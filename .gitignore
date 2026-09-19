@@ -1,0 +1,57 @@
+# Rust build artifacts
+/target/
+**/*.rs.bk
+Cargo.lock
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Claude Code state
+.claude/
+
+# Python contract tests
+__pycache__/
+
+# Python binding build environment
+crates/meshers-python/target/
+crates/meshers-python/.venv/
+
+.pytest_cache/
+
+# Isolated Microgen demonstration and reproducible outputs
+/demos/microgen/microgen_source/
+/demos/microgen/.venv/
+/demos/microgen/output/
+
+/.venv/
+/site/
+/.cache/
+.ruff_cache/
+
+/dist/
+
+# Editable extension binaries
+/crates/meshers-python/python/meshers/*.so
+/crates/meshers-python/python/meshers/*.pyd
+
+/coverage/
+.coverage*
+htmlcov/
+
+# Local work preserved while preparing main
+/.local-work/
+**/dist/
+
+# Reproduce the core and Python builds used for Mac validation
+!/Cargo.lock
+!/crates/meshers-python/Cargo.lock
+
+# Exploratory F-rep mesh exports
+/demos/frep/output/

@@ -1,0 +1,897 @@
+{
+  "environment": {
+    "platform": "macOS-26.5.1-arm64-arm-64bit",
+    "python": "3.12.9",
+    "fedoo": "1.0.0b2",
+    "meshers": "0.1.0",
+    "numpy": "2.5.3",
+    "scipy": "1.18.1"
+  },
+  "source_sha256": "d7017aaaa75045dd665f8e20e1526d836af4feebf2d7a548079164b5abb38713",
+  "extension_sha256": "fb22668817042734f1ed5c5809f36bfb8abfd91ca42da136c36d148907df1a66",
+  "material": {
+    "young_modulus": 2.5,
+    "poisson_ratio": 0.25
+  },
+  "geometry": {
+    "domain": [
+      0,
+      1,
+      0,
+      1,
+      0,
+      1
+    ],
+    "field": "Meshers built-in gyroid, period 1",
+    "band": [
+      -0.55,
+      0.55
+    ],
+    "geometry_tolerance": 0.04,
+    "optimize_passes": 4,
+    "snap": 0.2
+  },
+  "voigt_order": [
+    "xx",
+    "yy",
+    "zz",
+    "xy",
+    "xz",
+    "yz"
+  ],
+  "shear_convention": "Engineering strain gamma_ij=2*epsilon_ij; physical shear stress",
+  "normalization": "Full unit-cell volume, including void",
+  "periodicity": "Translational in x, y and z; traction-free internal surfaces; one translation pin",
+  "solver": "fedoo assembly/PeriodicBC/homogen API with audited SciPy CG, Jacobi, rtol=1e-12, atol=1e-14",
+  "limitations": [
+    "Linear elasticity only",
+    "No rotational periodicity, nonlinear buckling or MMG comparison",
+    "TPMS refinement is an observed stability study, not a certified continuum limit"
+  ],
+  "cases": [
+    {
+      "geometry": "solid",
+      "cells": 6,
+      "tetrahedra": 2592,
+      "points": 559,
+      "solid_volume_fraction": 1.0,
+      "minimum_quality": 0.6651075101064486,
+      "periodic_pair_counts": [
+        49,
+        49,
+        49
+      ],
+      "stiffness_engineering_voigt": [
+        [
+          2.999999999999997,
+          0.9999999999999994,
+          0.9999999999999984,
+          9.462463326315071e-18,
+          1.0147684909721633e-18,
+          6.819558937938384e-18
+        ],
+        [
+          0.9999999999999998,
+          3.000000000000002,
+          0.9999999999999976,
+          4.108953484195116e-18,
+          6.411377637092311e-19,
+          1.023330336478088e-17
+        ],
+        [
+          0.9999999999999997,
+          0.9999999999999998,
+          3.000000000000001,
+          3.3928542026382082e-18,
+          1.549782563650174e-18,
+          1.7044932386445572e-17
+        ],
+        [
+          -4.3833047385641517e-20,
+          -9.034169272873436e-19,
+          -9.927323818585834e-29,
+          0.9999999999999966,
+          2.5308895927735317e-18,
+          3.975534399770967e-18
+        ],
+        [
+          -3.841681678163493e-18,
+          3.668780239861657e-29,
+          6.190181865146942e-18,
+          4.1520014925855364e-18,
+          0.9999999999999999,
+          -2.695724105074517e-19
+        ],
+        [
+          2.6505721013087343e-28,
+          2.4650536252235105e-18,
+          -2.984574714361401e-19,
+          -2.0019740581040863e-18,
+          -1.829041318144485e-19,
+          0.9999999999999996
+        ]
+      ],
+      "stiffness_eigenvalues": [
+        0.9999999999999968,
+        0.9999999999999996,
+        1.0,
+        1.9999999999999991,
+        2.0000000000000027,
+        4.999999999999997
+      ],
+      "young_modulus_xyz": [
+        2.4999999999999973,
+        2.500000000000003,
+        2.5000000000000018
+      ],
+      "poisson_xy_xz_yz": [
+        0.25000000000000006,
+        0.24999999999999983,
+        0.24999999999999975
+      ],
+      "hill_mandel_relative_error": 1.0102850121446823e-15,
+      "reaction_stress_relative_difference": 1.0202040606950343e-12,
+      "stiffness_symmetry_relative_error": 6.024659011652313e-16,
+      "automatic_homogenization_relative_difference": 6.0282051426211e-14,
+      "strain_controlled_loads": [
+        {
+          "load": "E_xx",
+          "periodic_jump_error": 0.0,
+          "periodic_force_balance_relative_error": 9.568694317952703e-12,
+          "iterations": 76,
+          "relative_residual": 9.926232475070282e-13,
+          "free_dofs": 1293
+        },
+        {
+          "load": "E_yy",
+          "periodic_jump_error": 0.0,
+          "periodic_force_balance_relative_error": 9.568767368080557e-12,
+          "iterations": 76,
+          "relative_residual": 9.926415957175967e-13,
+          "free_dofs": 1293
+        },
+        {
+          "load": "E_zz",
+          "periodic_jump_error": 0.0,
+          "periodic_force_balance_relative_error": 9.568960983136542e-12,
+          "iterations": 76,
+          "relative_residual": 9.926616778390802e-13,
+          "free_dofs": 1293
+        },
+        {
+          "load": "E_xy",
+          "periodic_jump_error": 0.0,
+          "periodic_force_balance_relative_error": 4.979588752244152e-12,
+          "iterations": 82,
+          "relative_residual": 5.753449199587409e-13,
+          "free_dofs": 1293
+        },
+        {
+          "load": "E_xz",
+          "periodic_jump_error": 0.0,
+          "periodic_force_balance_relative_error": 4.978949233105708e-12,
+          "iterations": 82,
+          "relative_residual": 5.752828070765284e-13,
+          "free_dofs": 1293
+        },
+        {
+          "load": "E_yz",
+          "periodic_jump_error": 0.0,
+          "periodic_force_balance_relative_error": 4.979426059402509e-12,
+          "iterations": 82,
+          "relative_residual": 5.753241113696157e-13,
+          "free_dofs": 1293
+        }
+      ],
+      "automatic_stress_controlled_solves": [
+        {
+          "iterations": 98,
+          "relative_residual": 6.348983564732527e-13,
+          "free_dofs": 1299
+        },
+        {
+          "iterations": 98,
+          "relative_residual": 6.349416499324627e-13,
+          "free_dofs": 1299
+        },
+        {
+          "iterations": 98,
+          "relative_residual": 6.347666820141036e-13,
+          "free_dofs": 1299
+        },
+        {
+          "iterations": 102,
+          "relative_residual": 7.508687313284212e-13,
+          "free_dofs": 1299
+        },
+        {
+          "iterations": 102,
+          "relative_residual": 7.507426750766457e-13,
+          "free_dofs": 1299
+        },
+        {
+          "iterations": 102,
+          "relative_residual": 7.509140129322148e-13,
+          "free_dofs": 1299
+        }
+      ],
+      "seconds": 0.11362070898758247,
+      "analytic_stiffness_relative_error": 1.0046775685524555e-15
+    },
+    {
+      "geometry": "gyroid_sheet",
+      "cells": 12,
+      "tetrahedra": 10832,
+      "points": 3283,
+      "solid_volume_fraction": 0.3596796979492931,
+      "minimum_quality": 0.3822813302231279,
+      "periodic_pair_counts": [
+        113,
+        119,
+        113
+      ],
+      "stiffness_engineering_voigt": [
+        [
+          0.5224155506582231,
+          0.1912875052164016,
+          0.1912377710174787,
+          0.00015262641051954305,
+          4.0138634756703316e-05,
+          -1.2049574081292213e-05
+        ],
+        [
+          0.19128750521662385,
+          0.5225425127686173,
+          0.19094921048788277,
+          4.1725240784114155e-05,
+          -3.678987503400263e-06,
+          4.700746631458361e-05
+        ],
+        [
+          0.19123777101696587,
+          0.19094921048804586,
+          0.522722254560239,
+          7.129996283503932e-06,
+          5.716494906649766e-05,
+          -5.244899793108895e-06
+        ],
+        [
+          0.00015262641079546354,
+          4.172524073282212e-05,
+          7.129996025540079e-06,
+          0.1880009041347754,
+          2.5960517044238262e-06,
+          -4.112254539392704e-05
+        ],
+        [
+          4.0138634838848964e-05,
+          -3.678987557449015e-06,
+          5.7164948849152336e-05,
+          2.596051689776561e-06,
+          0.18807009723359885,
+          7.365142376249481e-06
+        ],
+        [
+          -1.2049574346614318e-05,
+          4.700746641981121e-05,
+          -5.244899685840913e-06,
+          -4.1122545475065755e-05,
+          7.365142236546459e-06,
+          0.1877984858649211
+        ]
+      ],
+      "stiffness_eigenvalues": [
+        0.1877902226076806,
+        0.18800881849214587,
+        0.18807031380566494,
+        0.33110946647181966,
+        0.33169452147440476,
+        0.9048764623686593
+      ],
+      "young_modulus_xyz": [
+        0.4198864455649492,
+        0.4202001559389889,
+        0.4204008795020261
+      ],
+      "poisson_xy_xz_yz": [
+        0.2681794827515602,
+        0.26788432195039286,
+        0.2671109864883058
+      ],
+      "hill_mandel_relative_error": 9.071476505252234e-13,
+      "reaction_stress_relative_difference": 3.1652521659423554e-12,
+      "stiffness_symmetry_relative_error": 1.0743831874416223e-12,
+      "automatic_homogenization_relative_difference": 9.583619923300745e-13,
+      "strain_controlled_loads": [
+        {
+          "load": "E_xx",
+          "periodic_jump_error": 0.0,
+          "periodic_force_balance_relative_error": 2.6542863907913144e-11,
+          "iterations": 369,
+          "relative_residual": 9.544748561366787e-13,
+          "free_dofs": 8871
+        },
+        {
+          "load": "E_yy",
+          "periodic_jump_error": 0.0,
+          "periodic_force_balance_relative_error": 2.628186831976462e-11,
+          "iterations": 373,
+          "relative_residual": 8.836336036216388e-13,
+          "free_dofs": 8871
+        },
+        {
+          "load": "E_zz",
+          "periodic_jump_error": 0.0,
+          "periodic_force_balance_relative_error": 2.7461021577909137e-11,
+          "iterations": 372,
+          "relative_residual": 9.654125480285114e-13,
+          "free_dofs": 8871
+        },
+        {
+          "load": "E_xy",
+          "periodic_jump_error": 0.0,
+          "periodic_force_balance_relative_error": 2.1049874224044043e-11,
+          "iterations": 381,
+          "relative_residual": 9.271454197179834e-13,
+          "free_dofs": 8871
+        },
+        {
+          "load": "E_xz",
+          "periodic_jump_error": 0.0,
+          "periodic_force_balance_relative_error": 2.1715138271479144e-11,
+          "iterations": 381,
+          "relative_residual": 9.12247500624954e-13,
+          "free_dofs": 8871
+        },
+        {
+          "load": "E_yz",
+          "periodic_jump_error": 0.0,
+          "periodic_force_balance_relative_error": 2.2911714861892538e-11,
+          "iterations": 383,
+          "relative_residual": 9.021983113992944e-13,
+          "free_dofs": 8871
+        }
+      ],
+      "automatic_stress_controlled_solves": [
+        {
+          "iterations": 480,
+          "relative_residual": 9.58665696393113e-13,
+          "free_dofs": 8877
+        },
+        {
+          "iterations": 483,
+          "relative_residual": 7.526056985053531e-13,
+          "free_dofs": 8877
+        },
+        {
+          "iterations": 481,
+          "relative_residual": 9.409040615757213e-13,
+          "free_dofs": 8877
+        },
+        {
+          "iterations": 484,
+          "relative_residual": 9.409299230291944e-13,
+          "free_dofs": 8877
+        },
+        {
+          "iterations": 483,
+          "relative_residual": 9.679671320983146e-13,
+          "free_dofs": 8877
+        },
+        {
+          "iterations": 484,
+          "relative_residual": 9.97174841828185e-13,
+          "free_dofs": 8877
+        }
+      ],
+      "seconds": 1.086786707979627
+    },
+    {
+      "geometry": "gyroid_sheet",
+      "cells": 18,
+      "tetrahedra": 34186,
+      "points": 9321,
+      "solid_volume_fraction": 0.35750065323824276,
+      "minimum_quality": 0.15952167283478735,
+      "periodic_pair_counts": [
+        240,
+        244,
+        240
+      ],
+      "stiffness_engineering_voigt": [
+        [
+          0.5020599337271154,
+          0.19109866699097205,
+          0.19106971715225418,
+          4.098243436196336e-05,
+          6.345148247058907e-06,
+          -3.254009382916995e-05
+        ],
+        [
+          0.19109866699111838,
+          0.5022061529100207,
+          0.19099679015558985,
+          -3.776401567540249e-06,
+          -3.176794788522054e-06,
+          1.937100547702305e-05
+        ],
+        [
+          0.1910697171524844,
+          0.19099679015567103,
+          0.5022401382896229,
+          -4.995156439055078e-06,
+          1.6933195462154727e-05,
+          -5.0312897488523024e-06
+        ],
+        [
+          4.098243472445321e-05,
+          -3.776401313934177e-06,
+          -4.995156504056125e-06,
+          0.17657724830960175,
+          3.5491002906183523e-06,
+          1.9554799494485504e-07
+        ],
+        [
+          6.345148158134001e-06,
+          -3.1767944793445258e-06,
+          1.6933195889050903e-05,
+          3.5491004422329207e-06,
+          0.17657425386865055,
+          -4.682562508825509e-06
+        ],
+        [
+          -3.254009387892786e-05,
+          1.9371005855582886e-05,
+          -5.031289908199939e-06,
+          1.9554793541996637e-07,
+          -4.682562414022128e-06,
+          0.17648865165033234
+        ]
+      ],
+      "stiffness_eigenvalues": [
+        0.1764883845357727,
+        0.17657208586688466,
+        0.17657966084699936,
+        0.3109979480807281,
+        0.3112294385133199,
+        0.8842788609116383
+      ],
+      "young_modulus_xyz": [
+        0.3967162362373465,
+        0.39690260520938414,
+        0.39695438298305763
+      ],
+      "poisson_xy_xz_yz": [
+        0.2757088559274668,
+        0.2755857209397449,
+        0.27535121169243004
+      ],
+      "hill_mandel_relative_error": 1.000557970702116e-12,
+      "reaction_stress_relative_difference": 6.197241054734411e-12,
+      "stiffness_symmetry_relative_error": 1.202850214801069e-12,
+      "automatic_homogenization_relative_difference": 9.967751599670934e-13,
+      "strain_controlled_loads": [
+        {
+          "load": "E_xx",
+          "periodic_jump_error": 0.0,
+          "periodic_force_balance_relative_error": 4.4710533425066427e-11,
+          "iterations": 580,
+          "relative_residual": 9.742661515941017e-13,
+          "free_dofs": 25884
+        },
+        {
+          "load": "E_yy",
+          "periodic_jump_error": 0.0,
+          "periodic_force_balance_relative_error": 4.155624937084237e-11,
+          "iterations": 582,
+          "relative_residual": 9.367861296303986e-13,
+          "free_dofs": 25884
+        },
+        {
+          "load": "E_zz",
+          "periodic_jump_error": 0.0,
+          "periodic_force_balance_relative_error": 4.057496199046698e-11,
+          "iterations": 583,
+          "relative_residual": 9.224316068057362e-13,
+          "free_dofs": 25884
+        },
+        {
+          "load": "E_xy",
+          "periodic_jump_error": 0.0,
+          "periodic_force_balance_relative_error": 3.324914883113921e-11,
+          "iterations": 598,
+          "relative_residual": 9.986712964509929e-13,
+          "free_dofs": 25884
+        },
+        {
+          "load": "E_xz",
+          "periodic_jump_error": 0.0,
+          "periodic_force_balance_relative_error": 3.078888998615586e-11,
+          "iterations": 597,
+          "relative_residual": 9.58162587006089e-13,
+          "free_dofs": 25884
+        },
+        {
+          "load": "E_yz",
+          "periodic_jump_error": 0.0,
+          "periodic_force_balance_relative_error": 3.0762500598470926e-11,
+          "iterations": 598,
+          "relative_residual": 9.751019911693791e-13,
+          "free_dofs": 25884
+        }
+      ],
+      "automatic_stress_controlled_solves": [
+        {
+          "iterations": 740,
+          "relative_residual": 7.42014856421284e-13,
+          "free_dofs": 25890
+        },
+        {
+          "iterations": 738,
+          "relative_residual": 9.777802761893424e-13,
+          "free_dofs": 25890
+        },
+        {
+          "iterations": 741,
+          "relative_residual": 9.081134860205824e-13,
+          "free_dofs": 25890
+        },
+        {
+          "iterations": 745,
+          "relative_residual": 9.575021294635614e-13,
+          "free_dofs": 25890
+        },
+        {
+          "iterations": 744,
+          "relative_residual": 8.999649188040032e-13,
+          "free_dofs": 25890
+        },
+        {
+          "iterations": 741,
+          "relative_residual": 9.924090132914505e-13,
+          "free_dofs": 25890
+        }
+      ],
+      "seconds": 4.4785772080067545,
+      "stiffness_relative_change": 0.0391456497152794
+    },
+    {
+      "geometry": "gyroid_sheet",
+      "cells": 24,
+      "tetrahedra": 72757,
+      "points": 17647,
+      "solid_volume_fraction": 0.3570984598296883,
+      "minimum_quality": 0.1622169171739096,
+      "periodic_pair_counts": [
+        347,
+        349,
+        347
+      ],
+      "stiffness_engineering_voigt": [
+        [
+          0.4952705472073817,
+          0.19146629318300495,
+          0.19146935433026413,
+          3.384953160653378e-05,
+          1.2717386697229976e-05,
+          -1.8850437353671776e-05
+        ],
+        [
+          0.19146629318340505,
+          0.4953109336928399,
+          0.19141205554351173,
+          -3.2713188481044134e-06,
+          -5.496145623096754e-06,
+          1.2869820944973539e-05
+        ],
+        [
+          0.19146935432931617,
+          0.19141205554426155,
+          0.49530311461589527,
+          -1.6143877485318856e-06,
+          2.175244797958385e-05,
+          -9.359157690977148e-06
+        ],
+        [
+          3.384953202894615e-05,
+          -3.2713191331977036e-06,
+          -1.6143868249941975e-06,
+          0.1722635608128724,
+          8.888366186001047e-06,
+          1.0755348807986875e-05
+        ],
+        [
+          1.27173864425119e-05,
+          -5.496145125644567e-06,
+          2.175244895384771e-05,
+          8.8883662583301e-06,
+          0.1722696259463536,
+          1.1711324437056627e-05
+        ],
+        [
+          -1.8850437034045696e-05,
+          1.2869821785512642e-05,
+          -9.359157956392603e-06,
+          1.075534886488053e-05,
+          1.171132442000624e-05,
+          0.17222620475663428
+        ]
+      ],
+      "stiffness_eigenvalues": [
+        0.17222151890749052,
+        0.17225728189290432,
+        0.17228057617182263,
+        0.303796137709525,
+        0.30389513741941404,
+        0.8781933349308201
+      ],
+      "young_modulus_xyz": [
+        0.38850219891983945,
+        0.3885803001850513,
+        0.38857090666669164
+      ],
+      "poisson_xy_xz_yz": [
+        0.27880673865034816,
+        0.2788239716817392,
+        0.27865437646895763
+      ],
+      "hill_mandel_relative_error": 2.131095030309042e-12,
+      "reaction_stress_relative_difference": 4.87683334972368e-12,
+      "stiffness_symmetry_relative_error": 3.0571984377362043e-12,
+      "automatic_homogenization_relative_difference": 2.1643756141783975e-12,
+      "strain_controlled_loads": [
+        {
+          "load": "E_xx",
+          "periodic_jump_error": 0.0,
+          "periodic_force_balance_relative_error": 5.463033502924462e-11,
+          "iterations": 734,
+          "relative_residual": 9.850020408268814e-13,
+          "free_dofs": 49941
+        },
+        {
+          "load": "E_yy",
+          "periodic_jump_error": 0.0,
+          "periodic_force_balance_relative_error": 5.590804159554031e-11,
+          "iterations": 738,
+          "relative_residual": 9.582680851157272e-13,
+          "free_dofs": 49941
+        },
+        {
+          "load": "E_zz",
+          "periodic_jump_error": 0.0,
+          "periodic_force_balance_relative_error": 4.62939827496608e-11,
+          "iterations": 742,
+          "relative_residual": 8.973028446487995e-13,
+          "free_dofs": 49941
+        },
+        {
+          "load": "E_xy",
+          "periodic_jump_error": 0.0,
+          "periodic_force_balance_relative_error": 3.6679527746899834e-11,
+          "iterations": 760,
+          "relative_residual": 9.488799015284194e-13,
+          "free_dofs": 49941
+        },
+        {
+          "load": "E_xz",
+          "periodic_jump_error": 0.0,
+          "periodic_force_balance_relative_error": 3.565962406308229e-11,
+          "iterations": 762,
+          "relative_residual": 9.643539595973625e-13,
+          "free_dofs": 49941
+        },
+        {
+          "load": "E_yz",
+          "periodic_jump_error": 0.0,
+          "periodic_force_balance_relative_error": 3.8260187798847043e-11,
+          "iterations": 761,
+          "relative_residual": 9.82393262698708e-13,
+          "free_dofs": 49941
+        }
+      ],
+      "automatic_stress_controlled_solves": [
+        {
+          "iterations": 939,
+          "relative_residual": 1.0019430429943986e-12,
+          "free_dofs": 49947
+        },
+        {
+          "iterations": 945,
+          "relative_residual": 8.132945393250035e-13,
+          "free_dofs": 49947
+        },
+        {
+          "iterations": 937,
+          "relative_residual": 9.755393110819884e-13,
+          "free_dofs": 49947
+        },
+        {
+          "iterations": 942,
+          "relative_residual": 1.0026977878729362e-12,
+          "free_dofs": 49947
+        },
+        {
+          "iterations": 947,
+          "relative_residual": 9.245737973807905e-13,
+          "free_dofs": 49947
+        },
+        {
+          "iterations": 941,
+          "relative_residual": 9.198617215998616e-13,
+          "free_dofs": 49947
+        }
+      ],
+      "seconds": 10.826912334014196,
+      "stiffness_relative_change": 0.013765881458208227
+    },
+    {
+      "geometry": "gyroid_sheet",
+      "cells": 32,
+      "tetrahedra": 171679,
+      "points": 39717,
+      "solid_volume_fraction": 0.35673176851230615,
+      "minimum_quality": 0.31362482282617266,
+      "periodic_pair_counts": [
+        498,
+        504,
+        498
+      ],
+      "stiffness_engineering_voigt": [
+        [
+          0.49099391556516536,
+          0.19156877893963506,
+          0.19156898124797436,
+          1.3532304285092015e-05,
+          1.5071162600603934e-07,
+          -1.2035030207215116e-05
+        ],
+        [
+          0.19156877893876698,
+          0.49098546096855333,
+          0.19154606391891907,
+          -6.16472716113613e-06,
+          -5.372434760155566e-06,
+          3.639171760895033e-06
+        ],
+        [
+          0.19156898124702773,
+          0.19154606392026727,
+          0.4909912932064571,
+          -4.303531200533171e-06,
+          8.461355400472346e-06,
+          -8.413619973692293e-06
+        ],
+        [
+          1.353230472557081e-05,
+          -6.164727157824488e-06,
+          -4.303530966225605e-06,
+          0.16961350955882235,
+          4.81329900575003e-06,
+          2.7114990233408217e-06
+        ],
+        [
+          1.5071202766471313e-07,
+          -5.372434175781675e-06,
+          8.46135633509866e-06,
+          4.813299173873493e-06,
+          0.16961332689272995,
+          2.3758127911538044e-06
+        ],
+        [
+          -1.2035028402503854e-05,
+          3.6391708539157128e-06,
+          -8.413619911368046e-06,
+          2.7114991570319484e-06,
+          2.375812742441539e-06,
+          0.16959259927831144
+        ]
+      ],
+      "stiffness_eigenvalues": [
+        0.16959209949993953,
+        0.16960860514253528,
+        0.169618727337878,
+        0.29941549443580756,
+        0.29944240593840904,
+        0.8741127731154703
+      ],
+      "young_modulus_xyz": [
+        0.383457549944483,
+        0.38346623572753663,
+        0.38347146357813733
+      ],
+      "poisson_xy_xz_yz": [
+        0.28067523774361197,
+        0.28067044374747446,
+        0.2806081883248738
+      ],
+      "hill_mandel_relative_error": 3.426241021465507e-12,
+      "reaction_stress_relative_difference": 7.0756960651773086e-12,
+      "stiffness_symmetry_relative_error": 4.232879169602838e-12,
+      "automatic_homogenization_relative_difference": 3.457830499733212e-12,
+      "strain_controlled_loads": [
+        {
+          "load": "E_xx",
+          "periodic_jump_error": 0.0,
+          "periodic_force_balance_relative_error": 6.905343184561429e-11,
+          "iterations": 965,
+          "relative_residual": 9.537015271379248e-13,
+          "free_dofs": 114780
+        },
+        {
+          "load": "E_yy",
+          "periodic_jump_error": 0.0,
+          "periodic_force_balance_relative_error": 7.016053647464482e-11,
+          "iterations": 965,
+          "relative_residual": 9.817232247033778e-13,
+          "free_dofs": 114780
+        },
+        {
+          "load": "E_zz",
+          "periodic_jump_error": 0.0,
+          "periodic_force_balance_relative_error": 6.534086351102634e-11,
+          "iterations": 986,
+          "relative_residual": 9.635965728162592e-13,
+          "free_dofs": 114780
+        },
+        {
+          "load": "E_xy",
+          "periodic_jump_error": 0.0,
+          "periodic_force_balance_relative_error": 5.180472169556018e-11,
+          "iterations": 1010,
+          "relative_residual": 9.644300002341276e-13,
+          "free_dofs": 114780
+        },
+        {
+          "load": "E_xz",
+          "periodic_jump_error": 0.0,
+          "periodic_force_balance_relative_error": 4.726321922658865e-11,
+          "iterations": 1007,
+          "relative_residual": 9.711155123337519e-13,
+          "free_dofs": 114780
+        },
+        {
+          "load": "E_yz",
+          "periodic_jump_error": 0.0,
+          "periodic_force_balance_relative_error": 5.093382195254458e-11,
+          "iterations": 1011,
+          "relative_residual": 9.585846233025292e-13,
+          "free_dofs": 114780
+        }
+      ],
+      "automatic_stress_controlled_solves": [
+        {
+          "iterations": 1246,
+          "relative_residual": 8.046495295978386e-13,
+          "free_dofs": 114786
+        },
+        {
+          "iterations": 1244,
+          "relative_residual": 9.825934158932765e-13,
+          "free_dofs": 114786
+        },
+        {
+          "iterations": 1247,
+          "relative_residual": 1.0325198217064e-12,
+          "free_dofs": 114786
+        },
+        {
+          "iterations": 1246,
+          "relative_residual": 9.862228564184676e-13,
+          "free_dofs": 114786
+        },
+        {
+          "iterations": 1260,
+          "relative_residual": 8.493799056410634e-13,
+          "free_dofs": 114786
+        },
+        {
+          "iterations": 1256,
+          "relative_residual": 9.506091818989636e-13,
+          "free_dofs": 114786
+        }
+      ],
+      "seconds": 30.934953709016554,
+      "stiffness_relative_change": 0.008629810484982032
+    }
+  ]
+}

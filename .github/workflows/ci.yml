@@ -1,0 +1,104 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+env:
+  CARGO_TERM_COLOR: always
+  RUST_BACKTRACE: 1
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.head_ref || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  cpu-core:
+    name: CPU core (${{ matrix.os }})
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          components: rustfmt, clippy
+      - run: cargo fmt --all -- --check
+      - run: cargo clippy --locked --all-targets -- -D warnings
+      - run: cargo test --locked --release
+      - name: Verify Rust crate packaging
+        if: runner.os == 'Linux'
+        run: cargo package --locked -p meshers-core
+      - run: cargo run --locked --release --example gyroid
+      - run: cargo doc --locked --no-deps
+        env:
+          RUSTDOCFLAGS: -D warnings
+
+  python-bindings:
+    name: Python bindings (${{ matrix.os }}, ${{ matrix.python }})
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+        python: ['3.10', '3.12', '3.14']
+    runs-on: ${{ matrix.os }}
+    defaults:
+      run:
+        working-directory: crates/meshers-python
+        shell: bash
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python }}
+      - uses: astral-sh/setup-uv@v6
+      - run: uv pip install --system maturin pytest h5py pyvista
+      - run: maturin build --locked --release --interpreter python --out dist
+      - run: uv pip install --system dist/*.whl
+      - run: python -m pytest tests -q
+      - uses: actions/upload-artifact@v4
+        with:
+          name: wheel-${{ matrix.os }}-${{ matrix.python }}
+          path: crates/meshers-python/dist/*.whl
+
+  quality-and-docs:
+    name: Python quality and documentation
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          components: rustfmt, clippy
+      - uses: astral-sh/setup-uv@v6
+        with:
+          python-version: '3.12'
+          enable-cache: true
+      - run: uv sync --locked --all-packages --group docs
+      - run: uv run ruff check
+      - run: uv run ruff format --check
+      - run: uv run ty check
+      - run: uv run pytest crates/meshers-python/tests tools/tests -q
+      - run: cargo fmt --manifest-path crates/meshers-python/Cargo.toml -- --check
+      - run: cargo clippy --locked --manifest-path crates/meshers-python/Cargo.toml --all-targets -- -D warnings
+      - run: cargo run --locked --release --example implicit_sphere
+      - run: uv run --with scipy python demos/solver/convergence.py
+      - run: uv run --with fedoo==0.8.4 python demos/solver/fedoo_convergence.py
+      - run: uv run --with fedoo==1.0.0b2 python demos/solver/fedoo_homogenization.py
+      - uses: actions/upload-artifact@v4
+        with:
+          name: solver-verification
+          path: |
+            docs/solver-convergence-results.json
+            docs/fedoo-convergence-results.json
+            docs/fedoo-homogenization-results.json
+      - run: uv run --group docs python tools/build_docs.py
+      - uses: actions/upload-artifact@v4
+        with:
+          name: documentation
+          path: site/

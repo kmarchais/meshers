@@ -1,0 +1,80 @@
+name: Performance
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+  workflow_dispatch:
+    inputs:
+      baseline:
+        description: Optional baseline commit or release tag
+        required: false
+        type: string
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.head_ref || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  compare:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    env:
+      OPENBLAS_NUM_THREADS: '1'
+      OMP_NUM_THREADS: '1'
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          path: candidate
+          persist-credentials: false
+          fetch-depth: 2
+      - name: Resolve baseline
+        id: baseline
+        env:
+          REQUESTED: ${{ inputs.baseline }}
+          PR_BASE: ${{ github.event.pull_request.base.sha }}
+        run: |
+          baseline="$REQUESTED"
+          if [ -z "$baseline" ]; then baseline="$PR_BASE"; fi
+          if [ -z "$baseline" ]; then
+            baseline=$(git -C candidate rev-parse --verify HEAD^ 2>/dev/null || git -C candidate rev-parse HEAD)
+          fi
+          echo "ref=$baseline" >> "$GITHUB_OUTPUT"
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ steps.baseline.outputs.ref }}
+          path: baseline
+          persist-credentials: false
+      - uses: dtolnay/rust-toolchain@stable
+      - uses: astral-sh/setup-uv@v6
+        with:
+          python-version: '3.12'
+      - name: Build and install both wheels
+        run: |
+          for source in baseline candidate; do
+            uv tool run --from maturin==1.15.0 maturin build --locked --release --manifest-path "$source/crates/meshers-python/Cargo.toml" --out "$source/dist" -i python3.12
+            uv venv "$source/env" --python 3.12
+            uv pip install --python "$source/env" numpy==2.2.6 "$source"/dist/*.whl
+          done
+      - name: Compare time, memory and mesh quality
+        run: |
+          python3 candidate/tools/performance_gate.py \
+            --base-python "$GITHUB_WORKSPACE/baseline/env/bin/python" \
+            --head-python "$GITHUB_WORKSPACE/candidate/env/bin/python" \
+            --base-ref "$(git -C baseline rev-parse HEAD)" \
+            --head-ref "$(git -C candidate rev-parse HEAD)" \
+            --output results/performance.json
+      - name: Summarize measurements
+        if: always()
+        run: |
+          if [ -f results/performance.md ]; then cat results/performance.md >> "$GITHUB_STEP_SUMMARY"; fi
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: performance-comparison
+          path: results/
+          if-no-files-found: warn

@@ -1,0 +1,37 @@
+name: Coverage
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.head_ref || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  core-and-python:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          components: llvm-tools-preview
+      - uses: astral-sh/setup-uv@v6
+      - name: Install locked Python environment
+        run: uv sync --locked --all-packages
+      - name: Measure Python statement and branch coverage
+        run: uv run pytest crates/meshers-python/tests --cov=meshers --cov-branch --cov-report=term-missing --cov-report=xml:coverage/python.xml
+      - name: Install Rust coverage tool
+        run: cargo install cargo-llvm-cov --version 0.9.1 --locked
+      - name: Measure Rust core coverage
+        run: cargo llvm-cov --workspace --release --lcov --output-path coverage/rust.lcov
+      - uses: actions/upload-artifact@v4
+        with:
+          name: coverage-reports
+          path: coverage/
+          if-no-files-found: error

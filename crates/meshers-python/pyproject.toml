@@ -1,0 +1,28 @@
+[build-system]
+requires = ["maturin>=1.9,<2"]
+build-backend = "maturin"
+[project]
+name = "meshers"
+version = "0.1.0"
+description = "Direct CPU tetrahedral meshing of implicit geometries and constrained intersections"
+readme = "README.md"
+license = "MIT"
+license-files = ["LICENSE", "THIRDPARTY.json"]
+requires-python = ">=3.10"
+dependencies = ["numpy>=1.23"]
+[project.urls]
+Repository = "https://github.com/kmarchais/meshers"
+Issues = "https://github.com/kmarchais/meshers/issues"
+Documentation = "https://github.com/kmarchais/meshers/tree/main/docs/site"
+
+[project.optional-dependencies]
+io = ["h5py>=3.8"]
+test = ["pytest>=8", "h5py>=3.8", "pyvista>=0.46"]
+[tool.maturin]
+python-source = "python"
+module-name = "meshers._meshers"
+strip = true
+
+# Keep Maturin: uv_build cannot build Rust extension modules.
+[tool.uv]
+cache-keys = [{ file = "pyproject.toml" }, { file = "Cargo.toml" }, { file = "src/**/*.rs" }, { file = "python/**/*" }, { file = "../meshers-core/src/**/*.rs" }, { file = "../meshers-core/Cargo.toml" }]

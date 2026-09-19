@@ -1,0 +1,15 @@
+/* Meshers: navy structure, teal interaction, copper Rust accent. */
+:root { --md-text-font: Arial, Helvetica, sans-serif; --md-code-font: Consolas, "Liberation Mono", monospace; }
+[data-md-color-scheme="default"] { --md-primary-fg-color: #087c72; --md-accent-fg-color: #a34e2d; --md-default-bg-color: #f8fafb; }
+[data-md-color-scheme="slate"] { --md-primary-fg-color: #2dd4bf; --md-accent-fg-color: #ed9c74; --md-default-bg-color: #091e2b; }
+.md-typeset h1, .md-typeset h2 { font-weight: 700; letter-spacing: -.025em; }
+.md-typeset img[alt="Meshers"] { width: 100%; border-radius: 14px; }
+.md-typeset table:not([class]) th { background: #091e2b; color: #f4f8f9; }
+.md-typeset a:focus-visible { outline: 2px solid var(--md-primary-fg-color); outline-offset: 3px; }
+.md-typeset .brand-actions { display: flex; flex-wrap: wrap; gap: .7rem; margin: 1.2rem 0 2rem; }
+.md-typeset .brand-actions a { border: 1px solid var(--md-primary-fg-color); border-radius: 6px; padding: .45rem .9rem; font-weight: 600; }
+.md-typeset .brand-actions a:first-child { background: #087c72; color: white; }
+
+[data-md-color-scheme="default"] { --md-accent-fg-color--transparent: #087c7214; --md-primary-fg-color--light: #087c7214; }
+[data-md-color-scheme="slate"] { --md-accent-fg-color--transparent: #2dd4bf1a; --md-primary-fg-color--light: #2dd4bf1a; }
+.md-nav__link--active { background-color: var(--md-accent-fg-color--transparent) !important; color: var(--md-primary-fg-color) !important; }

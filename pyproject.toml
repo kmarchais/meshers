@@ -1,0 +1,68 @@
+[project]
+name = "meshers-development"
+version = "0.1.0"
+requires-python = ">=3.12"
+dependencies = []
+
+[tool.uv]
+package = false
+
+[tool.uv.workspace]
+members = ["crates/meshers-python"]
+
+[dependency-groups]
+dev = [
+    "ruff>=0.16.7",
+    "ty",
+    "pytest>=8",
+    "h5py>=3.8",
+    "pyvista>=0.46",
+    "maturin>=1.9,<2",
+    "psutil>=7.2.2",
+    "pytest-cov>=7.1.0",
+]
+docs = ["zensical", "mkdocstrings-python"]
+
+[tool.ruff]
+preview = true
+target-version = "py310"
+line-length = 100
+extend-exclude = [".local-work", "experiments", "tests/contracts", "scripts", "demos/microgen/microgen_source"]
+
+[tool.ruff.lint]
+select = ["ALL"]
+# Mutually exclusive docstring styles, formatter conflict, and repository-level licensing.
+# Keep exception messages inline; requiring a temporary variable adds no value here.
+ignore = ["incorrect-blank-line-before-class", "multi-line-summary-second-line", "missing-trailing-comma", "missing-copyright-notice", "raise-vanilla-args", "raw-string-in-exception", "f-string-in-exception"]
+
+[tool.ruff.lint.per-file-ignores]
+# Benchmark orchestration uses fixed subprocess argument lists and explicit metric loops.
+"tools/performance_gate.py" = ["ANN", "import-outside-top-level", "magic-value-comparison", "print", "suspicious-subprocess-import", "subprocess-without-shell-equals-true", "complex-structure", "unused-lambda-argument", "manual-list-comprehension"]
+# Tests/examples intentionally use assertions, simple callback names and direct output.
+"**/tests/**" = ["D", "ANN", "assert", "magic-value-comparison", "unused-function-argument", "private-member-access", "import-outside-top-level", "subprocess-without-shell-equals-true", "suspicious-subprocess-import", "implicit-namespace-package", "unused-lambda-argument", "pytest-raises-too-broad", "import-private-name"]
+"**/test_*.py" = ["D", "ANN", "assert", "magic-value-comparison", "unused-function-argument", "private-member-access", "import-outside-top-level", "subprocess-without-shell-equals-true", "suspicious-subprocess-import", "implicit-namespace-package", "unused-lambda-argument", "pytest-raises-too-broad", "import-private-name"]
+"**/examples/**" = ["D", "ANN", "print", "magic-value-comparison", "assert", "implicit-namespace-package", "suspicious-subprocess-import", "subprocess-without-shell-equals-true"]
+# Scalar expression protocols intentionally have dynamic operands and many operators.
+"**/expression.py" = ["missing-type-function-argument", "missing-type-args", "missing-type-kwargs", "missing-return-type-private-function", "missing-return-type-special-method", "bad-dunder-method-name", "too-many-public-methods", "eq-without-hash", "private-member-access", "complex-structure", "too-many-return-statements", "too-many-branches", "float-equality-comparison", "magic-value-comparison"]
+# Python facade re-exports the public API and mirrors meshing options.
+"**/meshers/__init__.py" = ["non-empty-init-module", "too-many-arguments", "builtin-argument-shadowing", "import-outside-top-level", "magic-value-comparison", "docstring-extraneous-exception"]
+# The intersection facade follows the existing public mesher options and validates exact cap coordinates.
+"**/meshers/intersection.py" = ["too-many-arguments", "builtin-argument-shadowing", "import-outside-top-level", "magic-value-comparison", "float-equality-comparison", "docstring-extraneous-exception"]
+# Stub Any marks the FFI boundary; stub docstrings feed generated API docs.
+"**/_meshers.pyi" = ["any-type", "D", "too-many-arguments", "docstring-in-stub"]
+# Exploratory geometry examples share the demonstration conventions.
+"demos/frep/*.py" = ["ANN", "private-member-access", "import-outside-top-level", "magic-value-comparison", "print", "implicit-namespace-package", "subprocess-without-shell-equals-true", "assert", "unused-function-argument"]
+# Independent solver verification uses explicit scientific equations and executable assertions.
+"demos/solver/*.py" = ["ANN", "assert", "magic-value-comparison", "print", "implicit-namespace-package", "unused-function-argument"]
+# Demonstration uses private Microgen field access pending upstream integration.
+"demos/microgen/*.py" = ["ANN", "private-member-access", "import-outside-top-level", "magic-value-comparison", "print", "implicit-namespace-package", "subprocess-without-shell-equals-true", "start-process-with-partial-path", "assert", "unused-function-argument", "unused-lambda-argument"]
+
+[tool.ruff.lint.pydocstyle]
+convention = "google"
+
+[tool.ty.environment]
+python-version = "3.10"
+root = ["crates/meshers-python/python"]
+
+[tool.ty.src]
+include = ["crates/meshers-python/python"]

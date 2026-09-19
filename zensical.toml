@@ -1,0 +1,45 @@
+[project]
+site_name = "Meshers"
+site_description = "CPU tetrahedral meshing of implicit solids and TPMS geometries"
+extra_css = ["assets/brand.css"]
+copyright = "Meshers contributors · MIT license"
+docs_dir = "docs/site"
+site_dir = "site"
+nav = [
+  { "Start here" = [{ "Overview" = "index.md" }, { "Installation and first mesh" = "getting-started.md" }, { "Python examples" = "examples.md" }] },
+  { "User guide" = [{ "Fields and grading" = "fields.md" }, { "Periodicity and quality" = "quality.md" }, { "Intersections and curved domains" = "intersections.md" }, { "Solver verification" = "solver-verification.md" }, { "Periodic homogenization" = "periodic-homogenization.md" }] },
+  { "Performance" = [{ "Regression checks" = "performance.md" }] },
+  { "API reference" = [{ "Python" = "api/python.md" }, { "Rust" = "api/rust.md" }] },
+  { "Development" = [{ "Contributing" = "contributing.md" }, { "Testing and coverage" = "testing.md" }, { "Release preparation" = "release.md" }] },
+]
+
+[project.theme]
+language = "en"
+logo = "assets/mark.svg"
+favicon = "assets/mark.svg"
+font = false
+features = ["navigation.sections", "navigation.top", "content.code.copy"]
+
+[[project.theme.palette]]
+scheme = "default"
+primary = "custom"
+accent = "custom"
+toggle.icon = "lucide/sun"
+toggle.name = "Switch to dark mode"
+
+[[project.theme.palette]]
+scheme = "slate"
+primary = "custom"
+accent = "custom"
+toggle.icon = "lucide/moon"
+toggle.name = "Switch to light mode"
+
+[project.plugins.mkdocstrings.handlers.python]
+paths = ["crates/meshers-python/python"]
+
+[project.plugins.mkdocstrings.handlers.python.options]
+docstring_style = "google"
+show_source = true
+show_signature_annotations = true
+show_root_heading = true
+members_order = "source"

@@ -1,0 +1,83 @@
+name: Release artifacts
+
+# Builds and tests candidate artifacts. Publication remains an explicit manual step.
+on:
+  workflow_dispatch:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+    tags: ['v*']
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.head_ref || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  wheels:
+    name: Wheel (${{ matrix.os }})
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: ubuntu-latest
+            target: x86_64
+          - os: windows-latest
+            target: x86_64
+          - os: macos-latest
+            target: aarch64
+          - os: macos-15-intel
+            target: x86_64
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - uses: PyO3/maturin-action@v1
+        with:
+          target: ${{ matrix.target }}
+          manylinux: auto
+          args: --release --locked --manifest-path crates/meshers-python/Cargo.toml --out dist -i ${{ runner.os == 'Linux' && 'python3.12' || 'python' }}
+      - uses: astral-sh/setup-uv@v6
+      - name: Check package metadata
+        shell: bash
+        run: uv tool run --from twine twine check --strict dist/*.whl
+      - name: Test the wheel outside the source tree
+        shell: bash
+        run: |
+          uv venv .artifact-test
+          uv pip install --python .artifact-test dist/*.whl pytest h5py pyvista
+          cd "$RUNNER_TEMP"
+          "$GITHUB_WORKSPACE/.artifact-test/${{ runner.os == 'Windows' && 'Scripts/python.exe' || 'bin/python' }}" -m pytest "$GITHUB_WORKSPACE/crates/meshers-python/tests" -q
+      - uses: actions/upload-artifact@v4
+        with:
+          name: meshers-${{ matrix.os }}-${{ matrix.target }}
+          path: dist/*.whl
+          if-no-files-found: error
+
+  sdist:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@1.95.0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - uses: astral-sh/setup-uv@v6
+      - run: uv tool run maturin sdist --manifest-path crates/meshers-python/Cargo.toml --out dist
+      - run: uv tool run --from twine twine check --strict dist/*.tar.gz
+      - name: Build and test the source distribution in isolation
+        run: |
+          uv venv .sdist-test
+          uv pip install --python .sdist-test dist/*.tar.gz pytest h5py pyvista
+          cd "$RUNNER_TEMP"
+          "$GITHUB_WORKSPACE/.sdist-test/bin/python" -m pytest "$GITHUB_WORKSPACE/crates/meshers-python/tests" -q
+      - uses: actions/upload-artifact@v4
+        with:
+          name: meshers-sdist
+          path: dist/*.tar.gz
+          if-no-files-found: error

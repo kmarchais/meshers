@@ -1,0 +1,22 @@
+[package]
+name = "meshers-python"
+description = "Python bindings for the Meshers implicit tetrahedral mesher"
+repository = "https://github.com/kmarchais/meshers"
+version = "0.1.0"
+rust-version = "1.95"
+edition = "2024"
+license = "MIT"
+[workspace]
+[lib]
+name = "_meshers"
+crate-type = ["cdylib"]
+[dependencies]
+meshers-core = { version = "0.1.0", path = "../meshers-core" }
+pyo3 = { version = "0.28", features = ["extension-module", "abi3-py310"] }
+numpy = "0.28"
+cranelift-codegen = "0.135.1"
+cranelift-frontend = "0.135.1"
+cranelift-jit = "0.135.1"
+cranelift-module = "0.135.1"
+[profile.release]
+lto = "thin"
