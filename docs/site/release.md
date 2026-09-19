@@ -22,13 +22,18 @@ portable Linux wheel built by the release workflow.
 
 ## Publish tested artifacts
 
-1. Require all release checks to pass on the final commit.
-2. Download that commit's tested wheels and source distribution. Verify package
-   versions, platform tags, license notices and hashes.
-3. Verify PyPI ownership and publishing authorization, then publish those files.
-4. Tag the reviewed source and attach release notes describing supported behavior.
+1. Merge release preparation and require all four validation workflows to pass
+   on the exact main commit.
+2. Run **Publish to PyPI** from main, supplying the successful **Release artifacts**
+   run ID. The workflow verifies the source SHA and all check results, downloads
+   the tested artifacts, and publishes through the `pypi` environment.
+3. Verify installation from PyPI in a fresh environment, then tag the same source
+   commit and create its GitHub release.
 
-The workflows build and test packages; they do not upload to PyPI automatically.
-The candidate has not yet been published. The source archive includes the Rust
-core and does not require a prior crates.io release. A conda-forge package is
-not part of v0.1.
+The publishing workflow is `.github/workflows/publish-pypi.yml`. Configure that
+filename and the repository in PyPI Trusted Publishing. The GitHub environment
+is `pypi`. Publishing is explicitly triggered and never runs on pull requests.
+It reuses tested files rather than rebuilding them during upload.
+
+The source archive includes the Rust core and does not require a prior crates.io
+release. A conda-forge package is not part of v0.1.

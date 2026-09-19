@@ -13,9 +13,10 @@ mesh = meshers.generate("gyroid", band=(-0.5, 0.5), cells=24, periodic=(True, Tr
 mesh.write_vtkhdf("gyroid.vtkhdf")
 ```
 
-The candidate is not yet published on PyPI. Install a tested wheel with
-`python -m pip install /path/to/meshers.whl h5py`. Wheels require Python 3.10+
-and NumPy. Rust is only needed to build from source; h5py is optional for export.
+Install with `python -m pip install "meshers[io]"` for meshing and VTKHDF export,
+or `python -m pip install meshers` for meshing only. Wheels require Python 3.10+
+and include the native implementation. NumPy is required; the `io` extra adds
+h5py. Rust is only needed to build from source.
 
 - [Installation and first mesh](docs/site/getting-started.md)
 - [Runnable Python examples](docs/site/examples.md)
