@@ -48,10 +48,10 @@ Install the wheel matching the operating system and architecture. Python 3.10+
 uses the stable Python ABI. Wheels must be built by maintainers, with Rust, before
 distribution; installing from a source archive still requires a build toolchain.
 Use `pip install --only-binary=meshers <wheel-or-release>` to avoid a source build.
-This development version is not published on PyPI.
+Install with `python -m pip install meshers`.
 
-CI builds and tests Windows, Linux and macOS wheels. Linux and Windows x86-64 wheels
-have passed native tests; macOS still requires CI verification.
+CI builds and tests Windows, Linux and macOS wheels, including Apple Silicon
+and Intel Mac artifacts.
 Embedded JIT compilation requires permission to allocate executable memory.
 The supported NumPy fallback remains available where that is disallowed.
 

@@ -1,6 +1,6 @@
 # Changelog
 
-## 0.1.0 — release candidate (not yet published)
+## 0.1.0
 
 - Rust/Python direct tetrahedral meshing of bounded implicit functions, TPMS
   bands, callable grading and blends, with compiled expressions and gradients.
@@ -15,7 +15,7 @@
 - Robust classification/order of coincident cuts; fixes the original Microgen
   cylindrical fixture through separate TPMS/container constraints.
 - Initial manufactured linear-elasticity refinement and affine patch verification.
-- Candidate wheel/source-distribution validation and cross-platform CI.
+- Wheel/source-distribution validation, executable examples and performance regression CI.
 
 Scope: implicit tetrahedral meshing. CAD/BRep, general remeshing, universal
 minimum-quality guarantees and a solver-qualified replacement for every

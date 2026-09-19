@@ -2,14 +2,15 @@
 
 ## Install a wheel
 
-Use Python 3.10+ and a wheel matching your OS and architecture. The v0.1 candidate is not published on PyPI yet. Release artifacts target
-Linux x86-64, Windows x86-64, macOS ARM64 and macOS x86-64. Use artifacts from
-a passing release workflow; see [release checks](release.md).
+Use Python 3.10+. Wheels target Linux x86-64, Windows x86-64, macOS ARM64
+and macOS x86-64.
 
 ```sh
-uv pip install /path/to/meshers.whl h5py
-# Or: python -m pip install /path/to/meshers.whl h5py
+python -m pip install "meshers[io]"
+# Or: uv pip install "meshers[io]"
 ```
+
+For meshing without export, install `meshers` without the extra.
 
 `h5py` is needed only for VTKHDF export. NumPy is the only required Python runtime
 dependency. Installing from source requires Rust; installing a wheel does not.

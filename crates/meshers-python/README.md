@@ -1,15 +1,19 @@
 # Meshers Python 0.1.0
 
-In-process CPU float64 meshing of bounded implicit solids. This is the v0.1.0 release candidate. No subprocess or intermediate mesh file is needed.
+In-process CPU float64 meshing of bounded implicit solids. No subprocess or intermediate mesh file is needed.
 
 ## Install and use
 
-Install a prebuilt wheel matching your platform. Users need Python, not Rust,
-Numba or SymPy. The candidate has not yet been published on PyPI.
+Use Python 3.10+. Wheels are available for Linux x86-64, Windows x86-64,
+macOS Apple Silicon and macOS Intel. Users installing a wheel do not need Rust,
+Numba or SymPy.
 
 ```sh
-python -m pip install /path/to/meshers.whl h5py
+python -m pip install "meshers[io]"
 ```
+
+The base installation, `pip install meshers`, requires NumPy. The optional
+`io` extra adds h5py for VTKHDF export; it does not install a viewer.
 
 ```python
 import meshers
@@ -59,14 +63,14 @@ connectivity, metadata or diagnostics. Surface output is the closed solid bounda
 not an independent zero-level surface mesher. Small features may be missed at
 insufficient resolution; successful sampling is not geometry certification.
 
-## Verification and remaining work
+## Validation and limits
 
 The test suite covers automatic derivatives, cache invalidation, cancellation,
 periodicity, bounded callbacks, named intersections, physical coordinate scales
-and VTKHDF round trips. Linux and Windows source and wheel checks have passed
-locally. Final macOS and portable artifact checks remain required before
-publication. See the [release validation](https://github.com/kmarchais/meshers/blob/main/docs/site/release.md)
-for the tested source, platform results and remaining gates. Thin, nonsmooth or
+and VTKHDF round trips. CI tests Python 3.10, 3.12 and 3.14 on Linux, Windows
+and macOS, plus installed platform wheels and an isolated source build.
+See the [release checks](https://github.com/kmarchais/meshers/blob/main/docs/site/release.md)
+and [CI results](https://github.com/kmarchais/meshers/actions). Thin, nonsmooth or
 poorly resolved geometry still needs application-specific convergence checks.
 
 See the [runnable examples](https://github.com/kmarchais/meshers/blob/main/docs/site/examples.md) and [performance regression checks](https://github.com/kmarchais/meshers/blob/main/docs/site/performance.md).
