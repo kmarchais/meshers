@@ -14,6 +14,7 @@ from . import _meshers
 from ._meshers import CancellationToken, CancelledError, CompiledField, MeshingError
 from .expression import TraceError, compile_field
 from .intersection import generate_intersection
+from .periodic_tile import tile_periodic
 
 Field = Callable[
     [npt.NDArray[np.float64], npt.NDArray[np.float64], npt.NDArray[np.float64]],
@@ -331,22 +332,26 @@ def generate_surface(
                 f"Using NumPy callbacks: {error}", RuntimeWarning, stacklevel=2
             )
     periodic = tuple(bool(v) for v in periodic)
-    total_seconds = 0.0
+    generation_start = time.perf_counter()
     for actual_cells in range(cells, min(cells + (5 if any(periodic) else 1), 129)):
-        result = native(
-            field,
-            gradient,
-            [b[::2].tolist(), b[1::2].tolist()],
-            actual_cells,
-            band,
-            periodic,
-            smoothing_iterations,
-            improvement_rounds,
-            polish_passes,
-            batch_size,
-            cancel,
-        )
-        total_seconds += result["seconds"]
+        try:
+            result = native(
+                field,
+                gradient,
+                [b[::2].tolist(), b[1::2].tolist()],
+                actual_cells,
+                band,
+                periodic,
+                smoothing_iterations,
+                improvement_rounds,
+                polish_passes,
+                batch_size,
+                cancel,
+            )
+        except MeshingError as error:
+            if any(periodic) and "Coincident periodic surface vertices" in str(error):
+                continue
+            raise
         triangles = result["triangles"]
         vertices = result["points"][triangles]
         angles = []
@@ -388,7 +393,7 @@ def generate_surface(
         triangles,
         result["labels"],
         {
-            "seconds": total_seconds,
+            "seconds": time.perf_counter() - generation_start,
             "background_cells": actual_cells,
             "resolution_retries": actual_cells - cells,
             "minimum_angle_degrees": minimum_angle,
@@ -408,4 +413,5 @@ __all__ = [
     "generate",
     "generate_intersection",
     "generate_surface",
+    "tile_periodic",
 ]

@@ -53,6 +53,9 @@ It cannot replace all of microgen's surface generation until the quality limit
 at grazing cell-edge intersections and unsupported surface features are
 addressed.
 
+For identical repeated TPMS cells, `tile_periodic` avoids optimizing every
+copy. The measurements and its limits are in `TPMS_SCALING.md`.
+
 On Windows, all 18 core library tests and four experimental Python tests passed.
 The broader meshers integration suite was not completed for this source branch.
 

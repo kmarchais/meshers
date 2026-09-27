@@ -596,51 +596,83 @@ pub fn polish_periodic<F: ScalarField>(
         orbits.entry(key).or_default().push(i);
     }
     let orbits: Vec<_> = orbits.into_values().collect();
+    if orbits.iter().any(|orbit| orbit.len() > 8) {
+        return Err(fail("Coincident periodic surface vertices"));
+    }
+    let mut owner = vec![0; mesh.points.len()];
+    let mut slot = vec![0; mesh.points.len()];
+    let mut patches = Vec::with_capacity(orbits.len());
+    for (oi, orbit) in orbits.iter().enumerate() {
+        let mut patch: Vec<_> = orbit
+            .iter()
+            .flat_map(|&i| incident[i].iter().copied())
+            .collect();
+        patch.sort_unstable();
+        patch.dedup();
+        patches.push(patch);
+        for (j, &i) in orbit.iter().enumerate() {
+            owner[i] = oi;
+            slot[i] = j;
+        }
+    }
+    let mut neighbors = vec![Vec::new(); orbits.len()];
+    for face in &mesh.faces {
+        let ids = face.map(|i| owner[i]);
+        for &a in &ids {
+            for &b in &ids {
+                if a != b {
+                    neighbors[a].push(b);
+                }
+            }
+        }
+    }
+    for row in &mut neighbors {
+        row.sort_unstable();
+        row.dedup();
+    }
+    let mut active: Vec<_> = (0..orbits.len()).collect();
     for _ in 0..passes {
         let mut moved = 0;
-        for orbit in &orbits {
+        let mut next_active = vec![false; orbits.len()];
+        for &oi in &active {
+            let orbit = &orbits[oi];
             let base = orbit[0];
             let old = mesh.points[base];
-            let mut patch: Vec<_> = orbit
-                .iter()
-                .flat_map(|&i| incident[i].iter().copied())
-                .collect();
-            patch.sort_unstable();
-            patch.dedup();
-            let translated = |candidate: Point| -> Vec<Point> {
-                orbit
-                    .iter()
-                    .map(|&i| {
-                        std::array::from_fn(|axis| {
-                            let low = band.bounds[0][axis];
-                            let high = band.bounds[1][axis];
-                            if periodic[axis]
-                                && (mesh.points[i][axis] - low).abs() < 1e-9
-                                && (old[axis] - high).abs() < 1e-9
-                            {
-                                candidate[axis] - (high - low)
-                            } else if periodic[axis]
-                                && (mesh.points[i][axis] - high).abs() < 1e-9
-                                && (old[axis] - low).abs() < 1e-9
-                            {
-                                candidate[axis] + (high - low)
-                            } else {
-                                candidate[axis]
-                            }
-                        })
-                    })
-                    .collect()
+            let patch = &patches[oi];
+            let translated = |candidate: Point| -> [Point; 8] {
+                let mut points = [[0.; 3]; 8];
+                for (j, &i) in orbit.iter().enumerate() {
+                    points[j] = std::array::from_fn(|axis| {
+                        let low = band.bounds[0][axis];
+                        let high = band.bounds[1][axis];
+                        if periodic[axis]
+                            && (mesh.points[i][axis] - low).abs() < 1e-9
+                            && (old[axis] - high).abs() < 1e-9
+                        {
+                            candidate[axis] - (high - low)
+                        } else if periodic[axis]
+                            && (mesh.points[i][axis] - high).abs() < 1e-9
+                            && (old[axis] - low).abs() < 1e-9
+                        {
+                            candidate[axis] + (high - low)
+                        } else {
+                            candidate[axis]
+                        }
+                    });
+                }
+                points
             };
             let eval = |candidate: Point| {
                 let replacements = translated(candidate);
                 let mut loss = 0.0;
                 let mut worst = 1.0f64;
-                for &fi in &patch {
+                for &fi in patch {
                     let points = mesh.faces[fi].map(|v| {
-                        orbit
-                            .iter()
-                            .position(|&i| i == v)
-                            .map_or(mesh.points[v], |j| replacements[j])
+                        if owner[v] == oi {
+                            replacements[slot[v]]
+                        } else {
+                            mesh.points[v]
+                        }
                     });
                     let q = shape(points, mesh.labels[fi], band);
                     if q <= 0.0 || !q.is_finite() {
@@ -694,6 +726,10 @@ pub fn polish_periodic<F: ScalarField>(
                         mesh.points[i] = p;
                     }
                     moved += 1;
+                    next_active[oi] = true;
+                    for &j in &neighbors[oi] {
+                        next_active[j] = true;
+                    }
                     break;
                 }
             }
@@ -701,6 +737,11 @@ pub fn polish_periodic<F: ScalarField>(
         if moved == 0 {
             break;
         }
+        active = next_active
+            .into_iter()
+            .enumerate()
+            .filter_map(|(i, yes)| yes.then_some(i))
+            .collect();
     }
     band.field.check().map_err(MeshingError::GenerationFailed)
 }
