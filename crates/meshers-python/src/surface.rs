@@ -13,6 +13,7 @@ pub(super) fn generate_surface<'py>(
     bounds: [Point; 2],
     cells: usize,
     band: [f64; 2],
+    periodic: [bool; 3],
     smoothing_iterations: usize,
     improvement_rounds: usize,
     polish_passes: usize,
@@ -21,6 +22,11 @@ pub(super) fn generate_surface<'py>(
 ) -> PyResult<Bound<'py, PyDict>> {
     if smoothing_iterations > 100 || improvement_rounds > 100 || polish_passes > 100 {
         return Err(PyValueError::new_err("surface passes must be at most 100"));
+    }
+    if periodic.iter().any(|&v| v) && (smoothing_iterations != 0 || improvement_rounds != 0) {
+        return Err(PyValueError::new_err(
+            "periodic surfaces currently require zero smoothing and improvement rounds",
+        ));
     }
     let f = make_field(
         py,
@@ -38,9 +44,13 @@ pub(super) fn generate_surface<'py>(
     let start = std::time::Instant::now();
     let result = py.detach(|| {
         let mut mesh = triangles::extract(&geometry, cells)?;
-        triangles::smooth(&mut mesh, &geometry, smoothing_iterations)?;
-        triangles::improve(&mut mesh, &geometry, improvement_rounds)?;
-        triangles::polish(&mut mesh, &geometry, polish_passes)?;
+        if periodic.iter().any(|&v| v) {
+            triangles::polish_periodic(&mut mesh, &geometry, periodic, polish_passes)?;
+        } else {
+            triangles::smooth(&mut mesh, &geometry, smoothing_iterations)?;
+            triangles::improve(&mut mesh, &geometry, improvement_rounds)?;
+            triangles::polish(&mut mesh, &geometry, polish_passes)?;
+        }
         Ok::<_, MeshingError>(mesh)
     });
     if let Some(error) = f.error.lock().unwrap().take() {

@@ -38,6 +38,81 @@ def test_generates_closed_surface_without_tetrahedra():
     assert mesh.volume > 0
 
 
-def test_rejects_periodic_optimization_until_pairs_are_preserved():
-    with pytest.raises(NotImplementedError, match="periodic"):
-        meshers.generate_surface(gyroid, band=(-0.25, 0.25), periodic=(True,) * 3)
+def split_p(x, y, z):
+    x, y, z = (2 * np.pi * v for v in (x, y, z))
+    return (
+        1.1
+        * (
+            np.sin(2 * x) * np.cos(y) * np.sin(z)
+            + np.sin(2 * y) * np.cos(z) * np.sin(x)
+            + np.sin(2 * z) * np.cos(x) * np.sin(y)
+        )
+        - 0.2
+        * (
+            np.cos(2 * x) * np.cos(2 * y)
+            + np.cos(2 * y) * np.cos(2 * z)
+            + np.cos(2 * z) * np.cos(2 * x)
+        )
+        - 0.4 * (np.cos(2 * x) + np.cos(2 * y) + np.cos(2 * z))
+    )
+
+
+@pytest.mark.skipif(
+    not hasattr(meshers._meshers, "generate_surface"),
+    reason="requires experimental-surfaces Rust feature",
+)
+def test_split_p_periodic_surface_pairs_cap_triangles():
+    surface = meshers.generate_surface(
+        split_p,
+        bounds=(-0.5, 0.5, -0.5, 0.5, -0.5, 0.5),
+        cells=12,
+        band=(-0.25, 0.25),
+        periodic=(True,) * 3,
+    )
+    assert surface.diagnostics["minimum_angle_degrees"] > 5
+    mesh = pv.PolyData(
+        surface.points,
+        np.column_stack((np.full(len(surface.triangles), 3), surface.triangles)),
+    )
+    assert mesh.n_open_edges == 0
+    for label, level in ((0, 0.25), (1, -0.25)):
+        wall_nodes = np.unique(surface.triangles[surface.labels == label])
+        x, y, z = surface.points[wall_nodes].T
+        assert np.max(np.abs(split_p(x, y, z) - level)) < 1e-8
+    for axis in range(3):
+        caps = []
+        for side in range(2):
+            triangles = surface.triangles[surface.labels == 2 + 2 * axis + side]
+            points = surface.points[triangles].copy()
+            points[:, :, axis] = 0
+            rounded = np.rint(points * 1e9).astype(np.int64)
+            caps.append({tuple(sorted(map(tuple, face))) for face in rounded})
+        assert caps[0]
+        assert caps[0] == caps[1]
+
+
+def test_periodic_surface_rejects_unpaired_topology_edits():
+    with pytest.raises(ValueError, match="zero smoothing and improvement"):
+        meshers.generate_surface(
+            gyroid,
+            band=(-0.25, 0.25),
+            periodic=(True,) * 3,
+            improvement_rounds=1,
+        )
+
+
+@pytest.mark.skipif(
+    not hasattr(meshers._meshers, "generate_surface"),
+    reason="requires experimental-surfaces Rust feature",
+)
+def test_periodic_gyroid_retries_degenerate_grid_alignment():
+    surface = meshers.generate_surface(
+        gyroid,
+        bounds=(-0.5, 0.5, -0.5, 0.5, -0.5, 0.5),
+        cells=24,
+        band=(-0.25, 0.25),
+        periodic=(True,) * 3,
+    )
+    assert surface.diagnostics["background_cells"] == 26
+    assert surface.diagnostics["resolution_retries"] == 2
+    assert surface.diagnostics["minimum_angle_degrees"] > 15

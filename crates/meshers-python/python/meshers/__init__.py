@@ -291,9 +291,9 @@ def generate_surface(
     cells: int = 24,
     band: tuple[float, float],
     periodic: Sequence[bool] = (False, False, False),
-    smoothing_iterations: int = 10,
-    improvement_rounds: int = 12,
-    polish_passes: int = 40,
+    smoothing_iterations: int | None = None,
+    improvement_rounds: int | None = None,
+    polish_passes: int | None = None,
     gradient: Field | None = None,
     batch_size: int = 4096,
     cancel: CancellationToken | None = None,
@@ -301,11 +301,19 @@ def generate_surface(
 ) -> SurfaceMesh:
     """Extract a clipped implicit-band surface without building tetrahedra.
 
-    This research API needs a build with ``experimental-surfaces``. Its optimizer
-    does not yet preserve periodic face pairing.
+    This research API needs a build with ``experimental-surfaces``. Periodic
+    surfaces use paired vertex polishing without topology edits.
     """
-    if any(periodic):
-        raise NotImplementedError("periodic surface optimization is not yet supported")
+    if len(periodic) != 3:
+        raise ValueError("periodic must contain three booleans")
+    if not 4 <= cells <= 128:
+        raise ValueError("Surface cells must be in 4..=128")
+    if smoothing_iterations is None:
+        smoothing_iterations = 0 if any(periodic) else 10
+    if improvement_rounds is None:
+        improvement_rounds = 0 if any(periodic) else 12
+    if polish_passes is None:
+        polish_passes = 10 if any(periodic) else 40
     native = getattr(_meshers, "generate_surface", None)
     if native is None:
         raise NotImplementedError("rebuild meshers with experimental-surfaces")
@@ -322,40 +330,68 @@ def generate_surface(
             warnings.warn(
                 f"Using NumPy callbacks: {error}", RuntimeWarning, stacklevel=2
             )
-    result = native(
-        field,
-        gradient,
-        [b[::2].tolist(), b[1::2].tolist()],
-        cells,
-        band,
-        smoothing_iterations,
-        improvement_rounds,
-        polish_passes,
-        batch_size,
-        cancel,
-    )
-    triangles = result["triangles"]
-    vertices = result["points"][triangles]
-    angles = []
-    for axis in range(3):
-        a = vertices[:, (axis + 1) % 3] - vertices[:, axis]
-        b = vertices[:, (axis + 2) % 3] - vertices[:, axis]
-        angles.append(
-            np.degrees(
-                np.arctan2(
-                    np.linalg.norm(np.cross(a, b), axis=1),
-                    np.einsum("ij,ij->i", a, b),
+    periodic = tuple(bool(v) for v in periodic)
+    total_seconds = 0.0
+    for actual_cells in range(cells, min(cells + (5 if any(periodic) else 1), 129)):
+        result = native(
+            field,
+            gradient,
+            [b[::2].tolist(), b[1::2].tolist()],
+            actual_cells,
+            band,
+            periodic,
+            smoothing_iterations,
+            improvement_rounds,
+            polish_passes,
+            batch_size,
+            cancel,
+        )
+        total_seconds += result["seconds"]
+        triangles = result["triangles"]
+        vertices = result["points"][triangles]
+        angles = []
+        for axis in range(3):
+            a = vertices[:, (axis + 1) % 3] - vertices[:, axis]
+            edge_b = vertices[:, (axis + 2) % 3] - vertices[:, axis]
+            angles.append(
+                np.degrees(
+                    np.arctan2(
+                        np.linalg.norm(np.cross(a, edge_b), axis=1),
+                        np.einsum("ij,ij->i", a, edge_b),
+                    )
                 )
             )
+        minimum_angle = float(np.min(angles))
+        if not any(periodic):
+            break
+        matching = True
+        for axis, is_periodic in enumerate(periodic):
+            if not is_periodic:
+                continue
+            caps = []
+            for side in range(2):
+                cap_faces = triangles[result["labels"] == 2 + 2 * axis + side]
+                cap_points = result["points"][cap_faces].copy()
+                cap_points[:, :, axis] = 0
+                rounded = np.rint(cap_points * 1e9).astype(np.int64)
+                caps.append({tuple(sorted(map(tuple, face))) for face in rounded})
+            matching &= caps[0] == caps[1]
+        if matching and (minimum_angle >= 5.0 or polish_passes == 0):
+            break
+    else:
+        raise MeshingError(
+            "Periodic surface did not reach 5 degrees with matching caps "
+            f"at resolutions {cells}..{actual_cells}"
         )
     return SurfaceMesh(
         result["points"],
         triangles,
         result["labels"],
         {
-            "seconds": result["seconds"],
-            "background_cells": cells,
-            "minimum_angle_degrees": float(np.min(angles)),
+            "seconds": total_seconds,
+            "background_cells": actual_cells,
+            "resolution_retries": actual_cells - cells,
+            "minimum_angle_degrees": minimum_angle,
         },
     )
 

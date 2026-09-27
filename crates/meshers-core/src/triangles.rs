@@ -565,6 +565,146 @@ pub fn polish<F: ScalarField>(
     band.field.check().map_err(MeshingError::GenerationFailed)
 }
 
+/// Move periodic copies as one vertex while keeping the extracted cap connectivity.
+/// The input must be a periodic field on the requested bounds. This deliberately
+/// avoids topology edits, which would need paired operations on opposite caps.
+pub fn polish_periodic<F: ScalarField>(
+    mesh: &mut TriangleMesh,
+    band: &Band<'_, F>,
+    periodic: [bool; 3],
+    passes: usize,
+) -> Result<()> {
+    smooth_impl(mesh, band, 0, true)?;
+    let mut incident = vec![Vec::new(); mesh.points.len()];
+    let mut masks = vec![0u8; mesh.points.len()];
+    for (fi, face) in mesh.faces.iter().enumerate() {
+        for &v in face {
+            incident[v].push(fi);
+            masks[v] |= 1 << mesh.labels[fi];
+        }
+    }
+    let mut orbits = std::collections::BTreeMap::<[i64; 3], Vec<usize>>::new();
+    for (i, p) in mesh.points.iter().enumerate() {
+        let key = std::array::from_fn(|axis| {
+            let width = band.bounds[1][axis] - band.bounds[0][axis];
+            let mut value = (p[axis] - band.bounds[0][axis]) / width;
+            if periodic[axis] && (value - 1.0).abs() < 1e-9 {
+                value = 0.0;
+            }
+            (value * 1e9).round() as i64
+        });
+        orbits.entry(key).or_default().push(i);
+    }
+    let orbits: Vec<_> = orbits.into_values().collect();
+    for _ in 0..passes {
+        let mut moved = 0;
+        for orbit in &orbits {
+            let base = orbit[0];
+            let old = mesh.points[base];
+            let mut patch: Vec<_> = orbit
+                .iter()
+                .flat_map(|&i| incident[i].iter().copied())
+                .collect();
+            patch.sort_unstable();
+            patch.dedup();
+            let translated = |candidate: Point| -> Vec<Point> {
+                orbit
+                    .iter()
+                    .map(|&i| {
+                        std::array::from_fn(|axis| {
+                            let low = band.bounds[0][axis];
+                            let high = band.bounds[1][axis];
+                            if periodic[axis]
+                                && (mesh.points[i][axis] - low).abs() < 1e-9
+                                && (old[axis] - high).abs() < 1e-9
+                            {
+                                candidate[axis] - (high - low)
+                            } else if periodic[axis]
+                                && (mesh.points[i][axis] - high).abs() < 1e-9
+                                && (old[axis] - low).abs() < 1e-9
+                            {
+                                candidate[axis] + (high - low)
+                            } else {
+                                candidate[axis]
+                            }
+                        })
+                    })
+                    .collect()
+            };
+            let eval = |candidate: Point| {
+                let replacements = translated(candidate);
+                let mut loss = 0.0;
+                let mut worst = 1.0f64;
+                for &fi in &patch {
+                    let points = mesh.faces[fi].map(|v| {
+                        orbit
+                            .iter()
+                            .position(|&i| i == v)
+                            .map_or(mesh.points[v], |j| replacements[j])
+                    });
+                    let q = shape(points, mesh.labels[fi], band);
+                    if q <= 0.0 || !q.is_finite() {
+                        return (f64::INFINITY, q);
+                    }
+                    worst = worst.min(q);
+                    loss += -q.ln() + 100.0 * (0.75 - q).max(0.0).powi(2);
+                }
+                (loss, worst)
+            };
+            let (before, worst) = eval(old);
+            if worst >= 0.76 {
+                continue;
+            }
+            let edge = incident[base]
+                .iter()
+                .flat_map(|&fi| mesh.faces[fi])
+                .filter(|&v| v != base)
+                .map(|v| dot(sub(mesh.points[v], old), sub(mesh.points[v], old)).sqrt())
+                .sum::<f64>()
+                / (2 * incident[base].len()) as f64;
+            let h = edge * 1e-4;
+            let gradient: Point = std::array::from_fn(|axis| {
+                let mut a = old;
+                let mut b = old;
+                a[axis] += h;
+                b[axis] -= h;
+                (eval(a).0 - eval(b).0) / (2.0 * h)
+            });
+            let length = dot(gradient, gradient).sqrt();
+            if !length.is_finite() || length < 1e-14 {
+                continue;
+            }
+            for attempt in 0..16 {
+                let step = 0.2 * edge / length * 0.5f64.powi(attempt);
+                let candidate = std::array::from_fn(|axis| old[axis] - step * gradient[axis]);
+                let Ok(candidate) = band.project(candidate, masks[base]) else {
+                    continue;
+                };
+                let replacements = translated(candidate);
+                if orbit.iter().zip(&replacements).any(|(&i, &p)| {
+                    let value = band.field.value(p);
+                    !value.is_finite()
+                        || (masks[i] & 3 == 0 && (value < band.levels[0] || value > band.levels[1]))
+                }) {
+                    continue;
+                }
+                let (loss, next_worst) = eval(candidate);
+                if loss < before - 1e-12 && next_worst >= worst.min(0.65) - 1e-12 {
+                    for (&i, &p) in orbit.iter().zip(&replacements) {
+                        mesh.points[i] = p;
+                    }
+                    moved += 1;
+                    break;
+                }
+            }
+        }
+        if moved == 0 {
+            break;
+        }
+    }
+    band.field.check().map_err(MeshingError::GenerationFailed)
+}
+
 fn collapse_slivers<F: ScalarField>(mesh: &mut TriangleMesh, band: &Band<'_, F>) -> Result<()> {
     use std::collections::{BTreeMap, BTreeSet};
     let mut edges = BTreeMap::<(usize, usize), Vec<usize>>::new();
