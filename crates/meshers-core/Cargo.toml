@@ -7,6 +7,9 @@ rust-version.workspace = true
 license.workspace = true
 repository.workspace = true
 
+[features]
+experimental-surfaces = []
+
 [dependencies]
 rayon = "1.11"
 serde = { version = "1", features = ["derive"] }

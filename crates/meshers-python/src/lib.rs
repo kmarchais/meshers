@@ -1,5 +1,7 @@
 mod compiled;
 mod intersection;
+#[cfg(feature = "experimental-surfaces")]
+mod surface;
 use meshers_core::{
     MeshingError, Point,
     implicit::{self, ScalarField},
@@ -461,6 +463,8 @@ fn _meshers(m: &Bound<'_, PyModule>) -> PyResult<()> {
     m.add_class::<compiled::CompiledField>()?;
     m.add_function(wrap_pyfunction!(compiled::_compile_expression, m)?)?;
     m.add_function(wrap_pyfunction!(generate, m)?)?;
+    #[cfg(feature = "experimental-surfaces")]
+    m.add_function(wrap_pyfunction!(surface::generate_surface, m)?)?;
     m.add_function(wrap_pyfunction!(intersection::generate_intersection, m)?)?;
     m.add_class::<CancellationToken>()?;
     m.add("MeshingError", m.py().get_type::<MeshingFailure>())?;

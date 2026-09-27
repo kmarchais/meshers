@@ -10,6 +10,9 @@ license = "MIT"
 [lib]
 name = "_meshers"
 crate-type = ["cdylib"]
+[features]
+experimental-surfaces = ["meshers-core/experimental-surfaces"]
+
 [dependencies]
 meshers-core = { version = "0.1.0", path = "../meshers-core" }
 pyo3 = { version = "0.28", features = ["extension-module", "abi3-py310"] }

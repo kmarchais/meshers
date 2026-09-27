@@ -77,11 +77,13 @@ class Mesh:
             return np.empty((0, 2), dtype=np.int64)
         edges = np.unique(
             np.sort(
-                np.concatenate([
-                    self.surface[:, [0, 1]],
-                    self.surface[:, [1, 2]],
-                    self.surface[:, [2, 0]],
-                ]),
+                np.concatenate(
+                    [
+                        self.surface[:, [0, 1]],
+                        self.surface[:, [1, 2]],
+                        self.surface[:, [2, 0]],
+                    ]
+                ),
                 axis=1,
             ),
             axis=0,
@@ -136,7 +138,9 @@ class Mesh:
                     for j in range(i + 1, 4)
                 )
                 data["Volume"] = determinant / 6
-                data["MMGQuality"] = np.sqrt(np.maximum(432 * determinant**2 / edge_sum**3, 0))
+                data["MMGQuality"] = np.sqrt(
+                    np.maximum(432 * determinant**2 / edge_sum**3, 0)
+                )
             data = g.create_group("PointData")
             data["PeriodicMasterId"] = masters
             data["PeriodicShift"] = points - points[masters]
@@ -151,7 +155,9 @@ class Mesh:
                 metadata[f"PeriodicPairs{axis}"] = pairs
             if self.constraint_names:
                 metadata["ConstraintNamesUTF8"] = np.frombuffer(
-                    json.dumps(self.constraint_names, ensure_ascii=False).encode("utf-8"),
+                    json.dumps(self.constraint_names, ensure_ascii=False).encode(
+                        "utf-8"
+                    ),
                     dtype=np.uint8,
                 )
                 metadata["FeatureEdges"] = self.feature_edges
@@ -241,7 +247,9 @@ def generate(
             gradient = None
             evaluator = "compiled"
         except TraceError as error:
-            warnings.warn(f"Using NumPy callbacks: {error}", RuntimeWarning, stacklevel=2)
+            warnings.warn(
+                f"Using NumPy callbacks: {error}", RuntimeWarning, stacklevel=2
+            )
     preparation_seconds = time.perf_counter() - preparation_start
     result = _meshers.generate(
         field,
@@ -266,14 +274,102 @@ def generate(
     return Mesh(**result)
 
 
+@dataclass(frozen=True)
+class SurfaceMesh:
+    """Experimental surface-only triangles. Labels 0/1 are implicit walls, 2..7 caps."""
+
+    points: npt.NDArray[np.float64]
+    triangles: npt.NDArray[np.int64]
+    labels: npt.NDArray[np.uint8]
+    diagnostics: dict
+
+
+def generate_surface(
+    field: str | Field | CompiledField,
+    *,
+    bounds: Sequence[float] = (0.0, 1.0, 0.0, 1.0, 0.0, 1.0),
+    cells: int = 24,
+    band: tuple[float, float],
+    periodic: Sequence[bool] = (False, False, False),
+    smoothing_iterations: int = 10,
+    improvement_rounds: int = 12,
+    polish_passes: int = 40,
+    gradient: Field | None = None,
+    batch_size: int = 4096,
+    cancel: CancellationToken | None = None,
+    compile: bool = True,
+) -> SurfaceMesh:
+    """Extract a clipped implicit-band surface without building tetrahedra.
+
+    This research API needs a build with ``experimental-surfaces``. Its optimizer
+    does not yet preserve periodic face pairing.
+    """
+    if any(periodic):
+        raise NotImplementedError("periodic surface optimization is not yet supported")
+    native = getattr(_meshers, "generate_surface", None)
+    if native is None:
+        raise NotImplementedError("rebuild meshers with experimental-surfaces")
+    b = np.asarray(bounds, dtype=float)
+    if b.shape != (6,) or not np.all(np.isfinite(b)) or np.any(b[1::2] <= b[::2]):
+        raise ValueError("bounds must contain three finite increasing intervals")
+    if len(band) != 2 or not np.all(np.isfinite(band)) or band[0] >= band[1]:
+        raise ValueError("band must contain two finite increasing levels")
+    if callable(field) and not isinstance(field, CompiledField) and compile:
+        try:
+            field = compile_field(field, gradient=gradient)
+            gradient = None
+        except TraceError as error:
+            warnings.warn(
+                f"Using NumPy callbacks: {error}", RuntimeWarning, stacklevel=2
+            )
+    result = native(
+        field,
+        gradient,
+        [b[::2].tolist(), b[1::2].tolist()],
+        cells,
+        band,
+        smoothing_iterations,
+        improvement_rounds,
+        polish_passes,
+        batch_size,
+        cancel,
+    )
+    triangles = result["triangles"]
+    vertices = result["points"][triangles]
+    angles = []
+    for axis in range(3):
+        a = vertices[:, (axis + 1) % 3] - vertices[:, axis]
+        b = vertices[:, (axis + 2) % 3] - vertices[:, axis]
+        angles.append(
+            np.degrees(
+                np.arctan2(
+                    np.linalg.norm(np.cross(a, b), axis=1),
+                    np.einsum("ij,ij->i", a, b),
+                )
+            )
+        )
+    return SurfaceMesh(
+        result["points"],
+        triangles,
+        result["labels"],
+        {
+            "seconds": result["seconds"],
+            "background_cells": cells,
+            "minimum_angle_degrees": float(np.min(angles)),
+        },
+    )
+
+
 __all__ = [
     "CancellationToken",
     "CancelledError",
     "CompiledField",
     "Field",
     "Mesh",
+    "SurfaceMesh",
     "MeshingError",
     "compile_field",
     "generate",
     "generate_intersection",
+    "generate_surface",
 ]

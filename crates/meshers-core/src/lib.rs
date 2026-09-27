@@ -9,6 +9,10 @@ pub mod accelerator;
 mod error;
 mod geometry;
 pub mod implicit;
+#[cfg(feature = "experimental-surfaces")]
+pub mod surface_band;
+#[cfg(feature = "experimental-surfaces")]
+pub mod triangles;
 pub use error::MeshingError;
 use geometry::Geometry;
 mod profile;
