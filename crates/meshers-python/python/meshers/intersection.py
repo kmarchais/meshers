@@ -259,7 +259,9 @@ def generate_intersection(
             estimate. None skips this relatively expensive check. This is an
             acceptance gate, not adaptive refinement or a Hausdorff bound.
         minimum_quality: Required final minimum MMG quality, 0-1; zero disables gate.
-        optimize_passes: Integrated constrained optimization rounds, 0-20.
+        optimize_passes: Requested constrained optimization rounds, 0-20. With a
+            positive quality gate, up to four extra rounds may be used before
+            rejecting a mesh. Zero leaves optimization disabled.
         snap: Joint background snap fraction, 0-0.2.
         max_tetrahedra: Output element budget.
         compile: Automatically compile supported field and map expressions.

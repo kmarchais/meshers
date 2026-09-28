@@ -92,18 +92,36 @@ slab's sampled surface error was 0.0043 and 0.0037, below the requested 0.01.
 These are different tetrahedralizations of the same geometric sheet, so the
 times are not a controlled measure of the optimizer alone. In particular,
 the legacy microgen volume has mixed cell types and no MMG-quality gate.
-The MMG executable was unavailable, so an end-to-end microgen-plus-MMG timing
-was not measured.
+The complete microgen plus MMG workflow is compared below.
 
 When thickness is `0.6 + (0.1/3)*(x+y+z)`, no axis can be tiled. At two units,
 legacy microgen took 0.91 seconds for 68k mixed cells; the meshers path took
 4.61 seconds for 133k tetrahedra with minimum MMG quality 0.113. At three
-units, legacy microgen took 0.98 seconds for 234k mixed cells; microgen's
-meshers adapter took 14.15 seconds for 458k tetrahedra with minimum quality
-0.098. Calling meshers directly took 13.95 seconds for the identical mesh.
-The three-unit output would fail the adapter's default 0.1 quality gate; the
-benchmark disabled that gate to measure its raw generation time. These results
-do not support a general speedup for fully graded domains.
+units, legacy microgen took 0.98 seconds for 234k mixed cells. With its 0.1
+quality gate enabled, direct meshers took 15.05 seconds for 458k tetrahedra
+with minimum quality 0.117 and 0.00524 sampled surface error. The microgen
+meshers adapter produced the same mesh in 14.55 seconds. The optimizer used
+five passes, one more than its default four, because the fourth pass reached
+only 0.098. This is a controlled improvement over rejecting the mesh or
+rerunning the entire generator. Unremeshed VTK output remains much faster;
+the complete workflow is the relevant comparison for FEM-ready tetrahedra.
+
+For that comparison, `pymmg` 1.0.0 provided MMG3D 5.7.0. The existing
+`remesh_keeping_boundaries_for_fem` routine triangulates microgen's mixed
+cells, writes required boundary triangles, and runs two MMG3D passes. A
+Windows temporary-file fix was needed to let meshio reopen its input file.
+After one warm-up, four alternating fresh-process runs of the one-unit,
+three-axis-graded case had median times of 0.345 seconds for direct meshers
+and 3.43 seconds for microgen plus MMG. Meshers returned 15,831 tetrahedra
+with minimum MMG quality 0.120 and first-percentile quality 0.200. MMG
+returned 9,160 tetrahedra with minimum quality 0.0123 and first-percentile
+quality 0.0989. Meshers' peak process working set was about 44 MB versus
+489 MB for the microgen Python process; the latter excludes the MMG child
+process. The two-unit MMG run was stopped after more
+than four minutes of MMG CPU work without producing an output mesh, so its
+final quality and total time remain unknown. The one-unit output counts differ,
+and the MMG version and size controls matter; larger matched-quality
+measurements are still needed before claiming a general speedup.
 
 The direct periodic surface path has a separate scaling issue. At two units,
 10 polish passes did not reach its 5-degree angle requirement; 40 passes

@@ -56,6 +56,19 @@ def test_named_intersection_quality_and_export(tmp_path):
     )
 
 
+def test_quality_gate_can_use_one_extra_optimization_pass():
+    mesh = meshers.generate_intersection(
+        constraints(),
+        cells=8,
+        snap=0,
+        periodic=(False, False, True),
+        optimize_passes=2,
+        minimum_quality=0.1,
+    )
+    assert mesh.diagnostics["minimum_mmg_quality"] >= 0.1
+    assert mesh.diagnostics["quality_optimization_passes"] == 3
+
+
 def test_rotational_periodicity():
     radius = 3.0
     angle = 1 / radius

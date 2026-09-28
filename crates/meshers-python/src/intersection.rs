@@ -136,6 +136,10 @@ pub(super) fn generate_intersection<'py>(
         "accepted_reconnections",
         result.quality.accepted_reconnections,
     )?;
+    d.set_item(
+        "quality_optimization_passes",
+        result.quality.quality_optimization_passes,
+    )?;
     d.set_item("seconds", start.elapsed().as_secs_f64())?;
     d.set_item("threads", 1)?;
     d.set_item(

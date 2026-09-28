@@ -34,6 +34,7 @@ pub struct QualityDiagnostics {
     pub collapsed_vertices: usize,
     pub accepted_vertex_moves: usize,
     pub accepted_reconnections: usize,
+    pub quality_optimization_passes: usize,
 }
 
 struct Cutter<'a> {
@@ -517,7 +518,12 @@ fn generate_with_map(
         output.quality.initial_minimum_quality = output.quality.initial_minimum_quality.min(q);
         output.quality.initial_elements_below_01 += usize::from(q < 0.1);
     }
-    for _ in 0..options.optimize_passes {
+    let maximum_passes = if options.minimum_quality > 0. && options.optimize_passes > 0 {
+        (options.optimize_passes + 4).min(20)
+    } else {
+        options.optimize_passes
+    };
+    for pass in 0..maximum_passes {
         for field in fields {
             field.check()?;
         }
@@ -533,23 +539,22 @@ fn generate_with_map(
         output.quality.collapsed_vertices += collapsed;
         output.quality.accepted_vertex_moves += moved;
         output.quality.accepted_reconnections += flipped;
+        output.quality.quality_optimization_passes += 1;
         if collapsed == 0 && moved == 0 && flipped == 0 {
+            break;
+        }
+        if pass + 1 >= options.optimize_passes
+            && options.minimum_quality > 0.
+            && score_quality(&output.mesh)?.0 >= options.minimum_quality
+        {
             break;
         }
     }
     if output.mesh.tets.len() > options.max_tetrahedra {
         return Err("quality improvement exhausted tetrahedron budget".into());
     }
-    let mut minimum: f64 = 1.;
-    for t in &output.mesh.tets {
-        let p = t.map(|i| output.mesh.points[i]);
-        let q = quality(p).powf(1.5);
-        if !q.is_finite() || q <= 0. || determinant(p) <= 0. {
-            return Err("invalid element after quality improvement".into());
-        }
-        minimum = minimum.min(q);
-        output.quality.elements_below_01 += usize::from(q < 0.1);
-    }
+    let (minimum, below_01) = score_quality(&output.mesh)?;
+    output.quality.elements_below_01 = below_01;
     output.quality.minimum_quality = minimum;
     if !output.mesh.tets.is_empty() && minimum < options.minimum_quality {
         return Err(format!(
@@ -558,6 +563,21 @@ fn generate_with_map(
         ));
     }
     Ok(output)
+}
+
+fn score_quality(mesh: &Mesh) -> Result<(f64, usize), String> {
+    let mut minimum: f64 = 1.;
+    let mut below_01 = 0;
+    for t in &mesh.tets {
+        let p = t.map(|i| mesh.points[i]);
+        let q = quality(p).powf(1.5);
+        if !q.is_finite() || q <= 0. || determinant(p) <= 0. {
+            return Err("invalid element after quality improvement".into());
+        }
+        minimum = minimum.min(q);
+        below_01 += usize::from(q < 0.1);
+    }
+    Ok((minimum, below_01))
 }
 
 fn orient_and_score(tets: Vec<Tet>, points: &[Point]) -> Result<(Vec<Tet>, f64), String> {
