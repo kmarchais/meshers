@@ -287,6 +287,46 @@ pub extern "C" fn meshers_clear() {
 mod tests {
     use super::*;
     #[test]
+    #[ignore = "manual opt-in optimizer experiment matrix"]
+    fn profile_optimizer_matrix() {
+        use std::hash::{Hash, Hasher};
+        for (name, shape, repeat, resolution, grade) in [
+            ("gyroid", 0, 1, 16, 0.),
+            ("split-p", 1, 1, 16, 0.),
+            ("schwarz-p", 2, 1, 16, 0.),
+            ("graded-gyroid-2", 0, 2, 12, 0.3),
+            ("graded-split-p-2", 1, 2, 12, 0.3),
+        ] {
+            let mut times = Vec::new();
+            let mut output = Value::Null;
+            for _ in 0..3 {
+                let start = std::time::Instant::now();
+                output = match generate(shape, 2, repeat, resolution, 0.6, grade) {
+                    Ok(mesh) => mesh,
+                    Err(error) => {
+                        println!(
+                            "EXPERIMENT {}",
+                            json!({"case":name,"error":error,"seconds":start.elapsed().as_secs_f64()})
+                        );
+                        break;
+                    }
+                };
+                times.push(start.elapsed().as_secs_f64());
+            }
+            if output.is_null() {
+                continue;
+            }
+            times.sort_by(f64::total_cmp);
+            let mut hash = std::collections::hash_map::DefaultHasher::new();
+            serde_json::to_vec(&output).unwrap().hash(&mut hash);
+            println!(
+                "EXPERIMENT {}",
+                json!({"case":name,"seconds":times[1],"times":times,
+                "fingerprint":format!("{:016x}",hash.finish()),"tets":output["tetrahedra"].as_array().unwrap().len(),"metrics":output["metrics"]})
+            );
+        }
+    }
+    #[test]
     #[ignore = "manual native adapter benchmark"]
     fn profile_fea_generation() {
         for shape in [0, 1] {

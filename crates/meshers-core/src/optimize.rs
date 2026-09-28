@@ -1,6 +1,9 @@
 //! Local vertex optimization, with translated boundary nodes moved as one group.
 #[path = "optimize_batch.rs"]
 mod batch;
+#[cfg(feature = "optimizer-experiments")]
+#[path = "optimize_experiments.rs"]
+mod experiments;
 use crate::accelerator::Group;
 use crate::{Mesh, Point, determinant, dot, norm, sub};
 use rayon::prelude::*;
@@ -140,10 +143,18 @@ pub(crate) fn optimize_for(
         }
     };
     if threads == 0 && accelerator.is_none() {
+        #[cfg(feature = "optimizer-experiments")]
+        let mut active = experiments::Active::new(mesh, &groups);
         for pass in 0..passes {
+            #[cfg(feature = "optimizer-experiments")]
+            active.begin_pass(pass);
             for (index, group) in groups.iter().enumerate() {
                 if index % 128 == 0 {
                     geometry.check()?;
+                }
+                #[cfg(feature = "optimizer-experiments")]
+                if !active.visit(index) {
+                    continue;
                 }
                 let delta = if geometry.batched() {
                     batch::proposals(
@@ -169,6 +180,8 @@ pub(crate) fn optimize_for(
                     )
                 };
                 apply(mesh, group, delta);
+                #[cfg(feature = "optimizer-experiments")]
+                active.update(index, delta);
             }
         }
         cpu_profile.mark("serial_iterations");
@@ -428,18 +441,28 @@ fn proposal(
         }
     }
     // Finite differences of a smooth penalty focus work on poor tets.
+    #[cfg(feature = "optimizer-experiments")]
+    let experimental_direction =
+        experiments::direction(mesh, group, threshold, h, surface_weight, level, geometry);
+    #[cfg(not(feature = "optimizer-experiments"))]
+    let experimental_direction: Option<Point> = None;
     let eps = h * 0.002;
     let mut direction = [0.; 3];
-    for a in 0..3 {
-        let mut lo = original;
-        lo[a] -= eps;
-        let mut hi = original;
-        hi[a] += eps;
-        let c0 = project(lo, original, level, geometry).map_or(old_cost, |p| evaluate(p).1);
-        let c1 = project(hi, original, level, geometry).map_or(old_cost, |p| evaluate(p).1);
-        if c0.is_finite() && c1.is_finite() {
-            direction[a] = c0 - c1;
+    if experimental_direction.is_none() {
+        for a in 0..3 {
+            let mut lo = original;
+            lo[a] -= eps;
+            let mut hi = original;
+            hi[a] += eps;
+            let c0 = project(lo, original, level, geometry).map_or(old_cost, |p| evaluate(p).1);
+            let c1 = project(hi, original, level, geometry).map_or(old_cost, |p| evaluate(p).1);
+            if c0.is_finite() && c1.is_finite() {
+                direction[a] = c0 - c1;
+            }
         }
+    }
+    if let Some(analytic) = experimental_direction {
+        direction = analytic;
     }
     let length = norm(direction);
     if length > 1e-15 {

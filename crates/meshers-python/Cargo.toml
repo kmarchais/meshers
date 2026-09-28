@@ -12,6 +12,7 @@ name = "_meshers"
 crate-type = ["cdylib"]
 [features]
 experimental-surfaces = ["meshers-core/experimental-surfaces"]
+optimizer-experiments = ["meshers-core/optimizer-experiments"]
 
 [dependencies]
 meshers-core = { version = "0.1.0", path = "../meshers-core" }
