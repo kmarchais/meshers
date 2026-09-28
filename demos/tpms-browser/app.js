@@ -56,6 +56,8 @@ new ResizeObserver(() => {
   const { width, height } = $("viewport").getBoundingClientRect();
   renderer.setSize(width, height, false);
   camera.aspect = width / height;
+  // Keep the whole cell visible in the narrow in-app browser panel.
+  camera.zoom = Math.min(1, camera.aspect);
   camera.updateProjectionMatrix();
 }).observe($("viewport"));
 function frame() {
