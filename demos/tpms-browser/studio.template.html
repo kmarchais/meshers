@@ -322,7 +322,7 @@
         font-size: 12px;
         z-index: 3;
       }
-      .status-panel[hidden] {
+      [hidden] {
         display: none;
       }
       .status-panel.error {
@@ -539,7 +539,7 @@
         <div class="presets">
           <button class="preset active" data-preset="0">
             <strong>Quick view</strong
-            ><small>Fast surface · linear intersections</small></button
+            ><small>Live GPU shader · no mesh</small></button
           ><button class="preset" data-preset="1">
             <strong>3D printing</strong
             ><small>Fine surface · exact intersections</small></button
@@ -596,7 +596,7 @@
         ><input id="cell-size" type="range" min="1" max="30" value="10" />
         <button class="primary" id="generate">Generate mesh</button
         ><button class="secondary" id="compare">
-          Compare all three presets
+          Compare printing and FEA
         </button>
         <div id="stale" aria-live="polite"></div>
       </aside>
@@ -644,7 +644,7 @@
         <div>
           <div class="metric">
             <div class="value" id="time">—</div>
-            <div class="label">Generation + validation + serialization</div>
+            <div class="label" id="time-label">Display frame rate</div>
           </div>
           <div class="metric">
             <div class="value" id="triangles">—</div>
@@ -728,10 +728,13 @@
     </section>
     <footer class="foot">
       <p>
-        Runs locally in WebAssembly. No geometry is uploaded. Presets are
-        experimental settings, not certification for printing or analysis.
+        Preview runs on your GPU; meshing runs locally in WebAssembly. No
+        geometry is uploaded. Presets are experimental settings, not
+        certification for printing or analysis.
       </p>
       <p>
+        Quick view renders the implicit field on the GPU without generating a
+        mesh. Thin features may be missed at the preview pixel and step limits.
         Printing uses exact intersections without triangle polishing. Deviation
         is a first-order distance estimate at triangle centroids, not a maximum
         error bound. Closure checks edge incidence and orientation, not

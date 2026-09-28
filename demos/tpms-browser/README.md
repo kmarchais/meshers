@@ -2,6 +2,8 @@
 
 Experimental local browser demo of meshers. The standalone HTML bundles the Rust WASM engine, Three.js, controls and worker code. It needs no server or network after download. Generation runs in a dedicated worker; Stop terminates that worker.
 
+Quick view raymarches the implicit TPMS field in a GPU fragment shader, without generating a mesh or loading the WASM engine. Geometry, repeats, offset, grading and cut update live. The frame-rate display includes browser frame pacing and is not a mesh-generation benchmark. Finite ray steps and pixel tolerance can miss thin features. Mesh checks and exports are disabled in this view. Printing and FEA generate real meshes; the comparison button runs those two modes. The library's numeric preset 0 still generates a linear surface for callers that need it.
+
 Build from the meshers repository:
 
 ```powershell

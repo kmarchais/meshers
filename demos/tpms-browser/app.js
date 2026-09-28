@@ -1,5 +1,6 @@
 import * as THREE from "three";
 import { stlBytes, vtuText } from "./exports.js";
+import { createPreview } from "./preview.js";
 import { OrbitControls } from "three/addons/controls/OrbitControls.js";
 
 const $ = (id) => document.getElementById(id);
@@ -17,6 +18,9 @@ let preset = 0,
 let wire = false,
   quality = false,
   tetWire = false;
+let preview = null,
+  frameStart = performance.now(),
+  frameCount = 0;
 const scene = new THREE.Scene();
 const camera = new THREE.PerspectiveCamera(38, 1, 0.01, 100);
 camera.position.set(1.9, 1.45, 2.1);
@@ -64,6 +68,16 @@ function frame() {
   requestAnimationFrame(frame);
   controls.update();
   renderer.render(scene, camera);
+  if (preview) {
+    frameCount++;
+    const now = performance.now();
+    if (now - frameStart >= 1000) {
+      $("time").textContent =
+        `${Math.round((frameCount * 1000) / (now - frameStart))} fps`;
+      frameStart = now;
+      frameCount = 0;
+    }
+  }
 }
 frame();
 
@@ -95,7 +109,12 @@ function labels() {
   $("resolution-value").textContent = c.resolution;
   $("cell-size-value").textContent = `${c.cellSize} mm`;
   $("budget").textContent =
-    `${c.repeat * c.resolution - 1} grid divisions per domain axis.`;
+    preset === 0
+      ? "Live GPU preview. No sampling grid or mesh is built."
+      : `${c.repeat * c.resolution - 1} grid divisions per domain axis.`;
+  $("resolution").disabled = busy || preset === 0;
+  $("generate").textContent =
+    preset === 0 ? "Refresh preview" : "Generate mesh";
 }
 function choosePreset(p, reset = true) {
   preset = p;
@@ -111,6 +130,10 @@ function choosePreset(p, reset = true) {
 }
 function dirty() {
   labels();
+  if (preset === 0 && !busy) {
+    showPreview(config());
+    return;
+  }
   if (current)
     $("stale").textContent =
       "Settings changed. Generate to update the displayed mesh.";
@@ -171,8 +194,13 @@ function setBusy(value) {
   document
     .querySelectorAll("aside input,aside select,.preset,#history button")
     .forEach((e) => (e.disabled = value));
+  $("resolution").disabled = value || preset === 0;
 }
 function launch(c) {
+  if (c.preset === 0) {
+    showPreview(c);
+    return;
+  }
   setBusy(true);
   worker ??= newWorker();
   start = performance.now();
@@ -199,7 +227,7 @@ $("generate").onclick = () => {
 };
 $("compare").onclick = () => {
   const c = config();
-  queue = [0, 1, 2].map((p) => ({
+  queue = [1, 2].map((p) => ({
     ...c,
     preset: p,
     resolution: Math.min(
@@ -225,6 +253,52 @@ function disposeView() {
     if (obj.material !== material) obj.material?.dispose();
   }
   mesh = wireMesh = tetMesh = box = null;
+  preview = null;
+}
+function showPreview(c) {
+  current = null;
+  if (!preview) {
+    disposeView();
+    preview = createPreview(c, plane.constant);
+    group.add(preview);
+    renderer.setPixelRatio(Math.min(devicePixelRatio, 1));
+    frameStart = performance.now();
+    frameCount = 0;
+    $("time").textContent = "Live";
+  }
+  const u = preview.material.uniforms;
+  u.shape.value = c.shape;
+  u.repeats.value = c.repeat;
+  u.thickness.value = c.thickness;
+  u.grade.value = c.grade;
+  $("scene-mode").textContent = "Quick view / GPU shader";
+  $("scene-title").textContent =
+    `${names[c.shape]} · ${c.repeat === 1 ? "1 cell" : c.repeat + "³ cells"}${c.grade ? " · graded" : ""}`;
+  $("time-label").textContent = "Display frame rate · not mesh generation time";
+  $("triangles").textContent = "Not meshed";
+  $("tets").textContent = "Not meshed";
+  for (const id of [
+    "angle",
+    "area",
+    "deviation",
+    "tet-quality",
+    "closed",
+    "periodic",
+  ])
+    $(id).textContent = "—";
+  $("quality-status").textContent =
+    "Visual preview only. Mesh checks have not run.";
+  $("quality-status").style.color = "var(--accent)";
+  $("hist").replaceChildren();
+  $("size-stats").textContent =
+    "Printing and FEA generate meshes for inspection and export.";
+  for (const id of ["stl", "vtu", "json", "quality", "wire", "volume-wire"])
+    $(id).disabled = true;
+  for (const id of ["quality", "wire", "volume-wire"])
+    $(id).classList.remove("on");
+  $("legend").hidden = true;
+  $("stale").textContent = "Changes update the preview immediately.";
+  status("");
 }
 function colorFor(angle) {
   return new THREE.Color().setHSL(
@@ -249,6 +323,10 @@ function show(result) {
   $("scene-title").textContent =
     `${names[c.shape]} · ${c.repeat === 1 ? "1 cell" : c.repeat + "³ cells"}${c.grade ? " · graded" : ""}`;
   disposeView();
+  renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
+  $("time-label").textContent = "Generation + validation + serialization";
+  $("quality").disabled = false;
+  $("wire").disabled = false;
   const positions = new Float32Array(m.triangles.length * 9),
     colors = new Float32Array(positions.length);
   m.triangles.forEach((f, i) => {
@@ -410,6 +488,7 @@ $("volume-wire").onclick = () => {
 };
 $("slice").oninput = () => {
   plane.constant = +$("slice").value / 100 - 0.5 + 0.001;
+  if (preview) preview.material.uniforms.cut.value = plane.constant;
 };
 $("reset").onclick = () => {
   camera.position.set(1.9, 1.45, 2.1);
@@ -417,6 +496,7 @@ $("reset").onclick = () => {
   controls.update();
   $("slice").value = 100;
   plane.constant = 0.51;
+  if (preview) preview.material.uniforms.cut.value = plane.constant;
 };
 function renderHistory() {
   const tbody = $("history");
