@@ -386,7 +386,17 @@ fn proposal(
     let floor = old_min.min(0.65_f64.powi(3));
     let mut try_candidate = |candidate: Point| {
         if let Some(p) = project(candidate, original, level, geometry) {
-            let (worst, cost) = evaluate(p);
+            let (worst, cost) = evaluate_bounded(
+                mesh,
+                group,
+                threshold,
+                h,
+                surface_weight,
+                p,
+                geometry,
+                floor,
+                best_cost,
+            );
             if worst >= floor - 1e-12 && cost < best_cost {
                 best = p;
                 best_cost = cost;
@@ -452,6 +462,34 @@ fn evaluate(
     candidate: Point,
     geometry: &impl crate::geometry::Geometry,
 ) -> (f64, f64) {
+    evaluate_bounded(
+        mesh,
+        group,
+        threshold,
+        h,
+        surface_weight,
+        candidate,
+        geometry,
+        0.,
+        f64::INFINITY,
+    )
+}
+
+// A candidate below this floor will be rejected regardless of its cost. Avoid
+// evaluating its remaining elements and implicit surface samples. Cost-gradient
+// probes still use the unbounded evaluator above.
+#[allow(clippy::too_many_arguments)]
+fn evaluate_bounded(
+    mesh: &Mesh,
+    group: &Group,
+    threshold: f64,
+    h: f64,
+    surface_weight: f64,
+    candidate: Point,
+    geometry: &impl crate::geometry::Geometry,
+    floor: f64,
+    cost_limit: f64,
+) -> (f64, f64) {
     let (members, cells, faces) = group;
     let original = mesh.points[members[0]];
     let delta = sub(candidate, original);
@@ -473,8 +511,14 @@ fn evaluate(
             .sum();
         // Squared MMG quality avoids fractional powers in the hot loop.
         let q = 432. * determinant(p).powi(2) / l2.powi(3);
+        if q < floor - 1e-12 {
+            return (q, f64::INFINITY);
+        }
         worst = worst.min(q);
         cost += 1. / (q * q);
+        if surface_weight >= 0. && cost >= cost_limit {
+            return (worst, f64::INFINITY);
+        }
     }
     for f in faces {
         let p = f.map(|i| {
@@ -494,6 +538,9 @@ fn evaluate(
         ] {
             let error = geometry.residual(sample, threshold) / denom;
             cost += surface_weight * error.powi(2);
+            if surface_weight >= 0. && cost >= cost_limit {
+                return (worst, f64::INFINITY);
+            }
         }
     }
     (worst, cost)
@@ -502,6 +549,71 @@ fn evaluate(
 #[cfg(test)]
 mod gpu_acceptance_tests {
     use super::*;
+    #[test]
+    fn bounded_cost_preserves_accepted_candidates_and_skips_rejected_surfaces() {
+        use std::sync::atomic::{AtomicUsize, Ordering};
+        struct Field(AtomicUsize);
+        impl crate::geometry::Geometry for Field {
+            fn value(&self, p: Point) -> f64 {
+                p[0]
+            }
+            fn gradient(&self, _: Point) -> Point {
+                self.0.fetch_add(1, Ordering::Relaxed);
+                [1., 0., 0.]
+            }
+            fn rank(&self, _: Point) -> [i64; 3] {
+                [0; 3]
+            }
+            fn bounds(&self) -> [Point; 2] {
+                [[0.; 3], [1.; 3]]
+            }
+        }
+        let field = Field(AtomicUsize::new(0));
+        let mesh = Mesh {
+            points: vec![
+                [0.2, 0.2, 0.2],
+                [0.8, 0.2, 0.2],
+                [0.2, 0.8, 0.2],
+                [0.2, 0.2, 0.8],
+            ],
+            tets: vec![[0, 1, 2, 3]],
+            surface: vec![[0, 1, 2]],
+        };
+        let group = (vec![0], vec![0], mesh.surface.clone());
+        let original = mesh.points[0];
+        let full = evaluate(&mesh, &group, 0.5, 0.6, 3., original, &field);
+        assert_eq!(
+            evaluate_bounded(
+                &mesh,
+                &group,
+                0.5,
+                0.6,
+                3.,
+                original,
+                &field,
+                full.0,
+                f64::INFINITY
+            ),
+            full
+        );
+        field.0.store(0, Ordering::Relaxed);
+        let bad = evaluate_bounded(
+            &mesh,
+            &group,
+            0.5,
+            0.6,
+            3.,
+            [0.39; 3],
+            &field,
+            full.0,
+            f64::INFINITY,
+        );
+        assert!(bad.0 < full.0 && bad.1.is_infinite());
+        assert_eq!(field.0.load(Ordering::Relaxed), 0);
+        let too_costly = evaluate_bounded(&mesh, &group, 0.5, 0.6, 3., original, &field, 0., 0.);
+        assert!(too_costly.1.is_infinite());
+        assert_eq!(field.0.load(Ordering::Relaxed), 0);
+    }
     #[test]
     fn rejects_nonfinite_outside_and_inverting_gpu_moves() {
         let mesh = Mesh {

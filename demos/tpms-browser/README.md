@@ -35,3 +35,5 @@ Browser limits: surfaces at most 64 grid divisions per axis, volumes at most 40 
 Quick view uses four subpixel rays per pixel for antialiasing, including partial coverage at implicit silhouettes. This costs more GPU work than a single ray; frame rate depends on viewport size, geometry and hardware.
 
 Three.js is MIT licensed. Its license is distributed with the built artifacts.
+
+See [PERFORMANCE.md](PERFORMANCE.md) for optimizer and fast-extractor measurements, quality tradeoffs and reproduction commands.

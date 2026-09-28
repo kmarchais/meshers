@@ -19,10 +19,14 @@ struct Extractor<'a, 'b, F: ScalarField> {
     grid: Vec<Point>,
     values: Vec<f64>,
     mesh: TriangleMesh,
-    cache: HashMap<(usize, usize, u8), usize>,
+    cache: HashMap<u64, usize>,
     refine_edges: bool,
 }
 impl<F: ScalarField> Extractor<'_, '_, F> {
+    fn edge_key(a: usize, b: usize, label: u8) -> u64 {
+        // At most 129^3 grid vertices: 22 bits per index and four for the label.
+        ((a as u64) << 26) | ((b as u64) << 4) | u64::from(label)
+    }
     fn linear_wall(&mut self, tet: [usize; 4], label: u8) -> Result<()> {
         // Cyclic crossing-edge order for each of the 16 tetrahedron sign cases.
         // Intersections are coplanar under linear interpolation, so no analytic
@@ -71,9 +75,14 @@ impl<F: ScalarField> Extractor<'_, '_, F> {
             let d = sub(self.mesh.points[c], self.mesh.points[a]);
             let other = sub(self.mesh.points[c], self.mesh.points[b]);
             let n = cross(e, d);
-            dot(n, n) / (dot(e, e) + dot(d, d) + dot(other, other)).powi(2)
+            let lengths = [dot(e, e), dot(d, d), dot(other, other)];
+            // sin² of the smallest angle, without square roots or acos.
+            dot(n, n)
+                / (lengths[0] * lengths[1])
+                    .max(lengths[0] * lengths[2])
+                    .max(lengths[1] * lengths[2])
         };
-        // Choose the better of the two quad diagonals using only coordinates.
+        // Maximize the worst minimum angle across both triangles of the quad.
         let start = if count == 4
             && quality(ids[1], ids[2], ids[3]).min(quality(ids[1], ids[3], ids[0]))
                 > quality(ids[0], ids[1], ids[2]).min(quality(ids[0], ids[2], ids[3]))
@@ -103,15 +112,19 @@ impl<F: ScalarField> Extractor<'_, '_, F> {
         Ok(())
     }
     fn original(&mut self, id: usize) -> usize {
-        *self.cache.entry((id, id, 8)).or_insert_with(|| {
-            let out = self.mesh.points.len();
-            self.mesh.points.push(self.grid[id]);
-            out
-        })
+        *self
+            .cache
+            .entry(Self::edge_key(id, id, 8))
+            .or_insert_with(|| {
+                let out = self.mesh.points.len();
+                self.mesh.points.push(self.grid[id]);
+                out
+            })
     }
     fn root(&mut self, a: usize, b: usize, label: u8) -> Result<usize> {
         let (a, b) = if a < b { (a, b) } else { (b, a) };
-        if let Some(&id) = self.cache.get(&(a, b, label)) {
+        let key = Self::edge_key(a, b, label);
+        if let Some(&id) = self.cache.get(&key) {
             return Ok(id);
         }
         let level = self.band.levels[if label == 0 { 1 } else { 0 }];
@@ -131,7 +144,7 @@ impl<F: ScalarField> Extractor<'_, '_, F> {
             let p = std::array::from_fn(|k| self.grid[a][k] * (1. - t) + self.grid[b][k] * t);
             let id = self.mesh.points.len();
             self.mesh.points.push(p);
-            self.cache.insert((a, b, label), id);
+            self.cache.insert(key, id);
             return Ok(id);
         }
         let mut lo = 0.;
@@ -173,7 +186,7 @@ impl<F: ScalarField> Extractor<'_, '_, F> {
         let p = std::array::from_fn(|k| self.grid[a][k] * (1. - t) + self.grid[b][k] * t);
         let id = self.mesh.points.len();
         self.mesh.points.push(p);
-        self.cache.insert((a, b, label), id);
+        self.cache.insert(key, id);
         Ok(id)
     }
     fn polygon(&mut self, mut ids: Vec<usize>, label: u8) -> Result<()> {
@@ -311,6 +324,7 @@ pub fn extract_with_edge_refinement<F: ScalarField>(
     cells: usize,
     refine_edges: bool,
 ) -> Result<TriangleMesh> {
+    let mut profile = crate::profile::Profile::new("triangle_extraction");
     band.validate()?;
     if !(4..=128).contains(&cells) {
         return Err(MeshingError::InvalidOptions(
@@ -337,6 +351,7 @@ pub fn extract_with_edge_refinement<F: ScalarField>(
             }
         }
     }
+    profile.mark("sample_grid");
     let mut e = Extractor {
         band,
         grid,
@@ -354,6 +369,28 @@ pub fn extract_with_edge_refinement<F: ScalarField>(
         for y in 0..cells {
             for x in 0..cells {
                 let base = x + n * (y + n * z);
+                // Linear tetrahedra cannot cross a level outside the range of
+                // their cube corners. Interior cubes wholly in the band have
+                // neither walls nor caps. This also holds for bracketed roots.
+                let corners = [0, 1, n, n + 1, n * n, n * n + 1, n * n + n, n * n + n + 1];
+                let (min, max) = corners
+                    .iter()
+                    .fold((f64::INFINITY, f64::NEG_INFINITY), |(lo, hi), &i| {
+                        (lo.min(e.values[base + i]), hi.max(e.values[base + i]))
+                    });
+                if min > band.levels[1]
+                    || max < band.levels[0]
+                    || (min > band.levels[0]
+                        && max < band.levels[1]
+                        && x > 0
+                        && y > 0
+                        && z > 0
+                        && x + 1 < cells
+                        && y + 1 < cells
+                        && z + 1 < cells)
+                {
+                    continue;
+                }
                 for perm in [
                     [0, 1, 2],
                     [0, 2, 1],
@@ -397,6 +434,8 @@ pub fn extract_with_edge_refinement<F: ScalarField>(
             }
         }
     }
+    profile.mark("walls_and_caps");
+    profile.count("triangles", e.mesh.faces.len());
     // Avoid a silent success for unresolved or empty geometry in the benchmark.
     if e.mesh.faces.is_empty() {
         return Err(fail("No resolved triangle surface"));

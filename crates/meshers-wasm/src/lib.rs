@@ -45,13 +45,31 @@ impl ScalarField for Tpms {
         self.raw(p) / (0.5 * self.thickness * (1. + 2. * self.grade * p[0] / self.repeat))
     }
     fn gradient(&self, p: Point) -> Option<Point> {
-        Some(std::array::from_fn(|a| {
-            let mut lo = p;
-            let mut hi = p;
-            lo[a] -= 1e-5;
-            hi[a] += 1e-5;
-            (self.value(hi) - self.value(lo)) / 2e-5
-        }))
+        let q = p.map(|v| v * TAU);
+        let s = q.map(f64::sin);
+        let c = q.map(f64::cos);
+        let g = match self.shape {
+            0 => std::array::from_fn(|a| c[a] * c[(a + 1) % 3] - s[(a + 2) % 3] * s[a]),
+            1 => {
+                let s2 = q.map(|v| (2. * v).sin());
+                let c2 = q.map(|v| (2. * v).cos());
+                std::array::from_fn(|a| {
+                    let b = (a + 1) % 3;
+                    let d = (a + 2) % 3;
+                    1.1 * (2. * c2[a] * c[b] * s[d] + s2[b] * c[d] * c[a] - s2[d] * s[a] * s[b])
+                        + 0.4 * s2[a] * (c2[b] + c2[d])
+                        + 0.8 * s2[a]
+                })
+            }
+            _ => s.map(|v| -v),
+        };
+        let width = 0.5 * self.thickness * (1. + 2. * self.grade * p[0] / self.repeat);
+        let mut result = g.map(|v| v * TAU / width);
+        // Quotient rule for the X-dependent sheet width.
+        if self.grade != 0. {
+            result[0] -= self.raw(p) * self.thickness * self.grade / self.repeat / width.powi(2);
+        }
+        Some(result)
     }
 }
 
@@ -268,6 +286,94 @@ pub extern "C" fn meshers_clear() {
 #[cfg(test)]
 mod tests {
     use super::*;
+    #[test]
+    #[ignore = "manual native adapter benchmark"]
+    fn profile_fea_generation() {
+        for shape in [0, 1] {
+            let mut times = Vec::new();
+            for _ in 0..4 {
+                let start = std::time::Instant::now();
+                let mesh = generate(shape, 2, 1, 16, 0.6, 0.).unwrap();
+                let _serialized = serde_json::to_vec(&mesh).unwrap();
+                times.push(start.elapsed().as_secs_f64());
+                assert_eq!(mesh["metrics"]["volume"]["target_met"], true);
+            }
+            times.remove(0);
+            times.sort_by(f64::total_cmp);
+            println!("FEA shape={shape} median={:.6}", times[1]);
+        }
+    }
+    #[test]
+    #[ignore = "manual native generation benchmark"]
+    fn profile_surface_extraction() {
+        for shape in [0, 1] {
+            for repeat in [1., 3., 7.] {
+                let field = Tpms {
+                    shape,
+                    thickness: 0.6,
+                    grade: 0.3,
+                    repeat,
+                };
+                let band = Band {
+                    field: &field,
+                    bounds: [[-repeat / 2.; 3], [repeat / 2.; 3]],
+                    levels: [-1., 1.],
+                };
+                let mut times = Vec::new();
+                for run in 0..4 {
+                    let start = std::time::Instant::now();
+                    let mesh = triangles::extract_with_edge_refinement(
+                        &band,
+                        (repeat * 16.) as usize - 1,
+                        false,
+                    )
+                    .unwrap();
+                    let seconds = start.elapsed().as_secs_f64();
+                    if run > 0 {
+                        times.push(seconds);
+                    }
+                    assert!(!mesh.faces.is_empty());
+                }
+                times.sort_by(f64::total_cmp);
+                println!(
+                    "surface shape={shape} repeats={repeat} median={:.6}",
+                    times[1]
+                );
+            }
+        }
+    }
+    #[test]
+    fn analytic_gradients_match_independent_central_differences() {
+        for shape in 0..3 {
+            for grade in [-0.7, 0., 0.7] {
+                for repeat in [1., 3.] {
+                    let field = Tpms {
+                        shape,
+                        thickness: 0.6,
+                        grade,
+                        repeat,
+                    };
+                    for i in 0..41 {
+                        let p = std::array::from_fn(|a| {
+                            (((i * (a * 12 + 7) + a * 11) % 101) as f64 / 100. - 0.5) * repeat
+                        });
+                        let g = field.gradient(p).unwrap();
+                        for a in 0..3 {
+                            let mut lo = p;
+                            let mut hi = p;
+                            lo[a] -= 1e-6;
+                            hi[a] += 1e-6;
+                            let expected = (field.value(hi) - field.value(lo)) / 2e-6;
+                            assert!(
+                                (g[a] - expected).abs() < 1e-6 * (1. + expected.abs()),
+                                "shape={shape} grade={grade} point={p:?} axis={a}"
+                            );
+                        }
+                    }
+                }
+            }
+        }
+    }
     #[test]
     fn invalid_inputs_are_errors() {
         assert!(generate(0, 0, 1, 12, f64::NAN, 0.).is_err());

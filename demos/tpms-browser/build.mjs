@@ -33,6 +33,8 @@ await writeFile(
 await writeFile("dist/THIRD_PARTY_NOTICES.txt", thirdParty);
 await writeFile("dist/package/meshers.wasm", wasm);
 await copyFile("meshers.js", "dist/package/index.js");
+await copyFile("PERFORMANCE.md", "dist/package/PERFORMANCE.md");
+await copyFile("performance-results.json", "dist/package/performance-results.json");
 await writeFile(
   "dist/package/package.json",
   JSON.stringify(
@@ -41,7 +43,7 @@ await writeFile(
       version: "0.1.0-experiment",
       type: "module",
       exports: "./index.js",
-      files: ["index.js", "meshers.wasm"],
+      files: ["index.js", "meshers.wasm", "PERFORMANCE.md", "performance-results.json"],
       license: "MIT",
     },
     null,
