@@ -143,6 +143,15 @@ def main():
             legacy_seconds = time.perf_counter() - runtime_start
             if args.mode == "microgen_mmg_volume":
                 result = remesh_keeping_boundaries_for_fem(result, periodic=False)
+                output = {
+                    "points": result.n_points,
+                    "elements": result.n_cells,
+                    "legacy_seconds": round(legacy_seconds, 3),
+                    "mmg_seconds": round(
+                        time.perf_counter() - runtime_start - legacy_seconds, 3
+                    ),
+                    **tetra_quality(result.points, result.cells_dict[10]),
+                }
             elif args.mode == "microgen_mmgpy_volume":
                 box = BoxMesh.from_pyvista(result.triangulate())
                 boundary, _ = box.boundary_elements(box.rve)
@@ -180,14 +189,6 @@ def main():
                     )[0].tolist(),
                     "legacy_seconds": round(legacy_seconds, 3),
                 }
-                if args.mode == "microgen_mmg_volume":
-                    tets = result.cells_dict[10]
-                    output.update(
-                        mmg_seconds=round(
-                            time.perf_counter() - runtime_start - legacy_seconds, 3
-                        ),
-                        **tetra_quality(result.points, tets),
-                    )
         else:
             result = shape.generate_meshers(
                 periodic=periodic,

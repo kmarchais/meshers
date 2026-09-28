@@ -125,16 +125,29 @@ measured against the implicit field, so this is not a matched-accuracy result.
 The two-unit `mmgpy` run exceeded a 120-second wall-time limit without
 returning a mesh; its final quality and runtime remain unknown.
 
-The existing `remesh_keeping_boundaries_for_fem` command-line path was also
-tested with an MMG3D 5.7.0 executable supplied by `pymmg` 1.0.0. A Windows
-temporary-file fix was needed to let meshio reopen its input file. Four
-alternating fresh-process runs had a median of 3.43 seconds for the one-unit
-case, **including about 0.6 seconds of microgen import time**. Its 9,160-tet
-output had minimum quality 0.0123 and first-percentile quality 0.0989. This
-older, two-pass run is not the primary performance baseline. The two-unit
-CLI run was stopped after 235 seconds of MMG CPU work without producing an
-output mesh. Larger matched-quality measurements remain necessary before
-claiming a general speedup.
+Microgen's existing `remesh_keeping_boundaries_for_fem` path was also run
+unchanged with the MMG3D 5.8.0 executable bundled in `mmgpy` 0.16.2. The
+executable lives in `mmgpy/bin/Release`, and its DLL directory `mmgpy/bin`
+must be on `PATH`. The function makes two MMG3D command-line passes, first
+with `-nofem`, then with `-ls -nr`. In three alternating fresh-process runs,
+the one-unit case had median generation times, excluding imports, of 0.392
+seconds for direct meshers and 3.607 seconds for the complete microgen plus
+MMG workflow. The MMG output contained 9,109 tetrahedra with minimum quality
+0.0137 and first-percentile quality 0.0971. A Windows temporary-file fix in
+the microgen experiment branch was needed to let meshio reopen its input
+file. The workflow results do not have matched element counts or measured
+MMG surface error. At two units, MMG 5.8 failed in the first `-nofem` pass
+after about 31 seconds. It reported that the neighborhood of one edge had
+too many elements and could not complete Delaunay adaptation. Microgen's five
+identical retries all failed, so there is no two-unit output to compare.
+
+An earlier test used an MMG3D 5.7.0 executable supplied by `pymmg` 1.0.0.
+Four one-unit runs had a median of 3.43 seconds, **including about 0.6
+seconds of microgen import time**. Its 9,160-tet output had minimum quality
+0.0123 and first-percentile quality 0.0989. The two-unit MMG 5.7 run was
+stopped after 235 seconds of MMG CPU work without producing an output mesh.
+This older test is retained only as historical context. Larger matched-quality
+measurements remain necessary before claiming a general speedup.
 
 The direct periodic surface path has a separate scaling issue. At two units,
 10 polish passes did not reach its 5-degree angle requirement; 40 passes
