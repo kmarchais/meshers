@@ -23,6 +23,85 @@ struct Extractor<'a, 'b, F: ScalarField> {
     refine_edges: bool,
 }
 impl<F: ScalarField> Extractor<'_, '_, F> {
+    fn linear_wall(&mut self, tet: [usize; 4], label: u8) -> Result<()> {
+        // Cyclic crossing-edge order for each of the 16 tetrahedron sign cases.
+        // Intersections are coplanar under linear interpolation, so no analytic
+        // gradients or angular sorting are needed. Caps use the same edge cache.
+        const EDGES: [[usize; 2]; 6] = [[0, 1], [0, 2], [0, 3], [1, 2], [1, 3], [2, 3]];
+        const CASES: [&[usize]; 16] = [
+            &[],
+            &[0, 1, 2],
+            &[0, 3, 4],
+            &[1, 3, 4, 2],
+            &[1, 3, 5],
+            &[0, 3, 5, 2],
+            &[0, 1, 5, 4],
+            &[2, 4, 5],
+            &[2, 4, 5],
+            &[0, 4, 5, 1],
+            &[0, 2, 5, 3],
+            &[1, 3, 5],
+            &[1, 2, 4, 3],
+            &[0, 3, 4],
+            &[0, 1, 2],
+            &[],
+        ];
+        let level = self.band.levels[if label == 0 { 1 } else { 0 }];
+        let mask = (0..4).fold(0, |mask, i| {
+            mask | (usize::from(self.values[tet[i]] < level) << i)
+        });
+        if CASES[mask].is_empty() {
+            return Ok(());
+        }
+        let mut ids = [0; 4];
+        let mut count = 0;
+        for &edge in CASES[mask] {
+            let [a, b] = EDGES[edge];
+            let id = self.root(tet[a], tet[b], label)?;
+            if !ids[..count].contains(&id) {
+                ids[count] = id;
+                count += 1;
+            }
+        }
+        if count < 3 {
+            return Ok(());
+        }
+        let quality = |a: usize, b: usize, c: usize| {
+            let e = sub(self.mesh.points[b], self.mesh.points[a]);
+            let d = sub(self.mesh.points[c], self.mesh.points[a]);
+            let other = sub(self.mesh.points[c], self.mesh.points[b]);
+            let n = cross(e, d);
+            dot(n, n) / (dot(e, e) + dot(d, d) + dot(other, other)).powi(2)
+        };
+        // Choose the better of the two quad diagonals using only coordinates.
+        let start = if count == 4
+            && quality(ids[1], ids[2], ids[3]).min(quality(ids[1], ids[3], ids[0]))
+                > quality(ids[0], ids[1], ids[2]).min(quality(ids[0], ids[2], ids[3]))
+        {
+            1
+        } else {
+            0
+        };
+        let below = tet[mask.trailing_zeros() as usize];
+        for j in 1..count - 1 {
+            let mut face = [
+                ids[start],
+                ids[(start + j) % count],
+                ids[(start + j + 1) % count],
+            ];
+            let [a, b, c] = face.map(|i| self.mesh.points[i]);
+            let toward_below = dot(cross(sub(b, a), sub(c, a)), sub(self.grid[below], a));
+            if toward_below == 0. {
+                return Err(fail("Degenerate linearly interpolated triangle"));
+            }
+            if (toward_below > 0.) == (label == 0) {
+                face.swap(1, 2);
+            }
+            self.mesh.faces.push(face);
+            self.mesh.labels.push(label);
+        }
+        Ok(())
+    }
     fn original(&mut self, id: usize) -> usize {
         *self.cache.entry((id, id, 8)).or_insert_with(|| {
             let out = self.mesh.points.len();
@@ -225,8 +304,8 @@ pub fn extract<F: ScalarField>(band: &Band<'_, F>, cells: usize) -> Result<Trian
     extract_with_edge_refinement(band, cells, true)
 }
 
-/// Experimental fast mode skips analytic edge roots and reuses one polygon
-/// normal for fan scoring when `refine_edges` is false.
+/// Experimental fast mode uses linear roots and table-driven tetrahedron cases
+/// when `refine_edges` is false. Box caps retain canonical periodic triangulation.
 pub fn extract_with_edge_refinement<F: ScalarField>(
     band: &Band<'_, F>,
     cells: usize,
@@ -290,6 +369,10 @@ pub fn extract_with_edge_refinement<F: ScalarField>(
                         base + 1 + n + n * n,
                     ];
                     for label in 0..2 {
+                        if !refine_edges {
+                            e.linear_wall(tet, label)?;
+                            continue;
+                        }
                         let level = band.levels[if label == 0 { 1 } else { 0 }];
                         let mut ids = Vec::new();
                         for i in 0..4 {
@@ -301,18 +384,14 @@ pub fn extract_with_edge_refinement<F: ScalarField>(
                         }
                         e.polygon(ids, label)?;
                     }
-                    for omit in 0..4 {
-                        let face: Vec<_> = (0..4).filter(|&j| j != omit).map(|j| tet[j]).collect();
-                        for label in 2..8 {
-                            let axis = (label - 2) / 2;
-                            let boundary_index = if (label - 2) % 2 == 0 { 0 } else { cells };
-                            if face
-                                .iter()
-                                .all(|&i| (i / stride[axis]) % n == boundary_index)
-                            {
-                                e.cap([face[0], face[1], face[2]], label as u8)?;
-                            }
-                        }
+                    // A Freudenthal tetrahedron has at most two box faces:
+                    // opposite its first vertex on the first permutation axis,
+                    // and opposite its last vertex on the last axis.
+                    if [x, y, z][perm[0]] == cells - 1 {
+                        e.cap([tet[1], tet[2], tet[3]], (3 + 2 * perm[0]) as u8)?;
+                    }
+                    if [x, y, z][perm[2]] == 0 {
+                        e.cap([tet[0], tet[1], tet[2]], (2 + 2 * perm[2]) as u8)?;
                     }
                 }
             }
@@ -530,6 +609,9 @@ pub fn polish<F: ScalarField>(
     passes: usize,
 ) -> Result<()> {
     smooth_impl(mesh, band, 0, true)?;
+    if passes == 0 {
+        return Ok(());
+    }
     let mut incident = vec![Vec::new(); mesh.points.len()];
     let mut masks = vec![0u8; mesh.points.len()];
     for (fi, f) in mesh.faces.iter().enumerate() {
@@ -623,14 +705,6 @@ pub fn polish_periodic<F: ScalarField>(
     passes: usize,
 ) -> Result<()> {
     smooth_impl(mesh, band, 0, true)?;
-    let mut incident = vec![Vec::new(); mesh.points.len()];
-    let mut masks = vec![0u8; mesh.points.len()];
-    for (fi, face) in mesh.faces.iter().enumerate() {
-        for &v in face {
-            incident[v].push(fi);
-            masks[v] |= 1 << mesh.labels[fi];
-        }
-    }
     let mut orbits = std::collections::BTreeMap::<[i64; 3], Vec<usize>>::new();
     for (i, p) in mesh.points.iter().enumerate() {
         let key = std::array::from_fn(|axis| {
@@ -646,6 +720,17 @@ pub fn polish_periodic<F: ScalarField>(
     let orbits: Vec<_> = orbits.into_values().collect();
     if orbits.iter().any(|orbit| orbit.len() > 8) {
         return Err(fail("Coincident periodic surface vertices"));
+    }
+    if passes == 0 {
+        return Ok(());
+    }
+    let mut incident = vec![Vec::new(); mesh.points.len()];
+    let mut masks = vec![0u8; mesh.points.len()];
+    for (fi, face) in mesh.faces.iter().enumerate() {
+        for &v in face {
+            incident[v].push(fi);
+            masks[v] |= 1 << mesh.labels[fi];
+        }
     }
     let mut owner = vec![0; mesh.points.len()];
     let mut slot = vec![0; mesh.points.len()];
@@ -991,6 +1076,22 @@ fn smooth_impl<F: ScalarField>(
     {
         return Err(MeshingError::InvalidOptions("Invalid triangle mesh".into()));
     }
+    // Validation is still required for a zero-pass call, but adjacency is not.
+    if iterations == 0 {
+        let mut masks = vec![0u8; mesh.points.len()];
+        for (face, &label) in mesh.faces.iter().zip(&mesh.labels) {
+            for &v in face {
+                masks[v] |= 1 << label;
+            }
+        }
+        if masks
+            .iter()
+            .any(|&m| m & 3 == 3 || m & 12 == 12 || m & 48 == 48 || m & 192 == 192)
+        {
+            return Err(fail("Incompatible vertex constraints"));
+        }
+        return band.field.check().map_err(MeshingError::GenerationFailed);
+    }
     let mut neighbors = vec![Vec::new(); mesh.points.len()];
     let mut incident = vec![Vec::new(); mesh.points.len()];
     let mut masks = vec![0u8; mesh.points.len()];
@@ -1077,6 +1178,69 @@ fn smooth_impl<F: ScalarField>(
 #[cfg(test)]
 mod tests {
     use super::*;
+    #[test]
+    fn linear_cases_interpolate_and_orient_both_walls() {
+        for mask in 1usize..15 {
+            let values: [f64; 4] =
+                std::array::from_fn(|i| if mask & (1 << i) != 0 { -1. } else { 1. });
+            let field = |p: Point| {
+                values[0]
+                    + (values[1] - values[0]) * p[0]
+                    + (values[2] - values[1]) * p[1]
+                    + (values[3] - values[2]) * p[2]
+            };
+            for label in 0..2 {
+                let band = Band {
+                    field: &field,
+                    bounds: [[0.; 3], [1.; 3]],
+                    levels: if label == 0 { [-10., 0.] } else { [0., 10.] },
+                };
+                let mut e = Extractor {
+                    band: &band,
+                    grid: vec![[0., 0., 0.], [1., 0., 0.], [1., 1., 0.], [1., 1., 1.]],
+                    values: values.to_vec(),
+                    mesh: TriangleMesh {
+                        points: Vec::new(),
+                        faces: Vec::new(),
+                        labels: Vec::new(),
+                    },
+                    cache: HashMap::new(),
+                    refine_edges: false,
+                };
+                e.linear_wall([0, 1, 2, 3], label).unwrap();
+                assert_eq!(
+                    e.mesh.faces.len(),
+                    if mask.count_ones() == 2 { 2 } else { 1 }
+                );
+                for &p in &e.mesh.points {
+                    assert!(field(p).abs() < 1e-12);
+                }
+                for face in &e.mesh.faces {
+                    let [a, b, c] = face.map(|i| e.mesh.points[i]);
+                    assert!(dot(cross(sub(b, a), sub(c, a)), band.normal(a, label)) > 0.);
+                }
+            }
+        }
+    }
+
+    #[test]
+    fn zero_pass_validation_keeps_incompatible_constraints_check() {
+        let field = |p: Point| p[0];
+        let band = Band {
+            field: &field,
+            bounds: [[0.; 3], [1.; 3]],
+            levels: [0.2, 0.8],
+        };
+        let mut mesh = TriangleMesh {
+            points: vec![[0., 0., 0.], [1., 0., 0.], [0., 1., 0.]],
+            faces: vec![[0, 1, 2], [0, 2, 1]],
+            labels: vec![0, 1],
+        };
+        assert!(smooth(&mut mesh, &band, 0).is_err());
+        assert!(polish(&mut mesh, &band, 0).is_err());
+        assert!(polish_periodic(&mut mesh, &band, [true; 3], 0).is_err());
+    }
+
     fn check<F: ScalarField>(mesh: &TriangleMesh, band: &Band<'_, F>) {
         let mut edges = HashMap::<(usize, usize), (usize, i32)>::new();
         let mut used = vec![false; mesh.points.len()];

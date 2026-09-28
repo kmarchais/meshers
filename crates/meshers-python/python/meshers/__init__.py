@@ -306,7 +306,7 @@ def generate_surface(
     This research API needs a build with ``experimental-surfaces``. Periodic
     surfaces use paired vertex polishing without topology edits. Set
     ``refine_edges=False`` only for speed experiments: linear edge interpolation
-    and one normal per polygon can leave large implicit-surface errors,
+    with table-driven tetrahedron cases can leave large implicit-surface errors,
     especially for split-P.
     """
     if len(periodic) != 3:
