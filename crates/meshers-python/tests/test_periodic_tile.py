@@ -108,3 +108,39 @@ def test_volume_tiles_share_nodes_and_periodic_outer_faces():
         np.column_stack((np.full(len(tiled.surface), 3), tiled.surface)),
     )
     assert poly.n_open_edges == 0
+
+
+def test_axis_graded_volume_tiles_only_in_periodic_directions():
+    bounds = (-1.0, 1.0, -0.5, 0.5, -0.5, 0.5)
+
+    def graded(x, y, z):
+        return gyroid(x, y, z) / (0.3 + 0.05 * x)
+
+    slab = meshers.generate(
+        graded,
+        bounds=bounds,
+        cells=(23, 11, 11),
+        band=(-1, 1),
+        periodic=(False, True, True),
+        geometry_tolerance=0.02,
+        minimum_quality=0,
+        optimize_passes=2,
+    )
+    tiled = meshers.tile_periodic(slab, bounds=bounds, repeats=(1, 2, 2))
+
+    assert len(tiled.tetrahedra) == 4 * len(slab.tetrahedra)
+    assert len(tiled.periodic_pairs[0]) == 0
+    for axis in (1, 2):
+        pairs = tiled.periodic_pairs[axis]
+        assert len(pairs) > 0
+        displacement = tiled.points[pairs[:, 1]] - tiled.points[pairs[:, 0]]
+        np.testing.assert_allclose(displacement[:, axis], 2.0, rtol=0, atol=1e-9)
+        np.testing.assert_allclose(
+            displacement[:, [i for i in range(3) if i != axis]],
+            0.0,
+            rtol=0,
+            atol=1e-9,
+        )
+    assert tiled.diagnostics["minimum_mmg_quality"] == pytest.approx(
+        slab.diagnostics["minimum_mmg_quality"]
+    )

@@ -65,3 +65,57 @@ The benchmark is `crates/meshers-python/examples/tpms_scaling.py`. Each row
 above is one fresh-process run, not a median. Peak memory is process working
 set on Windows. The listed times include generation and tiling but exclude
 field compilation and process startup.
+
+## One-axis density grading
+
+A sheet gyroid with thickness `0.6 + 0.1*x` is nonperiodic along x, but still
+periodic along y and z. The two isosurfaces are
+`gyroid(2*pi*x, 2*pi*y, 2*pi*z) = +/- thickness/2`. Meshing the entire box
+repeats the expensive optimization everywhere. Meshing a graded x slab that is
+one unit wide in y and z, then tiling it only along y and z, preserves the
+grade and gives matching lateral seams. A grade that also depends on y or z
+cannot use that tiling direction.
+
+One Windows release build, 16 grid points per unit length, four volume
+optimization passes, one fresh process per measurement:
+
+| Domain | Microgen legacy volume | Microgen to meshers volume | Direct meshers volume | Meshers graded slab plus lateral tiling |
+| --- | ---: | ---: | ---: | ---: |
+| 2 x 2 x 2 | 0.88 s, 68k mixed cells | 4.64 s, 133k tetrahedra | 4.20 s, 133k tetrahedra | 2.35 s, 129k tetrahedra |
+| 3 x 3 x 3 | 0.87 s, 231k mixed cells | 13.57 s, 458k tetrahedra | 12.73 s, 458k tetrahedra | 3.87 s, 442k tetrahedra |
+
+The direct meshers volume column uses the same pair of implicit constraints
+as the microgen adapter. The slab uses one normalized band field so it can be
+tiled by the current API. Its minimum MMG quality was 0.172 at two units and
+0.174 at three; the full direct mesh had 0.122 and 0.138 respectively. The
+slab's sampled surface error was 0.0043 and 0.0037, below the requested 0.01.
+These are different tetrahedralizations of the same geometric sheet, so the
+times are not a controlled measure of the optimizer alone. In particular,
+the legacy microgen volume has mixed cell types and no MMG-quality gate.
+The MMG executable was unavailable, so an end-to-end microgen-plus-MMG timing
+was not measured.
+
+When thickness is `0.6 + (0.1/3)*(x+y+z)`, no axis can be tiled. At two units,
+legacy microgen took 0.91 seconds for 68k mixed cells; the meshers path took
+4.61 seconds for 133k tetrahedra with minimum MMG quality 0.113. At three
+units, legacy microgen took 0.98 seconds for 234k mixed cells; microgen's
+meshers adapter took 14.15 seconds for 458k tetrahedra with minimum quality
+0.098. Calling meshers directly took 13.95 seconds for the identical mesh.
+The three-unit output would fail the adapter's default 0.1 quality gate; the
+benchmark disabled that gate to measure its raw generation time. These results
+do not support a general speedup for fully graded domains.
+
+The direct periodic surface path has a separate scaling issue. At two units,
+10 polish passes did not reach its 5-degree angle requirement; 40 passes
+reached 13.16 degrees but took 23.03 seconds for 116k triangles. At three
+units, even 40 passes and five background-resolution attempts did not meet
+the 5-degree requirement. Microgen's
+legacy surface took 1.21 seconds for 57k triangles, but its minimum angle was
+0.0014 degrees. At three units its 190k-triangle surface took 1.30 seconds
+and had a 0.00053-degree minimum angle. A fast, high-quality direct surface
+for a large graded domain is not yet established.
+
+Run `crates/meshers-python/examples/graded_comparison.py` for these cases.
+The timings include geometry setup and generation, but exclude module import
+and process startup. Each is one run, not a median; both output counts and
+surface angles should be considered alongside time.
