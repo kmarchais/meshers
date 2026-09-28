@@ -1,0 +1,13 @@
+[package]
+name = "meshers-wasm"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+description = "Experimental browser TPMS meshing adapter"
+
+[lib]
+crate-type = ["cdylib", "rlib"]
+
+[dependencies]
+meshers-core = { path = "../meshers-core", features = ["experimental-surfaces"] }
+serde_json = "1"

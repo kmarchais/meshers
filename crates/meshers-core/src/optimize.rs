@@ -85,7 +85,7 @@ pub(crate) fn optimize_for(
     cpu_profile.count("passes", passes);
     cpu_profile.count("threads", threads);
     let profiling = accelerator.is_some() && std::env::var_os("MESHER_GPU_PROFILE").is_some();
-    let stage_start = std::time::Instant::now();
+    let stage_start = profiling.then(std::time::Instant::now);
     let mut proposal_seconds = 0.;
     let mut acceptance_seconds = 0.;
     let mut apply_seconds = 0.;
@@ -206,7 +206,7 @@ pub(crate) fn optimize_for(
     }
     cpu_profile.mark("coloring");
     cpu_profile.count("colors", colors.len());
-    let topology_seconds = stage_start.elapsed().as_secs_f64();
+    let topology_seconds = stage_start.map_or(0., |start| start.elapsed().as_secs_f64());
     let mut gpu = accelerator
         .map(|factory| factory.create(mesh, &groups, &incident, &node_group))
         .transpose()?;
@@ -304,7 +304,7 @@ pub(crate) fn optimize_for(
     if profiling {
         eprintln!(
             "RUST_GPU_PROFILE {}",
-            serde_json::json!({"topology_seconds":topology_seconds,"proposal_seconds":proposal_seconds,"acceptance_seconds":acceptance_seconds,"apply_seconds":apply_seconds,"stage_seconds":stage_start.elapsed().as_secs_f64()})
+            serde_json::json!({"topology_seconds":topology_seconds,"proposal_seconds":proposal_seconds,"acceptance_seconds":acceptance_seconds,"apply_seconds":apply_seconds,"stage_seconds":stage_start.map_or(0., |start| start.elapsed().as_secs_f64())})
         );
     }
     Ok(())
