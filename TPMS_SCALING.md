@@ -164,3 +164,68 @@ Its `runtime_seconds` includes geometry setup and generation but excludes
 module imports and process startup. `total_seconds` includes imports but not
 process startup. Except for the stated four-run medians, each measurement
 above is one run. Compare output counts and quality alongside time.
+
+## Quality-led workflow comparison
+
+These cases compare the native meshers path with microgen's VTK surface path
+and its unchanged two-pass MMG 5.8 volume path. A regular gyroid is the simple
+TPMS case; split-P and three-axis grading are the harder cases. Surface
+quality is triangle angle in degrees. Volume quality is the MMG tetrahedron
+shape metric on `[0, 1]`; larger values are better. The first percentile
+shows whether poor quality affects more than one element. Periodicity was
+checked by matching both nodes and cap triangles on each pair of box faces,
+not just by requesting periodic output. All times exclude module imports.
+
+For a one-cell gyroid with constant thickness `0.6` and 16 grid points per
+axis, both paths returned fully periodic meshes:
+
+| Output | Workflow | Time | Worst quality | First-percentile quality |
+| --- | --- | ---: | ---: | ---: |
+| Surface | microgen VTK | 0.035 s | 0.287° | 2.51° |
+| Surface | meshers direct | 0.38 s | 19.77° | 28.94° |
+| Volume | microgen + two-pass MMG | 3.421 s | 0.0225 | 0.1046 |
+| Volume | meshers direct | 0.896 s | 0.1440 | 0.3888 |
+
+Volume times are medians of three alternating fresh-process runs. Surface
+times are single runs. The meshers volume passed a 0.1 minimum-quality gate
+and had 0.0034 sampled surface error. Microgen's MMG output had fewer
+tetrahedra, but its surface error against the implicit field has not been
+measured, so this is not a matched-accuracy comparison. At thickness `0.5`,
+the same microgen+MMG workflow failed its first pass on the uniform gyroid
+because MMG reported a zero-quality element; meshers produced a periodic
+volume above the 0.1 gate.
+
+For a one-cell split-P sheet of thickness `0.5`, both surface outputs were
+periodic. At 16 grid points, microgen VTK took 0.041 seconds with a 0.259°
+worst angle and 2.72° first-percentile angle. Meshers took 0.653 seconds with
+a 6.42° worst angle and 28.04° first-percentile angle. The meshers volume at
+16 grid points missed the 0.1 quality gate (minimum 0.068), but at 32
+background intervals it produced a fully periodic volume in 10.9 seconds,
+with minimum quality 0.140, first-percentile quality 0.413, and 0.00218
+sampled surface error. At the 16-point input resolution, microgen's first
+MMG pass ran for more than 120 CPU seconds without returning an output; it
+was stopped. These different resolutions and the missing MMG result do not
+support a numeric split-P speed ratio.
+
+Three-axis grading makes the field nonperiodic, so no workflow should force
+periodic boundary constraints in that case. Direct meshers produced a
+`(3, 3, 3)` graded gyroid volume in 15.07 seconds with minimum quality 0.117,
+first-percentile quality 0.230, and 0.00524 sampled surface error. On a
+`(2, 2, 2)` graded case, microgen's MMG 5.8 first pass failed with a Delaunay
+adaptation error after about 31 seconds and five identical retries. The
+unremeshed microgen VTK volume is faster, but it has mixed cell types and no
+comparable quality gate.
+
+With a grade only along x, both workflows retained matching nodes and cap
+triangles along the still-periodic y and z axes in a one-cell test. Direct
+meshers took 0.409 seconds with minimum tetrahedron quality 0.132; microgen
+plus MMG took 3.398 seconds with minimum quality 0.00044. The MMG output's
+first-percentile quality was 0.0875, versus 0.210 for meshers. Microgen's
+wrapper was called with `periodic=False` because its option applies to all
+axes, but the required boundary triangles happened to retain the two lateral
+periodic cap meshes in this run.
+
+The result is narrower for large **surface-only** grading: microgen VTK is
+fast but has nearly degenerate triangles, while the current direct meshers
+optimizer is expensive and did not meet its angle gate at three cells per
+side. That case still needs algorithmic work before claiming a replacement.
