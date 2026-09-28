@@ -138,7 +138,9 @@ def main():
     )
     parser.add_argument("--repeats", type=int, default=1)
     parser.add_argument("--grid-points-per-cell", type=int, default=16)
-    parser.add_argument("--polish-passes", type=int, default=10)
+    parser.add_argument("--polish-passes", type=int, default=None)
+    parser.add_argument("--smoothing-iterations", type=int, default=None)
+    parser.add_argument("--improvement-rounds", type=int, default=None)
     parser.add_argument("--grade-axes", choices=("none", "x", "xyz"), default="x")
     parser.add_argument("--geometry", choices=("gyroid", "split_p"), default="gyroid")
     parser.add_argument("--uniform-thickness", type=float, default=0.5)
@@ -267,6 +269,8 @@ def main():
                 cells=count - 1,
                 band=(-1, 1),
                 periodic=periodic,
+                smoothing_iterations=args.smoothing_iterations,
+                improvement_rounds=args.improvement_rounds,
                 polish_passes=args.polish_passes,
             )
             output = {

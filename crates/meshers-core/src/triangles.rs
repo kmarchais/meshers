@@ -48,20 +48,40 @@ impl<F: ScalarField> Extractor<'_, '_, F> {
         }
         let mut lo = 0.;
         let mut hi = 1.;
-        for _ in 0..40 {
-            let t = (lo + hi) * 0.5;
+        let mut f_lo = va;
+        let mut f_hi = vb;
+        let mut t = 0.5;
+        for iteration in 0..44 {
+            let midpoint = (lo + hi) * 0.5;
+            t = if iteration < 12 {
+                let secant = (lo * f_hi - hi * f_lo) / (f_hi - f_lo);
+                if secant.is_finite()
+                    && secant > lo + 1e-6 * (hi - lo)
+                    && secant < hi - 1e-6 * (hi - lo)
+                {
+                    secant
+                } else {
+                    midpoint
+                }
+            } else {
+                midpoint
+            };
             let p = std::array::from_fn(|k| self.grid[a][k] * (1. - t) + self.grid[b][k] * t);
             let v = self.band.field.value(p) - level;
             if !v.is_finite() {
                 return Err(fail("Non-finite field during edge solve"));
             }
-            if v.signum() == va.signum() {
-                lo = t
+            if v.abs() <= 1e-12 * (1. + va.abs().max(vb.abs())) {
+                break;
+            }
+            if v.signum() == f_lo.signum() {
+                lo = t;
+                f_lo = v;
             } else {
-                hi = t
+                hi = t;
+                f_hi = v;
             }
         }
-        let t = (lo + hi) * 0.5;
         let p = std::array::from_fn(|k| self.grid[a][k] * (1. - t) + self.grid[b][k] * t);
         let id = self.mesh.points.len();
         self.mesh.points.push(p);
@@ -295,10 +315,15 @@ pub fn smooth<F: ScalarField>(
 
 fn shape<F: ScalarField>(points: [Point; 3], label: u8, band: &Band<'_, F>) -> f64 {
     let [a, b, c] = points;
+    let normal = band.normal(std::array::from_fn(|k| (a[k] + b[k] + c[k]) / 3.0), label);
+    shape_with_normal(points, normal)
+}
+
+fn shape_with_normal(points: [Point; 3], normal: Point) -> f64 {
+    let [a, b, c] = points;
     let e = sub(b, a);
     let d = sub(c, a);
     let other = sub(c, b);
-    let normal = band.normal(std::array::from_fn(|k| (a[k] + b[k] + c[k]) / 3.0), label);
     2.0 * 3.0f64.sqrt() * dot(cross(e, d), normal)
         / (dot(e, e) + dot(d, d) + dot(other, other)).max(1e-300)
 }
@@ -639,6 +664,18 @@ pub fn polish_periodic<F: ScalarField>(
             let base = orbit[0];
             let old = mesh.points[base];
             let patch = &patches[oi];
+            let normals: Vec<_> = patch
+                .iter()
+                .map(|&fi| {
+                    let points = mesh.faces[fi].map(|v| mesh.points[v]);
+                    band.normal(
+                        std::array::from_fn(|axis| {
+                            (points[0][axis] + points[1][axis] + points[2][axis]) / 3.0
+                        }),
+                        mesh.labels[fi],
+                    )
+                })
+                .collect();
             let translated = |candidate: Point| -> [Point; 8] {
                 let mut points = [[0.; 3]; 8];
                 for (j, &i) in orbit.iter().enumerate() {
@@ -666,7 +703,7 @@ pub fn polish_periodic<F: ScalarField>(
                 let replacements = translated(candidate);
                 let mut loss = 0.0;
                 let mut worst = 1.0f64;
-                for &fi in patch {
+                for (&fi, &normal) in patch.iter().zip(&normals) {
                     let points = mesh.faces[fi].map(|v| {
                         if owner[v] == oi {
                             replacements[slot[v]]
@@ -674,7 +711,7 @@ pub fn polish_periodic<F: ScalarField>(
                             mesh.points[v]
                         }
                     });
-                    let q = shape(points, mesh.labels[fi], band);
+                    let q = shape_with_normal(points, normal);
                     if q <= 0.0 || !q.is_finite() {
                         return (f64::INFINITY, q);
                     }
@@ -694,21 +731,39 @@ pub fn polish_periodic<F: ScalarField>(
                 .map(|v| dot(sub(mesh.points[v], old), sub(mesh.points[v], old)).sqrt())
                 .sum::<f64>()
                 / (2 * incident[base].len()) as f64;
-            let h = edge * 1e-4;
-            let gradient: Point = std::array::from_fn(|axis| {
-                let mut a = old;
-                let mut b = old;
-                a[axis] += h;
-                b[axis] -= h;
-                (eval(a).0 - eval(b).0) / (2.0 * h)
+            let target: Point = std::array::from_fn(|axis| {
+                incident[base]
+                    .iter()
+                    .flat_map(|&fi| mesh.faces[fi])
+                    .filter(|&v| v != base)
+                    .map(|v| mesh.points[v][axis])
+                    .sum::<f64>()
+                    / (2 * incident[base].len()) as f64
             });
-            let length = dot(gradient, gradient).sqrt();
-            if !length.is_finite() || length < 1e-14 {
-                continue;
-            }
-            for attempt in 0..16 {
-                let step = 0.2 * edge / length * 0.5f64.powi(attempt);
-                let candidate = std::array::from_fn(|axis| old[axis] - step * gradient[axis]);
+            let mut gradient = None;
+            let mut accepted = None;
+            for attempt in 0..18 {
+                let candidate = if attempt < 2 {
+                    let weight = 0.5f64.powi(attempt + 1);
+                    std::array::from_fn(|axis| old[axis] + weight * (target[axis] - old[axis]))
+                } else {
+                    let (direction, length) = gradient.get_or_insert_with(|| {
+                        let h = edge * 1e-4;
+                        let direction: Point = std::array::from_fn(|axis| {
+                            let mut a = old;
+                            let mut b = old;
+                            a[axis] += h;
+                            b[axis] -= h;
+                            (eval(a).0 - eval(b).0) / (2.0 * h)
+                        });
+                        (direction, dot(direction, direction).sqrt())
+                    });
+                    if !length.is_finite() || *length < 1e-14 {
+                        break;
+                    }
+                    let step = 0.2 * edge / *length * 0.5f64.powi(attempt - 2);
+                    std::array::from_fn(|axis| old[axis] - step * direction[axis])
+                };
                 let Ok(candidate) = band.project(candidate, masks[base]) else {
                     continue;
                 };
@@ -722,15 +777,40 @@ pub fn polish_periodic<F: ScalarField>(
                 }
                 let (loss, next_worst) = eval(candidate);
                 if loss < before - 1e-12 && next_worst >= worst.min(0.65) - 1e-12 {
-                    for (&i, &p) in orbit.iter().zip(&replacements) {
-                        mesh.points[i] = p;
+                    let exact = translated(candidate);
+                    let mut exact_loss = 0.0;
+                    let mut exact_worst = 1.0f64;
+                    for &fi in patch {
+                        let points = mesh.faces[fi].map(|v| {
+                            if owner[v] == oi {
+                                exact[slot[v]]
+                            } else {
+                                mesh.points[v]
+                            }
+                        });
+                        let q = shape(points, mesh.labels[fi], band);
+                        if q <= 0.0 || !q.is_finite() {
+                            exact_loss = f64::INFINITY;
+                            break;
+                        }
+                        exact_worst = exact_worst.min(q);
+                        exact_loss += -q.ln() + 100.0 * (0.75 - q).max(0.0).powi(2);
                     }
-                    moved += 1;
-                    next_active[oi] = true;
-                    for &j in &neighbors[oi] {
-                        next_active[j] = true;
+                    if exact_loss >= before - 1e-12 || exact_worst < worst.min(0.65) - 1e-12 {
+                        continue;
                     }
+                    accepted = Some(replacements);
                     break;
+                }
+            }
+            if let Some(replacements) = accepted {
+                for (&i, &p) in orbit.iter().zip(&replacements) {
+                    mesh.points[i] = p;
+                }
+                moved += 1;
+                next_active[oi] = true;
+                for &j in &neighbors[oi] {
+                    next_active[j] = true;
                 }
             }
         }

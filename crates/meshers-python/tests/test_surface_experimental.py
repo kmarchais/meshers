@@ -38,6 +38,34 @@ def test_generates_closed_surface_without_tetrahedra():
     assert mesh.volume > 0
 
 
+@pytest.mark.skipif(
+    not hasattr(meshers._meshers, "generate_surface"),
+    reason="requires experimental-surfaces Rust feature",
+)
+def test_graded_surface_default_is_closed_and_respects_implicit_walls():
+    def graded_gyroid(x, y, z):
+        thickness = 0.6 + (0.1 / 3) * (x + y + z)
+        return gyroid(x, y, z) / (0.5 * thickness)
+
+    surface = meshers.generate_surface(
+        graded_gyroid,
+        bounds=(-1, 1, -1, 1, -1, 1),
+        cells=31,
+        band=(-1, 1),
+    )
+    assert surface.diagnostics["minimum_angle_degrees"] > 10
+    mesh = pv.PolyData(
+        surface.points,
+        np.column_stack((np.full(len(surface.triangles), 3), surface.triangles)),
+    )
+    assert mesh.n_open_edges == 0
+    assert mesh.volume > 0
+    for label, level in ((0, 1), (1, -1)):
+        wall_nodes = np.unique(surface.triangles[surface.labels == label])
+        x, y, z = surface.points[wall_nodes].T
+        assert np.max(np.abs(graded_gyroid(x, y, z) - level)) < 1e-8
+
+
 def split_p(x, y, z):
     x, y, z = (2 * np.pi * v for v in (x, y, z))
     return (

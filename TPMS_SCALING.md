@@ -149,15 +149,31 @@ stopped after 235 seconds of MMG CPU work without producing an output mesh.
 This older test is retained only as historical context. Larger matched-quality
 measurements remain necessary before claiming a general speedup.
 
-The direct periodic surface path has a separate scaling issue. At two units,
-10 polish passes did not reach its 5-degree angle requirement; 40 passes
-reached 13.16 degrees but took 23.03 seconds for 116k triangles. At three
-units, even 40 passes and five background-resolution attempts did not meet
-the 5-degree requirement. Microgen's
-legacy surface took 1.21 seconds for 57k triangles, but its minimum angle was
-0.0014 degrees. At three units its 190k-triangle surface took 1.30 seconds
-and had a 0.00053-degree minimum angle. A fast, high-quality direct surface
-for a large graded domain is not yet established.
+The surface path previously spent most of its time improving an already
+extracted mesh: raw extraction for the two-unit graded gyroid took 0.43
+seconds, while the old default of 10 smoothing iterations, 12 topology
+rounds, and 40 polishing passes took 23.03 seconds and still left a 13.16°
+minimum angle. Four topology rounds without smoothing or polishing are now
+the nonperiodic default. At matched grid counts, the resulting graded
+gyroid took 1.96 seconds for two units (103k triangles, 15.34° minimum
+angle) and 6.73 seconds for three units (349k triangles, 14.25°). A two-unit
+graded split-P took 4.08 seconds (167k triangles, 7.28°). These single-run
+times exclude imports. The three-unit gyroid produced 3.4 times as many
+triangles as the two-unit case and took 3.4 times as long in this pair of
+runs. The corresponding direct gyroid volumes took about
+4.61 and 15.07 seconds. Microgen's raw VTK gyroid surface took 1.21 seconds
+for two units and 1.30 seconds for three, but its minimum angles were
+0.0014° and 0.00053°. Thus the improved surface path is faster than direct
+volume meshing and avoids VTK's nearly degenerate triangles, though raw VTK
+extraction remains faster. Larger graded cases and end-to-end FEA are still
+unmeasured.
+
+A two-unit gyroid graded only along x retains periodic y/z cap meshes. It
+took 4.19 seconds with the periodic default, had a 6.92° minimum angle, and
+matched both cap nodes and triangles on the two periodic axes. This mixed
+case remains considerably slower than the fully nonperiodic four-round
+path; paired topology edits or a faster periodic optimizer are needed to
+bring it to the same speed and quality.
 
 Run `crates/meshers-python/examples/graded_comparison.py` for these cases.
 Its `runtime_seconds` includes geometry setup and generation but excludes
@@ -182,12 +198,13 @@ axis, both paths returned fully periodic meshes:
 | Output | Workflow | Time | Worst quality | First-percentile quality |
 | --- | --- | ---: | ---: | ---: |
 | Surface | microgen VTK | 0.035 s | 0.287° | 2.51° |
-| Surface | meshers direct | 0.38 s | 19.77° | 28.94° |
+| Surface | meshers direct | 0.258 s | 15.05° | 28.74° |
 | Volume | microgen + two-pass MMG | 3.421 s | 0.0225 | 0.1046 |
 | Volume | meshers direct | 0.896 s | 0.1440 | 0.3888 |
 
 Volume times are medians of three alternating fresh-process runs. Surface
-times are single runs. The meshers volume passed a 0.1 minimum-quality gate
+times are single runs, with the meshers result rerun after the surface
+optimizer change. The meshers volume passed a 0.1 minimum-quality gate
 and had 0.0034 sampled surface error. Microgen's MMG output had fewer
 tetrahedra, but its surface error against the implicit field has not been
 measured, so this is not a matched-accuracy comparison. At thickness `0.5`,
@@ -197,8 +214,9 @@ volume above the 0.1 gate.
 
 For a one-cell split-P sheet of thickness `0.5`, both surface outputs were
 periodic. At 16 grid points, microgen VTK took 0.041 seconds with a 0.259°
-worst angle and 2.72° first-percentile angle. Meshers took 0.653 seconds with
-a 6.42° worst angle and 28.04° first-percentile angle. The meshers volume at
+worst angle and 2.72° first-percentile angle. With the revised surface
+optimizer, meshers took 0.449 seconds with a 7.65° worst angle and 26.57°
+first-percentile angle. The meshers volume at
 16 grid points missed the 0.1 quality gate (minimum 0.068), but at 32
 background intervals it produced a fully periodic volume in 10.9 seconds,
 with minimum quality 0.140, first-percentile quality 0.413, and 0.00218
@@ -225,7 +243,8 @@ wrapper was called with `periodic=False` because its option applies to all
 axes, but the required boundary triangles happened to retain the two lateral
 periodic cap meshes in this run.
 
-The result is narrower for large **surface-only** grading: microgen VTK is
-fast but has nearly degenerate triangles, while the current direct meshers
-optimizer is expensive and did not meet its angle gate at three cells per
-side. That case still needs algorithmic work before claiming a replacement.
+For large **surface-only** grading, meshers now meets a 10° minimum-angle
+gate for the tested two- and three-unit gyroids with its shorter default
+improvement path. The two-unit graded split-P exceeds 5°. Microgen's raw
+VTK surfaces remain faster, but their worst angles are nearly zero. Results
+at larger sizes and matched FEA accuracy remain open.

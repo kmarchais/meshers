@@ -310,11 +310,11 @@ def generate_surface(
     if not 4 <= cells <= 128:
         raise ValueError("Surface cells must be in 4..=128")
     if smoothing_iterations is None:
-        smoothing_iterations = 0 if any(periodic) else 10
+        smoothing_iterations = 0
     if improvement_rounds is None:
-        improvement_rounds = 0 if any(periodic) else 12
+        improvement_rounds = 0 if any(periodic) else 4
     if polish_passes is None:
-        polish_passes = 10 if any(periodic) else 40
+        polish_passes = 12 if any(periodic) else 0
     native = getattr(_meshers, "generate_surface", None)
     if native is None:
         raise NotImplementedError("rebuild meshers with experimental-surfaces")
