@@ -119,6 +119,34 @@ def test_split_p_periodic_surface_pairs_cap_triangles():
         assert caps[0] == caps[1]
 
 
+@pytest.mark.skipif(
+    not hasattr(meshers._meshers, "generate_surface"),
+    reason="requires experimental-surfaces Rust feature",
+)
+def test_x_graded_surface_keeps_lateral_periodic_caps():
+    def graded_gyroid(x, y, z):
+        return gyroid(x, y, z) / (0.5 * (0.6 + 0.1 * x))
+
+    surface = meshers.generate_surface(
+        graded_gyroid,
+        bounds=(-1, 1, -1, 1, -1, 1),
+        cells=31,
+        band=(-1, 1),
+        periodic=(False, True, True),
+    )
+    assert surface.diagnostics["minimum_angle_degrees"] > 5
+    for axis in (1, 2):
+        caps = []
+        for side in range(2):
+            triangles = surface.triangles[surface.labels == 2 + 2 * axis + side]
+            points = surface.points[triangles].copy()
+            points[:, :, axis] = 0
+            rounded = np.rint(points * 1e9).astype(np.int64)
+            caps.append({tuple(sorted(map(tuple, face))) for face in rounded})
+        assert caps[0]
+        assert caps[0] == caps[1]
+
+
 def test_periodic_surface_rejects_unpaired_topology_edits():
     with pytest.raises(ValueError, match="zero smoothing and improvement"):
         meshers.generate_surface(

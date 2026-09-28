@@ -314,7 +314,12 @@ def generate_surface(
     if improvement_rounds is None:
         improvement_rounds = 0 if any(periodic) else 4
     if polish_passes is None:
-        polish_passes = 12 if any(periodic) else 0
+        if all(periodic):
+            polish_passes = 12
+        elif any(periodic):
+            polish_passes = 8
+        else:
+            polish_passes = 0
     native = getattr(_meshers, "generate_surface", None)
     if native is None:
         raise NotImplementedError("rebuild meshers with experimental-surfaces")

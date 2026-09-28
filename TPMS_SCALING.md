@@ -168,12 +168,13 @@ volume meshing and avoids VTK's nearly degenerate triangles, though raw VTK
 extraction remains faster. Larger graded cases and end-to-end FEA are still
 unmeasured.
 
-A two-unit gyroid graded only along x retains periodic y/z cap meshes. It
-took 4.19 seconds with the periodic default, had a 6.92° minimum angle, and
-matched both cap nodes and triangles on the two periodic axes. This mixed
-case remains considerably slower than the fully nonperiodic four-round
-path; paired topology edits or a faster periodic optimizer are needed to
-bring it to the same speed and quality.
+A two-unit gyroid graded only along x retains periodic y/z cap meshes. With
+the shorter eight-pass default for partially periodic surfaces, it took 2.80
+seconds, had a 6.24° minimum angle, and matched both cap nodes and triangles
+on the two periodic axes. The corresponding direct volume took 3.89 seconds
+with minimum MMG quality 0.122. This surface path is still considerably
+slower than the fully nonperiodic four-round path; paired topology edits or
+a faster periodic optimizer are needed for a larger speed margin.
 
 Run `crates/meshers-python/examples/graded_comparison.py` for these cases.
 Its `runtime_seconds` includes geometry setup and generation but excludes
