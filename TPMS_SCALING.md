@@ -106,22 +106,35 @@ only 0.098. This is a controlled improvement over rejecting the mesh or
 rerunning the entire generator. Unremeshed VTK output remains much faster;
 the complete workflow is the relevant comparison for FEM-ready tetrahedra.
 
-For that comparison, `pymmg` 1.0.0 provided MMG3D 5.7.0. The existing
-`remesh_keeping_boundaries_for_fem` routine triangulates microgen's mixed
-cells, writes required boundary triangles, and runs two MMG3D passes. A
-Windows temporary-file fix was needed to let meshio reopen its input file.
-After one warm-up, four alternating fresh-process runs of the one-unit,
-three-axis-graded case had median times of 0.345 seconds for direct meshers
-and 3.43 seconds for microgen plus MMG. Meshers returned 15,831 tetrahedra
-with minimum MMG quality 0.120 and first-percentile quality 0.200. MMG
-returned 9,160 tetrahedra with minimum quality 0.0123 and first-percentile
-quality 0.0989. Meshers' peak process working set was about 44 MB versus
-489 MB for the microgen Python process; the latter excludes the MMG child
-process. The two-unit MMG run was stopped after 235 seconds of MMG CPU work
-without producing an output mesh, so its
-final quality and total time remain unknown. The one-unit output counts differ,
-and the MMG version and size controls matter; larger matched-quality
-measurements are still needed before claiming a general speedup.
+For an MMG 5.8 comparison, `mmgpy` 0.16.2 provided the native library.
+The PyPI package named [`mmg`](https://pypi.org/project/mmg/) is a Markdown
+localization tool, not the mesh remesher.
+The benchmark triangulates microgen's mixed cells, marks its boundary faces
+as required, and performs one MMG remeshing pass through `mmgpy`. All required
+faces were retained in the one-unit output. Four alternating fresh-process
+runs of the one-unit, three-axis-graded case gave median generation times,
+excluding imports, of 0.350 seconds for direct meshers and 1.766 seconds
+for microgen plus `mmgpy`. Meshers returned 15,831 tetrahedra with minimum
+MMG quality 0.120 and first-percentile quality 0.200. `mmgpy` returned
+13,941 tetrahedra with minimum quality 0.0104 and first-percentile quality
+0.110. Peak process working sets were about 44 MB and 497 MB respectively.
+This is a one-pass `mmgpy` comparison, not a reproduction of microgen's
+existing two-pass command-line workflow; the element counts and MMG size
+controls differ. The `mmgpy` output's sampled surface error has not yet been
+measured against the implicit field, so this is not a matched-accuracy result.
+The two-unit `mmgpy` run exceeded a 120-second wall-time limit without
+returning a mesh; its final quality and runtime remain unknown.
+
+The existing `remesh_keeping_boundaries_for_fem` command-line path was also
+tested with an MMG3D 5.7.0 executable supplied by `pymmg` 1.0.0. A Windows
+temporary-file fix was needed to let meshio reopen its input file. Four
+alternating fresh-process runs had a median of 3.43 seconds for the one-unit
+case, **including about 0.6 seconds of microgen import time**. Its 9,160-tet
+output had minimum quality 0.0123 and first-percentile quality 0.0989. This
+older, two-pass run is not the primary performance baseline. The two-unit
+CLI run was stopped after 235 seconds of MMG CPU work without producing an
+output mesh. Larger matched-quality measurements remain necessary before
+claiming a general speedup.
 
 The direct periodic surface path has a separate scaling issue. At two units,
 10 polish passes did not reach its 5-degree angle requirement; 40 passes
@@ -134,6 +147,7 @@ and had a 0.00053-degree minimum angle. A fast, high-quality direct surface
 for a large graded domain is not yet established.
 
 Run `crates/meshers-python/examples/graded_comparison.py` for these cases.
-The timings include geometry setup and generation, but exclude module import
-and process startup. Each is one run, not a median; both output counts and
-surface angles should be considered alongside time.
+Its `runtime_seconds` includes geometry setup and generation but excludes
+module imports and process startup. `total_seconds` includes imports but not
+process startup. Except for the stated four-run medians, each measurement
+above is one run. Compare output counts and quality alongside time.

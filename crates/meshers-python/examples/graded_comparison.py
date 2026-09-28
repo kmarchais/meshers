@@ -65,6 +65,14 @@ def tetra_quality(points, tetrahedra):
     }
 
 
+def face_keys(points, triangles):
+    coordinates = np.rint(points * 1e9).astype(np.int64)
+    return {
+        tuple(sorted(map(tuple, coordinates[face])))
+        for face in triangles
+    }
+
+
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument(
@@ -73,6 +81,7 @@ def main():
             "microgen_surface",
             "microgen_volume",
             "microgen_mmg_volume",
+            "microgen_mmgpy_volume",
             "microgen_meshers_volume",
             "meshers_surface",
             "meshers_volume",
@@ -99,6 +108,15 @@ def main():
     if args.mode.startswith("microgen"):
         from microgen import Tpms
         from microgen.shape.surface_functions import gyroid as microgen_gyroid
+        if args.mode == "microgen_mmg_volume":
+            from microgen.remesh import remesh_keeping_boundaries_for_fem
+        if args.mode == "microgen_mmgpy_volume":
+            import mmgpy
+            from microgen import BoxMesh
+
+    import_seconds = time.perf_counter() - start
+    runtime_start = time.perf_counter()
+    if args.mode.startswith("microgen"):
 
         shape = Tpms(
             microgen_gyroid,
@@ -106,7 +124,7 @@ def main():
             repeat_cell=u,
             resolution=args.grid_points_per_cell,
         )
-        setup_seconds = time.perf_counter() - start
+        setup_seconds = time.perf_counter() - runtime_start
         if args.mode == "microgen_surface":
             result = shape.generate_surface_mesh()
             triangles = result.faces.reshape(-1, 4)[:, 1:]
@@ -116,27 +134,60 @@ def main():
                 "open_edges": result.n_open_edges,
                 "minimum_angle": minimum_angle(result.points, triangles),
             }
-        elif args.mode in ("microgen_volume", "microgen_mmg_volume"):
+        elif args.mode in (
+            "microgen_volume",
+            "microgen_mmg_volume",
+            "microgen_mmgpy_volume",
+        ):
             result = shape._generate_legacy_volume_mesh()
-            legacy_seconds = time.perf_counter() - start
+            legacy_seconds = time.perf_counter() - runtime_start
             if args.mode == "microgen_mmg_volume":
-                from microgen.remesh import remesh_keeping_boundaries_for_fem
-
                 result = remesh_keeping_boundaries_for_fem(result, periodic=False)
-            output = {
-                "points": result.n_points,
-                "elements": result.n_cells,
-                "cell_types": np.unique(
-                    result.celltypes, return_counts=True
-                )[0].tolist(),
-                "legacy_seconds": round(legacy_seconds, 3),
-            }
-            if args.mode == "microgen_mmg_volume":
-                tets = result.cells_dict[10]
-                output.update(
-                    mmg_seconds=round(time.perf_counter() - start - legacy_seconds, 3),
-                    **tetra_quality(result.points, tets),
+            elif args.mode == "microgen_mmgpy_volume":
+                box = BoxMesh.from_pyvista(result.triangulate())
+                boundary, _ = box.boundary_elements(box.rve)
+                merged = box.to_pyvista().merge(boundary)
+                mmg_mesh = mmgpy.from_pyvista(merged)
+                required = face_keys(
+                    mmg_mesh.get_vertices(), mmg_mesh.get_triangles()
                 )
+                mmg_mesh.set_required_triangles(
+                    np.arange(boundary.n_cells, dtype=np.int32)
+                )
+                mmg_result = mmg_mesh.remesh(verbose=-1)
+                if mmg_result["return_code"] != 0:
+                    raise RuntimeError(f"mmgpy remeshing failed: {mmg_result}")
+                output = {
+                    "points": len(mmg_mesh.get_vertices()),
+                    "elements": len(mmg_mesh.get_tetrahedra()),
+                    "required_faces_preserved": required.issubset(
+                        face_keys(mmg_mesh.get_vertices(), mmg_mesh.get_triangles())
+                    ),
+                    "legacy_seconds": round(legacy_seconds, 3),
+                    "mmgpy_seconds": round(
+                        time.perf_counter() - runtime_start - legacy_seconds, 3
+                    ),
+                    **tetra_quality(
+                        mmg_mesh.get_vertices(), mmg_mesh.get_tetrahedra()
+                    ),
+                }
+            else:
+                output = {
+                    "points": result.n_points,
+                    "elements": result.n_cells,
+                    "cell_types": np.unique(
+                        result.celltypes, return_counts=True
+                    )[0].tolist(),
+                    "legacy_seconds": round(legacy_seconds, 3),
+                }
+                if args.mode == "microgen_mmg_volume":
+                    tets = result.cells_dict[10]
+                    output.update(
+                        mmg_seconds=round(
+                            time.perf_counter() - runtime_start - legacy_seconds, 3
+                        ),
+                        **tetra_quality(result.points, tets),
+                    )
         else:
             result = shape.generate_meshers(
                 periodic=periodic,
@@ -214,7 +265,7 @@ def main():
                 snap=args.snap,
                 threads=1,
             )
-            generation_seconds = time.perf_counter() - start
+            generation_seconds = time.perf_counter() - runtime_start
             result = meshers.tile_periodic(
                 slab,
                 bounds=slab_bounds,
@@ -234,6 +285,8 @@ def main():
         grade_axes=GRADE_AXES,
         grid_points_per_cell=args.grid_points_per_cell,
         setup_seconds=round(setup_seconds, 3),
+        import_seconds=round(import_seconds, 3),
+        runtime_seconds=round(time.perf_counter() - runtime_start, 3),
         total_seconds=round(time.perf_counter() - start, 3),
         peak_megabytes=peak_megabytes(),
     )
