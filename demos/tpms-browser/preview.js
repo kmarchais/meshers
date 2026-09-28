@@ -5,6 +5,7 @@ import * as THREE from "three";
 export function createPreview(config, cut) {
   const material = new THREE.ShaderMaterial({
     side: THREE.BackSide,
+    transparent: true,
     uniforms: {
       shape: { value: config.shape },
       repeats: { value: config.repeat },
@@ -29,10 +30,10 @@ export function createPreview(config, cut) {
         else f=c.x+c.y+c.z;
         return abs(f)-.5*thickness*(1.+2.*grade*p.x);
       }
-      void main(){
-        vec3 ro=cameraPosition,rd=normalize(positionWorld-ro);
+      vec4 trace(vec3 target){
+        vec3 ro=cameraPosition,rd=normalize(target-ro);
         vec3 low=vec3(-.5),high=vec3(min(.5,cut),.5,.5);
-        if(high.x<=low.x) discard;
+        if(high.x<=low.x) return vec4(0.);
         // Protect exactly parallel rays without changing their meaningful sign.
         vec3 safe=vec3(abs(rd.x)<1e-8?1e-8:rd.x,abs(rd.y)<1e-8?1e-8:rd.y,abs(rd.z)<1e-8?1e-8:rd.z);
         vec3 a=(low-ro)/safe,b=(high-ro)/safe;
@@ -40,7 +41,7 @@ export function createPreview(config, cut) {
         float entry=max(max(nearT.x,nearT.y),nearT.z);
         float end=min(min(farT.x,farT.y),farT.z);
         float t=max(entry,0.);
-        if(end<t) discard;
+        if(end<t) return vec4(0.);
         vec3 p=ro+rd*t;
         bool cap=entry>=0. && band(p)<0.;
         bool inside=band(p)<0.;
@@ -53,7 +54,7 @@ export function createPreview(config, cut) {
           if(abs(f)<.0004 || ((f<0.)!=inside)){hit=true;break;}
           t+=max(abs(f)/L,.000025);
         }
-        if(!hit||t>end) discard;
+        if(!hit||t>end) return vec4(0.);
         vec3 n;
         if(cap){
           vec3 d=min(abs(p-low),abs(p-high));
@@ -67,7 +68,15 @@ export function createPreview(config, cut) {
         if(dot(n,rd)>0.)n=-n;
         float light=.27+.64*max(dot(n,normalize(vec3(2.,4.,3.))),0.)+.2*max(dot(n,normalize(vec3(-3.,1.,-2.))),0.);
         vec3 color=vec3(.69,.82,.51)*light;
-        gl_FragColor=vec4(color,1.);
+        return vec4(color,1.);
+      }
+      void main(){
+        // Four subpixel rays smooth implicit edges that raster MSAA cannot see.
+        vec3 dx=dFdx(positionWorld)*.25,dy=dFdy(positionWorld)*.25;
+        vec4 sum=trace(positionWorld-dx-dy)+trace(positionWorld+dx-dy)
+                +trace(positionWorld-dx+dy)+trace(positionWorld+dx+dy);
+        if(sum.a==0.) discard;
+        gl_FragColor=vec4(sum.rgb/sum.a,sum.a*.25);
         #include <tonemapping_fragment>
         #include <colorspace_fragment>
       }`,

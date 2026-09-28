@@ -32,4 +32,6 @@ Printing uses exact roots without triangle polishing. FEA uses the real volume m
 
 Browser limits: surfaces at most 64 grid divisions per axis, volumes at most 40 and 600,000 tetrahedra. The worker uses serial Rust execution. Timings include generation, validation and JSON serialization/parsing, but exclude WASM loading, worker transfer and rendering. The package is experimental and not published to npm.
 
+Quick view uses four subpixel rays per pixel for antialiasing, including partial coverage at implicit silhouettes. This costs more GPU work than a single ray; frame rate depends on viewport size, geometry and hardware.
+
 Three.js is MIT licensed. Its license is distributed with the built artifacts.
