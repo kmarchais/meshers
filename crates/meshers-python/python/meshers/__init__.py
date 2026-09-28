@@ -295,6 +295,7 @@ def generate_surface(
     smoothing_iterations: int | None = None,
     improvement_rounds: int | None = None,
     polish_passes: int | None = None,
+    refine_edges: bool = True,
     gradient: Field | None = None,
     batch_size: int = 4096,
     cancel: CancellationToken | None = None,
@@ -303,7 +304,10 @@ def generate_surface(
     """Extract a clipped implicit-band surface without building tetrahedra.
 
     This research API needs a build with ``experimental-surfaces``. Periodic
-    surfaces use paired vertex polishing without topology edits.
+    surfaces use paired vertex polishing without topology edits. Set
+    ``refine_edges=False`` only for speed experiments: linear edge interpolation
+    and one normal per polygon can leave large implicit-surface errors,
+    especially for split-P.
     """
     if len(periodic) != 3:
         raise ValueError("periodic must contain three booleans")
@@ -350,6 +354,7 @@ def generate_surface(
                 smoothing_iterations,
                 improvement_rounds,
                 polish_passes,
+                refine_edges,
                 batch_size,
                 cancel,
             )

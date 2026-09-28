@@ -20,6 +20,7 @@ struct Extractor<'a, 'b, F: ScalarField> {
     values: Vec<f64>,
     mesh: TriangleMesh,
     cache: HashMap<(usize, usize, u8), usize>,
+    refine_edges: bool,
 }
 impl<F: ScalarField> Extractor<'_, '_, F> {
     fn original(&mut self, id: usize) -> usize {
@@ -45,6 +46,14 @@ impl<F: ScalarField> Extractor<'_, '_, F> {
         }
         if va.signum() == vb.signum() {
             return Err(fail("No bracket on surface edge"));
+        }
+        if !self.refine_edges {
+            let t = va / (va - vb);
+            let p = std::array::from_fn(|k| self.grid[a][k] * (1. - t) + self.grid[b][k] * t);
+            let id = self.mesh.points.len();
+            self.mesh.points.push(p);
+            self.cache.insert((a, b, label), id);
+            return Ok(id);
         }
         let mut lo = 0.;
         let mut hi = 1.;
@@ -135,9 +144,12 @@ impl<F: ScalarField> Extractor<'_, '_, F> {
                     ids[(start + j + 1) % ids.len()],
                 ];
                 let [a, b, c] = face.map(|i| self.mesh.points[i]);
-                let n = self
-                    .band
-                    .normal(std::array::from_fn(|k| (a[k] + b[k] + c[k]) / 3.), label);
+                let n = if self.refine_edges {
+                    self.band
+                        .normal(std::array::from_fn(|k| (a[k] + b[k] + c[k]) / 3.), label)
+                } else {
+                    normal
+                };
                 let e = sub(b, a);
                 let d = sub(c, a);
                 let edge = sub(c, b);
@@ -210,6 +222,16 @@ impl<F: ScalarField> Extractor<'_, '_, F> {
 }
 
 pub fn extract<F: ScalarField>(band: &Band<'_, F>, cells: usize) -> Result<TriangleMesh> {
+    extract_with_edge_refinement(band, cells, true)
+}
+
+/// Experimental fast mode skips analytic edge roots and reuses one polygon
+/// normal for fan scoring when `refine_edges` is false.
+pub fn extract_with_edge_refinement<F: ScalarField>(
+    band: &Band<'_, F>,
+    cells: usize,
+    refine_edges: bool,
+) -> Result<TriangleMesh> {
     band.validate()?;
     if !(4..=128).contains(&cells) {
         return Err(MeshingError::InvalidOptions(
@@ -246,6 +268,7 @@ pub fn extract<F: ScalarField>(band: &Band<'_, F>, cells: usize) -> Result<Trian
             labels: Vec::new(),
         },
         cache: HashMap::new(),
+        refine_edges,
     };
     let stride = [1, n, n * n];
     for z in 0..cells {
@@ -1132,6 +1155,8 @@ mod tests {
         };
         let mut mesh = extract(&band, 8).unwrap();
         check(&mesh, &band);
+        let linear = extract_with_edge_refinement(&band, 8, false).unwrap();
+        check(&linear, &band);
         smooth(&mut mesh, &band, 3).unwrap();
         check(&mesh, &band);
         improve(&mut mesh, &band, 4).unwrap();

@@ -17,6 +17,7 @@ pub(super) fn generate_surface<'py>(
     smoothing_iterations: usize,
     improvement_rounds: usize,
     polish_passes: usize,
+    refine_edges: bool,
     batch_size: usize,
     cancel: Option<PyRef<'py, CancellationToken>>,
 ) -> PyResult<Bound<'py, PyDict>> {
@@ -43,7 +44,7 @@ pub(super) fn generate_surface<'py>(
     };
     let start = std::time::Instant::now();
     let result = py.detach(|| {
-        let mut mesh = triangles::extract(&geometry, cells)?;
+        let mut mesh = triangles::extract_with_edge_refinement(&geometry, cells, refine_edges)?;
         if periodic.iter().any(|&v| v) {
             triangles::polish_periodic(&mut mesh, &geometry, periodic, polish_passes)?;
         } else {
