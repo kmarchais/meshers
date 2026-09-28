@@ -117,8 +117,8 @@ with minimum MMG quality 0.120 and first-percentile quality 0.200. MMG
 returned 9,160 tetrahedra with minimum quality 0.0123 and first-percentile
 quality 0.0989. Meshers' peak process working set was about 44 MB versus
 489 MB for the microgen Python process; the latter excludes the MMG child
-process. The two-unit MMG run was stopped after more
-than four minutes of MMG CPU work without producing an output mesh, so its
+process. The two-unit MMG run was stopped after 235 seconds of MMG CPU work
+without producing an output mesh, so its
 final quality and total time remain unknown. The one-unit output counts differ,
 and the MMG version and size controls matter; larger matched-quality
 measurements are still needed before claiming a general speedup.
