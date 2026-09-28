@@ -4,6 +4,9 @@ import { Worker } from "node:worker_threads";
 import { Script } from "node:vm";
 import { stlBytes, vtuText } from "./exports.js";
 const html = await readFile("dist/index.html", "utf8");
+const entry = await readFile("index.html", "utf8");
+assert(entry.includes('href="dist/index.html"'));
+assert(!entry.includes("APP_BUNDLE"));
 const script = html.slice(
   html.indexOf("<script>") + 8,
   html.lastIndexOf("</script>"),

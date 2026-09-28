@@ -13,7 +13,7 @@ npm run build
 npm test
 ```
 
-Open `dist/index.html`. The reusable ES module package is in `dist/package`.
+Open `index.html` and follow **Open TPMS studio**, or open `dist/index.html` directly. The reusable ES module package is in `dist/package`. `studio.template.html` is a build input and does not run on its own.
 
 ```js
 import { createMeshers } from './package/index.js';

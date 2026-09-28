@@ -22,7 +22,7 @@ const app = await build({
 });
 await mkdir("dist/package", { recursive: true });
 await writeFile("dist/worker.bundle.js", worker.outputFiles[0].text);
-const template = await readFile("index.html", "utf8");
+const template = await readFile("studio.template.html", "utf8");
 const thirdParty = await readFile("node_modules/three/LICENSE", "utf8");
 await writeFile(
   "dist/index.html",

@@ -1,0 +1,747 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Meshers · TPMS studio</title>
+    <style>
+      :root {
+        color-scheme: dark;
+        --bg: #101815;
+        --panel: #19221e;
+        --line: #35423a;
+        --ink: #e9efe7;
+        --muted: #a0b0a4;
+        --accent: #c4e494;
+        --orange: #edb578;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+        background: var(--bg);
+        color: var(--ink);
+        font:
+          14px/1.5 system-ui,
+          sans-serif;
+      }
+      button,
+      input,
+      select {
+        font: inherit;
+      }
+      button,
+      select {
+        cursor: pointer;
+      }
+      button {
+        color: var(--ink);
+        background: #243329;
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        padding: 9px 14px;
+      }
+      button:hover {
+        border-color: var(--accent);
+      }
+      button:disabled {
+        opacity: 0.4;
+        cursor: default;
+      }
+      button:focus-visible,
+      input:focus-visible,
+      select:focus-visible {
+        outline: 2px solid var(--accent);
+        outline-offset: 3px;
+      }
+      header {
+        height: 77px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0 28px;
+        border-bottom: 1px solid var(--line);
+      }
+      .brand {
+        font-weight: 700;
+        font-size: 20px;
+        letter-spacing: -0.7px;
+      }
+      .brand i {
+        display: inline-block;
+        width: 20px;
+        height: 20px;
+        border: 3px solid var(--accent);
+        transform: rotate(30deg);
+        margin-right: 14px;
+        border-radius: 5px;
+      }
+      .brand span {
+        font-size: 13px;
+        color: var(--muted);
+        font-weight: 400;
+        letter-spacing: 0;
+        margin-left: 19px;
+      }
+      .badge {
+        border: 1px solid var(--line);
+        padding: 5px 11px;
+        border-radius: 20px;
+        color: var(--accent);
+        font-size: 11px;
+        letter-spacing: 1px;
+        text-transform: uppercase;
+      }
+      .layout {
+        display: grid;
+        grid-template-columns: 300px minmax(380px, 1fr) 286px;
+        min-height: 660px;
+      }
+      aside {
+        padding: 24px;
+        border-right: 1px solid var(--line);
+      }
+      .eyebrow {
+        font-size: 10px;
+        letter-spacing: 1.5px;
+        text-transform: uppercase;
+        color: var(--muted);
+        font-weight: 650;
+      }
+      h1 {
+        font-size: 25px;
+        font-weight: 550;
+        letter-spacing: -0.8px;
+        margin: 6px 0 23px;
+      }
+      h2 {
+        font-size: 15px;
+        font-weight: 550;
+        margin: 0 0 15px;
+      }
+      h3 {
+        font-size: 13px;
+        margin: 18px 0 8px;
+      }
+      label {
+        display: block;
+        color: #ced9d0;
+        font-size: 12px;
+        margin-top: 18px;
+      }
+      .row {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 10px;
+      }
+      output {
+        color: var(--accent);
+        font-variant-numeric: tabular-nums;
+      }
+      select {
+        width: 100%;
+        background: #111b15;
+        color: var(--ink);
+        border: 1px solid var(--line);
+        border-radius: 7px;
+        padding: 10px;
+        margin-top: 7px;
+      }
+      input[type="range"] {
+        width: 100%;
+        accent-color: var(--accent);
+        margin: 12px 0 0;
+      }
+      small,
+      .help {
+        font-size: 11px;
+        color: var(--muted);
+      }
+      .help {
+        line-height: 1.6;
+        margin: 5px 0;
+      }
+      .presets {
+        display: grid;
+        gap: 7px;
+        margin: 11px 0 20px;
+      }
+      .preset {
+        text-align: left;
+        padding: 11px 13px;
+        position: relative;
+        background: transparent;
+      }
+      .preset strong {
+        display: block;
+        font-size: 13px;
+      }
+      .preset small {
+        display: block;
+        font-size: 10px;
+        margin-top: 2px;
+      }
+      .preset.active {
+        border-color: var(--accent);
+        background: #283622;
+      }
+      .preset.active:after {
+        content: "●";
+        position: absolute;
+        right: 12px;
+        top: 10px;
+        color: var(--accent);
+      }
+      .primary {
+        background: var(--accent);
+        color: #182313;
+        border: 0;
+        font-weight: 700;
+        width: 100%;
+        margin-top: 18px;
+        padding: 12px;
+      }
+      .secondary {
+        width: 100%;
+        margin-top: 8px;
+        background: transparent;
+      }
+      .scene-panel {
+        position: relative;
+        min-width: 0;
+        min-height: 660px;
+        background: radial-gradient(
+          ellipse at 50% 45%,
+          #283b32 0%,
+          #17251e 50%,
+          #111b16 100%
+        );
+      }
+      #viewport {
+        position: absolute;
+        inset: 0;
+      }
+      #viewport canvas {
+        display: block;
+        width: 100%;
+        height: 100%;
+        touch-action: none;
+      }
+      .scene-top {
+        position: absolute;
+        top: 22px;
+        left: 25px;
+        right: 25px;
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        pointer-events: none;
+      }
+      .scene-top h2 {
+        font-size: 20px;
+        margin: 2px 0;
+        color: #e3ecd9;
+      }
+      .scene-top button {
+        pointer-events: auto;
+        background: #15231bcf;
+        font-size: 11px;
+      }
+      .scene-bottom {
+        position: absolute;
+        bottom: 20px;
+        left: 25px;
+        right: 25px;
+        pointer-events: none;
+      }
+      .hint {
+        color: #8fa899;
+        font-size: 11px;
+        text-align: center;
+        margin-bottom: 15px;
+      }
+      .toolbar {
+        display: flex;
+        gap: 5px;
+        align-items: center;
+        justify-content: center;
+        background: #111d17e8;
+        border: 1px solid var(--line);
+        border-radius: 10px;
+        padding: 7px;
+        pointer-events: auto;
+        flex-wrap: wrap;
+      }
+      .toolbar button {
+        background: transparent;
+        font-size: 11px;
+        padding: 6px 9px;
+        border-color: transparent;
+      }
+      .toolbar button.on {
+        background: #384936;
+        color: var(--accent);
+      }
+      .toolbar label {
+        margin: 0;
+        display: flex;
+        align-items: center;
+        gap: 5px;
+        font-size: 11px;
+      }
+      .toolbar input[type="range"] {
+        width: 72px;
+        margin: 0;
+      }
+      .legend {
+        display: flex;
+        justify-content: center;
+        gap: 10px;
+        align-items: center;
+        color: #bfccc0;
+        font-size: 10px;
+        margin-bottom: 12px;
+      }
+      #ramp {
+        width: 120px;
+        height: 5px;
+        border-radius: 4px;
+        background: linear-gradient(90deg, #ed7756, #ebcb7a, #a4d994);
+      }
+      .status-panel {
+        position: absolute;
+        top: 100px;
+        left: 25px;
+        right: 25px;
+        padding: 12px 15px;
+        border: 1px solid #607246;
+        background: #26371ff0;
+        border-radius: 9px;
+        font-size: 12px;
+        z-index: 3;
+      }
+      .status-panel[hidden] {
+        display: none;
+      }
+      .status-panel.error {
+        background: #482b25f5;
+        border-color: #bb795f;
+      }
+      .stats {
+        border-right: 0;
+        border-left: 1px solid var(--line);
+        padding: 24px 21px;
+      }
+      .metric {
+        padding: 14px 0;
+        border-bottom: 1px solid var(--line);
+      }
+      .metric .value {
+        font-size: 25px;
+        letter-spacing: -0.6px;
+        font-variant-numeric: tabular-nums;
+      }
+      .metric .label {
+        color: var(--muted);
+        font-size: 11px;
+      }
+      .metric-line {
+        display: flex;
+        justify-content: space-between;
+        padding: 8px 0;
+        font-size: 11px;
+        gap: 8px;
+      }
+      .metric-line span:first-child {
+        color: var(--muted);
+      }
+      #quality-status {
+        margin-top: 15px;
+        color: var(--accent);
+        font-size: 12px;
+      }
+      .hist {
+        height: 58px;
+        display: flex;
+        gap: 3px;
+        align-items: flex-end;
+        margin-top: 14px;
+      }
+      .hist span {
+        flex: 1;
+        min-height: 2px;
+        background: #829f6f;
+        border-radius: 2px 2px 0 0;
+      }
+      .hist-labels {
+        display: flex;
+        justify-content: space-between;
+        color: var(--muted);
+        font-size: 10px;
+        margin: 5px 0 14px;
+      }
+      .downloads {
+        display: flex;
+        gap: 7px;
+        margin-top: 18px;
+      }
+      .downloads button {
+        font-size: 11px;
+        flex: 1;
+        padding: 9px 6px;
+      }
+      .comparison {
+        padding: 26px 28px 32px;
+        border-top: 1px solid var(--line);
+        background: #141d18;
+      }
+      .table-wrap {
+        overflow: auto;
+      }
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 12px;
+        text-align: left;
+        min-width: 850px;
+      }
+      th {
+        color: var(--muted);
+        font-size: 10px;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        font-weight: 500;
+      }
+      th,
+      td {
+        padding: 12px 10px;
+        border-bottom: 1px solid var(--line);
+      }
+      td button {
+        font-size: 10px;
+        padding: 3px 8px;
+      }
+      .foot {
+        padding: 20px 28px;
+        color: var(--muted);
+        font-size: 11px;
+        max-width: 1250px;
+      }
+      .foot p {
+        margin: 5px 0;
+      }
+      .inline {
+        border: 0;
+        padding: 0;
+        background: none;
+        color: var(--accent);
+        font-size: 11px;
+      }
+      #elapsed {
+        font-variant-numeric: tabular-nums;
+      }
+      #stop {
+        margin-left: 12px;
+        padding: 3px 12px;
+      }
+      #stale {
+        font-size: 10px;
+        color: var(--orange);
+        margin-top: 8px;
+        min-height: 15px;
+      }
+      @media (max-width: 1150px) {
+        .layout {
+          grid-template-columns: 270px minmax(350px, 1fr);
+        }
+        .stats {
+          grid-column: 1/-1;
+          display: grid;
+          grid-template-columns: repeat(3, 1fr);
+          gap: 20px;
+          border-top: 1px solid var(--line);
+        }
+        .stats > h2 {
+          grid-column: 1/-1;
+          margin: 0;
+        }
+        .stats .details {
+          grid-column: 2/4;
+        }
+        .stats .downloads {
+          grid-column: 1/-1;
+        }
+        header .brand span {
+          display: none;
+        }
+      }
+      @media (max-width: 700px) {
+        header {
+          padding: 0 17px;
+        }
+        .layout {
+          display: flex;
+          flex-direction: column;
+        }
+        aside {
+          border-right: 0;
+          padding: 20px;
+        }
+        .scene-panel {
+          height: 520px;
+          min-height: 520px;
+        }
+        .presets {
+          grid-template-columns: repeat(3, 1fr);
+          gap: 5px;
+        }
+        .preset {
+          padding: 9px;
+        }
+        .preset small {
+          font-size: 9px;
+        }
+        .preset.active:after {
+          display: none;
+        }
+        .stats {
+          display: block;
+        }
+        .comparison {
+          padding: 20px;
+        }
+        .brand {
+          font-size: 18px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <div class="brand">
+        <i></i>meshers<span>Geometry, straight to mesh.</span>
+      </div>
+      <div class="badge">TPMS studio · experimental</div>
+    </header>
+    <main class="layout">
+      <aside>
+        <div class="eyebrow">Build a microstructure</div>
+        <h1>Shape. Sample. Compare.</h1>
+        <label for="shape">Geometry</label
+        ><select id="shape">
+          <option value="0">Gyroid</option>
+          <option value="1">Split-P</option>
+          <option value="2">Schwarz P</option>
+        </select>
+        <label>Intended use</label>
+        <div class="presets">
+          <button class="preset active" data-preset="0">
+            <strong>Quick view</strong
+            ><small>Fast surface · linear intersections</small></button
+          ><button class="preset" data-preset="1">
+            <strong>3D printing</strong
+            ><small>Fine surface · exact intersections</small></button
+          ><button class="preset" data-preset="2">
+            <strong>FEA</strong><small>Volume tetrahedra · optimized</small>
+          </button>
+        </div>
+        <label class="row" for="repeat"
+          >Cells along each axis
+          <output id="repeat-value">1 × 1 × 1</output></label
+        ><input id="repeat" type="range" min="1" max="3" value="1" step="1" />
+        <label class="row" for="thickness"
+          >Sheet offset <output id="thickness-value">0.60</output></label
+        ><input
+          id="thickness"
+          type="range"
+          min="0.2"
+          max="1.2"
+          step="0.05"
+          value="0.6"
+        />
+        <p class="help">
+          Implicit-field width, not a constant physical wall thickness.
+        </p>
+        <label class="row" for="grade"
+          >Thickness grading along X
+          <output id="grade-value">Uniform</output></label
+        ><input
+          id="grade"
+          type="range"
+          min="0"
+          max="0.7"
+          step="0.05"
+          value="0"
+        />
+        <p class="help">Graded meshes remain periodic along Y and Z.</p>
+        <label class="row" for="resolution"
+          >Samples per cell axis
+          <output id="resolution-value">12</output></label
+        ><input
+          id="resolution"
+          type="range"
+          min="8"
+          max="32"
+          step="1"
+          value="12"
+        />
+        <p class="help" id="budget">
+          Higher sampling follows the geometry more closely.
+        </p>
+        <label class="row" for="cell-size"
+          >Cell size for display and export
+          <output id="cell-size-value">10 mm</output></label
+        ><input id="cell-size" type="range" min="1" max="30" value="10" />
+        <button class="primary" id="generate">Generate mesh</button
+        ><button class="secondary" id="compare">
+          Compare all three presets
+        </button>
+        <div id="stale" aria-live="polite"></div>
+      </aside>
+      <section class="scene-panel" aria-label="Interactive mesh viewer">
+        <div id="viewport"></div>
+        <div class="scene-top">
+          <div>
+            <div class="eyebrow" id="scene-mode">Quick view / surface mesh</div>
+            <h2 id="scene-title">Gyroid · 1 cell</h2>
+          </div>
+          <button id="reset">Reset view</button>
+        </div>
+        <div
+          id="status"
+          class="status-panel"
+          role="status"
+          aria-live="polite"
+          hidden
+        >
+          <span id="status-text"></span><span id="elapsed"></span
+          ><button id="stop" hidden>Stop</button>
+        </div>
+        <div class="scene-bottom">
+          <div class="hint">
+            Drag to orbit · scroll to zoom · right-drag to pan
+          </div>
+          <div class="legend" id="legend" hidden>
+            <span>0°</span>
+            <div id="ramp"></div>
+            <span>60° minimum angle</span>
+          </div>
+          <div class="toolbar">
+            <button id="solid" class="on">Surface</button
+            ><button id="quality">Triangle quality</button
+            ><button id="wire">Wireframe</button
+            ><button id="volume-wire" disabled>Tetrahedra</button
+            ><label for="slice"
+              >Cut <input id="slice" type="range" min="0" max="100" value="100"
+            /></label>
+          </div>
+        </div>
+      </section>
+      <aside class="stats">
+        <h2>Mesh inspection</h2>
+        <div>
+          <div class="metric">
+            <div class="value" id="time">—</div>
+            <div class="label">Generation + validation + serialization</div>
+          </div>
+          <div class="metric">
+            <div class="value" id="triangles">—</div>
+            <div class="label">Surface triangles</div>
+          </div>
+          <div class="metric">
+            <div class="value" id="tets">—</div>
+            <div class="label">Volume tetrahedra</div>
+          </div>
+        </div>
+        <div class="details">
+          <div id="quality-status">Generate a mesh to inspect it.</div>
+          <div class="metric-line">
+            <span>Closed, oriented edges</span><b id="closed">—</b>
+          </div>
+          <div class="metric-line">
+            <span>Periodic faces X / Y / Z</span><b id="periodic">—</b>
+          </div>
+          <div class="metric-line">
+            <span>Triangle angle, 1st percentile</span><b id="angle">—</b>
+          </div>
+          <div class="metric-line">
+            <span>Triangle area variation</span><b id="area">—</b>
+          </div>
+          <div class="metric-line">
+            <span>Surface deviation, p95 estimate</span><b id="deviation">—</b>
+          </div>
+          <div class="metric-line">
+            <span>Minimum tetrahedron quality</span><b id="tet-quality">—</b>
+          </div>
+          <h3>Minimum triangle angles</h3>
+          <div
+            id="hist"
+            class="hist"
+            aria-label="Triangle minimum angle distribution"
+          ></div>
+          <div class="hist-labels">
+            <span>0° / skinny</span><span>60° / equilateral</span>
+          </div>
+          <div class="help" id="size-stats"></div>
+        </div>
+        <div class="downloads">
+          <button id="stl" disabled>STL surface ↓</button
+          ><button id="vtu" disabled>VTU volume ↓</button
+          ><button id="json" disabled>Metrics ↓</button>
+        </div>
+      </aside>
+    </main>
+    <section class="comparison">
+      <div class="row">
+        <h2>Compare your meshes</h2>
+        <button class="inline" id="clear">Clear history</button>
+      </div>
+      <p class="help">
+        Presets choose different sampling densities. Set the same samples per
+        cell manually for an equal-input comparison. Select View to restore a
+        saved result and its settings.
+      </p>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Geometry / cells</th>
+              <th>Preset / samples</th>
+              <th>Time</th>
+              <th>Triangles</th>
+              <th>Tetrahedra</th>
+              <th>Angle p01</th>
+              <th>Deviation p95</th>
+              <th>Tet quality</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody id="history">
+            <tr>
+              <td colspan="9">Your generated meshes will appear here.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+    <footer class="foot">
+      <p>
+        Runs locally in WebAssembly. No geometry is uploaded. Presets are
+        experimental settings, not certification for printing or analysis.
+      </p>
+      <p>
+        Printing uses exact intersections without triangle polishing. Deviation
+        is a first-order distance estimate at triangle centroids, not a maximum
+        error bound. Closure checks edge incidence and orientation, not
+        self-intersections. FEA targets minimum MMG tetrahedron quality ≥ 0.1
+        and sampled boundary error ≤ 1% of a unit cell. A missed target is
+        reported, not hidden. Cutting the view does not modify exported meshes.
+      </p>
+    </footer>
+    <script>
+      /* APP_BUNDLE */
+    </script>
+  </body>
+</html>
