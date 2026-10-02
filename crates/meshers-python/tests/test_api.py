@@ -177,6 +177,42 @@ finally:
     assert "interrupted" in run.stdout
 
 
+@pytest.mark.parametrize("delay", [0.15, 2.0])
+def test_native_interruption_on_windows_and_parallel_workers(delay):
+    import os
+    import subprocess
+    import sys
+    from pathlib import Path
+    import meshers
+
+    # interrupt_main sets Python's pending SIGINT on Windows too. Delay the
+    # second request until the optimizer, after lattice sampling has completed.
+    code = f"""
+import sys, _thread, threading, time
+sys.path.insert(0, {str(Path(meshers.__file__).parent.parent)!r})
+import meshers
+sent = []
+def interrupt():
+    sent.append(time.perf_counter())
+    _thread.interrupt_main()
+timer = threading.Timer({delay}, interrupt)
+timer.start()
+try:
+    meshers.generate('gyroid', cells=80, band=(-.5,.5))
+except KeyboardInterrupt:
+    assert time.perf_counter() - sent[0] < 2
+else:
+    raise AssertionError('interrupt was ignored')
+finally:
+    timer.join()
+"""
+    run = subprocess.run(
+        [sys.executable, "-c", code], env=dict(os.environ, RAYON_NUM_THREADS="4"),
+        capture_output=True, check=False, text=True, timeout=30,
+    )
+    assert run.returncode == 0, run.stderr
+
+
 def test_optimizer_batch_size_and_gradient_batches():
     sizes = []
 

@@ -10,6 +10,7 @@ use pyo3::{
     prelude::*,
     types::PyDict,
 };
+use std::cell::Cell;
 use std::f64::consts::TAU;
 use std::sync::{
     Arc, Mutex,
@@ -49,8 +50,12 @@ struct Field {
     cancellation: Arc<AtomicBool>,
     step: Point,
     calls: AtomicUsize,
-    checks: AtomicUsize,
+    owner: std::thread::ThreadId,
     batch_size: usize,
+}
+thread_local! {
+    static THREAD_ID: std::thread::ThreadId = std::thread::current().id();
+    static SIGNAL_CHECKS: Cell<usize> = const { Cell::new(0) };
 }
 fn native_value(name: &str, p: Point) -> f64 {
     let [x, y, z] = p.map(|v| TAU * v);
@@ -81,6 +86,36 @@ fn native_gradient(name: &str, p: Point) -> Point {
     .map(|v| TAU * v)
 }
 impl Field {
+    fn check_fast(&self) -> Result<(), String> {
+        if self.cancellation.load(Ordering::Relaxed) {
+            self.save(CancelledError::new_err("generation cancelled"));
+            return Err("generation cancelled".into());
+        }
+        if self.failed.load(Ordering::Acquire) {
+            return Err("Python field failed".into());
+        }
+        // CPython handles signals on its main thread. Worker calls need only the
+        // cancellation/error flags; a shared RMW counter and worker GIL checks
+        // add contention without helping interruption. Coarse check() polls on
+        // the caller between parallel colors, including long optimization stages.
+        if THREAD_ID.with(|id| *id == self.owner)
+            && SIGNAL_CHECKS.with(|checks| {
+                let value = checks.get();
+                checks.set(value.wrapping_add(1));
+                value.is_multiple_of(256)
+            })
+        {
+            self.check_signals()?;
+        }
+        Ok(())
+    }
+    fn check_signals(&self) -> Result<(), String> {
+        if let Err(error) = Python::attach(|py| py.check_signals()) {
+            self.save(error);
+            return Err("Python interrupted".into());
+        }
+        Ok(())
+    }
     fn save(&self, error: PyErr) {
         let mut slot = self.error.lock().unwrap();
         if slot.is_none() {
@@ -89,7 +124,7 @@ impl Field {
         self.failed.store(true, Ordering::Release);
     }
     fn evaluate(&self, points: &[Point]) -> Vec<f64> {
-        if self.check().is_err() {
+        if self.check_fast().is_err() {
             return vec![f64::NAN; points.len()];
         }
         if let Some(name) = &self.native {
@@ -145,7 +180,7 @@ impl Field {
 impl ScalarField for Field {
     fn value(&self, p: Point) -> f64 {
         if let Some((_, kernel, _)) = self.compiled {
-            if self.check().is_err() {
+            if self.check_fast().is_err() {
                 return f64::NAN;
             }
             return match compiled::evaluate(kernel, p) {
@@ -157,7 +192,7 @@ impl ScalarField for Field {
             };
         }
         if let Some(name) = &self.native {
-            if self.check().is_err() {
+            if self.check_fast().is_err() {
                 return f64::NAN;
             }
             return native_value(name, p);
@@ -178,7 +213,7 @@ impl ScalarField for Field {
             if !has_gradient {
                 return None;
             }
-            if self.check().is_err() {
+            if self.check_fast().is_err() {
                 return Some([f64::NAN; 3]);
             }
             return Some(match compiled::evaluate(kernel, p) {
@@ -263,23 +298,10 @@ impl ScalarField for Field {
         output
     }
     fn check(&self) -> Result<(), String> {
-        if self.cancellation.load(Ordering::Relaxed) {
-            self.save(CancelledError::new_err("generation cancelled"));
-            return Err("generation cancelled".into());
+        self.check_fast()?;
+        if THREAD_ID.with(|id| *id == self.owner) {
+            self.check_signals()?;
         }
-        if self.failed.load(Ordering::Acquire) {
-            return Err("Python field failed".into());
-        }
-        if self
-            .checks
-            .fetch_add(1, Ordering::Relaxed)
-            .is_multiple_of(256)
-            && let Err(error) = Python::attach(|py| py.check_signals())
-        {
-            self.save(error);
-            return Err("Python interrupted".into());
-        }
-        // Native field calls avoid taking the GIL per point.
         Ok(())
     }
 }
@@ -327,7 +349,7 @@ fn make_field(
         cancellation,
         step: std::array::from_fn(|a| (bounds[1][a] - bounds[0][a]) * 1e-5),
         calls: AtomicUsize::new(0),
-        checks: AtomicUsize::new(0),
+        owner: std::thread::current().id(),
         batch_size,
     })
 }
