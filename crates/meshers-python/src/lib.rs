@@ -40,11 +40,12 @@ impl CancellationToken {
 }
 
 struct Field {
-    compiled: Option<(compiled::Kernel, bool)>,
+    compiled: Option<(compiled::Kernel, compiled::Kernel, bool)>,
     native: Option<String>,
     callback: Option<Py<PyAny>>,
     derivative: Option<Py<PyAny>>,
     error: Mutex<Option<PyErr>>,
+    failed: AtomicBool,
     cancellation: Arc<AtomicBool>,
     step: Point,
     calls: AtomicUsize,
@@ -85,6 +86,7 @@ impl Field {
         if slot.is_none() {
             *slot = Some(error);
         }
+        self.failed.store(true, Ordering::Release);
     }
     fn evaluate(&self, points: &[Point]) -> Vec<f64> {
         if self.check().is_err() {
@@ -142,7 +144,7 @@ impl Field {
 }
 impl ScalarField for Field {
     fn value(&self, p: Point) -> f64 {
-        if let Some((kernel, _)) = self.compiled {
+        if let Some((_, kernel, _)) = self.compiled {
             if self.check().is_err() {
                 return f64::NAN;
             }
@@ -172,7 +174,7 @@ impl ScalarField for Field {
         self.compiled.is_none() && (self.native.is_none() || self.derivative.is_some())
     }
     fn gradient(&self, p: Point) -> Option<Point> {
-        if let Some((kernel, has_gradient)) = self.compiled {
+        if let Some((kernel, _, has_gradient)) = self.compiled {
             if !has_gradient {
                 return None;
             }
@@ -265,7 +267,7 @@ impl ScalarField for Field {
             self.save(CancelledError::new_err("generation cancelled"));
             return Err("generation cancelled".into());
         }
-        if self.error.lock().unwrap().is_some() {
+        if self.failed.load(Ordering::Acquire) {
             return Err("Python field failed".into());
         }
         if self
@@ -296,7 +298,7 @@ fn make_field(
     let compiled = field
         .extract::<PyRef<'_, compiled::CompiledField>>(py)
         .ok()
-        .map(|c| (c.kernel, c.has_gradient));
+        .map(|c| (c.kernel, c.value_kernel, c.has_gradient));
     if compiled.is_some() && gradient.is_some() {
         return Err(PyValueError::new_err(
             "supply the gradient to compile_field, not generate",
@@ -321,6 +323,7 @@ fn make_field(
         callback: Some(field),
         derivative: gradient,
         error: Mutex::new(None),
+        failed: AtomicBool::new(false),
         cancellation,
         step: std::array::from_fn(|a| (bounds[1][a] - bounds[0][a]) * 1e-5),
         calls: AtomicUsize::new(0),

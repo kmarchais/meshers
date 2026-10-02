@@ -32,6 +32,7 @@ impl Drop for CodeMemory {
 #[pyclass(frozen)]
 pub(crate) struct CompiledField {
     pub(crate) kernel: Kernel,
+    pub(crate) value_kernel: Kernel,
     #[pyo3(get)]
     pub(crate) has_gradient: bool,
     #[pyo3(get)]
@@ -49,7 +50,7 @@ pub(crate) fn evaluate(kernel: Kernel, p: [f64; 3]) -> Result<[f64; 4], ()> {
 #[pymethods]
 impl CompiledField {
     fn __call__(&self, x: f64, y: f64, z: f64) -> PyResult<f64> {
-        let out = evaluate(self.kernel, [x, y, z])
+        let out = evaluate(self.value_kernel, [x, y, z])
             .map_err(|_| PyRuntimeError::new_err("compiled field failed"))?;
         if !out[0].is_finite() {
             return Err(PyValueError::new_err("nonfinite compiled field"));
@@ -96,6 +97,120 @@ extern "C" fn maximum(a: f64, b: f64) -> f64 {
 }
 
 type Node = (String, Vec<usize>, f64);
+fn emit_kernel(
+    module: &mut JITModule,
+    imports: &HashMap<&str, cranelift_module::FuncId>,
+    nodes: &[Node],
+    outputs: &[usize],
+    name: &str,
+) -> PyResult<cranelift_module::FuncId> {
+    let err =
+        |e: &dyn std::fmt::Display| PyRuntimeError::new_err(format!("embedded compiler: {e}"));
+    // External math calls are not eliminated as dead code by the JIT. Prune
+    // nodes unreachable from this kernel's outputs before lowering the graph.
+    let mut required = vec![false; nodes.len()];
+    for &output in outputs {
+        required[output] = true;
+    }
+    for i in (0..nodes.len()).rev() {
+        if required[i] && nodes[i].0 != "input" {
+            for &argument in &nodes[i].1 {
+                required[argument] = true;
+            }
+        }
+    }
+    let mut indices = vec![usize::MAX; nodes.len()];
+    let mut pruned = Vec::new();
+    for (i, (op, args, constant)) in nodes.iter().enumerate() {
+        if required[i] {
+            indices[i] = pruned.len();
+            let arguments = if op == "input" {
+                args.clone()
+            } else {
+                args.iter().map(|&arg| indices[arg]).collect()
+            };
+            pruned.push((op.clone(), arguments, *constant));
+        }
+    }
+    let outputs: Vec<_> = outputs.iter().map(|&output| indices[output]).collect();
+    let nodes = pruned;
+    let mut ctx = module.make_context();
+    ctx.func
+        .signature
+        .params
+        .extend((0..3).map(|_| AbiParam::new(types::F64)));
+    ctx.func
+        .signature
+        .params
+        .push(AbiParam::new(module.target_config().pointer_type()));
+    ctx.func.signature.returns.push(AbiParam::new(types::I32));
+    let id = module
+        .declare_function(name, Linkage::Local, &ctx.func.signature)
+        .map_err(|e| err(&e))?;
+    let mut fc = FunctionBuilderContext::new();
+    {
+        let mut b = FunctionBuilder::new(&mut ctx.func, &mut fc);
+        let block = b.create_block();
+        b.append_block_params_for_function_params(block);
+        b.switch_to_block(block);
+        let params = b.block_params(block).to_vec();
+        let mut values: Vec<Value> = Vec::with_capacity(nodes.len());
+        for (op, args, c) in &nodes {
+            let v = match op.as_str() {
+                "input" => params[args[0]],
+                "constant" => b.ins().f64const(*c),
+                "add" => b.ins().fadd(values[args[0]], values[args[1]]),
+                "sub" => b.ins().fsub(values[args[0]], values[args[1]]),
+                "mul" => b.ins().fmul(values[args[0]], values[args[1]]),
+                "div" => b.ins().fdiv(values[args[0]], values[args[1]]),
+                "neg" => b.ins().fneg(values[args[0]]),
+                "abs" => b.ins().fabs(values[args[0]]),
+                "sqrt" => b.ins().sqrt(values[args[0]]),
+                "select" => {
+                    let zero = b.ins().f64const(0.);
+                    let cond = b.ins().fcmp(FloatCC::NotEqual, values[args[0]], zero);
+                    b.ins().select(cond, values[args[1]], values[args[2]])
+                }
+                "lt" | "le" | "gt" | "ge" | "eq" | "ne" => {
+                    let cc = match op.as_str() {
+                        "lt" => FloatCC::LessThan,
+                        "le" => FloatCC::LessThanOrEqual,
+                        "gt" => FloatCC::GreaterThan,
+                        "ge" => FloatCC::GreaterThanOrEqual,
+                        "eq" => FloatCC::Equal,
+                        _ => FloatCC::NotEqual,
+                    };
+                    let cond = b.ins().fcmp(cc, values[args[0]], values[args[1]]);
+                    let one = b.ins().f64const(1.);
+                    let zero = b.ins().f64const(0.);
+                    b.ins().select(cond, one, zero)
+                }
+                name => {
+                    let callee = module.declare_func_in_func(imports[name], b.func);
+                    let argv: Vec<_> = args.iter().map(|&a| values[a]).collect();
+                    let call = b.ins().call(callee, &argv);
+                    b.inst_results(call)[0]
+                }
+            };
+            values.push(v);
+        }
+        for (offset, &node) in outputs.iter().enumerate() {
+            b.ins().store(
+                MemFlagsData::new(),
+                values[node],
+                params[3],
+                (offset * 8) as i32,
+            );
+        }
+        let status = b.ins().iconst(types::I32, 0);
+        b.ins().return_(&[status]);
+        b.seal_all_blocks();
+        b.finalize(module.target_config());
+    }
+    module.define_function(id, &mut ctx).map_err(|e| err(&e))?;
+    Ok(id)
+}
+
 #[pyfunction]
 pub(crate) fn _compile_expression(
     nodes: Vec<Node>,
@@ -165,86 +280,22 @@ pub(crate) fn _compile_expression(
             .map_err(|e| err(&e))?;
         imports.insert(name, id);
     }
-    let mut ctx = module.make_context();
-    ctx.func
-        .signature
-        .params
-        .extend((0..3).map(|_| AbiParam::new(types::F64)));
-    ctx.func
-        .signature
-        .params
-        .push(AbiParam::new(module.target_config().pointer_type()));
-    ctx.func.signature.returns.push(AbiParam::new(types::I32));
-    let id = module
-        .declare_function("field", Linkage::Local, &ctx.func.signature)
-        .map_err(|e| err(&e))?;
-    let mut fc = FunctionBuilderContext::new();
-    {
-        let mut b = FunctionBuilder::new(&mut ctx.func, &mut fc);
-        let block = b.create_block();
-        b.append_block_params_for_function_params(block);
-        b.switch_to_block(block);
-        let params = b.block_params(block).to_vec();
-        let mut values: Vec<Value> = Vec::with_capacity(nodes.len());
-        for (op, args, c) in &nodes {
-            let v = match op.as_str() {
-                "input" => params[args[0]],
-                "constant" => b.ins().f64const(*c),
-                "add" => b.ins().fadd(values[args[0]], values[args[1]]),
-                "sub" => b.ins().fsub(values[args[0]], values[args[1]]),
-                "mul" => b.ins().fmul(values[args[0]], values[args[1]]),
-                "div" => b.ins().fdiv(values[args[0]], values[args[1]]),
-                "neg" => b.ins().fneg(values[args[0]]),
-                "abs" => b.ins().fabs(values[args[0]]),
-                "sqrt" => b.ins().sqrt(values[args[0]]),
-                "select" => {
-                    let zero = b.ins().f64const(0.);
-                    let cond = b.ins().fcmp(FloatCC::NotEqual, values[args[0]], zero);
-                    b.ins().select(cond, values[args[1]], values[args[2]])
-                }
-                "lt" | "le" | "gt" | "ge" | "eq" | "ne" => {
-                    let cc = match op.as_str() {
-                        "lt" => FloatCC::LessThan,
-                        "le" => FloatCC::LessThanOrEqual,
-                        "gt" => FloatCC::GreaterThan,
-                        "ge" => FloatCC::GreaterThanOrEqual,
-                        "eq" => FloatCC::Equal,
-                        _ => FloatCC::NotEqual,
-                    };
-                    let cond = b.ins().fcmp(cc, values[args[0]], values[args[1]]);
-                    let one = b.ins().f64const(1.);
-                    let zero = b.ins().f64const(0.);
-                    b.ins().select(cond, one, zero)
-                }
-                name => {
-                    let callee = module.declare_func_in_func(imports[name], b.func);
-                    let argv: Vec<_> = args.iter().map(|&a| values[a]).collect();
-                    let call = b.ins().call(callee, &argv);
-                    b.inst_results(call)[0]
-                }
-            };
-            values.push(v);
-        }
-        for (offset, &node) in outputs.iter().enumerate() {
-            b.ins().store(
-                MemFlagsData::new(),
-                values[node],
-                params[3],
-                (offset * 8) as i32,
-            );
-        }
-        let status = b.ins().iconst(types::I32, 0);
-        b.ins().return_(&[status]);
-        b.seal_all_blocks();
-        b.finalize(module.target_config());
-    }
-    module.define_function(id, &mut ctx).map_err(|e| err(&e))?;
+    let id = emit_kernel(module, &imports, &nodes, &outputs, "field")?;
+    let value_id = if outputs.len() == 4 {
+        emit_kernel(module, &imports, &nodes, &[outputs[0]], "field_value")?
+    } else {
+        id
+    };
     module.finalize_definitions().map_err(|e| err(&e))?;
     let address = module.get_finalized_function(id);
     // SAFETY: the function signature and stores above exactly match Kernel.
     let kernel = unsafe { std::mem::transmute::<*const u8, Kernel>(address) };
+    let value_address = module.get_finalized_function(value_id);
+    // SAFETY: emit_kernel uses the same ABI for both output sets.
+    let value_kernel = unsafe { std::mem::transmute::<*const u8, Kernel>(value_address) };
     Ok(CompiledField {
         kernel,
+        value_kernel,
         has_gradient: outputs.len() == 4,
         node_count: nodes.len(),
         _memory: memory,

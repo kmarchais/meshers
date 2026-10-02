@@ -120,3 +120,29 @@ def test_builtin_and_analytic_compiled_paths(name):
     compiled = meshers.generate(field, **options)
     np.testing.assert_array_equal(native.tetrahedra, compiled.tetrahedra)
     np.testing.assert_allclose(native.points, compiled.points, atol=5e-9, rtol=0)
+
+
+@pytest.mark.parametrize(
+    ("field", "expected", "gradient"),
+    [
+        (lambda x, y, z: z * z, 9.0, [0.0, 0.0, 6.0]),
+        (lambda x, y, z: np.sin(y), float(np.sin(2.0)), [0.0, float(np.cos(2.0)), 0.0]),
+        (lambda x, y, z: x * 0 + 4.0, 4.0, [0.0, 0.0, 0.0]),
+    ],
+)
+def test_pruned_kernels_keep_input_coordinate_indices(field, expected, gradient):
+    compiled = meshers.compile_field(field)
+    assert compiled(1.0, 2.0, 3.0) == expected
+    np.testing.assert_allclose(compiled.gradient(1.0, 2.0, 3.0), gradient, rtol=0, atol=1e-15)
+
+
+def test_value_kernel_does_not_require_finite_derivative():
+    compiled = meshers.compile_field(lambda x, y, z: np.sqrt(x))
+    np.testing.assert_equal(compiled(0.0, 1.0, 2.0), 0.0)
+    with pytest.raises(ValueError, match="gradient"):
+        compiled.gradient(0.0, 1.0, 2.0)
+
+
+def test_invalid_unused_nodes_are_still_rejected():
+    with pytest.raises(ValueError, match="operation"):
+        meshers._meshers._compile_expression([("constant", [], 1.0), ("unknown", [], 0.0)], [0])
