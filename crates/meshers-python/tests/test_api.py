@@ -183,6 +183,7 @@ def test_native_interruption_on_windows_and_parallel_workers(delay):
     import subprocess
     import sys
     from pathlib import Path
+
     import meshers
 
     # interrupt_main sets Python's pending SIGINT on Windows too. Delay the
