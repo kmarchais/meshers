@@ -606,11 +606,34 @@ fn build<F: ScalarField>(g: &Context<F>) -> Result<Output, String> {
         b.edges.clear();
         let (candidate, sources) = clip_lattice(&mut b, g)?;
         let bad = nonmanifold_vertices(&candidate.surface, candidate.points.len());
-        if bad.is_empty() {
+        // A tiny sampled component can disappear entirely if every interior
+        // sample snaps onto its wall. Surface manifold tests cannot see an
+        // absent component. Restore discarded interior samples before accepting.
+        let mut represented = vec![false; original_points.len()];
+        for &source in &sources {
+            if source < represented.len() {
+                represented[source] = true;
+            }
+        }
+        let lost: Vec<_> = (0..original_points.len())
+            .filter(|&i| {
+                !represented[i]
+                    && (if g.band() {
+                        original_values[i].abs() - threshold
+                    } else {
+                        original_values[i]
+                    }) < -1e-12
+                    && (b.points[i] != original_points[i] || b.values[i] != original_values[i])
+            })
+            .collect();
+        if bad.is_empty() && lost.is_empty() {
             mesh = Some(candidate);
             break;
         }
         let mut undo = std::collections::BTreeSet::new();
+        for i in lost {
+            undo.insert(g.rank(original_points[i]));
+        }
         for v in bad {
             let i = sources[v];
             if i < original_points.len()

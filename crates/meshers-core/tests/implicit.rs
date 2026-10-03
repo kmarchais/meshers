@@ -540,3 +540,53 @@ fn optimized_mesh_is_independent_of_physical_unit_scale() {
         }
     }
 }
+
+#[test]
+fn snapping_does_not_erase_a_sampled_small_component() {
+    let field = |p: Point| {
+        let large = ((p[0] + 0.35).powi(2) + p[1].powi(2) + p[2].powi(2)).sqrt() - 0.4;
+        let small =
+            ((p[0] - 0.65).powi(2) + (p[1] - 0.2).powi(2) + (p[2] - 0.13).powi(2)).sqrt() - 0.075;
+        large.min(small)
+    };
+    // Isolate clipping and snapping. An FEA quality floor may subsequently
+    // reject a coarse component, but it must not disappear silently.
+    let output = generate(
+        &field,
+        Options {
+            bounds: [[-1.; 3], [1.; 3]],
+            cells: [12; 3],
+            optimize_passes: 0,
+            minimum_quality: 0.,
+            geometry_tolerance: 0.2,
+            ..Default::default()
+        },
+    )
+    .unwrap();
+    let mesh = &output.mesh;
+    let mut parent: Vec<usize> = (0..mesh.points.len()).collect();
+    fn find(parent: &mut [usize], mut i: usize) -> usize {
+        while parent[i] != i {
+            parent[i] = parent[parent[i]];
+            i = parent[i];
+        }
+        i
+    }
+    for tet in &mesh.tets {
+        for &v in &tet[1..] {
+            let a = find(&mut parent, tet[0]);
+            let b = find(&mut parent, v);
+            parent[a] = b;
+        }
+    }
+    let mut groups = std::collections::BTreeSet::new();
+    for tet in &mesh.tets {
+        groups.insert(find(&mut parent, tet[0]));
+    }
+    assert_eq!(groups.len(), 2, "Snapping erased an interior component");
+    assert!(
+        mesh.tets
+            .iter()
+            .any(|tet| tet.iter().all(|&i| mesh.points[i][0] > 0.5))
+    );
+}
