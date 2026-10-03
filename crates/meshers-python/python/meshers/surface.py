@@ -39,6 +39,8 @@ def generate_surface(  # ruff: ignore[too-many-arguments] - match the volume API
     This experimental API checks manifold topology and finite positive triangle
     shapes. It does not certify intersections or geometric approximation errors.
     Sampling can miss features below the background spacing.
+    Set ``geometry_tolerance=0`` for a quick preview without distance sampling;
+    topology and finite triangle checks still run. Diagnostics mark that omission.
 
     Returns:
         Triangle mesh and measured generation diagnostics.
@@ -66,8 +68,8 @@ def generate_surface(  # ruff: ignore[too-many-arguments] - match the volume API
         if geometry_tolerance is None
         else float(geometry_tolerance)
     )
-    if not np.isfinite(tolerance) or tolerance <= 0:
-        raise ValueError("geometry_tolerance must be finite and positive")
+    if not np.isfinite(tolerance) or tolerance < 0:
+        raise ValueError("geometry_tolerance must be finite and nonnegative")
     options = (4, 4, 8) if quality else (0, 0, 0)
     result = _meshers.generate_surface(
         field,
@@ -78,9 +80,10 @@ def generate_surface(  # ruff: ignore[too-many-arguments] - match the volume API
         *options,
         batch_size,
         cancel,
+        tolerance > 0,
     )
     labels = np.asarray(result["labels"])
-    if result["maximum_sampled_surface_error"] > tolerance:
+    if tolerance > 0 and result["maximum_sampled_surface_error"] > tolerance:
         raise _meshers.MeshingError(
             f"Sampled surface error {result['maximum_sampled_surface_error']} "
             f"exceeds tolerance {tolerance}; increase resolution"
@@ -99,6 +102,7 @@ def generate_surface(  # ruff: ignore[too-many-arguments] - match the volume API
                 "minimum_triangle_shape",
                 "volume",
                 "maximum_sampled_surface_error",
+                "geometry_checked",
             )
         }
         | {"preparation_seconds": preparation, "experimental": True},

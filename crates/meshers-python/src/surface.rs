@@ -5,7 +5,7 @@ use numpy::{IntoPyArray, ndarray::Array2};
 use pyo3::{exceptions::PyValueError, prelude::*, types::PyDict};
 
 #[allow(clippy::too_many_arguments)]
-#[pyfunction]
+#[pyfunction(signature = (field, gradient, bounds, cells, band, smoothing_iterations, improvement_rounds, polish_passes, batch_size, cancel, check_geometry=true))]
 pub(super) fn generate_surface<'py>(
     py: Python<'py>,
     field: Py<PyAny>,
@@ -18,6 +18,7 @@ pub(super) fn generate_surface<'py>(
     polish_passes: usize,
     batch_size: usize,
     cancel: Option<PyRef<'py, CancellationToken>>,
+    check_geometry: bool,
 ) -> PyResult<Bound<'py, PyDict>> {
     if smoothing_iterations > 100 || improvement_rounds > 100 || polish_passes > 100 {
         return Err(PyValueError::new_err("Surface passes must be at most 100"));
@@ -43,7 +44,11 @@ pub(super) fn generate_surface<'py>(
         triangles::improve(&mut mesh, &geometry, improvement_rounds)?;
         triangles::polish(&mut mesh, &geometry, polish_passes)?;
         let (minimum_shape, volume) = triangles::validate(&mesh)?;
-        let error = triangles::sampled_error(&mesh, &geometry)?;
+        let error = if check_geometry {
+            Some(triangles::sampled_error(&mesh, &geometry)?)
+        } else {
+            None
+        };
         Ok::<_, MeshingError>((
             mesh,
             extraction,
@@ -87,5 +92,6 @@ pub(super) fn generate_surface<'py>(
     output.set_item("minimum_triangle_shape", minimum_shape)?;
     output.set_item("volume", volume)?;
     output.set_item("maximum_sampled_surface_error", error)?;
+    output.set_item("geometry_checked", check_geometry)?;
     Ok(output)
 }

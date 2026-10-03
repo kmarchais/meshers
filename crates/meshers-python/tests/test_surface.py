@@ -37,3 +37,15 @@ def test_surface_rejects_insufficient_geometry_accuracy():
             cells=8,
             geometry_tolerance=1e-8,
         )
+
+
+def test_quick_preview_marks_omitted_geometry_measurement():
+    field = lambda x, y, z: (x - 0.5) ** 2 + (y - 0.5) ** 2 + (z - 0.5) ** 2 - 0.35**2
+    quick = meshers.generate_surface(field, cells=12, geometry_tolerance=0)
+    checked = meshers.generate_surface(field, cells=12)
+    np.testing.assert_array_equal(quick.points, checked.points)
+    np.testing.assert_array_equal(quick.triangles, checked.triangles)
+    assert quick.diagnostics["geometry_checked"] is False
+    assert quick.diagnostics["maximum_sampled_surface_error"] is None
+    assert checked.diagnostics["geometry_checked"] is True
+    assert checked.diagnostics["maximum_sampled_surface_error"] > 0
