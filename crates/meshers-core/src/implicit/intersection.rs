@@ -11,11 +11,17 @@ use super::{Options, ScalarField};
 use crate::{Mesh, Point, Tet, determinant, dot, norm, quality, sub};
 use std::collections::{HashMap, HashSet};
 
+#[cfg(feature = "wide-constraints")]
+pub type ConstraintMask = u32;
+#[cfg(not(feature = "wide-constraints"))]
+pub type ConstraintMask = u8;
+pub const MAX_CONSTRAINTS: usize = ConstraintMask::BITS as usize;
+
 /// Experimental mesh plus active surface constraints at its vertices.
 pub struct Output {
     pub mesh: Mesh,
     /// Bit j denotes membership in the piecewise-linear boundary of field j.
-    pub constraints: Vec<u8>,
+    pub constraints: Vec<ConstraintMask>,
     /// Parameter coordinates, useful for identifying periodic end surfaces.
     pub parameters: Vec<Point>,
     /// Quality before and after the integrated improvement stage.
@@ -41,7 +47,7 @@ struct Cutter<'a> {
     points: Vec<Point>,
     parameters: Vec<Point>,
     values: Vec<Vec<f64>>,
-    masks: Vec<u8>,
+    masks: Vec<ConstraintMask>,
     edges: HashMap<(usize, usize, usize), usize>,
 }
 impl Cutter<'_> {
@@ -298,7 +304,7 @@ fn generate_with_map(
     map: &dyn Fn(Point) -> Point,
     options: Options,
 ) -> Result<Output, String> {
-    if !(2..=8).contains(&fields.len())
+    if !(2..=MAX_CONSTRAINTS).contains(&fields.len())
         || (!options.snap.is_finite() || !(0.0..=0.2).contains(&options.snap))
         || options.optimize_passes > 20
         || options.geometry_tolerance != 0.
@@ -306,7 +312,9 @@ fn generate_with_map(
         || !(0.0..=1.).contains(&options.minimum_quality)
         || !matches!(options.region, super::Region::Negative)
     {
-        return Err("intersection requires 2..8 fields, Negative region and snap 0..0.2 and passes 0..20, quality 0..1 and zero tolerance; geometric acceptance is caller-owned".into());
+        return Err(format!(
+            "intersection requires 2..{MAX_CONSTRAINTS} fields, Negative region and snap 0..0.2 and passes 0..20, quality 0..1 and zero tolerance; geometric acceptance is caller-owned"
+        ));
     }
     let [lo, hi] = options.bounds;
     if (0..3).any(|a| {
@@ -398,7 +406,7 @@ fn generate_with_map(
     // Values at an analytically coincident background vertex can straddle zero
     // by roundoff (e.g. a Pythagorean point on a cylinder). Classify them once,
     // using each incident cell's field scale, before sharing any edge cuts.
-    let mut coincident = vec![0_u8; c.values.len()];
+    let mut coincident = vec![ConstraintMask::default(); c.values.len()];
     for t in &background.tets {
         for j in 0..fields.len() {
             let scale = t.iter().map(|&i| c.values[i][j].abs()).fold(0., f64::max);

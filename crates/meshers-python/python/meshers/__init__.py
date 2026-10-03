@@ -50,7 +50,7 @@ class Mesh:
     periodic_pairs: tuple[npt.NDArray[np.int64], ...]
     diagnostics: dict
     parameters: npt.NDArray[np.float64] | None = None
-    constraint_masks: npt.NDArray[np.uint8] | None = None
+    constraint_masks: npt.NDArray[np.uint8] | npt.NDArray[np.uint32] | None = None
     constraint_names: tuple[str, ...] = ()
     periodic_transforms: npt.NDArray[np.float64] | None = None
 
@@ -277,3 +277,8 @@ __all__ = [
     "generate",
     "generate_intersection",
 ]
+
+if hasattr(_meshers, "generate_surface"):
+    from .surface import SurfaceMesh, generate_surface
+
+    __all__ += ["SurfaceMesh", "generate_surface"]

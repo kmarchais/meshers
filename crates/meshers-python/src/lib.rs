@@ -1,5 +1,7 @@
 mod compiled;
 mod intersection;
+#[cfg(feature = "experimental-surfaces")]
+mod surface;
 use meshers_core::{
     MeshingError, Point,
     implicit::{self, ScalarField},
@@ -482,11 +484,14 @@ fn available_threads() -> usize {
 
 #[pymodule(gil_used = true)]
 fn _meshers(m: &Bound<'_, PyModule>) -> PyResult<()> {
+    m.add("MAX_CONSTRAINTS", meshers_core::implicit::intersection::MAX_CONSTRAINTS)?;
     m.add_function(wrap_pyfunction!(available_threads, m)?)?;
     m.add_class::<compiled::CompiledField>()?;
     m.add_function(wrap_pyfunction!(compiled::_compile_expression, m)?)?;
     m.add_function(wrap_pyfunction!(generate, m)?)?;
     m.add_function(wrap_pyfunction!(intersection::generate_intersection, m)?)?;
+    #[cfg(feature = "experimental-surfaces")]
+    m.add_function(wrap_pyfunction!(surface::generate_surface, m)?)?;
     m.add_class::<CancellationToken>()?;
     m.add("MeshingError", m.py().get_type::<MeshingFailure>())?;
     m.add("CancelledError", m.py().get_type::<CancelledError>())?;

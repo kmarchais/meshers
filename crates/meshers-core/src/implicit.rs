@@ -317,7 +317,7 @@ pub fn generate<F: ScalarField>(field: &F, options: Options) -> Result<Output, M
 
 // Every closed surface edge has two incident triangles, and every vertex link
 // must be one cycle. Edge counts alone miss two shells touching at one vertex.
-fn nonmanifold_vertices(surface: &[[usize; 3]], point_count: usize) -> Vec<usize> {
+pub(crate) fn nonmanifold_vertices(surface: &[[usize; 3]], point_count: usize) -> Vec<usize> {
     let mut links = vec![Vec::<[usize; 2]>::new(); point_count];
     let mut edges = HashMap::<[usize; 2], usize>::new();
     for &[a, b, c] in surface {

@@ -11,7 +11,7 @@ struct Export<'a> {
     parameters: &'a [Point],
     tetrahedra: &'a [[usize; 4]],
     surface: &'a [[usize; 3]],
-    constraints: &'a [u8],
+    constraints: &'a [meshers_core::implicit::intersection::ConstraintMask],
     seconds: f64,
     minimum_quality: f64,
     elements_below_quality_01: usize,

@@ -244,7 +244,8 @@ def generate_intersection(
     tetrahedra approximate the mapped geometry. This path currently uses one worker.
 
     Args:
-        constraints: Ordered mapping of 2-8 unique nonempty names to fields. Keep
+        constraints: Ordered mapping of 2-32 unique nonempty names to fields
+            (8 without wide-constraints). Keep
             every field <= 0. Use two constraints for the sides of a TPMS sheet.
         bounds: Parameter box ``(xmin,xmax,ymin,ymax,zmin,zmax)``.
         cells: Background intervals, 4-128 per parameter axis.
@@ -375,8 +376,9 @@ def _validate_options(  # ruff: ignore[complex-structure, too-many-branches] - e
     minimum_quality: float,
     geometry_tolerance: float | None,
 ) -> tuple[Points, Sequence[int], Points]:
-    if not isinstance(constraints, Mapping) or not 2 <= len(constraints) <= 8:
-        raise ValueError("constraints must be a mapping of 2-8 named fields")
+    maximum = _meshers.MAX_CONSTRAINTS
+    if not isinstance(constraints, Mapping) or not 2 <= len(constraints) <= maximum:
+        raise ValueError(f"constraints must be a mapping of 2-{maximum} named fields")
     if any(not isinstance(name, str) or not name.strip() for name in constraints):
         raise ValueError("constraint names must be nonempty strings")
     b = np.asarray(bounds, dtype=np.float64)

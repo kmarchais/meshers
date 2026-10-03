@@ -1,10 +1,14 @@
 //! Conservative short-edge removal, preserving constraint strata and periodic orbits.
-use super::Output;
+use super::{MAX_CONSTRAINTS, Output};
 use crate::implicit::Options;
 use crate::{Point, Tet, determinant, quality};
 use std::collections::{BTreeMap, BTreeSet};
 
 type Simplex = Vec<usize>;
+#[cfg(feature = "wide-constraints")]
+type StratumMask = u64;
+#[cfg(not(feature = "wide-constraints"))]
+type StratumMask = u16;
 fn subsets(vertices: &[usize], out: &mut BTreeSet<Simplex>) {
     for bits in 1..(1 << vertices.len()) {
         let mut s: Vec<_> = vertices
@@ -16,7 +20,7 @@ fn subsets(vertices: &[usize], out: &mut BTreeSet<Simplex>) {
         out.insert(s);
     }
 }
-fn link_ok(a: usize, b: usize, ids: &BTreeSet<usize>, tets: &[Tet], masks: &[u16]) -> bool {
+fn link_ok(a: usize, b: usize, ids: &BTreeSet<usize>, tets: &[Tet], masks: &[StratumMask]) -> bool {
     let mut la = BTreeSet::new();
     let mut lb = BTreeSet::new();
     let mut le = BTreeSet::new();
@@ -98,7 +102,7 @@ fn link_ok(a: usize, b: usize, ids: &BTreeSet<usize>, tets: &[Tet], masks: &[u16
 // A topologically valid solid collapse can still connect two separate rims.
 // Preserve the feature subcomplex too: no new labelled curve edge, no lost
 // curve edge except the collapsed one, and the 1D link condition on each rim.
-fn feature_link_ok(a: usize, b: usize, faces: &[[usize; 3]], masks: &[u16]) -> bool {
+fn feature_link_ok(a: usize, b: usize, faces: &[[usize; 3]], masks: &[StratumMask]) -> bool {
     let features = |faces: &[[usize; 3]]| {
         let mut edges = BTreeSet::new();
         for f in faces {
@@ -107,11 +111,11 @@ fn feature_link_ok(a: usize, b: usize, faces: &[[usize; 3]], masks: &[u16]) -> b
                 if common.count_ones() < 2 {
                     continue;
                 }
-                for x in 0..14 {
+                for x in 0..MAX_CONSTRAINTS + 6 {
                     if common & (1 << x) == 0 {
                         continue;
                     }
-                    for y in x + 1..14 {
+                    for y in x + 1..MAX_CONSTRAINTS + 6 {
                         let bits = (1 << x) | (1 << y);
                         if common & bits == bits {
                             edges.insert((bits, u.min(v), u.max(v)));
@@ -169,12 +173,12 @@ fn feature_link_ok(a: usize, b: usize, faces: &[[usize; 3]], masks: &[u16]) -> b
 fn q(points: &[Point], t: Tet) -> f64 {
     quality(t.map(|i| points[i])).powf(1.5)
 }
-fn cap(p: Point, o: &Options) -> u16 {
+fn cap(p: Point, o: &Options) -> StratumMask {
     (0..3).fold(0, |bits, a| {
         bits | if p[a] == o.bounds[0][a] {
-            1 << (8 + 2 * a)
+            1 << (MAX_CONSTRAINTS + 2 * a)
         } else if p[a] == o.bounds[1][a] {
-            1 << (9 + 2 * a)
+            1 << (MAX_CONSTRAINTS + 1 + 2 * a)
         } else {
             0
         }
@@ -214,7 +218,7 @@ pub(super) fn improve(output: &mut Output, o: &Options) -> Result<usize, String>
         .constraints
         .iter()
         .zip(&output.parameters)
-        .map(|(&m, &p)| u16::from(m) | cap(p, o))
+        .map(|(&m, &p)| StratumMask::from(m) | cap(p, o))
         .collect();
     let mut accepted = 0;
     for _ in 0..o.optimize_passes {
@@ -718,5 +722,23 @@ mod tests {
             [0, 2, 4],
         ];
         assert!(!feature_link_ok(0, 1, &faces, &masks));
+    }
+    #[cfg(feature = "wide-constraints")]
+    #[test]
+    fn high_constraint_and_cap_bits_preserve_feature_links() {
+        let wall = 1 << 31;
+        let cap = 1 << (MAX_CONSTRAINTS + 5);
+        let masks = [wall | cap, wall | cap, wall | cap, wall | cap, wall, cap];
+        let faces = [
+            [2, 0, 4],
+            [2, 5, 0],
+            [0, 1, 4],
+            [0, 5, 1],
+            [1, 3, 4],
+            [1, 5, 3],
+        ];
+        assert!(feature_link_ok(0, 1, &faces, &masks));
+        let masks = [wall, wall | cap, wall | cap, wall, wall];
+        assert!(!feature_link_ok(0, 1, &[[0, 2, 3], [1, 3, 4]], &masks));
     }
 }
