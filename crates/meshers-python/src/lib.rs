@@ -484,7 +484,11 @@ fn available_threads() -> usize {
 
 #[pymodule(gil_used = true)]
 fn _meshers(m: &Bound<'_, PyModule>) -> PyResult<()> {
-    m.add("MAX_CONSTRAINTS", meshers_core::implicit::intersection::MAX_CONSTRAINTS)?;
+    m.add("IMPLICIT_API_VERSION", 1)?;
+    m.add(
+        "MAX_CONSTRAINTS",
+        meshers_core::implicit::intersection::MAX_CONSTRAINTS,
+    )?;
     m.add_function(wrap_pyfunction!(available_threads, m)?)?;
     m.add_class::<compiled::CompiledField>()?;
     m.add_function(wrap_pyfunction!(compiled::_compile_expression, m)?)?;
