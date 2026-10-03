@@ -199,7 +199,7 @@ def interrupt():
 timer = threading.Timer({delay}, interrupt)
 timer.start()
 try:
-    meshers.generate('gyroid', cells=80, band=(-.5,.5))
+    meshers.generate('gyroid', cells=96, band=(-.5,.5), max_tetrahedra=4_000_000)
 except KeyboardInterrupt:
     assert time.perf_counter() - sent[0] < 2
 else:
