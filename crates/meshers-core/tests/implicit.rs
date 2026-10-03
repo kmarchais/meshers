@@ -497,3 +497,46 @@ fn minimum_quality_gate_rejects_flat_cells_without_changing_geometry() {
         ));
     }
 }
+#[test]
+fn optimized_mesh_is_independent_of_physical_unit_scale() {
+    let mut reference: Option<(Vec<[usize; 4]>, Vec<Point>, f64)> = None;
+    for scale in [1., 1e-3, 1e3] {
+        let field = |p: Point| {
+            let p = p.map(|x| x / scale);
+            ((p[0] - 0.47).powi(2) + (p[1] - 0.51).powi(2) + (p[2] - 0.49).powi(2)).sqrt() - 0.29
+        };
+        let output = generate(
+            &field,
+            Options {
+                bounds: [[0.; 3], [scale; 3]],
+                cells: [10; 3],
+                optimize_passes: 2,
+                geometry_tolerance: 0.05 * scale,
+                ..Default::default()
+            },
+        )
+        .unwrap();
+        let points = output
+            .mesh
+            .points
+            .iter()
+            .map(|p| p.map(|x| x / scale))
+            .collect::<Vec<_>>();
+        if let Some((tets, old_points, quality)) = &reference {
+            assert!(
+                output.mesh.tets == *tets,
+                "Unit change altered connectivity"
+            );
+            for (a, b) in points.iter().zip(old_points) {
+                assert!(meshers_core::norm(meshers_core::sub(*a, *b)) < 1e-6);
+            }
+            assert!((output.diagnostics.minimum_mmg_quality - quality).abs() < 1e-6);
+        } else {
+            reference = Some((
+                output.mesh.tets,
+                points,
+                output.diagnostics.minimum_mmg_quality,
+            ));
+        }
+    }
+}

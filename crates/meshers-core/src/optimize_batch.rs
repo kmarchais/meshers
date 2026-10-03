@@ -135,7 +135,7 @@ fn evaluate(
             .zip(gradients)
             .zip(values.as_chunks::<4>().0)
         {
-            let denom = norm(grad) * h * h * 0.3;
+            let denom = norm(grad) * h * h * 0.3 / g.optimizer_length();
             for &value in values {
                 let residual = if g.band() {
                     value.abs() - threshold

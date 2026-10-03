@@ -485,7 +485,7 @@ fn evaluate(
             }
         });
         let center: Point = std::array::from_fn(|a| (p[0][a] + p[1][a] + p[2][a]) / 3.);
-        let denom = norm(geometry.gradient(center)) * h * h * 0.3;
+        let denom = norm(geometry.gradient(center)) * h * h * 0.3 / geometry.optimizer_length();
         for sample in [
             center,
             std::array::from_fn(|a| (p[0][a] + p[1][a]) * 0.5),

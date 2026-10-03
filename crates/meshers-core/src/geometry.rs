@@ -1,6 +1,10 @@
 //! Internal geometry context shared by specialized and generic algorithms.
 use crate::Point;
 pub(crate) trait Geometry: Sync {
+    /// Physical reference length for dimensionless optimizer penalties.
+    fn optimizer_length(&self) -> f64 {
+        1.
+    }
     fn value(&self, p: Point) -> f64;
     fn batched(&self) -> bool {
         false

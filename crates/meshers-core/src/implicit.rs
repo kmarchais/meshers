@@ -101,6 +101,7 @@ struct Context<'a, F: ScalarField> {
     options: Options,
     center: f64,
     scale: f64,
+    optimizer_length: f64,
     invalid: AtomicBool,
 }
 impl<F: ScalarField> Context<'_, F> {
@@ -140,6 +141,9 @@ impl<F: ScalarField> Context<'_, F> {
     }
 }
 impl<F: ScalarField> Geometry for Context<'_, F> {
+    fn optimizer_length(&self) -> f64 {
+        self.optimizer_length
+    }
     fn batched(&self) -> bool {
         self.field.prefers_batches()
     }
@@ -277,6 +281,7 @@ pub fn generate<F: ScalarField>(field: &F, options: Options) -> Result<Output, M
         options,
         center,
         scale,
+        optimizer_length: (0..3).map(|a| hi[a] - lo[a]).product::<f64>().cbrt(),
         invalid: AtomicBool::new(false),
     };
     // Inspect raw field traces before canonicalizing opposite faces.
