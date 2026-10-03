@@ -5,7 +5,6 @@ from __future__ import annotations
 import time
 import warnings
 from collections.abc import Callable, Mapping, Sequence
-from itertools import starmap
 from typing import TYPE_CHECKING
 
 import numpy as np
@@ -38,7 +37,7 @@ def _prepare(field: Scalar, *, compile: bool) -> Scalar:
 
 def _values(field: Scalar, points: Points) -> Points:
     if isinstance(field, _meshers.CompiledField):
-        return np.fromiter(starmap(field, points), dtype=np.float64, count=len(points))
+        return field.values(points)
     if isinstance(field, str):
         x, y, z = (2 * np.pi * points).T
         if field == "gyroid":

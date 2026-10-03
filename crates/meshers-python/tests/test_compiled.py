@@ -146,3 +146,20 @@ def test_value_kernel_does_not_require_finite_derivative():
 def test_invalid_unused_nodes_are_still_rejected():
     with pytest.raises(ValueError, match="operation"):
         meshers._meshers._compile_expression([("constant", [], 1.0), ("unknown", [], 0.0)], [0])
+
+
+def test_compiled_batch_matches_scalar_for_strided_points():
+    f = meshers.compile_field(gyroid)
+    storage = np.random.default_rng(43).normal(size=(9000, 6))
+    points = storage[::2, ::2]
+    expected = np.array([f(*p) for p in points])
+    np.testing.assert_array_equal(f.values(points), expected)
+    assert f.values(np.empty((0, 3))).shape == (0,)
+    with pytest.raises(ValueError, match="shape"):
+        f.values(np.zeros((3, 2)))
+
+
+def test_compiled_batch_rejects_nonfinite_values():
+    f = meshers.compile_field(lambda x, y, z: np.sqrt(x))
+    with pytest.raises(ValueError, match="nonfinite"):
+        f.values(np.array([[1.0, 0.0, 0.0], [-1.0, 0.0, 0.0]]))

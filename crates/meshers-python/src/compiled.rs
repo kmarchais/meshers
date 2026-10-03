@@ -5,6 +5,7 @@ use cranelift_codegen::ir::{
 use cranelift_frontend::{FunctionBuilder, FunctionBuilderContext};
 use cranelift_jit::{JITBuilder, JITModule};
 use cranelift_module::{Linkage, Module, default_libcall_names};
+use numpy::{IntoPyArray, PyArray1, PyReadonlyArray2};
 use pyo3::{
     exceptions::{PyRuntimeError, PyValueError},
     prelude::*,
@@ -49,6 +50,44 @@ pub(crate) fn evaluate(kernel: Kernel, p: [f64; 3]) -> Result<[f64; 4], ()> {
 }
 #[pymethods]
 impl CompiledField {
+    /// Evaluate owned point batches without a Python call per point.
+    fn values<'py>(
+        &self,
+        py: Python<'py>,
+        points: PyReadonlyArray2<'py, f64>,
+    ) -> PyResult<Bound<'py, PyArray1<f64>>> {
+        let array = points.as_array();
+        if array.ncols() != 3 {
+            return Err(PyValueError::new_err("points must have shape (n, 3)"));
+        }
+        // Copy before releasing the GIL: another Python thread may modify the
+        // source array, and strided arrays need not have contiguous storage.
+        let owned: Vec<[f64; 3]> = array
+            .rows()
+            .into_iter()
+            .map(|row| [row[0], row[1], row[2]])
+            .collect();
+        let mut result = Vec::with_capacity(owned.len());
+        for chunk in owned.chunks(4096) {
+            py.check_signals()?;
+            let values = py.detach(|| {
+                chunk
+                    .iter()
+                    .map(|&point| {
+                        let out = evaluate(self.value_kernel, point)
+                            .map_err(|_| PyRuntimeError::new_err("compiled field failed"))?;
+                        if !out[0].is_finite() {
+                            return Err(PyValueError::new_err("nonfinite compiled field"));
+                        }
+                        Ok(out[0])
+                    })
+                    .collect::<PyResult<Vec<f64>>>()
+            })?;
+            result.extend(values);
+        }
+        py.check_signals()?;
+        Ok(result.into_pyarray(py))
+    }
     fn __call__(&self, x: f64, y: f64, z: f64) -> PyResult<f64> {
         let out = evaluate(self.value_kernel, [x, y, z])
             .map_err(|_| PyRuntimeError::new_err("compiled field failed"))?;
