@@ -205,6 +205,13 @@ fn emit_kernel(
                 "neg" => b.ins().fneg(values[args[0]]),
                 "abs" => b.ins().fabs(values[args[0]]),
                 "sqrt" => b.ins().sqrt(values[args[0]]),
+                // Keep cheap scalar operations in the native instruction stream.
+                // Nonfinite min/max results retain NumPy's NaN propagation.
+                "pow" if nodes[args[1]].0 == "constant" && nodes[args[1]].2 == 2. => {
+                    b.ins().fmul(values[args[0]], values[args[0]])
+                }
+                "minimum" => b.ins().fmin(values[args[0]], values[args[1]]),
+                "maximum" => b.ins().fmax(values[args[0]], values[args[1]]),
                 "select" => {
                     let zero = b.ins().f64const(0.);
                     let cond = b.ins().fcmp(FloatCC::NotEqual, values[args[0]], zero);

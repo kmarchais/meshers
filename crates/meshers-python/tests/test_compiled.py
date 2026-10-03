@@ -164,3 +164,33 @@ def test_compiled_batch_rejects_nonfinite_values():
     f = meshers.compile_field(lambda x, y, z: np.sqrt(x))
     with pytest.raises(ValueError, match="nonfinite"):
         f.values(np.array([[1.0, 0.0, 0.0], [-1.0, 0.0, 0.0]]))
+
+
+def test_compiled_minmax_values_and_piecewise_gradients():
+    points = np.random.default_rng(83).uniform(-3, 3, (257, 3))
+    field = meshers.compile_field(lambda x, y, z: np.maximum(np.minimum(x, y), z))
+    expected = np.maximum(np.minimum(points[:, 0], points[:, 1]), points[:, 2])
+    np.testing.assert_array_equal(field.values(points), expected)
+    branch = np.where(
+        np.minimum(points[:, 0], points[:, 1]) > points[:, 2], np.argmin(points[:, :2], axis=1), 2
+    )
+    gradients = np.array(list(starmap(field.gradient, points)))
+    np.testing.assert_array_equal(gradients, np.eye(3)[branch])
+
+
+def test_compiled_minmax_propagates_nonfinite_branches():
+    field = meshers.compile_field(lambda x, y, z: np.minimum(np.sqrt(x), 0))
+    with pytest.raises(ValueError, match="nonfinite"):
+        field(-1, 0, 0)
+    masked = meshers.compile_field(lambda x, y, z: np.where(x >= 0, np.minimum(np.sqrt(x), 0), 1))
+    assert masked(-1, 0, 0) == 1
+    np.testing.assert_array_equal(masked.gradient(-1, 0, 0), [0, 0, 0])
+
+
+def test_compiled_square_values_and_gradients_at_extreme_scales():
+    field = meshers.compile_field(lambda x, y, z: x**2)
+    for x in (-0.0, 0.0, -1e-150, 1e-150, -1e150, 1e150):
+        assert field(x, 0, 0) == x * x
+        np.testing.assert_array_equal(field.gradient(x, 0, 0), [2 * x, 0, 0])
+    with pytest.raises(ValueError, match="nonfinite"):
+        field(1e200, 0, 0)
