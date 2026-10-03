@@ -2,6 +2,7 @@ import gc
 import subprocess
 import sys
 import threading
+from itertools import starmap
 
 import meshers
 import numpy as np
@@ -152,7 +153,7 @@ def test_compiled_batch_matches_scalar_for_strided_points():
     f = meshers.compile_field(gyroid)
     storage = np.random.default_rng(43).normal(size=(9000, 6))
     points = storage[::2, ::2]
-    expected = np.array([f(*p) for p in points])
+    expected = np.array(list(starmap(f, points)))
     np.testing.assert_array_equal(f.values(points), expected)
     assert f.values(np.empty((0, 3))).shape == (0,)
     with pytest.raises(ValueError, match="shape"):
