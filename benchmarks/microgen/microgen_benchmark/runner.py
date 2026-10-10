@@ -168,9 +168,19 @@ def worker(request_path):
         if (
             result["failure_kind"] == "native rejection"
             and request["cells"] == 8
-            and case.id in {"gyroid", "schwarz-p", "neovius", "graded-gyroid", "thin-gyroid"}
+            and case.id
+            in {
+                "gyroid",
+                "schwarz-p",
+                "neovius",
+                "graded-gyroid",
+                "thin-gyroid",
+                "implicit-lattice",
+                "spinodoid",
+            }
         ):
-            result["issue_url"] = "https://github.com/kmarchais/meshers/issues/3"
+            number = 4 if case.implicit else 3
+            result["issue_url"] = f"https://github.com/kmarchais/meshers/issues/{number}"
         traceback.print_exc()
     write_json(out / "result.json", result)
     print(f"Result: {result['status']} / {result.get('error', '')}", flush=True)

@@ -97,6 +97,12 @@ timeouts alone are not proof of a library defect. Keep failures in published
 benchmark results. `failures.json` exports every failed, timed-out and geometry-warning
 measurement with its exact reproduction command and provenance. Link any confirmed issue in the row's `issue_url` field.
 
+The retained eight-interval Meshers native failures are tracked in
+[issue #3](https://github.com/kmarchais/meshers/issues/3) for the original sheet
+corpus and [issue #4](https://github.com/kmarchais/meshers/issues/4) for the two
+implicit solids. Matching smoke rows link these issues automatically. Rejection
+at a coarse resolution does not establish failure at finer resolutions.
+
 `--cells` means intervals per box axis. Microgen uses `cells+1` sample points.
 Equal intervals are only a sampling schedule. Actual element counts decide
 budget comparisons.
