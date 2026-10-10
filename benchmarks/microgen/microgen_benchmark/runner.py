@@ -67,7 +67,7 @@ def verify_sources(expected):
 def worker(request_path):
     request = json.loads(request_path.read_text(encoding="utf-8"))
     out = request_path.parent
-    result = {"status": "failed", "stage": "imports"}
+    result = {"status": "failed", "stage": "imports", "failure_owner": "Benchmark dependencies"}
     phase_start = time.perf_counter()
 
     def checkpoint(**values):
@@ -165,6 +165,12 @@ def worker(request_path):
         result["failure_kind"] = (
             "native rejection" if type(exc).__name__ == "MeshingFailure" else "pipeline failure"
         )
+        if (
+            result["failure_kind"] == "native rejection"
+            and request["cells"] == 8
+            and case.id in {"gyroid", "schwarz-p", "neovius", "graded-gyroid", "thin-gyroid"}
+        ):
+            result["issue_url"] = "https://github.com/kmarchais/meshers/issues/3"
         traceback.print_exc()
     write_json(out / "result.json", result)
     print(f"Result: {result['status']} / {result.get('error', '')}", flush=True)
@@ -272,6 +278,8 @@ def run_child(request, directory, timeout, heartbeat):
     if timed_out:
         partial = directory / "progress.json"
         return {
+            "stage": "worker",
+            "failure_owner": "Owned worker pipeline",
             **(json.loads(partial.read_text(encoding="utf-8")) if partial.is_file() else {}),
             "status": "timeout",
             "error": f"Owned worker tree killed after {timeout}s",
@@ -282,6 +290,7 @@ def run_child(request, directory, timeout, heartbeat):
         return {
             "status": "failed",
             "stage": "worker",
+            "failure_owner": "Owned worker pipeline",
             "error": "Nonzero worker exit or missing completed result",
             "worker_exit_code": process.returncode,
         }
