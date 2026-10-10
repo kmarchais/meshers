@@ -121,7 +121,7 @@
       }
       .previews {
         display: grid;
-        grid-template-columns: repeat(5, minmax(0, 1fr));
+        grid-template-columns: repeat(6, minmax(0, 1fr));
         gap: 12px;
         margin: 22px 0;
       }
@@ -368,13 +368,15 @@
       const colors = {
         vtk: "#737d8a",
         mmg: "#ce731e",
+        "mmg-microgen": "#b54353",
         "meshers-fast": "#6c5ce7",
         "meshers-balanced": "#2477bd",
         "meshers-quality": "#14836b",
       };
       const names = {
         vtk: "Microgen VTK",
-        mmg: "VTK + MMG3D",
+        mmg: "VTK + MMG binding",
+        "mmg-microgen": "Microgen MMG · two passes",
         "meshers-fast": "Meshers · 0 passes",
         "meshers-balanced": "Meshers · 4 passes",
         "meshers-quality": "Meshers · 12 passes",
@@ -436,6 +438,9 @@
             const counts = rows
               .filter((r) => r.tetrahedra)
               .map((r) => r.tetrahedra);
+            const measuredErrors = rows.filter(
+              (r) => r.worst_energy_error != null,
+            );
             return {
               w,
               n,
@@ -453,8 +458,8 @@
                     ...rows.filter((r) => r.q_min != null).map((r) => r.q_min),
                   )
                 : null,
-              error: valid.length
-                ? Math.max(...valid.map((r) => r.worst_energy_error))
+              error: measuredErrors.length
+                ? Math.max(...measuredErrors.map((r) => r.worst_energy_error))
                 : null,
               eligible:
                 valid.length === cfg.repeats && rows.length === cfg.repeats,

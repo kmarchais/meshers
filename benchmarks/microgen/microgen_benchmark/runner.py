@@ -227,7 +227,7 @@ def provenance(config):
             binary_hashes = {
                 str(f): digest(Path(distribution.locate_file(f)))
                 for f in distribution.files or []
-                if str(f).endswith((".pyd", ".so", ".dll")) and name in {"meshers", "mmgpy"}
+                if str(f).endswith((".pyd", ".so", ".dll", ".exe")) and name in {"meshers", "mmgpy"}
             }
             packages[name] = {"version": distribution.version, "native_sha256": binary_hashes}
         except importlib.metadata.PackageNotFoundError:
@@ -270,7 +270,7 @@ def main():
     parser.add_argument("--repeats", type=int)
     parser.add_argument("--warmups", type=int)
     parser.add_argument("--threads", type=int, default=1)
-    parser.add_argument("--timeout", type=float, default=300)
+    parser.add_argument("--timeout", type=float, help="Seconds per worker: smoke 60, standard 300")
     parser.add_argument("--geometry-tolerance", type=float, default=0.01)
     parser.add_argument("--volume-tolerance", type=float, default=0.1)
     parser.add_argument("--mmg-boundary", choices=["caps", "fixed"], default="caps")
@@ -304,7 +304,8 @@ def main():
     ]
     repeats = args.repeats if args.repeats is not None else (1 if args.suite == "smoke" else 3)
     warmups = args.warmups if args.warmups is not None else (0 if args.suite == "smoke" else 1)
-    if min(cells) < 2 or repeats < 1 or warmups < 0 or args.threads < 1 or args.timeout <= 0:
+    timeout = args.timeout if args.timeout is not None else (60 if args.suite == "smoke" else 300)
+    if min(cells) < 2 or repeats < 1 or warmups < 0 or args.threads < 1 or timeout <= 0:
         parser.error("Positive cells >=2, repeats, threads and timeout required; warmups >=0")
     if (
         len(set(cells)) != len(cells)
@@ -332,7 +333,7 @@ def main():
         "minimum_quality": args.minimum_quality,
         "max_tetrahedra": args.max_tetrahedra,
         "pair_cap": args.pair_cap,
-        "timeout_s": args.timeout,
+        "timeout_s": timeout,
         "workflows": workflows,
         "suite": args.suite,
         "matched_count_tolerance": 0.05,
@@ -386,7 +387,7 @@ def main():
             result = run_child(
                 request,
                 output / identity,
-                args.timeout,
+                timeout,
                 lambda i=index, msg=identity, f=failures: progress(i, len(tasks), msg, start, f),
             )
             row = {

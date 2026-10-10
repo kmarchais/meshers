@@ -1,6 +1,6 @@
 # Microgen meshing benchmark
 
-Compare Microgen's VTK tetrahedra, VTK followed by MMG3D, and three Meshers
+Compare Microgen's VTK tetrahedra, two VTK-to-MMG workflows, and three Meshers
 optimization budgets. One command produces a standalone HTML document, raw
 measurements, mesh arrays, solved displacement fields and full failure logs.
 
@@ -18,7 +18,9 @@ It runs serially and can take hours. Start with the shorter complete case matrix
 uv run --project benchmarks/microgen --locked microgen-benchmark --suite smoke
 ```
 
-The smoke suite uses eight grid intervals, no warmups and one measurement. It
+The smoke suite uses eight grid intervals, no warmups, one measurement and a
+60-second limit per worker (300 seconds in the standard suite). Use `--timeout`
+to change that limit. It
 checks that the workflows run and the report contains every case. Its timings
 are not sufficient for performance claims, and coarse meshes may fail.
 
@@ -72,6 +74,13 @@ budget comparisons.
   Microgen's legacy two-pass command-line remesher. Its surface approximation
   starts from VTK's polyhedral boundary. `--mmg-boundary fixed` instead protects
   every surface triangle for a comparison on the same VTK polyhedral domain.
+* `mmg-microgen` calls Microgen's public `remesh_keeping_boundaries_for_fem`
+  function unchanged, using mmgpy's installed `mmg3d_O3` command alias. It runs
+  Microgen's two passes, file exchange and built-in retries with `hsiz=L/cells`,
+  `hausd=geometry_tolerance*L` and `hgrad=1.3`. These costs enter the generation
+  time. `periodic=False` matches this benchmark's finite specimens and varying
+  thickness; periodic homogenization needs a separate test. `--mmg-boundary`
+  applies only to the direct binding workflow.
 * `meshers-fast`, `meshers-balanced` and `meshers-quality` call the public
   `meshers.generate` API with 0, 4 and 12 optimization passes. All use the same
   geometry tolerance and minimum quality. A higher budget does not guarantee a

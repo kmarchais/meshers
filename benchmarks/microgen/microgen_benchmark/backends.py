@@ -1,6 +1,10 @@
 """Explicit public backends. No silent algorithm or quality fallback."""
 
+import os
+import shutil
+import sys
 import time
+from pathlib import Path
 
 import numpy as np
 
@@ -23,6 +27,13 @@ def generate(case, workflow, cells, config):
 
     if workflow == "mmg":
         import mmgpy
+    elif workflow == "mmg-microgen":
+        from microgen.remesh import remesh_keeping_boundaries_for_fem
+
+        # mmgpy installs Microgen's conventional command alias beside Python.
+        os.environ["PATH"] = str(Path(sys.executable).parent) + os.pathsep + os.environ["PATH"]
+        if not shutil.which("mmg3d_O3"):
+            raise ImportError("mmgpy's mmg3d_O3 command alias is unavailable")
     elif workflow in PROFILES:
         import meshers
     vtkSMPTools.Initialize(config["threads"])
@@ -32,7 +43,7 @@ def generate(case, workflow, cells, config):
     shape = case.shape(cells)
     setup_s = time.perf_counter() - start
     start = time.perf_counter()
-    if workflow in {"vtk", "mmg"}:
+    if workflow in {"vtk", "mmg", "mmg-microgen"}:
         grid = shape.grid_sheet.triangulate()
         extraction_s = time.perf_counter() - start
         if workflow == "mmg":
@@ -56,6 +67,14 @@ def generate(case, workflow, cells, config):
                 verbose=-1,
             )
             grid = mmgpy.to_pyvista(native)
+        elif workflow == "mmg-microgen":
+            grid = remesh_keeping_boundaries_for_fem(
+                grid,
+                periodic=False,
+                hsiz=case.scale / cells,
+                hausd=config["geometry_tolerance"] * case.scale,
+                hgrad=1.3,
+            )
         points, tets = tetrahedra(grid)
     elif workflow in PROFILES:
         native = meshers.generate(
