@@ -218,9 +218,54 @@
         background: #f0f2f4;
         color: #526576;
       }
-      .diagnostic {
-        background: #fff2d7;
-        color: #815413;
+      .heat {
+        color: #183047;
+        font-variant-numeric: tabular-nums;
+        font-weight: 650;
+      }
+      .heat small {
+        color: #263e50;
+        font-weight: 400;
+      }
+      .heat-note {
+        font-size: 10px;
+        letter-spacing: .02em;
+      }
+      .gate-fail {
+        display: inline-block;
+        background: #8b2335;
+        color: white !important;
+        border-radius: 4px;
+        padding: 1px 5px;
+      }
+      .heat-key {
+        padding: 12px 14px;
+        background: #f3f6f8;
+        border-radius: 6px;
+        font-size: 12px;
+        margin-top: 18px;
+      }
+      .heat-key p {
+        margin: 5px 0 0;
+      }
+      .colorbar {
+        display: inline-block;
+        width: 150px;
+        height: 12px;
+        background: linear-gradient(90deg, #82c9b4, #f7e1a0, #ef9695);
+        vertical-align: middle;
+        border-radius: 3px;
+        margin: 0 8px;
+      }
+      .ratio-key {
+        font-size: 12px;
+      }
+      .target-time {
+        display: table;
+        margin: 4px 0 0 auto;
+        padding: 1px 5px;
+        border: 1px solid #ffffff80;
+        border-radius: 4px;
       }
       tr.selected {
         outline: 2px solid var(--blue);
@@ -267,6 +312,24 @@
       th {
         color: var(--muted);
         font-weight: 600;
+        white-space: normal;
+        vertical-align: bottom;
+        background: #f3f6f8;
+      }
+      .results-table {
+        min-width: 880px;
+      }
+      .results-table th:first-child,
+      .results-table td:first-child {
+        position: sticky;
+        left: 0;
+        z-index: 1;
+        background: #f8fafb;
+        min-width: 160px;
+        max-width: 185px;
+        width: 175px;
+        white-space: normal;
+        box-shadow: 1px 0 var(--line);
       }
       td.status {
         text-align: left;
@@ -328,6 +391,12 @@
         }
       }
       @media (max-width: 500px) {
+        .results-table th:first-child,
+        .results-table td:first-child {
+          width: 128px;
+          min-width: 128px;
+          max-width: 128px;
+        }
         h1 {
           font-size: 28px;
         }
@@ -760,27 +829,44 @@
             : "No accepted mesh returned";
         return "No accepted mesh returned";
       }
+      // Color numeric observations separately from their admission status.
+      function heatColor(position) {
+        const v = Math.max(0, Math.min(1, position)),
+          stops = [[130, 201, 180], [247, 225, 160], [239, 150, 149]],
+          i = v <= 0.5 ? 0 : 1,
+          t = i === 0 ? v * 2 : (v - 0.5) * 2;
+        return `rgb(${stops[i].map((x, j) => Math.round(x + t * (stops[i + 1][j] - x))).join(",")})`;
+      }
+      function heatScale(value, peers, higher = false) {
+        const values = peers.filter(Number.isFinite),
+          lo = Math.min(...values),
+          hi = Math.max(...values),
+          spread = hi > lo;
+        return {
+          background: spread
+            ? heatColor(higher ? (hi - value) / (hi - lo) : (value - lo) / (hi - lo))
+            : "#e6edf3",
+          label: !spread ? "No range" : value === (higher ? hi : lo) ? "Best observed" : value === (higher ? lo : hi) ? "Worst observed" : "",
+          lo,
+          hi,
+        };
+      }
       function metricCell(g, key, gs, format = num) {
-        const value = g[key];
-        if (value == null)
-          return `<td class="missing">Not available<small>${esc(missingReason(g, key))}</small></td>`;
         if (key === "q")
-          return `<td class="${value < cfg.minimum_quality ? "fail" : "ok"}" title="Higher is better; requested minimum ${cfg.minimum_quality}">${num(value)}<small>${value < cfg.minimum_quality ? "Below quality target" : "Meets quality target"}</small></td>`;
+          format = (x) => Number(x).toLocaleString("en-US", { maximumFractionDigits: 6 });
+        const value = g[key];
+        if (!Number.isFinite(value))
+          return `<td class="missing">Not available<small>${esc(missingReason(g, key))}</small></td>`;
         const peers = gs
-          .filter((p) => p.n === g.n && p.eligible && p[key] != null)
+          .filter((p) => p.n === g.n)
           .map((p) => p[key]);
-        const lo = Math.min(...peers),
-          hi = Math.max(...peers),
-          v = hi > lo ? (value - lo) / (hi - lo) : 0.5;
-        const background =
-          g.eligible && peers.length > 1
-            ? `hsl(${140 * (1 - Math.max(0, Math.min(1, v)))} 48% 92%)`
-            : "#f0f2f4";
+        const scale = heatScale(value, peers, key === "q");
         const note =
           key === "count" || key === "nodes"
             ? "Fewer is only better at comparable accuracy"
-            : "Lower is better";
-        return `<td class="${g.eligible ? "" : "diagnostic"}" style="${g.eligible ? "background:" + background : ""}" title="${note}. Colors compare admissible workflows at the same intervals; this is not a matched-count claim.">${format(value)}${key === "time" ? `<small>[${num(g.lo)}, ${num(g.hi)}] s</small>` : ""}${!g.eligible ? "<small>Diagnostic only</small>" : ""}</td>`;
+            : key === "q" ? "Higher is better" : "Lower is better";
+        const title = `${note}. Observed range ${format(scale.lo)} to ${format(scale.hi)} at ${g.n} intervals, including diagnostic results. ${g.eligible ? "Admissible." : "Diagnostic only; excluded from claims."}`;
+        return `<td class="heat" data-metric="${key}" data-value="${value}" style="background:${scale.background}" title="${esc(title)}">${format(value)}${key === "time" ? `<small>[${num(g.lo)}, ${num(g.hi)}] s</small>` : ""}${scale.label ? `<small class="heat-note">${scale.label}</small>` : ""}${key === "q" ? `<small class="${value < cfg.minimum_quality ? "gate-fail" : ""}">${value < cfg.minimum_quality ? "Below target" : "Meets target"}, q ≥ ${num(cfg.minimum_quality)}</small>` : ""}${!g.eligible ? "<small class=heat-note>Diagnostic only</small>" : ""}</td>`;
       }
       function resultRows(gs) {
         return gs
@@ -799,6 +885,12 @@
           )
           .join("");
       }
+      function ratioCell(value) {
+        if (Number.isNaN(value))
+          return '<td class="missing">Undefined ratio<small>Both observations are zero</small></td>';
+        const label = value < 1 ? "Favors Meshers" : value > 1 ? "Favors control" : "Equal";
+        return `<td class="heat" style="background:${heatColor(0.5 + Math.log2(value) / 2)}" title="${label}. Meshers / control; 1 is equal. Color saturates at 0.5× and 2×.">${num(value)}×<small>${label}</small></td>`;
+      }
       function comparisons(gs) {
         const good = gs.filter((g) => g.eligible),
           pairs = [];
@@ -810,30 +902,35 @@
             );
             if (delta <= cfg.matched_count_tolerance)
               pairs.push(
-                `<tr><td>${esc(names[m.w])} n${m.n} / ${esc(names[c.w])} n${c.n}</td><td>${pct((m.count - c.count) / c.count)}</td><td class="${m.error < c.error ? "ok" : "fail"}">${num(m.error / c.error)}×</td><td class="${m.time < c.time ? "ok" : "fail"}">${num(m.time / c.time)}×</td></tr>`,
+                `<tr><td>${esc(names[m.w])} n${m.n} / ${esc(names[c.w])} n${c.n}</td><td>${pct((m.count - c.count) / c.count)}</td>${ratioCell(m.error / c.error)}${ratioCell(m.time / c.time)}</tr>`,
               );
           }
         }
         return pairs.length
-          ? `<div class="table-wrap"><table><thead><tr><th>Observed matched-count pair</th><th>Element difference</th><th>FEA error ratio ↓, &lt;1 favors Meshers</th><th>Time ratio ↓, &lt;1 favors Meshers</th></tr></thead><tbody>${pairs.join("")}</tbody></table></div>`
+          ? `<div class="table-wrap"><table><thead><tr><th>Observed matched-count pair</th><th>Element difference</th><th>FEA error ratio ↓, &lt;1 favors Meshers</th><th>Time ratio ↓, &lt;1 favors Meshers</th></tr></thead><tbody>${pairs.join("")}</tbody></table></div><p class="ratio-key">Ratio colors use a fixed scale: green at ≤ 0.5×, yellow at 1×, red at ≥ 2×. All pairs pass admission and the matched-count tolerance.</p>`
           : `<p class="muted">No measured Meshers/control pair is within ${pct(cfg.matched_count_tolerance)} of the same element count. Add resolution levels before making a matched-count claim.</p>`;
       }
       function targets(gs) {
+        const best = (w, t) => gs
+          .filter((g) => g.w === w && g.eligible && g.error <= t)
+          .sort((a, b) => a.count - b.count)[0];
         return `<div class="table-wrap"><table><thead><tr><th>Workflow</th>${cfg.error_targets.map((t) => `<th>≤ ${pct(t)} error</th>`).join("")}</tr></thead><tbody>${cfg.workflows
           .map(
             (w) =>
               `<tr><td>${esc(names[w])}</td>${cfg.error_targets
                 .map((t) => {
-                  const matches = gs
-                    .filter((g) => g.w === w && g.eligible && g.error <= t)
-                    .sort((a, b) => a.count - b.count);
-                  return `<td class="${matches.length ? "ok" : "missing"}">${matches.length ? num(matches[0].count) + " tets · " + num(matches[0].time) + " s" : "Not reached"}</td>`;
+                  const g = best(w, t);
+                  if (!g) return '<td class="missing">Not reached<small>No admissible tested configuration reaches this target</small></td>';
+                  const peers = cfg.workflows.map((other) => best(other, t)).filter(Boolean),
+                    count = heatScale(g.count, peers.map((p) => p.count)),
+                    time = heatScale(g.time, peers.map((p) => p.time));
+                  return `<td class="heat" style="background:${count.background}" title="Fewer tets is better at this shared error target">${num(g.count)} tets${count.label ? `<small>${count.label}</small>` : ""}<small class="target-time" style="background:${time.background}" title="Generation time of the selected minimum-count configuration; lower is better">${num(g.time)} s</small></td>`;
                 })
                 .join("")}</tr>`,
           )
           .join(
             "",
-          )}</tbody></table></div><p class="muted">Lowest observed maximum element count reaching each target across all repeats. No interpolation or extrapolation; the tested resolution range may miss a better configuration.</p>`;
+          )}</tbody></table></div><p class="muted">Lowest observed maximum element count reaching each target across all repeats. Each target column has separate count and time scales across qualifying workflows, green for lower values. Gray means no qualifying observation. No interpolation or extrapolation; the tested resolution range may miss a better configuration.</p>`;
       }
 
       function mesh(canvas, triangles) {
@@ -919,7 +1016,7 @@
             return `<div class="mesh-card"><b>${esc(names[w])}</b>${r ? `<canvas data-mesh="${esc(r.artifact)}" aria-label="${esc(c.name + " " + names[w] + " mesh")}" title="Drag to rotate"></canvas><small>n=${r.cells} · ${num(r.tetrahedra)} tets · ${esc(r.status)}<br>Surface simplified for display. Drag to rotate.</small>` : '<div class="empty-preview">No retained validated surface</div><small>See status and logs below.</small>'}</div>`;
           })
           .join("");
-        section.innerHTML = `<div class="case-header"><div><div class="eyebrow">${esc(c.id)}</div><h2>${esc(c.name)}</h2><p>${esc(c.description)}</p></div><span class="badge">${rows.length}/${cfg.cells.length * cfg.workflows.length * cfg.repeats} measured runs</span></div><div class="formula">${esc(c.formula)}<br>X = 2πx/L, Y = 2πy/L, Z = 2πz/L · cube [−L/2, L/2]³ · L=${c.scale}<br>${["bcc_lattice", "spinodoid"].includes(c.function) ? "Implicit solid: signed field ≤ 0. The lower Meshers band value −1 is inactive." : `Sheet: |f| ≤ width(x)/2 · width(x)=${c.offset}${c.grading ? " × (1 + " + c.grading + " x/L)" : ""}${c.function === "solid" ? " · full cube" : ""}`}</div><div class="previews">${previews}</div><div class="legend">${cfg.workflows.map((w) => `<span><i class="dot" style="background:${colors[w]}"></i>${esc(names[w])}</span>`).join("")}</div><div class="charts"><div class="chart"><h3>Generation time versus FEA error</h3>${chart(gs, "time", "Generation seconds")}</div><div class="chart"><h3>Elements versus FEA error</h3>${chart(gs, "count", "Tetrahedra")}</div></div><div class="table-wrap"><table><thead><tr><th>Workflow / intervals</th><th>Time ↓ median [min, max] s</th><th>Max tets ↓*</th><th>Max nodes ↓*</th><th>Min q ↑</th><th>Worst FEA error ↓</th><th>Status</th></tr></thead><tbody>${resultRows(gs)}</tbody></table></div><p class="muted">Green → red compares lower → higher values among admissible workflows at the same intervals. Amber numbers are diagnostic scores excluded from claims. q is green at or above the requested minimum, red below it. * Fewer elements only helps at comparable FEA error.</p><details open><summary>Compare at matched budgets and error targets</summary>${comparisons(gs)}${targets(gs)}</details><details><summary>Individual repetitions, geometry diagnostics and all 18 load errors</summary>${rows.map((r) => `<details><summary>${esc(names[r.workflow])} n${r.cells}, repeat ${r.repeat + 1}: ${esc(r.status)}</summary><p><a href="${artifact(r, "worker.log")}">Full log</a> · <a href="${artifact(r, "request.json")}">Input</a>${r.mesh_sha256 ? ' · <a href="' + artifact(r, "mesh.npz") + '">Mesh arrays</a>' : ""}${r.fields_sha256 ? ' · <a href="' + artifact(r, "fields.npz") + '">Solved fields</a>' : ""}</p><pre>${esc(JSON.stringify(Object.fromEntries(Object.entries(r).filter(([k]) => k !== "preview")), null, 2))}</pre></details>`).join("")}</details>${failures.length ? `<details open><summary>${failures.length} retained failures</summary>${failures.map((r) => `<div class="failure"><b>${esc(names[r.workflow])} n${r.cells}, repeat ${r.repeat + 1}</b><p>${esc(r.failure_owner || owner(r))} · ${esc(r.stage)}: ${esc(r.error)}</p><a href="${artifact(r, "worker.log")}">Full worker log</a></div>`).join("")}</details>` : ""}`;
+        section.innerHTML = `<div class="case-header"><div><div class="eyebrow">${esc(c.id)}</div><h2>${esc(c.name)}</h2><p>${esc(c.description)}</p></div><span class="badge">${rows.length}/${cfg.cells.length * cfg.workflows.length * cfg.repeats} measured runs</span></div><div class="formula">${esc(c.formula)}<br>X = 2πx/L, Y = 2πy/L, Z = 2πz/L · cube [−L/2, L/2]³ · L=${c.scale}<br>${["bcc_lattice", "spinodoid"].includes(c.function) ? "Implicit solid: signed field ≤ 0. The lower Meshers band value −1 is inactive." : `Sheet: |f| ≤ width(x)/2 · width(x)=${c.offset}${c.grading ? " × (1 + " + c.grading + " x/L)" : ""}${c.function === "solid" ? " · full cube" : ""}`}</div><div class="previews">${previews}</div><div class="legend">${cfg.workflows.map((w) => `<span><i class="dot" style="background:${colors[w]}"></i>${esc(names[w])}</span>`).join("")}</div><div class="charts"><div class="chart"><h3>Generation time versus FEA error</h3>${chart(gs, "time", "Generation seconds")}</div><div class="chart"><h3>Elements versus FEA error</h3>${chart(gs, "count", "Tetrahedra")}</div></div><div class="heat-key"><b>Better</b><span class="colorbar" aria-label="Green through yellow to red"></span><b>Worse</b><p>Each metric uses its own linear range across available workflows at the same intervals. Green is the best observed value, red the worst; a column with no variation has a neutral fill. Diagnostic results keep their colors and labels, but stay excluded from claims. Hover a value for its range.</p><p>↓ Lower time and FEA error are better. ↑ Higher q is better. ↓* Fewer tets or nodes only helps at comparable FEA accuracy. A red q badge marks the quality gate independently of the colormap.</p></div><div class="table-wrap" role="region" aria-label="Measurements, scroll horizontally on narrow screens" tabindex="0"><table class="results-table"><thead><tr><th>Workflow / intervals</th><th>Time ↓ median [min, max] s</th><th>Max tets ↓*</th><th>Max nodes ↓*</th><th>Min q ↑</th><th>Worst FEA error ↓</th><th>Status</th></tr></thead><tbody>${resultRows(gs)}</tbody></table></div><p class="muted">Colors describe the observed column values, not overall mesh qualification. Use the admissible matched-budget and error-target comparisons below to judge tradeoffs. On narrow screens, scroll the table horizontally; workflow names stay visible.</p><details open><summary>Compare at matched budgets and error targets</summary>${comparisons(gs)}${targets(gs)}</details><details><summary>Individual repetitions, geometry diagnostics and all 18 load errors</summary>${rows.map((r) => `<details><summary>${esc(names[r.workflow])} n${r.cells}, repeat ${r.repeat + 1}: ${esc(r.status)}</summary><p><a href="${artifact(r, "worker.log")}">Full log</a> · <a href="${artifact(r, "request.json")}">Input</a>${r.mesh_sha256 ? ' · <a href="' + artifact(r, "mesh.npz") + '">Mesh arrays</a>' : ""}${r.fields_sha256 ? ' · <a href="' + artifact(r, "fields.npz") + '">Solved fields</a>' : ""}</p><pre>${esc(JSON.stringify(Object.fromEntries(Object.entries(r).filter(([k]) => k !== "preview")), null, 2))}</pre></details>`).join("")}</details>${failures.length ? `<details open><summary>${failures.length} retained failures</summary>${failures.map((r) => `<div class="failure"><b>${esc(names[r.workflow])} n${r.cells}, repeat ${r.repeat + 1}</b><p>${esc(r.failure_owner || owner(r))} · ${esc(r.stage)}: ${esc(r.error)}</p><a href="${artifact(r, "worker.log")}">Full worker log</a></div>`).join("")}</details>` : ""}`;
         document.getElementById("cases").append(section);
         section
           .querySelectorAll(".interactive-chart")

@@ -203,6 +203,12 @@ The report provides:
 * The lowest observed element count reaching 5%, 10% and 20% error targets.
   These are observed configurations, without interpolation or extrapolation.
 * Full timings and status for every repeat, including unsuccessful generations.
+* Continuous green-to-red table colormaps, with a separate scale for each metric
+  at the same grid resolution. Diagnostic observations keep their colors and
+  explicit labels; colors alone do not establish qualification. Higher q is
+  better, while lower time and FEA error are better. Missing values stay gray.
+  Matched-count ratios use a fixed scale centered on 1, and error-target tables
+  compare element counts and timings only among qualifying observations.
 
 A configuration enters comparisons only if every measured repeat passes.
 The largest observed element count and worst FEA error are used, so count
