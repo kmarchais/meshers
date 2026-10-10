@@ -170,6 +170,67 @@
         height: auto;
         display: block;
       }
+      .plot {
+        touch-action: none;
+        cursor: grab;
+      }
+      .plot circle {
+        cursor: pointer;
+      }
+      .plot-controls {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px 12px;
+        font-size: 12px;
+      }
+      .plot-controls label {
+        cursor: pointer;
+      }
+      button {
+        font: inherit;
+        border: 1px solid var(--line);
+        background: white;
+        color: var(--ink);
+        border-radius: 5px;
+        padding: 3px 9px;
+        cursor: pointer;
+      }
+      .point-detail {
+        display: block;
+        min-height: 62px;
+        background: #f3f6f8;
+        padding: 8px;
+        font-size: 12px;
+        white-space: normal;
+      }
+      .better {
+        color: var(--green);
+        font-size: 12px;
+        font-weight: 600;
+      }
+      td small {
+        display: block;
+        white-space: normal;
+        font-size: 11px;
+        max-width: 210px;
+      }
+      .missing {
+        background: #f0f2f4;
+        color: #526576;
+      }
+      .diagnostic {
+        background: #fff2d7;
+        color: #815413;
+      }
+      tr.selected {
+        outline: 2px solid var(--blue);
+        outline-offset: -2px;
+      }
+      .status {
+        white-space: normal;
+        min-width: 180px;
+        max-width: 240px;
+      }
       .legend {
         display: flex;
         gap: 14px;
@@ -290,6 +351,26 @@
           keeps its own results. Equal grid resolution does not mean equal
           element count.
         </div>
+        <details open>
+          <summary>Why some measurements are unavailable</summary>
+          <p>
+            A failed generation returns no accepted mesh, so element count and
+            FEA error are unavailable. A mesh that fails validity checks keeps
+            its measured time and arrays, but FEA is blocked. Timeouts retain
+            any finished phases and name the interrupted phase. A geometry
+            warning keeps its FEA score as diagnostic data; enable warnings in
+            the chart to see it. Missing values are never zeros.
+          </p>
+          <p>
+            Failure ownership identifies the pipeline to investigate, not a
+            proven root cause. Meshers native rejections are Meshers limitations
+            to report. VTK and Microgen MMG failures belong to their control
+            pipelines; a direct MMG binding failure is not automatically a
+            Microgen bug. Benchmark field-adapter and solver failures are
+            reported separately. Full logs and exact input files accompany every
+            attempt.
+          </p>
+        </details>
         <nav class="nav" id="nav"></nav>
       </header>
       <details open>
@@ -473,33 +554,242 @@
         );
       }
       function chart(gs, key, label) {
-        const good = gs.filter((g) => g.eligible && g[key] > 0 && g.error > 0);
-        if (!good.length)
-          return '<p class="muted">No complete, admissible FEA measurements yet.</p>';
-        const xx = good.map((g) => Math.log10(g[key])),
-          yy = good.map((g) => Math.log10(g.error));
-        let xl = Math.min(...xx) - 0.12,
-          xh = Math.max(...xx) + 0.12,
-          yl = Math.min(...yy) - 0.12,
-          yh = Math.max(...yy) + 0.12;
-        const X = (v) => 64 + ((Math.log10(v) - xl) / (xh - xl)) * 420,
-          Y = (v) => 240 - ((Math.log10(v) - yl) / (yh - yl)) * 195;
-        let svg =
-          '<svg viewBox="0 0 520 295" role="img" aria-label="' +
-          esc(label) +
-          ' versus worst energy error"><path d="M64 35V240H484" fill="none" stroke="#9aa9b6"/>';
-        for (let i = 0; i < 4; i++) {
-          const x = xl + ((xh - xl) * i) / 3,
-            y = yl + ((yh - yl) * i) / 3;
-          svg += `<text x="${64 + i * 140}" y="260" text-anchor="middle" fill="#526576" font-size="11">${num(10 ** x)}</text><text x="57" y="${244 - i * 65}" text-anchor="end" fill="#526576" font-size="11">${pct(10 ** y)}</text>`;
+        return `<div class="interactive-chart" data-key="${key}" data-label="${esc(label)}">
+          <p class="better">↙ Lower and left is better: ↓ less FEA error; ← ${key === "time" ? "faster generation" : "fewer elements at comparable accuracy"}.</p>
+          <div class="plot-controls">${cfg.workflows.map((w) => `<label><input type="checkbox" data-workflow="${esc(w)}" checked><i class="dot" style="background:${colors[w]}"></i>${esc(names[w])}</label>`).join("")}</div>
+          <div class="plot-controls"><label><input type="checkbox" class="show-diagnostics">Show geometry warnings, diagnostic only</label><button class="reset-plot">Reset zoom</button></div>
+          <svg class="plot" viewBox="0 0 540 310" role="group" aria-label="Interactive ${esc(label)} versus FEA error" tabindex="0"></svg>
+          <output class="point-detail" aria-live="polite">Hover or select a point for details. Scroll to zoom; drag to pan; double-click or press R to reset. Point colors identify workflows.</output></div>`;
+      }
+      function installChart(host, gs, section) {
+        const key = host.dataset.key,
+          label = host.dataset.label,
+          svg = host.querySelector("svg"),
+          info = host.querySelector("output");
+        let bounds = null,
+          home = null,
+          drag = null;
+        const selection = () => {
+          const enabled = new Set(
+            Array.from(
+              host.querySelectorAll("input[data-workflow]:checked"),
+              (e) => e.dataset.workflow,
+            ),
+          );
+          const diagnostics = host.querySelector(".show-diagnostics").checked;
+          return gs.filter(
+            (g) =>
+              enabled.has(g.w) &&
+              (g.eligible || diagnostics) &&
+              g[key] > 0 &&
+              g.error > 0,
+          );
+        };
+        function details(g) {
+          const why = g.eligible
+            ? "Admissible across all measured repeats"
+            : "Diagnostic only. " + reasons(g).join("; ");
+          info.textContent = `${names[g.w]}, ${g.n} intervals. Generation ${num(g.time)} s; ${num(g.count)} tets; worst FEA error ${pct(g.error)}; min q ${num(g.q)}. ${why}`;
+          section
+            .querySelectorAll("tr.selected")
+            .forEach((r) => r.classList.remove("selected"));
+          section
+            .querySelector(`[data-result="${g.w}-${g.n}"]`)
+            ?.classList.add("selected");
         }
-        for (const g of good) {
-          svg += `<circle cx="${X(g[key])}" cy="${Y(g.error)}" r="5" fill="${colors[g.w]}"><title>${esc(names[g.w])}, n=${g.n}, ${label} ${num(g[key])}, error ${pct(g.error)}</title></circle>`;
+        function draw(reset = false) {
+          const points = selection();
+          if (!points.length) {
+            svg.innerHTML =
+              '<text x="24" y="120" fill="#526576">No selected admissible scores. See reasons in the table.</text>';
+            info.textContent =
+              "A missing FEA score cannot be plotted. Enable geometry warnings to inspect available diagnostic scores.";
+            bounds = null;
+            return;
+          }
+          const xx = points.map((g) => Math.log10(g[key])),
+            yy = points.map((g) => Math.log10(g.error));
+          if (!bounds || reset) {
+            const dx = Math.max(0.4, Math.max(...xx) - Math.min(...xx)),
+              dy = Math.max(0.4, Math.max(...yy) - Math.min(...yy));
+            bounds = [
+              Math.min(...xx) - dx * 0.15,
+              Math.max(...xx) + dx * 0.15,
+              Math.min(...yy) - dy * 0.15,
+              Math.max(...yy) + dy * 0.15,
+            ];
+            home = bounds.slice();
+          }
+          const [xl, xh, yl, yh] = bounds;
+          const X = (v) => 72 + ((Math.log10(v) - xl) / (xh - xl)) * 436,
+            Y = (v) => 245 - ((Math.log10(v) - yl) / (yh - yl)) * 200;
+          let body = '<path d="M72 45V245H508" fill="none" stroke="#9aa9b6"/>';
+          for (let i = 0; i < 5; i++) {
+            const x = 72 + i * 109,
+              y = 245 - i * 50;
+            body += `<path d="M${x} 45V245 M72 ${y}H508" stroke="#e5ebf0"/><text x="${x}" y="265" text-anchor="middle" fill="#526576" font-size="11">${num(10 ** (xl + ((xh - xl) * i) / 4))}</text><text x="65" y="${y + 4}" text-anchor="end" fill="#526576" font-size="11">${pct(10 ** (yl + ((yh - yl) * i) / 4))}</text>`;
+          }
+          body += `<text x="72" y="19" fill="#197862" font-size="12">↓ Worst FEA error, lower is better · log scale</text><text x="290" y="293" text-anchor="middle" fill="#197862" font-size="12">← ${esc(label)}, lower is better · log scale</text>`;
+          points.forEach((g, i) => {
+            const x = X(g[key]),
+              y = Y(g.error);
+            if (x < 72 || x > 508 || y < 45 || y > 245) return;
+            body += `<circle data-point="${i}" cx="${x}" cy="${y}" r="6" fill="${g.eligible ? colors[g.w] : "white"}" stroke="${colors[g.w]}" stroke-width="2" tabindex="0" role="button" aria-label="${esc(names[g.w])}, ${g.n} intervals, error ${pct(g.error)}, ${g.eligible ? "admissible" : "diagnostic"}"><title>${esc(names[g.w])} · n${g.n} · ${pct(g.error)}</title></circle>`;
+          });
+          svg.innerHTML = body;
+          svg.querySelectorAll("circle").forEach((c) => {
+            const g = points[Number(c.dataset.point)];
+            c.onpointerenter = () => details(g);
+            c.onfocus = () => details(g);
+            c.onclick = () => details(g);
+            c.onkeydown = (e) => {
+              if (e.key === "Enter" || e.key === " ") {
+                e.preventDefault();
+                details(g);
+              }
+            };
+          });
         }
-        return (
-          svg +
-          `<text x="274" y="287" text-anchor="middle" fill="#526576" font-size="12">${esc(label)} · log scale</text><text x="64" y="18" fill="#526576" font-size="12">Worst energy error · log scale</text></svg>`
-        );
+        const local = (e) => {
+          const r = svg.getBoundingClientRect();
+          return [
+            ((e.clientX - r.left) * 540) / r.width,
+            ((e.clientY - r.top) * 310) / r.height,
+          ];
+        };
+        svg.onwheel = (e) => {
+          if (!bounds) return;
+          e.preventDefault();
+          const [x, y] = local(e),
+            [xl, xh, yl, yh] = bounds,
+            tx = Math.max(0, Math.min(1, (x - 72) / 436)),
+            ty = Math.max(0, Math.min(1, (245 - y) / 200)),
+            cx = xl + tx * (xh - xl),
+            cy = yl + ty * (yh - yl),
+            factor = e.deltaY > 0 ? 1.2 : 1 / 1.2;
+          bounds = [
+            cx + (xl - cx) * factor,
+            cx + (xh - cx) * factor,
+            cy + (yl - cy) * factor,
+            cy + (yh - cy) * factor,
+          ];
+          draw();
+        };
+        svg.onpointerdown = (e) => {
+          if (!bounds || e.target.closest("circle")) return;
+          drag = { xy: local(e), bounds: bounds.slice(), id: e.pointerId };
+          svg.setPointerCapture(e.pointerId);
+        };
+        svg.onpointermove = (e) => {
+          if (!drag) return;
+          const [x, y] = local(e),
+            b = drag.bounds,
+            dx = ((x - drag.xy[0]) * (b[1] - b[0])) / 436,
+            dy = ((y - drag.xy[1]) * (b[3] - b[2])) / 200;
+          bounds = [b[0] - dx, b[1] - dx, b[2] + dy, b[3] + dy];
+          draw();
+        };
+        svg.onpointerup = svg.onpointercancel = () => {
+          drag = null;
+        };
+        const reset = () => {
+          bounds = home?.slice() ?? null;
+          draw(true);
+        };
+        svg.ondblclick = reset;
+        svg.onkeydown = (e) => {
+          if (e.key.toLowerCase() === "r") reset();
+        };
+        host.querySelector("button").onclick = reset;
+        host.querySelectorAll("input").forEach((input) => {
+          input.onchange = () => draw(true);
+        });
+        draw(true);
+      }
+      function reasons(g) {
+        return [
+          ...new Set(
+            g.rows.flatMap((r) =>
+              r.admission_reasons?.length
+                ? r.admission_reasons
+                : r.error
+                  ? [`${r.failure_owner || owner(r)}: ${r.stage}: ${r.error}`]
+                  : r.status === "geometry-warning"
+                    ? [
+                        "Sampled boundary distance or volume exceeds the configured tolerance",
+                      ]
+                    : [],
+            ),
+          ),
+        ];
+      }
+      function owner(r) {
+        if (r.stage === "elasticity") return "Benchmark FEA solver";
+        return r.workflow.startsWith("meshers")
+          ? "Meshers"
+          : r.workflow === "vtk"
+            ? "Microgen / VTK"
+            : r.workflow === "mmg"
+              ? "MMG binding pipeline"
+              : "Microgen / MMG pipeline";
+      }
+      function missingReason(g, key) {
+        if (!g.rows.length) return "Not run yet";
+        const r =
+          g.rows.find((r) => r.status === "failed" || r.status === "timeout") ||
+          g.rows[0];
+        if (r.status === "timeout")
+          return `Time limit during ${r.stage || "worker"}`;
+        if (key === "time")
+          return "Generation did not complete; failed-attempt duration is in the log details";
+        if (key === "error")
+          return r.mesh_sha256
+            ? `FEA blocked by ${r.stage}`
+            : "No accepted mesh; FEA not run";
+        if (key === "q")
+          return r.mesh_sha256
+            ? "Mesh validation did not finish"
+            : "No accepted mesh returned";
+        return "No accepted mesh returned";
+      }
+      function metricCell(g, key, gs, format = num) {
+        const value = g[key];
+        if (value == null)
+          return `<td class="missing">Not available<small>${esc(missingReason(g, key))}</small></td>`;
+        if (key === "q")
+          return `<td class="${value < cfg.minimum_quality ? "fail" : "ok"}" title="Higher is better; requested minimum ${cfg.minimum_quality}">${num(value)}<small>${value < cfg.minimum_quality ? "Below quality target" : "Meets quality target"}</small></td>`;
+        const peers = gs
+          .filter((p) => p.n === g.n && p.eligible && p[key] != null)
+          .map((p) => p[key]);
+        const lo = Math.min(...peers),
+          hi = Math.max(...peers),
+          v = hi > lo ? (value - lo) / (hi - lo) : 0.5;
+        const background =
+          g.eligible && peers.length > 1
+            ? `hsl(${140 * (1 - Math.max(0, Math.min(1, v)))} 48% 92%)`
+            : "#f0f2f4";
+        const note =
+          key === "count" || key === "nodes"
+            ? "Fewer is only better at comparable accuracy"
+            : "Lower is better";
+        return `<td class="${g.eligible ? "" : "diagnostic"}" style="${g.eligible ? "background:" + background : ""}" title="${note}. Colors compare admissible workflows at the same intervals; this is not a matched-count claim.">${format(value)}${key === "time" ? `<small>[${num(g.lo)}, ${num(g.hi)}] s</small>` : ""}${!g.eligible ? "<small>Diagnostic only</small>" : ""}</td>`;
+      }
+      function resultRows(gs) {
+        return gs
+          .map(
+            (g) =>
+              `<tr data-result="${g.w}-${g.n}"><td>${esc(names[g.w])} / ${g.n}</td>${metricCell(g, "time", gs)}${metricCell(g, "count", gs)}${metricCell(g, "nodes", gs)}${metricCell(g, "q", gs)}${metricCell(g, "error", gs, pct)}<td class="status"><span class="badge ${g.eligible ? "ok" : g.rows.some((r) => r.status === "failed" || r.status === "timeout") ? "fail" : ""}">${g.rows.length ? (g.eligible ? "Admissible" : g.rows.map((r) => r.status).join(", ")) : "Pending"}</span>${reasons(
+                g,
+              )
+                .map((x) => `<small>${esc(x)}</small>`)
+                .join(
+                  "",
+                )}${g.rows.length < cfg.repeats ? "<small>Repeats incomplete</small>" : ""}${g.rows
+                .filter((r) => r.issue_url)
+                .map((r) => `<a href="${esc(r.issue_url)}">Reported issue</a>`)
+                .join(" ")}</td></tr>`,
+          )
+          .join("");
       }
       function comparisons(gs) {
         const good = gs.filter((g) => g.eligible),
@@ -512,12 +802,12 @@
             );
             if (delta <= cfg.matched_count_tolerance)
               pairs.push(
-                `<tr><td>${esc(names[m.w])} n${m.n} / ${esc(names[c.w])} n${c.n}</td><td>${pct((m.count - c.count) / c.count)}</td><td>${num(m.error / c.error)}×</td><td>${num(m.time / c.time)}×</td></tr>`,
+                `<tr><td>${esc(names[m.w])} n${m.n} / ${esc(names[c.w])} n${c.n}</td><td>${pct((m.count - c.count) / c.count)}</td><td class="${m.error < c.error ? "ok" : "fail"}">${num(m.error / c.error)}×</td><td class="${m.time < c.time ? "ok" : "fail"}">${num(m.time / c.time)}×</td></tr>`,
               );
           }
         }
         return pairs.length
-          ? `<div class="table-wrap"><table><thead><tr><th>Observed matched-count pair</th><th>Element difference</th><th>FEA error ratio</th><th>Time ratio</th></tr></thead><tbody>${pairs.join("")}</tbody></table></div>`
+          ? `<div class="table-wrap"><table><thead><tr><th>Observed matched-count pair</th><th>Element difference</th><th>FEA error ratio ↓, &lt;1 favors Meshers</th><th>Time ratio ↓, &lt;1 favors Meshers</th></tr></thead><tbody>${pairs.join("")}</tbody></table></div>`
           : `<p class="muted">No measured Meshers/control pair is within ${pct(cfg.matched_count_tolerance)} of the same element count. Add resolution levels before making a matched-count claim.</p>`;
       }
       function targets(gs) {
@@ -529,7 +819,7 @@
                   const matches = gs
                     .filter((g) => g.w === w && g.eligible && g.error <= t)
                     .sort((a, b) => a.count - b.count);
-                  return `<td>${matches.length ? num(matches[0].count) + " tets · " + num(matches[0].time) + " s" : "Not reached"}</td>`;
+                  return `<td class="${matches.length ? "ok" : "missing"}">${matches.length ? num(matches[0].count) + " tets · " + num(matches[0].time) + " s" : "Not reached"}</td>`;
                 })
                 .join("")}</tr>`,
           )
@@ -621,8 +911,11 @@
             return `<div class="mesh-card"><b>${esc(names[w])}</b>${r ? `<canvas data-mesh="${esc(r.artifact)}" aria-label="${esc(c.name + " " + names[w] + " mesh")}" title="Drag to rotate"></canvas><small>n=${r.cells} · ${num(r.tetrahedra)} tets · ${esc(r.status)}<br>Surface simplified for display. Drag to rotate.</small>` : '<div class="empty-preview">No retained validated surface</div><small>See status and logs below.</small>'}</div>`;
           })
           .join("");
-        section.innerHTML = `<div class="case-header"><div><div class="eyebrow">${esc(c.id)}</div><h2>${esc(c.name)}</h2><p>${esc(c.description)}</p></div><span class="badge">${rows.length}/${cfg.cells.length * cfg.workflows.length * cfg.repeats} measured runs</span></div><div class="formula">${esc(c.formula)}<br>X = 2πx/L, Y = 2πy/L, Z = 2πz/L · cube [−L/2, L/2]³ · L=${c.scale}<br>Sheet: |f| ≤ width(x)/2 · width(x)=${c.offset}${c.grading ? " × (1 + " + c.grading + " x/L)" : ""}${c.function === "solid" ? " · full cube" : ""}</div><div class="previews">${previews}</div><div class="legend">${cfg.workflows.map((w) => `<span><i class="dot" style="background:${colors[w]}"></i>${esc(names[w])}</span>`).join("")}</div><div class="charts"><div class="chart"><h3>Generation time versus FEA error</h3>${chart(gs, "time", "Generation seconds")}</div><div class="chart"><h3>Elements versus FEA error</h3>${chart(gs, "count", "Tetrahedra")}</div></div><div class="table-wrap"><table><thead><tr><th>Workflow / intervals</th><th>Time median [min, max] s</th><th>Max tets</th><th>Max nodes</th><th>Min q</th><th>Worst FEA error</th><th>Status</th></tr></thead><tbody>${gs.map((g) => `<tr><td>${esc(names[g.w])} / ${g.n}</td><td>${num(g.time)} ${g.time == null ? "" : "[" + num(g.lo) + ", " + num(g.hi) + "]"}</td><td>${num(g.count)}</td><td>${num(g.nodes)}</td><td>${num(g.q)}</td><td>${pct(g.error)}</td><td class="status"><span class="badge ${g.eligible ? "ok" : g.rows.some((r) => r.status === "failed" || r.status === "timeout") ? "fail" : ""}">${g.rows.length ? (g.eligible ? "Admissible" : g.rows.map((r) => r.status).join(", ")) : "Pending"}</span>${g.q != null && g.q < 0.1 ? " <small>q &lt; 0.1</small>" : ""}${g.rows.length < cfg.repeats ? " <small>Repeats incomplete</small>" : ""}</td></tr>`).join("")}</tbody></table></div><details open><summary>Compare at matched budgets and error targets</summary>${comparisons(gs)}${targets(gs)}</details><details><summary>Individual repetitions, geometry diagnostics and all 18 load errors</summary>${rows.map((r) => `<details><summary>${esc(names[r.workflow])} n${r.cells}, repeat ${r.repeat + 1}: ${esc(r.status)}</summary><p><a href="${artifact(r, "worker.log")}">Full log</a> · <a href="${artifact(r, "request.json")}">Input</a>${r.mesh_sha256 ? ' · <a href="' + artifact(r, "mesh.npz") + '">Mesh arrays</a>' : ""}${r.fields_sha256 ? ' · <a href="' + artifact(r, "fields.npz") + '">Solved fields</a>' : ""}</p><pre>${esc(JSON.stringify(Object.fromEntries(Object.entries(r).filter(([k]) => k !== "preview")), null, 2))}</pre></details>`).join("")}</details>${failures.length ? `<details open><summary>${failures.length} retained failures</summary>${failures.map((r) => `<div class="failure"><b>${esc(names[r.workflow])} n${r.cells}, repeat ${r.repeat + 1}</b><p>${esc(r.stage)}: ${esc(r.error)}</p><a href="${artifact(r, "worker.log")}">Full worker log</a></div>`).join("")}</details>` : ""}`;
+        section.innerHTML = `<div class="case-header"><div><div class="eyebrow">${esc(c.id)}</div><h2>${esc(c.name)}</h2><p>${esc(c.description)}</p></div><span class="badge">${rows.length}/${cfg.cells.length * cfg.workflows.length * cfg.repeats} measured runs</span></div><div class="formula">${esc(c.formula)}<br>X = 2πx/L, Y = 2πy/L, Z = 2πz/L · cube [−L/2, L/2]³ · L=${c.scale}<br>${["bcc_lattice", "spinodoid"].includes(c.function) ? "Implicit solid: signed field ≤ 0. The lower Meshers band value −1 is inactive." : `Sheet: |f| ≤ width(x)/2 · width(x)=${c.offset}${c.grading ? " × (1 + " + c.grading + " x/L)" : ""}${c.function === "solid" ? " · full cube" : ""}`}</div><div class="previews">${previews}</div><div class="legend">${cfg.workflows.map((w) => `<span><i class="dot" style="background:${colors[w]}"></i>${esc(names[w])}</span>`).join("")}</div><div class="charts"><div class="chart"><h3>Generation time versus FEA error</h3>${chart(gs, "time", "Generation seconds")}</div><div class="chart"><h3>Elements versus FEA error</h3>${chart(gs, "count", "Tetrahedra")}</div></div><div class="table-wrap"><table><thead><tr><th>Workflow / intervals</th><th>Time ↓ median [min, max] s</th><th>Max tets ↓*</th><th>Max nodes ↓*</th><th>Min q ↑</th><th>Worst FEA error ↓</th><th>Status</th></tr></thead><tbody>${resultRows(gs)}</tbody></table></div><p class="muted">Green → red compares lower → higher values among admissible workflows at the same intervals. Amber numbers are diagnostic scores excluded from claims. q is green at or above the requested minimum, red below it. * Fewer elements only helps at comparable FEA error.</p><details open><summary>Compare at matched budgets and error targets</summary>${comparisons(gs)}${targets(gs)}</details><details><summary>Individual repetitions, geometry diagnostics and all 18 load errors</summary>${rows.map((r) => `<details><summary>${esc(names[r.workflow])} n${r.cells}, repeat ${r.repeat + 1}: ${esc(r.status)}</summary><p><a href="${artifact(r, "worker.log")}">Full log</a> · <a href="${artifact(r, "request.json")}">Input</a>${r.mesh_sha256 ? ' · <a href="' + artifact(r, "mesh.npz") + '">Mesh arrays</a>' : ""}${r.fields_sha256 ? ' · <a href="' + artifact(r, "fields.npz") + '">Solved fields</a>' : ""}</p><pre>${esc(JSON.stringify(Object.fromEntries(Object.entries(r).filter(([k]) => k !== "preview")), null, 2))}</pre></details>`).join("")}</details>${failures.length ? `<details open><summary>${failures.length} retained failures</summary>${failures.map((r) => `<div class="failure"><b>${esc(names[r.workflow])} n${r.cells}, repeat ${r.repeat + 1}</b><p>${esc(r.failure_owner || owner(r))} · ${esc(r.stage)}: ${esc(r.error)}</p><a href="${artifact(r, "worker.log")}">Full worker log</a></div>`).join("")}</details>` : ""}`;
         document.getElementById("cases").append(section);
+        section
+          .querySelectorAll(".interactive-chart")
+          .forEach((host) => installChart(host, gs, section));
         section
           .querySelectorAll("canvas[data-mesh]")
           .forEach((canvas) =>

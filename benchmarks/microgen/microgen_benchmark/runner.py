@@ -27,6 +27,36 @@ def digest(path):
     return hashlib.sha256(path.read_bytes()).hexdigest()
 
 
+def failure_catalog(document):
+    """Export reproductions without credentials, environments or mesh payloads."""
+    failures = []
+    config = document["provenance"]["config"]
+    for row in document["rows"]:
+        if row["repeat"] < 0 or row["status"] not in {"failed", "timeout", "geometry-warning"}:
+            continue
+        failures.append(
+            {
+                **{key: value for key, value in row.items() if key != "preview"},
+                "reproduce": (
+                    "uv run --project benchmarks/microgen --locked microgen-benchmark"
+                    f" --cases {row['case']} --workflows {row['workflow']} --cells {row['cells']}"
+                    f" --repeats 1 --warmups 0 --threads {config['threads']}"
+                    f" --timeout {config['timeout_s']} --geometry-tolerance {config['geometry_tolerance']}"
+                    f" --volume-tolerance {config['volume_tolerance']} --minimum-quality {config['minimum_quality']}"
+                    f" --max-tetrahedra {config['max_tetrahedra']} --pair-cap {config['pair_cap']}"
+                    f" --mmg-boundary {config['mmg_boundary']}"
+                ),
+            }
+        )
+    return {
+        "manifest_sha256": document["manifest_sha256"],
+        "provenance": document["provenance"],
+        "cases": [{k: v for k, v in c.items() if k != "target_preview"} for c in document["cases"]],
+        "failures": failures,
+        "scope": "Pipeline requiring investigation, not a confirmed root cause. Timeouts are retained limits, not proof of library bugs.",
+    }
+
+
 def verify_sources(expected):
     root = Path(__file__).parent
     for name, sha in expected.items():
@@ -38,6 +68,15 @@ def worker(request_path):
     request = json.loads(request_path.read_text(encoding="utf-8"))
     out = request_path.parent
     result = {"status": "failed", "stage": "imports"}
+    phase_start = time.perf_counter()
+
+    def checkpoint(**values):
+        nonlocal phase_start
+        if "stage" in values:
+            phase_start = time.perf_counter()
+        result.update(values)
+        write_json(out / "progress.json", result)
+
     try:
         import numpy as np
 
@@ -50,10 +89,21 @@ def worker(request_path):
         result["stage"] = "generation"
         print(f"Generating {case.id}: {request['workflow']} / {request['cells']} cells", flush=True)
         points, tets, timing = generate(
-            case, request["workflow"], request["cells"], request["config"]
+            case, request["workflow"], request["cells"], request["config"], checkpoint
         )
         result.update(timing)
-        result["stage"] = "canonicalization"
+        pipeline = (
+            "Meshers"
+            if request["workflow"].startswith("meshers")
+            else (
+                "Microgen / VTK"
+                if request["workflow"] == "vtk"
+                else "Microgen / MMG pipeline"
+                if request["workflow"] == "mmg-microgen"
+                else "MMG binding pipeline"
+            )
+        )
+        checkpoint(stage="canonicalization", failure_owner=pipeline)
         points, tets, flips, unused = canonical_mesh(points, tets)
         np.savez_compressed(out / "mesh.npz", points=points, tetrahedra=tets)
         result.update(
@@ -66,7 +116,7 @@ def worker(request_path):
         if request["warmup"]:
             result.update(status="warmup", stage="complete")
         else:
-            result["stage"] = "geometry validation"
+            checkpoint(stage="geometry validation", failure_owner=pipeline)
             print("Checking topology, tetrahedral overlap and sampled geometry", flush=True)
             metrics, surface = validate(points, tets, case, request["config"]["pair_cap"])
             result.update(metrics)
@@ -74,7 +124,7 @@ def worker(request_path):
             result["relative_volume_error"] = (
                 abs(metrics["solid_fraction"] - target_fraction) / target_fraction
             )
-            result["stage"] = "elasticity"
+            checkpoint(stage="elasticity", failure_owner="Benchmark FEA solver")
             print("Solving 18 quadratic fields and six affine patch tests", flush=True)
             fea, fields = solve(points, tets, surface, case.scale)
             result.update(fea)
@@ -92,9 +142,29 @@ def worker(request_path):
                 and result["relative_volume_error"] <= request["config"]["volume_tolerance"]
             )
             result["status"] = "ok" if result["comparison_eligible"] else "geometry-warning"
+            result["failure_owner"] = pipeline
+            result["admission_reasons"] = []
+            if distance is None:
+                result["admission_reasons"].append(
+                    "Boundary distance unavailable: near-zero field gradient"
+                )
+            elif distance > request["config"]["geometry_tolerance"]:
+                result["admission_reasons"].append(
+                    f"Sampled boundary distance {distance:.6g}L exceeds {request['config']['geometry_tolerance']:.6g}L"
+                )
+            if result["relative_volume_error"] > request["config"]["volume_tolerance"]:
+                result["admission_reasons"].append(
+                    f"Relative volume error {result['relative_volume_error']:.2%} exceeds {request['config']['volume_tolerance']:.2%}"
+                )
             result["stage"] = "complete"
+            if result["status"] == "ok":
+                result.pop("failure_owner", None)
     except Exception as exc:
         result["error"] = f"{type(exc).__name__}: {exc}"
+        result["failed_stage_elapsed_s"] = time.perf_counter() - phase_start
+        result["failure_kind"] = (
+            "native rejection" if type(exc).__name__ == "MeshingFailure" else "pipeline failure"
+        )
         traceback.print_exc()
     write_json(out / "result.json", result)
     print(f"Result: {result['status']} / {result.get('error', '')}", flush=True)
@@ -200,10 +270,12 @@ def run_child(request, directory, timeout, heartbeat):
             reader.join(timeout=10)
     path = directory / "result.json"
     if timed_out:
+        partial = directory / "progress.json"
         return {
+            **(json.loads(partial.read_text(encoding="utf-8")) if partial.is_file() else {}),
             "status": "timeout",
-            "stage": "worker",
             "error": f"Owned worker tree killed after {timeout}s",
+            "failure_kind": "time limit; not a proven library bug",
             "worker_exit_code": process.returncode,
         }
     if process.returncode != 0 or not path.is_file():
@@ -412,6 +484,7 @@ def main():
     document["state"] = "complete"
     document["elapsed_s"] = time.monotonic() - start
     write_json(output / "results.json", document)
+    write_json(output / "failures.json", failure_catalog(document))
     (output / "report.html").write_text(render(document), encoding="utf-8")
     progress(len(tasks), len(tasks), "Benchmark complete; failures retained", start, failures)
     print(f"Report: {output / 'report.html'}", flush=True)

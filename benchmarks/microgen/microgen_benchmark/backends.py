@@ -29,7 +29,16 @@ def tetrahedra(grid):
     return np.asarray(grid.points).copy(), np.asarray(grid.cells_dict[pv.CellType.TETRA]).copy()
 
 
-def generate(case, workflow, cells, config):
+def generate(case, workflow, cells, config, progress=None):
+    callback = progress or (lambda **values: None)
+    reporting_s = 0.0
+
+    def progress(**values):
+        nonlocal reporting_s
+        start = time.perf_counter()
+        callback(**values)
+        reporting_s += time.perf_counter() - start
+
     import microgen  # Import cost is excluded equally for every workflow.
     import pyvista as pv
     from vtkmodules.vtkCommonCore import vtkSMPTools
@@ -48,14 +57,19 @@ def generate(case, workflow, cells, config):
     vtkSMPTools.Initialize(config["threads"])
     if not hasattr(microgen, "Tpms"):
         raise ImportError("Microgen does not provide Tpms")
+    progress(stage="Microgen field setup", failure_owner="Microgen")
     start = time.perf_counter()
     shape = case.shape(cells)
     setup_s = time.perf_counter() - start
+    progress(setup_s=setup_s)
     start = time.perf_counter()
+    reporting_start = reporting_s
     if workflow in {"vtk", "mmg", "mmg-microgen"}:
-        grid = shape.grid_sheet.triangulate()
-        extraction_s = time.perf_counter() - start
+        progress(stage="Microgen VTK extraction", failure_owner="Microgen / VTK")
+        grid = case.volume_grid(shape, cells).triangulate()
+        extraction_s = time.perf_counter() - start - (reporting_s - reporting_start)
         if workflow == "mmg":
+            progress(stage="MMG binding remeshing", failure_owner="MMG binding pipeline")
             # Standard MMG3D adaptation of Microgen's VTK tetrahedra.
             # The default protects physical box faces while allowing MMG to
             # improve the curved surface. A fully fixed surface is optional.
@@ -77,6 +91,7 @@ def generate(case, workflow, cells, config):
             )
             grid = mmgpy.to_pyvista(native)
         elif workflow == "mmg-microgen":
+            progress(stage="Microgen MMG remeshing", failure_owner="Microgen / MMG pipeline")
             # Microgen reopens a delete=True temporary file before its context
             # closes. POSIX permits this; Windows needs delete_on_close=False.
             # Scope the file-lifecycle compatibility to this isolated worker.
@@ -95,11 +110,12 @@ def generate(case, workflow, cells, config):
                 )
         points, tets = tetrahedra(grid)
     elif workflow in PROFILES:
+        progress(stage="Meshers native generation", failure_owner="Meshers")
         native = meshers.generate(
             case.field,
             bounds=(-case.scale / 2, case.scale / 2) * 3,
             cells=cells,
-            band=(-1, 1),
+            band=case.band,
             minimum_quality=config["minimum_quality"],
             geometry_tolerance=config["geometry_tolerance"] * case.scale,
             max_tetrahedra=config["max_tetrahedra"],
@@ -110,17 +126,12 @@ def generate(case, workflow, cells, config):
         extraction_s = None
     else:
         raise ValueError(f"Unknown workflow {workflow}")
-    generation_s = time.perf_counter() - start
+    generation_s = time.perf_counter() - start - (reporting_s - reporting_start)
+    progress(mesh_s=setup_s + generation_s, generation_s=generation_s)
     # Check the physical field outside the generation timer. Microgen stores
     # the raw periodic field, before its sheet half-offset is applied.
-    sample = np.asarray(shape.grid.points)
-    expected = case.field(*sample.T) * 0.5 * case.width(*sample.T)
-    raw = np.asarray(shape.grid.point_data["surface"])
-    if not np.allclose(expected, raw, rtol=1e-12, atol=1e-12):
-        raise ValueError("Case formula and Microgen's sampled surface field disagree")
-    offset = np.broadcast_to(np.asarray(shape.offset).ravel(order="F"), (len(sample),))
-    if not np.allclose(offset, case.width(*sample.T), rtol=1e-12, atol=1e-12):
-        raise ValueError("Actual Microgen offset differs from the declared graded field")
+    progress(stage="shared field preflight", failure_owner="Benchmark field adapter")
+    sample_count = case.verify_field(shape, cells)
     return (
         points,
         tets,
@@ -129,7 +140,7 @@ def generate(case, workflow, cells, config):
             "generation_s": generation_s,
             "mesh_s": setup_s + generation_s,
             "vtk_extraction_s": extraction_s,
-            "field_samples_checked": len(sample),
+            "field_samples_checked": sample_count,
             "vtk_version": pv.vtk_version_info,
         },
     )

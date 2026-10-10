@@ -30,11 +30,32 @@ def test_real_backend_cube_pipeline(workflow):
 @pytest.mark.parametrize("case", CASES, ids=lambda c: c.id)
 def test_actual_microgen_fields_match_case(case):
     shape = case.shape(4)
+    assert case.verify_field(shape, 4) == 125
+    if case.implicit:
+        return
     sample = np.asarray(shape.grid.points)
     raw = case.field(*sample.T) * 0.5 * case.width(*sample.T)
     assert np.allclose(raw, shape.grid.point_data["surface"], rtol=1e-12, atol=1e-12)
     offset = np.broadcast_to(np.asarray(shape.offset).ravel(order="F"), (len(sample),))
     assert np.allclose(offset, case.width(*sample.T), rtol=1e-12, atol=1e-12)
+
+
+def test_implicit_lattice_known_material_points():
+    case = next(c for c in CASES if c.id == "implicit-lattice")
+    assert case.material(np.array([0, 0.25]), np.array([0, 0.25]), np.array([0, 0.25])).all()
+    assert not case.material(np.array([0.5]), np.array([0]), np.array([0]))[0]
+
+
+def test_spinodoid_resolution_does_not_change_field():
+    from microgen_benchmark.cases import spinodoid_source
+
+    case = next(c for c in CASES if c.id == "spinodoid")
+    x = np.random.default_rng(71).uniform(-0.5, 0.5, (3, 91))
+    low, high = case.shape(4), case.shape(12)
+    assert np.array_equal(low.evaluate(*x), high.evaluate(*x))
+    original = spinodoid_source(1).evaluate(*(a + 0.5 for a in x))
+    assert np.array_equal(case.field(*x), np.tanh(original))
+    assert np.array_equal(case.material(*x), original <= 0)
 
 
 def test_microgen_temporary_file_reopens_and_cleans_up():

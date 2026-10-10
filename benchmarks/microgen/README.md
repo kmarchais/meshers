@@ -10,7 +10,7 @@ From the Meshers repository root, with [uv](https://docs.astral.sh/uv/) installe
 uv run --project benchmarks/microgen --locked microgen-benchmark
 ```
 
-Open the printed `report.html` path. The default run covers eight cases, three
+Open the printed `report.html` path. The default run covers ten cases, three
 resolution levels, one warmup and three measured repetitions per configuration.
 It runs serially and can take hours. Start with the shorter complete case matrix:
 
@@ -55,6 +55,8 @@ installs these before running the benchmark.
 | Graded Gyroid | Actual spatially varying thickness | `0.5 * (1 + 0.4*x/L)` |
 | Thin Gyroid | Thin-wall resolution stress test | 0.25 |
 | Gyroid at scale 0.001 | Units and scaling control | 0.5 |
+| Implicit BCC lattice | Eight capped struts join the center to the cube corners | Radius `0.12 L` |
+| Seeded spinodoid | Fixed Microgen Gaussian random field | Iso-value 0, seed 20261010 |
 
 Every specimen occupies the cube `[-L/2,L/2]^3`. Sheets satisfy
 `abs(raw_field) <= offset(x)/2`. Offsets are field values, not physical wall
@@ -63,11 +65,44 @@ previews for each workflow. Drag a preview to rotate it. Larger surfaces use
 topology-preserving simplification for display; numerical checks and saved mesh
 arrays use the complete mesh.
 
+The implicit lattice uses a benchmark-defined union of eight capsule distance
+fields through Microgen's public `from_field` API. It is an implicit BCC test,
+not the CAD/Gmsh `BodyCenteredCubic` workflow. The spinodoid uses the public
+Microgen `Spinodoid` field, with spectral resolution fixed at 16, `k0=4π/L`,
+bandwidth `3/L`, and relative mode threshold 0.05. The seed and spectral grid
+stay fixed across all meshing resolutions and workflows. See the
+[Microgen Spinodoid API](https://3mah.github.io/microgen-docs/microgen.shape.html#microgen.shape.spinodoid.Spinodoid). Both signed fields
+use `tanh` normalization and material `field <= 0`; Meshers receives band
+`[-1,0]`, whose lower boundary is inactive. Microgen samples the same field
+through `from_field(...).generate_volume_mesh(resolution=cells+1)`.
+
+Charts support workflow toggles, wheel zoom, drag pan, point selection and a
+reset button. Lower and left is better. Hollow points enabled by the geometry
+warning switch are diagnostic scores excluded from comparisons. Table colors
+compare admissible workflows at the same intervals; those colors do not prove
+a matched-element win. Minimum element quality uses the configured threshold.
+Element counts only become better when accuracy is comparable.
+
+Every unavailable value has a reason. Failed generation gives no accepted mesh
+or FEA score. Invalid meshes retain completed timing and mesh arrays but block
+FEA. Timeouts retain completed phases and name the interrupted phase. A warning
+keeps its FEA score visibly marked as diagnostic. Progress checkpoint I/O is excluded from successful generation timings.
+Failed-attempt stage duration is retained separately from successful meshing time.
+
+Failure ownership names the pipeline requiring investigation: Meshers,
+Microgen/VTK, Microgen/MMG, the direct MMG binding, or the benchmark adapter and
+FEA solver. Ownership is not a confirmed root cause. Native Meshers rejections
+are capability failures to report with exact fields, parameters and logs;
+timeouts alone are not proof of a library defect. Keep failures in published
+benchmark results. `failures.json` exports every failed, timed-out and geometry-warning
+measurement with its exact reproduction command and provenance. Link any confirmed issue in the row's `issue_url` field.
+
 `--cells` means intervals per box axis. Microgen uses `cells+1` sample points.
 Equal intervals are only a sampling schedule. Actual element counts decide
 budget comparisons.
 
-* `vtk` explicitly uses `Tpms.grid_sheet.triangulate()`. It does not call a
+* `vtk` explicitly uses `Tpms.grid_sheet.triangulate()` for sheets and the public
+  implicit volume generator followed by `triangulate()` for the other fields. It does not call a
   version-dependent default backend.
 * `mmg` converts those VTK tetrahedra to MMG3D through mmgpy, runs one volume
   adaptation pass with `hsiz=L/cells` and `hgrad=1.3`, then converts back. Box-cap

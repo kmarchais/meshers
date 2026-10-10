@@ -183,7 +183,8 @@ def validate(points, tets, case, max_pairs=2_000_000):
             if np.any(size < 1e-12 / case.scale):
                 metrics["sampled_geometry_distance"] = None
             else:
-                distance = np.abs(np.abs(value) - 1) / size / case.scale
+                residual = np.minimum(np.abs(value - case.band[0]), np.abs(value - case.band[1]))
+                distance = residual / size / case.scale
                 metrics["sampled_geometry_distance"] = float(distance.max())
     else:
         metrics["sampled_geometry_distance"] = 0.0
