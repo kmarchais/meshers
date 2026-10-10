@@ -599,6 +599,13 @@
             ?.classList.add("selected");
         }
         function draw(reset = false) {
+          if (reset) {
+            info.textContent =
+              "Hover or select a point for measurements. Hollow points are geometry-warning scores, diagnostic only. Scroll to zoom; drag to pan; reset restores the view.";
+            section
+              .querySelectorAll("tr.selected")
+              .forEach((r) => r.classList.remove("selected"));
+          }
           const points = selection();
           if (!points.length) {
             svg.innerHTML =
