@@ -3,6 +3,8 @@
 import numpy as np
 from scipy.stats import qmc
 
+from .preview import surface_preview
+
 
 def target(case):
     sample = (qmc.Sobol(3, scramble=True, seed=20261010).random_base2(18) - 0.5) * case.scale
@@ -19,9 +21,7 @@ def target(case):
         shape = case.shape(32)
         surface = shape.grid_sheet.extract_surface().triangulate()
         faces = surface.faces.reshape(-1, 4)[:, 1:]
-        triangles = np.asarray(surface.points)[faces] / case.scale
-        stride = max(1, (len(triangles) + 1599) // 1600)
-        record["target_preview"] = triangles[::stride].round(6).tolist()
+        record["target_preview"] = surface_preview(np.asarray(surface.points), faces, case.scale)
     except Exception as exc:
         record["target_preview_error"] = f"{type(exc).__name__}: {exc}"
     return record

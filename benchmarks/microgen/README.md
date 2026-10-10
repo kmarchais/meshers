@@ -59,8 +59,9 @@ installs these before running the benchmark.
 Every specimen occupies the cube `[-L/2,L/2]^3`. Sheets satisfy
 `abs(raw_field) <= offset(x)/2`. Offsets are field values, not physical wall
 thicknesses. The HTML shows the formula, offset, scale and actual boundary
-previews for each workflow. Drag a preview to rotate it. Previews sample faces
-for display; numerical checks use the complete mesh.
+previews for each workflow. Drag a preview to rotate it. Larger surfaces use
+topology-preserving simplification for display; numerical checks and saved mesh
+arrays use the complete mesh.
 
 `--cells` means intervals per box axis. Microgen uses `cells+1` sample points.
 Equal intervals are only a sampling schedule. Actual element counts decide

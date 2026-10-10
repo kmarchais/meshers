@@ -44,6 +44,7 @@ def worker(request_path):
         from .backends import generate
         from .elasticity import solve
         from .geometry import canonical_mesh, validate
+        from .preview import surface_preview
 
         case = Case(**request["case"])
         result["stage"] = "generation"
@@ -79,11 +80,11 @@ def worker(request_path):
             result.update(fea)
             np.savez_compressed(out / "fields.npz", **fields)
             result["fields_sha256"] = digest(out / "fields.npz")
-            # Same display transformation for every backend. Keep every face
-            # up to the display budget; the numerical checks use the full mesh.
-            triangles = points[surface] / case.scale
-            stride = max(1, (len(triangles) + 1599) // 1600)
-            result["preview"] = triangles[::stride].round(6).tolist()
+            # Display simplification leaves mesh arrays and numerical checks intact.
+            try:
+                result["preview"] = surface_preview(points, surface, case.scale)
+            except Exception as exc:
+                result["preview_error"] = f"{type(exc).__name__}: {exc}"
             distance = result.get("sampled_geometry_distance")
             result["comparison_eligible"] = (
                 distance is not None
@@ -227,7 +228,8 @@ def provenance(config):
             binary_hashes = {
                 str(f): digest(Path(distribution.locate_file(f)))
                 for f in distribution.files or []
-                if str(f).endswith((".pyd", ".so", ".dll", ".exe")) and name in {"meshers", "mmgpy"}
+                if (str(f).endswith((".pyd", ".so", ".dll", ".exe", ".dylib")) or ".so." in str(f))
+                and name in {"meshers", "mmgpy"}
             }
             packages[name] = {"version": distribution.version, "native_sha256": binary_hashes}
         except importlib.metadata.PackageNotFoundError:
