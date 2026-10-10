@@ -324,13 +324,14 @@
               order. Warmups are retained but excluded from medians.
             </p>
             <p>
-              MMG uses one MMG3D volume-adaptation pass on Microgen's VTK
-              tetrahedra, with physical box-cap triangles fixed. MMG may adapt
-              the curved boundary unless the recorded policy fixes the full
-              surface. This is distinct from Microgen's legacy two-pass CLI
-              remesher. Meshers profiles change only the optimization-pass
-              budget. No failed run falls back to another algorithm or a weaker
-              quality threshold.
+              The direct MMG binding uses one volume-adaptation pass on VTK
+              tetrahedra with physical box-cap triangles fixed. Microgen MMG
+              calls its public two-pass remesher through the installed MMG
+              command wrapper, including file exchange and retries. Both use
+              hsiz = L / intervals and hgrad = 1.3. Specimens are non-periodic.
+              Meshers profiles change only the optimization-pass budget. No
+              failed run falls back to another algorithm or a weaker quality
+              threshold.
             </p>
           </div>
         </div>
@@ -411,7 +412,11 @@
       document.getElementById("machine").textContent =
         `${data.provenance.machine} · ${data.provenance.platform} · ${cfg.threads} requested computational threads · ${data.provenance.started_utc}`;
       document.getElementById("provenance").textContent = JSON.stringify(
-        { ...data.provenance, manifest_sha256: data.manifest_sha256 },
+        {
+          ...data.provenance,
+          manifest_sha256: data.manifest_sha256,
+          render_template_sha256: data.render_template_sha256,
+        },
         null,
         2,
       );

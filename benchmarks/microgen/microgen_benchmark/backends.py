@@ -4,11 +4,20 @@ import os
 import shutil
 import sys
 import time
+from contextlib import nullcontext
 from pathlib import Path
+from tempfile import NamedTemporaryFile
+from unittest.mock import patch
 
 import numpy as np
 
 from .cases import PROFILES
+
+
+def reopenable_temporary_file(*args, **kwargs):
+    """Python 3.12 permits Windows reopening while retaining context cleanup."""
+    kwargs["delete_on_close"] = False
+    return NamedTemporaryFile(*args, **kwargs)
 
 
 def tetrahedra(grid):
@@ -68,13 +77,22 @@ def generate(case, workflow, cells, config):
             )
             grid = mmgpy.to_pyvista(native)
         elif workflow == "mmg-microgen":
-            grid = remesh_keeping_boundaries_for_fem(
-                grid,
-                periodic=False,
-                hsiz=case.scale / cells,
-                hausd=config["geometry_tolerance"] * case.scale,
-                hgrad=1.3,
+            # Microgen reopens a delete=True temporary file before its context
+            # closes. POSIX permits this; Windows needs delete_on_close=False.
+            # Scope the file-lifecycle compatibility to this isolated worker.
+            context = (
+                patch("microgen.remesh.NamedTemporaryFile", reopenable_temporary_file)
+                if os.name == "nt"
+                else nullcontext()
             )
+            with context:
+                grid = remesh_keeping_boundaries_for_fem(
+                    grid,
+                    periodic=False,
+                    hsiz=case.scale / cells,
+                    hausd=config["geometry_tolerance"] * case.scale,
+                    hgrad=1.3,
+                )
         points, tets = tetrahedra(grid)
     elif workflow in PROFILES:
         native = meshers.generate(

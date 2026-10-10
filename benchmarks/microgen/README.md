@@ -75,12 +75,16 @@ budget comparisons.
   starts from VTK's polyhedral boundary. `--mmg-boundary fixed` instead protects
   every surface triangle for a comparison on the same VTK polyhedral domain.
 * `mmg-microgen` calls Microgen's public `remesh_keeping_boundaries_for_fem`
-  function unchanged, using mmgpy's installed `mmg3d_O3` command alias. It runs
+  function using mmgpy's installed `mmg3d_O3` command alias. It runs
   Microgen's two passes, file exchange and built-in retries with `hsiz=L/cells`,
   `hausd=geometry_tolerance*L` and `hgrad=1.3`. These costs enter the generation
   time. `periodic=False` matches this benchmark's finite specimens and varying
   thickness; periodic homogenization needs a separate test. `--mmg-boundary`
   applies only to the direct binding workflow.
+  On Windows, a scoped temporary-file wrapper sets Python 3.12's
+  `delete_on_close=False`, allowing Microgen to reopen a file before its context
+  closes. Context cleanup remains enabled. This changes file handling only;
+  MMG passes and parameters stay unchanged.
 * `meshers-fast`, `meshers-balanced` and `meshers-quality` call the public
   `meshers.generate` API with 0, 4 and 12 optimization passes. All use the same
   geometry tolerance and minimum quality. A higher budget does not guarantee a

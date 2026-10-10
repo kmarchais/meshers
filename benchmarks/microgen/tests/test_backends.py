@@ -1,7 +1,9 @@
+from pathlib import Path
+
 import numpy as np
 import pytest
 
-from microgen_benchmark.backends import generate
+from microgen_benchmark.backends import generate, reopenable_temporary_file
 from microgen_benchmark.cases import CASES, WORKFLOWS
 from microgen_benchmark.elasticity import solve
 from microgen_benchmark.geometry import canonical_mesh, validate
@@ -33,3 +35,11 @@ def test_actual_microgen_fields_match_case(case):
     assert np.allclose(raw, shape.grid.point_data["surface"], rtol=1e-12, atol=1e-12)
     offset = np.broadcast_to(np.asarray(shape.offset).ravel(order="F"), (len(sample),))
     assert np.allclose(offset, case.width(*sample.T), rtol=1e-12, atol=1e-12)
+
+
+def test_microgen_temporary_file_reopens_and_cleans_up():
+    with reopenable_temporary_file(suffix=".mesh", delete=True) as temporary:
+        path = Path(temporary.name)
+        path.write_bytes(b"reopened")
+        assert path.read_bytes() == b"reopened"
+    assert not path.exists()
