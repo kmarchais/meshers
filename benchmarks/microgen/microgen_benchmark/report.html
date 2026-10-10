@@ -1,0 +1,650 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Microgen meshing benchmark</title>
+    <style>
+      :root {
+        color-scheme: light;
+        --ink: #183047;
+        --muted: #526576;
+        --line: #d9e1e7;
+        --blue: #2563a6;
+        --green: #197862;
+        --red: #a33434;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+        background: #f3f6f8;
+        color: var(--ink);
+        font:
+          15px/1.6 system-ui,
+          sans-serif;
+      }
+      main {
+        max-width: 1320px;
+        margin: auto;
+        padding: 38px 28px;
+      }
+      h1 {
+        font-size: 36px;
+        line-height: 1.15;
+        margin: 10px 0 16px;
+      }
+      h2 {
+        font-size: 25px;
+        margin: 0;
+      }
+      h3 {
+        font-size: 17px;
+      }
+      p {
+        margin: 10px 0;
+      }
+      a {
+        color: var(--blue);
+      }
+      header {
+        padding-bottom: 24px;
+      }
+      .eyebrow {
+        letter-spacing: 0.13em;
+        font-size: 12px;
+        text-transform: uppercase;
+        color: var(--blue);
+        font-weight: 700;
+      }
+      .muted,
+      small {
+        color: var(--muted);
+      }
+      .notice {
+        border-left: 4px solid var(--blue);
+        background: #eaf1f8;
+        padding: 14px 18px;
+        margin: 18px 0;
+      }
+      .badge {
+        display: inline-block;
+        border-radius: 5px;
+        background: #e6edf3;
+        padding: 2px 7px;
+        font-size: 12px;
+        white-space: nowrap;
+      }
+      .ok {
+        color: var(--green);
+        background: #e2f3ec;
+      }
+      .fail {
+        color: var(--red);
+        background: #fae6e4;
+      }
+      .case {
+        background: white;
+        border: 1px solid var(--line);
+        border-radius: 12px;
+        margin: 28px 0;
+        padding: 26px;
+        scroll-margin-top: 12px;
+      }
+      .case-header {
+        display: flex;
+        gap: 24px;
+        justify-content: space-between;
+        align-items: start;
+      }
+      .formula {
+        font:
+          13px/1.7 ui-monospace,
+          monospace;
+        background: #f3f6f8;
+        padding: 12px;
+        overflow-wrap: anywhere;
+      }
+      .nav {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        margin: 20px 0;
+      }
+      .nav a {
+        background: white;
+        border: 1px solid var(--line);
+        padding: 4px 10px;
+        border-radius: 6px;
+        text-decoration: none;
+      }
+      .previews {
+        display: grid;
+        grid-template-columns: repeat(5, minmax(0, 1fr));
+        gap: 12px;
+        margin: 22px 0;
+      }
+      .mesh-card {
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        padding: 10px;
+        min-width: 0;
+      }
+      .mesh-card canvas {
+        display: block;
+        width: 100%;
+        height: 155px;
+        background: #f8fafb;
+        border-radius: 6px;
+        cursor: grab;
+      }
+      .mesh-card b {
+        font-size: 13px;
+      }
+      .mesh-card small {
+        display: block;
+        font-size: 11px;
+      }
+      .empty-preview {
+        height: 155px;
+        display: grid;
+        place-items: center;
+        background: #f8fafb;
+        color: var(--muted);
+        font-size: 12px;
+        text-align: center;
+      }
+      .charts {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 20px;
+      }
+      .chart {
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        padding: 12px;
+      }
+      .chart svg {
+        width: 100%;
+        height: auto;
+        display: block;
+      }
+      .legend {
+        display: flex;
+        gap: 14px;
+        flex-wrap: wrap;
+        font-size: 12px;
+      }
+      .dot {
+        display: inline-block;
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        margin-right: 5px;
+      }
+      .table-wrap {
+        overflow: auto;
+        margin: 16px 0;
+      }
+      table {
+        border-collapse: collapse;
+        width: 100%;
+        font-size: 13px;
+        white-space: nowrap;
+      }
+      th,
+      td {
+        padding: 9px 10px;
+        text-align: right;
+        border-bottom: 1px solid var(--line);
+      }
+      th:first-child,
+      td:first-child {
+        text-align: left;
+      }
+      th {
+        color: var(--muted);
+        font-weight: 600;
+      }
+      td.status {
+        text-align: left;
+        max-width: 240px;
+        white-space: normal;
+      }
+      details {
+        border-top: 1px solid var(--line);
+        padding: 12px 0;
+      }
+      summary {
+        cursor: pointer;
+        font-weight: 600;
+      }
+      pre {
+        font:
+          12px/1.6 ui-monospace,
+          monospace;
+        white-space: pre-wrap;
+        overflow-wrap: anywhere;
+        background: #f3f6f8;
+        padding: 12px;
+        max-height: 450px;
+        overflow: auto;
+      }
+      .grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 20px;
+      }
+      .failure {
+        padding: 10px;
+        border-left: 3px solid var(--red);
+        margin: 10px 0;
+        background: #fff6f5;
+      }
+      .failure a {
+        font-size: 12px;
+      }
+      footer {
+        margin: 30px 0;
+        color: var(--muted);
+        font-size: 13px;
+      }
+      @media (max-width: 850px) {
+        main {
+          padding: 22px 14px;
+        }
+        .case {
+          padding: 18px;
+        }
+        .previews {
+          grid-template-columns: repeat(3, minmax(0, 1fr));
+        }
+        .charts,
+        .grid {
+          grid-template-columns: 1fr;
+        }
+      }
+      @media (max-width: 500px) {
+        h1 {
+          font-size: 28px;
+        }
+        .previews {
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+        .case-header {
+          display: block;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <header>
+        <div class="eyebrow">Meshers · Microgen · VTK · MMG3D</div>
+        <h1>Generation speed and elastic accuracy</h1>
+        <p id="headline"></p>
+        <p class="muted" id="machine"></p>
+        <div class="notice">
+          Lower generation time and lower FEA energy error are better. Each case
+          keeps its own results. Equal grid resolution does not mean equal
+          element count.
+        </div>
+        <nav class="nav" id="nav"></nav>
+      </header>
+      <details open>
+        <summary>What this benchmark measures</summary>
+        <div class="grid">
+          <div>
+            <h3>FEA accuracy</h3>
+            <p>
+              The same linear tetrahedral elasticity solver handles every valid
+              mesh, with E = 1 and Poisson ratio 0.3 in normalized coordinates.
+              Exact quadratic displacement fields supply body forces and natural
+              boundary tractions. Six pins per connected component remove rigid
+              motion. Six affine patch tests and free-equilibrium checks must
+              pass.
+            </p>
+            <p>
+              The main score is the worst relative strain-energy error over
+              every linear combination of 18 quadratic displacement fields. This
+              is a fixed load family, not a guarantee for every engineering
+              problem. The exact field is integrated on each generated
+              polyhedral domain. Geometry approximation remains a separate
+              diagnostic.
+            </p>
+          </div>
+          <div>
+            <h3>Performance and admission</h3>
+            <p>
+              Generation time includes Microgen case construction, extraction,
+              remeshing or Meshers generation, and owned-array conversion. It
+              excludes imports, process startup, geometry validation, FEA and
+              file writing. Repeats use fresh processes and rotating backend
+              order. Warmups are retained but excluded from medians.
+            </p>
+            <p>
+              MMG uses one MMG3D volume-adaptation pass on Microgen's VTK
+              tetrahedra, with physical box-cap triangles fixed. MMG may adapt
+              the curved boundary unless the recorded policy fixes the full
+              surface. This is distinct from Microgen's legacy two-pass CLI
+              remesher. Meshers profiles change only the optimization-pass
+              budget. No failed run falls back to another algorithm or a weaker
+              quality threshold.
+            </p>
+          </div>
+        </div>
+        <p class="muted">
+          The MMG shape metric q is normalized to 1 for a regular tetrahedron.
+          Low q alone does not exclude a VTK/MMG FEA result. Numerical
+          comparisons require global mesh checks, affine patch tests,
+          equilibrium, the declared sampled geometry tolerance and the
+          material-volume tolerance. Sampled implicit residual divided by
+          gradient is a first-order distance estimate, not a Hausdorff
+          certificate. Interior overlap checks have declared floating-point
+          tolerances and a checked work cap. Geometry-invalid and incomplete
+          runs remain visible.
+        </p>
+      </details>
+      <section id="cases"></section>
+      <details>
+        <summary>Machine, configuration and source provenance</summary>
+        <pre id="provenance"></pre>
+      </details>
+      <footer>
+        Results and meshes are retained beside this document. Open results.json
+        to inspect raw repetitions, fields.npz for solved displacements and
+        energy matrices, and each worker.log for full backend output. A
+        completed benchmark can contain failed mesh generations.
+      </footer>
+    </main>
+    <script type="application/json" id="data">
+      __BENCHMARK_DATA__
+    </script>
+    <script>
+      "use strict";
+      const data = JSON.parse(document.getElementById("data").textContent),
+        cfg = data.provenance.config;
+      const colors = {
+        vtk: "#737d8a",
+        mmg: "#ce731e",
+        "meshers-fast": "#6c5ce7",
+        "meshers-balanced": "#2477bd",
+        "meshers-quality": "#14836b",
+      };
+      const names = {
+        vtk: "Microgen VTK",
+        mmg: "VTK + MMG3D",
+        "meshers-fast": "Meshers · 0 passes",
+        "meshers-balanced": "Meshers · 4 passes",
+        "meshers-quality": "Meshers · 12 passes",
+      };
+      const esc = (x) =>
+        String(x ?? "").replace(
+          /[&<>"']/g,
+          (c) =>
+            ({
+              "&": "&amp;",
+              "<": "&lt;",
+              ">": "&gt;",
+              '"': "&quot;",
+              "'": "&#39;",
+            })[c],
+        );
+      const num = (x) =>
+        x == null
+          ? "—"
+          : Number(x).toLocaleString("en-US", { maximumFractionDigits: 3 });
+      const pct = (x) => (x == null ? "—" : (100 * x).toFixed(2) + "%");
+      const median = (a) => {
+        const s = a.slice().sort((x, y) => x - y);
+        return s.length
+          ? (s[Math.floor((s.length - 1) / 2)] + s[Math.floor(s.length / 2)]) /
+              2
+          : null;
+      };
+      const artifact = (r, file) => esc(r.artifact) + "/" + file;
+      document.getElementById("headline").textContent =
+        `${data.cases.length} cases · ${cfg.workflows.length} workflows · ${cfg.cells.join(", ")} grid intervals · ${cfg.repeats} measured repeats · ${cfg.warmups} warmups · ${data.state}`;
+      document.getElementById("machine").textContent =
+        `${data.provenance.machine} · ${data.provenance.platform} · ${cfg.threads} requested computational threads · ${data.provenance.started_utc}`;
+      document.getElementById("provenance").textContent = JSON.stringify(
+        { ...data.provenance, manifest_sha256: data.manifest_sha256 },
+        null,
+        2,
+      );
+      document.getElementById("nav").innerHTML = data.cases
+        .map((c) => `<a href="#${esc(c.id)}">${esc(c.name)}</a>`)
+        .join("");
+
+      function groups(caseId) {
+        return cfg.cells.flatMap((n) =>
+          cfg.workflows.map((w) => {
+            const rows = data.rows.filter(
+              (r) =>
+                r.case === caseId &&
+                r.cells === n &&
+                r.workflow === w &&
+                r.repeat >= 0,
+            );
+            const timings = rows
+              .filter((r) => r.mesh_s != null)
+              .map((r) => r.mesh_s);
+            const valid = rows.filter(
+              (r) => r.comparison_eligible && r.status === "ok",
+            );
+            const counts = rows
+              .filter((r) => r.tetrahedra)
+              .map((r) => r.tetrahedra);
+            return {
+              w,
+              n,
+              rows,
+              time: median(timings),
+              lo: timings.length ? Math.min(...timings) : null,
+              hi: timings.length ? Math.max(...timings) : null,
+              count: counts.length ? Math.max(...counts) : null,
+              countLo: counts.length ? Math.min(...counts) : null,
+              nodes: rows.filter((r) => r.nodes).length
+                ? Math.max(...rows.filter((r) => r.nodes).map((r) => r.nodes))
+                : null,
+              q: rows.filter((r) => r.q_min != null).length
+                ? Math.min(
+                    ...rows.filter((r) => r.q_min != null).map((r) => r.q_min),
+                  )
+                : null,
+              error: valid.length
+                ? Math.max(...valid.map((r) => r.worst_energy_error))
+                : null,
+              eligible:
+                valid.length === cfg.repeats && rows.length === cfg.repeats,
+            };
+          }),
+        );
+      }
+      function chart(gs, key, label) {
+        const good = gs.filter((g) => g.eligible && g[key] > 0 && g.error > 0);
+        if (!good.length)
+          return '<p class="muted">No complete, admissible FEA measurements yet.</p>';
+        const xx = good.map((g) => Math.log10(g[key])),
+          yy = good.map((g) => Math.log10(g.error));
+        let xl = Math.min(...xx) - 0.12,
+          xh = Math.max(...xx) + 0.12,
+          yl = Math.min(...yy) - 0.12,
+          yh = Math.max(...yy) + 0.12;
+        const X = (v) => 64 + ((Math.log10(v) - xl) / (xh - xl)) * 420,
+          Y = (v) => 240 - ((Math.log10(v) - yl) / (yh - yl)) * 195;
+        let svg =
+          '<svg viewBox="0 0 520 295" role="img" aria-label="' +
+          esc(label) +
+          ' versus worst energy error"><path d="M64 35V240H484" fill="none" stroke="#9aa9b6"/>';
+        for (let i = 0; i < 4; i++) {
+          const x = xl + ((xh - xl) * i) / 3,
+            y = yl + ((yh - yl) * i) / 3;
+          svg += `<text x="${64 + i * 140}" y="260" text-anchor="middle" fill="#526576" font-size="11">${num(10 ** x)}</text><text x="57" y="${244 - i * 65}" text-anchor="end" fill="#526576" font-size="11">${pct(10 ** y)}</text>`;
+        }
+        for (const g of good) {
+          svg += `<circle cx="${X(g[key])}" cy="${Y(g.error)}" r="5" fill="${colors[g.w]}"><title>${esc(names[g.w])}, n=${g.n}, ${label} ${num(g[key])}, error ${pct(g.error)}</title></circle>`;
+        }
+        return (
+          svg +
+          `<text x="274" y="287" text-anchor="middle" fill="#526576" font-size="12">${esc(label)} · log scale</text><text x="64" y="18" fill="#526576" font-size="12">Worst energy error · log scale</text></svg>`
+        );
+      }
+      function comparisons(gs) {
+        const good = gs.filter((g) => g.eligible),
+          pairs = [];
+        for (const m of good.filter((g) => g.w.startsWith("meshers"))) {
+          for (const c of good.filter((g) => !g.w.startsWith("meshers"))) {
+            const delta = Math.max(
+              Math.abs(m.count / c.countLo - 1),
+              Math.abs(m.countLo / c.count - 1),
+            );
+            if (delta <= cfg.matched_count_tolerance)
+              pairs.push(
+                `<tr><td>${esc(names[m.w])} n${m.n} / ${esc(names[c.w])} n${c.n}</td><td>${pct((m.count - c.count) / c.count)}</td><td>${num(m.error / c.error)}×</td><td>${num(m.time / c.time)}×</td></tr>`,
+              );
+          }
+        }
+        return pairs.length
+          ? `<div class="table-wrap"><table><thead><tr><th>Observed matched-count pair</th><th>Element difference</th><th>FEA error ratio</th><th>Time ratio</th></tr></thead><tbody>${pairs.join("")}</tbody></table></div>`
+          : `<p class="muted">No measured Meshers/control pair is within ${pct(cfg.matched_count_tolerance)} of the same element count. Add resolution levels before making a matched-count claim.</p>`;
+      }
+      function targets(gs) {
+        return `<div class="table-wrap"><table><thead><tr><th>Workflow</th>${cfg.error_targets.map((t) => `<th>≤ ${pct(t)} error</th>`).join("")}</tr></thead><tbody>${cfg.workflows
+          .map(
+            (w) =>
+              `<tr><td>${esc(names[w])}</td>${cfg.error_targets
+                .map((t) => {
+                  const matches = gs
+                    .filter((g) => g.w === w && g.eligible && g.error <= t)
+                    .sort((a, b) => a.count - b.count);
+                  return `<td>${matches.length ? num(matches[0].count) + " tets · " + num(matches[0].time) + " s" : "Not reached"}</td>`;
+                })
+                .join("")}</tr>`,
+          )
+          .join(
+            "",
+          )}</tbody></table></div><p class="muted">Lowest observed maximum element count reaching each target across all repeats. No interpolation or extrapolation; the tested resolution range may miss a better configuration.</p>`;
+      }
+
+      function mesh(canvas, triangles) {
+        let yaw = 0.7,
+          pitch = 0.45,
+          drag = null;
+        const ctx = canvas.getContext("2d");
+        function draw() {
+          const size = canvas.getBoundingClientRect();
+          canvas.width = Math.max(1, size.width * 2);
+          canvas.height = 310;
+          const width = canvas.width,
+            height = canvas.height;
+          ctx.fillStyle = "#f8fafb";
+          ctx.fillRect(0, 0, width, height);
+          const scale = Math.min(width, height) * 0.62;
+          function project(p) {
+            let x = p[0] * Math.cos(yaw) + p[2] * Math.sin(yaw),
+              z = -p[0] * Math.sin(yaw) + p[2] * Math.cos(yaw);
+            return [
+              width / 2 + scale * x,
+              height / 2 -
+                scale * (p[1] * Math.cos(pitch) - z * Math.sin(pitch)),
+              p[1] * Math.sin(pitch) + z * Math.cos(pitch),
+            ];
+          }
+          const faces = triangles
+            .map((t) => t.map(project))
+            .sort(
+              (a, b) =>
+                a.reduce((s, p) => s + p[2], 0) -
+                b.reduce((s, p) => s + p[2], 0),
+            );
+          for (const t of faces) {
+            const shade = Math.max(
+              80,
+              Math.min(210, 145 + (70 * t.reduce((s, p) => s + p[2], 0)) / 3),
+            );
+            ctx.fillStyle = `rgb(${shade * 0.58},${shade * 0.81},${shade})`;
+            ctx.strokeStyle = "rgba(30,60,80,.18)";
+            ctx.lineWidth = 0.5;
+            ctx.beginPath();
+            ctx.moveTo(t[0][0], t[0][1]);
+            for (const p of t.slice(1)) ctx.lineTo(p[0], p[1]);
+            ctx.closePath();
+            ctx.fill();
+            ctx.stroke();
+          }
+        }
+        canvas.onpointerdown = (e) => {
+          drag = [e.clientX, e.clientY];
+          canvas.setPointerCapture(e.pointerId);
+        };
+        canvas.onpointermove = (e) => {
+          if (drag) {
+            yaw += (e.clientX - drag[0]) * 0.01;
+            pitch += (e.clientY - drag[1]) * 0.01;
+            drag = [e.clientX, e.clientY];
+            draw();
+          }
+        };
+        canvas.onpointerup = () => {
+          drag = null;
+        };
+        new ResizeObserver(draw).observe(canvas);
+        draw();
+      }
+
+      for (const c of data.cases) {
+        const gs = groups(c.id),
+          rows = data.rows.filter((r) => r.case === c.id && r.repeat >= 0),
+          failures = rows.filter(
+            (r) => !["ok", "geometry-warning"].includes(r.status),
+          );
+        const section = document.createElement("section");
+        section.className = "case";
+        section.id = c.id;
+        const previews = cfg.workflows
+          .map((w) => {
+            const r = rows
+              .filter((r) => r.workflow === w && r.preview)
+              .sort((a, b) => b.cells - a.cells)[0];
+            return `<div class="mesh-card"><b>${esc(names[w])}</b>${r ? `<canvas data-mesh="${esc(r.artifact)}" aria-label="${esc(c.name + " " + names[w] + " mesh")}" title="Drag to rotate"></canvas><small>n=${r.cells} · ${num(r.tetrahedra)} tets · ${esc(r.status)}<br>Boundary faces sampled for display. Drag to rotate.</small>` : '<div class="empty-preview">No retained validated surface</div><small>See status and logs below.</small>'}</div>`;
+          })
+          .join("");
+        section.innerHTML = `<div class="case-header"><div><div class="eyebrow">${esc(c.id)}</div><h2>${esc(c.name)}</h2><p>${esc(c.description)}</p></div><span class="badge">${rows.length}/${cfg.cells.length * cfg.workflows.length * cfg.repeats} measured runs</span></div><div class="formula">${esc(c.formula)}<br>X = 2πx/L, Y = 2πy/L, Z = 2πz/L · cube [−L/2, L/2]³ · L=${c.scale}<br>Sheet: |f| ≤ width(x)/2 · width(x)=${c.offset}${c.grading ? " × (1 + " + c.grading + " x/L)" : ""}${c.function === "solid" ? " · full cube" : ""}</div><div class="previews">${previews}</div><div class="legend">${cfg.workflows.map((w) => `<span><i class="dot" style="background:${colors[w]}"></i>${esc(names[w])}</span>`).join("")}</div><div class="charts"><div class="chart"><h3>Generation time versus FEA error</h3>${chart(gs, "time", "Generation seconds")}</div><div class="chart"><h3>Elements versus FEA error</h3>${chart(gs, "count", "Tetrahedra")}</div></div><div class="table-wrap"><table><thead><tr><th>Workflow / intervals</th><th>Time median [min, max] s</th><th>Max tets</th><th>Max nodes</th><th>Min q</th><th>Worst FEA error</th><th>Status</th></tr></thead><tbody>${gs.map((g) => `<tr><td>${esc(names[g.w])} / ${g.n}</td><td>${num(g.time)} ${g.time == null ? "" : "[" + num(g.lo) + ", " + num(g.hi) + "]"}</td><td>${num(g.count)}</td><td>${num(g.nodes)}</td><td>${num(g.q)}</td><td>${pct(g.error)}</td><td class="status"><span class="badge ${g.eligible ? "ok" : g.rows.some((r) => r.status === "failed" || r.status === "timeout") ? "fail" : ""}">${g.rows.length ? (g.eligible ? "Admissible" : g.rows.map((r) => r.status).join(", ")) : "Pending"}</span>${g.q != null && g.q < 0.1 ? " <small>q &lt; 0.1</small>" : ""}${g.rows.length < cfg.repeats ? " <small>Repeats incomplete</small>" : ""}</td></tr>`).join("")}</tbody></table></div><details open><summary>Compare at matched budgets and error targets</summary>${comparisons(gs)}${targets(gs)}</details><details><summary>Individual repetitions, geometry diagnostics and all 18 load errors</summary>${rows.map((r) => `<details><summary>${esc(names[r.workflow])} n${r.cells}, repeat ${r.repeat + 1}: ${esc(r.status)}</summary><p><a href="${artifact(r, "worker.log")}">Full log</a> · <a href="${artifact(r, "request.json")}">Input</a>${r.mesh_sha256 ? ' · <a href="' + artifact(r, "mesh.npz") + '">Mesh arrays</a>' : ""}${r.fields_sha256 ? ' · <a href="' + artifact(r, "fields.npz") + '">Solved fields</a>' : ""}</p><pre>${esc(JSON.stringify(Object.fromEntries(Object.entries(r).filter(([k]) => k !== "preview")), null, 2))}</pre></details>`).join("")}</details>${failures.length ? `<details open><summary>${failures.length} retained failures</summary>${failures.map((r) => `<div class="failure"><b>${esc(names[r.workflow])} n${r.cells}, repeat ${r.repeat + 1}</b><p>${esc(r.stage)}: ${esc(r.error)}</p><a href="${artifact(r, "worker.log")}">Full worker log</a></div>`).join("")}</details>` : ""}`;
+        document.getElementById("cases").append(section);
+        section
+          .querySelectorAll("canvas[data-mesh]")
+          .forEach((canvas) =>
+            mesh(
+              canvas,
+              rows.find((r) => r.artifact === canvas.dataset.mesh).preview,
+            ),
+          );
+      }
+      for (const c of data.cases) {
+        const section = document.getElementById(c.id),
+          display = document.createElement("div");
+        display.className = "mesh-card";
+        display.style.maxWidth = "240px";
+        display.innerHTML =
+          "<b>Intended geometry · display reference</b>" +
+          (c.target_preview
+            ? '<canvas aria-label="Target geometry" title="Drag to rotate"></canvas>'
+            : "<p>" +
+              esc(c.target_preview_error ?? "Preview pending") +
+              "</p>") +
+          "<small>Separate 32-interval surface; display only.<br>Material volume estimate " +
+          pct(c.target_volume_fraction) +
+          "<br>Half-sample difference " +
+          pct(c.target_volume_half_sample_delta) +
+          "<br>Admission volume tolerance " +
+          pct(cfg.volume_tolerance) +
+          "</small>";
+        section.querySelector(".previews").before(display);
+        if (c.target_preview)
+          mesh(display.querySelector("canvas"), c.target_preview);
+      }
+    </script>
+  </body>
+</html>

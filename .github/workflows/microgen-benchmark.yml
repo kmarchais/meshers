@@ -1,0 +1,51 @@
+name: Microgen benchmark
+
+on:
+  workflow_dispatch:
+    inputs:
+      suite:
+        description: Smoke checks or the repeated standard benchmark
+        type: choice
+        options: [smoke, standard]
+        default: smoke
+  pull_request:
+    paths: ['benchmarks/microgen/**', '.github/workflows/microgen-benchmark.yml']
+
+permissions:
+  contents: read
+
+jobs:
+  benchmark:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 180
+    env:
+      OMP_NUM_THREADS: '1'
+      OPENBLAS_NUM_THREADS: '1'
+      MKL_NUM_THREADS: '1'
+      PYTHONUNBUFFERED: '1'
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Gmsh's Linux runtime libraries
+        if: runner.os == 'Linux'
+        run: sudo apt-get update && sudo apt-get install -y libglu1-mesa libgl1
+      - uses: astral-sh/setup-uv@v6
+        with:
+          python-version: '3.12'
+          enable-cache: true
+      - run: uv run --project benchmarks/microgen --locked --group dev ruff check benchmarks/microgen
+      - run: uv run --project benchmarks/microgen --locked --group dev python -m pytest benchmarks/microgen/tests -q
+      - name: Run all cases and backends
+        env:
+          SUITE: ${{ inputs.suite || 'smoke' }}
+        shell: bash
+        run: uv run --project benchmarks/microgen --locked microgen-benchmark --suite "$SUITE" --output benchmarks/microgen/output/ci
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: microgen-${{ matrix.os }}
+          path: benchmarks/microgen/output/ci/
+          if-no-files-found: warn

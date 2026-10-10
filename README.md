@@ -23,6 +23,7 @@ h5py. Rust is only needed to build from source.
 - [Python API](docs/site/api/python.md) and [Rust API](docs/site/api/rust.md)
 - [Quality and limits](docs/site/quality.md)
 - [Performance checks](docs/site/performance.md)
+- [Microgen speed and FEA benchmark](benchmarks/microgen/README.md)
 - [Contributing](docs/site/contributing.md) and [release checks](docs/site/release.md)
 
 Supported NumPy expressions compile automatically with derivatives. Other
