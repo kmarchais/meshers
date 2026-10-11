@@ -151,6 +151,15 @@ Meshers can use its public compiler and automatic derivatives instead of NumPy
 callback fallback. Its preparation cost remains included. A fresh pilot must
 measure the geometry and timing effect before any claim of improvement. The
 earlier surface trial remains evidence for its original callback implementation.
+The compiler-only pilot at grids 24 and 36 completed four attempts in 23 s,
+but all four still reject `0.002 L`; its evidence is retained in
+`bcc-traceable-band.json`. Faster rejection is not a usable-mesh speed result.
+
+An optional `--meshers-solid-region negative` control removes the inactive
+lower band wall for BCC and Spinodoid while keeping their signed fields,
+material sets and independent admission policy fixed. It changes only the
+native region choice; sheet bands and the legacy default remain unchanged.
+The region is recorded even when native generation rejects the input.
 
 ## Coarse implicit failures
 

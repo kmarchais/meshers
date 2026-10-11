@@ -20,6 +20,7 @@ def test_real_backend_cube_pipeline(workflow):
         "geometry_tolerance": 0.01,
         "max_tetrahedra": 250_000,
         "mmg_boundary": "caps",
+        "meshers_solid_region": "negative",
     }
     points, tets, timing = generate(CASES[0], workflow, 4, config)
     points, tets, _, _ = canonical_mesh(points, tets)
@@ -58,6 +59,48 @@ def test_implicit_lattice_known_material_points():
     case = next(c for c in CASES if c.id == "implicit-lattice")
     assert case.material(np.array([0, 0.25]), np.array([0, 0.25]), np.array([0, 0.25])).all()
     assert not case.material(np.array([0.5]), np.array([0]), np.array([0]))[0]
+
+
+@pytest.mark.parametrize("case", [c for c in CASES if c.implicit], ids=lambda c: c.id)
+def test_implicit_band_and_negative_regions_have_identical_material(case):
+    samples = (
+        np.vstack(
+            [
+                np.random.default_rng(2031).uniform(-0.5, 0.5, (256, 3)),
+                list(product((-0.5, 0, 0.5), repeat=3)),
+            ]
+        )
+        * case.scale
+    )
+    value = case.field(*samples.T)
+    assert np.array_equal(case.material(*samples.T), value <= 0)
+
+
+def test_negative_control_reaches_public_api_without_changing_sheet_band(monkeypatch):
+    import meshers
+
+    class CapturedCall(Exception):
+        pass
+
+    calls = []
+
+    def capture(field, **options):
+        calls.append(options)
+        raise CapturedCall
+
+    monkeypatch.setattr(meshers, "generate", capture)
+    config = {
+        "threads": 1,
+        "minimum_quality": 0.1,
+        "geometry_tolerance": 0.002,
+        "max_tetrahedra": 1000000,
+        "meshers_solid_region": "negative",
+    }
+    for case in [next(c for c in CASES if c.implicit), next(c for c in CASES if c.id == "gyroid")]:
+        with pytest.raises(CapturedCall):
+            generate(case, "meshers-fast", 4, config)
+    assert calls[0]["band"] is None
+    assert calls[1]["band"] == (-1, 1)
 
 
 @pytest.mark.parametrize("scale", [0.001, 1, 1000])

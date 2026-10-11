@@ -74,6 +74,7 @@ def failure_catalog(document):
                     f" --volume-tolerance {config['volume_tolerance']} --minimum-quality {config['minimum_quality']}"
                     f" --max-tetrahedra {config['max_tetrahedra']} --pair-cap {config['pair_cap']}"
                     f" --mmg-boundary {config['mmg_boundary']}"
+                    f" --meshers-solid-region {config.get('meshers_solid_region', 'band')}"
                     f" --purpose {config.get('purpose', 'fea')} --fea-target {config.get('fea_target', 0.05)}"
                     f" --error-targets {','.join(map(str, config.get('error_targets', [0.01, 0.02, 0.05])))}"
                     f" --memory-limit-mib {config.get('memory_limit_mib', 8192)}"
@@ -479,6 +480,12 @@ def main():
         help="Directory containing native mmg3d_O3 for Microgen's CLI path; default: bundled MMG binary",
     )
     parser.add_argument(
+        "--meshers-solid-region",
+        choices=["band", "negative"],
+        default="band",
+        help="Native implicit solids: legacy inactive-lower band or equivalent negative region; sheets keep both walls",
+    )
+    parser.add_argument(
         "--cells", help="Comma-separated interval counts, default smoke 8, standard 16,24,36,54"
     )
     parser.add_argument("--repeats", type=int)
@@ -608,6 +615,7 @@ def main():
         "geometry_tolerance": args.geometry_tolerance,
         "volume_tolerance": args.volume_tolerance,
         "mmg_boundary": args.mmg_boundary,
+        "meshers_solid_region": args.meshers_solid_region,
         "mmg_bin_directory": str(args.mmg_bin_directory.resolve())
         if args.mmg_bin_directory
         else None,

@@ -148,6 +148,11 @@ stay fixed across all meshing resolutions and workflows. See the
 use `tanh` normalization and material `field <= 0`; Meshers receives band
 `[-1,0]`, whose lower boundary is inactive. Microgen samples the same field
 through `from_field(...).generate_volume_mesh(resolution=cells+1)`.
+`--meshers-solid-region negative` instead uses the native single-negative-region
+call for these two implicit solids. The field and material stay fixed, and
+sheets keep their two active walls. The default `band` setting preserves the
+original issue #4 reproduction. Each native attempt records the selected region
+and actual band, including rejected calls.
 
 The shared BCC expression uses scalar-coordinate operations that also broadcast
 over NumPy arrays. This lets Meshers use its public scalar compiler and automatic

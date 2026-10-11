@@ -243,12 +243,21 @@ def generate(case, workflow, cells, config, progress=None):
                 )
         points, tets = tetrahedra(grid)
     elif workflow in PROFILES:
-        progress(stage="Meshers native generation", failure_owner="Meshers")
+        native_band = (
+            None
+            if case.implicit and config.get("meshers_solid_region", "band") == "negative"
+            else case.band
+        )
+        region_metadata = {
+            "meshers_region": "negative" if native_band is None else "band",
+            "meshers_band": native_band,
+        }
+        progress(stage="Meshers native generation", failure_owner="Meshers", **region_metadata)
         native = meshers.generate(
             case.field,
             bounds=(-case.scale / 2, case.scale / 2) * 3,
             cells=cells,
-            band=case.band,
+            band=native_band,
             minimum_quality=config["minimum_quality"],
             geometry_tolerance=config["geometry_tolerance"] * case.scale,
             max_tetrahedra=config["max_tetrahedra"],
@@ -257,6 +266,7 @@ def generate(case, workflow, cells, config, progress=None):
         )
         points, tets = np.asarray(native.points).copy(), np.asarray(native.tetrahedra).copy()
         native_diagnostics = {
+            **region_metadata,
             "meshers_evaluator": native.diagnostics.get("evaluator"),
             "meshers_callback_calls": native.diagnostics.get("callback_calls"),
             "meshers_field_preparation_s": native.diagnostics.get("preparation_seconds"),
