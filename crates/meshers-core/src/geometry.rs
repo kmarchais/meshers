@@ -20,6 +20,10 @@ pub(crate) trait Geometry: Sync {
     fn band(&self) -> bool {
         true
     }
+    /// Implicit pipelines preserve this limit while improving element quality.
+    fn geometry_tolerance(&self) -> Option<f64> {
+        None
+    }
     fn locked(&self, p: Point) -> [bool; 3] {
         let [lo, hi] = self.bounds();
         std::array::from_fn(|a| p[a] == lo[a] || p[a] == hi[a])

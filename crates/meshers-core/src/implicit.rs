@@ -140,6 +140,9 @@ impl<F: ScalarField> Context<'_, F> {
     }
 }
 impl<F: ScalarField> Geometry for Context<'_, F> {
+    fn geometry_tolerance(&self) -> Option<f64> {
+        Some(self.options.geometry_tolerance)
+    }
     fn batched(&self) -> bool {
         self.field.prefers_batches()
     }

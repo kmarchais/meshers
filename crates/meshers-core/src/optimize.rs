@@ -339,7 +339,11 @@ fn accept_gpu(
     };
     let (old_min, old_cost) = evaluate(mesh, group, threshold, h, weight, origin, geometry);
     let (new_min, new_cost) = evaluate(mesh, group, threshold, h, weight, candidate, geometry);
-    if new_min >= old_min.min(0.65_f64.powi(3)) - 1e-12 && new_cost < old_cost {
+    if new_min >= old_min.min(0.65_f64.powi(3)) - 1e-12
+        && new_cost < old_cost
+        && batch::surface_moves(mesh, &[(group, candidate)], threshold, geometry)
+            .is_ok_and(|accepted| accepted[0])
+    {
         sub(candidate, origin)
     } else {
         [0.; 3]
@@ -440,7 +444,13 @@ fn proposal(
             }));
         }
     }
-    sub(best, original)
+    if batch::surface_moves(mesh, &[(group, best)], threshold, geometry)
+        .is_ok_and(|accepted| accepted[0])
+    {
+        sub(best, original)
+    } else {
+        [0.; 3]
+    }
 }
 
 fn evaluate(

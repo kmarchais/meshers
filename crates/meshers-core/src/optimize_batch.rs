@@ -315,9 +315,98 @@ pub(super) fn proposals(
             best_cost[i] = cost;
         }
     }
+    let accepted = surface_moves(
+        mesh,
+        &groups
+            .iter()
+            .zip(&best)
+            .map(|(&group, &point)| (group, point))
+            .collect::<Vec<_>>(),
+        threshold,
+        g,
+    )?;
     Ok(best
         .into_iter()
         .zip(origins)
-        .map(|(p, o)| sub(p, o))
+        .zip(accepted)
+        .map(|((p, o), accepted)| if accepted { sub(p, o) } else { [0.; 3] })
         .collect())
+}
+
+/// Check only selected proposals, keeping callback work bounded and batched.
+/// Projection already constrains vertices; these probes constrain face interiors.
+/// A face already outside the tolerance may improve, but cannot become worse.
+pub(super) fn surface_moves(
+    mesh: &Mesh,
+    queries: &[(&Group, Point)],
+    threshold: f64,
+    g: &impl Geometry,
+) -> Result<Vec<bool>, String> {
+    let mut accepted = vec![true; queries.len()];
+    let Some(tolerance) = g.geometry_tolerance() else {
+        return Ok(accepted);
+    };
+    for (chunk_index, chunk) in queries.chunks(128).enumerate() {
+        g.check()?;
+        let mut samples = Vec::new();
+        let mut owners = Vec::new();
+        for (qi, &(group, candidate)) in chunk.iter().enumerate() {
+            let delta = sub(candidate, mesh.points[group.0[0]]);
+            if delta == [0.; 3] {
+                continue;
+            }
+            for f in &group.2 {
+                let old = f.map(|i| mesh.points[i]);
+                let new = f.map(|i| {
+                    if group.0.contains(&i) {
+                        std::array::from_fn(|a| mesh.points[i][a] + delta[a])
+                    } else {
+                        mesh.points[i]
+                    }
+                });
+                for p in [old, new] {
+                    samples.extend([
+                        std::array::from_fn(|a| (p[0][a] + p[1][a] + p[2][a]) / 3.),
+                        std::array::from_fn(|a| (p[0][a] + p[1][a]) * 0.5),
+                        std::array::from_fn(|a| (p[1][a] + p[2][a]) * 0.5),
+                        std::array::from_fn(|a| (p[2][a] + p[0][a]) * 0.5),
+                    ]);
+                }
+                owners.push(chunk_index * 128 + qi);
+            }
+        }
+        let (gradients, values) = if g.batched() {
+            (g.gradients(&samples), g.values(&samples))
+        } else {
+            (
+                samples.iter().map(|&p| g.gradient(p)).collect(),
+                samples.iter().map(|&p| g.value(p)).collect(),
+            )
+        };
+        for (owner, (gradients, values)) in owners.into_iter().zip(
+            gradients
+                .as_chunks::<8>()
+                .0
+                .iter()
+                .zip(values.as_chunks::<8>().0),
+        ) {
+            let mut errors = [0_f64; 2];
+            for i in 0..8 {
+                let residual = if g.band() {
+                    values[i].abs() - threshold
+                } else {
+                    values[i]
+                };
+                let distance = if residual == 0. {
+                    0.
+                } else {
+                    residual.abs() / norm(gradients[i])
+                };
+                errors[i / 4] = errors[i / 4].max(distance);
+            }
+            accepted[owner] &= errors[1].is_finite() && errors[1] <= tolerance.max(errors[0]);
+        }
+    }
+    g.check()?;
+    Ok(accepted)
 }
