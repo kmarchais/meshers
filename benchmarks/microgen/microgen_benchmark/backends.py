@@ -98,6 +98,9 @@ def generate(case, workflow, cells, config, progress=None):
     elif workflow in PROFILES:
         import meshers
     vtkSMPTools.Initialize(config["threads"])
+    mmg_hausd = config.get("mmg_hausd", config["geometry_tolerance"])
+    if workflow.startswith("mmg"):
+        progress(mmg_hausd_over_L=mmg_hausd, mmg_hsiz_over_L=1 / cells, mmg_hgrad=1.3)
     if not hasattr(microgen, "Tpms"):
         raise ImportError("Microgen does not provide Tpms")
     progress(stage="Microgen field setup", failure_owner="Microgen")
@@ -217,7 +220,7 @@ def generate(case, workflow, cells, config, progress=None):
                 )
             native.remesh(
                 hsiz=case.scale / cells,
-                hausd=config["geometry_tolerance"] * case.scale,
+                hausd=mmg_hausd * case.scale,
                 hgrad=1.3,
                 nosurf=config["mmg_boundary"] == "fixed",
                 verbose=-1,
@@ -238,7 +241,7 @@ def generate(case, workflow, cells, config, progress=None):
                     grid,
                     periodic=False,
                     hsiz=case.scale / cells,
-                    hausd=config["geometry_tolerance"] * case.scale,
+                    hausd=mmg_hausd * case.scale,
                     hgrad=1.3,
                 )
         points, tets = tetrahedra(grid)

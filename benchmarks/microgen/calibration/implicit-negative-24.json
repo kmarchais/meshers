@@ -1,0 +1,502 @@
+{
+  "evidence_schema": 1,
+  "original_results_sha256": "85e80e6c100f9682b34eafc0a689f09585aee5fc300b43ee705e062528b80c54",
+  "local_artifact_directory": "implicit-negative-24",
+  "scope": "Measured runs only. Counts and times include failed configurations. Local output retains source snapshots, meshes and fields.",
+  "schema_version": 2,
+  "state": "complete",
+  "provenance": {
+    "started_utc": "2026-10-11T23:07:57.244058+00:00",
+    "machine": "Omen",
+    "platform": "Windows-11-10.0.26200-SP0",
+    "cpu": "Intel64 Family 6 Model 198 Stepping 2, GenuineIntel",
+    "logical_cpus": 24,
+    "ram_bytes": 68062457856,
+    "python": "3.12.13 (main, Aug  7 2026, 02:26:41) [MSC v.1944 64 bit (AMD64)]",
+    "packages": {
+      "meshers": {
+        "version": "0.1.0",
+        "native_sha256": {
+          "meshers/_meshers.pyd": "85cdab1af12445418b378c89b151e2e2ebc024b49bae659edac364c7faa7931f"
+        }
+      },
+      "microgen": {
+        "version": "2.0.0b1",
+        "native_sha256": {}
+      },
+      "mmgpy": {
+        "version": "0.17.1",
+        "native_sha256": {
+          "../../Scripts/mmg.exe": "8b0b908a127a0938df4b7c0b1a43c020144cd48c402788d52fd0ca6beb6948b6",
+          "../../Scripts/mmg2d.exe": "c34b929ae283f94197d53d117eb44c090010e3aa117771e5fb26014fdb9b0091",
+          "../../Scripts/mmg2d_O3.exe": "c34b929ae283f94197d53d117eb44c090010e3aa117771e5fb26014fdb9b0091",
+          "../../Scripts/mmg3d.exe": "84b0f5667a09ac0987461a73117450c69fcc1c7f98c7c34f43aba528dea5cb2b",
+          "../../Scripts/mmg3d_O3.exe": "84b0f5667a09ac0987461a73117450c69fcc1c7f98c7c34f43aba528dea5cb2b",
+          "../../Scripts/mmgpy-ui.exe": "7dc633bd48c120bf8dc34cdebab28fd0695fdcfa241157f6027eadb55f74a508",
+          "../../Scripts/mmgpy.exe": "8b0b908a127a0938df4b7c0b1a43c020144cd48c402788d52fd0ca6beb6948b6",
+          "../../Scripts/mmgs.exe": "782a3c8a81913ab59d9bc8b5cffa975f841556749f5f6877b77c5bd339ecd8b3",
+          "../../Scripts/mmgs_O3.exe": "782a3c8a81913ab59d9bc8b5cffa975f841556749f5f6877b77c5bd339ecd8b3",
+          "bin/concrt140.dll": "54716f0738af891f283d213b5c8d11b25896bb8ee3097d301eae718560cf974e",
+          "bin/mmg.dll": "d958b0adbd9c0d7c398ebe4af4c25fa7c09f21c565d2d44334a64a45f951dad4",
+          "bin/mmg2d.dll": "599f89350c4b7d38dceba3e19bb858ad8c6691bbea3b11b8e9aa8ba7f3ef6008",
+          "bin/mmg2d.exe": "40d142631918c682fa74cd99d9b22b63dee2141c6d0dd8bd77770f9a607c42d5",
+          "bin/mmg3d.dll": "f73298240242109a90f12dcee48ec1c5f60e9fefc444b566f1ed94deefe77ee4",
+          "bin/mmg3d.exe": "7010a9f4d7e3fec9d442b5fa4229133bff365d176babbb6cf399ebd62fd1c2b8",
+          "bin/mmgs.dll": "ae86c25e7cd3f5ef5814ca3514330d3ca1d434f37e81a3f5b140996a33fe5417",
+          "bin/mmgs.exe": "efbd0f3d132dad9498ead4bf9934b68cea48c0520b4f8f43fa3198ba88eb9b79",
+          "bin/msvcp140.dll": "7c26614e1d733892c2deac7e245ce115504b1d80592dd0a01b08e3e5a55f89ca",
+          "bin/msvcp140_1.dll": "206c931bf90fdad8816de3b5e2ef80b2bcaa9406c89ecc05fe6fddffe251e982",
+          "bin/msvcp140_2.dll": "d50d7883f20d1dc6191768d3746f52dd9cac89c346ffaed5be1f110c2f34a838",
+          "bin/msvcp140_atomic_wait.dll": "3d0cbfaa1bf3eecf5a3f4491d2960ee803cb994f30292c6adc4a07c498f60e2b",
+          "bin/msvcp140_codecvt_ids.dll": "8a65c7596ef2e6938731f5a1058e7e40145b6d97967cc649231a076b9a608d78",
+          "bin/vcruntime140.dll": "d1f4225df2cd877dbf130d5668a021dce3f94118455ff5ec952061c30afc9ce7",
+          "bin/vcruntime140_1.dll": "a7146c08f89fe5b04541ab507cdb59ff7b44534d4ba3c668a426c6450a03434e",
+          "mmgpy.libs/concrt140.dll": "54716f0738af891f283d213b5c8d11b25896bb8ee3097d301eae718560cf974e",
+          "mmgpy.libs/msvcp140-a4c2229bdc2a2a630acdc095b4d86008.dll": "a4c2229bdc2a2a630acdc095b4d86008e5c3e3bc7773174354f3da4f5beb9cde",
+          "mmgpy.libs/msvcp140_1.dll": "456aebccb449fcba35f1109c259ba0aa10923e660f4de812a490d35f37f54fc9",
+          "mmgpy.libs/msvcp140_2.dll": "7a403abf753d0bdf09776cf4bcb13b5a6ebe3a47670de124a3c621aa4b952f82",
+          "mmgpy.libs/msvcp140_atomic_wait.dll": "d759dd381bdbd6142372de4cb57acc382e1b80c106b7414a408816564ee1eb6a",
+          "mmgpy.libs/msvcp140_codecvt_ids.dll": "f781e1e0133c397c3a2c73fd4dbcdb442378ba20fced56a2f7db5822436ddd2a",
+          "mmgpy.libs/vcruntime140.dll": "052ad6a20d375957e82aa6a3c441ea548d89be0981516ca7eb306e063d5027f4",
+          "mmgpy.libs/vcruntime140_1.dll": "6a99bc0128e0c7d6cbbf615fcc26909565e17d4ca3451b97f8987f9c6acbc6c8",
+          "mmgpy/_mmgpy.cp312-win_amd64.pyd": "aecbc3f3a115ed220a89c7357e1d762b0ef8a9d6118e30c13e86a43901e03582",
+          "mmgpy/bin/mmg2d.dll": "599f89350c4b7d38dceba3e19bb858ad8c6691bbea3b11b8e9aa8ba7f3ef6008",
+          "mmgpy/bin/mmg2d_O3.exe": "40d142631918c682fa74cd99d9b22b63dee2141c6d0dd8bd77770f9a607c42d5",
+          "mmgpy/bin/mmg3d.dll": "f73298240242109a90f12dcee48ec1c5f60e9fefc444b566f1ed94deefe77ee4",
+          "mmgpy/bin/mmg3d_O3.exe": "7010a9f4d7e3fec9d442b5fa4229133bff365d176babbb6cf399ebd62fd1c2b8",
+          "mmgpy/bin/mmgs.dll": "ae86c25e7cd3f5ef5814ca3514330d3ca1d434f37e81a3f5b140996a33fe5417",
+          "mmgpy/bin/mmgs_O3.exe": "efbd0f3d132dad9498ead4bf9934b68cea48c0520b4f8f43fa3198ba88eb9b79",
+          "mmgpy/mmg2d.dll": "599f89350c4b7d38dceba3e19bb858ad8c6691bbea3b11b8e9aa8ba7f3ef6008",
+          "mmgpy/mmg3d.dll": "f73298240242109a90f12dcee48ec1c5f60e9fefc444b566f1ed94deefe77ee4",
+          "mmgpy/mmgs.dll": "ae86c25e7cd3f5ef5814ca3514330d3ca1d434f37e81a3f5b140996a33fe5417"
+        }
+      },
+      "vtk": {
+        "version": "9.7.1",
+        "native_sha256": {}
+      },
+      "pyvista": {
+        "version": "0.49.0",
+        "native_sha256": {}
+      },
+      "numpy": {
+        "version": "2.5.3",
+        "native_sha256": {}
+      },
+      "scipy": {
+        "version": "1.18.1",
+        "native_sha256": {}
+      },
+      "psutil": {
+        "version": "7.2.2",
+        "native_sha256": {}
+      },
+      "pyamg": {
+        "version": "5.3.0",
+        "native_sha256": {}
+      }
+    },
+    "git_head": "85e6aa5ea939e31ffc54e78cd03436a5ec3e404f",
+    "source_sha256": {
+      "backends.py": "c970d547774d6296c655681631f7dff5abbb1b3b8130dc81618f69a36bd26fe4",
+      "cases.py": "e7e271656f91e5028288b5da97e6cd5d20a3b4fcdc90d327101c9d44ed4287d2",
+      "elasticity.py": "4f573054a55c8637b05f21be01812e10fe8c11792ec9ce90e3b20c2ce82ba303",
+      "flying_edges.py": "74b20e300901a7e6f40dc9a03e6cc940825ab99d8e64042b5686c8b348850897",
+      "geometry.py": "64424d47b733bc26ab43807833f042f5cca7377044085dafa64fe0991fc06d84",
+      "linear_solve.py": "27b96c1778823110e44a1345ead11dfef46e82da11d4e98b13122f482ea48ed3",
+      "preview.py": "eb0177df868327825acb6f47cd33531db9846ab00b2ceb899eac9f90d1172c21",
+      "qualification.py": "819d112ff39c18bbb911d90ecce0324772c67ded74916dddc148b985198f50e0",
+      "reference.py": "49b5eef2f03768ccd821ecb15544bd158d6d9d892c762595bc07327f71a67afa",
+      "report.html": "3f6af9664feecb1a720a8a15aef9b6f161279e7dbfffbb038c5efed2ecbf2c6d",
+      "report.py": "b349872b3008dd7182ced452610bdaed6435f577b29ac8f6e01d2b7eb54058eb",
+      "runner.py": "9fb29c4eefb47a239aa7c513308aec0724f2d54d669c10851d2d013b4dfc53c6",
+      "surface.py": "1f7665e85f3a3e8aac5177c78fdc73cdecd934ed6889711e39718586417d2f3d",
+      "surface_cleanup.py": "66670d4a784ec853c0b46ca09499ef64637289b20d5f9dbd59c4aa0efd613cad",
+      "surface_intersections.py": "ff9b51d5494935e6d5174a832b002a814c13b2d6f4d646e831c6d78b7a0470d7",
+      "__init__.py": "d3c607efcc0449f226497be88dd2b2340e765fe49e6175ebb35c257a10ea6364",
+      "__main__.py": "116710c321651f30440cc5a3ff07e48abaf5510fda753af23626d47f798643a2"
+    },
+    "config": {
+      "case_ids": [
+        "implicit-lattice",
+        "spinodoid"
+      ],
+      "cells": [
+        24
+      ],
+      "repeats": 1,
+      "warmups": 0,
+      "threads": 1,
+      "geometry_tolerance": 0.002,
+      "volume_tolerance": 0.01,
+      "mmg_boundary": "caps",
+      "meshers_solid_region": "negative",
+      "mmg_bin_directory": null,
+      "minimum_quality": 0.0,
+      "max_tetrahedra": 1000000,
+      "pair_cap": 20000000,
+      "timeout_s": 1800,
+      "workflows": [
+        "meshers-fast",
+        "meshers-pass1"
+      ],
+      "suite": "standard",
+      "matched_count_tolerance": 0.05,
+      "error_targets": [
+        0.01,
+        0.02,
+        0.05
+      ],
+      "fea_target": 0.05,
+      "purpose": "surface",
+      "linear_solver": "amg",
+      "memory_limit_mib": 8192
+    },
+    "dependency_sha256": {
+      "pyproject.toml": "d325873391d5a065f69858bc9543520dd4a5fa839c64225b214f9050ae47eb87",
+      "uv.lock": "9787473729f063bb7ab366ca440f9849abc13fc66234c923b776c6621245e8bf",
+      ".python-version": "8dfda54ba2f66ab3a8ebab460f4338bbeea1fb1e0f85ce06fe3530aa3c64679b"
+    }
+  },
+  "manifest_sha256": "75894022754f96925b3f3497ad7781957ab07a90256b75f559b2c602e6451b05",
+  "elapsed_s": 30.90599999999904,
+  "cases": [
+    {
+      "id": "implicit-lattice",
+      "name": "Implicit BCC lattice",
+      "function": "bcc_lattice",
+      "offset": 0.12,
+      "description": "Eight capsule struts join the cell center to its corners. Benchmark-defined implicit union, sampled through Microgen's public from_field API.",
+      "formula": "min distance to segments [0, (\u00b1L/2, \u00b1L/2, \u00b1L/2)] \u2264 0.12 L",
+      "scale": 1.0,
+      "grading": 0.0,
+      "target_volume_fraction": 0.24582576751708984,
+      "target_volume_sample_count": 1048576,
+      "target_volume_replicates": [
+        0.2461395263671875,
+        0.24575042724609375,
+        0.24567413330078125,
+        0.24573898315429688
+      ],
+      "target_volume_uncertainty": 0.00031375885009765625,
+      "target_volume_uncertainty_scope": "Empirical scramble spread and nested-sample change, not a statistical confidence bound",
+      "target_volume_half_sample_delta": 9.918212890625e-05,
+      "target_preview_intervals": 32,
+      "target_boundary_artifact": "reference-implicit-lattice.npz",
+      "target_boundary_samples": 6470,
+      "target_boundary_sha256": "4861d35553ae68e9598b414e98f81095bd4f3e9f4e20ea72c49a6ba6ae5e3534"
+    },
+    {
+      "id": "spinodoid",
+      "name": "Seeded spinodoid",
+      "function": "spinodoid",
+      "offset": 0,
+      "description": "Microgen Spinodoid field, seed 20261010; fixed 16-cell spectral construction, k0=4\u03c0/L, bandwidth=3/L, retained-mode threshold 0.05. Only meshing resolution varies.",
+      "formula": "\u03a3 A\u1d62 cos(2\u03c0 m\u1d62\u00b7(x/L + 1/2) + \u03c6\u1d62) \u2265 0; shared signed field = tanh(\u2212\u03a3)",
+      "scale": 1.0,
+      "grading": 0.0,
+      "target_volume_fraction": 0.502223014831543,
+      "target_volume_sample_count": 1048576,
+      "target_volume_replicates": [
+        0.5023880004882812,
+        0.5022926330566406,
+        0.5023193359375,
+        0.50189208984375
+      ],
+      "target_volume_uncertainty": 0.00043487548828125,
+      "target_volume_uncertainty_scope": "Empirical scramble spread and nested-sample change, not a statistical confidence bound",
+      "target_volume_half_sample_delta": 0.00043487548828125,
+      "target_preview_intervals": 32,
+      "target_boundary_artifact": "reference-spinodoid.npz",
+      "target_boundary_samples": 11136,
+      "target_boundary_sha256": "8288ea9ea6875ee1e17ccb200aaa5db8cac5f5493dcbf57cd270c3c25bda74ca"
+    }
+  ],
+  "rows": [
+    {
+      "case": "implicit-lattice",
+      "workflow": "meshers-fast",
+      "cells": 24,
+      "repeat": 0,
+      "artifact": "implicit-lattice/meshers-fast/n24/repeat0",
+      "status": "failed",
+      "stage": "Meshers native generation",
+      "failure_owner": "Meshers",
+      "setup_s": 2.2999993234407157e-06,
+      "meshers_region": "negative",
+      "meshers_band": null,
+      "error": "MeshingFailure: sampled geometry error 1.4013711353188931e-2 exceeds tolerance 2e-3; increase resolution or budget",
+      "failed_stage_elapsed_s": 0.22322709999934887,
+      "failure_kind": "native rejection",
+      "worker_exit_code": 0,
+      "peak_worker_tree_rss_mib": 4.75
+    },
+    {
+      "case": "implicit-lattice",
+      "workflow": "meshers-pass1",
+      "cells": 24,
+      "repeat": 0,
+      "artifact": "implicit-lattice/meshers-pass1/n24/repeat0",
+      "status": "failed",
+      "stage": "Meshers native generation",
+      "failure_owner": "Meshers",
+      "setup_s": 2.1999985619913787e-06,
+      "meshers_region": "negative",
+      "meshers_band": null,
+      "error": "MeshingFailure: sampled geometry error 9.249268506083147e-3 exceeds tolerance 2e-3; increase resolution or budget",
+      "failed_stage_elapsed_s": 1.7624977000014042,
+      "failure_kind": "native rejection",
+      "worker_exit_code": 0,
+      "peak_worker_tree_rss_mib": 134.875
+    },
+    {
+      "case": "spinodoid",
+      "workflow": "meshers-fast",
+      "cells": 24,
+      "repeat": 0,
+      "artifact": "spinodoid/meshers-fast/n24/repeat0",
+      "status": "failed",
+      "stage": "Meshers native generation",
+      "failure_owner": "Meshers",
+      "setup_s": 0.0009011000001919456,
+      "meshers_region": "negative",
+      "meshers_band": null,
+      "error": "MeshingFailure: sampled geometry error 6.4807397065193804e-3 exceeds tolerance 2e-3; increase resolution or budget",
+      "failed_stage_elapsed_s": 5.014505399998598,
+      "failure_kind": "native rejection",
+      "worker_exit_code": 0,
+      "peak_worker_tree_rss_mib": 134.25
+    },
+    {
+      "case": "spinodoid",
+      "workflow": "meshers-pass1",
+      "cells": 24,
+      "repeat": 0,
+      "artifact": "spinodoid/meshers-pass1/n24/repeat0",
+      "status": "failed",
+      "stage": "Meshers native generation",
+      "failure_owner": "Meshers",
+      "setup_s": 0.001035600002069259,
+      "meshers_region": "negative",
+      "meshers_band": null,
+      "error": "MeshingFailure: sampled geometry error 4.808238638251073e-3 exceeds tolerance 2e-3; increase resolution or budget",
+      "failed_stage_elapsed_s": 15.344249499998114,
+      "failure_kind": "native rejection",
+      "worker_exit_code": 0,
+      "peak_worker_tree_rss_mib": 151.2734375
+    }
+  ],
+  "qualification": {
+    "configurations": [
+      {
+        "case": "implicit-lattice",
+        "workflow": "meshers-fast",
+        "cells": 24,
+        "complete": false,
+        "geometry_eligible": false,
+        "quality_eligible": false,
+        "median_mesh_s": null,
+        "max_tetrahedra": 0,
+        "max_triangles": 0,
+        "worst_energy_error": null
+      },
+      {
+        "case": "implicit-lattice",
+        "workflow": "meshers-pass1",
+        "cells": 24,
+        "complete": false,
+        "geometry_eligible": false,
+        "quality_eligible": false,
+        "median_mesh_s": null,
+        "max_tetrahedra": 0,
+        "max_triangles": 0,
+        "worst_energy_error": null
+      },
+      {
+        "case": "spinodoid",
+        "workflow": "meshers-fast",
+        "cells": 24,
+        "complete": false,
+        "geometry_eligible": false,
+        "quality_eligible": false,
+        "median_mesh_s": null,
+        "max_tetrahedra": 0,
+        "max_triangles": 0,
+        "worst_energy_error": null
+      },
+      {
+        "case": "spinodoid",
+        "workflow": "meshers-pass1",
+        "cells": 24,
+        "complete": false,
+        "geometry_eligible": false,
+        "quality_eligible": false,
+        "median_mesh_s": null,
+        "max_tetrahedra": 0,
+        "max_triangles": 0,
+        "worst_energy_error": null
+      }
+    ],
+    "targets": [
+      {
+        "case": "implicit-lattice",
+        "workflow": "meshers-fast",
+        "energy_target": null,
+        "fastest": null,
+        "smallest": null,
+        "status": "not reached"
+      },
+      {
+        "case": "implicit-lattice",
+        "workflow": "meshers-fast",
+        "energy_target": 0.01,
+        "fastest": null,
+        "smallest": null,
+        "status": "not reached"
+      },
+      {
+        "case": "implicit-lattice",
+        "workflow": "meshers-fast",
+        "energy_target": 0.02,
+        "fastest": null,
+        "smallest": null,
+        "status": "not reached"
+      },
+      {
+        "case": "implicit-lattice",
+        "workflow": "meshers-fast",
+        "energy_target": 0.05,
+        "fastest": null,
+        "smallest": null,
+        "status": "not reached"
+      },
+      {
+        "case": "implicit-lattice",
+        "workflow": "meshers-pass1",
+        "energy_target": null,
+        "fastest": null,
+        "smallest": null,
+        "status": "not reached"
+      },
+      {
+        "case": "implicit-lattice",
+        "workflow": "meshers-pass1",
+        "energy_target": 0.01,
+        "fastest": null,
+        "smallest": null,
+        "status": "not reached"
+      },
+      {
+        "case": "implicit-lattice",
+        "workflow": "meshers-pass1",
+        "energy_target": 0.02,
+        "fastest": null,
+        "smallest": null,
+        "status": "not reached"
+      },
+      {
+        "case": "implicit-lattice",
+        "workflow": "meshers-pass1",
+        "energy_target": 0.05,
+        "fastest": null,
+        "smallest": null,
+        "status": "not reached"
+      },
+      {
+        "case": "spinodoid",
+        "workflow": "meshers-fast",
+        "energy_target": null,
+        "fastest": null,
+        "smallest": null,
+        "status": "not reached"
+      },
+      {
+        "case": "spinodoid",
+        "workflow": "meshers-fast",
+        "energy_target": 0.01,
+        "fastest": null,
+        "smallest": null,
+        "status": "not reached"
+      },
+      {
+        "case": "spinodoid",
+        "workflow": "meshers-fast",
+        "energy_target": 0.02,
+        "fastest": null,
+        "smallest": null,
+        "status": "not reached"
+      },
+      {
+        "case": "spinodoid",
+        "workflow": "meshers-fast",
+        "energy_target": 0.05,
+        "fastest": null,
+        "smallest": null,
+        "status": "not reached"
+      },
+      {
+        "case": "spinodoid",
+        "workflow": "meshers-pass1",
+        "energy_target": null,
+        "fastest": null,
+        "smallest": null,
+        "status": "not reached"
+      },
+      {
+        "case": "spinodoid",
+        "workflow": "meshers-pass1",
+        "energy_target": 0.01,
+        "fastest": null,
+        "smallest": null,
+        "status": "not reached"
+      },
+      {
+        "case": "spinodoid",
+        "workflow": "meshers-pass1",
+        "energy_target": 0.02,
+        "fastest": null,
+        "smallest": null,
+        "status": "not reached"
+      },
+      {
+        "case": "spinodoid",
+        "workflow": "meshers-pass1",
+        "energy_target": 0.05,
+        "fastest": null,
+        "smallest": null,
+        "status": "not reached"
+      }
+    ],
+    "convergence": [
+      {
+        "case": "implicit-lattice",
+        "workflow": "meshers-fast",
+        "levels": 0,
+        "pairs": [],
+        "status": "insufficient levels"
+      },
+      {
+        "case": "implicit-lattice",
+        "workflow": "meshers-pass1",
+        "levels": 0,
+        "pairs": [],
+        "status": "insufficient levels"
+      },
+      {
+        "case": "spinodoid",
+        "workflow": "meshers-fast",
+        "levels": 0,
+        "pairs": [],
+        "status": "insufficient levels"
+      },
+      {
+        "case": "spinodoid",
+        "workflow": "meshers-pass1",
+        "levels": 0,
+        "pairs": [],
+        "status": "insufficient levels"
+      }
+    ],
+    "scope": "Observed configurations only. All repeats must pass; no interpolation or extrapolation. Geometry targets do not require FEA or element shape."
+  }
+}

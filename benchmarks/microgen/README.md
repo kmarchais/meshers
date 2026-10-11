@@ -229,6 +229,11 @@ budget comparisons.
   time. `periodic=False` matches this benchmark's finite specimens and varying
   thickness; periodic homogenization needs a separate test. `--mmg-boundary`
   applies only to the direct binding workflow.
+  `--mmg-hausd .0002` tunes MMG's reconstructed-surface approximation distance
+  independently of the benchmark's `--geometry-tolerance .002`. Both values
+  are relative to L. Every returned mesh still has to meet the same independent
+  analytic-field, volume and quality checks. The default MMG value equals the
+  geometry tolerance; tuning never changes the admission policy.
   Use `--mmg-bin-directory /path/to/mmg/bin` to measure an existing MMG
   installation instead. The directory must contain `mmg3d_O3`, or
   `mmg3d_O3.exe` on Windows. Each result records the exact executable path and

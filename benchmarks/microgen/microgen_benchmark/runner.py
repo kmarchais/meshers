@@ -74,6 +74,7 @@ def failure_catalog(document):
                     f" --volume-tolerance {config['volume_tolerance']} --minimum-quality {config['minimum_quality']}"
                     f" --max-tetrahedra {config['max_tetrahedra']} --pair-cap {config['pair_cap']}"
                     f" --mmg-boundary {config['mmg_boundary']}"
+                    f" --mmg-hausd {config.get('mmg_hausd', config['geometry_tolerance'])}"
                     f" --meshers-solid-region {config.get('meshers_solid_region', 'band')}"
                     f" --purpose {config.get('purpose', 'fea')} --fea-target {config.get('fea_target', 0.05)}"
                     f" --error-targets {','.join(map(str, config.get('error_targets', [0.01, 0.02, 0.05])))}"
@@ -506,6 +507,11 @@ def main():
     )
     parser.add_argument("--mmg-boundary", choices=["caps", "fixed"], default="caps")
     parser.add_argument(
+        "--mmg-hausd",
+        type=float,
+        help="MMG approximation distance / L; default: geometry tolerance, independent output gates stay fixed",
+    )
+    parser.add_argument(
         "--minimum-quality", type=float, help="Native minimum q: FEA .1, geometry/surface 0"
     )
     parser.add_argument(
@@ -563,6 +569,7 @@ def main():
         if args.volume_tolerance is not None
         else (0.1 if args.suite == "smoke" else 0.01)
     )
+    args.mmg_hausd = args.mmg_hausd if args.mmg_hausd is not None else args.geometry_tolerance
     args.minimum_quality = (
         args.minimum_quality
         if args.minimum_quality is not None
@@ -588,6 +595,7 @@ def main():
         len(set(cells)) != len(cells)
         or args.geometry_tolerance <= 0
         or args.volume_tolerance <= 0
+        or args.mmg_hausd <= 0
         or not 0 <= args.minimum_quality <= 1
         or args.pair_cap < 1
         or args.max_tetrahedra < 1
@@ -596,7 +604,8 @@ def main():
         or len(set(error_targets)) != len(error_targets)
         or not 0 < args.memory_limit_mib < float("inf")
         or not all(
-            math.isfinite(v) for v in [args.geometry_tolerance, args.volume_tolerance, timeout]
+            math.isfinite(v)
+            for v in [args.geometry_tolerance, args.volume_tolerance, args.mmg_hausd, timeout]
         )
     ):
         parser.error("Distinct cells and valid geometry, quality and validation limits required")
@@ -615,6 +624,7 @@ def main():
         "geometry_tolerance": args.geometry_tolerance,
         "volume_tolerance": args.volume_tolerance,
         "mmg_boundary": args.mmg_boundary,
+        "mmg_hausd": args.mmg_hausd,
         "meshers_solid_region": args.meshers_solid_region,
         "mmg_bin_directory": str(args.mmg_bin_directory.resolve())
         if args.mmg_bin_directory

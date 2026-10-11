@@ -20,6 +20,7 @@ def test_real_backend_cube_pipeline(workflow):
         "geometry_tolerance": 0.01,
         "max_tetrahedra": 250_000,
         "mmg_boundary": "caps",
+        "mmg_hausd": 0.003,
         "meshers_solid_region": "negative",
     }
     points, tets, timing = generate(CASES[0], workflow, 4, config)

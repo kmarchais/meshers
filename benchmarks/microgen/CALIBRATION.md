@@ -160,6 +160,9 @@ lower band wall for BCC and Spinodoid while keeping their signed fields,
 material sets and independent admission policy fixed. It changes only the
 native region choice; sheet bands and the legacy default remain unchanged.
 The region is recorded even when native generation rejects the input.
+At grid 24, zero and one pass still reject both fields under the strict policy.
+Their evidence is retained in `implicit-negative-24.json`. The single-negative
+control does not resolve these failures, and the legacy default stays unchanged.
 
 ## Coarse implicit failures
 
@@ -187,6 +190,13 @@ range from `0.011138 L` to `0.011397 L`. Fixing the native acceptance regression
 does not make those coarse meshes eligible for comparison. Native formatting,
 lint and all 49 release tests passed; the real Python suite passed 102 tests
 with one skip after correcting the scalar evaluator path.
+
+The useful-resolution check of the same native commit passes all geometry,
+quality and 5% FEA gates at Gyroid grid 32 with one and four passes. Both have
+96,060 tetrahedra; minimum qualities are 0.1788 and 0.1824, and worst energy
+errors are 4.574% and 4.551%. The single generation samples are 1.341 s and
+4.680 s. Both use the compiled evaluator with zero Python callbacks. These
+remain calibration times; the evidence is `native-guard-fine-32.json`.
 
 ## Measured 2% target and validator correction
 
