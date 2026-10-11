@@ -19,6 +19,20 @@ an admission criterion. Clipped sheet walls also need consistent box caps and
 shared feature curves. This benchmark does not substitute Flying Edges for
 Microgen's public generator and then claim that it measured the current workflow.
 
+[Lewiner et al.'s Marching Cubes 33 implementation](https://thomas.lewiner.org/pub/marching_cubes_jgt.html)
+resolves ambiguities that a small conventional case table can leave unresolved.
+It is a topology reference for a native surface API, alongside Flying Edges'
+execution strategy. Its guarantees concern the sampled interpolant; they do not
+certify the original analytic field, the later box caps or features below the
+sampling grid.
+
+[TetWeave, SIGGRAPH 2025](https://igl.ethz.ch/projects/tetweave/), uses changing
+Delaunay tetrahedral grids for adaptive surface optimization. Its authors report
+watertight, manifold and intersection-free extracted surfaces with memory tied
+to output vertex count. Their applications include reconstruction and mesh
+compression. This suggests an adaptive surface experiment; it is not evidence
+of low-error FEA volume meshes or a faster procedural Microgen pipeline.
+
 ## Accurate volume meshes
 
 The original Meshers issue reproductions remain useful. In particular, extra
@@ -32,6 +46,17 @@ provides a grid-based reference with bounded dihedral angles under its algorithm
 assumptions. Its cut stencils and snapping rules deserve comparison with Meshers'
 current extraction. Those guarantees do not transfer automatically to a different
 stencil set, clipped sheet bands, arbitrary sharp unions or later optimization.
+
+[Adaptive grid generation for implicit complexes, SIGGRAPH 2024](https://jurwen.github.io/Adaptive-grid-for-implicit-complexes/),
+refines for intersection curves as well as individual surfaces. That distinction
+is relevant to the capsule unions and box intersections in issue #4. The
+[authors' implementation](https://github.com/Jurwen/Adaptive-grid-generation)
+generates a background grid and uses a separate robust extraction stage.
+An experiment must time both stages and validate the final solid. My proposed
+next step is to represent the lattice's capsule fields separately and test
+feature-aware refinement against the current minimum-field union, with the same
+geometry and FEA targets. Published surface-discretization results do not imply
+the benchmark's minimum MMG quality or elastic energy target.
 
 [HXT](https://arxiv.org/abs/2008.08508) provides a fast parallel Delaunay route to
 quality tetrahedral meshes. It is a candidate for an implementation or additional

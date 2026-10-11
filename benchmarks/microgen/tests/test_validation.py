@@ -33,6 +33,28 @@ def test_outside_specimen_rejected():
         validate(p, t, CASES[0])
 
 
+@pytest.mark.parametrize("size", [0.001, 1, 1000])
+def test_small_well_shaped_mmg_cell_is_valid_but_collapsed_cell_is_not(size):
+    # Actual grid-80 MMG cell: determinant 1.0667e-16 L^3, above-quality-gate shape.
+    # A specimen-relative 1e-15 determinant cutoff falsely rejected 96 such cells.
+    points = np.array(
+        [
+            [0.4875035828233303, 0.3875022459965507, 0.049994196816181],
+            [0.4875053473071187, 0.38750000000000007, 0.04999465269288139],
+            [0.48750000000000004, 0.38750000000000007, 0.049991118558044945],
+            [0.48750898398620246, 0.3875089839862025, 0.04999101601379763],
+        ]
+    )
+    points = (points - points.mean(axis=0)) * size
+    p, t, _, _ = canonical_mesh(points, [[0, 1, 2, 3]])
+    metrics, _ = validate(p, t, CASES[0])
+    assert metrics["q_min"] > 0.1
+    assert metrics["volume"] > 0
+    p[:, 2] = 0
+    with pytest.raises(ValueError, match="Degenerate"):
+        validate(p, t, CASES[0])
+
+
 def test_vertex_only_material_contact_rejected():
     a = tet()
     points = np.vstack([a, -a[1:]])

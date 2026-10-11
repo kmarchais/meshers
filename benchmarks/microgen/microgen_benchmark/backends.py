@@ -94,6 +94,7 @@ def generate(case, workflow, cells, config, progress=None):
     start = time.perf_counter()
     reporting_start = reporting_s
     cleanup = {}
+    native_diagnostics = {}
     if workflow in {"vtk", "mmg", "mmg-microgen"} or tetra_seed:
         progress(stage="Microgen VTK extraction", failure_owner="Microgen / VTK")
         if tetra_seed:
@@ -179,6 +180,11 @@ def generate(case, workflow, cells, config, progress=None):
             **PROFILES[workflow],
         )
         points, tets = np.asarray(native.points).copy(), np.asarray(native.tetrahedra).copy()
+        native_diagnostics = {
+            "meshers_evaluator": native.diagnostics.get("evaluator"),
+            "meshers_callback_calls": native.diagnostics.get("callback_calls"),
+            "meshers_field_preparation_s": native.diagnostics.get("preparation_seconds"),
+        }
         extraction_s = None
     else:
         raise ValueError(f"Unknown workflow {workflow}")
@@ -199,6 +205,7 @@ def generate(case, workflow, cells, config, progress=None):
             "field_samples_checked": sample_count,
             "vtk_version": pv.vtk_version_info,
             **cleanup,
+            **native_diagnostics,
         },
     )
 

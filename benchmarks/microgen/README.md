@@ -251,8 +251,11 @@ Before FEA, the runner checks positive volumes, duplicate cells, face conformity
 closed manifold boundary edges and vertex links, disconnected material contacts,
 and tetrahedral interior overlap. The overlap test uses a spatial broad phase
 and separating axes at a dimensionless tolerance of `1e-10`. Exceeding its pair
-cap is an incomplete check, never a pass. Very small determinants below `1e-15`
-are rejected. This floating-point implementation is not an exact-arithmetic
+cap is an incomplete check, never a pass. Numerical degeneracy uses a determinant
+cutoff of `1e-12` times each tetrahedron's longest edge cubed. Small, well-shaped
+tetrahedra remain valid. The cutoff and minimum relative determinant are retained
+in every validated result. The separately named seed-cleanup control keeps its
+explicit `1e-15 L³` deletion policy. This floating-point implementation is not an exact-arithmetic
 mesh certificate.
 
 Implicit-boundary vertices, edge midpoints and face centers give a sampled

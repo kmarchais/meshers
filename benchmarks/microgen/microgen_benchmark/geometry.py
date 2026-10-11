@@ -184,15 +184,23 @@ def validate(points, tets, case, max_pairs=2_000_000, target_points=None):
         raise ValueError("Mesh leaves the declared specimen box")
     vertices = x[tets]
     det = np.linalg.det(vertices[:, 1:] - vertices[:, :1])
-    if np.any(det <= 1e-15):
+    edge_sum = np.zeros(len(tets))
+    largest_edge2 = np.zeros(len(tets))
+    for a, b in EDGES:
+        length2 = np.sum((vertices[:, a] - vertices[:, b]) ** 2, axis=1)
+        edge_sum += length2
+        largest_edge2 = np.maximum(largest_edge2, length2)
+    # A small, well-shaped cell is not degenerate. Measure numerical collapse
+    # against that cell's longest edge, not the specimen's volume scale.
+    determinant_tolerance = 1e-12 * largest_edge2**1.5
+    if np.any(det <= determinant_tolerance):
         raise ValueError(
-            "Degenerate tetrahedron at the declared 1e-15 volume determinant tolerance"
+            "Degenerate tetrahedron at the declared cell-relative determinant tolerance"
         )
     surface = boundary(x, tets)
     hit, checked = overlapping_pair(vertices, max_pairs)
     if hit:
         raise ValueError(f"Tetrahedral interiors overlap: {hit}")
-    edge_sum = sum(np.sum((vertices[:, a] - vertices[:, b]) ** 2, axis=1) for a, b in EDGES)
     q = np.sqrt(432 * det**2 / edge_sum**3)
     metrics = {
         "tetrahedra": len(tets),
@@ -203,6 +211,8 @@ def validate(points, tets, case, max_pairs=2_000_000, target_points=None):
         "q_p05": float(np.percentile(q, 5)),
         "q_median": float(np.median(q)),
         "q_below_01": int((q < 0.1).sum()),
+        "minimum_cell_relative_determinant": float((det / largest_edge2**1.5).min()),
+        "cell_relative_determinant_tolerance": 1e-12,
         "overlap_pairs_checked": checked,
         "geometry_status": "checked-at-declared-tolerances",
     }

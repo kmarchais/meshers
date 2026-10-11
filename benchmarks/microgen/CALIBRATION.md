@@ -47,6 +47,13 @@ agree below `1e-6` relative. The AMG solve took 37.581 s versus 258.773 s for LU
 Patch and equilibrium checks remain mandatory. This makes finer-grid
 calibration affordable without changing the FEA problem.
 
+At grid 32, the short-budget trial passes all strict admission gates with each
+profile. All three have 96,060 tetrahedra. One pass takes 1.187 s with 4.574%
+energy error, two take 2.031 s with 4.562%, and four take 4.537 s with 4.551%.
+One pass is the measured cheapest candidate for the 5% target in this trial.
+The small FEA change does not justify spending four passes for this case and
+target. This does not establish that one pass suffices for other fields.
+
 ## Fast surfaces
 
 The public Microgen surface workflow and a separate Flying Edges control are
@@ -92,10 +99,29 @@ does not make those coarse meshes eligible for comparison. Native formatting,
 lint and all 49 release tests passed; the real Python suite passed 102 tests
 with one skip after correcting the scalar evaluator path.
 
+## Measured 2% target and validator correction
+
+One-pass Meshers at grid 80 passes the strict policy with 1,190,946 tetrahedra,
+minimum quality 0.1828 and 1.942% worst energy error. Generation took 11.211 s.
+The forward distance is `0.0001349 L`, reverse distance `0.00008669 L`, and
+volume error 0.0382% before empirical reference uncertainty. This remains a
+single calibration timing.
+
+The first MMG grid-80 output was rejected by an absolute `1e-15 L³` determinant
+cutoff. Inspection found 96 small, positive-volume cells with minimum MMG shape
+quality 0.1350. Those cells are valid. The validator now tests collapse relative
+to each cell's longest edge cubed, with a `1e-12` threshold, while retaining all
+topology, overlap, geometry and FEA quality gates. A saved MMG cell is tested at
+three sizes, with a collapsed version required to fail at each size. The
+original false rejection is retained in `gyroid-two-percent-initial.json` and
+must not be interpreted as an MMG defect. The corrected common-runner MMG
+measurement follows.
+
 ## Next measurements
 
-Measure short optimization budgets at grid 32, then choose the next FEA grid
-from those results. Measure the 2% target rather than extrapolating it from
-coarse meshes. Repeat selected qualifying configurations with warmups before
-making timing claims. Keep surface timing separate and include all failures in
-the report.
+The next trial uses grid 80 with one-pass Meshers and the cleaned MMG control,
+a two-million native tetrahedron budget, 60 million validation-pair cap and
+16 GiB worker RSS ceiling. It measures the 2% target rather than extrapolating
+it from coarse meshes. Repeat selected qualifying configurations with warmups
+before making timing claims. Keep surface timing separate and include all
+failures in the report.
