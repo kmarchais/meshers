@@ -179,6 +179,16 @@ budget comparisons.
   seed. Original failed VTK and MMG results remain visible under their own names.
 * `vtk-tetra-clean` merges nodes in normalized coordinate bins of width `1e-12`
   and discards tetrahedra with absolute determinant at most `1e-15 L³`.
+* `mmg-tetra-tagged` uses the same declared cleaned seed and marks the two wall
+  patches and six box planes with distinct MMG references. It lets MMG
+  retriangulate cap interiors rather than making all cap triangles required.
+  Reference interfaces preserve boundary features; independent box, boundary,
+  volume, topology and quality checks still decide admission. This optional
+  control is separate from `mmg-tetra-clean`, whose cap triangles stay required.
+  The binding adapter supplies explicit boundary triangle entities alongside
+  the volume cells before setting flags or references. Volume-only `mmgpy`
+  conversion initially has no triangle entities to constrain. Results retain
+  supplied boundary and cap counts, and the real cube tests check those counts.
   `mmg-tetra-clean` remeshes that cleaned seed. Both record merged-node counts,
   discarded-cell counts and discarded volume. They still undergo every independent
   topology, overlap and fidelity check. These four experimental controls require

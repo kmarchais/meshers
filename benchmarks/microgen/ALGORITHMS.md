@@ -76,6 +76,13 @@ constrains approximation to its reconstructed ideal boundary. It is not a promis
 of that distance to the original analytic Microgen field. The independent volume
 and two-direction boundary probes remain necessary after MMG remeshing.
 
+MMG's [boundary analysis](https://www.mmgtools.org/documentation/mmg3d/documentation_mmg3d_mesh_analysis.html)
+marks edges between different references as reference features. The optional
+tagged control therefore distinguishes wall patches and box planes while
+allowing cap retriangulation. Freezing every cap triangle can constrain the
+improvement of nearby cells. This is a control to measure, not a guarantee that
+MMG will meet the analytic-field or FEA targets.
+
 The [level-set workflow](https://mmgtools.org/tutorials/tutorials_mmg3d_implicit.html)
 starts from a background volume mesh carrying a sampled level set. It is a useful
 future control alongside the current VTK-to-MMG pipelines. It needs its own name,

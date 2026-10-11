@@ -66,7 +66,7 @@ def generate(case, workflow, cells, config, progress=None):
     import pyvista as pv
     from vtkmodules.vtkCommonCore import vtkSMPTools
 
-    if workflow in {"mmg", "mmg-tetra", "mmg-tetra-clean"}:
+    if workflow in {"mmg", "mmg-tetra", "mmg-tetra-clean", "mmg-tetra-tagged"}:
         import mmgpy
     elif workflow == "mmg-microgen":
         from microgen.remesh import remesh_keeping_boundaries_for_fem
@@ -82,7 +82,13 @@ def generate(case, workflow, cells, config, progress=None):
         raise ImportError("Microgen does not provide Tpms")
     progress(stage="Microgen field setup", failure_owner="Microgen")
     start = time.perf_counter()
-    tetra_seed = workflow in {"vtk-tetra", "mmg-tetra", "vtk-tetra-clean", "mmg-tetra-clean"}
+    tetra_seed = workflow in {
+        "vtk-tetra",
+        "mmg-tetra",
+        "vtk-tetra-clean",
+        "mmg-tetra-clean",
+        "mmg-tetra-tagged",
+    }
     explicit_field = workflow in PROFILES or tetra_seed
     shape = None if explicit_field else case.shape(cells)
     if explicit_field and case.function == "spinodoid":
@@ -116,7 +122,7 @@ def generate(case, workflow, cells, config, progress=None):
             ).triangulate()
         else:
             grid = case.volume_grid(shape, cells).triangulate()
-        if workflow.endswith("-clean"):
+        if workflow.endswith("-clean") or workflow == "mmg-tetra-tagged":
             seed_points, seed_tets = tetrahedra(grid)
             seed_points, seed_tets, cleanup = clean_tetrahedra(seed_points, seed_tets, case.scale)
             grid = pv.UnstructuredGrid(
@@ -125,20 +131,70 @@ def generate(case, workflow, cells, config, progress=None):
                 seed_points,
             )
         extraction_s = time.perf_counter() - start - (reporting_s - reporting_start)
-        if workflow in {"mmg", "mmg-tetra", "mmg-tetra-clean"}:
+        if workflow in {"mmg", "mmg-tetra", "mmg-tetra-clean", "mmg-tetra-tagged"}:
             progress(stage="MMG binding remeshing", failure_owner="MMG binding pipeline")
             # Standard MMG3D adaptation of Microgen's VTK tetrahedra.
             # The default protects physical box faces while allowing MMG to
             # improve the curved surface. A fully fixed surface is optional.
-            native = mmgpy.from_pyvista(grid)
-            triangles = np.asarray(native.get_triangles())
+            # Volume-only conversion has no triangle entities until MMG's
+            # analysis. Supply actual boundary triangles before attaching
+            # references or required flags; an empty list silently protects none.
+            poly = grid.extract_surface(
+                pass_pointid=True, algorithm="dataset_surface"
+            ).triangulate()
+            original = np.asarray(poly.point_data["vtkOriginalPointIds"])
+            triangles = original[poly.faces.reshape(-1, 4)[:, 1:]].astype(np.int32)
+            mixed = pv.UnstructuredGrid(
+                np.concatenate([grid.cells, np.c_[np.full(len(triangles), 3), triangles].ravel()]),
+                np.concatenate(
+                    [
+                        grid.celltypes,
+                        np.full(len(triangles), pv.CellType.TRIANGLE, dtype=np.uint8),
+                    ]
+                ),
+                grid.points,
+            )
+            # Mixed input allocates triangle storage in MMG before setting it.
+            native = mmgpy.from_pyvista(mixed)
+            if len(native.get_triangles()) != len(triangles) or not len(triangles):
+                raise ValueError("MMG boundary triangle entities were not supplied")
             coordinates = np.asarray(grid.points)[triangles] / case.scale
             caps = np.any(
                 np.all(np.isclose(coordinates, 0.5, atol=1e-9, rtol=0), axis=1)
                 | np.all(np.isclose(coordinates, -0.5, atol=1e-9, rtol=0), axis=1),
                 axis=1,
             )
-            native.set_required_triangles(np.flatnonzero(caps).astype(np.int32))
+            cleanup["mmg_boundary_triangles_supplied"] = len(triangles)
+            cleanup["mmg_cap_triangles_supplied"] = int(caps.sum())
+            if workflow == "mmg-tetra-tagged":
+                # Distinct boundary patches preserve their interfaces while
+                # allowing MMG to retriangulate the planar cap interiors.
+                samples = np.asarray(grid.points)[triangles].mean(axis=1)
+                value = case.field(*samples.T)
+                refs = np.where(
+                    np.abs(value - case.band[0]) < np.abs(value - case.band[1]), 1, 2
+                ).astype(np.int64)
+                for axis in range(3):
+                    for side, reference in [(-0.5, 3 + 2 * axis), (0.5, 4 + 2 * axis)]:
+                        cap_patch = np.all(
+                            np.isclose(coordinates[:, :, axis], side, atol=1e-9, rtol=0),
+                            axis=1,
+                        )
+                        refs[cap_patch] = reference
+                native.set_triangles(triangles, refs)
+                cleanup.update(
+                    mmg_boundary_policy="tagged wall and box patches",
+                    mmg_boundary_patch_counts={
+                        str(ref): int((refs == ref).sum()) for ref in np.unique(refs)
+                    },
+                    mmg_required_cap_triangles=0,
+                )
+            else:
+                native.set_required_triangles(np.flatnonzero(caps).astype(np.int32))
+                cleanup.update(
+                    mmg_boundary_policy="required box cap triangles",
+                    mmg_required_cap_triangles=int(caps.sum()),
+                )
             native.remesh(
                 hsiz=case.scale / cells,
                 hausd=config["geometry_tolerance"] * case.scale,

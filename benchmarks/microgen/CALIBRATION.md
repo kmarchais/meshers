@@ -20,6 +20,12 @@ are not global certificates. Passing the volume test alone is insufficient.
 
 ## Initial Gyroid calibration
 
+The early binding runs below requested cap protection but supplied no boundary
+triangle entities to MMG. Their actual mode was free surface adaptation. The
+independent geometry checks still apply to their returned meshes, but their
+times must not be described as measurements of the corrected cap-protected
+pipeline. The boundary-entity correction and fresh controls are described below.
+
 The runs below used one thread, one repeat and no warmup. Their generation times
 are calibration samples, not stable performance claims. The local output
 folders retain exact source snapshots, dependency hashes, meshes and all 24 FEA
@@ -115,7 +121,27 @@ topology, overlap, geometry and FEA quality gates. A saved MMG cell is tested at
 three sizes, with a collapsed version required to fail at each size. The
 original false rejection is retained in `gyroid-two-percent-initial.json` and
 must not be interpreted as an MMG defect. The corrected common-runner MMG
-measurement follows.
+measurement is retained in `gyroid-two-percent-mmg.json`. It reaches 1.770%
+energy error in 1,139,944 tetrahedra, but 739 cells fall below quality 0.1 and
+some wall normals disagree with the analytic field. It remains a geometry
+warning and cannot qualify for the FEA target. Its 109.088 s generation time
+is retained without a speed claim.
+
+The next MMG control distinguishes wall patches and physical box planes with
+references, allowing cap interiors to be retriangulated. It retains the same
+cleaned seed and all independent admission gates. Its first trial uses grid 32
+before another expensive fine-grid run.
+
+The boundary-entity regression exposed an adapter error in the early binding
+controls. `mmgpy`'s volume-only conversion has no triangles until MMG analyzes
+the mesh. Calling the required-triangle API or assigning references to that
+empty list changes nothing. The corrected adapter extracts actual boundary
+triangles, maps their point IDs back to the volume, and supplies a mixed
+tetrahedron/triangle grid so MMG allocates both entity types. It verifies the
+supplied count and records actual cap counts. The cube integration tests now
+require nonempty cap constraints and all six distinct references in the tagged
+control. An initial grid-32 tagged trial was stopped when this check failed;
+its local output remains marked interrupted, and it provides no tagged result.
 
 ## Next measurements
 

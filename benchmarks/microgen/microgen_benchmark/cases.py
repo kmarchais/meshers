@@ -242,6 +242,7 @@ WORKFLOWS = [
     "mmg-tetra",
     "vtk-tetra-clean",
     "mmg-tetra-clean",
+    "mmg-tetra-tagged",
     *PROFILES,
 ]
 

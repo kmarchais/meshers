@@ -25,6 +25,12 @@ def test_real_backend_cube_pipeline(workflow):
     assert np.isclose(geometry["volume"], 1)
     assert fea["patch_max_error"] < 1e-8
     assert timing["mesh_s"] > 0
+    if workflow == "mmg-tetra-tagged":
+        assert set(timing["mmg_boundary_patch_counts"]) == set(map(str, range(3, 9)))
+        assert timing["mmg_required_cap_triangles"] == 0
+        assert geometry["q_min"] >= 0.1
+    if workflow in {"mmg", "mmg-tetra", "mmg-tetra-clean"}:
+        assert timing["mmg_required_cap_triangles"] > 0
 
 
 @pytest.mark.parametrize("case", CASES, ids=lambda c: c.id)
