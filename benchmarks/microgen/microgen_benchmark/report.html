@@ -521,7 +521,9 @@
       const surfaceMode = cfg.purpose === "surface",
         geometryMode = cfg.purpose === "geometry" || surfaceMode,
         accuracyLabel = geometryMode ? "Relative volume error" : "Worst FEA energy error",
-        countLabel = surfaceMode ? "Triangles" : "Tetrahedra";
+        countLabel = surfaceMode ? "Triangles" : "Tetrahedra",
+        qualityKey = surfaceMode ? "surface_shape_min" : "q_min",
+        qualityLabel = surfaceMode ? "Triangle shape" : "Min q";
       document.querySelector("h1").textContent = geometryMode ? "Generation speed and geometry fidelity" : "Generation speed and low-error FEA";
 
       const colors = {
@@ -529,6 +531,8 @@
         mmg: "#ce731e",
         "vtk-tetra": "#4a6877",
         "mmg-tetra": "#9b592b",
+        "vtk-tetra-clean": "#6c707d",
+        "mmg-tetra-clean": "#b55e52",
         "mmg-microgen": "#b54353",
         "meshers-fast": "#6c5ce7",
         "meshers-balanced": "#2477bd",
@@ -539,6 +543,8 @@
         mmg: "VTK + MMG binding",
         "vtk-tetra": "VTK · tetrahedral background clipping",
         "mmg-tetra": "VTK tetrahedral clipping + MMG",
+        "vtk-tetra-clean": "VTK tetrahedral clipping + cleanup",
+        "mmg-tetra-clean": "VTK tetrahedral clipping + cleanup + MMG",
         "mmg-microgen": "Microgen MMG · two passes",
         "meshers-fast": "Meshers · 0 passes",
         "meshers-balanced": "Meshers · 4 passes",
@@ -621,9 +627,9 @@
               nodes: rows.filter((r) => r.nodes).length
                 ? Math.max(...rows.filter((r) => r.nodes).map((r) => r.nodes))
                 : null,
-              q: rows.filter((r) => r.q_min != null).length
+              q: rows.filter((r) => r[qualityKey] != null).length
                 ? Math.min(
-                    ...rows.filter((r) => r.q_min != null).map((r) => r.q_min),
+                    ...rows.filter((r) => r[qualityKey] != null).map((r) => r[qualityKey]),
                   )
                 : null,
               error: measuredErrors.length
@@ -671,7 +677,7 @@
           const why = g.eligible
             ? "Admissible across all measured repeats"
             : "Diagnostic only. " + reasons(g).join("; ");
-          info.textContent = `${names[g.w]}, ${g.n} intervals. Generation ${num(g.time)} s; ${num(g.count)} ${countLabel.toLowerCase()}; ${accuracyLabel.toLowerCase()} ${pct(g.error)}; min q ${num(g.q)}. ${why}`;
+          info.textContent = `${names[g.w]}, ${g.n} intervals. Generation ${num(g.time)} s; ${num(g.count)} ${countLabel.toLowerCase()}; ${accuracyLabel.toLowerCase()} ${pct(g.error)}; ${qualityLabel.toLowerCase()} ${num(g.q)}. ${why}`;
           section
             .querySelectorAll("tr.selected")
             .forEach((r) => r.classList.remove("selected"));
@@ -878,7 +884,7 @@
             ? "Fewer is only better at comparable accuracy"
             : key === "q" ? "Higher is better" : "Lower is better";
         const title = `${note}. Observed range ${format(scale.lo)} to ${format(scale.hi)} at ${g.n} intervals, including diagnostic results. ${g.eligible ? "Admissible." : "Diagnostic only; excluded from claims."}`;
-        return `<td class="heat" data-metric="${key}" data-value="${value}" style="background:${scale.background}" title="${esc(title)}">${format(value)}${key === "time" ? `<small>[${num(g.lo)}, ${num(g.hi)}] s</small>` : ""}${scale.label ? `<small class="heat-note">${scale.label}</small>` : ""}${key === "q" ? `<small class="${value < cfg.minimum_quality ? "gate-fail" : ""}">${value < cfg.minimum_quality ? "Below target" : "Meets target"}, q ≥ ${num(cfg.minimum_quality)}</small>` : ""}${!g.eligible ? "<small class=heat-note>Diagnostic only</small>" : ""}</td>`;
+        return `<td class="heat" data-metric="${key}" data-value="${value}" style="background:${scale.background}" title="${esc(title)}">${format(value)}${key === "time" ? `<small>[${num(g.lo)}, ${num(g.hi)}] s</small>` : ""}${scale.label ? `<small class="heat-note">${scale.label}</small>` : ""}${key === "q" && !geometryMode ? `<small class="${value < cfg.minimum_quality ? "gate-fail" : ""}">${value < cfg.minimum_quality ? "Below target" : "Meets target"}, q ≥ ${num(cfg.minimum_quality)}</small>` : ""}${!g.eligible ? "<small class=heat-note>Diagnostic only</small>" : ""}</td>`;
       }
       function resultRows(gs) {
         return gs
@@ -1032,10 +1038,10 @@
             const r = rows
               .filter((r) => r.workflow === w && r.preview)
               .sort((a, b) => b.cells - a.cells)[0];
-            return `<div class="mesh-card"><b>${esc(names[w])}</b>${r ? `<canvas data-mesh="${esc(r.artifact)}" aria-label="${esc(c.name + " " + names[w] + " mesh")}" title="Drag to rotate"></canvas><small>n=${r.cells} · ${num(r.tetrahedra)} tets · ${esc(r.status)}<br>Surface simplified for display. Drag to rotate.</small>` : '<div class="empty-preview">No retained validated surface</div><small>See status and logs below.</small>'}</div>`;
+            return `<div class="mesh-card"><b>${esc(names[w])}</b>${r ? `<canvas data-mesh="${esc(r.artifact)}" aria-label="${esc(c.name + " " + names[w] + " mesh")}" title="Drag to rotate"></canvas><small>n=${r.cells} · ${num(surfaceMode ? r.triangles : r.tetrahedra)} ${countLabel.toLowerCase()} · ${esc(r.status)}<br>Surface simplified for display. Drag to rotate.</small>` : '<div class="empty-preview">No retained validated surface</div><small>See status and logs below.</small>'}</div>`;
           })
           .join("");
-        section.innerHTML = `<div class="case-header"><div><div class="eyebrow">${esc(c.id)}</div><h2>${esc(c.name)}</h2><p>${esc(c.description)}</p></div><span class="badge">${rows.length}/${cfg.cells.length * cfg.workflows.length * cfg.repeats} measured runs</span></div><div class="formula">${esc(c.formula)}<br>X = 2πx/L, Y = 2πy/L, Z = 2πz/L · cube [−L/2, L/2]³ · L=${c.scale}<br>${["bcc_lattice", "spinodoid"].includes(c.function) ? "Implicit solid: signed field ≤ 0. The lower Meshers band value −1 is inactive." : `Sheet: |f| ≤ width(x)/2 · width(x)=${c.offset}${c.grading ? " × (1 + " + c.grading + " x/L)" : ""}${c.function === "solid" ? " · full cube" : ""}`}</div><div class="previews">${previews}</div><div class="legend">${cfg.workflows.map((w) => `<span><i class="dot" style="background:${colors[w]}"></i>${esc(names[w])}</span>`).join("")}</div><div class="charts"><div class="chart"><h3>Generation time versus ${accuracyLabel}</h3>${chart(gs, "time", "Generation seconds")}</div><div class="chart"><h3>Elements versus ${accuracyLabel}</h3>${chart(gs, "count", countLabel)}</div></div><div class="heat-key"><b>Better</b><span class="colorbar" aria-label="Green through yellow to red"></span><b>Worse</b><p>Each metric uses its own linear range across available workflows at the same intervals. Green is the best observed value, red the worst; a column with no variation has a neutral fill. Diagnostic results keep their colors and labels, but stay excluded from claims. Hover a value for its range.</p><p>↓ Lower time and FEA error are better. ↑ Higher q is better. ↓* Fewer tets or nodes only helps at comparable FEA accuracy. A red q badge marks the quality gate independently of the colormap.</p></div><div class="table-wrap" role="region" aria-label="Measurements, scroll horizontally on narrow screens" tabindex="0"><table class="results-table"><thead><tr><th>Workflow / intervals</th><th>Time ↓ median [min, max] s</th><th>Max ${countLabel.toLowerCase()} ↓*</th><th>Max nodes ↓*</th><th>Min q ↑</th><th>${accuracyLabel} ↓</th><th>Status</th></tr></thead><tbody>${resultRows(gs)}</tbody></table></div><p class="muted">Colors describe the observed column values, not overall mesh qualification. Use the admissible matched-budget and error-target comparisons below to judge tradeoffs. On narrow screens, scroll the table horizontally; workflow names stay visible.</p><details open><summary>Compare at matched budgets and error targets</summary>${comparisons(gs)}${geometryMode ? "" : targets(gs)}${applicationTargets(c.id)}</details><details><summary>Individual repetitions, geometry diagnostics and all 18 load errors</summary>${rows.map((r) => `<details><summary>${esc(names[r.workflow])} n${r.cells}, repeat ${r.repeat + 1}: ${esc(r.status)}</summary><p><a href="${artifact(r, "worker.log")}">Full log</a> · <a href="${artifact(r, "request.json")}">Input</a>${r.mesh_sha256 ? ' · <a href="' + artifact(r, "mesh.npz") + '">Mesh arrays</a>' : ""}${r.fields_sha256 ? ' · <a href="' + artifact(r, "fields.npz") + '">Solved fields</a>' : ""}</p><pre>${esc(JSON.stringify(Object.fromEntries(Object.entries(r).filter(([k]) => k !== "preview")), null, 2))}</pre></details>`).join("")}</details>${failures.length ? `<details open><summary>${failures.length} retained failures</summary>${failures.map((r) => `<div class="failure"><b>${esc(names[r.workflow])} n${r.cells}, repeat ${r.repeat + 1}</b><p>${esc(r.failure_owner || owner(r))} · ${esc(r.stage)}: ${esc(r.error)}</p><a href="${artifact(r, "worker.log")}">Full worker log</a></div>`).join("")}</details>` : ""}`;
+        section.innerHTML = `<div class="case-header"><div><div class="eyebrow">${esc(c.id)}</div><h2>${esc(c.name)}</h2><p>${esc(c.description)}</p></div><span class="badge">${rows.length}/${cfg.cells.length * cfg.workflows.length * cfg.repeats} measured runs</span></div><div class="formula">${esc(c.formula)}<br>X = 2πx/L, Y = 2πy/L, Z = 2πz/L · cube [−L/2, L/2]³ · L=${c.scale}<br>${["bcc_lattice", "spinodoid"].includes(c.function) ? "Implicit solid: signed field ≤ 0. The lower Meshers band value −1 is inactive." : `Sheet: |f| ≤ width(x)/2 · width(x)=${c.offset}${c.grading ? " × (1 + " + c.grading + " x/L)" : ""}${c.function === "solid" ? " · full cube" : ""}`}</div><div class="previews">${previews}</div><div class="legend">${cfg.workflows.map((w) => `<span><i class="dot" style="background:${colors[w]}"></i>${esc(names[w])}</span>`).join("")}</div><div class="charts"><div class="chart"><h3>Generation time versus ${accuracyLabel}</h3>${chart(gs, "time", "Generation seconds")}</div><div class="chart"><h3>Elements versus ${accuracyLabel}</h3>${chart(gs, "count", countLabel)}</div></div><div class="heat-key"><b>Better</b><span class="colorbar" aria-label="Green through yellow to red"></span><b>Worse</b><p>Each metric uses its own linear range across available workflows at the same intervals. Green is the best observed value, red the worst; a column with no variation has a neutral fill. Diagnostic results keep their colors and labels, but stay excluded from claims. Hover a value for its range.</p><p>↓ Lower time and error are better. ↑ Higher shape quality is better. ↓* Fewer elements or nodes only helps at comparable accuracy. Shape quality is diagnostic in geometry modes; the FEA quality gate has its own badge.</p></div><div class="table-wrap" role="region" aria-label="Measurements, scroll horizontally on narrow screens" tabindex="0"><table class="results-table"><thead><tr><th>Workflow / intervals</th><th>Time ↓ median [min, max] s</th><th>Max ${countLabel.toLowerCase()} ↓*</th><th>Max nodes ↓*</th><th>${qualityLabel} ↑</th><th>${accuracyLabel} ↓</th><th>Status</th></tr></thead><tbody>${resultRows(gs)}</tbody></table></div><p class="muted">Colors describe the observed column values, not overall mesh qualification. Use the admissible matched-budget and error-target comparisons below to judge tradeoffs. On narrow screens, scroll the table horizontally; workflow names stay visible.</p><details open><summary>Compare at matched budgets and error targets</summary>${comparisons(gs)}${geometryMode ? "" : targets(gs)}${applicationTargets(c.id)}</details><details><summary>Individual repetitions, geometry diagnostics and all 18 load errors</summary>${rows.map((r) => `<details><summary>${esc(names[r.workflow])} n${r.cells}, repeat ${r.repeat + 1}: ${esc(r.status)}</summary><p><a href="${artifact(r, "worker.log")}">Full log</a> · <a href="${artifact(r, "request.json")}">Input</a>${r.mesh_sha256 ? ' · <a href="' + artifact(r, "mesh.npz") + '">Mesh arrays</a>' : ""}${r.fields_sha256 ? ' · <a href="' + artifact(r, "fields.npz") + '">Solved fields</a>' : ""}</p><pre>${esc(JSON.stringify(Object.fromEntries(Object.entries(r).filter(([k]) => k !== "preview")), null, 2))}</pre></details>`).join("")}</details>${failures.length ? `<details open><summary>${failures.length} retained failures</summary>${failures.map((r) => `<div class="failure"><b>${esc(names[r.workflow])} n${r.cells}, repeat ${r.repeat + 1}</b><p>${esc(r.failure_owner || owner(r))} · ${esc(r.stage)}: ${esc(r.error)}</p><a href="${artifact(r, "worker.log")}">Full worker log</a></div>`).join("")}</details>` : ""}`;
         document.getElementById("cases").append(section);
         section
           .querySelectorAll(".interactive-chart")

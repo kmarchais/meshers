@@ -213,14 +213,16 @@ def validate(points, tets, case, max_pairs=2_000_000, target_points=None):
 def geometry_metrics(points, surface, case, target_points=None):
     metrics = {}
     x = points / case.scale
+    triangles = points[surface]
+    normalized = triangles / case.scale
+    positive_caps = np.all(np.isclose(normalized, 0.5, atol=1e-9, rtol=0), axis=1)
+    negative_caps = np.all(np.isclose(normalized, -0.5, atol=1e-9, rtol=0), axis=1)
+    cap = np.any(positive_caps | negative_caps, axis=1)
+    normals = np.cross(normalized[:, 1] - normalized[:, 0], normalized[:, 2] - normalized[:, 0])
+    cap_normal = positive_caps.astype(float) - negative_caps.astype(float)
+    outward = bool(np.all(np.einsum("ij,ij->i", normals[cap], cap_normal[cap]) > 0))
+    metrics["sampled_cap_overshoot"] = 0.0
     if case.function != "solid":
-        triangles = points[surface]
-        normalized = triangles / case.scale
-        cap = np.any(
-            np.all(np.isclose(normalized, 0.5, atol=1e-9), axis=1)
-            | np.all(np.isclose(normalized, -0.5, atol=1e-9), axis=1),
-            axis=1,
-        )
         walls = triangles[~cap]
         sample = np.concatenate(
             [
@@ -242,14 +244,50 @@ def geometry_metrics(points, surface, case, target_points=None):
                     / (2e-6 * case.scale)
                 )
             size = np.linalg.norm(np.array(gradient).T, axis=1)
+            center_slice = slice(3 * len(walls), 4 * len(walls))
+            center_values = value[center_slice]
+            upper = np.abs(center_values - case.band[1]) < np.abs(center_values - case.band[0])
+            direction = np.array(gradient).T[center_slice] * np.where(upper, 1, -1)[:, None]
+            outward &= bool(np.all(np.einsum("ij,ij->i", normals[~cap], direction) > 0))
             if np.any(size < 1e-12 / case.scale):
                 metrics["sampled_geometry_distance"] = None
             else:
                 residual = np.minimum(np.abs(value - case.band[0]), np.abs(value - case.band[1]))
                 distance = residual / size / case.scale
                 metrics["sampled_geometry_distance"] = float(distance.max())
+        if cap.any():
+            caps = triangles[cap]
+            cap_samples = np.concatenate(
+                [
+                    caps.reshape(-1, 3),
+                    caps.mean(axis=1),
+                    (caps[:, 0] + caps[:, 1]) / 2,
+                    (caps[:, 1] + caps[:, 2]) / 2,
+                    (caps[:, 2] + caps[:, 0]) / 2,
+                ]
+            )
+            values = case.field(*cap_samples.T)
+            overshoot = np.maximum(np.maximum(case.band[0] - values, values - case.band[1]), 0)
+            outside = overshoot > 0
+            if outside.any():
+                sample = cap_samples[outside]
+                gradients = []
+                for axis in range(3):
+                    shift = np.zeros(3)
+                    shift[axis] = case.scale * 1e-6
+                    gradients.append(
+                        (case.field(*(sample + shift).T) - case.field(*(sample - shift).T))
+                        / (2e-6 * case.scale)
+                    )
+                size = np.linalg.norm(np.array(gradients).T, axis=1)
+                metrics["sampled_cap_overshoot"] = (
+                    None
+                    if np.any(size < 1e-12 / case.scale)
+                    else float((overshoot[outside] / size / case.scale).max())
+                )
     else:
         metrics["sampled_geometry_distance"] = 0.0
+    metrics["sampled_outward_orientation"] = outward
     if target_points is not None:
         import pyvista as pv
 

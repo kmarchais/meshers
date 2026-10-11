@@ -51,7 +51,9 @@ the empirical spread of four independently scrambled Sobol estimates and a
 nested-sample change. This uncertainty estimate is not a confidence bound.
 Analytic grid-edge roots and material points on the box faces provide a fixed
 target-to-mesh probe. Wall vertices, edge midpoints and face centers provide the
-mesh-to-field probe. Small features between probe points can still be missed;
+mesh-to-field probe. Cap samples must stay inside the intended material band,
+and triangle normals must agree with the outward box or field direction.
+Small features between probe points can still be missed;
 these checks do not certify Hausdorff distance.
 
 FEA targets are 1%, 2% and 5% worst relative energy error. `--fea-target` defaults
@@ -157,6 +159,12 @@ budget comparisons.
   an additional control for extraction order, not Microgen's current volume
   workflow. `mmg-tetra` applies the same one-pass MMG binding policy to that
   seed. Original failed VTK and MMG results remain visible under their own names.
+* `vtk-tetra-clean` merges nodes in normalized coordinate bins of width `1e-12`
+  and discards tetrahedra with absolute determinant at most `1e-15 L³`.
+  `mmg-tetra-clean` remeshes that cleaned seed. Both record merged-node counts,
+  discarded-cell counts and discarded volume. They still undergo every independent
+  topology, overlap and fidelity check. These four experimental controls require
+  an explicit `--workflows` selection and do not change the default six workflows.
 * `mmg` converts those VTK tetrahedra to MMG3D through mmgpy, runs one volume
   adaptation pass with `hsiz=L/cells` and `hgrad=1.3`, then converts back. Box-cap
   triangles stay fixed; MMG can adapt the curved boundary. This portable binding workflow is distinct from
@@ -274,13 +282,23 @@ and file writing are excluded. Assembly, solve and error-evaluation times are
 saved separately. These timings measure the declared Python API workflow, not
 only its native kernel or a whole Microgen application.
 
+The standard suite uses PyAMG smoothed aggregation with six rigid-body candidate
+modes and conjugate gradients at relative tolerance `1e-11`. Nonconvergence fails
+the worker. The smoke suite uses sparse direct LU. Select either with
+`--linear-solver direct` or `--linear-solver amg`; both solve the same 24 right-hand
+sides and run the same patch, equilibrium and energy checks. The solver is common
+to every meshing workflow and its time is excluded from meshing time.
+
 `manifest.json` records machine details, configuration, package versions,
 Meshers/MMG native-binary SHA-256 hashes, benchmark source hashes and the git
 commit. `results.json` records a hash of that manifest and each completed mesh
 and field archive. A research build with the same version number can still
 differ; compare the binary hashes before combining results. No run is resumed
 implicitly and an existing nonempty output directory is never overwritten.
-The runner stops if its benchmark source files change during the run.
+The runner stops if its benchmark source files change during the run. Each output
+also retains the exact package source, `pyproject.toml` and `uv.lock` under `source/`,
+with SHA-256 hashes. Run that snapshot with `uv run --project <output>/source --locked
+microgen-benchmark ...` to reproduce an experiment made before the next commit.
 
 Examples:
 

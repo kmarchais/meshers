@@ -10,9 +10,9 @@ import time
 import numpy as np
 from scipy import linalg, sparse
 from scipy.sparse.csgraph import connected_components
-from scipy.sparse.linalg import splu
 
 from .geometry import EDGES
+from .linear_solve import solve_system
 
 LAM = 0.3 / (1.3 * 0.4)
 MU = 1 / 2.6
@@ -95,7 +95,9 @@ def worst_error(error, reference):
     return float(np.sqrt(max(0, eigenvalues[-1]))), eigenvectors[:, -1]
 
 
-def solve(points, tets, surface, scale, ordering="MMD_AT_PLUS_A"):
+def solve(
+    points, tets, surface, scale, ordering="MMD_AT_PLUS_A", linear_solver="direct", checkpoint=None
+):
     start = time.perf_counter()
     x = points / scale
     vertices = x[tets]
@@ -157,8 +159,9 @@ def solve(points, tets, surface, scale, ordering="MMD_AT_PLUS_A"):
     rhs = f[free] - k[free][:, pins] @ u[pins]
     assembly_s = time.perf_counter() - start
     start = time.perf_counter()
-    factor = splu(k[free][:, free], permc_spec=ordering)
-    u[free] = factor.solve(rhs)
+    u[free], solver_metrics = solve_system(
+        k[free][:, free], rhs, x, free, linear_solver, ordering, checkpoint
+    )
     residual = k[free] @ u - f[free]
     relative_residual = np.linalg.norm(residual, axis=0) / np.maximum(
         np.linalg.norm(rhs, axis=0), 1e-30
@@ -196,8 +199,7 @@ def solve(points, tets, surface, scale, ordering="MMD_AT_PLUS_A"):
         "solve_s": solve_s,
         "evaluation_s": time.perf_counter() - start,
         "worst_combination": combination.tolist(),
-        "solver_ordering": ordering,
-        "factor_nonzeros": factor.L.nnz + factor.U.nnz,
+        **solver_metrics,
     }
     return metrics, {
         "displacements": fields,

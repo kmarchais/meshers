@@ -1,6 +1,7 @@
 import itertools
 
 import numpy as np
+import pytest
 
 from microgen_benchmark.cases import CASES
 from microgen_benchmark.elasticity import solve, worst_error
@@ -53,6 +54,22 @@ def test_sparse_ordering_does_not_change_solution_or_energy():
     assert np.isclose(a["worst_energy_error"], b["worst_energy_error"], rtol=1e-10)
     assert np.allclose(fa["displacements"], fb["displacements"], atol=1e-10)
     assert np.allclose(fa["error_energy"], fb["error_energy"], atol=1e-10)
+
+
+@pytest.mark.parametrize("components", [1, 2])
+def test_amg_matches_direct_including_disconnected_material(components):
+    p, t = cube(3)
+    if components == 2:
+        t = np.vstack([t, t + len(p)])
+        p = np.vstack([p, p + [2, 0, 0]])
+    surface = boundary(p, t)
+    direct, reference = solve(p, t, surface, 1)
+    amg, iterative = solve(p, t, surface, 1, linear_solver="amg")
+    assert amg["patch_max_error"] < 1e-8
+    assert amg["free_residual"] < 1e-9
+    assert np.allclose(reference["displacements"], iterative["displacements"], atol=1e-8)
+    assert np.allclose(reference["error_energy"], iterative["error_energy"], atol=1e-8)
+    assert np.isclose(direct["worst_energy_error"], amg["worst_energy_error"], rtol=1e-9)
 
 
 def test_worst_combination_is_basis_invariant():

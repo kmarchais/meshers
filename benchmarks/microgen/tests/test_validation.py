@@ -81,3 +81,29 @@ def test_saved_vtk_gyroid_adjacent_overlap_is_rejected():
     with pytest.raises(ValueError, match="same side"):
         boundary(p, t)
     assert overlapping_pair(p[t])[0] == [0, 1]
+
+
+def test_cap_material_and_outward_normals_are_checked():
+    from types import SimpleNamespace
+
+    from microgen_benchmark.geometry import geometry_metrics
+
+    case = SimpleNamespace(scale=1, function="plane", band=(-0.1, 0.1), field=lambda x, y, z: x)
+    points = np.array([[0, 0, 0.5], [0.2, 0, 0.5], [0, 0.2, 0.5]])
+    outward = geometry_metrics(points, np.array([[0, 1, 2]]), case)
+    assert outward["sampled_outward_orientation"]
+    assert np.isclose(outward["sampled_cap_overshoot"], 0.1)
+    inward = geometry_metrics(points, np.array([[0, 2, 1]]), case)
+    assert not inward["sampled_outward_orientation"]
+
+
+def test_cleanup_cannot_hide_a_positive_volume_overlap():
+    from microgen_benchmark.backends import clean_tetrahedra
+
+    points = np.vstack([tet(), tet() + 0.02, tet()[0]])
+    cells = np.array([[0, 1, 2, 3], [4, 5, 6, 7], [0, 8, 1, 2]])
+    points, cells, diagnostics = clean_tetrahedra(points, cells, 1)
+    assert diagnostics["cleanup_merged_nodes"] == 1
+    assert diagnostics["cleanup_discarded_cells"] == 1
+    assert diagnostics["cleanup_discarded_abs_volume_over_L3"] == 0
+    assert overlapping_pair(points[cells])[0] == [0, 1]

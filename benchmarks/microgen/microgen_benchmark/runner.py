@@ -7,6 +7,7 @@ import json
 import math
 import os
 import platform
+import shutil
 import subprocess
 import sys
 import threading
@@ -15,7 +16,7 @@ import traceback
 from datetime import datetime, timezone
 from pathlib import Path
 
-from .cases import CASES, WORKFLOWS, Case
+from .cases import CASES, DEFAULT_WORKFLOWS, WORKFLOWS, Case
 from .qualification import admission, summarize
 
 
@@ -55,6 +56,7 @@ def failure_catalog(document):
                     f" --purpose {config.get('purpose', 'fea')} --fea-target {config.get('fea_target', 0.05)}"
                     f" --error-targets {','.join(map(str, config.get('error_targets', [0.01, 0.02, 0.05])))}"
                     f" --memory-limit-mib {config.get('memory_limit_mib', 8192)}"
+                    f" --linear-solver {config.get('linear_solver', 'direct')}"
                 ),
             }
         )
@@ -72,6 +74,23 @@ def verify_sources(expected):
     for name, sha in expected.items():
         if digest(root / name) != sha:
             raise RuntimeError(f"Benchmark source changed during the run: {name}")
+
+
+def snapshot_sources(output, expected):
+    """Retain the exact runner and lockfile, including uncommitted experiments."""
+    root = Path(__file__).parent
+    destination = output / "source" / root.name
+    destination.mkdir(parents=True)
+    for name, sha in expected.items():
+        shutil.copy2(root / name, destination / name)
+        if digest(destination / name) != sha:
+            raise RuntimeError(f"Source snapshot hash disagrees: {name}")
+    dependencies = {}
+    for name in ["pyproject.toml", "uv.lock", ".python-version"]:
+        path = root.parent / name
+        shutil.copy2(path, destination.parent / name)
+        dependencies[name] = digest(path)
+    return dependencies
 
 
 def worker(request_path):
@@ -158,7 +177,14 @@ def worker(request_path):
             if request["config"].get("purpose", "fea") == "fea":
                 checkpoint(stage="elasticity", failure_owner="Benchmark FEA solver")
                 print("Solving 18 quadratic fields and six affine patch tests", flush=True)
-                fea, fields = solve(points, tets, surface, case.scale)
+                fea, fields = solve(
+                    points,
+                    tets,
+                    surface,
+                    case.scale,
+                    linear_solver=request["config"].get("linear_solver", "direct"),
+                    checkpoint=checkpoint,
+                )
                 result.update(fea)
                 np.savez_compressed(out / "fields.npz", **fields)
                 result["fields_sha256"] = digest(out / "fields.npz")
@@ -357,7 +383,17 @@ def provenance(config):
     import psutil
 
     packages = {}
-    for name in ["meshers", "microgen", "mmgpy", "vtk", "pyvista", "numpy", "scipy", "psutil"]:
+    for name in [
+        "meshers",
+        "microgen",
+        "mmgpy",
+        "vtk",
+        "pyvista",
+        "numpy",
+        "scipy",
+        "psutil",
+        "pyamg",
+    ]:
         try:
             distribution = importlib.metadata.distribution(name)
             binary_hashes = {
@@ -399,16 +435,21 @@ def main():
     )
     parser.add_argument("--suite", choices=["smoke", "standard"], default="standard")
     parser.add_argument("--purpose", choices=["fea", "geometry", "surface"], default="fea")
+    parser.add_argument(
+        "--linear-solver",
+        choices=["direct", "amg"],
+        help="Smoke: direct; standard: AMG-preconditioned CG",
+    )
     parser.add_argument("--output", type=Path)
     parser.add_argument("--cases", default=",".join(c.id for c in CASES))
-    parser.add_argument("--workflows", default=",".join(WORKFLOWS))
+    parser.add_argument("--workflows", default=",".join(DEFAULT_WORKFLOWS))
     parser.add_argument(
         "--cells", help="Comma-separated interval counts, default smoke 8, standard 16,24,36,54"
     )
     parser.add_argument("--repeats", type=int)
     parser.add_argument("--warmups", type=int)
     parser.add_argument("--threads", type=int, default=1)
-    parser.add_argument("--timeout", type=float, help="Seconds per worker: smoke 60, standard 300")
+    parser.add_argument("--timeout", type=float, help="Seconds per worker: smoke 60, standard 1800")
     parser.add_argument(
         "--geometry-tolerance", type=float, help="Boundary distance / L: smoke .01, standard .002"
     )
@@ -537,6 +578,7 @@ def main():
         "error_targets": sorted(error_targets),
         "fea_target": args.fea_target,
         "purpose": args.purpose,
+        "linear_solver": args.linear_solver or ("direct" if args.suite == "smoke" else "amg"),
         "memory_limit_mib": args.memory_limit_mib,
     }
     cases = [c for c in CASES if c.id in case_ids]
@@ -547,6 +589,9 @@ def main():
         "cases": [c.record() for c in cases],
         "rows": [],
     }
+    document["provenance"]["dependency_sha256"] = snapshot_sources(
+        output, document["provenance"]["source_sha256"]
+    )
     write_json(output / "manifest.json", document["provenance"])
     document["manifest_sha256"] = digest(output / "manifest.json")
     tasks = []

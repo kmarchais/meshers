@@ -15,6 +15,11 @@ def admission(result, config, reference_uncertainty=0.0):
         reasons.append(f"Sampled boundary distance {distance:.6g}L exceeds tolerance")
     if reverse is not None and reverse > config["geometry_tolerance"]:
         reasons.append(f"Sampled target-to-mesh distance {reverse:.6g}L exceeds tolerance")
+    cap = result.get("sampled_cap_overshoot", 0)
+    if cap is None or cap > config["geometry_tolerance"]:
+        reasons.append("Cap samples leave the material band beyond the declared tolerance")
+    if not result.get("sampled_outward_orientation", True):
+        reasons.append("Boundary normals disagree with the intended outward direction")
     upper = result["relative_volume_error"] + reference_uncertainty
     if upper > config["volume_tolerance"]:
         reasons.append(f"Volume error plus sampling uncertainty {upper:.2%} exceeds tolerance")

@@ -29,6 +29,29 @@ def tetrahedra(grid):
     return np.asarray(grid.points).copy(), np.asarray(grid.cells_dict[pv.CellType.TETRA]).copy()
 
 
+def clean_tetrahedra(points, tets, scale):
+    """Declared floating-point cleanup for an additional VTK control only."""
+    normalized = np.asarray(points, float) / scale
+    _, representatives, inverse = np.unique(
+        np.round(normalized / 1e-12), axis=0, return_index=True, return_inverse=True
+    )
+    points, tets = np.asarray(points)[representatives], inverse[tets]
+    v = points[tets] / scale
+    det = np.linalg.det(v[:, 1:] - v[:, :1])
+    keep = np.abs(det) > 1e-15
+    return (
+        points,
+        tets[keep],
+        {
+            "cleanup_merge_tolerance_over_L": 1e-12,
+            "cleanup_det_tolerance_over_L3": 1e-15,
+            "cleanup_merged_nodes": len(normalized) - len(points),
+            "cleanup_discarded_cells": int((~keep).sum()),
+            "cleanup_discarded_abs_volume_over_L3": float(np.abs(det[~keep]).sum() / 6),
+        },
+    )
+
+
 def generate(case, workflow, cells, config, progress=None):
     callback = progress or (lambda **values: None)
     reporting_s = 0.0
@@ -43,7 +66,7 @@ def generate(case, workflow, cells, config, progress=None):
     import pyvista as pv
     from vtkmodules.vtkCommonCore import vtkSMPTools
 
-    if workflow in {"mmg", "mmg-tetra"}:
+    if workflow in {"mmg", "mmg-tetra", "mmg-tetra-clean"}:
         import mmgpy
     elif workflow == "mmg-microgen":
         from microgen.remesh import remesh_keeping_boundaries_for_fem
@@ -59,7 +82,8 @@ def generate(case, workflow, cells, config, progress=None):
         raise ImportError("Microgen does not provide Tpms")
     progress(stage="Microgen field setup", failure_owner="Microgen")
     start = time.perf_counter()
-    explicit_field = workflow in PROFILES or workflow in {"vtk-tetra", "mmg-tetra"}
+    tetra_seed = workflow in {"vtk-tetra", "mmg-tetra", "vtk-tetra-clean", "mmg-tetra-clean"}
+    explicit_field = workflow in PROFILES or tetra_seed
     shape = None if explicit_field else case.shape(cells)
     if explicit_field and case.function == "spinodoid":
         from .cases import spinodoid_source
@@ -69,9 +93,10 @@ def generate(case, workflow, cells, config, progress=None):
     progress(setup_s=setup_s)
     start = time.perf_counter()
     reporting_start = reporting_s
-    if workflow in {"vtk", "mmg", "mmg-microgen", "vtk-tetra", "mmg-tetra"}:
+    cleanup = {}
+    if workflow in {"vtk", "mmg", "mmg-microgen"} or tetra_seed:
         progress(stage="Microgen VTK extraction", failure_owner="Microgen / VTK")
-        if workflow in {"vtk-tetra", "mmg-tetra"}:
+        if tetra_seed:
             # Triangulate the background first, then clip linear tetrahedra.
             # This is a distinct control, not a repair of Microgen's output.
             grid = (
@@ -90,8 +115,16 @@ def generate(case, workflow, cells, config, progress=None):
             ).triangulate()
         else:
             grid = case.volume_grid(shape, cells).triangulate()
+        if workflow.endswith("-clean"):
+            seed_points, seed_tets = tetrahedra(grid)
+            seed_points, seed_tets, cleanup = clean_tetrahedra(seed_points, seed_tets, case.scale)
+            grid = pv.UnstructuredGrid(
+                np.c_[np.full(len(seed_tets), 4), seed_tets].ravel(),
+                np.full(len(seed_tets), pv.CellType.TETRA),
+                seed_points,
+            )
         extraction_s = time.perf_counter() - start - (reporting_s - reporting_start)
-        if workflow in {"mmg", "mmg-tetra"}:
+        if workflow in {"mmg", "mmg-tetra", "mmg-tetra-clean"}:
             progress(stage="MMG binding remeshing", failure_owner="MMG binding pipeline")
             # Standard MMG3D adaptation of Microgen's VTK tetrahedra.
             # The default protects physical box faces while allowing MMG to
@@ -100,8 +133,8 @@ def generate(case, workflow, cells, config, progress=None):
             triangles = np.asarray(native.get_triangles())
             coordinates = np.asarray(grid.points)[triangles] / case.scale
             caps = np.any(
-                np.all(np.isclose(coordinates, 0.5, atol=1e-9), axis=1)
-                | np.all(np.isclose(coordinates, -0.5, atol=1e-9), axis=1),
+                np.all(np.isclose(coordinates, 0.5, atol=1e-9, rtol=0), axis=1)
+                | np.all(np.isclose(coordinates, -0.5, atol=1e-9, rtol=0), axis=1),
                 axis=1,
             )
             native.set_required_triangles(np.flatnonzero(caps).astype(np.int32))
@@ -165,6 +198,7 @@ def generate(case, workflow, cells, config, progress=None):
             "vtk_extraction_s": extraction_s,
             "field_samples_checked": sample_count,
             "vtk_version": pv.vtk_version_info,
+            **cleanup,
         },
     )
 

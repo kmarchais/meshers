@@ -223,4 +223,14 @@ PROFILES = {
     "meshers-balanced": {"optimize_passes": 4},
     "meshers-quality": {"optimize_passes": 12},
 }
-WORKFLOWS = ["vtk", "mmg", "mmg-microgen", "vtk-tetra", "mmg-tetra", *PROFILES]
+DEFAULT_WORKFLOWS = ["vtk", "mmg", "mmg-microgen", *PROFILES]
+WORKFLOWS = [
+    "vtk",
+    "mmg",
+    "mmg-microgen",
+    "vtk-tetra",
+    "mmg-tetra",
+    "vtk-tetra-clean",
+    "mmg-tetra-clean",
+    *PROFILES,
+]
