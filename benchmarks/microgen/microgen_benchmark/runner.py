@@ -4,6 +4,7 @@ import argparse
 import hashlib
 import importlib.metadata
 import json
+import math
 import os
 import platform
 import subprocess
@@ -15,6 +16,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 
 from .cases import CASES, WORKFLOWS, Case
+from .qualification import admission, summarize
 
 
 def write_json(path, value):
@@ -32,7 +34,12 @@ def failure_catalog(document):
     failures = []
     config = document["provenance"]["config"]
     for row in document["rows"]:
-        if row["repeat"] < 0 or row["status"] not in {"failed", "timeout", "geometry-warning"}:
+        if row["repeat"] < 0 or row["status"] not in {
+            "failed",
+            "timeout",
+            "memory-limit",
+            "geometry-warning",
+        }:
             continue
         failures.append(
             {
@@ -45,6 +52,9 @@ def failure_catalog(document):
                     f" --volume-tolerance {config['volume_tolerance']} --minimum-quality {config['minimum_quality']}"
                     f" --max-tetrahedra {config['max_tetrahedra']} --pair-cap {config['pair_cap']}"
                     f" --mmg-boundary {config['mmg_boundary']}"
+                    f" --purpose {config.get('purpose', 'fea')} --fea-target {config.get('fea_target', 0.05)}"
+                    f" --error-targets {','.join(map(str, config.get('error_targets', [0.01, 0.02, 0.05])))}"
+                    f" --memory-limit-mib {config.get('memory_limit_mib', 8192)}"
                 ),
             }
         )
@@ -80,15 +90,16 @@ def worker(request_path):
     try:
         import numpy as np
 
-        from .backends import generate
+        from .backends import generate, generate_surface
         from .elasticity import solve
-        from .geometry import canonical_mesh, validate
+        from .geometry import canonical_mesh, canonical_surface, validate
         from .preview import surface_preview
 
         case = Case(**request["case"])
+        surface_mode = request["config"].get("purpose") == "surface"
         result["stage"] = "generation"
         print(f"Generating {case.id}: {request['workflow']} / {request['cells']} cells", flush=True)
-        points, tets, timing = generate(
+        points, tets, timing = (generate_surface if surface_mode else generate)(
             case, request["workflow"], request["cells"], request["config"], checkpoint
         )
         result.update(timing)
@@ -104,58 +115,67 @@ def worker(request_path):
             )
         )
         checkpoint(stage="canonicalization", failure_owner=pipeline)
-        points, tets, flips, unused = canonical_mesh(points, tets)
-        np.savez_compressed(out / "mesh.npz", points=points, tetrahedra=tets)
+        if surface_mode:
+            points, tets, flips, unused = canonical_surface(points, tets)
+            np.savez_compressed(out / "mesh.npz", points=points, triangles=tets)
+        else:
+            points, tets, flips, unused = canonical_mesh(points, tets)
+            np.savez_compressed(out / "mesh.npz", points=points, tetrahedra=tets)
         result.update(
             mesh_sha256=digest(out / "mesh.npz"),
             orientation_flips=flips,
             unused_nodes=unused,
-            tetrahedra=len(tets),
             nodes=len(points),
         )
+        result["triangles" if surface_mode else "tetrahedra"] = len(tets)
         if request["warmup"]:
             result.update(status="warmup", stage="complete")
         else:
             checkpoint(stage="geometry validation", failure_owner=pipeline)
             print("Checking topology, tetrahedral overlap and sampled geometry", flush=True)
-            metrics, surface = validate(points, tets, case, request["config"]["pair_cap"])
+            target_points = None
+            if request.get("target_boundary_path"):
+                reference_path = Path(request["target_boundary_path"])
+                if digest(reference_path) != request["target_boundary_sha256"]:
+                    raise RuntimeError("Independent boundary reference hash changed")
+                target_points = np.load(reference_path)["boundary_points"]
+            if surface_mode:
+                from .surface import validate_surface
+
+                metrics = validate_surface(
+                    points, tets, case, request["config"]["pair_cap"], target_points
+                )
+                surface = tets
+            else:
+                metrics, surface = validate(
+                    points, tets, case, request["config"]["pair_cap"], target_points
+                )
             result.update(metrics)
             target_fraction = request["target_volume_fraction"]
             result["relative_volume_error"] = (
                 abs(metrics["solid_fraction"] - target_fraction) / target_fraction
             )
-            checkpoint(stage="elasticity", failure_owner="Benchmark FEA solver")
-            print("Solving 18 quadratic fields and six affine patch tests", flush=True)
-            fea, fields = solve(points, tets, surface, case.scale)
-            result.update(fea)
-            np.savez_compressed(out / "fields.npz", **fields)
-            result["fields_sha256"] = digest(out / "fields.npz")
+            if request["config"].get("purpose", "fea") == "fea":
+                checkpoint(stage="elasticity", failure_owner="Benchmark FEA solver")
+                print("Solving 18 quadratic fields and six affine patch tests", flush=True)
+                fea, fields = solve(points, tets, surface, case.scale)
+                result.update(fea)
+                np.savez_compressed(out / "fields.npz", **fields)
+                result["fields_sha256"] = digest(out / "fields.npz")
+            else:
+                result["fea_skipped_reason"] = "Geometry-only run; no elasticity solve requested"
             # Display simplification leaves mesh arrays and numerical checks intact.
             try:
                 result["preview"] = surface_preview(points, surface, case.scale)
             except Exception as exc:
                 result["preview_error"] = f"{type(exc).__name__}: {exc}"
-            distance = result.get("sampled_geometry_distance")
-            result["comparison_eligible"] = (
-                distance is not None
-                and distance <= request["config"]["geometry_tolerance"]
-                and result["relative_volume_error"] <= request["config"]["volume_tolerance"]
+            result.update(
+                admission(
+                    result, request["config"], request.get("relative_reference_uncertainty", 0)
+                )
             )
             result["status"] = "ok" if result["comparison_eligible"] else "geometry-warning"
             result["failure_owner"] = pipeline
-            result["admission_reasons"] = []
-            if distance is None:
-                result["admission_reasons"].append(
-                    "Boundary distance unavailable: near-zero field gradient"
-                )
-            elif distance > request["config"]["geometry_tolerance"]:
-                result["admission_reasons"].append(
-                    f"Sampled boundary distance {distance:.6g}L exceeds {request['config']['geometry_tolerance']:.6g}L"
-                )
-            if result["relative_volume_error"] > request["config"]["volume_tolerance"]:
-                result["admission_reasons"].append(
-                    f"Relative volume error {result['relative_volume_error']:.2%} exceeds {request['config']['volume_tolerance']:.2%}"
-                )
             result["stage"] = "complete"
             if result["status"] == "ok":
                 result.pop("failure_owner", None)
@@ -234,6 +254,8 @@ def progress(done, total, message, start, failures):
 
 
 def run_child(request, directory, timeout, heartbeat):
+    import psutil
+
     directory.mkdir(parents=True)
     request_path = directory / "request.json"
     write_json(request_path, request)
@@ -271,9 +293,27 @@ def run_child(request, directory, timeout, heartbeat):
         reader.start()
         start = time.monotonic()
         timed_out = False
+        memory_limited = False
+        peak_rss = 0
+        memory_limit = request["config"].get("memory_limit_mib", 8192) * 2**20
+        monitored = psutil.Process(process.pid)
         try:
             while process.poll() is None:
                 heartbeat()
+                try:
+                    rss = monitored.memory_info().rss
+                    for child in monitored.children(recursive=True):
+                        try:
+                            rss += child.memory_info().rss
+                        except psutil.NoSuchProcess:
+                            pass
+                    peak_rss = max(peak_rss, rss)
+                    if rss > memory_limit:
+                        memory_limited = True
+                        stop_tree(process)
+                        break
+                except psutil.NoSuchProcess:
+                    pass
                 if time.monotonic() - start > timeout:
                     timed_out = True
                     stop_tree(process)
@@ -285,15 +325,18 @@ def run_child(request, directory, timeout, heartbeat):
         finally:
             reader.join(timeout=10)
     path = directory / "result.json"
-    if timed_out:
+    if timed_out or memory_limited:
         partial = directory / "progress.json"
         return {
             "stage": "worker",
             "failure_owner": "Owned worker pipeline",
             **(json.loads(partial.read_text(encoding="utf-8")) if partial.is_file() else {}),
-            "status": "timeout",
-            "error": f"Owned worker tree killed after {timeout}s",
-            "failure_kind": "time limit; not a proven library bug",
+            "status": "memory-limit" if memory_limited else "timeout",
+            "error": f"Owned worker tree exceeded {memory_limit / 2**20:g} MiB RSS"
+            if memory_limited
+            else f"Owned worker tree killed after {timeout}s",
+            "failure_kind": "resource limit; not a proven library bug",
+            "peak_worker_tree_rss_mib": peak_rss / 2**20,
             "worker_exit_code": process.returncode,
         }
     if process.returncode != 0 or not path.is_file():
@@ -306,6 +349,7 @@ def run_child(request, directory, timeout, heartbeat):
         }
     result = json.loads(path.read_text(encoding="utf-8"))
     result["worker_exit_code"] = process.returncode
+    result["peak_worker_tree_rss_mib"] = peak_rss / 2**20
     return result
 
 
@@ -354,26 +398,49 @@ def main():
         description="Run portable Microgen meshing and exact-field elasticity comparisons."
     )
     parser.add_argument("--suite", choices=["smoke", "standard"], default="standard")
+    parser.add_argument("--purpose", choices=["fea", "geometry", "surface"], default="fea")
     parser.add_argument("--output", type=Path)
     parser.add_argument("--cases", default=",".join(c.id for c in CASES))
     parser.add_argument("--workflows", default=",".join(WORKFLOWS))
     parser.add_argument(
-        "--cells", help="Comma-separated interval counts, default smoke 8, standard 12,20,28"
+        "--cells", help="Comma-separated interval counts, default smoke 8, standard 16,24,36,54"
     )
     parser.add_argument("--repeats", type=int)
     parser.add_argument("--warmups", type=int)
     parser.add_argument("--threads", type=int, default=1)
     parser.add_argument("--timeout", type=float, help="Seconds per worker: smoke 60, standard 300")
-    parser.add_argument("--geometry-tolerance", type=float, default=0.01)
-    parser.add_argument("--volume-tolerance", type=float, default=0.1)
+    parser.add_argument(
+        "--geometry-tolerance", type=float, help="Boundary distance / L: smoke .01, standard .002"
+    )
+    parser.add_argument(
+        "--volume-tolerance", type=float, help="Relative volume error: smoke .1, standard .01"
+    )
+    parser.add_argument(
+        "--fea-target", type=float, default=0.05, help="Required worst relative energy error"
+    )
+    parser.add_argument(
+        "--error-targets", default="0.01,0.02,0.05", help="Measured FEA error targets"
+    )
     parser.add_argument("--mmg-boundary", choices=["caps", "fixed"], default="caps")
-    parser.add_argument("--minimum-quality", type=float, default=0.1)
-    parser.add_argument("--max-tetrahedra", type=int, default=250_000)
-    parser.add_argument("--pair-cap", type=int, default=2_000_000)
+    parser.add_argument(
+        "--minimum-quality", type=float, help="Native minimum q: FEA .1, geometry/surface 0"
+    )
+    parser.add_argument(
+        "--max-tetrahedra", type=int, help="Native budget: smoke 250000, standard 1000000"
+    )
+    parser.add_argument(
+        "--pair-cap", type=int, help="Validation cap: smoke 2000000, standard 20000000"
+    )
     parser.add_argument(
         "--render", type=Path, help="Regenerate HTML from a retained results.json without compute"
     )
     parser.add_argument("--worker", type=Path, help=argparse.SUPPRESS)
+    parser.add_argument(
+        "--memory-limit-mib",
+        type=float,
+        default=8192,
+        help="Worker tree RSS ceiling, checked every 2s",
+    )
     args = parser.parse_args()
     if args.worker:
         worker(args.worker.resolve())
@@ -393,11 +460,40 @@ def main():
     if len(set(workflows)) != len(workflows) or not set(workflows) <= set(WORKFLOWS):
         parser.error("Unknown or repeated workflows")
     cells = [
-        int(n) for n in (args.cells or ("8" if args.suite == "smoke" else "12,20,28")).split(",")
+        int(n) for n in (args.cells or ("8" if args.suite == "smoke" else "16,24,36,54")).split(",")
     ]
     repeats = args.repeats if args.repeats is not None else (1 if args.suite == "smoke" else 3)
     warmups = args.warmups if args.warmups is not None else (0 if args.suite == "smoke" else 1)
-    timeout = args.timeout if args.timeout is not None else (60 if args.suite == "smoke" else 300)
+    timeout = args.timeout if args.timeout is not None else (60 if args.suite == "smoke" else 1800)
+    args.geometry_tolerance = (
+        args.geometry_tolerance
+        if args.geometry_tolerance is not None
+        else (0.01 if args.suite == "smoke" else 0.002)
+    )
+    args.volume_tolerance = (
+        args.volume_tolerance
+        if args.volume_tolerance is not None
+        else (0.1 if args.suite == "smoke" else 0.01)
+    )
+    args.minimum_quality = (
+        args.minimum_quality
+        if args.minimum_quality is not None
+        else (0.1 if args.purpose == "fea" else 0.0)
+    )
+    args.max_tetrahedra = (
+        args.max_tetrahedra
+        if args.max_tetrahedra is not None
+        else (250_000 if args.suite == "smoke" else 1_000_000)
+    )
+    args.pair_cap = (
+        args.pair_cap
+        if args.pair_cap is not None
+        else (2_000_000 if args.suite == "smoke" else 20_000_000)
+    )
+    try:
+        error_targets = [float(t) for t in args.error_targets.split(",")]
+    except ValueError:
+        parser.error("Error targets must be comma-separated numbers")
     if min(cells) < 2 or repeats < 1 or warmups < 0 or args.threads < 1 or timeout <= 0:
         parser.error("Positive cells >=2, repeats, threads and timeout required; warmups >=0")
     if (
@@ -406,6 +502,14 @@ def main():
         or args.volume_tolerance <= 0
         or not 0 <= args.minimum_quality <= 1
         or args.pair_cap < 1
+        or args.max_tetrahedra < 1
+        or not 0 < args.fea_target < 1
+        or any(not 0 < t < 1 for t in error_targets)
+        or len(set(error_targets)) != len(error_targets)
+        or not 0 < args.memory_limit_mib < float("inf")
+        or not all(
+            math.isfinite(v) for v in [args.geometry_tolerance, args.volume_tolerance, timeout]
+        )
     ):
         parser.error("Distinct cells and valid geometry, quality and validation limits required")
     output = (
@@ -430,11 +534,14 @@ def main():
         "workflows": workflows,
         "suite": args.suite,
         "matched_count_tolerance": 0.05,
-        "error_targets": [0.05, 0.1, 0.2],
+        "error_targets": sorted(error_targets),
+        "fea_target": args.fea_target,
+        "purpose": args.purpose,
+        "memory_limit_mib": args.memory_limit_mib,
     }
     cases = [c for c in CASES if c.id in case_ids]
     document = {
-        "schema_version": 1,
+        "schema_version": 2,
         "state": "running",
         "provenance": provenance(config),
         "cases": [c.record() for c in cases],
@@ -451,13 +558,27 @@ def main():
                 for w in workflows[shift:] + workflows[:shift]:
                     tasks.append((c, n, r, w))
     start, failures = time.monotonic(), 0
-    progress(0, len(tasks), "Preparing benchmark", start, failures)
+    total_units = len(tasks) + len(cases)
+    progress(0, total_units, "Preparing benchmark", start, failures)
     from .reference import target
 
-    for c in cases:
-        progress(0, len(tasks), f"Independent target diagnostics: {c.id}", start, failures)
+    for reference_index, c in enumerate(cases):
+        message = f"Independent target diagnostics: {c.id}"
+        progress(reference_index, total_units, message, start, failures)
         record = next(record for record in document["cases"] if record["id"] == c.id)
-        record.update(target(c))
+        stop_heartbeat = threading.Event()
+
+        def reference_heartbeat(index=reference_index, msg=message, signal=stop_heartbeat):
+            while not signal.wait(2):
+                progress(index, total_units, msg, start, failures)
+
+        reporter = threading.Thread(target=reference_heartbeat, daemon=True)
+        reporter.start()
+        try:
+            record.update(target(c, output))
+        finally:
+            stop_heartbeat.set()
+            reporter.join()
     write_json(output / "results.json", document)
     (output / "report.html").write_text(render(document), encoding="utf-8")
     try:
@@ -476,12 +597,24 @@ def main():
                     for record in document["cases"]
                     if record["id"] == c.id
                 ),
+                "relative_reference_uncertainty": next(
+                    record.get("target_volume_uncertainty", 0) / record["target_volume_fraction"]
+                    for record in document["cases"]
+                    if record["id"] == c.id
+                ),
             }
+            reference_record = next(record for record in document["cases"] if record["id"] == c.id)
+            request.update(
+                target_boundary_path=str(output / reference_record["target_boundary_artifact"]),
+                target_boundary_sha256=reference_record["target_boundary_sha256"],
+            )
             result = run_child(
                 request,
                 output / identity,
                 timeout,
-                lambda i=index, msg=identity, f=failures: progress(i, len(tasks), msg, start, f),
+                lambda i=index, msg=identity, f=failures: progress(
+                    i + len(cases), total_units, msg, start, f
+                ),
             )
             row = {
                 "case": c.id,
@@ -492,6 +625,7 @@ def main():
                 **result,
             }
             document["rows"].append(row)
+            document["qualification"] = summarize(document)
             failures += result["status"] not in {"ok", "warmup", "geometry-warning"}
             write_json(output / "results.json", document)
             (output / "report.html").write_text(render(document), encoding="utf-8")
@@ -504,6 +638,7 @@ def main():
     document["elapsed_s"] = time.monotonic() - start
     write_json(output / "results.json", document)
     write_json(output / "failures.json", failure_catalog(document))
+    write_json(output / "qualification.json", document["qualification"])
     (output / "report.html").write_text(render(document), encoding="utf-8")
-    progress(len(tasks), len(tasks), "Benchmark complete; failures retained", start, failures)
+    progress(total_units, total_units, "Benchmark complete; failures retained", start, failures)
     print(f"Report: {output / 'report.html'}", flush=True)

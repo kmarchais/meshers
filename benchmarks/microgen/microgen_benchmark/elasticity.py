@@ -95,7 +95,7 @@ def worst_error(error, reference):
     return float(np.sqrt(max(0, eigenvalues[-1]))), eigenvectors[:, -1]
 
 
-def solve(points, tets, surface, scale):
+def solve(points, tets, surface, scale, ordering="MMD_AT_PLUS_A"):
     start = time.perf_counter()
     x = points / scale
     vertices = x[tets]
@@ -117,7 +117,7 @@ def solve(points, tets, surface, scale):
         b[:, 4, j + 2] = gx
         b[:, 5, j] = gy
         b[:, 5, j + 1] = gx
-    ke = np.einsum("tki,kl,tlj,t->tij", b, C, b, volumes)
+    ke = np.einsum("tki,kl,tlj,t->tij", b, C, b, volumes, optimize=True)
     dofs = (3 * tets[..., None] + np.arange(3)).reshape(-1, 12)
     k = sparse.coo_matrix(
         (
@@ -157,7 +157,7 @@ def solve(points, tets, surface, scale):
     rhs = f[free] - k[free][:, pins] @ u[pins]
     assembly_s = time.perf_counter() - start
     start = time.perf_counter()
-    factor = splu(k[free][:, free])
+    factor = splu(k[free][:, free], permc_spec=ordering)
     u[free] = factor.solve(rhs)
     residual = k[free] @ u - f[free]
     relative_residual = np.linalg.norm(residual, axis=0) / np.maximum(
@@ -169,15 +169,17 @@ def solve(points, tets, surface, scale):
     fields = u.reshape(len(x), 3, 24).transpose(0, 2, 1)
     start = time.perf_counter()
     error, reference = np.zeros((24, 24)), np.zeros((24, 24))
-    for first in range(0, len(tets), 128):
-        sl = slice(first, first + 128)
+    for first in range(0, len(tets), 1024):
+        sl = slice(first, first + 1024)
         discrete = strain(np.einsum("tami,taj->tmij", fields[tets[sl]], grad[sl]))
         for weights in QUADRATURE:
             sample = np.einsum("a,taj->tj", weights, vertices[sl])
             analytical = strain(np.einsum("miab,tb->tmia", H, sample) + A)
             delta = discrete - analytical
-            error += np.einsum("tmi,ij,tnj,t->mn", delta, C, delta, volumes[sl] / 4)
-            reference += np.einsum("tmi,ij,tnj,t->mn", analytical, C, analytical, volumes[sl] / 4)
+            error += np.einsum("tmi,ij,tnj,t->mn", delta, C, delta, volumes[sl] / 4, optimize=True)
+            reference += np.einsum(
+                "tmi,ij,tnj,t->mn", analytical, C, analytical, volumes[sl] / 4, optimize=True
+            )
     relative = np.sqrt(np.maximum(0, error.diagonal()) / reference.diagonal())
     if relative[18:].max() > 1e-8:
         raise ValueError(f"Affine patch energy error {relative[18:].max():.3g} exceeds 1e-8")
@@ -194,6 +196,8 @@ def solve(points, tets, surface, scale):
         "solve_s": solve_s,
         "evaluation_s": time.perf_counter() - start,
         "worst_combination": combination.tolist(),
+        "solver_ordering": ordering,
+        "factor_nonzeros": factor.L.nnz + factor.U.nnz,
     }
     return metrics, {
         "displacements": fields,

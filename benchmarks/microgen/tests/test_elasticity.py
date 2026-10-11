@@ -45,6 +45,16 @@ def test_units_do_not_change_fea():
     assert np.isclose(a["worst_energy_error"], b["worst_energy_error"], rtol=1e-12)
 
 
+def test_sparse_ordering_does_not_change_solution_or_energy():
+    p, t = cube(4)
+    surface = boundary(p, t)
+    a, fa = solve(p, t, surface, 1, ordering="COLAMD")
+    b, fb = solve(p, t, surface, 1, ordering="MMD_AT_PLUS_A")
+    assert np.isclose(a["worst_energy_error"], b["worst_energy_error"], rtol=1e-10)
+    assert np.allclose(fa["displacements"], fb["displacements"], atol=1e-10)
+    assert np.allclose(fa["error_energy"], fb["error_energy"], atol=1e-10)
+
+
 def test_worst_combination_is_basis_invariant():
     reference = np.diag([1.0, 2.0, 3.0])
     error = np.diag([0.01, 0.08, 0.03])

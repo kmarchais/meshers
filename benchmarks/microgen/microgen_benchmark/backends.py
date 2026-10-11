@@ -43,7 +43,7 @@ def generate(case, workflow, cells, config, progress=None):
     import pyvista as pv
     from vtkmodules.vtkCommonCore import vtkSMPTools
 
-    if workflow == "mmg":
+    if workflow in {"mmg", "mmg-tetra"}:
         import mmgpy
     elif workflow == "mmg-microgen":
         from microgen.remesh import remesh_keeping_boundaries_for_fem
@@ -59,16 +59,39 @@ def generate(case, workflow, cells, config, progress=None):
         raise ImportError("Microgen does not provide Tpms")
     progress(stage="Microgen field setup", failure_owner="Microgen")
     start = time.perf_counter()
-    shape = case.shape(cells)
+    explicit_field = workflow in PROFILES or workflow in {"vtk-tetra", "mmg-tetra"}
+    shape = None if explicit_field else case.shape(cells)
+    if explicit_field and case.function == "spinodoid":
+        from .cases import spinodoid_source
+
+        spinodoid_source(case.scale)
     setup_s = time.perf_counter() - start
     progress(setup_s=setup_s)
     start = time.perf_counter()
     reporting_start = reporting_s
-    if workflow in {"vtk", "mmg", "mmg-microgen"}:
+    if workflow in {"vtk", "mmg", "mmg-microgen", "vtk-tetra", "mmg-tetra"}:
         progress(stage="Microgen VTK extraction", failure_owner="Microgen / VTK")
-        grid = case.volume_grid(shape, cells).triangulate()
+        if workflow in {"vtk-tetra", "mmg-tetra"}:
+            # Triangulate the background first, then clip linear tetrahedra.
+            # This is a distinct control, not a repair of Microgen's output.
+            grid = (
+                pv.ImageData(
+                    dimensions=(cells + 1,) * 3,
+                    spacing=(case.scale / cells,) * 3,
+                    origin=(-case.scale / 2,) * 3,
+                )
+                .cast_to_unstructured_grid()
+                .triangulate()
+            )
+            grid.point_data["benchmark_field"] = case.field(*np.asarray(grid.points).T)
+            grid = grid.clip_scalar(scalars="benchmark_field", value=case.band[0], invert=False)
+            grid = grid.clip_scalar(
+                scalars="benchmark_field", value=case.band[1], invert=True
+            ).triangulate()
+        else:
+            grid = case.volume_grid(shape, cells).triangulate()
         extraction_s = time.perf_counter() - start - (reporting_s - reporting_start)
-        if workflow == "mmg":
+        if workflow in {"mmg", "mmg-tetra"}:
             progress(stage="MMG binding remeshing", failure_owner="MMG binding pipeline")
             # Standard MMG3D adaptation of Microgen's VTK tetrahedra.
             # The default protects physical box faces while allowing MMG to
@@ -131,7 +154,7 @@ def generate(case, workflow, cells, config, progress=None):
     # Check the physical field outside the generation timer. Microgen stores
     # the raw periodic field, before its sheet half-offset is applied.
     progress(stage="shared field preflight", failure_owner="Benchmark field adapter")
-    sample_count = case.verify_field(shape, cells)
+    sample_count = case.verify_field(shape if shape is not None else case.shape(cells), cells)
     return (
         points,
         tets,
@@ -142,5 +165,52 @@ def generate(case, workflow, cells, config, progress=None):
             "vtk_extraction_s": extraction_s,
             "field_samples_checked": sample_count,
             "vtk_version": pv.vtk_version_info,
+        },
+    )
+
+
+def generate_surface(case, workflow, cells, config, progress=None):
+    """Time the public surface path, or the full volume-to-surface cost."""
+    if workflow != "vtk":
+        from .geometry import boundary
+
+        points, tets, timing = generate(case, workflow, cells, config, progress)
+        start = time.perf_counter()
+        # Orientation normalization is necessary before oriented face extraction.
+        from .geometry import canonical_mesh
+
+        points, tets, _, _ = canonical_mesh(points, tets)
+        faces = boundary(points, tets)
+        timing["surface_extraction_s"] = time.perf_counter() - start
+        timing["mesh_s"] += timing["surface_extraction_s"]
+        timing["surface_pipeline"] = "volume generation plus boundary extraction"
+        timing["generated_tetrahedra"] = len(tets)
+        return points, faces, timing
+    import pyvista as pv
+    from vtkmodules.vtkCommonCore import vtkSMPTools
+
+    vtkSMPTools.Initialize(config["threads"])
+    if progress:
+        progress(stage="Microgen surface field setup", failure_owner="Microgen / VTK")
+    start = time.perf_counter()
+    shape = case.shape(cells)
+    setup_s = time.perf_counter() - start
+    start = time.perf_counter()
+    poly = shape.generate_surface_mesh(resolution=cells + 1).triangulate()
+    faces = poly.faces.reshape(-1, 4)[:, 1:]
+    points = np.asarray(poly.points).copy()
+    generation_s = time.perf_counter() - start
+    checked = case.verify_field(shape, cells)
+    return (
+        points,
+        faces.copy(),
+        {
+            "setup_s": setup_s,
+            "generation_s": generation_s,
+            "mesh_s": setup_s + generation_s,
+            "field_samples_checked": checked,
+            "vtk_version": pv.vtk_version_info,
+            "generated_tetrahedra": 0,
+            "surface_pipeline": "Microgen public surface generator",
         },
     )

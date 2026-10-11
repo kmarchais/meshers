@@ -25,6 +25,21 @@ def canonical_mesh(points, tets):
     return p, t, int(flipped.sum()), len(points) - len(p)
 
 
+def canonical_surface(points, faces):
+    p, f = np.asarray(points, float).copy(), np.asarray(faces, np.int64).copy()
+    if p.ndim != 2 or p.shape[1] != 3 or f.ndim != 2 or f.shape[1] != 3:
+        raise ValueError("Expected points (N,3) and triangles (M,3)")
+    if not len(f) or not np.isfinite(p).all() or f.min() < 0 or f.max() >= len(p):
+        raise ValueError("Empty or malformed triangle surface")
+    used, inverse = np.unique(f, return_inverse=True)
+    p, f = p[used], inverse.reshape(f.shape)
+    v = p[f]
+    reversed_winding = np.sum(np.einsum("ij,ij->i", v[:, 0], np.cross(v[:, 1], v[:, 2]))) < 0
+    if reversed_winding:
+        f = f[:, ::-1].copy()
+    return p, f, len(f) if reversed_winding else 0, len(points) - len(p)
+
+
 def boundary(points, tets):
     faces = tets[:, FACES].reshape(-1, 3)
     _, inverse, counts = np.unique(
@@ -57,6 +72,21 @@ def boundary(points, tets):
         if np.any(left * right >= 0):
             raise ValueError("Adjacent tetrahedra lie on the same side of a shared face")
     surface = faces[counts[inverse] == 1]
+    surface_topology(surface)
+    return surface
+
+
+def surface_topology(surface):
+    """Closed, consistently wound triangles with one circular link per vertex."""
+    if len(np.unique(np.sort(surface, axis=1), axis=0)) != len(surface):
+        raise ValueError("Duplicate boundary triangles")
+    directed = np.concatenate([surface[:, [0, 1]], surface[:, [1, 2]], surface[:, [2, 0]]])
+    _, inverse, counts = np.unique(
+        np.sort(directed, axis=1), axis=0, return_inverse=True, return_counts=True
+    )
+    winding = np.bincount(inverse, weights=np.where(directed[:, 0] < directed[:, 1], 1, -1))
+    if np.any(counts != 2) or np.any(winding != 0):
+        raise ValueError("Boundary edges are open, nonmanifold or inconsistently wound")
     edges = np.sort(
         np.concatenate([surface[:, [0, 1]], surface[:, [1, 2]], surface[:, [2, 0]]]), axis=1
     )
@@ -82,7 +112,6 @@ def boundary(points, tets):
                 pending.extend(link[node] - seen)
         if len(seen) != len(link):
             raise ValueError("Boundary vertex has disconnected fans")
-    return surface
 
 
 def overlapping_pair(vertices, max_pairs=2_000_000, tolerance=1e-10):
@@ -96,43 +125,60 @@ def overlapping_pair(vertices, max_pairs=2_000_000, tolerance=1e-10):
     radii = np.linalg.norm((hi - lo) / 2, axis=1)
     tree = cKDTree(centers)
     maximum = radii.max()
+    edge_vectors = np.stack([vertices[:, y] - vertices[:, x] for x, y in EDGES], axis=1)
+    face_normals = np.cross(
+        vertices[:, FACES[:, 1]] - vertices[:, FACES[:, 0]],
+        vertices[:, FACES[:, 2]] - vertices[:, FACES[:, 0]],
+    )
+
+    def survivors(a, b, axes):
+        size = np.linalg.norm(axes, axis=2)
+        valid = size > 1e-15
+        axes = axes / np.maximum(size[..., None], 1e-30)
+        pa = np.einsum("kaj,kvj->kav", axes, a)
+        pb = np.einsum("kaj,kvj->kav", axes, b)
+        interval = np.minimum(pa.max(axis=2), pb.max(axis=2)) - np.maximum(
+            pa.min(axis=2), pb.min(axis=2)
+        )
+        return np.all((interval > tolerance) | ~valid, axis=1)
+
     checked = 0
-    for i, center in enumerate(centers):
-        candidates = np.asarray(tree.query_ball_point(center, radii[i] + maximum), dtype=int)
-        candidates = candidates[candidates > i]
-        if not len(candidates):
+    for first in range(0, len(vertices), 256):
+        stop = min(first + 256, len(vertices))
+        neighbors = tree.query_ball_point(centers[first:stop], radii[first:stop] + maximum)
+        pairs = np.asarray(
+            [(first + i, j) for i, ids in enumerate(neighbors) for j in ids if j > first + i],
+            dtype=int,
+        ).reshape(-1, 2)
+        if not len(pairs):
             continue
-        overlap = np.minimum(hi[i], hi[candidates]) - np.maximum(lo[i], lo[candidates])
-        candidates = candidates[np.all(overlap > tolerance, axis=1)]
-        checked += len(candidates)
+        left, right = pairs.T
+        overlap = np.minimum(hi[left], hi[right]) - np.maximum(lo[left], lo[right])
+        pairs = pairs[np.all(overlap > tolerance, axis=1)]
+        # Count the same broad-phase candidates as the scalar loop. A cap never passes.
+        checked += len(pairs)
         if checked > max_pairs:
             raise RuntimeError(f"Overlap validation incomplete: pair cap {max_pairs} exceeded")
-        for start in range(0, len(candidates), 256):
-            ids = candidates[start : start + 256]
-            a, b = vertices[i], vertices[ids]
-            ea = np.array([a[y] - a[x] for x, y in EDGES])
-            eb = np.stack([b[:, y] - b[:, x] for x, y in EDGES], axis=1)
-            na = np.cross(a[FACES[:, 1]] - a[FACES[:, 0]], a[FACES[:, 2]] - a[FACES[:, 0]])
-            nb = np.cross(
-                b[:, FACES[:, 1]] - b[:, FACES[:, 0]], b[:, FACES[:, 2]] - b[:, FACES[:, 0]]
-            )
-            cross = np.cross(ea[None, :, None, :], eb[:, None, :, :]).reshape(len(ids), 36, 3)
-            axes = np.concatenate([np.broadcast_to(na, (len(ids), 4, 3)), nb, cross], axis=1)
-            size = np.linalg.norm(axes, axis=2)
-            valid = size > 1e-15
-            axes /= np.maximum(size[..., None], 1e-30)
-            pa = np.einsum("kaj,vj->kav", axes, a)
-            pb = np.einsum("kaj,kvj->kav", axes, b)
-            interval = np.minimum(pa.max(axis=2), pb.max(axis=2)) - np.maximum(
-                pa.min(axis=2), pb.min(axis=2)
-            )
-            hit = np.all((interval > tolerance) | ~valid, axis=1)
+        for start in range(0, len(pairs), 2048):
+            left, right = pairs[start : start + 2048].T
+            if not len(left):
+                continue
+            axes = np.concatenate([face_normals[left], face_normals[right]], axis=1)
+            remaining = survivors(vertices[left], vertices[right], axes)
+            left, right = left[remaining], right[remaining]
+            if not len(left):
+                continue
+            axes = np.cross(
+                edge_vectors[left, :, None, :], edge_vectors[right, None, :, :]
+            ).reshape(len(left), 36, 3)
+            hit = survivors(vertices[left], vertices[right], axes)
             if hit.any():
-                return [int(i), int(ids[np.flatnonzero(hit)[0]])], checked
+                index = np.flatnonzero(hit)[0]
+                return [int(left[index]), int(right[index])], checked
     return None, checked
 
 
-def validate(points, tets, case, max_pairs=2_000_000):
+def validate(points, tets, case, max_pairs=2_000_000, target_points=None):
     x = points / case.scale
     if np.any(np.abs(x) > 0.5 + 1e-8):
         raise ValueError("Mesh leaves the declared specimen box")
@@ -160,6 +206,13 @@ def validate(points, tets, case, max_pairs=2_000_000):
         "overlap_pairs_checked": checked,
         "geometry_status": "checked-at-declared-tolerances",
     }
+    metrics.update(geometry_metrics(points, surface, case, target_points))
+    return metrics, surface
+
+
+def geometry_metrics(points, surface, case, target_points=None):
+    metrics = {}
+    x = points / case.scale
     if case.function != "solid":
         triangles = points[surface]
         normalized = triangles / case.scale
@@ -168,7 +221,16 @@ def validate(points, tets, case, max_pairs=2_000_000):
             | np.all(np.isclose(normalized, -0.5, atol=1e-9), axis=1),
             axis=1,
         )
-        sample = np.concatenate([triangles[~cap].reshape(-1, 3), triangles[~cap].mean(axis=1)])
+        walls = triangles[~cap]
+        sample = np.concatenate(
+            [
+                walls.reshape(-1, 3),
+                walls.mean(axis=1),
+                ((walls[:, 0] + walls[:, 1]) / 2),
+                ((walls[:, 1] + walls[:, 2]) / 2),
+                ((walls[:, 2] + walls[:, 0]) / 2),
+            ]
+        )
         if len(sample):
             value = case.field(*sample.T)
             gradient = []
@@ -188,4 +250,11 @@ def validate(points, tets, case, max_pairs=2_000_000):
                 metrics["sampled_geometry_distance"] = float(distance.max())
     else:
         metrics["sampled_geometry_distance"] = 0.0
-    return metrics, surface
+    if target_points is not None:
+        import pyvista as pv
+
+        poly = pv.PolyData(x, np.c_[np.full(len(surface), 3), surface].ravel())
+        probe = pv.PolyData(target_points / case.scale).compute_implicit_distance(poly)
+        metrics["sampled_reverse_distance"] = float(np.abs(probe["implicit_distance"]).max())
+        metrics["reverse_distance_samples"] = len(target_points)
+    return metrics

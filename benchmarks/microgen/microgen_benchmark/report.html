@@ -488,7 +488,8 @@
         </div>
         <p class="muted">
           The MMG shape metric q is normalized to 1 for a regular tetrahedron.
-          Low q alone does not exclude a VTK/MMG FEA result. Numerical
+          FEA targets require the same minimum q for every workflow. Geometry
+          targets do not require good element shape or an elasticity solve. Numerical
           comparisons require global mesh checks, affine patch tests,
           equilibrium, the declared sampled geometry tolerance and the
           material-volume tolerance. Sampled implicit residual divided by
@@ -517,9 +518,17 @@
       "use strict";
       const data = JSON.parse(document.getElementById("data").textContent),
         cfg = data.provenance.config;
+      const surfaceMode = cfg.purpose === "surface",
+        geometryMode = cfg.purpose === "geometry" || surfaceMode,
+        accuracyLabel = geometryMode ? "Relative volume error" : "Worst FEA energy error",
+        countLabel = surfaceMode ? "Triangles" : "Tetrahedra";
+      document.querySelector("h1").textContent = geometryMode ? "Generation speed and geometry fidelity" : "Generation speed and low-error FEA";
+
       const colors = {
         vtk: "#737d8a",
         mmg: "#ce731e",
+        "vtk-tetra": "#4a6877",
+        "mmg-tetra": "#9b592b",
         "mmg-microgen": "#b54353",
         "meshers-fast": "#6c5ce7",
         "meshers-balanced": "#2477bd",
@@ -528,6 +537,8 @@
       const names = {
         vtk: "Microgen VTK",
         mmg: "VTK + MMG binding",
+        "vtk-tetra": "VTK · tetrahedral background clipping",
+        "mmg-tetra": "VTK tetrahedral clipping + MMG",
         "mmg-microgen": "Microgen MMG · two passes",
         "meshers-fast": "Meshers · 0 passes",
         "meshers-balanced": "Meshers · 4 passes",
@@ -550,6 +561,7 @@
           ? "—"
           : Number(x).toLocaleString("en-US", { maximumFractionDigits: 3 });
       const pct = (x) => (x == null ? "—" : (100 * x).toFixed(2) + "%");
+      document.querySelector(".notice").textContent = `Application: ${cfg.purpose || "fea"}. Boundary tolerance ${num(cfg.geometry_tolerance)} L; volume tolerance ${pct(cfg.volume_tolerance)}; FEA target ${pct(cfg.fea_target ?? 0.05)}. Geometry and FEA admission are separate. Surface mode includes full volume-to-boundary cost for workflows without a surface API.`;
       const median = (a) => {
         const s = a.slice().sort((x, y) => x - y);
         return s.length
@@ -592,10 +604,10 @@
               (r) => r.comparison_eligible && r.status === "ok",
             );
             const counts = rows
-              .filter((r) => r.tetrahedra)
-              .map((r) => r.tetrahedra);
+              .filter((r) => surfaceMode ? r.triangles : r.tetrahedra)
+              .map((r) => surfaceMode ? r.triangles : r.tetrahedra);
             const measuredErrors = rows.filter(
-              (r) => r.worst_energy_error != null,
+              (r) => (geometryMode ? r.relative_volume_error : r.worst_energy_error) != null,
             );
             return {
               w,
@@ -615,7 +627,7 @@
                   )
                 : null,
               error: measuredErrors.length
-                ? Math.max(...measuredErrors.map((r) => r.worst_energy_error))
+                ? Math.max(...measuredErrors.map((r) => geometryMode ? r.relative_volume_error : r.worst_energy_error))
                 : null,
               eligible:
                 valid.length === cfg.repeats && rows.length === cfg.repeats,
@@ -625,10 +637,10 @@
       }
       function chart(gs, key, label) {
         return `<div class="interactive-chart" data-key="${key}" data-label="${esc(label)}">
-          <p class="better">↙ Lower and left is better: ↓ less FEA error; ← ${key === "time" ? "faster generation" : "fewer elements at comparable accuracy"}.</p>
+          <p class="better">↙ Lower and left is better: ↓ less ${accuracyLabel.toLowerCase()}; ← ${key === "time" ? "faster generation" : "fewer elements at comparable accuracy"}.</p>
           <div class="plot-controls">${cfg.workflows.map((w) => `<label><input type="checkbox" data-workflow="${esc(w)}" checked><i class="dot" style="background:${colors[w]}"></i>${esc(names[w])}</label>`).join("")}</div>
           <div class="plot-controls"><label><input type="checkbox" class="show-diagnostics">Show geometry warnings, diagnostic only</label><button class="reset-plot">Reset zoom</button></div>
-          <svg class="plot" viewBox="0 0 540 310" role="group" aria-label="Interactive ${esc(label)} versus FEA error" tabindex="0"></svg>
+          <svg class="plot" viewBox="0 0 540 310" role="group" aria-label="Interactive ${esc(label)} versus ${esc(accuracyLabel)}" tabindex="0"></svg>
           <output class="point-detail" aria-live="polite">Hover or select a point for details. Scroll to zoom; drag to pan; double-click or press R to reset. Point colors identify workflows.</output></div>`;
       }
       function installChart(host, gs, section) {
@@ -659,7 +671,7 @@
           const why = g.eligible
             ? "Admissible across all measured repeats"
             : "Diagnostic only. " + reasons(g).join("; ");
-          info.textContent = `${names[g.w]}, ${g.n} intervals. Generation ${num(g.time)} s; ${num(g.count)} tets; worst FEA error ${pct(g.error)}; min q ${num(g.q)}. ${why}`;
+          info.textContent = `${names[g.w]}, ${g.n} intervals. Generation ${num(g.time)} s; ${num(g.count)} ${countLabel.toLowerCase()}; ${accuracyLabel.toLowerCase()} ${pct(g.error)}; min q ${num(g.q)}. ${why}`;
           section
             .querySelectorAll("tr.selected")
             .forEach((r) => r.classList.remove("selected"));
@@ -680,7 +692,7 @@
             svg.innerHTML =
               '<text x="24" y="120" fill="#526576">No selected admissible scores. See reasons in the table.</text>';
             info.textContent =
-              "A missing FEA score cannot be plotted. Enable geometry warnings to inspect available diagnostic scores.";
+              "A missing or zero error cannot appear on a log-scale chart. Zero-error observations remain in the table. Enable geometry warnings to inspect diagnostic scores.";
             bounds = null;
             return;
           }
@@ -706,7 +718,7 @@
               y = 245 - i * 50;
             body += `<path d="M${x} 45V245 M72 ${y}H508" stroke="#e5ebf0"/><text x="${x}" y="265" text-anchor="middle" fill="#526576" font-size="11">${num(10 ** (xl + ((xh - xl) * i) / 4))}</text><text x="65" y="${y + 4}" text-anchor="end" fill="#526576" font-size="11">${pct(10 ** (yl + ((yh - yl) * i) / 4))}</text>`;
           }
-          body += `<text x="72" y="19" fill="#197862" font-size="12">↓ Worst FEA error, lower is better · log scale</text><text x="290" y="293" text-anchor="middle" fill="#197862" font-size="12">← ${esc(label)}, lower is better · log scale</text>`;
+          body += `<text x="72" y="19" fill="#197862" font-size="12">↓ ${esc(accuracyLabel)}, lower is better · log scale</text><text x="290" y="293" text-anchor="middle" fill="#197862" font-size="12">← ${esc(label)}, lower is better · log scale</text>`;
           points.forEach((g, i) => {
             const x = X(g[key]),
               y = Y(g.error);
@@ -813,7 +825,7 @@
       function missingReason(g, key) {
         if (!g.rows.length) return "Not run yet";
         const r =
-          g.rows.find((r) => r.status === "failed" || r.status === "timeout") ||
+          g.rows.find((r) => r.status === "failed" || r.status === "timeout" || r.status === "memory-limit") ||
           g.rows[0];
         if (r.status === "timeout")
           return `Time limit during ${r.stage || "worker"}`;
@@ -872,7 +884,7 @@
         return gs
           .map(
             (g) =>
-              `<tr data-result="${g.w}-${g.n}"><td>${esc(names[g.w])} / ${g.n}</td>${metricCell(g, "time", gs)}${metricCell(g, "count", gs)}${metricCell(g, "nodes", gs)}${metricCell(g, "q", gs)}${metricCell(g, "error", gs, pct)}<td class="status"><span class="badge ${g.eligible ? "ok" : g.rows.some((r) => r.status === "failed" || r.status === "timeout") ? "fail" : ""}">${g.rows.length ? (g.eligible ? "Admissible" : g.rows.map((r) => r.status).join(", ")) : "Pending"}</span>${reasons(
+              `<tr data-result="${g.w}-${g.n}"><td>${esc(names[g.w])} / ${g.n}</td>${metricCell(g, "time", gs)}${metricCell(g, "count", gs)}${metricCell(g, "nodes", gs)}${metricCell(g, "q", gs)}${metricCell(g, "error", gs, pct)}<td class="status"><span class="badge ${g.eligible ? "ok" : g.rows.some((r) => r.status === "failed" || r.status === "timeout" || r.status === "memory-limit") ? "fail" : ""}">${g.rows.length ? (g.eligible ? "Admissible" : g.rows.map((r) => r.status).join(", ")) : "Pending"}</span>${reasons(
                 g,
               )
                 .map((x) => `<small>${esc(x)}</small>`)
@@ -892,7 +904,7 @@
         return `<td class="heat" style="background:${heatColor(0.5 + Math.log2(value) / 2)}" title="${label}. Meshers / control; 1 is equal. Color saturates at 0.5× and 2×.">${num(value)}×<small>${label}</small></td>`;
       }
       function comparisons(gs) {
-        const good = gs.filter((g) => g.eligible),
+        const good = gs.filter((g) => g.eligible && (geometryMode || (g.error <= (cfg.fea_target ?? 0.05) && g.q >= cfg.minimum_quality))),
           pairs = [];
         for (const m of good.filter((g) => g.w.startsWith("meshers"))) {
           for (const c of good.filter((g) => !g.w.startsWith("meshers"))) {
@@ -907,12 +919,12 @@
           }
         }
         return pairs.length
-          ? `<div class="table-wrap"><table><thead><tr><th>Observed matched-count pair</th><th>Element difference</th><th>FEA error ratio ↓, &lt;1 favors Meshers</th><th>Time ratio ↓, &lt;1 favors Meshers</th></tr></thead><tbody>${pairs.join("")}</tbody></table></div><p class="ratio-key">Ratio colors use a fixed scale: green at ≤ 0.5×, yellow at 1×, red at ≥ 2×. All pairs pass admission and the matched-count tolerance.</p>`
+          ? `<div class="table-wrap"><table><thead><tr><th>Observed matched-count pair</th><th>Element difference</th><th>${geometryMode ? "Volume" : "FEA"} error ratio ↓, &lt;1 favors Meshers</th><th>Time ratio ↓, &lt;1 favors Meshers</th></tr></thead><tbody>${pairs.join("")}</tbody></table></div><p class="ratio-key">Ratio colors use a fixed scale: green at ≤ 0.5×, yellow at 1×, red at ≥ 2×. All pairs pass admission and the matched-count tolerance.</p>`
           : `<p class="muted">No measured Meshers/control pair is within ${pct(cfg.matched_count_tolerance)} of the same element count. Add resolution levels before making a matched-count claim.</p>`;
       }
       function targets(gs) {
         const best = (w, t) => gs
-          .filter((g) => g.w === w && g.eligible && g.error <= t)
+          .filter((g) => g.w === w && g.eligible && g.q >= cfg.minimum_quality && g.error <= t)
           .sort((a, b) => a.count - b.count)[0];
         return `<div class="table-wrap"><table><thead><tr><th>Workflow</th>${cfg.error_targets.map((t) => `<th>≤ ${pct(t)} error</th>`).join("")}</tr></thead><tbody>${cfg.workflows
           .map(
@@ -924,13 +936,20 @@
                   const peers = cfg.workflows.map((other) => best(other, t)).filter(Boolean),
                     count = heatScale(g.count, peers.map((p) => p.count)),
                     time = heatScale(g.time, peers.map((p) => p.time));
-                  return `<td class="heat" style="background:${count.background}" title="Fewer tets is better at this shared error target">${num(g.count)} tets${count.label ? `<small>${count.label}</small>` : ""}<small class="target-time" style="background:${time.background}" title="Generation time of the selected minimum-count configuration; lower is better">${num(g.time)} s</small></td>`;
+                  return `<td class="heat" style="background:${count.background}" title="Fewer tets is better at this shared error target">${num(g.count)} ${countLabel.toLowerCase()}${count.label ? `<small>${count.label}</small>` : ""}<small class="target-time" style="background:${time.background}" title="Generation time of the selected minimum-count configuration; lower is better">${num(g.time)} s</small></td>`;
                 })
                 .join("")}</tr>`,
           )
           .join(
             "",
           )}</tbody></table></div><p class="muted">Lowest observed maximum element count reaching each target across all repeats. Each target column has separate count and time scales across qualifying workflows, green for lower values. Gray means no qualifying observation. No interpolation or extrapolation; the tested resolution range may miss a better configuration.</p>`;
+      }
+
+      function applicationTargets(caseId) {
+        const targets = (data.qualification?.targets || []).filter(t => t.case === caseId && (!geometryMode || t.energy_target == null));
+        const cost = g => g ? `${num(g.median_mesh_s)} s · n${g.cells} · ${num(g.max_triangles || g.max_tetrahedra)} ${countLabel.toLowerCase()}` : "Not reached";
+        const convergence = (data.qualification?.convergence || []).filter(g => g.case === caseId);
+        return `<h3>Cost to reach the application target</h3><p>Fastest and smallest are selected independently from measured configurations. Every requested repeat must pass. FEA targets also require q ≥ ${num(cfg.minimum_quality)}. Boundary checks run in both directions; volume admission includes empirical reference uncertainty.</p><div class="table-wrap"><table><thead><tr><th>Workflow</th><th>Target</th><th>Fastest qualifying configuration</th><th>Smallest qualifying configuration</th></tr></thead><tbody>${targets.map(t => `<tr><td>${esc(names[t.workflow])}</td><td>${t.energy_target == null ? "Geometry fidelity" : "FEA ≤ " + pct(t.energy_target)}</td><td>${cost(t.fastest)}</td><td>${cost(t.smallest)}</td></tr>`).join("")}</tbody></table></div>${geometryMode ? "" : `<h3>Observed convergence</h3>${convergence.map(g => `<p>${esc(names[g.workflow])}: ${g.levels} admissible levels, ${esc(g.status)}. ${g.pairs.map(p => `n${p.cells.join(" → ")}: order ${num(p.effective_h_order)}`).join("; ")}</p>`).join("")}<p class="muted">Orders use h proportional to element count to the power −1/3. They are diagnostics for independently generated meshes, not an error bound or extrapolation.</p>`}`;
       }
 
       function mesh(canvas, triangles) {
@@ -1016,7 +1035,7 @@
             return `<div class="mesh-card"><b>${esc(names[w])}</b>${r ? `<canvas data-mesh="${esc(r.artifact)}" aria-label="${esc(c.name + " " + names[w] + " mesh")}" title="Drag to rotate"></canvas><small>n=${r.cells} · ${num(r.tetrahedra)} tets · ${esc(r.status)}<br>Surface simplified for display. Drag to rotate.</small>` : '<div class="empty-preview">No retained validated surface</div><small>See status and logs below.</small>'}</div>`;
           })
           .join("");
-        section.innerHTML = `<div class="case-header"><div><div class="eyebrow">${esc(c.id)}</div><h2>${esc(c.name)}</h2><p>${esc(c.description)}</p></div><span class="badge">${rows.length}/${cfg.cells.length * cfg.workflows.length * cfg.repeats} measured runs</span></div><div class="formula">${esc(c.formula)}<br>X = 2πx/L, Y = 2πy/L, Z = 2πz/L · cube [−L/2, L/2]³ · L=${c.scale}<br>${["bcc_lattice", "spinodoid"].includes(c.function) ? "Implicit solid: signed field ≤ 0. The lower Meshers band value −1 is inactive." : `Sheet: |f| ≤ width(x)/2 · width(x)=${c.offset}${c.grading ? " × (1 + " + c.grading + " x/L)" : ""}${c.function === "solid" ? " · full cube" : ""}`}</div><div class="previews">${previews}</div><div class="legend">${cfg.workflows.map((w) => `<span><i class="dot" style="background:${colors[w]}"></i>${esc(names[w])}</span>`).join("")}</div><div class="charts"><div class="chart"><h3>Generation time versus FEA error</h3>${chart(gs, "time", "Generation seconds")}</div><div class="chart"><h3>Elements versus FEA error</h3>${chart(gs, "count", "Tetrahedra")}</div></div><div class="heat-key"><b>Better</b><span class="colorbar" aria-label="Green through yellow to red"></span><b>Worse</b><p>Each metric uses its own linear range across available workflows at the same intervals. Green is the best observed value, red the worst; a column with no variation has a neutral fill. Diagnostic results keep their colors and labels, but stay excluded from claims. Hover a value for its range.</p><p>↓ Lower time and FEA error are better. ↑ Higher q is better. ↓* Fewer tets or nodes only helps at comparable FEA accuracy. A red q badge marks the quality gate independently of the colormap.</p></div><div class="table-wrap" role="region" aria-label="Measurements, scroll horizontally on narrow screens" tabindex="0"><table class="results-table"><thead><tr><th>Workflow / intervals</th><th>Time ↓ median [min, max] s</th><th>Max tets ↓*</th><th>Max nodes ↓*</th><th>Min q ↑</th><th>Worst FEA error ↓</th><th>Status</th></tr></thead><tbody>${resultRows(gs)}</tbody></table></div><p class="muted">Colors describe the observed column values, not overall mesh qualification. Use the admissible matched-budget and error-target comparisons below to judge tradeoffs. On narrow screens, scroll the table horizontally; workflow names stay visible.</p><details open><summary>Compare at matched budgets and error targets</summary>${comparisons(gs)}${targets(gs)}</details><details><summary>Individual repetitions, geometry diagnostics and all 18 load errors</summary>${rows.map((r) => `<details><summary>${esc(names[r.workflow])} n${r.cells}, repeat ${r.repeat + 1}: ${esc(r.status)}</summary><p><a href="${artifact(r, "worker.log")}">Full log</a> · <a href="${artifact(r, "request.json")}">Input</a>${r.mesh_sha256 ? ' · <a href="' + artifact(r, "mesh.npz") + '">Mesh arrays</a>' : ""}${r.fields_sha256 ? ' · <a href="' + artifact(r, "fields.npz") + '">Solved fields</a>' : ""}</p><pre>${esc(JSON.stringify(Object.fromEntries(Object.entries(r).filter(([k]) => k !== "preview")), null, 2))}</pre></details>`).join("")}</details>${failures.length ? `<details open><summary>${failures.length} retained failures</summary>${failures.map((r) => `<div class="failure"><b>${esc(names[r.workflow])} n${r.cells}, repeat ${r.repeat + 1}</b><p>${esc(r.failure_owner || owner(r))} · ${esc(r.stage)}: ${esc(r.error)}</p><a href="${artifact(r, "worker.log")}">Full worker log</a></div>`).join("")}</details>` : ""}`;
+        section.innerHTML = `<div class="case-header"><div><div class="eyebrow">${esc(c.id)}</div><h2>${esc(c.name)}</h2><p>${esc(c.description)}</p></div><span class="badge">${rows.length}/${cfg.cells.length * cfg.workflows.length * cfg.repeats} measured runs</span></div><div class="formula">${esc(c.formula)}<br>X = 2πx/L, Y = 2πy/L, Z = 2πz/L · cube [−L/2, L/2]³ · L=${c.scale}<br>${["bcc_lattice", "spinodoid"].includes(c.function) ? "Implicit solid: signed field ≤ 0. The lower Meshers band value −1 is inactive." : `Sheet: |f| ≤ width(x)/2 · width(x)=${c.offset}${c.grading ? " × (1 + " + c.grading + " x/L)" : ""}${c.function === "solid" ? " · full cube" : ""}`}</div><div class="previews">${previews}</div><div class="legend">${cfg.workflows.map((w) => `<span><i class="dot" style="background:${colors[w]}"></i>${esc(names[w])}</span>`).join("")}</div><div class="charts"><div class="chart"><h3>Generation time versus ${accuracyLabel}</h3>${chart(gs, "time", "Generation seconds")}</div><div class="chart"><h3>Elements versus ${accuracyLabel}</h3>${chart(gs, "count", countLabel)}</div></div><div class="heat-key"><b>Better</b><span class="colorbar" aria-label="Green through yellow to red"></span><b>Worse</b><p>Each metric uses its own linear range across available workflows at the same intervals. Green is the best observed value, red the worst; a column with no variation has a neutral fill. Diagnostic results keep their colors and labels, but stay excluded from claims. Hover a value for its range.</p><p>↓ Lower time and FEA error are better. ↑ Higher q is better. ↓* Fewer tets or nodes only helps at comparable FEA accuracy. A red q badge marks the quality gate independently of the colormap.</p></div><div class="table-wrap" role="region" aria-label="Measurements, scroll horizontally on narrow screens" tabindex="0"><table class="results-table"><thead><tr><th>Workflow / intervals</th><th>Time ↓ median [min, max] s</th><th>Max ${countLabel.toLowerCase()} ↓*</th><th>Max nodes ↓*</th><th>Min q ↑</th><th>${accuracyLabel} ↓</th><th>Status</th></tr></thead><tbody>${resultRows(gs)}</tbody></table></div><p class="muted">Colors describe the observed column values, not overall mesh qualification. Use the admissible matched-budget and error-target comparisons below to judge tradeoffs. On narrow screens, scroll the table horizontally; workflow names stay visible.</p><details open><summary>Compare at matched budgets and error targets</summary>${comparisons(gs)}${geometryMode ? "" : targets(gs)}${applicationTargets(c.id)}</details><details><summary>Individual repetitions, geometry diagnostics and all 18 load errors</summary>${rows.map((r) => `<details><summary>${esc(names[r.workflow])} n${r.cells}, repeat ${r.repeat + 1}: ${esc(r.status)}</summary><p><a href="${artifact(r, "worker.log")}">Full log</a> · <a href="${artifact(r, "request.json")}">Input</a>${r.mesh_sha256 ? ' · <a href="' + artifact(r, "mesh.npz") + '">Mesh arrays</a>' : ""}${r.fields_sha256 ? ' · <a href="' + artifact(r, "fields.npz") + '">Solved fields</a>' : ""}</p><pre>${esc(JSON.stringify(Object.fromEntries(Object.entries(r).filter(([k]) => k !== "preview")), null, 2))}</pre></details>`).join("")}</details>${failures.length ? `<details open><summary>${failures.length} retained failures</summary>${failures.map((r) => `<div class="failure"><b>${esc(names[r.workflow])} n${r.cells}, repeat ${r.repeat + 1}</b><p>${esc(r.failure_owner || owner(r))} · ${esc(r.stage)}: ${esc(r.error)}</p><a href="${artifact(r, "worker.log")}">Full worker log</a></div>`).join("")}</details>` : ""}`;
         document.getElementById("cases").append(section);
         section
           .querySelectorAll(".interactive-chart")

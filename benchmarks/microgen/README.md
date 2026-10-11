@@ -10,8 +10,8 @@ From the Meshers repository root, with [uv](https://docs.astral.sh/uv/) installe
 uv run --project benchmarks/microgen --locked microgen-benchmark
 ```
 
-Open the printed `report.html` path. The default run covers ten cases, three
-resolution levels, one warmup and three measured repetitions per configuration.
+Open the printed `report.html` path. The default run covers ten cases at 16, 24, 36 and 54 intervals, one warmup and
+three measured repetitions per configuration.
 It runs serially and can take hours. Start with the shorter complete case matrix:
 
 ```sh
@@ -19,7 +19,7 @@ uv run --project benchmarks/microgen --locked microgen-benchmark --suite smoke
 ```
 
 The smoke suite uses eight grid intervals, no warmups, one measurement and a
-60-second limit per worker (300 seconds in the standard suite). Use `--timeout`
+60-second limit per worker and 1,800 seconds in the standard suite. Use `--timeout`
 to change that limit. It
 checks that the workflows run and the report contains every case. Its timings
 are not sufficient for performance claims, and coarse meshes may fail.
@@ -42,6 +42,48 @@ the queue's group state are untouched.
 Linux also needs Gmsh's system runtime libraries, typically
 `sudo apt-get install libglu1-mesa libgl1` on Debian or Ubuntu. The CI workflow
 installs these before running the benchmark.
+
+## Application targets
+
+The standard suite requires sampled boundary distances below `0.002 L` in both
+directions and relative material-volume error below 1%. Volume admission includes
+the empirical spread of four independently scrambled Sobol estimates and a
+nested-sample change. This uncertainty estimate is not a confidence bound.
+Analytic grid-edge roots and material points on the box faces provide a fixed
+target-to-mesh probe. Wall vertices, edge midpoints and face centers provide the
+mesh-to-field probe. Small features between probe points can still be missed;
+these checks do not certify Hausdorff distance.
+
+FEA targets are 1%, 2% and 5% worst relative energy error. `--fea-target` defaults
+to 5%. A 20% result remains diagnostic data and cannot qualify as a low-error FEA
+result. Every workflow must meet the same minimum element quality for FEA target
+comparisons. `qualification.json` records the fastest qualifying configuration
+and the smallest qualifying configuration independently. All requested repeats
+must pass. It also records observed convergence using actual tetrahedron counts.
+There is no interpolation or extrapolation to claim an unmeasured target.
+
+For visualization or printing, use `--purpose surface`. Microgen VTK calls its
+public `generate_surface_mesh`; Meshers and the two volume MMG pipelines include
+volume generation and boundary extraction. The released Meshers API has no direct
+surface generator. Surface rows retain triangle counts, volume and boundary
+errors, closed-manifold and winding checks, and nonadjacent triangle intersection
+checks. The intersection test excludes pairs sharing a vertex and uses floating
+point tolerances, so it is not a complete self-intersection certificate.
+No elasticity solve or minimum element-shape gate is required for this use.
+`--purpose geometry` measures volume generation under the same geometry gates
+while skipping FEA. Both modes default to native minimum quality zero, explicitly
+declared in the manifest; the FEA mode still defaults to 0.1.
+
+```sh
+microgen-benchmark --purpose surface --cases gyroid --cells 16,24,36
+microgen-benchmark --purpose fea --cases gyroid --cells 24,36,54 --error-targets .01,.02,.05
+```
+
+Smoke defaults retain the original `.01 L` boundary tolerance, 10% volume
+tolerance, 250,000-tetrahedron budget and 2,000,000 validation-pair cap, so issues
+#3 and #4 can still be reproduced. Standard defaults use a 1,000,000-tetrahedron
+budget and 20,000,000 validation-pair cap. Neither cap means that a mesh passes
+when the budget runs out. Override limits explicitly and retain the manifest.
 
 ## Cases and workflows
 
@@ -110,6 +152,11 @@ budget comparisons.
 * `vtk` explicitly uses `Tpms.grid_sheet.triangulate()` for sheets and the public
   implicit volume generator followed by `triangulate()` for the other fields. It does not call a
   version-dependent default backend.
+* `vtk-tetra` builds a Cartesian background with VTK, triangulates it first,
+  samples the shared field and clips the tetrahedra at the band bounds. This is
+  an additional control for extraction order, not Microgen's current volume
+  workflow. `mmg-tetra` applies the same one-pass MMG binding policy to that
+  seed. Original failed VTK and MMG results remain visible under their own names.
 * `mmg` converts those VTK tetrahedra to MMG3D through mmgpy, runs one volume
   adaptation pass with `hsiz=L/cells` and `hgrad=1.3`, then converts back. Box-cap
   triangles stay fixed; MMG can adapt the curved boundary. This portable binding workflow is distinct from
@@ -137,9 +184,9 @@ for the legacy workflow, and MMG's
 [required-boundary implementation](https://www.mmgtools.org/documentation/mmg3d/documentation_mmg3d_mesh_analysis.html)
 for the effect of `nosurf`.
 
-The default Meshers minimum quality is 0.1 and geometry tolerance is 0.01 times
-the cell size. Configure them explicitly to test another policy. The report
-records the policy; no automatic relaxation or backend fallback occurs.
+The FEA mode requests minimum Meshers quality 0.1. Standard geometry tolerance
+is `0.002 L`; smoke retains `0.01 L`. Configure these values explicitly to test
+another policy. The manifest records the policy.
 
 ## What FEA quality means here
 
@@ -179,28 +226,27 @@ cap is an incomplete check, never a pass. Very small determinants below `1e-15`
 are rejected. This floating-point implementation is not an exact-arithmetic
 mesh certificate.
 
-Implicit-boundary vertices and face centroids give a sampled first-order
-geometry distance, `abs(abs(field)-1)/norm(gradient)`. Cap faces are excluded.
-This is a diagnostic, not a Hausdorff bound. Only runs within the declared
-sampled tolerance enter FEA comparison charts. Invalid meshes and geometry
-warnings remain in the tables and logs. The MMG shape score q is a separate
-diagnostic, with 1 for a regular tetrahedron. A control's q below 0.1 alone does
-not disqualify its FEA measurement.
+Implicit-boundary vertices, edge midpoints and face centers give a sampled
+first-order geometry distance. Reverse probes measure the distance from analytic
+wall roots and material box-face samples to the generated triangle boundary.
+Both directions must meet the declared tolerance. These samples are diagnostics,
+not a Hausdorff bound. Invalid meshes and geometry warnings remain in the tables
+and logs. MMG shape q equals 1 for a regular tetrahedron. Low-q control meshes
+retain their FEA score, but cannot qualify for the FEA application target.
 
-An independent scrambled Sobol sample of 262,144 points estimates the intended
-material volume. The report records its difference from the first 131,072
-samples. This difference is a convergence diagnostic, not a confidence bound.
-Meshes more than 10% from that volume estimate do not enter comparisons. Use
-`--volume-tolerance` to declare another threshold. Volume agreement and sampled
-boundary agreement still cannot certify every missing feature. The target
-preview uses a separate 32-interval Microgen surface for display only.
+Four scrambled Sobol samples of 262,144 points each estimate material volume.
+The report retains the individual estimates, their spread and the nested half-
+sample difference. Admission includes this empirical uncertainty, with a 1%
+standard volume tolerance and 10% smoke tolerance. Volume and boundary agreement
+cannot certify every missing feature. The target preview uses a separate
+32-interval Microgen surface for display only.
 
 The report provides:
 
 * Generation time versus worst FEA error, and elements versus worst FEA error.
 * Measured Meshers/control pairs within 5% of the same element count. Ratios
   compare Meshers to the control; below 1 is better. No match means no claim.
-* The lowest observed element count reaching 5%, 10% and 20% error targets.
+* The lowest observed element count reaching 1%, 2% and 5% error targets.
   These are observed configurations, without interpolation or extrapolation.
 * Full timings and status for every repeat, including unsuccessful generations.
 * Continuous green-to-red table colormaps, with a separate scale for each metric
