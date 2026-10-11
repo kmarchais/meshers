@@ -149,6 +149,12 @@ use `tanh` normalization and material `field <= 0`; Meshers receives band
 `[-1,0]`, whose lower boundary is inactive. Microgen samples the same field
 through `from_field(...).generate_volume_mesh(resolution=cells+1)`.
 
+The shared BCC expression uses scalar-coordinate operations that also broadcast
+over NumPy arrays. This lets Meshers use its public scalar compiler and automatic
+derivatives. Tests compare it against the original vector expression at three
+scales and check gradients away from the nondifferentiable junctions. Preparation
+remains timed. Earlier callback measurements retain their original source snapshots.
+
 Charts support workflow toggles, wheel zoom, drag pan, point selection and a
 reset button. Lower and left is better. Hollow points enabled by the geometry
 warning switch are diagnostic scores excluded from comparisons. Table colors

@@ -104,11 +104,53 @@ triangulation left open edges. Its explicit cleanup now conforms existing
 collinear cap edges without moving vertices or filling holes. Gyroid grid 54
 still has open edges and remains a failure. Spinodoid grid 54 has accurate
 volume but a sampled boundary distance of `0.002437 L`, so it remains excluded.
-Common-runner repeats are needed before quoting a speed ratio.
+The completed common-runner trial uses one warmup and three measured repeats
+per configuration, with all 72 measured rows and 24 warmups retained in
+`calibration/surface-repeated.json`. Every repeat of the configurations below
+passes the same strict geometry policy.
+
+| Case | Workflow | Grid | Triangles | Median generation |
+| --- | --- | ---: | ---: | ---: |
+| Gyroid | Microgen public VTK surface | 54 | 72,512 | 0.1944 s |
+| Gyroid | Direct Flying Edges control | 36 | 25,872 | 0.07543 s |
+| Gyroid | Meshers zero passes, full volume then boundary | 24 | 20,944 | 0.4010 s |
+| Gyroid | Meshers one pass, full volume then boundary | 24 | 20,944 | 0.8760 s |
+| BCC lattice | Direct Flying Edges control | 54 | 34,904 | 0.1825 s |
+
+At this geometry target, the fastest tested Meshers surface configuration costs
+2.06 times the current Microgen VTK path and 5.32 times the direct Flying Edges
+control for Gyroid. These are observed target-cost comparisons on this machine;
+their triangle counts differ. One optimization pass costs more without improving
+the zero-pass Gyroid's boundary distances. This supports the zero-pass profile
+for this printing/visualization case.
+
+The public VTK Gyroid surface fails topology at grids 24 and 36 but passes at
+54. The direct control passes at 36 and fails topology at 54. Keep these
+nonmonotonic results. The lattice public surface leaves the specimen box at
+every tested grid. The original Meshers lattice field uses NumPy callback
+fallback; neither zero nor one pass returns a mesh meeting `0.002 L` at grids
+24, 36 or 54. Removing the FEA shape gate does not resolve that geometry failure.
 
 This is the strongest reason to add a native surface-only API. Comparing full
 native volume generation against a direct VTK surface algorithm would hide the
 cost Microgen users actually pay for printing and visualization.
+
+## Traceable BCC field control
+
+The vector implementation of the BCC field uses `broadcast_arrays`, array
+construction and reductions that the released native scalar tracer does not
+support. A scalar-coordinate expression computes the same capsule distances
+and also broadcasts over NumPy arrays. On 10,027 random and named points at
+three scales, its NumPy values agree exactly with the original vector expression;
+compiled values differ by at most `2.22e-16`, and compiled gradients are finite.
+Regression tests retain the original expression and check gradients against
+finite differences away from the capsule junctions.
+
+The benchmark now uses that shared traceable expression for all workflows.
+Meshers can use its public compiler and automatic derivatives instead of NumPy
+callback fallback. Its preparation cost remains included. A fresh pilot must
+measure the geometry and timing effect before any claim of improvement. The
+earlier surface trial remains evidence for its original callback implementation.
 
 ## Coarse implicit failures
 

@@ -66,13 +66,15 @@ class Case:
                 values[sl] = source.evaluate(*(a[sl] for a in flat))
             return np.tanh(values.reshape(arrays[0].shape))
         if self.function == "bcc_lattice":
-            arrays = np.broadcast_arrays(x / self.scale, y / self.scale, z / self.scale)
-            p = np.stack(arrays, axis=-1)
-            distance = np.full(arrays[0].shape, np.inf)
-            for corner in product((-0.5, 0.5), repeat=3):
-                end = np.asarray(corner)
-                t = np.clip(np.sum(p * end, axis=-1) / np.dot(end, end), 0, 1)
-                distance = np.minimum(distance, np.linalg.norm(p - t[..., None] * end, axis=-1))
+            x, y, z = x / self.scale, y / self.scale, z / self.scale
+            distance = None
+            # Scalar-coordinate operations also broadcast over NumPy arrays.
+            # They let Meshers trace this same field instead of falling back
+            # because of array construction and vector reductions.
+            for a, b, c in product((-0.5, 0.5), repeat=3):
+                t = np.clip((x * a + y * b + z * c) / 0.75, 0, 1)
+                norm = np.sqrt((x - t * a) ** 2 + (y - t * b) ** 2 + (z - t * c) ** 2)
+                distance = norm if distance is None else np.minimum(distance, norm)
             return np.tanh(distance / self.offset - 1)
         a, b, c = 2 * np.pi * x / self.scale, 2 * np.pi * y / self.scale, 2 * np.pi * z / self.scale
         if self.function == "gyroid":
