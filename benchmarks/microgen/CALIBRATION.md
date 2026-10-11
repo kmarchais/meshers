@@ -26,8 +26,17 @@ that launches the bundled native MMG executable. Subsequent runs call that
 native executable directly, record its exact path and hash, and can use an
 existing installation through `--mmg-bin-directory`. Microgen's two-pass
 function, parameters, required-boundary treatment and file exchange remain
-unchanged. Finer-grid measurements are needed before claiming usable target
-coverage or comparing its qualified timing to Meshers.
+unchanged.
+
+The grid-54 run returns 332,322 tetrahedra in 30.401 s with 2.511% energy error.
+It also remains excluded. Forward boundary distance is `0.004463 L`, reverse
+distance `0.003591 L`, and 745 tetrahedra fall below quality 0.1, with minimum
+0.004806. Volume error plus empirical uncertainty is 0.381%.
+`calibration/gyroid-microgen-mmg-54.json` retains the full metrics and native CLI
+hash. Both resolutions used `hausd=0.002 L`, `hsiz=L/cells`, `hgrad=1.3` and
+Microgen's required-boundary policy. A smaller MMG approximation tolerance is a
+useful next control, since its tolerance concerns the reconstructed boundary
+rather than the analytic field. These failures provide no qualified speed ratio.
 
 ## Admission policy
 
@@ -150,10 +159,11 @@ some wall normals disagree with the analytic field. It remains a geometry
 warning and cannot qualify for the FEA target. Its 109.088 s generation time
 is retained without a speed claim.
 
-The next MMG control distinguishes wall patches and physical box planes with
+The optional MMG control distinguishes wall patches and physical box planes with
 references, allowing cap interiors to be retriangulated. It retains the same
-cleaned seed and all independent admission gates. Its first trial uses grid 32
-before another expensive fine-grid run.
+cleaned seed and all independent admission gates. A corrected trial needs a
+coarse proof before another expensive fine-grid run. The current Microgen CLI
+baseline and repeated surface measurements take priority.
 
 The boundary-entity regression exposed an adapter error in the early binding
 controls. `mmgpy`'s volume-only conversion has no triangles until MMG analyzes
@@ -168,9 +178,10 @@ its local output remains marked interrupted, and it provides no tagged result.
 
 ## Next measurements
 
-The next trial uses grid 80 with one-pass Meshers and the cleaned MMG control,
-a two-million native tetrahedron budget, 60 million validation-pair cap and
-16 GiB worker RSS ceiling. It measures the 2% target rather than extrapolating
-it from coarse meshes. Repeat selected qualifying configurations with warmups
-before making timing claims. Keep surface timing separate and include all
-failures in the report.
+Measure Microgen's current CLI pipeline at finer grids, then repeat selected
+qualifying configurations with warmups before making timing claims. Keep
+surface timing separate and include all failures in the report. Extend the
+strict FEA calibration beyond uniform Gyroid, especially the coarse failures
+in issues #3 and #4. The measured 2% native run used a two-million-tetrahedron
+budget, a 60-million validation-pair cap and a 16 GiB worker RSS ceiling;
+these larger limits remain explicit rather than becoming silent defaults.
