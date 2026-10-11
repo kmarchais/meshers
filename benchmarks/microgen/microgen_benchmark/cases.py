@@ -225,7 +225,7 @@ PROFILES = {
     "meshers-balanced": {"optimize_passes": 4},
     "meshers-quality": {"optimize_passes": 12},
 }
-DEFAULT_WORKFLOWS = [
+SMOKE_WORKFLOWS = [
     "vtk",
     "mmg",
     "mmg-microgen",
@@ -233,6 +233,7 @@ DEFAULT_WORKFLOWS = [
     "meshers-balanced",
     "meshers-quality",
 ]
+DEFAULT_WORKFLOWS = [*SMOKE_WORKFLOWS, "vtk-tetra-clean", "mmg-tetra-clean", "meshers-pass1"]
 WORKFLOWS = [
     "vtk",
     "mmg",

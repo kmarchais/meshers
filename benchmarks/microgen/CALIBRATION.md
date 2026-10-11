@@ -81,6 +81,17 @@ reject. Issue #3 must stay open, and the lattice and Spinodoid in issue #4 need
 further work. The common geometry validator must admit a returned mesh before
 it enters benchmark comparisons.
 
+The common-runner verification used native commit
+`66b800cf80e791788b980c01a8438f0e7f8ec8c6`, proposed in
+[PR #5](https://github.com/kmarchais/meshers/pull/5), without replacing the locked
+wheel baseline. Its binary hash is retained in `native-geometry-correction.json`.
+Both uniform Gyroid outputs also pass the independent smoke geometry policy.
+The graded and thin outputs remain geometry warnings because reverse distances
+range from `0.011138 L` to `0.011397 L`. Fixing the native acceptance regression
+does not make those coarse meshes eligible for comparison. Native formatting,
+lint and all 49 release tests passed; the real Python suite passed 102 tests
+with one skip after correcting the scalar evaluator path.
+
 ## Next measurements
 
 Measure short optimization budgets at grid 32, then choose the next FEA grid

@@ -16,7 +16,7 @@ import traceback
 from datetime import datetime, timezone
 from pathlib import Path
 
-from .cases import CASES, DEFAULT_WORKFLOWS, SURFACE_WORKFLOWS, WORKFLOWS, Case
+from .cases import CASES, DEFAULT_WORKFLOWS, SMOKE_WORKFLOWS, SURFACE_WORKFLOWS, WORKFLOWS, Case
 from .qualification import admission, summarize
 
 
@@ -448,7 +448,9 @@ def main():
     )
     parser.add_argument("--output", type=Path)
     parser.add_argument("--cases", default=",".join(c.id for c in CASES))
-    parser.add_argument("--workflows", default=",".join(DEFAULT_WORKFLOWS))
+    parser.add_argument(
+        "--workflows", help="Comma-separated workflows; standard adds cleaned controls and one pass"
+    )
     parser.add_argument(
         "--cells", help="Comma-separated interval counts, default smoke 8, standard 16,24,36,54"
     )
@@ -501,7 +503,11 @@ def main():
         )
         print(target.resolve())
         return
-    case_ids, workflows = args.cases.split(","), args.workflows.split(",")
+    defaults = DEFAULT_WORKFLOWS if args.suite == "standard" else SMOKE_WORKFLOWS
+    if args.purpose == "surface":
+        defaults = [*defaults, "vtk-flying-edges"]
+    case_ids = args.cases.split(",")
+    workflows = args.workflows.split(",") if args.workflows else list(defaults)
     if len(set(case_ids)) != len(case_ids) or not set(case_ids) <= {c.id for c in CASES}:
         parser.error("Unknown or repeated case IDs")
     available = SURFACE_WORKFLOWS if args.purpose == "surface" else WORKFLOWS

@@ -3,6 +3,13 @@
 Compare Microgen's VTK tetrahedra, two VTK-to-MMG workflows, and three Meshers
 optimization budgets. One command produces a standalone HTML document, raw
 measurements, mesh arrays, solved displacement fields and full failure logs.
+The standard run also includes the explicitly cleaned VTK and MMG controls and
+the one-pass native profile. Surface runs add the direct Flying Edges control.
+Smoke keeps the original six volume workflows.
+
+[Calibration results](CALIBRATION.md) record measured target coverage and the
+remaining failures. [Algorithm investigations](ALGORITHMS.md) connect those
+findings to primary sources and the next implementation choices.
 
 From the Meshers repository root, with [uv](https://docs.astral.sh/uv/) installed:
 

@@ -49,9 +49,9 @@ jobs:
           PURPOSE: ${{ inputs.purpose || 'fea' }}
         shell: bash
         run: uv run --project benchmarks/microgen --locked microgen-benchmark --suite "$SUITE" --purpose "$PURPOSE" --output benchmarks/microgen/output/ci
-      - name: Check the public surface workflow
+      - name: Check the public surface workflow and direct control
         shell: bash
-        run: uv run --project benchmarks/microgen --locked microgen-benchmark --suite smoke --purpose surface --cases solid-cell,gyroid --workflows vtk,meshers-fast --output benchmarks/microgen/output/ci-surface
+        run: uv run --project benchmarks/microgen --locked microgen-benchmark --suite smoke --purpose surface --cases solid-cell,gyroid --workflows vtk,vtk-flying-edges,meshers-fast --output benchmarks/microgen/output/ci-surface
       - uses: actions/upload-artifact@v4
         if: always()
         with:
