@@ -205,6 +205,40 @@ def generate(case, workflow, cells, config, progress=None):
 
 def generate_surface(case, workflow, cells, config, progress=None):
     """Time the public surface path, or the full volume-to-surface cost."""
+    if workflow == "vtk-flying-edges":
+        import pyvista as pv
+        from vtkmodules.vtkCommonCore import vtkSMPTools
+
+        from .flying_edges import generate as flying_edges
+
+        vtkSMPTools.Initialize(config["threads"])
+        if progress:
+            progress(
+                stage="Flying Edges surface extraction", failure_owner="VTK Flying Edges control"
+            )
+        start = time.perf_counter()
+        if case.function == "spinodoid":
+            from .cases import spinodoid_source
+
+            spinodoid_source(case.scale)
+        setup_s = time.perf_counter() - start
+        points, faces, generation_s, cleanup = flying_edges(case, cells)
+        checked = case.verify_field(case.shape(cells), cells)
+        return (
+            points,
+            faces,
+            {
+                "setup_s": setup_s,
+                "generation_s": generation_s,
+                "mesh_s": setup_s + generation_s,
+                "field_samples_checked": checked,
+                "vtk_version": pv.vtk_version_info,
+                "generated_tetrahedra": 0,
+                "surface_pipeline": "Flying Edges, positive halo, six planar caps, conforming cap edges",
+                "surface_grid_dimensions": [cells + 3] * 3,
+                **cleanup,
+            },
+        )
     if workflow != "vtk":
         from .geometry import boundary
 

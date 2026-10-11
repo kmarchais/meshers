@@ -16,7 +16,7 @@ import traceback
 from datetime import datetime, timezone
 from pathlib import Path
 
-from .cases import CASES, DEFAULT_WORKFLOWS, WORKFLOWS, Case
+from .cases import CASES, DEFAULT_WORKFLOWS, SURFACE_WORKFLOWS, WORKFLOWS, Case
 from .qualification import admission, summarize
 
 
@@ -127,7 +127,7 @@ def worker(request_path):
             if request["workflow"].startswith("meshers")
             else (
                 "Microgen / VTK"
-                if request["workflow"] == "vtk"
+                if request["workflow"].startswith("vtk")
                 else "Microgen / MMG pipeline"
                 if request["workflow"] == "mmg-microgen"
                 else "MMG binding pipeline"
@@ -253,7 +253,7 @@ def stop_tree(process):
     process.wait(timeout=10)
 
 
-def progress(done, total, message, start, failures):
+def progress(done, total, message, start, failures, **values):
     elapsed = time.monotonic() - start
     eta = elapsed / done * (total - done) if done else None
     try:
@@ -271,7 +271,7 @@ def progress(done, total, message, start, failures):
         else:
             report = None
     if report:
-        report(done / total, message, eta_s=eta, completed=done, total=total, failures=failures)
+        report(done / total, message, eta_s=eta, failures=failures, **values)
     print(
         f"\r\x1b]9;4;1;{int(100 * done / total)}\x07[{done}/{total}] {message} | elapsed {elapsed:.0f}s",
         end="\n",
@@ -325,7 +325,11 @@ def run_child(request, directory, timeout, heartbeat):
         monitored = psutil.Process(process.pid)
         try:
             while process.poll() is None:
-                heartbeat()
+                live = {}
+                try:
+                    live = json.loads((directory / "progress.json").read_text(encoding="utf-8"))
+                except (FileNotFoundError, json.JSONDecodeError):
+                    pass
                 try:
                     rss = monitored.memory_info().rss
                     for child in monitored.children(recursive=True):
@@ -334,12 +338,14 @@ def run_child(request, directory, timeout, heartbeat):
                         except psutil.NoSuchProcess:
                             pass
                     peak_rss = max(peak_rss, rss)
+                    live["worker_rss_mib"] = rss / 2**20
                     if rss > memory_limit:
                         memory_limited = True
                         stop_tree(process)
                         break
                 except psutil.NoSuchProcess:
                     pass
+                heartbeat(live)
                 if time.monotonic() - start > timeout:
                     timed_out = True
                     stop_tree(process)
@@ -498,7 +504,8 @@ def main():
     case_ids, workflows = args.cases.split(","), args.workflows.split(",")
     if len(set(case_ids)) != len(case_ids) or not set(case_ids) <= {c.id for c in CASES}:
         parser.error("Unknown or repeated case IDs")
-    if len(set(workflows)) != len(workflows) or not set(workflows) <= set(WORKFLOWS):
+    available = SURFACE_WORKFLOWS if args.purpose == "surface" else WORKFLOWS
+    if len(set(workflows)) != len(workflows) or not set(workflows) <= set(available):
         parser.error("Unknown or repeated workflows")
     cells = [
         int(n) for n in (args.cells or ("8" if args.suite == "smoke" else "16,24,36,54")).split(",")
@@ -657,8 +664,17 @@ def main():
                 request,
                 output / identity,
                 timeout,
-                lambda i=index, msg=identity, f=failures: progress(
-                    i + len(cases), total_units, msg, start, f
+                lambda live, i=index, msg=identity, f=failures: progress(
+                    i + len(cases),
+                    total_units,
+                    f"{msg}: {live.get('stage', 'imports')}",
+                    start,
+                    f,
+                    **{
+                        key: live[key]
+                        for key in ["worker_rss_mib", "fea_cg_relative_residual"]
+                        if key in live
+                    },
                 ),
             )
             row = {

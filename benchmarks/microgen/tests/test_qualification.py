@@ -44,6 +44,8 @@ def test_reverse_distance_and_reference_uncertainty_block_admission():
     assert not admission(row, config(), 0.002)["geometry_eligible"]
     row["relative_volume_error"], row["sampled_reverse_distance"] = 0, 0.003
     assert not admission(row, config())["geometry_eligible"]
+    row.pop("sampled_reverse_distance")
+    assert not admission(row, config())["geometry_eligible"]
 
 
 def test_target_requires_all_repeats_and_reports_fastest_and_smallest():
@@ -67,6 +69,10 @@ def test_target_requires_all_repeats_and_reports_fastest_and_smallest():
     target = next(t for t in summarize(doc)["targets"] if t["energy_target"] == 0.02)
     assert target["fastest"]["cells"] == 32
     assert target["smallest"]["cells"] == 16
+    duplicated = deepcopy(doc)
+    duplicated["rows"][1]["repeat"] = 0
+    target = next(t for t in summarize(duplicated)["targets"] if t["energy_target"] == 0.02)
+    assert target["smallest"]["cells"] == 32
     changed = deepcopy(doc)
     changed["rows"][0]["status"] = "timeout"
     target = next(t for t in summarize(changed)["targets"] if t["energy_target"] == 0.02)

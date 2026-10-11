@@ -37,7 +37,9 @@ qrun -g gpu -l "Microgen speed and FEA benchmark" --progress report uv run --pro
 The runner streams child output and reports progress every two seconds. It uses
 the Workbench `pueue_progress` helper when installed, and OSC terminal progress
 otherwise. A timeout kills the owned worker and its descendants. Other jobs and
-the queue's group state are untouched.
+the queue's group state are untouched. Worker RSS and the current FEA residual
+appear as Queue values. RSS includes imports, validation and FEA, and is sampled
+every two seconds. It does not measure peak native meshing memory.
 
 Linux also needs Gmsh's system runtime libraries, typically
 `sudo apt-get install libglu1-mesa libgl1` on Debian or Ubuntu. The CI workflow
@@ -75,6 +77,15 @@ No elasticity solve or minimum element-shape gate is required for this use.
 `--purpose geometry` measures volume generation under the same geometry gates
 while skipping FEA. Both modes default to native minimum quality zero, explicitly
 declared in the manifest; the FEA mode still defaults to 0.1.
+
+For a direct surface control, select `--purpose surface --workflows vtk-flying-edges`.
+This samples the shared analytic field on a grid with one exterior cell layer,
+extracts the zero band with VTK Flying Edges, and clips it to six physical box
+planes. Its declared cap cleanup removes zero-area triangles and splits existing
+edges at existing collinear vertices. It does not move vertices or fill holes.
+The full extraction and cleanup cost is timed. All surface geometry checks still
+apply, and open caps remain failures. This is a separate control from Microgen's
+public `vtk` surface workflow.
 
 ```sh
 microgen-benchmark --purpose surface --cases gyroid --cells 16,24,36
@@ -182,6 +193,9 @@ budget comparisons.
   `delete_on_close=False`, allowing Microgen to reopen a file before its context
   closes. Context cleanup remains enabled. This changes file handling only;
   MMG passes and parameters stay unchanged.
+* `meshers-pass1` and `meshers-pass2` are explicit experiments with one and two
+  optimization passes. Select them with `--workflows` to test whether a smaller
+  budget reaches the same application target.
 * `meshers-fast`, `meshers-balanced` and `meshers-quality` call the public
   `meshers.generate` API with 0, 4 and 12 optimization passes. All use the same
   geometry tolerance and minimum quality. A higher budget does not guarantee a
@@ -206,8 +220,8 @@ The test space contains `x², y², z², xy, yz, zx` in each of the three displac
 components, for 18 quadratic fields. Each field gives exact body forces and
 natural tractions on every produced boundary face. Six independently selected
 scalar constraints per material component remove only rigid motion. The runner
-assembles one stiffness matrix, factorizes it once and solves all right-hand
-sides. Three-point triangle quadrature integrates the linear tractions exactly;
+assembles one stiffness matrix, prepares one common solver and solves all
+right-hand sides. Three-point triangle quadrature integrates the linear tractions exactly;
 four-point tetrahedral quadrature integrates the quadratic energy exactly.
 
 Let G be the exact strain-energy Gram matrix and H the displacement-error

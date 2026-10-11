@@ -7,6 +7,7 @@ from microgen_benchmark.cases import CASES
 from microgen_benchmark.geometry import boundary, canonical_surface
 from microgen_benchmark.reference import boundary_samples
 from microgen_benchmark.surface import validate_surface
+from microgen_benchmark.surface_cleanup import conform_cap_edges
 from microgen_benchmark.surface_intersections import check
 
 
@@ -32,11 +33,29 @@ def test_nonadjacent_coplanar_and_transverse_intersections():
         check(np.vstack([a, a + [0.1, 0.1, 0]]), np.array([[0, 1, 2], [3, 4, 5]]), max_pairs=0)
 
 
-def test_real_vtk_surface_avoids_tetrahedra():
+@pytest.mark.parametrize("workflow", ["vtk", "vtk-flying-edges"])
+def test_real_vtk_surface_avoids_tetrahedra(workflow):
     config = {"threads": 1}
-    points, faces, timing = generate_surface(CASES[0], "vtk", 4, config)
+    points, faces, timing = generate_surface(CASES[0], workflow, 4, config)
     points, faces, flips, _ = canonical_surface(points, faces)
     assert flips in {0, len(faces)}
     assert timing["generated_tetrahedra"] == 0
     assert timing["mesh_s"] > 0
     assert np.isclose(validate_surface(points, faces, CASES[0])["volume"], 1)
+
+
+def test_cap_stitching_preserves_geometry_and_leaves_real_holes_open():
+    p, t = cube(1)
+    faces = boundary(p, t)
+    a, b, c = faces[0]
+    p = np.vstack([p, (p[a] + p[b]) / 2])
+    midpoint = len(p) - 1
+    mismatched = np.vstack([[[a, midpoint, c], [midpoint, b, c]], faces[1:]])
+    with pytest.raises(ValueError, match="open"):
+        validate_surface(p, mismatched, CASES[0])
+    fixed, diagnostics = conform_cap_edges(p, mismatched, 1)
+    assert diagnostics["cap_edge_splits"] == 1
+    assert np.isclose(validate_surface(p, fixed, CASES[0])["volume"], 1)
+    missing_face, _ = conform_cap_edges(p, fixed[1:], 1)
+    with pytest.raises(ValueError, match="open"):
+        validate_surface(p, missing_face, CASES[0])

@@ -13,7 +13,9 @@ def admission(result, config, reference_uncertainty=0.0):
         reasons.append("Boundary distance unavailable: near-zero field gradient")
     elif distance > config["geometry_tolerance"]:
         reasons.append(f"Sampled boundary distance {distance:.6g}L exceeds tolerance")
-    if reverse is not None and reverse > config["geometry_tolerance"]:
+    if reverse is None:
+        reasons.append("Target-to-mesh boundary distance unavailable")
+    elif reverse > config["geometry_tolerance"]:
         reasons.append(f"Sampled target-to-mesh distance {reverse:.6g}L exceeds tolerance")
     cap = result.get("sampled_cap_overshoot", 0)
     if cap is None or cap > config["geometry_tolerance"]:
@@ -52,7 +54,11 @@ def summarize(document):
                     and r["cells"] == cells
                     and r["repeat"] >= 0
                 ]
-                complete = len(rows) == config["repeats"] and all(r["status"] == "ok" for r in rows)
+                complete = (
+                    len(rows) == config["repeats"]
+                    and {r["repeat"] for r in rows} == set(range(config["repeats"]))
+                    and all(r["status"] == "ok" for r in rows)
+                )
                 geometry = complete and all(
                     r.get("geometry_eligible", r.get("comparison_eligible", False)) for r in rows
                 )

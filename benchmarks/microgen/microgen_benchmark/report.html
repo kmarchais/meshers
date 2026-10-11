@@ -529,11 +529,14 @@
       const colors = {
         vtk: "#737d8a",
         mmg: "#ce731e",
+        "vtk-flying-edges": "#3eb5a2",
         "vtk-tetra": "#4a6877",
         "mmg-tetra": "#9b592b",
         "vtk-tetra-clean": "#6c707d",
         "mmg-tetra-clean": "#b55e52",
         "mmg-microgen": "#b54353",
+        "meshers-pass1": "#8e7aff",
+        "meshers-pass2": "#d69f3a",
         "meshers-fast": "#6c5ce7",
         "meshers-balanced": "#2477bd",
         "meshers-quality": "#14836b",
@@ -541,11 +544,14 @@
       const names = {
         vtk: "Microgen VTK",
         mmg: "VTK + MMG binding",
+        "vtk-flying-edges": "VTK · direct Flying Edges + caps",
         "vtk-tetra": "VTK · tetrahedral background clipping",
         "mmg-tetra": "VTK tetrahedral clipping + MMG",
         "vtk-tetra-clean": "VTK tetrahedral clipping + cleanup",
         "mmg-tetra-clean": "VTK tetrahedral clipping + cleanup + MMG",
         "mmg-microgen": "Microgen MMG · two passes",
+        "meshers-pass1": "Meshers · 1 pass",
+        "meshers-pass2": "Meshers · 2 passes",
         "meshers-fast": "Meshers · 0 passes",
         "meshers-balanced": "Meshers · 4 passes",
         "meshers-quality": "Meshers · 12 passes",
@@ -636,7 +642,7 @@
                 ? Math.max(...measuredErrors.map((r) => geometryMode ? r.relative_volume_error : r.worst_energy_error))
                 : null,
               eligible:
-                valid.length === cfg.repeats && rows.length === cfg.repeats,
+                valid.length === cfg.repeats && rows.length === cfg.repeats && Array.from({length: cfg.repeats}, (_, i) => i).every(i => rows.some(r => r.repeat === i)),
             };
           }),
         );
@@ -675,7 +681,7 @@
         };
         function details(g) {
           const why = g.eligible
-            ? "Admissible across all measured repeats"
+            ? "Geometry admitted across all measured repeats"
             : "Diagnostic only. " + reasons(g).join("; ");
           info.textContent = `${names[g.w]}, ${g.n} intervals. Generation ${num(g.time)} s; ${num(g.count)} ${countLabel.toLowerCase()}; ${accuracyLabel.toLowerCase()} ${pct(g.error)}; ${qualityLabel.toLowerCase()} ${num(g.q)}. ${why}`;
           section
@@ -822,9 +828,9 @@
         if (r.stage === "elasticity") return "Benchmark FEA solver";
         return r.workflow.startsWith("meshers")
           ? "Meshers"
-          : r.workflow === "vtk"
+          : r.workflow.startsWith("vtk")
             ? "Microgen / VTK"
-            : r.workflow === "mmg"
+            : r.workflow.startsWith("mmg") && r.workflow !== "mmg-microgen"
               ? "MMG binding pipeline"
               : "Microgen / MMG pipeline";
       }

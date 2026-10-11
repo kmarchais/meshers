@@ -33,6 +33,7 @@ def solve_system(matrix, rhs, coordinates, free, method, ordering, checkpoint=No
     preconditioner = hierarchy.aspreconditioner()
     result = np.empty_like(rhs)
     counts = []
+    residuals = []
     for column in range(rhs.shape[1]):
         count = 0
         last_report = time.monotonic()
@@ -63,11 +64,19 @@ def solve_system(matrix, rhs, coordinates, free, method, ordering, checkpoint=No
         if info:
             raise ValueError(f"AMG load {column} did not converge in 1000 iterations: {info}")
         counts.append(count)
+        residual = float(
+            np.linalg.norm(matrix @ result[:, column] - rhs[:, column])
+            / max(np.linalg.norm(rhs[:, column]), 1e-30)
+        )
+        residuals.append(residual)
         if checkpoint:
-            checkpoint(fea_rhs=column + 1, fea_cg_iterations=count)
+            checkpoint(
+                fea_rhs=column + 1, fea_cg_iterations=count, fea_cg_relative_residual=residual
+            )
     return result, {
         "linear_solver": method,
         "amg_iterations": counts,
+        "amg_final_relative_residuals": residuals,
         "amg_operator_complexity": hierarchy.operator_complexity(),
         "amg_relative_tolerance": 1e-11,
         "amg_max_iterations": 1000,

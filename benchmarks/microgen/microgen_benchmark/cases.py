@@ -220,10 +220,19 @@ CASES = [
 
 PROFILES = {
     "meshers-fast": {"optimize_passes": 0},
+    "meshers-pass1": {"optimize_passes": 1},
+    "meshers-pass2": {"optimize_passes": 2},
     "meshers-balanced": {"optimize_passes": 4},
     "meshers-quality": {"optimize_passes": 12},
 }
-DEFAULT_WORKFLOWS = ["vtk", "mmg", "mmg-microgen", *PROFILES]
+DEFAULT_WORKFLOWS = [
+    "vtk",
+    "mmg",
+    "mmg-microgen",
+    "meshers-fast",
+    "meshers-balanced",
+    "meshers-quality",
+]
 WORKFLOWS = [
     "vtk",
     "mmg",
@@ -234,3 +243,5 @@ WORKFLOWS = [
     "mmg-tetra-clean",
     *PROFILES,
 ]
+
+SURFACE_WORKFLOWS = (*WORKFLOWS, "vtk-flying-edges")
