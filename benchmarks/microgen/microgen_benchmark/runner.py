@@ -24,7 +24,21 @@ from .qualification import admission, summarize
 def write_json(path, value):
     temporary = path.with_suffix(path.suffix + ".tmp")
     temporary.write_text(json.dumps(value, indent=2, allow_nan=False), encoding="utf-8")
-    temporary.replace(path)
+    deadline = time.perf_counter() + 5
+    while True:
+        try:
+            temporary.replace(path)
+            return
+        except PermissionError as error:
+            # Windows readers without delete sharing temporarily block rename.
+            # Keep the old complete JSON visible; persistent errors still fail.
+            if (
+                os.name != "nt"
+                or error.winerror not in {5, 32, 33}
+                or time.perf_counter() >= deadline
+            ):
+                raise
+            time.sleep(0.05)
 
 
 def digest(path):

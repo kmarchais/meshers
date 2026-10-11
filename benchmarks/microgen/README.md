@@ -54,6 +54,10 @@ otherwise. A timeout kills the owned worker and its descendants. Other jobs and
 the queue's group state are untouched. Worker RSS and the current FEA residual
 appear as Queue values. RSS includes imports, validation and FEA, and is sampled
 every two seconds. It does not measure peak native meshing memory.
+JSON checkpoints replace the previous complete file atomically. On Windows,
+an observer's read handle can temporarily block that replacement; the runner
+retries for up to five seconds, then reports a persistent failure. Internal
+artifact output does not enter meshing time.
 
 Linux also needs Gmsh's system runtime libraries, typically
 `sudo apt-get install libglu1-mesa libgl1` on Debian or Ubuntu. The CI workflow

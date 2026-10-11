@@ -1,6 +1,7 @@
 import json
 import subprocess
 import sys
+import threading
 import time
 
 import pytest
@@ -19,6 +20,35 @@ def test_html_payload_cannot_close_script():
 def test_json_rejects_nonfinite_values(tmp_path):
     with pytest.raises(ValueError):
         write_json(tmp_path / "result.json", {"invalid": float("nan")})
+
+
+@pytest.mark.skipif(sys.platform != "win32", reason="Windows read handles deny rename")
+def test_json_write_waits_for_windows_reader(tmp_path):
+    path = tmp_path / "results.json"
+    write_json(path, {"old": True})
+    reader = path.open(encoding="utf-8")
+    assert json.load(reader) == {"old": True}
+    release = threading.Timer(0.2, reader.close)
+    release.start()
+    try:
+        write_json(path, {"new": True})
+    finally:
+        release.join()
+        reader.close()
+    assert json.loads(path.read_text()) == {"new": True}
+    assert not path.with_suffix(".json.tmp").exists()
+
+
+@pytest.mark.skipif(sys.platform != "win32", reason="Windows read handles deny rename")
+def test_json_persistent_windows_lock_fails_without_corrupting_old_result(tmp_path):
+    path = tmp_path / "results.json"
+    write_json(path, {"old": True})
+    with path.open(encoding="utf-8"):
+        start = time.perf_counter()
+        with pytest.raises(PermissionError):
+            write_json(path, {"new": True})
+        assert 4.9 <= time.perf_counter() - start < 7
+        assert json.loads(path.read_text()) == {"old": True}
 
 
 def test_changed_source_cannot_mix_results():
