@@ -8,6 +8,54 @@ fn gyroid(p: Point) -> f64 {
     let [x, y, z] = p.map(|v| v * TAU);
     x.sin() * y.cos() + y.sin() * z.cos() + z.sin() * x.cos()
 }
+
+struct BenchmarkGyroid {
+    variant: usize,
+    batched: bool,
+}
+impl ScalarField for BenchmarkGyroid {
+    fn value(&self, p: Point) -> f64 {
+        let width = match self.variant {
+            0 => 0.25,
+            1 => 0.25 * (1. + 0.4 * p[0]),
+            _ => 0.125,
+        };
+        gyroid(p) / width
+    }
+    fn prefers_batches(&self) -> bool {
+        self.batched
+    }
+}
+
+#[test]
+fn quality_optimization_preserves_the_coarse_benchmark_geometry_limit() {
+    for variant in 0..3 {
+        for batched in [false, true] {
+            for optimize_passes in [4, 12] {
+                let result = generate(
+                    &BenchmarkGyroid { variant, batched },
+                    Options {
+                        bounds: [[-0.5; 3], [0.5; 3]],
+                        cells: [8; 3],
+                        region: Region::Band {
+                            lower: -1.,
+                            upper: 1.,
+                        },
+                        geometry_tolerance: 0.01,
+                        minimum_quality: 0.1,
+                        max_tetrahedra: 250_000,
+                        optimize_passes,
+                        threads: 1,
+                        ..Options::default()
+                    },
+                )
+                .unwrap();
+                assert!(result.diagnostics.maximum_sampled_surface_error <= 0.01);
+                assert!(result.diagnostics.minimum_mmg_quality >= 0.1);
+            }
+        }
+    }
+}
 fn schwarz_p(p: Point) -> f64 {
     p.map(|v| (TAU * v).cos()).iter().sum()
 }
