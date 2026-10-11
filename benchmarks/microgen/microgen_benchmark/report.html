@@ -471,14 +471,18 @@
               Generation time includes Microgen case construction, extraction,
               remeshing or Meshers generation, and owned-array conversion. It
               excludes imports, process startup, geometry validation, FEA and
-              file writing. Repeats use fresh processes and rotating backend
+              artifact writing. Microgen's internal mesh-file exchange remains
+              included. Repeats use fresh processes and rotating backend
               order. Warmups are retained but excluded from medians.
             </p>
             <p>
+              Microgen's current VTK and two-pass MMG CLI pipelines are the
+              adoption baselines. Direct mmgpy workflows are experimental
+              controls; Microgen does not use that Python API.
               The direct MMG binding uses one volume-adaptation pass on VTK
               tetrahedra with physical box-cap triangles fixed. Microgen MMG
               calls its public two-pass remesher through the installed MMG
-              command wrapper, including file exchange and retries. Both use
+              native command, including file exchange and retries. Both use
               hsiz = L / intervals and hgrad = 1.3. Specimens are non-periodic.
               Meshers profiles change only the optimization-pass budget. No
               failed run falls back to another algorithm or a weaker quality
@@ -551,7 +555,7 @@
         "vtk-tetra-clean": "VTK tetrahedral clipping + cleanup",
         "mmg-tetra-tagged": "MMG · tagged box and wall patches",
         "mmg-tetra-clean": "VTK tetrahedral clipping + cleanup + MMG",
-        "mmg-microgen": "Microgen MMG · two passes",
+        "mmg-microgen": "Microgen MMG CLI · current pipeline",
         "meshers-pass1": "Meshers · 1 pass",
         "meshers-pass2": "Meshers · 2 passes",
         "meshers-fast": "Meshers · 0 passes",

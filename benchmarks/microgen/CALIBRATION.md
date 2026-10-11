@@ -6,6 +6,29 @@ worst elastic energy error over a fixed quadratic displacement space on each
 produced polyhedral domain. Engineering and homogenization accuracy still need
 a converged reference on the same physical domain.
 
+The adoption baselines are Microgen's current VTK path and its public
+`remesh_keeping_boundaries_for_fem` CLI pipeline, named `mmg-microgen`.
+Direct `mmgpy` binding measurements are additional algorithm controls. They do
+not measure Microgen's current remesher or imply support for that Python API.
+
+## Current Microgen MMG pipeline
+
+At grid 32, the public two-pass remesher returns 75,257 tetrahedra in 8.276 s.
+The worst energy error is 4.213%, but the mesh remains excluded. Its sampled
+forward boundary error is `0.006797 L`, reverse distance is `0.005353 L`,
+and 266 tetrahedra fall below quality 0.1, with minimum 0.01023. Relative volume
+error plus empirical uncertainty is 0.755%. Passing the FEA error test and
+volume test does not compensate for these boundary and shape failures.
+
+This is one calibration measurement with no warmup, retained in
+`calibration/gyroid-microgen-mmg-32.json`. It used the installed command alias
+that launches the bundled native MMG executable. Subsequent runs call that
+native executable directly, record its exact path and hash, and can use an
+existing installation through `--mmg-bin-directory`. Microgen's two-pass
+function, parameters, required-boundary treatment and file exchange remain
+unchanged. Finer-grid measurements are needed before claiming usable target
+coverage or comparing its qualified timing to Meshers.
+
 ## Admission policy
 
 The standard policy requires sampled distances in both directions below

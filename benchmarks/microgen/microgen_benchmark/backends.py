@@ -1,8 +1,9 @@
 """Explicit public backends. No silent algorithm or quality fallback."""
 
+import hashlib
+import importlib.metadata
 import os
 import shutil
-import sys
 import time
 from contextlib import nullcontext
 from pathlib import Path
@@ -18,6 +19,26 @@ def reopenable_temporary_file(*args, **kwargs):
     """Python 3.12 permits Windows reopening while retaining context cleanup."""
     kwargs["delete_on_close"] = False
     return NamedTemporaryFile(*args, **kwargs)
+
+
+def configure_mmg_cli(directory=None):
+    """Use a native CLI executable; the wheel only supplies the default binary."""
+    packaged = directory is None
+    directory = Path(directory or importlib.metadata.distribution("mmgpy").locate_file("mmgpy/bin"))
+    executable = directory / ("mmg3d_O3.exe" if os.name == "nt" else "mmg3d_O3")
+    if not executable.is_file():
+        raise FileNotFoundError(f"Native MMG command is unavailable: {executable}")
+    if packaged and os.name != "nt" and not os.access(executable, os.X_OK):
+        # Wheel extraction can lose executable bits; the package's launcher
+        # restores these too. Do not change permissions on a user installation.
+        executable.chmod(executable.stat().st_mode | 0o111)
+    os.environ["PATH"] = str(directory.resolve()) + os.pathsep + os.environ["PATH"]
+    resolved = shutil.which("mmg3d_O3")
+    if resolved is None or not Path(resolved).samefile(executable):
+        raise RuntimeError("Microgen's MMG command does not resolve to the selected executable")
+    with executable.open("rb") as stream:
+        sha = hashlib.file_digest(stream, "sha256").hexdigest()
+    return {"mmg_cli_executable": str(executable.resolve()), "mmg_cli_sha256": sha}
 
 
 def tetrahedra(grid):
@@ -66,15 +87,14 @@ def generate(case, workflow, cells, config, progress=None):
     import pyvista as pv
     from vtkmodules.vtkCommonCore import vtkSMPTools
 
+    cli_metadata = {}
     if workflow in {"mmg", "mmg-tetra", "mmg-tetra-clean", "mmg-tetra-tagged"}:
         import mmgpy
     elif workflow == "mmg-microgen":
         from microgen.remesh import remesh_keeping_boundaries_for_fem
 
-        # mmgpy installs Microgen's conventional command alias beside Python.
-        os.environ["PATH"] = str(Path(sys.executable).parent) + os.pathsep + os.environ["PATH"]
-        if not shutil.which("mmg3d_O3"):
-            raise ImportError("mmgpy's mmg3d_O3 command alias is unavailable")
+        cli_metadata = configure_mmg_cli(config.get("mmg_bin_directory"))
+        progress(**cli_metadata)
     elif workflow in PROFILES:
         import meshers
     vtkSMPTools.Initialize(config["threads"])
@@ -262,6 +282,7 @@ def generate(case, workflow, cells, config, progress=None):
             "vtk_version": pv.vtk_version_info,
             **cleanup,
             **native_diagnostics,
+            **cli_metadata,
         },
     )
 

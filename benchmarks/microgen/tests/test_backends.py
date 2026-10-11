@@ -1,3 +1,4 @@
+import hashlib
 from pathlib import Path
 
 import numpy as np
@@ -25,6 +26,11 @@ def test_real_backend_cube_pipeline(workflow):
     assert np.isclose(geometry["volume"], 1)
     assert fea["patch_max_error"] < 1e-8
     assert timing["mesh_s"] > 0
+    if workflow == "mmg-microgen":
+        executable = Path(timing["mmg_cli_executable"])
+        assert executable.parent.name == "bin"
+        assert executable.parent.parent.name == "mmgpy"
+        assert hashlib.sha256(executable.read_bytes()).hexdigest() == timing["mmg_cli_sha256"]
     if workflow == "mmg-tetra-tagged":
         assert set(timing["mmg_boundary_patch_counts"]) == set(map(str, range(3, 9)))
         assert timing["mmg_required_cap_triangles"] == 0

@@ -7,6 +7,7 @@ import json
 import math
 import os
 import platform
+import shlex
 import shutil
 import subprocess
 import sys
@@ -34,6 +35,12 @@ def failure_catalog(document):
     """Export reproductions without credentials, environments or mesh payloads."""
     failures = []
     config = document["provenance"]["config"]
+    mmg_args = (
+        ["--mmg-bin-directory", config["mmg_bin_directory"]]
+        if config.get("mmg_bin_directory")
+        else []
+    )
+    mmg_command = subprocess.list2cmdline(mmg_args) if os.name == "nt" else shlex.join(mmg_args)
     for row in document["rows"]:
         if row["repeat"] < 0 or row["status"] not in {
             "failed",
@@ -57,6 +64,7 @@ def failure_catalog(document):
                     f" --error-targets {','.join(map(str, config.get('error_targets', [0.01, 0.02, 0.05])))}"
                     f" --memory-limit-mib {config.get('memory_limit_mib', 8192)}"
                     f" --linear-solver {config.get('linear_solver', 'direct')}"
+                    + (f" {mmg_command}" if mmg_command else "")
                 ),
             }
         )
@@ -452,6 +460,11 @@ def main():
         "--workflows", help="Comma-separated workflows; standard adds cleaned controls and one pass"
     )
     parser.add_argument(
+        "--mmg-bin-directory",
+        type=Path,
+        help="Directory containing native mmg3d_O3 for Microgen's CLI path; default: bundled MMG binary",
+    )
+    parser.add_argument(
         "--cells", help="Comma-separated interval counts, default smoke 8, standard 16,24,36,54"
     )
     parser.add_argument("--repeats", type=int)
@@ -581,6 +594,9 @@ def main():
         "geometry_tolerance": args.geometry_tolerance,
         "volume_tolerance": args.volume_tolerance,
         "mmg_boundary": args.mmg_boundary,
+        "mmg_bin_directory": str(args.mmg_bin_directory.resolve())
+        if args.mmg_bin_directory
+        else None,
         "minimum_quality": args.minimum_quality,
         "max_tetrahedra": args.max_tetrahedra,
         "pair_cap": args.pair_cap,

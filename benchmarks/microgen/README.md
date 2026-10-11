@@ -1,11 +1,18 @@
 # Microgen meshing benchmark
 
-Compare Microgen's VTK tetrahedra, two VTK-to-MMG workflows, and three Meshers
-optimization budgets. One command produces a standalone HTML document, raw
+Compare Microgen's current VTK and MMG pipelines against Meshers at declared
+geometry and FEA targets. One command produces a standalone HTML document, raw
 measurements, mesh arrays, solved displacement fields and full failure logs.
 The standard run also includes the explicitly cleaned VTK and MMG controls and
 the one-pass native profile. Surface runs add the direct Flying Edges control.
 Smoke keeps the original six volume workflows.
+
+`vtk` and `mmg-microgen` are the adoption baselines. The latter calls Microgen's
+public two-pass command-line remesher. The `mmg`, `mmg-tetra`,
+`mmg-tetra-clean` and `mmg-tetra-tagged` workflows are separate experimental
+controls using the `mmgpy` Python API. Microgen does not use that API. The
+dependency also supplies native MMG executables for portable installation;
+using those executables does not replace Microgen's remeshing function.
 
 [Calibration results](CALIBRATION.md) record measured target coverage and the
 remaining failures. [Algorithm investigations](ALGORITHMS.md) connect those
@@ -199,13 +206,19 @@ budget comparisons.
   Microgen's legacy two-pass command-line remesher. Its surface approximation
   starts from VTK's polyhedral boundary. `--mmg-boundary fixed` instead protects
   every surface triangle for a comparison on the same VTK polyhedral domain.
-* `mmg-microgen` calls Microgen's public `remesh_keeping_boundaries_for_fem`
-  function using mmgpy's installed `mmg3d_O3` command alias. It runs
+* `mmg-microgen` is the current-workflow adoption baseline. It calls Microgen's
+  public `remesh_keeping_boundaries_for_fem` function using the bundled native
+  `mmg3d_O3` executable. It runs
   Microgen's two passes, file exchange and built-in retries with `hsiz=L/cells`,
   `hausd=geometry_tolerance*L` and `hgrad=1.3`. These costs enter the generation
   time. `periodic=False` matches this benchmark's finite specimens and varying
   thickness; periodic homogenization needs a separate test. `--mmg-boundary`
   applies only to the direct binding workflow.
+  Use `--mmg-bin-directory /path/to/mmg/bin` to measure an existing MMG
+  installation instead. The directory must contain `mmg3d_O3`, or
+  `mmg3d_O3.exe` on Windows. Each result records the exact executable path and
+  SHA-256. The Python launcher and direct binding API are bypassed for this
+  workflow; the package supplies the default native executable only.
   On Windows, a scoped temporary-file wrapper sets Python 3.12's
   `delete_on_close=False`, allowing Microgen to reopen a file before its context
   closes. Context cleanup remains enabled. This changes file handling only;
