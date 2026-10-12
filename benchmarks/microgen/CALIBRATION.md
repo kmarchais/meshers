@@ -274,6 +274,17 @@ retained in `mmg-first-distance-001.json`. The optional
 complete two-pass CLI pipeline and all common admission checks. The baseline
 `mmg-microgen` workflow stays unchanged.
 
+The complete grid-32 comparison at `hausd=0.001 L` admits the experimental
+control's geometry. Its forward distance is `0.001322 L`, reverse distance
+`0.000894 L`, and volume error plus empirical uncertainty is 0.716%. The
+baseline still has distances `0.006541 L` and `0.005828 L`. Both fail the FEA
+quality gate: the control has 253 cells below 0.1, with minimum quality 0.0131,
+while the baseline has 269. The control's 4.099% energy score therefore remains
+diagnostic, despite passing the 5% numerical error threshold. Its 79,764
+tetrahedra and 11.690 s total generation sample are retained without a timing
+claim in `mmg-cli-first-distance-32.json`. These measurements establish a
+geometry correction to investigate upstream, not an FEA adoption result.
+
 ## Coverage beyond uniform Gyroid
 
 The grid-36 native trial of the PR #5 source uses the local editable build,
