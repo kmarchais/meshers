@@ -406,6 +406,39 @@ uniform control. The seed and indicator are unchanged, along with all geometry,
 quality and physical audits. This tests the map near the uniform control's
 complexity before deciding whether native volume adaptation deserves a prototype.
 
+Task 1296 completed guided base-40 sizing in 420.4 s. Its 416,540 tetrahedra
+are 1.5% fewer than the uniform control's 422,965. Worst relative energy
+disagreement is 0.89435%, essentially equal to uniform sizing's 0.89483%.
+Generation took 29.267 s and audited FEA took 313.588 s, both slightly longer
+than the uniform control in these single samples. Minimum quality was 0.1080,
+just above the unchanged 0.1 gate. Geometry, periodicity, saved-field physics
+audits and all six regression checks passed. Artifacts and the hashed tensor
+comparison are retained in `runs/mmg-adaptive-sizing-40-v1`.
+
+The scalar residual map has not shown a useful accuracy-per-element advantage
+near the target. Its offline FEA cost and weaker minimum-quality margin further
+limit its appeal for direct generation. Stop calibrating this map rather than
+implementing it in the native mesher on the strength of these results. This
+does not rule out anisotropic metrics or a different estimator; neither has
+been tested here.
+
+## Next check: a fine MMG interior on grid-80 geometry
+
+The remaining reference bias matters more than another scalar-sizing trial.
+The next bounded run uses the native grid-80 seed and standard MMG uniform
+sizing at h = 1/48, with hausd = 0.0002 and gradation 1.3. Its box-cap triangles
+stay required and independently checked. The seed generation remains part of
+the reported generation cost. It receives the same six strain loads, six
+stress-controlled audits, saved-field reconstruction and admission gates.
+The larger seed requires a declared four-million-tetrahedron budget and a
+90-minute worker limit; these change resource bounds only.
+
+This tests stiffness sensitivity to a remeshed volume topology while retaining
+a much finer periodic seed boundary than earlier MMG controls. It shares the
+native seed geometry and is not an independent geometry reference or a
+converged continuum certificate. Read the measured count, tensor and audits
+before deciding whether a finer MMG reference is warranted.
+
 ## Independent review and remaining limits
 
 The resumed Claude Sonnet 5.5 review confirmed the recorded comparisons and
