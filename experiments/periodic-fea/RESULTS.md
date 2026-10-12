@@ -422,7 +422,7 @@ implementing it in the native mesher on the strength of these results. This
 does not rule out anisotropic metrics or a different estimator; neither has
 been tested here.
 
-## Next check: a fine MMG interior on grid-80 geometry
+## Fine MMG interior on grid-80 geometry
 
 The remaining reference bias matters more than another scalar-sizing trial.
 The next bounded run uses the native grid-80 seed and standard MMG uniform
@@ -438,6 +438,30 @@ a much finer periodic seed boundary than earlier MMG controls. It shares the
 native seed geometry and is not an independent geometry reference or a
 converged continuum certificate. Read the measured count, tensor and audits
 before deciding whether a finer MMG reference is warranted.
+
+Task 1297 completed in 1,069.8 s despite the T3 completion wait being lost at
+server restart. The retained run is complete and independently verified. MMG
+produced 801,119 tetrahedra and 166,641 nodes. Generation took 104.916 s,
+including 17.920 s for the native seed, and audited FEA took 820.707 s. Minimum
+quality was 0.1314; sampled forward and reverse distances were 0.0001946 and
+0.0001535. The volume discrepancy plus empirical uncertainty was 0.09275%.
+All admission gates and six regression checks passed. Saved-field stiffness
+reconstruction agreed to 7.6e-16, with zero periodic displacement jumps.
+
+The full tensor differs from native grid 80 by 0.55719% in the worst relative
+energy direction. All six generalized energy differences are positive: this
+MMG mesh is stiffer than grid 80 in every strain combination. Against this
+coarser MMG tensor, direct grid 42 disagrees by 0.34143%, compared with 0.89433%
+against native grid 80. Direct grid 48 differs by only 0.07051% from the MMG
+tensor. These numbers show reference sensitivity; they do not qualify a new
+candidate or establish which tensor is closer to the continuum limit.
+Retained results are in `runs/mmg-reference48-seed80-v1`, including comparisons
+against both tensors and their artifact hashes.
+
+The next run uses MMG h = 1/64 on the same grid-80 seed, with the same hausd,
+required caps and all checks. A refinement step is needed before using a
+remeshed tensor as an alternative reference. Neither the grid-80 baseline nor
+the strict 1% target is replaced while this convergence check is pending.
 
 ## Independent review and remaining limits
 
