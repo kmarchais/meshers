@@ -35,7 +35,7 @@ def write_json(path, value):
             time.sleep(0.05)
 
 
-def prepare(output, native_package, task_specs=None, mmg_hausd=0.002):
+def prepare(output, native_package, task_specs=None, mmg_hausd=0.002, worker_timeout=1200):
     """Freeze the executable experiment before it enters the shared queue."""
     output.mkdir(parents=True, exist_ok=False)
     source = output / "source"
@@ -112,7 +112,7 @@ def prepare(output, native_package, task_specs=None, mmg_hausd=0.002):
             "mmg_boundary": "caps",
             "mmg_hausd": mmg_hausd,
             "periodic_pair_tolerance": 1e-10,
-            "worker_timeout_s": 1200,
+            "worker_timeout_s": worker_timeout,
         },
         "specimens": {
             "solid-cell": {"function": "solid", "offset": 1},
@@ -140,14 +140,18 @@ def prepare(output, native_package, task_specs=None, mmg_hausd=0.002):
             "meshers-balanced",
             "mmg-microgen",
             "mmg-microgen-first-distance",
+            "mmg-native-seed",
         }
         tasks = []
         for spec in task_specs:
-            workflow, resolution = spec.split(":")
+            descriptor, resolution = spec.split(":")
+            case_id, workflow = (
+                descriptor.split("/") if "/" in descriptor else ("periodic-gyroid", descriptor)
+            )
             cells = int(resolution)
-            if workflow not in known or cells < 2:
+            if workflow not in known or cells < 2 or case_id not in manifest["specimens"]:
                 raise ValueError(f"Unknown workflow or invalid resolution: {spec}")
-            tasks.append({"case": "periodic-gyroid", "workflow": workflow, "cells": cells})
+            tasks.append({"case": case_id, "workflow": workflow, "cells": cells})
     manifest["tasks"] = tasks
     write_json(output / "manifest.json", manifest)
     print(
@@ -159,6 +163,78 @@ def prepare(output, native_package, task_specs=None, mmg_hausd=0.002):
             }
         ),
         flush=True,
+    )
+
+
+def native_seed_control(case, cells, config, directory, checkpoint):
+    """Standard MMG adaptation on a valid native seed, with required box caps."""
+    from contextlib import nullcontext
+    from unittest.mock import patch
+
+    import numpy as np
+    import pyvista as pv
+    from microgen import BoxMesh, Mmg
+    from microgen_benchmark.backends import (
+        configure_mmg_cli,
+        generate,
+        reopenable_temporary_file,
+        tetrahedra,
+    )
+
+    remesh = importlib.import_module("microgen.remesh")
+    points, tets, seed = generate(case, "meshers-pass1", cells, config, checkpoint)
+    np.savez_compressed(directory / "native-seed.npz", points=points, tetrahedra=tets)
+    cli = configure_mmg_cli(config.get("mmg_bin_directory"))
+    started = time.perf_counter()
+    grid = pv.UnstructuredGrid(
+        np.c_[np.full(len(tets), 4), tets].ravel(), np.full(len(tets), pv.CellType.TETRA), points
+    )
+    input_path, raw_path, output_path = [
+        directory / name
+        for name in [
+            "native-seed-required.mesh",
+            "standard-mmg-raw.mesh",
+            "standard-mmg-volume.mesh",
+        ]
+    ]
+    context = (
+        patch("microgen.remesh.NamedTemporaryFile", reopenable_temporary_file)
+        if os.name == "nt"
+        else nullcontext()
+    )
+    with context:
+        remesh._generate_mesh_with_required_triangles(BoxMesh.from_pyvista(grid), str(input_path))
+    # A standard adaptation uses the valid volume directly. It needs neither
+    # nofem nor a level-set pass. This is an experimental algorithm control,
+    # separate from the unchanged public two-pass Microgen baseline.
+    Mmg.mmg3d(
+        input=str(input_path),
+        output=str(raw_path),
+        hausd=config["mmg_hausd"] * case.scale,
+        hsiz=case.scale / cells,
+        hgrad=1.3,
+        nr=True,
+    )
+    remesh._remove_unnecessary_fields_from_mesh_file(str(raw_path), str(output_path), 2, 3)
+    output = pv.UnstructuredGrid(str(output_path))
+    remesh._snap_to_expected_bounds(output, points, 1e-8)
+    adapted_points, adapted_tets = tetrahedra(output)
+    adaptation_s = time.perf_counter() - started
+    return (
+        adapted_points,
+        adapted_tets,
+        {
+            **seed,
+            **cli,
+            "mesh_s": seed["mesh_s"] + adaptation_s,
+            "generation_s": seed["generation_s"] + adaptation_s,
+            "native_seed_mesh_s": seed["mesh_s"],
+            "native_seed_tetrahedra": len(tets),
+            "standard_adaptation_s_including_capture": adaptation_s,
+            "mmg_standard_adaptation_hausd_over_L": config["mmg_hausd"],
+            "mmg_algorithm_control": "single standard adaptation of a valid Meshers seed",
+            "mmg_periodic_policy": "Microgen required cap triangles, independently validated",
+        },
     )
 
 
@@ -239,13 +315,22 @@ def worker(request_path):
                 capture_seconds += time.perf_counter() - start
 
         with patch.object(Mmg, "mmg3d", recorded_mmg):
-            points, tets, metrics = generate(
-                case, task["workflow"], task["cells"], config, checkpoint
-            )
+            if task["workflow"] == "mmg-native-seed":
+                points, tets, metrics = native_seed_control(
+                    case, task["cells"], config, directory, checkpoint
+                )
+            else:
+                points, tets, metrics = generate(
+                    case, task["workflow"], task["cells"], config, checkpoint
+                )
         result.update(metrics)
         result["mmg_diagnostic_capture_seconds"] = capture_seconds
         for key in ["generation_s", "mesh_s"]:
             result[key] -= capture_seconds
+        if "standard_adaptation_s_including_capture" in result:
+            result["standard_adaptation_s"] = (
+                result["standard_adaptation_s_including_capture"] - capture_seconds
+            )
         np.savez_compressed(directory / "raw-mesh.npz", points=points, tetrahedra=tets)
         result["stage"] = "independent geometry validation"
         checkpoint(stage=result["stage"])
@@ -532,6 +617,10 @@ def run(output):
             ),
             flush=True,
         )
+        if task["case"] == "solid-cell" and result["status"] != "ok":
+            document["state"] = "failed-foundation"
+            write_json(output / "results.json", document)
+            raise RuntimeError("Analytic solid-cell control failed; further measurements skipped")
     # Record coarse/fine disagreement only; no converged-reference claim.
     from periodic import tensor_difference
 
@@ -553,14 +642,16 @@ def run(output):
                 ),
             }
     document.update(
-        state="complete",
+        state="verifying-artifacts",
         elapsed_s=time.monotonic() - started,
         accuracy_scope="Coarse/fine stability only; no converged reference or 2% qualification",
     )
     write_json(output / "results.json", document)
     from verify import verify_run
 
+    report(0.99, "Reconstruct stiffness and equilibrium from saved fields", eta_s=60)
     document["artifact_verification"] = verify_run(output)
+    document["state"] = "complete"
     write_json(output / "results.json", document)
     report(
         1,
@@ -584,13 +675,20 @@ if __name__ == "__main__":
     )
     parser.add_argument("--tasks", nargs="+", help="Periodic Gyroid workflow:cells pairs")
     parser.add_argument("--mmg-hausd", type=float, default=0.002)
+    parser.add_argument("--worker-timeout", type=float, default=1200)
     args = parser.parse_args()
     if args.prepare:
         if args.native_package is None:
             parser.error("--prepare requires --native-package")
-        if args.mmg_hausd <= 0:
-            parser.error("--mmg-hausd must be positive")
-        prepare(args.prepare.resolve(), args.native_package.resolve(), args.tasks, args.mmg_hausd)
+        if args.mmg_hausd <= 0 or args.worker_timeout <= 0:
+            parser.error("--mmg-hausd and --worker-timeout must be positive")
+        prepare(
+            args.prepare.resolve(),
+            args.native_package.resolve(),
+            args.tasks,
+            args.mmg_hausd,
+            args.worker_timeout,
+        )
     elif args.run:
         run(args.run.resolve())
     else:

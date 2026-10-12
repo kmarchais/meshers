@@ -59,17 +59,50 @@ tested fixed-boundary pipeline from matching the native mesh's minimum quality
 better seed boundary or coupled periodic boundary changes. The present
 measurement does not imply an intrinsic limit of MMG with different input.
 
-## Next experiment
+## Refinement and first-pass distance
 
-The next batch tests zero and four native passes at grid 24 and one pass at
-grids 32 and 48. It also compares the public periodic MMG baseline with the
+Task 1210 completed the zero/four-pass trial at grid 24 and one pass at grids
+32 and 48. It also compared the public periodic MMG baseline with the
 explicit first-pass-distance control at grid 24. Both MMG configurations use
 `hausd=0.001` for the second pass, so the extra first-pass setting is the only
-parameter difference between those two controls. Geometry admission stays
+parameter difference between those two controls. Geometry admission stayed
 0.002 and all other common gates stay unchanged.
 
-Saved displacement fields allow an independent reconstruction of the full
-stiffness tensor, periodic force equilibrium and the Hill–Mandel energy matrix.
-The refinement results will determine which native profile and resolution to
-repeat, and whether another MMG seed control is useful. No 2% or 1% periodic
-FEA qualification is claimed until a fine reference has measured convergence.
+Its six regression checks passed. Five complete meshes have all six saved
+displacement fields, with independent stiffness reconstruction differences
+below 5e-16, Hill–Mandel errors below 6e-12, force-balance errors below 1.1e-10
+and periodic displacement jumps below 1e-15.
+
+| Native configuration | Tetrahedra | Generation sample | Min q | Admission |
+| --- | ---: | ---: | ---: | --- |
+| Zero passes, grid 24 | No output | No timing claim | 0.0513 at rejection | 58 cells below 0.1 |
+| Four passes, grid 24 | 72,757 | 2.130 s | 0.1622 | Geometry, shape and periodic pass |
+| One pass, grid 32 | 171,679 | 1.475 s | 0.2737 | Geometry, shape and periodic pass |
+| One pass, grid 48 | 543,496 | 4.431 s | 0.1520 | Geometry, shape and periodic pass |
+
+The grid-32 tensor differs from grid 48 by 1.158% in the worst macroscopic
+strain-energy combination, or 0.620% in the Frobenius norm. Grid 48 is still
+an observed refinement reference, not a certified continuum solution. A further
+level is required before interpreting a 2% reference target as a useful accuracy
+measurement.
+
+The first-pass-distance control reduces forward/reverse errors from
+0.009233/0.008763 to 0.002568/0.002296. Both still fail the unchanged 0.002
+boundary gate and the 0.1 shape gate. The modified output has 244 poor cells
+and minimum quality 0.0312. Its generation sample costs 11.811 s, versus
+7.852 s for its matched baseline. This is a geometry improvement to investigate,
+not an admitted FEA or speed result.
+
+## Next experiment
+
+The next batch starts with an analytic solid-cell proof of single standard MMG
+adaptation, then applies it to a valid native grid-32 Gyroid seed. This isolates
+MMG's adaptation from the VTK seed and the public pipeline's two-pass treatment.
+The native seed's required periodic caps stay constrained and every common
+admission/physics check remains active. Total generation includes the seed cost.
+
+A direct grid-64 reference follows with the same native profile, constitutive
+law and solver. Its prepared worker timeout is 40 minutes. The result will
+measure reference stability and compare the standard adaptation control at
+the actual periodic stiffness target. No 2% or 1% periodic FEA qualification
+is claimed before that comparison.

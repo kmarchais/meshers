@@ -58,7 +58,9 @@ qrun -g gpu -l "Periodic Gyroid: direct Meshers vs Microgen MMG pilot" --progres
 
 The job first runs the pairing and tensor-score regression checks. It then runs
 one bounded worker at a time and reports a fraction, phase, ETA and live values.
-Each worker has a 20-minute timeout and 16 GiB RSS limit. Each generated mesh
+Each worker has a default 20-minute timeout and 16 GiB RSS limit. A prepared
+fine-reference run can declare a longer timeout through `--worker-timeout`.
+Each generated mesh
 receives exhaustive overlap validation up to the declared 60-million-pair limit.
 Reaching a validation or resource limit is a recorded failure.
 
@@ -78,3 +80,12 @@ compare the six-load-case tensors and identify the cheapest native profile.
 Only after that comparison should the next finer reference or parameter trial
 be queued. A lower minimum-quality threshold or a wider boundary tolerance
 must never silently turn a failed configuration into a passing one.
+
+`--tasks` selects the next configurations as `workflow:cells` pairs. An optional
+`case/workflow:cells` entry selects an analytic solid control. `mmg-native-seed`
+measures single standard MMG adaptation of a valid one-pass Meshers seed. It uses
+Microgen's required box-cap treatment and native CLI. It omits the public
+pipeline's `nofem` and level-set passes. Its total cost includes native seed
+generation. This algorithm control is separate from the current Microgen
+adoption baseline. A failed solid-cell control stops a batch before its
+expensive references run.
