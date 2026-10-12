@@ -483,7 +483,9 @@
               tetrahedra with physical box-cap triangles fixed. Microgen MMG
               calls its public two-pass remesher through the installed MMG
               native command, including file exchange and retries. Both use
-              hsiz = L / intervals and hgrad = 1.3. Specimens are non-periodic.
+              hsiz = L / intervals and hgrad = 1.3. Microgen applies these
+              requested parameters only in its second pass; the first uses
+              its current defaults. Specimens are non-periodic.
               Meshers profiles change only the optimization-pass budget. No
               failed run falls back to another algorithm or a weaker quality
               threshold.

@@ -221,8 +221,9 @@ budget comparisons.
   supplied boundary and cap counts, and the real cube tests check those counts.
   `mmg-tetra-clean` remeshes that cleaned seed. Both record merged-node counts,
   discarded-cell counts and discarded volume. They still undergo every independent
-  topology, overlap and fidelity check. These four experimental controls require
-  an explicit `--workflows` selection and do not change the default six workflows.
+  topology, overlap and fidelity check. Standard includes the two cleaned
+  controls. Raw tetrahedral clipping and tagged-boundary controls require an
+  explicit `--workflows` selection. Smoke keeps its original six workflows.
 * `mmg` converts those VTK tetrahedra to MMG3D through mmgpy, runs one volume
   adaptation pass with `hsiz=L/cells` and `hgrad=1.3`, then converts back. Box-cap
   triangles stay fixed; MMG can adapt the curved boundary. This portable binding workflow is distinct from
@@ -237,6 +238,10 @@ budget comparisons.
   time. `periodic=False` matches this benchmark's finite specimens and varying
   thickness; periodic homogenization needs a separate test. `--mmg-boundary`
   applies only to the direct binding workflow.
+  Microgen's first pass uses its own defaults with `nofem=True`. The requested
+  size, distance and grading parameters apply to its second pass. The benchmark
+  preserves this behavior; the intermediate-mesh investigation is retained in
+  [the calibration notes](CALIBRATION.md#mmg-tolerance-and-first-pass-diagnostics).
   `--mmg-hausd .0002` tunes MMG's reconstructed-surface approximation distance
   independently of the benchmark's `--geometry-tolerance .002`. Both values
   are relative to L. Every returned mesh still has to meet the same independent
