@@ -310,6 +310,34 @@ is retained with the evidence; it must not be confused with a hash checked at
 each worker's startup. Future manifests record the actual imported extension,
 and every worker checks that hash against the manifest before generation.
 
+## Fine-grid sheet coverage
+
+The completed grid-80 trial of the packaged PR #5 build uses one optimization
+pass, one repetition without warmup, the standard 2% target and all common
+admission gates. Its imported
+native hash is `4ee6b2e90ae9e82a5dcbb40ba0bed7ac5bc1fc0cbe3567a678ec92797d28438a`,
+verified in every worker. `native-sheets-two-percent-80.json` retains the full
+configuration and all five completed rows.
+
+| Case | Tetrahedra | Worst energy error | Minimum q | 2% admission |
+| --- | ---: | ---: | ---: | --- |
+| Gyroid | 1,190,946 | 1.94244% | 0.182807 | Pass |
+| Schwarz P | 1,208,148 | 2.00037% | 0.381949 | Miss |
+| Microgen Neovius variant | 1,583,108 | 1.95394% | 0.279955 | Pass |
+| Graded Gyroid | 1,198,514 | 1.93858% | 0.206396 | Pass |
+| Thin Gyroid | 708,890 | 1.86462% | 0.157160 | Pass |
+
+Every row passes geometry and element quality. Schwarz P misses only the
+energy threshold, which uses the unrounded score. The report now displays five
+significant digits to make this miss visible. A finer grid is needed before
+that configuration can qualify. None of these rows reaches the 1% target.
+
+The Gyroid mesh hash equals the released-wheel grid-80 calibration's hash,
+and its energy error is identical. The geometry correction therefore preserves
+this fine-grid output. Its 13.729 s generation sample differs from the earlier
+11.211 s sample. These are individual calibration times; they do not establish
+the correction's performance cost. Selected repetitions are still needed.
+
 ## Next measurements
 
 The first five-sheet grid-80 batch was interrupted by a Windows permission
@@ -321,11 +349,12 @@ previous complete sample during temporary locks. A real exclusive-sharing
 regression reproduces the previous failure and verifies that a healthy child
 finishes after the fix. The numerical and failure-path suite passes 71 tests.
 
-Measure Microgen's current CLI pipeline at finer grids, then repeat selected
-qualifying configurations with warmups before making timing claims. Keep
-surface timing separate and include all failures in the report. Extend the
-strict FEA calibration beyond uniform Gyroid, especially the coarse failures
-in issues #3 and #4. The measured 2% native run used a two-million-tetrahedron
+Measure Schwarz P at a finer grid, then repeat selected qualifying
+configurations with warmups before making timing claims. Keep surface timing
+separate and include all failures in the report. A corrected tagged MMG
+control still needs a viable coarse proof before another expensive fine run.
+The lattice and Spinodoid failures in issue #4 remain unresolved. The measured
+2% native runs use a two-million-tetrahedron
 budget, a 60-million validation-pair cap and a 16 GiB worker RSS ceiling;
 these are now the documented standard-suite defaults. Smoke keeps its original
 limits. Standard uses a 2% primary target and grids 24, 36, 54 and 80, while
