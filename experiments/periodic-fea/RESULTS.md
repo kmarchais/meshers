@@ -385,6 +385,27 @@ useful. The map still requires the earlier 401.5 s offline FEA, and comparison
 with grid 80 remains a same-method convergence observation, not a continuum
 accuracy certificate.
 
+Task 1295 completed the guided base-42 control in 462.6 s. It produced 472,846
+tetrahedra and 92,723 nodes, with minimum quality 0.1476. Generation took
+27.881 s and the audited 12-solve FEA took 350.722 s. All admission gates and
+six regression checks passed. Independent reconstruction from all saved fields
+agreed with the stiffness tensor to 8.4e-16, and periodic displacement jumps
+were zero. The actual grid-80 comparison gives 0.73897% worst relative energy
+disagreement. Artifacts are in `runs/mmg-adaptive-sizing-42-v1`.
+
+This is below the observed-reference target, but it uses 11.8% more tetrahedra
+than uniform base-36 sizing and takes 14.8% longer in the single-sample audited
+FEA. It also needs the prior offline FEA that supplied the size map. The result
+does not yet establish a benefit from residual-guided allocation at equal
+complexity, or a faster direct pipeline. Direct grid 42 remains a competitive
+candidate at 0.89433% disagreement with 369,590 tetrahedra.
+
+One final complexity calibration uses guided base length 1/40. Scaling from the
+measured base-42 count predicts about 408,500 tetrahedra, within 4% of the
+uniform control. The seed and indicator are unchanged, along with all geometry,
+quality and physical audits. This tests the map near the uniform control's
+complexity before deciding whether native volume adaptation deserves a prototype.
+
 ## Independent review and remaining limits
 
 The resumed Claude Sonnet 5.5 review confirmed the recorded comparisons and
