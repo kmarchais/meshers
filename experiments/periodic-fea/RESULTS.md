@@ -463,6 +463,46 @@ required caps and all checks. A refinement step is needed before using a
 remeshed tensor as an alternative reference. Neither the grid-80 baseline nor
 the strict 1% target is replaced while this convergence check is pending.
 
+Task 1381 completed the MMG base-64 reference in 3,105.2 s. Its 2,132,476
+tetrahedra and 389,248 nodes passed all admission gates, six regression checks
+and saved-field audits. Minimum quality was 0.1838. Generation took 105.720 s,
+including 17.762 s for the native grid-80 seed; audited FEA took 2,668.245 s.
+Both geometry-distance directions stayed below 0.000186, and volume discrepancy
+plus empirical uncertainty was 0.09095%. Retained artifacts are in
+`runs/mmg-reference64-seed80-v1`.
+
+MMG base 48 to base 64 changes the worst strain energy by 0.49408%. The finer
+MMG tensor differs from native grid 80 by only 0.06301%, with all six energy
+eigenvalues still positive. Direct grid 42 differs from it by 0.83250%, and
+direct grid 48 by 0.54651%. The tight native-seed MMG control differs by 0.90293%.
+These comparisons support the earlier sub-1% observations on this Gyroid across
+two fine mesh topologies. They do not provide a continuum error bound: both
+fine methods share the native seed geometry, and neither refinement sequence
+has a certified remaining error.
+
+## Next algorithm control: HXT from the periodic surface
+
+The scalar residual map did not improve accuracy per element enough to justify
+a native implementation. The next control discards the seed's interior and
+constructs tetrahedra from its existing boundary with Gmsh's HXT algorithm.
+Gmsh 4.15.2 is already installed; its Python adapter and native library hashes
+and version are frozen with the run. This experimental workflow does not change
+production Meshers or add a package to the benchmark environment.
+
+The cube control runs first, followed by native grid-42 Gyroid surface input.
+Both use one thread, uniform target size 1/cells, linear tetrahedra and the
+default tetrahedral optimizer. Existing surface triangles must retain a
+bijective vertex mapping within 1e-12 L and exactly the same connectivity.
+Independent periodic, geometry, overlap and FEA checks then run as usual. A
+failed analytic cube control stops the batch before the Gyroid solve.
+
+Timing includes full native seed generation, surface extraction, HXT generation
+and boundary-preservation checks. It cannot claim the speed of a hypothetical
+surface-only Meshers generator. This tests whether rebuilding the interior can
+improve the practical accuracy/cost tradeoff before writing a native equivalent.
+HXT is documented as an efficient Delaunay implementation in the
+[Gmsh manual](https://gmsh.info/doc/texinfo/gmsh.html#Choosing-the-right-unstructured-algorithm).
+
 ## Independent review and remaining limits
 
 The resumed Claude Sonnet 5.5 review confirmed the recorded comparisons and

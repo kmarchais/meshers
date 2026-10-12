@@ -105,6 +105,14 @@ checked, then scalar sizes are matched to MEDIT vertex order. Such a map may
 require prior FEA; its generation timing excludes that earlier solve and must
 not be reported as a cold one-shot pipeline cost.
 
+`gmsh-hxt-native-surface` is an experimental volume-construction control. It
+extracts the full boundary from a native one-pass seed at the task resolution,
+then runs Gmsh HXT with uniform edge sizing. It checks that every boundary
+vertex and triangle is preserved before the common admission and FEA audits.
+Preparation records the installed Gmsh adapter/library hashes and version.
+Run the analytic solid control first. Generation cost includes the full native
+volume seed and boundary checks; it is not a surface-only timing estimate.
+
 Compare completed runs against the retained grid-64 tensor with:
 
 ```powershell

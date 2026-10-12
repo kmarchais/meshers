@@ -145,6 +145,7 @@ def prepare(output, native_package, task_specs=None, mmg_hausd=0.002, worker_tim
             "mmg-microgen-first-distance",
             "mmg-native-seed",
             "mmg-native-seed-metric",
+            "gmsh-hxt-native-surface",
         }
         tasks = []
         for spec in task_specs:
@@ -157,6 +158,11 @@ def prepare(output, native_package, task_specs=None, mmg_hausd=0.002, worker_tim
                 raise ValueError(f"Unknown workflow or invalid resolution: {spec}")
             tasks.append({"case": case_id, "workflow": workflow, "cells": cells})
     manifest["tasks"] = tasks
+    if any(task["workflow"] == "gmsh-hxt-native-surface" for task in tasks):
+        import gmsh
+        manifest["packages"]["gmsh"] = importlib.metadata.version("gmsh")
+        for path in [Path(gmsh.__file__), Path(gmsh.libpath)]:
+            manifest["dependency_sources_sha256"][str(path.resolve())] = digest(path)
     if mmg_seed_cells is not None:
         manifest["config"]["mmg_seed_cells"] = mmg_seed_cells
     if any(task["workflow"] == "mmg-native-seed-metric" for task in tasks):
@@ -344,6 +350,11 @@ def worker(request_path):
                     control_config.pop("mmg_size_map_path", None)
                 points, tets, metrics = native_seed_control(
                     case, task["cells"], control_config, directory, checkpoint
+                )
+            elif task["workflow"] == "gmsh-hxt-native-surface":
+                from gmsh_surface import generate as generate_hxt
+                points, tets, metrics = generate_hxt(
+                    case, task["cells"], config, directory, checkpoint
                 )
             else:
                 points, tets, metrics = generate(
