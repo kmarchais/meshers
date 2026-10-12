@@ -1,0 +1,1124 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Microgen meshing benchmark</title>
+    <style>
+      :root {
+        color-scheme: light;
+        --ink: #183047;
+        --muted: #526576;
+        --line: #d9e1e7;
+        --blue: #2563a6;
+        --green: #197862;
+        --red: #a33434;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+        background: #f3f6f8;
+        color: var(--ink);
+        font:
+          15px/1.6 system-ui,
+          sans-serif;
+      }
+      main {
+        max-width: 1320px;
+        margin: auto;
+        padding: 38px 28px;
+      }
+      h1 {
+        font-size: 36px;
+        line-height: 1.15;
+        margin: 10px 0 16px;
+      }
+      h2 {
+        font-size: 25px;
+        margin: 0;
+      }
+      h3 {
+        font-size: 17px;
+      }
+      p {
+        margin: 10px 0;
+      }
+      a {
+        color: var(--blue);
+      }
+      header {
+        padding-bottom: 24px;
+      }
+      .eyebrow {
+        letter-spacing: 0.13em;
+        font-size: 12px;
+        text-transform: uppercase;
+        color: var(--blue);
+        font-weight: 700;
+      }
+      .muted,
+      small {
+        color: var(--muted);
+      }
+      .notice {
+        border-left: 4px solid var(--blue);
+        background: #eaf1f8;
+        padding: 14px 18px;
+        margin: 18px 0;
+      }
+      .badge {
+        display: inline-block;
+        border-radius: 5px;
+        background: #e6edf3;
+        padding: 2px 7px;
+        font-size: 12px;
+        white-space: nowrap;
+      }
+      .ok {
+        color: var(--green);
+        background: #e2f3ec;
+      }
+      .fail {
+        color: var(--red);
+        background: #fae6e4;
+      }
+      .case {
+        background: white;
+        border: 1px solid var(--line);
+        border-radius: 12px;
+        margin: 28px 0;
+        padding: 26px;
+        scroll-margin-top: 12px;
+      }
+      .case-header {
+        display: flex;
+        gap: 24px;
+        justify-content: space-between;
+        align-items: start;
+      }
+      .formula {
+        font:
+          13px/1.7 ui-monospace,
+          monospace;
+        background: #f3f6f8;
+        padding: 12px;
+        overflow-wrap: anywhere;
+      }
+      .nav {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        margin: 20px 0;
+      }
+      .nav a {
+        background: white;
+        border: 1px solid var(--line);
+        padding: 4px 10px;
+        border-radius: 6px;
+        text-decoration: none;
+      }
+      .previews {
+        display: grid;
+        grid-template-columns: repeat(6, minmax(0, 1fr));
+        gap: 12px;
+        margin: 22px 0;
+      }
+      .mesh-card {
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        padding: 10px;
+        min-width: 0;
+      }
+      .mesh-card canvas {
+        display: block;
+        width: 100%;
+        height: 155px;
+        background: #f8fafb;
+        border-radius: 6px;
+        cursor: grab;
+      }
+      .mesh-card b {
+        font-size: 13px;
+      }
+      .mesh-card small {
+        display: block;
+        font-size: 11px;
+      }
+      .empty-preview {
+        height: 155px;
+        display: grid;
+        place-items: center;
+        background: #f8fafb;
+        color: var(--muted);
+        font-size: 12px;
+        text-align: center;
+      }
+      .charts {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 20px;
+      }
+      .chart {
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        padding: 12px;
+      }
+      .chart svg {
+        width: 100%;
+        height: auto;
+        display: block;
+      }
+      .plot {
+        touch-action: none;
+        cursor: grab;
+      }
+      .plot circle {
+        cursor: pointer;
+      }
+      .plot-controls {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px 12px;
+        font-size: 12px;
+      }
+      .plot-controls label {
+        cursor: pointer;
+      }
+      button {
+        font: inherit;
+        border: 1px solid var(--line);
+        background: white;
+        color: var(--ink);
+        border-radius: 5px;
+        padding: 3px 9px;
+        cursor: pointer;
+      }
+      .point-detail {
+        display: block;
+        min-height: 62px;
+        background: #f3f6f8;
+        padding: 8px;
+        font-size: 12px;
+        white-space: normal;
+      }
+      .better {
+        color: var(--green);
+        font-size: 12px;
+        font-weight: 600;
+      }
+      td small {
+        display: block;
+        white-space: normal;
+        font-size: 11px;
+        max-width: 210px;
+      }
+      .missing {
+        background: #f0f2f4;
+        color: #526576;
+      }
+      .heat {
+        color: #183047;
+        font-variant-numeric: tabular-nums;
+        font-weight: 650;
+      }
+      .heat small {
+        color: #263e50;
+        font-weight: 400;
+      }
+      .heat-note {
+        font-size: 10px;
+        letter-spacing: .02em;
+      }
+      .gate-fail {
+        display: inline-block;
+        background: #8b2335;
+        color: white !important;
+        border-radius: 4px;
+        padding: 1px 5px;
+      }
+      .heat-key {
+        padding: 12px 14px;
+        background: #f3f6f8;
+        border-radius: 6px;
+        font-size: 12px;
+        margin-top: 18px;
+      }
+      .heat-key p {
+        margin: 5px 0 0;
+      }
+      .colorbar {
+        display: inline-block;
+        width: 150px;
+        height: 12px;
+        background: linear-gradient(90deg, #82c9b4, #f7e1a0, #ef9695);
+        vertical-align: middle;
+        border-radius: 3px;
+        margin: 0 8px;
+      }
+      .ratio-key {
+        font-size: 12px;
+      }
+      .target-time {
+        display: table;
+        margin: 4px 0 0 auto;
+        padding: 1px 5px;
+        border: 1px solid #ffffff80;
+        border-radius: 4px;
+      }
+      tr.selected {
+        outline: 2px solid var(--blue);
+        outline-offset: -2px;
+      }
+      .status {
+        white-space: normal;
+        min-width: 180px;
+        max-width: 240px;
+      }
+      .legend {
+        display: flex;
+        gap: 14px;
+        flex-wrap: wrap;
+        font-size: 12px;
+      }
+      .dot {
+        display: inline-block;
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        margin-right: 5px;
+      }
+      .table-wrap {
+        overflow: auto;
+        margin: 16px 0;
+      }
+      table {
+        border-collapse: collapse;
+        width: 100%;
+        font-size: 13px;
+        white-space: nowrap;
+      }
+      th,
+      td {
+        padding: 9px 10px;
+        text-align: right;
+        border-bottom: 1px solid var(--line);
+      }
+      th:first-child,
+      td:first-child {
+        text-align: left;
+      }
+      th {
+        color: var(--muted);
+        font-weight: 600;
+        white-space: normal;
+        vertical-align: bottom;
+        background: #f3f6f8;
+      }
+      .results-table {
+        min-width: 880px;
+      }
+      .results-table th:first-child,
+      .results-table td:first-child {
+        position: sticky;
+        left: 0;
+        z-index: 1;
+        background: #f8fafb;
+        min-width: 160px;
+        max-width: 185px;
+        width: 175px;
+        white-space: normal;
+        box-shadow: 1px 0 var(--line);
+      }
+      td.status {
+        text-align: left;
+        max-width: 240px;
+        white-space: normal;
+      }
+      details {
+        border-top: 1px solid var(--line);
+        padding: 12px 0;
+      }
+      summary {
+        cursor: pointer;
+        font-weight: 600;
+      }
+      pre {
+        font:
+          12px/1.6 ui-monospace,
+          monospace;
+        white-space: pre-wrap;
+        overflow-wrap: anywhere;
+        background: #f3f6f8;
+        padding: 12px;
+        max-height: 450px;
+        overflow: auto;
+      }
+      .grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 20px;
+      }
+      .failure {
+        overflow-wrap: anywhere;
+        padding: 10px;
+        border-left: 3px solid var(--red);
+        margin: 10px 0;
+        background: #fff6f5;
+      }
+      .failure a {
+        font-size: 12px;
+      }
+      footer {
+        margin: 30px 0;
+        color: var(--muted);
+        font-size: 13px;
+      }
+      @media (max-width: 850px) {
+        main {
+          padding: 22px 14px;
+        }
+        .case {
+          padding: 18px;
+        }
+        .previews {
+          grid-template-columns: repeat(3, minmax(0, 1fr));
+        }
+        .charts,
+        .grid {
+          grid-template-columns: 1fr;
+        }
+      }
+      @media (max-width: 500px) {
+        .results-table th:first-child,
+        .results-table td:first-child {
+          width: 128px;
+          min-width: 128px;
+          max-width: 128px;
+        }
+        h1 {
+          font-size: 28px;
+        }
+        .previews {
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+        .case-header {
+          display: block;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <header>
+        <div class="eyebrow">Meshers · Microgen · VTK · MMG3D</div>
+        <h1>Generation speed and elastic accuracy</h1>
+        <p id="headline"></p>
+        <p class="muted" id="machine"></p>
+        <div class="notice">
+          Lower generation time and lower FEA energy error are better. Each case
+          keeps its own results. Equal grid resolution does not mean equal
+          element count.
+        </div>
+        <details open>
+          <summary>Why some measurements are unavailable</summary>
+          <p>
+            A failed generation returns no accepted mesh, so element count and
+            FEA error are unavailable. A mesh that fails validity checks keeps
+            its measured time and arrays, but FEA is blocked. Timeouts retain
+            any finished phases and name the interrupted phase. A geometry
+            warning keeps its FEA score as diagnostic data; enable warnings in
+            the chart to see it. Missing values are never zeros.
+          </p>
+          <p>
+            Failure ownership identifies the pipeline to investigate, not a
+            proven root cause. Meshers native rejections are Meshers limitations
+            to report. VTK and Microgen MMG failures belong to their control
+            pipelines; a direct MMG binding failure is not automatically a
+            Microgen bug. Benchmark field-adapter and solver failures are
+            reported separately. Full logs and exact input files accompany every
+            attempt.
+          </p>
+        </details>
+        <nav class="nav" id="nav"></nav>
+      </header>
+      <details open>
+        <summary>What this benchmark measures</summary>
+        <div class="grid">
+          <div class="fea-method">
+            <h3>FEA accuracy</h3>
+            <p>
+              The same linear tetrahedral elasticity solver handles every valid
+              mesh, with E = 1 and Poisson ratio 0.3 in normalized coordinates.
+              Exact quadratic displacement fields supply body forces and natural
+              boundary tractions. Six pins per connected component remove rigid
+              motion. Six affine patch tests and free-equilibrium checks must
+              pass.
+            </p>
+            <p>
+              The main score is the worst relative strain-energy error over
+              every linear combination of 18 quadratic displacement fields. This
+              is a fixed load family, not a guarantee for every engineering
+              problem. The exact field is integrated on each generated
+              polyhedral domain. Geometry approximation remains a separate
+              diagnostic.
+            </p>
+          </div>
+          <div>
+            <h3>Performance and admission</h3>
+            <p>
+              Generation time includes Microgen case construction, extraction,
+              remeshing or Meshers generation, and owned-array conversion. It
+              excludes imports, process startup, geometry validation, FEA and
+              artifact writing. Microgen's internal mesh-file exchange remains
+              included. Repeats use fresh processes and rotating backend
+              order. Warmups are retained but excluded from medians.
+            </p>
+            <p>
+              Microgen's current VTK and two-pass MMG CLI pipelines are the
+              adoption baselines. Direct mmgpy workflows are experimental
+              controls; Microgen does not use that Python API.
+              The direct MMG binding uses one volume-adaptation pass on VTK
+              tetrahedra with physical box-cap triangles fixed. Microgen MMG
+              calls its public two-pass remesher through the installed MMG
+              native command, including file exchange and retries. Both use
+              hsiz = L / intervals and hgrad = 1.3. Microgen applies these
+              requested parameters only in its second pass; the first uses
+              its current defaults. Specimens are non-periodic.
+              The separately named first-pass-distance CLI experiment also
+              applies the declared MMG distance in the first pass, leaving
+              its default size and grading unchanged.
+              Meshers profiles change only the optimization-pass budget. No
+              failed run falls back to another algorithm or a weaker quality
+              threshold.
+            </p>
+          </div>
+        </div>
+        <p class="muted" id="validation-note">
+          The MMG shape metric q is normalized to 1 for a regular tetrahedron.
+          FEA targets require the same minimum q for every workflow. Geometry
+          targets do not require good element shape or an elasticity solve. Numerical
+          comparisons require global mesh checks, affine patch tests,
+          equilibrium, the declared sampled geometry tolerance and the
+          material-volume tolerance. Sampled implicit residual divided by
+          gradient is a first-order distance estimate, not a Hausdorff
+          certificate. Interior overlap checks have declared floating-point
+          tolerances and a checked work cap. Geometry-invalid and incomplete
+          runs remain visible.
+        </p>
+      </details>
+      <section id="cases"></section>
+      <details>
+        <summary>Machine, configuration and source provenance</summary>
+        <pre id="provenance"></pre>
+      </details>
+      <footer>
+        Results and meshes are retained beside this document. Open results.json
+        to inspect raw repetitions, fields.npz for solved displacements and
+        energy matrices, and each worker.log for full backend output. A
+        completed benchmark can contain failed mesh generations.
+      </footer>
+    </main>
+    <script type="application/json" id="data">
+      __BENCHMARK_DATA__
+    </script>
+    <script>
+      "use strict";
+      const data = JSON.parse(document.getElementById("data").textContent),
+        cfg = data.provenance.config;
+      const surfaceMode = cfg.purpose === "surface",
+        geometryMode = cfg.purpose === "geometry" || surfaceMode,
+        accuracyLabel = geometryMode ? "Max sampled boundary distance / L" : "Worst FEA energy error",
+        countLabel = surfaceMode ? "Triangles" : "Tetrahedra",
+        qualityKey = surfaceMode ? "surface_shape_min" : "q_min",
+        qualityLabel = surfaceMode ? "Triangle shape" : "Min q";
+      document.querySelector("h1").textContent = geometryMode ? "Generation speed and geometry fidelity" : "Generation speed and low-error FEA";
+
+      const colors = {
+        vtk: "#737d8a",
+        mmg: "#ce731e",
+        "vtk-flying-edges": "#3eb5a2",
+        "vtk-tetra": "#4a6877",
+        "mmg-tetra": "#9b592b",
+        "vtk-tetra-clean": "#6c707d",
+        "mmg-tetra-tagged": "#c38742",
+        "mmg-tetra-clean": "#b55e52",
+        "mmg-microgen": "#b54353",
+        "mmg-microgen-first-distance": "#926134",
+        "meshers-pass1": "#8e7aff",
+        "meshers-pass2": "#d69f3a",
+        "meshers-fast": "#6c5ce7",
+        "meshers-balanced": "#2477bd",
+        "meshers-quality": "#14836b",
+      };
+      const names = {
+        vtk: "Microgen VTK",
+        mmg: "VTK + MMG binding",
+        "vtk-flying-edges": "VTK · direct Flying Edges + caps",
+        "vtk-tetra": "VTK · tetrahedral background clipping",
+        "mmg-tetra": "VTK tetrahedral clipping + MMG",
+        "vtk-tetra-clean": "VTK tetrahedral clipping + cleanup",
+        "mmg-tetra-tagged": "MMG · tagged box and wall patches",
+        "mmg-tetra-clean": "VTK tetrahedral clipping + cleanup + MMG",
+        "mmg-microgen": "Microgen MMG CLI · current pipeline",
+        "mmg-microgen-first-distance": "MMG CLI · experimental first-pass distance",
+        "meshers-pass1": "Meshers · 1 pass",
+        "meshers-pass2": "Meshers · 2 passes",
+        "meshers-fast": "Meshers · 0 passes",
+        "meshers-balanced": "Meshers · 4 passes",
+        "meshers-quality": "Meshers · 12 passes",
+      };
+      const esc = (x) =>
+        String(x ?? "").replace(
+          /[&<>"']/g,
+          (c) =>
+            ({
+              "&": "&amp;",
+              "<": "&lt;",
+              ">": "&gt;",
+              '"': "&quot;",
+              "'": "&#39;",
+            })[c],
+        );
+      const num = (x) =>
+        x == null
+          ? "—"
+          : Number(x).toLocaleString("en-US", { maximumFractionDigits: 3 });
+      const pct = (x) => (x == null ? "—" : (100 * x).toFixed(2) + "%");
+      const energyPercent = (x) => x == null ? "—" : (100 * x).toPrecision(5) + "%";
+      const distance = (x) => x == null ? "—" : Number(x).toPrecision(3);
+      const errorFormat = geometryMode ? distance : energyPercent;
+      if (geometryMode) {
+        document.querySelector(".fea-method").hidden = true;
+        document.querySelector(".fea-method").parentElement.style.gridTemplateColumns = "1fr";
+        document.getElementById("validation-note").textContent = "Geometry admission checks closed manifold topology, winding, intersections, the specimen box, sampled boundary distance in both directions, outward normals and volume error plus empirical sampling uncertainty. Element shape is diagnostic. Boundary samples are not a Hausdorff certificate, and empirical uncertainty is not a confidence bound. Invalid and incomplete results stay visible.";
+        document.querySelector("footer").textContent = "Results and meshes are retained beside this document. Open results.json for raw repetitions, mesh.npz for full arrays, and each worker.log for backend output. Geometry modes do not run FEA. A completed benchmark can contain rejected mesh generations.";
+      }
+      document.querySelector(".notice").textContent = `Application: ${cfg.purpose || "fea"}. Sampled boundary tolerance ${distance(cfg.geometry_tolerance)} L in both directions; volume tolerance ${pct(cfg.volume_tolerance)} including empirical sampling uncertainty.${geometryMode ? " No FEA solve or element-quality admission gate." : ` FEA target ${pct(cfg.fea_target ?? 0.05)}.`} Surface mode includes full volume-to-boundary cost for workflows without a surface API.`;
+      const median = (a) => {
+        const s = a.slice().sort((x, y) => x - y);
+        return s.length
+          ? (s[Math.floor((s.length - 1) / 2)] + s[Math.floor(s.length / 2)]) /
+              2
+          : null;
+      };
+      const artifact = (r, file) => esc(r.artifact) + "/" + file;
+      document.getElementById("headline").textContent =
+        `${data.cases.length} cases · ${cfg.workflows.length} workflows · ${cfg.cells.join(", ")} grid intervals · ${cfg.repeats} measured repeats · ${cfg.warmups} warmups · ${data.state}`;
+      document.getElementById("machine").textContent =
+        `${data.provenance.machine} · ${data.provenance.platform} · ${cfg.threads} requested computational threads · ${data.provenance.started_utc}`;
+      document.getElementById("provenance").textContent = JSON.stringify(
+        {
+          ...data.provenance,
+          manifest_sha256: data.manifest_sha256,
+          render_template_sha256: data.render_template_sha256,
+        },
+        null,
+        2,
+      );
+      document.getElementById("nav").innerHTML = data.cases
+        .map((c) => `<a href="#${esc(c.id)}">${esc(c.name)}</a>`)
+        .join("");
+
+      function groups(caseId) {
+        return cfg.cells.flatMap((n) =>
+          cfg.workflows.map((w) => {
+            const rows = data.rows.filter(
+              (r) =>
+                r.case === caseId &&
+                r.cells === n &&
+                r.workflow === w &&
+                r.repeat >= 0,
+            );
+            const timings = rows
+              .filter((r) => r.mesh_s != null)
+              .map((r) => r.mesh_s);
+            const valid = rows.filter(
+              (r) => r.comparison_eligible && r.status === "ok" &&
+                (geometryMode || (r.quality_eligible ?? (r.q_min >= cfg.minimum_quality))),
+            );
+            const counts = rows
+              .filter((r) => surfaceMode ? r.triangles : r.tetrahedra)
+              .map((r) => surfaceMode ? r.triangles : r.tetrahedra);
+            const worst = (key) => {
+              const values = rows.map(r => r[key]).filter(Number.isFinite);
+              return values.length ? Math.max(...values) : null;
+            };
+            const forward = worst("sampled_geometry_distance"), reverse = worst("sampled_reverse_distance");
+            return {
+              w,
+              n,
+              rows,
+              time: median(timings),
+              lo: timings.length ? Math.min(...timings) : null,
+              hi: timings.length ? Math.max(...timings) : null,
+              count: counts.length ? Math.max(...counts) : null,
+              countLo: counts.length ? Math.min(...counts) : null,
+              nodes: rows.filter((r) => r.nodes).length
+                ? Math.max(...rows.filter((r) => r.nodes).map((r) => r.nodes))
+                : null,
+              q: rows.filter((r) => r[qualityKey] != null).length
+                ? Math.min(
+                    ...rows.filter((r) => r[qualityKey] != null).map((r) => r[qualityKey]),
+                  )
+                : null,
+              forward,
+              reverse,
+              volume: worst("relative_volume_error_with_uncertainty"),
+              error: geometryMode ? (forward != null && reverse != null ? Math.max(forward, reverse) : null) : worst("worst_energy_error"),
+              eligible:
+                valid.length === cfg.repeats && rows.length === cfg.repeats && Array.from({length: cfg.repeats}, (_, i) => i).every(i => rows.some(r => r.repeat === i)),
+            };
+          }),
+        );
+      }
+      function chart(gs, key, label) {
+        return `<div class="interactive-chart" data-key="${key}" data-label="${esc(label)}">
+          <p class="better">↙ Lower and left is better: ↓ less ${accuracyLabel.toLowerCase()}; ← ${key === "time" ? "faster generation" : "fewer elements at comparable accuracy"}.</p>
+          <div class="plot-controls">${cfg.workflows.map((w) => `<label><input type="checkbox" data-workflow="${esc(w)}" checked><i class="dot" style="background:${colors[w]}"></i>${esc(names[w])}</label>`).join("")}</div>
+          <div class="plot-controls"><label><input type="checkbox" class="show-diagnostics">Show ${geometryMode ? "geometry" : "geometry and quality"} warnings, diagnostic only</label><button class="reset-plot">Reset zoom</button></div>
+          <svg class="plot" viewBox="0 0 540 310" role="group" aria-label="Interactive ${esc(label)} versus ${esc(accuracyLabel)}" tabindex="0"></svg>
+          <output class="point-detail" aria-live="polite">Hover or select a point for details. Scroll to zoom; drag to pan; double-click or press R to reset. Point colors identify workflows.</output></div>`;
+      }
+      function installChart(host, gs, section) {
+        const key = host.dataset.key,
+          label = host.dataset.label,
+          svg = host.querySelector("svg"),
+          info = host.querySelector("output");
+        let bounds = null,
+          home = null,
+          drag = null;
+        const selection = () => {
+          const enabled = new Set(
+            Array.from(
+              host.querySelectorAll("input[data-workflow]:checked"),
+              (e) => e.dataset.workflow,
+            ),
+          );
+          const diagnostics = host.querySelector(".show-diagnostics").checked;
+          return gs.filter(
+            (g) =>
+              enabled.has(g.w) &&
+              (g.eligible || diagnostics) &&
+              g[key] > 0 &&
+              g.error > 0,
+          );
+        };
+        function details(g) {
+          const why = g.eligible
+            ? `${geometryMode ? "Geometry" : "Geometry and element quality"} admitted across all measured repeats`
+            : "Diagnostic only. " + reasons(g).join("; ");
+          info.textContent = `${names[g.w]}, ${g.n} intervals. Generation ${num(g.time)} s; ${num(g.count)} ${countLabel.toLowerCase()}; ${accuracyLabel.toLowerCase()} ${errorFormat(g.error)}; forward ${distance(g.forward)} L; reverse ${distance(g.reverse)} L; volume plus empirical uncertainty ${pct(g.volume)}; ${qualityLabel.toLowerCase()} ${num(g.q)}. ${why}`;
+          section
+            .querySelectorAll("tr.selected")
+            .forEach((r) => r.classList.remove("selected"));
+          section
+            .querySelector(`[data-result="${g.w}-${g.n}"]`)
+            ?.classList.add("selected");
+        }
+        function draw(reset = false) {
+          if (reset) {
+            info.textContent =
+              "Hover or select a point for measurements. Hollow points are warning scores, diagnostic only. Scroll to zoom; drag to pan; reset restores the view.";
+            section
+              .querySelectorAll("tr.selected")
+              .forEach((r) => r.classList.remove("selected"));
+          }
+          const points = selection();
+          if (!points.length) {
+            svg.innerHTML =
+              '<text x="24" y="120" fill="#526576">No selected admissible scores. See reasons in the table.</text>';
+            info.textContent =
+              "A missing or zero error cannot appear on a log-scale chart. Zero-error observations remain in the table. Enable warnings to inspect diagnostic scores.";
+            bounds = null;
+            return;
+          }
+          const xx = points.map((g) => Math.log10(g[key])),
+            yy = points.map((g) => Math.log10(g.error));
+          if (!bounds || reset) {
+            const dx = Math.max(0.4, Math.max(...xx) - Math.min(...xx)),
+              dy = Math.max(0.4, Math.max(...yy) - Math.min(...yy));
+            bounds = [
+              Math.min(...xx) - dx * 0.15,
+              Math.max(...xx) + dx * 0.15,
+              Math.min(...yy) - dy * 0.15,
+              Math.max(...yy) + dy * 0.15,
+            ];
+            home = bounds.slice();
+          }
+          const [xl, xh, yl, yh] = bounds;
+          const X = (v) => 72 + ((Math.log10(v) - xl) / (xh - xl)) * 436,
+            Y = (v) => 245 - ((Math.log10(v) - yl) / (yh - yl)) * 200;
+          let body = '<path d="M72 45V245H508" fill="none" stroke="#9aa9b6"/>';
+          for (let i = 0; i < 5; i++) {
+            const x = 72 + i * 109,
+              y = 245 - i * 50;
+            body += `<path d="M${x} 45V245 M72 ${y}H508" stroke="#e5ebf0"/><text x="${x}" y="265" text-anchor="middle" fill="#526576" font-size="11">${num(10 ** (xl + ((xh - xl) * i) / 4))}</text><text x="65" y="${y + 4}" text-anchor="end" fill="#526576" font-size="11">${errorFormat(10 ** (yl + ((yh - yl) * i) / 4))}</text>`;
+          }
+          body += `<text x="72" y="19" fill="#197862" font-size="12">↓ ${esc(accuracyLabel)}, lower is better · log scale</text><text x="290" y="293" text-anchor="middle" fill="#197862" font-size="12">← ${esc(label)}, lower is better · log scale</text>`;
+          points.forEach((g, i) => {
+            const x = X(g[key]),
+              y = Y(g.error);
+            if (x < 72 || x > 508 || y < 45 || y > 245) return;
+            body += `<circle data-point="${i}" cx="${x}" cy="${y}" r="6" fill="${g.eligible ? colors[g.w] : "white"}" stroke="${colors[g.w]}" stroke-width="2" tabindex="0" role="button" aria-label="${esc(names[g.w])}, ${g.n} intervals, error ${errorFormat(g.error)}, ${g.eligible ? "admissible" : "diagnostic"}"><title>${esc(names[g.w])} · n${g.n} · ${errorFormat(g.error)}</title></circle>`;
+          });
+          svg.innerHTML = body;
+          svg.querySelectorAll("circle").forEach((c) => {
+            const g = points[Number(c.dataset.point)];
+            c.onpointerenter = () => details(g);
+            c.onfocus = () => details(g);
+            c.onclick = () => details(g);
+            c.onkeydown = (e) => {
+              if (e.key === "Enter" || e.key === " ") {
+                e.preventDefault();
+                details(g);
+              }
+            };
+          });
+        }
+        const local = (e) => {
+          const r = svg.getBoundingClientRect();
+          return [
+            ((e.clientX - r.left) * 540) / r.width,
+            ((e.clientY - r.top) * 310) / r.height,
+          ];
+        };
+        svg.onwheel = (e) => {
+          if (!bounds) return;
+          e.preventDefault();
+          const [x, y] = local(e),
+            [xl, xh, yl, yh] = bounds,
+            tx = Math.max(0, Math.min(1, (x - 72) / 436)),
+            ty = Math.max(0, Math.min(1, (245 - y) / 200)),
+            cx = xl + tx * (xh - xl),
+            cy = yl + ty * (yh - yl),
+            factor = e.deltaY > 0 ? 1.2 : 1 / 1.2;
+          bounds = [
+            cx + (xl - cx) * factor,
+            cx + (xh - cx) * factor,
+            cy + (yl - cy) * factor,
+            cy + (yh - cy) * factor,
+          ];
+          draw();
+        };
+        svg.onpointerdown = (e) => {
+          if (!bounds || e.target.closest("circle")) return;
+          drag = { xy: local(e), bounds: bounds.slice(), id: e.pointerId };
+          svg.setPointerCapture(e.pointerId);
+        };
+        svg.onpointermove = (e) => {
+          if (!drag) return;
+          const [x, y] = local(e),
+            b = drag.bounds,
+            dx = ((x - drag.xy[0]) * (b[1] - b[0])) / 436,
+            dy = ((y - drag.xy[1]) * (b[3] - b[2])) / 200;
+          bounds = [b[0] - dx, b[1] - dx, b[2] + dy, b[3] + dy];
+          draw();
+        };
+        svg.onpointerup = svg.onpointercancel = () => {
+          drag = null;
+        };
+        const reset = () => {
+          bounds = home?.slice() ?? null;
+          draw(true);
+        };
+        svg.ondblclick = reset;
+        svg.onkeydown = (e) => {
+          if (e.key.toLowerCase() === "r") reset();
+        };
+        host.querySelector("button").onclick = reset;
+        host.querySelectorAll("input").forEach((input) => {
+          input.onchange = () => draw(true);
+        });
+        draw(true);
+      }
+      function reasons(g) {
+        return [
+          ...(!geometryMode && g.q != null && g.q < cfg.minimum_quality
+            ? [`Minimum element quality ${num(g.q)} is below required ${num(cfg.minimum_quality)}`]
+            : []),
+          ...new Set(
+            g.rows.flatMap((r) =>
+              r.admission_reasons?.length
+                ? r.admission_reasons
+                : r.error
+                  ? [`${r.failure_owner || owner(r)}: ${r.stage}: ${r.error}`]
+                  : r.status === "geometry-warning"
+                    ? [
+                        "Sampled boundary distance or volume exceeds the configured tolerance",
+                      ]
+                    : [],
+            ),
+          ),
+        ];
+      }
+      function owner(r) {
+        if (r.stage === "elasticity") return "Benchmark FEA solver";
+        if (r.workflow === "vtk-flying-edges") return "VTK Flying Edges control";
+        return r.workflow.startsWith("meshers")
+          ? "Meshers"
+          : r.workflow.startsWith("vtk")
+            ? "Microgen / VTK"
+            : r.workflow.startsWith("mmg") && !r.workflow.startsWith("mmg-microgen")
+              ? "MMG binding pipeline"
+              : "Microgen / MMG pipeline";
+      }
+      function missingReason(g, key) {
+        if (!g.rows.length) return "Not run yet";
+        const r =
+          g.rows.find((r) => r.status === "failed" || r.status === "timeout" || r.status === "memory-limit") ||
+          g.rows[0];
+        if (r.status === "timeout")
+          return `Time limit during ${r.stage || "worker"}`;
+        if (key === "time")
+          return "Generation did not complete; failed-attempt duration is in the log details";
+        if (key === "forward" || key === "reverse" || key === "volume" || (key === "error" && geometryMode))
+          return r.mesh_sha256 ? `Geometry diagnostics blocked during ${r.stage}` : "No accepted mesh returned";
+        if (key === "error")
+          return r.mesh_sha256
+            ? `FEA blocked by ${r.stage}`
+            : "No accepted mesh; FEA not run";
+        if (key === "q")
+          return r.mesh_sha256
+            ? "Mesh validation did not finish"
+            : "No accepted mesh returned";
+        return "No accepted mesh returned";
+      }
+      // Color numeric observations separately from their admission status.
+      function heatColor(position) {
+        const v = Math.max(0, Math.min(1, position)),
+          stops = [[130, 201, 180], [247, 225, 160], [239, 150, 149]],
+          i = v <= 0.5 ? 0 : 1,
+          t = i === 0 ? v * 2 : (v - 0.5) * 2;
+        return `rgb(${stops[i].map((x, j) => Math.round(x + t * (stops[i + 1][j] - x))).join(",")})`;
+      }
+      function heatScale(value, peers, higher = false) {
+        const values = peers.filter(Number.isFinite),
+          lo = Math.min(...values),
+          hi = Math.max(...values),
+          spread = hi > lo;
+        return {
+          background: spread
+            ? heatColor(higher ? (hi - value) / (hi - lo) : (value - lo) / (hi - lo))
+            : "#e6edf3",
+          label: !spread ? "No range" : value === (higher ? hi : lo) ? "Best observed" : value === (higher ? lo : hi) ? "Worst observed" : "",
+          lo,
+          hi,
+        };
+      }
+      function metricCell(g, key, gs, format = num) {
+        if (key === "q")
+          format = (x) => Number(x).toLocaleString("en-US", { maximumFractionDigits: 6 });
+        const value = g[key];
+        if (!Number.isFinite(value))
+          return `<td class="missing">Not available<small>${esc(missingReason(g, key))}</small></td>`;
+        const peers = gs
+          .filter((p) => p.n === g.n)
+          .map((p) => p[key]);
+        const scale = heatScale(value, peers, key === "q");
+        const note =
+          key === "count" || key === "nodes"
+            ? "Fewer is only better at comparable accuracy"
+            : key === "q" ? "Higher is better" : "Lower is better";
+        const title = `${note}. Observed range ${format(scale.lo)} to ${format(scale.hi)} at ${g.n} intervals, including diagnostic results. ${g.eligible ? "Admissible." : "Diagnostic only; excluded from claims."}`;
+        return `<td class="heat" data-metric="${key}" data-value="${value}" style="background:${scale.background}" title="${esc(title)}">${format(value)}${key === "time" ? `<small>[${num(g.lo)}, ${num(g.hi)}] s</small>` : ""}${scale.label ? `<small class="heat-note">${scale.label}</small>` : ""}${key === "q" && !geometryMode ? `<small class="${value < cfg.minimum_quality ? "gate-fail" : ""}">${value < cfg.minimum_quality ? "Below target" : "Meets target"}, q ≥ ${num(cfg.minimum_quality)}</small>` : ""}${!g.eligible ? "<small class=heat-note>Diagnostic only</small>" : ""}</td>`;
+      }
+      function resultRows(gs) {
+        const status = (g) => !g.rows.length ? "Pending" : g.eligible ? "Admissible" :
+          (!geometryMode && g.rows.every(r => r.status === "ok") && g.q < cfg.minimum_quality)
+            ? "Quality warning" : g.rows.map(r => r.status).join(", ");
+        return gs
+          .map(
+            (g) =>
+              `<tr data-result="${g.w}-${g.n}"><td>${esc(names[g.w])} / ${g.n}</td>${metricCell(g, "time", gs)}${metricCell(g, "count", gs)}${metricCell(g, "nodes", gs)}${metricCell(g, "q", gs)}${geometryMode ? "" : metricCell(g, "error", gs, energyPercent)}${metricCell(g, "forward", gs, distance)}${metricCell(g, "reverse", gs, distance)}${metricCell(g, "volume", gs, pct)}<td class="status"><span class="badge ${g.eligible ? "ok" : g.rows.some((r) => r.status === "failed" || r.status === "timeout" || r.status === "memory-limit") ? "fail" : ""}">${status(g)}</span>${reasons(
+                g,
+              )
+                .map((x) => `<small>${esc(x)}</small>`)
+                .join(
+                  "",
+                )}${g.rows.length < cfg.repeats ? "<small>Repeats incomplete</small>" : ""}${g.rows
+                .filter((r) => r.issue_url)
+                .map((r) => `<a href="${esc(r.issue_url)}">Reported issue</a>`)
+                .join(" ")}</td></tr>`,
+          )
+          .join("");
+      }
+      function ratioCell(value) {
+        if (Number.isNaN(value))
+          return '<td class="missing">Undefined ratio<small>Both observations are zero</small></td>';
+        const label = value < 1 ? "Favors Meshers" : value > 1 ? "Favors control" : "Equal";
+        return `<td class="heat" style="background:${heatColor(0.5 + Math.log2(value) / 2)}" title="${label}. Meshers / control; 1 is equal. Color saturates at 0.5× and 2×.">${num(value)}×<small>${label}</small></td>`;
+      }
+      function comparisons(gs) {
+        const good = gs.filter((g) => g.eligible && (geometryMode || (g.error <= (cfg.fea_target ?? 0.05) && g.q >= cfg.minimum_quality))),
+          pairs = [];
+        for (const m of good.filter((g) => g.w.startsWith("meshers"))) {
+          for (const c of good.filter((g) => !g.w.startsWith("meshers"))) {
+            const delta = Math.max(
+              Math.abs(m.count / c.countLo - 1),
+              Math.abs(m.countLo / c.count - 1),
+            );
+            if (delta <= cfg.matched_count_tolerance)
+              pairs.push(
+                `<tr><td>${esc(names[m.w])} n${m.n} / ${esc(names[c.w])} n${c.n}</td><td>${pct((m.count - c.count) / c.count)}</td>${ratioCell(m.error / c.error)}${ratioCell(m.time / c.time)}</tr>`,
+              );
+          }
+        }
+        return pairs.length
+          ? `<div class="table-wrap"><table><thead><tr><th>Observed matched-count pair</th><th>Element difference</th><th>${geometryMode ? "Boundary" : "FEA"} error ratio ↓, &lt;1 favors Meshers</th><th>Time ratio ↓, &lt;1 favors Meshers</th></tr></thead><tbody>${pairs.join("")}</tbody></table></div><p class="ratio-key">Ratio colors use a fixed scale: green at ≤ 0.5×, yellow at 1×, red at ≥ 2×. All pairs pass admission and the matched-count tolerance.</p>`
+          : `<p class="muted">No measured Meshers/control pair is within ${pct(cfg.matched_count_tolerance)} of the same element count. Add resolution levels before making a matched-count claim.</p>`;
+      }
+      function targets(gs) {
+        const best = (w, t) => gs
+          .filter((g) => g.w === w && g.eligible && g.q >= cfg.minimum_quality && g.error <= t)
+          .sort((a, b) => a.count - b.count)[0];
+        return `<div class="table-wrap"><table><thead><tr><th>Workflow</th>${cfg.error_targets.map((t) => `<th>≤ ${pct(t)} error</th>`).join("")}</tr></thead><tbody>${cfg.workflows
+          .map(
+            (w) =>
+              `<tr><td>${esc(names[w])}</td>${cfg.error_targets
+                .map((t) => {
+                  const g = best(w, t);
+                  if (!g) return '<td class="missing">Not reached<small>No admissible tested configuration reaches this target</small></td>';
+                  const peers = cfg.workflows.map((other) => best(other, t)).filter(Boolean),
+                    count = heatScale(g.count, peers.map((p) => p.count)),
+                    time = heatScale(g.time, peers.map((p) => p.time));
+                  return `<td class="heat" style="background:${count.background}" title="Fewer tets is better at this shared error target">${num(g.count)} ${countLabel.toLowerCase()}${count.label ? `<small>${count.label}</small>` : ""}<small class="target-time" style="background:${time.background}" title="Generation time of the selected minimum-count configuration; lower is better">${num(g.time)} s</small></td>`;
+                })
+                .join("")}</tr>`,
+          )
+          .join(
+            "",
+          )}</tbody></table></div><p class="muted">Lowest observed maximum element count reaching each target across all repeats. Each target column has separate count and time scales across qualifying workflows, green for lower values. Gray means no qualifying observation. No interpolation or extrapolation; the tested resolution range may miss a better configuration.</p>`;
+      }
+
+      function applicationTargets(caseId) {
+        const targets = (data.qualification?.targets || []).filter(t => t.case === caseId && (!geometryMode || t.energy_target == null));
+        const cost = g => g ? `${num(g.median_mesh_s)} s · n${g.cells} · ${num(g.max_triangles || g.max_tetrahedra)} ${countLabel.toLowerCase()}` : "Not reached";
+        const convergence = (data.qualification?.convergence || []).filter(g => g.case === caseId);
+        return `<h3>Cost to reach the application target</h3><p>Fastest and smallest are selected independently from measured configurations. Every requested repeat must pass. ${geometryMode ? "Element shape is diagnostic in this mode." : `FEA targets also require q ≥ ${num(cfg.minimum_quality)}.`} Boundary checks run in both directions; volume admission includes empirical reference uncertainty.</p><div class="table-wrap"><table><thead><tr><th>Workflow</th><th>Target</th><th>Fastest qualifying configuration</th><th>Smallest qualifying configuration</th></tr></thead><tbody>${targets.map(t => `<tr><td>${esc(names[t.workflow])}</td><td>${t.energy_target == null ? "Geometry fidelity" : "FEA ≤ " + pct(t.energy_target)}</td><td>${cost(t.fastest)}</td><td>${cost(t.smallest)}</td></tr>`).join("")}</tbody></table></div>${geometryMode ? "" : `<h3>Observed convergence</h3>${convergence.map(g => `<p>${esc(names[g.workflow])}: ${g.levels} levels with admitted geometry, ${esc(g.status)}. ${g.pairs.map(p => `n${p.cells.join(" → ")}: order ${num(p.effective_h_order)}`).join("; ")}</p>`).join("")}<p class="muted">Orders use h proportional to element count to the power −1/3. They are diagnostics for independently generated meshes, not an error bound or extrapolation.</p>`}`;
+      }
+
+      function mesh(canvas, triangles) {
+        let yaw = 0.7,
+          pitch = 0.45,
+          drag = null;
+        const ctx = canvas.getContext("2d");
+        function draw() {
+          const size = canvas.getBoundingClientRect();
+          canvas.width = Math.max(1, size.width * 2);
+          canvas.height = 310;
+          const width = canvas.width,
+            height = canvas.height;
+          ctx.fillStyle = "#f8fafb";
+          ctx.fillRect(0, 0, width, height);
+          const scale = Math.min(width, height) * 0.62;
+          function project(p) {
+            let x = p[0] * Math.cos(yaw) + p[2] * Math.sin(yaw),
+              z = -p[0] * Math.sin(yaw) + p[2] * Math.cos(yaw);
+            return [
+              width / 2 + scale * x,
+              height / 2 -
+                scale * (p[1] * Math.cos(pitch) - z * Math.sin(pitch)),
+              p[1] * Math.sin(pitch) + z * Math.cos(pitch),
+            ];
+          }
+          const faces = triangles
+            .map((t) => t.map(project))
+            .sort(
+              (a, b) =>
+                a.reduce((s, p) => s + p[2], 0) -
+                b.reduce((s, p) => s + p[2], 0),
+            );
+          for (const t of faces) {
+            const shade = Math.max(
+              80,
+              Math.min(210, 145 + (70 * t.reduce((s, p) => s + p[2], 0)) / 3),
+            );
+            ctx.fillStyle = `rgb(${shade * 0.58},${shade * 0.81},${shade})`;
+            ctx.strokeStyle = "rgba(30,60,80,.18)";
+            ctx.lineWidth = 0.5;
+            ctx.beginPath();
+            ctx.moveTo(t[0][0], t[0][1]);
+            for (const p of t.slice(1)) ctx.lineTo(p[0], p[1]);
+            ctx.closePath();
+            ctx.fill();
+            ctx.stroke();
+          }
+        }
+        canvas.onpointerdown = (e) => {
+          drag = [e.clientX, e.clientY];
+          canvas.setPointerCapture(e.pointerId);
+        };
+        canvas.onpointermove = (e) => {
+          if (drag) {
+            yaw += (e.clientX - drag[0]) * 0.01;
+            pitch += (e.clientY - drag[1]) * 0.01;
+            drag = [e.clientX, e.clientY];
+            draw();
+          }
+        };
+        canvas.onpointerup = () => {
+          drag = null;
+        };
+        new ResizeObserver(draw).observe(canvas);
+        draw();
+      }
+
+      for (const c of data.cases) {
+        const gs = groups(c.id),
+          rows = data.rows.filter((r) => r.case === c.id && r.repeat >= 0),
+          failures = rows.filter(
+            (r) => !["ok", "geometry-warning"].includes(r.status),
+          );
+        const section = document.createElement("section");
+        section.className = "case";
+        section.id = c.id;
+        const previews = cfg.workflows
+          .map((w) => {
+            const r = rows
+              .filter((r) => r.workflow === w && r.preview)
+              .sort((a, b) => b.cells - a.cells)[0];
+            return `<div class="mesh-card"><b>${esc(names[w])}</b>${r ? `<canvas data-mesh="${esc(r.artifact)}" aria-label="${esc(c.name + " " + names[w] + " mesh")}" title="Drag to rotate"></canvas><small>n=${r.cells} · ${num(surfaceMode ? r.triangles : r.tetrahedra)} ${countLabel.toLowerCase()} · ${esc(r.status)}<br>Surface simplified for display. Drag to rotate.</small>` : '<div class="empty-preview">No retained validated surface</div><small>See status and logs below.</small>'}</div>`;
+          })
+          .join("");
+        section.innerHTML = `<div class="case-header"><div><div class="eyebrow">${esc(c.id)}</div><h2>${esc(c.name)}</h2><p>${esc(c.description)}</p></div><span class="badge">${rows.length}/${cfg.cells.length * cfg.workflows.length * cfg.repeats} measured runs</span></div><div class="formula">${esc(c.formula)}<br>X = 2πx/L, Y = 2πy/L, Z = 2πz/L · cube [−L/2, L/2]³ · L=${c.scale}<br>${["bcc_lattice", "spinodoid"].includes(c.function) ? "Implicit solid: signed field ≤ 0. The lower Meshers band value −1 is inactive." : `Sheet: |f| ≤ width(x)/2 · width(x)=${c.offset}${c.grading ? " × (1 + " + c.grading + " x/L)" : ""}${c.function === "solid" ? " · full cube" : ""}`}</div><div class="previews">${previews}</div><div class="legend">${cfg.workflows.map((w) => `<span><i class="dot" style="background:${colors[w]}"></i>${esc(names[w])}</span>`).join("")}</div><div class="charts"><div class="chart"><h3>Generation time versus ${accuracyLabel}</h3>${chart(gs, "time", "Generation seconds")}</div><div class="chart"><h3>Elements versus ${accuracyLabel}</h3>${chart(gs, "count", countLabel)}</div></div><div class="heat-key"><b>Better</b><span class="colorbar" aria-label="Green through yellow to red"></span><b>Worse</b><p>Each metric uses its own linear range across available workflows at the same intervals. Green is the best observed value, red the worst; a column with no variation has a neutral fill. Diagnostic results keep their colors and labels, but stay excluded from claims. Hover a value for its range.</p><p>↓ Lower time and error are better. ↑ Higher shape quality is better. ↓* Fewer elements or nodes only helps at comparable accuracy. Shape quality is diagnostic in geometry modes; the FEA quality gate has its own badge.</p></div><div class="table-wrap" role="region" aria-label="Measurements, scroll horizontally on narrow screens" tabindex="0"><table class="results-table"><thead><tr><th>Workflow / intervals</th><th>Time ↓ median [min, max] s</th><th>Max ${countLabel.toLowerCase()} ↓*</th><th>Max nodes ↓*</th><th>${qualityLabel} ↑</th>${geometryMode ? "" : `<th>${accuracyLabel} ↓</th>`}<th>Mesh → field ↓ / L</th><th>Field → mesh ↓ / L</th><th>Volume + empirical uncertainty ↓</th><th>Status</th></tr></thead><tbody>${resultRows(gs)}</tbody></table></div><p class="muted">Colors describe the observed column values, not overall mesh qualification. Use the admissible matched-budget and error-target comparisons below to judge tradeoffs. On narrow screens, scroll the table horizontally; workflow names stay visible.</p><details open><summary>Compare at matched budgets and error targets</summary>${comparisons(gs)}${geometryMode ? "" : targets(gs)}${applicationTargets(c.id)}</details><details><summary>Individual repetitions and geometry diagnostics${geometryMode ? "" : ", including all 18 load errors"}</summary>${rows.map((r) => `<details><summary>${esc(names[r.workflow])} n${r.cells}, repeat ${r.repeat + 1}: ${esc(r.status)}</summary><p><a href="${artifact(r, "worker.log")}">Full log</a> · <a href="${artifact(r, "request.json")}">Input</a>${r.mesh_sha256 ? ' · <a href="' + artifact(r, "mesh.npz") + '">Mesh arrays</a>' : ""}${r.fields_sha256 ? ' · <a href="' + artifact(r, "fields.npz") + '">Solved fields</a>' : ""}</p><pre>${esc(JSON.stringify(Object.fromEntries(Object.entries(r).filter(([k]) => k !== "preview")), null, 2))}</pre></details>`).join("")}</details>${failures.length ? `<details open><summary>${failures.length} retained failures</summary>${failures.map((r) => `<div class="failure"><b>${esc(names[r.workflow])} n${r.cells}, repeat ${r.repeat + 1}</b><p>${esc(r.failure_owner || owner(r))} · ${esc(r.stage)}: ${esc(r.error)}</p><a href="${artifact(r, "worker.log")}">Full worker log</a></div>`).join("")}</details>` : ""}`;
+        document.getElementById("cases").append(section);
+        section
+          .querySelectorAll(".interactive-chart")
+          .forEach((host) => installChart(host, gs, section));
+        section
+          .querySelectorAll("canvas[data-mesh]")
+          .forEach((canvas) =>
+            mesh(
+              canvas,
+              rows.find((r) => r.artifact === canvas.dataset.mesh).preview,
+            ),
+          );
+      }
+      for (const c of data.cases) {
+        const section = document.getElementById(c.id),
+          display = document.createElement("div");
+        display.className = "mesh-card";
+        display.style.maxWidth = "240px";
+        display.innerHTML =
+          "<b>Intended geometry · display reference</b>" +
+          (c.target_preview
+            ? '<canvas aria-label="Target geometry" title="Drag to rotate"></canvas>'
+            : "<p>" +
+              esc(c.target_preview_error ?? "Preview pending") +
+              "</p>") +
+          "<small>Separate 32-interval surface, simplified for display only.<br>Material volume estimate " +
+          pct(c.target_volume_fraction) +
+          "<br>Half-sample difference " +
+          pct(c.target_volume_half_sample_delta) +
+          "<br>Admission volume tolerance " +
+          pct(cfg.volume_tolerance) +
+          "</small>";
+        section.querySelector(".previews").before(display);
+        if (c.target_preview)
+          mesh(display.querySelector("canvas"), c.target_preview);
+      }
+    </script>
+  </body>
+</html>

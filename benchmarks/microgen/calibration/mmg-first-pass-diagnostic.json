@@ -1,0 +1,87 @@
+{
+  "scope": "First-pass diagnostic only. Surface sampling does not certify volume validity or FEA accuracy.",
+  "case": {
+    "id": "gyroid",
+    "name": "Gyroid",
+    "function": "gyroid",
+    "offset": 0.5,
+    "description": "Uniform sheet, one unit cell.",
+    "formula": "sin X cos Y + sin Y cos Z + sin Z cos X",
+    "scale": 1.0,
+    "grading": 0.0
+  },
+  "cells": 32,
+  "cli": {
+    "mmg_cli_executable": "C:\\Users\\kevin\\dev\\meshers\\.local-work\\microgen-accuracy\\benchmarks\\microgen\\.venv\\Lib\\site-packages\\mmgpy\\bin\\mmg3d_O3.exe",
+    "mmg_cli_sha256": "7010a9f4d7e3fec9d442b5fa4229133bff365d176babbb6cf399ebd62fd1c2b8"
+  },
+  "rows": [
+    {
+      "name": "vtk-input",
+      "nodes": 19967,
+      "cells": 77760,
+      "sampled_cap_overshoot": 0.0006029116626608833,
+      "sampled_geometry_distance": 0.0015388422814547526,
+      "sampled_outward_orientation": false
+    },
+    {
+      "name": "first-default",
+      "nodes": 4040,
+      "cells": 16298,
+      "sampled_cap_overshoot": 0.0006029116626578202,
+      "sampled_geometry_distance": 0.008748672056199853,
+      "sampled_outward_orientation": true,
+      "parameters": {
+        "input": "C:\\Users\\kevin\\dev\\meshers\\.local-work\\microgen-accuracy\\benchmarks\\microgen\\output\\mmg-first-pass-probe\\input-required.mesh",
+        "output": "C:\\Users\\kevin\\dev\\meshers\\.local-work\\microgen-accuracy\\benchmarks\\microgen\\output\\mmg-first-pass-probe\\first-default.mesh",
+        "nofem": true
+      },
+      "command_s": 2.6504458999988856
+    }
+  ],
+  "source_sha256": {
+    "C:\\Users\\kevin\\dev\\meshers\\.local-work\\mmg_first_pass_probe.py": "713afb6992d7372b2835e9f224fbfa9a018dabab1f9aeff61da2e5aa99004329",
+    "C:\\Users\\kevin\\dev\\meshers\\.local-work\\microgen-accuracy\\benchmarks\\microgen\\.venv\\Lib\\site-packages\\microgen\\remesh.py": "b93c8b8150c1c40ccf5312d57785331d52f114d2217a8b59296b7484cf6f2612"
+  },
+  "state": "interrupted",
+  "interruption_reason": "Stopped the fully constrained first-pass control after more than ten minutes of CPU time without an output mesh. The completed default-pass measurement is retained; the constrained call has no mesh or geometry claim.",
+  "evidence_schema": 1,
+  "local_artifact_directory": "mmg-first-pass-probe",
+  "job_id": 1165,
+  "original_results_sha256": "574c5da509ca5cfec72cdd12c2855adabfcddba49691bfa9b09ba6e3d1ab689d",
+  "mesh_sha256": {
+    "first-default.mesh": "94428d0c06f052493836a5a4907aae84dc05c98d20f144ace3f7a681592c6937",
+    "input-required.mesh": "05bdb10ea054f3b5c28da6661a8b35a0237cb5a52985f28d76c2ff84e5182bc5"
+  },
+  "benchmark_source_sha256": {
+    "backends.py": "4dc5084988712ae7e58fb4cd63a84f365f5ce5b0b0a464498708f64232d43aa5",
+    "cases.py": "e7e271656f91e5028288b5da97e6cd5d20a3b4fcdc90d327101c9d44ed4287d2",
+    "elasticity.py": "4f573054a55c8637b05f21be01812e10fe8c11792ec9ce90e3b20c2ce82ba303",
+    "flying_edges.py": "74b20e300901a7e6f40dc9a03e6cc940825ab99d8e64042b5686c8b348850897",
+    "geometry.py": "64424d47b733bc26ab43807833f042f5cca7377044085dafa64fe0991fc06d84",
+    "linear_solve.py": "27b96c1778823110e44a1345ead11dfef46e82da11d4e98b13122f482ea48ed3",
+    "preview.py": "eb0177df868327825acb6f47cd33531db9846ab00b2ceb899eac9f90d1172c21",
+    "qualification.py": "819d112ff39c18bbb911d90ecce0324772c67ded74916dddc148b985198f50e0",
+    "reference.py": "49b5eef2f03768ccd821ecb15544bd158d6d9d892c762595bc07327f71a67afa",
+    "report.py": "b349872b3008dd7182ced452610bdaed6435f577b29ac8f6e01d2b7eb54058eb",
+    "runner.py": "bc2679e42f16e034bf3a173530eba8a0ba1bb1c62849309b548f0f31d2b23f7e",
+    "surface.py": "1f7665e85f3a3e8aac5177c78fdc73cdecd934ed6889711e39718586417d2f3d",
+    "surface_cleanup.py": "66670d4a784ec853c0b46ca09499ef64637289b20d5f9dbd59c4aa0efd613cad",
+    "surface_intersections.py": "ff9b51d5494935e6d5174a832b002a814c13b2d6f4d646e831c6d78b7a0470d7",
+    "__init__.py": "d3c607efcc0449f226497be88dd2b2340e765fe49e6175ebb35c257a10ea6364",
+    "__main__.py": "116710c321651f30440cc5a3ff07e48abaf5510fda753af23626d47f798643a2"
+  },
+  "probe_source": "\"\"\"Compare the exact Microgen first pass with and without requested size controls.\"\"\"\n\nimport hashlib\nimport json\nimport os\nimport shutil\nimport sys\nimport threading\nimport time\nfrom pathlib import Path\nfrom unittest.mock import patch\n\nsys.path.insert(0, str(Path.home() / \"bin\"))\nfrom pueue_progress import report\n\nstate = {\"done\": 0, \"message\": \"Loading first-pass MMG probe\"}\nstart = time.monotonic()\nstop = threading.Event()\n\n\ndef heartbeat():\n    while not stop.is_set():\n        elapsed = time.monotonic() - start\n        report(state[\"done\"] / 6, state[\"message\"], eta_s=elapsed / max(1, state[\"done\"]) * (6 - state[\"done\"]), cells=32)\n        stop.wait(2)\n\n\nheartbeat_thread = threading.Thread(target=heartbeat, daemon=True)\nheartbeat_thread.start()\n\nimport microgen.remesh as remesh\nimport pyvista as pv\nfrom microgen import BoxMesh\nfrom microgen.external import Mmg\n\nfrom microgen_benchmark.backends import configure_mmg_cli, reopenable_temporary_file\nfrom microgen_benchmark.cases import CASES\nfrom microgen_benchmark.geometry import geometry_metrics\n\noutput = Path(\"benchmarks/microgen/output/mmg-first-pass-probe\").resolve()\noutput.mkdir(parents=True, exist_ok=False)\nshutil.copy2(__file__, output / \"probe.py\")\ncase = next(c for c in CASES if c.id == \"gyroid\")\ndocument = {\"scope\": \"First-pass diagnostic only. Surface sampling does not certify volume validity or FEA accuracy.\", \"case\": case.record(), \"cells\": 32, \"cli\": configure_mmg_cli(), \"rows\": [], \"source_sha256\": {str(p): hashlib.sha256(Path(p).read_bytes()).hexdigest() for p in [__file__, remesh.__file__]}}\n\n\ndef measure(grid, name):\n    poly = grid.extract_surface(algorithm=\"dataset_surface\").triangulate()\n    faces = poly.faces.reshape(-1, 4)[:, 1:]\n    return {\"name\": name, \"nodes\": grid.n_points, \"cells\": grid.n_cells, **geometry_metrics(poly.points, faces, case)}\n\n\ntry:\n    state.update(done=1, message=\"Building Microgen VTK seed and required cap file\")\n    grid = case.volume_grid(case.shape(32), 32).triangulate()\n    context = patch(\"microgen.remesh.NamedTemporaryFile\", reopenable_temporary_file) if os.name == \"nt\" else __import__(\"contextlib\").nullcontext()\n    with context:\n        remesh._generate_mesh_with_required_triangles(BoxMesh.from_pyvista(grid), str(output / \"input-required.mesh\"))\n    document[\"rows\"].append(measure(grid, \"vtk-input\"))\n    state.update(done=2, message=\"Running exact Microgen first-pass defaults\")\n    for index, (name, parameters) in enumerate([\n        (\"first-default\", {}),\n        (\"first-tight\", {\"hausd\": 0.0002, \"hsiz\": 1 / 32, \"hgrad\": 1.3}),\n    ]):\n        state.update(done=2 + 2 * index, message=f\"MMG {name}\")\n        args = {\"input\": str(output / \"input-required.mesh\"), \"output\": str(output / f\"{name}.mesh\"), \"nofem\": True, **parameters}\n        begin = time.perf_counter()\n        Mmg.mmg3d(**args)\n        seconds = time.perf_counter() - begin\n        state.update(done=3 + 2 * index, message=f\"Sampling {name} geometry\")\n        row = measure(pv.read(output / f\"{name}.mesh\"), name)\n        row.update(parameters=args, command_s=seconds)\n        document[\"rows\"].append(row)\n        (output / \"results.json\").write_text(json.dumps(document, indent=2, allow_nan=False), encoding=\"utf-8\")\n    document[\"mesh_sha256\"] = {p.name: hashlib.sha256(p.read_bytes()).hexdigest() for p in output.glob(\"*.mesh\")}\n    (output / \"results.json\").write_text(json.dumps(document, indent=2, allow_nan=False), encoding=\"utf-8\")\n    state.update(done=6, message=\"MMG first-pass comparison complete\")\n    report(1, state[\"message\"], eta_s=0)\n    for row in document[\"rows\"]:\n        print(json.dumps({k: row.get(k) for k in [\"name\", \"command_s\", \"cells\", \"sampled_geometry_distance\", \"sampled_cap_overshoot\"]}))\nfinally:\n    stop.set()\n    heartbeat_thread.join()\n",
+  "unfinished_control": {
+    "name": "first-tight",
+    "parameters": {
+      "nofem": true,
+      "hausd": 0.0002,
+      "hsiz": 0.03125,
+      "hgrad": 1.3
+    },
+    "status": "stopped",
+    "output_mesh": null,
+    "command_s": null
+  }
+}

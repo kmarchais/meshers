@@ -1,0 +1,45 @@
+{
+  "scope": "First-pass sampled boundary diagnostic only; no volume validity or FEA certificate.",
+  "case": {
+    "id": "gyroid",
+    "name": "Gyroid",
+    "function": "gyroid",
+    "offset": 0.5,
+    "description": "Uniform sheet, one unit cell.",
+    "formula": "sin X cos Y + sin Y cos Z + sin Z cos X",
+    "scale": 1.0,
+    "grading": 0.0
+  },
+  "cells": 68826,
+  "cli": {
+    "mmg_cli_executable": "C:\\Users\\kevin\\dev\\meshers\\.local-work\\microgen-accuracy\\benchmarks\\microgen\\.venv\\Lib\\site-packages\\mmgpy\\bin\\mmg3d_O3.exe",
+    "mmg_cli_sha256": "7010a9f4d7e3fec9d442b5fa4229133bff365d176babbb6cf399ebd62fd1c2b8"
+  },
+  "command": [
+    "C:\\Users\\kevin\\dev\\meshers\\.local-work\\microgen-accuracy\\benchmarks\\microgen\\.venv\\Lib\\site-packages\\mmgpy\\bin\\mmg3d_O3.exe",
+    "-in",
+    "C:\\Users\\kevin\\dev\\meshers\\.local-work\\microgen-accuracy\\benchmarks\\microgen\\output\\mmg-first-pass-probe\\input-required.mesh",
+    "-out",
+    "C:\\Users\\kevin\\dev\\meshers\\.local-work\\microgen-accuracy\\benchmarks\\microgen\\output\\mmg-first-distance-001\\first-distance.mesh",
+    "-nofem",
+    "-hausd",
+    "0.001"
+  ],
+  "timeout_s": 180.0,
+  "input_sha256": "05bdb10ea054f3b5c28da6661a8b35a0237cb5a52985f28d76c2ff84e5182bc5",
+  "source_sha256": "e5fc3f4e057254fae0a3c21d480d7c03de6c3f61921be861501baa61d02f280a",
+  "status": "ok",
+  "returncode": 0,
+  "command_s": 14.384420100002899,
+  "nodes": 16684,
+  "mesh_sha256": "0758696e93159d69625073792778168748b459db194f5396d9bbc2621d1fefbd",
+  "sampled_cap_overshoot": 0.0006029116626578202,
+  "sampled_geometry_distance": 0.0011996785680842617,
+  "sampled_outward_orientation": false,
+  "probe_source": "\"\"\"Bounded diagnostic of MMG's first-pass distance parameter, not FEA admission.\"\"\"\nimport argparse\nimport hashlib\nimport json\nimport shutil\nimport subprocess\nimport sys\nimport threading\nimport time\nfrom pathlib import Path\n\nsys.path.insert(0, str(Path.home() / \"bin\"))\nfrom pueue_progress import report\n\nparser = argparse.ArgumentParser()\nparser.add_argument(\"--hausd\", type=float, required=True)\nparser.add_argument(\"--output\", type=Path, required=True)\nparser.add_argument(\"--timeout\", type=float, default=180)\nargs = parser.parse_args()\noutput = args.output.resolve()\noutput.mkdir(parents=True, exist_ok=False)\nshutil.copy2(__file__, output / \"probe.py\")\nstate = {\"fraction\": 0, \"message\": \"Loading bounded MMG distance probe\"}\nstart = time.monotonic()\nstop = threading.Event()\n\n\ndef heartbeat():\n    while not stop.is_set():\n        elapsed = time.monotonic() - start\n        report(state[\"fraction\"], state[\"message\"], eta_s=max(0, args.timeout - elapsed), hausd=args.hausd, elapsed_s=round(elapsed, 1))\n        stop.wait(2)\n\n\nthread = threading.Thread(target=heartbeat, daemon=True)\nthread.start()\ntry:\n    import pyvista as pv\n    from microgen_benchmark.backends import configure_mmg_cli\n    from microgen_benchmark.cases import CASES\n    from microgen_benchmark.geometry import geometry_metrics\n\n    case = next(c for c in CASES if c.id == \"gyroid\")\n    seed = Path(\"benchmarks/microgen/output/mmg-first-pass-probe/input-required.mesh\").resolve()\n    cli = configure_mmg_cli()\n    command = [cli[\"mmg_cli_executable\"], \"-in\", str(seed), \"-out\", str(output / \"first-distance.mesh\"), \"-nofem\", \"-hausd\", str(args.hausd)]\n    doc = {\"scope\": \"First-pass sampled boundary diagnostic only; no volume validity or FEA certificate.\", \"case\": case.record(), \"cells\": 32, \"cli\": cli, \"command\": command, \"timeout_s\": args.timeout, \"input_sha256\": hashlib.sha256(seed.read_bytes()).hexdigest(), \"source_sha256\": hashlib.sha256(Path(__file__).read_bytes()).hexdigest()}\n    state.update(fraction=1 / 3, message=\"MMG first pass with distance control only\")\n    begin = time.perf_counter()\n    with (output / \"mmg.log\").open(\"w\") as log:\n        try:\n            completed = subprocess.run(command, stdout=log, stderr=subprocess.STDOUT, timeout=args.timeout, check=False)\n            doc.update(status=\"ok\" if completed.returncode == 0 else \"failed\", returncode=completed.returncode, command_s=time.perf_counter() - begin)\n        except subprocess.TimeoutExpired:\n            doc.update(status=\"timeout\", command_s=None, censored_runtime_s=args.timeout)\n    mesh = output / \"first-distance.mesh\"\n    if doc[\"status\"] == \"ok\" and mesh.exists():\n        state.update(fraction=2 / 3, message=\"Sampling completed first-pass boundary\")\n        grid = pv.read(mesh)\n        poly = grid.extract_surface(algorithm=\"dataset_surface\").triangulate()\n        doc.update(nodes=grid.n_points, cells=grid.n_cells, mesh_sha256=hashlib.sha256(mesh.read_bytes()).hexdigest(), **geometry_metrics(poly.points, poly.faces.reshape(-1, 4)[:, 1:], case))\n    doc[\"probe_source\"] = Path(__file__).read_text()\n    (output / \"results.json\").write_text(json.dumps(doc, indent=2, allow_nan=False) + \"\\n\")\n    print(json.dumps({k: v for k, v in doc.items() if k not in {\"probe_source\", \"case\", \"command\"}}), flush=True)\n    state.update(fraction=1, message=\"Bounded first-pass diagnostic complete\")\n    report(1, state[\"message\"], eta_s=0)\nfinally:\n    stop.set()\n    thread.join()\n",
+  "grid_intervals": 32,
+  "cells_field_scope": "Mixed tetrahedron and triangle count in the output file, not sampling intervals",
+  "evidence_schema": 1,
+  "original_results_sha256": "5b67927578ae8bd46a42d18e1d8cea9bfc25c79388a8916b53c992f0847ffac6",
+  "local_artifact_directory": "mmg-first-distance-001"
+}

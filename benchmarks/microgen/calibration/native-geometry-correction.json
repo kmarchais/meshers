@@ -1,0 +1,894 @@
+{
+  "evidence_schema": 1,
+  "original_results_sha256": "86d23008895bfc035a78244778e3ca3cbe62a3547e8c7440fda86092146a1921",
+  "local_artifact_directory": "native-geometry-correction",
+  "scope": "Measured runs only. Counts and times include failed configurations. Local output retains source snapshots, meshes and fields.",
+  "schema_version": 2,
+  "state": "complete",
+  "provenance": {
+    "started_utc": "2026-10-11T21:23:37.345239+00:00",
+    "machine": "Omen",
+    "platform": "Windows-11-10.0.26200-SP0",
+    "cpu": "Intel64 Family 6 Model 198 Stepping 2, GenuineIntel",
+    "logical_cpus": 24,
+    "ram_bytes": 68062457856,
+    "python": "3.12.13 (main, Aug  7 2026, 02:26:41) [MSC v.1944 64 bit (AMD64)]",
+    "packages": {
+      "meshers": {
+        "version": "0.1.0",
+        "native_sha256": {
+          "meshers/_meshers.pyd": "4ee6b2e90ae9e82a5dcbb40ba0bed7ac5bc1fc0cbe3567a678ec92797d28438a"
+        }
+      },
+      "microgen": {
+        "version": "2.0.0b1",
+        "native_sha256": {}
+      },
+      "mmgpy": {
+        "version": "0.17.1",
+        "native_sha256": {
+          "../../Scripts/mmg.exe": "8b0b908a127a0938df4b7c0b1a43c020144cd48c402788d52fd0ca6beb6948b6",
+          "../../Scripts/mmg2d.exe": "c34b929ae283f94197d53d117eb44c090010e3aa117771e5fb26014fdb9b0091",
+          "../../Scripts/mmg2d_O3.exe": "c34b929ae283f94197d53d117eb44c090010e3aa117771e5fb26014fdb9b0091",
+          "../../Scripts/mmg3d.exe": "84b0f5667a09ac0987461a73117450c69fcc1c7f98c7c34f43aba528dea5cb2b",
+          "../../Scripts/mmg3d_O3.exe": "84b0f5667a09ac0987461a73117450c69fcc1c7f98c7c34f43aba528dea5cb2b",
+          "../../Scripts/mmgpy-ui.exe": "7dc633bd48c120bf8dc34cdebab28fd0695fdcfa241157f6027eadb55f74a508",
+          "../../Scripts/mmgpy.exe": "8b0b908a127a0938df4b7c0b1a43c020144cd48c402788d52fd0ca6beb6948b6",
+          "../../Scripts/mmgs.exe": "782a3c8a81913ab59d9bc8b5cffa975f841556749f5f6877b77c5bd339ecd8b3",
+          "../../Scripts/mmgs_O3.exe": "782a3c8a81913ab59d9bc8b5cffa975f841556749f5f6877b77c5bd339ecd8b3",
+          "bin/concrt140.dll": "54716f0738af891f283d213b5c8d11b25896bb8ee3097d301eae718560cf974e",
+          "bin/mmg.dll": "d958b0adbd9c0d7c398ebe4af4c25fa7c09f21c565d2d44334a64a45f951dad4",
+          "bin/mmg2d.dll": "599f89350c4b7d38dceba3e19bb858ad8c6691bbea3b11b8e9aa8ba7f3ef6008",
+          "bin/mmg2d.exe": "40d142631918c682fa74cd99d9b22b63dee2141c6d0dd8bd77770f9a607c42d5",
+          "bin/mmg3d.dll": "f73298240242109a90f12dcee48ec1c5f60e9fefc444b566f1ed94deefe77ee4",
+          "bin/mmg3d.exe": "7010a9f4d7e3fec9d442b5fa4229133bff365d176babbb6cf399ebd62fd1c2b8",
+          "bin/mmgs.dll": "ae86c25e7cd3f5ef5814ca3514330d3ca1d434f37e81a3f5b140996a33fe5417",
+          "bin/mmgs.exe": "efbd0f3d132dad9498ead4bf9934b68cea48c0520b4f8f43fa3198ba88eb9b79",
+          "bin/msvcp140.dll": "7c26614e1d733892c2deac7e245ce115504b1d80592dd0a01b08e3e5a55f89ca",
+          "bin/msvcp140_1.dll": "206c931bf90fdad8816de3b5e2ef80b2bcaa9406c89ecc05fe6fddffe251e982",
+          "bin/msvcp140_2.dll": "d50d7883f20d1dc6191768d3746f52dd9cac89c346ffaed5be1f110c2f34a838",
+          "bin/msvcp140_atomic_wait.dll": "3d0cbfaa1bf3eecf5a3f4491d2960ee803cb994f30292c6adc4a07c498f60e2b",
+          "bin/msvcp140_codecvt_ids.dll": "8a65c7596ef2e6938731f5a1058e7e40145b6d97967cc649231a076b9a608d78",
+          "bin/vcruntime140.dll": "d1f4225df2cd877dbf130d5668a021dce3f94118455ff5ec952061c30afc9ce7",
+          "bin/vcruntime140_1.dll": "a7146c08f89fe5b04541ab507cdb59ff7b44534d4ba3c668a426c6450a03434e",
+          "mmgpy.libs/concrt140.dll": "54716f0738af891f283d213b5c8d11b25896bb8ee3097d301eae718560cf974e",
+          "mmgpy.libs/msvcp140-a4c2229bdc2a2a630acdc095b4d86008.dll": "a4c2229bdc2a2a630acdc095b4d86008e5c3e3bc7773174354f3da4f5beb9cde",
+          "mmgpy.libs/msvcp140_1.dll": "456aebccb449fcba35f1109c259ba0aa10923e660f4de812a490d35f37f54fc9",
+          "mmgpy.libs/msvcp140_2.dll": "7a403abf753d0bdf09776cf4bcb13b5a6ebe3a47670de124a3c621aa4b952f82",
+          "mmgpy.libs/msvcp140_atomic_wait.dll": "d759dd381bdbd6142372de4cb57acc382e1b80c106b7414a408816564ee1eb6a",
+          "mmgpy.libs/msvcp140_codecvt_ids.dll": "f781e1e0133c397c3a2c73fd4dbcdb442378ba20fced56a2f7db5822436ddd2a",
+          "mmgpy.libs/vcruntime140.dll": "052ad6a20d375957e82aa6a3c441ea548d89be0981516ca7eb306e063d5027f4",
+          "mmgpy.libs/vcruntime140_1.dll": "6a99bc0128e0c7d6cbbf615fcc26909565e17d4ca3451b97f8987f9c6acbc6c8",
+          "mmgpy/_mmgpy.cp312-win_amd64.pyd": "aecbc3f3a115ed220a89c7357e1d762b0ef8a9d6118e30c13e86a43901e03582",
+          "mmgpy/bin/mmg2d.dll": "599f89350c4b7d38dceba3e19bb858ad8c6691bbea3b11b8e9aa8ba7f3ef6008",
+          "mmgpy/bin/mmg2d_O3.exe": "40d142631918c682fa74cd99d9b22b63dee2141c6d0dd8bd77770f9a607c42d5",
+          "mmgpy/bin/mmg3d.dll": "f73298240242109a90f12dcee48ec1c5f60e9fefc444b566f1ed94deefe77ee4",
+          "mmgpy/bin/mmg3d_O3.exe": "7010a9f4d7e3fec9d442b5fa4229133bff365d176babbb6cf399ebd62fd1c2b8",
+          "mmgpy/bin/mmgs.dll": "ae86c25e7cd3f5ef5814ca3514330d3ca1d434f37e81a3f5b140996a33fe5417",
+          "mmgpy/bin/mmgs_O3.exe": "efbd0f3d132dad9498ead4bf9934b68cea48c0520b4f8f43fa3198ba88eb9b79",
+          "mmgpy/mmg2d.dll": "599f89350c4b7d38dceba3e19bb858ad8c6691bbea3b11b8e9aa8ba7f3ef6008",
+          "mmgpy/mmg3d.dll": "f73298240242109a90f12dcee48ec1c5f60e9fefc444b566f1ed94deefe77ee4",
+          "mmgpy/mmgs.dll": "ae86c25e7cd3f5ef5814ca3514330d3ca1d434f37e81a3f5b140996a33fe5417"
+        }
+      },
+      "vtk": {
+        "version": "9.7.1",
+        "native_sha256": {}
+      },
+      "pyvista": {
+        "version": "0.49.0",
+        "native_sha256": {}
+      },
+      "numpy": {
+        "version": "2.5.3",
+        "native_sha256": {}
+      },
+      "scipy": {
+        "version": "1.18.1",
+        "native_sha256": {}
+      },
+      "psutil": {
+        "version": "7.2.2",
+        "native_sha256": {}
+      },
+      "pyamg": {
+        "version": "5.3.0",
+        "native_sha256": {}
+      }
+    },
+    "git_head": "816d884995e62216e0838887aaeb81aa51669ec6",
+    "source_sha256": {
+      "backends.py": "75300392fcb67890a28670612a3fb239ecf4371ab045e8c405d9ee8df38aeb24",
+      "cases.py": "239d84d7f27826c14ab7b721c4c824c3201b3fa645dd0e562d3619873224b040",
+      "elasticity.py": "4f573054a55c8637b05f21be01812e10fe8c11792ec9ce90e3b20c2ce82ba303",
+      "flying_edges.py": "74b20e300901a7e6f40dc9a03e6cc940825ab99d8e64042b5686c8b348850897",
+      "geometry.py": "d4e3c57238e318cd6bb9281afc22517bbf90fec972ad9d602447a680c52741d6",
+      "linear_solve.py": "27b96c1778823110e44a1345ead11dfef46e82da11d4e98b13122f482ea48ed3",
+      "preview.py": "eb0177df868327825acb6f47cd33531db9846ab00b2ceb899eac9f90d1172c21",
+      "qualification.py": "819d112ff39c18bbb911d90ecce0324772c67ded74916dddc148b985198f50e0",
+      "reference.py": "49b5eef2f03768ccd821ecb15544bd158d6d9d892c762595bc07327f71a67afa",
+      "report.html": "b85f3800d469dabb81626c30d4e1369e56422f6dad123d4af0113613d0671b7e",
+      "report.py": "b349872b3008dd7182ced452610bdaed6435f577b29ac8f6e01d2b7eb54058eb",
+      "runner.py": "56a8a35b1a963c6fc257b39263214f6cead72c4d1219f2da0260926e6b2f555d",
+      "surface.py": "1f7665e85f3a3e8aac5177c78fdc73cdecd934ed6889711e39718586417d2f3d",
+      "surface_cleanup.py": "66670d4a784ec853c0b46ca09499ef64637289b20d5f9dbd59c4aa0efd613cad",
+      "surface_intersections.py": "ff9b51d5494935e6d5174a832b002a814c13b2d6f4d646e831c6d78b7a0470d7",
+      "__init__.py": "d3c607efcc0449f226497be88dd2b2340e765fe49e6175ebb35c257a10ea6364",
+      "__main__.py": "116710c321651f30440cc5a3ff07e48abaf5510fda753af23626d47f798643a2"
+    },
+    "config": {
+      "case_ids": [
+        "gyroid",
+        "graded-gyroid",
+        "thin-gyroid"
+      ],
+      "cells": [
+        8
+      ],
+      "repeats": 1,
+      "warmups": 0,
+      "threads": 1,
+      "geometry_tolerance": 0.01,
+      "volume_tolerance": 0.1,
+      "mmg_boundary": "caps",
+      "minimum_quality": 0.1,
+      "max_tetrahedra": 250000,
+      "pair_cap": 20000000,
+      "timeout_s": 300.0,
+      "workflows": [
+        "meshers-balanced",
+        "meshers-quality"
+      ],
+      "suite": "standard",
+      "matched_count_tolerance": 0.05,
+      "error_targets": [
+        0.01,
+        0.02,
+        0.05
+      ],
+      "fea_target": 0.05,
+      "purpose": "geometry",
+      "linear_solver": "amg",
+      "memory_limit_mib": 8192
+    },
+    "dependency_sha256": {
+      "pyproject.toml": "d325873391d5a065f69858bc9543520dd4a5fa839c64225b214f9050ae47eb87",
+      "uv.lock": "9787473729f063bb7ab366ca440f9849abc13fc66234c923b776c6621245e8bf",
+      ".python-version": "8dfda54ba2f66ab3a8ebab460f4338bbeea1fb1e0f85ce06fe3530aa3c64679b"
+    }
+  },
+  "manifest_sha256": "f30e9091d6f4d0b9e050895af7fc523ab860b30610f81fccedb41ac59c9ca9b3",
+  "elapsed_s": 15.390999999999622,
+  "cases": [
+    {
+      "id": "gyroid",
+      "name": "Gyroid",
+      "function": "gyroid",
+      "offset": 0.5,
+      "description": "Uniform sheet, one unit cell.",
+      "formula": "sin X cos Y + sin Y cos Z + sin Z cos X",
+      "scale": 1.0,
+      "grading": 0.0,
+      "target_volume_fraction": 0.16107845306396484,
+      "target_volume_sample_count": 1048576,
+      "target_volume_replicates": [
+        0.16080474853515625,
+        0.16120147705078125,
+        0.1611785888671875,
+        0.16112899780273438
+      ],
+      "target_volume_uncertainty": 0.00027370452880859375,
+      "target_volume_uncertainty_scope": "Empirical scramble spread and nested-sample change, not a statistical confidence bound",
+      "target_volume_half_sample_delta": 9.918212890625e-05,
+      "target_preview_intervals": 32,
+      "target_boundary_artifact": "reference-gyroid.npz",
+      "target_boundary_samples": 11342,
+      "target_boundary_sha256": "b6ee019675f85c24fbeb446cf792ecfc3a1abdd3799076d2db5ecb1d667c8c61"
+    },
+    {
+      "id": "graded-gyroid",
+      "name": "Graded Gyroid",
+      "function": "gyroid",
+      "offset": 0.5,
+      "description": "Thickness varies by 40% from left to right.",
+      "formula": "sin X cos Y + sin Y cos Z + sin Z cos X",
+      "scale": 1.0,
+      "grading": 0.4,
+      "target_volume_fraction": 0.16110610961914062,
+      "target_volume_sample_count": 1048576,
+      "target_volume_replicates": [
+        0.16124725341796875,
+        0.16110992431640625,
+        0.1610870361328125,
+        0.160980224609375
+      ],
+      "target_volume_uncertainty": 0.000141143798828125,
+      "target_volume_uncertainty_scope": "Empirical scramble spread and nested-sample change, not a statistical confidence bound",
+      "target_volume_half_sample_delta": 0.00011444091796875,
+      "target_preview_intervals": 32,
+      "target_boundary_artifact": "reference-graded-gyroid.npz",
+      "target_boundary_samples": 11306,
+      "target_boundary_sha256": "400fc44b8122ea9ba0737c5deb34187ce7743cf6e3617adf1b79a76ea41267d9"
+    },
+    {
+      "id": "thin-gyroid",
+      "name": "Thin Gyroid",
+      "function": "gyroid",
+      "offset": 0.25,
+      "description": "Thin-wall resolution stress test.",
+      "formula": "sin X cos Y + sin Y cos Z + sin Z cos X",
+      "scale": 1.0,
+      "grading": 0.0,
+      "target_volume_fraction": 0.08042430877685547,
+      "target_volume_sample_count": 1048576,
+      "target_volume_replicates": [
+        0.0805816650390625,
+        0.08023452758789062,
+        0.08043289184570312,
+        0.08044815063476562
+      ],
+      "target_volume_uncertainty": 0.0004425048828125,
+      "target_volume_uncertainty_scope": "Empirical scramble spread and nested-sample change, not a statistical confidence bound",
+      "target_volume_half_sample_delta": 0.0004425048828125,
+      "target_preview_intervals": 32,
+      "target_boundary_artifact": "reference-thin-gyroid.npz",
+      "target_boundary_samples": 10910,
+      "target_boundary_sha256": "37134aa3d1c89d7ba1b594716927fa750a85a8fcbb4de27388d74c8ed580ddb5"
+    }
+  ],
+  "rows": [
+    {
+      "case": "gyroid",
+      "workflow": "meshers-balanced",
+      "cells": 8,
+      "repeat": 0,
+      "artifact": "gyroid/meshers-balanced/n8/repeat0",
+      "status": "ok",
+      "stage": "complete",
+      "setup_s": 2.1999985619913787e-06,
+      "mesh_s": 0.26277979999940726,
+      "generation_s": 0.26277760000084527,
+      "vtk_extraction_s": null,
+      "field_samples_checked": 729,
+      "vtk_version": [
+        9,
+        7,
+        1
+      ],
+      "mesh_sha256": "9e54c9a33e64d0fc145eb664204cba920d49447c3d1e38919ff7ee994626a25e",
+      "orientation_flips": 0,
+      "unused_nodes": 0,
+      "nodes": 1451,
+      "tetrahedra": 3493,
+      "volume": 0.16447156375102967,
+      "solid_fraction": 0.16447156375102967,
+      "q_min": 0.14974565181344657,
+      "q_p05": 0.32957308911855765,
+      "q_median": 0.5721666331788784,
+      "q_below_01": 0,
+      "overlap_pairs_checked": 41421,
+      "geometry_status": "checked-at-declared-tolerances",
+      "sampled_cap_overshoot": 0.009039296942288862,
+      "sampled_geometry_distance": 0.009978600180925265,
+      "sampled_outward_orientation": true,
+      "sampled_reverse_distance": 0.009375888589751793,
+      "reverse_distance_samples": 11342,
+      "relative_volume_error": 0.021064956997801622,
+      "fea_skipped_reason": "Geometry-only run; no elasticity solve requested",
+      "geometry_eligible": true,
+      "quality_eligible": true,
+      "fea_eligible": false,
+      "comparison_eligible": true,
+      "admission_reasons": [],
+      "relative_volume_error_with_uncertainty": 0.02276415713042212,
+      "worker_exit_code": 0,
+      "peak_worker_tree_rss_mib": 2.27734375
+    },
+    {
+      "case": "gyroid",
+      "workflow": "meshers-quality",
+      "cells": 8,
+      "repeat": 0,
+      "artifact": "gyroid/meshers-quality/n8/repeat0",
+      "status": "ok",
+      "stage": "complete",
+      "setup_s": 2.2999993234407157e-06,
+      "mesh_s": 0.6659202999981062,
+      "generation_s": 0.6659179999987828,
+      "vtk_extraction_s": null,
+      "field_samples_checked": 729,
+      "vtk_version": [
+        9,
+        7,
+        1
+      ],
+      "mesh_sha256": "c908f81604b7a5f587ac16ebf00e6de7d3681d3d969178b6ddbeeea9dcab0af7",
+      "orientation_flips": 0,
+      "unused_nodes": 0,
+      "nodes": 1451,
+      "tetrahedra": 3493,
+      "volume": 0.16448158224017442,
+      "solid_fraction": 0.16448158224017442,
+      "q_min": 0.14974565181344657,
+      "q_p05": 0.33003915769839615,
+      "q_median": 0.5722341402205824,
+      "q_below_01": 0,
+      "overlap_pairs_checked": 41492,
+      "geometry_status": "checked-at-declared-tolerances",
+      "sampled_cap_overshoot": 0.009039306433673096,
+      "sampled_geometry_distance": 0.00999670763184178,
+      "sampled_outward_orientation": true,
+      "sampled_reverse_distance": 0.009368406550114172,
+      "reverse_distance_samples": 11342,
+      "relative_volume_error": 0.021127153331042883,
+      "fea_skipped_reason": "Geometry-only run; no elasticity solve requested",
+      "geometry_eligible": true,
+      "quality_eligible": true,
+      "fea_eligible": false,
+      "comparison_eligible": true,
+      "admission_reasons": [],
+      "relative_volume_error_with_uncertainty": 0.022826353463663383,
+      "worker_exit_code": 0,
+      "peak_worker_tree_rss_mib": 4.8359375
+    },
+    {
+      "case": "graded-gyroid",
+      "workflow": "meshers-balanced",
+      "cells": 8,
+      "repeat": 0,
+      "artifact": "graded-gyroid/meshers-balanced/n8/repeat0",
+      "status": "geometry-warning",
+      "stage": "complete",
+      "failure_owner": "Meshers",
+      "setup_s": 2.2999993234407157e-06,
+      "mesh_s": 0.2421976999976323,
+      "generation_s": 0.24219539999830886,
+      "vtk_extraction_s": null,
+      "field_samples_checked": 729,
+      "vtk_version": [
+        9,
+        7,
+        1
+      ],
+      "mesh_sha256": "ebcdf4cc2cfd984112e65beec05e4ccf5656a8a271220d4588d8b4779486c6dd",
+      "orientation_flips": 0,
+      "unused_nodes": 0,
+      "nodes": 1400,
+      "tetrahedra": 3369,
+      "volume": 0.16480397389103907,
+      "solid_fraction": 0.16480397389103907,
+      "q_min": 0.15677123235040652,
+      "q_p05": 0.33628477035662807,
+      "q_median": 0.5619948057470467,
+      "q_below_01": 0,
+      "overlap_pairs_checked": 39625,
+      "geometry_status": "checked-at-declared-tolerances",
+      "sampled_cap_overshoot": 0.009941872097505052,
+      "sampled_geometry_distance": 0.009989223380179163,
+      "sampled_outward_orientation": true,
+      "sampled_reverse_distance": 0.011138311520239712,
+      "reverse_distance_samples": 11306,
+      "relative_volume_error": 0.022952973544208215,
+      "fea_skipped_reason": "Geometry-only run; no elasticity solve requested",
+      "geometry_eligible": false,
+      "quality_eligible": true,
+      "fea_eligible": false,
+      "comparison_eligible": false,
+      "admission_reasons": [
+        "Sampled target-to-mesh distance 0.0111383L exceeds tolerance"
+      ],
+      "relative_volume_error_with_uncertainty": 0.0238290656996317,
+      "worker_exit_code": 0,
+      "peak_worker_tree_rss_mib": 4.8359375
+    },
+    {
+      "case": "graded-gyroid",
+      "workflow": "meshers-quality",
+      "cells": 8,
+      "repeat": 0,
+      "artifact": "graded-gyroid/meshers-quality/n8/repeat0",
+      "status": "geometry-warning",
+      "stage": "complete",
+      "failure_owner": "Meshers",
+      "setup_s": 2.0000006770715117e-06,
+      "mesh_s": 0.6675859999995737,
+      "generation_s": 0.6675839999988966,
+      "vtk_extraction_s": null,
+      "field_samples_checked": 729,
+      "vtk_version": [
+        9,
+        7,
+        1
+      ],
+      "mesh_sha256": "b84c8c0b46613b499e06c6eac6a004ffa965dc9d237fb94c3750be4eb5b959e7",
+      "orientation_flips": 0,
+      "unused_nodes": 0,
+      "nodes": 1400,
+      "tetrahedra": 3369,
+      "volume": 0.16478144779928214,
+      "solid_fraction": 0.16478144779928214,
+      "q_min": 0.15428411423151783,
+      "q_p05": 0.33731657741610765,
+      "q_median": 0.5611910523751705,
+      "q_below_01": 0,
+      "overlap_pairs_checked": 39647,
+      "geometry_status": "checked-at-declared-tolerances",
+      "sampled_cap_overshoot": 0.009941872097505052,
+      "sampled_geometry_distance": 0.00997513725397582,
+      "sampled_outward_orientation": true,
+      "sampled_reverse_distance": 0.011138311520239712,
+      "reverse_distance_samples": 11306,
+      "relative_volume_error": 0.022813152082376737,
+      "fea_skipped_reason": "Geometry-only run; no elasticity solve requested",
+      "geometry_eligible": false,
+      "quality_eligible": true,
+      "fea_eligible": false,
+      "comparison_eligible": false,
+      "admission_reasons": [
+        "Sampled target-to-mesh distance 0.0111383L exceeds tolerance"
+      ],
+      "relative_volume_error_with_uncertainty": 0.023689244237800222,
+      "worker_exit_code": 0,
+      "peak_worker_tree_rss_mib": 6.3125
+    },
+    {
+      "case": "thin-gyroid",
+      "workflow": "meshers-balanced",
+      "cells": 8,
+      "repeat": 0,
+      "artifact": "thin-gyroid/meshers-balanced/n8/repeat0",
+      "status": "geometry-warning",
+      "stage": "complete",
+      "failure_owner": "Meshers",
+      "setup_s": 2.7000023692380637e-06,
+      "mesh_s": 0.2794966000037675,
+      "generation_s": 0.2794939000013983,
+      "vtk_extraction_s": null,
+      "field_samples_checked": 729,
+      "vtk_version": [
+        9,
+        7,
+        1
+      ],
+      "mesh_sha256": "72492eb8bafaf337b5d1858093eb6f159caacc651081f4283b71112f9845d050",
+      "orientation_flips": 0,
+      "unused_nodes": 0,
+      "nodes": 1609,
+      "tetrahedra": 4025,
+      "volume": 0.08425773083432198,
+      "solid_fraction": 0.08425773083432198,
+      "q_min": 0.11398024477227421,
+      "q_p05": 0.25015824596761765,
+      "q_median": 0.38041443484261833,
+      "q_below_01": 0,
+      "overlap_pairs_checked": 45670,
+      "geometry_status": "checked-at-declared-tolerances",
+      "sampled_cap_overshoot": 0.00998341795703941,
+      "sampled_geometry_distance": 0.009993512753181888,
+      "sampled_outward_orientation": true,
+      "sampled_reverse_distance": 0.011148053538001213,
+      "reverse_distance_samples": 10910,
+      "relative_volume_error": 0.04766496741803133,
+      "fea_skipped_reason": "Geometry-only run; no elasticity solve requested",
+      "geometry_eligible": false,
+      "quality_eligible": true,
+      "fea_eligible": false,
+      "comparison_eligible": false,
+      "admission_reasons": [
+        "Sampled target-to-mesh distance 0.0111481L exceeds tolerance"
+      ],
+      "relative_volume_error_with_uncertainty": 0.053167095935421134,
+      "worker_exit_code": 0,
+      "peak_worker_tree_rss_mib": 11.07421875
+    },
+    {
+      "case": "thin-gyroid",
+      "workflow": "meshers-quality",
+      "cells": 8,
+      "repeat": 0,
+      "artifact": "thin-gyroid/meshers-quality/n8/repeat0",
+      "status": "geometry-warning",
+      "stage": "complete",
+      "failure_owner": "Meshers",
+      "setup_s": 2.2999993234407157e-06,
+      "mesh_s": 0.8213569000035932,
+      "generation_s": 0.8213546000042697,
+      "vtk_extraction_s": null,
+      "field_samples_checked": 729,
+      "vtk_version": [
+        9,
+        7,
+        1
+      ],
+      "mesh_sha256": "48ad8dd4f20b910070c02f0d46a11d7e3de84da5900731d5338dc7e84f4a7e25",
+      "orientation_flips": 0,
+      "unused_nodes": 0,
+      "nodes": 1609,
+      "tetrahedra": 4025,
+      "volume": 0.08428134478685839,
+      "solid_fraction": 0.08428134478685839,
+      "q_min": 0.11398024477227421,
+      "q_p05": 0.25081837553534864,
+      "q_median": 0.3798130722752522,
+      "q_below_01": 0,
+      "overlap_pairs_checked": 45613,
+      "geometry_status": "checked-at-declared-tolerances",
+      "sampled_cap_overshoot": 0.00998341795703941,
+      "sampled_geometry_distance": 0.009993512753181888,
+      "sampled_outward_orientation": true,
+      "sampled_reverse_distance": 0.011396996878147565,
+      "reverse_distance_samples": 10910,
+      "relative_volume_error": 0.04795858452081471,
+      "fea_skipped_reason": "Geometry-only run; no elasticity solve requested",
+      "geometry_eligible": false,
+      "quality_eligible": true,
+      "fea_eligible": false,
+      "comparison_eligible": false,
+      "admission_reasons": [
+        "Sampled target-to-mesh distance 0.011397L exceeds tolerance"
+      ],
+      "relative_volume_error_with_uncertainty": 0.053460713038204516,
+      "worker_exit_code": 0,
+      "peak_worker_tree_rss_mib": 11.3515625
+    }
+  ],
+  "qualification": {
+    "configurations": [
+      {
+        "case": "gyroid",
+        "workflow": "meshers-balanced",
+        "cells": 8,
+        "complete": true,
+        "geometry_eligible": true,
+        "quality_eligible": true,
+        "median_mesh_s": 0.26277979999940726,
+        "max_tetrahedra": 3493,
+        "max_triangles": 0,
+        "worst_energy_error": null
+      },
+      {
+        "case": "gyroid",
+        "workflow": "meshers-quality",
+        "cells": 8,
+        "complete": true,
+        "geometry_eligible": true,
+        "quality_eligible": true,
+        "median_mesh_s": 0.6659202999981062,
+        "max_tetrahedra": 3493,
+        "max_triangles": 0,
+        "worst_energy_error": null
+      },
+      {
+        "case": "graded-gyroid",
+        "workflow": "meshers-balanced",
+        "cells": 8,
+        "complete": false,
+        "geometry_eligible": false,
+        "quality_eligible": false,
+        "median_mesh_s": 0.2421976999976323,
+        "max_tetrahedra": 3369,
+        "max_triangles": 0,
+        "worst_energy_error": null
+      },
+      {
+        "case": "graded-gyroid",
+        "workflow": "meshers-quality",
+        "cells": 8,
+        "complete": false,
+        "geometry_eligible": false,
+        "quality_eligible": false,
+        "median_mesh_s": 0.6675859999995737,
+        "max_tetrahedra": 3369,
+        "max_triangles": 0,
+        "worst_energy_error": null
+      },
+      {
+        "case": "thin-gyroid",
+        "workflow": "meshers-balanced",
+        "cells": 8,
+        "complete": false,
+        "geometry_eligible": false,
+        "quality_eligible": false,
+        "median_mesh_s": 0.2794966000037675,
+        "max_tetrahedra": 4025,
+        "max_triangles": 0,
+        "worst_energy_error": null
+      },
+      {
+        "case": "thin-gyroid",
+        "workflow": "meshers-quality",
+        "cells": 8,
+        "complete": false,
+        "geometry_eligible": false,
+        "quality_eligible": false,
+        "median_mesh_s": 0.8213569000035932,
+        "max_tetrahedra": 4025,
+        "max_triangles": 0,
+        "worst_energy_error": null
+      }
+    ],
+    "targets": [
+      {
+        "case": "gyroid",
+        "workflow": "meshers-balanced",
+        "energy_target": null,
+        "fastest": {
+          "case": "gyroid",
+          "workflow": "meshers-balanced",
+          "cells": 8,
+          "complete": true,
+          "geometry_eligible": true,
+          "quality_eligible": true,
+          "median_mesh_s": 0.26277979999940726,
+          "max_tetrahedra": 3493,
+          "max_triangles": 0,
+          "worst_energy_error": null
+        },
+        "smallest": {
+          "case": "gyroid",
+          "workflow": "meshers-balanced",
+          "cells": 8,
+          "complete": true,
+          "geometry_eligible": true,
+          "quality_eligible": true,
+          "median_mesh_s": 0.26277979999940726,
+          "max_tetrahedra": 3493,
+          "max_triangles": 0,
+          "worst_energy_error": null
+        },
+        "status": "reached"
+      },
+      {
+        "case": "gyroid",
+        "workflow": "meshers-balanced",
+        "energy_target": 0.01,
+        "fastest": null,
+        "smallest": null,
+        "status": "not reached"
+      },
+      {
+        "case": "gyroid",
+        "workflow": "meshers-balanced",
+        "energy_target": 0.02,
+        "fastest": null,
+        "smallest": null,
+        "status": "not reached"
+      },
+      {
+        "case": "gyroid",
+        "workflow": "meshers-balanced",
+        "energy_target": 0.05,
+        "fastest": null,
+        "smallest": null,
+        "status": "not reached"
+      },
+      {
+        "case": "gyroid",
+        "workflow": "meshers-quality",
+        "energy_target": null,
+        "fastest": {
+          "case": "gyroid",
+          "workflow": "meshers-quality",
+          "cells": 8,
+          "complete": true,
+          "geometry_eligible": true,
+          "quality_eligible": true,
+          "median_mesh_s": 0.6659202999981062,
+          "max_tetrahedra": 3493,
+          "max_triangles": 0,
+          "worst_energy_error": null
+        },
+        "smallest": {
+          "case": "gyroid",
+          "workflow": "meshers-quality",
+          "cells": 8,
+          "complete": true,
+          "geometry_eligible": true,
+          "quality_eligible": true,
+          "median_mesh_s": 0.6659202999981062,
+          "max_tetrahedra": 3493,
+          "max_triangles": 0,
+          "worst_energy_error": null
+        },
+        "status": "reached"
+      },
+      {
+        "case": "gyroid",
+        "workflow": "meshers-quality",
+        "energy_target": 0.01,
+        "fastest": null,
+        "smallest": null,
+        "status": "not reached"
+      },
+      {
+        "case": "gyroid",
+        "workflow": "meshers-quality",
+        "energy_target": 0.02,
+        "fastest": null,
+        "smallest": null,
+        "status": "not reached"
+      },
+      {
+        "case": "gyroid",
+        "workflow": "meshers-quality",
+        "energy_target": 0.05,
+        "fastest": null,
+        "smallest": null,
+        "status": "not reached"
+      },
+      {
+        "case": "graded-gyroid",
+        "workflow": "meshers-balanced",
+        "energy_target": null,
+        "fastest": null,
+        "smallest": null,
+        "status": "not reached"
+      },
+      {
+        "case": "graded-gyroid",
+        "workflow": "meshers-balanced",
+        "energy_target": 0.01,
+        "fastest": null,
+        "smallest": null,
+        "status": "not reached"
+      },
+      {
+        "case": "graded-gyroid",
+        "workflow": "meshers-balanced",
+        "energy_target": 0.02,
+        "fastest": null,
+        "smallest": null,
+        "status": "not reached"
+      },
+      {
+        "case": "graded-gyroid",
+        "workflow": "meshers-balanced",
+        "energy_target": 0.05,
+        "fastest": null,
+        "smallest": null,
+        "status": "not reached"
+      },
+      {
+        "case": "graded-gyroid",
+        "workflow": "meshers-quality",
+        "energy_target": null,
+        "fastest": null,
+        "smallest": null,
+        "status": "not reached"
+      },
+      {
+        "case": "graded-gyroid",
+        "workflow": "meshers-quality",
+        "energy_target": 0.01,
+        "fastest": null,
+        "smallest": null,
+        "status": "not reached"
+      },
+      {
+        "case": "graded-gyroid",
+        "workflow": "meshers-quality",
+        "energy_target": 0.02,
+        "fastest": null,
+        "smallest": null,
+        "status": "not reached"
+      },
+      {
+        "case": "graded-gyroid",
+        "workflow": "meshers-quality",
+        "energy_target": 0.05,
+        "fastest": null,
+        "smallest": null,
+        "status": "not reached"
+      },
+      {
+        "case": "thin-gyroid",
+        "workflow": "meshers-balanced",
+        "energy_target": null,
+        "fastest": null,
+        "smallest": null,
+        "status": "not reached"
+      },
+      {
+        "case": "thin-gyroid",
+        "workflow": "meshers-balanced",
+        "energy_target": 0.01,
+        "fastest": null,
+        "smallest": null,
+        "status": "not reached"
+      },
+      {
+        "case": "thin-gyroid",
+        "workflow": "meshers-balanced",
+        "energy_target": 0.02,
+        "fastest": null,
+        "smallest": null,
+        "status": "not reached"
+      },
+      {
+        "case": "thin-gyroid",
+        "workflow": "meshers-balanced",
+        "energy_target": 0.05,
+        "fastest": null,
+        "smallest": null,
+        "status": "not reached"
+      },
+      {
+        "case": "thin-gyroid",
+        "workflow": "meshers-quality",
+        "energy_target": null,
+        "fastest": null,
+        "smallest": null,
+        "status": "not reached"
+      },
+      {
+        "case": "thin-gyroid",
+        "workflow": "meshers-quality",
+        "energy_target": 0.01,
+        "fastest": null,
+        "smallest": null,
+        "status": "not reached"
+      },
+      {
+        "case": "thin-gyroid",
+        "workflow": "meshers-quality",
+        "energy_target": 0.02,
+        "fastest": null,
+        "smallest": null,
+        "status": "not reached"
+      },
+      {
+        "case": "thin-gyroid",
+        "workflow": "meshers-quality",
+        "energy_target": 0.05,
+        "fastest": null,
+        "smallest": null,
+        "status": "not reached"
+      }
+    ],
+    "convergence": [
+      {
+        "case": "gyroid",
+        "workflow": "meshers-balanced",
+        "levels": 0,
+        "pairs": [],
+        "status": "insufficient levels"
+      },
+      {
+        "case": "gyroid",
+        "workflow": "meshers-quality",
+        "levels": 0,
+        "pairs": [],
+        "status": "insufficient levels"
+      },
+      {
+        "case": "graded-gyroid",
+        "workflow": "meshers-balanced",
+        "levels": 0,
+        "pairs": [],
+        "status": "insufficient levels"
+      },
+      {
+        "case": "graded-gyroid",
+        "workflow": "meshers-quality",
+        "levels": 0,
+        "pairs": [],
+        "status": "insufficient levels"
+      },
+      {
+        "case": "thin-gyroid",
+        "workflow": "meshers-balanced",
+        "levels": 0,
+        "pairs": [],
+        "status": "insufficient levels"
+      },
+      {
+        "case": "thin-gyroid",
+        "workflow": "meshers-quality",
+        "levels": 0,
+        "pairs": [],
+        "status": "insufficient levels"
+      }
+    ],
+    "scope": "Observed configurations only. All repeats must pass; no interpolation or extrapolation. Geometry targets do not require FEA or element shape."
+  }
+}
