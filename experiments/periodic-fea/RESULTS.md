@@ -292,9 +292,9 @@ control; interior discretization also matters. This is not a qualified speed
 advantage at the 1% target. Full scores remain in
 `runs/mmg-fine-seed-coarsening-v1/cross-run-comparison.json`.
 
-## Next diagnostic: locate elasticity residuals
+## Completed elasticity-residual diagnostic
 
-The next queued diagnostic reads the saved fields from the analytic solid,
+Task 1241 completed in 10.4 s. The diagnostic reads the saved fields from the analytic solid,
 direct grids 42 and 48, and the coarsened output. It builds face adjacency in
 the periodic quotient mesh, so caps become interior interfaces. It measures
 normal stress jumps across interior faces and traction residuals on physical
@@ -303,14 +303,59 @@ The largest local indicator over six energy-normalized unit loads supplies a
 concentration map. This map is a heuristic for refinement, not a continuum
 error bound or a bound for all mixed strains, and omits geometry error.
 
-The diagnostic checks zero residual on the periodic affine solid, detects a
+The diagnostic passed its checks of zero residual on the periodic affine solid,
+detected a
 periodic non-affine perturbation, and checks nonzero traction on a free isolated
 tetrahedron. It verifies saved mesh/field hashes and reconstructs the reported
-stiffness tensors before reporting concentration. The result will decide whether
-targeted volume sizing is worth an adaptation test.
+stiffness tensors before reporting concentration. Its retained results are
+`runs/residual-location-v1/residual-analysis.json` and the hashed cell maps.
+
+| Mesh | Top 20% of cells: indicator share | Cells containing 80% of indicator | Boundary-adjacent cells: indicator share |
+| --- | ---: | ---: | ---: |
+| Direct grid 42 | 42.1% | 59.3% | 10.7% |
+| Direct grid 48 | 42.3% | 59.1% | 9.5% |
+| Fine-seed MMG coarsened output | 44.7% | 54.5% | 9.3% |
+
+The indicator is broadly distributed rather than concentrated in a few cells.
+These are cell-based shares; the boundary-adjacent category includes all
+residual contributions assigned to such cells, not just free-face tractions.
+The indicator's magnitude is not a measured FEA error percentage.
+
+The review's proposed interior sign change is rejected. The equilibrium
+residual is the sum of outward tractions, `sigma_L n + sigma_R (-n)`, giving
+the existing difference `(sigma_L - sigma_R) n`. A plus sign with the same
+normal would fail the verified affine-solid control, whose current indicator
+sum is below 1e-20. The normalization is explicitly `a(u,u) = integral sigma:epsilon`,
+the squared energy norm, twice the physical strain energy. No arithmetic change
+is needed. The per-cell boundary flag is intentional and named accordingly.
 The face-residual approach follows the integration-by-parts reasoning used in
 [the residual estimator tutorial](https://jschoeberl.github.io/iFEM/aposteriori/residualEE.html);
 that scalar tutorial does not certify this periodic-elasticity indicator.
+
+## Next test: uniform versus residual-guided sizing
+
+The prepared paired test starts from the same native grid-48 seed and keeps
+`hausd=0.0005`, gradation 1.3 and all admission/physics gates unchanged. One
+worker requests uniform edge length `1/36`. The other supplies a scalar nodal
+map with the same base length. Its heuristic coefficient comes from the saved
+unit-load indicators divided by element volume and equivalent-edge length
+squared; sizes vary with coefficient to the power -1/5 and are clamped between
+`1/64` and `1/24`. Volume-weighted nodal averaging combines periodic equivalence
+classes, giving identical desired sizes on opposite faces.
+
+The map is frozen with the run. Its mesh must exactly match the generated seed.
+The MEDIT vertex mapping is checked bijectively before writing the scalar map,
+because Microgen's boundary merge can reorder vertices. The MMG metric flag is
+used instead of uniform sizing. Final stiffness is measured with all six loads,
+including the usual audits; the indicator never substitutes for that target.
+
+This is an offline algorithm control. The map required the earlier grid-48
+audited FEA, which took 401.5 s; that preliminary solve is not included in the
+new generation time. The experiment cannot establish a faster one-shot pipeline.
+It tests whether targeted volume sizing merits a native implementation or a
+cheaper geometry-based predictor. MMG combines supplied isotropic sizes with its
+geometry controls as described in its
+[metric documentation](https://mmgtools.org/documentation/mmg3d/documentation_mmg3d_metric.html).
 
 ## Independent review and remaining limits
 

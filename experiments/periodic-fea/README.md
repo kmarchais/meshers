@@ -98,6 +98,13 @@ resolution for both. Results record `native_seed_cells` and `mmg_sizing_cells`.
 This supports testing volume coarsening while retaining a finer periodic seed
 boundary. All final admission and physics checks remain active.
 
+`mmg-native-seed-metric` uses a frozen `--mmg-size-map` instead of uniform MMG
+sizing. A paired `mmg-native-seed` task in the same prepared run retains uniform
+sizing. The source map's coordinates, tetrahedra, base size and file hash are
+checked, then scalar sizes are matched to MEDIT vertex order. Such a map may
+require prior FEA; its generation timing excludes that earlier solve and must
+not be reported as a cold one-shot pipeline cost.
+
 Compare completed runs against the retained grid-64 tensor with:
 
 ```powershell

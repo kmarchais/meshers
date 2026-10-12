@@ -64,6 +64,7 @@ def stress_and_strain(displacement, tets, gradients):
 def indicator(stress, topology, count):
     left, right, interior, normal, weight, _ = topology
     jump = np.einsum("fij,fj->fi", stress[left], normal)
+    # Sum outward tractions: sigma_L n + sigma_R (-n) = (sigma_L-sigma_R) n.
     jump[interior] -= np.einsum("fij,fj->fi", stress[right[interior]], normal[interior])
     contribution = weight * np.einsum("fi,fi->f", jump, jump)
     local = np.bincount(left, weights=contribution * np.where(interior, .5, 1), minlength=count)
@@ -143,9 +144,10 @@ def analyze(output, artifacts):
                 assert np.array_equal(field["engineering"], np.eye(6)[load])
                 displacement = field["displacement"]
                 stress, strain = stress_and_strain(displacement, tets, gradients)
-                energy = np.einsum("t,tij,tij", volume, stress, strain)
-                assert energy > 0
-                local = indicator(stress, topology, len(tets)) / energy
+                # a(u,u) = integral sigma:epsilon = twice the physical strain energy.
+                energy_norm_squared = np.einsum("t,tij,tij", volume, stress, strain)
+                assert energy_norm_squared > 0
+                local = indicator(stress, topology, len(tets)) / energy_norm_squared
                 score = np.maximum(score, local)
                 load_summaries.append(concentration(local, volume, topology[-1]))
                 average = np.einsum("t,tij->ij", volume, stress)

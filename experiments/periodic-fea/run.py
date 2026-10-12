@@ -36,7 +36,7 @@ def write_json(path, value):
 
 
 def prepare(output, native_package, task_specs=None, mmg_hausd=0.002, worker_timeout=1200,
-            max_tetrahedra=2_000_000, mmg_seed_cells=None):
+            max_tetrahedra=2_000_000, mmg_seed_cells=None, mmg_size_map=None):
     """Freeze the executable experiment before it enters the shared queue."""
     output.mkdir(parents=True, exist_ok=False)
     source = output / "source"
@@ -53,6 +53,8 @@ def prepare(output, native_package, task_specs=None, mmg_hausd=0.002, worker_tim
     )
     for name in ["pyproject.toml", "uv.lock"]:
         shutil.copy2(ROOT / "benchmarks/microgen" / name, source / name)
+    if mmg_size_map is not None:
+        shutil.copy2(mmg_size_map, source / "size-map.npz")
     native = next(
         path
         for path in (source / "meshers").iterdir()
@@ -142,6 +144,7 @@ def prepare(output, native_package, task_specs=None, mmg_hausd=0.002, worker_tim
             "mmg-microgen",
             "mmg-microgen-first-distance",
             "mmg-native-seed",
+            "mmg-native-seed-metric",
         }
         tasks = []
         for spec in task_specs:
@@ -156,6 +159,11 @@ def prepare(output, native_package, task_specs=None, mmg_hausd=0.002, worker_tim
     manifest["tasks"] = tasks
     if mmg_seed_cells is not None:
         manifest["config"]["mmg_seed_cells"] = mmg_seed_cells
+    if any(task["workflow"] == "mmg-native-seed-metric" for task in tasks):
+        if mmg_size_map is None:
+            raise ValueError("The metric workflow requires --mmg-size-map")
+        manifest["config"].update(mmg_size_map_path=str((source / "size-map.npz").resolve()),
+                                  mmg_size_map_sha256=digest(source / "size-map.npz"))
     write_json(output / "manifest.json", manifest)
     print(
         json.dumps(
@@ -211,11 +219,19 @@ def native_seed_control(case, cells, config, directory, checkpoint):
     # A standard adaptation uses the valid volume directly. It needs neither
     # nofem nor a level-set pass. This is an experimental algorithm control,
     # separate from the unchanged public two-pass Microgen baseline.
+    sizing, metric_metadata = {"hsiz": case.scale / cells}, {}
+    if config.get("mmg_size_map_path"):
+        from make_size_map import write_mmg_metric
+        metric_path, metric_metadata = write_mmg_metric(
+            Path(config["mmg_size_map_path"]), input_path, points, tets,
+            case.scale / cells, config["mmg_size_map_sha256"],
+        )
+        sizing = {"metric": str(metric_path)}
     Mmg.mmg3d(
         input=str(input_path),
         output=str(raw_path),
         hausd=config["mmg_hausd"] * case.scale,
-        hsiz=case.scale / cells,
+        **sizing,
         hgrad=1.3,
         nr=True,
     )
@@ -230,6 +246,7 @@ def native_seed_control(case, cells, config, directory, checkpoint):
         {
             **seed,
             **cli,
+            **metric_metadata,
             "mesh_s": seed["mesh_s"] + adaptation_s,
             "generation_s": seed["generation_s"] + adaptation_s,
             "native_seed_mesh_s": seed["mesh_s"],
@@ -321,9 +338,12 @@ def worker(request_path):
                 capture_seconds += time.perf_counter() - start
 
         with patch.object(Mmg, "mmg3d", recorded_mmg):
-            if task["workflow"] == "mmg-native-seed":
+            if task["workflow"] in {"mmg-native-seed", "mmg-native-seed-metric"}:
+                control_config = dict(config)
+                if task["workflow"] == "mmg-native-seed":
+                    control_config.pop("mmg_size_map_path", None)
                 points, tets, metrics = native_seed_control(
-                    case, task["cells"], config, directory, checkpoint
+                    case, task["cells"], control_config, directory, checkpoint
                 )
             else:
                 points, tets, metrics = generate(
@@ -684,6 +704,7 @@ if __name__ == "__main__":
     parser.add_argument("--worker-timeout", type=float, default=1200)
     parser.add_argument("--max-tetrahedra", type=int, default=2_000_000)
     parser.add_argument("--mmg-seed-cells", type=int, help="Native seed grid, independent of MMG target sizing")
+    parser.add_argument("--mmg-size-map", type=Path, help="Saved-point scalar sizing map for the metric workflow")
     args = parser.parse_args()
     if args.prepare:
         if args.native_package is None:
@@ -700,6 +721,7 @@ if __name__ == "__main__":
             args.worker_timeout,
             args.max_tetrahedra,
             args.mmg_seed_cells,
+            args.mmg_size_map,
         )
     elif args.run:
         run(args.run.resolve())
