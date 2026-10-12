@@ -150,7 +150,9 @@ def worker(request_path):
             "Meshers"
             if request["workflow"].startswith("meshers")
             else (
-                "Microgen / VTK"
+                "VTK Flying Edges control"
+                if request["workflow"] == "vtk-flying-edges"
+                else "Microgen / VTK"
                 if request["workflow"].startswith("vtk")
                 else "Microgen / MMG pipeline"
                 if request["workflow"] == "mmg-microgen"
@@ -487,7 +489,7 @@ def main():
         help="Native implicit solids: legacy inactive-lower band or equivalent negative region; sheets keep both walls",
     )
     parser.add_argument(
-        "--cells", help="Comma-separated interval counts, default smoke 8, standard 16,24,36,54"
+        "--cells", help="Comma-separated interval counts, default smoke 8, standard 24,36,54,80"
     )
     parser.add_argument("--repeats", type=int)
     parser.add_argument("--warmups", type=int)
@@ -500,7 +502,9 @@ def main():
         "--volume-tolerance", type=float, help="Relative volume error: smoke .1, standard .01"
     )
     parser.add_argument(
-        "--fea-target", type=float, default=0.05, help="Required worst relative energy error"
+        "--fea-target",
+        type=float,
+        help="Required worst relative energy error: smoke .05, standard .02",
     )
     parser.add_argument(
         "--error-targets", default="0.01,0.02,0.05", help="Measured FEA error targets"
@@ -515,10 +519,10 @@ def main():
         "--minimum-quality", type=float, help="Native minimum q: FEA .1, geometry/surface 0"
     )
     parser.add_argument(
-        "--max-tetrahedra", type=int, help="Native budget: smoke 250000, standard 1000000"
+        "--max-tetrahedra", type=int, help="Native budget: smoke 250000, standard 2000000"
     )
     parser.add_argument(
-        "--pair-cap", type=int, help="Validation cap: smoke 2000000, standard 20000000"
+        "--pair-cap", type=int, help="Validation cap: smoke 2000000, standard 60000000"
     )
     parser.add_argument(
         "--render", type=Path, help="Regenerate HTML from a retained results.json without compute"
@@ -527,8 +531,7 @@ def main():
     parser.add_argument(
         "--memory-limit-mib",
         type=float,
-        default=8192,
-        help="Worker tree RSS ceiling, checked every 2s",
+        help="Worker tree RSS ceiling, checked every 2s: smoke 8192 MiB, standard 16384 MiB",
     )
     args = parser.parse_args()
     if args.worker:
@@ -554,7 +557,7 @@ def main():
     if len(set(workflows)) != len(workflows) or not set(workflows) <= set(available):
         parser.error("Unknown or repeated workflows")
     cells = [
-        int(n) for n in (args.cells or ("8" if args.suite == "smoke" else "16,24,36,54")).split(",")
+        int(n) for n in (args.cells or ("8" if args.suite == "smoke" else "24,36,54,80")).split(",")
     ]
     repeats = args.repeats if args.repeats is not None else (1 if args.suite == "smoke" else 3)
     warmups = args.warmups if args.warmups is not None else (0 if args.suite == "smoke" else 1)
@@ -570,6 +573,16 @@ def main():
         else (0.1 if args.suite == "smoke" else 0.01)
     )
     args.mmg_hausd = args.mmg_hausd if args.mmg_hausd is not None else args.geometry_tolerance
+    args.fea_target = (
+        args.fea_target
+        if args.fea_target is not None
+        else (0.05 if args.suite == "smoke" else 0.02)
+    )
+    args.memory_limit_mib = (
+        args.memory_limit_mib
+        if args.memory_limit_mib is not None
+        else (8192 if args.suite == "smoke" else 16384)
+    )
     args.minimum_quality = (
         args.minimum_quality
         if args.minimum_quality is not None
@@ -578,12 +591,12 @@ def main():
     args.max_tetrahedra = (
         args.max_tetrahedra
         if args.max_tetrahedra is not None
-        else (250_000 if args.suite == "smoke" else 1_000_000)
+        else (250_000 if args.suite == "smoke" else 2_000_000)
     )
     args.pair_cap = (
         args.pair_cap
         if args.pair_cap is not None
-        else (2_000_000 if args.suite == "smoke" else 20_000_000)
+        else (2_000_000 if args.suite == "smoke" else 60_000_000)
     )
     try:
         error_targets = [float(t) for t in args.error_targets.split(",")]

@@ -1,0 +1,521 @@
+{
+  "evidence_schema": 1,
+  "original_results_sha256": "e428be8ebf5bad510bd05b40d770b765891c152585cdbd10ae737fef18c958f0",
+  "local_artifact_directory": "gyroid-tight-mmg-32",
+  "scope": "Measured runs only. Counts and times include failed configurations. Local output retains source snapshots, meshes and fields.",
+  "schema_version": 2,
+  "state": "complete",
+  "provenance": {
+    "started_utc": "2026-10-11T23:31:33.957627+00:00",
+    "machine": "Omen",
+    "platform": "Windows-11-10.0.26200-SP0",
+    "cpu": "Intel64 Family 6 Model 198 Stepping 2, GenuineIntel",
+    "logical_cpus": 24,
+    "ram_bytes": 68062457856,
+    "python": "3.12.13 (main, Aug  7 2026, 02:26:41) [MSC v.1944 64 bit (AMD64)]",
+    "packages": {
+      "meshers": {
+        "version": "0.1.0",
+        "native_sha256": {
+          "meshers/_meshers.pyd": "85cdab1af12445418b378c89b151e2e2ebc024b49bae659edac364c7faa7931f"
+        }
+      },
+      "microgen": {
+        "version": "2.0.0b1",
+        "native_sha256": {}
+      },
+      "mmgpy": {
+        "version": "0.17.1",
+        "native_sha256": {
+          "../../Scripts/mmg.exe": "8b0b908a127a0938df4b7c0b1a43c020144cd48c402788d52fd0ca6beb6948b6",
+          "../../Scripts/mmg2d.exe": "c34b929ae283f94197d53d117eb44c090010e3aa117771e5fb26014fdb9b0091",
+          "../../Scripts/mmg2d_O3.exe": "c34b929ae283f94197d53d117eb44c090010e3aa117771e5fb26014fdb9b0091",
+          "../../Scripts/mmg3d.exe": "84b0f5667a09ac0987461a73117450c69fcc1c7f98c7c34f43aba528dea5cb2b",
+          "../../Scripts/mmg3d_O3.exe": "84b0f5667a09ac0987461a73117450c69fcc1c7f98c7c34f43aba528dea5cb2b",
+          "../../Scripts/mmgpy-ui.exe": "7dc633bd48c120bf8dc34cdebab28fd0695fdcfa241157f6027eadb55f74a508",
+          "../../Scripts/mmgpy.exe": "8b0b908a127a0938df4b7c0b1a43c020144cd48c402788d52fd0ca6beb6948b6",
+          "../../Scripts/mmgs.exe": "782a3c8a81913ab59d9bc8b5cffa975f841556749f5f6877b77c5bd339ecd8b3",
+          "../../Scripts/mmgs_O3.exe": "782a3c8a81913ab59d9bc8b5cffa975f841556749f5f6877b77c5bd339ecd8b3",
+          "bin/concrt140.dll": "54716f0738af891f283d213b5c8d11b25896bb8ee3097d301eae718560cf974e",
+          "bin/mmg.dll": "d958b0adbd9c0d7c398ebe4af4c25fa7c09f21c565d2d44334a64a45f951dad4",
+          "bin/mmg2d.dll": "599f89350c4b7d38dceba3e19bb858ad8c6691bbea3b11b8e9aa8ba7f3ef6008",
+          "bin/mmg2d.exe": "40d142631918c682fa74cd99d9b22b63dee2141c6d0dd8bd77770f9a607c42d5",
+          "bin/mmg3d.dll": "f73298240242109a90f12dcee48ec1c5f60e9fefc444b566f1ed94deefe77ee4",
+          "bin/mmg3d.exe": "7010a9f4d7e3fec9d442b5fa4229133bff365d176babbb6cf399ebd62fd1c2b8",
+          "bin/mmgs.dll": "ae86c25e7cd3f5ef5814ca3514330d3ca1d434f37e81a3f5b140996a33fe5417",
+          "bin/mmgs.exe": "efbd0f3d132dad9498ead4bf9934b68cea48c0520b4f8f43fa3198ba88eb9b79",
+          "bin/msvcp140.dll": "7c26614e1d733892c2deac7e245ce115504b1d80592dd0a01b08e3e5a55f89ca",
+          "bin/msvcp140_1.dll": "206c931bf90fdad8816de3b5e2ef80b2bcaa9406c89ecc05fe6fddffe251e982",
+          "bin/msvcp140_2.dll": "d50d7883f20d1dc6191768d3746f52dd9cac89c346ffaed5be1f110c2f34a838",
+          "bin/msvcp140_atomic_wait.dll": "3d0cbfaa1bf3eecf5a3f4491d2960ee803cb994f30292c6adc4a07c498f60e2b",
+          "bin/msvcp140_codecvt_ids.dll": "8a65c7596ef2e6938731f5a1058e7e40145b6d97967cc649231a076b9a608d78",
+          "bin/vcruntime140.dll": "d1f4225df2cd877dbf130d5668a021dce3f94118455ff5ec952061c30afc9ce7",
+          "bin/vcruntime140_1.dll": "a7146c08f89fe5b04541ab507cdb59ff7b44534d4ba3c668a426c6450a03434e",
+          "mmgpy.libs/concrt140.dll": "54716f0738af891f283d213b5c8d11b25896bb8ee3097d301eae718560cf974e",
+          "mmgpy.libs/msvcp140-a4c2229bdc2a2a630acdc095b4d86008.dll": "a4c2229bdc2a2a630acdc095b4d86008e5c3e3bc7773174354f3da4f5beb9cde",
+          "mmgpy.libs/msvcp140_1.dll": "456aebccb449fcba35f1109c259ba0aa10923e660f4de812a490d35f37f54fc9",
+          "mmgpy.libs/msvcp140_2.dll": "7a403abf753d0bdf09776cf4bcb13b5a6ebe3a47670de124a3c621aa4b952f82",
+          "mmgpy.libs/msvcp140_atomic_wait.dll": "d759dd381bdbd6142372de4cb57acc382e1b80c106b7414a408816564ee1eb6a",
+          "mmgpy.libs/msvcp140_codecvt_ids.dll": "f781e1e0133c397c3a2c73fd4dbcdb442378ba20fced56a2f7db5822436ddd2a",
+          "mmgpy.libs/vcruntime140.dll": "052ad6a20d375957e82aa6a3c441ea548d89be0981516ca7eb306e063d5027f4",
+          "mmgpy.libs/vcruntime140_1.dll": "6a99bc0128e0c7d6cbbf615fcc26909565e17d4ca3451b97f8987f9c6acbc6c8",
+          "mmgpy/_mmgpy.cp312-win_amd64.pyd": "aecbc3f3a115ed220a89c7357e1d762b0ef8a9d6118e30c13e86a43901e03582",
+          "mmgpy/bin/mmg2d.dll": "599f89350c4b7d38dceba3e19bb858ad8c6691bbea3b11b8e9aa8ba7f3ef6008",
+          "mmgpy/bin/mmg2d_O3.exe": "40d142631918c682fa74cd99d9b22b63dee2141c6d0dd8bd77770f9a607c42d5",
+          "mmgpy/bin/mmg3d.dll": "f73298240242109a90f12dcee48ec1c5f60e9fefc444b566f1ed94deefe77ee4",
+          "mmgpy/bin/mmg3d_O3.exe": "7010a9f4d7e3fec9d442b5fa4229133bff365d176babbb6cf399ebd62fd1c2b8",
+          "mmgpy/bin/mmgs.dll": "ae86c25e7cd3f5ef5814ca3514330d3ca1d434f37e81a3f5b140996a33fe5417",
+          "mmgpy/bin/mmgs_O3.exe": "efbd0f3d132dad9498ead4bf9934b68cea48c0520b4f8f43fa3198ba88eb9b79",
+          "mmgpy/mmg2d.dll": "599f89350c4b7d38dceba3e19bb858ad8c6691bbea3b11b8e9aa8ba7f3ef6008",
+          "mmgpy/mmg3d.dll": "f73298240242109a90f12dcee48ec1c5f60e9fefc444b566f1ed94deefe77ee4",
+          "mmgpy/mmgs.dll": "ae86c25e7cd3f5ef5814ca3514330d3ca1d434f37e81a3f5b140996a33fe5417"
+        }
+      },
+      "vtk": {
+        "version": "9.7.1",
+        "native_sha256": {}
+      },
+      "pyvista": {
+        "version": "0.49.0",
+        "native_sha256": {}
+      },
+      "numpy": {
+        "version": "2.5.3",
+        "native_sha256": {}
+      },
+      "scipy": {
+        "version": "1.18.1",
+        "native_sha256": {}
+      },
+      "psutil": {
+        "version": "7.2.2",
+        "native_sha256": {}
+      },
+      "pyamg": {
+        "version": "5.3.0",
+        "native_sha256": {}
+      }
+    },
+    "git_head": "b8ff78f3c66b0781b9c197597914802f94a1cb44",
+    "source_sha256": {
+      "backends.py": "4dc5084988712ae7e58fb4cd63a84f365f5ce5b0b0a464498708f64232d43aa5",
+      "cases.py": "e7e271656f91e5028288b5da97e6cd5d20a3b4fcdc90d327101c9d44ed4287d2",
+      "elasticity.py": "4f573054a55c8637b05f21be01812e10fe8c11792ec9ce90e3b20c2ce82ba303",
+      "flying_edges.py": "74b20e300901a7e6f40dc9a03e6cc940825ab99d8e64042b5686c8b348850897",
+      "geometry.py": "64424d47b733bc26ab43807833f042f5cca7377044085dafa64fe0991fc06d84",
+      "linear_solve.py": "27b96c1778823110e44a1345ead11dfef46e82da11d4e98b13122f482ea48ed3",
+      "preview.py": "eb0177df868327825acb6f47cd33531db9846ab00b2ceb899eac9f90d1172c21",
+      "qualification.py": "819d112ff39c18bbb911d90ecce0324772c67ded74916dddc148b985198f50e0",
+      "reference.py": "49b5eef2f03768ccd821ecb15544bd158d6d9d892c762595bc07327f71a67afa",
+      "report.html": "3f6af9664feecb1a720a8a15aef9b6f161279e7dbfffbb038c5efed2ecbf2c6d",
+      "report.py": "b349872b3008dd7182ced452610bdaed6435f577b29ac8f6e01d2b7eb54058eb",
+      "runner.py": "bc2679e42f16e034bf3a173530eba8a0ba1bb1c62849309b548f0f31d2b23f7e",
+      "surface.py": "1f7665e85f3a3e8aac5177c78fdc73cdecd934ed6889711e39718586417d2f3d",
+      "surface_cleanup.py": "66670d4a784ec853c0b46ca09499ef64637289b20d5f9dbd59c4aa0efd613cad",
+      "surface_intersections.py": "ff9b51d5494935e6d5174a832b002a814c13b2d6f4d646e831c6d78b7a0470d7",
+      "__init__.py": "d3c607efcc0449f226497be88dd2b2340e765fe49e6175ebb35c257a10ea6364",
+      "__main__.py": "116710c321651f30440cc5a3ff07e48abaf5510fda753af23626d47f798643a2"
+    },
+    "config": {
+      "case_ids": [
+        "gyroid"
+      ],
+      "cells": [
+        32
+      ],
+      "repeats": 1,
+      "warmups": 0,
+      "threads": 1,
+      "geometry_tolerance": 0.002,
+      "volume_tolerance": 0.01,
+      "mmg_boundary": "caps",
+      "mmg_hausd": 0.0002,
+      "meshers_solid_region": "band",
+      "mmg_bin_directory": null,
+      "minimum_quality": 0.1,
+      "max_tetrahedra": 1000000,
+      "pair_cap": 20000000,
+      "timeout_s": 1800,
+      "workflows": [
+        "mmg-microgen",
+        "mmg-tetra-tagged"
+      ],
+      "suite": "standard",
+      "matched_count_tolerance": 0.05,
+      "error_targets": [
+        0.01,
+        0.02,
+        0.05
+      ],
+      "fea_target": 0.05,
+      "purpose": "fea",
+      "linear_solver": "amg",
+      "memory_limit_mib": 8192
+    },
+    "dependency_sha256": {
+      "pyproject.toml": "d325873391d5a065f69858bc9543520dd4a5fa839c64225b214f9050ae47eb87",
+      "uv.lock": "9787473729f063bb7ab366ca440f9849abc13fc66234c923b776c6621245e8bf",
+      ".python-version": "8dfda54ba2f66ab3a8ebab460f4338bbeea1fb1e0f85ce06fe3530aa3c64679b"
+    }
+  },
+  "manifest_sha256": "cd67445990ecf1b1b41eeabcf67951d8b3856ea46eae7dad53bb423fdd9b910b",
+  "elapsed_s": 1514.7029999999977,
+  "cases": [
+    {
+      "id": "gyroid",
+      "name": "Gyroid",
+      "function": "gyroid",
+      "offset": 0.5,
+      "description": "Uniform sheet, one unit cell.",
+      "formula": "sin X cos Y + sin Y cos Z + sin Z cos X",
+      "scale": 1.0,
+      "grading": 0.0,
+      "target_volume_fraction": 0.16107845306396484,
+      "target_volume_sample_count": 1048576,
+      "target_volume_replicates": [
+        0.16080474853515625,
+        0.16120147705078125,
+        0.1611785888671875,
+        0.16112899780273438
+      ],
+      "target_volume_uncertainty": 0.00027370452880859375,
+      "target_volume_uncertainty_scope": "Empirical scramble spread and nested-sample change, not a statistical confidence bound",
+      "target_volume_half_sample_delta": 9.918212890625e-05,
+      "target_preview_intervals": 32,
+      "target_boundary_artifact": "reference-gyroid.npz",
+      "target_boundary_samples": 11342,
+      "target_boundary_sha256": "b6ee019675f85c24fbeb446cf792ecfc3a1abdd3799076d2db5ecb1d667c8c61"
+    }
+  ],
+  "rows": [
+    {
+      "case": "gyroid",
+      "workflow": "mmg-microgen",
+      "cells": 32,
+      "repeat": 0,
+      "artifact": "gyroid/mmg-microgen/n32/repeat0",
+      "status": "geometry-warning",
+      "stage": "complete",
+      "failure_owner": "Microgen / MMG pipeline",
+      "mmg_cli_executable": "C:\\Users\\kevin\\dev\\meshers\\.local-work\\microgen-accuracy\\benchmarks\\microgen\\.venv\\Lib\\site-packages\\mmgpy\\bin\\mmg3d_O3.exe",
+      "mmg_cli_sha256": "7010a9f4d7e3fec9d442b5fa4229133bff365d176babbb6cf399ebd62fd1c2b8",
+      "mmg_hausd_over_L": 0.0002,
+      "mmg_hsiz_over_L": 0.03125,
+      "mmg_hgrad": 1.3,
+      "setup_s": 0.004870799999480369,
+      "mesh_s": 52.23150880000321,
+      "generation_s": 52.22663800000373,
+      "vtk_extraction_s": 0.14952220000486705,
+      "field_samples_checked": 35937,
+      "vtk_version": [
+        9,
+        7,
+        1
+      ],
+      "mesh_sha256": "60f3c75ace7fea06b0be607900dfe4140db90e48b8d05564093d44b852e6fdc2",
+      "orientation_flips": 0,
+      "unused_nodes": 0,
+      "nodes": 123513,
+      "tetrahedra": 557073,
+      "volume": 0.1617562443732554,
+      "solid_fraction": 0.1617562443732554,
+      "q_min": 0.01502362311946331,
+      "q_p05": 0.57680282247135,
+      "q_median": 0.794598807086947,
+      "q_below_01": 281,
+      "minimum_cell_relative_determinant": 0.003576555446035285,
+      "cell_relative_determinant_tolerance": 1e-12,
+      "overlap_pairs_checked": 12121052,
+      "geometry_status": "checked-at-declared-tolerances",
+      "sampled_cap_overshoot": 0.0006029116626578202,
+      "sampled_geometry_distance": 0.006698058470788194,
+      "sampled_outward_orientation": true,
+      "sampled_reverse_distance": 0.006094225089254692,
+      "reverse_distance_samples": 11342,
+      "relative_volume_error": 0.004207833489817506,
+      "fea_rhs": 24,
+      "fea_cg_iterations": 42,
+      "fea_cg_relative_residual": 5.958925451069983e-12,
+      "worst_energy_error": 0.023811009432738863,
+      "per_load_errors": {
+        "ux=xx": 0.011828888564902273,
+        "ux=yy": 0.016468891483510995,
+        "ux=zz": 0.016362605408479284,
+        "ux=xy": 0.014257546348762369,
+        "ux=yz": 0.018385021330936762,
+        "ux=zx": 0.014264731803534436,
+        "uy=xx": 0.016492603327661372,
+        "uy=yy": 0.011794086658795123,
+        "uy=zz": 0.016381697973152243,
+        "uy=xy": 0.014315380855756493,
+        "uy=yz": 0.01422428259180151,
+        "uy=zx": 0.01840304677555661,
+        "uz=xx": 0.016530505260228548,
+        "uz=yy": 0.016452295216776144,
+        "uz=zz": 0.011758899265064508,
+        "uz=xy": 0.01845268320389806,
+        "uz=yz": 0.01426542133498991,
+        "uz=zx": 0.014255027297262524
+      },
+      "patch_max_error": 6.9472761179872464e-12,
+      "free_residual": 9.498132937759434e-12,
+      "components": 3,
+      "dofs": 370539,
+      "free_dofs": 370521,
+      "assembly_s": 8.82257430000027,
+      "solve_s": 289.45594509999864,
+      "evaluation_s": 17.373085700000956,
+      "worst_combination": [
+        -0.008905847156470607,
+        0.7889127888031575,
+        -0.7098333927289555,
+        0.8357603366572086,
+        -6.358602338111299,
+        1.4089060559330044,
+        -0.8262750338595309,
+        0.012536951594414793,
+        0.8761143900823318,
+        -0.7662301869813203,
+        -1.3946231898795445,
+        -4.338679916524778,
+        -1.454492187896936,
+        1.3458427179019181,
+        0.0030233707527758933,
+        10.742603551948605,
+        -0.8729915268621163,
+        0.7654011471450824
+      ],
+      "linear_solver": "amg",
+      "amg_iterations": [
+        42,
+        42,
+        42,
+        42,
+        42,
+        43,
+        42,
+        41,
+        41,
+        42,
+        42,
+        41,
+        42,
+        41,
+        42,
+        42,
+        42,
+        42,
+        42,
+        42,
+        42,
+        42,
+        42,
+        42
+      ],
+      "amg_final_relative_residuals": [
+        6.692704984467096e-12,
+        7.48257469500964e-12,
+        9.498148280972935e-12,
+        8.124857972435996e-12,
+        9.132524934751543e-12,
+        5.853365518226478e-12,
+        6.599472406233882e-12,
+        7.478648282884678e-12,
+        8.705758481370882e-12,
+        7.168489806471925e-12,
+        6.3594128469410335e-12,
+        8.385452401609905e-12,
+        9.434192516379978e-12,
+        9.112098030635974e-12,
+        6.3416696977681175e-12,
+        6.2129220318244845e-12,
+        8.384779892946037e-12,
+        8.989458186675935e-12,
+        8.38229769123141e-12,
+        5.154845278170736e-12,
+        7.031691303712645e-12,
+        6.562444712996089e-12,
+        7.731094905968522e-12,
+        5.958925451069983e-12
+      ],
+      "amg_operator_complexity": 1.4439839139902868,
+      "amg_relative_tolerance": 1e-11,
+      "amg_max_iterations": 1000,
+      "fields_sha256": "c50df9a91419e61241de8f00b5d24b06ac37653e826bad3da9208901cc463b84",
+      "geometry_eligible": false,
+      "quality_eligible": false,
+      "fea_eligible": false,
+      "comparison_eligible": false,
+      "admission_reasons": [
+        "Sampled boundary distance 0.00669806L exceeds tolerance",
+        "Sampled target-to-mesh distance 0.00609423L exceeds tolerance"
+      ],
+      "relative_volume_error_with_uncertainty": 0.005907033622438005,
+      "worker_exit_code": 0,
+      "peak_worker_tree_rss_mib": 3425.5234375
+    },
+    {
+      "case": "gyroid",
+      "workflow": "mmg-tetra-tagged",
+      "cells": 32,
+      "repeat": 0,
+      "artifact": "gyroid/mmg-tetra-tagged/n32/repeat0",
+      "status": "failed",
+      "stage": "geometry validation",
+      "failure_owner": "MMG binding pipeline",
+      "mmg_hausd_over_L": 0.0002,
+      "mmg_hsiz_over_L": 0.03125,
+      "mmg_hgrad": 1.3,
+      "setup_s": 2.1000014385208488e-06,
+      "mesh_s": 181.60978950000572,
+      "generation_s": 181.60978740000428,
+      "vtk_extraction_s": 0.42173620000176015,
+      "field_samples_checked": 35937,
+      "vtk_version": [
+        9,
+        7,
+        1
+      ],
+      "cleanup_merge_tolerance_over_L": 1e-12,
+      "cleanup_det_tolerance_over_L3": 1e-15,
+      "cleanup_merged_nodes": 0,
+      "cleanup_discarded_cells": 0,
+      "cleanup_discarded_abs_volume_over_L3": 0.0,
+      "mmg_boundary_triangles_supplied": 59520,
+      "mmg_cap_triangles_supplied": 3552,
+      "mmg_boundary_policy": "tagged wall and box patches",
+      "mmg_boundary_patch_counts": {
+        "1": 27984,
+        "2": 27984,
+        "3": 592,
+        "4": 592,
+        "5": 592,
+        "6": 592,
+        "7": 592,
+        "8": 592
+      },
+      "mmg_required_cap_triangles": 0,
+      "mesh_sha256": "6b2072421f0b7926aec4bf599d43777dd3ec336946e819a309cd00742b3166d8",
+      "orientation_flips": 0,
+      "unused_nodes": 0,
+      "nodes": 508340,
+      "tetrahedra": 2586087,
+      "error": "RuntimeError: Overlap validation incomplete: pair cap 20000000 exceeded",
+      "failed_stage_elapsed_s": 800.1170592000017,
+      "failure_kind": "pipeline failure",
+      "worker_exit_code": 0,
+      "peak_worker_tree_rss_mib": 2428.3046875
+    }
+  ],
+  "qualification": {
+    "configurations": [
+      {
+        "case": "gyroid",
+        "workflow": "mmg-microgen",
+        "cells": 32,
+        "complete": false,
+        "geometry_eligible": false,
+        "quality_eligible": false,
+        "median_mesh_s": 52.23150880000321,
+        "max_tetrahedra": 557073,
+        "max_triangles": 0,
+        "worst_energy_error": 0.023811009432738863
+      },
+      {
+        "case": "gyroid",
+        "workflow": "mmg-tetra-tagged",
+        "cells": 32,
+        "complete": false,
+        "geometry_eligible": false,
+        "quality_eligible": false,
+        "median_mesh_s": 181.60978950000572,
+        "max_tetrahedra": 2586087,
+        "max_triangles": 0,
+        "worst_energy_error": null
+      }
+    ],
+    "targets": [
+      {
+        "case": "gyroid",
+        "workflow": "mmg-microgen",
+        "energy_target": null,
+        "fastest": null,
+        "smallest": null,
+        "status": "not reached"
+      },
+      {
+        "case": "gyroid",
+        "workflow": "mmg-microgen",
+        "energy_target": 0.01,
+        "fastest": null,
+        "smallest": null,
+        "status": "not reached"
+      },
+      {
+        "case": "gyroid",
+        "workflow": "mmg-microgen",
+        "energy_target": 0.02,
+        "fastest": null,
+        "smallest": null,
+        "status": "not reached"
+      },
+      {
+        "case": "gyroid",
+        "workflow": "mmg-microgen",
+        "energy_target": 0.05,
+        "fastest": null,
+        "smallest": null,
+        "status": "not reached"
+      },
+      {
+        "case": "gyroid",
+        "workflow": "mmg-tetra-tagged",
+        "energy_target": null,
+        "fastest": null,
+        "smallest": null,
+        "status": "not reached"
+      },
+      {
+        "case": "gyroid",
+        "workflow": "mmg-tetra-tagged",
+        "energy_target": 0.01,
+        "fastest": null,
+        "smallest": null,
+        "status": "not reached"
+      },
+      {
+        "case": "gyroid",
+        "workflow": "mmg-tetra-tagged",
+        "energy_target": 0.02,
+        "fastest": null,
+        "smallest": null,
+        "status": "not reached"
+      },
+      {
+        "case": "gyroid",
+        "workflow": "mmg-tetra-tagged",
+        "energy_target": 0.05,
+        "fastest": null,
+        "smallest": null,
+        "status": "not reached"
+      }
+    ],
+    "convergence": [
+      {
+        "case": "gyroid",
+        "workflow": "mmg-microgen",
+        "levels": 0,
+        "pairs": [],
+        "status": "insufficient levels"
+      },
+      {
+        "case": "gyroid",
+        "workflow": "mmg-tetra-tagged",
+        "levels": 0,
+        "pairs": [],
+        "status": "insufficient levels"
+      }
+    ],
+    "scope": "Observed configurations only. All repeats must pass; no interpolation or extrapolation. Geometry targets do not require FEA or element shape."
+  }
+}

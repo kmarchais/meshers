@@ -237,6 +237,32 @@ require nonempty cap constraints and all six distinct references in the tagged
 control. An initial grid-32 tagged trial was stopped when this check failed;
 its local output remains marked interrupted, and it provides no tagged result.
 
+## MMG tolerance and first-pass diagnostics
+
+At Gyroid grid 32, reducing MMG's requested distance to `0.0002 L` in the
+current Microgen CLI pipeline produces 557,073 tetrahedra with 2.381% energy
+error. It still fails geometry and element-quality admission. Forward and
+reverse distances are `0.006698 L` and `0.006094 L`, and 281 cells have quality
+below 0.1. The 52.232 s generation sample cannot support a speed comparison.
+The experimental tagged binding control produces 2,586,087 tetrahedra, then
+exceeds its declared 20-million validation-pair budget. It has no validity,
+geometry or FEA certificate. Both outcomes are in `gyroid-tight-mmg-32.json`.
+
+An intermediate-mesh probe isolates the current CLI pipeline's first pass.
+Microgen invokes it with `nofem=True`; the requested distance, size and grading
+parameters reach only the second pass. The seed's sampled boundary distance is
+`0.001539 L`. After the default first pass it is `0.008749 L`, above the standard
+`0.002 L` limit. That pass takes 2.650 s. Tightening only the second pass cannot
+be assumed to recover geometry already lost in the first pass.
+
+A control that also supplies `hausd=0.0002`, `hsiz=1/32` and `hgrad=1.3` to the
+first pass was stopped after more than ten minutes of CPU time without an
+output mesh. This observation does not identify which parameter caused the
+long run. Its runtime is censored, and it has no mesh or accuracy result.
+`mmg-first-pass-diagnostic.json` retains the exact probe source, executable,
+benchmark source and completed mesh hashes. These surface samples diagnose
+boundary movement; they do not certify volume validity or FEA accuracy.
+
 ## Next measurements
 
 Measure Microgen's current CLI pipeline at finer grids, then repeat selected
@@ -245,4 +271,7 @@ surface timing separate and include all failures in the report. Extend the
 strict FEA calibration beyond uniform Gyroid, especially the coarse failures
 in issues #3 and #4. The measured 2% native run used a two-million-tetrahedron
 budget, a 60-million validation-pair cap and a 16 GiB worker RSS ceiling;
-these larger limits remain explicit rather than becoming silent defaults.
+these are now the documented standard-suite defaults. Smoke keeps its original
+limits. Standard uses a 2% primary target and grids 24, 36, 54 and 80, while
+every report still records coverage at 1%, 2% and 5%. Earlier retained runs keep
+their original configuration.

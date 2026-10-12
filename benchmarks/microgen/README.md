@@ -24,7 +24,7 @@ From the Meshers repository root, with [uv](https://docs.astral.sh/uv/) installe
 uv run --project benchmarks/microgen --locked microgen-benchmark
 ```
 
-Open the printed `report.html` path. The default run covers ten cases at 16, 24, 36 and 54 intervals, one warmup and
+Open the printed `report.html` path. The default run covers ten cases at 24, 36, 54 and 80 intervals, one warmup and
 three measured repetitions per configuration.
 It runs serially and can take hours. Start with the shorter complete case matrix:
 
@@ -77,7 +77,7 @@ Small features between probe points can still be missed;
 these checks do not certify Hausdorff distance.
 
 FEA targets are 1%, 2% and 5% worst relative energy error. `--fea-target` defaults
-to 5%. A 20% result remains diagnostic data and cannot qualify as a low-error FEA
+to 2% in the standard suite and 5% in smoke. A 20% result remains diagnostic data and cannot qualify as a low-error FEA
 result. Every workflow must meet the same minimum element quality for FEA target
 comparisons. `qualification.json` records the fastest qualifying configuration
 and the smallest qualifying configuration independently. All requested repeats
@@ -112,8 +112,12 @@ microgen-benchmark --purpose fea --cases gyroid --cells 24,36,54 --error-targets
 
 Smoke defaults retain the original `.01 L` boundary tolerance, 10% volume
 tolerance, 250,000-tetrahedron budget and 2,000,000 validation-pair cap, so issues
-#3 and #4 can still be reproduced. Standard defaults use a 1,000,000-tetrahedron
-budget and 20,000,000 validation-pair cap. Neither cap means that a mesh passes
+#3 and #4 retain their declared coarse policy. Exact historical errors also need
+their frozen source snapshots, since the BCC field now uses the scalar compiler.
+Standard defaults use a 2,000,000-tetrahedron budget, a 60,000,000 validation-pair
+cap and a 16 GiB worker-tree RSS ceiling. These limits include the measured
+Gyroid grid-80 2% case; they do not guarantee target coverage for every field.
+Neither cap means that a mesh passes
 when the budget runs out. Override limits explicitly and retain the manifest.
 
 ## Cases and workflows
@@ -166,6 +170,10 @@ warning switch are diagnostic scores excluded from comparisons. Table colors
 compare admissible workflows at the same intervals; those colors do not prove
 a matched-element win. Minimum element quality uses the configured threshold.
 Element counts only become better when accuracy is comparable.
+Geometry-mode charts plot the larger sampled boundary distance in the two
+directions. Every aggregate row shows both distances and volume error plus
+empirical sampling uncertainty. FEA rows retain those geometry diagnostics beside
+the energy score. Geometry modes omit FEA targets and solved-field links.
 
 Every unavailable value has a reason. Failed generation gives no accepted mesh
 or FEA score. Invalid meshes retain completed timing and mesh arrays but block
