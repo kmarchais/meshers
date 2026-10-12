@@ -503,6 +503,21 @@ improve the practical accuracy/cost tradeoff before writing a native equivalent.
 HXT is documented as an efficient Delaunay implementation in the
 [Gmsh manual](https://gmsh.info/doc/texinfo/gmsh.html#Choosing-the-right-unstructured-algorithm).
 
+Task 1387 finished the experimental batch, but did not produce a Gyroid result.
+The cube passed all audits with 292 tetrahedra, unchanged boundary and analytic
+stiffness error 6.8e-16. HXT failed during Gyroid volume reconstruction with
+`duplicate volume 1 and 2 in reconstructed Brep` followed by `HXT 3D mesh failed`.
+The batch's successful process exit reports retained case outcomes, not success
+of every meshing algorithm. The Gyroid failure has no FEA or performance result.
+
+The initial adapter described all triangles as one discrete surface, which
+does not distinguish the Gyroid's two void networks in HXT's boundary labeling.
+The next test registers the negative and positive implicit walls separately,
+along with the six cap patches. Node coordinates and triangles stay unchanged;
+only boundary entity identifiers differ. The input surface and patch labels
+are archived before meshing, including on failure. Rerun the cube and Gyroid
+controls to test this explanation, with the same sizing and admission gates.
+
 ## Independent review and remaining limits
 
 The resumed Claude Sonnet 5.5 review confirmed the recorded comparisons and

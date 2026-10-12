@@ -15,6 +15,22 @@ def generate(case, cells, config, directory, checkpoint):
     started = time.perf_counter()
     surface = boundary(points, tets)
     surface_points, faces, _, _ = canonical_surface(points, surface)
+    # HXT distinguishes the two Gyroid void networks through boundary-surface
+    # identifiers. One tag for every triangle gives both voids the same BRep.
+    coordinates = surface_points[faces]
+    patches = np.full(len(faces), -1, dtype=np.int64)
+    for axis in range(3):
+        for side, value in enumerate([-case.scale / 2, case.scale / 2]):
+            cap = np.all(np.abs(coordinates[:, :, axis] - value) < 1e-12 * case.scale, axis=1)
+            patches[cap] = 2 * axis + side
+    wall = patches < 0
+    if wall.any():
+        values = case.field(*coordinates[wall].reshape(-1, 3).T).reshape(-1, 3)
+        if not np.all(np.abs(np.abs(values) - 1) < 1e-8):
+            raise ValueError("Unexpected native wall vertices away from band isosurfaces")
+        if not np.all(np.sign(values) == np.sign(values[:, :1])):
+            raise ValueError("A native wall face crosses both band isosurfaces")
+        patches[wall] = 6 + (values.mean(axis=1) > 0)
     options = {
         "General.NumThreads": 1,
         "Mesh.MaxNumThreads1D": 1,
@@ -31,6 +47,8 @@ def generate(case, cells, config, directory, checkpoint):
         "Mesh.OptimizeNetgen": 0,
         "Mesh.ElementOrder": 1,
     }
+    np.savez_compressed(directory / "native-surface.npz", points=surface_points, triangles=faces,
+                        patches=patches)
     checkpoint(stage="HXT volume construction", surface_triangles=len(faces))
     gmsh.initialize([], readConfigFiles=False)
     log = []
@@ -39,10 +57,18 @@ def generate(case, cells, config, directory, checkpoint):
         gmsh.model.add("periodic-native-surface")
         for name, value in options.items():
             gmsh.option.setNumber(name, value)
-        surface_tag = gmsh.model.addDiscreteEntity(2)
-        gmsh.model.mesh.addNodes(2, surface_tag, np.arange(1, len(surface_points) + 1), surface_points.ravel())
-        gmsh.model.mesh.addElementsByType(surface_tag, 2, [], (faces + 1).ravel())
-        shell = gmsh.model.geo.addSurfaceLoop([surface_tag])
+        surface_tags, registered = [], np.zeros(len(surface_points), dtype=bool)
+        for patch in np.unique(patches):
+            surface_tag = gmsh.model.addDiscreteEntity(2)
+            surface_tags.append(surface_tag)
+            triangles = faces[patches == patch]
+            used = np.unique(triangles)
+            new = used[~registered[used]]
+            gmsh.model.mesh.addNodes(2, surface_tag, new + 1, surface_points[new].ravel())
+            registered[new] = True
+            gmsh.model.mesh.addElementsByType(surface_tag, 2, [], (triangles + 1).ravel())
+        assert registered.all()
+        shell = gmsh.model.geo.addSurfaceLoop(surface_tags)
         volume = gmsh.model.geo.addVolume([shell])
         gmsh.model.geo.synchronize()
         gmsh.model.mesh.generate(3)
@@ -77,7 +103,6 @@ def generate(case, cells, config, directory, checkpoint):
         if not np.array_equal(expected, actual):
             raise ValueError("HXT changed boundary triangulation")
         construction_s = time.perf_counter() - started
-        np.savez_compressed(directory / "native-surface.npz", points=surface_points, triangles=faces)
         return xyz, result_tets, {
             **seed,
             "mesh_s": seed["mesh_s"] + construction_s,
@@ -85,6 +110,7 @@ def generate(case, cells, config, directory, checkpoint):
             "native_seed_mesh_s": seed["mesh_s"],
             "native_seed_tetrahedra": len(tets),
             "surface_triangles": len(faces),
+            "surface_patch_triangle_counts": {str(p): int((patches == p).sum()) for p in np.unique(patches)},
             "hxt_construction_and_boundary_checks_s": construction_s,
             "hxt_options": options,
             "hxt_boundary_unchanged": True,
