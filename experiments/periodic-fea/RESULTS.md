@@ -536,6 +536,28 @@ and extracts tetrahedra from every volume. It retains the exact boundary and
 all common admission criteria. Numerical verification of this correction is
 pending the next queued cube/Gyroid batch.
 
+Task 1413 verified the corrected component importer. Both cases passed
+saved-field reconstruction and physical audits. The Gyroid retains every
+surface triangle and all three material components; its opposite cap nodes
+and triangles are exactly periodic. Geometry distances and volume match the
+native grid-42 seed within the unchanged admission criteria.
+
+The HXT output has 153,704 tetrahedra and 43,237 nodes. Generation took 9.982 s,
+including the full native seed and experimental boundary/component checks;
+audited FEA took 100.800 s. Minimum quality is 0.07282, below 0.1, and worst
+relative energy disagreement is 3.31491% against native grid 80 or 3.25139%
+against fine MMG. It is rejected for the FEA target despite valid geometry,
+periodicity and solver audits. Native grid 42 has 369,590 tetrahedra and
+0.89433% disagreement against grid 80. A smaller mesh is not a qualified win.
+Retained artifacts are in `runs/hxt-native-surface-components-v3`.
+
+The next control keeps the native grid-42 boundary and requests HXT target
+length 1/64 instead of 1/42. This isolates interior resolution. It keeps the
+same optimizer, one thread, exact-boundary constraint and common audits.
+The cube control still uses a grid-4 seed and target. Measure element count,
+quality and tensor before deciding whether HXT optimization merits another
+test. Generation timing remains a single sample including the full seed.
+
 ## Independent review and remaining limits
 
 The resumed Claude Sonnet 5.5 review confirmed the recorded comparisons and

@@ -112,6 +112,8 @@ vertex and triangle is preserved before the common admission and FEA audits.
 Preparation records the installed Gmsh adapter/library hashes and version.
 Run the analytic solid control first. Generation cost includes the full native
 volume seed and boundary checks; it is not a surface-only timing estimate.
+`--surface-seed-cells` separates native boundary resolution from HXT interior
+sizing. The analytic solid control always uses its task resolution for the seed.
 
 Compare completed runs against the retained grid-64 tensor with:
 

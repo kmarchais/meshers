@@ -36,7 +36,7 @@ def write_json(path, value):
 
 
 def prepare(output, native_package, task_specs=None, mmg_hausd=0.002, worker_timeout=1200,
-            max_tetrahedra=2_000_000, mmg_seed_cells=None, mmg_size_map=None):
+            max_tetrahedra=2_000_000, mmg_seed_cells=None, mmg_size_map=None, surface_seed_cells=None):
     """Freeze the executable experiment before it enters the shared queue."""
     output.mkdir(parents=True, exist_ok=False)
     source = output / "source"
@@ -165,6 +165,8 @@ def prepare(output, native_package, task_specs=None, mmg_hausd=0.002, worker_tim
             manifest["dependency_sources_sha256"][str(path.resolve())] = digest(path)
     if mmg_seed_cells is not None:
         manifest["config"]["mmg_seed_cells"] = mmg_seed_cells
+    if surface_seed_cells is not None:
+        manifest["config"]["surface_seed_cells"] = surface_seed_cells
     if any(task["workflow"] == "mmg-native-seed-metric" for task in tasks):
         if mmg_size_map is None:
             raise ValueError("The metric workflow requires --mmg-size-map")
@@ -716,6 +718,7 @@ if __name__ == "__main__":
     parser.add_argument("--max-tetrahedra", type=int, default=2_000_000)
     parser.add_argument("--mmg-seed-cells", type=int, help="Native seed grid, independent of MMG target sizing")
     parser.add_argument("--mmg-size-map", type=Path, help="Saved-point scalar sizing map for the metric workflow")
+    parser.add_argument("--surface-seed-cells", type=int, help="Native surface seed grid, independent of HXT volume sizing")
     args = parser.parse_args()
     if args.prepare:
         if args.native_package is None:
@@ -724,6 +727,8 @@ if __name__ == "__main__":
             parser.error("--mmg-hausd, --worker-timeout and --max-tetrahedra must be positive")
         if args.mmg_seed_cells is not None and not 4 <= args.mmg_seed_cells <= 128:
             parser.error("--mmg-seed-cells must be between 4 and 128")
+        if args.surface_seed_cells is not None and not 4 <= args.surface_seed_cells <= 128:
+            parser.error("--surface-seed-cells must be between 4 and 128")
         prepare(
             args.prepare.resolve(),
             args.native_package.resolve(),
@@ -733,6 +738,7 @@ if __name__ == "__main__":
             args.max_tetrahedra,
             args.mmg_seed_cells,
             args.mmg_size_map,
+            args.surface_seed_cells,
         )
     elif args.run:
         run(args.run.resolve())

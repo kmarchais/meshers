@@ -13,7 +13,8 @@ def generate(case, cells, config, directory, checkpoint):
     from microgen_benchmark.backends import generate as native_generate
     from microgen_benchmark.geometry import boundary, canonical_surface
 
-    points, tets, seed = native_generate(case, "meshers-pass1", cells, config, checkpoint)
+    seed_cells = cells if case.function == "solid" else config.get("surface_seed_cells", cells)
+    points, tets, seed = native_generate(case, "meshers-pass1", seed_cells, config, checkpoint)
     started = time.perf_counter()
     surface = boundary(points, tets)
     surface_points, faces, _, _ = canonical_surface(points, surface)
@@ -130,6 +131,8 @@ def generate(case, cells, config, directory, checkpoint):
             "mesh_s": seed["mesh_s"] + construction_s,
             "generation_s": seed["generation_s"] + construction_s,
             "native_seed_mesh_s": seed["mesh_s"],
+            "native_seed_cells": seed_cells,
+            "hxt_sizing_cells": cells,
             "native_seed_tetrahedra": len(tets),
             "surface_triangles": len(faces),
             "material_components": len(shells),
