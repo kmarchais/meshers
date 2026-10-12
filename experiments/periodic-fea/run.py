@@ -36,7 +36,7 @@ def write_json(path, value):
 
 
 def prepare(output, native_package, task_specs=None, mmg_hausd=0.002, worker_timeout=1200,
-            max_tetrahedra=2_000_000):
+            max_tetrahedra=2_000_000, mmg_seed_cells=None):
     """Freeze the executable experiment before it enters the shared queue."""
     output.mkdir(parents=True, exist_ok=False)
     source = output / "source"
@@ -154,6 +154,8 @@ def prepare(output, native_package, task_specs=None, mmg_hausd=0.002, worker_tim
                 raise ValueError(f"Unknown workflow or invalid resolution: {spec}")
             tasks.append({"case": case_id, "workflow": workflow, "cells": cells})
     manifest["tasks"] = tasks
+    if mmg_seed_cells is not None:
+        manifest["config"]["mmg_seed_cells"] = mmg_seed_cells
     write_json(output / "manifest.json", manifest)
     print(
         json.dumps(
@@ -183,7 +185,8 @@ def native_seed_control(case, cells, config, directory, checkpoint):
     )
 
     remesh = importlib.import_module("microgen.remesh")
-    points, tets, seed = generate(case, "meshers-pass1", cells, config, checkpoint)
+    seed_cells = config.get("mmg_seed_cells", cells)
+    points, tets, seed = generate(case, "meshers-pass1", seed_cells, config, checkpoint)
     np.savez_compressed(directory / "native-seed.npz", points=points, tetrahedra=tets)
     cli = configure_mmg_cli(config.get("mmg_bin_directory"))
     started = time.perf_counter()
@@ -230,6 +233,8 @@ def native_seed_control(case, cells, config, directory, checkpoint):
             "mesh_s": seed["mesh_s"] + adaptation_s,
             "generation_s": seed["generation_s"] + adaptation_s,
             "native_seed_mesh_s": seed["mesh_s"],
+            "native_seed_cells": seed_cells,
+            "mmg_sizing_cells": cells,
             "native_seed_tetrahedra": len(tets),
             "standard_adaptation_s_including_capture": adaptation_s,
             "mmg_standard_adaptation_hausd_over_L": config["mmg_hausd"],
@@ -678,12 +683,15 @@ if __name__ == "__main__":
     parser.add_argument("--mmg-hausd", type=float, default=0.002)
     parser.add_argument("--worker-timeout", type=float, default=1200)
     parser.add_argument("--max-tetrahedra", type=int, default=2_000_000)
+    parser.add_argument("--mmg-seed-cells", type=int, help="Native seed grid, independent of MMG target sizing")
     args = parser.parse_args()
     if args.prepare:
         if args.native_package is None:
             parser.error("--prepare requires --native-package")
         if args.mmg_hausd <= 0 or args.worker_timeout <= 0 or args.max_tetrahedra <= 0:
             parser.error("--mmg-hausd, --worker-timeout and --max-tetrahedra must be positive")
+        if args.mmg_seed_cells is not None and not 4 <= args.mmg_seed_cells <= 128:
+            parser.error("--mmg-seed-cells must be between 4 and 128")
         prepare(
             args.prepare.resolve(),
             args.native_package.resolve(),
@@ -691,6 +699,7 @@ if __name__ == "__main__":
             args.mmg_hausd,
             args.worker_timeout,
             args.max_tetrahedra,
+            args.mmg_seed_cells,
         )
     elif args.run:
         run(args.run.resolve())

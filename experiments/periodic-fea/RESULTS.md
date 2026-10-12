@@ -254,6 +254,20 @@ The reference remains native; continuum accuracy and broader superiority
 remain unproven. The retained `runs/native-neighbours-v1/cross-run-comparison.json`
 records the exact scores, hashes and admission status.
 
+Task 1226 is queued for the grid-42 generation repeats. The non-Claude
+Nemotron 3 Ultra artifact review confirmed the neighbouring-grid numbers and
+retained three evidence limits: unrepeated timings, a same-method reference,
+and one tested Gyroid width. It did not rerun numerical solves.
+
+The next algorithm control is prepared in `runs/mmg-fine-seed-coarsening-v1`
+but has not been queued. It generates a native grid-48 seed, then requests MMG
+edge sizing `1/32`, with `hausd=0.0005` and the existing required periodic caps.
+This separates seed geometry resolution from volume sizing. The unchanged
+geometry, shape, periodicity and physics gates will decide whether it reduces
+FEA cost while meeting the same grid-80 worst-energy target. Seed generation
+remains part of its measured cost. The generation repeat result will be read
+before this control enters the queue.
+
 ## Independent review and remaining limits
 
 The resumed Claude Sonnet 5.5 review confirmed the recorded comparisons and

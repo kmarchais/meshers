@@ -92,6 +92,12 @@ generation. This algorithm control is separate from the current Microgen
 adoption baseline. A failed solid-cell control stops a batch before its
 expensive references run.
 
+For `mmg-native-seed`, `--mmg-seed-cells` can set the native seed resolution
+independently of the task's MMG sizing resolution. The default uses the same
+resolution for both. Results record `native_seed_cells` and `mmg_sizing_cells`.
+This supports testing volume coarsening while retaining a finer periodic seed
+boundary. All final admission and physics checks remain active.
+
 Compare completed runs against the retained grid-64 tensor with:
 
 ```powershell
