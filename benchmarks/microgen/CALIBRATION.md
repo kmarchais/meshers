@@ -336,7 +336,8 @@ The Gyroid mesh hash equals the released-wheel grid-80 calibration's hash,
 and its energy error is identical. The geometry correction therefore preserves
 this fine-grid output. Its 13.729 s generation sample differs from the earlier
 11.211 s sample. These are individual calibration times; they do not establish
-the correction's performance cost. Selected repetitions are still needed.
+the correction's performance cost. The repeated result below measures the
+proposed build's timing range.
 
 The follow-up Schwarz P trial at grid 82 passes the unchanged geometry,
 quality and 2% energy gates. It has 1,308,864 tetrahedra, minimum quality
@@ -347,7 +348,23 @@ grid-80 miss without rounding the score or weakening a threshold. All five
 tested sheet cases now have an observed qualifying 2% configuration; none
 has reached 1%.
 
-## Next measurements
+## Repeated 2% Gyroid result
+
+At grid 80, one-pass Meshers from PR #5 passes all three measured repetitions
+after one warmup. Every repetition has 1,190,946 tetrahedra, minimum quality
+0.182807 and 1.94244% worst energy error. All geometry, quality, affine patch
+and equilibrium checks pass. Generation has a 13.911 s median and a
+13.895–14.158 s observed range. The warmup's 13.591 s is excluded.
+
+All three mesh hashes are identical and match the released-wheel calibration.
+The retained source snapshots, manifest, mesh arrays and solved-field archives
+have been checked against their recorded SHA-256 hashes. The three-repeat
+qualification record reaches 2% and 5%, while 1% remains unreached. Evidence
+is in `native-gyroid-two-percent-repeated-80.json`. This is a repeated timing for
+the proposed build, not a measured speed ratio against the current MMG pipeline
+or the released Meshers wheel.
+
+## Checkpoint reliability
 
 The first five-sheet grid-80 batch was interrupted by a Windows permission
 error while the parent read an advisory progress checkpoint. It stopped its
@@ -358,7 +375,9 @@ previous complete sample during temporary locks. A real exclusive-sharing
 regression reproduces the previous failure and verifies that a healthy child
 finishes after the fix. The numerical and failure-path suite passes 71 tests.
 
-Repeat selected qualifying configurations with warmups before making timing
+## Next measurements
+
+Repeat additional qualifying cases and controls before making general speed
 claims. Keep surface timing
 separate and include all failures in the report. A corrected tagged MMG
 control still needs a viable coarse proof before another expensive fine run.
