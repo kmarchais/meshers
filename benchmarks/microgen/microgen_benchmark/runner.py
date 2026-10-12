@@ -168,7 +168,7 @@ def worker(request_path):
                 else "Microgen / VTK"
                 if request["workflow"].startswith("vtk")
                 else "Microgen / MMG pipeline"
-                if request["workflow"] == "mmg-microgen"
+                if request["workflow"].startswith("mmg-microgen")
                 else "MMG binding pipeline"
             )
         )

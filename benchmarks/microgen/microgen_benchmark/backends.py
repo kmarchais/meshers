@@ -5,14 +5,14 @@ import importlib.metadata
 import os
 import shutil
 import time
-from contextlib import nullcontext
+from contextlib import ExitStack, nullcontext
 from pathlib import Path
 from tempfile import NamedTemporaryFile
 from unittest.mock import patch
 
 import numpy as np
 
-from .cases import PROFILES
+from .cases import MICROGEN_MMG_WORKFLOWS, PROFILES
 
 
 def reopenable_temporary_file(*args, **kwargs):
@@ -90,7 +90,7 @@ def generate(case, workflow, cells, config, progress=None):
     cli_metadata = {}
     if workflow in {"mmg", "mmg-tetra", "mmg-tetra-clean", "mmg-tetra-tagged"}:
         import mmgpy
-    elif workflow == "mmg-microgen":
+    elif workflow in MICROGEN_MMG_WORKFLOWS:
         from microgen.remesh import remesh_keeping_boundaries_for_fem
 
         cli_metadata = configure_mmg_cli(config.get("mmg_bin_directory"))
@@ -99,6 +99,10 @@ def generate(case, workflow, cells, config, progress=None):
         import meshers
     vtkSMPTools.Initialize(config["threads"])
     mmg_hausd = config.get("mmg_hausd", config["geometry_tolerance"])
+    if workflow in MICROGEN_MMG_WORKFLOWS:
+        cli_metadata["mmg_first_pass_hausd_over_L"] = (
+            mmg_hausd if workflow == "mmg-microgen-first-distance" else None
+        )
     if workflow.startswith("mmg"):
         progress(mmg_hausd_over_L=mmg_hausd, mmg_hsiz_over_L=1 / cells, mmg_hgrad=1.3)
     if not hasattr(microgen, "Tpms"):
@@ -124,7 +128,7 @@ def generate(case, workflow, cells, config, progress=None):
     reporting_start = reporting_s
     cleanup = {}
     native_diagnostics = {}
-    if workflow in {"vtk", "mmg", "mmg-microgen"} or tetra_seed:
+    if workflow in {"vtk", "mmg", *MICROGEN_MMG_WORKFLOWS} or tetra_seed:
         progress(stage="Microgen VTK extraction", failure_owner="Microgen / VTK")
         if tetra_seed:
             # Triangulate the background first, then clip linear tetrahedra.
@@ -226,7 +230,7 @@ def generate(case, workflow, cells, config, progress=None):
                 verbose=-1,
             )
             grid = mmgpy.to_pyvista(native)
-        elif workflow == "mmg-microgen":
+        elif workflow in MICROGEN_MMG_WORKFLOWS:
             progress(stage="Microgen MMG remeshing", failure_owner="Microgen / MMG pipeline")
             # Microgen reopens a delete=True temporary file before its context
             # closes. POSIX permits this; Windows needs delete_on_close=False.
@@ -236,7 +240,19 @@ def generate(case, workflow, cells, config, progress=None):
                 if os.name == "nt"
                 else nullcontext()
             )
-            with context:
+            with ExitStack() as contexts:
+                contexts.enter_context(context)
+                if workflow == "mmg-microgen-first-distance":
+                    from microgen.external import Mmg
+
+                    original_mmg = Mmg.mmg3d
+
+                    def distance_control(**parameters):
+                        if parameters.get("nofem"):
+                            parameters["hausd"] = mmg_hausd * case.scale
+                        return original_mmg(**parameters)
+
+                    contexts.enter_context(patch.object(Mmg, "mmg3d", distance_control))
                 grid = remesh_keeping_boundaries_for_fem(
                     grid,
                     periodic=False,

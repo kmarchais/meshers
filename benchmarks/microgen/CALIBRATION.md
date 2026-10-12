@@ -263,6 +263,17 @@ long run. Its runtime is censored, and it has no mesh or accuracy result.
 benchmark source and completed mesh hashes. These surface samples diagnose
 boundary movement; they do not certify volume validity or FEA accuracy.
 
+A bounded follow-up supplies only `hausd=0.001 L` to the first pass, retaining
+its default size and grading. It finishes in 14.384 s with sampled boundary
+distance `0.001200 L`, inside the standard distance limit. Outward-normal
+sampling is still negative in this uncanonicalized mixed-file probe, and the
+reverse-distance and volume-validity checks have not run. This is a diagnostic
+finding, not an admitted mesh. Its exact command, input, output and source are
+retained in `mmg-first-distance-001.json`. The optional
+`mmg-microgen-first-distance` workflow tests that distance change inside the
+complete two-pass CLI pipeline and all common admission checks. The baseline
+`mmg-microgen` workflow stays unchanged.
+
 ## Coverage beyond uniform Gyroid
 
 The grid-36 native trial of the PR #5 source uses the local editable build,

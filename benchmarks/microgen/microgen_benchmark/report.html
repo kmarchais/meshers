@@ -486,6 +486,9 @@
               hsiz = L / intervals and hgrad = 1.3. Microgen applies these
               requested parameters only in its second pass; the first uses
               its current defaults. Specimens are non-periodic.
+              The separately named first-pass-distance CLI experiment also
+              applies the declared MMG distance in the first pass, leaving
+              its default size and grading unchanged.
               Meshers profiles change only the optimization-pass budget. No
               failed run falls back to another algorithm or a weaker quality
               threshold.
@@ -542,6 +545,7 @@
         "mmg-tetra-tagged": "#c38742",
         "mmg-tetra-clean": "#b55e52",
         "mmg-microgen": "#b54353",
+        "mmg-microgen-first-distance": "#926134",
         "meshers-pass1": "#8e7aff",
         "meshers-pass2": "#d69f3a",
         "meshers-fast": "#6c5ce7",
@@ -558,6 +562,7 @@
         "mmg-tetra-tagged": "MMG · tagged box and wall patches",
         "mmg-tetra-clean": "VTK tetrahedral clipping + cleanup + MMG",
         "mmg-microgen": "Microgen MMG CLI · current pipeline",
+        "mmg-microgen-first-distance": "MMG CLI · experimental first-pass distance",
         "meshers-pass1": "Meshers · 1 pass",
         "meshers-pass2": "Meshers · 2 passes",
         "meshers-fast": "Meshers · 0 passes",
@@ -850,7 +855,7 @@
           ? "Meshers"
           : r.workflow.startsWith("vtk")
             ? "Microgen / VTK"
-            : r.workflow.startsWith("mmg") && r.workflow !== "mmg-microgen"
+            : r.workflow.startsWith("mmg") && !r.workflow.startsWith("mmg-microgen")
               ? "MMG binding pipeline"
               : "Microgen / MMG pipeline";
       }

@@ -13,6 +13,9 @@ public two-pass command-line remesher. The `mmg`, `mmg-tetra`,
 controls using the `mmgpy` Python API. Microgen does not use that API. The
 dependency also supplies native MMG executables for portable installation;
 using those executables does not replace Microgen's remeshing function.
+`mmg-microgen-first-distance` is a separate CLI experiment that also supplies
+the declared distance parameter to the first pass. It is not the current
+Microgen baseline and does not use the mmgpy binding API.
 
 [Calibration results](CALIBRATION.md) record measured target coverage and the
 remaining failures. [Algorithm investigations](ALGORITHMS.md) connect those
@@ -259,6 +262,12 @@ budget comparisons.
 * `meshers-pass1` and `meshers-pass2` are explicit experiments with one and two
   optimization passes. Select them with `--workflows` to test whether a smaller
   budget reaches the same application target.
+* `mmg-microgen-first-distance` calls the same public two-pass Microgen function,
+  with a scoped wrapper that supplies `--mmg-hausd` to its `nofem` first pass
+  as well as its second pass. First-pass size and grading keep Microgen's
+  defaults. The first-pass distance is recorded explicitly. This optional
+  experiment keeps the same seed, file exchange, retries and admission gates;
+  it does not change the `mmg-microgen` baseline or the default workflow list.
 * `meshers-fast`, `meshers-balanced` and `meshers-quality` call the public
   `meshers.generate` API with 0, 4 and 12 optimization passes. All use the same
   geometry tolerance and minimum quality. A higher budget does not guarantee a

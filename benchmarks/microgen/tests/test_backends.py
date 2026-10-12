@@ -13,7 +13,7 @@ from microgen_benchmark.geometry import canonical_mesh, validate
 
 
 @pytest.mark.parametrize("workflow", WORKFLOWS)
-def test_real_backend_cube_pipeline(workflow):
+def test_real_backend_cube_pipeline(workflow, monkeypatch):
     config = {
         "threads": 1,
         "minimum_quality": 0.1,
@@ -23,6 +23,17 @@ def test_real_backend_cube_pipeline(workflow):
         "mmg_hausd": 0.003,
         "meshers_solid_region": "negative",
     }
+    cli_calls = []
+    if workflow.startswith("mmg-microgen"):
+        from microgen.external import Mmg
+
+        original = Mmg.mmg3d
+
+        def recorded_command(**parameters):
+            cli_calls.append(parameters.copy())
+            return original(**parameters)
+
+        monkeypatch.setattr(Mmg, "mmg3d", recorded_command)
     points, tets, timing = generate(CASES[0], workflow, 4, config)
     points, tets, _, _ = canonical_mesh(points, tets)
     geometry, surface = validate(points, tets, CASES[0])
@@ -30,11 +41,19 @@ def test_real_backend_cube_pipeline(workflow):
     assert np.isclose(geometry["volume"], 1)
     assert fea["patch_max_error"] < 1e-8
     assert timing["mesh_s"] > 0
-    if workflow == "mmg-microgen":
+    if workflow.startswith("mmg-microgen"):
         executable = Path(timing["mmg_cli_executable"])
         assert executable.parent.name == "bin"
         assert executable.parent.parent.name == "mmgpy"
         assert hashlib.sha256(executable.read_bytes()).hexdigest() == timing["mmg_cli_sha256"]
+        assert len(cli_calls) == 2
+        assert cli_calls[0]["nofem"] is True
+        assert cli_calls[1]["hausd"] == config["mmg_hausd"]
+        if workflow == "mmg-microgen-first-distance":
+            assert cli_calls[0]["hausd"] == config["mmg_hausd"]
+            assert "hsiz" not in cli_calls[0] and "hgrad" not in cli_calls[0]
+        else:
+            assert "hausd" not in cli_calls[0]
     if workflow == "mmg-tetra-tagged":
         assert set(timing["mmg_boundary_patch_counts"]) == set(map(str, range(3, 9)))
         assert timing["mmg_required_cap_triangles"] == 0

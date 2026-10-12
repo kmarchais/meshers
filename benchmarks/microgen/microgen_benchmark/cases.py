@@ -236,10 +236,12 @@ SMOKE_WORKFLOWS = [
     "meshers-quality",
 ]
 DEFAULT_WORKFLOWS = [*SMOKE_WORKFLOWS, "vtk-tetra-clean", "mmg-tetra-clean", "meshers-pass1"]
+MICROGEN_MMG_WORKFLOWS = {"mmg-microgen", "mmg-microgen-first-distance"}
 WORKFLOWS = [
     "vtk",
     "mmg",
     "mmg-microgen",
+    "mmg-microgen-first-distance",
     "vtk-tetra",
     "mmg-tetra",
     "vtk-tetra-clean",
