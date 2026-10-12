@@ -139,7 +139,12 @@ Reproduce the cross-run comparison with `compare_reference.py`. The retained
 `runs/reference-and-seed-v1/cross-run-comparison.json` records artifact hashes,
 full relative energy eigenvalues, admission status and timing scope.
 
-## Cost near the 1% reference target
+## Historical cost comparison against grid 64
+
+The accuracy interpretation in this section is superseded by the
+[completed grid-80 comparison](#completed-grid-80-reference-check). Generation
+measurements remain valid, but grid 40 no longer passes the strict 1% target
+against the finest measured tensor.
 
 Task 1212 completed both controls and all independent saved-field checks.
 All common geometry, shape, periodic and physical gates pass. Reconstruction
@@ -165,8 +170,9 @@ empirical uncertainty 0.137%. The full comparison is retained in
 `runs/accuracy-cost-v1/cross-run-comparison.json`.
 
 Task 1213 completed one warmup and three generation measurements of the roughly
-0.8% pair. Every canonical mesh exactly matches its saved, physically audited
-mesh. Native measured samples are 3.183, 3.239 and 3.242 s; MMG seed samples are
+0.8% pair against grid 64. This historical accuracy pairing is superseded by
+the grid-80 comparison below. Every canonical mesh exactly matches its saved,
+physically audited mesh. Native measured samples are 3.183, 3.239 and 3.242 s; MMG seed samples are
 34.554, 34.755 and 34.495 s. Median generation is 3.239 s versus 34.554 s,
 a 10.67 times ratio for these configurations. The MMG total includes its seed.
 FEA timing was not repeated. The retained `generation-repeats.json` describes
@@ -206,8 +212,18 @@ The grid-40 configuration misses the strict 1% reference target. It must not
 be rounded into a pass. The warmed 10.67 times generation ratio remains valid
 for the two tested meshes, but no longer establishes a speedup for two meshes
 both below 1% of the finest measured tensor. Grid 48 passes that target, with
-more tetrahedra than the tight MMG control and a lower single generation sample.
-Its generation timing has not been repeated.
+13% more tetrahedra than the tight MMG control and a lower single generation
+sample. Its single audited FEA sample is about 5% faster, and generation plus
+audited FEA about 12% faster. These are unrepeated total-cost samples, not a
+large established solver or overall speed advantage.
+
+The tight MMG control's margin below 1% is only 0.034 percentage points, while
+grid 40 exceeds it by 0.00772 points. The observed 0.189% reference-level shift
+is larger than either margin. This is a reason to treat those verdicts as
+reference-specific; it is not a quantified bound on reference error. The gate
+uses the worst relative strain-energy difference over all macroscopic strain
+combinations, not the tensor Frobenius norm. Grid 48 has more margin against
+the measured target, but still requires an independent accuracy reference.
 
 Task 1220 is queued to test native grids 38 and 42 with all gates unchanged.
 It checks neighbouring-grid shape sensitivity and whether grid 42 provides a

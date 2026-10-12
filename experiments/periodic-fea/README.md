@@ -106,3 +106,7 @@ or physics audit alone does not establish continuum accuracy or repeatable speed
 three timing samples of the native grid-40/MMG seed grid-32 pair. Every sample
 must reproduce the corresponding audited canonical mesh exactly. It repeats
 generation only and does not claim repeated solver measurements.
+That pair was selected against the historical grid-64 reference. The completed
+grid-80 comparison in [RESULTS.md](RESULTS.md#completed-grid-80-reference-check)
+supersedes its accuracy qualification: native grid 40 no longer passes the
+strict 1% worst-energy target against the finest measured tensor.
