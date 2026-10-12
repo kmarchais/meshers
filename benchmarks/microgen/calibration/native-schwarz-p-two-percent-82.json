@@ -1,0 +1,487 @@
+{
+  "evidence_schema": 1,
+  "original_results_sha256": "5c2fb8818cb479127b9dc987452ee5387baf6874efbf6acd5a0c2cb033e31a44",
+  "local_artifact_directory": "native-schwarz-p-two-percent-82",
+  "scope": "Measured runs only. Counts and times include failed configurations. Local output retains source snapshots, meshes and fields.",
+  "schema_version": 2,
+  "state": "complete",
+  "provenance": {
+    "started_utc": "2026-10-12T01:54:44.397495+00:00",
+    "machine": "Omen",
+    "platform": "Windows-11-10.0.26200-SP0",
+    "cpu": "Intel64 Family 6 Model 198 Stepping 2, GenuineIntel",
+    "logical_cpus": 24,
+    "ram_bytes": 68062457856,
+    "python": "3.12.13 (main, Aug  7 2026, 02:26:41) [MSC v.1944 64 bit (AMD64)]",
+    "packages": {
+      "meshers": {
+        "version": "0.1.0",
+        "native_sha256": {
+          "meshers/_meshers.pyd": "4ee6b2e90ae9e82a5dcbb40ba0bed7ac5bc1fc0cbe3567a678ec92797d28438a"
+        },
+        "loaded_native": {
+          "path": "C:\\Users\\kevin\\AppData\\Local\\uv\\cache\\archive-v0\\5mCyN6F85EkLo3NI\\Lib\\site-packages\\meshers\\_meshers.pyd",
+          "sha256": "4ee6b2e90ae9e82a5dcbb40ba0bed7ac5bc1fc0cbe3567a678ec92797d28438a"
+        }
+      },
+      "microgen": {
+        "version": "2.0.0b1",
+        "native_sha256": {}
+      },
+      "mmgpy": {
+        "version": "0.17.1",
+        "native_sha256": {
+          "../../Scripts/mmg.exe": "8b0b908a127a0938df4b7c0b1a43c020144cd48c402788d52fd0ca6beb6948b6",
+          "../../Scripts/mmg2d.exe": "c34b929ae283f94197d53d117eb44c090010e3aa117771e5fb26014fdb9b0091",
+          "../../Scripts/mmg2d_O3.exe": "c34b929ae283f94197d53d117eb44c090010e3aa117771e5fb26014fdb9b0091",
+          "../../Scripts/mmg3d.exe": "84b0f5667a09ac0987461a73117450c69fcc1c7f98c7c34f43aba528dea5cb2b",
+          "../../Scripts/mmg3d_O3.exe": "84b0f5667a09ac0987461a73117450c69fcc1c7f98c7c34f43aba528dea5cb2b",
+          "../../Scripts/mmgpy-ui.exe": "7dc633bd48c120bf8dc34cdebab28fd0695fdcfa241157f6027eadb55f74a508",
+          "../../Scripts/mmgpy.exe": "8b0b908a127a0938df4b7c0b1a43c020144cd48c402788d52fd0ca6beb6948b6",
+          "../../Scripts/mmgs.exe": "782a3c8a81913ab59d9bc8b5cffa975f841556749f5f6877b77c5bd339ecd8b3",
+          "../../Scripts/mmgs_O3.exe": "782a3c8a81913ab59d9bc8b5cffa975f841556749f5f6877b77c5bd339ecd8b3",
+          "bin/concrt140.dll": "54716f0738af891f283d213b5c8d11b25896bb8ee3097d301eae718560cf974e",
+          "bin/mmg.dll": "d958b0adbd9c0d7c398ebe4af4c25fa7c09f21c565d2d44334a64a45f951dad4",
+          "bin/mmg2d.dll": "599f89350c4b7d38dceba3e19bb858ad8c6691bbea3b11b8e9aa8ba7f3ef6008",
+          "bin/mmg2d.exe": "40d142631918c682fa74cd99d9b22b63dee2141c6d0dd8bd77770f9a607c42d5",
+          "bin/mmg3d.dll": "f73298240242109a90f12dcee48ec1c5f60e9fefc444b566f1ed94deefe77ee4",
+          "bin/mmg3d.exe": "7010a9f4d7e3fec9d442b5fa4229133bff365d176babbb6cf399ebd62fd1c2b8",
+          "bin/mmgs.dll": "ae86c25e7cd3f5ef5814ca3514330d3ca1d434f37e81a3f5b140996a33fe5417",
+          "bin/mmgs.exe": "efbd0f3d132dad9498ead4bf9934b68cea48c0520b4f8f43fa3198ba88eb9b79",
+          "bin/msvcp140.dll": "7c26614e1d733892c2deac7e245ce115504b1d80592dd0a01b08e3e5a55f89ca",
+          "bin/msvcp140_1.dll": "206c931bf90fdad8816de3b5e2ef80b2bcaa9406c89ecc05fe6fddffe251e982",
+          "bin/msvcp140_2.dll": "d50d7883f20d1dc6191768d3746f52dd9cac89c346ffaed5be1f110c2f34a838",
+          "bin/msvcp140_atomic_wait.dll": "3d0cbfaa1bf3eecf5a3f4491d2960ee803cb994f30292c6adc4a07c498f60e2b",
+          "bin/msvcp140_codecvt_ids.dll": "8a65c7596ef2e6938731f5a1058e7e40145b6d97967cc649231a076b9a608d78",
+          "bin/vcruntime140.dll": "d1f4225df2cd877dbf130d5668a021dce3f94118455ff5ec952061c30afc9ce7",
+          "bin/vcruntime140_1.dll": "a7146c08f89fe5b04541ab507cdb59ff7b44534d4ba3c668a426c6450a03434e",
+          "mmgpy.libs/concrt140.dll": "54716f0738af891f283d213b5c8d11b25896bb8ee3097d301eae718560cf974e",
+          "mmgpy.libs/msvcp140-a4c2229bdc2a2a630acdc095b4d86008.dll": "a4c2229bdc2a2a630acdc095b4d86008e5c3e3bc7773174354f3da4f5beb9cde",
+          "mmgpy.libs/msvcp140_1.dll": "456aebccb449fcba35f1109c259ba0aa10923e660f4de812a490d35f37f54fc9",
+          "mmgpy.libs/msvcp140_2.dll": "7a403abf753d0bdf09776cf4bcb13b5a6ebe3a47670de124a3c621aa4b952f82",
+          "mmgpy.libs/msvcp140_atomic_wait.dll": "d759dd381bdbd6142372de4cb57acc382e1b80c106b7414a408816564ee1eb6a",
+          "mmgpy.libs/msvcp140_codecvt_ids.dll": "f781e1e0133c397c3a2c73fd4dbcdb442378ba20fced56a2f7db5822436ddd2a",
+          "mmgpy.libs/vcruntime140.dll": "052ad6a20d375957e82aa6a3c441ea548d89be0981516ca7eb306e063d5027f4",
+          "mmgpy.libs/vcruntime140_1.dll": "6a99bc0128e0c7d6cbbf615fcc26909565e17d4ca3451b97f8987f9c6acbc6c8",
+          "mmgpy/_mmgpy.cp312-win_amd64.pyd": "aecbc3f3a115ed220a89c7357e1d762b0ef8a9d6118e30c13e86a43901e03582",
+          "mmgpy/bin/mmg2d.dll": "599f89350c4b7d38dceba3e19bb858ad8c6691bbea3b11b8e9aa8ba7f3ef6008",
+          "mmgpy/bin/mmg2d_O3.exe": "40d142631918c682fa74cd99d9b22b63dee2141c6d0dd8bd77770f9a607c42d5",
+          "mmgpy/bin/mmg3d.dll": "f73298240242109a90f12dcee48ec1c5f60e9fefc444b566f1ed94deefe77ee4",
+          "mmgpy/bin/mmg3d_O3.exe": "7010a9f4d7e3fec9d442b5fa4229133bff365d176babbb6cf399ebd62fd1c2b8",
+          "mmgpy/bin/mmgs.dll": "ae86c25e7cd3f5ef5814ca3514330d3ca1d434f37e81a3f5b140996a33fe5417",
+          "mmgpy/bin/mmgs_O3.exe": "efbd0f3d132dad9498ead4bf9934b68cea48c0520b4f8f43fa3198ba88eb9b79",
+          "mmgpy/mmg2d.dll": "599f89350c4b7d38dceba3e19bb858ad8c6691bbea3b11b8e9aa8ba7f3ef6008",
+          "mmgpy/mmg3d.dll": "f73298240242109a90f12dcee48ec1c5f60e9fefc444b566f1ed94deefe77ee4",
+          "mmgpy/mmgs.dll": "ae86c25e7cd3f5ef5814ca3514330d3ca1d434f37e81a3f5b140996a33fe5417"
+        }
+      },
+      "vtk": {
+        "version": "9.7.1",
+        "native_sha256": {}
+      },
+      "pyvista": {
+        "version": "0.49.0",
+        "native_sha256": {}
+      },
+      "numpy": {
+        "version": "2.5.3",
+        "native_sha256": {}
+      },
+      "scipy": {
+        "version": "1.18.1",
+        "native_sha256": {}
+      },
+      "psutil": {
+        "version": "7.2.2",
+        "native_sha256": {}
+      },
+      "pyamg": {
+        "version": "5.3.0",
+        "native_sha256": {}
+      }
+    },
+    "git_head": "3f2da947f7e0c71687c5ec41299891cbf43887b6",
+    "source_sha256": {
+      "backends.py": "ab6eb9cc655971bfe2ba8464fb980db26ba3eaa0a084fee5e68700a9c87d0e1e",
+      "cases.py": "93ce61a0c0d48c36e7ad48bfc78f0863114c3babd670f7b8ca7ea7dc576859c0",
+      "elasticity.py": "4f573054a55c8637b05f21be01812e10fe8c11792ec9ce90e3b20c2ce82ba303",
+      "flying_edges.py": "74b20e300901a7e6f40dc9a03e6cc940825ab99d8e64042b5686c8b348850897",
+      "geometry.py": "64424d47b733bc26ab43807833f042f5cca7377044085dafa64fe0991fc06d84",
+      "linear_solve.py": "27b96c1778823110e44a1345ead11dfef46e82da11d4e98b13122f482ea48ed3",
+      "preview.py": "eb0177df868327825acb6f47cd33531db9846ab00b2ceb899eac9f90d1172c21",
+      "qualification.py": "819d112ff39c18bbb911d90ecce0324772c67ded74916dddc148b985198f50e0",
+      "reference.py": "49b5eef2f03768ccd821ecb15544bd158d6d9d892c762595bc07327f71a67afa",
+      "report.html": "b27d167ff9afd8598e86463999a0df8bb98569e89124065b46a844f0fca651c7",
+      "report.py": "b349872b3008dd7182ced452610bdaed6435f577b29ac8f6e01d2b7eb54058eb",
+      "runner.py": "be25ea0744206d5dfec5dd468c997077b43985e361506a5473ec9acc596ee628",
+      "surface.py": "1f7665e85f3a3e8aac5177c78fdc73cdecd934ed6889711e39718586417d2f3d",
+      "surface_cleanup.py": "66670d4a784ec853c0b46ca09499ef64637289b20d5f9dbd59c4aa0efd613cad",
+      "surface_intersections.py": "ff9b51d5494935e6d5174a832b002a814c13b2d6f4d646e831c6d78b7a0470d7",
+      "__init__.py": "d3c607efcc0449f226497be88dd2b2340e765fe49e6175ebb35c257a10ea6364",
+      "__main__.py": "116710c321651f30440cc5a3ff07e48abaf5510fda753af23626d47f798643a2"
+    },
+    "config": {
+      "case_ids": [
+        "schwarz-p"
+      ],
+      "cells": [
+        82
+      ],
+      "repeats": 1,
+      "warmups": 0,
+      "threads": 1,
+      "geometry_tolerance": 0.002,
+      "volume_tolerance": 0.01,
+      "mmg_boundary": "caps",
+      "mmg_hausd": 0.002,
+      "meshers_solid_region": "band",
+      "mmg_bin_directory": null,
+      "minimum_quality": 0.1,
+      "max_tetrahedra": 2000000,
+      "pair_cap": 60000000,
+      "timeout_s": 1800,
+      "workflows": [
+        "meshers-pass1"
+      ],
+      "suite": "standard",
+      "matched_count_tolerance": 0.05,
+      "error_targets": [
+        0.01,
+        0.02,
+        0.05
+      ],
+      "fea_target": 0.02,
+      "purpose": "fea",
+      "linear_solver": "amg",
+      "memory_limit_mib": 16384
+    },
+    "dependency_sha256": {
+      "pyproject.toml": "d325873391d5a065f69858bc9543520dd4a5fa839c64225b214f9050ae47eb87",
+      "uv.lock": "9787473729f063bb7ab366ca440f9849abc13fc66234c923b776c6621245e8bf",
+      ".python-version": "8dfda54ba2f66ab3a8ebab460f4338bbeea1fb1e0f85ce06fe3530aa3c64679b"
+    }
+  },
+  "manifest_sha256": "b3892f2ee529293575584778cc3dd3948ac44641a52b53e50c565482dea82c23",
+  "elapsed_s": 587.2969999999987,
+  "cases": [
+    {
+      "id": "schwarz-p",
+      "name": "Schwarz P",
+      "function": "schwarz_p",
+      "offset": 0.6,
+      "description": "Uniform sheet with narrow junctions.",
+      "formula": "cos X + cos Y + cos Z",
+      "scale": 1.0,
+      "grading": 0.0,
+      "target_volume_fraction": 0.17131328582763672,
+      "target_volume_sample_count": 1048576,
+      "target_volume_replicates": [
+        0.17147445678710938,
+        0.17120742797851562,
+        0.171234130859375,
+        0.17133712768554688
+      ],
+      "target_volume_uncertainty": 0.00016117095947265625,
+      "target_volume_uncertainty_scope": "Empirical scramble spread and nested-sample change, not a statistical confidence bound",
+      "target_volume_half_sample_delta": 1.1444091796875e-05,
+      "target_preview_intervals": 32,
+      "target_boundary_artifact": "reference-schwarz-p.npz",
+      "target_boundary_samples": 8736,
+      "target_boundary_sha256": "0c5b78af4957bdd2abae9b33988d61237bb9f8653fb5e4aacc9bd46a3b9ceafc"
+    }
+  ],
+  "rows": [
+    {
+      "case": "schwarz-p",
+      "workflow": "meshers-pass1",
+      "cells": 82,
+      "repeat": 0,
+      "artifact": "schwarz-p/meshers-pass1/n82/repeat0",
+      "status": "ok",
+      "stage": "complete",
+      "meshers_native_sha256": "4ee6b2e90ae9e82a5dcbb40ba0bed7ac5bc1fc0cbe3567a678ec92797d28438a",
+      "setup_s": 2.1000014385208488e-06,
+      "meshers_region": "band",
+      "meshers_band": [
+        -1,
+        1
+      ],
+      "mesh_s": 11.152219400006288,
+      "generation_s": 11.15221730000485,
+      "vtk_extraction_s": null,
+      "field_samples_checked": 571787,
+      "vtk_version": [
+        9,
+        7,
+        1
+      ],
+      "meshers_evaluator": "compiled",
+      "meshers_callback_calls": 0,
+      "meshers_field_preparation_s": 0.001087800003006123,
+      "mesh_sha256": "0206c2f7ac3900843ff7a62c859db609753d8f9495e58685677c10b39e681894",
+      "orientation_flips": 0,
+      "unused_nodes": 0,
+      "nodes": 273488,
+      "tetrahedra": 1308864,
+      "volume": 0.17129944860555724,
+      "solid_fraction": 0.17129944860555724,
+      "q_min": 0.3568883007315877,
+      "q_p05": 0.6020743469549944,
+      "q_median": 0.9295160030897793,
+      "q_below_01": 0,
+      "minimum_cell_relative_determinant": 0.08781101257918368,
+      "cell_relative_determinant_tolerance": 1e-12,
+      "overlap_pairs_checked": 17643436,
+      "geometry_status": "checked-at-declared-tolerances",
+      "sampled_cap_overshoot": 0.00021093265486994288,
+      "sampled_geometry_distance": 0.00021093265486994288,
+      "sampled_outward_orientation": true,
+      "sampled_reverse_distance": 0.00013025991254794745,
+      "reverse_distance_samples": 8736,
+      "relative_volume_error": 8.077144754204581e-05,
+      "fea_rhs": 24,
+      "fea_cg_iterations": 26,
+      "fea_cg_relative_residual": 3.045493994999143e-12,
+      "worst_energy_error": 0.01951036346058119,
+      "per_load_errors": {
+        "ux=xx": 0.007815777825501864,
+        "ux=yy": 0.014125997897677774,
+        "ux=zz": 0.01412565821935825,
+        "ux=xy": 0.008777792248199098,
+        "ux=yz": 0.009082136946023332,
+        "ux=zx": 0.008777898331985601,
+        "uy=xx": 0.014325257507669211,
+        "uy=yy": 0.007770555349627096,
+        "uy=zz": 0.014171091088934539,
+        "uy=xy": 0.008790074383092756,
+        "uy=yz": 0.008778167030284797,
+        "uy=zx": 0.00906655678006255,
+        "uz=xx": 0.014325067014478167,
+        "uz=yy": 0.014170780465841679,
+        "uz=zz": 0.007770417772291083,
+        "uz=xy": 0.009066437406194401,
+        "uz=yz": 0.008778741817097837,
+        "uz=zx": 0.008790023161890188
+      },
+      "patch_max_error": 4.645685564350795e-12,
+      "free_residual": 9.899966882707495e-12,
+      "components": 1,
+      "dofs": 820464,
+      "free_dofs": 820458,
+      "assembly_s": 19.541601400000218,
+      "solve_s": 354.90475929999957,
+      "evaluation_s": 47.644131299995934,
+      "worst_combination": [
+        1.6748917415034016e-05,
+        0.38216423351376,
+        -0.3820576510036753,
+        2.179544469560858,
+        -0.00014434923955048402,
+        -2.162291274228014,
+        -4.213132102223405,
+        0.005584078978345891,
+        4.156727072670876,
+        -0.22049389588550528,
+        2.1559049903558045,
+        0.006176324540891063,
+        4.179618337203489,
+        -4.123898403799938,
+        -0.0056103322941393014,
+        -0.005992435674785112,
+        -2.1728040309777428,
+        0.22040485050365322
+      ],
+      "linear_solver": "amg",
+      "amg_iterations": [
+        25,
+        25,
+        26,
+        25,
+        26,
+        25,
+        25,
+        25,
+        26,
+        25,
+        25,
+        25,
+        25,
+        26,
+        25,
+        25,
+        25,
+        25,
+        25,
+        25,
+        25,
+        25,
+        25,
+        26
+      ],
+      "amg_final_relative_residuals": [
+        3.3715841786165322e-12,
+        9.899966947385282e-12,
+        3.9701961530069675e-12,
+        5.405236917489349e-12,
+        4.03502970988678e-12,
+        4.649178598767765e-12,
+        4.84969788260413e-12,
+        3.7356869172520105e-12,
+        3.3076540634662987e-12,
+        5.3048047301397595e-12,
+        3.4080596212287367e-12,
+        9.855586561395905e-12,
+        8.66017060420241e-12,
+        4.468594444275981e-12,
+        7.666595482885866e-12,
+        8.426338572041037e-12,
+        5.807254414441259e-12,
+        6.159828529815715e-12,
+        5.78898197224027e-12,
+        7.229537789190352e-12,
+        8.412436852111885e-12,
+        9.256132607178733e-12,
+        9.29031005875484e-12,
+        3.045493994999143e-12
+      ],
+      "amg_operator_complexity": 1.5894930516686867,
+      "amg_relative_tolerance": 1e-11,
+      "amg_max_iterations": 1000,
+      "fields_sha256": "06a254e89951e31814c4c9009587dc663f2f5d7cfc1e732d273420d132ead849",
+      "geometry_eligible": true,
+      "quality_eligible": true,
+      "fea_eligible": true,
+      "comparison_eligible": true,
+      "admission_reasons": [],
+      "relative_volume_error_with_uncertainty": 0.0010215680629009681,
+      "worker_exit_code": 0,
+      "peak_worker_tree_rss_mib": 7835.96875
+    }
+  ],
+  "qualification": {
+    "configurations": [
+      {
+        "case": "schwarz-p",
+        "workflow": "meshers-pass1",
+        "cells": 82,
+        "complete": true,
+        "geometry_eligible": true,
+        "quality_eligible": true,
+        "median_mesh_s": 11.152219400006288,
+        "max_tetrahedra": 1308864,
+        "max_triangles": 0,
+        "worst_energy_error": 0.01951036346058119
+      }
+    ],
+    "targets": [
+      {
+        "case": "schwarz-p",
+        "workflow": "meshers-pass1",
+        "energy_target": null,
+        "fastest": {
+          "case": "schwarz-p",
+          "workflow": "meshers-pass1",
+          "cells": 82,
+          "complete": true,
+          "geometry_eligible": true,
+          "quality_eligible": true,
+          "median_mesh_s": 11.152219400006288,
+          "max_tetrahedra": 1308864,
+          "max_triangles": 0,
+          "worst_energy_error": 0.01951036346058119
+        },
+        "smallest": {
+          "case": "schwarz-p",
+          "workflow": "meshers-pass1",
+          "cells": 82,
+          "complete": true,
+          "geometry_eligible": true,
+          "quality_eligible": true,
+          "median_mesh_s": 11.152219400006288,
+          "max_tetrahedra": 1308864,
+          "max_triangles": 0,
+          "worst_energy_error": 0.01951036346058119
+        },
+        "status": "reached"
+      },
+      {
+        "case": "schwarz-p",
+        "workflow": "meshers-pass1",
+        "energy_target": 0.01,
+        "fastest": null,
+        "smallest": null,
+        "status": "not reached"
+      },
+      {
+        "case": "schwarz-p",
+        "workflow": "meshers-pass1",
+        "energy_target": 0.02,
+        "fastest": {
+          "case": "schwarz-p",
+          "workflow": "meshers-pass1",
+          "cells": 82,
+          "complete": true,
+          "geometry_eligible": true,
+          "quality_eligible": true,
+          "median_mesh_s": 11.152219400006288,
+          "max_tetrahedra": 1308864,
+          "max_triangles": 0,
+          "worst_energy_error": 0.01951036346058119
+        },
+        "smallest": {
+          "case": "schwarz-p",
+          "workflow": "meshers-pass1",
+          "cells": 82,
+          "complete": true,
+          "geometry_eligible": true,
+          "quality_eligible": true,
+          "median_mesh_s": 11.152219400006288,
+          "max_tetrahedra": 1308864,
+          "max_triangles": 0,
+          "worst_energy_error": 0.01951036346058119
+        },
+        "status": "reached"
+      },
+      {
+        "case": "schwarz-p",
+        "workflow": "meshers-pass1",
+        "energy_target": 0.05,
+        "fastest": {
+          "case": "schwarz-p",
+          "workflow": "meshers-pass1",
+          "cells": 82,
+          "complete": true,
+          "geometry_eligible": true,
+          "quality_eligible": true,
+          "median_mesh_s": 11.152219400006288,
+          "max_tetrahedra": 1308864,
+          "max_triangles": 0,
+          "worst_energy_error": 0.01951036346058119
+        },
+        "smallest": {
+          "case": "schwarz-p",
+          "workflow": "meshers-pass1",
+          "cells": 82,
+          "complete": true,
+          "geometry_eligible": true,
+          "quality_eligible": true,
+          "median_mesh_s": 11.152219400006288,
+          "max_tetrahedra": 1308864,
+          "max_triangles": 0,
+          "worst_energy_error": 0.01951036346058119
+        },
+        "status": "reached"
+      }
+    ],
+    "convergence": [
+      {
+        "case": "schwarz-p",
+        "workflow": "meshers-pass1",
+        "levels": 1,
+        "pairs": [],
+        "status": "insufficient levels"
+      }
+    ],
+    "scope": "Observed configurations only. All repeats must pass; no interpolation or extrapolation. Geometry targets do not require FEA or element shape."
+  }
+}

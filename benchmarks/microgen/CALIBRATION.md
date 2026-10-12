@@ -338,6 +338,15 @@ this fine-grid output. Its 13.729 s generation sample differs from the earlier
 11.211 s sample. These are individual calibration times; they do not establish
 the correction's performance cost. Selected repetitions are still needed.
 
+The follow-up Schwarz P trial at grid 82 passes the unchanged geometry,
+quality and 2% energy gates. It has 1,308,864 tetrahedra, minimum quality
+0.356888 and 1.95104% worst energy error. Its 11.152 s generation sample remains
+a calibration time with one repetition and no warmup. The evidence is
+`native-schwarz-p-two-percent-82.json`. This measured point resolves the
+grid-80 miss without rounding the score or weakening a threshold. All five
+tested sheet cases now have an observed qualifying 2% configuration; none
+has reached 1%.
+
 ## Next measurements
 
 The first five-sheet grid-80 batch was interrupted by a Windows permission
@@ -349,8 +358,8 @@ previous complete sample during temporary locks. A real exclusive-sharing
 regression reproduces the previous failure and verifies that a healthy child
 finishes after the fix. The numerical and failure-path suite passes 71 tests.
 
-Measure Schwarz P at a finer grid, then repeat selected qualifying
-configurations with warmups before making timing claims. Keep surface timing
+Repeat selected qualifying configurations with warmups before making timing
+claims. Keep surface timing
 separate and include all failures in the report. A corrected tagged MMG
 control still needs a viable coarse proof before another expensive fine run.
 The lattice and Spinodoid failures in issue #4 remain unresolved. The measured
