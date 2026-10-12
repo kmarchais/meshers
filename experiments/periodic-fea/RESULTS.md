@@ -332,9 +332,9 @@ The face-residual approach follows the integration-by-parts reasoning used in
 [the residual estimator tutorial](https://jschoeberl.github.io/iFEM/aposteriori/residualEE.html);
 that scalar tutorial does not certify this periodic-elasticity indicator.
 
-## Next test: uniform versus residual-guided sizing
+## Uniform versus residual-guided sizing
 
-The prepared paired test starts from the same native grid-48 seed and keeps
+The paired test starts from the same native grid-48 seed and keeps
 `hausd=0.0005`, gradation 1.3 and all admission/physics gates unchanged. One
 worker requests uniform edge length `1/36`. The other supplies a scalar nodal
 map with the same base length. Its heuristic coefficient comes from the saved
@@ -356,6 +356,34 @@ It tests whether targeted volume sizing merits a native implementation or a
 cheaper geometry-based predictor. MMG combines supplied isotropic sizes with its
 geometry controls as described in its
 [metric documentation](https://mmgtools.org/documentation/mmg3d/documentation_mmg3d_metric.html).
+
+Task 1284 completed both workers and reconstructed their tensors and periodic
+equilibrium from all six saved fields. All geometry, quality and periodicity
+gates passed; the six regression checks passed too. The results are retained in
+`runs/mmg-adaptive-sizing-v1`. Comparison against the actual grid-80 tensor gives:
+
+| Sizing from native grid-48 seed | Tetrahedra | Generation, s | Audited 12-solve FEA, s | Minimum quality | Worst relative energy difference |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| Uniform, h = 1/36 | 422,965 | 25.890 | 305.569 | 0.1654 | 0.89483% |
+| Residual-guided, base h = 1/36 | 286,066 | 27.920 | 199.329 | 0.1646 | 1.37853% |
+| Direct Meshers grid 42, earlier run | 369,590 | 2.985 | 234.483 | 0.2548 | 0.89433% |
+
+The guided map uses 32.4% fewer cells and the audited FEA takes 34.8% less time
+than the uniform control, but it misses the strict 1% observed-reference target.
+The different element counts prevent a conclusion about accuracy at equal
+complexity. Uniform sizing reaches essentially the same tensor disagreement as
+direct grid 42 with 14.4% more tetrahedra. These generation and FEA times are
+single samples; only the earlier direct-grid-42 versus tight-MMG generation
+comparison has warmups and repeated measurements.
+
+The next test keeps the seed, indicator, geometry tolerance, gradation and
+admission gates fixed, and decreases the guided base length to 1/42. Unclamped
+three-dimensional size scaling predicts about 454,000 cells, near the uniform
+control's complexity. Clamping, fixed caps and MMG geometry controls can change
+that count, so the next measured result decides whether further tuning is
+useful. The map still requires the earlier 401.5 s offline FEA, and comparison
+with grid 80 remains a same-method convergence observation, not a continuum
+accuracy certificate.
 
 ## Independent review and remaining limits
 
