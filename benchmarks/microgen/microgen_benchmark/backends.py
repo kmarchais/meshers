@@ -255,7 +255,7 @@ def generate(case, workflow, cells, config, progress=None):
                     contexts.enter_context(patch.object(Mmg, "mmg3d", distance_control))
                 grid = remesh_keeping_boundaries_for_fem(
                     grid,
-                    periodic=False,
+                    periodic=config.get("periodic", False),
                     hsiz=case.scale / cells,
                     hausd=mmg_hausd * case.scale,
                     hgrad=1.3,
@@ -281,6 +281,7 @@ def generate(case, workflow, cells, config, progress=None):
             geometry_tolerance=config["geometry_tolerance"] * case.scale,
             max_tetrahedra=config["max_tetrahedra"],
             threads=config["threads"],
+            periodic=(config.get("periodic", False),) * 3,
             **PROFILES[workflow],
         )
         points, tets = np.asarray(native.points).copy(), np.asarray(native.tetrahedra).copy()
