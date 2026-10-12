@@ -518,6 +518,24 @@ only boundary entity identifiers differ. The input surface and patch labels
 are archived before meshing, including on failure. Rerun the cube and Gyroid
 controls to test this explanation, with the same sizing and admission gates.
 
+Task 1401 passed the cube again and reconstructed the main Gyroid volume, but
+the unchanged-boundary check rejected its output. Short single-thread diagnosis
+runs were performed while the heavy queue was idle. The archived output had
+153,473 tetrahedra and omitted 112 prescribed surface vertices; independent
+periodic matching also failed because opposite cap node counts differed.
+Adding explicit patch-interface curves did not change this outcome.
+
+The retained native grid-42 mesh has three material components in the cut cube:
+369,314 tetrahedra in the main component, plus 135 and 141 in two small corner
+components. Their corner surface vertices account for the omitted 112 nodes.
+The importer had declared only one volume. This is missing material in the
+experimental importer, not evidence that HXT optimization removes periodic
+boundary vertices. The corrected adapter declares each validated native
+component as a separate volume, with its own wall and cap surface entities,
+and extracts tetrahedra from every volume. It retains the exact boundary and
+all common admission criteria. Numerical verification of this correction is
+pending the next queued cube/Gyroid batch.
+
 ## Independent review and remaining limits
 
 The resumed Claude Sonnet 5.5 review confirmed the recorded comparisons and

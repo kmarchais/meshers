@@ -7,6 +7,8 @@ import numpy as np
 
 def generate(case, cells, config, directory, checkpoint):
     import gmsh
+    from scipy import sparse
+    from scipy.sparse.csgraph import connected_components
     from scipy.spatial import cKDTree
     from microgen_benchmark.backends import generate as native_generate
     from microgen_benchmark.geometry import boundary, canonical_surface
@@ -15,6 +17,16 @@ def generate(case, cells, config, directory, checkpoint):
     started = time.perf_counter()
     surface = boundary(points, tets)
     surface_points, faces, _, _ = canonical_surface(points, surface)
+    # A periodic material can be disconnected in the cut cube. Each connected
+    # solid must be declared as a volume, including small corner components.
+    left, right = tets[:, [0, 0, 0]].ravel(), tets[:, [1, 2, 3]].ravel()
+    _, components = connected_components(
+        sparse.coo_matrix((np.ones(len(left)), (left, right)), shape=(len(points), len(points))),
+        directed=False,
+    )
+    surface_components = components[np.unique(surface)]
+    face_components = surface_components[faces[:, 0]]
+    assert np.all(surface_components[faces] == face_components[:, None])
     # HXT distinguishes the two Gyroid void networks through boundary-surface
     # identifiers. One tag for every triangle gives both voids the same BRep.
     coordinates = surface_points[faces]
@@ -48,7 +60,7 @@ def generate(case, cells, config, directory, checkpoint):
         "Mesh.ElementOrder": 1,
     }
     np.savez_compressed(directory / "native-surface.npz", points=surface_points, triangles=faces,
-                        patches=patches)
+                        patches=patches, components=face_components)
     checkpoint(stage="HXT volume construction", surface_triangles=len(faces))
     gmsh.initialize([], readConfigFiles=False)
     log = []
@@ -57,26 +69,34 @@ def generate(case, cells, config, directory, checkpoint):
         gmsh.model.add("periodic-native-surface")
         for name, value in options.items():
             gmsh.option.setNumber(name, value)
-        surface_tags, registered = [], np.zeros(len(surface_points), dtype=bool)
-        for patch in np.unique(patches):
-            surface_tag = gmsh.model.addDiscreteEntity(2)
-            surface_tags.append(surface_tag)
-            triangles = faces[patches == patch]
-            used = np.unique(triangles)
-            new = used[~registered[used]]
-            gmsh.model.mesh.addNodes(2, surface_tag, new + 1, surface_points[new].ravel())
-            registered[new] = True
-            gmsh.model.mesh.addElementsByType(surface_tag, 2, [], (triangles + 1).ravel())
+        shells, registered = [], np.zeros(len(surface_points), dtype=bool)
+        for component in np.unique(face_components):
+            surface_tags = []
+            for patch in np.unique(patches[face_components == component]):
+                surface_tag = gmsh.model.addDiscreteEntity(2)
+                surface_tags.append(surface_tag)
+                triangles = faces[(face_components == component) & (patches == patch)]
+                used = np.unique(triangles)
+                new = used[~registered[used]]
+                gmsh.model.mesh.addNodes(2, surface_tag, new + 1, surface_points[new].ravel())
+                registered[new] = True
+                gmsh.model.mesh.addElementsByType(surface_tag, 2, [], (triangles + 1).ravel())
+            shells.append(surface_tags)
         assert registered.all()
-        shell = gmsh.model.geo.addSurfaceLoop(surface_tags)
-        volume = gmsh.model.geo.addVolume([shell])
+        # Material-wall/cap interfaces must be explicit curves, so boundary
+        # recovery treats their vertices as part of the prescribed topology.
+        gmsh.model.mesh.createTopology(makeSimplyConnected=False, exportDiscrete=True)
+        gmsh.model.mesh.reclassifyNodes()
+        for surface_tags in shells:
+            shell = gmsh.model.geo.addSurfaceLoop(surface_tags)
+            gmsh.model.geo.addVolume([shell])
         gmsh.model.geo.synchronize()
         gmsh.model.mesh.generate(3)
         tags, xyz, _ = gmsh.model.mesh.getNodes()
         tags, xyz = np.asarray(tags), np.asarray(xyz).reshape(-1, 3)
         order = np.argsort(tags)
         tags, xyz = tags[order], xyz[order]
-        types, _, connectivity = gmsh.model.mesh.getElements(3, volume)
+        types, _, connectivity = gmsh.model.mesh.getElements(3)
         if list(types) != [4]:
             raise ValueError(f"Expected only linear tetrahedra, received Gmsh types {types}")
         element_tags = np.asarray(connectivity[0])
@@ -90,12 +110,14 @@ def generate(case, cells, config, directory, checkpoint):
         # reorder nodes, but may not change the input surface in this control.
         from microgen_benchmark.geometry import canonical_mesh
         xyz, result_tets, _, _ = canonical_mesh(xyz, result_tets)
+        np.savez_compressed(directory / "hxt-volume.npz", points=xyz, tetrahedra=result_tets)
         output_surface = boundary(xyz, result_tets)
         output_points, output_faces, _, _ = canonical_surface(xyz, output_surface)
         distance, match = cKDTree(surface_points).query(output_points)
         if (len(output_points) != len(surface_points) or len(np.unique(match)) != len(match)
                 or distance.max() > 1e-12 * case.scale):
-            raise ValueError("HXT changed boundary vertices")
+            raise ValueError(f"HXT changed boundary vertices: {len(surface_points)} input, "
+                             f"{len(output_points)} output, maximum nearest-input distance {distance.max():.6g}")
         expected = np.sort(faces, axis=1)
         actual = np.sort(match[output_faces], axis=1)
         expected = expected[np.lexsort(expected.T[::-1])]
@@ -110,6 +132,7 @@ def generate(case, cells, config, directory, checkpoint):
             "native_seed_mesh_s": seed["mesh_s"],
             "native_seed_tetrahedra": len(tets),
             "surface_triangles": len(faces),
+            "material_components": len(shells),
             "surface_patch_triangle_counts": {str(p): int((patches == p).sum()) for p in np.unique(patches)},
             "hxt_construction_and_boundary_checks_s": construction_s,
             "hxt_options": options,
