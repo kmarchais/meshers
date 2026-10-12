@@ -172,15 +172,47 @@ a 10.67 times ratio for these configurations. The MMG total includes its seed.
 FEA timing was not repeated. The retained `generation-repeats.json` describes
 that scope and records the matched mesh hashes.
 
-## Further reference check
+## Completed grid-80 reference check
 
-Task 1214 tests direct grid 80 because the observed 0.418% grid-48/grid-64
-disagreement matters when comparing candidates near 1%. Its prepared native
-tetrahedron budget is four million and worker timeout 90 minutes; the 16 GiB
-memory cap, validation budget and every admission/physical gate stay unchanged.
-Grid 64 used about 4 GiB peak worker memory. The larger element budget is a
-declared reference allowance, not a weakened geometry or quality threshold.
-No grid-80 result or continuum-error claim is available yet.
+Task 1214 completed successfully in 2,813 s. Six regression checks pass. The
+reference has 2,372,255 tetrahedra, minimum quality 0.1608 and no cells below
+0.1. Its generation sample is 17.239 s and audited FEA takes 2,563.862 s.
+Peak worker memory is 6,637 MiB. The declared four-million-element budget and
+90-minute timeout allowed this reference; every admission tolerance stayed
+unchanged.
+
+Forward/reverse distances are 0.000159/0.000093 and volume error plus empirical
+uncertainty is 0.085%. All periodic faces and physics audits pass. Independent
+reconstruction of the six saved displacement fields agrees below 3e-16; the
+energy consistency error is below 8e-12, periodic force-balance error below
+1.7e-10 and displacement jump error zero.
+
+| Candidate | Worst energy difference to grid 64 | To grid 80 | Below 1% of grid-80 tensor? |
+| --- | ---: | ---: | --- |
+| Direct Meshers, grid 32 | 1.581% | 1.773% | No |
+| Direct Meshers, grid 40 | 0.817% | 1.00772% | No |
+| Direct Meshers, grid 48 | 0.418% | 0.608% | Yes |
+| Direct Meshers, grid 64 | Reference | 0.189% | Yes |
+| Native grid-32 seed + MMG, hausd 0.0002 | 0.777% | 0.966% | Yes |
+| Native grid-32 seed + MMG, hausd 0.0005 | 1.339% | 1.531% | No |
+
+Grid 64 differs from grid 80 by 0.189%, compared with 0.418% for grids 48 and
+64. This supports further observed convergence within the native method, but
+does not remove the possibility of shared discretization errors. The retained
+`runs/reference-80-v1/cross-run-comparison.json` reproduces all comparisons and
+records the reference and candidate hashes.
+
+The grid-40 configuration misses the strict 1% reference target. It must not
+be rounded into a pass. The warmed 10.67 times generation ratio remains valid
+for the two tested meshes, but no longer establishes a speedup for two meshes
+both below 1% of the finest measured tensor. Grid 48 passes that target, with
+more tetrahedra than the tight MMG control and a lower single generation sample.
+Its generation timing has not been repeated.
+
+Task 1220 is queued to test native grids 38 and 42 with all gates unchanged.
+It checks neighbouring-grid shape sensitivity and whether grid 42 provides a
+less costly native mesh below 1% of the grid-80 tensor. These cases will use the
+retained finest reference after their saved fields have been verified.
 
 ## Independent review and remaining limits
 
