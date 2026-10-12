@@ -182,6 +182,35 @@ Grid 64 used about 4 GiB peak worker memory. The larger element budget is a
 declared reference allowance, not a weakened geometry or quality threshold.
 No grid-80 result or continuum-error claim is available yet.
 
+## Independent review and remaining limits
+
+The resumed Claude Sonnet 5.5 review confirmed the recorded comparisons and
+artifact-verification results. It inspected retained artifacts without rerunning
+numerics; no transcript was available in this worktree. The earlier log entry
+about an unavailable review records the initial provider failure. The resumed
+review supersedes that status.
+
+The stiffness reference uses Meshers' own discretization. Native candidates
+may share discretization errors with that reference, so closeness to its tensor
+does not establish better continuum FEA accuracy than MMG. Grid 80 adds a
+convergence check within the same method. An independently converged reference
+is still needed to test possible shared errors. Reconstruction, equilibrium
+and energy audits establish numerical consistency, not continuum accuracy.
+
+The warmed 10.67 times generation ratio compares direct native grid 40 with
+standard MMG adapting a native grid-32 seed at `hausd=0.0002`. It is not a
+qualified speed ratio against the current Microgen VTK-to-MMG pipeline, whose
+tested meshes fail common admission gates. This result covers one Gyroid band,
+one thread and one machine. FEA timings use the common audited iterative solver
+and remain single samples; they do not predict timings with another solver.
+
+Minimum native quality is not monotonic with resolution: 0.2737 at grid 32,
+0.1144 at grid 40 and 0.1520 at grid 48. Grid 40 has only 0.0144 margin above
+the 0.1 gate. Neighbouring grids and other geometries must pass before treating
+that configuration as a robust default. The MMG control has the higher minimum
+quality in the roughly 0.8% pair. These observations support a promising direct
+generation result, not a general claim that Meshers has better shape quality.
+
 ## Algorithm hypotheses to test
 
 The current native generator clips a regular lattice, moves vertices, and
