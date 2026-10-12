@@ -35,7 +35,8 @@ def write_json(path, value):
             time.sleep(0.05)
 
 
-def prepare(output, native_package, task_specs=None, mmg_hausd=0.002, worker_timeout=1200):
+def prepare(output, native_package, task_specs=None, mmg_hausd=0.002, worker_timeout=1200,
+            max_tetrahedra=2_000_000):
     """Freeze the executable experiment before it enters the shared queue."""
     output.mkdir(parents=True, exist_ok=False)
     source = output / "source"
@@ -106,7 +107,7 @@ def prepare(output, native_package, task_specs=None, mmg_hausd=0.002, worker_tim
             "volume_tolerance": 0.01,
             "minimum_quality": 0.1,
             "threads": 1,
-            "max_tetrahedra": 2_000_000,
+            "max_tetrahedra": max_tetrahedra,
             "max_validation_pairs": 60_000_000,
             "memory_limit_mib": 16384,
             "mmg_boundary": "caps",
@@ -676,18 +677,20 @@ if __name__ == "__main__":
     parser.add_argument("--tasks", nargs="+", help="Periodic Gyroid workflow:cells pairs")
     parser.add_argument("--mmg-hausd", type=float, default=0.002)
     parser.add_argument("--worker-timeout", type=float, default=1200)
+    parser.add_argument("--max-tetrahedra", type=int, default=2_000_000)
     args = parser.parse_args()
     if args.prepare:
         if args.native_package is None:
             parser.error("--prepare requires --native-package")
-        if args.mmg_hausd <= 0 or args.worker_timeout <= 0:
-            parser.error("--mmg-hausd and --worker-timeout must be positive")
+        if args.mmg_hausd <= 0 or args.worker_timeout <= 0 or args.max_tetrahedra <= 0:
+            parser.error("--mmg-hausd, --worker-timeout and --max-tetrahedra must be positive")
         prepare(
             args.prepare.resolve(),
             args.native_package.resolve(),
             args.tasks,
             args.mmg_hausd,
             args.worker_timeout,
+            args.max_tetrahedra,
         )
     elif args.run:
         run(args.run.resolve())

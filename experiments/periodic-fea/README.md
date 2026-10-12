@@ -60,6 +60,8 @@ The job first runs the pairing and tensor-score regression checks. It then runs
 one bounded worker at a time and reports a fraction, phase, ETA and live values.
 Each worker has a default 20-minute timeout and 16 GiB RSS limit. A prepared
 fine-reference run can declare a longer timeout through `--worker-timeout`.
+`--max-tetrahedra` declares a larger native element budget for a finer reference;
+its default remains two million and it does not change any admission tolerance.
 Each generated mesh
 receives exhaustive overlap validation up to the declared 60-million-pair limit.
 Reaching a validation or resource limit is a recorded failure.
@@ -89,3 +91,18 @@ pipeline's `nofem` and level-set passes. Its total cost includes native seed
 generation. This algorithm control is separate from the current Microgen
 adoption baseline. A failed solid-cell control stops a batch before its
 expensive references run.
+
+Compare completed runs against the retained grid-64 tensor with:
+
+```powershell
+benchmarks/microgen/.venv/Scripts/python.exe experiments/periodic-fea/compare_reference.py experiments/periodic-fea/runs/reference-and-seed-v1/02-periodic-gyroid-meshers-pass1-64/result.json experiments/periodic-fea/runs/refinement-v1 experiments/periodic-fea/runs/reference-and-seed-v1
+```
+
+The comparison records the input artifact hashes, all six relative energy
+eigenvalues and admission status. It rejects incomplete runs. A passed geometry
+or physics audit alone does not establish continuum accuracy or repeatable speed.
+
+`repeat_generation.py` reuses the frozen generation code for one warmup and
+three timing samples of the native grid-40/MMG seed grid-32 pair. Every sample
+must reproduce the corresponding audited canonical mesh exactly. It repeats
+generation only and does not claim repeated solver measurements.

@@ -93,16 +93,115 @@ and minimum quality 0.0312. Its generation sample costs 11.811 s, versus
 7.852 s for its matched baseline. This is a geometry improvement to investigate,
 not an admitted FEA or speed result.
 
-## Next experiment
+## Fine reference and standard MMG adaptation
 
-The next batch starts with an analytic solid-cell proof of single standard MMG
-adaptation, then applies it to a valid native grid-32 Gyroid seed. This isolates
-MMG's adaptation from the VTK seed and the public pipeline's two-pass treatment.
-The native seed's required periodic caps stay constrained and every common
-admission/physics check remains active. Total generation includes the seed cost.
+Task 1211 completed successfully despite the cancelled T3 background wait.
+Its analytic solid-cell control, standard MMG adaptation of a native grid-32
+seed, and direct grid-64 reference pass all common gates. Six regression checks
+pass. Independent reconstruction of all three sets of saved displacement fields
+agrees with the recorded tensors below 7e-16. Hill–Mandel differences remain
+below 6e-12 and periodic force-balance errors below 1.35e-10.
 
-A direct grid-64 reference follows with the same native profile, constitutive
-law and solver. Its prepared worker timeout is 40 minutes. The result will
-measure reference stability and compare the standard adaptation control at
-the actual periodic stiffness target. No 2% or 1% periodic FEA qualification
-is claimed before that comparison.
+The standard adaptation uses `hausd=0.0002`, native MMG CLI and Microgen's
+required periodic caps. It has no `nofem` or level-set pass. Its total generation
+time includes creating the native seed. This control shows that MMG can produce
+an admitted periodic mesh from a better seed; the earlier failed Microgen
+outputs do not establish an intrinsic failure of MMG.
+
+| Workflow | Grid | Tetrahedra | Generation sample | Audited FEA | Min q | Worst energy difference to grid 64 |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: |
+| Meshers, one pass | 24 | 72,757 | 0.686 s | 28.996 s | 0.1503 | 3.166% |
+| Meshers, four passes | 24 | 72,757 | 2.130 s | 28.296 s | 0.1622 | 3.176% |
+| Meshers, one pass | 32 | 171,679 | 1.475 s | 75.522 s | 0.2737 | 1.581% |
+| Meshers, one pass | 48 | 543,496 | 4.431 s | 401.505 s | 0.1520 | 0.418% |
+| Meshers seed + standard MMG | 32 | 481,253 | 35.095 s | 424.589 s | 0.2039 | 0.777% |
+| Meshers, one pass reference | 64 | 1,251,854 | 9.425 s | 1,033.062 s | 0.2927 | Reference |
+
+Grid 48 and grid 64 disagree by 0.418% in the worst strain-energy combination.
+This is observed reference stability, not a continuum error bound. Grid 32 is
+below a 2% difference to this reference; grid 48 and the MMG seed control are
+below 1%. All timings remain single samples without warmup. Audited FEA includes
+six strain-controlled solves and six stress-controlled cross-checks.
+
+The MMG control has forward/reverse distances 0.000769/0.000491 and volume error
+plus empirical uncertainty 0.093%. Its native seed costs 1.466 s and standard
+adaptation 33.629 s after diagnostic capture overhead. The grid-64 reference
+has distances 0.000297/0.000224 and volume error plus uncertainty 0.094%.
+
+More smoothing at grid 24 improves minimum shape quality modestly but does not
+improve the measured tensor. Reducing the elements needed for accurate periodic
+stiffness is a more promising target than adding smoothing passes alone.
+Grid 48 already has lower stiffness disagreement and lower measured total cost
+than this tightly constrained MMG control. MMG sizing still needs tuning before
+making a general algorithm comparison.
+
+Reproduce the cross-run comparison with `compare_reference.py`. The retained
+`runs/reference-and-seed-v1/cross-run-comparison.json` records artifact hashes,
+full relative energy eigenvalues, admission status and timing scope.
+
+## Cost near the 1% reference target
+
+Task 1212 completed both controls and all independent saved-field checks.
+All common geometry, shape, periodic and physical gates pass. Reconstruction
+differences are below 8e-16, energy consistency errors below 5e-12 and periodic
+force-balance errors below 9e-11. Displacement jump errors are zero.
+
+| Workflow | Tetrahedra | Generation sample | Audited FEA | Min q | Worst energy difference to grid 64 |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| Native grid-32 seed + MMG, hausd 0.0005 | 198,635 | 11.880 s | 107.910 s | 0.1499 | 1.339% |
+| Direct Meshers, one pass, grid 40 | 326,818 | 2.919 s | 216.870 s | 0.1144 | 0.817% |
+| Native grid-32 seed + MMG, hausd 0.0002 | 481,253 | 35.095 s | 424.589 s | 0.2039 | 0.777% |
+
+At roughly 0.8% disagreement to the same reference, direct Meshers uses 32.1%
+fewer tetrahedra than the tight MMG seed control. Its measured generation is
+12.0 times faster and audited FEA 2.0 times faster. These are single-sample
+ratios for this Gyroid and these configurations. MMG has the higher minimum
+quality in this pair. Meshers' worst cell still passes the unchanged 0.1 gate.
+
+Loosening the MMG setting reduces generation and FEA cost sharply, but misses
+the 1% reference target. This confirms that tuning affects the comparison.
+The grid-40 native mesh has distances 0.000550/0.000468 and volume error plus
+empirical uncertainty 0.137%. The full comparison is retained in
+`runs/accuracy-cost-v1/cross-run-comparison.json`.
+
+Task 1213 completed one warmup and three generation measurements of the roughly
+0.8% pair. Every canonical mesh exactly matches its saved, physically audited
+mesh. Native measured samples are 3.183, 3.239 and 3.242 s; MMG seed samples are
+34.554, 34.755 and 34.495 s. Median generation is 3.239 s versus 34.554 s,
+a 10.67 times ratio for these configurations. The MMG total includes its seed.
+FEA timing was not repeated. The retained `generation-repeats.json` describes
+that scope and records the matched mesh hashes.
+
+## Further reference check
+
+Task 1214 tests direct grid 80 because the observed 0.418% grid-48/grid-64
+disagreement matters when comparing candidates near 1%. Its prepared native
+tetrahedron budget is four million and worker timeout 90 minutes; the 16 GiB
+memory cap, validation budget and every admission/physical gate stay unchanged.
+Grid 64 used about 4 GiB peak worker memory. The larger element budget is a
+declared reference allowance, not a weakened geometry or quality threshold.
+No grid-80 result or continuum-error claim is available yet.
+
+## Algorithm hypotheses to test
+
+The current native generator clips a regular lattice, moves vertices, and
+refines surface edges according to geometry error. `implicit.rs` calls
+`adaptive::refine_for`; that routine scores implicit boundary faces and splits
+entire periodic edge orbits. It does not allocate interior resolution using the
+six elasticity fields. The current experiment supports testing accuracy per
+element as a separate objective from minimum element quality.
+
+MMG's documented adaptation combines a geometry/user size map with edge
+splitting, collapse and swaps in the surface and volume. A useful next control
+would prescribe a size map from the saved elasticity solutions and measure
+whether it reaches the same tensor target with fewer unknowns. That result
+would guide a native periodic volume-adaptation implementation. It is a
+hypothesis, not a measured speed or accuracy advantage.
+[MMG algorithm overview](https://mmgtools.org/tutorials/tutorials_algorithm_overview.html)
+
+Periodic restricted Delaunay refinement is another established comparison.
+CGAL generates implicit domains on a flat torus, tunes surface/volume criteria,
+and offers vertex optimization and sliver removal. A benchmark would need to
+export a conforming cut-cell representation and pass the same independent
+periodic checks. No CGAL runtime or FEA result is claimed here.
+[CGAL periodic mesh manual](https://doc.cgal.org/latest/Periodic_3_mesh_3/index.html)
