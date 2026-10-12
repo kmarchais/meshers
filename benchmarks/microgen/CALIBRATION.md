@@ -34,16 +34,19 @@ distance `0.003591 L`, and 745 tetrahedra fall below quality 0.1, with minimum
 0.004806. Volume error plus empirical uncertainty is 0.381%.
 `calibration/gyroid-microgen-mmg-54.json` retains the full metrics and native CLI
 hash. Both resolutions used `hausd=0.002 L`, `hsiz=L/cells`, `hgrad=1.3` and
-Microgen's required-boundary policy. A smaller MMG approximation tolerance is a
-useful next control, since its tolerance concerns the reconstructed boundary
-rather than the analytic field. These failures provide no qualified speed ratio.
+Microgen's required-boundary policy. The tighter-distance trials and the
+first-pass investigation appear below. MMG's distance option concerns the
+reconstructed boundary rather than the analytic field, so the independent
+geometry checks still decide admission. These failures provide no qualified
+speed ratio.
 
 ## Admission policy
 
 The standard policy requires sampled distances in both directions below
 `0.002 L`, relative volume error plus empirical reference uncertainty below 1%,
 and minimum MMG tetrahedron quality 0.1 for FEA. Every measured repeat must pass.
-FEA targets are 1%, 2% and 5%. Surface and geometry runs retain the geometry
+FEA targets are 1%, 2% and 5%. The standard suite uses 2% as its primary target;
+smoke uses 5%. Surface and geometry runs retain the geometry
 policy and do not impose the FEA quality gate.
 
 The Sobol volume uncertainty is an empirical consistency estimate, not a

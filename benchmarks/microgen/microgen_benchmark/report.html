@@ -586,8 +586,9 @@
           ? "—"
           : Number(x).toLocaleString("en-US", { maximumFractionDigits: 3 });
       const pct = (x) => (x == null ? "—" : (100 * x).toFixed(2) + "%");
+      const energyPercent = (x) => x == null ? "—" : (100 * x).toPrecision(5) + "%";
       const distance = (x) => x == null ? "—" : Number(x).toPrecision(3);
-      const errorFormat = geometryMode ? distance : pct;
+      const errorFormat = geometryMode ? distance : energyPercent;
       if (geometryMode) {
         document.querySelector(".fea-method").hidden = true;
         document.querySelector(".fea-method").parentElement.style.gridTemplateColumns = "1fr";
@@ -930,7 +931,7 @@
         return gs
           .map(
             (g) =>
-              `<tr data-result="${g.w}-${g.n}"><td>${esc(names[g.w])} / ${g.n}</td>${metricCell(g, "time", gs)}${metricCell(g, "count", gs)}${metricCell(g, "nodes", gs)}${metricCell(g, "q", gs)}${geometryMode ? "" : metricCell(g, "error", gs, pct)}${metricCell(g, "forward", gs, distance)}${metricCell(g, "reverse", gs, distance)}${metricCell(g, "volume", gs, pct)}<td class="status"><span class="badge ${g.eligible ? "ok" : g.rows.some((r) => r.status === "failed" || r.status === "timeout" || r.status === "memory-limit") ? "fail" : ""}">${status(g)}</span>${reasons(
+              `<tr data-result="${g.w}-${g.n}"><td>${esc(names[g.w])} / ${g.n}</td>${metricCell(g, "time", gs)}${metricCell(g, "count", gs)}${metricCell(g, "nodes", gs)}${metricCell(g, "q", gs)}${geometryMode ? "" : metricCell(g, "error", gs, energyPercent)}${metricCell(g, "forward", gs, distance)}${metricCell(g, "reverse", gs, distance)}${metricCell(g, "volume", gs, pct)}<td class="status"><span class="badge ${g.eligible ? "ok" : g.rows.some((r) => r.status === "failed" || r.status === "timeout" || r.status === "memory-limit") ? "fail" : ""}">${status(g)}</span>${reasons(
                 g,
               )
                 .map((x) => `<small>${esc(x)}</small>`)

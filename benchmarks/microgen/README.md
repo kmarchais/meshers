@@ -183,6 +183,8 @@ the energy score. Geometry modes omit FEA targets and solved-field links.
 FEA charts require geometry and element-quality admission for filled points.
 Enable the warning control to inspect excluded scores as hollow diagnostic
 points. Geometry-only charts keep element shape diagnostic.
+FEA scores show five significant digits so borderline target misses remain
+visible. Qualification uses the unrounded score.
 
 Every unavailable value has a reason. Failed generation gives no accepted mesh
 or FEA score. Invalid meshes retain completed timing and mesh arrays but block
