@@ -29,9 +29,10 @@ use the same centered unit cube and analytic material set.
   be computed as a diagnostic when volume validity and periodicity pass.
   Diagnostics do not qualify for accuracy or speed claims.
 
-The homogenization code is copied from `demos/solver/fedoo_homogenization.py`.
-The experiment adds progress reporting without changing its material or solver
-checks. This first batch uses single timing samples without warmup.
+The homogenization code starts from `demos/solver/fedoo_homogenization.py`.
+The experiment adds progress reporting, solver timing and saved displacement
+fields without changing its material or solver checks. The first batch uses
+single timing samples without warmup. See [measured results](RESULTS.md).
 
 The generalized eigenvalue score compares full stiffness tensors over all
 macroscopic strain combinations. A difference between two refinement levels
@@ -66,6 +67,8 @@ request, raw and canonical meshes, and periodic pair metadata. MMG folders also
 retain every pass's input/output mesh and exact parameters. Archival capture
 overhead is measured separately and subtracted from MMG generation samples.
 Native public diagnostics and analytic sampling have their own recorded scope.
+Follow-up batches also save all six displacement fields. Their stiffness, energy
+and periodic force balance are reconstructed independently from those artifacts.
 
 ## Choose the next experiment from the result
 

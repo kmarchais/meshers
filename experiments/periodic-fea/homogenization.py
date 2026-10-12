@@ -39,6 +39,7 @@ class AuditedCG:
         Returns:
             Solution after checking CG status and the recomputed residual.
         """
+        started = time.perf_counter()
         diagonal = matrix.diagonal()
         assert np.all(diagonal > 0)
         skew = matrix - matrix.T
@@ -66,6 +67,7 @@ class AuditedCG:
                 "iterations": iterations,
                 "relative_residual": residual,
                 "free_dofs": len(rhs),
+                "seconds": time.perf_counter() - started,
             }
         )
         return solution
@@ -130,7 +132,7 @@ def element_geometry(mesh):
     return volumes, gradients
 
 
-def homogenize(mesh):  # ruff: ignore[too-many-locals, too-many-statements] - keep all six-load-case audits together.
+def homogenize(mesh, artifact_directory=None):
     """Run strain- and stress-controlled fedoo homogenization and cross-check.
 
     Returns:
@@ -138,6 +140,7 @@ def homogenize(mesh):  # ruff: ignore[too-many-locals, too-many-statements] - ke
     """
     start = time.perf_counter()
     classes = pair_classes(mesh)
+    field_records, archive_seconds = [], 0.0
     volumes, gradients = element_geometry(mesh)
     fd.ModelingSpace("3D")
     fem_mesh = fd.Mesh(mesh.points.copy(), mesh.tetrahedra.copy(), "tet4")
@@ -200,6 +203,18 @@ def homogenize(mesh):  # ruff: ignore[too-many-locals, too-many-statements] - ke
                 **solver.records[-1],
             }
         )
+        if artifact_directory is not None:
+            archive_started = time.perf_counter()
+            path = Path(artifact_directory) / f"displacement-{case}.npz"
+            np.savez_compressed(path, displacement=displacement, engineering=engineering)
+            field_records.append(
+                {
+                    "load": COMPONENTS[case],
+                    "artifact": path.name,
+                    "sha256": hashlib.sha256(path.read_bytes()).hexdigest(),
+                }
+            )
+            archive_seconds += time.perf_counter() - archive_started
     energy_matrix = np.einsum("t,itkl,jtkl->ij", volumes, all_strains, all_stresses)
     hill_mandel = float(np.linalg.norm(energy_matrix - stiffness) / np.linalg.norm(stiffness))
     reaction_error = float(np.linalg.norm(reactions - stiffness) / np.linalg.norm(stiffness))
@@ -238,6 +253,9 @@ def homogenize(mesh):  # ruff: ignore[too-many-locals, too-many-statements] - ke
         "automatic_homogenization_relative_difference": automatic_error,
         "strain_controlled_loads": checks,
         "automatic_stress_controlled_solves": automatic_solver.records,
+        "displacement_fields": field_records,
+        "field_coordinate_shift_from_saved_mesh": [0.5, 0.5, 0.5],
+        "archive_seconds": archive_seconds,
         "seconds": time.perf_counter() - start,
     }
 

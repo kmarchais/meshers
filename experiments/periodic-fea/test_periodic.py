@@ -62,3 +62,20 @@ def test_tensor_score_uses_coupled_strain_combinations():
 def test_tensor_score_rejects_singular_reference():
     with pytest.raises(ValueError, match="positive definite"):
         tensor_difference(np.eye(6), np.zeros((6, 6)))
+
+
+def test_fixed_triangle_quality_is_an_attainable_tet_ceiling():
+    from analyze_caps import triangle_quality
+
+    base = np.array([[0, 0, 0], [1, 0, 0], [0.13, 0.02, 0]], float)
+    edge_sum = sum(np.sum((base[a] - base[b]) ** 2) for a, b in [(0, 1), (1, 2), (2, 0)])
+    apex = base.mean(axis=0) + [0, 0, np.sqrt(2 * edge_sum / 9)]
+    vertices = np.vstack([base, apex])
+    determinant = np.linalg.det(vertices[1:] - vertices[:1])
+    tet_edge_sum = sum(
+        np.sum((vertices[a] - vertices[b]) ** 2) for a in range(4) for b in range(a + 1, 4)
+    )
+    tet_quality = np.sqrt(432 * determinant**2 / tet_edge_sum**3)
+    ceiling = triangle_quality(base, np.array([[0, 1, 2]]))[0]
+    assert ceiling < 0.1
+    assert tet_quality == pytest.approx(ceiling, rel=1e-12)

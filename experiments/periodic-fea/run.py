@@ -35,7 +35,7 @@ def write_json(path, value):
             time.sleep(0.05)
 
 
-def prepare(output, native_package):
+def prepare(output, native_package, task_specs=None, mmg_hausd=0.002):
     """Freeze the executable experiment before it enters the shared queue."""
     output.mkdir(parents=True, exist_ok=False)
     source = output / "source"
@@ -110,7 +110,7 @@ def prepare(output, native_package):
             "max_validation_pairs": 60_000_000,
             "memory_limit_mib": 16384,
             "mmg_boundary": "caps",
-            "mmg_hausd": 0.002,
+            "mmg_hausd": mmg_hausd,
             "periodic_pair_tolerance": 1e-10,
             "worker_timeout_s": 1200,
         },
@@ -133,6 +133,21 @@ def prepare(output, native_package):
         {"case": "periodic-gyroid", "workflow": workflow, "cells": 24}
         for workflow in ["meshers-pass1", "mmg-microgen"]
     ]
+    if task_specs:
+        known = {
+            "meshers-fast",
+            "meshers-pass1",
+            "meshers-balanced",
+            "mmg-microgen",
+            "mmg-microgen-first-distance",
+        }
+        tasks = []
+        for spec in task_specs:
+            workflow, resolution = spec.split(":")
+            cells = int(resolution)
+            if workflow not in known or cells < 2:
+                raise ValueError(f"Unknown workflow or invalid resolution: {spec}")
+            tasks.append({"case": "periodic-gyroid", "workflow": workflow, "cells": cells})
     manifest["tasks"] = tasks
     write_json(output / "manifest.json", manifest)
     print(
@@ -305,7 +320,7 @@ def worker(request_path):
                 return solution
 
         with patch.object(homogenization, "AuditedCG", ProgressCG):
-            result["homogenization"] = homogenization.homogenize(mesh)
+            result["homogenization"] = homogenization.homogenize(mesh, directory)
         result["homogenization_audited"] = True
         if task["case"] == "solid-cell":
             tensor = np.array(result["homogenization"]["stiffness_engineering_voigt"])
@@ -340,7 +355,7 @@ def run(output):
     from pueue_progress import report
 
     started = time.monotonic()
-    report(0, "Verify frozen periodic experiment", eta_s=1800, cases=8)
+    report(0, "Verify frozen periodic experiment", eta_s=1800)
     source = output / "source"
     manifest = json.loads((output / "manifest.json").read_text(encoding="utf-8"))
     for name, sha in manifest["source_sha256"].items():
@@ -375,7 +390,9 @@ def run(output):
 
     references = {}
     for name, definition in manifest["specimens"].items():
-        report(0.03, f"Analytic reference samples: {name}", eta_s=1800, cases=8)
+        report(
+            0.03, f"Analytic reference samples: {name}", eta_s=1800, cases=len(manifest["tasks"])
+        )
         case = Case(name, name, definition["function"], definition["offset"], "Periodic cell", "")
         fractions, nested = [], 0.0
         for seed in [20261010, 20261011, 20261012, 20261013]:
@@ -541,6 +558,10 @@ def run(output):
         accuracy_scope="Coarse/fine stability only; no converged reference or 2% qualification",
     )
     write_json(output / "results.json", document)
+    from verify import verify_run
+
+    document["artifact_verification"] = verify_run(output)
+    write_json(output / "results.json", document)
     report(
         1,
         "Periodic coarse comparison complete",
@@ -561,11 +582,15 @@ if __name__ == "__main__":
         type=Path,
         help="Previously verified packaged Meshers Python/native directory",
     )
+    parser.add_argument("--tasks", nargs="+", help="Periodic Gyroid workflow:cells pairs")
+    parser.add_argument("--mmg-hausd", type=float, default=0.002)
     args = parser.parse_args()
     if args.prepare:
         if args.native_package is None:
             parser.error("--prepare requires --native-package")
-        prepare(args.prepare.resolve(), args.native_package.resolve())
+        if args.mmg_hausd <= 0:
+            parser.error("--mmg-hausd must be positive")
+        prepare(args.prepare.resolve(), args.native_package.resolve(), args.tasks, args.mmg_hausd)
     elif args.run:
         run(args.run.resolve())
     else:
