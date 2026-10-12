@@ -268,14 +268,49 @@ unrepeated timings, a same-method reference and one tested Gyroid width. The
 generation repeat now addresses the first limit for generation only. The
 review did not rerun numerical solves.
 
-The next algorithm control is frozen in `runs/mmg-fine-seed-coarsening-v1`
-and runs as task 1229, queued after the repeat result was read. It generates a
-native grid-48 seed, then requests MMG
-edge sizing `1/32`, with `hausd=0.0005` and the existing required periodic caps.
-This separates seed geometry resolution from volume sizing. The unchanged
-geometry, shape, periodicity and physics gates will decide whether it reduces
-FEA cost while meeting the same grid-80 worst-energy target. Seed generation
-remains part of its measured cost.
+## Completed finer-seed coarsening control
+
+Task 1229 completed in 265 s. A native grid-48 seed is adapted with MMG sizing
+`1/32`, `hausd=0.0005` and the existing required periodic caps. This separates
+seed geometry resolution from volume sizing. All geometry, shape, periodicity
+and physical audits pass, as do six regression checks. Saved-field stiffness
+reconstruction agrees below 5e-16, energy consistency below 4e-12, periodic
+force balance below 1.1e-10 and displacement jumps are zero.
+
+| Configuration | Tetrahedra | Generation sample | Audited FEA | Min q | Worst energy difference to grid 80 |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| Direct Meshers, grid 48 seed | 543,496 | 4.431 s | 401.505 s | 0.1520 | 0.608% |
+| Grid-48 seed + MMG sizing 32 | 275,637 | 27.578 s | 193.630 s | 0.1552 | 1.440% |
+| Direct Meshers, grid 42 | 369,590 | 2.985 s | 234.483 s | 0.2548 | 0.894% |
+
+The coarsened output has forward/reverse distances 0.000535/0.000377 and volume
+error plus empirical uncertainty 0.130%. Its seed cost is 4.557 s and standard
+adaptation 23.021 s, included in total generation. The output nearly halves
+the seed's tetrahedra and measured audited FEA cost, but fails the unchanged
+1% reference target. Preserving a finer seed boundary is insufficient in this
+control; interior discretization also matters. This is not a qualified speed
+advantage at the 1% target. Full scores remain in
+`runs/mmg-fine-seed-coarsening-v1/cross-run-comparison.json`.
+
+## Next diagnostic: locate elasticity residuals
+
+The next queued diagnostic reads the saved fields from the analytic solid,
+direct grids 42 and 48, and the coarsened output. It builds face adjacency in
+the periodic quotient mesh, so caps become interior interfaces. It measures
+normal stress jumps across interior faces and traction residuals on physical
+free surfaces, with face-diameter/area weights and the existing material law.
+The largest local indicator over six energy-normalized unit loads supplies a
+concentration map. This map is a heuristic for refinement, not a continuum
+error bound or a bound for all mixed strains, and omits geometry error.
+
+The diagnostic checks zero residual on the periodic affine solid, detects a
+periodic non-affine perturbation, and checks nonzero traction on a free isolated
+tetrahedron. It verifies saved mesh/field hashes and reconstructs the reported
+stiffness tensors before reporting concentration. The result will decide whether
+targeted volume sizing is worth an adaptation test.
+The face-residual approach follows the integration-by-parts reasoning used in
+[the residual estimator tutorial](https://jschoeberl.github.io/iFEM/aposteriori/residualEE.html);
+that scalar tutorial does not certify this periodic-elasticity indicator.
 
 ## Independent review and remaining limits
 
