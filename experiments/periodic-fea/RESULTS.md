@@ -254,19 +254,27 @@ The reference remains native; continuum accuracy and broader superiority
 remain unproven. The retained `runs/native-neighbours-v1/cross-run-comparison.json`
 records the exact scores, hashes and admission status.
 
-Task 1226 is queued for the grid-42 generation repeats. The non-Claude
-Nemotron 3 Ultra artifact review confirmed the neighbouring-grid numbers and
-retained three evidence limits: unrepeated timings, a same-method reference,
-and one tested Gyroid width. It did not rerun numerical solves.
+Task 1226 completed in 158 s. Each of its eight outputs, including warmups,
+exactly matches its saved audited mesh. Native measured generation samples are
+3.587, 3.632 and 3.488 s; the MMG control samples are 34.676, 34.949 and
+34.663 s. Their medians are 3.587 and 34.676 s, a 9.67 times generation ratio
+for two admitted configurations below the measured grid-80 1% target. Native
+grid 42 uses 23.2% fewer tetrahedra and has the higher minimum shape quality in
+this pair. FEA timing has not been repeated.
 
-The next algorithm control is prepared in `runs/mmg-fine-seed-coarsening-v1`
-but has not been queued. It generates a native grid-48 seed, then requests MMG
+The non-Claude Nemotron 3 Ultra artifact review confirmed the neighbouring-grid
+numbers before those timing repeats completed. Its remaining limits were
+unrepeated timings, a same-method reference and one tested Gyroid width. The
+generation repeat now addresses the first limit for generation only. The
+review did not rerun numerical solves.
+
+The next algorithm control is frozen in `runs/mmg-fine-seed-coarsening-v1`
+and was queued after the repeat result was read. It generates a native grid-48 seed, then requests MMG
 edge sizing `1/32`, with `hausd=0.0005` and the existing required periodic caps.
 This separates seed geometry resolution from volume sizing. The unchanged
 geometry, shape, periodicity and physics gates will decide whether it reduces
 FEA cost while meeting the same grid-80 worst-energy target. Seed generation
-remains part of its measured cost. The generation repeat result will be read
-before this control enters the queue.
+remains part of its measured cost.
 
 ## Independent review and remaining limits
 
