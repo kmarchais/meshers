@@ -634,7 +634,8 @@
               .filter((r) => r.mesh_s != null)
               .map((r) => r.mesh_s);
             const valid = rows.filter(
-              (r) => r.comparison_eligible && r.status === "ok",
+              (r) => r.comparison_eligible && r.status === "ok" &&
+                (geometryMode || (r.quality_eligible ?? (r.q_min >= cfg.minimum_quality))),
             );
             const counts = rows
               .filter((r) => surfaceMode ? r.triangles : r.tetrahedra)
@@ -675,7 +676,7 @@
         return `<div class="interactive-chart" data-key="${key}" data-label="${esc(label)}">
           <p class="better">↙ Lower and left is better: ↓ less ${accuracyLabel.toLowerCase()}; ← ${key === "time" ? "faster generation" : "fewer elements at comparable accuracy"}.</p>
           <div class="plot-controls">${cfg.workflows.map((w) => `<label><input type="checkbox" data-workflow="${esc(w)}" checked><i class="dot" style="background:${colors[w]}"></i>${esc(names[w])}</label>`).join("")}</div>
-          <div class="plot-controls"><label><input type="checkbox" class="show-diagnostics">Show geometry warnings, diagnostic only</label><button class="reset-plot">Reset zoom</button></div>
+          <div class="plot-controls"><label><input type="checkbox" class="show-diagnostics">Show ${geometryMode ? "geometry" : "geometry and quality"} warnings, diagnostic only</label><button class="reset-plot">Reset zoom</button></div>
           <svg class="plot" viewBox="0 0 540 310" role="group" aria-label="Interactive ${esc(label)} versus ${esc(accuracyLabel)}" tabindex="0"></svg>
           <output class="point-detail" aria-live="polite">Hover or select a point for details. Scroll to zoom; drag to pan; double-click or press R to reset. Point colors identify workflows.</output></div>`;
       }
@@ -705,7 +706,7 @@
         };
         function details(g) {
           const why = g.eligible
-            ? "Geometry admitted across all measured repeats"
+            ? `${geometryMode ? "Geometry" : "Geometry and element quality"} admitted across all measured repeats`
             : "Diagnostic only. " + reasons(g).join("; ");
           info.textContent = `${names[g.w]}, ${g.n} intervals. Generation ${num(g.time)} s; ${num(g.count)} ${countLabel.toLowerCase()}; ${accuracyLabel.toLowerCase()} ${errorFormat(g.error)}; forward ${distance(g.forward)} L; reverse ${distance(g.reverse)} L; volume plus empirical uncertainty ${pct(g.volume)}; ${qualityLabel.toLowerCase()} ${num(g.q)}. ${why}`;
           section
@@ -718,7 +719,7 @@
         function draw(reset = false) {
           if (reset) {
             info.textContent =
-              "Hover or select a point for measurements. Hollow points are geometry-warning scores, diagnostic only. Scroll to zoom; drag to pan; reset restores the view.";
+              "Hover or select a point for measurements. Hollow points are warning scores, diagnostic only. Scroll to zoom; drag to pan; reset restores the view.";
             section
               .querySelectorAll("tr.selected")
               .forEach((r) => r.classList.remove("selected"));
@@ -728,7 +729,7 @@
             svg.innerHTML =
               '<text x="24" y="120" fill="#526576">No selected admissible scores. See reasons in the table.</text>';
             info.textContent =
-              "A missing or zero error cannot appear on a log-scale chart. Zero-error observations remain in the table. Enable geometry warnings to inspect diagnostic scores.";
+              "A missing or zero error cannot appear on a log-scale chart. Zero-error observations remain in the table. Enable warnings to inspect diagnostic scores.";
             bounds = null;
             return;
           }
@@ -833,6 +834,9 @@
       }
       function reasons(g) {
         return [
+          ...(!geometryMode && g.q != null && g.q < cfg.minimum_quality
+            ? [`Minimum element quality ${num(g.q)} is below required ${num(cfg.minimum_quality)}`]
+            : []),
           ...new Set(
             g.rows.flatMap((r) =>
               r.admission_reasons?.length
@@ -920,10 +924,13 @@
         return `<td class="heat" data-metric="${key}" data-value="${value}" style="background:${scale.background}" title="${esc(title)}">${format(value)}${key === "time" ? `<small>[${num(g.lo)}, ${num(g.hi)}] s</small>` : ""}${scale.label ? `<small class="heat-note">${scale.label}</small>` : ""}${key === "q" && !geometryMode ? `<small class="${value < cfg.minimum_quality ? "gate-fail" : ""}">${value < cfg.minimum_quality ? "Below target" : "Meets target"}, q ≥ ${num(cfg.minimum_quality)}</small>` : ""}${!g.eligible ? "<small class=heat-note>Diagnostic only</small>" : ""}</td>`;
       }
       function resultRows(gs) {
+        const status = (g) => !g.rows.length ? "Pending" : g.eligible ? "Admissible" :
+          (!geometryMode && g.rows.every(r => r.status === "ok") && g.q < cfg.minimum_quality)
+            ? "Quality warning" : g.rows.map(r => r.status).join(", ");
         return gs
           .map(
             (g) =>
-              `<tr data-result="${g.w}-${g.n}"><td>${esc(names[g.w])} / ${g.n}</td>${metricCell(g, "time", gs)}${metricCell(g, "count", gs)}${metricCell(g, "nodes", gs)}${metricCell(g, "q", gs)}${geometryMode ? "" : metricCell(g, "error", gs, pct)}${metricCell(g, "forward", gs, distance)}${metricCell(g, "reverse", gs, distance)}${metricCell(g, "volume", gs, pct)}<td class="status"><span class="badge ${g.eligible ? "ok" : g.rows.some((r) => r.status === "failed" || r.status === "timeout" || r.status === "memory-limit") ? "fail" : ""}">${g.rows.length ? (g.eligible ? "Admissible" : g.rows.map((r) => r.status).join(", ")) : "Pending"}</span>${reasons(
+              `<tr data-result="${g.w}-${g.n}"><td>${esc(names[g.w])} / ${g.n}</td>${metricCell(g, "time", gs)}${metricCell(g, "count", gs)}${metricCell(g, "nodes", gs)}${metricCell(g, "q", gs)}${geometryMode ? "" : metricCell(g, "error", gs, pct)}${metricCell(g, "forward", gs, distance)}${metricCell(g, "reverse", gs, distance)}${metricCell(g, "volume", gs, pct)}<td class="status"><span class="badge ${g.eligible ? "ok" : g.rows.some((r) => r.status === "failed" || r.status === "timeout" || r.status === "memory-limit") ? "fail" : ""}">${status(g)}</span>${reasons(
                 g,
               )
                 .map((x) => `<small>${esc(x)}</small>`)
@@ -958,7 +965,7 @@
           }
         }
         return pairs.length
-          ? `<div class="table-wrap"><table><thead><tr><th>Observed matched-count pair</th><th>Element difference</th><th>${geometryMode ? "Volume" : "FEA"} error ratio ↓, &lt;1 favors Meshers</th><th>Time ratio ↓, &lt;1 favors Meshers</th></tr></thead><tbody>${pairs.join("")}</tbody></table></div><p class="ratio-key">Ratio colors use a fixed scale: green at ≤ 0.5×, yellow at 1×, red at ≥ 2×. All pairs pass admission and the matched-count tolerance.</p>`
+          ? `<div class="table-wrap"><table><thead><tr><th>Observed matched-count pair</th><th>Element difference</th><th>${geometryMode ? "Boundary" : "FEA"} error ratio ↓, &lt;1 favors Meshers</th><th>Time ratio ↓, &lt;1 favors Meshers</th></tr></thead><tbody>${pairs.join("")}</tbody></table></div><p class="ratio-key">Ratio colors use a fixed scale: green at ≤ 0.5×, yellow at 1×, red at ≥ 2×. All pairs pass admission and the matched-count tolerance.</p>`
           : `<p class="muted">No measured Meshers/control pair is within ${pct(cfg.matched_count_tolerance)} of the same element count. Add resolution levels before making a matched-count claim.</p>`;
       }
       function targets(gs) {
@@ -988,7 +995,7 @@
         const targets = (data.qualification?.targets || []).filter(t => t.case === caseId && (!geometryMode || t.energy_target == null));
         const cost = g => g ? `${num(g.median_mesh_s)} s · n${g.cells} · ${num(g.max_triangles || g.max_tetrahedra)} ${countLabel.toLowerCase()}` : "Not reached";
         const convergence = (data.qualification?.convergence || []).filter(g => g.case === caseId);
-        return `<h3>Cost to reach the application target</h3><p>Fastest and smallest are selected independently from measured configurations. Every requested repeat must pass. ${geometryMode ? "Element shape is diagnostic in this mode." : `FEA targets also require q ≥ ${num(cfg.minimum_quality)}.`} Boundary checks run in both directions; volume admission includes empirical reference uncertainty.</p><div class="table-wrap"><table><thead><tr><th>Workflow</th><th>Target</th><th>Fastest qualifying configuration</th><th>Smallest qualifying configuration</th></tr></thead><tbody>${targets.map(t => `<tr><td>${esc(names[t.workflow])}</td><td>${t.energy_target == null ? "Geometry fidelity" : "FEA ≤ " + pct(t.energy_target)}</td><td>${cost(t.fastest)}</td><td>${cost(t.smallest)}</td></tr>`).join("")}</tbody></table></div>${geometryMode ? "" : `<h3>Observed convergence</h3>${convergence.map(g => `<p>${esc(names[g.workflow])}: ${g.levels} admissible levels, ${esc(g.status)}. ${g.pairs.map(p => `n${p.cells.join(" → ")}: order ${num(p.effective_h_order)}`).join("; ")}</p>`).join("")}<p class="muted">Orders use h proportional to element count to the power −1/3. They are diagnostics for independently generated meshes, not an error bound or extrapolation.</p>`}`;
+        return `<h3>Cost to reach the application target</h3><p>Fastest and smallest are selected independently from measured configurations. Every requested repeat must pass. ${geometryMode ? "Element shape is diagnostic in this mode." : `FEA targets also require q ≥ ${num(cfg.minimum_quality)}.`} Boundary checks run in both directions; volume admission includes empirical reference uncertainty.</p><div class="table-wrap"><table><thead><tr><th>Workflow</th><th>Target</th><th>Fastest qualifying configuration</th><th>Smallest qualifying configuration</th></tr></thead><tbody>${targets.map(t => `<tr><td>${esc(names[t.workflow])}</td><td>${t.energy_target == null ? "Geometry fidelity" : "FEA ≤ " + pct(t.energy_target)}</td><td>${cost(t.fastest)}</td><td>${cost(t.smallest)}</td></tr>`).join("")}</tbody></table></div>${geometryMode ? "" : `<h3>Observed convergence</h3>${convergence.map(g => `<p>${esc(names[g.workflow])}: ${g.levels} levels with admitted geometry, ${esc(g.status)}. ${g.pairs.map(p => `n${p.cells.join(" → ")}: order ${num(p.effective_h_order)}`).join("; ")}</p>`).join("")}<p class="muted">Orders use h proportional to element count to the power −1/3. They are diagnostics for independently generated meshes, not an error bound or extrapolation.</p>`}`;
       }
 
       function mesh(canvas, triangles) {
