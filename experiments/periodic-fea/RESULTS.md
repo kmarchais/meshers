@@ -269,7 +269,8 @@ generation repeat now addresses the first limit for generation only. The
 review did not rerun numerical solves.
 
 The next algorithm control is frozen in `runs/mmg-fine-seed-coarsening-v1`
-and was queued after the repeat result was read. It generates a native grid-48 seed, then requests MMG
+and runs as task 1229, queued after the repeat result was read. It generates a
+native grid-48 seed, then requests MMG
 edge sizing `1/32`, with `hausd=0.0005` and the existing required periodic caps.
 This separates seed geometry resolution from volume sizing. The unchanged
 geometry, shape, periodicity and physics gates will decide whether it reduces
