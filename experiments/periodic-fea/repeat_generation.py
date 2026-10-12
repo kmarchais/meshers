@@ -52,10 +52,12 @@ def repeat(output, references):
         if digest(meshers._meshers.__file__) != manifest["native_sha256"]:
             raise ValueError("Imported native binary differs from the frozen candidate")
         if len(references) != 2:
-            raise ValueError("Expected the audited native grid-40 and MMG seed grid-32 artifacts")
+            raise ValueError("Expected two admitted periodic-Gyroid artifacts")
         controls = []
         for path in references:
             result = json.loads((path / "result.json").read_text())
+            if result["case"] != "periodic-gyroid":
+                raise ValueError(f"Expected the shared periodic Gyroid case: {path}")
             if not all(result.get(k) for k in ["homogenization_audited", "geometry_eligible", "quality_eligible", "periodic_eligible"]):
                 raise ValueError(f"Reference is not admitted: {path}")
             if digest(path / "mesh.npz") != result["mesh_sha256"]:

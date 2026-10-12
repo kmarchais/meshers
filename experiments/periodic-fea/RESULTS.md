@@ -225,10 +225,34 @@ uses the worst relative strain-energy difference over all macroscopic strain
 combinations, not the tensor Frobenius norm. Grid 48 has more margin against
 the measured target, but still requires an independent accuracy reference.
 
-Task 1220 is queued to test native grids 38 and 42 with all gates unchanged.
-It checks neighbouring-grid shape sensitivity and whether grid 42 provides a
-less costly native mesh below 1% of the grid-80 tensor. These cases will use the
-retained finest reference after their saved fields have been verified.
+## Completed neighbouring-grid checks
+
+Task 1220 completed in 482 s with six regression checks passing. Both grids
+pass every geometry, shape, periodicity and physics gate. Independent stiffness
+reconstruction agrees below 7e-16, energy consistency errors are below 6e-12,
+periodic force-balance errors below 1e-10 and displacement jump errors zero.
+
+| Candidate | Tetrahedra | Generation sample | Audited FEA | Min q | Worst energy difference to grid 80 |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| Direct Meshers, grid 38 | 285,074 | 2.736 s | 170.223 s | 0.1498 | 1.146% |
+| Direct Meshers, grid 42 | 369,590 | 2.985 s | 234.483 s | 0.2548 | 0.894% |
+| Native grid-32 seed + MMG, hausd 0.0002 | 481,253 | 35.095 s | 424.589 s | 0.2039 | 0.966% |
+
+Grid 38 misses the strict 1% worst-energy target. Grid 42 passes and has
+0.1548 margin above the 0.1 shape gate, substantially more than grid 40. Its
+forward/reverse distances are 0.000531/0.000392 and volume error plus empirical
+uncertainty is 0.132%. The neighbouring grids confirm that minimum quality
+changes non-monotonically, while both tested neighbours pass the declared gate.
+They do not establish robustness on other Gyroid widths or other geometries.
+
+Grid 42 has fewer tetrahedra and a higher minimum quality than the tight MMG
+control, while both are below 1% of the same grid-80 tensor. Its observed
+generation and audited FEA costs are lower, but the native timing samples have
+not been repeated. A follow-up repeats one warmup and three generation samples
+for this pair, requiring exact identity with the saved audited meshes.
+The reference remains native; continuum accuracy and broader superiority
+remain unproven. The retained `runs/native-neighbours-v1/cross-run-comparison.json`
+records the exact scores, hashes and admission status.
 
 ## Independent review and remaining limits
 
