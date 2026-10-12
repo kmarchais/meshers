@@ -2,6 +2,7 @@
 
 import argparse
 import hashlib
+import importlib
 import importlib.metadata
 import json
 import math
@@ -43,6 +44,13 @@ def write_json(path, value):
 
 def digest(path):
     return hashlib.sha256(path.read_bytes()).hexdigest()
+
+
+def meshers_native_identity():
+    """Hash the imported extension even when an editable wheel has no binary RECORD."""
+    native = importlib.import_module("meshers._meshers")
+    path = Path(native.__file__).resolve()
+    return {"path": str(path), "sha256": digest(path)}
 
 
 def failure_catalog(document):
@@ -138,6 +146,11 @@ def worker(request_path):
         from .geometry import canonical_mesh, canonical_surface, validate
         from .preview import surface_preview
 
+        native_identity = meshers_native_identity()
+        result["meshers_native_sha256"] = native_identity["sha256"]
+        expected_native = request.get("meshers_native_sha256")
+        if expected_native is not None and native_identity["sha256"] != expected_native:
+            raise RuntimeError("Loaded Meshers native binary differs from the run manifest")
         case = Case(**request["case"])
         surface_mode = request["config"].get("purpose") == "surface"
         result["stage"] = "generation"
@@ -435,6 +448,8 @@ def provenance(config):
                 and name in {"meshers", "mmgpy"}
             }
             packages[name] = {"version": distribution.version, "native_sha256": binary_hashes}
+            if name == "meshers":
+                packages[name]["loaded_native"] = meshers_native_identity()
         except importlib.metadata.PackageNotFoundError:
             packages[name] = {"version": "unavailable"}
     root = Path(__file__).parent
@@ -711,6 +726,9 @@ def main():
                 "repeat": r,
                 "warmup": r < 0,
                 "config": config,
+                "meshers_native_sha256": document["provenance"]["packages"]["meshers"][
+                    "loaded_native"
+                ]["sha256"],
                 "target_volume_fraction": next(
                     record["target_volume_fraction"]
                     for record in document["cases"]

@@ -374,7 +374,10 @@ Meshers/MMG native-binary SHA-256 hashes, benchmark source hashes and the git
 commit. `results.json` records a hash of that manifest and each completed mesh
 and field archive. A research build with the same version number can still
 differ; compare the binary hashes before combining results. No run is resumed
-implicitly and an existing nonempty output directory is never overwritten.
+implicitly. The manifest also hashes the actual imported Meshers extension,
+including editable installations whose wheel RECORD contains no binary. Every
+worker verifies that imported hash before generating a mesh. An existing
+nonempty output directory is never overwritten.
 The runner stops if its benchmark source files change during the run. Each output
 also retains the exact package source, `pyproject.toml` and `uv.lock` under `source/`,
 with SHA-256 hashes. Run that snapshot with `uv run --project <output>/source --locked

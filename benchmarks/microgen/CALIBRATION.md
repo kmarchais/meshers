@@ -263,6 +263,28 @@ long run. Its runtime is censored, and it has no mesh or accuracy result.
 benchmark source and completed mesh hashes. These surface samples diagnose
 boundary movement; they do not certify volume validity or FEA accuracy.
 
+## Coverage beyond uniform Gyroid
+
+The grid-36 native trial of the PR #5 source uses the local editable build,
+separately from the released wheel and the earlier packaged PR #5 build. At one
+and four passes, Schwarz P, graded Gyroid and thin Gyroid pass geometry and
+element quality and reach the 5% energy target. Their one-pass errors are
+4.362%, 4.084% and 3.802%; none reaches 2% at this grid. Four passes preserve
+qualification but do not substantially reduce error. Thin Gyroid's energy
+error increases slightly while its minimum element quality improves.
+
+Neovius rejects both profiles with sampled geometry error `0.002292 L`. BCC
+rejects with errors above `0.008 L`. Spinodoid rejects on minimum element
+quality: eleven cells remain below 0.1 after one pass and nine after four.
+These results are retained in `native-difficult-fields-36.json`. The trial has
+one repetition and no warmup, so its times remain calibration measurements.
+
+Its original manifest lists no native binary because the editable wheel's
+RECORD has no extension entry. A separate observation of the imported binary
+is retained with the evidence; it must not be confused with a hash checked at
+each worker's startup. Future manifests record the actual imported extension,
+and every worker checks that hash against the manifest before generation.
+
 ## Next measurements
 
 Measure Microgen's current CLI pipeline at finer grids, then repeat selected

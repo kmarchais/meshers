@@ -1,3 +1,4 @@
+import importlib.metadata
 import json
 import subprocess
 import sys
@@ -7,7 +8,14 @@ import time
 import pytest
 
 from microgen_benchmark.report import render
-from microgen_benchmark.runner import failure_catalog, stop_tree, verify_sources, worker, write_json
+from microgen_benchmark.runner import (
+    failure_catalog,
+    provenance,
+    stop_tree,
+    verify_sources,
+    worker,
+    write_json,
+)
 
 
 def test_html_payload_cannot_close_script():
@@ -54,6 +62,45 @@ def test_json_persistent_windows_lock_fails_without_corrupting_old_result(tmp_pa
 def test_changed_source_cannot_mix_results():
     with pytest.raises(RuntimeError, match="source changed"):
         verify_sources({"cases.py": "not-the-actual-hash"})
+
+
+def test_editable_native_binary_is_recorded_without_distribution_binary(monkeypatch):
+    original = importlib.metadata.distribution
+
+    class EditableDistribution:
+        version = "0.1.0"
+        files = []
+
+    monkeypatch.setattr(
+        importlib.metadata,
+        "distribution",
+        lambda name: EditableDistribution() if name == "meshers" else original(name),
+    )
+    package = provenance({})["packages"]["meshers"]
+    assert package["native_sha256"] == {}
+    assert package["loaded_native"]["path"].endswith((".pyd", ".so"))
+    assert len(package["loaded_native"]["sha256"]) == 64
+
+
+def test_worker_rejects_different_native_binary_before_generation(tmp_path):
+    from microgen_benchmark.cases import CASES
+
+    request = tmp_path / "request.json"
+    write_json(
+        request,
+        {
+            "case": CASES[0].record(),
+            "workflow": "meshers-fast",
+            "cells": 4,
+            "config": {},
+            "meshers_native_sha256": "different-build",
+        },
+    )
+    worker(request)
+    result = json.loads((tmp_path / "result.json").read_text())
+    assert result["status"] == "failed"
+    assert "native binary differs" in result["error"]
+    assert "mesh_s" not in result
 
 
 def test_failed_worker_keeps_owner_phase_and_attempt_time(tmp_path, monkeypatch):
