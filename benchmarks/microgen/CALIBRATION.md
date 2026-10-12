@@ -309,6 +309,15 @@ and every worker checks that hash against the manifest before generation.
 
 ## Next measurements
 
+The first five-sheet grid-80 batch was interrupted by a Windows permission
+error while the parent read an advisory progress checkpoint. It stopped its
+owned worker during Gyroid's affine checks and left no completed FEA result.
+`native-sheets-80-interrupted.json` retains that interrupted state and the last
+checkpoint, without admitting it as a measurement. The reader now keeps its
+previous complete sample during temporary locks. A real exclusive-sharing
+regression reproduces the previous failure and verifies that a healthy child
+finishes after the fix. The numerical and failure-path suite passes 71 tests.
+
 Measure Microgen's current CLI pipeline at finer grids, then repeat selected
 qualifying configurations with warmups before making timing claims. Keep
 surface timing separate and include all failures in the report. Extend the

@@ -61,6 +61,9 @@ JSON checkpoints replace the previous complete file atomically. On Windows,
 an observer's read handle can temporarily block that replacement; the runner
 retries for up to five seconds, then reports a persistent failure. Internal
 artifact output does not enter meshing time.
+The parent's advisory progress reader keeps its last complete sample when a
+temporary sharing lock denies a read. Resource monitoring and timeouts continue;
+the final result file remains authoritative.
 
 Linux also needs Gmsh's system runtime libraries, typically
 `sudo apt-get install libglu1-mesa libgl1` on Debian or Ubuntu. The CI workflow

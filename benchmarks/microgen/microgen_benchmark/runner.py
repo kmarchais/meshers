@@ -362,12 +362,14 @@ def run_child(request, directory, timeout, heartbeat):
         peak_rss = 0
         memory_limit = request["config"].get("memory_limit_mib", 8192) * 2**20
         monitored = psutil.Process(process.pid)
+        live = {}
         try:
             while process.poll() is None:
-                live = {}
                 try:
                     live = json.loads((directory / "progress.json").read_text(encoding="utf-8"))
-                except (FileNotFoundError, json.JSONDecodeError):
+                except (FileNotFoundError, PermissionError, json.JSONDecodeError):
+                    # Progress is advisory. Windows can deny a read while the
+                    # writer replaces the file; retain the last complete sample.
                     pass
                 try:
                     rss = monitored.memory_info().rss
@@ -397,11 +399,10 @@ def run_child(request, directory, timeout, heartbeat):
             reader.join(timeout=10)
     path = directory / "result.json"
     if timed_out or memory_limited:
-        partial = directory / "progress.json"
         return {
             "stage": "worker",
             "failure_owner": "Owned worker pipeline",
-            **(json.loads(partial.read_text(encoding="utf-8")) if partial.is_file() else {}),
+            **live,
             "status": "memory-limit" if memory_limited else "timeout",
             "error": f"Owned worker tree exceeded {memory_limit / 2**20:g} MiB RSS"
             if memory_limited

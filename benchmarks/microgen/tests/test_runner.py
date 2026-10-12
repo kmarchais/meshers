@@ -11,6 +11,7 @@ from microgen_benchmark.report import render
 from microgen_benchmark.runner import (
     failure_catalog,
     provenance,
+    run_child,
     stop_tree,
     verify_sources,
     worker,
@@ -62,6 +63,65 @@ def test_json_persistent_windows_lock_fails_without_corrupting_old_result(tmp_pa
 def test_changed_source_cannot_mix_results():
     with pytest.raises(RuntimeError, match="source changed"):
         verify_sources({"cases.py": "not-the-actual-hash"})
+
+
+@pytest.mark.skipif(sys.platform != "win32", reason="Windows exclusive file sharing")
+def test_locked_progress_read_does_not_kill_healthy_worker(tmp_path, monkeypatch):
+    from pathlib import Path
+
+    helper = tmp_path / "locked_worker.py"
+    helper.write_text(
+        """import ctypes, json, sys, time
+from pathlib import Path
+directory = Path(sys.argv[1])
+progress = directory / 'progress.json'
+progress.write_text(json.dumps({'stage': 'running'}))
+kernel = ctypes.WinDLL('kernel32', use_last_error=True)
+kernel.CreateFileW.argtypes = [ctypes.c_wchar_p, ctypes.c_uint32, ctypes.c_uint32, ctypes.c_void_p, ctypes.c_uint32, ctypes.c_uint32, ctypes.c_void_p]
+kernel.CreateFileW.restype = ctypes.c_void_p
+kernel.CloseHandle.argtypes = [ctypes.c_void_p]
+handle = kernel.CreateFileW(str(progress), 0x80000000, 0, None, 3, 0, None)
+if handle in (None, ctypes.c_void_p(-1).value):
+    raise ctypes.WinError(ctypes.get_last_error())
+print('locked', flush=True)
+time.sleep(0.5)
+kernel.CloseHandle(handle)
+(directory / 'result.json').write_text(json.dumps({'status': 'ok', 'completed': True}))
+""",
+        encoding="utf-8",
+    )
+    original_popen = subprocess.Popen
+    original_read = Path.read_text
+    processes, denied_reads = [], []
+
+    def controlled_worker(arguments, **options):
+        if "--worker" not in arguments:
+            return original_popen(arguments, **options)
+        process = original_popen(
+            [sys.executable, "-u", str(helper), str(tmp_path / "run")], **options
+        )
+        processes.append(process)
+        assert process.stdout.readline().strip() == "locked"
+        return process
+
+    def observed_read(path, *arguments, **options):
+        try:
+            return original_read(path, *arguments, **options)
+        except PermissionError:
+            if path.name == "progress.json":
+                denied_reads.append(path)
+            raise
+
+    monkeypatch.setattr(subprocess, "Popen", controlled_worker)
+    monkeypatch.setattr(Path, "read_text", observed_read)
+    try:
+        result = run_child({"config": {"threads": 1}}, tmp_path / "run", 10, lambda live: None)
+        assert denied_reads
+        assert result["status"] == "ok" and result["completed"] is True
+        assert result["worker_exit_code"] == 0
+    finally:
+        for process in processes:
+            stop_tree(process)
 
 
 def test_editable_native_binary_is_recorded_without_distribution_binary(monkeypatch):
