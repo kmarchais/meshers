@@ -490,11 +490,45 @@ boundary distances are 0.0007033 and 0.0003790. All common gates and six-field
 audits pass. Its generation sample takes 3.80 s and FEA 275.24 s, with peak RSS
 8.32 GiB. These are single samples, not a new speed calibration.
 
-The actual seed count leaves 8,168 nodes within MMG's 123,172-node budget.
-`runs/accuracy-schwarz-p-body50-matched-nodes-v1` requests exactly that many
-length-ranked interior insertions with the same binary, geometry request and
-common gates. Its retained-coordinate and oriented-boundary checks must pass,
-and volume must remain unchanged with nonincreasing mixed-load energy. Inspect
-the fresh fields before comparing stiffness and local stress against native80
-and MMG64. No accuracy lead is claimed for this new profile yet, and no broader
-sweep is queued.
+`runs/accuracy-schwarz-p-body50-matched-nodes-v1` inserts 8,168 length-ranked
+interior nodes into this seed. The admitted mesh matches MMG's 123,172 nodes
+and has 604,833 tetrahedra versus MMG's 629,597, a 3.93% reduction. Minimum
+quality is 0.304329. All 115,004 original coordinates and 71,616 oriented
+boundary triangles remain exact. Volume changes by -1.11e-16, and all six
+eigenvalues of the mixed-load energy change are negative. All common gates,
+six saved fields and independent periodic equilibrium audits pass. One live
+generation sample takes 4.29 s and Pardiso FEA takes 285.35 s, with peak RSS
+8.42 GiB. These single samples do not establish a speed advantage.
+
+`runs/accuracy-schwarz-p-body-matched-fields-v1` compares this body mesh, its
+grid50 seed, the original native52 mesh and MMG40seed52 on identical common
+material. It uses 1,048,576 probes split across four Sobol scrambles against
+each reference. Canonical cell ordering makes point location independent of
+cell row order. Read-only body-field revalidation leaves the original audit
+digest unchanged; exact retained-boundary checks pass. All 48 source and 375
+input hashes remain unchanged. Thirty-one regressions pass, with one optional
+test skipped, and the isolated real Pardiso smoke test passes.
+
+| Reference | Metric | Native grid50 seed | Native grid50 body | MMG40seed52 |
+| --- | --- | ---: | ---: | ---: |
+| Native80 | Worst stiffness disagreement | 0.588839% | 0.533844% | 0.540755% |
+| Native80 | Worst local stress disagreement | 10.957566% | 10.724960% | 10.902769% |
+| MMG64 | Worst stiffness disagreement | 0.458454% | 0.402684% | 0.406088% |
+| MMG64 | Worst local stress disagreement | 11.371331% | 11.150560% | 11.251075% |
+
+The matched-node native body mesh has lower stiffness disagreement and lower
+local stress disagreement in every scramble against both reference topologies.
+Common material coverage exceeds 99.94%. Adding the grid50 candidates changes
+the common intersection slightly, so local scores here differ slightly from
+the earlier two-candidate comparison. Stiffness scores use the full tensors.
+The stiffness margins are small, and matching total nodes does not match
+reduced periodic degrees of freedom. MMG still has better wall-normal RMS,
+0.7272 degrees versus 1.0415 degrees. Local stress disagreement remains about
+11%; this is reference sensitivity evidence, not a continuum certificate.
+
+`runs/accuracy-schwarz-p-matched-generation-v1` freezes these admitted native
+body and standard MMG recipes for one warmup and three measured live generations
+each, in alternating order on one thread. Every generated mesh must reproduce
+its admitted coordinates and tetrahedra exactly. Public Microgen BoxMesh
+roundtrip and periodic-node checks cover the new body and seed. Timing results
+remain pending, and no broader sweep is queued.
