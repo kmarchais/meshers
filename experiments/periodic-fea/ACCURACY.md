@@ -818,10 +818,37 @@ meshes takes 18.36 s. Adding archived seed and guide generation and FEA timings
 gives an estimated recipe time of 119.35 s, which is not a measured live recipe
 and cannot establish generation speed.
 
-`runs/accuracy-schwarz-d-guided-fields-v1` freezes this guide-refined mesh, the
-native64 seed, native length refinement and standard MMG62seed80 on identical
-common material against native80 and alternate MMG64. Its 49 source and 611
-input hashes retain both original guide and body reports. Four Sobol scrambles
-use 1,048,576 probes per reference. Read-only guided-body revalidation, exact
-retained-boundary and mixed-energy checks, regressions and real Pardiso smoke
-checks precede the stress comparison. Local-stress results remain pending.
+`runs/accuracy-schwarz-d-guided-fields-v1` compares this guide-refined mesh,
+the native64 seed, native length refinement and standard MMG62seed80 on
+identical common material against native80 and alternate MMG64. All 49 source
+and 611 input hashes remain unchanged, including original guide and body
+reports. Four Sobol scrambles use 1,048,576 probes per reference. Read-only
+guided-body revalidation preserves its audit digest; exact retained-boundary,
+volume and mixed-energy checks pass. Thirty-one regressions pass with one
+optional test skipped, and the real Pardiso smoke check passes.
+
+| Reference | Metric | Native length refinement | Native guided refinement | MMG62seed80 |
+| --- | --- | ---: | ---: | ---: |
+| Native80 | Worst stiffness disagreement | 0.262676% | 0.282939% | 0.417868% |
+| Native80 | Worst local stress disagreement | 12.329883% | 12.404998% | 10.513604% |
+| MMG64 | Worst stiffness disagreement | 0.054269% | 0.051593% | 0.103583% |
+| MMG64 | Worst local stress disagreement | 13.275251% | 13.344148% | 11.181098% |
+
+Guided placement has slightly larger local stress disagreement than length
+refinement in every scramble against both references. MMG remains lower than
+both in every scramble. Common reference material coverage exceeds 99.89%.
+This coarse residual marker does not justify a native port or another budget
+tuning run on these results. The combined accuracy objective remains open.
+
+`runs/accuracy-schwarz-d-error-localization-v1` freezes a read-only diagnostic
+of these same four candidates, references and probes. It pins 49 source and
+612 input hashes. `sample_fields` optionally returns the original located cell
+IDs; its default result remains unchanged. `localize_stress_error.py` must
+reproduce the retained global Gram matrices and scores, then conserve the
+native seed's worst mixed-load error when grouped into wall-distance bins and
+original cells. Wall distance uses periodic reference triangle centroids as a
+proxy, applied identically to all candidates. Exact and 1e-12-quantized shared
+reference tetrahedra are topology diagnostics; they change no geometry or
+point-location gate. The diagnostic distinguishes wall resolution, interior
+error distribution and shared-reference-cell effects before another mesh
+experiment. Localization results remain pending.
