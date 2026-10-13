@@ -593,11 +593,26 @@ Single-sample generation takes 3.01 s and Pardiso FEA takes 86.76 s, with peak
 RSS 4.16 GiB. This seed establishes admission and a node budget, not accuracy
 against a finer reference.
 
-The admitted counts leave exactly 11,968 nodes within MMG's 85,347-node budget.
-`runs/accuracy-schwarz-d-body40-matched-nodes-v1` freezes that number of
-length-ranked native interior insertions, with the unchanged grid40 field,
-geometry request and common gates. The retained-coordinate and oriented-
-boundary checks must pass, volume must remain unchanged and all mixed-load
-energy changes must be nonpositive within the existing numerical tolerance.
-The actual refined mesh and six fields remain pending. No finer reference is
-queued ahead of this result, and no Schwarz D superiority claim is established.
+`runs/accuracy-schwarz-d-body40-matched-nodes-v1` admits all 11,968 requested
+length-ranked interior insertions. It has exactly MMG's 85,347 nodes and
+375,660 tetrahedra, 12.40% fewer than MMG. Minimum quality remains 0.129951.
+All 73,379 seed coordinates and 68,592 oriented boundary triangles remain
+exact; volume is unchanged. All six mixed-load relative energy-change
+eigenvalues are negative, from -0.00281315 to -0.00049891. The fixed grid40
+field, geometry request and common admission gates remain unchanged.
+
+All six field hashes and twelve actual solver residuals pass. Independent
+stiffness reconstruction differs by 5.09e-16, Hill-Mandel energy by 8.96e-15,
+force balance by at most 4.13e-13, and displacement jumps are zero. One live
+generation sample takes 3.42 s and Pardiso FEA takes 112.94 s, with peak RSS
+4.51 GiB. The retained boundary and nonincreasing energy establish nested
+refinement; they do not establish better local stress accuracy than MMG.
+
+`runs/schwarz-d-reference80-v1` freezes one finer native reference using the
+same Microgen field, native build, geometry request and common admission gates.
+Audited CG avoids extrapolating Pardiso's tested factorization memory to this
+larger mesh. The one-thread worker uses the established finer-reference bounds
+of 16 GiB, 5,400 seconds and four million tetrahedra. Inspect the actual admission
+and six fields before preparing an alternate MMG reference or accuracy analysis.
+No dependent reference is queued ahead of this result, and no Schwarz D
+superiority claim is established yet.
