@@ -768,11 +768,40 @@ stiffness disagreement is 0.262676% against native80 and 0.054269% against
 alternate MMG64, both lower than the seed and MMG62. Local stress remains to
 be measured; lower mixed energies do not establish a field-accuracy win.
 
-`runs/accuracy-schwarz-d-body64-fields-v1` freezes native64, MMG62seed80 and
+`runs/accuracy-schwarz-d-body64-fields-v1` compares native64, MMG62seed80 and
 this refined native body on identical common material against native80 and
-alternate MMG64. It pins 48 analysis source and 510 input hashes, including the
-previous comparison's original fields and reports. Four Sobol scrambles use
-1,048,576 probes per reference. Read-only body-field revalidation must preserve
-the saved audit digest, with exact retained-boundary, volume and mixed-energy
-checks, regression tests and the real Pardiso smoke check. Local-stress results
-remain pending; no alternative refinement is queued ahead of this comparison.
+alternate MMG64. All 48 analysis source and 510 input hashes remain unchanged,
+including the previous comparison's original fields and reports. Four Sobol
+scrambles use 1,048,576 probes per reference. Read-only body-field revalidation
+preserves the saved audit digest, and exact retained-boundary, volume and
+mixed-energy checks pass. Thirty-one regressions pass with one optional test
+skipped, and the real Pardiso smoke check passes.
+
+| Reference | Metric | Native grid64 seed | Native grid64 body | MMG62seed80 |
+| --- | --- | ---: | ---: | ---: |
+| Native80 | Worst stiffness disagreement | 0.388498% | 0.262676% | 0.417868% |
+| Native80 | Worst local stress disagreement | 12.785678% | 12.329905% | 10.513631% |
+| MMG64 | Worst stiffness disagreement | 0.077814% | 0.054269% | 0.103583% |
+| MMG64 | Worst local stress disagreement | 13.704631% | 13.275278% | 11.181124% |
+
+Interior refinement improves native local stress disagreement in every scramble,
+but MMG remains lower against both references in every scramble. Common reference
+material coverage exceeds 99.89%. The three-candidate intersection changes a
+few point-location classifications, so the seed and MMG stress values differ
+slightly from the prior two-candidate report. The fixed tolerance and all
+archived reports remain unchanged. Lower stiffness disagreement and nested
+energy improvements do not satisfy the combined local-stress objective.
+
+`runs/accuracy-schwarz-d-guided-body64-v1` freezes one residual-guided Python
+prototype at the same 57,431-node ceiling. It keeps the native64 seed boundary
+and uses the already-admitted native40 six-load fields as a coarser guide.
+The marker is the existing worst mixed-load traction residual, transferred
+by periodic nearest centroid. The field, build, common gates and CG resource
+bounds remain fixed. Its 74 source hashes include both copied seed and guide;
+24 original input hashes pin their fields and reports. `run_guided_body.py`
+revalidates the original guide read-only and checks its audit digest before
+the standard regression, admission and six-load experiment. It also verifies
+the actual retained oriented boundary and rejects a failed row even if the
+underlying runner returns zero. Admission, fields and accuracy remain pending.
+This uses archived meshes and a prior FEA guide; adaptation timing does not
+establish live generation speed.
