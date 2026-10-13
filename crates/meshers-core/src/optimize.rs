@@ -484,12 +484,7 @@ fn evaluate(
         // Squared MMG quality avoids fractional powers in the hot loop.
         let q = 432. * determinant(p).powi(2) / l2.powi(3);
         worst = worst.min(q);
-        // Experimental interpolation objective: the quadratic ODT energy is
-        // proportional to volume * sum(edge lengths squared). Normalize by
-        // h^5 so scaling the specimen does not change the geometry tradeoff.
-        // Retain a small shape barrier and the existing minimum-quality floor.
-        // This is a geometry-only surrogate, not an elasticity error estimator.
-        cost += determinant(p) * l2 / h.powi(5) + 0.05 / (q * q);
+        cost += 1. / (q * q);
     }
     for f in faces {
         let p = f.map(|i| {

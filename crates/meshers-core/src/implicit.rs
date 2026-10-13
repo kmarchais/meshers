@@ -140,6 +140,11 @@ impl<F: ScalarField> Context<'_, F> {
     }
 }
 impl<F: ScalarField> Geometry for Context<'_, F> {
+    fn refinement_quality_floor(&self) -> f64 {
+        // Experimental: allow curvature refinement down to the requested
+        // FEA shape gate, retaining the historical ceiling for higher targets.
+        self.options.minimum_quality.clamp(0.1, 0.25)
+    }
     fn geometry_tolerance(&self) -> Option<f64> {
         Some(self.options.geometry_tolerance)
     }

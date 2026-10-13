@@ -199,7 +199,9 @@ pub(crate) fn refine_for(
                         let mut t = mesh.tets[ci];
                         *t.iter_mut().find(|v| **v == endpoint).unwrap() = id;
                         let xyz = t.map(|i| if i == id { p } else { mesh.points[i] });
-                        if determinant(xyz) <= 0. || quality(xyz).powf(1.5) < 0.25 {
+                        if determinant(xyz) <= 0.
+                            || quality(xyz).powf(1.5) < geometry.refinement_quality_floor()
+                        {
                             valid = false;
                             break;
                         }

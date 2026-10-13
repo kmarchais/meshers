@@ -1,6 +1,9 @@
 //! Internal geometry context shared by specialized and generic algorithms.
 use crate::Point;
 pub(crate) trait Geometry: Sync {
+    fn refinement_quality_floor(&self) -> f64 {
+        0.25
+    }
     fn value(&self, p: Point) -> f64;
     fn batched(&self) -> bool {
         false
