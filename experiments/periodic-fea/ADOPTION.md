@@ -82,6 +82,24 @@ actual matched-node and 20,000-node Gyroid meshes through public `BoxMesh`
 roundtrips. Coordinates and tetrahedra remain exact, and both pass the public
 periodic-node check at 1e-10. These checks do not change the geometry or run MMG.
 
+The same isolated accuracy wheel also has an admitted Schwarz P profile at
+matched total nodes. Use the fixed raw band [-0.6, 0.6] above with `cells=50`,
+`geometry_tolerance=0.001` and `interior_refine_nodes=8168`, keeping the other
+options fixed. The native request remains separate from the common geometry
+admission gate of 0.002. This produces 123,172 nodes and 604,833 tetrahedra,
+3.93% fewer tetrahedra than the standard MMG control at the same node count.
+Stiffness and mixed-load local stress disagreement are lower against both
+native80 and MMG64, including every stress scramble. Wall-normal RMS is worse
+than MMG and local stress disagreement remains about 11%.
+
+Three measured live Schwarz P generations give median 4.03 s versus 30.56 s
+for standard MMG adaptation of a freshly generated native seed, a 7.57-times
+ratio on one thread. All eight runs reproduce their admitted meshes exactly.
+The public BoxMesh roundtrip and periodic-node checks also pass for the new
+Schwarz P body and seed. See [ACCURACY.md](ACCURACY.md) for the fixed field,
+reference sensitivity, unchanged gates and timing scope. These experimental
+fixture profiles do not establish defaults for other TPMS or spinodoids.
+
 `verify_microgen_bridge.py` checks actual admitted native artifacts through
 Microgen 2.0.0b1's public `BoxMesh.from_pyvista` and `to_pyvista` methods. Both
 roundtrips preserve every coordinate and tetrahedron exactly, and both pass

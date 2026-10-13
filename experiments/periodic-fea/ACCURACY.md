@@ -526,9 +526,30 @@ reduced periodic degrees of freedom. MMG still has better wall-normal RMS,
 0.7272 degrees versus 1.0415 degrees. Local stress disagreement remains about
 11%; this is reference sensitivity evidence, not a continuum certificate.
 
-`runs/accuracy-schwarz-p-matched-generation-v1` freezes these admitted native
-body and standard MMG recipes for one warmup and three measured live generations
-each, in alternating order on one thread. Every generated mesh must reproduce
-its admitted coordinates and tetrahedra exactly. Public Microgen BoxMesh
-roundtrip and periodic-node checks cover the new body and seed. Timing results
-remain pending, and no broader sweep is queued.
+`runs/accuracy-schwarz-p-matched-generation-v1` measures these admitted native
+body and standard MMG recipes with one warmup and three measured live generations
+each, in alternating order on one thread. All eight runs reproduce their admitted
+coordinates and tetrahedra exactly. Native measured samples are 4.0341, 4.0303
+and 4.0702 s; MMG samples are 31.1285, 30.5556 and 30.2592 s. Medians are 4.03 s
+and 30.56 s, a 7.57-times ratio. This comparison includes complete live native
+generation versus standard MMG adaptation of its freshly regenerated native
+seed. Imports, process startup, independent validation and FEA are outside
+timing. Three samples on one machine do not establish a generic MMG speed ratio.
+
+Both the new body and seed pass exact public Microgen BoxMesh roundtrips and
+periodic-node checks at 1e-10. The installed Microgen Schwarz P callable agrees
+exactly with the fixed-width analytic recipe on 2,048 probes. All 154 source
+and 20 input hashes remain unchanged. The 3.93% tetrahedron reduction and lower
+sampled stress disagreement apply to these admitted meshes at matched total
+node counts, with the wall-normal and reference-accuracy limitations above.
+
+`runs/accuracy-schwarz-d-seed48-v1` starts the next case with one grid48 native
+seed and audited Pardiso. It uses the actual installed Microgen Schwarz D
+callable and the catalogue's fixed raw band of half-width 0.42513263140719755.
+The catalogue chooses this width once from a 35% sampled density target; the
+field is unchanged across meshing resolutions. Native boundary tolerance is
+0.001, with unchanged common geometry 0.002, volume 0.01 and quality 0.1 gates.
+The one-thread worker keeps the existing 16 GiB, 1,200-second and two-million-
+tetrahedron bounds. Admission and six-field results remain pending. This seed
+will determine the next control and reference run; no Schwarz D accuracy or
+speed claim follows from the Schwarz P result.
