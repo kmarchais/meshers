@@ -792,16 +792,36 @@ slightly from the prior two-candidate report. The fixed tolerance and all
 archived reports remain unchanged. Lower stiffness disagreement and nested
 energy improvements do not satisfy the combined local-stress objective.
 
-`runs/accuracy-schwarz-d-guided-body64-v1` freezes one residual-guided Python
-prototype at the same 57,431-node ceiling. It keeps the native64 seed boundary
-and uses the already-admitted native40 six-load fields as a coarser guide.
-The marker is the existing worst mixed-load traction residual, transferred
-by periodic nearest centroid. The field, build, common gates and CG resource
-bounds remain fixed. Its 74 source hashes include both copied seed and guide;
-24 original input hashes pin their fields and reports. `run_guided_body.py`
-revalidates the original guide read-only and checks its audit digest before
-the standard regression, admission and six-load experiment. It also verifies
-the actual retained oriented boundary and rejects a failed row even if the
-underlying runner returns zero. Admission, fields and accuracy remain pending.
-This uses archived meshes and a prior FEA guide; adaptation timing does not
-establish live generation speed.
+`runs/accuracy-schwarz-d-guided-body64-v1` admits a residual-guided Python
+prototype with all 57,431 requested nodes. It matches the 324,554-node ceiling,
+with 1,527,204 tetrahedra and minimum quality 0.139258. All 267,123 seed
+coordinates and 196,416 oriented boundary triangles remain exact; volume
+changes by 5.56e-17. All six mixed-load energy-change eigenvalues are negative,
+from -0.00107963 to -0.00022297. The marker uses the admitted native40 six-load
+fields and transfers the worst mixed-load traction residual by periodic nearest
+centroid. The field, build, common gates and CG resource bounds remain fixed.
+
+All 74 source hashes and 24 original input hashes remain unchanged.
+`run_guided_body.py` revalidates the original guide read-only before the standard
+regression, admission and six-load experiment, preserving its audit digest.
+Thirty-one regressions pass with one optional test skipped. The wrapper verifies
+the actual oriented boundary and rejects a failed row even if the underlying
+runner returns zero. Its real completed integration is retained and the helper
+is committed as `3f743af3`.
+
+Six guided-body field hashes and twelve actual solver residuals pass. Independent
+stiffness reconstruction differs by 3.33e-16, Hill-Mandel energy by 2.06e-12,
+force balance by at most 1.46e-10 and displacement jumps are zero. Full stiffness
+disagreement is 0.282939% against native80 and 0.051593% against alternate MMG64.
+CG FEA takes 1,840.00 s, with peak RSS 4.27 GiB. Python adaptation of archived
+meshes takes 18.36 s. Adding archived seed and guide generation and FEA timings
+gives an estimated recipe time of 119.35 s, which is not a measured live recipe
+and cannot establish generation speed.
+
+`runs/accuracy-schwarz-d-guided-fields-v1` freezes this guide-refined mesh, the
+native64 seed, native length refinement and standard MMG62seed80 on identical
+common material against native80 and alternate MMG64. Its 49 source and 611
+input hashes retain both original guide and body reports. Four Sobol scrambles
+use 1,048,576 probes per reference. Read-only guided-body revalidation, exact
+retained-boundary and mixed-energy checks, regressions and real Pardiso smoke
+checks precede the stress comparison. Local-stress results remain pending.
