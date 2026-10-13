@@ -635,6 +635,30 @@ MMG generation time. Compare their actual tensors with grid 64 before choosing
 the next reference refinement. The observed grid-64 score is provisional until
 a finer Schwarz P reference establishes its sensitivity.
 
+Task 1426 completed the refined Schwarz P pair in 721.5 s. Both meshes pass
+all admission, regression and saved-field physics audits. Against native grid
+64, worst relative energy disagreement is 0.66366% for direct grid 44 and
+0.54815% for standard MMG target 36 from that same grid-44 seed.
+
+| Schwarz P target pair | Tetrahedra | Nodes | Generation, s | Audited FEA, s | Minimum quality |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| Direct one-pass Meshers grid 44 | 393,408 | 80,876 | 2.453 | 250.152 | 0.4024 |
+| MMG target 36, native seed 44 | 451,100 | 92,347 | 24.006 | 339.670 | 0.2196 |
+
+Native uses 12.8% fewer elements and has higher minimum shape quality, while
+MMG is slightly closer to the current fine stiffness tensor. Both are below
+the observed 1% target. All timing values remain single samples. Native's
+lower cost at this target does not mean its FEA tensor is the more accurate
+one. The raw meshes, six fields and hashed grid-64 comparisons are retained
+in `runs/schwarz-p-target44-v1`.
+
+The next job calculates native Schwarz P grid 80. It declares a four-million
+tetrahedron seed budget and a 90-minute worker limit, with no change to
+geometry or accuracy tolerances. Compare grid 64 and both target candidates
+against the completed grid-80 tensor before confirming their target status or
+repeating generation timings. A finer same-method reference checks convergence
+sensitivity; it still does not certify continuum accuracy.
+
 ## Independent review and remaining limits
 
 The resumed Claude Sonnet 5.5 review confirmed the recorded comparisons and
