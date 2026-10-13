@@ -9,6 +9,30 @@ fn gyroid(p: Point) -> f64 {
     x.sin() * y.cos() + y.sin() * z.cos() + z.sin() * x.cos()
 }
 
+#[test]
+fn requested_quality_allows_tighter_curvature_refinement() {
+    let mesh = generate(
+        &gyroid,
+        Options {
+            bounds: [[-0.5; 3], [0.5; 3]],
+            region: Region::Band {
+                lower: -0.55,
+                upper: 0.55,
+            },
+            cells: [48; 3],
+            minimum_quality: 0.1,
+            geometry_tolerance: 0.0002,
+            optimize_passes: 1,
+            periodic: [true; 3],
+            ..Options::default()
+        },
+    )
+    .unwrap();
+    assert!(mesh.diagnostics.maximum_sampled_surface_error <= 0.0002);
+    assert!(mesh.diagnostics.minimum_mmg_quality >= 0.1);
+    assert!(mesh.periodic_pairs.iter().all(|pairs| !pairs.is_empty()));
+}
+
 struct BenchmarkGyroid {
     variant: usize,
     batched: bool,
