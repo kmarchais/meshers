@@ -689,6 +689,17 @@ These choices seek more margin against both the observed tensor and the
 convergence model. Keep the actual fine-grid and model-based scores separate.
 Only repeat performance measurements after reading those results.
 
+The same scripted quadratic sensitivity check on Gyroid grids 48/64/80 gives
+0.33731% disagreement between grid 80 and the finest extrapolation, with the
+two extrapolations agreeing within 0.01529%. Direct grid 42 differs from the
+two fits by 1.24800%/1.23461%, direct grid 48 by 0.96068%/0.94728%, and the tight
+MMG32 control by 1.31880%/1.30486%. The artifact is
+`runs/reference-80-v1/quadratic-sensitivity.json`. Grid 48 has more margin than
+grid 42 under this model. The warmed 9.7-times generation measurement for the
+grid42/MMG32 pair remains an actual measurement at the observed-grid80 target;
+it must not be presented as a speed ratio at certified or extrapolated sub-1%
+continuum error. Model qualification remains an empirical sensitivity result.
+
 ## Independent review and remaining limits
 
 The resumed Claude Sonnet 5.5 review confirmed the recorded comparisons and
