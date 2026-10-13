@@ -840,15 +840,42 @@ both in every scramble. Common reference material coverage exceeds 99.89%.
 This coarse residual marker does not justify a native port or another budget
 tuning run on these results. The combined accuracy objective remains open.
 
-`runs/accuracy-schwarz-d-error-localization-v1` freezes a read-only diagnostic
-of these same four candidates, references and probes. It pins 49 source and
-612 input hashes. `sample_fields` optionally returns the original located cell
-IDs; its default result remains unchanged. `localize_stress_error.py` must
-reproduce the retained global Gram matrices and scores, then conserve the
-native seed's worst mixed-load error when grouped into wall-distance bins and
-original cells. Wall distance uses periodic reference triangle centroids as a
-proxy, applied identically to all candidates. Exact and 1e-12-quantized shared
-reference tetrahedra are topology diagnostics; they change no geometry or
-point-location gate. The diagnostic distinguishes wall resolution, interior
-error distribution and shared-reference-cell effects before another mesh
-experiment. Localization results remain pending.
+`runs/accuracy-schwarz-d-error-localization-v1` completes a read-only diagnostic
+of these same four candidates, references and probes. All 49 source and 612
+input hashes remain unchanged, as do all eight per-cell error artifacts.
+Thirty-one regressions pass with one optional test skipped. `sample_fields`
+optionally returns original located cell IDs; its default result remains
+unchanged. The diagnostic reproduces every retained global error Gram matrix
+and worst score. Per-probe energy integrates to the native seed's worst mixed-
+load quadratic form, and wall bins and original-cell sums conserve total error.
+The completed helpers are committed as `32c72978`.
+
+Wall distance uses periodic reference triangle centroids as a proxy, applied
+identically to all candidates. Within proxy distance 0.01 of native80 walls,
+length refinement reduces anchor error density to 0.02314 versus MMG's 0.02725.
+The native excess is in the interior. At distances 0.02-0.04, density is 0.01211
+versus MMG's 0.00384; beyond 0.04 it is 0.01011 versus 0.000354. Median native
+interior tetrahedron volume stays 3.1789e-7, nearly twice the retained fine-grid
+volume 1.6276e-7. Both refinement markers mostly reduce near-wall cell volume
+and leave this interior volume unchanged.
+
+At 1e-12 coordinate quantization, MMG62 shares native80 tetrahedra at 24.61% of
+the common probes; those probes contribute only 0.159% of its anchor error.
+Against alternate MMG64, 22.19% of probes lie in shared tetrahedra, contributing
+0.114% of anchor error. Exact-coordinate sharing is 0.034% against native80
+and 22.19% against MMG64, reflecting the different coordinate representations.
+None of the three native64 candidates shares reference tetrahedra by either
+check. Sharing is a topology diagnostic, not a changed point-location or
+geometry gate. These measurements show correlated reference regions and finer
+MMG interior resolution; they do not prove that its continuum stress ranking
+is biased or superior.
+
+`runs/schwarz-d-reference92-v1` freezes one finer native reference on a fresh
+grid that was not used to seed the MMG candidates. The fixed Microgen field,
+native build, geometry request and common admission gates remain unchanged.
+Audited CG uses the existing 16 GiB, 5,400-second and four-million-tetrahedron
+bounds. Its 61 source hashes are frozen. The actual admission and fields must
+pass before testing ranking against the fresh reference. Existing references
+and unfavorable scores remain retained; no favorable reference is substituted
+or claimed as a continuum certificate. No dependent analysis or mesh change
+is queued before this result.
