@@ -614,6 +614,27 @@ tensor before choosing a native candidate or another reference refinement.
 As with Gyroid, a same-method fine tensor is a convergence observation, not
 a certified continuum reference.
 
+Task 1424 completed native Schwarz P grid 64 in 1,080.8 s. It has 1,168,908
+tetrahedra and 226,716 nodes, minimum quality 0.3839, generation 6.780 s and
+audited FEA 949.890 s. Forward/reverse sampled distances are 0.000350 and
+0.000166 L; volume discrepancy plus empirical uncertainty is 0.05418%.
+All admission, regression and saved-field physics checks passed. The retained
+fine tensor and hashed pilot comparison are in `runs/schwarz-p-reference64-v1`.
+
+Against this tensor, native grid 32 differs by 1.73717% in the worst relative
+strain-energy direction and standard MMG differs by 1.08929%. Both initial
+pilot meshes miss the strict observed 1% target. The faster native generation
+and FEA are accompanied by lower accuracy in that pair; they are not evidence
+of a win at matched FEA error.
+
+The next controlled pair uses direct native grid 44 and standard MMG uniform
+target length 1/36 from the same grid-44 native seed, with hausd 0.0002.
+This refines the native candidate and uses finer required caps for MMG. Both
+receive all common admission and physical checks; the seed remains part of
+MMG generation time. Compare their actual tensors with grid 64 before choosing
+the next reference refinement. The observed grid-64 score is provisional until
+a finer Schwarz P reference establishes its sensitivity.
+
 ## Independent review and remaining limits
 
 The resumed Claude Sonnet 5.5 review confirmed the recorded comparisons and
