@@ -100,6 +100,19 @@ Schwarz P body and seed. See [ACCURACY.md](ACCURACY.md) for the fixed field,
 reference sensitivity, unchanged gates and timing scope. These experimental
 fixture profiles do not establish defaults for other TPMS or spinodoids.
 
+Schwarz D also has an admitted matched-node baseline using Microgen's fixed
+catalogue width 0.8502652628143951, `cells=40`, `geometry_tolerance=0.001` and
+`interior_refine_nodes=11968` in the same experimental wheel. It matches MMG's
+85,347 nodes with 12.40% fewer tetrahedra, and both stiffness and local stress
+disagreement are lower against native80 and MMG64. Three measured live runs
+give median 3.19 s versus 32.45 s for the standard MMG40seed48 recipe, a
+10.17-times ratio on one thread. All eight meshes reproduce their admitted
+arrays exactly; public Microgen roundtrips and periodic-node checks pass.
+Stiffness disagreement remains 1.46-1.78%, and local stress disagreement is
+15-16%. This profile remains an admitted baseline while the investigation
+works toward the existing 1% stiffness selection target. See
+[ACCURACY.md](ACCURACY.md) for the stronger MMG control and fixed gates.
+
 `verify_microgen_bridge.py` checks actual admitted native artifacts through
 Microgen 2.0.0b1's public `BoxMesh.from_pyvista` and `to_pyvista` methods. Both
 roundtrips preserve every coordinate and tetrahedron exactly, and both pass

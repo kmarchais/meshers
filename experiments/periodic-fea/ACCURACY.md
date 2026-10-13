@@ -660,11 +660,26 @@ this budget, so these results do not certify low continuum error. The larger
 native48 control has lower stiffness disagreement and slightly lower local
 stress disagreement against MMG64, with 49.91% more total nodes.
 
-`runs/accuracy-schwarz-d-matched-generation-v1` freezes the admitted body and
-MMG recipes for one warmup and three measured live generations each, in
-alternating order on one thread. Every generated mesh must match its admitted
-coordinates and tetrahedra exactly. Public Microgen BoxMesh roundtrips and
-periodic-node checks cover the body and native40 seed. The timing wrapper now
-accepts an explicit fixed-width field-equivalence definition for Schwarz D;
-older manifests retain the Schwarz P check. All 177 source and 20 input hashes
-are frozen. Timing and application checks remain pending.
+`runs/accuracy-schwarz-d-matched-generation-v1` measures the admitted body
+and MMG recipes with one warmup and three measured live generations each, in
+alternating order on one thread. All eight generated meshes match their admitted
+coordinates and tetrahedra exactly. Native measured samples are 3.1924, 3.2419
+and 3.1672 s; MMG samples are 30.5765, 32.4619 and 32.4546 s. Medians are 3.19 s
+and 32.45 s, a 10.17-times ratio for these recipes. The MMG timing includes
+fresh native48 seed generation and standard adaptation. Imports, process
+startup, independent validation and FEA remain outside timing.
+
+Both the body and native40 seed pass exact public Microgen BoxMesh roundtrips
+and periodic-node checks at 1e-10. The timing wrapper accepts an explicit
+fixed-width field-equivalence definition for Schwarz D; older manifests retain
+the Schwarz P check. The independent benchmark formula and installed Microgen
+Schwarz D callable agree exactly on 2,048 probes at the fixed width. All 177
+source and 20 input hashes remain unchanged. The speed ratio describes this
+coarse admitted comparison; it is not a 1% stiffness-qualified adoption result.
+
+The next controlled point is standard MMG52 from the admitted native80 recipe,
+using the same frozen field, native build and common geometry, volume and
+quality gates. Its actual complexity and reference disagreement will guide
+the finer native profile. The larger seed keeps the established four-million-
+tetrahedron, 16 GiB and 5,400-second bounds, with audited CG. No dependent native
+refinement is queued before inspecting that control.

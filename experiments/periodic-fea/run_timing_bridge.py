@@ -21,14 +21,17 @@ def main():
     from microgen.shape import surface_functions
     from microgen_benchmark.cases import Case
     probes = np.random.default_rng(20261013).uniform(-.5, .5, (2048, 3))
-    field = Case("schwarz-p", "schwarz-p", "schwarz_p", 1.2, "", "")
-    microgen_values = surface_functions.schwarz_p(*(2 * np.pi * probes).T) / .6
+    definition = manifest.get("field_equivalence", {"function": "schwarz_p", "offset": 1.2})
+    function, half_width = definition["function"], definition["offset"] / 2
+    field = Case(function, function, function, definition["offset"], "", "")
+    microgen_values = getattr(surface_functions, function)(*(2 * np.pi * probes).T) / half_width
     difference = float(np.abs(field.field(*probes.T) - microgen_values).max())
     assert difference < 1e-14
     write_json(output / "microgen-field-equivalence.json", {
         "probes": len(probes), "maximum_absolute_difference": difference,
-        "raw_band": [-.6, .6], "microgen_source_sha256": digest(manifest["microgen_surface_functions"]),
-        "scope": "Existing Schwarz P analytic fixture versus the installed Microgen callable at fixed width"})
+        "function": function, "raw_band": [-half_width, half_width],
+        "microgen_source_sha256": digest(manifest["microgen_surface_functions"]),
+        "scope": "Benchmark analytic fixture versus the installed Microgen callable at fixed width"})
     for n, h in manifest["input_sha256"].items():
         assert digest(n) == h, n
     for n, h in manifest["source_sha256"].items():
