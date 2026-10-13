@@ -1,0 +1,282 @@
+{
+  "generated_utc": "2026-10-13T04:15:03.086429+00:00",
+  "scope": "Two periodic fixtures, one machine, one thread; observed and quadratic-model 1% targets, no certified continuum error",
+  "native_source_commit": "66b800cf80e791788b980c01a8438f0e7f8ec8c6",
+  "native_sha256": "4ee6b2e90ae9e82a5dcbb40ba0bed7ac5bc1fc0cbe3567a678ec92797d28438a",
+  "python": "3.12.13",
+  "os": "Windows-11-10.0.26200-SP0",
+  "material": {
+    "young_modulus": 2.5,
+    "poisson_ratio": 0.25
+  },
+  "fea": "P1 tetrahedral elasticity; six strain plus six stress-controlled audits; solver timings single samples",
+  "generation": "One warmup plus three alternating samples per workflow; exact identity to audited meshes",
+  "baseline": "Standard native-seed MMG through supported Microgen CLI wrapper; full seed cost included; no full VTK pipeline speed ratio",
+  "production_native_algorithm_changed": false,
+  "qualification_script_sha256": "779b745b3f1ae79bd79af05e0ea06fcd18c3dfdef4bef4ec4835c09542a6ceb8",
+  "microgen_bridge": {
+    "state": "complete",
+    "microgen_version": "2.0.0b1",
+    "scope": "Public BoxMesh exact array roundtrip and periodic-node check; no remeshing or new FEA",
+    "rows": [
+      {
+        "path": "C:\\Users\\kevin\\dev\\meshers\\.local-work\\periodic-microgen\\experiments\\periodic-fea\\runs\\refinement-v1\\03-periodic-gyroid-meshers-pass1-48\\result.json",
+        "result_sha256": "4234d2c72ea060430af54ae05998f59050776c0817fc30ac376ecf6fba3ab22b",
+        "mesh_sha256": "e4cf4d27ab4fc41a3edcb0118f6ebe60c61a0696c6a695a786f1743ca51e4db9",
+        "case": "periodic-gyroid",
+        "cells": 48,
+        "tetrahedra": 543496,
+        "nodes": 114913,
+        "exact_roundtrip": true,
+        "microgen_is_periodic": true,
+        "periodic_tolerance": 1e-10,
+        "face_interior_node_counts": {
+          "x-": 972,
+          "x+": 972,
+          "y-": 982,
+          "y+": 982,
+          "z-": 972,
+          "z+": 972
+        }
+      },
+      {
+        "path": "C:\\Users\\kevin\\dev\\meshers\\.local-work\\periodic-microgen\\experiments\\periodic-fea\\runs\\schwarz-p-margin52-v1\\00-periodic-schwarz-p-meshers-pass1-52\\result.json",
+        "result_sha256": "bb1c5ab3754a737a196c1692a9a3ea71b4c2f0b8ea45aa5dd8296078d16e3e41",
+        "mesh_sha256": "3e3aae5ee5070b31bf0fae56d746c7896e8af3ea5bed03d9a009f044b2d6434c",
+        "case": "periodic-schwarz-p",
+        "cells": 52,
+        "tetrahedra": 645684,
+        "nodes": 129672,
+        "exact_roundtrip": true,
+        "microgen_is_periodic": true,
+        "periodic_tolerance": 1e-10,
+        "face_interior_node_counts": {
+          "x-": 972,
+          "x+": 972,
+          "y-": 972,
+          "y+": 972,
+          "z-": 972,
+          "z+": 972
+        }
+      }
+    ]
+  },
+  "cases": [
+    {
+      "case": "periodic-gyroid",
+      "raw_band": [
+        -0.55,
+        0.55
+      ],
+      "generation_ratio": 7.49285623686229,
+      "qualification_result_sha256": "d6924c0378118bb99a95a917d44f2eed3303dbcecfb16f44bfe83b1f0c2796fb",
+      "reference_artifacts": [
+        {
+          "path": "experiments\\periodic-fea\\runs\\refinement-v1\\03-periodic-gyroid-meshers-pass1-48\\result.json",
+          "result_sha256": "4234d2c72ea060430af54ae05998f59050776c0817fc30ac376ecf6fba3ab22b",
+          "mesh_sha256": "e4cf4d27ab4fc41a3edcb0118f6ebe60c61a0696c6a695a786f1743ca51e4db9"
+        },
+        {
+          "path": "experiments\\periodic-fea\\runs\\reference-and-seed-v1\\02-periodic-gyroid-meshers-pass1-64\\result.json",
+          "result_sha256": "e3681fc1c4e9778ec3e6cba1cab3e7b3fda61056f1ab371296e987514d40f914",
+          "mesh_sha256": "c9e7fa5da266163cce61b8400ab96da756fc5ac1cc09f91a1b6a9ba6a33dedcd"
+        },
+        {
+          "path": "experiments\\periodic-fea\\runs\\reference-80-v1\\00-periodic-gyroid-meshers-pass1-80\\result.json",
+          "result_sha256": "27f560634762da1373752e2a4e5ceff8bbf25157ced1a92502b38607fdff0a52",
+          "mesh_sha256": "33daf11e58b7cfd5444262edf962dbd7a846a3a095efabb6de70df40f15dbcc4"
+        }
+      ],
+      "quadratic_assumption": "Leading full-tensor error proportional to 1/cells^2, including geometry/discretization effects",
+      "profiles": [
+        {
+          "artifact": "experiments\\periodic-fea\\runs\\refinement-v1\\03-periodic-gyroid-meshers-pass1-48\\result.json",
+          "result_sha256": "4234d2c72ea060430af54ae05998f59050776c0817fc30ac376ecf6fba3ab22b",
+          "mesh_sha256": "e4cf4d27ab4fc41a3edcb0118f6ebe60c61a0696c6a695a786f1743ca51e4db9",
+          "case": "periodic-gyroid",
+          "workflow": "meshers-pass1",
+          "cells": 48,
+          "tetrahedra": 543496,
+          "nodes": 114913,
+          "q_min": 0.151982443453541,
+          "observed_worst_relative_energy_difference": 0.0060792314050667345,
+          "modeled_worst_relative_energy_differences": [
+            0.0096068139861038,
+            0.009472769189058337
+          ],
+          "observed_and_modeled_target_met": true,
+          "generation_samples_s": [
+            5.326294000027701,
+            5.679902200005017,
+            5.462604099971941
+          ],
+          "generation_median_s": 5.462604099971941,
+          "audited_fea_single_sample_s": 401.50541669999075,
+          "q_p05": 0.6048930473007063,
+          "q_median": 0.9295160030897782,
+          "native_seed_cells": 48,
+          "geometry": {
+            "sampled_geometry_distance": 0.0004546967065436321,
+            "sampled_reverse_distance": 0.0003350729782657628,
+            "relative_volume_error_with_uncertainty": 0.001169311263763225
+          }
+        },
+        {
+          "artifact": "experiments\\periodic-fea\\runs\\gyroid-margin-mmg40-seed48-v1\\00-periodic-gyroid-mmg-native-seed-40\\result.json",
+          "result_sha256": "cd3cb5f8c92c2e5b9ec87979522afb688a2d9a45b217bbcdcd0769d9d2b749dd",
+          "mesh_sha256": "847ef8c8f4568f667d20ff008b2dc9ce6083d6594c4bdcc8b3e7d12ece494048",
+          "case": "periodic-gyroid",
+          "workflow": "mmg-native-seed",
+          "cells": 40,
+          "tetrahedra": 640585,
+          "nodes": 135444,
+          "q_min": 0.13790128364664184,
+          "observed_worst_relative_energy_difference": 0.004958754119216486,
+          "modeled_worst_relative_energy_differences": [
+            0.008476677388371521,
+            0.008341877293626402
+          ],
+          "observed_and_modeled_target_met": true,
+          "generation_samples_s": [
+            40.97069409998949,
+            40.639241799974116,
+            40.93050719998428
+          ],
+          "generation_median_s": 40.93050719998428,
+          "audited_fea_single_sample_s": 604.4017244000133,
+          "q_p05": 0.5830529442590296,
+          "q_median": 0.9015172286066392,
+          "native_seed_cells": 48,
+          "geometry": {
+            "sampled_geometry_distance": 0.00045469670654565216,
+            "sampled_reverse_distance": 0.00033507297826555136,
+            "relative_volume_error_with_uncertainty": 0.0008615122779859045
+          }
+        }
+      ]
+    },
+    {
+      "case": "periodic-schwarz-p",
+      "raw_band": [
+        -0.6,
+        0.6
+      ],
+      "generation_ratio": 6.345261907374204,
+      "qualification_result_sha256": "03fe684bdae25dc7784aebbc52a92e5ddc6eba8831d63d15d27712a8c695f09f",
+      "reference_artifacts": [
+        {
+          "path": "experiments\\periodic-fea\\runs\\schwarz-p-target44-v1\\00-periodic-schwarz-p-meshers-pass1-44\\result.json",
+          "result_sha256": "982ec384c9d236e3cef88a7ca21a9ea229571258672e11e9d80983818c52cf91",
+          "mesh_sha256": "171c50adb775fdb5c7206db69e0693ba20f146201821c46ba0354134daad6e52"
+        },
+        {
+          "path": "experiments\\periodic-fea\\runs\\schwarz-p-reference64-v1\\00-periodic-schwarz-p-meshers-pass1-64\\result.json",
+          "result_sha256": "b4651b8ef94032136946c625b1951f3237077eaeac45407351ee19000312a692",
+          "mesh_sha256": "89d4843c5ab291c99c003601f4f098735327c8d8a7a2866245bfcf35025d5eef"
+        },
+        {
+          "path": "experiments\\periodic-fea\\runs\\schwarz-p-reference80-v1\\00-periodic-schwarz-p-meshers-pass1-80\\result.json",
+          "result_sha256": "2c38d27c6b766996f21ed9377160152cc3a589c3c2187bc4ab58c1da56b636db",
+          "mesh_sha256": "a6da597c97a09fdb13478b9d34d2cd671faec9fa9449aec4c8165304e9bc6663"
+        }
+      ],
+      "quadratic_assumption": "Leading full-tensor error proportional to 1/cells^2, including geometry/discretization effects",
+      "profiles": [
+        {
+          "artifact": "experiments\\periodic-fea\\runs\\schwarz-p-margin52-v1\\00-periodic-schwarz-p-meshers-pass1-52\\result.json",
+          "result_sha256": "bb1c5ab3754a737a196c1692a9a3ea71b4c2f0b8ea45aa5dd8296078d16e3e41",
+          "mesh_sha256": "3e3aae5ee5070b31bf0fae56d746c7896e8af3ea5bed03d9a009f044b2d6434c",
+          "case": "periodic-schwarz-p",
+          "workflow": "meshers-pass1",
+          "cells": 52,
+          "tetrahedra": 645684,
+          "nodes": 129672,
+          "q_min": 0.3454998876371982,
+          "observed_worst_relative_energy_difference": 0.005100649286953869,
+          "modeled_worst_relative_energy_differences": [
+            0.008961284617926318,
+            0.008929428443665196
+          ],
+          "observed_and_modeled_target_met": true,
+          "generation_samples_s": [
+            5.035047199999099,
+            4.782378299976699,
+            5.262879200003226
+          ],
+          "generation_median_s": 5.035047199999099,
+          "audited_fea_single_sample_s": 478.027602999995,
+          "q_p05": 0.6209444159680122,
+          "q_median": 0.9295160030897791,
+          "native_seed_cells": 52,
+          "geometry": {
+            "sampled_geometry_distance": 0.0005491635527546215,
+            "sampled_reverse_distance": 0.00039856361983009393,
+            "relative_volume_error_with_uncertainty": 0.000629352844514738
+          }
+        },
+        {
+          "artifact": "experiments\\periodic-fea\\runs\\schwarz-p-margin52-v1\\01-periodic-schwarz-p-mmg-native-seed-40\\result.json",
+          "result_sha256": "5ba345f4b9d276e8ded730bbc8d8cf7a0ecbf73b115933fe6045c34aaed59194",
+          "mesh_sha256": "ae8c0ef27aa6823e3321e995ac8314805405accf37fdb19d3ee193c773338f61",
+          "case": "periodic-schwarz-p",
+          "workflow": "mmg-native-seed",
+          "cells": 40,
+          "tetrahedra": 629597,
+          "nodes": 123172,
+          "q_min": 0.204849209415625,
+          "observed_worst_relative_energy_difference": 0.00540755208185022,
+          "modeled_worst_relative_energy_differences": [
+            0.009230197843972145,
+            0.009230247621608555
+          ],
+          "observed_and_modeled_target_met": true,
+          "generation_samples_s": [
+            30.96902149998641,
+            31.948693199985428,
+            33.04253949999111
+          ],
+          "generation_median_s": 31.948693199985428,
+          "audited_fea_single_sample_s": 509.2764220000099,
+          "q_p05": 0.6462891829394478,
+          "q_median": 0.929516003089751,
+          "native_seed_cells": 52,
+          "geometry": {
+            "sampled_geometry_distance": 0.0005491635527547234,
+            "sampled_reverse_distance": 0.0003982772622416223,
+            "relative_volume_error_with_uncertainty": 0.0006134416893494943
+          }
+        }
+      ]
+    }
+  ],
+  "packages": {
+    "meshers": "0.1.0",
+    "microgen": "2.0.0b1",
+    "fedoo": "1.0.0b2",
+    "numpy": "2.5.3",
+    "scipy": "1.18.1",
+    "pyamg": "5.3.0",
+    "pyvista": "0.49.0",
+    "vtk": "9.7.1",
+    "mmgpy": "0.17.1",
+    "meshio": "5.3.5",
+    "simcoon": "2.1.0"
+  },
+  "benchmark_lock_sha256": "803abfea7a22d3189f64d77cd8d947eddb092954a7fe82f062ddcae2b0f94584",
+  "admission": {
+    "geometry_tolerance": 0.002,
+    "volume_tolerance": 0.01,
+    "minimum_quality": 0.1,
+    "periodic_pair_tolerance": 1e-10,
+    "threads": 1
+  },
+  "mmg_cli_sha256": "7010a9f4d7e3fec9d442b5fa4229133bff365d176babbb6cf399ebd62fd1c2b8",
+  "microgen_recipe_check": {
+    "candidate_sha256": "4ee6b2e90ae9e82a5dcbb40ba0bed7ac5bc1fc0cbe3567a678ec92797d28438a",
+    "microgen_is_periodic": true,
+    "points": 114913,
+    "tetrahedra": 543496,
+    "exact_points": true,
+    "exact_tetrahedra": true
+  }
+}

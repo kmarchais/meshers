@@ -1,14 +1,20 @@
 # Periodic meshing investigation
 
-The strongest current repeated-generation comparison is periodic Schwarz P:
-native grid 52 takes 5.035 s median versus 31.949 s for standard MMG target 40
-from the same native seed, a 6.35-times generation ratio. All eight repeated
-outputs exactly match the admitted meshes and saved FEA fields. Their worst
-energy disagreement against native grid 80 is 0.510% and 0.541%; quadratic
-convergence-model scores are about 0.893% and 0.923%. Those modeled scores are
-not certified continuum errors. The MMG control uses Microgen's supported CLI
-wrapper; this ratio is not measured against the full VTK-to-MMG pipeline.
-These experiments have not changed the production native meshing algorithm.
+The current repeated-generation comparisons use admitted meshes with margin
+against observed grid-80 and quadratic-model 1% energy targets:
+
+| Periodic fixture | Direct native grid | MMG target / seed | Native median, s | MMG median, s | Generation ratio |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| Gyroid band [-0.55, 0.55] | 48 | 40 / 48 | 5.463 | 40.931 | 7.49 |
+| Schwarz P band [-0.6, 0.6] | 52 | 40 / 52 | 5.035 | 31.949 | 6.35 |
+
+One warmup and three measured samples per workflow reproduce all sixteen
+audited meshes exactly. Quadratic-model scores are not certified continuum
+errors. MMG uses Microgen's supported CLI wrapper and includes the native seed
+cost; these ratios are not measured against the full VTK-to-MMG pipeline.
+FEA timings are single samples. The production native algorithm is unchanged.
+See [SUMMARY.json](SUMMARY.json) for the consolidated measurements and
+[ADOPTION.md](ADOPTION.md) for a direct Microgen integration recipe.
 
 The completed first pilot is pueue task 1204, retained in `runs/coarse-v2`.
 It uses the packaged PR #5 build, native MMG CLI through Microgen's supported
@@ -779,13 +785,38 @@ comparisons that require extra convergence-model margin, while retaining the
 older pair's original observed-reference scope. No repeated solver speedup or
 certified continuum error is inferred.
 
-## Independent review and remaining limits
+Task 1441 completed the higher-margin Gyroid repeats in 189.6 s. Native samples
+are 5.3263, 5.6799 and 5.4626 s, median 5.4626 s. MMG samples are 40.9707,
+40.6392 and 40.9305 s, median 40.9305 s. The ratio is 7.4929. All eight outputs
+exactly match the admitted canonical meshes. Artifacts are in
+`runs/gyroid-margin-generation-repeats48-v1`.
+
+`qualify_comparison.py` ties those medians to saved-field-verified artifacts
+and three native reference levels. It recomputes medians and checks one warmup
+and three samples per workflow, manifest and audited-mesh hashes, and exact
+identity records. It reports a speed ratio at the target only when both
+observed and both quadratic-model energy differences are at most 1%. Current
+Gyroid and Schwarz P pairs pass. The older native42/tight-MMG32 pair returns
+`selected_pair=false` and no target speed ratio. This prevents its reuse at
+the stronger model target. Repeat folders retain `qualified-comparison.json`.
+
+The native Gyroid48 and Schwarz P52 artifacts also passed a public Microgen
+2.0.0b1 `BoxMesh` roundtrip without any array changes and its public periodic-node
+check at 1e-10. This proves an array-conversion path for the tested meshes, not
+a completed production backend or a new FEA solve. Reproduce it with
+`verify_microgen_bridge.py`.
+
+## Historical review and remaining limits
 
 The resumed Claude Sonnet 5.5 review confirmed the recorded comparisons and
 artifact-verification results. It inspected retained artifacts without rerunning
 numerics; no transcript was available in this worktree. The earlier log entry
 about an unavailable review records the initial provider failure. The resumed
 review supersedes that status.
+
+That review predates the later HXT, Schwarz P and convergence-model work.
+The later experiments were checked against actual retained artifacts without
+delegated reviewers, following the user's instruction.
 
 The stiffness reference uses Meshers' own discretization. Native candidates
 may share discretization errors with that reference, so closeness to its tensor
@@ -794,7 +825,7 @@ convergence check within the same method. An independently converged reference
 is still needed to test possible shared errors. Reconstruction, equilibrium
 and energy audits establish numerical consistency, not continuum accuracy.
 
-The warmed 10.67 times generation ratio compares direct native grid 40 with
+The historical warmed 10.67 times generation ratio compares direct native grid 40 with
 standard MMG adapting a native grid-32 seed at `hausd=0.0002`. It is not a
 qualified speed ratio against the current Microgen VTK-to-MMG pipeline, whose
 tested meshes fail common admission gates. This result covers one Gyroid band,
@@ -805,7 +836,7 @@ Minimum native quality is not monotonic with resolution: 0.2737 at grid 32,
 0.1144 at grid 40 and 0.1520 at grid 48. Grid 40 has only 0.0144 margin above
 the 0.1 gate. Neighbouring grids and other geometries must pass before treating
 that configuration as a robust default. The MMG control has the higher minimum
-quality in the roughly 0.8% pair. These observations support a promising direct
+quality in that historical roughly 0.8% pair. These observations support a promising direct
 generation result, not a general claim that Meshers has better shape quality.
 
 ## Algorithm hypotheses to test
@@ -818,11 +849,10 @@ six elasticity fields. The current experiment supports testing accuracy per
 element as a separate objective from minimum element quality.
 
 MMG's documented adaptation combines a geometry/user size map with edge
-splitting, collapse and swaps in the surface and volume. A useful next control
-would prescribe a size map from the saved elasticity solutions and measure
-whether it reaches the same tensor target with fewer unknowns. That result
-would guide a native periodic volume-adaptation implementation. It is a
-hypothesis, not a measured speed or accuracy advantage.
+splitting, collapse and swaps in the surface and volume. The completed scalar
+residual-size-map control gave only 1.5% fewer elements at essentially the same
+tensor disagreement, with prior FEA cost. It does not justify a native port.
+Anisotropic metrics or a different estimator remain separate untested hypotheses.
 [MMG algorithm overview](https://mmgtools.org/tutorials/tutorials_algorithm_overview.html)
 
 Periodic restricted Delaunay refinement is another established comparison.

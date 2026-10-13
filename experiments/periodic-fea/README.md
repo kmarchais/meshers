@@ -137,6 +137,19 @@ same case/build and independently verified saved fields. The assumed leading
 error is proportional to 1/cells^2. Report its scores separately from observed
 fine-grid disagreement; it does not provide a certified continuum error bound.
 
+`qualify_comparison.py --references <low/result.json> <mid/result.json>
+<high/result.json> --native <native/result.json> --mmg <mmg/result.json>
+--repeats <repeat-folder>` checks admitted saved-field artifacts, the repeat
+manifest, sample counts, exact-identity records and recomputed medians. It emits
+a generation ratio at the target only when both meshes meet observed and both
+quadratic-model 1% targets. The target is an empirical selection rule, not a
+certification. The older grid42/tight-MMG32 Gyroid pair fails this stronger rule.
+
+`verify_microgen_bridge.py <native/result.json> ...` exercises the public
+Microgen `BoxMesh` conversion and periodic-node check on admitted native arrays.
+See [ADOPTION.md](ADOPTION.md) for the integration recipe and
+[SUMMARY.json](SUMMARY.json) for the consolidated tested profiles.
+
 `repeat_generation.py` reuses the frozen generation code for one warmup and
 three timing samples of two admitted artifacts from the same prepared case.
 It reads the field and offset from the frozen manifest and requires a common
