@@ -550,6 +550,22 @@ The catalogue chooses this width once from a 35% sampled density target; the
 field is unchanged across meshing resolutions. Native boundary tolerance is
 0.001, with unchanged common geometry 0.002, volume 0.01 and quality 0.1 gates.
 The one-thread worker keeps the existing 16 GiB, 1,200-second and two-million-
-tetrahedron bounds. Admission and six-field results remain pending. This seed
-will determine the next control and reference run; no Schwarz D accuracy or
-speed claim follows from the Schwarz P result.
+tetrahedron bounds. The admitted seed has 127,943 nodes, 568,584 tetrahedra and
+minimum quality 0.183251. Both sampled boundary distances pass, with forward
+0.0004082 and reverse 0.0001482. Solid fraction is 0.349609, and relative volume
+error including reference uncertainty is 0.0013474. Shape, geometry, manifold,
+nonoverlap and periodic triangle checks pass.
+
+All six field hashes and twelve solver residuals pass. Independent stiffness
+reconstruction differs by 4.46e-16, Hill-Mandel energy by 2.71e-14, periodic
+force balance by at most 1.27e-12, and displacement jumps are zero. Single-sample
+generation takes 5.71 s and Pardiso FEA takes 249.59 s, with peak RSS 7.83 GiB.
+These values establish admission, not reference accuracy or repeated speed.
+
+`runs/accuracy-schwarz-d-mmg40-seed48-v1` prepares one standard MMG40 control
+from the identical grid48 native recipe. The native build, frozen Microgen
+specimen, native tolerance, common geometry, volume and quality gates remain
+the same. MMG uses required box caps, Hausdorff parameter 0.002, hgrad 1.3 and
+nr enabled, with audited Pardiso and the existing worker bounds. Inspect its
+admission and actual complexity before choosing body refinement or a finer
+reference. No Schwarz D superiority claim is established yet.
