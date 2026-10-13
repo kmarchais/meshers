@@ -158,7 +158,7 @@ quality 0.119638. Independent checks retain all 120,248 seed coordinates and
 mixed energy changes are negative, and saved fields pass reconstruction,
 energy, periodic displacement and force-balance audits.
 
-On identical probes, the results are:
+On identical 131,072 probes, the results are:
 
 | Reference | Metric | Boundary seed | Body refinement | MMG40seed48 |
 | --- | --- | ---: | ---: | ---: |
@@ -205,7 +205,80 @@ Stiffness disagreement is 2.53e-12; volume-weighted local stress disagreement
 over all tetrahedra is 3.79e-11. Each Pardiso formulation uses one factorization
 for six right-hand sides, with the first factor released before the second.
 These are single calibration samples, not repeated solver performance results.
-A larger saved-mesh replay is the next check.
+The larger paired replay in `runs/accuracy-pardiso-replay48-v1` completes on the
+same 623,665-tetrahedron body mesh. Both workflows retain all twelve solver
+records and pass their individual saved-field audits. CG takes 533.10 s for
+homogenization and Pardiso 258.44 s. Peak worker RSS increases from 2.39 GiB to
+8.38 GiB, within the unchanged 16 GiB worker limit. Pardiso uses one factor for
+each six-load formulation; maximum reduced-system residual is 7.40e-13.
+The direct paired comparison confirms stiffness agreement to 9.91e-12 and
+volume-weighted local stress agreement to 1.19e-10. Revalidation leaves the
+saved audit unchanged. These remain single calibration samples.
+`--fea-solver pardiso` explicitly selects the callback for future accuracy
+experiments; CG remains the default.
+
+## The 20,000-node result
+
+`runs/accuracy-body-refine48-20k-v1` retains the same boundary seed and fixed
+grid16 guide, with a 20,000-node budget and audited Pardiso. It completes with
+645,319 tetrahedra, 140,248 nodes and minimum quality 0.119638. Volume and all
+120,248 seed coordinates and 97,818 oriented boundary triangles are unchanged.
+All physical and saved-field audits pass. FEA takes 282.97 s in this sample,
+with peak worker RSS 8.79 GiB. Adaptation of saved artifacts takes 5.93 s;
+that time still excludes live seed and guide preparation.
+
+`runs/accuracy-body-fields20k-v1` compares all candidates on identical common
+material using 1,048,576 probes per reference, split into four independent
+scrambles. This finer sampling gives:
+
+| Reference | Metric | Guided body20k | MMG40seed48 |
+| --- | --- | ---: | ---: |
+| Native80 | Worst stiffness disagreement | 0.486935% | 0.495875% |
+| Native80 | Worst local stress disagreement | 10.352727% | 10.456603% |
+| MMG64 | Worst stiffness disagreement | 0.425450% | 0.433647% |
+| MMG64 | Worst local stress disagreement | 10.590793% | 10.664993% |
+
+The body mesh's local score is lower in every independent scramble against
+both references. Common material coverage exceeds 99.94%. It uses 0.74% more
+tetrahedra and 3.55% more nodes than MMG, while MMG retains the higher minimum
+shape quality (0.137901). This is an accuracy lead on the studied fixture at
+similar complexity, with the original gates preserved. It does not certify
+continuum stress error or establish a production generation speed.
+
+## Length-only control
+
+`runs/accuracy-body-length48-20k-v1` ranks eligible interior edges by length
+alone at the same 20,000-node budget. It performs no guide FEA or residual
+transfer. The admitted mesh has 642,072 tetrahedra, 140,248 nodes and minimum
+quality 0.136380. It preserves every original coordinate and oriented boundary
+triangle, with unchanged volume and nonincreasing energy for every mixed load.
+Adaptation of the saved seed takes 5.05 s; audited Pardiso FEA takes 285.19 s
+with peak worker RSS 8.21 GiB. These are single samples. The adaptation time
+excludes live seed generation.
+
+`runs/accuracy-body-marker-fields-v1` compares the length-only control with
+the guided meshes and MMG on 1,048,576 identical probes per reference, split
+into four independent Sobol scrambles:
+
+| Reference | Metric | Length-only body20k | Guided body20k | MMG40seed48 |
+| --- | --- | ---: | ---: | ---: |
+| Native80 | Worst stiffness disagreement | 0.465206% | 0.486935% | 0.495875% |
+| Native80 | Worst local stress disagreement | 10.247238% | 10.352727% | 10.456603% |
+| MMG64 | Worst stiffness disagreement | 0.403727% | 0.425450% | 0.433647% |
+| MMG64 | Worst local stress disagreement | 10.489613% | 10.590793% | 10.664993% |
+
+Length-only refinement beats both controls in every local-stress scramble
+against both references. Common material coverage exceeds 99.94%. It uses
+0.23% more tetrahedra and 3.55% more nodes than MMG, whose minimum quality is
+0.137901. Thirty regressions pass in the original environment, one optional
+library test skips there and passes in the isolated Pardiso environment.
+Read-only revalidation preserves the saved audit digest and checks all six
+fields. All 52 source hashes and 167 input hashes match the frozen manifest.
+
+Carry forward length-only refinement for this fixture. The coarse FEA guide
+does not earn its extra preparation cost. A native implementation and live
+generation measurements remain necessary before adopting a production recipe.
+The local scores remain reference disagreements, not continuum error bounds.
 
 ## Broader fixtures
 

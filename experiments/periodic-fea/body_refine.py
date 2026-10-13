@@ -146,37 +146,49 @@ def generate(case, cells, config, directory, checkpoint):
     source = Path(__file__).parent
     seed_dir, guide_dir = source / "body-seed", source / "body-guide"
     started = time.perf_counter()
-    checkpoint(stage="Coarse mixed-load residual map")
-    centers, density, guide = guide_score(guide_dir)
+    marker = config.get("body_marker", "guide")
+    if marker not in {"guide", "length"}:
+        raise ValueError("Unknown body marker")
+    guide = None
+    if marker == "guide":
+        checkpoint(stage="Coarse mixed-load residual map")
+        centers, density, guide = guide_score(guide_dir)
     seed = json.loads((seed_dir / "result.json").read_text())
-    if seed["case"] != case.id or guide["case"] != case.id:
+    if seed["case"] != case.id or guide is not None and guide["case"] != case.id:
         raise ValueError("Seed/guide geometry differs from requested case")
-    definitions = [json.loads((folder / "input-provenance.json").read_text())["specimen"] for folder in [seed_dir, guide_dir]]
-    if definitions[0] != definitions[1] or definitions[0]["offset"] != case.offset or definitions[0]["function"] != case.function:
+    folders = [seed_dir, guide_dir] if guide is not None else [seed_dir]
+    definitions = [json.loads((folder / "input-provenance.json").read_text())["specimen"] for folder in folders]
+    if any(definition != definitions[0] for definition in definitions) or definitions[0]["offset"] != case.offset or definitions[0]["function"] != case.function:
         raise ValueError("Seed/guide field definitions differ from the requested specimen")
     mesh = np.load(seed_dir / "mesh.npz")
     if digest(seed_dir / "mesh.npz") != seed["mesh_sha256"]:
         raise ValueError("Seed mesh changed")
     points, tets, surface = mesh["points"], mesh["tetrahedra"], mesh["surface"]
     all_edges = np.unique(np.sort(tets[:, TET_EDGES].reshape(-1, 2), axis=1), axis=0)
-    query = (points[all_edges].mean(axis=1) + .5) % 1
-    tree = cKDTree((centers + .5) % 1, boxsize=1)
-    _, nearest = tree.query(query, workers=1)
+    edge_density = np.ones(len(all_edges))
+    if guide is not None:
+        query = (points[all_edges].mean(axis=1) + .5) % 1
+        tree = cKDTree((centers + .5) % 1, boxsize=1)
+        _, nearest = tree.query(query, workers=1)
+        edge_density = density[nearest]
     checkpoint(stage="Nested body-edge bisection")
-    points, tets, metadata = split_interior_edges(points, tets, surface, density[nearest],
+    points, tets, metadata = split_interior_edges(points, tets, surface, edge_density,
                                                  config["body_refine_nodes"], config["minimum_quality"])
     if len(tets) > config["max_tetrahedra"]:
         raise ValueError("Body-refinement tetrahedron budget exceeded")
     elapsed = time.perf_counter() - started
+    guide_generation_s = guide["generation_s"] if guide is not None else 0.
+    guide_fea_s = guide["homogenization"]["seconds"] if guide is not None else 0.
     return points, tets, {
         **metadata, "generation_s": elapsed, "mesh_s": elapsed, "setup_s": 0.,
         "generation_timing_scope": "Only Python adaptation of saved artifacts; not direct generation",
-        "prototype_only": True, "guide_cells": guide["cells"], "seed_cells": seed["cells"],
-        "archived_guide_generation_s": guide["generation_s"],
-        "archived_guide_fea_s": guide["homogenization"]["seconds"],
+        "prototype_only": True, "guide_cells": guide["cells"] if guide is not None else None, "seed_cells": seed["cells"],
+        "archived_guide_generation_s": guide_generation_s,
+        "archived_guide_fea_s": guide_fea_s,
         "archived_seed_generation_s": seed["generation_s"],
-        "estimated_live_recipe_s": elapsed + guide["generation_s"] + guide["homogenization"]["seconds"] + seed["generation_s"],
+        "estimated_live_recipe_s": elapsed + guide_generation_s + guide_fea_s + seed["generation_s"],
         "seed_tensor": seed["homogenization"]["stiffness_engineering_voigt"],
         "seed_volume": seed["solid_fraction"],
-        "body_marker": "Coarse worst mixed-load traction residual, transferred by periodic nearest centroid",
+        "body_marker_kind": marker,
+        "body_marker": "Coarse worst mixed-load traction residual, transferred by periodic nearest centroid" if guide is not None else "Longest eligible interior edges; no FEA guide",
     }

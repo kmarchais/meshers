@@ -171,6 +171,8 @@ def compare(reference_path, candidates, output, power=17, geometry_gate=None):
                 constants[name]["relative_difference"] = (a / b - 1).tolist()
         row = {
             **candidate[2], "workflow": candidate[0]["workflow"], "cells": candidate[0]["cells"],
+            **{key: candidate[0].get(key) for key in ["nodes", "tetrahedra", "q_min", "inserted_body_nodes",
+                                                      "body_marker_kind", "linear_solver", "generation_timing_scope", "estimated_live_recipe_s"]},
             "stiffness": tensor_difference(candidate[1], reference[1]),
             "compliance": tensor_difference(np.linalg.inv(candidate[1]), np.linalg.inv(reference[1])),
             "engineering_constants": constants,

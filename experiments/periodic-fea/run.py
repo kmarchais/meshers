@@ -38,8 +38,13 @@ def write_json(path, value):
 def prepare(output, native_package, task_specs=None, mmg_hausd=0.002, worker_timeout=1200,
             max_tetrahedra=2_000_000, mmg_seed_cells=None, mmg_size_map=None, surface_seed_cells=None,
             native_build_manifest=None, specimens_path=None, geometry_tolerance=0.002,
-            native_geometry_tolerance=None, body_seed=None, body_guide=None, body_refine_nodes=15000):
+            native_geometry_tolerance=None, body_seed=None, body_guide=None, body_refine_nodes=15000,
+            fea_solver="cg", body_marker="guide"):
     """Freeze the executable experiment before it enters the shared queue."""
+    if fea_solver not in {"cg", "pardiso"}:
+        raise ValueError("Unknown FEA solver")
+    if body_marker not in {"guide", "length"}:
+        raise ValueError("Unknown body marker")
     output.mkdir(parents=True, exist_ok=False)
     source = output / "source"
     source.mkdir()
@@ -152,6 +157,8 @@ def prepare(output, native_package, task_specs=None, mmg_hausd=0.002, worker_tim
             "periodic_pair_tolerance": 1e-10,
             "worker_timeout_s": worker_timeout,
             "body_refine_nodes": body_refine_nodes,
+            "fea_solver": fea_solver,
+            "body_marker": body_marker,
         },
         "specimens": {
             "solid-cell": {"function": "solid", "offset": 1},
@@ -200,11 +207,13 @@ def prepare(output, native_package, task_specs=None, mmg_hausd=0.002, worker_tim
                 raise ValueError(f"Unknown workflow or invalid resolution: {spec}")
             tasks.append({"case": case_id, "workflow": workflow, "cells": cells})
     manifest["tasks"] = tasks
-    if any(task["workflow"] == "meshers-body-refine" for task in tasks) and (body_seed is None or body_guide is None):
-        raise ValueError("Body-refinement prototype needs --body-seed and --body-guide")
+    if any(task["workflow"] == "meshers-body-refine" for task in tasks) and (
+        body_seed is None or body_marker == "guide" and body_guide is None
+    ):
+        raise ValueError("Body refinement needs --body-seed and the guide marker also needs --body-guide")
     if any(task["workflow"].startswith("solver-") for task in tasks) and body_seed is None:
         raise ValueError("Solver replay needs an admitted --body-seed")
-    if any(task["workflow"] == "solver-pardiso-replay" for task in tasks):
+    if fea_solver == "pardiso" or any(task["workflow"] == "solver-pardiso-replay" for task in tasks):
         import pypardiso
         engine = pypardiso.PyPardisoSolver()
         manifest["packages"].update({name: importlib.metadata.version(name) for name in ["pypardiso", "mkl"]})
@@ -475,7 +484,9 @@ def worker(request_path):
         checkpoint(stage=result["stage"], load=0)
         original_solver = homogenization.AuditedCG
         result["linear_solver"] = "audited-cg"
-        if task["workflow"] == "solver-pardiso-replay":
+        if task["workflow"] == "solver-pardiso-replay" or (
+            task["workflow"] != "solver-cg-replay" and config.get("fea_solver", "cg") == "pardiso"
+        ):
             from pardiso_solver import AuditedPardiso
             original_solver = AuditedPardiso
             result["linear_solver"] = "pypardiso"
@@ -805,6 +816,8 @@ if __name__ == "__main__":
     parser.add_argument("--body-seed", type=Path, help="Audited seed artifact directory for nested body refinement")
     parser.add_argument("--body-guide", type=Path, help="Audited coarse-guide artifact directory")
     parser.add_argument("--body-refine-nodes", type=int, default=15000)
+    parser.add_argument("--fea-solver", choices=["cg", "pardiso"], default="cg")
+    parser.add_argument("--body-marker", choices=["guide", "length"], default="guide")
     args = parser.parse_args()
     if args.prepare:
         if args.native_package is None:
@@ -836,6 +849,8 @@ if __name__ == "__main__":
             args.body_seed,
             args.body_guide,
             args.body_refine_nodes,
+            args.fea_solver,
+            args.body_marker,
         )
     elif args.run:
         run(args.run.resolve())

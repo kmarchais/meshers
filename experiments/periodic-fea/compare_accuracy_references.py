@@ -12,7 +12,7 @@ sys.path.insert(0, str(Path.home() / "bin"))
 from pueue_progress import report
 
 
-def compare(references, candidates, output, geometry_gate):
+def compare(references, candidates, output, geometry_gate, power=17):
     # Read-only inputs and atomic fixed-name outputs make an interrupted run restartable.
     output.mkdir(parents=True, exist_ok=True)
     boundary_checks = []
@@ -34,7 +34,7 @@ def compare(references, candidates, output, geometry_gate):
         accuracy_metrics.report = lambda fraction, message, **kwargs: report(
             (index + fraction) / len(references), f"Reference {index + 1}/{len(references)}: {message}", **kwargs)
         rows.append(accuracy_metrics.compare(reference, candidates, output / f"reference-{index}.json",
-                                             geometry_gate=geometry_gate))
+                                             power=power, geometry_gate=geometry_gate))
     write_json(output / "comparisons.json", {"state": "complete", "source_sha256": digest(Path(__file__)),
                                              "common_geometry_gate": geometry_gate, "comparisons": rows,
                                              "body_boundary_verification": boundary_checks})
@@ -47,5 +47,8 @@ if __name__ == "__main__":
     parser.add_argument("--candidates", type=Path, nargs="+", required=True)
     parser.add_argument("--output", type=Path, required=True)
     parser.add_argument("--common-geometry-gate", type=float, default=.002)
+    parser.add_argument("--power", type=int, default=17)
     args = parser.parse_args()
-    compare(args.references, args.candidates, args.output, args.common_geometry_gate)
+    if not 8 <= args.power <= 21:
+        parser.error("--power must be between 8 and 21")
+    compare(args.references, args.candidates, args.output, args.common_geometry_gate, args.power)
