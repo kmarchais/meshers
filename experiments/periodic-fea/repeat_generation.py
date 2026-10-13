@@ -52,20 +52,25 @@ def repeat(output, references):
         if digest(meshers._meshers.__file__) != manifest["native_sha256"]:
             raise ValueError("Imported native binary differs from the frozen candidate")
         if len(references) != 2:
-            raise ValueError("Expected two admitted periodic-Gyroid artifacts")
+            raise ValueError("Expected two admitted artifacts from the same periodic case")
         controls = []
         for path in references:
             result = json.loads((path / "result.json").read_text())
-            if result["case"] != "periodic-gyroid":
-                raise ValueError(f"Expected the shared periodic Gyroid case: {path}")
+            if result["case"] not in manifest["specimens"] or (
+                controls and result["case"] != controls[0][1]["case"]
+            ):
+                raise ValueError(f"Reference case differs from the prepared specimen: {path}")
             if not all(result.get(k) for k in ["homogenization_audited", "geometry_eligible", "quality_eligible", "periodic_eligible"]):
                 raise ValueError(f"Reference is not admitted: {path}")
             if digest(path / "mesh.npz") != result["mesh_sha256"]:
                 raise ValueError(f"Audited mesh changed: {path}")
             controls.append((path, result, np.load(path / "mesh.npz")))
-        case = Case("periodic-gyroid", "periodic-gyroid", "gyroid", 1.1,
+        case_id = controls[0][1]["case"]
+        specimen = manifest["specimens"][case_id]
+        case = Case(case_id, case_id, specimen["function"], specimen["offset"],
                     "Periodic unit cell", "Shared analytic field")
-        document = {"state": "running", "manifest_sha256": digest(output / "manifest.json"), "rows": [],
+        document = {"state": "running", "case": case_id,
+                    "manifest_sha256": digest(output / "manifest.json"), "rows": [],
                     "scope": "One warmup and three generation samples; exact canonical mesh identity to previously audited FEA artifacts; no repeated solver timing"}
         for repetition in range(4):
             for index in ([0, 1] if repetition % 2 == 0 else [1, 0]):
@@ -81,7 +86,7 @@ def repeat(output, references):
                 points, tets, _, _ = canonical_mesh(points, tets)
                 if not np.array_equal(points, saved["points"]) or not np.array_equal(tets, saved["tetrahedra"]):
                     raise ValueError(f"Generated mesh differs from audited artifact: {workflow}, repeat {repetition}")
-                document["rows"].append({"workflow": workflow, "cells": cells, "warmup": repetition == 0,
+                document["rows"].append({"case": case_id, "workflow": workflow, "cells": cells, "warmup": repetition == 0,
                                          "mesh_s": metrics["mesh_s"], "tetrahedra": len(tets),
                                          "audited_artifact": str(path), "audited_mesh_sha256": reference["mesh_sha256"], "exact_mesh_identity": True})
                 live["completed"] += 1

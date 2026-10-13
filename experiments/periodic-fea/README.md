@@ -138,10 +138,13 @@ error is proportional to 1/cells^2. Report its scores separately from observed
 fine-grid disagreement; it does not provide a certified continuum error bound.
 
 `repeat_generation.py` reuses the frozen generation code for one warmup and
-three timing samples of the native grid-40/MMG seed grid-32 pair. Every sample
+three timing samples of two admitted artifacts from the same prepared case.
+It reads the field and offset from the frozen manifest and requires a common
+case, so it can also repeat the Schwarz P pair. Every sample
 must reproduce the corresponding audited canonical mesh exactly. It repeats
 generation only and does not claim repeated solver measurements.
-That pair was selected against the historical grid-64 reference. The completed
+The historical native grid-40/MMG seed grid-32 pair was selected against the
+grid-64 reference. The completed
 grid-80 comparison in [RESULTS.md](RESULTS.md#completed-grid-80-reference-check)
 supersedes its accuracy qualification: native grid 40 no longer passes the
 strict 1% worst-energy target against the finest measured tensor.

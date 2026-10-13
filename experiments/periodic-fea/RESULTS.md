@@ -700,6 +700,32 @@ grid42/MMG32 pair remains an actual measurement at the observed-grid80 target;
 it must not be presented as a speed ratio at certified or extrapolated sub-1%
 continuum error. Model qualification remains an empirical sensitivity result.
 
+Task 1438 completed the higher-margin Schwarz P pair in 1,181.6 s. Both meshes
+pass all common gates, six regression checks and saved-field audits. Against
+grid 80, worst relative energy disagreement is 0.51006% for native grid 52 and
+0.54076% for MMG target 40 from the native52 seed. Against the two quadratic
+fits, native differs by 0.89613%/0.89294% and MMG by 0.92302%/0.92302%.
+Both retain more margin under the convergence model than the earlier pair.
+Observed and extrapolated scores remain distinct, without a continuum certificate.
+
+| Schwarz P higher-margin pair | Tetrahedra | Nodes | Generation sample, s | Audited FEA sample, s | Minimum quality |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| Direct one-pass Meshers grid 52 | 645,684 | 129,672 | 3.972 | 478.028 | 0.3455 |
+| MMG target 40, native seed 52 | 629,597 | 123,172 | 32.573 | 509.276 | 0.2048 |
+
+Native has 2.6% more tetrahedra and 5.3% more nodes, with slightly lower tensor
+disagreement and higher minimum quality. Its audited FEA sample is 6.1% faster,
+but solver performance is not repeated. MMG has a higher fifth-percentile
+quality, 0.6463 versus 0.6209; native does not dominate every quality statistic.
+Retained artifacts and both types of tensor comparisons are in
+`runs/schwarz-p-margin52-v1`.
+
+The next job repeats generation for this admitted pair, one warmup and three
+alternating samples per workflow. `repeat_generation.py` now derives the common
+case from the frozen specimen definition instead of assuming Gyroid. Every
+output must exactly match its audited canonical coordinates and tetrahedra.
+No solver timings are repeated or inferred from these generation samples.
+
 ## Independent review and remaining limits
 
 The resumed Claude Sonnet 5.5 review confirmed the recorded comparisons and
