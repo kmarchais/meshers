@@ -1,5 +1,15 @@
 # Periodic meshing investigation
 
+The strongest current repeated-generation comparison is periodic Schwarz P:
+native grid 52 takes 5.035 s median versus 31.949 s for standard MMG target 40
+from the same native seed, a 6.35-times generation ratio. All eight repeated
+outputs exactly match the admitted meshes and saved FEA fields. Their worst
+energy disagreement against native grid 80 is 0.510% and 0.541%; quadratic
+convergence-model scores are about 0.893% and 0.923%. Those modeled scores are
+not certified continuum errors. The MMG control uses Microgen's supported CLI
+wrapper; this ratio is not measured against the full VTK-to-MMG pipeline.
+These experiments have not changed the production native meshing algorithm.
+
 The completed first pilot is pueue task 1204, retained in `runs/coarse-v2`.
 It uses the packaged PR #5 build, native MMG CLI through Microgen's supported
 public two-pass remesher, one thread and no timing warmup. Its five regression
@@ -725,6 +735,26 @@ alternating samples per workflow. `repeat_generation.py` now derives the common
 case from the frozen specimen definition instead of assuming Gyroid. Every
 output must exactly match its audited canonical coordinates and tetrahedra.
 No solver timings are repeated or inferred from these generation samples.
+
+Task 1439 completed the Schwarz P generation repeats in 152.8 s. Every warmup
+and measured output exactly reproduced its audited canonical mesh. Native
+measured samples are 5.0350, 4.7824 and 5.2629 s, median 5.0350 s. MMG samples
+are 30.9690, 31.9487 and 33.0425 s, median 31.9487 s. The median ratio is
+6.3453. Generation includes the complete native seed for MMG, runs in the
+serial heavy queue with one thread, and excludes the already audited FEA.
+Retained results are in `runs/schwarz-p-generation-repeats52-v1`.
+
+This is a repeated generation result at the observed sub-1% target with extra
+margin under the stated quadratic model. It does not establish continuum
+certification, general superiority across geometries, or a repeated solver
+speedup. Native has slightly more tetrahedra in this pair, and only its minimum
+quality, not every quality percentile, exceeds MMG.
+
+The next Gyroid control uses standard MMG target 1/40 from the admitted native
+grid-48 seed with hausd 0.0002. Native grid 48 already has saved verified fields
+and stays below 1% under both existing quadratic fits. Measure the new MMG
+tensor before selecting a matching generation-repeat pair. The older grid42/
+tight-MMG32 timing pair stays documented at its observed grid-80 target only.
 
 ## Independent review and remaining limits
 
