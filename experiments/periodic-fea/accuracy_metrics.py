@@ -50,14 +50,19 @@ def field_score(candidate, reference):
 
 
 def probe_cells(points, tets, probes):
-    """Locate independent probes in tetrahedra using VTK, without meshing."""
+    """Locate probes with a cell-order-independent choice on shared faces."""
     import pyvista as pv
     from vtkmodules.vtkFiltersCore import vtkProbeFilter
     from vtkmodules.vtkCommonDataModel import vtkStaticCellLocator
 
-    grid = pv.UnstructuredGrid(np.c_[np.full(len(tets), 4), tets].ravel(),
+    # VTK selects the first matching cell at a shared face/edge. Canonical
+    # vertex-set ordering prevents equivalent meshes with permuted cell rows
+    # from sampling different sides of a P1 stress jump. Keep original IDs.
+    keys = np.sort(tets, axis=1)
+    order = np.lexsort(keys.T[::-1])
+    grid = pv.UnstructuredGrid(np.c_[np.full(len(tets), 4), tets[order]].ravel(),
                               np.full(len(tets), pv.CellType.TETRA), points)
-    grid.cell_data["element_id"] = np.arange(len(tets), dtype=np.int64)
+    grid.cell_data["element_id"] = order.astype(np.int64)
     query = pv.PolyData(probes)
     probe = vtkProbeFilter()
     probe.SetInputData(query)
@@ -155,6 +160,7 @@ def compare(reference_path, candidates, output, power=17, geometry_gate=None):
         "scope": "Sampled local stress disagreement on common material; geometry omissions reported separately; no continuum certificate",
         "reference": reference[2], "probe_count": len(probes), "sobol_scramble_seeds": seeds,
         "source_sha256": digest(Path(__file__)), "rows": [],
+        "point_location_policy": "VTK static cell locator with canonical vertex-set cell order; original element IDs and 1e-12 tolerance retained",
         "comparison_domain": "Identical intersection of reference and every candidate material domain",
         "common_material_probe_count": int(common.sum()),
         "reference_material_coverage": float(common.sum() / reference[4].sum()),

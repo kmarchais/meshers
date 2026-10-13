@@ -25,6 +25,20 @@ def test_probe_reports_cell_membership_and_void():
     assert ids[0] == 0
 
 
+def test_shared_face_probes_choose_the_same_tet_after_cell_reordering():
+    # P1 stress jumps across this face. Its sampled value must not depend on
+    # the order in which equivalent meshes store their two cells.
+    points = np.array([[0, 0, 0], [1, 0, 0], [0, 1, 0], [0, 0, 1], [0, 0, -1]], float)
+    tets = np.array([[0, 1, 2, 3], [0, 2, 1, 4]])
+    probes = np.array([[.2, .2, 0], [0, 0, 0], [.3, 0, 0], [.2, .2, .1], [.2, .2, -.1]])
+    first, valid = probe_cells(points, tets, probes)
+    reordered = tets[::-1]
+    second, reordered_valid = probe_cells(points, reordered, probes)
+    np.testing.assert_array_equal(valid, reordered_valid)
+    assert valid.all()
+    np.testing.assert_array_equal(tets[first], reordered[second])
+
+
 def test_stress_score_is_invariant_to_load_basis_and_units():
     rng = np.random.default_rng(20261013)
     reference = rng.normal(size=(12, 6, 6))

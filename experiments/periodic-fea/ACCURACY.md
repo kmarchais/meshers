@@ -279,6 +279,9 @@ Carry forward length-only refinement for this fixture. The coarse FEA guide
 does not earn its extra preparation cost. A native implementation and live
 generation measurements remain necessary before adopting a production recipe.
 The local scores remain reference disagreements, not continuum error bounds.
+These archived scores use VTK's original cell order for shared-face probes.
+The canonical cell-order comparison below supersedes that sampling policy;
+the original reports remain unchanged.
 
 ## Native recipe check
 
@@ -299,9 +302,52 @@ with a 20,000-node budget in `runs/accuracy-native-body48-20k-v1`. It requests
 native boundary tolerance 0.0002, with the unchanged common admission tolerance
 0.002. The archived boundary seed supplies an exact coordinate/boundary check
 and the tensor for checking nested energy; it does not supply the generated
-mesh. Fresh independent admission, saved fields and two-reference comparison
-must pass before accepting this native recipe. The production package and
-default generator remain unchanged.
+mesh. The live run passes independent admission and all six saved-field
+checks, with unchanged volume and nonincreasing energy for every mixed load.
+It produces exactly the Python control's 140,248 coordinates and 642,072
+tetrahedra, allowing for cell order. The six displacement fields agree to
+2.67e-13 in relative L2 norm; worst mixed-load stiffness disagreement between
+the implementations is 1.79e-15. FEA takes 294.85 s with peak RSS 8.62 GiB in
+this sample. The production package and default generator remain unchanged.
+
+### Cell-order-independent stress probing
+
+The first native comparison, `runs/accuracy-native-body-fields-v1`, exposed a
+small sampling dependence. VTK chooses different adjacent cells for shared-face
+or shared-edge probes when cell rows are permuted. P1 stress jumps across these
+faces, so equivalent meshes could get slightly different sampled scores.
+A two-tetrahedron regression reproduces the problem. `probe_cells` now sorts
+cells by canonical vertex sets before building the VTK locator and preserves
+original element IDs. The probe tolerance remains 1e-12. Interior membership
+and all admission gates retain their definitions.
+
+`runs/accuracy-native-body-fields-v2` repeats the million-probe comparison with
+this policy. Thirty-one regressions pass, one optional library check skips in
+the original environment and passes in the isolated Pardiso environment.
+All 46 source hashes and 183 input hashes match. Read-only saved-field
+revalidation preserves the audit digest.
+
+| Reference | Metric | Native body20k | MMG40seed48 |
+| --- | --- | ---: | ---: |
+| Native80 | Worst stiffness disagreement | 0.465206% | 0.495875% |
+| Native80 | Worst local stress disagreement | 10.245754% | 10.456424% |
+| MMG64 | Worst stiffness disagreement | 0.403727% | 0.433647% |
+| MMG64 | Worst local stress disagreement | 10.488190% | 10.664809% |
+
+Native refinement wins in every scramble against both references. Its stress
+scores now match the equivalent Python mesh to roundoff. Coverage remains
+above 99.94%. Minimum shape quality is slightly below MMG, 0.136380 versus
+0.137901; wall-normal RMS angle is also higher, 0.9966 versus 0.8544 degrees.
+Both meshes pass the same common geometry, volume, shape and periodic gates.
+The two-metric FEA lead does not mean every mesh diagnostic improves.
+
+`runs/accuracy-native-body-generation-v1` checks live generation time with one
+warmup and three measured samples per recipe in alternating order. Each recipe
+retains its admitted binary, source and configuration; imports, process startup
+and the independent identity check are outside the measured scope. All eight
+runs must reproduce their admitted coordinates and connectivity exactly. This
+comparison uses standard MMG adaptation of an admitted Meshers seed, rather
+than the public Microgen two-pass remeshing path. Repeated timings are pending.
 
 ## Broader fixtures
 
