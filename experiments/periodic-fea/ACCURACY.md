@@ -677,9 +677,28 @@ Schwarz D callable agree exactly on 2,048 probes at the fixed width. All 177
 source and 20 input hashes remain unchanged. The speed ratio describes this
 coarse admitted comparison; it is not a 1% stiffness-qualified adoption result.
 
-The next controlled point is standard MMG52 from the admitted native80 recipe,
-using the same frozen field, native build and common geometry, volume and
-quality gates. Its actual complexity and reference disagreement will guide
-the finer native profile. The larger seed keeps the established four-million-
+`runs/accuracy-schwarz-d-mmg52-seed80-v1` admits standard MMG52 from the
+native80 recipe, with 136,124 nodes, 670,453 tetrahedra and minimum quality
+0.120484. The regenerated seed coordinates and tetrahedra match native80
+exactly. Both common boundary-distance directions pass, at 0.0011168 and
+0.0006674; volume error including uncertainty is 0.0017893. Six field hashes
+and twelve actual solver residuals pass. Independent stiffness reconstruction
+differs by 7.18e-16, Hill-Mandel energy by 1.69e-12, force balance by at most
+1.62e-10 and displacement jumps are zero. Single-sample CG FEA takes 678.43 s,
+with peak RSS 2.51 GiB; live generation takes 106.63 s. These samples are not
+repeated speed measurements.
+
+Its full mixed-load stiffness disagreement is 1.355278% against native80 and
+1.038340% against alternate MMG64. It therefore misses the observed 1% target;
+local stress has not yet been compared for this control. The fixed field,
+native build and common geometry, volume and quality gates remain unchanged.
+
+`runs/accuracy-schwarz-d-mmg62-seed80-v1` freezes one next MMG control at target
+sizing 62, using the identical native80 seed recipe and all other settings.
+A rough inverse-resolution-squared estimate from the measured 1.355278% point
+places the 1% comparison threshold near resolution 60.54, so 62 gives some
+headroom. This estimate chooses an experiment; it is not a convergence model
+or certified error bound. The actual admitted fields will determine whether
+the target is met. The larger seed keeps the established four-million-
 tetrahedron, 16 GiB and 5,400-second bounds, with audited CG. No dependent native
 refinement is queued before inspecting that control.
