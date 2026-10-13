@@ -659,6 +659,36 @@ against the completed grid-80 tensor before confirming their target status or
 repeating generation timings. A finer same-method reference checks convergence
 sensitivity; it still does not certify continuum accuracy.
 
+Task 1428 completed native Schwarz P grid 80 in 2,560.1 s. It has 2,253,762
+tetrahedra and 426,154 nodes, minimum quality 0.3483, generation 13.717 s and
+audited FEA 2,316.413 s. All admission, regression and saved-field audits pass.
+Forward/reverse sampled distances are 0.0002453 and 0.0001471 L. Volume
+discrepancy plus empirical uncertainty is 0.06192%. The actual tensor and
+hashed cross-run comparisons are in `runs/schwarz-p-reference80-v1`.
+
+Grid 64 differs from grid 80 by 0.21347% in the worst energy direction. Against
+grid 80, the pilot native32/MMG32 meshes differ by 1.95434%/1.30496%, and the
+refined native44/MMG36-seed44 pair by 0.87854%/0.76237%. The refined pair stays
+below the observed 1% target, but native's margin is smaller than the latest
+reference shift. Do not treat this as a certified low-error comparison.
+
+`reference_sensitivity.py` makes a separate, explicitly assumed quadratic
+convergence check reproducible from admitted, saved-field-verified artifacts.
+It extrapolates the full tensor using a leading error proportional to 1/cells^2.
+The extrapolations from grids 44/64 and 64/80 differ by 0.00371%, while grid 80
+differs from the latter by 0.38094%. Native44 differs from the two extrapolations
+by 1.26602%/1.26282%, and MMG36-seed44 by 1.14523%/1.14547%. This consistent trend
+suggests that observed grid-80 scores understate the remaining error near 1%.
+It is a model sensitivity calculation, not a continuum error certificate or a
+replacement for the measured grid-80 score. Results and hashes are retained in
+`runs/schwarz-p-reference80-v1/quadratic-sensitivity.json`.
+
+Instead of repeating generation on this marginal pair, test direct grid 52
+and MMG target 40 from the same native52 seed, with unchanged hausd and gates.
+These choices seek more margin against both the observed tensor and the
+convergence model. Keep the actual fine-grid and model-based scores separate.
+Only repeat performance measurements after reading those results.
+
 ## Independent review and remaining limits
 
 The resumed Claude Sonnet 5.5 review confirmed the recorded comparisons and

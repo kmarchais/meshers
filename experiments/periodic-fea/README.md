@@ -130,6 +130,13 @@ The comparison records the input artifact hashes, all six relative energy
 eigenvalues and admission status. It rejects incomplete runs. A passed geometry
 or physics audit alone does not establish continuum accuracy or repeatable speed.
 
+`reference_sensitivity.py --references <native-low/result.json> <native-mid/result.json>
+<native-high/result.json> --candidates <candidate/result.json> ...` compares two
+full-tensor quadratic extrapolations. It requires admitted artifacts from the
+same case/build and independently verified saved fields. The assumed leading
+error is proportional to 1/cells^2. Report its scores separately from observed
+fine-grid disagreement; it does not provide a certified continuum error bound.
+
 `repeat_generation.py` reuses the frozen generation code for one warmup and
 three timing samples of the native grid-40/MMG seed grid-32 pair. Every sample
 must reproduce the corresponding audited canonical mesh exactly. It repeats
