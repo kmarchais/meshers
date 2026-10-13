@@ -120,6 +120,7 @@ def prepare(output, native_package, task_specs=None, mmg_hausd=0.002, worker_tim
         "specimens": {
             "solid-cell": {"function": "solid", "offset": 1},
             "periodic-gyroid": {"function": "gyroid", "offset": 1.1},
+            "periodic-schwarz-p": {"function": "schwarz_p", "offset": 1.2},
         },
         "measurements": "Single calibration samples, no warmup; no performance claim",
         "reference_status": "No converged continuum stiffness reference yet",

@@ -92,6 +92,11 @@ generation. This algorithm control is separate from the current Microgen
 adoption baseline. A failed solid-cell control stops a batch before its
 expensive references run.
 
+`periodic-schwarz-p/workflow:cells` selects a separate periodic Schwarz P pilot
+with raw band [-0.6, 0.6]. It needs its own fine stiffness reference; the Gyroid
+tensor cannot score this specimen. Analytic geometry probes use the selected
+field. Default task selection still uses the original solid/Gyroid cases.
+
 For `mmg-native-seed`, `--mmg-seed-cells` can set the native seed resolution
 independently of the task's MMG sizing resolution. The default uses the same
 resolution for both. Results record `native_seed_cells` and `mmg_sizing_cells`.

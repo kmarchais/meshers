@@ -558,6 +558,37 @@ The cube control still uses a grid-4 seed and target. Measure element count,
 quality and tensor before deciding whether HXT optimization merits another
 test. Generation timing remains a single sample including the full seed.
 
+Task 1418 completed the finer HXT interior control in 424.1 s. The output
+retains all grid-42 boundary triangles and periodic pairs, and passes geometry
+and saved-field physics audits. It has 390,910 tetrahedra and 79,812 nodes,
+with generation 11.479 s and audited FEA 339.333 s. Minimum quality is 0.007545;
+six elements fall below 0.1. Worst relative energy disagreement is 1.34190%
+against native grid 80 or 1.27931% against fine MMG. It fails both the minimum
+quality and observed 1% accuracy targets. Artifacts are in
+`runs/hxt-interior64-seed42-v1`.
+
+At comparable element/node counts, direct native grid 42 has better measured
+accuracy and minimum quality, and lower generation and audited solver costs
+in the retained samples. Stop calibrating this uniform HXT construction rather
+than adopting it as a native replacement. This result covers the tested fixed
+surface, sizing and optimizer; it does not exclude other Delaunay algorithms
+or optimization settings. There is no qualified HXT speed/accuracy win here.
+
+## Next geometry: periodic Schwarz P
+
+The measured native advantage still covers one Gyroid band. The next pilot
+uses the analytic Schwarz P field `cos(2*pi*x)+cos(2*pi*y)+cos(2*pi*z)` in the
+same unit cube with raw band [-0.6, 0.6], represented by offset 1.2. It compares
+native one-pass grid 32 with standard MMG from that same seed at target 1/32
+and hausd 0.0002. All geometry, quality, periodicity, material, solver and
+saved-field audits remain unchanged. The analytic volume and boundary samples
+come from this new field, not the Gyroid reference.
+
+This first job is an admission and cost pilot. It has no fine Schwarz P tensor
+reference and cannot qualify either workflow at 1%. Inspect its actual meshes
+before choosing a finer reference or changing resolution. Existing default
+Gyroid task selection remains unchanged; the new specimen is selected explicitly.
+
 ## Independent review and remaining limits
 
 The resumed Claude Sonnet 5.5 review confirmed the recorded comparisons and
