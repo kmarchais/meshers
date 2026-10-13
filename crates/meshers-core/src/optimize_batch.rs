@@ -109,7 +109,8 @@ fn evaluate(
                     .sum();
                 let q = 432. * determinant(p).powi(2) / l2.powi(3);
                 worst = worst.min(q);
-                cost += 1. / (q * q);
+                // Match the scalar experimental quadratic interpolation objective.
+                cost += determinant(p) * l2 / h.powi(5) + 0.05 / (q * q);
             }
             current.push((worst, cost));
             if !cost.is_finite() {
