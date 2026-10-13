@@ -581,8 +581,23 @@ speed measurements.
 
 The native grid48 seed exceeds the control's node count by 49.91%, so adding
 interior nodes to it cannot produce a matched-node comparison.
-`runs/accuracy-schwarz-d-seed40-v1` measures one coarser native seed with the
-same field, build, geometry request, admission gates and solver bounds. Its
-actual admitted node count will determine any body-refinement budget. No
-finer reference or dependent refinement is queued ahead of that result, and
-no Schwarz D superiority claim is established yet.
+`runs/accuracy-schwarz-d-seed40-v1` admits a coarser native seed with the same
+field, build, geometry request, admission gates and solver bounds. It has
+73,379 nodes, 326,112 tetrahedra and minimum quality 0.129951. Sampled forward
+and reverse boundary distances are 0.0006361 and 0.0004950. Volume error
+including uncertainty is 0.0018131. All common geometry, quality and periodic
+triangle gates pass, as do six field hashes and twelve actual solver residuals.
+Independent stiffness reconstruction differs by 5.10e-16, Hill-Mandel energy
+by 1.67e-14, force balance by at most 5.16e-13 and displacement jumps are zero.
+Single-sample generation takes 3.01 s and Pardiso FEA takes 86.76 s, with peak
+RSS 4.16 GiB. This seed establishes admission and a node budget, not accuracy
+against a finer reference.
+
+The admitted counts leave exactly 11,968 nodes within MMG's 85,347-node budget.
+`runs/accuracy-schwarz-d-body40-matched-nodes-v1` freezes that number of
+length-ranked native interior insertions, with the unchanged grid40 field,
+geometry request and common gates. The retained-coordinate and oriented-
+boundary checks must pass, volume must remain unchanged and all mixed-load
+energy changes must be nonpositive within the existing numerical tolerance.
+The actual refined mesh and six fields remain pending. No finer reference is
+queued ahead of this result, and no Schwarz D superiority claim is established.
