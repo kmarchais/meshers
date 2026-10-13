@@ -729,10 +729,35 @@ the observed 1% stiffness target at lower complexity. The count leaves 57,431
 nodes within MMG62's budget, but adding them is deferred until the existing
 local-stress fields are compared.
 
-`runs/accuracy-schwarz-d-low-error-fields-v1` freezes native64 and MMG62seed80
-against native80 and alternate MMG64. It pins 48 analysis sources and 435 input
-hashes, including original fields, audits and dependency sources. All four
-meshes receive read-only field revalidation with unchanged saved audit digests.
-The comparison uses 1,048,576 probes split across four Sobol scrambles on the
-same material intersection, alongside regression and real Pardiso smoke checks.
-Local-stress results remain pending; no body-refinement job is queued.
+`runs/accuracy-schwarz-d-low-error-fields-v1` compares native64 and MMG62seed80
+against native80 and alternate MMG64. All 48 analysis source hashes and 435 input
+hashes remain unchanged, including original fields, audits and dependency
+sources. All four meshes pass read-only field revalidation, with unchanged saved
+audit digests. Thirty-one regressions pass with one optional test skipped, and
+the isolated real Pardiso smoke check passes. The comparison uses 1,048,576
+probes split across four Sobol scrambles on the same material intersection.
+
+| Reference | Metric | Native grid64 | MMG62seed80 |
+| --- | --- | ---: | ---: |
+| Native80 | Worst stiffness disagreement | 0.388498% | 0.417868% |
+| Native80 | Worst local stress disagreement | 12.785651% | 10.513607% |
+| MMG64 | Worst stiffness disagreement | 0.077814% | 0.103583% |
+| MMG64 | Worst local stress disagreement | 13.704605% | 11.181109% |
+
+Native64 has lower stiffness disagreement, but MMG62 has lower local stress
+disagreement against both references in every scramble. Common reference
+material coverage exceeds 99.89%. Native wall-normal RMS is better, 0.9627
+degrees versus 1.4462 degrees, and minimum quality is higher. Those geometry
+and shape diagnostics do not establish lower FEA field error. The low-error
+native profile therefore does not yet meet the combined stiffness and local-
+stress objective, despite its lower complexity.
+
+`runs/accuracy-schwarz-d-body64-matched-nodes-v1` freezes one length-ranked
+native interior-refinement pass with a 57,431-node ceiling, the remaining
+headroom under MMG62's 324,554 nodes. It uses the admitted native64 seed and
+unchanged field, build, geometry request, common gates and CG bounds. The
+pass requires exact retained coordinates and oriented boundary triangles,
+unchanged volume and nonincreasing mixed-load energies. Disjoint edge stars
+can limit insertion count, so inspect the actual result before calling it a
+matched-node mesh. Admission and six-field results remain pending; no dependent
+comparison or alternative refinement is queued.
