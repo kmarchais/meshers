@@ -608,11 +608,36 @@ generation sample takes 3.42 s and Pardiso FEA takes 112.94 s, with peak RSS
 4.51 GiB. The retained boundary and nonincreasing energy establish nested
 refinement; they do not establish better local stress accuracy than MMG.
 
-`runs/schwarz-d-reference80-v1` freezes one finer native reference using the
+`runs/schwarz-d-reference80-v1` admits a finer native reference with the
 same Microgen field, native build, geometry request and common admission gates.
-Audited CG avoids extrapolating Pardiso's tested factorization memory to this
-larger mesh. The one-thread worker uses the established finer-reference bounds
-of 16 GiB, 5,400 seconds and four million tetrahedra. Inspect the actual admission
-and six fields before preparing an alternate MMG reference or accuracy analysis.
-No dependent reference is queued ahead of this result, and no Schwarz D
-superiority claim is established yet.
+It has 483,391 nodes, 2,394,888 tetrahedra and minimum quality 0.177350. Sampled
+forward and reverse boundary distances are 0.0001446 and 0.0000810; volume error
+including uncertainty is 0.0008967. All six field hashes and twelve actual
+solver residuals pass. Independent stiffness reconstruction differs by
+4.53e-16, Hill-Mandel energy by 4.32e-12, force balance by at most 1.60e-10,
+and displacement jumps are zero. Audited CG FEA takes 2,555.98 s, with peak RSS
+6.49 GiB. The one-thread worker uses the established finer-reference bounds
+of 16 GiB, 5,400 seconds and four million tetrahedra.
+
+`runs/schwarz-d-mmg-reference64-seed80-v1` admits an alternate standard MMG64
+reference from this native80 recipe. Its regenerated seed coordinates and
+tetrahedra match the admitted native80 artifact exactly. The specimen, native
+build, geometry request, common gates and CG resource bounds remain fixed.
+The alternate mesh has 350,178 nodes, 1,905,153 tetrahedra and minimum quality
+0.132911. Sampled forward and reverse distances are 0.0006885 and 0.0004797;
+volume error including uncertainty is 0.0013311. All six field hashes and
+twelve actual solver residuals pass. Independent stiffness reconstruction
+differs by 1.15e-15, Hill-Mandel energy by 2.92e-12, force balance by at most
+1.70e-10, and displacement jumps are zero. CG FEA takes 2,405.42 s, with peak
+RSS 5.25 GiB. These are admitted reference samples, not repeated solver timings
+or continuum error certification.
+
+`runs/accuracy-schwarz-d-body-matched-fields-v1` freezes both references and
+the native48, MMG40seed48, native40 seed and native40 body candidates. It pins
+48 analysis source files and 585 input hashes, including original sources,
+fields, audits and dependency sources. The comparison uses 1,048,576 probes
+split across four Sobol scrambles on identical common material against each
+reference. It runs regression and real Pardiso smoke checks, read-only body
+revalidation with an unchanged audit digest, and exact retained-coordinate
+and oriented-boundary checks. Full mixed-load stiffness and local stress
+results remain pending; no Schwarz D superiority claim is established yet.
