@@ -480,11 +480,21 @@ Native grid52 has the lower local score in every scramble against both
 topologies. Common material coverage exceeds 99.96%. Its 5.28% node excess
 remains a limitation of this comparison.
 
-`runs/accuracy-schwarz-p-seed50-v1` next measures a grid50 seed with the native
+`runs/accuracy-schwarz-p-seed50-v1` measures a grid50 seed with the native
 accuracy prototype. It requests native boundary tolerance 0.001, with the
 same common geometry 0.002, volume 0.01 and quality 0.1 gates, raw band [-0.6,
 0.6], one optimization pass and one thread. Audited Pardiso uses the existing
-16 GiB and 1,200-second worker bounds. Its actual admitted node count determines
-whether there is room for interior refinement within MMG's 123,172-node budget.
-Do not queue a body refinement until this seed and its fields have been checked.
-No broader sweep is queued.
+16 GiB and 1,200-second worker bounds. The admitted seed has 115,004 nodes,
+571,224 tetrahedra and minimum quality 0.315404. Sampled forward and reverse
+boundary distances are 0.0007033 and 0.0003790. All common gates and six-field
+audits pass. Its generation sample takes 3.80 s and FEA 275.24 s, with peak RSS
+8.32 GiB. These are single samples, not a new speed calibration.
+
+The actual seed count leaves 8,168 nodes within MMG's 123,172-node budget.
+`runs/accuracy-schwarz-p-body50-matched-nodes-v1` requests exactly that many
+length-ranked interior insertions with the same binary, geometry request and
+common gates. Its retained-coordinate and oriented-boundary checks must pass,
+and volume must remain unchanged with nonincreasing mixed-load energy. Inspect
+the fresh fields before comparing stiffness and local stress against native80
+and MMG64. No accuracy lead is claimed for this new profile yet, and no broader
+sweep is queued.
