@@ -36,7 +36,8 @@ def write_json(path, value):
 
 
 def prepare(output, native_package, task_specs=None, mmg_hausd=0.002, worker_timeout=1200,
-            max_tetrahedra=2_000_000, mmg_seed_cells=None, mmg_size_map=None, surface_seed_cells=None):
+            max_tetrahedra=2_000_000, mmg_seed_cells=None, mmg_size_map=None, surface_seed_cells=None,
+            native_build_manifest=None, specimens_path=None, geometry_tolerance=0.002):
     """Freeze the executable experiment before it enters the shared queue."""
     output.mkdir(parents=True, exist_ok=False)
     source = output / "source"
@@ -55,13 +56,30 @@ def prepare(output, native_package, task_specs=None, mmg_hausd=0.002, worker_tim
         shutil.copy2(ROOT / "benchmarks/microgen" / name, source / name)
     if mmg_size_map is not None:
         shutil.copy2(mmg_size_map, source / "size-map.npz")
+    if specimens_path is not None:
+        specimens_document = json.loads(specimens_path.read_text())
+        if "spinodoid_spectrum" in specimens_document:
+            spectrum = specimens_path.parent / specimens_document["spinodoid_spectrum"]
+            if digest(spectrum) != specimens_document["spinodoid_spectrum_sha256"]:
+                raise ValueError("Changed spinodoid spectrum")
+            shutil.copy2(spectrum, source / "spinodoid-spectrum.npz")
+        shutil.copy2(specimens_path, source / "specimens.json")
     native = next(
         path
         for path in (source / "meshers").iterdir()
         if path.name.startswith("_meshers") and path.suffix in {".pyd", ".so"}
     )
     native_hash = digest(native)
-    if native_hash != "4ee6b2e90ae9e82a5dcbb40ba0bed7ac5bc1fc0cbe3567a678ec92797d28438a":
+    native_commit = "66b800cf80e791788b980c01a8438f0e7f8ec8c6"
+    if native_build_manifest is not None:
+        build = json.loads(native_build_manifest.read_text())
+        if build["state"] != "complete" or native_hash != build["native_sha256"] or any(
+            command["exit_code"] != 0 for command in build["commands"]
+        ):
+            raise RuntimeError("Experimental native build is incomplete or does not match package")
+        native_commit = build["source_commit"]
+        shutil.copy2(native_build_manifest, source / "native-build.json")
+    elif native_hash != "4ee6b2e90ae9e82a5dcbb40ba0bed7ac5bc1fc0cbe3567a678ec92797d28438a":
         raise RuntimeError("Expected the previously verified packaged PR #5 native build")
     mmg_executable = Path(
         importlib.metadata.distribution("mmgpy").locate_file(
@@ -85,7 +103,7 @@ def prepare(output, native_package, task_specs=None, mmg_hausd=0.002, worker_tim
         "native_path": str(native.resolve()),
         "native_sha256": native_hash,
         "dependency_sources_sha256": dependency_sources,
-        "native_source_commit": "66b800cf80e791788b980c01a8438f0e7f8ec8c6",
+        "native_source_commit": native_commit,
         "packages": {
             name: importlib.metadata.version(name)
             for name in [
@@ -105,7 +123,7 @@ def prepare(output, native_package, task_specs=None, mmg_hausd=0.002, worker_tim
         "interpreter": sys.executable,
         "config": {
             "periodic": True,
-            "geometry_tolerance": 0.002,
+            "geometry_tolerance": geometry_tolerance,
             "volume_tolerance": 0.01,
             "minimum_quality": 0.1,
             "threads": 1,
@@ -129,6 +147,8 @@ def prepare(output, native_package, task_specs=None, mmg_hausd=0.002, worker_tim
         {"case": "solid-cell", "workflow": workflow, "cells": 4}
         for workflow in ["meshers-fast", "mmg-microgen"]
     ]
+    if specimens_path is not None:
+        manifest["specimens"] = specimens_document["specimens"]
     tasks += [
         {"case": "periodic-gyroid", "workflow": workflow, "cells": 16}
         for workflow in ["meshers-fast", "meshers-pass1", "meshers-balanced", "mmg-microgen"]
@@ -279,7 +299,7 @@ def worker(request_path):
     import homogenization
     import numpy as np
     from microgen_benchmark.backends import generate
-    from microgen_benchmark.cases import Case
+    from fixtures import make_case
     from microgen_benchmark.geometry import canonical_mesh, validate
     from periodic import periodic_pairs
 
@@ -307,14 +327,7 @@ def worker(request_path):
             if digest(path) != expected:
                 raise RuntimeError(f"Dependency source changed since preparation: {path}")
         specimen = manifest["specimens"][task["case"]]
-        case = Case(
-            task["case"],
-            task["case"],
-            specimen["function"],
-            specimen["offset"],
-            "Periodic unit cell",
-            "Shared analytic field",
-        )
+        case = make_case(task["case"], specimen)
         result["stage"] = "generation"
         checkpoint(stage="generation")
         calls, capture_seconds = [], 0.0
@@ -497,7 +510,7 @@ def run(output):
     ]:
         env[name] = "1"
     tests = subprocess.run(
-        [sys.executable, "-m", "pytest", "-q", str(source / "test_periodic.py")],
+        [sys.executable, "-m", "pytest", "-q", *[str(path) for path in sorted(source.glob("test_*.py"))]],
         env=env,
         capture_output=True,
         text=True,
@@ -509,16 +522,19 @@ def run(output):
     # Fixed analytic probes, independent of each generated candidate.
     sys.path.insert(0, str(source))
     import numpy as np
-    from microgen_benchmark.cases import Case
+    from fixtures import make_case
     from microgen_benchmark.reference import boundary_samples
     from scipy.stats import qmc
 
     references = {}
+    selected_cases = {task["case"] for task in manifest["tasks"]}
     for name, definition in manifest["specimens"].items():
+        if name not in selected_cases:
+            continue
         report(
             0.03, f"Analytic reference samples: {name}", eta_s=1800, cases=len(manifest["tasks"])
         )
-        case = Case(name, name, definition["function"], definition["offset"], "Periodic cell", "")
+        case = make_case(name, definition)
         fractions, nested = [], 0.0
         for seed in [20261010, 20261011, 20261012, 20261013]:
             sample = qmc.Sobol(3, scramble=True, seed=seed).random_base2(18) - 0.5
@@ -720,12 +736,15 @@ if __name__ == "__main__":
     parser.add_argument("--mmg-seed-cells", type=int, help="Native seed grid, independent of MMG target sizing")
     parser.add_argument("--mmg-size-map", type=Path, help="Saved-point scalar sizing map for the metric workflow")
     parser.add_argument("--surface-seed-cells", type=int, help="Native surface seed grid, independent of HXT volume sizing")
+    parser.add_argument("--native-build-manifest", type=Path, help="Verified isolated experimental build provenance")
+    parser.add_argument("--specimens", type=Path, help="Frozen Microgen TPMS and spectral-field definitions")
+    parser.add_argument("--geometry-tolerance", type=float, default=0.002)
     args = parser.parse_args()
     if args.prepare:
         if args.native_package is None:
             parser.error("--prepare requires --native-package")
-        if args.mmg_hausd <= 0 or args.worker_timeout <= 0 or args.max_tetrahedra <= 0:
-            parser.error("--mmg-hausd, --worker-timeout and --max-tetrahedra must be positive")
+        if args.mmg_hausd <= 0 or args.worker_timeout <= 0 or args.max_tetrahedra <= 0 or args.geometry_tolerance <= 0:
+            parser.error("--mmg-hausd, --worker-timeout, --max-tetrahedra and --geometry-tolerance must be positive")
         if args.mmg_seed_cells is not None and not 4 <= args.mmg_seed_cells <= 128:
             parser.error("--mmg-seed-cells must be between 4 and 128")
         if args.surface_seed_cells is not None and not 4 <= args.surface_seed_cells <= 128:
@@ -740,6 +759,9 @@ if __name__ == "__main__":
             args.mmg_seed_cells,
             args.mmg_size_map,
             args.surface_seed_cells,
+            args.native_build_manifest,
+            args.specimens,
+            args.geometry_tolerance,
         )
     elif args.run:
         run(args.run.resolve())

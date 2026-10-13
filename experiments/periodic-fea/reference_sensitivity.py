@@ -20,6 +20,9 @@ def read(path):
         r["artifact"] == path.parent.name for r in parent["artifact_verification"]["rows"]
     ):
         raise ValueError(f"Saved fields not independently verified: {path}")
+    parent_row = next(row for row in parent["rows"] if row["artifact"] == path.parent.name)
+    if parent_row["homogenization"] != result["homogenization"] or parent_row["mesh_sha256"] != result["mesh_sha256"]:
+        raise ValueError(f"Artifact disagrees with independently audited parent run: {path}")
     if digest(path.parent / "mesh.npz") != result["mesh_sha256"]:
         raise ValueError(f"Saved mesh changed: {path}")
     tensor = np.asarray(result["homogenization"]["stiffness_engineering_voigt"])
@@ -46,9 +49,10 @@ def sensitivity(reference_paths, candidate_paths):
     rows = []
     for path in candidate_paths:
         result, tensor, provenance = read(path)
-        if result["case"] != case or result["native_sha256"] != binary:
-            raise ValueError("Candidate case/build differs from the reference sequence")
-        rows.append({**provenance, "workflow": result["workflow"], "cells": result["cells"],
+        if result["case"] != case:
+            raise ValueError("Candidate geometry differs from the reference sequence")
+        rows.append({**provenance, "native_sha256": result["native_sha256"],
+                     "workflow": result["workflow"], "cells": result["cells"],
                      "difference_to_each_extrapolation": [
                          tensor_difference(tensor, fit["extrapolated_tensor"]) for fit in fits]})
     return {
