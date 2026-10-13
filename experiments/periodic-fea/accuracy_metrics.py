@@ -78,7 +78,7 @@ def probe_cells(points, tets, probes):
     return np.asarray(sampled["element_id"]).copy(), np.asarray(sampled["vtkValidPointMask"], dtype=bool).copy()
 
 
-def sample_fields(path, probes, geometry_gate=None):
+def sample_fields(path, probes, geometry_gate=None, *, include_cells=False):
     row, tensor, provenance = read(path, geometry_gate)
     archive = np.load(path.parent / "mesh.npz")
     points, tets = archive["points"], archive["tetrahedra"]
@@ -97,7 +97,8 @@ def sample_fields(path, probes, geometry_gate=None):
         strain = (gradient + gradient.transpose(0, 2, 1)) / 2
         stress = 2 * strain + np.trace(strain, axis1=1, axis2=2)[:, None, None] * np.eye(3)
         stresses[valid, :, load] = stress[:, [0, 1, 2, 0, 0, 1], [0, 1, 2, 1, 2, 2]]
-    return row, tensor, provenance, stresses, valid
+    result = row, tensor, provenance, stresses, valid
+    return (*result, cells) if include_cells else result
 
 
 def engineering_constants(tensor):
