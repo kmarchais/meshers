@@ -756,6 +756,29 @@ and stays below 1% under both existing quadratic fits. Measure the new MMG
 tensor before selecting a matching generation-repeat pair. The older grid42/
 tight-MMG32 timing pair stays documented at its observed grid-80 target only.
 
+Task 1440 completed the higher-margin Gyroid MMG control in 734.0 s. It passes
+all admission, regression and saved-field physics audits, with zero periodic
+displacement jumps. Its 640,585 tetrahedra and 135,444 nodes have minimum
+quality 0.1379. Generation took 39.005 s, including 4.168 s for the grid-48
+native seed, and audited FEA took 604.402 s. Geometry distances are 0.0004547
+and 0.0003351 L; volume discrepancy plus empirical uncertainty is 0.08615%.
+Artifacts are retained in `runs/gyroid-margin-mmg40-seed48-v1`.
+
+MMG's worst energy disagreement is 0.49588% against native grid 80 and
+0.84767%/0.83419% against the two existing quadratic fits. The direct grid-48
+candidate has observed disagreement 0.60792%, modeled disagreement
+0.96068%/0.94728%, 543,496 tetrahedra, minimum quality 0.1520 and audited FEA
+401.505 s. Both pass the observed and modeled sub-1% targets, with MMG closer
+to the reference tensors. Native has 15.2% fewer elements and a slightly
+higher minimum quality; its solver timing is still a single sample.
+
+The next job repeats generation for native48 and MMG40-seed48, requiring exact
+canonical identity to these saved and audited meshes, one warmup and three
+alternating measurements per workflow. It replaces the older timing pair for
+comparisons that require extra convergence-model margin, while retaining the
+older pair's original observed-reference scope. No repeated solver speedup or
+certified continuum error is inferred.
+
 ## Independent review and remaining limits
 
 The resumed Claude Sonnet 5.5 review confirmed the recorded comparisons and
