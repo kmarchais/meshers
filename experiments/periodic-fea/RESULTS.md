@@ -589,6 +589,31 @@ reference and cannot qualify either workflow at 1%. Inspect its actual meshes
 before choosing a finer reference or changing resolution. Existing default
 Gyroid task selection remains unchanged; the new specimen is selected explicitly.
 
+Task 1421 completed the Schwarz P pilot in 389.1 s. Both workflows passed all
+admission gates, six regression checks and saved-field physical audits, with
+zero periodic displacement jumps. The analytic sampled solid fraction is
+0.343058 with empirical uncertainty 0.0001812. Artifacts are retained in
+`runs/schwarz-p-pilot32-v1`.
+
+| Schwarz P pilot, grid 32 | Tetrahedra | Nodes | Generation, s | Audited FEA, s | Minimum quality |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| Direct one-pass Meshers | 161,328 | 35,380 | 1.107 | 65.562 | 0.3679 |
+| Standard MMG from native seed | 319,114 | 69,142 | 19.166 | 223.723 | 0.2007 |
+
+Both retain the seed caps, with maximum sampled geometry distance about
+0.0017644 L and reverse distance about 0.00105 L. Relative volume discrepancy
+plus empirical uncertainty is 0.1294% for native and 0.0653% for MMG. These
+meshes satisfy the unchanged geometry gates, but MMG uses nearly twice as
+many elements. Faster single-sample generation and solver timings alone cannot
+establish a win at matched FEA accuracy.
+
+The next job calculates native Schwarz P grid 64 with the same field and all
+admission/solver settings. It uses the default two-million-element budget and
+a 40-minute worker limit. Compare both pilot tensors against its actual saved
+tensor before choosing a native candidate or another reference refinement.
+As with Gyroid, a same-method fine tensor is a convergence observation, not
+a certified continuum reference.
+
 ## Independent review and remaining limits
 
 The resumed Claude Sonnet 5.5 review confirmed the recorded comparisons and
