@@ -10,6 +10,8 @@ Use these resolutions for the studied unit-cell fixtures, not as defaults for
 arbitrary geometries. Worst strain-energy differences stay below 1% against
 grid 80 and two quadratic extrapolations. The extrapolations assume a leading
 error proportional to 1/cells^2; they do not certify continuum accuracy.
+These targets concern homogenized stiffness. The [local stress checks](ACCURACY.md)
+show larger field disagreement; these profiles do not promise 1% local stress error.
 
 ## Generate the studied periodic Gyroid
 

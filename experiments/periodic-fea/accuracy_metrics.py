@@ -73,8 +73,8 @@ def probe_cells(points, tets, probes):
     return np.asarray(sampled["element_id"]).copy(), np.asarray(sampled["vtkValidPointMask"], dtype=bool).copy()
 
 
-def sample_fields(path, probes):
-    row, tensor, provenance = read(path)
+def sample_fields(path, probes, geometry_gate=None):
+    row, tensor, provenance = read(path, geometry_gate)
     archive = np.load(path.parent / "mesh.npz")
     points, tets = archive["points"], archive["tetrahedra"]
     cells, valid = probe_cells(points, tets, probes)
@@ -133,20 +133,20 @@ def wall_normal_error(path):
             "scope": "Finite-difference analytic normal at wall triangle centroids; cap faces excluded"}
 
 
-def compare(reference_path, candidates, output, power=17):
+def compare(reference_path, candidates, output, power=17, geometry_gate=None):
     started = time.monotonic()
     report(0, "Load independently verified reference fields", eta_s=180)
     seeds = [20261013 + i for i in range(4)]
     probes = np.vstack([qmc.Sobol(3, scramble=True, seed=seed).random_base2(power - 2)
                        for seed in seeds]) - .5
     blocks = np.repeat(np.arange(4), 2 ** (power - 2))
-    reference = sample_fields(reference_path, probes)
+    reference = sample_fields(reference_path, probes, geometry_gate)
     sampled_candidates = []
     common = reference[4].copy()
     for index, path in enumerate(candidates):
         report((index + 1) / (len(candidates) + 1), f"Probe saved fields: {path.parent.name}",
                eta_s=(time.monotonic() - started) * (len(candidates) - index))
-        candidate = sample_fields(path, probes)
+        candidate = sample_fields(path, probes, geometry_gate)
         if candidate[0]["case"] != reference[0]["case"]:
             raise ValueError("Reference and candidate geometries differ")
         sampled_candidates.append(candidate)
@@ -198,7 +198,10 @@ if __name__ == "__main__":
     parser.add_argument("--candidates", type=Path, nargs="+", required=True)
     parser.add_argument("--output", type=Path, required=True)
     parser.add_argument("--power", type=int, default=17)
+    parser.add_argument("--common-geometry-gate", type=float, help="Recheck all artifacts against this explicit shared geometry gate")
     args = parser.parse_args()
     if not 8 <= args.power <= 21:
         parser.error("--power must be between 8 and 21")
-    compare(args.reference, args.candidates, args.output, args.power)
+    if args.common_geometry_gate is not None and (not np.isfinite(args.common_geometry_gate) or args.common_geometry_gate <= 0):
+        parser.error("--common-geometry-gate must be finite and positive")
+    compare(args.reference, args.candidates, args.output, args.power, args.common_geometry_gate)

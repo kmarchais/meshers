@@ -10,10 +10,16 @@ from periodic import tensor_difference
 from run import digest
 
 
-def read(path):
+def read(path, geometry_gate=None):
     result = json.loads(path.read_text())
-    if not all(result.get(k) for k in ["homogenization_audited", "geometry_eligible",
-                                       "quality_eligible", "periodic_eligible"]):
+    geometry_ok = result.get("geometry_eligible")
+    if geometry_gate is not None:
+        geometry_ok = all(result.get(k) is not None and result[k] <= geometry_gate for k in
+                          ["sampled_geometry_distance", "sampled_reverse_distance", "sampled_cap_overshoot"])
+        geometry_ok &= result.get("sampled_outward_orientation", False)
+        geometry_ok &= result.get("relative_volume_error_with_uncertainty", float("inf")) <= .01
+    if not geometry_ok or not all(result.get(k) for k in ["homogenization_audited",
+                                                         "quality_eligible", "periodic_eligible"]):
         raise ValueError(f"Unadmitted artifact: {path}")
     parent = json.loads((path.parent.parent / "results.json").read_text())
     if parent["state"] != "complete" or not any(
@@ -27,7 +33,8 @@ def read(path):
         raise ValueError(f"Saved mesh changed: {path}")
     tensor = np.asarray(result["homogenization"]["stiffness_engineering_voigt"])
     return result, tensor, {"path": str(path), "result_sha256": digest(path),
-                            "mesh_sha256": result["mesh_sha256"]}
+                            "mesh_sha256": result["mesh_sha256"], "native_sha256": result["native_sha256"],
+                            "common_geometry_gate_override": geometry_gate}
 
 
 def sensitivity(reference_paths, candidate_paths):

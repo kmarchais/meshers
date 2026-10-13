@@ -107,6 +107,20 @@ generation succeeds in 4.84 s and the FEA audit starts with about 4.7% more
 reduced degrees of freedom. Stiffness and local-stress comparisons remain
 pending; this is not yet an accuracy or release recommendation.
 
+The completed audit has 557,583 tetrahedra, 120,248 nodes and minimum quality
+0.15714. Worst stiffness disagreement to native80 is 0.556455%, an 8.5%
+reduction from the original grid48 value with 2.6% more tetrahedra. The audited
+FEA sample takes 431.27 s. MMG40seed48 remains closer at 0.495875%.
+
+The independent forward boundary distance is 0.00019996; reverse distance is
+0.00023631. The stricter 0.0002 experiment gate therefore fails in the reverse
+direction. The artifact remains a diagnostic at that threshold. The field
+comparison explicitly rechecks all meshes against the original common 0.002
+gate and records the override; it does not change the saved artifact's flag.
+Future runs separate `--native-geometry-tolerance` from the shared
+`--geometry-tolerance` admission gate. Report both measured directions rather
+than inferring them from the generator's request.
+
 ## Broader fixtures
 
 `prepare_catalogue.py` freezes ten 3D TPMS callables from the installed Microgen

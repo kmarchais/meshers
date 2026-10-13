@@ -37,7 +37,8 @@ def write_json(path, value):
 
 def prepare(output, native_package, task_specs=None, mmg_hausd=0.002, worker_timeout=1200,
             max_tetrahedra=2_000_000, mmg_seed_cells=None, mmg_size_map=None, surface_seed_cells=None,
-            native_build_manifest=None, specimens_path=None, geometry_tolerance=0.002):
+            native_build_manifest=None, specimens_path=None, geometry_tolerance=0.002,
+            native_geometry_tolerance=None):
     """Freeze the executable experiment before it enters the shared queue."""
     output.mkdir(parents=True, exist_ok=False)
     source = output / "source"
@@ -124,6 +125,7 @@ def prepare(output, native_package, task_specs=None, mmg_hausd=0.002, worker_tim
         "config": {
             "periodic": True,
             "geometry_tolerance": geometry_tolerance,
+            "native_geometry_tolerance": native_geometry_tolerance or geometry_tolerance,
             "volume_tolerance": 0.01,
             "minimum_quality": 0.1,
             "threads": 1,
@@ -360,8 +362,11 @@ def worker(request_path):
                 capture_seconds += time.perf_counter() - start
 
         with patch.object(Mmg, "mmg3d", recorded_mmg):
+            generation_config = dict(config)
+            generation_config["geometry_tolerance"] = config.get("native_geometry_tolerance", config["geometry_tolerance"])
+            result["requested_native_geometry_tolerance"] = generation_config["geometry_tolerance"]
             if task["workflow"] in {"mmg-native-seed", "mmg-native-seed-metric"}:
-                control_config = dict(config)
+                control_config = dict(generation_config)
                 if task["workflow"] == "mmg-native-seed":
                     control_config.pop("mmg_size_map_path", None)
                 points, tets, metrics = native_seed_control(
@@ -370,11 +375,11 @@ def worker(request_path):
             elif task["workflow"] == "gmsh-hxt-native-surface":
                 from gmsh_surface import generate as generate_hxt
                 points, tets, metrics = generate_hxt(
-                    case, task["cells"], config, directory, checkpoint
+                    case, task["cells"], generation_config, directory, checkpoint
                 )
             else:
                 points, tets, metrics = generate(
-                    case, task["workflow"], task["cells"], config, checkpoint
+                    case, task["workflow"], task["cells"], generation_config, checkpoint
                 )
         result.update(metrics)
         result["mmg_diagnostic_capture_seconds"] = capture_seconds
@@ -739,6 +744,7 @@ if __name__ == "__main__":
     parser.add_argument("--native-build-manifest", type=Path, help="Verified isolated experimental build provenance")
     parser.add_argument("--specimens", type=Path, help="Frozen Microgen TPMS and spectral-field definitions")
     parser.add_argument("--geometry-tolerance", type=float, default=0.002)
+    parser.add_argument("--native-geometry-tolerance", type=float, help="Native refinement request, independent of the shared geometry admission gate")
     args = parser.parse_args()
     if args.prepare:
         if args.native_package is None:
@@ -747,6 +753,8 @@ if __name__ == "__main__":
             parser.error("--mmg-hausd, --worker-timeout, --max-tetrahedra and --geometry-tolerance must be positive")
         if args.mmg_seed_cells is not None and not 4 <= args.mmg_seed_cells <= 128:
             parser.error("--mmg-seed-cells must be between 4 and 128")
+        if args.native_geometry_tolerance is not None and args.native_geometry_tolerance <= 0:
+            parser.error("--native-geometry-tolerance must be positive")
         if args.surface_seed_cells is not None and not 4 <= args.surface_seed_cells <= 128:
             parser.error("--surface-seed-cells must be between 4 and 128")
         prepare(
@@ -762,6 +770,7 @@ if __name__ == "__main__":
             args.native_build_manifest,
             args.specimens,
             args.geometry_tolerance,
+            args.native_geometry_tolerance,
         )
     elif args.run:
         run(args.run.resolve())

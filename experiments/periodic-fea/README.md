@@ -4,6 +4,11 @@ This experiment compares Meshers' direct periodic generator with Microgen's
 public VTK-to-MMG pipeline using `periodic=True`. The MMG control uses native CLI
 executables. It does not use the mmgpy Python bindings.
 
+The [accuracy follow-up](ACCURACY.md) adds local stress energy-norm comparisons
+and controlled optimizer experiments. A sub-1% homogenized-stiffness result
+does not establish sub-1% local stress accuracy. It also separates the native
+refinement request from the independently checked common geometry gates.
+
 The first batch checks a solid cube against its analytic elasticity tensor,
 then tests a periodic Gyroid sheet at grids 16 and 24. Its sheet band is
 `[-0.55, 0.55]` in the raw period-one Gyroid field, matching the existing
