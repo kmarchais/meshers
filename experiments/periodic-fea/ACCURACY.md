@@ -632,12 +632,39 @@ differs by 1.15e-15, Hill-Mandel energy by 2.92e-12, force balance by at most
 RSS 5.25 GiB. These are admitted reference samples, not repeated solver timings
 or continuum error certification.
 
-`runs/accuracy-schwarz-d-body-matched-fields-v1` freezes both references and
-the native48, MMG40seed48, native40 seed and native40 body candidates. It pins
-48 analysis source files and 585 input hashes, including original sources,
-fields, audits and dependency sources. The comparison uses 1,048,576 probes
-split across four Sobol scrambles on identical common material against each
-reference. It runs regression and real Pardiso smoke checks, read-only body
-revalidation with an unchanged audit digest, and exact retained-coordinate
-and oriented-boundary checks. Full mixed-load stiffness and local stress
-results remain pending; no Schwarz D superiority claim is established yet.
+`runs/accuracy-schwarz-d-body-matched-fields-v1` compares both references and
+the native48, MMG40seed48, native40 seed and native40 body candidates. All 48
+analysis source hashes and 585 input hashes remain unchanged, including
+original sources, fields, audits and dependency sources. The comparison uses
+1,048,576 probes split across four Sobol scrambles on identical common material
+against each reference. Thirty-one regressions pass, with one optional test
+skipped, and the isolated real Pardiso smoke check passes. Read-only body
+revalidation preserves the original audit digest, and exact retained-coordinate
+and oriented-boundary checks pass.
+
+| Reference | Metric | Native grid48 | Native grid40 seed | Native grid40 body | MMG40seed48 |
+| --- | --- | ---: | ---: | ---: | ---: |
+| Native80 | Worst stiffness disagreement | 1.214093% | 2.061919% | 1.777094% | 2.040836% |
+| Native80 | Worst local stress disagreement | 15.436120% | 15.888108% | 15.109141% | 17.478612% |
+| MMG64 | Worst stiffness disagreement | 0.900925% | 1.745647% | 1.461034% | 1.722684% |
+| MMG64 | Worst local stress disagreement | 16.130619% | 17.011495% | 16.239412% | 17.974925% |
+
+The matched-node body mesh has lower stiffness and local stress disagreement
+than MMG against both reference topologies, including every stress scramble.
+Common reference material coverage exceeds 99.82%; geometry omissions remain
+separate from the stress comparison. Minimum quality is 0.129951 versus MMG's
+0.108527, and wall-normal RMS is 1.5913 degrees versus 2.2331 degrees. Matching
+total nodes does not match reduced periodic degrees of freedom. Local stress
+disagreement remains 15-16% and stiffness disagreement remains above 1% for
+this budget, so these results do not certify low continuum error. The larger
+native48 control has lower stiffness disagreement and slightly lower local
+stress disagreement against MMG64, with 49.91% more total nodes.
+
+`runs/accuracy-schwarz-d-matched-generation-v1` freezes the admitted body and
+MMG recipes for one warmup and three measured live generations each, in
+alternating order on one thread. Every generated mesh must match its admitted
+coordinates and tetrahedra exactly. Public Microgen BoxMesh roundtrips and
+periodic-node checks cover the body and native40 seed. The timing wrapper now
+accepts an explicit fixed-width field-equivalence definition for Schwarz D;
+older manifests retain the Schwarz P check. All 177 source and 20 input hashes
+are frozen. Timing and application checks remain pending.
