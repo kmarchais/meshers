@@ -341,13 +341,36 @@ above 99.94%. Minimum shape quality is slightly below MMG, 0.136380 versus
 Both meshes pass the same common geometry, volume, shape and periodic gates.
 The two-metric FEA lead does not mean every mesh diagnostic improves.
 
-`runs/accuracy-native-body-generation-v1` checks live generation time with one
+`runs/accuracy-native-body-generation-v2` checks live generation time with one
 warmup and three measured samples per recipe in alternating order. Each recipe
 retains its admitted binary, source and configuration; imports, process startup
 and the independent identity check are outside the measured scope. All eight
 runs must reproduce their admitted coordinates and connectivity exactly. This
 comparison uses standard MMG adaptation of an admitted Meshers seed, rather
-than the public Microgen two-pass remeshing path. Repeated timings are pending.
+than the public Microgen two-pass remeshing path. The first timing attempt,
+`runs/accuracy-native-body-generation-v1`, stopped before MMG generation because
+the older archive predates `fixtures.py`. The corrected harness uses that
+archive's original direct `Case` construction. Its failed output is retained.
+
+All eight runs in v2 reproduce their admitted meshes. All 108 source hashes
+and ten input hashes remain unchanged. Three measured samples give:
+
+| Live recipe | Generation samples, s | Median, s | Maximum measured worker RSS, MiB |
+| --- | --- | ---: | ---: |
+| Native body20k | 5.5775, 5.4360, 5.4352 | 5.4360 | 264.8 |
+| Standard MMG40seed48 | 38.5330, 37.8352, 37.9647 | 37.9647 | 575.6 |
+
+Native generation is 6.98 times faster in this one-thread Gyroid calibration,
+with the two-metric accuracy lead above at 0.23% more tetrahedra and 3.55% more
+nodes. This measures the full live generation recipes, including native
+interior refinement, rather than adaptation of saved artifacts. It excludes
+independent validation and FEA and does not establish speed on other fixtures.
+
+`runs/accuracy-native-body48-matched-nodes-v1` next requests 15,196 interior
+nodes. Added to the seed's 120,248 nodes, that exactly matches MMG's 135,444
+total nodes. Keep the same binary, boundary request, common gates and audited
+Pardiso solver. Fresh fields and both reference comparisons are still needed
+to determine whether the lead survives this stricter complexity comparison.
 
 ## Broader fixtures
 
