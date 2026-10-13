@@ -711,9 +711,28 @@ this control, and this result does not certify continuum error. The rough
 inverse-resolution-squared estimate used to select 62 was only a sizing
 heuristic; the admitted fields determine the result.
 
-`runs/accuracy-schwarz-d-seed64-v1` freezes one finer native seed with the same
-field, native build, geometry request and common admission gates. Audited CG
-keeps the existing four-million-tetrahedron, 16 GiB and 5,400-second bounds.
-Its actual admitted count will determine how many interior nodes fit within
-MMG62's measured 324,554-node budget. No dependent refinement or field comparison
-is queued before inspecting the seed.
+`runs/accuracy-schwarz-d-seed64-v1` admits a finer native seed with the same
+field, native build, geometry request and common admission gates. It has
+267,123 nodes, 1,269,384 tetrahedra and minimum quality 0.180697. Sampled forward
+and reverse boundary distances are 0.0002153 and 0.0001628; volume error
+including uncertainty is 0.0010532. All common gates pass, as do six field hashes
+and twelve actual solver residuals. Independent stiffness reconstruction
+differs by 3.72e-16, Hill-Mandel energy by 2.09e-12, force balance by at most
+1.40e-10 and displacement jumps are zero. One live generation sample takes
+11.22 s and audited CG FEA takes 1,097.22 s, with peak RSS 4.76 GiB. The existing
+four-million-tetrahedron, 16 GiB and 5,400-second bounds remain fixed.
+
+The seed's full mixed-load stiffness disagreement is 0.388498% against native80
+and 0.077814% against alternate MMG64. Both are below MMG62's disagreement,
+with 17.70% fewer total nodes and 27.86% fewer tetrahedra. This is already below
+the observed 1% stiffness target at lower complexity. The count leaves 57,431
+nodes within MMG62's budget, but adding them is deferred until the existing
+local-stress fields are compared.
+
+`runs/accuracy-schwarz-d-low-error-fields-v1` freezes native64 and MMG62seed80
+against native80 and alternate MMG64. It pins 48 analysis sources and 435 input
+hashes, including original fields, audits and dependency sources. All four
+meshes receive read-only field revalidation with unchanged saved audit digests.
+The comparison uses 1,048,576 probes split across four Sobol scrambles on the
+same material intersection, alongside regression and real Pardiso smoke checks.
+Local-stress results remain pending; no body-refinement job is queued.
