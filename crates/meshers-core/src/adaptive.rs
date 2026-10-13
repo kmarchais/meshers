@@ -5,6 +5,128 @@ type Edge = [usize; 2];
 fn edge(a: usize, b: usize) -> Edge {
     if a < b { [a, b] } else { [b, a] }
 }
+
+/// One nested pass over disjoint interior edge stars, ranked by squared length.
+/// Boundary coordinates and triangles remain unchanged. The node budget is an upper limit.
+pub(crate) fn refine_interior(
+    mesh: &mut Mesh,
+    node_budget: usize,
+    minimum_quality: f64,
+    max_tets: usize,
+    geometry: &impl crate::geometry::Geometry,
+) -> Result<usize, String> {
+    if node_budget == 0 || mesh.tets.is_empty() {
+        return Ok(0);
+    }
+    geometry.check()?;
+    let boundary_edges: HashSet<_> = mesh
+        .surface
+        .iter()
+        .flat_map(|f| [edge(f[0], f[1]), edge(f[1], f[2]), edge(f[2], f[0])])
+        .collect();
+    let mut incidence = Vec::with_capacity(mesh.tets.len() * 6);
+    for (ci, t) in mesh.tets.iter().enumerate() {
+        for i in 0..4 {
+            for j in i + 1..4 {
+                incidence.push((edge(t[i], t[j]), ci));
+            }
+        }
+    }
+    incidence.sort_unstable();
+    geometry.check()?;
+    let [lo, hi] = geometry.bounds();
+    let midpoint = |e: Edge| {
+        std::array::from_fn::<_, 3, _>(|a| (mesh.points[e[0]][a] + mesh.points[e[1]][a]) * 0.5)
+    };
+    let mut candidates = Vec::new();
+    let mut start = 0;
+    while start < incidence.len() {
+        let e = incidence[start].0;
+        let mut end = start + 1;
+        while end < incidence.len() && incidence[end].0 == e {
+            end += 1;
+        }
+        let p = midpoint(e);
+        let delta = sub(mesh.points[e[0]], mesh.points[e[1]]);
+        let length2 = dot(delta, delta);
+        if !boundary_edges.contains(&e)
+            && (0..3).all(|a| {
+                p[a] > lo[a] + (hi[a] - lo[a]) * 1e-9 && p[a] < hi[a] - (hi[a] - lo[a]) * 1e-9
+            })
+            && length2 > 1e-20
+        {
+            candidates.push((e, start, end, length2));
+        }
+        start = end;
+    }
+    candidates.sort_unstable_by(|a, b| b.3.total_cmp(&a.3).then(a.0.cmp(&b.0)));
+    let mut removed = vec![false; mesh.tets.len()];
+    let mut additions = Vec::new();
+    let original_nodes = mesh.points.len();
+    let mut output_tets = mesh.tets.len();
+    for (index, (e, start, end, _)) in candidates.into_iter().enumerate() {
+        if mesh.points.len() - original_nodes >= node_budget {
+            break;
+        }
+        if index % 1024 == 0 {
+            geometry.check()?;
+        }
+        let star = &incidence[start..end];
+        if star.iter().any(|&(_, ci)| removed[ci])
+            || output_tets.saturating_add(star.len()) > max_tets
+        {
+            continue;
+        }
+        let p = std::array::from_fn(|a| (mesh.points[e[0]][a] + mesh.points[e[1]][a]) * 0.5);
+        let id = mesh.points.len();
+        let mut children = Vec::with_capacity(star.len() * 2);
+        for &(_, ci) in star {
+            for endpoint in e {
+                let mut t = mesh.tets[ci];
+                *t.iter_mut().find(|v| **v == endpoint).unwrap() = id;
+                let xyz = t.map(|i| if i == id { p } else { mesh.points[i] });
+                let det = determinant(xyz);
+                let edge_sum: f64 = (0..4)
+                    .flat_map(|i| {
+                        (i + 1..4).map(move |j| {
+                            let delta = sub(xyz[i], xyz[j]);
+                            dot(delta, delta)
+                        })
+                    })
+                    .sum();
+                let q = (432. * det * det / edge_sum.powi(3)).sqrt();
+                if !det.is_finite() || det <= 0. || !q.is_finite() || q < minimum_quality {
+                    children.clear();
+                    break;
+                }
+                children.push(t);
+            }
+            if children.is_empty() {
+                break;
+            }
+        }
+        if children.len() == star.len() * 2 {
+            mesh.points.push(p);
+            for &(_, ci) in star {
+                removed[ci] = true;
+            }
+            additions.extend(children);
+            output_tets += star.len();
+        }
+    }
+    mesh.tets = mesh
+        .tets
+        .iter()
+        .enumerate()
+        .filter_map(|(i, &t)| (!removed[i]).then_some(t))
+        .chain(additions)
+        .collect();
+    geometry.check()?;
+    if mesh.surface != boundary(&mesh.tets)? {
+        return Err("interior refinement changed the oriented boundary".into());
+    }
+    Ok(mesh.points.len() - original_nodes)
+}
 fn orbit(mesh: &Mesh, e: Edge, geometry: &impl crate::geometry::Geometry) -> [[i64; 3]; 2] {
     let mut k = e.map(|i| geometry.rank(mesh.points[i]));
     k.sort_unstable();
@@ -314,6 +436,27 @@ fn update_boundary(
 #[cfg(test)]
 mod tests {
     use super::*;
+    #[test]
+    fn interior_quality_rejection_leaves_mesh_unchanged() {
+        let mut mesh = crate::implicit::generate(
+            &|_| -1.,
+            crate::implicit::Options {
+                cells: [4; 3],
+                optimize_passes: 0,
+                ..Default::default()
+            },
+        )
+        .unwrap()
+        .mesh;
+        let points = mesh.points.clone();
+        let tets = mesh.tets.clone();
+        assert_eq!(
+            refine_interior(&mut mesh, 20, 1., 10000, &crate::geometry::Legacy).unwrap(),
+            0
+        );
+        assert_eq!(mesh.points, points);
+        assert_eq!(mesh.tets, tets);
+    }
     #[test]
     fn incremental_boundary_matches_full_edge_bisection() {
         let old = [[0, 1, 2, 3]];

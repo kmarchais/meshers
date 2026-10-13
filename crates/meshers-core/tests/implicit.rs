@@ -10,6 +10,70 @@ fn gyroid(p: Point) -> f64 {
 }
 
 #[test]
+fn interior_refinement_is_nested_and_preserves_periodic_boundaries() {
+    let options = Options {
+        cells: [4; 3],
+        optimize_passes: 0,
+        minimum_quality: 0.1,
+        periodic: [true; 3],
+        ..Options::default()
+    };
+    let seed = generate(&|_| -1., options).unwrap();
+    let explicit_zero = generate(
+        &|_| -1.,
+        Options {
+            interior_refine_nodes: 0,
+            ..options
+        },
+    )
+    .unwrap();
+    assert_eq!(seed.mesh.points, explicit_zero.mesh.points);
+    assert_eq!(seed.mesh.tets, explicit_zero.mesh.tets);
+    let refined = generate(
+        &|_| -1.,
+        Options {
+            interior_refine_nodes: 20,
+            ..options
+        },
+    )
+    .unwrap();
+    let inserted = refined.diagnostics.inserted_interior_nodes;
+    assert!(inserted > 0 && inserted <= 20);
+    assert_eq!(
+        &refined.mesh.points[..seed.mesh.points.len()],
+        &seed.mesh.points
+    );
+    assert_eq!(refined.mesh.surface, seed.mesh.surface);
+    assert_eq!(refined.boundary_tags, seed.boundary_tags);
+    assert_eq!(refined.periodic_pairs, seed.periodic_pairs);
+    assert!((refined.diagnostics.volume - seed.diagnostics.volume).abs() < 1e-12);
+    assert!(refined.diagnostics.minimum_mmg_quality >= 0.1);
+    assert!(refined.mesh.tets.len() > seed.mesh.tets.len());
+    let repeat = generate(
+        &|_| -1.,
+        Options {
+            interior_refine_nodes: 20,
+            ..options
+        },
+    )
+    .unwrap();
+    assert_eq!(refined.mesh.points, repeat.mesh.points);
+    assert_eq!(refined.mesh.tets, repeat.mesh.tets);
+    let bounded = generate(
+        &|_| -1.,
+        Options {
+            interior_refine_nodes: 20,
+            max_tetrahedra: seed.mesh.tets.len(),
+            ..options
+        },
+    )
+    .unwrap();
+    assert_eq!(bounded.diagnostics.inserted_interior_nodes, 0);
+    assert_eq!(bounded.mesh.points, seed.mesh.points);
+    assert_eq!(bounded.mesh.tets, seed.mesh.tets);
+}
+
+#[test]
 fn requested_quality_allows_tighter_curvature_refinement() {
     let mesh = generate(
         &gyroid,
