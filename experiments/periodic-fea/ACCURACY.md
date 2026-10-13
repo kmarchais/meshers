@@ -693,12 +693,27 @@ Its full mixed-load stiffness disagreement is 1.355278% against native80 and
 local stress has not yet been compared for this control. The fixed field,
 native build and common geometry, volume and quality gates remain unchanged.
 
-`runs/accuracy-schwarz-d-mmg62-seed80-v1` freezes one next MMG control at target
-sizing 62, using the identical native80 seed recipe and all other settings.
-A rough inverse-resolution-squared estimate from the measured 1.355278% point
-places the 1% comparison threshold near resolution 60.54, so 62 gives some
-headroom. This estimate chooses an experiment; it is not a convergence model
-or certified error bound. The actual admitted fields will determine whether
-the target is met. The larger seed keeps the established four-million-
-tetrahedron, 16 GiB and 5,400-second bounds, with audited CG. No dependent native
-refinement is queued before inspecting that control.
+`runs/accuracy-schwarz-d-mmg62-seed80-v1` admits standard MMG62 from the
+identical native80 seed recipe, changing only target sizing from 52 to 62.
+It has 324,554 nodes, 1,759,577 tetrahedra and minimum quality 0.143481. The
+regenerated native80 seed coordinates and tetrahedra remain exact. Both common
+boundary-distance directions pass, at 0.0006991 and 0.0005141; volume error
+including uncertainty is 0.0013741. Six field hashes and twelve actual solver
+residuals pass. Independent stiffness reconstruction differs by 1.06e-15,
+Hill-Mandel energy by 2.40e-12, force balance by at most 1.66e-10 and displacement
+jumps are zero. Single-sample generation takes 111.12 s and CG FEA takes
+2,104.36 s, with peak RSS 5.18 GiB.
+
+The full mixed-load stiffness disagreement is 0.417868% against native80 and
+0.103583% against alternate MMG64. This control passes the observed 1% stiffness
+comparison target against both references. Local stress remains unmeasured for
+this control, and this result does not certify continuum error. The rough
+inverse-resolution-squared estimate used to select 62 was only a sizing
+heuristic; the admitted fields determine the result.
+
+`runs/accuracy-schwarz-d-seed64-v1` freezes one finer native seed with the same
+field, native build, geometry request and common admission gates. Audited CG
+keeps the existing four-million-tetrahedron, 16 GiB and 5,400-second bounds.
+Its actual admitted count will determine how many interior nodes fit within
+MMG62's measured 324,554-node budget. No dependent refinement or field comparison
+is queued before inspecting the seed.
