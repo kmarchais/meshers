@@ -366,11 +366,54 @@ nodes. This measures the full live generation recipes, including native
 interior refinement, rather than adaptation of saved artifacts. It excludes
 independent validation and FEA and does not establish speed on other fixtures.
 
-`runs/accuracy-native-body48-matched-nodes-v1` next requests 15,196 interior
-nodes. Added to the seed's 120,248 nodes, that exactly matches MMG's 135,444
-total nodes. Keep the same binary, boundary request, common gates and audited
-Pardiso solver. Fresh fields and both reference comparisons are still needed
-to determine whether the lead survives this stricter complexity comparison.
+## Matched total node count
+
+`runs/accuracy-native-body48-matched-nodes-v1` inserts 15,196 interior nodes.
+Added to the seed's 120,248 nodes, that exactly matches MMG's 135,444 total
+nodes. It has 621,403 tetrahedra, 2.99% fewer than MMG's 640,585, and retains
+the same binary, boundary request, common gates and audited Pardiso solver.
+All coordinates and oriented boundary triangles from the seed are unchanged.
+Volume is unchanged and every mixed-load energy change is negative. Minimum
+quality remains 0.136380. The live generation sample takes 5.61 s and FEA
+303.71 s, with peak RSS 8.59 GiB. These timings are single samples; the repeated
+6.98-times generation calibration above concerns the 20,000-node recipe.
+
+`runs/accuracy-native-body-matched-fields-v1` independently revalidates the
+six saved fields without rewriting their audit. Thirty-one regressions pass,
+one optional library check skips in the original environment and passes in
+the isolated Pardiso environment. All 47 source hashes and 199 input hashes
+match. Canonical probing on one million points per reference gives:
+
+| Reference | Metric | Native matched nodes | MMG40seed48 |
+| --- | --- | ---: | ---: |
+| Native80 | Worst stiffness disagreement | 0.482144% | 0.495875% |
+| Native80 | Worst local stress disagreement | 10.322556% | 10.456424% |
+| MMG64 | Worst stiffness disagreement | 0.420711% | 0.433647% |
+| MMG64 | Worst local stress disagreement | 10.562808% | 10.664809% |
+
+The native local score is lower in every scramble against both references.
+The accuracy lead therefore survives equal total node count with fewer
+tetrahedra. Reduced-system degree counts can still differ because the meshes
+have different periodic boundary discretizations. Local disagreement remains
+about 10%; this does not certify continuum accuracy.
+
+`runs/accuracy-native-matched-generation-v1` repeats live generation at this
+matched node count. Each recipe uses one warmup and three measured runs in
+alternating order. All eight meshes match their admitted artifacts exactly;
+all 112 frozen source hashes and 21 input hashes remain unchanged.
+
+| Live recipe | Generation samples, s | Median, s | Maximum measured worker RSS, MiB |
+| --- | --- | ---: | ---: |
+| Native matched nodes | 5.5405, 5.3591, 5.6225 | 5.5405 | 252.2 |
+| Standard MMG40seed48 | 39.5061, 39.9121, 37.1645 | 39.5061 | 566.9 |
+
+The native recipe is 7.13 times faster in this one-thread calibration, while
+retaining the two-metric lead at equal total nodes. Timing excludes process
+startup, imports, independent validation and FEA. The same run verifies exact
+public Microgen `BoxMesh` roundtrips and its periodic-node check for both new
+Gyroid profiles and the existing Schwarz P grid52 mesh. The Schwarz P analytic
+fixture matches Microgen's installed callable exactly on 2,048 fixed probes at
+raw band [-0.6, 0.6]. These application checks perform no remeshing.
 
 ## Broader fixtures
 
@@ -386,3 +429,35 @@ This catalogue prepares coverage; it does not establish FEA convergence or
 superiority on those shapes. Every added case still needs admitted meshes,
 finer-reference sensitivity and a standard MMG control. Keep the Gyroid
 accuracy investigation first before committing the shared queue to a sweep.
+
+After the matched-node Gyroid result, `runs/accuracy-schwarz-p-baseline-fields-v1`
+audits the existing Schwarz P grid52 native and standard MMG40seed52 fields.
+It compares both on identical common material against the admitted native
+grid80 and grid64 references. This tests resolution sensitivity, not alternate
+MMG topology sensitivity. The older raw band [-0.6, 0.6] remains fixed; the
+catalogue's density-adjusted width is a different specimen. Measure this
+baseline before choosing a new native refinement budget or a finer MMG
+reference. All four existing meshes pass read-only six-field revalidation.
+Their saved audit digests and all 47 source and 157 input hashes are unchanged.
+
+| Native reference | Metric | Native grid52 | MMG40seed52 |
+| --- | --- | ---: | ---: |
+| Grid80 | Worst stiffness disagreement | 0.510065% | 0.540755% |
+| Grid80 | Worst local stress disagreement | 10.759541% | 10.902912% |
+| Grid64 | Worst stiffness disagreement | 0.295973% | 0.327001% |
+| Grid64 | Worst local stress disagreement | 11.501795% | 11.645746% |
+
+Native grid52 has the lower local score in every scramble against both native
+reference levels. It uses 129,672 nodes versus MMG's 123,172, a 5.28% excess,
+and 645,684 tetrahedra versus 629,597. Coverage exceeds 99.97%. This baseline
+does not yet establish a lead at matched nodal complexity or against another
+reference topology.
+
+`runs/schwarz-p-mmg-reference64-seed80-v1` next generates one standard MMG64
+reference from the same admitted native80 recipe and raw band. Its common
+geometry 0.002, volume 0.01 and minimum quality 0.1 gates remain fixed. It uses
+audited CG, with the existing finer-reference policy of 16 GiB, 5,400 seconds
+per worker and a four-million-tetrahedron generation budget, also used by the
+retained grid80 reference. This avoids treating the native64 resolution check
+as independent topology evidence. Inspect its actual admission and saved fields
+before a new comparison or refinement experiment. No broader sweep is queued.

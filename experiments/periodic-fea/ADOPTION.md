@@ -58,6 +58,30 @@ described in [README.md](README.md).
 
 ## Verify the application boundary
 
+For the studied Gyroid, an isolated native accuracy prototype now supports
+`interior_refine_nodes`. Use the unchanged field above with `cells=48`,
+`geometry_tolerance=0.0002`, `minimum_quality=0.1`, `optimize_passes=1`,
+`threads=1` and `interior_refine_nodes=15196`. This option requires the verified
+experimental wheel from `runs/accuracy-native-body-build-v1/package`, source
+commit `83be74cb`; the released package and older PR #5 wheel do not expose it.
+Import that isolated package before generating the mesh.
+
+The profile produces 135,444 nodes and 621,403 tetrahedra, matching MMG's total
+node count with 2.99% fewer tetrahedra. Its stiffness and mixed-load local-stress
+scores are lower against both native80 and MMG64. Three measured live generation
+runs give median 5.54 s versus standard MMG's 39.51 s, a 7.13-times ratio under
+the same one-thread calibration. Minimum shape quality and wall-normal RMS
+remain slightly worse than MMG, while all common gates pass. The independent
+geometry admission tolerance remains 0.002; the native 0.0002 request concerns
+its sampled forward boundary estimate. See [ACCURACY.md](ACCURACY.md) for both
+distance directions, field scores, reference sensitivity and timing scope.
+Local stress disagreement remains about 10%, rather than a certified error.
+
+`runs/accuracy-native-matched-generation-v1/microgen-bridge.json` verifies the
+actual matched-node and 20,000-node Gyroid meshes through public `BoxMesh`
+roundtrips. Coordinates and tetrahedra remain exact, and both pass the public
+periodic-node check at 1e-10. These checks do not change the geometry or run MMG.
+
 `verify_microgen_bridge.py` checks actual admitted native artifacts through
 Microgen 2.0.0b1's public `BoxMesh.from_pyvista` and `to_pyvista` methods. Both
 roundtrips preserve every coordinate and tetrahedron exactly, and both pass

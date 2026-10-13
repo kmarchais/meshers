@@ -25,7 +25,7 @@ def verify(paths):
     rows = []
     for index, path in enumerate(paths):
         artifact, _, provenance = read(path)
-        if artifact["workflow"] != "meshers-pass1":
+        if artifact["workflow"] not in {"meshers-pass1", "meshers-native-body"}:
             raise ValueError("This bridge check requires an admitted direct native artifact")
         saved = np.load(path.parent / "mesh.npz")
         points, tets = saved["points"], saved["tetrahedra"]
@@ -39,7 +39,7 @@ def verify(paths):
             raise ValueError("Microgen BoxMesh conversion changed native coordinates or tetrahedra")
         if not is_periodic(box.nodes_coords, tol=1e-10):
             raise ValueError("Microgen's public periodic-node check rejected the native mesh")
-        rows.append({**provenance, "case": artifact["case"], "cells": artifact["cells"],
+        rows.append({**provenance, "case": artifact["case"], "workflow": artifact["workflow"], "cells": artifact["cells"],
                      "tetrahedra": len(tets), "nodes": len(points), "exact_roundtrip": True,
                      "microgen_is_periodic": True, "periodic_tolerance": 1e-10,
                      "face_interior_node_counts": {k: len(v) for k, v in box.faces.items()}})
