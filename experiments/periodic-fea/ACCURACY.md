@@ -752,12 +752,27 @@ and shape diagnostics do not establish lower FEA field error. The low-error
 native profile therefore does not yet meet the combined stiffness and local-
 stress objective, despite its lower complexity.
 
-`runs/accuracy-schwarz-d-body64-matched-nodes-v1` freezes one length-ranked
-native interior-refinement pass with a 57,431-node ceiling, the remaining
-headroom under MMG62's 324,554 nodes. It uses the admitted native64 seed and
-unchanged field, build, geometry request, common gates and CG bounds. The
-pass requires exact retained coordinates and oriented boundary triangles,
-unchanged volume and nonincreasing mixed-load energies. Disjoint edge stars
-can limit insertion count, so inspect the actual result before calling it a
-matched-node mesh. Admission and six-field results remain pending; no dependent
-comparison or alternative refinement is queued.
+`runs/accuracy-schwarz-d-body64-matched-nodes-v1` admits all 57,431 requested
+length-ranked native interior insertions. It matches MMG62's 324,554 nodes,
+with 1,512,918 tetrahedra, 14.02% fewer than MMG. Minimum quality remains
+0.180697. All 267,123 seed coordinates and 196,416 oriented boundary triangles
+remain exact. Volume changes by 5.56e-17, and all six mixed-load energy-change
+eigenvalues are negative, from -0.00126415 to -0.00021471. The fixed field,
+build, geometry request, common gates and CG bounds remain unchanged.
+
+Six field hashes and twelve actual solver residuals pass. Independent stiffness
+reconstruction differs by 3.37e-16, Hill-Mandel energy by 2.91e-12, force balance
+by at most 1.68e-10 and displacement jumps are zero. One live generation sample
+takes 12.95 s and CG FEA takes 1,764.04 s, with peak RSS 4.82 GiB. The full
+stiffness disagreement is 0.262676% against native80 and 0.054269% against
+alternate MMG64, both lower than the seed and MMG62. Local stress remains to
+be measured; lower mixed energies do not establish a field-accuracy win.
+
+`runs/accuracy-schwarz-d-body64-fields-v1` freezes native64, MMG62seed80 and
+this refined native body on identical common material against native80 and
+alternate MMG64. It pins 48 analysis source and 510 input hashes, including the
+previous comparison's original fields and reports. Four Sobol scrambles use
+1,048,576 probes per reference. Read-only body-field revalidation must preserve
+the saved audit digest, with exact retained-boundary, volume and mixed-energy
+checks, regression tests and the real Pardiso smoke check. Local-stress results
+remain pending; no alternative refinement is queued ahead of this comparison.
