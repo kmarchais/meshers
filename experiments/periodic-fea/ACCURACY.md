@@ -562,10 +562,27 @@ force balance by at most 1.27e-12, and displacement jumps are zero. Single-sampl
 generation takes 5.71 s and Pardiso FEA takes 249.59 s, with peak RSS 7.83 GiB.
 These values establish admission, not reference accuracy or repeated speed.
 
-`runs/accuracy-schwarz-d-mmg40-seed48-v1` prepares one standard MMG40 control
-from the identical grid48 native recipe. The native build, frozen Microgen
-specimen, native tolerance, common geometry, volume and quality gates remain
-the same. MMG uses required box caps, Hausdorff parameter 0.002, hgrad 1.3 and
-nr enabled, with audited Pardiso and the existing worker bounds. Inspect its
-admission and actual complexity before choosing body refinement or a finer
-reference. No Schwarz D superiority claim is established yet.
+`runs/accuracy-schwarz-d-mmg40-seed48-v1` admits one standard MMG40 control
+from the identical grid48 native recipe. Its regenerated seed coordinates and
+tetrahedra match the admitted native seed exactly. The native build, frozen
+Microgen specimen, native tolerance, common geometry, volume and quality gates
+remain the same. MMG uses required box caps, Hausdorff parameter 0.002, hgrad
+1.3 and nr enabled, with audited Pardiso and the existing worker bounds.
+
+The admitted control has 85,347 nodes, 428,865 tetrahedra and minimum quality
+0.108527. Sampled forward and reverse boundary distances are 0.0012378 and
+0.0009738, both below the common 0.002 gate. Volume error including uncertainty
+is 0.0024850. All geometry, shape and periodic checks pass. Six field hashes
+and twelve actual solver residuals pass, with independent stiffness difference
+6.09e-16, Hill-Mandel difference 1.75e-14, force balance at most 2.29e-13 and
+zero displacement jumps. Single-sample generation takes 32.10 s and Pardiso
+FEA takes 141.76 s, with peak RSS 5.71 GiB. These samples are not repeated
+speed measurements.
+
+The native grid48 seed exceeds the control's node count by 49.91%, so adding
+interior nodes to it cannot produce a matched-node comparison.
+`runs/accuracy-schwarz-d-seed40-v1` measures one coarser native seed with the
+same field, build, geometry request, admission gates and solver bounds. Its
+actual admitted node count will determine any body-refinement budget. No
+finer reference or dependent refinement is queued ahead of that result, and
+no Schwarz D superiority claim is established yet.
