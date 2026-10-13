@@ -12,8 +12,10 @@ import platform
 import time
 from importlib.metadata import version
 from pathlib import Path
+from unittest.mock import patch
 
 import fedoo as fd
+from fedoo.core.problem import Problem
 import meshers
 import numpy as np
 from scipy.sparse import diags
@@ -226,12 +228,17 @@ def homogenize(mesh, artifact_directory=None):
     voigt_gap = np.linalg.eigvalsh(volumes.sum() * MATERIAL - (stiffness + stiffness.T) / 2)
     assert voigt_gap.min() > -1e-7
     automatic_solver = AuditedCG()
-    automatic = fd.homogen.get_homogenized_stiffness(
-        assembly,
-        meshperio=True,
-        solver=automatic_solver,
-        rigid_body_constraint="pin",
-    )
+    # Fedoo's built-in factor reuse selects a default direct backend even when
+    # a callback was supplied. Keep every automatic solve inside our audit;
+    # AuditedPardiso handles its own factor reuse.
+    with patch.object(Problem, "set_reuse_factorization", side_effect=RuntimeError("Use the audited solver callback")):
+        automatic = fd.homogen.get_homogenized_stiffness(
+            assembly,
+            meshperio=True,
+            solver=automatic_solver,
+            rigid_body_constraint="pin",
+        )
+    assert len(automatic_solver.records) == 6, "Automatic homogenization bypassed the audited solver"
     automatic_error = float(np.linalg.norm(automatic - stiffness) / np.linalg.norm(stiffness))
     assert automatic_error < 1e-7, automatic_error
     compliance = np.linalg.inv(stiffness)

@@ -38,7 +38,7 @@ def write_json(path, value):
 def prepare(output, native_package, task_specs=None, mmg_hausd=0.002, worker_timeout=1200,
             max_tetrahedra=2_000_000, mmg_seed_cells=None, mmg_size_map=None, surface_seed_cells=None,
             native_build_manifest=None, specimens_path=None, geometry_tolerance=0.002,
-            native_geometry_tolerance=None):
+            native_geometry_tolerance=None, body_seed=None, body_guide=None, body_refine_nodes=15000):
     """Freeze the executable experiment before it enters the shared queue."""
     output.mkdir(parents=True, exist_ok=False)
     source = output / "source"
@@ -65,6 +65,21 @@ def prepare(output, native_package, task_specs=None, mmg_hausd=0.002, worker_tim
                 raise ValueError("Changed spinodoid spectrum")
             shutil.copy2(spectrum, source / "spinodoid-spectrum.npz")
         shutil.copy2(specimens_path, source / "specimens.json")
+    for label, artifact in [("body-seed", body_seed), ("body-guide", body_guide)]:
+        if artifact is None:
+            continue
+        from reference_sensitivity import read
+        row, _, provenance = read(artifact / "result.json", geometry_gate=.002)
+        original_manifest = json.loads((artifact.parent / "manifest.json").read_text())
+        provenance["specimen"] = original_manifest["specimens"][row["case"]]
+        target = source / label
+        target.mkdir()
+        names = ["result.json", "mesh.npz", "periodic.npz"]
+        if label == "body-guide":
+            names += [field["artifact"] for field in row["homogenization"]["displacement_fields"]]
+        for name in names:
+            shutil.copy2(artifact / name, target / name)
+        write_json(target / "input-provenance.json", provenance)
     native = next(
         path
         for path in (source / "meshers").iterdir()
@@ -136,6 +151,7 @@ def prepare(output, native_package, task_specs=None, mmg_hausd=0.002, worker_tim
             "mmg_hausd": mmg_hausd,
             "periodic_pair_tolerance": 1e-10,
             "worker_timeout_s": worker_timeout,
+            "body_refine_nodes": body_refine_nodes,
         },
         "specimens": {
             "solid-cell": {"function": "solid", "offset": 1},
@@ -169,6 +185,9 @@ def prepare(output, native_package, task_specs=None, mmg_hausd=0.002, worker_tim
             "mmg-native-seed",
             "mmg-native-seed-metric",
             "gmsh-hxt-native-surface",
+            "meshers-body-refine",
+            "solver-cg-replay",
+            "solver-pardiso-replay",
         }
         tasks = []
         for spec in task_specs:
@@ -181,6 +200,16 @@ def prepare(output, native_package, task_specs=None, mmg_hausd=0.002, worker_tim
                 raise ValueError(f"Unknown workflow or invalid resolution: {spec}")
             tasks.append({"case": case_id, "workflow": workflow, "cells": cells})
     manifest["tasks"] = tasks
+    if any(task["workflow"] == "meshers-body-refine" for task in tasks) and (body_seed is None or body_guide is None):
+        raise ValueError("Body-refinement prototype needs --body-seed and --body-guide")
+    if any(task["workflow"].startswith("solver-") for task in tasks) and body_seed is None:
+        raise ValueError("Solver replay needs an admitted --body-seed")
+    if any(task["workflow"] == "solver-pardiso-replay" for task in tasks):
+        import pypardiso
+        engine = pypardiso.PyPardisoSolver()
+        manifest["packages"].update({name: importlib.metadata.version(name) for name in ["pypardiso", "mkl"]})
+        for path in [*Path(pypardiso.__file__).parent.glob("*.py"), Path(engine.libmkl._name)]:
+            manifest["dependency_sources_sha256"][str(path.resolve())] = digest(path)
     if any(task["workflow"] == "gmsh-hxt-native-surface" for task in tasks):
         import gmsh
         manifest["packages"]["gmsh"] = importlib.metadata.version("gmsh")
@@ -377,6 +406,12 @@ def worker(request_path):
                 points, tets, metrics = generate_hxt(
                     case, task["cells"], generation_config, directory, checkpoint
                 )
+            elif task["workflow"] == "meshers-body-refine":
+                from body_refine import generate as generate_body
+                points, tets, metrics = generate_body(case, task["cells"], config, directory, checkpoint)
+            elif task["workflow"].startswith("solver-"):
+                from body_refine import replay_mesh
+                points, tets, metrics = replay_mesh(case, task["cells"])
             else:
                 points, tets, metrics = generate(
                     case, task["workflow"], task["cells"], generation_config, checkpoint
@@ -439,15 +474,24 @@ def worker(request_path):
         result["stage"] = "periodic homogenization"
         checkpoint(stage=result["stage"], load=0)
         original_solver = homogenization.AuditedCG
+        result["linear_solver"] = "audited-cg"
+        if task["workflow"] == "solver-pardiso-replay":
+            from pardiso_solver import AuditedPardiso
+            original_solver = AuditedPardiso
+            result["linear_solver"] = "pypardiso"
 
         solver_count = 0
+        solver_instances = []
 
         class ProgressCG(original_solver):
             def __init__(self):
                 nonlocal solver_count
+                if solver_instances and hasattr(solver_instances[-1], "free_memory"):
+                    solver_instances[-1].free_memory()
                 super().__init__()
                 self.load_offset = 6 * solver_count
                 solver_count += 1
+                solver_instances.append(self)
 
             def __call__(self, matrix, rhs, **kwargs):
                 checkpoint(
@@ -462,9 +506,22 @@ def worker(request_path):
                 )
                 return solution
 
-        with patch.object(homogenization, "AuditedCG", ProgressCG):
-            result["homogenization"] = homogenization.homogenize(mesh, directory)
+        try:
+            with patch.object(homogenization, "AuditedCG", ProgressCG):
+                result["homogenization"] = homogenization.homogenize(mesh, directory)
+        finally:
+            for solver in solver_instances:
+                if hasattr(solver, "free_memory"):
+                    solver.free_memory()
         result["homogenization_audited"] = True
+        if task["workflow"] == "meshers-body-refine":
+            from periodic import tensor_difference
+            nested = tensor_difference(result["homogenization"]["stiffness_engineering_voigt"], result["seed_tensor"])
+            if max(nested["relative_energy_difference_eigenvalues"]) > 1e-8:
+                raise ValueError("Nested refinement increased strain-controlled energy")
+            if abs(result["solid_fraction"] - result["seed_volume"]) > 1e-10:
+                raise ValueError("Body-only refinement changed material volume")
+            result["nested_refinement_energy_change"] = nested
         if task["case"] == "solid-cell":
             tensor = np.array(result["homogenization"]["stiffness_engineering_voigt"])
             error = float(
@@ -745,6 +802,9 @@ if __name__ == "__main__":
     parser.add_argument("--specimens", type=Path, help="Frozen Microgen TPMS and spectral-field definitions")
     parser.add_argument("--geometry-tolerance", type=float, default=0.002)
     parser.add_argument("--native-geometry-tolerance", type=float, help="Native refinement request, independent of the shared geometry admission gate")
+    parser.add_argument("--body-seed", type=Path, help="Audited seed artifact directory for nested body refinement")
+    parser.add_argument("--body-guide", type=Path, help="Audited coarse-guide artifact directory")
+    parser.add_argument("--body-refine-nodes", type=int, default=15000)
     args = parser.parse_args()
     if args.prepare:
         if args.native_package is None:
@@ -755,6 +815,8 @@ if __name__ == "__main__":
             parser.error("--mmg-seed-cells must be between 4 and 128")
         if args.native_geometry_tolerance is not None and args.native_geometry_tolerance <= 0:
             parser.error("--native-geometry-tolerance must be positive")
+        if args.body_refine_nodes <= 0:
+            parser.error("--body-refine-nodes must be positive")
         if args.surface_seed_cells is not None and not 4 <= args.surface_seed_cells <= 128:
             parser.error("--surface-seed-cells must be between 4 and 128")
         prepare(
@@ -771,6 +833,9 @@ if __name__ == "__main__":
             args.specimens,
             args.geometry_tolerance,
             args.native_geometry_tolerance,
+            args.body_seed,
+            args.body_guide,
+            args.body_refine_nodes,
         )
     elif args.run:
         run(args.run.resolve())

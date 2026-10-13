@@ -11,7 +11,7 @@ def sha(path):
     return hashlib.sha256(Path(path).read_bytes()).hexdigest()
 
 
-def verify_run(output):
+def verify_run(output, *, write_report=True):
     document = json.loads((output / "results.json").read_text(encoding="utf-8"))
     manifest = json.loads((output / "manifest.json").read_text(encoding="utf-8"))
     assert sha(output / "manifest.json") == document["manifest_sha256"]
@@ -100,7 +100,8 @@ def verify_run(output):
         "rows": verified,
         "scope": "Saved fields, source/reference/mesh hashes, stiffness, energy and periodic equilibrium",
     }
-    (output / "artifact-verification.json").write_text(
-        json.dumps(result, indent=2) + "\n", encoding="utf-8"
-    )
+    if write_report:
+        (output / "artifact-verification.json").write_text(
+            json.dumps(result, indent=2) + "\n", encoding="utf-8"
+        )
     return result

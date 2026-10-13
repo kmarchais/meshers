@@ -40,7 +40,7 @@ def test_stress_score_is_invariant_to_load_basis_and_units():
 def test_common_gate_checks_both_directions_caps_and_volume(tmp_path, failed_metric):
     import json
 
-    row = {"homogenization_audited": True, "quality_eligible": True, "periodic_eligible": True,
+    row = {"status": "ok", "homogenization_audited": True, "quality_eligible": True, "periodic_eligible": True,
            "sampled_geometry_distance": .0001, "sampled_reverse_distance": .0001,
            "sampled_cap_overshoot": .0001, "sampled_outward_orientation": True,
            "relative_volume_error_with_uncertainty": .001}
@@ -49,3 +49,26 @@ def test_common_gate_checks_both_directions_caps_and_volume(tmp_path, failed_met
     path.write_text(json.dumps(row))
     with pytest.raises(ValueError, match="Unadmitted"):
         read(path, geometry_gate=.002)
+
+
+def test_failed_post_solve_check_cannot_supply_an_accuracy_candidate(tmp_path):
+    import json
+
+    row = {"status": "failed", "geometry_eligible": True, "homogenization_audited": True,
+           "quality_eligible": True, "periodic_eligible": True}
+    path = tmp_path / "result.json"
+    path.write_text(json.dumps(row))
+    with pytest.raises(ValueError, match="Unadmitted"):
+        read(path)
+
+
+def test_automatic_solver_bypass_cannot_supply_an_accuracy_candidate(tmp_path):
+    import json
+
+    row = {"status": "ok", "geometry_eligible": True, "homogenization_audited": True,
+           "quality_eligible": True, "periodic_eligible": True,
+           "homogenization": {"strain_controlled_loads": [{}] * 6, "automatic_stress_controlled_solves": []}}
+    path = tmp_path / "result.json"
+    path.write_text(json.dumps(row))
+    with pytest.raises(ValueError, match="twelve audited"):
+        read(path)

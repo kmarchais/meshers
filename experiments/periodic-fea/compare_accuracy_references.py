@@ -1,6 +1,7 @@
 """Compare the same candidates against two independent volume topologies."""
 
 import argparse
+import json
 import sys
 from pathlib import Path
 
@@ -14,6 +15,20 @@ from pueue_progress import report
 def compare(references, candidates, output, geometry_gate):
     # Read-only inputs and atomic fixed-name outputs make an interrupted run restartable.
     output.mkdir(parents=True, exist_ok=True)
+    boundary_checks = []
+    for path in candidates:
+        row = json.loads(path.read_text())
+        if row["workflow"] != "meshers-body-refine":
+            continue
+        import numpy as np
+        from body_refine import verify_preserved_boundary
+        seed_dir = path.parent.parent / "source/body-seed"
+        seed_row = json.loads((seed_dir / "result.json").read_text())
+        if digest(seed_dir / "mesh.npz") != seed_row["mesh_sha256"] or digest(path.parent / "mesh.npz") != row["mesh_sha256"]:
+            raise ValueError("Body-refinement boundary-check input changed")
+        with np.load(seed_dir / "mesh.npz") as seed, np.load(path.parent / "mesh.npz") as mesh:
+            boundary_checks.append({"artifact": str(path), **verify_preserved_boundary(
+                seed["points"], seed["surface"], mesh["points"], mesh["surface"])})
     rows = []
     for index, reference in enumerate(references):
         accuracy_metrics.report = lambda fraction, message, **kwargs: report(
@@ -21,7 +36,8 @@ def compare(references, candidates, output, geometry_gate):
         rows.append(accuracy_metrics.compare(reference, candidates, output / f"reference-{index}.json",
                                              geometry_gate=geometry_gate))
     write_json(output / "comparisons.json", {"state": "complete", "source_sha256": digest(Path(__file__)),
-                                             "common_geometry_gate": geometry_gate, "comparisons": rows})
+                                             "common_geometry_gate": geometry_gate, "comparisons": rows,
+                                             "body_boundary_verification": boundary_checks})
     report(1, "Accuracy comparisons against both reference topologies complete", eta_s=0)
 
 

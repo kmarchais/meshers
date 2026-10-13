@@ -18,9 +18,12 @@ def read(path, geometry_gate=None):
                           ["sampled_geometry_distance", "sampled_reverse_distance", "sampled_cap_overshoot"])
         geometry_ok &= result.get("sampled_outward_orientation", False)
         geometry_ok &= result.get("relative_volume_error_with_uncertainty", float("inf")) <= .01
-    if not geometry_ok or not all(result.get(k) for k in ["homogenization_audited",
+    if result.get("status") != "ok" or not geometry_ok or not all(result.get(k) for k in ["homogenization_audited",
                                                          "quality_eligible", "periodic_eligible"]):
         raise ValueError(f"Unadmitted artifact: {path}")
+    if any(len(result["homogenization"].get(key, [])) != 6 for key in
+           ["strain_controlled_loads", "automatic_stress_controlled_solves"]):
+        raise ValueError(f"Unadmitted artifact without twelve audited solves: {path}")
     parent = json.loads((path.parent.parent / "results.json").read_text())
     if parent["state"] != "complete" or not any(
         r["artifact"] == path.parent.name for r in parent["artifact_verification"]["rows"]
