@@ -18,7 +18,7 @@ def compare(references, candidates, output, geometry_gate, power=17):
     boundary_checks = []
     for path in candidates:
         row = json.loads(path.read_text())
-        if row["workflow"] != "meshers-body-refine":
+        if row["workflow"] not in {"meshers-body-refine", "meshers-native-body"}:
             continue
         import numpy as np
         from body_refine import verify_preserved_boundary

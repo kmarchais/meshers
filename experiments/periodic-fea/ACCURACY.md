@@ -280,6 +280,29 @@ does not earn its extra preparation cost. A native implementation and live
 generation measurements remain necessary before adopting a production recipe.
 The local scores remain reference disagreements, not continuum error bounds.
 
+## Native recipe check
+
+The isolated optimizer branch prototypes `interior_refine_nodes`, default zero,
+in the native generator. It ranks interior edges by squared length, splits
+complete disjoint edge stars and protects every boundary edge. It inserts at
+most the requested number of nodes and respects the tetrahedron budget and
+the quality floor of max(minimum_quality, 0.1). No optimizer runs after this
+nested pass. Core tests check deterministic output, retained coordinates,
+oriented boundaries, periodic metadata, volume and budget enforcement. Zero
+nodes preserves the existing generation path.
+
+`runs/accuracy-native-body-build-v1` freezes optimizer commit `83be74cb` and
+binary hash `5c01b691254222832043fcbaa26daefdff333b54c2436034fea28887f66bcd93`.
+Fifteen library tests, 22 implicit tests and eight public Python quality/API
+checks pass. `meshers-native-body:48` in `run.py` measures live native generation
+with a 20,000-node budget in `runs/accuracy-native-body48-20k-v1`. It requests
+native boundary tolerance 0.0002, with the unchanged common admission tolerance
+0.002. The archived boundary seed supplies an exact coordinate/boundary check
+and the tensor for checking nested energy; it does not supply the generated
+mesh. Fresh independent admission, saved fields and two-reference comparison
+must pass before accepting this native recipe. The production package and
+default generator remain unchanged.
+
 ## Broader fixtures
 
 `prepare_catalogue.py` freezes ten 3D TPMS callables from the installed Microgen

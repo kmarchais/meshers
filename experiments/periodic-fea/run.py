@@ -193,6 +193,7 @@ def prepare(output, native_package, task_specs=None, mmg_hausd=0.002, worker_tim
             "mmg-native-seed-metric",
             "gmsh-hxt-native-surface",
             "meshers-body-refine",
+            "meshers-native-body",
             "solver-cg-replay",
             "solver-pardiso-replay",
         }
@@ -211,6 +212,8 @@ def prepare(output, native_package, task_specs=None, mmg_hausd=0.002, worker_tim
         body_seed is None or body_marker == "guide" and body_guide is None
     ):
         raise ValueError("Body refinement needs --body-seed and the guide marker also needs --body-guide")
+    if any(task["workflow"] == "meshers-native-body" for task in tasks) and body_seed is None:
+        raise ValueError("Native body refinement needs --body-seed for exact boundary and nested energy checks")
     if any(task["workflow"].startswith("solver-") for task in tasks) and body_seed is None:
         raise ValueError("Solver replay needs an admitted --body-seed")
     if fea_solver == "pardiso" or any(task["workflow"] == "solver-pardiso-replay" for task in tasks):
@@ -418,6 +421,13 @@ def worker(request_path):
             elif task["workflow"] == "meshers-body-refine":
                 from body_refine import generate as generate_body
                 points, tets, metrics = generate_body(case, task["cells"], config, directory, checkpoint)
+            elif task["workflow"] == "meshers-native-body":
+                generation_config["interior_refine_nodes"] = config["body_refine_nodes"]
+                points, tets, metrics = generate(
+                    case, "meshers-pass1", task["cells"], generation_config, checkpoint
+                )
+                metrics.update(body_marker_kind="length", prototype_only=True,
+                               generation_timing_scope="Live native generation including interior refinement; no archived mesh adaptation")
             elif task["workflow"].startswith("solver-"):
                 from body_refine import replay_mesh
                 points, tets, metrics = replay_mesh(case, task["cells"])
@@ -444,6 +454,19 @@ def worker(request_path):
         )
         result.update(metrics)
         np.savez_compressed(directory / "mesh.npz", points=points, tetrahedra=tets, surface=surface)
+        if task["workflow"] == "meshers-native-body":
+            from body_refine import verify_preserved_boundary
+            seed_dir = Path(__file__).parent / "body-seed"
+            seed = json.loads((seed_dir / "result.json").read_text())
+            definition = json.loads((seed_dir / "input-provenance.json").read_text())["specimen"]
+            if (seed["case"] != case.id or seed["cells"] != task["cells"]
+                or definition != specimen or digest(seed_dir / "mesh.npz") != seed["mesh_sha256"]):
+                raise ValueError("Native body-refinement seed differs from requested specimen or changed")
+            with np.load(seed_dir / "mesh.npz") as original:
+                result["retained_boundary"] = verify_preserved_boundary(
+                    original["points"], original["surface"], points, surface)
+            result.update(seed_tensor=seed["homogenization"]["stiffness_engineering_voigt"],
+                          seed_volume=seed["solid_fraction"])
         result["mesh_sha256"] = digest(directory / "mesh.npz")
         volume = request["volume_reference"]
         result["relative_volume_error"] = (
@@ -473,6 +496,10 @@ def worker(request_path):
             classes=classes,
             **{f"pairs_{i}": pair for i, pair in enumerate(pairs)},
         )
+        if task["workflow"] == "meshers-native-body" and not all(
+            result[key] for key in ["geometry_eligible", "quality_eligible", "periodic_eligible"]
+        ):
+            raise ValueError("Live native body mesh failed the unchanged common admission gates")
         mesh = SimpleNamespace(
             points=points + 0.5,
             tetrahedra=tets,
@@ -525,7 +552,7 @@ def worker(request_path):
                 if hasattr(solver, "free_memory"):
                     solver.free_memory()
         result["homogenization_audited"] = True
-        if task["workflow"] == "meshers-body-refine":
+        if task["workflow"] in {"meshers-body-refine", "meshers-native-body"}:
             from periodic import tensor_difference
             nested = tensor_difference(result["homogenization"]["stiffness_engineering_voigt"], result["seed_tensor"])
             if max(nested["relative_energy_difference_eigenvalues"]) > 1e-8:

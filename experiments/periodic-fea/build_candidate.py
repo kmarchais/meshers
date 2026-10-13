@@ -42,7 +42,7 @@ def build(worktree, output, target_directory=None):
         env["CARGO_BUILD_JOBS"] = "2"
         env["CARGO_TARGET_DIR"] = str(target_directory or output / "target")
         commands = [
-            ["cargo", "test", "-p", "meshers-core", "--test", "implicit", "--release"],
+            ["cargo", "test", "-p", "meshers-core", "--lib", "--test", "implicit", "--release"],
             [str(Path.home() / "dev/meshers/.venv/Scripts/maturin.exe"), "build", "--release",
              "--manifest-path", "crates/meshers-python/Cargo.toml", "--interpreter", sys.executable,
              "--out", str(output / "wheels")],
@@ -67,6 +67,19 @@ def build(worktree, output, target_directory=None):
                 if name.startswith("meshers/"):
                     archive.extract(name, output / "package")
         native = next((output / "package/meshers").glob("*.pyd"))
+        env["PYTHONPATH"] = str(output / "package")
+        command = [sys.executable, "-m", "pytest", "-q", "crates/meshers-python/tests/test_quality.py"]
+        live["message"] = "Exercise the isolated native wheel through the public Python API"
+        with (output / "python-checks.log").open("w", encoding="utf-8") as log:
+            completed = subprocess.run(command, cwd=worktree, env=env, stdout=log,
+                                       stderr=subprocess.STDOUT, timeout=1200)
+        records.append({"command": command, "exit_code": completed.returncode})
+        if completed.returncode:
+            print((output / "python-checks.log").read_text()[-4000:], flush=True)
+            raise RuntimeError("Isolated candidate Python checks failed")
+        for name, expected in hashes.items():
+            if digest(worktree / name) != expected:
+                raise ValueError(f"Source changed while checking the wheel: {name}")
         result = {"state": "complete", "source_commit": commit, "source_sha256": hashes,
                   "native_sha256": digest(native), "wheel_sha256": digest(wheel), "commands": records,
                   "worktree": str(worktree), "seconds": time.monotonic() - started}

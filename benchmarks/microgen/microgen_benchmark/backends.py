@@ -282,6 +282,8 @@ def generate(case, workflow, cells, config, progress=None):
             max_tetrahedra=config["max_tetrahedra"],
             threads=config["threads"],
             periodic=(config.get("periodic", False),) * 3,
+            **({"interior_refine_nodes": config["interior_refine_nodes"]}
+               if config.get("interior_refine_nodes", 0) else {}),
             **PROFILES[workflow],
         )
         points, tets = np.asarray(native.points).copy(), np.asarray(native.tetrahedra).copy()
@@ -290,6 +292,7 @@ def generate(case, workflow, cells, config, progress=None):
             "meshers_evaluator": native.diagnostics.get("evaluator"),
             "meshers_callback_calls": native.diagnostics.get("callback_calls"),
             "meshers_field_preparation_s": native.diagnostics.get("preparation_seconds"),
+            "inserted_body_nodes": native.diagnostics.get("inserted_interior_nodes", 0),
         }
         extraction_s = None
     else:
