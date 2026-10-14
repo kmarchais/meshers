@@ -1009,10 +1009,34 @@ jumps are zero. CG FEA takes 1,309.29 s with peak RSS 4.23 GiB. Generation takes
 12.40 s as one calibration sample, which does not establish speed.
 
 `runs/accuracy-schwarz-d-seed68-fields-v1` freezes 50 source files and 954 inputs
-for one pending comparison. It adds native68 to the five retained candidates
+for one completed comparison. It adds native68 to the five retained candidates
 and compares all six against native80, alternate MMG64 and native92. Four Sobol
 scrambles use 1,048,576 probes per reference on identical common material.
-Regressions, the real Pardiso smoke check, read-only native68 and retained
-volume-body audits, and the existing exact body-boundary, volume and mixed-
-energy checks remain required. The measured reference-to-reference variation
-remains part of the evidence. No refinement job is queued before this result.
+All source and input hashes remain unchanged. Thirty-three regressions pass
+with one optional test skipped, and the real Pardiso smoke check passes.
+Read-only native68 and retained volume-body audits preserve both original
+digests. The existing exact body-boundary, volume and mixed-energy checks pass.
+
+| Reference | Metric | Native64 seed | Native68 seed | MMG62seed80 |
+| --- | --- | ---: | ---: | ---: |
+| Native80 | Worst stiffness disagreement | 0.388498% | 0.285422% | 0.417868% |
+| Native80 | Worst local stress disagreement | 12.786201% | 12.618752% | 10.513646% |
+| MMG64 | Worst stiffness disagreement | 0.077814% | 0.054859% | 0.103583% |
+| MMG64 | Worst local stress disagreement | 13.705123% | 13.511935% | 11.180800% |
+| Native92 | Worst stiffness disagreement | 0.571010% | 0.467659% | 0.598833% |
+| Native92 | Worst local stress disagreement | 12.424362% | 11.979720% | 12.317939% |
+
+Native68 reduces stress disagreement versus native64 in every scramble against
+all three references. It still loses to MMG against both older references in
+every scramble and wins against native92 in every scramble. Common reference
+material coverage exceeds 99.87%. Adding the new boundary changes the common
+material intersection, so retained candidates' stress scores shift slightly;
+the tolerance and original reports remain unchanged. The measured reference-
+to-reference variation still limits any absolute accuracy claim.
+
+The next controlled point uses at most the remaining 27,767 nodes for native
+length-ranked interior refinement of the admitted grid68 seed. Length ranking
+performed best among the tested native64 markers. The same native build, field,
+common gates and CG bounds remain fixed. Original seed coordinates, oriented
+boundary triangles, volume and nonincreasing mixed-load energy must pass before
+another field comparison. No dependent comparison is queued before admission.
