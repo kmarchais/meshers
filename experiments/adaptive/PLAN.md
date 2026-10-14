@@ -41,8 +41,15 @@ compiled fields) + `fea-accuracy-optimizer` (PR #5 geometry guard, quality floor
 - [x] FEA error per DOF: linear adaptivity ties the lattice; curved quadratic tets
   give 13-22x lower error at equal nodes. Native `generate(order=2)`.
 - [x] Issues #3/#4: adapter passes all smooth fixtures at 8 cells; crease lattice open.
-- [ ] Crease capture for min/max fields (compiled-field branch information).
-- [ ] Speed: profile, batch field calls, parallel independent sets.
+- [x] Balanced vertex placement for surfaces (~40% fewer triangles at equal H).
+- [x] Curve chords measured in-plane on adaptive paths (found via the spinodoid).
+- [x] Thick solid FEA: linear adaptivity +-20%; curved quadratic ~10x better per node.
+- [ ] Crease capture for min/max fields (compiled-field branch information); smooth
+  unions (k ~ strut radius) already work.
+- [ ] Error-driven size field for linear meshes (stress in ligament necks).
+- [ ] Spinodoid at 16 cells: remaining in-plane curve error 2.0e-2 does not refine.
+- [~] Speed: phase timers; targeted edge removal, cached normals (surface 2.5x,
+  volume 1.7x, single-run indications). Parallel relocation not done.
 - [ ] Surface: volume-neutral vertex offset (halves Hausdorff at equal count).
 - [ ] Box-edge wedges limit q_min (gyroid ~0.18-0.27) in non-periodic boxes.
 - [ ] Timing study in the gpu queue once idle (surface vs Flying Edges, volume vs
