@@ -105,7 +105,7 @@ def main():
         assert digest(name) == expected, name
     write_json(output / "completion.json", {"state": "complete", "manifest_sha256": digest(output / "manifest.json"),
                                            "input_hashes_unchanged": True, "pardiso_smoke_passed": True})
-    report(1, "Body accuracy comparisons and optional direct-solver checks complete", eta_s=0)
+    report(1, "Saved-field accuracy comparisons and optional direct-solver checks complete", eta_s=0)
 
 
 if __name__ == "__main__":

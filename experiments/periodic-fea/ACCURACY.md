@@ -967,6 +967,31 @@ This marker does not justify a native port or another budget tuning run.
 with one another on the same common material and four Sobol scrambles. The
 candidate ranking changes with the reference, so reference-to-reference
 stiffness and local stress disagreement must be measured before another mesh
-recipe is tuned. The queued job revalidates all three reference fields without
-rewriting their saved audit reports and runs the regressions and real Pardiso
-smoke check. No meshing or full FEA solve is queued at this checkpoint.
+recipe is tuned. All source and input hashes remain unchanged after completion.
+Read-only revalidation preserves all three original audit digests. Thirty-three
+regressions pass with one optional test skipped, and the real Pardiso smoke
+check passes. All three self-comparisons give exactly zero stiffness and stress
+disagreement, including every scramble. Common reference material coverage
+exceeds 99.89%.
+
+| Reference | Compared field | Worst stiffness disagreement | Worst local stress disagreement |
+| --- | --- | ---: | ---: |
+| Native80 | MMG64seed80 | 0.315476% | 9.425041% |
+| Native80 | Native92 | 0.181483% | 10.897170% |
+| MMG64seed80 | Native80 | 0.314484% | 9.412874% |
+| MMG64seed80 | Native92 | 0.493963% | 11.912303% |
+| Native92 | Native80 | 0.181813% | 10.906078% |
+| Native92 | MMG64seed80 | 0.496416% | 11.938862% |
+
+The score normalizes by the named reference, so reversing a pair changes its
+value slightly. Reference local stress variation is larger than the measured
+candidate margins. Small stiffness differences do not establish low absolute
+stress error, and none of these finite meshes supplies a continuum certificate.
+All retained reference rankings must accompany later candidate results.
+
+The next controlled point is one native grid68 seed at the same fixed field,
+native geometry request, common gates and CG bounds. It increases base-grid
+resolution throughout the domain rather than selecting interior edge stars.
+The actual admitted node count will determine whether it fits the MMG62seed80
+324,554-node budget. No dependent refinement or field comparison is queued
+before that result.
