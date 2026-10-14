@@ -1085,9 +1085,19 @@ these repeated older-reference misses.
 
 Source inspection finds vertex movement and edge bisection in the experimental
 native implementation, with no edge-collapse or coarsening path. Before
-introducing a topology-changing algorithm, the next read-only localization
-will compare the latest seven candidates against all three references. It
+introducing a topology-changing algorithm,
+`runs/accuracy-schwarz-d-latest-localization-v1` freezes 49 source files and
+1,146 inputs for one read-only localization of the latest seven candidates
+against all three references. It
 must reproduce the retained global scores and conserve per-probe error across
 wall-distance bins and cells. This will distinguish remaining wall and bulk
-disagreement and recheck shared reference cells on the fresh grid. No meshing
-or solver job is queued at this checkpoint.
+disagreement and recheck shared reference cells on the fresh grid. Progress
+counts all references and candidates and reports coverage and stress values.
+No meshing or solver job is queued at this checkpoint.
+
+The host choice follows the updated computer inventory and verified SSH
+procedure. OMEN's shared lane is idle with 26.99 GiB free RAM. Lenovo is
+reachable with 10.29 GiB free RAM, but its Scoop pueue shim cannot launch the
+queue client, so its queue is unverified. The analysis stays on OMEN with its
+local frozen inputs and benchmark environment. `host-choice.json` records
+these checks and is included in the pinned inputs. No new session is created.
