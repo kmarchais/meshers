@@ -911,10 +911,17 @@ against all three references, but the local ranking depends on the reference.
 This sensitivity supports retaining multiple reference topologies. It does not
 establish a combined accuracy win or a continuum stress certificate.
 
-The next bounded diagnostic will rank interior edge stars by mean incident
-tetrahedron volume, at the same 57,431-node insertion ceiling. The localization
+`runs/accuracy-schwarz-d-volume-body64-v1` freezes one bounded diagnostic that
+ranks interior edge stars by mean incident tetrahedron volume, at the same
+57,431-node insertion ceiling. The localization
 showed that both existing markers leave the larger interior cells untouched.
 This geometry-only Python prototype will use the same archived native64 seed,
-complete disjoint cavities, boundary protection and quality floor. It will not
-supply a generation speed claim, and its actual admission must pass before
-another field comparison or a native implementation.
+complete disjoint cavities, boundary protection and quality floor. Equal-volume
+stars prefer longer edges; a fixed-seed shuffle breaks exact ties to avoid
+concentrating insertions by vertex numbering. All 66 source files and 223
+original inputs are pinned. The queued job first revalidates the seed read-only
+and runs the regressions, including a two-block case where the larger cells
+differ from the longest eligible edge. CG keeps the existing resource bounds.
+This archive adaptation supplies no generation speed claim. Its actual
+admission and six-field audit must pass before another field comparison or
+a native implementation.
