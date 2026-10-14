@@ -962,8 +962,11 @@ native92 but higher against native80 and MMG64. Common reference material
 coverage exceeds 99.89%, and the four older candidate scores reproduce exactly.
 This marker does not justify a native port or another budget tuning run.
 
-The next read-only diagnostic will compare the three retained reference fields
+`runs/accuracy-schwarz-d-reference-pair-fields-v1` freezes 50 source files and
+879 inputs for a read-only comparison of the three retained reference fields
 with one another on the same common material and four Sobol scrambles. The
 candidate ranking changes with the reference, so reference-to-reference
 stiffness and local stress disagreement must be measured before another mesh
-recipe is tuned. No further meshing job is queued at this checkpoint.
+recipe is tuned. The queued job revalidates all three reference fields without
+rewriting their saved audit reports and runs the regressions and real Pardiso
+smoke check. No meshing or full FEA solve is queued at this checkpoint.
