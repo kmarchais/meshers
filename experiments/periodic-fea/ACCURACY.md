@@ -1056,10 +1056,38 @@ generation including refinement takes 13.17 s as one calibration sample, which
 does not establish generation speed.
 
 `runs/accuracy-schwarz-d-body68-fields-v1` freezes 50 source files and 1,089
-inputs for one pending comparison. It adds the refined grid68 mesh to the six
+inputs for one completed comparison. It adds the refined grid68 mesh to the six
 retained candidates and compares all seven against native80, alternate MMG64
 and native92. Four Sobol scrambles use 1,048,576 probes per reference on
-identical common material. Regressions, the real Pardiso smoke check, read-only
-body68 and original-seed audits, exact retained body boundaries, volume and
-mixed-energy checks remain required. No further mesh experiment is queued
-before its actual result.
+identical common material. All source and input hashes remain unchanged.
+Thirty-three regressions pass with one optional test skipped, and the real
+Pardiso smoke check passes. Read-only body68 and original-seed audits preserve
+both original digests. All exact retained body boundaries, volume and mixed-
+energy checks pass.
+
+| Reference | Metric | Native68 seed | Native68 refinement | MMG62seed80 |
+| --- | --- | ---: | ---: | ---: |
+| Native80 | Worst stiffness disagreement | 0.285422% | 0.218305% | 0.417868% |
+| Native80 | Worst local stress disagreement | 12.618752% | 12.378616% | 10.513646% |
+| MMG64 | Worst stiffness disagreement | 0.054859% | 0.099028% | 0.103583% |
+| MMG64 | Worst local stress disagreement | 13.511935% | 13.284333% | 11.180800% |
+| Native92 | Worst stiffness disagreement | 0.467659% | 0.400472% | 0.598833% |
+| Native92 | Worst local stress disagreement | 11.979720% | 11.724949% | 12.317939% |
+
+Refinement reduces native68 stress disagreement in every scramble against all
+three references. At matched total nodes, it still loses to MMG against both
+older references in every scramble, while winning against native92 in every
+scramble. Common reference material coverage exceeds 99.87%. Lower stiffness
+disagreement against all three references does not establish a combined win.
+The reference-to-reference stress variation and every older result remain
+retained. Another grid or insertion-budget adjustment is not justified by
+these repeated older-reference misses.
+
+Source inspection finds vertex movement and edge bisection in the experimental
+native implementation, with no edge-collapse or coarsening path. Before
+introducing a topology-changing algorithm, the next read-only localization
+will compare the latest seven candidates against all three references. It
+must reproduce the retained global scores and conserve per-probe error across
+wall-distance bins and cells. This will distinguish remaining wall and bulk
+disagreement and recheck shared reference cells on the fresh grid. No meshing
+or solver job is queued at this checkpoint.
