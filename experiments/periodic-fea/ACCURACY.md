@@ -1034,9 +1034,15 @@ material intersection, so retained candidates' stress scores shift slightly;
 the tolerance and original reports remain unchanged. The measured reference-
 to-reference variation still limits any absolute accuracy claim.
 
-The next controlled point uses at most the remaining 27,767 nodes for native
-length-ranked interior refinement of the admitted grid68 seed. Length ranking
+`runs/accuracy-schwarz-d-body68-matched-nodes-v1` freezes 66 source files and
+225 original inputs for one queued native length-ranked interior refinement
+of the admitted grid68 seed, using at most the remaining 27,767 nodes. Length ranking
 performed best among the tested native64 markers. The same native build, field,
 common gates and CG bounds remain fixed. Original seed coordinates, oriented
 boundary triangles, volume and nonincreasing mixed-load energy must pass before
-another field comparison. No dependent comparison is queued before admission.
+another field comparison. The wrapper first revalidates the original seed
+read-only, preserving its audit digest, then runs the bounded native experiment
+and rejects a failed row even if the underlying runner returns zero. Completion
+records the actual generation scope, distinguishing live native generation
+from Python adaptation of archives. No dependent comparison is queued before
+admission, and a single calibration timing cannot establish generation speed.
