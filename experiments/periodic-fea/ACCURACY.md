@@ -989,10 +989,30 @@ candidate margins. Small stiffness differences do not establish low absolute
 stress error, and none of these finite meshes supplies a continuum certificate.
 All retained reference rankings must accompany later candidate results.
 
-`runs/accuracy-schwarz-d-seed68-v1` freezes 61 source files for one queued native
+`runs/accuracy-schwarz-d-seed68-v1` freezes 61 source files for one admitted native
 grid68 seed at the same fixed field, native build, geometry request, common
 gates and CG bounds. It increases base-grid
 resolution throughout the domain rather than selecting interior edge stars.
-The actual admitted node count will determine whether it fits the MMG62seed80
-324,554-node budget. No dependent refinement or field comparison is queued
-before that result.
+The actual mesh has 296,787 nodes and 1,465,896 tetrahedra at minimum quality
+0.134168. It leaves 27,767 nodes below the MMG62seed80 324,554-node budget.
+Forward distance is 0.00018866 and reverse distance is 0.00011807. Volume error
+including reference uncertainty is 0.00103837; all common and periodic gates
+pass. Its boundary differs from the native64 seed, so the original-coordinate
+and oriented-boundary invariants apply to later nested refinement of this new
+seed, not to comparison between the two base grids.
+
+All 61 source hashes and six field hashes remain unchanged. Thirty-three
+regressions pass with one optional test skipped, and all twelve actual solver
+residuals pass. Independent stiffness reconstruction differs by 3.65e-16,
+Hill-Mandel energy by 2.41e-12, force balance by at most 2.13e-9 and displacement
+jumps are zero. CG FEA takes 1,309.29 s with peak RSS 4.23 GiB. Generation takes
+12.40 s as one calibration sample, which does not establish speed.
+
+`runs/accuracy-schwarz-d-seed68-fields-v1` freezes 50 source files and 954 inputs
+for one pending comparison. It adds native68 to the five retained candidates
+and compares all six against native80, alternate MMG64 and native92. Four Sobol
+scrambles use 1,048,576 probes per reference on identical common material.
+Regressions, the real Pardiso smoke check, read-only native68 and retained
+volume-body audits, and the existing exact body-boundary, volume and mixed-
+energy checks remain required. The measured reference-to-reference variation
+remains part of the evidence. No refinement job is queued before this result.
