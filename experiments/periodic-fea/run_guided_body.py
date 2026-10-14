@@ -1,4 +1,4 @@
-"""Audit an archived guide read-only before the bounded body-refinement prototype."""
+"""Audit an archived seed or guide before the bounded body-refinement prototype."""
 import json
 import os
 import sys
@@ -17,15 +17,15 @@ def main():
     output = Path(__file__).resolve().parents[1]
     manifest = json.loads((output / "manifest.json").read_text())
     report = pueue_progress.report
-    report(0, "Verify frozen guide inputs", eta_s=60)
+    report(0, "Verify frozen body-refinement inputs", eta_s=60)
     for name, expected in manifest["source_sha256"].items():
         assert digest(output / "source" / name) == expected, name
     for name, expected in manifest["preflight_input_sha256"].items():
         assert digest(name) == expected, name
-    guide_run = Path(manifest["guide_audit_run"])
-    audit_path = guide_run / "artifact-verification.json"
+    input_run = Path(manifest.get("preflight_audit_run") or manifest["guide_audit_run"])
+    audit_path = input_run / "artifact-verification.json"
     audit_hash = digest(audit_path)
-    audit = verify_run(guide_run, write_report=False)
+    audit = verify_run(input_run, write_report=False)
     assert audit["verified_rows"] == 1 and audit["rows"][0]["fields"] == 6
     assert digest(audit_path) == audit_hash
     write_json(output / "guide-readonly-revalidation.json", {
@@ -45,9 +45,9 @@ def main():
     write_json(output / "guided-completion.json", {
         "state": "complete", "manifest_sha256": digest(output / "manifest.json"),
         "retained_boundary": boundary, "original_inputs_unchanged": True,
-        "scope": "Python adaptation of archived seed and guide; no generation speed claim",
+        "scope": "Python adaptation of archived inputs; no generation speed claim",
     })
-    report(1, "Guided prototype admitted with retained boundary and guide audit unchanged", eta_s=0)
+    report(1, "Body prototype admitted with retained boundary and input audit unchanged", eta_s=0)
 
 
 if __name__ == "__main__":

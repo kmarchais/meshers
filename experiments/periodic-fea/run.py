@@ -43,7 +43,7 @@ def prepare(output, native_package, task_specs=None, mmg_hausd=0.002, worker_tim
     """Freeze the executable experiment before it enters the shared queue."""
     if fea_solver not in {"cg", "pardiso"}:
         raise ValueError("Unknown FEA solver")
-    if body_marker not in {"guide", "length"}:
+    if body_marker not in {"guide", "length", "volume"}:
         raise ValueError("Unknown body marker")
     output.mkdir(parents=True, exist_ok=False)
     source = output / "source"
@@ -844,7 +844,7 @@ if __name__ == "__main__":
     parser.add_argument("--body-guide", type=Path, help="Audited coarse-guide artifact directory")
     parser.add_argument("--body-refine-nodes", type=int, default=15000)
     parser.add_argument("--fea-solver", choices=["cg", "pardiso"], default="cg")
-    parser.add_argument("--body-marker", choices=["guide", "length"], default="guide")
+    parser.add_argument("--body-marker", choices=["guide", "length", "volume"], default="guide")
     args = parser.parse_args()
     if args.prepare:
         if args.native_package is None:

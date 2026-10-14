@@ -1,4 +1,4 @@
-"""Prototype nested interior-edge refinement using a coarse six-load guide.
+"""Prototype nested interior-edge refinement with geometry or six-load markers.
 
 This reads frozen, already audited artifacts. Adaptation time is measured, but
 the complete direct recipe is only estimated from archived seed/guide timings.
@@ -95,7 +95,7 @@ def guide_score(directory):
     return points[tets].mean(axis=1), density, row
 
 
-def split_interior_edges(points, tets, surface, density, max_new_nodes, minimum_quality=.1):
+def split_interior_edges(points, tets, surface, density, max_new_nodes, minimum_quality=.1, *, marker="guide"):
     """Split complete edge stars in disjoint cavities; preserve every boundary face."""
     count = len(points)
     all_edges = np.sort(tets[:, TET_EDGES].reshape(-1, 2), axis=1)
@@ -107,6 +107,11 @@ def split_interior_edges(points, tets, surface, density, max_new_nodes, minimum_
     eligible &= np.all((midpoint > -.5 + 1e-9) & (midpoint < .5 - 1e-9), axis=1)
     length2 = np.sum((points[edges[:, 0]] - points[edges[:, 1]])**2, axis=1)
     priority = density * length2
+    if marker == "volume":
+        volume = np.linalg.det(points[tets[:, 1:]] - points[tets[:, :1]]) / 6
+        priority = np.bincount(inverse, weights=np.repeat(volume, 6), minlength=len(edges)) / counts
+    elif marker not in {"guide", "length"}:
+        raise ValueError("Unknown body marker")
     ordering = np.argsort(inverse, kind="stable")
     starts = np.r_[0, np.cumsum(counts)]
     cells = np.repeat(np.arange(len(tets)), 6)
@@ -114,7 +119,14 @@ def split_interior_edges(points, tets, surface, density, max_new_nodes, minimum_
     new_points, additions = [], []
     rejected_quality = 0
     candidates = np.flatnonzero(eligible & (priority > 1e-20))
-    for ei in candidates[np.argsort(-priority[candidates], kind="stable")]:
+    if marker == "volume":
+        # Prefer the longest edge among equal-volume stars. Shuffle exact ties
+        # with a fixed seed so vertex numbering does not concentrate insertions.
+        tie = np.random.default_rng(20261014).permutation(len(candidates))
+        order = np.lexsort((tie, -length2[candidates], -priority[candidates]))
+    else:
+        order = np.argsort(-priority[candidates], kind="stable")
+    for ei in candidates[order]:
         if len(new_points) >= max_new_nodes:
             break
         incident = cells[ordering[starts[ei]:starts[ei + 1]]]
@@ -147,7 +159,7 @@ def generate(case, cells, config, directory, checkpoint):
     seed_dir, guide_dir = source / "body-seed", source / "body-guide"
     started = time.perf_counter()
     marker = config.get("body_marker", "guide")
-    if marker not in {"guide", "length"}:
+    if marker not in {"guide", "length", "volume"}:
         raise ValueError("Unknown body marker")
     guide = None
     if marker == "guide":
@@ -173,7 +185,7 @@ def generate(case, cells, config, directory, checkpoint):
         edge_density = density[nearest]
     checkpoint(stage="Nested body-edge bisection")
     points, tets, metadata = split_interior_edges(points, tets, surface, edge_density,
-                                                 config["body_refine_nodes"], config["minimum_quality"])
+                                                 config["body_refine_nodes"], config["minimum_quality"], marker=marker)
     if len(tets) > config["max_tetrahedra"]:
         raise ValueError("Body-refinement tetrahedron budget exceeded")
     elapsed = time.perf_counter() - started
@@ -190,5 +202,9 @@ def generate(case, cells, config, directory, checkpoint):
         "seed_tensor": seed["homogenization"]["stiffness_engineering_voigt"],
         "seed_volume": seed["solid_fraction"],
         "body_marker_kind": marker,
-        "body_marker": "Coarse worst mixed-load traction residual, transferred by periodic nearest centroid" if guide is not None else "Longest eligible interior edges; no FEA guide",
+        "body_marker": {
+            "guide": "Coarse worst mixed-load traction residual, transferred by periodic nearest centroid",
+            "length": "Longest eligible interior edges; no FEA guide",
+            "volume": "Largest mean incident tetrahedron volume; longest-edge tie break, fixed-seed exact ties; no FEA guide",
+        }[marker],
     }

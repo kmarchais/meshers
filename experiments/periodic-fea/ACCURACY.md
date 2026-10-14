@@ -915,13 +915,32 @@ establish a combined accuracy win or a continuum stress certificate.
 ranks interior edge stars by mean incident tetrahedron volume, at the same
 57,431-node insertion ceiling. The localization
 showed that both existing markers leave the larger interior cells untouched.
-This geometry-only Python prototype will use the same archived native64 seed,
+This geometry-only Python prototype uses the same archived native64 seed,
 complete disjoint cavities, boundary protection and quality floor. Equal-volume
 stars prefer longer edges; a fixed-seed shuffle breaks exact ties to avoid
 concentrating insertions by vertex numbering. All 66 source files and 223
-original inputs are pinned. The queued job first revalidates the seed read-only
-and runs the regressions, including a two-block case where the larger cells
-differ from the longest eligible edge. CG keeps the existing resource bounds.
-This archive adaptation supplies no generation speed claim. Its actual
-admission and six-field audit must pass before another field comparison or
-a native implementation.
+original inputs remain unchanged after completion. Read-only seed revalidation
+preserves its audit digest. Thirty-three regressions pass with one optional
+test skipped, including the two-block case where the larger cells differ from
+the longest eligible edge.
+
+All 57,431 insertions are admitted, giving 324,554 nodes and 1,518,981 tetrahedra
+at minimum quality 0.180697. All 267,123 seed coordinates and 196,416 oriented
+boundary triangles remain exact. Volume changes by 5.56e-17. All six mixed-load
+energy-change eigenvalues are negative, from -0.00085492 to -0.00019366. Six
+saved field hashes and twelve actual solver residuals pass. Independent
+stiffness reconstruction differs by 4.96e-16, Hill-Mandel energy by 3.01e-12,
+force balance by at most 1.92e-10 and displacement jumps are zero.
+
+CG FEA takes 1,746.66 s with peak RSS 4.56 GiB, within the existing resource
+bounds. Python adaptation of archives takes 14.21 s; this supplies no generation
+speed claim. Admission and energy reduction do not establish local accuracy.
+
+`runs/accuracy-schwarz-d-volume-fields-v1` freezes 50 source files and 823 inputs
+for one pending field comparison. It adds the volume prototype to the four
+retained candidates and compares all five against native80, alternate MMG64
+and fresh native92. Four Sobol scrambles use 1,048,576 probes per reference on
+identical common material. Regressions, the real Pardiso smoke check, read-only
+volume-body and fresh-reference audits, exact oriented boundary checks, volume
+and mixed-energy checks remain required. No further mesh experiment or native
+port is queued before this actual result.
