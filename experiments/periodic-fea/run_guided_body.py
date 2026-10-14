@@ -36,7 +36,7 @@ def main():
     run(output)
     row = json.loads((output / "results.json").read_text())["rows"][0]
     if row["status"] != "ok" or not all(row[k] for k in ["geometry_eligible", "quality_eligible", "periodic_eligible"]):
-        raise RuntimeError(f"Guided prototype failed admission: {row.get('error', row['status'])}")
+        raise RuntimeError(f"Body prototype failed admission: {row.get('error', row['status'])}")
     import numpy as np
     with np.load(output / "source/body-seed/mesh.npz") as seed, np.load(output / row["artifact"] / "mesh.npz") as body:
         boundary = verify_preserved_boundary(seed["points"], seed["surface"], body["points"], body["surface"])
@@ -45,7 +45,7 @@ def main():
     write_json(output / "guided-completion.json", {
         "state": "complete", "manifest_sha256": digest(output / "manifest.json"),
         "retained_boundary": boundary, "original_inputs_unchanged": True,
-        "scope": "Python adaptation of archived inputs; no generation speed claim",
+        "scope": row["generation_timing_scope"] + "; no generation speed claim",
     })
     report(1, "Body prototype admitted with retained boundary and input audit unchanged", eta_s=0)
 

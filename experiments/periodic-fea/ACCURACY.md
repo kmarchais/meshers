@@ -1035,14 +1035,31 @@ the tolerance and original reports remain unchanged. The measured reference-
 to-reference variation still limits any absolute accuracy claim.
 
 `runs/accuracy-schwarz-d-body68-matched-nodes-v1` freezes 66 source files and
-225 original inputs for one queued native length-ranked interior refinement
+225 original inputs for one admitted native length-ranked interior refinement
 of the admitted grid68 seed, using at most the remaining 27,767 nodes. Length ranking
 performed best among the tested native64 markers. The same native build, field,
-common gates and CG bounds remain fixed. Original seed coordinates, oriented
-boundary triangles, volume and nonincreasing mixed-load energy must pass before
-another field comparison. The wrapper first revalidates the original seed
-read-only, preserving its audit digest, then runs the bounded native experiment
-and rejects a failed row even if the underlying runner returns zero. Completion
-records the actual generation scope, distinguishing live native generation
-from Python adaptation of archives. No dependent comparison is queued before
-admission, and a single calibration timing cannot establish generation speed.
+common gates and CG bounds remain fixed. All 27,767 insertions are admitted,
+giving exactly 324,554 nodes and 1,579,040 tetrahedra at minimum quality 0.134168.
+All 296,787 seed coordinates and 190,512 oriented boundary triangles remain
+exact. Volume changes by 1.11e-16. All six mixed-load energy-change eigenvalues
+are negative, from -0.00068993 to -0.00010433.
+
+All 66 source hashes and 225 original input hashes remain unchanged. Thirty-
+three regressions pass with one optional test skipped. The wrapper revalidates
+the original seed read-only, preserving its audit digest, and rejects a failed
+row even if the underlying runner returns zero. Completion records the actual
+live native generation scope. Six saved field hashes and twelve actual solver
+residuals pass. Independent stiffness reconstruction differs by 4.99e-16,
+Hill-Mandel energy by 2.10e-12, force balance by at most 1.42e-10 and displacement
+jumps are zero. CG FEA takes 1,685.32 s with peak RSS 4.54 GiB. Live native
+generation including refinement takes 13.17 s as one calibration sample, which
+does not establish generation speed.
+
+`runs/accuracy-schwarz-d-body68-fields-v1` freezes 50 source files and 1,089
+inputs for one pending comparison. It adds the refined grid68 mesh to the six
+retained candidates and compares all seven against native80, alternate MMG64
+and native92. Four Sobol scrambles use 1,048,576 probes per reference on
+identical common material. Regressions, the real Pardiso smoke check, read-only
+body68 and original-seed audits, exact retained body boundaries, volume and
+mixed-energy checks remain required. No further mesh experiment is queued
+before its actual result.
