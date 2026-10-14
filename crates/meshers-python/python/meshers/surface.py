@@ -32,6 +32,11 @@ def generate_surface(  # ruff: ignore[too-many-arguments] - match the volume API
     geometry_tolerance: float | None = None,
     batch_size: int = 4096,
     cancel: _meshers.CancellationToken | None = None,
+    adaptive: bool = False,
+    min_length: float | None = None,
+    max_length: float | None = None,
+    gradation: float = 0.3,
+    iterations: int = 8,
 ) -> SurfaceMesh:
     """Generate a closed boundary without tetrahedra.
 
@@ -39,6 +44,9 @@ def generate_surface(  # ruff: ignore[too-many-arguments] - match the volume API
     This experimental API checks manifold topology and finite positive triangle
     shapes. It does not certify intersections or geometric approximation errors.
     Sampling can miss features below the background spacing.
+    ``adaptive=True`` remeshes towards curvature-adaptive edge lengths so that the
+    sampled wall distance meets ``geometry_tolerance`` with as few triangles as
+    possible; ``cells`` then only sets the extraction grid that resolves topology.
     Set ``geometry_tolerance=0`` for a quick preview without distance sampling;
     topology and finite triangle checks still run. Diagnostics mark that omission.
 
@@ -71,6 +79,18 @@ def generate_surface(  # ruff: ignore[too-many-arguments] - match the volume API
     if not np.isfinite(tolerance) or tolerance < 0:
         raise ValueError("geometry_tolerance must be finite and nonnegative")
     options = (4, 4, 8) if quality else (0, 0, 0)
+    extent = float(np.min(domain[1::2] - domain[::2]))
+    remeshing = None
+    if adaptive:
+        if tolerance <= 0:
+            raise ValueError("adaptive remeshing needs a positive geometry_tolerance")
+        remeshing = (
+            tolerance,
+            tolerance / 2 if min_length is None else float(min_length),
+            extent / 4 if max_length is None else float(max_length),
+            float(gradation),
+            int(iterations),
+        )
     result = _meshers.generate_surface(
         field,
         gradient,
@@ -81,6 +101,7 @@ def generate_surface(  # ruff: ignore[too-many-arguments] - match the volume API
         batch_size,
         cancel,
         tolerance > 0,
+        remeshing,
     )
     labels = np.asarray(result["labels"])
     if tolerance > 0 and result["maximum_sampled_surface_error"] > tolerance:
@@ -105,5 +126,6 @@ def generate_surface(  # ruff: ignore[too-many-arguments] - match the volume API
                 "geometry_checked",
             )
         }
-        | {"preparation_seconds": preparation, "experimental": True},
+        | {"preparation_seconds": preparation, "experimental": True}
+        | ({"adaptive": result["adaptive"]} if "adaptive" in result else {}),
     )

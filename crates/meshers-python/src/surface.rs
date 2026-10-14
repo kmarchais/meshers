@@ -1,11 +1,11 @@
 //! Isolated direct-surface research API; not included in published wheels.
 use crate::{CancellationToken, MeshingFailure, make_field};
-use meshers_core::{MeshingError, Point, quads::Band, triangles};
+use meshers_core::{MeshingError, Point, quads::Band, remesh, triangles};
 use numpy::{IntoPyArray, ndarray::Array2};
 use pyo3::{exceptions::PyValueError, prelude::*, types::PyDict};
 
 #[allow(clippy::too_many_arguments)]
-#[pyfunction(signature = (field, gradient, bounds, cells, band, smoothing_iterations, improvement_rounds, polish_passes, batch_size, cancel, check_geometry=true))]
+#[pyfunction(signature = (field, gradient, bounds, cells, band, smoothing_iterations, improvement_rounds, polish_passes, batch_size, cancel, check_geometry=true, adaptive=None))]
 pub(super) fn generate_surface<'py>(
     py: Python<'py>,
     field: Py<PyAny>,
@@ -19,6 +19,7 @@ pub(super) fn generate_surface<'py>(
     batch_size: usize,
     cancel: Option<PyRef<'py, CancellationToken>>,
     check_geometry: bool,
+    adaptive: Option<(f64, f64, f64, f64, usize)>,
 ) -> PyResult<Bound<'py, PyDict>> {
     if smoothing_iterations > 100 || improvement_rounds > 100 || polish_passes > 100 {
         return Err(PyValueError::new_err("Surface passes must be at most 100"));
@@ -40,9 +41,21 @@ pub(super) fn generate_surface<'py>(
         let start = std::time::Instant::now();
         let mut mesh = triangles::extract(&geometry, cells)?;
         let extraction = start.elapsed().as_secs_f64();
-        triangles::smooth(&mut mesh, &geometry, smoothing_iterations)?;
-        triangles::improve(&mut mesh, &geometry, improvement_rounds)?;
-        triangles::polish(&mut mesh, &geometry, polish_passes)?;
+        let mut stats = None;
+        if let Some((tolerance, min_length, max_length, gradation, iterations)) = adaptive {
+            let options = remesh::Options {
+                tolerance,
+                min_length,
+                max_length,
+                gradation,
+                iterations,
+            };
+            stats = Some(remesh::adapt(&mut mesh, &geometry, &options)?);
+        } else {
+            triangles::smooth(&mut mesh, &geometry, smoothing_iterations)?;
+            triangles::improve(&mut mesh, &geometry, improvement_rounds)?;
+            triangles::polish(&mut mesh, &geometry, polish_passes)?;
+        }
         let (minimum_shape, volume) = triangles::validate(&mesh)?;
         let error = if check_geometry {
             Some(triangles::sampled_error(&mesh, &geometry)?)
@@ -56,13 +69,14 @@ pub(super) fn generate_surface<'py>(
             minimum_shape,
             volume,
             error,
+            stats,
         ))
     });
     if let Some(error) = f.error.lock().unwrap().take() {
         return Err(error);
     }
     py.check_signals()?;
-    let (mesh, extraction, total, minimum_shape, volume, error) =
+    let (mesh, extraction, total, minimum_shape, volume, error, stats) =
         result.map_err(|error| match error {
             MeshingError::InvalidOptions(message) => PyValueError::new_err(message),
             MeshingError::GenerationFailed(message) => MeshingFailure::new_err(message),
@@ -93,5 +107,15 @@ pub(super) fn generate_surface<'py>(
     output.set_item("volume", volume)?;
     output.set_item("maximum_sampled_surface_error", error)?;
     output.set_item("geometry_checked", check_geometry)?;
+    if let Some(stats) = stats {
+        let adaptive = PyDict::new(py);
+        adaptive.set_item("splits", stats.splits)?;
+        adaptive.set_item("collapses", stats.collapses)?;
+        adaptive.set_item("flips", stats.flips)?;
+        adaptive.set_item("moves", stats.moves)?;
+        adaptive.set_item("error_splits", stats.error_splits)?;
+        adaptive.set_item("maximum_error", stats.maximum_error)?;
+        output.set_item("adaptive", adaptive)?;
+    }
     Ok(output)
 }

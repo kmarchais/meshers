@@ -12,6 +12,8 @@ pub mod implicit;
 #[cfg(feature = "experimental-quads")]
 pub mod quads;
 #[cfg(feature = "experimental-quads")]
+pub mod remesh;
+#[cfg(feature = "experimental-quads")]
 pub mod triangles;
 pub use error::MeshingError;
 use geometry::Geometry;
