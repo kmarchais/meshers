@@ -136,3 +136,21 @@ and the vertices that would resolve it cannot settle without slivers. The lattic
 pipeline first passes at 24 cells. Capturing creases needs feature-aware
 projection onto the curve where two `min` branches are equal; the compiled-field
 JIT knows those branches. Spinodoid is untested here (needs Microgen).
+
+### Curve chords and the spinodoid
+
+The spinodoid (`spinodoid.py`, run in the PR #2 environment for Microgen's
+`Spinodoid`) exposed a measurement gap. On a wall face, a chord that lies in a box
+plane follows the wall/plane curve. The first-order check used the full field
+gradient, which measures the distance to the unclipped wall; where the wall meets
+the box at a shallow angle that wall passes close outside the box, while the curve
+inside the plane is far. The 16-cell adapted spinodoid passed its own check (7.3e-3)
+but its independent surface-to-mesh distance was 1.23e-2, at a curve on y = 0.5.
+
+The adaptive paths now measure such chords with the in-plane gradient, size curve
+edges by the curve's in-plane turning, and the surface remesher samples every edge of
+every wall face (curve edges with a cap neighbour were sometimes never sampled).
+The adapted spinodoid is now rejected at 16 cells (2.0e-2) instead of passing with a
+hidden error. The lattice pipeline keeps its released check: with the in-plane
+measure, three of its existing tests exceed their tolerance by 8% to 6x. Whether to
+tighten the released check is a tolerance decision left open.

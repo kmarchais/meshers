@@ -371,7 +371,15 @@ impl<'g, G: Geometry> Tets<'g, G> {
             }
             let l = self.length(u, v);
             let theta = angle(self.normals[u], self.normals[v]);
-            let target = (6. * tol * l / theta.max(1e-12)).sqrt();
+            let mut target = (6. * tol * l / theta.max(1e-12)).sqrt();
+            let locked = self.locked(u, v);
+            if locked.iter().filter(|&&x| x).count() == 1 {
+                // Curve chord: it sags with the curve's in-plane turning, which can far
+                // exceed the wall's where the wall meets the plane at a shallow angle.
+                let (t, s) = (self.curve_tangent(u, locked), self.curve_tangent(v, locked));
+                let turn = norm(cross(t, s)).atan2(dot(t, s).abs());
+                target = target.min((8. * tol * l / turn.max(1e-12)).sqrt());
+            }
             for w in [u, v] {
                 size[w] = size[w].min(target);
             }
@@ -863,12 +871,34 @@ impl<'g, G: Geometry> Tets<'g, G> {
         true
     }
 
-    fn distance(&self, p: Point) -> f64 {
+    /// First-order wall distance moving only along unlocked axes: a chord in a box
+    /// plane must follow the wall/plane curve inside that plane.
+    fn distance(&self, p: Point, locked: [bool; 3]) -> f64 {
         let r = self.g.residual(p, self.threshold).abs();
         if r == 0. {
             return 0.;
         }
-        r / norm(self.g.gradient(p))
+        let mut g = self.g.gradient(p);
+        for a in 0..3 {
+            if locked[a] {
+                g[a] = 0.;
+            }
+        }
+        r / norm(g)
+    }
+
+    /// Box axes held by both ends of an edge.
+    fn locked(&self, u: usize, v: usize) -> [bool; 3] {
+        let shared = self.masks[u] & self.masks[v];
+        std::array::from_fn(|a| (shared >> (2 + 2 * a)) & 3 != 0)
+    }
+
+    /// Unit tangent of the wall/plane curve through a curve vertex.
+    fn curve_tangent(&self, v: usize, locked: [bool; 3]) -> Point {
+        let a = (0..3).find(|&a| locked[a]).unwrap_or(0);
+        let mut n = [0.; 3];
+        n[a] = 1.;
+        unit(cross(self.normals[v], n))
     }
 
     /// Move partially inserted wall vertices onto the surface where now valid.
@@ -912,13 +942,13 @@ impl<'g, G: Geometry> Tets<'g, G> {
             for f in wall {
                 let p = self.local(f.map(|i| self.points[i]));
                 let c = std::array::from_fn(|a| (p[0][a] + p[1][a] + p[2][a]) / 3.);
-                let dc = self.distance(c);
+                let dc = self.distance(c, [false; 3]);
                 worst = worst.max(dc);
                 let mut any = false;
                 let mut longest = (0., [f[0], f[1]]);
                 for (i, j) in [(0, 1), (1, 2), (0, 2)] {
                     let m = std::array::from_fn(|a| 0.5 * (p[i][a] + p[j][a]));
-                    let d = self.distance(m);
+                    let d = self.distance(m, self.locked(f[i], f[j]));
                     worst = worst.max(d);
                     let l = self.length(f[i], f[j]);
                     if l > longest.0 {

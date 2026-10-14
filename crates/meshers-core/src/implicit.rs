@@ -145,12 +145,19 @@ impl<F: ScalarField> Context<'_, F> {
             Region::Band { lower, upper } => (upper - lower) / 2. / self.scale,
         }
     }
-    fn distance(&self, p: Point) -> f64 {
+    /// First-order distance to the wall, moving only along unlocked axes.
+    fn distance_in(&self, p: Point, locked: [bool; 3]) -> f64 {
         let residual = self.residual(p, self.threshold()).abs();
         if residual == 0. {
             return 0.;
         }
-        let gradient = norm(self.gradient(p));
+        let mut gradient = self.gradient(p);
+        for a in 0..3 {
+            if locked[a] {
+                gradient[a] = 0.;
+            }
+        }
+        let gradient = norm(gradient);
         if gradient > 0. {
             residual / gradient
         } else {
@@ -452,14 +459,37 @@ fn finish<F: ScalarField>(mesh: Mesh, g: &Context<F>) -> Result<Output, String> 
         }
         tags.push(tag);
         if tag == 0 {
+            // A chord lying in a box plane must follow the wall/plane curve inside
+            // that plane. The full gradient measures the distance to the unclipped
+            // wall, which can pass much closer outside the box, so it under-reports
+            // curve error. Only the adaptive path, which refines curve chords by this
+            // measure, applies it; the lattice pipeline keeps its released check.
+            let in_plane = g.options.adapt.is_some();
+            let lock = |q: &[Point]| -> [bool; 3] {
+                std::array::from_fn(|a| {
+                    in_plane && (q.iter().all(|v| v[a] == lo[a]) || q.iter().all(|v| v[a] == hi[a]))
+                })
+            };
             for sample in [
-                p[0],
-                p[1],
-                p[2],
-                std::array::from_fn(|a| (p[0][a] + p[1][a] + p[2][a]) / 3.),
-                std::array::from_fn(|a| (p[0][a] + p[1][a]) / 2.),
-                std::array::from_fn(|a| (p[1][a] + p[2][a]) / 2.),
-                std::array::from_fn(|a| (p[2][a] + p[0][a]) / 2.),
+                (p[0], lock(&p[..1])),
+                (p[1], lock(&p[1..2])),
+                (p[2], lock(&p[2..])),
+                (
+                    std::array::from_fn(|a| (p[0][a] + p[1][a] + p[2][a]) / 3.),
+                    [false; 3],
+                ),
+                (
+                    std::array::from_fn(|a| (p[0][a] + p[1][a]) / 2.),
+                    lock(&[p[0], p[1]]),
+                ),
+                (
+                    std::array::from_fn(|a| (p[1][a] + p[2][a]) / 2.),
+                    lock(&[p[1], p[2]]),
+                ),
+                (
+                    std::array::from_fn(|a| (p[2][a] + p[0][a]) / 2.),
+                    lock(&[p[2], p[0]]),
+                ),
             ] {
                 if g.batched() {
                     samples.push(sample);
@@ -468,7 +498,7 @@ fn finish<F: ScalarField>(mesh: Mesh, g: &Context<F>) -> Result<Output, String> 
                         samples.clear();
                     }
                 } else {
-                    error = error.max(g.distance(sample));
+                    error = error.max(g.distance_in(sample.0, sample.1));
                 }
             }
         }
@@ -975,13 +1005,22 @@ fn snap_batch<F: ScalarField>(
     g.check()
 }
 
-fn distance_batch<F: ScalarField>(g: &Context<F>, points: &[Point]) -> Result<f64, String> {
+fn distance_batch<F: ScalarField>(
+    g: &Context<F>,
+    samples: &[(Point, [bool; 3])],
+) -> Result<f64, String> {
     g.check()?;
-    let values = g.values(points);
-    let gradients = g.gradients(points);
+    let points: Vec<Point> = samples.iter().map(|s| s.0).collect();
+    let values = g.values(&points);
+    let gradients = g.gradients(&points);
     let mut error = 0_f64;
-    for (v, grad) in values.into_iter().zip(gradients) {
+    for ((v, mut grad), (_, locked)) in values.into_iter().zip(gradients).zip(samples) {
         let residual = if g.band() { v.abs() - g.threshold() } else { v };
+        for a in 0..3 {
+            if locked[a] {
+                grad[a] = 0.;
+            }
+        }
         let n = norm(grad);
         let distance = if residual == 0. {
             0.

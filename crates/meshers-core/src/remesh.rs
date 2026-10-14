@@ -511,13 +511,21 @@ impl<'a, 'b, F: ScalarField> Surface<'a, 'b, F> {
         true
     }
 
-    fn distance(&self, p: Point, label: u8) -> f64 {
+    /// First-order wall distance; `mask` box bits hold those axes, so a chord on a
+    /// wall/plane curve is measured against the curve inside its plane.
+    fn distance(&self, p: Point, label: u8, mask: u8) -> f64 {
         let level = self.band.levels[if label == 0 { 1 } else { 0 }];
         let residual = (self.band.field.value(p) - level).abs();
         if residual == 0. {
             return 0.;
         }
-        residual / norm(self.band.gradient(p))
+        let mut g = self.band.gradient(p);
+        for (a, v) in g.iter_mut().enumerate() {
+            if (mask >> (2 + 2 * a)) & 3 != 0 {
+                *v = 0.;
+            }
+        }
+        residual / norm(g)
     }
 
     /// Split until sampled midpoint and centroid distances meet the tolerance.
@@ -536,22 +544,16 @@ impl<'a, 'b, F: ScalarField> Surface<'a, 'b, F> {
                 let face = self.faces[f];
                 let p = face.map(|i| self.points[i]);
                 let centroid = std::array::from_fn(|k| (p[0][k] + p[1][k] + p[2][k]) / 3.);
-                let dc = self.distance(centroid, self.labels[f]);
+                let dc = self.distance(centroid, self.labels[f], 0);
                 worst = worst.max(dc);
                 let mut longest = (0., [face[0], face[1]]);
                 let mut any = false;
                 for i in 0..3 {
+                    // Every edge of a wall face is sampled: an edge shared with a cap
+                    // face has no second wall face to sample it from.
                     let (a, b) = (face[i], face[(i + 1) % 3]);
-                    if a > b {
-                        // Each wall edge is sampled once, from its increasing face.
-                        let l = self.length(a, b);
-                        if l > longest.0 {
-                            longest = (l, [a, b]);
-                        }
-                        continue;
-                    }
                     let mid = std::array::from_fn(|k| 0.5 * (p[i][k] + p[(i + 1) % 3][k]));
-                    let d = self.distance(mid, self.labels[f]);
+                    let d = self.distance(mid, self.labels[f], self.masks[a] & self.masks[b]);
                     worst = worst.max(d);
                     let l = self.length(a, b);
                     if l > longest.0 {
@@ -571,9 +573,13 @@ impl<'a, 'b, F: ScalarField> Surface<'a, 'b, F> {
                 return Ok(());
             }
             flagged.sort_by(|a, b| b.0.total_cmp(&a.0));
+            flagged.dedup_by_key(|e| {
+                let [a, b] = e.1;
+                [a.min(b), a.max(b)]
+            });
             let mut progress = false;
             for (_, [a, b]) in flagged {
-                if self.length(a, b) < o.min_length {
+                if self.edge_faces(a, b).len() != 2 || self.length(a, b) < o.min_length {
                     continue;
                 }
                 if self.split(a, b).is_some() {
