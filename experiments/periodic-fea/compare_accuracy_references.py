@@ -16,8 +16,18 @@ def compare(references, candidates, output, geometry_gate, power=17):
     # Read-only inputs and atomic fixed-name outputs make an interrupted run restartable.
     output.mkdir(parents=True, exist_ok=True)
     boundary_checks = []
+    geometry_replay_checks = []
     for path in candidates:
         row = json.loads(path.read_text())
+        if row["workflow"] == "geometry-replay":
+            import numpy as np
+            from geometry_replay import check_replayed_geometry
+            if digest(path.parent / "mesh.npz") != row["mesh_sha256"]:
+                raise ValueError("Geometry replay mesh changed")
+            with np.load(path.parent / "mesh.npz") as mesh:
+                geometry_replay_checks.append({"artifact": str(path), **check_replayed_geometry(
+                    path.parent.parent / "source/geometry-seed",
+                    mesh["points"], mesh["tetrahedra"], mesh["surface"])})
         if row["workflow"] not in {"meshers-body-refine", "meshers-native-body"}:
             continue
         import numpy as np
@@ -37,7 +47,8 @@ def compare(references, candidates, output, geometry_gate, power=17):
                                              power=power, geometry_gate=geometry_gate))
     write_json(output / "comparisons.json", {"state": "complete", "source_sha256": digest(Path(__file__)),
                                              "common_geometry_gate": geometry_gate, "comparisons": rows,
-                                             "body_boundary_verification": boundary_checks})
+                                             "body_boundary_verification": boundary_checks,
+                                             "geometry_replay_verification": geometry_replay_checks})
     report(1, "Accuracy comparisons against all reference topologies complete", eta_s=0)
 
 

@@ -1239,3 +1239,30 @@ common-domain probe subset slightly; the prior seven-candidate results remain
 archived. No refinement follows before this actual stiffness and stress
 comparison. The shared lane is busy, so regressions and the real optional
 Pardiso smoke run together in the queued analysis.
+
+The eight-candidate comparison completes with all 55 source and 1,427 input
+hashes unchanged. Forty-four regressions pass with one optional test skipped;
+the real Pardiso smoke passes. The body68, coarsened seed and original seed
+saved-field audits remain unchanged. Four original body boundaries and the
+coarsened seed's exact mesh arrays, retained coordinates and oriented caps
+pass. Common-reference material coverage is 99.9282%, 99.8754% and 99.9367%.
+
+| Reference | Original native68 stiffness / stress, % | Coarsened native68 stiffness / stress, % | MMG62 stiffness / stress, % |
+| --- | ---: | ---: | ---: |
+| Native80 | 0.285422 / 12.618746 | 0.287624 / 12.624460 | 0.417868 / 10.513560 |
+| MMG64 seed80 | 0.054859 / 13.511935 | 0.052742 / 13.516347 | 0.103583 / 11.180835 |
+| Independent native92 | 0.467659 / 11.979772 | 0.469885 / 11.984768 | 0.598833 / 12.317899 |
+
+Local stress disagreement increases slightly against the original seed in
+all twelve scramble/reference pairs. The pooled increase is 0.005715,
+0.004412 and 0.004997 percentage points. Coarsening alone is therefore not an
+accuracy improvement. The retained reference-to-reference stress variation
+remains much larger, and the MMG advantage on the two older references remains.
+This result supports only one controlled combined test: use the admitted
+coarsened seed with the existing longest-interior-edge refinement algorithm.
+Its 294,787 nodes leave exactly 29,767 additions within MMG's 324,554-node
+budget, 2,000 more than original native68. Full original coarsened-boundary
+preservation, unchanged coarsened volume and nonincreasing mixed-load energy
+apply to this nested step. No guide, new marker or native port is introduced.
+The full live generation recipe is unmeasured because this seed is an archive
+replay; its zero meshing time cannot estimate that recipe.

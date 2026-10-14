@@ -103,8 +103,11 @@ def main():
                        output / "comparisons", manifest["geometry_gate"], manifest["power"])
     for name, expected in manifest["input_sha256"].items():
         assert digest(name) == expected, name
+    for name, expected in manifest["source_sha256"].items():
+        assert digest(source / name) == expected, name
     write_json(output / "completion.json", {"state": "complete", "manifest_sha256": digest(output / "manifest.json"),
-                                           "input_hashes_unchanged": True, "pardiso_smoke_passed": True})
+                                           "input_hashes_unchanged": True, "source_hashes_unchanged": True,
+                                           "pardiso_smoke_passed": True})
     report(1, "Saved-field accuracy comparisons and optional direct-solver checks complete", eta_s=0)
 
 
