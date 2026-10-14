@@ -154,3 +154,23 @@ The adapted spinodoid is now rejected at 16 cells (2.0e-2) instead of passing wi
 hidden error. The lattice pipeline keeps its released check: with the in-plane
 measure, three of its existing tests exceed their tolerance by 8% to 6x. Whether to
 tighten the released check is a tolerance decision left open.
+
+### Lattice with smooth unions
+
+`smooth_lattice.py` rebuilds the issue #4 lattice with Microgen's cubic polynomial
+smooth union (`implicit_ops.smooth_union`). Microgen's strut lattices currently go
+CAD -> STEP -> gmsh; its F-rep path already offers smooth unions. A sharp concave
+crease is also a stress singularity, so FEA would not converge there anyway.
+
+| Blend k | Cells | Lattice pipeline | Adapter |
+|---|---:|---|---|
+| 0.08 | 12 | 5,696 tets, H 5.8e-3, ΔV -3.3%, q_min 0.32 | 6,225 tets, H 1.0e-2, ΔV -3.1%, q_min 0.48 |
+| 0.08 | 16 | 24,480 tets, H 7.4e-3, ΔV -0.5%, q_min 0.20 | 8,129 tets, H 6.9e-3, ΔV -2.0%, q_min 0.34 |
+| 0.03 | 8-16 | rejected | rejected (closest 1.09e-2 at 16) |
+
+A blend much smaller than the cell size behaves like a crease. When the exact
+position of a wall vertex would flatten a neighbour, the adapter now splits the
+longest edge facing it in each such element and retries, which made the smooth
+fixtures slightly better (Neovius q_min 0.28 -> 0.34). Equalizing sag to the
+tolerance raises the mean deviation, hence the larger volume error of the adapted
+16-cell mesh at equal H; balanced placement would cancel it for linear meshes.

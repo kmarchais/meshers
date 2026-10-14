@@ -912,18 +912,40 @@ impl<'g, G: Geometry> Tets<'g, G> {
             let level = self.level(self.points[v]);
             // Same floor as a split: geometry may not be bought with slivers.
             let floor = (0.5 * self.worst(&self.vt[v].clone()).min(guard)).max(1e-6);
-            let moved = self.project(self.points[v], mask, level).filter(|&q| {
-                self.vt[v]
-                    .iter()
-                    .all(|&t| mmg(self.tet_points(self.tets[t], Some((v, q)))) >= floor)
-            });
-            match moved {
-                Some(q) => {
-                    self.points[v] = q;
-                    self.refresh(v);
-                }
-                None => self.pending.push(v),
+            let Some(q) = self.project(self.points[v], mask, level) else {
+                self.pending.push(v);
+                continue;
+            };
+            let blocking: Vec<usize> = self.vt[v]
+                .iter()
+                .copied()
+                .filter(|&t| mmg(self.tet_points(self.tets[t], Some((v, q)))) < floor)
+                .collect();
+            if blocking.is_empty() {
+                self.points[v] = q;
+                self.refresh(v);
+                continue;
             }
+            // Make room: split the longest edge facing the vertex in each element the
+            // move would flatten, then try again in the next round.
+            let mut facing = Vec::new();
+            for t in blocking {
+                let rest: Vec<usize> = self.tets[t].into_iter().filter(|&w| w != v).collect();
+                let mut best = (0., [rest[0], rest[1]]);
+                for (i, j) in [(0, 1), (1, 2), (0, 2)] {
+                    let l = self.length(rest[i], rest[j]);
+                    if l > best.0 {
+                        best = (l, [rest[i], rest[j]]);
+                    }
+                }
+                facing.push(best.1);
+            }
+            for [a, b] in facing {
+                if !self.shell(a, b).is_empty() {
+                    self.split(a, b, guard);
+                }
+            }
+            self.pending.push(v);
         }
     }
 
