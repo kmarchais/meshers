@@ -119,7 +119,9 @@ class Mesh:
             g["Points"] = points
             g["Connectivity"] = cells.ravel()
             g["Offsets"] = np.arange(len(cells) + 1, dtype=np.int64) * cells.shape[1]
-            g["Types"] = np.full(len(cells), 5 if surface else 10, dtype=np.uint8)
+            # Linear or quadratic triangle/tetrahedron; corners come first in both.
+            vtk_type = {3: 5, 4: 10, 6: 22, 10: 24}[cells.shape[1]]
+            g["Types"] = np.full(len(cells), vtk_type, dtype=np.uint8)
             data = g.create_group("CellData")
             if surface:
                 data["BoundaryTag"] = self.boundary_tags
