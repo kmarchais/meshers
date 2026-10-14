@@ -1190,3 +1190,26 @@ six-load FEA run on this saved geometry before reusing its freed nodes.
 The coarsened wall changes material slightly, so nested-energy monotonicity
 against the original native68 mesh does not apply. No FEA accuracy or native
 generation speed claim follows from this archive operation.
+
+`runs/accuracy-schwarz-d-coarsened-seed68-v1` prepares one full FEA replay of
+the admitted v2 geometry. The new geometry replay workflow freezes its mesh,
+qualification, manifest and original mesh. It checks exact point, cell and
+oriented surface arrays after independent validation, indexed original
+coordinates and unchanged oriented caps. It rejects failed geometry records,
+changed mesh hashes, launcher-only memory reports and specimen mismatches.
+Forty-four regressions pass with one optional test skipped before submission.
+
+The original native68 six-field audit is revalidated read-only and its saved
+report digest must remain unchanged. The existing bounded worker performs
+six strain-controlled and six automatic stress-controlled audited CG solves,
+saves six displacement fields, and reconstructs stiffness, Hill-Mandel energy
+and periodic equilibrium independently. One thread, 16 GiB, 5,400 s, four
+million tetrahedra and all common geometry gates stay fixed. A completed
+geometry archive does not substitute for an admitted FEA record. The wrapper
+rejects a failed row even when the runner returns zero. No dependent field
+comparison or further refinement is queued before this actual result.
+
+OMEN's lane is idle with about 19 GiB free RAM at preparation. Lenovo is
+reachable with 3.26 GiB free, but its pueue client still fails to launch, so
+its shared queue is unverified. This solve stays on OMEN with the frozen
+local inputs. No other session's job or host configuration is changed.

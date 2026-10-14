@@ -39,7 +39,7 @@ def prepare(output, native_package, task_specs=None, mmg_hausd=0.002, worker_tim
             max_tetrahedra=2_000_000, mmg_seed_cells=None, mmg_size_map=None, surface_seed_cells=None,
             native_build_manifest=None, specimens_path=None, geometry_tolerance=0.002,
             native_geometry_tolerance=None, body_seed=None, body_guide=None, body_refine_nodes=15000,
-            fea_solver="cg", body_marker="guide"):
+            fea_solver="cg", body_marker="guide", geometry_seed=None):
     """Freeze the executable experiment before it enters the shared queue."""
     if fea_solver not in {"cg", "pardiso"}:
         raise ValueError("Unknown FEA solver")
@@ -70,6 +70,9 @@ def prepare(output, native_package, task_specs=None, mmg_hausd=0.002, worker_tim
                 raise ValueError("Changed spinodoid spectrum")
             shutil.copy2(spectrum, source / "spinodoid-spectrum.npz")
         shutil.copy2(specimens_path, source / "specimens.json")
+    if geometry_seed is not None:
+        from geometry_replay import freeze_geometry
+        freeze_geometry(geometry_seed, source / "geometry-seed")
     for label, artifact in [("body-seed", body_seed), ("body-guide", body_guide)]:
         if artifact is None:
             continue
@@ -194,6 +197,7 @@ def prepare(output, native_package, task_specs=None, mmg_hausd=0.002, worker_tim
             "gmsh-hxt-native-surface",
             "meshers-body-refine",
             "meshers-native-body",
+            "geometry-replay",
             "solver-cg-replay",
             "solver-pardiso-replay",
         }
@@ -208,6 +212,8 @@ def prepare(output, native_package, task_specs=None, mmg_hausd=0.002, worker_tim
                 raise ValueError(f"Unknown workflow or invalid resolution: {spec}")
             tasks.append({"case": case_id, "workflow": workflow, "cells": cells})
     manifest["tasks"] = tasks
+    if any(task["workflow"] == "geometry-replay" for task in tasks) and geometry_seed is None:
+        raise ValueError("Geometry replay needs an admitted --geometry-seed")
     if any(task["workflow"] == "meshers-body-refine" for task in tasks) and (
         body_seed is None or body_marker == "guide" and body_guide is None
     ):
@@ -431,6 +437,10 @@ def worker(request_path):
             elif task["workflow"].startswith("solver-"):
                 from body_refine import replay_mesh
                 points, tets, metrics = replay_mesh(case, task["cells"])
+            elif task["workflow"] == "geometry-replay":
+                from geometry_replay import replay_geometry
+                points, tets, metrics = replay_geometry(
+                    Path(__file__).parent / "geometry-seed", task, specimen)
             else:
                 points, tets, metrics = generate(
                     case, task["workflow"], task["cells"], generation_config, checkpoint
@@ -454,6 +464,10 @@ def worker(request_path):
         )
         result.update(metrics)
         np.savez_compressed(directory / "mesh.npz", points=points, tetrahedra=tets, surface=surface)
+        if task["workflow"] == "geometry-replay":
+            from geometry_replay import check_replayed_geometry
+            result["geometry_replay"] = check_replayed_geometry(
+                Path(__file__).parent / "geometry-seed", points, tets, surface)
         if task["workflow"] == "meshers-native-body":
             from body_refine import verify_preserved_boundary
             seed_dir = Path(__file__).parent / "body-seed"
@@ -496,7 +510,7 @@ def worker(request_path):
             classes=classes,
             **{f"pairs_{i}": pair for i, pair in enumerate(pairs)},
         )
-        if task["workflow"] == "meshers-native-body" and not all(
+        if task["workflow"] in {"meshers-native-body", "geometry-replay"} and not all(
             result[key] for key in ["geometry_eligible", "quality_eligible", "periodic_eligible"]
         ):
             raise ValueError("Live native body mesh failed the unchanged common admission gates")
@@ -841,6 +855,7 @@ if __name__ == "__main__":
     parser.add_argument("--geometry-tolerance", type=float, default=0.002)
     parser.add_argument("--native-geometry-tolerance", type=float, help="Native refinement request, independent of the shared geometry admission gate")
     parser.add_argument("--body-seed", type=Path, help="Audited seed artifact directory for nested body refinement")
+    parser.add_argument("--geometry-seed", type=Path, help="Completed independently admitted geometry-only archive")
     parser.add_argument("--body-guide", type=Path, help="Audited coarse-guide artifact directory")
     parser.add_argument("--body-refine-nodes", type=int, default=15000)
     parser.add_argument("--fea-solver", choices=["cg", "pardiso"], default="cg")
@@ -878,6 +893,7 @@ if __name__ == "__main__":
             args.body_refine_nodes,
             args.fea_solver,
             args.body_marker,
+            args.geometry_seed,
         )
     elif args.run:
         run(args.run.resolve())
