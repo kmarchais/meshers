@@ -39,9 +39,11 @@ compiled fields) + `fea-accuracy-optimizer` (PR #5 geometry guard, quality floor
   its seed's facet error; we project to the exact field.
 - [x] Periodic adaptation on the torus (merged copies, internal box planes).
 - [x] FEA error per DOF: linear adaptivity ties the lattice; curved quadratic tets
-  give 13-22x lower error at equal nodes. Native .
+  give 13-22x lower error at equal nodes. Native `generate(order=2)`.
 - [x] Issues #3/#4: adapter passes all smooth fixtures at 8 cells; crease lattice open.
 - [ ] Crease capture for min/max fields (compiled-field branch information).
 - [ ] Speed: profile, batch field calls, parallel independent sets.
 - [ ] Surface: volume-neutral vertex offset (halves Hausdorff at equal count).
-- [ ] Box-edge wedges limit q_min (gyroid ~0.18-0.27).
+- [ ] Box-edge wedges limit q_min (gyroid ~0.18-0.27) in non-periodic boxes.
+- [ ] Timing study in the gpu queue once idle (surface vs Flying Edges, volume vs
+  lattice and MMG, FEA wall time at a 1% target, 1 and N threads).
