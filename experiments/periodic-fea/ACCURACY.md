@@ -1088,10 +1088,12 @@ native implementation, with no edge-collapse or coarsening path. Before
 introducing a topology-changing algorithm,
 `runs/accuracy-schwarz-d-latest-localization-v1` freezes 49 source files and
 1,146 inputs for one read-only localization of the latest seven candidates
-against all three references. It
-must reproduce the retained global scores and conserve per-probe error across
-wall-distance bins and cells. This will distinguish remaining wall and bulk
-disagreement and recheck shared reference cells on the fresh grid. Progress
+against all three references. It reproduces every retained global error Gram
+matrix and worst score. Per-probe error integrates to the anchor mixed-load
+quadratic form; wall bins and per-cell sums conserve total error. All source
+and input hashes and 21 per-cell artifact hashes remain unchanged. Thirty-three
+regressions pass with one optional test skipped. The diagnostic completes in
+144.02 s. Progress
 counts all references and candidates and reports coverage and stress values.
 No meshing or solver job is queued at this checkpoint.
 
@@ -1101,3 +1103,31 @@ reachable with 10.29 GiB free RAM, but its Scoop pueue shim cannot launch the
 queue client, so its queue is unverified. The analysis stays on OMEN with its
 local frozen inputs and benchmark environment. `host-choice.json` records
 these checks and is included in the pinned inputs. No new session is created.
+
+Against native80, refined grid68 has lower near-wall anchor error density than
+MMG, 0.02329 versus 0.02725 within centroid-proxy distance 0.01. At distances
+0.02-0.04 it is 0.01201 versus 0.00384, and beyond 0.04 it is 0.01001 versus
+0.000353. MMG shares reference cells at 24.61% of these probes; shared cells
+contribute only 0.159% of its anchor error. Against alternate MMG64, sharing is
+22.20% with 0.114% of anchor error. The newer base grid reduces native bulk
+median volume from 3.1789e-7 to 2.6503e-7, but selective refinement still leaves
+that bulk median unchanged.
+
+Against fresh native92, no candidate shares reference tetrahedra. The dramatic
+MMG bulk advantage shrinks: at distances 0.02-0.04, refined grid68 error density
+is 0.01080 versus 0.01001; beyond 0.04 it is 0.00907 versus 0.00743. Its near-wall
+value is 0.02082 versus MMG's 0.02763. MMG's bulk median volume is 1.6276e-7,
+versus native68's 2.6503e-7. These diagnostics support investigating node
+allocation between wall and bulk, while retaining reference correlation as a
+limit on the observed rankings.
+
+The next algorithm prototype will test a small, conservative surface-edge
+coarsening pass as a geometry-only operation. [MMG's algorithm overview](https://mmgtools.org/tutorials/tutorials_algorithm_overview.html)
+includes collapse of short surface edges before adaptation to its size map.
+[Dey et al.](https://graphics.stanford.edu/courses/cs448b-00-winter/papers/dey_edge_contract.pdf)
+describe link conditions using boundary cones for topology-preserving edge
+contraction. The prototype will check surface and boundary-coned volume links,
+protect periodic cap vertices, use existing endpoints, reject inverted or
+low-quality cavities, and independently validate the resulting geometry. It
+will qualify as a new seed through the unchanged common gates. No FEA solve or
+native port is queued before that geometry result.
