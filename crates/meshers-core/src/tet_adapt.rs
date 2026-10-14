@@ -1,0 +1,992 @@
+//! Size-driven tetrahedral adaptation with exact implicit boundary projection.
+//!
+//! The operations follow MMG's local remeshing loop (split long edges, collapse short
+//! ones, swap for quality, relocate vertices), but boundary vertices are projected onto
+//! the implicit field instead of a reconstructed surface. Boundary sizes come from the
+//! chord sag of the exact surface: a triangle of side `l` whose vertex normals differ by
+//! `theta` sags by about `l * theta / 6`. Interior sizes grade away from the boundary.
+//!
+//! Faces on periodic box sides are frozen, so an initially periodic mesh stays periodic.
+use crate::{Mesh, Point, cross, determinant, dot, geometry::Geometry, norm, quality, sub};
+use std::collections::HashMap;
+
+#[derive(Clone, Copy, Debug)]
+pub struct Options {
+    /// Maximum sampled distance between boundary triangles and the implicit walls.
+    pub tolerance: f64,
+    pub min_length: f64,
+    pub max_length: f64,
+    /// Maximum growth of the target length per unit distance (MMG's hgrad - 1).
+    pub gradation: f64,
+    /// Sheet bands: at least this many element lengths across the local thickness.
+    /// Zero disables the thickness limit.
+    pub layers: f64,
+    pub iterations: usize,
+    /// Smallest MMG quality an operation may create, unless the worst affected
+    /// element was already worse.
+    pub quality_guard: f64,
+}
+
+impl Default for Options {
+    fn default() -> Self {
+        Self {
+            tolerance: 0.01,
+            min_length: 1e-3,
+            max_length: 0.25,
+            gradation: 0.3,
+            layers: 0.,
+            iterations: 6,
+            quality_guard: 0.3,
+        }
+    }
+}
+
+#[derive(Clone, Debug, Default)]
+pub struct Stats {
+    pub splits: usize,
+    pub collapses: usize,
+    pub swaps: usize,
+    pub moves: usize,
+    pub error_splits: usize,
+    pub maximum_error: f64,
+}
+
+const SPLIT: f64 = 4. / 3.;
+const COLLAPSE: f64 = 4. / 5.;
+const SIZING_SAFETY: f64 = 0.8;
+const WALL: u8 = 1;
+
+type Face = [usize; 3];
+
+fn sorted(mut f: Face) -> Face {
+    f.sort_unstable();
+    f
+}
+
+fn unit(a: Point) -> Point {
+    let n = norm(a);
+    if n > 0. { a.map(|v| v / n) } else { a }
+}
+
+fn angle(a: Point, b: Point) -> f64 {
+    norm(cross(a, b)).atan2(dot(a, b))
+}
+
+/// MMG-normalized quality: 1 for the regular tetrahedron, 0 when flat or inverted.
+fn mmg(p: [Point; 4]) -> f64 {
+    if determinant(p) <= 0. {
+        return 0.;
+    }
+    quality(p).powf(1.5)
+}
+
+struct Tets<'g, G: Geometry> {
+    g: &'g G,
+    threshold: f64,
+    points: Vec<Point>,
+    /// Bit 0: implicit wall. Bits 2 + 2a + side: box plane.
+    masks: Vec<u8>,
+    /// Outward wall normal for wall vertices, zero otherwise.
+    normals: Vec<Point>,
+    frozen: Vec<bool>,
+    tets: Vec<[usize; 4]>,
+    alive: Vec<bool>,
+    vt: Vec<Vec<usize>>,
+    /// Boundary faces (sorted) and their label: 0 wall, 2.. box plane.
+    faces: HashMap<Face, u8>,
+    vb: Vec<Vec<Face>>,
+    periodic: [bool; 3],
+}
+
+impl<'g, G: Geometry> Tets<'g, G> {
+    fn new(mesh: &Mesh, g: &'g G, threshold: f64, periodic: [bool; 3]) -> Self {
+        let n = mesh.points.len();
+        let [lo, hi] = g.bounds();
+        let mut s = Self {
+            g,
+            threshold,
+            points: mesh.points.clone(),
+            masks: vec![0; n],
+            normals: vec![[0.; 3]; n],
+            frozen: vec![false; n],
+            tets: mesh.tets.clone(),
+            alive: vec![true; mesh.tets.len()],
+            vt: vec![Vec::new(); n],
+            faces: HashMap::new(),
+            vb: vec![Vec::new(); n],
+            periodic,
+        };
+        for (t, tet) in mesh.tets.iter().enumerate() {
+            for &v in tet {
+                s.vt[v].push(t);
+            }
+        }
+        for &f in &mesh.surface {
+            let p = f.map(|i| mesh.points[i]);
+            let mut label = 0;
+            for a in 0..3 {
+                if p.iter().all(|q| q[a] == lo[a]) {
+                    label = 2 + 2 * a as u8;
+                } else if p.iter().all(|q| q[a] == hi[a]) {
+                    label = 3 + 2 * a as u8;
+                }
+            }
+            s.add_face(f, label);
+        }
+        for v in 0..n {
+            s.refresh(v);
+        }
+        s
+    }
+
+    fn add_face(&mut self, f: Face, label: u8) {
+        let key = sorted(f);
+        self.faces.insert(key, label);
+        for v in key {
+            self.vb[v].push(key);
+            self.masks[v] |= if label == 0 { WALL } else { 1 << label };
+        }
+    }
+
+    fn remove_face(&mut self, key: Face) -> Option<u8> {
+        let label = self.faces.remove(&key)?;
+        for v in key {
+            self.vb[v].retain(|&f| f != key);
+        }
+        Some(label)
+    }
+
+    /// Recompute a vertex's constraint mask, normal and frozen state.
+    fn refresh(&mut self, v: usize) {
+        let mut mask = 0;
+        for f in &self.vb[v] {
+            let label = self.faces[f];
+            mask |= if label == 0 { WALL } else { 1 << label };
+        }
+        self.masks[v] = mask;
+        self.normals[v] = if mask & WALL != 0 {
+            self.outward(self.points[v])
+        } else {
+            [0.; 3]
+        };
+        // Points fixed by three constraints (box corners, a wall crossing a box edge)
+        // never move; curves and box edges slide along their line.
+        self.frozen[v] = (0..3).any(|a| self.periodic[a] && (mask >> (2 + 2 * a)) & 3 != 0)
+            || mask.count_ones() >= 3;
+    }
+
+    fn outward(&self, p: Point) -> Point {
+        let v = self.g.value(p);
+        let sign = if self.g.band() && v < 0. { -1. } else { 1. };
+        unit(self.g.gradient(p).map(|x| sign * x))
+    }
+
+    fn level(&self, p: Point) -> f64 {
+        self.g.level(self.g.value(p), self.threshold)
+    }
+
+    /// Newton projection onto the wall through `p`, holding box coordinates in `mask`.
+    fn project(&self, mut p: Point, mask: u8, level: f64) -> Option<Point> {
+        let [lo, hi] = self.g.bounds();
+        let locked: [bool; 3] = std::array::from_fn(|a| (mask >> (2 + 2 * a)) & 3 != 0);
+        for a in 0..3 {
+            if mask & (1 << (2 + 2 * a)) != 0 {
+                p[a] = lo[a];
+            }
+            if mask & (1 << (3 + 2 * a)) != 0 {
+                p[a] = hi[a];
+            }
+        }
+        if mask & WALL == 0 {
+            return Some(p);
+        }
+        let scale = (0..3).map(|a| hi[a] - lo[a]).fold(0., f64::max);
+        for _ in 0..30 {
+            let r = self.g.value(p) - level;
+            let mut grad = self.g.gradient(p);
+            for a in 0..3 {
+                if locked[a] {
+                    grad[a] = 0.;
+                }
+            }
+            let g2 = dot(grad, grad);
+            if !r.is_finite() || g2 <= 1e-300 {
+                return None;
+            }
+            if r.abs() / g2.sqrt() <= scale * 1e-13 {
+                return self.g.contains(p).then_some(p);
+            }
+            let step = (r / g2).clamp(-0.05 * scale / g2.sqrt(), 0.05 * scale / g2.sqrt());
+            p = std::array::from_fn(|a| p[a] - step * grad[a]);
+        }
+        None
+    }
+
+    fn tet_points(&self, t: [usize; 4], moved: Option<(usize, Point)>) -> [Point; 4] {
+        t.map(|i| match moved {
+            Some((j, q)) if i == j => q,
+            _ => self.points[i],
+        })
+    }
+
+    fn shell(&self, u: usize, v: usize) -> Vec<usize> {
+        self.vt[u]
+            .iter()
+            .copied()
+            .filter(|&t| self.tets[t].contains(&v))
+            .collect()
+    }
+
+    fn adjacent(&self, u: usize) -> Vec<usize> {
+        let mut out: Vec<usize> = self.vt[u]
+            .iter()
+            .flat_map(|&t| self.tets[t])
+            .filter(|&w| w != u)
+            .collect();
+        out.sort_unstable();
+        out.dedup();
+        out
+    }
+
+    fn edges(&self) -> Vec<[usize; 2]> {
+        let mut out = Vec::with_capacity(self.tets.len() * 2);
+        for (t, tet) in self.tets.iter().enumerate() {
+            if !self.alive[t] {
+                continue;
+            }
+            for i in 0..4 {
+                for j in i + 1..4 {
+                    let (a, b) = (tet[i].min(tet[j]), tet[i].max(tet[j]));
+                    out.push([a, b]);
+                }
+            }
+        }
+        out.sort_unstable();
+        out.dedup();
+        out
+    }
+
+    fn length(&self, u: usize, v: usize) -> f64 {
+        norm(sub(self.points[u], self.points[v]))
+    }
+
+    /// Boundary faces containing edge `uv`.
+    fn edge_faces(&self, u: usize, v: usize) -> Vec<Face> {
+        self.vb[u]
+            .iter()
+            .copied()
+            .filter(|f| f.contains(&v))
+            .collect()
+    }
+
+    fn edge_mask(&self, faces: &[Face]) -> u8 {
+        faces.iter().fold(0, |m, f| {
+            let label = self.faces[f];
+            m | if label == 0 { WALL } else { 1 << label }
+        })
+    }
+
+    fn sag(&self, pu: Point, nu: Point, pv: Point, nv: Point) -> f64 {
+        if norm(nu) == 0. || norm(nv) == 0. {
+            return 0.;
+        }
+        norm(sub(pu, pv)) * angle(nu, nv) / 6.
+    }
+
+    fn sizes(&self, o: &Options, edges: &[[usize; 2]]) -> Vec<f64> {
+        let tol = o.tolerance * SIZING_SAFETY;
+        let mut size = vec![o.max_length; self.points.len()];
+        for &[u, v] in edges {
+            if self.masks[u] & self.masks[v] & WALL == 0 || self.edge_faces(u, v).is_empty() {
+                continue;
+            }
+            let l = self.length(u, v);
+            let theta = angle(self.normals[u], self.normals[v]);
+            let target = (6. * tol * l / theta.max(1e-12)).sqrt();
+            for w in [u, v] {
+                size[w] = size[w].min(target);
+            }
+        }
+        if o.layers > 0. && self.g.band() {
+            for v in 0..self.points.len() {
+                if self.masks[v] & WALL != 0 {
+                    // Linear field across the sheet: thickness ~ band width / |grad|.
+                    let g = norm(self.g.gradient(self.points[v]));
+                    if g > 0. {
+                        size[v] = size[v].min(2. * self.threshold / g / o.layers);
+                    }
+                }
+            }
+        }
+        for s in &mut size {
+            *s = s.clamp(o.min_length, o.max_length);
+        }
+        for _ in 0..64 {
+            let mut changed = false;
+            for &[u, v] in edges {
+                let l = self.length(u, v);
+                for (a, b) in [(u, v), (v, u)] {
+                    let limit = size[a] + o.gradation * l;
+                    if size[b] > limit * (1. + 1e-12) {
+                        size[b] = limit;
+                        changed = true;
+                    }
+                }
+            }
+            if !changed {
+                break;
+            }
+        }
+        size
+    }
+
+    fn worst(&self, tets: &[usize]) -> f64 {
+        tets.iter()
+            .map(|&t| mmg(self.tet_points(self.tets[t], None)))
+            .fold(1., f64::min)
+    }
+
+    fn add_tet(&mut self, t: [usize; 4]) -> usize {
+        let i = self.tets.len();
+        self.tets.push(t);
+        self.alive.push(true);
+        for v in t {
+            self.vt[v].push(i);
+        }
+        i
+    }
+
+    fn kill_tet(&mut self, t: usize) {
+        self.alive[t] = false;
+        for v in self.tets[t] {
+            self.vt[v].retain(|&s| s != t);
+        }
+    }
+
+    fn add_vertex(&mut self, p: Point) -> usize {
+        self.points.push(p);
+        self.masks.push(0);
+        self.normals.push([0.; 3]);
+        self.frozen.push(false);
+        self.vt.push(Vec::new());
+        self.vb.push(Vec::new());
+        self.points.len() - 1
+    }
+
+    fn split(&mut self, u: usize, v: usize, guard: f64) -> Option<usize> {
+        let shell = self.shell(u, v);
+        if shell.is_empty() {
+            return None;
+        }
+        let bfaces = self.edge_faces(u, v);
+        let mask = self.edge_mask(&bfaces);
+        if (0..3).any(|a| self.periodic[a] && (mask >> (2 + 2 * a)) & 3 != 0) {
+            return None;
+        }
+        let mid = std::array::from_fn(|a| 0.5 * (self.points[u][a] + self.points[v][a]));
+        let p = if mask & WALL != 0 {
+            let level = self.level(self.points[u]);
+            self.project(mid, mask, level)?
+        } else {
+            self.project(mid, mask, 0.)?
+        };
+        // Midpoint children are naturally worse than their parent; only reject slivers.
+        let floor = (0.5 * self.worst(&shell).min(guard)).max(1e-9);
+        let mut planned = Vec::new();
+        for &t in &shell {
+            let tet = self.tets[t];
+            let a = tet.map(|i| if i == v { usize::MAX } else { i });
+            let b = tet.map(|i| if i == u { usize::MAX } else { i });
+            for c in [a, b] {
+                let q = c.map(|i| if i == usize::MAX { p } else { self.points[i] });
+                if mmg(q) < floor {
+                    return None;
+                }
+            }
+            planned.push((t, a, b));
+        }
+        let m = self.add_vertex(p);
+        for (t, a, b) in planned {
+            self.kill_tet(t);
+            self.add_tet(a.map(|i| if i == usize::MAX { m } else { i }));
+            self.add_tet(b.map(|i| if i == usize::MAX { m } else { i }));
+        }
+        for f in bfaces {
+            let label = self.remove_face(f).unwrap();
+            let c = f.into_iter().find(|&w| w != u && w != v).unwrap();
+            self.add_face([u, m, c], label);
+            self.add_face([m, v, c], label);
+        }
+        for w in [u, v, m] {
+            self.refresh(w);
+        }
+        Some(m)
+    }
+
+    /// Merge `u` into `v`.
+    fn collapse(&mut self, u: usize, v: usize, size: &[f64], o: &Options) -> bool {
+        let (mu, mv) = (self.masks[u], self.masks[v]);
+        if self.frozen[u] || mu & !mv != 0 || mu.count_ones() >= 3 {
+            return false;
+        }
+        let bfaces = self.edge_faces(u, v);
+        if mu != 0 && (bfaces.len() != 2 || self.edge_mask(&bfaces) != mu) {
+            // A boundary vertex may only slide along its own patch or curve.
+            return false;
+        }
+        if mu == 0 && !bfaces.is_empty() {
+            return false;
+        }
+        let shell = self.shell(u, v);
+        if shell.is_empty() {
+            return false;
+        }
+        // Link condition, vertex level: common neighbours are exactly the shell ring.
+        let au = self.adjacent(u);
+        let av = self.adjacent(v);
+        let mut ring: Vec<usize> = shell
+            .iter()
+            .flat_map(|&t| self.tets[t])
+            .filter(|&w| w != u && w != v)
+            .collect();
+        ring.sort_unstable();
+        ring.dedup();
+        let common: Vec<usize> = au.iter().copied().filter(|w| av.binary_search(w).is_ok()).collect();
+        if common != ring {
+            return false;
+        }
+        if mu != 0 {
+            // Surface link condition on the boundary triangulation.
+            let bu: Vec<usize> = self.vb[u].iter().flatten().copied().filter(|&w| w != u).collect();
+            let bv: Vec<usize> = self.vb[v].iter().flatten().copied().filter(|&w| w != v).collect();
+            let mut common: Vec<usize> = bu.iter().copied().filter(|w| bv.contains(w)).collect();
+            common.sort_unstable();
+            common.dedup();
+            let mut opposite: Vec<usize> = bfaces
+                .iter()
+                .flatten()
+                .copied()
+                .filter(|&w| w != u && w != v)
+                .collect();
+            opposite.sort_unstable();
+            if common != opposite {
+                return false;
+            }
+        }
+        for &w in &au {
+            if w != v && self.length(v, w) > SPLIT * 0.5 * (size[v] + size[w]) {
+                return false;
+            }
+        }
+        let others: Vec<usize> = self.vt[u]
+            .iter()
+            .copied()
+            .filter(|t| !shell.contains(t))
+            .collect();
+        let before = self.worst(&self.vt[u].clone()).min(o.quality_guard);
+        for &t in &others {
+            let q = self.tet_points(self.tets[t], Some((u, self.points[v])));
+            if mmg(q) < before {
+                return false;
+            }
+        }
+        if mu & WALL != 0 {
+            for f in &self.vb[u] {
+                if f.contains(&v) || self.faces[f] != 0 {
+                    continue;
+                }
+                let [a, b] = [f[0], f[1], f[2]]
+                    .into_iter()
+                    .filter(|&w| w != u)
+                    .collect::<Vec<_>>()[..]
+                else {
+                    unreachable!()
+                };
+                for w in [a, b] {
+                    if self.masks[w] & WALL != 0
+                        && self.sag(self.points[v], self.normals[v], self.points[w], self.normals[w])
+                            > o.tolerance * SIZING_SAFETY
+                    {
+                        return false;
+                    }
+                }
+            }
+        }
+        for t in shell {
+            self.kill_tet(t);
+        }
+        for t in std::mem::take(&mut self.vt[u]) {
+            self.tets[t] = self.tets[t].map(|i| if i == u { v } else { i });
+            self.vt[v].push(t);
+        }
+        for f in bfaces {
+            self.remove_face(f);
+        }
+        for f in std::mem::take(&mut self.vb[u]) {
+            let label = self.remove_face(f).unwrap_or(0);
+            self.add_face(f.map(|i| if i == u { v } else { i }), label);
+        }
+        self.masks[u] = 0;
+        for w in au {
+            self.refresh(w);
+        }
+        self.refresh(v);
+        true
+    }
+
+    /// Ordered ring of an interior edge's shell; None for boundary edges or odd shells.
+    fn ring(&self, u: usize, v: usize, shell: &[usize]) -> Option<Vec<usize>> {
+        let mut pairs = Vec::new();
+        for &t in shell {
+            let rest: Vec<usize> = self.tets[t].into_iter().filter(|&w| w != u && w != v).collect();
+            pairs.push([rest[0], rest[1]]);
+        }
+        let mut ring = vec![pairs[0][0], pairs[0][1]];
+        let mut used = vec![false; pairs.len()];
+        used[0] = true;
+        while ring.len() < pairs.len() {
+            let last = *ring.last().unwrap();
+            let next = (0..pairs.len()).find(|&i| !used[i] && pairs[i].contains(&last))?;
+            used[next] = true;
+            let w = if pairs[next][0] == last { pairs[next][1] } else { pairs[next][0] };
+            ring.push(w);
+        }
+        let closing = (0..pairs.len()).find(|&i| !used[i])?;
+        if !(pairs[closing].contains(&ring[0]) && pairs[closing].contains(ring.last().unwrap())) {
+            return None;
+        }
+        Some(ring)
+    }
+
+    /// Replace an interior edge shell by the best triangulation of its ring.
+    fn remove_edge(&mut self, u: usize, v: usize) -> bool {
+        if !self.edge_faces(u, v).is_empty() {
+            return false;
+        }
+        let shell = self.shell(u, v);
+        let n = shell.len();
+        if !(3..=7).contains(&n) {
+            return false;
+        }
+        let Some(ring) = self.ring(u, v, &shell) else {
+            return false;
+        };
+        let before = self.worst(&shell);
+        // Each ring triangle joins u and v, which must lie on opposite sides of it.
+        let oriented = |a: usize, b: usize, c: usize| -> Option<[[usize; 4]; 2]> {
+            let [pa, pb, pc] = [a, b, c].map(|i| self.points[i]);
+            let du = determinant([pa, pb, pc, self.points[u]]);
+            let dv = determinant([pa, pb, pc, self.points[v]]);
+            if du * dv >= 0. {
+                return None;
+            }
+            let tu = if du > 0. { [a, b, c, u] } else { [a, c, b, u] };
+            let tv = if dv > 0. { [a, b, c, v] } else { [a, c, b, v] };
+            Some([tu, tv])
+        };
+        let q = |i: usize, k: usize, j: usize| -> f64 {
+            oriented(ring[i], ring[k], ring[j]).map_or(f64::NEG_INFINITY, |ts| {
+                ts.iter()
+                    .map(|t| mmg(t.map(|w| self.points[w])))
+                    .fold(1., f64::min)
+            })
+        };
+        // Dynamic programming over polygon triangulations, maximizing the worst quality.
+        let mut best = vec![vec![f64::NEG_INFINITY; n]; n];
+        let mut split = vec![vec![usize::MAX; n]; n];
+        for i in 0..n - 1 {
+            best[i][i + 1] = f64::INFINITY;
+        }
+        for gap in 2..n {
+            for i in 0..n - gap {
+                let j = i + gap;
+                for k in i + 1..j {
+                    let value = best[i][k].min(best[k][j]).min(q(i, k, j));
+                    if value > best[i][j] {
+                        best[i][j] = value;
+                        split[i][j] = k;
+                    }
+                }
+            }
+        }
+        if best[0][n - 1] <= before + 1e-6 {
+            return false;
+        }
+        let mut new = Vec::new();
+        let mut stack = vec![(0, n - 1)];
+        while let Some((i, j)) = stack.pop() {
+            if j - i < 2 {
+                continue;
+            }
+            let k = split[i][j];
+            let Some(ts) = oriented(ring[i], ring[k], ring[j]) else {
+                return false;
+            };
+            new.extend(ts);
+            stack.push((i, k));
+            stack.push((k, j));
+        }
+        let volume = |ts: &mut dyn Iterator<Item = [usize; 4]>| -> f64 {
+            ts.map(|t| determinant(t.map(|w| self.points[w])).abs()).sum()
+        };
+        let old = volume(&mut shell.iter().map(|&t| self.tets[t]));
+        if (volume(&mut new.iter().copied()) - old).abs() > 1e-9 * old {
+            return false;
+        }
+        for t in shell {
+            self.kill_tet(t);
+        }
+        for t in new {
+            self.add_tet(t);
+        }
+        true
+    }
+
+    /// 2-3 swap across an interior face shared by two tetrahedra.
+    fn swap_face(&mut self, t: usize, i: usize) -> bool {
+        let tet = self.tets[t];
+        let d = tet[i];
+        let face: Vec<usize> = tet.into_iter().filter(|&w| w != d).collect();
+        if self.faces.contains_key(&sorted([face[0], face[1], face[2]])) {
+            return false;
+        }
+        let Some(&s) = self.vt[face[0]]
+            .iter()
+            .find(|&&s| s != t && face.iter().all(|w| self.tets[s].contains(w)))
+        else {
+            return false;
+        };
+        let Some(e) = self.tets[s].into_iter().find(|w| !face.contains(w)) else {
+            return false;
+        };
+        if self.adjacent(d).contains(&e) {
+            return false;
+        }
+        let before = self.worst(&[t, s]);
+        let [a, b, c] = [face[0], face[1], face[2]];
+        let mut new = Vec::new();
+        for [x, y] in [[a, b], [b, c], [c, a]] {
+            let mut tet = [x, y, d, e];
+            if determinant(tet.map(|k| self.points[k])) < 0. {
+                tet.swap(0, 1);
+            }
+            new.push(tet);
+        }
+        let after = new
+            .iter()
+            .map(|&t| mmg(t.map(|k| self.points[k])))
+            .fold(1., f64::min);
+        // The three new tetrahedra must exactly fill the old pair.
+        let volume = |ts: &[[usize; 4]]| -> f64 {
+            ts.iter()
+                .map(|&t| determinant(t.map(|k| self.points[k])).abs())
+                .sum()
+        };
+        let old = volume(&[self.tets[t], self.tets[s]]);
+        if after <= before + 1e-6 || (volume(&new) - old).abs() > 1e-9 * old {
+            return false;
+        }
+        self.kill_tet(t);
+        self.kill_tet(s);
+        for tet in new {
+            self.add_tet(tet);
+        }
+        true
+    }
+
+    fn relocate(&mut self, v: usize, o: &Options) -> bool {
+        let mask = self.masks[v];
+        if self.frozen[v] || self.vt[v].is_empty() {
+            return false;
+        }
+        let p = self.points[v];
+        let adj = self.adjacent(v);
+        let centroid: Point = std::array::from_fn(|a| {
+            adj.iter().map(|&w| self.points[w][a]).sum::<f64>() / adj.len() as f64
+        });
+        let mut target = std::array::from_fn(|a| p[a] + 0.5 * (centroid[a] - p[a]));
+        if mask & WALL != 0 {
+            let n = self.normals[v];
+            let d = sub(target, p);
+            target = std::array::from_fn(|a| p[a] + d[a] - dot(d, n) * n[a]);
+        }
+        let level = if mask & WALL != 0 { self.level(p) } else { 0. };
+        let Some(q) = self.project(target, mask, level) else {
+            return false;
+        };
+        let incident = self.vt[v].clone();
+        let before = self.worst(&incident);
+        let after = incident
+            .iter()
+            .map(|&t| mmg(self.tet_points(self.tets[t], Some((v, q)))))
+            .fold(1., f64::min);
+        if after <= before.min(o.quality_guard) || after <= 0. {
+            return false;
+        }
+        if mask & WALL != 0 {
+            let n = self.outward(q);
+            for f in &self.vb[v] {
+                if self.faces[f] != 0 {
+                    continue;
+                }
+                for &w in f {
+                    if w != v
+                        && self.masks[w] & WALL != 0
+                        && self.sag(q, n, self.points[w], self.normals[w])
+                            > o.tolerance * SIZING_SAFETY
+                    {
+                        return false;
+                    }
+                }
+            }
+        }
+        self.points[v] = q;
+        self.refresh(v);
+        true
+    }
+
+    fn distance(&self, p: Point) -> f64 {
+        let r = self.g.residual(p, self.threshold).abs();
+        if r == 0. {
+            return 0.;
+        }
+        r / norm(self.g.gradient(p))
+    }
+
+    fn enforce(&mut self, o: &Options, stats: &mut Stats) -> Result<(), String> {
+        for _ in 0..16 {
+            self.g.check()?;
+            let mut flagged = Vec::new();
+            let mut worst = 0f64;
+            let wall: Vec<Face> = self
+                .faces
+                .iter()
+                .filter(|(_, l)| **l == 0)
+                .map(|(f, _)| *f)
+                .collect();
+            for f in wall {
+                let p = f.map(|i| self.points[i]);
+                let c = std::array::from_fn(|a| (p[0][a] + p[1][a] + p[2][a]) / 3.);
+                let dc = self.distance(c);
+                worst = worst.max(dc);
+                let mut any = false;
+                let mut longest = (0., [f[0], f[1]]);
+                for (i, j) in [(0, 1), (1, 2), (0, 2)] {
+                    let m = std::array::from_fn(|a| 0.5 * (p[i][a] + p[j][a]));
+                    let d = self.distance(m);
+                    worst = worst.max(d);
+                    let l = self.length(f[i], f[j]);
+                    if l > longest.0 {
+                        longest = (l, [f[i], f[j]]);
+                    }
+                    if d > o.tolerance {
+                        flagged.push((l, [f[i], f[j]]));
+                        any = true;
+                    }
+                }
+                if dc > o.tolerance && !any {
+                    flagged.push(longest);
+                }
+            }
+            stats.maximum_error = worst;
+            if flagged.is_empty() {
+                return Ok(());
+            }
+            flagged.sort_by(|a, b| b.0.total_cmp(&a.0));
+            flagged.dedup_by_key(|e| e.1);
+            let mut progress = false;
+            for (_, [a, b]) in flagged {
+                if self.shell(a, b).is_empty() || self.length(a, b) < o.min_length {
+                    continue;
+                }
+                if self.split(a, b, 0.).is_some() {
+                    stats.error_splits += 1;
+                    progress = true;
+                }
+            }
+            if !progress {
+                return Ok(());
+            }
+        }
+        Ok(())
+    }
+
+    fn into_mesh(self) -> Result<Mesh, String> {
+        let mut map = vec![usize::MAX; self.points.len()];
+        let mut points = Vec::new();
+        let mut tets = Vec::new();
+        for (t, tet) in self.tets.iter().enumerate() {
+            if !self.alive[t] {
+                continue;
+            }
+            tets.push(tet.map(|v| {
+                if map[v] == usize::MAX {
+                    map[v] = points.len();
+                    points.push(self.points[v]);
+                }
+                map[v]
+            }));
+        }
+        let surface = crate::boundary(&tets)?;
+        Ok(Mesh {
+            points,
+            tets,
+            surface,
+        })
+    }
+}
+
+/// Adapt a valid boundary-conforming mesh towards curvature and thickness sizes.
+pub(crate) fn adapt(
+    mesh: &mut Mesh,
+    g: &impl Geometry,
+    threshold: f64,
+    periodic: [bool; 3],
+    o: &Options,
+) -> Result<Stats, String> {
+    if !(o.tolerance > 0. && o.min_length > 0. && o.max_length >= o.min_length)
+        || !(o.gradation > 0.)
+        || !(0.0..1.).contains(&o.quality_guard)
+        || !(o.layers >= 0.)
+        || o.iterations > 100
+    {
+        return Err("invalid adaptation options".into());
+    }
+    let mut s = Tets::new(mesh, g, threshold, periodic);
+    let mut stats = Stats::default();
+    for _ in 0..o.iterations {
+        g.check()?;
+        let edges = s.edges();
+        let size = s.sizes(o, &edges);
+        let mut long: Vec<(f64, [usize; 2])> = edges
+            .iter()
+            .filter_map(|&[u, v]| {
+                let r = s.length(u, v) / (0.5 * (size[u] + size[v]));
+                (r > SPLIT).then_some((r, [u, v]))
+            })
+            .collect();
+        long.sort_by(|a, b| b.0.total_cmp(&a.0));
+        for (_, [u, v]) in long {
+            if s.split(u, v, o.quality_guard).is_some() {
+                stats.splits += 1;
+            }
+        }
+        let edges = s.edges();
+        let mut size = s.sizes(o, &edges);
+        let mut short: Vec<(f64, [usize; 2])> = edges
+            .iter()
+            .filter_map(|&[u, v]| {
+                let r = s.length(u, v) / (0.5 * (size[u] + size[v]));
+                (r < COLLAPSE).then_some((r, [u, v]))
+            })
+            .collect();
+        short.sort_by(|a, b| a.0.total_cmp(&b.0));
+        size.resize(s.points.len(), o.max_length);
+        for (_, [u, v]) in short {
+            if s.vt[u].is_empty() || s.vt[v].is_empty() || s.shell(u, v).is_empty() {
+                continue;
+            }
+            let (remove, keep) = if s.masks[u].count_ones() <= s.masks[v].count_ones() {
+                (u, v)
+            } else {
+                (v, u)
+            };
+            if s.collapse(remove, keep, &size, o) || s.collapse(keep, remove, &size, o) {
+                stats.collapses += 1;
+            }
+        }
+        for [u, v] in s.edges() {
+            if s.remove_edge(u, v) {
+                stats.swaps += 1;
+            }
+        }
+        for t in 0..s.tets.len() {
+            if !s.alive[t] || mmg(s.tet_points(s.tets[t], None)) > 0.5 {
+                continue;
+            }
+            for i in 0..4 {
+                if s.alive[t] && s.swap_face(t, i) {
+                    stats.swaps += 1;
+                    break;
+                }
+            }
+        }
+        for v in 0..s.points.len() {
+            if s.relocate(v, o) {
+                stats.moves += 1;
+            }
+        }
+    }
+    s.enforce(o, &mut stats)?;
+    *mesh = s.into_mesh()?;
+    Ok(stats)
+}
+
+#[cfg(test)]
+mod tests {
+    use crate::implicit::{Options, Region, generate};
+    use crate::{Point, dot};
+
+    fn adapt(tolerance: f64) -> Option<super::Options> {
+        Some(super::Options {
+            tolerance,
+            min_length: tolerance,
+            max_length: 0.3,
+            ..Default::default()
+        })
+    }
+
+    #[test]
+    fn sphere_adapts_with_fewer_tetrahedra_and_exact_walls() {
+        let field = |p: Point| dot(p, p).sqrt() - 0.35;
+        let base = Options {
+            bounds: [[-0.5; 3], [0.5; 3]],
+            cells: [24; 3],
+            geometry_tolerance: 1e-3,
+            optimize_passes: 2,
+            minimum_quality: 0.1,
+            ..Default::default()
+        };
+        let lattice = generate(&field, base).unwrap();
+        let adapted = generate(&field, Options { adapt: adapt(1e-3), ..base }).unwrap();
+        let exact = 4. / 3. * std::f64::consts::PI * 0.35f64.powi(3);
+        let d = &adapted.diagnostics;
+        assert!(d.maximum_sampled_surface_error <= 1e-3);
+        assert!((d.volume / exact - 1.).abs() < 0.01, "{}", d.volume / exact);
+        assert!(
+            adapted.mesh.tets.len() < lattice.mesh.tets.len(),
+            "{} vs {} ({:?})",
+            adapted.mesh.tets.len(),
+            lattice.mesh.tets.len(),
+            d.adapt
+        );
+        assert!(d.minimum_mmg_quality >= 0.1, "{}", d.minimum_mmg_quality);
+    }
+
+    #[test]
+    fn periodic_gyroid_band_stays_periodic() {
+        let field = |p: Point| {
+            let t = std::f64::consts::TAU;
+            (t * p[0]).sin() * (t * p[1]).cos()
+                + (t * p[1]).sin() * (t * p[2]).cos()
+                + (t * p[2]).sin() * (t * p[0]).cos()
+        };
+        let out = generate(
+            &field,
+            Options {
+                bounds: [[-0.5; 3], [0.5; 3]],
+                cells: [24; 3],
+                region: Region::Band { lower: -0.55, upper: 0.55 },
+                periodic: [true; 3],
+                geometry_tolerance: 2e-3,
+                optimize_passes: 2,
+                minimum_quality: 0.1,
+                adapt: adapt(2e-3),
+                ..Default::default()
+            },
+        )
+        .unwrap();
+        assert!(out.periodic_pairs.iter().all(|p| !p.is_empty()));
+        assert!(out.diagnostics.maximum_sampled_surface_error <= 2e-3);
+    }
+}

@@ -62,6 +62,9 @@ pub struct Options {
     pub snap: f64,
     /// Worker count. Defaults to one; 0 retains legacy serial ordering.
     pub threads: usize,
+    /// Size-driven adaptation with exact boundary projection instead of fixed
+    /// surface refinement. `None` keeps the lattice pipeline.
+    pub adapt: Option<crate::tet_adapt::Options>,
 }
 impl Default for Options {
     fn default() -> Self {
@@ -77,6 +80,7 @@ impl Default for Options {
             interior_refine_nodes: 0,
             snap: 0.2,
             threads: 1,
+            adapt: None,
         }
     }
 }
@@ -90,6 +94,7 @@ pub struct Diagnostics {
     pub reverted_snap_vertices: usize,
     pub inserted_interior_nodes: usize,
     pub maximum_sampled_surface_error: f64,
+    pub adapt: Option<crate::tet_adapt::Stats>,
 }
 pub struct Output {
     pub mesh: Mesh,
@@ -514,6 +519,7 @@ fn finish<F: ScalarField>(mesh: Mesh, g: &Context<F>) -> Result<Output, String> 
             elements_below_quality_01,
             reverted_snap_vertices: 0,
             inserted_interior_nodes: 0,
+            adapt: None,
         },
     })
 }
@@ -682,6 +688,23 @@ fn build<F: ScalarField>(g: &Context<F>) -> Result<Output, String> {
     drop(original_values);
     if mesh.tets.is_empty() {
         return finish(mesh, g);
+    }
+    if let Some(adapt) = o.adapt {
+        let stats = crate::tet_adapt::adapt(&mut mesh, g, threshold, o.periodic, &adapt)?;
+        crate::optimize::optimize_for(
+            &mut mesh,
+            threshold,
+            h,
+            o.optimize_passes,
+            3.,
+            o.threads,
+            None,
+            g,
+        )?;
+        let mut output = finish(mesh, g)?;
+        output.diagnostics.reverted_snap_vertices = reverted_snap_vertices;
+        output.diagnostics.adapt = Some(stats);
+        return Ok(output);
     }
     crate::optimize::optimize_for(
         &mut mesh,

@@ -309,3 +309,88 @@ def main():
 
 if __name__ == "__main__":
     main()
+
+
+def tet_metrics(points, tets):
+    """MMG quality and dihedral angles of every tetrahedron."""
+    p = points[tets]
+    edges = [(0, 1), (0, 2), (0, 3), (1, 2), (1, 3), (2, 3)]
+    l2 = sum(((p[:, i] - p[:, j]) ** 2).sum(1) for i, j in edges)
+    volume = np.einsum("ij,ij->i", p[:, 1] - p[:, 0], np.cross(p[:, 2] - p[:, 0], p[:, 3] - p[:, 0])) / 6
+    q = (12 * (3 * np.abs(volume)) ** (2 / 3) / l2) ** 1.5
+    normals = []
+    for i in range(4):
+        f = [j for j in range(4) if j != i]
+        n = np.cross(p[:, f[1]] - p[:, f[0]], p[:, f[2]] - p[:, f[0]])
+        side = np.einsum("ij,ij->i", n, p[:, i] - p[:, f[0]])
+        n *= -np.sign(side)[:, None]
+        normals.append(n / np.linalg.norm(n, axis=1)[:, None])
+    dihedral = np.full(len(tets), 180.0)
+    for i in range(4):
+        for j in range(i + 1, 4):
+            c = np.einsum("ij,ij->i", normals[i], normals[j])
+            dihedral = np.minimum(dihedral, 180 - np.degrees(np.arccos(np.clip(c, -1, 1))))
+    return q, dihedral, volume
+
+
+def score_volume(case, mesh, walls=None):
+    used, faces = np.unique(mesh.surface, return_inverse=True)
+    row = score(case, mesh.points[used], faces.reshape(-1, 3), walls)
+    q, dihedral, volume = tet_metrics(mesh.points, mesh.tetrahedra)
+    reference, _ = reference_volume(case)
+    return row | {
+        "tetrahedra": len(mesh.tetrahedra),
+        "nodes": len(mesh.points),
+        "tet_volume_error": float(volume.sum() / reference - 1),
+        "q_min": float(q.min()),
+        "q_p01": float(np.quantile(q, 0.01)),
+        "q_mean": float(q.mean()),
+        "q_below_0.3": float((q < 0.3).mean()),
+        "dihedral_min_deg": float(dihedral.min()),
+    }
+
+
+@dataclass
+class TetMesh:
+    points: np.ndarray
+    tetrahedra: np.ndarray
+    surface: np.ndarray
+
+
+def boundary_faces(tets):
+    faces = np.concatenate([tets[:, [1, 2, 3]], tets[:, [0, 3, 2]], tets[:, [0, 1, 3]], tets[:, [0, 2, 1]]])
+    keys = np.sort(faces, axis=1)
+    _, index, counts = np.unique(keys, axis=0, return_index=True, return_counts=True)
+    return faces[index[counts == 1]]
+
+
+def mmg_adapt(case, seed, tolerance, max_length, hgrad=1.3):
+    """MMG3D adaptation of a seed mesh with tagged wall and box patches."""
+    import mmgpy
+    import pyvista as pv
+
+    points = np.asarray(seed.points, dtype=float)
+    tets = np.asarray(seed.tetrahedra, dtype=np.int64)
+    triangles = boundary_faces(tets)
+    grid = pv.UnstructuredGrid(
+        np.concatenate([np.c_[np.full(len(tets), 4), tets].ravel(), np.c_[np.full(len(triangles), 3), triangles].ravel()]),
+        np.concatenate([np.full(len(tets), pv.CellType.TETRA), np.full(len(triangles), pv.CellType.TRIANGLE)]).astype(np.uint8),
+        points,
+    )
+    native = mmgpy.from_pyvista(grid)
+    corners = points[triangles]
+    refs = np.ones(len(triangles), dtype=np.int64)
+    if case.band is not None:
+        value = case.function(*corners.mean(axis=1).T)
+        refs = np.where(np.abs(value - case.levels[0]) < np.abs(value - case.levels[1]), 1, 2)
+    for axis in range(3):
+        for side, reference in ((LO, 3 + 2 * axis), (HI, 4 + 2 * axis)):
+            refs[np.all(np.isclose(corners[:, :, axis], side, atol=1e-12), axis=1)] = reference
+    native.set_triangles(triangles.astype(np.int32), refs)
+    native.remesh(hausd=tolerance, hgrad=hgrad, hmax=max_length, verbose=-1)
+    out = mmgpy.to_pyvista(native)
+    tet = out.cells_dict[pv.CellType.TETRA].astype(np.int64)
+    used, inverse = np.unique(tet, return_inverse=True)
+    tet = inverse.reshape(-1, 4)
+    pts = np.asarray(out.points)[used]
+    return TetMesh(pts, tet, boundary_faces(tet))

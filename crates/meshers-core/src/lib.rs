@@ -686,6 +686,7 @@ impl Mesh {
 }
 
 mod adaptive;
+pub mod tet_adapt;
 mod optimize;
 
 #[cfg(test)]

@@ -175,6 +175,13 @@ def generate(
     batch_size: int = 4096,
     cancel: CancellationToken | None = None,
     compile: bool = True,
+    adapt: bool = False,
+    min_length: float | None = None,
+    max_length: float | None = None,
+    gradation: float = 0.3,
+    layers: float = 0.0,
+    adapt_iterations: int = 6,
+    quality_guard: float = 0.3,
 ) -> Mesh:
     """Generate a tetrahedral mesh directly from a bounded implicit field.
 
@@ -206,6 +213,17 @@ def generate(
         compile: Compile supported expressions and their first derivatives
             automatically. False selects NumPy callbacks. Unsupported operations
             emit a warning and use callbacks, which must return float64 (N,) arrays.
+        adapt: Experimental. Replace fixed surface refinement by size-driven
+            adaptation: boundary edges follow the curvature needed for
+            ``geometry_tolerance``, the interior grades towards ``max_length``.
+            ``cells`` then only sets the starting lattice, which must resolve topology.
+        min_length: Smallest adapted edge length; default ``geometry_tolerance``.
+        max_length: Largest adapted edge length; default a quarter of the smallest box side.
+        gradation: Maximum length growth per unit distance (MMG ``hgrad - 1``).
+        layers: For bands, minimum element count across the local sheet thickness.
+        adapt_iterations: Split/collapse/swap/relocate rounds.
+        quality_guard: Operations may not create MMG quality below this value
+            unless the affected elements were already worse.
 
     Returns:
         Mesh: Owned arrays and diagnostics. Empty geometries return empty arrays.
@@ -264,6 +282,16 @@ def generate(
         threads,
         batch_size,
         cancel,
+        (
+            geometry_tolerance if min_length is None else float(min_length),
+            float(np.min(b[1::2] - b[::2])) / 4 if max_length is None else float(max_length),
+            float(gradation),
+            float(layers),
+            int(adapt_iterations),
+            float(quality_guard),
+        )
+        if adapt
+        else None,
     )
     result["diagnostics"]["threads"] = threads
     result["diagnostics"]["evaluator"] = evaluator

@@ -27,5 +27,19 @@ compiled fields) + `fea-accuracy-optimizer` (PR #5 geometry guard, quality floor
 ## Status
 
 - [x] Integration branch builds; 69 core tests pass.
-- [ ] Scorecard and baselines (VTK Flying Edges, current meshers surface, meshers
-      volume boundary).
+- [x] Scorecard: `scorecard.py` (no timing). Reference volumes cached.
+- [x] Surface remesher `remesh.rs`, Python `generate_surface(adaptive=True)`.
+  At matched Hausdorff vs Flying Edges: sphere -39% triangles, ellipsoid -66%,
+  gyroid -39%; min angle 17-35 deg vs 0-3 deg. Not yet faster than FE.
+- [x] Tet adapter `tet_adapt.rs`, Python `generate(adapt=True)`; same seed and
+  targets as MMG3D (hausd, hmax 0.1, hgrad 1.3, tagged patches):
+  sphere 1e-3: 13.7k tets q_min .51 vs MMG 17.2k q_min .42;
+  ellipsoid 1e-3: 16.1k .52 vs 16.0k .36; gyroid 2e-3: 42k .27 vs 52k .14;
+  gyroid 1e-3: 75k H 1.0e-3 vs MMG 84k H 3.8e-2 (MMG defect). MMG cannot beat
+  its seed's facet error; we project to the exact field.
+- [ ] Periodic adaptation (torus with internal box-plane constraints). Today
+  periodic cap vertices are frozen.
+- [ ] FEA error per DOF (periodic homogenization) against lattice and MMG.
+- [ ] Speed: profile, batch field calls, parallel independent sets.
+- [ ] Surface: volume-neutral vertex offset (halves Hausdorff at equal count).
+- [ ] Box-edge wedges limit q_min (gyroid ~0.18-0.27).

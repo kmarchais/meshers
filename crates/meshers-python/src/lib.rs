@@ -357,7 +357,7 @@ fn make_field(
 }
 
 #[allow(clippy::too_many_arguments)]
-#[pyfunction]
+#[pyfunction(signature = (field, gradient, bounds, cells, periodic, band, tolerance, minimum_quality, budget, passes, interior_refine_nodes, snap, threads, batch_size, cancel, adapt=None))]
 fn generate<'py>(
     py: Python<'py>,
     field: Py<PyAny>,
@@ -375,6 +375,7 @@ fn generate<'py>(
     threads: usize,
     batch_size: usize,
     cancel: Option<PyRef<'py, CancellationToken>>,
+    adapt: Option<(f64, f64, f64, f64, usize, f64)>,
 ) -> PyResult<Bound<'py, PyDict>> {
     let f = make_field(
         py,
@@ -398,6 +399,19 @@ fn generate<'py>(
         interior_refine_nodes,
         snap,
         threads,
+        adapt: adapt.map(
+            |(min_length, max_length, gradation, layers, iterations, quality_guard)| {
+                meshers_core::tet_adapt::Options {
+                    tolerance,
+                    min_length,
+                    max_length,
+                    gradation,
+                    layers,
+                    iterations,
+                    quality_guard,
+                }
+            },
+        ),
     };
     let start = std::time::Instant::now();
     let result = py.detach(|| implicit::generate(&f, options));
@@ -474,6 +488,16 @@ fn generate<'py>(
     )?;
     diagnostics.set_item("callback_calls", f.calls.load(Ordering::Relaxed))?;
     diagnostics.set_item("inserted_interior_nodes", result.diagnostics.inserted_interior_nodes)?;
+    if let Some(stats) = &result.diagnostics.adapt {
+        let adapt = PyDict::new(py);
+        adapt.set_item("splits", stats.splits)?;
+        adapt.set_item("collapses", stats.collapses)?;
+        adapt.set_item("swaps", stats.swaps)?;
+        adapt.set_item("moves", stats.moves)?;
+        adapt.set_item("error_splits", stats.error_splits)?;
+        adapt.set_item("maximum_error", stats.maximum_error)?;
+        diagnostics.set_item("adapt", adapt)?;
+    }
     diagnostics.set_item("seconds", start.elapsed().as_secs_f64())?;
     output.set_item("diagnostics", diagnostics)?;
     Ok(output)
