@@ -989,8 +989,9 @@ candidate margins. Small stiffness differences do not establish low absolute
 stress error, and none of these finite meshes supplies a continuum certificate.
 All retained reference rankings must accompany later candidate results.
 
-The next controlled point is one native grid68 seed at the same fixed field,
-native geometry request, common gates and CG bounds. It increases base-grid
+`runs/accuracy-schwarz-d-seed68-v1` freezes 61 source files for one queued native
+grid68 seed at the same fixed field, native build, geometry request, common
+gates and CG bounds. It increases base-grid
 resolution throughout the domain rather than selecting interior edge stars.
 The actual admitted node count will determine whether it fits the MMG62seed80
 324,554-node budget. No dependent refinement or field comparison is queued
