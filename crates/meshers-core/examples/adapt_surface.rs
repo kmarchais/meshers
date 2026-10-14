@@ -14,7 +14,11 @@ fn main() {
             + (t * p[2]).sin() * (t * p[0]).cos())
             / 0.55
     };
-    let band = Band { field: &field, bounds: [[-0.5; 3], [0.5; 3]], levels: [-1., 1.] };
+    let band = Band {
+        field: &field,
+        bounds: [[-0.5; 3], [0.5; 3]],
+        levels: [-1., 1.],
+    };
     let start = std::time::Instant::now();
     let mut mesh = triangles::extract(&band, cells).unwrap();
     let extraction = start.elapsed().as_secs_f64();
@@ -34,7 +38,14 @@ fn main() {
         stats.maximum_error
     );
     println!("  {:15} {extraction:.3}s", "extraction");
-    let names = ["sizing", "split", "collapse", "flip", "relax", "enforce+validate"];
+    let names = [
+        "sizing",
+        "split",
+        "collapse",
+        "flip",
+        "relax",
+        "enforce+validate",
+    ];
     for (name, s) in names.iter().zip(stats.seconds) {
         println!("  {name:15} {s:.3}s");
     }

@@ -16,7 +16,8 @@ def test_closed_sphere_can_be_exported_to_stl(tmp_path, quality):
         return (x - 0.5) ** 2 + (y - 0.5) ** 2 + (z - 0.5) ** 2 - 0.35**2
 
     mesh = meshers.generate_surface(sphere, cells=12, quality=quality)
-    assert mesh.triangles.ndim == 2 and mesh.triangles.shape[1] == 3
+    assert mesh.triangles.ndim == 2
+    assert mesh.triangles.shape[1] == 3
     faces = np.column_stack((np.full(len(mesh.triangles), 3), mesh.triangles))
     surface = pv.PolyData(mesh.points, faces)
     assert surface.n_open_edges == 0
@@ -40,7 +41,9 @@ def test_surface_rejects_insufficient_geometry_accuracy():
 
 
 def test_quick_preview_marks_omitted_geometry_measurement():
-    field = lambda x, y, z: (x - 0.5) ** 2 + (y - 0.5) ** 2 + (z - 0.5) ** 2 - 0.35**2
+    def field(x, y, z):
+        return (x - 0.5) ** 2 + (y - 0.5) ** 2 + (z - 0.5) ** 2 - 0.35**2
+
     quick = meshers.generate_surface(field, cells=12, geometry_tolerance=0)
     checked = meshers.generate_surface(field, cells=12)
     np.testing.assert_array_equal(quick.points, checked.points)

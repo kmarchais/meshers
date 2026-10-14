@@ -442,7 +442,12 @@ fn generate<'py>(
             "tetrahedra",
             Array2::from_shape_vec(
                 (q.elements.tets.len(), 10),
-                q.elements.tets.into_iter().flatten().map(|i| i as i64).collect(),
+                q.elements
+                    .tets
+                    .into_iter()
+                    .flatten()
+                    .map(|i| i as i64)
+                    .collect(),
             )
             .unwrap()
             .into_pyarray(py),
@@ -451,7 +456,12 @@ fn generate<'py>(
             "surface",
             Array2::from_shape_vec(
                 (q.elements.surface.len(), 6),
-                q.elements.surface.into_iter().flatten().map(|i| i as i64).collect(),
+                q.elements
+                    .surface
+                    .into_iter()
+                    .flatten()
+                    .map(|i| i as i64)
+                    .collect(),
             )
             .unwrap()
             .into_pyarray(py),
@@ -536,7 +546,10 @@ fn generate<'py>(
         result.diagnostics.reverted_snap_vertices,
     )?;
     diagnostics.set_item("callback_calls", f.calls.load(Ordering::Relaxed))?;
-    diagnostics.set_item("inserted_interior_nodes", result.diagnostics.inserted_interior_nodes)?;
+    diagnostics.set_item(
+        "inserted_interior_nodes",
+        result.diagnostics.inserted_interior_nodes,
+    )?;
     if let Some(stats) = &result.diagnostics.adapt {
         let adapt = PyDict::new(py);
         adapt.set_item("splits", stats.splits)?;

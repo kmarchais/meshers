@@ -1,5 +1,5 @@
 //! Periodic Gyroid sheet adaptation with per-phase timing.
-//! cargo run --release --features experimental-quads --example adapt_gyroid -- 1e-3
+//! cargo run --release --example adapt_gyroid -- 1e-3
 use meshers_core::implicit::{Options, Region, generate};
 use meshers_core::{Point, tet_adapt};
 
@@ -15,7 +15,10 @@ fn main() {
     let base = Options {
         bounds: [[-0.5; 3], [0.5; 3]],
         cells: [24; 3],
-        region: Region::Band { lower: -1., upper: 1. },
+        region: Region::Band {
+            lower: -1.,
+            upper: 1.,
+        },
         periodic: [true; 3],
         geometry_tolerance: tolerance,
         optimize_passes: 1,
@@ -42,7 +45,15 @@ fn main() {
         out.mesh.tets.len(),
         out.diagnostics.minimum_mmg_quality
     );
-    let names = ["sizing", "split", "collapse", "edge removal", "face swap", "relocate", "enforce+unfold"];
+    let names = [
+        "sizing",
+        "split",
+        "collapse",
+        "edge removal",
+        "face swap",
+        "relocate",
+        "enforce+unfold",
+    ];
     for (name, s) in names.iter().zip(stats.seconds) {
         println!("  {name:15} {s:.3}s");
     }

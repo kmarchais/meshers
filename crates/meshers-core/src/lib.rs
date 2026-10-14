@@ -686,10 +686,10 @@ impl Mesh {
 }
 
 mod adaptive;
+mod optimize;
 mod projection;
 pub mod quadratic;
 pub mod tet_adapt;
-mod optimize;
 
 #[cfg(test)]
 mod tests {

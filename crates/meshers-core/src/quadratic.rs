@@ -94,7 +94,13 @@ fn jacobian(x: &[Point; 10], l: [f64; 4]) -> f64 {
         + jac[0][2] * (jac[1][0] * jac[2][1] - jac[1][1] * jac[2][0])
 }
 
-fn project(g: &impl Geometry, p: Point, level: f64, locked: [bool; 3], reach: f64) -> Option<Point> {
+fn project(
+    g: &impl Geometry,
+    p: Point,
+    level: f64,
+    locked: [bool; 3],
+    reach: f64,
+) -> Option<Point> {
     let p = crate::projection::onto_level(g, p, level, locked, reach)?;
     g.contains(p).then_some(p)
 }
@@ -156,7 +162,11 @@ pub(crate) fn elevate(
     // Periodic copies of a box-plane edge share one canonical straight midpoint.
     let canonical = |p: Point| -> [i64; 3] {
         std::array::from_fn(|c| {
-            let x = if periodic[c] && p[c] == hi[c] { lo[c] } else { p[c] };
+            let x = if periodic[c] && p[c] == hi[c] {
+                lo[c]
+            } else {
+                p[c]
+            };
             ((x - lo[c]) / (hi[c] - lo[c]) * 1e11).round() as i64
         })
     };
@@ -187,11 +197,15 @@ pub(crate) fn elevate(
                 low = low.min(d);
                 high = high.max(d);
             }
-            let ratio = if high > 0. { low / high } else { f64::NEG_INFINITY };
+            let ratio = if high > 0. {
+                low / high
+            } else {
+                f64::NEG_INFINITY
+            };
             minimum_ratio = minimum_ratio.min(ratio);
-            if !(ratio > 1e-3) {
-                for n in 4..10 {
-                    let e = q[n] - mesh.points.len();
+            if ratio.is_nan() || ratio <= 1e-3 {
+                for &node in &q[4..] {
+                    let e = node - mesh.points.len();
                     if curved[e] {
                         bad.insert(canonical(straight[e]));
                     }
@@ -223,7 +237,7 @@ pub(crate) fn elevate(
     }
     let mut points = mesh.points.clone();
     points.extend(mid);
-    if points.iter().flatten().any(|v| !v.is_finite()) || !(norm(points[0]) >= 0.) {
+    if points.iter().flatten().any(|v| !v.is_finite()) {
         return Err("nonfinite quadratic node".into());
     }
     Ok(Quadratic {
@@ -311,7 +325,10 @@ mod tests {
                 worst_straight = worst_straight.max(field(straight).abs());
             }
         }
-        assert!(worst_straight > 1e-4, "linear chords should sag: {worst_straight}");
+        assert!(
+            worst_straight > 1e-4,
+            "linear chords should sag: {worst_straight}"
+        );
     }
 
     #[test]
@@ -328,7 +345,10 @@ mod tests {
             Options {
                 bounds: [[-0.5; 3], [0.5; 3]],
                 cells: [10; 3],
-                region: Region::Band { lower: -0.55, upper: 0.55 },
+                region: Region::Band {
+                    lower: -0.55,
+                    upper: 0.55,
+                },
                 periodic: [true; 3],
                 geometry_tolerance: 0.1,
                 optimize_passes: 1,

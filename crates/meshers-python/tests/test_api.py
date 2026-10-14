@@ -208,8 +208,12 @@ finally:
     timer.join()
 """
     run = subprocess.run(
-        [sys.executable, "-c", code], env=dict(os.environ, RAYON_NUM_THREADS="4"),
-        capture_output=True, check=False, text=True, timeout=30,
+        [sys.executable, "-c", code],
+        env=dict(os.environ, RAYON_NUM_THREADS="4"),
+        capture_output=True,
+        check=False,
+        text=True,
+        timeout=30,
     )
     assert run.returncode == 0, run.stderr
 

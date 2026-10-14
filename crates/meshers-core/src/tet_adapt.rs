@@ -64,9 +64,19 @@ const WALL: u8 = 1;
 type Face = [usize; 3];
 
 /// Total order for finite sizes in a heap.
-#[derive(Clone, Copy, PartialEq, PartialOrd)]
+#[derive(Clone, Copy)]
 struct Ordered(f64);
+impl PartialEq for Ordered {
+    fn eq(&self, other: &Self) -> bool {
+        self.cmp(other).is_eq()
+    }
+}
 impl Eq for Ordered {}
+impl PartialOrd for Ordered {
+    fn partial_cmp(&self, other: &Self) -> Option<std::cmp::Ordering> {
+        Some(self.cmp(other))
+    }
+}
 impl Ord for Ordered {
     fn cmp(&self, other: &Self) -> std::cmp::Ordering {
         self.0.total_cmp(&other.0)
@@ -128,7 +138,11 @@ impl<'g, G: Geometry> Tets<'g, G> {
             .iter()
             .map(|&p| {
                 let c: Point = std::array::from_fn(|a| {
-                    if periodic[a] && p[a] == hi[a] { lo[a] } else { p[a] }
+                    if periodic[a] && p[a] == hi[a] {
+                        lo[a]
+                    } else {
+                        p[a]
+                    }
                 });
                 let key: [i64; 3] = std::array::from_fn(|a| {
                     ((c[a] - lo[a]) / (hi[a] - lo[a]) * 1e11).round() as i64
@@ -363,12 +377,12 @@ impl<'g, G: Geometry> Tets<'g, G> {
             }
         }
         if o.layers > 0. && self.g.band() {
-            for v in 0..self.points.len() {
-                if self.masks[v] & WALL != 0 {
+            for ((s, &p), &mask) in size.iter_mut().zip(&self.points).zip(&self.masks) {
+                if mask & WALL != 0 {
                     // Linear field across the sheet: thickness ~ band width / |grad|.
-                    let g = norm(self.g.gradient(self.points[v]));
+                    let g = norm(self.g.gradient(p));
                     if g > 0. {
-                        size[v] = size[v].min(2. * self.threshold / g / o.layers);
+                        *s = s.min(2. * self.threshold / g / o.layers);
                     }
                 }
             }
@@ -525,14 +539,28 @@ impl<'g, G: Geometry> Tets<'g, G> {
             .collect();
         ring.sort_unstable();
         ring.dedup();
-        let common: Vec<usize> = au.iter().copied().filter(|w| av.binary_search(w).is_ok()).collect();
+        let common: Vec<usize> = au
+            .iter()
+            .copied()
+            .filter(|w| av.binary_search(w).is_ok())
+            .collect();
         if common != ring {
             return false;
         }
         if mu != 0 {
             // Surface link condition on the boundary triangulation.
-            let bu: Vec<usize> = self.vb[u].iter().flatten().copied().filter(|&w| w != u).collect();
-            let bv: Vec<usize> = self.vb[v].iter().flatten().copied().filter(|&w| w != v).collect();
+            let bu: Vec<usize> = self.vb[u]
+                .iter()
+                .flatten()
+                .copied()
+                .filter(|&w| w != u)
+                .collect();
+            let bv: Vec<usize> = self.vb[v]
+                .iter()
+                .flatten()
+                .copied()
+                .filter(|&w| w != v)
+                .collect();
             let mut common: Vec<usize> = bu.iter().copied().filter(|w| bv.contains(w)).collect();
             common.sort_unstable();
             common.dedup();
@@ -578,8 +606,12 @@ impl<'g, G: Geometry> Tets<'g, G> {
                 };
                 for w in [a, b] {
                     if self.masks[w] & WALL != 0
-                        && self.sag(self.points[v], self.normals[v], self.points[w], self.normals[w])
-                            > o.tolerance * SIZING_SAFETY
+                        && self.sag(
+                            self.points[v],
+                            self.normals[v],
+                            self.points[w],
+                            self.normals[w],
+                        ) > o.tolerance * SIZING_SAFETY
                     {
                         return false;
                     }
@@ -612,7 +644,10 @@ impl<'g, G: Geometry> Tets<'g, G> {
     fn ring(&self, u: usize, v: usize, shell: &[usize]) -> Option<Vec<usize>> {
         let mut pairs = Vec::new();
         for &t in shell {
-            let rest: Vec<usize> = self.tets[t].into_iter().filter(|&w| w != u && w != v).collect();
+            let rest: Vec<usize> = self.tets[t]
+                .into_iter()
+                .filter(|&w| w != u && w != v)
+                .collect();
             pairs.push([rest[0], rest[1]]);
         }
         let mut ring = vec![pairs[0][0], pairs[0][1]];
@@ -622,7 +657,11 @@ impl<'g, G: Geometry> Tets<'g, G> {
             let last = *ring.last().unwrap();
             let next = (0..pairs.len()).find(|&i| !used[i] && pairs[i].contains(&last))?;
             used[next] = true;
-            let w = if pairs[next][0] == last { pairs[next][1] } else { pairs[next][0] };
+            let w = if pairs[next][0] == last {
+                pairs[next][1]
+            } else {
+                pairs[next][0]
+            };
             ring.push(w);
         }
         let closing = (0..pairs.len()).find(|&i| !used[i])?;
@@ -700,7 +739,8 @@ impl<'g, G: Geometry> Tets<'g, G> {
             stack.push((k, j));
         }
         let volume = |ts: &mut dyn Iterator<Item = [usize; 4]>| -> f64 {
-            ts.map(|t| determinant(self.tet_points(t, None)).abs()).sum()
+            ts.map(|t| determinant(self.tet_points(t, None)).abs())
+                .sum()
         };
         let old = volume(&mut shell.iter().map(|&t| self.tets[t]));
         if (volume(&mut new.iter().copied()) - old).abs() > 1e-9 * old {
@@ -720,7 +760,10 @@ impl<'g, G: Geometry> Tets<'g, G> {
         let tet = self.tets[t];
         let d = tet[i];
         let face: Vec<usize> = tet.into_iter().filter(|&w| w != d).collect();
-        if self.faces.contains_key(&sorted([face[0], face[1], face[2]])) {
+        if self
+            .faces
+            .contains_key(&sorted([face[0], face[1], face[2]]))
+        {
             return false;
         }
         let Some(&s) = self.vt[face[0]]
@@ -974,9 +1017,11 @@ pub(crate) fn adapt(
     o: &Options,
 ) -> Result<Stats, String> {
     if !(o.tolerance > 0. && o.min_length > 0. && o.max_length >= o.min_length)
-        || !(o.gradation > 0.)
+        || o.gradation.is_nan()
+        || o.gradation <= 0.
         || !(0.0..1.).contains(&o.quality_guard)
-        || !(o.layers >= 0.)
+        || o.layers.is_nan()
+        || o.layers < 0.
         || o.iterations > 100
     {
         return Err("invalid adaptation options".into());
@@ -1110,7 +1155,14 @@ mod tests {
             ..Default::default()
         };
         let lattice = generate(&field, base).unwrap();
-        let adapted = generate(&field, Options { adapt: adapt(1e-3), ..base }).unwrap();
+        let adapted = generate(
+            &field,
+            Options {
+                adapt: adapt(1e-3),
+                ..base
+            },
+        )
+        .unwrap();
         let exact = 4. / 3. * std::f64::consts::PI * 0.35f64.powi(3);
         let d = &adapted.diagnostics;
         assert!(d.maximum_sampled_surface_error <= 1e-3);
@@ -1138,7 +1190,10 @@ mod tests {
             Options {
                 bounds: [[-0.5; 3], [0.5; 3]],
                 cells: [24; 3],
-                region: Region::Band { lower: -0.55, upper: 0.55 },
+                region: Region::Band {
+                    lower: -0.55,
+                    upper: 0.55,
+                },
                 periodic: [true; 3],
                 geometry_tolerance: 2e-3,
                 optimize_passes: 2,

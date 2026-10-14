@@ -95,7 +95,10 @@ impl<'a, 'b, F: ScalarField> Surface<'a, 'b, F> {
                 vf[v].push(f);
             }
         }
-        if masks.iter().any(|&m| m == 0 || (0..4).any(|j| (m >> (2 * j)) & 3 == 3)) {
+        if masks
+            .iter()
+            .any(|&m| m == 0 || (0..4).any(|j| (m >> (2 * j)) & 3 == 3))
+        {
             return Err(fail("Unresolved or incompatible surface constraints"));
         }
         let mut surface = Self {
@@ -120,12 +123,7 @@ impl<'a, 'b, F: ScalarField> Surface<'a, 'b, F> {
 
     /// Shape against the reference normal: cached vertex wall normals, or the box axis.
     /// `moved` substitutes one vertex (or the new vertex `usize::MAX`) and its normal.
-    fn face_shape(
-        &self,
-        face: [usize; 3],
-        label: u8,
-        moved: Option<(usize, Point, Point)>,
-    ) -> f64 {
+    fn face_shape(&self, face: [usize; 3], label: u8, moved: Option<(usize, Point, Point)>) -> f64 {
         let at = |i: usize| match moved {
             Some((j, q, n)) if i == j => (q, n),
             _ => (self.points[i], self.normals[i]),
@@ -222,8 +220,7 @@ impl<'a, 'b, F: ScalarField> Surface<'a, 'b, F> {
                 let s = self.curve_tangent(v);
                 let theta = norm(cross(t, s)).atan2(dot(t, s).abs());
                 (8. * tol * l / theta.max(1e-12)).sqrt()
-            } else if norm(self.normals[u]) > 0. && norm(self.normals[v]) > 0. && shared & 3 != 0
-            {
+            } else if norm(self.normals[u]) > 0. && norm(self.normals[v]) > 0. && shared & 3 != 0 {
                 let theta = angle(self.normals[u], self.normals[v]);
                 (6. * tol * l / theta.max(1e-12)).sqrt()
             } else {
@@ -316,9 +313,9 @@ impl<'a, 'b, F: ScalarField> Surface<'a, 'b, F> {
         }
         let n = self.wall_normal(p, mask);
         let ok = planned.iter().all(|(f, first, second)| {
-            [first, second]
-                .iter()
-                .all(|face| self.face_shape(**face, self.labels[*f], Some((usize::MAX, p, n))) > 1e-6)
+            [first, second].iter().all(|face| {
+                self.face_shape(**face, self.labels[*f], Some((usize::MAX, p, n))) > 1e-6
+            })
         });
         if !ok {
             return None;
@@ -477,9 +474,11 @@ impl<'a, 'b, F: ScalarField> Surface<'a, 'b, F> {
             let curve: Vec<usize> = self
                 .neighbors(v)
                 .into_iter()
-                .filter(|&w| self.masks[w] & mask == mask && {
-                    let faces = self.edge_faces(v, w);
-                    faces.len() == 2 && self.edge_mask(&faces) == mask
+                .filter(|&w| {
+                    self.masks[w] & mask == mask && {
+                        let faces = self.edge_faces(v, w);
+                        faces.len() == 2 && self.edge_mask(&faces) == mask
+                    }
                 })
                 .collect();
             if curve.len() != 2 {
@@ -520,7 +519,10 @@ impl<'a, 'b, F: ScalarField> Surface<'a, 'b, F> {
     /// Split until sampled midpoint and centroid distances meet the tolerance.
     fn enforce(&mut self, o: &Options, stats: &mut Stats) -> Result<()> {
         for _ in 0..16 {
-            self.band.field.check().map_err(MeshingError::GenerationFailed)?;
+            self.band
+                .field
+                .check()
+                .map_err(MeshingError::GenerationFailed)?;
             let mut flagged = Vec::new();
             let mut worst = 0f64;
             for f in 0..self.faces.len() {
@@ -617,7 +619,8 @@ pub fn adapt<F: ScalarField>(
 ) -> Result<Stats> {
     band.validate()?;
     if !(o.tolerance > 0. && o.min_length > 0. && o.max_length >= o.min_length)
-        || !(o.gradation > 0.)
+        || o.gradation.is_nan()
+        || o.gradation <= 0.
         || o.iterations > 100
     {
         return Err(MeshingError::InvalidOptions(
@@ -731,7 +734,11 @@ mod tests {
         let stats = adapt(&mut mesh, &band, &options(1e-3)).unwrap();
         let (minimum, volume) = validate(&mesh).unwrap();
         assert!(sampled_error(&mesh, &band).unwrap() <= 1e-3, "{stats:?}");
-        assert!(mesh.faces.len() < before, "{} vs {before}", mesh.faces.len());
+        assert!(
+            mesh.faces.len() < before,
+            "{} vs {before}",
+            mesh.faces.len()
+        );
         assert!(minimum > 0.3, "minimum shape {minimum}");
         let exact = 4. / 3. * std::f64::consts::PI * 0.35f64.powi(3);
         assert!((volume / exact - 1.).abs() < 0.01);

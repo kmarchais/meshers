@@ -31,6 +31,8 @@ def generate(
     threads: int,
     batch_size: int,
     cancel: CancellationToken | None,
+    adapt: tuple[float, float, float, float, int, float, float] | None = None,
+    order: int = 1,
 ) -> dict[str, Any]: ...
 
 class CompiledField:
@@ -48,10 +50,15 @@ class CompiledField:
         """Number of interned nodes in the compiled expression graph."""
     def gradient(self, x: float, y: float, z: float) -> list[float]:
         """Return the three first derivatives, or raise ValueError if unavailable."""
+    def values(self, points: Any) -> Any:
+        """Evaluate an (n, 3) float64 point array without a Python call per point."""
 
 def _compile_expression(
     nodes: list[tuple[str, list[int], float]], outputs: list[int]
 ) -> CompiledField: ...
+
+MAX_CONSTRAINTS: int
+
 def available_threads() -> int: ...
 def generate_intersection(
     fields: Any,

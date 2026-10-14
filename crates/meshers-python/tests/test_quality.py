@@ -4,20 +4,24 @@ import pytest
 
 
 def test_optional_interior_refinement_preserves_periodic_boundary():
-    options = dict(cells=4, optimize_passes=0, minimum_quality=0.1, periodic=(True,) * 3)
-    field = lambda x, y, z: x * 0 - 1
+    options = {"cells": 4, "optimize_passes": 0, "minimum_quality": 0.1, "periodic": (True,) * 3}
+
+    def field(x, y, z):
+        return x * 0 - 1
+
     seed = meshers.generate(field, **options)
     refined = meshers.generate(field, interior_refine_nodes=20, **options)
     assert 0 < refined.diagnostics["inserted_interior_nodes"] <= 20
-    np.testing.assert_array_equal(refined.points[:len(seed.points)], seed.points)
+    np.testing.assert_array_equal(refined.points[: len(seed.points)], seed.points)
     np.testing.assert_array_equal(refined.surface, seed.surface)
     np.testing.assert_array_equal(refined.boundary_tags, seed.boundary_tags)
-    for old, new in zip(seed.periodic_pairs, refined.periodic_pairs):
+    for old, new in zip(seed.periodic_pairs, refined.periodic_pairs, strict=True):
         np.testing.assert_array_equal(old, new)
     assert abs(refined.diagnostics["volume"] - seed.diagnostics["volume"]) < 1e-12
     assert refined.diagnostics["minimum_mmg_quality"] >= 0.1
-    bounded = meshers.generate(field, interior_refine_nodes=20,
-                              max_tetrahedra=len(seed.tetrahedra), **options)
+    bounded = meshers.generate(
+        field, interior_refine_nodes=20, max_tetrahedra=len(seed.tetrahedra), **options
+    )
     assert bounded.diagnostics["inserted_interior_nodes"] == 0
     np.testing.assert_array_equal(bounded.points, seed.points)
     np.testing.assert_array_equal(bounded.tetrahedra, seed.tetrahedra)

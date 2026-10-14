@@ -33,7 +33,7 @@ def test_high_constraint_bits_and_planar_intersections():
     mesh = meshers.generate_intersection(fields, cells=8, geometry_tolerance=1e-10)
     assert mesh.constraint_masks.dtype == np.uint32
     assert np.isclose(volume(mesh), 0.63 * 0.72 * 0.81, atol=1e-12)
-    for axis, (name, level) in enumerate(zip("xyz", (0.63, 0.72, 0.81))):
+    for axis, (name, level) in enumerate(zip("xyz", (0.63, 0.72, 0.81), strict=True)):
         faces = mesh.surface_for(name)
         assert len(faces) > 0
         assert np.max(abs(mesh.points[faces, axis] - level)) < 1e-12
