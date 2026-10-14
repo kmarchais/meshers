@@ -184,6 +184,7 @@ def generate(
     layers: float = 0.0,
     adapt_iterations: int = 6,
     quality_guard: float = 0.3,
+    adapt_tolerance: float | None = None,
     order: int = 1,
 ) -> Mesh:
     """Generate a tetrahedral mesh directly from a bounded implicit field.
@@ -227,6 +228,8 @@ def generate(
         adapt_iterations: Split/collapse/swap/relocate rounds.
         quality_guard: Operations may not create MMG quality below this value
             unless the affected elements were already worse.
+        adapt_tolerance: Distance the adapter aims for; default ``geometry_tolerance``,
+            which remains the acceptance check.
         order: 1 for linear tetrahedra, 2 for 10-node tetrahedra (VTK/Gmsh/fedoo
             node order) whose wall edges follow the exact field. Quadratic meshes
             report ``tetrahedra`` of shape (M, 10) and ``surface`` of shape (K, 6);
@@ -296,6 +299,7 @@ def generate(
             float(layers),
             int(adapt_iterations),
             float(quality_guard),
+            geometry_tolerance if adapt_tolerance is None else float(adapt_tolerance),
         )
         if adapt
         else None,

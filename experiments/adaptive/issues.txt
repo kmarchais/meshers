@@ -1,0 +1,24 @@
+gyroid            lattice passes=0   ok tets=  3493 H=7.97e-03 dV=+0.0208 q_min=0.106
+gyroid            lattice passes=4   ok tets=  3493 H=1.00e-02 dV=+0.0208 q_min=0.150
+gyroid            lattice passes=12  ok tets=  3493 H=1.01e-02 dV=+0.0209 q_min=0.150
+gyroid            adapt              ok tets=  6273 H=9.88e-03 dV=+0.0154 q_min=0.326
+schwarz-p         lattice passes=0   REJECTED sampled geometry error 1.528296416301964e-2 exceeds tolerance 1e-2; increase res
+schwarz-p         lattice passes=4   ok tets=  2570 H=1.01e-02 dV=+0.0173 q_min=0.338
+schwarz-p         lattice passes=12  ok tets=  2567 H=1.01e-02 dV=+0.0173 q_min=0.339
+schwarz-p         adapt              ok tets=  3891 H=8.09e-03 dV=+0.0144 q_min=0.390
+neovius           lattice passes=0   REJECTED sampled geometry error 2.9122411940647065e-2 exceeds tolerance 1e-2; increase re
+neovius           lattice passes=4   REJECTED sampled geometry error 2.9122411940643588e-2 exceeds tolerance 1e-2; increase re
+neovius           lattice passes=12  REJECTED sampled geometry error 2.9122411940643588e-2 exceeds tolerance 1e-2; increase re
+neovius           adapt              ok tets= 11848 H=9.80e-03 dV=+0.0175 q_min=0.280
+graded-gyroid     lattice passes=0   REJECTED minimum MMG quality 9.047231622515513e-2 is below required 1e-1; mesh rejected (
+graded-gyroid     lattice passes=4   ok tets=  3369 H=1.05e-02 dV=+0.0229 q_min=0.157
+graded-gyroid     lattice passes=12  ok tets=  3369 H=1.09e-02 dV=+0.0227 q_min=0.154
+graded-gyroid     adapt              ok tets=  5919 H=9.77e-03 dV=+0.0144 q_min=0.339
+thin-gyroid       lattice passes=0   REJECTED minimum MMG quality 5.536557287215033e-2 is below required 1e-1; mesh rejected (
+thin-gyroid       lattice passes=4   ok tets=  4025 H=1.07e-02 dV=+0.0470 q_min=0.114
+thin-gyroid       lattice passes=12  ok tets=  4025 H=1.07e-02 dV=+0.0473 q_min=0.114
+thin-gyroid       adapt              ok tets=  9618 H=8.95e-03 dV=+0.0177 q_min=0.322
+implicit-lattice  lattice passes=0   REJECTED sampled geometry error 4.189314467579676e-2 exceeds tolerance 1e-2; increase res
+implicit-lattice  lattice passes=4   REJECTED sampled geometry error 4.189314467579676e-2 exceeds tolerance 1e-2; increase res
+implicit-lattice  lattice passes=12  REJECTED sampled geometry error 4.189314467579676e-2 exceeds tolerance 1e-2; increase res
+implicit-lattice  adapt              REJECTED sampled geometry error 3.4627142726794215e-2 exceeds tolerance 1e-2; increase re

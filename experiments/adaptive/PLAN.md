@@ -37,9 +37,11 @@ compiled fields) + `fea-accuracy-optimizer` (PR #5 geometry guard, quality floor
   ellipsoid 1e-3: 16.1k .52 vs 16.0k .36; gyroid 2e-3: 42k .27 vs 52k .14;
   gyroid 1e-3: 75k H 1.0e-3 vs MMG 84k H 3.8e-2 (MMG defect). MMG cannot beat
   its seed's facet error; we project to the exact field.
-- [ ] Periodic adaptation (torus with internal box-plane constraints). Today
-  periodic cap vertices are frozen.
-- [ ] FEA error per DOF (periodic homogenization) against lattice and MMG.
+- [x] Periodic adaptation on the torus (merged copies, internal box planes).
+- [x] FEA error per DOF: linear adaptivity ties the lattice; curved quadratic tets
+  give 13-22x lower error at equal nodes. Native .
+- [x] Issues #3/#4: adapter passes all smooth fixtures at 8 cells; crease lattice open.
+- [ ] Crease capture for min/max fields (compiled-field branch information).
 - [ ] Speed: profile, batch field calls, parallel independent sets.
 - [ ] Surface: volume-neutral vertex offset (halves Hausdorff at equal count).
 - [ ] Box-edge wedges limit q_min (gyroid ~0.18-0.27).

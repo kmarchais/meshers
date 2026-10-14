@@ -7,7 +7,7 @@
 //! and fifteen interior points; edges of failing elements are straightened, together
 //! with their periodic copies, until every sample is positive. Sampling is a strong
 //! check but not a proof of positivity everywhere.
-use crate::{Mesh, Point, dot, geometry::Geometry, norm};
+use crate::{Mesh, Point, geometry::Geometry, norm};
 use std::collections::{HashMap, HashSet};
 
 /// VTK / fedoo / Gmsh-compatible mid-edge order after the four vertices.
@@ -94,27 +94,9 @@ fn jacobian(x: &[Point; 10], l: [f64; 4]) -> f64 {
         + jac[0][2] * (jac[1][0] * jac[2][1] - jac[1][1] * jac[2][0])
 }
 
-fn project(g: &impl Geometry, mut p: Point, level: f64, locked: [bool; 3]) -> Option<Point> {
-    let [lo, hi] = g.bounds();
-    let scale = (0..3).map(|a| hi[a] - lo[a]).fold(0., f64::max);
-    for _ in 0..40 {
-        let r = g.value(p) - level;
-        let mut grad = g.gradient(p);
-        for a in 0..3 {
-            if locked[a] {
-                grad[a] = 0.;
-            }
-        }
-        let g2 = dot(grad, grad);
-        if !r.is_finite() || g2 <= 1e-300 {
-            return None;
-        }
-        if r.abs() / g2.sqrt() <= scale * 1e-13 {
-            return g.contains(p).then_some(p);
-        }
-        p = std::array::from_fn(|a| p[a] - r / g2 * grad[a]);
-    }
-    None
+fn project(g: &impl Geometry, p: Point, level: f64, locked: [bool; 3], reach: f64) -> Option<Point> {
+    let p = crate::projection::onto_level(g, p, level, locked, reach)?;
+    g.contains(p).then_some(p)
 }
 
 /// Elevate a validated linear mesh. `tags` marks implicit-wall boundary faces with 0.
@@ -165,7 +147,8 @@ pub(crate) fn elevate(
         let locked: [bool; 3] =
             std::array::from_fn(|c| pa[c] == pb[c] && (pa[c] == lo[c] || pa[c] == hi[c]));
         let level = g.level(g.value(pa), threshold);
-        if let Some(p) = project(g, straight[e], level, locked) {
+        let reach = 0.5 * norm(crate::sub(pa, pb));
+        if let Some(p) = project(g, straight[e], level, locked, reach) {
             mid[e] = p;
             curved[e] = true;
         }
@@ -298,6 +281,7 @@ pub(crate) fn node_pairs(
 #[cfg(test)]
 mod tests {
     use super::*;
+    use crate::dot;
 
     #[test]
     fn wall_mid_edge_nodes_lie_on_the_sphere() {

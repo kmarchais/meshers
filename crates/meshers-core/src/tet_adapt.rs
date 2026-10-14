@@ -112,6 +112,8 @@ struct Tets<'g, G: Geometry> {
     vb: Vec<Vec<Face>>,
     /// Box length along periodic axes.
     period: [Option<f64>; 3],
+    /// Wall vertices inserted short of the surface, still to be projected.
+    pending: Vec<usize>,
 }
 
 impl<'g, G: Geometry> Tets<'g, G> {
@@ -152,6 +154,7 @@ impl<'g, G: Geometry> Tets<'g, G> {
             faces: HashMap::new(),
             vb: vec![Vec::new(); n],
             period,
+            pending: Vec::new(),
         };
         for (t, tet) in s.tets.iter().enumerate() {
             for &v in tet {
@@ -269,26 +272,9 @@ impl<'g, G: Geometry> Tets<'g, G> {
             return Some(self.wrap(p));
         }
         let scale = (0..3).map(|a| hi[a] - lo[a]).fold(0., f64::max);
-        for _ in 0..30 {
-            let r = self.g.value(p) - level;
-            let mut grad = self.g.gradient(p);
-            for a in 0..3 {
-                if locked[a] {
-                    grad[a] = 0.;
-                }
-            }
-            let g2 = dot(grad, grad);
-            if !r.is_finite() || g2 <= 1e-300 {
-                return None;
-            }
-            if r.abs() / g2.sqrt() <= scale * 1e-13 {
-                let p = self.wrap(p);
-                return self.g.contains(p).then_some(p);
-            }
-            let step = (r / g2).clamp(-0.05 * scale / g2.sqrt(), 0.05 * scale / g2.sqrt());
-            p = std::array::from_fn(|a| p[a] - step * grad[a]);
-        }
-        None
+        let p = crate::projection::onto_level(self.g, p, level, locked, 0.05 * scale)?;
+        let p = self.wrap(p);
+        self.g.contains(p).then_some(p)
     }
 
     fn tet_points(&self, t: [usize; 4], moved: Option<(usize, Point)>) -> [Point; 4] {
@@ -459,7 +445,7 @@ impl<'g, G: Geometry> Tets<'g, G> {
         let mask = self.edge_mask(&bfaces);
         let d = self.delta(self.points[u], self.points[v]);
         let mid = self.wrap(std::array::from_fn(|a| self.points[u][a] + 0.5 * d[a]));
-        let p = if mask & WALL != 0 {
+        let target = if mask & WALL != 0 {
             let level = self.level(self.points[u]);
             self.project(mid, mask, level)?
         } else {
@@ -467,20 +453,33 @@ impl<'g, G: Geometry> Tets<'g, G> {
         };
         // Midpoint children are naturally worse than their parent; only reject slivers.
         let floor = (0.5 * self.worst(&shell).min(guard)).max(1e-9);
-        let mut planned = Vec::new();
-        for &t in &shell {
-            let tet = self.tets[t];
-            let a = tet.map(|i| if i == v { usize::MAX } else { i });
-            let b = tet.map(|i| if i == u { usize::MAX } else { i });
-            for c in [a, b] {
-                let q = self.local(c.map(|i| if i == usize::MAX { p } else { self.points[i] }));
-                if mmg(q) < floor {
-                    return None;
-                }
+        // A deep concave sag can invert neighbours if the vertex goes straight onto the
+        // surface; insert it part of the way and finish the projection later.
+        let offset = self.delta(mid, target);
+        let mut chosen = None;
+        for fraction in [1., 0.75, 0.5, 0.25] {
+            let p = self.wrap(std::array::from_fn(|a| mid[a] + fraction * offset[a]));
+            let mut planned = Vec::new();
+            let valid = shell.iter().all(|&t| {
+                let tet = self.tets[t];
+                let a = tet.map(|i| if i == v { usize::MAX } else { i });
+                let b = tet.map(|i| if i == u { usize::MAX } else { i });
+                planned.push((t, a, b));
+                [a, b].iter().all(|c| {
+                    mmg(self.local(c.map(|i| if i == usize::MAX { p } else { self.points[i] })))
+                        >= floor
+                })
+            });
+            if valid {
+                chosen = Some((p, fraction, planned));
+                break;
             }
-            planned.push((t, a, b));
         }
+        let (p, fraction, planned) = chosen?;
         let m = self.add_vertex(p);
+        if fraction < 1. {
+            self.pending.push(m);
+        }
         for (t, a, b) in planned {
             self.kill_tet(t);
             self.add_tet(a.map(|i| if i == usize::MAX { m } else { i }));
@@ -829,9 +828,36 @@ impl<'g, G: Geometry> Tets<'g, G> {
         r / norm(self.g.gradient(p))
     }
 
+    /// Move partially inserted wall vertices onto the surface where now valid.
+    fn settle(&mut self, guard: f64) {
+        let pending = std::mem::take(&mut self.pending);
+        for v in pending {
+            if self.vt[v].is_empty() {
+                continue;
+            }
+            let mask = self.masks[v];
+            let level = self.level(self.points[v]);
+            // Same floor as a split: geometry may not be bought with slivers.
+            let floor = (0.5 * self.worst(&self.vt[v].clone()).min(guard)).max(1e-6);
+            let moved = self.project(self.points[v], mask, level).filter(|&q| {
+                self.vt[v]
+                    .iter()
+                    .all(|&t| mmg(self.tet_points(self.tets[t], Some((v, q)))) >= floor)
+            });
+            match moved {
+                Some(q) => {
+                    self.points[v] = q;
+                    self.refresh(v);
+                }
+                None => self.pending.push(v),
+            }
+        }
+    }
+
     fn enforce(&mut self, o: &Options, stats: &mut Stats) -> Result<(), String> {
         for _ in 0..16 {
             self.g.check()?;
+            self.settle(o.quality_guard);
             let mut flagged = Vec::new();
             let mut worst = 0f64;
             let wall: Vec<Face> = self
@@ -1043,6 +1069,7 @@ pub(crate) fn adapt(
             }
         }
         lap(&mut stats, 4);
+        s.settle(o.quality_guard);
         for v in 0..s.points.len() {
             if s.relocate(v, o) {
                 stats.moves += 1;
@@ -1051,6 +1078,7 @@ pub(crate) fn adapt(
         lap(&mut stats, 5);
     }
     s.enforce(o, &mut stats)?;
+    s.settle(o.quality_guard);
     *mesh = s.into_mesh()?;
     lap(&mut stats, 6);
     Ok(stats)

@@ -686,6 +686,7 @@ impl Mesh {
 }
 
 mod adaptive;
+mod projection;
 pub mod quadratic;
 pub mod tet_adapt;
 mod optimize;

@@ -375,7 +375,7 @@ fn generate<'py>(
     threads: usize,
     batch_size: usize,
     cancel: Option<PyRef<'py, CancellationToken>>,
-    adapt: Option<(f64, f64, f64, f64, usize, f64)>,
+    adapt: Option<(f64, f64, f64, f64, usize, f64, f64)>,
     order: u8,
 ) -> PyResult<Bound<'py, PyDict>> {
     let f = make_field(
@@ -401,9 +401,9 @@ fn generate<'py>(
         snap,
         threads,
         adapt: adapt.map(
-            |(min_length, max_length, gradation, layers, iterations, quality_guard)| {
+            |(min_length, max_length, gradation, layers, iterations, quality_guard, target)| {
                 meshers_core::tet_adapt::Options {
-                    tolerance,
+                    tolerance: target,
                     min_length,
                     max_length,
                     gradation,
