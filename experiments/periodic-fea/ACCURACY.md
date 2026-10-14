@@ -1266,3 +1266,19 @@ preservation, unchanged coarsened volume and nonincreasing mixed-load energy
 apply to this nested step. No guide, new marker or native port is introduced.
 The full live generation recipe is unmeasured because this seed is an archive
 replay; its zero meshing time cannot estimate that recipe.
+
+`runs/accuracy-schwarz-d-coarsened-body68-matched-nodes-v1` freezes the single
+combined diagnostic. The coarsened seed must pass read-only six-field
+revalidation before the existing Python nested length refinement adds at most
+29,767 nodes. Admission retains the same original common gates, exact seed
+vertices and oriented boundary triangles, unchanged coarsened volume and
+nonincreasing strain-controlled energy for every mixed load. The full live
+recipe estimate is unavailable for a geometry replay seed; zero replay meshing
+time cannot replace its actual generation and coarsening cost.
+
+One-thread CG uses the existing 16 GiB, 5,400 s and four-million-cell worker
+bounds. The shared lane is busy, so regressions run inside this one queued
+job. OMEN has 27.93 GiB free at preparation. Lenovo is reachable with 6.36 GiB
+free but its shared queue remains unverified because its pueue client cannot
+launch. No other session's jobs are changed. The field comparison and any
+algorithm port wait for this diagnostic's actual admission and saved fields.
