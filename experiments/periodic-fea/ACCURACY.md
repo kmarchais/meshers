@@ -870,12 +870,26 @@ geometry gate. These measurements show correlated reference regions and finer
 MMG interior resolution; they do not prove that its continuum stress ranking
 is biased or superior.
 
-`runs/schwarz-d-reference92-v1` freezes one finer native reference on a fresh
-grid that was not used to seed the MMG candidates. The fixed Microgen field,
+`runs/schwarz-d-reference92-v1` admits one finer native reference on a fresh
+grid that was not used to seed the MMG candidates. It has 717,331 nodes,
+3,619,944 tetrahedra and minimum quality 0.184818. The fixed Microgen field,
 native build, geometry request and common admission gates remain unchanged.
-Audited CG uses the existing 16 GiB, 5,400-second and four-million-tetrahedron
-bounds. Its 61 source hashes are frozen. The actual admission and fields must
-pass before testing ranking against the fresh reference. Existing references
-and unfavorable scores remain retained; no favorable reference is substituted
-or claimed as a continuum certificate. No dependent analysis or mesh change
-is queued before this result.
+Audited CG completes within the existing 16 GiB, 5,400-second and four-million-
+tetrahedron bounds. FEA takes 4,643.45 s and peak RSS is 9.76 GiB. Generation
+takes 27.93 s as one calibration sample, which does not establish speed.
+
+All 61 frozen source hashes, six saved field hashes and twelve actual solver
+residuals pass. Independent stiffness reconstruction differs by 6.93e-16,
+Hill-Mandel energy by 3.43e-12, force balance by at most 1.85e-10 and
+displacement jumps are zero. These checks admit the reference for comparison;
+they do not certify continuum stress accuracy.
+
+`runs/accuracy-schwarz-d-fresh-reference-fields-v1` freezes 50 source files and
+687 inputs for the next comparison. It retains native80 and alternate MMG64,
+adds fresh native92, and compares the same native64 seed, native length
+refinement, guided prototype and MMG62seed80. Four Sobol scrambles use 1,048,576
+probes per reference on the same common material. The job also runs regressions,
+the real Pardiso smoke check and read-only fresh-reference and guided-body
+audits. Exact retained boundary, volume and mixed-energy checks remain required.
+The comparison is pending. Existing unfavorable scores remain retained, and
+no further mesh change is queued before its actual result.
