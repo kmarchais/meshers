@@ -1129,5 +1129,28 @@ describe link conditions using boundary cones for topology-preserving edge
 contraction. The prototype will check surface and boundary-coned volume links,
 protect periodic cap vertices, use existing endpoints, reject inverted or
 low-quality cavities, and independently validate the resulting geometry. It
-will qualify as a new seed through the unchanged common gates. No FEA solve or
-native port is queued before that geometry result.
+will qualify as a new seed through the unchanged common gates.
+
+`runs/accuracy-schwarz-d-surface-coarsen-geometry-v1` freezes 52 source files and
+1,221 inputs for one queued geometry-only trial on the audited native68 seed.
+It removes at most 2,000 vertices on same-isovalue wall edges shorter than half
+the base-grid spacing, 0.5/68. A fixed-seed shuffle breaks exact length ties.
+The operation keeps an existing endpoint and uses disjoint vertex cavities.
+Local quality must meet the seed minimum, 0.134168, and sampled new-wall forward
+distance must remain below 0.001. Periodic cap vertices are protected; their
+oriented triangles must remain exact. Boundary components and Euler
+characteristic must match the original. Global topology, orientation, overlap,
+both boundary distance directions, volume, quality and periodic matching use
+the existing common checks. An extra relative volume-change cap of 0.001
+constrains this first trial.
+
+Five direct unit checks pass while OMEN's shared lane is idle. They restore an
+exact volume mesh after removing a flat boundary-edge midpoint, protect cap
+nodes, prevent deleting a material component, and reject disallowed or
+misoriented wall geometry. The queued trial runs all regressions before its
+owned worker. Its memory bound is 16 GiB and timeout is 900 s. `geometry-result.json`
+and `completion.json` describe only geometry qualification; no six-load FEA
+result is implied. Remaining coordinates must equal the indexed original
+coordinates. All original archives remain pinned. No full FEA solve or native
+port is queued before this actual geometry result, and archive adaptation
+supplies no generation speed claim.
