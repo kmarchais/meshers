@@ -1179,3 +1179,14 @@ two seconds, matching the original benchmark guard. A regression allocates
 shared lane is busy with another job, so this check and the trial are queued
 together. The original launcher-only report remains unchanged. No full FEA
 solve or native port is queued before the corrected result.
+
+The corrected rerun completes in 144.61 s with peak owned process-tree RSS
+1,428.61 MiB, below the 16 GiB cap and 900 s timeout. Thirty-nine regressions
+pass with one optional test skipped, including the real allocating-child
+memory check. All four saved mesh arrays reproduce v1 exactly. All 52 source
+and 1,279 input hashes and the actual mesh digest pass. Geometry qualification
+remains admitted with the values above. These results justify one bounded
+six-load FEA run on this saved geometry before reusing its freed nodes.
+The coarsened wall changes material slightly, so nested-energy monotonicity
+against the original native68 mesh does not apply. No FEA accuracy or native
+generation speed claim follows from this archive operation.
