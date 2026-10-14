@@ -1,0 +1,198 @@
+"""Interleaved wall-clock timing at matched, independently measured geometry error.
+
+Meant for the pueue `gpu` group (one job at a time): timings taken next to other
+heavy work are not valid. Each configuration is warmed up once in this process, then
+measured `--repeats` times in rotation with the others. Mesh counts and the
+independent Hausdorff distance are recorded once per configuration. The FEA block
+times mesh generation plus the six-load homogenization for a 1% target.
+
+Run: uv run --no-sync python experiments/adaptive/timing.py [--threads N] [--fea]
+"""
+
+import argparse
+import json
+import platform
+import statistics
+import sys
+import time
+from pathlib import Path
+
+import numpy as np
+
+HERE = Path(__file__).resolve().parent
+sys.path.insert(0, str(HERE))
+
+import fea  # noqa: E402  (frozen build path, periodic-fea modules)
+import meshers  # noqa: E402
+import scorecard  # noqa: E402
+
+BOX = (-0.5, 0.5) * 3
+
+
+def surface_configs(threads):
+    out = {}
+    for name, cells in (("sphere", 24), ("ellipsoid", 24), ("gyroid", 16)):
+        case = scorecard.CASES[name]
+        for n in (48, 96):
+            out[f"{name}/flying-edges-{n}"] = (case, lambda c=case, n=n: scorecard.flying_edges(c, n))
+        for balanced in (False, True):
+            label = "balanced" if balanced else "adaptive"
+            out[f"{name}/{label}-1e-3"] = (
+                case,
+                lambda c=case, cells=cells, b=balanced: _surface(c, cells, b),
+            )
+    return out
+
+
+def _surface(case, cells, balanced):
+    mesh = meshers.generate_surface(
+        case.function,
+        bounds=BOX,
+        cells=cells,
+        band=case.band,
+        geometry_tolerance=1e-3,
+        adaptive=True,
+        iterations=5,
+        balanced=balanced,
+    )
+    return mesh.points, mesh.triangles
+
+
+def volume_configs(threads):
+    case = scorecard.CASES["gyroid"]
+    common = dict(bounds=BOX, band=case.band, periodic=(True,) * 3, threads=threads)
+
+    def lattice():
+        return meshers.generate(
+            case.function, cells=32, geometry_tolerance=1.0, optimize_passes=1, **common
+        )
+
+    def adapted():
+        return meshers.generate(
+            case.function,
+            cells=24,
+            geometry_tolerance=1e-3,
+            optimize_passes=1,
+            adapt=True,
+            max_length=0.1,
+            **common,
+        )
+
+    def mmg():
+        seed = meshers.generate(
+            case.function,
+            cells=24,
+            geometry_tolerance=1.0,
+            optimize_passes=1,
+            **{**common, "periodic": (False,) * 3},
+        )
+        return scorecard.mmg_adapt(case, seed, 1e-3, 0.1)
+
+    return {
+        "gyroid-volume/lattice-32": (case, lattice),
+        "gyroid-volume/adapt-1e-3": (case, adapted),
+        "gyroid-volume/mmg3d-1e-3-nonperiodic": (case, mmg),
+    }
+
+
+def measure(configs, repeats):
+    rows = {}
+    for label, (case, make) in configs.items():
+        result = make()  # warm-up and geometry record
+        if isinstance(result, tuple):
+            row = scorecard.score(case, *result)
+        else:
+            row = scorecard.score_volume(case, result)
+        rows[label] = {"metrics": row, "seconds": []}
+    for _ in range(repeats):
+        for label, (_, make) in configs.items():
+            start = time.perf_counter()
+            make()
+            rows[label]["seconds"].append(time.perf_counter() - start)
+    for row in rows.values():
+        row["median_s"] = statistics.median(row["seconds"])
+    return rows
+
+
+def fea_block(threads):
+    """Mesh + homogenization to a 1% stiffness target: linear vs curved quadratic."""
+    import p2
+    from homogenization import homogenize
+
+    out = {}
+    start = time.perf_counter()
+    linear = fea.generate("lattice:cells=48")
+    generation = time.perf_counter() - start
+    shifted = fea.Shifted(
+        linear.points + 0.5,
+        linear.tetrahedra,
+        linear.surface,
+        linear.periodic_pairs,
+        linear.diagnostics,
+    )
+    result = homogenize(shifted)
+    error = fea.tensor_difference(np.asarray(result["stiffness_engineering_voigt"]), fea.reference())
+    out["linear-48"] = {
+        "nodes": len(linear.points),
+        "elements": len(linear.tetrahedra),
+        "generation_s": generation,
+        "fea_s": result["seconds"],
+        "error": error["worst_relative_strain_energy_difference"],
+    }
+    start = time.perf_counter()
+    quadratic = meshers.generate(
+        scorecard.gyroid,
+        bounds=BOX,
+        band=(-1.0, 1.0),
+        periodic=(True,) * 3,
+        cells=9,
+        geometry_tolerance=1.0,
+        optimize_passes=1,
+        threads=threads,
+        order=2,
+    )
+    generation = time.perf_counter() - start
+    start = time.perf_counter()
+    stiffness = p2.homogenize_p2(quadratic.points, quadratic.tetrahedra)
+    solve = time.perf_counter() - start
+    error = fea.tensor_difference((stiffness + stiffness.T) / 2, fea.reference())
+    out["quadratic-9"] = {
+        "nodes": len(quadratic.points),
+        "elements": len(quadratic.tetrahedra),
+        "generation_s": generation,
+        "fea_s": solve,
+        "error": error["worst_relative_strain_energy_difference"],
+    }
+    return out
+
+
+def main():
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--threads", type=int, default=1)
+    parser.add_argument("--repeats", type=int, default=5)
+    parser.add_argument("--fea", action="store_true")
+    args = parser.parse_args()
+    record = {
+        "meshers": meshers.__file__,
+        "threads": args.threads,
+        "repeats": args.repeats,
+        "platform": platform.platform(),
+        "processor": platform.processor(),
+        "surface": measure(surface_configs(args.threads), args.repeats),
+        "volume": measure(volume_configs(args.threads), args.repeats),
+    }
+    if args.fea:
+        record["fea"] = fea_block(args.threads)
+    out = HERE / f"timing-threads{args.threads}.json"
+    out.write_text(json.dumps(record, indent=1), encoding="utf-8")
+    for block in ("surface", "volume"):
+        for label, row in record[block].items():
+            m = row["metrics"]
+            count = m.get("tetrahedra", m["triangles"])
+            print(f"{label:40s} n={count:7d} H={m['hausdorff']:.2e} median={row['median_s']:.3f}s")
+    for label, row in record.get("fea", {}).items():
+        print(label, row)
+
+
+if __name__ == "__main__":
+    main()
