@@ -113,6 +113,8 @@ p=4 extrapolation of the quadratic 16- and 20-cell tensors (they differ from it 
 | Adapted 1e-3, hmax 0.2 | linear | 8,451 | 34,918 | 2.58% |
 | Lattice 8 | quadratic | 6,864 | 3,852 | 0.26% |
 | Lattice 12 | quadratic | 19,628 | 11,976 | 0.074% |
+| Adapted 4e-3, hmax 0.2 | quadratic | 15,221 | 8,889 | 0.065% |
+| Adapted 2e-3, hmax 0.2 | quadratic | 25,890 | 15,825 | 0.031% |
 
 Geometric adaptivity lowers the linear error by about 20% at equal nodes on coarse
 meshes and loses slightly at 8.5k nodes: FEA error follows stress resolution in the
