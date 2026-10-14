@@ -370,6 +370,7 @@ fn generate<'py>(
     minimum_quality: f64,
     budget: usize,
     passes: usize,
+    interior_refine_nodes: usize,
     snap: f64,
     threads: usize,
     batch_size: usize,
@@ -394,6 +395,7 @@ fn generate<'py>(
         minimum_quality,
         max_tetrahedra: budget,
         optimize_passes: passes,
+        interior_refine_nodes,
         snap,
         threads,
     };
@@ -471,6 +473,7 @@ fn generate<'py>(
         result.diagnostics.reverted_snap_vertices,
     )?;
     diagnostics.set_item("callback_calls", f.calls.load(Ordering::Relaxed))?;
+    diagnostics.set_item("inserted_interior_nodes", result.diagnostics.inserted_interior_nodes)?;
     diagnostics.set_item("seconds", start.elapsed().as_secs_f64())?;
     output.set_item("diagnostics", diagnostics)?;
     Ok(output)

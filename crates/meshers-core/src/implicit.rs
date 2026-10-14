@@ -56,6 +56,8 @@ pub struct Options {
     pub minimum_quality: f64,
     pub max_tetrahedra: usize,
     pub optimize_passes: usize,
+    /// Optional length-ranked interior bisection after optimization. Zero disables it.
+    pub interior_refine_nodes: usize,
     /// Maximum constrained lattice snap displacement as a fraction of the smallest cell spacing.
     pub snap: f64,
     /// Worker count. Defaults to one; 0 retains legacy serial ordering.
@@ -72,6 +74,7 @@ impl Default for Options {
             minimum_quality: 0.,
             max_tetrahedra: 2_000_000,
             optimize_passes: 4,
+            interior_refine_nodes: 0,
             snap: 0.2,
             threads: 1,
         }
@@ -85,6 +88,7 @@ pub struct Diagnostics {
     pub minimum_mmg_quality: f64,
     pub elements_below_quality_01: usize,
     pub reverted_snap_vertices: usize,
+    pub inserted_interior_nodes: usize,
     pub maximum_sampled_surface_error: f64,
 }
 pub struct Output {
@@ -143,6 +147,18 @@ impl<F: ScalarField> Context<'_, F> {
 impl<F: ScalarField> Geometry for Context<'_, F> {
     fn optimizer_length(&self) -> f64 {
         self.optimizer_length
+    }
+    fn refinement_quality_floor(&self) -> f64 {
+        // Experimental: allow curvature refinement down to the requested
+        // FEA shape gate, retaining the historical ceiling for higher targets.
+        if self.options.minimum_quality > 0. {
+            self.options.minimum_quality.clamp(0.1, 0.25)
+        } else {
+            0.25
+        }
+    }
+    fn geometry_tolerance(&self) -> Option<f64> {
+        Some(self.options.geometry_tolerance)
     }
     fn batched(&self) -> bool {
         self.field.prefers_batches()
@@ -497,6 +513,7 @@ fn finish<F: ScalarField>(mesh: Mesh, g: &Context<F>) -> Result<Output, String> 
             maximum_sampled_surface_error: error,
             elements_below_quality_01,
             reverted_snap_vertices: 0,
+            inserted_interior_nodes: 0,
         },
     })
 }
@@ -693,8 +710,16 @@ fn build<F: ScalarField>(g: &Context<F>) -> Result<Output, String> {
         None,
         g,
     )?;
+    let inserted_interior_nodes = crate::adaptive::refine_interior(
+        &mut mesh,
+        o.interior_refine_nodes,
+        o.minimum_quality.max(0.1),
+        o.max_tetrahedra,
+        g,
+    )?;
     let mut output = finish(mesh, g)?;
     output.diagnostics.reverted_snap_vertices = reverted_snap_vertices;
+    output.diagnostics.inserted_interior_nodes = inserted_interior_nodes;
     Ok(output)
 }
 

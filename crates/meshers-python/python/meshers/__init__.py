@@ -169,6 +169,7 @@ def generate(
     minimum_quality: float = 0.0,
     max_tetrahedra: int = 2_000_000,
     optimize_passes: int = 4,
+    interior_refine_nodes: int = 0,
     snap: float = 0.2,
     threads: int | None = 1,
     batch_size: int = 4096,
@@ -193,6 +194,10 @@ def generate(
             geometry changes are made. Empty meshes remain valid.
         max_tetrahedra: Budget for generated tetrahedra.
         optimize_passes: Number of quality-optimization passes, 0..100.
+        interior_refine_nodes: Maximum new nodes in one length-ranked interior
+            bisection pass. Zero disables it. Boundary vertices and triangles stay
+            fixed. Disjoint cavities, the tetrahedron budget and a quality floor
+            of max(minimum_quality, 0.1) may limit the number inserted.
         snap: Maximum lattice snap as a fraction of minimum spacing, 0..0.2.
         threads: Native worker limit, default one. None uses available CPU parallelism, capped
             at 256. One uses one worker; zero retains legacy serial update ordering.
@@ -254,6 +259,7 @@ def generate(
         minimum_quality,
         max_tetrahedra,
         optimize_passes,
+        interior_refine_nodes,
         snap,
         threads,
         batch_size,

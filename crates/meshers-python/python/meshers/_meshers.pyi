@@ -26,6 +26,7 @@ def generate(
     minimum_quality: float,
     budget: int,
     passes: int,
+    interior_refine_nodes: int,
     snap: float,
     threads: int,
     batch_size: int,

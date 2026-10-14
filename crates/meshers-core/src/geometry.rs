@@ -5,6 +5,9 @@ pub(crate) trait Geometry: Sync {
     fn optimizer_length(&self) -> f64 {
         1.
     }
+    fn refinement_quality_floor(&self) -> f64 {
+        0.25
+    }
     fn value(&self, p: Point) -> f64;
     fn batched(&self) -> bool {
         false
@@ -23,6 +26,10 @@ pub(crate) trait Geometry: Sync {
     fn bounds(&self) -> [Point; 2];
     fn band(&self) -> bool {
         true
+    }
+    /// Implicit pipelines preserve this limit while improving element quality.
+    fn geometry_tolerance(&self) -> Option<f64> {
+        None
     }
     fn locked(&self, p: Point) -> [bool; 3] {
         let [lo, hi] = self.bounds();

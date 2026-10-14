@@ -8,6 +8,142 @@ fn gyroid(p: Point) -> f64 {
     let [x, y, z] = p.map(|v| v * TAU);
     x.sin() * y.cos() + y.sin() * z.cos() + z.sin() * x.cos()
 }
+
+#[test]
+fn interior_refinement_is_nested_and_preserves_periodic_boundaries() {
+    let options = Options {
+        cells: [4; 3],
+        optimize_passes: 0,
+        minimum_quality: 0.1,
+        periodic: [true; 3],
+        ..Options::default()
+    };
+    let seed = generate(&|_| -1., options).unwrap();
+    let explicit_zero = generate(
+        &|_| -1.,
+        Options {
+            interior_refine_nodes: 0,
+            ..options
+        },
+    )
+    .unwrap();
+    assert_eq!(seed.mesh.points, explicit_zero.mesh.points);
+    assert_eq!(seed.mesh.tets, explicit_zero.mesh.tets);
+    let refined = generate(
+        &|_| -1.,
+        Options {
+            interior_refine_nodes: 20,
+            ..options
+        },
+    )
+    .unwrap();
+    let inserted = refined.diagnostics.inserted_interior_nodes;
+    assert!(inserted > 0 && inserted <= 20);
+    assert_eq!(
+        &refined.mesh.points[..seed.mesh.points.len()],
+        &seed.mesh.points
+    );
+    assert_eq!(refined.mesh.surface, seed.mesh.surface);
+    assert_eq!(refined.boundary_tags, seed.boundary_tags);
+    assert_eq!(refined.periodic_pairs, seed.periodic_pairs);
+    assert!((refined.diagnostics.volume - seed.diagnostics.volume).abs() < 1e-12);
+    assert!(refined.diagnostics.minimum_mmg_quality >= 0.1);
+    assert!(refined.mesh.tets.len() > seed.mesh.tets.len());
+    let repeat = generate(
+        &|_| -1.,
+        Options {
+            interior_refine_nodes: 20,
+            ..options
+        },
+    )
+    .unwrap();
+    assert_eq!(refined.mesh.points, repeat.mesh.points);
+    assert_eq!(refined.mesh.tets, repeat.mesh.tets);
+    let bounded = generate(
+        &|_| -1.,
+        Options {
+            interior_refine_nodes: 20,
+            max_tetrahedra: seed.mesh.tets.len(),
+            ..options
+        },
+    )
+    .unwrap();
+    assert_eq!(bounded.diagnostics.inserted_interior_nodes, 0);
+    assert_eq!(bounded.mesh.points, seed.mesh.points);
+    assert_eq!(bounded.mesh.tets, seed.mesh.tets);
+}
+
+#[test]
+fn requested_quality_allows_tighter_curvature_refinement() {
+    let mesh = generate(
+        &gyroid,
+        Options {
+            bounds: [[-0.5; 3], [0.5; 3]],
+            region: Region::Band {
+                lower: -0.55,
+                upper: 0.55,
+            },
+            cells: [48; 3],
+            minimum_quality: 0.1,
+            geometry_tolerance: 0.0002,
+            optimize_passes: 1,
+            periodic: [true; 3],
+            ..Options::default()
+        },
+    )
+    .unwrap();
+    assert!(mesh.diagnostics.maximum_sampled_surface_error <= 0.0002);
+    assert!(mesh.diagnostics.minimum_mmg_quality >= 0.1);
+    assert!(mesh.periodic_pairs.iter().all(|pairs| !pairs.is_empty()));
+}
+
+struct BenchmarkGyroid {
+    variant: usize,
+    batched: bool,
+}
+impl ScalarField for BenchmarkGyroid {
+    fn value(&self, p: Point) -> f64 {
+        let width = match self.variant {
+            0 => 0.25,
+            1 => 0.25 * (1. + 0.4 * p[0]),
+            _ => 0.125,
+        };
+        gyroid(p) / width
+    }
+    fn prefers_batches(&self) -> bool {
+        self.batched
+    }
+}
+
+#[test]
+fn quality_optimization_preserves_the_coarse_benchmark_geometry_limit() {
+    for variant in 0..3 {
+        for batched in [false, true] {
+            for optimize_passes in [4, 12] {
+                let result = generate(
+                    &BenchmarkGyroid { variant, batched },
+                    Options {
+                        bounds: [[-0.5; 3], [0.5; 3]],
+                        cells: [8; 3],
+                        region: Region::Band {
+                            lower: -1.,
+                            upper: 1.,
+                        },
+                        geometry_tolerance: 0.01,
+                        minimum_quality: 0.1,
+                        max_tetrahedra: 250_000,
+                        optimize_passes,
+                        threads: 1,
+                        ..Options::default()
+                    },
+                )
+                .unwrap();
+                assert!(result.diagnostics.maximum_sampled_surface_error <= 0.01);
+                assert!(result.diagnostics.minimum_mmg_quality >= 0.1);
+            }
+        }
+    }
+}
 fn schwarz_p(p: Point) -> f64 {
     p.map(|v| (TAU * v).cos()).iter().sum()
 }
