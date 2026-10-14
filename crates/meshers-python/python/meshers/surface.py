@@ -37,6 +37,7 @@ def generate_surface(  # ruff: ignore[too-many-arguments] - match the volume API
     max_length: float | None = None,
     gradation: float = 0.3,
     iterations: int = 8,
+    balanced: bool = False,
 ) -> SurfaceMesh:
     """Generate a closed boundary without tetrahedra.
 
@@ -47,6 +48,10 @@ def generate_surface(  # ruff: ignore[too-many-arguments] - match the volume API
     ``adaptive=True`` remeshes towards curvature-adaptive edge lengths so that the
     sampled wall distance meets ``geometry_tolerance`` with as few triangles as
     possible; ``cells`` then only sets the extraction grid that resolves topology.
+    ``balanced=True`` also moves wall vertices outward by half the local chord sag,
+    so triangles deviate to both sides of the surface: about half the triangles at
+    the same tolerance and almost no volume bias, but vertices are then off the
+    surface. Use it for printing and display, not for curved quadratic FEA meshes.
     Set ``geometry_tolerance=0`` for a quick preview without distance sampling;
     topology and finite triangle checks still run. Diagnostics mark that omission.
 
@@ -90,6 +95,7 @@ def generate_surface(  # ruff: ignore[too-many-arguments] - match the volume API
             extent / 4 if max_length is None else float(max_length),
             float(gradation),
             int(iterations),
+            bool(balanced),
         )
     result = _meshers.generate_surface(
         field,

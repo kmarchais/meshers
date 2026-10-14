@@ -19,7 +19,7 @@ pub(super) fn generate_surface<'py>(
     batch_size: usize,
     cancel: Option<PyRef<'py, CancellationToken>>,
     check_geometry: bool,
-    adaptive: Option<(f64, f64, f64, f64, usize)>,
+    adaptive: Option<(f64, f64, f64, f64, usize, bool)>,
 ) -> PyResult<Bound<'py, PyDict>> {
     if smoothing_iterations > 100 || improvement_rounds > 100 || polish_passes > 100 {
         return Err(PyValueError::new_err("Surface passes must be at most 100"));
@@ -42,13 +42,16 @@ pub(super) fn generate_surface<'py>(
         let mut mesh = triangles::extract(&geometry, cells)?;
         let extraction = start.elapsed().as_secs_f64();
         let mut stats = None;
-        if let Some((tolerance, min_length, max_length, gradation, iterations)) = adaptive {
+        if let Some((tolerance, min_length, max_length, gradation, iterations, balanced)) =
+            adaptive
+        {
             let options = remesh::Options {
                 tolerance,
                 min_length,
                 max_length,
                 gradation,
                 iterations,
+                balanced,
             };
             stats = Some(remesh::adapt(&mut mesh, &geometry, &options)?);
         } else {

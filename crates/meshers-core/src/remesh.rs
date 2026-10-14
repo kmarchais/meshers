@@ -23,6 +23,10 @@ pub struct Options {
     /// Maximum growth of the target length per unit distance (0.3 is typical).
     pub gradation: f64,
     pub iterations: usize,
+    /// Offset wall vertices outward by half the local chord sag, so triangles deviate
+    /// to both sides of the surface. Halves the deviation at equal triangle count and
+    /// removes the volume bias; vertices then no longer lie exactly on the surface.
+    pub balanced: bool,
 }
 
 #[derive(Clone, Debug, Default)]
@@ -584,6 +588,76 @@ impl<'a, 'b, F: ScalarField> Surface<'a, 'b, F> {
         Ok(())
     }
 
+    /// Signed outward distance from the wall that `label` belongs to.
+    fn signed(&self, p: Point, label: u8) -> f64 {
+        let g = norm(self.band.gradient(p));
+        let f = self.band.field.value(p);
+        if label == 0 {
+            (f - self.band.levels[1]) / g
+        } else {
+            (self.band.levels[0] - f) / g
+        }
+    }
+
+    /// Largest sampled deviation at wall vertices, edge midpoints and centroids.
+    fn deviation(&self) -> f64 {
+        let mut worst = 0f64;
+        for (f, face) in self.faces.iter().enumerate() {
+            let label = self.labels[f];
+            if !self.alive[f] || label >= 2 {
+                continue;
+            }
+            let p = face.map(|i| self.points[i]);
+            let mut samples = vec![std::array::from_fn(|k| (p[0][k] + p[1][k] + p[2][k]) / 3.)];
+            for i in 0..3 {
+                samples.push(p[i]);
+                samples.push(std::array::from_fn(|k| 0.5 * (p[i][k] + p[(i + 1) % 3][k])));
+            }
+            for q in samples {
+                worst = worst.max(self.signed(q, label).abs());
+            }
+        }
+        worst
+    }
+
+    /// Move wall vertices outward by half the mean centroid sag of their faces, holding
+    /// box coordinates. Returns the on-surface positions for undoing.
+    fn balance(&mut self) -> Vec<Point> {
+        let base = self.points.clone();
+        let n = self.points.len();
+        let mut sum = vec![0.; n];
+        let mut count = vec![0usize; n];
+        for (f, face) in self.faces.iter().enumerate() {
+            let label = self.labels[f];
+            if !self.alive[f] || label >= 2 {
+                continue;
+            }
+            let p = face.map(|i| base[i]);
+            let c = std::array::from_fn(|k| (p[0][k] + p[1][k] + p[2][k]) / 3.);
+            let sag = self.signed(c, label);
+            for &v in face {
+                sum[v] += sag;
+                count[v] += 1;
+            }
+        }
+        for v in 0..n {
+            let mask = self.masks[v];
+            if count[v] == 0 || mask & 3 == 0 || mask.count_ones() >= 3 {
+                continue;
+            }
+            let mut direction = self.normals[v];
+            for (a, d) in direction.iter_mut().enumerate() {
+                if (mask >> (2 + 2 * a)) & 3 != 0 {
+                    *d = 0.;
+                }
+            }
+            let direction = unit(direction);
+            let offset = -0.5 * sum[v] / count[v] as f64;
+            self.points[v] = std::array::from_fn(|k| base[v][k] + offset * direction[k]);
+        }
+        base
+    }
+
     fn compact(&self) -> TriangleMesh {
         let mut map = vec![usize::MAX; self.points.len()];
         let mut mesh = TriangleMesh {
@@ -630,6 +704,16 @@ pub fn adapt<F: ScalarField>(
     }
     let mut s = Surface::new(mesh, band)?;
     let mut stats = Stats::default();
+    let sizing = Options {
+        tolerance: if o.balanced {
+            1.8 * o.tolerance
+        } else {
+            o.tolerance
+        },
+        ..*o
+    };
+    let o_final = o;
+    let o = &sizing;
     let mut clock = std::time::Instant::now();
     let mut lap = |stats: &mut Stats, phase: usize| {
         stats.seconds[phase] += clock.elapsed().as_secs_f64();
@@ -693,7 +777,31 @@ pub fn adapt<F: ScalarField>(
         }
         lap(&mut stats, 4);
     }
-    s.enforce(o, &mut stats)?;
+    if o_final.balanced {
+        // Chords may sag up to about twice the tolerance before balancing halves it.
+        let mut relaxed = Options {
+            tolerance: 1.8 * o_final.tolerance,
+            ..*o_final
+        };
+        let mut done = false;
+        for _ in 0..6 {
+            s.enforce(&relaxed, &mut stats)?;
+            let base = s.balance();
+            let deviation = s.deviation();
+            if deviation <= o_final.tolerance {
+                stats.maximum_error = deviation;
+                done = true;
+                break;
+            }
+            s.points = base;
+            relaxed.tolerance = (0.85 * relaxed.tolerance).max(o_final.tolerance);
+        }
+        if !done {
+            s.enforce(o_final, &mut stats)?;
+        }
+    } else {
+        s.enforce(o_final, &mut stats)?;
+    }
     *mesh = s.compact();
     crate::triangles::validate(mesh)?;
     lap(&mut stats, 5);
@@ -718,6 +826,7 @@ mod tests {
             max_length: 0.5,
             gradation: 0.3,
             iterations: 8,
+            balanced: false,
         }
     }
 
@@ -742,6 +851,40 @@ mod tests {
         assert!(minimum > 0.3, "minimum shape {minimum}");
         let exact = 4. / 3. * std::f64::consts::PI * 0.35f64.powi(3);
         assert!((volume / exact - 1.).abs() < 0.01);
+    }
+
+    #[test]
+    fn balanced_sphere_halves_deviation_and_volume_bias() {
+        let field = |p: Point| dot(p, p).sqrt() - 0.35;
+        let band = Band {
+            field: &field,
+            bounds: [[-0.5; 3], [0.5; 3]],
+            levels: [f64::NEG_INFINITY, 0.],
+        };
+        let exact = 4. / 3. * std::f64::consts::PI * 0.35f64.powi(3);
+        let mut plain = extract(&band, 24).unwrap();
+        adapt(&mut plain, &band, &options(1e-3)).unwrap();
+        let mut balanced = extract(&band, 24).unwrap();
+        let stats = adapt(
+            &mut balanced,
+            &band,
+            &Options {
+                balanced: true,
+                ..options(1e-3)
+            },
+        )
+        .unwrap();
+        assert!(stats.maximum_error <= 1e-3, "{stats:?}");
+        // Same tolerance with fewer triangles. Half the centroid sag minimizes the
+        // largest deviation; the volume bias shrinks but does not vanish.
+        assert!(balanced.faces.len() * 10 < plain.faces.len() * 7);
+        let bias = |m: &TriangleMesh| (validate(m).unwrap().1 / exact - 1.).abs();
+        assert!(
+            bias(&balanced) < 0.75 * bias(&plain),
+            "{} {}",
+            bias(&balanced),
+            bias(&plain)
+        );
     }
 
     #[test]
