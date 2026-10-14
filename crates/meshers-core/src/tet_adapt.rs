@@ -6,7 +6,9 @@
 //! chord sag of the exact surface: a triangle of side `l` whose vertex normals differ by
 //! `theta` sags by about `l * theta / 6`. Interior sizes grade away from the boundary.
 //!
-//! Faces on periodic box sides are frozen, so an initially periodic mesh stays periodic.
+//! Periodic axes are adapted on the torus: copies of a vertex on opposite box faces are
+//! merged, geometry uses minimal-image displacements, and the periodic box planes become
+//! internal constrained faces. Unfolding the result recreates identical opposite faces.
 use crate::{Mesh, Point, cross, determinant, dot, geometry::Geometry, norm, quality, sub};
 use std::collections::HashMap;
 
@@ -95,28 +97,50 @@ struct Tets<'g, G: Geometry> {
     /// Boundary faces (sorted) and their label: 0 wall, 2.. box plane.
     faces: HashMap<Face, u8>,
     vb: Vec<Vec<Face>>,
-    periodic: [bool; 3],
+    /// Box length along periodic axes.
+    period: [Option<f64>; 3],
 }
 
 impl<'g, G: Geometry> Tets<'g, G> {
     fn new(mesh: &Mesh, g: &'g G, threshold: f64, periodic: [bool; 3]) -> Self {
-        let n = mesh.points.len();
         let [lo, hi] = g.bounds();
+        let period = std::array::from_fn(|a| periodic[a].then(|| hi[a] - lo[a]));
+        // Merge periodic copies; the representative lies on the lower plane.
+        let mut index = HashMap::new();
+        let mut points = Vec::new();
+        let map: Vec<usize> = mesh
+            .points
+            .iter()
+            .map(|&p| {
+                let c: Point = std::array::from_fn(|a| {
+                    if periodic[a] && p[a] == hi[a] { lo[a] } else { p[a] }
+                });
+                let key: [i64; 3] = std::array::from_fn(|a| {
+                    ((c[a] - lo[a]) / (hi[a] - lo[a]) * 1e11).round() as i64
+                });
+                *index.entry(key).or_insert_with(|| {
+                    points.push(c);
+                    points.len() - 1
+                })
+            })
+            .collect();
+        let n = points.len();
+        let tets: Vec<[usize; 4]> = mesh.tets.iter().map(|t| t.map(|i| map[i])).collect();
         let mut s = Self {
             g,
             threshold,
-            points: mesh.points.clone(),
+            points,
             masks: vec![0; n],
             normals: vec![[0.; 3]; n],
             frozen: vec![false; n],
-            tets: mesh.tets.clone(),
-            alive: vec![true; mesh.tets.len()],
+            alive: vec![true; tets.len()],
+            tets,
             vt: vec![Vec::new(); n],
             faces: HashMap::new(),
             vb: vec![Vec::new(); n],
-            periodic,
+            period,
         };
-        for (t, tet) in mesh.tets.iter().enumerate() {
+        for (t, tet) in s.tets.iter().enumerate() {
             for &v in tet {
                 s.vt[v].push(t);
             }
@@ -128,15 +152,47 @@ impl<'g, G: Geometry> Tets<'g, G> {
                 if p.iter().all(|q| q[a] == lo[a]) {
                     label = 2 + 2 * a as u8;
                 } else if p.iter().all(|q| q[a] == hi[a]) {
-                    label = 3 + 2 * a as u8;
+                    // Opposite periodic faces are one internal plane on the torus.
+                    label = if periodic[a] { 2 } else { 3 } + 2 * a as u8;
                 }
             }
-            s.add_face(f, label);
+            let f = f.map(|i| map[i]);
+            if !s.faces.contains_key(&sorted(f)) {
+                s.add_face(f, label);
+            }
         }
         for v in 0..n {
             s.refresh(v);
         }
         s
+    }
+
+    /// Minimal-image displacement from `a` to `b`.
+    fn delta(&self, a: Point, b: Point) -> Point {
+        std::array::from_fn(|k| {
+            let d = b[k] - a[k];
+            self.period[k].map_or(d, |l| d - l * (d / l).round())
+        })
+    }
+
+    /// Bring a point into the box along periodic axes.
+    fn wrap(&self, mut p: Point) -> Point {
+        let [lo, _] = self.g.bounds();
+        for a in 0..3 {
+            if let Some(l) = self.period[a] {
+                p[a] = lo[a] + (p[a] - lo[a]).rem_euclid(l);
+            }
+        }
+        p
+    }
+
+    /// Unwrapped coordinates of a simplex, relative to its first vertex.
+    fn local<const N: usize>(&self, raw: [Point; N]) -> [Point; N] {
+        let base = raw[0];
+        raw.map(|p| {
+            let d = self.delta(base, p);
+            std::array::from_fn(|k| base[k] + d[k])
+        })
     }
 
     fn add_face(&mut self, f: Face, label: u8) {
@@ -171,8 +227,7 @@ impl<'g, G: Geometry> Tets<'g, G> {
         };
         // Points fixed by three constraints (box corners, a wall crossing a box edge)
         // never move; curves and box edges slide along their line.
-        self.frozen[v] = (0..3).any(|a| self.periodic[a] && (mask >> (2 + 2 * a)) & 3 != 0)
-            || mask.count_ones() >= 3;
+        self.frozen[v] = mask.count_ones() >= 3;
     }
 
     fn outward(&self, p: Point) -> Point {
@@ -198,7 +253,7 @@ impl<'g, G: Geometry> Tets<'g, G> {
             }
         }
         if mask & WALL == 0 {
-            return Some(p);
+            return Some(self.wrap(p));
         }
         let scale = (0..3).map(|a| hi[a] - lo[a]).fold(0., f64::max);
         for _ in 0..30 {
@@ -214,6 +269,7 @@ impl<'g, G: Geometry> Tets<'g, G> {
                 return None;
             }
             if r.abs() / g2.sqrt() <= scale * 1e-13 {
+                let p = self.wrap(p);
                 return self.g.contains(p).then_some(p);
             }
             let step = (r / g2).clamp(-0.05 * scale / g2.sqrt(), 0.05 * scale / g2.sqrt());
@@ -223,10 +279,10 @@ impl<'g, G: Geometry> Tets<'g, G> {
     }
 
     fn tet_points(&self, t: [usize; 4], moved: Option<(usize, Point)>) -> [Point; 4] {
-        t.map(|i| match moved {
+        self.local(t.map(|i| match moved {
             Some((j, q)) if i == j => q,
             _ => self.points[i],
-        })
+        }))
     }
 
     fn shell(&self, u: usize, v: usize) -> Vec<usize> {
@@ -267,7 +323,7 @@ impl<'g, G: Geometry> Tets<'g, G> {
     }
 
     fn length(&self, u: usize, v: usize) -> f64 {
-        norm(sub(self.points[u], self.points[v]))
+        norm(self.delta(self.points[u], self.points[v]))
     }
 
     /// Boundary faces containing edge `uv`.
@@ -290,7 +346,7 @@ impl<'g, G: Geometry> Tets<'g, G> {
         if norm(nu) == 0. || norm(nv) == 0. {
             return 0.;
         }
-        norm(sub(pu, pv)) * angle(nu, nv) / 6.
+        norm(self.delta(pu, pv)) * angle(nu, nv) / 6.
     }
 
     fn sizes(&self, o: &Options, edges: &[[usize; 2]]) -> Vec<f64> {
@@ -380,10 +436,8 @@ impl<'g, G: Geometry> Tets<'g, G> {
         }
         let bfaces = self.edge_faces(u, v);
         let mask = self.edge_mask(&bfaces);
-        if (0..3).any(|a| self.periodic[a] && (mask >> (2 + 2 * a)) & 3 != 0) {
-            return None;
-        }
-        let mid = std::array::from_fn(|a| 0.5 * (self.points[u][a] + self.points[v][a]));
+        let d = self.delta(self.points[u], self.points[v]);
+        let mid = self.wrap(std::array::from_fn(|a| self.points[u][a] + 0.5 * d[a]));
         let p = if mask & WALL != 0 {
             let level = self.level(self.points[u]);
             self.project(mid, mask, level)?
@@ -398,7 +452,7 @@ impl<'g, G: Geometry> Tets<'g, G> {
             let a = tet.map(|i| if i == v { usize::MAX } else { i });
             let b = tet.map(|i| if i == u { usize::MAX } else { i });
             for c in [a, b] {
-                let q = c.map(|i| if i == usize::MAX { p } else { self.points[i] });
+                let q = self.local(c.map(|i| if i == usize::MAX { p } else { self.points[i] }));
                 if mmg(q) < floor {
                     return None;
                 }
@@ -430,7 +484,7 @@ impl<'g, G: Geometry> Tets<'g, G> {
             return false;
         }
         let bfaces = self.edge_faces(u, v);
-        if mu != 0 && (bfaces.len() != 2 || self.edge_mask(&bfaces) != mu) {
+        if mu != 0 && self.edge_mask(&bfaces) != mu {
             // A boundary vertex may only slide along its own patch or curve.
             return false;
         }
@@ -574,9 +628,8 @@ impl<'g, G: Geometry> Tets<'g, G> {
         let before = self.worst(&shell);
         // Each ring triangle joins u and v, which must lie on opposite sides of it.
         let oriented = |a: usize, b: usize, c: usize| -> Option<[[usize; 4]; 2]> {
-            let [pa, pb, pc] = [a, b, c].map(|i| self.points[i]);
-            let du = determinant([pa, pb, pc, self.points[u]]);
-            let dv = determinant([pa, pb, pc, self.points[v]]);
+            let du = determinant(self.tet_points([a, b, c, u], None));
+            let dv = determinant(self.tet_points([a, b, c, v], None));
             if du * dv >= 0. {
                 return None;
             }
@@ -587,7 +640,7 @@ impl<'g, G: Geometry> Tets<'g, G> {
         let q = |i: usize, k: usize, j: usize| -> f64 {
             oriented(ring[i], ring[k], ring[j]).map_or(f64::NEG_INFINITY, |ts| {
                 ts.iter()
-                    .map(|t| mmg(t.map(|w| self.points[w])))
+                    .map(|&t| mmg(self.tet_points(t, None)))
                     .fold(1., f64::min)
             })
         };
@@ -627,7 +680,7 @@ impl<'g, G: Geometry> Tets<'g, G> {
             stack.push((k, j));
         }
         let volume = |ts: &mut dyn Iterator<Item = [usize; 4]>| -> f64 {
-            ts.map(|t| determinant(t.map(|w| self.points[w])).abs()).sum()
+            ts.map(|t| determinant(self.tet_points(t, None)).abs()).sum()
         };
         let old = volume(&mut shell.iter().map(|&t| self.tets[t]));
         if (volume(&mut new.iter().copied()) - old).abs() > 1e-9 * old {
@@ -667,19 +720,19 @@ impl<'g, G: Geometry> Tets<'g, G> {
         let mut new = Vec::new();
         for [x, y] in [[a, b], [b, c], [c, a]] {
             let mut tet = [x, y, d, e];
-            if determinant(tet.map(|k| self.points[k])) < 0. {
+            if determinant(self.tet_points(tet, None)) < 0. {
                 tet.swap(0, 1);
             }
             new.push(tet);
         }
         let after = new
             .iter()
-            .map(|&t| mmg(t.map(|k| self.points[k])))
+            .map(|&t| mmg(self.tet_points(t, None)))
             .fold(1., f64::min);
         // The three new tetrahedra must exactly fill the old pair.
         let volume = |ts: &[[usize; 4]]| -> f64 {
             ts.iter()
-                .map(|&t| determinant(t.map(|k| self.points[k])).abs())
+                .map(|&t| determinant(self.tet_points(t, None)).abs())
                 .sum()
         };
         let old = volume(&[self.tets[t], self.tets[s]]);
@@ -701,9 +754,11 @@ impl<'g, G: Geometry> Tets<'g, G> {
         }
         let p = self.points[v];
         let adj = self.adjacent(v);
-        let centroid: Point = std::array::from_fn(|a| {
-            adj.iter().map(|&w| self.points[w][a]).sum::<f64>() / adj.len() as f64
+        let mean: Point = adj.iter().fold([0.; 3], |m, &w| {
+            let d = self.delta(p, self.points[w]);
+            std::array::from_fn(|a| m[a] + d[a] / adj.len() as f64)
         });
+        let centroid: Point = std::array::from_fn(|a| p[a] + mean[a]);
         let mut target = std::array::from_fn(|a| p[a] + 0.5 * (centroid[a] - p[a]));
         if mask & WALL != 0 {
             let n = self.normals[v];
@@ -765,7 +820,7 @@ impl<'g, G: Geometry> Tets<'g, G> {
                 .map(|(f, _)| *f)
                 .collect();
             for f in wall {
-                let p = f.map(|i| self.points[i]);
+                let p = self.local(f.map(|i| self.points[i]));
                 let c = std::array::from_fn(|a| (p[0][a] + p[1][a] + p[2][a]) / 3.);
                 let dc = self.distance(c);
                 worst = worst.max(dc);
@@ -811,21 +866,48 @@ impl<'g, G: Geometry> Tets<'g, G> {
         Ok(())
     }
 
+    /// Unfold the torus into the box: each tetrahedron moves to the cell holding its
+    /// centroid, and plane vertices get one copy per side they are used on.
     fn into_mesh(self) -> Result<Mesh, String> {
-        let mut map = vec![usize::MAX; self.points.len()];
+        let [lo, hi] = self.g.bounds();
+        let mut map = HashMap::<(usize, [u8; 3]), usize>::new();
         let mut points = Vec::new();
         let mut tets = Vec::new();
         for (t, tet) in self.tets.iter().enumerate() {
             if !self.alive[t] {
                 continue;
             }
-            tets.push(tet.map(|v| {
-                if map[v] == usize::MAX {
-                    map[v] = points.len();
-                    points.push(self.points[v]);
+            let mut p = self.tet_points(*tet, None);
+            for a in 0..3 {
+                if let Some(l) = self.period[a] {
+                    let c = p.iter().map(|q| q[a]).sum::<f64>() / 4.;
+                    let shift = ((c - lo[a]) / l).floor() * l;
+                    for q in &mut p {
+                        q[a] -= shift;
+                    }
                 }
-                map[v]
-            }));
+            }
+            let mut out = [0; 4];
+            for (k, &v) in tet.iter().enumerate() {
+                let mut image = [0u8; 3];
+                let mut q = self.points[v];
+                for a in 0..3 {
+                    if let Some(l) = self.period[a] {
+                        let m = ((p[k][a] - q[a]) / l).round();
+                        if m == 1. && q[a] == lo[a] {
+                            image[a] = 1;
+                            q[a] = hi[a];
+                        } else if m != 0. {
+                            return Err("a tetrahedron crosses a periodic plane".into());
+                        }
+                    }
+                }
+                out[k] = *map.entry((v, image)).or_insert_with(|| {
+                    points.push(q);
+                    points.len() - 1
+                });
+            }
+            tets.push(out);
         }
         let surface = crate::boundary(&tets)?;
         Ok(Mesh {
@@ -851,6 +933,10 @@ pub(crate) fn adapt(
         || o.iterations > 100
     {
         return Err("invalid adaptation options".into());
+    }
+    let [lo, hi] = g.bounds();
+    if (0..3).any(|a| periodic[a] && o.max_length > 0.25 * (hi[a] - lo[a])) {
+        return Err("periodic adaptation needs max_length <= a quarter of the period".into());
     }
     let mut s = Tets::new(mesh, g, threshold, periodic);
     let mut stats = Stats::default();
@@ -931,7 +1017,7 @@ mod tests {
         Some(super::Options {
             tolerance,
             min_length: tolerance,
-            max_length: 0.3,
+            max_length: 0.1,
             ..Default::default()
         })
     }
