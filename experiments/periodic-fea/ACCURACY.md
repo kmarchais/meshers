@@ -937,10 +937,33 @@ bounds. Python adaptation of archives takes 14.21 s; this supplies no generation
 speed claim. Admission and energy reduction do not establish local accuracy.
 
 `runs/accuracy-schwarz-d-volume-fields-v1` freezes 50 source files and 823 inputs
-for one pending field comparison. It adds the volume prototype to the four
+for one completed field comparison. It adds the volume prototype to the four
 retained candidates and compares all five against native80, alternate MMG64
 and fresh native92. Four Sobol scrambles use 1,048,576 probes per reference on
-identical common material. Regressions, the real Pardiso smoke check, read-only
-volume-body and fresh-reference audits, exact oriented boundary checks, volume
-and mixed-energy checks remain required. No further mesh experiment or native
-port is queued before this actual result.
+identical common material. All source and input hashes remain unchanged.
+Thirty-three regressions pass with one optional test skipped, and the real
+Pardiso smoke check passes. Read-only volume-body and fresh-reference audits
+preserve both original digests. All three refined candidates retain the exact
+seed coordinates and oriented boundary triangles. Volume and mixed-energy
+checks pass.
+
+| Reference | Metric | Length refinement | Volume refinement | MMG62seed80 |
+| --- | --- | ---: | ---: | ---: |
+| Native80 | Worst stiffness disagreement | 0.262676% | 0.303476% | 0.417868% |
+| Native80 | Worst local stress disagreement | 12.329883% | 12.482168% | 10.513604% |
+| MMG64 | Worst stiffness disagreement | 0.054269% | 0.035441% | 0.103583% |
+| MMG64 | Worst local stress disagreement | 13.275251% | 13.418484% | 11.181098% |
+| Native92 | Worst stiffness disagreement | 0.444732% | 0.485790% | 0.598833% |
+| Native92 | Worst local stress disagreement | 11.930038% | 12.090420% | 12.317755% |
+
+Volume ranking has larger local stress disagreement than length refinement in
+every scramble against all three references. It remains lower than MMG against
+native92 but higher against native80 and MMG64. Common reference material
+coverage exceeds 99.89%, and the four older candidate scores reproduce exactly.
+This marker does not justify a native port or another budget tuning run.
+
+The next read-only diagnostic will compare the three retained reference fields
+with one another on the same common material and four Sobol scrambles. The
+candidate ranking changes with the reference, so reference-to-reference
+stiffness and local stress disagreement must be measured before another mesh
+recipe is tuned. No further meshing job is queued at this checkpoint.
