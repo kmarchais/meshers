@@ -1,4 +1,4 @@
-"""Read-only saved-field audits and two-reference comparisons from frozen sources."""
+"""Read-only saved-field audits and reference comparisons from frozen sources."""
 
 import json
 import os
@@ -37,6 +37,7 @@ def main():
         print(checked.stdout + checked.stderr, flush=True)
         if checked.returncode:
             raise RuntimeError(f"{label} checks failed")
+    revalidation = {"manifest_sha256": digest(output / "manifest.json")}
     if manifest.get("body_run"):
         body_run = Path(manifest["body_run"])
         audit_path = body_run / "artifact-verification.json"
@@ -48,7 +49,7 @@ def main():
         assert body_row["status"] == "ok"
         assert abs(body_row["solid_fraction"] - body_row["seed_volume"]) <= 1e-10
         assert max(body_row["nested_refinement_energy_change"]["relative_energy_difference_eigenvalues"]) <= 1e-8
-        write_json(output / "readonly-revalidation.json", {
+        revalidation.update({
             "audit": audit, "unchanged_audit_sha256": audit_hash,
             "manifest_sha256": digest(output / "manifest.json"),
             "volume_change": body_row["solid_fraction"] - body_row["seed_volume"],
@@ -83,7 +84,7 @@ def main():
                 agreement["six_displacement_field_differences"] = differences
                 assert max(x["relative_l2"] for x in differences) < 1e-7
             write_json(output / "native-prototype-equivalence.json", agreement)
-    else:
+    if manifest.get("audit_runs"):
         audits = []
         for index, run_path in enumerate(manifest["audit_runs"]):
             run_path = Path(run_path)
@@ -95,8 +96,8 @@ def main():
             assert audit["verified_rows"] > 0
             audits.append({"run": str(run_path), "audit": audit,
                            "unchanged_audit_sha256": audit_hash})
-        write_json(output / "readonly-revalidation.json", {"audits": audits,
-                    "manifest_sha256": digest(output / "manifest.json")})
+        revalidation["audits"] = audits
+    write_json(output / "readonly-revalidation.json", revalidation)
     comparison.report = lambda fraction, message, **kwargs: report(.20 + .80 * fraction, message, **kwargs)
     comparison.compare(list(map(Path, manifest["references"])), list(map(Path, manifest["candidates"])),
                        output / "comparisons", manifest["geometry_gate"], manifest["power"])

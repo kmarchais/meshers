@@ -891,5 +891,30 @@ refinement, guided prototype and MMG62seed80. Four Sobol scrambles use 1,048,576
 probes per reference on the same common material. The job also runs regressions,
 the real Pardiso smoke check and read-only fresh-reference and guided-body
 audits. Exact retained boundary, volume and mixed-energy checks remain required.
-The comparison is pending. Existing unfavorable scores remain retained, and
-no further mesh change is queued before its actual result.
+The comparison completes with all source and input hashes unchanged. Thirty-one
+regressions pass with one optional test skipped, and the real Pardiso smoke
+check passes. Read-only fresh-reference and guided-body audits preserve both
+original report digests. Both refined candidates retain all 267,123 seed
+coordinates and 196,416 oriented boundary triangles. Volume and mixed-energy
+checks pass. The two older comparison reports reproduce their prior scores.
+
+| Native92 comparison | Native64 seed | Length refinement | Guided refinement | MMG62seed80 |
+| --- | ---: | ---: | ---: | ---: |
+| Worst stiffness disagreement | 0.571010% | 0.444732% | 0.464015% | 0.598833% |
+| Worst local stress disagreement | 12.423745% | 11.930038% | 11.998160% | 12.317755% |
+
+Both refined native candidates now have lower local stress disagreement than
+MMG in every scramble against fresh native92. MMG remains lower against both
+older references in every scramble. Reference material coverage ranges from
+99.89% to 99.95%. All candidates remain below the observed 1% stiffness target
+against all three references, but the local ranking depends on the reference.
+This sensitivity supports retaining multiple reference topologies. It does not
+establish a combined accuracy win or a continuum stress certificate.
+
+The next bounded diagnostic will rank interior edge stars by mean incident
+tetrahedron volume, at the same 57,431-node insertion ceiling. The localization
+showed that both existing markers leave the larger interior cells untouched.
+This geometry-only Python prototype will use the same archived native64 seed,
+complete disjoint cavities, boundary protection and quality floor. It will not
+supply a generation speed claim, and its actual admission must pass before
+another field comparison or a native implementation.

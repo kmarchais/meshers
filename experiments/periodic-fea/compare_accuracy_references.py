@@ -1,4 +1,4 @@
-"""Compare the same candidates against two independent volume topologies."""
+"""Compare the same candidates against retained volume reference topologies."""
 
 import argparse
 import json
@@ -38,12 +38,12 @@ def compare(references, candidates, output, geometry_gate, power=17):
     write_json(output / "comparisons.json", {"state": "complete", "source_sha256": digest(Path(__file__)),
                                              "common_geometry_gate": geometry_gate, "comparisons": rows,
                                              "body_boundary_verification": boundary_checks})
-    report(1, "Accuracy comparisons against both reference topologies complete", eta_s=0)
+    report(1, "Accuracy comparisons against all reference topologies complete", eta_s=0)
 
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--references", type=Path, nargs=2, required=True)
+    parser.add_argument("--references", type=Path, nargs="+", required=True)
     parser.add_argument("--candidates", type=Path, nargs="+", required=True)
     parser.add_argument("--output", type=Path, required=True)
     parser.add_argument("--common-geometry-gate", type=float, default=.002)
