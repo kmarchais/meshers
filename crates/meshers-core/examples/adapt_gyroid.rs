@@ -4,7 +4,11 @@ use meshers_core::implicit::{Options, Region, generate};
 use meshers_core::{Point, tet_adapt};
 
 fn main() {
-    let tolerance: f64 = std::env::args().nth(1).map_or(1e-3, |v| v.parse().unwrap());
+    let mut args = std::env::args().skip(1);
+    let tolerance: f64 = args.next().map_or(1e-3, |v| v.parse().unwrap());
+    let passes: usize = args.next().map_or(1, |v| v.parse().unwrap());
+    let iterations: usize = args.next().map_or(4, |v| v.parse().unwrap());
+    let cells: usize = args.next().map_or(24, |v| v.parse().unwrap());
     let field = |p: Point| {
         let t = std::f64::consts::TAU;
         ((t * p[0]).sin() * (t * p[1]).cos()
@@ -14,14 +18,14 @@ fn main() {
     };
     let base = Options {
         bounds: [[-0.5; 3], [0.5; 3]],
-        cells: [24; 3],
+        cells: [cells; 3],
         region: Region::Band {
             lower: -1.,
             upper: 1.,
         },
         periodic: [true; 3],
         geometry_tolerance: tolerance,
-        optimize_passes: 1,
+        optimize_passes: passes,
         ..Default::default()
     };
     let start = std::time::Instant::now();
@@ -32,6 +36,7 @@ fn main() {
                 tolerance,
                 min_length: tolerance,
                 max_length: 0.1,
+                iterations,
                 ..Default::default()
             }),
             ..base

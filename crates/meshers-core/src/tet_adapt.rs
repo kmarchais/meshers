@@ -37,7 +37,7 @@ impl Default for Options {
             max_length: 0.25,
             gradation: 0.3,
             layers: 0.,
-            iterations: 6,
+            iterations: 4,
             quality_guard: 0.3,
         }
     }

@@ -84,12 +84,77 @@ def generate(config):
     raise ValueError(kind)
 
 
+def balance(mesh):
+    """Move wall vertices outward by half the mean centroid sag of their wall faces.
+
+    Box coordinates stay fixed and periodic copies share one offset, so the cell stays
+    periodic. Linear boundary chords then deviate to both sides of the wall.
+    """
+    points = np.array(mesh.points)
+    surface = np.asarray(mesh.surface)
+    corners = points[surface]
+    cap = np.zeros(len(surface), dtype=bool)
+    for a in range(3):
+        for side in (-0.5, 0.5):
+            cap |= np.all(np.isclose(corners[:, :, a], side, atol=1e-12), axis=1)
+    wall = surface[~cap]
+    centroid = points[wall].mean(axis=1)
+    value = scorecard.gyroid(*centroid.T)
+    level = np.where(value > 0, 1.0, -1.0)
+    grad = scorecard.gradient(scorecard.gyroid, centroid)
+    # Signed outward distance: outward is +grad on the upper wall, -grad on the lower.
+    signed = (value - level) / np.linalg.norm(grad, axis=1) * level
+    total = np.zeros(len(points))
+    count = np.zeros(len(points))
+    np.add.at(total, wall.ravel(), np.repeat(signed, 3))
+    np.add.at(count, wall.ravel(), 1)
+    # Periodic copies form one class; pool their faces.
+    parent = np.arange(len(points))
+    for pairs in mesh.periodic_pairs:
+        for a, b in pairs:
+            ra, rb = parent[a], parent[b]
+            while parent[ra] != ra:
+                ra = parent[ra]
+            while parent[rb] != rb:
+                rb = parent[rb]
+            parent[max(ra, rb)] = min(ra, rb)
+    root = np.array([i for i in range(len(points))])
+    for i in range(len(points)):
+        r = i
+        while parent[r] != r:
+            r = parent[r]
+        root[i] = r
+    class_total = np.zeros(len(points))
+    class_count = np.zeros(len(points))
+    np.add.at(class_total, root, total)
+    np.add.at(class_count, root, count)
+    moving = class_count[root] > 0
+    offset = np.zeros(len(points))
+    offset[moving] = -0.5 * class_total[root][moving] / class_count[root][moving]
+    v = points[moving]
+    vv = scorecard.gyroid(*v.T)
+    lv = np.where(vv > 0, 1.0, -1.0)
+    normal = scorecard.gradient(scorecard.gyroid, v) * lv[:, None]
+    locked = np.isclose(v, -0.5, atol=1e-12) | np.isclose(v, 0.5, atol=1e-12)
+    normal[locked] = 0
+    normal /= np.linalg.norm(normal, axis=1)[:, None]
+    points[moving] = v + offset[moving][:, None] * normal
+    tets = np.asarray(mesh.tetrahedra)
+    p = points[tets]
+    det = np.einsum("ij,ij->i", p[:, 1] - p[:, 0], np.cross(p[:, 2] - p[:, 0], p[:, 3] - p[:, 0]))
+    assert (det > 0).all(), "balancing inverted an element"
+    return Shifted(points, tets, mesh.surface, mesh.periodic_pairs, mesh.diagnostics)
+
+
 def main():
     ref = reference()
     out = HERE / "fea.jsonl"
     for config in sys.argv[1:]:
         start = time.perf_counter()
-        mesh = generate(config)
+        balanced = config.startswith("balanced-")
+        mesh = generate(config.removeprefix("balanced-"))
+        if balanced:
+            mesh = balance(mesh)
         generation = time.perf_counter() - start
         shifted = Shifted(
             mesh.points + 0.5,

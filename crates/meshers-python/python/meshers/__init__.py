@@ -182,7 +182,7 @@ def generate(
     max_length: float | None = None,
     gradation: float = 0.3,
     layers: float = 0.0,
-    adapt_iterations: int = 6,
+    adapt_iterations: int = 4,
     quality_guard: float = 0.3,
     adapt_tolerance: float | None = None,
     order: int = 1,
