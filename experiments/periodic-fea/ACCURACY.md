@@ -1083,8 +1083,12 @@ The reference-to-reference stress variation and every older result remain
 retained. Another grid or insertion-budget adjustment is not justified by
 these repeated older-reference misses.
 
-Source inspection finds vertex movement and edge bisection in the experimental
-native implementation, with no edge-collapse or coarsening path. Before
+The first source inspection covered the vertex optimizer and adaptive edge
+bisection and missed `implicit/intersection/repair.rs`. The broader scan finds
+constraint-aware collapse in intersection quality repair. It selects short
+edges from tetrahedra below quality 0.1 and checks periodic orbits and feature
+strata. This is distinct from general size-based coarsening of an already
+admitted mesh. Its existing guards should be considered for reuse. Before
 introducing a topology-changing algorithm,
 `runs/accuracy-schwarz-d-latest-localization-v1` freezes 49 source files and
 1,146 inputs for one read-only localization of the latest seven candidates
@@ -1132,7 +1136,7 @@ low-quality cavities, and independently validate the resulting geometry. It
 will qualify as a new seed through the unchanged common gates.
 
 `runs/accuracy-schwarz-d-surface-coarsen-geometry-v1` freezes 52 source files and
-1,221 inputs for one queued geometry-only trial on the audited native68 seed.
+1,221 inputs for one completed geometry-only trial on the audited native68 seed.
 It removes at most 2,000 vertices on same-isovalue wall edges shorter than half
 the base-grid spacing, 0.5/68. A fixed-seed shuffle breaks exact length ties.
 The operation keeps an existing endpoint and uses disjoint vertex cavities.
@@ -1147,10 +1151,31 @@ constrains this first trial.
 Five direct unit checks pass while OMEN's shared lane is idle. They restore an
 exact volume mesh after removing a flat boundary-edge midpoint, protect cap
 nodes, prevent deleting a material component, and reject disallowed or
-misoriented wall geometry. The queued trial runs all regressions before its
-owned worker. Its memory bound is 16 GiB and timeout is 900 s. `geometry-result.json`
+misoriented wall geometry. Thirty-eight regressions pass with one optional test
+skipped in the real trial. All 2,000 removals are admitted, giving 294,787 nodes
+and 1,461,856 tetrahedra. Minimum quality stays 0.134168. Forward distance is
+0.00024047 and reverse distance is 0.00017692; all common gates pass. Relative
+volume change is 8.22e-6. All oriented cap triangles and remaining coordinates
+are exact. Boundary components remain three and Euler characteristic -18.
+All 52 source and 1,221 input hashes and the actual mesh hash remain unchanged.
+
+The configured memory bound is 16 GiB and timeout 900 s, but the first RSS
+monitor tracks only the Windows Python launcher. Its recorded 7.49 MiB omits
+the worker child and cannot establish worker memory usage or enforcement.
+The valid geometry result remains archived, and this resource-monitor defect
+requires a corrected rerun before advancement. `geometry-result.json`
 and `completion.json` describe only geometry qualification; no six-load FEA
 result is implied. Remaining coordinates must equal the indexed original
 coordinates. All original archives remain pinned. No full FEA solve or native
 port is queued before this actual geometry result, and archive adaptation
 supplies no generation speed claim.
+
+`runs/accuracy-schwarz-d-surface-coarsen-geometry-v2` freezes 52 source files and
+1,279 inputs for an identical geometry rerun. The algorithm and configuration
+remain exact; point, tetrahedron, surface and retained-ID arrays must reproduce
+v1. The corrected monitor sums the owned worker and recursive children every
+two seconds, matching the original benchmark guard. A regression allocates
+64 MiB in a real child process and requires the monitor to count it. OMEN's
+shared lane is busy with another job, so this check and the trial are queued
+together. The original launcher-only report remains unchanged. No full FEA
+solve or native port is queued before the corrected result.
