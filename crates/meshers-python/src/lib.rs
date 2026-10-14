@@ -496,6 +496,7 @@ fn generate<'py>(
         adapt.set_item("moves", stats.moves)?;
         adapt.set_item("error_splits", stats.error_splits)?;
         adapt.set_item("maximum_error", stats.maximum_error)?;
+        adapt.set_item("seconds", stats.seconds.to_vec())?;
         diagnostics.set_item("adapt", adapt)?;
     }
     diagnostics.set_item("seconds", start.elapsed().as_secs_f64())?;

@@ -51,6 +51,9 @@ pub struct Stats {
     pub moves: usize,
     pub error_splits: usize,
     pub maximum_error: f64,
+    /// Wall-clock seconds per phase: sizing, split, collapse, edge removal,
+    /// face swap, relocation, error enforcement and unfolding.
+    pub seconds: [f64; 7],
 }
 
 const SPLIT: f64 = 4. / 3.;
@@ -59,6 +62,16 @@ const SIZING_SAFETY: f64 = 0.8;
 const WALL: u8 = 1;
 
 type Face = [usize; 3];
+
+/// Total order for finite sizes in a heap.
+#[derive(Clone, Copy, PartialEq, PartialOrd)]
+struct Ordered(f64);
+impl Eq for Ordered {}
+impl Ord for Ordered {
+    fn cmp(&self, other: &Self) -> std::cmp::Ordering {
+        self.0.total_cmp(&other.0)
+    }
+}
 
 fn sorted(mut f: Face) -> Face {
     f.sort_unstable();
@@ -377,20 +390,28 @@ impl<'g, G: Geometry> Tets<'g, G> {
         for s in &mut size {
             *s = s.clamp(o.min_length, o.max_length);
         }
-        for _ in 0..64 {
-            let mut changed = false;
-            for &[u, v] in edges {
-                let l = self.length(u, v);
-                for (a, b) in [(u, v), (v, u)] {
-                    let limit = size[a] + o.gradation * l;
-                    if size[b] > limit * (1. + 1e-12) {
-                        size[b] = limit;
-                        changed = true;
-                    }
-                }
+        // Lipschitz gradation in one Dijkstra pass from the smallest sizes.
+        let mut adjacency = vec![Vec::new(); self.points.len()];
+        for &[u, v] in edges {
+            let l = self.length(u, v);
+            adjacency[u].push((v, l));
+            adjacency[v].push((u, l));
+        }
+        let mut heap: std::collections::BinaryHeap<_> = size
+            .iter()
+            .enumerate()
+            .map(|(v, &h)| std::cmp::Reverse((Ordered(h), v)))
+            .collect();
+        while let Some(std::cmp::Reverse((Ordered(h), v))) = heap.pop() {
+            if h > size[v] {
+                continue;
             }
-            if !changed {
-                break;
+            for &(w, l) in &adjacency[v] {
+                let limit = h + o.gradation * l;
+                if limit < size[w] {
+                    size[w] = limit;
+                    heap.push(std::cmp::Reverse((Ordered(limit), w)));
+                }
             }
         }
         size
@@ -940,10 +961,16 @@ pub(crate) fn adapt(
     }
     let mut s = Tets::new(mesh, g, threshold, periodic);
     let mut stats = Stats::default();
+    let mut clock = std::time::Instant::now();
+    let mut lap = |stats: &mut Stats, phase: usize| {
+        stats.seconds[phase] += clock.elapsed().as_secs_f64();
+        clock = std::time::Instant::now();
+    };
     for _ in 0..o.iterations {
         g.check()?;
         let edges = s.edges();
         let size = s.sizes(o, &edges);
+        lap(&mut stats, 0);
         let mut long: Vec<(f64, [usize; 2])> = edges
             .iter()
             .filter_map(|&[u, v]| {
@@ -957,8 +984,10 @@ pub(crate) fn adapt(
                 stats.splits += 1;
             }
         }
+        lap(&mut stats, 1);
         let edges = s.edges();
         let mut size = s.sizes(o, &edges);
+        lap(&mut stats, 0);
         let mut short: Vec<(f64, [usize; 2])> = edges
             .iter()
             .filter_map(|&[u, v]| {
@@ -981,11 +1010,27 @@ pub(crate) fn adapt(
                 stats.collapses += 1;
             }
         }
-        for [u, v] in s.edges() {
+        lap(&mut stats, 2);
+        // Edge removal only pays off around poor elements.
+        let mut candidates = Vec::new();
+        for t in 0..s.tets.len() {
+            if s.alive[t] && mmg(s.tet_points(s.tets[t], None)) < 0.4 {
+                let tet = s.tets[t];
+                for i in 0..4 {
+                    for j in i + 1..4 {
+                        candidates.push([tet[i].min(tet[j]), tet[i].max(tet[j])]);
+                    }
+                }
+            }
+        }
+        candidates.sort_unstable();
+        candidates.dedup();
+        for [u, v] in candidates {
             if s.remove_edge(u, v) {
                 stats.swaps += 1;
             }
         }
+        lap(&mut stats, 3);
         for t in 0..s.tets.len() {
             if !s.alive[t] || mmg(s.tet_points(s.tets[t], None)) > 0.5 {
                 continue;
@@ -997,14 +1042,17 @@ pub(crate) fn adapt(
                 }
             }
         }
+        lap(&mut stats, 4);
         for v in 0..s.points.len() {
             if s.relocate(v, o) {
                 stats.moves += 1;
             }
         }
+        lap(&mut stats, 5);
     }
     s.enforce(o, &mut stats)?;
     *mesh = s.into_mesh()?;
+    lap(&mut stats, 6);
     Ok(stats)
 }
 
