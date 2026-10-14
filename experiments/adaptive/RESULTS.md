@@ -92,6 +92,35 @@ extrapolation of the archived native64/native80 linear tensors (observed order 2
   so quadratic errors are resolved down to ~0.04%. Quadratic lattice 20 (79,848
   nodes, 46,881 elements) is at 0.037%.
 
+Balancing linear wall vertices (half the centroid sag outward, periodic copies
+sharing one offset) cuts the volume bias about 2.5x but lowers the stiffness error
+only ~5%: lattice 24 3.71% -> 3.51%, lattice 32 2.12% -> 2.01%, adapted 1e-3
+3.50% -> 3.33%. Linear discretization, not geometry bias, dominates.
+
+### Thick solid: Schwarz P network (`fea_solid.py`)
+
+cos 2πx + cos 2πy + cos 2πz < 0, about 50% solid with thick ligaments. Reference:
+p=4 extrapolation of the quadratic 16- and 20-cell tensors (they differ from it by
+0.03% and 0.01%).
+
+| Mesh | Order | Nodes | Elements | Error |
+|---|---|---:|---:|---:|
+| Lattice 16 | linear | 6,240 | 27,492 | 3.06% |
+| Lattice 24 | linear | 19,004 | 90,792 | 1.35% |
+| Lattice 32 | linear | 41,956 | 210,576 | 0.76% |
+| Adapted 4e-3, hmax 0.2 | linear | 2,364 | 8,889 | 5.20% |
+| Adapted 2e-3, hmax 0.2 | linear | 3,888 | 15,825 | 3.58% |
+| Adapted 1e-3, hmax 0.2 | linear | 8,451 | 34,918 | 2.58% |
+| Lattice 8 | quadratic | 6,864 | 3,852 | 0.26% |
+| Lattice 12 | quadratic | 19,628 | 11,976 | 0.074% |
+
+Geometric adaptivity lowers the linear error by about 20% at equal nodes on coarse
+meshes and loses slightly at 8.5k nodes: FEA error follows stress resolution in the
+ligament necks, which curvature sizing does not target. An error-driven size field
+would be the next step for linear meshes. Curved quadratic elements again win by an
+order of magnitude: 0.26% with 6.9k nodes and 3.9k elements against 0.76% with 42k
+linear nodes and 211k elements.
+
 Exact (quadrature) solid volume error of the same meshes:
 
 | Grid | Linear | Curved quadratic |
