@@ -357,7 +357,7 @@ fn make_field(
 }
 
 #[allow(clippy::too_many_arguments)]
-#[pyfunction(signature = (field, gradient, bounds, cells, periodic, band, tolerance, minimum_quality, budget, passes, interior_refine_nodes, snap, threads, batch_size, cancel, adapt=None))]
+#[pyfunction(signature = (field, gradient, bounds, cells, periodic, band, tolerance, minimum_quality, budget, passes, interior_refine_nodes, snap, threads, batch_size, cancel, adapt=None, order=1))]
 fn generate<'py>(
     py: Python<'py>,
     field: Py<PyAny>,
@@ -376,6 +376,7 @@ fn generate<'py>(
     batch_size: usize,
     cancel: Option<PyRef<'py, CancellationToken>>,
     adapt: Option<(f64, f64, f64, f64, usize, f64)>,
+    order: u8,
 ) -> PyResult<Bound<'py, PyDict>> {
     let f = make_field(
         py,
@@ -412,6 +413,7 @@ fn generate<'py>(
                 }
             },
         ),
+        order,
     };
     let start = std::time::Instant::now();
     let result = py.detach(|| implicit::generate(&f, options));
@@ -424,6 +426,53 @@ fn generate<'py>(
         MeshingError::GenerationFailed(message) => MeshingFailure::new_err(message),
     })?;
     let output = PyDict::new(py);
+    let mut result = result;
+    if let Some(q) = result.quadratic.take() {
+        let quadratic = PyDict::new(py);
+        quadratic.set_item(
+            "points",
+            Array2::from_shape_vec(
+                (q.elements.points.len(), 3),
+                q.elements.points.into_iter().flatten().collect(),
+            )
+            .unwrap()
+            .into_pyarray(py),
+        )?;
+        quadratic.set_item(
+            "tetrahedra",
+            Array2::from_shape_vec(
+                (q.elements.tets.len(), 10),
+                q.elements.tets.into_iter().flatten().map(|i| i as i64).collect(),
+            )
+            .unwrap()
+            .into_pyarray(py),
+        )?;
+        quadratic.set_item(
+            "surface",
+            Array2::from_shape_vec(
+                (q.elements.surface.len(), 6),
+                q.elements.surface.into_iter().flatten().map(|i| i as i64).collect(),
+            )
+            .unwrap()
+            .into_pyarray(py),
+        )?;
+        let pairs = pyo3::types::PyList::empty(py);
+        for axis in q.periodic_pairs {
+            pairs.append(
+                Array2::from_shape_vec(
+                    (axis.len(), 2),
+                    axis.into_iter().flatten().map(|i| i as i64).collect(),
+                )
+                .unwrap()
+                .into_pyarray(py),
+            )?;
+        }
+        quadratic.set_item("periodic_pairs", pairs)?;
+        quadratic.set_item("curved_edges", q.elements.curved_edges)?;
+        quadratic.set_item("straightened_edges", q.elements.straightened_edges)?;
+        quadratic.set_item("minimum_jacobian_ratio", q.elements.minimum_jacobian_ratio)?;
+        output.set_item("quadratic", quadratic)?;
+    }
     let points = Array2::from_shape_vec(
         (result.mesh.points.len(), 3),
         result.mesh.points.into_iter().flatten().collect(),

@@ -33,6 +33,8 @@ pub struct Stats {
     pub moves: usize,
     pub error_splits: usize,
     pub maximum_error: f64,
+    /// Seconds per phase: sizing, split, collapse, flip, relax, enforce+validate.
+    pub seconds: [f64; 6],
 }
 
 const SPLIT: f64 = 4. / 3.;
@@ -116,17 +118,28 @@ impl<'a, 'b, F: ScalarField> Surface<'a, 'b, F> {
         wall_label(mask).map_or([0.; 3], |l| self.band.normal(p, l))
     }
 
-    fn face_normal(&self, p: [Point; 3], label: u8) -> Point {
-        let c = std::array::from_fn(|k| (p[0][k] + p[1][k] + p[2][k]) / 3.);
-        self.band.normal(c, label)
-    }
-
-    fn face_shape(&self, face: [usize; 3], label: u8, moved: Option<(usize, Point)>) -> f64 {
-        let p = face.map(|i| match moved {
-            Some((j, q)) if i == j => q,
-            _ => self.points[i],
-        });
-        shape(p, self.face_normal(p, label))
+    /// Shape against the reference normal: cached vertex wall normals, or the box axis.
+    /// `moved` substitutes one vertex (or the new vertex `usize::MAX`) and its normal.
+    fn face_shape(
+        &self,
+        face: [usize; 3],
+        label: u8,
+        moved: Option<(usize, Point, Point)>,
+    ) -> f64 {
+        let at = |i: usize| match moved {
+            Some((j, q, n)) if i == j => (q, n),
+            _ => (self.points[i], self.normals[i]),
+        };
+        let p = face.map(|i| at(i).0);
+        let normal = if label >= 2 {
+            self.band.normal(p[0], label)
+        } else {
+            unit(face.iter().fold([0.; 3], |m, &i| {
+                let n = at(i).1;
+                [m[0] + n[0], m[1] + n[1], m[2] + n[2]]
+            }))
+        };
+        shape(p, normal)
     }
 
     fn edge_faces(&self, u: usize, v: usize) -> Vec<usize> {
@@ -301,11 +314,11 @@ impl<'a, 'b, F: ScalarField> Surface<'a, 'b, F> {
             let [x, y, a] = Self::rotate(self.faces[f], u, v);
             planned.push((f, [x, usize::MAX, a], [usize::MAX, y, a]));
         }
+        let n = self.wall_normal(p, mask);
         let ok = planned.iter().all(|(f, first, second)| {
-            [first, second].iter().all(|face| {
-                let q = face.map(|i| if i == usize::MAX { p } else { self.points[i] });
-                shape(q, self.face_normal(q, self.labels[*f])) > 1e-6
-            })
+            [first, second]
+                .iter()
+                .all(|face| self.face_shape(**face, self.labels[*f], Some((usize::MAX, p, n))) > 1e-6)
         });
         if !ok {
             return None;
@@ -340,7 +353,8 @@ impl<'a, 'b, F: ScalarField> Surface<'a, 'b, F> {
         if common.len() != 2 || !opposite.iter().all(|w| common.contains(w)) {
             return false;
         }
-        if opposite.iter().any(|&w| self.neighbors(w).len() <= 3) {
+        // On a closed manifold a vertex has as many neighbours as incident faces.
+        if opposite.iter().any(|&w| self.vf[w].len() <= 3) {
             return false;
         }
         for &w in &nu {
@@ -398,7 +412,7 @@ impl<'a, 'b, F: ScalarField> Surface<'a, 'b, F> {
             return false;
         }
         let next = [[x, b, a], [b, y, a]];
-        let valence = |w: usize| self.neighbors(w).len() as i64;
+        let valence = |w: usize| self.vf[w].len() as i64;
         let deviation = |w: usize, delta: i64| (valence(w) + delta - self.valence_target(w)).pow(2);
         let gain = [x, y, a, b].iter().map(|&w| deviation(w, 0)).sum::<i64>()
             - (deviation(x, -1) + deviation(y, -1) + deviation(a, 1) + deviation(b, 1));
@@ -484,7 +498,7 @@ impl<'a, 'b, F: ScalarField> Surface<'a, 'b, F> {
             .fold(1f64, f64::min);
         let after = self.vf[v]
             .iter()
-            .map(|&f| self.face_shape(self.faces[f], self.labels[f], Some((v, q))))
+            .map(|&f| self.face_shape(self.faces[f], self.labels[f], Some((v, q, n))))
             .fold(1f64, f64::min);
         if after < before.min(0.4) || after <= 1e-6 {
             return false;
@@ -613,9 +627,15 @@ pub fn adapt<F: ScalarField>(
     }
     let mut s = Surface::new(mesh, band)?;
     let mut stats = Stats::default();
+    let mut clock = std::time::Instant::now();
+    let mut lap = |stats: &mut Stats, phase: usize| {
+        stats.seconds[phase] += clock.elapsed().as_secs_f64();
+        clock = std::time::Instant::now();
+    };
     for _ in 0..o.iterations {
         band.field.check().map_err(MeshingError::GenerationFailed)?;
         let size = s.sizes(o);
+        lap(&mut stats, 0);
         let mut long: Vec<(f64, [usize; 2])> = s
             .edges()
             .into_iter()
@@ -630,7 +650,9 @@ pub fn adapt<F: ScalarField>(
                 stats.splits += 1;
             }
         }
+        lap(&mut stats, 1);
         let size = s.sizes(o);
+        lap(&mut stats, 0);
         let mut short: Vec<(f64, [usize; 2])> = s
             .edges()
             .into_iter()
@@ -654,20 +676,24 @@ pub fn adapt<F: ScalarField>(
                 stats.collapses += 1;
             }
         }
+        lap(&mut stats, 2);
         for [u, v] in s.edges() {
             if s.alive_edge(u, v) && s.flip(u, v, o) {
                 stats.flips += 1;
             }
         }
+        lap(&mut stats, 3);
         for v in 0..s.points.len() {
             if s.relax(v) {
                 stats.moves += 1;
             }
         }
+        lap(&mut stats, 4);
     }
     s.enforce(o, &mut stats)?;
     *mesh = s.compact();
     crate::triangles::validate(mesh)?;
+    lap(&mut stats, 5);
     Ok(stats)
 }
 

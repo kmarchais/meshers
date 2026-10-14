@@ -41,7 +41,7 @@ def project(points, locked, levels, iterations=30):
     return q
 
 
-def to_tet10(mesh):
+def to_tet10(mesh, curve=True):
     """Add mid-edge nodes; wall edges are curved onto the exact surface."""
     points, tets = np.asarray(mesh.points), np.asarray(mesh.tetrahedra)
     pairs = np.concatenate([tets[:, list(e)] for e in EDGES])
@@ -75,7 +75,8 @@ def to_tet10(mesh):
     levels = np.where(scorecard.gyroid(*start.T) > 0, 1.0, -1.0)
     curved = project(start, locked, levels)
     curved[high] = HI
-    mid[is_wall] = curved
+    if curve:
+        mid[is_wall] = curved
     straight = points[unique].mean(axis=1)
     curved_index = np.flatnonzero(is_wall)
     canonical = np.round(np.where(np.isclose(straight, HI, atol=1e-12), LO, straight), 11)
@@ -123,8 +124,9 @@ def main():
     ref = fea.reference()
     out = HERE / "p2.jsonl"
     for config in sys.argv[1:]:
-        mesh = fea.generate(config)
-        nodes, tet10, curved = to_tet10(mesh)
+        straight = config.startswith("straight-")
+        mesh = fea.generate(config.removeprefix("straight-"))
+        nodes, tet10, curved = to_tet10(mesh, curve=not straight)
         ok = jacobian_ok(nodes, tet10)
         start = time.perf_counter()
         stiffness = homogenize_p2(nodes, tet10)
@@ -140,6 +142,7 @@ def main():
             "invalid_jacobian_elements": int((~ok).sum()),
             "worst_energy_error": error["worst_relative_strain_energy_difference"],
             "eigenvalues": error["relative_energy_difference_eigenvalues"],
+            "stiffness": stiffness.tolist(),
             "fea_s_unreliable": seconds,
         }
         with out.open("a") as log:

@@ -65,6 +65,8 @@ pub struct Options {
     /// Size-driven adaptation with exact boundary projection instead of fixed
     /// surface refinement. `None` keeps the lattice pipeline.
     pub adapt: Option<crate::tet_adapt::Options>,
+    /// Element order: 1 (linear) or 2 (10-node, wall edges curved onto the field).
+    pub order: u8,
 }
 impl Default for Options {
     fn default() -> Self {
@@ -81,6 +83,7 @@ impl Default for Options {
             snap: 0.2,
             threads: 1,
             adapt: None,
+            order: 1,
         }
     }
 }
@@ -96,7 +99,13 @@ pub struct Diagnostics {
     pub maximum_sampled_surface_error: f64,
     pub adapt: Option<crate::tet_adapt::Stats>,
 }
+pub struct QuadraticOutput {
+    pub elements: crate::quadratic::Quadratic,
+    pub periodic_pairs: [Vec<[usize; 2]>; 3],
+}
 pub struct Output {
+    /// Linear mesh; with `order: 2` its points are the vertices of `quadratic`.
+    pub quadratic: Option<QuadraticOutput>,
     pub mesh: Mesh,
     /// One tag per boundary triangle: 0 implicit, 1/2 x-/x+, 3/4 y-/y+, 5/6 z-/z+.
     pub boundary_tags: Vec<u8>,
@@ -327,7 +336,27 @@ pub fn generate<F: ScalarField>(field: &F, options: Options) -> Result<Output, M
         }
     }
     context.check().map_err(MeshingError::GenerationFailed)?;
-    let result = build(&context);
+    if !(1..=2).contains(&options.order) {
+        return Err(MeshingError::InvalidOptions("order must be 1 or 2".into()));
+    }
+    let result = build(&context).and_then(|mut output| {
+        if options.order == 2 && !output.mesh.tets.is_empty() {
+            let elements = crate::quadratic::elevate(
+                &output.mesh,
+                &output.boundary_tags,
+                &context,
+                context.threshold(),
+                options.periodic,
+            )?;
+            let periodic_pairs =
+                crate::quadratic::node_pairs(&elements.points, options.bounds, options.periodic)?;
+            output.quadratic = Some(QuadraticOutput {
+                elements,
+                periodic_pairs,
+            });
+        }
+        Ok(output)
+    });
     if context.invalid.load(Ordering::Relaxed) {
         return Err(MeshingError::GenerationFailed(
             "field or gradient returned nonfinite values".into(),
@@ -508,6 +537,7 @@ fn finish<F: ScalarField>(mesh: Mesh, g: &Context<F>) -> Result<Output, String> 
         ));
     }
     Ok(Output {
+        quadratic: None,
         mesh,
         boundary_tags: tags,
         periodic_pairs: pairs,

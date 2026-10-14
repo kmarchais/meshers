@@ -182,6 +182,7 @@ def generate(
     layers: float = 0.0,
     adapt_iterations: int = 6,
     quality_guard: float = 0.3,
+    order: int = 1,
 ) -> Mesh:
     """Generate a tetrahedral mesh directly from a bounded implicit field.
 
@@ -224,6 +225,10 @@ def generate(
         adapt_iterations: Split/collapse/swap/relocate rounds.
         quality_guard: Operations may not create MMG quality below this value
             unless the affected elements were already worse.
+        order: 1 for linear tetrahedra, 2 for 10-node tetrahedra (VTK/Gmsh/fedoo
+            node order) whose wall edges follow the exact field. Quadratic meshes
+            report ``tetrahedra`` of shape (M, 10) and ``surface`` of shape (K, 6);
+            ``periodic_pairs`` then cover every node.
 
     Returns:
         Mesh: Owned arrays and diagnostics. Empty geometries return empty arrays.
@@ -292,7 +297,13 @@ def generate(
         )
         if adapt
         else None,
+        int(order),
     )
+    quadratic = result.pop("quadratic", None)
+    if quadratic is not None:
+        for name in ("points", "tetrahedra", "surface", "periodic_pairs"):
+            result[name] = quadratic.pop(name)
+        result["diagnostics"]["quadratic"] = quadratic
     result["diagnostics"]["threads"] = threads
     result["diagnostics"]["evaluator"] = evaluator
     result["diagnostics"]["preparation_seconds"] = preparation_seconds
