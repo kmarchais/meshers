@@ -1213,3 +1213,29 @@ OMEN's lane is idle with about 19 GiB free RAM at preparation. Lenovo is
 reachable with 3.26 GiB free, but its pueue client still fails to launch, so
 its shared queue is unverified. This solve stays on OMEN with the frozen
 local inputs. No other session's job or host configuration is changed.
+
+The coarsened seed FEA completes with an admitted row and six hashed fields.
+All 73 frozen sources and 1,336 pinned inputs pass. Forty-four regressions
+pass with one optional test skipped. Its 294,787 nodes, 1,461,856 cells,
+minimum quality 0.134168, volume 0.349503903 and boundary distances reproduce
+the qualified v2 geometry. The full worker takes 1,496.38 s with peak owned
+process-tree RSS 4,401.99 MiB; homogenization takes 1,355.60 s. These timings
+cover archive replay and FEA, not mesh generation.
+
+All twelve actual CG solve residuals meet the original 2e-9 gate. Independent
+saved-field stiffness reconstruction differs by 3.73e-16, Hill-Mandel energy
+by 3.74e-12, maximum periodic force imbalance is 1.42e-10, and displacement
+jump error is zero. The original seed audit digest remains
+`fc82fb78af31e6ae6bec49565ffe4042f77dbefb49d787c37c65506486f97651`.
+Retained coordinates, oriented caps and all qualified mesh arrays are exact.
+
+`runs/accuracy-schwarz-d-coarsened-seed68-fields-v1` freezes one saved-field
+analysis of this new seed alongside all seven retained candidates. It uses
+the same three references, four Sobol scrambles and 1,048,576 probes per
+reference, with the common geometry gate 0.002. It rechecks actual geometry
+replay arrays and caps, all prior body boundaries and the new seed audit
+without rewriting saved reports. Adding a changed boundary can alter the
+common-domain probe subset slightly; the prior seven-candidate results remain
+archived. No refinement follows before this actual stiffness and stress
+comparison. The shared lane is busy, so regressions and the real optional
+Pardiso smoke run together in the queued analysis.
