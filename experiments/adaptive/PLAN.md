@@ -50,7 +50,6 @@ compiled fields) + `fea-accuracy-optimizer` (PR #5 geometry guard, quality floor
 - [ ] Spinodoid at 16 cells: remaining in-plane curve error 2.0e-2 does not refine.
 - [~] Speed: phase timers; targeted edge removal, cached normals (surface 2.5x,
   volume 1.7x, single-run indications). Parallel relocation not done.
-- [ ] Surface: volume-neutral vertex offset (halves Hausdorff at equal count).
 - [ ] Box-edge wedges limit q_min (gyroid ~0.18-0.27) in non-periodic boxes.
 - [ ] Timing study in the gpu queue once idle (surface vs Flying Edges, volume vs
   lattice and MMG, FEA wall time at a 1% target, 1 and N threads).
