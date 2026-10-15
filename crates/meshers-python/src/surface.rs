@@ -19,7 +19,7 @@ pub(super) fn generate_surface<'py>(
     batch_size: usize,
     cancel: Option<PyRef<'py, CancellationToken>>,
     check_geometry: bool,
-    adaptive: Option<(f64, f64, f64, f64, usize, bool)>,
+    adaptive: Option<(f64, f64, f64, f64, usize, bool, bool)>,
 ) -> PyResult<Bound<'py, PyDict>> {
     if smoothing_iterations > 100 || improvement_rounds > 100 || polish_passes > 100 {
         return Err(PyValueError::new_err("Surface passes must be at most 100"));
@@ -42,7 +42,7 @@ pub(super) fn generate_surface<'py>(
         let mut mesh = triangles::extract(&geometry, cells)?;
         let extraction = start.elapsed().as_secs_f64();
         let mut stats = None;
-        if let Some((tolerance, min_length, max_length, gradation, iterations, balanced)) =
+        if let Some((tolerance, min_length, max_length, gradation, iterations, balanced, fast)) =
             adaptive
         {
             let options = remesh::Options {
@@ -52,6 +52,7 @@ pub(super) fn generate_surface<'py>(
                 gradation,
                 iterations,
                 balanced,
+                fast,
             };
             stats = Some(remesh::adapt(&mut mesh, &geometry, &options)?);
         } else {
@@ -118,6 +119,12 @@ pub(super) fn generate_surface<'py>(
         adaptive.set_item("moves", stats.moves)?;
         adaptive.set_item("error_splits", stats.error_splits)?;
         adaptive.set_item("maximum_error", stats.maximum_error)?;
+        let phases = ["sizing", "split", "collapse", "flip", "relax", "enforce"];
+        let seconds = PyDict::new(py);
+        for (phase, s) in phases.iter().zip(stats.seconds) {
+            seconds.set_item(phase, s)?;
+        }
+        adaptive.set_item("seconds", seconds)?;
         output.set_item("adaptive", adaptive)?;
     }
     Ok(output)

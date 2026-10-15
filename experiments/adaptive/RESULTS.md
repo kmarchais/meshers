@@ -38,6 +38,55 @@ measured deviation is still checked against the tolerance. Same independent H:
 Balanced vertices are off the surface, so this mode is for printing and display;
 curved quadratic FEA meshes keep vertices on the surface.
 
+### Fast mode (`fast=True`): fewer triangles at Flying Edges speed
+
+For printing and display, where triangle shape does not matter: collapse the 24-cell
+extraction towards the size field (two passes, shape guard 0.05 instead of 0.3, no
+flips or smoothing), then split only where the error exceeds the tolerance.
+Supporting changes, which also apply to the quality modes:
+
+- the error check per triangle is the exact maximum of the quadratic through its
+  vertex and mid-edge samples (it was the largest sample, which read up to 2.7% low
+  against the independent reverse distance on irregular triangles);
+- balanced mode repairs locally: after balancing, faces still above the tolerance
+  are split and balanced again (it used to tighten the tolerance everywhere, and
+  in fast mode failed and fell back to unbalanced);
+- lattice extraction solves all edge crossings in parallel and triangulates slabs
+  in parallel with deterministic numbering; error scans, balancing and the final
+  error check are parallel and incremental; manifold validation sorts instead of
+  hashing.
+
+Tolerance 1e-3, independent scorecard. Counts, H, ΔV and angles are deterministic.
+Times are single warm runs through Python, compiled fields, while a GPU render was
+running: indicative only, the timing study waits for the queue. The pip VTK wheel
+uses the sequential SMP backend, so Flying Edges is single-threaded.
+
+| Case | Mesh | Triangles | H | ΔV | Min angle | 1 thread | 24 threads |
+|---|---|---:|---:|---:|---:|---:|---:|
+| Gyroid | Flying Edges 40 | 31,034 | 1.20e-3 | +0.34% | 0.0° | 0.094 s | |
+| | Flying Edges 48 | 44,938 | 9.3e-4 | +0.23% | 0.0° | 0.159 s | |
+| | fast | 26,780 | 9.9e-4 | +0.14% | 1.1° | 0.114 s | 0.068 s |
+| | fast, balanced | 19,616 | 1.0e-3 | +0.08% | 1.8° | 0.125 s | 0.064 s |
+| | balanced (quality) | 15,802 | 1.0e-3 | +0.05% | 18.0° | 0.315 s | 0.196 s |
+| Schwarz P | Flying Edges 40 | 24,064 | 9.5e-4 | +0.20% | 0.0° | 0.077 s | |
+| | fast | 16,872 | 9.8e-4 | +0.19% | 0.0° | 0.072 s | 0.056 s |
+| | fast, balanced | 11,880 | 1.0e-3 | +0.12% | 0.0° | 0.077 s | 0.047 s |
+| | balanced (quality) | 8,946 | 1.0e-3 | +0.09% | 18.9° | 0.135 s | 0.108 s |
+| Sphere | Flying Edges 32 | 4,808 | 1.01e-3 | -0.47% | | 0.011 s | |
+| | fast, balanced | 1,954 | 9.9e-4 | -0.26% | 8.8° | | 0.015 s |
+| Ellipsoid | Flying Edges 64 | 9,464 | 1.08e-3 | -0.41% | | 0.042 s | |
+| | fast, balanced | 2,950 | 1.0e-3 | -0.34% | 0.1° | | 0.019 s |
+
+- At equal H, fast balanced has 2.0-3.2x fewer triangles than Flying Edges and a
+  smaller volume error. On one thread it is about as fast; on 24 threads 1.6-2.5x
+  faster on the TPMS cases. On the small sphere fixed costs dominate.
+- Balancing offsets vertices by half the centroid sag, which minimizes H; the volume
+  bias left is about a third (for a spherical cap the mean sag is 3/4 of the centroid
+  sag). An offset of 3/4 would cancel the volume error at a larger H.
+- Limits: the hard-min lattice (creases) fails the 1e-3 check in every adaptive mode,
+  as before; Flying Edges 48 reaches only 1.26e-3 there, without a check. Fast mode
+  keeps triangles valid (positive shape) but has slivers.
+
 ## Volumes: size-driven tet adaptation (`tet_adapt.rs`)
 
 MMG-style split, collapse, edge removal, 2-3 swaps and relocation, with boundary

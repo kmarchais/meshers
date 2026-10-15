@@ -30,6 +30,7 @@ fn main() {
         gradation: 0.3,
         iterations,
         balanced: std::env::args().any(|a| a == "balanced"),
+        fast: std::env::args().any(|a| a == "fast"),
     };
     let stats = remesh::adapt(&mut mesh, &band, &options).unwrap();
     let total = start.elapsed().as_secs_f64();

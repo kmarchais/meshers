@@ -50,6 +50,12 @@ compiled fields) + `fea-accuracy-optimizer` (PR #5 geometry guard, quality floor
 - [ ] Spinodoid at 16 cells: remaining in-plane curve error 2.0e-2 does not refine.
 - [~] Speed: phase timers; targeted edge removal, cached normals (surface 2.5x,
   volume 1.7x, single-run indications). Parallel relocation not done.
+- [x] Fast surface mode (Kevin, 2026-10-15: no quality needed, beat VTK on speed with
+  fewer triangles and good fidelity): collapse-only coarsening + error splits, exact
+  quadratic error per triangle, local balance repair, parallel extraction. Indicative:
+  parity with Flying Edges on 1 thread, 1.6-2.5x faster on 24, 2-3x fewer triangles.
+- [ ] Fast mode, single thread: collapse (~26 ms) works on the 2x-dense Freudenthal
+  extraction; a coarser or marching-cubes extraction would cut it.
 - [ ] Box-edge wedges limit q_min (gyroid ~0.18-0.27) in non-periodic boxes.
 - [ ] Timing study in the gpu queue once idle (surface vs Flying Edges, volume vs
   lattice and MMG, FEA wall time at a 1% target, 1 and N threads).

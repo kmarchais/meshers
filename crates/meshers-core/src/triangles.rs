@@ -2,7 +2,6 @@
 //! Only crossing edges and boundary polygons are retained. No volume mesh is built.
 use crate::{MeshingError, Point, cross, dot, implicit::ScalarField, quads::Band, sub};
 use serde::{Deserialize, Serialize};
-use std::collections::HashMap;
 
 #[derive(Serialize, Deserialize)]
 pub struct TriangleMesh {
@@ -20,12 +19,13 @@ pub fn validate(mesh: &TriangleMesh) -> Result<(f64, f64)> {
     if mesh.faces.is_empty() {
         return Ok((0., 0.));
     }
-    let mut edges = HashMap::<[usize; 2], (usize, i32)>::new();
     let mut minimum = 1f64;
     let mut volume = 0.;
     let origin = mesh.points[0];
+    let n = mesh.points.len();
+    let mut directed = Vec::with_capacity(3 * mesh.faces.len());
     for face in &mesh.faces {
-        if face.iter().any(|&i| i >= mesh.points.len()) {
+        if face.iter().any(|&i| i >= n) {
             return Err(fail("Invalid triangle index"));
         }
         let [a, b, c] = face.map(|i| sub(mesh.points[i], origin));
@@ -38,17 +38,10 @@ pub fn validate(mesh: &TriangleMesh) -> Result<(f64, f64)> {
         minimum = minimum.min(q);
         volume += dot(a, cross(b, c)) / 6.;
         for i in 0..3 {
-            let a = face[i];
-            let b = face[(i + 1) % 3];
-            let e = [a.min(b), a.max(b)];
-            let entry = edges.entry(e).or_default();
-            entry.0 += 1;
-            entry.1 += if a < b { 1 } else { -1 };
+            directed.push([face[i], face[(i + 1) % 3]]);
         }
     }
-    if edges.values().any(|&v| v != (2, 0))
-        || !crate::implicit::nonmanifold_vertices(&mesh.faces, mesh.points.len()).is_empty()
-    {
+    if !closed_oriented_manifold(&mesh.faces, directed, n) {
         return Err(fail("Surface is not a closed oriented two-manifold"));
     }
     if !volume.is_finite() || volume <= 0. {
@@ -56,74 +49,157 @@ pub fn validate(mesh: &TriangleMesh) -> Result<(f64, f64)> {
     }
     Ok((minimum, volume))
 }
+/// Every directed edge appears once and its reverse once, and the faces around each
+/// vertex form one cycle. Sorting replaces hashing: this runs on every result.
+fn closed_oriented_manifold(faces: &[[usize; 3]], mut directed: Vec<[usize; 2]>, n: usize) -> bool {
+    directed.sort_unstable();
+    if directed.windows(2).any(|w| w[0] == w[1])
+        || directed
+            .iter()
+            .any(|&[a, b]| directed.binary_search(&[b, a]).is_err())
+    {
+        return false;
+    }
+    // Link of each vertex as directed edges (next, previous corner), grouped by vertex.
+    let mut start = vec![0usize; n + 1];
+    for face in faces {
+        for &v in face {
+            start[v + 1] += 1;
+        }
+    }
+    for v in 0..n {
+        start[v + 1] += start[v];
+    }
+    let mut fill = start.clone();
+    let mut link = vec![[0usize; 2]; start[n]];
+    for &[a, b, c] in faces {
+        for (v, edge) in [(a, [b, c]), (b, [c, a]), (c, [a, b])] {
+            link[fill[v]] = edge;
+            fill[v] += 1;
+        }
+    }
+    (0..n).all(|v| {
+        let ring = &link[start[v]..start[v + 1]];
+        if ring.is_empty() {
+            return true;
+        }
+        // Walk the cycle from the first link edge; it must visit every edge.
+        let mut current = ring[0][1];
+        for steps in 1..=ring.len() {
+            match ring.iter().find(|e| e[0] == current) {
+                Some(e) if e == &ring[0] => return steps == ring.len(),
+                Some(e) => current = e[1],
+                None => return false,
+            }
+        }
+        false
+    })
+}
+
 type Result<T> = std::result::Result<T, MeshingError>;
 /// Physical distance estimate at vertices, mid-edges and facet interiors.
 pub fn sampled_error<F: ScalarField>(mesh: &TriangleMesh, band: &Band<'_, F>) -> Result<f64> {
-    let mut maximum = 0f64;
-    for (i, (face, &label)) in mesh.faces.iter().zip(&mesh.labels).enumerate() {
-        if i % 256 == 0 {
-            band.field.check().map_err(MeshingError::GenerationFailed)?;
+    use rayon::prelude::*;
+    band.field.check().map_err(MeshingError::GenerationFailed)?;
+    // NaN marks a nonfinite distance; `f64::max` would drop it, so reduce explicitly.
+    let worst = |a: f64, b: f64| {
+        if a.is_nan() || b.is_nan() {
+            f64::NAN
+        } else {
+            a.max(b)
         }
-        if label >= 2 {
-            continue;
-        }
-        let p = face.map(|i| mesh.points[i]);
-        let level = band.levels[if label == 0 { 1 } else { 0 }];
-        for sample in [
-            p[0],
-            p[1],
-            p[2],
-            std::array::from_fn(|a| (p[0][a] + p[1][a] + p[2][a]) / 3.),
-            std::array::from_fn(|a| (p[0][a] + p[1][a]) * 0.5),
-            std::array::from_fn(|a| (p[1][a] + p[2][a]) * 0.5),
-            std::array::from_fn(|a| (p[2][a] + p[0][a]) * 0.5),
-        ] {
-            let residual = (band.field.value(sample) - level).abs();
-            let gradient = crate::norm(band.gradient(sample));
-            let distance = if residual == 0. {
-                0.
-            } else {
-                residual / gradient
-            };
-            if !distance.is_finite() {
-                return Err(fail("Nonfinite sampled surface distance"));
+    };
+    let maximum = mesh
+        .faces
+        .par_iter()
+        .zip(&mesh.labels)
+        .filter(|&(_, &label)| label < 2)
+        .map(|(face, &label)| {
+            let p = face.map(|i| mesh.points[i]);
+            let level = band.levels[if label == 0 { 1 } else { 0 }];
+            let mut maximum = 0f64;
+            for sample in [
+                p[0],
+                p[1],
+                p[2],
+                std::array::from_fn(|a| (p[0][a] + p[1][a] + p[2][a]) / 3.),
+                std::array::from_fn(|a| (p[0][a] + p[1][a]) * 0.5),
+                std::array::from_fn(|a| (p[1][a] + p[2][a]) * 0.5),
+                std::array::from_fn(|a| (p[2][a] + p[0][a]) * 0.5),
+            ] {
+                let residual = (band.field.value(sample) - level).abs();
+                let gradient = crate::norm(band.gradient(sample));
+                let distance = if residual == 0. {
+                    0.
+                } else {
+                    residual / gradient
+                };
+                if !distance.is_finite() {
+                    return f64::NAN;
+                }
+                maximum = maximum.max(distance);
             }
-            maximum = maximum.max(distance);
-        }
+            maximum
+        })
+        .reduce(|| 0., worst);
+    band.field.check().map_err(MeshingError::GenerationFailed)?;
+    if maximum.is_nan() {
+        return Err(fail("Nonfinite sampled surface distance"));
     }
     Ok(maximum)
 }
 fn fail(message: &str) -> MeshingError {
     MeshingError::GenerationFailed(message.into())
 }
-struct Extractor<'a, 'b, F: ScalarField> {
+/// Freudenthal lattice edge directions: three axes, three face diagonals and the body
+/// diagonal, each from the lower grid node.
+const STEPS: [[usize; 3]; 7] = [
+    [1, 0, 0],
+    [0, 1, 0],
+    [0, 0, 1],
+    [1, 1, 0],
+    [1, 0, 1],
+    [0, 1, 1],
+    [1, 1, 1],
+];
+
+enum Root {
+    Node(usize),
+    Point(Point),
+}
+
+/// Level crossings on the sampling lattice. Every crossing is solved once, in
+/// parallel, before triangulation, so slabs of cubes can be triangulated
+/// independently and the vertex numbering does not depend on scheduling.
+struct Lattice<'a, 'b, F: ScalarField> {
     band: &'a Band<'b, F>,
+    n: usize,
+    offsets: [usize; 7],
     grid: Vec<Point>,
     values: Vec<f64>,
-    mesh: TriangleMesh,
-    cache: HashMap<(usize, usize, u8), usize>,
+    /// Crossing lattice edges `(lower node, direction, label)`, sorted.
+    keys: Vec<(usize, u8, u8)>,
+    key_vertex: Vec<usize>,
+    node_vertex: Vec<usize>,
+    points: Vec<Point>,
 }
-impl<F: ScalarField> Extractor<'_, '_, F> {
-    fn original(&mut self, id: usize) -> usize {
-        *self.cache.entry((id, id, 8)).or_insert_with(|| {
-            let out = self.mesh.points.len();
-            self.mesh.points.push(self.grid[id]);
-            out
-        })
+
+type Faces = Vec<([usize; 3], u8)>;
+
+impl<F: ScalarField> Lattice<'_, '_, F> {
+    fn level(&self, label: u8) -> f64 {
+        self.band.levels[if label == 0 { 1 } else { 0 }]
     }
-    fn root(&mut self, a: usize, b: usize, label: u8) -> Result<usize> {
-        let (a, b) = if a < b { (a, b) } else { (b, a) };
-        if let Some(&id) = self.cache.get(&(a, b, label)) {
-            return Ok(id);
-        }
-        let level = self.band.levels[if label == 0 { 1 } else { 0 }];
+
+    fn solve(&self, a: usize, b: usize, label: u8) -> Result<Root> {
+        let level = self.level(label);
         let va = self.values[a] - level;
         let vb = self.values[b] - level;
         if va == 0.0 {
-            return Ok(self.original(a));
+            return Ok(Root::Node(a));
         }
         if vb == 0.0 {
-            return Ok(self.original(b));
+            return Ok(Root::Node(b));
         }
         if va.signum() == vb.signum() {
             return Err(fail("No bracket on surface edge"));
@@ -172,27 +248,60 @@ impl<F: ScalarField> Extractor<'_, '_, F> {
             }
         }
         let t = root.unwrap_or((lo + hi) * 0.5);
-        let p = std::array::from_fn(|k| self.grid[a][k] * (1. - t) + self.grid[b][k] * t);
-        let id = self.mesh.points.len();
-        self.mesh.points.push(p);
-        self.cache.insert((a, b, label), id);
-        Ok(id)
+        Ok(Root::Point(std::array::from_fn(|k| {
+            self.grid[a][k] * (1. - t) + self.grid[b][k] * t
+        })))
     }
-    fn polygon(&mut self, mut ids: Vec<usize>, label: u8) -> Result<()> {
+
+    fn node(&self, id: usize) -> Result<usize> {
+        match self.node_vertex[id] {
+            usize::MAX => Err(fail("Unassigned lattice vertex")),
+            v => Ok(v),
+        }
+    }
+
+    fn vertex(&self, a: usize, b: usize, label: u8) -> Result<usize> {
+        let (a, b) = if a < b { (a, b) } else { (b, a) };
+        let direction = self
+            .offsets
+            .iter()
+            .position(|&o| o == b - a)
+            .ok_or_else(|| fail("Invalid lattice edge"))?;
+        if let Ok(i) = self.keys.binary_search(&(a, direction as u8, label)) {
+            return Ok(self.key_vertex[i]);
+        }
+        // Clipping treats a node exactly on the level as inside; it is its own root.
+        let level = self.level(label);
+        if self.values[a] == level {
+            return self.node(a);
+        }
+        if self.values[b] == level {
+            return self.node(b);
+        }
+        Err(fail("No bracket on surface edge"))
+    }
+
+    fn polygon(
+        &self,
+        mut ids: Vec<usize>,
+        label: u8,
+        normal: Option<Point>,
+        out: &mut Faces,
+    ) -> Result<()> {
         ids.sort_unstable();
         ids.dedup();
         if ids.len() < 3 {
             return Ok(());
         }
         let center = std::array::from_fn(|k| {
-            ids.iter().map(|&i| self.mesh.points[i][k]).sum::<f64>() / ids.len() as f64
+            ids.iter().map(|&i| self.points[i][k]).sum::<f64>() / ids.len() as f64
         });
-        let normal = self.band.normal(center, label);
-        let axis = sub(self.mesh.points[ids[0]], center);
+        let normal = normal.unwrap_or_else(|| self.band.normal(center, label));
+        let axis = sub(self.points[ids[0]], center);
         let perpendicular = cross(normal, axis);
         ids.sort_by(|&a, &b| {
-            let a = sub(self.mesh.points[a], center);
-            let b = sub(self.mesh.points[b], center);
+            let a = sub(self.points[a], center);
+            let b = sub(self.points[b], center);
             dot(a, perpendicular)
                 .atan2(dot(a, axis))
                 .total_cmp(&dot(b, perpendicular).atan2(dot(b, axis)))
@@ -208,14 +317,13 @@ impl<F: ScalarField> Extractor<'_, '_, F> {
                     ids[(start + j) % ids.len()],
                     ids[(start + j + 1) % ids.len()],
                 ];
-                let [a, b, c] = face.map(|i| self.mesh.points[i]);
-                let n = self
-                    .band
-                    .normal(std::array::from_fn(|k| (a[k] + b[k] + c[k]) / 3.), label);
+                let [a, b, c] = face.map(|i| self.points[i]);
+                // A polygon spans one lattice tetrahedron, so its centre normal serves
+                // every candidate triangle.
                 let e = sub(b, a);
                 let d = sub(c, a);
                 let edge = sub(c, b);
-                let score = dot(cross(e, d), n) / (dot(e, e) + dot(d, d) + dot(edge, edge));
+                let score = dot(cross(e, d), normal) / (dot(e, e) + dot(d, d) + dot(edge, edge));
                 worst = worst.min(score);
                 faces.push(face);
             }
@@ -227,18 +335,16 @@ impl<F: ScalarField> Extractor<'_, '_, F> {
         if score <= 0. {
             return Err(fail("Inverted triangle after analytic edge intersection"));
         }
-        for face in faces {
-            self.mesh.faces.push(face);
-            self.mesh.labels.push(label)
-        }
+        out.extend(faces.into_iter().map(|face| (face, label)));
         Ok(())
     }
-    fn cap(&mut self, face: [usize; 3], label: u8) -> Result<()> {
+
+    fn cap(&self, face: [usize; 3], label: u8, out: &mut Faces) -> Result<()> {
         // Each clipped point retains its original grid-edge support so both
         // implicit walls and clipping caps share exactly the same vertex IDs.
         let mut poly = face.map(|id| ([id, id], self.values[id], None)).to_vec();
         for wall in [1u8, 0] {
-            let level = self.band.levels[if wall == 0 { 1 } else { 0 }];
+            let level = self.level(wall);
             let inside = |v: f64| if wall == 0 { v <= level } else { v >= level };
             let mut next = Vec::new();
             for j in 0..poly.len() {
@@ -254,7 +360,7 @@ impl<F: ScalarField> Extractor<'_, '_, F> {
                     if support.len() != 2 {
                         return Err(fail("Invalid clipping edge support"));
                     }
-                    let id = self.root(support[0], support[1], wall)?;
+                    let id = self.vertex(support[0], support[1], wall)?;
                     next.push(([support[0], support[1]], level, Some(id)));
                 }
             }
@@ -262,13 +368,92 @@ impl<F: ScalarField> Extractor<'_, '_, F> {
         }
         let ids = poly
             .into_iter()
-            .map(|(support, _, id)| id.unwrap_or_else(|| self.original(support[0])))
-            .collect();
-        self.polygon(ids, label)
+            .map(|(support, _, id)| id.map_or_else(|| self.node(support[0]), Ok))
+            .collect::<Result<Vec<_>>>()?;
+        self.polygon(ids, label, None, out)
+    }
+
+    /// Triangles of one slab of cubes.
+    fn slab(&self, z: usize) -> Result<Faces> {
+        let (n, cells) = (self.n, self.n - 1);
+        let stride = [1, n, n * n];
+        let h: Point = std::array::from_fn(|k| {
+            (self.band.bounds[1][k] - self.band.bounds[0][k]) / cells as f64
+        });
+        let mut out = Vec::new();
+        for y in 0..cells {
+            for x in 0..cells {
+                let base = x + n * (y + n * z);
+                for perm in [
+                    [0, 1, 2],
+                    [0, 2, 1],
+                    [1, 0, 2],
+                    [1, 2, 0],
+                    [2, 0, 1],
+                    [2, 1, 0],
+                ] {
+                    let tet = [
+                        base,
+                        base + stride[perm[0]],
+                        base + stride[perm[0]] + stride[perm[1]],
+                        base + 1 + n + n * n,
+                    ];
+                    for label in 0..2 {
+                        let level = self.level(label);
+                        if !level.is_finite() {
+                            continue;
+                        }
+                        let mut ids = Vec::new();
+                        for i in 0..4 {
+                            for j in i + 1..4 {
+                                if (self.values[tet[i]] < level) != (self.values[tet[j]] < level) {
+                                    ids.push(self.vertex(tet[i], tet[j], label)?)
+                                }
+                            }
+                        }
+                        if ids.is_empty() {
+                            continue;
+                        }
+                        // The tetrahedron's edges step along `perm` one axis at a time,
+                        // so the linear interpolant's gradient needs no field evaluation.
+                        let mut g = [0.; 3];
+                        for (k, &axis) in perm.iter().enumerate() {
+                            g[axis] = (self.values[tet[k + 1]] - self.values[tet[k]]) / h[axis];
+                        }
+                        let length = crate::norm(g);
+                        let sign = if label == 0 { 1. } else { -1. };
+                        let normal = (length > 0.).then(|| g.map(|v| sign * v / length));
+                        self.polygon(ids, label, normal, &mut out)?;
+                    }
+                    // Only cubes touching the box can hold cap faces.
+                    if ![x, y, z].iter().any(|&c| c == 0 || c == cells - 1) {
+                        continue;
+                    }
+                    for omit in 0..4 {
+                        let mut face = [0; 3];
+                        for (slot, j) in (0..4).filter(|&j| j != omit).enumerate() {
+                            face[slot] = tet[j];
+                        }
+                        for label in 2..8 {
+                            let axis = (label - 2) / 2;
+                            let boundary_index = if (label - 2) % 2 == 0 { 0 } else { cells };
+                            if face
+                                .iter()
+                                .all(|&i| (i / stride[axis]) % n == boundary_index)
+                            {
+                                self.cap(face, label as u8, &mut out)?;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        Ok(out)
     }
 }
 
 pub fn extract<F: ScalarField>(band: &Band<'_, F>, cells: usize) -> Result<TriangleMesh> {
+    use rayon::prelude::*;
     band.validate()?;
     if !(4..=128).contains(&cells) {
         return Err(MeshingError::InvalidOptions(
@@ -276,24 +461,24 @@ pub fn extract<F: ScalarField>(band: &Band<'_, F>, cells: usize) -> Result<Trian
         ));
     }
     let n = cells + 1;
-    let mut grid = Vec::with_capacity(n * n * n);
-    let mut values = Vec::with_capacity(n * n * n);
-    for z in 0..n {
-        for y in 0..n {
-            for x in 0..n {
-                let p = std::array::from_fn(|k| {
-                    band.bounds[0][k]
-                        + (band.bounds[1][k] - band.bounds[0][k]) * [x, y, z][k] as f64
-                            / cells as f64
-                });
-                let value = band.field.value(p);
-                if !value.is_finite() {
-                    return Err(fail("Non-finite sampled field"));
-                }
-                grid.push(p);
-                values.push(value);
-            }
-        }
+    let index = |i: usize| [i % n, (i / n) % n, i / (n * n)];
+    let grid: Vec<Point> = (0..n * n * n)
+        .map(|i| {
+            let c = index(i);
+            std::array::from_fn(|k| {
+                band.bounds[0][k]
+                    + (band.bounds[1][k] - band.bounds[0][k]) * c[k] as f64 / cells as f64
+            })
+        })
+        .collect();
+    let mut values: Vec<f64> = if band.field.prefers_batches() {
+        band.field.values(&grid)
+    } else {
+        grid.par_iter().map(|&p| band.field.value(p)).collect()
+    };
+    band.field.check().map_err(MeshingError::GenerationFailed)?;
+    if values.iter().any(|v| !v.is_finite()) {
+        return Err(fail("Non-finite sampled field"));
     }
     // A zero iso-value has no relative scale of its own. Use the sampled
     // field range so near-zero cancellation ties share one lattice vertex.
@@ -317,74 +502,101 @@ pub fn extract<F: ScalarField>(band: &Band<'_, F>, cells: usize) -> Result<Trian
             }
         }
     }
-    let mut e = Extractor {
+    let offsets = STEPS.map(|s| s[0] + n * s[1] + n * n * s[2]);
+    let mut lattice = Lattice {
         band,
+        n,
+        offsets,
         grid,
         values,
-        mesh: TriangleMesh {
-            points: Vec::new(),
-            faces: Vec::new(),
-            labels: Vec::new(),
-        },
-        cache: HashMap::new(),
+        keys: Vec::new(),
+        key_vertex: Vec::new(),
+        node_vertex: Vec::new(),
+        points: Vec::new(),
     };
-    let stride = [1, n, n * n];
-    for z in 0..cells {
-        for y in 0..cells {
-            for x in 0..cells {
-                let base = x + n * (y + n * z);
-                for perm in [
-                    [0, 1, 2],
-                    [0, 2, 1],
-                    [1, 0, 2],
-                    [1, 2, 0],
-                    [2, 0, 1],
-                    [2, 1, 0],
-                ] {
-                    let tet = [
-                        base,
-                        base + stride[perm[0]],
-                        base + stride[perm[0]] + stride[perm[1]],
-                        base + 1 + n + n * n,
-                    ];
-                    for label in 0..2 {
-                        let level = band.levels[if label == 0 { 1 } else { 0 }];
-                        if !level.is_finite() {
-                            continue;
-                        }
-                        let mut ids = Vec::new();
-                        for i in 0..4 {
-                            for j in i + 1..4 {
-                                if (e.values[tet[i]] < level) != (e.values[tet[j]] < level) {
-                                    ids.push(e.root(tet[i], tet[j], label)?)
-                                }
-                            }
-                        }
-                        e.polygon(ids, label)?;
-                    }
-                    for omit in 0..4 {
-                        let face: Vec<_> = (0..4).filter(|&j| j != omit).map(|j| tet[j]).collect();
-                        for label in 2..8 {
-                            let axis = (label - 2) / 2;
-                            let boundary_index = if (label - 2) % 2 == 0 { 0 } else { cells };
-                            if face
-                                .iter()
-                                .all(|&i| (i / stride[axis]) % n == boundary_index)
-                            {
-                                e.cap([face[0], face[1], face[2]], label as u8)?;
-                            }
-                        }
-                    }
-                }
-            }
+    let level = |label: u8| band.levels[if label == 0 { 1 } else { 0 }];
+    lattice.keys = (0..n * n * n)
+        .into_par_iter()
+        .flat_map_iter(|a| {
+            let c = index(a);
+            let values = &lattice.values;
+            STEPS
+                .iter()
+                .enumerate()
+                .filter(move |(_, s)| (0..3).all(|k| c[k] + s[k] < n))
+                .flat_map(move |(d, _)| {
+                    let b = a + offsets[d];
+                    (0..2u8).filter_map(move |label| {
+                        let level = level(label);
+                        (level.is_finite() && (values[a] < level) != (values[b] < level))
+                            .then_some((a, d as u8, label))
+                    })
+                })
+        })
+        .collect();
+    let roots = lattice
+        .keys
+        .par_iter()
+        .map(|&(a, d, label)| lattice.solve(a, a + offsets[d as usize], label))
+        .collect::<Result<Vec<_>>>()?;
+    band.field.check().map_err(MeshingError::GenerationFailed)?;
+    // Nodes become vertices when a cap keeps them or they lie exactly on a level.
+    // Unused ones are dropped after triangulation.
+    lattice.node_vertex = vec![usize::MAX; n * n * n];
+    for id in 0..n * n * n {
+        let v = lattice.values[id];
+        let on_box = index(id).iter().any(|&c| c == 0 || c == cells);
+        let inside = v >= band.levels[0] && v <= band.levels[1];
+        if (on_box && inside) || band.levels.iter().any(|&l| l.is_finite() && v == l) {
+            lattice.node_vertex[id] = lattice.points.len();
+            lattice.points.push(lattice.grid[id]);
         }
     }
+    lattice.key_vertex = roots
+        .into_iter()
+        .map(|root| match root {
+            Root::Node(id) => lattice.node_vertex[id],
+            Root::Point(p) => {
+                lattice.points.push(p);
+                lattice.points.len() - 1
+            }
+        })
+        .collect();
+    let slabs = (0..cells)
+        .into_par_iter()
+        .map(|z| lattice.slab(z))
+        .collect::<Result<Vec<_>>>()?;
+    // Compact to the referenced vertices, keeping their order.
+    let mut map = vec![usize::MAX; lattice.points.len()];
+    let mut mesh = TriangleMesh {
+        points: Vec::new(),
+        faces: Vec::new(),
+        labels: Vec::new(),
+    };
+    for (face, label) in slabs.into_iter().flatten() {
+        for &v in &face {
+            if map[v] == usize::MAX {
+                map[v] = 0;
+            }
+        }
+        mesh.faces.push(face);
+        mesh.labels.push(label);
+    }
+    for (v, m) in map.iter_mut().enumerate() {
+        if *m == 0 {
+            *m = mesh.points.len();
+            mesh.points.push(lattice.points[v]);
+        }
+    }
+    for face in &mut mesh.faces {
+        *face = face.map(|v| map[v]);
+    }
     // Avoid a silent success for unresolved or empty geometry in the benchmark.
-    if e.mesh.faces.is_empty() {
+    if mesh.faces.is_empty() {
         return Err(fail("No resolved triangle surface"));
     }
     band.field.check().map_err(MeshingError::GenerationFailed)?;
-    Ok(e.mesh)
+    Ok(mesh)
 }
 
 /// Constrained neighbor averaging with local orientation checks. Connectivity
@@ -897,6 +1109,27 @@ fn smooth_impl<F: ScalarField>(
 #[cfg(test)]
 mod tests {
     use super::*;
+    use std::collections::HashMap;
+
+    #[test]
+    fn manifold_check_rejects_open_and_pinched_surfaces() {
+        let tetra = |o: usize| {
+            [[0, 2, 1], [0, 1, 3], [1, 2, 3], [0, 3, 2]].map(|f: [usize; 3]| f.map(|v| v + o))
+        };
+        let check = |faces: &[[usize; 3]], n: usize| {
+            let directed = faces
+                .iter()
+                .flat_map(|f| [[f[0], f[1]], [f[1], f[2]], [f[2], f[0]]])
+                .collect();
+            closed_oriented_manifold(faces, directed, n)
+        };
+        assert!(check(&tetra(0), 4));
+        assert!(!check(&tetra(0)[..3], 4));
+        // Two tetrahedra sharing vertex 3: every edge is fine, the vertex link is not.
+        let mut pinched = tetra(0).to_vec();
+        pinched.extend(tetra(3));
+        assert!(!check(&pinched, 7));
+    }
     fn check<F: ScalarField>(mesh: &TriangleMesh, band: &Band<'_, F>) {
         let mut edges = HashMap::<(usize, usize), (usize, i32)>::new();
         let mut used = vec![false; mesh.points.len()];

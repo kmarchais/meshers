@@ -38,6 +38,7 @@ def generate_surface(  # ruff: ignore[too-many-arguments] - match the volume API
     gradation: float = 0.3,
     iterations: int = 8,
     balanced: bool = False,
+    fast: bool = False,
 ) -> SurfaceMesh:
     """Generate a closed boundary without tetrahedra.
 
@@ -52,6 +53,10 @@ def generate_surface(  # ruff: ignore[too-many-arguments] - match the volume API
     so triangles deviate to both sides of the surface: about half the triangles at
     the same tolerance and almost no volume bias, but vertices are then off the
     surface. Use it for printing and display, not for curved quadratic FEA meshes.
+    ``fast=True`` (with ``adaptive=True``) only coarsens the extraction and splits
+    where the tolerance is exceeded, without flips or smoothing: faster, a few more
+    triangles, and lower but valid triangle shapes. ``iterations`` then counts
+    coarsening passes; two are enough.
     Set ``geometry_tolerance=0`` for a quick preview without distance sampling;
     topology and finite triangle checks still run. Diagnostics mark that omission.
 
@@ -96,6 +101,7 @@ def generate_surface(  # ruff: ignore[too-many-arguments] - match the volume API
             float(gradation),
             int(iterations),
             bool(balanced),
+            bool(fast),
         )
     result = _meshers.generate_surface(
         field,

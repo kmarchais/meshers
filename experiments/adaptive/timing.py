@@ -7,15 +7,21 @@ independent Hausdorff distance are recorded once per configuration. The FEA bloc
 times mesh generation plus the six-load homogenization for a 1% target.
 
 Run: uv run --no-sync python experiments/adaptive/timing.py [--threads N] [--fea]
+`--threads` also caps the surface pipeline's rayon pool. The pip VTK wheel runs its
+SMP filters sequentially; the backend is recorded with the results.
 """
 
 import argparse
 import json
+import os
 import platform
 import statistics
 import sys
 import time
 from pathlib import Path
+
+if "--threads" in sys.argv:  # must precede the meshers import that starts rayon
+    os.environ["RAYON_NUM_THREADS"] = sys.argv[sys.argv.index("--threads") + 1]
 
 import numpy as np
 
@@ -29,22 +35,28 @@ import scorecard  # noqa: E402
 BOX = (-0.5, 0.5) * 3
 
 
+# Flying Edges grids bracketing H = 1e-3 (independent scorecard, see RESULTS.md).
+FLYING_EDGES = {"sphere": (28, 32), "ellipsoid": (64, 80), "gyroid": (40, 48), "schwarz-p": (36, 40)}
+MODES = {  # label: (balanced, fast, iterations)
+    "adaptive": (False, False, 5),
+    "balanced": (True, False, 5),
+    "fast": (False, True, 2),
+    "fast-balanced": (True, True, 2),
+}
+
+
 def surface_configs(threads):
     out = {}
-    for name, cells in (("sphere", 24), ("ellipsoid", 24), ("gyroid", 16)):
+    for name, grids in FLYING_EDGES.items():
         case = scorecard.CASES[name]
-        for n in (48, 96):
+        for n in grids:
             out[f"{name}/flying-edges-{n}"] = (case, lambda c=case, n=n: scorecard.flying_edges(c, n))
-        for balanced in (False, True):
-            label = "balanced" if balanced else "adaptive"
-            out[f"{name}/{label}-1e-3"] = (
-                case,
-                lambda c=case, cells=cells, b=balanced: _surface(c, cells, b),
-            )
+        for label, mode in MODES.items():
+            out[f"{name}/{label}-1e-3"] = (case, lambda c=case, m=mode: _surface(c, 24, *m))
     return out
 
 
-def _surface(case, cells, balanced):
+def _surface(case, cells, balanced, fast, iterations):
     mesh = meshers.generate_surface(
         case.function,
         bounds=BOX,
@@ -52,8 +64,9 @@ def _surface(case, cells, balanced):
         band=case.band,
         geometry_tolerance=1e-3,
         adaptive=True,
-        iterations=5,
+        iterations=iterations,
         balanced=balanced,
+        fast=fast,
     )
     return mesh.points, mesh.triangles
 
@@ -172,7 +185,11 @@ def main():
     parser.add_argument("--repeats", type=int, default=5)
     parser.add_argument("--fea", action="store_true")
     args = parser.parse_args()
+    from vtkmodules.vtkCommonCore import vtkSMPTools
+
     record = {
+        "vtk_smp_backend": vtkSMPTools.GetBackend(),
+        "vtk_smp_threads": vtkSMPTools.GetEstimatedNumberOfThreads(),
         "meshers": meshers.__file__,
         "threads": args.threads,
         "repeats": args.repeats,

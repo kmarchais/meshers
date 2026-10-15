@@ -29,6 +29,27 @@ def test_adaptive_surface_meets_tolerance_with_fewer_triangles():
     assert abs(adapted.diagnostics["volume"] / exact - 1) < 0.01
 
 
+@pytest.mark.skipif(not hasattr(meshers, "generate_surface"), reason="surface build feature")
+@pytest.mark.parametrize("balanced", [False, True])
+def test_fast_surface_meets_tolerance_with_fewer_triangles(balanced):
+    tolerance = 1e-3
+    fixed = meshers.generate_surface(gyroid, bounds=BOX, cells=24, band=(-1.0, 1.0))
+    fast = meshers.generate_surface(
+        gyroid,
+        bounds=BOX,
+        cells=24,
+        band=(-1.0, 1.0),
+        geometry_tolerance=tolerance,
+        adaptive=True,
+        iterations=2,
+        balanced=balanced,
+        fast=True,
+    )
+    assert fast.diagnostics["maximum_sampled_surface_error"] <= tolerance
+    assert len(fast.triangles) < 0.8 * len(fixed.triangles)
+    assert fast.diagnostics["minimum_triangle_shape"] > 0
+
+
 def test_adapted_periodic_sheet_stays_periodic_and_shaped():
     mesh = meshers.generate(
         gyroid,

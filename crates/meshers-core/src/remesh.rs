@@ -7,6 +7,8 @@
 //! towards that length, and every vertex is projected back onto its exact constraint
 //! (implicit wall, box plane, or their intersection curve). A final pass splits edges
 //! until sampled centroid and midpoint distances meet the tolerance.
+use rayon::prelude::*;
+
 use crate::{
     MeshingError, Point, cross, dot, implicit::ScalarField, norm, quads::Band, sub,
     triangles::TriangleMesh,
@@ -27,6 +29,10 @@ pub struct Options {
     /// to both sides of the surface. Halves the deviation at equal triangle count and
     /// removes the volume bias; vertices then no longer lie exactly on the surface.
     pub balanced: bool,
+    /// Coarsen by collapses only, then split where the sampled distance exceeds the
+    /// tolerance. No flips or smoothing: fewer triangles than a uniform extraction at
+    /// a fraction of the full remeshing cost, with lower but valid triangle shapes.
+    pub fast: bool,
 }
 
 #[derive(Clone, Debug, Default)]
@@ -41,10 +47,16 @@ pub struct Stats {
     pub seconds: [f64; 6],
 }
 
+/// An edge with its sort key (a length or a length ratio).
+type Edge = (f64, [usize; 2]);
+
 const SPLIT: f64 = 4. / 3.;
 const COLLAPSE: f64 = 4. / 5.;
 /// Fraction of the tolerance used for sizing, leaving room for estimate error.
 const SIZING_SAFETY: f64 = 0.8;
+/// Collapses must keep every changed triangle above this shape, or not worsen it.
+const SHAPE_GUARD: f64 = 0.3;
+const FAST_SHAPE_GUARD: f64 = 0.05;
 
 fn fail(message: &str) -> MeshingError {
     MeshingError::GenerationFailed(message.into())
@@ -64,6 +76,43 @@ fn shape(p: [Point; 3], normal: Point) -> f64 {
     let d = sub(p[2], p[0]);
     let f = sub(p[2], p[1]);
     2. * 3f64.sqrt() * dot(cross(e, d), normal) / (dot(e, e) + dot(d, d) + dot(f, f)).max(1e-300)
+}
+
+/// Largest magnitude of the quadratic through corner values and the mid-edge values
+/// of edges (0,1), (1,2), (2,0). The deviation of a flat triangle from a smooth
+/// surface is quadratic to leading order, and its peak is generally at none of the
+/// six samples, so this catches what they miss without more field evaluations.
+fn quadratic_max(corners: [f64; 3], mids: [f64; 3]) -> f64 {
+    // q(s, t) = a + b s + c t + d s² + e s t + f t², corner 0 at the origin, corner 1
+    // at s = 1, corner 2 at t = 1.
+    let [c0, c1, c2] = corners;
+    let [m01, m12, m20] = mids;
+    let (a, b, c) = (c0, 4. * m01 - 3. * c0 - c1, 4. * m20 - 3. * c0 - c2);
+    let (d, f) = (2. * c1 - 4. * m01 + 2. * c0, 2. * c2 - 4. * m20 + 2. * c0);
+    let e = 4. * (m12 - a - 0.5 * b - 0.5 * c - 0.25 * d - 0.25 * f);
+    let q = |s: f64, t: f64| a + b * s + c * t + d * s * s + e * s * t + f * t * t;
+    let mut worst = c0.abs().max(c1.abs()).max(c2.abs());
+    let mut candidate = |s: f64, t: f64| {
+        if s >= 0. && t >= 0. && s + t <= 1. + 1e-12 {
+            worst = worst.max(q(s, t).abs());
+        }
+    };
+    let det = 4. * d * f - e * e;
+    if det != 0. {
+        candidate((-2. * f * b + e * c) / det, (-2. * d * c + e * b) / det);
+    }
+    if d != 0. {
+        candidate(-b / (2. * d), 0.);
+    }
+    if f != 0. {
+        candidate(0., -c / (2. * f));
+    }
+    let curvature = d - e + f;
+    if curvature != 0. {
+        let s = -(b - c + e - 2. * f) / (2. * curvature);
+        candidate(s, 1. - s);
+    }
+    worst
 }
 
 fn wall_label(mask: u8) -> Option<u8> {
@@ -378,7 +427,12 @@ impl<'a, 'b, F: ScalarField> Surface<'a, 'b, F> {
                 continue;
             }
             let next = self.faces[f].map(|i| if i == u { v } else { i });
-            if self.face_shape(next, self.labels[f], None) < before.min(0.3) {
+            let guard = if o.fast {
+                FAST_SHAPE_GUARD
+            } else {
+                SHAPE_GUARD
+            };
+            if self.face_shape(next, self.labels[f], None) < before.min(guard) {
                 return false;
             }
         }
@@ -513,9 +567,14 @@ impl<'a, 'b, F: ScalarField> Surface<'a, 'b, F> {
 
     /// First-order wall distance; `mask` box bits hold those axes, so a chord on a
     /// wall/plane curve is measured against the curve inside its plane.
-    fn distance(&self, p: Point, label: u8, mask: u8) -> f64 {
-        let level = self.band.levels[if label == 0 { 1 } else { 0 }];
-        let residual = (self.band.field.value(p) - level).abs();
+    /// Signed outward version of the same estimate.
+    fn signed_in(&self, p: Point, label: u8, mask: u8) -> f64 {
+        let f = self.band.field.value(p);
+        let residual = if label == 0 {
+            f - self.band.levels[1]
+        } else {
+            self.band.levels[0] - f
+        };
         if residual == 0. {
             return 0.;
         }
@@ -528,66 +587,75 @@ impl<'a, 'b, F: ScalarField> Surface<'a, 'b, F> {
         residual / norm(g)
     }
 
+    /// Evaluate `eval` in parallel on alive wall faces that are new since the last
+    /// call or `dirty`; other entries keep their cached value, dead faces get none.
+    fn refresh<T: Send>(
+        &self,
+        cache: &mut Vec<Option<T>>,
+        dirty: impl Fn(usize) -> bool + Sync,
+        eval: impl Fn(usize) -> T + Sync,
+    ) {
+        cache.resize_with(self.faces.len(), || None);
+        cache.par_iter_mut().enumerate().for_each(|(f, slot)| {
+            if !self.alive[f] || self.labels[f] >= 2 {
+                *slot = None;
+            } else if slot.is_none() || dirty(f) {
+                *slot = Some(eval(f));
+            }
+        });
+    }
+
+    /// Distance of a wall face with vertices on the surface, and the edges to split
+    /// when it exceeds `tolerance`.
+    fn wall_error(&self, f: usize, tolerance: f64) -> (f64, Vec<Edge>) {
+        let face = self.faces[f];
+        let p = face.map(|i| self.points[i]);
+        let centroid = std::array::from_fn(|k| (p[0][k] + p[1][k] + p[2][k]) / 3.);
+        let dc = self.signed_in(centroid, self.labels[f], 0).abs();
+        let mut flagged = Vec::new();
+        let mut longest = (0., [face[0], face[1]]);
+        let mut mids = [0.; 3];
+        for i in 0..3 {
+            // Every edge of a wall face is sampled: an edge shared with a cap
+            // face has no second wall face to sample it from.
+            let (a, b) = (face[i], face[(i + 1) % 3]);
+            let mid = std::array::from_fn(|k| 0.5 * (p[i][k] + p[(i + 1) % 3][k]));
+            mids[i] = self.signed_in(mid, self.labels[f], self.masks[a] & self.masks[b]);
+            let l = self.length(a, b);
+            if l > longest.0 {
+                longest = (l, [a, b]);
+            }
+            if mids[i].abs() > tolerance {
+                flagged.push((l, [a, b]));
+            }
+        }
+        // Vertices lie on the surface here.
+        let worst = dc.max(quadratic_max([0.; 3], mids));
+        if worst > tolerance && flagged.is_empty() {
+            flagged.push(longest);
+        }
+        (worst, flagged)
+    }
+
     /// Split until sampled midpoint and centroid distances meet the tolerance.
     fn enforce(&mut self, o: &Options, stats: &mut Stats) -> Result<()> {
+        // A split changes only the faces it creates, so only those are sampled again.
+        let mut cache = Vec::new();
         for _ in 0..16 {
             self.band
                 .field
                 .check()
                 .map_err(MeshingError::GenerationFailed)?;
-            let mut flagged = Vec::new();
-            let mut worst = 0f64;
-            for f in 0..self.faces.len() {
-                if !self.alive[f] || self.labels[f] >= 2 {
-                    continue;
-                }
-                let face = self.faces[f];
-                let p = face.map(|i| self.points[i]);
-                let centroid = std::array::from_fn(|k| (p[0][k] + p[1][k] + p[2][k]) / 3.);
-                let dc = self.distance(centroid, self.labels[f], 0);
-                worst = worst.max(dc);
-                let mut longest = (0., [face[0], face[1]]);
-                let mut any = false;
-                for i in 0..3 {
-                    // Every edge of a wall face is sampled: an edge shared with a cap
-                    // face has no second wall face to sample it from.
-                    let (a, b) = (face[i], face[(i + 1) % 3]);
-                    let mid = std::array::from_fn(|k| 0.5 * (p[i][k] + p[(i + 1) % 3][k]));
-                    let d = self.distance(mid, self.labels[f], self.masks[a] & self.masks[b]);
-                    worst = worst.max(d);
-                    let l = self.length(a, b);
-                    if l > longest.0 {
-                        longest = (l, [a, b]);
-                    }
-                    if d > o.tolerance {
-                        flagged.push((l, [a, b]));
-                        any = true;
-                    }
-                }
-                if dc > o.tolerance && !any {
-                    flagged.push(longest);
-                }
-            }
+            self.refresh(&mut cache, |_| false, |f| self.wall_error(f, o.tolerance));
+            let worst = cache.iter().flatten().map(|s| s.0).fold(0f64, f64::max);
+            let flagged: Vec<_> = cache.iter().flatten().flat_map(|s| s.1.clone()).collect();
             stats.maximum_error = worst;
             if flagged.is_empty() {
                 return Ok(());
             }
-            flagged.sort_by(|a, b| b.0.total_cmp(&a.0));
-            flagged.dedup_by_key(|e| {
-                let [a, b] = e.1;
-                [a.min(b), a.max(b)]
-            });
-            let mut progress = false;
-            for (_, [a, b]) in flagged {
-                if self.edge_faces(a, b).len() != 2 || self.length(a, b) < o.min_length {
-                    continue;
-                }
-                if self.split(a, b).is_some() {
-                    stats.error_splits += 1;
-                    progress = true;
-                }
-            }
-            if !progress {
+            let splits = self.split_all(flagged, o);
+            stats.error_splits += splits;
+            if splits == 0 {
                 return Ok(());
             }
         }
@@ -596,52 +664,93 @@ impl<'a, 'b, F: ScalarField> Surface<'a, 'b, F> {
 
     /// Signed outward distance from the wall that `label` belongs to.
     fn signed(&self, p: Point, label: u8) -> f64 {
-        let g = norm(self.band.gradient(p));
-        let f = self.band.field.value(p);
-        if label == 0 {
-            (f - self.band.levels[1]) / g
-        } else {
-            (self.band.levels[0] - f) / g
-        }
+        self.signed_in(p, label, 0)
     }
 
-    /// Largest sampled deviation at wall vertices, edge midpoints and centroids.
-    fn deviation(&self) -> f64 {
-        let mut worst = 0f64;
-        for (f, face) in self.faces.iter().enumerate() {
+    /// Largest deviation at wall vertices, edge midpoints, centroids and the maximum
+    /// of their quadratic interpolant, and the longest edge of every face whose
+    /// deviation exceeds `tolerance`.
+    /// Faces are re-sampled only when new or when one of their vertices moved since
+    /// the positions in `previous`.
+    fn deviation(
+        &self,
+        tolerance: f64,
+        cache: &mut Vec<Option<(f64, Option<Edge>)>>,
+        previous: &[Point],
+    ) -> (f64, Vec<Edge>) {
+        let moved = |f: usize| {
+            self.faces[f]
+                .iter()
+                .any(|&v| previous.get(v) != Some(&self.points[v]))
+        };
+        self.refresh(cache, moved, |f| {
             let label = self.labels[f];
-            if !self.alive[f] || label >= 2 {
+            let face = self.faces[f];
+            let p = face.map(|i| self.points[i]);
+            let centroid = std::array::from_fn(|k| (p[0][k] + p[1][k] + p[2][k]) / 3.);
+            let mut longest = (0., [face[0], face[1]]);
+            let mut corners = [0.; 3];
+            let mut mids = [0.; 3];
+            for i in 0..3 {
+                let mid = std::array::from_fn(|k| 0.5 * (p[i][k] + p[(i + 1) % 3][k]));
+                corners[i] = self.signed(p[i], label);
+                mids[i] = self.signed(mid, label);
+                let edge = [face[i], face[(i + 1) % 3]];
+                let l = self.length(edge[0], edge[1]);
+                if l > longest.0 {
+                    longest = (l, edge);
+                }
+            }
+            let worst = self
+                .signed(centroid, label)
+                .abs()
+                .max(quadratic_max(corners, mids));
+            (worst, (worst > tolerance).then_some(longest))
+        });
+        let worst = cache.iter().flatten().map(|s| s.0).fold(0., f64::max);
+        (worst, cache.iter().flatten().filter_map(|s| s.1).collect())
+    }
+
+    /// Split edges longest first; returns how many splits succeeded.
+    fn split_all(&mut self, mut edges: Vec<Edge>, o: &Options) -> usize {
+        edges.sort_by(|a, b| b.0.total_cmp(&a.0));
+        edges.dedup_by_key(|e| {
+            let [a, b] = e.1;
+            [a.min(b), a.max(b)]
+        });
+        let mut count = 0;
+        for (_, [a, b]) in edges {
+            if self.edge_faces(a, b).len() != 2 || self.length(a, b) < o.min_length {
                 continue;
             }
-            let p = face.map(|i| self.points[i]);
-            let mut samples = vec![std::array::from_fn(|k| (p[0][k] + p[1][k] + p[2][k]) / 3.)];
-            for i in 0..3 {
-                samples.push(p[i]);
-                samples.push(std::array::from_fn(|k| 0.5 * (p[i][k] + p[(i + 1) % 3][k])));
-            }
-            for q in samples {
-                worst = worst.max(self.signed(q, label).abs());
+            if self.split(a, b).is_some() {
+                count += 1;
             }
         }
-        worst
+        count
     }
 
     /// Move wall vertices outward by half the mean centroid sag of their faces, holding
     /// box coordinates. Returns the on-surface positions for undoing.
-    fn balance(&mut self) -> Vec<Point> {
+    /// Centroid sags are cached in `sags`: on-surface positions of surviving faces do
+    /// not change between calls.
+    fn balance(&mut self, sags: &mut Vec<Option<f64>>) -> Vec<Point> {
         let base = self.points.clone();
         let n = self.points.len();
         let mut sum = vec![0.; n];
         let mut count = vec![0usize; n];
-        for (f, face) in self.faces.iter().enumerate() {
-            let label = self.labels[f];
-            if !self.alive[f] || label >= 2 {
-                continue;
-            }
-            let p = face.map(|i| base[i]);
-            let c = std::array::from_fn(|k| (p[0][k] + p[1][k] + p[2][k]) / 3.);
-            let sag = self.signed(c, label);
-            for &v in face {
+        self.refresh(
+            sags,
+            |_| false,
+            |f| {
+                let p = self.faces[f].map(|i| self.points[i]);
+                let c = std::array::from_fn(|k| (p[0][k] + p[1][k] + p[2][k]) / 3.);
+                self.signed(c, self.labels[f])
+            },
+        );
+        for (f, sag) in sags.iter().enumerate() {
+            let Some(sag) = *sag else { continue };
+            for &v in &self.faces[f] {
                 sum[v] += sag;
                 count[v] += 1;
             }
@@ -727,9 +836,16 @@ pub fn adapt<F: ScalarField>(
     };
     for _ in 0..o.iterations {
         band.field.check().map_err(MeshingError::GenerationFailed)?;
+        if o.fast {
+            let size = s.sizes(o);
+            lap(&mut stats, 0);
+            stats.collapses += s.coarsen(&size, o);
+            lap(&mut stats, 2);
+            continue;
+        }
         let size = s.sizes(o);
         lap(&mut stats, 0);
-        let mut long: Vec<(f64, [usize; 2])> = s
+        let mut long: Vec<Edge> = s
             .edges()
             .into_iter()
             .filter_map(|[u, v]| {
@@ -746,29 +862,7 @@ pub fn adapt<F: ScalarField>(
         lap(&mut stats, 1);
         let size = s.sizes(o);
         lap(&mut stats, 0);
-        let mut short: Vec<(f64, [usize; 2])> = s
-            .edges()
-            .into_iter()
-            .filter_map(|[u, v]| {
-                let ratio = s.length(u, v) / Surface::<F>::target(&size, u, v);
-                (ratio < COLLAPSE).then_some((ratio, [u, v]))
-            })
-            .collect();
-        short.sort_by(|a, b| a.0.total_cmp(&b.0));
-        for (_, [u, v]) in short {
-            if s.vf[u].is_empty() || s.vf[v].is_empty() || s.edge_faces(u, v).len() != 2 {
-                continue;
-            }
-            // Keep the more constrained vertex.
-            let (remove, keep) = if s.masks[u].count_ones() <= s.masks[v].count_ones() {
-                (u, v)
-            } else {
-                (v, u)
-            };
-            if s.collapse(remove, keep, &size, o) || s.collapse(keep, remove, &size, o) {
-                stats.collapses += 1;
-            }
-        }
+        stats.collapses += s.coarsen(&size, o);
         lap(&mut stats, 2);
         for [u, v] in s.edges() {
             if s.alive_edge(u, v) && s.flip(u, v, o) {
@@ -785,22 +879,31 @@ pub fn adapt<F: ScalarField>(
     }
     if o_final.balanced {
         // Chords may sag up to about twice the tolerance before balancing halves it.
-        let mut relaxed = Options {
+        let relaxed = Options {
             tolerance: 1.8 * o_final.tolerance,
             ..*o_final
         };
+        s.enforce(&relaxed, &mut stats)?;
         let mut done = false;
-        for _ in 0..6 {
-            s.enforce(&relaxed, &mut stats)?;
-            let base = s.balance();
-            let deviation = s.deviation();
-            if deviation <= o_final.tolerance {
+        let (mut sags, mut deviations, mut previous) = (Vec::new(), Vec::new(), Vec::new());
+        for _ in 0..16 {
+            band.field.check().map_err(MeshingError::GenerationFailed)?;
+            let base = s.balance(&mut sags);
+            let (deviation, flagged) = s.deviation(o_final.tolerance, &mut deviations, &previous);
+            previous.clone_from(&s.points);
+            if flagged.is_empty() {
                 stats.maximum_error = deviation;
                 done = true;
                 break;
             }
+            // Refine only where the balanced surface still deviates, on the exact
+            // positions, then balance again.
             s.points = base;
-            relaxed.tolerance = (0.85 * relaxed.tolerance).max(o_final.tolerance);
+            let splits = s.split_all(flagged, o_final);
+            stats.error_splits += splits;
+            if splits == 0 {
+                break;
+            }
         }
         if !done {
             s.enforce(o_final, &mut stats)?;
@@ -815,6 +918,35 @@ pub fn adapt<F: ScalarField>(
 }
 
 impl<F: ScalarField> Surface<'_, '_, F> {
+    /// Collapse edges shorter than their target, shortest first. Returns the count.
+    fn coarsen(&mut self, size: &[f64], o: &Options) -> usize {
+        let mut short: Vec<Edge> = self
+            .edges()
+            .into_iter()
+            .filter_map(|[u, v]| {
+                let ratio = self.length(u, v) / Self::target(size, u, v);
+                (ratio < COLLAPSE).then_some((ratio, [u, v]))
+            })
+            .collect();
+        short.sort_by(|a, b| a.0.total_cmp(&b.0));
+        let mut count = 0;
+        for (_, [u, v]) in short {
+            if self.vf[u].is_empty() || self.vf[v].is_empty() || self.edge_faces(u, v).len() != 2 {
+                continue;
+            }
+            // Keep the more constrained vertex.
+            let (remove, keep) = if self.masks[u].count_ones() <= self.masks[v].count_ones() {
+                (u, v)
+            } else {
+                (v, u)
+            };
+            if self.collapse(remove, keep, size, o) || self.collapse(keep, remove, size, o) {
+                count += 1;
+            }
+        }
+        count
+    }
+
     fn alive_edge(&self, u: usize, v: usize) -> bool {
         self.edge_faces(u, v).len() == 2
     }
@@ -833,6 +965,65 @@ mod tests {
             gradation: 0.3,
             iterations: 8,
             balanced: false,
+            fast: false,
+        }
+    }
+
+    #[test]
+    fn quadratic_max_matches_dense_sampling() {
+        let cases: [fn(f64, f64) -> f64; 3] = [
+            |s, t| 0.1 + s - 2. * t * t + 3. * s * t,
+            |s, t| -(s - 0.3).powi(2) - (t - 0.2).powi(2) + 0.01,
+            |s, t| 2. * s * s - s + 0.5 * t,
+        ];
+        for q in cases {
+            let corners = [q(0., 0.), q(1., 0.), q(0., 1.)];
+            let mids = [q(0.5, 0.), q(0.5, 0.5), q(0., 0.5)];
+            let n = 400;
+            let dense = (0..=n)
+                .flat_map(|i| (0..=n - i).map(move |j| (i as f64 / n as f64, j as f64 / n as f64)))
+                .map(|(s, t)| q(s, t).abs())
+                .fold(0., f64::max);
+            let exact = quadratic_max(corners, mids);
+            assert!(
+                exact >= dense - 1e-12 && exact <= dense + 1e-5,
+                "{exact} vs {dense}"
+            );
+        }
+    }
+
+    #[test]
+    fn fast_mode_meets_tolerance_with_fewer_triangles() {
+        let field = |p: Point| dot(p, p).sqrt() - 0.35;
+        let band = Band {
+            field: &field,
+            bounds: [[-0.5; 3], [0.5; 3]],
+            levels: [f64::NEG_INFINITY, 0.],
+        };
+        let mesh = extract(&band, 24).unwrap();
+        let extracted = mesh.faces.len();
+        for balanced in [false, true] {
+            let mut out = TriangleMesh {
+                points: mesh.points.clone(),
+                faces: mesh.faces.clone(),
+                labels: mesh.labels.clone(),
+            };
+            let o = Options {
+                iterations: 2,
+                balanced,
+                fast: true,
+                ..options(1e-3)
+            };
+            adapt(&mut out, &band, &o).unwrap();
+            validate(&out).unwrap();
+            assert!(
+                out.faces.len() * 2 < extracted,
+                "{} of {extracted}",
+                out.faces.len()
+            );
+            if !balanced {
+                assert!(sampled_error(&out, &band).unwrap() <= 1e-3);
+            }
         }
     }
 
