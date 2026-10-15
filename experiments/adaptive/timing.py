@@ -25,9 +25,14 @@ if "--threads" in sys.argv:  # must precede the meshers import that starts rayon
 
 import numpy as np
 
+sys.path.insert(0, str(Path.home() / "bin"))
+from pueue_progress import report, result  # no-ops outside pueue
+
 HERE = Path(__file__).resolve().parent
 sys.path.insert(0, str(HERE))
 
+# fea puts the frozen extension named by MESHERS_BUILD first on sys.path; timing_job.sh
+# builds and freezes HEAD so the timed code is the committed code.
 import fea  # noqa: E402  (frozen build path, periodic-fea modules)
 import meshers  # noqa: E402
 import scorecard  # noqa: E402
@@ -108,20 +113,37 @@ def volume_configs(threads):
     }
 
 
-def measure(configs, repeats):
+class Progress:
+    """Fraction over the whole job: `--part i/n` places this process's share."""
+
+    def __init__(self, part, total):
+        index, parts = part
+        self.base, self.span, self.total = index / parts, 1 / parts, total
+        self.done, self.start = 0, time.perf_counter()
+
+    def step(self, message):
+        self.done += 1
+        rate = (time.perf_counter() - self.start) / self.done
+        fraction = self.base + self.span * self.done / self.total
+        report(fraction, message, eta_s=rate * (self.total - self.done))
+
+
+def measure(configs, repeats, progress, tag):
     rows = {}
     for label, (case, make) in configs.items():
-        result = make()  # warm-up and geometry record
-        if isinstance(result, tuple):
-            row = scorecard.score(case, *result)
+        mesh = make()  # warm-up and geometry record
+        if isinstance(mesh, tuple):
+            row = scorecard.score(case, *mesh)
         else:
-            row = scorecard.score_volume(case, result)
+            row = scorecard.score_volume(case, mesh)
         rows[label] = {"metrics": row, "seconds": []}
-    for _ in range(repeats):
+        progress.step(f"{tag}: scored {label}")
+    for repeat in range(repeats):
         for label, (_, make) in configs.items():
             start = time.perf_counter()
             make()
             rows[label]["seconds"].append(time.perf_counter() - start)
+        progress.step(f"{tag}: repeat {repeat + 1}/{repeats}")
     for row in rows.values():
         row["median_s"] = statistics.median(row["seconds"])
     return rows
@@ -184,7 +206,12 @@ def main():
     parser.add_argument("--threads", type=int, default=1)
     parser.add_argument("--repeats", type=int, default=5)
     parser.add_argument("--fea", action="store_true")
+    parser.add_argument("--part", default="0/1", help="i/n: this run's share of the progress bar")
     args = parser.parse_args()
+    part = tuple(int(v) for v in args.part.split("/"))
+    surface, volume = surface_configs(args.threads), volume_configs(args.threads)
+    progress = Progress(part, len(surface) + len(volume) + 2 * args.repeats)
+    report(part[0] / part[1], f"threads {args.threads}: starting")
     from vtkmodules.vtkCommonCore import vtkSMPTools
 
     record = {
@@ -195,8 +222,8 @@ def main():
         "repeats": args.repeats,
         "platform": platform.platform(),
         "processor": platform.processor(),
-        "surface": measure(surface_configs(args.threads), args.repeats),
-        "volume": measure(volume_configs(args.threads), args.repeats),
+        "surface": measure(surface, args.repeats, progress, f"threads {args.threads} surface"),
+        "volume": measure(volume, args.repeats, progress, f"threads {args.threads} volume"),
     }
     if args.fea:
         record["fea"] = fea_block(args.threads)
@@ -206,7 +233,13 @@ def main():
         for label, row in record[block].items():
             m = row["metrics"]
             count = m.get("tetrahedra", m["triangles"])
-            print(f"{label:40s} n={count:7d} H={m['hausdorff']:.2e} median={row['median_s']:.3f}s")
+            result(
+                f"t{args.threads} {label}",
+                elements=count,
+                hausdorff=m["hausdorff"],
+                median={"value": row["median_s"], "unit": "s"},
+                jsonl=HERE / "timing-results.jsonl",
+            )
     for label, row in record.get("fea", {}).items():
         print(label, row)
 
