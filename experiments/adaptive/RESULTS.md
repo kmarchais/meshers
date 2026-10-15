@@ -57,29 +57,41 @@ Supporting changes, which also apply to the quality modes:
   hashing.
 
 Tolerance 1e-3, independent scorecard. Counts, H, ΔV and angles are deterministic.
-Times are single warm runs through Python, compiled fields, while a GPU render was
-running: indicative only, the timing study waits for the queue. The pip VTK wheel
-uses the sequential SMP backend, so Flying Edges is single-threaded.
+Times: `timing_job.sh`, pueue job 1676 alone in the `gpu` queue on the OMEN (Intel
+family 6 model 198, 24 threads), release build of 9dad555f frozen in `builds/`.
+Compiled fields through Python, one warm-up, then the median of 5 runs interleaved
+with all other configurations (`timing-threads1.json`, `timing-threads24.json`, with
+every run). The pip VTK wheel uses the sequential SMP backend, so Flying Edges is
+single-threaded in both columns; its two columns differ by run-to-run noise only.
 
 | Case | Mesh | Triangles | H | ΔV | Min angle | 1 thread | 24 threads |
 |---|---|---:|---:|---:|---:|---:|---:|
-| Gyroid | Flying Edges 40 | 31,034 | 1.20e-3 | +0.34% | 0.0° | 0.094 s | |
-| | Flying Edges 48 | 44,938 | 9.3e-4 | +0.23% | 0.0° | 0.159 s | |
-| | fast | 26,780 | 9.9e-4 | +0.14% | 1.1° | 0.114 s | 0.068 s |
-| | fast, balanced | 19,616 | 1.0e-3 | +0.08% | 1.8° | 0.125 s | 0.064 s |
-| | balanced (quality) | 15,802 | 1.0e-3 | +0.05% | 18.0° | 0.315 s | 0.196 s |
-| Schwarz P | Flying Edges 40 | 24,064 | 9.5e-4 | +0.20% | 0.0° | 0.077 s | |
-| | fast | 16,872 | 9.8e-4 | +0.19% | 0.0° | 0.072 s | 0.056 s |
-| | fast, balanced | 11,880 | 1.0e-3 | +0.12% | 0.0° | 0.077 s | 0.047 s |
-| | balanced (quality) | 8,946 | 1.0e-3 | +0.09% | 18.9° | 0.135 s | 0.108 s |
-| Sphere | Flying Edges 32 | 4,808 | 1.01e-3 | -0.47% | | 0.011 s | |
-| | fast, balanced | 1,954 | 9.9e-4 | -0.26% | 8.8° | | 0.015 s |
-| Ellipsoid | Flying Edges 64 | 9,464 | 1.08e-3 | -0.41% | | 0.042 s | |
-| | fast, balanced | 2,950 | 1.0e-3 | -0.34% | 0.1° | | 0.019 s |
+| Gyroid | Flying Edges 40 | 31,034 | 1.20e-3 | +0.34% | 0.0° | 0.107 s | 0.122 s |
+| | Flying Edges 48 | 44,938 | 9.3e-4 | +0.23% | 0.0° | 0.175 s | 0.179 s |
+| | fast | 26,780 | 9.9e-4 | +0.14% | 1.1° | 0.119 s | 0.086 s |
+| | fast, balanced | 19,616 | 1.0e-3 | +0.08% | 1.8° | 0.125 s | 0.078 s |
+| | balanced (quality) | 15,802 | 1.0e-3 | +0.05% | 18.0° | 0.226 s | 0.206 s |
+| Schwarz P | Flying Edges 36 | 19,360 | 1.16e-3 | +0.26% | | 0.061 s | 0.072 s |
+| | Flying Edges 40 | 24,064 | 9.5e-4 | +0.20% | 0.0° | 0.081 s | 0.091 s |
+| | fast | 16,872 | 9.8e-4 | +0.19% | 0.0° | 0.076 s | 0.055 s |
+| | fast, balanced | 11,880 | 1.0e-3 | +0.12% | 0.0° | 0.073 s | 0.048 s |
+| | balanced (quality) | 8,946 | 1.0e-3 | +0.09% | 18.9° | 0.146 s | 0.116 s |
+| Sphere | Flying Edges 32 | 4,808 | 1.01e-3 | -0.47% | | 0.016 s | 0.016 s |
+| | fast, balanced | 1,954 | 9.9e-4 | -0.26% | 8.8° | 0.018 s | 0.015 s |
+| Ellipsoid | Flying Edges 64 | 9,464 | 1.08e-3 | -0.41% | | 0.047 s | 0.049 s |
+| | Flying Edges 80 | 14,856 | 6.9e-4 | -0.26% | | 0.077 s | 0.089 s |
+| | fast, balanced | 2,950 | 1.0e-3 | -0.34% | 0.1° | 0.016 s | 0.013 s |
 
-- At equal H, fast balanced has 2.0-3.2x fewer triangles than Flying Edges and a
-  smaller volume error. On one thread it is about as fast; on 24 threads 1.6-2.5x
-  faster on the TPMS cases. On the small sphere fixed costs dominate.
+- Against the Flying Edges grid that meets H ≤ 1e-3 (48, 40, 32, 80), fast balanced
+  has 2.0-5.0x fewer triangles and a smaller volume error except on the ellipsoid
+  against grid 80. Speed: gyroid 1.4x faster on one thread and 2.3x on 24; Schwarz P
+  1.1x and 1.9x; ellipsoid 4.7x and 6.8x (against grid 64, which misses 1e-3:
+  2.9x and 3.8x); sphere 1.2x slower on one thread, parity on 24.
+- The quality modes stay slower than Flying Edges at one thread (gyroid balanced
+  0.226 s against 0.175 s) with 2.8x fewer triangles and 18° minimum angle.
+- Volume block, same job (gyroid, tetrahedra): lattice-32 1.73 s / 0.58 s,
+  adapt 1.81 s / 1.78 s (the tet adaptation barely uses the threads), MMG3D on the
+  non-periodic seed 4.77 s / 4.65 s.
 - Balancing offsets vertices by half the centroid sag, which minimizes H; the volume
   bias left is about a third (for a spherical cap the mean sag is 3/4 of the centroid
   sag). An offset of 3/4 would cancel the volume error at a larger H.

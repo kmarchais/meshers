@@ -57,5 +57,7 @@ compiled fields) + `fea-accuracy-optimizer` (PR #5 geometry guard, quality floor
 - [ ] Fast mode, single thread: collapse (~26 ms) works on the 2x-dense Freudenthal
   extraction; a coarser or marching-cubes extraction would cut it.
 - [ ] Box-edge wedges limit q_min (gyroid ~0.18-0.27) in non-periodic boxes.
-- [ ] Timing study in the gpu queue once idle (surface vs Flying Edges, volume vs
-  lattice and MMG, FEA wall time at a 1% target, 1 and N threads).
+- [x] Timing study, surface vs Flying Edges and volume vs lattice and MMG, 1 and 24
+  threads (`timing_job.sh`, job 1676; RESULTS.md, fast mode).
+- [ ] FEA wall time at a 1% target (`timing.py --fea`, not run yet).
+- [ ] Tet adaptation does not scale with threads (gyroid 1.81 s on 1, 1.78 s on 24).
