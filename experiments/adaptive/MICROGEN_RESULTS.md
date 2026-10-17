@@ -318,3 +318,13 @@ This is an over-refinement rejection, not an MMG executable failure. The frozen
 records the actual intermediate cap. The runner now distinguishes that status
 as `intermediate-element-cap`. Raw first-pass meshes stay local and ignored.
 Records are in `runs/g3-microgen-firstpass24-v1`.
+
+Job 20 relaxes only the first-pass `hausd` override to 0.0005. The first pass
+now has 129,222 tets and the second 168,621, both inside the cap. Final two-sided
+distance is 0.001440 and signed volume error is -0.01052%, so the geometry loss
+is resolved for this specimen and extraction grid. Minimum quality remains
+0.02402. There are 72 retained cap triangles whose adjacent-tet quality ceiling
+is below 0.1, making further size tuning insufficient on this seed. Periodic
+checks pass. FEA remains withheld. Records are in
+`runs/g3-microgen-firstpass24-v2`. These instrumented timings include intermediate
+audits and are not used for a workflow speed comparison.
