@@ -285,3 +285,36 @@ Its manifests link the frozen reference inputs by hash. Records are under
 `runs/g3-microgen-tuned-schwarz28-v1`, `runs/g3-microgen-tuned-schwarz28-v2`,
 `runs/g3-microgen-tuned-schwarz32-v1` and `runs/g3-microgen-tuned-schwarz20-v1`.
 All runs preserve the same independent admission gates.
+
+## Audited intermediate MMG meshes
+
+Job 18 repeats the resolution-20 tuned candidate without changing either MMG
+call. It archives and independently measures the VTK seed and each MMG output.
+The final mesh reproduces job 14. Intermediate audits add work, so this run is
+explicitly excluded from comparable workflow timings.
+
+| Stage | Nodes | Tets | Sampled two-sided H | Minimum quality |
+|---|---:|---:|---:|---:|
+| VTK seed | 6,288 | 26,636 | 0.002190 | 0.00700 |
+| First MMG pass, nofem | 3,118 | 10,519 | 0.007183 | 0.06860 |
+| Second MMG pass, tuned | 22,928 | 108,979 | 0.005347 | 0.03994 |
+
+This confirms first-pass boundary degradation for this candidate. The seed
+already narrowly misses the 0.002 distance gate, and the second pass does not
+recover the lost geometry. It does not prove that every extraction grid behaves
+the same way. Records are in `runs/g3-microgen-stage-audit-v1`.
+
+The next diagnostic uses resolution 24 and overrides the first call with
+`hausd=0.0001`, `hmax=0.06` and `hgrad=1.3`, keeping `nofem=True`. It still calls
+Microgen's VTK generation and both MMG commands, but this override is not exposed
+by its public remeshing function. The runner labels this modified route
+`microgen-vtk-mmg-first-pass-override`, never as the default pipeline.
+
+Job 19 completed that first pass with 346,003 vertices and 1,730,349 tetrahedra.
+The stage audit stopped at the unchanged 250,000-tet gate before the second pass
+or FEA. The VTK seed itself has H=0.001500 but minimum quality 0.000344.
+This is an over-refinement rejection, not an MMG executable failure. The frozen
+`result.json` uses the overly broad status `microgen-mmg-failed`; its error text
+records the actual intermediate cap. The runner now distinguishes that status
+as `intermediate-element-cap`. Raw first-pass meshes stay local and ignored.
+Records are in `runs/g3-microgen-firstpass24-v1`.

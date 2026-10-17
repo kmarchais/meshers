@@ -17,6 +17,10 @@ sys.path.insert(0, str(Path.home() / "bin"))
 from pueue_progress import Job
 
 
+class IntermediateCapError(ValueError):
+    pass
+
+
 def worker(args):
     np, fd, _, microgen, pv, _ = workflow.imports()
     from microgen.shape import surface_functions
@@ -31,6 +35,27 @@ def worker(args):
            "resolution": args.resolution,
            "mmg_arguments": {"hausd": 0.0005, "hmax": 0.06, "hgrad": 1.3},
            "status": "started", "mmg_calls": []}
+    row["stage_audit_enabled"] = args.audit_stages
+    row["timing_comparable"] = not args.audit_stages
+    row["first_pass_hausd_override"] = args.first_pass_hausd
+    if args.first_pass_hausd is not None:
+        row["route"] = "microgen-vtk-mmg-first-pass-override"
+    def audit_stage(label, stage_grid):
+        tetrahedra_count = int(np.count_nonzero(stage_grid.celltypes == int(pv.CellType.TETRA)))
+        if tetrahedra_count > workflow.CAP:
+            raise IntermediateCapError(f"{label}: {tetrahedra_count} tetrahedra exceed the intermediate element cap")
+        stage_grid = stage_grid.extract_cells(stage_grid.celltypes == int(pv.CellType.TETRA))
+        stage_points = np.asarray(stage_grid.points).copy()
+        stage_tets, _ = workflow.reorient_linear(
+            stage_points, stage_grid.cells_dict[pv.CellType.TETRA].copy())
+        stage_poly = stage_grid.extract_surface(pass_pointid=True, algorithm="dataset_surface").triangulate()
+        stage_surface = np.asarray(stage_poly.point_data["vtkOriginalPointIds"])[
+            stage_poly.faces.reshape(-1, 4)[:, 1:]]
+        np.savez_compressed(args.run / (label + ".npz"), points=stage_points,
+                            tetrahedra=stage_tets, surface=stage_surface)
+        metrics = workflow.geometry(args.run, "schwarz-solid", stage_points, stage_tets, stage_surface)
+        workflow.save(args.run / (label + ".json"), {
+            "nodes": len(stage_points), "elements": len(stage_tets), "geometry": metrics})
     started = time.perf_counter()
     shape = microgen.Tpms(surface_functions.schwarz_p, offset=0, resolution=args.resolution)
     row["specimen_setup_s"] = time.perf_counter() - started
@@ -42,15 +67,28 @@ def worker(args):
         row.update(status="seed-element-cap", total_workflow_s=time.perf_counter() - started)
         workflow.save(output, row)
         return
+    if args.audit_stages:
+        audit_stage("vtk-seed", grid)
     binary = Path(importlib.metadata.distribution("mmgpy").locate_file("mmgpy/bin/mmg3d_O3"))
     os.environ["PATH"] = str(binary.parent) + os.pathsep + os.environ["PATH"]
     original = microgen.Mmg.mmg3d
     def record_call(**parameters):
+        if args.first_pass_hausd is not None and parameters.get("nofem"):
+            parameters.update(hausd=args.first_pass_hausd, hmax=0.06, hgrad=1.3)
         row["mmg_calls"].append({key: value for key, value in parameters.items()
                                  if key not in {"input", "output"}})
         workflow.save(output, row)
         try:
-            return original(**parameters)
+            result = original(**parameters)
+            if args.audit_stages:
+                label = f"mmg-stage-{len(row['mmg_calls'])}"
+                captured = args.run / (label + ".mesh")
+                shutil.copyfile(parameters["output"], captured)
+                from microgen.remesh import _remove_unnecessary_fields_from_mesh_file
+                cleaned = args.run / (label + "-tetra.mesh")
+                _remove_unnecessary_fields_from_mesh_file(str(captured), str(cleaned), 2, 3)
+                audit_stage(label, pv.UnstructuredGrid(str(cleaned)))
+            return result
         except Exception as error:
             captured = getattr(error.__cause__, "output", b"")
             (args.run / f"mmg-call-{len(row['mmg_calls'])}.log").write_bytes(captured or b"")
@@ -59,7 +97,8 @@ def worker(args):
         with patch.object(microgen.Mmg, "mmg3d", record_call):
             grid = remesh_keeping_boundaries_for_fem(grid, **row["mmg_arguments"])
     except Exception as error:
-        row.update(status="microgen-mmg-failed", error=str(error),
+        status = "intermediate-element-cap" if isinstance(error, IntermediateCapError) else "microgen-mmg-failed"
+        row.update(status=status, error=str(error),
                    total_workflow_s=time.perf_counter() - started)
         workflow.save(output, row)
         return
@@ -114,6 +153,8 @@ def main():
     parser.add_argument("--resolution", type=int, required=True)
     parser.add_argument("--source", type=Path, default=workflow.HERE / "runs/g3-microgen-defaults-v4")
     parser.add_argument("--worker", action="store_true")
+    parser.add_argument("--audit-stages", action="store_true")
+    parser.add_argument("--first-pass-hausd", type=float)
     args = parser.parse_args()
     if args.worker:
         worker(args)
@@ -133,8 +174,13 @@ def main():
         "baseline_manifest_sha256": workflow.digest(args.source / "manifest.json")})
     with Job(parts=["tuned-candidate"]) as job:
         with job.part("tuned-candidate") as part:
-            result = workflow.bounded([sys.executable, __file__, "--run", str(args.run),
-                "--source", str(args.source), "--resolution", str(args.resolution), "--worker"],
+            command = [sys.executable, __file__, "--run", str(args.run),
+                "--source", str(args.source), "--resolution", str(args.resolution), "--worker"]
+            if args.audit_stages:
+                command.append("--audit-stages")
+            if args.first_pass_hausd is not None:
+                command.extend(["--first-pass-hausd", str(args.first_pass_hausd)])
+            result = workflow.bounded(command,
                 args.run / "worker.log", part, timeout=600)
             workflow.save(args.run / "worker.json", result)
             assert result["returncode"] == 0, "Read worker.log"

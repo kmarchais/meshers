@@ -1,0 +1,25 @@
+{
+  "script_sha256": "0fddb946349b8657f22717c65dbe8c44c2ee325a4858b490c8d3bead37c76300",
+  "inputs": {
+    "/home/kmarchais/dev/meshers/experiments/adaptive/runs/g3-microgen-defaults-v4/schwarz-solid-specimen.json": "42848bc582c5921aafc817735129dfef5e756c6689e178b5e642ef2c90b1d095",
+    "/home/kmarchais/dev/meshers/experiments/adaptive/runs/g3-microgen-defaults-v4/schwarz-solid-samples.npz": "d8ae76c147379fbffd28ef546d83c7bc59113292d89968a255c20a840ac59ece",
+    "/home/kmarchais/dev/meshers/experiments/adaptive/runs/g3-microgen-defaults-v4/summary.json": "614c5c123eaae0ce0455b07b1f5c8bcf451b687cabca45f93521aaa469b05f35"
+  },
+  "limits": {
+    "rss_bytes": 8589934592,
+    "timeout_s": 600,
+    "tetrahedra": 250000,
+    "nodes": 100000,
+    "threads": 1
+  },
+  "packages": {
+    "microgen": "2.0.0b1",
+    "mmgpy": "0.17.1",
+    "fedoo": "1.0.0b2",
+    "numpy": "2.5.4",
+    "scipy": "1.18.1",
+    "vtk": "9.7.1",
+    "pyvista": "0.49.1"
+  },
+  "baseline_manifest_sha256": "a72e1196eb462156a35d34cc41f083ba3304d7cf5c5aae81fc97e764622de98f"
+}

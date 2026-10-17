@@ -1,0 +1,28 @@
+{
+  "case": "schwarz-solid",
+  "route": "microgen-vtk-mmg-first-pass-override",
+  "resolution": 24,
+  "mmg_arguments": {
+    "hausd": 0.0005,
+    "hmax": 0.06,
+    "hgrad": 1.3
+  },
+  "status": "microgen-mmg-failed",
+  "mmg_calls": [
+    {
+      "nofem": true,
+      "hausd": 0.0001,
+      "hmax": 0.06,
+      "hgrad": 1.3
+    }
+  ],
+  "stage_audit_enabled": true,
+  "timing_comparable": false,
+  "first_pass_hausd_override": 0.0001,
+  "specimen_setup_s": 0.003776197998377029,
+  "seed_nodes": 10376,
+  "seed_elements": 46004,
+  "vtk_extraction_s": 0.08172572199691785,
+  "error": "mmg-stage-1 exceeds the intermediate element cap",
+  "total_workflow_s": 119.5775826359968
+}
