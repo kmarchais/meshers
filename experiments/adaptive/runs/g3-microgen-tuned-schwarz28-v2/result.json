@@ -1,0 +1,34 @@
+{
+  "case": "schwarz-solid",
+  "route": "microgen-vtk-mmg-tuned",
+  "resolution": 28,
+  "mmg_arguments": {
+    "hausd": 0.0005,
+    "hmax": 0.06,
+    "hgrad": 1.3
+  },
+  "status": "microgen-mmg-failed",
+  "mmg_calls": [
+    {
+      "nofem": true
+    },
+    {
+      "nofem": true
+    },
+    {
+      "nofem": true
+    },
+    {
+      "nofem": true
+    },
+    {
+      "nofem": true
+    }
+  ],
+  "specimen_setup_s": 0.003739550997124752,
+  "seed_nodes": 15766,
+  "seed_elements": 72028,
+  "vtk_extraction_s": 0.10861419399952865,
+  "error": "mmg command 'mmg3d_O3 -in /tmp/tmpl8wia0_r.mesh -out /tmp/tmpzryrf1he.mesh -nofem' failed",
+  "total_workflow_s": 3.0257696749977185
+}

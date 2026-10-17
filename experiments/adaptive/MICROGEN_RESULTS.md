@@ -244,3 +244,44 @@ The executable audit is `cap_quality_bound.py`; its output and input hashes
 are in `g3-cap-quality-bound.json`. Run it through the shared queue with
 `--source experiments/adaptive/runs/g3-microgen-defaults-v4` and a fresh
 `--output` JSON path.
+
+## Tuned Schwarz baseline pilot
+
+Jobs 11 through 14 tested one candidate at a time using the actual Microgen
+VTK generation and two-pass MMG function. Each completed result was read before
+selecting the next candidate. The specimen remains Schwarz P solid at offset
+zero. These are explicitly tuned runs, with `hausd=0.0005`, `hmax=0.06` and
+`hgrad=1.3`, and extraction resolutions 28, 32 and 20 points per axis.
+Microgen applies the size arguments to its second pass. The first pass still
+receives only `nofem=True`, as recorded in every call list.
+
+At resolution 28, all five built-in first-pass attempts failed. Job 11 exposed
+the failure, but the Microgen wrapper hid the captured MMG text. Job 12 repeated
+that candidate with exception-output capture. MMG reports a worst element of
+zero quality and stops in `MMG5_minQualCheck`. No cells were deleted or repaired.
+
+| Resolution | Output nodes | Output tets | Sampled H | Signed volume error | Minimum quality | Outcome |
+|---|---:|---:|---:|---:|---:|---|
+| 28 | None | None | Unavailable | Unavailable | Unavailable | MMG first-pass failure |
+| 32 | 28,472 | 131,516 | 0.005800 | -0.01289% | 0.02092 | Geometry and quality rejection |
+| 20 | 22,928 | 108,979 | 0.005347 | -0.07307% | 0.03994 | Geometry and quality rejection |
+
+Both completed meshes pass periodic node and cap matching and have no unresolved
+projection samples. Resolution 32 has 48 cap triangles whose adjacent-tet quality
+ceiling is below 0.1. Resolution 20 has none, but its actual element quality still
+fails. Their complete geometry-audit workflows take 12.98 and 8.80 seconds on G3.
+FEA is withheld because admission fails, so these are not total meshing-plus-FEA
+times and no new stiffness errors are reported.
+
+This bounded pilot does not find an admissible tuned competitor. It does not
+rule out other extraction grids, controls applied to the first MMG pass, or
+separately identified periodic boundary repair. The actual first-pass geometry
+has not been archived or audited, so its contribution to the final boundary
+error is still a hypothesis.
+
+The runner is `microgen_tuned.py`. It uses one thread, an 8 GiB worker ceiling,
+a 600-second worker timeout, a 250,000-tet cap and a 100,000-node solve cap.
+Its manifests link the frozen reference inputs by hash. Records are under
+`runs/g3-microgen-tuned-schwarz28-v1`, `runs/g3-microgen-tuned-schwarz28-v2`,
+`runs/g3-microgen-tuned-schwarz32-v1` and `runs/g3-microgen-tuned-schwarz20-v1`.
+All runs preserve the same independent admission gates.

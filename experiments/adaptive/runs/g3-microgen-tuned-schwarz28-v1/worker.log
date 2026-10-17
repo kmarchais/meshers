@@ -1,0 +1,37 @@
+/home/kmarchais/dev/meshers/.venv/lib/python3.12/site-packages/fedoo/core/base.py:80: UserWarning: WARNING: no fast direct sparse solver has been found. Consider installing pypardiso (Intel) or python-mumps (any platform) to improve computation performance
+  warnings.warn(
+Traceback (most recent call last):
+  File "/home/kmarchais/dev/meshers/.venv/lib/python3.12/site-packages/microgen/external.py", line 316, in _run_mmg_command
+    subprocess.check_output(cmd, stderr=subprocess.STDOUT)
+  File "/home/kmarchais/.local/share/uv/python/cpython-3.12.15-linux-x86_64-gnu/lib/python3.12/subprocess.py", line 466, in check_output
+    return run(*popenargs, stdout=PIPE, timeout=timeout, check=True,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/kmarchais/.local/share/uv/python/cpython-3.12.15-linux-x86_64-gnu/lib/python3.12/subprocess.py", line 571, in run
+    raise CalledProcessError(retcode, process.args,
+subprocess.CalledProcessError: Command '['mmg3d_O3', '-in', '/tmp/tmp6thnnwdt.mesh', '-out', '/tmp/tmp2l9fs5ru.mesh', '-nofem']' returned non-zero exit status 1.
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/home/kmarchais/dev/meshers/experiments/adaptive/microgen_tuned.py", line 136, in <module>
+    main()
+  File "/home/kmarchais/dev/meshers/experiments/adaptive/microgen_tuned.py", line 108, in main
+    worker(args)
+  File "/home/kmarchais/dev/meshers/experiments/adaptive/microgen_tuned.py", line 54, in worker
+    grid = remesh_keeping_boundaries_for_fem(grid, **row["mmg_arguments"])
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/kmarchais/dev/meshers/.venv/lib/python3.12/site-packages/microgen/remesh.py", line 164, in remesh_keeping_boundaries_for_fem
+    raise last_error
+  File "/home/kmarchais/dev/meshers/.venv/lib/python3.12/site-packages/microgen/remesh.py", line 136, in remesh_keeping_boundaries_for_fem
+    output_mesh = _run_mmg_pipeline(
+                  ^^^^^^^^^^^^^^^^^^
+  File "/home/kmarchais/dev/meshers/.venv/lib/python3.12/site-packages/microgen/remesh.py", line 194, in _run_mmg_pipeline
+    Mmg.mmg3d(
+  File "/home/kmarchais/dev/meshers/experiments/adaptive/microgen_tuned.py", line 52, in record_call
+    return original(**parameters)
+           ^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/kmarchais/dev/meshers/.venv/lib/python3.12/site-packages/microgen/external.py", line 639, in mmg3d
+    Mmg._run_mmg_command(cmd)
+  File "/home/kmarchais/dev/meshers/.venv/lib/python3.12/site-packages/microgen/external.py", line 319, in _run_mmg_command
+    raise MmgError(
+microgen.external.MmgError: mmg command 'mmg3d_O3 -in /tmp/tmp6thnnwdt.mesh -out /tmp/tmp2l9fs5ru.mesh -nofem' failed
