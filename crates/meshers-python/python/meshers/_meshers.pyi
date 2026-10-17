@@ -33,6 +33,7 @@ def generate(
     cancel: CancellationToken | None,
     adapt: tuple[float, float, float, float, int, float, float] | None = None,
     order: int = 1,
+    size_field: Any = None,
 ) -> dict[str, Any]: ...
 
 class CompiledField:

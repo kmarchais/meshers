@@ -116,6 +116,7 @@ pub struct Output {
 
 struct Context<'a, F: ScalarField> {
     field: &'a F,
+    size_field: Option<&'a dyn ScalarField>,
     options: Options,
     center: f64,
     scale: f64,
@@ -184,6 +185,12 @@ impl<F: ScalarField> Geometry for Context<'_, F> {
     fn batched(&self) -> bool {
         self.field.prefers_batches()
     }
+    fn target_lengths(&self, points: &[Point]) -> Option<Vec<f64>> {
+        self.size_field.map(|field| {
+            let canonical: Vec<_> = points.iter().map(|&point| self.canonical(point)).collect();
+            field.values(&canonical)
+        })
+    }
     fn values(&self, points: &[Point]) -> Vec<f64> {
         let canonical: Vec<_> = points.iter().map(|&p| self.canonical(p)).collect();
         let values = self.field.values(&canonical);
@@ -244,7 +251,11 @@ impl<F: ScalarField> Geometry for Context<'_, F> {
         self.options.bounds
     }
     fn check(&self) -> Result<(), String> {
-        self.field.check()
+        self.field.check()?;
+        if let Some(field) = self.size_field {
+            field.check()?;
+        }
+        Ok(())
     }
     fn band(&self) -> bool {
         matches!(self.options.region, Region::Band { .. })
@@ -255,6 +266,21 @@ impl<F: ScalarField> Geometry for Context<'_, F> {
 /// Custom functions and grading use the same evaluator in roots, optimization and refinement.
 /// Unmet sampled tolerance or invalid topology returns an error, never a partial success.
 pub fn generate<F: ScalarField>(field: &F, options: Options) -> Result<Output, MeshingError> {
+    generate_with_size(field, None, options)
+}
+
+/// Generate with an optional positive spatial target length for tet adaptation.
+/// Geometry sizing and gradation remain active. Periodic size traces must match.
+pub fn generate_with_size<F: ScalarField>(
+    field: &F,
+    size_field: Option<&dyn ScalarField>,
+    options: Options,
+) -> Result<Output, MeshingError> {
+    if size_field.is_some() && options.adapt.is_none() {
+        return Err(MeshingError::InvalidOptions(
+            "size_field requires adaptation".into(),
+        ));
+    }
     let [lo, hi] = options.bounds;
     if !(0..3).all(|a| {
         lo[a].is_finite()
@@ -315,6 +341,7 @@ pub fn generate<F: ScalarField>(field: &F, options: Options) -> Result<Output, M
     }
     let context = Context {
         field,
+        size_field,
         options,
         center,
         scale,
@@ -326,6 +353,7 @@ pub fn generate<F: ScalarField>(field: &F, options: Options) -> Result<Output, M
         if !options.periodic[axis] {
             continue;
         }
+        let mut size_samples = Vec::new();
         for i in 0..11 {
             for j in 0..11 {
                 let mut p = lo;
@@ -333,12 +361,35 @@ pub fn generate<F: ScalarField>(field: &F, options: Options) -> Result<Output, M
                 p[(axis + 2) % 3] += (hi[(axis + 2) % 3] - lo[(axis + 2) % 3]) * j as f64 / 10.;
                 let mut q = p;
                 q[axis] = hi[axis];
+                if size_field.is_some() {
+                    size_samples.extend([p, q]);
+                }
                 let difference = (field.value(p) - field.value(q)) / scale;
                 if !difference.is_finite() || difference.abs() > 1e-8 {
                     return Err(MeshingError::InvalidOptions(format!(
                         "field/grading is incompatible with periodic axis {axis}"
                     )));
                 }
+            }
+        }
+        if let Some(size) = size_field {
+            let values = size.values(&size_samples);
+            if values.len() != size_samples.len()
+                || values
+                    .iter()
+                    .any(|value| !value.is_finite() || *value <= 0.)
+            {
+                return Err(MeshingError::InvalidOptions(
+                    "size_field must return finite positive lengths".into(),
+                ));
+            }
+            if values
+                .chunks_exact(2)
+                .any(|pair| (pair[0] - pair[1]).abs() > 1e-8 * pair[0].max(pair[1]))
+            {
+                return Err(MeshingError::InvalidOptions(format!(
+                    "size_field is incompatible with periodic axis {axis}"
+                )));
             }
         }
     }

@@ -357,7 +357,7 @@ fn make_field(
 }
 
 #[allow(clippy::too_many_arguments)]
-#[pyfunction(signature = (field, gradient, bounds, cells, periodic, band, tolerance, minimum_quality, budget, passes, interior_refine_nodes, snap, threads, batch_size, cancel, adapt=None, order=1))]
+#[pyfunction(signature = (field, gradient, bounds, cells, periodic, band, tolerance, minimum_quality, budget, passes, interior_refine_nodes, snap, threads, batch_size, cancel, adapt=None, order=1, size_field=None))]
 fn generate<'py>(
     py: Python<'py>,
     field: Py<PyAny>,
@@ -377,6 +377,7 @@ fn generate<'py>(
     cancel: Option<PyRef<'py, CancellationToken>>,
     adapt: Option<(f64, f64, f64, f64, usize, f64, f64)>,
     order: u8,
+    size_field: Option<Py<PyAny>>,
 ) -> PyResult<Bound<'py, PyDict>> {
     let f = make_field(
         py,
@@ -386,6 +387,9 @@ fn generate<'py>(
         cancel.as_ref().map(|v| v.flag.clone()).unwrap_or_default(),
         batch_size,
     )?;
+    let size = size_field
+        .map(|field| make_field(py, field, None, bounds, f.cancellation.clone(), batch_size))
+        .transpose()?;
     let options = implicit::Options {
         bounds,
         cells,
@@ -416,8 +420,19 @@ fn generate<'py>(
         order,
     };
     let start = std::time::Instant::now();
-    let result = py.detach(|| implicit::generate(&f, options));
+    let result = py.detach(|| {
+        implicit::generate_with_size(
+            &f,
+            size.as_ref().map(|field| field as &dyn ScalarField),
+            options,
+        )
+    });
     if let Some(error) = f.error.lock().unwrap().take() {
+        return Err(error);
+    }
+    if let Some(field) = &size
+        && let Some(error) = field.error.lock().unwrap().take()
+    {
         return Err(error);
     }
     py.check_signals()?;

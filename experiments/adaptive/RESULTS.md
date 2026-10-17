@@ -297,3 +297,13 @@ specimen tensors within 1.2e-11 relative mixed-load energy disagreement. Periodi
 mid-edge displacement jumps remain below 6e-17. This validates conversion and
 periodic FE integration, not local stress accuracy. Microgen's public converters
 remain unsupported for Tet10.
+
+## Spatial sizing from recovered stress, 2026-10-17
+
+`STRESS_RESULTS.md` records an optional periodic target-length callback and two
+Schwarz pilots. Recovery sizing loses at the coarse target after charging its
+coarse solve. At target 0.04 it uses 22,664 rather than 33,657 nodes and takes
+25.87 rather than 36.51 seconds, with 1.0207% rather than 1.0401% worst mixed-load
+stiffness disagreement. All four meshes pass the unchanged admission checks.
+This is a single-run Meshers comparison, not a matched-accuracy Microgen victory
+or a local-stress accuracy claim.

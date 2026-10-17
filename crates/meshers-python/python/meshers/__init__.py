@@ -211,6 +211,7 @@ def generate(
     quality_guard: float = 0.3,
     adapt_tolerance: float | None = None,
     order: int = 1,
+    size_field: Field | None = None,
 ) -> Mesh:
     """Generate a tetrahedral mesh directly from a bounded implicit field.
 
@@ -259,6 +260,11 @@ def generate(
             node order) whose wall edges follow the exact field. Quadratic meshes
             report ``tetrahedra`` of shape (M, 10) and ``surface`` of shape (K, 6);
             ``periodic_pairs`` then cover every node.
+        size_field: Optional vectorized callback returning positive physical target
+            edge lengths, shape (N,), for ``adapt=True``. Targets combine with
+            curvature sizing by taking the smaller length, then applying
+            ``min_length``, ``max_length`` and gradation. Opposite periodic traces
+            must match. This callback is evaluated in batches without tracing.
 
     Returns:
         Mesh: Owned arrays and diagnostics. Empty geometries return empty arrays.
@@ -277,6 +283,8 @@ def generate(
         Python fallback callbacks execute on the calling thread.
     """
     b = np.asarray(bounds, dtype=np.float64)
+    if size_field is not None and not adapt:
+        raise ValueError("size_field requires adapt=True")
     if b.shape != (6,):
         raise ValueError("bounds must contain xmin,xmax,ymin,ymax,zmin,zmax")
     if isinstance(cells, (int, np.integer)):
@@ -329,6 +337,7 @@ def generate(
         if adapt
         else None,
         int(order),
+        size_field,
     )
     quadratic = result.pop("quadratic", None)
     if quadratic is not None:

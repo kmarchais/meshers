@@ -362,9 +362,21 @@ impl<'g, G: Geometry> Tets<'g, G> {
         norm(self.delta(pu, pv)) * angle(nu, nv) / 6.
     }
 
-    fn sizes(&self, o: &Options, edges: &[[usize; 2]]) -> Vec<f64> {
+    fn sizes(&self, o: &Options, edges: &[[usize; 2]]) -> Result<Vec<f64>, String> {
         let tol = o.tolerance * SIZING_SAFETY;
         let mut size = vec![o.max_length; self.points.len()];
+        if let Some(targets) = self.g.target_lengths(&self.points) {
+            if targets.len() != size.len()
+                || targets
+                    .iter()
+                    .any(|value| !value.is_finite() || *value <= 0.)
+            {
+                return Err("size_field must return finite positive lengths".into());
+            }
+            for (length, target) in size.iter_mut().zip(targets) {
+                *length = length.min(target);
+            }
+        }
         for &[u, v] in edges {
             if self.masks[u] & self.masks[v] & WALL == 0 || self.edge_faces(u, v).is_empty() {
                 continue;
@@ -422,7 +434,7 @@ impl<'g, G: Geometry> Tets<'g, G> {
                 }
             }
         }
-        size
+        Ok(size)
     }
 
     fn worst(&self, tets: &[usize]) -> f64 {
@@ -1092,7 +1104,7 @@ pub(crate) fn adapt(
     for _ in 0..o.iterations {
         g.check()?;
         let edges = s.edges();
-        let size = s.sizes(o, &edges);
+        let size = s.sizes(o, &edges)?;
         lap(&mut stats, 0);
         let mut long: Vec<(f64, [usize; 2])> = edges
             .iter()
@@ -1109,7 +1121,7 @@ pub(crate) fn adapt(
         }
         lap(&mut stats, 1);
         let edges = s.edges();
-        let mut size = s.sizes(o, &edges);
+        let mut size = s.sizes(o, &edges)?;
         lap(&mut stats, 0);
         let mut short: Vec<(f64, [usize; 2])> = edges
             .iter()

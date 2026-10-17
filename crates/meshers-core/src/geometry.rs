@@ -15,6 +15,9 @@ pub(crate) trait Geometry: Sync {
     fn values(&self, points: &[Point]) -> Vec<f64> {
         points.iter().map(|&p| self.value(p)).collect()
     }
+    fn target_lengths(&self, _points: &[Point]) -> Option<Vec<f64>> {
+        None
+    }
     fn gradients(&self, points: &[Point]) -> Vec<Point> {
         points.iter().map(|&p| self.gradient(p)).collect()
     }

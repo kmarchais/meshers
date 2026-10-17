@@ -1,0 +1,88 @@
+# Periodic stress-recovery sizing on G3
+
+The stopping condition is a faster Meshers workflow at matched accuracy against
+the actual Microgen+MMG route. The comparison still needs an admitted Microgen
+baseline. Failed competitors are recorded in `MICROGEN_RESULTS.md` and do not
+provide a matched-accuracy timing comparison.
+
+## Recovery diagnostic
+
+Job 15 solves the saved 12-cell Tet4 and straight Tet10 controls on identical
+piecewise-planar domains. Both controls fail the original geometry admission,
+so this is an estimator diagnostic. No local-stress continuum reference is
+assumed. Their corner connectivity and all straight mid-edge positions are
+checked before comparing fields.
+
+Six prescribed engineering strains produce the full displacement response.
+Element Tet4 stresses are recovered at nodes by volume-weighted averaging over
+periodic equivalence classes. Four-point quadrature measures the difference
+between the recovered field and the original element stress. The same rule
+measures the Tet4-to-Tet10 enrichment difference on that fixed domain.
+
+The local six-by-six error matrices use the elastic compliance inner product.
+Their traces after normalization by the coarse stiffness tensor give a scalar
+ranking that accounts for all six loads. The largest generalized eigenvalue of
+their global sum supplies a worst mixed-load energy-norm diagnostic.
+
+| Case | Density rank correlation | Enrichment energy in top 20% by recovery | By element volume | Best possible selection |
+|---|---:|---:|---:|---:|
+| Gyroid | 0.8853 | 39.88% | 35.28% | 41.07% |
+| Schwarz solid | 0.9838 | 52.32% | 23.77% | 53.13% |
+
+Ranking by stress magnitude captures 37.61% for Gyroid and 40.24% for Schwarz.
+Recovery therefore adds useful localization information, especially for Schwarz.
+This does not establish that remeshing with it will reduce total workflow cost.
+
+The integrated enrichment-error matrix agrees with the difference of the two
+stiffness tensors within 9.36e-11 relative for Gyroid and 4.88e-10 for Schwarz.
+This checks the fixed-domain variational energy identity across mixed loads.
+The six-load solves also reproduce the previously saved control tensors.
+Recovery preserves constant stress in an executable check. All original control
+hashes are unchanged.
+
+Source and records are `stress_recovery.py` and
+`runs/g3-stress-recovery-v1`. Displacement and indicator archives remain local.
+
+## Spatial size input
+
+The candidate API adds `size_field` to `meshers.generate(..., adapt=True)`.
+It is a separate vectorized callback returning positive physical edge lengths.
+The adapter takes the smaller of that target and its existing curvature and
+thickness limits, then applies the existing bounds and gradation. Opposite
+periodic traces are sampled and must match. Invalid callback values and Python
+exceptions are propagated to the caller.
+
+The sizing pilot derives an element coefficient from recovered error density
+divided by the square of the coarse characteristic element length. The target
+length is proportional to that coefficient to power -1/5, the three-dimensional
+linear-element allocation exponent. Adjacent elements contribute the smallest
+target to each periodic nodal class. Targets are rescaled to a chosen median,
+clipped to [0.03, 0.1], and interpolated using four periodic nearest nodes with
+inverse-squared-distance weights. This is a heuristic size field.
+
+The first pilot compares uniform and recovery-driven median target 0.065 on
+Schwarz solid. Both start adaptation from 16 cells with four rounds, unchanged
+geometry tolerance 0.002, minimum quality 0.1 and quality guard 0.3. A live
+12-cell coarse Tet4 generation and solve are charged to the recovery workflow.
+Final admission uses the same independent geometry and periodic checks as step 1.
+Jobs 16 and 17 completed in `runs/g3-sizing-schwarz-v1` and
+`runs/g3-sizing-schwarz-v2`. The second uses median target 0.04. All four
+meshes pass the unchanged geometry, quality and periodic admission checks.
+
+| Target | Sizing | Nodes | Tets | Worst mixed-load disagreement | Total workflow seconds |
+|---|---|---:|---:|---:|---:|
+| 0.065 | Uniform | 7,104 | 29,139 | 2.6516% | 4.09 |
+| 0.065 | Recovery | 5,513 | 23,463 | 2.7578% | 4.92 |
+| 0.04 | Uniform | 33,657 | 179,861 | 1.0401% | 36.51 |
+| 0.04 | Recovery | 22,664 | 112,134 | 1.0207% | 25.87 |
+
+At the coarse target, recovery does not pay for its extra solve. At the finer
+target, recovery uses 32.7% fewer nodes and takes 29.2% less total time with
+slightly lower disagreement. These are single-run observations, not repeated
+matched-accuracy timings. Neither finer candidate meets the 1% stiffness target.
+They do not establish an advantage over Microgen, which still lacks an admitted
+comparison mesh. Recovery does not certify local stress accuracy.
+
+The queued Linux rebuild passed 20 core unit tests and 35 focused Python tests.
+Tests cover unchanged default adaptation with a constant target, spatial
+refinement, periodic matching, invalid lengths and callback error propagation.

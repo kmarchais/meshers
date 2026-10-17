@@ -80,3 +80,12 @@ six-load curved Gyroid/Schwarz reproduction. Full periodic mid-edge pairing,
 six-node cap matching and sampled curved Jacobians pass. See `TET10_RESULTS.md`.
 Microgen's own `from_pyvista` converters still reject Tet10. Next is the requested
 coarse stress-recovery sizing experiment for linear meshes.
+
+## G3 stress sizing, 2026-10-17
+
+`STRESS_RESULTS.md` records the fixed-domain recovery diagnostic and two actual
+Schwarz remeshing pilots. The optional `size_field` API preserves existing sizing
+limits and passes its native/Python checks. At target 0.04, recovery reduces nodes
+by 32.7% and total workflow time by 29.2% against uniform sizing, including its
+coarse solve. Both narrowly miss 1% stiffness disagreement. An admitted Microgen
+baseline and repeated matched-accuracy timings remain open.
