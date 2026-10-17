@@ -1,0 +1,167 @@
+{
+  "case": "schwarz-solid",
+  "route": "mmg-default",
+  "cells": 0,
+  "status": "diagnostic-unqualified",
+  "specimen_setup_s": 0.002831941998010734,
+  "vtk_extraction_s": 0.05564112099818885,
+  "seed_nodes": 6288,
+  "seed_elements": 26636,
+  "mmg_arguments": {
+    "periodic": true,
+    "mesh_version": 2,
+    "dimension": 3,
+    "tol": 1e-08,
+    "hausd": null,
+    "hgrad": null,
+    "hmax": null,
+    "hmin": null,
+    "hsiz": null
+  },
+  "mmg_calls": [
+    {
+      "nofem": true
+    },
+    {
+      "hausd": null,
+      "hgrad": null,
+      "hmax": null,
+      "hmin": null,
+      "hsiz": null,
+      "ls": true,
+      "nr": true
+    }
+  ],
+  "generation_s": 3.0497948349984654,
+  "nodes": 3151,
+  "elements": 10829,
+  "order": 1,
+  "nonpositive_or_tiny_tetrahedra": 0,
+  "geometry": {
+    "sampled_forward_max": 0.008462582020815691,
+    "sampled_reverse_max": 0.008112452066992655,
+    "sampled_two_sided_max": 0.008462582020815691,
+    "outward_forward_max": 0.008462582020815691,
+    "inward_forward_max": 0.006878600307811893,
+    "projection_failed": 0,
+    "forward_samples": 12116,
+    "reverse_samples": 50135,
+    "volume": 0.4997242509505627,
+    "relative_volume_error": -0.0005514980988745588,
+    "q_min_corner": 0.05483889301142197,
+    "q_p01_corner": 0.13582599182200492,
+    "minimum_dihedral_deg_corner": 2.6140638539927465,
+    "minimum_sampled_jacobian": 1.9592968268264333e-06,
+    "reverse_tessellation_delta_max": 0.0,
+    "quadratic_reverse_subdivisions": null,
+    "geometry_admitted": false
+  },
+  "audit_s": 0.6390234469981806,
+  "periodic": {
+    "periodic_pair_counts": [
+      372,
+      372,
+      372
+    ],
+    "periodic_coordinate_errors": [
+      0.0,
+      0.0,
+      0.0
+    ],
+    "periodic_pair_tolerance": 1e-10,
+    "periodic_equivalence_classes": 2094,
+    "periodic_triangles_match": true
+  },
+  "qualified": false,
+  "solve_s": 1.0961835980015167,
+  "stiffness_skew_relative": 7.68023041834614e-14,
+  "stiffness": [
+    [
+      0.8182666914377968,
+      0.14637551660566803,
+      0.1465615841422022,
+      -9.668731688499346e-05,
+      0.00014972363764913476,
+      4.630833424861321e-05
+    ],
+    [
+      0.14637551660566803,
+      0.8179709580030459,
+      0.14626014302128915,
+      0.0001550471785282172,
+      7.216594290388825e-05,
+      9.036272727736022e-05
+    ],
+    [
+      0.1465615841422022,
+      0.14626014302128915,
+      0.8172655809041061,
+      0.00010522248376815907,
+      -0.00012023700848926476,
+      1.9328491224412447e-05
+    ],
+    [
+      -9.668731688499346e-05,
+      0.0001550471785282172,
+      0.00010522248376815907,
+      0.20251016487674534,
+      7.170052869852982e-06,
+      9.873241418821465e-05
+    ],
+    [
+      0.00014972363764913476,
+      7.216594290388825e-05,
+      -0.00012023700848926476,
+      7.170052869852982e-06,
+      0.20233684183285777,
+      -7.004150942157087e-05
+    ],
+    [
+      4.630833424861321e-05,
+      9.036272727736022e-05,
+      1.9328491224412447e-05,
+      9.873241418821465e-05,
+      -7.004150942157087e-05,
+      0.20212960625154183
+    ]
+  ],
+  "solver_records": [
+    {
+      "iterations": 433,
+      "relative_residual": 9.738295701174342e-13,
+      "free_dofs": 6285,
+      "seconds": 0.14175907699973322
+    },
+    {
+      "iterations": 431,
+      "relative_residual": 8.618074621870411e-13,
+      "free_dofs": 6285,
+      "seconds": 0.13973515299949213
+    },
+    {
+      "iterations": 433,
+      "relative_residual": 9.179004349649307e-13,
+      "free_dofs": 6285,
+      "seconds": 0.14041419199929805
+    },
+    {
+      "iterations": 440,
+      "relative_residual": 8.208560025953407e-13,
+      "free_dofs": 6285,
+      "seconds": 0.14320269700328936
+    },
+    {
+      "iterations": 440,
+      "relative_residual": 8.61609625623955e-13,
+      "free_dofs": 6285,
+      "seconds": 0.14011573199968552
+    },
+    {
+      "iterations": 439,
+      "relative_residual": 9.32437043336162e-13,
+      "free_dofs": 6285,
+      "seconds": 0.13941764799892553
+    }
+  ],
+  "total_workflow_s": 4.818522508998285
+}

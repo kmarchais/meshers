@@ -1,0 +1,144 @@
+{
+  "case": "spinodoid",
+  "route": "vtk-default",
+  "cells": 0,
+  "status": "diagnostic-unqualified",
+  "specimen_setup_s": 0.001007849001325667,
+  "vtk_extraction_s": 0.06918135200248798,
+  "seed_nodes": 5268,
+  "seed_elements": 20702,
+  "generation_s": 0.08006497500173282,
+  "nodes": 5268,
+  "elements": 20702,
+  "order": 1,
+  "input_signed_volume_ordering_diagnostic": 0.3952900234517889,
+  "reoriented_tetrahedra": 2561,
+  "nonpositive_or_tiny_tetrahedra": 0,
+  "geometry": {
+    "sampled_forward_max": 0.03005060928687621,
+    "sampled_reverse_max": 0.020099174010979617,
+    "sampled_two_sided_max": 0.03005060928687621,
+    "outward_forward_max": 0.02823323075448957,
+    "inward_forward_max": 0.03005060928687621,
+    "projection_failed": 99,
+    "forward_samples": 59930,
+    "reverse_samples": 41325,
+    "volume": 0.5021093683381768,
+    "relative_volume_error": -5.349570284574057e-05,
+    "q_min_corner": 1.1813946804971798e-09,
+    "q_p01_corner": 0.005653721079876333,
+    "minimum_dihedral_deg_corner": 4.1220559467092244e-05,
+    "minimum_sampled_jacobian": 5.756211641420367e-15,
+    "reverse_tessellation_delta_max": 0.0,
+    "quadratic_reverse_subdivisions": null,
+    "geometry_admitted": false
+  },
+  "audit_s": 3.255104066000058,
+  "periodic": {
+    "periodic_pair_counts": [
+      228,
+      257,
+      228
+    ],
+    "periodic_coordinate_errors": [
+      6.106226635438361e-16,
+      3.3306690738754696e-16,
+      2.1094237467877974e-15
+    ],
+    "periodic_pair_tolerance": 1e-10,
+    "periodic_equivalence_classes": 4592,
+    "periodic_triangles_match": true
+  },
+  "qualified": false,
+  "solve_s": 11.465595917998144,
+  "stiffness_skew_relative": 2.90707678433961e-13,
+  "stiffness": [
+    [
+      0.6969178073783577,
+      0.14054011528438728,
+      0.16482062440136025,
+      -0.041219748533626546,
+      -0.05115064486366061,
+      -0.007066583935421722
+    ],
+    [
+      0.14054011528438728,
+      0.598942775009573,
+      0.16407261662370448,
+      -0.0347750612108529,
+      -0.010114394291060399,
+      -0.04016218530468213
+    ],
+    [
+      0.16482062440136025,
+      0.16407261662370448,
+      0.7523703100677044,
+      -0.0035779827110005023,
+      -0.06870407847343704,
+      -0.0365394099440932
+    ],
+    [
+      -0.041219748533626546,
+      -0.0347750612108529,
+      -0.0035779827110005023,
+      0.19239588966923898,
+      -0.015699930751247853,
+      -0.018464657642918037
+    ],
+    [
+      -0.05115064486366061,
+      -0.010114394291060399,
+      -0.06870407847343704,
+      -0.015699930751247853,
+      0.21820077676292585,
+      -0.0070634295939395325
+    ],
+    [
+      -0.007066583935421722,
+      -0.04016218530468213,
+      -0.0365394099440932,
+      -0.018464657642918037,
+      -0.0070634295939395325,
+      0.2286753527673271
+    ]
+  ],
+  "solver_records": [
+    {
+      "iterations": 3018,
+      "relative_residual": 2.2994867150120293e-11,
+      "free_dofs": 13779,
+      "seconds": 1.789603763998457
+    },
+    {
+      "iterations": 3006,
+      "relative_residual": 6.624790373776308e-11,
+      "free_dofs": 13779,
+      "seconds": 1.8603416149999248
+    },
+    {
+      "iterations": 2989,
+      "relative_residual": 5.028380667910353e-12,
+      "free_dofs": 13779,
+      "seconds": 1.765753034997033
+    },
+    {
+      "iterations": 3117,
+      "relative_residual": 8.63115803863935e-12,
+      "free_dofs": 13779,
+      "seconds": 1.933171543001663
+    },
+    {
+      "iterations": 3107,
+      "relative_residual": 5.602526190468996e-11,
+      "free_dofs": 13779,
+      "seconds": 1.8309198260030826
+    },
+    {
+      "iterations": 3034,
+      "relative_residual": 1.8419017283547912e-11,
+      "free_dofs": 13779,
+      "seconds": 1.894739176001167
+    }
+  ],
+  "total_workflow_s": 14.846473911999055
+}

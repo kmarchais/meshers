@@ -1,0 +1,147 @@
+{
+  "case": "gyroid",
+  "route": "control-straight",
+  "cells": 12,
+  "status": "diagnostic-unqualified",
+  "specimen_setup_s": 0.0032871900002646726,
+  "replay_source_sha256": "50e845fe10f341a6ec6cfc48aba5ac8491da78f465df6cefeb96b68b4476aedf",
+  "workflow_scope": "Saved-mesh same-geometry FEA control; no live generation timing",
+  "replay_load_s": 0.014247682000132045,
+  "generation_s": null,
+  "nodes": 19931,
+  "elements": 10832,
+  "order": 2,
+  "input_signed_volume_ordering_diagnostic": 0.35976784217837326,
+  "reoriented_tetrahedra": 0,
+  "nonpositive_or_tiny_tetrahedra": 0,
+  "geometry": {
+    "sampled_forward_max": 0.007465941267503501,
+    "sampled_reverse_max": 0.006887788083067507,
+    "sampled_two_sided_max": 0.007465941267503501,
+    "outward_forward_max": 0.007465941267503501,
+    "inward_forward_max": 0.005505531364708508,
+    "projection_failed": 0,
+    "forward_samples": 55692,
+    "reverse_samples": 36260,
+    "volume": 0.35976784217837293,
+    "relative_volume_error": 0.009326689676286692,
+    "q_min_corner": 0.3713583989884226,
+    "q_p01_corner": 0.46711923194191096,
+    "minimum_dihedral_deg_corner": 19.52022075811297,
+    "minimum_sampled_jacobian": 2.285439332483795e-05,
+    "reverse_tessellation_delta_max": 1.1492543028346347e-16,
+    "quadratic_reverse_subdivisions": [
+      4,
+      8
+    ],
+    "geometry_admitted": false
+  },
+  "audit_s": 1.237960294001823,
+  "periodic": {
+    "periodic_pair_counts": [
+      349,
+      367,
+      349
+    ],
+    "periodic_coordinate_errors": [
+      0.0,
+      0.0,
+      0.0
+    ],
+    "periodic_pair_tolerance": 1e-10,
+    "periodic_equivalence_classes": 18898,
+    "periodic_triangles_match": true
+  },
+  "qualified": false,
+  "solve_s": 44.79605231499954,
+  "stiffness_skew_relative": 4.069712996965885e-13,
+  "stiffness": [
+    [
+      0.49192504641881635,
+      0.19347622464306874,
+      0.1934498915042045,
+      5.630605389652148e-05,
+      5.748193861507656e-06,
+      1.0374317175320468e-05
+    ],
+    [
+      0.19347622464306874,
+      0.4918662733362509,
+      0.19344017161058535,
+      2.5865396226321326e-05,
+      5.768743091890945e-06,
+      4.122668246369458e-05
+    ],
+    [
+      0.1934498915042045,
+      0.19344017161058535,
+      0.49195012040804037,
+      1.5193556721541366e-05,
+      4.971548598541976e-05,
+      2.479999233069861e-06
+    ],
+    [
+      5.630605389652148e-05,
+      2.5865396226321326e-05,
+      1.5193556721541366e-05,
+      0.16886702487439254,
+      1.2459097003252633e-05,
+      6.45475220715301e-06
+    ],
+    [
+      5.748193861507656e-06,
+      5.768743091890945e-06,
+      4.971548598541976e-05,
+      1.2459097003252633e-05,
+      0.1688349385134087,
+      1.6490482848273544e-05
+    ],
+    [
+      1.0374317175320468e-05,
+      4.122668246369458e-05,
+      2.479999233069861e-06,
+      6.45475220715301e-06,
+      1.6490482848273544e-05,
+      0.16883147621495626
+    ]
+  ],
+  "solver_records": [
+    {
+      "iterations": 1364,
+      "relative_residual": 9.69772430887693e-13,
+      "free_dofs": 56697,
+      "seconds": 7.274391953000304
+    },
+    {
+      "iterations": 1365,
+      "relative_residual": 1.0169685215476696e-12,
+      "free_dofs": 56697,
+      "seconds": 6.9261742109993065
+    },
+    {
+      "iterations": 1361,
+      "relative_residual": 1.0007105734432013e-12,
+      "free_dofs": 56697,
+      "seconds": 7.292633611999918
+    },
+    {
+      "iterations": 1371,
+      "relative_residual": 1.0067646554380222e-12,
+      "free_dofs": 56697,
+      "seconds": 7.3288052780008
+    },
+    {
+      "iterations": 1371,
+      "relative_residual": 9.92088169035727e-13,
+      "free_dofs": 56697,
+      "seconds": 7.316897517001053
+    },
+    {
+      "iterations": 1364,
+      "relative_residual": 1.0192536226051796e-12,
+      "free_dofs": 56697,
+      "seconds": 7.320626496999466
+    }
+  ],
+  "replay_workflow_s": 46.108855245001905
+}

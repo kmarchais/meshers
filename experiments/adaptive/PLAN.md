@@ -61,3 +61,14 @@ compiled fields) + `fea-accuracy-optimizer` (PR #5 geometry guard, quality floor
   threads (`timing_job.sh`, job 1676; RESULTS.md, fast mode).
 - [ ] FEA wall time at a 1% target (`timing.py --fea`, not run yet).
 - [ ] Tet adaptation does not scale with threads (gyroid 1.81 s on 1, 1.78 s on 24).
+
+## G3 continuation, 2026-10-17
+
+The real default Microgen VTK/MMG pilot and same-skeleton controls are in
+`MICROGEN_RESULTS.md`; protocol and exact defaults are in `MICROGEN.md`.
+This is a reviewable diagnostic result, not a completed four-fixture
+matched-accuracy comparison. Gyroid and Schwarz-solid references are
+supported by refinement checks. Meshers rejects the tested spinodoids and
+the smooth lattice, and neither has an admitted fine reference here.
+No native meshing code or frozen admission rule was changed. Do not infer
+local stress accuracy or a tuned Microgen workflow speed ranking.

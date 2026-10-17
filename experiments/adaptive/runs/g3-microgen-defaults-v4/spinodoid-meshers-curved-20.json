@@ -1,0 +1,11 @@
+{
+  "case": "spinodoid",
+  "route": "meshers-curved",
+  "cells": 20,
+  "status": "failed",
+  "specimen_setup_s": 0.0010182679980061948,
+  "error_type": "MeshingFailure",
+  "error": "minimum MMG quality 1.5830310085338778e-2 is below required 1e-1; mesh rejected (6 elements below 0.1). Improve resolution/optimization or use a quality remesher",
+  "traceback": "Traceback (most recent call last):\n  File \"/home/kmarchais/dev/meshers/experiments/adaptive/microgen_workflow.py\", line 323, in worker\n    mesh = meshers.generate(case.function, bounds=BOUNDS, cells=cells, band=case.band,\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/kmarchais/dev/meshers/crates/meshers-python/python/meshers/__init__.py\", line 279, in generate\n    result = _meshers.generate(\n             ^^^^^^^^^^^^^^^^^^\n_meshers.MeshingFailure: minimum MMG quality 1.5830310085338778e-2 is below required 1e-1; mesh rejected (6 elements below 0.1). Improve resolution/optimization or use a quality remesher\n",
+  "failed_workflow_s": 21.282302952000464
+}

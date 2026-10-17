@@ -1,0 +1,172 @@
+{
+  "case": "schwarz-solid",
+  "route": "meshers-curved",
+  "cells": 16,
+  "status": "solved",
+  "specimen_setup_s": 0.002790345999528654,
+  "native_diagnostics": {
+    "empty": false,
+    "volume": 0.5001069205728781,
+    "minimum_mmg_quality": 0.44999529727748616,
+    "sampled_surface_error": 0.0034441901689794547,
+    "elements_below_quality_01": 0,
+    "reverted_snap_vertices": 0,
+    "callback_calls": 0,
+    "inserted_interior_nodes": 0,
+    "seconds": 0.259738107,
+    "quadratic": {
+      "curved_edges": 5100,
+      "straightened_edges": 0,
+      "minimum_jacobian_ratio": 0.6278808256521734
+    },
+    "threads": 1,
+    "evaluator": "compiled",
+    "preparation_seconds": 0.0007256490025611129
+  },
+  "native_arguments": {
+    "geometry_tolerance": 1.0,
+    "minimum_quality": 0.1,
+    "optimize_passes": 1,
+    "order": 2,
+    "periodic": [
+      true,
+      true,
+      true
+    ]
+  },
+  "generation_s": 0.26331448099881527,
+  "nodes": 42928,
+  "elements": 27492,
+  "order": 2,
+  "nonpositive_or_tiny_tetrahedra": 0,
+  "geometry": {
+    "sampled_forward_max": 0.0001391190044000286,
+    "sampled_reverse_max": 0.00016189052407492453,
+    "sampled_two_sided_max": 0.00016189052407492453,
+    "outward_forward_max": 0.0001391190044000286,
+    "inward_forward_max": 0.00011407806061534533,
+    "projection_failed": 0,
+    "forward_samples": 43524,
+    "reverse_samples": 50135,
+    "volume": 0.5000002737518886,
+    "relative_volume_error": 5.475037772040281e-07,
+    "q_min_corner": 0.44999529727748616,
+    "q_p01_corner": 0.5573114869459874,
+    "minimum_dihedral_deg_corner": 23.63244830210826,
+    "minimum_sampled_jacobian": 1.2462605328560242e-05,
+    "reverse_tessellation_delta_max": 0.0001864845083169516,
+    "quadratic_reverse_subdivisions": [
+      4,
+      8
+    ],
+    "geometry_admitted": true
+  },
+  "audit_s": 1.5659925239997392,
+  "periodic": {
+    "periodic_pair_counts": [
+      942,
+      942,
+      942
+    ],
+    "periodic_coordinate_errors": [
+      0.0,
+      0.0,
+      0.0
+    ],
+    "periodic_pair_tolerance": 1e-10,
+    "periodic_equivalence_classes": 40200,
+    "periodic_triangles_match": true
+  },
+  "qualified": true,
+  "solve_s": 107.67500370199923,
+  "stiffness_skew_relative": 1.2011162626939716e-13,
+  "stiffness": [
+    [
+      0.7977934230744271,
+      0.1433809858657326,
+      0.14338034028042673,
+      -5.09032330558864e-07,
+      -4.7282057589677585e-07,
+      2.313535299848863e-07
+    ],
+    [
+      0.1433809858657326,
+      0.797793089073957,
+      0.14338030653208816,
+      -5.630919631717829e-07,
+      2.0172322190842425e-07,
+      -4.1170216536001625e-07
+    ],
+    [
+      0.14338034028042673,
+      0.14338030653208816,
+      0.7977909257123385,
+      1.899072090269864e-07,
+      -6.034862653555037e-07,
+      -6.039745338140595e-07
+    ],
+    [
+      -5.09032330558864e-07,
+      -5.630919631717829e-07,
+      1.899072090269864e-07,
+      0.1912584639952702,
+      -4.8944468261522834e-08,
+      -9.041547933064181e-08
+    ],
+    [
+      -4.7282057589677585e-07,
+      2.0172322190842425e-07,
+      -6.034862653555037e-07,
+      -4.8944468261522834e-08,
+      0.19125854445788312,
+      -1.1653752487301137e-07
+    ],
+    [
+      2.313535299848863e-07,
+      -4.1170216536001625e-07,
+      -6.039745338140595e-07,
+      -9.041547933064181e-08,
+      -1.1653752487301137e-07,
+      0.19125855902561248
+    ]
+  ],
+  "solver_records": [
+    {
+      "iterations": 1346,
+      "relative_residual": 1.0562193411337498e-12,
+      "free_dofs": 120603,
+      "seconds": 17.059040813001047
+    },
+    {
+      "iterations": 1363,
+      "relative_residual": 1.0095273788742484e-12,
+      "free_dofs": 120603,
+      "seconds": 17.332140368998807
+    },
+    {
+      "iterations": 1366,
+      "relative_residual": 9.92284954037595e-13,
+      "free_dofs": 120603,
+      "seconds": 17.346181820998027
+    },
+    {
+      "iterations": 1385,
+      "relative_residual": 9.047561816764992e-13,
+      "free_dofs": 120603,
+      "seconds": 17.630068143000244
+    },
+    {
+      "iterations": 1377,
+      "relative_residual": 1.0310509354021188e-12,
+      "free_dofs": 120603,
+      "seconds": 17.568434093998803
+    },
+    {
+      "iterations": 1370,
+      "relative_residual": 1.8375274395554585e-12,
+      "free_dofs": 120603,
+      "seconds": 17.52032177899673
+    }
+  ],
+  "total_workflow_s": 109.63773563799987
+}

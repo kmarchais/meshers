@@ -1,0 +1,167 @@
+{
+  "case": "gyroid",
+  "route": "mmg-default",
+  "cells": 0,
+  "status": "diagnostic-unqualified",
+  "specimen_setup_s": 0.0033972349992836826,
+  "vtk_extraction_s": 0.11142914199808729,
+  "seed_nodes": 7808,
+  "seed_elements": 30642,
+  "mmg_arguments": {
+    "periodic": true,
+    "mesh_version": 2,
+    "dimension": 3,
+    "tol": 1e-08,
+    "hausd": null,
+    "hgrad": null,
+    "hmax": null,
+    "hmin": null,
+    "hsiz": null
+  },
+  "mmg_calls": [
+    {
+      "nofem": true
+    },
+    {
+      "hausd": null,
+      "hgrad": null,
+      "hmax": null,
+      "hmin": null,
+      "hsiz": null,
+      "ls": true,
+      "nr": true
+    }
+  ],
+  "generation_s": 4.599609011998837,
+  "nodes": 3527,
+  "elements": 12282,
+  "order": 1,
+  "nonpositive_or_tiny_tetrahedra": 0,
+  "geometry": {
+    "sampled_forward_max": 0.008672060064299872,
+    "sampled_reverse_max": 0.0077086780504939025,
+    "sampled_two_sided_max": 0.008672060064299872,
+    "outward_forward_max": 0.008672060064299872,
+    "inward_forward_max": 0.004930437056281366,
+    "projection_failed": 0,
+    "forward_samples": 39520,
+    "reverse_samples": 36260,
+    "volume": 0.3642024128240331,
+    "relative_volume_error": 0.021767853074377896,
+    "q_min_corner": 0.00048272418303970174,
+    "q_p01_corner": 0.05333597074143354,
+    "minimum_dihedral_deg_corner": 0.21762720679024028,
+    "minimum_sampled_jacobian": 4.77543994489976e-09,
+    "reverse_tessellation_delta_max": 0.0,
+    "quadratic_reverse_subdivisions": null,
+    "geometry_admitted": false
+  },
+  "audit_s": 0.6914338700007647,
+  "periodic": {
+    "periodic_pair_counts": [
+      250,
+      250,
+      250
+    ],
+    "periodic_coordinate_errors": [
+      9.992007221626409e-16,
+      9.992007221626409e-16,
+      9.992007221626409e-16
+    ],
+    "periodic_pair_tolerance": 1e-10,
+    "periodic_equivalence_classes": 2812,
+    "periodic_triangles_match": true
+  },
+  "qualified": false,
+  "solve_s": 1.976805106998654,
+  "stiffness_skew_relative": 3.4353115403569264e-13,
+  "stiffness": [
+    [
+      0.5352145817580293,
+      0.19385900479447946,
+      0.19424195558092122,
+      8.792202336790508e-05,
+      -0.00012138593832934495,
+      6.518513413139273e-05
+    ],
+    [
+      0.19385900479447946,
+      0.5341078276776603,
+      0.19429196648914335,
+      -5.439313658798133e-06,
+      2.799392894794689e-05,
+      -0.00010922372587699365
+    ],
+    [
+      0.19424195558092122,
+      0.19429196648914335,
+      0.5346110874983613,
+      6.485256925902986e-05,
+      -0.0006432171062736726,
+      0.00018608737205566645
+    ],
+    [
+      8.792202336790508e-05,
+      -5.439313658798133e-06,
+      6.485256925902986e-05,
+      0.19336553282321942,
+      0.0003438236667124429,
+      -1.9569299558946772e-05
+    ],
+    [
+      -0.00012138593832934495,
+      2.799392894794689e-05,
+      -0.0006432171062736726,
+      0.0003438236667124429,
+      0.19394498648655153,
+      -0.00011270649295570795
+    ],
+    [
+      6.518513413139273e-05,
+      -0.00010922372587699365,
+      0.00018608737205566645,
+      -1.9569299558946772e-05,
+      -0.00011270649295570795,
+      0.19358555028620622
+    ]
+  ],
+  "solver_records": [
+    {
+      "iterations": 712,
+      "relative_residual": 9.874912183757516e-13,
+      "free_dofs": 8439,
+      "seconds": 0.2889167229986924
+    },
+    {
+      "iterations": 711,
+      "relative_residual": 9.521491238968341e-13,
+      "free_dofs": 8439,
+      "seconds": 0.284321335999266
+    },
+    {
+      "iterations": 714,
+      "relative_residual": 9.472595528690756e-13,
+      "free_dofs": 8439,
+      "seconds": 0.28501016100199195
+    },
+    {
+      "iterations": 719,
+      "relative_residual": 9.225157004002885e-13,
+      "free_dofs": 8439,
+      "seconds": 0.2732120090004173
+    },
+    {
+      "iterations": 717,
+      "relative_residual": 8.984155657736859e-13,
+      "free_dofs": 8439,
+      "seconds": 0.29113071499887155
+    },
+    {
+      "iterations": 718,
+      "relative_residual": 9.570396268835362e-13,
+      "free_dofs": 8439,
+      "seconds": 0.28352626400010195
+    }
+  ],
+  "total_workflow_s": 7.302260895998188
+}

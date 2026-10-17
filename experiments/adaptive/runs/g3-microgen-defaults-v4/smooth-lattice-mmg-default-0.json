@@ -1,0 +1,169 @@
+{
+  "case": "smooth-lattice",
+  "route": "mmg-default",
+  "cells": 0,
+  "status": "diagnostic-unqualified",
+  "specimen_setup_s": 0.0007129010009521153,
+  "vtk_extraction_s": 0.3825925150013063,
+  "seed_nodes": 48353,
+  "seed_elements": 233532,
+  "mmg_arguments": {
+    "periodic": true,
+    "mesh_version": 2,
+    "dimension": 3,
+    "tol": 1e-08,
+    "hausd": null,
+    "hgrad": null,
+    "hmax": null,
+    "hmin": null,
+    "hsiz": null
+  },
+  "mmg_calls": [
+    {
+      "nofem": true
+    },
+    {
+      "hausd": null,
+      "hgrad": null,
+      "hmax": null,
+      "hmin": null,
+      "hsiz": null,
+      "ls": true,
+      "nr": true
+    }
+  ],
+  "generation_s": 12.622919188001106,
+  "nodes": 6709,
+  "elements": 27717,
+  "order": 1,
+  "input_signed_volume_ordering_diagnostic": 0.24122326927317075,
+  "reoriented_tetrahedra": 0,
+  "nonpositive_or_tiny_tetrahedra": 0,
+  "geometry": {
+    "sampled_forward_max": 0.010581485793279907,
+    "sampled_reverse_max": 0.010164073938454444,
+    "sampled_two_sided_max": 0.010581485793279907,
+    "outward_forward_max": 0.008584526425740655,
+    "inward_forward_max": 0.010581485793279907,
+    "projection_failed": 0,
+    "forward_samples": 43264,
+    "reverse_samples": 34791,
+    "volume": 0.24122326927317075,
+    "relative_volume_error": -0.028543931969196912,
+    "q_min_corner": 0.009051749366064555,
+    "q_p01_corner": 0.2639383897207462,
+    "minimum_dihedral_deg_corner": 0.5090543505191079,
+    "minimum_sampled_jacobian": 3.502219435910743e-08,
+    "reverse_tessellation_delta_max": 0.0,
+    "quadratic_reverse_subdivisions": null,
+    "geometry_admitted": false
+  },
+  "audit_s": 0.8818108240011497,
+  "periodic": {
+    "periodic_pair_counts": [
+      360,
+      360,
+      360
+    ],
+    "periodic_coordinate_errors": [
+      0.0,
+      0.0,
+      0.0
+    ],
+    "periodic_pair_tolerance": 1e-10,
+    "periodic_equivalence_classes": 5682,
+    "periodic_triangles_match": true
+  },
+  "qualified": false,
+  "solve_s": 5.085982442000386,
+  "stiffness_skew_relative": 8.121747005087709e-14,
+  "stiffness": [
+    [
+      0.13983899611317252,
+      0.10399166312775684,
+      0.10398711515762887,
+      -0.00012334525891356425,
+      -4.3034500803670894e-05,
+      -2.0655236656464012e-05
+    ],
+    [
+      0.10399166312775684,
+      0.13996984747185826,
+      0.10408383804738759,
+      -8.331364862397255e-05,
+      5.1855325134716816e-06,
+      -2.3490275339542175e-05
+    ],
+    [
+      0.10398711515762887,
+      0.10408383804738759,
+      0.13995716207877718,
+      -1.9964638192468497e-05,
+      4.1884866883509217e-07,
+      -7.383467463681242e-05
+    ],
+    [
+      -0.00012334525891356425,
+      -8.331364862397255e-05,
+      -1.9964638192468497e-05,
+      0.10244800464651949,
+      -3.9498750360559474e-05,
+      1.0800464075487479e-05
+    ],
+    [
+      -4.3034500803670894e-05,
+      5.1855325134716816e-06,
+      4.1884866883509217e-07,
+      -3.9498750360559474e-05,
+      0.10244749676771613,
+      -2.1814868515938216e-05
+    ],
+    [
+      -2.0655236656464012e-05,
+      -2.3490275339542175e-05,
+      -7.383467463681242e-05,
+      1.0800464075487479e-05,
+      -2.1814868515938216e-05,
+      0.10253936320867665
+    ]
+  ],
+  "solver_records": [
+    {
+      "iterations": 900,
+      "relative_residual": 1.0521733127853093e-12,
+      "free_dofs": 17049,
+      "seconds": 0.7521517099994526
+    },
+    {
+      "iterations": 888,
+      "relative_residual": 1.2222345618404912e-12,
+      "free_dofs": 17049,
+      "seconds": 0.7479815910010075
+    },
+    {
+      "iterations": 902,
+      "relative_residual": 1.2882220938522442e-12,
+      "free_dofs": 17049,
+      "seconds": 0.7467310399988492
+    },
+    {
+      "iterations": 903,
+      "relative_residual": 9.752905754449681e-13,
+      "free_dofs": 17049,
+      "seconds": 0.7888676389993634
+    },
+    {
+      "iterations": 909,
+      "relative_residual": 9.499480266235504e-13,
+      "free_dofs": 17049,
+      "seconds": 0.7375635449971014
+    },
+    {
+      "iterations": 902,
+      "relative_residual": 8.358872389349287e-13,
+      "free_dofs": 17049,
+      "seconds": 0.7682769230013946
+    }
+  ],
+  "total_workflow_s": 18.668550045000302
+}

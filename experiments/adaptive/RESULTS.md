@@ -266,3 +266,24 @@ longest edge facing it in each such element and retries, which made the smooth
 fixtures slightly better (Neovius q_min 0.28 -> 0.34). Equalizing sag to the
 tolerance raises the mean deviation, hence the larger volume error of the adapted
 16-cell mesh at equal H; balanced placement would cancel it for linear meshes.
+
+## Real Microgen defaults on Linux G3, 2026-10-17
+
+`MICROGEN_RESULTS.md` records the full default VTK-to-MMG workflow on the
+Gyroid sheet, Schwarz P solid, fixed spinodoid and smooth-union lattice.
+This replaces no earlier frozen results and does not relabel the historical
+MMG-on-a-Meshers-seed measurements. Both Microgen paths now have real G3
+execution evidence on all four fixtures, with unsupported FEA routes marked.
+
+At about 20k nodes, curved Meshers has 0.2951% Gyroid and 0.0738% Schwarz-solid
+full mixed-load stiffness disagreement, versus 3.7152% and 1.3458% for the
+tested linear meshes. Their geometry passes the unchanged common gates,
+but curved CG workflows take longer at these unmatched accuracies.
+Every default Microgen control fails geometry or quality admission.
+
+The negative findings matter. Meshers rejects periodic spinodoids at the
+quality floor and rejects the smooth lattice's raw-field periodicity,
+although Microgen completes diagnostic lattice FEA. Neither fixture has a
+justified fine stiffness reference. Same-domain order controls separate
+approximation-order changes from curved geometric-mapping changes without
+claiming certified continuum error. Native meshing code remains unchanged.

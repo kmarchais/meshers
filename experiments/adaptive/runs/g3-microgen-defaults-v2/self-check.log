@@ -1,0 +1,14 @@
+/home/kmarchais/dev/meshers/.venv/lib/python3.12/site-packages/fedoo/core/base.py:80: UserWarning: WARNING: no fast direct sparse solver has been found. Consider installing pypardiso (Intel) or python-mumps (any platform) to improve computation performance
+  warnings.warn(
+Traceback (most recent call last):
+  File "/home/kmarchais/dev/meshers/experiments/adaptive/microgen_workflow.py", line 557, in <module>
+    main()
+  File "/home/kmarchais/dev/meshers/experiments/adaptive/microgen_workflow.py", line 508, in main
+    self_check()
+  File "/home/kmarchais/dev/meshers/experiments/adaptive/microgen_workflow.py", line 437, in self_check
+    cube = meshers.generate(lambda x, y, z: x * 0 - 1, bounds=BOUNDS, cells=2,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/kmarchais/dev/meshers/crates/meshers-python/python/meshers/__init__.py", line 279, in generate
+    result = _meshers.generate(
+             ^^^^^^^^^^^^^^^^^^
+ValueError: finite, representable positive bounds; cells 4..128; positive tolerance/budget; snap 0..0.2; threads <=256; passes <=100; minimum_quality in 0..1 required

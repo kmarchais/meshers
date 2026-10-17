@@ -1,0 +1,11 @@
+{
+  "case": "smooth-lattice",
+  "route": "meshers-curved",
+  "cells": 16,
+  "status": "failed",
+  "specimen_setup_s": 0.0007179029998951592,
+  "error_type": "ValueError",
+  "error": "field/grading is incompatible with periodic axis 0",
+  "traceback": "Traceback (most recent call last):\n  File \"/home/kmarchais/dev/meshers/experiments/adaptive/microgen_workflow.py\", line 358, in worker\n    mesh = meshers.generate(case.function, bounds=BOUNDS, cells=cells, band=case.band,\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/kmarchais/dev/meshers/crates/meshers-python/python/meshers/__init__.py\", line 279, in generate\n    result = _meshers.generate(\n             ^^^^^^^^^^^^^^^^^^\nValueError: field/grading is incompatible with periodic axis 0\n",
+  "failed_workflow_s": 0.014756081000086851
+}

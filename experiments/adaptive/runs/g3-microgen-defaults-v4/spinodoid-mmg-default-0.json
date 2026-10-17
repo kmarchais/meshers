@@ -1,0 +1,65 @@
+{
+  "case": "spinodoid",
+  "route": "mmg-default",
+  "cells": 0,
+  "status": "failed",
+  "specimen_setup_s": 0.0008537489993614145,
+  "vtk_extraction_s": 0.059819308000442106,
+  "seed_nodes": 5268,
+  "seed_elements": 20702,
+  "mmg_arguments": {
+    "periodic": true,
+    "mesh_version": 2,
+    "dimension": 3,
+    "tol": 1e-08,
+    "hausd": null,
+    "hgrad": null,
+    "hmax": null,
+    "hmin": null,
+    "hsiz": null
+  },
+  "mmg_calls": [
+    {
+      "nofem": true
+    },
+    {
+      "hausd": null,
+      "hgrad": null,
+      "hmax": null,
+      "hmin": null,
+      "hsiz": null,
+      "ls": true,
+      "nr": true
+    }
+  ],
+  "generation_s": 4.03529728400099,
+  "nodes": 5509,
+  "elements": 22907,
+  "order": 1,
+  "nonpositive_or_tiny_tetrahedra": 0,
+  "geometry": {
+    "sampled_forward_max": 0.03540761852840497,
+    "sampled_reverse_max": 0.018450132296885958,
+    "sampled_two_sided_max": 0.03540761852840497,
+    "outward_forward_max": 0.03540761852840497,
+    "inward_forward_max": 0.030050609287408353,
+    "projection_failed": 23,
+    "forward_samples": 46579,
+    "reverse_samples": 41325,
+    "volume": 0.5022168216116432,
+    "relative_volume_error": 0.0001604965704584682,
+    "q_min_corner": 0.0018350704076735588,
+    "q_p01_corner": 0.09643911283094964,
+    "minimum_dihedral_deg_corner": 0.24035552086957068,
+    "minimum_sampled_jacobian": 4.0434414577770275e-09,
+    "reverse_tessellation_delta_max": 0.0,
+    "quadratic_reverse_subdivisions": null,
+    "geometry_admitted": false
+  },
+  "audit_s": 2.692937363000965,
+  "periodic_error": "Opposite-face triangulations differ on axis 1",
+  "error_type": "ValueError",
+  "error": "Periodic topology unsupported; no nonmatching-BC substitution",
+  "traceback": "Traceback (most recent call last):\n  File \"/home/kmarchais/dev/meshers/experiments/adaptive/microgen_workflow.py\", line 347, in worker\n    _, _, row[\"periodic\"] = periodic_pairs(points + 0.5, surface[:, :3])\n                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/kmarchais/dev/periodic-microgen/experiments/periodic-fea/periodic.py\", line 47, in periodic_pairs\n    raise ValueError(f\"Opposite-face triangulations differ on axis {axis}\")\nValueError: Opposite-face triangulations differ on axis 1\n\nThe above exception was the direct cause of the following exception:\n\nTraceback (most recent call last):\n  File \"/home/kmarchais/dev/meshers/experiments/adaptive/microgen_workflow.py\", line 350, in worker\n    raise ValueError(\"Periodic topology unsupported; no nonmatching-BC substitution\") from error\nValueError: Periodic topology unsupported; no nonmatching-BC substitution\n",
+  "failed_workflow_s": 6.79531996500009
+}

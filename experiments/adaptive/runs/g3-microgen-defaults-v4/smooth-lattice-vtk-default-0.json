@@ -1,0 +1,144 @@
+{
+  "case": "smooth-lattice",
+  "route": "vtk-default",
+  "cells": 0,
+  "status": "diagnostic-unqualified",
+  "specimen_setup_s": 0.0006783730023016687,
+  "vtk_extraction_s": 0.37451926600260776,
+  "seed_nodes": 48353,
+  "seed_elements": 233532,
+  "generation_s": 0.44930591299998923,
+  "nodes": 48353,
+  "elements": 233532,
+  "order": 1,
+  "input_signed_volume_ordering_diagnostic": 0.2176951162215066,
+  "reoriented_tetrahedra": 20796,
+  "nonpositive_or_tiny_tetrahedra": 0,
+  "geometry": {
+    "sampled_forward_max": 0.0026507638754141743,
+    "sampled_reverse_max": 0.0026139059335306175,
+    "sampled_two_sided_max": 0.0026507638754141743,
+    "outward_forward_max": 0.0026507638754141743,
+    "inward_forward_max": 0.001153415827977344,
+    "projection_failed": 288,
+    "forward_samples": 434772,
+    "reverse_samples": 34791,
+    "volume": 0.24731347364685202,
+    "relative_volume_error": -0.00401741754052265,
+    "q_min_corner": 2.3210574294163336e-07,
+    "q_p01_corner": 0.007475386009404405,
+    "minimum_dihedral_deg_corner": 0.00860933128274155,
+    "minimum_sampled_jacobian": 2.9798721908151637e-16,
+    "reverse_tessellation_delta_max": 0.0,
+    "quadratic_reverse_subdivisions": null,
+    "geometry_admitted": false
+  },
+  "audit_s": 5.356978024999989,
+  "periodic": {
+    "periodic_pair_counts": [
+      360,
+      360,
+      360
+    ],
+    "periodic_coordinate_errors": [
+      0.0,
+      0.0,
+      0.0
+    ],
+    "periodic_pair_tolerance": 1e-10,
+    "periodic_equivalence_classes": 47326,
+    "periodic_triangles_match": true
+  },
+  "qualified": false,
+  "solve_s": 190.20686619799744,
+  "stiffness_skew_relative": 4.456971952056369e-13,
+  "stiffness": [
+    [
+      0.14135078299872475,
+      0.10684931583348088,
+      0.1068624243852214,
+      2.6090068618634394e-05,
+      3.057432204778633e-05,
+      2.3695406639193847e-05
+    ],
+    [
+      0.10684931583348088,
+      0.14137482887337469,
+      0.10687300359099751,
+      2.651218815678613e-05,
+      3.695467862751334e-05,
+      3.0514015929797803e-06
+    ],
+    [
+      0.1068624243852214,
+      0.10687300359099751,
+      0.14152780738738005,
+      -4.4146737542198065e-06,
+      -1.2526872569806857e-05,
+      -3.43545673986339e-05
+    ],
+    [
+      2.6090068618634394e-05,
+      2.651218815678613e-05,
+      -4.4146737542198065e-06,
+      0.10378379537348431,
+      -2.740351834800566e-05,
+      -8.495041834765306e-06
+    ],
+    [
+      3.057432204778633e-05,
+      3.695467862751334e-05,
+      -1.2526872569806857e-05,
+      -2.740351834800566e-05,
+      0.10384294185461548,
+      5.26250740532784e-06
+    ],
+    [
+      2.3695406639193847e-05,
+      3.0514015929797803e-06,
+      -3.43545673986339e-05,
+      -8.495041834765306e-06,
+      5.26250740532784e-06,
+      0.10385534635023458
+    ]
+  ],
+  "solver_records": [
+    {
+      "iterations": 4458,
+      "relative_residual": 4.648885244100147e-12,
+      "free_dofs": 141981,
+      "seconds": 31.3052743799999
+    },
+    {
+      "iterations": 4465,
+      "relative_residual": 5.396094094286827e-12,
+      "free_dofs": 141981,
+      "seconds": 31.597814593002113
+    },
+    {
+      "iterations": 4458,
+      "relative_residual": 6.12939597933075e-12,
+      "free_dofs": 141981,
+      "seconds": 31.308931960000336
+    },
+    {
+      "iterations": 4414,
+      "relative_residual": 1.5310141225055546e-12,
+      "free_dofs": 141981,
+      "seconds": 29.621971672000655
+    },
+    {
+      "iterations": 4446,
+      "relative_residual": 1.4643163049573318e-12,
+      "free_dofs": 141981,
+      "seconds": 31.146873670000787
+    },
+    {
+      "iterations": 4476,
+      "relative_residual": 1.7015700553472156e-12,
+      "free_dofs": 141981,
+      "seconds": 31.542581143999996
+    }
+  ],
+  "total_workflow_s": 196.38711828799933
+}
