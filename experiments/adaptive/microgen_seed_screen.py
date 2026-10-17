@@ -31,10 +31,17 @@ def worker(args):
         surface = np.asarray(poly.point_data["vtkOriginalPointIds"])[poly.faces.reshape(-1, 4)[:, 1:]]
         _, triangles = caps({"points": points, "surface": surface})
         ceiling, _ = bounds(triangles)
-        row.update(cap_minimum_quality_ceiling=float(ceiling.min()),
-                   caps_below_quality_gate=int((ceiling < 0.1).sum()))
-        row["geometry"] = workflow.geometry(args.run, "schwarz-solid", points, tetrahedra, surface)
-        row["status"] = "screened"
+        valid_ceiling = np.isfinite(ceiling)
+        row.update(cap_minimum_quality_ceiling=float(ceiling[valid_ceiling].min()) if valid_ceiling.any() else None,
+                   caps_below_quality_gate=int((ceiling < 0.1).sum()),
+                   degenerate_caps=int((~valid_ceiling).sum()))
+        determinants = np.linalg.det(points[tetrahedra[:, 1:]] - points[tetrahedra[:, :1]])
+        row["zero_volume_tetrahedra"] = int((determinants == 0).sum())
+        if row["zero_volume_tetrahedra"]:
+            row["status"] = "degenerate-seed"
+        else:
+            row["geometry"] = workflow.geometry(args.run, "schwarz-solid", points, tetrahedra, surface)
+            row["status"] = "screened"
     workflow.save(args.run / f"seed-{args.resolution}.json", row)
 
 

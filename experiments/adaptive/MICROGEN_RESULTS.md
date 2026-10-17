@@ -328,3 +328,25 @@ is below 0.1, making further size tuning insufficient on this seed. Periodic
 checks pass. FEA remains withheld. Records are in
 `runs/g3-microgen-firstpass24-v2`. These instrumented timings include intermediate
 audits and are not used for a workflow speed comparison.
+
+## Nearby VTK seed grids
+
+Jobs 22 and 23 screen Schwarz resolutions 21, 22, 23, 25, 26 and 27 before
+spending time in MMG. The first screen failed while serializing nonfinite quality
+from zero-volume seed cells. The corrected screen records those cells as a
+rejection instead of deleting them or admitting nonfinite metrics.
+
+| Resolution | Zero-volume tets | Caps with quality ceiling below 0.1 |
+|---|---:|---:|
+| 21 | 538 | 48 |
+| 22 | 245 | 33 |
+| 23 | 0 | 48 |
+| 25 | 459 | 81 |
+| 26 | 0 | 96 |
+| 27 | 0 | 48 |
+
+None offers a feasible set of unchanged retained caps under the fixed quality
+gate. This screen does not rule out other grids or explicit boundary repair.
+It does rule out obtaining an admitted competitor merely by tuning MMG on
+these six seeds. Records and the runnable driver are in
+`runs/g3-microgen-seed-screen-v1` and `runs/g3-microgen-seed-screen-v2`.
