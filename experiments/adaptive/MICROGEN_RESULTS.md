@@ -204,3 +204,43 @@ batching changes to the mesher or claiming continuum certification.
 Kevin's later requested order remains unchanged. Direct fedoo Tet10 now
 has G3 execution evidence, but public Microgen Tet10 conversion and its
 periodic curved-node integration still need a separate integration result.
+
+## Retained cap triangles limit quality
+
+A subsequent read-only audit, job 10, explains part of the default Microgen
+quality failure. The VTK seeds contain thin box-cap triangles that the MMG
+workflow retains. Their shape alone limits the quality of any adjacent
+tetrahedron, regardless of its fourth vertex or the requested MMG size.
+
+For triangle area A and sum of its three squared edge lengths S, the quality
+definition used in this study satisfies `q_tet <= 4*sqrt(3)*A/S`. To derive
+the bound, place the fourth vertex at height h above the face and at planar
+distance r from its centroid. The tetrahedron volume is A*h/3, and the sum
+of all six squared edge lengths is `4*S/3 + 3*h*h + 3*r*r`. Quality is
+maximized at r = 0 and `h*h = 2*S/9`, which gives the stated bound. Additional
+constraints on the fourth vertex can only lower that maximum.
+
+| Specimen | Retained cap triangles below the 0.1 quality ceiling | Smallest ceiling |
+|---|---:|---:|
+| Gyroid | 60 | 0.009126 |
+| Schwarz solid | 0 | 0.138143 |
+| Spinodoid | 46 | 0.009166 |
+| Smooth lattice | 96 | 0.017177 |
+
+The audit matched every seed cap triangle in the saved MMG mesh at coordinate
+tolerance 1e-10. Spinodoid MMG also has one extra cap triangle, consistent with
+its earlier topology rejection. The analytic bound was checked numerically
+on regular and thin triangles, including a fourth vertex that attains it.
+All eight input mesh hashes are unchanged. The job finished before the
+progress-start audit could observe it; its five result records are available.
+
+Thus tuning only MMG sizes while retaining these particular seed caps cannot
+pass the existing quality gate for Gyroid, spinodoid or lattice. Schwarz has
+no obstruction from this bound, though its actual mesh still fails quality.
+The bound does not rule out a different VTK extraction grid or a separately
+identified boundary-repair workflow. It says nothing about stiffness error.
+
+The executable audit is `cap_quality_bound.py`; its output and input hashes
+are in `g3-cap-quality-bound.json`. Run it through the shared queue with
+`--source experiments/adaptive/runs/g3-microgen-defaults-v4` and a fresh
+`--output` JSON path.

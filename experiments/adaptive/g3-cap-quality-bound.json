@@ -1,0 +1,63 @@
+{
+  "source_sha256": "80c1bda856e27e814a22aca8039bb0b73610ce67ebe0ed2a81e3d167c6048fe0",
+  "inputs": {
+    "experiments/adaptive/runs/g3-microgen-defaults-v4/gyroid-vtk-default-0.npz": "1dc35bffb19aa2723def425ffc97522b2e429f31753786b9d77c3c1823022371",
+    "experiments/adaptive/runs/g3-microgen-defaults-v4/gyroid-mmg-default-0.npz": "ae4eab0cab13ca2250d59fe0fe81479418b31f446dc0b61608d09477c9db1627",
+    "experiments/adaptive/runs/g3-microgen-defaults-v4/schwarz-solid-vtk-default-0.npz": "6e5c819602de0d438ba9dcaf09223a8770a252ef17dd797de32905760d3b35ac",
+    "experiments/adaptive/runs/g3-microgen-defaults-v4/schwarz-solid-mmg-default-0.npz": "9949e3c3d54094b9182b1a45b005e39fd0a001fa1a75fa6c96dc0eecfce2ba92",
+    "experiments/adaptive/runs/g3-microgen-defaults-v4/spinodoid-vtk-default-0.npz": "727e48eee4eb6f6fc1569a131f24aaf181faedd44e3929b49af4e922781c5c91",
+    "experiments/adaptive/runs/g3-microgen-defaults-v4/spinodoid-mmg-default-0.npz": "35e437d2167c84c48f559d07e3b642157a4b8ceb8f84f7ea2df297e4d50bd24b",
+    "experiments/adaptive/runs/g3-microgen-defaults-v4/smooth-lattice-vtk-default-0.npz": "b092f0cf89ac2a43c51d779d70a533e665e573ea6e9802ad2f553be4387b4af4",
+    "experiments/adaptive/runs/g3-microgen-defaults-v4/smooth-lattice-mmg-default-0.npz": "1a9ebed8ebdc6bf08d5d4833041820ffe6f0860be0d852d26a609a8d46adb017"
+  },
+  "inputs_unchanged": true,
+  "quality_gate": 0.1,
+  "formula": "q_tet <= 4*sqrt(3)*triangle_area/sum_squared_triangle_edges",
+  "scope": "Fixed cap triangles only; not a bound for changed extraction grids or repaired caps.",
+  "rows": [
+    {
+      "case": "gyroid",
+      "seed_caps": 2028,
+      "mmg_caps": 2028,
+      "seed_minimum_adjacent_tet_quality_ceiling": 0.009126081205196838,
+      "mmg_minimum_adjacent_tet_quality_ceiling": 0.009126081205196224,
+      "seed_caps_below_quality_gate": 60,
+      "mmg_caps_below_quality_gate": 60,
+      "seed_caps_retained": 2028,
+      "retained_caps_below_quality_gate": 60
+    },
+    {
+      "case": "schwarz-solid",
+      "seed_caps": 3768,
+      "mmg_caps": 3768,
+      "seed_minimum_adjacent_tet_quality_ceiling": 0.13814339070355142,
+      "mmg_minimum_adjacent_tet_quality_ceiling": 0.13814339070356144,
+      "seed_caps_below_quality_gate": 0,
+      "mmg_caps_below_quality_gate": 0,
+      "seed_caps_retained": 3768,
+      "retained_caps_below_quality_gate": 0
+    },
+    {
+      "case": "spinodoid",
+      "seed_caps": 2064,
+      "mmg_caps": 2065,
+      "seed_minimum_adjacent_tet_quality_ceiling": 0.009165994785951311,
+      "mmg_minimum_adjacent_tet_quality_ceiling": 0.009165994785951308,
+      "seed_caps_below_quality_gate": 46,
+      "mmg_caps_below_quality_gate": 46,
+      "seed_caps_retained": 2064,
+      "retained_caps_below_quality_gate": 46
+    },
+    {
+      "case": "smooth-lattice",
+      "seed_caps": 3432,
+      "mmg_caps": 3432,
+      "seed_minimum_adjacent_tet_quality_ceiling": 0.01717690393678564,
+      "mmg_minimum_adjacent_tet_quality_ceiling": 0.017176903936766953,
+      "seed_caps_below_quality_gate": 96,
+      "mmg_caps_below_quality_gate": 96,
+      "seed_caps_retained": 3432,
+      "retained_caps_below_quality_gate": 96
+    }
+  ]
+}
