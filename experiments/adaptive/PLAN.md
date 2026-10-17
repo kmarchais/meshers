@@ -89,3 +89,9 @@ limits and passes its native/Python checks. At target 0.04, recovery reduces nod
 by 32.7% and total workflow time by 29.2% against uniform sizing, including its
 coarse solve. Both narrowly miss 1% stiffness disagreement. An admitted Microgen
 baseline and repeated matched-accuracy timings remain open.
+
+At nominal 0.038, both Schwarz candidates meet the 1% target. Recovery uses
+27.0% fewer nodes and takes 15.9% less total time in a single run. The actual
+Microgen first-pass audit identifies geometry degradation. An explicit tighter
+first-pass override fixes distance but leaves impossible retained-cap triangles
+on the 24-point VTK grid. A bounded seed-grid screen is next.

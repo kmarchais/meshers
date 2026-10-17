@@ -86,3 +86,18 @@ comparison mesh. Recovery does not certify local stress accuracy.
 The queued Linux rebuild passed 20 core unit tests and 35 focused Python tests.
 Tests cover unchanged default adaptation with a constant target, spatial
 refinement, periodic matching, invalid lengths and callback error propagation.
+
+## The 1% target
+
+Job 21 tightens the nominal target to 0.038 without changing the estimator,
+admission gates or solver. Both candidates now pass the 1% stiffness target.
+
+| Sizing | Nodes | Tets | Worst mixed-load disagreement | Total workflow seconds |
+|---|---:|---:|---:|---:|
+| Uniform | 35,393 | 189,199 | 0.9492% | 37.77 |
+| Recovery | 25,854 | 130,338 | 0.9385% | 31.76 |
+
+Recovery uses 27.0% fewer nodes and takes 15.9% less total time at this common
+target. The live coarse solve and size construction remain charged. This is
+still one run per configuration and only a comparison against uniform Meshers.
+Records are in `runs/g3-sizing-schwarz-v3`. The Microgen comparison is unresolved.
