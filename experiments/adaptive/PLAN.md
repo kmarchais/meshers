@@ -72,3 +72,11 @@ supported by refinement checks. Meshers rejects the tested spinodoids and
 the smooth lattice, and neither has an admitted fine reference here.
 No native meshing code or frozen admission rule was changed. Do not infer
 local stress accuracy or a tuned Microgen workflow speed ranking.
+
+## G3 Tet10 integration, 2026-10-17
+
+The public `Mesh.to_fedoo()` route passes Tet4 and Tet10 solid patches and
+six-load curved Gyroid/Schwarz reproduction. Full periodic mid-edge pairing,
+six-node cap matching and sampled curved Jacobians pass. See `TET10_RESULTS.md`.
+Microgen's own `from_pyvista` converters still reject Tet10. Next is the requested
+coarse stress-recovery sizing experiment for linear meshes.

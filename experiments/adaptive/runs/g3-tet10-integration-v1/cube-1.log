@@ -1,0 +1,11 @@
+/home/kmarchais/dev/meshers/.venv/lib/python3.12/site-packages/fedoo/core/base.py:80: UserWarning: WARNING: no fast direct sparse solver has been found. Consider installing pypardiso (Intel) or python-mumps (any platform) to improve computation performance
+  warnings.warn(
+Traceback (most recent call last):
+  File "/home/kmarchais/dev/meshers/experiments/adaptive/tet10_integration.py", line 206, in <module>
+    main()
+  File "/home/kmarchais/dev/meshers/experiments/adaptive/tet10_integration.py", line 174, in main
+    check_case(args.case, args.source, args.run)
+  File "/home/kmarchais/dev/meshers/experiments/adaptive/tet10_integration.py", line 72, in check_case
+    assert interpolation_error < 1e-14
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError

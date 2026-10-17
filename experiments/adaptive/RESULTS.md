@@ -287,3 +287,13 @@ although Microgen completes diagnostic lattice FEA. Neither fixture has a
 justified fine stiffness reference. Same-domain order controls separate
 approximation-order changes from curved geometric-mapping changes without
 claiming certified continuum error. Native meshing code remains unchanged.
+
+## Public direct-fedoo Tet10 integration, 2026-10-17
+
+`TET10_RESULTS.md` records the successful G3 integration through `Mesh.to_fedoo()`.
+Four six-load cases pass: solid Tet4, solid Tet10, curved Gyroid and curved Schwarz
+solid. Independent strain-controlled stress integration reproduces the saved
+specimen tensors within 1.2e-11 relative mixed-load energy disagreement. Periodic
+mid-edge displacement jumps remain below 6e-17. This validates conversion and
+periodic FE integration, not local stress accuracy. Microgen's public converters
+remain unsupported for Tet10.

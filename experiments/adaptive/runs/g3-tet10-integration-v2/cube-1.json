@@ -1,0 +1,159 @@
+{
+  "case": "cube-1",
+  "nodes": 189,
+  "elements": 768,
+  "order": 1,
+  "volume": 1.0,
+  "minimum_sampled_jacobian": 0.004860233579080618,
+  "vtk_fedoo_interpolation_error": 1.1102230246251565e-16,
+  "periodic": {
+    "periodic_pair_counts": [
+      25,
+      25,
+      25
+    ],
+    "periodic_coordinate_errors": [
+      0.0,
+      0.0,
+      0.0
+    ],
+    "periodic_pair_tolerance": 1e-10,
+    "periodic_equivalence_classes": 128,
+    "periodic_triangles_match": true
+  },
+  "periodic_mid_edge_pair_counts": [
+    0,
+    0,
+    0
+  ],
+  "microgen_from_pyvista": {},
+  "solver_checks": [
+    {
+      "load": "E_xx",
+      "jump_max": 0.0,
+      "mid_edge_jump_max": 0.0,
+      "force_balance_relative": 3.506688413920806e-12,
+      "iterations": 55,
+      "relative_residual": 6.18164748273616e-13,
+      "free_dofs": 381,
+      "seconds": 0.003672478997032158
+    },
+    {
+      "load": "E_yy",
+      "jump_max": 0.0,
+      "mid_edge_jump_max": 0.0,
+      "force_balance_relative": 1.8996967532686378e-11,
+      "iterations": 56,
+      "relative_residual": 7.092022969532398e-13,
+      "free_dofs": 381,
+      "seconds": 0.0036397059993760195
+    },
+    {
+      "load": "E_zz",
+      "jump_max": 0.0,
+      "mid_edge_jump_max": 0.0,
+      "force_balance_relative": 1.8996696935708468e-11,
+      "iterations": 56,
+      "relative_residual": 7.09207216295037e-13,
+      "free_dofs": 381,
+      "seconds": 0.0035814789989672136
+    },
+    {
+      "load": "E_xy",
+      "jump_max": 0.0,
+      "mid_edge_jump_max": 0.0,
+      "force_balance_relative": 4.189847119206089e-12,
+      "iterations": 66,
+      "relative_residual": 8.60363820806592e-13,
+      "free_dofs": 381,
+      "seconds": 0.004196445002889959
+    },
+    {
+      "load": "E_xz",
+      "jump_max": 0.0,
+      "mid_edge_jump_max": 0.0,
+      "force_balance_relative": 4.190056101047651e-12,
+      "iterations": 66,
+      "relative_residual": 8.603856496102488e-13,
+      "free_dofs": 381,
+      "seconds": 0.0041350929968757555
+    },
+    {
+      "load": "E_yz",
+      "jump_max": 0.0,
+      "mid_edge_jump_max": 0.0,
+      "force_balance_relative": 1.966917530712895e-12,
+      "iterations": 58,
+      "relative_residual": 4.0610656854291673e-13,
+      "free_dofs": 381,
+      "seconds": 0.003702832000271883
+    }
+  ],
+  "stiffness": [
+    [
+      3.0000000000000027,
+      0.9999999999999996,
+      0.9999999999999998,
+      -9.368350639417413e-18,
+      -1.3324936483384978e-17,
+      -2.5596790921059446e-18
+    ],
+    [
+      1.0000000000000013,
+      3.0,
+      0.9999999999999998,
+      -7.49974311114777e-18,
+      -4.798602606864723e-18,
+      -5.103501022027861e-18
+    ],
+    [
+      1.0000000000000013,
+      0.9999999999999997,
+      3.000000000000001,
+      -4.2170234376107275e-18,
+      -5.8694739438287754e-18,
+      -5.135215346439108e-18
+    ],
+    [
+      4.704377589759412e-19,
+      8.336034662210133e-18,
+      -6.922254443314379e-29,
+      1.0000000000000002,
+      -3.843370781205468e-18,
+      2.0433782897524787e-18
+    ],
+    [
+      7.501834201642677e-19,
+      -1.148384262775488e-27,
+      2.9743665553658178e-18,
+      -1.4387885212278732e-18,
+      0.9999999999999987,
+      7.848128080312816e-19
+    ],
+    [
+      -1.2385116211969885e-28,
+      2.223521430313311e-18,
+      -1.2701179987736836e-17,
+      9.767656417395938e-19,
+      3.9284984362831534e-20,
+      1.000000000000001
+    ]
+  ],
+  "reference_disagreement": {
+    "worst_relative_strain_energy_difference": 1.3322783129093572e-15,
+    "relative_tensor_frobenius_difference": 6.434023992604423e-16,
+    "relative_energy_difference_eigenvalues": [
+      -1.3322783129093572e-15,
+      -5.213469238811026e-17,
+      2.2202833213292614e-16,
+      4.0372049000233896e-16,
+      9.36258893615894e-16,
+      1.1102639981114888e-15
+    ]
+  },
+  "reaction_relative_error": 5.183254418692564e-13,
+  "hill_mandel_relative_error": 1.440328519425202e-15,
+  "source_mesh_unchanged": true,
+  "workflow_s": 0.11481450100109214,
+  "scope": "Conversion and periodic FE integration; no continuum or local stress accuracy claim."
+}

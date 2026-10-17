@@ -1,0 +1,168 @@
+{
+  "case": "cube-2",
+  "nodes": 1241,
+  "elements": 768,
+  "order": 2,
+  "volume": 1.0000000000000002,
+  "minimum_sampled_jacobian": 0.004860233579080609,
+  "vtk_fedoo_interpolation_error": 3.3306690738754696e-16,
+  "periodic": {
+    "periodic_pair_counts": [
+      81,
+      81,
+      81
+    ],
+    "periodic_coordinate_errors": [
+      0.0,
+      0.0,
+      0.0
+    ],
+    "periodic_pair_tolerance": 1e-10,
+    "periodic_equivalence_classes": 1024,
+    "periodic_triangles_match": true
+  },
+  "periodic_mid_edge_pair_counts": [
+    56,
+    56,
+    56
+  ],
+  "microgen_from_pyvista": {
+    "SingleMesh": {
+      "supported": false,
+      "error": "Mesh contains elements other than linear tetrahedra.Use triangulate() to ensure that only linear tetrahedra are used."
+    },
+    "BoxMesh": {
+      "supported": false,
+      "error": "Mesh contains elements other than linear tetrahedra.Use triangulate() to ensure that only linear tetrahedra are used."
+    }
+  },
+  "solver_checks": [
+    {
+      "load": "E_xx",
+      "jump_max": 0.0,
+      "mid_edge_jump_max": 0.0,
+      "force_balance_relative": 1.1180921276209432e-11,
+      "iterations": 132,
+      "relative_residual": 8.45640205071094e-13,
+      "free_dofs": 3069,
+      "seconds": 0.04560314499758533
+    },
+    {
+      "load": "E_yy",
+      "jump_max": 0.0,
+      "mid_edge_jump_max": 0.0,
+      "force_balance_relative": 1.2453009245972997e-11,
+      "iterations": 133,
+      "relative_residual": 9.279254177965175e-13,
+      "free_dofs": 3069,
+      "seconds": 0.045186859999375883
+    },
+    {
+      "load": "E_zz",
+      "jump_max": 0.0,
+      "mid_edge_jump_max": 0.0,
+      "force_balance_relative": 1.2453185308693986e-11,
+      "iterations": 133,
+      "relative_residual": 9.27926512560696e-13,
+      "free_dofs": 3069,
+      "seconds": 0.045477880998078035
+    },
+    {
+      "load": "E_xy",
+      "jump_max": 0.0,
+      "mid_edge_jump_max": 0.0,
+      "force_balance_relative": 2.707636460748446e-11,
+      "iterations": 139,
+      "relative_residual": 7.55473432921672e-13,
+      "free_dofs": 3069,
+      "seconds": 0.046840448998409556
+    },
+    {
+      "load": "E_xz",
+      "jump_max": 0.0,
+      "mid_edge_jump_max": 0.0,
+      "force_balance_relative": 2.7078938405637206e-11,
+      "iterations": 139,
+      "relative_residual": 7.554972544037595e-13,
+      "free_dofs": 3069,
+      "seconds": 0.0474863559975347
+    },
+    {
+      "load": "E_yz",
+      "jump_max": 0.0,
+      "mid_edge_jump_max": 0.0,
+      "force_balance_relative": 6.321681293439517e-12,
+      "iterations": 133,
+      "relative_residual": 7.195226064275696e-13,
+      "free_dofs": 3069,
+      "seconds": 0.045526720001362264
+    }
+  ],
+  "stiffness": [
+    [
+      3.0000000000000004,
+      1.0000000000000002,
+      1.0000000000000002,
+      3.9117938077315734e-19,
+      -1.7405238995646444e-17,
+      2.4208482285574126e-18
+    ],
+    [
+      1.0000000000000004,
+      3.0000000000000004,
+      1.0000000000000007,
+      -6.1319380460942956e-18,
+      -6.898050823363048e-18,
+      1.1136389605168317e-18
+    ],
+    [
+      1.0000000000000002,
+      1.0000000000000007,
+      3.0000000000000004,
+      -1.4351896667968958e-18,
+      -1.0186964297242107e-17,
+      8.569753953882584e-18
+    ],
+    [
+      -7.738038058288264e-18,
+      1.5056738723654302e-18,
+      -7.296963373294359e-29,
+      1.0000000000000004,
+      -6.402511838505625e-20,
+      -3.477788195169289e-18
+    ],
+    [
+      -4.857629348895781e-18,
+      1.4199496293978212e-29,
+      -4.889723156808368e-18,
+      6.85838277049663e-18,
+      1.0,
+      8.484999744153948e-19
+    ],
+    [
+      -2.68212707775144e-28,
+      1.237727918279425e-17,
+      -8.551197497191549e-19,
+      5.50401261396482e-19,
+      -7.011147029680147e-18,
+      1.0
+    ]
+  ],
+  "reference_disagreement": {
+    "worst_relative_strain_energy_difference": 4.441426501725161e-16,
+    "relative_tensor_frobenius_difference": 2.3701872981946024e-16,
+    "relative_energy_difference_eigenvalues": [
+      -1.324976567944776e-16,
+      -3.0819322918492808e-18,
+      2.9112425939001712e-18,
+      1.177506793380553e-16,
+      2.8131775274195544e-16,
+      4.441426501725161e-16
+    ]
+  },
+  "reaction_relative_error": 1.1431425935507508e-12,
+  "hill_mandel_relative_error": 2.2818682635419304e-16,
+  "source_mesh_unchanged": true,
+  "workflow_s": 0.5626773330004653,
+  "scope": "Conversion and periodic FE integration; no continuum or local stress accuracy claim."
+}
