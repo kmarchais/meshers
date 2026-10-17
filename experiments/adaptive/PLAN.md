@@ -95,3 +95,10 @@ At nominal 0.038, both Schwarz candidates meet the 1% target. Recovery uses
 Microgen first-pass audit identifies geometry degradation. An explicit tighter
 first-pass override fixes distance but leaves impossible retained-cap triangles
 on the 24-point VTK grid. A bounded seed-grid screen is next.
+
+The six-grid screen found no feasible retained caps at resolutions 21, 22, 23,
+25, 26 or 27. Gyroid recovery pilots at nominal 0.065 and 0.04 pass admission but
+do not establish a matched-accuracy gain. Keep spatial sizing optional. Next
+assess the requested volume-correction and relocation priorities against the
+measured phase costs and volume bias, rather than assume the Schwarz result
+generalizes. The four-fixture Microgen comparison is still incomplete.

@@ -1,0 +1,226 @@
+{
+  "case": "gyroid",
+  "route": "recovery",
+  "nominal_length": 0.04,
+  "status": "solved",
+  "qualified": true,
+  "coarse_generation_s": 0.2779637490020832,
+  "coarse_solve_s": 1.1711504039994907,
+  "coarse_solver_records": [
+    {
+      "iterations": 369,
+      "relative_residual": 9.739215394961359e-13,
+      "free_dofs": 8871,
+      "seconds": 0.14682568100397475
+    },
+    {
+      "iterations": 373,
+      "relative_residual": 9.314898927369589e-13,
+      "free_dofs": 8871,
+      "seconds": 0.1388157469991711
+    },
+    {
+      "iterations": 373,
+      "relative_residual": 8.664000321796354e-13,
+      "free_dofs": 8871,
+      "seconds": 0.1301295079974807
+    },
+    {
+      "iterations": 379,
+      "relative_residual": 9.617334454979277e-13,
+      "free_dofs": 8871,
+      "seconds": 0.1355189160021837
+    },
+    {
+      "iterations": 380,
+      "relative_residual": 9.474780606186833e-13,
+      "free_dofs": 8871,
+      "seconds": 0.13970870900084265
+    },
+    {
+      "iterations": 384,
+      "relative_residual": 8.675243579233159e-13,
+      "free_dofs": 8871,
+      "seconds": 0.134128714002145
+    }
+  ],
+  "recovery_s": 0.13590926100005163,
+  "target_quantiles": [
+    0.031051248839684017,
+    0.03656066015995368,
+    0.04,
+    0.04626444810382532,
+    0.06947502649263805
+  ],
+  "generation_s": 4.181577218994789,
+  "nodes": 18944,
+  "elements": 89694,
+  "native_diagnostics": {
+    "empty": false,
+    "volume": 0.35736074914829,
+    "minimum_mmg_quality": 0.3022268332077701,
+    "sampled_surface_error": 0.0018763278794780896,
+    "elements_below_quality_01": 0,
+    "reverted_snap_vertices": 0,
+    "callback_calls": 0,
+    "inserted_interior_nodes": 0,
+    "adapt": {
+      "splits": 15349,
+      "collapses": 4246,
+      "swaps": 4228,
+      "moves": 64550,
+      "error_splits": 0,
+      "maximum_error": 0.0018763278794781187,
+      "seconds": [
+        0.59789767,
+        0.100599588,
+        1.646026903,
+        0.22500772899999996,
+        0.26053673,
+        0.685540704,
+        0.073888709
+      ]
+    },
+    "seconds": 4.181269256,
+    "threads": 1,
+    "evaluator": "compiled",
+    "preparation_seconds": 0.00024811900220811367
+  },
+  "geometry": {
+    "sampled_forward_max": 0.0018710902917836402,
+    "sampled_reverse_max": 0.0016982573270919387,
+    "sampled_two_sided_max": 0.0018710902917836402,
+    "outward_forward_max": 0.0018710902917836402,
+    "inward_forward_max": 0.0012414465493057322,
+    "projection_failed": 0,
+    "forward_samples": 147394,
+    "reverse_samples": 36260,
+    "volume": 0.3573607491482855,
+    "relative_volume_error": 0.0025736035052428274,
+    "q_min_corner": 0.3022268332077701,
+    "q_p01_corner": 0.5283497195968891,
+    "minimum_dihedral_deg_corner": 18.400385550484145,
+    "minimum_sampled_jacobian": 5.2258348159551675e-06,
+    "reverse_tessellation_delta_max": 0.0,
+    "quadratic_reverse_subdivisions": null,
+    "geometry_admitted": true
+  },
+  "periodic": {
+    "periodic_pair_counts": [
+      370,
+      376,
+      384
+    ],
+    "periodic_coordinate_errors": [
+      0.0,
+      0.0,
+      0.0
+    ],
+    "periodic_pair_tolerance": 1e-10,
+    "periodic_equivalence_classes": 17846,
+    "periodic_triangles_match": true
+  },
+  "audit_s": 1.1238474330020836,
+  "solve_s": 19.082733334995282,
+  "stiffness": [
+    [
+      0.49573231987465827,
+      0.19151043053439945,
+      0.19151884482242293,
+      -1.7880058162894915e-05,
+      3.817857562259019e-06,
+      9.176892780325016e-07
+    ],
+    [
+      0.19151043053439945,
+      0.4957873606204363,
+      0.19146411020377146,
+      1.3524657900656531e-05,
+      -3.7635680652281445e-06,
+      1.2270912338873328e-05
+    ],
+    [
+      0.19151884482242293,
+      0.19146411020377146,
+      0.4957522211525623,
+      -1.2137263539950871e-05,
+      -4.730225359190397e-06,
+      -1.2667202516885929e-06
+    ],
+    [
+      -1.7880058162894915e-05,
+      1.3524657900656531e-05,
+      -1.2137263539950871e-05,
+      0.17305759673066679,
+      1.52880377307705e-05,
+      -1.9163319918153246e-06
+    ],
+    [
+      3.817857562259019e-06,
+      -3.7635680652281445e-06,
+      -4.730225359190397e-06,
+      1.52880377307705e-05,
+      0.17307112889009857,
+      -1.1237639925656931e-05
+    ],
+    [
+      9.176892780325016e-07,
+      1.2270912338873328e-05,
+      -1.2667202516885929e-06,
+      -1.9163319918153246e-06,
+      -1.1237639925656931e-05,
+      0.17300146692397134
+    ]
+  ],
+  "solver_records": [
+    {
+      "iterations": 817,
+      "relative_residual": 9.639666124943223e-13,
+      "free_dofs": 53535,
+      "seconds": 2.645598263996362
+    },
+    {
+      "iterations": 817,
+      "relative_residual": 9.448324265999587e-13,
+      "free_dofs": 53535,
+      "seconds": 2.669612577999942
+    },
+    {
+      "iterations": 816,
+      "relative_residual": 9.555538826862767e-13,
+      "free_dofs": 53535,
+      "seconds": 2.665051031995972
+    },
+    {
+      "iterations": 844,
+      "relative_residual": 9.849022027265444e-13,
+      "free_dofs": 53535,
+      "seconds": 2.772954229003517
+    },
+    {
+      "iterations": 846,
+      "relative_residual": 9.469881260616089e-13,
+      "free_dofs": 53535,
+      "seconds": 2.7619772799953353
+    },
+    {
+      "iterations": 845,
+      "relative_residual": 9.930136799597983e-13,
+      "free_dofs": 53535,
+      "seconds": 2.7406968169962056
+    }
+  ],
+  "reference_disagreement": {
+    "worst_relative_strain_energy_difference": 0.04208524765619763,
+    "relative_tensor_frobenius_difference": 0.021335346954475923,
+    "relative_energy_difference_eigenvalues": [
+      0.01106589280509179,
+      0.03575338591017815,
+      0.03608597718280003,
+      0.041582266497279585,
+      0.04187751764656549,
+      0.04208524765619763
+    ]
+  },
+  "total_workflow_s": 26.218408946006093
+}

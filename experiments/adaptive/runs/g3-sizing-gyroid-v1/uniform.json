@@ -1,0 +1,178 @@
+{
+  "case": "gyroid",
+  "route": "uniform",
+  "nominal_length": 0.065,
+  "status": "solved",
+  "qualified": true,
+  "generation_s": 1.4410503929975675,
+  "nodes": 9258,
+  "elements": 34410,
+  "native_diagnostics": {
+    "empty": false,
+    "volume": 0.3573023173604533,
+    "minimum_mmg_quality": 0.30797445043406824,
+    "sampled_surface_error": 0.001993020139932747,
+    "elements_below_quality_01": 0,
+    "reverted_snap_vertices": 0,
+    "callback_calls": 0,
+    "inserted_interior_nodes": 0,
+    "adapt": {
+      "splits": 4561,
+      "collapses": 2785,
+      "swaps": 2576,
+      "moves": 24277,
+      "error_splits": 0,
+      "maximum_error": 0.0018763278794781187,
+      "seconds": [
+        0.144708863,
+        0.027571218999999998,
+        0.300075823,
+        0.132698617,
+        0.128058837,
+        0.265797199,
+        0.034101023
+      ]
+    },
+    "seconds": 1.439900463,
+    "threads": 1,
+    "evaluator": "compiled",
+    "preparation_seconds": 0.0010964430039166473
+  },
+  "geometry": {
+    "sampled_forward_max": 0.001987101232820953,
+    "sampled_reverse_max": 0.0018317399699461772,
+    "sampled_two_sided_max": 0.001987101232820953,
+    "outward_forward_max": 0.001987101232820953,
+    "inward_forward_max": 0.0014218984461236977,
+    "projection_failed": 0,
+    "forward_samples": 129818,
+    "reverse_samples": 36260,
+    "volume": 0.35730231736045426,
+    "relative_volume_error": 0.0024096734479412962,
+    "q_min_corner": 0.30797445043406824,
+    "q_p01_corner": 0.5243304919549066,
+    "minimum_dihedral_deg_corner": 17.472921408905137,
+    "minimum_sampled_jacobian": 5.653525099974549e-06,
+    "reverse_tessellation_delta_max": 0.0,
+    "quadratic_reverse_subdivisions": null,
+    "geometry_admitted": true
+  },
+  "periodic": {
+    "periodic_pair_counts": [
+      260,
+      256,
+      255
+    ],
+    "periodic_coordinate_errors": [
+      0.0,
+      0.0,
+      0.0
+    ],
+    "periodic_pair_tolerance": 1e-10,
+    "periodic_equivalence_classes": 8519,
+    "periodic_triangles_match": true
+  },
+  "audit_s": 0.9936120800048229,
+  "solve_s": 5.0203858020031475,
+  "stiffness": [
+    [
+      0.500979267143821,
+      0.1910108588854857,
+      0.19103238170631595,
+      6.228928426494447e-06,
+      -6.585167124417662e-06,
+      7.424099465459464e-06
+    ],
+    [
+      0.1910108588854857,
+      0.5008988204388789,
+      0.19094863625402117,
+      -1.638948404802437e-06,
+      7.446718901755894e-06,
+      3.833890528818156e-07
+    ],
+    [
+      0.19103238170631595,
+      0.19094863625402117,
+      0.5009671393472271,
+      -3.426025410509191e-06,
+      7.618687765370677e-06,
+      2.8239286440437557e-05
+    ],
+    [
+      6.228928426494447e-06,
+      -1.638948404802437e-06,
+      -3.426025410509191e-06,
+      0.17619643824557799,
+      1.2381825646728806e-05,
+      2.1502313751169463e-05
+    ],
+    [
+      -6.585167124417662e-06,
+      7.446718901755894e-06,
+      7.618687765370677e-06,
+      1.2381825646728806e-05,
+      0.17618052281180288,
+      7.741758746217574e-06
+    ],
+    [
+      7.424099465459464e-06,
+      3.833890528818156e-07,
+      2.8239286440437557e-05,
+      2.1502313751169463e-05,
+      7.741758746217574e-06,
+      0.17609145206715315
+    ]
+  ],
+  "solver_records": [
+    {
+      "iterations": 556,
+      "relative_residual": 9.229077811022496e-13,
+      "free_dofs": 25554,
+      "seconds": 0.6746096140050213
+    },
+    {
+      "iterations": 556,
+      "relative_residual": 9.336981490795304e-13,
+      "free_dofs": 25554,
+      "seconds": 0.6663177139998879
+    },
+    {
+      "iterations": 555,
+      "relative_residual": 9.317439666595669e-13,
+      "free_dofs": 25554,
+      "seconds": 0.6505054740046035
+    },
+    {
+      "iterations": 580,
+      "relative_residual": 9.494100564924208e-13,
+      "free_dofs": 25554,
+      "seconds": 0.6732512689995929
+    },
+    {
+      "iterations": 579,
+      "relative_residual": 9.56503414416094e-13,
+      "free_dofs": 25554,
+      "seconds": 0.6655862379993778
+    },
+    {
+      "iterations": 581,
+      "relative_residual": 9.60291847153406e-13,
+      "free_dofs": 25554,
+      "seconds": 0.6778799259991501
+    }
+  ],
+  "reference_disagreement": {
+    "worst_relative_strain_energy_difference": 0.06089443955128954,
+    "relative_tensor_frobenius_difference": 0.031800666844839696,
+    "relative_energy_difference_eigenvalues": [
+      0.01588644119010353,
+      0.055182295112257564,
+      0.05541423946975762,
+      0.06017209131582211,
+      0.060701461981352886,
+      0.06089443955128954
+    ]
+  },
+  "total_workflow_s": 7.554551605993765
+}

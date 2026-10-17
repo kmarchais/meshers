@@ -101,3 +101,22 @@ Recovery uses 27.0% fewer nodes and takes 15.9% less total time at this common
 target. The live coarse solve and size construction remain charged. This is
 still one run per configuration and only a comparison against uniform Meshers.
 Records are in `runs/g3-sizing-schwarz-v3`. The Microgen comparison is unresolved.
+
+## Gyroid pilot
+
+Job 24 applies the same sizing method at nominal 0.065 to Gyroid. Uniform sizing
+uses 9,258 nodes and 34,410 tets, with 6.0894% stiffness disagreement in 7.55 seconds.
+Recovery uses 9,238 nodes and 34,343 tets, with 6.0992% disagreement in 9.10 seconds.
+Both pass geometry, volume, quality and periodic checks. Recovery provides no
+benefit at this target. Records are in `runs/g3-sizing-gyroid-v1`.
+
+Job 25 tightens the target to 0.04. Uniform sizing uses 21,742 nodes and 106,037
+tets, with 3.9870% disagreement in 27.58 seconds. Recovery uses 18,944 nodes and
+89,694 tets, with 4.2085% disagreement in 26.22 seconds. Both pass admission.
+The 12.9% node reduction comes with worse accuracy and only a 4.9% time saving.
+This does not establish a matched-accuracy improvement on Gyroid and remains far
+from the 1% stiffness target. Records are in `runs/g3-sizing-gyroid-v2`.
+
+The current recovery heuristic helps Schwarz at a common 1% target but has not
+shown a useful Gyroid workflow gain. Keep it optional. These results do not
+justify replacing curvature sizing or claiming general adaptive superiority.
