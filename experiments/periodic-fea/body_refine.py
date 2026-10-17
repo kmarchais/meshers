@@ -198,7 +198,9 @@ def generate(case, cells, config, directory, checkpoint):
         "archived_guide_generation_s": guide_generation_s,
         "archived_guide_fea_s": guide_fea_s,
         "archived_seed_generation_s": seed["generation_s"],
-        "estimated_live_recipe_s": elapsed + guide_generation_s + guide_fea_s + seed["generation_s"],
+        # A geometry replay records zero meshing time; its live recipe is unknown.
+        "estimated_live_recipe_s": (None if seed["workflow"] == "geometry-replay" else
+                                    elapsed + guide_generation_s + guide_fea_s + seed["generation_s"]),
         "seed_tensor": seed["homogenization"]["stiffness_engineering_voigt"],
         "seed_volume": seed["solid_fraction"],
         "body_marker_kind": marker,
