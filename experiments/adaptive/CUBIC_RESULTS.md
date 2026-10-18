@@ -287,3 +287,31 @@ Second-pass hausd 0.0009 reduces the lift to 267,550 but fails quality at
 retaining VTK51, first-pass 0.0015 and all admission gates. Check exact lift
 size and admission before any solve. This is explicitly tuned Microgen,
 not its recorded defaults and not MMG on a Meshers seed.
+
+## Worst-mode discrete error localization
+
+Job 202 uses the worst retained-model strain of the finest adaptive Meshers
+candidate, dominated by deviatoric normal strain. On the unchanged curved24
+physical domain it embeds the parent Tet10 field exactly into the cubic space
+and integrates the energy of its difference from the cubic solution. The
+own-rule Galerkin identity reproduces the corresponding parent-minus-cubic
+quadratic form within 9.50e-9 relative. This is a discrete enrichment check,
+not a local stress or continuum certificate.
+
+The highest-energy 20% of coarse tets contain 98.394% of the correction energy.
+The largest-volume 20% contain only 48.515%. Elements incident on cap vertices
+are 6.990% of the mesh but contain 77.461% of the correction energy. Wall-vertex
+incident elements contain 95.416%. Positive 125-point integration changes total
+correction energy by 0.05995% relative to the own rule; the 64-to-125 change is
+0.00800%. These percentages concern the small correction, not the full tensor's
+separate quadrature admission check. Records are in
+`runs/g3-lattice-cubic-error-localization-v1`.
+
+This supports one cap-focused sizing pilot, not an inference about the error
+location on every refined mesh. The current finest adaptive cap edges still
+reach 0.06241 despite median length 0.01080. Start from the admitted 24-cell,
+adapt-tolerance 0.004 recipe and add a periodic size callback with target 0.015
+on box planes. A smoothstep transitions to maximum length 0.1 over distance
+0.05. Keep native budgets, geometry, quality and periodicity gates unchanged.
+Check geometry and counts before selecting any solve. No native API change or
+oracle field is added to the workflow.

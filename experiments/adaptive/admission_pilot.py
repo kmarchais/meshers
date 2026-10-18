@@ -1,6 +1,7 @@
 """One bounded adaptive admission check on a fixed difficult specimen."""
 
 import argparse
+import importlib.metadata
 import json
 import os
 from pathlib import Path
@@ -29,6 +30,7 @@ def worker(args):
            "adaptive": not args.no_adapt, "adapt_tolerance": args.adapt_tolerance,
            "solver_quadrature_points": args.quadrature_points if args.order == 2 else 4,
            "solve_node_cap": args.solve_node_cap, "qualified": False}
+    row["solver"] = "cached-elastic-block-amg-cg" if args.amg else "jacobi-cg"
     started = time.perf_counter()
     if args.order == 2 and args.quadrature_points == 4:
         row.update(timing_comparable=False,
@@ -103,12 +105,34 @@ def worker(args):
                 "verification_points": len(queries), "material_mismatches": 0,
                 "domain_identity": "min(phi, positive_constant) <= 0 iff phi <= 0"}
         phase = time.perf_counter()
+        size_field = None
+        if args.cap_length is not None:
+            def size_field(coordinates_x, coordinates_y, coordinates_z):
+                distance = np.minimum.reduce([.5 - abs(coordinates_x),
+                    .5 - abs(coordinates_y), .5 - abs(coordinates_z)])
+                fraction = np.clip(distance / args.cap_band, 0, 1)
+                smooth = fraction**2 * (3 - 2 * fraction)
+                return args.cap_length + (.1 - args.cap_length) * smooth
+            queries = np.random.default_rng(20261018).uniform(-.5, .5, (4096, 3))
+            values = size_field(*queries.T)
+            assert np.isfinite(values).all() and (values > 0).all()
+            for axis in range(3):
+                low, high = queries.copy(), queries.copy()
+                low[:, axis], high[:, axis] = -.5, .5
+                np.testing.assert_array_equal(size_field(*low.T), size_field(*high.T))
+                np.testing.assert_allclose(size_field(*low.T), args.cap_length, atol=1e-15, rtol=0)
+            np.testing.assert_allclose(size_field(*np.zeros((3, 1))), .1, atol=1e-15, rtol=0)
+            row["cap_size_field"] = {"cap_target_length": args.cap_length,
+                "transition_band": args.cap_band, "interior_maximum_length": .1,
+                "formula": "cap + (0.1-cap)*smoothstep(min_box_plane_distance/band)",
+                "periodic_verification_points_per_axis": len(queries)}
         mesh = meshers.generate(field, bounds=workflow.BOUNDS, cells=args.cells,
             band=case.band, periodic=(True, True, True), threads=1, optimize_passes=args.optimization_passes,
             minimum_quality=0.1,
             geometry_tolerance=args.native_tolerance, max_tetrahedra=workflow.CAP,
             adapt=not args.no_adapt, min_length=args.min_length, max_length=0.1, gradation=0.3,
-            adapt_iterations=4, quality_guard=0.3, adapt_tolerance=args.adapt_tolerance, order=args.order)
+            adapt_iterations=4, quality_guard=0.3, adapt_tolerance=args.adapt_tolerance, order=args.order,
+            size_field=size_field)
         row.update(generation_s=time.perf_counter() - phase, nodes=len(mesh.points),
                    elements=len(mesh.tetrahedra), diagnostics=mesh.diagnostics)
         np.savez_compressed(args.run / "mesh.npz", points=mesh.points,
@@ -122,14 +146,22 @@ def worker(args):
             if len(mesh.points) > args.solve_node_cap:
                 row["status"] = "solve-node-cap"
             else:
-                from stress_recovery import solve
+                from stress_recovery import solve, vector_first_reactions
                 phase = time.perf_counter()
                 def checkpoint(completed, partial_tensor, records):
                     row.update(status="solving", completed_loads=completed,
                         partial_stiffness_columns=partial_tensor.tolist(), solver_records=records)
                     workflow.save(args.run / "result.json", row)
+                solver, save_field = None, None
+                if args.amg:
+                    from amg_reference import AuditedAMG
+                    solver = AuditedAMG(elastic_blocks=True)
+                    def save_field(completed, displacement):
+                        np.savez_compressed(args.run / f"load-{completed}.npz", displacement=displacement)
                 fields, tensor, records = solve(mesh.points, mesh.tetrahedra, checkpoint=checkpoint,
-                    n_elm_gp=row["solver_quadrature_points"])
+                    n_elm_gp=row["solver_quadrature_points"], solver=solver,
+                    field_checkpoint=save_field, reaction_reader=vector_first_reactions if args.amg else None,
+                    release_reduced_cache=args.amg)
                 row.pop("partial_stiffness_columns", None)
                 row.update(solve_s=time.perf_counter() - phase, stiffness=tensor.tolist(),
                            solver_records=records, status="solved-needs-reference")
@@ -176,7 +208,11 @@ def main():
     parser.add_argument("--worker", action="store_true")
     parser.add_argument("--build", action="store_true")
     parser.add_argument("--python-tests", action="store_true")
+    parser.add_argument("--cap-length", type=float)
+    parser.add_argument("--cap-band", type=float, default=.05)
+    parser.add_argument("--amg", action="store_true")
     args = parser.parse_args()
+    assert args.cap_length is None or (not args.no_adapt and 0 < args.cap_length < .1 and 0 < args.cap_band < .5)
     if args.worker:
         worker(args)
         return
@@ -191,11 +227,15 @@ def main():
                       workflow.HERE / "tet10_integration.py",
                       workflow.HERE / "gradient_tie_probe.py", workflow.ROOT / "crates/meshers-python/python/meshers/expression.py"]
     source_hashes = {str(path): workflow.digest(path) for path in python_sources}
+    if args.amg:
+        source_hashes[str(workflow.HERE / "amg_reference.py")] = workflow.digest(workflow.HERE / "amg_reference.py")
     import meshers._meshers
     workflow.save(args.run / "manifest.json", {"script_sha256": workflow.digest(Path(__file__)),
         "native_sha256": workflow.digest(Path(meshers._meshers.__file__)), "inputs": hashes,
         "memory_bytes": workflow.MEMORY, "threads": 1, "timeout_s": args.worker_timeout,
-        "python_source_sha256": source_hashes})
+        "python_source_sha256": source_hashes,
+        "solver": "cached-elastic-block-amg-cg" if args.amg else "jacobi-cg",
+        "pyamg": importlib.metadata.version("pyamg") if args.amg else None})
     parts = ["build", "core-tests", "adaptive-admission"] if args.build else ["adaptive-admission"]
     if args.python_tests:
         parts.insert(-1, "python-tests")
@@ -234,6 +274,10 @@ def main():
                 "--worker"]
             if args.compiled_spinodoid:
                 command.append("--compiled-spinodoid")
+            if args.amg:
+                command.append("--amg")
+            if args.cap_length is not None:
+                command.extend(["--cap-length", str(args.cap_length), "--cap-band", str(args.cap_band)])
             if args.solve:
                 command.append("--solve")
             if args.clip_void is not None:

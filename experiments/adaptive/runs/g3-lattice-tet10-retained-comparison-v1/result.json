@@ -1,0 +1,250 @@
+{
+  "inputs": {
+    "/home/kmarchais/dev/meshers/experiments/adaptive/runs/g3-lattice-tet10-retained-comparison-v1/driver.py": "9ae432fa8958319fc5a9b03f54de646a3316e7c90b48796867efd0bce5f9df6a",
+    "/home/kmarchais/dev/meshers/experiments/adaptive/runs/g3-lattice-reference-sensitivity-v2.json": "0bc21b6b9c07819795697047ee827aab8c23363790dc5137ea7d2d1a5aa0ac07",
+    "/home/kmarchais/dev/meshers/experiments/adaptive/runs/g3-lattice-microgen-reference-comparison-v1.json": "6acf432121761aa9028ffd81be1e146cbd5010e84f6183fab9cd455c966dfdd4",
+    "/home/kmarchais/dev/meshers/experiments/adaptive/runs/g3-lattice-finer-reference-comparison-v1.json": "8fc3ac22764e9075d1770fb3ca2bc92a8ec65f851bc51714c0579f39b48a8fde",
+    "/home/kmarchais/dev/meshers/experiments/adaptive/runs/g3-lattice-adapt24-solve-v1/result.json": "39b0d48a7ad2db72cbe8bf0c04ca475454ff4d7c7ded058684b69f9e2054744e",
+    "/home/kmarchais/dev/meshers/experiments/adaptive/runs/g3-lattice-finer-reference-field-audit-v1/manifest.json": "3802e7d1e7c45251fee35d22833f601ba28e84888c140ad2d7e30d10ee564414",
+    "/home/kmarchais/dev/meshers/experiments/adaptive/runs/g3-lattice-adapt24-solve-v1/mesh.npz": "063ebf1fa5a8ff0610d560e312c5f1dc8a1d7fa64cb0b020503068902cecf1f0",
+    "/home/kmarchais/dev/meshers/experiments/adaptive/runs/g3-lattice-adapt24-solve-v1/fields.npz": "cc29259ddb1e178dfc2f16b43818cda1b928184f224a7a22613a25268ecdcdcb",
+    "/home/kmarchais/dev/meshers/experiments/adaptive/runs/g3-lattice-finer-reference-field-audit-v1/g3-lattice-adapt24-solve-v1.json": "d260b21ead51b499414b482bc8b27e223e3fe6e9a14d427aafefc53129b92690",
+    "/home/kmarchais/dev/meshers/experiments/adaptive/runs/g3-lattice-adapt24-tol003-v1/result.json": "92d785b45e08524148a1aba47b382983f1e90e82992f683a5ffd11c612339876",
+    "/home/kmarchais/dev/meshers/experiments/adaptive/runs/g3-lattice-adapt24-tol003-v1/mesh.npz": "c379e247a5e41ab1811352cb1d62036bf9f839dc5c69b9c0c86b787621b5541b",
+    "/home/kmarchais/dev/meshers/experiments/adaptive/runs/g3-lattice-adapt24-tol003-v1/fields.npz": "d05e7ecd0a82e190dd5cbd1a7b64fe7b9d68f001b44119885579c2400438bef4",
+    "/home/kmarchais/dev/meshers/experiments/adaptive/runs/g3-lattice-finer-reference-field-audit-v1/g3-lattice-adapt24-tol003-v1.json": "df3c76c005ea3d11bee75642e128c867d62b113003057d43b822b6634b218191",
+    "/home/kmarchais/dev/meshers/experiments/adaptive/runs/g3-lattice-adapt24-tol0028-v1/result.json": "558bada3358cfd7b0b6158d20c492287345dedb3993cc9d7719aa2e3295bf55e",
+    "/home/kmarchais/dev/meshers/experiments/adaptive/runs/g3-lattice-adapt24-tol0028-v1/mesh.npz": "230db70dc8a2d0325152176fbe4da8708aac96ae2f2dbda7c5dd357457b214ea",
+    "/home/kmarchais/dev/meshers/experiments/adaptive/runs/g3-lattice-adapt24-tol0028-v1/fields.npz": "3de71f98a7236b46a49f6180e5e8e1d4bea2f303521c5a5a52fbebd401c93df2",
+    "/home/kmarchais/dev/meshers/experiments/adaptive/runs/g3-lattice-finer-reference-field-audit-v1/g3-lattice-adapt24-tol0028-v1.json": "10c19cbc9ce4f36f62b3c9a14666e1adeddabb07035b34aa7ade3c66528210cb",
+    "/home/kmarchais/dev/meshers/experiments/adaptive/runs/g3-lattice-curved24-symmetric-v1/result.json": "5c3e1aa53be58e32fae972b7e82e6fdb9457e683f3ac155348b2162d80820446",
+    "/home/kmarchais/dev/meshers/experiments/adaptive/runs/g3-lattice-curved24-symmetric-v1/mesh.npz": "2adbd9557d40e2abfdee384aa738d63bff5c5188d2a420f3a4c0256e0cee6e47",
+    "/home/kmarchais/dev/meshers/experiments/adaptive/runs/g3-lattice-curved24-symmetric-v1/fields.npz": "c4e41fbdb3bfcdb991f7b2687b019e2ff21e2e3e324e10b0d7d02e4ce02baf59",
+    "/home/kmarchais/dev/meshers/experiments/adaptive/runs/g3-lattice-finer-reference-field-audit-v1/g3-lattice-curved24-symmetric-v1.json": "a2d6c45a263759053e0657b6570d3d7761631e5b639daed2e9e69c56a2a1d7de",
+    "/home/kmarchais/dev/meshers/experiments/adaptive/runs/g3-lattice-curved32-reference-v1/result.json": "2af8d6d176419f7b52cfa25668935375bb890501aace8c7576878f5fa5c727a2",
+    "/home/kmarchais/dev/meshers/experiments/adaptive/runs/g3-lattice-curved32-reference-v1/mesh.npz": "950662caa470de81efd4368827aafa457a113ff8fc178cf51dcfd5599e0f04bf",
+    "/home/kmarchais/dev/meshers/experiments/adaptive/runs/g3-lattice-curved32-reference-v1/fields.npz": "9320b584c0cf0ceed95835ee952e787371d1a43c4790fa20c064abcf607c3dde",
+    "/home/kmarchais/dev/meshers/experiments/adaptive/runs/g3-lattice-finer-reference-field-audit-v1/g3-lattice-curved32-reference-v1.json": "004e452354a3079513f2f0083a0f468b267086fb6c370eee9aa24858002315de",
+    "/home/kmarchais/dev/meshers/experiments/adaptive/runs/g3-lattice-linear32-control-v1/result.json": "d3b4c4a631324531aaa3dd1aad01e501f5da320b40ad78c65b27384a0b849f6b",
+    "/home/kmarchais/dev/meshers/experiments/adaptive/runs/g3-lattice-linear32-control-v1/mesh.npz": "d7e7f412b9fc45fe225593b5e24d3ad3a0ffccbc5aa4e4ba50b4f6ede2ebb824",
+    "/home/kmarchais/dev/meshers/experiments/adaptive/runs/g3-lattice-linear32-control-v1/fields.npz": "95c423b940094e59bf85589b649552ab174cfb52b9aee44375d4b119393cbc5f",
+    "/home/kmarchais/dev/meshers/experiments/adaptive/runs/g3-lattice-finer-reference-field-audit-v1/g3-lattice-linear32-control-v1.json": "7d62ca372751a732fc53be4088a7c23f1770096c358dd2885398de988720ff74",
+    "/home/kmarchais/dev/meshers/experiments/adaptive/runs/g3-lattice-tuned51-timing-v1/result.json": "7f69c94da2f73d2ae98fd6fec7db20cd56eb89210eb77ad6f47522b24fe2e639",
+    "/home/kmarchais/dev/meshers/experiments/adaptive/runs/g3-lattice-tuned51-timing-v1/mesh.npz": "c7eb11313c5a86b7f1cae36909fa1ded622e6061d55093b59580f6759175addc",
+    "/home/kmarchais/dev/meshers/experiments/adaptive/runs/g3-lattice-tuned51-timing-v1/fields.npz": "071ca56c84934d38b995f0f9e3a79f3ce251564fd222cfda6d05653c32fd8b2a",
+    "/home/kmarchais/dev/meshers/experiments/adaptive/runs/g3-lattice-finer-reference-field-audit-v1/g3-lattice-tuned51-timing-v1.json": "8ad30a237455ae7ab8be57f11df7f287ee8c6530e5c78217021fa607154b1e15",
+    "/home/kmarchais/dev/meshers/experiments/adaptive/runs/g3-lattice-uniform34-quadrature4-v1/result.json": "886e4c9d4372e767acd6578d302b9a094d8bfb2f59b6626b8617e4825d7aac65",
+    "/home/kmarchais/dev/meshers/experiments/adaptive/runs/g3-lattice-uniform34-field-audit-v1/manifest.json": "d63757082fb91fe2a06059cb2a8efb535e32581698a2bbe1d0b1c795f0b06541",
+    "/home/kmarchais/dev/meshers/experiments/adaptive/runs/g3-lattice-uniform34-quadrature4-v1/mesh.npz": "335f253910ccbba0a70584f1e605539511cc87a8d93cdd7b3803f7a6705f9ad1",
+    "/home/kmarchais/dev/meshers/experiments/adaptive/runs/g3-lattice-uniform34-quadrature4-v1/fields.npz": "8900c4485c239279ae8f7a19728824ade05f89a272b602869b9dbc491f3e1fac",
+    "/home/kmarchais/dev/meshers/experiments/adaptive/runs/g3-lattice-uniform34-field-audit-v1/g3-lattice-uniform34-quadrature4-v1.json": "21820a4a217ffc010b6c62fcc9cfa45215291dfeb7fca60e7ed0d42cecb22c89",
+    "/home/kmarchais/dev/meshers/experiments/adaptive/runs/g3-lattice-microgen-straight-tet10-hausd001-amg-v2/result.json": "e5452076dde3f2790c524d121c3dd78565f463d335482099a95dbf5a117e7803",
+    "/home/kmarchais/dev/meshers/experiments/adaptive/runs/g3-lattice-microgen-tet10-field-audit-v1/manifest.json": "3546c414f19ebfe0701caaa5dc9648ef2a4d791fcc64c79746acc34d7ab4db8b",
+    "/home/kmarchais/dev/meshers/experiments/adaptive/runs/g3-lattice-microgen-straight-tet10-hausd001-amg-v2/mesh.npz": "9a999da87f150c0dadc7e5a47719a0e75cb5da90c2667097f2e06462ebc5448e",
+    "/home/kmarchais/dev/meshers/experiments/adaptive/runs/g3-lattice-microgen-straight-tet10-hausd001-amg-v2/fields.npz": "7304e0d4e60be1d5d54ec8667ce83b4b41c91f903bd5922c4f71a08962192120",
+    "/home/kmarchais/dev/meshers/experiments/adaptive/runs/g3-lattice-microgen-tet10-field-audit-v1/g3-lattice-microgen-straight-tet10-hausd001-amg-v2.json": "bbe7045df08070f6168b24b9dc019a05600ebdf464eee9e83245dd9dff13f7bf"
+  },
+  "retained_model_count": 24,
+  "candidates": [
+    {
+      "source": "/home/kmarchais/dev/meshers/experiments/adaptive/runs/g3-lattice-adapt24-solve-v1",
+      "nodes": 123570,
+      "minimum_model_disagreement": 0.0012732699139952341,
+      "worst_model": {
+        "source": "/home/kmarchais/dev/meshers/experiments/adaptive/runs/g3-lattice-reference-sensitivity-v2.json",
+        "index": 0,
+        "length_proxy": "uniform_seed",
+        "assumed_order": 1,
+        "worst_relative_strain_energy_difference": 0.014271853258468248,
+        "signed_relative_energy_difference": 0.014271853258468248,
+        "engineering_strain_in_saved_tensor_basis": [
+          -0.3507859652796896,
+          -0.423296730356816,
+          0.835286271893711,
+          0.0024541588215050134,
+          -0.006299642704825555,
+          0.004496690360866988
+        ]
+      },
+      "passes_one_percent_all_retained_models": false
+    },
+    {
+      "source": "/home/kmarchais/dev/meshers/experiments/adaptive/runs/g3-lattice-adapt24-tol003-v1",
+      "nodes": 175818,
+      "minimum_model_disagreement": 0.0014682239996481883,
+      "worst_model": {
+        "source": "/home/kmarchais/dev/meshers/experiments/adaptive/runs/g3-lattice-reference-sensitivity-v2.json",
+        "index": 0,
+        "length_proxy": "uniform_seed",
+        "assumed_order": 1,
+        "worst_relative_strain_energy_difference": 0.01306138782438171,
+        "signed_relative_energy_difference": 0.01306138782438171,
+        "engineering_strain_in_saved_tensor_basis": [
+          -0.3644283008021165,
+          -0.40540515712894476,
+          0.8383085651934722,
+          0.0026764429735135556,
+          -0.00664439524222389,
+          0.0051098273820433
+        ]
+      },
+      "passes_one_percent_all_retained_models": false
+    },
+    {
+      "source": "/home/kmarchais/dev/meshers/experiments/adaptive/runs/g3-lattice-adapt24-tol0028-v1",
+      "nodes": 193242,
+      "minimum_model_disagreement": 0.0011349017998949495,
+      "worst_model": {
+        "source": "/home/kmarchais/dev/meshers/experiments/adaptive/runs/g3-lattice-reference-sensitivity-v2.json",
+        "index": 0,
+        "length_proxy": "uniform_seed",
+        "assumed_order": 1,
+        "worst_relative_strain_energy_difference": 0.012698817969885923,
+        "signed_relative_energy_difference": 0.012698817969885923,
+        "engineering_strain_in_saved_tensor_basis": [
+          -0.36329415604091503,
+          -0.4052927689493632,
+          0.8388523230089605,
+          0.0028025197429935567,
+          -0.006866876917451293,
+          0.005186491187561456
+        ]
+      },
+      "passes_one_percent_all_retained_models": false
+    },
+    {
+      "source": "/home/kmarchais/dev/meshers/experiments/adaptive/runs/g3-lattice-curved24-symmetric-v1",
+      "nodes": 69025,
+      "minimum_model_disagreement": 0.008687092667320595,
+      "worst_model": {
+        "source": "/home/kmarchais/dev/meshers/experiments/adaptive/runs/g3-lattice-reference-sensitivity-v2.json",
+        "index": 0,
+        "length_proxy": "uniform_seed",
+        "assumed_order": 1,
+        "worst_relative_strain_energy_difference": 0.026667448039886077,
+        "signed_relative_energy_difference": 0.026667448039886077,
+        "engineering_strain_in_saved_tensor_basis": [
+          0.22045800623922676,
+          0.5518204133682596,
+          -0.8042814817423565,
+          -0.0017143905003864383,
+          0.004262948574756788,
+          -0.0016386384863210696
+        ]
+      },
+      "passes_one_percent_all_retained_models": false
+    },
+    {
+      "source": "/home/kmarchais/dev/meshers/experiments/adaptive/runs/g3-lattice-curved32-reference-v1",
+      "nodes": 189187,
+      "minimum_model_disagreement": 0.0036843050399688604,
+      "worst_model": {
+        "source": "/home/kmarchais/dev/meshers/experiments/adaptive/runs/g3-lattice-reference-sensitivity-v2.json",
+        "index": 0,
+        "length_proxy": "uniform_seed",
+        "assumed_order": 1,
+        "worst_relative_strain_energy_difference": 0.021954172230914448,
+        "signed_relative_energy_difference": 0.021954172230914448,
+        "engineering_strain_in_saved_tensor_basis": [
+          -0.49729913564006517,
+          -0.2709916087683408,
+          0.8241487455531166,
+          0.0021500448460810605,
+          -0.0036712916986298234,
+          0.004226321856936244
+        ]
+      },
+      "passes_one_percent_all_retained_models": false
+    },
+    {
+      "source": "/home/kmarchais/dev/meshers/experiments/adaptive/runs/g3-lattice-linear32-control-v1",
+      "nodes": 48259,
+      "minimum_model_disagreement": 0.033948892338760084,
+      "worst_model": {
+        "source": "/home/kmarchais/dev/meshers/experiments/adaptive/runs/g3-lattice-reference-sensitivity-v2.json",
+        "index": 0,
+        "length_proxy": "uniform_seed",
+        "assumed_order": 1,
+        "worst_relative_strain_energy_difference": 0.05252371931795485,
+        "signed_relative_energy_difference": 0.05252371931795485,
+        "engineering_strain_in_saved_tensor_basis": [
+          -0.3743133688833581,
+          -0.4313167247888537,
+          0.8208806448498808,
+          0.0014069822431367195,
+          -0.0026865204254263014,
+          0.0010745754615624058
+        ]
+      },
+      "passes_one_percent_all_retained_models": false
+    },
+    {
+      "source": "/home/kmarchais/dev/meshers/experiments/adaptive/runs/g3-lattice-tuned51-timing-v1",
+      "nodes": 46219,
+      "minimum_model_disagreement": 0.033544385325434245,
+      "worst_model": {
+        "source": "/home/kmarchais/dev/meshers/experiments/adaptive/runs/g3-lattice-reference-sensitivity-v2.json",
+        "index": 0,
+        "length_proxy": "uniform_seed",
+        "assumed_order": 1,
+        "worst_relative_strain_energy_difference": 0.05206730360710177,
+        "signed_relative_energy_difference": 0.05206730360710177,
+        "engineering_strain_in_saved_tensor_basis": [
+          0.33842574174239737,
+          0.46381072675645796,
+          -0.8187426625382899,
+          -0.0012263811213454438,
+          0.002558015303835502,
+          -0.00017932795917006378
+        ]
+      },
+      "passes_one_percent_all_retained_models": false
+    },
+    {
+      "source": "/home/kmarchais/dev/meshers/experiments/adaptive/runs/g3-lattice-uniform34-quadrature4-v1",
+      "nodes": 233964,
+      "minimum_model_disagreement": 0.004349230735607668,
+      "worst_model": {
+        "source": "/home/kmarchais/dev/meshers/experiments/adaptive/runs/g3-lattice-reference-sensitivity-v2.json",
+        "index": 0,
+        "length_proxy": "uniform_seed",
+        "assumed_order": 1,
+        "worst_relative_strain_energy_difference": 0.022298298062299438,
+        "signed_relative_energy_difference": 0.022298298062299438,
+        "engineering_strain_in_saved_tensor_basis": [
+          0.27483561505993137,
+          0.5017902869612072,
+          -0.820148300929094,
+          -0.001681359552674063,
+          0.004650144341340862,
+          -0.002050920963457456
+        ]
+      },
+      "passes_one_percent_all_retained_models": false
+    },
+    {
+      "source": "/home/kmarchais/dev/meshers/experiments/adaptive/runs/g3-lattice-microgen-straight-tet10-hausd001-amg-v2",
+      "nodes": 238411,
+      "minimum_model_disagreement": 0.004125390892671166,
+      "worst_model": {
+        "source": "/home/kmarchais/dev/meshers/experiments/adaptive/runs/g3-lattice-reference-sensitivity-v2.json",
+        "index": 0,
+        "length_proxy": "uniform_seed",
+        "assumed_order": 1,
+        "worst_relative_strain_energy_difference": 0.010043540553144714,
+        "signed_relative_energy_difference": 0.010043540553144714,
+        "engineering_strain_in_saved_tensor_basis": [
+          -0.32164160817604653,
+          -0.45018149386499323,
+          0.8329126442145232,
+          0.006585210826766363,
+          -0.009633546895012576,
+          -0.001911897374164378
+        ]
+      },
+      "passes_one_percent_all_retained_models": false
+    }
+  ],
+  "stiffness_target": 0.01,
+  "scope": "Audited empirical model disagreements only; no model removed, continuum bound or live timing comparison"
+}

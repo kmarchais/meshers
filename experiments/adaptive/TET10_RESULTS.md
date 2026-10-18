@@ -195,3 +195,32 @@ Job 199 stops at the new small test because its fixture requests three cells,
 below the documented minimum of four. No large solve runs. Correct only that
 fixture and retain its failed output. Job 200 repeats the validation-gated
 retry with four cells; it is not a live speed comparison.
+
+Job 200 passes all eight small checks and completes six fresh large solves.
+The solve takes 530.80 seconds; total saved-mesh study time is 555.78 seconds,
+and worker peak RSS is 4.378 GiB. Every field is retained. Original CG and AMG
+agree on the five available reaction columns within 2.01e-11 relative. Own-rule
+reaction disagreement is 5.89e-12, Hill-Mandel disagreement is 1.94e-12 and
+periodic mid-edge jumps are zero. Fifteen-point reintegration changes mixed-load
+energy by 2.72e-11 relative. Job 201 reproduces those checks in a fresh process.
+
+The full tensor differs by 0.77217% from cubic24 and ranges from 0.41254% to
+1.004354% across all 24 retained models. It narrowly fails the 1% target.
+Do not round that into admission. This is stronger accuracy evidence than the
+tested Meshers candidates: the finest adaptive Tet10 mesh has worst retained
+model disagreement 1.269882%. The new Microgen control has 238,411 nodes,
+versus 193,242 for that Meshers mesh. Neither is a target-qualified timing
+competitor, and their saved solves use different solver policies.
+
+Records are in `runs/g3-lattice-microgen-straight-tet10-hausd001-amg-v2`,
+`runs/g3-lattice-microgen-tet10-field-audit-v1` and
+`runs/g3-lattice-tet10-retained-comparison-v1`. The comparison verifies every
+candidate's archived field-audit hashes and retains all models. Its worst-load
+witnesses are predominantly deviatoric normal strains. Every candidate's worst
+model is the retained uniform-seed first-order extrapolation. This does not
+justify removing it or distorting geometry to compensate for its bias.
+
+Before changing Meshers, localize same-domain Tet10-to-cubic enrichment energy
+in that worst strain. Verify the Galerkin energy identity and quadrature
+sensitivity first. This diagnoses discrete error on an unchanged physical
+domain, not local stress uncertainty or continuum accuracy.

@@ -388,3 +388,31 @@ within 6.79e-12. A fresh same-native, same-helper curved12 control is selected
 before attributing cost savings to coarsening. The earlier 47.08-second
 curved12 control used a different solver formulation and native revision.
 No Gyroid matched-accuracy Microgen victory is established.
+
+## Stronger lattice control, 18 October 2026
+
+A reference-only cubic enrichment on the admitted 24-cell Meshers geometry
+now completes all six loads and independent stress, energy and positive
+125-point quadrature checks under 8 GiB. It does not resolve the disagreement
+among the 24 retained empirical reference models or certify continuum error.
+See `CUBIC_RESULTS.md`.
+
+An actual tuned VTK51/two-pass MMG lattice seed admits 33,903 Tet4 nodes,
+158,252 tets, distance 0.00162159, volume error -0.48770% and quality 0.109983.
+Manual straight Tet10 elevation and direct fedoo conversion preserve that
+physical geometry and use 238,411 nodes. This is not Microgen's unsupported
+public Tet10 conversion or its default meshing recipe. The original CG control
+times out after five loads. An explicitly selected, validated AMG retry
+completes all six and passes fresh-process field audits at 4.378 GiB peak RSS.
+
+Worst disagreement across all retained models is 1.004354%, versus 1.269882%
+for the best tested Meshers mesh. Neither passes 1%. The Microgen result is
+stronger accuracy evidence and must not be rounded into admission or omitted.
+Saved solves with different solver policies do not establish a timing win.
+See `TET10_RESULTS.md` and `runs/g3-lattice-tet10-retained-comparison-v1`.
+
+The remaining worst direction is mainly deviatoric normal strain. A verified
+same-domain Tet10-to-cubic correction puts 77.46% of its energy in the 6.99%
+of coarse elements incident on cap vertices. This motivates one cap-focused
+size-field pilot rather than more global refinement. Its geometry stage passes
+with 159,147 nodes; read its full solve before selecting another change.

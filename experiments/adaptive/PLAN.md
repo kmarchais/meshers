@@ -334,3 +334,17 @@ hausd 0.001 on the actual VTK51 Microgen lattice seed, retaining first-pass
 0.0015, to assess a stronger straight-Tet10 comparator inside 250,000 nodes.
 Read its quality, distance and exact lift count before any solve. The existing
 Schwarz matched-target result remains the only demonstrated workflow win.
+
+The actual tuned lattice parent passes admission at second-pass hausd 0.001
+and lifts to 238,411 straight Tet10 nodes. Default diagonal CG hits its unchanged
+1,800-second timeout after five loads. A separately validated explicit AMG
+retry completes six fresh solves and independent field checks within 4.378 GiB.
+The worst retained-model disagreement is 1.004354%, versus 1.269882% for the
+best tested Meshers candidate. Neither passes 1%; do not round or remove models.
+No timing victory follows from saved solves under different solver policies.
+See `TET10_RESULTS.md` and `runs/g3-lattice-tet10-retained-comparison-v1`.
+
+The worst error direction is predominantly deviatoric normal strain. Next
+localize same-domain Tet10-to-cubic enrichment energy in that direction, with
+the Galerkin identity and independent quadrature checks, before selecting a
+Meshers sizing or geometry change. No speculative native patch is queued.

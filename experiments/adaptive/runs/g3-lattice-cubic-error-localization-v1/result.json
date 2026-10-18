@@ -1,0 +1,68 @@
+{
+  "source_parent": "experiments/adaptive/runs/g3-lattice-curved24-symmetric-v1",
+  "source_cubic": "experiments/adaptive/runs/g3-lattice-cubic-reference-cache-release-v1",
+  "engineering_strain": [
+    -0.36329415604091503,
+    -0.4052927689493632,
+    0.8388523230089605,
+    0.0028025197429935567,
+    -0.006866876917451293,
+    0.005186491187561456
+  ],
+  "worst_model_witness": {
+    "source": "/home/kmarchais/dev/meshers/experiments/adaptive/runs/g3-lattice-reference-sensitivity-v2.json",
+    "index": 0,
+    "length_proxy": "uniform_seed",
+    "assumed_order": 1,
+    "worst_relative_strain_energy_difference": 0.012698817969885923,
+    "signed_relative_energy_difference": 0.012698817969885923,
+    "engineering_strain_in_saved_tensor_basis": [
+      -0.36329415604091503,
+      -0.4052927689493632,
+      0.8388523230089605,
+      0.0028025197429935567,
+      -0.006866876917451293,
+      0.005186491187561456
+    ]
+  },
+  "expected_galerkin_energy": 0.00028070105306956253,
+  "rules": [
+    {
+      "quadrature": "own15",
+      "enrichment_energy": 0.00028070105573351796,
+      "galerkin_identity_relative_error": 9.490364938358198e-09,
+      "relative_change_from_previous_rule": null,
+      "highest_energy_twenty_percent_capture": 0.9839335310587175,
+      "largest_volume_twenty_percent_capture": 0.48550583550827225,
+      "wall_vertex_incident_element_fraction": 0.4103521878335112,
+      "wall_vertex_incident_energy_fraction": 0.9541308716471051,
+      "cap_vertex_incident_element_fraction": 0.06990394877267876,
+      "cap_vertex_incident_energy_fraction": 0.7745830432175012
+    },
+    {
+      "quadrature": "positive64",
+      "enrichment_energy": 0.00028084688262604117,
+      "galerkin_identity_relative_error": 0.0005195190929423443,
+      "relative_change_from_previous_rule": 0.0005195095976469055,
+      "highest_energy_twenty_percent_capture": 0.9839416605766059,
+      "largest_volume_twenty_percent_capture": 0.4851279393852704,
+      "wall_vertex_incident_element_fraction": 0.4103521878335112,
+      "wall_vertex_incident_energy_fraction": 0.9541546887263188,
+      "cap_vertex_incident_element_fraction": 0.06990394877267876,
+      "cap_vertex_incident_energy_fraction": 0.7746148289022489
+    },
+    {
+      "quadrature": "positive125",
+      "enrichment_energy": 0.0002808693458305765,
+      "galerkin_identity_relative_error": 0.0005995444590380927,
+      "relative_change_from_previous_rule": 7.998381297769086e-05,
+      "highest_energy_twenty_percent_capture": 0.9839429044891597,
+      "largest_volume_twenty_percent_capture": 0.4851529929587403,
+      "wall_vertex_incident_element_fraction": 0.4103521878335112,
+      "wall_vertex_incident_energy_fraction": 0.954158355315854,
+      "cap_vertex_incident_element_fraction": 0.06990394877267876,
+      "cap_vertex_incident_energy_fraction": 0.7746144338750858
+    }
+  ],
+  "scope": "Same-domain discrete enrichment energy localization; no continuum or local stress certificate; no meshing improvement inferred"
+}
