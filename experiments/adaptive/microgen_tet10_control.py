@@ -63,7 +63,8 @@ def worker(source, run):
     np.savez_compressed(run / "mesh.npz", points=elevated_points, tetrahedra=elevated, surface=elevated_surface)
     row["geometry"] = workflow.geometry(run, parent["case"], elevated_points, elevated, elevated_surface,
         reverse_subdivisions=(1,))
-    row.update(periodic=periodic, qualified=row["geometry"]["geometry_admitted"], status="geometry-rejected")
+    row.update(periodic=periodic, qualified=row["geometry"]["geometry_admitted"],
+        status="admitted-needs-reference" if row["geometry"]["geometry_admitted"] else "geometry-rejected")
     workflow.save(run / "result.json", row)
     if not row["qualified"]:
         return
@@ -81,9 +82,11 @@ def worker(source, run):
     row["higher_rule_fixed_field_difference"] = tensor_difference(higher_energy, tensor)
     assert row["higher_rule_fixed_field_difference"]["worst_relative_strain_energy_difference"] < 1e-7
     row.update(quadrature_sensitivity_limit=1e-4, quadrature_sensitivity_passed=True,
-        total_saved_mesh_study_s=time.perf_counter() - started)
+        higher_rule_consistency_limit=1e-7)
     workflow.save(run / "result.json", row)
     audit_saved(run, run / "field-consistency.json")
+    row["total_saved_mesh_study_s"] = time.perf_counter() - started
+    workflow.save(run / "result.json", row)
 
 
 def main():

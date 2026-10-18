@@ -74,6 +74,76 @@ is outside this result. The native mesher and the step-1 admission gates are
 unchanged. These tests establish integration and tensor reproduction; local
 stress accuracy and continuum error remain unproven.
 
+## Stronger genuine Microgen control, 18 October
+
+Job 152 lifts the admitted actual Microgen VTK/MMG Schwarz mesh to straight
+Tet10. Every added node is the exact midpoint of one unique original edge.
+The original planar boundary and domain are unchanged. The parent uses the
+explicit one-pass override from the matched Schwarz study, not Microgen's
+default two-pass route. Its source and MMG-call hashes are preserved.
+
+The lift has 230,337 nodes and 154,012 elements, within the explicitly staged
+250,000-node solve limit and unchanged 8 GiB worker ceiling. Independent
+geometry and periodic checks pass. Arrays returned by `Mesh.to_fedoo()` feed
+all six prescribed-strain solves; no native Meshers generation is called.
+This is manual elevation plus direct fedoo, not support added to Microgen's
+public Tet10 converters.
+
+Four-point integration is checked against fifteen-point fixed-field energy,
+which differs by less than 9.57e-11 relative. Independent reaction disagreement
+is 3.27e-11, Hill-Mandel disagreement is 2.81e-11 and periodic mid-edge jumps
+are below 5.56e-17. All six reduced solves meet the strict residual check.
+
+Worst mixed-load stiffness disagreement is 0.062583% against the primary
+Schwarz reference, and 0.054006% to 0.062702% across all declared fine-window
+orders and length proxies. The original linear Microgen parent spans
+0.92778% to 0.99022%. Tet10 materially strengthens the competitor.
+
+The solve takes 1,128.92 seconds; the complete worker uses 1,152.73 seconds
+and peaks at 6.05 GiB. These are saved-mesh diagnostic costs, not a live
+Microgen extraction/MMG/conversion/solve workflow. Do not use them to claim
+a new matched-workflow speed ratio.
+
+The stronger control also exposes a Meshers limit. Curved12 reaches 0.13559%
+across the same reference models, so it does not meet a stricter 0.1% target
+that this Microgen control passes. Select one current-native curved14 pilot
+against that same target. The original four-fixture 1% objective remains open.
+Text records are in `runs/g3-schwarz-microgen-straight-tet10-v1` and
+`runs/g3-schwarz-microgen-straight-tet10-reference-v1.json`.
+
+## Supplementary 0.1% target
+
+The stricter target supplements the original 1% objective; it does not replace
+that objective or settle any other fixture. Curved14 and curved15 both pass
+geometry and independent field checks, but their model envelopes reach
+0.101239% and 0.103035%. Both strictly miss 0.1%, despite passing 1%.
+Do not round either into a stricter-target pass. Seven comparison-admission
+and target regression cases pass, including the genuine Microgen positive
+control and the curved14 negative control.
+
+The existing curved16 reference data indicates a passing 0.093778% envelope.
+Job 157 refreshes that known control with the current verified native build
+and the prescribed-strain solver. It has 42,928 nodes and 27,492 elements,
+H=0.000162, and an 88.01-second live workflow. Its tensor reproduces the
+archived sixteen-cell input within 2.67e-11 relative. The declared envelope is
+0.031469% to 0.093778%. Job 158 independently checks its fields with reaction
+disagreement 1.18e-11 and periodic jumps below 5.56e-17. This also checks the
+numerical reproduction of one input to the reference models, not independent
+continuum convergence.
+
+No new strict-target workflow speed ratio is claimed against job 152's
+saved-mesh solve. Before a live comparison, job 159 tests whether that
+Microgen Tet10 parent overresolves its interior. Change only first-pass hmax
+from 0.05 to 0.1, preserving the VTK30 seed, hausd=0.0005, hgrad=1.3, explicit
+one-pass route and independent admission gates. Audit the actual returned mesh
+before selecting any Tet10 lift and solve.
+
+Job 159 passes admission with 29,204 Tet4 nodes, 136,587 elements,
+H=0.0009615 and q_min=0.10387. Its exact lift has 207,200 Tet10 nodes,
+only 10.0% fewer than the original 230,337-node control. Job 160 runs that
+coarser straight-Tet10 control with the same six-load solver and independent
+audits. No accuracy or timing conclusion is assigned before reading it.
+
 The next requested priority is a coarse FEA stress-recovery estimate for linear
 mesh sizing. The new displacement archives provide integration evidence, but
 they are not qualified local-stress references for that study.

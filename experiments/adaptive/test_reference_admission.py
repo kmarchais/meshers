@@ -8,6 +8,10 @@ import pytest
 import microgen_workflow as workflow
 import stiffness_pair
 
+pytest.importorskip("fedoo")
+pytest.importorskip("microgen")
+pytest.importorskip("pyvista")
+
 
 @pytest.mark.parametrize("updates", [None, {"status": "failed"},
     {"quadrature_sensitivity_passed": False}, {"quadrature_sensitivity_limit": 0.01},
@@ -32,3 +36,18 @@ def test_four_point_comparison_admission(tmp_path, monkeypatch, updates):
         with pytest.raises(AssertionError):
             stiffness_pair.main()
         assert not output.exists()
+
+
+@pytest.mark.parametrize(("source", "expected"), [
+    ("g3-schwarz-microgen-straight-tet10-v1", True), ("g3-schwarz-curved14-v1", False)])
+def test_supplementary_stricter_target(tmp_path, monkeypatch, source, expected):
+    output = tmp_path / "comparison.json"
+    monkeypatch.setattr(sys, "argv", ["stiffness_pair.py", "--first",
+        str(workflow.HERE / "runs" / source / "result.json"), "--reference-summary",
+        str(workflow.HERE / "runs/g3-microgen-defaults-v4/summary.json"),
+        "--orders", "1", "2", "3", "4", "--target", "0.001", "--output", str(output)])
+    stiffness_pair.main()
+    report = json.loads(output.read_text())
+    assert report["stiffness_target"] == 0.001
+    assert report["passes_target_under_all_declared_models"] is expected
+    assert report["passes_one_percent_under_all_declared_models"]

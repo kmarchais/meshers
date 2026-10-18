@@ -20,6 +20,13 @@ from its predecessor but still reaches 1.26988% against retained reference
 models. This does not establish 1% accuracy. See `MICROGEN_RESULTS.md` and
 `PERIODIC_RESULTS.md` for the full recipes and exclusions.
 
+A stronger genuine Microgen-derived straight-Tet10 Schwarz control reaches
+0.05401% to 0.06270% under the same reference models. Fresh Meshers curved16
+also meets the supplementary 0.1% target, with 42,928 nodes and an 88.01-second
+live single run. No new paired workflow speed ratio is claimed from the
+Microgen saved-mesh solve. Its coarser admitted variant is being tested before
+selecting a live comparison. See `TET10_RESULTS.md`.
+
 ## Historical measurement protocol
 
 The opening study used branch `claude/adaptive-implicit` and made no timing

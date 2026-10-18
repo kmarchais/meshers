@@ -14,9 +14,11 @@ def main():
     normalization.add_argument("--second", type=Path)
     normalization.add_argument("--reference-summary", type=Path)
     parser.add_argument("--orders", nargs="+", type=int, default=[])
+    parser.add_argument("--target", type=float, default=0.01)
     parser.add_argument("--output", type=Path, required=True)
     args = parser.parse_args()
     assert not args.orders or (args.reference_summary and all(order > 0 for order in args.orders))
+    assert 0 < args.target < 1 and (args.orders or args.target == 0.01)
     if args.output.exists():
         raise FileExistsError(args.output)
     np, *_ = workflow.imports()
@@ -69,7 +71,8 @@ def main():
                     "difference": tensor_difference(tensors[0], extrapolated)})
         differences = [model["difference"]["worst_relative_strain_energy_difference"] for model in models]
         report.update(declared_order_models=models, declared_order_difference_range=[min(differences), max(differences)],
-            passes_one_percent_under_all_declared_models=max(differences) <= 0.01)
+            passes_one_percent_under_all_declared_models=max(differences) <= 0.01,
+            stiffness_target=args.target, passes_target_under_all_declared_models=max(differences) <= args.target)
     workflow.save(args.output, report)
 
 

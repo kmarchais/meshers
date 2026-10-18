@@ -36,6 +36,7 @@ def worker(args):
            "mmg_arguments": {"hausd": args.hausd, "hmax": 0.06, "hgrad": 1.3},
            "status": "started", "mmg_calls": []}
     row["stage_audit_enabled"] = args.audit_stages
+    row["geometry_only"] = args.geometry_only
     row["timing_comparable"] = not args.audit_stages
     row["first_pass_hausd_override"] = args.first_pass_hausd
     row["first_pass_hmax_override"] = args.first_pass_hmax if args.first_pass_hausd is not None else None

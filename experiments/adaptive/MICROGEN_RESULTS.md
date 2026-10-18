@@ -1007,3 +1007,26 @@ fifteen-point fixed-field energy and independent reactions/periodic jumps.
 This is a saved-mesh diagnostic. It excludes the live Microgen extraction/MMG
 cost and must not be ranked as an end-to-end timing or a newly supported public
 Microgen Tet10 converter.
+
+Job 152 completes that stronger Schwarz control. Its declared full mixed-load
+reference-model range is 0.054006% to 0.062702%. All six loads and independent
+field checks pass, including fifteen-point reintegration of the affine
+Tet10 fields. The saved-mesh solve takes 1,128.92 seconds and peaks at 6.05 GiB.
+This strengthens the accuracy control, not a new end-to-end timing claim.
+
+At a supplementary 0.1% target, current Meshers curved14 and curved15 reach
+0.101239% and 0.103035%, so neither passes. Independent field audits confirm
+these results. The known curved16 level passes after a fresh current-native
+run and independent audit: 42,928 nodes, 0.031469% to 0.093778% model
+disagreement and an 88.01-second single-run live workflow. Its tensor reproduces
+the archived sixteen-cell reference input within 2.67e-11. This checks that
+input's numerical reproduction, not independent continuum convergence.
+
+Before comparing strict-target workflow costs, job 159 doubles only the actual
+Microgen first-pass hmax from 0.05 to 0.1. The original VTK30 seed, hausd and
+hgrad, explicit one-pass route and admission gates remain unchanged. The result
+is admitted and would lift to 207,200 Tet10 nodes rather than 230,337. Job 160
+measures its six-load accuracy as a saved-mesh control. Do not assume that the
+denser control was the cheapest eligible Microgen route. `TET10_RESULTS.md`
+contains the exact protocol and limits. The original four-fixture 1% objective
+remains unmet.
