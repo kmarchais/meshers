@@ -1,0 +1,9 @@
+{
+  "case": "spinodoid",
+  "cells": 16,
+  "qualified": false,
+  "status": "failed",
+  "error": "a tetrahedron crosses a periodic plane: tet=162586, vertex=19983, axis=1, image=-1, canonical=[-0.40375857392811926, 0.4999788240285261, 0.23096639171370037], local=[-0.40375857392811926, -0.5000211759714739, 0.23096639171370037], mask=1, tet_points=[[-0.41441569079622387, -0.49940953110363484, 0.2286294910803628], [-0.40375857392811926, 0.4999788240285261, 0.23096639171370037], [-0.40018841670204125, -0.492681094963497, 0.22809300627070117], [-0.4054633857998876, -0.49897192644734345, 0.24331440138296145]]",
+  "traceback": "Traceback (most recent call last):\n  File \"/home/kmarchais/dev/meshers/experiments/adaptive/admission_pilot.py\", line 31, in worker\n    mesh = meshers.generate(case.function, bounds=workflow.BOUNDS, cells=args.cells,\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/kmarchais/dev/meshers/crates/meshers-python/python/meshers/__init__.py\", line 312, in generate\n    result = _meshers.generate(\n             ^^^^^^^^^^^^^^^^^^\n_meshers.MeshingFailure: a tetrahedron crosses a periodic plane: tet=162586, vertex=19983, axis=1, image=-1, canonical=[-0.40375857392811926, 0.4999788240285261, 0.23096639171370037], local=[-0.40375857392811926, -0.5000211759714739, 0.23096639171370037], mask=1, tet_points=[[-0.41441569079622387, -0.49940953110363484, 0.2286294910803628], [-0.40375857392811926, 0.4999788240285261, 0.23096639171370037], [-0.40018841670204125, -0.492681094963497, 0.22809300627070117], [-0.4054633857998876, -0.49897192644734345, 0.24331440138296145]]\n",
+  "total_audit_workflow_s": 37.10585933699997
+}

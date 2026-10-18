@@ -283,11 +283,10 @@ impl<'g, G: Geometry> Tets<'g, G> {
             }
         }
         if mask & WALL == 0 {
-            return Some(self.wrap(p));
+            return self.g.contains(p).then_some(p);
         }
         let scale = (0..3).map(|a| hi[a] - lo[a]).fold(0., f64::max);
         let p = crate::projection::onto_level(self.g, p, level, locked, 0.05 * scale)?;
-        let p = self.wrap(p);
         self.g.contains(p).then_some(p)
     }
 
@@ -1052,7 +1051,12 @@ impl<'g, G: Geometry> Tets<'g, G> {
                             image[a] = 1;
                             q[a] = hi[a];
                         } else if m != 0. {
-                            return Err("a tetrahedron crosses a periodic plane".into());
+                            return Err(format!(
+                                "a tetrahedron crosses a periodic plane: tet={t}, vertex={v}, axis={a}, image={m}, canonical={q:?}, local={:?}, mask={}, tet_points={:?}",
+                                p[k],
+                                self.masks[v],
+                                tet.map(|vertex| self.points[vertex])
+                            ));
                         }
                     }
                 }
@@ -1197,6 +1201,47 @@ pub(crate) fn adapt(
 mod tests {
     use crate::implicit::{Options, Region, generate};
     use crate::{Point, dot};
+
+    struct PlaneWave;
+
+    impl crate::geometry::Geometry for PlaneWave {
+        fn value(&self, point: Point) -> f64 {
+            (std::f64::consts::TAU * (point[1] + 0.5)).sin() + 0.001
+        }
+        fn gradient(&self, point: Point) -> Point {
+            [
+                0.,
+                std::f64::consts::TAU * (std::f64::consts::TAU * (point[1] + 0.5)).cos(),
+                0.,
+            ]
+        }
+        fn bounds(&self) -> [Point; 2] {
+            [[-0.5; 3], [0.5; 3]]
+        }
+        fn rank(&self, _point: Point) -> [i64; 3] {
+            [0; 3]
+        }
+        fn band(&self) -> bool {
+            false
+        }
+    }
+
+    #[test]
+    fn projection_cannot_move_a_wall_vertex_across_a_periodic_plane() {
+        let mesh = crate::Mesh {
+            points: Vec::new(),
+            tets: Vec::new(),
+            surface: Vec::new(),
+        };
+        let tets = super::Tets::new(&mesh, &PlaneWave, 0., [true; 3]);
+        assert!(tets.project([-0.4, -0.5001, 0.23], 0, 0.).is_none());
+        assert!(
+            tets.project([-0.4, -0.4999, 0.23], super::WALL, 0.)
+                .is_none()
+        );
+        let point = tets.project([-0.4, 0.4999, 0.23], super::WALL, 0.).unwrap();
+        assert!(point[1] > 0.49 && point[1] < 0.5);
+    }
 
     fn adapt(tolerance: f64) -> Option<super::Options> {
         Some(super::Options {
