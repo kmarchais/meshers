@@ -59,6 +59,48 @@ to inspect, not a proven root cause or an implemented fix. Records are in
 `runs/g3-spinodoid-coarse16-box-probe-v1` and
 `runs/g3-spinodoid-coarse16-projection-stars-v1`.
 
+## Follow-up repair feasibility, 18 October 2026
+
+Job 175 exercises the actual native collapse predicate on a reconstructed torus
+from the rejected 16-cell mesh. It uses the saved 52-mode field, recomputed
+native target lengths and both relative quality guards 0.3 and 0.1. The cap
+vertex has four on-field wall neighbours, only one mask-compatible. No collapse
+is accepted. The interior vertex has no adjacent on-field wall vertex at all.
+This rules out the tested local collapse fallback, not every possible cavity
+repair. The reconstructed state does not reproduce live pending history.
+
+The probe is test-only. Its source and containing module snapshot are frozen in
+`runs/g3-spinodoid-native-collapse-feasibility-v1`. Restore the probe module and
+test-only hook from those snapshots to repeat it. The frozen driver regenerates
+its local JSON mesh input from the existing ignored NPZ archive. No production
+extension is rebuilt, and the temporary hook and probe are removed afterward.
+
+Job 176 tests simultaneous root moves of all 6,330 wall classes on that saved
+mesh. Independent field and gradient checks pass. Every root converges inside
+the cell and periodic copies move together. Nevertheless, full, half and quarter
+moves all invert elements. Their sampled distances are respectively 0.005686,
+0.006027 and 0.008115, still above 0.002. None passes admission or proceeds to
+FEA. Joint projection is not a safe shortcut for this stranded patch. Preserve
+the frozen driver in `runs/g3-spinodoid-collective-projection-v1`; do not add the
+unsuccessful postprocessor to the maintained API or runner.
+
+Job 177 then tests the existing 24-cell quadratic route on current production
+code, without a new repair. It returns 105,689 nodes and 66,231 tets in 7.20
+seconds of generation. Minimum quality 0.18951, signed volume error +0.02595%,
+sampled curved Jacobians and periodicity pass. Independent sampled distance
+0.002302 and nine failed projections still reject it. No FEA runs. This is not
+a new matched-accuracy improvement, and it uses only about 8% fewer nodes than
+the admitted 32-cell curved route. Records are in
+`runs/g3-spinodoid-current-curved24-admission-v1`.
+
+No topology fallback or looser admission rule is promoted from these failures.
+The current evidence does not justify a broad cavity-repair rewrite for this
+small coarse-route node saving. Lattice reference uncertainty remains a larger
+obstacle to the four-fixture comparison. Next assess a reference-only cubic
+enrichment through fedoo's existing element registration interface, beginning
+with polynomial identities and an analytic solid patch. Do not run a large
+lattice solve or claim a Tet20 product feature before that check passes.
+
 ## Selecting the next change
 
 The saved finer sizing pilots put relocation at 0.69 to 1.23 seconds within

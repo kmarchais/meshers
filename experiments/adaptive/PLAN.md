@@ -43,6 +43,11 @@ isolated meshing improvement. The four-fixture objective remains unmet.
   the first topology operation crossing the tet budget, validated by replay.
   Stop blind sizing-scale tuning. An actual Gyroid first-pass FEM override
   still fails quality and remains unranked.
+  Coarse spinodoid diagnostics reject direct snapping, local collapse and
+  collective projection. The existing current 24-cell curved route also fails
+  distance. Do not promote these repairs. Before another large lattice run,
+  assess a reference-only cubic FE enrichment on an analytic solid patch to
+  separate quadratic discretization error from geometric reference uncertainty.
 
 Every heavy stage uses the shared queue, an 8 GiB worker ceiling, conservative
 threads, a timeout and staged mesh caps. Admission gates and frozen outputs
