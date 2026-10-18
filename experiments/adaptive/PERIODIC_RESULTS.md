@@ -467,3 +467,86 @@ diagnosis. The frozen diagnostic drivers and outputs remain unchanged, and the
 pre-change native package remains available locally. The live runner again
 always requires native minimum quality 0.1 as well as independent admission.
 Keep the optimization-pass selector for supported configuration checks.
+
+## Pending wall-projection progress
+
+Job 87 leaves mesh decisions unchanged and traces enforcement's pending queue.
+After four rounds, it stops because no flagged error edge can be split, even
+though that round's pending-projection repair created 118 tetrahedra. Four
+vertices remain pending at an estimated maximum distance of 0.002243. The final
+optimizer then returns the previously measured off-wall corner. The trace does
+not establish that more repair rounds will resolve it. Records are in
+`runs/g3-lattice-projection-progress-v1`, including the temporary native probe
+patch against commit `4a24c1e`.
+
+Job 88 adds a wall-corner constraint check on the same physical fixture. It
+fails with maximum raw field residual 0.004272 while the other 35 Python tests
+pass. Records are in `runs/g3-lattice-projection-red-v1`.
+
+The next experiment counts mesh growth and a shrinking pending queue as real
+progress before applying the existing no-progress stop. It does not increase
+the 16-round bound or change quality, field projection or admission thresholds.
+Temporary probe code is removed before rebuilding. This is one hypothesis,
+not an established geometry fix; the regression and independent audit remain
+pending.
+
+Job 89's progress-aware stopping still fails the wall check at the same four
+vertices and the same maximum residual 0.004272. The other 35 Python tests and
+all 23 core tests pass. Revert this hypothesis rather than ship an unproved
+projection fix. Records are in `runs/g3-lattice-projection-progress-fix-v1`.
+
+The next controlled mesh uses the pinned native package from `4a24c1e` with
+zero final optimizer passes and the normal positive minimum quality. Compare
+it with job 83's one-pass result to test whether final optimization enlarges
+the unfinished corner error. This is not a diagnostic-quality bypass and
+permits no FE solve.
+
+Job 90's pinned zero-pass control has H=0.002273 and maximum corner field
+residual 0.001379, versus H=0.006986 and residual 0.004272 after one optimizer
+pass. Counts and adaptation operation counts agree, but some connectivity
+ordering differs between the generated records, so do not claim a pointwise
+identical-mesh replay from their numeric node IDs. Records are in
+`runs/g3-lattice-projection-before-optimizer-v1`.
+
+Minimize the suspected optimizer classification issue to one tetrahedron with
+an oblique implicit wall and three box-plane caps. A wall vertex starts slightly
+off the level set. Test scalar and batched proposal paths. The optimizer has
+wall-face membership but currently infers whether to project only from near-zero
+field residual. This is a hypothesis until the minimized check runs red.
+
+Retain the larger wall-residual assertion as an experimental diagnostic in
+`runs/g3-lattice-projection-red-v1/projection_test.py`. Exact zero residual is
+not an SDK guarantee for the deliberately loose native tolerance of 1.0. The
+maintained end-to-end test continues to enforce its actual quality and periodic
+contract. Independent experimental admission remains unchanged at distance
+0.002; the lattice is still rejected and receives no solve.
+
+Job 91 reproduces the minimized classification bug. The scalar optimizer moves
+the known wall vertex from 1.02 to 0.995 instead of projecting it to the plane
+at 1.0. The other 23 core tests pass. Records are in
+`runs/g3-optimizer-wall-red-v1`.
+
+The fix shares one projection-level decision between scalar proposals, batched
+proposals and host-validated GPU acceptance. Wall-face membership now preserves
+the implicit constraint even when a vertex starts off the field. The existing
+near-level behavior for other vertices remains. Job 92 passes all 24 core tests
+and 36 Python tests. The minimized check exercises both CPU paths and
+host-validated GPU acceptance, not a GPU performance run.
+
+On the actual lattice, distance improves from 0.006986 to 0.002284 with unchanged
+counts and q_min=0.11744. It still fails 0.002, so no solve runs. Records are in
+`runs/g3-optimizer-wall-fixed-v1`. The next check uses four optimization passes,
+changing no other parameter or admission gate.
+
+Job 93's four-pass version improves quality to 0.16423, but distance remains
+0.002245 and fails. No solve runs. Records are in
+`runs/g3-optimizer-wall-fixed-opt4-v1`. Validate existing coverage before
+committing the classification fix, and keep the remaining projection problem
+separate from that verified correction.
+
+Jobs 94 and 95 validate the existing controls. Schwarz's points, Tet10 and
+six-node surface arrays remain byte-identical to the repeatedly timed mesh.
+Spinodoid remains admitted with the same recorded geometry metrics and counts
+as job 85. Neither control includes a new stiffness solve. Records are in
+`runs/g3-optimizer-wall-schwarz-control-v1` and
+`runs/g3-optimizer-wall-spinodoid-control-v1`.

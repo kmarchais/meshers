@@ -6,6 +6,20 @@ use crate::{Mesh, Point, determinant, dot, norm, sub};
 use rayon::prelude::*;
 use std::collections::BTreeMap;
 
+fn projection_level(
+    value: f64,
+    on_wall: bool,
+    threshold: f64,
+    geometry: &impl crate::geometry::Geometry,
+) -> Option<f64> {
+    let residual = if geometry.band() {
+        (value.abs() - threshold).abs()
+    } else {
+        value.abs()
+    };
+    (on_wall || residual < 1e-8).then_some(geometry.level(value, threshold))
+}
+
 fn project(
     mut p: Point,
     original: Point,
@@ -323,12 +337,7 @@ fn accept_gpu(
     }
     let origin = mesh.points[group.0[0]];
     let value = geometry.value(origin);
-    let level = (if geometry.band() {
-        (value.abs() - threshold).abs()
-    } else {
-        value.abs()
-    } < 1e-8)
-        .then_some(geometry.level(value, threshold));
+    let level = projection_level(value, !group.2.is_empty(), threshold, geometry);
     let Some(candidate) = project(
         std::array::from_fn(|a| origin[a] + delta[a]),
         origin,
@@ -364,12 +373,7 @@ fn proposal(
     let (members, _, faces) = group;
     let original = mesh.points[members[0]];
     let value = geometry.value(original);
-    let level = (if geometry.band() {
-        (value.abs() - threshold).abs()
-    } else {
-        value.abs()
-    } < 1e-8)
-        .then_some(geometry.level(value, threshold));
+    let level = projection_level(value, !faces.is_empty(), threshold, geometry);
     let evaluate = |candidate| {
         evaluate(
             mesh,
@@ -512,6 +516,57 @@ fn evaluate(
 #[cfg(test)]
 mod gpu_acceptance_tests {
     use super::*;
+
+    struct SlantedPlane {
+        batched: bool,
+    }
+
+    impl crate::geometry::Geometry for SlantedPlane {
+        fn value(&self, point: Point) -> f64 {
+            point.iter().sum::<f64>() - 1.
+        }
+        fn gradient(&self, _point: Point) -> Point {
+            [1.; 3]
+        }
+        fn bounds(&self) -> [Point; 2] {
+            [[0.; 3], [2.; 3]]
+        }
+        fn rank(&self, point: Point) -> [i64; 3] {
+            point.map(|coordinate| (coordinate * 1e11).round() as i64)
+        }
+        fn band(&self) -> bool {
+            false
+        }
+        fn batched(&self) -> bool {
+            self.batched
+        }
+    }
+
+    #[test]
+    fn off_field_wall_vertex_keeps_its_boundary_constraint() {
+        use crate::geometry::Geometry;
+
+        for batched in [false, true] {
+            let tetrahedra = vec![[3, 0, 1, 2]];
+            let surface = crate::boundary(&tetrahedra).unwrap();
+            let mut mesh = Mesh {
+                points: vec![[1.02, 0., 0.], [0., 1., 0.], [0., 0., 1.], [0.; 3]],
+                tets: tetrahedra,
+                surface,
+            };
+            let geometry = SlantedPlane { batched };
+            let group = (vec![0], vec![0], vec![[0, 1, 2]]);
+            let delta = accept_gpu(&mesh, &group, 0., 1., 3., [-0.025, 0., 0.], &geometry);
+            assert!((mesh.points[0][0] + delta[0] - 1.).abs() < 1e-12);
+            optimize_for(&mut mesh, 0., 1., 1, 3., 1, None, &geometry).unwrap();
+            assert!(
+                geometry.value(mesh.points[0]).abs() < 1e-12,
+                "batched={batched}: wall vertex moved to {:?}",
+                mesh.points[0]
+            );
+        }
+    }
+
     #[test]
     fn rejects_nonfinite_outside_and_inverting_gpu_moves() {
         let mesh = Mesh {

@@ -1,0 +1,65 @@
+.......................F............                                     [100%]
+=================================== FAILURES ===================================
+______ test_adapted_smooth_lattice_preserves_quality_and_wall_constraints ______
+
+    def test_adapted_smooth_lattice_preserves_quality_and_wall_constraints():
+        corners = (
+            (-0.5, -0.5, -0.5), (-0.5, -0.5, 0.5),
+            (-0.5, 0.5, -0.5), (-0.5, 0.5, 0.5),
+            (0.5, -0.5, -0.5), (0.5, -0.5, 0.5),
+            (0.5, 0.5, -0.5), (0.5, 0.5, 0.5),
+        )
+    
+        def field(coordinates_x, coordinates_y, coordinates_z):
+            distance = None
+            for corner in corners:
+                parameter = np.clip(
+                    (coordinates_x * corner[0] + coordinates_y * corner[1]
+                     + coordinates_z * corner[2]) / 0.75, 0, 1
+                )
+                radius = np.sqrt(
+                    (coordinates_x - parameter * corner[0]) ** 2
+                    + (coordinates_y - parameter * corner[1]) ** 2
+                    + (coordinates_z - parameter * corner[2]) ** 2
+                )
+                if distance is None:
+                    distance = radius
+                else:
+                    difference = np.abs(distance - radius)
+                    blend = np.maximum(0.08 - difference, 0.0) / 0.08
+                    distance = (distance + radius - difference) / 2 - blend ** 3 * 0.08 / 6
+            return np.minimum(distance - 0.12, 0.02)
+    
+        mesh = meshers.generate(
+            field, bounds=BOX, cells=20, periodic=(True, True, True), threads=1,
+            optimize_passes=1, minimum_quality=0.1, geometry_tolerance=1.0,
+            max_tetrahedra=250_000, adapt=True, min_length=0.002, max_length=0.1,
+            gradation=0.3, adapt_iterations=4, quality_guard=0.3,
+            adapt_tolerance=0.004, order=2,
+        )
+        assert mesh.diagnostics["minimum_mmg_quality"] >= 0.1
+        assert mesh.diagnostics["elements_below_quality_01"] == 0
+        assert mesh.diagnostics["quadratic"]["minimum_jacobian_ratio"] > 1e-3
+        face_corners = mesh.points[mesh.surface[:, :3]]
+        caps = np.any(np.all(np.isclose(np.abs(face_corners), 0.5, rtol=0, atol=1e-12), axis=1), axis=1)
+        wall_nodes = np.unique(mesh.surface[~caps, :3])
+>       np.testing.assert_allclose(field(*mesh.points[wall_nodes].T), 0, rtol=0, atol=1e-10)
+E       AssertionError: 
+E       Not equal to tolerance rtol=0, atol=1e-10
+E       
+E       Mismatched elements: 4 / 7454 (0.0537%)
+E       Mismatch at indices:
+E        [6322]: 0.0028130502022043896 (ACTUAL), 0 (DESIRED)
+E        [7368]: 0.004271564269653749 (ACTUAL), 0 (DESIRED)
+E        [7369]: 0.002786985953418128 (ACTUAL), 0 (DESIRED)
+E        [7372]: 0.002697131619119525 (ACTUAL), 0 (DESIRED)
+E       Max absolute difference among violations: 0.00427156
+E       Max relative difference among violations: inf
+E        ACTUAL: array([ 0.000000e+00,  0.000000e+00,  0.000000e+00, ..., -4.163336e-17,
+E              -1.387779e-17,  0.000000e+00], shape=(7454,))
+E        DESIRED: array(0)
+
+crates/meshers-python/tests/test_adaptive.py:128: AssertionError
+=========================== short test summary info ============================
+FAILED crates/meshers-python/tests/test_adaptive.py::test_adapted_smooth_lattice_preserves_quality_and_wall_constraints
+1 failed, 35 passed in 13.02s

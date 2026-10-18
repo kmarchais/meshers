@@ -166,14 +166,8 @@ pub(super) fn proposals(
     let values = g.values(&origins);
     let levels: Vec<_> = values
         .into_iter()
-        .map(|v| {
-            (if g.band() {
-                (v.abs() - threshold).abs()
-            } else {
-                v.abs()
-            } < 1e-8)
-                .then_some(g.level(v, threshold))
-        })
+        .zip(groups)
+        .map(|(value, group)| super::projection_level(value, !group.2.is_empty(), threshold, g))
         .collect();
     let old = evaluate(
         mesh,

@@ -194,3 +194,12 @@ Spinodoid remains admitted, and the repeatedly timed nonadaptive Schwarz mesh
 is byte-for-byte identical in its point and connectivity arrays. Next diagnose
 the stalled corner projection while preserving both quality and geometry gates.
 This does not resolve lattice stiffness uncertainty or complete the four cases.
+
+The optimizer also misclassifies an off-field wall vertex as unconstrained when
+it relies only on a near-zero field residual. A one-tetrahedron regression
+reproduces that defect. Shared wall-topology-based projection selection passes
+24 core and 36 Python tests and reduces the lattice distance failure from
+0.006986 to 0.002284. Four passes reach 0.002245, still above 0.002, so no solve
+runs. Schwarz arrays remain byte-identical and spinodoid admission metrics
+remain unchanged. Continue the remaining wall-projection investigation without
+calling this a lattice reference or a four-fixture win.

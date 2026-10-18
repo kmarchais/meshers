@@ -1,0 +1,68 @@
+diff --git a/crates/meshers-core/src/tet_adapt.rs b/crates/meshers-core/src/tet_adapt.rs
+index cfe2b16..2ab7792 100644
+--- a/crates/meshers-core/src/tet_adapt.rs
++++ b/crates/meshers-core/src/tet_adapt.rs
+@@ -965,9 +965,25 @@ impl<'g, G: Geometry> Tets<'g, G> {
+     }
+ 
+     fn enforce(&mut self, o: &Options, stats: &mut Stats) -> Result<(), String> {
+-        for _ in 0..16 {
++        let diagnostic = std::env::var_os("MESHERS_ENFORCE_DIAGNOSTICS").is_some();
++        for iteration in 0..16 {
+             self.g.check()?;
++            let pending_before = self.pending.len();
++            let tetrahedra_before = self.tets.len();
+             self.settle(o.quality_guard);
++            if diagnostic {
++                let distance = self
++                    .pending
++                    .iter()
++                    .filter(|&&vertex| !self.vt[vertex].is_empty())
++                    .map(|&vertex| self.distance(self.points[vertex], self.locked(vertex, vertex)))
++                    .fold(0., f64::max);
++                eprintln!(
++                    "[DEBUG-g3-enforce-progress] iteration={iteration} phase=after-settle pending_before={pending_before} pending_after={} created_tets={} maximum_pending_distance={distance:.12e}",
++                    self.pending.len(),
++                    self.tets.len() - tetrahedra_before
++                );
++            }
+             let mut flagged = Vec::new();
+             let mut worst = 0f64;
+             let wall: Vec<Face> = self
+@@ -1002,10 +1018,17 @@ impl<'g, G: Geometry> Tets<'g, G> {
+             }
+             stats.maximum_error = worst;
+             if flagged.is_empty() {
++                if diagnostic {
++                    eprintln!(
++                        "[DEBUG-g3-enforce-progress] iteration={iteration} stop=no-flagged-edges pending={} maximum_face_error={worst:.12e}",
++                        self.pending.len()
++                    );
++                }
+                 return Ok(());
+             }
+             flagged.sort_by(|a, b| b.0.total_cmp(&a.0));
+             flagged.dedup_by_key(|e| e.1);
++            let flagged_count = flagged.len();
+             let mut progress = false;
+             for (_, [a, b]) in flagged {
+                 if self.shell(a, b).is_empty() || self.length(a, b) < o.min_length {
+@@ -1016,7 +1039,18 @@ impl<'g, G: Geometry> Tets<'g, G> {
+                     progress = true;
+                 }
+             }
++            if diagnostic {
++                eprintln!(
++                    "[DEBUG-g3-enforce-progress] iteration={iteration} phase=after-error-splits flagged={flagged_count} accepted_any={progress} pending={} maximum_face_error={worst:.12e}",
++                    self.pending.len()
++                );
++            }
+             if !progress {
++                if diagnostic {
++                    eprintln!(
++                        "[DEBUG-g3-enforce-progress] iteration={iteration} stop=no-accepted-error-splits"
++                    );
++                }
+                 return Ok(());
+             }
+         }
