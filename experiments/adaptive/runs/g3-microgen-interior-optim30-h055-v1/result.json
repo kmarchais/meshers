@@ -1,0 +1,89 @@
+{
+  "case": "schwarz-solid",
+  "route": "microgen-vtk-mmg-interior-optimization-override",
+  "resolution": 30,
+  "mmg_arguments": {
+    "hausd": 0.0005,
+    "hmax": 0.06,
+    "hgrad": 1.3
+  },
+  "status": "microgen-mmg-failed",
+  "mmg_calls": [
+    {
+      "nofem": true,
+      "hausd": 0.0005,
+      "hmax": 0.055,
+      "hgrad": 1.3
+    },
+    {
+      "optim": true,
+      "nosurf": true,
+      "noinsert": true
+    },
+    {
+      "nofem": true,
+      "hausd": 0.0005,
+      "hmax": 0.055,
+      "hgrad": 1.3
+    },
+    {
+      "optim": true,
+      "nosurf": true,
+      "noinsert": true
+    },
+    {
+      "nofem": true,
+      "hausd": 0.0005,
+      "hmax": 0.055,
+      "hgrad": 1.3
+    },
+    {
+      "optim": true,
+      "nosurf": true,
+      "noinsert": true
+    },
+    {
+      "nofem": true,
+      "hausd": 0.0005,
+      "hmax": 0.055,
+      "hgrad": 1.3
+    },
+    {
+      "optim": true,
+      "nosurf": true,
+      "noinsert": true
+    },
+    {
+      "nofem": true,
+      "hausd": 0.0005,
+      "hmax": 0.055,
+      "hgrad": 1.3
+    },
+    {
+      "optim": true,
+      "nosurf": true,
+      "noinsert": true
+    }
+  ],
+  "stage_audit_enabled": true,
+  "timing_comparable": false,
+  "first_pass_hausd_override": 0.0005,
+  "first_pass_hmax_override": 0.055,
+  "first_pass_only": false,
+  "optimize_second_pass": true,
+  "specimen_setup_s": 0.0047374699997817515,
+  "seed_nodes": 18640,
+  "seed_elements": 86876,
+  "vtk_extraction_s": 0.11382253400006448,
+  "replaced_second_pass": {
+    "hausd": 0.0005,
+    "hgrad": 1.3,
+    "hmax": 0.06,
+    "hmin": null,
+    "hsiz": null,
+    "ls": true,
+    "nr": true
+  },
+  "error": "mmg command 'mmg3d_O3 -in /tmp/tmpzj1cg9re.mesh -out /tmp/tmp2ibcf8ig.mesh -noinsert -nosurf -optim' failed",
+  "total_workflow_s": 38.300395492999996
+}

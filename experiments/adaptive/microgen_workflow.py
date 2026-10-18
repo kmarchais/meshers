@@ -230,7 +230,7 @@ def on_box_plane(coordinates, value):
     return np.isclose(coordinates, value, atol=1e-12, rtol=0)
 
 
-def geometry(run, name, points, tets, surface, detail_count=0):
+def geometry(run, name, points, tets, surface, detail_count=0, reverse_subdivisions=(4, 8)):
     np, fd, _, _, _, scorecard = imports()
     case, _, _ = specimen(name)
     samples = np.load(run / f"{name}-samples.npz")
@@ -260,7 +260,7 @@ def geometry(run, name, points, tets, surface, detail_count=0):
     outside = (values < case.levels[0]) | (values > case.levels[1])
     queries = np.concatenate([samples["walls"], samples["caps"]])
     reverse_values = []
-    for divisions in ((4, 8) if surface.shape[1] == 6 else (1,)):
+    for divisions in (reverse_subdivisions if surface.shape[1] == 6 else (1,)):
         vertices, faces = tessellate(points, surface, divisions)
         reverse_values.append(scorecard.distance_to_mesh(vertices, faces, queries))
     quality, angles, corner_volumes = scorecard.tet_metrics(points, tets[:, :4])
@@ -287,7 +287,7 @@ def geometry(run, name, points, tets, surface, detail_count=0):
            "minimum_dihedral_deg_corner": float(angles[np.isfinite(angles)].min()) if np.isfinite(angles).any() else None,
            "minimum_sampled_jacobian": minimum,
            "reverse_tessellation_delta_max": float(np.max(np.abs(reverse_values[-1] - reverse_values[0]))),
-           "quadratic_reverse_subdivisions": [4, 8] if tets.shape[1] == 10 else None}
+           "quadratic_reverse_subdivisions": list(reverse_subdivisions) if tets.shape[1] == 10 else None}
     row["geometry_admitted"] = bool(row["sampled_two_sided_max"] <= 0.002 and
                                     abs(row["relative_volume_error"]) <= 0.01 and
                                     row["q_min_corner"] >= 0.1 and not failed.any() and minimum > 0)

@@ -157,3 +157,22 @@ unproven. The 189,187-node reference peaks at 6.56 GiB under the hard 8 GiB
 ceiling. Stop blind grid refinement and return to the genuine Microgen first-pass
 diagnostic on the cap-feasible default Schwarz seed. A matched-accuracy workflow
 victory remains unestablished.
+
+## Schwarz matched-target result, 2026-10-18
+
+A cap-feasible 30-point actual VTK seed and explicitly modified one-pass MMG
+recipe now meet all admission gates and the 1% stiffness target. The default
+two-pass pipeline still fails. Against that labeled comparator, an eight-cell
+curved Meshers mesh passes at 0.25870% stiffness disagreement with 6,864 nodes,
+versus 0.92806% and 32,070 nodes for Microgen. Five interleaved live pairs with
+the same prescribed-strain CG helper give median total times of 7.7916 and
+40.5036 seconds. Meshers is faster in every pair by factors 5.1155 to 5.2908.
+Independent saved-field integration agrees within 1.32e-11 relative.
+See `MICROGEN_RESULTS.md` and `runs/g3-schwarz-matched-v1`.
+
+This is one supported matched-target result, not a four-fixture completion.
+Gyroid and spinodoid still need admitted comparators; lattice still lacks a
+stable stiffness reference. Its adaptive quality rejection blocks useful graded
+reference meshes. Next reproduce that rejection in a regression test before
+testing a single seed-quality hypothesis. Do not raise resource limits or remove
+slow-order reference models to claim a global win.

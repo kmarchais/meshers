@@ -1,0 +1,560 @@
+{
+  "case": "schwarz-solid",
+  "rows": [
+    {
+      "phase": "warmup",
+      "arm": "microgen",
+      "source": "experiments/adaptive/runs/g3-schwarz-matched-v1/warmup-microgen",
+      "nodes": 32070,
+      "elements": 154012,
+      "geometry": {
+        "sampled_forward_max": 0.0009615151058020022,
+        "sampled_reverse_max": 0.0008398485125722161,
+        "sampled_two_sided_max": 0.0009615151058020022,
+        "outward_forward_max": 0.0009615151058020022,
+        "inward_forward_max": 0.0008341572895187741,
+        "projection_failed": 0,
+        "forward_samples": 205322,
+        "reverse_samples": 50135,
+        "volume": 0.49994918744176614,
+        "relative_volume_error": -0.00010162511646771843,
+        "q_min_corner": 0.10701011270793916,
+        "q_p01_corner": 0.49117525405143503,
+        "minimum_dihedral_deg_corner": 4.939444177810998,
+        "minimum_sampled_jacobian": 2.8441644410425245e-08,
+        "reverse_tessellation_delta_max": 0.0,
+        "quadratic_reverse_subdivisions": null,
+        "geometry_admitted": true
+      },
+      "stiffness_disagreement": {
+        "worst_relative_strain_energy_difference": 0.009280590310373597,
+        "relative_tensor_frobenius_difference": 0.004411927447060218,
+        "relative_energy_difference_eigenvalues": [
+          0.0032176840373860606,
+          0.004540774999650596,
+          0.00458096140800402,
+          0.008887648041620804,
+          0.009118730094346696,
+          0.009280590310373597
+        ]
+      },
+      "generation_s": 7.582838031999927,
+      "solve_s": 31.039510190999863,
+      "total_workflow_s": 40.289304899000854
+    },
+    {
+      "phase": "warmup",
+      "arm": "meshers",
+      "source": "experiments/adaptive/runs/g3-schwarz-matched-v1/warmup-meshers",
+      "nodes": 6864,
+      "elements": 3852,
+      "geometry": {
+        "sampled_forward_max": 0.0009636734510676229,
+        "sampled_reverse_max": 0.0009366366510957007,
+        "sampled_two_sided_max": 0.0009636734510676229,
+        "outward_forward_max": 0.0009636734510676229,
+        "inward_forward_max": 0.000761733700587362,
+        "projection_failed": 0,
+        "forward_samples": 11076,
+        "reverse_samples": 50135,
+        "volume": 0.4999955430696897,
+        "relative_volume_error": -8.913860620629599e-06,
+        "q_min_corner": 0.4784002758854627,
+        "q_p01_corner": 0.522298924912719,
+        "minimum_dihedral_deg_corner": 26.40359320322898,
+        "minimum_sampled_jacobian": 5.573595696364211e-05,
+        "reverse_tessellation_delta_max": 0.0006643348453112493,
+        "quadratic_reverse_subdivisions": [
+          4,
+          8
+        ],
+        "geometry_admitted": true
+      },
+      "stiffness_disagreement": {
+        "worst_relative_strain_energy_difference": 0.0025870300926195172,
+        "relative_tensor_frobenius_difference": 0.0013324714145804626,
+        "relative_energy_difference_eigenvalues": [
+          0.0011181977885757447,
+          0.0013606038323482712,
+          0.001384181129349657,
+          0.0024848576007880994,
+          0.002516775394376254,
+          0.0025870300926195172
+        ]
+      },
+      "generation_s": 0.059022492001531646,
+      "solve_s": 6.673093421999511,
+      "total_workflow_s": 7.747525188000509
+    },
+    {
+      "phase": "repeat-1",
+      "arm": "microgen",
+      "source": "experiments/adaptive/runs/g3-schwarz-matched-v1/repeat-1-microgen",
+      "nodes": 32070,
+      "elements": 154012,
+      "geometry": {
+        "sampled_forward_max": 0.0009615151058020022,
+        "sampled_reverse_max": 0.0008398485125722161,
+        "sampled_two_sided_max": 0.0009615151058020022,
+        "outward_forward_max": 0.0009615151058020022,
+        "inward_forward_max": 0.0008341572895187741,
+        "projection_failed": 0,
+        "forward_samples": 205322,
+        "reverse_samples": 50135,
+        "volume": 0.49994918744176614,
+        "relative_volume_error": -0.00010162511646771843,
+        "q_min_corner": 0.10701011270793916,
+        "q_p01_corner": 0.49117525405143503,
+        "minimum_dihedral_deg_corner": 4.939444177810998,
+        "minimum_sampled_jacobian": 2.8441644410425245e-08,
+        "reverse_tessellation_delta_max": 0.0,
+        "quadratic_reverse_subdivisions": null,
+        "geometry_admitted": true
+      },
+      "stiffness_disagreement": {
+        "worst_relative_strain_energy_difference": 0.009280590310373597,
+        "relative_tensor_frobenius_difference": 0.004411927447060218,
+        "relative_energy_difference_eigenvalues": [
+          0.0032176840373860606,
+          0.004540774999650596,
+          0.00458096140800402,
+          0.008887648041620804,
+          0.009118730094346696,
+          0.009280590310373597
+        ]
+      },
+      "generation_s": 7.816377322000335,
+      "solve_s": 31.040570148999905,
+      "total_workflow_s": 40.50360625200119
+    },
+    {
+      "phase": "repeat-1",
+      "arm": "meshers",
+      "source": "experiments/adaptive/runs/g3-schwarz-matched-v1/repeat-1-meshers",
+      "nodes": 6864,
+      "elements": 3852,
+      "geometry": {
+        "sampled_forward_max": 0.0009636734510676229,
+        "sampled_reverse_max": 0.0009366366510957007,
+        "sampled_two_sided_max": 0.0009636734510676229,
+        "outward_forward_max": 0.0009636734510676229,
+        "inward_forward_max": 0.000761733700587362,
+        "projection_failed": 0,
+        "forward_samples": 11076,
+        "reverse_samples": 50135,
+        "volume": 0.4999955430696897,
+        "relative_volume_error": -8.913860620629599e-06,
+        "q_min_corner": 0.4784002758854627,
+        "q_p01_corner": 0.522298924912719,
+        "minimum_dihedral_deg_corner": 26.40359320322898,
+        "minimum_sampled_jacobian": 5.573595696364211e-05,
+        "reverse_tessellation_delta_max": 0.0006643348453112493,
+        "quadratic_reverse_subdivisions": [
+          4,
+          8
+        ],
+        "geometry_admitted": true
+      },
+      "stiffness_disagreement": {
+        "worst_relative_strain_energy_difference": 0.0025870300926195172,
+        "relative_tensor_frobenius_difference": 0.0013324714145804626,
+        "relative_energy_difference_eigenvalues": [
+          0.0011181977885757447,
+          0.0013606038323482712,
+          0.001384181129349657,
+          0.0024848576007880994,
+          0.002516775394376254,
+          0.0025870300926195172
+        ]
+      },
+      "generation_s": 0.051894857999286614,
+      "solve_s": 6.700786071000039,
+      "total_workflow_s": 7.7784637629993085
+    },
+    {
+      "phase": "repeat-2",
+      "arm": "meshers",
+      "source": "experiments/adaptive/runs/g3-schwarz-matched-v1/repeat-2-meshers",
+      "nodes": 6864,
+      "elements": 3852,
+      "geometry": {
+        "sampled_forward_max": 0.0009636734510676229,
+        "sampled_reverse_max": 0.0009366366510957007,
+        "sampled_two_sided_max": 0.0009636734510676229,
+        "outward_forward_max": 0.0009636734510676229,
+        "inward_forward_max": 0.000761733700587362,
+        "projection_failed": 0,
+        "forward_samples": 11076,
+        "reverse_samples": 50135,
+        "volume": 0.4999955430696897,
+        "relative_volume_error": -8.913860620629599e-06,
+        "q_min_corner": 0.4784002758854627,
+        "q_p01_corner": 0.522298924912719,
+        "minimum_dihedral_deg_corner": 26.40359320322898,
+        "minimum_sampled_jacobian": 5.573595696364211e-05,
+        "reverse_tessellation_delta_max": 0.0006643348453112493,
+        "quadratic_reverse_subdivisions": [
+          4,
+          8
+        ],
+        "geometry_admitted": true
+      },
+      "stiffness_disagreement": {
+        "worst_relative_strain_energy_difference": 0.0025870300926195172,
+        "relative_tensor_frobenius_difference": 0.0013324714145804626,
+        "relative_energy_difference_eigenvalues": [
+          0.0011181977885757447,
+          0.0013606038323482712,
+          0.001384181129349657,
+          0.0024848576007880994,
+          0.002516775394376254,
+          0.0025870300926195172
+        ]
+      },
+      "generation_s": 0.061555983000289416,
+      "solve_s": 6.770264176999262,
+      "total_workflow_s": 7.880295777000356
+    },
+    {
+      "phase": "repeat-2",
+      "arm": "microgen",
+      "source": "experiments/adaptive/runs/g3-schwarz-matched-v1/repeat-2-microgen",
+      "nodes": 32070,
+      "elements": 154012,
+      "geometry": {
+        "sampled_forward_max": 0.0009615151058020022,
+        "sampled_reverse_max": 0.0008398485125722161,
+        "sampled_two_sided_max": 0.0009615151058020022,
+        "outward_forward_max": 0.0009615151058020022,
+        "inward_forward_max": 0.0008341572895187741,
+        "projection_failed": 0,
+        "forward_samples": 205322,
+        "reverse_samples": 50135,
+        "volume": 0.49994918744176614,
+        "relative_volume_error": -0.00010162511646771843,
+        "q_min_corner": 0.10701011270793916,
+        "q_p01_corner": 0.49117525405143503,
+        "minimum_dihedral_deg_corner": 4.939444177810998,
+        "minimum_sampled_jacobian": 2.8441644410425245e-08,
+        "reverse_tessellation_delta_max": 0.0,
+        "quadratic_reverse_subdivisions": null,
+        "geometry_admitted": true
+      },
+      "stiffness_disagreement": {
+        "worst_relative_strain_energy_difference": 0.009280590310373597,
+        "relative_tensor_frobenius_difference": 0.004411927447060218,
+        "relative_energy_difference_eigenvalues": [
+          0.0032176840373860606,
+          0.004540774999650596,
+          0.00458096140800402,
+          0.008887648041620804,
+          0.009118730094346696,
+          0.009280590310373597
+        ]
+      },
+      "generation_s": 7.7208437909994245,
+      "solve_s": 30.94640792700011,
+      "total_workflow_s": 40.31150114999946
+    },
+    {
+      "phase": "repeat-3",
+      "arm": "microgen",
+      "source": "experiments/adaptive/runs/g3-schwarz-matched-v1/repeat-3-microgen",
+      "nodes": 32070,
+      "elements": 154012,
+      "geometry": {
+        "sampled_forward_max": 0.0009615151058020022,
+        "sampled_reverse_max": 0.0008398485125722161,
+        "sampled_two_sided_max": 0.0009615151058020022,
+        "outward_forward_max": 0.0009615151058020022,
+        "inward_forward_max": 0.0008341572895187741,
+        "projection_failed": 0,
+        "forward_samples": 205322,
+        "reverse_samples": 50135,
+        "volume": 0.49994918744176614,
+        "relative_volume_error": -0.00010162511646771843,
+        "q_min_corner": 0.10701011270793916,
+        "q_p01_corner": 0.49117525405143503,
+        "minimum_dihedral_deg_corner": 4.939444177810998,
+        "minimum_sampled_jacobian": 2.8441644410425245e-08,
+        "reverse_tessellation_delta_max": 0.0,
+        "quadratic_reverse_subdivisions": null,
+        "geometry_admitted": true
+      },
+      "stiffness_disagreement": {
+        "worst_relative_strain_energy_difference": 0.009280590310373597,
+        "relative_tensor_frobenius_difference": 0.004411927447060218,
+        "relative_energy_difference_eigenvalues": [
+          0.0032176840373860606,
+          0.004540774999650596,
+          0.00458096140800402,
+          0.008887648041620804,
+          0.009118730094346696,
+          0.009280590310373597
+        ]
+      },
+      "generation_s": 7.6607994259993575,
+      "solve_s": 31.99723971000094,
+      "total_workflow_s": 41.287628912999935
+    },
+    {
+      "phase": "repeat-3",
+      "arm": "meshers",
+      "source": "experiments/adaptive/runs/g3-schwarz-matched-v1/repeat-3-meshers",
+      "nodes": 6864,
+      "elements": 3852,
+      "geometry": {
+        "sampled_forward_max": 0.0009636734510676229,
+        "sampled_reverse_max": 0.0009366366510957007,
+        "sampled_two_sided_max": 0.0009636734510676229,
+        "outward_forward_max": 0.0009636734510676229,
+        "inward_forward_max": 0.000761733700587362,
+        "projection_failed": 0,
+        "forward_samples": 11076,
+        "reverse_samples": 50135,
+        "volume": 0.4999955430696897,
+        "relative_volume_error": -8.913860620629599e-06,
+        "q_min_corner": 0.4784002758854627,
+        "q_p01_corner": 0.522298924912719,
+        "minimum_dihedral_deg_corner": 26.40359320322898,
+        "minimum_sampled_jacobian": 5.573595696364211e-05,
+        "reverse_tessellation_delta_max": 0.0006643348453112493,
+        "quadratic_reverse_subdivisions": [
+          4,
+          8
+        ],
+        "geometry_admitted": true
+      },
+      "stiffness_disagreement": {
+        "worst_relative_strain_energy_difference": 0.0025870300926195172,
+        "relative_tensor_frobenius_difference": 0.0013324714145804626,
+        "relative_energy_difference_eigenvalues": [
+          0.0011181977885757447,
+          0.0013606038323482712,
+          0.001384181129349657,
+          0.0024848576007880994,
+          0.002516775394376254,
+          0.0025870300926195172
+        ]
+      },
+      "generation_s": 0.06008026599920413,
+      "solve_s": 6.724537559000964,
+      "total_workflow_s": 7.8039460700001655
+    },
+    {
+      "phase": "repeat-4",
+      "arm": "meshers",
+      "source": "experiments/adaptive/runs/g3-schwarz-matched-v1/repeat-4-meshers",
+      "nodes": 6864,
+      "elements": 3852,
+      "geometry": {
+        "sampled_forward_max": 0.0009636734510676229,
+        "sampled_reverse_max": 0.0009366366510957007,
+        "sampled_two_sided_max": 0.0009636734510676229,
+        "outward_forward_max": 0.0009636734510676229,
+        "inward_forward_max": 0.000761733700587362,
+        "projection_failed": 0,
+        "forward_samples": 11076,
+        "reverse_samples": 50135,
+        "volume": 0.4999955430696897,
+        "relative_volume_error": -8.913860620629599e-06,
+        "q_min_corner": 0.4784002758854627,
+        "q_p01_corner": 0.522298924912719,
+        "minimum_dihedral_deg_corner": 26.40359320322898,
+        "minimum_sampled_jacobian": 5.573595696364211e-05,
+        "reverse_tessellation_delta_max": 0.0006643348453112493,
+        "quadratic_reverse_subdivisions": [
+          4,
+          8
+        ],
+        "geometry_admitted": true
+      },
+      "stiffness_disagreement": {
+        "worst_relative_strain_energy_difference": 0.0025870300926195172,
+        "relative_tensor_frobenius_difference": 0.0013324714145804626,
+        "relative_energy_difference_eigenvalues": [
+          0.0011181977885757447,
+          0.0013606038323482712,
+          0.001384181129349657,
+          0.0024848576007880994,
+          0.002516775394376254,
+          0.0025870300926195172
+        ]
+      },
+      "generation_s": 0.0638456420001603,
+      "solve_s": 6.704322214000058,
+      "total_workflow_s": 7.791552786999091
+    },
+    {
+      "phase": "repeat-4",
+      "arm": "microgen",
+      "source": "experiments/adaptive/runs/g3-schwarz-matched-v1/repeat-4-microgen",
+      "nodes": 32070,
+      "elements": 154012,
+      "geometry": {
+        "sampled_forward_max": 0.0009615151058020022,
+        "sampled_reverse_max": 0.0008398485125722161,
+        "sampled_two_sided_max": 0.0009615151058020022,
+        "outward_forward_max": 0.0009615151058020022,
+        "inward_forward_max": 0.0008341572895187741,
+        "projection_failed": 0,
+        "forward_samples": 205322,
+        "reverse_samples": 50135,
+        "volume": 0.49994918744176614,
+        "relative_volume_error": -0.00010162511646771843,
+        "q_min_corner": 0.10701011270793916,
+        "q_p01_corner": 0.49117525405143503,
+        "minimum_dihedral_deg_corner": 4.939444177810998,
+        "minimum_sampled_jacobian": 2.8441644410425245e-08,
+        "reverse_tessellation_delta_max": 0.0,
+        "quadratic_reverse_subdivisions": null,
+        "geometry_admitted": true
+      },
+      "stiffness_disagreement": {
+        "worst_relative_strain_energy_difference": 0.009280590310373597,
+        "relative_tensor_frobenius_difference": 0.004411927447060218,
+        "relative_energy_difference_eigenvalues": [
+          0.0032176840373860606,
+          0.004540774999650596,
+          0.00458096140800402,
+          0.008887648041620804,
+          0.009118730094346696,
+          0.009280590310373597
+        ]
+      },
+      "generation_s": 7.733140386000741,
+      "solve_s": 31.857885702000203,
+      "total_workflow_s": 41.223771131999456
+    },
+    {
+      "phase": "repeat-5",
+      "arm": "microgen",
+      "source": "experiments/adaptive/runs/g3-schwarz-matched-v1/repeat-5-microgen",
+      "nodes": 32070,
+      "elements": 154012,
+      "geometry": {
+        "sampled_forward_max": 0.0009615151058020022,
+        "sampled_reverse_max": 0.0008398485125722161,
+        "sampled_two_sided_max": 0.0009615151058020022,
+        "outward_forward_max": 0.0009615151058020022,
+        "inward_forward_max": 0.0008341572895187741,
+        "projection_failed": 0,
+        "forward_samples": 205322,
+        "reverse_samples": 50135,
+        "volume": 0.49994918744176614,
+        "relative_volume_error": -0.00010162511646771843,
+        "q_min_corner": 0.10701011270793916,
+        "q_p01_corner": 0.49117525405143503,
+        "minimum_dihedral_deg_corner": 4.939444177810998,
+        "minimum_sampled_jacobian": 2.8441644410425245e-08,
+        "reverse_tessellation_delta_max": 0.0,
+        "quadratic_reverse_subdivisions": null,
+        "geometry_admitted": true
+      },
+      "stiffness_disagreement": {
+        "worst_relative_strain_energy_difference": 0.009280590310373597,
+        "relative_tensor_frobenius_difference": 0.004411927447060218,
+        "relative_energy_difference_eigenvalues": [
+          0.0032176840373860606,
+          0.004540774999650596,
+          0.00458096140800402,
+          0.008887648041620804,
+          0.009118730094346696,
+          0.009280590310373597
+        ]
+      },
+      "generation_s": 7.638673907000339,
+      "solve_s": 31.023292023000977,
+      "total_workflow_s": 40.25875106600142
+    },
+    {
+      "phase": "repeat-5",
+      "arm": "meshers",
+      "source": "experiments/adaptive/runs/g3-schwarz-matched-v1/repeat-5-meshers",
+      "nodes": 6864,
+      "elements": 3852,
+      "geometry": {
+        "sampled_forward_max": 0.0009636734510676229,
+        "sampled_reverse_max": 0.0009366366510957007,
+        "sampled_two_sided_max": 0.0009636734510676229,
+        "outward_forward_max": 0.0009636734510676229,
+        "inward_forward_max": 0.000761733700587362,
+        "projection_failed": 0,
+        "forward_samples": 11076,
+        "reverse_samples": 50135,
+        "volume": 0.4999955430696897,
+        "relative_volume_error": -8.913860620629599e-06,
+        "q_min_corner": 0.4784002758854627,
+        "q_p01_corner": 0.522298924912719,
+        "minimum_dihedral_deg_corner": 26.40359320322898,
+        "minimum_sampled_jacobian": 5.573595696364211e-05,
+        "reverse_tessellation_delta_max": 0.0006643348453112493,
+        "quadratic_reverse_subdivisions": [
+          4,
+          8
+        ],
+        "geometry_admitted": true
+      },
+      "stiffness_disagreement": {
+        "worst_relative_strain_energy_difference": 0.0025870300926195172,
+        "relative_tensor_frobenius_difference": 0.0013324714145804626,
+        "relative_energy_difference_eigenvalues": [
+          0.0011181977885757447,
+          0.0013606038323482712,
+          0.001384181129349657,
+          0.0024848576007880994,
+          0.002516775394376254,
+          0.0025870300926195172
+        ]
+      },
+      "generation_s": 0.052099618998909136,
+      "solve_s": 6.64117995199922,
+      "total_workflow_s": 7.683806316999835
+    }
+  ],
+  "statistics": {
+    "microgen": {
+      "generation_s": {
+        "median": 7.7208437909994245,
+        "minimum": 7.638673907000339,
+        "maximum": 7.816377322000335
+      },
+      "solve_s": {
+        "median": 31.040570148999905,
+        "minimum": 30.94640792700011,
+        "maximum": 31.99723971000094
+      },
+      "total_workflow_s": {
+        "median": 40.50360625200119,
+        "minimum": 40.25875106600142,
+        "maximum": 41.287628912999935
+      }
+    },
+    "meshers": {
+      "generation_s": {
+        "median": 0.06008026599920413,
+        "minimum": 0.051894857999286614,
+        "maximum": 0.0638456420001603
+      },
+      "solve_s": {
+        "median": 6.704322214000058,
+        "minimum": 6.64117995199922,
+        "maximum": 6.770264176999262
+      },
+      "total_workflow_s": {
+        "median": 7.791552786999091,
+        "minimum": 7.683806316999835,
+        "maximum": 7.880295777000356
+      }
+    }
+  },
+  "paired_workflow_speedups": [
+    5.20714725762036,
+    5.115480724423275,
+    5.290609204965849,
+    5.290828703719371,
+    5.239428143436152
+  ],
+  "all_pairs_meshers_faster": true,
+  "scope": "One-specimen matched 1 percent target against explicit one-pass Microgen variant; not default pipeline or four-fixture victory"
+}

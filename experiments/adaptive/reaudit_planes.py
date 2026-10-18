@@ -31,7 +31,8 @@ def worker(args):
     assert not workflow.on_box_plane(0.5 - 1e-6, 0.5)
     assert workflow.on_box_plane(0.5 + 1e-13, 0.5)
     metrics = workflow.geometry(mesh_path.parent, row["case"], points, mesh["tetrahedra"], surface,
-                                detail_count=args.boundary_details)
+                                detail_count=args.boundary_details,
+                                reverse_subdivisions=tuple(args.reverse_subdivisions or (4, 8)))
     workflow.save(args.run / (args.source.stem + ".json"), {"source": str(args.source),
         "case": row["case"], "previous_geometry": row["geometry"], "geometry": metrics,
         "near_plane_vertex_coordinate_locks_removed": int((loose & ~strict).sum())})
@@ -45,7 +46,11 @@ def main():
     parser.add_argument("--curved-only", action="store_true")
     parser.add_argument("--boundary-details", type=int, default=0)
     parser.add_argument("--sources", nargs="+", type=Path)
+    parser.add_argument("--reverse-subdivisions", nargs="+", type=int)
     args = parser.parse_args()
+    assert args.reverse_subdivisions is None or (
+        min(args.reverse_subdivisions) > 0
+        and args.reverse_subdivisions == sorted(set(args.reverse_subdivisions)))
     if args.source:
         worker(args)
         return
@@ -70,12 +75,16 @@ def main():
             inputs[str(path)] = workflow.digest(path)
     workflow.save(args.run / "manifest.json", {"script_sha256": workflow.digest(Path(__file__)),
         "geometry_source_sha256": workflow.digest(Path(workflow.__file__)), "inputs": inputs,
-        "plane_absolute_tolerance": 1e-12, "plane_relative_tolerance": 0})
+        "plane_absolute_tolerance": 1e-12, "plane_relative_tolerance": 0,
+        "quadratic_reverse_subdivisions": args.reverse_subdivisions or [4, 8]})
     with Job(parts=[source.stem for source in sources]) as job:
         for source in sources:
             with job.part(source.stem) as part:
-                result = workflow.bounded([sys.executable, __file__, "--run", str(args.run),
-                    "--source", str(source), "--boundary-details", str(args.boundary_details)],
+                command = [sys.executable, __file__, "--run", str(args.run),
+                    "--source", str(source), "--boundary-details", str(args.boundary_details)]
+                if args.reverse_subdivisions:
+                    command.extend(["--reverse-subdivisions", *map(str, args.reverse_subdivisions)])
+                result = workflow.bounded(command,
                     args.run / (source.name + ".log"), part, timeout=180)
                 workflow.save(args.run / (source.name + "-worker.json"), result)
                 assert result["returncode"] == 0, f"Read {source.name}.log"

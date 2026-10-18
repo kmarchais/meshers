@@ -418,3 +418,111 @@ in `runs/g3-microgen-singlepass30-v1`.
 Select the other screened cap-feasible seed, 38 points, for the next one-pass
 candidate with unchanged MMG settings. Keep the standard two-pass failures and
 the explicit omission of its second native call visible in the records.
+
+Job 68's 38-point one-pass alternative rejects at minimum quality 0.09785,
+despite H=0.0005868 and matching periodic caps. Its 31,172 nodes and 141,591
+tets receive no FEA. Records are in `runs/g3-microgen-singlepass38-v1`.
+The next candidate returns to the geometry-admitted 30-point route and reduces
+only first-pass hmax from 0.06 to 0.055, seeking the missing stiffness accuracy
+without changing the seed, quality floor or other MMG settings.
+
+Job 69's hmax=0.055 candidate rejects quality at 0.08943. It has 31,949 nodes,
+153,277 tets and unchanged H=0.0009615. No FEA runs. Records are in
+`runs/g3-microgen-singlepass30-h055-v1`.
+
+The next diagnostic replaces the original second level-set call with MMG's
+interior optimization, `optim=True, nosurf=True, noinsert=True`. The installed
+CLI documents those switches as mesh optimization, no surface modifications,
+and no point insertion or deletion. It is an explicit modified two-pass recipe,
+not a public Microgen default. The purpose is to repair measured quality defects
+without coarsening the refined first-pass mesh or changing its surface. All
+output admission gates and the full stiffness target remain fixed.
+
+Job 70 fails all five API retries before optimization. MMG reports that its
+optimization option cannot be used with an input metric. The first pass leaves
+an automatically discovered sibling `.sol` file. This is an unsupported call
+combination, not evidence about optimized mesh quality. Records, including raw
+native errors, are in `runs/g3-microgen-interior-optim30-h055-v1`.
+The corrected explicit optimization variant hashes and removes only that fresh
+temporary metric before calling MMG. No frozen input or saved output is removed.
+
+Job 71's corrected optimization runs but worsens minimum quality from 0.08943
+to 0.08610 at the same 31,949 nodes. It remains rejected and receives no FEA.
+Records are in `runs/g3-microgen-interior-optim30-h055-v2`. Discard this modified
+optimization recipe rather than weaken quality admission. The next candidate
+returns to the original one-pass variant at hmax=0.05, with intermediate audits
+to enforce the unchanged 250,000-tet cap before any solve.
+
+Job 72's hmax=0.05 one-pass variant passes geometry, quality and periodic gates
+with 32,070 nodes and 154,012 tets. H=0.0009615, volume error=-0.01016%,
+q_min=0.10701, and all six loads converge. Worst mixed-load disagreement is
+0.92806%, below 1% against the justified Schwarz reference. This is the first
+tested Microgen-derived variant to meet both admission and the stiffness target.
+It is explicitly a modified one-pass recipe, not the default two-pass pipeline.
+Records are in `runs/g3-microgen-singlepass30-h050-v1`.
+
+Its 48.45-second total includes intermediate audits, so it is not a comparable
+workflow timing. Before repeated timing, test a coarser eight-cell curved Meshers
+candidate. The existing 12-cell candidate is much more accurate than the target,
+and its FE solve dominates total cost. Independent geometry and stiffness
+admission must still pass. Paired live timing must use the same six-load
+formulation and solver, not mix the stress-controlled Microgen screen with the
+strain-controlled Meshers admission runner.
+
+## Schwarz matched-target timing protocol
+
+Job 73's eight-cell curved Meshers candidate passes independent admission with
+6,864 nodes, 3,852 Tet10 elements, H=0.0009637, volume error=-0.0008914% and
+q_min=0.47840. All sampled Jacobians are positive and periodic nodes and caps
+match. Its complete six-load tensor differs from the justified reference by
+0.25870% in the worst mixed load. Its single pilot takes 7.84 seconds total.
+Job 74 repeats reverse distance at eight and sixteen subdivisions, retaining
+the same admitted maximum. The subdivision difference drops to 0.0001922.
+Records are in `runs/g3-schwarz-curved8-pilot-v1` and
+`runs/g3-schwarz-curved8-distance-v1`.
+
+The paired experiment declares one warm-up per arm and five live repetitions,
+alternating arm order between pairs. It regenerates both specimens and meshes,
+audits geometry and periodicity, serializes meshes and displacement fields,
+and solves six prescribed engineering strains with the same strict CG helper.
+There is no saved-mesh timing replay. Fresh worker processes use one thread,
+the hard 8 GiB ceiling, 250,000-tet and 100,000-node caps and 600-second timeout.
+Imports and fine-reference computation are excluded consistently from reported
+workflow time. Every repetition must meet all admission gates and 1% stiffness
+disagreement before any timing summary is accepted. Failed repetitions stop the
+experiment rather than disappear from the sample.
+
+The Microgen arm is the explicit one-pass 30-point VTK recipe, hausd=0.0005,
+hmax=0.05 and hgrad=1.3. The Meshers arm is eight-cell nonadaptive curved Tet10,
+with one optimization pass and native corner tolerance 1.0. Independent final
+distance admission remains 0.002. `schwarz_matched.py` records pinned sources,
+the native extension hash, counts, per-load residuals, full tensors and paired
+time ratios. A result applies only to Schwarz against this modified recipe,
+not to the default two-pass pipeline or all four specimens.
+
+Job 75 completes both warm-ups and all five interleaved pairs. Every run meets
+the fixed geometry, quality, periodicity, positive sampled Jacobian and 1%
+stiffness gates. Meshers has 6,864 nodes and 3,852 Tet10 elements; the explicit
+one-pass Microgen variant has 32,070 nodes and 154,012 Tet4 elements. Their
+worst mixed-load disagreements are 0.25870% and 0.92806%, respectively.
+
+Median total workflow times are 7.7916 seconds for Meshers and 40.5036 seconds
+for Microgen. Paired speedups range from 5.1155 to 5.2908. Median generation
+times are 0.06008 and 7.72084 seconds; median six-load solve times are 6.70432
+and 31.04057 seconds. Full workflow times range from 7.6838 to 7.8803 seconds
+for Meshers and 40.2588 to 41.2876 seconds for Microgen. Both arms use the same
+prescribed-strain solver. These are same-G3 repeated measurements, not OMEN
+comparisons. Records are in `runs/g3-schwarz-matched-v1`.
+
+This supports a Schwarz matched-target workflow advantage against the explicitly
+modified one-pass comparator. It does not establish a four-fixture victory,
+repair the default two-pass Microgen pipeline, or establish lattice stiffness
+accuracy. Representative measured displacement fields still require the next
+independent stress, energy and reaction audit.
+
+Job 76 independently integrates measured fields from both arms. Stress, energy
+and reaction tensors agree within 1.32e-11 relative. Periodic displacement jumps,
+including curved mid-edge pairs, are at most 5.56e-17. The representative fields
+therefore pass the independent FE consistency check. Records are in
+`runs/g3-schwarz-matched-field-audit-v1`. This establishes the stated one-case
+advantage, not local stress accuracy or a continuum certification.

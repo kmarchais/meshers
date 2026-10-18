@@ -1,0 +1,79 @@
+{
+  "case": "schwarz-solid",
+  "route": "microgen-vtk-single-mmg-diagnostic-override",
+  "resolution": 38,
+  "mmg_arguments": {
+    "hausd": 0.0005,
+    "hmax": 0.06,
+    "hgrad": 1.3
+  },
+  "status": "geometry-rejected",
+  "mmg_calls": [
+    {
+      "nofem": true,
+      "hausd": 0.0005,
+      "hmax": 0.06,
+      "hgrad": 1.3
+    }
+  ],
+  "stage_audit_enabled": false,
+  "timing_comparable": true,
+  "first_pass_hausd_override": 0.0005,
+  "first_pass_only": true,
+  "specimen_setup_s": 0.0070837539997228305,
+  "seed_nodes": 35768,
+  "seed_elements": 174404,
+  "vtk_extraction_s": 0.18306833499991626,
+  "omitted_second_pass": {
+    "hausd": 0.0005,
+    "hgrad": 1.3,
+    "hmax": 0.06,
+    "hmin": null,
+    "hsiz": null,
+    "ls": true,
+    "nr": true
+  },
+  "generation_s": 11.178563223999845,
+  "nodes": 31172,
+  "elements": 141591,
+  "reoriented_tetrahedra": 0,
+  "cap_minimum_quality_ceiling": 0.15073235735509077,
+  "caps_below_quality_gate": 0,
+  "geometry": {
+    "sampled_forward_max": 0.0005867573197199938,
+    "sampled_reverse_max": 0.0005260522097494787,
+    "sampled_two_sided_max": 0.0005867573197199938,
+    "outward_forward_max": 0.0005867573197199938,
+    "inward_forward_max": 0.0005439078127889353,
+    "projection_failed": 0,
+    "forward_samples": 196716,
+    "reverse_samples": 50135,
+    "volume": 0.4999615075764755,
+    "relative_volume_error": -7.698484704898867e-05,
+    "q_min_corner": 0.09785470482963125,
+    "q_p01_corner": 0.47193964998126564,
+    "minimum_dihedral_deg_corner": 4.602209678119493,
+    "minimum_sampled_jacobian": 9.300775029205934e-08,
+    "reverse_tessellation_delta_max": 0.0,
+    "quadratic_reverse_subdivisions": null,
+    "geometry_admitted": false
+  },
+  "periodic": {
+    "periodic_pair_counts": [
+      1260,
+      1260,
+      1260
+    ],
+    "periodic_coordinate_errors": [
+      0.0,
+      0.0,
+      0.0
+    ],
+    "periodic_pair_tolerance": 1e-10,
+    "periodic_equivalence_classes": 27505,
+    "periodic_triangles_match": true
+  },
+  "audit_s": 1.1040289789998496,
+  "qualified": false,
+  "total_workflow_s": 12.647412475999772
+}
