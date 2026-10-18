@@ -1,0 +1,77 @@
+{
+  "case": "smooth-lattice",
+  "cells": 16,
+  "min_length": 0.01,
+  "order": 2,
+  "native_tolerance": 1.0,
+  "adaptive": false,
+  "qualified": false,
+  "void_clamp": {
+    "positive_ceiling": 0.02,
+    "verification_points": 4096,
+    "material_mismatches": 0,
+    "domain_identity": "min(phi, positive_constant) <= 0 iff phi <= 0"
+  },
+  "generation_s": 2.434106925000151,
+  "nodes": 43685,
+  "elements": 24480,
+  "diagnostics": {
+    "empty": false,
+    "volume": 0.24709119838515975,
+    "minimum_mmg_quality": 0.17944623198604137,
+    "sampled_surface_error": 0.008419515122133117,
+    "elements_below_quality_01": 0,
+    "reverted_snap_vertices": 0,
+    "callback_calls": 0,
+    "inserted_interior_nodes": 0,
+    "seconds": 2.421289594,
+    "quadratic": {
+      "curved_edges": 14765,
+      "straightened_edges": 55,
+      "minimum_jacobian_ratio": 0.0024565564621763167
+    },
+    "threads": 1,
+    "evaluator": "compiled",
+    "preparation_seconds": 0.01276363300007688
+  },
+  "geometry": {
+    "sampled_forward_max": 0.008419515120388328,
+    "sampled_reverse_max": 0.006923619427466184,
+    "sampled_two_sided_max": 0.008419515120388328,
+    "outward_forward_max": 0.008419515120388328,
+    "inward_forward_max": 0.0019468324881843709,
+    "projection_failed": 0,
+    "forward_samples": 127452,
+    "reverse_samples": 34791,
+    "volume": 0.2482443820361888,
+    "relative_volume_error": -0.00026845664497199273,
+    "q_min_corner": 0.17944623198604137,
+    "q_p01_corner": 0.3290774625181963,
+    "minimum_dihedral_deg_corner": 13.814092427120471,
+    "minimum_sampled_jacobian": 1.2738089359541072e-07,
+    "reverse_tessellation_delta_max": 0.0002536488264696617,
+    "quadratic_reverse_subdivisions": [
+      4,
+      8
+    ],
+    "geometry_admitted": false
+  },
+  "periodic": {
+    "periodic_pair_counts": [
+      238,
+      238,
+      238
+    ],
+    "periodic_coordinate_errors": [
+      0.0,
+      0.0,
+      0.0
+    ],
+    "periodic_pair_tolerance": 1e-10,
+    "periodic_equivalence_classes": 43012,
+    "periodic_triangles_match": true
+  },
+  "status": "geometry-rejected",
+  "total_audit_workflow_s": 4.940184215000045,
+  "total_workflow_s": 4.940184215000045
+}

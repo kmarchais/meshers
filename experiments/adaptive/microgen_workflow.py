@@ -225,18 +225,23 @@ def reorient_linear(points, tetrahedra):
     return tetrahedra, int(negative.sum())
 
 
+def on_box_plane(coordinates, value):
+    np, *_ = imports()
+    return np.isclose(coordinates, value, atol=1e-12, rtol=0)
+
+
 def geometry(run, name, points, tets, surface):
     np, fd, _, _, _, scorecard = imports()
     case, _, _ = specimen(name)
     samples = np.load(run / f"{name}-samples.npz")
     reference = json.loads((run / f"{name}-specimen.json").read_text())
     corners = points[surface[:, :3]]
-    caps = np.any(np.all(np.isclose(corners, -0.5, atol=1e-12), axis=1) |
-                  np.all(np.isclose(corners, 0.5, atol=1e-12), axis=1), axis=1)
+    caps = np.any(np.all(on_box_plane(corners, -0.5), axis=1) |
+                  np.all(on_box_plane(corners, 0.5), axis=1), axis=1)
     wall = surface[~caps]
     weights = tri_values(scorecard.BARY) if surface.shape[1] == 6 else scorecard.BARY
     probes = np.einsum("sn,fnd->fsd", weights, points[wall]).reshape(-1, 3)
-    locked = np.isclose(np.abs(probes), 0.5, atol=1e-12)
+    locked = on_box_plane(np.abs(probes), 0.5)
     foot = probes.copy()
     finite_levels = np.array([level for level in case.levels if np.isfinite(level)])
     values = case.function(*probes.T)

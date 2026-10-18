@@ -117,3 +117,25 @@ All four study specimens now have admitted Meshers routes on G3. The lattice
 route requires the explicit void clamp and spinodoid uses the verified Fourier
 expression. Fine stiffness references for these two specimens remain missing,
 so their stiffness errors and matched-accuracy speed rankings remain unknown.
+
+Job 38 tests a smaller curved lattice candidate using the original lattice
+meshing path, a 16-cell seed and the same void clamp. It has 43,685 nodes and
+24,480 Tet10 elements, minimum corner quality 0.1794 and positive sampled
+Jacobians. Independent curved distance is 0.008420, so FEA is withheld.
+Records are in `runs/g3-lattice-curved16-v1`. A small volume error alone does
+not qualify this candidate as a stiffness reference.
+
+## Absolute box-plane audit tolerance
+
+The geometry audit previously used NumPy's default relative tolerance together
+with `atol=1e-12` when classifying box planes. At coordinate 0.5, that also
+accepted points about 5e-6 away. `on_box_plane` now sets `rtol=0` explicitly for
+both cap classification and locked projection coordinates. Its executable
+regression checks a point 1e-6 away is free and a point 1e-13 away is locked.
+
+Job 39 re-audits the saved linear spinodoid and lattice and the two rejected
+curved candidates. All four distances and admission outcomes are unchanged.
+Job 40 re-audits all four fine Gyroid/Schwarz reference inputs, which also retain
+their distances and pass admission. Source mesh and report hashes are unchanged.
+Records are in `runs/g3-plane-reaudit-v1` and
+`runs/g3-reference-plane-reaudit-v1`. Historical reports remain frozen.

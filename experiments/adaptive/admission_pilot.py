@@ -24,7 +24,8 @@ def worker(args):
     from periodic import periodic_pairs
 
     row = {"case": args.case, "cells": args.cells, "min_length": args.min_length,
-           "order": args.order, "native_tolerance": args.native_tolerance, "qualified": False}
+           "order": args.order, "native_tolerance": args.native_tolerance,
+           "adaptive": not args.no_adapt, "qualified": False}
     started = time.perf_counter()
     try:
         case, shape, _ = workflow.specimen(args.case)
@@ -81,7 +82,7 @@ def worker(args):
         mesh = meshers.generate(field, bounds=workflow.BOUNDS, cells=args.cells,
             band=case.band, periodic=(True, True, True), threads=1, optimize_passes=1,
             minimum_quality=0.1, geometry_tolerance=args.native_tolerance, max_tetrahedra=workflow.CAP,
-            adapt=True, min_length=args.min_length, max_length=0.1, gradation=0.3,
+            adapt=not args.no_adapt, min_length=args.min_length, max_length=0.1, gradation=0.3,
             adapt_iterations=4, quality_guard=0.3, adapt_tolerance=0.002, order=args.order)
         row.update(generation_s=time.perf_counter() - phase, nodes=len(mesh.points),
                    elements=len(mesh.tetrahedra), diagnostics=mesh.diagnostics)
@@ -120,6 +121,7 @@ def main():
     parser.add_argument("--native-tolerance", type=float, default=0.002)
     parser.add_argument("--solve", action="store_true")
     parser.add_argument("--clip-void", type=float)
+    parser.add_argument("--no-adapt", action="store_true")
     parser.add_argument("--worker", action="store_true")
     parser.add_argument("--build", action="store_true")
     parser.add_argument("--python-tests", action="store_true")
@@ -175,6 +177,8 @@ def main():
                 command.append("--solve")
             if args.clip_void is not None:
                 command.extend(["--clip-void", str(args.clip_void)])
+            if args.no_adapt:
+                command.append("--no-adapt")
             result = workflow.bounded(command, args.run / "worker.log", part, timeout=600)
             workflow.save(args.run / "worker.json", result)
             assert result["returncode"] == 0, "Read worker.log"
