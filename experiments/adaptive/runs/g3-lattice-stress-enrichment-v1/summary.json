@@ -1,0 +1,260 @@
+{
+  "inputs_unchanged": true,
+  "cases": [
+    {
+      "case": "smooth-lattice",
+      "elements": 44976,
+      "linear_nodes": 9907,
+      "straight_nodes": 69025,
+      "periodic": {
+        "periodic_pair_counts": [
+          102,
+          102,
+          102
+        ],
+        "periodic_coordinate_errors": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "periodic_pair_tolerance": 1e-10,
+        "periodic_equivalence_classes": 9630,
+        "periodic_triangles_match": true
+      },
+      "energy_identity_relative_error": 1.0728597945493038e-09,
+      "top_20_percent_elements_enrichment_energy_capture": {
+        "recovery": 0.7250309785155159,
+        "stress-magnitude": 0.6520089720796037,
+        "volume": 0.34844528333410546,
+        "enrichment-oracle": 0.7281461340646725
+      },
+      "density_spearman": 0.9926562662803907,
+      "live_sizing_pilot_worth_testing": true,
+      "selector_scope": "Recovery capture beats volume and stress magnitude; density correlation >0.5; not benchmark admission",
+      "control_geometry": {
+        "sampled_forward_max": 0.0053439523136918875,
+        "sampled_reverse_max": 0.004269612620001098,
+        "sampled_two_sided_max": 0.0053439523136918875,
+        "outward_forward_max": 0.0053439523136918875,
+        "inward_forward_max": 0.00486171144503251,
+        "projection_failed": 2,
+        "forward_samples": 99996,
+        "reverse_samples": 34791,
+        "volume": 0.24616448206104138,
+        "relative_volume_error": -0.00864464463812098,
+        "q_min_corner": 0.34102176039778975,
+        "q_p01_corner": 0.6084119487919122,
+        "minimum_dihedral_deg_corner": 18.80977924215472,
+        "minimum_sampled_jacobian": 3.746974799440761e-06,
+        "reverse_tessellation_delta_max": 0.0,
+        "quadratic_reverse_subdivisions": null,
+        "geometry_admitted": false
+      },
+      "field_consistency": {
+        "linear": {
+          "reaction_relative_error": 8.45330891084792e-12,
+          "hill_mandel_relative_error": 8.543766462169373e-12,
+          "integrated_volume": 0.2461644820610413
+        },
+        "straight": {
+          "reaction_relative_error": 1.7705068307940138e-11,
+          "hill_mandel_relative_error": 1.8127552833715516e-11,
+          "integrated_volume": 0.24616448206104133
+        }
+      },
+      "source_skeleton": "experiments/adaptive/runs/g3-lattice-curved24-symmetric-v1",
+      "source_cells": 24,
+      "recovery_worst_relative_energy_norm": 0.2841193896986923,
+      "enrichment_worst_relative_energy_norm": 0.2846434380471454,
+      "target_length_quantiles": [
+        0.008577976520021202,
+        0.0175955042583902,
+        0.032407792255042395,
+        0.04650097357506342,
+        0.06527127371732354
+      ],
+      "stiffness": {
+        "linear": [
+          [
+            0.14098182430123618,
+            0.10652705258171073,
+            0.10652220751810526,
+            9.438203643493917e-06,
+            9.27030095446851e-06,
+            1.7392347905665496e-06
+          ],
+          [
+            0.10652705258171073,
+            0.14134401041345004,
+            0.10657093986785386,
+            1.1723723817986369e-05,
+            1.4542081166222768e-06,
+            5.379316349685731e-06
+          ],
+          [
+            0.10652220751810526,
+            0.10657093986785386,
+            0.1413262825173386,
+            3.563070453149012e-06,
+            9.945139642943829e-06,
+            4.048799159896664e-06
+          ],
+          [
+            9.438203643493917e-06,
+            1.1723723817986369e-05,
+            3.563070453149012e-06,
+            0.10438762194214683,
+            4.851362640756908e-06,
+            2.5359899102479333e-06
+          ],
+          [
+            9.27030095446851e-06,
+            1.4542081166222768e-06,
+            9.945139642943829e-06,
+            4.851362640756908e-06,
+            0.10438797978373027,
+            6.309654747436739e-06
+          ],
+          [
+            1.7392347905665496e-06,
+            5.379316349685731e-06,
+            4.048799159896664e-06,
+            2.5359899102479333e-06,
+            6.309654747436739e-06,
+            0.10441494022559564
+          ]
+        ],
+        "straight": [
+          [
+            0.13764497639364953,
+            0.10582035436812581,
+            0.10581781815191862,
+            8.713410542021246e-06,
+            7.415033233476822e-06,
+            2.685528995322879e-06
+          ],
+          [
+            0.10582035436812581,
+            0.13779605661029784,
+            0.10584193956256543,
+            1.2317860503790442e-05,
+            5.044964872362734e-06,
+            8.258325067700093e-06
+          ],
+          [
+            0.10581781815191862,
+            0.10584193956256543,
+            0.13778291588669678,
+            6.68177926447901e-06,
+            9.517581326623243e-06,
+            7.249340287274214e-06
+          ],
+          [
+            8.713410542021246e-06,
+            1.2317860503790442e-05,
+            6.68177926447901e-06,
+            0.10232736526710276,
+            2.741892504984873e-06,
+            4.484727025317422e-06
+          ],
+          [
+            7.415033233476822e-06,
+            5.044964872362734e-06,
+            9.517581326623243e-06,
+            2.741892504984873e-06,
+            0.1023289441902889,
+            9.117157399088976e-06
+          ],
+          [
+            2.685528995322879e-06,
+            8.258325067700093e-06,
+            7.249340287274214e-06,
+            4.484727025317422e-06,
+            9.117157399088976e-06,
+            0.10233831021190438
+          ]
+        ]
+      },
+      "solver_records": {
+        "linear": [
+          {
+            "iterations": 656,
+            "relative_residual": 9.554620387424938e-13,
+            "free_dofs": 28887,
+            "seconds": 0.9085064479986613
+          },
+          {
+            "iterations": 669,
+            "relative_residual": 9.84223362699915e-13,
+            "free_dofs": 28887,
+            "seconds": 0.9353349759985576
+          },
+          {
+            "iterations": 665,
+            "relative_residual": 9.593030558989114e-13,
+            "free_dofs": 28887,
+            "seconds": 0.8840336559987918
+          },
+          {
+            "iterations": 735,
+            "relative_residual": 9.997601261378441e-13,
+            "free_dofs": 28887,
+            "seconds": 1.0019820509987767
+          },
+          {
+            "iterations": 745,
+            "relative_residual": 9.434997111067245e-13,
+            "free_dofs": 28887,
+            "seconds": 1.021031331998529
+          },
+          {
+            "iterations": 670,
+            "relative_residual": 9.225985893179783e-13,
+            "free_dofs": 28887,
+            "seconds": 0.9776103779986443
+          }
+        ],
+        "straight": [
+          {
+            "iterations": 1784,
+            "relative_residual": 9.672122620280736e-13,
+            "free_dofs": 204261,
+            "seconds": 37.63816696399954
+          },
+          {
+            "iterations": 1816,
+            "relative_residual": 9.746633381760373e-13,
+            "free_dofs": 204261,
+            "seconds": 38.51934400499886
+          },
+          {
+            "iterations": 1801,
+            "relative_residual": 9.959063335144126e-13,
+            "free_dofs": 204261,
+            "seconds": 38.19637535199945
+          },
+          {
+            "iterations": 2026,
+            "relative_residual": 9.749137958462458e-13,
+            "free_dofs": 204261,
+            "seconds": 41.723835283999506
+          },
+          {
+            "iterations": 2029,
+            "relative_residual": 9.961492669567624e-13,
+            "free_dofs": 204261,
+            "seconds": 42.077053005999915
+          },
+          {
+            "iterations": 1829,
+            "relative_residual": 9.697857847226598e-13,
+            "free_dofs": 204261,
+            "seconds": 37.705338722000306
+          }
+        ]
+      },
+      "workflow_s": 256.2747566500002,
+      "scope": "Fixed-domain polynomial enrichment only; separately reported control geometry is not a continuum stress reference or admitted workflow ranking."
+    }
+  ]
+}

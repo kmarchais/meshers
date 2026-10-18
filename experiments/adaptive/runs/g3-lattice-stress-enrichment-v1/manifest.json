@@ -1,0 +1,24 @@
+{
+  "source_sha256": "6842b099c23ddbd5832d7c00df16d474c34587992c3e490eab118650035efbd7",
+  "inputs": {
+    "experiments/adaptive/runs/g3-lattice-curved24-symmetric-v1/result.json": "5c3e1aa53be58e32fae972b7e82e6fdb9457e683f3ac155348b2162d80820446",
+    "experiments/adaptive/runs/g3-lattice-curved24-symmetric-v1/mesh.npz": "2adbd9557d40e2abfdee384aa738d63bff5c5188d2a420f3a4c0256e0cee6e47",
+    "experiments/adaptive/runs/g3-lattice-curved24-symmetric-v1/manifest.json": "eb05f4b4e3291e66ab8f4f468f1b48060e78c63518d1d93d9fa186a559fa6ddf",
+    "experiments/adaptive/runs/g3-lattice-curved24-symmetric-v1/smooth-lattice-samples.npz": "a2b4375d2c99901f03b34e913563c887a4cdcff00bca35983adb7ef9d5311abe",
+    "experiments/adaptive/runs/g3-lattice-curved24-symmetric-v1/smooth-lattice-specimen.json": "0e5b34b76183341a6e0d454f13cd404668ab82675f9a51cd9d2ecf3c91be3316",
+    "/home/kmarchais/dev/meshers/experiments/adaptive/microgen_workflow.py": "3f98bcaf9ae151cb357944744e82dd80801703a4db04f94df31263c9c9fa7640",
+    "/home/kmarchais/dev/meshers/experiments/adaptive/tet10_integration.py": "d5f1b35f95ca0117bb7e2a7b4fa2ab0910e0038e6fce79958aed4eeaa38136b6"
+  },
+  "memory_bytes": 8589934592,
+  "timeout_s": 600,
+  "threads": 1,
+  "baseline_manifest_sha256": "eb05f4b4e3291e66ab8f4f468f1b48060e78c63518d1d93d9fa186a559fa6ddf",
+  "source_skeleton": "experiments/adaptive/runs/g3-lattice-curved24-symmetric-v1",
+  "selector": {
+    "recovery_capture_beats": [
+      "volume",
+      "stress-magnitude"
+    ],
+    "density_spearman_minimum": 0.5
+  }
+}

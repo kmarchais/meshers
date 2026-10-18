@@ -13,7 +13,8 @@ isolated meshing improvement. The four-fixture objective remains unmet.
   A stronger manual straight-Tet10 Microgen control also passes a supplementary
   0.1% stiffness target. Fresh Meshers curved16 passes that target with 42,928
   nodes and an 88.01-second single-run workflow. There is no new paired live
-  timing claim against Tet10; a coarser genuine Microgen control is being solved.
+  timing claim against Tet10; a coarser genuine Microgen control also passes
+  the target but remains a saved-mesh study.
 - Gyroid curved9 passes admission and field checks with 11,857 nodes,
   0.72921% to 0.95990% reference-model disagreement and 20.56 seconds total.
   The same-helper curved12 control takes 39.17 seconds. These are single runs.
@@ -35,8 +36,13 @@ isolated meshing improvement. The four-fixture objective remains unmet.
   stage. Fine-mesh quadrature sensitivity passes and enables uniform34 within
   8 GiB, but that level still does not settle the retained reference models.
   Lattice Microgen straight-Tet10 routes remain capped or quality-rejected.
-  Schwarz's stronger straight-Tet10 integration control is verified, with a
-  coarser admitted Microgen variant selected for one successor solve.
+  Same-domain enrichment validates recovery localization, but two live sizing
+  pilots show no benefit. A final scale trial exceeds the fixed tet cap and is
+  excluded, including a mistakenly solved uniform arm. Explicit post-adaptation
+  budget checks now precede audit and solve. Native adaptation also stops at
+  the first topology operation crossing the tet budget, validated by replay.
+  Stop blind sizing-scale tuning. An actual Gyroid first-pass FEM override
+  still fails quality and remains unranked.
 
 Every heavy stage uses the shared queue, an 8 GiB worker ceiling, conservative
 threads, a timeout and staged mesh caps. Admission gates and frozen outputs

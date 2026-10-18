@@ -27,6 +27,7 @@ def main():
     for path in ((args.first, args.second) if args.second else (args.first,)):
         row = json.loads(path.read_text())
         assert row["qualified"] and row["geometry"]["geometry_admitted"]
+        assert 0 < row["elements"] <= workflow.CAP
         assert row["status"] in ("solved", "solved-needs-reference")
         if row.get("order") == 2 and row.get("solver_quadrature_points", 15) == 4:
             assert row.get("quadrature_sensitivity_passed")
@@ -57,6 +58,7 @@ def main():
         coarse_row, fine_row = levels[16], levels[20]
         for record in (coarse_row, fine_row):
             assert record["qualified"] and record["geometry"]["geometry_admitted"]
+            assert 0 < record["elements"] <= workflow.CAP
             assert len(record["solver_records"]) == 6
             assert max(solver["relative_residual"] for solver in record["solver_records"]) < 2e-9
         coarse, fine = (np.asarray(record["stiffness"]) for record in (coarse_row, fine_row))

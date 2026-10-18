@@ -69,22 +69,74 @@ def recover(stress, volumes, tetrahedra, classes):
     return totals[classes] / weights[classes, None, None, None]
 
 
+def periodic_displacement_jump_error(points, surface, fields):
+    np, *_ = workflow.imports()
+    from homogenization import strain_tensor
+    from periodic import periodic_pairs
+
+    assert fields.shape == (6, len(points), 3) and np.isfinite(fields).all()
+    matching, _, _ = periodic_pairs(points, surface)
+    maximum = 0.0
+    for load, engineering in enumerate(np.eye(6)):
+        for paired in matching:
+            shift = points[paired[:, 1]] - points[paired[:, 0]]
+            jump = fields[load, paired[:, 1]] - fields[load, paired[:, 0]]
+            maximum = max(maximum, float(abs(jump - shift @ strain_tensor(engineering).T).max(initial=0)))
+    return maximum
+
+
 def worker(args):
     np, fd, _, _, _, _ = workflow.imports()
     from periodic import periodic_pairs, tensor_difference
     from scipy.linalg import eigvalsh
     from scipy.stats import spearmanr
+    from tet10_integration import integrated_tensors
 
     started = time.perf_counter()
-    meshes, fields, tensors, records = {}, {}, {}, {}
+    meshes, fields, tensors, records, consistency = {}, {}, {}, {}, {}
+    source_row = None
+    if args.skeleton:
+        source_row = json.loads((args.skeleton / "result.json").read_text())
+        assert source_row["case"] == args.case and source_row["order"] == 2
+        assert source_row["qualified"] and source_row["geometry"]["geometry_admitted"]
+        original = np.load(args.skeleton / "mesh.npz")
+        corner_tets = original["tetrahedra"][:, :4]
+        corner_count = int(corner_tets.max()) + 1
+        np.testing.assert_array_equal(np.unique(corner_tets), np.arange(corner_count))
+        meshes["linear"] = {"points": original["points"][:corner_count].copy(),
+            "tetrahedra": corner_tets.copy(), "surface": original["surface"][:, :3].copy()}
+        straight_points = original["points"].copy()
+        edge_order = np.array(((0, 1), (1, 2), (2, 0), (0, 3), (1, 3), (2, 3)))
+        straight_points[original["tetrahedra"][:, 4:].ravel()] = original["points"][
+            corner_tets[:, edge_order]].mean(axis=2).reshape(-1, 3)
+        meshes["straight"] = {"points": straight_points,
+            "tetrahedra": original["tetrahedra"].copy(), "surface": original["surface"].copy()}
+        np.testing.assert_array_equal(straight_points[original["surface"][:, 3:]],
+            original["points"][original["surface"][:, :3][:, edge_order[:3]]].mean(axis=2))
     for route in ("linear", "straight"):
-        label = f"{args.case}-control-{route}-12"
-        data = np.load(args.source / (label + ".npz"))
-        meshes[route] = {key: data[key] for key in ("points", "tetrahedra", "surface")}
+        if not args.skeleton:
+            label = f"{args.case}-control-{route}-12"
+            archive = np.load(args.source / (label + ".npz"))
+            meshes[route] = {key: archive[key] for key in ("points", "tetrahedra", "surface")}
+        data = meshes[route]
         periodic_pairs(data["points"], data["surface"])
-        fields[route], tensors[route], records[route] = solve(data["points"], data["tetrahedra"])
-        saved = json.loads((args.source / (label + ".json")).read_text())
-        assert tensor_difference(tensors[route], np.array(saved["stiffness"]))["worst_relative_strain_energy_difference"] < 1e-7
+        fields[route], tensors[route], records[route] = solve(data["points"], data["tetrahedra"],
+            n_elm_gp=4 if args.skeleton else None)
+        if not args.skeleton:
+            saved = json.loads((args.source / (label + ".json")).read_text())
+            assert tensor_difference(tensors[route], np.array(saved["stiffness"]))["worst_relative_strain_energy_difference"] < 1e-7
+        stress, energy, volume = integrated_tensors(data["points"], data["tetrahedra"], fields[route])
+        reaction_error = float(np.linalg.norm(stress - tensors[route]) / np.linalg.norm(tensors[route]))
+        energy_error = float(np.linalg.norm(energy - tensors[route]) / np.linalg.norm(tensors[route]))
+        assert max(reaction_error, energy_error) < 1e-7
+        jump_error = periodic_displacement_jump_error(data["points"], data["surface"], fields[route])
+        assert jump_error < 1e-9
+        assert len(records[route]) == 6 and max(record["relative_residual"] for record in records[route]) < 2e-9
+        consistency[route] = {"reaction_relative_error": reaction_error,
+            "hill_mandel_relative_error": energy_error, "integrated_volume": volume,
+            "periodic_jump_max": jump_error}
+        if args.skeleton:
+            np.savez_compressed(args.run / (args.case + "-control-" + route + ".npz"), **data)
     linear, quadratic = meshes["linear"], meshes["straight"]
     points, tetrahedra = linear["points"], linear["tetrahedra"]
     assert np.array_equal(points[tetrahedra], quadratic["points"][quadratic["tetrahedra"][:, :4]])
@@ -122,6 +174,15 @@ def worker(args):
                             ("volume", volumes), ("enrichment-oracle", observed_mass)):
         selected = np.argsort(indicator)[-int(np.ceil(0.2 * len(indicator))):]
         rankings[name] = float(observed_mass[selected].sum() / observed_mass.sum())
+    density_correlation = float(spearmanr(estimated_mass / volumes, observed_mass / volumes).statistic)
+    worth_testing = (rankings["recovery"] > max(rankings["volume"], rankings["stress-magnitude"])
+        and density_correlation > 0.5)
+    control_geometry = None
+    if args.skeleton:
+        control_geometry = workflow.geometry(args.run, args.case, points, tetrahedra, linear["surface"])
+        assert control_geometry["q_min_corner"] >= 0.1 and control_geometry["minimum_sampled_jacobian"] > 0
+    np.testing.assert_allclose([value["integrated_volume"] for value in consistency.values()],
+        volumes.sum(), atol=1e-12, rtol=1e-10)
     length = np.cbrt(6 * volumes)
     coefficient = np.maximum(estimated_mass / (volumes * length**2), 1e-30)
     target = coefficient**(-1 / 5)
@@ -138,13 +199,18 @@ def worker(args):
         "straight_nodes": len(quadratic["points"]), "periodic": pairing,
         "energy_identity_relative_error": energy_identity_error,
         "top_20_percent_elements_enrichment_energy_capture": rankings,
-        "density_spearman": float(spearmanr(estimated_mass / volumes, observed_mass / volumes).statistic),
+        "density_spearman": density_correlation,
+        "live_sizing_pilot_worth_testing": bool(worth_testing),
+        "selector_scope": "Recovery capture beats volume and stress magnitude; density correlation >0.5; not benchmark admission",
+        "control_geometry": control_geometry, "field_consistency": consistency,
+        "source_skeleton": str(args.skeleton) if args.skeleton else None,
+        "source_cells": source_row["cells"] if source_row else 12,
         "recovery_worst_relative_energy_norm": float(np.sqrt(eigvalsh(estimated.sum(axis=0), tensors["linear"]).max())),
         "enrichment_worst_relative_energy_norm": float(np.sqrt(eigvalsh(observed.sum(axis=0), tensors["linear"]).max())),
         "target_length_quantiles": np.quantile(nodal_target, [0, 0.1, 0.5, 0.9, 1]).tolist(),
         "stiffness": {route: tensor.tolist() for route, tensor in tensors.items()},
         "solver_records": records, "workflow_s": time.perf_counter() - started,
-        "scope": "Fixed-domain diagnostic controls fail geometry admission. Enrichment is not a continuum stress reference."})
+        "scope": "Fixed-domain polynomial enrichment only; separately reported control geometry is not a continuum stress reference or admitted workflow ranking."})
 
 
 def main():
@@ -152,23 +218,37 @@ def main():
     parser.add_argument("--run", type=Path, required=True)
     parser.add_argument("--source", type=Path, default=workflow.HERE / "runs/g3-microgen-defaults-v4")
     parser.add_argument("--case")
+    parser.add_argument("--skeleton", type=Path)
     args = parser.parse_args()
     if args.case:
         worker(args)
         return
     args.run.mkdir(parents=True, exist_ok=False)
     shutil.copyfile(__file__, args.run / "driver.py")
-    cases = ("gyroid", "schwarz-solid")
-    hashes = {str(path): workflow.digest(path) for path in args.source.glob("*-control-*-12.*")}
+    cases = (json.loads((args.skeleton / "result.json").read_text())["case"],) if args.skeleton else ("gyroid", "schwarz-solid")
+    if args.skeleton:
+        inputs = [args.skeleton / name for name in ("result.json", "mesh.npz", "manifest.json",
+            cases[0] + "-samples.npz", cases[0] + "-specimen.json")]
+        for path in inputs[-2:]:
+            shutil.copyfile(path, args.run / path.name)
+    else:
+        inputs = list(args.source.glob("*-control-*-12.*"))
+    inputs += [Path(workflow.__file__), workflow.HERE / "tet10_integration.py"]
+    hashes = {str(path): workflow.digest(path) for path in inputs}
+    baseline = (args.skeleton or args.source) / "manifest.json"
     workflow.save(args.run / "manifest.json", {"source_sha256": workflow.digest(Path(__file__)),
         "inputs": hashes, "memory_bytes": workflow.MEMORY, "timeout_s": 600, "threads": 1,
-        "baseline_manifest_sha256": workflow.digest(args.source / "manifest.json")})
+        "baseline_manifest_sha256": workflow.digest(baseline),
+        "source_skeleton": str(args.skeleton) if args.skeleton else None,
+        "selector": {"recovery_capture_beats": ["volume", "stress-magnitude"], "density_spearman_minimum": 0.5}})
     workers = {}
     with Job(parts=list(cases)) as job:
         for case in cases:
             with job.part(case) as part:
-                workers[case] = workflow.bounded([sys.executable, __file__, "--run", str(args.run),
-                    "--source", str(args.source), "--case", case], args.run / (case + ".log"), part, timeout=600)
+                command = [sys.executable, __file__, "--run", str(args.run), "--source", str(args.source), "--case", case]
+                if args.skeleton:
+                    command.extend(["--skeleton", str(args.skeleton)])
+                workers[case] = workflow.bounded(command, args.run / (case + ".log"), part, timeout=600)
                 workflow.save(args.run / "workers.json", workers)
                 assert workers[case]["returncode"] == 0, f"Read {case}.log"
                 row = json.loads((args.run / (case + ".json")).read_text())

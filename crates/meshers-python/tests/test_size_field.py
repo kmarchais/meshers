@@ -69,3 +69,12 @@ def test_size_callback_exception_is_preserved():
 
     with pytest.raises(RuntimeError, match="size callback failed"):
         generate(size_field=fail)
+
+
+def test_adaptive_mesh_respects_tetrahedron_budget():
+    seed = meshers.generate(solid, bounds=(-0.5, 0.5) * 3, cells=4,
+        periodic=(True, True, True), minimum_quality=0.1, threads=1)
+    maximum = len(seed.tetrahedra) + 100
+    with pytest.raises(meshers.MeshingError, match="max_tetrahedra"):
+        generate(max_tetrahedra=maximum,
+            size_field=lambda coordinates_x, *_: np.full_like(coordinates_x, 0.04))

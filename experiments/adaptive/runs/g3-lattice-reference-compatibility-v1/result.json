@@ -1,0 +1,47 @@
+{
+  "inputs": {
+    "/home/kmarchais/dev/meshers/experiments/adaptive/runs/g3-lattice-reference-sensitivity-v2.json": "0bc21b6b9c07819795697047ee827aab8c23363790dc5137ea7d2d1a5aa0ac07",
+    "/home/kmarchais/dev/meshers/experiments/adaptive/runs/g3-lattice-microgen-reference-comparison-v1.json": "6acf432121761aa9028ffd81be1e146cbd5010e84f6183fab9cd455c966dfdd4",
+    "/home/kmarchais/dev/meshers/experiments/adaptive/runs/g3-lattice-finer-reference-comparison-v1.json": "8fc3ac22764e9075d1770fb3ca2bc92a8ec65f851bc51714c0579f39b48a8fde"
+  },
+  "driver_sha256": "8bf936d8f8a3904d3db07b9792e241dd07f37615319befb9df2530938abcd515",
+  "models": 24,
+  "target": 0.01,
+  "necessary_common_relative_error_lower_bound": 0.009019312871446557,
+  "pairwise_obstruction_to_target": false,
+  "worst_pair_witness": {
+    "higher_model": {
+      "source": "/home/kmarchais/dev/meshers/experiments/adaptive/runs/g3-lattice-reference-sensitivity-v2.json",
+      "model_index": 7,
+      "length_proxy": "element_density",
+      "assumed_order": 4
+    },
+    "lower_model": {
+      "source": "/home/kmarchais/dev/meshers/experiments/adaptive/runs/g3-lattice-reference-sensitivity-v2.json",
+      "model_index": 0,
+      "length_proxy": "uniform_seed",
+      "assumed_order": 1
+    },
+    "engineering_strain_in_saved_tensor_basis": [
+      -0.497299135639986,
+      -0.270991608768434,
+      0.8241487455531336,
+      0.002150044846080788,
+      -0.0036712916986330777,
+      0.004226321856940245
+    ],
+    "higher_quadratic_form": 0.0326010579972679,
+    "lower_quadratic_form": 0.0320182363638925,
+    "higher_model_candidate_interval": [
+      0.03227504741729522,
+      0.032927068577240586
+    ],
+    "lower_model_candidate_interval": [
+      0.03169805400025357,
+      0.032338418727531425
+    ],
+    "interval_gap_at_target": -6.337131023620435e-05
+  },
+  "derivation": "A target tensor must satisfy (1-eps)*R <= A <= (1+eps)*R for every reference R. A pair with quadratic-form ratio r requires eps >= (r-1)/(r+1).",
+  "scope": "Necessary compatibility condition for retained sensitivity models only; not an optimal global radius, a mesher impossibility theorem, or a continuum error bound"
+}

@@ -116,6 +116,7 @@ struct Tets<'g, G: Geometry> {
     frozen: Vec<bool>,
     tets: Vec<[usize; 4]>,
     alive: Vec<bool>,
+    live_tetrahedra: usize,
     vt: Vec<Vec<usize>>,
     /// Boundary faces (sorted) and their label: 0 wall, 2.. box plane.
     faces: HashMap<Face, u8>,
@@ -163,6 +164,7 @@ impl<'g, G: Geometry> Tets<'g, G> {
             normals: vec![[0.; 3]; n],
             frozen: vec![false; n],
             alive: vec![true; tets.len()],
+            live_tetrahedra: tets.len(),
             tets,
             vt: vec![Vec::new(); n],
             faces: HashMap::new(),
@@ -443,6 +445,7 @@ impl<'g, G: Geometry> Tets<'g, G> {
     }
 
     fn add_tet(&mut self, t: [usize; 4]) -> usize {
+        self.live_tetrahedra += 1;
         let i = self.tets.len();
         self.tets.push(t);
         self.alive.push(true);
@@ -453,6 +456,7 @@ impl<'g, G: Geometry> Tets<'g, G> {
     }
 
     fn kill_tet(&mut self, t: usize) {
+        self.live_tetrahedra -= 1;
         self.alive[t] = false;
         for v in self.tets[t] {
             self.vt[v].retain(|&s| s != t);
@@ -914,8 +918,18 @@ impl<'g, G: Geometry> Tets<'g, G> {
         unit(cross(self.normals[v], n))
     }
 
+    fn check_budget(&self, maximum: usize) -> Result<(), String> {
+        if self.live_tetrahedra > maximum {
+            return Err(format!(
+                "adaptation exceeded max_tetrahedra: {} > {maximum}",
+                self.live_tetrahedra
+            ));
+        }
+        Ok(())
+    }
+
     /// Move partially inserted wall vertices onto the surface where now valid.
-    fn settle(&mut self, guard: f64) {
+    fn settle(&mut self, guard: f64, maximum: usize) -> Result<(), String> {
         let pending = std::mem::take(&mut self.pending);
         for v in pending {
             if self.vt[v].is_empty() {
@@ -958,16 +972,18 @@ impl<'g, G: Geometry> Tets<'g, G> {
             for [a, b] in facing {
                 if !self.shell(a, b).is_empty() {
                     self.split(a, b, guard);
+                    self.check_budget(maximum)?;
                 }
             }
             self.pending.push(v);
         }
+        Ok(())
     }
 
-    fn enforce(&mut self, o: &Options, stats: &mut Stats) -> Result<(), String> {
+    fn enforce(&mut self, o: &Options, stats: &mut Stats, maximum: usize) -> Result<(), String> {
         for _ in 0..16 {
             self.g.check()?;
-            self.settle(o.quality_guard);
+            self.settle(o.quality_guard, maximum)?;
             let mut flagged = Vec::new();
             let mut worst = 0f64;
             let wall: Vec<Face> = self
@@ -1012,6 +1028,7 @@ impl<'g, G: Geometry> Tets<'g, G> {
                     continue;
                 }
                 if self.split(a, b, o.quality_guard).is_some() {
+                    self.check_budget(maximum)?;
                     stats.error_splits += 1;
                     progress = true;
                 }
@@ -1087,6 +1104,7 @@ pub(crate) fn adapt(
     threshold: f64,
     periodic: [bool; 3],
     o: &Options,
+    maximum: usize,
 ) -> Result<Stats, String> {
     if !(o.tolerance > 0. && o.min_length > 0. && o.max_length >= o.min_length)
         || o.gradation.is_nan()
@@ -1103,6 +1121,7 @@ pub(crate) fn adapt(
         return Err("periodic adaptation needs max_length <= a quarter of the period".into());
     }
     let mut s = Tets::new(mesh, g, threshold, periodic);
+    s.check_budget(maximum)?;
     let mut stats = Stats::default();
     let mut clock = std::time::Instant::now();
     let mut lap = |stats: &mut Stats, phase: usize| {
@@ -1124,6 +1143,7 @@ pub(crate) fn adapt(
         long.sort_by(|a, b| b.0.total_cmp(&a.0));
         for (_, [u, v]) in long {
             if s.split(u, v, o.quality_guard).is_some() {
+                s.check_budget(maximum)?;
                 stats.splits += 1;
             }
         }
@@ -1170,6 +1190,7 @@ pub(crate) fn adapt(
         candidates.dedup();
         for [u, v] in candidates {
             if s.remove_edge(u, v) {
+                s.check_budget(maximum)?;
                 stats.swaps += 1;
             }
         }
@@ -1180,13 +1201,14 @@ pub(crate) fn adapt(
             }
             for i in 0..4 {
                 if s.alive[t] && s.swap_face(t, i) {
+                    s.check_budget(maximum)?;
                     stats.swaps += 1;
                     break;
                 }
             }
         }
         lap(&mut stats, 4);
-        s.settle(o.quality_guard);
+        s.settle(o.quality_guard, maximum)?;
         for v in 0..s.points.len() {
             if s.relocate(v, o) {
                 stats.moves += 1;
@@ -1194,8 +1216,8 @@ pub(crate) fn adapt(
         }
         lap(&mut stats, 5);
     }
-    s.enforce(o, &mut stats)?;
-    s.settle(o.quality_guard);
+    s.enforce(o, &mut stats, maximum)?;
+    s.settle(o.quality_guard, maximum)?;
     *mesh = s.into_mesh()?;
     lap(&mut stats, 6);
     Ok(stats)

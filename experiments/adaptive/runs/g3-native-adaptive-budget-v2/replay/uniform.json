@@ -1,0 +1,22 @@
+{
+  "case": "smooth-lattice",
+  "route": "uniform",
+  "nominal_length": 0.02247651505130419,
+  "cells": 24,
+  "coarse_cells": 24,
+  "min_length": 0.002,
+  "order": 1,
+  "solver_quadrature_points": 4,
+  "status": "failed",
+  "qualified": false,
+  "lattice_field_representation": {
+    "symmetric_minimum": true,
+    "positive_void_ceiling": 0.02,
+    "verification_points": 4096,
+    "material_mismatches": 0,
+    "maximum_symmetric_field_difference": 1.6653345369377348e-16
+  },
+  "error": "adaptation exceeded max_tetrahedra: 250002 > 250000",
+  "traceback": "Traceback (most recent call last):\n  File \"/home/kmarchais/dev/meshers/experiments/adaptive/sizing_pilot.py\", line 116, in candidate\n    mesh = meshers.generate(field, cells=args.cells, geometry_tolerance=0.002,\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/kmarchais/dev/meshers/crates/meshers-python/python/meshers/__init__.py\", line 315, in generate\n    result = _meshers.generate(\n             ^^^^^^^^^^^^^^^^^^\n_meshers.MeshingFailure: adaptation exceeded max_tetrahedra: 250002 > 250000\n",
+  "total_workflow_s": 0.4184800860020914
+}

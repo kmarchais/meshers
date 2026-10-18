@@ -804,7 +804,14 @@ fn build<F: ScalarField>(g: &Context<F>) -> Result<Output, String> {
         return finish(mesh, g);
     }
     if let Some(adapt) = o.adapt {
-        let stats = crate::tet_adapt::adapt(&mut mesh, g, threshold, o.periodic, &adapt)?;
+        let stats = crate::tet_adapt::adapt(
+            &mut mesh,
+            g,
+            threshold,
+            o.periodic,
+            &adapt,
+            o.max_tetrahedra,
+        )?;
         crate::optimize::optimize_for(
             &mut mesh,
             threshold,

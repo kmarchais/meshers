@@ -1,0 +1,12 @@
+{
+  "source_run": "g3-lattice-sizing-active-scale-v1",
+  "job": 166,
+  "tetrahedra_cap": 250000,
+  "benchmark_admitted": false,
+  "uniform": {"elements": 424754, "nodes": 83574, "benchmark_admitted": false},
+  "recovery": {"elements": 567821, "nodes": 111087, "benchmark_admitted": false},
+  "reason": "Both generated meshes exceed the unchanged element cap. Native adaptation ignored the supplied budget and the runner missed its own post-generation check. Frozen qualified flags describe geometry only and must not admit this experiment.",
+  "native_budget_enforcement_fixed": false,
+  "runner_post_generation_guard_added": true,
+  "regression": "experiments/adaptive/test_reference_admission.py::test_post_adaptation_mesh_cap"
+}

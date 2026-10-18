@@ -1,0 +1,33 @@
+{
+  "inputs": {
+    "/home/kmarchais/dev/meshers/experiments/adaptive/runs/g3-lattice-stress-enrichment-v1/workers.json": "960c5222226aabbeda3d8fea4630127721d5e90fcb87f65e2f053fee46395a9f",
+    "/home/kmarchais/dev/meshers/experiments/adaptive/runs/g3-lattice-stress-enrichment-v1/smooth-lattice.json": "9f597f5952afa9e08d9320dc39f1057012c5e3418fa818d4f67b6b599dbd6770",
+    "/home/kmarchais/dev/meshers/experiments/adaptive/runs/g3-lattice-stress-enrichment-v1/smooth-lattice-recovery.npz": "ec866075c11b57d2dbe44d79bc289a2d962534ddda1de7b7d090d6a08e50bf50",
+    "/home/kmarchais/dev/meshers/experiments/adaptive/runs/g3-lattice-stress-enrichment-v1/smooth-lattice-control-linear.npz": "cea7a6710acabf676d495b5232f82a8fbdb5aafa8689c9e7c29e0e7aa46697ba",
+    "/home/kmarchais/dev/meshers/experiments/adaptive/runs/g3-lattice-stress-enrichment-v1/smooth-lattice-control-straight.npz": "c3e9be32b552746aa29a4a71ab247799ffbe0c205abd7daec35d0cf3cf580e36"
+  },
+  "driver_sha256": "bf749d23a63b7f8cdae83496aa75b9598236033c7e0b4a62a42c525578d5da57",
+  "helper_sha256": "02bfe51e36ca901428b54eb0711509973f0769386863bd4b3eac8bc32220b1cb",
+  "checks": {
+    "linear": {
+      "periodic_jump_max_recomputed": 0.0,
+      "recorded_worker_field_consistency": {
+        "reaction_relative_error": 8.45330891084792e-12,
+        "hill_mandel_relative_error": 8.543766462169373e-12,
+        "integrated_volume": 0.2461644820610413
+      }
+    },
+    "straight": {
+      "periodic_jump_max_recomputed": 0.0,
+      "recorded_worker_field_consistency": {
+        "reaction_relative_error": 1.7705068307940138e-11,
+        "hill_mandel_relative_error": 1.8127552833715516e-11,
+        "integrated_volume": 0.24616448206104133
+      }
+    }
+  },
+  "ranking_selector_passed": true,
+  "field_checks_passed": true,
+  "live_pilot_eligible": true,
+  "scope": "Recomputed saved-field jumps and completed-worker stress/energy checks; diagnostic controls are not continuum references or benchmark rankings"
+}

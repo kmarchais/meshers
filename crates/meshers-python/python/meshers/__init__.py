@@ -230,7 +230,8 @@ def generate(
             the requirement. Adaptive splitting and wall projection honor a positive
             requested minimum. Nonempty meshes below it are rejected, and requested
             geometry limits are not relaxed. Empty meshes remain valid.
-        max_tetrahedra: Budget for generated tetrahedra.
+        max_tetrahedra: Budget for generated tetrahedra. Adaptation raises
+            MeshingError when a local topology operation exceeds this budget.
         optimize_passes: Number of quality-optimization passes, 0..100.
         interior_refine_nodes: Maximum new nodes in one length-ranked interior
             bisection pass. Zero disables it. Boundary vertices and triangles stay

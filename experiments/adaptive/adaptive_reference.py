@@ -34,6 +34,7 @@ def main():
     def read_record(path):
         row = json.loads(path.read_text())
         assert row["qualified"] and row["geometry"]["geometry_admitted"]
+        assert 0 < row["elements"] <= workflow.CAP
         assert row["status"] in ("solved", "solved-needs-reference")
         if row.get("order") == 2 and row.get("solver_quadrature_points", 15) == 4:
             assert row.get("quadrature_sensitivity_passed")

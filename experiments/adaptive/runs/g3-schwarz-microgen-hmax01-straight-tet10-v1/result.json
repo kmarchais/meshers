@@ -1,0 +1,166 @@
+{
+  "case": "schwarz-solid",
+  "route": "microgen-vtk-mmg-straight-tet10-direct-fedoo",
+  "parent_route": "microgen-vtk-single-mmg-diagnostic-override",
+  "parent_mmg_calls": [
+    {
+      "nofem": true,
+      "hausd": 0.0005,
+      "hmax": 0.1,
+      "hgrad": 1.3
+    }
+  ],
+  "source": "experiments/adaptive/runs/g3-schwarz-microgen-hmax01-seed-v1",
+  "nodes": 207200,
+  "elements": 136587,
+  "order": 2,
+  "solver_quadrature_points": 4,
+  "qualified": true,
+  "status": "solved-needs-reference",
+  "live_workflow_timing": false,
+  "scope": "Saved genuine Microgen mesh; manual straight elevation and direct fedoo; no native Meshers generation or public Microgen Tet10 conversion",
+  "lift_and_conversion_s": 1.2883294190032757,
+  "geometry": {
+    "sampled_forward_max": 0.0009615151058020022,
+    "sampled_reverse_max": 0.0008399156671267588,
+    "sampled_two_sided_max": 0.0009615151058020022,
+    "outward_forward_max": 0.0009615151058020022,
+    "inward_forward_max": 0.0008426811109546939,
+    "projection_failed": 0,
+    "forward_samples": 205842,
+    "reverse_samples": 50135,
+    "volume": 0.4999490989068641,
+    "relative_volume_error": -0.00010180218627175996,
+    "q_min_corner": 0.10387138156538732,
+    "q_p01_corner": 0.4595554962326826,
+    "minimum_dihedral_deg_corner": 4.746361675739308,
+    "minimum_sampled_jacobian": 2.999749865472616e-08,
+    "reverse_tessellation_delta_max": 0.0,
+    "quadratic_reverse_subdivisions": [
+      1
+    ],
+    "geometry_admitted": true
+  },
+  "periodic": {
+    "periodic_pair_counts": [
+      3028,
+      3028,
+      3028
+    ],
+    "periodic_coordinate_errors": [
+      0.0,
+      0.0,
+      0.0
+    ],
+    "periodic_pair_tolerance": 1e-10,
+    "periodic_equivalence_classes": 198292,
+    "periodic_triangles_match": true
+  },
+  "completed_loads": 6,
+  "solver_records": [
+    {
+      "iterations": 2064,
+      "relative_residual": 9.82541276899419e-13,
+      "free_dofs": 594873,
+      "seconds": 204.31408548499894
+    },
+    {
+      "iterations": 2067,
+      "relative_residual": 9.707662945065322e-13,
+      "free_dofs": 594873,
+      "seconds": 186.14688654199927
+    },
+    {
+      "iterations": 2051,
+      "relative_residual": 1.0001188036365555e-12,
+      "free_dofs": 594873,
+      "seconds": 153.80792163500155
+    },
+    {
+      "iterations": 2085,
+      "relative_residual": 9.715177728302178e-13,
+      "free_dofs": 594873,
+      "seconds": 155.5482150409989
+    },
+    {
+      "iterations": 2033,
+      "relative_residual": 9.806100869145478e-13,
+      "free_dofs": 594873,
+      "seconds": 144.20576453600006
+    },
+    {
+      "iterations": 2096,
+      "relative_residual": 9.735368286087553e-13,
+      "free_dofs": 594873,
+      "seconds": 153.24591046299975
+    }
+  ],
+  "solve_s": 1026.8774108029975,
+  "stiffness": [
+    [
+      0.7972825882448334,
+      0.14325557949640888,
+      0.14324740552122797,
+      6.326199957851128e-06,
+      2.0025757471259092e-05,
+      -1.7869925381258482e-06
+    ],
+    [
+      0.14325557949640888,
+      0.7972636055837141,
+      0.14324437968386106,
+      -2.713674339475911e-06,
+      -2.7069542587450184e-06,
+      1.631360036339666e-05
+    ],
+    [
+      0.14324740552122797,
+      0.14324437968386106,
+      0.797243531274084,
+      -6.335001295856546e-07,
+      3.1736523492220366e-05,
+      3.189518529606219e-05
+    ],
+    [
+      6.326199957851128e-06,
+      -2.713674339475911e-06,
+      -6.335001295856546e-07,
+      0.19118969896338212,
+      4.508568476817057e-07,
+      1.2200930783012634e-06
+    ],
+    [
+      2.0025757471259092e-05,
+      -2.7069542587450184e-06,
+      3.1736523492220366e-05,
+      4.508568476817057e-07,
+      0.19117759987207592,
+      -4.5710228008719023e-07
+    ],
+    [
+      -1.7869925381258482e-06,
+      1.631360036339666e-05,
+      3.189518529606219e-05,
+      1.2200930783012634e-06,
+      -4.5710228008719023e-07,
+      0.19117278236502966
+    ]
+  ],
+  "quadrature_exact_for_affine_geometry": true,
+  "higher_rule_fixed_field_difference": {
+    "worst_relative_strain_energy_difference": 5.124968257366395e-11,
+    "relative_tensor_frobenius_difference": 2.0170867747562892e-11,
+    "relative_energy_difference_eigenvalues": [
+      -5.124968257366395e-11,
+      -2.0981963807685598e-11,
+      -7.303239184886768e-14,
+      8.972958612610376e-12,
+      2.2439974457085156e-11,
+      3.2806351293769086e-11
+    ]
+  },
+  "quadrature_sensitivity_limit": 0.0001,
+  "quadrature_sensitivity_passed": true,
+  "higher_rule_consistency_limit": 1e-07,
+  "total_saved_mesh_study_s": 1048.0741993560005
+}

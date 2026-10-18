@@ -10,6 +10,21 @@ The real Microgen VTK and CLI MMG workflows ran on all four fixed
 specimens. This is not the earlier MMG-on-a-Meshers-seed comparison.
 There is no demonstrated four-fixture win for Meshers.
 
+## Gyroid first-pass FEM diagnostic, 18 October 2026
+
+Job 167 removes `nofem=True` from the actual Microgen first MMG call. The
+installed MMG help defines this flag as disabling forced finite-element mesh
+creation. This is an explicitly modified one-pass diagnostic, not a default
+workflow. Keep VTK resolution 43, first-pass `hausd=0.0015`, `hmax=0.06` and
+`hgrad=1.3`. Omit the second pass exactly as recorded in the frozen driver.
+
+The returned mesh has 22,482 nodes and 95,904 tets. Two-sided sampled distance
+is 0.0015123 and volume error is +0.3676%, but minimum quality is 0.0079758,
+far below 0.1. No stiffness solve runs. Removing the flag does not establish
+an admitted comparator. Intermediate audits are charged, so this diagnostic's
+28.56 seconds is not a fair live timing comparison. See
+`runs/g3-gyroid-first-pass-fem43-v1`.
+
 The useful negative results are:
 
 - Meshers rejects all tested periodic spinodoids at quality 0.1.

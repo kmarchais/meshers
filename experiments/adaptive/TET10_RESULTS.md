@@ -144,6 +144,15 @@ only 10.0% fewer than the original 230,337-node control. Job 160 runs that
 coarser straight-Tet10 control with the same six-load solver and independent
 audits. No accuracy or timing conclusion is assigned before reading it.
 
+Job 160 completes the coarser control. Its declared model range is 0.053985%
+to 0.062716%, so it still passes the supplementary 0.1% target. The solve
+takes 1,026.88 seconds; the worker takes 1,049.97 seconds and peaks at 5.40 GiB.
+Reaction disagreement is 1.47e-11, Hill-Mandel disagreement is 1.09e-11 and
+periodic jumps remain below 5.56e-17. This modest coarsening reduces nodes
+without losing the declared target. It remains a saved-mesh control, not a
+paired live workflow measurement. Return to the unresolved lattice recovery
+validation rather than spending further runs tightening Schwarz alone.
+
 The next requested priority is a coarse FEA stress-recovery estimate for linear
 mesh sizing. The new displacement archives provide integration evidence, but
 they are not qualified local-stress references for that study.

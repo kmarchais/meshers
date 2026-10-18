@@ -41,6 +41,7 @@ def worker(args):
     row["first_pass_hausd_override"] = args.first_pass_hausd
     row["first_pass_hmax_override"] = args.first_pass_hmax if args.first_pass_hausd is not None else None
     row["first_pass_only"] = args.first_pass_only
+    row["first_pass_fem_override"] = args.first_pass_fem
     row["optimize_second_pass"] = args.optimize_second_pass
     row["solver_formulation"] = "prescribed-strain" if args.strain_controlled else "stress-controlled"
     if args.first_pass_hausd is not None:
@@ -49,6 +50,8 @@ def worker(args):
         row["route"] = "microgen-vtk-single-mmg-diagnostic-override"
     if args.optimize_second_pass:
         row["route"] = "microgen-vtk-mmg-interior-optimization-override"
+    if args.first_pass_fem:
+        row["route"] = "microgen-vtk-mmg-first-pass-fem-override"
     def audit_stage(label, stage_grid):
         tetrahedra_count = int(np.count_nonzero(stage_grid.celltypes == int(pv.CellType.TETRA)))
         if tetrahedra_count > workflow.CAP:
@@ -112,6 +115,8 @@ def worker(args):
             return
         if args.first_pass_hausd is not None and parameters.get("nofem"):
             parameters.update(hausd=args.first_pass_hausd, hmax=args.first_pass_hmax, hgrad=1.3)
+        if args.first_pass_fem and parameters.get("nofem"):
+            del parameters["nofem"]
         row["mmg_calls"].append({key: value for key, value in parameters.items()
                                  if key not in {"input", "output"}})
         workflow.save(output, row)
@@ -207,6 +212,7 @@ def main():
     parser.add_argument("--first-pass-hausd", type=float)
     parser.add_argument("--first-pass-hmax", type=float, default=0.06)
     parser.add_argument("--first-pass-only", action="store_true")
+    parser.add_argument("--first-pass-fem", action="store_true")
     parser.add_argument("--optimize-second-pass", action="store_true")
     parser.add_argument("--strain-controlled", action="store_true")
     parser.add_argument("--geometry-only", action="store_true")
@@ -243,6 +249,8 @@ def main():
                 command.extend(["--first-pass-hmax", str(args.first_pass_hmax)])
             if args.first_pass_only:
                 command.append("--first-pass-only")
+            if args.first_pass_fem:
+                command.append("--first-pass-fem")
             if args.optimize_second_pass:
                 command.append("--optimize-second-pass")
             if args.strain_controlled:

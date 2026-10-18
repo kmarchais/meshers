@@ -7,15 +7,24 @@ import pytest
 
 import microgen_workflow as workflow
 import stiffness_pair
+from sizing_pilot import enforce_mesh_cap
 
 pytest.importorskip("fedoo")
 pytest.importorskip("microgen")
 pytest.importorskip("pyvista")
 
 
+def test_post_adaptation_mesh_cap():
+    enforce_mesh_cap(83_574, workflow.CAP)
+    with pytest.raises(ValueError, match="mesh element cap"):
+        enforce_mesh_cap(83_574, 424_754)
+    with pytest.raises(ValueError, match="mesh element cap"):
+        enforce_mesh_cap(111_087, 567_821)
+
+
 @pytest.mark.parametrize("updates", [None, {"status": "failed"},
     {"quadrature_sensitivity_passed": False}, {"quadrature_sensitivity_limit": 0.01},
-    {"qualified": False}])
+    {"qualified": False}, {"elements": 424_754}])
 def test_four_point_comparison_admission(tmp_path, monkeypatch, updates):
     control = workflow.HERE / "runs/g3-lattice-uniform34-quadrature4-v1/result.json"
     reference = workflow.HERE / "runs/g3-lattice-adapt24-tol0028-v1/result.json"
