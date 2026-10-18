@@ -1,5 +1,64 @@
 # Difficult periodic specimens on G3
 
+## Rejected classic VTK spinodoid clip, 18 October 2026
+
+Job 170 replaces PyVista's table-based clipping with `vtkClipDataSet` at its
+default merge tolerance 0.01. It then calls Microgen's public volume generator.
+This is a nondefault diagnostic, not a replacement default pipeline. The FFT16
+constructor, all 52 spectral coefficients and 4,096 queried field values remain
+unchanged. Only the sampling grid is 32 cells.
+
+The seed still has 28,648 nodes and 131,889 tets. Its retained caps include 83
+triangles with quality ceilings below 0.1, compared with 78 in the earlier
+table-based clip. Minimum ceiling remains 0.001338. Independent sampled
+two-sided distance is 0.017742, with 55 projection failures. This also fails
+geometry admission. Do not remesh or solve this seed as a qualified competitor.
+The frozen driver and results remain in `runs/g3-spinodoid-classic-clip32-v1`;
+the unsuccessful option is removed from the maintained screening runner.
+
+Stop this clipping-algorithm path. The missing spinodoid comparator remains
+unsupported within the tested recipes and stage. The next native investigation
+returns to coarse spinodoid box curves, where the earlier 16-cell failure could
+make the admitted 32-cell Meshers workflow unnecessarily expensive.
+
+## Current coarse spinodoid diagnosis
+
+Job 171 reruns the fixed compiled FFT16 specimen from 16 cells on the
+budget-corrected native binary. The independent gate remains 0.002. A loose
+internal return tolerance of 1 is diagnostic only and never changes admission.
+The one-pass optimizer configuration rejects two tets below quality 0.1,
+with minimum 0.05810, before returning a mesh.
+
+Job 172 changes only optimizer passes from one to four. It returns 15,550
+nodes and 64,663 tets with minimum quality 0.100176. It still fails independent
+two-sided distance at 0.010418, with 18 failed projections. No FEA runs.
+Generation takes 16.52 seconds, so the coarser seed is not automatically
+cheaper than the earlier admitted 32-cell generation.
+
+The existing curve probe reproduces every recorded geometry metric. Ten of
+its worst finite samples lie on cap-supported vertices or edges. Several
+surface vertices remain off the true wall, including an interior vertex.
+This is not merely a curved-chord approximation error.
+
+Job 174 tests exact saved roots for two distinct periodic vertex classes,
+moving all periodic copies together and preserving locked box coordinates.
+The worst box-curve vertex has nine incident tets. Its root move lowers
+minimum absolute quality from 0.26653 to 0.09826 and inverts one tet. The
+interior vertex has 133 incident tets; projection inverts 77 and leaves 73
+below quality 0.1. Neither direct move meets the fixed gates. These are
+separate diagnostic moves, not a jointly repaired mesh or an admission claim.
+
+Do not force these vertices onto the field, weaken the quality floor or assume
+quadratic edge projection repairs off-wall corner nodes. A topology-aware
+repair or a better initial topology is needed for this coarse route. Before
+changing that code, inspect why the pending-vertex repair cannot make space
+in these saved stars. The current longest-facing-edge strategy is a hypothesis
+to inspect, not a proven root cause or an implemented fix. Records are in
+`runs/g3-spinodoid-coarse16-box-diagnostic-v1`,
+`runs/g3-spinodoid-coarse16-opt4-v1`,
+`runs/g3-spinodoid-coarse16-box-probe-v1` and
+`runs/g3-spinodoid-coarse16-projection-stars-v1`.
+
 ## Selecting the next change
 
 The saved finer sizing pilots put relocation at 0.69 to 1.23 seconds within
