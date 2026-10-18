@@ -38,8 +38,11 @@ def worker(args):
     row["stage_audit_enabled"] = args.audit_stages
     row["timing_comparable"] = not args.audit_stages
     row["first_pass_hausd_override"] = args.first_pass_hausd
+    row["first_pass_only"] = args.first_pass_only
     if args.first_pass_hausd is not None:
         row["route"] = "microgen-vtk-mmg-first-pass-override"
+    if args.first_pass_only:
+        row["route"] = "microgen-vtk-single-mmg-diagnostic-override"
     def audit_stage(label, stage_grid):
         tetrahedra_count = int(np.count_nonzero(stage_grid.celltypes == int(pv.CellType.TETRA)))
         if tetrahedra_count > workflow.CAP:
@@ -73,6 +76,12 @@ def worker(args):
     os.environ["PATH"] = str(binary.parent) + os.pathsep + os.environ["PATH"]
     original = microgen.Mmg.mmg3d
     def record_call(**parameters):
+        if args.first_pass_only and parameters.get("ls"):
+            row["omitted_second_pass"] = {key: value for key, value in parameters.items()
+                if key not in {"input", "output"}}
+            workflow.save(output, row)
+            shutil.copyfile(parameters["input"], parameters["output"])
+            return
         if args.first_pass_hausd is not None and parameters.get("nofem"):
             parameters.update(hausd=args.first_pass_hausd, hmax=0.06, hgrad=1.3)
         row["mmg_calls"].append({key: value for key, value in parameters.items()
@@ -155,6 +164,7 @@ def main():
     parser.add_argument("--worker", action="store_true")
     parser.add_argument("--audit-stages", action="store_true")
     parser.add_argument("--first-pass-hausd", type=float)
+    parser.add_argument("--first-pass-only", action="store_true")
     args = parser.parse_args()
     if args.worker:
         worker(args)
@@ -180,6 +190,8 @@ def main():
                 command.append("--audit-stages")
             if args.first_pass_hausd is not None:
                 command.extend(["--first-pass-hausd", str(args.first_pass_hausd)])
+            if args.first_pass_only:
+                command.append("--first-pass-only")
             result = workflow.bounded(command,
                 args.run / "worker.log", part, timeout=600)
             workflow.save(args.run / "worker.json", result)

@@ -350,3 +350,71 @@ gate. This screen does not rule out other grids or explicit boundary repair.
 It does rule out obtaining an admitted competitor merely by tuning MMG on
 these six seeds. Records and the runnable driver are in
 `runs/g3-microgen-seed-screen-v1` and `runs/g3-microgen-seed-screen-v2`.
+
+## First-pass override on the default Schwarz seed
+
+Job 61 applies the explicit first-pass hausd=0.0005 override to the original
+20-point VTK seed, keeping the actual two Microgen MMG calls. It produces 35,084
+nodes and 172,800 tets in 15.25 seconds including audit. Distance improves from
+0.005347 to 0.002098, but still fails 0.002. Minimum quality is 0.02980 and
+41 elements fail 0.1. Volume error is -0.02849%, periodic checks pass, and no
+retained cap triangle has an adjacent-tet quality ceiling below 0.1. No FEA runs.
+Records are in `runs/g3-microgen-tuned-schwarz20-firstpass-v1`.
+
+Job 62 localizes the worst probes to box-cap curves and the ten worst elements
+to tets adjoining a box cap. Its optional detail metrics reproduce every prior
+aggregate geometry metric exactly. Jobs 63 and 64 match ten rejected curve
+probes to edges retained from the default VTK seed. Job 64 recomputes the probes
+from saved mesh connectivity and barycentric weights rather than trusting the
+diagnostic coordinates. Endpoint matching errors are below 4.2e-16.
+
+For a worst probe at (0.2479023, 0, 0.5), the Schwarz field stays positive
+throughout its coordinate box of radius 0.002. The analytic lower estimate is
+0.0005350, from the minimum cosine in each coordinate interval. The Euclidean
+ball is contained in that coordinate box. Retaining this chord therefore leaves
+an obstruction to the distance gate, regardless of interior MMG sizing. This is
+a geometry argument, not FE or local stress certification. Records are in
+`runs/g3-microgen-firstpass20-diagnostic-v1`, `runs/g3-microgen-fixed-curve-v1`
+and `runs/g3-microgen-fixed-curve-v2`.
+
+Before adding a boundary-repair algorithm, the next bounded experiment screens
+the actual VTK seeds at resolutions 28, 30, 34, 36, 38 and 40 for degeneracy,
+retained-cap quality ceilings and independent geometry. The specimen and fixed
+admission gates remain unchanged. These are tuned extraction grids, not defaults.
+
+Job 65 finds cap-feasible seeds at 30 and 38 points. Neither has a zero-volume
+tetrahedron or degenerate cap. Their seed distances are 0.0009615 and 0.0005868,
+and cap quality ceilings are at least 0.1448 and 0.1507. Raw seed tet quality
+still fails 0.1, so neither is an admitted comparator before remeshing. The
+other four grids have cap obstructions, and 28, 34 and 40 also contain
+zero-volume tets. Records are in `runs/g3-microgen-seed-screen-large-v1`.
+
+Select the smaller 30-point seed for the next actual two-pass Microgen/MMG
+experiment, with the explicit first-pass 0.0005 override. Intermediate audits
+enforce the 250,000-tet cap. Their extra cost makes this a diagnostic run, not
+a comparable workflow timing.
+
+Job 66's actual two-pass workflow retains the 30-point seed distance, H=0.0009615.
+Its first pass has 139,788 tets and q_min=0.10623, passing geometry and quality.
+The second pass has 163,887 tets and reduces q_min to 0.08494. The final mesh
+therefore fails admission and receives no FEA. Intermediate diagnostics are in
+`runs/g3-microgen-firstpass30-v1`.
+
+The next diagnostic retains the measured first-pass output and omits the second
+native call. This is explicitly a one-pass Microgen VTK/MMG override, not the
+default or a public Microgen API option. The API's output cleanup and periodic
+checks remain, followed by the fixed independent admission tests. If admitted,
+its full six-load stiffness and live workflow time can expose a stronger
+competitor than the failing two-pass controls.
+
+Job 67's explicitly modified one-pass route passes all independent geometry,
+quality and periodic gates with 29,713 nodes and 139,788 tets. H=0.0009615 and
+q_min=0.10623. It completes six converged loads in 34.98 seconds and a full live
+workflow in 44.35 seconds. Worst mixed-load disagreement is 1.13403% against the
+justified Schwarz reference, so it still misses the 1% stiffness target. This
+is an admitted geometry competitor, not a matched-accuracy winner. Records are
+in `runs/g3-microgen-singlepass30-v1`.
+
+Select the other screened cap-feasible seed, 38 points, for the next one-pass
+candidate with unchanged MMG settings. Keep the standard two-pass failures and
+the explicit omission of its second native call visible in the records.

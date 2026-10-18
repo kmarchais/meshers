@@ -1,0 +1,180 @@
+{
+  "case": "schwarz-solid",
+  "route": "microgen-vtk-single-mmg-diagnostic-override",
+  "resolution": 30,
+  "mmg_arguments": {
+    "hausd": 0.0005,
+    "hmax": 0.06,
+    "hgrad": 1.3
+  },
+  "status": "solved",
+  "mmg_calls": [
+    {
+      "nofem": true,
+      "hausd": 0.0005,
+      "hmax": 0.06,
+      "hgrad": 1.3
+    }
+  ],
+  "stage_audit_enabled": false,
+  "timing_comparable": true,
+  "first_pass_hausd_override": 0.0005,
+  "first_pass_only": true,
+  "specimen_setup_s": 0.004830615000173566,
+  "seed_nodes": 18640,
+  "seed_elements": 86876,
+  "vtk_extraction_s": 0.11382467400017049,
+  "omitted_second_pass": {
+    "hausd": 0.0005,
+    "hgrad": 1.3,
+    "hmax": 0.06,
+    "hmin": null,
+    "hsiz": null,
+    "ls": true,
+    "nr": true
+  },
+  "generation_s": 7.857052262000252,
+  "nodes": 29713,
+  "elements": 139788,
+  "reoriented_tetrahedra": 0,
+  "cap_minimum_quality_ceiling": 0.1448328375252718,
+  "caps_below_quality_gate": 0,
+  "geometry": {
+    "sampled_forward_max": 0.0009615151058020022,
+    "sampled_reverse_max": 0.0008441957658977628,
+    "sampled_two_sided_max": 0.0009615151058020022,
+    "outward_forward_max": 0.0009615151058020022,
+    "inward_forward_max": 0.0008339176064017973,
+    "projection_failed": 0,
+    "forward_samples": 206050,
+    "reverse_samples": 50135,
+    "volume": 0.4999462732251869,
+    "relative_volume_error": -0.0001074535496261575,
+    "q_min_corner": 0.10622777014162377,
+    "q_p01_corner": 0.48145958297355756,
+    "minimum_dihedral_deg_corner": 4.671148995093489,
+    "minimum_sampled_jacobian": 2.4176121869543847e-08,
+    "reverse_tessellation_delta_max": 0.0,
+    "quadratic_reverse_subdivisions": null,
+    "geometry_admitted": true
+  },
+  "periodic": {
+    "periodic_pair_counts": [
+      800,
+      800,
+      800
+    ],
+    "periodic_coordinate_errors": [
+      0.0,
+      0.0,
+      0.0
+    ],
+    "periodic_pair_tolerance": 1e-10,
+    "periodic_equivalence_classes": 27402,
+    "periodic_triangles_match": true
+  },
+  "audit_s": 1.1055620440001803,
+  "qualified": true,
+  "stiffness": [
+    [
+      0.8011085123984947,
+      0.14376889663108253,
+      0.1437644762954675,
+      -7.811526699036048e-05,
+      0.00011333258420620993,
+      9.292729691965607e-05
+    ],
+    [
+      0.14376889663099085,
+      0.8011372634238874,
+      0.14376454492521468,
+      -7.8738766763929e-05,
+      6.802228129129163e-05,
+      0.00014555897119411399
+    ],
+    [
+      0.14376447629554898,
+      0.14376454492516053,
+      0.8010433364456677,
+      -7.750031476868631e-05,
+      0.00011675751636071374,
+      0.0001630375724121394
+    ],
+    [
+      -7.811526699826941e-05,
+      -7.873876669772257e-05,
+      -7.750031474628744e-05,
+      0.19325412204536332,
+      4.427834115701461e-05,
+      2.4932062385461927e-05
+    ],
+    [
+      0.00011333258416241133,
+      6.802228125933575e-05,
+      0.00011675751635273377,
+      4.4278341157045104e-05,
+      0.1933387992334281,
+      -3.3277244828921175e-05
+    ],
+    [
+      9.292729692607166e-05,
+      0.00014555897116488498,
+      0.00016303757241207658,
+      2.4932062376628627e-05,
+      -3.3277244823605596e-05,
+      0.19330057169521342
+    ]
+  ],
+  "solver_records": [
+    {
+      "iterations": 1036,
+      "relative_residual": 1.0826135779965716e-12,
+      "free_dofs": 82209,
+      "seconds": 5.460640821000197
+    },
+    {
+      "iterations": 1037,
+      "relative_residual": 1.024049094627766e-12,
+      "free_dofs": 82209,
+      "seconds": 5.486017338999773
+    },
+    {
+      "iterations": 1035,
+      "relative_residual": 9.736468922942332e-13,
+      "free_dofs": 82209,
+      "seconds": 5.50028636099978
+    },
+    {
+      "iterations": 1044,
+      "relative_residual": 1.0564844925931454e-12,
+      "free_dofs": 82209,
+      "seconds": 5.3247590999999375
+    },
+    {
+      "iterations": 1046,
+      "relative_residual": 9.761943087034667e-13,
+      "free_dofs": 82209,
+      "seconds": 5.226161909000439
+    },
+    {
+      "iterations": 1045,
+      "relative_residual": 9.98096455733688e-13,
+      "free_dofs": 82209,
+      "seconds": 5.332241192000765
+    }
+  ],
+  "solve_s": 34.982315703000495,
+  "reference_disagreement": {
+    "worst_relative_strain_energy_difference": 0.011340252158481914,
+    "relative_tensor_frobenius_difference": 0.00480335269532778,
+    "relative_energy_difference_eigenvalues": [
+      0.003810070553655092,
+      0.004574131003235791,
+      0.004647098409231247,
+      0.010621810795284233,
+      0.011060768398767266,
+      0.011340252158481914
+    ]
+  },
+  "total_workflow_s": 44.34833004600023
+}

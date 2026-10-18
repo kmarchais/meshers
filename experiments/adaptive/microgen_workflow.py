@@ -292,6 +292,16 @@ def geometry(run, name, points, tets, surface, detail_count=0):
                                     abs(row["relative_volume_error"]) <= 0.01 and
                                     row["q_min_corner"] >= 0.1 and not failed.any() and minimum > 0)
     if detail_count:
+        row["elements_below_quality_gate"] = int((quality < 0.1).sum())
+        row["worst_quality_elements"] = []
+        for element_index in np.argsort(quality)[:detail_count]:
+            nodes = tets[element_index, :4]
+            coordinates = points[nodes]
+            row["worst_quality_elements"].append({"element": int(element_index),
+                "quality": float(quality[element_index]), "node_ids": nodes.tolist(),
+                "coordinates": coordinates.tolist(),
+                "box_plane_vertex_counts": [int(on_box_plane(coordinates[:, axis], plane).sum())
+                    for axis in range(3) for plane in (-0.5, 0.5)]})
         details = []
         for sample_index in np.argsort(forward)[-detail_count:][::-1]:
             face_index, probe_index = divmod(int(sample_index), len(weights))

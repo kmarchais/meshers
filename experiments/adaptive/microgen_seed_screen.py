@@ -49,6 +49,7 @@ def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--run", type=Path, required=True)
     parser.add_argument("--resolution", type=int)
+    parser.add_argument("--resolutions", type=int, nargs="+", default=(21, 22, 23, 25, 26, 27))
     args = parser.parse_args()
     if args.resolution is not None:
         worker(args)
@@ -60,7 +61,8 @@ def main():
     hashes = {str(path): workflow.digest(path) for path in inputs}
     for path in inputs:
         shutil.copyfile(path, args.run / path.name)
-    resolutions = (21, 22, 23, 25, 26, 27)
+    resolutions = args.resolutions
+    assert all(resolution >= 2 for resolution in resolutions) and len(set(resolutions)) == len(resolutions)
     workflow.save(args.run / "manifest.json", {"script_sha256": workflow.digest(Path(__file__)),
         "inputs": hashes, "resolutions": resolutions, "memory_bytes": workflow.MEMORY,
         "threads": 1, "worker_timeout_s": 120, "tetrahedra_cap": workflow.CAP})
