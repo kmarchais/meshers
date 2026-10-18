@@ -38,18 +38,52 @@ The 666,993-square CSR matrix has 91,401,219 stored entries and occupies
 end-to-end meshing benchmark. Records are in
 `runs/g3-lattice-cubic-assembly-memory-v1`.
 
-## Pending reference solve
+## Initial reference solve stopped
 
 Job 180 uses that prepared mesh. Before solving, it verifies the source
 quadratic mapping at every cubic node and embeds the saved parent fields.
 Mapping disagreement is 1.67e-16; integrated parent stress and energy reproduce
 the archived tensor within 2.17e-11 relative. Periodic checks pass.
 
-The run has an 8 GiB ceiling and a hard 1,800-second worker timeout. After the
-first load completes, it rejects continuation if solve-stage wall time exceeds
-240 seconds. This is a completion gate, not an interruptible per-load timer.
-Six completed solves still require independent own-rule stress and energy,
-periodic jumps, Galerkin monotonicity and positive 125-point reintegration.
-The retained quadrature sensitivity limit is 1e-4 relative. No new reference
-or stiffness-accuracy claim is justified until these checks finish. Records
-are in `runs/g3-lattice-cubic-reference-v1`.
+The run has an 8 GiB ceiling and a hard 1,800-second worker timeout. Its
+240-second post-first-load continuation gate becomes unreachable while the
+first load is still running. At 328 seconds after the preceding status write,
+no load has completed. Stop the run rather than wait for a result that cannot
+pass that gate. Final worker wall time is 381.19 seconds and peak RSS is
+5.742 GiB. No lattice reference tensor or displacement archive is obtained.
+
+Pueue cancellation initially leaves this known controller and worker alive.
+Their exact argv and process group are checked, the worker group is terminated
+and both known PIDs are confirmed gone before the next heavy job starts. No
+other jobs are touched. Frozen partial results remain unchanged; the separate
+stop record is `runs/g3-lattice-cubic-reference-jacobi-stop-v1.json`.
+
+## Cached AMG validation and retry
+
+PyAMG 5.3.0 is already installed and pinned in the G3 runtime requirements.
+Job 181 tests smoothed-aggregation V-cycle preconditioning with three reduced
+translational candidates. The original CG tolerances remain `rtol=1e-12` and
+`atol=1e-14`, with independently recomputed residuals below 2e-9. Reuse is
+allowed only when the complete reduced CSR matrix hashes identically.
+
+Six-load cubic cube and saved curved Schwarz checks both pass. Cube analytic
+stiffness disagreement is 4.42e-12; Schwarz reproduces its archived tensor
+within 4.74e-11. Independent own-rule stress and energy disagreement remains
+below 3.33e-12, and periodic jumps below 2.23e-16. Each case builds one
+hierarchy and reuses it for the remaining five loads. Records are in
+`runs/g3-amg-reference-validation-v1`.
+
+The small Schwarz solve takes 6.80 seconds, versus the archived diagonal-CG
+control's 6.74 seconds. This is not evidence of a speed advantage. The purpose
+is to test whether the large reference becomes feasible. Benchmark defaults
+are unchanged, and any future workflow comparison must use the same solver
+policy on both meshers and charge hierarchy setup.
+
+Job 182 tests the same admitted cubic lattice mesh with this validated solver.
+It adds an interruptible 240-second first-load deadline and saves completed
+fields before independent audits, while retaining the 8 GiB ceiling and
+1,800-second outer worker timeout. All six solves still require own-rule
+stress/energy agreement, periodic jumps, Galerkin monotonicity and positive
+125-point reintegration at the retained 1e-4 relative sensitivity limit. No new
+reference or accuracy claim is justified until those checks finish. Records
+are in `runs/g3-lattice-cubic-reference-amg-v1`.

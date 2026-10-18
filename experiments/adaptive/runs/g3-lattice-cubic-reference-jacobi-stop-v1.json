@@ -1,0 +1,17 @@
+{
+  "source_run": "g3-lattice-cubic-reference-v1",
+  "pueue_job": 180,
+  "status": "intentionally-stopped-after-first-stage-gate-became-unreachable",
+  "qualified": false,
+  "completed_loads": 0,
+  "observed_first_stage_elapsed_lower_bound_s": 328,
+  "continuation_gate_s": 240,
+  "worker_returncode": -15,
+  "worker_wall_s": 381.18819335300213,
+  "worker_peak_rss_bytes": 6164918272,
+  "embedded_parent_tensor_relative_error": 2.167595343979127e-11,
+  "lattice_reference_tensor_available": false,
+  "cleanup": "Pueue marked the wrapper killed while its known controller and worker remained alive. Their exact argv and process group were verified, only that worker group was terminated, and both known PIDs were confirmed gone before queuing job181.",
+  "frozen_partial_result_unchanged": true,
+  "next_stage": "Validate installed PyAMG on analytic and saved-mesh controls before any reference retry"
+}

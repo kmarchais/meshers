@@ -8,6 +8,7 @@ import math
 import os
 from pathlib import Path
 import shutil
+import signal
 import sys
 import time
 
@@ -211,7 +212,7 @@ def assembly_worker(run, source):
         "scope": "Resource feasibility only; no cubic lattice tensor or accuracy claim"})
 
 
-def reference_worker(run, source, prepared):
+def reference_worker(run, source, prepared, use_amg=False):
     np, *_ = workflow.imports()
     from fedoo.lib_elements.tetrahedron import Tet10
     from stress_recovery import solve, periodic_displacement_jump_error
@@ -260,22 +261,40 @@ def reference_worker(run, source, prepared):
         "embedded_parent_tensor_error": embedding_tensor_error, "periodic": periodic,
         "solver_quadrature_points": 15, "qualified": False, "status": "embedded-parent-verified",
         "scope": "Saved-mesh reference enrichment, not a live workflow timing or continuum certificate",
-        "first_load_wall_cap_s": 240}
+        "first_load_wall_cap_s": 240,
+        "solver": "cached-smoothed-aggregation-cg" if use_amg else "jacobi-cg"}
     workflow.save(run / "result.json", row)
     phase = time.perf_counter()
+
+    def first_load_timeout(signum, frame):
+        row["status"] = "first-load-timeout"
+        workflow.save(run / "result.json", row)
+        raise TimeoutError("First cubic reference load exceeds 240-second stage")
 
     def checkpoint(completed, partial, records):
         row.update(status="solving", completed_loads=completed,
             partial_stiffness_columns=partial.tolist(), solver_records=records)
-        if completed == 1 and time.perf_counter() - phase > row["first_load_wall_cap_s"]:
-            row["status"] = "first-load-budget-rejected"
-            workflow.save(run / "result.json", row)
-            raise TimeoutError("First cubic reference load exceeds predeclared 240-second stage")
+        if completed == 1:
+            signal.setitimer(signal.ITIMER_REAL, 0)
         workflow.save(run / "result.json", row)
 
-    fields, tensor, records = solve(points, cells, checkpoint=checkpoint, n_elm_gp=15,
-        element_type=element_class.name)
+    solver = None
+    if use_amg:
+        from amg_reference import AuditedAMG
+        solver = AuditedAMG()
+    previous_alarm = signal.signal(signal.SIGALRM, first_load_timeout)
+    signal.setitimer(signal.ITIMER_REAL, row["first_load_wall_cap_s"])
+    try:
+        fields, tensor, records = solve(points, cells, checkpoint=checkpoint, n_elm_gp=15,
+            element_type=element_class.name, solver=solver)
+    finally:
+        signal.setitimer(signal.ITIMER_REAL, 0)
+        signal.signal(signal.SIGALRM, previous_alarm)
     row["solve_s"] = time.perf_counter() - phase
+    np.savez_compressed(run / "fields.npz", displacement=fields)
+    row.pop("partial_stiffness_columns", None)
+    row.update(status="auditing", stiffness=tensor.tolist(), solver_records=records)
+    workflow.save(run / "result.json", row)
     stress, energy, volume = integrated_tensors(points, cells, fields, element_type=element_class.name)
     own_error = max(float(np.linalg.norm(value - tensor) / np.linalg.norm(tensor)) for value in (stress, energy))
     jump = periodic_displacement_jump_error(points, surface, fields)
@@ -293,7 +312,6 @@ def reference_worker(run, source, prepared):
         higher_rule_fixed_field_difference=sensitivity, quadrature_sensitivity_limit=1e-4,
         quadrature_sensitivity_passed=passed, minimum_parent_minus_cubic_eigenvalue=minimum_enrichment,
         integrated_volume=volume)
-    np.savez_compressed(run / "fields.npz", displacement=fields)
     workflow.save(run / "result.json", row)
 
 
@@ -303,15 +321,17 @@ def main():
     parser.add_argument("--worker", action="store_true")
     parser.add_argument("--source", type=Path)
     parser.add_argument("--prepared", type=Path)
+    parser.add_argument("--amg", action="store_true")
     args = parser.parse_args()
     assert args.prepared is None or args.source is not None
+    assert not args.amg or args.prepared is not None
     if args.worker:
         if args.source is None:
             worker(args.run)
         elif args.prepared is None:
             assembly_worker(args.run, args.source)
         else:
-            reference_worker(args.run, args.source, args.prepared)
+            reference_worker(args.run, args.source, args.prepared, args.amg)
         return
     args.run.mkdir(parents=True, exist_ok=False)
     shutil.copyfile(__file__, args.run / "driver.py")
@@ -321,6 +341,8 @@ def main():
         paths.extend(args.source / name for name in ("result.json", "mesh.npz"))
     if args.prepared is not None:
         paths.extend((args.prepared / "mesh.npz", args.prepared / "result.json", args.source / "fields.npz"))
+    if args.amg:
+        paths.append(workflow.HERE / "amg_reference.py")
     hashes = {str(path): workflow.digest(path) for path in paths}
     timeout = 1800 if args.prepared is not None else 600 if args.source is not None else 300
     workflow.save(args.run / "manifest.json", {"sources": hashes, "memory_bytes": workflow.MEMORY,
@@ -329,6 +351,8 @@ def main():
         "tet_cap": workflow.CAP if args.source is not None else 2000,
         "packages": {name: importlib.metadata.version(name) for name in ("fedoo", "numpy", "scipy", "meshers")},
         "assembly_only": args.source is not None and args.prepared is None,
+        "solver": "cached-smoothed-aggregation-cg" if args.amg else "jacobi-cg",
+        "pyamg": importlib.metadata.version("pyamg") if args.amg else None,
         "first_load_wall_cap_s": 240 if args.prepared is not None else None})
     label = "cubic-reference-solve" if args.prepared is not None else "cubic-assembly-memory" if args.source is not None else "basis-and-solid-patch"
     with Job(parts=[label]) as job:
@@ -338,6 +362,8 @@ def main():
                 command.extend(["--source", str(args.source)])
             if args.prepared is not None:
                 command.extend(["--prepared", str(args.prepared)])
+            if args.amg:
+                command.append("--amg")
             record = workflow.bounded(command, args.run / "worker.log", part, timeout=timeout)
             workflow.save(args.run / "worker.json", record)
             assert record["returncode"] == 0, "Read worker.log"

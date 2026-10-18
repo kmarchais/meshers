@@ -49,9 +49,12 @@ isolated meshing improvement. The four-fixture objective remains unmet.
   assess a reference-only cubic FE enrichment on an analytic solid patch to
   separate quadratic discretization error from geometric reference uncertainty.
   That patch now passes, and the admitted lattice's cubic assembly fits at
-  5.893 GiB. A bounded same-geometry reference solve is running with independent
-  field and quadrature gates. `CUBIC_RESULTS.md` records the passed stages and
-  the still-pending reference status. There is no Tet20 product API or new win.
+  5.893 GiB. Diagonal-CG cannot meet the first-load continuation gate and is
+  stopped. Installed AMG passes analytic and archived tensor controls without
+  showing a small-case speed gain. A same-geometry reference retry uses a hard
+  first-load deadline and retains field and quadrature gates. `CUBIC_RESULTS.md`
+  records the passed stages and pending status. There is no Tet20 product API
+  or new matched-workflow win.
 
 Every heavy stage uses the shared queue, an 8 GiB worker ceiling, conservative
 threads, a timeout and staged mesh caps. Admission gates and frozen outputs

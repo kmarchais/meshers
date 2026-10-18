@@ -15,7 +15,7 @@ from pueue_progress import Job
 import microgen_workflow as workflow
 
 
-def solve(points, tetrahedra, checkpoint=None, *, n_elm_gp=None, element_type=None):
+def solve(points, tetrahedra, checkpoint=None, *, n_elm_gp=None, element_type=None, solver=None):
     import fedoo as fd
     import numpy as np
     from homogenization import AuditedCG, COMPONENTS
@@ -27,10 +27,12 @@ def solve(points, tetrahedra, checkpoint=None, *, n_elm_gp=None, element_type=No
     mesh = fd.Mesh(points.copy(), tetrahedra.copy(), element_type)
     assembly = fd.Assembly.create(fd.weakform.StressEquilibrium(
         fd.constitutivelaw.ElasticIsotrop(2.5, 0.25)), mesh, n_elm_gp=n_elm_gp)
-    solver = AuditedCG()
+    solver = AuditedCG() if solver is None else solver
     fields, tensor = [], np.zeros((6, 6))
     for load, engineering in enumerate(np.eye(6)):
         problem = fd.problem.Linear(assembly)
+        if hasattr(solver, "problem"):
+            solver.problem = problem
         problem.bc.add(fd.constraint.PeriodicBC("small_strain", meshperio=True))
         problem.bc.add("Dirichlet", [int(np.linalg.norm(points, axis=1).argmin())], "Disp", 0)
         for component, value in zip(COMPONENTS, engineering, strict=True):
