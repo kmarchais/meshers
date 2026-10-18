@@ -348,3 +348,14 @@ The worst error direction is predominantly deviatoric normal strain. Next
 localize same-domain Tet10-to-cubic enrichment energy in that direction, with
 the Galerkin identity and independent quadrature checks, before selecting a
 Meshers sizing or geometry change. No speculative native patch is queued.
+
+The measured same-domain cap concentration justifies one analytic periodic
+cap-size pilot. It passes geometry and six-load FE consistency at 159,147
+nodes, but its worst retained-model error is 1.411382%. This is little better
+than the smaller untargeted baseline and worse than the best tested Meshers
+mesh. No further cap-length tuning is selected. A confirmed host suspend
+invalidates that pilot's timing comparison, without changing its frozen tensor.
+
+Stop study work for Kevin's requested computer shutdown after pushing a
+reviewable checkpoint. Do not mark the four-case goal achieved. Read
+`/home/kmarchais/dev/meshers/handoff/g3/CHECKPOINT-20261018.md` when Kevin resumes.

@@ -315,3 +315,23 @@ on box planes. A smoothstep transitions to maximum length 0.1 over distance
 0.05. Keep native budgets, geometry, quality and periodicity gates unchanged.
 Check geometry and counts before selecting any solve. No native API change or
 oracle field is added to the workflow.
+
+Job 203 passes geometry at 159,147 nodes and 99,604 tets. Job 204 completes
+six fresh 15-point loads with the validated explicit AMG preset. Fresh audit
+205 reproduces reactions within 7.08e-12 and Hill-Mandel energy within
+2.73e-12; periodic jumps are zero. Positive 125-point reintegration changes
+full mixed-load energy by 4.25e-7 relative. The cap-sizing callback is positive
+and has bitwise-equal opposite-plane traces in its recorded preflight.
+
+Its worst retained-model error is 1.411382%, versus 1.427185% for the
+123,570-node untargeted baseline and 1.269882% for the finest Meshers result.
+Adding 35,577 nodes produces little accuracy gain and does not meet 1%.
+Do not promote this as a workflow improvement or keep tuning cap lengths.
+Records are in `runs/g3-lattice-cap-size015-band005-comparison-v1`.
+
+The host suspends for 56 minutes during job 204, confirmed by the system
+journal. Its monotonic timer excludes sleep, and qrun records a matching long
+reporting gap. All timing claims for that run are excluded by the separate
+`runs/g3-lattice-cap-size015-band005-timing-exclusion-v1.json`. Frozen numerical
+results remain unchanged. The standard Job reporter is not replaced or exempted
+to hide the host interruption.

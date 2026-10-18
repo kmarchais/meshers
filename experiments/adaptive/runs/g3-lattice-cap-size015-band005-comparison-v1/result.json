@@ -1,0 +1,388 @@
+{
+  "inputs": {
+    "/home/kmarchais/dev/meshers/experiments/adaptive/runs/g3-lattice-cap-size015-band005-comparison-v1/driver.py": "162fff7db4c65a7f249471af048750a0d8ec18079c3631049812d875e7f2c4cb",
+    "/home/kmarchais/dev/meshers/experiments/adaptive/runs/g3-lattice-cap-size015-band005-solve-v1/result.json": "25f4aad20a20cc7357b9167c355e850cad15a8438a0774066e3aeb0e0244835f",
+    "/home/kmarchais/dev/meshers/experiments/adaptive/runs/g3-lattice-cap-size015-band005-final-audit-v1/manifest.json": "dcf4a89d8b32160a8dcd50f54ea78d411b40a2ddb73915ba34e906f24a1e97a7",
+    "/home/kmarchais/dev/meshers/experiments/adaptive/runs/g3-lattice-cap-size015-band005-solve-v1/mesh.npz": "96f1aeec0b0489e3fbb859b1111e9113c7a39f7dfd46ca5992d25ccee681f187",
+    "/home/kmarchais/dev/meshers/experiments/adaptive/runs/g3-lattice-cap-size015-band005-solve-v1/fields.npz": "ad2483e8b4ca305596d338e7e1e6aad4b1b3e769e5e6c344e22ff58b060ed131",
+    "/home/kmarchais/dev/meshers/experiments/adaptive/runs/g3-lattice-cap-size015-band005-final-audit-v1/g3-lattice-cap-size015-band005-solve-v1-consistency.json": "2a01117ac1f98d6264a7ef0186c66e672124c2327a73cc2dff15f20edb96354d",
+    "/home/kmarchais/dev/meshers/experiments/adaptive/runs/g3-lattice-cap-size015-band005-final-audit-v1/g3-lattice-cap-size015-band005-solve-v1.json": "eff586124550402f301bd92b3f5f45cdce086f6297945a730228dced48a35862",
+    "/home/kmarchais/dev/meshers/experiments/adaptive/runs/g3-lattice-cap-size015-band005-timing-exclusion-v1.json": "b6e53d802da5c82405269595590e6450d7d0e80a021725f0ce57fd64f3ee0ed3",
+    "/home/kmarchais/dev/meshers/experiments/adaptive/runs/g3-lattice-reference-sensitivity-v2.json": "0bc21b6b9c07819795697047ee827aab8c23363790dc5137ea7d2d1a5aa0ac07",
+    "/home/kmarchais/dev/meshers/experiments/adaptive/runs/g3-lattice-microgen-reference-comparison-v1.json": "6acf432121761aa9028ffd81be1e146cbd5010e84f6183fab9cd455c966dfdd4",
+    "/home/kmarchais/dev/meshers/experiments/adaptive/runs/g3-lattice-finer-reference-comparison-v1.json": "8fc3ac22764e9075d1770fb3ca2bc92a8ec65f851bc51714c0579f39b48a8fde"
+  },
+  "source": "/home/kmarchais/dev/meshers/experiments/adaptive/runs/g3-lattice-cap-size015-band005-solve-v1",
+  "nodes": 159147,
+  "elements": 99604,
+  "models": [
+    {
+      "source": "g3-lattice-reference-sensitivity-v2.json",
+      "index": 0,
+      "length_proxy": "uniform_seed",
+      "assumed_order": 1,
+      "relative_energy_eigenvalues": [
+        0.000909875853292814,
+        0.000978259712675867,
+        0.001066634770583457,
+        0.002710496517096314,
+        0.011796002930580035,
+        0.01411381500163436
+      ],
+      "worst_relative_strain_energy_difference": 0.01411381500163436
+    },
+    {
+      "source": "g3-lattice-reference-sensitivity-v2.json",
+      "index": 1,
+      "length_proxy": "uniform_seed",
+      "assumed_order": 2,
+      "relative_energy_eigenvalues": [
+        -0.00024900679847761055,
+        7.40823765312805e-05,
+        0.00012174624076731396,
+        0.00016005360993273543,
+        0.0011892579751357198,
+        0.0024756554572885558
+      ],
+      "worst_relative_strain_energy_difference": 0.0024756554572885558
+    },
+    {
+      "source": "g3-lattice-reference-sensitivity-v2.json",
+      "index": 2,
+      "length_proxy": "uniform_seed",
+      "assumed_order": 3,
+      "relative_energy_eigenvalues": [
+        -0.002658913253725038,
+        -0.0014407285712691022,
+        -0.0006937972403358632,
+        -0.00021466142501575948,
+        -0.0001781789208182611,
+        -0.00014122178805342584
+      ],
+      "worst_relative_strain_energy_difference": 0.002658913253725038
+    },
+    {
+      "source": "g3-lattice-reference-sensitivity-v2.json",
+      "index": 3,
+      "length_proxy": "uniform_seed",
+      "assumed_order": 4,
+      "relative_energy_eigenvalues": [
+        -0.004356959711607799,
+        -0.0032260861816376042,
+        -0.001262582899068733,
+        -0.00035958490048169586,
+        -0.00031956077704039794,
+        -0.0002914830584615761
+      ],
+      "worst_relative_strain_energy_difference": 0.004356959711607799
+    },
+    {
+      "source": "g3-lattice-reference-sensitivity-v2.json",
+      "index": 4,
+      "length_proxy": "element_density",
+      "assumed_order": 1,
+      "relative_energy_eigenvalues": [
+        0.000705941651640796,
+        0.0007623731865155565,
+        0.0008454879571138296,
+        0.0020379531892759976,
+        0.009182032021526175,
+        0.011259514226530478
+      ],
+      "worst_relative_strain_energy_difference": 0.011259514226530478
+    },
+    {
+      "source": "g3-lattice-reference-sensitivity-v2.json",
+      "index": 5,
+      "length_proxy": "element_density",
+      "assumed_order": 2,
+      "relative_energy_eigenvalues": [
+        -0.0008113598485802519,
+        -3.664241554087813e-05,
+        6.8160724882278154e-06,
+        3.0797267533621765e-05,
+        0.00014657445137880348,
+        0.0011205002664927645
+      ],
+      "worst_relative_strain_energy_difference": 0.0011205002664927645
+    },
+    {
+      "source": "g3-lattice-reference-sensitivity-v2.json",
+      "index": 6,
+      "length_proxy": "element_density",
+      "assumed_order": 3,
+      "relative_energy_eigenvalues": [
+        -0.003474981163092056,
+        -0.002292472557486036,
+        -0.0009926278640296148,
+        -0.00028495734417548717,
+        -0.00024710522079417,
+        -0.00021428848185808211
+      ],
+      "worst_relative_strain_energy_difference": 0.003474981163092056
+    },
+    {
+      "source": "g3-lattice-reference-sensitivity-v2.json",
+      "index": 7,
+      "length_proxy": "element_density",
+      "assumed_order": 4,
+      "relative_energy_eigenvalues": [
+        -0.004977928908299675,
+        -0.0038816736612329863,
+        -0.0014402680395406567,
+        -0.000411741196520919,
+        -0.00036986578864298787,
+        -0.0003452584808783897
+      ],
+      "worst_relative_strain_energy_difference": 0.004977928908299675
+    },
+    {
+      "source": "g3-lattice-microgen-reference-comparison-v1.json",
+      "index": 0,
+      "length_proxy": "target_length",
+      "assumed_order": 1,
+      "relative_energy_eigenvalues": [
+        0.0014609068757120832,
+        0.0015789643632776807,
+        0.0015919126132813398,
+        0.0025462338227375766,
+        0.008694057259397094,
+        0.009163580295038297
+      ],
+      "worst_relative_strain_energy_difference": 0.009163580295038297
+    },
+    {
+      "source": "g3-lattice-microgen-reference-comparison-v1.json",
+      "index": 1,
+      "length_proxy": "target_length",
+      "assumed_order": 2,
+      "relative_energy_eigenvalues": [
+        0.0007724684087987046,
+        0.000829609391447913,
+        0.0008382144223303352,
+        0.001340582195097461,
+        0.004583354735295214,
+        0.00480869090047934
+      ],
+      "worst_relative_strain_energy_difference": 0.00480869090047934
+    },
+    {
+      "source": "g3-lattice-microgen-reference-comparison-v1.json",
+      "index": 2,
+      "length_proxy": "target_length",
+      "assumed_order": 3,
+      "relative_energy_eigenvalues": [
+        0.0005445590382758076,
+        0.0005816664155882472,
+        0.0005892808979361133,
+        0.0009420663710382255,
+        0.003229796399521884,
+        0.003375421834997944
+      ],
+      "worst_relative_strain_energy_difference": 0.003375421834997944
+    },
+    {
+      "source": "g3-lattice-microgen-reference-comparison-v1.json",
+      "index": 3,
+      "length_proxy": "target_length",
+      "assumed_order": 4,
+      "relative_energy_eigenvalues": [
+        0.00043166522837362727,
+        0.00045896851748485794,
+        0.00046632240922150605,
+        0.0007449522788662936,
+        0.0025612225591940836,
+        0.0026677545362192782
+      ],
+      "worst_relative_strain_energy_difference": 0.0026677545362192782
+    },
+    {
+      "source": "g3-lattice-microgen-reference-comparison-v1.json",
+      "index": 4,
+      "length_proxy": "element_density",
+      "assumed_order": 1,
+      "relative_energy_eigenvalues": [
+        0.0016761156610988674,
+        0.0018132483972868633,
+        0.0018277141561391771,
+        0.002923475643939262,
+        0.009985155422632988,
+        0.01053186433338625
+      ],
+      "worst_relative_strain_energy_difference": 0.01053186433338625
+    },
+    {
+      "source": "g3-lattice-microgen-reference-comparison-v1.json",
+      "index": 5,
+      "length_proxy": "element_density",
+      "assumed_order": 2,
+      "relative_energy_eigenvalues": [
+        0.0008795006931060772,
+        0.0009460923945726655,
+        0.0009552822775998817,
+        0.001527884228379404,
+        0.005220411898495426,
+        0.005483415225289812
+      ],
+      "worst_relative_strain_energy_difference": 0.005483415225289812
+    },
+    {
+      "source": "g3-lattice-microgen-reference-comparison-v1.json",
+      "index": 6,
+      "length_proxy": "element_density",
+      "assumed_order": 3,
+      "relative_energy_eigenvalues": [
+        0.0006154199863485833,
+        0.0006587349241387612,
+        0.0006666074231993261,
+        0.0010659107378266192,
+        0.00365016105141519,
+        0.003820482482217623
+      ],
+      "worst_relative_strain_energy_difference": 0.003820482482217623
+    },
+    {
+      "source": "g3-lattice-microgen-reference-comparison-v1.json",
+      "index": 7,
+      "length_proxy": "element_density",
+      "assumed_order": 4,
+      "relative_energy_eigenvalues": [
+        0.0004843151771791221,
+        0.0005161730425872534,
+        0.0005236203138281669,
+        0.0008368429998402663,
+        0.002872825694497033,
+        0.0029975418280909294
+      ],
+      "worst_relative_strain_energy_difference": 0.0029975418280909294
+    },
+    {
+      "source": "g3-lattice-finer-reference-comparison-v1.json",
+      "index": 0,
+      "length_proxy": "target_length",
+      "assumed_order": 1,
+      "relative_energy_eigenvalues": [
+        0.00147358873256231,
+        0.001632344244414623,
+        0.0017487632077086486,
+        0.003099179684109474,
+        0.011361955978026042,
+        0.011948145813370342
+      ],
+      "worst_relative_strain_energy_difference": 0.011948145813370342
+    },
+    {
+      "source": "g3-lattice-finer-reference-comparison-v1.json",
+      "index": 1,
+      "length_proxy": "target_length",
+      "assumed_order": 2,
+      "relative_energy_eigenvalues": [
+        0.0008421634182913527,
+        0.0009182910769025747,
+        0.0009752386328386838,
+        0.0017209080983404202,
+        0.0062786791946184695,
+        0.006562259939758966
+      ],
+      "worst_relative_strain_energy_difference": 0.006562259939758966
+    },
+    {
+      "source": "g3-lattice-finer-reference-comparison-v1.json",
+      "index": 2,
+      "length_proxy": "target_length",
+      "assumed_order": 3,
+      "relative_energy_eigenvalues": [
+        0.0006319389146563463,
+        0.000680565184139683,
+        0.0007177762666496913,
+        0.0012625186471364586,
+        0.004596262845930558,
+        0.00478039664802495
+      ],
+      "worst_relative_strain_energy_difference": 0.00478039664802495
+    },
+    {
+      "source": "g3-lattice-finer-reference-comparison-v1.json",
+      "index": 3,
+      "length_proxy": "target_length",
+      "assumed_order": 4,
+      "relative_energy_eigenvalues": [
+        0.0005269144829727877,
+        0.0005617927062357206,
+        0.0005891864306458851,
+        0.0010336238681198165,
+        0.00375766363592581,
+        0.00389236287648677
+      ],
+      "worst_relative_strain_energy_difference": 0.00389236287648677
+    },
+    {
+      "source": "g3-lattice-finer-reference-comparison-v1.json",
+      "index": 4,
+      "length_proxy": "element_density",
+      "assumed_order": 1,
+      "relative_energy_eigenvalues": [
+        0.0015650972385514656,
+        0.0017358352542202666,
+        0.0018608853058225642,
+        0.0032990981865100126,
+        0.01210238188499996,
+        0.012732916998536011
+      ],
+      "worst_relative_strain_energy_difference": 0.012732916998536011
+    },
+    {
+      "source": "g3-lattice-finer-reference-comparison-v1.json",
+      "index": 5,
+      "length_proxy": "element_density",
+      "assumed_order": 2,
+      "relative_energy_eigenvalues": [
+        0.0008878466573053932,
+        0.0009699500789328333,
+        0.0010311934717087447,
+        0.0018205532670468746,
+        0.006644942232333967,
+        0.0069502195125930545
+      ],
+      "worst_relative_strain_energy_difference": 0.0069502195125930545
+    },
+    {
+      "source": "g3-lattice-finer-reference-comparison-v1.json",
+      "index": 6,
+      "length_proxy": "element_density",
+      "assumed_order": 3,
+      "relative_energy_eigenvalues": [
+        0.0006623687614102948,
+        0.000714976595523312,
+        0.0007550397031457109,
+        0.0013288534123695231,
+        0.004839479452359596,
+        0.0050379676595034536
+      ],
+      "worst_relative_strain_energy_difference": 0.0050379676595034536
+    },
+    {
+      "source": "g3-lattice-finer-reference-comparison-v1.json",
+      "index": 7,
+      "length_proxy": "element_density",
+      "assumed_order": 4,
+      "relative_energy_eigenvalues": [
+        0.0005497190381266034,
+        0.0005875836522462915,
+        0.0006171043713514162,
+        0.0010833178250268373,
+        0.003939642409388832,
+        0.0040850612053736565
+      ],
+      "worst_relative_strain_energy_difference": 0.0040850612053736565
+    }
+  ],
+  "retained_model_count": 24,
+  "model_difference_range": [
+    0.0011205002664927645,
+    0.01411381500163436
+  ],
+  "passes_one_percent_all_retained_models": false,
+  "timing_admitted": false,
+  "scope": "Audited negative sizing pilot; all models retained; suspended-host timing excluded; no continuum certificate"
+}

@@ -416,3 +416,15 @@ same-domain Tet10-to-cubic correction puts 77.46% of its energy in the 6.99%
 of coarse elements incident on cap vertices. This motivates one cap-focused
 size-field pilot rather than more global refinement. Its geometry stage passes
 with 159,147 nodes; read its full solve before selecting another change.
+
+The completed cap-focused pilot passes independent field and positive
+125-point quadrature checks, but worst retained-model error is 1.411382%.
+Its untargeted 123,570-node baseline has 1.427185% error, so the extra 35,577
+nodes give little benefit. It does not improve the best Meshers result or beat
+the stronger actual Microgen Tet10 control. A journal-confirmed host suspend
+also excludes its timing from comparison. Stop blind cap-length tuning.
+
+Kevin requests stopping G3 within the next hour. Finish and preserve this
+negative bounded study, then stop research for shutdown. The four-case goal
+remains unachieved. Restart instructions and exact current evidence are in
+`/home/kmarchais/dev/meshers/handoff/g3/CHECKPOINT-20261018.md`.

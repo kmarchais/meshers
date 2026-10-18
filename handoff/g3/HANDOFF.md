@@ -1,5 +1,9 @@
 # Microgen comparison on G3
 
+Latest shutdown checkpoint: read
+`/home/kmarchais/dev/meshers/handoff/g3/CHECKPOINT-20261018.md` before resuming.
+The original transfer instructions below remain historical context.
+
 Kevin authorized this transfer on 17 October 2026. Continue on G3 with GPT 6.1 Sol,
 medium reasoning. This is the replacement working session. Do not delegate reviews
 or create duplicate timers. Install missing dependencies within the user account;
