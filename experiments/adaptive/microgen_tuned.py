@@ -33,7 +33,7 @@ def worker(args):
     output = args.run / "result.json"
     row = {"case": args.case, "route": "microgen-vtk-mmg-tuned",
            "resolution": args.resolution,
-           "mmg_arguments": {"hausd": 0.0005, "hmax": 0.06, "hgrad": 1.3},
+           "mmg_arguments": {"hausd": args.hausd, "hmax": 0.06, "hgrad": 1.3},
            "status": "started", "mmg_calls": []}
     row["stage_audit_enabled"] = args.audit_stages
     row["timing_comparable"] = not args.audit_stages
@@ -189,12 +189,14 @@ def main():
     parser.add_argument("--source", type=Path, default=workflow.HERE / "runs/g3-microgen-defaults-v4")
     parser.add_argument("--worker", action="store_true")
     parser.add_argument("--audit-stages", action="store_true")
+    parser.add_argument("--hausd", type=float, default=0.0005)
     parser.add_argument("--first-pass-hausd", type=float)
     parser.add_argument("--first-pass-hmax", type=float, default=0.06)
     parser.add_argument("--first-pass-only", action="store_true")
     parser.add_argument("--optimize-second-pass", action="store_true")
     parser.add_argument("--strain-controlled", action="store_true")
     args = parser.parse_args()
+    assert args.hausd > 0
     assert args.first_pass_hmax > 0
     assert args.first_pass_hmax == 0.06 or args.first_pass_hausd is not None
     assert not (args.first_pass_only and args.optimize_second_pass)
@@ -218,7 +220,7 @@ def main():
         with job.part("tuned-candidate") as part:
             command = [sys.executable, __file__, "--run", str(args.run),
                 "--source", str(args.source), "--case", args.case,
-                "--resolution", str(args.resolution), "--worker"]
+                "--resolution", str(args.resolution), "--hausd", str(args.hausd), "--worker"]
             if args.audit_stages:
                 command.append("--audit-stages")
             if args.first_pass_hausd is not None:

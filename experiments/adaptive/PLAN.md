@@ -222,3 +222,17 @@ adaptive candidate also fails its own worst model at 1.07075%. Before another
 costly lattice solve, return to missing actual Microgen coverage by screening
 Gyroid VTK seeds for retained-cap feasibility. Read the six bounded seed stages
 before choosing one MMG successor. This does not replace the frozen defaults.
+
+The Gyroid study finds two cap-feasible VTK seeds among seventeen tested.
+Both actual tuned two-pass MMG routes remain quality-rejected. Separate,
+explicitly unranked six-load diagnostics also miss the 1% stiffness target at
+2.58544% and 2.29279%; quality repair alone is insufficient. Failed ordinary
+and skewness third-pass controls are removed from the maintained runner and
+preserved in frozen drivers. Do not claim a matched comparison from them.
+
+The admitted curved10 Meshers Gyroid pilot reaches 0.45586% disagreement in
+24.71 seconds, with 13,953 nodes and independently checked fields. Run a fresh
+curved12 control with the same prescribed-strain helper and native build before
+further coarsening. This distinguishes parameter savings from the older
+stress-controlled timing. Lattice cross-family uncertainty and admitted
+Gyroid, spinodoid and lattice Microgen comparators remain unresolved.

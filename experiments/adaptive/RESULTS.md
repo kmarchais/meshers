@@ -338,3 +338,24 @@ the union of declared models at 1%. That unresolved uncertainty is not a
 matched-accuracy success. Actual Gyroid VTK seed screening identifies one
 cap-feasible resolution among twelve tested, and genuine tuned MMG calls are
 being assessed under the unchanged element and admission caps.
+
+## Gyroid comparison limits and cheaper Meshers pilot
+
+Seventeen actual VTK Gyroid seeds reveal two cap-feasible resolutions, 31 and
+43. Tuned genuine two-pass MMG routes on both can pass distance, volume,
+periodicity and resource caps, but fail minimum quality near 0.0406. Two
+explicit third-pass optimization variants do not repair that failure and are
+removed from the maintained runner. Frozen drivers retain the negative tests.
+
+Separate unranked six-load diagnostics find 2.58544% and 2.29279% stiffness
+disagreement on those returned meshes. Independent stress and energy agree
+with reactions within 7.26e-12. Quality repair alone therefore would not meet
+the 1% target. These meshes remain unqualified and excluded from admitted
+timing comparisons. See `MICROGEN_RESULTS.md` for exact recipes and limits.
+
+A live Meshers curved10 pilot passes all gates with 13,953 nodes, 0.45586%
+stiffness disagreement and 24.71 seconds total. Independent field checks pass
+within 6.79e-12. A fresh same-native, same-helper curved12 control is selected
+before attributing cost savings to coarsening. The earlier 47.08-second
+curved12 control used a different solver formulation and native revision.
+No Gyroid matched-accuracy Microgen victory is established.

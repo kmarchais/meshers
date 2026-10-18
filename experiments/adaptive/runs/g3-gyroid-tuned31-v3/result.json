@@ -1,0 +1,30 @@
+{
+  "case": "gyroid",
+  "route": "microgen-vtk-mmg-first-pass-override",
+  "resolution": 31,
+  "mmg_arguments": {
+    "hausd": 0.0005,
+    "hmax": 0.06,
+    "hgrad": 1.3
+  },
+  "status": "started",
+  "mmg_calls": [
+    {
+      "nofem": true,
+      "hausd": 0.001,
+      "hmax": 0.06,
+      "hgrad": 1.3
+    }
+  ],
+  "stage_audit_enabled": true,
+  "timing_comparable": false,
+  "first_pass_hausd_override": 0.001,
+  "first_pass_hmax_override": 0.06,
+  "first_pass_only": false,
+  "optimize_second_pass": false,
+  "solver_formulation": "prescribed-strain",
+  "specimen_setup_s": 0.0060886329993081745,
+  "seed_nodes": 22199,
+  "seed_elements": 95776,
+  "vtk_extraction_s": 0.24323064599957434
+}

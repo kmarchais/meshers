@@ -559,3 +559,122 @@ pass. Increasing hmax from 0.05 to 0.06 does not reduce this count. The next
 single-parameter test changes only first-pass hausd from 0.0005 to 0.001.
 The independent 0.002 distance gate, second-pass settings and resource caps
 remain unchanged. This tests sizing sensitivity, not a relaxed admission gate.
+
+Job 107 reaches the 600-second worker timeout during its first native MMG
+call. The worker peaks at 0.72 GiB; its entire process tree is terminated.
+`runs/g3-gyroid-tuned31-v3/worker.json` records return code -9 and
+`limit_failure="timeout"`. The child result remains an incomplete `started`
+checkpoint, not a returned mesh, geometry rejection or completed workflow.
+No second pass or FEA occurs.
+
+Job 108 independently recomputes the frozen VTK seed's geometry and confirms
+every prior metric exactly. Its 32 worst forward probes are not on required
+cap vertices or edges. This does not prove every cap curve passes, but gives
+no retained-cap explanation for the observed maximum. Record this finite
+diagnostic separately from the analytic cap-quality obstruction. The next
+seed-only screen covers remaining denser resolutions 34, 40, 42, 43 and 44,
+seeking both seed geometry and cap feasibility before more native tuning.
+
+Job 109 finds one additional cap-feasible seed at resolution 43. It has 50,883
+nodes, 233,408 tets, H=0.001226 and minimum cap-quality ceiling 0.13254. Its
+raw minimum tetrahedral quality still fails, so MMG remains necessary. The
+other four denser seeds have cap-quality obstructions. Select the genuine
+public two-pass route on resolution 43 with its first native call unchanged,
+`nofem=True` only, and the public tuned second-pass sizing parameters already
+recorded. Capture both stages and solve only if all gates pass. No first-pass
+override or omitted pass is used in this candidate.
+
+Job 110 captures the first-pass geometry loss directly. The unmodified native
+call coarsens the seed from 233,408 to 25,869 tets, with H worsening from
+0.001226 to 0.007353 and minimum quality only 0.005458. The second pass
+produces 299,836 tets and exceeds the fixed intermediate cap. No FEA runs.
+Select one first-pass sizing override, hausd=0.0015 and hmax=0.06, retaining
+the actual two-pass path, stage captures and all independent gates. This
+tests the now-observed first-pass loss rather than attributing it by guess.
+
+Job 111 keeps first-pass distance within the gate at H=0.001461, with 85,640
+tets, but minimum quality is only 0.02611. The real second pass produces
+261,249 tets, again above the unchanged 250,000 cap. No solve runs. Select
+one change to the public second-pass hausd, from 0.0005 to 0.0006, keeping
+first-pass settings, hmax, hgrad and admission gates unchanged. The runner's
+new `--hausd` argument preserves the previous default of 0.0005.
+
+Job 112 completes both actual passes under the cap, producing 47,262 nodes
+and 210,503 tets. H=0.001192, volume error=+0.24209%, sampled Jacobians are
+positive and periodic nodes and cap triangles match. Minimum quality is
+0.04072, below 0.1, despite a first-percentile quality of 0.37106. The route
+therefore remains unqualified and receives no FEA. Select a saved-mesh
+worst-element audit before another parameter or algorithm change. The
+instrumented total of 34.62 seconds is not an admitted timing comparison.
+
+Job 113 identifies 189 tets below 0.1. The worst have three boundary vertices
+and one interior apex, making interior-only optimization a testable hypothesis.
+Select one explicitly modified third MMG call
+with `optim=True`, `nosurf=True`, `noinsert=True`, retaining the same actual
+two-pass precursor. Microgen's own serializer marks cap triangles required.
+This is a three-pass diagnostic variant, not the public or default two-pass
+pipeline. Generation and all audits remain charged if it reaches FEA.
+
+Job 114's third pass changes connectivity and raises the tet count to 210,669,
+but minimum quality remains exactly 0.04072. Distance remains 0.001192 and
+the mesh still rejects. Standard interior optimization is not a demonstrated
+repair. The installed MMG 5.8 help and Microgen wrapper also expose
+`optimLES`, explicitly for skewness improvement. Select that single method
+change for one further third-pass diagnostic, retaining `nosurf` and
+`noinsert`, the same precursor, caps and all admission gates.
+
+Job 115's skewness mode worsens minimum quality to 0.007873 while increasing
+the count to 216,087 tets. Distance remains 0.001192. No FEA runs. Reject
+both third-pass hypotheses and remove their new controls from the maintained
+runner; preserve the frozen experimental drivers and output records. The
+useful public `--hausd` parameter remains. Next change only seed resolution
+from 43 to the other cap-feasible seed, 31, in the two-pass recipe at
+first-pass hausd=0.0015 and second-pass hausd=0.0006. This retains all gates
+and tests whether the fixed cap triangulation affects attainable quality.
+
+Job 116's alternate seed also yields a quality-only rejection. Gyroid31 now
+returns 48,000 nodes and 218,723 tets, H=0.001528 and minimum quality 0.04059.
+Changing between the two cap-feasible grids does not establish an admitted
+competitor. No solve is added to the normal gated runner.
+
+Select a separate, explicitly unranked diagnostic on these two returned
+meshes to determine whether quality is the only remaining obstacle to the
+1% stiffness target. `microgen_stiffness_diagnostic.py` requires positive
+sampled Jacobians, matching periodic caps, the original node and tet caps,
+and all geometry gates except the already failed quality floor. It retains
+`qualified=false` in every output and excludes these cases from admitted
+rankings. Six prescribed-strain loads and independent stress, energy and
+periodic-jump checks quantify the discrete tensors. Saved-mesh solve times
+are not full live workflow timings or evidence of a matched-accuracy win.
+This diagnostic does not relax the quality gate for either workflow.
+
+Job 117 completes both six-load diagnostics. Gyroid31 has 2.58544% worst
+mixed-load stiffness disagreement and Gyroid43 has 2.29279%, so quality repair
+alone would not satisfy the 1% target at these discretizations. Their solve
+times are 77.82 and 75.38 seconds, with peak RSS below 1.95 GiB. Independent
+stress and energy agree with reactions within 7.26e-12 relative and periodic
+jumps are zero. Both outputs remain unqualified. No full-workflow speedup or
+matched-accuracy victory is inferred. Records are in
+`runs/g3-gyroid-unqualified-stiffness-v1`.
+
+Before further MMG tuning, test whether the admitted curved Meshers Gyroid
+control can reduce its initial density from 12 to 10 cells while retaining
+all admission gates and six-load accuracy. Use the verified native build and
+charge fresh generation, geometry and FEA. This is a Meshers cost/accuracy
+pilot, not a comparison against an admitted Microgen competitor.
+
+Job 118's curved10 Meshers pilot passes admission with 13,953 nodes and 7,398
+Tet10 elements. H=0.001163, volume error=-0.02437%, q_min=0.33550 and sampled
+Jacobians are positive. Periodic coordinates and cap triangles match.
+The six-load tensor differs from the justified Gyroid reference by 0.45586%,
+below the 1% target. Solve time is 23.24 seconds and live total workflow is
+24.71 seconds. The preceding curved12 control had 0.2951% disagreement and
+47.08 seconds total, but used the earlier stress-controlled formulation and
+native revision. Do not attribute that timing difference solely to density.
+These are individual G3 pilots, not repeated paired timings. Independently
+audit the curved10 fields before another candidate. Microgen remains unqualified.
+
+Job 119's curved10 field audit passes within 6.79e-12 relative reaction error
+and has zero periodic or mid-edge jumps. Select a fresh curved12 control with
+the same native build, prescribed-strain helper and other settings as curved10.
+This supplies a valid same-helper cost baseline before further coarsening.

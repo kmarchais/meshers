@@ -1,0 +1,132 @@
+{
+  "case": "gyroid",
+  "source": "experiments/adaptive/runs/g3-gyroid-tuned43-v3",
+  "qualified": false,
+  "status": "unqualified-stiffness-diagnostic",
+  "source_geometry": {
+    "sampled_forward_max": 0.0011920835691725837,
+    "sampled_reverse_max": 0.0010916899896483555,
+    "sampled_two_sided_max": 0.0011920835691725837,
+    "outward_forward_max": 0.0011920835691725837,
+    "inward_forward_max": 0.00044956708534504527,
+    "projection_failed": 0,
+    "forward_samples": 443118,
+    "reverse_samples": 36260,
+    "volume": 0.35730631278386443,
+    "relative_volume_error": 0.002420882586201323,
+    "q_min_corner": 0.04071858535381474,
+    "q_p01_corner": 0.3710556449898778,
+    "minimum_dihedral_deg_corner": 3.0215154295982245,
+    "minimum_sampled_jacobian": 6.997620054391617e-08,
+    "reverse_tessellation_delta_max": 0.0,
+    "quadratic_reverse_subdivisions": null,
+    "geometry_admitted": false
+  },
+  "nodes": 47262,
+  "elements": 210503,
+  "stiffness": [
+    [
+      0.49159161298214354,
+      0.1918983967989234,
+      0.19190921980897968,
+      -1.673148870188928e-05,
+      4.905136717434352e-06,
+      1.0733039935934399e-05
+    ],
+    [
+      0.1918983967989234,
+      0.4916010168837434,
+      0.19190397329084422,
+      -1.7108155977312752e-06,
+      6.573377601186545e-06,
+      -8.475535646333482e-06
+    ],
+    [
+      0.19190921980897968,
+      0.19190397329084422,
+      0.4916133449782792,
+      -8.476610903022493e-06,
+      3.3367645855594667e-06,
+      -5.870615836236522e-06
+    ],
+    [
+      -1.673148870188928e-05,
+      -1.7108155977312752e-06,
+      -8.476610903022493e-06,
+      0.1698770592820748,
+      -1.3714399109187774e-05,
+      -9.160478469763883e-06
+    ],
+    [
+      4.905136717434352e-06,
+      6.573377601186545e-06,
+      3.3367645855594667e-06,
+      -1.3714399109187774e-05,
+      0.1698885675311628,
+      -4.207836700562305e-06
+    ],
+    [
+      1.0733039935934399e-05,
+      -8.475535646333482e-06,
+      -5.870615836236522e-06,
+      -9.160478469763883e-06,
+      -4.207836700562305e-06,
+      0.16989686595770206
+    ]
+  ],
+  "reference_disagreement": {
+    "worst_relative_strain_energy_difference": 0.02292790189260142,
+    "relative_tensor_frobenius_difference": 0.012356172913841092,
+    "relative_energy_difference_eigenvalues": [
+      0.007219209608237368,
+      0.02036731770399449,
+      0.02041110274535436,
+      0.022706873849677737,
+      0.022908372130673132,
+      0.02292790189260142
+    ]
+  },
+  "solver_records": [
+    {
+      "iterations": 1176,
+      "relative_residual": 9.96775659447479e-13,
+      "free_dofs": 134742,
+      "seconds": 11.256950850998692
+    },
+    {
+      "iterations": 1175,
+      "relative_residual": 9.439099709269493e-13,
+      "free_dofs": 134742,
+      "seconds": 11.103014782998798
+    },
+    {
+      "iterations": 1171,
+      "relative_residual": 9.77199186154276e-13,
+      "free_dofs": 134742,
+      "seconds": 11.396309204003046
+    },
+    {
+      "iterations": 1217,
+      "relative_residual": 9.64980234294016e-13,
+      "free_dofs": 134742,
+      "seconds": 11.497006315999897
+    },
+    {
+      "iterations": 1215,
+      "relative_residual": 9.992735367150253e-13,
+      "free_dofs": 134742,
+      "seconds": 11.435895724000147
+    },
+    {
+      "iterations": 1212,
+      "relative_residual": 9.785476702609583e-13,
+      "free_dofs": 134742,
+      "seconds": 11.413686666997819
+    }
+  ],
+  "solve_s": 75.37565920899942,
+  "reaction_relative_error": 6.272969059178333e-12,
+  "hill_mandel_relative_error": 6.266764680872853e-12,
+  "periodic_jump_max": 0.0,
+  "scope": "Saved quality-rejected mesh diagnostic only; excluded from admitted rankings and matched-workflow timing; no continuum or local-stress certification"
+}
