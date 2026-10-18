@@ -243,3 +243,46 @@ before fresh solves. The 8 GiB ceiling, 1,800-second worker cap, first-new-load
 240-second deadline and final independent audits remain unchanged. There is no
 complete reference or four-fixture accuracy claim while it is pending. Records
 are in `runs/g3-lattice-cubic-reference-cache-release-v1`.
+
+## Complete same-domain cubic tensor
+
+Job 195 completes all six loads. It revalidates four retained fields and solves
+the final two in 119 iterations each. All current reduced residuals are below
+9.57e-13. Explicit completed-cache release brings peak RSS to 6.341 GiB under
+the unchanged 8 GiB ceiling. Worker wall time is 369.81 seconds, including
+verified replay. This is not a fresh workflow timing.
+
+Independent own-rule stress and energy reproduce reactions within 7.10e-12
+relative. Periodic displacement jumps are below 2.23e-16. Positive 125-point
+reintegration changes worst mixed-load energy by 6.87e-6 relative, below the
+unchanged 1e-4 quadrature-sensitivity limit. The smallest eigenvalue of the
+parent-minus-cubic tensor is +0.000140585, consistent with variational enrichment
+on the identical quadratic physical domain. All six fields remain archived.
+
+The tensor passes FE consistency, geometry and quadrature gates. It still has
+status `solved-needs-reference`: one higher-order same-domain result does not
+establish convergence to the fixed implicit specimen. All 24 earlier empirical
+reference models remain retained. The next bounded stage audits these saved
+fields in a fresh process and compares every retained model without re-solving.
+
+Job 196 passes that fresh-process check at 0.514 GiB peak RSS in 53.94 seconds.
+It uses explicit Tet20 registration rather than a Tet4 fallback. Affine analytic
+patches pass for every rule, all sampled Jacobians are positive, and 64-to-125
+point fixed-field energy changes by only 9.54e-7 relative. Records are in
+`runs/g3-lattice-cubic-assessment-v1`.
+
+Against cubic24, uniform Tet10 meshes at 24, 32 and 34 cells differ by 0.87761%,
+0.56789% and 0.49251%. The finest adaptive tensor differs by 0.52086%, in the
+opposite energy direction. The actual tuned Microgen Tet4 tensor differs by
+3.49233%. These pairwise values do not resolve specimen accuracy. The cubic
+tensor spans 0.15415% to 1.75050% across all 24 retained models, and no tested
+Tet10 candidate passes every retained model at 1%. Neither reference selection
+nor a four-fixture timing victory follows from this result.
+
+Before another reference solve, test a stronger actual Microgen control.
+Its previously admitted lattice parent needs 326,716 straight Tet10 nodes.
+Second-pass hausd 0.0009 reduces the lift to 267,550 but fails quality at
+0.097405. One geometry-only stage changes that second-pass value to 0.001,
+retaining VTK51, first-pass 0.0015 and all admission gates. Check exact lift
+size and admission before any solve. This is explicitly tuned Microgen,
+not its recorded defaults and not MMG on a Meshers seed.

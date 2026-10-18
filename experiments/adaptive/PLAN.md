@@ -317,3 +317,20 @@ curved12 control with the same prescribed-strain helper and native build before
 further coarsening. This distinguishes parameter savings from the older
 stress-controlled timing. Lattice cross-family uncertainty and admitted
 Gyroid, spinodoid and lattice Microgen comparators remain unresolved.
+
+## Cubic lattice reference checkpoint, 2026-10-18
+
+The reference-only cubic24 enrichment now completes all six loads under 8 GiB.
+Fresh-process stress, energy, positive 64-point and 125-point integration and
+periodic-jump checks pass. Explicit completed reduced-cache release fixes the
+measured fedoo retention failure without changing equations or benchmark
+defaults. The six-load tensor is not a live workflow timing or continuum bound.
+See `CUBIC_RESULTS.md` and `runs/g3-lattice-cubic-assessment-v1`.
+
+The cubic tensor still differs by up to 1.75050% from the 24 retained empirical
+models. None is removed. Finest adaptive Tet10 remains unproven at the 1%
+target across every model. The next geometry-only stage tests second-pass
+hausd 0.001 on the actual VTK51 Microgen lattice seed, retaining first-pass
+0.0015, to assess a stronger straight-Tet10 comparator inside 250,000 nodes.
+Read its quality, distance and exact lift count before any solve. The existing
+Schwarz matched-target result remains the only demonstrated workflow win.
