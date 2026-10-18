@@ -227,8 +227,9 @@ def generate(
         band: Keep ``lower < field < upper``. Without a band, keep the negative side.
         geometry_tolerance: Maximum sampled boundary-distance estimate, in physical units.
         minimum_quality: Required minimum MMG tetrahedron quality, 0..1. Zero disables
-            the gate. A nonempty mesh below this value is rejected; no automatic
-            geometry changes are made. Empty meshes remain valid.
+            the requirement. Adaptive splitting and wall projection honor a positive
+            requested minimum. Nonempty meshes below it are rejected, and requested
+            geometry limits are not relaxed. Empty meshes remain valid.
         max_tetrahedra: Budget for generated tetrahedra.
         optimize_passes: Number of quality-optimization passes, 0..100.
         interior_refine_nodes: Maximum new nodes in one length-ranked interior

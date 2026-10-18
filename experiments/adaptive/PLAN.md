@@ -176,3 +176,21 @@ stable stiffness reference. Its adaptive quality rejection blocks useful graded
 reference meshes. Next reproduce that rejection in a regression test before
 testing a single seed-quality hypothesis. Do not raise resource limits or remove
 slow-order reference models to claim a global win.
+
+## Adaptive quality-guard correction, 2026-10-18
+
+An exact failing lattice regression and phase probes identify geometry-error
+enforcement as the first quality loss. The main adaptation rounds have no tets
+below 0.1, but enforcement passes guard zero and creates over 1,300 bad elements.
+Respecting the relative guard alone is insufficient because repeated operations
+can halve quality. Splitting and pending wall projection now also honor the
+existing caller-required minimum. All 23 core and 36 Python tests pass, including
+the exact regression. Temporary source probes and diagnostic export flags are
+removed. See `PERIODIC_RESULTS.md` for rejected hypotheses and the decision trail.
+
+The new lattice candidate passes quality at 0.11744 but still fails independent
+distance at 0.006986 because a corner remains off the wall. No solve runs.
+Spinodoid remains admitted, and the repeatedly timed nonadaptive Schwarz mesh
+is byte-for-byte identical in its point and connectivity arrays. Next diagnose
+the stalled corner projection while preserving both quality and geometry gates.
+This does not resolve lattice stiffness uncertainty or complete the four cases.

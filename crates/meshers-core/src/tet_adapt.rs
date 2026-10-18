@@ -485,7 +485,9 @@ impl<'g, G: Geometry> Tets<'g, G> {
             self.project(mid, mask, 0.)?
         };
         // Midpoint children are naturally worse than their parent; only reject slivers.
-        let floor = (0.5 * self.worst(&shell).min(guard)).max(1e-9);
+        let floor = (0.5 * self.worst(&shell).min(guard))
+            .max(self.g.minimum_quality())
+            .max(1e-9);
         // A deep concave sag can invert neighbours if the vertex goes straight onto the
         // surface; insert it part of the way and finish the projection later.
         let offset = self.delta(mid, target);
@@ -922,7 +924,9 @@ impl<'g, G: Geometry> Tets<'g, G> {
             let mask = self.masks[v];
             let level = self.level(self.points[v]);
             // Same floor as a split: geometry may not be bought with slivers.
-            let floor = (0.5 * self.worst(&self.vt[v].clone()).min(guard)).max(1e-6);
+            let floor = (0.5 * self.worst(&self.vt[v].clone()).min(guard))
+                .max(self.g.minimum_quality())
+                .max(1e-6);
             let Some(q) = self.project(self.points[v], mask, level) else {
                 self.pending.push(v);
                 continue;
@@ -1007,7 +1011,7 @@ impl<'g, G: Geometry> Tets<'g, G> {
                 if self.shell(a, b).is_empty() || self.length(a, b) < o.min_length {
                     continue;
                 }
-                if self.split(a, b, 0.).is_some() {
+                if self.split(a, b, o.quality_guard).is_some() {
                     stats.error_splits += 1;
                     progress = true;
                 }

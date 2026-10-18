@@ -8,6 +8,9 @@ pub(crate) trait Geometry: Sync {
     fn refinement_quality_floor(&self) -> f64 {
         0.25
     }
+    fn minimum_quality(&self) -> f64 {
+        0.
+    }
     fn value(&self, p: Point) -> f64;
     fn batched(&self) -> bool {
         false

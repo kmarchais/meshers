@@ -170,6 +170,9 @@ impl<F: ScalarField> Geometry for Context<'_, F> {
     fn optimizer_length(&self) -> f64 {
         self.optimizer_length
     }
+    fn minimum_quality(&self) -> f64 {
+        self.options.minimum_quality
+    }
     fn refinement_quality_floor(&self) -> f64 {
         // Experimental: allow curvature refinement down to the requested
         // FEA shape gate, retaining the historical ceiling for higher targets.

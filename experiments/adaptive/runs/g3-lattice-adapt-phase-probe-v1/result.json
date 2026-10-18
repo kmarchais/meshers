@@ -1,0 +1,96 @@
+{
+  "case": "smooth-lattice",
+  "cells": 20,
+  "min_length": 0.002,
+  "order": 1,
+  "native_tolerance": 1.0,
+  "optimization_passes": 0,
+  "diagnostic_quality_export": true,
+  "adaptive": true,
+  "adapt_tolerance": 0.004,
+  "solve_node_cap": 100000,
+  "qualified": false,
+  "symmetric_union": {
+    "identity": "min(a,b) = (a+b-abs(a-b))/2",
+    "maximum_field_value_difference": 1.6653345369377348e-16,
+    "maximum_tie_gradient_difference": 1.468915544755589e-10,
+    "value_verification_points": 4096,
+    "gradient_verification_points": 3
+  },
+  "void_clamp": {
+    "positive_ceiling": 0.02,
+    "verification_points": 4096,
+    "material_mismatches": 0,
+    "domain_identity": "min(phi, positive_constant) <= 0 iff phi <= 0"
+  },
+  "generation_s": 3.6646340740007872,
+  "nodes": 20450,
+  "elements": 86715,
+  "diagnostics": {
+    "empty": false,
+    "volume": 0.2463374842494962,
+    "minimum_mmg_quality": 0.0017913173695516924,
+    "sampled_surface_error": 0.0030070307994705236,
+    "elements_below_quality_01": 1366,
+    "reverted_snap_vertices": 0,
+    "callback_calls": 0,
+    "inserted_interior_nodes": 0,
+    "adapt": {
+      "splits": 16377,
+      "collapses": 9390,
+      "swaps": 5436,
+      "moves": 55453,
+      "error_splits": 2519,
+      "maximum_error": 0.007859048851195148,
+      "seconds": [
+        0.383958825,
+        0.123989766,
+        0.849645102,
+        0.354289982,
+        0.478094569,
+        0.7147943649999999,
+        0.493905484
+      ]
+    },
+    "seconds": 3.651628054,
+    "threads": 1,
+    "evaluator": "compiled",
+    "preparation_seconds": 0.012934021000546636
+  },
+  "geometry": {
+    "sampled_forward_max": 0.00296166622985354,
+    "sampled_reverse_max": 0.0028257973276093707,
+    "sampled_two_sided_max": 0.00296166622985354,
+    "outward_forward_max": 0.00296166622985354,
+    "inward_forward_max": 0.002207195351259555,
+    "projection_failed": 0,
+    "forward_samples": 202332,
+    "reverse_samples": 34791,
+    "volume": 0.24633748424949686,
+    "relative_volume_error": -0.007947928992635855,
+    "q_min_corner": 0.0017913173695516924,
+    "q_p01_corner": 0.0789377413013852,
+    "minimum_dihedral_deg_corner": 0.12001599923962658,
+    "minimum_sampled_jacobian": 9.158569059695078e-09,
+    "reverse_tessellation_delta_max": 0.0,
+    "quadratic_reverse_subdivisions": null,
+    "geometry_admitted": false
+  },
+  "periodic": {
+    "periodic_pair_counts": [
+      464,
+      474,
+      474
+    ],
+    "periodic_coordinate_errors": [
+      0.0,
+      0.0,
+      0.0
+    ],
+    "periodic_pair_tolerance": 1e-10,
+    "periodic_equivalence_classes": 19067,
+    "periodic_triangles_match": true
+  },
+  "status": "diagnostic-only",
+  "total_audit_workflow_s": 7.007081734000167
+}

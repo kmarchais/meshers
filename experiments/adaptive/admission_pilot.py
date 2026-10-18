@@ -25,6 +25,7 @@ def worker(args):
 
     row = {"case": args.case, "cells": args.cells, "min_length": args.min_length,
            "order": args.order, "native_tolerance": args.native_tolerance,
+           "optimization_passes": args.optimization_passes,
            "adaptive": not args.no_adapt, "adapt_tolerance": args.adapt_tolerance,
            "solve_node_cap": args.solve_node_cap, "qualified": False}
     started = time.perf_counter()
@@ -99,8 +100,9 @@ def worker(args):
                 "domain_identity": "min(phi, positive_constant) <= 0 iff phi <= 0"}
         phase = time.perf_counter()
         mesh = meshers.generate(field, bounds=workflow.BOUNDS, cells=args.cells,
-            band=case.band, periodic=(True, True, True), threads=1, optimize_passes=1,
-            minimum_quality=0.1, geometry_tolerance=args.native_tolerance, max_tetrahedra=workflow.CAP,
+            band=case.band, periodic=(True, True, True), threads=1, optimize_passes=args.optimization_passes,
+            minimum_quality=0.1,
+            geometry_tolerance=args.native_tolerance, max_tetrahedra=workflow.CAP,
             adapt=not args.no_adapt, min_length=args.min_length, max_length=0.1, gradation=0.3,
             adapt_iterations=4, quality_guard=0.3, adapt_tolerance=args.adapt_tolerance, order=args.order)
         row.update(generation_s=time.perf_counter() - phase, nodes=len(mesh.points),
@@ -144,6 +146,7 @@ def main():
     parser.add_argument("--compiled-spinodoid", action="store_true")
     parser.add_argument("--order", type=int, default=1, choices=(1, 2))
     parser.add_argument("--native-tolerance", type=float, default=0.002)
+    parser.add_argument("--optimization-passes", type=int, default=1)
     parser.add_argument("--adapt-tolerance", type=float, default=0.002)
     parser.add_argument("--solve", action="store_true")
     parser.add_argument("--clip-void", type=float)
@@ -203,6 +206,7 @@ def main():
             command = [sys.executable, __file__, "--run", str(args.run),
                 "--case", args.case, "--cells", str(args.cells), "--min-length", str(args.min_length),
                 "--order", str(args.order), "--native-tolerance", str(args.native_tolerance),
+                "--optimization-passes", str(args.optimization_passes),
                 "--adapt-tolerance", str(args.adapt_tolerance),
                 "--solve-node-cap", str(args.solve_node_cap),
                 "--worker-timeout", str(args.worker_timeout),

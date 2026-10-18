@@ -82,3 +82,47 @@ def test_quadratic_wall_nodes_lie_on_the_surface(tmp_path):
     mesh.write_vtkhdf(path)
     with h5py.File(path) as file:
         assert set(file["VTKHDF/Types"][()]) == {24}
+
+
+def test_adapted_smooth_lattice_preserves_quality_and_periodic_pairs():
+    corners = (
+        (-0.5, -0.5, -0.5), (-0.5, -0.5, 0.5),
+        (-0.5, 0.5, -0.5), (-0.5, 0.5, 0.5),
+        (0.5, -0.5, -0.5), (0.5, -0.5, 0.5),
+        (0.5, 0.5, -0.5), (0.5, 0.5, 0.5),
+    )
+
+    def field(coordinates_x, coordinates_y, coordinates_z):
+        distance = None
+        for corner in corners:
+            parameter = np.clip(
+                (coordinates_x * corner[0] + coordinates_y * corner[1]
+                 + coordinates_z * corner[2]) / 0.75, 0, 1
+            )
+            radius = np.sqrt(
+                (coordinates_x - parameter * corner[0]) ** 2
+                + (coordinates_y - parameter * corner[1]) ** 2
+                + (coordinates_z - parameter * corner[2]) ** 2
+            )
+            if distance is None:
+                distance = radius
+            else:
+                difference = np.abs(distance - radius)
+                blend = np.maximum(0.08 - difference, 0.0) / 0.08
+                distance = (distance + radius - difference) / 2 - blend ** 3 * 0.08 / 6
+        return np.minimum(distance - 0.12, 0.02)
+
+    mesh = meshers.generate(
+        field, bounds=BOX, cells=20, periodic=(True, True, True), threads=1,
+        optimize_passes=1, minimum_quality=0.1, geometry_tolerance=1.0,
+        max_tetrahedra=250_000, adapt=True, min_length=0.002, max_length=0.1,
+        gradation=0.3, adapt_iterations=4, quality_guard=0.3,
+        adapt_tolerance=0.004, order=2,
+    )
+    assert mesh.diagnostics["minimum_mmg_quality"] >= 0.1
+    assert mesh.diagnostics["elements_below_quality_01"] == 0
+    assert mesh.diagnostics["quadratic"]["minimum_jacobian_ratio"] > 1e-3
+    for axis, pairs in enumerate(mesh.periodic_pairs):
+        assert len(pairs) > 0
+        shift = mesh.points[pairs[:, 1]] - mesh.points[pairs[:, 0]]
+        np.testing.assert_allclose(shift, np.eye(3)[np.full(len(pairs), axis)], atol=1e-12)

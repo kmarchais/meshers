@@ -334,3 +334,136 @@ identified first-pass geometry loss, but only the 24-point seed received the
 tighter first-pass override. Test the same explicit 0.0005 override on the
 20-point seed before adding any new repair algorithm. This remains a tuned
 Microgen VTK/MMG workflow, not its default pipeline or a Meshers seed.
+
+## Adaptive lattice quality regression
+
+After completing the supported Schwarz comparison, return to the unresolved
+lattice reference. Job 77 adds an end-to-end Python regression for the exact
+20-cell symmetric smooth-union field and positive void clamp. It reproduces the
+archived rejection exactly, with 525 elements below 0.1 and minimum quality
+0.0405062. The other 35 Python tests pass. Records are in
+`runs/g3-lattice-adapt-quality-red-v1`.
+
+The ranked hypotheses and predictions are:
+
+1. Poor clipped-seed quality survives adaptation's non-degradation guards.
+   Applying the existing seed optimizer before adaptation removes the failure.
+2. Surface projection during adaptation creates the bad elements. Seed
+   optimization alone does not remove the failure; bad quality recurs there.
+3. Final legacy optimization loses acceptable adapted quality. Seed
+   optimization alone fails, but a controlled post-optimization probe improves it.
+
+Test the first hypothesis by moving the existing initial optimization call
+before the adaptive branch. The nonadaptive route keeps its original call order;
+the adaptive route gains one identical pre-pass. Do not alter projection,
+quality guards, acceptance thresholds or iteration counts in this experiment.
+The pre-change native package is retained locally with SHA256
+`1b1735ab499abcdac4bdce6184363b6ebed99926b498be6afcd21ae1c91a02e5`.
+The build, core tests, Python regression suite and one independent lattice
+admission audit run as bounded stages. Results remain pending.
+
+Job 78 builds and passes all 23 core tests, but the regression still rejects:
+205 elements are below 0.1 and the minimum worsens to 0.0335035. The other
+35 Python tests pass. This does not support seed optimization as a fix, so
+the native call-order change is reverted. Records are in
+`runs/g3-lattice-adapt-quality-preopt-v1`.
+
+The next probe uses the original native pipeline with final optimization
+disabled through its existing pass-count option. A diagnostic-only export
+disables the internal final quality rejection so the failed mesh can be
+inspected, but leaves independent admission fixed at q_min >= 0.1. Diagnostic
+exports are never qualified and cannot request an FE solve. This distinguishes
+post-optimization loss from a quality defect already present after adaptation.
+It tests hypothesis 3 next because that phase has a direct existing control;
+projection instrumentation is needed only if quality is already bad there.
+
+Job 79 restores the original native call order, passes all 23 core tests and
+exports the unoptimized adapted skeleton only as a diagnostic. It has 20,450
+nodes, 86,715 tets, minimum quality 0.0017913 and 1,366 elements below 0.1.
+Independent geometry also rejects at H=0.002962. No FEA is permitted. The final
+one-pass optimizer therefore improves this mesh to the previously recorded
+525 bad elements and minimum 0.0405062; it is not the source of the quality loss.
+Records are in `runs/g3-lattice-adapt-quality-noopt-v1`.
+
+Before deeper instrumentation, test the public API's standard four optimization
+passes rather than the study's forced one-pass setting. This changes only the
+optimization count on the original native pipeline, with internal and external
+quality floors restored to 0.1. Failure under one pass is an unsupported
+configuration, not a promise that the API must return an admitted mesh.
+
+Job 80's standard four-pass variant also rejects, with 340 elements below 0.1
+and minimum quality 0.0498954. No FE solve runs. Records are in
+`runs/g3-lattice-adapt-quality-opt4-v1`.
+
+The next diagnostic adds temporary opt-in summaries of live tetrahedron count,
+minimum quality and count below 0.1 after clipping, size splitting, collapse,
+swaps, projection, relocation and final geometry-error enforcement. These probes
+do not change meshing decisions. Their worker log uses the unique prefix
+`[DEBUG-g3-adapt-quality]`, and the instrumentation must be removed before
+shipping a fix. The experiment exports only the same unqualified, unoptimized
+linear skeleton as job 79 and permits no solve.
+
+Job 81 identifies the loss. The initial clipped skeleton already has
+q_min=0.15865 and no element below 0.1. All four guarded adaptation rounds keep
+every element above 0.1, ending at q_min=0.28725 with 81,165 tets. Geometry-error
+enforcement then drops q_min to 0.0017913 and creates 1,357 bad elements. Final
+projection leaves 1,366. The exported counts and quality match job 79, so the
+instrumentation did not change the geometry. Records and the phase log are in
+`runs/g3-lattice-adapt-phase-probe-v1`.
+
+The enforcement call passes a literal zero to the existing split quality guard,
+unlike the preceding sizing splits. The next fix changes only that argument to
+the requested `quality_guard`. All temporary probe code and its environment
+hook are removed before the validation build. The exact failing Python
+regression, the 23 core tests and independent final admission remain required.
+This is not permission to trade away geometry acceptance for quality.
+
+Job 82 passes 23 core and 35 existing Python tests, but its guard-only fix
+still leaves 94 elements below 0.1, at minimum quality 0.0571262. The split
+and pending-projection rules each permit half their parent's quality, so
+repeated guarded operations can still cross the requested hard minimum.
+Records are in `runs/g3-lattice-adapt-quality-guarded-v1`.
+
+The next change exposes the existing caller-requested minimum through the
+internal geometry context, defaulting to zero for other geometry implementations.
+Split and pending-projection acceptance retain their existing relative guard
+and also honor this hard minimum. Error enforcement continues to pass the
+requested relative guard. This changes no final admission threshold and adds
+no public option. The exact failing regression and independent geometry audit
+remain the acceptance checks; results are pending.
+
+Job 83 passes all 23 core tests and all 36 Python tests, including the exact
+formerly failing lattice regression. The actual candidate now returns with
+134,109 nodes, 85,306 Tet10 elements and q_min=0.11744. Volume error is
+-0.02972%, all sampled curved Jacobians are positive, and periodic caps match.
+However, independent distance rejects at H=0.006986. No FE solve runs.
+Records are in `runs/g3-lattice-adapt-quality-floor-v1`.
+
+The quality fix is not a usable lattice reference yet. Retain the full geometry
+rejection and localize its worst probes before choosing any further algorithm
+change. Do not weaken the distance gate or infer accuracy from the green
+quality regression alone. Temporary debug source hooks are absent.
+
+Job 84 locates the remaining lattice error at an off-wall corner with raw field
+value 0.004272, rather than at a projected mid-edge node. There are 90 partially
+curved edges, but changing their interpolation alone cannot repair that corner.
+The corner is not locked on a box plane. Records are in
+`runs/g3-lattice-quality-floor-geometry-v1`.
+
+Job 85 checks the previously admitted 32-cell compiled spinodoid after the hard
+quality-floor change. It remains admitted with 16,731 nodes, 72,522 tets,
+H=0.0018504, volume error +0.04465% and q_min=0.23284. Periodic checks pass.
+This is a geometry regression control, not a new stiffness solve. Records are
+in `runs/g3-spinodoid-quality-floor-control-v1`.
+
+Job 86 regenerates the nonadaptive eight-cell Schwarz mesh with the new native
+build. Its points, Tet10 connectivity and six-node surface arrays are exactly
+identical to the measured comparison mesh. Independent admission still passes
+at the same distance and quality. Records are in
+`runs/g3-schwarz-quality-floor-control-v1`.
+
+Remove the temporary diagnostic-only export flag from the live runner after
+diagnosis. The frozen diagnostic drivers and outputs remain unchanged, and the
+pre-change native package remains available locally. The live runner again
+always requires native minimum quality 0.1 as well as independent admission.
+Keep the optimization-pass selector for supported configuration checks.
