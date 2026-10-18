@@ -1,0 +1,225 @@
+diff --git a/crates/meshers-core/src/optimize.rs b/crates/meshers-core/src/optimize.rs
+index 2ce3ebc..338e728 100644
+--- a/crates/meshers-core/src/optimize.rs
++++ b/crates/meshers-core/src/optimize.rs
+@@ -6,18 +6,34 @@ use crate::{Mesh, Point, determinant, dot, norm, sub};
+ use rayon::prelude::*;
+ use std::collections::BTreeMap;
+ 
+-fn projection_level(
++fn projection_constraint(
+     value: f64,
+     on_wall: bool,
+     threshold: f64,
+     geometry: &impl crate::geometry::Geometry,
+-) -> Option<f64> {
++) -> (Option<f64>, bool) {
+     let residual = if geometry.band() {
+         (value.abs() - threshold).abs()
+     } else {
+         value.abs()
+     };
+-    (on_wall || residual < 1e-8).then_some(geometry.level(value, threshold))
++    let near = residual < 1e-8;
++    (
++        (on_wall || near).then_some(geometry.level(value, threshold)),
++        on_wall && !near,
++    )
++}
++
++fn optimization_baseline(
++    previous: (f64, f64),
++    repair_wall: bool,
++    geometry: &impl crate::geometry::Geometry,
++) -> (f64, f64) {
++    if repair_wall {
++        (geometry.minimum_quality().powi(2), f64::INFINITY)
++    } else {
++        (previous.0.min(0.65_f64.powi(3)) - 1e-12, previous.1)
++    }
+ }
+ 
+ fn project(
+@@ -337,7 +353,8 @@ fn accept_gpu(
+     }
+     let origin = mesh.points[group.0[0]];
+     let value = geometry.value(origin);
+-    let level = projection_level(value, !group.2.is_empty(), threshold, geometry);
++    let (level, repair_wall) =
++        projection_constraint(value, !group.2.is_empty(), threshold, geometry);
+     let Some(candidate) = project(
+         std::array::from_fn(|a| origin[a] + delta[a]),
+         origin,
+@@ -348,8 +365,9 @@ fn accept_gpu(
+     };
+     let (old_min, old_cost) = evaluate(mesh, group, threshold, h, weight, origin, geometry);
+     let (new_min, new_cost) = evaluate(mesh, group, threshold, h, weight, candidate, geometry);
+-    if new_min >= old_min.min(0.65_f64.powi(3)) - 1e-12
+-        && new_cost < old_cost
++    let (floor, baseline_cost) = optimization_baseline((old_min, old_cost), repair_wall, geometry);
++    if new_min >= floor
++        && new_cost < baseline_cost
+         && batch::surface_moves(mesh, &[(group, candidate)], threshold, geometry)
+             .is_ok_and(|accepted| accepted[0])
+     {
+@@ -373,7 +391,7 @@ fn proposal(
+     let (members, _, faces) = group;
+     let original = mesh.points[members[0]];
+     let value = geometry.value(original);
+-    let level = projection_level(value, !faces.is_empty(), threshold, geometry);
++    let (level, repair_wall) = projection_constraint(value, !faces.is_empty(), threshold, geometry);
+     let evaluate = |candidate| {
+         evaluate(
+             mesh,
+@@ -390,12 +408,11 @@ fn proposal(
+         return [0.; 3];
+     }
+     let mut best = original;
+-    let mut best_cost = old_cost;
+-    let floor = old_min.min(0.65_f64.powi(3));
++    let (floor, mut best_cost) = optimization_baseline((old_min, old_cost), repair_wall, geometry);
+     let mut try_candidate = |candidate: Point| {
+         if let Some(p) = project(candidate, original, level, geometry) {
+             let (worst, cost) = evaluate(p);
+-            if worst >= floor - 1e-12 && cost < best_cost {
++            if worst >= floor && cost < best_cost {
+                 best = p;
+                 best_cost = cost;
+             }
+@@ -519,17 +536,21 @@ mod gpu_acceptance_tests {
+ 
+     struct SlantedPlane {
+         batched: bool,
++        intercept: f64,
+     }
+ 
+     impl crate::geometry::Geometry for SlantedPlane {
+         fn value(&self, point: Point) -> f64 {
+-            point.iter().sum::<f64>() - 1.
++            point[0] / self.intercept + point[1] + point[2] - 1.
+         }
+         fn gradient(&self, _point: Point) -> Point {
+-            [1.; 3]
++            [1. / self.intercept, 1., 1.]
+         }
+         fn bounds(&self) -> [Point; 2] {
+-            [[0.; 3], [2.; 3]]
++            [[0.; 3], [32.; 3]]
++        }
++        fn minimum_quality(&self) -> f64 {
++            0.1
+         }
+         fn rank(&self, point: Point) -> [i64; 3] {
+             point.map(|coordinate| (coordinate * 1e11).round() as i64)
+@@ -544,26 +565,38 @@ mod gpu_acceptance_tests {
+ 
+     #[test]
+     fn off_field_wall_vertex_keeps_its_boundary_constraint() {
+-        use crate::geometry::Geometry;
+-
+         for batched in [false, true] {
+-            let tetrahedra = vec![[3, 0, 1, 2]];
+-            let surface = crate::boundary(&tetrahedra).unwrap();
+-            let mut mesh = Mesh {
+-                points: vec![[1.02, 0., 0.], [0., 1., 0.], [0., 0., 1.], [0.; 3]],
+-                tets: tetrahedra,
+-                surface,
+-            };
+-            let geometry = SlantedPlane { batched };
+-            let group = (vec![0], vec![0], vec![[0, 1, 2]]);
+-            let delta = accept_gpu(&mesh, &group, 0., 1., 3., [-0.025, 0., 0.], &geometry);
+-            assert!((mesh.points[0][0] + delta[0] - 1.).abs() < 1e-12);
+-            optimize_for(&mut mesh, 0., 1., 1, 3., 1, None, &geometry).unwrap();
+-            assert!(
+-                geometry.value(mesh.points[0]).abs() < 1e-12,
+-                "batched={batched}: wall vertex moved to {:?}",
+-                mesh.points[0]
+-            );
++            for intercept in [1., 1.3, 3.5, 20.] {
++                let tetrahedra = vec![[3, 0, 1, 2]];
++                let surface = crate::boundary(&tetrahedra).unwrap();
++                let mut mesh = Mesh {
++                    points: vec![[1.02, 0., 0.], [0., 1., 0.], [0., 0., 1.], [0.; 3]],
++                    tets: tetrahedra,
++                    surface,
++                };
++                let geometry = SlantedPlane { batched, intercept };
++                let mut projected = mesh.points.clone();
++                projected[0][0] = intercept;
++                let projected_quality =
++                    crate::quality(mesh.tets[0].map(|node| projected[node])).powf(1.5);
++                assert_eq!(projected_quality >= 0.1, intercept < 20.);
++                let group = (vec![0], vec![0], vec![[0, 1, 2]]);
++                let delta = accept_gpu(&mesh, &group, 0., 1., 3., [-0.025, 0., 0.], &geometry);
++                let expected = if intercept < 20. { intercept } else { 1.02 };
++                assert!(
++                    (mesh.points[0][0] + delta[0] - expected).abs() < 1e-12,
++                    "batched={batched}, intercept={intercept}: accepted delta {delta:?}"
++                );
++                optimize_for(&mut mesh, 0., 1., 1, 3., 1, None, &geometry).unwrap();
++                assert!(
++                    (mesh.points[0][0] - expected).abs() < 1e-12,
++                    "batched={batched}, intercept={intercept}: wall vertex {:?}",
++                    mesh.points[0]
++                );
++                assert!(
++                    crate::quality(mesh.tets[0].map(|node| mesh.points[node])).powf(1.5) >= 0.1
++                );
++            }
+         }
+     }
+ 
+diff --git a/crates/meshers-core/src/optimize_batch.rs b/crates/meshers-core/src/optimize_batch.rs
+index 6b8d6c9..4868827 100644
+--- a/crates/meshers-core/src/optimize_batch.rs
++++ b/crates/meshers-core/src/optimize_batch.rs
+@@ -164,11 +164,13 @@ pub(super) fn proposals(
+ ) -> Result<Vec<Point>, String> {
+     let origins: Vec<_> = groups.iter().map(|g| mesh.points[g.0[0]]).collect();
+     let values = g.values(&origins);
+-    let levels: Vec<_> = values
++    let (levels, repairing): (Vec<_>, Vec<_>) = values
+         .into_iter()
+         .zip(groups)
+-        .map(|(value, group)| super::projection_level(value, !group.2.is_empty(), threshold, g))
+-        .collect();
++        .map(|(value, group)| {
++            super::projection_constraint(value, !group.2.is_empty(), threshold, g)
++        })
++        .unzip();
+     let old = evaluate(
+         mesh,
+         &groups
+@@ -181,8 +183,13 @@ pub(super) fn proposals(
+         weight,
+         g,
+     )?;
++    let baselines: Vec<_> = old
++        .iter()
++        .zip(&repairing)
++        .map(|(&previous, &repair_wall)| super::optimization_baseline(previous, repair_wall, g))
++        .collect();
+     let mut best = origins.clone();
+-    let mut best_cost: Vec<_> = old.iter().map(|v| v.1).collect();
++    let mut best_cost: Vec<_> = baselines.iter().map(|baseline| baseline.1).collect();
+     let mut candidates = Vec::new();
+     let mut owners = Vec::new();
+     let mut slots = Vec::new();
+@@ -253,7 +260,7 @@ pub(super) fn proposals(
+         let i = owners[j];
+         if let Some(slot) = slots[j] {
+             differences[i][slot] = cost;
+-        } else if worst >= old[i].0.min(0.65_f64.powi(3)) - 1e-12 && cost < best_cost[i] {
++        } else if worst >= baselines[i].0 && cost < best_cost[i] {
+             best[i] = p;
+             best_cost[i] = cost;
+         }
+@@ -304,7 +311,7 @@ pub(super) fn proposals(
+     )?;
+     for ((j, p), (worst, cost)) in valid.into_iter().zip(scores) {
+         let i = owners[j];
+-        if worst >= old[i].0.min(0.65_f64.powi(3)) - 1e-12 && cost < best_cost[i] {
++        if worst >= baselines[i].0 && cost < best_cost[i] {
+             best[i] = p;
+             best_cost[i] = cost;
+         }

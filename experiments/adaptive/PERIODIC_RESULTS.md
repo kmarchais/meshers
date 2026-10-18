@@ -550,3 +550,70 @@ Spinodoid remains admitted with the same recorded geometry metrics and counts
 as job 85. Neither control includes a new stiffness solve. Records are in
 `runs/g3-optimizer-wall-schwarz-control-v1` and
 `runs/g3-optimizer-wall-spinodoid-control-v1`.
+
+## Rejected wall-repair objective experiment
+
+Job 96 extends the planar diagnostic to restoring geometry at some cost in
+excess quality. Feasible plane targets remain above the unchanged 0.1 floor;
+a separate target would fall below it and must be rejected. The old objective
+rejects a feasible target at intercept 1.3. The next experimental policy gives
+wall feasibility priority only for initially off-field wall groups, retaining
+the requested hard quality minimum and the ordinary policy elsewhere.
+
+Job 97 passes the extended 24 core tests and 36 Python tests, including
+rejection of the below-floor target. However, the actual lattice still has
+exactly H=0.002284 and the same counts and quality as the committed classifier
+fix. This is not evidence of a useful lattice improvement. Revert the broader
+objective policy and its extended diagnostic from maintained code; preserve
+the experimental patch and outputs in `runs/g3-optimizer-wall-repair-fixed-v1`.
+The verified classification correction in `5914097` remains.
+
+Restore the default Python extension atomically from the verified Linux build
+of `5914097`, SHA256
+`1d2942d13f361770f7151dba51c4cca5390eb8ebd174df3a22f4d63bd512e85f`.
+The next experiment uses that same pinned build with the known feasible
+24-cell lattice seed, changing only initial density from the failing adaptive
+20-cell route. It must pass independent admission before any solve is chosen.
+
+Job 98's 24-cell adaptive candidate passes all admission gates with 123,570
+nodes and 77,602 Tet10 elements. H=0.0002939, volume error=-0.03139% and
+q_min=0.13571. All sampled Jacobians are positive, periodic caps match, and no
+edge needs partial curving. This uses the verified `5914097` native build, not
+the reverted objective policy. Records are in `runs/g3-lattice-adapt24-verified-v1`.
+
+Select one live six-load solve of this configuration before any successor.
+The 150,000-node, 1,200-second reference stage retains the hard 8 GiB ceiling.
+The preceding 118,205-node lattice solve peaked at 4.30 GiB, supporting this
+bounded attempt. Regenerate and re-audit before solving; do not estimate live
+workflow time from the saved geometry. A complete tensor will provide an
+independent adaptive-family check, not automatically a justified reference or
+a 1% accuracy claim.
+
+Job 99 completes all six prescribed-strain loads. The 24-cell adaptive tensor
+differs from the admitted uniform 32-cell tensor by 0.82695% in worst mixed-load
+energy. Solve time is 630.67 seconds and live total workflow is 639.81 seconds,
+including generation and admission. Peak worker RSS is 3.80 GiB. This is a
+pairwise difference, not evidence that either tensor has less than 1% error.
+The uniform refinement family still lacks a stable observed rate.
+
+Before choosing another refinement, job 100 checks the saved adaptive and
+uniform32 fields against the original reaction tensors, periodic jumps and
+integrated energies. It also reintegrates those fixed fields with positive
+64-point and 125-point Duffy rules. Exact monomial checks and an affine Tet10
+elasticity patch check guard the new rules. This separates quadrature
+sensitivity from mesh-family differences. Reintegration does not re-solve
+equilibrium with the new rules and cannot certify continuum error.
+
+Job 100 passes both saved-field audits. Maximum reaction disagreement is
+2.72e-11 and all periodic jumps are zero. The 125-point fixed-field energy
+changes by 3.77e-7 relative for adaptive24 and 5.65e-7 for uniform32. The
+64-to-125-point changes are 5.06e-8 and 1.03e-7. These are far smaller than
+the 0.00827 mesh-family disagreement. Quadrature sensitivity of these fixed
+fields does not explain that disagreement.
+
+Select one adaptive-family refinement from tolerance 0.004 to 0.003, keeping
+the 24-cell seed, native build, quality minimum, and specimen unchanged.
+Use the existing 200,000-node, 1,800-second stage with the same hard 8 GiB
+ceiling. The previous uniform 189,187-node solve peaked at 6.56 GiB, while
+adaptive24 used 3.80 GiB for 123,570 nodes. Generate and independently admit
+before solving. A resource cap or failed admission remains a negative result.

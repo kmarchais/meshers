@@ -307,3 +307,24 @@ coarse solve. At target 0.04 it uses 22,664 rather than 33,657 nodes and takes
 stiffness disagreement. All four meshes pass the unchanged admission checks.
 This is a single-run Meshers comparison, not a matched-accuracy Microgen victory
 or a local-stress accuracy claim.
+
+## Matched-target comparison and remaining uncertainty, 2026-10-18
+
+Five interleaved Schwarz pairs establish a narrow matched-target result.
+Meshers curved Tet10 uses 6,864 nodes at 0.25870% mixed-load stiffness
+disagreement, versus 32,070 Tet4 nodes at 0.92806% for an explicitly modified
+actual Microgen VTK-to-single-MMG route. Both pass all admission gates and the
+1% stiffness target. Median live total workflows are 7.7916 and 40.5036 seconds,
+with Meshers faster in every pair by 5.1155 to 5.2908 times. This is not the
+default two-pass Microgen pipeline and not a four-fixture victory.
+See `MICROGEN_RESULTS.md` for the route, same-solver protocol and field audits.
+
+The fixed spinodoid now has admitted curved meshes and a sensitivity-checked
+empirical reference, but no admitted Microgen timing comparator. The lattice
+also admits curved meshes, after explicit equivalent-field preparation and
+measured native corrections. Its uniform refinement family does not have a
+stable observed stiffness convergence rate. An independently audited adaptive
+123,570-node tensor differs by 0.82695% from uniform32; positive higher-rule
+reintegration changes fixed-field energy by at most 5.65e-7 relative. Lattice
+1% stiffness accuracy remains unproven. See `PERIODIC_RESULTS.md` for rejected
+changes, admission failures, native regression tests and reference limits.

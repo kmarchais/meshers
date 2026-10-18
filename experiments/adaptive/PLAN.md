@@ -203,3 +203,13 @@ reproduces that defect. Shared wall-topology-based projection selection passes
 runs. Schwarz arrays remain byte-identical and spinodoid admission metrics
 remain unchanged. Continue the remaining wall-projection investigation without
 calling this a lattice reference or a four-fixture win.
+
+The broader wall-repair objective policy passes its controls but gives no
+actual lattice improvement, so it is reverted. The verified 24-cell adaptive
+seed instead admits 123,570 Tet10 nodes and completes six loads in 639.81
+seconds total. Its tensor differs by 0.82695% from uniform32. Both saved-field
+audits pass, and positive 64-point and 125-point reintegration changes energy
+by at most 5.65e-7 relative. This does not resolve reference convergence.
+Next tighten only adaptive tolerance from 0.004 to 0.003 with admission before
+FEA, the existing 200,000-node and 1,800-second stage, and the unchanged hard
+8 GiB ceiling. Read that tensor before choosing any further refinement.

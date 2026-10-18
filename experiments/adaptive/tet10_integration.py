@@ -18,14 +18,15 @@ from pueue_progress import Job
 import microgen_workflow as workflow
 
 
-def integrated_tensors(points, tetrahedra, displacements):
+def integrated_tensors(points, tetrahedra, displacements, quadrature=None):
     np, fd, *_ = workflow.imports()
     order = 2 if tetrahedra.shape[1] == 10 else 1
     element = fd.lib_elements.element_list.get_element("tet10" if order == 2 else "tet4")(15 if order == 2 else 4)
     coordinates = points[tetrahedra]
     stiffness, energy = np.zeros((6, 6)), np.zeros((6, 6))
     volume = 0.0
-    for derivative, weight in zip(element.shape_function_derivative(element.xi_pg), element.w_pg, strict=True):
+    locations, weights_reference = (element.xi_pg, element.w_pg) if quadrature is None else quadrature
+    for derivative, weight in zip(element.shape_function_derivative(locations), weights_reference, strict=True):
         jacobian = np.einsum("an,tnb->tab", derivative, coordinates)
         determinants = np.linalg.det(jacobian)
         assert determinants.min() > 0
