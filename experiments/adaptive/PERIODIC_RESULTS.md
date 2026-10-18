@@ -139,3 +139,47 @@ Job 40 re-audits all four fine Gyroid/Schwarz reference inputs, which also retai
 their distances and pass admission. Source mesh and report hashes are unchanged.
 Records are in `runs/g3-plane-reaudit-v1` and
 `runs/g3-reference-plane-reaudit-v1`. Historical reports remain frozen.
+
+## Locating the curved failures
+
+Job 41 records the ten worst forward-distance probes without changing either
+saved mesh. Spinodoid's worst probe is a corner node with field residual
+0.003215 and distance 0.002591. Two other corners on that face lie on the wall.
+Curving mid-edge nodes cannot repair the off-wall corner left by constrained
+linear refinement. The lattice's worst probe is a mid-edge node on an interior
+junction face, with distance 0.008420. All three mid-edge nodes on that face are
+straight, and its three corners lie on the exact wall. The quadratic validity
+fallback therefore leaves the unresolved linear chord. Records are in
+`runs/g3-curved-boundary-diagnostic-v1`.
+
+The next spinodoid candidate elevates the admitted 32-cell linear skeleton.
+Its 114,659 Tet10 nodes require a staged solve cap above the initial 100,000.
+The runner keeps that initial cap as its default and explicitly permits a
+150,000-node reference stage. This is a resource stage, not a change to geometry,
+volume, quality, periodicity or sampled Jacobian admission. The 250,000-tet cap,
+8 GiB worker ceiling and 600-second worker timeout remain in force. The earlier
+83,244-node Schwarz Tet10 workflow peaked at 2.37 GiB, which supports this
+bounded next stage without increasing the memory ceiling.
+
+Job 42 completes all six loads on that admitted curved spinodoid. Generation
+takes 8.90 seconds, FEA 474.13 seconds and the full workflow 490.86 seconds.
+Peak worker RSS is 3.81 GiB. The largest recomputed solver residual is
+9.95e-13. The admitted linear mesh differs from this tensor by 5.3472% in
+worst mixed-load strain energy and 2.6483% in tensor Frobenius norm. This is a
+pairwise comparison, not yet an error against a justified fine reference.
+Records are in `runs/g3-spinodoid-curved32-v1` and
+`runs/g3-spinodoid-linear-curved-pair-v1.json`. The comparison is reproducible
+with `stiffness_pair.py`, which checks admission, six converged loads, finite
+6-by-6 tensors and positive definiteness before comparing them.
+
+Job 43 tightens only adaptation tolerance from 0.002 to 0.0015 and audits the
+candidate before selecting a solve. It passes with 147,894 nodes and 94,041
+Tet10 elements, H=0.0001295 and q_min=0.2402. Records are in
+`runs/g3-spinodoid-curved32-tight-v1`.
+
+The next reference solve retains the 150,000-node and 8 GiB ceilings and uses an
+explicit 1,200-second worker stage. The earlier 114,659-node solve needed 474
+seconds for FEA, so the initial 600-second stage may be too short for this finer
+candidate. The runner's default remains 600 seconds. Completed load columns
+and residuals are checkpointed in `result.json` with status `solving`. Only a
+completed six-load result receives the full stiffness tensor and solved status.

@@ -25,7 +25,8 @@ def worker(args):
 
     row = {"case": args.case, "cells": args.cells, "min_length": args.min_length,
            "order": args.order, "native_tolerance": args.native_tolerance,
-           "adaptive": not args.no_adapt, "qualified": False}
+           "adaptive": not args.no_adapt, "adapt_tolerance": args.adapt_tolerance,
+           "solve_node_cap": args.solve_node_cap, "qualified": False}
     started = time.perf_counter()
     try:
         case, shape, _ = workflow.specimen(args.case)
@@ -83,7 +84,7 @@ def worker(args):
             band=case.band, periodic=(True, True, True), threads=1, optimize_passes=1,
             minimum_quality=0.1, geometry_tolerance=args.native_tolerance, max_tetrahedra=workflow.CAP,
             adapt=not args.no_adapt, min_length=args.min_length, max_length=0.1, gradation=0.3,
-            adapt_iterations=4, quality_guard=0.3, adapt_tolerance=0.002, order=args.order)
+            adapt_iterations=4, quality_guard=0.3, adapt_tolerance=args.adapt_tolerance, order=args.order)
         row.update(generation_s=time.perf_counter() - phase, nodes=len(mesh.points),
                    elements=len(mesh.tetrahedra), diagnostics=mesh.diagnostics)
         np.savez_compressed(args.run / "mesh.npz", points=mesh.points,
@@ -92,13 +93,19 @@ def worker(args):
         _, _, row["periodic"] = periodic_pairs(mesh.points, mesh.surface)
         row["qualified"] = row["geometry"]["geometry_admitted"]
         row["status"] = "admitted-needs-reference" if row["qualified"] else "geometry-rejected"
+        workflow.save(args.run / "result.json", row)
         if row["qualified"] and args.solve:
-            if len(mesh.points) > 100_000:
+            if len(mesh.points) > args.solve_node_cap:
                 row["status"] = "solve-node-cap"
             else:
                 from stress_recovery import solve
                 phase = time.perf_counter()
-                fields, tensor, records = solve(mesh.points, mesh.tetrahedra)
+                def checkpoint(completed, partial_tensor, records):
+                    row.update(status="solving", completed_loads=completed,
+                        partial_stiffness_columns=partial_tensor.tolist(), solver_records=records)
+                    workflow.save(args.run / "result.json", row)
+                fields, tensor, records = solve(mesh.points, mesh.tetrahedra, checkpoint=checkpoint)
+                row.pop("partial_stiffness_columns", None)
                 row.update(solve_s=time.perf_counter() - phase, stiffness=tensor.tolist(),
                            solver_records=records, status="solved-needs-reference")
                 np.savez_compressed(args.run / "fields.npz", displacement=fields)
@@ -119,9 +126,12 @@ def main():
     parser.add_argument("--compiled-spinodoid", action="store_true")
     parser.add_argument("--order", type=int, default=1, choices=(1, 2))
     parser.add_argument("--native-tolerance", type=float, default=0.002)
+    parser.add_argument("--adapt-tolerance", type=float, default=0.002)
     parser.add_argument("--solve", action="store_true")
     parser.add_argument("--clip-void", type=float)
     parser.add_argument("--no-adapt", action="store_true")
+    parser.add_argument("--solve-node-cap", type=int, choices=(100_000, 150_000), default=100_000)
+    parser.add_argument("--worker-timeout", type=int, choices=(600, 1200), default=600)
     parser.add_argument("--worker", action="store_true")
     parser.add_argument("--build", action="store_true")
     parser.add_argument("--python-tests", action="store_true")
@@ -139,7 +149,7 @@ def main():
     import meshers._meshers
     workflow.save(args.run / "manifest.json", {"script_sha256": workflow.digest(Path(__file__)),
         "native_sha256": workflow.digest(Path(meshers._meshers.__file__)), "inputs": hashes,
-        "memory_bytes": workflow.MEMORY, "threads": 1, "timeout_s": 600})
+        "memory_bytes": workflow.MEMORY, "threads": 1, "timeout_s": args.worker_timeout})
     parts = ["build", "core-tests", "adaptive-admission"] if args.build else ["adaptive-admission"]
     if args.python_tests:
         parts.insert(-1, "python-tests")
@@ -170,6 +180,9 @@ def main():
             command = [sys.executable, __file__, "--run", str(args.run),
                 "--case", args.case, "--cells", str(args.cells), "--min-length", str(args.min_length),
                 "--order", str(args.order), "--native-tolerance", str(args.native_tolerance),
+                "--adapt-tolerance", str(args.adapt_tolerance),
+                "--solve-node-cap", str(args.solve_node_cap),
+                "--worker-timeout", str(args.worker_timeout),
                 "--worker"]
             if args.compiled_spinodoid:
                 command.append("--compiled-spinodoid")
@@ -179,7 +192,7 @@ def main():
                 command.extend(["--clip-void", str(args.clip_void)])
             if args.no_adapt:
                 command.append("--no-adapt")
-            result = workflow.bounded(command, args.run / "worker.log", part, timeout=600)
+            result = workflow.bounded(command, args.run / "worker.log", part, timeout=args.worker_timeout)
             workflow.save(args.run / "worker.json", result)
             assert result["returncode"] == 0, "Read worker.log"
             row = json.loads((args.run / "result.json").read_text())

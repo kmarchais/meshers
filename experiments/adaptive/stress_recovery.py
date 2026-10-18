@@ -15,7 +15,7 @@ from pueue_progress import Job
 import microgen_workflow as workflow
 
 
-def solve(points, tetrahedra):
+def solve(points, tetrahedra, checkpoint=None):
     import fedoo as fd
     import numpy as np
     from homogenization import AuditedCG, COMPONENTS
@@ -36,6 +36,8 @@ def solve(points, tetrahedra):
         problem.solve()
         fields.append(problem.get_disp().T.copy())
         tensor[:, load] = problem.get_ext_forces("MeanStrain").ravel()
+        if checkpoint is not None:
+            checkpoint(load + 1, tensor[:, :load + 1], solver.records)
     return np.asarray(fields), (tensor + tensor.T) / 2, solver.records
 
 

@@ -230,7 +230,7 @@ def on_box_plane(coordinates, value):
     return np.isclose(coordinates, value, atol=1e-12, rtol=0)
 
 
-def geometry(run, name, points, tets, surface):
+def geometry(run, name, points, tets, surface, detail_count=0):
     np, fd, _, _, _, scorecard = imports()
     case, _, _ = specimen(name)
     samples = np.load(run / f"{name}-samples.npz")
@@ -291,6 +291,23 @@ def geometry(run, name, points, tets, surface):
     row["geometry_admitted"] = bool(row["sampled_two_sided_max"] <= 0.002 and
                                     abs(row["relative_volume_error"]) <= 0.01 and
                                     row["q_min_corner"] >= 0.1 and not failed.any() and minimum > 0)
+    if detail_count:
+        details = []
+        for sample_index in np.argsort(forward)[-detail_count:][::-1]:
+            face_index, probe_index = divmod(int(sample_index), len(weights))
+            nodes = wall[face_index]
+            coordinates = points[nodes]
+            details.append({"face": int(np.flatnonzero(~caps)[face_index]),
+                "probe_index": probe_index, "distance": float(forward[sample_index]),
+                "probe": probes[sample_index].tolist(), "foot": foot[sample_index].tolist(),
+                "locked": locked[sample_index].tolist(), "failed": bool(failed[sample_index]),
+                "node_ids": nodes.tolist(), "coordinates": coordinates.tolist(),
+                "node_field_values": case.function(*coordinates.T).tolist(),
+                "mid_edge_displacements": [float(np.linalg.norm(coordinates[3 + edge]
+                    - (coordinates[first] + coordinates[second]) / 2))
+                    for edge, (first, second) in enumerate(((0, 1), (1, 2), (2, 0)))]
+                    if len(nodes) == 6 else None})
+        row["worst_boundary_samples"] = details
     return row
 
 

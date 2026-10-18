@@ -30,7 +30,8 @@ def worker(args):
     assert np.isclose(0.5 - 1e-6, 0.5, atol=1e-12)
     assert not workflow.on_box_plane(0.5 - 1e-6, 0.5)
     assert workflow.on_box_plane(0.5 + 1e-13, 0.5)
-    metrics = workflow.geometry(mesh_path.parent, row["case"], points, mesh["tetrahedra"], surface)
+    metrics = workflow.geometry(mesh_path.parent, row["case"], points, mesh["tetrahedra"], surface,
+                                detail_count=args.boundary_details)
     workflow.save(args.run / (args.source.stem + ".json"), {"source": str(args.source),
         "case": row["case"], "previous_geometry": row["geometry"], "geometry": metrics,
         "near_plane_vertex_coordinate_locks_removed": int((loose & ~strict).sum())})
@@ -41,6 +42,8 @@ def main():
     parser.add_argument("--run", type=Path, required=True)
     parser.add_argument("--source", type=Path)
     parser.add_argument("--legacy-references", action="store_true")
+    parser.add_argument("--curved-only", action="store_true")
+    parser.add_argument("--boundary-details", type=int, default=0)
     args = parser.parse_args()
     if args.source:
         worker(args)
@@ -50,6 +53,8 @@ def main():
     sources = [workflow.HERE / "runs" / name for name in (
         "g3-spinodoid-linear32-solve-v1", "g3-spinodoid-curved24-v1",
         "g3-lattice-void-clamp32-v1", "g3-lattice-curved16-v1")]
+    if args.curved_only:
+        sources = [source for source in sources if "curved" in source.name]
     if args.legacy_references:
         sources = [workflow.HERE / "runs/g3-microgen-defaults-v4" / f"{case}-meshers-curved-{cells}.npz"
                    for case in ("gyroid", "schwarz-solid") for cells in (16, 20)]
@@ -67,7 +72,8 @@ def main():
         for source in sources:
             with job.part(source.stem) as part:
                 result = workflow.bounded([sys.executable, __file__, "--run", str(args.run),
-                    "--source", str(source)], args.run / (source.name + ".log"), part, timeout=180)
+                    "--source", str(source), "--boundary-details", str(args.boundary_details)],
+                    args.run / (source.name + ".log"), part, timeout=180)
                 workflow.save(args.run / (source.name + "-worker.json"), result)
                 assert result["returncode"] == 0, f"Read {source.name}.log"
                 row = json.loads((args.run / (source.stem + ".json")).read_text())

@@ -1,0 +1,186 @@
+{
+  "case": "spinodoid",
+  "cells": 32,
+  "min_length": 0.002,
+  "order": 2,
+  "native_tolerance": 0.002,
+  "adaptive": true,
+  "solve_node_cap": 150000,
+  "qualified": true,
+  "compiled_field": {
+    "modes": 52,
+    "expression_nodes": 989,
+    "maximum_value_difference": 2.220446049250313e-16,
+    "maximum_gradient_difference": 1.8512502641954143e-10,
+    "verification_points": 4096,
+    "preparation_and_verification_s": 0.035650798000006034
+  },
+  "generation_s": 8.896004602999938,
+  "nodes": 114659,
+  "elements": 72468,
+  "diagnostics": {
+    "empty": false,
+    "volume": 0.5023600609897596,
+    "minimum_mmg_quality": 0.2543246628585053,
+    "sampled_surface_error": 0.0018719602372418247,
+    "elements_below_quality_01": 0,
+    "reverted_snap_vertices": 0,
+    "callback_calls": 0,
+    "inserted_interior_nodes": 0,
+    "adapt": {
+      "splits": 614,
+      "collapses": 30607,
+      "swaps": 7628,
+      "moves": 66169,
+      "error_splits": 12,
+      "maximum_error": 0.0019747065740194016,
+      "seconds": [
+        0.5342443729999999,
+        0.021899222,
+        2.222935482,
+        0.421349445,
+        0.40867909399999997,
+        0.883941665,
+        0.306661474
+      ]
+    },
+    "seconds": 8.8959455,
+    "quadratic": {
+      "curved_edges": 20044,
+      "straightened_edges": 0,
+      "minimum_jacobian_ratio": 0.36366806570567994
+    },
+    "threads": 1,
+    "evaluator": "compiled",
+    "preparation_seconds": 1.3050000688963337e-06
+  },
+  "geometry": {
+    "sampled_forward_max": 0.00017706724957487606,
+    "sampled_reverse_max": 0.00014422069412592246,
+    "sampled_two_sided_max": 0.00017706724957487606,
+    "outward_forward_max": 0.00017706724957487606,
+    "inward_forward_max": 0.00016618606601037384,
+    "projection_failed": 0,
+    "forward_samples": 170274,
+    "reverse_samples": 41325,
+    "volume": 0.5022660218490249,
+    "relative_volume_error": 0.00025847842159043566,
+    "q_min_corner": 0.2543246628585053,
+    "q_p01_corner": 0.5278057467388854,
+    "minimum_dihedral_deg_corner": 12.724558823375617,
+    "minimum_sampled_jacobian": 3.9438647746071483e-07,
+    "reverse_tessellation_delta_max": 8.038142988970196e-05,
+    "quadratic_reverse_subdivisions": [
+      4,
+      8
+    ],
+    "geometry_admitted": true
+  },
+  "periodic": {
+    "periodic_pair_counts": [
+      1640,
+      1822,
+      1480
+    ],
+    "periodic_coordinate_errors": [
+      0.0,
+      0.0,
+      0.0
+    ],
+    "periodic_pair_tolerance": 1e-10,
+    "periodic_equivalence_classes": 109794,
+    "periodic_triangles_match": true
+  },
+  "status": "solved-needs-reference",
+  "solve_s": 474.1292466279997,
+  "stiffness": [
+    [
+      0.6402719001064499,
+      0.1350161231188875,
+      0.15806728863507724,
+      -0.0399230348642938,
+      -0.05138066422734679,
+      -0.00757822272221057
+    ],
+    [
+      0.1350161231188875,
+      0.5466183072089883,
+      0.15919386714338002,
+      -0.033376000078203384,
+      -0.010160931669009115,
+      -0.03866893499535429
+    ],
+    [
+      0.15806728863507724,
+      0.15919386714338002,
+      0.699358950885059,
+      -0.0028996846577093458,
+      -0.06997815787433254,
+      -0.032740136008900626
+    ],
+    [
+      -0.0399230348642938,
+      -0.033376000078203384,
+      -0.0028996846577093458,
+      0.16493602359645476,
+      -0.014347923601132882,
+      -0.018895627999753164
+    ],
+    [
+      -0.05138066422734679,
+      -0.010160931669009115,
+      -0.06997815787433254,
+      -0.014347923601132882,
+      0.18735983346369267,
+      -0.005839130963098857
+    ],
+    [
+      -0.00757822272221057,
+      -0.03866893499535429,
+      -0.032740136008900626,
+      -0.018895627999753164,
+      -0.005839130963098857,
+      0.20263421176552424
+    ]
+  ],
+  "solver_records": [
+    {
+      "iterations": 2248,
+      "relative_residual": 9.851601453098127e-13,
+      "free_dofs": 329379,
+      "seconds": 75.71966667900006
+    },
+    {
+      "iterations": 2248,
+      "relative_residual": 9.945270587172624e-13,
+      "free_dofs": 329379,
+      "seconds": 74.41422525600001
+    },
+    {
+      "iterations": 2275,
+      "relative_residual": 9.82321639288802e-13,
+      "free_dofs": 329379,
+      "seconds": 75.68299666000007
+    },
+    {
+      "iterations": 2320,
+      "relative_residual": 9.851469565124287e-13,
+      "free_dofs": 329379,
+      "seconds": 77.24348453900006
+    },
+    {
+      "iterations": 2324,
+      "relative_residual": 9.871709654288425e-13,
+      "free_dofs": 329379,
+      "seconds": 77.2820037360002
+    },
+    {
+      "iterations": 2315,
+      "relative_residual": 9.74921505070717e-13,
+      "free_dofs": 329379,
+      "seconds": 76.77854479500002
+    }
+  ],
+  "total_audit_workflow_s": 490.85737151700005,
+  "total_workflow_s": 490.85737151700005
+}

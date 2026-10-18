@@ -121,3 +121,11 @@ completes six loads in 84.14 seconds. All four specimens therefore have admitted
 Meshers routes with explicit input representations. Next obtain justified fine
 stiffness references for spinodoid and lattice, then complete the matched-accuracy
 comparison. Their current tensors alone do not establish stiffness accuracy.
+
+The admitted curved spinodoid now has a complete tensor at 114,659 nodes.
+Its two-sided distance is 0.000177 and its full workflow takes 490.86 seconds.
+The admitted linear mesh differs by 5.3472% in the worst mixed load. A tighter
+0.0015 adaptation target admits 147,894 nodes and is selected for the next
+reference-sensitivity solve under the unchanged 8 GiB ceiling and an explicit
+1,200-second reference stage. Lattice's coarse curved failure is localized to
+mid-edge nodes straightened by the sampled Jacobian validity fallback.
