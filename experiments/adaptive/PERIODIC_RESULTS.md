@@ -103,3 +103,17 @@ This representation passes Meshers' existing periodic preflight. From 24 cells,
 adaptation then rejects two tetrahedra below quality 0.1, with minimum 0.08209.
 No mesh is admitted or solved. Records are in `runs/g3-lattice-void-clamp24-v1`.
 The raw field remains unsupported by the strict raw-value preflight.
+
+Job 37 keeps that exact material-domain representation and increases only the
+seed to 32 cells. It passes the fixed admission gates and completes all six
+loads. The mesh has 48,761 nodes and 222,145 tetrahedra, H=0.001773, signed
+volume error -0.43152%, minimum quality 0.10073 and positive sampled Jacobians.
+Periodic node coordinates and cap triangulations match exactly. Generation
+takes 11.11 seconds, FEA 67.91 seconds and the full verified workflow 84.14
+seconds. The quality margin is small. Records and the full tensor are in
+`runs/g3-lattice-void-clamp32-v1`.
+
+All four study specimens now have admitted Meshers routes on G3. The lattice
+route requires the explicit void clamp and spinodoid uses the verified Fourier
+expression. Fine stiffness references for these two specimens remain missing,
+so their stiffness errors and matched-accuracy speed rankings remain unknown.

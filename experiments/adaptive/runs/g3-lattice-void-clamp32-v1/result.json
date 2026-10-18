@@ -1,0 +1,174 @@
+{
+  "case": "smooth-lattice",
+  "cells": 32,
+  "min_length": 0.002,
+  "order": 1,
+  "native_tolerance": 0.002,
+  "qualified": true,
+  "void_clamp": {
+    "positive_ceiling": 0.02,
+    "verification_points": 4096,
+    "material_mismatches": 0,
+    "domain_identity": "min(phi, positive_constant) <= 0 iff phi <= 0"
+  },
+  "generation_s": 11.114882887000022,
+  "nodes": 48761,
+  "elements": 222145,
+  "diagnostics": {
+    "empty": false,
+    "volume": 0.2472395234360848,
+    "minimum_mmg_quality": 0.1007268154955431,
+    "sampled_surface_error": 0.0017745477024974608,
+    "elements_below_quality_01": 0,
+    "reverted_snap_vertices": 0,
+    "callback_calls": 0,
+    "inserted_interior_nodes": 0,
+    "adapt": {
+      "splits": 42421,
+      "collapses": 26158,
+      "swaps": 11598,
+      "moves": 137217,
+      "error_splits": 2050,
+      "maximum_error": 0.003937833284608339,
+      "seconds": [
+        0.7863452059999999,
+        0.36797478499999997,
+        2.223764841,
+        0.6297092750000001,
+        0.921392575,
+        1.473595589,
+        0.848210764
+      ]
+    },
+    "seconds": 11.102111749,
+    "threads": 1,
+    "evaluator": "compiled",
+    "preparation_seconds": 0.012720998000077088
+  },
+  "geometry": {
+    "sampled_forward_max": 0.0017726154205489838,
+    "sampled_reverse_max": 0.0013398700710153565,
+    "sampled_two_sided_max": 0.0017726154205489838,
+    "outward_forward_max": 0.0017726154205489838,
+    "inward_forward_max": 0.00105509941995758,
+    "projection_failed": 0,
+    "forward_samples": 360230,
+    "reverse_samples": 34791,
+    "volume": 0.24723952343608468,
+    "relative_volume_error": -0.0043152303560048955,
+    "q_min_corner": 0.1007268154955431,
+    "q_p01_corner": 0.3707183431831631,
+    "minimum_dihedral_deg_corner": 4.428034459265831,
+    "minimum_sampled_jacobian": 1.3800229960029366e-09,
+    "reverse_tessellation_delta_max": 0.0,
+    "quadratic_reverse_subdivisions": null,
+    "geometry_admitted": true
+  },
+  "periodic": {
+    "periodic_pair_counts": [
+      1152,
+      1163,
+      1164
+    ],
+    "periodic_coordinate_errors": [
+      0.0,
+      0.0,
+      0.0
+    ],
+    "periodic_pair_tolerance": 1e-10,
+    "periodic_equivalence_classes": 45329,
+    "periodic_triangles_match": true
+  },
+  "status": "solved-needs-reference",
+  "solve_s": 67.90519174099995,
+  "stiffness": [
+    [
+      0.13962900120306682,
+      0.10628499780210324,
+      0.1062940827141767,
+      1.0910437599044195e-05,
+      1.2504586504086421e-05,
+      5.714162394288523e-06
+    ],
+    [
+      0.10628499780210324,
+      0.13964198090202606,
+      0.10630241000722801,
+      1.410657847726535e-05,
+      9.079295421564297e-06,
+      3.108277674658217e-06
+    ],
+    [
+      0.1062940827141767,
+      0.10630241000722801,
+      0.13965365399009713,
+      8.965435332263215e-06,
+      1.244726567981361e-05,
+      6.283920393064586e-06
+    ],
+    [
+      1.0910437599044195e-05,
+      1.410657847726535e-05,
+      8.965435332263215e-06,
+      0.10357959958913654,
+      5.416767352786302e-06,
+      5.127209842962607e-06
+    ],
+    [
+      1.2504586504086421e-05,
+      9.079295421564297e-06,
+      1.244726567981361e-05,
+      5.416767352786302e-06,
+      0.10358784810277566,
+      6.3509645278086e-06
+    ],
+    [
+      5.714162394288523e-06,
+      3.108277674658217e-06,
+      6.283920393064586e-06,
+      5.127209842962607e-06,
+      6.3509645278086e-06,
+      0.10359623554365509
+    ]
+  ],
+  "solver_records": [
+    {
+      "iterations": 1222,
+      "relative_residual": 9.618934832878094e-13,
+      "free_dofs": 135984,
+      "seconds": 10.136579081000036
+    },
+    {
+      "iterations": 1231,
+      "relative_residual": 9.891087072464567e-13,
+      "free_dofs": 135984,
+      "seconds": 10.101292770999862
+    },
+    {
+      "iterations": 1148,
+      "relative_residual": 9.997676799763932e-13,
+      "free_dofs": 135984,
+      "seconds": 9.40651406400002
+    },
+    {
+      "iterations": 1254,
+      "relative_residual": 9.841557170660203e-13,
+      "free_dofs": 135984,
+      "seconds": 10.348623295999914
+    },
+    {
+      "iterations": 1259,
+      "relative_residual": 9.951034296113799e-13,
+      "free_dofs": 135984,
+      "seconds": 10.55596667299983
+    },
+    {
+      "iterations": 1251,
+      "relative_residual": 9.828592635203617e-13,
+      "free_dofs": 135984,
+      "seconds": 10.214405079000016
+    }
+  ],
+  "total_audit_workflow_s": 84.13669909600003,
+  "total_workflow_s": 84.13669909600003
+}

@@ -112,3 +112,12 @@ The same spectral spinodoid can use a verified compiled expression of its 52
 Microgen Fourier modes. At 32 cells, adaptation returns an admitted linear mesh
 with 16,721 nodes, H=0.001864, volume error +0.04458% and minimum quality 0.2543.
 The spinodoid stiffness reference and smooth-lattice admission remain open.
+
+The admitted spinodoid now completes all six loads in a live 27.71-second
+workflow. The smooth lattice also has an admitted linear route after a positive
+void-value clamp that preserves its exact material domain and wall. At 32 cells
+it has 48,761 nodes, H=0.001773, volume error -0.43152% and q_min=0.10073, and
+completes six loads in 84.14 seconds. All four specimens therefore have admitted
+Meshers routes with explicit input representations. Next obtain justified fine
+stiffness references for spinodoid and lattice, then complete the matched-accuracy
+comparison. Their current tensors alone do not establish stiffness accuracy.
