@@ -156,3 +156,22 @@ validation rather than spending further runs tightening Schwarz alone.
 The next requested priority is a coarse FEA stress-recovery estimate for linear
 mesh sizing. The new displacement archives provide integration evidence, but
 they are not qualified local-stress references for that study.
+
+## Admitted lattice parent, 18 October 2026
+
+After the cubic lattice reference passes, job 197 tests one more actual
+Microgen VTK51/MMG seed. The first call remains `nofem=True`, hausd 0.0015,
+hmax 0.06 and hgrad 1.3. Only second-pass hausd changes to 0.001, retaining
+the level-set call, required boundaries and the same size controls. This is
+an explicitly tuned two-pass recipe, not Microgen defaults or a Meshers seed.
+
+The parent has 33,903 nodes and 158,252 tets. Independent sampled two-sided
+distance is 0.00162159, volume error -0.48770% and minimum quality 0.109983.
+Sampled Jacobians and periodic nodes and caps pass. Its exact straight Tet10
+lift has 238,411 nodes, within the existing 250,000-node reference stage.
+Records are in `runs/g3-lattice-tuned51-tet10-seed-hausd001-v1`.
+
+Job 198 uses that unchanged physical mesh for a six-load direct-fedoo control,
+with the existing 8 GiB ceiling, 1,800-second timeout, four-point rule exact for
+affine Tet10 elasticity and independent higher-rule and field audits. No solve
+result, 1% stiffness claim or live workflow timing is inferred from admission.
