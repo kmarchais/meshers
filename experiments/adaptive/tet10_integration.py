@@ -43,7 +43,7 @@ def integrated_tensors(points, tetrahedra, displacements, quadrature=None):
 
 
 def audit_saved(source, output):
-    np, *_ = workflow.imports()
+    np, fd, *_ = workflow.imports()
     from homogenization import strain_tensor
     from periodic import periodic_pairs, tensor_difference
 
@@ -53,7 +53,10 @@ def audit_saved(source, output):
     fields = np.load(source / "fields.npz")["displacement"]
     points, tetrahedra = mesh["points"], mesh["tetrahedra"]
     assert fields.shape == (6, len(points), 3) and np.isfinite(fields).all()
-    stiffness, energy, volume = integrated_tensors(points, tetrahedra, fields)
+    quadrature_points = row.get("solver_quadrature_points", 15 if tetrahedra.shape[1] == 10 else 4)
+    assert quadrature_points in (4, 15)
+    element = fd.lib_elements.element_list.get_element("tet10" if tetrahedra.shape[1] == 10 else "tet4")(quadrature_points)
+    stiffness, energy, volume = integrated_tensors(points, tetrahedra, fields, (element.xi_pg, element.w_pg))
     expected = np.asarray(row["stiffness"])
     reaction_error = float(np.linalg.norm(stiffness - expected) / np.linalg.norm(stiffness))
     energy_error = float(np.linalg.norm(stiffness - energy) / np.linalg.norm(stiffness))
@@ -73,7 +76,8 @@ def audit_saved(source, output):
             jump_max = max(jump_max, float(error.max(initial=0)))
             mid_jump_max = max(mid_jump_max, float(error[mids[matching[:, 0]]].max(initial=0)))
     assert max(jump_max, mid_jump_max) < 1e-9
-    workflow.save(output, {"source": str(source), "stress_integrated_stiffness": stiffness.tolist(),
+    workflow.save(output, {"source": str(source), "quadrature_points": quadrature_points,
+        "stress_integrated_stiffness": stiffness.tolist(),
         "energy_integrated_stiffness": energy.tolist(), "reaction_relative_error": reaction_error,
         "hill_mandel_relative_error": energy_error, "integrated_stiffness_skew_relative": skew,
         "stress_reaction_mixed_load_difference": disagreement, "volume": volume,

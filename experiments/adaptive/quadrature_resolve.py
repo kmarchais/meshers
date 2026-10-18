@@ -50,8 +50,14 @@ def worker(source, run, node_cap):
     workflow.save(run / "result.json", row)
     if precheck["worst_relative_strain_energy_difference"] > LIMIT or abs(row["relative_volume_shift"]) > LIMIT:
         return
+    row["status"] = "solving"
+    workflow.save(run / "result.json", row)
     started = time.perf_counter()
-    fields, tensor, records = solve(points, tetrahedra, n_elm_gp=4)
+    def checkpoint(completed, partial_tensor, records):
+        row.update(completed_loads=completed, partial_stiffness_columns=partial_tensor.tolist(), solver_records=records)
+        workflow.save(run / "result.json", row)
+    fields, tensor, records = solve(points, tetrahedra, checkpoint=checkpoint, n_elm_gp=4)
+    row.pop("partial_stiffness_columns", None)
     row.update(solve_s=time.perf_counter() - started, stiffness=tensor.tolist(), solver_records=records)
     stress, energy, _ = integrated_tensors(points, tetrahedra, fields, quadrature)
     consistency = max(float(np.linalg.norm(stress - tensor) / np.linalg.norm(tensor)),

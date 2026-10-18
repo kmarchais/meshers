@@ -27,6 +27,7 @@ def worker(args):
            "order": args.order, "native_tolerance": args.native_tolerance,
            "optimization_passes": args.optimization_passes,
            "adaptive": not args.no_adapt, "adapt_tolerance": args.adapt_tolerance,
+           "solver_quadrature_points": args.quadrature_points if args.order == 2 else 4,
            "solve_node_cap": args.solve_node_cap, "qualified": False}
     started = time.perf_counter()
     try:
@@ -124,11 +125,25 @@ def worker(args):
                     row.update(status="solving", completed_loads=completed,
                         partial_stiffness_columns=partial_tensor.tolist(), solver_records=records)
                     workflow.save(args.run / "result.json", row)
-                fields, tensor, records = solve(mesh.points, mesh.tetrahedra, checkpoint=checkpoint)
+                fields, tensor, records = solve(mesh.points, mesh.tetrahedra, checkpoint=checkpoint,
+                    n_elm_gp=row["solver_quadrature_points"])
                 row.pop("partial_stiffness_columns", None)
                 row.update(solve_s=time.perf_counter() - phase, stiffness=tensor.tolist(),
                            solver_records=records, status="solved-needs-reference")
                 np.savez_compressed(args.run / "fields.npz", displacement=fields)
+                if args.order == 2 and args.quadrature_points == 4:
+                    from periodic import tensor_difference
+                    from tet10_integration import audit_saved, integrated_tensors
+                    workflow.save(args.run / "result.json", row)
+                    audit_saved(args.run, args.run / "four-point-field-consistency.json")
+                    _, higher_energy, _ = integrated_tensors(mesh.points, mesh.tetrahedra, fields)
+                    row["higher_rule_fixed_field_difference"] = tensor_difference(higher_energy, tensor)
+                    row["quadrature_sensitivity_limit"] = 1e-4
+                    row["quadrature_sensitivity_passed"] = row["higher_rule_fixed_field_difference"][
+                        "worst_relative_strain_energy_difference"] <= row["quadrature_sensitivity_limit"]
+                    row["quadrature_scope"] = "Own-rule equilibrium and fifteen-point reintegration; not a fifteen-point re-solve"
+                    if not row["quadrature_sensitivity_passed"]:
+                        row.update(qualified=False, status="quadrature-sensitivity-rejected")
     except Exception as error:
         row.update(status="failed", error=str(error), traceback=traceback.format_exc())
     row["total_audit_workflow_s"] = time.perf_counter() - started
@@ -152,7 +167,8 @@ def main():
     parser.add_argument("--clip-void", type=float)
     parser.add_argument("--no-adapt", action="store_true")
     parser.add_argument("--symmetric-union", action="store_true")
-    parser.add_argument("--solve-node-cap", type=int, choices=(100_000, 150_000, 200_000), default=100_000)
+    parser.add_argument("--solve-node-cap", type=int, choices=(100_000, 150_000, 200_000, 250_000), default=100_000)
+    parser.add_argument("--quadrature-points", type=int, choices=(4, 15), default=15)
     parser.add_argument("--worker-timeout", type=int, choices=(600, 1200, 1800), default=600)
     parser.add_argument("--worker", action="store_true")
     parser.add_argument("--build", action="store_true")
@@ -209,6 +225,7 @@ def main():
                 "--optimization-passes", str(args.optimization_passes),
                 "--adapt-tolerance", str(args.adapt_tolerance),
                 "--solve-node-cap", str(args.solve_node_cap),
+                "--quadrature-points", str(args.quadrature_points),
                 "--worker-timeout", str(args.worker_timeout),
                 "--worker"]
             if args.compiled_spinodoid:

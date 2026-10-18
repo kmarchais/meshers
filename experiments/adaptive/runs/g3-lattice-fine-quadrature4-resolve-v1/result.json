@@ -1,0 +1,125 @@
+{
+  "source": "experiments/adaptive/runs/g3-lattice-adapt24-tol003-v1",
+  "quadrature_points": 4,
+  "control_quadrature_points": 15,
+  "predeclared_relative_stiffness_limit": 0.0001,
+  "fixed_field_precheck": {
+    "worst_relative_strain_energy_difference": 2.0021882156602954e-05,
+    "relative_tensor_frobenius_difference": 3.864272453815678e-06,
+    "relative_energy_difference_eigenvalues": [
+      -2.0021882156602954e-05,
+      -1.8855802421800726e-05,
+      -3.491767485646485e-06,
+      -1.4682309427525782e-06,
+      -1.4348453558371874e-06,
+      -1.3162917195146218e-06
+    ]
+  },
+  "relative_volume_shift": -9.015055368877256e-11,
+  "scope": "Saved-mesh quadrature sensitivity, not a live workflow or continuum accuracy certificate",
+  "status": "solved",
+  "passed": true,
+  "solve_s": 1001.1183083979995,
+  "stiffness": [
+    [
+      0.13867433571459392,
+      0.10659048854680647,
+      0.10659258196475185,
+      1.0368320574797485e-05,
+      8.577226332391098e-06,
+      3.3864761722587686e-06
+    ],
+    [
+      0.10659048854680647,
+      0.1386950289341368,
+      0.10660300708368783,
+      1.3808846150176756e-05,
+      5.123367895334055e-06,
+      7.004730074276625e-06
+    ],
+    [
+      0.10659258196475185,
+      0.10660300708368783,
+      0.13870270073953914,
+      6.03128789300816e-06,
+      1.3399271198507175e-05,
+      8.540214213416675e-06
+    ],
+    [
+      1.0368320574797485e-05,
+      1.3808846150176756e-05,
+      6.03128789300816e-06,
+      0.10315793027358065,
+      4.653643112206072e-06,
+      6.445030775248047e-06
+    ],
+    [
+      8.577226332391098e-06,
+      5.123367895334055e-06,
+      1.3399271198507175e-05,
+      4.653643112206072e-06,
+      0.10316106615059127,
+      7.331613367230838e-06
+    ],
+    [
+      3.3864761722587686e-06,
+      7.004730074276625e-06,
+      8.540214213416675e-06,
+      6.445030775248047e-06,
+      7.331613367230838e-06,
+      0.10317356297209591
+    ]
+  ],
+  "solver_records": [
+    {
+      "iterations": 2795,
+      "relative_residual": 9.873701688258639e-13,
+      "free_dofs": 508008,
+      "seconds": 164.39531821399942
+    },
+    {
+      "iterations": 2791,
+      "relative_residual": 9.934383350469112e-13,
+      "free_dofs": 508008,
+      "seconds": 161.00032470100268
+    },
+    {
+      "iterations": 2788,
+      "relative_residual": 9.778323127528087e-13,
+      "free_dofs": 508008,
+      "seconds": 162.07981899100196
+    },
+    {
+      "iterations": 2828,
+      "relative_residual": 9.96760934381079e-13,
+      "free_dofs": 508008,
+      "seconds": 164.27212169199993
+    },
+    {
+      "iterations": 2827,
+      "relative_residual": 9.94319874182875e-13,
+      "free_dofs": 508008,
+      "seconds": 161.73967681000067
+    },
+    {
+      "iterations": 2861,
+      "relative_residual": 9.901420331440548e-13,
+      "free_dofs": 508008,
+      "seconds": 166.7482754550001
+    }
+  ],
+  "own_rule_consistency_relative": 4.1205228637713915e-11,
+  "periodic_jump_max": 0.0,
+  "control_difference": {
+    "worst_relative_strain_energy_difference": 2.03264025801222e-05,
+    "relative_tensor_frobenius_difference": 3.92567881282191e-06,
+    "relative_energy_difference_eigenvalues": [
+      -2.03264025801222e-05,
+      -1.9144176664311274e-05,
+      -3.544745485917257e-06,
+      -1.525901628407226e-06,
+      -1.4916456827991408e-06,
+      -1.3761504252302938e-06
+    ]
+  }
+}

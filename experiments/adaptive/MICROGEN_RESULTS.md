@@ -935,3 +935,22 @@ on the already-solved tolerance-0.003 reference, within the existing 200,000-nod
 and 8 GiB stage. Keep the same 0.0001 relative tensor threshold that rejected
 the coarse24 shortcut. A coarse-mesh rejection does not establish sensitivity
 on a finer mesh, but no reduction is accepted without the actual comparison.
+
+Job 147 passes the fine same-mesh comparison. Four-point stiffness differs
+from the solved fifteen-point control by 0.00203264%, below the unchanged
+0.01% sensitivity limit. Own-rule stress/energy/reaction disagreement is
+4.12e-11 and periodic jumps are zero. Peak worker RSS is 4.358 GiB, versus
+the recorded 5.64 GiB fifteen-point control. The solve takes 1,001.12 seconds
+versus the earlier 977.30 seconds, so this is not a demonstrated speedup.
+It supports a memory-limited reference-study option, not replacing the
+default integration rule or assuming coarse meshes have the same sensitivity.
+
+Job 148 extends only the reference study to one uniform34 mesh. The measured
+fine-control memory supports a 250,000-node stage, projected near 6.2 GiB at
+the cap. The 8 GiB worker ceiling, 250,000-tet cap and existing 1,800-second
+timeout remain unchanged. This mesh passes geometry with 233,964 nodes and
+150,384 Tet10 elements. Explicit four-point equilibrium must pass independent
+own-rule field checks and fifteen-point fixed-field reintegration at the
+same 0.0001 relative sensitivity limit. Fifteen-point reintegration is not
+a fifteen-point equilibrium re-solve. No reference-model exclusion or 1%
+accuracy claim follows from queuing this level.
