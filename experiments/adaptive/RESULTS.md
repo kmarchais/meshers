@@ -328,3 +328,13 @@ stable observed stiffness convergence rate. An independently audited adaptive
 reintegration changes fixed-field energy by at most 5.65e-7 relative. Lattice
 1% stiffness accuracy remains unproven. See `PERIODIC_RESULTS.md` for rejected
 changes, admission failures, native regression tests and reference limits.
+
+The tighter adaptive lattice subsequently completes at 175,818 nodes and
+5.64 GiB peak RSS. Its six-load workflow takes 989.67 seconds. Independent
+field checks pass within 4.02e-11. Its adaptive-family sensitivity envelope is
+0.15983% to 0.94546%, but comparison with earlier uniform-family models reaches
+1.30614%. Both families remain recorded; no tested lattice candidate passes
+the union of declared models at 1%. That unresolved uncertainty is not a
+matched-accuracy success. Actual Gyroid VTK seed screening identifies one
+cap-feasible resolution among twelve tested, and genuine tuned MMG calls are
+being assessed under the unchanged element and admission caps.

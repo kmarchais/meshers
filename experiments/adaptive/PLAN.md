@@ -213,3 +213,12 @@ by at most 5.65e-7 relative. This does not resolve reference convergence.
 Next tighten only adaptive tolerance from 0.004 to 0.003 with admission before
 FEA, the existing 200,000-node and 1,800-second stage, and the unchanged hard
 8 GiB ceiling. Read that tensor before choosing any further refinement.
+
+The tighter 175,818-node candidate completes at 5.64 GiB peak RSS, and all five
+saved-field audits pass. Its adaptive-family model envelope is 0.15983% to
+0.94546%, but disagreement with earlier uniform-family models reaches 1.30614%.
+Retain both families and keep lattice 1% accuracy unproven. The cheaper
+adaptive candidate also fails its own worst model at 1.07075%. Before another
+costly lattice solve, return to missing actual Microgen coverage by screening
+Gyroid VTK seeds for retained-cap feasibility. Read the six bounded seed stages
+before choosing one MMG successor. This does not replace the frozen defaults.

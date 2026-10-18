@@ -617,3 +617,41 @@ Use the existing 200,000-node, 1,800-second stage with the same hard 8 GiB
 ceiling. The previous uniform 189,187-node solve peaked at 6.56 GiB, while
 adaptive24 used 3.80 GiB for 123,570 nodes. Generate and independently admit
 before solving. A resource cap or failed admission remains a negative result.
+
+Before reading the tighter tensor, retain assumed orders 1, 2, 3 and 4 for
+the adaptive pair. Use both existing length proxies, square root of tolerance
+ratio and cube root of element-count ratio, with the tighter actual tensor as
+primary. These are empirical sensitivity models, not guaranteed convergence
+rates. Do not remove a slow-order model after seeing its error estimate.
+
+Job 101 completes all six tighter loads with 175,818 nodes and 112,721 Tet10
+elements. H=0.0002676, volume error=-0.03150%, q_min=0.12542 and all sampled
+Jacobians are positive. Caps and periodic coordinates match. Solve time is
+977.30 seconds, total live workflow is 989.67 seconds and peak RSS is 5.64 GiB.
+The adaptive pair differs by 0.12411% in worst mixed-load energy, substantially
+less than the adaptive-to-uniform32 disagreement. This is not yet a 1% error
+claim. Job 102 independently audits both adaptive fields and three saved
+comparison meshes before evaluating the already declared model envelope.
+
+Job 102 passes all five saved-field audits. Maximum reaction disagreement is
+4.02e-11 and periodic jumps are zero. Across both adaptive length proxies and
+all orders 1 through 4, the tighter tensor differs from extrapolated models
+by 0.15983% to 0.94546%. The preceding adaptive candidate spans 0.28414% to
+1.07075%, so it still fails the 1% target under the slowest declared model.
+The cheaper nonadaptive curved24 spans 1.53149% to 2.32630%, uniform32 spans
+1.10429% to 1.85698%, and linear spans 4.07345% to 4.88111%.
+
+The adaptive-only result does not settle the disagreement between families.
+The tighter tensor differs from the earlier uniform-family models by up to
+1.30614%. `adaptive_reference.py --other-models` records both envelopes without
+discarding the slow-order uniform models. No candidate passes the union of
+declared families. Lattice 1% accuracy therefore remains unproven, despite
+the improved adaptive-family sensitivity. Records are in
+`runs/g3-lattice-adaptive-reference-sensitivity-v1.json` and
+`runs/g3-lattice-adaptive-reference-sensitivity-v2.json`.
+
+Return to actual Microgen comparison coverage before another costly lattice
+solve. Gyroid already has a justified empirical stiffness reference but lacks
+an admitted Microgen competitor. Screen six actual VTK seed resolutions for
+retained-cap quality feasibility and geometry before choosing MMG parameters.
+This is an explicitly tuned seed diagnostic, not a new default-pipeline result.

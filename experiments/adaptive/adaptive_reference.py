@@ -17,6 +17,7 @@ def main():
     parser.add_argument("--orders", type=int, nargs="+", default=[2, 3, 4])
     parser.add_argument("--field-audit", type=Path, required=True)
     parser.add_argument("--candidate", action="append", type=Path, default=[])
+    parser.add_argument("--other-models", nargs="+", type=Path, default=[])
     parser.add_argument("--target", type=float, default=0.01)
     parser.add_argument("--output", type=Path, required=True)
     args = parser.parse_args()
@@ -77,6 +78,12 @@ def main():
             assert np.isfinite(extrapolated).all() and np.linalg.eigvalsh(extrapolated).min() > 0
             models.append({"length_proxy": proxy, "length_ratio": ratio, "assumed_order": order,
                 "stiffness": extrapolated.tolist(), "fine_to_model": tensor_difference(fine, extrapolated)})
+    other_models = []
+    for path in args.other_models:
+        other = json.loads(path.read_text())
+        assert other["case"] == fine_row["case"] and other["models"]
+        inputs[str(path)] = workflow.digest(path)
+        other_models.extend(other["models"])
     candidates = []
     for path in args.candidate:
         row, tensor = read_record(path)
@@ -88,6 +95,11 @@ def main():
             "difference_from_fine": tensor_difference(tensor, fine),
             "declared_model_difference_range": [min(differences), max(differences)],
             "passes_target_under_all_declared_models": max(differences) <= args.target})
+        if other_models:
+            other_differences = [tensor_difference(tensor, np.asarray(model["stiffness"]))[
+                "worst_relative_strain_energy_difference"] for model in other_models]
+            candidates[-1].update(other_family_model_difference_range=[min(other_differences), max(other_differences)],
+                passes_target_under_all_families=max(differences + other_differences) <= args.target)
     workflow.save(args.output, {"case": fine_row["case"], "inputs": inputs,
         "script_sha256": workflow.digest(Path(__file__)), "primary_reference_stiffness": fine.tolist(),
         "primary_reference_source": str(args.fine), "fine_pair_difference": tensor_difference(coarse, fine),

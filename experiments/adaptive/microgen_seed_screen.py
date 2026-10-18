@@ -19,9 +19,11 @@ def worker(args):
     from cap_quality_bound import bounds, caps
     from microgen.shape import surface_functions
 
-    grid = microgen.Tpms(surface_functions.schwarz_p, offset=0,
-                        resolution=args.resolution).generate_volume_mesh(type_part="lower skeletal").triangulate()
-    row = {"resolution": args.resolution, "nodes": grid.n_points, "elements": grid.n_cells}
+    function, offset, part = ((surface_functions.gyroid, 1.1, "sheet") if args.case == "gyroid"
+        else (surface_functions.schwarz_p, 0, "lower skeletal"))
+    grid = microgen.Tpms(function, offset=offset,
+                        resolution=args.resolution).generate_volume_mesh(type_part=part).triangulate()
+    row = {"case": args.case, "resolution": args.resolution, "nodes": grid.n_points, "elements": grid.n_cells}
     if grid.n_cells > workflow.CAP:
         row["status"] = "seed-element-cap"
     else:
@@ -40,7 +42,7 @@ def worker(args):
         if row["zero_volume_tetrahedra"]:
             row["status"] = "degenerate-seed"
         else:
-            row["geometry"] = workflow.geometry(args.run, "schwarz-solid", points, tetrahedra, surface)
+            row["geometry"] = workflow.geometry(args.run, args.case, points, tetrahedra, surface)
             row["status"] = "screened"
     workflow.save(args.run / f"seed-{args.resolution}.json", row)
 
@@ -48,6 +50,7 @@ def worker(args):
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--run", type=Path, required=True)
+    parser.add_argument("--case", choices=("gyroid", "schwarz-solid"), default="schwarz-solid")
     parser.add_argument("--resolution", type=int)
     parser.add_argument("--resolutions", type=int, nargs="+", default=(21, 22, 23, 25, 26, 27))
     args = parser.parse_args()
@@ -57,21 +60,24 @@ def main():
     args.run.mkdir(parents=True, exist_ok=False)
     shutil.copyfile(__file__, args.run / "driver.py")
     source = workflow.HERE / "runs/g3-microgen-defaults-v4"
-    inputs = [source / ("schwarz-solid" + suffix) for suffix in ("-samples.npz", "-specimen.json")]
+    inputs = [source / (args.case + suffix) for suffix in ("-samples.npz", "-specimen.json")]
     hashes = {str(path): workflow.digest(path) for path in inputs}
     for path in inputs:
         shutil.copyfile(path, args.run / path.name)
     resolutions = args.resolutions
     assert all(resolution >= 2 for resolution in resolutions) and len(set(resolutions)) == len(resolutions)
     workflow.save(args.run / "manifest.json", {"script_sha256": workflow.digest(Path(__file__)),
-        "inputs": hashes, "resolutions": resolutions, "memory_bytes": workflow.MEMORY,
+        "inputs": hashes, "case": args.case, "resolutions": resolutions, "memory_bytes": workflow.MEMORY,
+        "workflow_source_sha256": workflow.digest(Path(workflow.__file__)),
+        "baseline_manifest_sha256": workflow.digest(source / "manifest.json"),
         "threads": 1, "worker_timeout_s": 120, "tetrahedra_cap": workflow.CAP})
     rows = []
     with Job(parts=[str(resolution) for resolution in resolutions]) as job:
         for resolution in resolutions:
             with job.part(str(resolution)) as part:
                 result = workflow.bounded([sys.executable, __file__, "--run", str(args.run),
-                    "--resolution", str(resolution)], args.run / f"seed-{resolution}.log", part, timeout=120)
+                    "--case", args.case, "--resolution", str(resolution)],
+                    args.run / f"seed-{resolution}.log", part, timeout=120)
                 workflow.save(args.run / f"worker-{resolution}.json", result)
                 assert result["returncode"] == 0, f"Read seed-{resolution}.log"
                 row = json.loads((args.run / f"seed-{resolution}.json").read_text())

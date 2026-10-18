@@ -1,4 +1,4 @@
-"""One bounded tuned Schwarz-solid Microgen/MMG candidate per invocation."""
+"""One bounded tuned TPMS Microgen/MMG candidate per invocation."""
 
 import argparse
 import importlib.metadata
@@ -31,7 +31,7 @@ def worker(args):
     from unittest.mock import patch
 
     output = args.run / "result.json"
-    row = {"case": "schwarz-solid", "route": "microgen-vtk-mmg-tuned",
+    row = {"case": args.case, "route": "microgen-vtk-mmg-tuned",
            "resolution": args.resolution,
            "mmg_arguments": {"hausd": 0.0005, "hmax": 0.06, "hgrad": 1.3},
            "status": "started", "mmg_calls": []}
@@ -61,13 +61,15 @@ def worker(args):
             stage_poly.faces.reshape(-1, 4)[:, 1:]]
         np.savez_compressed(args.run / (label + ".npz"), points=stage_points,
                             tetrahedra=stage_tets, surface=stage_surface)
-        metrics = workflow.geometry(args.run, "schwarz-solid", stage_points, stage_tets, stage_surface)
+        metrics = workflow.geometry(args.run, args.case, stage_points, stage_tets, stage_surface)
         workflow.save(args.run / (label + ".json"), {
             "nodes": len(stage_points), "elements": len(stage_tets), "geometry": metrics})
     started = time.perf_counter()
-    shape = microgen.Tpms(surface_functions.schwarz_p, offset=0, resolution=args.resolution)
+    function, offset, part = ((surface_functions.gyroid, 1.1, "sheet") if args.case == "gyroid"
+        else (surface_functions.schwarz_p, 0, "lower skeletal"))
+    shape = microgen.Tpms(function, offset=offset, resolution=args.resolution)
     row["specimen_setup_s"] = time.perf_counter() - started
-    grid = shape.generate_volume_mesh(type_part="lower skeletal").triangulate()
+    grid = shape.generate_volume_mesh(type_part=part).triangulate()
     row.update(seed_nodes=grid.n_points, seed_elements=grid.n_cells,
                vtk_extraction_s=time.perf_counter() - started)
     workflow.save(output, row)
@@ -144,7 +146,7 @@ def worker(args):
     row["cap_minimum_quality_ceiling"] = float(ceiling.min())
     row["caps_below_quality_gate"] = int((ceiling < 0.1).sum())
     audit_started = time.perf_counter()
-    row["geometry"] = workflow.geometry(args.run, "schwarz-solid", points, tetrahedra, surface)
+    row["geometry"] = workflow.geometry(args.run, args.case, points, tetrahedra, surface)
     try:
         _, _, row["periodic"] = periodic_pairs(points, surface)
     except ValueError as error:
@@ -170,7 +172,7 @@ def worker(args):
         assert len(records) == 6
         if args.strain_controlled:
             np.savez_compressed(args.run / "fields.npz", displacement=fields)
-        reference = json.loads((args.source / "summary.json").read_text())["references"]["schwarz-solid"]
+        reference = json.loads((args.source / "summary.json").read_text())["references"][args.case]
         assert reference["qualified_inputs"]
         row.update(stiffness=stiffness.tolist(), solver_records=records,
                    solve_s=solve_seconds, status="solved",
@@ -182,6 +184,7 @@ def worker(args):
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--run", type=Path, required=True)
+    parser.add_argument("--case", choices=("gyroid", "schwarz-solid"), default="schwarz-solid")
     parser.add_argument("--resolution", type=int, required=True)
     parser.add_argument("--source", type=Path, default=workflow.HERE / "runs/g3-microgen-defaults-v4")
     parser.add_argument("--worker", action="store_true")
@@ -201,7 +204,7 @@ def main():
     args.run.mkdir(parents=True, exist_ok=False)
     shutil.copyfile(__file__, args.run / "driver.py")
     inputs = [args.source / name for name in
-              ("schwarz-solid-specimen.json", "schwarz-solid-samples.npz", "summary.json")]
+              (args.case + "-specimen.json", args.case + "-samples.npz", "summary.json")]
     hashes = {str(path): workflow.digest(path) for path in inputs}
     for path in inputs[:2]:
         shutil.copyfile(path, args.run / path.name)
@@ -214,7 +217,8 @@ def main():
     with Job(parts=["tuned-candidate"]) as job:
         with job.part("tuned-candidate") as part:
             command = [sys.executable, __file__, "--run", str(args.run),
-                "--source", str(args.source), "--resolution", str(args.resolution), "--worker"]
+                "--source", str(args.source), "--case", args.case,
+                "--resolution", str(args.resolution), "--worker"]
             if args.audit_stages:
                 command.append("--audit-stages")
             if args.first_pass_hausd is not None:

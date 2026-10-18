@@ -1,0 +1,32 @@
+{
+  "case": "gyroid",
+  "route": "microgen-vtk-mmg-first-pass-override",
+  "resolution": 31,
+  "mmg_arguments": {
+    "hausd": 0.0005,
+    "hmax": 0.06,
+    "hgrad": 1.3
+  },
+  "status": "intermediate-element-cap",
+  "mmg_calls": [
+    {
+      "nofem": true,
+      "hausd": 0.0005,
+      "hmax": 0.06,
+      "hgrad": 1.3
+    }
+  ],
+  "stage_audit_enabled": true,
+  "timing_comparable": false,
+  "first_pass_hausd_override": 0.0005,
+  "first_pass_hmax_override": 0.06,
+  "first_pass_only": false,
+  "optimize_second_pass": false,
+  "solver_formulation": "prescribed-strain",
+  "specimen_setup_s": 0.0059661010000127135,
+  "seed_nodes": 22199,
+  "seed_elements": 95776,
+  "vtk_extraction_s": 0.24270163000073808,
+  "error": "mmg-stage-1: 289317 tetrahedra exceed the intermediate element cap",
+  "total_workflow_s": 21.07074948599984
+}

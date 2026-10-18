@@ -526,3 +526,36 @@ including curved mid-edge pairs, are at most 5.56e-17. The representative fields
 therefore pass the independent FE consistency check. Records are in
 `runs/g3-schwarz-matched-field-audit-v1`. This establishes the stated one-case
 advantage, not local stress accuracy or a continuum certification.
+
+## Gyroid retained-cap screening
+
+Jobs 103 and 104 screen actual VTK Gyroid sheet seeds at resolutions 24, 28,
+30, 32, 36, 38 and 31, 33, 35, 37, 39, 41. The specimen remains offset 1.1,
+the original sheet, and no Meshers seed is involved. All twelve seeds contain
+fewer than 250,000 tets and no zero-volume tetrahedra. Eleven have retained
+cap triangles whose analytic tetrahedral quality ceiling is below 0.1. MMG
+interior sizing cannot admit those fixed cap triangulations.
+
+Resolution 31 has no such cap obstruction, with minimum ceiling 0.15055,
+22,199 nodes and 95,776 seed tets. Its seed distance is 0.002496, so it is
+not admitted as generated. Select one actual two-pass Microgen/MMG run,
+explicitly overriding first-pass hausd=0.0005, hmax=0.05, hgrad=1.3. The
+second pass uses the existing tuned hausd=0.0005, hmax=0.06, hgrad=1.3.
+Stage audits distinguish a retained-curve obstruction from remeshing losses.
+This is an instrumented tuned diagnostic, not default Microgen or a comparable
+workflow timing. Solve only if all unchanged admission gates pass. Records are
+in `runs/g3-gyroid-seed-screen-v1`, `runs/g3-gyroid-seed-screen-odd-v1` and
+`runs/g3-gyroid-tuned31-v1`.
+
+Job 105 stops after the first native MMG pass produces 288,870 tetrahedra,
+above the fixed 250,000 intermediate cap. No second pass or FEA runs. Peak
+RSS is 0.73 GiB, so this is an element-cap rejection, not a memory failure.
+Select hmax=0.06 for one successor while leaving all other settings and gates
+unchanged. Do not enlarge the cap or report the aborted route as an admitted
+competitor.
+
+Job 106 also exceeds the intermediate cap, at 289,317 tets after the first
+pass. Increasing hmax from 0.05 to 0.06 does not reduce this count. The next
+single-parameter test changes only first-pass hausd from 0.0005 to 0.001.
+The independent 0.002 distance gate, second-pass settings and resource caps
+remain unchanged. This tests sizing sensitivity, not a relaxed admission gate.
