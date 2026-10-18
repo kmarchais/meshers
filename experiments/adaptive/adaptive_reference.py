@@ -1,4 +1,4 @@
-"""Summarize field-audited adaptive tensor refinement and declared model sensitivity."""
+"""Summarize field-audited tensor refinement and declared model sensitivity."""
 
 import argparse
 import json
@@ -11,13 +11,16 @@ def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--coarse", type=Path, required=True)
     parser.add_argument("--fine", type=Path, required=True)
-    parser.add_argument("--coarse-tolerance", type=float, required=True)
-    parser.add_argument("--fine-tolerance", type=float, required=True)
+    parser.add_argument("--coarse-tolerance", type=float)
+    parser.add_argument("--fine-tolerance", type=float)
+    parser.add_argument("--uniform-seed", action="store_true")
+    parser.add_argument("--orders", type=int, nargs="+", default=[2, 3, 4])
     parser.add_argument("--field-audit", type=Path, required=True)
     parser.add_argument("--candidate", action="append", type=Path, default=[])
     parser.add_argument("--target", type=float, default=0.01)
     parser.add_argument("--output", type=Path, required=True)
     args = parser.parse_args()
+    assert args.orders and all(order > 0 for order in args.orders)
     if args.output.exists():
         raise FileExistsError(args.output)
     np, *_ = workflow.imports()
@@ -51,15 +54,25 @@ def main():
     coarse_row, coarse = read_record(args.coarse)
     fine_row, fine = read_record(args.fine)
     assert coarse_row["case"] == fine_row["case"]
-    assert 0 < args.fine_tolerance < args.coarse_tolerance
-    for row, tolerance in ((coarse_row, args.coarse_tolerance), (fine_row, args.fine_tolerance)):
-        assert row.get("adapt_tolerance", tolerance) == tolerance
-    ratios = {"target_length": (args.fine_tolerance / args.coarse_tolerance)**0.5,
+    if args.uniform_seed:
+        assert args.coarse_tolerance is None and args.fine_tolerance is None
+        assert coarse_row["adaptive"] is False and fine_row["adaptive"] is False
+        assert coarse_row["order"] == fine_row["order"] == 2
+        assert coarse_row.get("void_clamp") == fine_row.get("void_clamp")
+        assert coarse_row.get("symmetric_union") == fine_row.get("symmetric_union")
+        primary_ratio = {"uniform_seed": coarse_row["cells"] / fine_row["cells"]}
+    else:
+        assert args.coarse_tolerance is not None and args.fine_tolerance is not None
+        assert 0 < args.fine_tolerance < args.coarse_tolerance
+        for row, tolerance in ((coarse_row, args.coarse_tolerance), (fine_row, args.fine_tolerance)):
+            assert row.get("adapt_tolerance", tolerance) == tolerance
+        primary_ratio = {"target_length": (args.fine_tolerance / args.coarse_tolerance)**0.5}
+    ratios = {**primary_ratio,
               "element_density": (coarse_row["elements"] / fine_row["elements"])**(1 / 3)}
     models = []
     for proxy, ratio in ratios.items():
         assert 0 < ratio < 1
-        for order in (2, 3, 4):
+        for order in args.orders:
             extrapolated = (fine - ratio**order * coarse) / (1 - ratio**order)
             assert np.isfinite(extrapolated).all() and np.linalg.eigvalsh(extrapolated).min() > 0
             models.append({"length_proxy": proxy, "length_ratio": ratio, "assumed_order": order,
@@ -79,7 +92,7 @@ def main():
         "script_sha256": workflow.digest(Path(__file__)), "primary_reference_stiffness": fine.tolist(),
         "primary_reference_source": str(args.fine), "fine_pair_difference": tensor_difference(coarse, fine),
         "models": models, "candidates": candidates, "stiffness_target": args.target,
-        "scope": "Empirical adaptive refinement sensitivity; assumptions are not certified continuum error bounds"})
+        "scope": "Empirical refinement sensitivity; assumptions are not certified continuum error bounds"})
 
 
 if __name__ == "__main__":

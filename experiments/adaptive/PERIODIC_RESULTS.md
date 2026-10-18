@@ -271,3 +271,42 @@ The next candidate uses 32 seed cells with the same symmetric expression,
 void clamp, no adaptation, and Tet10 policy. It must pass independent geometry
 and periodic checks before solving, within the explicit 150,000-node and
 1,200-second reference stage. Seed density alone does not establish convergence.
+
+Job 56 passes all 35 focused Python tests and admits the 32-cell reference
+geometry at H=0.0003264 and q_min=0.2769. It has 189,187 nodes, exceeding the
+explicit 150,000-node solve stage, so no FE solve runs. Its 12.79-second recorded
+workflow is a geometry audit, not a completed homogenization workflow. Records
+are in `runs/g3-lattice-curved32-symmetric-v1`. The next candidate uses 28 cells
+under the same resource and admission limits.
+
+Before reading the 28-cell tensor, the lattice sensitivity protocol uses the
+actual finer tensor as primary reference. It compares seed-spacing and
+element-density length ratios with assumed orders 1, 2, 3 and 4. First-order
+convergence is included because neither smooth constituent formulas nor Tet10
+elements establish global periodic solution regularity. Both tensors and the
+linear candidate need independent saved-field checks before this analysis.
+The resulting envelope is empirical, not a continuum error bound. The existing
+adaptive spinodoid protocol remains unchanged.
+
+Job 57 completes the admitted 28-cell lattice with 118,205 nodes and 76,980
+Tet10 elements. H=0.0004124, q_min=0.2393 and all sampled Jacobians are positive.
+Its six-load solve takes 530.12 seconds, total workflow 538.22 seconds and peak
+RSS 4,613,533,696 bytes. Job 58 independently integrates both curved lattice
+fields and the admitted linear field. Stress, energy and reaction tensors agree
+within 2.04e-11 relative, and periodic displacement jumps are zero. Records are
+in `runs/g3-lattice-curved28-symmetric-v1` and `runs/g3-lattice-field-audit-v1`.
+
+The fine tensor pair differs by 0.21527% in the worst mixed load. Across the
+declared eight models, the 24-cell candidate ranges from 0.42167% to 1.52660%,
+the 28-cell candidate from 0.20596% to 1.30851%, and the linear candidate from
+2.91986% to 4.04895%. None passes the 1% target throughout this envelope. Keep
+that negative result rather than discard the first-order models. Records are
+in `runs/g3-lattice-fine-pair-v1.json` and
+`runs/g3-lattice-reference-sensitivity-v1.json`.
+
+A third reference stage explicitly permits 200,000 solve nodes and 1,800 seconds,
+retaining defaults of 100,000 nodes and 600 seconds. The measured 28-cell RSS
+scaled by the already measured 189,187-node reference count predicts 7.38 GB,
+or 6.88 GiB. This estimate justifies a bounded attempt, not a memory guarantee.
+The hard 8 GiB worker ceiling, 250,000-tet cap, single thread and all admission
+gates remain unchanged. A fresh 32-cell run must re-audit geometry before solving.
