@@ -15,13 +15,16 @@ from pueue_progress import Job
 import microgen_workflow as workflow
 
 
-def solve(points, tetrahedra, checkpoint=None, *, n_elm_gp=None):
+def solve(points, tetrahedra, checkpoint=None, *, n_elm_gp=None, element_type=None):
     import fedoo as fd
     import numpy as np
     from homogenization import AuditedCG, COMPONENTS
 
     fd.ModelingSpace("3D")
-    mesh = fd.Mesh(points.copy(), tetrahedra.copy(), "tet4" if tetrahedra.shape[1] == 4 else "tet10")
+    if element_type is None:
+        element_type = {4: "tet4", 10: "tet10"}[tetrahedra.shape[1]]
+    assert fd.lib_elements.element_list.get_element(element_type).n_nodes == tetrahedra.shape[1]
+    mesh = fd.Mesh(points.copy(), tetrahedra.copy(), element_type)
     assembly = fd.Assembly.create(fd.weakform.StressEquilibrium(
         fd.constitutivelaw.ElasticIsotrop(2.5, 0.25)), mesh, n_elm_gp=n_elm_gp)
     solver = AuditedCG()

@@ -1,0 +1,147 @@
+{
+  "basis_checks": {
+    "nodal_and_polynomial_identities": true,
+    "degree_four_quadrature_exact": true,
+    "quadratic_map_embedding_error": 5.551115123125783e-16,
+    "map_derivative_embedding_error": 1.3322676295501878e-15
+  },
+  "patches": [
+    {
+      "route": "tet10-control",
+      "nodes": 1241,
+      "elements": 768,
+      "difference": {
+        "worst_relative_strain_energy_difference": 1.6538527603128158e-12,
+        "relative_tensor_frobenius_difference": 9.763365187207048e-13,
+        "relative_energy_difference_eigenvalues": [
+          -1.6538527603128158e-12,
+          -9.093824590228846e-13,
+          -3.3158094628509903e-13,
+          -7.887564238236398e-14,
+          9.807417655715733e-14,
+          1.286399985076572e-12
+        ]
+      },
+      "higher_rule_stress_error": 5.858650151943653e-12,
+      "higher_rule_energy_error": 5.858655425149313e-12,
+      "volume": 0.9999999999999994,
+      "periodic_jump_max": 0.0,
+      "affine_field_error": 1.71770438004284e-11,
+      "solver_records": [
+        {
+          "iterations": 132,
+          "relative_residual": 8.45640205071094e-13,
+          "free_dofs": 3069,
+          "seconds": 0.04781912999897031
+        },
+        {
+          "iterations": 133,
+          "relative_residual": 9.279254177965175e-13,
+          "free_dofs": 3069,
+          "seconds": 0.048461030004546046
+        },
+        {
+          "iterations": 133,
+          "relative_residual": 9.27926512560696e-13,
+          "free_dofs": 3069,
+          "seconds": 0.048561975003394764
+        },
+        {
+          "iterations": 139,
+          "relative_residual": 7.55473432921672e-13,
+          "free_dofs": 3069,
+          "seconds": 0.05007361100433627
+        },
+        {
+          "iterations": 139,
+          "relative_residual": 7.554972544037595e-13,
+          "free_dofs": 3069,
+          "seconds": 0.04899273600312881
+        },
+        {
+          "iterations": 133,
+          "relative_residual": 7.195226064275696e-13,
+          "free_dofs": 3069,
+          "seconds": 0.04774362000171095
+        }
+      ]
+    },
+    {
+      "route": "tet20-reference",
+      "nodes": 3925,
+      "elements": 768,
+      "difference": {
+        "worst_relative_strain_energy_difference": 4.749856319315925e-12,
+        "relative_tensor_frobenius_difference": 2.422368246488051e-12,
+        "relative_energy_difference_eigenvalues": [
+          -4.259180053435391e-12,
+          -3.636586061664607e-12,
+          -2.4766717508345974e-12,
+          1.2288049851348629e-12,
+          1.7155189457990665e-12,
+          4.749856319315925e-12
+        ]
+      },
+      "higher_rule_stress_error": 1.4533846260316885e-11,
+      "higher_rule_energy_error": 1.4534237211861048e-11,
+      "volume": 0.9999999999999991,
+      "periodic_jump_max": 2.220446049250313e-16,
+      "affine_field_error": 7.382040136101704e-12,
+      "solver_records": [
+        {
+          "iterations": 252,
+          "relative_residual": 8.862121976680671e-13,
+          "free_dofs": 10365,
+          "seconds": 0.5464999500036356
+        },
+        {
+          "iterations": 259,
+          "relative_residual": 8.923945391570663e-13,
+          "free_dofs": 10365,
+          "seconds": 0.5736750579962973
+        },
+        {
+          "iterations": 259,
+          "relative_residual": 8.944204252458613e-13,
+          "free_dofs": 10365,
+          "seconds": 0.5883920190026402
+        },
+        {
+          "iterations": 271,
+          "relative_residual": 9.06188536261173e-13,
+          "free_dofs": 10365,
+          "seconds": 0.6012793159970897
+        },
+        {
+          "iterations": 271,
+          "relative_residual": 9.062552159406427e-13,
+          "free_dofs": 10365,
+          "seconds": 0.5825611249965732
+        },
+        {
+          "iterations": 269,
+          "relative_residual": 9.413930427676928e-13,
+          "free_dofs": 10365,
+          "seconds": 0.59385835500143
+        }
+      ]
+    }
+  ],
+  "cubic_periodic": {
+    "periodic_pair_counts": [
+      169,
+      169,
+      169
+    ],
+    "periodic_coordinate_errors": [
+      2.220446049250313e-16,
+      2.220446049250313e-16,
+      2.220446049250313e-16
+    ],
+    "periodic_pair_tolerance": 1e-10,
+    "periodic_equivalence_classes": 3456,
+    "periodic_triangles_match": true
+  },
+  "analytic_patch_passed": true,
+  "scope": "Reference element feasibility only; no lattice tensor or Meshers Tet20 support inferred"
+}

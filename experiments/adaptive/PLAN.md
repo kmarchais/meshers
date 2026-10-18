@@ -48,6 +48,10 @@ isolated meshing improvement. The four-fixture objective remains unmet.
   distance. Do not promote these repairs. Before another large lattice run,
   assess a reference-only cubic FE enrichment on an analytic solid patch to
   separate quadratic discretization error from geometric reference uncertainty.
+  That patch now passes, and the admitted lattice's cubic assembly fits at
+  5.893 GiB. A bounded same-geometry reference solve is running with independent
+  field and quadrature gates. `CUBIC_RESULTS.md` records the passed stages and
+  the still-pending reference status. There is no Tet20 product API or new win.
 
 Every heavy stage uses the shared queue, an 8 GiB worker ceiling, conservative
 threads, a timeout and staged mesh caps. Admission gates and frozen outputs

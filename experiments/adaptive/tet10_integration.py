@@ -18,10 +18,13 @@ from pueue_progress import Job
 import microgen_workflow as workflow
 
 
-def integrated_tensors(points, tetrahedra, displacements, quadrature=None):
+def integrated_tensors(points, tetrahedra, displacements, quadrature=None, *, element_type=None):
     np, fd, *_ = workflow.imports()
-    order = 2 if tetrahedra.shape[1] == 10 else 1
-    element = fd.lib_elements.element_list.get_element("tet10" if order == 2 else "tet4")(15 if order == 2 else 4)
+    if element_type is None:
+        element_type = {4: "tet4", 10: "tet10"}[tetrahedra.shape[1]]
+    element_class = fd.lib_elements.element_list.get_element(element_type)
+    assert element_class.n_nodes == tetrahedra.shape[1]
+    element = element_class(4 if tetrahedra.shape[1] == 4 else 15)
     coordinates = points[tetrahedra]
     stiffness, energy = np.zeros((6, 6)), np.zeros((6, 6))
     volume = 0.0
