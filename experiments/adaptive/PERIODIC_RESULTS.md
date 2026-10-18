@@ -183,3 +183,30 @@ seconds for FEA, so the initial 600-second stage may be too short for this finer
 candidate. The runner's default remains 600 seconds. Completed load columns
 and residuals are checkpointed in `result.json` with status `solving`. Only a
 completed six-load result receives the full stiffness tensor and solved status.
+
+## Spinodoid reference refinement
+
+Job 44 completes the tighter admitted candidate with 147,894 nodes and 94,041
+Tet10 elements. Generation takes 9.96 seconds, FEA 678.37 seconds and the full
+workflow 697.79 seconds. Peak RSS is 4.85 GiB. All six recomputed residuals are
+below 1e-12. The tighter and preceding fine tensors differ by 0.020306% in the
+worst mixed load. Records are in `runs/g3-spinodoid-curved32-tight-solve-v1` and
+`runs/g3-spinodoid-fine-pair-v1.json`.
+
+Job 45 independently integrates saved displacement fields from both fine
+spinodoid meshes, the admitted linear spinodoid and the admitted linear lattice.
+Stress, energy and reaction tensors agree within 2.03e-11 relative. All periodic
+displacement jumps, including mid-edge pairs, are zero in these checks. Input
+hashes are unchanged. This verifies FE integration, not local stress accuracy.
+Records are in `runs/g3-new-fixture-field-audit-v1`.
+
+`adaptive_reference.py` applies the declared length proxies and assumed orders
+to the two audited fine tensors. The finer tensor is the primary empirical
+reference. Its difference from the six extrapolation models ranges from
+0.02611% to 0.10714%. The coarser curved candidate's difference from those
+models ranges from 0.04643% to 0.12747%, below the 1% target throughout. The
+admitted linear candidate ranges from 5.39348% to 5.47426% and fails that target.
+These are empirical model sensitivities, not certified continuum error bounds.
+The 490.86-second curved workflow remains expensive; passing accuracy alone
+does not establish a performance advantage over Microgen. Records are in
+`runs/g3-spinodoid-reference-sensitivity-v1.json`.

@@ -166,3 +166,20 @@ same-skeleton controls. It inherits the measured native and MMG results
 from job 4 by SHA-256, checks native binary and dependency identities, and
 does not repeat the fine Gyroid or Schwarz solves. Both earlier runs stay
 unchanged. The `inherited.json` record points to each original artifact.
+
+## Adaptive reference sensitivity
+
+The regular-grid Gyroid and Schwarz references retain their recorded p=4
+extrapolation and cross-checks. For the adaptive spinodoid and lattice studies,
+equal seed-cell counts do not define a refinement ratio. Report the direct
+fine-mesh tensor difference first. Examine two alternative length ratios:
+the square root of the adaptation-tolerance ratio, and the cube root of the
+coarse-to-fine element-count ratio. Neither is a verified uniform mesh spacing.
+
+For each ratio, examine assumed convergence orders 2, 3 and 4. Reject any
+nonfinite or nonpositive-definite extrapolated tensor. Report the full mixed-load
+spread across these models, rather than choose an order from the observed result.
+This is an empirical sensitivity study, not a certified error bound. A candidate
+whose accuracy interval straddles the chosen stiffness target remains unproven.
+Independent integration of saved displacement fields checks the stress, energy
+and reaction tensors before a new fine tensor supports reference comparisons.

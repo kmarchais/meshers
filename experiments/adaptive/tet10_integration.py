@@ -18,6 +18,88 @@ from pueue_progress import Job
 import microgen_workflow as workflow
 
 
+def integrated_tensors(points, tetrahedra, displacements):
+    np, fd, *_ = workflow.imports()
+    order = 2 if tetrahedra.shape[1] == 10 else 1
+    element = fd.lib_elements.element_list.get_element("tet10" if order == 2 else "tet4")(15 if order == 2 else 4)
+    coordinates = points[tetrahedra]
+    stiffness, energy = np.zeros((6, 6)), np.zeros((6, 6))
+    volume = 0.0
+    for derivative, weight in zip(element.shape_function_derivative(element.xi_pg), element.w_pg, strict=True):
+        jacobian = np.einsum("an,tnb->tab", derivative, coordinates)
+        determinants = np.linalg.det(jacobian)
+        assert determinants.min() > 0
+        weights = weight * determinants
+        gradients = np.einsum("tba,an->tbn", np.linalg.inv(jacobian), derivative)
+        displacement_gradient = np.einsum("ltni,tjn->ltij", displacements[:, tetrahedra], gradients)
+        strain = (displacement_gradient + displacement_gradient.swapaxes(-1, -2)) / 2
+        stress = 2 * strain + np.trace(strain, axis1=-2, axis2=-1)[..., None, None] * np.eye(3)
+        mean = np.einsum("t,ltij->lij", weights, stress)
+        stiffness += mean[:, [0, 1, 2, 0, 0, 1], [0, 1, 2, 1, 2, 2]].T
+        energy += np.einsum("t,itkl,jtkl->ij", weights, strain, stress)
+        volume += weights.sum()
+    return stiffness, energy, float(volume)
+
+
+def audit_saved(source, output):
+    np, *_ = workflow.imports()
+    from homogenization import strain_tensor
+    from periodic import periodic_pairs, tensor_difference
+
+    row = json.loads((source / "result.json").read_text())
+    assert row["qualified"] and len(row["solver_records"]) == 6
+    mesh = np.load(source / "mesh.npz")
+    fields = np.load(source / "fields.npz")["displacement"]
+    points, tetrahedra = mesh["points"], mesh["tetrahedra"]
+    assert fields.shape == (6, len(points), 3) and np.isfinite(fields).all()
+    stiffness, energy, volume = integrated_tensors(points, tetrahedra, fields)
+    expected = np.asarray(row["stiffness"])
+    reaction_error = float(np.linalg.norm(stiffness - expected) / np.linalg.norm(stiffness))
+    energy_error = float(np.linalg.norm(stiffness - energy) / np.linalg.norm(stiffness))
+    skew = float(np.linalg.norm(stiffness - stiffness.T) / np.linalg.norm(stiffness))
+    assert max(reaction_error, energy_error, skew) < 1e-7
+    disagreement = tensor_difference((stiffness + stiffness.T) / 2, expected)
+    assert disagreement["worst_relative_strain_energy_difference"] < 1e-7
+    assert abs(volume / row["geometry"]["volume"] - 1) < 1e-10
+    pairs, _, _ = periodic_pairs(points, mesh["surface"])
+    mids = np.ones(len(points), dtype=bool)
+    mids[np.unique(tetrahedra[:, :4])] = False
+    jump_max, mid_jump_max = 0.0, 0.0
+    for load, engineering in enumerate(np.eye(6)):
+        for axis, matching in enumerate(pairs):
+            jump = fields[load, matching[:, 1]] - fields[load, matching[:, 0]]
+            error = abs(jump - strain_tensor(engineering)[:, axis])
+            jump_max = max(jump_max, float(error.max(initial=0)))
+            mid_jump_max = max(mid_jump_max, float(error[mids[matching[:, 0]]].max(initial=0)))
+    assert max(jump_max, mid_jump_max) < 1e-9
+    workflow.save(output, {"source": str(source), "stress_integrated_stiffness": stiffness.tolist(),
+        "energy_integrated_stiffness": energy.tolist(), "reaction_relative_error": reaction_error,
+        "hill_mandel_relative_error": energy_error, "integrated_stiffness_skew_relative": skew,
+        "stress_reaction_mixed_load_difference": disagreement, "volume": volume,
+        "periodic_jump_max": jump_max, "periodic_mid_edge_jump_max": mid_jump_max,
+        "scope": "Saved-field FE consistency; no continuum or local stress accuracy certification"})
+
+
+def audit_saved_runs(run, sources):
+    run.mkdir(parents=True, exist_ok=False)
+    shutil.copyfile(__file__, run / "driver.py")
+    inputs = {str(source / name): workflow.digest(source / name) for source in sources
+              for name in ("result.json", "mesh.npz", "fields.npz")}
+    workflow.save(run / "manifest.json", {"source_sha256": workflow.digest(Path(__file__)),
+        "inputs": inputs, "memory_bytes": workflow.MEMORY, "threads": 1, "worker_timeout_s": 300})
+    with Job(parts=[source.name for source in sources]) as job:
+        for source in sources:
+            with job.part(source.name) as part:
+                result = workflow.bounded([sys.executable, __file__, "--saved-worker", str(source),
+                    "--run", str(run)], run / (source.name + ".log"), part, timeout=300)
+                workflow.save(run / (source.name + "-worker.json"), result)
+                assert result["returncode"] == 0, f"Read {source.name}.log"
+                row = json.loads((run / (source.name + ".json")).read_text())
+                job.result(source.name, reaction_error=row["reaction_relative_error"],
+                    jump=row["periodic_jump_max"], seconds=result["wall_s"])
+    assert all(workflow.digest(Path(path)) == value for path, value in inputs.items())
+
+
 def check_case(name, source, output):
     import numpy as np
     import fedoo as fd
@@ -132,19 +214,7 @@ def check_case(name, source, output):
                        "mid_edge_jump_max": max(mid_jumps), "force_balance_relative": balance,
                        **solver.records[-1]})
     displacements = np.asarray(displacements)
-    stiffness, energy = np.zeros((6, 6)), np.zeros((6, 6))
-    volume = 0.0
-    for derivative, weight in zip(element.shape_function_derivative(element.xi_pg), element.w_pg, strict=True):
-        jacobian = np.einsum("an,tnb->tab", derivative, coordinates)
-        weights = weight * np.linalg.det(jacobian)
-        gradients = np.einsum("tba,an->tbn", np.linalg.inv(jacobian), derivative)
-        displacement_gradient = np.einsum("ltni,tjn->ltij", displacements[:, mesh.tetrahedra], gradients)
-        strain = (displacement_gradient + displacement_gradient.swapaxes(-1, -2)) / 2
-        stress = 2 * strain + np.trace(strain, axis1=-2, axis2=-1)[..., None, None] * np.eye(3)
-        mean = np.einsum("t,ltij->lij", weights, stress)
-        stiffness += mean[:, [0, 1, 2, 0, 0, 1], [0, 1, 2, 1, 2, 2]].T
-        energy += np.einsum("t,itkl,jtkl->ij", weights, strain, stress)
-        volume += weights.sum()
+    stiffness, energy, volume = integrated_tensors(mesh.points, mesh.tetrahedra, displacements)
     reaction_error = float(np.linalg.norm(stiffness - reactions) / np.linalg.norm(stiffness))
     energy_error = float(np.linalg.norm(stiffness - energy) / np.linalg.norm(stiffness))
     assert max(reaction_error, energy_error) < 1e-7
@@ -170,7 +240,15 @@ def main():
     parser.add_argument("--run", type=Path, required=True)
     parser.add_argument("--source", type=Path, default=workflow.HERE / "runs/g3-microgen-defaults-v4")
     parser.add_argument("--case")
+    parser.add_argument("--saved-fields", nargs="+", type=Path)
+    parser.add_argument("--saved-worker", type=Path)
     args = parser.parse_args()
+    if args.saved_worker:
+        audit_saved(args.saved_worker, args.run / (args.saved_worker.name + ".json"))
+        return
+    if args.saved_fields:
+        audit_saved_runs(args.run, args.saved_fields)
+        return
     if args.case:
         check_case(args.case, args.source, args.run)
         return

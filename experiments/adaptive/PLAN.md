@@ -129,3 +129,11 @@ The admitted linear mesh differs by 5.3472% in the worst mixed load. A tighter
 reference-sensitivity solve under the unchanged 8 GiB ceiling and an explicit
 1,200-second reference stage. Lattice's coarse curved failure is localized to
 mid-edge nodes straightened by the sampled Jacobian validity fallback.
+
+The tighter spinodoid solve completes and passes independent saved-field
+stress/energy/reaction checks. Its tensor differs by 0.020306% from the preceding
+fine tensor. The empirical model envelope puts the curved candidate at
+0.04643% to 0.12747% disagreement, below the 1% target, and the linear candidate
+at 5.39348% to 5.47426%. Next test a targeted curved-validity fallback improvement
+for the lattice, whose coarse curved geometry still fails. A qualified actual
+Microgen competitor and repeated matched-accuracy timings remain outstanding.
