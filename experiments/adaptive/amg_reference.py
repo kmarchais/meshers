@@ -17,6 +17,20 @@ sys.path.insert(0, str(Path.home() / "bin"))
 from pueue_progress import Job
 
 
+def reduced_matrix_key(matrix):
+    digest = hashlib.sha256()
+    for array in (matrix.indptr, matrix.indices, matrix.data):
+        digest.update(memoryview(array))
+    return matrix.shape, digest.hexdigest()
+
+
+def verify_symmetric(matrix):
+    import numpy as np
+
+    skew = matrix - matrix.T
+    assert np.linalg.norm(skew.data) / np.linalg.norm(matrix.data) < 1e-12
+
+
 def elastic_candidates(coordinates):
     import numpy as np
 
@@ -39,6 +53,7 @@ class AuditedAMG:
         self.key = None
         self.elastic_blocks = elastic_blocks
         self.permutation = None
+        self.symmetry_key = None
 
     def __call__(self, matrix, rhs, **kwargs):
         import numpy as np
@@ -48,16 +63,16 @@ class AuditedAMG:
         started = time.perf_counter()
         matrix = matrix.tocsr()
         assert (matrix.diagonal() > 0).all()
-        digest = hashlib.sha256()
-        for array in (matrix.indptr, matrix.indices, matrix.data):
-            digest.update(memoryview(array))
-        key = (matrix.shape, digest.hexdigest())
+        key = reduced_matrix_key(matrix)
+        symmetry_reused = self.symmetry_key is not None
+        if self.symmetry_key is None:
+            verify_symmetric(matrix)
+            self.symmetry_key = key
+        else:
+            assert self.symmetry_key == key, "Changed matrix cannot reuse its symmetry certificate"
         setup_seconds = 0.
         reorder_seconds = 0.
         if self.hierarchy is None:
-            skew = matrix - matrix.T
-            assert np.linalg.norm(skew.data) / np.linalg.norm(matrix.data) < 1e-12
-            del skew
             free = self.problem._dof_free
             count = self.problem.mesh.n_nodes
             ranks = self.problem.space.get_rank_vector("Disp")
@@ -104,15 +119,53 @@ class AuditedAMG:
             "free_dofs": len(rhs), "seconds": time.perf_counter() - started,
             "hierarchy_setup_s": setup_seconds, "hierarchy_reused": bool(len(self.records)),
             "node_reordering_s": reorder_seconds, "elastic_blocks": self.elastic_blocks,
-            "verified_symmetry_reused": bool(len(self.records)),
+            "verified_symmetry_reused": symmetry_reused,
             "levels": len(self.hierarchy.levels), "operator_complexity": self.hierarchy.operator_complexity(),
             "reduced_matrix_sha256": key[1]})
         return solution
 
 
+class VerifiedPrefixAMG:
+    def __init__(self, fields, elastic_blocks=True):
+        self.fields = fields
+        self.delegate = AuditedAMG(elastic_blocks=elastic_blocks)
+        self.problem = None
+        self.records = []
+        self.key = None
+
+    def __call__(self, matrix, rhs, **kwargs):
+        import numpy as np
+
+        if len(self.records) >= len(self.fields):
+            self.delegate.problem = self.problem
+            solution = self.delegate(matrix, rhs, **kwargs)
+            assert self.key is None or self.key == self.delegate.key
+            self.records.append({**self.delegate.records[-1], "replayed": False})
+            return solution
+        started = time.perf_counter()
+        matrix = matrix.tocsr()
+        key = reduced_matrix_key(matrix)
+        if self.key is None:
+            verify_symmetric(matrix)
+            self.key = key
+            self.delegate.symmetry_key = key
+        else:
+            assert key == self.key
+        field = np.asarray(self.fields[len(self.records)])
+        assert field.shape == (self.problem.mesh.n_nodes, 3) and np.isfinite(field).all()
+        assert self.problem.n_node_dof == field.size and np.all(self.problem._dof_free < field.size)
+        solution = field.T.ravel()[self.problem._dof_free].copy()
+        residual = float(np.linalg.norm(matrix @ solution - rhs) / max(np.linalg.norm(rhs), 1e-30))
+        assert residual < 2e-9, "Saved prefix does not solve the current reduced equations"
+        self.records.append({"iterations": 0, "relative_residual": residual, "free_dofs": len(rhs),
+            "seconds": time.perf_counter() - started, "replayed": True,
+            "hierarchy_reused": False, "reduced_matrix_sha256": key[1]})
+        return solution
+
+
 def worker(args):
     np, _, meshers, *_ = workflow.imports()
-    from stress_recovery import solve, periodic_displacement_jump_error
+    from stress_recovery import solve, periodic_displacement_jump_error, vector_first_reactions
     from tet10_integration import integrated_tensors
     from periodic import tensor_difference
     from homogenization import MATERIAL
@@ -131,21 +184,46 @@ def worker(args):
         points, cells, surface = (archive[name] for name in ("points", "tetrahedra", "surface"))
         expected = np.array(json.loads((args.source / "result.json").read_text())["stiffness"])
         element_type = None
-    solver = AuditedAMG(elastic_blocks=args.elastic_blocks)
+    prefix = []
+    if args.replay_prefix:
+        if args.case == "cube":
+            baseline_fields, _, _ = solve(points, cells, n_elm_gp=15, element_type=element_type)
+            prefix = list(baseline_fields[:2])
+        else:
+            prefix = list(np.load(args.source / "fields.npz")["displacement"][:2])
+    solver = (VerifiedPrefixAMG(prefix, elastic_blocks=args.elastic_blocks) if prefix else
+        AuditedAMG(elastic_blocks=args.elastic_blocks))
+    reaction_errors = []
+
+    def checked_reactions(problem):
+        native = problem.get_ext_forces("MeanStrain")
+        vector_first = vector_first_reactions(problem)
+        error = float(np.linalg.norm(vector_first - native) / max(np.linalg.norm(native), 1e-30))
+        assert error < 1e-9
+        reaction_errors.append(error)
+        return vector_first
+
+    def checked_field(load, displacement):
+        if load <= len(prefix):
+            np.testing.assert_allclose(displacement, prefix[load - 1], atol=1e-11, rtol=0)
+
     started = time.perf_counter()
-    fields, tensor, records = solve(points, cells, n_elm_gp=15, element_type=element_type, solver=solver)
+    fields, tensor, records = solve(points, cells, n_elm_gp=15, element_type=element_type, solver=solver,
+        reaction_reader=checked_reactions, field_checkpoint=checked_field)
     seconds = time.perf_counter() - started
     stress, energy, volume = integrated_tensors(points, cells, fields, element_type=element_type)
     own_error = max(float(np.linalg.norm(value - tensor) / np.linalg.norm(tensor)) for value in (stress, energy))
     jump = periodic_displacement_jump_error(points, surface, fields)
     difference = tensor_difference(tensor, expected)
     assert max(own_error, jump, difference["worst_relative_strain_energy_difference"]) < 1e-7
-    assert len(records) == 6 and sum(record["hierarchy_reused"] for record in records) == 5
+    assert len(records) == 6 and sum(record["hierarchy_reused"] for record in records) == 5 - len(prefix)
+    assert sum(record.get("replayed", False) for record in records) == len(prefix)
     _, higher, _ = integrated_tensors(points, cells, fields, duffy_rule(5), element_type=element_type)
     workflow.save(args.run / (args.case + ".json"), {"case": args.case, "passed": True,
         "nodes": len(points), "elements": len(cells), "solve_s": seconds, "difference": difference,
         "own_rule_relative_error": own_error, "periodic_jump_max": jump, "integrated_volume": volume,
         "higher_rule_fixed_field_difference": tensor_difference(higher, tensor), "solver_records": records,
+        "replayed_prefix_loads": len(prefix), "maximum_reaction_reassociation_difference": max(reaction_errors),
         "scope": "Solver validation only; same equations, unchanged tolerances; not a live workflow timing"})
 
 
@@ -155,6 +233,7 @@ def main():
     parser.add_argument("--source", type=Path, default=workflow.HERE / "runs/g3-schwarz-curved8-pilot-v1")
     parser.add_argument("--case", choices=("cube", "schwarz"))
     parser.add_argument("--elastic-blocks", action="store_true")
+    parser.add_argument("--replay-prefix", action="store_true")
     args = parser.parse_args()
     if args.case:
         worker(args)
@@ -164,10 +243,13 @@ def main():
     paths = [Path(__file__), Path(workflow.__file__), workflow.HERE / "stress_recovery.py",
         workflow.HERE / "cubic_reference.py", workflow.HERE / "tet10_integration.py",
         args.source / "mesh.npz", args.source / "result.json"]
+    if args.replay_prefix:
+        paths.append(args.source / "fields.npz")
     hashes = {str(path): workflow.digest(path) for path in paths}
     workflow.save(args.run / "manifest.json", {"inputs": hashes, "memory_bytes": workflow.MEMORY,
         "worker_timeout_s": 300, "threads": 1, "pyamg": importlib.metadata.version("pyamg"),
         "elastic_blocks": args.elastic_blocks,
+        "replayed_prefix_loads": 2 if args.replay_prefix else 0,
         "method": ("SA on node-major BSR3 with six elastic candidates and V-cycle CG" if args.elastic_blocks else
             "SA on component-major CSR with three translational candidates and V-cycle CG"),
         "cg_rtol": 1e-12, "cg_atol": 1e-14})
@@ -177,6 +259,8 @@ def main():
                 command = [sys.executable, __file__, "--run", str(args.run), "--source", str(args.source), "--case", case]
                 if args.elastic_blocks:
                     command.append("--elastic-blocks")
+                if args.replay_prefix:
+                    command.append("--replay-prefix")
                 record = workflow.bounded(command, args.run / (case + ".log"), part, timeout=300)
                 workflow.save(args.run / (case + "-worker.json"), record)
                 assert record["returncode"] == 0, f"Read {case}.log"

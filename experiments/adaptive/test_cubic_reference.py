@@ -2,6 +2,7 @@
 
 import numpy as np
 import pytest
+from types import SimpleNamespace
 
 import microgen_workflow as workflow
 
@@ -38,3 +39,21 @@ def test_nonstandard_elements_require_explicit_registration_choice():
 
     with pytest.raises(KeyError, match="20"):
         solve(np.zeros((20, 3)), np.arange(20)[None])
+
+
+@pytest.mark.parametrize("changed", ["rhs", "matrix"])
+def test_saved_prefix_rejects_changed_equations(changed):
+    from scipy.sparse import eye
+    from amg_reference import VerifiedPrefixAMG
+
+    solver = VerifiedPrefixAMG([np.ones((1, 3)), np.ones((1, 3))])
+    solver.problem = SimpleNamespace(mesh=SimpleNamespace(n_nodes=1),
+        n_node_dof=3, _dof_free=np.arange(3))
+    matrix = eye(3, format="csr")
+    if changed == "rhs":
+        with pytest.raises(AssertionError, match="Saved prefix"):
+            solver(matrix, np.ones(3) * 2)
+    else:
+        solver(matrix, np.ones(3))
+        with pytest.raises(AssertionError):
+            solver(matrix * 2, np.ones(3) * 2)

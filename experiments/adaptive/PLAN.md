@@ -61,8 +61,13 @@ isolated meshing improvement. The four-fixture objective remains unmet.
   but a redundant second symmetry allocation hits the address-space cap. Exact
   matrix hashing now guards reuse of the already verified symmetry property;
   control solves and twelve small regressions pass. The full reference retry
-  also archives each field immediately. `CUBIC_RESULTS.md` records these stages.
-  There is no complete new tensor, Tet20 product API or workflow win yet.
+  also archives each field immediately. It retains two solved fields, then
+  fedoo's reaction extraction hits a separate matrix-product allocation. A
+  vector-first equivalent passes native reaction comparisons; verified prefix
+  replay avoids solving those fields again. The resumed reference has recovered
+  three columns, including its first new solve, but still needs three loads
+  and final audits. `CUBIC_RESULTS.md` records these stages. There is no complete
+  new tensor, Tet20 product API or workflow win yet.
 
 Every heavy stage uses the shared queue, an 8 GiB worker ceiling, conservative
 threads, a timeout and staged mesh caps. Admission gates and frozen outputs

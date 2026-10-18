@@ -16,7 +16,7 @@ import microgen_workflow as workflow
 
 
 def solve(points, tetrahedra, checkpoint=None, *, n_elm_gp=None, element_type=None, solver=None,
-          field_checkpoint=None):
+          field_checkpoint=None, reaction_reader=None):
     import fedoo as fd
     import numpy as np
     from homogenization import AuditedCG, COMPONENTS
@@ -43,10 +43,24 @@ def solve(points, tetrahedra, checkpoint=None, *, n_elm_gp=None, element_type=No
         fields.append(problem.get_disp().T.copy())
         if field_checkpoint is not None:
             field_checkpoint(load + 1, fields[-1])
-        tensor[:, load] = problem.get_ext_forces("MeanStrain").ravel()
+        reactions = problem.get_ext_forces("MeanStrain") if reaction_reader is None else reaction_reader(problem)
+        tensor[:, load] = reactions.ravel()
         if checkpoint is not None:
             checkpoint(load + 1, tensor[:, :load + 1], solver.records)
     return np.asarray(fields), (tensor + tensor.T) / 2, solver.records
+
+
+def vector_first_reactions(problem):
+    import numpy as np
+
+    raw = problem.get_ext_forces("all", include_mpc=False)
+    if problem._MFext is None:
+        transformed = raw
+    else:
+        transformed = problem._MFext.T @ raw
+        identity_dofs = np.concatenate((problem._dof_free, np.array(list(problem._dof_blocked), dtype=int)))
+        np.add.at(transformed, identity_dofs, raw[identity_dofs])
+    return problem._get_vect_component(transformed, "MeanStrain")
 
 
 def stresses(points, tetrahedra, fields, derivative):

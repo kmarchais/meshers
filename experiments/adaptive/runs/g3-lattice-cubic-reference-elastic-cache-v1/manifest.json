@@ -1,0 +1,31 @@
+{
+  "sources": {
+    "/home/kmarchais/dev/meshers/experiments/adaptive/cubic_reference.py": "3fd99a081a94f7b0e86755272f4587ff689d1a1b5f0d478797c2d6d681e665d6",
+    "/home/kmarchais/dev/meshers/experiments/adaptive/microgen_workflow.py": "3f98bcaf9ae151cb357944744e82dd80801703a4db04f94df31263c9c9fa7640",
+    "/home/kmarchais/dev/meshers/experiments/adaptive/stress_recovery.py": "4bb6c2f5c46ed75be06948882a00f22168810d0820155624a2f8905ae7b14709",
+    "/home/kmarchais/dev/meshers/experiments/adaptive/tet10_integration.py": "b5adbf4a96ee90953d546c654992d4380843e3b1a865e64e043cd14529e3865d",
+    "/home/kmarchais/dev/meshers/experiments/adaptive/quadrature_audit.py": "d66bd0136e586b3af4dc2e21315495173542c6ca0f2addae041f854c233505c9",
+    "experiments/adaptive/runs/g3-lattice-curved24-symmetric-v1/result.json": "5c3e1aa53be58e32fae972b7e82e6fdb9457e683f3ac155348b2162d80820446",
+    "experiments/adaptive/runs/g3-lattice-curved24-symmetric-v1/mesh.npz": "2adbd9557d40e2abfdee384aa738d63bff5c5188d2a420f3a4c0256e0cee6e47",
+    "experiments/adaptive/runs/g3-lattice-cubic-assembly-memory-v1/mesh.npz": "d9c11772dc21e142e26f6bdcd470af06674b297b830010a71de5c8e617962fed",
+    "experiments/adaptive/runs/g3-lattice-cubic-assembly-memory-v1/result.json": "5e505f373196fff91201ce4df82c6a2a89af5198937bf608c27ea0e60146f8f8",
+    "experiments/adaptive/runs/g3-lattice-curved24-symmetric-v1/fields.npz": "c4e41fbdb3bfcdb991f7b2687b019e2ff21e2e3e324e10b0d7d02e4ce02baf59",
+    "/home/kmarchais/dev/meshers/experiments/adaptive/amg_reference.py": "5addf325b8033e596375b84db89c21b7ac4964737a3ca4105d40a7cd26463c8d"
+  },
+  "memory_bytes": 8589934592,
+  "worker_timeout_s": 1800,
+  "threads": 1,
+  "node_cap": 250000,
+  "tet_cap": 250000,
+  "packages": {
+    "fedoo": "1.0.0b2",
+    "numpy": "2.5.4",
+    "scipy": "1.18.1",
+    "meshers": "0.1.0"
+  },
+  "assembly_only": false,
+  "solver": "cached-elastic-block-amg-cg",
+  "elastic_blocks": true,
+  "pyamg": "5.3.0",
+  "first_load_wall_cap_s": 240
+}

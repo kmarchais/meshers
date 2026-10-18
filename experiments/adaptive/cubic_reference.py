@@ -212,10 +212,21 @@ def assembly_worker(run, source):
         "scope": "Resource feasibility only; no cubic lattice tensor or accuracy claim"})
 
 
-def reference_worker(run, source, prepared, use_amg=False, elastic_blocks=False):
+def prefix_field_paths(source):
+    paths = []
+    for completed in range(1, 7):
+        path = source / f"load-{completed}.npz"
+        if not path.exists():
+            break
+        paths.append(path)
+    assert paths and len(list(source.glob("load-*.npz"))) == len(paths)
+    return paths
+
+
+def reference_worker(run, source, prepared, use_amg=False, elastic_blocks=False, resume_prefix=None):
     np, *_ = workflow.imports()
     from fedoo.lib_elements.tetrahedron import Tet10
-    from stress_recovery import solve, periodic_displacement_jump_error
+    from stress_recovery import solve, periodic_displacement_jump_error, vector_first_reactions
     from tet10_integration import integrated_tensors
     from quadrature_audit import duffy_rule
     from periodic import tensor_difference, periodic_pairs
@@ -227,6 +238,14 @@ def reference_worker(run, source, prepared, use_amg=False, elastic_blocks=False)
     original = np.load(source / "mesh.npz")
     points, cells, surface = (mesh[name] for name in ("points", "tetrahedra", "surface"))
     assert cells.shape[1] == 20 and len(points) <= 250_000 and len(cells) <= workflow.CAP
+    prefix = []
+    if resume_prefix is not None:
+        previous = json.loads((resume_prefix / "manifest.json").read_text())["sources"]
+        prepared_path = (prepared / "mesh.npz").resolve()
+        matching = [value for path, value in previous.items()
+            if (Path(path) if Path(path).is_absolute() else workflow.ROOT / path).resolve() == prepared_path]
+        assert matching == [workflow.digest(prepared / "mesh.npz")]
+        prefix = [np.load(path)["displacement"] for path in prefix_field_paths(resume_prefix)]
     element_class = register_cubic()
     element = element_class()
     basis_checks(element)
@@ -262,6 +281,9 @@ def reference_worker(run, source, prepared, use_amg=False, elastic_blocks=False)
         "solver_quadrature_points": 15, "qualified": False, "status": "embedded-parent-verified",
         "scope": "Saved-mesh reference enrichment, not a live workflow timing or continuum certificate",
         "first_load_wall_cap_s": 240,
+        "replayed_prefix_loads": len(prefix), "resume_prefix_source": str(resume_prefix) if resume_prefix else None,
+        "first_load_deadline_scope": "First newly solved load after verified prefix",
+        "reaction_extraction": "Vector-first MPC transformation, identical equations",
         "solver": ("cached-elastic-block-amg-cg" if elastic_blocks else
             "cached-smoothed-aggregation-cg" if use_amg else "jacobi-cg")}
     workflow.save(run / "result.json", row)
@@ -275,22 +297,29 @@ def reference_worker(run, source, prepared, use_amg=False, elastic_blocks=False)
     def checkpoint(completed, partial, records):
         row.update(status="solving", completed_loads=completed,
             partial_stiffness_columns=partial.tolist(), solver_records=records)
-        if completed == 1:
+        if prefix and completed == len(prefix) and len(prefix) < 6:
+            signal.setitimer(signal.ITIMER_REAL, row["first_load_wall_cap_s"])
+        if completed == len(prefix) + 1:
             signal.setitimer(signal.ITIMER_REAL, 0)
         workflow.save(run / "result.json", row)
 
     def save_completed_field(completed, displacement):
+        if completed <= len(prefix):
+            np.testing.assert_allclose(displacement, prefix[completed - 1], atol=1e-11, rtol=0)
         np.savez_compressed(run / f"load-{completed}.npz", displacement=displacement)
 
     solver = None
     if use_amg:
-        from amg_reference import AuditedAMG
-        solver = AuditedAMG(elastic_blocks=elastic_blocks)
+        from amg_reference import AuditedAMG, VerifiedPrefixAMG
+        solver = (VerifiedPrefixAMG(prefix, elastic_blocks=elastic_blocks) if prefix else
+            AuditedAMG(elastic_blocks=elastic_blocks))
     previous_alarm = signal.signal(signal.SIGALRM, first_load_timeout)
-    signal.setitimer(signal.ITIMER_REAL, row["first_load_wall_cap_s"])
+    if not prefix:
+        signal.setitimer(signal.ITIMER_REAL, row["first_load_wall_cap_s"])
     try:
         fields, tensor, records = solve(points, cells, checkpoint=checkpoint, n_elm_gp=15,
-            element_type=element_class.name, solver=solver, field_checkpoint=save_completed_field)
+            element_type=element_class.name, solver=solver, field_checkpoint=save_completed_field,
+            reaction_reader=vector_first_reactions)
     finally:
         signal.setitimer(signal.ITIMER_REAL, 0)
         signal.signal(signal.SIGALRM, previous_alarm)
@@ -327,17 +356,19 @@ def main():
     parser.add_argument("--prepared", type=Path)
     parser.add_argument("--amg", action="store_true")
     parser.add_argument("--elastic-blocks", action="store_true")
+    parser.add_argument("--resume-prefix", type=Path)
     args = parser.parse_args()
     assert args.prepared is None or args.source is not None
     assert not args.amg or args.prepared is not None
     assert not args.elastic_blocks or args.amg
+    assert args.resume_prefix is None or args.amg and args.prepared is not None
     if args.worker:
         if args.source is None:
             worker(args.run)
         elif args.prepared is None:
             assembly_worker(args.run, args.source)
         else:
-            reference_worker(args.run, args.source, args.prepared, args.amg, args.elastic_blocks)
+            reference_worker(args.run, args.source, args.prepared, args.amg, args.elastic_blocks, args.resume_prefix)
         return
     args.run.mkdir(parents=True, exist_ok=False)
     shutil.copyfile(__file__, args.run / "driver.py")
@@ -349,6 +380,9 @@ def main():
         paths.extend((args.prepared / "mesh.npz", args.prepared / "result.json", args.source / "fields.npz"))
     if args.amg:
         paths.append(workflow.HERE / "amg_reference.py")
+    if args.resume_prefix is not None:
+        paths.extend(prefix_field_paths(args.resume_prefix))
+        paths.extend(args.resume_prefix / name for name in ("manifest.json", "result.json"))
     hashes = {str(path): workflow.digest(path) for path in paths}
     timeout = 1800 if args.prepared is not None else 600 if args.source is not None else 300
     workflow.save(args.run / "manifest.json", {"sources": hashes, "memory_bytes": workflow.MEMORY,
@@ -360,6 +394,8 @@ def main():
         "solver": ("cached-elastic-block-amg-cg" if args.elastic_blocks else
             "cached-smoothed-aggregation-cg" if args.amg else "jacobi-cg"),
         "elastic_blocks": args.elastic_blocks,
+        "resume_prefix_source": str(args.resume_prefix) if args.resume_prefix else None,
+        "reaction_extraction": "Vector-first MPC transformation" if args.prepared else None,
         "pyamg": importlib.metadata.version("pyamg") if args.amg else None,
         "first_load_wall_cap_s": 240 if args.prepared is not None else None})
     label = "cubic-reference-solve" if args.prepared is not None else "cubic-assembly-memory" if args.source is not None else "basis-and-solid-patch"
@@ -374,6 +410,8 @@ def main():
                 command.append("--amg")
             if args.elastic_blocks:
                 command.append("--elastic-blocks")
+            if args.resume_prefix is not None:
+                command.extend(["--resume-prefix", str(args.resume_prefix)])
             record = workflow.bounded(command, args.run / "worker.log", part, timeout=timeout)
             workflow.save(args.run / "worker.json", record)
             assert record["returncode"] == 0, "Read worker.log"

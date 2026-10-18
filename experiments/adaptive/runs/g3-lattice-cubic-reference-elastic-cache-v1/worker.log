@@ -1,0 +1,26 @@
+/home/kmarchais/dev/meshers/.venv/lib/python3.12/site-packages/fedoo/core/base.py:80: UserWarning: WARNING: no fast direct sparse solver has been found. Consider installing pypardiso (Intel) or python-mumps (any platform) to improve computation performance
+  warnings.warn(
+Traceback (most recent call last):
+  File "/home/kmarchais/dev/meshers/experiments/adaptive/cubic_reference.py", line 387, in <module>
+    main()
+  File "/home/kmarchais/dev/meshers/experiments/adaptive/cubic_reference.py", line 340, in main
+    reference_worker(args.run, args.source, args.prepared, args.amg, args.elastic_blocks)
+  File "/home/kmarchais/dev/meshers/experiments/adaptive/cubic_reference.py", line 292, in reference_worker
+    fields, tensor, records = solve(points, cells, checkpoint=checkpoint, n_elm_gp=15,
+                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/kmarchais/dev/meshers/experiments/adaptive/stress_recovery.py", line 46, in solve
+    tensor[:, load] = problem.get_ext_forces("MeanStrain").ravel()
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/kmarchais/dev/meshers/.venv/lib/python3.12/site-packages/fedoo/core/problem.py", line 619, in get_ext_forces
+    M @ self.get_A() @ self.get_X() - M @ self.get_D(), name
+    ~~^~~~~~~~~~~~~~
+  File "/home/kmarchais/dev/meshers/.venv/lib/python3.12/site-packages/scipy/sparse/_base.py", line 1010, in __matmul__
+    return self._matmul_dispatch(other)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/kmarchais/dev/meshers/.venv/lib/python3.12/site-packages/scipy/sparse/_base.py", line 914, in _matmul_dispatch
+    return self._matmul_sparse(other)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/kmarchais/dev/meshers/.venv/lib/python3.12/site-packages/scipy/sparse/_compressed.py", line 459, in _matmul_sparse
+    indices = np.empty(nnz, dtype=idx_dtype)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+numpy._core._exceptions._ArrayMemoryError: Unable to allocate 349. MiB for an array with shape (91513539,) and data type int32

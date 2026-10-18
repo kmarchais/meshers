@@ -168,6 +168,46 @@ Job 189 retries the full reference with this allocation fix. Each completed
 displacement field is now archived immediately, so a later allocation or audit
 failure does not destroy earlier solved fields. The complete reference still
 requires all six loads, own-rule stress/energy, periodic jumps, Galerkin
-monotonicity and the retained 125-point sensitivity check. No resource or
-accuracy limit is increased. Records are in
+monotonicity and the retained 125-point sensitivity check. It solves and saves
+two displacement fields, then fails during load-two reaction extraction. Fedoo
+evaluates `M @ A @ X` left-to-right and attempts another large sparse matrix
+product; a 349 MiB index allocation fails under the same address-space cap.
+Peak RSS is 7.216 GiB. Only one force column reaches the partial result file,
+so there is no complete tensor. Both field archives are intact and finite.
+Records are in
 `runs/g3-lattice-cubic-reference-elastic-cache-v1`.
+
+## Vector-first reactions and verified prefix replay
+
+The reference path now computes the equivalent `M @ (A @ X - D)` using vector
+operations. It reproduces fedoo's stored MPC transpose and free/blocked identity
+contributions, without forming `M @ A`. The installed dependency and benchmark
+default reaction path are not patched. An explicit experimental reaction reader
+selects this path for the cubic reference.
+
+Job 190 compares native and vector-first reactions on all six cube and Schwarz
+loads. Maximum relative differences are 5.62e-15 and 7.34e-14. Its two saved
+prefix fields per case are accepted only after checking the current reduced
+equations and reconstructing the same boundary-constrained displacements. The
+remaining four loads are solved normally. Tensors, independent stress/energy
+and periodic checks pass. These are twelve load checks with four verified
+replays, not twelve fresh solves or a live-workflow timing. Records are in
+`runs/g3-vector-reaction-prefix-validation-v1`.
+
+Fourteen focused and comparison tests pass, including rejection of a wrong RHS
+and rejection of a changed matrix even when the saved vector solves it. The
+controller also now hashes the source field archive whenever a saved prefix is
+used. Frozen earlier validation manifests are not rewritten.
+
+Job 191 resumes the lattice reference from the two retained fields rather than
+pay for their solves again. It verifies the identical prepared-mesh hash, each
+current reduced residual and the reconstructed boundary values before accepting
+them. Both retained fields pass, including a 9.56e-13 residual for load two.
+The first new solve, load three, passes in 116 iterations at 9.37e-13 residual.
+The 240-second deadline applies to this first newly solved load, after verified
+prefix preparation. The full worker remains capped at 1,800 seconds and 8 GiB.
+No field replay time is presented as a fresh meshing or workflow speed result.
+
+Three remaining loads and all independent final audits are still required.
+There is no complete new reference or four-fixture accuracy claim yet. Records
+are in `runs/g3-lattice-cubic-reference-vector-resume-v1`.
