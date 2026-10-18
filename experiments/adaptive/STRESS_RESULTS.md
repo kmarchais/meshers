@@ -120,3 +120,34 @@ from the 1% stiffness target. Records are in `runs/g3-sizing-gyroid-v2`.
 The current recovery heuristic helps Schwarz at a common 1% target but has not
 shown a useful Gyroid workflow gain. Keep it optional. These results do not
 justify replacing curvature sizing or claiming general adaptive superiority.
+
+## Lattice ranking check, 18 October
+
+The saved current-native linear32 lattice field has a recovery indicator, but
+no observed same-domain enrichment error yet. Job 136's density-ranked top
+20% of elements contain 15.70% of recovery mass and 0.758% of material volume.
+That result alone does not validate or invalidate recovery sizing.
+
+An immutable re-ranking of the same indicator gives a different question.
+The top 20% by element mass contain 78.12% of recovery mass and 67.32% of
+volume. The largest-volume 20% contain 63.01% of recovery mass. Density
+ranking and mass ranking are not interchangeable under an element budget.
+These are indicator-concentration measurements, not observed error captures.
+The script and input hashes are in `runs/g3-lattice-recovery-rank-check-v1`.
+
+Select one fixed-domain enrichment validation before a live sizing pilot.
+Use the admitted uniform24 curved mesh only as a source of corner topology.
+Derive Tet4 and straight Tet10 controls with the same corners and exact edge
+midpoints, keeping their polyhedral domains identical. Do not reuse the
+curved mesh's tensor as a straight-control reference. The straight controls
+may fail the original geometry gate and remain diagnostic-only.
+
+Retain the earlier six-load compliance-weighted recovery and enrichment
+identity. Require independent field consistency, periodic jumps and the
+energy identity within their existing tolerances. Before observing this
+control, choose the successor rule: recovery's mass-ranked top 20% must
+capture more actual enrichment energy than both volume and stress-magnitude
+ranking, and density Spearman correlation must exceed 0.5. This rule only
+selects whether a live pilot is worthwhile; it does not alter benchmark
+admission or certify local stress accuracy. A live pilot, if selected, must
+charge its coarse meshing, six-load solve and recovery cost.
