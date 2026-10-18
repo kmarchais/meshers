@@ -327,8 +327,8 @@ measured fedoo retention failure without changing equations or benchmark
 defaults. The six-load tensor is not a live workflow timing or continuum bound.
 See `CUBIC_RESULTS.md` and `runs/g3-lattice-cubic-assessment-v1`.
 
-The cubic tensor still differs by up to 1.75050% from the 24 retained empirical
-models. None is removed. Finest adaptive Tet10 remains unproven at the 1%
+Retained-model disagreement reaches 1.75050% when normalized by the cubic
+tensor. All 24 empirical models remain retained. Finest adaptive Tet10 remains unproven at the 1%
 target across every model. The next geometry-only stage tests second-pass
 hausd 0.001 on the actual VTK51 Microgen lattice seed, retaining first-pass
 0.0015, to assess a stronger straight-Tet10 comparator inside 250,000 nodes.

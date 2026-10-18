@@ -1,6 +1,7 @@
 """Straight Tet10 and direct-fedoo control on an admitted genuine Microgen mesh."""
 
 import argparse
+import importlib.metadata
 import json
 import os
 from pathlib import Path
@@ -15,10 +16,10 @@ sys.path.insert(0, str(Path.home() / "bin"))
 from pueue_progress import Job
 
 
-def worker(source, run):
+def worker(source, run, use_amg=False):
     np, _, meshers, *_ = workflow.imports()
     from periodic import periodic_pairs, tensor_difference
-    from stress_recovery import solve
+    from stress_recovery import solve, vector_first_reactions
     from tet10_integration import audit_saved, integrated_tensors
 
     parent = json.loads((source / "result.json").read_text())
@@ -35,6 +36,8 @@ def worker(source, run):
         "parent_route": parent["route"], "parent_mmg_calls": parent["mmg_calls"], "source": str(source),
         "nodes": nodes, "elements": len(tetrahedra), "order": 2, "solver_quadrature_points": 4,
         "qualified": False, "status": "lift-node-cap", "live_workflow_timing": False,
+        "solver": "cached-elastic-block-amg-cg" if use_amg else "jacobi-cg",
+        "release_completed_reduced_cache": use_amg,
         "scope": "Saved genuine Microgen mesh; manual straight elevation and direct fedoo; no native Meshers generation or public Microgen Tet10 conversion"}
     workflow.save(run / "result.json", row)
     if nodes > 250_000:
@@ -73,7 +76,16 @@ def worker(source, run):
         row.update(status="solving", completed_loads=completed,
             partial_stiffness_columns=partial_tensor.tolist(), solver_records=records)
         workflow.save(run / "result.json", row)
-    fields, tensor, records = solve(converted.nodes, converted.elements, checkpoint=checkpoint, n_elm_gp=4)
+    def save_field(completed, displacement):
+        np.savez_compressed(run / f"load-{completed}.npz", displacement=displacement)
+    solver = None
+    if use_amg:
+        from amg_reference import AuditedAMG
+        solver = AuditedAMG(elastic_blocks=True)
+    fields, tensor, records = solve(converted.nodes, converted.elements, checkpoint=checkpoint,
+        n_elm_gp=4, field_checkpoint=save_field, solver=solver,
+        reaction_reader=vector_first_reactions if use_amg else None,
+        release_reduced_cache=use_amg)
     row.pop("partial_stiffness_columns", None)
     row.update(solve_s=time.perf_counter() - phase, stiffness=tensor.tolist(), solver_records=records,
         status="solved-needs-reference", quadrature_exact_for_affine_geometry=True)
@@ -94,9 +106,10 @@ def main():
     parser.add_argument("--source", type=Path, required=True)
     parser.add_argument("--run", type=Path, required=True)
     parser.add_argument("--worker", action="store_true")
+    parser.add_argument("--amg", action="store_true")
     args = parser.parse_args()
     if args.worker:
-        worker(args.source, args.run)
+        worker(args.source, args.run, args.amg)
         return
     args.run.mkdir(parents=True, exist_ok=False)
     shutil.copyfile(__file__, args.run / "driver.py")
@@ -106,13 +119,30 @@ def main():
         shutil.copyfile(path, args.run / path.name)
     files += [Path(__file__), Path(workflow.__file__), workflow.HERE / "stress_recovery.py",
         workflow.HERE / "tet10_integration.py", workflow.ROOT / "crates/meshers-python/python/meshers/__init__.py"]
+    if args.amg:
+        files.extend(workflow.HERE / name for name in ("amg_reference.py", "test_cubic_reference.py"))
     hashes = {str(path): workflow.digest(path) for path in files}
     workflow.save(args.run / "manifest.json", {"inputs": hashes, "memory_bytes": workflow.MEMORY,
-        "threads": 1, "worker_timeout_s": 1800, "solve_node_cap": 250_000, "live_workflow_timing": False})
-    with Job(parts=["straight-tet10"]) as job:
+        "threads": 1, "worker_timeout_s": 1800, "solve_node_cap": 250_000, "live_workflow_timing": False,
+        "solver": "cached-elastic-block-amg-cg" if args.amg else "jacobi-cg",
+        "pyamg": importlib.metadata.version("pyamg") if args.amg else None,
+        "cg_rtol": 1e-12, "cg_atol": 1e-14})
+    parts = ["four-point-controls", "straight-tet10"] if args.amg else ["straight-tet10"]
+    with Job(parts=parts) as job:
+        if args.amg:
+            with job.part("four-point-controls") as part:
+                record = workflow.bounded([sys.executable, "-m", "pytest", "-q",
+                    str(workflow.HERE / "test_cubic_reference.py")],
+                    args.run / "four-point-controls.log", part, timeout=120)
+                workflow.save(args.run / "four-point-controls.json", record)
+                assert record["returncode"] == 0, "Read four-point-controls.log"
+                job.result("four-point-controls", seconds=record["wall_s"])
         with job.part("straight-tet10") as part:
-            record = workflow.bounded([sys.executable, __file__, "--worker", "--source", str(args.source),
-                "--run", str(args.run)], args.run / "worker.log", part, timeout=1800)
+            command = [sys.executable, __file__, "--worker", "--source", str(args.source),
+                "--run", str(args.run)]
+            if args.amg:
+                command.append("--amg")
+            record = workflow.bounded(command, args.run / "worker.log", part, timeout=1800)
             workflow.save(args.run / "worker.json", record)
             assert record["returncode"] == 0, "Read worker.log"
             row = json.loads((args.run / "result.json").read_text())

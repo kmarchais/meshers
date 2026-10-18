@@ -43,6 +43,34 @@ def test_nonstandard_elements_require_explicit_registration_choice():
         solve(np.zeros((20, 3)), np.arange(20)[None])
 
 
+def test_four_point_affine_tet10_block_amg_matches_original_solver():
+    _, _, meshers, *_ = workflow.imports()
+    from amg_reference import AuditedAMG
+    from homogenization import MATERIAL
+    from stress_recovery import solve, vector_first_reactions
+    from tet10_integration import integrated_tensors
+
+    mesh = meshers.generate(lambda coordinates_x, *_: coordinates_x * 0 - 1,
+        bounds=(-.5, .5) * 3, cells=4, order=2, minimum_quality=.1,
+        periodic=(True, True, True), threads=1)
+    original_fields, original_tensor, _ = solve(mesh.points, mesh.tetrahedra, n_elm_gp=4)
+    solver = AuditedAMG(elastic_blocks=True)
+    saved = []
+    fields, tensor, records = solve(mesh.points, mesh.tetrahedra, n_elm_gp=4, solver=solver,
+        field_checkpoint=lambda load, field: saved.append((load, field.copy())),
+        reaction_reader=vector_first_reactions, release_reduced_cache=True)
+    np.testing.assert_allclose(tensor, original_tensor, atol=1e-9, rtol=0)
+    np.testing.assert_allclose(tensor, MATERIAL, atol=1e-9, rtol=0)
+    np.testing.assert_allclose(fields, original_fields, atol=1e-9, rtol=0)
+    assert [load for load, _ in saved] == list(range(1, 7))
+    np.testing.assert_array_equal(np.array([field for _, field in saved]), fields)
+    stress, energy, volume = integrated_tensors(mesh.points, mesh.tetrahedra, fields)
+    np.testing.assert_allclose(stress, tensor, atol=1e-9, rtol=0)
+    np.testing.assert_allclose(energy, tensor, atol=1e-9, rtol=0)
+    assert abs(volume - 1) < 1e-12
+    assert len(records) == 6 and sum(record["hierarchy_reused"] for record in records) == 5
+
+
 @pytest.mark.parametrize("changed", ["rhs", "matrix"])
 def test_saved_prefix_rejects_changed_equations(changed):
     from scipy.sparse import eye

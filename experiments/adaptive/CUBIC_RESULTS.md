@@ -275,8 +275,9 @@ Against cubic24, uniform Tet10 meshes at 24, 32 and 34 cells differ by 0.87761%,
 0.56789% and 0.49251%. The finest adaptive tensor differs by 0.52086%, in the
 opposite energy direction. The actual tuned Microgen Tet4 tensor differs by
 3.49233%. These pairwise values do not resolve specimen accuracy. The cubic
-tensor spans 0.15415% to 1.75050% across all 24 retained models, and no tested
-Tet10 candidate passes every retained model at 1%. Neither reference selection
+tensor normalizes retained-model disagreements of 0.15415% to 1.75050% across
+all 24 models. No tested Tet10 candidate passes every retained model at 1%.
+Neither reference selection
 nor a four-fixture timing victory follows from this result.
 
 Before another reference solve, test a stronger actual Microgen control.

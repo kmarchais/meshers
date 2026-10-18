@@ -175,3 +175,23 @@ Job 198 uses that unchanged physical mesh for a six-load direct-fedoo control,
 with the existing 8 GiB ceiling, 1,800-second timeout, four-point rule exact for
 affine Tet10 elasticity and independent higher-rule and field audits. No solve
 result, 1% stiffness claim or live workflow timing is inferred from admission.
+
+Job 198 reaches the unchanged 1,800-second timeout after five completed loads.
+All five reduced residuals are below 9.94e-13, but there is no complete tensor
+or saved field archive. Peak RSS is 6.083 GiB, so this is a time failure, not
+an observed memory-ceiling failure. Its partial row remains frozen and excluded
+from stiffness ranking. Records are in
+`runs/g3-lattice-microgen-straight-tet10-hausd001-v1`.
+
+The experimental controller now offers the already validated elastic-block AMG
+preset explicitly, without changing default CG behavior or any benchmark policy.
+A new four-point affine Tet10 control compares all six fields and tensors with
+the original solver and the analytic material, then independently reintegrates
+with fifteen points. That control must pass before a large retry. Every newly
+completed large field is archived immediately. AMG uses identical residual
+tolerances, vector-first equivalent reactions and explicit completed-cache
+release. The large worker still has the same 8 GiB and 1,800-second limits.
+Job 199 stops at the new small test because its fixture requests three cells,
+below the documented minimum of four. No large solve runs. Correct only that
+fixture and retain its failed output. Job 200 repeats the validation-gated
+retry with four cells; it is not a live speed comparison.
