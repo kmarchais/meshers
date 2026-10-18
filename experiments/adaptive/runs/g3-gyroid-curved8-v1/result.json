@@ -1,0 +1,17 @@
+{
+  "case": "gyroid",
+  "cells": 8,
+  "min_length": 0.01,
+  "order": 2,
+  "native_tolerance": 1.0,
+  "optimization_passes": 1,
+  "adaptive": false,
+  "adapt_tolerance": 0.002,
+  "solve_node_cap": 100000,
+  "qualified": false,
+  "status": "failed",
+  "error": "minimum MMG quality 7.831594323849457e-2 is below required 1e-1; mesh rejected (8 elements below 0.1). Improve resolution/optimization or use a quality remesher",
+  "traceback": "Traceback (most recent call last):\n  File \"/home/kmarchais/dev/meshers/experiments/adaptive/admission_pilot.py\", line 102, in worker\n    mesh = meshers.generate(field, bounds=workflow.BOUNDS, cells=args.cells,\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/kmarchais/dev/meshers/.local-work/g3-builds/baseline-5914097/meshers/__init__.py\", line 315, in generate\n    result = _meshers.generate(\n             ^^^^^^^^^^^^^^^^^^\n_meshers.MeshingFailure: minimum MMG quality 7.831594323849457e-2 is below required 1e-1; mesh rejected (8 elements below 0.1). Improve resolution/optimization or use a quality remesher\n",
+  "total_audit_workflow_s": 0.1230229299981147,
+  "total_workflow_s": 0.1230229299981147
+}

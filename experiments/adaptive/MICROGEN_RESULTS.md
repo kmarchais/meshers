@@ -678,3 +678,163 @@ Job 119's curved10 field audit passes within 6.79e-12 relative reaction error
 and has zero periodic or mid-edge jumps. Select a fresh curved12 control with
 the same native build, prescribed-strain helper and other settings as curved10.
 This supplies a valid same-helper cost baseline before further coarsening.
+
+Job 120's fresh curved12 control passes admission at 19,931 nodes, H=0.000573
+and 0.29515% stiffness disagreement. Its prescribed-strain solve takes 37.47
+seconds and live total is 39.17 seconds. Curved10's observed total is 36.9%
+lower under this same-helper protocol, while both meet the 1% target. These
+are single runs, not a repeated timing result. Select one eight-cell curved
+candidate next, retaining every gate and withholding FEA if admission fails.
+
+Job 121's eight-cell Meshers candidate is rejected natively at minimum quality
+0.07832, with eight elements below 0.1. No mesh is admitted or solved. This
+is a Meshers limitation, not a Microgen-only problem. Select four existing
+optimization passes instead of one for a single successor, leaving density,
+geometry and the required quality minimum unchanged. No optimizer code change
+or diagnostic quality bypass is introduced.
+
+Job 122's four-pass eight-cell mesh passes corner quality at 0.12588 but
+fails boundary distance at H=0.007253. Six mid-edge corrections are partially
+curved to preserve sampled validity; there are no fully straightened edges.
+Positive sampled Jacobians and a good volume error do not compensate for the
+distance failure. No FEA runs. Select the nine-cell density midpoint with the
+ordinary one-pass setting before proposing a new meshing algorithm.
+
+Job 123's nine-cell candidate passes admission with 11,857 nodes and 6,008
+Tet10 elements. H=0.001189, volume error=-0.02633%, q_min=0.14469 and all
+sampled Jacobians are positive. All mid-edge corrections are fully curved.
+Its primary-reference disagreement is 0.72921%, solve time 19.16 seconds and
+live total workflow 20.56 seconds. Job 124 verifies the nine-cell and fresh
+12-cell fields within 8.20e-12 relative reaction error, with zero periodic
+jumps. Job 125 retains admission after refining reverse tessellation from
+8 to 16; H is unchanged and reverse-distance delta is 0.000172.
+
+The nine-cell pilot also stays below 1% across assumed orders 1, 2, 3 and 4
+for the existing fine16/fine20 window, using both seed-spacing and element-
+density proxies. The full envelope is 0.72921% to 0.95990%. These are declared
+empirical reference models, not continuum error bounds. The nine-cell result
+is a cheaper admitted Meshers pilot, not a matched Microgen victory.
+
+## Fixed-realization Spinodoid cap feasibility
+
+Job 126 screens actual Spinodoid VTK seeds at sampling resolutions 20, 24,
+28, 32, 36 and 40 cells. Crucially, constructor FFT resolution remains 16.
+Changing that constructor resolution would change the random specimen even
+with the same seed. Only the sampling-grid attribute changes after field
+construction. All 52 coefficients match the frozen realization exactly and
+4,096 field evaluations remain bitwise unchanged for every stage.
+
+All six seeds have cap-quality obstructions, with 68 to 122 required cap
+triangles below the analytic 0.1 quality ceiling. All remain within 250,000
+tets, with the largest at 243,508. These are necessary-feasibility screens,
+not geometry audits, MMG timings or stiffness results. Do not run an interior
+sizing sweep on these fixed cap triangulations. Select one reproduction of
+the default 16-cell arrays and five odd sampling grids, still with the exact
+same FFT16 field, before choosing any native successor.
+
+Job 127 reproduces the default 16-cell point, Tet4 and surface arrays exactly,
+including its 46 cap obstructions and minimum quality ceiling 0.009166.
+The five odd sampling grids also have cap obstructions. Select one final
+bounded screen to complete every integer sampling resolution from 16 through
+41, including the first expected over-cap seed. Keep the exact realization
+and all caps. End this seed search after that result rather than treat a
+finite sweep as proof about arbitrary resolutions or modified cap meshes.
+
+Job 128 completes that bounded range. Every integer sampling grid from 16
+through 40 has cap obstructions; 41 produces 261,650 tets and exceeds the
+250,000 cap before quality analysis. The original field is unchanged at every
+stage. End the seed search. This establishes no feasible fixed-cap route in
+that tested range, not impossibility for every extraction or changed cap mesh.
+
+The same fine-window reference sensitivity check is also applied to the
+representative repeatedly timed Schwarz meshes. Meshers spans 0.25842% to
+0.32050%, and the explicitly one-pass Microgen comparator spans 0.92778% to
+0.99022%, across orders 1 through 4 and both length proxies. Both remain
+below 1% under those empirical models. This strengthens the narrow supported
+Schwarz result without changing its route or claiming continuum certification.
+
+## Lattice cap feasibility
+
+Select one bounded cap-only screen of actual smooth-union lattice VTK seeds.
+Use the unchanged original ordered eight-strut field, verify shape and case
+values at 4,096 points, and reproduce the default 50-point mesh arrays exactly.
+Test grids 50, 33, 37, 41, 45, 49, 51 and 52 under the existing tet cap before
+choosing any MMG successor. This does not use the Meshers symmetric-gradient
+expression or void clamp as a Microgen seed.
+
+Job 129 reproduces the default50 arrays exactly, including 96 cap
+obstructions. Grids 33, 41, 45 and 51 have no cap-quality obstruction and
+contain 75,774, 126,648, 175,888 and 249,432 tets respectively. Grids 37 and
+49 remain obstructed, and 52 exceeds the cap at 256,848 tets. Field values
+remain unchanged at every stage. These four feasible grids warrant independent
+geometry audits before selecting one MMG successor; cap feasibility alone is
+not admission or evidence of stiffness accuracy.
+
+Job 130 measures all four feasible seeds. Grid51 alone passes seed distance,
+with H=0.001778 and no failed projections; its minimum cap-quality ceiling is
+0.17813. Grids33 and 41 exceed distance, while 45 also has 48 failed
+projections. Select actual two-pass Microgen/MMG on grid51 with the original
+field, first-pass hausd=0.0015, second-pass hausd=0.0006, hmax=0.06 and
+hgrad=1.3. Capture both stages and solve only if geometry, quality and
+periodicity all pass. The runner now preserves any admitted lattice tensor
+as `solved-needs-reference`, rather than pretending the old summary contains
+a justified lattice reference or assigning a stiffness error silently.
+
+Job 131's first pass returns 115,619 tets with H=0.001551 but minimum quality
+0.09904, still below 0.1. The second pass produces 282,630 tets and exceeds
+the cap. No solve runs. Do not round the first-pass value into admission.
+Select one second-pass hausd change from 0.0006 to 0.00075, keeping the
+first pass, hmax, hgrad and every independent gate unchanged.
+
+Job 132 completes the actual two-pass route and all six prescribed-strain
+loads. It is admitted with 46,219 nodes and 218,394 Tet4 elements,
+H=0.001570, volume error=-0.38358%, q_min=0.11491, positive sampled
+Jacobians and matching periodic caps. This is a genuine Microgen VTK seed
+with explicit first-pass sizing overrides, not the default pipeline or a
+Meshers-seed hybrid. The tensor differs by 3.89090% from the current finer
+adaptive Meshers tensor. That is pairwise disagreement, not a certified error.
+
+The instrumented solve takes 95.12 seconds and total is 141.87 seconds.
+Intermediate stage audits are included, so do not compare this total as a
+matched timing against uninstrumented Meshers runs. Select independent field
+audits of the admitted comparator and both reference families before assessing
+model-dependent accuracy or choosing a fresh timing experiment. The lattice
+1% reference question remains separate.
+
+Job 133 passes all six independent field audits. Maximum reaction disagreement
+is 4.02e-11 and periodic jumps are zero; the admitted Microgen mesh is within
+1.06e-11. Across both existing reference families, Microgen's disagreement
+spans 3.35444% to 5.20673%, while the historical Meshers linear32 candidate
+spans 3.37702% to 5.23059%. Their actual-fine differences are 3.89090% and
+3.91273%. These are closely matched accuracy levels, but neither supports
+the original 1% target. The curved24 Meshers candidate spans 0.86871% to
+2.66674%, at a substantially higher solve cost.
+
+Select a fresh Meshers linear32 control with the current verified native
+build, the same prescribed-strain solver and the original explicit void
+clamp. This checks admission, accuracy and live cost before choosing a
+proper uninstrumented comparison. Do not compare instrumented Microgen
+time directly with the historical Meshers timing or claim the 1% goal.
+
+Jobs 134 and 135 complete that control and its independent field audit.
+Current-native linear32 has 48,259 nodes and 219,507 Tet4 elements,
+H=0.001802, q_min=0.16532 and all admission gates pass. Six prescribed-strain
+loads take 77.64 seconds; the live workflow takes 94.43 seconds. Reaction
+disagreement is 1.36e-11, Hill-Mandel disagreement is 4.98e-12 and periodic
+jumps are zero. The tensor differs by 3.95566% from the fine adaptive tensor
+and by 0.30894% from the admitted tuned Microgen tensor. The latter is a
+pairwise difference, not a reference error. Microgen's stage-instrumented
+141.87 seconds is still unsuitable for a fair timing ratio.
+
+Select a saved-field recovery-localization diagnostic before another solve.
+It measures where the existing periodic recovery indicator concentrates and
+whether its proposed size field has useful variation. It does not establish
+observed stiffness error, local stress accuracy or a live adaptive speedup.
+
+Job 136 completes in 8.19 seconds at 0.772 GiB peak RSS. The highest-density
+20% of elements cover only 0.758% of volume and contain 15.70% of recovery
+mass. The median proposed target length is 0.065, with the lower and upper
+deciles clipped to 0.03 and 0.1. This does not show that a recovery-driven
+solve would repay its coarse-solve cost. Defer that solve and measure the
+admitted Microgen recipe without intermediate stage audits first. The
+localization diagnostic reuses saved fields and is not a workflow timing.

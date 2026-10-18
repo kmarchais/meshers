@@ -1,0 +1,75 @@
+{
+  "case": "gyroid",
+  "cells": 8,
+  "min_length": 0.01,
+  "order": 2,
+  "native_tolerance": 1.0,
+  "optimization_passes": 4,
+  "adaptive": false,
+  "adapt_tolerance": 0.002,
+  "solve_node_cap": 100000,
+  "qualified": false,
+  "generation_s": 0.3985506479984906,
+  "nodes": 6914,
+  "elements": 3257,
+  "diagnostics": {
+    "empty": false,
+    "volume": 0.364221216384205,
+    "minimum_mmg_quality": 0.12587872550977777,
+    "sampled_surface_error": 0.013720724157314486,
+    "elements_below_quality_01": 0,
+    "reverted_snap_vertices": 0,
+    "callback_calls": 0,
+    "inserted_interior_nodes": 0,
+    "seconds": 0.397546375,
+    "quadratic": {
+      "curved_edges": 2784,
+      "straightened_edges": 0,
+      "partially_curved_edges": 6,
+      "minimum_jacobian_ratio": 0.011830540152360645
+    },
+    "threads": 1,
+    "evaluator": "compiled",
+    "preparation_seconds": 0.0009462249981879722
+  },
+  "geometry": {
+    "sampled_forward_max": 0.007253481178651147,
+    "sampled_reverse_max": 0.005740113810351659,
+    "sampled_two_sided_max": 0.007253481178651147,
+    "outward_forward_max": 0.007253481178651147,
+    "inward_forward_max": 0.0026785402334550843,
+    "projection_failed": 0,
+    "forward_samples": 22386,
+    "reverse_samples": 36260,
+    "volume": 0.35638952427092413,
+    "relative_volume_error": -0.00015116251181634954,
+    "q_min_corner": 0.12587872550977777,
+    "q_p01_corner": 0.21431097057958337,
+    "minimum_dihedral_deg_corner": 9.30666685842229,
+    "minimum_sampled_jacobian": 1.2755243051802426e-05,
+    "reverse_tessellation_delta_max": 0.0007170450551281439,
+    "quadratic_reverse_subdivisions": [
+      4,
+      8
+    ],
+    "geometry_admitted": false
+  },
+  "periodic": {
+    "periodic_pair_counts": [
+      286,
+      286,
+      286
+    ],
+    "periodic_coordinate_errors": [
+      0.0,
+      0.0,
+      0.0
+    ],
+    "periodic_pair_tolerance": 1e-10,
+    "periodic_equivalence_classes": 6088,
+    "periodic_triangles_match": true
+  },
+  "status": "geometry-rejected",
+  "total_audit_workflow_s": 1.3662483520020032,
+  "total_workflow_s": 1.3662483520020032
+}

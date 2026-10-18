@@ -1,8 +1,28 @@
 # Adaptive and quadratic implicit meshing: results
 
-Branch `claude/adaptive-implicit`. All numbers are element counts, quality, geometry
-and FEA error; none is a timing claim. Timings wait for an idle `gpu` queue. Every
-geometry metric is independent of the mesher's own diagnostics (`scorecard.py`):
+## Current G3 outcome, 2026-10-18
+
+One narrow matched-target result is supported: Schwarz Meshers beats the
+explicitly modified actual one-pass Microgen comparator in five interleaved
+pairs by 5.1155 to 5.2908 times. Both pass admission and the 1% stiffness target.
+This is not the default Microgen pipeline or a four-fixture victory.
+
+Gyroid curved9 now meets admission and the 1% target with 11,857 nodes and
+a 20.56-second single-run workflow. Its fine-window order-sensitivity envelope
+is 0.72921% to 0.95990%. The same-helper curved12 control takes 39.17 seconds.
+Tested Microgen alternatives remain unqualified. Spinodoid has no cap-feasible
+seed in the tested fixed-realization 16-through-40 range. Lattice still lacks
+a cross-family reference supporting the 1% target. The actual tuned two-pass
+Microgen grid51 route now passes admission and field consistency, but differs
+by 3.89090% from the fine adaptive tensor. The fresh Meshers linear32 control
+differs by 3.95566%. See `MICROGEN_RESULTS.md` and
+`PERIODIC_RESULTS.md` for the full recipes and exclusions.
+
+## Historical measurement protocol
+
+The opening study used branch `claude/adaptive-implicit` and made no timing
+claim. Later dated G3 sections contain same-host queued workflow measurements.
+Its independent geometry metrics used `scorecard.py`:
 
 - mesh to surface: Newton foot-point distance at 13 points per wall triangle;
 - surface to mesh: exact point-to-triangle distance (VTK) from 2^17 projected samples;

@@ -1,4 +1,4 @@
-"""One bounded tuned TPMS Microgen/MMG candidate per invocation."""
+"""One bounded tuned Microgen/MMG candidate per invocation."""
 
 import argparse
 import importlib.metadata
@@ -65,11 +65,21 @@ def worker(args):
         workflow.save(args.run / (label + ".json"), {
             "nodes": len(stage_points), "elements": len(stage_tets), "geometry": metrics})
     started = time.perf_counter()
-    function, offset, part = ((surface_functions.gyroid, 1.1, "sheet") if args.case == "gyroid"
-        else (surface_functions.schwarz_p, 0, "lower skeletal"))
-    shape = microgen.Tpms(function, offset=offset, resolution=args.resolution)
+    if args.case == "smooth-lattice":
+        case, shape, _ = workflow.specimen(args.case)
+    else:
+        function, offset, part = ((surface_functions.gyroid, 1.1, "sheet") if args.case == "gyroid"
+            else (surface_functions.schwarz_p, 0, "lower skeletal"))
+        shape = microgen.Tpms(function, offset=offset, resolution=args.resolution)
     row["specimen_setup_s"] = time.perf_counter() - started
-    grid = shape.generate_volume_mesh(type_part=part).triangulate()
+    if args.case == "smooth-lattice":
+        queries = np.random.default_rng(20261018).uniform(-0.5, 0.5, (4096, 3))
+        expected, actual = case.function(*queries.T), shape.evaluate(*queries.T)
+        np.testing.assert_allclose(actual, expected, rtol=1e-12, atol=1e-12)
+        row["shape_field_verification"] = {"points": len(queries), "maximum_value_difference": float(abs(actual - expected).max())}
+        grid = shape.generate_volume_mesh(resolution=args.resolution).triangulate()
+    else:
+        grid = shape.generate_volume_mesh(type_part=part).triangulate()
     row.update(seed_nodes=grid.n_points, seed_elements=grid.n_cells,
                vtk_extraction_s=time.perf_counter() - started)
     workflow.save(output, row)
@@ -172,11 +182,12 @@ def worker(args):
         assert len(records) == 6
         if args.strain_controlled:
             np.savez_compressed(args.run / "fields.npz", displacement=fields)
-        reference = json.loads((args.source / "summary.json").read_text())["references"][args.case]
-        assert reference["qualified_inputs"]
         row.update(stiffness=stiffness.tolist(), solver_records=records,
-                   solve_s=solve_seconds, status="solved",
-                   reference_disagreement=tensor_difference(stiffness, np.array(reference["stiffness"])))
+                   solve_s=solve_seconds, status="solved-needs-reference")
+        reference = json.loads((args.source / "summary.json").read_text())["references"].get(args.case)
+        if reference is not None:
+            assert reference["qualified_inputs"]
+            row.update(status="solved", reference_disagreement=tensor_difference(stiffness, np.array(reference["stiffness"])))
     row["total_workflow_s"] = time.perf_counter() - started
     workflow.save(output, row)
 
@@ -184,7 +195,7 @@ def worker(args):
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--run", type=Path, required=True)
-    parser.add_argument("--case", choices=("gyroid", "schwarz-solid"), default="schwarz-solid")
+    parser.add_argument("--case", choices=("gyroid", "schwarz-solid", "smooth-lattice"), default="schwarz-solid")
     parser.add_argument("--resolution", type=int, required=True)
     parser.add_argument("--source", type=Path, default=workflow.HERE / "runs/g3-microgen-defaults-v4")
     parser.add_argument("--worker", action="store_true")

@@ -1,0 +1,165 @@
+{
+  "case": "gyroid",
+  "cells": 9,
+  "min_length": 0.01,
+  "order": 2,
+  "native_tolerance": 1.0,
+  "optimization_passes": 1,
+  "adaptive": false,
+  "adapt_tolerance": 0.002,
+  "solve_node_cap": 100000,
+  "qualified": true,
+  "generation_s": 0.211064755996631,
+  "nodes": 11857,
+  "elements": 6008,
+  "diagnostics": {
+    "empty": false,
+    "volume": 0.3609170329269302,
+    "minimum_mmg_quality": 0.1446900039008038,
+    "sampled_surface_error": 0.01247384064159229,
+    "elements_below_quality_01": 0,
+    "reverted_snap_vertices": 0,
+    "callback_calls": 0,
+    "inserted_interior_nodes": 0,
+    "seconds": 0.210079758,
+    "quadratic": {
+      "curved_edges": 4598,
+      "straightened_edges": 0,
+      "partially_curved_edges": 0,
+      "minimum_jacobian_ratio": 0.16533387970814545
+    },
+    "threads": 1,
+    "evaluator": "compiled",
+    "preparation_seconds": 0.0009296190000895876
+  },
+  "geometry": {
+    "sampled_forward_max": 0.0011893416581181503,
+    "sampled_reverse_max": 0.0010012247939772917,
+    "sampled_two_sided_max": 0.0011893416581181503,
+    "outward_forward_max": 0.0011490111040899855,
+    "inward_forward_max": 0.0011893416581181503,
+    "projection_failed": 0,
+    "forward_samples": 38194,
+    "reverse_samples": 36260,
+    "volume": 0.3563495621327247,
+    "relative_volume_error": -0.00026327606931786374,
+    "q_min_corner": 0.1446900039008038,
+    "q_p01_corner": 0.3379039985876697,
+    "minimum_dihedral_deg_corner": 11.919392693170067,
+    "minimum_sampled_jacobian": 1.704483190366835e-05,
+    "reverse_tessellation_delta_max": 0.0006741275123838894,
+    "quadratic_reverse_subdivisions": [
+      4,
+      8
+    ],
+    "geometry_admitted": true
+  },
+  "periodic": {
+    "periodic_pair_counts": [
+      285,
+      282,
+      285
+    ],
+    "periodic_coordinate_errors": [
+      0.0,
+      0.0,
+      0.0
+    ],
+    "periodic_pair_tolerance": 1e-10,
+    "periodic_equivalence_classes": 11043,
+    "periodic_triangles_match": true
+  },
+  "status": "solved-needs-reference",
+  "completed_loads": 6,
+  "solver_records": [
+    {
+      "iterations": 996,
+      "relative_residual": 9.854279359118354e-13,
+      "free_dofs": 33126,
+      "seconds": 3.0073591010004748
+    },
+    {
+      "iterations": 978,
+      "relative_residual": 9.420373349203017e-13,
+      "free_dofs": 33126,
+      "seconds": 2.9787654129977454
+    },
+    {
+      "iterations": 986,
+      "relative_residual": 9.555640313522597e-13,
+      "free_dofs": 33126,
+      "seconds": 2.944227280000632
+    },
+    {
+      "iterations": 1019,
+      "relative_residual": 9.74026965262004e-13,
+      "free_dofs": 33126,
+      "seconds": 3.0052936030006094
+    },
+    {
+      "iterations": 1025,
+      "relative_residual": 9.629251271821085e-13,
+      "free_dofs": 33126,
+      "seconds": 3.0317959940002766
+    },
+    {
+      "iterations": 1020,
+      "relative_residual": 9.540008050175274e-13,
+      "free_dofs": 33126,
+      "seconds": 2.895332894000603
+    }
+  ],
+  "solve_s": 19.16231941099977,
+  "stiffness": [
+    [
+      0.48693984705481036,
+      0.1915157623211365,
+      0.19152539329514492,
+      -7.222596300136131e-06,
+      1.8141606785482277e-05,
+      4.757698489661455e-06
+    ],
+    [
+      0.1915157623211365,
+      0.48697933030715473,
+      0.1915244129158259,
+      3.767474756437078e-05,
+      5.589107880694954e-06,
+      -1.7422505872757543e-05
+    ],
+    [
+      0.19152539329514492,
+      0.1915244129158259,
+      0.4869362975060174,
+      3.211291219278365e-06,
+      -9.3760506801324e-06,
+      1.221726599124194e-05
+    ],
+    [
+      -7.222596300136131e-06,
+      3.767474756437078e-05,
+      3.211291219278365e-06,
+      0.1672826946176508,
+      1.2848459440370713e-05,
+      1.3984893148595047e-05
+    ],
+    [
+      1.8141606785482277e-05,
+      5.589107880694954e-06,
+      -9.3760506801324e-06,
+      1.2848459440370713e-05,
+      0.16728124043193177,
+      1.0479054509375752e-05
+    ],
+    [
+      4.757698489661455e-06,
+      -1.7422505872757543e-05,
+      1.221726599124194e-05,
+      1.3984893148595047e-05,
+      1.0479054509375752e-05,
+      0.1672709413664754
+    ]
+  ],
+  "total_audit_workflow_s": 20.557594396999775,
+  "total_workflow_s": 20.557594396999775
+}

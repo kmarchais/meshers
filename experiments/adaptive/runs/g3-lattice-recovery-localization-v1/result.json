@@ -1,0 +1,36 @@
+{
+  "source": "experiments/adaptive/runs/g3-lattice-linear32-control-v1",
+  "elements": 219507,
+  "recovery_trace_indicator": 0.11193959738936687,
+  "density_ranked_capture": [
+    {
+      "element_fraction": 0.05,
+      "volume_fraction": 0.00044143760949250235,
+      "recovery_mass_fraction": 0.0518029577667679
+    },
+    {
+      "element_fraction": 0.1,
+      "volume_fraction": 0.001835193559362105,
+      "recovery_mass_fraction": 0.09366777380099149
+    },
+    {
+      "element_fraction": 0.2,
+      "volume_fraction": 0.007576741421446145,
+      "recovery_mass_fraction": 0.15701449991243807
+    },
+    {
+      "element_fraction": 0.5,
+      "volume_fraction": 0.12007738064106782,
+      "recovery_mass_fraction": 0.4323871180144048
+    }
+  ],
+  "target_length_quantiles": [
+    0.03,
+    0.03,
+    0.065,
+    0.1,
+    0.1
+  ],
+  "scope": "Recovery localization only, not observed error, stiffness error bounds or local stress certification",
+  "timing_scope": "Saved-field diagnostic, not a live adaptive workflow"
+}

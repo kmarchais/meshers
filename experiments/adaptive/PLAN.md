@@ -1,14 +1,47 @@
 # Adaptive implicit meshing: plan and status
 
+## Current G3 continuation, 2026-10-18
+
+Active branch: `handoff/g3-microgen-20261017`. The stopping objective is a
+demonstrated matched-accuracy advantage over actual Microgen/MMG, not an
+isolated meshing improvement. The four-fixture objective remains unmet.
+
+- Schwarz has a repeated 5.1155 to 5.2908 times workflow advantage against an
+  explicitly modified actual one-pass Microgen route. It is not the default
+  two-pass pipeline. Both representative meshes remain below 1% across the
+  conservative fine-window reference models.
+- Gyroid curved9 passes admission and field checks with 11,857 nodes,
+  0.72921% to 0.95990% reference-model disagreement and 20.56 seconds total.
+  The same-helper curved12 control takes 39.17 seconds. These are single runs.
+  Tested genuine Microgen variants remain quality-rejected and their unranked
+  stiffness diagnostics also exceed 1%.
+- Spinodoid's exact FFT16 field is preserved. All integer VTK sampling grids
+  16 through 40 have analytic retained-cap quality obstructions; 41 exceeds
+  the tet cap. Meshers has an empirical fine reference but no admitted
+  Microgen comparator in the tested range.
+- Lattice accuracy remains unproven across uniform and adaptive reference
+  families. The genuine tuned two-pass Microgen grid51 candidate is admitted,
+  but differs by 3.89090% from the finer adaptive tensor. A fresh current-native
+  Meshers linear32 control differs by 3.95566%. Neither supports 1% accuracy.
+  Recovery localization is the next bounded diagnostic before a sizing pilot.
+
+Every heavy stage uses the shared queue, an 8 GiB worker ceiling, conservative
+threads, a timeout and staged mesh caps. Admission gates and frozen outputs
+remain unchanged. `MICROGEN_RESULTS.md` and `PERIODIC_RESULTS.md` contain the
+recipes, failures and reference limits. No continuum or local-stress accuracy
+certification is claimed.
+
+## Historical starting point
+
 Goal (Kevin, 2026-10-14): surface and volume meshes of implicit geometries that are
 faster than VTK/MMG, with better element quality, fewer elements, and better
 geometry fidelity (volume and two-sided boundary distance).
 
-Constraint: a long GPU job owns the `gpu` queue. Until it is idle, run only small
+Historical constraint: a long GPU job owns the `gpu` queue. Until it is idle, run only small
 single-threaded checks. Element counts, quality and geometry error are deterministic
 and can be measured now; timing waits for the queue.
 
-Branch `claude/adaptive-implicit` = `implicit-microgen-ready-20261003` (surface API,
+Historical branch `claude/adaptive-implicit` = `implicit-microgen-ready-20261003` (surface API,
 compiled fields) + `fea-accuracy-optimizer` (PR #5 geometry guard, quality floor).
 
 ## Ideas, in order

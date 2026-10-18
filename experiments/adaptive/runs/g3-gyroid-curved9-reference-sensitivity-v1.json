@@ -1,0 +1,164 @@
+{
+  "inputs": {
+    "experiments/adaptive/runs/g3-gyroid-curved9-v1/result.json": "3abd1f7c20593571e4e9838b8473d5ff0d559cce146dd7bd09e8390670663fe5",
+    "experiments/adaptive/runs/g3-microgen-defaults-v4/summary.json": "614c5c123eaae0ce0455b07b1f5c8bcf451b687cabca45f93521aaa469b05f35"
+  },
+  "script_sha256": "666915b4c717c5a0c4194ae7f470f23bbaf2c5655445f20bdb30a9e9392db120",
+  "scope": "Previously justified reference comparison; not continuum certification",
+  "second_tensor_is_normalization": true,
+  "difference": {
+    "worst_relative_strain_energy_difference": 0.007292113674335183,
+    "relative_tensor_frobenius_difference": 0.0032818603108801256,
+    "relative_energy_difference_eigenvalues": [
+      0.0009892702531668878,
+      0.005787245606142612,
+      0.005895636798571083,
+      0.007055545213261001,
+      0.007099769273188735,
+      0.007292113674335183
+    ]
+  },
+  "declared_order_models": [
+    {
+      "length_proxy": "uniform_seed",
+      "length_ratio": 0.8,
+      "assumed_order": 1,
+      "difference": {
+        "worst_relative_strain_energy_difference": 0.009308402432678447,
+        "relative_tensor_frobenius_difference": 0.0042042890474049055,
+        "relative_energy_difference_eigenvalues": [
+          0.0012276135980545063,
+          0.0074573364806142855,
+          0.00758697423065908,
+          0.009073983904806729,
+          0.009143229638963019,
+          0.009308402432678447
+        ]
+      }
+    },
+    {
+      "length_proxy": "uniform_seed",
+      "length_ratio": 0.8,
+      "assumed_order": 2,
+      "difference": {
+        "worst_relative_strain_energy_difference": 0.007951750324007443,
+        "relative_tensor_frobenius_difference": 0.0035841250363057814,
+        "relative_energy_difference_eigenvalues": [
+          0.0010674197963871982,
+          0.006334339367304367,
+          0.006449627798887492,
+          0.007716538283661518,
+          0.0077690657259955505,
+          0.007951750324007443
+        ]
+      }
+    },
+    {
+      "length_proxy": "uniform_seed",
+      "length_ratio": 0.8,
+      "assumed_order": 3,
+      "difference": {
+        "worst_relative_strain_energy_difference": 0.0075082393010540895,
+        "relative_tensor_frobenius_difference": 0.0033809439910581778,
+        "relative_energy_difference_eigenvalues": [
+          0.0010148939390740351,
+          0.005966572329799263,
+          0.006077217075310116,
+          0.007272184548984169,
+          0.0073191197025405195,
+          0.0075082393010540895
+        ]
+      }
+    },
+    {
+      "length_proxy": "uniform_seed",
+      "length_ratio": 0.8,
+      "assumed_order": 4,
+      "difference": {
+        "worst_relative_strain_energy_difference": 0.0072921136743351106,
+        "relative_tensor_frobenius_difference": 0.0032818603108800953,
+        "relative_energy_difference_eigenvalues": [
+          0.0009892702531668451,
+          0.005787245606142772,
+          0.005895636798570861,
+          0.007055545213260977,
+          0.007099769273188663,
+          0.0072921136743351106
+        ]
+      }
+    },
+    {
+      "length_proxy": "element_density",
+      "length_ratio": 0.817340569249174,
+      "assumed_order": 1,
+      "difference": {
+        "worst_relative_strain_energy_difference": 0.009598994358244592,
+        "relative_tensor_frobenius_difference": 0.004336842080435399,
+        "relative_energy_difference_eigenvalues": [
+          0.0012618311191770408,
+          0.007697478835367571,
+          0.007830215579706392,
+          0.009364369649028302,
+          0.009437037126729043,
+          0.009598994358244592
+        ]
+      }
+    },
+    {
+      "length_proxy": "element_density",
+      "length_ratio": 0.817340569249174,
+      "assumed_order": 2,
+      "difference": {
+        "worst_relative_strain_energy_difference": 0.008094739157007242,
+        "relative_tensor_frobenius_difference": 0.0036495870065482655,
+        "relative_energy_difference_eigenvalues": [
+          0.001084338013680243,
+          0.006452842115045659,
+          0.006569632962542215,
+          0.007859739051454574,
+          0.007914066932913508,
+          0.008094739157007242
+        ]
+      }
+    },
+    {
+      "length_proxy": "element_density",
+      "length_ratio": 0.817340569249174,
+      "assumed_order": 3,
+      "difference": {
+        "worst_relative_strain_energy_difference": 0.007601665351362458,
+        "relative_tensor_frobenius_difference": 0.0034237610978863032,
+        "relative_energy_difference_eigenvalues": [
+          0.001025964879736082,
+          0.006044068480258104,
+          0.0061556893120325844,
+          0.0073658115276277756,
+          0.0074139233025418624,
+          0.007601665351362458
+        ]
+      }
+    },
+    {
+      "length_proxy": "element_density",
+      "length_ratio": 0.817340569249174,
+      "assumed_order": 4,
+      "difference": {
+        "worst_relative_strain_energy_difference": 0.007360336392332245,
+        "relative_tensor_frobenius_difference": 0.0033131422836221876,
+        "relative_energy_difference_eigenvalues": [
+          0.000997360632339695,
+          0.005843860175867915,
+          0.005952962049413474,
+          0.007123937555620904,
+          0.0071690152627375756,
+          0.007360336392332245
+        ]
+      }
+    }
+  ],
+  "declared_order_difference_range": [
+    0.0072921136743351106,
+    0.009598994358244592
+  ],
+  "passes_one_percent_under_all_declared_models": true
+}
