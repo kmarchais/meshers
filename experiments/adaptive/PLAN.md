@@ -55,8 +55,10 @@ isolated meshing improvement. The four-fixture objective remains unmet.
   first-load deadline and retains field and quadrature gates, but also times
   out. Its actual reduced system is captured without solving. Translation-only
   node-block AMG still misses the same deadline; a documented rotational
-  candidate extension is being tested on that fixed system. `CUBIC_RESULTS.md`
-  records these stages. There is no new tensor, Tet20 product API or workflow win.
+  candidate extension converges on that fixed system and passes twelve integrated
+  control solves. All six lattice loads are now being retried with this validated
+  preset under unchanged resource and accuracy gates. `CUBIC_RESULTS.md` records
+  these stages. There is no new tensor, Tet20 product API or workflow win yet.
 
 Every heavy stage uses the shared queue, an 8 GiB worker ceiling, conservative
 threads, a timeout and staged mesh caps. Admission gates and frozen outputs

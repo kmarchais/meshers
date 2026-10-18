@@ -212,7 +212,7 @@ def assembly_worker(run, source):
         "scope": "Resource feasibility only; no cubic lattice tensor or accuracy claim"})
 
 
-def reference_worker(run, source, prepared, use_amg=False):
+def reference_worker(run, source, prepared, use_amg=False, elastic_blocks=False):
     np, *_ = workflow.imports()
     from fedoo.lib_elements.tetrahedron import Tet10
     from stress_recovery import solve, periodic_displacement_jump_error
@@ -262,7 +262,8 @@ def reference_worker(run, source, prepared, use_amg=False):
         "solver_quadrature_points": 15, "qualified": False, "status": "embedded-parent-verified",
         "scope": "Saved-mesh reference enrichment, not a live workflow timing or continuum certificate",
         "first_load_wall_cap_s": 240,
-        "solver": "cached-smoothed-aggregation-cg" if use_amg else "jacobi-cg"}
+        "solver": ("cached-elastic-block-amg-cg" if elastic_blocks else
+            "cached-smoothed-aggregation-cg" if use_amg else "jacobi-cg")}
     workflow.save(run / "result.json", row)
     phase = time.perf_counter()
 
@@ -281,7 +282,7 @@ def reference_worker(run, source, prepared, use_amg=False):
     solver = None
     if use_amg:
         from amg_reference import AuditedAMG
-        solver = AuditedAMG()
+        solver = AuditedAMG(elastic_blocks=elastic_blocks)
     previous_alarm = signal.signal(signal.SIGALRM, first_load_timeout)
     signal.setitimer(signal.ITIMER_REAL, row["first_load_wall_cap_s"])
     try:
@@ -322,16 +323,18 @@ def main():
     parser.add_argument("--source", type=Path)
     parser.add_argument("--prepared", type=Path)
     parser.add_argument("--amg", action="store_true")
+    parser.add_argument("--elastic-blocks", action="store_true")
     args = parser.parse_args()
     assert args.prepared is None or args.source is not None
     assert not args.amg or args.prepared is not None
+    assert not args.elastic_blocks or args.amg
     if args.worker:
         if args.source is None:
             worker(args.run)
         elif args.prepared is None:
             assembly_worker(args.run, args.source)
         else:
-            reference_worker(args.run, args.source, args.prepared, args.amg)
+            reference_worker(args.run, args.source, args.prepared, args.amg, args.elastic_blocks)
         return
     args.run.mkdir(parents=True, exist_ok=False)
     shutil.copyfile(__file__, args.run / "driver.py")
@@ -351,7 +354,9 @@ def main():
         "tet_cap": workflow.CAP if args.source is not None else 2000,
         "packages": {name: importlib.metadata.version(name) for name in ("fedoo", "numpy", "scipy", "meshers")},
         "assembly_only": args.source is not None and args.prepared is None,
-        "solver": "cached-smoothed-aggregation-cg" if args.amg else "jacobi-cg",
+        "solver": ("cached-elastic-block-amg-cg" if args.elastic_blocks else
+            "cached-smoothed-aggregation-cg" if args.amg else "jacobi-cg"),
+        "elastic_blocks": args.elastic_blocks,
         "pyamg": importlib.metadata.version("pyamg") if args.amg else None,
         "first_load_wall_cap_s": 240 if args.prepared is not None else None})
     label = "cubic-reference-solve" if args.prepared is not None else "cubic-assembly-memory" if args.source is not None else "basis-and-solid-patch"
@@ -364,6 +369,8 @@ def main():
                 command.extend(["--prepared", str(args.prepared)])
             if args.amg:
                 command.append("--amg")
+            if args.elastic_blocks:
+                command.append("--elastic-blocks")
             record = workflow.bounded(command, args.run / "worker.log", part, timeout=timeout)
             workflow.save(args.run / "worker.json", record)
             assert record["returncode"] == 0, "Read worker.log"

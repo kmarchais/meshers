@@ -1,0 +1,22 @@
+{
+  "status": "cg",
+  "converged": false,
+  "iterations": 110,
+  "source": "experiments/adaptive/runs/g3-lattice-cubic-reduced-system-v1",
+  "method": "SA on node-interleaved BSR3 with three translations and three rotational candidates",
+  "deadline_s": 240,
+  "cg_rtol": 1e-12,
+  "cg_atol": 1e-14,
+  "scope": "One captured first-load linear solve only, not a homogenized tensor or live workflow",
+  "candidate_scope": "Rotations are algebraic candidates, not exact periodic null modes",
+  "algorithm_wall_s": 156.00145200500265,
+  "reorder_s": 1.5571979739979724,
+  "hierarchy_setup_s": 16.18880966800498,
+  "levels": [
+    661029,
+    4320,
+    60
+  ],
+  "operator_complexity": 1.0116550404345948,
+  "last_relative_residual": 4.614252880351269e-12
+}

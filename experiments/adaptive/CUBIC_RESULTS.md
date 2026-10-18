@@ -113,6 +113,33 @@ Job 185 adds the three rotational candidate fields used by PyAMG's own
 `gallery.linear_elasticity_p1` example, retaining the original matrix, RHS,
 CG tolerances and deadline. These are algebraic near-nullspace candidates,
 not exact periodic rigid modes or modified physical constraints. The original
-CSR residual must pass after undoing the permutation. This is still one load,
-not a full mixed-load reference. Records are in
+CSR residual passes after undoing the permutation. The first system converges
+in 117 iterations and 165.05 seconds of algorithm wall time. Its original-system
+relative residual is 7.72e-13. Hierarchy setup takes 16.19 seconds, CG 146.85
+seconds and peak RSS is 2.909 GiB. This is still one load, not a full mixed-load
+reference or a live workflow speed result. Records are in
 `runs/g3-lattice-cubic-block-amg-rigid-v1`.
+
+## Six-load block integration and full reference retry
+
+Job 186 verifies the integrated block solver on the same cubic cube and curved
+Schwarz controls. It passes all twelve solves and reuses the hierarchy for five
+loads in each case, conditional on an identical reduced matrix hash. Cube
+analytic disagreement is 3.45e-12 and Schwarz reproduces its archived tensor
+within 4.42e-11. Independent own-rule stress and energy error remains below
+3.16e-12, with periodic jumps below 2.23e-16. No small-case speed advantage is
+established. Records are in `runs/g3-elastic-block-amg-validation-v1`.
+
+That validation's manifest correctly records `elastic_blocks=true`, as do its
+solver records, but inherits a stale scalar-method description. The frozen
+description is not silently rewritten. Its correction is recorded separately
+in `runs/g3-elastic-block-amg-validation-v1-method-clarification.json`, and the
+maintained controller now writes the selected method explicitly.
+
+Job 187 retries all six lattice loads through the validated integrated solver.
+The actual mesh, coefficients, boundary conditions, residual tolerances,
+240-second first-load deadline, 1,800-second worker cap and 8 GiB ceiling remain
+unchanged. Completed fields are saved before stress/energy and 125-point audits.
+The parent embedding check passes again; a full reference tensor remains
+unproven until this run completes all its gates. Records are in
+`runs/g3-lattice-cubic-reference-elastic-block-v1`.

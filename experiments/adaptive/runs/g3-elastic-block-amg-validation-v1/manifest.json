@@ -1,0 +1,19 @@
+{
+  "inputs": {
+    "/home/kmarchais/dev/meshers/experiments/adaptive/amg_reference.py": "84eb78f2f756f52fb3e612120593832b9e7cc04f81cdf122aee2f97768997f05",
+    "/home/kmarchais/dev/meshers/experiments/adaptive/microgen_workflow.py": "3f98bcaf9ae151cb357944744e82dd80801703a4db04f94df31263c9c9fa7640",
+    "/home/kmarchais/dev/meshers/experiments/adaptive/stress_recovery.py": "70d9c7a01e74fe1a5f54d9d55b52783529fe53ac40b17f2f7924731723b03b0a",
+    "/home/kmarchais/dev/meshers/experiments/adaptive/cubic_reference.py": "d9c537b9edac28f91dbdf2f822d0bbec6eb5b7972b3a91d73ca0c852cccaf832",
+    "/home/kmarchais/dev/meshers/experiments/adaptive/tet10_integration.py": "b5adbf4a96ee90953d546c654992d4380843e3b1a865e64e043cd14529e3865d",
+    "/home/kmarchais/dev/meshers/experiments/adaptive/runs/g3-schwarz-curved8-pilot-v1/mesh.npz": "1fb3e041bcee9c086586806a6ff7f5a22940fcd8d34aab6e53a95e2841d05217",
+    "/home/kmarchais/dev/meshers/experiments/adaptive/runs/g3-schwarz-curved8-pilot-v1/result.json": "1b0c5557b62cf7fb1d861a31927a556a9d74bb6f5a85275f1be54ce5b44bd96c"
+  },
+  "memory_bytes": 8589934592,
+  "worker_timeout_s": 300,
+  "threads": 1,
+  "pyamg": "5.3.0",
+  "elastic_blocks": true,
+  "method": "SA with three reduced translational candidates, symmetric smoothers and V-cycle CG",
+  "cg_rtol": 1e-12,
+  "cg_atol": 1e-14
+}
