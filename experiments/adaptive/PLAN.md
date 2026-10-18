@@ -23,7 +23,9 @@ isolated meshing improvement. The four-fixture objective remains unmet.
   families. The genuine tuned two-pass Microgen grid51 candidate is admitted,
   but differs by 3.89090% from the finer adaptive tensor. A fresh current-native
   Meshers linear32 control differs by 3.95566%. Neither supports 1% accuracy.
-  Recovery localization is the next bounded diagnostic before a sizing pilot.
+  Recovery localization did not justify another sizing solve. A finer admitted
+  adaptive level still reaches 1.26988% across retained reference models.
+  The next bounded diagnostic tests fixed-topology volume correction.
 
 Every heavy stage uses the shared queue, an 8 GiB worker ceiling, conservative
 threads, a timeout and staged mesh caps. Admission gates and frozen outputs

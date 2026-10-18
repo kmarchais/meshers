@@ -859,3 +859,47 @@ Select one finer adaptive lattice level at tolerance 0.0028, with the same
 existing adaptive reference family. Keep the 200,000 solve-node stage,
 250,000-tet cap, 8 GiB ceiling and all admission gates. This tests another
 refinement increment, not an assumed resolution of cross-family uncertainty.
+
+Jobs 139 and 140 complete this level and seven independent field audits.
+The finer mesh is admitted with 193,242 nodes and 124,141 Tet10 elements.
+The six-load workflow takes 1,178.53 seconds with 6.12 GiB peak worker RSS.
+Its tensor differs by 0.03654% from the tolerance-0.003 level. Reaction
+disagreement is 3.46e-11 and periodic jumps are zero. All seven audits pass.
+
+The small successive change does not settle the reference. The finer mesh
+differs by 0.24757% to 1.13038% across the newly declared fine-window models,
+and by 0.11349% to 1.26988% across the retained earlier families. No candidate
+passes every declared model at 1%. The fresh linear candidate reaches
+5.25237% and the admitted Microgen candidate reaches 5.20673% across the
+combined families. Do not discard the first-order models or the older family
+to obtain a pass. Results are in `runs/g3-lattice-finer-reference-comparison-v1.json`.
+
+The next diagnostic addresses the requested volume-correction priority.
+The admitted linear lattice underfills the sampled volume target by about
+0.43%. At fixed connectivity, test half and full correction using averaged
+periodic wall-normal displacements, with box-normal components locked.
+Use the original sampled target and record its scramble spread rather than
+claim exact volume knowledge. Independently audit distance, quality, volume,
+Jacobians and periodic caps before choosing any stiffness solve. These are
+saved-mesh geometry probes, not changes to native meshing or live timings.
+
+Job 141 returns one admitted offset. Half correction moves wall nodes by at
+most 0.0001558, halves the sampled volume bias from -0.43146% to -0.21573%,
+and retains H=0.001947 and q_min=0.15617. Full correction meets the sampled
+volume target but has H=0.002096, so it is rejected without a stiffness solve.
+The target's full scramble spread remains 0.0001564 in absolute volume.
+
+Job 142 solves only the admitted half correction. Independent reaction and
+energy checks pass, with reaction disagreement 1.25e-11 and zero periodic
+jump. Against the new fine adaptive tensor, worst mixed-load disagreement
+worsens from the original 3.99223% to 4.49776%. Better volume alone is not a
+better stiffness mesh. Do not promote uniform volume offsets into native
+meshing from this experiment. Its 76.74-second worker time uses a saved mesh
+and is not a live generation-plus-correction workflow benchmark.
+
+Relocation is not the current workflow bottleneck. Native diagnostics charge
+0.816 seconds to the relocation phase of the finer 1,178.53-second workflow,
+and 1.399 seconds in the 94.43-second linear control. These phases also include
+settling. Even removing that entire phase would save less than 0.1% and 1.5%
+respectively in these runs. Defer a parallel rewrite until a measured workload
+justifies it. The unresolved stiffness/reference cost has much larger impact.

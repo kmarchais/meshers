@@ -15,7 +15,9 @@ seed in the tested fixed-realization 16-through-40 range. Lattice still lacks
 a cross-family reference supporting the 1% target. The actual tuned two-pass
 Microgen grid51 route now passes admission and field consistency, but differs
 by 3.89090% from the fine adaptive tensor. The fresh Meshers linear32 control
-differs by 3.95566%. See `MICROGEN_RESULTS.md` and
+differs by 3.95566%. A further admitted adaptive level changes by only 0.03654%
+from its predecessor but still reaches 1.26988% against retained reference
+models. This does not establish 1% accuracy. See `MICROGEN_RESULTS.md` and
 `PERIODIC_RESULTS.md` for the full recipes and exclusions.
 
 ## Historical measurement protocol

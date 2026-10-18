@@ -1,0 +1,135 @@
+{
+  "case": "smooth-lattice",
+  "route": "saved-linear-half-volume-correction",
+  "source": "experiments/adaptive/runs/g3-lattice-volume-correction-probe-v1",
+  "qualified": true,
+  "geometry": {
+    "sampled_forward_max": 0.0019473944350121956,
+    "sampled_reverse_max": 0.0015757864446606928,
+    "sampled_two_sided_max": 0.0019473944350121956,
+    "outward_forward_max": 0.0019473944350121956,
+    "inward_forward_max": 0.0009341780807265959,
+    "projection_failed": 0,
+    "forward_samples": 356148,
+    "reverse_samples": 34791,
+    "volume": 0.24777536672756298,
+    "relative_volume_error": -0.0021572784362392516,
+    "q_min_corner": 0.15617122732960045,
+    "q_p01_corner": 0.37328153916345946,
+    "minimum_dihedral_deg_corner": 7.98239531226676,
+    "minimum_sampled_jacobian": 2.7992774920482788e-09,
+    "reverse_tessellation_delta_max": 0.0,
+    "quadratic_reverse_subdivisions": null,
+    "geometry_admitted": true
+  },
+  "periodic": {
+    "periodic_pair_counts": [
+      1124,
+      1124,
+      1126
+    ],
+    "periodic_coordinate_errors": [
+      0.0,
+      0.0,
+      0.0
+    ],
+    "periodic_pair_tolerance": 1e-10,
+    "periodic_equivalence_classes": 44932,
+    "periodic_triangles_match": true
+  },
+  "nodes": 48259,
+  "elements": 219507,
+  "normal_offset": 0.00015579799002218294,
+  "solver_records": [
+    {
+      "iterations": 1197,
+      "relative_residual": 9.670681618205204e-13,
+      "free_dofs": 134793,
+      "seconds": 11.487039711999387
+    },
+    {
+      "iterations": 1226,
+      "relative_residual": 9.869651512916967e-13,
+      "free_dofs": 134793,
+      "seconds": 11.24231038400103
+    },
+    {
+      "iterations": 1226,
+      "relative_residual": 9.825148304268097e-13,
+      "free_dofs": 134793,
+      "seconds": 10.383441844998742
+    },
+    {
+      "iterations": 1237,
+      "relative_residual": 9.882571207643316e-13,
+      "free_dofs": 134793,
+      "seconds": 10.341471835999982
+    },
+    {
+      "iterations": 1241,
+      "relative_residual": 9.570327794392685e-13,
+      "free_dofs": 134793,
+      "seconds": 10.378847451000183
+    },
+    {
+      "iterations": 1239,
+      "relative_residual": 9.97402290010275e-13,
+      "free_dofs": 134793,
+      "seconds": 10.386711769999238
+    }
+  ],
+  "stiffness": [
+    [
+      0.14007015288217284,
+      0.10654358001296863,
+      0.10655678247351902,
+      1.165479249330972e-05,
+      1.1372695872774018e-05,
+      7.118213141281037e-06
+    ],
+    [
+      0.10654358001296863,
+      0.1400676391647774,
+      0.10656305295787344,
+      1.208112498800231e-05,
+      9.109776849746752e-06,
+      3.075476977820493e-06
+    ],
+    [
+      0.10655678247351902,
+      0.10656305295787344,
+      0.1400851225947356,
+      9.570837365330758e-06,
+      1.2188630743193914e-05,
+      5.914993758955847e-06
+    ],
+    [
+      1.165479249330972e-05,
+      1.208112498800231e-05,
+      9.570837365330758e-06,
+      0.10385428993761066,
+      6.431557009812079e-06,
+      5.899321264533462e-06
+    ],
+    [
+      1.1372695872774018e-05,
+      9.109776849746752e-06,
+      1.2188630743193914e-05,
+      6.431557009812079e-06,
+      0.10386548879097436,
+      5.3576587589969435e-06
+    ],
+    [
+      7.118213141281037e-06,
+      3.075476977820493e-06,
+      5.914993758955847e-06,
+      5.899321264533462e-06,
+      5.3576587589969435e-06,
+      0.10387267307962002
+    ]
+  ],
+  "solve_s": 71.58293288700224,
+  "status": "solved-needs-reference",
+  "live_workflow_timing": false,
+  "scope": "Admitted saved-mesh perturbation diagnostic, not a native or live adaptive workflow"
+}

@@ -1,0 +1,89 @@
+{
+  "source": "experiments/adaptive/runs/g3-lattice-linear32-control-v1",
+  "baseline_volume": 0.24723969066948145,
+  "volume_target": 0.24831104278564453,
+  "target_scramble_spread": 0.000156402587890625,
+  "candidates": [
+    {
+      "label": "half",
+      "fraction": 0.5,
+      "normal_offset": 0.00015579799002218294,
+      "maximum_displacement": 0.00015579799002222644,
+      "geometry": {
+        "sampled_forward_max": 0.0019473944350121956,
+        "sampled_reverse_max": 0.0015757864446606928,
+        "sampled_two_sided_max": 0.0019473944350121956,
+        "outward_forward_max": 0.0019473944350121956,
+        "inward_forward_max": 0.0009341780807265959,
+        "projection_failed": 0,
+        "forward_samples": 356148,
+        "reverse_samples": 34791,
+        "volume": 0.24777536672756298,
+        "relative_volume_error": -0.0021572784362392516,
+        "q_min_corner": 0.15617122732960045,
+        "q_p01_corner": 0.37328153916345946,
+        "minimum_dihedral_deg_corner": 7.98239531226676,
+        "minimum_sampled_jacobian": 2.7992774920482788e-09,
+        "reverse_tessellation_delta_max": 0.0,
+        "quadratic_reverse_subdivisions": null,
+        "geometry_admitted": true
+      },
+      "periodic": {
+        "periodic_pair_counts": [
+          1124,
+          1124,
+          1126
+        ],
+        "periodic_coordinate_errors": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "periodic_pair_tolerance": 1e-10,
+        "periodic_equivalence_classes": 44932,
+        "periodic_triangles_match": true
+      }
+    },
+    {
+      "label": "full",
+      "fraction": 1.0,
+      "normal_offset": 0.00031146109729844997,
+      "maximum_displacement": 0.00031146109729848775,
+      "geometry": {
+        "sampled_forward_max": 0.0020962662268740567,
+        "sampled_reverse_max": 0.0017255357700068637,
+        "sampled_two_sided_max": 0.0020962662268740567,
+        "outward_forward_max": 0.0020962662268740567,
+        "inward_forward_max": 0.0007799270489795065,
+        "projection_failed": 0,
+        "forward_samples": 356148,
+        "reverse_samples": 34791,
+        "volume": 0.24831104278564453,
+        "relative_volume_error": 0.0,
+        "q_min_corner": 0.14682898691975108,
+        "q_p01_corner": 0.36726588708023056,
+        "minimum_dihedral_deg_corner": 7.769797431088222,
+        "minimum_sampled_jacobian": 2.7992774920482788e-09,
+        "reverse_tessellation_delta_max": 0.0,
+        "quadratic_reverse_subdivisions": null,
+        "geometry_admitted": false
+      },
+      "periodic": {
+        "periodic_pair_counts": [
+          1124,
+          1124,
+          1126
+        ],
+        "periodic_coordinate_errors": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "periodic_pair_tolerance": 1e-10,
+        "periodic_equivalence_classes": 44932,
+        "periodic_triangles_match": true
+      }
+    }
+  ],
+  "scope": "Saved Tet4 geometry perturbation only; sampled volume target is uncertain; no stiffness or live workflow claim"
+}

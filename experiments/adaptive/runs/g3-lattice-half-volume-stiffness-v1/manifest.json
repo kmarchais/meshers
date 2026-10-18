@@ -1,0 +1,24 @@
+{
+  "inputs": {
+    "experiments/adaptive/runs/g3-lattice-volume-correction-probe-v1/result.json": "09deb3e4554f348a08c4be1dff7b42819433daeea791002af925665c0156b7c5",
+    "experiments/adaptive/runs/g3-lattice-volume-correction-probe-v1/half-mesh.npz": "c51746383f82b014b7b4685cd87b2069fba2c7ca9db51dd5564fca24e5303c68",
+    "/home/kmarchais/dev/meshers/experiments/adaptive/runs/g3-microgen-defaults-v4/smooth-lattice-specimen.json": "0e5b34b76183341a6e0d454f13cd404668ab82675f9a51cd9d2ecf3c91be3316",
+    "/home/kmarchais/dev/meshers/experiments/adaptive/runs/g3-microgen-defaults-v4/smooth-lattice-samples.npz": "a2b4375d2c99901f03b34e913563c887a4cdcff00bca35983adb7ef9d5311abe",
+    "/home/kmarchais/dev/meshers/experiments/adaptive/volume_correction_probe.py": "0efd9b12763dc1a918df15626a50b7ffe7342cb45a48cfae51dbf646ba47bcd7",
+    "/home/kmarchais/dev/meshers/experiments/adaptive/microgen_workflow.py": "3f98bcaf9ae151cb357944744e82dd80801703a4db04f94df31263c9c9fa7640",
+    "/home/kmarchais/dev/meshers/experiments/adaptive/stress_recovery.py": "4c9025bc4e8e94ee91031e209933c0c5c87410e137d2da6c696e4e00ffcc04e5",
+    "/home/kmarchais/dev/meshers/experiments/adaptive/tet10_integration.py": "4eb096c386de59da23956986cd7d8e179e7b4624c07341420d7afe6db1d3f3bd"
+  },
+  "memory_bytes": 8589934592,
+  "threads": 1,
+  "worker_timeout_s": 600,
+  "solve_half": true,
+  "offset_bracket": [
+    -0.002,
+    0.002
+  ],
+  "volume_correction_fractions": [
+    0.5,
+    1.0
+  ]
+}
