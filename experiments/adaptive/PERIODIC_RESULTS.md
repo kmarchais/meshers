@@ -42,3 +42,64 @@ core tests and reruns the original spinodoid. Unfolding now completes. The next
 failure is sampled geometry error 0.007612 above tolerance 0.002, after 44.87
 seconds. Admission still fails. Records are in
 `runs/g3-periodic-projection-red-v1` and `runs/g3-spinodoid-adaptive16-v3`.
+
+Job 30 passes all 35 focused Python checks and tests a 24-cell seed with the
+same adaptation settings. Boundary error falls to 0.002570, still above the
+0.002 gate, after 36.84 seconds. Unfolding succeeds again. Records are in
+`runs/g3-spinodoid-adaptive24-v1`. The next candidate keeps this seed and lowers
+only the minimum adaptation length from 0.01 to 0.002 to test whether the
+length floor stops the remaining curve refinement.
+
+Job 31 lowers that floor to 0.002 and reproduces the same error to all reported
+digits, so the floor is not the cause. The attempt takes 37.28 seconds.
+Records are in `runs/g3-spinodoid-adaptive24-v2`.
+
+Job 32 expands the same 52 Microgen Fourier modes into a traceable scalar
+expression and uses the existing embedded compiler. It checks values against
+the original Microgen evaluator at 4,096 fixed random points, with maximum
+difference 2.23e-16 and identical material classification. Compiled gradients
+agree with central differences at 32 points within 1.86e-10 absolute. The
+989-node expression takes 0.037 seconds to prepare and verify. Its full attempt
+takes 6.46 seconds and reproduces the 0.002570 geometry error. This is a faster
+evaluation of the same field, with the same admission rejection. Coefficients
+and verification records are in `runs/g3-spinodoid-compiled24-v1`.
+
+## First admitted spinodoid
+
+Job 33 keeps that verified field, minimum length 0.002 and the fixed admission
+gates, and starts adaptation from 32 cells. It returns 16,721 nodes and 72,468
+tets in 8.75 seconds of generation. Independent two-sided distance is 0.001864,
+signed volume error is +0.04458%, minimum quality is 0.2543 and minimum sampled
+Jacobian is positive. Periodic node coordinates and cap triangles match exactly.
+The full generation and geometry audit takes 14.08 seconds. These are not
+meshing-plus-FEA timings. Records are in `runs/g3-spinodoid-compiled32-v1`.
+
+This establishes a working adaptive route for the fixed specimen. A justified
+fine stiffness reference and a matched-accuracy Microgen comparison remain open.
+
+Job 34 regenerates that admitted linear mesh and completes six prescribed-strain
+loads. The solve takes 13.78 seconds and the full generation, verification,
+geometry audit and FEA takes 27.71 seconds. The full anisotropic 6-by-6 tensor
+and solver residuals are saved in `runs/g3-spinodoid-linear32-solve-v1`.
+There is not yet a justified reference for reporting its stiffness error.
+
+Job 35 tests a curved Tet10 candidate from 24 cells. Its native corner-surface
+tolerance is 0.01 while adaptation still targets 0.002. Final admission uses
+the original independent curved-distance gate 0.002. The candidate has 105,646
+nodes and 66,176 elements, positive sampled Jacobians and minimum corner quality
+0.1895. Independent curved distance is 0.002591, so it is rejected before FEA.
+Records are in `runs/g3-spinodoid-curved24-v1`.
+
+## Smooth lattice input representation
+
+Job 36 uses the original smooth-union lattice field with its positive void
+values capped at 0.02. For any positive constant c, min(phi,c) has exactly the
+same negative material domain and zero set as phi. The clamp leaves the field
+unchanged near its wall. A 4,096-point executable check also confirms unchanged
+material classification and exact equality of nonpositive values. Independent
+geometry auditing still uses the original unclamped field and frozen samples.
+
+This representation passes Meshers' existing periodic preflight. From 24 cells,
+adaptation then rejects two tetrahedra below quality 0.1, with minimum 0.08209.
+No mesh is admitted or solved. Records are in `runs/g3-lattice-void-clamp24-v1`.
+The raw field remains unsupported by the strict raw-value preflight.

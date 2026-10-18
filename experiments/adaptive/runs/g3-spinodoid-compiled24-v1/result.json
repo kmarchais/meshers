@@ -1,0 +1,18 @@
+{
+  "case": "spinodoid",
+  "cells": 24,
+  "min_length": 0.002,
+  "qualified": false,
+  "compiled_field": {
+    "modes": 52,
+    "expression_nodes": 989,
+    "maximum_value_difference": 2.220446049250313e-16,
+    "maximum_gradient_difference": 1.8512502641954143e-10,
+    "verification_points": 4096,
+    "preparation_and_verification_s": 0.03664587599996594
+  },
+  "status": "failed",
+  "error": "sampled geometry error 2.570171235001111e-3 exceeds tolerance 2e-3; increase resolution or budget",
+  "traceback": "Traceback (most recent call last):\n  File \"/home/kmarchais/dev/meshers/experiments/adaptive/admission_pilot.py\", line 66, in worker\n    mesh = meshers.generate(field, bounds=workflow.BOUNDS, cells=args.cells,\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/kmarchais/dev/meshers/crates/meshers-python/python/meshers/__init__.py\", line 312, in generate\n    result = _meshers.generate(\n             ^^^^^^^^^^^^^^^^^^\n_meshers.MeshingFailure: sampled geometry error 2.570171235001111e-3 exceeds tolerance 2e-3; increase resolution or budget\n",
+  "total_audit_workflow_s": 6.463480673999925
+}

@@ -102,3 +102,13 @@ do not establish a matched-accuracy gain. Keep spatial sizing optional. Next
 assess the requested volume-correction and relocation priorities against the
 measured phase costs and volume bias, rather than assume the Schwarz result
 generalizes. The four-fixture Microgen comparison is still incomplete.
+
+## G3 periodic projection and spinodoid, 2026-10-18
+
+`PERIODIC_RESULTS.md` records a reproduced periodic projection bug, its core
+regression and the fixed specimen rerun. Projection now rejects a target outside
+the current cell before wrapping. All 21 core and 35 focused Python tests pass.
+The same spectral spinodoid can use a verified compiled expression of its 52
+Microgen Fourier modes. At 32 cells, adaptation returns an admitted linear mesh
+with 16,721 nodes, H=0.001864, volume error +0.04458% and minimum quality 0.2543.
+The spinodoid stiffness reference and smooth-lattice admission remain open.

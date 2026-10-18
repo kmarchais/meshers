@@ -1,0 +1,19 @@
+{
+  "case": "smooth-lattice",
+  "cells": 24,
+  "min_length": 0.002,
+  "order": 1,
+  "native_tolerance": 0.002,
+  "qualified": false,
+  "void_clamp": {
+    "positive_ceiling": 0.02,
+    "verification_points": 4096,
+    "material_mismatches": 0,
+    "domain_identity": "min(phi, positive_constant) <= 0 iff phi <= 0"
+  },
+  "status": "failed",
+  "error": "minimum MMG quality 8.209402774566099e-2 is below required 1e-1; mesh rejected (2 elements below 0.1). Improve resolution/optimization or use a quality remesher",
+  "traceback": "Traceback (most recent call last):\n  File \"/home/kmarchais/dev/meshers/experiments/adaptive/admission_pilot.py\", line 81, in worker\n    mesh = meshers.generate(field, bounds=workflow.BOUNDS, cells=args.cells,\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/kmarchais/dev/meshers/crates/meshers-python/python/meshers/__init__.py\", line 312, in generate\n    result = _meshers.generate(\n             ^^^^^^^^^^^^^^^^^^\n_meshers.MeshingFailure: minimum MMG quality 8.209402774566099e-2 is below required 1e-1; mesh rejected (2 elements below 0.1). Improve resolution/optimization or use a quality remesher\n",
+  "total_audit_workflow_s": 7.964624215999947,
+  "total_workflow_s": 7.964624215999947
+}
