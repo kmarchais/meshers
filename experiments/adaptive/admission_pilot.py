@@ -31,6 +31,24 @@ def worker(args):
     try:
         case, shape, _ = workflow.specimen(args.case)
         field = case.function
+        if args.symmetric_union:
+            assert args.case == "smooth-lattice"
+            from gradient_tie_probe import symmetric_lattice
+            field = symmetric_lattice
+            prepared = meshers.compile_field(field)
+            queries = np.random.default_rng(20261018).uniform(-0.5, 0.5, (4096, 3))
+            expected, actual = case.function(*queries.T), prepared.values(queries)
+            np.testing.assert_allclose(actual, expected, rtol=1e-12, atol=1e-12)
+            assert np.array_equal(actual < 0, expected < 0)
+            tied = np.array([[0., 0.17, -0.17], [0.17, 0., -0.17], [-0.17, 0.17, 0.]])
+            import scorecard
+            numeric = scorecard.gradient(case.function, tied)
+            analytic = np.array([prepared.gradient(*point) for point in tied])
+            np.testing.assert_allclose(analytic, numeric, rtol=1e-7, atol=1e-7)
+            row["symmetric_union"] = {"identity": "min(a,b) = (a+b-abs(a-b))/2",
+                "maximum_field_value_difference": float(abs(actual - expected).max()),
+                "maximum_tie_gradient_difference": float(abs(analytic - numeric).max()),
+                "value_verification_points": len(queries), "gradient_verification_points": len(tied)}
         if args.compiled_spinodoid:
             assert args.case == "spinodoid"
             phase = time.perf_counter()
@@ -130,6 +148,7 @@ def main():
     parser.add_argument("--solve", action="store_true")
     parser.add_argument("--clip-void", type=float)
     parser.add_argument("--no-adapt", action="store_true")
+    parser.add_argument("--symmetric-union", action="store_true")
     parser.add_argument("--solve-node-cap", type=int, choices=(100_000, 150_000), default=100_000)
     parser.add_argument("--worker-timeout", type=int, choices=(600, 1200), default=600)
     parser.add_argument("--worker", action="store_true")
@@ -146,10 +165,14 @@ def main():
     hashes = {str(path): workflow.digest(path) for path in inputs}
     for path in inputs:
         shutil.copyfile(path, args.run / path.name)
+    python_sources = [Path(__file__), Path(workflow.__file__), workflow.HERE / "stress_recovery.py",
+                      workflow.HERE / "gradient_tie_probe.py", workflow.ROOT / "crates/meshers-python/python/meshers/expression.py"]
+    source_hashes = {str(path): workflow.digest(path) for path in python_sources}
     import meshers._meshers
     workflow.save(args.run / "manifest.json", {"script_sha256": workflow.digest(Path(__file__)),
         "native_sha256": workflow.digest(Path(meshers._meshers.__file__)), "inputs": hashes,
-        "memory_bytes": workflow.MEMORY, "threads": 1, "timeout_s": args.worker_timeout})
+        "memory_bytes": workflow.MEMORY, "threads": 1, "timeout_s": args.worker_timeout,
+        "python_source_sha256": source_hashes})
     parts = ["build", "core-tests", "adaptive-admission"] if args.build else ["adaptive-admission"]
     if args.python_tests:
         parts.insert(-1, "python-tests")
@@ -192,6 +215,8 @@ def main():
                 command.extend(["--clip-void", str(args.clip_void)])
             if args.no_adapt:
                 command.append("--no-adapt")
+            if args.symmetric_union:
+                command.append("--symmetric-union")
             result = workflow.bounded(command, args.run / "worker.log", part, timeout=args.worker_timeout)
             workflow.save(args.run / "worker.json", result)
             assert result["returncode"] == 0, "Read worker.log"
@@ -199,6 +224,7 @@ def main():
             job.result("adaptive-admission", qualified=int(row["qualified"]),
                        nodes=row.get("nodes", 0), seconds=row["total_audit_workflow_s"])
     assert all(workflow.digest(Path(path)) == value for path, value in hashes.items())
+    assert all(workflow.digest(Path(path)) == value for path, value in source_hashes.items())
     manifest = json.loads((args.run / "manifest.json").read_text())
     manifest["native_sha256_after"] = workflow.digest(Path(meshers._meshers.__file__))
     manifest["tet_adapt_sha256"] = workflow.digest(workflow.ROOT / "crates/meshers-core/src/tet_adapt.rs")

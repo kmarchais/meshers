@@ -44,6 +44,12 @@ At abs(0), the derivative is zero; min/max ties use the first branch; `where`
 uses the chosen branch. These conventions do not make nonsmooth or discontinuous
 geometries smooth. Keep thickness positive throughout the domain.
 
+These primitive conventions can also give an incorrect gradient where their
+kinks cancel inside a smooth composite. For cubic smooth-union formulas that
+also use `abs(a-b)`, express the minimum as `(a+b-abs(a-b))/2`. This keeps the
+tie derivative consistent with the absolute-value term. Verify the composite
+gradient at equal branches or supply an explicit gradient callback.
+
 
 ## Coordinate maps and nonsmooth points
 

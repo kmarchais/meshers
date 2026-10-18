@@ -44,6 +44,7 @@ def main():
     parser.add_argument("--legacy-references", action="store_true")
     parser.add_argument("--curved-only", action="store_true")
     parser.add_argument("--boundary-details", type=int, default=0)
+    parser.add_argument("--sources", nargs="+", type=Path)
     args = parser.parse_args()
     if args.source:
         worker(args)
@@ -55,6 +56,8 @@ def main():
         "g3-lattice-void-clamp32-v1", "g3-lattice-curved16-v1")]
     if args.curved_only:
         sources = [source for source in sources if "curved" in source.name]
+    if args.sources:
+        sources = args.sources
     if args.legacy_references:
         sources = [workflow.HERE / "runs/g3-microgen-defaults-v4" / f"{case}-meshers-curved-{cells}.npz"
                    for case in ("gyroid", "schwarz-solid") for cells in (16, 20)]

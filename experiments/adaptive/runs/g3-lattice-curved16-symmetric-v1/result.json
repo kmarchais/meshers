@@ -1,0 +1,87 @@
+{
+  "case": "smooth-lattice",
+  "cells": 16,
+  "min_length": 0.01,
+  "order": 2,
+  "native_tolerance": 1.0,
+  "adaptive": false,
+  "adapt_tolerance": 0.002,
+  "solve_node_cap": 100000,
+  "qualified": false,
+  "symmetric_union": {
+    "identity": "min(a,b) = (a+b-abs(a-b))/2",
+    "maximum_field_value_difference": 1.6653345369377348e-16,
+    "maximum_tie_gradient_difference": 1.468915544755589e-10,
+    "value_verification_points": 4096,
+    "gradient_verification_points": 3
+  },
+  "void_clamp": {
+    "positive_ceiling": 0.02,
+    "verification_points": 4096,
+    "material_mismatches": 0,
+    "domain_identity": "min(phi, positive_constant) <= 0 iff phi <= 0"
+  },
+  "generation_s": 2.4486217920002673,
+  "nodes": 43685,
+  "elements": 24480,
+  "diagnostics": {
+    "empty": false,
+    "volume": 0.24708965984516149,
+    "minimum_mmg_quality": 0.17944623198605447,
+    "sampled_surface_error": 0.008419515122133066,
+    "elements_below_quality_01": 0,
+    "reverted_snap_vertices": 0,
+    "callback_calls": 0,
+    "inserted_interior_nodes": 0,
+    "seconds": 2.436268203,
+    "quadratic": {
+      "curved_edges": 14820,
+      "straightened_edges": 0,
+      "partially_curved_edges": 55,
+      "minimum_jacobian_ratio": 0.0064928446873477865
+    },
+    "threads": 1,
+    "evaluator": "compiled",
+    "preparation_seconds": 0.012291316000300867
+  },
+  "geometry": {
+    "sampled_forward_max": 0.004209757559850308,
+    "sampled_reverse_max": 0.0037464673262801807,
+    "sampled_two_sided_max": 0.004209757559850308,
+    "outward_forward_max": 0.004209757559850308,
+    "inward_forward_max": 0.000906968014926871,
+    "projection_failed": 0,
+    "forward_samples": 127452,
+    "reverse_samples": 34791,
+    "volume": 0.24823497222077337,
+    "relative_volume_error": -0.0003063519206305543,
+    "q_min_corner": 0.17944623198605447,
+    "q_p01_corner": 0.3290774625181812,
+    "minimum_dihedral_deg_corner": 13.757582504577897,
+    "minimum_sampled_jacobian": 3.3940289864747073e-07,
+    "reverse_tessellation_delta_max": 0.00025074195219739,
+    "quadratic_reverse_subdivisions": [
+      4,
+      8
+    ],
+    "geometry_admitted": false
+  },
+  "periodic": {
+    "periodic_pair_counts": [
+      238,
+      238,
+      238
+    ],
+    "periodic_coordinate_errors": [
+      0.0,
+      0.0,
+      0.0
+    ],
+    "periodic_pair_tolerance": 1e-10,
+    "periodic_equivalence_classes": 43012,
+    "periodic_triangles_match": true
+  },
+  "status": "geometry-rejected",
+  "total_audit_workflow_s": 4.970674684000187,
+  "total_workflow_s": 4.970674684000187
+}

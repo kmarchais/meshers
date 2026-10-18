@@ -137,3 +137,13 @@ fine tensor. The empirical model envelope puts the curved candidate at
 at 5.39348% to 5.47426%. Next test a targeted curved-validity fallback improvement
 for the lattice, whose coarse curved geometry still fails. A qualified actual
 Microgen competitor and repeated matched-accuracy timings remain outstanding.
+
+The lattice diagnostics identify both excessive straightening after curved
+validity failure and incorrect composite gradients at smooth-union ties.
+Partial-curving corrections retain the unchanged sampled validity gate and
+preserve periodic copies in a new regression. A verified algebraically symmetric
+field fixes the gradient without changing compiler primitive conventions or the
+physical specimen. The 24-cell nonadaptive Tet10 route is admitted with 69,025
+nodes, H=0.0005435, volume error -0.03105% and q_min=0.3410. Its six-load workflow
+takes 239.60 seconds. Next test a finer lattice reference candidate and audit its
+saved fields. Stiffness accuracy and a Microgen timing advantage remain unproven.

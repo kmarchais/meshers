@@ -495,6 +495,7 @@ fn generate<'py>(
         quadratic.set_item("periodic_pairs", pairs)?;
         quadratic.set_item("curved_edges", q.elements.curved_edges)?;
         quadratic.set_item("straightened_edges", q.elements.straightened_edges)?;
+        quadratic.set_item("partially_curved_edges", q.elements.partially_curved_edges)?;
         quadratic.set_item("minimum_jacobian_ratio", q.elements.minimum_jacobian_ratio)?;
         output.set_item("quadratic", quadratic)?;
     }

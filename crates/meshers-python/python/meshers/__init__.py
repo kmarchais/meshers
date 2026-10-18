@@ -257,7 +257,9 @@ def generate(
         adapt_tolerance: Distance the adapter aims for; default ``geometry_tolerance``,
             which remains the acceptance check.
         order: 1 for linear tetrahedra, 2 for 10-node tetrahedra (VTK/Gmsh/fedoo
-            node order) whose wall edges follow the exact field. Quadratic meshes
+            node order) with wall mid-edge nodes projected onto the field where
+            sampled validity permits. Invalid corrections are reduced or straightened;
+            ``diagnostics["quadratic"]`` records both counts. Quadratic meshes
             report ``tetrahedra`` of shape (M, 10) and ``surface`` of shape (K, 6);
             ``periodic_pairs`` then cover every node.
         size_field: Optional vectorized callback returning positive physical target

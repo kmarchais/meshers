@@ -4,9 +4,9 @@
 //! any box coordinate the edge lies in, so the geometric error of the boundary drops
 //! from O(h^2) to O(h^3). Interior and box-plane mid-edge nodes stay at midpoints.
 //! Each element's Jacobian determinant is sampled at its nodes, face and cell centres
-//! and fifteen interior points; edges of failing elements are straightened, together
-//! with their periodic copies, until every sample is positive. Sampling is a strong
-//! check but not a proof of positivity everywhere.
+//! and fifteen interior points; corrections of failing elements are repeatedly halved,
+//! together with their periodic copies. Unresolved edges are straightened after eight
+//! reductions. Sampling is a strong check but not a proof of positivity everywhere.
 use crate::{Mesh, Point, geometry::Geometry, norm};
 use std::collections::{HashMap, HashSet};
 
@@ -21,6 +21,7 @@ pub struct Quadratic {
     pub surface: Vec<[usize; 6]>,
     pub curved_edges: usize,
     pub straightened_edges: usize,
+    pub partially_curved_edges: usize,
     /// Smallest ratio of minimum to maximum sampled Jacobian over all elements.
     pub minimum_jacobian_ratio: f64,
 }
@@ -181,6 +182,7 @@ pub(crate) fn elevate(
     };
     let sample = samples();
     let mut straightened = 0;
+    let mut reductions = vec![0u8; ends.len()];
     let mut minimum_ratio;
     loop {
         g.check()?;
@@ -217,9 +219,14 @@ pub(crate) fn elevate(
         }
         for e in 0..ends.len() {
             if curved[e] && bad.contains(&canonical(straight[e])) {
-                curved[e] = false;
-                mid[e] = straight[e];
-                straightened += 1;
+                if reductions[e] < 8 {
+                    mid[e] = std::array::from_fn(|axis| 0.5 * (mid[e][axis] + straight[e][axis]));
+                    reductions[e] += 1;
+                } else {
+                    curved[e] = false;
+                    mid[e] = straight[e];
+                    straightened += 1;
+                }
             }
         }
     }
@@ -246,6 +253,9 @@ pub(crate) fn elevate(
         surface,
         curved_edges: curved.iter().filter(|&&c| c).count(),
         straightened_edges: straightened,
+        partially_curved_edges: (0..ends.len())
+            .filter(|&edge| curved[edge] && reductions[edge] > 0)
+            .count(),
         minimum_jacobian_ratio: minimum_ratio,
     })
 }
@@ -296,6 +306,122 @@ pub(crate) fn node_pairs(
 mod tests {
     use super::*;
     use crate::dot;
+
+    struct ConcaveSphere {
+        bounds: [Point; 2],
+    }
+
+    impl Geometry for ConcaveSphere {
+        fn value(&self, point: Point) -> f64 {
+            1. - norm(point)
+        }
+        fn gradient(&self, point: Point) -> Point {
+            point.map(|coordinate| -coordinate / norm(point))
+        }
+        fn bounds(&self) -> [Point; 2] {
+            self.bounds
+        }
+        fn rank(&self, _point: Point) -> [i64; 3] {
+            [0; 3]
+        }
+        fn band(&self) -> bool {
+            false
+        }
+    }
+
+    #[test]
+    fn validity_fallback_retains_safe_partial_curvature() {
+        let height = 0.91f64.sqrt();
+        let tetrahedra = vec![[0, 1, 2, 3]];
+        let surface = crate::boundary(&tetrahedra).unwrap();
+        let tags: Vec<_> = surface
+            .iter()
+            .map(|face| u8::from(face.contains(&3)))
+            .collect();
+        let mesh = Mesh {
+            points: vec![
+                [-0.3, 0., height],
+                [0.3, 0., height],
+                [0., 0.3, height],
+                [0., 0.1, 1.01],
+            ],
+            tets: tetrahedra,
+            surface,
+        };
+        let geometry = ConcaveSphere {
+            bounds: [[-2.; 3], [2.; 3]],
+        };
+        let quadratic = elevate(&mesh, &tags, &geometry, 0., [false; 3]).unwrap();
+        assert!(
+            quadratic.curved_edges > 0,
+            "all {} wall edges were straightened",
+            quadratic.straightened_edges
+        );
+        assert!(quadratic.minimum_jacobian_ratio > 1e-3);
+        assert!(quadratic.partially_curved_edges > 0);
+        let straight: Point =
+            std::array::from_fn(|axis| (mesh.points[0][axis] + mesh.points[1][axis]) / 2.);
+        let midpoint = quadratic.points[quadratic.tets[0][4]];
+        assert!((norm(midpoint) - 1.).abs() < (norm(straight) - 1.).abs());
+        let coordinates = quadratic.tets[0].map(|node| quadratic.points[node]);
+        assert!(
+            samples()
+                .into_iter()
+                .all(|weights| jacobian(&coordinates, weights) > 0.)
+        );
+    }
+
+    #[test]
+    fn partial_curving_keeps_periodic_copies_identical() {
+        let height = 0.66f64.sqrt();
+        let mut points = vec![
+            [-0.5, -0.3, height],
+            [-0.5, 0.3, height],
+            [-0.4, 0., 0.84f64.sqrt()],
+            [-0.4, 0., 0.95],
+        ];
+        let upper: Vec<_> = points
+            .iter()
+            .map(|point| [-point[0], point[1], point[2]])
+            .collect();
+        points.extend(upper);
+        points[7][2] = 1.1;
+        let mut tetrahedra = vec![[0, 1, 2, 3], [4, 5, 6, 7]];
+        for tetrahedron in &mut tetrahedra {
+            if crate::determinant((*tetrahedron).map(|node| points[node])) < 0. {
+                tetrahedron.swap(0, 1);
+            }
+        }
+        let surface = crate::boundary(&tetrahedra).unwrap();
+        let tags: Vec<_> = surface
+            .iter()
+            .map(|face| u8::from(face.contains(&3) || face.contains(&7)))
+            .collect();
+        let mesh = Mesh {
+            points,
+            tets: tetrahedra,
+            surface,
+        };
+        let geometry = ConcaveSphere {
+            bounds: [[-0.5, -2., -2.], [0.5, 2., 2.]],
+        };
+        let quadratic = elevate(&mesh, &tags, &geometry, 0., [true, false, false]).unwrap();
+        assert!(quadratic.partially_curved_edges > 0);
+        let pairs = node_pairs(&quadratic.points, geometry.bounds(), [true, false, false]).unwrap();
+        assert_eq!(pairs[0].len(), 3);
+        for &[lower, upper] in &pairs[0] {
+            assert_eq!(
+                crate::sub(quadratic.points[upper], quadratic.points[lower]),
+                [1., 0., 0.]
+            );
+        }
+        let midpoint = pairs[0]
+            .iter()
+            .map(|pair| quadratic.points[pair[0]])
+            .find(|point| point[1] == 0.)
+            .unwrap();
+        assert!(midpoint[2] > height + 1e-6);
+    }
 
     #[test]
     fn wall_mid_edge_nodes_lie_on_the_sphere() {

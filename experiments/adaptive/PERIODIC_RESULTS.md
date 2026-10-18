@@ -210,3 +210,64 @@ These are empirical model sensitivities, not certified continuum error bounds.
 The 490.86-second curved workflow remains expensive; passing accuracy alone
 does not establish a performance advantage over Microgen. Records are in
 `runs/g3-spinodoid-reference-sensitivity-v1.json`.
+
+## Partial curving at lattice junctions
+
+Job 46 adds a concave single-tet regression. Full projection causes a sampled
+validity failure, and the old fallback removes curvature from all three wall
+edges. The regression fails as expected, while the other 21 core tests pass.
+The replacement halves failing corrections with their periodic copies, up to
+eight reductions, and then restores a straight edge if still necessary. The
+sampled Jacobian acceptance ratio remains greater than 0.001. Diagnostics now
+count partially curved edges separately from fully straightened edges.
+
+Job 47 passes all 22 core and 35 focused Python tests. On the unchanged 16-cell
+lattice, it retains partial curvature on 55 edges and halves the independent
+maximum distance from 0.008420 to 0.004210. Node and element counts remain
+43,685 and 24,480, and sampled Jacobians remain positive. The mesh still fails
+the 0.002 geometry gate. Job 48's 20-cell mesh also fails, at 0.008163. Records
+are in `runs/g3-curved-fallback-red-v1`, `runs/g3-lattice-curved16-partial-v1`
+and `runs/g3-lattice-curved20-partial-v1`.
+
+Job 49 locates the 20-cell maximum at a partially curved junction midpoint.
+Job 50 then checks the compiled gradient at equal smooth-union branches. The
+documented first-branch minimum derivative and zero derivative for abs(0) do
+not cancel correctly in this smooth composite. The maximum component error
+against centered differences is 0.81650. Replacing the minimum term algebraically
+with `(a+b-abs(a-b))/2` reduces that error to 1.82e-10. Field values agree with
+the original Microgen specimen within 1.67e-16 at 4,096 fixed random points.
+The generic compiler's documented primitive conventions remain unchanged.
+Records are in `runs/g3-lattice-partial20-diagnostic-v1` and
+`runs/g3-lattice-gradient-ties-v1.json`.
+
+The symmetric field expression is explicitly verified and recorded as input
+preparation. Job 51 reduces the 20-cell distance to 0.002241 at unchanged counts
+but still fails admission. Job 52's 16-cell control remains at 0.004210. Job 53's
+22-cell seed has fewer final nodes than the 20-cell seed and rejects at 0.004416.
+These results do not establish monotone refinement from seed counts. Records
+are in `runs/g3-lattice-curved20-symmetric-v1`,
+`runs/g3-lattice-curved16-symmetric-v1` and
+`runs/g3-lattice-curved22-symmetric-v1`.
+
+Job 54 applies existing adaptation to the 20-cell symmetric expression. It
+fails before returning a mesh, with 525 elements below the unchanged 0.1 quality
+gate and minimum quality 0.04051. No FE solve runs. Records are in
+`runs/g3-lattice-curved-adapt20-symmetric-v1`.
+
+Job 55 adds a regression with different tetrahedron thicknesses on opposite
+periodic faces. Partial-curving reductions preserve identical paired midpoint
+coordinates. All 23 core tests pass. The nonadaptive 24-cell lattice passes
+independent admission with 69,025 nodes and 44,976 Tet10 elements. Its sampled
+two-sided distance is 0.0005435, relative volume error is -0.03105%, and minimum
+corner quality is 0.3410. All sampled Jacobians are positive, periodic pairs are
+exact, and caps match. This mesh needs no partial-curving reductions. The
+gradient representation fix, rather than the fallback, removes this candidate's
+junction obstruction. All six loads converge below 1e-12. Generation takes
+1.92 seconds, FEA 234.73 seconds, and the full workflow 239.60 seconds.
+Reference sensitivity remains pending. Records are in
+`runs/g3-lattice-curved24-symmetric-v1`.
+
+The next candidate uses 32 seed cells with the same symmetric expression,
+void clamp, no adaptation, and Tet10 policy. It must pass independent geometry
+and periodic checks before solving, within the explicit 150,000-node and
+1,200-second reference stage. Seed density alone does not establish convergence.

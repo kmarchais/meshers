@@ -1,0 +1,29 @@
+{
+  "case": "smooth-lattice",
+  "cells": 20,
+  "min_length": 0.002,
+  "order": 2,
+  "native_tolerance": 1.0,
+  "adaptive": true,
+  "adapt_tolerance": 0.004,
+  "solve_node_cap": 100000,
+  "qualified": false,
+  "symmetric_union": {
+    "identity": "min(a,b) = (a+b-abs(a-b))/2",
+    "maximum_field_value_difference": 1.6653345369377348e-16,
+    "maximum_tie_gradient_difference": 1.468915544755589e-10,
+    "value_verification_points": 4096,
+    "gradient_verification_points": 3
+  },
+  "void_clamp": {
+    "positive_ceiling": 0.02,
+    "verification_points": 4096,
+    "material_mismatches": 0,
+    "domain_identity": "min(phi, positive_constant) <= 0 iff phi <= 0"
+  },
+  "status": "failed",
+  "error": "minimum MMG quality 4.0506213690738195e-2 is below required 1e-1; mesh rejected (525 elements below 0.1). Improve resolution/optimization or use a quality remesher",
+  "traceback": "Traceback (most recent call last):\n  File \"/home/kmarchais/dev/meshers/experiments/adaptive/admission_pilot.py\", line 101, in worker\n    mesh = meshers.generate(field, bounds=workflow.BOUNDS, cells=args.cells,\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/kmarchais/dev/meshers/crates/meshers-python/python/meshers/__init__.py\", line 314, in generate\n    result = _meshers.generate(\n             ^^^^^^^^^^^^^^^^^^\n_meshers.MeshingFailure: minimum MMG quality 4.0506213690738195e-2 is below required 1e-1; mesh rejected (525 elements below 0.1). Improve resolution/optimization or use a quality remesher\n",
+  "total_audit_workflow_s": 4.736330523999641,
+  "total_workflow_s": 4.736330523999641
+}
