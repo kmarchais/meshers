@@ -310,3 +310,27 @@ scaled by the already measured 189,187-node reference count predicts 7.38 GB,
 or 6.88 GiB. This estimate justifies a bounded attempt, not a memory guarantee.
 The hard 8 GiB worker ceiling, 250,000-tet cap, single thread and all admission
 gates remain unchanged. A fresh 32-cell run must re-audit geometry before solving.
+
+Job 59 completes the third admitted reference with 189,187 nodes. Its six loads
+take 1,026.69 seconds, total workflow 1,040.27 seconds and peak RSS
+7,041,929,216 bytes, or 6.56 GiB. Job 60 audits all three curved meshes and the
+linear candidate. Stress, energy and reactions agree within 2.04e-11 relative,
+and periodic displacement jumps are zero. Records are in
+`runs/g3-lattice-curved32-reference-v1` and `runs/g3-lattice-field-audit-v2`.
+
+The 28-to-32 tensor difference is 0.30689%, larger than the preceding 0.21527%.
+This is not evidence of a stable asymptotic rate. Using the same eight declared
+models on the finer pair, the 24-cell candidate ranges from 0.86871% to 2.66674%,
+the 28-cell candidate from 0.67645% to 2.50905%, the finest tensor from 0.36843%
+to 2.19542%, and the linear candidate from 3.37702% to 5.23059%. None meets the
+target under every declared model. Lattice stiffness accuracy remains unproven.
+Do not remove slow-order models or increase resource limits again to claim a win.
+Records are in `runs/g3-lattice-finer-pair-v1.json` and
+`runs/g3-lattice-reference-sensitivity-v2.json`.
+
+The next experiment returns to the actual Microgen comparator. The default
+20-point Schwarz seed has no retained-cap quality obstruction. Earlier audits
+identified first-pass geometry loss, but only the 24-point seed received the
+tighter first-pass override. Test the same explicit 0.0005 override on the
+20-point seed before adding any new repair algorithm. This remains a tuned
+Microgen VTK/MMG workflow, not its default pipeline or a Meshers seed.

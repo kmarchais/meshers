@@ -147,3 +147,13 @@ physical specimen. The 24-cell nonadaptive Tet10 route is admitted with 69,025
 nodes, H=0.0005435, volume error -0.03105% and q_min=0.3410. Its six-load workflow
 takes 239.60 seconds. Next test a finer lattice reference candidate and audit its
 saved fields. Stiffness accuracy and a Microgen timing advantage remain unproven.
+
+Three admitted curved lattice levels now have complete, independently audited
+tensors. Their successive worst mixed-load differences are 0.21527% and
+0.30689%, so they do not establish a stable asymptotic rate. The conservative
+finer-pair model envelope leaves the cheapest curved candidate at 0.86871% to
+2.66674% and the linear candidate at 3.37702% to 5.23059%. Keep lattice accuracy
+unproven. The 189,187-node reference peaks at 6.56 GiB under the hard 8 GiB
+ceiling. Stop blind grid refinement and return to the genuine Microgen first-pass
+diagnostic on the cap-feasible default Schwarz seed. A matched-accuracy workflow
+victory remains unestablished.
