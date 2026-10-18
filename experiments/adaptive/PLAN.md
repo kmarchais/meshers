@@ -65,9 +65,13 @@ isolated meshing improvement. The four-fixture objective remains unmet.
   fedoo's reaction extraction hits a separate matrix-product allocation. A
   vector-first equivalent passes native reaction comparisons; verified prefix
   replay avoids solving those fields again. The resumed reference has recovered
-  three columns, including its first new solve, but still needs three loads
-  and final audits. `CUBIC_RESULTS.md` records these stages. There is no complete
-  new tensor, Tet20 product API or workflow win yet.
+  four columns, then repeated problem caches prevent the fifth allocation.
+  Corrected delegate binding alone is insufficient. Explicitly releasing the
+  completed reduced cache passes a real six-matrix lifetime regression and
+  both six-load control cases. Another same-limit reference run resumes the
+  four verified fields and still needs the final pair and audits.
+  `CUBIC_RESULTS.md` records these stages. There is no complete new tensor,
+  Tet20 product API or workflow win yet.
 
 Every heavy stage uses the shared queue, an 8 GiB worker ceiling, conservative
 threads, a timeout and staged mesh caps. Admission gates and frozen outputs

@@ -1,0 +1,22 @@
+{
+  "inputs": {
+    "/home/kmarchais/dev/meshers/experiments/adaptive/amg_reference.py": "7c0293e3223317ba7a7b0dfcb5391c9d6c5282ea89571023a434393e41995f09",
+    "/home/kmarchais/dev/meshers/experiments/adaptive/microgen_workflow.py": "3f98bcaf9ae151cb357944744e82dd80801703a4db04f94df31263c9c9fa7640",
+    "/home/kmarchais/dev/meshers/experiments/adaptive/stress_recovery.py": "c9d74455c014c3b56ab656ca3f6a9cbf259dc11904318fecc354dcc6368651ac",
+    "/home/kmarchais/dev/meshers/experiments/adaptive/cubic_reference.py": "54744038f2780fcc4ff02bd951d6ccec2eed3619aaf85405af6f0771cce0814a",
+    "/home/kmarchais/dev/meshers/experiments/adaptive/tet10_integration.py": "b5adbf4a96ee90953d546c654992d4380843e3b1a865e64e043cd14529e3865d",
+    "/home/kmarchais/dev/meshers/experiments/adaptive/runs/g3-schwarz-curved8-pilot-v1/mesh.npz": "1fb3e041bcee9c086586806a6ff7f5a22940fcd8d34aab6e53a95e2841d05217",
+    "/home/kmarchais/dev/meshers/experiments/adaptive/runs/g3-schwarz-curved8-pilot-v1/result.json": "1b0c5557b62cf7fb1d861a31927a556a9d74bb6f5a85275f1be54ce5b44bd96c",
+    "/home/kmarchais/dev/meshers/experiments/adaptive/runs/g3-schwarz-curved8-pilot-v1/fields.npz": "f417d00d3f7434c29ce36c8f8fa102047a08f803575265242651bf3bbf42be82"
+  },
+  "memory_bytes": 8589934592,
+  "worker_timeout_s": 300,
+  "threads": 1,
+  "pyamg": "5.3.0",
+  "elastic_blocks": true,
+  "replayed_prefix_loads": 4,
+  "release_reduced_cache": true,
+  "method": "SA on node-major BSR3 with six elastic candidates and V-cycle CG",
+  "cg_rtol": 1e-12,
+  "cg_atol": 1e-14
+}

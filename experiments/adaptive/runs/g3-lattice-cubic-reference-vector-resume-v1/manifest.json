@@ -1,0 +1,37 @@
+{
+  "sources": {
+    "/home/kmarchais/dev/meshers/experiments/adaptive/cubic_reference.py": "ae72abd35ca902697cf5bc1378e9e57e654f6b8a5f181121b2bb96011f5aa6d5",
+    "/home/kmarchais/dev/meshers/experiments/adaptive/microgen_workflow.py": "3f98bcaf9ae151cb357944744e82dd80801703a4db04f94df31263c9c9fa7640",
+    "/home/kmarchais/dev/meshers/experiments/adaptive/stress_recovery.py": "63801e4476bfb4f247c762f91e68be5d69a670373a43ede2aec0f9381b8e849d",
+    "/home/kmarchais/dev/meshers/experiments/adaptive/tet10_integration.py": "b5adbf4a96ee90953d546c654992d4380843e3b1a865e64e043cd14529e3865d",
+    "/home/kmarchais/dev/meshers/experiments/adaptive/quadrature_audit.py": "d66bd0136e586b3af4dc2e21315495173542c6ca0f2addae041f854c233505c9",
+    "experiments/adaptive/runs/g3-lattice-curved24-symmetric-v1/result.json": "5c3e1aa53be58e32fae972b7e82e6fdb9457e683f3ac155348b2162d80820446",
+    "experiments/adaptive/runs/g3-lattice-curved24-symmetric-v1/mesh.npz": "2adbd9557d40e2abfdee384aa738d63bff5c5188d2a420f3a4c0256e0cee6e47",
+    "experiments/adaptive/runs/g3-lattice-cubic-assembly-memory-v1/mesh.npz": "d9c11772dc21e142e26f6bdcd470af06674b297b830010a71de5c8e617962fed",
+    "experiments/adaptive/runs/g3-lattice-cubic-assembly-memory-v1/result.json": "5e505f373196fff91201ce4df82c6a2a89af5198937bf608c27ea0e60146f8f8",
+    "experiments/adaptive/runs/g3-lattice-curved24-symmetric-v1/fields.npz": "c4e41fbdb3bfcdb991f7b2687b019e2ff21e2e3e324e10b0d7d02e4ce02baf59",
+    "/home/kmarchais/dev/meshers/experiments/adaptive/amg_reference.py": "80acf2e81d67db4dfafa0a2b1f0a48b69497bd5536baa9a8ae73bc6543a09a9f",
+    "experiments/adaptive/runs/g3-lattice-cubic-reference-elastic-cache-v1/load-1.npz": "f3438119b447ed0de23ac8fbe6e96ee360610ea1a5a75adf68ab31a399a9bd4c",
+    "experiments/adaptive/runs/g3-lattice-cubic-reference-elastic-cache-v1/load-2.npz": "c3da7632b4de7ddc832ab606608311f47e96e535d136812c41303c40274bab0a",
+    "experiments/adaptive/runs/g3-lattice-cubic-reference-elastic-cache-v1/manifest.json": "7ed56ba7f8b0022561985f5d9cac729cd614b16209aac20fac5e7487d2021cb6",
+    "experiments/adaptive/runs/g3-lattice-cubic-reference-elastic-cache-v1/result.json": "810a50639a64875830404ff8033a7e3ef91f82c23b9f2551d09522a3d366e26e"
+  },
+  "memory_bytes": 8589934592,
+  "worker_timeout_s": 1800,
+  "threads": 1,
+  "node_cap": 250000,
+  "tet_cap": 250000,
+  "packages": {
+    "fedoo": "1.0.0b2",
+    "numpy": "2.5.4",
+    "scipy": "1.18.1",
+    "meshers": "0.1.0"
+  },
+  "assembly_only": false,
+  "solver": "cached-elastic-block-amg-cg",
+  "elastic_blocks": true,
+  "resume_prefix_source": "experiments/adaptive/runs/g3-lattice-cubic-reference-elastic-cache-v1",
+  "reaction_extraction": "Vector-first MPC transformation",
+  "pyamg": "5.3.0",
+  "first_load_wall_cap_s": 240
+}

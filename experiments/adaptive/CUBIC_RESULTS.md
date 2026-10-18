@@ -208,6 +208,38 @@ The 240-second deadline applies to this first newly solved load, after verified
 prefix preparation. The full worker remains capped at 1,800 seconds and 8 GiB.
 No field replay time is presented as a fresh meshing or workflow speed result.
 
-Three remaining loads and all independent final audits are still required.
-There is no complete new reference or four-fixture accuracy claim yet. Records
-are in `runs/g3-lattice-cubic-reference-vector-resume-v1`.
+It also solves and saves load four. Before load five, another reduced-matrix
+allocation fails under the unchanged address-space cap. Four force columns and
+four intact fields remain, not a complete reference. Records are in
+`runs/g3-lattice-cubic-reference-vector-resume-v1`.
+
+## Completed-problem cache lifetime
+
+The replay wrapper updates its delegated problem only when the solver callback
+starts, which is too late to release the previous problem before the next
+reduction. Forwarding that binding immediately passes a weak-reference test
+and the four-prefix control cases in job 192. It is a real retention fix, but
+job 193 shows it is insufficient: replay reaches four fields and the fifth
+reduction still fails. Do not claim that this binding fix alone solves the
+large-case memory problem.
+
+Inspection of pinned fedoo source also finds a problem/boundary-condition cycle,
+including `problem.bc._problem = problem`. Completed problems can therefore
+retain their private reduced-matrix cache until cyclic garbage collection runs.
+Each cached reduction is about 1.1 GB. The reference helper now explicitly drops
+that unused cache after copying the field and extracting reactions. It still
+constructs a new problem for the next load, and never clears a matrix while
+that problem is solving. Benchmark helper defaults remain unchanged.
+
+A regression using actual fedoo solves and weak references verifies release of
+all six completed CSR matrix objects. Sixteen focused and admission tests pass.
+Job 194 also passes the two six-load control cases with four verified prefix
+fields each. Numeric tensors remain unchanged. Records are in
+`runs/g3-reduced-cache-release-validation-v1`.
+
+Job 195 resumes from the four retained fields with explicit per-load cache
+release. All four are revalidated against current equations and boundary values
+before fresh solves. The 8 GiB ceiling, 1,800-second worker cap, first-new-load
+240-second deadline and final independent audits remain unchanged. There is no
+complete reference or four-fixture accuracy claim while it is pending. Records
+are in `runs/g3-lattice-cubic-reference-cache-release-v1`.

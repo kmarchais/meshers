@@ -133,11 +133,18 @@ class VerifiedPrefixAMG:
         self.records = []
         self.key = None
 
+    @property
+    def problem(self):
+        return self.delegate.problem
+
+    @problem.setter
+    def problem(self, problem):
+        self.delegate.problem = problem
+
     def __call__(self, matrix, rhs, **kwargs):
         import numpy as np
 
         if len(self.records) >= len(self.fields):
-            self.delegate.problem = self.problem
             solution = self.delegate(matrix, rhs, **kwargs)
             assert self.key is None or self.key == self.delegate.key
             self.records.append({**self.delegate.records[-1], "replayed": False})
@@ -188,9 +195,9 @@ def worker(args):
     if args.replay_prefix:
         if args.case == "cube":
             baseline_fields, _, _ = solve(points, cells, n_elm_gp=15, element_type=element_type)
-            prefix = list(baseline_fields[:2])
+            prefix = list(baseline_fields[:args.prefix_count])
         else:
-            prefix = list(np.load(args.source / "fields.npz")["displacement"][:2])
+            prefix = list(np.load(args.source / "fields.npz")["displacement"][:args.prefix_count])
     solver = (VerifiedPrefixAMG(prefix, elastic_blocks=args.elastic_blocks) if prefix else
         AuditedAMG(elastic_blocks=args.elastic_blocks))
     reaction_errors = []
@@ -209,7 +216,8 @@ def worker(args):
 
     started = time.perf_counter()
     fields, tensor, records = solve(points, cells, n_elm_gp=15, element_type=element_type, solver=solver,
-        reaction_reader=checked_reactions, field_checkpoint=checked_field)
+        reaction_reader=checked_reactions, field_checkpoint=checked_field,
+        release_reduced_cache=args.release_reduced_cache)
     seconds = time.perf_counter() - started
     stress, energy, volume = integrated_tensors(points, cells, fields, element_type=element_type)
     own_error = max(float(np.linalg.norm(value - tensor) / np.linalg.norm(tensor)) for value in (stress, energy))
@@ -234,6 +242,8 @@ def main():
     parser.add_argument("--case", choices=("cube", "schwarz"))
     parser.add_argument("--elastic-blocks", action="store_true")
     parser.add_argument("--replay-prefix", action="store_true")
+    parser.add_argument("--prefix-count", type=int, choices=range(1, 6), default=2)
+    parser.add_argument("--release-reduced-cache", action="store_true")
     args = parser.parse_args()
     if args.case:
         worker(args)
@@ -249,7 +259,8 @@ def main():
     workflow.save(args.run / "manifest.json", {"inputs": hashes, "memory_bytes": workflow.MEMORY,
         "worker_timeout_s": 300, "threads": 1, "pyamg": importlib.metadata.version("pyamg"),
         "elastic_blocks": args.elastic_blocks,
-        "replayed_prefix_loads": 2 if args.replay_prefix else 0,
+        "replayed_prefix_loads": args.prefix_count if args.replay_prefix else 0,
+        "release_reduced_cache": args.release_reduced_cache,
         "method": ("SA on node-major BSR3 with six elastic candidates and V-cycle CG" if args.elastic_blocks else
             "SA on component-major CSR with three translational candidates and V-cycle CG"),
         "cg_rtol": 1e-12, "cg_atol": 1e-14})
@@ -261,6 +272,9 @@ def main():
                     command.append("--elastic-blocks")
                 if args.replay_prefix:
                     command.append("--replay-prefix")
+                    command.extend(["--prefix-count", str(args.prefix_count)])
+                if args.release_reduced_cache:
+                    command.append("--release-reduced-cache")
                 record = workflow.bounded(command, args.run / (case + ".log"), part, timeout=300)
                 workflow.save(args.run / (case + "-worker.json"), record)
                 assert record["returncode"] == 0, f"Read {case}.log"

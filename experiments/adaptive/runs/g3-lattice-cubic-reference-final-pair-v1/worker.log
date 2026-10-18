@@ -1,0 +1,33 @@
+/home/kmarchais/dev/meshers/.venv/lib/python3.12/site-packages/fedoo/core/base.py:80: UserWarning: WARNING: no fast direct sparse solver has been found. Consider installing pypardiso (Intel) or python-mumps (any platform) to improve computation performance
+  warnings.warn(
+Traceback (most recent call last):
+  File "/home/kmarchais/dev/meshers/experiments/adaptive/cubic_reference.py", line 425, in <module>
+    main()
+  File "/home/kmarchais/dev/meshers/experiments/adaptive/cubic_reference.py", line 371, in main
+    reference_worker(args.run, args.source, args.prepared, args.amg, args.elastic_blocks, args.resume_prefix)
+  File "/home/kmarchais/dev/meshers/experiments/adaptive/cubic_reference.py", line 320, in reference_worker
+    fields, tensor, records = solve(points, cells, checkpoint=checkpoint, n_elm_gp=15,
+                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/kmarchais/dev/meshers/experiments/adaptive/stress_recovery.py", line 42, in solve
+    problem.solve()
+  File "/home/kmarchais/dev/meshers/.venv/lib/python3.12/site-packages/fedoo/problem/linear.py", line 329, in solve
+    Problem.solve(self)
+  File "/home/kmarchais/dev/meshers/.venv/lib/python3.12/site-packages/fedoo/core/problem.py", line 380, in solve
+    self.__X[self._dof_free] = self._solve_reduced(rhs)
+                               ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/kmarchais/dev/meshers/.venv/lib/python3.12/site-packages/fedoo/core/problem.py", line 352, in _solve_reduced
+    return self._solve(self._reduced_system_matrix(), rhs)
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/kmarchais/dev/meshers/.venv/lib/python3.12/site-packages/fedoo/core/problem.py", line 343, in _reduced_system_matrix
+    cache = (A, mat_cb, mat_cb.T @ A @ mat_cb)
+                        ~~~~~~~~~~~~~^~~~~~~~
+  File "/home/kmarchais/dev/meshers/.venv/lib/python3.12/site-packages/scipy/sparse/_base.py", line 1010, in __matmul__
+    return self._matmul_dispatch(other)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/kmarchais/dev/meshers/.venv/lib/python3.12/site-packages/scipy/sparse/_base.py", line 914, in _matmul_dispatch
+    return self._matmul_sparse(other)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/kmarchais/dev/meshers/.venv/lib/python3.12/site-packages/scipy/sparse/_compressed.py", line 459, in _matmul_sparse
+    indices = np.empty(nnz, dtype=idx_dtype)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+numpy._core._exceptions._ArrayMemoryError: Unable to allocate 348. MiB for an array with shape (91117175,) and data type int32

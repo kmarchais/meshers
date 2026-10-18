@@ -16,7 +16,7 @@ import microgen_workflow as workflow
 
 
 def solve(points, tetrahedra, checkpoint=None, *, n_elm_gp=None, element_type=None, solver=None,
-          field_checkpoint=None, reaction_reader=None):
+          field_checkpoint=None, reaction_reader=None, release_reduced_cache=False):
     import fedoo as fd
     import numpy as np
     from homogenization import AuditedCG, COMPONENTS
@@ -45,6 +45,8 @@ def solve(points, tetrahedra, checkpoint=None, *, n_elm_gp=None, element_type=No
             field_checkpoint(load + 1, fields[-1])
         reactions = problem.get_ext_forces("MeanStrain") if reaction_reader is None else reaction_reader(problem)
         tensor[:, load] = reactions.ravel()
+        if release_reduced_cache:
+            problem._reduced_cache = None
         if checkpoint is not None:
             checkpoint(load + 1, tensor[:, :load + 1], solver.records)
     return np.asarray(fields), (tensor + tensor.T) / 2, solver.records

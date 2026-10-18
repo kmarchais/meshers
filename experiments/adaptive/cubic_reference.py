@@ -284,6 +284,7 @@ def reference_worker(run, source, prepared, use_amg=False, elastic_blocks=False,
         "replayed_prefix_loads": len(prefix), "resume_prefix_source": str(resume_prefix) if resume_prefix else None,
         "first_load_deadline_scope": "First newly solved load after verified prefix",
         "reaction_extraction": "Vector-first MPC transformation, identical equations",
+        "release_completed_reduced_cache": True,
         "solver": ("cached-elastic-block-amg-cg" if elastic_blocks else
             "cached-smoothed-aggregation-cg" if use_amg else "jacobi-cg")}
     workflow.save(run / "result.json", row)
@@ -319,7 +320,7 @@ def reference_worker(run, source, prepared, use_amg=False, elastic_blocks=False,
     try:
         fields, tensor, records = solve(points, cells, checkpoint=checkpoint, n_elm_gp=15,
             element_type=element_class.name, solver=solver, field_checkpoint=save_completed_field,
-            reaction_reader=vector_first_reactions)
+            reaction_reader=vector_first_reactions, release_reduced_cache=True)
     finally:
         signal.setitimer(signal.ITIMER_REAL, 0)
         signal.signal(signal.SIGALRM, previous_alarm)
@@ -396,6 +397,7 @@ def main():
         "elastic_blocks": args.elastic_blocks,
         "resume_prefix_source": str(args.resume_prefix) if args.resume_prefix else None,
         "reaction_extraction": "Vector-first MPC transformation" if args.prepared else None,
+        "release_completed_reduced_cache": args.prepared is not None,
         "pyamg": importlib.metadata.version("pyamg") if args.amg else None,
         "first_load_wall_cap_s": 240 if args.prepared is not None else None})
     label = "cubic-reference-solve" if args.prepared is not None else "cubic-assembly-memory" if args.source is not None else "basis-and-solid-patch"
