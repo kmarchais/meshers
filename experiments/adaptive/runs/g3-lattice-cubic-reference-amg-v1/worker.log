@@ -1,0 +1,57 @@
+/home/kmarchais/dev/meshers/.venv/lib/python3.12/site-packages/fedoo/core/base.py:80: UserWarning: WARNING: no fast direct sparse solver has been found. Consider installing pypardiso (Intel) or python-mumps (any platform) to improve computation performance
+  warnings.warn(
+Traceback (most recent call last):
+  File "/home/kmarchais/dev/meshers/experiments/adaptive/cubic_reference.py", line 377, in <module>
+    main()
+  File "/home/kmarchais/dev/meshers/experiments/adaptive/cubic_reference.py", line 334, in main
+    reference_worker(args.run, args.source, args.prepared, args.amg)
+  File "/home/kmarchais/dev/meshers/experiments/adaptive/cubic_reference.py", line 288, in reference_worker
+    fields, tensor, records = solve(points, cells, checkpoint=checkpoint, n_elm_gp=15,
+                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/kmarchais/dev/meshers/experiments/adaptive/stress_recovery.py", line 41, in solve
+    problem.solve()
+  File "/home/kmarchais/dev/meshers/.venv/lib/python3.12/site-packages/fedoo/problem/linear.py", line 329, in solve
+    Problem.solve(self)
+  File "/home/kmarchais/dev/meshers/.venv/lib/python3.12/site-packages/fedoo/core/problem.py", line 380, in solve
+    self.__X[self._dof_free] = self._solve_reduced(rhs)
+                               ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/kmarchais/dev/meshers/.venv/lib/python3.12/site-packages/fedoo/core/problem.py", line 352, in _solve_reduced
+    return self._solve(self._reduced_system_matrix(), rhs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/kmarchais/dev/meshers/.venv/lib/python3.12/site-packages/fedoo/core/base.py", line 658, in _solve
+    return self.__solver[1](A, B, **kargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/kmarchais/dev/meshers/experiments/adaptive/amg_reference.py", line 62, in __call__
+    solution, info = cg(matrix, rhs, M=self.hierarchy.aspreconditioner(cycle="V"),
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/kmarchais/dev/meshers/.venv/lib/python3.12/site-packages/scipy/sparse/linalg/_isolve/iterative.py", line 409, in cg
+    z = psolve(r)
+        ^^^^^^^^^
+  File "/home/kmarchais/dev/meshers/.venv/lib/python3.12/site-packages/scipy/sparse/linalg/_interface.py", line 391, in matvec
+    return self._shared_matvec(x)
+           ^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/kmarchais/dev/meshers/.venv/lib/python3.12/site-packages/scipy/sparse/linalg/_interface.py", line 353, in _shared_matvec
+    y = self._rmatvec(x) if adjoint else self._matvec(x)
+                                         ^^^^^^^^^^^^^^^
+  File "/home/kmarchais/dev/meshers/.venv/lib/python3.12/site-packages/scipy/sparse/linalg/_interface.py", line 891, in _matvec
+    return self.__matvec_impl(x)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/home/kmarchais/dev/meshers/.venv/lib/python3.12/site-packages/pyamg/multilevel.py", line 394, in matvec
+    return self.solve(b, maxiter=1, cycle=cycle, tol=1e-12)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/kmarchais/dev/meshers/.venv/lib/python3.12/site-packages/pyamg/multilevel.py", line 563, in solve
+    self.__solve(0, x, b, cycle, cycles_per_level)
+  File "/home/kmarchais/dev/meshers/.venv/lib/python3.12/site-packages/pyamg/multilevel.py", line 660, in __solve
+    x += self.levels[lvl].P @ coarse_x   # coarse grid correction
+         ~~~~~~~~~~~~~~~~~~~^~~~~~~~~~
+  File "/home/kmarchais/dev/meshers/.venv/lib/python3.12/site-packages/scipy/sparse/_base.py", line 1010, in __matmul__
+    return self._matmul_dispatch(other)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/kmarchais/dev/meshers/.venv/lib/python3.12/site-packages/scipy/sparse/_base.py", line 895, in _matmul_dispatch
+    return self._matmul_vector(other)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/kmarchais/dev/meshers/.venv/lib/python3.12/site-packages/scipy/sparse/_bsr.py", line 279, in _matmul_vector
+    bsr_matvec(M//R, N//C, R, C,
+  File "/home/kmarchais/dev/meshers/experiments/adaptive/cubic_reference.py", line 272, in first_load_timeout
+    raise TimeoutError("First cubic reference load exceeds 240-second stage")
+TimeoutError: First cubic reference load exceeds 240-second stage

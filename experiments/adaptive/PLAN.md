@@ -52,9 +52,11 @@ isolated meshing improvement. The four-fixture objective remains unmet.
   5.893 GiB. Diagonal-CG cannot meet the first-load continuation gate and is
   stopped. Installed AMG passes analytic and archived tensor controls without
   showing a small-case speed gain. A same-geometry reference retry uses a hard
-  first-load deadline and retains field and quadrature gates. `CUBIC_RESULTS.md`
-  records the passed stages and pending status. There is no Tet20 product API
-  or new matched-workflow win.
+  first-load deadline and retains field and quadrature gates, but also times
+  out. Its actual reduced system is captured without solving. Translation-only
+  node-block AMG still misses the same deadline; a documented rotational
+  candidate extension is being tested on that fixed system. `CUBIC_RESULTS.md`
+  records these stages. There is no new tensor, Tet20 product API or workflow win.
 
 Every heavy stage uses the shared queue, an 8 GiB worker ceiling, conservative
 threads, a timeout and staged mesh caps. Admission gates and frozen outputs

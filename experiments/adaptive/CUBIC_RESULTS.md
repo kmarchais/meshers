@@ -80,10 +80,39 @@ are unchanged, and any future workflow comparison must use the same solver
 policy on both meshers and charge hierarchy setup.
 
 Job 182 tests the same admitted cubic lattice mesh with this validated solver.
-It adds an interruptible 240-second first-load deadline and saves completed
-fields before independent audits, while retaining the 8 GiB ceiling and
-1,800-second outer worker timeout. All six solves still require own-rule
-stress/energy agreement, periodic jumps, Galerkin monotonicity and positive
-125-point reintegration at the retained 1e-4 relative sensitivity limit. No new
-reference or accuracy claim is justified until those checks finish. Records
-are in `runs/g3-lattice-cubic-reference-amg-v1`.
+Its interruptible 240-second first-load deadline fires inside a multigrid
+coarse correction. Peak RSS is 6.976 GiB. No load completes, so there is still
+no new lattice tensor or accuracy claim. The worker exits normally through
+the deadline exception, without an orphaned process. Records are in
+`runs/g3-lattice-cubic-reference-amg-v1`.
+
+## Isolated system and node-block diagnosis
+
+PyAMG's installed documentation states that its default block Gauss-Seidel
+smoother becomes point-wise Gauss-Seidel on CSR input. The prior solver feeds
+CSR in component-major order. Test actual node-block coupling before changing
+tolerances or increasing the reference budget.
+
+Job 183 captures the actual first-load reduced matrix and RHS through fedoo's
+solver callback. It raises a dedicated capture exception rather than returning
+a fake solution. The 661,029-square matrix has 91,117,159 entries. Its free
+unknowns form complete three-component blocks on 220,343 nodes, verified from
+fedoo's free-DOF metadata. Capture peaks at 5.850 GiB and takes 65.76 seconds.
+The matrix and vectors remain local ignored archives, with hashes in
+`runs/g3-lattice-cubic-reduced-system-v1/result.json`.
+
+Job 184 permutes this unchanged system to node-major order, uses BSR blocks of
+size three and retains the three translational candidates. It reaches 185 CG
+iterations but does not converge before the same 240-second algorithm cap.
+The hierarchy has levels of 661,029, 2,160 and 30 unknowns; setup takes 9.90
+seconds. Peak RSS is only 3.048 GiB outside the FE assembly process. Reordering
+alone does not establish reference feasibility. Records are in
+`runs/g3-lattice-cubic-block-amg-v1`.
+
+Job 185 adds the three rotational candidate fields used by PyAMG's own
+`gallery.linear_elasticity_p1` example, retaining the original matrix, RHS,
+CG tolerances and deadline. These are algebraic near-nullspace candidates,
+not exact periodic rigid modes or modified physical constraints. The original
+CSR residual must pass after undoing the permutation. This is still one load,
+not a full mixed-load reference. Records are in
+`runs/g3-lattice-cubic-block-amg-rigid-v1`.
