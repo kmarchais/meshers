@@ -838,3 +838,24 @@ deciles clipped to 0.03 and 0.1. This does not show that a recovery-driven
 solve would repay its coarse-solve cost. Defer that solve and measure the
 admitted Microgen recipe without intermediate stage audits first. The
 localization diagnostic reuses saved fields and is not a workflow timing.
+
+Job 137 repeats the admitted grid51 Microgen recipe without intermediate
+stage audits. Its mesh counts, quality and complete stiffness tensor reproduce
+job 132 exactly. Generation takes 24.60 seconds, the final audit 4.87 seconds,
+six-load solve 101.25 seconds and full live workflow 131.63 seconds. The fresh
+Meshers linear32 total is 94.43 seconds. These are single runs at roughly 4%
+fine-tensor disagreement, not a repeated matched-1% result.
+
+Job 138 tests a possible assembly-memory reduction before extending the
+reference study. Four-point reintegration of the saved admitted curved24
+fields shifts worst mixed-load energy by 0.0102316%, exceeding the declared
+0.0100000% threshold. The affine Tet10 patch passes and the relative volume
+shift is only 1.83e-10, but the mixed-load gate still rejects the shortcut.
+No curved re-solve runs. Keep the fifteen-point default; do not round this
+result into a pass.
+
+Select one finer adaptive lattice level at tolerance 0.0028, with the same
+24-cell seed, explicit symmetric-union expression and void clamp as the
+existing adaptive reference family. Keep the 200,000 solve-node stage,
+250,000-tet cap, 8 GiB ceiling and all admission gates. This tests another
+refinement increment, not an assumed resolution of cross-family uncertainty.

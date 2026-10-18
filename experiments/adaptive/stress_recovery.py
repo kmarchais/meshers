@@ -15,7 +15,7 @@ from pueue_progress import Job
 import microgen_workflow as workflow
 
 
-def solve(points, tetrahedra, checkpoint=None):
+def solve(points, tetrahedra, checkpoint=None, *, n_elm_gp=None):
     import fedoo as fd
     import numpy as np
     from homogenization import AuditedCG, COMPONENTS
@@ -23,7 +23,7 @@ def solve(points, tetrahedra, checkpoint=None):
     fd.ModelingSpace("3D")
     mesh = fd.Mesh(points.copy(), tetrahedra.copy(), "tet4" if tetrahedra.shape[1] == 4 else "tet10")
     assembly = fd.Assembly.create(fd.weakform.StressEquilibrium(
-        fd.constitutivelaw.ElasticIsotrop(2.5, 0.25)), mesh)
+        fd.constitutivelaw.ElasticIsotrop(2.5, 0.25)), mesh, n_elm_gp=n_elm_gp)
     solver = AuditedCG()
     fields, tensor = [], np.zeros((6, 6))
     for load, engineering in enumerate(np.eye(6)):
