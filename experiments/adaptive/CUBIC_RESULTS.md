@@ -140,6 +140,34 @@ Job 187 retries all six lattice loads through the validated integrated solver.
 The actual mesh, coefficients, boundary conditions, residual tolerances,
 240-second first-load deadline, 1,800-second worker cap and 8 GiB ceiling remain
 unchanged. Completed fields are saved before stress/energy and 125-point audits.
-The parent embedding check passes again; a full reference tensor remains
-unproven until this run completes all its gates. Records are in
+The parent embedding check passes again. The first load also passes, with the
+same 117 iterations and 7.72e-13 residual as the isolated system. The second
+load fails before solving, while allocating a repeated `A - A.T` symmetry
+check under the 8 GiB address-space cap. The rejected allocation is 695 MiB
+for sparse indices; observed peak RSS is 7.105 GiB. There is no full tensor or
+reference admission. Records are in
 `runs/g3-lattice-cubic-reference-elastic-block-v1`.
+
+## Hash-guarded symmetry reuse
+
+The matrix is already hashed completely before hierarchy reuse. Check symmetry
+once for the first matrix; on subsequent loads, require an identical shape,
+CSR structure and data hash before reusing that verified property. A changed
+matrix still fails rather than silently reusing the certificate. Independent
+residual and stress/energy checks remain per load. This avoids a redundant
+large sparse subtraction without changing any physical or numerical gate.
+
+Job 188 passes all twelve integrated control solves with five verified symmetry
+reuses in each case. The tensors and iterations are unchanged. Three focused
+reference tests plus the nine comparison-admission regressions also pass.
+These cover polynomial identities, exact quadratic-map reproduction, explicit
+element selection and preserving all six solved field checkpoints in order.
+Records are in `runs/g3-elastic-block-symmetry-cache-validation-v1`.
+
+Job 189 retries the full reference with this allocation fix. Each completed
+displacement field is now archived immediately, so a later allocation or audit
+failure does not destroy earlier solved fields. The complete reference still
+requires all six loads, own-rule stress/energy, periodic jumps, Galerkin
+monotonicity and the retained 125-point sensitivity check. No resource or
+accuracy limit is increased. Records are in
+`runs/g3-lattice-cubic-reference-elastic-cache-v1`.

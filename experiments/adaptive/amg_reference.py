@@ -48,9 +48,6 @@ class AuditedAMG:
         started = time.perf_counter()
         matrix = matrix.tocsr()
         assert (matrix.diagonal() > 0).all()
-        skew = matrix - matrix.T
-        assert np.linalg.norm(skew.data) / np.linalg.norm(matrix.data) < 1e-12
-        del skew
         digest = hashlib.sha256()
         for array in (matrix.indptr, matrix.indices, matrix.data):
             digest.update(memoryview(array))
@@ -58,6 +55,9 @@ class AuditedAMG:
         setup_seconds = 0.
         reorder_seconds = 0.
         if self.hierarchy is None:
+            skew = matrix - matrix.T
+            assert np.linalg.norm(skew.data) / np.linalg.norm(matrix.data) < 1e-12
+            del skew
             free = self.problem._dof_free
             count = self.problem.mesh.n_nodes
             ranks = self.problem.space.get_rank_vector("Disp")
@@ -104,6 +104,7 @@ class AuditedAMG:
             "free_dofs": len(rhs), "seconds": time.perf_counter() - started,
             "hierarchy_setup_s": setup_seconds, "hierarchy_reused": bool(len(self.records)),
             "node_reordering_s": reorder_seconds, "elastic_blocks": self.elastic_blocks,
+            "verified_symmetry_reused": bool(len(self.records)),
             "levels": len(self.hierarchy.levels), "operator_complexity": self.hierarchy.operator_complexity(),
             "reduced_matrix_sha256": key[1]})
         return solution

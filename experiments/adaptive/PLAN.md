@@ -57,8 +57,12 @@ isolated meshing improvement. The four-fixture objective remains unmet.
   node-block AMG still misses the same deadline; a documented rotational
   candidate extension converges on that fixed system and passes twelve integrated
   control solves. All six lattice loads are now being retried with this validated
-  preset under unchanged resource and accuracy gates. `CUBIC_RESULTS.md` records
-  these stages. There is no new tensor, Tet20 product API or workflow win yet.
+  preset under unchanged resource and accuracy gates. Its first load passes,
+  but a redundant second symmetry allocation hits the address-space cap. Exact
+  matrix hashing now guards reuse of the already verified symmetry property;
+  control solves and twelve small regressions pass. The full reference retry
+  also archives each field immediately. `CUBIC_RESULTS.md` records these stages.
+  There is no complete new tensor, Tet20 product API or workflow win yet.
 
 Every heavy stage uses the shared queue, an 8 GiB worker ceiling, conservative
 threads, a timeout and staged mesh caps. Admission gates and frozen outputs

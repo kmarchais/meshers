@@ -279,6 +279,9 @@ def reference_worker(run, source, prepared, use_amg=False, elastic_blocks=False)
             signal.setitimer(signal.ITIMER_REAL, 0)
         workflow.save(run / "result.json", row)
 
+    def save_completed_field(completed, displacement):
+        np.savez_compressed(run / f"load-{completed}.npz", displacement=displacement)
+
     solver = None
     if use_amg:
         from amg_reference import AuditedAMG
@@ -287,7 +290,7 @@ def reference_worker(run, source, prepared, use_amg=False, elastic_blocks=False)
     signal.setitimer(signal.ITIMER_REAL, row["first_load_wall_cap_s"])
     try:
         fields, tensor, records = solve(points, cells, checkpoint=checkpoint, n_elm_gp=15,
-            element_type=element_class.name, solver=solver)
+            element_type=element_class.name, solver=solver, field_checkpoint=save_completed_field)
     finally:
         signal.setitimer(signal.ITIMER_REAL, 0)
         signal.signal(signal.SIGALRM, previous_alarm)
