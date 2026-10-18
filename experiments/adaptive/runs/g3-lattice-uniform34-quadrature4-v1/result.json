@@ -1,0 +1,194 @@
+{
+  "case": "smooth-lattice",
+  "cells": 34,
+  "min_length": 0.01,
+  "order": 2,
+  "native_tolerance": 1.0,
+  "optimization_passes": 1,
+  "adaptive": false,
+  "adapt_tolerance": 0.002,
+  "solver_quadrature_points": 4,
+  "solve_node_cap": 250000,
+  "qualified": true,
+  "symmetric_union": {
+    "identity": "min(a,b) = (a+b-abs(a-b))/2",
+    "maximum_field_value_difference": 1.6653345369377348e-16,
+    "maximum_tie_gradient_difference": 1.468915544755589e-10,
+    "value_verification_points": 4096,
+    "gradient_verification_points": 3
+  },
+  "void_clamp": {
+    "positive_ceiling": 0.02,
+    "verification_points": 4096,
+    "material_mismatches": 0,
+    "domain_identity": "min(phi, positive_constant) <= 0 iff phi <= 0"
+  },
+  "generation_s": 8.199206188997778,
+  "nodes": 233964,
+  "elements": 150384,
+  "diagnostics": {
+    "empty": false,
+    "volume": 0.24775878362655848,
+    "minimum_mmg_quality": 0.2226478696918727,
+    "sampled_surface_error": 0.00454939243024304,
+    "elements_below_quality_01": 0,
+    "reverted_snap_vertices": 0,
+    "callback_calls": 0,
+    "inserted_interior_nodes": 0,
+    "seconds": 8.186057175,
+    "quadratic": {
+      "curved_edges": 44865,
+      "straightened_edges": 0,
+      "partially_curved_edges": 0,
+      "minimum_jacobian_ratio": 0.011279383168985035
+    },
+    "threads": 1,
+    "evaluator": "compiled",
+    "preparation_seconds": 0.013066841998806922
+  },
+  "geometry": {
+    "sampled_forward_max": 0.0003017285409591106,
+    "sampled_reverse_max": 0.0003315002584437474,
+    "sampled_two_sided_max": 0.0003315002584437474,
+    "outward_forward_max": 0.0003017285409591106,
+    "inward_forward_max": 0.00021746764119502304,
+    "projection_failed": 0,
+    "forward_samples": 386958,
+    "reverse_samples": 34791,
+    "volume": 0.24823312237298567,
+    "relative_volume_error": -0.0003138016408159583,
+    "q_min_corner": 0.2226478696918727,
+    "q_p01_corner": 0.5171686763227138,
+    "minimum_dihedral_deg_corner": 13.860694023932354,
+    "minimum_sampled_jacobian": 4.3502484077437675e-08,
+    "reverse_tessellation_delta_max": 0.00016433527949428673,
+    "quadratic_reverse_subdivisions": [
+      4,
+      8
+    ],
+    "geometry_admitted": true
+  },
+  "periodic": {
+    "periodic_pair_counts": [
+      708,
+      708,
+      708
+    ],
+    "periodic_coordinate_errors": [
+      0.0,
+      0.0,
+      0.0
+    ],
+    "periodic_pair_tolerance": 1e-10,
+    "periodic_equivalence_classes": 231905,
+    "periodic_triangles_match": true
+  },
+  "status": "solved-needs-reference",
+  "completed_loads": 6,
+  "solver_records": [
+    {
+      "iterations": 3159,
+      "relative_residual": 9.90167111083015e-13,
+      "free_dofs": 695712,
+      "seconds": 234.40403027700086
+    },
+    {
+      "iterations": 3181,
+      "relative_residual": 9.755796911502937e-13,
+      "free_dofs": 695712,
+      "seconds": 230.84551815099985
+    },
+    {
+      "iterations": 3178,
+      "relative_residual": 9.88723155331212e-13,
+      "free_dofs": 695712,
+      "seconds": 233.33086584500052
+    },
+    {
+      "iterations": 3350,
+      "relative_residual": 9.84224884030991e-13,
+      "free_dofs": 695712,
+      "seconds": 245.28531648599892
+    },
+    {
+      "iterations": 3354,
+      "relative_residual": 9.885881252110624e-13,
+      "free_dofs": 695712,
+      "seconds": 243.06473682200158
+    },
+    {
+      "iterations": 3240,
+      "relative_residual": 9.89964327655177e-13,
+      "free_dofs": 695712,
+      "seconds": 238.697466919999
+    }
+  ],
+  "solve_s": 1450.5608575580009,
+  "stiffness": [
+    [
+      0.13909978689902458,
+      0.10678778306822789,
+      0.10679304824929774,
+      1.1048195752933347e-05,
+      8.825339072491517e-06,
+      5.312206255257441e-06
+    ],
+    [
+      0.10678778306822789,
+      0.1392414814784396,
+      0.10684436808340998,
+      1.3879600092632202e-05,
+      5.289642924505629e-06,
+      7.426153592959899e-06
+    ],
+    [
+      0.10679304824929774,
+      0.10684436808340998,
+      0.1392403619443865,
+      6.122980831787366e-06,
+      1.3196883528601233e-05,
+      8.536896766602839e-06
+    ],
+    [
+      1.1048195752933347e-05,
+      1.3879600092632202e-05,
+      6.122980831787366e-06,
+      0.10322541683006486,
+      4.679715886778203e-06,
+      5.7090365962684706e-06
+    ],
+    [
+      8.825339072491517e-06,
+      5.289642924505629e-06,
+      1.3196883528601233e-05,
+      4.679715886778203e-06,
+      0.1032301112594822,
+      6.367761411858167e-06
+    ],
+    [
+      5.312206255257441e-06,
+      7.426153592959899e-06,
+      8.536896766602839e-06,
+      5.7090365962684706e-06,
+      6.367761411858167e-06,
+      0.10324669194819555
+    ]
+  ],
+  "higher_rule_fixed_field_difference": {
+    "worst_relative_strain_energy_difference": 5.210556045139751e-05,
+    "relative_tensor_frobenius_difference": 1.0385186400257708e-05,
+    "relative_energy_difference_eigenvalues": [
+      3.7048217030313764e-06,
+      4.308206446203721e-06,
+      4.905643283749263e-06,
+      9.09816371323875e-06,
+      4.598037591068497e-05,
+      5.210556045139751e-05
+    ]
+  },
+  "quadrature_sensitivity_limit": 0.0001,
+  "quadrature_sensitivity_passed": true,
+  "quadrature_scope": "Own-rule equilibrium and fifteen-point reintegration; not a fifteen-point re-solve",
+  "total_audit_workflow_s": 1481.657887677,
+  "total_workflow_s": 1481.657887677
+}

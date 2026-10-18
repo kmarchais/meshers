@@ -1,0 +1,31 @@
+{
+  "rows": [
+    {
+      "source": "/home/kmarchais/dev/meshers/experiments/adaptive/runs/g3-lattice-tuned51-timing-v1",
+      "input_sha256": {
+        "result.json": "7f69c94da2f73d2ae98fd6fec7db20cd56eb89210eb77ad6f47522b24fe2e639",
+        "mesh.npz": "c7eb11313c5a86b7f1cae36909fa1ded622e6061d55093b59580f6759175addc"
+      },
+      "parent_admitted": true,
+      "tet4_nodes": 46219,
+      "elements": 218394,
+      "unique_edges": 280497,
+      "straight_tet10_nodes": 326716,
+      "within_current_250000_node_stage": false
+    },
+    {
+      "source": "/home/kmarchais/dev/meshers/experiments/adaptive/runs/g3-lattice-tuned51-tet10-seed-v1",
+      "input_sha256": {
+        "result.json": "f44c325476c9046432d4f7161b77bcb187511caef7c1d25363655da11264c698",
+        "mesh.npz": "64666b1195ffc75e4b238938dfbb8766bff0e4f7c1e97cbb327eba37c403e494"
+      },
+      "parent_admitted": false,
+      "tet4_nodes": 37958,
+      "elements": 178171,
+      "unique_edges": 229592,
+      "straight_tet10_nodes": 267550,
+      "within_current_250000_node_stage": false
+    }
+  ],
+  "scope": "Exact connectivity count only; no Tet10 generation, admission or solve inferred"
+}

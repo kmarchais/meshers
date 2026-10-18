@@ -1,0 +1,93 @@
+{
+  "case": "smooth-lattice",
+  "route": "microgen-vtk-mmg-interior-optimization-override",
+  "resolution": 51,
+  "mmg_arguments": {
+    "hausd": 0.00075,
+    "hmax": 0.06,
+    "hgrad": 1.3
+  },
+  "status": "geometry-rejected",
+  "mmg_calls": [
+    {
+      "nofem": true,
+      "hausd": 0.0015,
+      "hmax": 0.06,
+      "hgrad": 1.3
+    },
+    {
+      "optim": true,
+      "nosurf": true,
+      "noinsert": true
+    }
+  ],
+  "stage_audit_enabled": false,
+  "timing_comparable": true,
+  "first_pass_hausd_override": 0.0015,
+  "first_pass_hmax_override": 0.06,
+  "first_pass_only": false,
+  "optimize_second_pass": true,
+  "solver_formulation": "stress-controlled",
+  "specimen_setup_s": 0.0007600560020364355,
+  "shape_field_verification": {
+    "points": 4096,
+    "maximum_value_difference": 5.551115123125783e-17
+  },
+  "seed_nodes": 51309,
+  "seed_elements": 249432,
+  "vtk_extraction_s": 0.4297138280016952,
+  "replaced_second_pass": {
+    "hausd": 0.00075,
+    "hgrad": 1.3,
+    "hmax": 0.06,
+    "hmin": null,
+    "hsiz": null,
+    "ls": true,
+    "nr": true
+  },
+  "optimization_input_metric_sha256": "5a9b90ee5fb2f6e8e0c4eec6cdf5470c0b731fc9f96fad9d66871a262bbbf8c6",
+  "optimization_input_metric_removed": true,
+  "generation_s": 18.516066514999693,
+  "nodes": 24923,
+  "elements": 115608,
+  "reoriented_tetrahedra": 0,
+  "cap_minimum_quality_ceiling": 0.17813258654271727,
+  "caps_below_quality_gate": 0,
+  "geometry": {
+    "sampled_forward_max": 0.001550596587372,
+    "sampled_reverse_max": 0.0014983443738502242,
+    "sampled_two_sided_max": 0.001550596587372,
+    "outward_forward_max": 0.001550596587372,
+    "inward_forward_max": 0.0014806237602249946,
+    "projection_failed": 0,
+    "forward_samples": 229632,
+    "reverse_samples": 34791,
+    "volume": 0.24700838205196252,
+    "relative_volume_error": -0.005246084584351496,
+    "q_min_corner": 0.0702501816640009,
+    "q_p01_corner": 0.4636175235485188,
+    "minimum_dihedral_deg_corner": 5.713954161731891,
+    "minimum_sampled_jacobian": 1.0996044125568558e-07,
+    "reverse_tessellation_delta_max": 0.0,
+    "quadratic_reverse_subdivisions": null,
+    "geometry_admitted": false
+  },
+  "periodic": {
+    "periodic_pair_counts": [
+      376,
+      376,
+      376
+    ],
+    "periodic_coordinate_errors": [
+      0.0,
+      0.0,
+      0.0
+    ],
+    "periodic_pair_tolerance": 1e-10,
+    "periodic_equivalence_classes": 23848,
+    "periodic_triangles_match": true
+  },
+  "audit_s": 2.934931329000392,
+  "qualified": false,
+  "total_workflow_s": 21.754064222001034
+}

@@ -1,5 +1,11 @@
 # G3 Microgen workflow results, 17 October 2026
 
+The opening tables and failure list record the initial 17 October experiment.
+Later sections include native fixes, admitted spinodoid and lattice meshes,
+and tuned Microgen controls. For current conclusions, start with the
+"Current G3 continuation" section in `PLAN.md`; the four-fixture goal remains
+unmet.
+
 The real Microgen VTK and CLI MMG workflows ran on all four fixed
 specimens. This is not the earlier MMG-on-a-Meshers-seed comparison.
 There is no demonstrated four-fixture win for Meshers.
@@ -954,3 +960,50 @@ own-rule field checks and fifteen-point fixed-field reintegration at the
 same 0.0001 relative sensitivity limit. Fifteen-point reintegration is not
 a fifteen-point equilibrium re-solve. No reference-model exclusion or 1%
 accuracy claim follows from queuing this level.
+
+Jobs 148 and 149 complete this level and eight independent field audits.
+The audited reference workflow takes 1,481.66 seconds with 5.92 GiB peak
+RSS. Own-rule reaction disagreement is 1.63e-11, Hill-Mandel disagreement is
+8.55e-12 and periodic jumps are zero. Fifteen-point fixed-field energy differs
+by 0.00521056%, below 0.01%. The new tensor is 0.101736% from uniform32 but
+still 0.973372% from the finer adaptive tensor. It spans 1.21347% to 2.08205%
+across the retained fine-adaptive models and 0.43492% to 2.22983% across the
+other retained families. No candidate passes every retained model at 1%.
+These exploratory ranges do not propagate quadrature-model uncertainty and
+must not be treated as continuum error bounds or a new stopping certificate.
+
+Comparison helpers now reject failed solver rows and four-point rows missing
+the declared sensitivity pass, or using a weaker sensitivity limit. Five
+admission regression cases pass against actual saved controls. The default
+solver quadrature remains fifteen points.
+
+The next comparison question is straight Tet10 on a genuine Microgen/MMG
+mesh through direct fedoo conversion, not Microgen's unsupported public Tet10
+converter. Exact edge counts show that the admitted two-pass candidate would
+need 326,716 Tet10 nodes, outside the current 250,000-node stage.
+Job 150 coarsens only the second-pass hausd from 0.00075 to 0.0009. It has
+H=0.001640 and a 267,550-node lift count, but q_min=0.097405 rejects it. No
+Tet10 lift or solve runs, and the quality value is not rounded into admission.
+
+Select one explicitly modified actual MMG variant on the smaller first-pass
+mesh: replace the second level-set call with `optim`, `nosurf`, `noinsert`.
+This is not the default public Microgen pipeline. Preserve the original VTK
+seed, first-pass parameters and all independent admission gates. Read its
+geometry and prospective lift count before choosing any direct-fedoo solve.
+
+Job 151 rejects that variant. Interior optimization returns 24,923 nodes
+with H=0.001551, but worsens minimum quality to 0.07025. No Tet10 solve runs.
+This is another unsupported admitted route under the fixed gates, not a
+Microgen default failure inferred from a Meshers seed.
+
+The admitted Schwarz Microgen parent provides a stronger supported integration
+control without another mesh-parameter search. Its exact straight Tet10 lift
+has 230,337 nodes and 154,012 elements, inside the current 250,000-node stage.
+Job 152 independently audits its unchanged affine geometry, converts the
+actual Microgen-derived arrays through `Mesh.to_fedoo()`, and uses the converted
+arrays in six prescribed-strain solves. No native Meshers generation is called.
+Four-point integration is exact for affine Tet10 linear elasticity; also check
+fifteen-point fixed-field energy and independent reactions/periodic jumps.
+This is a saved-mesh diagnostic. It excludes the live Microgen extraction/MMG
+cost and must not be ranked as an end-to-end timing or a newly supported public
+Microgen Tet10 converter.

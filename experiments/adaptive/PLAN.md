@@ -28,7 +28,10 @@ isolated meshing improvement. The four-fixture objective remains unmet.
   Uniform volume correction worsens stiffness and is rejected. A coarse-seed
   projection-repair hypothesis also fails its target and is reverted. A strict
   coarse20 adaptive budget passes geometry but exceeds the current solve-node
-  stage. Test finer-mesh quadrature sensitivity before considering larger solves.
+  stage. Fine-mesh quadrature sensitivity passes and enables uniform34 within
+  8 GiB, but that level still does not settle the retained reference models.
+  Lattice Microgen straight-Tet10 routes remain capped or quality-rejected.
+  A stronger saved-mesh Microgen straight-Tet10 control is running on Schwarz.
 
 Every heavy stage uses the shared queue, an 8 GiB worker ceiling, conservative
 threads, a timeout and staged mesh caps. Admission gates and frozen outputs

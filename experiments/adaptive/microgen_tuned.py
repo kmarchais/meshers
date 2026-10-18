@@ -164,7 +164,9 @@ def worker(args):
     row["audit_s"] = time.perf_counter() - audit_started
     row["qualified"] = row["geometry"]["geometry_admitted"] and "periodic" in row
     row["status"] = "geometry-rejected"
-    if row["qualified"]:
+    if row["qualified"] and args.geometry_only:
+        row["status"] = "admitted-needs-reference"
+    if row["qualified"] and not args.geometry_only:
         solve_started = time.perf_counter()
         if args.strain_controlled:
             from stress_recovery import solve
@@ -206,6 +208,7 @@ def main():
     parser.add_argument("--first-pass-only", action="store_true")
     parser.add_argument("--optimize-second-pass", action="store_true")
     parser.add_argument("--strain-controlled", action="store_true")
+    parser.add_argument("--geometry-only", action="store_true")
     args = parser.parse_args()
     assert args.hausd > 0
     assert args.first_pass_hmax > 0
@@ -243,6 +246,8 @@ def main():
                 command.append("--optimize-second-pass")
             if args.strain_controlled:
                 command.append("--strain-controlled")
+            if args.geometry_only:
+                command.append("--geometry-only")
             result = workflow.bounded(command,
                 args.run / "worker.log", part, timeout=600)
             workflow.save(args.run / "worker.json", result)

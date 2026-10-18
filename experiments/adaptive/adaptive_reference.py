@@ -34,6 +34,10 @@ def main():
     def read_record(path):
         row = json.loads(path.read_text())
         assert row["qualified"] and row["geometry"]["geometry_admitted"]
+        assert row["status"] in ("solved", "solved-needs-reference")
+        if row.get("order") == 2 and row.get("solver_quadrature_points", 15) == 4:
+            assert row.get("quadrature_sensitivity_passed")
+            assert row["quadrature_sensitivity_limit"] <= 1e-4
         assert len(row["solver_records"]) == 6
         assert max(record["relative_residual"] for record in row["solver_records"]) < 2e-9
         audit_path = args.field_audit / (path.parent.name + ".json")

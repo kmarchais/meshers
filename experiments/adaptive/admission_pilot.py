@@ -30,6 +30,9 @@ def worker(args):
            "solver_quadrature_points": args.quadrature_points if args.order == 2 else 4,
            "solve_node_cap": args.solve_node_cap, "qualified": False}
     started = time.perf_counter()
+    if args.order == 2 and args.quadrature_points == 4:
+        row.update(timing_comparable=False,
+            timing_scope="Reference study includes extra own-rule and fifteen-point fixed-field audits")
     try:
         case, shape, _ = workflow.specimen(args.case)
         field = case.function
@@ -145,7 +148,7 @@ def worker(args):
                     if not row["quadrature_sensitivity_passed"]:
                         row.update(qualified=False, status="quadrature-sensitivity-rejected")
     except Exception as error:
-        row.update(status="failed", error=str(error), traceback=traceback.format_exc())
+        row.update(status="failed", qualified=False, error=str(error), traceback=traceback.format_exc())
     row["total_audit_workflow_s"] = time.perf_counter() - started
     if args.solve:
         row["total_workflow_s"] = row["total_audit_workflow_s"]
@@ -185,6 +188,7 @@ def main():
     for path in inputs:
         shutil.copyfile(path, args.run / path.name)
     python_sources = [Path(__file__), Path(workflow.__file__), workflow.HERE / "stress_recovery.py",
+                      workflow.HERE / "tet10_integration.py",
                       workflow.HERE / "gradient_tie_probe.py", workflow.ROOT / "crates/meshers-python/python/meshers/expression.py"]
     source_hashes = {str(path): workflow.digest(path) for path in python_sources}
     import meshers._meshers
