@@ -17,7 +17,7 @@ from pueue_progress import Job
 LIMIT = 1e-4
 
 
-def worker(source, run):
+def worker(source, run, node_cap):
     np, fd, *_ = workflow.imports()
     from homogenization import MATERIAL, strain_tensor
     from periodic import periodic_pairs, tensor_difference
@@ -29,7 +29,7 @@ def worker(source, run):
     assert control["qualified"] and control["geometry"]["geometry_admitted"]
     mesh = np.load(source / "mesh.npz")
     points, tetrahedra = mesh["points"], mesh["tetrahedra"]
-    assert tetrahedra.shape[1] == 10 and len(points) <= 100_000
+    assert tetrahedra.shape[1] == 10 and len(points) <= node_cap
     element = fd.lib_elements.element_list.get_element("tet10")(4)
     quadrature = (element.xi_pg, element.w_pg)
     affine_fields = np.array([element.xi_nd @ strain_tensor(engineering).T for engineering in np.eye(6)])
@@ -76,9 +76,11 @@ def main():
     parser.add_argument("--source", type=Path, required=True)
     parser.add_argument("--run", type=Path, required=True)
     parser.add_argument("--worker", action="store_true")
+    parser.add_argument("--node-cap", type=int, choices=(100_000, 200_000), default=100_000)
+    parser.add_argument("--worker-timeout", type=int, choices=(600, 1200), default=600)
     args = parser.parse_args()
     if args.worker:
-        worker(args.source, args.run)
+        worker(args.source, args.run, args.node_cap)
         return
     args.run.mkdir(parents=True, exist_ok=False)
     shutil.copyfile(__file__, args.run / "driver.py")
@@ -87,11 +89,13 @@ def main():
         workflow.HERE / "tet10_integration.py"]
     hashes = {str(path): workflow.digest(path) for path in files}
     workflow.save(args.run / "manifest.json", {"inputs": hashes, "memory_bytes": workflow.MEMORY,
-        "threads": 1, "worker_timeout_s": 600, "predeclared_relative_stiffness_limit": LIMIT})
+        "threads": 1, "node_cap": args.node_cap, "worker_timeout_s": args.worker_timeout,
+        "predeclared_relative_stiffness_limit": LIMIT})
     with Job(parts=["four-point-control"]) as job:
         with job.part("four-point-control") as part:
             record = workflow.bounded([sys.executable, __file__, "--worker", "--source", str(args.source),
-                "--run", str(args.run)], args.run / "worker.log", part, timeout=600)
+                "--run", str(args.run), "--node-cap", str(args.node_cap)],
+                args.run / "worker.log", part, timeout=args.worker_timeout)
             workflow.save(args.run / "worker.json", record)
             assert record["returncode"] == 0, "Read worker.log"
             row = json.loads((args.run / "result.json").read_text())

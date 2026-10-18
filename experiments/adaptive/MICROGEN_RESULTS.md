@@ -903,3 +903,35 @@ and 1.399 seconds in the 94.43-second linear control. These phases also include
 settling. Even removing that entire phase would save less than 0.1% and 1.5%
 respectively in these runs. Defer a parallel rewrite until a measured workload
 justifies it. The unresolved stiffness/reference cost has much larger impact.
+
+Job 143 refreshes the older adaptive20 rejection with the verified native
+build. The quality fix now returns 134,109 nodes and 85,306 Tet10 elements,
+q_min=0.11744, but H=0.002284 still rejects it. There are 84 partially curved
+edges. It also uses more nodes than admitted uniform24, so it is not an
+established cheaper route. No solve runs.
+
+Job 144 reproduces the geometry metrics and locates the worst 32 probes.
+None is on a required cap edge or vertex. The worst faces include corners
+and mid-edge nodes still off the implicit surface, away from box planes.
+This does not justify a box-curve repair as the explanation of this failure.
+
+Job 145 tests enrolling inherited off-surface wall vertices in the existing
+pending-projection/star-splitting routine. The rebuild, 25 core tests and
+36 Python tests pass. However, the target's distance, quality and minimum
+sampled Jacobian are unchanged; its volume differs only by floating-point
+roundoff. Reject this change for the present problem and restore the verified
+`5914097` native build. The proposal and test remain in the frozen
+`native-proposal.patch`. The coarse candidate used adaptive tolerance 0.004,
+so its failure of the stricter independent 0.002 distance gate does not itself
+prove a native tolerance-contract violation.
+
+Job 146 tightens the coarse20 adaptive budget to 0.002 without changing the
+independent gates. Geometry now passes at H=0.00022394, but the mesh has
+288,800 nodes and 186,619 Tet10 elements. No solve runs above the existing
+200,000-node stage. The coarser seed is not a cheaper qualified solution.
+
+Before considering any larger solve stage, job 147 tests four-point sensitivity
+on the already-solved tolerance-0.003 reference, within the existing 200,000-node
+and 8 GiB stage. Keep the same 0.0001 relative tensor threshold that rejected
+the coarse24 shortcut. A coarse-mesh rejection does not establish sensitivity
+on a finer mesh, but no reduction is accepted without the actual comparison.

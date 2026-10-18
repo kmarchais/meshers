@@ -25,7 +25,10 @@ isolated meshing improvement. The four-fixture objective remains unmet.
   Meshers linear32 control differs by 3.95566%. Neither supports 1% accuracy.
   Recovery localization did not justify another sizing solve. A finer admitted
   adaptive level still reaches 1.26988% across retained reference models.
-  The next bounded diagnostic tests fixed-topology volume correction.
+  Uniform volume correction worsens stiffness and is rejected. A coarse-seed
+  projection-repair hypothesis also fails its target and is reverted. A strict
+  coarse20 adaptive budget passes geometry but exceeds the current solve-node
+  stage. Test finer-mesh quadrature sensitivity before considering larger solves.
 
 Every heavy stage uses the shared queue, an 8 GiB worker ceiling, conservative
 threads, a timeout and staged mesh caps. Admission gates and frozen outputs

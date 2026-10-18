@@ -1,0 +1,52 @@
+diff --git a/crates/meshers-core/src/tet_adapt.rs b/crates/meshers-core/src/tet_adapt.rs
+index cfe2b16..88c74f5 100644
+--- a/crates/meshers-core/src/tet_adapt.rs
++++ b/crates/meshers-core/src/tet_adapt.rs
+@@ -193,6 +193,16 @@ impl<'g, G: Geometry> Tets<'g, G> {
+         }
+         for v in 0..n {
+             s.refresh(v);
++            if s.masks[v] & WALL != 0 && !s.frozen[v] {
++                let point = s.points[v];
++                let value = g.value(point);
++                let scale = (0..3).map(|axis| hi[axis] - lo[axis]).fold(0., f64::max);
++                if (value - g.level(value, threshold)).abs()
++                    > scale * 1e-12 * norm(g.gradient(point)).max(1e-300)
++                {
++                    s.pending.push(v);
++                }
++            }
+         }
+         s
+     }
+@@ -1230,6 +1240,30 @@ mod tests {
+         }
+     }
+ 
++    #[test]
++    fn inherited_off_surface_wall_vertices_enter_pending_projection() {
++        let mesh = crate::Mesh {
++            points: vec![
++                [-0.1, 0., -0.1],
++                [0.1, 0., -0.1],
++                [0., 0., 0.1],
++                [0., 0.2, 0.],
++            ],
++            tets: vec![[0, 2, 1, 3]],
++            surface: vec![[0, 1, 2]],
++        };
++        let mut tets = super::Tets::new(&mesh, &PlaneWave, 0., [false; 3]);
++        assert_eq!(tets.pending, vec![0, 1, 2]);
++        tets.settle(0.3);
++        assert!(tets.pending.is_empty());
++        for vertex in 0..3 {
++            assert!(
++                crate::geometry::Geometry::value(&PlaneWave, tets.points[vertex]).abs() < 1e-12
++            );
++        }
++        assert_eq!(tets.points[3], mesh.points[3]);
++    }
++
+     #[test]
+     fn projection_cannot_move_a_wall_vertex_across_a_periodic_plane() {
+         let mesh = crate::Mesh {
