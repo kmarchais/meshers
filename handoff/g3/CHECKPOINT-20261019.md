@@ -84,6 +84,23 @@ absolute spread 0.00015640 exceeds the apparent native curved-mesh deficit,
 about 0.000078. Do not bias geometry to this uncertain mean or to the stiffness
 models. Preserve the frozen estimates and fixed gates when auditing them.
 
+Job 258 subsequently performs the volume audit: four nested 2^24-point
+sequences reproduce the original prefixes exactly. Mean volume is
+0.2482374460, with absolute spread 0.0000137091 and final nested mean shift
+0.0000007004. Both fixed precision screens pass. The finest Meshers volume
+error is -0.001898% at that mean, and its empirical replicate range includes
+zero. Do not add a volume offset or reinterpret stiffness agreement from this.
+Old outputs and all 24 stiffness models remain unchanged. Read
+`VOLUME_RESULTS.md` and `runs/g3-lattice-volume-reference-audit-v1`.
+
+Next inspect the raw smooth-union gradient mismatch at exact branch ties.
+`expression.py` differentiates min and max ties by selecting one operand,
+but differentiates abs at zero as zero. A focused smooth-composition
+regression should prove the mismatch before changing that policy. Existing
+manual symmetric-minimum and void-clamp representations are still not raw
+default support. Do not weaken periodicity or claim a workflow victory from
+a compiler fix alone.
+
 ## Local runtime
 
 Current native SHA256 is
@@ -95,6 +112,6 @@ Its package is in `.local-work/g3-builds/baseline-090a71c`.
 Preserve ignored NPZ meshes, fields, and native binaries locally. Use Rust
 1.95.0, two build threads, one numerical thread, the pinned `.venv`, and
 `LD_LIBRARY_PATH=/home/kmarchais/dev/meshers/.local-work/g3-runtime/root/usr/lib/x86_64-linux-gnu`.
-All study jobs through 255 finish before this checkpoint. No successor is
+All study jobs through 258 finish before this checkpoint. No successor is
 queued here. The shared queue belongs to other sessions too; do not touch
 unrelated jobs or timers.

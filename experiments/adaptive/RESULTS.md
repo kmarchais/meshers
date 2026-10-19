@@ -45,6 +45,14 @@ Higher-rule energy changes by only 2.49e-7 relative. Stop that sizing recipe;
 strong localization alone does not establish a workflow gain. See
 `STRESS_RESULTS.md`.
 
+An independent 67-million-point lattice volume audit reproduces every frozen
+prefix and passes its precision screens. The mean becomes 0.2482374460, with
+absolute replicate spread 0.0000137091. The finest Meshers volume error is
+then -0.001898%, with zero inside the replicate range, instead of the old
+nominal -0.03154%. A volume offset is not justified. The actual tuned
+Microgen-derived straight Tet10 control remains about -0.4582% by volume.
+No frozen errors, gates, or stiffness models change. See `VOLUME_RESULTS.md`.
+
 ## Current G3 outcome, 2026-10-18
 
 One narrow matched-target result is supported: Schwarz Meshers beats the

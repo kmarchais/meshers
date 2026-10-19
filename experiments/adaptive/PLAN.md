@@ -421,3 +421,19 @@ each, with absolute spread 0.00015640. That exceeds the apparent Meshers
 volume deficit, about 0.000078. A higher-precision, bounded volume audit must
 leave old records and all admission gates unchanged. Do not offset geometry
 to fit an uncertain volume mean or to manufacture stiffness agreement.
+
+Job 258 completes that audit using four nested 2^24-point sequences. Frozen
+prefixes reproduce exactly. New mean volume is 0.2482374460, spread is
+0.0000137091, and the final mean-prefix shift is 0.0000007004. Both precision
+screens pass. The finest Meshers volume error is -0.001898% at the new mean,
+and its empirical replicate range includes zero. Do not add a volume offset.
+Keep old records and every stiffness model unchanged. See `VOLUME_RESULTS.md`.
+
+Parallel relocation cannot resolve the measured accuracy gap, and final
+meshing costs only about nine seconds of the 812-second failed pilot. Before
+changing curved geometry, reproduce the known raw smooth-union gradient
+mismatch at tied branches with a focused regression. The compiler currently
+chooses one operand's derivative at a min or max tie, whereas its absolute
+value derivative is zero there. The existing symmetric-minimum workaround
+is not default raw-field support. Test any correction separately, keeping
+periodicity, quality, distance, and full stiffness gates fixed.

@@ -1,0 +1,86 @@
+{
+  "inputs": {
+    "/home/kmarchais/dev/meshers/experiments/adaptive/volume_reference_audit.py": "cff9cdb7c50de7005c616c203c65211d168289ad34c9f401d82d8f4a89285935",
+    "/home/kmarchais/dev/meshers/experiments/adaptive/microgen_workflow.py": "3f98bcaf9ae151cb357944744e82dd80801703a4db04f94df31263c9c9fa7640",
+    "/home/kmarchais/dev/meshers/experiments/adaptive/scorecard.py": "8f26256c7df0e84c9f35cdd71bf4f95a74e072d45469002b213c5dcd4f1bab2a",
+    "/home/kmarchais/dev/meshers/experiments/adaptive/runs/g3-microgen-defaults-v4/smooth-lattice-specimen.json": "0e5b34b76183341a6e0d454f13cd404668ab82675f9a51cd9d2ecf3c91be3316",
+    "/home/kmarchais/dev/meshers/experiments/adaptive/runs/g3-lattice-curved24-symmetric-v1/result.json": "5c3e1aa53be58e32fae972b7e82e6fdb9457e683f3ac155348b2162d80820446",
+    "/home/kmarchais/dev/meshers/experiments/adaptive/runs/g3-lattice-adapt24-tol0028-v1/result.json": "558bada3358cfd7b0b6158d20c492287345dedb3993cc9d7719aa2e3295bf55e",
+    "/home/kmarchais/dev/meshers/experiments/adaptive/runs/g3-lattice-live-energy-floor025-v1/final/result.json": "fb18e60206b7d306891256556a728c508775d79f56abbc5f39ec6797a16f6ccb",
+    "/home/kmarchais/dev/meshers/experiments/adaptive/runs/g3-lattice-microgen-straight-tet10-hausd001-amg-v2/result.json": "e5452076dde3f2790c524d121c3dd78565f463d335482099a95dbf5a117e7803",
+    "/home/kmarchais/dev/meshers/.venv/lib/python3.12/site-packages/microgen/shape/implicit_ops.py": "fccdb72744e2227438ba327decc00ea9a9bb745c452355fb0f087a10fd20bac4"
+  },
+  "case": "smooth-lattice",
+  "memory_bytes": 8589934592,
+  "threads": 1,
+  "replicate_timeout_s": 300,
+  "seeds": [
+    0,
+    1,
+    2,
+    3
+  ],
+  "batch_points": 262144,
+  "nested_powers": [
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24
+  ],
+  "maximum_points_per_replicate": 16777216,
+  "total_points": 67108864,
+  "maximum_final_spread": 3e-05,
+  "maximum_final_mean_prefix_shift": 1e-05,
+  "definition": "Eight capsules from center to corners, radius=0.12; sequential Microgen cubic smooth_union k=0.08 in scorecard.CORNERS order",
+  "corners_in_order": [
+    [
+      -0.5,
+      -0.5,
+      -0.5
+    ],
+    [
+      -0.5,
+      -0.5,
+      0.5
+    ],
+    [
+      -0.5,
+      0.5,
+      -0.5
+    ],
+    [
+      -0.5,
+      0.5,
+      0.5
+    ],
+    [
+      0.5,
+      -0.5,
+      -0.5
+    ],
+    [
+      0.5,
+      -0.5,
+      0.5
+    ],
+    [
+      0.5,
+      0.5,
+      -0.5
+    ],
+    [
+      0.5,
+      0.5,
+      0.5
+    ]
+  ],
+  "versions": {
+    "numpy": "2.5.4",
+    "scipy": "1.18.1",
+    "microgen": "2.0.0b1"
+  },
+  "scope": "Independent QMC volume audit only; frozen outputs and all scientific admission gates unchanged"
+}
