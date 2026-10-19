@@ -1,5 +1,26 @@
 # Adaptive and quadratic implicit meshing: results
 
+## Resumed G3 study, 2026-10-19
+
+The four-fixture objective remains unachieved. Tet10 recovery fails its
+predeclared incremental localization screen, and required-entity grading
+worsens the tested actual Gyroid MMG output. Neither negative result changes
+admission or justifies a new sizing feature. See `STRESS_RESULTS.md` and
+`MICROGEN_RESULTS.md`.
+
+A focused native change has one measured geometry benefit. Quality-preserving
+partial settling admits the previously rejected fixed spinodoid curved24
+mesh at 105,618 nodes. Independent distance is 0.00173079, volume error is
++0.02597%, corner quality is 0.18951, sampled Jacobians are positive, and
+periodic caps match. All 25 core and 37 focused Python tests pass. Its six-load
+tensor passes independent stress, energy, and periodic-jump checks and differs
+by 0.05430% to 0.13529% across all six unchanged spinodoid reference models.
+The 640.08-second workflow is slower than the historical curved32 control,
+despite 7.89% fewer nodes. This is no new workflow-speed victory. All four
+admitted geometry controls pass, and positive 125-point fixed-field energy
+differs by only 1.79e-8 relative from the solved tensor. Retain the native
+admission fix and test one coarser geometry. See `PERIODIC_RESULTS.md`.
+
 ## Current G3 outcome, 2026-10-18
 
 One narrow matched-target result is supported: Schwarz Meshers beats the

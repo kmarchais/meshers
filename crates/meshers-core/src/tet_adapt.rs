@@ -955,6 +955,29 @@ impl<'g, G: Geometry> Tets<'g, G> {
                 self.refresh(v);
                 continue;
             }
+            let origin = self.points[v];
+            let residual = (self.g.value(origin) - level).abs();
+            let partial = (1..=8).find_map(|halvings| {
+                let fraction = 0.5f64.powi(halvings);
+                let candidate =
+                    std::array::from_fn(|axis| origin[axis] + fraction * (q[axis] - origin[axis]));
+                if !self.g.contains(candidate) {
+                    return None;
+                }
+                let value = self.g.value(candidate);
+                (self.g.level(value, self.threshold) == level
+                    && (value - level).abs() < 0.999 * residual
+                    && self.vt[v].iter().all(|&tetrahedron| {
+                        mmg(self.tet_points(self.tets[tetrahedron], Some((v, candidate)))) >= floor
+                    }))
+                .then_some(candidate)
+            });
+            if let Some(candidate) = partial {
+                self.points[v] = candidate;
+                self.refresh(v);
+                self.pending.push(v);
+                continue;
+            }
             // Make room: split the longest edge facing the vertex in each element the
             // move would flatten, then try again in the next round.
             let mut facing = Vec::new();
@@ -1267,6 +1290,63 @@ mod tests {
         );
         let point = tets.project([-0.4, 0.4999, 0.23], super::WALL, 0.).unwrap();
         assert!(point[1] > 0.49 && point[1] < 0.5);
+    }
+
+    #[test]
+    fn pending_wall_projection_makes_safe_partial_progress() {
+        struct PendingPlane;
+
+        impl crate::geometry::Geometry for PendingPlane {
+            fn value(&self, point: Point) -> f64 {
+                -point[2]
+            }
+            fn gradient(&self, _point: Point) -> Point {
+                [0., 0., -1.]
+            }
+            fn bounds(&self) -> [Point; 2] {
+                [[-1.; 3], [1.; 3]]
+            }
+            fn rank(&self, _point: Point) -> [i64; 3] {
+                [0; 3]
+            }
+            fn band(&self) -> bool {
+                false
+            }
+            fn minimum_quality(&self) -> f64 {
+                0.1
+            }
+        }
+
+        let points = vec![
+            [0., 0., 0.2],
+            [0.2, 0., 0.05],
+            [-0.1, 0.03f64.sqrt(), 0.05],
+            [-0.1, -0.03f64.sqrt(), 0.05],
+        ];
+        let mut tetrahedron = [0, 1, 2, 3];
+        if crate::determinant(tetrahedron.map(|node| points[node])) < 0. {
+            tetrahedron.swap(1, 2);
+        }
+        let mesh = crate::Mesh {
+            points,
+            tets: vec![tetrahedron],
+            surface: vec![[0, 1, 2]],
+        };
+        let mut state = super::Tets::new(&mesh, &PendingPlane, 0., [false; 3]);
+        state.pending.push(0);
+        state.settle(0.3, 1000).unwrap();
+        assert!(
+            state.points[0][2] < 0.2,
+            "pending wall vertex did not make safe partial progress"
+        );
+        assert!(state.points[0][2] > 0.);
+        assert!(state.pending.contains(&0));
+        assert_eq!(state.live_tetrahedra, 1);
+        for (tetrahedron, alive) in state.tets.iter().zip(&state.alive) {
+            if *alive {
+                assert!(super::mmg(state.tet_points(*tetrahedron, None)) >= 0.1);
+            }
+        }
     }
 
     fn adapt(tolerance: f64) -> Option<super::Options> {

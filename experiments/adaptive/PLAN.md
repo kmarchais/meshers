@@ -359,3 +359,24 @@ invalidates that pilot's timing comparison, without changing its frozen tensor.
 Stop study work for Kevin's requested computer shutdown after pushing a
 reviewable checkpoint. Do not mark the four-case goal achieved. Read
 `/home/kmarchais/dev/meshers/handoff/g3/CHECKPOINT-20261018.md` when Kevin resumes.
+
+## Resumed bounded study, 2026-10-19
+
+Kevin resumes the goal after the shutdown. The Tet10 recovery screen misses
+its fixed incremental threshold, so do not promote it to live sizing. The
+actual Gyroid required-entity grading variant worsens quality and is stopped.
+
+Spinodoid saved-mesh probes reject selective curvature restoration and affine
+corner displacement. They identify a narrower native opportunity: partial
+pending-wall progress before quadratic elevation. A red regression confirms
+the missing progress. The candidate retains the original quality floor and
+branch, containment, periodicity, and Jacobian gates.
+
+Job 230 passes 25 core and 37 focused Python tests and admits the formerly
+rejected fixed curved24 spinodoid. Job 231 regenerates it for six prescribed
+strain loads. Jobs 232 and 235 pass independent field and higher-rule checks.
+All six unchanged reference models give disagreement 0.05430% to 0.13529%.
+Job 234 retains all four geometry admissions, including bitwise unchanged
+Schwarz and Gyroid controls. Keep the fix, but make no speed claim from the
+slower 640.08-second single workflow. Test one 20-cell spinodoid geometry
+before another solve. No admitted actual Microgen spinodoid comparator exists.

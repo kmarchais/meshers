@@ -1,0 +1,192 @@
+{
+  "case": "spinodoid",
+  "cells": 24,
+  "min_length": 0.002,
+  "order": 2,
+  "native_tolerance": 1.0,
+  "optimization_passes": 1,
+  "adaptive": true,
+  "adapt_tolerance": 0.002,
+  "solver_quadrature_points": 15,
+  "solve_node_cap": 150000,
+  "qualified": true,
+  "solver": "jacobi-cg",
+  "compiled_field": {
+    "modes": 52,
+    "expression_nodes": 989,
+    "maximum_value_difference": 2.220446049250313e-16,
+    "maximum_gradient_difference": 1.8512502641954143e-10,
+    "verification_points": 4096,
+    "preparation_and_verification_s": 0.041921807999642624
+  },
+  "generation_s": 7.944924972000081,
+  "nodes": 105618,
+  "elements": 66191,
+  "diagnostics": {
+    "empty": false,
+    "volume": 0.5023558067723298,
+    "minimum_mmg_quality": 0.18950659978691517,
+    "sampled_surface_error": 0.0046484003939063845,
+    "elements_below_quality_01": 0,
+    "reverted_snap_vertices": 0,
+    "callback_calls": 0,
+    "inserted_interior_nodes": 0,
+    "adapt": {
+      "splits": 2964,
+      "collapses": 9949,
+      "swaps": 3564,
+      "moves": 52806,
+      "error_splits": 18,
+      "maximum_error": 0.006709921206532196,
+      "seconds": [
+        0.402777979,
+        0.062443378,
+        1.367638292,
+        0.234089053,
+        0.316800235,
+        0.857103953,
+        0.368307607
+      ]
+    },
+    "seconds": 7.944850146,
+    "quadratic": {
+      "curved_edges": 18990,
+      "straightened_edges": 0,
+      "partially_curved_edges": 5,
+      "minimum_jacobian_ratio": 0.007152227714002065
+    },
+    "threads": 1,
+    "evaluator": "compiled",
+    "preparation_seconds": 1.9350000002305023e-06
+  },
+  "geometry": {
+    "sampled_forward_max": 0.0017307928859995358,
+    "sampled_reverse_max": 0.0016324913458096988,
+    "sampled_two_sided_max": 0.0017307928859995358,
+    "outward_forward_max": 0.0017307928859995358,
+    "inward_forward_max": 0.00022868834668791956,
+    "projection_failed": 0,
+    "forward_samples": 161304,
+    "reverse_samples": 41325,
+    "volume": 0.5022666113364029,
+    "relative_volume_error": 0.00025965238065217555,
+    "q_min_corner": 0.18950659978691517,
+    "q_p01_corner": 0.5288269781887915,
+    "minimum_dihedral_deg_corner": 11.004304021653269,
+    "minimum_sampled_jacobian": 4.7749050371061784e-08,
+    "reverse_tessellation_delta_max": 9.795409902330863e-05,
+    "quadratic_reverse_subdivisions": [
+      4,
+      8
+    ],
+    "geometry_admitted": true
+  },
+  "periodic": {
+    "periodic_pair_counts": [
+      1565,
+      1695,
+      1417
+    ],
+    "periodic_coordinate_errors": [
+      0.0,
+      0.0,
+      0.0
+    ],
+    "periodic_pair_tolerance": 1e-10,
+    "periodic_equivalence_classes": 101022,
+    "periodic_triangles_match": true
+  },
+  "status": "solved-needs-reference",
+  "completed_loads": 6,
+  "solver_records": [
+    {
+      "iterations": 2181,
+      "relative_residual": 9.872059173975272e-13,
+      "free_dofs": 303063,
+      "seconds": 94.19699279199995
+    },
+    {
+      "iterations": 2188,
+      "relative_residual": 9.546855448842612e-13,
+      "free_dofs": 303063,
+      "seconds": 96.15239853000003
+    },
+    {
+      "iterations": 2210,
+      "relative_residual": 9.873807939544695e-13,
+      "free_dofs": 303063,
+      "seconds": 100.71980363399962
+    },
+    {
+      "iterations": 2249,
+      "relative_residual": 9.762158947037295e-13,
+      "free_dofs": 303063,
+      "seconds": 103.79640219500016
+    },
+    {
+      "iterations": 2256,
+      "relative_residual": 9.71544403039289e-13,
+      "free_dofs": 303063,
+      "seconds": 102.97503376799978
+    },
+    {
+      "iterations": 2245,
+      "relative_residual": 9.968367314663598e-13,
+      "free_dofs": 303063,
+      "seconds": 102.74112018699998
+    }
+  ],
+  "solve_s": 623.093312776,
+  "stiffness": [
+    [
+      0.6402917148113683,
+      0.13501759614136988,
+      0.1580692505742602,
+      -0.03992349063518347,
+      -0.051380726382483685,
+      -0.007578844982600386
+    ],
+    [
+      0.13501759614136988,
+      0.5466329962539299,
+      0.1591949813686565,
+      -0.033377961380226855,
+      -0.010161826345120147,
+      -0.03867048505454132
+    ],
+    [
+      0.1580692505742602,
+      0.1591949813686565,
+      0.6993861337782603,
+      -0.0029008047351295344,
+      -0.06997702682475045,
+      -0.03274107897853741
+    ],
+    [
+      -0.03992349063518347,
+      -0.033377961380226855,
+      -0.0029008047351295344,
+      0.1649448882572524,
+      -0.014347774566332336,
+      -0.018894609362555825
+    ],
+    [
+      -0.051380726382483685,
+      -0.010161826345120147,
+      -0.06997702682475045,
+      -0.014347774566332336,
+      0.18737255975727357,
+      -0.005841237737038119
+    ],
+    [
+      -0.007578844982600386,
+      -0.03867048505454132,
+      -0.03274107897853741,
+      -0.018894609362555825,
+      -0.005841237737038119,
+      0.20264327360235307
+    ]
+  ],
+  "total_audit_workflow_s": 640.0815366690003,
+  "total_workflow_s": 640.0815366690003
+}

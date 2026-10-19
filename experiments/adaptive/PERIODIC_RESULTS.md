@@ -1,5 +1,65 @@
 # Difficult periodic specimens on G3
 
+## Partial pending-wall settling, 19 October 2026
+
+Job 228 first proves the focused native regression fails on the unchanged
+algorithm. A full wall projection crosses the opposite tetrahedral face,
+while a partial step can reduce the residual without lowering quality below
+the existing floor. The original module and assertion log are retained in
+`runs/g3-pending-partial-projection-red-v1`.
+
+The candidate tries eight successively halved steps before splitting facing
+edges. Each step must remain inside the box, retain the wall branch, reduce
+the field residual by at least 0.1%, and preserve the existing incident-tet
+quality floor. Accepted partial vertices remain pending. No admission gate,
+quadratic damping rule, public option, or default solver changes.
+
+Job 230 passes all 25 core and 37 focused Python tests. The fixed compiled
+spinodoid curved24 recipe now passes independent admission: two-sided sampled
+distance drops from 0.00230198 to 0.00173079 and failed projections from nine
+to zero. It has 105,618 nodes and 66,191 Tet10 elements, versus 105,689 and
+66,231 before the change. Corner quality remains 0.18951, relative volume
+error is +0.02597%, sampled Jacobians are positive, and periodic caps match.
+Generation takes 7.93 seconds and the geometry-audited workflow 16.84 seconds.
+Records are in `runs/g3-spinodoid-partial-settle-curved24-v1`.
+
+Job 231 regenerates this admitted recipe and completes all six prescribed
+strain loads under the same 8 GiB ceiling. Solve time is 623.09 seconds and
+total workflow time is 640.08 seconds, with 3.34 GiB peak RSS. Job 232
+independently reproduces the reaction tensor from integrated stresses within
+1.28e-11 relative error, verifies energy consistency, and finds zero periodic
+displacement jumps. It re-audits both retained reference fields too.
+
+The new tensor differs from the fine actual tensor by 0.02824% in worst
+mixed-load energy. Across all six unchanged reference models, disagreement
+is 0.05430% to 0.13529%, below the 1% target. Exact equality of the six model
+records is checked against the original sensitivity file. Records are in
+`runs/g3-partial-settle-spinodoid-field-audit-v1` and
+`runs/g3-spinodoid-partial-settle-reference-sensitivity-v1.json`.
+
+This is an admission benefit with 7.89% fewer nodes than the old admitted
+curved32 mesh, not a demonstrated speedup. The single 640.08-second workflow
+is slower than its historical 490.86-second control. There is still no
+admitted actual Microgen spinodoid comparator.
+
+Job 234 replays four admitted geometry controls. Schwarz curved8 and Gyroid
+curved9 remain bitwise identical. Lattice adaptive24 retains its counts and
+admission. A bijective coordinate match has zero maximum difference;
+canonical cell and boundary node sets match after renumbering. Spinodoid32
+also passes, with 114,747 nodes and distance 0.00016283. Its new tensor is not
+measured, and the older audited reference tensors remain retained. Job 233
+had stopped on a missing legacy optimizer metadata key, not a meshing failure.
+The corrected replay uses the one pass recorded by its original frozen driver.
+Records are in `runs/g3-partial-settle-admitted-controls-v2`.
+
+Job 235 passes positive 64-point and 125-point fixed-field reintegration and
+the affine and monomial controls. The 125-point energy differs from the
+solved 15-point tensor by 1.79e-8 in worst mixed-load energy; the 64-to-125
+shift is 3.63e-9. This does not certify continuum error or local stress.
+Records are in `runs/g3-partial-settle-spinodoid-positive-rule-audit-v1`.
+Retain the bounded native fix and test one coarser 20-cell spinodoid geometry
+before choosing any further solve.
+
 ## Coarse quadratic damping probes, 19 October 2026
 
 Job 222 reproduces the fixed 24-cell spinodoid and recovers all ten damped
@@ -21,11 +81,11 @@ fails corner quality at 0.06446. Half and quarter moves retain corner qualities
 runs. Records are in `runs/g3-spinodoid-curved24-corner-root-v1`.
 
 These tests rule out the tested postprocessors, not a native pre-elevation
-partial move followed by fresh quadratic projection and damping. The native
-pending-vertex repair currently accepts a full root or splits facing edges;
-it does not try a quality-preserving partial root step. A focused regression
-must establish that missing progress before testing a native change. Keep the
-existing quality, periodicity and sampled Jacobian floors unchanged.
+partial move followed by fresh quadratic projection and damping. Before job
+228, native pending-vertex repair accepts a full root or splits facing edges;
+it does not try a quality-preserving partial root step. The regression and
+native pilot above test that missing progress without changing the quality,
+periodicity, or sampled Jacobian floors.
 
 ## Rejected classic VTK spinodoid clip, 18 October 2026
 

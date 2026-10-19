@@ -1,0 +1,33 @@
+   Compiling meshers-core v0.1.0 (/home/kmarchais/dev/meshers/crates/meshers-core)
+    Finished `release` profile [optimized] target(s) in 36.02s
+     Running unittests src/lib.rs (target/release/deps/meshers_core-93dd010c0a9d9c50)
+
+running 25 tests
+test adaptive::tests::incremental_boundary_matches_full_edge_bisection ... ok
+test adaptive::tests::interior_quality_rejection_leaves_mesh_unchanged ... ok
+test boundary_tests::flat_boundary_rejects_same_orientation_and_nonmanifold_faces ... ok
+test implicit::intersection::repair::tests::forbids_collapsing_a_three_edge_feature_loop ... ok
+test implicit::intersection::repair::tests::permits_removing_an_interior_point_of_one_rim ... ok
+test implicit::intersection::repair::tests::rejects_creating_a_shortcut_between_separate_rims ... ok
+test implicit::topology_tests::catches_vertex_pinches_even_when_all_edges_have_two_faces ... ok
+test optimize::gpu_acceptance_tests::off_field_wall_vertex_keeps_its_boundary_constraint ... ok
+test optimize::gpu_acceptance_tests::rejects_nonfinite_outside_and_inverting_gpu_moves ... ok
+test quadratic::tests::partial_curving_keeps_periodic_copies_identical ... ok
+test quadratic::tests::periodic_quadratic_nodes_pair_on_every_axis ... ok
+test quadratic::tests::straight_jacobian_is_six_times_volume_everywhere ... ok
+test quadratic::tests::validity_fallback_retains_safe_partial_curvature ... ok
+test quadratic::tests::wall_mid_edge_nodes_lie_on_the_sphere ... ok
+test tests::adaptive_parallel_is_deterministic ... ok
+test tests::aligned_optimization_preserves_geometry_and_periodicity ... ok
+test tests::odd_resolution_and_other_band ... ok
+test tests::periodic_band ... ok
+test tests::regular_tet_quality ... ok
+test tests::rejects_underresolved_sheet ... ok
+test tests::rejects_unresolved_edge_alignment ... ok
+test tet_adapt::tests::pending_wall_projection_makes_safe_partial_progress ... ok
+test tet_adapt::tests::periodic_gyroid_band_stays_periodic ... ok
+test tet_adapt::tests::projection_cannot_move_a_wall_vertex_across_a_periodic_plane ... ok
+test tet_adapt::tests::sphere_adapts_with_fewer_tetrahedra_and_exact_walls ... ok
+
+test result: ok. 25 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 10.42s
+

@@ -1,0 +1,22 @@
+   Compiling meshers-core v0.1.0 (/home/kmarchais/dev/meshers/crates/meshers-core)
+    Finished `release` profile [optimized] target(s) in 3m 38s
+     Running unittests src/lib.rs (target/release/deps/meshers_core-93dd010c0a9d9c50)
+
+running 1 test
+test tet_adapt::tests::pending_wall_projection_makes_safe_partial_progress ... FAILED
+
+failures:
+
+---- tet_adapt::tests::pending_wall_projection_makes_safe_partial_progress stdout ----
+
+thread 'tet_adapt::tests::pending_wall_projection_makes_safe_partial_progress' (47009) panicked at crates/meshers-core/src/tet_adapt.rs:1315:9:
+pending wall vertex did not make safe partial progress
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+
+failures:
+    tet_adapt::tests::pending_wall_projection_makes_safe_partial_progress
+
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 24 filtered out; finished in 0.00s
+
+error: test failed, to rerun pass `-p meshers-core --lib`
