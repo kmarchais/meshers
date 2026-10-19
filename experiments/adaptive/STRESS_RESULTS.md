@@ -1,5 +1,26 @@
 # Periodic stress-recovery sizing on G3
 
+## Resumed Tet10 screen, 19 October 2026
+
+Job 206 tests periodic volume-weighted recovery of Tet10 corner stresses on
+the archived 24-cell lattice. The fixed worst mixed strain is a diagnostic
+input, not a free live estimator. The parent fields pass another independent
+stress/energy audit. An affine stress patch is reproduced within 2.39e-13.
+Positive 125-point reintegration changes estimated correction energy by only
+3.44e-6 relative to the 64-point rule.
+
+Recovery density has Spearman correlation 0.82290 with the archived same-domain
+cubic correction density. Its top 20% captures 98.2543% of discrete enrichment
+energy, versus 48.5153% for volume, 93.4141% for stress magnitude and 98.3943%
+for the oracle. The gain over stress magnitude is 4.8402 percentage points,
+below the predeclared five-point screen. The estimated energy is 1.947 times
+the observed discrete correction energy, not a certified error estimate.
+
+Do not relax that screen or select a live recovery-sizing pilot from this run.
+The ranking is strong, but it does not establish the additional workflow value
+over cheaper stress weighting. Records are in
+`runs/g3-lattice-p2-recovery-validation-v1`. No native feature changes result.
+
 The stopping condition is a faster Meshers workflow at matched accuracy against
 the actual Microgen+MMG route. The comparison still needs an admitted Microgen
 baseline. Failed competitors are recorded in `MICROGEN_RESULTS.md` and do not

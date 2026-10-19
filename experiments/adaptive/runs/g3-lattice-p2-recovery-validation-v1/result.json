@@ -1,0 +1,62 @@
+{
+  "source": "experiments/adaptive/runs/g3-lattice-curved24-symmetric-v1",
+  "oracle": "experiments/adaptive/runs/g3-lattice-cubic-error-localization-v1",
+  "elements": 44976,
+  "nodes": 69025,
+  "engineering_strain": [
+    -0.36329415604091503,
+    -0.4052927689493632,
+    0.8388523230089605,
+    0.0028025197429935567,
+    -0.006866876917451293,
+    0.005186491187561456
+  ],
+  "affine_patch_maximum_stress_error": 2.389199948993337e-13,
+  "recovery_and_diagnostic_s": 27.802765005999845,
+  "rules": [
+    {
+      "quadrature": "own15",
+      "estimated_energy": 0.0005468414373987029,
+      "discrete_energy_effectivity_squared": 1.946960198812738,
+      "density_spearman": 0.8228967622317419,
+      "top_twenty_percent_enrichment_capture": {
+        "recovery_density": 0.9825426762661541,
+        "recovery_mass": 0.9826963363411301,
+        "volume": 0.4851529929587403,
+        "stress_magnitude": 0.9341411118785307,
+        "oracle": 0.9839429044891597
+      },
+      "relative_energy_change_from_previous_rule": null
+    },
+    {
+      "quadrature": "positive64",
+      "estimated_energy": 0.0005468517702091161,
+      "discrete_energy_effectivity_squared": 1.9469969874853594,
+      "density_spearman": 0.8228965323933818,
+      "top_twenty_percent_enrichment_capture": {
+        "recovery_density": 0.9825426762661541,
+        "recovery_mass": 0.9826963363411301,
+        "volume": 0.4851529929587403,
+        "stress_magnitude": 0.9341411118785307,
+        "oracle": 0.9839429044891597
+      },
+      "relative_energy_change_from_previous_rule": 1.8895441542099434e-05
+    },
+    {
+      "quadrature": "positive125",
+      "estimated_energy": 0.0005468536491941105,
+      "discrete_energy_effectivity_squared": 1.94700367737524,
+      "density_spearman": 0.822896471660475,
+      "top_twenty_percent_enrichment_capture": {
+        "recovery_density": 0.9825426762661542,
+        "recovery_mass": 0.9826963363411301,
+        "volume": 0.4851529929587403,
+        "stress_magnitude": 0.9341411118785307,
+        "oracle": 0.9839429044891597
+      },
+      "relative_energy_change_from_previous_rule": 3.4360042278080982e-06
+    }
+  ],
+  "predeclared_pilot_screen_passed": false,
+  "scope": "Saved-field Tet10 recovery ranking against same-domain discrete cubic correction; fixed witness is a diagnostic input, not a free live estimator; no stiffness or local-stress certificate"
+}

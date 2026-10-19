@@ -1,5 +1,32 @@
 # Difficult periodic specimens on G3
 
+## Coarse quadratic damping probes, 19 October 2026
+
+Job 222 reproduces the fixed 24-cell spinodoid and recovers all ten damped
+edge proposals from their native power-of-two displacement fractions. Fifteen
+of the worst twenty boundary probes depend on those nodes. Five edges can
+safely regain full curvature under the existing 0.001 Jacobian-ratio floor,
+with opposite periodic copies moved together. Reverse distance improves from
+0.00163249 to 0.00153798, but worst forward distance stays 0.00230198 and nine
+projections still fail. No native restoration feature is promoted from this
+unadmitted saved-mesh diagnostic. Records are in
+`runs/g3-spinodoid-curved24-selective-restore-v1`.
+
+The maximum-distance samples are the off-wall periodic corner pair 15568 and
+15569. Job 225 tests full, half and quarter moves toward their independently
+computed roots. Mid-edge nodes initially follow the corresponding affine
+corner displacement, preserving their old curvature offsets. Full projection
+fails corner quality at 0.06446. Half and quarter moves retain corner qualities
+0.13847 and 0.17624, but invert curved elements. No move is accepted and no FEA
+runs. Records are in `runs/g3-spinodoid-curved24-corner-root-v1`.
+
+These tests rule out the tested postprocessors, not a native pre-elevation
+partial move followed by fresh quadratic projection and damping. The native
+pending-vertex repair currently accepts a full root or splits facing edges;
+it does not try a quality-preserving partial root step. A focused regression
+must establish that missing progress before testing a native change. Keep the
+existing quality, periodicity and sampled Jacobian floors unchanged.
+
 ## Rejected classic VTK spinodoid clip, 18 October 2026
 
 Job 170 replaces PyVista's table-based clipping with `vtkClipDataSet` at its

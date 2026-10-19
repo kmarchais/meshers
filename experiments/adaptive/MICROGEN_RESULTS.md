@@ -1,5 +1,26 @@
 # G3 Microgen workflow results, 17 October 2026
 
+## Required-entity grading diagnostic, 19 October 2026
+
+Saved-output audit 212 finds 189 Gyroid two-pass tets and 222 one-pass FEM tets
+below quality 0.1. Every bad tet touches a cap vertex, yet no cap or wall face
+has a quality ceiling below 0.1. This supports inspecting near-required-entity
+gradation, not a guarantee that sizing alone repairs these meshes. Records
+are in `runs/g3-gyroid-mmg-quality-localization-v1`.
+
+The installed MMG CLI supports `-hgradreq`, which the installed Microgen wrapper
+does not expose. Job 215 adds only `-hgradreq 1.1` to the actual recorded
+VTK43/one-pass FEM recipe, retaining first-pass hausd 0.0015, hmax 0.06,
+hgrad 1.3 and unchanged admission gates. The full actual CLI is archived.
+This is an explicit override, not Microgen defaults or a Meshers seed.
+
+The result has 32,194 nodes and 150,873 tets. Sampled distance 0.0014971,
+volume error +0.3494%, and periodicity pass, but minimum quality deteriorates
+from 0.0079758 to 0.00018695. No FEA runs. Stop this variant. Its unsuccessful
+option is removed from the maintained runner; restore the frozen driver in
+`runs/g3-gyroid-first-pass-fem43-required11-v1` to reproduce it. The admitted
+Gyroid Microgen comparator remains missing.
+
 The opening tables and failure list record the initial 17 October experiment.
 Later sections include native fixes, admitted spinodoid and lattice meshes,
 and tuned Microgen controls. For current conclusions, start with the
