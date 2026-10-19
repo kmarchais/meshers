@@ -437,3 +437,25 @@ chooses one operand's derivative at a min or max tie, whereas its absolute
 value derivative is zero there. The existing symmetric-minimum workaround
 is not default raw-field support. Test any correction separately, keeping
 periodicity, quality, distance, and full stiffness gates fixed.
+
+Jobs 261, 264, and 266 complete that compiler check. Both smooth-composition
+gradient regressions fail before correction. Exact min/max ties now average
+operand derivatives, consistently with zero derivative for abs(0), without
+changing primitive values. The documented subgradient policy changes; an
+explicit gradient callable can preserve another policy. This does not provide
+true crease constraints.
+
+The full Python suite passes 133 tests with one optional wide-constraints
+skip. All four geometry controls stay admitted. The actual raw lattice gradient
+matches centered differences within 1.81e-10. A raw-clamped before/after
+comparison improves distance and removes 516 nodes, but both arms already
+pass geometry. Fully raw scalar input still rejects at periodic axis 0.
+There is no new raw-clamped six-load tensor or matched-accuracy timing win.
+
+Return to the unresolved lattice stiffness/reference discrepancy rather than
+claiming that compiler correctness solves it. Volume bias and fixed-field
+quadrature sensitivity are too small in the measured candidates to justify
+an offset or explain their model misses. Further reference work must separate
+finite-element enrichment from geometric interpolation error. Preserve the
+same-domain cubic result and all 24 empirical models; do not promote another
+stress-sizing strength trial from localization alone.

@@ -40,15 +40,18 @@ The 32-entry cache includes captured constants, not mesh resolution. Each
 preparation retraces to observe changed parameters. An explicit `compile_field`
 call is optional and returns an immutable snapshot.
 
-At abs(0), the derivative is zero; min/max ties use the first branch; `where`
-uses the chosen branch. These conventions do not make nonsmooth or discontinuous
-geometries smooth. Keep thickness positive throughout the domain.
+At abs(0), the derivative is zero. Exact min/max ties average the operand
+derivatives; `where` uses the chosen branch. Field values do not change.
+These conventions do not make nonsmooth or discontinuous geometries smooth.
+An averaged subgradient at a true crease is not a branch constraint. Keep
+thickness positive throughout the domain.
 
-These primitive conventions can also give an incorrect gradient where their
-kinks cancel inside a smooth composite. For cubic smooth-union formulas that
-also use `abs(a-b)`, express the minimum as `(a+b-abs(a-b))/2`. This keeps the
-tie derivative consistent with the absolute-value term. Verify the composite
-gradient at equal branches or supply an explicit gradient callback.
+Earlier versions selected the first operand's derivative at min/max ties.
+That policy could misdifferentiate a cubic smooth union whose min and abs
+kinks cancel. The averaged policy gives the correct derivative for that
+composition without rewriting the minimum as `(a+b-abs(a-b))/2`. Verify
+gradients at equal branches for other composite formulas. Supply an explicit
+gradient callback when another tie policy is required.
 
 
 ## Coordinate maps and nonsmooth points

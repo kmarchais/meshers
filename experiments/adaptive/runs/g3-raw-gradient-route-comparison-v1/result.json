@@ -1,0 +1,77 @@
+{
+  "arms": [
+    {
+      "arm": "before-clamped",
+      "actual_expression_sha256": "54d7e781c5e0a54036e09ae4291a9308bf10f46fe34b26f97bab33220d0059f6",
+      "qualified": true,
+      "status": "admitted-needs-reference",
+      "nodes": 124024,
+      "elements": 78001,
+      "geometry": {
+        "sampled_forward_max": 0.0003902669676044599,
+        "sampled_reverse_max": 0.0002920167575950464,
+        "sampled_two_sided_max": 0.0003902669676044599,
+        "outward_forward_max": 0.0003902669676044599,
+        "inward_forward_max": 0.00030618615094443036,
+        "projection_failed": 0,
+        "forward_samples": 179868,
+        "reverse_samples": 34791,
+        "volume": 0.24823320005186245,
+        "relative_volume_error": -0.0003134888118901946,
+        "q_min_corner": 0.1357081239211734,
+        "q_p01_corner": 0.2544831426526722,
+        "minimum_dihedral_deg_corner": 7.428134167434564,
+        "minimum_sampled_jacobian": 9.97949255413017e-09,
+        "reverse_tessellation_delta_max": 0.00017279070397252305,
+        "quadratic_reverse_subdivisions": [
+          4,
+          8
+        ],
+        "geometry_admitted": true
+      },
+      "error": null
+    },
+    {
+      "arm": "after-clamped",
+      "actual_expression_sha256": "abf5e43d1b7e9fb05c7d081bd55c0f4ad74f1c6cc4d9ed7a89fb2881445c13f4",
+      "qualified": true,
+      "status": "admitted-needs-reference",
+      "nodes": 123508,
+      "elements": 77585,
+      "geometry": {
+        "sampled_forward_max": 0.00026399150944859636,
+        "sampled_reverse_max": 0.00026671173105885445,
+        "sampled_two_sided_max": 0.00026671173105885445,
+        "outward_forward_max": 0.00026399150944859636,
+        "inward_forward_max": 0.00024265934259539042,
+        "projection_failed": 0,
+        "forward_samples": 180076,
+        "reverse_samples": 34791,
+        "volume": 0.24823301939799022,
+        "relative_volume_error": -0.0003142163424509903,
+        "q_min_corner": 0.13570812739301347,
+        "q_p01_corner": 0.2534967095050248,
+        "minimum_dihedral_deg_corner": 7.428134165216733,
+        "minimum_sampled_jacobian": 1.0333042063009195e-08,
+        "reverse_tessellation_delta_max": 9.88274213973243e-05,
+        "quadratic_reverse_subdivisions": [
+          4,
+          8
+        ],
+        "geometry_admitted": true
+      },
+      "error": null
+    },
+    {
+      "arm": "after-fully-raw",
+      "actual_expression_sha256": "abf5e43d1b7e9fb05c7d081bd55c0f4ad74f1c6cc4d9ed7a89fb2881445c13f4",
+      "qualified": false,
+      "status": "failed",
+      "nodes": null,
+      "elements": null,
+      "geometry": null,
+      "error": "field/grading is incompatible with periodic axis 0"
+    }
+  ],
+  "scope": "Actual loaded derivative-policy comparison; scientific admission unchanged; no full-tensor or repeated timing claim"
+}

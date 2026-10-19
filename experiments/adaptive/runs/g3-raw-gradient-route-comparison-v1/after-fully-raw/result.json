@@ -1,0 +1,18 @@
+{
+  "case": "smooth-lattice",
+  "cells": 24,
+  "min_length": 0.002,
+  "order": 2,
+  "native_tolerance": 1.0,
+  "optimization_passes": 1,
+  "adaptive": true,
+  "adapt_tolerance": 0.004,
+  "solver_quadrature_points": 15,
+  "solve_node_cap": 100000,
+  "qualified": false,
+  "solver": "jacobi-cg",
+  "status": "failed",
+  "error": "field/grading is incompatible with periodic axis 0",
+  "traceback": "Traceback (most recent call last):\n  File \"/home/kmarchais/dev/meshers/experiments/adaptive/admission_pilot.py\", line 129, in worker\n    mesh = meshers.generate(field, bounds=workflow.BOUNDS, cells=args.cells,\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/kmarchais/dev/meshers/crates/meshers-python/python/meshers/__init__.py\", line 316, in generate\n    result = _meshers.generate(\n             ^^^^^^^^^^^^^^^^^^\nValueError: field/grading is incompatible with periodic axis 0\n",
+  "total_audit_workflow_s": 0.021046027999545913
+}

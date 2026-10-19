@@ -178,6 +178,53 @@ def test_compiled_minmax_values_and_piecewise_gradients():
     np.testing.assert_array_equal(gradients, np.eye(3)[branch])
 
 
+@pytest.mark.parametrize(("operation", "correction_sign"), [(np.minimum, -1), (np.maximum, 1)])
+def test_compiled_tied_smooth_composition_gradient(operation, correction_sign):
+    def smooth(coordinates_x, coordinates_y, coordinates_z):
+        blend = np.maximum(0.08 - np.abs(coordinates_x - coordinates_y), 0) / 0.08
+        return (
+            operation(coordinates_x, coordinates_y)
+            + correction_sign * blend**3 * 0.08 / 6
+            + coordinates_z**2
+        )
+
+    compiled = meshers.compile_field(smooth)
+    point = np.array([0.17, 0.17, 0.13])
+    expected = np.array([0.5, 0.5, 0.26])
+    numeric = np.array([
+        (smooth(*(point + 1e-6 * direction)) - smooth(*(point - 1e-6 * direction))) / 2e-6
+        for direction in np.eye(3)
+    ])
+    np.testing.assert_allclose(numeric, expected, rtol=0, atol=1e-9)
+    np.testing.assert_allclose(
+        compiled.gradient(*point),
+        expected,
+        rtol=0,
+        atol=1e-14,
+        err_msg="smooth-composition tie gradient mismatch",
+    )
+    probes = np.array([point, [0.16, 0.18, 0.13], [0.18, 0.16, -0.13]])
+    np.testing.assert_allclose(compiled.values(probes), smooth(*probes.T), rtol=0, atol=1e-15)
+
+
+@pytest.mark.parametrize("operation", [np.minimum, np.maximum])
+def test_compiled_minmax_tie_subgradient_is_operand_symmetric(operation):
+    direct = meshers.compile_field(
+        lambda coordinates_x, coordinates_y, coordinates_z: operation(coordinates_x, coordinates_y)
+    )
+    reverse = meshers.compile_field(
+        lambda coordinates_x, coordinates_y, coordinates_z: operation(coordinates_y, coordinates_x)
+    )
+    np.testing.assert_array_equal(direct.gradient(0.17, 0.17, 0.13), [0.5, 0.5, 0])
+    np.testing.assert_array_equal(reverse.gradient(0.17, 0.17, 0.13), [0.5, 0.5, 0])
+    extreme = meshers.compile_field(
+        lambda coordinates_x, coordinates_y, coordinates_z: operation(
+            1e308 * coordinates_x + coordinates_y, 1e308 * coordinates_x - coordinates_y
+        )
+    )
+    np.testing.assert_array_equal(extreme.gradient(0, 0, 0), [1e308, 0, 0])
+
+
 def test_compiled_minmax_propagates_nonfinite_branches():
     field = meshers.compile_field(lambda x, y, z: np.minimum(np.sqrt(x), 0))
     with pytest.raises(ValueError, match="nonfinite"):

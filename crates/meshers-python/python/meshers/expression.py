@@ -229,7 +229,8 @@ class _Graph:
             if op in {"minimum", "maximum"}:
                 b = args[1]
                 db = d(ids[1], axis)
-                return choose(a <= b if op == "minimum" else a >= b, da, db)
+                tied = add(mul(self.convert(0.5), da), mul(self.convert(0.5), db))
+                return choose(a == b, tied, choose(a <= b if op == "minimum" else a >= b, da, db))
             if op in {"add", "sub", "mul", "div", "pow"}:
                 b = args[1]
                 db = d(ids[1], axis)
@@ -327,7 +328,9 @@ def compile_field(
 
     Note:
         No Rust installation, Numba, SymPy or subprocess is used at runtime.
-        Gradients at abs(0) are zero; min/max ties use the first branch.
+        Gradients at abs(0) are zero. Exact min/max ties average the operand
+        derivatives. This is a subgradient choice at a true crease, not a
+        branch constraint. Supply a gradient callable for another policy.
     """
     if backend not in {"rust", "jit"}:
         raise ValueError("only the embedded Rust compiler is supported")

@@ -57,7 +57,7 @@ def main():
             assert np.array_equal(actual < 0, expected < 0)
             original_error = float(abs(original_gradient - numeric).max())
             symmetric_error = float(abs(symmetric_gradient - numeric).max())
-            assert original_error > 1e-3 and symmetric_error < 1e-7
+            assert max(original_error, symmetric_error) < 1e-7
             workflow.save(args.output, {"script_sha256": workflow.digest(Path(__file__)),
                 "specimen_source_sha256": workflow.digest(Path(workflow.__file__)),
                 "queries": queries.tolist(), "finite_difference_gradient": numeric.tolist(),

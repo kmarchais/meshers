@@ -32,9 +32,12 @@ Functions must be deterministic and pointwise. Tracing executes the function onc
 do not use side effects or quantities that depend on array length or batch contents.
 Unsupported array operations use NumPy callbacks with a warning. `compile=False`
 selects callbacks explicitly. Arbitrary Python programs are not compilable.
-At nonsmooth points, abs uses derivative zero; min/max use the first branch at a
-tie; `where` uses the selected branch. Discontinuous fields or undefined derivatives
-still need appropriate geometry and resolution checks.
+At nonsmooth points, abs uses derivative zero. Exact min/max ties average the
+operand derivatives, replacing the earlier first-branch policy; `where` uses
+the selected branch. Values are unchanged. Averaging is a subgradient choice
+at a true crease, not a geometric branch constraint. An explicit gradient
+callable can provide another policy. Discontinuous fields and undefined
+derivatives still need appropriate geometry and resolution checks.
 
 The 32-entry in-memory cache keys the expression graph, including captured scalar
 values. Each call retraces to observe changed parameters; mesh resolution does not

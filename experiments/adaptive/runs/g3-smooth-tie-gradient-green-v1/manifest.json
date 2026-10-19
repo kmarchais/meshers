@@ -1,0 +1,22 @@
+{
+  "inputs": {
+    "/home/kmarchais/dev/meshers/experiments/adaptive/runs/g3-smooth-tie-gradient-green-v1/driver.py": "b15880142c2718ac7e05f99bd61c8272ab4c6ce8466fe7b24d14c4e056819180",
+    "/home/kmarchais/dev/meshers/crates/meshers-python/python/meshers/expression.py": "abf5e43d1b7e9fb05c7d081bd55c0f4ad74f1c6cc4d9ed7a89fb2881445c13f4",
+    "/home/kmarchais/dev/meshers/crates/meshers-python/tests/test_compiled.py": "4698b503af99dc73e14a8111eeb25a7eca7a5c76f1271677e9112e3d151bdbdb",
+    "/home/kmarchais/dev/meshers/crates/meshers-python/python/meshers/_meshers.abi3.so": "908e326211792142f83f854ad2696cd879d927bd81deacf38eb6a0cb63bc4dc1",
+    "/home/kmarchais/dev/meshers/experiments/adaptive/gradient_tie_probe.py": "f2fddde187144f52527bd8563b34128831cc4f8733ef720ad86cf7c5db8d2762",
+    "/home/kmarchais/dev/meshers/experiments/adaptive/settle_controls.py": "c4add10b421d66b2ce3bdfa21282964adaf656dc4338f9f6eae2556285ba237f",
+    "/home/kmarchais/dev/meshers/experiments/adaptive/admission_pilot.py": "34881be3599ec1cd6392133f650094cbca8ef85930abadcd9a64bd4bd7b05e87",
+    "/home/kmarchais/dev/meshers/experiments/adaptive/microgen_workflow.py": "3f98bcaf9ae151cb357944744e82dd80801703a4db04f94df31263c9c9fa7640"
+  },
+  "memory_bytes": 8589934592,
+  "worker_timeouts_s": {
+    "python-tests": 1200,
+    "lattice-gradients": 120,
+    "geometry-controls": 600
+  },
+  "numerical_thread_environment": 1,
+  "test_threads": "Existing tests retain their explicit concurrency checks",
+  "native_rebuild_required": false,
+  "change_scope": "Python derivative graph; same embedded native compiler"
+}

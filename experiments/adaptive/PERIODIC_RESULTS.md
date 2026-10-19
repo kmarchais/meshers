@@ -1,5 +1,53 @@
 # Difficult periodic specimens on G3
 
+## Exact-tie smooth-composition gradients, 19 October 2026
+
+Job 261 proves two focused regressions fail before correction. Both cubic
+smooth-minimum and smooth-maximum compositions are differentiable at equal
+branches, but their compiled gradient is [1, 0, 0.26] instead of the analytic
+[0.5, 0.5, 0.26]. Centered finite differences agree with the analytic result.
+The red tests and pre-fix derivative source are preserved with hashes in
+`runs/g3-smooth-tie-gradient-red-v1`. The test source snapshot uses a non-test
+filename so repository discovery does not collect it twice.
+
+The derivative graph now averages operand derivatives at exact min/max ties.
+Away from ties the old branch derivative remains unchanged. Half-weighting
+each operand before addition avoids overflow when both derivatives are large.
+Field values and explicit gradient callables are unchanged. This deliberately
+replaces the documented first-branch subgradient convention. At a true crease
+the average is still only a subgradient, not a geometric branch constraint.
+
+Job 264 passes the complete Python suite: 133 passed and one skipped. The
+skip is the optional wide-constraints case; this build has eight constraints,
+not the required 32. Primitive operand-order symmetry and large-derivative
+tests pass too. No Rust library source changes or rebuild is required: the
+Python graph generator feeds the existing embedded native compiler.
+
+The actual raw smooth-union gradient and its symmetric algebraic counterpart
+now both agree with centered differences within 1.81e-10. Values remain equal
+within 1.67e-16 over 4,096 fixed random points. All four existing geometry
+controls stay admitted. Schwarz curved8 and Gyroid curved9 remain bitwise
+identical. Lattice adaptive24 keeps 123,570 nodes and the same measured
+distance. Spinodoid32 stays admitted at 114,747 nodes, as after partial settling.
+Records are in `runs/g3-smooth-tie-gradient-green-v1`.
+
+Job 266 completes the three-arm geometry-only comparison with actual loaded
+Python source hashes and the same native binary. Neither clamped arm uses
+the symmetric-minimum rewrite. Both pass admission. Before correction the
+mesh has 124,024 nodes and distance 0.00039027; afterward it has 123,508 nodes
+and distance 0.00026671. Both minimum corner qualities remain about 0.13571,
+all sampled Jacobians are positive, and periodic caps match. This is a measured
+geometry improvement, not a newly admitted route: the old clamped mesh already
+passed. Records are in `runs/g3-raw-gradient-route-comparison-v1`.
+
+The fully raw current input still rejects with `field/grading is incompatible
+with periodic axis 0`. Its far-void scalar mismatch is independent of the
+gradient fix. Keep that unsupported route explicit. The positive void clamp
+remains a recorded domain-equivalent input transformation. No six-load tensor
+is obtained for the new raw-clamped mesh, so there is no new stiffness accuracy
+or Microgen timing victory. True crease constraints are also not implemented
+by this averaged subgradient policy.
+
 ## Partial pending-wall settling, 19 October 2026
 
 Job 228 first proves the focused native regression fails on the unchanged

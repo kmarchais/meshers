@@ -1,0 +1,90 @@
+FF                                                                       [100%]
+=================================== FAILURES ===================================
+__________ test_compiled_tied_smooth_composition_gradient[minimum--1] __________
+
+operation = <ufunc 'minimum'>, correction_sign = -1
+
+    @pytest.mark.parametrize(("operation", "correction_sign"), [(np.minimum, -1), (np.maximum, 1)])
+    def test_compiled_tied_smooth_composition_gradient(operation, correction_sign):
+        def smooth(coordinates_x, coordinates_y, coordinates_z):
+            blend = np.maximum(0.08 - np.abs(coordinates_x - coordinates_y), 0) / 0.08
+            return (
+                operation(coordinates_x, coordinates_y)
+                + correction_sign * blend**3 * 0.08 / 6
+                + coordinates_z**2
+            )
+    
+        compiled = meshers.compile_field(smooth)
+        point = np.array([0.17, 0.17, 0.13])
+        expected = np.array([0.5, 0.5, 0.26])
+        numeric = np.array([
+            (smooth(*(point + 1e-6 * direction)) - smooth(*(point - 1e-6 * direction))) / 2e-6
+            for direction in np.eye(3)
+        ])
+        np.testing.assert_allclose(numeric, expected, rtol=0, atol=1e-9)
+>       np.testing.assert_allclose(
+            compiled.gradient(*point),
+            expected,
+            rtol=0,
+            atol=1e-14,
+            err_msg="smooth-composition tie gradient mismatch",
+        )
+E       AssertionError: 
+E       Not equal to tolerance rtol=0, atol=1e-14
+E       smooth-composition tie gradient mismatch
+E       Mismatched elements: 2 / 3 (66.7%)
+E       Mismatch at indices:
+E        [0]: 1.0 (ACTUAL), 0.5 (DESIRED)
+E        [1]: 0.0 (ACTUAL), 0.5 (DESIRED)
+E       Max absolute difference among violations: 0.5
+E       Max relative difference among violations: 1.
+E        ACTUAL: array([1.  , 0.  , 0.26])
+E        DESIRED: array([0.5 , 0.5 , 0.26])
+
+crates/meshers-python/tests/test_compiled.py:199: AssertionError
+__________ test_compiled_tied_smooth_composition_gradient[maximum-1] ___________
+
+operation = <ufunc 'maximum'>, correction_sign = 1
+
+    @pytest.mark.parametrize(("operation", "correction_sign"), [(np.minimum, -1), (np.maximum, 1)])
+    def test_compiled_tied_smooth_composition_gradient(operation, correction_sign):
+        def smooth(coordinates_x, coordinates_y, coordinates_z):
+            blend = np.maximum(0.08 - np.abs(coordinates_x - coordinates_y), 0) / 0.08
+            return (
+                operation(coordinates_x, coordinates_y)
+                + correction_sign * blend**3 * 0.08 / 6
+                + coordinates_z**2
+            )
+    
+        compiled = meshers.compile_field(smooth)
+        point = np.array([0.17, 0.17, 0.13])
+        expected = np.array([0.5, 0.5, 0.26])
+        numeric = np.array([
+            (smooth(*(point + 1e-6 * direction)) - smooth(*(point - 1e-6 * direction))) / 2e-6
+            for direction in np.eye(3)
+        ])
+        np.testing.assert_allclose(numeric, expected, rtol=0, atol=1e-9)
+>       np.testing.assert_allclose(
+            compiled.gradient(*point),
+            expected,
+            rtol=0,
+            atol=1e-14,
+            err_msg="smooth-composition tie gradient mismatch",
+        )
+E       AssertionError: 
+E       Not equal to tolerance rtol=0, atol=1e-14
+E       smooth-composition tie gradient mismatch
+E       Mismatched elements: 2 / 3 (66.7%)
+E       Mismatch at indices:
+E        [0]: 1.0 (ACTUAL), 0.5 (DESIRED)
+E        [1]: 0.0 (ACTUAL), 0.5 (DESIRED)
+E       Max absolute difference among violations: 0.5
+E       Max relative difference among violations: 1.
+E        ACTUAL: array([1.  , 0.  , 0.26])
+E        DESIRED: array([0.5 , 0.5 , 0.26])
+
+crates/meshers-python/tests/test_compiled.py:199: AssertionError
+=========================== short test summary info ============================
+FAILED crates/meshers-python/tests/test_compiled.py::test_compiled_tied_smooth_composition_gradient[minimum--1]
+FAILED crates/meshers-python/tests/test_compiled.py::test_compiled_tied_smooth_composition_gradient[maximum-1]
+2 failed, 17 deselected in 0.13s

@@ -53,6 +53,15 @@ nominal -0.03154%. A volume offset is not justified. The actual tuned
 Microgen-derived straight Tet10 control remains about -0.4582% by volume.
 No frozen errors, gates, or stiffness models change. See `VOLUME_RESULTS.md`.
 
+The exact-tie compiler gradient defect is corrected separately. Smooth-minimum
+and smooth-maximum regressions fail before the change; afterward 133 Python
+tests pass with one optional wide-constraints skip, and all four geometry
+controls remain admitted. The actual lattice gradient error drops to 1.81e-10.
+A same-binary raw-clamped comparison reduces distance from 0.00039027 to
+0.00026671 at 516 fewer nodes. Both meshes already pass geometry. Fully raw
+input still fails the unchanged periodicity preflight, and the new raw-clamped
+mesh has no six-load accuracy result. See `PERIODIC_RESULTS.md`.
+
 ## Current G3 outcome, 2026-10-18
 
 One narrow matched-target result is supported: Schwarz Meshers beats the

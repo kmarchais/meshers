@@ -93,13 +93,31 @@ zero. Do not add a volume offset or reinterpret stiffness agreement from this.
 Old outputs and all 24 stiffness models remain unchanged. Read
 `VOLUME_RESULTS.md` and `runs/g3-lattice-volume-reference-audit-v1`.
 
-Next inspect the raw smooth-union gradient mismatch at exact branch ties.
-`expression.py` differentiates min and max ties by selecting one operand,
-but differentiates abs at zero as zero. A focused smooth-composition
-regression should prove the mismatch before changing that policy. Existing
-manual symmetric-minimum and void-clamp representations are still not raw
-default support. Do not weaken periodicity or claim a workflow victory from
-a compiler fix alone.
+Jobs 261, 264, and 266 subsequently complete that compiler check. Two C2
+smooth-composition gradient regressions fail before correction. Exact min/max
+ties now average operand derivatives, replacing the documented first-branch
+policy without changing values. Half-weighted operands avoid derivative
+overflow. Explicit gradient callables are unchanged. This remains only a
+subgradient convention at a true crease, not a branch constraint.
+
+The full Python suite passes 133 tests with one optional wide-constraints
+skip. All four geometry controls remain admitted. The actual raw lattice
+gradient agrees with centered differences within 1.81e-10. No Rust library
+source changes or rebuild is needed; the changed Python graph feeds the same
+embedded compiler. Native SHA256 stays unchanged.
+
+The same-binary raw-clamped comparison admits both arms. Distance improves
+from 0.00039027 at 124,024 nodes to 0.00026671 at 123,508 nodes. The fully raw
+current arm still fails periodic-axis-0 compatibility, so the positive void
+clamp remains necessary for this tested route. There is no new six-load tensor
+or timing victory. Read `PERIODIC_RESULTS.md` and
+`runs/g3-raw-gradient-route-comparison-v1`. The before package is archived in
+`.local-work/g3-builds/baseline-1ac72d9`; red source snapshots match their hashes.
+
+Return to lattice stiffness/reference uncertainty. Keep the same-domain cubic
+result and all 24 models. Separate geometric interpolation error from FE
+enrichment before a new correction or another sizing trial. Do not weaken
+periodicity, retrospectively relabel a failed route, or claim a four-case win.
 
 ## Local runtime
 
@@ -112,6 +130,6 @@ Its package is in `.local-work/g3-builds/baseline-090a71c`.
 Preserve ignored NPZ meshes, fields, and native binaries locally. Use Rust
 1.95.0, two build threads, one numerical thread, the pinned `.venv`, and
 `LD_LIBRARY_PATH=/home/kmarchais/dev/meshers/.local-work/g3-runtime/root/usr/lib/x86_64-linux-gnu`.
-All study jobs through 258 finish before this checkpoint. No successor is
+All study jobs through 266 finish before this checkpoint. No successor is
 queued here. The shared queue belongs to other sessions too; do not touch
 unrelated jobs or timers.
