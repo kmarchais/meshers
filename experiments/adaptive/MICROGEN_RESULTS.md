@@ -1,5 +1,20 @@
 # G3 Microgen workflow results, 17 October 2026
 
+## Spinodoid seed41 feasibility, 19 October 2026
+
+The earlier actual VTK seed41 has 261,650 tets and was skipped solely by the
+250,000 seed cap. Its measured generation peak was 0.24 GiB. Job 243 therefore
+checks only cap feasibility in an explicit 300,000-tet seed stage, with the
+same 8 GiB worker ceiling and 120-second timeout. The new runner option is
+restricted to cap-only mode. Default seed, final mesh, and FE caps do not change.
+
+The fixed FFT16 realization and all 52 coefficients remain bitwise unchanged.
+Seed41 has 190 cap triangles with adjacent-tet quality ceilings below 0.1;
+the minimum ceiling is 0.00015428. Its 2.56-second screen peaks at 0.30 GiB.
+Retaining those particular caps cannot satisfy the quality gate, so no MMG or
+FE solve follows. This extends the tested obstruction, not a universal
+impossibility result. Records are in `runs/g3-spinodoid-seed41-cap-only300k-v1`.
+
 ## Required-entity grading diagnostic, 19 October 2026
 
 Saved-output audit 212 finds 189 Gyroid two-pass tets and 222 one-pass FEM tets

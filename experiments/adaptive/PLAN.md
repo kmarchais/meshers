@@ -380,3 +380,17 @@ Job 234 retains all four geometry admissions, including bitwise unchanged
 Schwarz and Gyroid controls. Keep the fix, but make no speed claim from the
 slower 640.08-second single workflow. Test one 20-cell spinodoid geometry
 before another solve. No admitted actual Microgen spinodoid comparator exists.
+
+The 20-cell seed rejects, including its two-pass optimizer control. Stop seed
+coarsening. Tolerance 0.003 on the fixed 24-cell seed admits 73,951 nodes and
+passes the full tensor target under all six unchanged reference models, with
+independent field and positive-rule checks. Total live workflow is 364.07
+seconds. The pre-patch binary rejects the exact recipe, confirming that the
+native fix enables its admission. Do not claim an interleaved speed benchmark.
+
+Return to comparison coverage rather than continue spinodoid tuning. Actual
+Microgen seed41 is cheap enough for a separate 300,000-tet seed-only preflight
+under the unchanged 8 GiB ceiling. It still has 190 obstructing cap triangles.
+Stop that route without MMG or FEA. No larger final mesh or solve gate is
+introduced. Gyroid's missing admitted MMG control and lattice's retained-model
+accuracy disagreement remain higher priorities than another spinodoid solve.

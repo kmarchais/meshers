@@ -56,10 +56,11 @@ def worker(args):
             else (surface_functions.schwarz_p, 0, "lower skeletal"))
         grid = microgen.Tpms(function, offset=offset,
                             resolution=args.resolution).generate_volume_mesh(type_part=part).triangulate()
-    row = {"case": args.case, "resolution": args.resolution, "nodes": grid.n_points, "elements": grid.n_cells}
+    row = {"case": args.case, "resolution": args.resolution, "nodes": grid.n_points, "elements": grid.n_cells,
+           "seed_tetrahedra_cap": args.seed_cap}
     if field_verification:
         row["field_verification"] = field_verification
-    if grid.n_cells > workflow.CAP:
+    if grid.n_cells > args.seed_cap:
         row["status"] = "seed-element-cap"
     else:
         points = np.asarray(grid.points).copy()
@@ -96,9 +97,12 @@ def main():
     parser.add_argument("--case", choices=("gyroid", "schwarz-solid", "spinodoid", "smooth-lattice"),
                         default="schwarz-solid")
     parser.add_argument("--cap-only", action="store_true")
+    parser.add_argument("--seed-cap", type=int, choices=(workflow.CAP, 300_000), default=workflow.CAP)
     parser.add_argument("--resolution", type=int)
     parser.add_argument("--resolutions", type=int, nargs="+", default=(21, 22, 23, 25, 26, 27))
     args = parser.parse_args()
+    if args.seed_cap > workflow.CAP and not args.cap_only:
+        parser.error("The larger seed cap is restricted to cap-only preflight; final admission caps are unchanged")
     if args.resolution is not None:
         worker(args)
         return
@@ -122,13 +126,15 @@ def main():
         "resolutions": resolutions, "memory_bytes": workflow.MEMORY,
         "workflow_source_sha256": workflow.digest(Path(workflow.__file__)),
         "baseline_manifest_sha256": workflow.digest(source / "manifest.json"),
-        "threads": 1, "worker_timeout_s": 120, "tetrahedra_cap": workflow.CAP})
+        "threads": 1, "worker_timeout_s": 120, "tetrahedra_cap": workflow.CAP,
+        "seed_tetrahedra_cap": args.seed_cap,
+        "seed_cap_scope": "VTK seed only; no MMG or FE stage in cap-only mode"})
     rows = []
     with Job(parts=[str(resolution) for resolution in resolutions]) as job:
         for resolution in resolutions:
             with job.part(str(resolution)) as part:
                 command = [sys.executable, __file__, "--run", str(args.run),
-                    "--case", args.case, "--resolution", str(resolution)]
+                    "--case", args.case, "--resolution", str(resolution), "--seed-cap", str(args.seed_cap)]
                 if args.cap_only:
                     command.append("--cap-only")
                 result = workflow.bounded(command,

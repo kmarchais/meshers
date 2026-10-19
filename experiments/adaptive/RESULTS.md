@@ -21,6 +21,20 @@ admitted geometry controls pass, and positive 125-point fixed-field energy
 differs by only 1.79e-8 relative from the solved tensor. Retain the native
 admission fix and test one coarser geometry. See `PERIODIC_RESULTS.md`.
 
+Further seed coarsening rejects, but a looser adaptive sizing tolerance of
+0.003 on the fixed 24-cell seed passes at 73,951 nodes. All six audited loads
+complete in a 364.07-second workflow with 2.61 GiB peak RSS. Disagreement is
+0.10333% to 0.18439% across the unchanged reference models. Higher-rule energy
+shift is 3.01e-8 relative. The archived pre-patch binary rejects the exact
+recipe at distance 0.00237022, so the native admission gain is independently
+confirmed. These single runs do not establish a Microgen timing victory.
+
+The previously skipped actual Microgen spinodoid seed41 is now inspected in
+a separate 300,000-tet seed-only preflight. It has 190 cap faces with quality
+ceilings below 0.1, so retaining those caps cannot admit it. Final mesh and FE
+caps remain unchanged. No MMG or FE successor is run on this known obstruction.
+The four-case objective is still unachieved.
+
 ## Current G3 outcome, 2026-10-18
 
 One narrow matched-target result is supported: Schwarz Meshers beats the

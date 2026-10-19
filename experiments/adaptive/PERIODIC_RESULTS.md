@@ -60,6 +60,46 @@ Records are in `runs/g3-partial-settle-spinodoid-positive-rule-audit-v1`.
 Retain the bounded native fix and test one coarser 20-cell spinodoid geometry
 before choosing any further solve.
 
+Job 236 rejects the 20-cell seed because one element has quality 0.09658,
+below the unchanged 0.1 floor. A second existing optimizer pass in job 237
+raises minimum quality to 0.19475, but two independent boundary projections
+still fail. Its 102,151 nodes save only 3.28% over admitted curved24. Neither
+rejected configuration receives an FE solve. Records are in
+`runs/g3-spinodoid-partial-settle-curved20-v1` and
+`runs/g3-spinodoid-partial-settle-curved20-opt2-v1`.
+
+Stop seed coarsening and vary only the adaptive sizing tolerance from 0.002
+to 0.003 on the admitted 24-cell seed. Job 238 passes geometry with 73,951
+nodes, 45,994 Tet10 elements, distance 0.00133298, volume error +0.02586%,
+corner quality 0.26858, positive sampled Jacobians, and zero failed projections.
+Caps remain periodic. This saves 29.98% of nodes against the new curved24
+control. Records are in `runs/g3-spinodoid-partial-settle-curved24-tol003-v1`.
+
+Job 239 regenerates that candidate and completes all six prescribed-strain
+loads. Solve time is 351.27 seconds, total workflow time is 364.07 seconds,
+and peak RSS is 2.61 GiB. Job 240 independently verifies integrated stress
+against reactions to 1.73e-11 relative error, energy consistency, and zero
+periodic jumps. Worst mixed-load disagreement from the fine tensor is
+0.07722%. Across all six unchanged reference models it is 0.10333% to
+0.18439%, below the 1% target. Records are in
+`runs/g3-partial-settle-spinodoid003-field-audit-v1` and
+`runs/g3-spinodoid-partial-settle003-reference-sensitivity-v1.json`.
+
+Job 241 passes positive 64-point and 125-point fixed-field reintegration.
+The 125-point energy shift is 3.01e-8 relative and the 64-to-125 shift is
+5.17e-9. Job 242 replays the exact sizing recipe using the archived pre-patch
+Linux binary. It rejects at distance 0.00237022, versus 0.00133298 after the
+fix. Binary hashes, unchanged Python wrappers, and the original source hash
+are checked by `runs/g3-spinodoid-prepatch-curved24-tol003-v1/check_attribution.py`.
+The runner's raw source hash describes the observer workspace, not the
+archived binary's source; the separate attribution record distinguishes them.
+
+The native fix therefore enables admission at tolerance 0.003 too. The
+364.07-second workflow is a useful single-run cost reduction from the new
+640.08-second control, not an interleaved timing benchmark or a victory over
+Microgen. Stop this coarsening study here and return to missing comparison
+coverage. No admitted actual Microgen spinodoid competitor is established.
+
 ## Coarse quadratic damping probes, 19 October 2026
 
 Job 222 reproduces the fixed 24-cell spinodoid and recovers all ten damped

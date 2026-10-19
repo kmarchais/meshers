@@ -1,0 +1,26 @@
+{
+  "case": "spinodoid",
+  "cells": 20,
+  "min_length": 0.002,
+  "order": 2,
+  "native_tolerance": 1.0,
+  "optimization_passes": 1,
+  "adaptive": true,
+  "adapt_tolerance": 0.002,
+  "solver_quadrature_points": 15,
+  "solve_node_cap": 100000,
+  "qualified": false,
+  "solver": "jacobi-cg",
+  "compiled_field": {
+    "modes": 52,
+    "expression_nodes": 989,
+    "maximum_value_difference": 2.220446049250313e-16,
+    "maximum_gradient_difference": 1.8512502641954143e-10,
+    "verification_points": 4096,
+    "preparation_and_verification_s": 0.03922818200044276
+  },
+  "status": "failed",
+  "error": "minimum MMG quality 9.657716430467352e-2 is below required 1e-1; mesh rejected (1 elements below 0.1). Improve resolution/optimization or use a quality remesher",
+  "traceback": "Traceback (most recent call last):\n  File \"/home/kmarchais/dev/meshers/experiments/adaptive/admission_pilot.py\", line 129, in worker\n    mesh = meshers.generate(field, bounds=workflow.BOUNDS, cells=args.cells,\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/kmarchais/dev/meshers/crates/meshers-python/python/meshers/__init__.py\", line 316, in generate\n    result = _meshers.generate(\n             ^^^^^^^^^^^^^^^^^^\n_meshers.MeshingFailure: minimum MMG quality 9.657716430467352e-2 is below required 1e-1; mesh rejected (1 elements below 0.1). Improve resolution/optimization or use a quality remesher\n",
+  "total_audit_workflow_s": 7.255527946999791
+}
