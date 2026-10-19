@@ -1,0 +1,158 @@
+{
+  "parent": "experiments/adaptive/runs/g3-lattice-curved24-symmetric-v1",
+  "fine": "experiments/adaptive/runs/g3-lattice-adapt24-tol0028-v1",
+  "normals": {
+    "axes": [
+      {
+        "axis": 0,
+        "paired_curve_nodes": 72,
+        "scalar_trace_mismatch": 0.0,
+        "normal_jump_angle_deg_quantiles": [
+          48.18968510422141,
+          48.6351783782882,
+          75.74083710191056,
+          107.80726837125954,
+          109.4712206308181
+        ],
+        "fraction_above_ten_degrees": 1.0,
+        "maximum_inward_limit_angle_change_deg": 0.0005007925615529984
+      },
+      {
+        "axis": 1,
+        "paired_curve_nodes": 72,
+        "scalar_trace_mismatch": 0.0,
+        "normal_jump_angle_deg_quantiles": [
+          48.18968510422141,
+          48.65968701200881,
+          77.10245959016666,
+          108.04370826471103,
+          109.47122063149992
+        ],
+        "fraction_above_ten_degrees": 1.0,
+        "maximum_inward_limit_angle_change_deg": 0.0004995027970764454
+      },
+      {
+        "axis": 2,
+        "paired_curve_nodes": 72,
+        "scalar_trace_mismatch": 0.0,
+        "normal_jump_angle_deg_quantiles": [
+          48.18968510073728,
+          48.65968700516783,
+          76.8554617200117,
+          108.04361970500645,
+          109.4712206308181
+        ],
+        "fraction_above_ten_degrees": 1.0,
+        "maximum_inward_limit_angle_change_deg": 0.0004995070835889237
+      }
+    ],
+    "maximum_scalar_trace_mismatch": 0.0,
+    "maximum_projection_distance": 4.307264720980231e-14,
+    "maximum_projected_field_distance": 2.7755575616485844e-17,
+    "median_normal_jump_deg": 75.74083710191056,
+    "fraction_above_ten_degrees": 1.0,
+    "maximum_inward_limit_angle_change_deg": 0.0005007925615529984
+  },
+  "rules": [
+    {
+      "quadrature": "own15",
+      "total_whitened_correction": 0.023338813478588204,
+      "groups": {
+        "curve_vertex_incident": {
+          "elements": 1408,
+          "element_fraction": 0.031305585200996085,
+          "whitened_trace_fraction": 0.7501450717218331,
+          "minimum_mixed_load_capture": 0.7059755436535428,
+          "maximum_mixed_load_capture": 0.7867027704550366
+        },
+        "curve_edge_incident": {
+          "elements": 332,
+          "element_fraction": 0.007381714692280327,
+          "whitened_trace_fraction": 0.3552502275447701,
+          "minimum_mixed_load_capture": 0.25950747633977234,
+          "maximum_mixed_load_capture": 0.38138156766552944
+        },
+        "cap_without_curve_vertex": {
+          "elements": 1736,
+          "element_fraction": 0.03859836357168268,
+          "whitened_trace_fraction": 0.01482164770222577,
+          "minimum_mixed_load_capture": 0.011507901264610286,
+          "maximum_mixed_load_capture": 0.021723069251318863
+        },
+        "wall_without_curve_vertex": {
+          "elements": 17048,
+          "element_fraction": 0.3790466026325151,
+          "whitened_trace_fraction": 0.20267286059873035,
+          "minimum_mixed_load_capture": 0.17381408464699152,
+          "maximum_mixed_load_capture": 0.2382418355456606
+        },
+        "neither_wall_nor_cap_vertex": {
+          "elements": 24792,
+          "element_fraction": 0.5512273212379936,
+          "whitened_trace_fraction": 0.03275026764192704,
+          "minimum_mixed_load_capture": 0.027551774720681356,
+          "maximum_mixed_load_capture": 0.037314326169959125
+        }
+      }
+    },
+    {
+      "quadrature": "positive125",
+      "total_whitened_correction": 0.023352662141981794,
+      "groups": {
+        "curve_vertex_incident": {
+          "elements": 1408,
+          "element_fraction": 0.031305585200996085,
+          "whitened_trace_fraction": 0.7501587596673222,
+          "minimum_mixed_load_capture": 0.7059003378341693,
+          "maximum_mixed_load_capture": 0.7867365819886823
+        },
+        "curve_edge_incident": {
+          "elements": 332,
+          "element_fraction": 0.007381714692280327,
+          "whitened_trace_fraction": 0.3554636353528964,
+          "minimum_mixed_load_capture": 0.25963566430402285,
+          "maximum_mixed_load_capture": 0.38160881359989934
+        },
+        "cap_without_curve_vertex": {
+          "elements": 1736,
+          "element_fraction": 0.03859836357168268,
+          "whitened_trace_fraction": 0.014812858125743702,
+          "minimum_mixed_load_capture": 0.011501533941020357,
+          "maximum_mixed_load_capture": 0.02171044032156003
+        },
+        "wall_without_curve_vertex": {
+          "elements": 17048,
+          "element_fraction": 0.3790466026325151,
+          "whitened_trace_fraction": 0.20268715269977958,
+          "minimum_mixed_load_capture": 0.17380294332961937,
+          "maximum_mixed_load_capture": 0.2383466457849974
+        },
+        "neither_wall_nor_cap_vertex": {
+          "elements": 24792,
+          "element_fraction": 0.5512273212379936,
+          "whitened_trace_fraction": 0.03273084598328,
+          "minimum_mixed_load_capture": 0.0275361829360328,
+          "maximum_mixed_load_capture": 0.037293658814334496
+        }
+      }
+    }
+  ],
+  "predeclared_curve_localization_screen_passed": true,
+  "coarse_curve_edges": 204,
+  "fine_curve_edges": 1024,
+  "coarse_curve_edge_chord_quantiles": [
+    0.016336383323371173,
+    0.021070490634573065,
+    0.03607212301893031,
+    0.048807911951236495,
+    0.05160541648720927
+  ],
+  "fine_curve_edge_chord_quantiles": [
+    0.002912765272477272,
+    0.004533497981097731,
+    0.006734650610043228,
+    0.011041714369246223,
+    0.015905600880255194
+  ],
+  "scope": "One-sided periodic-extension wall normals and fixed-domain full FE enrichment localization; no stress-singularity proof, total geometry-error bound, live sizing benefit or stiffness certification"
+}

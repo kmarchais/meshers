@@ -459,3 +459,19 @@ an offset or explain their model misses. Further reference work must separate
 finite-element enrichment from geometric interpolation error. Preserve the
 same-domain cubic result and all 24 empirical models; do not promote another
 stress-sizing strength trial from localization alone.
+
+## Curve-local pilot and shutdown checkpoint, 19 October 2026
+
+Jobs 271, 274, 276, and 278 measure periodic-extension normal jumps, localize
+the full fixed-domain FE enrichment near wall/box curves, admit a geometric
+curve-local size field, and audit its fresh six-load tensor. The workflow
+takes 342.19 seconds at 118,475 nodes but fails all-model admission with
+1.456109% worst disagreement. The previous best remains 1.269882%. Preserve
+all 24 models and do not claim that localization alone improves Meshers.
+
+An endpoint metric audit finds 288 of 2,822 curve edges above the native
+split ratio after four rounds. Before another solve after restart, inspect
+split eligibility and use one geometry-only increased-round control with
+the same metric and gates. Read `CREASE_RESULTS.md`. Do not start a fresh
+long solve during the requested shutdown window. Preserve local fields and
+record the final independent positive-quadrature audit before stopping.

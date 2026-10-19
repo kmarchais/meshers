@@ -2,6 +2,16 @@
 
 ## Resumed G3 study, 2026-10-19
 
+The subsequent curve-local lattice pilot also fails the fixed 1% stiffness
+target. It admits 118,475 nodes and 68,415 Tet10 elements, takes 342.19 seconds
+for the fresh six-load workflow, and peaks at 3.032 GiB. Worst disagreement
+across all 24 unchanged models is 1.456109%, worse than the previous best
+1.269882%. Independent saved-field checks pass. Physical periodic-extension
+normal jumps and full same-domain FE correction strongly localize near the
+wall/box curves, but that evidence does not establish a successful live size
+field. About 10.21% of curve edges remain above the requested split ratio
+after four adaptation rounds. See `CREASE_RESULTS.md` before any successor.
+
 The four-fixture objective remains unachieved. Tet10 recovery fails its
 predeclared incremental localization screen, and required-entity grading
 worsens the tested actual Gyroid MMG output. Neither negative result changes
