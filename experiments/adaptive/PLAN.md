@@ -394,3 +394,30 @@ under the unchanged 8 GiB ceiling. It still has 190 obstructing cap triangles.
 Stop that route without MMG or FEA. No larger final mesh or solve gate is
 introduced. Gyroid's missing admitted MMG control and lattice's retained-model
 accuracy disagreement remain higher priorities than another spinodoid solve.
+
+## Charged all-load energy pilot, 19 October 2026
+
+Job 250 validates a cheaper non-recovery indicator using all six parent
+fields, with no oracle strain in its input. Its top 20% captures 94.02% of
+the full correction trace and at least 92.24% for every mixed load. The full
+Galerkin matrix identity and basis invariance pass. This does not reverse
+the failed incremental recovery screen.
+
+The first live energy-sizing attempt hits the unchanged native tet budget.
+One geometry-only floor adjustment passes at 204,956 nodes, above the initial
+200,000-node stage. Job 253 then runs a fresh, fully charged workflow in the
+already validated 250,000-node stage under the same 8 GiB ceiling. All twelve
+coarse and final loads complete in a charged 812.17-second workflow. No old
+cap rejection is reclassified.
+
+Jobs 254 and 255 pass independent field and positive-rule checks. All 24
+reference models remain unchanged. Worst disagreement is 1.352008%, worse
+than the best prior Meshers result and above 1%. Stop energy-sizing tuning.
+Read `STRESS_RESULTS.md` before selecting another stress-based change.
+
+Before a volume-correction feature, tighten the independent lattice volume
+estimate. Its current four scrambled Sobol estimates use only 2^18 points
+each, with absolute spread 0.00015640. That exceeds the apparent Meshers
+volume deficit, about 0.000078. A higher-precision, bounded volume audit must
+leave old records and all admission gates unchanged. Do not offset geometry
+to fit an uncertain volume mean or to manufacture stiffness agreement.

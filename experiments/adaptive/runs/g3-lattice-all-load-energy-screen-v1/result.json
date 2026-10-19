@@ -1,0 +1,70 @@
+{
+  "parent": "experiments/adaptive/runs/g3-lattice-curved24-symmetric-v1",
+  "cubic": "experiments/adaptive/runs/g3-lattice-cubic-reference-cache-release-v1",
+  "elements": 44976,
+  "nodes": 69025,
+  "rules": [
+    {
+      "quadrature": "own15",
+      "galerkin_matrix_relative_error": 8.878954859534723e-09,
+      "basis_invariance_relative_error": 3.1132842290491166e-16,
+      "total_whitened_enrichment": 0.023338813478588086,
+      "top_twenty_percent_trace_capture": {
+        "all_load_stress_mass": 0.9402165419593143,
+        "all_load_stress_density": 0.9670743588714367,
+        "volume": 0.4989590277586624,
+        "oracle": 0.9816795084394949
+      },
+      "minimum_mixed_load_capture": {
+        "all_load_stress_mass": 0.9223916872857558,
+        "all_load_stress_density": 0.9644363342036701,
+        "volume": 0.4793796268501426,
+        "oracle": 0.977059805666899
+      },
+      "stress_mass_relative_change_from_previous_rule": null,
+      "enrichment_relative_change_from_previous_rule": null
+    },
+    {
+      "quadrature": "positive64",
+      "galerkin_matrix_relative_error": 0.0004903315438957459,
+      "basis_invariance_relative_error": 3.1379530675334754e-16,
+      "total_whitened_enrichment": 0.02335065753441294,
+      "top_twenty_percent_trace_capture": {
+        "all_load_stress_mass": 0.9402417290697714,
+        "all_load_stress_density": 0.9670909485483092,
+        "volume": 0.4984840256100583,
+        "oracle": 0.981688568853769
+      },
+      "minimum_mixed_load_capture": {
+        "all_load_stress_mass": 0.9224208509818524,
+        "all_load_stress_density": 0.9644528182349581,
+        "volume": 0.47899205251416976,
+        "oracle": 0.9770702542139159
+      },
+      "stress_mass_relative_change_from_previous_rule": 1.543484064790769e-07,
+      "enrichment_relative_change_from_previous_rule": 0.0005074832032794241
+    },
+    {
+      "quadrature": "positive125",
+      "galerkin_matrix_relative_error": 0.0005706979605860978,
+      "basis_invariance_relative_error": 3.1351798220665003e-16,
+      "total_whitened_enrichment": 0.023352662141981676,
+      "top_twenty_percent_trace_capture": {
+        "all_load_stress_mass": 0.9402458057731369,
+        "all_load_stress_density": 0.9670937520325547,
+        "volume": 0.4985908643500808,
+        "oracle": 0.9816900941512188
+      },
+      "minimum_mixed_load_capture": {
+        "all_load_stress_mass": 0.9224259821374882,
+        "all_load_stress_density": 0.9644557867104444,
+        "volume": 0.47903972862488997,
+        "oracle": 0.9770721588787753
+      },
+      "stress_mass_relative_change_from_previous_rule": 3.289936961817335e-08,
+      "enrichment_relative_change_from_previous_rule": 8.584801373490158e-05
+    }
+  ],
+  "predeclared_energy_baseline_screen_passed": true,
+  "scope": "All-six-load compliance-whitened stress-energy ranking versus a same-domain full cubic correction; no oracle strain in the indicator; no recovery promotion, stiffness gain, continuum bound or local-stress certificate"
+}

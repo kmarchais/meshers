@@ -35,6 +35,16 @@ ceilings below 0.1, so retaining those caps cannot admit it. Final mesh and FE
 caps remain unchanged. No MMG or FE successor is run on this known obstruction.
 The four-case objective is still unachieved.
 
+A non-oracle all-six-load stress-energy indicator passes a separate
+fixed-domain localization screen, but its live lattice sizing pilot is
+negative. After one native budget rejection and a geometry-only correction,
+the fresh charged workflow uses 204,956 nodes and takes 812.17 seconds. Field
+and positive-rule audits pass. Worst disagreement across all 24 unchanged
+models is 1.352008%, versus 1.269882% for the previous best Meshers candidate.
+Higher-rule energy changes by only 2.49e-7 relative. Stop that sizing recipe;
+strong localization alone does not establish a workflow gain. See
+`STRESS_RESULTS.md`.
+
 ## Current G3 outcome, 2026-10-18
 
 One narrow matched-target result is supported: Schwarz Meshers beats the

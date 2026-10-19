@@ -1,0 +1,37 @@
+{
+  "inputs": {
+    "/home/kmarchais/dev/meshers/experiments/adaptive/energy_sizing_pilot.py": "d0c1e3e6605c4acc15fe9fac40d218ba1b5db99c665381372ce25f7652ae57b4",
+    "experiments/adaptive/runs/g3-lattice-all-load-energy-screen-v1/manifest.json": "e96d18a7fbbfa4ddc2a227d562b64a1cedaaa3a18260bef1efa00483adfb58ba",
+    "experiments/adaptive/runs/g3-lattice-all-load-energy-screen-v1/result.json": "6572fefd2faf7c5358bf9a7bcfa2b452a59f2c01337524cb89168d7351623185",
+    "/home/kmarchais/dev/meshers/crates/meshers-python/python/meshers/_meshers.abi3.so": "908e326211792142f83f854ad2696cd879d927bd81deacf38eb6a0cb63bc4dc1",
+    "/home/kmarchais/dev/meshers/crates/meshers-core/src/tet_adapt.rs": "271ca423ea954837c239bd6af891cde36f4cb033d4e5c8eb0a08ab6e4600871c",
+    "/home/kmarchais/dev/meshers/experiments/adaptive/amg_reference.py": "7c0293e3223317ba7a7b0dfcb5391c9d6c5282ea89571023a434393e41995f09",
+    "/home/kmarchais/dev/meshers/experiments/adaptive/gradient_tie_probe.py": "07577c831bf0eb97d6ddb26cd5236e7b206e749e5904d1c28b30c64fe94b8441",
+    "/home/kmarchais/dev/meshers/experiments/adaptive/stress_recovery.py": "c9d74455c014c3b56ab656ca3f6a9cbf259dc11904318fecc354dcc6368651ac",
+    "/home/kmarchais/dev/meshers/experiments/adaptive/tet10_integration.py": "b5adbf4a96ee90953d546c654992d4380843e3b1a865e64e043cd14529e3865d",
+    "/home/kmarchais/dev/meshers/experiments/adaptive/microgen_workflow.py": "3f98bcaf9ae151cb357944744e82dd80801703a4db04f94df31263c9c9fa7640",
+    "/home/kmarchais/dev/meshers/experiments/adaptive/runs/g3-microgen-defaults-v4/smooth-lattice-samples.npz": "a2b4375d2c99901f03b34e913563c887a4cdcff00bca35983adb7ef9d5311abe",
+    "/home/kmarchais/dev/meshers/experiments/adaptive/runs/g3-microgen-defaults-v4/smooth-lattice-specimen.json": "0e5b34b76183341a6e0d454f13cd404668ab82675f9a51cd9d2ecf3c91be3316"
+  },
+  "memory_bytes": 8589934592,
+  "threads": 1,
+  "worker_timeouts_s": {
+    "coarse": 600,
+    "final": 1200
+  },
+  "tetrahedra_cap": 250000,
+  "coarse_node_cap": 100000,
+  "final_node_cap": 250000,
+  "pyamg": "5.3.0",
+  "selected_fraction": 0.2,
+  "length_multiplier": 0.5,
+  "target_clip": [
+    0.025,
+    0.05
+  ],
+  "unmarked_target": 0.1,
+  "oracle_input_to_live_indicator": false,
+  "coarse_workflow_charged": true,
+  "geometry_only": false,
+  "coarse_replay": null
+}

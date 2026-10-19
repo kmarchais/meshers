@@ -49,6 +49,22 @@ binary's source hash; `attribution.json` records that distinction.
 
 ## Remaining conclusion and next work
 
+Jobs 250 through 255 subsequently close one all-load energy-sizing study.
+A non-oracle, non-recovery stress-energy indicator captures 94.02% of full
+same-domain cubic correction trace and at least 92.24% for every mixed load.
+Its localization screen passes without reversing the earlier recovery failure.
+The first live half-length target exceeds the unchanged tet budget. A single
+geometry-only floor correction admits 204,956 nodes, above its 200,000-node
+solve stage. A fresh charged workflow then uses the previously validated
+250,000-node stage under 8 GiB, without reclassifying the old rejection.
+
+All twelve fresh coarse and final loads complete. Total charged workflow is
+812.17 seconds and peak RSS is 5.573 GiB. Independent field and positive-rule
+audits pass, but worst disagreement across all 24 unchanged models is
+1.352008%, worse than the previous best Meshers result. Higher-rule energy
+changes by only 2.49e-7 relative. Stop that energy-sizing recipe. Read
+`STRESS_RESULTS.md` and `runs/g3-lattice-live-energy-floor025-v1`.
+
 Schwarz retains the only narrow demonstrated matched-target workflow win.
 Gyroid and spinodoid still lack admitted actual Microgen/MMG comparators.
 Lattice's strongest Microgen straight Tet10 control reaches 1.004354% worst
@@ -62,6 +78,12 @@ and `.audit/g3-microgen.tsv`. Do not repeat failed required-entity grading,
 selective midpoint restoration, affine corner postprocessing, or cap-only
 lattice sizing without new evidence.
 
+Before volume correction, improve the independent volume estimate. The
+lattice reference still uses four scrambled Sobol sets of 2^18 points. Their
+absolute spread 0.00015640 exceeds the apparent native curved-mesh deficit,
+about 0.000078. Do not bias geometry to this uncertain mean or to the stiffness
+models. Preserve the frozen estimates and fixed gates when auditing them.
+
 ## Local runtime
 
 Current native SHA256 is
@@ -73,6 +95,6 @@ Its package is in `.local-work/g3-builds/baseline-090a71c`.
 Preserve ignored NPZ meshes, fields, and native binaries locally. Use Rust
 1.95.0, two build threads, one numerical thread, the pinned `.venv`, and
 `LD_LIBRARY_PATH=/home/kmarchais/dev/meshers/.local-work/g3-runtime/root/usr/lib/x86_64-linux-gnu`.
-All study jobs through 243 finish before this checkpoint. No successor is
+All study jobs through 255 finish before this checkpoint. No successor is
 queued here. The shared queue belongs to other sessions too; do not touch
 unrelated jobs or timers.

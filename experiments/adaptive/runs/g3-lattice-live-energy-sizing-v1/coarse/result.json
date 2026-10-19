@@ -1,0 +1,226 @@
+{
+  "case": "smooth-lattice",
+  "cells": 24,
+  "order": 2,
+  "solver_quadrature_points": 15,
+  "min_length": 0.002,
+  "native_tolerance": 1.0,
+  "optimization_passes": 1,
+  "adaptive": false,
+  "adapt_tolerance": 0.004,
+  "qualified": true,
+  "status": "solved-needs-reference",
+  "solver": "cached-elastic-block-amg-cg",
+  "field_representation": "Existing domain-equivalent symmetric union with positive void clamp0.02",
+  "pilot_policy": "Mark top20percent by all-load stress-energy mass; halve volume length; clip[.01,.05]; all other targets.1",
+  "generation_s": 2.2268676450003113,
+  "nodes": 69025,
+  "elements": 44976,
+  "diagnostics": {
+    "empty": false,
+    "volume": 0.24616448206110586,
+    "minimum_mmg_quality": 0.34102176039778975,
+    "sampled_surface_error": 0.005341218461470616,
+    "elements_below_quality_01": 0,
+    "reverted_snap_vertices": 0,
+    "callback_calls": 0,
+    "inserted_interior_nodes": 0,
+    "seconds": 2.213592513,
+    "quadratic": {
+      "curved_edges": 11640,
+      "straightened_edges": 0,
+      "partially_curved_edges": 0,
+      "minimum_jacobian_ratio": 0.277298095798377
+    },
+    "threads": 1,
+    "evaluator": "compiled",
+    "preparation_seconds": 0.01320969599964883
+  },
+  "geometry": {
+    "sampled_forward_max": 0.0005435408342574672,
+    "sampled_reverse_max": 0.00039946939926797074,
+    "sampled_two_sided_max": 0.0005435408342574672,
+    "outward_forward_max": 0.0005435408342574672,
+    "inward_forward_max": 0.0003574878645748485,
+    "projection_failed": 0,
+    "forward_samples": 99996,
+    "reverse_samples": 34791,
+    "volume": 0.248233945984706,
+    "relative_volume_error": -0.00031048478583006744,
+    "q_min_corner": 0.34102176039778975,
+    "q_p01_corner": 0.6084119487919122,
+    "minimum_dihedral_deg_corner": 18.80977924215472,
+    "minimum_sampled_jacobian": 3.681061499010042e-06,
+    "reverse_tessellation_delta_max": 0.0002029021484312666,
+    "quadratic_reverse_subdivisions": [
+      4,
+      8
+    ],
+    "geometry_admitted": true
+  },
+  "periodic": {
+    "periodic_pair_counts": [
+      330,
+      330,
+      330
+    ],
+    "periodic_coordinate_errors": [
+      0.0,
+      0.0,
+      0.0
+    ],
+    "periodic_pair_tolerance": 1e-10,
+    "periodic_equivalence_classes": 68088,
+    "periodic_triangles_match": true
+  },
+  "solve_node_cap": 100000,
+  "completed_loads": 6,
+  "solver_records": [
+    {
+      "iterations": 69,
+      "relative_residual": 7.974558866949678e-13,
+      "free_dofs": 204261,
+      "seconds": 22.311683384999924,
+      "hierarchy_setup_s": 3.8658245469996473,
+      "hierarchy_reused": false,
+      "node_reordering_s": 0.34042515399960394,
+      "elastic_blocks": true,
+      "verified_symmetry_reused": false,
+      "levels": 3,
+      "operator_complexity": 1.0527611169816646,
+      "reduced_matrix_sha256": "2818237af6f02d2ed56088e8be9d51139e6fcf7af732905b5873c80f20b8fff1"
+    },
+    {
+      "iterations": 69,
+      "relative_residual": 6.971685845560458e-13,
+      "free_dofs": 204261,
+      "seconds": 17.54137861399977,
+      "hierarchy_setup_s": 0.0,
+      "hierarchy_reused": true,
+      "node_reordering_s": 0.0,
+      "elastic_blocks": true,
+      "verified_symmetry_reused": true,
+      "levels": 3,
+      "operator_complexity": 1.0527611169816646,
+      "reduced_matrix_sha256": "2818237af6f02d2ed56088e8be9d51139e6fcf7af732905b5873c80f20b8fff1"
+    },
+    {
+      "iterations": 69,
+      "relative_residual": 7.22025844202595e-13,
+      "free_dofs": 204261,
+      "seconds": 17.814744469999823,
+      "hierarchy_setup_s": 0.0,
+      "hierarchy_reused": true,
+      "node_reordering_s": 0.0,
+      "elastic_blocks": true,
+      "verified_symmetry_reused": true,
+      "levels": 3,
+      "operator_complexity": 1.0527611169816646,
+      "reduced_matrix_sha256": "2818237af6f02d2ed56088e8be9d51139e6fcf7af732905b5873c80f20b8fff1"
+    },
+    {
+      "iterations": 70,
+      "relative_residual": 9.67015430662227e-13,
+      "free_dofs": 204261,
+      "seconds": 17.956135956999788,
+      "hierarchy_setup_s": 0.0,
+      "hierarchy_reused": true,
+      "node_reordering_s": 0.0,
+      "elastic_blocks": true,
+      "verified_symmetry_reused": true,
+      "levels": 3,
+      "operator_complexity": 1.0527611169816646,
+      "reduced_matrix_sha256": "2818237af6f02d2ed56088e8be9d51139e6fcf7af732905b5873c80f20b8fff1"
+    },
+    {
+      "iterations": 71,
+      "relative_residual": 7.182358118608013e-13,
+      "free_dofs": 204261,
+      "seconds": 18.30486553299943,
+      "hierarchy_setup_s": 0.0,
+      "hierarchy_reused": true,
+      "node_reordering_s": 0.0,
+      "elastic_blocks": true,
+      "verified_symmetry_reused": true,
+      "levels": 3,
+      "operator_complexity": 1.0527611169816646,
+      "reduced_matrix_sha256": "2818237af6f02d2ed56088e8be9d51139e6fcf7af732905b5873c80f20b8fff1"
+    },
+    {
+      "iterations": 70,
+      "relative_residual": 9.526130199012186e-13,
+      "free_dofs": 204261,
+      "seconds": 17.929287734000354,
+      "hierarchy_setup_s": 0.0,
+      "hierarchy_reused": true,
+      "node_reordering_s": 0.0,
+      "elastic_blocks": true,
+      "verified_symmetry_reused": true,
+      "levels": 3,
+      "operator_complexity": 1.0527611169816646,
+      "reduced_matrix_sha256": "2818237af6f02d2ed56088e8be9d51139e6fcf7af732905b5873c80f20b8fff1"
+    }
+  ],
+  "solve_s": 123.24115835599969,
+  "stiffness": [
+    [
+      0.13931174669544993,
+      0.1068849608104656,
+      0.10688723915156764,
+      1.0292495800237089e-05,
+      8.701424676443314e-06,
+      3.4907076553751566e-06
+    ],
+    [
+      0.1068849608104656,
+      0.13944748808800728,
+      0.10691536805003277,
+      1.3573322625811826e-05,
+      5.318726282544395e-06,
+      6.656911289457243e-06
+    ],
+    [
+      0.10688723915156764,
+      0.10691536805003277,
+      0.13945556086525335,
+      6.249398543394581e-06,
+      1.3138645535911247e-05,
+      8.071591687756162e-06
+    ],
+    [
+      1.0292495800237089e-05,
+      1.3573322625811826e-05,
+      6.249398543394581e-06,
+      0.10332814440602937,
+      4.8174104051997585e-06,
+      6.210789445635331e-06
+    ],
+    [
+      8.701424676443314e-06,
+      5.318726282544395e-06,
+      1.3138645535911247e-05,
+      4.8174104051997585e-06,
+      0.10333043493003356,
+      7.080934802294017e-06
+    ],
+    [
+      3.4907076553751566e-06,
+      6.656911289457243e-06,
+      8.071591687756162e-06,
+      6.210789445635331e-06,
+      7.080934802294017e-06,
+      0.10334646280568789
+    ]
+  ],
+  "indicator_and_target_s": 4.720511940000506,
+  "selected_elements": 8996,
+  "target_quantiles": [
+    0.01,
+    0.015669937240722916,
+    0.1,
+    0.1,
+    0.1
+  ],
+  "stage_workflow_s": 135.7650890469995,
+  "total_audit_workflow_s": 135.7650890469995
+}

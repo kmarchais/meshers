@@ -1,5 +1,108 @@
 # Periodic stress-recovery sizing on G3
 
+## All-load energy baseline screen, 19 October 2026
+
+Job 250 tests a simpler alternative, not another recovery variant. The
+indicator uses only the six parent Tet10 fields and their stiffness tensor:
+the trace of each element's stress-energy Gram matrix after multiplication
+by the inverse parent stiffness. It uses no oracle strain. An orthogonal
+load-basis change must leave this scalar invariant within 1e-12 relative.
+
+Validation uses the complete same-domain Tet10-to-cubic correction Gram
+matrix. Its own-rule sum must reproduce the parent-minus-cubic tensor within
+1e-6 relative error. The fixed top 20% selected by stress-energy mass must
+capture at least 80% of the compliance-whitened correction trace, improve
+over volume ranking by at least 20 percentage points, and capture at least
+50% of the correction energy for every mixed load. The final 64-to-125-point
+indicator and correction changes must each be at most 1%.
+
+These diagnostic thresholds are frozen before execution. Passing justifies
+at most one live energy-sizing pilot, whose coarse solves must be charged.
+It does not promote the failed recovery screen or establish stiffness,
+local-stress, or continuum accuracy. Records are in
+`runs/g3-lattice-all-load-energy-screen-v1`.
+
+The screen passes in 139.82 seconds at 0.61 GiB peak RSS. The own-rule full
+Galerkin matrix identity agrees within 8.88e-9 relative error, and the basis
+invariance error is below 3.14e-16. Under positive 125-point integration,
+the primary stress-mass selection captures 94.0246% of correction trace and
+at least 92.2426% of correction energy for every mixed load. Volume ranking
+captures 49.8591% of trace. The 64-to-125-point changes are 3.29e-8 for stress
+mass and 8.58e-5 for correction trace. This does not reverse job 206's failed
+incremental recovery screen.
+
+Job 251 selects exactly one live energy-sizing pilot. It freshly generates
+the admitted nonadaptive curved24 lattice, solves all six loads using the
+validated explicit elastic-block AMG preset, and computes stress-energy mass.
+It marks the top 20% of elements. Marked targets are half the cube root of
+six times physical element volume, clipped to [0.01, 0.05]; unmarked targets
+remain 0.1. Periodic nodal minima and the existing four-neighbor inverse-square
+interpolation construct the spatial callback. No cubic field or oracle strain
+enters this live calculation.
+
+Final meshing uses the existing cells24, adaptation tolerance 0.004 recipe.
+All geometry gates remain fixed. The final stage has a 200,000-node solve cap,
+the unchanged 250,000-tet cap, and no solve on a geometry rejection. The two
+workers have 600-second and 1,200-second caps under 8 GiB. Coarse generation,
+six coarse solves, target construction, final generation, independent geometry,
+and six final solves are charged to the workflow. No accuracy or performance
+result is claimed while this pilot is pending. Records are in
+`runs/g3-lattice-live-energy-sizing-v1`.
+
+Job 251 completes the live coarse stage: six fresh AMG loads take 123.24
+seconds and the full coarse stage, including target construction, costs
+135.77 seconds. Final adaptation then stops at 250,003 tets, preserving the
+250,000 cap. No final geometry or FE result exists. The complete failed live
+attempt costs 140.74 seconds. Strong indicator localization alone is not a
+workflow improvement.
+
+Job 252 probes one budget correction: raise only the target floor to 0.025.
+It reuses coarse fields for geometry selection only, with no live timing or
+final FE claim. Geometry passes at 204,956 nodes and 135,921 Tet10 elements:
+distance 0.00026484, volume error -0.03150%, corner quality 0.14875, positive
+sampled Jacobians, matching periodic caps, and zero failed projections. It
+still exceeds the declared 200,000-node solve stage, so that record remains
+`solve-node-cap`. Records are in `runs/g3-lattice-energy-floor025-geometry-v1`.
+
+The existing 250,000-node stage has already solved a 238,411-node Microgen
+Tet10 control at 4.378 GiB and a 222,331-node cubic reference at 6.341 GiB.
+Job 253 therefore selects a fresh full workflow at floor 0.025 in that stage,
+retaining the hard 8 GiB ceiling, 250,000-tet cap, and all scientific gates.
+It regenerates and resolves the coarse mesh rather than borrowing that cost
+from job 251. No old cap rejection is reclassified. Read all six final loads,
+independent field audits, and all 24 retained models before deciding whether
+this second attempt has an accuracy or cost benefit.
+
+Job 253 completes all six fresh final loads. Final solve time is 656.60
+seconds, the charged coarse-plus-final workflow is 812.17 seconds, and peak
+RSS is 5.573 GiB. The 204,956-node mesh passes geometry, quality, periodicity,
+and positive sampled Jacobian gates. Job 254 independently reproduces final
+reactions from integrated stress within 5.76e-12 relative error, verifies
+energy consistency, and finds zero periodic displacement jumps. Both retained
+fine-family field archives are re-audited too.
+
+All eight fine-family models reproduce exactly, and all sixteen other models
+remain retained. The pilot differs by 0.08359% from the finest actual adaptive
+tensor, but its worst disagreement across all 24 models is 1.352008%. This
+fails the unchanged 1% target and is worse than the previous best Meshers
+result, 1.269882%, despite using more nodes. It improves little over the
+123,570-node untargeted baseline at 1.427185%. Records are in
+`runs/g3-lattice-live-energy-floor025-reference-comparison-v1.json` and
+`runs/g3-lattice-live-energy-floor025-field-audit-v1`.
+
+Job 255 passes positive 64-point and 125-point reintegration, monomial and
+affine controls. The full mixed-load fixed-field energy changes by 2.49e-7
+relative from the solved tensor; the 64-to-125 shift is 5.07e-8. This cannot
+explain the reference-model miss. Records are in
+`runs/g3-lattice-live-energy-floor025-positive-rule-audit-v1`.
+
+Stop this energy-sizing recipe without another floor, strength, or marking
+fraction trial. Cheap all-load stress energy strongly localizes one fixed-domain
+enrichment correction, but that does not guarantee an efficient remeshed
+workflow or accuracy against the fixed implicit specimen. Do not promote a
+new native feature from this negative pilot, relabel it as recovery success,
+discard reference models, or claim a Microgen timing victory.
+
 ## Resumed Tet10 screen, 19 October 2026
 
 Job 206 tests periodic volume-weighted recovery of Tet10 corner stresses on
