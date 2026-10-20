@@ -527,3 +527,17 @@ confirms 218,508 cubic nodes at 5.014 GiB. A fresh cubic23 reference is selected
 as job 322, with no prefix replay and unchanged first-load and worker limits.
 Verify that job's authoritative state before any retry. See the current
 `handoff/g3/CHECKPOINT-20261020.md` for continuation and audit instructions.
+
+Job 322 and independent audit 323 pass. The predefined three-level analysis
+324 passes seven synthetic controls but rejects both length proxies: the
+correction direction reverses, cosine -0.959707, and common-matrix residual
+is 28.1%. Exact field provenance and all 24 retained tensors are verified.
+Do not promote an observed order, fit only the odd levels, or run another
+nonnested grid from this result alone.
+
+Select a bounded fixed-domain residual witness on the saved cubic24 fields.
+The proposed quartic edge modes share coefficients across periodic curve-edge
+orbits and require their full overlap matrix, independent trial-energy checks,
+and periodic trace controls. Read the declared protocol in `CUBIC_RESULTS.md`
+before implementation. It remains a diagnostic, not an equilibrated stiffness
+reference, a revived recovery-strength recipe, or a new native feature.

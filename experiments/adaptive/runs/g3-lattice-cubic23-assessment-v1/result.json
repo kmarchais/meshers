@@ -1,0 +1,591 @@
+{
+  "case": "smooth-lattice",
+  "source": "experiments/adaptive/runs/g3-lattice-cubic23-reference-v1",
+  "basis_checks": {
+    "nodal_and_polynomial_identities": true,
+    "degree_four_quadrature_exact": true,
+    "quadratic_map_embedding_error": 5.551115123125783e-16,
+    "map_derivative_embedding_error": 1.3322676295501878e-15
+  },
+  "fresh_process_audit_passed": true,
+  "rules": [
+    {
+      "points": 15,
+      "reaction_relative_error": 1.2332895081888147e-11,
+      "stress_skew_relative": 2.537610091380858e-12,
+      "fixed_field_energy_difference": {
+        "worst_relative_strain_energy_difference": 8.664794910633617e-11,
+        "relative_tensor_frobenius_difference": 1.2869884117398323e-11,
+        "relative_energy_difference_eigenvalues": [
+          -6.350434753862659e-11,
+          -1.4234208765848241e-11,
+          4.747835819547358e-13,
+          1.7275524679519656e-12,
+          9.684611288927937e-12,
+          8.664794910633617e-11
+        ]
+      },
+      "energy_vs_previous_rule": null,
+      "volume": 0.24823402340333364,
+      "sampled_jacobians_positive": true
+    },
+    {
+      "points": 64,
+      "reaction_relative_error": 1.2332970653290487e-11,
+      "stress_skew_relative": 2.537054811973751e-12,
+      "fixed_field_energy_difference": {
+        "worst_relative_strain_energy_difference": 6.664714612908393e-06,
+        "relative_tensor_frobenius_difference": 1.8065793594184938e-06,
+        "relative_energy_difference_eigenvalues": [
+          1.527961413940643e-06,
+          1.614372762277216e-06,
+          1.9405671964169123e-06,
+          2.1135927786895473e-06,
+          5.220149334340444e-06,
+          6.664714612908393e-06
+        ]
+      },
+      "energy_vs_previous_rule": {
+        "worst_relative_strain_energy_difference": 6.66464539593564e-06,
+        "relative_tensor_frobenius_difference": 1.8065796413963432e-06,
+        "relative_energy_difference_eigenvalues": [
+          1.5279690097007331e-06,
+          1.6143673675982973e-06,
+          1.940567090198335e-06,
+          2.1135935805679983e-06,
+          5.2201948580127404e-06,
+          6.66464539593564e-06
+        ]
+      },
+      "volume": 0.2482340234033333,
+      "sampled_jacobians_positive": true
+    },
+    {
+      "points": 125,
+      "reaction_relative_error": 1.2333445533938606e-11,
+      "stress_skew_relative": 2.53720730692721e-12,
+      "fixed_field_energy_difference": {
+        "worst_relative_strain_energy_difference": 7.675365479917103e-06,
+        "relative_tensor_frobenius_difference": 2.0997168159908724e-06,
+        "relative_energy_difference_eigenvalues": [
+          1.7466172455632135e-06,
+          1.8794676577632994e-06,
+          2.2247855025061403e-06,
+          2.417524612759456e-06,
+          6.2659387040864425e-06,
+          7.675365479917103e-06
+        ]
+      },
+      "energy_vs_previous_rule": {
+        "worst_relative_strain_energy_difference": 1.1211107828237555e-06,
+        "relative_tensor_frobenius_difference": 2.9469634822267993e-07,
+        "relative_energy_difference_eigenvalues": [
+          2.0769397332851433e-07,
+          2.7152196109132493e-07,
+          2.7485270766260325e-07,
+          3.1224487601284504e-07,
+          9.409026652038107e-07,
+          1.1211107828237555e-06
+        ]
+      },
+      "volume": 0.2482340234033334,
+      "sampled_jacobians_positive": true
+    }
+  ],
+  "periodic_jump_max": 2.220446049250313e-16,
+  "retained_model_count": 24,
+  "models": [
+    {
+      "source": "experiments/adaptive/runs/g3-lattice-curve-grading-reference-comparison-v1.json",
+      "index": 0,
+      "difference_from_cubic": {
+        "worst_relative_strain_energy_difference": 0.017293234312396568,
+        "relative_tensor_frobenius_difference": 0.004702874885492138,
+        "relative_energy_difference_eigenvalues": [
+          -0.017293234312396568,
+          -0.016661578110303204,
+          -0.004730248485396738,
+          -0.0018879127167352983,
+          -0.001747135782012329,
+          -0.0016296106960050738
+        ]
+      }
+    },
+    {
+      "source": "experiments/adaptive/runs/g3-lattice-curve-grading-reference-comparison-v1.json",
+      "index": 1,
+      "difference_from_cubic": {
+        "worst_relative_strain_energy_difference": 0.012053919035969583,
+        "relative_tensor_frobenius_difference": 0.0033240482410205607,
+        "relative_energy_difference_eigenvalues": [
+          -0.012053919035969583,
+          -0.011684913703302277,
+          -0.0033515860543852295,
+          -0.0011172020390678675,
+          -0.0010368815077167251,
+          -0.000996770017647569
+        ]
+      }
+    },
+    {
+      "source": "experiments/adaptive/runs/g3-lattice-curve-grading-reference-comparison-v1.json",
+      "index": 2,
+      "difference_from_cubic": {
+        "worst_relative_strain_energy_difference": 0.01031634505216877,
+        "relative_tensor_frobenius_difference": 0.0028658935021031668,
+        "relative_energy_difference_eigenvalues": [
+          -0.01031634505216877,
+          -0.010020703183257495,
+          -0.00289010630417451,
+          -0.0008612445845153895,
+          -0.0008036022884120594,
+          -0.0007816003925202382
+        ]
+      }
+    },
+    {
+      "source": "experiments/adaptive/runs/g3-lattice-curve-grading-reference-comparison-v1.json",
+      "index": 3,
+      "difference_from_cubic": {
+        "worst_relative_strain_energy_difference": 0.009451716688743807,
+        "relative_tensor_frobenius_difference": 0.002637377010829214,
+        "relative_energy_difference_eigenvalues": [
+          -0.009451716688743807,
+          -0.009186197656669953,
+          -0.0026587820944769746,
+          -0.0007342072655549085,
+          -0.0006903381420736747,
+          -0.0006698828942010382
+        ]
+      }
+    },
+    {
+      "source": "experiments/adaptive/runs/g3-lattice-curve-grading-reference-comparison-v1.json",
+      "index": 4,
+      "difference_from_cubic": {
+        "worst_relative_strain_energy_difference": 0.01805329435624703,
+        "relative_tensor_frobenius_difference": 0.004902835117849504,
+        "relative_energy_difference_eigenvalues": [
+          -0.01805329435624703,
+          -0.01738147424469088,
+          -0.004929458138290565,
+          -0.0019995976129833517,
+          -0.0018501887694039793,
+          -0.001720975663187299
+        ]
+      }
+    },
+    {
+      "source": "experiments/adaptive/runs/g3-lattice-curve-grading-reference-comparison-v1.json",
+      "index": 5,
+      "difference_from_cubic": {
+        "worst_relative_strain_energy_difference": 0.012432280551182355,
+        "relative_tensor_frobenius_difference": 0.0034237010558142364,
+        "relative_energy_difference_eigenvalues": [
+          -0.012432280551182355,
+          -0.012045814988448263,
+          -0.003451652196202305,
+          -0.0011729264185388305,
+          -0.0010880789404169307,
+          -0.0010428782832765618
+        ]
+      }
+    },
+    {
+      "source": "experiments/adaptive/runs/g3-lattice-curve-grading-reference-comparison-v1.json",
+      "index": 6,
+      "difference_from_cubic": {
+        "worst_relative_strain_energy_difference": 0.010567383456996541,
+        "relative_tensor_frobenius_difference": 0.002932157990675547,
+        "relative_energy_difference_eigenvalues": [
+          -0.010567383456996541,
+          -0.010262034569748757,
+          -0.0029570218755042006,
+          -0.0008982100535270792,
+          -0.0008369501363611764,
+          -0.0008132686166382195
+        ]
+      }
+    },
+    {
+      "source": "experiments/adaptive/runs/g3-lattice-curve-grading-reference-comparison-v1.json",
+      "index": 7,
+      "difference_from_cubic": {
+        "worst_relative_strain_energy_difference": 0.009639187829799006,
+        "relative_tensor_frobenius_difference": 0.002686968557313555,
+        "relative_energy_difference_eigenvalues": [
+          -0.009639187829799006,
+          -0.009367632789052923,
+          -0.002709064155444877,
+          -0.0007616886977531474,
+          -0.00071469981354929,
+          -0.0006944807828423952
+        ]
+      }
+    },
+    {
+      "source": "experiments/adaptive/runs/g3-lattice-reference-sensitivity-v2.json",
+      "index": 0,
+      "difference_from_cubic": {
+        "worst_relative_strain_energy_difference": 0.019303027451472762,
+        "relative_tensor_frobenius_difference": 0.0047603863769826536,
+        "relative_energy_difference_eigenvalues": [
+          -0.019303027451472762,
+          -0.017195595261399396,
+          -0.004311561222725028,
+          -0.0011924166490382617,
+          -0.0011459761812692678,
+          -0.0010410082265882843
+        ]
+      }
+    },
+    {
+      "source": "experiments/adaptive/runs/g3-lattice-reference-sensitivity-v2.json",
+      "index": 1,
+      "difference_from_cubic": {
+        "worst_relative_strain_energy_difference": 0.007864844920439172,
+        "relative_tensor_frobenius_difference": 0.0018650657381477766,
+        "relative_energy_difference_eigenvalues": [
+          -0.007864844920439172,
+          -0.0066887789093443275,
+          -0.0015500023365376903,
+          -0.00028064066337346675,
+          -0.00026111777410679624,
+          -0.00020458644771793134
+        ]
+      }
+    },
+    {
+      "source": "experiments/adaptive/runs/g3-lattice-reference-sensitivity-v2.json",
+      "index": 2,
+      "difference_from_cubic": {
+        "worst_relative_strain_energy_difference": 0.004094267235690541,
+        "relative_tensor_frobenius_difference": 0.0009185117885827921,
+        "relative_energy_difference_eigenvalues": [
+          -0.004094267235690541,
+          -0.0032250381365264797,
+          -0.0005982666032442888,
+          2.128778635975914e-05,
+          3.135088194947686e-05,
+          7.42426147709262e-05
+        ]
+      }
+    },
+    {
+      "source": "experiments/adaptive/runs/g3-lattice-reference-sensitivity-v2.json",
+      "index": 3,
+      "difference_from_cubic": {
+        "worst_relative_strain_energy_difference": 0.002234533953578941,
+        "relative_tensor_frobenius_difference": 0.0004737551845463879,
+        "relative_energy_difference_eigenvalues": [
+          -0.002234533953578941,
+          -0.0015618519108641427,
+          -6.673636821475031e-05,
+          0.00017034113060762412,
+          0.00017757820848528794,
+          0.0002140670694310627
+        ]
+      }
+    },
+    {
+      "source": "experiments/adaptive/runs/g3-lattice-reference-sensitivity-v2.json",
+      "index": 4,
+      "difference_from_cubic": {
+        "worst_relative_strain_energy_difference": 0.016528624824354816,
+        "relative_tensor_frobenius_difference": 0.004057940274940554,
+        "relative_energy_difference_eigenvalues": [
+          -0.016528624824354816,
+          -0.01465130495102587,
+          -0.0036462747647071094,
+          -0.0009715726554183827,
+          -0.0009314519575937526,
+          -0.0008387133503823319
+        ]
+      }
+    },
+    {
+      "source": "experiments/adaptive/runs/g3-lattice-reference-sensitivity-v2.json",
+      "index": 5,
+      "difference_from_cubic": {
+        "worst_relative_strain_energy_difference": 0.00649174685545611,
+        "relative_tensor_frobenius_difference": 0.0015185772844466812,
+        "relative_energy_difference_eigenvalues": [
+          -0.00649174685545611,
+          -0.005424797671504932,
+          -0.001210369814222753,
+          -0.00017081286878616625,
+          -0.00015474438472838653,
+          -0.00010341020901197396
+        ]
+      }
+    },
+    {
+      "source": "experiments/adaptive/runs/g3-lattice-reference-sensitivity-v2.json",
+      "index": 6,
+      "difference_from_cubic": {
+        "worst_relative_strain_energy_difference": 0.003191232593712422,
+        "relative_tensor_frobenius_difference": 0.0006974924733629722,
+        "relative_energy_difference_eigenvalues": [
+          -0.003191232593712422,
+          -0.002406745485420257,
+          -0.0003523523902145139,
+          9.371771162099439e-05,
+          0.00010182983489873804,
+          0.0001417113488000762
+        ]
+      }
+    },
+    {
+      "source": "experiments/adaptive/runs/g3-lattice-reference-sensitivity-v2.json",
+      "index": 7,
+      "difference_from_cubic": {
+        "worst_relative_strain_energy_difference": 0.0015681357280195685,
+        "relative_tensor_frobenius_difference": 0.00033617266249327013,
+        "relative_energy_difference_eigenvalues": [
+          -0.0015681357280195685,
+          -0.0010066159126529493,
+          0.00016000511460001238,
+          0.00022357717282112222,
+          0.00023559079333875893,
+          0.00026852920217667513
+        ]
+      }
+    },
+    {
+      "source": "experiments/adaptive/runs/g3-lattice-microgen-reference-comparison-v1.json",
+      "index": 0,
+      "difference_from_cubic": {
+        "worst_relative_strain_energy_difference": 0.014465597190658552,
+        "relative_tensor_frobenius_difference": 0.004140641683211938,
+        "relative_energy_difference_eigenvalues": [
+          -0.014465597190658552,
+          -0.01416491220129045,
+          -0.0041938429293984,
+          -0.0017294242406904864,
+          -0.0017000570703250748,
+          -0.0016125709491748715
+        ]
+      }
+    },
+    {
+      "source": "experiments/adaptive/runs/g3-lattice-microgen-reference-comparison-v1.json",
+      "index": 1,
+      "difference_from_cubic": {
+        "worst_relative_strain_energy_difference": 0.010223254350214376,
+        "relative_tensor_frobenius_difference": 0.002937539096931031,
+        "relative_energy_difference_eigenvalues": [
+          -0.010223254350214376,
+          -0.010118733614897764,
+          -0.0029781357912127267,
+          -0.0009859092658780434,
+          -0.0009504257889033372,
+          -0.0009194705656127226
+        ]
+      }
+    },
+    {
+      "source": "experiments/adaptive/runs/g3-lattice-microgen-reference-comparison-v1.json",
+      "index": 2,
+      "difference_from_cubic": {
+        "worst_relative_strain_energy_difference": 0.008858140225762565,
+        "relative_tensor_frobenius_difference": 0.002541356744837306,
+        "relative_energy_difference_eigenvalues": [
+          -0.008858140225762565,
+          -0.008743364048126609,
+          -0.002572313333031125,
+          -0.0007424719463570788,
+          -0.0007037076627124894,
+          -0.0006858441657754885
+        ]
+      }
+    },
+    {
+      "source": "experiments/adaptive/runs/g3-lattice-microgen-reference-comparison-v1.json",
+      "index": 3,
+      "difference_from_cubic": {
+        "worst_relative_strain_energy_difference": 0.008194023355270651,
+        "relative_tensor_frobenius_difference": 0.0023459789379789075,
+        "relative_energy_difference_eigenvalues": [
+          -0.008194023355270651,
+          -0.008052370211929344,
+          -0.0023704157747366193,
+          -0.0006231056984567884,
+          -0.0005827539219943362,
+          -0.0005679755516563233
+        ]
+      }
+    },
+    {
+      "source": "experiments/adaptive/runs/g3-lattice-microgen-reference-comparison-v1.json",
+      "index": 4,
+      "difference_from_cubic": {
+        "worst_relative_strain_energy_difference": 0.015798152052859425,
+        "relative_tensor_frobenius_difference": 0.004517599365215665,
+        "relative_energy_difference_eigenvalues": [
+          -0.015798152052859425,
+          -0.015423575474645143,
+          -0.004571839830690486,
+          -0.001962696876939598,
+          -0.0019344438666685597,
+          -0.0018278922772103259
+        ]
+      }
+    },
+    {
+      "source": "experiments/adaptive/runs/g3-lattice-microgen-reference-comparison-v1.json",
+      "index": 5,
+      "difference_from_cubic": {
+        "worst_relative_strain_energy_difference": 0.010876236284882882,
+        "relative_tensor_frobenius_difference": 0.0031241210502906546,
+        "relative_energy_difference_eigenvalues": [
+          -0.010876236284882882,
+          -0.010753842997942,
+          -0.0031680101756347092,
+          -0.0011009652870889338,
+          -0.0010668049499245433,
+          -0.001028020499851707
+        ]
+      }
+    },
+    {
+      "source": "experiments/adaptive/runs/g3-lattice-microgen-reference-comparison-v1.json",
+      "index": 6,
+      "difference_from_cubic": {
+        "worst_relative_strain_energy_difference": 0.009278605282172102,
+        "relative_tensor_frobenius_difference": 0.0026643324740873733,
+        "relative_energy_difference_eigenvalues": [
+          -0.009278605282172102,
+          -0.009174475691601947,
+          -0.002698733290102018,
+          -0.0008178680014430209,
+          -0.000780158250788204,
+          -0.0007589806723925474
+        ]
+      }
+    },
+    {
+      "source": "experiments/adaptive/runs/g3-lattice-microgen-reference-comparison-v1.json",
+      "index": 7,
+      "difference_from_cubic": {
+        "worst_relative_strain_energy_difference": 0.008502977308252236,
+        "relative_tensor_frobenius_difference": 0.0024369999136437505,
+        "relative_energy_difference_eigenvalues": [
+          -0.008502977308252236,
+          -0.008375087299382716,
+          -0.0024646490763422222,
+          -0.0006786449906170565,
+          -0.0006390126141668271,
+          -0.0006231724362226517
+        ]
+      }
+    }
+  ],
+  "candidates": [
+    {
+      "source": "experiments/adaptive/runs/g3-lattice-cubic-reference-cache-release-v1/result.json",
+      "nodes": 222331,
+      "difference_from_cubic": {
+        "worst_relative_strain_energy_difference": 0.002872605557109315,
+        "relative_tensor_frobenius_difference": 0.0006185685584746255,
+        "relative_energy_difference_eigenvalues": [
+          -0.002872605557109315,
+          -0.0016326632409616325,
+          -0.0006184242637246967,
+          -6.810171751031949e-05,
+          -3.505255904190703e-05,
+          -1.739265186546331e-05
+        ]
+      },
+      "retained_model_difference_range": [
+        0.001543873084938269,
+        0.017816861723235114
+      ],
+      "passes_one_percent_all_retained_models": false
+    },
+    {
+      "source": "experiments/adaptive/runs/g3-lattice-cubic25-reference-blocked-symmetry-v2/result.json",
+      "nodes": 241555,
+      "difference_from_cubic": {
+        "worst_relative_strain_energy_difference": 0.0008948225950480785,
+        "relative_tensor_frobenius_difference": 0.00023196328336400112,
+        "relative_energy_difference_eigenvalues": [
+          -0.0008948225950480785,
+          -0.0004172383350002757,
+          -2.131022756426024e-05,
+          2.2920241983572415e-05,
+          4.261540072800587e-05,
+          0.0003161155445844076
+        ]
+      },
+      "retained_model_difference_range": [
+        0.0011492364044694823,
+        0.019208187818665134
+      ],
+      "passes_one_percent_all_retained_models": false
+    },
+    {
+      "source": "experiments/adaptive/runs/g3-lattice-adapt24-tol0028-v1/result.json",
+      "nodes": 193242,
+      "difference_from_cubic": {
+        "worst_relative_strain_energy_difference": 0.007054100535585509,
+        "relative_tensor_frobenius_difference": 0.0019997823842846122,
+        "relative_energy_difference_eigenvalues": [
+          -0.007054100535585509,
+          -0.006828867190017425,
+          -0.002006437228064525,
+          -0.0004013795644430266,
+          -0.0003635578739053893,
+          -0.00034331124109061086
+        ]
+      },
+      "retained_model_difference_range": [
+        0.0011349017998945068,
+        0.012698817969886058
+      ],
+      "passes_one_percent_all_retained_models": false
+    },
+    {
+      "source": "experiments/adaptive/runs/g3-lattice-curve-eight-round-solve-v1/curve/result.json",
+      "nodes": 111605,
+      "difference_from_cubic": {
+        "worst_relative_strain_energy_difference": 0.005396392958999186,
+        "relative_tensor_frobenius_difference": 0.0017102466658713714,
+        "relative_energy_difference_eigenvalues": [
+          -0.005396392958999186,
+          -0.0051516570382282145,
+          -0.0017304259607102595,
+          2.0040652895014526e-05,
+          5.9399064352553436e-05,
+          8.713559086831272e-05
+        ]
+      },
+      "retained_model_difference_range": [
+        0.0013757288729599581,
+        0.014393062721993605
+      ],
+      "passes_one_percent_all_retained_models": false
+    },
+    {
+      "source": "experiments/adaptive/runs/g3-lattice-microgen-straight-tet10-hausd001-amg-v2/result.json",
+      "nodes": 238411,
+      "difference_from_cubic": {
+        "worst_relative_strain_energy_difference": 0.009690903025242135,
+        "relative_tensor_frobenius_difference": 0.0056998459016178605,
+        "relative_energy_difference_eigenvalues": [
+          -0.009690903025242135,
+          -0.009281597813711248,
+          -0.00573960220345387,
+          -0.005193181528138016,
+          -0.005007889918428116,
+          -0.004748446009719976
+        ]
+      },
+      "retained_model_difference_range": [
+        0.004125390892671201,
+        0.010043540553144647
+      ],
+      "passes_one_percent_all_retained_models": false
+    }
+  ],
+  "scope": "Fixed-field cubic consistency and empirical model disagreements; no continuum certificate or live timing claim"
+}

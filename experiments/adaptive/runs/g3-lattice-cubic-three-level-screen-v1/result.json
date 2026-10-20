@@ -1,0 +1,134 @@
+{
+  "records": [
+    {
+      "cells": 23,
+      "source": "/home/kmarchais/dev/meshers/experiments/adaptive/runs/g3-lattice-cubic23-reference-v1",
+      "elements": 43844,
+      "nodes": 218508,
+      "quadrature_shift": 7.675365479917103e-06
+    },
+    {
+      "cells": 24,
+      "source": "/home/kmarchais/dev/meshers/experiments/adaptive/runs/g3-lattice-cubic-reference-cache-release-v1",
+      "elements": 44976,
+      "nodes": 222331,
+      "quadrature_shift": 6.869053699230479e-06
+    },
+    {
+      "cells": 25,
+      "source": "/home/kmarchais/dev/meshers/experiments/adaptive/runs/g3-lattice-cubic25-reference-blocked-symmetry-v2",
+      "elements": 48696,
+      "nodes": 241555,
+      "quadrature_shift": 2.6353867295639755e-05
+    }
+  ],
+  "screens": {
+    "seed_spacing": {
+      "lengths": [
+        0.043478260869565216,
+        0.041666666666666664,
+        0.04
+      ],
+      "quadrature_shift": 2.6353867295639755e-05,
+      "correction_frobenius_norms": [
+        0.003364134456882938,
+        0.002798019732761227
+      ],
+      "correction_spectra": [
+        [
+          1.7391926473279005e-05,
+          3.505176641966254e-05,
+          6.810317179451576e-05,
+          0.0006184387042679388,
+          0.0016333549341714,
+          0.0028741810528608545
+        ],
+        [
+          -0.0024817662800987266,
+          -0.0012122943263808707,
+          -0.000437215840175177,
+          -5.965229100754266e-05,
+          -5.823737193199728e-05,
+          -4.455719805831522e-05
+        ]
+      ],
+      "minimum_mixed_load_correction": 0.0024817662800987266,
+      "signal_above_ten_times_quadrature": true,
+      "declared_order_interval": [
+        0.25,
+        6.0
+      ],
+      "matrix_model_relative_residual_limit": 0.1,
+      "compatible": false,
+      "observed_order": null,
+      "extrapolated_stiffness": null,
+      "best_correction_ratio": -1.153881448110785,
+      "correction_direction_cosine": -0.9597069030565865,
+      "matrix_model_relative_residual": 0.2810029541224359,
+      "positive_order_ratio_interval": [
+        1.05348935117843,
+        1.3391655504851838
+      ],
+      "reasons": [
+        "Correction directions reverse",
+        "Corrections are not proportional under one leading matrix model",
+        "Correction ratio is outside the declared positive-order interval"
+      ]
+    },
+    "element_density": {
+      "lengths": [
+        0.028359372056230476,
+        0.028119422074069717,
+        0.02738433740115494
+      ],
+      "quadrature_shift": 2.6353867295639755e-05,
+      "correction_frobenius_norms": [
+        0.003364134456882938,
+        0.002798019732761227
+      ],
+      "correction_spectra": [
+        [
+          1.7391926473279005e-05,
+          3.505176641966254e-05,
+          6.810317179451576e-05,
+          0.0006184387042679388,
+          0.0016333549341714,
+          0.0028741810528608545
+        ],
+        [
+          -0.0024817662800987266,
+          -0.0012122943263808707,
+          -0.000437215840175177,
+          -5.965229100754266e-05,
+          -5.823737193199728e-05,
+          -4.455719805831522e-05
+        ]
+      ],
+      "minimum_mixed_load_correction": 0.0024817662800987266,
+      "signal_above_ten_times_quadrature": true,
+      "declared_order_interval": [
+        0.25,
+        6.0
+      ],
+      "matrix_model_relative_residual_limit": 0.1,
+      "compatible": false,
+      "observed_order": null,
+      "extrapolated_stiffness": null,
+      "best_correction_ratio": -1.153881448110785,
+      "correction_direction_cosine": -0.9597069030565865,
+      "matrix_model_relative_residual": 0.2810029541224359,
+      "positive_order_ratio_interval": [
+        0.3221781945320731,
+        0.3559350055383799
+      ],
+      "reasons": [
+        "Correction directions reverse",
+        "Corrections are not proportional under one leading matrix model",
+        "Correction ratio is outside the declared positive-order interval"
+      ]
+    }
+  },
+  "retained_model_count": 24,
+  "retained_models_unchanged": true,
+  "scope": "Compatibility with one assumed common leading-error matrix, not a continuum certificate or a replacement for existing benchmark admission. Nonnested domains and spaces may violate this model."
+}

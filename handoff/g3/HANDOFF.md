@@ -1,6 +1,6 @@
 # Microgen comparison on G3
 
-Latest shutdown checkpoint: read
+Latest continuation checkpoint: read
 `/home/kmarchais/dev/meshers/handoff/g3/CHECKPOINT-20261020.md` before resuming.
 The original transfer instructions below remain historical context.
 

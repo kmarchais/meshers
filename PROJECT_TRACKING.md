@@ -466,6 +466,25 @@ Actual cubic23 assembly fits at 5.014 GiB. A fresh higher-order reference solve
 is selected next with the unchanged caps. Additional nonnested-mesh data may
 expose, rather than remove, reference uncertainty.
 
+Before reading the third cubic tensor, a full-matrix consistency analysis is
+defined for a common leading-error model. It accounts for unequal spacings,
+checks correction direction and proportionality, tests an order range of
+0.25 to 6, and separates correction signal from empirical quadrature shifts.
+Synthetic controls precede dataset analysis. Both existing length proxies
+remain visible, and the exact retained model tensors are checked. This is a
+diagnostic protocol, not a new benchmark admission rule.
+
+The third reference completes all six fresh loads at 5.976 GiB and passes
+independent field and quadrature audits. The subsequent three-level analysis
+passes seven synthetic controls but rejects both length proxies. Corrections
+reverse with cosine -0.959707, and the common-matrix residual is 28.1%.
+The exact retained 24-model set and field provenance are verified. Do not
+discard the middle level or fit only the closer odd levels. No extrapolated
+tensor is promoted. Next measure unresolved quartic curve-edge modes on a
+single frozen domain, with coupled overlap terms and independent trial-energy
+and periodic-trace controls. That diagnostic has not run yet and is not an
+equilibrium reference or a native API feature.
+
 Evidence: [cubic results](experiments/adaptive/CUBIC_RESULTS.md),
 `cubic_reference.py`, `cubic_assessment.py`, `amg_reference.py`,
 `capture_reference_system.py`, and `block_amg_probe.py` under
@@ -651,7 +670,7 @@ use the verified `kmarchais` account.
 
 | Priority | Next action | Completion criterion |
 |---|---|---|
-| 1 | Read the running cubic23 reference, independently audit its fields, then assess the three-level sequence | Test refinement behavior without dropping models or interpreting a single higher-order tensor as continuum truth |
+| 1 | Implement and validate one fixed-domain quartic curve-edge residual witness after the three-level model fails | Diagnose remaining FE error without another grid sweep, model deletion, or nonequilibrated trial energy mislabeled as stiffness |
 | 2 | Resolve lattice FE versus geometry/reference uncertainty | A justified reference envelope and a candidate passing every retained applicable model, without post-hoc model deletion |
 | 3 | Establish admitted actual Microgen/MMG comparators for Gyroid and spinodoid, or clearly bound unsupported tested routes | Genuine geometry-qualified controls, not MMG on Meshers seeds or altered specimens |
 | 4 | Run fresh repeated matched-target workflows where both competitors qualify | Same-host interleaved repetitions, charged preparation and solves, all scientific gates met |

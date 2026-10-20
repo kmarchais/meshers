@@ -1,5 +1,20 @@
 # Adaptive and quadratic implicit meshing: results
 
+## Three-level cubic consistency, 2026-10-20
+
+Cubic23 completes six fresh loads at 5.976 GiB and passes its independent
+field and positive-rule audits. The full 23/24/25 sequence does not support
+the predeclared common leading-error matrix model. Correction directions
+reverse with cosine -0.959707 and the best fit has 28.1% residual, above the
+10% screen. Both existing length proxies fail. Seven synthetic controls pass,
+and the exact 24-model set remains unchanged.
+
+Do not fit only the closer odd levels, discard the middle tensor, or adopt
+a favorable cubic reference for a timing claim. Next diagnose unresolved
+curve-edge FE modes on one frozen domain, rather than another grid-count
+or sizing-strength sweep. See `CUBIC_RESULTS.md` for the proposed bounded
+quartic-edge residual witness and its limits.
+
 ## Completed finer cubic reference, 2026-10-20
 
 All six fresh cubic25 loads complete within 8 GiB, peaking at 6.753 GiB.

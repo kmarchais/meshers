@@ -172,6 +172,98 @@ these gates pass, one fresh cubic23 solve is selected as job 322 in
 model is removed. Read its actual completion and fresh-process audit before
 interpreting a three-level sequence.
 
+## Declared three-level consistency screen
+
+Before the cubic23 tensor is complete, `cubic_refinement.py` declares a
+diagnostic for `C(h) = C_limit + A*h**p`. It uses one common symmetric leading
+matrix, not independent fits to whichever scalar entries look favorable.
+Differences are whitened by the finest tensor. Unequal mesh spacings enter
+the correction-ratio equation explicitly.
+
+The assumed positive-order range is 0.25 to 6. Corrections must have positive
+proportionality, best common-matrix relative Frobenius residual at most 10%,
+and mixed-load signal at least ten times the largest observed fixed-field
+quadrature shift. An inferred limit must be positive definite. Seed spacing
+and element-density proxies are reported separately, with neither silently
+chosen after the result. Exact audited model tensors must match the retained
+24-model set, not merely have the same count.
+
+Synthetic controls test known integer and fractional orders, correction
+reversals, nonproportional matrices, and quadrature-unresolved corrections
+before the dataset is analyzed. Compatibility only supports that stated local
+model. Failure does not prove absence of convergence under another model;
+success does not certify a continuum limit or replace benchmark admission.
+No existing model is deleted and no geometry or stiffness threshold changes.
+
+## Completed third level and rejected leading-order fit
+
+Job 322 completes all six fresh cubic23 loads. Solve time is 972.61 seconds,
+worker time is 1,018.27 seconds, and peak RSS is 5.976 GiB. Reduced residuals
+are below 9.76e-13. Own-rule error is 1.29e-11 relative and periodic jumps are
+below 2.23e-16. The 125-point energy shift is 7.6754e-6, below the unchanged
+1e-4 limit; parent-minus-cubic has minimum eigenvalue +0.000137181.
+Independent audit 323 passes in 56.75 seconds at 0.521 GiB, including
+64-to-125-point energy change 1.1212e-6.
+
+Job 324 first passes all seven synthetic tests, then reads the audited
+23/24/25 tensors. Every field hash, parent provenance, specimen, and exact
+24-model tensor set is verified. Both declared length proxies reject the
+common leading-order model:
+
+- The 23-to-24 correction is nominally positive definite, while the 24-to-25
+  correction is negative definite in the common cubic25 energy metric.
+- Correction-direction cosine is -0.959707. The best proportionality factor
+  is -1.153881, inconsistent with a positive-order common leading term.
+- Relative matrix-model residual is 28.1003%, above the declared 10% screen.
+- The dominant correction signal is over 94 times the largest measured
+  fixed-field quadrature shift. That sensitivity does not explain the largest
+  observed step, though it is not a rigorous quadrature-error bound.
+
+No observed order or extrapolated tensor is promoted. Cubic25 differs from
+cubic23 by 0.08948% with cubic23 as denominator, but fitting only those two
+odd levels would discard the valid middle result. Do not do that. This rejects
+the stated local model, not every possible convergence mechanism.
+
+Against cubic23 alone, the curve pilot differs by 0.53964%, the finest adaptive
+native tensor by 0.70541%, and the strongest Microgen-derived Tet10 by
+0.96909%. Those values do not override the unchanged retained-model failures
+or justify a target-qualified timing comparison. Reference uncertainty remains
+the blocker to interpreting another native sizing change.
+
+Records are in `runs/g3-lattice-cubic23-reference-v1`,
+`runs/g3-lattice-cubic23-assessment-v1`, and
+`runs/g3-lattice-cubic-three-level-screen-v1`.
+
+## Next fixed-domain FE diagnostic
+
+Do not select another nonnested grid or a favorable extrapolation from this
+oscillation. The next proposed diagnostic uses the saved cubic24 fields on
+their unchanged quadratic physical domain. It adds one quartic edge mode
+`16*lambda_i*lambda_j*(lambda_i-lambda_j)**2` per periodic wall/box-curve edge
+orbit, with a shared three-component displacement coefficient. Each mode is
+supported on the complete incident-tet star. Geometry, topology, and the
+existing fields remain frozen inputs.
+
+Assemble the small coupled mode stiffness `K` and six-load residual `R`,
+including overlap terms between edge stars. Minimizing only these extra
+coefficients gives `z = solve(K, R)` and a trial-energy reduction `R.T @ z`.
+Do not sum isolated overlapping patch corrections as if they were independent.
+
+Before a lattice measurement, controls must verify the quartic gradient,
+constant-strain periodic patch, coupled stiffness symmetry and positivity,
+and independently integrated trial-energy identity. Check continuity and
+periodic traces, including quartic face samples, and retain the source's
+geometry admission. Positive 64-point and 125-point rules must agree on the
+energy reduction within 1%. A worst mixed-load reduction of at least 0.05%
+relative to the saved cubic tensor is the predeclared signal for a useful
+curve-edge witness. Preserve the 8 GiB ceiling and bounded stages.
+
+This is a proposed residual/enrichment diagnostic, not a new Meshers API or
+another recovery-strength trial. Its trial fields are not globally equilibrated;
+their energy is not a new homogenized reference. A small signal does not rule
+out other unresolved FE modes, and a large signal does not certify continuum
+or local-stress accuracy. No such lattice experiment has run yet.
+
 This experiment addresses lattice reference uncertainty. It does not add a
 Meshers Tet20 product API, change the Microgen pipeline or establish a timing
 advantage. All existing uniform and adaptive reference models remain retained.

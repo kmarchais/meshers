@@ -1,20 +1,18 @@
 # G3 continuation checkpoint, 20 October 2026
 
 The four-fixture matched-accuracy goal is active and unachieved. The source
-and documentation changes through `4587cd6` are pushed. This checkpoint adds
-the completed finer-reference evidence and records one running successor.
+and documentation changes through `b928d1c` are pushed. This checkpoint adds
+the completed third reference and its negative consistency screen.
 No delegates, unrelated jobs, timers, or remote hosts are involved.
 
-## Current job to inspect first
+## Current execution state
 
-Pueue job 322 runs the fresh cubic23 reference. Its run directory is
-`experiments/adaptive/runs/g3-lattice-cubic23-reference-v1`. The observing
-terminal session in this thread is 71321. Check pueue and that existing handle
-before doing anything else. A missing observation or stale checkpoint is not
-proof that the worker stopped. Do not launch a duplicate or queue a successor
-before reading the actual result.
+Jobs 322, 323, and 324 all completed successfully. No Meshers successor is
+queued at this checkpoint. Recheck the authoritative shared queue before
+running anything. Do not restart cubic23 or treat its old observing terminal
+session 71321 as a current worker.
 
-The job uses `cubic_reference.py`, source
+The completed cubic23 job uses `cubic_reference.py`, source
 `runs/g3-lattice-cubic-parent23-fields-v1`, prepared mesh
 `runs/g3-lattice-cubic23-assembly-memory-v1`, and the validated elastic-block
 AMG preset. No saved load prefix is replayed. All paths beginning with `runs`
@@ -26,10 +24,10 @@ passes field audit 320. Actual cubic assembly 321 has 218,508 nodes and
 250,000-node and 250,000-tet stages, a 240-second first-load deadline, and a
 1,800-second total worker timeout. One numerical thread is used.
 
-Do not edit hashed reference, AMG, integration, or workflow sources while
-this job uses them. Documentation and independent analysis can wait until
-its outcome is read. Its sampled geometry comes from the admitted quadratic
-parent through an exact cubic embedding, not a projected cubic boundary.
+Its sampled geometry comes from the admitted quadratic parent through an
+exact cubic embedding, not a projected cubic boundary. The next selected
+question is a fixed-domain quartic curve-edge residual witness. Its controls
+and lattice experiment have not been implemented or run yet.
 
 ## What changed the next action
 
@@ -82,26 +80,59 @@ the append-only `.audit/g3-microgen.tsv`. Detailed new records are in:
 - `runs/g3-lattice-cubic-parent23-field-audit-v1`.
 - `runs/g3-lattice-cubic23-assembly-memory-v1`.
 
-## After job 322
+## Completed third-level result
 
-If all six loads and the existing own-rule and quadrature gates pass, run one
-fresh-process `cubic_assessment.py` audit in a new directory. Use the cubic23
-prepared mesh and retain exactly these three eight-model reports:
+Cubic23 completes all six fresh loads in a 1,018.27-second worker, peaking
+at 5.976 GiB. Its own-rule error is 1.29e-11 and periodic jumps are below
+2.23e-16. Positive 125-point energy shift is 7.6754e-6, and the minimum
+parent-minus-cubic eigenvalue is +0.000137181. Fresh-process audit 323 passes,
+including 64-to-125-point change 1.1212e-6. These three eight-model reports
+remain retained:
 
 - `runs/g3-lattice-curve-grading-reference-comparison-v1.json`.
 - `runs/g3-lattice-reference-sensitivity-v2.json`.
 - `runs/g3-lattice-microgen-reference-comparison-v1.json`.
 
-Compare cubic24, cubic25, the finest adaptive native candidate, the eight-round
-curve candidate, and the strongest Microgen-derived Tet10 control. Confirm all
-input hashes and all 24 models. Keep candidate-to-model normalization separate
-from the reverse model-to-cubic diagnostic.
+Before reading the full cubic23 tensor, `cubic_refinement.py` defines a
+common leading-matrix model, order range 0.25 to 6, at most 10% relative
+matrix-fit residual, and signal at least ten times observed quadrature shifts.
+Job 324 passes seven synthetic controls, verifies all field hashes and parent
+provenance, and checks exact equality of the retained 24 model tensors.
 
-Then assess the full 23/24/25 sequence without assuming monotonicity or fitting
-only a convenient pair. Geometry and displacement spaces are nonnested.
-If the sequence is inconsistent, preserve that negative conclusion rather
-than declare a reference or tune a native mesh to the model envelope. A failed
-job or first-load deadline needs inspection, not an automatic retry.
+Both length proxies reject the model. Correction-direction cosine is
+-0.959707 and the best proportionality coefficient is negative. Matrix-fit
+residual is 28.1%. Cubic24 is softer than both neighboring levels. Do not fit
+only the closer odd pair, drop the middle level, promote an observed order,
+or select a favorable reference for a timing claim. This rejects the stated
+local model, not every possible convergence mechanism.
+
+Records are in `runs/g3-lattice-cubic23-reference-v1`,
+`runs/g3-lattice-cubic23-assessment-v1`, and
+`runs/g3-lattice-cubic-three-level-screen-v1`.
+
+## Next bounded diagnostic
+
+Read the declared protocol in `CUBIC_RESULTS.md` before implementation. Use
+the saved cubic24 fields in `runs/g3-lattice-cubic-reference-cache-release-v1`
+and the prepared mesh in `runs/g3-lattice-cubic-assembly-memory-v1`. Freeze
+their geometry, topology, and source fields.
+
+The proposed scalar mode on each periodic wall/box-curve edge orbit is
+`16*lambda_i*lambda_j*(lambda_i-lambda_j)**2`. Give each orbit one shared
+three-component displacement coefficient, supported on the complete incident
+element star. Assemble all overlap terms in the small coupled mode stiffness
+and six-load residual. Solve only those extra coefficients and verify the
+trial-energy reduction independently. Do not sum independent overlapping
+patch gains or call trial energy an equilibrated homogenized stiffness.
+
+Controls must check quartic derivatives, a constant-strain periodic patch,
+coupled symmetry and positivity, trial-energy identity, continuity, and
+quartic periodic face traces. Only then run one lattice probe. Keep the 8 GiB
+ceiling and bounded stages. Positive 64-point and 125-point reductions must
+agree within 1%, and the predeclared useful signal is at least 0.05% worst
+mixed-load reduction relative to the source cubic tensor. This is an FE
+diagnostic, not a native feature or a revival of failed recovery sizing.
+Neither a small nor large signal certifies continuum or local-stress accuracy.
 
 ## Remaining objective and runtime
 

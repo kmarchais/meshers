@@ -1,0 +1,40 @@
+{
+  "inputs": {
+    "/home/kmarchais/dev/meshers/experiments/adaptive/cubic_refinement.py": "a6f79b051b80ed3dcd774ba42a7ccf969cf10dca489e5da1fe3a44737eeb6006",
+    "/home/kmarchais/dev/meshers/experiments/adaptive/test_cubic_refinement.py": "9034fbc803f90bfcc0a98825ea66303d18fd480bb499c4a2abf1d0307648b1f2",
+    "/home/kmarchais/dev/meshers/experiments/adaptive/microgen_workflow.py": "a8dfec3e7fd40eb94eee0f8f5b149721bd56cf058ce12b61c4f8a3e9fe42f950",
+    "/home/kmarchais/dev/meshers/experiments/adaptive/runs/g3-lattice-curve-grading-reference-comparison-v1.json": "bec8af1d841a1b3d0299d3746f96c0562ec0db13927ce8370cce6d22924a23b9",
+    "/home/kmarchais/dev/meshers/experiments/adaptive/runs/g3-lattice-reference-sensitivity-v2.json": "0bc21b6b9c07819795697047ee827aab8c23363790dc5137ea7d2d1a5aa0ac07",
+    "/home/kmarchais/dev/meshers/experiments/adaptive/runs/g3-lattice-microgen-reference-comparison-v1.json": "6acf432121761aa9028ffd81be1e146cbd5010e84f6183fab9cd455c966dfdd4",
+    "/home/kmarchais/dev/meshers/experiments/adaptive/runs/g3-lattice-cubic23-reference-v1/result.json": "16d3e309e0b75d9f56f33186044666d3ccfc78246f94f2ac653189ed8be130f9",
+    "/home/kmarchais/dev/meshers/experiments/adaptive/runs/g3-lattice-cubic23-reference-v1/fields.npz": "0b40709b227ee18de96d9a7fdfd4a9fd5d794a57593d02d9103b7d5fff1f565c",
+    "/home/kmarchais/dev/meshers/experiments/adaptive/runs/g3-lattice-cubic23-reference-v1/manifest.json": "0340db217fe913018625b7b099298f461d3154714f994037a5467016ad588fac",
+    "/home/kmarchais/dev/meshers/experiments/adaptive/runs/g3-lattice-cubic23-assessment-v1/result.json": "5eaacce55706b7cfc14c499262104262bd225612bd8a45e70512b0b1f8d4bc73",
+    "/home/kmarchais/dev/meshers/experiments/adaptive/runs/g3-lattice-cubic23-assessment-v1/manifest.json": "a233745d5bab93337abf030598c87e9033807d4f126e1a0576f3cb2af2bba845",
+    "/home/kmarchais/dev/meshers/experiments/adaptive/runs/g3-lattice-cubic-parent23-fields-v1/result.json": "741e816cb56525782b859a077a666068390842a9b1c0cf18a14f67b798648228",
+    "/home/kmarchais/dev/meshers/experiments/adaptive/runs/g3-lattice-cubic-reference-cache-release-v1/result.json": "46d350809514b6ea49f672b3435f9a67174f4c0ebe39f08d2373e5da9e55052a",
+    "/home/kmarchais/dev/meshers/experiments/adaptive/runs/g3-lattice-cubic-reference-cache-release-v1/fields.npz": "83485453937ad050f6d0eb486b2048f171692da782a6a173fa0be52a9e9e22db",
+    "/home/kmarchais/dev/meshers/experiments/adaptive/runs/g3-lattice-cubic-reference-cache-release-v1/manifest.json": "1cd1eb141ebac5933a97116b16ef3998ecf22b7711ff7b64970f099175c9c48d",
+    "/home/kmarchais/dev/meshers/experiments/adaptive/runs/g3-lattice-cubic-assessment-v1/result.json": "4b7317e063b9cf12fd11eb1117b49357ba1a589720a97fb12bebe4d9474ba28e",
+    "/home/kmarchais/dev/meshers/experiments/adaptive/runs/g3-lattice-cubic-assessment-v1/manifest.json": "42c08a77f18c734a54c04c98de8a884d30fdce5b9cda095ede5ab163dde2d089",
+    "/home/kmarchais/dev/meshers/experiments/adaptive/runs/g3-lattice-finer-reference-comparison-v1.json": "8fc3ac22764e9075d1770fb3ca2bc92a8ec65f851bc51714c0579f39b48a8fde",
+    "/home/kmarchais/dev/meshers/experiments/adaptive/runs/g3-lattice-curved24-symmetric-v1/result.json": "5c3e1aa53be58e32fae972b7e82e6fdb9457e683f3ac155348b2162d80820446",
+    "/home/kmarchais/dev/meshers/experiments/adaptive/runs/g3-lattice-cubic25-reference-blocked-symmetry-v2/result.json": "a4ad2d73a8bc927c4305bacdbeb585c7800a1de47b3b302a81589fdbcd6e87eb",
+    "/home/kmarchais/dev/meshers/experiments/adaptive/runs/g3-lattice-cubic25-reference-blocked-symmetry-v2/fields.npz": "e664ab11761f2394be17b6267be8a49431d7d327e57bb856cdb5e754e0d95518",
+    "/home/kmarchais/dev/meshers/experiments/adaptive/runs/g3-lattice-cubic25-reference-blocked-symmetry-v2/manifest.json": "65efed303d42f85ba7a74904d64d144b6a356c33908512e2fd31a0ab0c00a1e8",
+    "/home/kmarchais/dev/meshers/experiments/adaptive/runs/g3-lattice-cubic25-assessment-v1/result.json": "7130da0631f19c3ab9b5ae94f9d13c8151531b5c551347db351711e9ae0c3284",
+    "/home/kmarchais/dev/meshers/experiments/adaptive/runs/g3-lattice-cubic25-assessment-v1/manifest.json": "0507c708a763af7e6ba4a7a3106d96f859473d7c5dc8c04ac1c94d74f6f39c67",
+    "/home/kmarchais/dev/meshers/experiments/adaptive/runs/g3-lattice-cubic-parent25-fields-v1/result.json": "973e7f55378aad1ef9fe2846da23cdfe07073c81c2b6f0d700f922bea40651b2"
+  },
+  "threads": 1,
+  "memory_bytes": 8589934592,
+  "worker_timeout_s": 120,
+  "leading_matrix_model": "C(h) = C_limit + A*h**p",
+  "order_interval": [
+    0.25,
+    6.0
+  ],
+  "maximum_relative_matrix_residual": 0.1,
+  "minimum_correction_to_quadrature_ratio": 10,
+  "no_reference_admission_change": true
+}
