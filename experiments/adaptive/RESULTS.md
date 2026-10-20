@@ -1,5 +1,19 @@
 # Adaptive and quadratic implicit meshing: results
 
+## Fixed-domain quartic edge witness, 2026-10-20
+
+A coupled residual probe on the saved cubic24 domain uses 102 periodic
+curve-edge orbits and 306 mode DOFs. Derivative, affine, manufactured-energy,
+pin-gauge, overlap, and quartic periodic-trace controls pass. The original
+64/125-point precision check fails at 6.03% and remains rejected. A single
+125/216-point follow-up passes precision at 0.017934% change.
+
+The trial-energy reduction is only 0.648 ppm, far below the declared 500 ppm
+signal screen. This is not a stiffness error or a new equilibrated reference.
+No native sizing feature is justified. One possible omission remains to test:
+coarse curve-corner relaxation coupled to the same edge modes, with separate
+coarse-only gain and a Schur-complement check. See `CUBIC_RESULTS.md`.
+
 ## Three-level cubic consistency, 2026-10-20
 
 Cubic23 completes six fresh loads at 5.976 GiB and passes its independent

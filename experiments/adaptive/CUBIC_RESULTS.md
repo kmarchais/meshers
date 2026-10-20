@@ -234,7 +234,7 @@ Records are in `runs/g3-lattice-cubic23-reference-v1`,
 `runs/g3-lattice-cubic23-assessment-v1`, and
 `runs/g3-lattice-cubic-three-level-screen-v1`.
 
-## Next fixed-domain FE diagnostic
+## Quartic edge-witness protocol
 
 Do not select another nonnested grid or a favorable extrapolation from this
 oscillation. The next proposed diagnostic uses the saved cubic24 fields on
@@ -262,7 +262,76 @@ This is a proposed residual/enrichment diagnostic, not a new Meshers API or
 another recovery-strength trial. Its trial fields are not globally equilibrated;
 their energy is not a new homogenized reference. A small signal does not rule
 out other unresolved FE modes, and a large signal does not certify continuum
-or local-stress accuracy. No such lattice experiment has run yet.
+or local-stress accuracy. The measured experiments following this protocol
+are recorded below.
+
+## Coupled quartic edge-witness results
+
+The prototype is `quartic_edge_probe.py`; it changes no native meshing API.
+Three unit tests check the quartic derivatives, support and endpoint symmetry,
+and engineering-strain mapping. Jobs 325 and 326 then validate affine and
+manufactured periodic cube controls. The strengthened control has eight edge
+orbits, 24 scalar displacement DOFs, and 29 support tets. Affine residual is
+1.26e-16, trial-energy identity error is 1.00e-15, and positive 125-point versus
+216-point mode matrices differ by 1.79e-15 relative. Nonzero face and box-edge
+periodic traces agree at all 15 quartic face nodes. Off-orbit coupling is
+nonzero and tested explicitly. A nonzero pin-gauge control is exercised;
+uniform translations can restore the source pin without changing energy.
+
+Job 327 uses the saved cubic24 domain and fields without modifying them.
+It assembles all overlap terms for 102 periodic curve-edge orbits, 306 mode
+DOFs, and 332 support tets. Independent trial-energy checks and continuity
+pass. However, the 64-to-125-point gain changes by 6.0323%, failing the
+predeclared 1% precision gate. That run remains precision-rejected.
+
+One explicitly higher-rule check, job 328, preserves the geometry, fields,
+modes, overlap matrix, 1% precision gate, and 0.05% signal screen. Its
+125-to-216-point gain change is 0.017934%, so precision passes. The measured
+worst mixed-load trial-energy reduction is only 6.4791e-7 relative, or
+0.000064791%. This is 0.648 ppm versus the required 500 ppm, about 772 times
+below the signal screen. All six reduction eigenvalues are positive.
+The local mode solve residual is below 1.05e-16, direct energy-identity error is
+2.04e-13, continuity and periodic quartic-trace mismatches are zero, and no
+pin translation is needed on the actual lattice source.
+
+The higher-rule lattice worker takes 26.57 seconds and peaks at 0.3404 GiB.
+These are diagnostic costs, not live meshing-workflow timings. Existing
+geometry and benchmark references remain unchanged. Do not report the
+reduction as a stiffness error, a new equilibrium tensor, or a continuum
+bound. The resolved small witness does not justify another native sizing
+strength trial or a new meshing feature.
+
+The original cubic coefficients were fixed. A small mode-only reduction does
+not bound the benefit of re-equilibrating the original FE space with the new
+modes, or exclude errors in untested modes. The earlier full Tet10-to-cubic
+audit covers 1,408 curve-vertex-incident tets and 75.02% of its correction
+trace; the edge-incident subset has 332 tets and 35.55%. Those are a different
+enrichment diagnostic, not a claim about the remaining cubic error.
+
+Records are in `runs/g3-quartic-edge-controls-v1`,
+`runs/g3-quartic-edge-controls-v2`,
+`runs/g3-lattice-quartic-edge-witness-v1`, and
+`runs/g3-lattice-quartic-edge-witness-higher-v2`.
+
+## One remaining coarse-coupling check
+
+Before closing this mode family, test only one specific omission: allow the
+existing cubic corner basis functions at periodic curve vertices to relax
+jointly with the same quartic edge modes. Include their complete vertex stars
+and all cross terms, without changing geometry, adding another degree family,
+or selecting a favorable grid. Retain the source pin through a uniform gauge
+translation where needed. This is a proposed diagnostic, not an implemented
+native feature or a selected global reference solve.
+
+Report edge-only, coarse-corner-only, and joint gains separately. The signal
+must use the incremental quartic gain after coarse relaxation, not credit
+coarse-only integration or re-equilibration effects. Check it independently
+against the Schur complement and require nonnegative nested-space gain
+increments. The original edge-only result must reproduce before comparison.
+Keep the validated 125/216-point pair, 1% precision gate, 0.05% signal screen,
+8 GiB ceiling, and existing mode/support caps. If that increment remains
+small, stop this polynomial-mode route rather than escalating degree or
+tuning its strength. No such joint lattice check has run yet.
 
 This experiment addresses lattice reference uncertainty. It does not add a
 Meshers Tet20 product API, change the Microgen pipeline or establish a timing

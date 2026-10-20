@@ -482,8 +482,17 @@ The exact retained 24-model set and field provenance are verified. Do not
 discard the middle level or fit only the closer odd levels. No extrapolated
 tensor is promoted. Next measure unresolved quartic curve-edge modes on a
 single frozen domain, with coupled overlap terms and independent trial-energy
-and periodic-trace controls. That diagnostic has not run yet and is not an
+and periodic-trace controls. That diagnostic subsequently runs and is not an
 equilibrium reference or a native API feature.
+
+Three unit tests and manufactured periodic controls pass. The real lattice
+uses 102 edge orbits, 306 mode DOFs, and 332 support tets. Its initial 64/125
+precision test fails at 6.03%. A single higher-rule 125/216 check passes at
+0.017934%, but the trial-energy reduction is only 0.648 ppm, versus the
+predeclared 500 ppm signal. No native sizing change is justified. The small
+mode-only witness does not bound global coarse-space re-equilibration or
+exclude other FE errors. One joint curve-corner relaxation check is proposed,
+with coarse-only gain removed and an independent Schur-complement identity.
 
 Evidence: [cubic results](experiments/adaptive/CUBIC_RESULTS.md),
 `cubic_reference.py`, `cubic_assessment.py`, `amg_reference.py`,
@@ -670,7 +679,7 @@ use the verified `kmarchais` account.
 
 | Priority | Next action | Completion criterion |
 |---|---|---|
-| 1 | Implement and validate one fixed-domain quartic curve-edge residual witness after the three-level model fails | Diagnose remaining FE error without another grid sweep, model deletion, or nonequilibrated trial energy mislabeled as stiffness |
+| 1 | Test one coarse curve-corner relaxation coupled to the same quartic modes after the weak edge-only witness | Separate coarse-only and incremental gains, reproduce the original result, and stop this route if the increment remains small |
 | 2 | Resolve lattice FE versus geometry/reference uncertainty | A justified reference envelope and a candidate passing every retained applicable model, without post-hoc model deletion |
 | 3 | Establish admitted actual Microgen/MMG comparators for Gyroid and spinodoid, or clearly bound unsupported tested routes | Genuine geometry-qualified controls, not MMG on Meshers seeds or altered specimens |
 | 4 | Run fresh repeated matched-target workflows where both competitors qualify | Same-host interleaved repetitions, charged preparation and solves, all scientific gates met |

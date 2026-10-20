@@ -1,0 +1,239 @@
+{
+  "source": "/home/kmarchais/dev/meshers/experiments/adaptive/runs/g3-lattice-cubic-reference-cache-release-v1",
+  "prepared": "/home/kmarchais/dev/meshers/experiments/adaptive/runs/g3-lattice-cubic-assembly-memory-v1",
+  "edge_orbits": 102,
+  "selected_tets": 332,
+  "mode_dofs": 306,
+  "periodic": {
+    "periodic_pair_counts": [
+      688,
+      688,
+      688
+    ],
+    "periodic_coordinate_errors": [
+      2.220446049250313e-16,
+      2.220446049250313e-16,
+      2.220446049250313e-16
+    ],
+    "periodic_pair_tolerance": 1e-10,
+    "periodic_equivalence_classes": 220344,
+    "periodic_triangles_match": true
+  },
+  "rules": [
+    {
+      "points": 64,
+      "energy_reduction_gram": [
+        [
+          4.030357696013985e-08,
+          2.0780347227797417e-08,
+          2.0818774608996324e-08,
+          9.241296019135085e-11,
+          5.219408991073344e-10,
+          2.4844213024622494e-10
+        ],
+        [
+          2.078034722779742e-08,
+          4.48951167436678e-08,
+          2.3203364469955263e-08,
+          -2.0097714695760979e-10,
+          -3.549403197526136e-11,
+          7.866665295211182e-10
+        ],
+        [
+          2.0818774608996317e-08,
+          2.3203364469955263e-08,
+          4.4736419091393593e-08,
+          -1.0949778499106802e-10,
+          5.343867828318856e-10,
+          8.610553145079541e-10
+        ],
+        [
+          9.241296019135081e-11,
+          -2.0097714695760994e-10,
+          -1.0949778499106781e-10,
+          3.253492177875599e-08,
+          -1.2243368276754348e-11,
+          -2.162909100548186e-11
+        ],
+        [
+          5.219408991073346e-10,
+          -3.549403197526108e-11,
+          5.343867828318854e-10,
+          -1.224336827675321e-11,
+          3.2208435909862644e-08,
+          4.663332012299306e-11
+        ],
+        [
+          2.4844213024622515e-10,
+          7.86666529521118e-10,
+          8.610553145079543e-10,
+          -2.1629091005481034e-11,
+          4.663332012299284e-11,
+          4.052917947085319e-08
+        ]
+      ],
+      "mode_solve_relative_residual": 1.07509445083821e-16,
+      "mixed_load_relative_reduction_spectrum": [
+        2.4305023788498744e-07,
+        3.120989052118756e-07,
+        3.15279340286941e-07,
+        3.926378823255387e-07,
+        6.697224239207045e-07,
+        6.798698750135609e-07
+      ],
+      "quadrature_relative_change": null,
+      "trial_identity_relative_error": 2.7481866129732434e-13,
+      "trace": {
+        "continuity_max": 0.0,
+        "periodic_quartic_trace_max": 0.0,
+        "quartic_face_samples": 15,
+        "nonzero_cap_trace_entries": 204,
+        "pin_node": 4343,
+        "uniform_translation_to_add_to_trial": [
+          [
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0
+          ]
+        ],
+        "pin_gauge_max": 0.0,
+        "pin_scope": "A uniform translation restores the source pin without changing strains, energies, continuity or periodic jumps"
+      }
+    },
+    {
+      "points": 125,
+      "energy_reduction_gram": [
+        [
+          3.845219914023976e-08,
+          1.9515854824328164e-08,
+          1.9576064631616888e-08,
+          6.44617176025819e-11,
+          5.572815752684446e-10,
+          2.581529899459383e-10
+        ],
+        [
+          1.951585482432815e-08,
+          4.208984378575332e-08,
+          2.1672458079812785e-08,
+          -1.280032894138843e-10,
+          -1.997579221149091e-11,
+          7.941388450000964e-10
+        ],
+        [
+          1.9576064631616888e-08,
+          2.1672458079812782e-08,
+          4.19700866188816e-08,
+          -7.88339672593284e-11,
+          3.976955759447028e-10,
+          7.8495317255384e-10
+        ],
+        [
+          6.4461717602582e-11,
+          -1.2800328941388432e-10,
+          -7.883396725932812e-11,
+          3.1334379921315936e-08,
+          -1.2676409698297281e-11,
+          -4.358292340398879e-12
+        ],
+        [
+          5.572815752684447e-10,
+          -1.9975792211491057e-11,
+          3.9769557594470273e-10,
+          -1.2676409698297592e-11,
+          3.1035719768631115e-08,
+          6.671160269014036e-11
+        ],
+        [
+          2.581529899459387e-10,
+          7.941388450000968e-10,
+          7.849531725538396e-10,
+          -4.358292340399241e-12,
+          6.671160269014097e-11,
+          3.90899025265405e-08
+        ]
+      ],
+      "mode_solve_relative_residual": 9.308316153030427e-17,
+      "mixed_load_relative_reduction_spectrum": [
+        2.2904584925782432e-07,
+        3.0072411204370526e-07,
+        3.036630336962552e-07,
+        3.7872069632962666e-07,
+        6.309519373008753e-07,
+        6.479524142119999e-07
+      ],
+      "quadrature_relative_change": 0.06032253763563886,
+      "trial_identity_relative_error": 2.7807338158247847e-13,
+      "trace": {
+        "continuity_max": 0.0,
+        "periodic_quartic_trace_max": 0.0,
+        "quartic_face_samples": 15,
+        "nonzero_cap_trace_entries": 204,
+        "pin_node": 4343,
+        "uniform_translation_to_add_to_trial": [
+          [
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0
+          ]
+        ],
+        "pin_gauge_max": 0.0,
+        "pin_scope": "A uniform translation restores the source pin without changing strains, energies, continuity or periodic jumps"
+      }
+    }
+  ],
+  "quadrature_sensitivity_passed": false,
+  "predeclared_curve_signal_passed": false,
+  "geometry_unchanged": true,
+  "retained_models_unchanged": true,
+  "scope": "Coupled quartic edge-mode trial energy on a frozen quadratic domain, not global equilibrium, homogenized stiffness, continuum or local-stress certification"
+}

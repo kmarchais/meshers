@@ -541,3 +541,16 @@ orbits and require their full overlap matrix, independent trial-energy checks,
 and periodic trace controls. Read the declared protocol in `CUBIC_RESULTS.md`
 before implementation. It remains a diagnostic, not an equilibrated stiffness
 reference, a revived recovery-strength recipe, or a new native feature.
+
+Jobs 325 and 326 pass the quartic derivative, affine, coupled-energy, gauge,
+and periodic-trace controls. The lattice edge-only witness 327 fails its
+64/125-point precision gate. One higher-rule follow-up 328 passes 125/216
+precision but has only 0.648 ppm trial-energy reduction, far below the
+predeclared 500 ppm signal. Preserve the failed initial route and all sources.
+
+No native feature or stiffness reference follows. Select only one missing
+coarse-response check: existing cubic curve-corner functions relaxed jointly
+with the same edge modes. Separate coarse-only and incremental quartic gains,
+verify the Schur complement and nested-space ordering, and reproduce the
+original edge-only result. Keep the same higher-rule precision and signal
+screens, memory and support caps. If still small, stop this polynomial route.

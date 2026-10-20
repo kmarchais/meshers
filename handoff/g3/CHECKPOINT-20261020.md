@@ -1,13 +1,13 @@
 # G3 continuation checkpoint, 20 October 2026
 
 The four-fixture matched-accuracy goal is active and unachieved. The source
-and documentation changes through `b928d1c` are pushed. This checkpoint adds
-the completed third reference and its negative consistency screen.
+and documentation changes through `b186d39` are pushed. This checkpoint adds
+the controlled quartic edge witness and its resolved weak signal.
 No delegates, unrelated jobs, timers, or remote hosts are involved.
 
 ## Current execution state
 
-Jobs 322, 323, and 324 all completed successfully. No Meshers successor is
+Jobs 322 through 328 all completed. No Meshers successor is
 queued at this checkpoint. Recheck the authoritative shared queue before
 running anything. Do not restart cubic23 or treat its old observing terminal
 session 71321 as a current worker.
@@ -26,8 +26,9 @@ passes field audit 320. Actual cubic assembly 321 has 218,508 nodes and
 
 Its sampled geometry comes from the admitted quadratic parent through an
 exact cubic embedding, not a projected cubic boundary. The next selected
-question is a fixed-domain quartic curve-edge residual witness. Its controls
-and lattice experiment have not been implemented or run yet.
+question is now one coarse-corner coupling check on the same quartic curve-edge
+witness. The edge-only controls and lattice measurements are complete; the
+joint coarse-corner check has not been implemented or run.
 
 ## What changed the next action
 
@@ -110,29 +111,59 @@ Records are in `runs/g3-lattice-cubic23-reference-v1`,
 `runs/g3-lattice-cubic23-assessment-v1`, and
 `runs/g3-lattice-cubic-three-level-screen-v1`.
 
-## Next bounded diagnostic
+## Completed edge-only diagnostic
 
-Read the declared protocol in `CUBIC_RESULTS.md` before implementation. Use
+Read the measured protocol and limits in `CUBIC_RESULTS.md`. The witness uses
 the saved cubic24 fields in `runs/g3-lattice-cubic-reference-cache-release-v1`
 and the prepared mesh in `runs/g3-lattice-cubic-assembly-memory-v1`. Freeze
 their geometry, topology, and source fields.
 
-The proposed scalar mode on each periodic wall/box-curve edge orbit is
+The scalar mode on each periodic wall/box-curve edge orbit is
 `16*lambda_i*lambda_j*(lambda_i-lambda_j)**2`. Give each orbit one shared
 three-component displacement coefficient, supported on the complete incident
-element star. Assemble all overlap terms in the small coupled mode stiffness
-and six-load residual. Solve only those extra coefficients and verify the
-trial-energy reduction independently. Do not sum independent overlapping
-patch gains or call trial energy an equilibrated homogenized stiffness.
+element star. Full overlap terms are included. Three unit tests and analytic
+periodic controls pass, including nonzero quartic face traces, explicit
+off-orbit coupling, and a nonzero pin-gauge test. No regularization is added.
 
-Controls must check quartic derivatives, a constant-strain periodic patch,
-coupled symmetry and positivity, trial-energy identity, continuity, and
-quartic periodic face traces. Only then run one lattice probe. Keep the 8 GiB
-ceiling and bounded stages. Positive 64-point and 125-point reductions must
-agree within 1%, and the predeclared useful signal is at least 0.05% worst
-mixed-load reduction relative to the source cubic tensor. This is an FE
-diagnostic, not a native feature or a revival of failed recovery sizing.
-Neither a small nor large signal certifies continuum or local-stress accuracy.
+The actual lattice has 102 edge orbits, 306 mode DOFs, and 332 support tets.
+Job 327 passes energy and trace identities but fails the 64/125-point
+precision gate at 6.0323% change. Preserve that rejected run. One higher-rule
+125/216-point check, job 328, passes at 0.017934% change. Its worst mixed-load
+trial-energy reduction is only 6.4791e-7 relative, or 0.648 ppm, versus the
+500 ppm useful-signal screen. The direct energy identity agrees within
+2.04e-13; continuity, periodic quartic traces, and the actual pin offset are
+zero. Worker time is 26.57 seconds and peak RSS is 0.3404 GiB.
+
+This resolved small witness does not justify a native sizing feature. It is
+not an equilibrium tensor or a bound on all FE error: the original coarse
+coefficients were fixed. Inputs, geometry, and all 24 models remain unchanged.
+Records are in `runs/g3-quartic-edge-controls-v1`,
+`runs/g3-quartic-edge-controls-v2`,
+`runs/g3-lattice-quartic-edge-witness-v1`, and
+`runs/g3-lattice-quartic-edge-witness-higher-v2`.
+
+## Next single coarse-coupling check
+
+Before closing this polynomial route, allow only the existing cubic corner
+basis functions at periodic curve vertices to relax with the same quartic
+edge modes. Include complete vertex stars and all cross terms. The earlier
+Tet10-to-cubic audit covered 1,408 curve-vertex-incident tets versus 332 for
+the edge subset; this motivates a test, not a claim about current cubic error.
+Keep geometry and source fields fixed. No new mode degree or grid is selected.
+
+Report corner-only, edge-only, and joint trial gains. Use the incremental
+quartic gain after coarse relaxation for the signal, not the joint total.
+Verify it by the Schur complement, and check nonnegative gain increments
+under space enlargement. Reproduce the original edge-only Gram before the
+comparison. Any nonzero source-pin mode value needs an explicit uniform
+translation gauge, which changes no strains or periodic jumps.
+
+Retain the validated 125/216-point pair, 1% precision gate, 0.05% signal
+screen, 8 GiB ceiling, at most 512 scalar modes and 5,000 support tets.
+Run controlled coupled-space checks before a lattice measurement. If the
+increment remains small, stop this polynomial route rather than escalating
+degree or strength. Trial energy is still not globally equilibrated or a new
+homogenized reference. No such joint lattice check has run yet.
 
 ## Remaining objective and runtime
 
