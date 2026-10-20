@@ -1,5 +1,76 @@
 # G3 continuation checkpoint, 20 October 2026
 
+## Latest source-validity findings, jobs 336 through 341
+
+All are terminal; preflight 337 fails at its correct source guard. No job is
+queued. Do not restart observing sessions 54541, 89586, 56535, 39179, 10787
+or 13041. Recheck the shared queue before work. The full four-fixture goal
+remains active and unachieved. Native code and specimen definitions did not
+change in this phase.
+
+The worst remaining star at node 704 has a checked negative tangent bound at
+quality 0.1. The normalized bound is -0.0017874161, independently reproduced
+with 64-bit-mantissa arithmetic within 1.3e-16. Three supporting tets use only
+boundary vertices opposite the moving point. The subsequent source audit is
+essential to interpreting that algebraic obstruction.
+
+The 2-to-3 preflight 337 refuses a non-oriented source cavity. Cells 1297 and
+1298 share `[704, 9126, 9369]`, have positive determinants and same-side
+opposite vertices. No flips are applied. Do not bypass the guard or treat the
+failed run as a successful topology result.
+
+Lineage audit 338 finds 684 same-orientation shared faces in the saved VTK43
+Gyroid seed, before MMG, and 146 in the one-pass FEM stage, final output and
+partial interior repair. All have positive corner determinants and matching
+saved boundary arrays. The input is invalid under this necessary incidence
+check. Retire that repair source. The two-pass Gyroid has zero conflicts but
+still fails quality. The audit does not yet isolate which extraction step
+introduces the seed conflicts.
+
+Representative admitted controls pass. Replay 339 covers all 24 archived
+Schwarz timing-arm meshes by exact identity to audited controls and checks
+all six manual lifts preserve parent corners/surfaces. Earlier Schwarz timing
+conclusions are unaffected. Necessary corner-incidence consistency is not
+a certificate against curved or nonlocal intersections.
+
+The common `microgen_workflow.geometry` admission now requires oriented facet
+consistency, uniformly for future outputs. Numerical H, volume, quality,
+positive-Jacobian, projection and periodic thresholds are unchanged. Check 340
+passes sixteen controls, reproduces every legacy metric on bad-Gyroid and
+good-Schwarz records, and retains/rejects the appropriate controls. Its old
+study verifier still passes 96 comparisons and 205 hashes, using exact driver
+archives and declared measurement Git ref `2f0363f` for thirteen source records.
+Frozen flags, tensors and timings are not rewritten.
+
+Check 341 verifies early source rejection in the retired interior-repair
+entrypoint. Seven controls pass; status is `source-incidence-rejected`, with
+no moves, new mesh or FEA. Archive snapshots added for earlier checker/control
+versions match their already recorded SHA256 exactly. The original failed
+preflight, partial repair and witness outputs remain intact.
+
+The final focused suite passes 69 tests; targeted Ruff and whitespace checks
+also pass. No native rebuild is needed for these Python research changes.
+
+Next queue one paired extraction preflight at resolution 31: unmodified
+Microgen scalar clipping versus the same sampled background triangulated
+before its two scalar clips. Keep offset 1.1, analytic field, sample coordinates
+and scalar arrays identical. Explicitly label the variant non-default. Bound
+background and returned material tets at 250,000, and read incidence, cap
+feasibility, periodicity and independent geometry before selecting MMG or FEA.
+No such extraction trial has run yet. No new resolution or sizing sweep.
+
+Detailed records are under `experiments/adaptive/runs`:
+
+- `g3-gyroid-convex-star-feasibility-v1` and its witness audit v1/v2 JSON files.
+- `g3-gyroid-two-to-three-preflight-v1`, the failed source-guard run.
+- `g3-facet-incidence-lineage-controls-v1`.
+- `g3-schwarz-admitted-facet-replay-v1.json`.
+- `g3-facet-admission-check-v1`.
+- `g3-gyroid-invalid-source-rejection-v1`.
+
+Read `MICROGEN_RESULTS.md`, `PLAN.md`, `RESULTS.md`, `PROJECT_TRACKING.md` and
+the append-only `.audit/g3-microgen.tsv`. Earlier sections below are historical.
+
 ## Latest completed diagnostics, jobs 334 and 335
 
 Both are terminal success; scientific admission is not. No job is queued.

@@ -1,0 +1,12 @@
+Traceback (most recent call last):
+  File "/home/kmarchais/dev/meshers/experiments/adaptive/bistellar_probe.py", line 139, in <module>
+    main()
+  File "/home/kmarchais/dev/meshers/experiments/adaptive/bistellar_probe.py", line 115, in main
+    worker(args.run)
+  File "/home/kmarchais/dev/meshers/experiments/adaptive/bistellar_probe.py", line 98, in worker
+    _, report = flip_candidate(points, cells, indices)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/kmarchais/dev/meshers/experiments/adaptive/bistellar_probe.py", line 57, in flip_candidate
+    assert original_boundary is not None
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError

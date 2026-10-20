@@ -1,5 +1,28 @@
 # Adaptive and quadratic implicit meshing: results
 
+## Gyroid source consistency changes the repair direction, 2026-10-20
+
+A convex single-star check finds a negative tangent bound at quality 0.1.
+Independent extended-precision replay agrees. The subsequent 2-to-3 cavity
+preflight stops at an invalid oriented source cavity rather than applying
+a flip. A twelve-mesh lineage audit finds 684 same-orientation shared faces
+in the VTK43 seed and 146 in the one-pass FEM output and its partial repair.
+All have positive corner determinants. Retire that invalid repair source.
+The two-pass Gyroid and all tested admitted controls have zero conflicts.
+
+Every archived Schwarz timing arm is checked separately or exactly matched
+to its audited control: 24 arm meshes and six manual lifts pass. Earlier
+Schwarz results are unaffected. The common future geometry admission now
+fails closed on incoherent oriented incidence, with all numerical thresholds
+unchanged. Queued regression 340 reproduces legacy geometry metrics and the
+old 96-comparison, 205-hash verification. Sixty-eight focused tests pass.
+
+Next test the extraction order at fixed resolution 31 before any new MMG
+setting: triangulate the same sampled background before clipping, explicitly
+non-default, preserving field samples and box geometry while auditing the
+new periodic caps. No such extraction trial
+has run yet. See `MICROGEN_RESULTS.md` for limits and source-validity scope.
+
 ## Gyroid interior repair remains unqualified, 2026-10-20
 
 One complete fixed-neighbor star on actual MMG output reaches quality 0.1

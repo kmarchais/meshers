@@ -61,6 +61,136 @@ Records are in `runs/g3-gyroid-interior-star-feasibility-v1` and
 `runs/g3-gyroid-firstpass-fem43-interior-relocation-v1`. Maintained drivers are
 `interior_star_probe.py` and `interior_relocation_trial.py`.
 
+## Declared single-star convex check
+
+The next bounded diagnostic freezes the partially repaired mesh and selects
+its worst tet's single free interior vertex. For each incident tet, let `D`
+be its signed determinant and `S` its sum of squared edges. The existing
+quality is `12*sqrt(3)*D/S**1.5` for positive orientation. At target `q`, the
+constraint `D - q*S**1.5/(12*sqrt(3)) >= 0` is concave in this vertex: `D`
+is affine, while `S` is a nonnegative convex quadratic. Each tet uses a
+positive fixed normalization to avoid scale-dependent solver tolerances.
+
+First minimize a common nonnegative slack, with analytic derivatives. Then
+form concave upper tangents at that point. A separate small linear program
+selects nonnegative weights summing to one. Recompute their weighted tangent's
+maximum over the unchanged comparison box. A value below -1e-8 is the declared
+floating-point obstruction screen. It does not rely on the slack optimizer's
+success flag. Keep weights, expansion point, coordinate normalization, box,
+bound and residuals for review. If no bound or feasible point resolves the
+question, report it as unresolved rather than infer impossibility.
+
+Controls cover derivatives, direct MMG-quality equivalence, global tangent
+inequalities, a feasible star, and individually good faces with incompatible
+joint constraints. No source mesh changes, another repair sweep, topology
+change, FEA or reference promotion occurs in this diagnostic. A checked
+fixed-neighbor obstruction would not rule out coupled relocation or remeshing,
+and floating-point checks are not interval or continuum certification.
+
+## Declared oriented-facet consistency audit
+
+The local 2-to-3 preflight stops rather than treating a non-oriented source
+cavity as valid. Its first offending pair, cells 1297 and 1298, shares face
+`[704, 9126, 9369]`. Both corner determinants are positive, but their opposite
+vertices have same-signed scalar triple products against that face. This is
+a necessary source-consistency issue, not a successful topology candidate.
+Preserve the failed preflight and do not bypass its cavity guard.
+
+Before another repair, audit the original VTK43 seed, MMG stage and final
+output, partially repaired output, and representative admitted Schwarz,
+lattice and native controls. Check oriented incidence, nonmanifold and
+duplicate faces/cells, and agreement with the saved boundary. Synthetic
+controls include overlapping positive-volume tets that must fail. This is
+one supplemental validity study, not a mesh-parameter sweep or a certificate
+against every possible curved or nonlocal intersection. Frozen qualification
+flags remain unchanged in place; any affected earlier claim must be stated
+explicitly after reading the audit.
+
+## Checked obstruction and invalid source lineage
+
+Job 336 passes six controls and selects the remaining worst node 704 on the
+partially repaired one-pass FEM source. Its 22-tet slack problem converges
+with normalized slack 0.00178742. The independently checked weighted tangent
+upper bound is -0.0017874161, well below the declared -1e-8 screen. A second
+implementation uses scalar triple products, all eight box corners, and a
+64-bit mantissa. It agrees within 1.3e-16. Three nonzero weights support
+cells 1297, 1298 and 6378; every opposite vertex in that support is a boundary
+vertex. Moving unrelated interior vertices cannot alter those three constraints
+while boundary coordinates and these tets remain fixed.
+
+This is an algebraic fixed-neighbor obstruction, not a general remeshing or
+continuum impossibility claim. The subsequent source audit changes its physical
+interpretation. Job 337 passes three synthetic cavity controls but stops at an
+incoherent original cavity. Cells 1297 and 1298 share face `[704, 9126, 9369]`.
+Both have positive determinants and their opposite vertices lie on the same
+physical side. No flips are applied. Do not bypass that source guard.
+
+Job 338 passes three incidence controls and audits twelve saved meshes:
+
+| Saved mesh group | Same-orientation shared faces |
+|---|---:|
+| Gyroid VTK43 seed, before MMG | 684 |
+| Gyroid one-pass FEM MMG stage, final output, partial repair | 146 each |
+| Gyroid two-pass output | 0 |
+| Admitted Schwarz linear and stronger Tet10 parent | 0 |
+| Representative native Gyroid, Schwarz, spinodoid and lattice | 0 |
+| Admitted tuned lattice Microgen parent | 0 |
+
+All twelve have positive corner determinants, no duplicate tets, and matching
+saved/extracted boundaries. Those checks alone therefore do not detect the
+Gyroid conflicts. The one-pass source already has this problem before the
+interior-relocation trial. Retire repair work on that source. The two-pass
+Gyroid remains coherent under this necessary check but still fails quality.
+The VTK seed locates the issue upstream of MMG; it does not yet isolate which
+clipping or tetrahedralization operation introduces it.
+
+Job 339 checks every archived Schwarz timing arm, not just representatives.
+All 24 arm meshes exactly match their audited controls. All six manual Tet10
+lifts retain the audited parent corners and surfaces. Earlier Schwarz timing
+conclusions are unaffected. These are necessary corner-incidence checks, not
+certificates against curved or nonlocal intersections.
+
+## Fail-closed future admission and next extraction check
+
+The common `geometry` helper now records `facet_consistency` and requires
+oriented-facet consistency before admitting any newly measured mesh. The
+0.002 distance, 1% volume, 0.1 quality, positive sampled Jacobian and projection
+conditions are unchanged. A high-quality numerical row with incoherent
+incidence is red before the predicate fix and green afterward.
+
+Queued check 340 passes sixteen controls. Fresh invalid-Gyroid and admitted-
+Schwarz geometry replays reproduce every legacy metric while rejecting the
+former and retaining the latter. Frozen rows and timings are not rewritten.
+Its old-study verifier still checks all 96 mixed-load comparisons and 205
+hashes. Exact measured driver archives and explicitly declared Git source
+`2f0363f` account for thirteen source records after code changes. Mesh or field
+data cannot use that fallback. Sixty-eight focused checks pass afterward.
+
+The selected next extraction preflight compares unmodified clipping against
+triangulating the same sampled background before Microgen's two scalar clips.
+Use only resolution 31, not a grid sweep. Preserve the same analytic Gyroid,
+offset 1.1, sample coordinates and scalar arrays; label the variant explicitly
+non-default. Bound background and returned material tets separately by the
+existing 250,000 cap. Check oriented incidence, cap feasibility, periodicity
+and independent geometry before any MMG call or FEA. This is a hypothesis
+about the upstream extraction, not a completed fix or an admitted comparator.
+
+Records are in `runs/g3-gyroid-convex-star-feasibility-v1`,
+`runs/g3-gyroid-convex-star-witness-audit-v1.json`,
+`runs/g3-gyroid-convex-star-witness-audit-v2.json`,
+`runs/g3-gyroid-two-to-three-preflight-v1`,
+`runs/g3-facet-incidence-lineage-controls-v1`,
+`runs/g3-schwarz-admitted-facet-replay-v1.json`, and
+`runs/g3-facet-admission-check-v1`. The failed cavity preflight and earlier
+source snapshots retain their exact recorded hashes.
+
+Queued check 341 also verifies the retired repair entrypoint. An overlapping-
+positive-tet source regression is red before its guard and green afterward.
+The actual one-pass source now returns `source-incidence-rejected` before
+relocation. Seven controls pass; no new mesh, repair or FEA is attempted.
+The earlier 108-move diagnostic remains frozen as evidence, not a supported
+repair route.
+
 ## Spinodoid seed41 feasibility, 19 October 2026
 
 The earlier actual VTK seed41 has 261,650 tets and was skipped solely by the

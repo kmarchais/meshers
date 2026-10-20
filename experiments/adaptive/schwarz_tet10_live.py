@@ -81,7 +81,7 @@ def run_pair(run, *, native_first=False, job=None, prefix="", deadline=None):
         "microgen_tet10_control.py", "admission_pilot.py", "stress_recovery.py", "tet10_integration.py",
         "amg_reference.py", "stiffness_pair.py", "test_cubic_reference.py", "test_reference_admission.py",
         "test_schwarz_tet10_live.py", "schwarz_tet10_repeated.py", "test_schwarz_tet10_repeated.py",
-        "cap_quality_bound.py", "gradient_tie_probe.py", "job_parts.py", "test_job_parts.py"))
+        "cap_quality_bound.py", "gradient_tie_probe.py", "job_parts.py", "test_job_parts.py", "facet_incidence_audit.py"))
     paths.extend(workflow.ROOT / "crates/meshers-python/python/meshers" / name for name in ("__init__.py", "expression.py"))
     paths.extend(workflow.ROOT.parent / "periodic-microgen/experiments/periodic-fea" / name
                  for name in ("homogenization.py", "periodic.py"))

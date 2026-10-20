@@ -1,9 +1,11 @@
 """Independently recompute the completed repeated study from frozen records."""
 
 import argparse
+import hashlib
 import json
 from pathlib import Path
 import statistics
+import subprocess
 
 import numpy as np
 from scipy.linalg import eigvalsh
@@ -22,20 +24,26 @@ def model_errors(candidate, coarse, fine, ratios):
     return errors
 
 
-def verify_hash(path, expected, run):
+def verify_hash(path, expected, run, source_ref=None):
     if workflow.digest(path) == expected:
         return False
-    archives = {"schwarz_tet10_live.py": run / "warmup/driver.py",
-        "schwarz_tet10_repeated.py": run / "driver.py"}
-    archived = archives.get(path.name)
-    assert archived is not None and workflow.digest(archived) == expected, f"Hash mismatch: {path}"
-    return True
+    if path.suffix == ".py":
+        for archived in (run / "driver.py", run / "warmup/driver.py"):
+            if archived.exists() and workflow.digest(archived) == expected:
+                return True
+    if source_ref and path.suffix == ".py" and path.resolve().is_relative_to(workflow.ROOT):
+        relative = path.resolve().relative_to(workflow.ROOT).as_posix()
+        content = subprocess.check_output(["git", "show", f"{source_ref}:{relative}"], cwd=workflow.ROOT)
+        assert hashlib.sha256(content).hexdigest() == expected, f"Measured Git source differs: {path}"
+        return True
+    raise AssertionError(f"Hash mismatch: {path}")
 
 
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--run", type=Path, required=True)
     parser.add_argument("--output", type=Path, required=True)
+    parser.add_argument("--source-ref")
     args = parser.parse_args()
     assert not args.output.exists()
     report = json.loads((args.run / "summary.json").read_text())
@@ -50,7 +58,7 @@ def main():
     manifest = json.loads((args.run / "manifest.json").read_text())
     verified_hashes, archived_sources = 0, 0
     for path, digest in manifest["inputs"].items():
-        archived_sources += verify_hash(Path(path), digest, args.run)
+        archived_sources += verify_hash(Path(path), digest, args.run, args.source_ref)
         verified_hashes += 1
     times = {metric: {arm: [] for arm in ("microgen", "meshers")}
         for metric in ("science_audited_workflow_s", "generation_lift_solve_s")}
@@ -66,7 +74,7 @@ def main():
         inputs = json.loads((directory / "manifest.json").read_text())["inputs"]
         assert inputs[str(source)] == workflow.digest(source)
         for path, digest in {**inputs, **saved["artifact_sha256"]}.items():
-            archived_sources += verify_hash(Path(path), digest, args.run)
+            archived_sources += verify_hash(Path(path), digest, args.run, args.source_ref)
             verified_hashes += 1
         parent = json.loads((directory / "microgen-parent/result.json").read_text())
         rows = {arm: json.loads((directory / (arm + "-tet10/result.json")).read_text())
@@ -117,6 +125,7 @@ def main():
     workflow.save(args.output, {"source": str(args.run), "source_summary_sha256": workflow.digest(args.run / "summary.json"),
         "verifier_sha256": workflow.digest(Path(__file__)), "passed": True, "verified_hash_records": verified_hashes,
         "archived_source_hash_records": archived_sources,
+        "measurement_source_ref": args.source_ref,
         "meshers_faster_in_every_measured_pair": verified_faster,
         "independent_generalized_eigenvalue_comparisons": 6 * 2 * 8, "pairs": checked,
         "maximum_reaction_relative_error": maximum_reaction, "maximum_hill_mandel_relative_error": maximum_energy,

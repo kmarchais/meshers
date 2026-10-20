@@ -1,0 +1,40 @@
+{
+  "inputs": {
+    "/home/kmarchais/dev/meshers/experiments/adaptive/facet_incidence_audit.py": "4f51afc196c85e1d0bc64d7a96507517ddc6e32ccd8380a2ac77cae0ace89610",
+    "/home/kmarchais/dev/meshers/experiments/adaptive/runs/g3-gyroid-first-pass-fem43-v1/vtk-seed.npz": "64e8b3e53365f4ca10c17006fea38d00fd1eabc6984167eb048d422efbcc7aa2",
+    "/home/kmarchais/dev/meshers/experiments/adaptive/runs/g3-gyroid-first-pass-fem43-v1/mmg-stage-1.npz": "b2fe6149719e6e8174bbe709f93dabb828dc99d9fc97e2dc47833f3edf1a470e",
+    "/home/kmarchais/dev/meshers/experiments/adaptive/runs/g3-gyroid-first-pass-fem43-v1/mesh.npz": "b2fe6149719e6e8174bbe709f93dabb828dc99d9fc97e2dc47833f3edf1a470e",
+    "/home/kmarchais/dev/meshers/experiments/adaptive/runs/g3-gyroid-firstpass-fem43-interior-relocation-v1/mesh.npz": "adabb95e9263c2fe568ab43dcc0fae9c1a962059c41bf12fc8461f531937f131",
+    "/home/kmarchais/dev/meshers/experiments/adaptive/runs/g3-gyroid-tuned43-v3/mesh.npz": "d158f7c375118f6d990ef20d863761d1f716f634fc24fbd32c7e499e2a93f5e9",
+    "/home/kmarchais/dev/meshers/experiments/adaptive/runs/g3-schwarz-matched-v1/repeat-1-microgen/mesh.npz": "d056169996e18f7631d44c50c92d8677cd9fdaefc2d26a493c1a51f6c4cddc19",
+    "/home/kmarchais/dev/meshers/experiments/adaptive/runs/g3-schwarz-microgen-hmax01-seed-v1/mesh.npz": "bcdb580db65e9532ed3e9a120f81731b95534f79e28bec7d95685cd682ec0997",
+    "/home/kmarchais/dev/meshers/experiments/adaptive/runs/g3-schwarz-tet10-live-amg-repeated-v1/repeat-1/meshers-tet10/mesh.npz": "9677744de63c692b56ffefbe53a7df9847e385e041a08cacf57cec210a9dfaab",
+    "/home/kmarchais/dev/meshers/experiments/adaptive/runs/g3-gyroid-curved9-v1/mesh.npz": "0d2409f99d94b7054170eb66019b5a2546a57e9a71b7dfac024fea3cb2b6af66",
+    "/home/kmarchais/dev/meshers/experiments/adaptive/runs/g3-spinodoid-partial-settle-curved24-tol003-solve-v1/mesh.npz": "6edfa7aefa015ee59b4683e15caf51deba73adce705bd2aa674c29727f14b959",
+    "/home/kmarchais/dev/meshers/experiments/adaptive/runs/g3-lattice-adapt24-tol0028-v1/mesh.npz": "230db70dc8a2d0325152176fbe4da8708aac96ae2f2dbda7c5dd357457b214ea",
+    "/home/kmarchais/dev/meshers/experiments/adaptive/runs/g3-lattice-tuned51-tet10-seed-hausd001-v1/mesh.npz": "979fe04a98a0c7878945163499e67e4d848eaa9262ca8825ffa5f54f051802ce",
+    "/home/kmarchais/dev/meshers/experiments/adaptive/test_facet_incidence_audit.py": "34cb5c0447e21a4a0896eab0601ecde507bb8fbe7231b3acfdd72babc9939347",
+    "/home/kmarchais/dev/meshers/experiments/adaptive/job_parts.py": "7082e64a3d6f1029dfe871702e6ef53cc514f08a0687b4065f1412d65b427b78",
+    "/home/kmarchais/dev/meshers/experiments/adaptive/test_job_parts.py": "a4ad5866cb02a53bc6a7a31eda469d67e9e26a243a77347d83ec1551256b3a16",
+    "/home/kmarchais/dev/meshers/experiments/adaptive/microgen_workflow.py": "a8dfec3e7fd40eb94eee0f8f5b149721bd56cf058ce12b61c4f8a3e9fe42f950"
+  },
+  "meshes": {
+    "gyroid-vtk43": "/home/kmarchais/dev/meshers/experiments/adaptive/runs/g3-gyroid-first-pass-fem43-v1/vtk-seed.npz",
+    "gyroid-mmg-stage1": "/home/kmarchais/dev/meshers/experiments/adaptive/runs/g3-gyroid-first-pass-fem43-v1/mmg-stage-1.npz",
+    "gyroid-fem-final": "/home/kmarchais/dev/meshers/experiments/adaptive/runs/g3-gyroid-first-pass-fem43-v1/mesh.npz",
+    "gyroid-partial-repair": "/home/kmarchais/dev/meshers/experiments/adaptive/runs/g3-gyroid-firstpass-fem43-interior-relocation-v1/mesh.npz",
+    "gyroid-two-pass": "/home/kmarchais/dev/meshers/experiments/adaptive/runs/g3-gyroid-tuned43-v3/mesh.npz",
+    "schwarz-microgen-linear": "/home/kmarchais/dev/meshers/experiments/adaptive/runs/g3-schwarz-matched-v1/repeat-1-microgen/mesh.npz",
+    "schwarz-microgen-tet10-parent": "/home/kmarchais/dev/meshers/experiments/adaptive/runs/g3-schwarz-microgen-hmax01-seed-v1/mesh.npz",
+    "schwarz-native": "/home/kmarchais/dev/meshers/experiments/adaptive/runs/g3-schwarz-tet10-live-amg-repeated-v1/repeat-1/meshers-tet10/mesh.npz",
+    "gyroid-native": "/home/kmarchais/dev/meshers/experiments/adaptive/runs/g3-gyroid-curved9-v1/mesh.npz",
+    "spinodoid-native": "/home/kmarchais/dev/meshers/experiments/adaptive/runs/g3-spinodoid-partial-settle-curved24-tol003-solve-v1/mesh.npz",
+    "lattice-native": "/home/kmarchais/dev/meshers/experiments/adaptive/runs/g3-lattice-adapt24-tol0028-v1/mesh.npz",
+    "lattice-microgen": "/home/kmarchais/dev/meshers/experiments/adaptive/runs/g3-lattice-tuned51-tet10-seed-hausd001-v1/mesh.npz"
+  },
+  "memory_bytes": 8589934592,
+  "threads": 1,
+  "worker_timeout_s": 120,
+  "frozen_source_flags_unchanged": true,
+  "no_meshing_or_solves": true
+}

@@ -3,8 +3,10 @@
 import itertools
 
 import numpy as np
+import pytest
 
 from interior_relocation_trial import repair
+from test_facet_incidence_audit import surface
 from test_interior_star_probe import star
 
 
@@ -24,3 +26,10 @@ def test_all_boundary_bad_tet_stays_rejected():
     assert report["remaining_bad_elements"] == 1 and report["accepted_moves"] == 0
     assert report["attempts"][0]["status"] == "all-boundary"
     np.testing.assert_array_equal(moved, points)
+
+
+def test_incoherent_source_is_rejected_before_relocation():
+    points = np.array([[0., 0., 0.], [1., 0., 0.], [0., 1., 0.], [.2, .2, 1.], [.2, .2, .5]])
+    cells = np.array([[0, 1, 2, 3], [0, 1, 2, 4]])
+    with pytest.raises(ValueError, match="oriented facet"):
+        repair(points, cells, surface(cells))

@@ -13,6 +13,7 @@ os.environ.update(OPENBLAS_NUM_THREADS="1", OMP_NUM_THREADS="1", MKL_NUM_THREADS
 import numpy as np
 
 import microgen_workflow as workflow
+from facet_incidence_audit import audit
 from interior_star_probe import relocate_star
 from job_parts import worker_part
 from mmg_quality_localization import quality
@@ -24,6 +25,8 @@ SOURCE = workflow.HERE / "runs/g3-gyroid-first-pass-fem43-v1"
 
 
 def repair(points, cells, surface, *, maximum_attempts=400):
+    if not audit(points, cells, surface)["oriented_facet_consistency_passed"]:
+        raise ValueError("Source fails oriented facet consistency; relocation is unsupported")
     moved = points.copy()
     boundary = np.zeros(len(points), dtype=bool)
     boundary[np.unique(surface)] = True
@@ -76,6 +79,13 @@ def worker(run):
     archive = np.load(SOURCE / "mesh.npz")
     points, cells, surface = (archive[name] for name in ("points", "tetrahedra", "surface"))
     assert len(cells) <= workflow.CAP and len(points) <= 100000
+    topology = audit(points, cells, surface)
+    if not topology["oriented_facet_consistency_passed"]:
+        workflow.save(run / "result.json", {"case": "gyroid", "source": str(SOURCE),
+            "status": "source-incidence-rejected", "qualified": False, "facet_consistency": topology,
+            "repair_performed": False, "stiffness_solve_performed": False,
+            "scope": "Retired invalid one-pass source; no relocation, new mesh or FEA is attempted"})
+        return
     started = time.monotonic()
     moved, diagnostics = repair(points, cells, surface)
     repair_s = time.monotonic() - started
@@ -105,7 +115,7 @@ def main():
     paths = [Path(__file__), SOURCE / "result.json", SOURCE / "mesh.npz"]
     paths.extend(workflow.HERE / name for name in ("job_parts.py", "test_job_parts.py", "interior_star_probe.py",
         "test_interior_star_probe.py", "test_interior_relocation_trial.py", "microgen_workflow.py",
-        "cap_quality_bound.py", "mmg_quality_localization.py"))
+        "cap_quality_bound.py", "mmg_quality_localization.py", "facet_incidence_audit.py", "test_facet_incidence_audit.py"))
     for suffix in ("-specimen.json", "-samples.npz"):
         path = SOURCE / ("gyroid" + suffix)
         paths.append(path)

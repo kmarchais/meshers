@@ -623,3 +623,32 @@ Stop that recipe. Next diagnose a single remaining worst star with a convex
 slack feasibility problem and a checked supporting-plane bound. A failed
 SLSQP search alone does not establish infeasibility. Read this diagnostic
 before choosing any coupled relocation, topology repair, or MMG setting.
+
+Job 336 and extended-precision witness replay pass. Three boundary-only
+constraints obstruct quality 0.1 for the frozen worst star. The resulting
+2-to-3 preflight 337 stops at an invalid oriented source cavity; no flips
+are applied. Audit 338 finds the source issue already in the VTK43 seed,
+with 684 same-orientation shared faces, and 146 in the one-pass FEM output.
+The two-pass Gyroid and all representative admitted controls pass this
+necessary incidence check. Retire the invalid one-pass repair route rather
+than tune its optimizer or bypass the cavity guard.
+
+All 24 archived Schwarz timing-arm meshes and six lifts pass replay 339.
+The common geometry helper now rejects incoherent incidence uniformly for
+future measurements, without changing numerical admission thresholds or
+frozen flags. Check 340 reproduces legacy metrics and verifies all prior
+96 mixed-load comparisons and 205 hashes using exact archived source.
+
+Next queue one paired extraction preflight at resolution 31: normal scalar
+clipping versus the same sampled background triangulated before the two
+clips. Keep the analytic field, offset, sample coordinates and scalar data
+identical, with explicit non-default labeling and unchanged 250,000 background
+and material-tet limits. Read incidence, cap, periodic and geometry results
+before choosing MMG or FEA. Do not start another resolution or sizing sweep.
+
+Check 341 confirms the retired repair entrypoint rejects the actual invalid
+source before any moves. Its seven controls include a red/green positive-
+overlap regression. No new mesh or FE solve is produced. Shared geometry
+admission also rejects this source, while every legacy scalar geometry metric
+and the admitted Schwarz control reproduce. Do not reuse the invalid one-pass
+route to tune relocation or cavity operators.

@@ -1,0 +1,232 @@
+{
+  "nodes": 50883,
+  "elements": 233408,
+  "unique_faces": 489632,
+  "interior_faces": 444000,
+  "extracted_boundary_faces": 45632,
+  "same_orientation_shared_faces": 684,
+  "nonmanifold_faces": 0,
+  "duplicate_cells": 0,
+  "duplicate_surface_faces": 0,
+  "provided_boundary_matches_extraction": true,
+  "missing_provided_faces": 0,
+  "extra_provided_faces": 0,
+  "nonpositive_corner_determinants": 0,
+  "minimum_corner_determinant": 3.08057155301091e-11,
+  "oriented_facet_consistency_passed": false,
+  "conflict_examples": [
+    {
+      "face": [
+        704,
+        39575,
+        39576
+      ],
+      "incident_elements": [
+        1298,
+        1300
+      ],
+      "orientation_sum": -2,
+      "opposite_vertices": [
+        39578,
+        693
+      ],
+      "signed_plane_products": [
+        1.8420154645742507e-07,
+        2.5952115545091703e-07
+      ],
+      "same_physical_side": true
+    },
+    {
+      "face": [
+        704,
+        39575,
+        39578
+      ],
+      "incident_elements": [
+        1298,
+        1299
+      ],
+      "orientation_sum": 2,
+      "opposite_vertices": [
+        39576,
+        150
+      ],
+      "signed_plane_products": [
+        -1.8420154645742518e-07,
+        -1.1798154238392682e-05
+      ],
+      "same_physical_side": true
+    },
+    {
+      "face": [
+        704,
+        39576,
+        39578
+      ],
+      "incident_elements": [
+        1297,
+        1298
+      ],
+      "orientation_sum": -2,
+      "opposite_vertices": [
+        39579,
+        39575
+      ],
+      "signed_plane_products": [
+        7.360787034917629e-07,
+        1.8420154645742529e-07
+      ],
+      "same_physical_side": true
+    },
+    {
+      "face": [
+        727,
+        39581,
+        39582
+      ],
+      "incident_elements": [
+        1463,
+        1465
+      ],
+      "orientation_sum": -2,
+      "opposite_vertices": [
+        715,
+        39586
+      ],
+      "signed_plane_products": [
+        1.0739503283553592e-06,
+        1.2201387491964272e-07
+      ],
+      "same_physical_side": true
+    },
+    {
+      "face": [
+        727,
+        39581,
+        39586
+      ],
+      "incident_elements": [
+        1464,
+        1465
+      ],
+      "orientation_sum": 2,
+      "opposite_vertices": [
+        170,
+        39582
+      ],
+      "signed_plane_products": [
+        -8.701507995809821e-06,
+        -1.220138749196425e-07
+      ],
+      "same_physical_side": true
+    },
+    {
+      "face": [
+        727,
+        39582,
+        39586
+      ],
+      "incident_elements": [
+        1465,
+        1466
+      ],
+      "orientation_sum": -2,
+      "opposite_vertices": [
+        39581,
+        39587
+      ],
+      "signed_plane_products": [
+        1.220138749196423e-07,
+        1.1543448341449478e-06
+      ],
+      "same_physical_side": true
+    },
+    {
+      "face": [
+        739,
+        39586,
+        39587
+      ],
+      "incident_elements": [
+        1565,
+        1567
+      ],
+      "orientation_sum": -2,
+      "opposite_vertices": [
+        727,
+        39589
+      ],
+      "signed_plane_products": [
+        1.1543448341449476e-06,
+        9.413163092797034e-07
+      ],
+      "same_physical_side": true
+    },
+    {
+      "face": [
+        739,
+        39586,
+        39589
+      ],
+      "incident_elements": [
+        1566,
+        1567
+      ],
+      "orientation_sum": 2,
+      "opposite_vertices": [
+        182,
+        39587
+      ],
+      "signed_plane_products": [
+        -5.941548410360412e-06,
+        -9.413163092797032e-07
+      ],
+      "same_physical_side": true
+    },
+    {
+      "face": [
+        739,
+        39587,
+        39589
+      ],
+      "incident_elements": [
+        1567,
+        1568
+      ],
+      "orientation_sum": -2,
+      "opposite_vertices": [
+        39586,
+        39590
+      ],
+      "signed_plane_products": [
+        9.413163092797042e-07,
+        5.912306631982361e-07
+      ],
+      "same_physical_side": true
+    },
+    {
+      "face": [
+        995,
+        28315,
+        28316
+      ],
+      "incident_elements": [
+        3861,
+        3863
+      ],
+      "orientation_sum": 2,
+      "opposite_vertices": [
+        28318,
+        984
+      ],
+      "signed_plane_products": [
+        -1.8420154645742507e-07,
+        -2.5952115545091703e-07
+      ],
+      "same_physical_side": true
+    }
+  ],
+  "scope": "Oriented corner-face incidence and same-side neighbor diagnostics; necessary consistency, not a certificate of curved geometry or absence of nonlocal intersections",
+  "source": "/home/kmarchais/dev/meshers/experiments/adaptive/runs/g3-gyroid-first-pass-fem43-v1/vtk-seed.npz",
+  "source_sha256": "64e8b3e53365f4ca10c17006fea38d00fd1eabc6984167eb048d422efbcc7aa2"
+}

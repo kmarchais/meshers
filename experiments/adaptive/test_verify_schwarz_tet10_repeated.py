@@ -1,9 +1,12 @@
 """The independent verifier must detect mixed-load errors, not just diagonals."""
 
+import hashlib
+
 import numpy as np
 import pytest
 
 import microgen_workflow as workflow
+import verify_schwarz_tet10_repeated as verifier
 from verify_schwarz_tet10_repeated import model_errors, verify_hash
 
 
@@ -42,4 +45,18 @@ def test_changed_data_never_uses_source_archive_fallback(tmp_path):
     expected = workflow.digest(data)
     data.write_bytes(b"changed")
     with pytest.raises(AssertionError):
-        verify_hash(data, expected, tmp_path)
+        verify_hash(data, expected, tmp_path, "measurement-ref")
+
+
+def test_declared_git_ref_must_match_recorded_source_hash(tmp_path, monkeypatch):
+    source = workflow.ROOT / "experiments/adaptive/microgen_workflow.py"
+    content = b"measured Python source"
+    expected = hashlib.sha256(content).hexdigest()
+    def measured_blob(command, *, cwd):
+        assert command == ["git", "show", "measurement-ref:experiments/adaptive/microgen_workflow.py"]
+        assert cwd == workflow.ROOT
+        return content
+    monkeypatch.setattr(verifier.subprocess, "check_output", measured_blob)
+    assert verify_hash(source, expected, tmp_path, "measurement-ref")
+    with pytest.raises(AssertionError):
+        verify_hash(source, "0" * 64, tmp_path, "measurement-ref")

@@ -1,0 +1,45 @@
+{
+  "source": "experiments/adaptive/runs/g3-gyroid-convex-star-feasibility-v1",
+  "source_result_sha256": "9106c23ddebbcd8de98f34eaf574cddef16f4c566995e230d3515c3c37a80127",
+  "verifier_sha256": "af4d22492e630b98caf1a27b12873bbdb2f0a6767ef35489d604b5c64b084c76",
+  "passed": true,
+  "measurement_source_ref": "c6ee7db",
+  "archived_source_hash_records": 1,
+  "longdouble_mantissa_bits": 64,
+  "extended_precision_upper_bound": -0.0017874161218580807,
+  "checked_fixed_neighbor_obstruction": true,
+  "active_constraints": [
+    {
+      "element": 1297,
+      "weight": 0.39448400122766414,
+      "fixed_opposite_vertices": [
+        9369,
+        9368,
+        9126
+      ],
+      "other_interior_vertices": []
+    },
+    {
+      "element": 1298,
+      "weight": 0.5913897884756094,
+      "fixed_opposite_vertices": [
+        9372,
+        9126,
+        9369
+      ],
+      "other_interior_vertices": []
+    },
+    {
+      "element": 6378,
+      "weight": 0.014126210296726373,
+      "fixed_opposite_vertices": [
+        9368,
+        9365,
+        9364
+      ],
+      "other_interior_vertices": []
+    }
+  ],
+  "other_interior_vertices_in_active_constraints": [],
+  "scope": "Independent scalar-triple-product and eight-box-corner replay; fixed-neighbor floating-point witness, not interval certification or coupled-relocation impossibility"
+}

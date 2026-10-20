@@ -245,6 +245,12 @@ def on_box_plane(coordinates, value):
     return np.isclose(coordinates, value, atol=1e-12, rtol=0)
 
 
+def geometry_is_admitted(row):
+    return bool(row["sampled_two_sided_max"] <= .002 and abs(row["relative_volume_error"]) <= .01
+        and row["q_min_corner"] >= .1 and not row["projection_failed"] and row["minimum_sampled_jacobian"] > 0
+        and row["oriented_facet_consistency_passed"])
+
+
 def geometry(run, name, points, tets, surface, detail_count=0, reverse_subdivisions=(4, 8),
              *, element_type=None, quadrature=None):
     np, fd, _, _, _, scorecard = imports()
@@ -313,9 +319,10 @@ def geometry(run, name, points, tets, surface, detail_count=0, reverse_subdivisi
     if element_type is not None:
         row.update(element_type=element_type, curved_reverse_subdivisions=list(reverse_subdivisions),
                    volume_quadrature_points=len(locations))
-    row["geometry_admitted"] = bool(row["sampled_two_sided_max"] <= 0.002 and
-                                    abs(row["relative_volume_error"]) <= 0.01 and
-                                    row["q_min_corner"] >= 0.1 and not failed.any() and minimum > 0)
+    from facet_incidence_audit import audit
+    row["facet_consistency"] = audit(points, tets, surface)
+    row["oriented_facet_consistency_passed"] = row["facet_consistency"]["oriented_facet_consistency_passed"]
+    row["geometry_admitted"] = geometry_is_admitted(row)
     if detail_count:
         row["elements_below_quality_gate"] = int((quality < 0.1).sum())
         row["worst_quality_elements"] = []

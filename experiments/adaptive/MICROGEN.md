@@ -41,6 +41,16 @@ That is not the admission tolerance. Independent admission stays at
 0.002 boundary distance, 1% relative volume error and quality 0.1.
 Unqualified solves are retained as diagnostics, never as accepted results.
 
+After the 20 October source-validity audit, newly measured geometry also
+requires coherent oriented tet-face incidence and a matching extracted
+boundary. Positive determinants alone do not rule out adjacent tets on the
+same side of a shared face. The independent audit is
+`facet_incidence_audit.py`; `microgen_workflow.geometry` records its result
+and rejects incoherent sources before any gated FE solve. This adds necessary
+mesh consistency without changing the numerical distance, volume, quality,
+Jacobian or periodic thresholds. Historical outputs remain frozen. The check
+is not a certificate against every curved or nonlocal intersection.
+
 ## Bounded execution
 
 The runner builds the extension with Rust 1.95.0, two compile jobs and the
