@@ -10,6 +10,7 @@ import sys
 import time
 
 import microgen_workflow as workflow
+from job_parts import worker_part
 
 os.environ.update(OPENBLAS_NUM_THREADS="1", OMP_NUM_THREADS="1", MKL_NUM_THREADS="1",
                   RAYON_NUM_THREADS="1")
@@ -19,6 +20,21 @@ from pueue_progress import Job
 
 class IntermediateCapError(ValueError):
     pass
+
+
+def load_prepared_seed(path):
+    np, _, _, _, pv, _ = workflow.imports()
+    row = json.loads((path / "result.json").read_text())
+    if row["case"] != "gyroid" or not row["original_points_identical"] or not row["wall_triangles_identical"]:
+        raise ValueError("Prepared seed must preserve the recorded Gyroid geometry")
+    if row["cap_faces_below_quality_gate"] or row["minimum_replacement_relative_determinant"] <= 1e-12:
+        raise ValueError("Prepared seed has obstructing caps or rank-deficient replacements")
+    mesh = np.load(path / "mesh.npz")
+    points, cells = mesh["points"], mesh["tetrahedra"]
+    if cells.shape != (len(cells), 4) or len(cells) > workflow.CAP:
+        raise ValueError("Prepared seed exceeds the tetrahedron stage")
+    packed = np.column_stack((np.full(len(cells), 4), cells)).ravel()
+    return pv.UnstructuredGrid(packed, np.full(len(cells), pv.CellType.TETRA, dtype=np.uint8), points)
 
 
 def worker(args):
@@ -69,14 +85,21 @@ def worker(args):
         workflow.save(args.run / (label + ".json"), {
             "nodes": len(stage_points), "elements": len(stage_tets), "geometry": metrics})
     started = time.perf_counter()
-    if args.case == "smooth-lattice":
+    if args.prepared_seed is not None:
+        grid = load_prepared_seed(args.prepared_seed)
+        row.update(route="microgen-explicit-preclipping-and-cap-retriangulation-mmg-tuned",
+            prepared_seed=str(args.prepared_seed), saved_seed_replay=True, timing_comparable=False,
+            default_microgen_pipeline=False, preparation_cost_excluded=True)
+    elif args.case == "smooth-lattice":
         case, shape, _ = workflow.specimen(args.case)
     else:
         function, offset, part = ((surface_functions.gyroid, 1.1, "sheet") if args.case == "gyroid"
             else (surface_functions.schwarz_p, 0, "lower skeletal"))
         shape = microgen.Tpms(function, offset=offset, resolution=args.resolution)
     row["specimen_setup_s"] = time.perf_counter() - started
-    if args.case == "smooth-lattice":
+    if args.prepared_seed is not None:
+        pass
+    elif args.case == "smooth-lattice":
         queries = np.random.default_rng(20261018).uniform(-0.5, 0.5, (4096, 3))
         expected, actual = case.function(*queries.T), shape.evaluate(*queries.T)
         np.testing.assert_allclose(actual, expected, rtol=1e-12, atol=1e-12)
@@ -86,13 +109,16 @@ def worker(args):
         grid = shape.generate_volume_mesh(type_part=part).triangulate()
     row.update(seed_nodes=grid.n_points, seed_elements=grid.n_cells,
                vtk_extraction_s=time.perf_counter() - started)
+    if args.prepared_seed is not None:
+        row["saved_seed_load_s"] = row.pop("vtk_extraction_s")
+        row["vtk_extraction_performed"] = False
     workflow.save(output, row)
     if grid.n_cells > workflow.CAP:
         row.update(status="seed-element-cap", total_workflow_s=time.perf_counter() - started)
         workflow.save(output, row)
         return
     if args.audit_stages:
-        audit_stage("vtk-seed", grid)
+        audit_stage("prepared-seed" if args.prepared_seed is not None else "vtk-seed", grid)
     binary = Path(importlib.metadata.distribution("mmgpy").locate_file("mmgpy/bin/mmg3d_O3"))
     os.environ["PATH"] = str(binary.parent) + os.pathsep + os.environ["PATH"]
     original = microgen.Mmg.mmg3d
@@ -216,11 +242,13 @@ def main():
     parser.add_argument("--optimize-second-pass", action="store_true")
     parser.add_argument("--strain-controlled", action="store_true")
     parser.add_argument("--geometry-only", action="store_true")
+    parser.add_argument("--prepared-seed", type=Path)
     args = parser.parse_args()
     assert args.hausd > 0
     assert args.first_pass_hmax > 0
     assert args.first_pass_hmax == 0.06 or args.first_pass_hausd is not None
     assert not (args.first_pass_only and args.optimize_second_pass)
+    assert args.prepared_seed is None or (args.case == "gyroid" and args.geometry_only and args.audit_stages)
     if args.worker:
         worker(args)
         return
@@ -228,9 +256,14 @@ def main():
     shutil.copyfile(__file__, args.run / "driver.py")
     inputs = [args.source / name for name in
               (args.case + "-specimen.json", args.case + "-samples.npz", "summary.json")]
-    hashes = {str(path): workflow.digest(path) for path in inputs}
     for path in inputs[:2]:
         shutil.copyfile(path, args.run / path.name)
+    if args.prepared_seed is not None:
+        inputs.extend(args.prepared_seed / name for name in ("mesh.npz", "result.json"))
+        inputs.extend(workflow.HERE / name for name in ("microgen_workflow.py", "facet_incidence_audit.py", "job_parts.py", "test_microgen_prepared_seed.py"))
+        import microgen.remesh
+        inputs.append(Path(microgen.remesh.__file__))
+    hashes = {str(path): workflow.digest(path) for path in inputs}
     workflow.save(args.run / "manifest.json", {"script_sha256": workflow.digest(Path(__file__)),
         "inputs": hashes, "limits": {"rss_bytes": workflow.MEMORY, "timeout_s": 600,
         "tetrahedra": workflow.CAP, "nodes": 100_000, "threads": 1},
@@ -238,7 +271,7 @@ def main():
                      ("microgen", "mmgpy", "fedoo", "numpy", "scipy", "vtk", "pyvista")},
         "baseline_manifest_sha256": workflow.digest(args.source / "manifest.json")})
     with Job(parts=["tuned-candidate"]) as job:
-        with job.part("tuned-candidate") as part:
+        with worker_part(job, "tuned-candidate") as part:
             command = [sys.executable, __file__, "--run", str(args.run),
                 "--source", str(args.source), "--case", args.case,
                 "--resolution", str(args.resolution), "--hausd", str(args.hausd), "--worker"]
@@ -257,6 +290,8 @@ def main():
                 command.append("--strain-controlled")
             if args.geometry_only:
                 command.append("--geometry-only")
+            if args.prepared_seed is not None:
+                command.extend(["--prepared-seed", str(args.prepared_seed)])
             result = workflow.bounded(command,
                 args.run / "worker.log", part, timeout=600)
             workflow.save(args.run / "worker.json", result)

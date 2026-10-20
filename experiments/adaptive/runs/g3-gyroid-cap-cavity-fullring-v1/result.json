@@ -1,0 +1,275 @@
+{
+  "source": "/home/kmarchais/dev/meshers/experiments/adaptive/runs/g3-gyroid-preclip31-five-v2/pretriangulated",
+  "cavities": [
+    {
+      "edge": [
+        1463,
+        21497
+      ],
+      "neighbor_candidates": [
+        6526,
+        6527,
+        10052,
+        10053,
+        10054
+      ],
+      "attempts": [
+        {
+          "vertices": [
+            1069,
+            1070,
+            1082,
+            1463,
+            21166,
+            21497,
+            21498,
+            21500,
+            21519
+          ],
+          "candidate_tetrahedra": 105,
+          "solver_status": 0,
+          "solver_message": "Optimization terminated successfully. (HiGHS Status 7: Optimal)",
+          "solver_warnings": [
+            "Unrecognized options detected: {'threads'}. These will be passed to HiGHS verbatim."
+          ],
+          "passed": true,
+          "alternative_tetrahedra": 8,
+          "relative_volume_difference": 2.402774849799549e-16,
+          "integer_face_equations_exact": true,
+          "minimum_corner_determinant": 7.119998618355343e-07,
+          "neighbors": [
+            6526,
+            6527,
+            10052,
+            10053,
+            10054
+          ]
+        }
+      ],
+      "passed": true,
+      "incident_elements": [
+        6526,
+        6527,
+        10041,
+        10042,
+        10043,
+        10052,
+        10053,
+        10054
+      ],
+      "alternative_cells": [
+        [
+          1069,
+          1082,
+          1070,
+          1463
+        ],
+        [
+          1069,
+          1463,
+          1070,
+          21498
+        ],
+        [
+          1069,
+          1070,
+          21166,
+          21498
+        ],
+        [
+          1069,
+          1463,
+          21498,
+          21500
+        ],
+        [
+          1069,
+          21166,
+          21497,
+          21498
+        ],
+        [
+          1069,
+          21498,
+          21497,
+          21500
+        ],
+        [
+          1070,
+          21498,
+          1463,
+          21519
+        ],
+        [
+          1463,
+          21498,
+          21500,
+          21519
+        ]
+      ],
+      "new_cap_faces": [
+        [
+          1069,
+          1463,
+          21500
+        ],
+        [
+          1069,
+          21500,
+          21497
+        ]
+      ],
+      "old_cap_faces": [
+        [
+          1069,
+          1463,
+          21497
+        ],
+        [
+          1463,
+          21500,
+          21497
+        ]
+      ]
+    },
+    {
+      "edge": [
+        6498,
+        26301
+      ],
+      "neighbor_candidates": [
+        57295,
+        57296,
+        60802,
+        60814,
+        60815
+      ],
+      "attempts": [
+        {
+          "vertices": [
+            6098,
+            6115,
+            6116,
+            6498,
+            6516,
+            26016,
+            26301,
+            26302,
+            26324
+          ],
+          "candidate_tetrahedra": 105,
+          "solver_status": 0,
+          "solver_message": "Optimization terminated successfully. (HiGHS Status 7: Optimal)",
+          "solver_warnings": [
+            "Unrecognized options detected: {'threads'}. These will be passed to HiGHS verbatim."
+          ],
+          "passed": true,
+          "alternative_tetrahedra": 8,
+          "relative_volume_difference": 1.7383785235539987e-16,
+          "integer_face_equations_exact": true,
+          "minimum_corner_determinant": 1.23111244427041e-07,
+          "neighbors": [
+            57295,
+            57296,
+            60802,
+            60814,
+            60815
+          ]
+        }
+      ],
+      "passed": true,
+      "incident_elements": [
+        57295,
+        57296,
+        60802,
+        60807,
+        60808,
+        60809,
+        60814,
+        60815
+      ],
+      "alternative_cells": [
+        [
+          6098,
+          6115,
+          6116,
+          6498
+        ],
+        [
+          6115,
+          6116,
+          6498,
+          26302
+        ],
+        [
+          6115,
+          26016,
+          6116,
+          26302
+        ],
+        [
+          6115,
+          26302,
+          6498,
+          26324
+        ],
+        [
+          6115,
+          26301,
+          26016,
+          26302
+        ],
+        [
+          6115,
+          26301,
+          26302,
+          26324
+        ],
+        [
+          6116,
+          6516,
+          6498,
+          26302
+        ],
+        [
+          6498,
+          26302,
+          6516,
+          26324
+        ]
+      ],
+      "new_cap_faces": [
+        [
+          6115,
+          26324,
+          6498
+        ],
+        [
+          6115,
+          26301,
+          26324
+        ]
+      ],
+      "old_cap_faces": [
+        [
+          6115,
+          26301,
+          6498
+        ],
+        [
+          6498,
+          26301,
+          26324
+        ]
+      ]
+    }
+  ],
+  "solved_cavities": 2,
+  "source_unchanged": true,
+  "qualified": false,
+  "replacement_applied": false,
+  "mmg_calls": [],
+  "stiffness_solve_performed": false,
+  "full_ring": true,
+  "scope": "Measured face-neighbor expansions, at most nine existing vertices, independent integer replay; no mesh replacement or workflow accuracy claim"
+}

@@ -1,9 +1,8 @@
 # Meshers project tracking
 
 Updated 20 October 2026. Covers the recorded project history on
-`handoff/g3-microgen-20261017` through commit `3d37ccc`, including completed
-Gyroid feasibility, source-validity, and admission checks 336–341 below, plus
-extraction-order experiments 342–344. The history starts with the initial
+`handoff/g3-microgen-20261017` through commit `e99fa92`, plus completed
+Gyroid cap-preparation and actual MMG checks 350–357 below. The history starts with the initial
 release candidate on 19 September and includes the resumed 20 October geometry,
 reference, and fixed-field sensitivity studies.
 This is a consolidated index and status ledger, not a replacement for frozen
@@ -25,10 +24,11 @@ Completed means that the cited implementation or measurement exists. It does
 not mean that the four-fixture objective has been achieved. Planned and draft
 work has no measured result until its bounded run and independent checks finish.
 
-The latest supplemental work is cap-topology preflights 345–349. They find
-local planar alternatives for all 24 obstructing Gyroid caps, but only 22
-valid volume-cavity plans. The remaining two have no signed-face solution on
-their six existing vertices. No partial replacement or MMG/FE solve follows.
+Cap-topology preflights 345–349 find local alternatives for all 24 obstructing
+Gyroid caps, with two stars needing larger cavities. Jobs 350–354 then complete
+a rank-guarded replacement using full one-rings. The new seed preserves its
+geometry and periodic caps, but still fails actual volume quality. A final
+admitted MMG competitor has not yet been established by this preparation.
 
 ## Current conclusion
 
@@ -84,7 +84,8 @@ The [19 October shutdown record](handoff/g3/SHUTDOWN-20261019.md) remains histor
 | Completed negative diagnostic | Coupled cubic curve-corner relaxation reproduces original edge gains exactly but fails the useful-signal screen; polynomial-mode route closed |
 | Still open | Four-fixture matched-accuracy comparison, lattice reference uncertainty, admitted actual MMG controls for Gyroid and spinodoid |
 | Completed extraction preflight | Gyroid31 five- and six-tet preclipping remove all 288 oriented-face conflicts, but each introduces 24 cap faces with quality ceiling below 0.1; no MMG or FE follows |
-| Incomplete cap replacement | All 24 blocked cap faces have passing planar flips; 22 disjoint volume-cavity plans pass, while two require a larger cavity or another construction |
+| Completed cap preparation | Twenty safe cones and four full rings replace all 24 blocked Gyroid caps; points, wall, volume, incidence, and periodicity pass; actual volume quality still requires remeshing |
+| Actual prepared-seed MMG replays | Jobs 355–357 hit intermediate tet caps; one fitting first stage also fails distance and quality; none supplies an admitted comparator |
 
 The corner-coupling extension includes five algebraic tests, manufactured
 periodic controls, and the frozen-domain lattice comparison. Job 330 measures
@@ -387,6 +388,9 @@ Microgen extraction. They do not establish an admitted new competitor.
 | 345–346 | First attempt fails JSON serialization; corrected retry finds passing planar flips for all 24 blocked cap faces | `g3-gyroid-cap-flip-preflight-v1`, `g3-gyroid-cap-flip-preflight-v2` |
 | 347–348 | Complete two- and three-tet star checks find 22 disjoint valid volume plans; no partial replacement occurs | `g3-gyroid-cap-cavity-preflight-v1`, `g3-gyroid-cap-cavity-preflight-v2` |
 | 349 | Each unresolved six-vertex cavity has 13 tet candidates and 8,191 nonempty subsets, with no matching signed boundary | `g3-gyroid-cap-cavity-enumeration-v1` |
+| 350–351 | Single-neighbor expansions fail, but complete nine-vertex rings solve both unresolved stars with independent integer-face and volume replay | `g3-gyroid-cap-cavity-expansion-v1`, `g3-gyroid-cap-cavity-fullring-v1` |
+| 352–354 | First complete copy exposes near-flat cones; guarded rebuilding produces a globally consistent, periodic seed with no obstructing caps, but quality still below 0.1 | `g3-gyroid-cap-replacement-v1`, `g3-gyroid-cap-cavity-rankguard-v1`, `g3-gyroid-cap-replacement-v2` |
+| 355–357 | Actual MMG on the explicitly prepared seed produces over-cap outputs; the fitting first stage has distance 0.00203065 and quality 0.033234, so count alone cannot qualify it | `g3-gyroid-prepared-two-pass-mmg-v1`, `g3-gyroid-prepared-two-pass-mmg-hausd0015-v1`, `g3-gyroid-prepared-two-pass-mmg-hausd00175-v1` |
 
 The source defect predates MMG in this saved lineage. The recorded evidence
 does not yet isolate which clipping or tetrahedralization operation introduces
@@ -743,6 +747,8 @@ Use `git log --reverse --format='%h %ad %s' --date=short` for the complete ledge
 | 20 Oct | `2f0363f`, `5789b90` | Repeated exact-recipe Schwarz Tet10 advantage; independent mixed-load, timing and provenance verification; late reporting warning retained |
 | 20 Oct | `c6ee7db` | Progress-transition fix, exact archived-source verification, feasible Gyroid star and incomplete whole-mesh interior repair |
 | 20 Oct | `3d37ccc`, jobs 336–341 | Checked local obstruction, failed cavity preflight, upstream Gyroid incidence defect, all-arm comparison replay, and fail-closed admission/source guards |
+| 20 Oct | `051adb8` | Paired fixed-field preclipping and five-tet conversion controls; coherent seeds still have obstructing caps |
+| 20 Oct | `e99fa92` | Local cap flips, complete-star checks, and bounded exhaustive cavity obstruction; no partial replacement |
 
 ## 13. Verification and evidence register
 
@@ -766,6 +772,7 @@ are not claims that a fresh full suite ran while writing this document.
 | Progress and Gyroid repair | Two reporting regressions are red then green; queued single-star and complete-repair controls pass; 18 focused checks pass; repair remains scientifically rejected |
 | Source consistency and admission | Six convex controls, extended-precision witness replay, twelve-mesh lineage audit, 24 timing-arm and six-lift replay; admission/repair guards are red then green; 69 focused tests pass |
 | Extraction order | Both paired runs verify identical point/scalar hashes; seven current extraction/progress controls and sixteen combined focused tests pass; both altered seeds fail fixed-cap feasibility |
+| Rank-guarded cap preparation | Binary controls match exhaustive results; actual near-flat regression and fifteen queued controls pass; fresh 24-plan copy passes independent incidence, periodicity, wall/point identity, volume, and cap-ceiling checks; 103 input/source hash records verified across eight completed runs |
 
 Canonical detailed reports are under `experiments/adaptive`:
 
@@ -821,18 +828,28 @@ decompositions, but each introduces 24 retained-cap obstructions at minimum
 quality ceiling 0.08710052. The five-tet variant passes sampled distance at
 0.00163287. Neither qualifies, and no MMG or FE solve follows.
 
-Cap-flip and complete-volume-star preflights subsequently find local planar
-alternatives for all 24 blocked faces and 22 disjoint valid volume plans.
-Two three-tet stars reject all fixed-vertex signed-face solutions in the
-bounded enumeration. No partial replacement occurs. The selected successor
-is bounded one-ring cavity expansion around those two stars, not another
-background decomposition, sampling-grid sweep, or retry of the same cones.
-Keep target cap polygons and periodic boundaries fixed, with the 250,000-tet
-cap and 8 GiB worker ceiling. No enlarged-cavity experiment has run yet.
+Cap-flip and complete-star preflights then identify two stars needing larger
+cavities. Complete-ring binary solves supply those replacements. Independent
+quality checking catches two additional near-flat cones before MMG. A relative
+determinant guard rebuilds all 24 plans as 20 safe cones and four full rings.
+The resulting fresh seed has no obstructing caps, preserves points, walls,
+volume, incidence, and periodic triangles, and passes sampled distance. Actual
+minimum quality remains 0.00109506, below final admission 0.1.
+
+The selected successor is one audited, explicitly modified actual Microgen/MMG
+geometry replay on this prepared seed. It is not defaults or a fresh complete
+workflow timing. All intermediate outputs retain the 250,000-tet cap and
+8 GiB ceiling. No FE follows before final geometry and periodic admission.
+
+The first three replays, jobs 355–357, reject at intermediate tet caps.
+Job 359 is queued behind another shared-queue job at this update. It keeps
+first-pass hausd 0.00175 and changes second-pass hausd to 0.0015. No result
+is claimed before that queued run completes. Read the latest checkpoint for
+its exact task and run-directory identifiers.
 
 | Priority | Next action | Completion criterion |
 |---|---|---|
-| 1 | Assess bounded one-ring cavity expansion for two unresolved Gyroid cap flips | A complete compatible replacement with preserved periodic boundaries must precede MMG; 22 local plans alone do not remove all 24 cap obstructions |
+| 1 | Audit actual Microgen/MMG on the rank-guarded prepared Gyroid seed | Both actual calls and intermediate geometry recorded; require final quality, geometry, incidence, and periodic gates before any FE; no defaults or live-workflow claim |
 | Retired source | One-pass FEM43 interior repair | Invalid oriented source; current code rejects it before relocation; do not retry sweeps or bypass cavity guards |
 | Completed prerequisite | Retain progress values across worker-stage transitions | Red/green success/failure regressions and queued checks pass; shared helper unchanged |
 | Completed comparison | Stronger Schwarz Tet10 repetitions | Five interleaved pairs pass, both cost definitions favor Meshers; no further Schwarz tightening selected |

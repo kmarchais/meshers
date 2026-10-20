@@ -1,5 +1,101 @@
 # G3 Microgen workflow results, 17 October 2026
 
+## Actual MMG replay of the prepared Gyroid seed, 20 October 2026
+
+The prepared source is `runs/g3-gyroid-cap-replacement-v2`. These are genuine
+calls through `microgen.remesh.remesh_keeping_boundaries_for_fem` on an
+explicitly modified Microgen-derived seed. They are not Microgen defaults,
+Meshers-seeded MMG, or fresh complete-workflow timings. Preparation cost is
+excluded, each intermediate tet cap remains 250,000, and no FE runs.
+
+| Job | First-pass hausd | Second-pass hausd | Measured stop |
+|---|---:|---:|---|
+| 355 | 0.0005 | 0.0005, not reached | First pass returns 649,230 tets; 58.02 s diagnostic |
+| 356 | 0.0015 | 0.0005, not reached | First pass returns 259,134 tets; 27.23 s diagnostic |
+| 357 | 0.00175 | 0.0005 | First pass fits at 229,778 tets; second returns 446,978 and hits cap; 62.20 s diagnostic |
+
+Every first pass retains actual `nofem=True`, with explicit hmax 0.06 and
+hgrad 1.3. The second public call has `ls=True`, `nr=True`, and the recorded
+sizing arguments. Captured output counts stop the worker before another pass
+or solve. A rejected cap is not waived because an output is close to it.
+
+The captured first stage of 357 has 48,565 nodes, sampled distance
+0.0020306511, volume error +0.69621401%, and minimum quality 0.03323404.
+It fails both distance and quality. Passing the count limit does not qualify
+that intermediate mesh. The second output is not geometry-ranked above the
+stage cap. All three records have `qualified=false`.
+
+The next selected replay keeps first-pass hausd 0.00175 and changes only
+second-pass hausd to 0.0015. Final independent admission gates remain fixed.
+Older saved-seed rows reuse the historical `vtk_extraction_s` field for load
+time, while explicitly marking `saved_seed_replay` and excluded preparation.
+Future rows use `saved_seed_load_s` and `vtk_extraction_performed=false`.
+Do not interpret the old field as a measured live extraction or edit frozen
+rows to relabel it.
+
+Records are `runs/g3-gyroid-prepared-two-pass-mmg-v1`,
+`runs/g3-gyroid-prepared-two-pass-mmg-hausd0015-v1`, and
+`runs/g3-gyroid-prepared-two-pass-mmg-hausd00175-v1`.
+
+## Complete rank-guarded Gyroid cap preparation, 20 October 2026
+
+Jobs 350–354 resolve the previously incomplete cap replacement without moving
+coordinates, wall triangles, or periodic boundary curves. This remains an
+explicit modification of Microgen extraction, not its default workflow.
+
+Job 350 tries each single face neighbor of the two unresolved three-tet stars.
+Each has five neighbors. All ten seven-vertex binary models are infeasible.
+The binary signed-face solver first reproduces positive exhaustive controls
+and the previous six-vertex obstruction. It bounds solve time at two seconds,
+branch nodes at 1,000, and threads at one. Any returned subset needs exact
+integer face replay, incidence counts, positive determinants, and volume
+agreement. Solver status alone cannot admit a cavity.
+
+Job 351 considers each measured complete one-ring jointly. Both nine-vertex
+rings solve, with 105 candidate tets and eight selected tets per ring. Signed
+face equations replay exactly and relative volume differences are below
+2.5e-16. The resulting 24-plan copy in 352 passes global oriented incidence,
+periodic nodes/cap triangles, unchanged wall/point arrays, and unchanged volume.
+Its cap ceiling improves to 0.105300997. However, two of the earlier accepted
+cones contain roundoff-scale cells with determinants near 1e-20. The final
+quality check rejects that copy at approximately 2.75e-16. It is preserved,
+and no MMG call uses it.
+
+A regression uses one actual affected six-vertex star. Preparation now has an
+explicit relative determinant guard, rejecting candidate determinants at most
+1e-12 times the original cavity's summed determinant. This is a numerical
+rank guard, not a replacement or relaxation of final quality 0.1. Job 353
+recomputes 20 safe cones and four full rings. Each ring solves from 102 retained
+candidate tets, with minimum selected determinant at least 2.36e-7. Fifteen
+queued controls pass, including the actual near-flat example.
+
+Job 354 applies those 24 plans to a fresh copy and independently audits it:
+
+| Measurement | Result |
+|---|---:|
+| Nodes / tets | 30,271 / 101,472 |
+| Sampled two-sided distance | 0.0016328718 |
+| Relative volume error | +0.71897165% |
+| Relative volume change from seed | 0 |
+| Minimum retained-cap quality ceiling | 0.1053009971 |
+| Cap faces below ceiling 0.1 | 0 |
+| Minimum replacement determinant / original cavity sum | 0.0015171466 |
+| Minimum actual corner quality | 0.0010950575 |
+| Minimum sampled Jacobian | 1.417393e-9 |
+
+Oriented facets and periodic cap triangles pass. Original points and wall
+triangles are identical. This is a cap-feasible seed for a bounded MMG test,
+not an admitted final FE mesh. The seed still fails the actual quality gate.
+No FE solve or matched-accuracy timing claim follows from preparation.
+
+Records are `runs/g3-gyroid-cap-cavity-expansion-v1`,
+`runs/g3-gyroid-cap-cavity-fullring-v1`,
+`runs/g3-gyroid-cap-replacement-v1`,
+`runs/g3-gyroid-cap-cavity-rankguard-v1`, and
+`runs/g3-gyroid-cap-replacement-v2`. Old binary-solver source snapshots match
+their recorded hashes. Worker memory remains below 0.49 GiB, with one thread,
+120-second preparation stages, and unchanged 8 GiB/250,000-tet limits.
+
 ## Gyroid cap-flip feasibility, 20 October 2026
 
 The coherent five-tet seed has 24 cap faces below the necessary analytic

@@ -1,5 +1,20 @@
 # Adaptive and quadratic implicit meshing: results
 
+## Complete cap preparation still needs MMG quality, 2026-10-20
+
+Jobs 350–354 complete the fixed Gyroid31 cap replacement on a fresh copy.
+Single-neighbor growth fails, while joint one-rings supply the missing volume
+triangulations. Independent auditing catches two near-flat cones in the first
+complete copy. A relative determinant guard and actual-source regression
+then produce 20 safe cones and four ring replacements.
+
+The rebuilt seed preserves points, wall triangles, volume, oriented incidence,
+and periodic cap matching. It has no analytically obstructing caps, minimum
+ceiling 0.105301, and distance 0.00163287. Its actual minimum corner quality is
+still 0.00109506, so this is not an admitted FE mesh or a workflow victory.
+The next selected stage is an explicitly modified actual Microgen/MMG replay,
+not a native Meshers change or a defaults claim. See `MICROGEN_RESULTS.md`.
+
 ## Gyroid cap alternatives remain incomplete, 2026-10-20
 
 Jobs 345–349 follow the fixed-field extraction check. All 24 analytically

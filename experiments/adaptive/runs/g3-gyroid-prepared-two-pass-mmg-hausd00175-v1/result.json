@@ -1,0 +1,47 @@
+{
+  "case": "gyroid",
+  "route": "microgen-explicit-preclipping-and-cap-retriangulation-mmg-tuned",
+  "resolution": 31,
+  "mmg_arguments": {
+    "hausd": 0.0005,
+    "hmax": 0.06,
+    "hgrad": 1.3
+  },
+  "status": "intermediate-element-cap",
+  "mmg_calls": [
+    {
+      "nofem": true,
+      "hausd": 0.00175,
+      "hmax": 0.06,
+      "hgrad": 1.3
+    },
+    {
+      "hausd": 0.0005,
+      "hgrad": 1.3,
+      "hmax": 0.06,
+      "hmin": null,
+      "hsiz": null,
+      "ls": true,
+      "nr": true
+    }
+  ],
+  "stage_audit_enabled": true,
+  "geometry_only": true,
+  "timing_comparable": false,
+  "first_pass_hausd_override": 0.00175,
+  "first_pass_hmax_override": 0.06,
+  "first_pass_only": false,
+  "first_pass_fem_override": false,
+  "optimize_second_pass": false,
+  "solver_formulation": "stress-controlled",
+  "prepared_seed": "experiments/adaptive/runs/g3-gyroid-cap-replacement-v2",
+  "saved_seed_replay": true,
+  "default_microgen_pipeline": false,
+  "preparation_cost_excluded": true,
+  "specimen_setup_s": 0.019447259001026396,
+  "seed_nodes": 30271,
+  "seed_elements": 101472,
+  "vtk_extraction_s": 0.01946186499844771,
+  "error": "mmg-stage-2: 446978 tetrahedra exceed the intermediate element cap",
+  "total_workflow_s": 62.20308388400008
+}

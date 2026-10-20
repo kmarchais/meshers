@@ -1,5 +1,66 @@
 # G3 continuation checkpoint, 20 October 2026
 
+## Active queue checkpoint after job 357
+
+Jobs 355–357 are terminal and scientifically rejected. Job 356 returns
+259,134 tets at first-pass hausd 0.0015. Job 357 fits its first pass at
+229,778 tets with hausd 0.00175, but distance is 0.0020306511 and minimum
+quality 0.03323404. Its actual second pass at hausd 0.0005 returns 446,978
+tets and stops at the unchanged intermediate cap. No FE runs.
+
+Job 359 is queued behind another project's shared-queue build. Do not touch
+that other job. Observe qrun terminal session 60619 or pueue task 359 rather
+than restarting it. The selected replay keeps first-pass hausd 0.00175,
+hmax 0.06, hgrad 1.3 and changes only second-pass hausd to 0.0015. Its run
+directory is `runs/g3-gyroid-prepared-two-pass-mmg-second0015-v1` under
+`experiments/adaptive`, which is created only when the job starts. No result
+exists at this checkpoint. Read it before selecting any successor.
+
+Pueue's Running and Queued states are JSON objects, like Done. To inspect
+active tasks, exclude the Done key rather than excluding all object states.
+Earlier abbreviated status filters would miss active work. No local heavy
+computation was launched from those observations. Heavy work stays queued.
+
+The prepared seed, all native inputs, reference tensors, and admission gates
+remain unchanged. Saved-seed MMG times exclude preparation and do not support
+a workflow comparison. Earlier sections below are historical.
+
+## Latest complete cap preparation, jobs 350 through 355
+
+Jobs 350–354 are terminal. Single-neighbor expansions fail for the two old
+unresolved stars. Joint nine-vertex rings solve both. The first complete
+copy, job 352, passes incidence and periodicity but exposes roundoff-scale
+cells from two earlier cones. Do not use that copy as an MMG input.
+
+A relative determinant guard rejects new tets at most 1e-12 of the original
+cavity's summed determinant. An actual-source regression catches the issue.
+Job 353 rebuilds 20 safe cones and four full rings. All four binary models
+solve with 102 candidates, exact signed-face replay, and positive volume.
+Job 354 independently applies and audits all 24 plans to a fresh copy:
+
+- 30,271 points, 101,472 tets, original points and wall triangles unchanged.
+- All oriented facets and periodic cap triangles pass.
+- Sampled distance 0.0016328718, relative volume error +0.71897165%.
+- Relative volume change is zero and cap ceiling minimum is 0.1053009971.
+- Minimum replacement relative determinant is 0.0015171466.
+- Actual minimum corner quality is still 0.0010950575, so it is not admitted.
+
+Prepared source is `runs/g3-gyroid-cap-replacement-v2`. Its plan source is
+`runs/g3-gyroid-cap-cavity-rankguard-v1`. No native code, benchmark references,
+or specimen definitions change. Preparation uses an explicitly non-default
+Microgen background triangulation and cap retriangulation, not a Meshers seed.
+
+Job 355 invokes actual `remesh_keeping_boundaries_for_fem` on the saved prepared
+seed, with recorded first-pass overrides `nofem=True`, hausd 0.0005, hmax 0.06,
+hgrad 1.3. That first pass returns 649,230 tets and stops at the unchanged
+250,000 intermediate cap. No second MMG call or FE runs. Its 58.02-second
+saved-seed diagnostic is not a full-workflow timing or admission.
+
+The selected next control changes only first-pass hausd to 0.0015, retaining
+the actual public second call and hausd 0.0005 there. Inspect its live queue
+and results before choosing any successor. All stages retain 8 GiB, one
+thread, and 600-second MMG worker limits. Earlier sections below are historical.
+
 ## Latest cap-topology findings, jobs 345 through 349
 
 All jobs are terminal. Job 345 is a preserved JSON serialization failure,

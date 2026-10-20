@@ -24,7 +24,7 @@ from pueue_progress import Job
 PREFLIGHT = workflow.HERE / "runs/g3-gyroid-cap-flip-preflight-v2/result.json"
 
 
-def cavity(points, cells, old_faces, new_faces, edge):
+def cavity(points, cells, old_faces, new_faces, edge, *, minimum_relative_determinant=0):
     indices = np.flatnonzero((cells == edge[0]).any(axis=1) & (cells == edge[1]).any(axis=1))
     row = {"edge": list(map(int, edge)), "incident_elements": indices.tolist(), "cavity_passed": False}
     if len(indices) not in (2, 3):
@@ -49,7 +49,7 @@ def cavity(points, cells, old_faces, new_faces, edge):
         faces = [face for face in [*outer, *map(tuple, new_faces.tolist())] if vertex not in face]
         alternative = np.array([[*face, vertex] for face in faces])
         determinants = np.linalg.det(points[alternative[:, 1:]] - points[alternative[:, :1]])
-        if np.any(determinants == 0):
+        if np.any(abs(determinants) <= minimum_relative_determinant * old_volume):
             attempts.append({"apex": vertex, "status": "degenerate-alternative"})
             continue
         negative = determinants < 0

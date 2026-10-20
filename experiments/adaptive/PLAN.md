@@ -681,3 +681,26 @@ Next assess one bounded one-ring cavity expansion around those two stars,
 keeping target cap polygons and periodic boundaries fixed. Do not repeat cones
 or brute-force enumeration on the same six vertices. This is not a general
 remeshing impossibility and supplies no admitted new comparator.
+
+Jobs 350–354 complete a cap-feasible copy. All ten single-neighbor expansions
+fail, but complete nine-vertex rings solve both missing stars. The first copy
+exposes two near-flat cones in independent quality checking, so it is not used
+for MMG. A numerical relative-determinant guard, with an actual-source
+regression, rebuilds 20 safe cones and four full rings. The fresh copy preserves
+points, wall triangles, volume, incidence, periodic caps, and distance while
+removing every cap obstruction. Its actual quality remains below 0.1.
+
+Select one geometry-only actual `remesh_keeping_boundaries_for_fem` replay on
+that saved prepared seed. Label preclipping/cap retriangulation non-default,
+record both actual MMG calls and intermediate geometry, and exclude replay
+costs from end-to-end timing claims. First-pass sizing is explicitly overridden
+to hausd 0.0005, hmax 0.06, hgrad 1.3 while retaining nofem. The actual second
+level-set call remains. No FE before full final admission and periodic checks.
+
+Actual prepared-seed MMG controls 355–357 hit intermediate tet caps. First-pass
+hausd 0.0005 returns 649,230 tets and 0.0015 returns 259,134. At 0.00175 the
+first pass fits 229,778 tets, but misses distance at 0.00203065 and quality at
+0.033234. Its actual second pass at hausd 0.0005 returns 446,978 tets and stops.
+No FE or admitted competitor follows. Select only second-pass hausd 0.0015
+next, with all first-pass settings and admission gates unchanged. Saved-seed
+replays remain explicitly excluded from complete-workflow timing comparisons.
