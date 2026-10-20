@@ -1,5 +1,50 @@
 # G3 continuation checkpoint, 20 October 2026
 
+## Latest completed diagnostics, jobs 334 and 335
+
+Both are terminal success; scientific admission is not. No job is queued.
+Do not restart observing sessions 79681 or 32411. Check the shared queue
+before work. The full four-fixture goal remains active and unachieved.
+
+The progress transition issue below is now fixed for selected controllers
+with `job_parts.worker_part`, using public standard Job methods. Success and
+failure capture tests are red before the fix and green afterward. Completion
+retains elapsed time and the 8 GiB ceiling. Both queued checks pass, with six
+live reports in job 335. No shared workbench helper or frozen output changes.
+
+Existing audit 212 already rules out low cap/wall-face ceilings on the Gyroid
+outputs. Job 334 instead tests one worst free interior vertex, node 30242,
+on the original two-pass mesh. All 26 incident tets reach strict quality 0.1
+with a 1e-9 positive guard, while boundary and signed volume stay unchanged.
+Global quality still fails. That mesh would lift to 325,911 Tet10 nodes,
+above the stage. The smaller one-pass FEM43 precursor lifts to 153,010.
+
+Job 335 makes one explicitly added SciPy interior-relocation attempt on that
+smaller saved genuine Microgen mesh. Two sweeps, 400-attempt cap, complete
+star target 0.100001, no boundary or topology changes. Six controls pass.
+It accepts 108 moves in sweep one and none in sweep two. Bad tets fall from
+222 to 49, but minimum quality remains 0.0079758. All determinants stay
+positive, volume change is zero, and original H=0.00151229 and periodic caps
+reproduce. The route remains `repair-incomplete`, `qualified=false` and no
+FEA runs. This is not a Microgen default or a Meshers seed. Do not call it
+an admitted or matched-accuracy competitor.
+
+Read `runs/g3-gyroid-interior-star-feasibility-v1` and
+`runs/g3-gyroid-firstpass-fem43-interior-relocation-v1` under
+`experiments/adaptive`. The maintained drivers are `interior_star_probe.py`
+and `interior_relocation_trial.py`. Stop this sweep recipe. Next diagnose one
+remaining worst star using an independent convex-slack feasibility problem
+and checked supporting-plane bound. A failed SLSQP search alone is not an
+infeasibility proof. Read that diagnostic before coupled or topology changes.
+
+Schwarz's repeated comparison remains valid. Verification v2 still checks
+96 comparisons and 205 hashes after source changes, using exact measured
+driver archives for seven source records. Changed mesh/field data cannot use
+that fallback. Read
+`runs/g3-schwarz-tet10-live-amg-repeated-verification-v2.json`.
+Eighteen focused tests pass. Native code and specimen definitions are unchanged.
+The sections below retain earlier checkpoint reasoning as history.
+
 ## Latest completed experiment, job 333
 
 Job 333 is terminal success. Do not restart its observing session 95526 or

@@ -22,6 +22,16 @@ def model_errors(candidate, coarse, fine, ratios):
     return errors
 
 
+def verify_hash(path, expected, run):
+    if workflow.digest(path) == expected:
+        return False
+    archives = {"schwarz_tet10_live.py": run / "warmup/driver.py",
+        "schwarz_tet10_repeated.py": run / "driver.py"}
+    archived = archives.get(path.name)
+    assert archived is not None and workflow.digest(archived) == expected, f"Hash mismatch: {path}"
+    return True
+
+
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--run", type=Path, required=True)
@@ -38,9 +48,9 @@ def main():
     coarse, fine = (np.asarray(levels[count]["stiffness"]) for count in (16, 20))
     ratios = [16 / 20, (levels[16]["elements"] / levels[20]["elements"])**(1 / 3)]
     manifest = json.loads((args.run / "manifest.json").read_text())
-    verified_hashes = 0
+    verified_hashes, archived_sources = 0, 0
     for path, digest in manifest["inputs"].items():
-        assert workflow.digest(Path(path)) == digest
+        archived_sources += verify_hash(Path(path), digest, args.run)
         verified_hashes += 1
     times = {metric: {arm: [] for arm in ("microgen", "meshers")}
         for metric in ("science_audited_workflow_s", "generation_lift_solve_s")}
@@ -56,7 +66,7 @@ def main():
         inputs = json.loads((directory / "manifest.json").read_text())["inputs"]
         assert inputs[str(source)] == workflow.digest(source)
         for path, digest in {**inputs, **saved["artifact_sha256"]}.items():
-            assert workflow.digest(Path(path)) == digest
+            archived_sources += verify_hash(Path(path), digest, args.run)
             verified_hashes += 1
         parent = json.loads((directory / "microgen-parent/result.json").read_text())
         rows = {arm: json.loads((directory / (arm + "-tet10/result.json")).read_text())
@@ -106,6 +116,7 @@ def main():
     assert verified_faster == report["meshers_faster_in_every_measured_pair"]
     workflow.save(args.output, {"source": str(args.run), "source_summary_sha256": workflow.digest(args.run / "summary.json"),
         "verifier_sha256": workflow.digest(Path(__file__)), "passed": True, "verified_hash_records": verified_hashes,
+        "archived_source_hash_records": archived_sources,
         "meshers_faster_in_every_measured_pair": verified_faster,
         "independent_generalized_eigenvalue_comparisons": 6 * 2 * 8, "pairs": checked,
         "maximum_reaction_relative_error": maximum_reaction, "maximum_hill_mandel_relative_error": maximum_energy,

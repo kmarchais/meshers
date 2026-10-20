@@ -11,6 +11,7 @@ import sys
 import time
 
 import microgen_workflow as workflow
+from job_parts import worker_part
 
 os.environ.update(OPENBLAS_NUM_THREADS="1", OMP_NUM_THREADS="1", MKL_NUM_THREADS="1", RAYON_NUM_THREADS="1")
 sys.path.insert(0, str(Path.home() / "bin"))
@@ -80,7 +81,7 @@ def run_pair(run, *, native_first=False, job=None, prefix="", deadline=None):
         "microgen_tet10_control.py", "admission_pilot.py", "stress_recovery.py", "tet10_integration.py",
         "amg_reference.py", "stiffness_pair.py", "test_cubic_reference.py", "test_reference_admission.py",
         "test_schwarz_tet10_live.py", "schwarz_tet10_repeated.py", "test_schwarz_tet10_repeated.py",
-        "cap_quality_bound.py", "gradient_tie_probe.py"))
+        "cap_quality_bound.py", "gradient_tie_probe.py", "job_parts.py", "test_job_parts.py"))
     paths.extend(workflow.ROOT / "crates/meshers-python/python/meshers" / name for name in ("__init__.py", "expression.py"))
     paths.extend(workflow.ROOT.parent / "periodic-microgen/experiments/periodic-fea" / name
                  for name in ("homogenization.py", "periodic.py"))
@@ -101,7 +102,7 @@ def run_pair(run, *, native_first=False, job=None, prefix="", deadline=None):
     commands = [
         ("controls", 120, ["-m", "pytest", "-q", "experiments/adaptive/test_schwarz_tet10_live.py",
             "experiments/adaptive/test_reference_admission.py", "experiments/adaptive/test_cubic_reference.py",
-            "experiments/adaptive/test_schwarz_tet10_repeated.py"]),
+            "experiments/adaptive/test_schwarz_tet10_repeated.py", "experiments/adaptive/test_job_parts.py"]),
         ("microgen-parent", 600, [str(workflow.HERE / "microgen_tuned.py"), "--worker", "--run", str(parent),
             "--source", str(source), "--resolution", "30", "--first-pass-hausd", ".0005",
             "--first-pass-hmax", ".1", "--first-pass-only", "--geometry-only"]),
@@ -127,7 +128,7 @@ def run_pair(run, *, native_first=False, job=None, prefix="", deadline=None):
             if deadline is not None:
                 timeout = min(timeout, deadline - time.monotonic())
                 assert timeout > 0, "Whole-experiment deadline reached before the next worker"
-            with active_job.part(prefix + name) as part:
+            with worker_part(active_job, prefix + name) as part:
                 records[name] = workflow.bounded([sys.executable, *commands[name]], run / (name + ".log"), part, timeout=timeout)
                 workflow.save(run / "workers.json", records)
                 assert records[name]["returncode"] == 0, f"Read {name}.log"

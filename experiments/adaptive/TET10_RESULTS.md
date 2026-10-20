@@ -147,6 +147,22 @@ another experiment; no shared workbench helper was modified here.
 The captured reports and helper hash are in
 `runs/g3-schwarz-tet10-progress-warning-v1.json`.
 
+The subsequent reporting fix uses `job_parts.worker_part` and public standard
+Job methods. Both success and failure regressions fail before the fix and
+pass afterward. Stage completion retains elapsed time and the 8 GiB memory
+ceiling instead of an empty values object. Selected controllers use it;
+older frozen drivers and the shared helper remain unchanged. Queued checks
+334 and 335 pass. The latter records six progress reports with live values.
+This addresses worker-stage transitions, not a claim about every historical
+controller or prolonged reporting under every failure mode.
+
+The repeated-study verifier also accepts the exact archived driver when
+maintained source later changes. It requires the same recorded SHA256 and
+never substitutes a source archive for changed mesh or field data. Four
+verifier controls pass. Fresh verification v2 still checks all 205 records
+and 96 comparisons, with seven source records resolved to measured archives.
+Original reports and verification v1 remain frozen.
+
 Records are in `runs/g3-schwarz-tet10-live-amg-repeated-v1` and
 `runs/g3-schwarz-tet10-live-amg-repeated-verification-v1.json`. This establishes
 a repeated advantage for this stronger, explicitly modified Schwarz comparator.

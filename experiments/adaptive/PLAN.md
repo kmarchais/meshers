@@ -604,3 +604,22 @@ helper changes or successor job were submitted. After that reporting fix,
 return to missing admitted actual Gyroid/spinodoid comparators and lattice
 reference uncertainty rather than tightening Schwarz again. All four-fixture
 requirements and admission gates remain unchanged.
+
+The progress-transition fix is now tested in `job_parts.py`, using public Job
+methods and explicit completion values. Both success/failure capture tests
+are red before the fix and green afterward. Queued checks 334 and 335 pass.
+Frozen driver verification remains possible after source changes by exact
+archive-hash matching; mesh and field changes are still rejected.
+
+Do not repeat the existing Gyroid cap/wall-face audit. Job 334 demonstrates
+one feasible complete-star relocation on the actual two-pass output. Exact
+Tet10 node counting instead selects the smaller FEM43 precursor for one
+whole-mesh repair trial. Job 335 reduces bad tets from 222 to 49 with 108
+accepted moves. Worst quality remains 0.0079758 and the second sweep makes
+no progress. Boundary, volume, geometry and periodic caps stay unchanged;
+the route is still rejected, and no FE solve follows.
+
+Stop that recipe. Next diagnose a single remaining worst star with a convex
+slack feasibility problem and a checked supporting-plane bound. A failed
+SLSQP search alone does not establish infeasibility. Read this diagnostic
+before choosing any coupled relocation, topology repair, or MMG setting.

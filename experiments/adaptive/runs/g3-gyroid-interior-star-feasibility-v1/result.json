@@ -1,0 +1,38 @@
+{
+  "case": "gyroid",
+  "source": "/home/kmarchais/dev/meshers/experiments/adaptive/runs/g3-gyroid-tuned43-v3",
+  "worst_element": 62508,
+  "nodes": 47262,
+  "elements": 210503,
+  "star": {
+    "node": 30242,
+    "incident_tets": 26,
+    "quality_target": 0.1,
+    "initial_minimum_quality": 0.04071858535381472,
+    "fixed_opposite_face_upper_bound": 0.1456126467101898,
+    "target_attained": true,
+    "status": "feasible-numerically",
+    "numerical_quality_guard": 1e-09,
+    "solver_success": true,
+    "solver_message": "Optimization terminated successfully",
+    "iterations": 9,
+    "seconds": 0.008418117999099195,
+    "final_minimum_quality": 0.10000000099999955,
+    "maximum_move": 0.011627098286814049,
+    "minimum_normalized_constraint": -7.15573433840433e-18,
+    "candidate_coordinates": [
+      -0.4865717999019292,
+      -0.48753529865894785,
+      0.4132829548153532
+    ],
+    "minimum_signed_determinant": 1.7901107924877e-07
+  },
+  "all_boundary_coordinates_unchanged": true,
+  "connectivity_unchanged": true,
+  "signed_volume_difference": -1.4802973661668753e-16,
+  "minimum_signed_determinant_after_trial": 6.997620054391629e-08,
+  "global_minimum_quality_after_trial": 0.0455439470240102,
+  "qualified": false,
+  "stiffness_solve_performed": false,
+  "scope": "One interior-vertex feasibility diagnostic on frozen actual MMG output; not a repaired workflow, Microgen default, Meshers seed, or admitted comparator"
+}

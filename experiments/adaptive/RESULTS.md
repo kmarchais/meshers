@@ -1,5 +1,20 @@
 # Adaptive and quadratic implicit meshing: results
 
+## Gyroid interior repair remains unqualified, 2026-10-20
+
+One complete fixed-neighbor star on actual MMG output reaches quality 0.1
+without changing boundary or volume. That local witness justifies one bounded
+full interior-only repair on the smaller one-pass FEM precursor. Job 335
+accepts 108 moves and reduces bad tets from 222 to 49, but worst quality stays
+0.0079758. No move is accepted on the second sweep. Geometry and periodicity
+are unchanged; the route remains unqualified and no FEA runs.
+
+This explicitly added SciPy postprocess is not a Microgen default or a Meshers
+seed. Stop its unchanged sweep recipe and diagnose one failed star before
+choosing coupled movement or a topology change. See `MICROGEN_RESULTS.md`.
+The progress-transition regressions and both queued checks pass using the
+standard Job APIs, without changing the shared workbench helper.
+
 ## Repeated stronger Schwarz Tet10 comparison, 2026-10-20
 
 Job 333 completes five interleaved measured pairs after warmup. All geometry,

@@ -1,8 +1,8 @@
 # Meshers project tracking
 
 Updated 20 October 2026. Covers the recorded project history on
-`handoff/g3-microgen-20261017` through commit `2f0363f`, plus completed
-repeated experiment 333 and its independent verification below. The history starts with the initial
+`handoff/g3-microgen-20261017` through commit `5789b90`, plus completed
+Gyroid diagnostic jobs 334 and 335 and the reporting fix below. The history starts with the initial
 release candidate on 19 September and includes the resumed 20 October geometry,
 reference, and fixed-field sensitivity studies.
 This is a consolidated index and status ledger, not a replacement for frozen
@@ -56,7 +56,8 @@ The [19 October shutdown record](handoff/g3/SHUTDOWN-20261019.md) remains histor
 | Measured with limited scope | Repeated Schwarz advantage against the labeled one-pass Microgen variant; single-run recovery and geometry improvements |
 | Fresh stronger-comparator pilot | Common-AMG Schwarz Tet10 pair, 409.87 versus 55.10 seconds; both pass supplementary 0.1%, independent fields and positive-rule audit pass |
 | Completed stronger-comparator repetitions | Job 333, five measured pairs after warmup; both arms pass 0.1%, medians 409.28 versus 55.19 seconds; independent verifier passes |
-| Reporting defect, pending | Standard part context clears values at stage end; late progress audit warning reproduced; fix before another experiment |
+| Reporting fix validated | Explicit standard Job completion retains values; red/green success/failure tests and queued checks 334–335 pass; old warning remains frozen |
+| New negative Gyroid repair | One full-star move is feasible; whole interior-only trial reduces 222 bad tets to 49 but remains quality-rejected; no FEA |
 | Completed negative studies | Default Microgen admissions, unsuccessful sizing and repair recipes, volume-offset rationale, three-level cubic extrapolation, edge-only quartic signal |
 | Completed negative diagnostic | Coupled cubic curve-corner relaxation reproduces original edge gains exactly but fails the useful-signal screen; polynomial-mode route closed |
 | Still open | Four-fixture matched-accuracy comparison, lattice reference uncertainty, admitted actual MMG controls for Gyroid and spinodoid |
@@ -306,6 +307,22 @@ Evidence: [Microgen results](experiments/adaptive/MICROGEN_RESULTS.md),
 `cap_quality_bound.py`, `g3-cap-quality-bound.json`, `microgen_seed_screen.py`,
 `microgen_tuned.py`, and the frozen `g3-microgen-*` records under
 `experiments/adaptive/runs`.
+
+### Fixed-boundary Gyroid interior diagnostic
+
+The existing boundary-face audit already rules out cap and wall-face quality
+ceilings on two tested outputs. A new single-star feasibility check reaches
+quality 0.1 on all 26 incident tets while preserving boundary and signed
+volume. The two-pass parent would lift to 325,911 Tet10 nodes, over the stage
+cap, whereas the earlier FEM43 one-pass parent would lift to 153,010 nodes.
+
+One bounded repair of that smaller saved parent accepts 108 interior moves
+and reduces bad tets from 222 to 49. Minimum quality remains 0.0079758, and
+the second sweep accepts no moves. Geometry and periodic caps remain unchanged.
+The explicitly added SciPy postprocess stays unqualified and receives no FEA.
+It is not Microgen defaults or a Meshers-seeded MMG comparison. Next separate
+a failed local search from fixed-neighbor infeasibility before a coupled or
+topology repair. Detailed records are in `MICROGEN_RESULTS.md`.
 
 ## 6. Direct fedoo Tet10 integration
 
@@ -654,7 +671,8 @@ Use `git log --reverse --format='%h %ad %s' --date=short` for the complete ledge
 | 20 Oct | `06e4f27` | Controlled quartic edge diagnostic, rejected initial precision, resolved weak higher-rule signal |
 | 20 Oct | `ca388d2` | Validated corner-coupling diagnostic and weak incremental signal; polynomial-mode route closed |
 | 20 Oct | `9f9ee96` | Fresh stronger Schwarz Tet10 pilot with common AMG and independent field/quadrature audits |
-| 20 Oct | `2f0363f`, completed job 333 | Repeated exact-recipe Schwarz Tet10 advantage; independent mixed-load, timing and provenance verification; late reporting warning retained |
+| 20 Oct | `2f0363f`, `5789b90` | Repeated exact-recipe Schwarz Tet10 advantage; independent mixed-load, timing and provenance verification; late reporting warning retained |
+| 20 Oct | Jobs 334–335 and subsequent working-tree record | Progress-transition fix, exact archived-source verification, feasible Gyroid star and incomplete whole-mesh interior repair |
 
 ## 13. Verification and evidence register
 
@@ -675,6 +693,7 @@ are not claims that a fresh full suite ran while writing this document.
 | Corner-coupling diagnostic | Five algebraic tests, manufactured periodic controls, exact edge-only regression, Schur identity, and 125/216-point precision pass; useful signal fails |
 | Live Schwarz Tet10 pilot | 33 controls, fresh VTK/MMG and native meshes, twelve fresh loads, independent field audits, all eight reference models, and native positive-rule sensitivity pass |
 | Repeated stronger Schwarz comparison | Five measured pairs and warmup, 38 controls per pair, 72 fresh loads, independent fields; separate verifier checks 96 mixed-load comparisons, timing statistics and 205 hashes |
+| Progress and Gyroid repair | Two reporting regressions are red then green; queued single-star and complete-repair controls pass; 18 focused checks pass; repair remains scientifically rejected |
 
 Canonical detailed reports are under `experiments/adaptive`:
 
@@ -723,7 +742,8 @@ use the verified `kmarchais` account.
 
 | Priority | Next action | Completion criterion |
 |---|---|---|
-| 1, operational prerequisite | Retain progress values across stage transitions before another experiment | Reproduce and fix the recorded late `no_chips` warning using standard Job reporting |
+| 1 | Diagnose one remaining worst Gyroid interior star | Independent convex-feasibility/slack check and supporting-plane bound before selecting a coupled or topology repair |
+| Completed prerequisite | Retain progress values across worker-stage transitions | Red/green success/failure regressions and queued checks pass; shared helper unchanged |
 | Completed comparison | Stronger Schwarz Tet10 repetitions | Five interleaved pairs pass, both cost definitions favor Meshers; no further Schwarz tightening selected |
 | Closed diagnostic | Curve-corner relaxation coupled to the same quartic modes | Completed; incremental signal remains small, so no further polynomial-mode trial is selected |
 | 2 | Resolve lattice FE versus geometry/reference uncertainty | A justified reference envelope and a candidate passing every retained applicable model, without post-hoc model deletion |

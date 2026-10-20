@@ -1,5 +1,66 @@
 # G3 Microgen workflow results, 17 October 2026
 
+## Gyroid fixed-boundary interior feasibility, 20 October 2026
+
+After the repeated Schwarz comparison, return to the missing admitted Gyroid
+control. Do not repeat audit 212: it already finds no cap or wall face below
+the analytic quality ceiling. Instead job 334 tests only the worst two-pass
+tet's free interior vertex, node 30242, over its complete 26-tet star. All
+neighbors and boundary coordinates stay fixed. The target is quality 0.1,
+with a positive 1e-9 numerical guard. Fixed opposite faces give upper bound
+0.14561, which is necessary but not sufficient for a feasible position.
+
+Four controls pass. One constrained minimum-displacement solve finds a point
+with minimum star quality 0.100000001 in nine iterations and 0.00842 seconds.
+The move is 0.0116271. Every signed determinant stays positive, and full-cell
+signed volume changes by only -1.48e-16. The source boundary and connectivity
+are unchanged. Global minimum quality rises only to 0.04554, so the whole
+mesh remains rejected and receives no FEA. This is one feasible local move,
+not a repaired workflow or an admitted Microgen comparison.
+
+Exact edge counting gives 325,911 nodes for a straight Tet10 lift of this
+two-pass mesh, above the unchanged 250,000-node stage. The earlier one-pass
+FEM43 precursor would lift to 153,010 nodes and fits that stage. Every bad
+tet in both precursors has at least one interior vertex. This motivates one
+bounded repair attempt on the smaller precursor, not a resource-cap increase.
+
+## Incomplete Gyroid interior-only repair
+
+Job 335 retains the actual VTK43/one-pass FEM precursor, its fixed scalar
+specimen, all boundary coordinates and connectivity. It explicitly adds SciPy
+constrained interior relocation, rather than claiming this is a Microgen
+default or remeshing a Meshers seed. Each accepted move must put its complete
+incident star above 0.100001 and strictly reduce the number below 0.1.
+The limits are two sweeps and 400 attempted vertices. No stiffness solve is
+selected before full admission.
+
+Six controls pass, including boundary immobility and an all-boundary bad tet
+that must remain rejected. The trial accepts 108 moves in its first sweep.
+Bad elements fall from 222 to 49, but minimum quality remains 0.0079758.
+The second sweep accepts no moves. There are 210 attempts total: 108 feasible,
+92 without a feasible point found, and ten fixed-opposite-face rejections.
+Attempt counts are not distinct-element counts. A failed optimization is not
+an impossibility proof.
+
+Boundary arrays remain identical, signed volume is unchanged, sampled
+distance stays 0.00151229 and relative volume error stays +0.36758%.
+Periodic cap triangles match, with coordinate errors below 1e-15. All signed
+determinants remain positive. Repair takes 9.24 seconds; the full worker takes
+12.58 seconds and 0.3531 GiB. These are saved-mesh diagnostic costs, not live
+workflow timings. Status remains `repair-incomplete`, `qualified=false`, and
+no FE or Tet10 accuracy claim follows.
+
+Stop this two-sweep recipe. More sweeps would repeat an unchanged state.
+Before a coupled relocation or topology change, diagnose one remaining worst
+star with an independent convex-feasibility/slack check and supporting-plane
+bound. Separate failure to find a position from a checked fixed-neighbor
+obstruction. Do not weaken quality or select another MMG grading value from
+these results. The admitted actual Gyroid comparator is still missing.
+
+Records are in `runs/g3-gyroid-interior-star-feasibility-v1` and
+`runs/g3-gyroid-firstpass-fem43-interior-relocation-v1`. Maintained drivers are
+`interior_star_probe.py` and `interior_relocation_trial.py`.
+
 ## Spinodoid seed41 feasibility, 19 October 2026
 
 The earlier actual VTK seed41 has 261,650 tets and was skipped solely by the
