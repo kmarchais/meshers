@@ -711,3 +711,10 @@ cap checks, but quality 0.047711 rejects. No FE runs. Localization 361 finds
 analytic obstruction. Next classify actual free interior vertices before
 choosing relocation or another topology/geometry route. Do not infer that a
 passing face ceiling guarantees a feasible complete-star move.
+
+Classification 364 finds all 104 bad cells have free interior vertices and
+none is all-boundary. Queue one fixed-boundary repair using the existing
+guarded relocation algorithm with an explicit source argument. Keep two
+sweeps, 400 attempts, complete-star target 0.100001, connectivity, boundary,
+volume, and every final gate fixed. Seven focused controls pass. Read this
+trial before another MMG or FE experiment. Applicability is not feasibility.

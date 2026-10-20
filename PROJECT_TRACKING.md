@@ -392,6 +392,7 @@ Microgen extraction. They do not establish an admitted new competitor.
 | 352–354 | First complete copy exposes near-flat cones; guarded rebuilding produces a globally consistent, periodic seed with no obstructing caps, but quality still below 0.1 | `g3-gyroid-cap-replacement-v1`, `g3-gyroid-cap-cavity-rankguard-v1`, `g3-gyroid-cap-replacement-v2` |
 | 355–357 | Actual MMG on the explicitly prepared seed produces over-cap outputs; the fitting first stage has distance 0.00203065 and quality 0.033234, so count alone cannot qualify it | `g3-gyroid-prepared-two-pass-mmg-v1`, `g3-gyroid-prepared-two-pass-mmg-hausd0015-v1`, `g3-gyroid-prepared-two-pass-mmg-hausd00175-v1` |
 | 359, 361 | Fitting two-pass output passes distance, volume, incidence, and periodic caps but fails quality 0.047711; localization finds 104 bad cells with no fixed-face ceiling obstruction | `g3-gyroid-prepared-two-pass-mmg-second0015-v1`, `g3-gyroid-prepared-mmg-quality-localization-v1` |
+| 364 | All 104 bad cells have free interior vertices; none is all-boundary; this supports a bounded repair trial but does not prove feasibility | `g3-gyroid-prepared-mmg-quality-localization-v2` |
 
 The source defect predates MMG in this saved lineage. The recorded evidence
 does not yet isolate which clipping or tetrahedralization operation introduces
@@ -844,14 +845,16 @@ workflow timing. All intermediate outputs retain the 250,000-tet cap and
 
 The first three replays, jobs 355–357, reject at intermediate tet caps.
 Replay 359 subsequently fits at 133,826 tets and passes geometry/periodicity
-except quality. It has 104 bad cells and no obstructing boundary face under
-the analytic ceiling. Job 364 is queued to classify free interior vertices
-before any repair is selected. Read the latest checkpoint for its exact task
-and run-directory identifiers. Forty-one focused tests pass at this update.
+except quality. Classification 364 confirms all 104 bad cells have interior
+vertices and no fixed-face ceiling obstruction. Job 366 is queued for one
+bounded fixed-boundary relocation trial, with two sweeps and 400 attempts.
+No repair result or FE claim exists yet. Read the latest checkpoint for exact
+task and run-directory identifiers. The previous 41-test focused suite and
+seven repair-specific controls pass at their recorded source snapshots.
 
 | Priority | Next action | Completion criterion |
 |---|---|---|
-| 1 | Classify free vertices in the 104 quality-rejected cells from actual prepared-seed MMG | Establish whether interior relocation is even applicable before selecting repair; preserve every admission gate and keep FE disabled |
+| 1 | Read the bounded fixed-boundary repair of the 104 quality-rejected Gyroid cells | All bad cells have interior vertices, but require fresh full admission before FE; no extra sweeps or speculative MMG calls queued ahead |
 | Retired source | One-pass FEM43 interior repair | Invalid oriented source; current code rejects it before relocation; do not retry sweeps or bypass cavity guards |
 | Completed prerequisite | Retain progress values across worker-stage transitions | Red/green success/failure regressions and queued checks pass; shared helper unchanged |
 | Completed comparison | Stronger Schwarz Tet10 repetitions | Five interleaved pairs pass, both cost definitions favor Meshers; no further Schwarz tightening selected |

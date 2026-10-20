@@ -69,19 +69,25 @@ def repair(points, cells, surface, *, maximum_attempts=400):
         "signed_volume_difference": volume_difference, "minimum_signed_determinant": float(new_determinants.min())}
 
 
-def worker(run):
+def worker(run, source_path):
     workflow.imports()
     from periodic import periodic_pairs
 
-    source = json.loads((SOURCE / "result.json").read_text())
-    assert source["case"] == "gyroid" and source["route"].startswith("microgen-vtk")
-    assert len(source["mmg_calls"]) == 1 and source["first_pass_fem_override"] and source["first_pass_only"]
-    archive = np.load(SOURCE / "mesh.npz")
+    source = json.loads((source_path / "result.json").read_text())
+    assert source["case"] == "gyroid"
+    old_route = source["route"].startswith("microgen-vtk") and len(source["mmg_calls"]) == 1
+    if old_route:
+        assert source["first_pass_fem_override"] and source["first_pass_only"]
+    else:
+        assert source["route"] == "microgen-explicit-preclipping-and-cap-retriangulation-mmg-tuned"
+        assert source["saved_seed_replay"] and len(source["mmg_calls"]) == 2
+        assert source["geometry"]["sampled_two_sided_max"] <= .002 and abs(source["geometry"]["relative_volume_error"]) <= .01
+    archive = np.load(source_path / "mesh.npz")
     points, cells, surface = (archive[name] for name in ("points", "tetrahedra", "surface"))
     assert len(cells) <= workflow.CAP and len(points) <= 100000
     topology = audit(points, cells, surface)
     if not topology["oriented_facet_consistency_passed"]:
-        workflow.save(run / "result.json", {"case": "gyroid", "source": str(SOURCE),
+        workflow.save(run / "result.json", {"case": "gyroid", "source": str(source_path),
             "status": "source-incidence-rejected", "qualified": False, "facet_consistency": topology,
             "repair_performed": False, "stiffness_solve_performed": False,
             "scope": "Retired invalid one-pass source; no relocation, new mesh or FEA is attempted"})
@@ -92,8 +98,8 @@ def worker(run):
     np.savez_compressed(run / "mesh.npz", points=moved, tetrahedra=cells, surface=surface)
     geometry = workflow.geometry(run, "gyroid", moved, cells, surface)
     _, _, periodic = periodic_pairs(moved, surface)
-    row = {"case": "gyroid", "route": "microgen-vtk-one-pass-fem-explicit-slsqp-interior-relocation",
-        "parent_route": source["route"], "source": str(SOURCE), "parent_mmg_calls": source["mmg_calls"],
+    row = {"case": "gyroid", "route": source["route"] + "-explicit-slsqp-interior-relocation",
+        "parent_route": source["route"], "source": str(source_path), "parent_mmg_calls": source["mmg_calls"],
         "nodes": len(moved), "elements": len(cells), "order": 1, "qualified": geometry["geometry_admitted"],
         "status": "admitted-needs-reference" if geometry["geometry_admitted"] else "repair-incomplete",
         "geometry": geometry, "periodic": periodic, "repair_s": repair_s, "repair": diagnostics,
@@ -106,18 +112,19 @@ def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--run", type=Path, required=True)
     parser.add_argument("--worker", action="store_true")
+    parser.add_argument("--source", type=Path, default=SOURCE)
     args = parser.parse_args()
     if args.worker:
-        worker(args.run)
+        worker(args.run, args.source)
         return
     args.run.mkdir(parents=True, exist_ok=False)
     shutil.copyfile(__file__, args.run / "driver.py")
-    paths = [Path(__file__), SOURCE / "result.json", SOURCE / "mesh.npz"]
+    paths = [Path(__file__), args.source / "result.json", args.source / "mesh.npz"]
     paths.extend(workflow.HERE / name for name in ("job_parts.py", "test_job_parts.py", "interior_star_probe.py",
         "test_interior_star_probe.py", "test_interior_relocation_trial.py", "microgen_workflow.py",
         "cap_quality_bound.py", "mmg_quality_localization.py", "facet_incidence_audit.py", "test_facet_incidence_audit.py"))
     for suffix in ("-specimen.json", "-samples.npz"):
-        path = SOURCE / ("gyroid" + suffix)
+        path = args.source / ("gyroid" + suffix)
         paths.append(path)
         shutil.copyfile(path, args.run / path.name)
     hashes = {str(path): workflow.digest(path) for path in paths}
@@ -129,7 +136,7 @@ def main():
             with worker_part(job, stage) as part:
                 arguments = (["-m", "pytest", "-q", "experiments/adaptive/test_job_parts.py",
                     "experiments/adaptive/test_interior_star_probe.py", "experiments/adaptive/test_interior_relocation_trial.py"]
-                    if stage == "controls" else [__file__, "--run", str(args.run), "--worker"])
+                    if stage == "controls" else [__file__, "--run", str(args.run), "--source", str(args.source), "--worker"])
                 record = workflow.bounded([sys.executable, *arguments], args.run / (stage + ".log"), part,
                     timeout=120 if stage == "controls" else 600)
                 workflow.save(args.run / (stage + "-worker.json"), record)

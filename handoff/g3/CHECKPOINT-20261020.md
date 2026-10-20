@@ -1,5 +1,29 @@
 # G3 continuation checkpoint, 20 October 2026
 
+## Active checkpoint after classification 364
+
+Job 364 is terminal success. All 104 bad cells in the fitting prepared-seed
+MMG output have interior vertices, and none is all-boundary. The worst cell
+has two free vertices. No fixed cap or wall face is analytically obstructing.
+This permits a relocation trial without establishing that it will succeed.
+
+Job 366 is queued behind another project's shared work. Observe pueue task
+366 or qrun terminal session 21723. Do not restart it or touch other jobs.
+Its run directory is `runs/g3-gyroid-prepared-mmg-interior-repair-v1` under
+`experiments/adaptive`, created when it starts. There is no repair result at
+this checkpoint. Read it before choosing a successor.
+
+The reused `interior_relocation_trial.py` now takes `--source`, defaulting to
+the retired original input. Source-incidence rejection remains intact. The
+new explicitly accepted source is
+`runs/g3-gyroid-prepared-two-pass-mmg-second0015-v1`, with two recorded actual
+MMG calls. Seven focused controls pass. The queued limits are two sweeps,
+400 attempts, 600-second worker, one thread, and 8 GiB. Every accepted move
+must raise its complete incident star above 0.100001, reduce bad-cell count,
+and preserve boundary, connectivity, and signed volume. Full admission and
+periodicity are rerun before any FE work. No native change or default-pipeline
+claim follows. Earlier sections below are historical.
+
 ## Active checkpoint after jobs 359 and 361
 
 Both jobs are terminal success but the mesh remains scientifically rejected.

@@ -40,6 +40,21 @@ overlap. This does not establish that interior relocation can repair them.
 The selected next check classifies free interior vertices in each bad cell
 before choosing a repair or another MMG call.
 
+Classification 364 confirms all 104 bad cells have at least one interior
+vertex, and none is all-boundary. The worst cell has two free interior
+vertices. This makes interior relocation applicable as a trial, not a
+guaranteed repair. The necessary face-ceiling checks still pass.
+
+The existing fixed-boundary relocation runner now accepts an explicit source
+path. Its default retains the retired one-pass source and its incidence
+rejection. The additional supported source is this recorded two-pass prepared
+Gyroid route. Seven focused star, whole-mesh, and progress controls pass.
+The selected trial is two sweeps, at most 400 vertex attempts, complete-star
+quality target 0.100001, fixed boundary/connectivity, and signed volume
+preservation. It allows 600 seconds, one thread, and 8 GiB. No FE follows
+before fresh full admission. This is explicitly added SciPy postprocessing,
+not a Microgen default or an uncharged end-to-end comparison.
+
 Older saved-seed rows reuse the historical `vtk_extraction_s` field for load
 time, while explicitly marking `saved_seed_replay` and excluded preparation.
 Future rows use `saved_seed_load_s` and `vtk_extraction_performed=false`.
@@ -50,7 +65,8 @@ Records are `runs/g3-gyroid-prepared-two-pass-mmg-v1`,
 `runs/g3-gyroid-prepared-two-pass-mmg-hausd0015-v1`, and
 `runs/g3-gyroid-prepared-two-pass-mmg-hausd00175-v1`, plus
 `runs/g3-gyroid-prepared-two-pass-mmg-second0015-v1` and
-`runs/g3-gyroid-prepared-mmg-quality-localization-v1`.
+`runs/g3-gyroid-prepared-mmg-quality-localization-v1`, with free-vertex
+classification in `runs/g3-gyroid-prepared-mmg-quality-localization-v2`.
 
 ## Complete rank-guarded Gyroid cap preparation, 20 October 2026
 
