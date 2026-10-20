@@ -704,3 +704,10 @@ first pass fits 229,778 tets, but misses distance at 0.00203065 and quality at
 No FE or admitted competitor follows. Select only second-pass hausd 0.0015
 next, with all first-pass settings and admission gates unchanged. Saved-seed
 replays remain explicitly excluded from complete-workflow timing comparisons.
+
+Replay 359 fits 133,826 tets and passes distance, volume, incidence, and periodic
+cap checks, but quality 0.047711 rejects. No FE runs. Localization 361 finds
+104 bad cells, all touching cap and wall vertices, without any fixed-face
+analytic obstruction. Next classify actual free interior vertices before
+choosing relocation or another topology/geometry route. Do not infer that a
+passing face ceiling guarantees a feasible complete-star move.

@@ -13,6 +13,7 @@ excluded, each intermediate tet cap remains 250,000, and no FE runs.
 | 355 | 0.0005 | 0.0005, not reached | First pass returns 649,230 tets; 58.02 s diagnostic |
 | 356 | 0.0015 | 0.0005, not reached | First pass returns 259,134 tets; 27.23 s diagnostic |
 | 357 | 0.00175 | 0.0005 | First pass fits at 229,778 tets; second returns 446,978 and hits cap; 62.20 s diagnostic |
+| 359 | 0.00175 | 0.0015 | Final 133,826 tets fit, but minimum quality 0.047711 rejects; 48.71 s diagnostic |
 
 Every first pass retains actual `nofem=True`, with explicit hmax 0.06 and
 hgrad 1.3. The second public call has `ls=True`, `nr=True`, and the recorded
@@ -25,8 +26,20 @@ It fails both distance and quality. Passing the count limit does not qualify
 that intermediate mesh. The second output is not geometry-ranked above the
 stage cap. All three records have `qualified=false`.
 
-The next selected replay keeps first-pass hausd 0.00175 and changes only
-second-pass hausd to 0.0015. Final independent admission gates remain fixed.
+Job 359 completes that looser second-pass replay at 29,876 nodes. Sampled
+distance is 0.0019272611, volume error +0.72004462%, and minimum sampled
+Jacobian 2.388798e-8. Oriented incidence and periodic cap triangles pass.
+No cap face is below the analytic ceiling, whose minimum remains 0.105301.
+Only final corner quality rejects this candidate. Peak worker RSS is 0.814 GiB.
+No FE solve runs, and none of these saved-seed controls is a timing victory.
+
+Localization 361 finds 104 elements below 0.1. All touch both cap and wall
+vertices. Seventy-five have a cap face, 26 a wall face, and none has an
+obstructing fixed cap or wall face under the analytic ceiling. The sets can
+overlap. This does not establish that interior relocation can repair them.
+The selected next check classifies free interior vertices in each bad cell
+before choosing a repair or another MMG call.
+
 Older saved-seed rows reuse the historical `vtk_extraction_s` field for load
 time, while explicitly marking `saved_seed_replay` and excluded preparation.
 Future rows use `saved_seed_load_s` and `vtk_extraction_performed=false`.
@@ -35,7 +48,9 @@ rows to relabel it.
 
 Records are `runs/g3-gyroid-prepared-two-pass-mmg-v1`,
 `runs/g3-gyroid-prepared-two-pass-mmg-hausd0015-v1`, and
-`runs/g3-gyroid-prepared-two-pass-mmg-hausd00175-v1`.
+`runs/g3-gyroid-prepared-two-pass-mmg-hausd00175-v1`, plus
+`runs/g3-gyroid-prepared-two-pass-mmg-second0015-v1` and
+`runs/g3-gyroid-prepared-mmg-quality-localization-v1`.
 
 ## Complete rank-guarded Gyroid cap preparation, 20 October 2026
 

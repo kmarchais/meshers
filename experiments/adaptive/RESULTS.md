@@ -15,6 +15,14 @@ still 0.00109506, so this is not an admitted FE mesh or a workflow victory.
 The next selected stage is an explicitly modified actual Microgen/MMG replay,
 not a native Meshers change or a defaults claim. See `MICROGEN_RESULTS.md`.
 
+Actual replay 359 later fits the intermediate and final tet caps at 29,876
+nodes and 133,826 tets. It passes distance 0.00192726, volume, oriented facets,
+and periodic cap matching, but quality 0.047711 fails 0.1. No FE runs.
+Localization 361 finds 104 bad cells with no analytically obstructing boundary
+faces. Free-vertex classification is next, before any relocation assumption.
+The explicitly modified saved-seed diagnostic is not an admitted competitor
+or a complete-workflow timing. Forty-one focused tests pass at this checkpoint.
+
 ## Gyroid cap alternatives remain incomplete, 2026-10-20
 
 Jobs 345–349 follow the fixed-field extraction check. All 24 analytically

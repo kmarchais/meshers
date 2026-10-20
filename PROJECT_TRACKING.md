@@ -85,7 +85,7 @@ The [19 October shutdown record](handoff/g3/SHUTDOWN-20261019.md) remains histor
 | Still open | Four-fixture matched-accuracy comparison, lattice reference uncertainty, admitted actual MMG controls for Gyroid and spinodoid |
 | Completed extraction preflight | Gyroid31 five- and six-tet preclipping remove all 288 oriented-face conflicts, but each introduces 24 cap faces with quality ceiling below 0.1; no MMG or FE follows |
 | Completed cap preparation | Twenty safe cones and four full rings replace all 24 blocked Gyroid caps; points, wall, volume, incidence, and periodicity pass; actual volume quality still requires remeshing |
-| Actual prepared-seed MMG replays | Jobs 355–357 hit intermediate tet caps; one fitting first stage also fails distance and quality; none supplies an admitted comparator |
+| Actual prepared-seed MMG replays | Jobs 355–357 hit intermediate caps; 359 fits and passes geometry/periodicity except quality 0.047711; 104 bad cells need diagnosis; no admitted comparator or FE solve |
 
 The corner-coupling extension includes five algebraic tests, manufactured
 periodic controls, and the frozen-domain lattice comparison. Job 330 measures
@@ -391,6 +391,7 @@ Microgen extraction. They do not establish an admitted new competitor.
 | 350–351 | Single-neighbor expansions fail, but complete nine-vertex rings solve both unresolved stars with independent integer-face and volume replay | `g3-gyroid-cap-cavity-expansion-v1`, `g3-gyroid-cap-cavity-fullring-v1` |
 | 352–354 | First complete copy exposes near-flat cones; guarded rebuilding produces a globally consistent, periodic seed with no obstructing caps, but quality still below 0.1 | `g3-gyroid-cap-replacement-v1`, `g3-gyroid-cap-cavity-rankguard-v1`, `g3-gyroid-cap-replacement-v2` |
 | 355–357 | Actual MMG on the explicitly prepared seed produces over-cap outputs; the fitting first stage has distance 0.00203065 and quality 0.033234, so count alone cannot qualify it | `g3-gyroid-prepared-two-pass-mmg-v1`, `g3-gyroid-prepared-two-pass-mmg-hausd0015-v1`, `g3-gyroid-prepared-two-pass-mmg-hausd00175-v1` |
+| 359, 361 | Fitting two-pass output passes distance, volume, incidence, and periodic caps but fails quality 0.047711; localization finds 104 bad cells with no fixed-face ceiling obstruction | `g3-gyroid-prepared-two-pass-mmg-second0015-v1`, `g3-gyroid-prepared-mmg-quality-localization-v1` |
 
 The source defect predates MMG in this saved lineage. The recorded evidence
 does not yet isolate which clipping or tetrahedralization operation introduces
@@ -842,14 +843,15 @@ workflow timing. All intermediate outputs retain the 250,000-tet cap and
 8 GiB ceiling. No FE follows before final geometry and periodic admission.
 
 The first three replays, jobs 355–357, reject at intermediate tet caps.
-Job 359 is queued behind another shared-queue job at this update. It keeps
-first-pass hausd 0.00175 and changes second-pass hausd to 0.0015. No result
-is claimed before that queued run completes. Read the latest checkpoint for
-its exact task and run-directory identifiers.
+Replay 359 subsequently fits at 133,826 tets and passes geometry/periodicity
+except quality. It has 104 bad cells and no obstructing boundary face under
+the analytic ceiling. Job 364 is queued to classify free interior vertices
+before any repair is selected. Read the latest checkpoint for its exact task
+and run-directory identifiers. Forty-one focused tests pass at this update.
 
 | Priority | Next action | Completion criterion |
 |---|---|---|
-| 1 | Audit actual Microgen/MMG on the rank-guarded prepared Gyroid seed | Both actual calls and intermediate geometry recorded; require final quality, geometry, incidence, and periodic gates before any FE; no defaults or live-workflow claim |
+| 1 | Classify free vertices in the 104 quality-rejected cells from actual prepared-seed MMG | Establish whether interior relocation is even applicable before selecting repair; preserve every admission gate and keep FE disabled |
 | Retired source | One-pass FEM43 interior repair | Invalid oriented source; current code rejects it before relocation; do not retry sweeps or bypass cavity guards |
 | Completed prerequisite | Retain progress values across worker-stage transitions | Red/green success/failure regressions and queued checks pass; shared helper unchanged |
 | Completed comparison | Stronger Schwarz Tet10 repetitions | Five interleaved pairs pass, both cost definitions favor Meshers; no further Schwarz tightening selected |

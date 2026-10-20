@@ -1,0 +1,32 @@
+{
+  "script_sha256": "92f5956a7b740708d7f5cb2428f14e6acc27fe709305a043fe7a8610a5015b1a",
+  "inputs": {
+    "/home/kmarchais/dev/meshers/experiments/adaptive/runs/g3-microgen-defaults-v4/gyroid-specimen.json": "2f9171aa778f1899aed5b1057bc6255da515e8a9d96bf76c305b62e3c7bd0ed8",
+    "/home/kmarchais/dev/meshers/experiments/adaptive/runs/g3-microgen-defaults-v4/gyroid-samples.npz": "d49ce7a80d95af127951750fa7dd02f52d4dd67bc87246dee02be932b51539d6",
+    "/home/kmarchais/dev/meshers/experiments/adaptive/runs/g3-microgen-defaults-v4/summary.json": "614c5c123eaae0ce0455b07b1f5c8bcf451b687cabca45f93521aaa469b05f35",
+    "experiments/adaptive/runs/g3-gyroid-cap-replacement-v2/mesh.npz": "3bbf65764719dafff34fcfdbeab750b46e1b3216e0787482694a2bda301cefe7",
+    "experiments/adaptive/runs/g3-gyroid-cap-replacement-v2/result.json": "0f6eab6f28fb870eda22162eb243a5d1e9cd764b0d3b6bf3e084edbd87fb5095",
+    "/home/kmarchais/dev/meshers/experiments/adaptive/microgen_workflow.py": "d644b586c8539d3ee53dc772c5cd8a24fb87819395d181a262c38f6770453af2",
+    "/home/kmarchais/dev/meshers/experiments/adaptive/facet_incidence_audit.py": "4f51afc196c85e1d0bc64d7a96507517ddc6e32ccd8380a2ac77cae0ace89610",
+    "/home/kmarchais/dev/meshers/experiments/adaptive/job_parts.py": "7082e64a3d6f1029dfe871702e6ef53cc514f08a0687b4065f1412d65b427b78",
+    "/home/kmarchais/dev/meshers/experiments/adaptive/test_microgen_prepared_seed.py": "ba53d5067f78d5169c2738b8696f0cb683fb7461db9a055ecbe975f75a100839",
+    "/home/kmarchais/dev/meshers/.venv/lib/python3.12/site-packages/microgen/remesh.py": "b93c8b8150c1c40ccf5312d57785331d52f114d2217a8b59296b7484cf6f2612"
+  },
+  "limits": {
+    "rss_bytes": 8589934592,
+    "timeout_s": 600,
+    "tetrahedra": 250000,
+    "nodes": 100000,
+    "threads": 1
+  },
+  "packages": {
+    "microgen": "2.0.0b1",
+    "mmgpy": "0.17.1",
+    "fedoo": "1.0.0b2",
+    "numpy": "2.5.4",
+    "scipy": "1.18.1",
+    "vtk": "9.7.1",
+    "pyvista": "0.49.1"
+  },
+  "baseline_manifest_sha256": "a72e1196eb462156a35d34cc41f083ba3304d7cf5c5aae81fc97e764622de98f"
+}

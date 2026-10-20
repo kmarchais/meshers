@@ -1,5 +1,30 @@
 # G3 continuation checkpoint, 20 October 2026
 
+## Active checkpoint after jobs 359 and 361
+
+Both jobs are terminal success but the mesh remains scientifically rejected.
+Actual two-pass MMG replay 359 returns 29,876 nodes and 133,826 tets. Its
+sampled distance 0.0019272611, volume +0.72004462%, positive sampled Jacobians,
+coherent oriented facets, and periodic caps pass. Quality 0.04771095 fails
+0.1. No FE runs and no comparative timing claim follows from saved-seed work.
+
+Localization 361 finds 104 bad cells, all touching cap and wall nodes. There
+are 75 with a cap face, 26 with a wall face, and zero with analytically
+obstructing cap or wall faces. The next classification checks free interior
+vertices rather than assuming relocation applies.
+
+Job 364 is queued behind other shared work. Observe pueue task 364 or qrun
+terminal session 95223. Do not restart or cancel other jobs. Its output will
+be `runs/g3-gyroid-prepared-mmg-quality-localization-v2` under
+`experiments/adaptive`, created when it starts. No v2 result exists at this
+checkpoint. Read it before selecting a successor. Current script has the
+necessary source-incidence guard and standard worker-part progress retention.
+
+Forty-one focused tests pass, plus Ruff and whitespace checks. Commit
+`fb0f587` preserves the completed cap preparation and earlier MMG stage-cap
+failures. No native code, references, specimen definitions, or admission
+thresholds change. Earlier sections below are historical.
+
 ## Active queue checkpoint after job 357
 
 Jobs 355–357 are terminal and scientifically rejected. Job 356 returns
