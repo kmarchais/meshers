@@ -1,5 +1,69 @@
 # Reference-only cubic enrichment on G3
 
+## Final lattice26 workflow before pause, 20 October 2026
+
+Job 379 completes the fresh six-load workflow selected after preflight 378.
+It retains all 24 models and the fixed specimen. The geometry-admitted curved
+Tet10 mesh has 199,972 nodes and 128,300 elements. Cached elastic-block AMG
+uses 108, 108, 108, 109, 108, and 110 iterations, with maximum reported
+relative residual 9.41e-13. Generation is 9.03 seconds, solve 716.94 seconds,
+and charged total workflow 736.51 seconds. Worker wall is 738.82 seconds at
+5,781,733,376 bytes peak RSS, below 8 GiB.
+
+A lightweight read-only comparison of its symmetric tensor to all 24 models
+gives worst generalized energy disagreement 1.2686985%. Three models exceed
+1%; the worst is index 0 of `g3-lattice-reference-sensitivity-v2.json`.
+This is a preliminary rejection, not an independently audited stiffness
+result. Saved-field, reaction, Hill-Mandel, and higher-positive-rule checks
+remain pending. The run status is `solved-needs-reference`, and `qualified`
+refers to geometry admission only. No controlled lattice24 refinement or
+timing ratio follows because native binaries and solver configurations differ.
+
+The user requested a pause. No successor or audit was queued. The completed
+record is `runs/g3-lattice-adapt26-tol0028-amg-solve-v1`. Mesh and all six
+displacement archives remain local and ignored. Resume instructions and the
+project-wide unresolved objective are recorded in `PROJECT_TRACKING.md`.
+
+## Retained lattice target is algebraically feasible, 20 October 2026
+
+Job 377 checks the unchanged 24 empirical stiffness models before another
+native mesh or reference solve. It does not promote a new reference.
+
+If a symmetric candidate is within relative energy error `e` of every model,
+then for any strain direction its energy must be at least `(1-e)*A` and at
+most `(1+e)*B` for every pair of model directional energies. Therefore an
+ordered generalized ratio `r` requires `e >= (r-1)/(r+1)`. All 552 ordered
+pairs of the full 6-by-6 matrices are checked. The worst direction and both
+energies are saved and independently recomputed in the assessment.
+
+The worst ratio is 1.0182028025, below the necessary one-percent limit
+1.0202020202. Its lower bound is 0.9019312871%. The pair consists of models
+7 and 0 in `g3-lattice-reference-sensitivity-v2.json`, using element-density
+order 4 and uniform-seed order 1 extrapolations. The bound is necessary, not
+alone sufficient for a common tensor across 24 matrices.
+
+The pair's harmonic trial matrix is then checked against every retained
+model using the full generalized-eigenvalue metric. Its worst disagreement
+is 0.9084715371%, below 1%. This establishes algebraic feasibility, so an
+inconsistent target is not an explanation for the existing near misses.
+The trial is not a physical mesh, equilibrium solve, continuum estimate,
+replacement reference, or permission to fit geometry to its coefficients.
+No model or admission threshold changes.
+
+Six queued controls pass, including exact scaled-SPD bounds, mixed-direction
+and basis-congruence checks, identical models, invalid stiffness rejection,
+and standard progress controls. Inputs are hashed before and after the run.
+The record is `runs/g3-lattice-reference-envelope-feasibility-v1`, with
+`reference_envelope.py` and `reference_envelope_job.py` as maintained code.
+
+The selected next candidate is current-native lattice26 at the existing
+adaptive tolerance 0.0028. Geometry-only preflight 378 passes at 199,972 nodes
+and 128,300 tets, below the fixed 250,000-node solve stage. Sampled distance
+is 0.0003236401 and minimum quality 0.149329. A fresh regenerated six-load
+AMG workflow is selected before any accuracy statement. The archived lattice24
+binary differs, so node-count scaling is only a budget estimate, not a
+controlled convergence or timing claim.
+
 ## Cubic geometry sensitivity, 20 October 2026
 
 Job 309 separates a change in boundary mapping from another equilibrium

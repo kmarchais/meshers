@@ -1,8 +1,8 @@
 # Meshers project tracking
 
 Updated 20 October 2026. Covers the recorded project history on
-`handoff/g3-microgen-20261017` through commit `e99fa92`, plus completed
-Gyroid cap-preparation and actual MMG checks 350–357 below. The history starts with the initial
+`handoff/g3-microgen-20261017` through commit `4db5cd6`, plus completed
+Gyroid repair diagnostics and lattice workflow 379 below. The history starts with the initial
 release candidate on 19 September and includes the resumed 20 October geometry,
 reference, and fixed-field sensitivity studies.
 This is a consolidated index and status ledger, not a replacement for frozen
@@ -31,6 +31,12 @@ geometry and periodic caps, but still fails actual volume quality. A final
 admitted MMG competitor has not yet been established by this preparation.
 
 ## Current conclusion
+
+**Paused at the user's request on 20 October 2026, after job 379 finished.**
+No successor experiment was submitted. The objective remains unachieved.
+The last job completed all six loads, but its preliminary worst disagreement
+against the unchanged 24 lattice models is 1.2686985%, above the 1% target.
+Independent saved-field and higher-quadrature audits remain pending.
 
 Meshers has a Rust/Python implicit mesher, adaptive surface and volume paths,
 curved Tet10 output, direct fedoo conversion, and independently checked
@@ -86,6 +92,73 @@ The [19 October shutdown record](handoff/g3/SHUTDOWN-20261019.md) remains histor
 | Completed extraction preflight | Gyroid31 five- and six-tet preclipping remove all 288 oriented-face conflicts, but each introduces 24 cap faces with quality ceiling below 0.1; no MMG or FE follows |
 | Completed cap preparation | Twenty safe cones and four full rings replace all 24 blocked Gyroid caps; points, wall, volume, incidence, and periodicity pass; actual volume quality still requires remeshing |
 | Actual prepared-seed MMG replays | Jobs 355–357 hit intermediate caps; 359 fits and passes geometry/periodicity except quality 0.047711; 104 bad cells need diagnosis; no admitted comparator or FE solve |
+| Incomplete valid-source repair | Job 366 reduces 104 bad tets to 16 with 64 fixed-boundary moves; quality 0.051264 still rejects; 368 finds a single-vertex obstruction that does not yet exclude coupled moves |
+| Completed Gyroid obstruction checks | Boundary-only witness 370 excludes interior-only repair at fixed connectivity; eight local flips fail, complete existing-vertex star solve rejects, and one proposed Steiner point lies outside the cavity |
+| Completed lattice feasibility check | Job 377 finds a 0.9019313% necessary lower bound and a trial matrix within 0.9084715% of all 24 models; the 1% target is algebraically feasible, not a validated physical reference |
+| Last completed workflow | Job 379, fresh curved lattice26, six AMG loads, 199,972 nodes and 128,300 tets, 736.51 seconds; preliminary worst disagreement 1.2686985%, independent field/quadrature audit pending |
+| Paused | No new experiments selected or submitted after the pause request; resume requires the user's instruction |
+
+### Final work on 20 October, jobs 366–379
+
+The earlier sections retain today's extraction, cap preparation, Schwarz
+repetitions, reference sensitivity, and rejected enrichment work. The final
+sequence adds the following results without changing native code, specimen
+definitions, references, or admission thresholds.
+
+- Fixed-boundary repair 366 accepts 64 moves and reduces 104 bad Gyroid tets
+  to 16. Quality 0.05126434 still fails. A second sweep accepts no moves.
+- Full-star check 368 finds a fixed-neighbor obstruction. Boundary-only check
+  370 strengthens it to constraints unaffected by other interior vertices.
+  Its tangent upper bound is -0.000976627527263, independently reproduced
+  with extended-precision arithmetic. This blocks this fixed-connectivity
+  repair, not arbitrary remeshing.
+- All eight 2-to-3 cavities in 372 fail. Complete-star trial 374 uses 13
+  existing vertices, 20 original tets, and 477 quality-filtered candidates.
+  The bounded binary solve reports infeasible. Trial 375 rejects one analytic
+  cap-optimal Steiner point because it is outside the original star.
+  No rejected source proceeds to FE. Larger cavities and other inserted-point
+  constructions remain untested.
+- Lattice feasibility check 377 retains all 24 stiffness models. The necessary
+  pairwise lower bound is 0.9019312871%. A harmonic trial matrix has worst
+  disagreement 0.9084715371%. This proves algebraic feasibility of the fixed
+  1% condition, not mesh realizability or continuum accuracy. Six queued
+  controls pass.
+- Geometry preflight 378 admits the current-native lattice26 configuration.
+  Fresh workflow 379 regenerates it and completes all six engineering-strain
+  loads using curved Tet10, 15-point quadrature, and cached elastic-block AMG.
+
+Job 379 finishes successfully at 21:41 Europe/Paris. Its final record is
+`experiments/adaptive/runs/g3-lattice-adapt26-tol0028-amg-solve-v1/result.json`.
+The worker exits zero with no limit failure.
+
+| Final lattice26 measurement | Result |
+|---|---:|
+| Nodes / tetrahedra | 199,972 / 128,300 |
+| Independent sampled two-sided maximum distance | 0.0003236401 |
+| Relative volume error against frozen estimate | -0.03139036% |
+| Minimum corner MMG quality | 0.14932885 |
+| Minimum sampled curved Jacobian | 2.5104482e-9 |
+| Periodic nodes, cap triangles, oriented facets | Pass |
+| Generation / six-load solve | 9.03 / 716.94 seconds |
+| Charged total workflow / bounded worker wall | 736.51 / 738.82 seconds |
+| Worker peak RSS | 5,781,733,376 bytes, below 8 GiB |
+| CG iterations per load | 108, 108, 108, 109, 108, 110 |
+| Largest reported relative residual | 9.41e-13 |
+| Preliminary worst disagreement across all 24 models | 1.2686985%, fails 1% |
+
+The last comparison is a lightweight read-only generalized-eigenvalue check
+of the saved symmetric tensor against each unchanged model, using
+`max(abs(eigvalsh(C_candidate - C_model, C_model)))`. Its worst model is
+index 0 of `g3-lattice-reference-sensitivity-v2.json`. Three models exceed
+1%. It is not an independent displacement, reaction, Hill-Mandel, or
+higher-positive-quadrature audit. The run's `qualified=true` means geometry
+admission, while its final status remains `solved-needs-reference`.
+Saved meshes and all six fields stay local and ignored.
+
+This candidate does not resolve lattice accuracy. Its binary differs from
+the archived lattice24 binary, and the old solve used a different solver
+configuration. Neither a controlled refinement gain nor a matched-accuracy
+speedup follows from their raw timings. No four-fixture victory is claimed.
 
 The corner-coupling extension includes five algebraic tests, manufactured
 periodic controls, and the frozen-domain lattice comparison. Job 330 measures
@@ -393,6 +466,7 @@ Microgen extraction. They do not establish an admitted new competitor.
 | 355–357 | Actual MMG on the explicitly prepared seed produces over-cap outputs; the fitting first stage has distance 0.00203065 and quality 0.033234, so count alone cannot qualify it | `g3-gyroid-prepared-two-pass-mmg-v1`, `g3-gyroid-prepared-two-pass-mmg-hausd0015-v1`, `g3-gyroid-prepared-two-pass-mmg-hausd00175-v1` |
 | 359, 361 | Fitting two-pass output passes distance, volume, incidence, and periodic caps but fails quality 0.047711; localization finds 104 bad cells with no fixed-face ceiling obstruction | `g3-gyroid-prepared-two-pass-mmg-second0015-v1`, `g3-gyroid-prepared-mmg-quality-localization-v1` |
 | 364 | All 104 bad cells have free interior vertices; none is all-boundary; this supports a bounded repair trial but does not prove feasibility | `g3-gyroid-prepared-mmg-quality-localization-v2` |
+| 366, 368 | Repair accepts 64 moves but leaves 16 bad tets; the worst fixed-neighbor star has a negative checked bound, independently replayed, with three other interior vertices in its support | `g3-gyroid-prepared-mmg-interior-repair-v1`, `g3-gyroid-prepared-repair-star-feasibility-v1`, `g3-gyroid-prepared-repair-star-witness-audit-v1.json` |
 
 The source defect predates MMG in this saved lineage. The recorded evidence
 does not yet isolate which clipping or tetrahedralization operation introduces
@@ -821,6 +895,15 @@ use the verified `kmarchais` account.
 
 ## 15. Open work and restart order
 
+The project is paused after terminal job 379. Nothing below authorizes an
+automatic restart. On explicit resume, first read the final lattice26 record
+and decide whether its pending independent field and positive-quadrature
+checks are useful despite its preliminary 1% rejection. Do not regenerate
+the completed mesh or repeat its six loads merely to recover context.
+
+The following paragraphs preserve the earlier Gyroid investigation sequence.
+Its formerly selected successors have finished, as summarized above.
+
 The latest completed experiment is `experiments/adaptive/preclip_probe.py`,
 with `experiments/adaptive/test_preclip_probe.py`. It compares paired Gyroid
 resolution31 extraction using identical background coordinates, scalar
@@ -838,23 +921,25 @@ The resulting fresh seed has no obstructing caps, preserves points, walls,
 volume, incidence, and periodic triangles, and passes sampled distance. Actual
 minimum quality remains 0.00109506, below final admission 0.1.
 
-The selected successor is one audited, explicitly modified actual Microgen/MMG
+The successor at that checkpoint was one audited, explicitly modified actual Microgen/MMG
 geometry replay on this prepared seed. It is not defaults or a fresh complete
 workflow timing. All intermediate outputs retain the 250,000-tet cap and
 8 GiB ceiling. No FE follows before final geometry and periodic admission.
 
 The first three replays, jobs 355–357, reject at intermediate tet caps.
 Replay 359 subsequently fits at 133,826 tets and passes geometry/periodicity
-except quality. Classification 364 confirms all 104 bad cells have interior
-vertices and no fixed-face ceiling obstruction. Job 366 is queued for one
-bounded fixed-boundary relocation trial, with two sweeps and 400 attempts.
-No repair result or FE claim exists yet. Read the latest checkpoint for exact
-task and run-directory identifiers. The previous 41-test focused suite and
-seven repair-specific controls pass at their recorded source snapshots.
+except quality. Repair 366 reduces 104 bad tets to 16 with 64 moves, but still
+fails quality. No FE follows. The subsequent boundary-only witness rules out
+coupled interior moves at this connectivity. Bounded local topology and one
+Steiner-point trials also reject, without proving general impossibility.
+Read the latest checkpoint for completed task identifiers and pause state.
+The previous 41-test focused suite and seven queued repair controls pass at
+their recorded source snapshots.
 
 | Priority | Next action | Completion criterion |
 |---|---|---|
-| 1 | Read the bounded fixed-boundary repair of the 104 quality-rejected Gyroid cells | All bad cells have interior vertices, but require fresh full admission before FE; no extra sweeps or speculative MMG calls queued ahead |
+| On resume | Review completed lattice26 fields and decide whether to audit them | Independent checks before any stiffness promotion; preliminary error already fails 1%, no automatic solve or parameter sweep |
+| Completed negative | Boundary-only constraints and bounded Gyroid topology trials | Witness independently replayed; fixed-connectivity relocation blocked, tested local remeshing rejected; no admitted comparator |
 | Retired source | One-pass FEM43 interior repair | Invalid oriented source; current code rejects it before relocation; do not retry sweeps or bypass cavity guards |
 | Completed prerequisite | Retain progress values across worker-stage transitions | Red/green success/failure regressions and queued checks pass; shared helper unchanged |
 | Completed comparison | Stronger Schwarz Tet10 repetitions | Five interleaved pairs pass, both cost definitions favor Meshers; no further Schwarz tightening selected |

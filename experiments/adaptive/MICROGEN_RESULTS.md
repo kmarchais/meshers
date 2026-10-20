@@ -1,5 +1,77 @@
 # G3 Microgen workflow results, 17 October 2026
 
+## Valid-source interior repair remains incomplete, 20 October 2026
+
+Classification 364 confirms all 104 bad cells have free interior vertices.
+Job 366 therefore tests the existing two-sweep, 400-attempt fixed-boundary
+repair on the coherent prepared two-pass output. Seven queued controls pass.
+The repair accepts 64 moves in sweep zero and none in sweep one. There are
+97 attempts, with 33 unsuccessful searches. Bad elements fall from 104 to 16,
+but minimum quality is only 0.0512643362. The result stays `repair-incomplete`
+and receives no FE solve.
+
+Boundary coordinates and connectivity remain fixed. Signed volume changes
+by -7.40e-17. Distance remains 0.0019272611, volume error +0.72004462%, and
+periodic caps and oriented incidence still pass. Repair takes 8.73 seconds,
+the bounded worker 14.42 seconds at 0.4054 GiB. These saved-mesh diagnostic
+costs are not charged live-workflow timings.
+
+Do not repeat the unchanged second sweep. Job 368 diagnoses the new worst
+element, 62548, whose only free vertex is 19446. Its complete star has 20
+tets. At quality 0.1, the checked concave-tangent upper bound is
+-0.001009524655965. Independent 64-bit-mantissa replay agrees within 2e-16.
+This rejects that single vertex with all neighbors fixed, not every repair.
+The active witness also depends on interior vertices 805, 8895, and 10865.
+It does not yet exclude moving those vertices together.
+
+The selected next diagnostic uses only tets whose three opposite vertices
+are all on the fixed boundary. It checks whether those necessary constraints
+already obstruct the worst vertex before selecting a coupled relocation or
+topology change. No new moves or FE runs in that diagnostic. Numerical gates,
+references, and native code remain unchanged.
+
+Job 370 performs that check on seven tets. The boundary-only tangent bound
+is -0.000976627527263. Independent 64-bit-mantissa replay agrees, and every
+active opposite vertex is on the fixed boundary. Moving other interior
+vertices cannot change those supported constraints while the cells and
+boundary remain fixed. Coupled interior-only relocation is therefore not
+selected. This does not exclude changing connectivity or boundary geometry.
+
+Job 372 tests eight adjacent two-to-three cavities on this coherent source.
+Three fail oriented-boundary matching, three fail new-cell quality, and two
+are degenerate. No local candidate passes and no flip is applied. This is
+distinct from the earlier failed preflight on an invalid one-pass source.
+
+Job 374 tests the complete 20-tet star, with 13 existing vertices and its
+exact oriented outer boundary. The minimum fixed-face ceiling is 0.105301.
+There are 477 candidates after positive-determinant and quality 0.100001
+guards. The bounded binary solve reports infeasible. It does not certify
+all possible larger cavities, extra vertices, or boundary changes.
+
+Job 375 tests one additional candidate at the analytic quality-maximizing
+apex of the highest-weight cap face. Its single-tet quality is 0.105301, but
+its maximum minimum barycentric coordinate over the old star is -0.866917.
+It is not contained, so no point is inserted and no binary solve follows.
+This rejects one analytic candidate, not every Steiner construction. Ten
+queued controls include apex-side, containment, and original-volume checks.
+The extended solve helper treats added candidate vertices separately from
+the original cavity, whose domain and volume stay fixed.
+
+Stop these unchanged sweeps and local recipes. Gyroid still has no admitted
+actual Microgen comparator. Larger-cavity or boundary-triangulation work
+remains unproven, not universally impossible. Before more meshing, the next
+comparison diagnostic checks whether the retained lattice model envelope
+even admits a common one-percent full tensor, without changing its models.
+
+Records are `runs/g3-gyroid-prepared-mmg-interior-repair-v1`,
+`runs/g3-gyroid-prepared-repair-star-feasibility-v1`, and
+`runs/g3-gyroid-prepared-repair-star-witness-audit-v1.json`, plus
+`runs/g3-gyroid-prepared-repair-boundary-star-v1`,
+`runs/g3-gyroid-prepared-repair-boundary-witness-audit-v1.json`,
+`runs/g3-gyroid-prepared-repair-two-to-three-v1`,
+`runs/g3-gyroid-prepared-repair-star-topology-v1`, and
+`runs/g3-gyroid-prepared-repair-star-steiner-v1`.
+
 ## Actual MMG replay of the prepared Gyroid seed, 20 October 2026
 
 The prepared source is `runs/g3-gyroid-cap-replacement-v2`. These are genuine

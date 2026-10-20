@@ -1,0 +1,256 @@
+{
+  "model_count": 24,
+  "target": 0.01,
+  "pairwise_lower_bound": 0.00901931287144623,
+  "worst_ordered_pair": [
+    15,
+    8
+  ],
+  "maximum_generalized_ratio": 1.0182028025139025,
+  "necessary_ratio_limit": 1.02020202020202,
+  "mixed_strain_direction": [
+    -2.7791948812564735,
+    -1.514457673415529,
+    4.605819336660907,
+    0.012015692774193405,
+    -0.020517299076547073,
+    0.023619128266150424
+  ],
+  "directional_high_energy": 1.018202802513902,
+  "directional_low_energy": 1.0,
+  "candidate_energy_required_lower": 1.008020774488763,
+  "candidate_energy_required_upper": 1.01,
+  "normalized_required_energy_gap": -0.0019792255112369705,
+  "contradiction_margin": 1e-10,
+  "contradiction_passed": false,
+  "harmonic_trial_stiffness": [
+    [
+      0.13865783107178978,
+      0.10658539838868905,
+      0.10657893218512877,
+      1.0674982692453459e-05,
+      6.661076919261455e-06,
+      1.719291174081896e-05
+    ],
+    [
+      0.10658539838868905,
+      0.13855382475458566,
+      0.1065440202901153,
+      1.6105040043318737e-05,
+      -3.1236815106734055e-06,
+      1.0933708605726212e-05
+    ],
+    [
+      0.10657893218512877,
+      0.1065440202901153,
+      0.1384862029756565,
+      5.880882794189672e-06,
+      1.3847793604702856e-05,
+      1.1986413099157595e-05
+    ],
+    [
+      1.0674982692453459e-05,
+      1.6105040043318737e-05,
+      5.880882794189672e-06,
+      0.10314316964498785,
+      8.817253403153987e-06,
+      6.337280678792764e-06
+    ],
+    [
+      6.661076919261455e-06,
+      -3.1236815106734055e-06,
+      1.3847793604702856e-05,
+      8.817253403153987e-06,
+      0.10314776021466526,
+      9.54370919249006e-06
+    ],
+    [
+      1.719291174081896e-05,
+      1.0933708605726212e-05,
+      1.1986413099157595e-05,
+      6.337280678792764e-06,
+      9.54370919249006e-06,
+      0.1031628706924824
+    ]
+  ],
+  "harmonic_trial_model_disagreements": [
+    0.008338467736312836,
+    0.0033480679638351247,
+    0.0018773383591967141,
+    0.00141836622740337,
+    0.009084715371274246,
+    0.003691117376265416,
+    0.002074657355166846,
+    0.00138321487606123,
+    0.009019312871446581,
+    0.002658451464339171,
+    0.006468610845231963,
+    0.00834606333115623,
+    0.0061659384924738605,
+    0.004047258612144948,
+    0.007380139681213048,
+    0.009019312871445818,
+    0.005725130928332562,
+    0.0019365748384665435,
+    0.0019386753305796669,
+    0.002569309059563022,
+    0.0070053359141639725,
+    0.0024614796777639933,
+    0.0015574198985981915,
+    0.002272339990200135
+  ],
+  "harmonic_trial_maximum_disagreement": 0.009084715371274246,
+  "harmonic_trial_passes_all_models": true,
+  "scope": "Pairwise necessary lower bound for any symmetric candidate; passing harmonic trial proves only algebraic target feasibility, not a realizable mesh or a continuum reference",
+  "case": "smooth-lattice",
+  "provenance": [
+    {
+      "source": "/home/kmarchais/dev/meshers/experiments/adaptive/runs/g3-lattice-curve-grading-reference-comparison-v1.json",
+      "index": 0,
+      "length_proxy": "target_length",
+      "assumed_order": 1
+    },
+    {
+      "source": "/home/kmarchais/dev/meshers/experiments/adaptive/runs/g3-lattice-curve-grading-reference-comparison-v1.json",
+      "index": 1,
+      "length_proxy": "target_length",
+      "assumed_order": 2
+    },
+    {
+      "source": "/home/kmarchais/dev/meshers/experiments/adaptive/runs/g3-lattice-curve-grading-reference-comparison-v1.json",
+      "index": 2,
+      "length_proxy": "target_length",
+      "assumed_order": 3
+    },
+    {
+      "source": "/home/kmarchais/dev/meshers/experiments/adaptive/runs/g3-lattice-curve-grading-reference-comparison-v1.json",
+      "index": 3,
+      "length_proxy": "target_length",
+      "assumed_order": 4
+    },
+    {
+      "source": "/home/kmarchais/dev/meshers/experiments/adaptive/runs/g3-lattice-curve-grading-reference-comparison-v1.json",
+      "index": 4,
+      "length_proxy": "element_density",
+      "assumed_order": 1
+    },
+    {
+      "source": "/home/kmarchais/dev/meshers/experiments/adaptive/runs/g3-lattice-curve-grading-reference-comparison-v1.json",
+      "index": 5,
+      "length_proxy": "element_density",
+      "assumed_order": 2
+    },
+    {
+      "source": "/home/kmarchais/dev/meshers/experiments/adaptive/runs/g3-lattice-curve-grading-reference-comparison-v1.json",
+      "index": 6,
+      "length_proxy": "element_density",
+      "assumed_order": 3
+    },
+    {
+      "source": "/home/kmarchais/dev/meshers/experiments/adaptive/runs/g3-lattice-curve-grading-reference-comparison-v1.json",
+      "index": 7,
+      "length_proxy": "element_density",
+      "assumed_order": 4
+    },
+    {
+      "source": "/home/kmarchais/dev/meshers/experiments/adaptive/runs/g3-lattice-reference-sensitivity-v2.json",
+      "index": 0,
+      "length_proxy": "uniform_seed",
+      "assumed_order": 1
+    },
+    {
+      "source": "/home/kmarchais/dev/meshers/experiments/adaptive/runs/g3-lattice-reference-sensitivity-v2.json",
+      "index": 1,
+      "length_proxy": "uniform_seed",
+      "assumed_order": 2
+    },
+    {
+      "source": "/home/kmarchais/dev/meshers/experiments/adaptive/runs/g3-lattice-reference-sensitivity-v2.json",
+      "index": 2,
+      "length_proxy": "uniform_seed",
+      "assumed_order": 3
+    },
+    {
+      "source": "/home/kmarchais/dev/meshers/experiments/adaptive/runs/g3-lattice-reference-sensitivity-v2.json",
+      "index": 3,
+      "length_proxy": "uniform_seed",
+      "assumed_order": 4
+    },
+    {
+      "source": "/home/kmarchais/dev/meshers/experiments/adaptive/runs/g3-lattice-reference-sensitivity-v2.json",
+      "index": 4,
+      "length_proxy": "element_density",
+      "assumed_order": 1
+    },
+    {
+      "source": "/home/kmarchais/dev/meshers/experiments/adaptive/runs/g3-lattice-reference-sensitivity-v2.json",
+      "index": 5,
+      "length_proxy": "element_density",
+      "assumed_order": 2
+    },
+    {
+      "source": "/home/kmarchais/dev/meshers/experiments/adaptive/runs/g3-lattice-reference-sensitivity-v2.json",
+      "index": 6,
+      "length_proxy": "element_density",
+      "assumed_order": 3
+    },
+    {
+      "source": "/home/kmarchais/dev/meshers/experiments/adaptive/runs/g3-lattice-reference-sensitivity-v2.json",
+      "index": 7,
+      "length_proxy": "element_density",
+      "assumed_order": 4
+    },
+    {
+      "source": "/home/kmarchais/dev/meshers/experiments/adaptive/runs/g3-lattice-microgen-reference-comparison-v1.json",
+      "index": 0,
+      "length_proxy": "target_length",
+      "assumed_order": 1
+    },
+    {
+      "source": "/home/kmarchais/dev/meshers/experiments/adaptive/runs/g3-lattice-microgen-reference-comparison-v1.json",
+      "index": 1,
+      "length_proxy": "target_length",
+      "assumed_order": 2
+    },
+    {
+      "source": "/home/kmarchais/dev/meshers/experiments/adaptive/runs/g3-lattice-microgen-reference-comparison-v1.json",
+      "index": 2,
+      "length_proxy": "target_length",
+      "assumed_order": 3
+    },
+    {
+      "source": "/home/kmarchais/dev/meshers/experiments/adaptive/runs/g3-lattice-microgen-reference-comparison-v1.json",
+      "index": 3,
+      "length_proxy": "target_length",
+      "assumed_order": 4
+    },
+    {
+      "source": "/home/kmarchais/dev/meshers/experiments/adaptive/runs/g3-lattice-microgen-reference-comparison-v1.json",
+      "index": 4,
+      "length_proxy": "element_density",
+      "assumed_order": 1
+    },
+    {
+      "source": "/home/kmarchais/dev/meshers/experiments/adaptive/runs/g3-lattice-microgen-reference-comparison-v1.json",
+      "index": 5,
+      "length_proxy": "element_density",
+      "assumed_order": 2
+    },
+    {
+      "source": "/home/kmarchais/dev/meshers/experiments/adaptive/runs/g3-lattice-microgen-reference-comparison-v1.json",
+      "index": 6,
+      "length_proxy": "element_density",
+      "assumed_order": 3
+    },
+    {
+      "source": "/home/kmarchais/dev/meshers/experiments/adaptive/runs/g3-lattice-microgen-reference-comparison-v1.json",
+      "index": 7,
+      "length_proxy": "element_density",
+      "assumed_order": 4
+    }
+  ],
+  "references_unchanged": true,
+  "admission_threshold_unchanged": true,
+  "mesh_candidate_created": false,
+  "stiffness_solve_performed": false
+}

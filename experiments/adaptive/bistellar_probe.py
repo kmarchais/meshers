@@ -15,6 +15,7 @@ import numpy as np
 import microgen_workflow as workflow
 from job_parts import worker_part
 from mmg_quality_localization import quality
+from facet_incidence_audit import audit
 
 sys.path.insert(0, str(Path.home() / "bin"))
 from pueue_progress import Job
@@ -71,15 +72,16 @@ def flip_candidate(points, cells, indices):
     return alternative, row
 
 
-def worker(run):
-    witness = json.loads(WITNESS.read_text())
+def worker(run, source_path, witness_path):
+    witness = json.loads(witness_path.read_text())
     assert witness["passed"] and witness["checked_fixed_neighbor_obstruction"]
     assert not witness["other_interior_vertices_in_active_constraints"]
     recorded = json.loads(Path(witness["source"]).joinpath("result.json").read_text())
     assert workflow.digest(Path(witness["source"]) / "result.json") == witness["source_result_sha256"]
-    assert Path(recorded["source"]).resolve() == SOURCE.resolve()
-    mesh = np.load(SOURCE / "mesh.npz")
+    assert Path(recorded["source"]).resolve() == source_path.resolve()
+    mesh = np.load(source_path / "mesh.npz")
     points, cells = mesh["points"], mesh["tetrahedra"]
+    assert audit(points, cells, mesh["surface"])["oriented_facet_consistency_passed"]
     assert len(cells) + 1 <= workflow.CAP
     active = [record["element"] for record in witness["active_constraints"]]
     targets = {tuple(sorted(map(int, cells[index, list(face)]))) for index in active for face in FACES}
@@ -98,7 +100,7 @@ def worker(run):
         _, report = flip_candidate(points, cells, indices)
         candidates.append(report)
     assert len(candidates) <= 12
-    workflow.save(run / "result.json", {"case": "gyroid", "source": str(SOURCE), "witness": str(WITNESS),
+    workflow.save(run / "result.json", {"case": "gyroid", "source": str(source_path), "witness": str(witness_path),
         "active_elements": active, "candidates": candidates, "candidates_evaluated": len(candidates),
         "local_target_candidates": sum(record["local_target_passed"] for record in candidates),
         "source_mesh_unchanged": True, "source_boundary_unchanged": True,
@@ -110,15 +112,17 @@ def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--run", type=Path, required=True)
     parser.add_argument("--worker", action="store_true")
+    parser.add_argument("--source", type=Path, default=SOURCE)
+    parser.add_argument("--witness", type=Path, default=WITNESS)
     args = parser.parse_args()
     if args.worker:
-        worker(args.run)
+        worker(args.run, args.source, args.witness)
         return
     args.run.mkdir(parents=True, exist_ok=False)
     shutil.copyfile(__file__, args.run / "driver.py")
-    paths = [Path(__file__), SOURCE / "result.json", SOURCE / "mesh.npz", WITNESS]
+    paths = [Path(__file__), args.source / "result.json", args.source / "mesh.npz", args.witness]
     paths.extend(workflow.HERE / name for name in ("test_bistellar_probe.py", "job_parts.py", "test_job_parts.py",
-        "microgen_workflow.py", "mmg_quality_localization.py"))
+        "microgen_workflow.py", "mmg_quality_localization.py", "facet_incidence_audit.py"))
     hashes = {str(path): workflow.digest(path) for path in paths}
     workflow.save(args.run / "manifest.json", {"inputs": hashes, "memory_bytes": workflow.MEMORY,
         "threads": 1, "worker_timeout_s": 120, "quality_gate": .1,
@@ -127,7 +131,8 @@ def main():
         for stage in ("controls", "two-to-three"):
             with worker_part(job, stage) as part:
                 arguments = (["-m", "pytest", "-q", "experiments/adaptive/test_bistellar_probe.py", "experiments/adaptive/test_job_parts.py"]
-                    if stage == "controls" else [__file__, "--run", str(args.run), "--worker"])
+                    if stage == "controls" else [__file__, "--run", str(args.run), "--source", str(args.source),
+                        "--witness", str(args.witness), "--worker"])
                 record = workflow.bounded([sys.executable, *arguments], args.run / (stage + ".log"), part, timeout=120)
                 workflow.save(args.run / (stage + "-worker.json"), record)
                 assert record["returncode"] == 0, f"Read {stage}.log"

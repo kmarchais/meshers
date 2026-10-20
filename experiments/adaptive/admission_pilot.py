@@ -11,6 +11,7 @@ import time
 import traceback
 
 import microgen_workflow as workflow
+from job_parts import worker_part
 
 os.environ.update(OPENBLAS_NUM_THREADS="1", OMP_NUM_THREADS="1", MKL_NUM_THREADS="1", RAYON_NUM_THREADS="1")
 os.environ.update(CARGO_BUILD_JOBS="2", RUSTUP_TOOLCHAIN="1.95.0",
@@ -225,6 +226,7 @@ def main():
         shutil.copyfile(path, args.run / path.name)
     python_sources = [Path(__file__), Path(workflow.__file__), workflow.HERE / "stress_recovery.py",
                       workflow.HERE / "tet10_integration.py",
+                      workflow.HERE / "job_parts.py", workflow.HERE / "facet_incidence_audit.py",
                       workflow.HERE / "gradient_tie_probe.py", workflow.ROOT / "crates/meshers-python/python/meshers/expression.py"]
     source_hashes = {str(path): workflow.digest(path) for path in python_sources}
     if args.amg:
@@ -248,13 +250,13 @@ def main():
                 ("core-tests", ["cargo", "test", "--release", "--locked", "-p", "meshers-core", "--lib",
                     "--", "--test-threads=1"])]
             for label, command in commands:
-                with job.part(label) as part:
+                with worker_part(job, label) as part:
                     result = workflow.bounded(command, args.run / (label + ".log"), part, timeout=1200)
                     workflow.save(args.run / (label + ".json"), result)
                     assert result["returncode"] == 0, f"Read {label}.log"
                     job.result(label, seconds=result["wall_s"], peak_gib=result["peak_rss_bytes"] / 1024**3)
         if args.python_tests:
-            with job.part("python-tests") as part:
+            with worker_part(job, "python-tests") as part:
                 command = [sys.executable, "-m", "pytest", "-q"] + [
                     str(workflow.ROOT / "crates/meshers-python/tests" / name) for name in
                     ("test_api.py", "test_adaptive.py", "test_size_field.py", "test_fedoo.py")]
@@ -262,7 +264,7 @@ def main():
                 workflow.save(args.run / "python-tests.json", result)
                 assert result["returncode"] == 0, "Read python-tests.log"
                 job.result("python-tests", seconds=result["wall_s"], peak_gib=result["peak_rss_bytes"] / 1024**3)
-        with job.part("adaptive-admission") as part:
+        with worker_part(job, "adaptive-admission") as part:
             command = [sys.executable, __file__, "--run", str(args.run),
                 "--case", args.case, "--cells", str(args.cells), "--min-length", str(args.min_length),
                 "--order", str(args.order), "--native-tolerance", str(args.native_tolerance),

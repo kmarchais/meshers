@@ -1,0 +1,235 @@
+{
+  "case": "gyroid",
+  "source": "experiments/adaptive/runs/g3-gyroid-prepared-mmg-interior-repair-v1",
+  "witness": "experiments/adaptive/runs/g3-gyroid-prepared-repair-boundary-witness-audit-v1.json",
+  "active_elements": [
+    54892,
+    62548,
+    95388
+  ],
+  "candidates": [
+    {
+      "old_elements": [
+        52396,
+        95388
+      ],
+      "shared_face": [
+        13011,
+        19446,
+        26449
+      ],
+      "proposed_edge": [
+        10865,
+        26450
+      ],
+      "old_minimum_quality": 0.18908890074847193,
+      "local_target_passed": false,
+      "status": "oriented-cavity-boundary-mismatch"
+    },
+    {
+      "old_elements": [
+        57313,
+        62548
+      ],
+      "shared_face": [
+        6658,
+        19446,
+        26450
+      ],
+      "proposed_edge": [
+        26752,
+        26449
+      ],
+      "old_minimum_quality": 0.051264336176680525,
+      "local_target_passed": false,
+      "status": "degenerate-alternative"
+    },
+    {
+      "old_elements": [
+        14130,
+        95388
+      ],
+      "shared_face": [
+        13011,
+        19446,
+        26450
+      ],
+      "proposed_edge": [
+        22271,
+        26449
+      ],
+      "old_minimum_quality": 0.18908890074847193,
+      "local_target_passed": false,
+      "status": "local-quality-rejected",
+      "alternative_cells": [
+        [
+          22271,
+          13011,
+          26449,
+          19446
+        ],
+        [
+          22271,
+          19446,
+          26449,
+          26450
+        ],
+        [
+          22271,
+          26450,
+          26449,
+          13011
+        ]
+      ],
+      "new_minimum_quality": 0.011817545583541589,
+      "minimum_signed_determinant": 1.1199040028502314e-07,
+      "relative_cavity_volume_difference": 2.1271508159393165e-16,
+      "oriented_cavity_boundary_identical": true
+    },
+    {
+      "old_elements": [
+        54892,
+        74751
+      ],
+      "shared_face": [
+        8024,
+        19446,
+        26752
+      ],
+      "proposed_edge": [
+        26450,
+        8895
+      ],
+      "old_minimum_quality": 0.22362677992875424,
+      "local_target_passed": false,
+      "status": "local-quality-rejected",
+      "alternative_cells": [
+        [
+          26450,
+          8895,
+          8024,
+          19446
+        ],
+        [
+          26450,
+          8895,
+          19446,
+          26752
+        ],
+        [
+          26450,
+          8895,
+          26752,
+          8024
+        ]
+      ],
+      "new_minimum_quality": 0.06539898600038968,
+      "minimum_signed_determinant": 2.3418182162433016e-07,
+      "relative_cavity_volume_difference": 2.0421474999937488e-16,
+      "oriented_cavity_boundary_identical": true
+    },
+    {
+      "old_elements": [
+        54892,
+        92262
+      ],
+      "shared_face": [
+        8024,
+        19446,
+        26450
+      ],
+      "proposed_edge": [
+        26752,
+        22271
+      ],
+      "old_minimum_quality": 0.2929521409255994,
+      "local_target_passed": false,
+      "status": "local-quality-rejected",
+      "alternative_cells": [
+        [
+          26752,
+          8024,
+          22271,
+          19446
+        ],
+        [
+          26752,
+          19446,
+          22271,
+          26450
+        ],
+        [
+          26752,
+          26450,
+          22271,
+          8024
+        ]
+      ],
+      "new_minimum_quality": 0.03012635439547555,
+      "minimum_signed_determinant": 1.7563098166244435e-07,
+      "relative_cavity_volume_difference": 1.1847633352705942e-15,
+      "oriented_cavity_boundary_identical": true
+    },
+    {
+      "old_elements": [
+        62548,
+        81353
+      ],
+      "shared_face": [
+        6658,
+        19446,
+        26449
+      ],
+      "proposed_edge": [
+        26450,
+        6269
+      ],
+      "old_minimum_quality": 0.051264336176680525,
+      "local_target_passed": false,
+      "status": "degenerate-alternative"
+    },
+    {
+      "old_elements": [
+        62548,
+        95388
+      ],
+      "shared_face": [
+        19446,
+        26449,
+        26450
+      ],
+      "proposed_edge": [
+        6658,
+        13011
+      ],
+      "old_minimum_quality": 0.051264336176680525,
+      "local_target_passed": false,
+      "status": "oriented-cavity-boundary-mismatch"
+    },
+    {
+      "old_elements": [
+        54892,
+        57313
+      ],
+      "shared_face": [
+        19446,
+        26450,
+        26752
+      ],
+      "proposed_edge": [
+        8024,
+        6658
+      ],
+      "old_minimum_quality": 0.14034502466960336,
+      "local_target_passed": false,
+      "status": "oriented-cavity-boundary-mismatch"
+    }
+  ],
+  "candidates_evaluated": 8,
+  "local_target_candidates": 0,
+  "source_mesh_unchanged": true,
+  "source_boundary_unchanged": true,
+  "qualified": false,
+  "stiffness_solve_performed": false,
+  "scope": "Single five-vertex 2-to-3 alternatives next to checked obstruction; no flips applied, no whole-mesh admission or continuum claim"
+}

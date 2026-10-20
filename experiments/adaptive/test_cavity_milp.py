@@ -41,3 +41,12 @@ def test_nine_vertex_stage_reproduces_a_cube_with_center():
     target = oriented_boundary(cells)
     alternative, row = solve_cavity(points, cells, target, maximum_vertices=9)
     assert row["passed"] and oriented_boundary(alternative) == target
+
+
+@pytest.mark.parametrize("quality_target,expected", [(.1, True), (1.01, False)])
+def test_quality_filter_is_enforced_before_integer_solve(quality_target, expected):
+    points = np.array([[0, 0, 0], [1, 0, 0], [.5, np.sqrt(3) / 2, 0], [.5, np.sqrt(3) / 6, np.sqrt(2 / 3)]])
+    cells = np.arange(4)[None]
+    alternative, row = solve_cavity(points, cells, oriented_boundary(cells), maximum_vertices=16, quality_target=quality_target)
+    assert row["passed"] is expected
+    assert (alternative is not None) is expected

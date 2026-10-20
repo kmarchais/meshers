@@ -1,0 +1,265 @@
+{
+  "case": "smooth-lattice",
+  "cells": 26,
+  "min_length": 0.002,
+  "order": 2,
+  "native_tolerance": 1.0,
+  "optimization_passes": 1,
+  "adaptive": true,
+  "adapt_tolerance": 0.0028,
+  "solver_quadrature_points": 15,
+  "solve_node_cap": 250000,
+  "qualified": true,
+  "solver": "cached-elastic-block-amg-cg",
+  "symmetric_union": {
+    "identity": "min(a,b) = (a+b-abs(a-b))/2",
+    "maximum_field_value_difference": 1.6653345369377348e-16,
+    "maximum_tie_gradient_difference": 1.468915544755589e-10,
+    "value_verification_points": 4096,
+    "gradient_verification_points": 3
+  },
+  "void_clamp": {
+    "positive_ceiling": 0.02,
+    "verification_points": 4096,
+    "material_mismatches": 0,
+    "domain_identity": "min(phi, positive_constant) <= 0 iff phi <= 0"
+  },
+  "generation_s": 9.031434691998584,
+  "nodes": 199972,
+  "elements": 128300,
+  "diagnostics": {
+    "empty": false,
+    "volume": 0.24694936922020985,
+    "minimum_mmg_quality": 0.14932884688282982,
+    "sampled_surface_error": 0.002270644115086228,
+    "elements_below_quality_01": 0,
+    "reverted_snap_vertices": 0,
+    "callback_calls": 0,
+    "inserted_interior_nodes": 0,
+    "adapt": {
+      "splits": 23374,
+      "collapses": 11736,
+      "swaps": 7205,
+      "moves": 81980,
+      "error_splits": 2071,
+      "maximum_error": 0.009554879369075288,
+      "seconds": [
+        0.57668029,
+        0.237798562,
+        1.9247706680000003,
+        0.447780572,
+        0.667410385,
+        1.075717552,
+        0.635250549
+      ]
+    },
+    "seconds": 9.011508499,
+    "quadratic": {
+      "curved_edges": 29841,
+      "straightened_edges": 0,
+      "partially_curved_edges": 0,
+      "minimum_jacobian_ratio": 0.26447737425487705
+    },
+    "threads": 1,
+    "evaluator": "compiled",
+    "preparation_seconds": 0.01982881699950667
+  },
+  "geometry": {
+    "sampled_forward_max": 0.0003236400768516191,
+    "sampled_reverse_max": 0.0003131261546558753,
+    "sampled_two_sided_max": 0.0003236400768516191,
+    "outward_forward_max": 0.0003236400768516191,
+    "inward_forward_max": 0.0002550954429284902,
+    "projection_failed": 0,
+    "forward_samples": 253864,
+    "reverse_samples": 34791,
+    "volume": 0.24823309704590688,
+    "relative_volume_error": -0.00031390363820804623,
+    "q_min_corner": 0.14932884688282982,
+    "q_p01_corner": 0.2935275996179917,
+    "minimum_dihedral_deg_corner": 8.014200725852078,
+    "minimum_sampled_jacobian": 2.5104482261913092e-09,
+    "reverse_tessellation_delta_max": 0.00012800065424001567,
+    "quadratic_reverse_subdivisions": [
+      4,
+      8
+    ],
+    "facet_consistency": {
+      "nodes": 199972,
+      "elements": 128300,
+      "unique_faces": 269809,
+      "interior_faces": 243391,
+      "extracted_boundary_faces": 26418,
+      "same_orientation_shared_faces": 0,
+      "nonmanifold_faces": 0,
+      "duplicate_cells": 0,
+      "duplicate_surface_faces": 0,
+      "provided_boundary_matches_extraction": true,
+      "missing_provided_faces": 0,
+      "extra_provided_faces": 0,
+      "nonpositive_corner_determinants": 0,
+      "minimum_corner_determinant": 2.5104482261922994e-09,
+      "oriented_facet_consistency_passed": true,
+      "conflict_examples": [],
+      "scope": "Oriented corner-face incidence and same-side neighbor diagnostics; necessary consistency, not a certificate of curved geometry or absence of nonlocal intersections"
+    },
+    "oriented_facet_consistency_passed": true,
+    "geometry_admitted": true
+  },
+  "periodic": {
+    "periodic_pair_counts": [
+      2441,
+      2563,
+      2579
+    ],
+    "periodic_coordinate_errors": [
+      0.0,
+      0.0,
+      0.0
+    ],
+    "periodic_pair_tolerance": 1e-10,
+    "periodic_equivalence_classes": 192460,
+    "periodic_triangles_match": true
+  },
+  "status": "solved-needs-reference",
+  "completed_loads": 6,
+  "solver_records": [
+    {
+      "iterations": 108,
+      "relative_residual": 8.404867309030292e-13,
+      "free_dofs": 577377,
+      "seconds": 125.59841898000013,
+      "hierarchy_setup_s": 16.444050754998898,
+      "hierarchy_reused": false,
+      "node_reordering_s": 1.6053884770008153,
+      "elastic_blocks": true,
+      "verified_symmetry_reused": false,
+      "levels": 4,
+      "operator_complexity": 1.0593781072937047,
+      "reduced_matrix_sha256": "5f795cd4c6510e669b8c577464bf30778185aeb531ba2f5d3ea9111e67816468"
+    },
+    {
+      "iterations": 108,
+      "relative_residual": 7.956516875567629e-13,
+      "free_dofs": 577377,
+      "seconds": 108.98360733300069,
+      "hierarchy_setup_s": 0.0,
+      "hierarchy_reused": true,
+      "node_reordering_s": 0.0,
+      "elastic_blocks": true,
+      "verified_symmetry_reused": true,
+      "levels": 4,
+      "operator_complexity": 1.0593781072937047,
+      "reduced_matrix_sha256": "5f795cd4c6510e669b8c577464bf30778185aeb531ba2f5d3ea9111e67816468"
+    },
+    {
+      "iterations": 108,
+      "relative_residual": 9.40926024491485e-13,
+      "free_dofs": 577377,
+      "seconds": 118.38249865399848,
+      "hierarchy_setup_s": 0.0,
+      "hierarchy_reused": true,
+      "node_reordering_s": 0.0,
+      "elastic_blocks": true,
+      "verified_symmetry_reused": true,
+      "levels": 4,
+      "operator_complexity": 1.0593781072937047,
+      "reduced_matrix_sha256": "5f795cd4c6510e669b8c577464bf30778185aeb531ba2f5d3ea9111e67816468"
+    },
+    {
+      "iterations": 109,
+      "relative_residual": 9.395245977869294e-13,
+      "free_dofs": 577377,
+      "seconds": 101.3818537240004,
+      "hierarchy_setup_s": 0.0,
+      "hierarchy_reused": true,
+      "node_reordering_s": 0.0,
+      "elastic_blocks": true,
+      "verified_symmetry_reused": true,
+      "levels": 4,
+      "operator_complexity": 1.0593781072937047,
+      "reduced_matrix_sha256": "5f795cd4c6510e669b8c577464bf30778185aeb531ba2f5d3ea9111e67816468"
+    },
+    {
+      "iterations": 108,
+      "relative_residual": 8.352095155561755e-13,
+      "free_dofs": 577377,
+      "seconds": 102.80118824599776,
+      "hierarchy_setup_s": 0.0,
+      "hierarchy_reused": true,
+      "node_reordering_s": 0.0,
+      "elastic_blocks": true,
+      "verified_symmetry_reused": true,
+      "levels": 4,
+      "operator_complexity": 1.0593781072937047,
+      "reduced_matrix_sha256": "5f795cd4c6510e669b8c577464bf30778185aeb531ba2f5d3ea9111e67816468"
+    },
+    {
+      "iterations": 110,
+      "relative_residual": 7.872675144045537e-13,
+      "free_dofs": 577377,
+      "seconds": 106.09412571700159,
+      "hierarchy_setup_s": 0.0,
+      "hierarchy_reused": true,
+      "node_reordering_s": 0.0,
+      "elastic_blocks": true,
+      "verified_symmetry_reused": true,
+      "levels": 4,
+      "operator_complexity": 1.0593781072937047,
+      "reduced_matrix_sha256": "5f795cd4c6510e669b8c577464bf30778185aeb531ba2f5d3ea9111e67816468"
+    }
+  ],
+  "solve_s": 716.9444413090023,
+  "stiffness": [
+    [
+      0.13865633732531274,
+      0.10658332670072762,
+      0.1065859930094975,
+      1.0298323935018212e-05,
+      8.543781801863691e-06,
+      3.1638418837897376e-06
+    ],
+    [
+      0.10658332670072762,
+      0.1386757424208346,
+      0.10659408000412077,
+      1.3348117906582558e-05,
+      4.58835477973037e-06,
+      6.901070799485083e-06
+    ],
+    [
+      0.1065859930094975,
+      0.10659408000412077,
+      0.13868297600941798,
+      5.400513067922845e-06,
+      1.2897998048825045e-05,
+      8.587861792395791e-06
+    ],
+    [
+      1.0298323935018212e-05,
+      1.3348117906582558e-05,
+      5.400513067922845e-06,
+      0.10315105380471157,
+      4.70741096189934e-06,
+      5.940812470470635e-06
+    ],
+    [
+      8.543781801863691e-06,
+      4.58835477973037e-06,
+      1.2897998048825045e-05,
+      4.70741096189934e-06,
+      0.10315441097081565,
+      6.747533134194798e-06
+    ],
+    [
+      3.1638418837897376e-06,
+      6.901070799485083e-06,
+      8.587861792395791e-06,
+      5.940812470470635e-06,
+      6.747533134194798e-06,
+      0.10316624904455426
+    ]
+  ],
+  "total_audit_workflow_s": 736.5068683770005,
+  "total_workflow_s": 736.5068683770005
+}

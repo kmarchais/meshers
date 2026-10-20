@@ -1,0 +1,45 @@
+{
+  "source": "experiments/adaptive/runs/g3-gyroid-prepared-repair-boundary-star-v1",
+  "source_result_sha256": "1ffabf4c767916ed9c8f40458d333e3537b97d730157f93c5bf2332bc7d900d7",
+  "verifier_sha256": "c1c5133d036aa1f92dc22d3fd7c4fd1e7490ba024d13a2c43971e9795b7647dd",
+  "passed": true,
+  "measurement_source_ref": null,
+  "archived_source_hash_records": 0,
+  "longdouble_mantissa_bits": 64,
+  "extended_precision_upper_bound": -0.000976627527263101,
+  "checked_fixed_neighbor_obstruction": true,
+  "active_constraints": [
+    {
+      "element": 54892,
+      "weight": 8.137647215300375e-09,
+      "fixed_opposite_vertices": [
+        26450,
+        8024,
+        26752
+      ],
+      "other_interior_vertices": []
+    },
+    {
+      "element": 62548,
+      "weight": 0.9295834403212089,
+      "fixed_opposite_vertices": [
+        6658,
+        26449,
+        26450
+      ],
+      "other_interior_vertices": []
+    },
+    {
+      "element": 95388,
+      "weight": 0.07041655154114387,
+      "fixed_opposite_vertices": [
+        26449,
+        13011,
+        26450
+      ],
+      "other_interior_vertices": []
+    }
+  ],
+  "other_interior_vertices_in_active_constraints": [],
+  "scope": "Independent scalar-triple-product and eight-box-corner replay; fixed-neighbor floating-point witness, not interval certification or coupled-relocation impossibility"
+}

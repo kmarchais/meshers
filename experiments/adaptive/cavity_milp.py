@@ -7,14 +7,17 @@ import numpy as np
 from scipy.optimize import Bounds, LinearConstraint, milp
 
 from bistellar_probe import oriented_boundary
+from mmg_quality_localization import quality
 
 
-def solve_cavity(points, original, target, *, maximum_vertices=7, minimum_relative_determinant=0):
-    vertices = np.unique(original)
-    if maximum_vertices not in (7, 9):
-        raise ValueError("Only seven- or nine-vertex stages are supported")
+def solve_cavity(points, original, target, *, maximum_vertices=7, minimum_relative_determinant=0, quality_target=0, extra_vertices=()):
+    vertices = np.union1d(np.unique(original), np.asarray(extra_vertices, dtype=int))
+    assert vertices.min() >= 0 and vertices.max() < len(points)
+    if maximum_vertices not in (7, 9, 16):
+        raise ValueError("Only seven-, nine-, or sixteen-vertex stages are supported")
     if len(vertices) > maximum_vertices:
-        raise ValueError("Expanded cavity exceeds seven-vertex limit")
+        label = {7: "seven", 9: "nine", 16: "sixteen"}[maximum_vertices]
+        raise ValueError(f"Expanded cavity exceeds {label}-vertex limit")
     candidates = np.array(list(combinations(map(int, vertices), 4)))
     old_volume = float(np.linalg.det(points[original[:, 1:]] - points[original[:, :1]]).sum())
     assert old_volume > 0
@@ -24,7 +27,13 @@ def solve_cavity(points, original, target, *, maximum_vertices=7, minimum_relati
     determinants = determinants[retained]
     negative = determinants < 0
     candidates[negative, 1], candidates[negative, 2] = candidates[negative, 2].copy(), candidates[negative, 1].copy()
-    assert len(candidates) <= 126
+    if quality_target > 0:
+        candidates = candidates[quality(points, candidates) >= quality_target]
+    assert len(candidates) <= 1820
+    if not len(candidates):
+        return None, {"vertices": vertices.tolist(), "candidate_tetrahedra": 0,
+            "quality_target": quality_target, "passed": False, "solver_status": None,
+            "solver_message": "No candidate meets the prescribed quality and determinant guards"}
     boundaries = [oriented_boundary(cell[None]) for cell in candidates]
     keys = sorted(set(target).union(*(set(boundary) for boundary in boundaries)))
     matrix = np.array([[boundary.get(key, 0) for boundary in boundaries] for key in keys], dtype=np.int16)
@@ -36,6 +45,7 @@ def solve_cavity(points, original, target, *, maximum_vertices=7, minimum_relati
                 LinearConstraint(abs(matrix), 0, limits)],
             options={"time_limit": 2, "node_limit": 1000, "threads": 1, "mip_rel_gap": 0})
     report = {"vertices": vertices.tolist(), "candidate_tetrahedra": len(candidates),
+        "quality_target": quality_target,
         "solver_status": int(result.status), "solver_message": result.message,
         "solver_warnings": [str(item.message) for item in caught], "passed": False}
     if result.x is None:
@@ -44,6 +54,7 @@ def solve_cavity(points, original, target, *, maximum_vertices=7, minimum_relati
     if np.max(abs(result.x - rounded)) > 1e-8 or not np.array_equal(matrix @ rounded, desired) or np.any(abs(matrix) @ rounded > limits):
         return None, dict(report, replay_rejected="integer-face-equations")
     selected = candidates[rounded.astype(bool)]
+    assert quality_target <= 0 or quality(points, selected).min() >= quality_target
     new_determinants = np.linalg.det(points[selected[:, 1:]] - points[selected[:, :1]])
     assert old_volume > 0
     difference = float(abs(new_determinants.sum() - old_volume) / old_volume)

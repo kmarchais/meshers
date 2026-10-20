@@ -16,6 +16,7 @@ from scipy.optimize import linprog, minimize
 
 import microgen_workflow as workflow
 from job_parts import worker_part
+from facet_incidence_audit import audit
 from mmg_quality_localization import quality
 
 sys.path.insert(0, str(Path.home() / "bin"))
@@ -121,24 +122,34 @@ def diagnose(points, cells, node, target=.1):
         "scope": "Floating-point checked concave-tangent bound for this single moving vertex and fixed neighbors inside the comparison box; not interval certification, coupled-relocation impossibility, or continuum accuracy"}
 
 
-def worker(run):
-    source = json.loads((SOURCE / "result.json").read_text())
-    assert not source["qualified"] and source["repair"]["remaining_bad_elements"] == 49
-    mesh = np.load(SOURCE / "mesh.npz")
+def worker(run, source_path, boundary_only):
+    source = json.loads((source_path / "result.json").read_text())
+    assert not source["qualified"] and source["repair"]["remaining_bad_elements"] > 0
+    mesh = np.load(source_path / "mesh.npz")
     points, cells, surface = (mesh[name] for name in ("points", "tetrahedra", "surface"))
     assert len(cells) <= workflow.CAP
+    assert audit(points, cells, surface)["oriented_facet_consistency_passed"], "Retired incoherent source is unsupported"
     measured = quality(points, cells)
     worst = int(measured.argmin())
     boundary = np.zeros(len(points), dtype=bool)
     boundary[np.unique(surface)] = True
     free = cells[worst][~boundary[cells[worst]]]
-    assert len(free) == 1
-    report = diagnose(points, cells, int(free[0]))
-    model = StarConstraints(points, cells, int(free[0]), .1)
-    independently_checked = checked_upper_bound(model, np.asarray(report["normalized_expansion_point"]), report["weights"])
-    assert abs(independently_checked - report["checked_tangent_upper_bound"]) < 1e-14
-    workflow.save(run / "result.json", {"case": "gyroid", "source": str(SOURCE), "worst_element": worst,
-        "diagnostic": report, "global_geometry_unchanged": True, "source_mesh_unchanged": True,
+    assert 1 <= len(free) <= 2
+    reports = []
+    for node in free:
+        selected = np.flatnonzero((cells == node).any(axis=1))
+        if boundary_only:
+            selected = np.array([index for index in selected if boundary[cells[index][cells[index] != node]].all()])
+        assert len(selected)
+        report = diagnose(points, cells[selected], int(node))
+        report["constraint_elements"] = selected.tolist()
+        model = StarConstraints(points, cells[selected], int(node), .1)
+        independently_checked = checked_upper_bound(model, np.asarray(report["normalized_expansion_point"]), report["weights"])
+        assert abs(independently_checked - report["checked_tangent_upper_bound"]) < 1e-14
+        reports.append(report)
+    workflow.save(run / "result.json", {"case": "gyroid", "source": str(source_path), "worst_element": worst,
+        "diagnostic": reports[0], "diagnostics": reports, "global_geometry_unchanged": True, "source_mesh_unchanged": True,
+        "boundary_only": boundary_only,
         "qualified": False, "stiffness_solve_performed": False,
         "scope": "One frozen failed star, no vertex moves applied to source mesh, no new remeshing or stiffness workflow"})
 
@@ -147,25 +158,30 @@ def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--run", type=Path, required=True)
     parser.add_argument("--worker", action="store_true")
+    parser.add_argument("--source", type=Path, default=SOURCE)
+    parser.add_argument("--boundary-only", action="store_true")
     args = parser.parse_args()
     if args.worker:
-        worker(args.run)
+        worker(args.run, args.source, args.boundary_only)
         return
     args.run.mkdir(parents=True, exist_ok=False)
     shutil.copyfile(__file__, args.run / "driver.py")
-    paths = [Path(__file__), SOURCE / "result.json", SOURCE / "mesh.npz"]
+    paths = [Path(__file__), args.source / "result.json", args.source / "mesh.npz"]
     paths.extend(workflow.HERE / name for name in ("test_star_feasibility.py", "job_parts.py", "test_job_parts.py",
-        "microgen_workflow.py", "mmg_quality_localization.py"))
+        "microgen_workflow.py", "mmg_quality_localization.py", "facet_incidence_audit.py"))
     hashes = {str(path): workflow.digest(path) for path in paths}
     workflow.save(args.run / "manifest.json", {"inputs": hashes, "memory_bytes": workflow.MEMORY,
         "threads": 1, "highs_threads": 1, "worker_timeout_s": 120, "quality_target": .1,
-        "negative_margin": BOUND_MARGIN, "one_star_only": True,
+        "negative_margin": BOUND_MARGIN, "maximum_stars": 2, "one_worst_element_only": True,
+        "boundary_only": args.boundary_only,
         "packages": {name: importlib.metadata.version(name) for name in ("numpy", "scipy")}})
     with Job(parts=["controls", "frozen-star"]) as job:
         for stage in ("controls", "frozen-star"):
             with worker_part(job, stage) as part:
                 arguments = (["-m", "pytest", "-q", "experiments/adaptive/test_star_feasibility.py", "experiments/adaptive/test_job_parts.py"]
-                    if stage == "controls" else [__file__, "--run", str(args.run), "--worker"])
+                    if stage == "controls" else [__file__, "--run", str(args.run), "--source", str(args.source), "--worker"])
+                if stage != "controls" and args.boundary_only:
+                    arguments.append("--boundary-only")
                 record = workflow.bounded([sys.executable, *arguments], args.run / (stage + ".log"), part, timeout=120)
                 workflow.save(args.run / (stage + "-worker.json"), record)
                 assert record["returncode"] == 0, f"Read {stage}.log"

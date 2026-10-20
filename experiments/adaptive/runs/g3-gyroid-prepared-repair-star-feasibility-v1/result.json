@@ -1,0 +1,152 @@
+{
+  "case": "gyroid",
+  "source": "experiments/adaptive/runs/g3-gyroid-prepared-mmg-interior-repair-v1",
+  "worst_element": 62548,
+  "diagnostic": {
+    "node": 19446,
+    "incident_tets": 20,
+    "quality_target": 0.1,
+    "initial_minimum_quality": 0.051264336176680525,
+    "candidate_minimum_quality": 0.0740735439766976,
+    "candidate_minimum_signed_determinant": 2.51601451584194e-07,
+    "candidate_coordinates": [
+      0.02783055738557571,
+      0.48379565339878944,
+      0.11041310516671188
+    ],
+    "positive_candidate_at_target": false,
+    "slack_optimizer_success": true,
+    "slack_optimizer_message": "Optimization terminated successfully",
+    "slack_iterations": 13,
+    "optimal_slack_reported": 0.0010095246559649058,
+    "minimum_slack_constraint": 1.5178830414797062e-18,
+    "checked_tangent_upper_bound": -0.0010095246559646987,
+    "required_negative_margin": 1e-08,
+    "fixed_neighbor_obstruction": true,
+    "weights": [
+      0.005088106225508593,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.9061280608136706,
+      0.0,
+      0.023521272606300367,
+      0.0,
+      0.0,
+      0.0,
+      0.06526256035452038,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0
+    ],
+    "normalized_expansion_point": [
+      0.039279074206054566,
+      -0.31665487223659594,
+      -0.14756575732264096
+    ],
+    "normalized_box_lower": [
+      -19.501308158046545,
+      -36.737329111274754,
+      -22.745405845059615
+    ],
+    "normalized_box_upper": [
+      17.519260202072793,
+      0.2832392488445871,
+      14.275162515059725
+    ],
+    "physical_origin": [
+      0.0267695506008077,
+      0.492349138292817,
+      0.114399153027652
+    ],
+    "scale": 0.027012011006218285,
+    "linear_solver_success": true,
+    "linear_solver_warnings": [
+      "Unrecognized options detected: {'threads': 1}. These will be passed to HiGHS verbatim."
+    ],
+    "scope": "Floating-point checked concave-tangent bound for this single moving vertex and fixed neighbors inside the comparison box; not interval certification, coupled-relocation impossibility, or continuum accuracy"
+  },
+  "diagnostics": [
+    {
+      "node": 19446,
+      "incident_tets": 20,
+      "quality_target": 0.1,
+      "initial_minimum_quality": 0.051264336176680525,
+      "candidate_minimum_quality": 0.0740735439766976,
+      "candidate_minimum_signed_determinant": 2.51601451584194e-07,
+      "candidate_coordinates": [
+        0.02783055738557571,
+        0.48379565339878944,
+        0.11041310516671188
+      ],
+      "positive_candidate_at_target": false,
+      "slack_optimizer_success": true,
+      "slack_optimizer_message": "Optimization terminated successfully",
+      "slack_iterations": 13,
+      "optimal_slack_reported": 0.0010095246559649058,
+      "minimum_slack_constraint": 1.5178830414797062e-18,
+      "checked_tangent_upper_bound": -0.0010095246559646987,
+      "required_negative_margin": 1e-08,
+      "fixed_neighbor_obstruction": true,
+      "weights": [
+        0.005088106225508593,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.9061280608136706,
+        0.0,
+        0.023521272606300367,
+        0.0,
+        0.0,
+        0.0,
+        0.06526256035452038,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "normalized_expansion_point": [
+        0.039279074206054566,
+        -0.31665487223659594,
+        -0.14756575732264096
+      ],
+      "normalized_box_lower": [
+        -19.501308158046545,
+        -36.737329111274754,
+        -22.745405845059615
+      ],
+      "normalized_box_upper": [
+        17.519260202072793,
+        0.2832392488445871,
+        14.275162515059725
+      ],
+      "physical_origin": [
+        0.0267695506008077,
+        0.492349138292817,
+        0.114399153027652
+      ],
+      "scale": 0.027012011006218285,
+      "linear_solver_success": true,
+      "linear_solver_warnings": [
+        "Unrecognized options detected: {'threads': 1}. These will be passed to HiGHS verbatim."
+      ],
+      "scope": "Floating-point checked concave-tangent bound for this single moving vertex and fixed neighbors inside the comparison box; not interval certification, coupled-relocation impossibility, or continuum accuracy"
+    }
+  ],
+  "global_geometry_unchanged": true,
+  "source_mesh_unchanged": true,
+  "qualified": false,
+  "stiffness_solve_performed": false,
+  "scope": "One frozen failed star, no vertex moves applied to source mesh, no new remeshing or stiffness workflow"
+}

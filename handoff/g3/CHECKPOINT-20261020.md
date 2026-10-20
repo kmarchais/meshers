@@ -1,5 +1,69 @@
 # G3 continuation checkpoint, 20 October 2026
 
+## Paused after job 379, 21:41 Europe/Paris
+
+The user requested a project pause after the current job finishes. Job 379
+has finished successfully, and no successor was submitted. Resume only on
+explicit instruction. Earlier active/queued descriptions below are historical.
+
+Final record is `experiments/adaptive/runs/g3-lattice-adapt26-tol0028-amg-solve-v1/result.json`.
+Fresh lattice26 has 199,972 nodes, 128,300 curved Tet10 elements, and passes
+geometry, quality, oriented-facet, and periodic admission. All six engineering
+strain loads finish with cached elastic-block AMG and 15-point quadrature.
+Charged workflow is 736.51 seconds, worker wall 738.82 seconds, peak RSS
+5,781,733,376 bytes. Largest reported residual is 9.41e-13. Native binary
+and frozen specimen hashes are unchanged.
+
+A read-only full-matrix comparison to the unchanged 24 models gives worst
+disagreement 1.2686985%, above 1%, at model 0 of
+`g3-lattice-reference-sensitivity-v2.json`. Three models exceed 1%.
+This is preliminary. No independent saved-field, reaction, Hill-Mandel, or
+higher-positive-quadrature audit has run for this candidate. The final status
+is `solved-needs-reference`; `qualified=true` denotes geometry only.
+All six load archives and mesh remain local and ignored. Do not rerun them
+merely to recover context. No matched-accuracy or four-fixture victory follows.
+
+Jobs 370, 372, 374, and 375 are also terminal. The independently replayed
+boundary-only witness rules out fixed-connectivity interior-only repair of
+the worst Gyroid star. Eight local flips fail, the existing-vertex complete
+star binary trial rejects, and one cap-optimal Steiner candidate lies outside
+the star. No FE follows and arbitrary remeshing is not ruled out.
+
+Job 377 establishes algebraic feasibility of the retained lattice 1% target,
+with pairwise lower bound 0.9019313% and a harmonic trial at 0.9084715%.
+The trial is not a physical reference. Geometry preflight 378 admits the
+lattice26 configuration before the fresh workflow. Full details and restart
+limits are in the root `PROJECT_TRACKING.md`. No new research job is pending
+from this session.
+
+## Active checkpoint after repair 366 and star check 368
+
+Both are terminal. The fixed-boundary repair accepts 64 moves and reduces
+104 bad tets to 16, with quality 0.05126434. Its second sweep accepts none.
+Boundary and connectivity stay identical, volume changes by -7.40e-17,
+distance remains 0.0019272611, and periodic/incidence checks pass. Repair is
+8.73 seconds, worker 14.42 seconds at 0.4054 GiB. No FE or admission follows.
+
+Worst node19446 has 20 incident tets and a checked fixed-neighbor tangent
+bound -0.001009524655965 at quality 0.1. Independent 64-bit-mantissa replay
+agrees. Active constraints also involve interior vertices 805, 8895, and
+10865, so coupled moves are not ruled out by that witness.
+
+Job 370 is queued behind another shared job. Observe pueue370 or qrun
+session35112. It checks only necessary constraints whose three opposite
+vertices are fixed boundary vertices. Do not repeat sweeps or select coupled
+relocation before reading it. Its run directory is
+`runs/g3-gyroid-prepared-repair-boundary-star-v1` under `experiments/adaptive`.
+No boundary-only result exists at this checkpoint. The verifier now accepts
+explicit constraint-element subsets and independently checks their membership
+and fixed-boundary property. Old witnesses and outputs remain unchanged.
+
+Latest completed records are `runs/g3-gyroid-prepared-mmg-interior-repair-v1`,
+`runs/g3-gyroid-prepared-repair-star-feasibility-v1`, and
+`runs/g3-gyroid-prepared-repair-star-witness-audit-v1.json`. No native code,
+references, specimen definitions, or admission gates change. Earlier sections
+below are historical.
+
 ## Active checkpoint after classification 364
 
 Job 364 is terminal success. All 104 bad cells in the fitting prepared-seed

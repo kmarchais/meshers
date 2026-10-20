@@ -1,0 +1,26 @@
+{
+  "script_sha256": "49c4897f6632dca1b07d44454eed197d3b9a62de9aefa5b13df73edbc2578d83",
+  "native_sha256": "908e326211792142f83f854ad2696cd879d927bd81deacf38eb6a0cb63bc4dc1",
+  "inputs": {
+    "/home/kmarchais/dev/meshers/experiments/adaptive/runs/g3-microgen-defaults-v4/smooth-lattice-samples.npz": "a2b4375d2c99901f03b34e913563c887a4cdcff00bca35983adb7ef9d5311abe",
+    "/home/kmarchais/dev/meshers/experiments/adaptive/runs/g3-microgen-defaults-v4/smooth-lattice-specimen.json": "0e5b34b76183341a6e0d454f13cd404668ab82675f9a51cd9d2ecf3c91be3316"
+  },
+  "memory_bytes": 8589934592,
+  "threads": 1,
+  "timeout_s": 1800,
+  "python_source_sha256": {
+    "/home/kmarchais/dev/meshers/experiments/adaptive/admission_pilot.py": "49c4897f6632dca1b07d44454eed197d3b9a62de9aefa5b13df73edbc2578d83",
+    "/home/kmarchais/dev/meshers/experiments/adaptive/microgen_workflow.py": "d644b586c8539d3ee53dc772c5cd8a24fb87819395d181a262c38f6770453af2",
+    "/home/kmarchais/dev/meshers/experiments/adaptive/stress_recovery.py": "c9d74455c014c3b56ab656ca3f6a9cbf259dc11904318fecc354dcc6368651ac",
+    "/home/kmarchais/dev/meshers/experiments/adaptive/tet10_integration.py": "b5adbf4a96ee90953d546c654992d4380843e3b1a865e64e043cd14529e3865d",
+    "/home/kmarchais/dev/meshers/experiments/adaptive/job_parts.py": "7082e64a3d6f1029dfe871702e6ef53cc514f08a0687b4065f1412d65b427b78",
+    "/home/kmarchais/dev/meshers/experiments/adaptive/facet_incidence_audit.py": "4f51afc196c85e1d0bc64d7a96507517ddc6e32ccd8380a2ac77cae0ace89610",
+    "/home/kmarchais/dev/meshers/experiments/adaptive/gradient_tie_probe.py": "f2fddde187144f52527bd8563b34128831cc4f8733ef720ad86cf7c5db8d2762",
+    "/home/kmarchais/dev/meshers/crates/meshers-python/python/meshers/expression.py": "abf5e43d1b7e9fb05c7d081bd55c0f4ad74f1c6cc4d9ed7a89fb2881445c13f4",
+    "/home/kmarchais/dev/meshers/experiments/adaptive/amg_reference.py": "65f2f06f6764f97e68050a477233736b85e713e3674fa55ee80a4b50a788bd7a"
+  },
+  "solver": "cached-elastic-block-amg-cg",
+  "pyamg": "5.3.0",
+  "native_sha256_after": "908e326211792142f83f854ad2696cd879d927bd81deacf38eb6a0cb63bc4dc1",
+  "tet_adapt_sha256": "271ca423ea954837c239bd6af891cde36f4cb033d4e5c8eb0a08ab6e4600871c"
+}

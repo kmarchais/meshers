@@ -718,3 +718,44 @@ guarded relocation algorithm with an explicit source argument. Keep two
 sweeps, 400 attempts, complete-star target 0.100001, connectivity, boundary,
 volume, and every final gate fixed. Seven focused controls pass. Read this
 trial before another MMG or FE experiment. Applicability is not feasibility.
+
+Repair 366 is terminal but incomplete. It accepts 64 moves, reducing bad tets
+104 to 16, with minimum quality 0.05126434. The second sweep accepts none.
+All boundary, volume, geometry, periodic, and incidence checks remain fixed.
+No FE follows. Stop this recipe rather than repeating the same sweep.
+
+Diagnostic 368 finds a checked fixed-neighbor obstruction at worst node19446,
+with independent extended-precision replay. Three other interior vertices
+participate in the active witness. Check the boundary-only subset of necessary
+constraints before choosing coupled relocation or connectivity changes.
+
+Check 370 finds a boundary-only obstruction independent of other interior
+moves, with extended-precision replay. Preflight 372 rejects all eight 2-to-3
+alternatives. Complete-star trial 374 reports infeasible for 477 quality-filtered
+candidates on 13 vertices. Trial 375 rejects one analytic cap-optimal apex because
+it lies outside the fixed star. No additional point, source edit, or FE follows.
+Stop these particular recipes without claiming universal remeshing failure.
+
+Before more expensive tuning, assessment 377 checks the retained lattice
+target. Its pairwise lower bound is 0.9019313%, and a trial SPD matrix passes
+all 24 models at 0.9084715%. The 1% rule is algebraically feasible. Keep every model,
+the same admission metric, and the distinction between a mathematical trial
+and a physical stiffness reference.
+
+Preflight 378 selects current-native lattice26 under the fixed solve budget.
+It passes at 199,972 nodes, 128,300 tets, distance 0.0003236401, and quality 0.149329.
+Run one fresh regeneration and six-load 15-point curved-Tet10 AMG workflow before assessing
+accuracy. The old lattice24binary differs; no pure-refinement or timing claim
+comes from the rough count projection. No volume-offset, size-strength,
+parallelization, or speculative feature change is selected.
+
+## Pause checkpoint, 20 October 2026
+
+The user requested a pause after the current job finishes. Job 379 is now
+terminal success: six fresh lattice26 AMG loads, 199,972 nodes, 128,300 tets,
+736.51 seconds charged workflow. Preliminary worst disagreement across all
+24 unchanged models is 1.2686985%, so the 1% condition is still not met.
+Independent saved-field and higher-quadrature checks remain pending.
+No successor experiment or audit was queued. Resume only on explicit user
+instruction, starting from the root `PROJECT_TRACKING.md` and the final
+20 October checkpoint. Older selected-next instructions above are historical.

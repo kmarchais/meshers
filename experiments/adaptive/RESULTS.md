@@ -1,5 +1,51 @@
 # Adaptive and quadratic implicit meshing: results
 
+## Paused after completed lattice26 workflow, 2026-10-20
+
+Job 379 completes all six fresh AMG loads on a geometry-admitted curved
+Tet10 mesh with 199,972 nodes and 128,300 elements. Charged workflow is
+736.51 seconds; bounded worker peak RSS is 5,781,733,376 bytes. Preliminary
+full-matrix comparison against the unchanged 24 models gives 1.2686985%
+worst disagreement, above the fixed 1% target. Independent field and
+higher-quadrature audits remain pending. Geometry qualification alone is
+not stiffness verification. No successor was queued after the user's pause
+request, and the four-fixture objective remains unachieved. See the root
+`PROJECT_TRACKING.md` and `CUBIC_RESULTS.md` for the final checkpoint.
+
+## Lattice target feasibility and finer preflight, 2026-10-20
+
+Assessment 377 retains all 24 model tensors and checks full-matrix target
+feasibility. Their necessary pairwise error lower bound is 0.9019313%.
+A harmonic trial matrix passes every model at 0.9084715%, so the 1% condition
+is algebraically feasible. This trial is not a mesh or reference. No admission
+gate, model, or frozen result changes.
+
+Current-native lattice26 preflight 378 passes geometry at 199,972 nodes and
+128,300 tets, distance 0.0003236401 and quality 0.149329. One fresh regenerated
+six-load AMG workflow is selected under the existing 250,000-node and 8 GiB limits.
+No stiffness, audited timing ratio, or workflow victory is claimed yet.
+
+## Fixed-boundary repair does not yet qualify Gyroid, 2026-10-20
+
+Job 366 accepts 64 interior moves and reduces the coherent actual-MMG output
+from 104 bad tets to 16. Minimum quality 0.05126434 still rejects. Boundary,
+connectivity, volume, periodicity, and sampled distance remain unchanged.
+The second sweep accepts no moves. No FE runs.
+
+Job 368 and independent extended-precision replay establish a fixed-neighbor
+obstruction for the worst vertex at quality 0.1. Its active witness includes
+three other interior vertices, so this does not rule out coupled moves.
+The next diagnostic isolates fixed-boundary-only necessary constraints before
+choosing another repair. Details and preserved failures are in
+`MICROGEN_RESULTS.md`.
+
+Boundary-only check 370 subsequently finds an obstruction independent of other
+interior vertices, verified in extended precision. All eight 2-to-3 candidates
+in 372 fail. A complete 13-vertex star solve in 374 reports infeasible after
+quality filtering. Job 375 rejects one noncontained analytic Steiner point before
+insertion. No source changes or FE follow. These bounded negatives do not
+exclude larger remeshing or other boundary/Steiner constructions.
+
 ## Complete cap preparation still needs MMG quality, 2026-10-20
 
 Jobs 350–354 complete the fixed Gyroid31 cap replacement on a fresh copy.

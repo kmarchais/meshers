@@ -62,7 +62,9 @@ def main():
     mesh = np.load(source / "mesh.npz")
     points, cells, surface = (mesh[name] for name in ("points", "tetrahedra", "surface"))
     node = row["node"]
-    selected = np.flatnonzero((cells == node).any(axis=1))
+    selected = np.asarray(row["constraint_elements"]) if "constraint_elements" in row else np.flatnonzero((cells == node).any(axis=1))
+    assert len(np.unique(selected)) == len(selected) and selected.min() >= 0 and selected.max() < len(cells)
+    assert (cells[selected] == node).any(axis=1).all()
     assert len(selected) == row["incident_tets"]
     np.testing.assert_array_equal(points[node], row["physical_origin"])
     assert np.finfo(np.longdouble).nmant > np.finfo(float).nmant
@@ -73,6 +75,8 @@ def main():
     assert obstructed == row["fixed_neighbor_obstruction"]
     boundary = np.zeros(len(points), dtype=bool)
     boundary[np.unique(surface)] = True
+    if result.get("boundary_only"):
+        assert all(boundary[cell[cell != node]].all() for cell in cells[selected])
     active, neighbors = [], set()
     for local, weight in enumerate(row["weights"]):
         if weight <= 1e-12:

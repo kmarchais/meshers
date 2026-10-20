@@ -1,0 +1,64 @@
+{
+  "source": "experiments/adaptive/runs/g3-gyroid-prepared-repair-star-feasibility-v1",
+  "source_result_sha256": "c26551702fa8b0d9ab2148db94b062c2dbd554659b027bc443063aa563bbc88c",
+  "verifier_sha256": "af4d22492e630b98caf1a27b12873bbdb2f0a6767ef35489d604b5c64b084c76",
+  "passed": true,
+  "measurement_source_ref": null,
+  "archived_source_hash_records": 0,
+  "longdouble_mantissa_bits": 64,
+  "extended_precision_upper_bound": -0.001009524655964881,
+  "checked_fixed_neighbor_obstruction": true,
+  "active_constraints": [
+    {
+      "element": 2631,
+      "weight": 0.005088106225508593,
+      "fixed_opposite_vertices": [
+        10865,
+        22271,
+        805
+      ],
+      "other_interior_vertices": [
+        10865,
+        805
+      ]
+    },
+    {
+      "element": 62548,
+      "weight": 0.9061280608136706,
+      "fixed_opposite_vertices": [
+        6658,
+        26449,
+        26450
+      ],
+      "other_interior_vertices": []
+    },
+    {
+      "element": 71984,
+      "weight": 0.023521272606300367,
+      "fixed_opposite_vertices": [
+        6658,
+        8895,
+        26752
+      ],
+      "other_interior_vertices": [
+        8895
+      ]
+    },
+    {
+      "element": 95388,
+      "weight": 0.06526256035452038,
+      "fixed_opposite_vertices": [
+        26449,
+        13011,
+        26450
+      ],
+      "other_interior_vertices": []
+    }
+  ],
+  "other_interior_vertices_in_active_constraints": [
+    805,
+    8895,
+    10865
+  ],
+  "scope": "Independent scalar-triple-product and eight-box-corner replay; fixed-neighbor floating-point witness, not interval certification or coupled-relocation impossibility"
+}
