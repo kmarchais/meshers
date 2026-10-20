@@ -1,0 +1,1571 @@
+{
+  "source": "/home/kmarchais/dev/meshers/experiments/adaptive/runs/g3-gyroid-preclip31-five-v2/pretriangulated",
+  "case": "gyroid",
+  "blocked_cap_faces": [
+    150,
+    402,
+    594,
+    846,
+    1363,
+    1394,
+    1399,
+    1459,
+    1914,
+    2017,
+    2248,
+    2254,
+    3046,
+    3066,
+    3071,
+    3142,
+    3598,
+    3701,
+    3924,
+    3929,
+    4250,
+    4501,
+    4679,
+    4931
+  ],
+  "blocked_count": 24,
+  "candidate_count": 48,
+  "locally_feasible_count": 24,
+  "blocked_faces_with_local_alternative": 24,
+  "blocked_faces_without_local_alternative": [],
+  "outer_edges": [
+    [
+      20425,
+      20427
+    ],
+    [
+      10624,
+      10625
+    ],
+    [
+      20579,
+      20580
+    ],
+    [
+      10759,
+      10760
+    ],
+    [
+      21705,
+      21706
+    ],
+    [
+      21497,
+      21500
+    ],
+    [
+      21514,
+      21517
+    ],
+    [
+      21997,
+      21999
+    ],
+    [
+      23667,
+      23668
+    ],
+    [
+      23974,
+      23975
+    ],
+    [
+      14584,
+      14586
+    ],
+    [
+      14598,
+      14600
+    ],
+    [
+      16661,
+      16663
+    ],
+    [
+      26301,
+      26324
+    ],
+    [
+      26322,
+      26337
+    ],
+    [
+      16953,
+      16956
+    ],
+    [
+      18633,
+      18634
+    ],
+    [
+      18929,
+      18930
+    ],
+    [
+      19436,
+      19457
+    ],
+    [
+      19455,
+      19467
+    ],
+    [
+      30137,
+      30139
+    ],
+    [
+      20297,
+      20298
+    ],
+    [
+      30212,
+      30213
+    ],
+    [
+      20372,
+      20373
+    ]
+  ],
+  "candidates": [
+    {
+      "triangles": [
+        149,
+        150
+      ],
+      "shared_edge": [
+        42,
+        20427
+      ],
+      "alternative_edge": [
+        20426,
+        20425
+      ],
+      "local_target_passed": false,
+      "status": "cap-ceiling-rejected",
+      "axis": 2,
+      "side": -0.5,
+      "alternative_triangles": [
+        [
+          20426,
+          42,
+          20425
+        ],
+        [
+          20426,
+          20425,
+          20427
+        ]
+      ],
+      "old_minimum_ceiling": 0.0904575778413793,
+      "new_minimum_ceiling": 0.053323150739016355,
+      "relative_area_difference": 1.3612831180801598e-16,
+      "oriented_patch_boundary_identical": true
+    },
+    {
+      "triangles": [
+        123,
+        150
+      ],
+      "shared_edge": [
+        42,
+        20425
+      ],
+      "alternative_edge": [
+        33,
+        20427
+      ],
+      "local_target_passed": true,
+      "status": "cap-ceiling-passed",
+      "axis": 2,
+      "side": -0.5,
+      "alternative_triangles": [
+        [
+          33,
+          20427,
+          42
+        ],
+        [
+          33,
+          20425,
+          20427
+        ]
+      ],
+      "old_minimum_ceiling": 0.0904575778413793,
+      "new_minimum_ceiling": 0.12521739371241528,
+      "relative_area_difference": 3.9296710090829053e-16,
+      "oriented_patch_boundary_identical": true
+    },
+    {
+      "triangles": [
+        401,
+        402
+      ],
+      "shared_edge": [
+        123,
+        10625
+      ],
+      "alternative_edge": [
+        10632,
+        10624
+      ],
+      "local_target_passed": false,
+      "status": "nonconvex-or-boundary-mismatch"
+    },
+    {
+      "triangles": [
+        366,
+        402
+      ],
+      "shared_edge": [
+        123,
+        10624
+      ],
+      "alternative_edge": [
+        113,
+        10625
+      ],
+      "local_target_passed": true,
+      "status": "cap-ceiling-passed",
+      "axis": 2,
+      "side": -0.5,
+      "alternative_triangles": [
+        [
+          113,
+          10625,
+          123
+        ],
+        [
+          113,
+          10624,
+          10625
+        ]
+      ],
+      "old_minimum_ceiling": 0.0871005200512504,
+      "new_minimum_ceiling": 0.4458032150984547,
+      "relative_area_difference": 0.0,
+      "oriented_patch_boundary_identical": true
+    },
+    {
+      "triangles": [
+        572,
+        594
+      ],
+      "shared_edge": [
+        183,
+        20579
+      ],
+      "alternative_edge": [
+        175,
+        20580
+      ],
+      "local_target_passed": true,
+      "status": "cap-ceiling-passed",
+      "axis": 2,
+      "side": -0.5,
+      "alternative_triangles": [
+        [
+          175,
+          183,
+          20580
+        ],
+        [
+          175,
+          20580,
+          20579
+        ]
+      ],
+      "old_minimum_ceiling": 0.09045757784137802,
+      "new_minimum_ceiling": 0.12521739371241444,
+      "relative_area_difference": 0.0,
+      "oriented_patch_boundary_identical": true
+    },
+    {
+      "triangles": [
+        594,
+        595
+      ],
+      "shared_edge": [
+        183,
+        20580
+      ],
+      "alternative_edge": [
+        20579,
+        184
+      ],
+      "local_target_passed": false,
+      "status": "cap-ceiling-rejected",
+      "axis": 2,
+      "side": -0.5,
+      "alternative_triangles": [
+        [
+          20579,
+          183,
+          184
+        ],
+        [
+          20579,
+          184,
+          20580
+        ]
+      ],
+      "old_minimum_ceiling": 0.09045757784137802,
+      "new_minimum_ceiling": 0.04579148505466677,
+      "relative_area_difference": 3.8080371511101617e-16,
+      "oriented_patch_boundary_identical": true
+    },
+    {
+      "triangles": [
+        816,
+        846
+      ],
+      "shared_edge": [
+        265,
+        10759
+      ],
+      "alternative_edge": [
+        255,
+        10760
+      ],
+      "local_target_passed": true,
+      "status": "cap-ceiling-passed",
+      "axis": 2,
+      "side": -0.5,
+      "alternative_triangles": [
+        [
+          255,
+          265,
+          10760
+        ],
+        [
+          255,
+          10760,
+          10759
+        ]
+      ],
+      "old_minimum_ceiling": 0.0871005200512477,
+      "new_minimum_ceiling": 0.44580321509844656,
+      "relative_area_difference": 1.9950287708754853e-16,
+      "oriented_patch_boundary_identical": true
+    },
+    {
+      "triangles": [
+        846,
+        847
+      ],
+      "shared_edge": [
+        265,
+        10760
+      ],
+      "alternative_edge": [
+        10759,
+        10768
+      ],
+      "local_target_passed": false,
+      "status": "nonconvex-or-boundary-mismatch"
+    },
+    {
+      "triangles": [
+        1362,
+        1363
+      ],
+      "shared_edge": [
+        1335,
+        21705
+      ],
+      "alternative_edge": [
+        1334,
+        21706
+      ],
+      "local_target_passed": true,
+      "status": "cap-ceiling-passed",
+      "axis": 0,
+      "side": -0.5,
+      "alternative_triangles": [
+        [
+          1334,
+          1335,
+          21706
+        ],
+        [
+          1334,
+          21706,
+          21705
+        ]
+      ],
+      "old_minimum_ceiling": 0.09045757784137927,
+      "new_minimum_ceiling": 0.12521739371241344,
+      "relative_area_difference": 0.0,
+      "oriented_patch_boundary_identical": true
+    },
+    {
+      "triangles": [
+        1363,
+        1364
+      ],
+      "shared_edge": [
+        1335,
+        21706
+      ],
+      "alternative_edge": [
+        21705,
+        1727
+      ],
+      "local_target_passed": false,
+      "status": "cap-ceiling-rejected",
+      "axis": 0,
+      "side": -0.5,
+      "alternative_triangles": [
+        [
+          21705,
+          1335,
+          1727
+        ],
+        [
+          21705,
+          1727,
+          21706
+        ]
+      ],
+      "old_minimum_ceiling": 0.09045757784137927,
+      "new_minimum_ceiling": 0.045791485054669866,
+      "relative_area_difference": 1.9040185755550771e-16,
+      "oriented_patch_boundary_identical": true
+    },
+    {
+      "triangles": [
+        1394,
+        1395
+      ],
+      "shared_edge": [
+        1463,
+        21500
+      ],
+      "alternative_edge": [
+        21497,
+        21499
+      ],
+      "local_target_passed": false,
+      "status": "cap-ceiling-rejected",
+      "axis": 1,
+      "side": -0.5,
+      "alternative_triangles": [
+        [
+          21497,
+          1463,
+          21499
+        ],
+        [
+          21497,
+          21499,
+          21500
+        ]
+      ],
+      "old_minimum_ceiling": 0.0904575778413793,
+      "new_minimum_ceiling": 0.0533231507390163,
+      "relative_area_difference": 2.7225662361603207e-16,
+      "oriented_patch_boundary_identical": true
+    },
+    {
+      "triangles": [
+        1279,
+        1394
+      ],
+      "shared_edge": [
+        1463,
+        21497
+      ],
+      "alternative_edge": [
+        1069,
+        21500
+      ],
+      "local_target_passed": true,
+      "status": "cap-ceiling-passed",
+      "axis": 1,
+      "side": -0.5,
+      "alternative_triangles": [
+        [
+          1069,
+          1463,
+          21500
+        ],
+        [
+          1069,
+          21500,
+          21497
+        ]
+      ],
+      "old_minimum_ceiling": 0.0904575778413793,
+      "new_minimum_ceiling": 0.12521739371241528,
+      "relative_area_difference": 1.9648355045414532e-16,
+      "oriented_patch_boundary_identical": true
+    },
+    {
+      "triangles": [
+        1282,
+        1399
+      ],
+      "shared_edge": [
+        1479,
+        21514
+      ],
+      "alternative_edge": [
+        1081,
+        21517
+      ],
+      "local_target_passed": true,
+      "status": "cap-ceiling-passed",
+      "axis": 1,
+      "side": 0.5,
+      "alternative_triangles": [
+        [
+          1081,
+          1479,
+          21517
+        ],
+        [
+          1081,
+          21517,
+          21514
+        ]
+      ],
+      "old_minimum_ceiling": 0.09045757784137923,
+      "new_minimum_ceiling": 0.12521739371241516,
+      "relative_area_difference": 0.0,
+      "oriented_patch_boundary_identical": true
+    },
+    {
+      "triangles": [
+        1399,
+        1400
+      ],
+      "shared_edge": [
+        1479,
+        21517
+      ],
+      "alternative_edge": [
+        21514,
+        21516
+      ],
+      "local_target_passed": false,
+      "status": "cap-ceiling-rejected",
+      "axis": 1,
+      "side": 0.5,
+      "alternative_triangles": [
+        [
+          21514,
+          1479,
+          21516
+        ],
+        [
+          21514,
+          21516,
+          21517
+        ]
+      ],
+      "old_minimum_ceiling": 0.09045757784137923,
+      "new_minimum_ceiling": 0.05332315073901646,
+      "relative_area_difference": 2.7225662361603483e-16,
+      "oriented_patch_boundary_identical": true
+    },
+    {
+      "triangles": [
+        1459,
+        1460
+      ],
+      "shared_edge": [
+        1717,
+        21999
+      ],
+      "alternative_edge": [
+        21997,
+        2087
+      ],
+      "local_target_passed": false,
+      "status": "cap-ceiling-rejected",
+      "axis": 0,
+      "side": 0.5,
+      "alternative_triangles": [
+        [
+          21997,
+          1717,
+          2087
+        ],
+        [
+          21997,
+          2087,
+          21999
+        ]
+      ],
+      "old_minimum_ceiling": 0.09045757784137844,
+      "new_minimum_ceiling": 0.0457914850546667,
+      "relative_area_difference": 1.9040185755550806e-16,
+      "oriented_patch_boundary_identical": true
+    },
+    {
+      "triangles": [
+        1458,
+        1459
+      ],
+      "shared_edge": [
+        1717,
+        21997
+      ],
+      "alternative_edge": [
+        1716,
+        21999
+      ],
+      "local_target_passed": true,
+      "status": "cap-ceiling-passed",
+      "axis": 0,
+      "side": 0.5,
+      "alternative_triangles": [
+        [
+          1716,
+          1717,
+          21999
+        ],
+        [
+          1716,
+          21999,
+          21997
+        ]
+      ],
+      "old_minimum_ceiling": 0.09045757784137844,
+      "new_minimum_ceiling": 0.12521739371241516,
+      "relative_area_difference": 1.9648355045414517e-16,
+      "oriented_patch_boundary_identical": true
+    },
+    {
+      "triangles": [
+        1913,
+        1914
+      ],
+      "shared_edge": [
+        3673,
+        23668
+      ],
+      "alternative_edge": [
+        23665,
+        23667
+      ],
+      "local_target_passed": false,
+      "status": "cap-ceiling-rejected",
+      "axis": 0,
+      "side": -0.5,
+      "alternative_triangles": [
+        [
+          23665,
+          3673,
+          23667
+        ],
+        [
+          23665,
+          23667,
+          23668
+        ]
+      ],
+      "old_minimum_ceiling": 0.0904575778413793,
+      "new_minimum_ceiling": 0.053323150739016355,
+      "relative_area_difference": 1.3612831180801598e-16,
+      "oriented_patch_boundary_identical": true
+    },
+    {
+      "triangles": [
+        1911,
+        1914
+      ],
+      "shared_edge": [
+        3673,
+        23667
+      ],
+      "alternative_edge": [
+        3672,
+        23668
+      ],
+      "local_target_passed": true,
+      "status": "cap-ceiling-passed",
+      "axis": 0,
+      "side": -0.5,
+      "alternative_triangles": [
+        [
+          3672,
+          23668,
+          3673
+        ],
+        [
+          3672,
+          23667,
+          23668
+        ]
+      ],
+      "old_minimum_ceiling": 0.0904575778413793,
+      "new_minimum_ceiling": 0.12521739371241528,
+      "relative_area_difference": 3.9296710090829053e-16,
+      "oriented_patch_boundary_identical": true
+    },
+    {
+      "triangles": [
+        2015,
+        2017
+      ],
+      "shared_edge": [
+        4055,
+        23974
+      ],
+      "alternative_edge": [
+        4054,
+        23975
+      ],
+      "local_target_passed": true,
+      "status": "cap-ceiling-passed",
+      "axis": 0,
+      "side": 0.5,
+      "alternative_triangles": [
+        [
+          4054,
+          23975,
+          4055
+        ],
+        [
+          4054,
+          23974,
+          23975
+        ]
+      ],
+      "old_minimum_ceiling": 0.09045757784137921,
+      "new_minimum_ceiling": 0.12521739371241516,
+      "relative_area_difference": 0.0,
+      "oriented_patch_boundary_identical": true
+    },
+    {
+      "triangles": [
+        2017,
+        2018
+      ],
+      "shared_edge": [
+        4055,
+        23975
+      ],
+      "alternative_edge": [
+        23974,
+        23971
+      ],
+      "local_target_passed": false,
+      "status": "cap-ceiling-rejected",
+      "axis": 0,
+      "side": 0.5,
+      "alternative_triangles": [
+        [
+          23974,
+          23971,
+          4055
+        ],
+        [
+          23974,
+          23975,
+          23971
+        ]
+      ],
+      "old_minimum_ceiling": 0.09045757784137921,
+      "new_minimum_ceiling": 0.05332315073901646,
+      "relative_area_difference": 2.7225662361603483e-16,
+      "oriented_patch_boundary_identical": true
+    },
+    {
+      "triangles": [
+        2248,
+        2249
+      ],
+      "shared_edge": [
+        4733,
+        14586
+      ],
+      "alternative_edge": [
+        14584,
+        14945
+      ],
+      "local_target_passed": false,
+      "status": "nonconvex-or-boundary-mismatch"
+    },
+    {
+      "triangles": [
+        2103,
+        2248
+      ],
+      "shared_edge": [
+        4733,
+        14584
+      ],
+      "alternative_edge": [
+        4379,
+        14586
+      ],
+      "local_target_passed": true,
+      "status": "cap-ceiling-passed",
+      "axis": 1,
+      "side": -0.5,
+      "alternative_triangles": [
+        [
+          4379,
+          4733,
+          14586
+        ],
+        [
+          4379,
+          14586,
+          14584
+        ]
+      ],
+      "old_minimum_ceiling": 0.08710052005124796,
+      "new_minimum_ceiling": 0.44580321509845305,
+      "relative_area_difference": 1.9950287708754875e-16,
+      "oriented_patch_boundary_identical": true
+    },
+    {
+      "triangles": [
+        2106,
+        2254
+      ],
+      "shared_edge": [
+        4742,
+        14598
+      ],
+      "alternative_edge": [
+        4391,
+        14600
+      ],
+      "local_target_passed": true,
+      "status": "cap-ceiling-passed",
+      "axis": 1,
+      "side": 0.5,
+      "alternative_triangles": [
+        [
+          4391,
+          4742,
+          14600
+        ],
+        [
+          4391,
+          14600,
+          14598
+        ]
+      ],
+      "old_minimum_ceiling": 0.08710052005124931,
+      "new_minimum_ceiling": 0.4458032150984481,
+      "relative_area_difference": 0.0,
+      "oriented_patch_boundary_identical": true
+    },
+    {
+      "triangles": [
+        2254,
+        2255
+      ],
+      "shared_edge": [
+        4742,
+        14600
+      ],
+      "alternative_edge": [
+        14598,
+        14956
+      ],
+      "local_target_passed": false,
+      "status": "nonconvex-or-boundary-mismatch"
+    },
+    {
+      "triangles": [
+        3044,
+        3046
+      ],
+      "shared_edge": [
+        6453,
+        16661
+      ],
+      "alternative_edge": [
+        6452,
+        16663
+      ],
+      "local_target_passed": true,
+      "status": "cap-ceiling-passed",
+      "axis": 0,
+      "side": -0.5,
+      "alternative_triangles": [
+        [
+          6452,
+          6453,
+          16663
+        ],
+        [
+          6452,
+          16663,
+          16661
+        ]
+      ],
+      "old_minimum_ceiling": 0.08710052005124605,
+      "new_minimum_ceiling": 0.44580321509844306,
+      "relative_area_difference": 0.0,
+      "oriented_patch_boundary_identical": true
+    },
+    {
+      "triangles": [
+        3046,
+        3047
+      ],
+      "shared_edge": [
+        6453,
+        16663
+      ],
+      "alternative_edge": [
+        16661,
+        16664
+      ],
+      "local_target_passed": false,
+      "status": "nonconvex-or-boundary-mismatch"
+    },
+    {
+      "triangles": [
+        2961,
+        3066
+      ],
+      "shared_edge": [
+        6498,
+        26301
+      ],
+      "alternative_edge": [
+        6115,
+        26324
+      ],
+      "local_target_passed": true,
+      "status": "cap-ceiling-passed",
+      "axis": 1,
+      "side": -0.5,
+      "alternative_triangles": [
+        [
+          6115,
+          26324,
+          6498
+        ],
+        [
+          6115,
+          26301,
+          26324
+        ]
+      ],
+      "old_minimum_ceiling": 0.09045757784137924,
+      "new_minimum_ceiling": 0.12521739371241344,
+      "relative_area_difference": 0.0,
+      "oriented_patch_boundary_identical": true
+    },
+    {
+      "triangles": [
+        3066,
+        3067
+      ],
+      "shared_edge": [
+        6498,
+        26324
+      ],
+      "alternative_edge": [
+        26301,
+        6515
+      ],
+      "local_target_passed": false,
+      "status": "cap-ceiling-rejected",
+      "axis": 1,
+      "side": -0.5,
+      "alternative_triangles": [
+        [
+          26301,
+          6515,
+          6498
+        ],
+        [
+          26301,
+          26324,
+          6515
+        ]
+      ],
+      "old_minimum_ceiling": 0.09045757784137924,
+      "new_minimum_ceiling": 0.04579148505466987,
+      "relative_area_difference": 5.712055726665232e-16,
+      "oriented_patch_boundary_identical": true
+    },
+    {
+      "triangles": [
+        3071,
+        3072
+      ],
+      "shared_edge": [
+        6514,
+        26337
+      ],
+      "alternative_edge": [
+        26322,
+        6527
+      ],
+      "local_target_passed": false,
+      "status": "cap-ceiling-rejected",
+      "axis": 1,
+      "side": 0.5,
+      "alternative_triangles": [
+        [
+          26322,
+          6527,
+          6514
+        ],
+        [
+          26322,
+          26337,
+          6527
+        ]
+      ],
+      "old_minimum_ceiling": 0.09045757784137842,
+      "new_minimum_ceiling": 0.0457914850546667,
+      "relative_area_difference": 5.712055726665242e-16,
+      "oriented_patch_boundary_identical": true
+    },
+    {
+      "triangles": [
+        2963,
+        3071
+      ],
+      "shared_edge": [
+        6514,
+        26322
+      ],
+      "alternative_edge": [
+        6127,
+        26337
+      ],
+      "local_target_passed": true,
+      "status": "cap-ceiling-passed",
+      "axis": 1,
+      "side": 0.5,
+      "alternative_triangles": [
+        [
+          6127,
+          26337,
+          6514
+        ],
+        [
+          6127,
+          26322,
+          26337
+        ]
+      ],
+      "old_minimum_ceiling": 0.09045757784137842,
+      "new_minimum_ceiling": 0.12521739371241516,
+      "relative_area_difference": 1.9648355045414517e-16,
+      "oriented_patch_boundary_identical": true
+    },
+    {
+      "triangles": [
+        3142,
+        3143
+      ],
+      "shared_edge": [
+        6835,
+        16956
+      ],
+      "alternative_edge": [
+        16953,
+        16957
+      ],
+      "local_target_passed": false,
+      "status": "nonconvex-or-boundary-mismatch"
+    },
+    {
+      "triangles": [
+        3140,
+        3142
+      ],
+      "shared_edge": [
+        6835,
+        16953
+      ],
+      "alternative_edge": [
+        6834,
+        16956
+      ],
+      "local_target_passed": true,
+      "status": "cap-ceiling-passed",
+      "axis": 0,
+      "side": 0.5,
+      "alternative_triangles": [
+        [
+          6834,
+          6835,
+          16956
+        ],
+        [
+          6834,
+          16956,
+          16953
+        ]
+      ],
+      "old_minimum_ceiling": 0.08710052005124846,
+      "new_minimum_ceiling": 0.4458032150984498,
+      "relative_area_difference": 5.985086312626453e-16,
+      "oriented_patch_boundary_identical": true
+    },
+    {
+      "triangles": [
+        3597,
+        3598
+      ],
+      "shared_edge": [
+        8791,
+        18634
+      ],
+      "alternative_edge": [
+        18636,
+        18633
+      ],
+      "local_target_passed": false,
+      "status": "nonconvex-or-boundary-mismatch"
+    },
+    {
+      "triangles": [
+        3595,
+        3598
+      ],
+      "shared_edge": [
+        8791,
+        18633
+      ],
+      "alternative_edge": [
+        8790,
+        18634
+      ],
+      "local_target_passed": true,
+      "status": "cap-ceiling-passed",
+      "axis": 0,
+      "side": -0.5,
+      "alternative_triangles": [
+        [
+          8790,
+          18634,
+          8791
+        ],
+        [
+          8790,
+          18633,
+          18634
+        ]
+      ],
+      "old_minimum_ceiling": 0.08710052005124796,
+      "new_minimum_ceiling": 0.44580321509845305,
+      "relative_area_difference": 3.990057541750974e-16,
+      "oriented_patch_boundary_identical": true
+    },
+    {
+      "triangles": [
+        3699,
+        3701
+      ],
+      "shared_edge": [
+        9173,
+        18929
+      ],
+      "alternative_edge": [
+        9172,
+        18930
+      ],
+      "local_target_passed": true,
+      "status": "cap-ceiling-passed",
+      "axis": 0,
+      "side": 0.5,
+      "alternative_triangles": [
+        [
+          9172,
+          18930,
+          9173
+        ],
+        [
+          9172,
+          18929,
+          18930
+        ]
+      ],
+      "old_minimum_ceiling": 0.0871005200512493,
+      "new_minimum_ceiling": 0.4458032150984481,
+      "relative_area_difference": 0.0,
+      "oriented_patch_boundary_identical": true
+    },
+    {
+      "triangles": [
+        3701,
+        3702
+      ],
+      "shared_edge": [
+        9173,
+        18930
+      ],
+      "alternative_edge": [
+        18929,
+        18931
+      ],
+      "local_target_passed": false,
+      "status": "nonconvex-or-boundary-mismatch"
+    },
+    {
+      "triangles": [
+        3787,
+        3924
+      ],
+      "shared_edge": [
+        9788,
+        19436
+      ],
+      "alternative_edge": [
+        9425,
+        19457
+      ],
+      "local_target_passed": true,
+      "status": "cap-ceiling-passed",
+      "axis": 1,
+      "side": -0.5,
+      "alternative_triangles": [
+        [
+          9425,
+          19457,
+          9788
+        ],
+        [
+          9425,
+          19436,
+          19457
+        ]
+      ],
+      "old_minimum_ceiling": 0.08710052005124605,
+      "new_minimum_ceiling": 0.44580321509844306,
+      "relative_area_difference": 0.0,
+      "oriented_patch_boundary_identical": true
+    },
+    {
+      "triangles": [
+        3924,
+        3925
+      ],
+      "shared_edge": [
+        9788,
+        19457
+      ],
+      "alternative_edge": [
+        19436,
+        19813
+      ],
+      "local_target_passed": false,
+      "status": "nonconvex-or-boundary-mismatch"
+    },
+    {
+      "triangles": [
+        3929,
+        3930
+      ],
+      "shared_edge": [
+        9797,
+        19467
+      ],
+      "alternative_edge": [
+        19455,
+        19822
+      ],
+      "local_target_passed": false,
+      "status": "nonconvex-or-boundary-mismatch"
+    },
+    {
+      "triangles": [
+        3789,
+        3929
+      ],
+      "shared_edge": [
+        9797,
+        19455
+      ],
+      "alternative_edge": [
+        9437,
+        19467
+      ],
+      "local_target_passed": true,
+      "status": "cap-ceiling-passed",
+      "axis": 1,
+      "side": 0.5,
+      "alternative_triangles": [
+        [
+          9437,
+          19467,
+          9797
+        ],
+        [
+          9437,
+          19455,
+          19467
+        ]
+      ],
+      "old_minimum_ceiling": 0.08710052005124845,
+      "new_minimum_ceiling": 0.4458032150984498,
+      "relative_area_difference": 3.9900575417509685e-16,
+      "oriented_patch_boundary_identical": true
+    },
+    {
+      "triangles": [
+        4223,
+        4250
+      ],
+      "shared_edge": [
+        10260,
+        30137
+      ],
+      "alternative_edge": [
+        10251,
+        30139
+      ],
+      "local_target_passed": true,
+      "status": "cap-ceiling-passed",
+      "axis": 2,
+      "side": 0.5,
+      "alternative_triangles": [
+        [
+          10251,
+          30139,
+          10260
+        ],
+        [
+          10251,
+          30137,
+          30139
+        ]
+      ],
+      "old_minimum_ceiling": 0.09045757784137921,
+      "new_minimum_ceiling": 0.12521739371241516,
+      "relative_area_difference": 0.0,
+      "oriented_patch_boundary_identical": true
+    },
+    {
+      "triangles": [
+        4249,
+        4250
+      ],
+      "shared_edge": [
+        10260,
+        30139
+      ],
+      "alternative_edge": [
+        30138,
+        30137
+      ],
+      "local_target_passed": false,
+      "status": "cap-ceiling-rejected",
+      "axis": 2,
+      "side": 0.5,
+      "alternative_triangles": [
+        [
+          30138,
+          10260,
+          30137
+        ],
+        [
+          30138,
+          30137,
+          30139
+        ]
+      ],
+      "old_minimum_ceiling": 0.09045757784137921,
+      "new_minimum_ceiling": 0.05332315073901646,
+      "relative_area_difference": 2.7225662361603483e-16,
+      "oriented_patch_boundary_identical": true
+    },
+    {
+      "triangles": [
+        4466,
+        4501
+      ],
+      "shared_edge": [
+        10341,
+        20297
+      ],
+      "alternative_edge": [
+        10331,
+        20298
+      ],
+      "local_target_passed": true,
+      "status": "cap-ceiling-passed",
+      "axis": 2,
+      "side": 0.5,
+      "alternative_triangles": [
+        [
+          10331,
+          20298,
+          10341
+        ],
+        [
+          10331,
+          20297,
+          20298
+        ]
+      ],
+      "old_minimum_ceiling": 0.08710052005124841,
+      "new_minimum_ceiling": 0.4458032150984502,
+      "relative_area_difference": 5.985086312626458e-16,
+      "oriented_patch_boundary_identical": true
+    },
+    {
+      "triangles": [
+        4500,
+        4501
+      ],
+      "shared_edge": [
+        10341,
+        20298
+      ],
+      "alternative_edge": [
+        20302,
+        20297
+      ],
+      "local_target_passed": false,
+      "status": "nonconvex-or-boundary-mismatch"
+    },
+    {
+      "triangles": [
+        4678,
+        4679
+      ],
+      "shared_edge": [
+        10401,
+        30213
+      ],
+      "alternative_edge": [
+        10402,
+        30212
+      ],
+      "local_target_passed": false,
+      "status": "cap-ceiling-rejected",
+      "axis": 2,
+      "side": 0.5,
+      "alternative_triangles": [
+        [
+          10402,
+          30212,
+          10401
+        ],
+        [
+          10402,
+          30213,
+          30212
+        ]
+      ],
+      "old_minimum_ceiling": 0.09045757784138,
+      "new_minimum_ceiling": 0.04579148505466953,
+      "relative_area_difference": 0.0,
+      "oriented_patch_boundary_identical": true
+    },
+    {
+      "triangles": [
+        4656,
+        4679
+      ],
+      "shared_edge": [
+        10401,
+        30212
+      ],
+      "alternative_edge": [
+        10393,
+        30213
+      ],
+      "local_target_passed": true,
+      "status": "cap-ceiling-passed",
+      "axis": 2,
+      "side": 0.5,
+      "alternative_triangles": [
+        [
+          10393,
+          10401,
+          30213
+        ],
+        [
+          10393,
+          30213,
+          30212
+        ]
+      ],
+      "old_minimum_ceiling": 0.09045757784138,
+      "new_minimum_ceiling": 0.12521739371241516,
+      "relative_area_difference": 1.9648355045414512e-16,
+      "oriented_patch_boundary_identical": true
+    },
+    {
+      "triangles": [
+        4930,
+        4931
+      ],
+      "shared_edge": [
+        10483,
+        20373
+      ],
+      "alternative_edge": [
+        20375,
+        20372
+      ],
+      "local_target_passed": false,
+      "status": "nonconvex-or-boundary-mismatch"
+    },
+    {
+      "triangles": [
+        4900,
+        4931
+      ],
+      "shared_edge": [
+        10483,
+        20372
+      ],
+      "alternative_edge": [
+        10473,
+        20373
+      ],
+      "local_target_passed": true,
+      "status": "cap-ceiling-passed",
+      "axis": 2,
+      "side": 0.5,
+      "alternative_triangles": [
+        [
+          10473,
+          10483,
+          20373
+        ],
+        [
+          10473,
+          20373,
+          20372
+        ]
+      ],
+      "old_minimum_ceiling": 0.08710052005124842,
+      "new_minimum_ceiling": 0.4458032150984502,
+      "relative_area_difference": 5.985086312626458e-16,
+      "oriented_patch_boundary_identical": true
+    }
+  ],
+  "periodic_source": {
+    "periodic_pair_counts": [
+      593,
+      593,
+      593
+    ],
+    "periodic_coordinate_errors": [
+      1.1102230246251565e-16,
+      1.1102230246251565e-16,
+      1.1102230246251565e-16
+    ],
+    "periodic_pair_tolerance": 1e-10,
+    "periodic_equivalence_classes": 28536,
+    "periodic_triangles_match": true
+  },
+  "source_mesh_unchanged": true,
+  "qualified": false,
+  "mmg_calls": [],
+  "stiffness_solve_performed": false,
+  "scope": "Individual convex planar edge-flip cap-ceiling feasibility only; alternatives are not applied, jointly compatible, periodic replacements, or valid volume cavities"
+}

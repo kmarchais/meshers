@@ -668,3 +668,16 @@ Next inspect local cap-triangulation feasibility on the coherent five-tet
 seed, preserving periodic cap boundaries. A valid replacement must precede
 volume remeshing. Do not send analytically blocked caps to MMG or start another
 grid-resolution or sizing sweep. The four-fixture goal remains unachieved.
+
+Jobs 345–349 test local cap flips before volume remeshing. All 24 obstructing
+cap faces have passing planar alternatives. Complete-star checks find 22
+valid disjoint cavity plans, leaving two three-tet stars. Their existing-apex
+cones fail. Independent enumeration checks all 8,191 subsets of 13 positive
+tet candidates on each six-vertex cavity and finds no matching signed boundary.
+No partial mesh replacement, MMG, or FE runs. Preserve the failed JSON-ID
+serialization attempt and exact driver/control snapshots as well as successes.
+
+Next assess one bounded one-ring cavity expansion around those two stars,
+keeping target cap polygons and periodic boundaries fixed. Do not repeat cones
+or brute-force enumeration on the same six vertices. This is not a general
+remeshing impossibility and supplies no admitted new comparator.

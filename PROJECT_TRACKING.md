@@ -25,6 +25,11 @@ Completed means that the cited implementation or measurement exists. It does
 not mean that the four-fixture objective has been achieved. Planned and draft
 work has no measured result until its bounded run and independent checks finish.
 
+The latest supplemental work is cap-topology preflights 345–349. They find
+local planar alternatives for all 24 obstructing Gyroid caps, but only 22
+valid volume-cavity plans. The remaining two have no signed-face solution on
+their six existing vertices. No partial replacement or MMG/FE solve follows.
+
 ## Current conclusion
 
 Meshers has a Rust/Python implicit mesher, adaptive surface and volume paths,
@@ -79,6 +84,7 @@ The [19 October shutdown record](handoff/g3/SHUTDOWN-20261019.md) remains histor
 | Completed negative diagnostic | Coupled cubic curve-corner relaxation reproduces original edge gains exactly but fails the useful-signal screen; polynomial-mode route closed |
 | Still open | Four-fixture matched-accuracy comparison, lattice reference uncertainty, admitted actual MMG controls for Gyroid and spinodoid |
 | Completed extraction preflight | Gyroid31 five- and six-tet preclipping remove all 288 oriented-face conflicts, but each introduces 24 cap faces with quality ceiling below 0.1; no MMG or FE follows |
+| Incomplete cap replacement | All 24 blocked cap faces have passing planar flips; 22 disjoint volume-cavity plans pass, while two require a larger cavity or another construction |
 
 The corner-coupling extension includes five algebraic tests, manufactured
 periodic controls, and the frozen-domain lattice comparison. Job 330 measures
@@ -378,6 +384,9 @@ Microgen extraction. They do not establish an admitted new competitor.
 | 341 | The relocation entry point rejects the actual invalid source before any move, new mesh, or FE solve | `g3-gyroid-invalid-source-rejection-v1` |
 | 342 | Six-tet preclipping preserves all sample hashes and removes face conflicts, but introduces 24 obstructing caps and fails distance | `g3-gyroid-preclip31-v1` |
 | 343–344 | Exact-point-order guard catches a five-tet conversion mismatch; corrected retry preserves samples, passes incidence and distance, but retains the same 24 cap obstructions | `g3-gyroid-preclip31-five-v1`, `g3-gyroid-preclip31-five-v2` |
+| 345–346 | First attempt fails JSON serialization; corrected retry finds passing planar flips for all 24 blocked cap faces | `g3-gyroid-cap-flip-preflight-v1`, `g3-gyroid-cap-flip-preflight-v2` |
+| 347–348 | Complete two- and three-tet star checks find 22 disjoint valid volume plans; no partial replacement occurs | `g3-gyroid-cap-cavity-preflight-v1`, `g3-gyroid-cap-cavity-preflight-v2` |
+| 349 | Each unresolved six-vertex cavity has 13 tet candidates and 8,191 nonempty subsets, with no matching signed boundary | `g3-gyroid-cap-cavity-enumeration-v1` |
 
 The source defect predates MMG in this saved lineage. The recorded evidence
 does not yet isolate which clipping or tetrahedralization operation introduces
@@ -812,15 +821,18 @@ decompositions, but each introduces 24 retained-cap obstructions at minimum
 quality ceiling 0.08710052. The five-tet variant passes sampled distance at
 0.00163287. Neither qualifies, and no MMG or FE solve follows.
 
-The selected successor is a local cap-triangulation feasibility audit on the
-coherent five-tet seed, not another background decomposition or sampling-grid
-sweep. It must preserve periodic cap boundaries and establish a valid
-replacement before any volume remeshing. Keep the 250,000-tet cap and 8 GiB
-worker ceiling. No cap-replacement experiment has run yet.
+Cap-flip and complete-volume-star preflights subsequently find local planar
+alternatives for all 24 blocked faces and 22 disjoint valid volume plans.
+Two three-tet stars reject all fixed-vertex signed-face solutions in the
+bounded enumeration. No partial replacement occurs. The selected successor
+is bounded one-ring cavity expansion around those two stars, not another
+background decomposition, sampling-grid sweep, or retry of the same cones.
+Keep target cap polygons and periodic boundaries fixed, with the 250,000-tet
+cap and 8 GiB worker ceiling. No enlarged-cavity experiment has run yet.
 
 | Priority | Next action | Completion criterion |
 |---|---|---|
-| 1 | Audit local cap-triangulation feasibility on the coherent five-tet Gyroid seed | Remove the demonstrated fixed-cap obstruction with valid periodic cap boundaries before selecting volume remeshing; no claimed replacement exists yet |
+| 1 | Assess bounded one-ring cavity expansion for two unresolved Gyroid cap flips | A complete compatible replacement with preserved periodic boundaries must precede MMG; 22 local plans alone do not remove all 24 cap obstructions |
 | Retired source | One-pass FEM43 interior repair | Invalid oriented source; current code rejects it before relocation; do not retry sweeps or bypass cavity guards |
 | Completed prerequisite | Retain progress values across worker-stage transitions | Red/green success/failure regressions and queued checks pass; shared helper unchanged |
 | Completed comparison | Stronger Schwarz Tet10 repetitions | Five interleaved pairs pass, both cost definitions favor Meshers; no further Schwarz tightening selected |

@@ -1,5 +1,20 @@
 # Adaptive and quadratic implicit meshing: results
 
+## Gyroid cap alternatives remain incomplete, 2026-10-20
+
+Jobs 345–349 follow the fixed-field extraction check. All 24 analytically
+blocked cap faces have a valid local planar edge alternative. Complete-star
+checks find 22 disjoint valid volume cavities, but two three-tet stars reject
+both existing-apex cones. Independent exhaustive enumeration checks all
+8,191 nonempty subsets of 13 candidate tetrahedra for each unresolved cavity.
+Neither has a matching signed boundary with these six existing vertices.
+
+No partial replacement, MMG call, or FE solve is applied. This does not rule
+out larger cavities or added vertices. Next assess bounded one-ring cavity
+expansion while preserving target cap polygons and periodic boundaries.
+Detailed controls, failed serialization attempt, and limits are preserved in
+`MICROGEN_RESULTS.md`. No comparative victory follows from these diagnostics.
+
 ## Gyroid extraction-order check, 2026-10-20
 
 Jobs 342–344 compare fixed Gyroid31 samples and offset 1.1 with normal clipping

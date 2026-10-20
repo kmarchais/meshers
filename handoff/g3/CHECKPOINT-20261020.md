@@ -1,5 +1,37 @@
 # G3 continuation checkpoint, 20 October 2026
 
+## Latest cap-topology findings, jobs 345 through 349
+
+All jobs are terminal. Job 345 is a preserved JSON serialization failure,
+corrected with Python integer IDs and an actual roundtrip regression in 346.
+The five-tet Gyroid seed remains unchanged. No MMG or FE call runs.
+
+Cap-flip preflight 346 finds 24 passing local planar alternatives among 48
+candidates. All 24 obstructing faces are covered. Patch boundaries and areas
+are unchanged. Two-tet volume-star check 347 finds 20 passing cavities and
+four three-tet stars. Extended check 348 finds 22 valid disjoint plans, but
+two three-tet stars have no valid cone from their existing non-patch vertices.
+No partial replacement is applied.
+
+Independent finite-vertex enumeration 349 checks 13 nondegenerate oriented
+tet candidates and 8,191 nonempty subsets on each of those six-vertex stars.
+Neither has a target signed-face solution. Positive controls reproduce the
+original cavity and a changed-boundary convex cavity. A missing boundary
+face is rejected. This is finite-precision local evidence, not an obstruction
+to all remeshing, larger cavities, or Steiner points.
+
+Next assess bounded one-ring cavity expansion around the two unresolved
+stars. Keep target cap polygons and periodic boundaries fixed. Do not repeat
+the same cones or enumeration and do not send blocked caps to MMG. The source
+mesh is in `runs/g3-gyroid-preclip31-five-v2/pretriangulated`. Latest results are
+`runs/g3-gyroid-cap-flip-preflight-v2`,
+`runs/g3-gyroid-cap-cavity-preflight-v2`, and
+`runs/g3-gyroid-cap-cavity-enumeration-v1` under `experiments/adaptive`.
+All workers stay below 0.294 GiB with one thread and 120-second stage limits.
+No native code, references, specimen definitions, or admission gates change.
+The four-fixture goal remains active and unachieved. Earlier sections below
+are historical.
+
 ## Latest extraction-order findings, jobs 342 through 344
 
 All three jobs are terminal. No MMG or FE solve runs in this phase. Normal

@@ -1,5 +1,57 @@
 # G3 Microgen workflow results, 17 October 2026
 
+## Gyroid cap-flip feasibility, 20 October 2026
+
+The coherent five-tet seed has 24 cap faces below the necessary analytic
+quality ceiling. Jobs 345–349 test only local replacements. No MMG call or
+FE solve runs, and no source or partial mesh replacement is applied.
+
+Job 346 enumerates 48 cap-edge alternatives incident to those blocked faces.
+Twenty-four pass the 0.1 ceiling on both new triangles, twelve fail the
+ceiling, and twelve fail convexity or oriented patch-boundary matching. All
+24 blocked faces have a passing local alternative. Each passing alternative
+retains the exact oriented planar patch boundary and area. This is not yet
+a compatible periodic volume mesh.
+
+First attempt 345 passes seven controls but fails while serializing NumPy
+edge IDs. Its failed log and original source/test snapshots remain frozen.
+The retry converts IDs to Python integers and adds a JSON roundtrip regression.
+
+Job 347 tests complete tetrahedral stars around the 24 selected cap edges.
+Twenty have valid two-tet replacements, with positive determinants, unchanged
+non-cap oriented cavity boundary, and unchanged volume. Four have three-tet
+stars and are not silently truncated. No partial replacement follows.
+
+Job 348 permits only those measured two- or three-tet stars. It tests cones
+from existing non-patch vertices and finds 22 valid, mutually disjoint cavity
+plans. Both existing-apex cones fail on each remaining three-tet star. Since
+all 24 replacements are needed, none is applied. A manufactured three-tet
+control passes before the real diagnostic.
+
+Job 349 independently enumerates every nondegenerate positive-oriented
+tetrahedron on the six existing vertices of each unresolved cavity. Each has
+13 candidate tets and 8,191 nonempty subsets. None matches the target signed
+boundary-face equations. Valid matches would also need volume agreement and
+at most two cells per face. Four controls include reproduction of the original
+cavity, a successful changed-boundary convex cavity, the archived nonconical
+case, and rejection of an unclosed boundary. Six controls including progress
+tests pass in the queued run.
+
+This is a finite-precision fixed-vertex obstruction for two particular
+cavities, not a general remeshing impossibility. It does not exclude larger
+cavities or added vertices. The next selected check is bounded one-ring cavity
+expansion around those two stars, with unchanged target cap polygons and
+periodic boundaries. Do not rerun failed cones or submit the blocked seed to
+MMG. Native Meshers, references, specimens, and admission gates are unchanged.
+
+Workers remain below 0.294 GiB, one thread, 120 seconds per stage, and the
+8 GiB ceiling. These are saved-seed diagnostics, not workflow timings. Records
+are `runs/g3-gyroid-cap-flip-preflight-v1`,
+`runs/g3-gyroid-cap-flip-preflight-v2`,
+`runs/g3-gyroid-cap-cavity-preflight-v1`,
+`runs/g3-gyroid-cap-cavity-preflight-v2`, and
+`runs/g3-gyroid-cap-cavity-enumeration-v1`.
+
 ## Fixed-field Gyroid extraction order, 20 October 2026
 
 Jobs 342 and 344 compare normal Microgen scalar clipping with background

@@ -1,0 +1,34 @@
+/home/kmarchais/dev/meshers/.venv/lib/python3.12/site-packages/fedoo/core/base.py:80: UserWarning: WARNING: no fast direct sparse solver has been found. Consider installing pypardiso (Intel) or python-mumps (any platform) to improve computation performance
+  warnings.warn(
+Traceback (most recent call last):
+  File "/home/kmarchais/dev/meshers/experiments/adaptive/cap_flip_probe.py", line 154, in <module>
+    main()
+  File "/home/kmarchais/dev/meshers/experiments/adaptive/cap_flip_probe.py", line 130, in main
+    worker(args.run)
+  File "/home/kmarchais/dev/meshers/experiments/adaptive/cap_flip_probe.py", line 113, in worker
+    workflow.save(run / "result.json", {"source": str(SOURCE), "case": "gyroid",
+  File "/home/kmarchais/dev/meshers/experiments/adaptive/microgen_workflow.py", line 29, in save
+    temporary.write_text(json.dumps(data, indent=2, allow_nan=False) + "\n")
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/kmarchais/.local/share/uv/python/cpython-3.12.15-linux-x86_64-gnu/lib/python3.12/json/__init__.py", line 238, in dumps
+    **kw).encode(obj)
+          ^^^^^^^^^^^
+  File "/home/kmarchais/.local/share/uv/python/cpython-3.12.15-linux-x86_64-gnu/lib/python3.12/json/encoder.py", line 202, in encode
+    chunks = list(chunks)
+             ^^^^^^^^^^^^
+  File "/home/kmarchais/.local/share/uv/python/cpython-3.12.15-linux-x86_64-gnu/lib/python3.12/json/encoder.py", line 432, in _iterencode
+    yield from _iterencode_dict(o, _current_indent_level)
+  File "/home/kmarchais/.local/share/uv/python/cpython-3.12.15-linux-x86_64-gnu/lib/python3.12/json/encoder.py", line 406, in _iterencode_dict
+    yield from chunks
+  File "/home/kmarchais/.local/share/uv/python/cpython-3.12.15-linux-x86_64-gnu/lib/python3.12/json/encoder.py", line 326, in _iterencode_list
+    yield from chunks
+  File "/home/kmarchais/.local/share/uv/python/cpython-3.12.15-linux-x86_64-gnu/lib/python3.12/json/encoder.py", line 406, in _iterencode_dict
+    yield from chunks
+  File "/home/kmarchais/.local/share/uv/python/cpython-3.12.15-linux-x86_64-gnu/lib/python3.12/json/encoder.py", line 326, in _iterencode_list
+    yield from chunks
+  File "/home/kmarchais/.local/share/uv/python/cpython-3.12.15-linux-x86_64-gnu/lib/python3.12/json/encoder.py", line 439, in _iterencode
+    o = _default(o)
+        ^^^^^^^^^^^
+  File "/home/kmarchais/.local/share/uv/python/cpython-3.12.15-linux-x86_64-gnu/lib/python3.12/json/encoder.py", line 180, in default
+    raise TypeError(f'Object of type {o.__class__.__name__} '
+TypeError: Object of type int64 is not JSON serializable
