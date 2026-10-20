@@ -1,5 +1,35 @@
 # G3 continuation checkpoint, 20 October 2026
 
+## Latest extraction-order findings, jobs 342 through 344
+
+All three jobs are terminal. No MMG or FE solve runs in this phase. Normal
+Gyroid31 scalar clipping produces 288 same-orientation shared faces.
+Triangulating the background before clipping removes all such conflicts in
+both tested decompositions, with identical original coordinate and scalar
+hashes. Both pass periodic cap triangulations, but each introduces 24 fixed-cap
+quality obstructions, minimum ceiling 0.08710052. Neither is admitted.
+
+The six-tet version has 34,743 nodes, 123,344 tets, and sampled distance
+0.00253049. The five-tet version has 30,271 nodes, 101,472 tets, and sampled
+distance 0.00163287. Volume errors are +0.719315% and +0.718972%.
+Five-tet background count is 135,000; six-tet count is 162,000. All material
+and background limits remain 250,000, with 8 GiB and one thread per worker.
+
+Job 343 is a preserved implementation failure at an exact-input-order guard,
+not a scientific result for five-tet extraction. Microgen structured order
+differs from VTK rectilinear order. Retry 344 explicitly maps connectivity
+back to original point order and restores exact coordinates before clipping.
+Seven controls and sixteen combined focused tests pass. Original driver and
+test snapshots match their declared hashes. Both completed paired-run progress
+audits pass. No native code, benchmark references, or specimen changes occur.
+
+Do not send either blocked seed to MMG. Next inspect local cap-triangulation
+feasibility on the coherent five-tet seed, preserving periodic cap boundaries,
+before any volume-remeshing or FE experiment. No such cap trial has run.
+Frozen records are `g3-gyroid-preclip31-v1`,
+`g3-gyroid-preclip31-five-v1`, and `g3-gyroid-preclip31-five-v2` under
+`experiments/adaptive/runs`. Earlier sections below are historical.
+
 ## Latest source-validity findings, jobs 336 through 341
 
 All are terminal; preflight 337 fails at its correct source guard. No job is

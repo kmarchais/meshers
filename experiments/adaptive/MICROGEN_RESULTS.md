@@ -1,5 +1,52 @@
 # G3 Microgen workflow results, 17 October 2026
 
+## Fixed-field Gyroid extraction order, 20 October 2026
+
+Jobs 342 and 344 compare normal Microgen scalar clipping with background
+tetrahedralization before its two clips, at resolution31 and offset 1.1.
+Coordinates and every sampled scalar array have identical hashes across arms.
+These are explicitly modified extraction variants, not default Microgen
+pipelines or Meshers seeds. No MMG or FE call runs.
+
+| Extraction | Nodes | Tets | Oriented-face conflicts | Cap faces with ceiling below 0.1 | Sampled two-sided distance | Relative volume error |
+|---|---:|---:|---:|---:|---:|---:|
+| Normal clips, then triangulation | 22,199 | 95,776 | 288 | 0 | 0.00249648 | +0.588923% |
+| Six-tet background before clips | 34,743 | 123,344 | 0 | 24 | 0.00253049 | +0.719315% |
+| Five-tet background before clips | 30,271 | 101,472 | 0 | 24 | 0.00163287 | +0.718972% |
+
+Both variants pass periodic nodes and cap triangles, with coordinate errors
+below 1.2e-16. Neither is admitted. Their retained caps have minimum analytic
+quality ceiling 0.08710052, below 0.1. Minimum actual corner quality is
+0.00050237 for six-tet and 0.00109506 for five-tet extraction. Positive corner
+determinants alone would not distinguish the normal arm's 288 face conflicts.
+
+The five-tet construction uses VTK's rectilinear-grid conversion. Microgen's
+structured grid has a different point order. First attempt 343 stops at the
+exact-coordinate guard before clipping. Its failure remains frozen. A new
+regression and explicit bijective connectivity mapping preserve original point
+order and samples in retry 344. VTK's float32 output coordinates are replaced
+with the exact original coordinates before scalar clipping, after checking
+their expected point correspondence. No field value or sample is resampled.
+
+Job 342 passes four controls. Retry 344 passes seven, including permuted point
+order and rejection of nonrectilinear backgrounds. Sixteen combined extraction,
+progress, incidence, and admission tests pass after the retry. Both queued
+progress audits pass. Worker peaks are at most 0.530 GiB, with 120-second stage
+timeouts, one numerical thread, and unchanged 250,000-tet and 8 GiB ceilings.
+These small diagnostic costs are not end-to-end workflow timings.
+
+Do not send either fixed-cap seed to MMG. The next useful check is local
+cap-triangulation feasibility on the coherent five-tet seed, preserving its
+periodic cap boundaries. It must establish a valid replacement before any
+volume remeshing or FE cost. No grid-resolution or sizing sweep is selected.
+This experiment identifies an extraction-order effect, not the exact upstream
+VTK operation responsible for all conflicts or a generally repaired pipeline.
+
+Records are `runs/g3-gyroid-preclip31-v1`,
+`runs/g3-gyroid-preclip31-five-v1`, and
+`runs/g3-gyroid-preclip31-five-v2`. The first two retain exact driver and test
+snapshots matching their original manifest hashes.
+
 ## Gyroid fixed-boundary interior feasibility, 20 October 2026
 
 After the repeated Schwarz comparison, return to the missing admitted Gyroid

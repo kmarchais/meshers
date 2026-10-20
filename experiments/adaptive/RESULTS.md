@@ -1,5 +1,21 @@
 # Adaptive and quadratic implicit meshing: results
 
+## Gyroid extraction-order check, 2026-10-20
+
+Jobs 342–344 compare fixed Gyroid31 samples and offset 1.1 with normal clipping
+or an explicitly pretriangulated background. Normal extraction has 288
+oriented-face conflicts. Five- and six-tet backgrounds remove those conflicts
+and preserve periodic cap triangles, with identical original point/scalar
+hashes. Each introduces 24 cap faces whose analytic quality ceiling is below
+0.1, minimum 0.08710052. Neither is admitted and no MMG or FE solve follows.
+
+The five-tet arm has 30,271 nodes, 101,472 tets, sampled distance 0.00163287,
+and volume error +0.718972%. Six-tet distance fails at 0.00253049. The failed
+first five-tet attempt is preserved, and its point-order guard receives a
+regression before the successful diagnostic retry. Sixteen combined focused
+tests pass. This is an extraction diagnostic, not a matched-accuracy win.
+Detailed evidence and limits are in `MICROGEN_RESULTS.md`.
+
 ## Gyroid source consistency changes the repair direction, 2026-10-20
 
 A convex single-star check finds a negative tangent bound at quality 0.1.

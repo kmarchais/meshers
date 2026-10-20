@@ -652,3 +652,19 @@ overlap regression. No new mesh or FE solve is produced. Shared geometry
 admission also rejects this source, while every legacy scalar geometry metric
 and the admitted Schwarz control reproduce. Do not reuse the invalid one-pass
 route to tune relocation or cavity operators.
+
+Jobs 342–344 complete that extraction-order check. Normal Gyroid31 clipping
+has 288 face conflicts. Both five- and six-tet background variants eliminate
+them with identical coordinate/scalar hashes, but each creates 24 retained
+caps with analytic quality ceiling below 0.1. The five-tet arm passes distance
+at 0.00163287. Neither seed qualifies. No MMG or FE solve runs.
+
+First five-tet attempt 343 stops correctly on point-order mismatch; retry344
+uses a checked bijective connectivity mapping and restores exact coordinates
+before clipping. Seven queued controls and sixteen combined focused tests pass.
+Original failed records and matching source snapshots remain preserved.
+
+Next inspect local cap-triangulation feasibility on the coherent five-tet
+seed, preserving periodic cap boundaries. A valid replacement must precede
+volume remeshing. Do not send analytically blocked caps to MMG or start another
+grid-resolution or sizing sweep. The four-fixture goal remains unachieved.

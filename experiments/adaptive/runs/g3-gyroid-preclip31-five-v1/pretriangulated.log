@@ -1,0 +1,34 @@
+/home/kmarchais/dev/meshers/.venv/lib/python3.12/site-packages/fedoo/core/base.py:80: UserWarning: WARNING: no fast direct sparse solver has been found. Consider installing pypardiso (Intel) or python-mumps (any platform) to improve computation performance
+  warnings.warn(
+Traceback (most recent call last):
+  File "/home/kmarchais/dev/meshers/experiments/adaptive/preclip_probe.py", line 170, in <module>
+    main()
+  File "/home/kmarchais/dev/meshers/experiments/adaptive/preclip_probe.py", line 125, in main
+    worker(args.run, args.worker, args.background_tets)
+  File "/home/kmarchais/dev/meshers/experiments/adaptive/preclip_probe.py", line 71, in worker
+    shape.grid = triangulate_background(shape.grid, tetra_per_cell=tetra_per_cell)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/kmarchais/dev/meshers/experiments/adaptive/preclip_probe.py", line 47, in triangulate_background
+    np.testing.assert_array_equal(rectilinear.points, points)
+  File "/home/kmarchais/dev/meshers/.venv/lib/python3.12/site-packages/numpy/testing/_private/utils.py", line 1128, in assert_array_equal
+    assert_array_compare(operator.__eq__, actual, desired, err_msg=err_msg,
+  File "/home/kmarchais/dev/meshers/.venv/lib/python3.12/site-packages/numpy/testing/_private/utils.py", line 988, in assert_array_compare
+    raise AssertionError(msg)
+AssertionError: 
+Arrays are not equal
+
+Mismatched elements: 57660 / 89373 (64.5%)
+First 5 mismatches are at indices:
+ [1, 0]: -0.4666666666666667 (ACTUAL), -0.5 (DESIRED)
+ [1, 1]: -0.5 (ACTUAL), -0.4666666666666667 (DESIRED)
+ [2, 0]: -0.43333333333333335 (ACTUAL), -0.5 (DESIRED)
+ [2, 1]: -0.5 (ACTUAL), -0.43333333333333335 (DESIRED)
+ [3, 0]: -0.4 (ACTUAL), -0.5 (DESIRED)
+Max absolute difference among violations: 1.
+Max relative difference among violations: 16.
+ ACTUAL: array([[-0.5     , -0.5     , -0.5     ],
+       [-0.466667, -0.5     , -0.5     ],
+       [-0.433333, -0.5     , -0.5     ],...
+ DESIRED: array([[-0.5     , -0.5     , -0.5     ],
+       [-0.5     , -0.466667, -0.5     ],
+       [-0.5     , -0.433333, -0.5     ],...

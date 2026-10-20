@@ -1,14 +1,29 @@
 # Meshers project tracking
 
 Updated 20 October 2026. Covers the recorded project history on
-`handoff/g3-microgen-20261017` through commit `c6ee7db`, plus completed
-Gyroid feasibility, source-validity and admission checks 336–341 below. The history starts with the initial
+`handoff/g3-microgen-20261017` through commit `3d37ccc`, including completed
+Gyroid feasibility, source-validity, and admission checks 336–341 below, plus
+extraction-order experiments 342–344. The history starts with the initial
 release candidate on 19 September and includes the resumed 20 October geometry,
 reference, and fixed-field sensitivity studies.
 This is a consolidated index and status ledger, not a replacement for frozen
 experiment records. Historical results on other machines remain historical.
 Work in separate support repositories is included only where this checkout
 records its integration or evidence.
+
+## Reading this tracker
+
+- Sections 1–3 cover the product foundation, solver verification, and early
+  adaptive meshing work before the G3 migration.
+- Sections 4–10 cover the fixed comparison protocol, implemented changes,
+  experiments, failed approaches, and reference uncertainty.
+- Section 11 is the current four-fixture scoreboard.
+- Sections 12–14 index commits, validation evidence, and preserved artifacts.
+- Section 15 records unfinished work and the selected next experiment.
+
+Completed means that the cited implementation or measurement exists. It does
+not mean that the four-fixture objective has been achieved. Planned and draft
+work has no measured result until its bounded run and independent checks finish.
 
 ## Current conclusion
 
@@ -63,6 +78,7 @@ The [19 October shutdown record](handoff/g3/SHUTDOWN-20261019.md) remains histor
 | Completed negative studies | Default Microgen admissions, unsuccessful sizing and repair recipes, volume-offset rationale, three-level cubic extrapolation, edge-only quartic signal |
 | Completed negative diagnostic | Coupled cubic curve-corner relaxation reproduces original edge gains exactly but fails the useful-signal screen; polynomial-mode route closed |
 | Still open | Four-fixture matched-accuracy comparison, lattice reference uncertainty, admitted actual MMG controls for Gyroid and spinodoid |
+| Completed extraction preflight | Gyroid31 five- and six-tet preclipping remove all 288 oriented-face conflicts, but each introduces 24 cap faces with quality ceiling below 0.1; no MMG or FE follows |
 
 The corner-coupling extension includes five algebraic tests, manufactured
 periodic controls, and the frozen-domain lattice comparison. Job 330 measures
@@ -345,6 +361,28 @@ facets. Legacy metric replays and the old 96-comparison, 205-hash verification
 still pass. Next compare one fixed-resolution extraction-order variant before
 another MMG recipe. This does not certify absence of curved or nonlocal
 intersections and does not supply an admitted Gyroid comparator.
+
+### Latest source-validity study ledger
+
+These checks explain why work moved upstream from interior relocation to
+Microgen extraction. They do not establish an admitted new competitor.
+
+| Job | Work and result | Evidence under `experiments/adaptive/runs` |
+|---|---|---|
+| 334–335 | Single-star feasibility succeeds, but whole-mesh repair leaves 49 bad tets and fails quality; later source audit retires the repair input | `g3-gyroid-firstpass-fem43-interior-relocation-v1` and the corresponding single-star records |
+| 336 | A weighted concave-tangent bound rejects the exact 0.1 quality target for one fixed-neighbor star; extended-precision replay agrees | `g3-gyroid-convex-star-feasibility-v1`, `g3-gyroid-convex-star-witness-audit-v1.json` |
+| 337 | The proposed two-to-three cavity preflight stops on same-side source neighbors; no flips occur | `g3-gyroid-two-to-three-preflight-v1` |
+| 338 | Twelve-mesh lineage/control audit finds 684 oriented-face conflicts in the Gyroid VTK43 seed and 146 in the one-pass FEM output; representative admitted controls have none | `g3-facet-incidence-lineage-controls-v1` |
+| 339 | All 24 archived Schwarz timing-arm meshes match coherent controls; six manual Tet10 lifts preserve their parent corners | `g3-schwarz-admitted-facet-replay-v1.json` |
+| 340 | New admission rejects incoherent facets while reproducing legacy geometry metrics; the previous 96 tensor comparisons and 205 hashes still verify | `g3-facet-admission-check-v1` |
+| 341 | The relocation entry point rejects the actual invalid source before any move, new mesh, or FE solve | `g3-gyroid-invalid-source-rejection-v1` |
+| 342 | Six-tet preclipping preserves all sample hashes and removes face conflicts, but introduces 24 obstructing caps and fails distance | `g3-gyroid-preclip31-v1` |
+| 343–344 | Exact-point-order guard catches a five-tet conversion mismatch; corrected retry preserves samples, passes incidence and distance, but retains the same 24 cap obstructions | `g3-gyroid-preclip31-five-v1`, `g3-gyroid-preclip31-five-v2` |
+
+The source defect predates MMG in this saved lineage. The recorded evidence
+does not yet isolate which clipping or tetrahedralization operation introduces
+it. Coherent corner-face incidence is necessary, but it does not exclude all
+nonlocal intersections or certify curved elements everywhere.
 
 ## 6. Direct fedoo Tet10 integration
 
@@ -695,7 +733,7 @@ Use `git log --reverse --format='%h %ad %s' --date=short` for the complete ledge
 | 20 Oct | `9f9ee96` | Fresh stronger Schwarz Tet10 pilot with common AMG and independent field/quadrature audits |
 | 20 Oct | `2f0363f`, `5789b90` | Repeated exact-recipe Schwarz Tet10 advantage; independent mixed-load, timing and provenance verification; late reporting warning retained |
 | 20 Oct | `c6ee7db` | Progress-transition fix, exact archived-source verification, feasible Gyroid star and incomplete whole-mesh interior repair |
-| 20 Oct | Jobs 336–341 | Checked local obstruction, failed cavity preflight, upstream Gyroid incidence defect, all-arm comparison replay, and fail-closed admission/source guards |
+| 20 Oct | `3d37ccc`, jobs 336–341 | Checked local obstruction, failed cavity preflight, upstream Gyroid incidence defect, all-arm comparison replay, and fail-closed admission/source guards |
 
 ## 13. Verification and evidence register
 
@@ -718,6 +756,7 @@ are not claims that a fresh full suite ran while writing this document.
 | Repeated stronger Schwarz comparison | Five measured pairs and warmup, 38 controls per pair, 72 fresh loads, independent fields; separate verifier checks 96 mixed-load comparisons, timing statistics and 205 hashes |
 | Progress and Gyroid repair | Two reporting regressions are red then green; queued single-star and complete-repair controls pass; 18 focused checks pass; repair remains scientifically rejected |
 | Source consistency and admission | Six convex controls, extended-precision witness replay, twelve-mesh lineage audit, 24 timing-arm and six-lift replay; admission/repair guards are red then green; 69 focused tests pass |
+| Extraction order | Both paired runs verify identical point/scalar hashes; seven current extraction/progress controls and sixteen combined focused tests pass; both altered seeds fail fixed-cap feasibility |
 
 Canonical detailed reports are under `experiments/adaptive`:
 
@@ -764,9 +803,24 @@ use the verified `kmarchais` account.
 
 ## 15. Open work and restart order
 
+The latest completed experiment is `experiments/adaptive/preclip_probe.py`,
+with `experiments/adaptive/test_preclip_probe.py`. It compares paired Gyroid
+resolution31 extraction using identical background coordinates, scalar
+samples, and offset 1.1. Normal clipping has 288 oriented-face conflicts.
+Pretriangulation removes those conflicts for both five- and six-tet background
+decompositions, but each introduces 24 retained-cap obstructions at minimum
+quality ceiling 0.08710052. The five-tet variant passes sampled distance at
+0.00163287. Neither qualifies, and no MMG or FE solve follows.
+
+The selected successor is a local cap-triangulation feasibility audit on the
+coherent five-tet seed, not another background decomposition or sampling-grid
+sweep. It must preserve periodic cap boundaries and establish a valid
+replacement before any volume remeshing. Keep the 250,000-tet cap and 8 GiB
+worker ceiling. No cap-replacement experiment has run yet.
+
 | Priority | Next action | Completion criterion |
 |---|---|---|
-| 1 | Compare one fixed-resolution pre-clipping triangulation variant | Same Gyroid field, offset 1.1 and resolution 31; identical scalar samples; read incidence, cap, periodic and geometry results before MMG or FEA |
+| 1 | Audit local cap-triangulation feasibility on the coherent five-tet Gyroid seed | Remove the demonstrated fixed-cap obstruction with valid periodic cap boundaries before selecting volume remeshing; no claimed replacement exists yet |
 | Retired source | One-pass FEM43 interior repair | Invalid oriented source; current code rejects it before relocation; do not retry sweeps or bypass cavity guards |
 | Completed prerequisite | Retain progress values across worker-stage transitions | Red/green success/failure regressions and queued checks pass; shared helper unchanged |
 | Completed comparison | Stronger Schwarz Tet10 repetitions | Five interleaved pairs pass, both cost definitions favor Meshers; no further Schwarz tightening selected |
