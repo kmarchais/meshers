@@ -127,3 +127,57 @@ bulk grading in the same experiment would not isolate the cause.
 Records are in `runs/g3-lattice-curve-size-realization-v1`. The four-specimen
 matched-accuracy objective remains unachieved. This is a negative sizing pilot
 with useful geometric localization evidence, not a production feature win.
+
+## Eight-round size-realization control, 20 October 2026
+
+Job 305 changes only adaptation rounds from four to eight. The curve metric,
+gradation, specimen, native binary, admission gates, and mesh cap stay fixed.
+The geometry-only workflow passes at 111,605 nodes and 63,867 Tet10 elements,
+with distance 0.00035766, minimum corner quality 0.30065, positive sampled
+Jacobians, zero unresolved projections, and matching periodic caps. Worker
+time is 25.62 seconds and peak RSS is 0.657 GiB.
+
+There are 3,048 curve edges. Median chord is 0.00248211 and maximum is
+0.00405172. Only 32 edges exceed the requested 4/3 ratio, versus 288 after
+four rounds. The worst ratio falls from 2.85078 to 1.59475. This shows that
+the previous four-round result had a substantial size-realization limitation.
+It does not show that all remaining splits are admissible or that stiffness
+improves. More rounds also change bulk collapse, swapping, and relocation.
+
+One fresh eight-round six-load workflow is selected after reading this result.
+Coarse generation, curve preparation, final generation, audits, and all six
+loads remain charged. No saved fields are reused for timing. The fixed 1%
+target and all 24 models remain unchanged. Read the actual solved tensor and
+independent field audit before choosing a successor.
+
+Records are in `runs/g3-lattice-curve-eight-round-geometry-v1` and
+`runs/g3-lattice-curve-eight-round-solve-v1`.
+
+Job 306 completes the fresh eight-round workflow in 274.06 seconds, including
+248.94 seconds of final solves, at 2.851 GiB peak RSS. Counts and geometry
+reproduce the geometry-only control. Job 307 reproduces reactions within
+1.52e-11 relative, with zero periodic jumps, and re-audits both fine inputs.
+All eight fine-family models reproduce exactly; the other sixteen remain.
+
+Worst disagreement across the same 24 models is 1.439306%. This improves only
+slightly on four rounds at 1.456109%, and remains worse than the previous best
+Meshers result at 1.269882%. Difference from the actual finest tensor is
+0.169570%, with all six signed generalized differences positive. The primary
+fine-family envelope alone reaches 1.301824%. This is not merely a failure
+introduced by one of the other retained families.
+
+Improved size realization, quality, and single-run cost therefore do not solve
+the stiffness problem. Do not select sixteen rounds or a stronger curve target
+from this result alone. The curve metric also changes the bulk mesh, so this
+study does not isolate a continuum curve-error component. The next accuracy
+investigation must separate geometric-domain approximation from FE enrichment
+or independently justify a bulk refinement, not fit the reference envelope.
+
+Records are in `runs/g3-lattice-curve-eight-round-field-audit-v1` and
+`runs/g3-lattice-curve-eight-round-reference-comparison-v1.json`.
+
+Job 308 completes positive 64-point and 125-point fixed-field reintegration.
+The 125-point energy shift is 5.0073e-7 relative, again too small to explain
+the stiffness miss. Its worker takes 64.18 seconds at 0.505 GiB peak RSS.
+This is not a higher-rule equilibrium re-solve. Records are in
+`runs/g3-lattice-curve-eight-round-positive-rule-audit-v1`.

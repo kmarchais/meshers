@@ -69,7 +69,8 @@ def worker(args):
 
     output = args.run / args.worker
     row = {"case": "smooth-lattice", "cells": 24, "order": 2, "solver_quadrature_points": 15,
-        "adaptive": True, "adapt_tolerance": .004, "native_tolerance": 1., "min_length": .002,
+        "adaptive": True, "adapt_iterations": args.adapt_iterations,
+        "adapt_tolerance": .004, "native_tolerance": 1., "min_length": .002,
         "optimization_passes": 1, "gradation": SLOPE, "qualified": False, "status": "started",
         "route": args.worker, "solve_node_cap": 250000,
         "solver": "cached-elastic-block-amg-cg" if args.solve else None,
@@ -105,11 +106,26 @@ def worker(args):
             row["curve_feature"] = metadata
             np.savez_compressed(output / "curve-samples.npz", points=cloud)
         phase = time.perf_counter()
-        mesh = meshers.generate(field, adapt=True, adapt_iterations=4, adapt_tolerance=.004,
+        mesh = meshers.generate(field, adapt=True, adapt_iterations=args.adapt_iterations, adapt_tolerance=.004,
             min_length=.002, max_length=.1, gradation=SLOPE, quality_guard=.3, size_field=size_field, **common)
         row.update(generation_s=time.perf_counter() - phase, nodes=len(mesh.points),
                    elements=len(mesh.tetrahedra), diagnostics=mesh.diagnostics)
         assert len(mesh.tetrahedra) <= workflow.CAP
+        if size_field is not None:
+            from periodic_crease_audit import features
+
+            data = features({"points": mesh.points, "tetrahedra": mesh.tetrahedra, "surface": mesh.surface})
+            locations = mesh.points[np.asarray(data["curve_edges"])]
+            targets = size_field(*locations.reshape(-1, 3).T).reshape(-1, 2).mean(axis=1)
+            lengths = np.linalg.norm(locations[:, 1] - locations[:, 0], axis=1)
+            ratios = lengths / targets
+            row["curve_size_realization"] = {
+                "curve_edges": len(lengths),
+                "edge_length_quantiles": np.quantile(lengths, [0, .1, .5, .9, 1]).tolist(),
+                "length_target_ratio_quantiles": np.quantile(ratios, [0, .1, .5, .9, 1]).tolist(),
+                "edges_above_split_ratio": int(np.count_nonzero(ratios > 4 / 3 + 1e-8)),
+                "fraction_above_split_ratio": float(np.mean(ratios > 4 / 3 + 1e-8)),
+                "scope": "Requested endpoint targets, not proof of native split admissibility"}
         np.savez_compressed(output / "mesh.npz", points=mesh.points, tetrahedra=mesh.tetrahedra, surface=mesh.surface)
         row["geometry"] = workflow.geometry(output, "smooth-lattice", mesh.points, mesh.tetrahedra, mesh.surface)
         _, _, row["periodic"] = periodic_pairs(mesh.points, mesh.surface)
@@ -149,6 +165,7 @@ def main():
     parser.add_argument("--screen", type=Path, required=True)
     parser.add_argument("--route", choices=("both", "baseline", "curve"), default="both")
     parser.add_argument("--solve", action="store_true")
+    parser.add_argument("--adapt-iterations", type=int, choices=(4, 8), default=4)
     parser.add_argument("--worker", choices=("baseline", "curve"))
     args = parser.parse_args()
     if args.solve and args.route != "curve":
@@ -170,6 +187,7 @@ def main():
     assert int(checked["groups"]["curve_vertex_incident"].sum()) == screen["rules"][0]["groups"]["curve_vertex_incident"]["elements"]
     paths = [Path(__file__), args.screen / "manifest.json", args.screen / "result.json",
         parent / "mesh.npz", Path(meshers._meshers.__file__),
+        workflow.ROOT / "crates/meshers-core/src/tet_adapt.rs",
         workflow.ROOT / "crates/meshers-python/python/meshers/expression.py"]
     paths.extend(workflow.HERE / name for name in ("periodic_crease_audit.py", "microgen_workflow.py",
                  "amg_reference.py", "stress_recovery.py", "tet10_integration.py"))
@@ -178,7 +196,8 @@ def main():
     hashes = {str(path): workflow.digest(path) for path in paths}
     workflow.save(args.run / "manifest.json", {"inputs": hashes, "memory_bytes": workflow.MEMORY,
         "threads": 1, "worker_timeout_s": 1200 if args.solve else 300, "tetrahedra_cap": workflow.CAP,
-        "solve_node_cap": 250000, "curve_length": CURVE_LENGTH, "grading_slope": SLOPE,
+        "solve_node_cap": 250000, "adapt_iterations": args.adapt_iterations,
+        "curve_length": CURVE_LENGTH, "grading_slope": SLOPE,
         "metric": "min(0.1, curve_length + grading_slope * torus_distance_to_projected_curve_samples)",
         "coarse_solve_count": 0, "live_feature_preparation_charged": True, "geometry_only": not args.solve,
         "policy_note": "One fixed curve-local metric with matching native gradation; no physical crease smoothing"})

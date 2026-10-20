@@ -1,0 +1,625 @@
+# Meshers project tracking
+
+Updated 20 October 2026. Covers the recorded project history on
+`handoff/g3-microgen-20261017` through commit `347a010`, from the initial
+release candidate on 19 September through the G3 shutdown checkpoint, with
+the resumed 20 October geometry control recorded below.
+This is a consolidated index and status ledger, not a replacement for frozen
+experiment records. Historical results on other machines remain historical.
+Work in separate support repositories is included only where this checkout
+records its integration or evidence.
+
+## Current conclusion
+
+Meshers has a Rust/Python implicit mesher, adaptive surface and volume paths,
+curved Tet10 output, direct fedoo conversion, and independently checked
+elasticity experiments. Several correctness and geometry-admission defects
+have been fixed and regression-tested.
+
+The current research objective is **not achieved**: demonstrate that Meshers
+beats the actual Microgen+MMG workflow at matched accuracy on Gyroid sheet,
+Schwarz P solid, a fixed spinodoid, and a fixed smooth-union lattice.
+
+- Schwarz has one demonstrated, repeated matched-target workflow advantage
+  against an explicitly modified actual one-pass Microgen route.
+- Gyroid and spinodoid have admitted Meshers candidates, but no admitted actual
+  Microgen/MMG comparator in the tested routes.
+- Lattice stiffness accuracy remains unresolved across all retained reference
+  models. Neither the best tested Meshers candidate nor the strongest tested
+  Microgen-derived Tet10 control passes the fixed 1% target against every model.
+- The latest curve-local sizing pilot fails that target. Its results and audits
+  are preserved rather than promoted as an improvement.
+- Computing stopped for the requested 19 October shutdown. Work resumed on
+  20 October after checking the checkout, memory, and idle shared queue.
+  The eight-round curve control improves size realization and single-run cost,
+  but its audited fresh full-tensor result still fails the stiffness target.
+
+Latest restart instructions: [G3 shutdown checkpoint](handoff/g3/SHUTDOWN-20261019.md).
+
+## 1. Product foundation and release preparation
+
+### Initial Rust/Python implementation
+
+The initial release-candidate lineage provides:
+
+- CPU float64 tetrahedral meshing of bounded implicit solids and TPMS bands.
+- Built-in Gyroid, Schwarz P, and Schwarz D fields, custom pointwise fields,
+  callable grading, thickness functions, and blends.
+- Automatically compiled supported NumPy expressions, automatic derivatives,
+  cached native evaluation, and bounded NumPy callbacks for unsupported graphs.
+- Owned point, tetrahedron, boundary, and periodic-pair arrays in Python.
+- Named multi-constraint intersections, retained surface identities, feature
+  edges, coordinate maps, and explicit rigid periodic transforms.
+- Quality optimization, minimum-quality admission, topology validation,
+  boundary-link checks, snapping rollback, cancellation, and preserved callback
+  exceptions.
+- VTKHDF export, including boundary and periodic metadata. Quadratic triangle
+  and tetrahedron export was added during the adaptive work.
+
+The core is independent of Python, CUDA, OpenCascade, and HDF5. Its code forbids
+unsafe Rust. Python bindings and the native field compiler are separate layers.
+Some intersection and surface features have separate build-feature limits.
+The constrained path does not imply general multithreaded support for every API.
+
+Release preparation added wheel and source-distribution checks, platform/Python
+test matrices, installed-wheel tests, executable examples, API documentation,
+coverage workflows, performance comparisons, and PyPI Trusted Publishing
+configuration. Workflow configuration alone does not prove a particular remote
+run succeeded or that every branch change has been published.
+
+Evidence: [changelog](CHANGELOG.md), [project README](README.md),
+[core README](crates/meshers-core/README.md),
+[Python README](crates/meshers-python/README.md),
+[release checks](docs/site/release.md), [testing](docs/site/testing.md), and
+the workflows in `.github/workflows`.
+
+### Early integration and performance fixes
+
+The 3 October work reduced scalar-evaluation cost, removed unnecessary gradient
+work and mutex locking, reduced shared signal-counter overhead, added bulk
+compiled point evaluation without Python callbacks, and directly lowered scalar
+min/max and squares into JIT instructions.
+
+It also normalized optimizer penalties across physical scales, protected sampled
+interior components during snapping, bounded interruption-test workloads,
+combined optional surface and wide-constraint APIs, allowed preview surfaces to
+skip distance sampling, and identified the integration API independently of the
+wheel version. The default constraint width remains eight; the optional wide
+build supports 32.
+
+Evidence: commits `e645847` through `2ca2b35` and
+[integration build notes](docs/implicit-microgen-integration.md). The matching
+Microgen port and older research worktree are separate work, not proof that the
+current default Microgen pipeline uses Meshers.
+
+## 2. Solver and periodic integration verification
+
+### Manufactured elasticity solutions
+
+An independent P1 elasticity assembly tested a cube, cylindrical Gyroid sheet,
+and toroidal Gyroid sheet at three resolutions each. Affine patches checked
+assembly and boundary handling. The manufactured displacement study observed
+approximately second-order displacement and first-order energy convergence.
+All physical tetrahedral volumes were positive and explicit solver residual
+checks passed.
+
+Fedoo 0.8.4 repeated the same nine mesh solves. Error norms agreed with fresh
+independent assemblies within 5e-13 relative. This validates assembly, loading,
+and boundary integration, but both studies share the SciPy CG backend.
+
+These historical measurements were on an Apple M4, not G3 timing baselines.
+They do not establish periodic or nonlinear correctness, continuum geometry
+accuracy, or parity with Microgen/MMG.
+
+Evidence: [solver verification](docs/site/solver-verification.md),
+`demos/solver/convergence.py`, `demos/solver/fedoo_convergence.py`,
+`docs/solver-convergence-results.json`, and `docs/fedoo-convergence-results.json`.
+
+### Periodic homogenization
+
+Fedoo 1.0.0b2 was checked on a solid cell and four Gyroid refinements using six
+engineering-strain loads and the automatic stress-controlled route. All 60
+systems converged. Checks included opposite nodes and cap triangles, periodic
+displacement jumps, force balance, mixed-load Hill-Mandel energy, averaged
+stress versus reactions, symmetry, positive stiffness eigenvalues, and the
+solid-material limit. Loading-path disagreements were below 4e-12 relative.
+
+This established translational periodic integration, not rotational periodic
+homogenization or continuum certification. Full-cell volume, including void,
+normalizes effective stiffness.
+
+Evidence: [periodic homogenization](docs/site/periodic-homogenization.md),
+`demos/solver/fedoo_homogenization.py`, and
+`docs/fedoo-homogenization-results.json`.
+
+## 3. Adaptive and quadratic meshing, 11–15 October
+
+| Workstream | Implemented or measured | Remaining qualification |
+|---|---|---|
+| Geometry-preserving optimization | Preserve implicit tolerance during quality moves; prototype quadratic interpolation and nested interior-refinement objectives | Prototype objectives are not general accuracy guarantees |
+| Adaptive surfaces | Curvature sizing, split/collapse/flip, tangential relaxation, exact wall and box-curve projection | Thin features and sharp creases remain difficult |
+| Adaptive tetrahedra | Size-driven split/collapse, edge removal, swaps, relocation, curvature/thickness targets | Adaptation is largely serial |
+| Periodic adaptation | Torus/minimal-image treatment with internal box-plane constraints | Per-specimen periodic admission is still required |
+| Curved Tet10 | Exact wall mid-edge projection with sampled Jacobian checks and validity fallbacks | No proof of positive Jacobians everywhere |
+| Balanced surfaces | Offset vertices to reduce two-sided chord error and triangle count | Display/printing mode, not on-surface curved FEA geometry |
+| Fast surfaces | Collapse-focused coarsening, error-triggered splits, exact quadratic triangle-error estimate, local balancing repair | Slivers are allowed; sphere one-thread speed remains worse |
+| Extraction and diagnostics | Parallel crossings/slabs, deterministic numbering, incremental error scans, sorted manifold validation, phase timings | Coarser initial extraction remains open |
+
+Historical independent surface scorecards measured forward and reverse distance,
+volume, shape, and angles. At similar sampled distance, adaptive surfaces used
+39% fewer sphere triangles, 66% fewer ellipsoid triangles, and 43% fewer Gyroid
+triangles than the tested Flying Edges controls. Balancing reduced counts further.
+
+The controlled OMEN timing study used a warm-up and five interleaved repetitions
+at one and 24 threads. Fast balanced output used about 2–5 times fewer triangles
+than the compared Flying Edges grids. It was faster on Gyroid, Schwarz P, and
+ellipsoid, but about 1.2 times slower on sphere at one thread. Tet adaptation
+barely scaled with threads. These are surface-route results, not G3 workflow
+comparisons.
+
+The early MMG volume comparison remeshed a **Meshers seed**. It was useful as an
+adapter comparison but was not the actual default Microgen pipeline. Early FEA
+experiments also showed much lower stiffness error per node for curved Tet10,
+while balanced linear and curvature-only sizing did not establish a general
+linear-FEA improvement.
+
+Evidence: [adaptive results](experiments/adaptive/RESULTS.md), historical sections
+of [adaptive plan](experiments/adaptive/PLAN.md), `scorecard.py`, `timing.py`,
+`timing_job.sh`, `timing-threads1.json`, and `timing-threads24.json`, all under
+`experiments/adaptive`.
+
+## 4. G3 migration and comparison rules
+
+On 17 October, work moved from OMEN to the dedicated Linux G3. Commit `2e35c7e`
+preserves the handoff. Linux dependencies and native code were rebuilt rather
+than copying Windows binaries or virtual environments. Small historical tensor
+records were restored; large original OMEN meshes and fields were not copied.
+
+The sibling support checkouts are:
+
+- `/home/kmarchais/dev/periodic-microgen` at
+  `2b1ea80b36d4ba03842a7d9087638abf3868fe3e`.
+- `/home/kmarchais/dev/microgen-benchmark` at
+  `602dc900cd028d205b36e29dcdb5b4a9cf4f581a`.
+
+### Fixed specimens
+
+All four occupy `[-0.5, 0.5]^3` with isotropic `E=2.5`, `nu=0.25` and six
+engineering-strain loads, including shear.
+
+| Specimen | Definition retained throughout the comparison |
+|---|---|
+| Gyroid sheet | Raw field band `[-0.55, 0.55]`; Microgen offset 1.1 |
+| Schwarz P solid | Negative sublevel of `cos(2*pi*x)+cos(2*pi*y)+cos(2*pi*z)`; not a Schwarz sheet |
+| Spinodoid | Fixed FFT16 realization, seed 20261010, `k0=4*pi`, bandwidth 3, retained-mode threshold 0.05, translated into the comparison box |
+| Smooth lattice | Eight radius-0.12 origin-to-corner capsules, sequential cubic smooth union with `k=0.08` and frozen corner order |
+
+Changing VTK sampling does not change the spinodoid realization. Reordering the
+nonassociative smooth unions or adding neighboring struts would change the
+lattice specimen and is not an admissible shortcut.
+
+### Admission and execution
+
+- Independently sampled two-sided boundary distance at most 0.002.
+- Absolute relative volume error at most 1%.
+- Minimum MMG corner quality at least 0.1, with separate positive sampled curved
+  Jacobians for quadratic meshes.
+- Matching periodic nodes and cap triangles, with no unresolved projections
+  promoted as reliable complete distance maxima.
+- Full mixed-load stiffness disagreement at most 1% against justified retained
+  references. The supplementary Schwarz 0.1% target is separate.
+- Heavy work through the shared `gpu` pueue group, `Job` progress, and
+  `qrun --check-start`, one bounded experiment read before selecting its successor.
+- About 8 GiB per worker, one numerical thread, two build threads, explicit
+  timeouts, and staged mesh/solve caps. The final tet cap stays 250,000. A later
+  measured-safe solve stage allows 250,000 nodes without reclassifying earlier
+  stage-cap failures. Separate seed-only preflights do not relax final caps.
+- Same-host timing only. Live workflows charge coarse solves, size construction,
+  meshing, audits, and final solves when used. Saved-mesh replay is labeled.
+
+The stiffness score is the maximum absolute generalized eigenvalue of
+`C_candidate - C_reference` relative to `C_reference`, not six diagonal errors.
+Distance, Jacobian, reference-model, and QMC checks are empirical, not continuum
+or local-stress certificates.
+
+Evidence: [original G3 handoff](handoff/g3/HANDOFF.md),
+[actual workflow definition](experiments/adaptive/MICROGEN.md), and
+[decision trail](.audit/g3-microgen.tsv).
+
+## 5. Actual Microgen workflow and stronger controls
+
+### Defaults measured, not substituted
+
+The first G3 comparison used Microgen 2.0.0b1's actual volumetric VTK extraction
+and `remesh_keeping_boundaries_for_fem`, backed by mmgpy 0.17.1. Actual calls and
+source hashes were recorded. The default MMG route first uses `nofem=True`, then
+`ls=True` and `nr=True`, with unset sizing options and Microgen's retry policy.
+
+Every default Microgen/MMG specimen fails at least one unchanged admission
+gate. Original Meshers Gyroid linear24 and curved12, and Schwarz linear24 and
+curved12, pass geometry. Initial Meshers spinodoid routes fail quality, while
+raw smooth-lattice input fails periodic scalar compatibility. Later work fixes
+or explicitly transforms some of those Meshers routes; it does not erase the
+original failures.
+
+| Initial admitted Meshers route | Nodes | Mixed-load disagreement | G3 total workflow |
+|---|---:|---:|---:|
+| Gyroid linear24 | 17,647 | 3.7152% | 17.48 s |
+| Gyroid curved12 | 19,931 | 0.2951% | 47.08 s |
+| Schwarz linear24 | 19,004 | 1.3458% | 15.21 s |
+| Schwarz curved12 | 19,628 | 0.0738% | 38.07 s |
+
+These initial disagreements use the initial declared references, not the later
+conservative multi-model envelopes. Faster rejected default MMG rows are not
+matched-accuracy victories for either workflow.
+
+### Why tuning and seed inspection were needed
+
+An analytic retained-cap quality ceiling was derived and self-checked:
+`q_tet <= 4*sqrt(3)*A/S`, where `A` is a fixed triangular cap's area and `S` its
+sum of squared edge lengths. Caps below 0.1 cannot support an admitted adjacent
+tet while those faces remain fixed. This obstructs particular Gyroid, spinodoid,
+and lattice seeds, not every possible Microgen mesh.
+
+Tuned Schwarz defaults exposed first-pass MMG failures and geometry loss.
+Intermediate meshes and actual MMG output were audited. Seed scans identified
+cap-feasible alternatives. One explicitly modified one-pass recipe eventually
+qualified. Gyroid first-pass FEM, interior-quality, skewness, and required-entity
+grading controls still failed quality. Fixed-realization spinodoid seed grids
+16–41 remained obstructed in the tested screens; grid41 used a separate bounded
+seed-only inspection. Tuned lattice VTK51/two-pass MMG eventually passed geometry.
+
+Unsupported routes, failed retries, timeouts, and stage-cap stops remain records,
+not omitted samples. Microgen's public Tet10 converters remain unsupported.
+
+Evidence: [Microgen results](experiments/adaptive/MICROGEN_RESULTS.md),
+`cap_quality_bound.py`, `g3-cap-quality-bound.json`, `microgen_seed_screen.py`,
+`microgen_tuned.py`, and the frozen `g3-microgen-*` records under
+`experiments/adaptive/runs`.
+
+## 6. Direct fedoo Tet10 integration
+
+`Mesh.to_fedoo()` was added for Tet4 and Tet10, preserving curved coordinates
+and ordering in independent arrays. It does not transfer boundary conditions,
+surface tags, or periodic transforms. It avoids, rather than fixes, the tested
+Microgen `SingleMesh.from_pyvista` and `BoxMesh.from_pyvista` Tet10 rejection.
+
+The integration study checked two solid patches and admitted curved Gyroid and
+Schwarz meshes, with 24 prescribed-strain solves. Independent stresses, energy,
+reactions, periodic jumps, and saved stress-controlled tensors agree within
+about 1.2e-11 relative. Mid-edge jumps are below 6e-17. VTK/fedoo reference
+coordinates required an explicit mapping; the initially incorrect test mapping
+was corrected in a fresh run rather than changing conversion to fit the test.
+
+Stronger competitors were then constructed by manual straight-Tet10 elevation
+of genuine admitted Microgen meshes, preserving their planar domains. These
+are explicitly manual elevation plus direct fedoo, not default Microgen Tet10
+support and not Meshers-seeded MMG.
+
+Evidence: [Tet10 results](experiments/adaptive/TET10_RESULTS.md),
+`experiments/adaptive/tet10_integration.py`, and the public conversion tests.
+
+## 7. Stress recovery and spatial sizing
+
+An optional periodic `size_field` input was added to adaptive generation.
+It accepts positive physical lengths, validates finite values and callback
+errors, checks opposite periodic traces, and combines the requested sizes with
+existing curvature, thickness, bounds, and gradation. Default generation is
+preserved when no size field is supplied.
+
+| Study | Measured outcome | Decision |
+|---|---|---|
+| Tet4-to-straight-Tet10 recovery diagnostic | Six-load compliance-error matrices satisfy fixed-domain enrichment identities; useful Schwarz localization | Justified one live linear-sizing pilot, not stress certification |
+| Schwarz linear recovery sizing | At common 1% target, 25,854 nodes and 31.76 s versus uniform 35,393 and 37.77 s | Useful single-run improvement within Meshers; retain optional API |
+| Gyroid linear recovery sizing | Coarse trial adds cost; tighter trial reduces nodes but worsens disagreement | No matched-accuracy gain established |
+| Lattice recovery ranking/enrichment | Some localization, but the later predeclared incremental recovery screen fails | Do not promote recovery from ranking alone |
+| Initial live lattice sizing trials | No demonstrated workflow benefit; some runs hit resource caps | Stop blind sizing-strength tuning |
+| All-load non-recovery energy screen | Top 20% captures 94.02% correction trace and at least 92.24% in every mixed load | Justified one separately labeled energy-sizing study |
+| Charged energy-sizing workflow | 204,956 nodes, 812.17 s, 5.573 GiB, 1.352008% worst retained-model disagreement | Fails 1%; worse than previous best; stop this recipe |
+
+The last pilot includes all twelve fresh coarse and final loads. Independent
+field and positive-rule audits pass; fixed-field energy shifts by only 2.49e-7
+relative. Passing localization does not imply an efficient remeshed workflow.
+An earlier stage-cap rejection remains rejected even when a later fresh run
+uses the previously validated larger solve stage.
+
+Evidence: [stress-sizing results](experiments/adaptive/STRESS_RESULTS.md),
+`stress_recovery.py`, `sizing_pilot.py`, `p2_recovery.py`,
+`lattice_energy_screen.py`, and `energy_sizing_pilot.py` under
+`experiments/adaptive`.
+
+## 8. Periodic geometry and native correctness fixes
+
+Implemented changes include:
+
+- Keeping adaptive projection inside the periodic cell partition rather than
+  crossing a retained internal box plane.
+- Evaluating the fixed spinodoid with its exact compiled spectral field instead
+  of changing its realization or accepting an unsafe coarse projection.
+- Using absolute box-plane tolerances in independent audits and revalidating
+  frozen inputs without rewriting their reports.
+- Retaining valid partial curvature at lattice junctions and separately checking
+  sampled curved Jacobians.
+- Honoring the requested tetrahedral quality floor during refinement.
+- Preserving wall projection targets for initially off-field vertices.
+- Enforcing tet budgets inside topology operations and before audit/solve.
+- Allowing quality-preserving partial settling of pending wall vertices before
+  attempting local subdivision.
+- Correcting exact min/max tie derivatives to average operand derivatives,
+  including overflow-safe half weighting. Primitive values and explicit user
+  gradient callables are unchanged.
+
+The smooth lattice's nonassociative scalar construction has a mismatch in void
+across periodic faces. An explicitly recorded positive void clamp at 0.02 keeps
+the material and zero boundary unchanged and admits tested routes. A symmetric
+algebraic representation was also studied. Fully raw unclamped input still
+fails periodic preflight. This is not general raw-field periodic support.
+
+Partial settling admits a previously rejected curved24 spinodoid. A coarser
+sizing tolerance then produces a 73,951-node admitted candidate in a fresh
+364.07-second workflow, with 0.10333–0.18439% disagreement across six retained
+models. Archived-binary replay confirms that the same recipe previously failed
+distance. This improves Meshers' admitted route, not its missing Microgen
+comparison coverage.
+
+Exact-tie gradient regressions were red before the compiler correction. The
+full Python suite afterward passed 133 tests with one optional wide-constraints
+skip. All four geometry controls remained admitted. Actual lattice gradient
+error dropped to 1.81e-10. A raw-clamped before/after control improved sampled
+distance from 0.00039027 to 0.00026671 with 516 fewer nodes. Both already passed
+geometry, and no new six-load tensor was measured for that control.
+
+Rejected diagnostics include unsafe coarse spinodoid snapping, collapse,
+collective projection, classic VTK clipping, quadratic damping shortcuts,
+ineffective coarse lattice repair objectives, selective midpoint restoration,
+and affine corner postprocessing. Do not revive them without new evidence.
+
+Evidence: [periodic results](experiments/adaptive/PERIODIC_RESULTS.md),
+native and Python regressions, and archived before/after builds.
+
+## 9. References, solver memory, and independent audits
+
+### Fine references and sensitivity
+
+Gyroid and Schwarz initially used sensitivity-checked curved16/20 extrapolation,
+with archived linear comparisons where available. Spinodoid later gained a
+field-audited fine reference and order/length sensitivity checks.
+
+Lattice uniform and adaptive refinement families disagree enough that close
+adjacent-level agreement is insufficient. All 24 empirical lattice models are
+retained. A candidate may agree with the finest actual tensor yet fail their
+combined 1% envelope. No convenient family is selected after seeing the answer.
+
+Independent field audits compare integrated stresses, reactions, mixed-load
+energy, and periodic jumps. Positive 64-point and 125-point reintegration checks
+have separate affine and monomial controls. They evaluate fixed fields, not
+higher-quadrature equilibrium re-solves. Reduced quadrature as a shortcut was
+tested and rejected where it failed the declared sensitivity checks.
+
+### Reference-only cubic enrichment
+
+A research-only Tet20 registration was built and checked on analytic patches.
+It enriches the FE displacement on the same quadratic physical geometry,
+separating one FE correction from a change in geometric domain. It is not a
+public Meshers Tet20 product feature or a continuum reference by itself.
+
+The lattice assembly fit at 5.893 GiB, but initial diagonal and translation-only
+block solver attempts failed bounded continuation tests. The actual reduced
+system was captured and inspected. Elastic translation/rotation candidates,
+node-major block AMG, explicit residual tests, and integrated control solves
+justified a new preset.
+
+Further failures exposed redundant symmetry allocations, reaction-access
+copies, and retained completed reduced matrices. Complete matrix hashes guarded
+symmetry reuse, vector-first reactions avoided unnecessary copies, and explicit
+completed-cache release bounded memory. Reused load prefixes were rechecked
+against the current equations; they were not charged as fresh workflow solves.
+
+The complete six-load cubic result has 222,331 nodes and 44,976 elements, peaks
+at 6.341 GiB, and passes stress/energy, periodic, residual, and positive-rule
+checks. It retains status `solved-needs-reference`. Its disagreement with the
+24 models spans about 0.154–1.7505%, so it does not settle lattice accuracy.
+
+Evidence: [cubic results](experiments/adaptive/CUBIC_RESULTS.md),
+`cubic_reference.py`, `cubic_assessment.py`, `amg_reference.py`,
+`capture_reference_system.py`, and `block_amg_probe.py` under
+`experiments/adaptive`.
+
+### Volume reference audited before correction
+
+A proposed lattice volume offset was investigated rather than added. Four
+nested Sobol sequences were extended from 2^18 to 2^24 points each, totaling
+67,108,864 classifications, with exact reproduction of the original prefixes.
+The refined mean is 0.2482374460, replicate spread 0.0000137091, and last nested
+mean shift 0.0000007004. Both predeclared precision screens pass.
+
+The finest Meshers volume error becomes approximately -0.001898%, with zero
+inside the empirical replicate range. About 94% of its previously apparent
+deficit came from the old reference estimate. A geometry offset is unjustified.
+The Microgen-derived control remains about -0.4582% by volume, inside admission.
+Old frozen estimates and stiffness models are not overwritten.
+
+Evidence: [volume audit](experiments/adaptive/VOLUME_RESULTS.md) and
+`experiments/adaptive/volume_reference_audit.py`.
+
+## 10. Latest periodic-curve study
+
+The fixed lattice's periodic extension has measured wall-normal jumps of
+48.19–109.47 degrees, with matching scalar traces. Full same-domain FE correction
+is concentrated near actual wall/box intersection curves: 3.1306% of cells carry
+75.0159% of whitened correction trace and at least 70.5900% in every mixed load.
+Cap cells away from those curves carry little of this measured correction.
+This is distinct from the corrected compiler tie derivative and does not prove
+a continuum stress singularity.
+
+One geometric metric was tested, using a fresh coarse mesh and exact projected
+curve samples, without coarse FE or oracle fields:
+
+`target = min(0.1, 0.0025 + 0.8 * periodic_distance_to_curve_samples)`.
+
+The matching native gradation is explicitly tuned to 0.8. Both the same-gradation
+geometry control and the curve candidate pass geometry admission. The fresh
+six-load curve workflow has:
+
+| Measurement | Result |
+|---|---:|
+| Nodes / Tet10 elements | 118,475 / 68,415 |
+| Sampled two-sided distance | 0.00032671 |
+| Minimum corner quality | 0.16959 |
+| Charged total workflow | 342.19 s |
+| Peak RSS | 3.032 GiB |
+| Worst disagreement across all 24 models | 1.456109% |
+| Positive 125-point fixed-field energy shift | 3.8591e-7 relative |
+
+The pilot fails 1% and is worse than the previous best Meshers result. Independent
+field and quadrature audits pass, so their measured errors do not explain the
+miss. All six signed energy differences from the finest saved tensor are
+positive.
+
+The saved mesh has 2,822 curve edges, median chord 0.00260035. Of these, 288
+remain above the native 4/3 split ratio after four rounds; the worst ratio to
+the requested endpoint target is 2.85078. This does not prove those splits are
+admissible. It identifies a concrete realization question before strengthening
+the size field or paying for another solve.
+
+Evidence: [curve study](experiments/adaptive/CREASE_RESULTS.md),
+`periodic_crease_audit.py`, `curve_sizing_pilot.py`, and frozen
+`g3-lattice-curve-*` records under `experiments/adaptive/runs`. Last job 279
+completed the positive-rule audit. No new production/native feature was added
+by this geometric pilot.
+
+On 20 October, job 305 tests eight rather than four adaptation rounds while
+preserving the curve metric and all gates. It passes geometry at 111,605 nodes
+and minimum corner quality 0.30065. Oversized curve edges fall from 288 to 32,
+and the worst requested-size ratio from 2.85078 to 1.59475. This establishes
+a size-realization gain, not stiffness accuracy. One fresh charged six-load
+workflow then completes in 274.06 seconds at 2.851 GiB peak RSS. Its independent
+field audit passes, but worst disagreement across all 24 unchanged models is
+1.439306%. All eight fine-family models reproduce exactly and both other
+families remain retained. Positive 125-point fixed-field energy shifts by only
+5.0073e-7 relative. More adaptation rounds alone do not close the gap.
+
+## 11. Current comparison scoreboard
+
+Percentages below are retained-model disagreement, not certified continuum
+errors. Single-run and saved-mesh measurements are not repeated workflow ratios.
+
+| Fixture | Best relevant Meshers evidence | Actual Microgen/MMG evidence | Current verdict |
+|---|---|---|---|
+| Schwarz, 1% target | Curved8, 6,864 nodes, 0.25870% primary disagreement, 7.7916 s median | Explicit VTK30 one-pass variant, 32,070 Tet4 nodes, 0.92806%, 40.5036 s median | Five interleaved pairs pass; measured speedup 5.1155–5.2908 times, only for this modified comparator |
+| Schwarz, supplementary 0.1% | Curved16, 42,928 nodes, 0.031469–0.093778%, 88.01 s live single run | Manual straight Tet10 controls at 207,200–230,337 nodes, about 0.054–0.063%; saved-mesh solves | Both accuracy controls pass; no paired live Tet10 workflow speed claim |
+| Gyroid, 1% | Curved9, 11,857 nodes, 0.72921–0.95990%, 20.56 s single run | Tested default and tuned routes remain unqualified | Meshers passes tested target; comparative win not established |
+| Spinodoid, 1% | Partial-settle adaptive24 at tolerance 0.003, 73,951 nodes, 0.10333–0.18439%, 364.07 s | Tested fixed-realization seeds 16–41 have retained-cap obstructions | Meshers has an admitted route; comparative win not established |
+| Lattice, 1% | Best retained-model result 1.269882%, 193,242 nodes; latest curve pilot 1.456109% | Admitted tuned two-pass parent; strongest manual straight Tet10 control, 238,411 nodes, 1.004354% | Neither passes all 24 models at 1%; no matched-accuracy win |
+
+The strongest lattice Microgen-derived Tet10 control uses validated explicit AMG.
+Its six-load solve takes 530.80 s, with 555.78 s for that saved-mesh study and
+4.378 GiB peak RSS. Default-CG timeout remains recorded. These numbers do not
+include a fresh VTK/MMG workflow and must not be used as such.
+
+## 12. Commit milestones
+
+This groups the committed lineage by substantive work. Formatting, test,
+documentation, and failure-recording commits between milestones remain in Git.
+Use `git log --reverse --format='%h %ad %s' --date=short` for the complete ledger.
+
+| Date | Commits | Milestone |
+|---|---|---|
+| 19 Sep | `3e2cbf4`, `d1324b7` | Initial v0.1 release candidate and publication preparation |
+| 3 Oct | `e645847` through `2ca2b35` | Scalar/batch/JIT performance, scale and component fixes, optional integration APIs |
+| 11–14 Oct | `66b800c` through `dfd0e33` | Geometry guards, optimizer prototypes, adaptive surfaces/tets, torus adaptation |
+| 15 Oct | `09598fe` through `80cf40c` | Phase timings, curved elements, export, crease robustness, balanced/fast surfaces, controlled timings |
+| 17 Oct | `2e35c7e`, `004ed9c` | G3 migration and actual Microgen defaults study |
+| 17 Oct | `31d9cf8`, `4e6e137`, `de64e18` | Direct fedoo conversion, cap quality bound, tuned MMG failures |
+| 17 Oct | `3bcca84` through `5f7d74c` | Spatial sizing, intermediate MMG audits, cap screens, Schwarz recovery gain and Gyroid limitation |
+| 18 Oct | `d5da490` through `64e6681` | Periodic projection, exact spinodoid and lattice representations, audit tolerance, finer references, partial curvature |
+| 18 Oct | `bff2c47`, `af4e25a` | Cap-feasible actual comparator and repeated Schwarz matched-target advantage |
+| 18 Oct | `4a24c1e` through `01590ae` | Quality-floor and projection-target fixes, lattice field/reference audits |
+| 18 Oct | `115e4a7` through `26cbdfe` | Cheaper Gyroid, admitted lattice comparator, negative correction/repair controls, stronger Tet10 and stricter Schwarz controls |
+| 18 Oct | `06558a2` through `dad565e` | Recovery clarification, enforced tet budgets, unsafe coarse spinodoid diagnoses and rejected repairs |
+| 18 Oct | `94a14b7` through `14a946c` | Cubic feasibility, isolated systems, bounded AMG, hash reuse, safe reactions/cache lifetime, completed six-load reference |
+| 18 Oct | `f8d7534` through `300b5af` | Stronger admitted lattice parent, retained timeout, Tet10 AMG control, error localization and shutdown checkpoint |
+| 19 Oct | `090a71c`, `56e1b59`, `f28fa01` | Resumed screens, partial-settle fix, smaller admitted spinodoid, seed41 bound |
+| 19 Oct | `5a91f82`, `1ac72d9` | Negative charged energy-sizing study and higher-precision volume reference |
+| 19 Oct | `234e497`, `347a010` | Exact-tie gradient correction, negative curve pilot, final audits and shutdown checkpoint |
+
+## 13. Verification and evidence register
+
+Historical test counts belong to their specific source/build snapshots. They
+are not claims that a fresh full suite ran while writing this document.
+
+| Checkpoint | Recorded validation |
+|---|---|
+| Spatial-size API | Linux rebuild, 20 core and 35 focused Python tests; constant-size default preservation, periodic sizes, invalid values and exceptions |
+| Direct fedoo API | Focused conversion tests plus 24 integration solves and independent interpolation/energy checks |
+| Reference admission | Regression cases keep borderline 0.1% failures rejected rather than rounding them into passes |
+| Partial settling | Red native regression before fix; 25 core and 37 focused Python tests after fix; four admitted geometry controls and archived-binary replay |
+| Exact-tie derivative | Two red smooth-composition regressions; full Python suite 133 passed, one optional skip; four geometry controls |
+| Curve-local pilot | Fresh six-load solve; independent field and positive 64/125-point audits; source/input hashes and bounded worker records |
+| Latest checkpoint | Focused experimental Ruff checks and `git diff --check` passed; commit `347a010` pushed with a clean tree |
+
+Canonical detailed reports are under `experiments/adaptive`:
+
+| Report | Subject |
+|---|---|
+| `PLAN.md` | Requested sequence, dated decisions, open work |
+| `RESULTS.md` | Cross-study summary and historical adaptive measurements |
+| `MICROGEN.md`, `MICROGEN_RESULTS.md` | Exact defaults, actual calls, seed/tuning controls, admissions and timings |
+| `TET10_RESULTS.md` | Public direct-fedoo integration and stronger manually elevated competitors |
+| `STRESS_RESULTS.md` | Recovery diagnostics, spatial sizing, negative live energy pilots |
+| `PERIODIC_RESULTS.md` | Geometry defects, representations, native fixes, rejected repairs |
+| `CUBIC_RESULTS.md` | Reference-only enrichment, solver/memory failures and validated completion |
+| `VOLUME_RESULTS.md` | Independent nested QMC audit and rejected volume-offset rationale |
+| `CREASE_RESULTS.md` | Physical periodic normal jumps, full correction localization, negative curve pilot |
+
+The append-only decision ledger is `.audit/g3-microgen.tsv`. Frozen run
+directories retain selected JSON, driver snapshots, and logs. Manifests record
+versions, hashes, limits, and inputs. Do not edit historical outputs to match
+new conclusions or remove failures from a timing sample.
+
+## 14. Environment and artifact preservation
+
+The G3 has 14 GiB RAM. The tested environment uses Python 3.12, Rust 1.95.0,
+Microgen 2.0.0b1, mmgpy 0.17.1, fedoo 1.0.0b2, and PyAMG 5.3.0. Exact per-run
+requirements and hashes are authoritative. User-local GLU/OpenGL libraries
+satisfy import dependencies without a privileged system installation.
+
+The native binary at the shutdown checkpoint has SHA256:
+
+`908e326211792142f83f854ad2696cd879d927bd81deacf38eb6a0cb63bc4dc1`.
+
+The exact-tie correction changes the Python graph generator, not that binary.
+Older binaries are archived locally for controlled before/after comparisons.
+
+Large NPZ meshes, displacements, Gram arrays, curve samples, local packages,
+and native binaries remain ignored on G3. Git contains selected evidence, not
+a complete binary backup. Some historical large inputs remain only on OMEN.
+Small archived tensors cannot support claims of saved-field revalidation.
+
+Use the runtime library path recorded in
+[the G3 checkpoint](handoff/g3/CHECKPOINT-20261019.md). Do not store private
+machine addresses or credentials in project tracking. GitHub-backed operations
+use the verified `kmarchais` account.
+
+## 15. Open work and restart order
+
+| Priority | Next action | Completion criterion |
+|---|---|---|
+| 1 | Separate geometric-domain error from FE enrichment before another curve-sizing change; the eight-round positive-rule audit is complete | Independent evidence for the next accuracy change, not a stronger metric selected just from localization |
+| 2 | Resolve lattice FE versus geometry/reference uncertainty | A justified reference envelope and a candidate passing every retained applicable model, without post-hoc model deletion |
+| 3 | Establish admitted actual Microgen/MMG comparators for Gyroid and spinodoid, or clearly bound unsupported tested routes | Genuine geometry-qualified controls, not MMG on Meshers seeds or altered specimens |
+| 4 | Run fresh repeated matched-target workflows where both competitors qualify | Same-host interleaved repetitions, charged preparation and solves, all scientific gates met |
+| 5 | Add true branch-aware crease and box-curve handling only when evidence justifies a native change | Regression plus independent geometry and full-tensor gain; averaged subgradients alone are not crease constraints |
+| 6 | Reconsider volume correction only with resolved bias; separately assess parallel relocation | Measured need and benefit, not fitting an uncertain volume estimate; no current justification for a lattice offset |
+| 7 | Reduce fast-surface initial extraction density and improve one-thread sphere cost | Matched sampled geometry with fewer triangles and measured same-host speed improvement |
+
+The user's original order was actual workflow comparison, Tet10 integration,
+linear stress-recovery sizing, volume correction/parallel relocation,
+branch-aware creases/spinodoid curves, then coarser extraction. The first three
+have substantial implemented and measured work, but comparison coverage remains
+incomplete. Later work was selected from measured blockers, not treated as a
+license to batch speculative changes.
+
+General CAD/BRep replacement, universal geometry support, certified Hausdorff
+bounds, globally proven curved Jacobian positivity, nonlinear mechanics, and
+continuum/local-stress certification remain outside the demonstrated results.

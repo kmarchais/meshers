@@ -1,5 +1,17 @@
 # Adaptive and quadratic implicit meshing: results
 
+## Eight-round curve follow-up, 2026-10-20
+
+Eight adaptation rounds improve curve-target realization, quality, and cost,
+but do not resolve lattice stiffness. At the unchanged geometric metric,
+oversized curve edges fall from 288 to 32, minimum quality rises to 0.30065,
+and the admitted mesh uses 111,605 nodes. A fresh six-load workflow takes
+274.06 seconds at 2.851 GiB. Independent fields pass. Worst disagreement
+across all 24 unchanged models is 1.439306%, still above 1% and worse than
+the previous best Meshers result, 1.269882%. The primary fine-family envelope
+itself reaches 1.301824%. Do not promote further round-count or curve-strength
+tuning from this evidence. See `CREASE_RESULTS.md`.
+
 ## Resumed G3 study, 2026-10-19
 
 The subsequent curve-local lattice pilot also fails the fixed 1% stiffness

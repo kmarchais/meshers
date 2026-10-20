@@ -1,0 +1,31 @@
+{
+  "inputs": {
+    "/home/kmarchais/dev/meshers/experiments/adaptive/curve_sizing_pilot.py": "75be83d2c38611541f0e325c187d812fd81b8791fcb6f4ef3acf1475adae077a",
+    "experiments/adaptive/runs/g3-lattice-periodic-crease-audit-v1/manifest.json": "3318b6ddc435426a541818ab3a55e6cf0f602c1f24d69f2b6458bc747c46ecc6",
+    "experiments/adaptive/runs/g3-lattice-periodic-crease-audit-v1/result.json": "26a7f27557e3d63d11dc7a140939e1d3867170d16df1d050c7f1a8a5f106a204",
+    "experiments/adaptive/runs/g3-lattice-curved24-symmetric-v1/mesh.npz": "2adbd9557d40e2abfdee384aa738d63bff5c5188d2a420f3a4c0256e0cee6e47",
+    "/home/kmarchais/dev/meshers/crates/meshers-python/python/meshers/_meshers.abi3.so": "908e326211792142f83f854ad2696cd879d927bd81deacf38eb6a0cb63bc4dc1",
+    "/home/kmarchais/dev/meshers/crates/meshers-core/src/tet_adapt.rs": "271ca423ea954837c239bd6af891cde36f4cb033d4e5c8eb0a08ab6e4600871c",
+    "/home/kmarchais/dev/meshers/crates/meshers-python/python/meshers/expression.py": "abf5e43d1b7e9fb05c7d081bd55c0f4ad74f1c6cc4d9ed7a89fb2881445c13f4",
+    "/home/kmarchais/dev/meshers/experiments/adaptive/periodic_crease_audit.py": "d326ff63068dc2ba9988163991cf5e5d228991777e9dd6f85f53b1a7b5c14133",
+    "/home/kmarchais/dev/meshers/experiments/adaptive/microgen_workflow.py": "3f98bcaf9ae151cb357944744e82dd80801703a4db04f94df31263c9c9fa7640",
+    "/home/kmarchais/dev/meshers/experiments/adaptive/amg_reference.py": "7c0293e3223317ba7a7b0dfcb5391c9d6c5282ea89571023a434393e41995f09",
+    "/home/kmarchais/dev/meshers/experiments/adaptive/stress_recovery.py": "c9d74455c014c3b56ab656ca3f6a9cbf259dc11904318fecc354dcc6368651ac",
+    "/home/kmarchais/dev/meshers/experiments/adaptive/tet10_integration.py": "b5adbf4a96ee90953d546c654992d4380843e3b1a865e64e043cd14529e3865d",
+    "/home/kmarchais/dev/meshers/experiments/adaptive/runs/g3-microgen-defaults-v4/smooth-lattice-samples.npz": "a2b4375d2c99901f03b34e913563c887a4cdcff00bca35983adb7ef9d5311abe",
+    "/home/kmarchais/dev/meshers/experiments/adaptive/runs/g3-microgen-defaults-v4/smooth-lattice-specimen.json": "0e5b34b76183341a6e0d454f13cd404668ab82675f9a51cd9d2ecf3c91be3316"
+  },
+  "memory_bytes": 8589934592,
+  "threads": 1,
+  "worker_timeout_s": 1200,
+  "tetrahedra_cap": 250000,
+  "solve_node_cap": 250000,
+  "adapt_iterations": 8,
+  "curve_length": 0.0025,
+  "grading_slope": 0.8,
+  "metric": "min(0.1, curve_length + grading_slope * torus_distance_to_projected_curve_samples)",
+  "coarse_solve_count": 0,
+  "live_feature_preparation_charged": true,
+  "geometry_only": false,
+  "policy_note": "One fixed curve-local metric with matching native gradation; no physical crease smoothing"
+}

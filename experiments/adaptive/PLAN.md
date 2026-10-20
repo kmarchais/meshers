@@ -475,3 +475,19 @@ split eligibility and use one geometry-only increased-round control with
 the same metric and gates. Read `CREASE_RESULTS.md`. Do not start a fresh
 long solve during the requested shutdown window. Preserve local fields and
 record the final independent positive-quadrature audit before stopping.
+
+## Eight-round realization follow-up, 20 October 2026
+
+The resumed geometry control 305 changes only adaptation rounds from four
+to eight. It admits 111,605 nodes, raises minimum corner quality to 0.30065,
+and reduces oversized curve edges from 288 to 32. Fresh six-load workflow 306
+then takes 274.06 seconds at 2.851 GiB. Independent field audit 307 passes,
+but all 24 unchanged models still give 1.439306% worst disagreement. The eight
+fine-family models reproduce exactly and their envelope itself reaches
+1.301824%. More rounds are not a stiffness-target solution.
+
+Do not select another round count or stronger curve metric from localization
+alone. Complete positive-rule reintegration, then investigate geometric-domain
+approximation separately from FE enrichment or justify a bulk-refinement
+control with independent evidence. Preserve all references and resource gates.
+Read `CREASE_RESULTS.md` and the new consolidated `PROJECT_TRACKING.md`.
