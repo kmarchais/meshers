@@ -78,6 +78,31 @@ Records are in `runs/g3-schwarz-tet10-live-amg-pilot-v1` and
 selecting interleaved repetitions with the same recipes and solver. No
 repeated stronger-Tet10 speed claim is made before those measurements.
 
+## Declared interleaved repetitions
+
+`schwarz_tet10_repeated.py` selects one fresh warmup per arm followed by five
+fresh measured pairs. The first measured pair runs Meshers first, then the
+order alternates. Microgen's parent generation remains immediately before its
+manual elevation and solve. All recipes, eight-model 0.1% target, numerical
+threads, and AMG tolerances match the qualified pilot. Each pair repeats its
+independent field and reference audits. No previous mesh, solved load prefix,
+or previous-run preconditioner is reused.
+
+Warmups remain visible but do not enter timing statistics. Report median,
+minimum, maximum, and each paired ratio for both science-audited workflow
+and generation/lift/solve subtotal. A slower pair must remain visible even
+if the median favors Meshers. Both arms must qualify in every pair before
+a repeated matched-target claim. This remains a supplementary Schwarz study,
+not a substitute for the missing four-fixture comparison.
+
+The entire experiment has a 3,600-second awake-time budget, with existing
+per-stage timeouts shortened if less budget remains. The 8 GiB, one-thread,
+250,000-node and 250,000-tet limits remain unchanged. Preserve partial results
+if any stage or the whole budget fails. Compare wall and monotonic clocks
+for each pair. A discrepancy above five seconds excludes this timing
+experiment rather than silently treating host suspension as faster computing.
+No unrelated job, timer, or host power setting changes.
+
 ## Original public integration
 
 `Mesh.to_fedoo()` now copies Tet4 or curved Tet10 coordinates and connectivity

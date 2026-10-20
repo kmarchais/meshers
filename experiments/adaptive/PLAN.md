@@ -580,3 +580,13 @@ passes with native energy shift 2.89e-9. Select interleaved repetitions of
 these exact recipes before any repeated stronger-Tet10 timing claim. Keep
 both cost definitions and the explicit one-pass/manual-elevation labels.
 No additional lattice sizing or degree trial follows from this result.
+
+The repeated stronger-Tet10 protocol is now implemented in
+`schwarz_tet10_repeated.py`: one fresh warmup per arm, then five fresh pairs
+with alternating arm order. Preserve the pilot recipes, common AMG, eight
+reference models, both cost definitions, and all admission/resource gates.
+Eight focused ordering/summary controls pass. Queue this as one bounded
+experiment with a 3,600-second whole budget, then read its authoritative
+completion before choosing a successor. Host clock discrepancy above five
+seconds excludes timing. No lattice or missing-comparator conclusion changes
+until new fixture-specific evidence exists.

@@ -1,5 +1,33 @@
 # G3 continuation checkpoint, 20 October 2026
 
+## Current running experiment, job 333
+
+Job 333 is the single authorized successor to the completed live pilot and
+positive-rule audit below. It runs `schwarz_tet10_repeated.py` with output
+`experiments/adaptive/runs/g3-schwarz-tet10-live-amg-repeated-v1`.
+Its observing terminal session is 95526. Check authoritative pueue state
+before any retry or additional experiment. An observer timeout is not a
+worker failure. Do not restart completed jobs 331 or 332.
+
+The first warmup's 38 controls and fresh Microgen parent admission pass.
+Its six-load straight-Tet10 solve is running at this checkpoint. No repeated
+timing result exists yet. No successor is queued, and source code hashed by
+the active experiment must remain unchanged until it completes.
+
+The protocol is one fresh warmup per arm, then five measured pairs with
+alternating arm order. Use exactly the pilot recipes, common explicit AMG,
+all eight Schwarz models and supplementary 0.1% target. Both costs remain
+visible. Warmup is excluded from statistics; every measured pair remains
+visible. The whole experiment has a 3,600-second awake-time budget, existing
+stage caps shortened to remaining budget, 8 GiB workers and one numerical
+thread. Wall/monotonic discrepancy above five seconds excludes timing.
+
+Read root `checkpoint.json` for completed pairs and `summary.json` only
+after terminal success. Per-pair `workers.json`, `result.json`, audits and
+reference reports retain failures and partial progress. Do not claim the
+pilot's 7.4382 single-pair ratio as a repeated result. The full four-fixture
+goal remains active and unachieved.
+
 ## Latest live comparison, jobs 331 and 332
 
 After closing the polynomial diagnostic, one fresh stronger Schwarz Tet10

@@ -1,8 +1,8 @@
 # Meshers project tracking
 
 Updated 20 October 2026. Covers the recorded project history on
-`handoff/g3-microgen-20261017` through commit `ca388d2`, plus completed
-live Tet10 comparison jobs 331 and 332 recorded below. The history starts with the initial
+`handoff/g3-microgen-20261017` through commit `9f9ee96`, plus the explicitly
+running repeated experiment 333 recorded below. The history starts with the initial
 release candidate on 19 September and includes the resumed 20 October geometry,
 reference, and fixed-field sensitivity studies.
 This is a consolidated index and status ledger, not a replacement for frozen
@@ -55,6 +55,7 @@ The [19 October shutdown record](handoff/g3/SHUTDOWN-20261019.md) remains histor
 | Implemented and validated | Direct fedoo Tet4/Tet10 conversion, optional spatial sizing, periodic projection and quality fixes, partial curved settling, exact-tie derivative correction |
 | Measured with limited scope | Repeated Schwarz advantage against the labeled one-pass Microgen variant; single-run recovery and geometry improvements |
 | Fresh stronger-comparator pilot | Common-AMG Schwarz Tet10 pair, 409.87 versus 55.10 seconds; both pass supplementary 0.1%, independent fields and positive-rule audit pass |
+| Running, no repeated result yet | Job 333 runs one warmup per arm and five interleaved fresh common-AMG Tet10 pairs; 38 controls and initial parent admission pass |
 | Completed negative studies | Default Microgen admissions, unsuccessful sizing and repair recipes, volume-offset rationale, three-level cubic extrapolation, edge-only quartic signal |
 | Completed negative diagnostic | Coupled cubic curve-corner relaxation reproduces original edge gains exactly but fails the useful-signal screen; polynomial-mode route closed |
 | Still open | Four-fixture matched-accuracy comparison, lattice reference uncertainty, admitted actual MMG controls for Gyroid and spinodoid |
@@ -651,7 +652,8 @@ Use `git log --reverse --format='%h %ad %s' --date=short` for the complete ledge
 | 20 Oct | `b186d39` | Fresh cubic23 reference, rejected three-level extrapolation, unchanged 24-model set |
 | 20 Oct | `06e4f27` | Controlled quartic edge diagnostic, rejected initial precision, resolved weak higher-rule signal |
 | 20 Oct | `ca388d2` | Validated corner-coupling diagnostic and weak incremental signal; polynomial-mode route closed |
-| 20 Oct | Jobs 331–332, subsequent working-tree record | Fresh stronger Schwarz Tet10 pilot with common AMG and independent field/quadrature audits |
+| 20 Oct | `9f9ee96` | Fresh stronger Schwarz Tet10 pilot with common AMG and independent field/quadrature audits |
+| 20 Oct | Job 333, running | Repeated exact-recipe Schwarz Tet10 experiment; first warmup underway, no repeated timing conclusion |
 
 ## 13. Verification and evidence register
 
@@ -719,7 +721,7 @@ use the verified `kmarchais` account.
 
 | Priority | Next action | Completion criterion |
 |---|---|---|
-| 1 | Repeat the qualified fresh stronger Schwarz Tet10 pair in interleaved order | Same recipes, common AMG, unchanged eight-model 0.1% target, both cost definitions, and measured repeatability |
+| 1, running | Read job 333 before selecting any successor | Five interleaved measured pairs after warmup, common AMG, unchanged eight-model 0.1% target, both cost definitions, clock-consistency and resource gates |
 | Closed diagnostic | Curve-corner relaxation coupled to the same quartic modes | Completed; incremental signal remains small, so no further polynomial-mode trial is selected |
 | 2 | Resolve lattice FE versus geometry/reference uncertainty | A justified reference envelope and a candidate passing every retained applicable model, without post-hoc model deletion |
 | 3 | Establish admitted actual Microgen/MMG comparators for Gyroid and spinodoid, or clearly bound unsupported tested routes | Genuine geometry-qualified controls, not MMG on Meshers seeds or altered specimens |

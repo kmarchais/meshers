@@ -1,18 +1,32 @@
 """One fresh Schwarz Tet10 workflow pair with the same explicit AMG preset."""
 
 import argparse
+from contextlib import nullcontext
 import importlib.metadata
 import json
 import os
 from pathlib import Path
 import shutil
 import sys
+import time
 
 import microgen_workflow as workflow
 
 os.environ.update(OPENBLAS_NUM_THREADS="1", OMP_NUM_THREADS="1", MKL_NUM_THREADS="1", RAYON_NUM_THREADS="1")
 sys.path.insert(0, str(Path.home() / "bin"))
 from pueue_progress import Job
+
+STAGE_TIMEOUTS = {"controls": 120, "microgen-parent": 600, "microgen-tet10": 1800,
+    "meshers-tet10": 600, "microgen-audit": 300, "microgen-reference": 60,
+    "meshers-audit": 300, "meshers-reference": 60}
+
+
+def stage_names(native_first=False):
+    names = list(STAGE_TIMEOUTS)
+    if native_first:
+        names.remove("meshers-tet10")
+        names.insert(1, "meshers-tet10")
+    return names
 
 
 def comparison_summary(parent, elevated, native, comparisons):
@@ -49,14 +63,12 @@ def comparison_summary(parent, elevated, native, comparisons):
         "scope": "Single G3 pair at supplementary 0.1 percent target, explicit one-pass Microgen override plus manual straight Tet10 and direct fedoo, not default/public Microgen Tet10 or a repeated/four-fixture advantage"}
 
 
-def main():
-    parser = argparse.ArgumentParser()
-    parser.add_argument("--run", type=Path, required=True)
-    args = parser.parse_args()
-    args.run.mkdir(parents=True, exist_ok=False)
-    shutil.copyfile(__file__, args.run / "driver.py")
+def run_pair(run, *, native_first=False, job=None, prefix="", deadline=None):
+    wall_start, monotonic_start = time.time(), time.monotonic()
+    run.mkdir(parents=True, exist_ok=False)
+    shutil.copyfile(__file__, run / "driver.py")
     source = workflow.HERE / "runs/g3-microgen-defaults-v4"
-    directories = {name: args.run / name for name in ("microgen-parent", "microgen-tet10", "meshers-tet10", "audits")}
+    directories = {name: run / name for name in ("microgen-parent", "microgen-tet10", "meshers-tet10", "audits")}
     for directory in directories.values():
         directory.mkdir()
         for suffix in ("-specimen.json", "-samples.npz"):
@@ -67,15 +79,17 @@ def main():
     paths.extend(workflow.HERE / name for name in ("microgen_workflow.py", "microgen_tuned.py",
         "microgen_tet10_control.py", "admission_pilot.py", "stress_recovery.py", "tet10_integration.py",
         "amg_reference.py", "stiffness_pair.py", "test_cubic_reference.py", "test_reference_admission.py",
-        "test_schwarz_tet10_live.py", "cap_quality_bound.py", "gradient_tie_probe.py"))
+        "test_schwarz_tet10_live.py", "schwarz_tet10_repeated.py", "test_schwarz_tet10_repeated.py",
+        "cap_quality_bound.py", "gradient_tie_probe.py"))
     paths.extend(workflow.ROOT / "crates/meshers-python/python/meshers" / name for name in ("__init__.py", "expression.py"))
     paths.extend(workflow.ROOT.parent / "periodic-microgen/experiments/periodic-fea" / name
                  for name in ("homogenization.py", "periodic.py"))
     paths.extend(source / name for name in ("summary.json", "schwarz-solid-specimen.json", "schwarz-solid-samples.npz"))
     hashes = {str(path): workflow.digest(path) for path in paths}
-    workflow.save(args.run / "manifest.json", {"inputs": hashes, "memory_bytes": workflow.MEMORY,
+    workflow.save(run / "manifest.json", {"inputs": hashes, "memory_bytes": workflow.MEMORY,
         "threads": 1, "solve_node_cap": 250000, "tetrahedron_cap": workflow.CAP,
         "stiffness_target": .001, "repetitions": 1, "live_workflow_timing": True,
+        "native_first": native_first, "stage_timeouts_s": STAGE_TIMEOUTS,
         "solver": "cached-elastic-block-amg-cg", "cg_rtol": 1e-12, "cg_atol": 1e-14,
         "packages": {name: importlib.metadata.version(name) for name in (
             "meshers", "microgen", "mmgpy", "fedoo", "numpy", "scipy", "vtk", "pyvista", "pyamg")},
@@ -86,7 +100,8 @@ def main():
     parent, elevated, native, audits = (directories[name] for name in ("microgen-parent", "microgen-tet10", "meshers-tet10", "audits"))
     commands = [
         ("controls", 120, ["-m", "pytest", "-q", "experiments/adaptive/test_schwarz_tet10_live.py",
-            "experiments/adaptive/test_reference_admission.py", "experiments/adaptive/test_cubic_reference.py"]),
+            "experiments/adaptive/test_reference_admission.py", "experiments/adaptive/test_cubic_reference.py",
+            "experiments/adaptive/test_schwarz_tet10_repeated.py"]),
         ("microgen-parent", 600, [str(workflow.HERE / "microgen_tuned.py"), "--worker", "--run", str(parent),
             "--source", str(source), "--resolution", "30", "--first-pass-hausd", ".0005",
             "--first-pass-hmax", ".1", "--first-pass-only", "--geometry-only"]),
@@ -101,28 +116,48 @@ def main():
             "--saved-worker", str(directory)]))
         commands.append((arm + "-reference", 60, [str(workflow.HERE / "stiffness_pair.py"),
             "--first", str(directory / "result.json"), "--reference-summary", str(source / "summary.json"),
-            "--orders", "1", "2", "3", "4", "--target", ".001", "--output", str(args.run / (arm + "-reference.json"))]))
+            "--orders", "1", "2", "3", "4", "--target", ".001", "--output", str(run / (arm + "-reference.json"))]))
+    assert {name: timeout for name, timeout, _ in commands} == STAGE_TIMEOUTS
+    commands = {name: arguments for name, timeout, arguments in commands}
     records = {}
-    with Job(parts={name: timeout for name, timeout, _ in commands}) as job:
-        for name, timeout, arguments in commands:
-            with job.part(name) as part:
-                records[name] = workflow.bounded([sys.executable, *arguments], args.run / (name + ".log"), part, timeout=timeout)
-                workflow.save(args.run / "workers.json", records)
+    context = Job(parts=STAGE_TIMEOUTS) if job is None else nullcontext(job)
+    with context as active_job:
+        for name in stage_names(native_first):
+            timeout = STAGE_TIMEOUTS[name]
+            if deadline is not None:
+                timeout = min(timeout, deadline - time.monotonic())
+                assert timeout > 0, "Whole-experiment deadline reached before the next worker"
+            with active_job.part(prefix + name) as part:
+                records[name] = workflow.bounded([sys.executable, *commands[name]], run / (name + ".log"), part, timeout=timeout)
+                workflow.save(run / "workers.json", records)
                 assert records[name]["returncode"] == 0, f"Read {name}.log"
                 if name in ("microgen-parent", "microgen-tet10", "meshers-tet10"):
                     row = json.loads((directories[name] / "result.json").read_text())
                     assert row["qualified"] and row["geometry"]["geometry_admitted"]
                     if name != "microgen-parent":
                         assert row["status"] == "solved-needs-reference"
-                job.result(name, seconds=records[name]["wall_s"], peak_gib=records[name]["peak_rss_bytes"] / 1024**3)
-    comparisons = {arm: json.loads((args.run / (arm + "-reference.json")).read_text()) for arm in ("microgen", "meshers")}
+                active_job.result(prefix + name, seconds=records[name]["wall_s"], peak_gib=records[name]["peak_rss_bytes"] / 1024**3)
+    comparisons = {arm: json.loads((run / (arm + "-reference.json")).read_text()) for arm in ("microgen", "meshers")}
     report = comparison_summary(*(json.loads((directory / "result.json").read_text()) for directory in (parent, elevated, native)), comparisons)
     assert all(workflow.digest(Path(path)) == digest for path, digest in hashes.items())
     report.update(inputs_unchanged=True, workers=records)
     report["artifact_sha256"] = {str(directory / name): workflow.digest(directory / name)
         for directory in (parent, elevated, native) for name in ("result.json", "mesh.npz", "fields.npz")
         if (directory / name).exists()}
-    workflow.save(args.run / "summary.json", report)
+    wall_elapsed, monotonic_elapsed = time.time() - wall_start, time.monotonic() - monotonic_start
+    report.update(native_first=native_first, elapsed_wall_s=wall_elapsed, elapsed_monotonic_s=monotonic_elapsed,
+        wall_minus_monotonic_s=wall_elapsed - monotonic_elapsed,
+        timing_clock_consistent=abs(wall_elapsed - monotonic_elapsed) <= 5)
+    workflow.save(run / "summary.json", report)
+    return report
+
+
+def main():
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--run", type=Path, required=True)
+    parser.add_argument("--native-first", action="store_true")
+    args = parser.parse_args()
+    run_pair(args.run, native_first=args.native_first)
 
 
 if __name__ == "__main__":
