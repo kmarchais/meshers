@@ -1,5 +1,18 @@
 # Adaptive and quadratic implicit meshing: results
 
+## Completed finer cubic reference, 2026-10-20
+
+All six fresh cubic25 loads complete within 8 GiB, peaking at 6.753 GiB.
+The same geometry, quality, periodic, residual, and quadrature gates pass;
+an independent fresh-process audit reproduces the fields. Its tensor differs
+by 0.248177% from cubic24, so reference convergence is still unproven.
+The curve pilot differs by 0.483742% from cubic25, the finest adaptive
+Meshers tensor by 0.651535%, and the strongest Microgen-derived Tet10 tensor
+by 0.917416%. These single-reference comparisons do not override the original
+24-model failures. Cubic25 itself fails their model-normalized envelope at
+1.920819%. A third neighboring parent23 passes geometry and fits the existing
+cubic node stage. Read `CUBIC_RESULTS.md` before selecting further refinement.
+
 ## Cubic mapping sensitivity, 2026-10-20
 
 Projecting higher-order cubic boundary nodes improves sampled distance from

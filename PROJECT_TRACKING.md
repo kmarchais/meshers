@@ -419,7 +419,9 @@ against the current equations; they were not charged as fresh workflow solves.
 The complete six-load cubic result has 222,331 nodes and 44,976 elements, peaks
 at 6.341 GiB, and passes stress/energy, periodic, residual, and positive-rule
 checks. It retains status `solved-needs-reference`. Its disagreement with the
-24 models spans about 0.154–1.7505%, so it does not settle lattice accuracy.
+24 models, normalized by cubic24, spans about 0.154–1.7505%. This reverse
+diagnostic is distinct from candidate-to-model admission and does not settle
+lattice accuracy.
 
 On 20 October, a separate cubic geometry probe projects 30,972 higher-order
 wall nodes while preserving topology, corner coordinates, and the six saved
@@ -447,6 +449,22 @@ same 1e-12 threshold and matrix-hash reuse gates. Ten focused tests and twelve
 integrated control loads pass. A fresh cubic25 retry is selected with the
 same resource and first-load limits; no finer-reference accuracy result is
 claimed before its completion and audits.
+
+The retry completes all six fresh cubic25 loads at 6.753 GiB peak RSS, with
+1,071.18 seconds of worker time. Its own-rule, periodic, higher-rule, and
+fresh-process audits pass. Cubic24 and cubic25 differ by 0.248177%, leaving
+reference convergence unresolved. Against cubic25, the curve pilot differs
+by 0.483742%, the finest adaptive Meshers tensor by 0.651535%, and the strongest
+Microgen-derived Tet10 tensor by 0.917416%. Do not choose this single reference
+to override the unchanged 24-model admission failures. Cubic25 itself fails
+their model-normalized envelope at 1.920819%.
+
+A third neighboring parent23 passes geometry at 68,095 quadratic nodes and
+fits the existing cubic stage at an exact 218,508 nodes. One fresh parent
+control completes in 119.43 seconds and passes independent field checks.
+Actual cubic23 assembly fits at 5.014 GiB. A fresh higher-order reference solve
+is selected next with the unchanged caps. Additional nonnested-mesh data may
+expose, rather than remove, reference uncertainty.
 
 Evidence: [cubic results](experiments/adaptive/CUBIC_RESULTS.md),
 `cubic_reference.py`, `cubic_assessment.py`, `amg_reference.py`,
@@ -633,7 +651,7 @@ use the verified `kmarchais` account.
 
 | Priority | Next action | Completion criterion |
 |---|---|---|
-| 1 | Read the seed25 parent preflight and exact cubic node budget after the sub-threshold geometry-sensitivity probe | A qualified, bounded next higher-order refinement level, without interpreting fixed-field energy as equilibrium stiffness |
+| 1 | Read the running cubic23 reference, independently audit its fields, then assess the three-level sequence | Test refinement behavior without dropping models or interpreting a single higher-order tensor as continuum truth |
 | 2 | Resolve lattice FE versus geometry/reference uncertainty | A justified reference envelope and a candidate passing every retained applicable model, without post-hoc model deletion |
 | 3 | Establish admitted actual Microgen/MMG comparators for Gyroid and spinodoid, or clearly bound unsupported tested routes | Genuine geometry-qualified controls, not MMG on Meshers seeds or altered specimens |
 | 4 | Run fresh repeated matched-target workflows where both competitors qualify | Same-host interleaved repetitions, charged preparation and solves, all scientific gates met |

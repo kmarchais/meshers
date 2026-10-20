@@ -109,6 +109,69 @@ The 8 GiB ceiling, 250,000-node stage, 240-second first-load deadline, and
 accuracy until all six loads, own-rule checks, and positive-rule sensitivity
 are complete. Control records are in `runs/g3-blocked-symmetry-amg-controls-v1`.
 
+## Completed cubic25 refinement and unresolved models
+
+Job 316 completes all six fresh cubic25 loads, without prefix replay. The
+first recorded solver call takes 185.43 seconds, and the full first-load
+continuation gate passes within 240 seconds.
+Final solve time is 1,020.87 seconds; worker time is 1,071.18 seconds and
+peak RSS is 6.753 GiB. The original 8 GiB ceiling is unchanged. This confirms
+large-case feasibility of blocked symmetry verification, not a workflow-speed
+comparison with the cubic24 run that replayed four verified fields.
+
+Own-rule stress and energy reproduce reactions within 1.03e-11 relative.
+Periodic displacement jumps are below 2.23e-16. The 125-point energy shift
+is 2.6354e-5 relative, below the unchanged 1e-4 limit. The minimum eigenvalue
+of the parent-minus-cubic tensor is +0.000140792, consistent with same-domain
+variational enrichment. Status remains `solved-needs-reference`.
+
+Fresh-process audit 317 passes in 62.11 seconds at 0.555 GiB. Its own-rule
+reaction disagreement is 9.12e-12, and the 64-to-125-point energy change is
+6.8313e-6 relative. All sampled Jacobians and affine controls pass. Every
+earlier empirical model is retained.
+
+| Compared tensor | Worst mixed-load difference relative to cubic25 |
+|---|---:|
+| Cubic24 | 0.248177% |
+| Finest adaptive Meshers Tet10 | 0.651535% |
+| Eight-round curve-graded Meshers Tet10 | 0.483742% |
+| Strongest Microgen-derived straight Tet10 | 0.917416% |
+
+Cubic24 is softer than cubic25 in all six generalized modes. Two neighboring
+levels do not establish an asymptotic reference. Candidate ranking also depends
+on reference choice: the curve pilot is closer to cubic25 than the finest
+adaptive mesh, despite being worse across the original model envelope.
+Do not select cubic25 alone to manufacture a target-qualified timing comparison.
+
+The separate model-normalized score uses the original benchmark denominator,
+not the reverse model-versus-cubic diagnostic. Cubic25 itself spans 0.114924%
+to 1.920819% across all 24 models and fails their 1% envelope. The earlier
+candidate model envelopes remain exactly unchanged. No model is deleted or
+reclassified as a certified continuum tensor.
+
+Before a third higher-order solve, job 318 preflights one neighboring parent23.
+It admits 68,095 nodes and 43,844 Tet10 elements, with distance 0.00059463,
+minimum quality 0.15825, positive sampled Jacobians, no unresolved projections,
+and matching periodic caps. Exact topology counting gives 218,508 cubic nodes,
+inside the existing stage. A fresh parent23 six-load control is selected next.
+This permits a third refinement point; it does not guarantee a reliable
+three-point extrapolation or settle sensitivity to nonnested meshes.
+
+Records are in `runs/g3-lattice-cubic25-reference-blocked-symmetry-v2`,
+`runs/g3-lattice-cubic25-assessment-v1`,
+`runs/g3-lattice-cubic25-reference-envelope-v1`, and
+`runs/g3-lattice-cubic-parent23-preflight-v1`.
+
+The fresh parent23 control, job 319, completes all six loads in a 119.43-second
+workflow and exactly reproduces the preflight arrays. Independent audit 320
+has reaction disagreement 6.57e-12 and zero periodic jumps. Assembly-only
+job 321 confirms 218,508 cubic nodes, 43,844 elements, and 89,362,584 matrix
+nonzeros. Its worker takes 52.91 seconds and peaks at 5.014 GiB. Only after
+these gates pass, one fresh cubic23 solve is selected as job 322 in
+`runs/g3-lattice-cubic23-reference-v1`. No prefix is replayed and no reference
+model is removed. Read its actual completion and fresh-process audit before
+interpreting a three-level sequence.
+
 This experiment addresses lattice reference uncertainty. It does not add a
 Meshers Tet20 product API, change the Microgen pipeline or establish a timing
 advantage. All existing uniform and adaptive reference models remain retained.

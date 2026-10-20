@@ -1,0 +1,410 @@
+{
+  "inputs": {
+    "/home/kmarchais/dev/meshers/experiments/adaptive/runs/g3-lattice-cubic25-reference-envelope-v1/driver.py": "3efce2198db0ce9fe7fb1b94b42b845e15d1b046231170bedad0777255540a76",
+    "/home/kmarchais/dev/meshers/experiments/adaptive/runs/g3-lattice-cubic25-reference-blocked-symmetry-v2/result.json": "a4ad2d73a8bc927c4305bacdbeb585c7800a1de47b3b302a81589fdbcd6e87eb",
+    "/home/kmarchais/dev/meshers/experiments/adaptive/runs/g3-lattice-cubic25-assessment-v1/result.json": "7130da0631f19c3ab9b5ae94f9d13c8151531b5c551347db351711e9ae0c3284",
+    "/home/kmarchais/dev/meshers/experiments/adaptive/runs/g3-lattice-cubic25-assessment-v1/manifest.json": "0507c708a763af7e6ba4a7a3106d96f859473d7c5dc8c04ac1c94d74f6f39c67",
+    "/home/kmarchais/dev/meshers/experiments/adaptive/runs/g3-lattice-curve-grading-reference-comparison-v1.json": "bec8af1d841a1b3d0299d3746f96c0562ec0db13927ce8370cce6d22924a23b9",
+    "/home/kmarchais/dev/meshers/experiments/adaptive/runs/g3-lattice-reference-sensitivity-v2.json": "0bc21b6b9c07819795697047ee827aab8c23363790dc5137ea7d2d1a5aa0ac07",
+    "/home/kmarchais/dev/meshers/experiments/adaptive/runs/g3-lattice-microgen-reference-comparison-v1.json": "6acf432121761aa9028ffd81be1e146cbd5010e84f6183fab9cd455c966dfdd4",
+    "/home/kmarchais/dev/meshers/experiments/adaptive/runs/g3-lattice-cubic-parent23-preflight-v1/result.json": "2c425497878124dc3b10180f1952685b72c55c736828fbc1f2fda9aaa2f56e16",
+    "/home/kmarchais/dev/meshers/experiments/adaptive/runs/g3-lattice-cubic-parent23-preflight-v1/mesh.npz": "edfb8385263058afc7fa460a4fde37a2ab489479d8c77b0d389fca69f89081f8",
+    "/home/kmarchais/dev/meshers/experiments/adaptive/cubic_reference.py": "33bd7ce2c78126209406809af139a81bb460eeef1ecb81661da9a778373291f1"
+  },
+  "source": "/home/kmarchais/dev/meshers/experiments/adaptive/runs/g3-lattice-cubic25-reference-blocked-symmetry-v2/result.json",
+  "models": [
+    {
+      "source": "/home/kmarchais/dev/meshers/experiments/adaptive/runs/g3-lattice-curve-grading-reference-comparison-v1.json",
+      "index": 0,
+      "difference_normalized_by_model": {
+        "worst_relative_strain_energy_difference": 0.017120694121773094,
+        "relative_tensor_frobenius_difference": 0.004639250169925667,
+        "relative_energy_difference_eigenvalues": [
+          0.0016253003384520902,
+          0.0017872710624681223,
+          0.0019036258196484476,
+          0.0046885322358311485,
+          0.01647436085707488,
+          0.017120694121773094
+        ]
+      }
+    },
+    {
+      "source": "/home/kmarchais/dev/meshers/experiments/adaptive/runs/g3-lattice-curve-grading-reference-comparison-v1.json",
+      "index": 1,
+      "difference_normalized_by_model": {
+        "worst_relative_strain_energy_difference": 0.011710414517751936,
+        "relative_tensor_frobenius_difference": 0.0032481778134811536,
+        "relative_energy_difference_eigenvalues": [
+          0.0009936591751557942,
+          0.0010729744578133217,
+          0.001129816559575068,
+          0.0033082850137769134,
+          0.011362465999183398,
+          0.011710414517751936
+        ]
+      }
+    },
+    {
+      "source": "/home/kmarchais/dev/meshers/experiments/adaptive/runs/g3-lattice-curve-grading-reference-comparison-v1.json",
+      "index": 2,
+      "difference_normalized_by_model": {
+        "worst_relative_strain_energy_difference": 0.00992208825818605,
+        "relative_tensor_frobenius_difference": 0.002786317637504863,
+        "relative_energy_difference_eigenvalues": [
+          0.0007832861200367876,
+          0.0008351192952016237,
+          0.0008723341950943449,
+          0.002849249448381934,
+          0.009669010455638708,
+          0.00992208825818605
+        ]
+      }
+    },
+    {
+      "source": "/home/kmarchais/dev/meshers/experiments/adaptive/runs/g3-lattice-curve-grading-reference-comparison-v1.json",
+      "index": 3,
+      "difference_normalized_by_model": {
+        "worst_relative_strain_energy_difference": 0.00903174799914753,
+        "relative_tensor_frobenius_difference": 0.002555962108231244,
+        "relative_energy_difference_eigenvalues": [
+          0.0006781246946652612,
+          0.0007162588878194269,
+          0.0007438123744387321,
+          0.002620030078949507,
+          0.008824004653721986,
+          0.00903174799914753
+        ]
+      }
+    },
+    {
+      "source": "/home/kmarchais/dev/meshers/experiments/adaptive/runs/g3-lattice-curve-grading-reference-comparison-v1.json",
+      "index": 4,
+      "difference_normalized_by_model": {
+        "worst_relative_strain_energy_difference": 0.017909244458460292,
+        "relative_tensor_frobenius_difference": 0.004841187279546734,
+        "relative_energy_difference_eigenvalues": [
+          0.001716831426152035,
+          0.0018907898186891709,
+          0.0020157907769255685,
+          0.004888742509762827,
+          0.017218740233252115,
+          0.017909244458460292
+        ]
+      }
+    },
+    {
+      "source": "/home/kmarchais/dev/meshers/experiments/adaptive/runs/g3-lattice-curve-grading-reference-comparison-v1.json",
+      "index": 5,
+      "difference_normalized_by_model": {
+        "worst_relative_strain_energy_difference": 0.012099964327540033,
+        "relative_tensor_frobenius_difference": 0.0033486505410319153,
+        "relative_energy_difference_eigenvalues": [
+          0.0010393650679492393,
+          0.001124656302999911,
+          0.0011857869979930336,
+          0.0034080709699768385,
+          0.011730952597298037,
+          0.012099964327540033
+        ]
+      }
+    },
+    {
+      "source": "/home/kmarchais/dev/meshers/experiments/adaptive/runs/g3-lattice-curve-grading-reference-comparison-v1.json",
+      "index": 6,
+      "difference_normalized_by_model": {
+        "worst_relative_strain_energy_difference": 0.01018047576620795,
+        "relative_tensor_frobenius_difference": 0.002853114372525432,
+        "relative_energy_difference_eigenvalues": [
+          0.0008137444245227243,
+          0.0008695526675103063,
+          0.0009095919109636518,
+          0.002915677780551996,
+          0.00991393896136805,
+          0.01018047576620795
+        ]
+      }
+    },
+    {
+      "source": "/home/kmarchais/dev/meshers/experiments/adaptive/runs/g3-lattice-curve-grading-reference-comparison-v1.json",
+      "index": 7,
+      "difference_normalized_by_model": {
+        "worst_relative_strain_energy_difference": 0.009224864939133269,
+        "relative_tensor_frobenius_difference": 0.0026059539758431145,
+        "relative_energy_difference_eigenvalues": [
+          0.000700966043406105,
+          0.0007420706561837706,
+          0.000771706968832979,
+          0.00266979485449443,
+          0.009007454988929773,
+          0.009224864939133269
+        ]
+      }
+    },
+    {
+      "source": "/home/kmarchais/dev/meshers/experiments/adaptive/runs/g3-lattice-reference-sensitivity-v2.json",
+      "index": 0,
+      "difference_normalized_by_model": {
+        "worst_relative_strain_energy_difference": 0.019208187818665134,
+        "relative_tensor_frobenius_difference": 0.004665499396670267,
+        "relative_energy_difference_eigenvalues": [
+          0.0010637335970907448,
+          0.0011372048431125311,
+          0.0012248898908379167,
+          0.004407264972568314,
+          0.01688025604420278,
+          0.019208187818665134
+        ]
+      }
+    },
+    {
+      "source": "/home/kmarchais/dev/meshers/experiments/adaptive/runs/g3-lattice-reference-sensitivity-v2.json",
+      "index": 1,
+      "difference_normalized_by_model": {
+        "worst_relative_strain_energy_difference": 0.00748048889653419,
+        "relative_tensor_frobenius_difference": 0.0017478163984376723,
+        "relative_energy_difference_eigenvalues": [
+          0.00021484460067998628,
+          0.00026011757036525685,
+          0.00031408406390527995,
+          0.0016567186110843638,
+          0.006074005970441247,
+          0.00748048889653419
+        ]
+      }
+    },
+    {
+      "source": "/home/kmarchais/dev/meshers/experiments/adaptive/runs/g3-lattice-reference-sensitivity-v2.json",
+      "index": 2,
+      "difference_normalized_by_model": {
+        "worst_relative_strain_energy_difference": 0.0036787007039768348,
+        "relative_tensor_frobenius_difference": 0.000789904619079834,
+        "relative_energy_difference_eigenvalues": [
+          -7.288631407909485e-05,
+          -2.4328204722638498e-05,
+          1.2862645645354425e-05,
+          0.000748690569251611,
+          0.0025193923028082182,
+          0.0036787007039768348
+        ]
+      }
+    },
+    {
+      "source": "/home/kmarchais/dev/meshers/experiments/adaptive/runs/g3-lattice-reference-sensitivity-v2.json",
+      "index": 3,
+      "difference_normalized_by_model": {
+        "worst_relative_strain_energy_difference": 0.0018151187836555772,
+        "relative_tensor_frobenius_difference": 0.00033053530668464634,
+        "relative_energy_difference_eigenvalues": [
+          -0.00021760158838620244,
+          -0.0001644195440210064,
+          -0.00013648528962870605,
+          0.0002992068309844329,
+          0.000758858705276227,
+          0.0018151187836555772
+        ]
+      }
+    },
+    {
+      "source": "/home/kmarchais/dev/meshers/experiments/adaptive/runs/g3-lattice-reference-sensitivity-v2.json",
+      "index": 4,
+      "difference_normalized_by_model": {
+        "worst_relative_strain_energy_difference": 0.01633687285132089,
+        "relative_tensor_frobenius_difference": 0.003956987427435566,
+        "relative_energy_difference_eigenvalues": [
+          0.0008597207269606904,
+          0.0009230795190210244,
+          0.001004041966820205,
+          0.0037396858279042187,
+          0.01424754430919613,
+          0.01633687285132089
+        ]
+      }
+    },
+    {
+      "source": "/home/kmarchais/dev/meshers/experiments/adaptive/runs/g3-lattice-reference-sensitivity-v2.json",
+      "index": 5,
+      "difference_normalized_by_model": {
+        "worst_relative_strain_energy_difference": 0.006092336709638262,
+        "relative_tensor_frobenius_difference": 0.0013982501850296795,
+        "relative_energy_difference_eigenvalues": [
+          0.00011071866179743808,
+          0.00015628058625225167,
+          0.0002045313671359219,
+          0.0013263470187951296,
+          0.004780897673524959,
+          0.006092336709638262
+        ]
+      }
+    },
+    {
+      "source": "/home/kmarchais/dev/meshers/experiments/adaptive/runs/g3-lattice-reference-sensitivity-v2.json",
+      "index": 6,
+      "difference_normalized_by_model": {
+        "worst_relative_strain_energy_difference": 0.0027728607962450016,
+        "relative_tensor_frobenius_difference": 0.0005633053376954001,
+        "relative_energy_difference_eigenvalues": [
+          -0.00014276822758188244,
+          -9.227176055909442e-05,
+          -5.9541905564234843e-05,
+          0.0005306706989374557,
+          0.0016653277907366715,
+          0.0027728607962450016
+        ]
+      }
+    },
+    {
+      "source": "/home/kmarchais/dev/meshers/experiments/adaptive/runs/g3-lattice-reference-sensitivity-v2.json",
+      "index": 7,
+      "difference_normalized_by_model": {
+        "worst_relative_strain_energy_difference": 0.0011492364044694823,
+        "relative_tensor_frobenius_difference": 0.00018879607070073297,
+        "relative_energy_difference_eigenvalues": [
+          -0.0002716799254444201,
+          -0.00021534612045369698,
+          -0.00019041578297190743,
+          0.0001207601827550214,
+          0.0001448308679199754,
+          0.0011492364044694823
+        ]
+      }
+    },
+    {
+      "source": "/home/kmarchais/dev/meshers/experiments/adaptive/runs/g3-lattice-microgen-reference-comparison-v1.json",
+      "index": 0,
+      "difference_normalized_by_model": {
+        "worst_relative_strain_energy_difference": 0.014238692763685955,
+        "relative_tensor_frobenius_difference": 0.004075706459310266,
+        "relative_energy_difference_eigenvalues": [
+          0.0016097897768278457,
+          0.0017362049066355328,
+          0.0017468081124491933,
+          0.0041351283873629725,
+          0.013876173292810176,
+          0.014238692763685955
+        ]
+      }
+    },
+    {
+      "source": "/home/kmarchais/dev/meshers/experiments/adaptive/runs/g3-lattice-microgen-reference-comparison-v1.json",
+      "index": 1,
+      "difference_normalized_by_model": {
+        "worst_relative_strain_energy_difference": 0.009862882904640262,
+        "relative_tensor_frobenius_difference": 0.0028610321301030185,
+        "relative_energy_difference_eigenvalues": [
+          0.000921396510759976,
+          0.000986541773673461,
+          0.0009928814667592499,
+          0.0029274455126603264,
+          0.009743649441170092,
+          0.009862882904640262
+        ]
+      }
+    },
+    {
+      "source": "/home/kmarchais/dev/meshers/experiments/adaptive/runs/g3-lattice-microgen-reference-comparison-v1.json",
+      "index": 2,
+      "difference_normalized_by_model": {
+        "worst_relative_strain_energy_difference": 0.008425485624360704,
+        "relative_tensor_frobenius_difference": 0.002460920712371002,
+        "relative_energy_difference_eigenvalues": [
+          0.0006936486192734233,
+          0.000738407789316442,
+          0.0007437943658818837,
+          0.0025282423490226636,
+          0.008380185711046338,
+          0.008425485624360704
+        ]
+      }
+    },
+    {
+      "source": "/home/kmarchais/dev/meshers/experiments/adaptive/runs/g3-lattice-microgen-reference-comparison-v1.json",
+      "index": 3,
+      "difference_normalized_by_model": {
+        "worst_relative_strain_energy_difference": 0.007725576930249128,
+        "relative_tensor_frobenius_difference": 0.0022634880222161947,
+        "relative_energy_difference_eigenvalues": [
+          0.0005809449008290046,
+          0.0006155810391313667,
+          0.0006206799551677466,
+          0.0023307904122363715,
+          0.007696924931642012,
+          0.007725576930249128
+        ]
+      }
+    },
+    {
+      "source": "/home/kmarchais/dev/meshers/experiments/adaptive/runs/g3-lattice-microgen-reference-comparison-v1.json",
+      "index": 4,
+      "difference_normalized_by_model": {
+        "worst_relative_strain_energy_difference": 0.015613781803606435,
+        "relative_tensor_frobenius_difference": 0.004456468407038438,
+        "relative_energy_difference_eigenvalues": [
+          0.0018250190505669664,
+          0.001970553229270292,
+          0.0019826650576182433,
+          0.004512992731968706,
+          0.015173920208208768,
+          0.015613781803606435
+        ]
+      }
+    },
+    {
+      "source": "/home/kmarchais/dev/meshers/experiments/adaptive/runs/g3-lattice-microgen-reference-comparison-v1.json",
+      "index": 5,
+      "difference_normalized_by_model": {
+        "worst_relative_strain_energy_difference": 0.010540635604304007,
+        "relative_tensor_frobenius_difference": 0.003049405302269494,
+        "relative_energy_difference_eigenvalues": [
+          0.001028397639609493,
+          0.0011030915856383712,
+          0.0011099956249060352,
+          0.0031150682988295344,
+          0.010384290398107175,
+          0.010540635604304007
+        ]
+      }
+    },
+    {
+      "source": "/home/kmarchais/dev/meshers/experiments/adaptive/runs/g3-lattice-microgen-reference-comparison-v1.json",
+      "index": 6,
+      "difference_normalized_by_model": {
+        "worst_relative_strain_energy_difference": 0.008871047589142646,
+        "relative_tensor_frobenius_difference": 0.0025851425962362313,
+        "relative_energy_difference_eigenvalues": [
+          0.0007644383833690727,
+          0.0008155444086461859,
+          0.0008211821636566857,
+          0.0026523005919834894,
+          0.008804405481693702,
+          0.008871047589142646
+        ]
+      }
+    },
+    {
+      "source": "/home/kmarchais/dev/meshers/experiments/adaptive/runs/g3-lattice-microgen-reference-comparison-v1.json",
+      "index": 7,
+      "difference_normalized_by_model": {
+        "worst_relative_strain_energy_difference": 0.008049394331980911,
+        "relative_tensor_frobenius_difference": 0.002355479583225178,
+        "relative_energy_difference_eigenvalues": [
+          0.0006334908059446774,
+          0.0006728489895758218,
+          0.0006780628767451608,
+          0.0024228379076629203,
+          0.008017727338421965,
+          0.008049394331980911
+        ]
+      }
+    }
+  ],
+  "model_count": 24,
+  "model_normalized_disagreement_range": [
+    0.0011492364044694823,
+    0.019208187818665134
+  ],
+  "passes_one_percent_all_retained_models": false,
+  "parent23_cubic_node_count": 218508,
+  "parent23_within_existing_node_cap": true,
+  "scope": "Model-normalized disagreement, not an independent continuum bound; parent23 node-budget preflight, not a solve"
+}

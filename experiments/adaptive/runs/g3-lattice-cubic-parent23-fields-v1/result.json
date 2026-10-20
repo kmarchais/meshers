@@ -1,0 +1,228 @@
+{
+  "case": "smooth-lattice",
+  "cells": 23,
+  "min_length": 0.01,
+  "order": 2,
+  "native_tolerance": 1.0,
+  "optimization_passes": 1,
+  "adaptive": false,
+  "adapt_tolerance": 0.002,
+  "solver_quadrature_points": 15,
+  "solve_node_cap": 250000,
+  "qualified": true,
+  "solver": "cached-elastic-block-amg-cg",
+  "symmetric_union": {
+    "identity": "min(a,b) = (a+b-abs(a-b))/2",
+    "maximum_field_value_difference": 1.6653345369377348e-16,
+    "maximum_tie_gradient_difference": 1.468915544755589e-10,
+    "value_verification_points": 4096,
+    "gradient_verification_points": 3
+  },
+  "void_clamp": {
+    "positive_ceiling": 0.02,
+    "verification_points": 4096,
+    "material_mismatches": 0,
+    "domain_identity": "min(phi, positive_constant) <= 0 iff phi <= 0"
+  },
+  "generation_s": 2.393403909999961,
+  "nodes": 68095,
+  "elements": 43844,
+  "diagnostics": {
+    "empty": false,
+    "volume": 0.24626849417304889,
+    "minimum_mmg_quality": 0.15825302635217986,
+    "sampled_surface_error": 0.009278559855381811,
+    "elements_below_quality_01": 0,
+    "reverted_snap_vertices": 0,
+    "callback_calls": 0,
+    "inserted_interior_nodes": 0,
+    "seconds": 2.377848761,
+    "quadratic": {
+      "curved_edges": 12360,
+      "straightened_edges": 0,
+      "partially_curved_edges": 0,
+      "minimum_jacobian_ratio": 0.1745671611497857
+    },
+    "threads": 1,
+    "evaluator": "compiled",
+    "preparation_seconds": 0.015462381999896024
+  },
+  "geometry": {
+    "sampled_forward_max": 0.00057888010687089,
+    "sampled_reverse_max": 0.0005946333930470559,
+    "sampled_two_sided_max": 0.0005946333930470559,
+    "outward_forward_max": 0.00057888010687089,
+    "inward_forward_max": 0.0004163176068125447,
+    "projection_failed": 0,
+    "forward_samples": 105872,
+    "reverse_samples": 34791,
+    "volume": 0.24823402340333064,
+    "relative_volume_error": -0.0003101730049934748,
+    "q_min_corner": 0.15825302635217986,
+    "q_p01_corner": 0.4414505730720432,
+    "minimum_dihedral_deg_corner": 12.243456549595464,
+    "minimum_sampled_jacobian": 1.974951892153935e-06,
+    "reverse_tessellation_delta_max": 0.00047040949794792777,
+    "quadratic_reverse_subdivisions": [
+      4,
+      8
+    ],
+    "geometry_admitted": true
+  },
+  "periodic": {
+    "periodic_pair_counts": [
+      372,
+      372,
+      372
+    ],
+    "periodic_coordinate_errors": [
+      0.0,
+      0.0,
+      0.0
+    ],
+    "periodic_pair_tolerance": 1e-10,
+    "periodic_equivalence_classes": 67032,
+    "periodic_triangles_match": true
+  },
+  "status": "solved-needs-reference",
+  "completed_loads": 6,
+  "solver_records": [
+    {
+      "iterations": 71,
+      "relative_residual": 8.405334952856005e-13,
+      "free_dofs": 201093,
+      "seconds": 20.80893697500005,
+      "hierarchy_setup_s": 3.4316910970001118,
+      "hierarchy_reused": false,
+      "node_reordering_s": 0.29423455599999215,
+      "elastic_blocks": true,
+      "verified_symmetry_reused": false,
+      "levels": 3,
+      "operator_complexity": 1.0553011375889736,
+      "reduced_matrix_sha256": "3b7ec82fff2577e10c913be8e21a79b120f2ada85e612c8e6f7e78d0758d6879"
+    },
+    {
+      "iterations": 71,
+      "relative_residual": 7.208492562781238e-13,
+      "free_dofs": 201093,
+      "seconds": 16.488470247999885,
+      "hierarchy_setup_s": 0.0,
+      "hierarchy_reused": true,
+      "node_reordering_s": 0.0,
+      "elastic_blocks": true,
+      "verified_symmetry_reused": true,
+      "levels": 3,
+      "operator_complexity": 1.0553011375889736,
+      "reduced_matrix_sha256": "3b7ec82fff2577e10c913be8e21a79b120f2ada85e612c8e6f7e78d0758d6879"
+    },
+    {
+      "iterations": 70,
+      "relative_residual": 9.36879751833722e-13,
+      "free_dofs": 201093,
+      "seconds": 16.39092564700013,
+      "hierarchy_setup_s": 0.0,
+      "hierarchy_reused": true,
+      "node_reordering_s": 0.0,
+      "elastic_blocks": true,
+      "verified_symmetry_reused": true,
+      "levels": 3,
+      "operator_complexity": 1.0553011375889736,
+      "reduced_matrix_sha256": "3b7ec82fff2577e10c913be8e21a79b120f2ada85e612c8e6f7e78d0758d6879"
+    },
+    {
+      "iterations": 72,
+      "relative_residual": 6.258324075865181e-13,
+      "free_dofs": 201093,
+      "seconds": 16.81277249799996,
+      "hierarchy_setup_s": 0.0,
+      "hierarchy_reused": true,
+      "node_reordering_s": 0.0,
+      "elastic_blocks": true,
+      "verified_symmetry_reused": true,
+      "levels": 3,
+      "operator_complexity": 1.0553011375889736,
+      "reduced_matrix_sha256": "3b7ec82fff2577e10c913be8e21a79b120f2ada85e612c8e6f7e78d0758d6879"
+    },
+    {
+      "iterations": 71,
+      "relative_residual": 7.736011523916329e-13,
+      "free_dofs": 201093,
+      "seconds": 16.604284275999817,
+      "hierarchy_setup_s": 0.0,
+      "hierarchy_reused": true,
+      "node_reordering_s": 0.0,
+      "elastic_blocks": true,
+      "verified_symmetry_reused": true,
+      "levels": 3,
+      "operator_complexity": 1.0553011375889736,
+      "reduced_matrix_sha256": "3b7ec82fff2577e10c913be8e21a79b120f2ada85e612c8e6f7e78d0758d6879"
+    },
+    {
+      "iterations": 72,
+      "relative_residual": 8.713999201467086e-13,
+      "free_dofs": 201093,
+      "seconds": 16.69132704399999,
+      "hierarchy_setup_s": 0.0,
+      "hierarchy_reused": true,
+      "node_reordering_s": 0.0,
+      "elastic_blocks": true,
+      "verified_symmetry_reused": true,
+      "levels": 3,
+      "operator_complexity": 1.0553011375889736,
+      "reduced_matrix_sha256": "3b7ec82fff2577e10c913be8e21a79b120f2ada85e612c8e6f7e78d0758d6879"
+    }
+  ],
+  "solve_s": 113.4913487419999,
+  "stiffness": [
+    [
+      0.13948871341567853,
+      0.10694256911866383,
+      0.10693566573481904,
+      1.0146416259773575e-05,
+      7.896336724778291e-06,
+      4.757414635862954e-06
+    ],
+    [
+      0.10694256911866383,
+      0.1396401176641932,
+      0.10701975152846184,
+      1.2672073096548904e-05,
+      5.233809430868103e-06,
+      8.497249584660815e-06
+    ],
+    [
+      0.10693566573481904,
+      0.10701975152846184,
+      0.1396299760696045,
+      4.9437686999928565e-06,
+      1.2973612122282196e-05,
+      7.912097352143208e-06
+    ],
+    [
+      1.0146416259773575e-05,
+      1.2672073096548904e-05,
+      4.9437686999928565e-06,
+      0.10333022533460556,
+      5.7232648532045544e-06,
+      5.327625253828342e-06
+    ],
+    [
+      7.896336724778291e-06,
+      5.233809430868103e-06,
+      1.2973612122282196e-05,
+      5.7232648532045544e-06,
+      0.10332914850446305,
+      5.94107169266697e-06
+    ],
+    [
+      4.757414635862954e-06,
+      8.497249584660815e-06,
+      7.912097352143208e-06,
+      5.327625253828342e-06,
+      5.94107169266697e-06,
+      0.10335346190530223
+    ]
+  ],
+  "total_audit_workflow_s": 119.43152625199991,
+  "total_workflow_s": 119.43152625199991
+}

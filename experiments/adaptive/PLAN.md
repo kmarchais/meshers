@@ -509,3 +509,21 @@ first completed load. Blocked exact Frobenius verification preserves the
 1e-12 gate and passes ten focused and twelve integrated control cases.
 One fresh retry 316 uses the same 8 GiB ceiling and first-load deadline.
 Read its actual result before any successor; no reference model changes.
+
+Job 316 completes all six fresh cubic25 loads at 6.753 GiB. Own-rule checks,
+higher-rule sensitivity, and fresh-process audit 317 pass. Cubic24-to25 change
+is 0.248177%, and the relative ranking of the two native Tet10 candidates
+depends on reference choice. Do not select the favorable reference or discard
+any of the 24 models. Cubic25 itself misses their envelope at 1.920819%.
+
+Job 318 admits a third neighboring parent23, whose exact cubic node count
+is 218,508. One fresh parent23 six-load control is selected in the existing
+8 GiB stage. Audit its fields and read resource feasibility before a cubic23
+successor. Three nonnested meshes may still fail an asymptotic-convergence
+test; do not assume that an additional point proves a continuum reference.
+
+Parent23 six-load control 319 and independent audit 320 pass. Assembly 321
+confirms 218,508 cubic nodes at 5.014 GiB. A fresh cubic23 reference is selected
+as job 322, with no prefix replay and unchanged first-load and worker limits.
+Verify that job's authoritative state before any retry. See the current
+`handoff/g3/CHECKPOINT-20261020.md` for continuation and audit instructions.

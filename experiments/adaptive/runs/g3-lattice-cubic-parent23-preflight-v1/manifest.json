@@ -1,0 +1,23 @@
+{
+  "script_sha256": "34881be3599ec1cd6392133f650094cbca8ef85930abadcd9a64bd4bd7b05e87",
+  "native_sha256": "908e326211792142f83f854ad2696cd879d927bd81deacf38eb6a0cb63bc4dc1",
+  "inputs": {
+    "/home/kmarchais/dev/meshers/experiments/adaptive/runs/g3-microgen-defaults-v4/smooth-lattice-samples.npz": "a2b4375d2c99901f03b34e913563c887a4cdcff00bca35983adb7ef9d5311abe",
+    "/home/kmarchais/dev/meshers/experiments/adaptive/runs/g3-microgen-defaults-v4/smooth-lattice-specimen.json": "0e5b34b76183341a6e0d454f13cd404668ab82675f9a51cd9d2ecf3c91be3316"
+  },
+  "memory_bytes": 8589934592,
+  "threads": 1,
+  "timeout_s": 600,
+  "python_source_sha256": {
+    "/home/kmarchais/dev/meshers/experiments/adaptive/admission_pilot.py": "34881be3599ec1cd6392133f650094cbca8ef85930abadcd9a64bd4bd7b05e87",
+    "/home/kmarchais/dev/meshers/experiments/adaptive/microgen_workflow.py": "a8dfec3e7fd40eb94eee0f8f5b149721bd56cf058ce12b61c4f8a3e9fe42f950",
+    "/home/kmarchais/dev/meshers/experiments/adaptive/stress_recovery.py": "c9d74455c014c3b56ab656ca3f6a9cbf259dc11904318fecc354dcc6368651ac",
+    "/home/kmarchais/dev/meshers/experiments/adaptive/tet10_integration.py": "b5adbf4a96ee90953d546c654992d4380843e3b1a865e64e043cd14529e3865d",
+    "/home/kmarchais/dev/meshers/experiments/adaptive/gradient_tie_probe.py": "f2fddde187144f52527bd8563b34128831cc4f8733ef720ad86cf7c5db8d2762",
+    "/home/kmarchais/dev/meshers/crates/meshers-python/python/meshers/expression.py": "abf5e43d1b7e9fb05c7d081bd55c0f4ad74f1c6cc4d9ed7a89fb2881445c13f4"
+  },
+  "solver": "jacobi-cg",
+  "pyamg": null,
+  "native_sha256_after": "908e326211792142f83f854ad2696cd879d927bd81deacf38eb6a0cb63bc4dc1",
+  "tet_adapt_sha256": "271ca423ea954837c239bd6af891cde36f4cb033d4e5c8eb0a08ab6e4600871c"
+}
