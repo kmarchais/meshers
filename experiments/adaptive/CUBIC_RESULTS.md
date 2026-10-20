@@ -331,11 +331,56 @@ increments. The original edge-only result must reproduce before comparison.
 Keep the validated 125/216-point pair, 1% precision gate, 0.05% signal screen,
 8 GiB ceiling, and existing mode/support caps. If that increment remains
 small, stop this polynomial-mode route rather than escalating degree or
-tuning its strength. No such joint lattice check has run yet.
+tuning its strength. The completed check is recorded below.
 
 This experiment addresses lattice reference uncertainty. It does not add a
 Meshers Tet20 product API, change the Microgen pipeline or establish a timing
 advantage. All existing uniform and adaptive reference models remain retained.
+
+## Completed corner-coupling check, 20 October 2026
+
+Job 329 passes five algebraic tests and manufactured periodic controls for
+the combined space. The controls cover registered cubic corner functions,
+complete periodic corner copies, nonzero face traces, affine residuals,
+nonzero pin gauges, coupled trial energy, and the Schur-complement identity.
+The manufactured affine residual is 1.88e-16 and energy identity error is
+2.70e-15. Positive 125-point and 216-point matrices agree within 4.65e-15.
+
+Job 330 measures the unchanged cubic24 domain and saved six-load fields.
+The space has 102 quartic edge orbits and 96 cubic corner orbits, totaling
+594 displacement DOFs on 1,408 tets. All cross terms are assembled. Original
+edge-only gains reproduce exactly at both rules. The incremental gain after
+corner relaxation agrees with the independent Schur calculation within
+5.37e-16 relative. Nested-space positivity checks pass.
+
+| Positive-rule measurement | Result |
+|---|---:|
+| Edge-only maximum relative reduction | 0.647912 ppm |
+| Corner-only maximum relative reduction | 0.000873 ppm |
+| Joint maximum relative reduction | 0.676767 ppm |
+| Incremental quartic maximum after corner relaxation | 0.676219 ppm |
+| Incremental gain change, 125 to 216 points | 0.018333% |
+| Direct trial-energy identity relative error | 3.86e-13 |
+| Maximum continuity and periodic-trace mismatch | 3.39e-21 |
+| Lattice worker time and peak RSS | 263.45 s, 0.6863 GiB |
+
+Each maximum uses its own worst mixed load. Differences of these scalar
+maxima need not equal the maximum of the matrix difference. The signal uses
+the full joint-minus-corner matrix, not subtraction of scalar maxima.
+
+Precision passes the unchanged 1% screen. The incremental signal fails the
+500 ppm screen by about 739 times. No source-pin translation is needed.
+The 300-second worker stage and 8 GiB ceiling are unchanged and satisfied.
+Geometry, source fields, and all 24 model tensors remain unchanged.
+
+Stop this polynomial-mode route. Do not escalate degree, tune mode strength,
+or promote the trial energy as a new homogenized reference. This closes the
+specified corner-coupling omission, not all possible FE or geometry errors.
+The four-fixture benchmark objective remains unachieved.
+
+Records are in `runs/g3-quartic-corner-controls-v1` and
+`runs/g3-lattice-quartic-corner-witness-v1`. The maintained driver and tests
+are `quartic_edge_probe.py` and `test_quartic_edge_probe.py`.
 
 ## Analytic feasibility
 

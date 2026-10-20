@@ -1,5 +1,28 @@
 # G3 continuation checkpoint, 20 October 2026
 
+## Latest completed diagnostic, jobs 329 and 330
+
+The corner-coupling check proposed later in this checkpoint is now complete.
+Five algebraic tests and manufactured periodic controls pass. On the frozen
+cubic24 lattice, 102 edge orbits and 96 cubic corner orbits give 594 DOFs on
+1,408 tets. Edge-only gains reproduce exactly. The incremental quartic gain
+after corner relaxation agrees with the Schur complement within 5.37e-16.
+
+The incremental worst mixed-load gain is 0.676219 ppm, versus the unchanged
+500 ppm screen. Its 125/216-point change is 0.018333%, passing precision.
+Trial-energy identity error is 3.86e-13 and periodic trace mismatch 3.39e-21.
+Worker time is 263.45 seconds, peak RSS 0.6863 GiB. The 300-second stage
+and 8 GiB cap remain unchanged. All source hashes reproduce after the run.
+
+Stop this polynomial-mode route. No higher degree, mode-strength tuning,
+new equilibrium reference, or native feature is selected. All 24 models
+remain retained and the four-fixture objective remains unachieved. No
+successor is queued by this checkpoint. Recheck the shared queue before work.
+
+Read `runs/g3-quartic-corner-controls-v1` and
+`runs/g3-lattice-quartic-corner-witness-v1` under `experiments/adaptive`.
+The remaining sections retain the earlier reasoning and proposal as history.
+
 The four-fixture matched-accuracy goal is active and unachieved. The source
 and documentation changes through `b186d39` are pushed. This checkpoint adds
 the controlled quartic edge witness and its resolved weak signal.

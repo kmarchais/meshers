@@ -554,3 +554,11 @@ with the same edge modes. Separate coarse-only and incremental quartic gains,
 verify the Schur complement and nested-space ordering, and reproduce the
 original edge-only result. Keep the same higher-rule precision and signal
 screens, memory and support caps. If still small, stop this polynomial route.
+
+Jobs 329 and 330 complete that check. Five algebraic tests and manufactured
+controls pass. The lattice incremental signal is 0.676219 ppm versus 500 ppm,
+with 0.018333% higher-rule change. Original edge-only results reproduce
+exactly and the Schur identity passes. Close this polynomial-mode route.
+Do not select another degree, strength, or reference tensor from it. All
+geometry and benchmark gates remain unchanged, and the four-fixture goal
+is still active and unachieved. Detailed evidence is in `CUBIC_RESULTS.md`.

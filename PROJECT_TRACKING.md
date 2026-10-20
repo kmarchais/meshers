@@ -1,10 +1,10 @@
 # Meshers project tracking
 
 Updated 20 October 2026. Covers the recorded project history on
-`handoff/g3-microgen-20261017` through commit `0ebaa71` and the later dated
-experiments below, from the initial
-release candidate on 19 September through the G3 shutdown checkpoint, with
-the resumed 20 October geometry and fixed-field sensitivity controls below.
+`handoff/g3-microgen-20261017` through commit `06e4f27`, plus completed
+corner-coupling jobs 329 and 330 recorded below. The history starts with the initial
+release candidate on 19 September and includes the resumed 20 October geometry,
+reference, and fixed-field sensitivity studies.
 This is a consolidated index and status ledger, not a replacement for frozen
 experiment records. Historical results on other machines remain historical.
 Work in separate support repositories is included only where this checkout
@@ -28,14 +28,37 @@ Schwarz P solid, a fixed spinodoid, and a fixed smooth-union lattice.
 - Lattice stiffness accuracy remains unresolved across all retained reference
   models. Neither the best tested Meshers candidate nor the strongest tested
   Microgen-derived Tet10 control passes the fixed 1% target against every model.
-- The latest curve-local sizing pilot fails that target. Its results and audits
+- The latest eight-round curve-local sizing pilot fails that target at
+  1.439306%. Its results and audits
   are preserved rather than promoted as an improvement.
+- Three neighboring cubic reference levels fail the declared common-error
+  extrapolation screen. No new reference replaces the retained model set.
+- The quartic curve-edge diagnostic resolves a trial-energy reduction of only
+  0.648 ppm. Allowing cubic curve-corner relaxation raises the incremental
+  quartic signal to only 0.676219 ppm against the 500 ppm screen. This does not
+  justify a native sizing change or establish a globally equilibrated tensor.
 - Computing stopped for the requested 19 October shutdown. Work resumed on
   20 October after checking the checkout, memory, and idle shared queue.
   The eight-round curve control improves size realization and single-run cost,
   but its audited fresh full-tensor result still fails the stiffness target.
 
-Latest restart instructions: [G3 shutdown checkpoint](handoff/g3/SHUTDOWN-20261019.md).
+Latest continuation record: [20 October checkpoint](handoff/g3/CHECKPOINT-20261020.md).
+The [19 October shutdown record](handoff/g3/SHUTDOWN-20261019.md) remains historical.
+
+### Work status at this update
+
+| State | Work |
+|---|---|
+| Implemented and validated | Direct fedoo Tet4/Tet10 conversion, optional spatial sizing, periodic projection and quality fixes, partial curved settling, exact-tie derivative correction |
+| Measured with limited scope | Repeated Schwarz advantage against the labeled one-pass Microgen variant; single-run recovery and geometry improvements |
+| Completed negative studies | Default Microgen admissions, unsuccessful sizing and repair recipes, volume-offset rationale, three-level cubic extrapolation, edge-only quartic signal |
+| Completed negative diagnostic | Coupled cubic curve-corner relaxation reproduces original edge gains exactly but fails the useful-signal screen; polynomial-mode route closed |
+| Still open | Four-fixture matched-accuracy comparison, lattice reference uncertainty, admitted actual MMG controls for Gyroid and spinodoid |
+
+The corner-coupling extension includes five algebraic tests, manufactured
+periodic controls, and the frozen-domain lattice comparison. Job 330 measures
+594 displacement DOFs on 1,408 tets in 263.45 seconds at 0.6863 GiB. Precision
+passes, but useful signal fails. No native API or benchmark reference changes.
 
 ## 1. Product foundation and release preparation
 
@@ -431,8 +454,8 @@ fixed-field energy changes by 0.0105922%, below the predeclared 0.05% signal
 screen. Quadrature sensitivity is 9.965e-7 relative. No projected-domain
 equilibrium solve is selected. This does not bound total geometry error or
 create a new stiffness reference. Three added interpolation/admission controls
-pass. The next selected stage is a finer seed25 geometry and node-budget
-preflight, not another curve-metric strength trial.
+pass. This led to a finer seed25 geometry and node-budget preflight, not
+another curve-metric strength trial.
 
 That preflight passes at 75,113 quadratic nodes and 48,696 elements. Exact
 shared-edge and face counting predicts 241,555 cubic nodes and matches the
@@ -462,9 +485,9 @@ their model-normalized envelope at 1.920819%.
 A third neighboring parent23 passes geometry at 68,095 quadratic nodes and
 fits the existing cubic stage at an exact 218,508 nodes. One fresh parent
 control completes in 119.43 seconds and passes independent field checks.
-Actual cubic23 assembly fits at 5.014 GiB. A fresh higher-order reference solve
-is selected next with the unchanged caps. Additional nonnested-mesh data may
-expose, rather than remove, reference uncertainty.
+Actual cubic23 assembly fits at 5.014 GiB. The subsequent fresh higher-order
+solve preserves the unchanged caps. These additional nonnested-mesh data
+expose reference uncertainty rather than remove it.
 
 Before reading the third cubic tensor, a full-matrix consistency analysis is
 defined for a common leading-error model. It accounts for unequal spacings,
@@ -491,8 +514,10 @@ precision test fails at 6.03%. A single higher-rule 125/216 check passes at
 0.017934%, but the trial-energy reduction is only 0.648 ppm, versus the
 predeclared 500 ppm signal. No native sizing change is justified. The small
 mode-only witness does not bound global coarse-space re-equilibration or
-exclude other FE errors. One joint curve-corner relaxation check is proposed,
-with coarse-only gain removed and an independent Schur-complement identity.
+exclude other FE errors. The joint curve-corner relaxation check subsequently
+passes its Schur-complement identity and reproduces the original edge gains
+exactly. Its incremental signal is still only 0.676219 ppm; higher-rule change
+is 0.018333%. Stop this polynomial-mode route without escalating degree.
 
 Evidence: [cubic results](experiments/adaptive/CUBIC_RESULTS.md),
 `cubic_reference.py`, `cubic_assessment.py`, `amg_reference.py`,
@@ -584,7 +609,7 @@ errors. Single-run and saved-mesh measurements are not repeated workflow ratios.
 | Schwarz, supplementary 0.1% | Curved16, 42,928 nodes, 0.031469–0.093778%, 88.01 s live single run | Manual straight Tet10 controls at 207,200–230,337 nodes, about 0.054–0.063%; saved-mesh solves | Both accuracy controls pass; no paired live Tet10 workflow speed claim |
 | Gyroid, 1% | Curved9, 11,857 nodes, 0.72921–0.95990%, 20.56 s single run | Tested default and tuned routes remain unqualified | Meshers passes tested target; comparative win not established |
 | Spinodoid, 1% | Partial-settle adaptive24 at tolerance 0.003, 73,951 nodes, 0.10333–0.18439%, 364.07 s | Tested fixed-realization seeds 16–41 have retained-cap obstructions | Meshers has an admitted route; comparative win not established |
-| Lattice, 1% | Best retained-model result 1.269882%, 193,242 nodes; latest curve pilot 1.456109% | Admitted tuned two-pass parent; strongest manual straight Tet10 control, 238,411 nodes, 1.004354% | Neither passes all 24 models at 1%; no matched-accuracy win |
+| Lattice, 1% | Best retained-model result 1.269882%, 193,242 nodes; latest eight-round curve pilot 1.439306%, 111,605 nodes | Admitted tuned two-pass parent; strongest manual straight Tet10 control, 238,411 nodes, 1.004354% | Neither passes all 24 models at 1%; no matched-accuracy win |
 
 The strongest lattice Microgen-derived Tet10 control uses validated explicit AMG.
 Its six-load solve takes 530.80 s, with 555.78 s for that saved-mesh study and
@@ -616,6 +641,12 @@ Use `git log --reverse --format='%h %ad %s' --date=short` for the complete ledge
 | 19 Oct | `090a71c`, `56e1b59`, `f28fa01` | Resumed screens, partial-settle fix, smaller admitted spinodoid, seed41 bound |
 | 19 Oct | `5a91f82`, `1ac72d9` | Negative charged energy-sizing study and higher-precision volume reference |
 | 19 Oct | `234e497`, `347a010` | Exact-tie gradient correction, negative curve pilot, final audits and shutdown checkpoint |
+| 20 Oct | `0ebaa71` | Eight-round curve-size realization improves, but full-tensor admission still fails; consolidated project tracker |
+| 20 Oct | `4587cd6` | Fixed-field cubic geometry sensitivity and bounded complete symmetry verification |
+| 20 Oct | `b928d1c` | Fresh finer cubic25 reference and independent audits; retained reference uncertainty |
+| 20 Oct | `b186d39` | Fresh cubic23 reference, rejected three-level extrapolation, unchanged 24-model set |
+| 20 Oct | `06e4f27` | Controlled quartic edge diagnostic, rejected initial precision, resolved weak higher-rule signal |
+| 20 Oct | Jobs 329–330, subsequent working-tree record | Validated corner-coupling diagnostic and weak incremental signal; polynomial-mode route closed |
 
 ## 13. Verification and evidence register
 
@@ -630,7 +661,10 @@ are not claims that a fresh full suite ran while writing this document.
 | Partial settling | Red native regression before fix; 25 core and 37 focused Python tests after fix; four admitted geometry controls and archived-binary replay |
 | Exact-tie derivative | Two red smooth-composition regressions; full Python suite 133 passed, one optional skip; four geometry controls |
 | Curve-local pilot | Fresh six-load solve; independent field and positive 64/125-point audits; source/input hashes and bounded worker records |
-| Latest checkpoint | Focused experimental Ruff checks and `git diff --check` passed; commit `347a010` pushed with a clean tree |
+| Cubic solver memory | Ten focused blocked-symmetry tests and twelve integrated control loads; fresh six-load cubic25 and cubic23 solves and independent audits |
+| Three-level reference screen | Seven synthetic controls, source-field provenance, exact retained-model equality, and both declared length proxies checked; scientific model rejected |
+| Quartic edge diagnostic | Three unit tests and manufactured periodic controls; direct trial-energy identity, overlap coupling, pin gauge, and periodic traces checked; higher-rule precision passes but useful signal fails |
+| Corner-coupling diagnostic | Five algebraic tests, manufactured periodic controls, exact edge-only regression, Schur identity, and 125/216-point precision pass; useful signal fails |
 
 Canonical detailed reports are under `experiments/adaptive`:
 
@@ -671,7 +705,7 @@ a complete binary backup. Some historical large inputs remain only on OMEN.
 Small archived tensors cannot support claims of saved-field revalidation.
 
 Use the runtime library path recorded in
-[the G3 checkpoint](handoff/g3/CHECKPOINT-20261019.md). Do not store private
+[the G3 checkpoint](handoff/g3/CHECKPOINT-20261020.md). Do not store private
 machine addresses or credentials in project tracking. GitHub-backed operations
 use the verified `kmarchais` account.
 
@@ -679,7 +713,7 @@ use the verified `kmarchais` account.
 
 | Priority | Next action | Completion criterion |
 |---|---|---|
-| 1 | Test one coarse curve-corner relaxation coupled to the same quartic modes after the weak edge-only witness | Separate coarse-only and incremental gains, reproduce the original result, and stop this route if the increment remains small |
+| Closed diagnostic | Curve-corner relaxation coupled to the same quartic modes | Completed; incremental signal remains small, so no further polynomial-mode trial is selected |
 | 2 | Resolve lattice FE versus geometry/reference uncertainty | A justified reference envelope and a candidate passing every retained applicable model, without post-hoc model deletion |
 | 3 | Establish admitted actual Microgen/MMG comparators for Gyroid and spinodoid, or clearly bound unsupported tested routes | Genuine geometry-qualified controls, not MMG on Meshers seeds or altered specimens |
 | 4 | Run fresh repeated matched-target workflows where both competitors qualify | Same-host interleaved repetitions, charged preparation and solves, all scientific gates met |

@@ -18,6 +18,7 @@ from pueue_progress import Job
 EDGES = tuple(itertools.combinations(range(4), 2))
 SOURCE = workflow.HERE / "runs/g3-lattice-cubic-reference-cache-release-v1"
 PREPARED = workflow.HERE / "runs/g3-lattice-cubic-assembly-memory-v1"
+EDGE_BASELINE = workflow.HERE / "runs/g3-lattice-quartic-edge-witness-higher-v2"
 
 
 def edge_basis(barycentric):
@@ -35,14 +36,30 @@ def edge_basis(barycentric):
     return values, derivatives
 
 
-def select_modes(cells, classes, physical_edges):
+def mode_basis(barycentric, relax_corners=False):
+    import numpy as np
+
+    values, derivatives = edge_basis(barycentric)
+    if not relax_corners:
+        return values, derivatives
+    barycentric = np.asarray(barycentric)
+    corners = .5 * barycentric * (3 * barycentric - 1) * (3 * barycentric - 2)
+    corner_derivatives = np.zeros((len(barycentric), 4, 4))
+    for corner in range(4):
+        corner_derivatives[:, corner, corner] = 13.5 * barycentric[:, corner]**2 - 9 * barycentric[:, corner] + 1
+    return np.concatenate((values, corners), axis=1), np.concatenate((derivatives, corner_derivatives), axis=1)
+
+
+def select_modes(cells, classes, physical_edges, relax_corners=False):
     import numpy as np
 
     physical_edges = {tuple(sorted(map(int, edge))) for edge in physical_edges}
     keys = sorted({tuple(sorted(map(int, classes[list(edge)]))) for edge in physical_edges})
-    assert 0 < len(keys) <= 512
+    corner_keys = sorted({int(classes[node]) for edge in physical_edges for node in edge}) if relax_corners else []
+    assert 0 < len(keys) + len(corner_keys) <= 512
     lookup = {key: index for index, key in enumerate(keys)}
-    identifiers = np.full((len(cells), 6), -1, dtype=int)
+    corner_lookup = {key: len(keys) + index for index, key in enumerate(corner_keys)}
+    identifiers = np.full((len(cells), 10 if relax_corners else 6), -1, dtype=int)
     for cell, corners in enumerate(cells[:, :4]):
         for edge, (first, second) in enumerate(EDGES):
             pair = tuple(sorted((int(corners[first]), int(corners[second]))))
@@ -50,11 +67,16 @@ def select_modes(cells, classes, physical_edges):
             if key in lookup:
                 assert pair in physical_edges, "Unexpected winding edge in a periodic orbit"
                 identifiers[cell, edge] = lookup[key]
+        for corner, node in enumerate(corners):
+            if int(classes[node]) in corner_lookup:
+                identifiers[cell, 6 + corner] = corner_lookup[int(classes[node])]
     active = np.flatnonzero((identifiers >= 0).any(axis=1))
     assert 0 < len(active) <= 5000
-    assert set(identifiers[identifiers >= 0]) == set(range(len(keys)))
+    assert set(identifiers[identifiers >= 0]) == set(range(len(keys) + len(corner_keys)))
     return {"active": active, "identifiers": identifiers[active], "orbits": keys,
-            "mode_count": len(keys), "physical_edges": sorted(physical_edges)}
+            "mode_count": len(keys) + len(corner_keys), "physical_edges": sorted(physical_edges),
+            "edge_mode_count": len(keys), "corner_mode_count": len(corner_keys),
+            "corner_orbits": corner_keys, "relax_corners": relax_corners}
 
 
 def strain_basis(gradients):
@@ -80,13 +102,14 @@ def assemble(points, cells, fields, selection, element, quadrature):
     identifiers = selection["identifiers"]
     size = 3 * selection["mode_count"]
     matrix, residual, cached = np.zeros((size, size)), np.zeros((size, 6)), []
-    dofs = (3 * identifiers[:, :, None] + np.arange(3)).reshape(-1, 18)
+    local_size = 3 * identifiers.shape[1]
+    dofs = (3 * identifiers[:, :, None] + np.arange(3)).reshape(-1, local_size)
     valid = dofs >= 0
     pairs = valid[:, :, None] & valid[:, None, :]
     matrix_indices = (dofs[:, :, None] * size + dofs[:, None, :])[pairs]
     locations, weights = quadrature
     linear = Tet4()
-    _, derivatives = edge_basis(linear.shape_function(locations))
+    _, derivatives = mode_basis(linear.shape_function(locations), selection["relax_corners"])
     references = np.einsum("pea,da->ped", derivatives, linear.shape_function_derivative([[.25] * 3])[0])
     for derivative, reference, weight in zip(element.shape_function_derivative(locations), references, weights, strict=True):
         jacobian = np.einsum("an,tnb->tab", derivative, points[selected])
@@ -99,14 +122,40 @@ def assemble(points, cells, fields, selection, element, quadrature):
         stress = stresses(points, selected, fields, derivative)
         voigt = np.stack([stress[:, :, first, second] for first, second in
                           ((0, 0), (1, 1), (2, 2), (0, 1), (0, 2), (1, 2))], axis=-1)
-        local_matrix = np.einsum("teai,ab,tfbj,t->teifj", strain, MATERIAL, strain, integration).reshape(-1, 18, 18)
-        local_residual = np.einsum("teai,tla,t->teil", strain, voigt, integration).reshape(-1, 18, 6)
+        local_matrix = np.einsum("teai,ab,tfbj,t->teifj", strain, MATERIAL, strain, integration).reshape(-1, local_size, local_size)
+        local_residual = np.einsum("teai,tla,t->teil", strain, voigt, integration).reshape(-1, local_size, 6)
         np.add.at(matrix.ravel(), matrix_indices, local_matrix[pairs])
         np.add.at(residual, dofs[valid], local_residual[valid])
         cached.append((integration, gradients, stress))
     np.testing.assert_allclose(matrix, matrix.T, atol=1e-12, rtol=1e-12)
     np.linalg.cholesky(matrix)
     return matrix, residual, cached
+
+
+def coupled_gains(matrix, residual, edge_modes):
+    import numpy as np
+
+    split = 3 * edge_modes
+    assert 0 < split < len(matrix)
+    edges, corners = matrix[:split, :split], matrix[split:, split:]
+    cross = matrix[:split, split:]
+    edge_residual, corner_residual = residual[:split], residual[split:]
+    edge_gain = edge_residual.T @ np.linalg.solve(edges, edge_residual)
+    corner_gain = corner_residual.T @ np.linalg.solve(corners, corner_residual)
+    coefficients = np.linalg.solve(matrix, residual)
+    joint_gain = residual.T @ coefficients
+    incremental = joint_gain - corner_gain
+    schur = edges - cross @ np.linalg.solve(corners, cross.T)
+    np.testing.assert_allclose(schur, schur.T, atol=1e-12, rtol=1e-12)
+    np.linalg.cholesky(schur)
+    reduced = edge_residual - cross @ np.linalg.solve(corners, corner_residual)
+    schur_gain = reduced.T @ np.linalg.solve(schur, reduced)
+    np.testing.assert_allclose(incremental, schur_gain, atol=1e-12, rtol=1e-8)
+    assert np.linalg.eigvalsh(incremental).min() >= -1e-12
+    assert np.linalg.eigvalsh(joint_gain - edge_gain).min() >= -1e-12
+    return {"coefficients": coefficients, "edge_gain": edge_gain, "corner_gain": corner_gain,
+        "joint_gain": joint_gain, "incremental_gain": incremental,
+        "schur_identity_relative_error": float(np.linalg.norm(incremental - schur_gain) / max(np.linalg.norm(incremental), 1e-30))}
 
 
 def trial_energy(cached, selection, coefficients):
@@ -133,7 +182,7 @@ def gauge_at_node(cells, selection, element, coefficients, pin):
     identifiers = selection["identifiers"]
     local = coefficients.reshape(-1, 3, 6)[np.maximum(identifiers, 0)].copy()
     local *= (identifiers >= 0)[:, :, None, None]
-    values = edge_basis(Tet4().shape_function(element.xi_nd))[0]
+    values = mode_basis(Tet4().shape_function(element.xi_nd), selection["relax_corners"])[0]
     result = None
     for cell, node in np.argwhere(cells[selection["active"]] == pin):
         current = np.einsum("e,eil->li", values[node], local[cell])
@@ -160,7 +209,7 @@ def trace_audit(points, cells, surface, classes, selection, coefficients, elemen
             ordered = sorted(face, key=lambda position: int(cell[position]))
             barycentric = np.zeros((15, 4))
             barycentric[:, ordered] = triangles
-            values = np.einsum("pe,eil->pli", edge_basis(barycentric)[0], local[index])
+            values = np.einsum("pe,eil->pli", mode_basis(barycentric, selection["relax_corners"])[0], local[index])
             key = tuple(sorted(map(int, cell[list(face)])))
             if key in faces:
                 previous, count = faces[key]
@@ -176,7 +225,7 @@ def trace_audit(points, cells, surface, classes, selection, coefficients, elemen
                         assert len(set(canonical)) == 3
                         barycentric[:] = 0
                         barycentric[:, ordered] = triangles
-                        caps[axis, side, canonical] = np.einsum("pe,eil->pli", edge_basis(barycentric)[0], local[index])
+                        caps[axis, side, canonical] = np.einsum("pe,eil->pli", mode_basis(barycentric, selection["relax_corners"])[0], local[index])
     for key, (values, count) in faces.items():
         assert count <= 2
         if count == 1 and key not in boundary:
@@ -204,6 +253,8 @@ def nodal_quadratic_field(points, cells, selection, element, coefficients):
 
     barycentric = Tet4().shape_function(element.xi_nd)
     values = np.array([4 * barycentric[:, first] * barycentric[:, second] for first, second in EDGES]).T
+    if selection["relax_corners"]:
+        values = np.concatenate((values, mode_basis(barycentric, True)[0][:, 6:]), axis=1)
     identifiers = selection["identifiers"]
     local = coefficients.reshape(-1, 3, 6)[np.maximum(identifiers, 0)].copy()
     local *= (identifiers >= 0)[:, :, None, None]
@@ -217,7 +268,7 @@ def nodal_quadratic_field(points, cells, selection, element, coefficients):
     return fields
 
 
-def controls(run):
+def controls(run, relax_corners=False):
     np, _, meshers, *_ = workflow.imports()
     from cubic_reference import register_cubic, enrich
     from homogenization import strain_tensor
@@ -242,7 +293,7 @@ def controls(run):
         assert matches
         selected_keys.add(tuple(sorted(map(int, classes[list(matches[0])]))))
     selected_edges = [edge for edge in all_edges if tuple(sorted(map(int, classes[list(edge)]))) in selected_keys]
-    selection = select_modes(cells, classes, selected_edges)
+    selection = select_modes(cells, classes, selected_edges, relax_corners)
     affine = np.array([points @ strain_tensor(load).T for load in np.eye(6)])
     matrix, residual, _ = assemble(points, cells, affine, selection, element, duffy_rule(5))
     affine_residual_norm = float(np.linalg.norm(residual))
@@ -263,6 +314,7 @@ def controls(run):
     np.testing.assert_allclose(direct, expected, atol=1e-12, rtol=1e-8)
     np.testing.assert_allclose(mode, coefficients.T @ matrix @ coefficients, atol=1e-12, rtol=1e-10)
     assert np.linalg.norm(expected) > 1e-8
+    coupled = coupled_gains(matrix, residual, selection["edge_mode_count"]) if relax_corners else None
     higher, _, _ = assemble(points, cells, fields, selection, element, duffy_rule(6))
     np.testing.assert_allclose(matrix, higher, atol=1e-12, rtol=1e-11)
     overlap = matrix.copy()
@@ -270,13 +322,15 @@ def controls(run):
         overlap[3 * orbit:3 * orbit + 3, 3 * orbit:3 * orbit + 3] = 0
     assert np.linalg.norm(overlap) > 1e-6
     workflow.save(run / "controls.json", {"passed": True, "nodes": len(points), "selected_tets": len(selection["active"]),
-        "edge_orbits": selection["mode_count"], "mode_dofs": len(matrix), "affine_residual_norm": affine_residual_norm,
+        "edge_orbits": selection["edge_mode_count"], "corner_orbits": selection["corner_mode_count"],
+        "mode_dofs": len(matrix), "affine_residual_norm": affine_residual_norm,
         "trial_identity_relative_error": float(np.linalg.norm(direct - expected) / np.linalg.norm(expected)),
         "nonzero_pin_gauge_control": max(nonzero_gauges), "off_orbit_coupling_norm": float(np.linalg.norm(overlap)),
-        "trace": trace, "affine125_vs216_matrix_relative_error": float(np.linalg.norm(matrix - higher) / np.linalg.norm(matrix))})
+        "trace": trace, "affine125_vs216_matrix_relative_error": float(np.linalg.norm(matrix - higher) / np.linalg.norm(matrix)),
+        "schur_identity_relative_error": None if coupled is None else coupled["schur_identity_relative_error"]})
 
 
-def lattice(run, higher_rules=False):
+def lattice(run, higher_rules=False, relax_corners=False):
     np, *_ = workflow.imports()
     from cubic_reference import register_cubic
     from periodic import periodic_pairs
@@ -298,7 +352,7 @@ def lattice(run, higher_rules=False):
     np.testing.assert_allclose(parent["points"][list(mapping)], points[list(mapping.values())], atol=1e-12, rtol=0)
     selected_edges = [tuple(mapping[node] for node in edge) for edge in features(parent)["curve_edges"]]
     _, classes, periodic = periodic_pairs(points, surface)
-    selection = select_modes(cells, classes, selected_edges)
+    selection = select_modes(cells, classes, selected_edges, relax_corners)
     fields = np.load(SOURCE / "fields.npz")["displacement"]
     assert fields.shape == (6, len(points), 3)
     assert abs(fields[:, np.linalg.norm(points, axis=1).argmin()]).max() < 1e-10
@@ -308,7 +362,8 @@ def lattice(run, higher_rules=False):
     orders = (5, 6) if higher_rules else (4, 5)
     for order in orders:
         matrix, residual, cached = assemble(points, cells, fields, selection, element, duffy_rule(order))
-        coefficients = np.linalg.solve(matrix, residual)
+        coupled = coupled_gains(matrix, residual, selection["edge_mode_count"]) if relax_corners else None
+        coefficients = np.linalg.solve(matrix, residual) if coupled is None else coupled["coefficients"]
         solve_residual = float(np.linalg.norm(matrix @ coefficients - residual) / max(np.linalg.norm(residual), 1e-30))
         assert solve_residual < 1e-10
         gain = residual.T @ coefficients
@@ -317,20 +372,41 @@ def lattice(run, higher_rules=False):
         np.testing.assert_allclose(mode, coefficients.T @ matrix @ coefficients, atol=1e-12, rtol=1e-10)
         spectrum = eigvalsh(gain, reference)
         assert spectrum.min() >= -1e-12
+        signal_gain = gain if coupled is None else coupled["incremental_gain"]
+        signal_spectrum = eigvalsh(signal_gain, reference)
+        extra = {}
+        if coupled is not None:
+            baseline = np.load(EDGE_BASELINE / f"positive{order**3}-coefficients.npz")
+            split = 3 * selection["edge_mode_count"]
+            np.testing.assert_allclose(matrix[:split, :split], baseline["mode_stiffness"], atol=1e-12, rtol=1e-10)
+            np.testing.assert_allclose(residual[:split], baseline["mode_residual"], atol=1e-12, rtol=1e-8)
+            saved = json.loads((EDGE_BASELINE / "result.json").read_text())
+            saved_rule = next(rule for rule in saved["rules"] if rule["points"] == order**3)
+            saved_gain = np.asarray(saved_rule["energy_reduction_gram"])
+            regression = float(np.linalg.norm(coupled["edge_gain"] - saved_gain) / np.linalg.norm(saved_gain))
+            assert regression < 1e-7
+            extra = {"edge_only_regression_relative_error": regression,
+                "schur_identity_relative_error": coupled["schur_identity_relative_error"],
+                "edge_only_energy_reduction_gram": coupled["edge_gain"].tolist(),
+                "corner_only_energy_reduction_gram": coupled["corner_gain"].tolist(),
+                "edge_only_relative_reduction_spectrum": eigvalsh(coupled["edge_gain"], reference).tolist(),
+                "corner_only_relative_reduction_spectrum": eigvalsh(coupled["corner_gain"], reference).tolist()}
         trace = trace_audit(points, cells, surface, classes, selection, coefficients, element)
-        change = None if previous is None else float(abs(eigvalsh(gain - previous, reference)).max() / max(abs(spectrum).max(), 1e-30))
+        change = None if previous is None else float(abs(eigvalsh(signal_gain - previous, reference)).max() / max(abs(signal_spectrum).max(), 1e-30))
         rules.append({"points": order**3, "energy_reduction_gram": gain.tolist(),
+            "signal_reduction_gram": signal_gain.tolist(), "signal_relative_reduction_spectrum": signal_spectrum.tolist(),
             "mode_solve_relative_residual": solve_residual,
             "mixed_load_relative_reduction_spectrum": spectrum.tolist(), "quadrature_relative_change": change,
-            "trial_identity_relative_error": float(np.linalg.norm(direct - gain) / max(np.linalg.norm(gain), 1e-30)), "trace": trace})
+            "trial_identity_relative_error": float(np.linalg.norm(direct - gain) / max(np.linalg.norm(gain), 1e-30)), "trace": trace, **extra})
         np.savez_compressed(run / f"positive{order**3}-coefficients.npz", coefficients=coefficients,
                             mode_stiffness=matrix, mode_residual=residual)
-        previous = gain
+        previous = signal_gain
     passed = rules[-1]["quadrature_relative_change"] <= .01
-    signal = max(rules[-1]["mixed_load_relative_reduction_spectrum"]) >= 5e-4
+    signal = max(rules[-1]["signal_relative_reduction_spectrum"]) >= 5e-4
     workflow.save(run / "result.json", {"source": str(SOURCE), "prepared": str(PREPARED),
         "quadrature_orders": list(orders),
-        "edge_orbits": selection["mode_count"], "selected_tets": len(selection["active"]), "mode_dofs": len(matrix),
+        "edge_orbits": selection["edge_mode_count"], "corner_orbits": selection["corner_mode_count"],
+        "relax_curve_corners": relax_corners, "selected_tets": len(selection["active"]), "mode_dofs": len(matrix),
         "periodic": periodic, "rules": rules, "quadrature_sensitivity_passed": passed,
         "predeclared_curve_signal_passed": bool(passed and signal), "geometry_unchanged": True,
         "retained_models_unchanged": True,
@@ -342,13 +418,16 @@ def main():
     parser.add_argument("--run", type=Path, required=True)
     parser.add_argument("--lattice", action="store_true")
     parser.add_argument("--higher-rules", action="store_true")
+    parser.add_argument("--relax-curve-corners", action="store_true")
     parser.add_argument("--worker", choices=("controls", "lattice"))
     args = parser.parse_args()
+    if args.relax_curve_corners and not args.higher_rules:
+        parser.error("Corner coupling requires the validated higher-rule pair")
     if args.worker:
         if args.worker == "controls":
-            controls(args.run)
+            controls(args.run, args.relax_curve_corners)
         else:
-            lattice(args.run, args.higher_rules)
+            lattice(args.run, args.higher_rules, args.relax_curve_corners)
         return
     args.run.mkdir(parents=True, exist_ok=False)
     shutil.copyfile(__file__, args.run / "driver.py")
@@ -380,10 +459,14 @@ def main():
         paths.extend(workflow.HERE / "runs" / name for name in (
             "g3-lattice-curve-grading-reference-comparison-v1.json", "g3-lattice-reference-sensitivity-v2.json",
             "g3-lattice-microgen-reference-comparison-v1.json"))
+        if args.relax_curve_corners:
+            paths.extend(EDGE_BASELINE / name for name in ("result.json", "manifest.json",
+                "positive125-coefficients.npz", "positive216-coefficients.npz"))
     hashes = {str(path): workflow.digest(path) for path in paths}
     workflow.save(args.run / "manifest.json", {"inputs": hashes, "memory_bytes": workflow.MEMORY, "threads": 1,
         "packages": {name: importlib.metadata.version(name) for name in ("numpy", "scipy", "fedoo", "meshers")},
-        "worker_timeout_s": 300, "maximum_edge_orbits": 512, "maximum_support_tets": 5000,
+        "worker_timeout_s": 300, "maximum_scalar_modes": 512, "maximum_support_tets": 5000,
+        "relax_curve_corners": args.relax_curve_corners,
         "quadrature_points": [125, 216] if args.higher_rules else [64, 125],
         "maximum_relative_gain_quadrature_change": .01,
         "minimum_mixed_load_signal": 5e-4, "equilibrium_solve": False, "lattice_selected": args.lattice})
@@ -395,6 +478,8 @@ def main():
                     if stage == "unit-tests" else [sys.executable, __file__, "--run", str(args.run), "--worker", stage])
                 if stage != "unit-tests" and args.higher_rules:
                     command.append("--higher-rules")
+                if stage != "unit-tests" and args.relax_curve_corners:
+                    command.append("--relax-curve-corners")
                 record = workflow.bounded(command, args.run / (stage + ".log"), part, timeout=300)
                 workflow.save(args.run / (stage + "-worker.json"), record)
                 assert record["returncode"] == 0, f"Read {stage}.log"
@@ -404,6 +489,7 @@ def main():
                     values.update(signal_passed=int(row["predeclared_curve_signal_passed"]),
                         quadrature_passed=int(row["quadrature_sensitivity_passed"]),
                         energy_reduction_ppm=max(row["rules"][-1]["mixed_load_relative_reduction_spectrum"]) * 1e6,
+                        incremental_signal_ppm=max(row["rules"][-1]["signal_relative_reduction_spectrum"]) * 1e6,
                         quadrature_change_percent=row["rules"][-1]["quadrature_relative_change"] * 100)
                 job.result(stage, **values)
     assert all(workflow.digest(Path(path)) == digest for path, digest in hashes.items())

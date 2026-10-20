@@ -1,5 +1,20 @@
 # Adaptive and quadratic implicit meshing: results
 
+## Closed quartic corner-coupling diagnostic, 2026-10-20
+
+Five algebraic tests and manufactured periodic controls pass in job 329.
+Job 330 then checks 102 edge and 96 corner orbits on 1,408 frozen-domain
+tets. The original edge-only gains reproduce exactly. Joint-minus-corner
+gain agrees with the Schur complement within 5.37e-16 relative.
+
+The incremental worst mixed-load reduction is only 0.676219 ppm, versus the
+unchanged 500 ppm screen. Its 125/216-point change is 0.018333%, passing
+precision. Trial-energy and periodic-trace checks pass. The worker takes
+263.45 seconds and 0.6863 GiB. Stop this polynomial-mode route without a
+native feature, a new reference, or another degree/strength trial.
+These are nonequilibrated trial-energy diagnostics, not stiffness errors.
+See `CUBIC_RESULTS.md` for records and limits.
+
 ## Fixed-domain quartic edge witness, 2026-10-20
 
 A coupled residual probe on the saved cubic24 domain uses 102 periodic
