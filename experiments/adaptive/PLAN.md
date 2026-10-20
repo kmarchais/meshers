@@ -590,3 +590,17 @@ experiment with a 3,600-second whole budget, then read its authoritative
 completion before choosing a successor. Host clock discrepancy above five
 seconds excludes timing. No lattice or missing-comparator conclusion changes
 until new fixture-specific evidence exists.
+
+Job 333 completes all five measured pairs and warmup within 2,923.13 seconds.
+All geometry, field, clock and eight-model 0.1% gates pass. Median common-AMG
+audited times are 409.28 versus 55.19 seconds; paired ratios are 7.3858–7.5401.
+The independent verifier recomputes 96 mixed-load comparisons and every timing
+statistic, checks 205 hashes, and passes. Both timing definitions favor Meshers
+in every measured pair. Preserve explicit one-pass/manual-Tet10 labels.
+
+Before another experiment, fix the recorded `no_chips` warning. A direct
+standard-Job capture proves the end-of-part context clears values. No shared
+helper changes or successor job were submitted. After that reporting fix,
+return to missing admitted actual Gyroid/spinodoid comparators and lattice
+reference uncertainty rather than tightening Schwarz again. All four-fixture
+requirements and admission gates remain unchanged.

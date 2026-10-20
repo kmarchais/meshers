@@ -1,32 +1,45 @@
 # G3 continuation checkpoint, 20 October 2026
 
-## Current running experiment, job 333
+## Latest completed experiment, job 333
 
-Job 333 is the single authorized successor to the completed live pilot and
-positive-rule audit below. It runs `schwarz_tet10_repeated.py` with output
+Job 333 is terminal success. Do not restart its observing session 95526 or
+completed jobs 331 and 332. No successor is queued. Recheck the authoritative
+shared queue before new work. Its output is
 `experiments/adaptive/runs/g3-schwarz-tet10-live-amg-repeated-v1`.
-Its observing terminal session is 95526. Check authoritative pueue state
-before any retry or additional experiment. An observer timeout is not a
-worker failure. Do not restart completed jobs 331 or 332.
 
-The first warmup's 38 controls and fresh Microgen parent admission pass.
-Its six-load straight-Tet10 solve is running at this checkpoint. No repeated
-timing result exists yet. No successor is queued, and source code hashed by
-the active experiment must remain unchanged until it completes.
+One fresh warmup per arm and all five alternating measured pairs pass 38
+controls each, geometry, periodic, field and eight-model supplementary 0.1%
+gates. All 72 loads are fresh. Common explicit AMG, recipes and admission
+limits match the pilot; no saved mesh, load or previous-run hierarchy replay.
 
-The protocol is one fresh warmup per arm, then five measured pairs with
-alternating arm order. Use exactly the pilot recipes, common explicit AMG,
-all eight Schwarz models and supplementary 0.1% target. Both costs remain
-visible. Warmup is excluded from statistics; every measured pair remains
-visible. The whole experiment has a 3,600-second awake-time budget, existing
-stage caps shortened to remaining budget, 8 GiB workers and one numerical
-thread. Wall/monotonic discrepancy above five seconds excludes timing.
+Median audited times are 409.2799 seconds for actual VTK30/one-pass MMG plus
+manual straight Tet10/direct fedoo and 55.1914 seconds for native curved16.
+Every paired workflow ratio favors Meshers, 7.3858–7.5401. Phase-only ratios
+are 7.2806–7.4331. Microgen has the smaller model disagreement. This is a
+common-target result, not identical measured errors or the default pipeline.
 
-Read root `checkpoint.json` for completed pairs and `summary.json` only
-after terminal success. Per-pair `workers.json`, `result.json`, audits and
-reference reports retain failures and partial progress. Do not claim the
-pilot's 7.4382 single-pair ratio as a repeated result. The full four-fixture
-goal remains active and unachieved.
+The experiment takes 2,923.13 seconds within its 3,600-second budget. Peaks
+are 3.8143 and 1.4571 GiB. Clock discrepancy is below 8.1e-7 seconds. No
+host interruption or resource gate fails. All measurement input hashes pass.
+
+The new `verify_schwarz_tet10_repeated.py` independently recomputes 96 full
+mixed-load comparisons and every timing statistic, verifies 205 hashes,
+and reads every geometry/field gate. Its two controls include an off-diagonal
+error invisible to diagonals. Read its output
+`experiments/adaptive/runs/g3-schwarz-tet10-live-amg-repeated-verification-v1.json`.
+
+One operational issue remains before another queued experiment. The initial
+progress audit passes, but a late `no_chips` warning appears after 16 minutes.
+A direct standard-Job capture proves `Part.__exit__()` ends the part with
+empty values after populated worker reports. Fix stage-transition reporting
+using standard Job APIs before any successor. Preserve the warning; no shared
+workbench helper was changed. Scientific results and timings remain valid.
+The warning capture is in
+`experiments/adaptive/runs/g3-schwarz-tet10-progress-warning-v1.json`.
+
+After that reporting fix, return to missing admitted actual Gyroid/spinodoid
+comparators and lattice reference uncertainty. Do not tighten Schwarz again
+from this result alone. The full four-fixture goal remains active and unmet.
 
 ## Latest live comparison, jobs 331 and 332
 

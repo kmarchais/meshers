@@ -1,0 +1,84 @@
+{
+  "case": "schwarz-solid",
+  "route": "microgen-vtk-single-mmg-diagnostic-override",
+  "resolution": 30,
+  "mmg_arguments": {
+    "hausd": 0.0005,
+    "hmax": 0.06,
+    "hgrad": 1.3
+  },
+  "status": "admitted-needs-reference",
+  "mmg_calls": [
+    {
+      "nofem": true,
+      "hausd": 0.0005,
+      "hmax": 0.1,
+      "hgrad": 1.3
+    }
+  ],
+  "stage_audit_enabled": false,
+  "geometry_only": true,
+  "timing_comparable": true,
+  "first_pass_hausd_override": 0.0005,
+  "first_pass_hmax_override": 0.1,
+  "first_pass_only": true,
+  "first_pass_fem_override": false,
+  "optimize_second_pass": false,
+  "solver_formulation": "stress-controlled",
+  "specimen_setup_s": 0.005076289000498946,
+  "seed_nodes": 18640,
+  "seed_elements": 86876,
+  "vtk_extraction_s": 0.12049950400069065,
+  "omitted_second_pass": {
+    "hausd": 0.0005,
+    "hgrad": 1.3,
+    "hmax": 0.06,
+    "hmin": null,
+    "hsiz": null,
+    "ls": true,
+    "nr": true
+  },
+  "generation_s": 9.52240389399958,
+  "nodes": 29204,
+  "elements": 136587,
+  "reoriented_tetrahedra": 0,
+  "cap_minimum_quality_ceiling": 0.1448328375252718,
+  "caps_below_quality_gate": 0,
+  "geometry": {
+    "sampled_forward_max": 0.0009615151058020022,
+    "sampled_reverse_max": 0.0008399156671267588,
+    "sampled_two_sided_max": 0.0009615151058020022,
+    "outward_forward_max": 0.0009615151058020022,
+    "inward_forward_max": 0.0008426811109546939,
+    "projection_failed": 0,
+    "forward_samples": 205842,
+    "reverse_samples": 50135,
+    "volume": 0.4999490989068639,
+    "relative_volume_error": -0.00010180218627220405,
+    "q_min_corner": 0.10387138156538732,
+    "q_p01_corner": 0.4595554962326826,
+    "minimum_dihedral_deg_corner": 4.746361675739308,
+    "minimum_sampled_jacobian": 2.999749865472916e-08,
+    "reverse_tessellation_delta_max": 0.0,
+    "quadratic_reverse_subdivisions": null,
+    "geometry_admitted": true
+  },
+  "periodic": {
+    "periodic_pair_counts": [
+      800,
+      800,
+      800
+    ],
+    "periodic_coordinate_errors": [
+      0.0,
+      0.0,
+      0.0
+    ],
+    "periodic_pair_tolerance": 1e-10,
+    "periodic_equivalence_classes": 26893,
+    "periodic_triangles_match": true
+  },
+  "audit_s": 1.1924364839996997,
+  "qualified": true,
+  "total_workflow_s": 11.157743662999565
+}

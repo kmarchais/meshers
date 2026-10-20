@@ -1,0 +1,22 @@
+{
+  "job": 333,
+  "initial_check_start_audit": "passed",
+  "late_finding": "no_chips",
+  "late_message": "no values to watch after 16 min",
+  "helper_source": "/home/kmarchais/bin/pueue_progress.py",
+  "helper_sha256": "9ea40c045f261da873941ccd3b6db8ff8eb4d39c4bc80fa96993817cb24fc72a",
+  "capture_method": "Capture the standard report function while a real Job part emits populated values and exits its context",
+  "captured_reports": [
+    {
+      "message": "stage (1/1): working",
+      "values": {"rss_gib": 1.0, "peak_gib": 1.0}
+    },
+    {
+      "message": "stage (1/1): done",
+      "values": {}
+    }
+  ],
+  "status": "reproduced-unfixed",
+  "next_requirement": "Retain values across stage transitions using standard Job APIs before another queued experiment",
+  "scope": "Operational progress defect; no numerical or timing gate failed; frozen experiment outputs unchanged"
+}

@@ -103,6 +103,57 @@ for each pair. A discrepancy above five seconds excludes this timing
 experiment rather than silently treating host suspension as faster computing.
 No unrelated job, timer, or host power setting changes.
 
+## Completed interleaved Tet10 comparison
+
+Job 333 completes all five measured pairs after one fresh warmup per arm.
+Each pair passes 38 controls, unchanged geometry and periodic admission,
+twelve fresh prescribed-strain loads, independent field audits, and all eight
+Schwarz models at the supplementary 0.1% target. No saved mesh, solved load,
+or previous-run AMG hierarchy is replayed. Both arm orders are represented.
+
+| Recorded cost | Microgen median, range | Meshers median, range | Paired Microgen/Meshers ratio |
+|---|---:|---:|---:|
+| Science-audited workflow | 409.2799 s, 408.8994–412.9563 s | 55.1914 s, 54.7677–55.4881 s | 7.3858–7.5401 |
+| Generation/lift/solve subtotal | 387.6108 s, 387.2127–391.2574 s | 53.0263 s, 52.6370–53.3121 s | 7.2806–7.4331 |
+
+Meshers is faster in every measured pair under both cost definitions.
+Microgen uses 207,200 straight-Tet10 nodes and 136,587 elements; Meshers uses
+42,928 curved-Tet10 nodes and 27,492 elements. Their reference-model ranges
+remain 0.053985–0.062716% and 0.031469–0.093778%, respectively. Microgen has
+the smaller disagreement. This is a common-target comparison, not identical
+measured errors or a default Microgen workflow comparison.
+
+Maximum worker RSS is 3.8143 GiB for the Microgen solve and 1.4571 GiB for
+Meshers. The complete experiment takes 2,923.13 seconds, below the 3,600-second
+budget. The maximum wall/monotonic discrepancy is below 8.1e-7 seconds.
+All source hashes remain unchanged during the run. Warmup data stay visible
+but are excluded from every measured statistic.
+
+The separate `verify_schwarz_tet10_repeated.py` recomputes all 96 full
+generalized-eigenvalue comparisons, source-derived workflow totals, phase
+subtotals, medians, ranges, ratios and warmup exclusion. It verifies 205 hash
+records and reads all geometry and field gates. Two verifier controls include
+an off-diagonal mixed-load error invisible to diagonal-only comparisons.
+Maximum reaction error is 7.60e-12, Hill–Mandel error 6.54e-12, and periodic
+jump 5.56e-17. This verifies frozen records, not a new equilibrium solve or
+continuum/local-stress accuracy.
+
+The initial progress audit passes, but the later audit records `no_chips`
+at a stage transition after 16 minutes. A direct capture reproduces the cause:
+the standard `Part.__exit__()` calls `done()` without values, clearing chips
+after a populated worker report. Numerical results and timings are unaffected.
+Preserve that warning. Retain values across stage transitions before submitting
+another experiment; no shared workbench helper was modified here.
+The captured reports and helper hash are in
+`runs/g3-schwarz-tet10-progress-warning-v1.json`.
+
+Records are in `runs/g3-schwarz-tet10-live-amg-repeated-v1` and
+`runs/g3-schwarz-tet10-live-amg-repeated-verification-v1.json`. This establishes
+a repeated advantage for this stronger, explicitly modified Schwarz comparator.
+It does not settle Gyroid or spinodoid comparison coverage, the lattice model
+envelope, or the full four-fixture objective. Stop tightening Schwarz from
+these results alone and return to those unresolved comparisons.
+
 ## Original public integration
 
 `Mesh.to_fedoo()` now copies Tet4 or curved Tet10 coordinates and connectivity

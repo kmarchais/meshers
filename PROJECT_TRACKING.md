@@ -1,8 +1,8 @@
 # Meshers project tracking
 
 Updated 20 October 2026. Covers the recorded project history on
-`handoff/g3-microgen-20261017` through commit `9f9ee96`, plus the explicitly
-running repeated experiment 333 recorded below. The history starts with the initial
+`handoff/g3-microgen-20261017` through commit `2f0363f`, plus completed
+repeated experiment 333 and its independent verification below. The history starts with the initial
 release candidate on 19 September and includes the resumed 20 October geometry,
 reference, and fixed-field sensitivity studies.
 This is a consolidated index and status ledger, not a replacement for frozen
@@ -23,9 +23,9 @@ Schwarz P solid, a fixed spinodoid, and a fixed smooth-union lattice.
 
 - Schwarz has one demonstrated, repeated matched-target workflow advantage
   against an explicitly modified actual one-pass Microgen route.
-  A new stronger Tet10 live pilot also passes the supplementary 0.1% target
-  on both arms with a common AMG solver. Its single-pair ratio is 7.4382,
-  not yet a repeated stronger-comparator timing result.
+  Five new interleaved stronger Tet10 pairs also pass the supplementary 0.1%
+  target with common AMG. Their paired workflow ratios are 7.3858–7.5401.
+  This remains an explicit one-pass/manual-Tet10 comparison, not defaults.
 - Gyroid and spinodoid have admitted Meshers candidates, but no admitted actual
   Microgen/MMG comparator in the tested routes.
 - Lattice stiffness accuracy remains unresolved across all retained reference
@@ -55,7 +55,8 @@ The [19 October shutdown record](handoff/g3/SHUTDOWN-20261019.md) remains histor
 | Implemented and validated | Direct fedoo Tet4/Tet10 conversion, optional spatial sizing, periodic projection and quality fixes, partial curved settling, exact-tie derivative correction |
 | Measured with limited scope | Repeated Schwarz advantage against the labeled one-pass Microgen variant; single-run recovery and geometry improvements |
 | Fresh stronger-comparator pilot | Common-AMG Schwarz Tet10 pair, 409.87 versus 55.10 seconds; both pass supplementary 0.1%, independent fields and positive-rule audit pass |
-| Running, no repeated result yet | Job 333 runs one warmup per arm and five interleaved fresh common-AMG Tet10 pairs; 38 controls and initial parent admission pass |
+| Completed stronger-comparator repetitions | Job 333, five measured pairs after warmup; both arms pass 0.1%, medians 409.28 versus 55.19 seconds; independent verifier passes |
+| Reporting defect, pending | Standard part context clears values at stage end; late progress audit warning reproduced; fix before another experiment |
 | Completed negative studies | Default Microgen admissions, unsuccessful sizing and repair recipes, volume-offset rationale, three-level cubic extrapolation, edge-only quartic signal |
 | Completed negative diagnostic | Coupled cubic curve-corner relaxation reproduces original edge gains exactly but fails the useful-signal screen; polynomial-mode route closed |
 | Still open | Four-fixture matched-accuracy comparison, lattice reference uncertainty, admitted actual MMG controls for Gyroid and spinodoid |
@@ -611,7 +612,7 @@ errors. Single-run and saved-mesh measurements are not repeated workflow ratios.
 | Fixture | Best relevant Meshers evidence | Actual Microgen/MMG evidence | Current verdict |
 |---|---|---|---|
 | Schwarz, 1% target | Curved8, 6,864 nodes, 0.25870% primary disagreement, 7.7916 s median | Explicit VTK30 one-pass variant, 32,070 Tet4 nodes, 0.92806%, 40.5036 s median | Five interleaved pairs pass; measured speedup 5.1155–5.2908 times, only for this modified comparator |
-| Schwarz, supplementary 0.1% | Curved16, 42,928 nodes, 0.031469–0.093778%, 55.10 s fresh common-AMG workflow | Actual VTK30 one-pass parent plus manual straight Tet10, 207,200 nodes, 0.053985–0.062716%, 409.87 s fresh common-AMG workflow | Both pass; single-pair total ratio 7.4382 and phase ratio 7.3368; stronger-comparator repetitions not measured yet |
+| Schwarz, supplementary 0.1% | Curved16, 42,928 nodes, 0.031469–0.093778%, 55.19 s median common-AMG workflow | Actual VTK30 one-pass plus manual straight Tet10, 207,200 nodes, 0.053985–0.062716%, 409.28 s median | Five measured pairs pass; total ratios 7.3858–7.5401, phase ratios 7.2806–7.4331; explicitly modified comparator |
 | Gyroid, 1% | Curved9, 11,857 nodes, 0.72921–0.95990%, 20.56 s single run | Tested default and tuned routes remain unqualified | Meshers passes tested target; comparative win not established |
 | Spinodoid, 1% | Partial-settle adaptive24 at tolerance 0.003, 73,951 nodes, 0.10333–0.18439%, 364.07 s | Tested fixed-realization seeds 16–41 have retained-cap obstructions | Meshers has an admitted route; comparative win not established |
 | Lattice, 1% | Best retained-model result 1.269882%, 193,242 nodes; latest eight-round curve pilot 1.439306%, 111,605 nodes | Admitted tuned two-pass parent; strongest manual straight Tet10 control, 238,411 nodes, 1.004354% | Neither passes all 24 models at 1%; no matched-accuracy win |
@@ -653,7 +654,7 @@ Use `git log --reverse --format='%h %ad %s' --date=short` for the complete ledge
 | 20 Oct | `06e4f27` | Controlled quartic edge diagnostic, rejected initial precision, resolved weak higher-rule signal |
 | 20 Oct | `ca388d2` | Validated corner-coupling diagnostic and weak incremental signal; polynomial-mode route closed |
 | 20 Oct | `9f9ee96` | Fresh stronger Schwarz Tet10 pilot with common AMG and independent field/quadrature audits |
-| 20 Oct | Job 333, running | Repeated exact-recipe Schwarz Tet10 experiment; first warmup underway, no repeated timing conclusion |
+| 20 Oct | `2f0363f`, completed job 333 | Repeated exact-recipe Schwarz Tet10 advantage; independent mixed-load, timing and provenance verification; late reporting warning retained |
 
 ## 13. Verification and evidence register
 
@@ -673,6 +674,7 @@ are not claims that a fresh full suite ran while writing this document.
 | Quartic edge diagnostic | Three unit tests and manufactured periodic controls; direct trial-energy identity, overlap coupling, pin gauge, and periodic traces checked; higher-rule precision passes but useful signal fails |
 | Corner-coupling diagnostic | Five algebraic tests, manufactured periodic controls, exact edge-only regression, Schur identity, and 125/216-point precision pass; useful signal fails |
 | Live Schwarz Tet10 pilot | 33 controls, fresh VTK/MMG and native meshes, twelve fresh loads, independent field audits, all eight reference models, and native positive-rule sensitivity pass |
+| Repeated stronger Schwarz comparison | Five measured pairs and warmup, 38 controls per pair, 72 fresh loads, independent fields; separate verifier checks 96 mixed-load comparisons, timing statistics and 205 hashes |
 
 Canonical detailed reports are under `experiments/adaptive`:
 
@@ -721,7 +723,8 @@ use the verified `kmarchais` account.
 
 | Priority | Next action | Completion criterion |
 |---|---|---|
-| 1, running | Read job 333 before selecting any successor | Five interleaved measured pairs after warmup, common AMG, unchanged eight-model 0.1% target, both cost definitions, clock-consistency and resource gates |
+| 1, operational prerequisite | Retain progress values across stage transitions before another experiment | Reproduce and fix the recorded late `no_chips` warning using standard Job reporting |
+| Completed comparison | Stronger Schwarz Tet10 repetitions | Five interleaved pairs pass, both cost definitions favor Meshers; no further Schwarz tightening selected |
 | Closed diagnostic | Curve-corner relaxation coupled to the same quartic modes | Completed; incremental signal remains small, so no further polynomial-mode trial is selected |
 | 2 | Resolve lattice FE versus geometry/reference uncertainty | A justified reference envelope and a candidate passing every retained applicable model, without post-hoc model deletion |
 | 3 | Establish admitted actual Microgen/MMG comparators for Gyroid and spinodoid, or clearly bound unsupported tested routes | Genuine geometry-qualified controls, not MMG on Meshers seeds or altered specimens |

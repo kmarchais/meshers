@@ -1,0 +1,57 @@
+{
+  "inputs": {
+    "/home/kmarchais/dev/meshers/experiments/adaptive/schwarz_tet10_repeated.py": "1b819f8cb24c1e44148b83c880e494bafbe29d2140481afe5dc7303fd9e30c8c",
+    "/home/kmarchais/dev/meshers/experiments/adaptive/schwarz_tet10_live.py": "d8e9c2676f14586a83943a5a9c76e0a1e41e2e773463c668ac58f666c041a9cb",
+    "/home/kmarchais/dev/meshers/experiments/adaptive/test_schwarz_tet10_repeated.py": "c789523036ddbac7d377bfab6ed16464ca72ad91056a2661a788fe31b557f7fe",
+    "/home/kmarchais/dev/meshers/experiments/adaptive/runs/g3-schwarz-tet10-live-amg-pilot-v1/summary.json": "b3b200d1c4777cd44c6146f21490761fdc19c8d2d459c4bb3286d2c7f5286066",
+    "/home/kmarchais/dev/meshers/experiments/adaptive/runs/g3-schwarz-tet10-live-amg-pilot-quadrature-v1/meshers-tet10.json": "2ff1e42eab4e5d5dcb808a1765b8c74afdb6baec6f0649c0f5662a8cc9e7c193",
+    "/home/kmarchais/dev/meshers/experiments/adaptive/runs/g3-schwarz-tet10-live-amg-pilot-quadrature-v1/manifest.json": "c821fec516d59c34508d8aae5689f40e3ca74d2e6ff46ffc354371a07a7f04c6",
+    "/home/kmarchais/dev/meshers/experiments/adaptive/runs/g3-schwarz-tet10-live-amg-pilot-artifacts-v1.json": "3358269e4c98667e0c8f558f124d3084acbdcd12c5c5dd8cc8dc728a36ae38e2"
+  },
+  "memory_bytes": 8589934592,
+  "threads": 1,
+  "whole_experiment_timeout_s": 3600,
+  "stage_timeouts_s": {
+    "controls": 120,
+    "microgen-parent": 600,
+    "microgen-tet10": 1800,
+    "meshers-tet10": 600,
+    "microgen-audit": 300,
+    "microgen-reference": 60,
+    "meshers-audit": 300,
+    "meshers-reference": 60
+  },
+  "repetitions": 5,
+  "warmups_per_arm": 1,
+  "schedule": [
+    [
+      "warmup",
+      false
+    ],
+    [
+      "repeat-1",
+      true
+    ],
+    [
+      "repeat-2",
+      false
+    ],
+    [
+      "repeat-3",
+      true
+    ],
+    [
+      "repeat-4",
+      false
+    ],
+    [
+      "repeat-5",
+      true
+    ]
+  ],
+  "stiffness_target": 0.001,
+  "solve_node_cap": 250000,
+  "tetrahedron_cap": 250000,
+  "maximum_wall_minus_monotonic_s": 5,
+  "timing_scope": "Both recorded costs retained; warmup excluded; alternate native-first and Microgen-first; no previous-run mesh, load or preconditioner replay"
+}

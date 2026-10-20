@@ -1,5 +1,22 @@
 # Adaptive and quadratic implicit meshing: results
 
+## Repeated stronger Schwarz Tet10 comparison, 2026-10-20
+
+Job 333 completes five interleaved measured pairs after warmup. All geometry,
+periodic, field and eight-model supplementary 0.1% gates pass with common
+AMG. Median audited workflows are 409.28 seconds for actual VTK30/one-pass
+MMG plus manual straight Tet10 and 55.19 seconds for Meshers curved16.
+Every paired ratio favors Meshers, 7.3858–7.5401. Generation/lift/solve-only
+ratios are 7.2806–7.4331. Microgen has the smaller model disagreement; this
+matches a target, not identical errors. It is not the default Microgen route.
+
+The independent frozen-record verifier checks 96 mixed-load comparisons,
+all timing statistics, 205 hashes, and geometry/field gates. Both clock and
+resource limits pass. A late progress warning exposes cleared stage-end
+values in the standard context manager. Fix reporting before another run;
+do not erase the warning or discard scientific results because of it.
+The four-fixture goal remains unachieved. See `TET10_RESULTS.md`.
+
 ## Fresh stronger Schwarz Tet10 comparison, 2026-10-20
 
 Job 331 compares fresh actual VTK30/one-pass MMG plus manual straight Tet10
