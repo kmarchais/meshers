@@ -1,5 +1,45 @@
 # G3 continuation checkpoint, 20 October 2026
 
+## Latest live comparison, jobs 331 and 332
+
+After closing the polynomial diagnostic, one fresh stronger Schwarz Tet10
+pair now completes. Both arms use the same explicit AMG preset. Actual
+Microgen VTK30/one-pass MMG at hausd .0005, hmax .1, hgrad 1.3 is followed by
+manual straight elevation and direct fedoo, not public Microgen Tet10 support.
+The competing native mesh is nonadaptive curved16. No saved meshes, solved
+load prefixes, or previous-run preconditioners are replayed.
+
+Both pass the supplementary 0.1% target across all eight Schwarz models.
+Microgen has 207,200 nodes and 0.053985–0.062716% disagreement, native has
+42,928 nodes and 0.031469–0.093778%. Both pass unchanged geometry and periodic
+gates. Fresh field reaction errors are below 7.60e-12 and jumps 5.56e-17.
+
+Science-audited total times are 409.87 versus 55.10 seconds, ratio 7.4382.
+Generation/lift/solve subtotals are 388.25 versus 52.92 seconds, ratio 7.3368.
+Checkpoint I/O within those phases remains included, despite the frozen v1
+subtotal label saying serialization is excluded. Frozen values are unchanged;
+the maintained runner corrects that wording. Microgen is more accurate against
+the models. These are common-target, single-pair times without warmups, not
+identical measured errors or a repeated/default/four-fixture speed claim.
+
+After reading the pair, positive-rule audit 332 checks fresh native fields.
+The 125-point energy shift is 2.89e-9 and 64-to-125 change 5.81e-10, below
+1e-4. The Microgen four-point affine rule already agrees with fifteen-point
+reintegration within 1.24e-11. Worker peaks are 3.8152 and 1.4316 GiB.
+
+Read `runs/g3-schwarz-tet10-live-amg-pilot-v1` and
+`runs/g3-schwarz-tet10-live-amg-pilot-quadrature-v1`, under
+`experiments/adaptive`. The maintained runner is `schwarz_tet10_live.py`.
+Its 33 combined controls pass. A separate artifact-hash record preserves the
+pilot's generated meshes and fields without rewriting its frozen summary.
+
+The selected next experiment is interleaved repetitions with these exact
+recipes, common AMG and both timing definitions. Do not claim repeated
+stronger-Tet10 performance before measuring it. No successor is queued here.
+Lattice reference uncertainty and missing admitted actual MMG comparators
+for Gyroid and spinodoid remain unresolved. The full goal remains active.
+The earlier sections below are historical.
+
 ## Latest completed diagnostic, jobs 329 and 330
 
 The corner-coupling check proposed later in this checkpoint is now complete.

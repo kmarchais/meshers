@@ -562,3 +562,21 @@ exactly and the Schur identity passes. Close this polynomial-mode route.
 Do not select another degree, strength, or reference tensor from it. All
 geometry and benchmark gates remain unchanged, and the four-fixture goal
 is still active and unachieved. Detailed evidence is in `CUBIC_RESULTS.md`.
+
+Next close one missing comparison measurement rather than revive lattice
+degree or size-strength tuning. Run a single fresh Schwarz pair against the
+stronger genuine Microgen one-pass plus manual straight-Tet10 route, using
+the same validated explicit AMG preset on both arms. The declared protocol
+is in `TET10_RESULTS.md`; `schwarz_tet10_live.py` charges the fresh VTK/MMG
+parent instead of treating its saved mesh as free. Retain the supplementary
+0.1% target, all eight Schwarz models, and all geometry/resource gates.
+Read the pair and its independent field audits before choosing repetitions.
+
+Job 331 completes that fresh pair. Both arms pass the supplementary 0.1%
+target and all eight Schwarz models with the same explicit AMG. The total
+single-pair ratio is 7.4382, or 7.3368 for generation/lift/solve only. Both
+independent field audits pass. After reading it, positive-rule audit 332
+passes with native energy shift 2.89e-9. Select interleaved repetitions of
+these exact recipes before any repeated stronger-Tet10 timing claim. Keep
+both cost definitions and the explicit one-pass/manual-elevation labels.
+No additional lattice sizing or degree trial follows from this result.

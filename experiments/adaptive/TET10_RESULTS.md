@@ -1,5 +1,85 @@
 # Public fedoo integration on G3
 
+## Declared live Schwarz Tet10 pilot, 20 October 2026
+
+After closing the lattice polynomial-mode diagnostic, return to the missing
+live stronger-comparator measurement. The maintained runner is
+`schwarz_tet10_live.py`. Queue one pair, then read its results before deciding
+whether repeated timing is justified. This supplements the original 1% study
+with the already declared 0.1% Schwarz target. It does not replace any fixture
+or resolve the lattice reference models.
+
+Both arms use fresh geometry and the same explicit elastic-block AMG preset,
+CG tolerances, one numerical thread, and 8 GiB worker ceiling. Microgen uses
+the admitted VTK30 one-pass override at hausd 0.0005, hmax 0.1, hgrad 1.3,
+followed immediately by manual straight Tet10 elevation and direct fedoo.
+This is neither the default two-pass route nor public Microgen Tet10 support.
+Meshers uses the verified nonadaptive curved16 recipe and fifteen-point rule.
+The planar Microgen domain uses its exact four-point rule. Neither arm replays
+a saved mesh, solved load prefix, or preconditioner from another run.
+
+Each arm must pass unchanged geometry and periodic gates, six-load residuals,
+fresh-process stress/reaction/energy/jump audits, and the same eight Schwarz
+reference models using both length proxies and orders 1 through 4. Failed
+accuracy produces no matched-target timing ratio. Four-point sensitivity
+remains at most 1e-4. Controls precede the live pair.
+
+Record both science-audited total and generation/lift/solve subtotal. The
+Microgen total charges fresh parent generation and its audit, then elevation,
+final audit and solves. The subtotal uses recorded generation/lift/solve
+timers, so duplicate parent/final validation cost remains visible rather
+than hidden in a speed claim. Checkpoint I/O inside those phases remains
+charged on both arms. Separate post-workflow validation workers are
+not timing samples. One pair has no warmup or repeatability claim.
+
+## Completed live Schwarz Tet10 pilot
+
+Job 331 passes 33 controls and runs both complete fresh arms with the same
+explicit AMG preset. The actual Microgen parent has 29,204 Tet4 nodes and
+136,587 elements. Its manual straight lift has 207,200 nodes. Native curved16
+has 42,928 nodes and 27,492 elements. All original geometry and periodic gates
+pass. Both six-load tensors pass all eight declared Schwarz models at 0.1%.
+
+| Measurement | Microgen one-pass plus straight Tet10 | Meshers curved Tet10 |
+|---|---:|---:|
+| Reference-model disagreement | 0.053985–0.062716% | 0.031469–0.093778% |
+| Sampled two-sided distance | 0.000961515 | 0.000161891 |
+| Minimum corner quality | 0.103871 | 0.449995 |
+| Fresh meshing, before elevation | 9.7197 s | 0.2791 s |
+| Manual elevation and conversion | 1.1792 s | Not used |
+| Six-load solve | 377.3525 s | 52.6394 s |
+| Science-audited workflow | 409.8735 s | 55.1039 s |
+| Generation/lift/solve subtotal | 388.2513 s | 52.9185 s |
+| Solve worker peak RSS | 3.8152 GiB | 1.4316 GiB |
+
+The single-pair total ratio is 7.4382. The phase subtotal ratio is 7.3368,
+so duplicate Microgen parent/final audits do not explain most of the difference.
+The frozen pilot's label says the subtotal excludes serialization. More
+precisely, checkpoint I/O inside solve and generation timers remains included.
+The maintained runner now states that scope. Frozen timers are unchanged.
+The Microgen tensor is more accurate against these models. Both satisfy the
+same target, not identical measured errors. These are single-run measurements,
+not a repeated timing result, default Microgen comparison, or four-fixture win.
+
+Fresh-process field audits reproduce reactions within 4.17e-12 for Microgen
+and 7.60e-12 for Meshers. Hill–Mandel errors are below 6.54e-12 and periodic
+jumps below 5.56e-17. Microgen's exact affine four-point rule agrees with
+fifteen-point reintegration within 1.24e-11. All input hashes remain unchanged.
+
+After reading that pair, job 332 independently reintegrates the fresh curved
+Meshers fields with positive 64-point and 125-point rules. The final mixed-load
+energy shift is 2.89e-9 relative, and the 64-to-125 change is 5.81e-10. Both
+are below 1e-4. This fixed-field audit is not a higher-rule equilibrium solve
+or a continuum certificate. It takes 27.08 seconds at 0.3367 GiB and is not
+added to either workflow timing sample.
+
+Records are in `runs/g3-schwarz-tet10-live-amg-pilot-v1` and
+`runs/g3-schwarz-tet10-live-amg-pilot-quadrature-v1`. This pilot justifies
+selecting interleaved repetitions with the same recipes and solver. No
+repeated stronger-Tet10 speed claim is made before those measurements.
+
+## Original public integration
+
 `Mesh.to_fedoo()` now copies Tet4 or curved Tet10 coordinates and connectivity
 into an independent fedoo mesh. The direct route passes the integration checks
 on fedoo 1.0.0b2. Microgen 2.0.0b1 still rejects quadratic tetrahedra in both

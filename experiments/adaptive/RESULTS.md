@@ -1,5 +1,20 @@
 # Adaptive and quadratic implicit meshing: results
 
+## Fresh stronger Schwarz Tet10 comparison, 2026-10-20
+
+Job 331 compares fresh actual VTK30/one-pass MMG plus manual straight Tet10
+against fresh Meshers curved16. Both use the same explicit AMG preset and
+pass the supplementary 0.1% target across all eight Schwarz models. Audited
+workflow times are 409.87 and 55.10 seconds, a single-pair ratio of
+7.4382. Generation/lift/solve subtotals are 388.25 and 52.92 seconds, ratio
+7.3368. Both field audits pass; no saved mesh or solved load is replayed.
+
+The native fresh-field positive 125-point audit 332 shifts energy by only
+2.89e-9 relative. This qualifies the pilot for repeated timing, not a repeated
+speed claim. The actual Microgen route remains explicitly one-pass with
+manual Tet10 support, not defaults. Gyroid, spinodoid, and lattice conclusions
+are unchanged. See `TET10_RESULTS.md` for recipes, errors, counts, and costs.
+
 ## Closed quartic corner-coupling diagnostic, 2026-10-20
 
 Five algebraic tests and manufactured periodic controls pass in job 329.
