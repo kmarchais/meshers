@@ -1,0 +1,30 @@
+{
+  "sources": {
+    "/home/kmarchais/dev/meshers/experiments/adaptive/cubic_reference.py": "33bd7ce2c78126209406809af139a81bb460eeef1ecb81661da9a778373291f1",
+    "/home/kmarchais/dev/meshers/experiments/adaptive/microgen_workflow.py": "a8dfec3e7fd40eb94eee0f8f5b149721bd56cf058ce12b61c4f8a3e9fe42f950",
+    "/home/kmarchais/dev/meshers/experiments/adaptive/stress_recovery.py": "c9d74455c014c3b56ab656ca3f6a9cbf259dc11904318fecc354dcc6368651ac",
+    "/home/kmarchais/dev/meshers/experiments/adaptive/tet10_integration.py": "b5adbf4a96ee90953d546c654992d4380843e3b1a865e64e043cd14529e3865d",
+    "/home/kmarchais/dev/meshers/experiments/adaptive/quadrature_audit.py": "d66bd0136e586b3af4dc2e21315495173542c6ca0f2addae041f854c233505c9",
+    "experiments/adaptive/runs/g3-lattice-cubic-parent25-preflight-v1/result.json": "3d697be000fa13798df2ebed5081d97eb7bdd1a5eb4612d2e25b1a66284448c1",
+    "experiments/adaptive/runs/g3-lattice-cubic-parent25-preflight-v1/mesh.npz": "5277c4d61d59e6caa1b700367adc5eaf6a7ea15905a49d5cac2179b43db20cd2"
+  },
+  "memory_bytes": 8589934592,
+  "worker_timeout_s": 600,
+  "threads": 1,
+  "node_cap": 250000,
+  "tet_cap": 250000,
+  "packages": {
+    "fedoo": "1.0.0b2",
+    "numpy": "2.5.4",
+    "scipy": "1.18.1",
+    "meshers": "0.1.0"
+  },
+  "assembly_only": true,
+  "solver": "jacobi-cg",
+  "elastic_blocks": false,
+  "resume_prefix_source": null,
+  "reaction_extraction": null,
+  "release_completed_reduced_cache": false,
+  "pyamg": null,
+  "first_load_wall_cap_s": null
+}

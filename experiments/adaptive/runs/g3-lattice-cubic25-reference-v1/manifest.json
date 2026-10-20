@@ -1,0 +1,34 @@
+{
+  "sources": {
+    "/home/kmarchais/dev/meshers/experiments/adaptive/cubic_reference.py": "33bd7ce2c78126209406809af139a81bb460eeef1ecb81661da9a778373291f1",
+    "/home/kmarchais/dev/meshers/experiments/adaptive/microgen_workflow.py": "a8dfec3e7fd40eb94eee0f8f5b149721bd56cf058ce12b61c4f8a3e9fe42f950",
+    "/home/kmarchais/dev/meshers/experiments/adaptive/stress_recovery.py": "c9d74455c014c3b56ab656ca3f6a9cbf259dc11904318fecc354dcc6368651ac",
+    "/home/kmarchais/dev/meshers/experiments/adaptive/tet10_integration.py": "b5adbf4a96ee90953d546c654992d4380843e3b1a865e64e043cd14529e3865d",
+    "/home/kmarchais/dev/meshers/experiments/adaptive/quadrature_audit.py": "d66bd0136e586b3af4dc2e21315495173542c6ca0f2addae041f854c233505c9",
+    "experiments/adaptive/runs/g3-lattice-cubic-parent25-fields-v1/result.json": "973e7f55378aad1ef9fe2846da23cdfe07073c81c2b6f0d700f922bea40651b2",
+    "experiments/adaptive/runs/g3-lattice-cubic-parent25-fields-v1/mesh.npz": "5277c4d61d59e6caa1b700367adc5eaf6a7ea15905a49d5cac2179b43db20cd2",
+    "experiments/adaptive/runs/g3-lattice-cubic25-assembly-memory-v1/mesh.npz": "86ab7f777ed10e30c02945e617aa08e12668a8975556862bf33ccb6905d83a3a",
+    "experiments/adaptive/runs/g3-lattice-cubic25-assembly-memory-v1/result.json": "0a35f3b0c75caee3091734cc6b9888987d2cc7ea44763243aba54120213f04a0",
+    "experiments/adaptive/runs/g3-lattice-cubic-parent25-fields-v1/fields.npz": "90be8015c68226d57054022b1ccbf792744e7e0e83e92b29074bf6172e03ae3e",
+    "/home/kmarchais/dev/meshers/experiments/adaptive/amg_reference.py": "7c0293e3223317ba7a7b0dfcb5391c9d6c5282ea89571023a434393e41995f09"
+  },
+  "memory_bytes": 8589934592,
+  "worker_timeout_s": 1800,
+  "threads": 1,
+  "node_cap": 250000,
+  "tet_cap": 250000,
+  "packages": {
+    "fedoo": "1.0.0b2",
+    "numpy": "2.5.4",
+    "scipy": "1.18.1",
+    "meshers": "0.1.0"
+  },
+  "assembly_only": false,
+  "solver": "cached-elastic-block-amg-cg",
+  "elastic_blocks": true,
+  "resume_prefix_source": null,
+  "reaction_extraction": "Vector-first MPC transformation",
+  "release_completed_reduced_cache": true,
+  "pyamg": "5.3.0",
+  "first_load_wall_cap_s": 240
+}

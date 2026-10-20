@@ -491,3 +491,21 @@ alone. Complete positive-rule reintegration, then investigate geometric-domain
 approximation separately from FE enrichment or justify a bulk-refinement
 control with independent evidence. Preserve all references and resource gates.
 Read `CREASE_RESULTS.md` and the new consolidated `PROJECT_TRACKING.md`.
+
+Job 309 subsequently tests a separate cubic boundary mapping while retaining
+the original displacement coefficients. Both domains pass the unchanged gates
+and sampled distance improves fourfold. Fixed-field energy changes by only
+0.0105922%, below the predeclared 0.05% signal screen; quadrature sensitivity
+is 9.965e-7 relative. Do not call these projected fields equilibrated or launch
+a projected-domain solve from that signal. Preserve all 24 models. Select one
+finer nonadaptive seed25 geometry preflight, then count the exact cubic nodes
+before considering an independent higher-order refinement solve within the
+existing 250,000-node stage. See `CUBIC_RESULTS.md`.
+
+The seed25 parent admits and its exact cubic count is 241,555. Assembly 311
+fits at 5.818 GiB. Fresh parent loads 312 and independent audit 313 pass.
+However cubic solve 314 fails in the full-matrix symmetry audit before its
+first completed load. Blocked exact Frobenius verification preserves the
+1e-12 gate and passes ten focused and twelve integrated control cases.
+One fresh retry 316 uses the same 8 GiB ceiling and first-load deadline.
+Read its actual result before any successor; no reference model changes.

@@ -188,8 +188,21 @@ def preparation(run, name):
     })
 
 
-def tri_values(barycentric):
+def tri_values(barycentric, degree=2):
     np, *_ = imports()
+    if degree == 3:
+        indices = ((3, 0, 0), (0, 3, 0), (0, 0, 3), (2, 1, 0), (1, 2, 0),
+                   (2, 0, 1), (1, 0, 2), (0, 2, 1), (0, 1, 2), (1, 1, 1))
+        values = []
+        for index in indices:
+            value = np.ones(len(barycentric))
+            for axis, count in enumerate(index):
+                for shift in range(count):
+                    value *= (3 * np.asarray(barycentric)[:, axis] - shift) / (shift + 1)
+            values.append(value)
+        return np.array(values).T
+    if degree != 2:
+        raise ValueError("Only quadratic and explicit cubic reference triangles are supported")
     first, second, third = np.asarray(barycentric).T
     return np.array([first * (2 * first - 1), second * (2 * second - 1),
                      third * (2 * third - 1), 4 * first * second,
@@ -211,7 +224,9 @@ def tessellate(points, surface, subdivisions):
             triangles.append([lookup[first, second], lookup[first + 1, second], lookup[first, second + 1]])
         if first + second < subdivisions - 1:
             triangles.append([lookup[first + 1, second], lookup[first + 1, second + 1], lookup[first, second + 1]])
-    vertices = np.einsum("sn,fnd->fsd", tri_values(barycentric), points[surface])
+    if surface.shape[1] not in (6, 10):
+        raise ValueError("Unsupported curved surface connectivity")
+    vertices = np.einsum("sn,fnd->fsd", tri_values(barycentric, 3 if surface.shape[1] == 10 else 2), points[surface])
     faces = (np.array(triangles)[None] + np.arange(len(surface))[:, None, None] * len(barycentric))
     return vertices.reshape(-1, 3), faces.reshape(-1, 3)
 
@@ -230,8 +245,11 @@ def on_box_plane(coordinates, value):
     return np.isclose(coordinates, value, atol=1e-12, rtol=0)
 
 
-def geometry(run, name, points, tets, surface, detail_count=0, reverse_subdivisions=(4, 8)):
+def geometry(run, name, points, tets, surface, detail_count=0, reverse_subdivisions=(4, 8),
+             *, element_type=None, quadrature=None):
     np, fd, _, _, _, scorecard = imports()
+    if tets.shape[1] not in (4, 10) and element_type is None:
+        raise ValueError("Nonstandard geometry requires an explicit registered element type")
     case, _, _ = specimen(name)
     samples = np.load(run / f"{name}-samples.npz")
     reference = json.loads((run / f"{name}-specimen.json").read_text())
@@ -239,7 +257,9 @@ def geometry(run, name, points, tets, surface, detail_count=0, reverse_subdivisi
     caps = np.any(np.all(on_box_plane(corners, -0.5), axis=1) |
                   np.all(on_box_plane(corners, 0.5), axis=1), axis=1)
     wall = surface[~caps]
-    weights = tri_values(scorecard.BARY) if surface.shape[1] == 6 else scorecard.BARY
+    if surface.shape[1] not in (3, 6, 10):
+        raise ValueError("Unsupported surface connectivity")
+    weights = tri_values(scorecard.BARY, 3 if surface.shape[1] == 10 else 2) if surface.shape[1] != 3 else scorecard.BARY
     probes = np.einsum("sn,fnd->fsd", weights, points[wall]).reshape(-1, 3)
     locked = on_box_plane(np.abs(probes), 0.5)
     foot = probes.copy()
@@ -260,16 +280,18 @@ def geometry(run, name, points, tets, surface, detail_count=0, reverse_subdivisi
     outside = (values < case.levels[0]) | (values > case.levels[1])
     queries = np.concatenate([samples["walls"], samples["caps"]])
     reverse_values = []
-    for divisions in (reverse_subdivisions if surface.shape[1] == 6 else (1,)):
+    for divisions in (reverse_subdivisions if surface.shape[1] != 3 else (1,)):
         vertices, faces = tessellate(points, surface, divisions)
         reverse_values.append(scorecard.distance_to_mesh(vertices, faces, queries))
     quality, angles, corner_volumes = scorecard.tet_metrics(points, tets[:, :4])
-    if tets.shape[1] == 10:
-        element = fd.lib_elements.element_list.get_element("tet10")(15)
+    if tets.shape[1] == 10 or element_type is not None:
+        element = fd.lib_elements.element_list.get_element(element_type or "tet10")(15)
+        assert element.n_nodes == tets.shape[1]
+        locations, weights_reference = (element.xi_pg, element.w_pg) if quadrature is None else quadrature
         coordinates = points[tets]
         determinants = np.array([np.linalg.det(np.einsum("an,tnb->tab", derivative, coordinates))
-                                 for derivative in element.shape_function_derivative(element.xi_pg)])
-        volume = float(np.einsum("gt,g->", determinants, element.w_pg))
+                                 for derivative in element.shape_function_derivative(locations)])
+        volume = float(np.einsum("gt,g->", determinants, weights_reference))
         extra = element.shape_function_derivative(np.concatenate([element.xi_nd, [[0.25]*3]]))
         minimum = min(float(determinants.min()), *(float(np.linalg.det(np.einsum("an,tnb->tab", derivative, coordinates)).min()) for derivative in extra))
     else:
@@ -288,6 +310,9 @@ def geometry(run, name, points, tets, surface, detail_count=0, reverse_subdivisi
            "minimum_sampled_jacobian": minimum,
            "reverse_tessellation_delta_max": float(np.max(np.abs(reverse_values[-1] - reverse_values[0]))),
            "quadratic_reverse_subdivisions": list(reverse_subdivisions) if tets.shape[1] == 10 else None}
+    if element_type is not None:
+        row.update(element_type=element_type, curved_reverse_subdivisions=list(reverse_subdivisions),
+                   volume_quadrature_points=len(locations))
     row["geometry_admitted"] = bool(row["sampled_two_sided_max"] <= 0.002 and
                                     abs(row["relative_volume_error"]) <= 0.01 and
                                     row["q_min_corner"] >= 0.1 and not failed.any() and minimum > 0)

@@ -1,0 +1,58 @@
+{
+  "case": "smooth-lattice",
+  "order": 3,
+  "element_type": "tet20_reference",
+  "nodes": 241555,
+  "elements": 48696,
+  "geometry": {
+    "sampled_forward_max": 0.00038198208500262587,
+    "sampled_reverse_max": 0.0003468626760467457,
+    "sampled_two_sided_max": 0.00038198208500262587,
+    "outward_forward_max": 0.00038198208500262587,
+    "inward_forward_max": 0.0002696788476968117,
+    "projection_failed": 0,
+    "forward_samples": 112008,
+    "reverse_samples": 34791,
+    "volume": 0.24823273133479654,
+    "relative_volume_error": -0.00031537643259627046,
+    "q_min_corner": 0.3224835315931843,
+    "q_p01_corner": 0.4922539343711697,
+    "minimum_dihedral_deg_corner": 16.58430817385056,
+    "minimum_sampled_jacobian": 1.0343708543914683e-06,
+    "reverse_tessellation_delta_max": 0.0002715174408905259,
+    "quadratic_reverse_subdivisions": [
+      4,
+      8
+    ],
+    "geometry_admitted": true
+  },
+  "geometry_source": "experiments/adaptive/runs/g3-lattice-cubic-parent25-fields-v1",
+  "exact_quadratic_mapping_embedding_error": 1.6653345369377348e-16,
+  "embedded_parent_tensor_error": 9.073606725228392e-12,
+  "periodic": {
+    "periodic_pair_counts": [
+      796,
+      796,
+      796
+    ],
+    "periodic_coordinate_errors": [
+      2.220446049250313e-16,
+      2.220446049250313e-16,
+      2.220446049250313e-16
+    ],
+    "periodic_pair_tolerance": 1e-10,
+    "periodic_equivalence_classes": 239244,
+    "periodic_triangles_match": true
+  },
+  "solver_quadrature_points": 15,
+  "qualified": false,
+  "status": "embedded-parent-verified",
+  "scope": "Saved-mesh reference enrichment, not a live workflow timing or continuum certificate",
+  "first_load_wall_cap_s": 240,
+  "replayed_prefix_loads": 0,
+  "resume_prefix_source": null,
+  "first_load_deadline_scope": "First newly solved load after verified prefix",
+  "reaction_extraction": "Vector-first MPC transformation, identical equations",
+  "release_completed_reduced_cache": true,
+  "solver": "cached-elastic-block-amg-cg"
+}

@@ -24,11 +24,18 @@ def reduced_matrix_key(matrix):
     return matrix.shape, digest.hexdigest()
 
 
-def verify_symmetric(matrix):
+def verify_symmetric(matrix, block_rows=32768):
     import numpy as np
 
-    skew = matrix - matrix.T
-    assert np.linalg.norm(skew.data) / np.linalg.norm(matrix.data) < 1e-12
+    assert matrix.shape[0] == matrix.shape[1] and block_rows > 0
+    denominator = np.linalg.norm(matrix.data)
+    assert np.isfinite(denominator) and denominator > 0
+    squared_skew = 0.
+    for first in range(0, matrix.shape[0], block_rows):
+        last = min(first + block_rows, matrix.shape[0])
+        skew = matrix[first:last] - matrix[:, first:last].T
+        squared_skew += float(skew.data @ skew.data)
+    assert np.sqrt(squared_skew) / denominator < 1e-12
 
 
 def elastic_candidates(coordinates):

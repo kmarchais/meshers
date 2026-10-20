@@ -19,6 +19,73 @@ def test_cubic_basis_reproduces_quadratic_geometry():
     assert result["map_derivative_embedding_error"] < 1e-12
 
 
+def test_cubic_surface_basis_matches_reference_element_faces():
+    from cubic_reference import register_cubic
+
+    element = register_cubic()()
+    selected = np.flatnonzero(element.multi_indices[:, 3] == 0)
+    indices = element.multi_indices[selected, :3]
+    nodal = indices / 3
+    np.testing.assert_allclose(workflow.tri_values(nodal, degree=3), np.eye(10), atol=1e-14)
+    barycentric = np.random.default_rng(20261020).dirichlet(np.ones(3), 128)
+    locations = barycentric @ element.xi_nd[:3]
+    actual = workflow.tri_values(barycentric, degree=3)
+    np.testing.assert_allclose(actual, element.shape_function(locations)[:, selected], atol=1e-14)
+    np.testing.assert_allclose(actual.sum(axis=1), 1, atol=1e-14)
+    for first in range(4):
+        for second in range(4 - first):
+            expected = barycentric[:, 0]**first * barycentric[:, 1]**second
+            values = nodal[:, 0]**first * nodal[:, 1]**second
+            np.testing.assert_allclose(actual @ values, expected, atol=1e-14)
+
+
+def test_cubic_node_budget_counts_shared_edges_and_faces():
+    from cubic_reference import cubic_node_count
+
+    assert cubic_node_count(np.array([[0, 1, 2, 3]])) == 20
+    assert cubic_node_count(np.array([[0, 1, 2, 3], [0, 1, 2, 4]])) == 30
+
+
+@pytest.mark.parametrize("block_rows", [1, 3, 32])
+@pytest.mark.parametrize("perturbation", [0., 1e-14, 1e-8])
+def test_blocked_symmetry_matches_full_frobenius_test(block_rows, perturbation):
+    from scipy.sparse import csr_matrix
+    from amg_reference import verify_symmetric
+
+    matrix = np.random.default_rng(20261020).normal(size=(11, 11))
+    matrix += matrix.T + 20 * np.eye(11)
+    matrix[1, 9] += perturbation
+    matrix = csr_matrix(matrix)
+    skew = matrix - matrix.T
+    expected = np.linalg.norm(skew.data) / np.linalg.norm(matrix.data) < 1e-12
+    if expected:
+        verify_symmetric(matrix, block_rows=block_rows)
+    else:
+        with pytest.raises(AssertionError):
+            verify_symmetric(matrix, block_rows=block_rows)
+
+
+def test_blocked_symmetry_never_subtracts_whole_matrix(monkeypatch):
+    from scipy.sparse import csr_matrix
+    from amg_reference import verify_symmetric
+
+    original = csr_matrix.__sub__
+    shapes = []
+    def limited_subtraction(matrix, other):
+        shapes.append(matrix.shape)
+        assert matrix.shape[0] <= 3
+        return original(matrix, other)
+    monkeypatch.setattr(csr_matrix, "__sub__", limited_subtraction)
+    verify_symmetric(csr_matrix(np.eye(11)), block_rows=3)
+    assert shapes == [(3, 11), (3, 11), (3, 11), (2, 11)]
+
+
+def test_nonstandard_geometry_rejects_implicit_linear_fallback(tmp_path):
+    with pytest.raises(ValueError, match="explicit registered element"):
+        workflow.geometry(tmp_path, "smooth-lattice", np.zeros((20, 3)),
+                          np.arange(20)[None], np.arange(10)[None])
+
+
 def test_solved_fields_are_checkpointed_in_load_order():
     _, _, meshers, *_ = workflow.imports()
     from stress_recovery import solve

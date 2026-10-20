@@ -1,0 +1,123 @@
+{
+  "case": "schwarz",
+  "passed": true,
+  "nodes": 6864,
+  "elements": 3852,
+  "solve_s": 6.751777321999953,
+  "difference": {
+    "worst_relative_strain_energy_difference": 4.418217696241868e-11,
+    "relative_tensor_frobenius_difference": 1.705445577136206e-11,
+    "relative_energy_difference_eigenvalues": [
+      -4.1693814189226294e-11,
+      -9.794307866329905e-12,
+      -5.3451235792112175e-12,
+      4.520542361107939e-12,
+      8.544683750709376e-12,
+      4.418217696241868e-11
+    ]
+  },
+  "own_rule_relative_error": 3.1563487289824005e-12,
+  "periodic_jump_max": 5.551115123125783e-17,
+  "integrated_volume": 0.4999955430696894,
+  "higher_rule_fixed_field_difference": {
+    "worst_relative_strain_energy_difference": 8.109163469561128e-07,
+    "relative_tensor_frobenius_difference": 2.076159719797443e-07,
+    "relative_energy_difference_eigenvalues": [
+      1.026729328973624e-07,
+      1.3337609729539575e-07,
+      1.418356981769971e-07,
+      6.177553454887734e-07,
+      7.618830084279484e-07,
+      8.109163469561128e-07
+    ]
+  },
+  "solver_records": [
+    {
+      "iterations": 42,
+      "relative_residual": 9.301252639844167e-13,
+      "free_dofs": 18093,
+      "seconds": 1.2052268679999543,
+      "hierarchy_setup_s": 0.2894744529999116,
+      "hierarchy_reused": false,
+      "node_reordering_s": 0.025285367999913433,
+      "elastic_blocks": true,
+      "verified_symmetry_reused": false,
+      "levels": 3,
+      "operator_complexity": 1.0594110960826524,
+      "reduced_matrix_sha256": "1b397ecaf98f938f3831ee769fc1cfac8298a2475bae2d80a67208fab9bf8615"
+    },
+    {
+      "iterations": 43,
+      "relative_residual": 6.334565216791998e-13,
+      "free_dofs": 18093,
+      "seconds": 0.8758767640001679,
+      "hierarchy_setup_s": 0.0,
+      "hierarchy_reused": true,
+      "node_reordering_s": 0.0,
+      "elastic_blocks": true,
+      "verified_symmetry_reused": true,
+      "levels": 3,
+      "operator_complexity": 1.0594110960826524,
+      "reduced_matrix_sha256": "1b397ecaf98f938f3831ee769fc1cfac8298a2475bae2d80a67208fab9bf8615"
+    },
+    {
+      "iterations": 43,
+      "relative_residual": 7.201301308621377e-13,
+      "free_dofs": 18093,
+      "seconds": 0.8743109409999761,
+      "hierarchy_setup_s": 0.0,
+      "hierarchy_reused": true,
+      "node_reordering_s": 0.0,
+      "elastic_blocks": true,
+      "verified_symmetry_reused": true,
+      "levels": 3,
+      "operator_complexity": 1.0594110960826524,
+      "reduced_matrix_sha256": "1b397ecaf98f938f3831ee769fc1cfac8298a2475bae2d80a67208fab9bf8615"
+    },
+    {
+      "iterations": 45,
+      "relative_residual": 9.725612481283613e-13,
+      "free_dofs": 18093,
+      "seconds": 0.9476632060000156,
+      "hierarchy_setup_s": 0.0,
+      "hierarchy_reused": true,
+      "node_reordering_s": 0.0,
+      "elastic_blocks": true,
+      "verified_symmetry_reused": true,
+      "levels": 3,
+      "operator_complexity": 1.0594110960826524,
+      "reduced_matrix_sha256": "1b397ecaf98f938f3831ee769fc1cfac8298a2475bae2d80a67208fab9bf8615"
+    },
+    {
+      "iterations": 45,
+      "relative_residual": 7.813049105159128e-13,
+      "free_dofs": 18093,
+      "seconds": 0.9081402439999238,
+      "hierarchy_setup_s": 0.0,
+      "hierarchy_reused": true,
+      "node_reordering_s": 0.0,
+      "elastic_blocks": true,
+      "verified_symmetry_reused": true,
+      "levels": 3,
+      "operator_complexity": 1.0594110960826524,
+      "reduced_matrix_sha256": "1b397ecaf98f938f3831ee769fc1cfac8298a2475bae2d80a67208fab9bf8615"
+    },
+    {
+      "iterations": 45,
+      "relative_residual": 7.856592678568595e-13,
+      "free_dofs": 18093,
+      "seconds": 0.9145723030001136,
+      "hierarchy_setup_s": 0.0,
+      "hierarchy_reused": true,
+      "node_reordering_s": 0.0,
+      "elastic_blocks": true,
+      "verified_symmetry_reused": true,
+      "levels": 3,
+      "operator_complexity": 1.0594110960826524,
+      "reduced_matrix_sha256": "1b397ecaf98f938f3831ee769fc1cfac8298a2475bae2d80a67208fab9bf8615"
+    }
+  ],
+  "replayed_prefix_loads": 0,
+  "maximum_reaction_reassociation_difference": 7.336459229060219e-14,
+  "scope": "Solver validation only; same equations, unchanged tolerances; not a live workflow timing"
+}

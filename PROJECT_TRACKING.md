@@ -1,9 +1,10 @@
 # Meshers project tracking
 
 Updated 20 October 2026. Covers the recorded project history on
-`handoff/g3-microgen-20261017` through commit `347a010`, from the initial
+`handoff/g3-microgen-20261017` through commit `0ebaa71` and the later dated
+experiments below, from the initial
 release candidate on 19 September through the G3 shutdown checkpoint, with
-the resumed 20 October geometry control recorded below.
+the resumed 20 October geometry and fixed-field sensitivity controls below.
 This is a consolidated index and status ledger, not a replacement for frozen
 experiment records. Historical results on other machines remain historical.
 Work in separate support repositories is included only where this checkout
@@ -420,6 +421,33 @@ at 6.341 GiB, and passes stress/energy, periodic, residual, and positive-rule
 checks. It retains status `solved-needs-reference`. Its disagreement with the
 24 models spans about 0.154–1.7505%, so it does not settle lattice accuracy.
 
+On 20 October, a separate cubic geometry probe projects 30,972 higher-order
+wall nodes while preserving topology, corner coordinates, and the six saved
+displacement coefficient arrays. Both domains pass unchanged geometry gates;
+sampled distance improves from 0.00054354 to 0.00013101. Positive 125-point
+fixed-field energy changes by 0.0105922%, below the predeclared 0.05% signal
+screen. Quadrature sensitivity is 9.965e-7 relative. No projected-domain
+equilibrium solve is selected. This does not bound total geometry error or
+create a new stiffness reference. Three added interpolation/admission controls
+pass. The next selected stage is a finer seed25 geometry and node-budget
+preflight, not another curve-metric strength trial.
+
+That preflight passes at 75,113 quadratic nodes and 48,696 elements. Exact
+shared-edge and face counting predicts 241,555 cubic nodes and matches the
+constructed mesh. Assembly-only peak RSS is 5.818 GiB under the same 8 GiB
+ceiling. A new budget check prevents cubic construction above 250,000 nodes.
+A fresh six-load parent25 control is selected before any higher-order
+equilibrium solve. Resource feasibility alone is not reference convergence.
+
+The fresh parent25 control completes in 128.64 seconds and passes independent
+field checks. The first cubic25 solve then fails before completing a load
+because full-matrix symmetry subtraction needs a 1.47 GiB temporary beyond
+the 8 GiB address-space cap. A blocked complete Frobenius audit preserves the
+same 1e-12 threshold and matrix-hash reuse gates. Ten focused tests and twelve
+integrated control loads pass. A fresh cubic25 retry is selected with the
+same resource and first-load limits; no finer-reference accuracy result is
+claimed before its completion and audits.
+
 Evidence: [cubic results](experiments/adaptive/CUBIC_RESULTS.md),
 `cubic_reference.py`, `cubic_assessment.py`, `amg_reference.py`,
 `capture_reference_system.py`, and `block_amg_probe.py` under
@@ -605,7 +633,7 @@ use the verified `kmarchais` account.
 
 | Priority | Next action | Completion criterion |
 |---|---|---|
-| 1 | Separate geometric-domain error from FE enrichment before another curve-sizing change; the eight-round positive-rule audit is complete | Independent evidence for the next accuracy change, not a stronger metric selected just from localization |
+| 1 | Read the seed25 parent preflight and exact cubic node budget after the sub-threshold geometry-sensitivity probe | A qualified, bounded next higher-order refinement level, without interpreting fixed-field energy as equilibrium stiffness |
 | 2 | Resolve lattice FE versus geometry/reference uncertainty | A justified reference envelope and a candidate passing every retained applicable model, without post-hoc model deletion |
 | 3 | Establish admitted actual Microgen/MMG comparators for Gyroid and spinodoid, or clearly bound unsupported tested routes | Genuine geometry-qualified controls, not MMG on Meshers seeds or altered specimens |
 | 4 | Run fresh repeated matched-target workflows where both competitors qualify | Same-host interleaved repetitions, charged preparation and solves, all scientific gates met |

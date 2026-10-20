@@ -1,0 +1,108 @@
+{
+  "source": "/home/kmarchais/dev/meshers/experiments/adaptive/runs/g3-lattice-cubic-reference-cache-release-v1",
+  "prepared": "/home/kmarchais/dev/meshers/experiments/adaptive/runs/g3-lattice-cubic-assembly-memory-v1",
+  "basis_checks": {
+    "nodal_and_polynomial_identities": true,
+    "degree_four_quadrature_exact": true,
+    "quadratic_map_embedding_error": 5.551115123125783e-16,
+    "map_derivative_embedding_error": 1.3322676295501878e-15
+  },
+  "nodes": 222331,
+  "elements": 44976,
+  "projected_wall_nodes": 30972,
+  "movement_quantiles": [
+    0.0,
+    5.551115123125783e-17,
+    3.2350259666669603e-07,
+    1.6120597272843432e-05,
+    0.00039995094222104326
+  ],
+  "projection": {
+    "maximum_projection_distance": 0.00039995094222104326,
+    "maximum_projected_field_distance": 6.561413042397605e-17
+  },
+  "baseline": {
+    "sampled_forward_max": 0.0005435408342573615,
+    "sampled_reverse_max": 0.0003994693992680114,
+    "sampled_two_sided_max": 0.0005435408342573615,
+    "outward_forward_max": 0.0005435408342573615,
+    "inward_forward_max": 0.00035748786457482815,
+    "projection_failed": 0,
+    "forward_samples": 99996,
+    "reverse_samples": 34791,
+    "volume": 0.24823394598470586,
+    "relative_volume_error": -0.00031048478583062256,
+    "q_min_corner": 0.34102176039778975,
+    "q_p01_corner": 0.6084119487919122,
+    "minimum_dihedral_deg_corner": 18.80977924215472,
+    "minimum_sampled_jacobian": 3.681061499010173e-06,
+    "reverse_tessellation_delta_max": 0.00020290214843126704,
+    "quadratic_reverse_subdivisions": null,
+    "element_type": "tet20_reference",
+    "curved_reverse_subdivisions": [
+      4,
+      8
+    ],
+    "volume_quadrature_points": 125,
+    "geometry_admitted": true
+  },
+  "projected": {
+    "sampled_forward_max": 7.158421296612284e-05,
+    "sampled_reverse_max": 0.00013100883167923715,
+    "sampled_two_sided_max": 0.00013100883167923715,
+    "outward_forward_max": 7.158421296612284e-05,
+    "inward_forward_max": 5.418404394208984e-05,
+    "projection_failed": 0,
+    "forward_samples": 99996,
+    "reverse_samples": 34791,
+    "volume": 0.24823372774631772,
+    "relative_volume_error": -0.0003113636770216699,
+    "q_min_corner": 0.34102176039778975,
+    "q_p01_corner": 0.6084119487919122,
+    "minimum_dihedral_deg_corner": 18.80977924215472,
+    "minimum_sampled_jacobian": 2.2607533317833533e-06,
+    "reverse_tessellation_delta_max": 0.00022242975284623943,
+    "quadratic_reverse_subdivisions": null,
+    "element_type": "tet20_reference",
+    "curved_reverse_subdivisions": [
+      4,
+      8
+    ],
+    "volume_quadrature_points": 125,
+    "geometry_admitted": true
+  },
+  "baseline_periodic": {
+    "periodic_pair_counts": [
+      688,
+      688,
+      688
+    ],
+    "periodic_coordinate_errors": [
+      2.220446049250313e-16,
+      2.220446049250313e-16,
+      2.220446049250313e-16
+    ],
+    "periodic_pair_tolerance": 1e-10,
+    "periodic_equivalence_classes": 220344,
+    "periodic_triangles_match": true
+  },
+  "projected_periodic": {
+    "periodic_pair_counts": [
+      688,
+      688,
+      688
+    ],
+    "periodic_coordinate_errors": [
+      2.220446049250313e-16,
+      4.996003610813204e-16,
+      9.43689570931383e-16
+    ],
+    "periodic_pair_tolerance": 1e-10,
+    "periodic_equivalence_classes": 220344,
+    "periodic_triangles_match": true
+  },
+  "geometry_admitted": true,
+  "corner_coordinates_unchanged": true,
+  "connectivity_unchanged": true,
+  "scope": "Explicit research cubic geometry, not a native Meshers feature or an equilibrium result"
+}

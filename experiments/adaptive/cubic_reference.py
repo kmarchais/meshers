@@ -74,6 +74,16 @@ def register_cubic():
     return CubicTetrahedron
 
 
+def cubic_node_count(tetrahedra):
+    import numpy as np
+
+    corners = tetrahedra[:, :4]
+    edges = np.concatenate([corners[:, pair] for pair in itertools.combinations(range(4), 2)])
+    faces = np.concatenate([corners[:, triple] for triple in itertools.combinations(range(4), 3)])
+    return (len(np.unique(corners)) + 2 * len(np.unique(np.sort(edges, axis=1), axis=0))
+            + len(np.unique(np.sort(faces, axis=1), axis=0)))
+
+
 def enrich(points, tetrahedra, surface, element):
     import numpy as np
     from fedoo.lib_elements.tetrahedron import Tet10
@@ -187,10 +197,15 @@ def assembly_worker(run, source):
     assert parent["case"] == "smooth-lattice" and parent["qualified"]
     assert parent["order"] == 2 and parent["geometry"]["geometry_admitted"]
     archive = np.load(source / "mesh.npz")
+    planned_nodes = cubic_node_count(archive["tetrahedra"])
+    workflow.save(run / "node-budget.json", {"planned_cubic_nodes": planned_nodes,
+        "node_cap": 250000, "within_cap": planned_nodes <= 250000})
+    assert planned_nodes <= 250000
     element_class = register_cubic()
     element = element_class()
     basis_checks(element)
     points, cells, surface = enrich(archive["points"], archive["tetrahedra"], archive["surface"], element)
+    assert len(points) == planned_nodes
     assert len(points) <= 250_000 and len(cells) <= workflow.CAP
     _, _, periodic = periodic_pairs(points, surface)
     np.savez_compressed(run / "mesh.npz", points=points, tetrahedra=cells, surface=surface)

@@ -1,5 +1,114 @@
 # Reference-only cubic enrichment on G3
 
+## Cubic geometry sensitivity, 20 October 2026
+
+Job 309 separates a change in boundary mapping from another equilibrium
+enrichment. The existing cubic displacement space embeds a quadratic physical
+domain. The probe retains its 222,331 nodes, 44,976 elements, connectivity,
+corner coordinates, and all six saved displacement coefficient arrays. It
+projects only 30,972 higher-order wall nodes onto the fixed implicit boundary,
+locking box-plane coordinates. It introduces no native Meshers Tet20 API.
+
+Three focused controls pass: cubic basis identities, independent cubic surface
+interpolation against the registered reference element, and rejection of an
+implicit linear-geometry fallback for nonstandard elements. The experimental
+geometry auditor now accepts an explicitly registered cubic element, cubic
+boundary interpolation, and positive-rule volume quadrature. Default Tet4 and
+Tet10 paths remain unchanged. Baseline distance and volume reproduce the saved
+quadratic-domain report within 1e-10.
+
+Both old and projected domains pass the unchanged sampled admission gates:
+
+| Measurement | Embedded quadratic domain | Projected cubic domain |
+|---|---:|---:|
+| Two-sided sampled distance | 0.00054354 | 0.00013101 |
+| Volume | 0.24823394598 | 0.24823372775 |
+| Minimum corner quality | 0.34102 | 0.34102 |
+| Minimum sampled Jacobian | 3.6811e-6 | 2.2608e-6 |
+| Failed forward projections | 0 | 0 |
+
+Periodic cubic nodes and full ten-node cap faces match. Maximum coordinate
+mismatch is below 1e-15. The largest nodal movement is 0.00039995; median
+movement is 3.24e-7. This is not an equilibrium or accuracy result.
+
+The saved fields are then integrated without changing their nodal coefficients.
+Positive 64-point and 125-point rules pass affine elasticity controls. The
+125-point mixed-load energy change between domains is 0.0105922%, below the
+predeclared 0.05% geometry-signal screen. All six signed changes are negative.
+The largest 64-to-125-point change is 9.965e-7 relative. Baseline energy
+reproduces the earlier saved-equilibrium quadrature difference, 6.869e-6.
+Projected-field stress and energy disagree by 1.11e-5 relative; those fields
+are not newly equilibrated.
+
+Geometry takes 18.64 seconds at 0.475 GiB, and reintegration takes 105.57
+seconds at 0.531 GiB. Do not run a costly projected-domain equilibrium solve
+from this sub-threshold signal alone. This does not bound re-equilibrated
+geometry error or continuum error. The original cubic result and all 24
+empirical models remain unchanged. Before another reference solve, inspect
+one finer native parent and its exact cubic node budget for an independent
+higher-order refinement level.
+
+Records are in `runs/g3-lattice-cubic-geometry-sensitivity-v1`; the maintained
+runner is `cubic_geometry_probe.py`.
+
+## Finer reference resource preflight, 20 October 2026
+
+Job 310 generates one nonadaptive curved25 parent with the same symmetric
+lattice representation and positive void clamp used by the original cubic24
+parent. It passes admission at 75,113 nodes and 48,696 elements: sampled
+distance 0.00038198, minimum corner quality 0.32248, positive sampled
+Jacobians, no unresolved projections, and matching periodic caps.
+
+Exact topological counting predicts 241,555 cubic nodes, inside the existing
+250,000-node stage. The count is corner vertices plus twice the unique edge
+count plus the unique triangular face count. It reproduces the old cubic24
+count of 222,331 and passes single-tet and shared-face checks. The assembly
+runner now checks and records this budget before constructing the enrichment.
+
+Job 311 builds the actual cubic25 mesh and matrix without solving. Its
+241,555 nodes match the prediction. Matrix dimensions are 724,665 squared,
+with 99,084,987 nonzeros and 1,191,918,508 CSR bytes. The worker takes 58.35
+seconds and peaks at 5.818 GiB, below the same 8 GiB ceiling. This is resource
+feasibility, not convergence or a workflow performance claim.
+
+One fresh six-load parent25 control is selected next. Its fields are needed
+to verify exact quadratic-to-cubic embedding and the later enrichment energy
+identity. Read and independently audit that parent before selecting a cubic25
+equilibrium solve. No reference model is removed or replaced.
+
+Records are in `runs/g3-lattice-cubic-parent25-preflight-v1`,
+`runs/g3-lattice-cubic25-assembly-memory-v1`, and
+`runs/g3-lattice-cubic-parent25-fields-v1`.
+
+Job 312 completes all six fresh parent loads in a 128.64-second workflow.
+Its arrays reproduce the preflight exactly and reduced residuals are below
+9.35e-13. Independent audit 313 reproduces reactions within 7.68e-12 relative
+with zero periodic jumps. The source is ready for an enrichment check.
+
+The first fresh cubic25 solve, job 314, fails before completing any load.
+Exact geometry embedding agrees within 1.67e-16 and embedded parent energy
+within 9.08e-12 relative, but the full `A - A.T` symmetry check requests a
+1.47 GiB temporary and hits the unchanged 8 GiB address-space ceiling. Peak
+RSS is 6.068 GiB. Assembly fitting in memory did not prove solve feasibility.
+The failed record remains in `runs/g3-lattice-cubic25-reference-v1`.
+
+The research AMG helper now computes the same complete relative Frobenius
+symmetry norm in blocks of at most 32,768 rows. The threshold stays 1e-12,
+every row is checked, and complete matrix hashes still guard reuse. Ten
+focused tests compare against the full norm, detect off-diagonal asymmetry,
+and prohibit whole-matrix subtraction on the forced-block path. Job 315
+passes twelve integrated cube and Schwarz loads with the same equations and
+solver tolerances. Cube disagreement is 3.45e-12; Schwarz reproduces its saved
+tensor within 4.42e-11 worst mixed-load disagreement. Neither is a large-case
+memory proof.
+
+Only after reading those controls, one fresh cubic25 retry is selected in
+`runs/g3-lattice-cubic25-reference-blocked-symmetry-v2`. No prefix is replayed.
+The 8 GiB ceiling, 250,000-node stage, 240-second first-load deadline, and
+1,800-second worker timeout stay fixed. Do not infer convergence or reference
+accuracy until all six loads, own-rule checks, and positive-rule sensitivity
+are complete. Control records are in `runs/g3-blocked-symmetry-amg-controls-v1`.
+
 This experiment addresses lattice reference uncertainty. It does not add a
 Meshers Tet20 product API, change the Microgen pipeline or establish a timing
 advantage. All existing uniform and adaptive reference models remain retained.

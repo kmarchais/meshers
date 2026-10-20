@@ -1,5 +1,16 @@
 # Adaptive and quadratic implicit meshing: results
 
+## Cubic mapping sensitivity, 2026-10-20
+
+Projecting higher-order cubic boundary nodes improves sampled distance from
+0.00054354 to 0.00013101 while keeping topology and corners fixed. Both domains
+pass admission. With the existing six displacement coefficient arrays held
+fixed, positive 125-point energy changes by only 0.0105922%, below the frozen
+0.05% signal screen. Quadrature sensitivity is 9.965e-7 relative. This does
+not qualify the projected fields as equilibrated, establish a continuum bound,
+or justify discarding any lattice model. No projected-domain solve is selected.
+See `CUBIC_RESULTS.md` before choosing a higher-order refinement experiment.
+
 ## Eight-round curve follow-up, 2026-10-20
 
 Eight adaptation rounds improve curve-target realization, quality, and cost,
