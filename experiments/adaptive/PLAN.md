@@ -1,5 +1,17 @@
 # Adaptive implicit meshing: plan and status
 
+## Primary MacBook continuation, 2026-10-24
+
+Kevin requests the primary session move to MacBook Pro with Sol 6.1 medium.
+Read `handoff/macbook/HANDOFF.md`. G3 jobs 473, 475 and 476 are terminal.
+The saved lattice26 audit passes but its 1.2686985% model score fails 1%.
+One nested Tet10 refinement preserves geometry and old fields exactly;
+its six-load correction is 0.499513% and independent energy balance passes.
+This has not established an asymptotic reference. After native Mac setup,
+verify transferred data and prepare one second-level nested geometry/resource
+preflight before deciding on another solve. Older active/paused instructions
+below describe their historical checkpoints.
+
 ## Current G3 continuation, 2026-10-18
 
 Active branch: `handoff/g3-microgen-20261017`. The stopping objective is a

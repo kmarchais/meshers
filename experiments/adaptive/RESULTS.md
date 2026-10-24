@@ -1,5 +1,21 @@
 # Adaptive and quadratic implicit meshing: results
 
+## MacBook handoff after nested correction, 2026-10-24
+
+Job 473 completes the lattice26 field and positive-quadrature audits, with
+reaction error 1.0611e-11 and 125-point energy shift 4.0667e-8. The candidate
+still fails the retained 1% target at 1.2686985%.
+
+Jobs 475–476 establish one conforming nested refinement of parent23 on its
+fixed quadratic physical domain. Ten controls and independent admission pass.
+The refined space has 123,514 nodes and 76,947 Tet10 cells. Six fresh loads
+and saved-field/positive-rule audits pass; maximum parent-to-refined energy
+correction is -0.499513% and the Galerkin balance agrees within 6.6756e-8.
+Worst retained-model disagreement is 2.4480846%, so no reference is promoted.
+G3's final job is terminal success. Kevin requests primary continuation on
+MacBook Pro with Sol 6.1 medium. Read `handoff/macbook/HANDOFF.md` for data,
+native environment setup and the next bounded preflight.
+
 ## Paused after completed lattice26 workflow, 2026-10-20
 
 Job 379 completes all six fresh AMG loads on a geometry-admitted curved

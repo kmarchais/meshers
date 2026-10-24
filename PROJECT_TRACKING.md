@@ -1,8 +1,8 @@
 # Meshers project tracking
 
-Updated 20 October 2026. Covers the recorded project history on
-`handoff/g3-microgen-20261017` through commit `4db5cd6`, plus completed
-Gyroid repair diagnostics and lattice workflow 379 below. The history starts with the initial
+Updated 24 October 2026. Covers the recorded project history on
+`handoff/g3-microgen-20261017` through commit `9a20151`, plus completed
+audit 473 and nested-refinement experiments 475–476 below. The history starts with the initial
 release candidate on 19 September and includes the resumed 20 October geometry,
 reference, and fixed-field sensitivity studies.
 This is a consolidated index and status ledger, not a replacement for frozen
@@ -32,11 +32,14 @@ admitted MMG competitor has not yet been established by this preparation.
 
 ## Current conclusion
 
-**Paused at the user's request on 20 October 2026, after job 379 finished.**
-No successor experiment was submitted. The objective remains unachieved.
-The last job completed all six loads, but its preliminary worst disagreement
-against the unchanged 24 lattice models is 1.2686985%, above the 1% target.
-Independent saved-field and higher-quadrature audits remain pending.
+Kevin requested primary continuation on the MacBook Pro on 24 October 2026,
+with Sol 6.1 medium. Read the [MacBook handoff](handoff/macbook/HANDOFF.md)
+for current state and selected continuation. G3's last job, 476, has finished.
+The objective remains unachieved. Work resumed on 23 October after the earlier
+pause. Job 473 finishes the saved lattice26 field and quadrature audits.
+They pass, while worst retained-model disagreement remains 1.2686985%.
+Jobs 475–476 establish a controlled nested FE correction on a fixed curved
+domain; reference convergence remains unresolved.
 
 Meshers has a Rust/Python implicit mesher, adaptive surface and volume paths,
 curved Tet10 output, direct fedoo conversion, and independently checked
@@ -96,7 +99,9 @@ The [19 October shutdown record](handoff/g3/SHUTDOWN-20261019.md) remains histor
 | Completed Gyroid obstruction checks | Boundary-only witness 370 excludes interior-only repair at fixed connectivity; eight local flips fail, complete existing-vertex star solve rejects, and one proposed Steiner point lies outside the cavity |
 | Completed lattice feasibility check | Job 377 finds a 0.9019313% necessary lower bound and a trial matrix within 0.9084715% of all 24 models; the 1% target is algebraically feasible, not a validated physical reference |
 | Last completed workflow | Job 379, fresh curved lattice26, six AMG loads, 199,972 nodes and 128,300 tets, 736.51 seconds; preliminary worst disagreement 1.2686985%, independent field/quadrature audit pending |
-| Paused | No new experiments selected or submitted after the pause request; resume requires the user's instruction |
+| Historical pause | Work paused on 20 October; resumed on 23 October; user requests MacBook primary continuation on 24 October |
+| Latest independent audit | Job 473 passes lattice26 fields and positive quadrature; its 1.2686985% retained-model miss remains |
+| Latest controlled refinement | Jobs 475–476 preserve parent23 geometry, pass controls and audits, and measure a 0.499513% nested FE correction; no reference promoted |
 
 ### Final work on 20 October, jobs 366–379
 
@@ -164,6 +169,36 @@ The corner-coupling extension includes five algebraic tests, manufactured
 periodic controls, and the frozen-domain lattice comparison. Job 330 measures
 594 displacement DOFs on 1,408 tets in 263.45 seconds at 0.6863 GiB. Precision
 passes, but useful signal fails. No native API or benchmark reference changes.
+
+### Resumed work, 23–24 October, jobs 473–476
+
+Job 473 independently audits the lattice26 fields. Reaction error is
+1.0611e-11, Hill-Mandel error 4.1723e-12, and periodic jumps zero. Positive
+125-point reintegration shifts energy by 4.0667e-8; final quadrature change
+is 9.9686e-9. The 117.41-second audit passes at 0.7454 GiB on G3. These
+checks do not explain the candidate's 1.2686985% miss.
+
+The smallest archived admitted parent has 43,844 tets, so uniform eight-child
+refinement exceeds the fixed cap. Job 475 uses conforming periodic edge-star
+bisection with exact parent quadratic map restriction and six-field
+prolongation. Ten controls and independent admission pass. Parent23 grows
+from 68,095 nodes and 43,844 tets to 123,514 nodes and 76,947 tets.
+Map/field errors are 3.33e-16, volume change 1.40e-14, sampled distance
+0.0006492808, and minimum quality 0.10385108. Worker is 14.82 seconds.
+
+Job 476 completes six fresh refined-space loads in 245.83 seconds, worker
+247.63 seconds at 3,304,448,000 bytes peak RSS. Independent fields and positive
+quadrature pass. All generalized parent-to-refined corrections are negative,
+largest magnitude 0.499513%. The full Galerkin energy balance agrees within
+6.6756e-8 relative. Worst disagreement across all 24 models is 2.4480846%,
+still above 1%. This coarser fixed-domain diagnostic does not replace the
+latest best native candidate or establish continuum convergence.
+
+Records under `experiments/adaptive/runs` are
+`g3-lattice-adapt26-field-audit-v1`, `g3-lattice-nested23-preflight-v1`, and
+`g3-lattice-nested23-level1-v1`. Maintained code is `nested_refinement.py`,
+`nested_preflight.py`, and `nested_solve.py`. Selected Mac continuation is
+one second-level nested preflight, read before any further solve.
 
 ## 1. Product foundation and release preparation
 
@@ -781,7 +816,7 @@ errors. Single-run and saved-mesh measurements are not repeated workflow ratios.
 | Schwarz, supplementary 0.1% | Curved16, 42,928 nodes, 0.031469–0.093778%, 55.19 s median common-AMG workflow | Actual VTK30 one-pass plus manual straight Tet10, 207,200 nodes, 0.053985–0.062716%, 409.28 s median | Five measured pairs pass; total ratios 7.3858–7.5401, phase ratios 7.2806–7.4331; explicitly modified comparator |
 | Gyroid, 1% | Curved9, 11,857 nodes, 0.72921–0.95990%, 20.56 s single run | Tested default and tuned routes remain unqualified | Meshers passes tested target; comparative win not established |
 | Spinodoid, 1% | Partial-settle adaptive24 at tolerance 0.003, 73,951 nodes, 0.10333–0.18439%, 364.07 s | Tested fixed-realization seeds 16–41 have retained-cap obstructions | Meshers has an admitted route; comparative win not established |
-| Lattice, 1% | Best retained-model result 1.269882%, 193,242 nodes; latest eight-round curve pilot 1.439306%, 111,605 nodes | Admitted tuned two-pass parent; strongest manual straight Tet10 control, 238,411 nodes, 1.004354% | Neither passes all 24 models at 1%; no matched-accuracy win |
+| Lattice, 1% | Latest audited native result 1.2686985%, 199,972 nodes; eight-round curve pilot 1.439306%, 111,605 nodes | Admitted tuned two-pass parent; strongest manual straight Tet10 control, 238,411 nodes, 1.004354% | Neither passes all 24 models at 1%; no matched-accuracy win |
 
 The strongest lattice Microgen-derived Tet10 control uses validated explicit AMG.
 Its six-load solve takes 530.80 s, with 555.78 s for that saved-mesh study and
@@ -895,11 +930,11 @@ use the verified `kmarchais` account.
 
 ## 15. Open work and restart order
 
-The project is paused after terminal job 379. Nothing below authorizes an
-automatic restart. On explicit resume, first read the final lattice26 record
-and decide whether its pending independent field and positive-quadrature
-checks are useful despite its preliminary 1% rejection. Do not regenerate
-the completed mesh or repeat its six loads merely to recover context.
+Primary work moves to MacBook Pro at the user's request. Read
+`handoff/macbook/HANDOFF.md`. G3 jobs 473, 475, and 476 are terminal, and the
+lattice26 audits are complete. The selected continuation is a second-level
+nested geometry/resource preflight from the solved level1 fields. No G3
+successor is queued. Earlier restart instructions below are historical.
 
 The following paragraphs preserve the earlier Gyroid investigation sequence.
 Its formerly selected successors have finished, as summarized above.

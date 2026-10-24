@@ -1,0 +1,27 @@
+{
+  "inputs": {
+    "experiments/adaptive/runs/g3-lattice-cubic-parent23-fields-v1/result.json": "741e816cb56525782b859a077a666068390842a9b1c0cf18a14f67b798648228",
+    "experiments/adaptive/runs/g3-lattice-cubic-parent23-fields-v1/mesh.npz": "edfb8385263058afc7fa460a4fde37a2ab489479d8c77b0d389fca69f89081f8",
+    "experiments/adaptive/runs/g3-lattice-cubic-parent23-fields-v1/fields.npz": "4f10c8d87e1cfe7fd380c10a99b1805d97d815880793d6fdc299b37c7f207f33",
+    "experiments/adaptive/runs/g3-lattice-cubic-parent23-fields-v1/smooth-lattice-samples.npz": "a2b4375d2c99901f03b34e913563c887a4cdcff00bca35983adb7ef9d5311abe",
+    "experiments/adaptive/runs/g3-lattice-cubic-parent23-fields-v1/smooth-lattice-specimen.json": "0e5b34b76183341a6e0d454f13cd404668ab82675f9a51cd9d2ecf3c91be3316",
+    "/home/kmarchais/dev/meshers/experiments/adaptive/nested_preflight.py": "959042e547b2dad7b50b2961a7ec21a218b1e6313635395dc432d6a2ca6ad179",
+    "/home/kmarchais/dev/meshers/experiments/adaptive/nested_refinement.py": "69ff24f27921bdd2681b1e637e0574b2411ba08b910d8f16848e168edb961973",
+    "/home/kmarchais/dev/meshers/experiments/adaptive/test_nested_refinement.py": "f36d61b8f1970b9a648fed1f8cd29bc4a38403956508e1e5d16c66227aee5649",
+    "/home/kmarchais/dev/meshers/experiments/adaptive/job_parts.py": "7082e64a3d6f1029dfe871702e6ef53cc514f08a0687b4065f1412d65b427b78",
+    "/home/kmarchais/dev/meshers/experiments/adaptive/test_job_parts.py": "a4ad5866cb02a53bc6a7a31eda469d67e9e26a243a77347d83ec1551256b3a16",
+    "/home/kmarchais/dev/meshers/experiments/adaptive/microgen_workflow.py": "d644b586c8539d3ee53dc772c5cd8a24fb87819395d181a262c38f6770453af2",
+    "/home/kmarchais/dev/meshers/experiments/adaptive/facet_incidence_audit.py": "4f51afc196c85e1d0bc64d7a96507517ddc6e32ccd8380a2ac77cae0ace89610",
+    "/home/kmarchais/dev/meshers/experiments/adaptive/scorecard.py": "8f26256c7df0e84c9f35cdd71bf4f95a74e072d45469002b213c5dcd4f1bab2a",
+    "/home/kmarchais/dev/periodic-microgen/experiments/periodic-fea/periodic.py": "f065de0570eed98149c45aff3babcbadc3f73aed89eb1639eca0448de4353629"
+  },
+  "memory_bytes": 8589934592,
+  "threads": 1,
+  "controls_timeout_s": 120,
+  "worker_timeout_s": 300,
+  "maximum_tetrahedra": 250000,
+  "maximum_nodes": 250000,
+  "minimum_corner_quality": 0.1,
+  "maximum_bisections_per_parent": 1,
+  "selection": "Descending physical edge length, complete periodic orbits and disjoint incident stars"
+}

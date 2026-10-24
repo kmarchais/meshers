@@ -9,6 +9,7 @@ import shutil
 import sys
 
 import microgen_workflow as workflow
+from job_parts import worker_part
 
 os.environ.update(OPENBLAS_NUM_THREADS="1", OMP_NUM_THREADS="1", MKL_NUM_THREADS="1")
 sys.path.insert(0, str(Path.home() / "bin"))
@@ -85,7 +86,8 @@ def main():
     args.run.mkdir(parents=True, exist_ok=False)
     shutil.copyfile(__file__, args.run / "driver.py")
     from tet10_integration import __file__ as integration_source
-    sources = [Path(__file__), Path(integration_source), Path(workflow.__file__)]
+    sources = [Path(__file__), Path(integration_source), Path(workflow.__file__),
+               workflow.HERE / "job_parts.py"]
     inputs = {str(source / name): workflow.digest(source / name) for source in args.sources
         for name in ("result.json", "mesh.npz", "fields.npz")}
     source_hashes = {str(source): workflow.digest(source) for source in sources}
@@ -94,7 +96,7 @@ def main():
         "quadrature_points": [15, 64, 125], "fixed_displacement_fields": True})
     with Job(parts=[source.name for source in args.sources]) as job:
         for source in args.sources:
-            with job.part(source.name) as part:
+            with worker_part(job, source.name) as part:
                 record = workflow.bounded([sys.executable, __file__, "--run", str(args.run),
                     "--worker", str(source)], args.run / (source.name + ".log"), part, timeout=300)
                 workflow.save(args.run / (source.name + "-worker.json"), record)

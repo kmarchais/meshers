@@ -1,5 +1,34 @@
 # Reference-only cubic enrichment on G3
 
+## Nested fixed-domain correction, 23 October 2026
+
+Job 473 completes lattice26 saved-field and positive-quadrature checks.
+Reaction error is 1.0611e-11, Hill-Mandel error 4.1723e-12, periodic jumps
+zero, and 125-point fixed-field energy shift 4.0667e-8. Its retained-model
+score still fails 1% at 1.2686985%.
+
+Job 475 tests complete periodic edge-star bisection with disjoint incident
+stars, exact parent Tet10 geometry restriction and field prolongation.
+Ten controls pass. Parent23 grows from 68,095 nodes and 43,844 tets to
+123,514 nodes and 76,947 tets. Interpolation errors are 3.33e-16 and volume
+change 1.40e-14. Independent distance 0.0006492808, quality 0.10385108,
+positive Jacobians, periodic caps and oriented facets pass.
+
+Job 476 completes six fresh loads in this nested space. Solve time is
+245.83 seconds, worker 247.63 seconds at 3,304,448,000 bytes peak RSS.
+Independent fields and positive rules pass. Every generalized correction
+from the parent is negative; largest magnitude is 0.499513%. The full
+prolonged-parent/fine/correction energy balance agrees within 6.6756e-8.
+Worst disagreement across all 24 models is 2.4480846%, above 1%. This is
+a controlled correction on a coarser fixed domain, not a new reference or
+live meshing workflow timing. One level does not establish convergence.
+
+Records are `runs/g3-lattice-adapt26-field-audit-v1`,
+`runs/g3-lattice-nested23-preflight-v1`, and
+`runs/g3-lattice-nested23-level1-v1`. Kevin requests MacBook primary
+continuation on 24 October. Read `handoff/macbook/HANDOFF.md`; next prepare
+one second-level nested geometry/resource preflight before choosing a solve.
+
 ## Final lattice26 workflow before pause, 20 October 2026
 
 Job 379 completes the fresh six-load workflow selected after preflight 378.
