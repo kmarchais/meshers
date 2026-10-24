@@ -36,6 +36,7 @@ def generate(
     size_field: Any = None,
     halfspaces: Any = None,
     regions: Any = None,
+    constraints: Any = None,
 ) -> dict[str, Any]: ...
 
 class CompiledField:
@@ -67,6 +68,7 @@ MAX_CONSTRAINTS: int
 ADAPTIVE_POLYHEDRAL: bool
 POLYHEDRAL_REGIONS: bool
 RETAINED_INTERSECTIONS: bool
+ADAPTIVE_RETAINED_INTERSECTIONS: bool
 
 def available_threads() -> int: ...
 def generate_intersection(

@@ -121,6 +121,7 @@ struct Tets<'g, G: Geometry> {
     vt: Vec<Vec<usize>>,
     /// Boundary faces (sorted) and their label: 0 wall, 2.. box plane.
     faces: HashMap<Face, u8>,
+    constraint_faces: Option<HashMap<Face, u64>>,
     vb: Vec<Vec<Face>>,
     /// Box length along periodic axes.
     period: [Option<f64>; 3],
@@ -130,6 +131,16 @@ struct Tets<'g, G: Geometry> {
 
 impl<'g, G: Geometry> Tets<'g, G> {
     fn new(mesh: &Mesh, g: &'g G, threshold: f64, periodic: [bool; 3]) -> Self {
+        Self::with_constraints(mesh, g, threshold, periodic, None)
+    }
+
+    fn with_constraints(
+        mesh: &Mesh,
+        g: &'g G,
+        threshold: f64,
+        periodic: [bool; 3],
+        constraints: Option<&[crate::implicit::intersection::ConstraintMask]>,
+    ) -> Self {
         let [lo, hi] = g.bounds();
         let period = std::array::from_fn(|a| periodic[a].then(|| hi[a] - lo[a]));
         // Coordinate buckets identify periodic copies, not distinct vertices of a
@@ -168,7 +179,9 @@ impl<'g, G: Geometry> Tets<'g, G> {
             threshold,
             points,
             masks: vec![0; n],
-            features: if g.halfspaces().is_some() {
+            features: if let Some(masks) = constraints {
+                masks.iter().map(|&mask| u64::from(mask)).collect()
+            } else if g.halfspaces().is_some() {
                 vec![0; n]
             } else {
                 Vec::new()
@@ -180,6 +193,7 @@ impl<'g, G: Geometry> Tets<'g, G> {
             tets,
             vt: vec![Vec::new(); n],
             faces: HashMap::new(),
+            constraint_faces: constraints.map(|_| HashMap::new()),
             vb: vec![Vec::new(); n],
             period,
             pending: Vec::new(),
@@ -202,11 +216,15 @@ impl<'g, G: Geometry> Tets<'g, G> {
             }
             let f = f.map(|i| map[i]);
             if !s.faces.contains_key(&sorted(f)) {
-                s.add_face(f, label);
+                let features = f.iter().fold(u64::MAX, |mask, &v| mask & s.feature_mask(v));
+                s.add_feature_face(f, label, features);
             }
         }
         for v in 0..n {
             s.refresh(v);
+        }
+        if constraints.is_some() {
+            s.pending = (0..n).filter(|&v| s.masks[v] & WALL != 0).collect();
         }
         s
     }
@@ -239,8 +257,11 @@ impl<'g, G: Geometry> Tets<'g, G> {
         })
     }
 
-    fn add_face(&mut self, f: Face, label: u8) {
+    fn add_feature_face(&mut self, f: Face, label: u8, features: u64) {
         let key = sorted(f);
+        if let Some(faces) = &mut self.constraint_faces {
+            faces.insert(key, features);
+        }
         self.faces.insert(key, label);
         for v in key {
             self.vb[v].push(key);
@@ -250,6 +271,9 @@ impl<'g, G: Geometry> Tets<'g, G> {
 
     fn remove_face(&mut self, key: Face) -> Option<u8> {
         let label = self.faces.remove(&key)?;
+        if let Some(faces) = &mut self.constraint_faces {
+            faces.remove(&key);
+        }
         for v in key {
             self.vb[v].retain(|&f| f != key);
         }
@@ -264,6 +288,9 @@ impl<'g, G: Geometry> Tets<'g, G> {
             mask |= if label == 0 { WALL } else { 1 << label };
         }
         self.masks[v] = mask;
+        if let Some(faces) = &self.constraint_faces {
+            self.features[v] = self.vb[v].iter().fold(0, |mask, f| mask | faces[f]);
+        }
         if let Some(planes) = self.g.halfspaces() {
             let tolerance = self.feature_tolerance();
             self.features[v] = if self.g.halfspace_regions().is_some() {
@@ -319,6 +346,19 @@ impl<'g, G: Geometry> Tets<'g, G> {
             if mask & (1 << (3 + 2 * a)) != 0 {
                 p[a] = hi[a];
             }
+        }
+        if let Some(fields) = self.g.constraints() {
+            let p =
+                crate::projection::onto_constraints(fields, features, p, locked, self.g.bounds())?;
+            return (self.g.contains(p)
+                && fields.iter().all(|field| {
+                    let residual = field.value(p);
+                    residual <= 0.
+                        || residual
+                            <= crate::norm(self.constraint_gradient(*field, p))
+                                * self.feature_tolerance()
+                }))
+            .then_some(p);
         }
         if let Some(planes) = self.g.halfspaces() {
             let p = crate::polyhedral::project(
@@ -410,6 +450,20 @@ impl<'g, G: Geometry> Tets<'g, G> {
         norm(self.delta(pu, pv)) * angle(nu, nv) / 6.
     }
 
+    fn constraint_gradient(&self, field: &dyn crate::implicit::ScalarField, p: Point) -> Point {
+        let [lo, hi] = self.g.bounds();
+        let step = (0..3).map(|a| hi[a] - lo[a]).fold(0., f64::max) * 1e-5;
+        field.gradient(p).unwrap_or_else(|| {
+            std::array::from_fn(|a| {
+                let mut lo = p;
+                let mut hi = p;
+                lo[a] -= step;
+                hi[a] += step;
+                (field.value(hi) - field.value(lo)) / (2. * step)
+            })
+        })
+    }
+
     fn sizes(&self, o: &Options, edges: &[[usize; 2]]) -> Result<Vec<f64>, String> {
         let tol = o.tolerance * SIZING_SAFETY;
         let mut size = vec![o.max_length; self.points.len()];
@@ -435,7 +489,22 @@ impl<'g, G: Geometry> Tets<'g, G> {
                 continue;
             }
             let l = self.length(u, v);
-            let theta = angle(self.normals[u], self.normals[v]);
+            let theta = if let Some(fields) = self.g.constraints() {
+                let common = self.feature_mask(u) & self.feature_mask(v);
+                fields
+                    .iter()
+                    .enumerate()
+                    .filter(|(j, _)| common & (1u64 << j) != 0)
+                    .map(|(_, field)| {
+                        angle(
+                            unit(self.constraint_gradient(*field, self.points[u])),
+                            unit(self.constraint_gradient(*field, self.points[v])),
+                        )
+                    })
+                    .fold(0., f64::max)
+            } else {
+                angle(self.normals[u], self.normals[v])
+            };
             let mut target = (6. * tol * l / theta.max(1e-12)).sqrt();
             let locked = self.locked(u, v);
             if locked.iter().filter(|&&x| x).count() == 1 {
@@ -518,7 +587,7 @@ impl<'g, G: Geometry> Tets<'g, G> {
     fn add_vertex(&mut self, p: Point) -> usize {
         self.points.push(p);
         self.masks.push(0);
-        if self.g.halfspaces().is_some() {
+        if !self.features.is_empty() {
             self.features.push(0);
         }
         self.normals.push([0.; 3]);
@@ -576,6 +645,9 @@ impl<'g, G: Geometry> Tets<'g, G> {
         }
         let (p, fraction, planned) = chosen?;
         let m = self.add_vertex(p);
+        if !self.features.is_empty() {
+            self.features[m] = self.feature_mask(u) & self.feature_mask(v);
+        }
         if fraction < 1. {
             self.pending.push(m);
         }
@@ -585,10 +657,11 @@ impl<'g, G: Geometry> Tets<'g, G> {
             self.add_tet(b.map(|i| if i == usize::MAX { m } else { i }));
         }
         for f in bfaces {
+            let features = self.constraint_faces.as_ref().map_or(0, |faces| faces[&f]);
             let label = self.remove_face(f).unwrap();
             let c = f.into_iter().find(|&w| w != u && w != v).unwrap();
-            self.add_face([u, m, c], label);
-            self.add_face([m, v, c], label);
+            self.add_feature_face([u, m, c], label, features);
+            self.add_feature_face([m, v, c], label, features);
         }
         for w in [u, v, m] {
             self.refresh(w);
@@ -607,7 +680,7 @@ impl<'g, G: Geometry> Tets<'g, G> {
         // freezing both would preserve a roundoff-width sliver forever.
         let [lo, hi] = self.g.bounds();
         let roundoff = 64. * f64::EPSILON * (0..3).map(|a| hi[a] - lo[a]).fold(0., f64::max);
-        let same_corner = self.g.halfspaces().is_some()
+        let same_corner = (self.g.halfspaces().is_some() || self.g.constraints().is_some())
             && self.feature_mask(u) == self.feature_mask(v)
             && self.feature_mask(u).count_ones() >= 2
             && self.length(u, v) <= roundoff;
@@ -703,11 +776,12 @@ impl<'g, G: Geometry> Tets<'g, G> {
                 };
                 for w in [a, b] {
                     if self.masks[w] & WALL != 0
-                        && self.sag(
+                        && self.edge_error(
                             self.points[v],
                             self.normals[v],
                             self.points[w],
                             self.normals[w],
+                            self.feature_mask(v) & self.feature_mask(w),
                         ) > o.tolerance * SIZING_SAFETY
                     {
                         return false;
@@ -726,8 +800,9 @@ impl<'g, G: Geometry> Tets<'g, G> {
             self.remove_face(f);
         }
         for f in std::mem::take(&mut self.vb[u]) {
+            let features = self.constraint_faces.as_ref().map_or(0, |faces| faces[&f]);
             let label = self.remove_face(f).unwrap_or(0);
-            self.add_face(f.map(|i| if i == u { v } else { i }), label);
+            self.add_feature_face(f.map(|i| if i == u { v } else { i }), label, features);
         }
         self.masks[u] = 0;
         for w in au {
@@ -947,8 +1022,13 @@ impl<'g, G: Geometry> Tets<'g, G> {
                 for &w in f {
                     if w != v
                         && self.masks[w] & WALL != 0
-                        && self.sag(q, n, self.points[w], self.normals[w])
-                            > o.tolerance * SIZING_SAFETY
+                        && self.edge_error(
+                            q,
+                            n,
+                            self.points[w],
+                            self.normals[w],
+                            self.feature_mask(v) & self.feature_mask(w),
+                        ) > o.tolerance * SIZING_SAFETY
                     {
                         return false;
                     }
@@ -958,6 +1038,25 @@ impl<'g, G: Geometry> Tets<'g, G> {
         self.points[v] = q;
         self.refresh(v);
         true
+    }
+
+    fn edge_error(&self, p: Point, n: Point, q: Point, m: Point, features: u64) -> f64 {
+        if self.g.constraints().is_none() {
+            return self.sag(p, n, q, m);
+        }
+        self.constraint_distance(
+            std::array::from_fn(|a| (p[a] + q[a]) * 0.5),
+            [false; 3],
+            features,
+        )
+    }
+
+    fn constraint_distance(&self, p: Point, locked: [bool; 3], features: u64) -> f64 {
+        let distance = self.distance(p, locked);
+        self.g.constraints().map_or(distance, |fields| {
+            crate::projection::onto_constraints(fields, features, p, locked, self.g.bounds())
+                .map_or(f64::INFINITY, |q| distance.max(norm(sub(q, p))))
+        })
     }
 
     /// First-order wall distance moving only along unlocked axes: a chord in a box
@@ -1090,13 +1189,18 @@ impl<'g, G: Geometry> Tets<'g, G> {
             for f in wall {
                 let p = self.local(f.map(|i| self.points[i]));
                 let c = std::array::from_fn(|a| (p[0][a] + p[1][a] + p[2][a]) / 3.);
-                let dc = self.distance(c, [false; 3]);
+                let features = self.constraint_faces.as_ref().map_or(0, |faces| faces[&f]);
+                let dc = self.constraint_distance(c, [false; 3], features);
                 worst = worst.max(dc);
                 let mut any = false;
                 let mut longest = (0., [f[0], f[1]]);
                 for (i, j) in [(0, 1), (1, 2), (0, 2)] {
                     let m = std::array::from_fn(|a| 0.5 * (p[i][a] + p[j][a]));
-                    let d = self.distance(m, self.locked(f[i], f[j]));
+                    let d = self.constraint_distance(
+                        m,
+                        self.locked(f[i], f[j]),
+                        self.feature_mask(f[i]) & self.feature_mask(f[j]),
+                    );
                     worst = worst.max(d);
                     let l = self.length(f[i], f[j]);
                     if l > longest.0 {
@@ -1201,7 +1305,7 @@ pub(crate) fn adapt(
     o: &Options,
     maximum: usize,
 ) -> Result<Stats, String> {
-    adapt_with_polish(mesh, g, threshold, periodic, o, maximum, 0)
+    adapt_with_polish(mesh, g, threshold, periodic, o, maximum, 0, None)
 }
 
 #[allow(clippy::too_many_arguments)]
@@ -1213,6 +1317,7 @@ pub(crate) fn adapt_with_polish(
     o: &Options,
     maximum: usize,
     polish: usize,
+    constraints: Option<&[crate::implicit::intersection::ConstraintMask]>,
 ) -> Result<Stats, String> {
     if !(o.tolerance > 0. && o.min_length > 0. && o.max_length >= o.min_length)
         || o.gradation.is_nan()
@@ -1228,7 +1333,16 @@ pub(crate) fn adapt_with_polish(
     if (0..3).any(|a| periodic[a] && o.max_length > 0.25 * (hi[a] - lo[a])) {
         return Err("periodic adaptation needs max_length <= a quarter of the period".into());
     }
-    let mut s = Tets::new(mesh, g, threshold, periodic);
+    if constraints
+        .is_some_and(|masks| masks.len() != mesh.points.len() || periodic.iter().any(|&a| a))
+    {
+        return Err("retained constraints require one mask per nonperiodic vertex".into());
+    }
+    let mut s = if constraints.is_some() {
+        Tets::with_constraints(mesh, g, threshold, periodic, constraints)
+    } else {
+        Tets::new(mesh, g, threshold, periodic)
+    };
     s.check_budget(maximum)?;
     let mut stats = Stats::default();
     let mut clock = std::time::Instant::now();

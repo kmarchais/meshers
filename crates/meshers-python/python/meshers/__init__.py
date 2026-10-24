@@ -338,7 +338,11 @@ def generate(  # ruff: ignore[complex-structure]
         ),
     )
     planes = _affine_planes(field, scalar_mode)
-    if planes is None and not adapt and not any(scalar_mode):
+    if (
+        planes is None
+        and (not adapt or getattr(_meshers, "ADAPTIVE_RETAINED_INTERSECTIONS", False))
+        and not any(scalar_mode)
+    ):
         planes = _retained_constraints(field)
     preparation_seconds = time.perf_counter() - preparation_start
     if planes is not None and not adapt:
@@ -370,6 +374,11 @@ def generate(  # ruff: ignore[complex-structure]
     feature_options = (
         {"halfspaces": getattr(field, "_halfspaces", None)}
         if planes is not None and adapt and getattr(_meshers, "ADAPTIVE_POLYHEDRAL", False)
+        else {}
+    )
+    feature_options.update(
+        {"constraints": list(planes.values())}
+        if planes is not None and adapt and getattr(field, "_halfspaces", None) is None
         else {}
     )
     planes = (

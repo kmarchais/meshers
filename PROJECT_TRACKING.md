@@ -1,5 +1,24 @@
 # Meshers project tracking
 
+## 25 October continuation — adaptive nonlinear failure recovered
+
+The unchanged cells24 adaptive bore recipe now admits12955 tets and3004 nodes,
+qmin0.168559,distance0.001977286,volume error0.106744%. Actual surface labels
+survive splits/collapse and joint projection. No option or admission gate was
+relaxed. Python/fixture suite250 passes185 tests / one optional skip; full
+all-feature native suite251 passes93 tests. Core and binding Clippy pass.
+All four fresh study controls253–256 admit and independent replay258 proves
+exact canonical equality with preserved b2814b0e meshes and fixed fixtures.
+The hollow-shell regression257 remains admitted, with fewer elements but worse
+quality/distance/volume error than its prior admitted result; no dominance claim.
+See [adaptive nonlinear results](experiments/adaptive/ADAPTIVE_NONLINEAR_RESULTS.md)
+and [the audit](handoff/macbook/adaptive-nonlinear-change-audit-20261025.json).
+No FE solve, reference promotion, model removal or new actual Microgen timing
+ratio. General nonlinear Boolean/periodic feature handling, admitted actual
+Gyroid/spinodoid comparators and all24 lattice convergence remain open. The full
+goal stays active. Earlier selected-next descriptions below are historical.
+
+
 Eligible nonadaptive Tet4 calls now retain analytic outer-max branches.
 The bored-prism scalar route that failed at matched settings now admits with
 145924 tets, qmin 0.121400, distance 0.00105814 and volume error 0.05022%.

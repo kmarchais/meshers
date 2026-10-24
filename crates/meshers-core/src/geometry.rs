@@ -1,6 +1,9 @@
 //! Internal geometry context shared by specialized and generic algorithms.
 use crate::Point;
 pub(crate) trait Geometry: Sync {
+    fn constraints(&self) -> Option<&[&dyn crate::implicit::ScalarField]> {
+        None
+    }
     fn halfspaces(&self) -> Option<&[[f64; 4]]> {
         None
     }

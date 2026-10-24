@@ -80,3 +80,59 @@ def test_retained_evaluators_outlive_their_parent():
     points = np.array(((0.2, 0.3, 0.4), (-0.7, -0.1, 0.2)))
     np.testing.assert_array_equal(branches[0].values(points), points[:, 0] ** 2)
     np.testing.assert_array_equal(branches[1].values(points), points[:, 1])
+
+
+def test_adaptive_nonlinear_intersection_preserves_bore_and_caps():
+    mesh = meshers.generate(
+        bored_prism,
+        bounds=(-0.5, 0.5) * 3,
+        cells=24,
+        adapt=True,
+        min_length=0.002,
+        max_length=0.1,
+        geometry_tolerance=0.002,
+        minimum_quality=0.1,
+        max_tetrahedra=250000,
+        optimize_passes=1,
+    )
+    assert mesh.diagnostics["retained_constraints"] == 7
+    assert mesh.diagnostics["adapt"]["collapses"] > 0
+    assert mesh.diagnostics["minimum_mmg_quality"] >= 0.1
+    assert mesh.diagnostics["sampled_surface_error"] <= 0.002
+    exact = 0.7 * 0.7 * 0.6 - np.pi * 0.12**2 * 0.6
+    assert abs(mesh.diagnostics["volume"] / exact - 1) <= 0.01
+    # The retained rim must lie on both surfaces, including after adaptation.
+    boundary = mesh.points[np.unique(mesh.surface)]
+    radius = np.linalg.norm(boundary[:, :2] - (0.03, -0.02), axis=1)
+    rim = boundary[(abs(abs(boundary[:, 2]) - 0.3) < 1e-12) & (abs(radius - 0.12) < 1e-12)]
+    assert len(rim) >= 12
+    points = mesh.points[mesh.tetrahedra]
+    assert np.all(
+        np.einsum(
+            "ij,ij->i",
+            points[:, 1] - points[:, 0],
+            np.cross(points[:, 2] - points[:, 0], points[:, 3] - points[:, 0]),
+        )
+        > 0
+    )
+
+
+def test_retained_adaptation_preserves_sizing_errors_and_budget():
+    options = {
+        "bounds": (-0.5, 0.5) * 3,
+        "cells": 12,
+        "adapt": True,
+        "geometry_tolerance": 0.01,
+        "minimum_quality": 0.0,
+        "max_tetrahedra": 250000,
+    }
+
+    def fail(x, y, z):
+        raise LookupError("retained sizing control")
+
+    with pytest.raises(LookupError, match="retained sizing control"):
+        meshers.generate(bored_prism, size_field=fail, **options)
+    with pytest.raises(meshers.MeshingError, match="budget"):
+        meshers.generate(bored_prism, **{**options, "max_tetrahedra": 100})
+    with pytest.raises(meshers.MeshingError, match="invalid adaptation options"):
+        meshers.generate(bored_prism, min_length=0.2, max_length=0.1, **options)

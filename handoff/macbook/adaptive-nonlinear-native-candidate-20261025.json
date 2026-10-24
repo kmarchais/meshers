@@ -1,0 +1,25 @@
+{
+  "binary": "/Users/kmarchais/dev/meshers/crates/meshers-python/python/meshers/_meshers.abi3.so",
+  "binary_sha256": "dc707190517fecbe8b8242593c5304a800fd265323335275fe8807085b9e6268",
+  "file": "/Users/kmarchais/dev/meshers/crates/meshers-python/python/meshers/_meshers.abi3.so: Mach-O 64-bit dynamically linked shared library arm64",
+  "base_commit": "cd9cea9de475d7bd022ca4e74effa856223dbeb9",
+  "build_run": "experiments/adaptive/runs/macbook-adaptive-nonlinear-build-v2",
+  "preserved_package": "/Users/kmarchais/dev/meshers/.local-work/native-baselines/dc707190517fecbe8b8242593c5304a800fd265323335275fe8807085b9e6268",
+  "sources": {
+    "crates/meshers-core/src/geometry.rs": "b00a2c883484ab6f09300f2b7ad13efa51b3685f8ac259d86e9bb0d199b5bc08",
+    "crates/meshers-core/src/implicit.rs": "95bbd248ad3de38ab04494ed58e7aeec2fe8595bee602c243c1b9686da77e600",
+    "crates/meshers-core/src/projection.rs": "926d1ab1c848cf80cc392295764d7bf8f2254dfb62f219639db7e5a4194acf84",
+    "crates/meshers-core/src/tet_adapt.rs": "d1e1b032a7ffa8d36020fb802ec8ca0edad96955f4df8210cc44fa4aa843a75d",
+    "crates/meshers-python/python/meshers/__init__.py": "762264e5e0680003791fbf26f6593b8eb2d650ebb94a354b915e7a158c941a08",
+    "crates/meshers-python/python/meshers/_meshers.pyi": "3f186e0391f2c7ea7bd06f0a034e0f1d2cca9bc052e29bf76117d69ce1d1b4f2",
+    "crates/meshers-python/src/lib.rs": "21832c5f69406aab3d7b40451e1586850136e44148858b1871ad40ae2efda85b",
+    "crates/meshers-python/tests/test_nonlinear_constraints.py": "8a44ea8d46f739f1f32226d59acc2043a88c4d8431b4f30c3b876607fa76dd39",
+    "Cargo.lock": "c5de0b0561f9ab415ff941a24cae24bd7de5069eca73e3dd9b6da63db4273278",
+    "crates/meshers-python/Cargo.lock": "7b11f1f129ed55d1f6fae69498e7191b6f6e08b7cca51dda7af9690deff17eac"
+  },
+  "scope": "Eligible nonperiodic adaptive Tet4 retained nonlinear outer-max intersections; four-study meshes independently verified exactly unchanged after canonical relabeling",
+  "no_fe_solve": true,
+  "reference_promoted": false,
+  "comparative_timing_claim": false,
+  "independent_audit": "handoff/macbook/adaptive-nonlinear-change-audit-20261025.json"
+}

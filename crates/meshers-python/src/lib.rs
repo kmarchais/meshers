@@ -357,7 +357,7 @@ fn make_field(
 }
 
 #[allow(clippy::too_many_arguments)]
-#[pyfunction(signature = (field, gradient, bounds, cells, periodic, band, tolerance, minimum_quality, budget, passes, interior_refine_nodes, snap, threads, batch_size, cancel, adapt=None, order=1, size_field=None, halfspaces=None, regions=None))]
+#[pyfunction(signature = (field, gradient, bounds, cells, periodic, band, tolerance, minimum_quality, budget, passes, interior_refine_nodes, snap, threads, batch_size, cancel, adapt=None, order=1, size_field=None, halfspaces=None, regions=None, constraints=None))]
 fn generate<'py>(
     py: Python<'py>,
     field: Py<PyAny>,
@@ -380,6 +380,7 @@ fn generate<'py>(
     size_field: Option<Py<PyAny>>,
     halfspaces: Option<Vec<[f64; 4]>>,
     regions: Option<Vec<u64>>,
+    constraints: Option<Vec<Py<PyAny>>>,
 ) -> PyResult<Bound<'py, PyDict>> {
     let regions = regions
         .map(|groups| {
@@ -406,6 +407,21 @@ fn generate<'py>(
     let size = size_field
         .map(|field| make_field(py, field, None, bounds, f.cancellation.clone(), batch_size))
         .transpose()?;
+    let constraints = constraints
+        .map(|fields| {
+            fields
+                .into_iter()
+                .map(|field| {
+                    make_field(py, field, None, bounds, f.cancellation.clone(), batch_size)
+                })
+                .collect::<PyResult<Vec<_>>>()
+        })
+        .transpose()?;
+    if constraints.is_some() && (halfspaces.is_some() || regions.is_some()) {
+        return Err(PyValueError::new_err(
+            "retained constraints cannot be combined with halfspaces or regions",
+        ));
+    }
     let options = implicit::Options {
         bounds,
         cells,
@@ -437,6 +453,18 @@ fn generate<'py>(
     };
     let start = std::time::Instant::now();
     let result = py.detach(|| {
+        if let Some(fields) = &constraints {
+            let fields: Vec<&dyn ScalarField> = fields
+                .iter()
+                .map(|field| field as &dyn ScalarField)
+                .collect();
+            return implicit::generate_with_constraints(
+                &f,
+                size.as_ref().map(|field| field as &dyn ScalarField),
+                options,
+                &fields,
+            );
+        }
         implicit::generate_with_regions(
             &f,
             size.as_ref().map(|field| field as &dyn ScalarField),
@@ -452,6 +480,13 @@ fn generate<'py>(
         && let Some(error) = field.error.lock().unwrap().take()
     {
         return Err(error);
+    }
+    if let Some(fields) = &constraints {
+        for field in fields {
+            if let Some(error) = field.error.lock().unwrap().take() {
+                return Err(error);
+            }
+        }
     }
     py.check_signals()?;
     let result = result.map_err(|e| match e {
@@ -561,6 +596,12 @@ fn generate<'py>(
     }
     output.set_item("periodic_pairs", pairs)?;
     let diagnostics = PyDict::new(py);
+    if result.diagnostics.retained_constraints > 0 {
+        diagnostics.set_item(
+            "retained_constraints",
+            result.diagnostics.retained_constraints,
+        )?;
+    }
     if result.diagnostics.polyhedral_constraints > 0 {
         diagnostics.set_item(
             "polyhedral_constraints",
@@ -621,6 +662,7 @@ fn _meshers(m: &Bound<'_, PyModule>) -> PyResult<()> {
     m.add("ADAPTIVE_POLYHEDRAL", true)?;
     m.add("POLYHEDRAL_REGIONS", true)?;
     m.add("RETAINED_INTERSECTIONS", true)?;
+    m.add("ADAPTIVE_RETAINED_INTERSECTIONS", true)?;
     m.add(
         "MAX_CONSTRAINTS",
         meshers_core::implicit::intersection::MAX_CONSTRAINTS,

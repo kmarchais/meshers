@@ -18,6 +18,7 @@ def main():
     parser.add_argument('--feature-case', choices=('octahedron', 'notched-prism', 'bored-prism'), default='octahedron')
     parser.add_argument('--feature-run', default='macbook-adaptive-feature-octahedron-final-v1')
     parser.add_argument('--matched-feature-run')
+    parser.add_argument('--shell-run')
     args = parser.parse_args()
     assert not args.output.exists()
     np, _, _, _, _, scorecard = w.imports()
@@ -108,6 +109,34 @@ def main():
             hashes[str(matched/name)] = w.digest(matched/name)
         matched_result = dict(run=str(matched), canonical_arrays_identical=True,
             matched_geometry_and_quality_settings=True)
+    shell_result = None
+    if args.shell_run:
+        shell = w.HERE/'runs'/args.shell_run
+        record = json.loads((shell/'result.json').read_text())
+        assert record['qualified'] and record['case'] == 'shell'
+        assert record['diagnostics']['retained_constraints'] == 2
+        mesh = np.load(shell/'mesh.npz')
+        p, t, f = (mesh[key] for key in ('points', 'tetrahedra', 'surface'))
+        field, queries, volume, components, euler = fixture('shell', np)
+        np.testing.assert_array_equal(queries, np.load(shell/'reference.npz')['points'])
+        assert w.digest(shell/'mesh.npz') == record['mesh_sha256']
+        assert w.digest(shell/'reference.npz') == record['reference_sha256']
+        assert audit(p, t, f)['oriented_facet_consistency_passed']
+        assert boundary_topology(f, np) == (components, euler)
+        q, _, volumes = scorecard.tet_metrics(p, t)
+        assert q.min() >= .1 and volumes.min() > 0 and abs(volumes.sum()/volume-1) < .01
+        bary = np.array([(i/4, j/4, 1-(i+j)/4) for i in range(5) for j in range(5-i)])
+        probes = np.einsum('sn,fnd->fsd', bary, p[f]).reshape(-1, 3)
+        forward_shell = float(np.abs(field(*probes.T)).max())
+        reverse_shell = float(scorecard.distance_to_mesh(p, f, queries).max())
+        assert max(forward_shell, reverse_shell) <= .002
+        assert len(p) <= 250000 and len(t) <= 250000 and len(np.unique(t)) == len(p)
+        boundary_volume = np.einsum('ij,ij->i', p[f[:, 0]], np.cross(p[f[:, 1]], p[f[:, 2]])).sum()/6
+        assert abs(boundary_volume-volumes.sum()) < 1e-12
+        for name in ('mesh.npz', 'reference.npz', 'result.json'):
+            hashes[str(shell/name)] = w.digest(shell/name)
+        shell_result = dict(run=str(shell), admitted=True, sampled_distance=max(forward_shell, reverse_shell),
+            minimum_quality=float(q.min()), relative_volume_error=float(volumes.sum()/volume-1))
     for path in (w.HERE/'topology_coverage.py', w.HERE/'scorecard.py',
         w.HERE/'facet_incidence_audit.py', w.HERE/'mesh_comparison_report.py'):
         hashes[str(path)] = w.digest(path)
@@ -116,7 +145,7 @@ def main():
     assert not archived_source.exists()
     copyfile(__file__, archived_source)
     w.save(args.output, dict(study_controls=controls, inputs=hashes, feature_case=args.feature_case,
-        matched_feature=matched_result,
+        matched_feature=matched_result, shell_regression=shell_result,
         native_baseline_sha256=w.digest(baseline), candidate_sha256=w.digest(binary),
         polyhedral_reverse_distance=reverse, polyhedral_forward_distance=forward, polyhedral_result=str(poly/'result.json'),
         no_fe_solve=True, reference_promoted=False, comparative_timing_claim=False))

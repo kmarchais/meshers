@@ -90,6 +90,7 @@ impl Default for Options {
 
 #[derive(Debug)]
 pub struct Diagnostics {
+    pub retained_constraints: usize,
     pub polyhedral_constraints: usize,
     pub polyhedral_regions: usize,
     pub empty: bool,
@@ -118,6 +119,7 @@ pub struct Output {
 
 struct Context<'a, F: ScalarField> {
     field: &'a F,
+    constraints: Option<&'a [&'a dyn ScalarField]>,
     halfspaces: Option<&'a [[f64; 4]]>,
     halfspace_regions: Option<&'a [intersection::ConstraintMask]>,
     size_field: Option<&'a dyn ScalarField>,
@@ -171,6 +173,9 @@ impl<F: ScalarField> Context<'_, F> {
     }
 }
 impl<F: ScalarField> Geometry for Context<'_, F> {
+    fn constraints(&self) -> Option<&[&dyn ScalarField]> {
+        self.constraints
+    }
     fn halfspaces(&self) -> Option<&[[f64; 4]]> {
         self.halfspaces
     }
@@ -265,6 +270,11 @@ impl<F: ScalarField> Geometry for Context<'_, F> {
     }
     fn check(&self) -> Result<(), String> {
         self.field.check()?;
+        if let Some(fields) = self.constraints {
+            for field in fields {
+                field.check()?;
+            }
+        }
         if let Some(field) = self.size_field {
             field.check()?;
         }
@@ -313,6 +323,42 @@ pub fn generate_with_regions<F: ScalarField>(
     halfspaces: Option<&[[f64; 4]]>,
     regions: Option<&[intersection::ConstraintMask]>,
 ) -> Result<Output, MeshingError> {
+    generate_internal(field, size_field, options, halfspaces, regions, None)
+}
+
+/// Adapt an equivalent retained intersection. Periodic and quadratic feature
+/// contexts are not admitted by this interface.
+pub fn generate_with_constraints<F: ScalarField>(
+    field: &F,
+    size_field: Option<&dyn ScalarField>,
+    options: Options,
+    constraints: &[&dyn ScalarField],
+) -> Result<Output, MeshingError> {
+    generate_internal(field, size_field, options, None, None, Some(constraints))
+}
+
+fn generate_internal<F: ScalarField>(
+    field: &F,
+    size_field: Option<&dyn ScalarField>,
+    options: Options,
+    halfspaces: Option<&[[f64; 4]]>,
+    regions: Option<&[intersection::ConstraintMask]>,
+    constraints: Option<&[&dyn ScalarField]>,
+) -> Result<Output, MeshingError> {
+    if let Some(fields) = constraints
+        && (!(2..=intersection::MAX_CONSTRAINTS).contains(&fields.len())
+            || options.adapt.is_none()
+            || options.periodic.iter().any(|&v| v)
+            || options.order != 1
+            || options.threads != 1
+            || options.interior_refine_nodes != 0
+            || options.optimize_passes > 20
+            || !matches!(options.region, Region::Negative))
+    {
+        return Err(MeshingError::InvalidOptions(
+            "retained adaptive constraints require bounded nonperiodic Tet4 and one worker".into(),
+        ));
+    }
     if let Some(groups) = regions {
         let count = halfspaces.map_or(0, <[_]>::len);
         if !(2..=intersection::MAX_CONSTRAINTS).contains(&count)
@@ -411,6 +457,7 @@ pub fn generate_with_regions<F: ScalarField>(
     }
     let context = Context {
         field,
+        constraints,
         halfspaces: halfspaces.as_deref(),
         halfspace_regions: halfspaces.as_ref().and(regions),
         size_field,
@@ -695,6 +742,7 @@ fn finish<F: ScalarField>(mesh: Mesh, g: &Context<F>) -> Result<Output, String> 
         boundary_tags: tags,
         periodic_pairs: pairs,
         diagnostics: Diagnostics {
+            retained_constraints: g.constraints.map_or(0, <[_]>::len),
             polyhedral_constraints: g.halfspaces.map_or(0, <[_]>::len),
             polyhedral_regions: g.halfspace_regions.map_or(0, <[_]>::len),
             empty,
@@ -711,6 +759,36 @@ fn finish<F: ScalarField>(mesh: Mesh, g: &Context<F>) -> Result<Output, String> 
 
 fn build<F: ScalarField>(g: &Context<F>) -> Result<Output, String> {
     let o = g.options;
+    if let Some(fields) = g.constraints {
+        let seed = intersection::generate(
+            fields,
+            |p| p,
+            Options {
+                adapt: None,
+                geometry_tolerance: 0.,
+                minimum_quality: 0.,
+                ..o
+            },
+        )?;
+        let mut mesh = seed.mesh;
+        if mesh.tets.is_empty() {
+            return finish(mesh, g);
+        }
+        let stats = crate::tet_adapt::adapt_with_polish(
+            &mut mesh,
+            g,
+            0.,
+            o.periodic,
+            &o.adapt.expect("validated retained adaptation"),
+            o.max_tetrahedra,
+            o.optimize_passes,
+            Some(&seed.constraints),
+        )?;
+        let mut output = finish(mesh, g)?;
+        output.diagnostics.adapt = Some(stats);
+        output.diagnostics.reverted_snap_vertices = seed.quality.reverted_snap_vertices;
+        return Ok(output);
+    }
     if let Some(planes) = g.halfspaces {
         struct Affine<'a, F: ScalarField> {
             plane: [f64; 4],
@@ -759,6 +837,7 @@ fn build<F: ScalarField>(g: &Context<F>) -> Result<Output, String> {
             &o.adapt.expect("validated feature adaptation"),
             o.max_tetrahedra,
             o.optimize_passes,
+            None,
         )?;
         let mut output = finish(mesh, g)?;
         output.diagnostics.reverted_snap_vertices = reverted_snap_vertices;
