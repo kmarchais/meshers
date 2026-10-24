@@ -1,0 +1,39 @@
+{
+  "inputs": {
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/interior_relocation_trial.py": "9d405415b5df5a9d12eb20c360ac9054e074aca2e3a379fc7eb6709adad708ef",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-schwarz-tet10-live-v1/microgen-parent/result.json": "cecffe3ede2be7398675859ea61606ab9ae6e3b1ca3b7b80a2bfa934e7585cd3",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-schwarz-tet10-live-v1/microgen-parent/mesh.npz": "4e3f91e8daefb13b8456d2ec2ebf6c034030dfd5e6746ef09be3a6a121006f25",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/job_parts.py": "7082e64a3d6f1029dfe871702e6ef53cc514f08a0687b4065f1412d65b427b78",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/test_job_parts.py": "a4ad5866cb02a53bc6a7a31eda469d67e9e26a243a77347d83ec1551256b3a16",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/interior_star_probe.py": "fe5daf85f5147b77d76c37e5eb7ec9f511b16203fb5eaedb24a89e9667395616",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/test_interior_star_probe.py": "e799f53b6d90bd0dae4254a9db0fcbbc1172bd923eae805afda1a3077bbf69fb",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/test_interior_relocation_trial.py": "b894e820c1f6c7390d0b43dd551980097c6b5f2985130e817a88ae227c3dc9a8",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/microgen_workflow.py": "a3a22afd4c5c2927e5109153195dba4321805db78df57bc6023363997ebc812a",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/cap_quality_bound.py": "80c1bda856e27e814a22aca8039bb0b73610ce67ebe0ed2a81e3d167c6048fe0",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/mmg_quality_localization.py": "03ef27a978fcd5101f36745ccaf67309f49ce6ece172fad28b84246d6d457ebc",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/facet_incidence_audit.py": "4f51afc196c85e1d0bc64d7a96507517ddc6e32ccd8380a2ac77cae0ace89610",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/test_facet_incidence_audit.py": "34cb5c0447e21a4a0896eab0601ecde507bb8fbe7231b3acfdd72babc9939347",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-schwarz-tet10-live-v1/microgen-parent/schwarz-solid-specimen.json": "42848bc582c5921aafc817735129dfef5e756c6689e178b5e642ef2c90b1d095",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-schwarz-tet10-live-v1/microgen-parent/schwarz-solid-samples.npz": "d8ae76c147379fbffd28ef546d83c7bc59113292d89968a255c20a840ac59ece"
+  },
+  "memory_bytes": 8589934592,
+  "numerical_thread_policy": {
+    "environment": {
+      "OPENBLAS_NUM_THREADS": "1",
+      "OMP_NUM_THREADS": "1",
+      "MKL_NUM_THREADS": "1",
+      "VECLIB_MAXIMUM_THREADS": "1",
+      "RAYON_NUM_THREADS": "1"
+    },
+    "accelerate_blas_threading": 1,
+    "accelerate_scope": "calling thread"
+  },
+  "platform": "darwin",
+  "threads": 1,
+  "worker_timeout_s": 600,
+  "quality_gate": 0.1,
+  "local_constraint_target": 0.100001,
+  "maximum_attempts": 400,
+  "maximum_sweeps": 2,
+  "live_workflow_timing": false
+}

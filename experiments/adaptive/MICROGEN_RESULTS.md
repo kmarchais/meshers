@@ -1,5 +1,78 @@
 # G3 Microgen workflow results, 17 October 2026
 
+## First verified Mac Schwarz pair, 24 October 2026
+
+Job 29 completes one fresh same-host pair after the separately preserved
+quality rejection. The actual Microgen route is VTK30 plus one MMG call
+with `nofem`, hausd 0.0005, hmax 0.1 and hgrad 1.3, explicit omission of the
+second call, one fixed-boundary SciPy interior move, and manual straight
+Tet10/direct fedoo. The repair is charged. It is not a Microgen default.
+Meshers freshly generates curved16 with one optimization pass and no adaptation.
+Both use the same explicit six-load block-AMG preset, one numerical thread,
+250,000-node/tet limits and the 8 GiB process-tree RSS watchdog.
+
+Both pass geometry, quality, positive Jacobians, coherent facets and periodic
+caps/nodes. Full mixed-load error against all eight declared Schwarz16/20
+models is 0.053480–0.062162% for Microgen and 0.031469–0.093778% for Meshers.
+Both pass the supplementary 0.1% target. Independent reactions and energy
+agree within 7.60e-12, with periodic jumps at most 5.56e-17.
+
+Charged science-audited workflow time is 132.63564 seconds for Microgen and
+19.27508 seconds for Meshers, a single-pair ratio of 6.8812. The generation,
+lift/repair and solve subtotal is 119.88952 versus 17.60300 seconds, ratio
+6.8107. Peak RSS is 4.910 GiB for the Microgen solve and 2.244 GiB for Meshers.
+This is one pair with no excluded warmup, not a repeated timing claim.
+
+Job 30 independently replays saved artifacts, full model errors, charged
+workflow totals, the earlier geometry witnesses and unchanged repaired
+boundary/connectivity. Job 31 reintegrates the fresh native six-load fields
+with positive 64- and 125-point rules. Maximum energy shift from the solve
+is 2.88454e-9; successive-rule shift is 5.80694e-10. These are fixed-field
+checks, not new equilibrium solves or continuum certification.
+
+The selected next experiment is one bounded repeated Mac study: use this
+verified pilot and quadrature record, exclude one warmup per arm, then run
+five fresh interleaved pairs with alternating arm order and the same explicit
+charged repair. Port the repeated runner's historical G3 evidence lookup
+without rewriting frozen records. Every pair must pass before its successor.
+Gyroid and spinodoid still lack admitted actual comparators in tested routes;
+lattice remains at 1.2556246% against all 24 retained models. No new reference
+or four-fixture victory is promoted.
+
+
+## Spinodoid geometry and fresh Mac comparison, 24 October 2026
+
+Job 24 replays the fixed spinodoid samples against the coherent sampling36
+seed. All 113 reverse samples above 0.002 are wall samples; none is a cap
+sample. The worst 32 nearest faces are wall triangles, including witnesses
+well inside the box. Reverse maximum is 0.0044944787. Closest-point replay
+agrees with the existing VTK distance evaluator and a manufactured plane
+control. Forward Newton failures remain separate diagnostics.
+
+Job 25 tests hypothetical damped wall-node projection on the exact frozen
+field. All 22,602 periodic representatives converge below 1e-9 residual
+distance, with box coordinates locked and periodic copies consistent.
+Reverse maximum improves to 0.0028468542, but 27 samples still fail and 146
+tets invert. No projected mesh is applied or admitted. Stop this simple
+projection recipe as well as the previous two-orbit cap search.
+
+Job 26 attempts the recorded Schwarz pair afresh on the Mac. The Microgen
+parent passes distance, volume, facets and periodicity, but quality 0.0956791
+rejects it before FE. Historical G3 wins remain historical. Job 27 localizes
+one failing tet, with one free interior vertex and no fixed-face obstruction.
+Job 28 reuses the existing complete-star relocation control: one move of
+0.000748602 gives global quality 0.100001001 while boundary coordinates,
+connectivity and volume stay unchanged. All geometry gates pass. This is
+saved-mesh feasibility, not a live workflow or a timing win.
+
+Job 29 selects one fresh paired workflow with that explicit SciPy repair
+charged to Microgen, followed by manual straight Tet10 and direct fedoo.
+Keep the existing supplementary 0.1% eight-model mixed-load test, all original
+admission gates, and independent six-load field audits. Read its actual
+result before deciding on repetitions or another experiment. Gyroid and
+spinodoid comparator coverage and lattice reference convergence remain open.
+
+
 ## Independent two-orbit cap search, 24 October 2026
 
 Mac job 21 stops at its manufactured fixture: the optimized cube does not

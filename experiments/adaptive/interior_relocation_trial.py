@@ -70,15 +70,22 @@ def repair(points, cells, surface, *, maximum_attempts=400):
 
 
 def worker(run, source_path):
+    worker_started = time.monotonic()
     workflow.imports()
     from periodic import periodic_pairs
 
     source = json.loads((source_path / "result.json").read_text())
-    assert source["case"] == "gyroid"
+    case_name = source["case"]
+    assert case_name in ("gyroid", "schwarz-solid")
     old_route = source["route"].startswith("microgen-vtk") and len(source["mmg_calls"]) == 1
     if old_route:
-        assert source["first_pass_fem_override"] and source["first_pass_only"]
+        assert source["first_pass_only"]
+        if case_name == "gyroid":
+            assert source["first_pass_fem_override"]
+        else:
+            assert source["resolution"] == 30 and source["first_pass_hmax_override"] == .1
     else:
+        assert case_name == "gyroid"
         assert source["route"] == "microgen-explicit-preclipping-and-cap-retriangulation-mmg-tuned"
         assert source["saved_seed_replay"] and len(source["mmg_calls"]) == 2
         assert source["geometry"]["sampled_two_sided_max"] <= .002 and abs(source["geometry"]["relative_volume_error"]) <= .01
@@ -87,7 +94,7 @@ def worker(run, source_path):
     assert len(cells) <= workflow.CAP and len(points) <= 100000
     topology = audit(points, cells, surface)
     if not topology["oriented_facet_consistency_passed"]:
-        workflow.save(run / "result.json", {"case": "gyroid", "source": str(source_path),
+        workflow.save(run / "result.json", {"case": case_name, "source": str(source_path),
             "status": "source-incidence-rejected", "qualified": False, "facet_consistency": topology,
             "repair_performed": False, "stiffness_solve_performed": False,
             "scope": "Retired invalid one-pass source; no relocation, new mesh or FEA is attempted"})
@@ -96,13 +103,14 @@ def worker(run, source_path):
     moved, diagnostics = repair(points, cells, surface)
     repair_s = time.monotonic() - started
     np.savez_compressed(run / "mesh.npz", points=moved, tetrahedra=cells, surface=surface)
-    geometry = workflow.geometry(run, "gyroid", moved, cells, surface)
+    geometry = workflow.geometry(run, case_name, moved, cells, surface)
     _, _, periodic = periodic_pairs(moved, surface)
-    row = {"case": "gyroid", "route": source["route"] + "-explicit-slsqp-interior-relocation",
+    row = {"case": case_name, "route": source["route"] + "-explicit-slsqp-interior-relocation",
         "parent_route": source["route"], "source": str(source_path), "parent_mmg_calls": source["mmg_calls"],
         "nodes": len(moved), "elements": len(cells), "order": 1, "qualified": geometry["geometry_admitted"],
         "status": "admitted-needs-reference" if geometry["geometry_admitted"] else "repair-incomplete",
         "geometry": geometry, "periodic": periodic, "repair_s": repair_s, "repair": diagnostics,
+        "total_saved_mesh_study_s": time.monotonic() - worker_started,
         "live_workflow_timing": False, "stiffness_solve_performed": False,
         "scope": "Saved genuine Microgen VTK/MMG output plus explicitly added SciPy interior relocation; fixed boundary and topology, not default/public Microgen pipeline or a Meshers seed; no matched-accuracy claim"}
     workflow.save(run / "result.json", row)
@@ -118,17 +126,20 @@ def main():
         worker(args.run, args.source)
         return
     args.run.mkdir(parents=True, exist_ok=False)
+    case_name = json.loads((args.source / "result.json").read_text())["case"]
     shutil.copyfile(__file__, args.run / "driver.py")
     paths = [Path(__file__), args.source / "result.json", args.source / "mesh.npz"]
     paths.extend(workflow.HERE / name for name in ("job_parts.py", "test_job_parts.py", "interior_star_probe.py",
         "test_interior_star_probe.py", "test_interior_relocation_trial.py", "microgen_workflow.py",
         "cap_quality_bound.py", "mmg_quality_localization.py", "facet_incidence_audit.py", "test_facet_incidence_audit.py"))
     for suffix in ("-specimen.json", "-samples.npz"):
-        path = args.source / ("gyroid" + suffix)
+        path = args.source / (case_name + suffix)
         paths.append(path)
         shutil.copyfile(path, args.run / path.name)
     hashes = {str(path): workflow.digest(path) for path in paths}
     workflow.save(args.run / "manifest.json", {"inputs": hashes, "memory_bytes": workflow.MEMORY,
+        "numerical_thread_policy": workflow.NUMERICAL_THREAD_POLICY,
+        "platform": sys.platform,
         "threads": 1, "worker_timeout_s": 600, "quality_gate": .1, "local_constraint_target": .100001,
         "maximum_attempts": 400, "maximum_sweeps": 2, "live_workflow_timing": False})
     with Job(parts=["controls", "repair-and-admit"]) as job:

@@ -92,6 +92,7 @@ def main():
         for name in ("result.json", "mesh.npz", "fields.npz")}
     source_hashes = {str(source): workflow.digest(source) for source in sources}
     workflow.save(args.run / "manifest.json", {"inputs": inputs, "source_sha256": source_hashes,
+        "numerical_thread_policy": workflow.NUMERICAL_THREAD_POLICY, "platform": sys.platform,
         "memory_bytes": workflow.MEMORY, "threads": 1, "worker_timeout_s": 300,
         "quadrature_points": [15, 64, 125], "fixed_displacement_fields": True})
     with Job(parts=[source.name for source in args.sources]) as job:

@@ -1,0 +1,54 @@
+{
+  "source": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-schwarz-tet10-live-v1/microgen-parent",
+  "nodes": 29192,
+  "elements": 136511,
+  "bad_elements": 1,
+  "quality_minimum": 0.09567912599422443,
+  "bad_incident_on_cap_vertices": 1,
+  "bad_incident_on_wall_vertices": 1,
+  "bad_all_boundary_vertices": 0,
+  "bad_with_interior_vertices": 1,
+  "cap_faces_below_quality_ceiling": 0,
+  "wall_faces_below_quality_ceiling": 0,
+  "bad_with_cap_face": 1,
+  "bad_with_wall_face": 0,
+  "bad_with_obstructing_wall_face": 0,
+  "bad_with_obstructing_cap_face": 0,
+  "worst_examples": [
+    {
+      "element": 59473,
+      "quality": 0.09567912599422443,
+      "coordinates": [
+        [
+          -0.234270057565561,
+          -0.109153212254372,
+          -0.487772387212641
+        ],
+        [
+          -0.227114623325551,
+          -0.0862068965517241,
+          -0.5
+        ],
+        [
+          -0.224137931034483,
+          -0.0911184189542988,
+          -0.5
+        ],
+        [
+          -0.224137931034483,
+          -0.120689655172414,
+          -0.5
+        ]
+      ],
+      "cap_face_quality_ceilings": [
+        0.1448328375252718
+      ],
+      "wall_face_quality_ceilings": [],
+      "interior_vertices": [
+        896
+      ],
+      "nearest_box_plane_distance": 0.0
+    }
+  ],
+  "scope": "Saved actual MMG output; fixed-face obstructions and adjacency only, no guarantee that grading or interior optimization repairs it"
+}

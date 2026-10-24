@@ -42,3 +42,18 @@ def test_saved_or_weakened_control_is_rejected():
     elevated["quadrature_sensitivity_limit"] = .01
     with pytest.raises(AssertionError):
         comparison_summary(parent, elevated, native, comparisons)
+
+
+def test_explicit_repair_is_charged_and_must_pass_geometry():
+    parent, elevated, native, comparisons = inputs()
+    repair = dict(parent, repair={"boundary_coordinates_unchanged": True,
+        "remaining_bad_elements": 0, "signed_volume_difference": 0.},
+        total_saved_mesh_study_s=4., repair_s=1.)
+    parent["qualified"] = False
+    report = comparison_summary(parent, elevated, native, comparisons, repair)
+    assert report["science_audited_workflow_s"]["microgen"] == 34.
+    assert report["generation_lift_solve_s"]["microgen"] == 13.
+    assert report["explicit_interior_repair"]
+    repair["geometry"] = {"geometry_admitted": False}
+    with pytest.raises(AssertionError):
+        comparison_summary(parent, elevated, native, comparisons, repair)

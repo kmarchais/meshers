@@ -1,0 +1,34 @@
+{
+  "inputs": {
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-schwarz-tet10-live-repair-v1/meshers-tet10/result.json": "248b75a53e9263d9a0cac2d7f22bad35a6d0c8a6b494457aa3d1ec9992bdfe0a",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-schwarz-tet10-live-repair-v1/meshers-tet10/mesh.npz": "dc92e7f1e6534c58903be3cf7d1b78eb8283b0ff038ca719856b671b2b6f3d27",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-schwarz-tet10-live-repair-v1/meshers-tet10/fields.npz": "408a8f3fe859df9825a2c0a2519ad08f87ab7884e58c24cd36ad2c963919c055"
+  },
+  "source_sha256": {
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/quadrature_audit.py": "020677df452ec86864e687c9b35e2c69e70f8587ec54240ce0c4eaa4b717319e",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/tet10_integration.py": "b5adbf4a96ee90953d546c654992d4380843e3b1a865e64e043cd14529e3865d",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/microgen_workflow.py": "a3a22afd4c5c2927e5109153195dba4321805db78df57bc6023363997ebc812a",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/job_parts.py": "7082e64a3d6f1029dfe871702e6ef53cc514f08a0687b4065f1412d65b427b78"
+  },
+  "numerical_thread_policy": {
+    "environment": {
+      "OPENBLAS_NUM_THREADS": "1",
+      "OMP_NUM_THREADS": "1",
+      "MKL_NUM_THREADS": "1",
+      "VECLIB_MAXIMUM_THREADS": "1",
+      "RAYON_NUM_THREADS": "1"
+    },
+    "accelerate_blas_threading": 1,
+    "accelerate_scope": "calling thread"
+  },
+  "platform": "darwin",
+  "memory_bytes": 8589934592,
+  "threads": 1,
+  "worker_timeout_s": 300,
+  "quadrature_points": [
+    15,
+    64,
+    125
+  ],
+  "fixed_displacement_fields": true
+}

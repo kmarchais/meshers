@@ -1,5 +1,19 @@
 # Meshers project tracking
 
+One fresh Mac Schwarz pair now passes the supplementary 0.1% full-tensor
+comparison. The actual Microgen route includes explicit one-pass overrides,
+a charged one-vertex SciPy repair, and manual straight Tet10. Workflow times
+are 132.63564 versus 19.27508 seconds, a single-pair 6.8812 ratio. Independent
+field/tensor/artifact replay and positive-rule reintegration pass. This is
+one pair; repeated Mac timings are next. No four-case victory is claimed.
+
+Mac jobs 24–28 locate an independent spinodoid wall-geometry failure and
+reject simple wall-node projection. The first fresh Schwarz pair rejects
+its Microgen parent at quality 0.0956791; no FE or timing claim follows.
+A one-vertex fixed-boundary repair preflight then passes all geometry gates.
+Job 29 tests this explicitly added, charged repair in a fresh paired workflow.
+The current Mac checkpoint records the evidence and remaining four-case gaps.
+
 Mac jobs 21–23 complete the selected two-orbit spinodoid cap preflight.
 The initial control failure is preserved; corrected derivative and known-repair
 controls pass. Eight starts miss cap quality 0.1, reaching about 0.00504.

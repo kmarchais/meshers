@@ -24,7 +24,8 @@ def worker(source, run, use_amg=False):
 
     parent = json.loads((source / "result.json").read_text())
     assert parent["qualified"] and parent["geometry"]["geometry_admitted"]
-    assert parent["route"].startswith("microgen-vtk") and parent["mmg_calls"]
+    parent_calls = parent["mmg_calls"] if "mmg_calls" in parent else parent["parent_mmg_calls"]
+    assert parent["route"].startswith("microgen-vtk") and parent_calls
     original = np.load(source / "mesh.npz")
     points, tetrahedra, surface = (original[name] for name in ("points", "tetrahedra", "surface"))
     assert tetrahedra.shape[1] == 4 and len(tetrahedra) <= workflow.CAP
@@ -33,7 +34,8 @@ def worker(source, run, use_amg=False):
     unique, inverse = np.unique(np.sort(tetrahedra[:, edges].reshape(-1, 2), axis=1), axis=0, return_inverse=True)
     nodes = len(points) + len(unique)
     row = {"case": parent["case"], "route": "microgen-vtk-mmg-straight-tet10-direct-fedoo",
-        "parent_route": parent["route"], "parent_mmg_calls": parent["mmg_calls"], "source": str(source),
+        "parent_route": parent["route"],
+        "parent_mmg_calls": parent_calls, "source": str(source),
         "nodes": nodes, "elements": len(tetrahedra), "order": 2, "solver_quadrature_points": 4,
         "qualified": False, "status": "lift-node-cap", "live_workflow_timing": False,
         "solver": "cached-elastic-block-amg-cg" if use_amg else "jacobi-cg",
