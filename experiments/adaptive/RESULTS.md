@@ -1,5 +1,23 @@
 # Adaptive and quadratic implicit meshing: results
 
+## Native Mac second nested level, 24 October 2026
+
+Native setup passes 54 focused tests and twelve fresh AMG control loads.
+The second parent23 nested level preserves the curved domain and old fields
+within 3.33e-16, at 218,135 nodes and 141,144 Tet10 elements. All geometry,
+quality, sampled Jacobian, periodic, and oriented-facet gates pass.
+
+Six fresh loads complete in a 191.45-second solve worker at 4.508 GiB peak
+RSS. Independent fields and positive quadrature pass. The largest additional
+signed stiffness correction is -0.328272%, and the Galerkin balance error is
+3.78355e-8. Worst disagreement across all 24 unchanged models is 2.135117%,
+failing 1%. No reference or timing advantage is promoted. Two nonuniform
+nested corrections do not prove continuum convergence.
+
+The next selected experiment is one fixed-domain nested geometry preflight
+on the best saved native lattice26 candidate, under unchanged caps. Details
+and native resource controls are in `handoff/macbook/CHECKPOINT-20261024.md`.
+
 ## MacBook handoff after nested correction, 2026-10-24
 
 Job 473 completes the lattice26 field and positive-quadrature audits, with

@@ -1,5 +1,24 @@
 # Adaptive implicit meshing: plan and status
 
+## Native Mac results and selected candidate check, 24 October 2026
+
+The native arm64 environment, shared serial queue, 54 focused tests, and
+twelve fresh solver-control loads pass. Mac job 3 preflights the second
+nested parent23 level at 218,135 nodes and 141,144 tets. Job 4 measures actual
+reduced assembly at 4.464 GiB. Job 5 completes six fresh loads and independent
+field, positive-rule, and Galerkin checks. The additional FE correction is
+0.328272%, and the balance error is 3.78355e-8. Worst disagreement across all
+24 models is 2.135117%, still failing 1%. No reference is promoted.
+
+Select one fixed-domain nested preflight on the best saved native lattice26
+candidate. Its worst retained-model error is positive. The controlled
+softening seen on parent23 makes an FE-resolution check useful without
+another sizing-strength sweep or a change to physical geometry. Mac job 6
+uses the same periodic edge-star rule, fixed samples, 250,000-node/tet caps,
+and 8 GiB RSS watchdog. Read actual admission and counts before any solve.
+This is a saved-mesh diagnostic. Fresh same-host workflows remain necessary
+for a timing claim. Read `handoff/macbook/CHECKPOINT-20261024.md`.
+
 ## Primary MacBook continuation, 2026-10-24
 
 Kevin requests the primary session move to MacBook Pro with Sol 6.1 medium.

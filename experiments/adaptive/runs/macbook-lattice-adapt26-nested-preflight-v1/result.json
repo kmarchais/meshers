@@ -1,0 +1,109 @@
+{
+  "case": "smooth-lattice",
+  "source": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/g3-lattice-adapt26-tol0028-amg-solve-v1",
+  "nodes": 250000,
+  "elements": 160291,
+  "order": 2,
+  "qualified": true,
+  "geometry": {
+    "sampled_forward_max": 0.0003236400768516191,
+    "sampled_reverse_max": 0.00030942315738475575,
+    "sampled_two_sided_max": 0.0003236400768516191,
+    "outward_forward_max": 0.0003236400768516191,
+    "inward_forward_max": 0.0002550954429284902,
+    "projection_failed": 0,
+    "forward_samples": 301262,
+    "reverse_samples": 34791,
+    "volume": 0.2482330970459066,
+    "relative_volume_error": -0.00031390363820915645,
+    "q_min_corner": 0.14932884688282982,
+    "q_p01_corner": 0.30832787571145337,
+    "minimum_dihedral_deg_corner": 8.014200725852021,
+    "minimum_sampled_jacobian": 2.5104482261911397e-09,
+    "reverse_tessellation_delta_max": 0.00012306344991095465,
+    "quadratic_reverse_subdivisions": [
+      4,
+      8
+    ],
+    "facet_consistency": {
+      "nodes": 250000,
+      "elements": 160291,
+      "unique_faces": 335750,
+      "interior_faces": 305414,
+      "extracted_boundary_faces": 30336,
+      "same_orientation_shared_faces": 0,
+      "nonmanifold_faces": 0,
+      "duplicate_cells": 0,
+      "duplicate_surface_faces": 0,
+      "provided_boundary_matches_extraction": true,
+      "missing_provided_faces": 0,
+      "extra_provided_faces": 0,
+      "nonpositive_corner_determinants": 0,
+      "minimum_corner_determinant": 2.5104482261922994e-09,
+      "oriented_facet_consistency_passed": true,
+      "conflict_examples": [],
+      "scope": "Oriented corner-face incidence and same-side neighbor diagnostics; necessary consistency, not a certificate of curved geometry or absence of nonlocal intersections"
+    },
+    "oriented_facet_consistency_passed": true,
+    "geometry_admitted": true
+  },
+  "relative_volume_change": -1.1102230246251565e-15,
+  "refinement": {
+    "accepted_edge_orbits": 7971,
+    "quality_rejected_orbits": 329,
+    "overlapping_star_orbits": 52858,
+    "budget_rejected_orbits": 104107,
+    "source_nodes": 199972,
+    "source_elements": 128300,
+    "nodes": 250000,
+    "elements": 160291,
+    "bisected_parent_elements": 31991,
+    "shared_position_error": 5.551115123125783e-17,
+    "shared_field_error": 1.1102230246251565e-16,
+    "projected_node_upper_bound": 250000,
+    "facet_consistency": {
+      "nodes": 250000,
+      "elements": 160291,
+      "unique_faces": 335750,
+      "interior_faces": 305414,
+      "extracted_boundary_faces": 30336,
+      "same_orientation_shared_faces": 0,
+      "nonmanifold_faces": 0,
+      "duplicate_cells": 0,
+      "duplicate_surface_faces": 0,
+      "provided_boundary_matches_extraction": true,
+      "missing_provided_faces": 0,
+      "extra_provided_faces": 0,
+      "nonpositive_corner_determinants": 0,
+      "minimum_corner_determinant": 2.5104482261922994e-09,
+      "oriented_facet_consistency_passed": true,
+      "conflict_examples": [],
+      "scope": "Oriented corner-face incidence and same-side neighbor diagnostics; necessary consistency, not a certificate of curved geometry or absence of nonlocal intersections"
+    },
+    "periodic": {
+      "periodic_pair_counts": [
+        2545,
+        2647,
+        2663
+      ],
+      "periodic_coordinate_errors": [
+        5.551115123125783e-17,
+        5.551115123125783e-17,
+        5.551115123125783e-17
+      ],
+      "periodic_pair_tolerance": 1e-10,
+      "periodic_equivalence_classes": 242216,
+      "periodic_triangles_match": true
+    }
+  },
+  "interpolation": {
+    "points_per_element": 12,
+    "elements_checked": 160291,
+    "maximum_geometry_error": 3.3306690738754696e-16,
+    "maximum_field_error": 3.3306690738754696e-16
+  },
+  "equilibrium_solve_performed": false,
+  "reference_promoted": false,
+  "status": "nested-preflight-passed",
+  "scope": "One conforming edge-star bisection stage with exact parent Tet10 map restriction and field prolongation; no convergence or continuum claim"
+}

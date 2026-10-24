@@ -76,19 +76,33 @@ hierarchy or six-load solve memory, so the same watchdog remains active.
 
 ## Selected solve and interpretation
 
-After reading assembly, job 5 starts one fresh level2 six-load solve with
+After reading assembly, job 5 completes one fresh level2 six-load solve with
 validated elastic-block AMG, 15-point curved Tet10 integration, and explicit
 completed-cache release. The solve has a 1,200-second timeout. Independent
 field and positive-quadrature audits and Galerkin assessment each have a
 300-second timeout. Its immutable output directory is
 `/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-lattice-nested23-level2-v1`.
 
-Read its authoritative completion, all six residual records, independent
-audits, parent correction, and full Galerkin balance before selecting a
-successor. Retain all 24 model tensors. Compare the two nested corrections,
-but do not infer an asymptotic order from nonuniform bisection alone or
-promote a continuum reference from small successive changes. This saved-mesh
-diagnostic supplies no live workflow timing or cross-host speed ratio.
+All six residuals pass. Solve worker time is 191.45 seconds at 4.508 GiB
+peak RSS. Independent fields and positive quadrature pass. Every generalized
+parent-to-level2 correction is negative, with maximum magnitude 0.328272%,
+versus 0.499513% for the preceding level. The full Galerkin balance agrees
+within 3.78355e-8. Worst retained-model disagreement falls to 2.135117%,
+still above 1%. No reference is promoted. Nonuniform bisection and two
+corrections do not establish an asymptotic order or a continuum bound.
+This saved-mesh diagnostic supplies no live workflow timing or cross-host
+speed ratio.
+
+After reading that result, job 6 tests one nested preflight on the best saved
+native lattice26 candidate, whose original worst model disagreement is
+1.2686985%. Its worst-model generalized error is positive, so measured
+same-domain FE softening is a relevant hypothesis. The edge-selection rule
+is unchanged and uses lengths, periodicity, quality, and budgets. It does
+not use oracle fields to tune a size function. The new preflight is
+`/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-lattice-adapt26-nested-preflight-v1`.
+Read its counts, mapping and field reproduction, geometry, and resource
+record before deciding on a solve. All 24 models and both 250,000 caps remain.
+The source's three independent field-audit input hashes were rechecked.
 
 Schwarz retains its historical repeated wins against explicitly modified
 actual Microgen routes. Gyroid and spinodoid still lack admitted actual

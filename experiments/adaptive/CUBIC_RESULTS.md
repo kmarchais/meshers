@@ -1,5 +1,49 @@
 # Reference-only cubic enrichment on G3
 
+## Second nested correction on native Mac, 24 October 2026
+
+Mac jobs 0–2 establish the native environment and queue, pass 54 focused
+tests, and pass twelve fresh cube/Schwarz solver-control loads. Exact G3
+package versions have arm64 wheels. macOS rejects Linux's `RLIMIT_AS` setup;
+the shared bounded runner retains the 8 GiB process-tree RSS watchdog and
+records its enforcement explicitly. Small timeout and memory-stop controls
+pass. Neither mesh cap changes.
+
+Job 3 refines the completed G3 level1 mesh on its exact quadratic physical
+domain. Fourteen controls pass. The new mesh has 218,135 nodes and 141,144
+tets, from 64,197 parent bisections. Geometry and six-field interpolation
+errors are 2.78e-16 and 3.33e-16. Relative volume change is -2.52e-14.
+Distance 0.0006492808, quality 0.10010709, positive sampled Jacobians,
+periodic caps, and coherent oriented facets pass. Preflight worker time is
+87.72 seconds at 1.047 GiB peak RSS.
+
+Job 4 captures only actual reduced-system metrics before any solve. The
+646,029-square matrix has 51,030,214 stored entries and 614,946,688 CSR bytes.
+It fits at 4.464 GiB peak RSS in 9.61 seconds. No large matrix archive or
+fake solution is produced.
+
+After reading that resource check, job 5 completes all six fresh loads.
+Solve worker time is 191.45 seconds at 4.508 GiB. Independent fields and
+positive quadrature pass. All six generalized stiffness corrections from
+level1 are negative, with maximum magnitude 0.3282719%, versus 0.4995130%
+for level1. The full prolonged-parent/fine/correction energy balance agrees
+within 3.78355e-8. Worst retained-model disagreement is 2.1351167%, failing
+1%. All 24 models remain unchanged. No reference is promoted.
+
+This isolates another FE correction on one fixed domain. It does not
+establish an asymptotic rate or supply a live workflow timing. Records are
+`runs/macbook-lattice-nested23-level2-preflight-v1`,
+`runs/macbook-lattice-nested23-level2-assembly-v1`, and
+`runs/macbook-lattice-nested23-level2-v1`.
+
+The controlled FE softening justifies one different candidate investigation:
+the best native lattice26 tensor has positive worst-model error 1.2686985%.
+Job 6 tests its saved mesh with the unchanged nested bisection rule, first
+checking geometry, periodicity, and actual counts within 250,000 nodes/tets.
+Read before a solve. This tests FE resolution without changing geometry or
+strengthening a sizing recipe. It is not yet an improved native candidate,
+matched-target workflow, or substitute reference.
+
 ## Nested fixed-domain correction, 23 October 2026
 
 Job 473 completes lattice26 saved-field and positive-quadrature checks.
