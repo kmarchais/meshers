@@ -1,0 +1,420 @@
+{
+  "source": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-spinodoid-preclip36-five-v1/pretriangulated",
+  "case": "spinodoid",
+  "roots": [
+    13306,
+    13894
+  ],
+  "orbits": [
+    [
+      13306,
+      13320
+    ],
+    [
+      13894,
+      13906
+    ]
+  ],
+  "axis": 0,
+  "unknowns": 4,
+  "incident_cap_triangles": 24,
+  "incident_volume_tets": 51,
+  "target_cap_quality": 0.1,
+  "search_target_cap_quality": 0.100001,
+  "maximum_starts": 8,
+  "maximum_iterations_per_start": 500,
+  "attempts": [
+    {
+      "start": "original",
+      "initial_variables": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "variables": [
+        -0.0349627338852035,
+        0.004093928176444825,
+        0.00013691470872532853,
+        -0.09832463447675177
+      ],
+      "solver_success": true,
+      "solver_message": "Optimization terminated successfully",
+      "iterations": 9,
+      "reported_slack": 0.0002355734190480273,
+      "feasible": false,
+      "metrics_finite": true,
+      "minimum_cap_quality": 0.005035927421887737,
+      "minimum_volume_quality": 2.744867463485246e-06,
+      "minimum_volume_determinant": 1.8163338766628594e-15,
+      "minimum_signed_cap_determinant": 5.565141538474309e-09,
+      "periodic_displacement_error": 0.0,
+      "candidate_coordinates": [
+        [
+          -0.5,
+          -0.1958179103455027,
+          0.027938602465291947
+        ],
+        [
+          0.5,
+          -0.1958179103455027,
+          0.027938602465291947
+        ],
+        [
+          -0.5,
+          -0.19443906592672314,
+          0.051692999122433365
+        ],
+        [
+          0.5,
+          -0.19443906592672314,
+          0.051692999122433365
+        ]
+      ]
+    },
+    {
+      "start": "previous-single-orbit",
+      "initial_variables": [
+        -0.04066967916313396,
+        0.0024298278660913972,
+        0.0,
+        0.0
+      ],
+      "variables": [
+        -0.03496273390092549,
+        0.004093928041070224,
+        0.000199464197649629,
+        -0.09822110901504667
+      ],
+      "solver_success": true,
+      "solver_message": "Optimization terminated successfully",
+      "iterations": 8,
+      "reported_slack": 0.0002355734190531079,
+      "feasible": false,
+      "metrics_finite": true,
+      "minimum_cap_quality": 0.005035927420182385,
+      "minimum_volume_quality": 2.7448674625657927e-06,
+      "minimum_volume_determinant": 1.816333876015064e-15,
+      "minimum_signed_cap_determinant": 5.565141536489502e-09,
+      "periodic_displacement_error": 0.0,
+      "candidate_coordinates": [
+        [
+          -0.5,
+          -0.1958179103461203,
+          0.02793860245997393
+        ],
+        [
+          0.5,
+          -0.1958179103461203,
+          0.02793860245997393
+        ],
+        [
+          -0.5,
+          -0.19443660875073548,
+          0.05169706598665543
+        ],
+        [
+          0.5,
+          -0.19443660875073548,
+          0.05169706598665543
+        ]
+      ]
+    },
+    {
+      "start": "half-smoothing",
+      "initial_variables": [
+        -0.06770210142519663,
+        0.008769918135977151,
+        -0.03903921814731273,
+        -0.011916128159592936
+      ],
+      "variables": [
+        -0.03496273233067606,
+        0.004093941560879774,
+        -0.032816570811995335,
+        -0.10092879624656644
+      ],
+      "solver_success": true,
+      "solver_message": "Optimization terminated successfully",
+      "iterations": 11,
+      "reported_slack": 0.0002355734190516054,
+      "feasible": false,
+      "metrics_finite": true,
+      "minimum_cap_quality": 0.005035927590510463,
+      "minimum_volume_quality": 2.744867554408744e-06,
+      "minimum_volume_determinant": 1.8163339407063174e-15,
+      "minimum_signed_cap_determinant": 5.565141734699786e-09,
+      "periodic_displacement_error": 0.0,
+      "candidate_coordinates": [
+        [
+          -0.5,
+          -0.1958179102844351,
+          0.02793860299108221
+        ],
+        [
+          0.5,
+          -0.1958179102844351,
+          0.02793860299108221
+        ],
+        [
+          -0.5,
+          -0.19573360109758062,
+          0.05159069798650322
+        ],
+        [
+          0.5,
+          -0.19573360109758062,
+          0.05159069798650322
+        ]
+      ]
+    },
+    {
+      "start": "smoothing",
+      "initial_variables": [
+        -0.13540420285039326,
+        0.017539836271954302,
+        -0.07807843629462546,
+        -0.023832256319185872
+      ],
+      "variables": [
+        -0.034962733880466126,
+        0.004093928217233185,
+        -0.06681600629749786,
+        -0.11646411547612398
+      ],
+      "solver_success": true,
+      "solver_message": "Optimization terminated successfully",
+      "iterations": 12,
+      "reported_slack": 0.00023557341905299593,
+      "feasible": false,
+      "metrics_finite": true,
+      "minimum_cap_quality": 0.005035927422401606,
+      "minimum_volume_quality": 2.744867463762346e-06,
+      "minimum_volume_determinant": 1.8163338768580342e-15,
+      "minimum_signed_cap_determinant": 5.565141539072313e-09,
+      "periodic_displacement_error": 0.0,
+      "candidate_coordinates": [
+        [
+          -0.5,
+          -0.1958179103453166,
+          0.027938602466894266
+        ],
+        [
+          0.5,
+          -0.1958179103453166,
+          0.027938602466894266
+        ],
+        [
+          -0.5,
+          -0.19706922506359803,
+          0.05098041301010778
+        ],
+        [
+          0.5,
+          -0.19706922506359803,
+          0.05098041301010778
+        ]
+      ]
+    },
+    {
+      "start": "perturbation-4",
+      "initial_variables": [
+        -0.0562293260648169,
+        -0.036513749595317224,
+        0.06929852970916628,
+        0.034319471584190714
+      ],
+      "variables": [
+        -0.03496273393025873,
+        0.0040939277885162235,
+        0.05457726407996224,
+        -0.10240974055340223
+      ],
+      "solver_success": true,
+      "solver_message": "Optimization terminated successfully",
+      "iterations": 11,
+      "reported_slack": 0.00023557341905360314,
+      "feasible": false,
+      "metrics_finite": true,
+      "minimum_cap_quality": 0.005035927417000475,
+      "minimum_volume_quality": 2.7448674608499894e-06,
+      "minimum_volume_determinant": 1.8163338748066397e-15,
+      "minimum_signed_cap_determinant": 5.5651415327869804e-09,
+      "periodic_displacement_error": 0.0,
+      "candidate_coordinates": [
+        [
+          -0.5,
+          -0.19581791034727264,
+          0.027938602450052672
+        ],
+        [
+          0.5,
+          -0.19581791034727264,
+          0.027938602450052672
+        ],
+        [
+          -0.5,
+          -0.19230044702613613,
+          0.05153252099972971
+        ],
+        [
+          0.5,
+          -0.19230044702613613,
+          0.05153252099972971
+        ]
+      ]
+    },
+    {
+      "start": "perturbation-5",
+      "initial_variables": [
+        -0.07950174982930856,
+        0.043086212604771676,
+        -0.05446079172254259,
+        -0.042114238531733614
+      ],
+      "variables": [
+        -0.03496274015724029,
+        0.004093874174367109,
+        -0.04730165883352324,
+        -0.10379935492776965
+      ],
+      "solver_success": true,
+      "solver_message": "Optimization terminated successfully",
+      "iterations": 12,
+      "reported_slack": 0.00023557341904706334,
+      "feasible": false,
+      "metrics_finite": true,
+      "minimum_cap_quality": 0.005035926741532291,
+      "minimum_volume_quality": 2.7448670966249327e-06,
+      "minimum_volume_determinant": 1.8163336182670787e-15,
+      "minimum_signed_cap_determinant": 5.565140746764641e-09,
+      "periodic_displacement_error": 0.0,
+      "candidate_coordinates": [
+        [
+          -0.5,
+          -0.19581791059189158,
+          0.027938600343889983
+        ],
+        [
+          0.5,
+          -0.19581791059189158,
+          0.027938600343889983
+        ],
+        [
+          -0.5,
+          -0.19630262909569762,
+          0.05147793179154363
+        ],
+        [
+          0.5,
+          -0.19630262909569762,
+          0.05147793179154363
+        ]
+      ]
+    },
+    {
+      "start": "perturbation-6",
+      "initial_variables": [
+        -0.13056883212171794,
+        -0.11525643056102079,
+        -0.2476319123098544,
+        -0.0694869415322727
+      ],
+      "variables": [
+        -0.03496273388431568,
+        0.004093928184079698,
+        -0.20047686321703648,
+        -0.18862596140626142
+      ],
+      "solver_success": true,
+      "solver_message": "Optimization terminated successfully",
+      "iterations": 13,
+      "reported_slack": 0.00023557341905409315,
+      "feasible": false,
+      "metrics_finite": true,
+      "minimum_cap_quality": 0.005035927421984026,
+      "minimum_volume_quality": 2.744867463537214e-06,
+      "minimum_volume_determinant": 1.816333876699357e-15,
+      "minimum_signed_cap_determinant": 5.565141538586156e-09,
+      "periodic_displacement_error": 0.0,
+      "candidate_coordinates": [
+        [
+          -0.5,
+          -0.19581791034546783,
+          0.027938602465591874
+        ],
+        [
+          0.5,
+          -0.19581791034546783,
+          0.027938602465591874
+        ],
+        [
+          -0.5,
+          -0.2023199194139875,
+          0.04814562797676672
+        ],
+        [
+          0.5,
+          -0.2023199194139875,
+          0.04814562797676672
+        ]
+      ]
+    },
+    {
+      "start": "perturbation-7",
+      "initial_variables": [
+        -0.17549317871872805,
+        0.01909638571097323,
+        -0.021155265517369452,
+        -0.22895811328344012
+      ],
+      "variables": [
+        -0.03496273388431299,
+        0.00409392818410451,
+        -0.021155265517369452,
+        -0.22895811328344012
+      ],
+      "solver_success": true,
+      "solver_message": "Optimization terminated successfully",
+      "iterations": 8,
+      "reported_slack": 0.0002355734190548634,
+      "feasible": false,
+      "metrics_finite": true,
+      "minimum_cap_quality": 0.005035927421984352,
+      "minimum_volume_quality": 2.7448674635374047e-06,
+      "minimum_volume_determinant": 1.816333876699499e-15,
+      "minimum_signed_cap_determinant": 5.565141538586551e-09,
+      "periodic_displacement_error": 0.0,
+      "candidate_coordinates": [
+        [
+          -0.5,
+          -0.19581791034546772,
+          0.02793860246559285
+        ],
+        [
+          0.5,
+          -0.19581791034546772,
+          0.02793860246559285
+        ],
+        [
+          -0.5,
+          -0.19527550176139635,
+          0.046561231416089005
+        ],
+        [
+          0.5,
+          -0.19527550176139635,
+          0.046561231416089005
+        ]
+      ]
+    }
+  ],
+  "candidate_found": false,
+  "candidate_periodic_check": null,
+  "infeasibility_proved": false,
+  "source_mesh_unchanged": true,
+  "qualified": false,
+  "mmg_calls": [],
+  "stiffness_solve_performed": false,
+  "scope": "Independent motion of two periodic cap-interior orbits with fixed outer curves; directly checked local candidate or inconclusive nonlinear search, never a global infeasibility certificate. No move is applied."
+}

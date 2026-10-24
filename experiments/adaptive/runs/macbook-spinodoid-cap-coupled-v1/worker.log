@@ -1,0 +1,66 @@
+FF                                                                       [100%]
+=================================== FAILURES ===================================
+________ test_joint_derivatives_include_cross_terms_and_periodic_copies ________
+
+    def test_joint_derivatives_include_cross_terms_and_periodic_copies():
+>       points, cells, faces, orbits = cube()
+                                       ^^^^^^
+
+experiments/adaptive/test_cap_coupled_patch.py:25: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+distort = False
+
+    def cube(distort=False):
+        _, _, meshers, *_ = workflow.imports()
+        mesh = meshers.generate(lambda x, *_: x * 0 - 1, bounds=(-.5, .5) * 3, cells=4,
+            periodic=(True, True, True), threads=1)
+        points = mesh.points.copy()
+        orbits = [np.flatnonzero((abs(points[:, 0]) == .5) & (abs(points[:, 1] - y) < 1e-12)
+            & (abs(points[:, 2]) < 1e-12)) for y in (0., .25)]
+>       assert all(len(orbit) == 2 for orbit in orbits)
+E       assert False
+E        +  where False = all(<generator object cube.<locals>.<genexpr> at 0x11aab28e0>)
+
+experiments/adaptive/test_cap_coupled_patch.py:17: AssertionError
+_ test_known_distorted_periodic_patch_can_be_repaired_without_source_mutation __
+
+    def test_known_distorted_periodic_patch_can_be_repaired_without_source_mutation():
+>       points, cells, faces, orbits = cube(distort=True)
+                                       ^^^^^^^^^^^^^^^^^^
+
+experiments/adaptive/test_cap_coupled_patch.py:41: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+distort = True
+
+    def cube(distort=False):
+        _, _, meshers, *_ = workflow.imports()
+        mesh = meshers.generate(lambda x, *_: x * 0 - 1, bounds=(-.5, .5) * 3, cells=4,
+            periodic=(True, True, True), threads=1)
+        points = mesh.points.copy()
+        orbits = [np.flatnonzero((abs(points[:, 0]) == .5) & (abs(points[:, 1] - y) < 1e-12)
+            & (abs(points[:, 2]) < 1e-12)) for y in (0., .25)]
+>       assert all(len(orbit) == 2 for orbit in orbits)
+E       assert False
+E        +  where False = all(<generator object cube.<locals>.<genexpr> at 0x11aab2cf0>)
+
+experiments/adaptive/test_cap_coupled_patch.py:17: AssertionError
+=============================== warnings summary ===============================
+experiments/adaptive/test_cap_coupled_patch.py::test_joint_derivatives_include_cross_terms_and_periodic_copies
+  /Users/kmarchais/dev/meshers/.local-work/macbook-runtime/venv/lib/python3.12/site-packages/fedoo/core/base.py:80: UserWarning: WARNING: no fast direct sparse solver has been found. Consider installing pypardiso (Intel) or python-mumps (any platform) to improve computation performance
+    warnings.warn(
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED experiments/adaptive/test_cap_coupled_patch.py::test_joint_derivatives_include_cross_terms_and_periodic_copies
+FAILED experiments/adaptive/test_cap_coupled_patch.py::test_known_distorted_periodic_patch_can_be_repaired_without_source_mutation
+2 failed, 1 warning in 1.54s
+Traceback (most recent call last):
+  File "/Users/kmarchais/dev/meshers/experiments/adaptive/cap_coupled_patch.py", line 212, in <module>
+    main()
+  File "/Users/kmarchais/dev/meshers/experiments/adaptive/cap_coupled_patch.py", line 167, in main
+    subprocess.run([sys.executable, "-m", "pytest", "-q", "experiments/adaptive/test_cap_coupled_patch.py"],
+  File "/Users/kmarchais/.local/share/uv/python/cpython-3.12.9-macos-aarch64-none/lib/python3.12/subprocess.py", line 573, in run
+    raise CalledProcessError(retcode, process.args,
+subprocess.CalledProcessError: Command '['/Users/kmarchais/dev/meshers/.local-work/macbook-runtime/venv/bin/python', '-m', 'pytest', '-q', 'experiments/adaptive/test_cap_coupled_patch.py']' returned non-zero exit status 1.

@@ -256,3 +256,32 @@ Read direct cap-quality, volume-positivity, and periodic checks before any
 mesh edit or MMG. This tests motion identified by the checked witness.
 The independent geometry failure remains, so cap feasibility alone cannot
 admit this comparator. All four fixtures and the full goal remain in scope.
+
+## Independent two-orbit cap search, 24 October 2026
+
+Mac job 21 stops at its manufactured fixture: the optimized cube does not
+retain the assumed quarter-grid node. Its exact test and failed log are
+preserved. Job 22 selects the actual neighboring periodic orbit, passes both
+analytic-derivative and known-repair controls, then tests four independent
+planar unknowns on the spinodoid. All eight deterministic starts miss the
+unchanged 0.1 cap gate. Direct replay finds minimum cap quality about
+0.00503593, positive incident tetrahedra, and exactly matching periodic
+translations across all candidates. The patch has 24 cap triangles and 51
+incident tets. No move, MMG call, or FE solve follows.
+
+This stops this two-orbit search recipe; nonlinear search failure does not
+prove infeasibility. Job 23 independently replays every returned candidate
+from saved coordinates, all transferred hashes, run inputs, and all 72 lattice
+comparisons. No reference or comparator is promoted. Before expanding cap
+motion again, localize the coherent spinodoid seed's independent reverse
+distance failure (0.00449448 versus 0.002) and unresolved forward projections.
+Use that evidence to decide whether the extraction geometry is worth repairing;
+do not spend another cap sweep on a source that still fails geometry.
+All four cases remain in scope, and fresh same-host workflows are still needed.
+
+Records: `runs/macbook-spinodoid-cap-coupled-v1` (failed control),
+`runs/macbook-spinodoid-cap-coupled-v2` (completed search), and
+`runs/macbook-coupled-checkpoint-verification-v1`. Independent receipt:
+[verification-20261024-coupled.json](verification-20261024-coupled.json).
+Jobs through 23 are terminal. No successor is queued. Earlier selected-next
+instructions above are historical; the geometry localization above is current.

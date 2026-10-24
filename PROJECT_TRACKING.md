@@ -1,5 +1,13 @@
 # Meshers project tracking
 
+Mac jobs 21–23 complete the selected two-orbit spinodoid cap preflight.
+The initial control failure is preserved; corrected derivative and known-repair
+controls pass. Eight starts miss cap quality 0.1, reaching about 0.00504.
+Independent saved-coordinate replay confirms the rejection. No move, MMG,
+FE, admitted comparator, or reference follows. Stop this search recipe and
+localize the separate spinodoid distance failure before more cap repair.
+See the latest Mac checkpoint for the active continuation.
+
 Latest Mac comparison work is in
 [fixed-spinodoid extraction and cap feasibility](experiments/adaptive/MICROGEN_RESULTS.md).
 The exact frozen coefficients now survive cross-platform FFT roundoff.
