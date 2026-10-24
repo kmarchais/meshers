@@ -1,0 +1,54 @@
+{
+  "source": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-lattice-actual-vtk51-stage-audit-v1",
+  "nodes": 33953,
+  "elements": 158430,
+  "bad_elements": 1,
+  "quality_minimum": 0.099880992130727,
+  "bad_incident_on_cap_vertices": 1,
+  "bad_incident_on_wall_vertices": 1,
+  "bad_all_boundary_vertices": 0,
+  "bad_with_interior_vertices": 1,
+  "cap_faces_below_quality_ceiling": 0,
+  "wall_faces_below_quality_ceiling": 0,
+  "bad_with_cap_face": 1,
+  "bad_with_wall_face": 0,
+  "bad_with_obstructing_wall_face": 0,
+  "bad_with_obstructing_cap_face": 0,
+  "worst_examples": [
+    {
+      "element": 54685,
+      "quality": 0.099880992130727,
+      "coordinates": [
+        [
+          -0.5,
+          0.34,
+          0.46
+        ],
+        [
+          -0.5,
+          0.337180053450983,
+          0.46
+        ],
+        [
+          -0.48353950857752,
+          0.351625646876586,
+          0.451937104803976
+        ],
+        [
+          -0.5,
+          0.34,
+          0.468110643477692
+        ]
+      ],
+      "cap_face_quality_ceilings": [
+        0.5372609475179543
+      ],
+      "wall_face_quality_ceilings": [],
+      "interior_vertices": [
+        25192
+      ],
+      "nearest_box_plane_distance": 0.0
+    }
+  ],
+  "scope": "Saved actual MMG output; fixed-face obstructions and adjacency only, no guarantee that grading or interior optimization repairs it"
+}

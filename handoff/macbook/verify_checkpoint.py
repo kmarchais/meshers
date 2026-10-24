@@ -52,6 +52,7 @@ def main():
     ranked_replays = []
     increment_replays = []
     curve_star_replays = []
+    fresh_actual_replays = []
     for run in sorted((workflow.HERE / "runs").glob("macbook-*")):
         if not run.is_dir() or not (run / "manifest.json").exists():
             continue
@@ -82,6 +83,18 @@ def main():
             failed_runs.append(run.name)
         if (run / "result.json").exists():
             result = json.loads((run / "result.json").read_text())
+            if result.get("status") == "fresh-actual-preflight-passed":
+                from verify_actual_lattice import verify_prepared
+                fresh_actual_replays.append(verify_prepared(run, result))
+            if result.get("fresh_actual_workflow_assessment"):
+                from verify_actual_lattice import verify_assessment
+                replay = verify_assessment(run, result)
+                fresh_actual_replays.append(replay)
+                comparisons += replay["model_count"]
+                scores[run.name] = replay["worst_disagreement"]
+            if result.get("fresh_actual_workflow_costs"):
+                from verify_actual_lattice import verify_costs
+                fresh_actual_replays.append(verify_costs(run, result))
             if result.get("priority", {}).get("mode") == "curve-vertex-incident-edges" and (run / "prolongation.npz").exists():
                 workflow.imports()
                 from nested_refinement import interpolation_check
@@ -368,6 +381,7 @@ def main():
         comparisons += len(errors)
         scores[run.name] = max(errors)
     workflow.save(output, {"passed": True, "verifier_sha256": workflow.digest(Path(__file__)),
+        "fresh_actual_verifier_sha256": workflow.digest(Path(__file__).with_name("verify_actual_lattice.py")),
         "repository_head_at_verification": subprocess.check_output(["git", "rev-parse", "HEAD"], cwd=ROOT, text=True).strip(),
         "transferred_files_checked": files,
         "transferred_bytes_checked": total_bytes, "mac_input_hashes_checked": checked,
@@ -379,6 +393,7 @@ def main():
         "ranked_refinement_replays": ranked_replays,
         "ranked_increment_replays": increment_replays,
         "curve_vertex_star_replays": curve_star_replays,
+        "fresh_actual_lattice_replays": fresh_actual_replays,
         "reference_promoted": False})
     print(f"Verified {files} transferred files, {checked} input hashes and {comparisons} full model comparisons")
 

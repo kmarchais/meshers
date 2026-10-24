@@ -1,5 +1,15 @@
 # Meshers project tracking
 
+One fresh Mac actual lattice workflow now passes all 24 models at 0.994671%.
+The route declares tuned VTK51/two-pass MMG, a one-vertex fixed-boundary repair,
+manual straight Tet10/direct fedoo and star refinement. Every added stage is
+charged: 314.03 seconds including diagnostics. Independent fields and positive
+quadrature pass; this is one diagnostic workflow, without a timing ratio.
+The native star-refined control still fails at 1.230455%. Next inspect and
+preflight preferred-star-only refinement under the unchanged native26 domain,
+250000-node/tet caps and all scientific gates. Schwarz repeats stand; Gyroid
+and spinodoid comparator gaps remain. The four-case goal is unachieved.
+
 A star-refined actual Microgen-derived saved-mesh lattice control now passes
 all 24 models at 0.988498%. The native star-refined control still fails at
 1.230455%. Both pass full field, periodic and positive-quadrature audits.

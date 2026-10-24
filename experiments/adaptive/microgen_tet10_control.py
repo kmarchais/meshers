@@ -16,6 +16,30 @@ sys.path.insert(0, str(Path.home() / "bin"))
 from pueue_progress import Job
 
 
+def straight_elevation(points, tetrahedra, surface, node_cap=250000):
+    """Count before allocating, then preserve the exact affine parent domain."""
+    import numpy as np
+
+    assert tetrahedra.shape[1] == 4 and surface.shape[1] == 3
+    edges = np.array(((0, 1), (1, 2), (2, 0), (0, 3), (1, 3), (2, 3)))
+    unique, inverse = np.unique(np.sort(tetrahedra[:, edges].reshape(-1, 2), axis=1), axis=0, return_inverse=True)
+    nodes = len(points) + len(unique)
+    result = {"nodes": nodes, "within_node_cap": nodes <= node_cap}
+    if nodes > node_cap:
+        return result
+    elevated = np.column_stack((tetrahedra, inverse.reshape(-1, 6) + len(points)))
+    keys = unique[:, 0] * len(points) + unique[:, 1]
+    surface_edges = np.sort(surface[:, edges[:3]].reshape(-1, 2), axis=1)
+    surface_keys = surface_edges[:, 0] * len(points) + surface_edges[:, 1]
+    mapped = np.searchsorted(keys, surface_keys)
+    np.testing.assert_array_equal(keys[mapped], surface_keys)
+    elevated_surface = np.column_stack((surface, mapped.reshape(-1, 3) + len(points)))
+    elevated_points = np.concatenate((points, points[unique].mean(axis=1)))
+    np.testing.assert_array_equal(elevated_points[elevated[:, 4:]], points[tetrahedra[:, edges]].mean(axis=2))
+    result.update(points=elevated_points, tetrahedra=elevated, surface=elevated_surface)
+    return result
+
+
 def worker(source, run, use_amg=False):
     np, _, meshers, *_ = workflow.imports()
     from periodic import periodic_pairs, tensor_difference
@@ -30,9 +54,8 @@ def worker(source, run, use_amg=False):
     points, tetrahedra, surface = (original[name] for name in ("points", "tetrahedra", "surface"))
     assert tetrahedra.shape[1] == 4 and len(tetrahedra) <= workflow.CAP
     started = time.perf_counter()
-    edges = np.array(((0, 1), (1, 2), (2, 0), (0, 3), (1, 3), (2, 3)))
-    unique, inverse = np.unique(np.sort(tetrahedra[:, edges].reshape(-1, 2), axis=1), axis=0, return_inverse=True)
-    nodes = len(points) + len(unique)
+    elevation = straight_elevation(points, tetrahedra, surface)
+    nodes = elevation["nodes"]
     row = {"case": parent["case"], "route": "microgen-vtk-mmg-straight-tet10-direct-fedoo",
         "parent_route": parent["route"],
         "parent_mmg_calls": parent_calls, "source": str(source),
@@ -42,18 +65,9 @@ def worker(source, run, use_amg=False):
         "release_completed_reduced_cache": use_amg,
         "scope": "Saved genuine Microgen mesh; manual straight elevation and direct fedoo; no native Meshers generation or public Microgen Tet10 conversion"}
     workflow.save(run / "result.json", row)
-    if nodes > 250_000:
+    if not elevation["within_node_cap"]:
         return
-    midpoints = points[unique].mean(axis=1)
-    elevated = np.column_stack((tetrahedra, inverse.reshape(-1, 6) + len(points)))
-    keys = unique[:, 0] * len(points) + unique[:, 1]
-    surface_edges = np.sort(surface[:, edges[:3]].reshape(-1, 2), axis=1)
-    surface_keys = surface_edges[:, 0] * len(points) + surface_edges[:, 1]
-    mapped = np.searchsorted(keys, surface_keys)
-    np.testing.assert_array_equal(keys[mapped], surface_keys)
-    elevated_surface = np.column_stack((surface, mapped.reshape(-1, 3) + len(points)))
-    elevated_points = np.concatenate((points, midpoints))
-    np.testing.assert_array_equal(elevated_points[elevated[:, 4:]], points[tetrahedra[:, edges]].mean(axis=2))
+    elevated_points, elevated, elevated_surface = (elevation[key] for key in ("points", "tetrahedra", "surface"))
     matching, _, periodic = periodic_pairs(elevated_points, elevated_surface)
     tags = np.zeros(len(surface), dtype=np.uint8)
     for axis in range(3):

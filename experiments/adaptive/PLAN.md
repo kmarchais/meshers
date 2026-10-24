@@ -1,5 +1,95 @@
 # Adaptive implicit meshing: plan and status
 
+## Fresh Mac actual lattice workflow passes, 24 October 2026
+
+The declared actual lattice route now passes fresh Mac generation and all
+24 retained stiffness models. Worst disagreement is 0.9946706124%, negative
+against sensitivity model 7. This closes the frozen-seed reproduction gap
+for one explicitly modified route. It does not establish a lattice Meshers
+win: the native star-refined control still fails at 1.230455074%.
+
+Job 65 regenerates the fixed smooth-union specimen through actual VTK51 and
+two MMG calls. First pass uses nofem, hausd0.0015, hmax0.06 and hgrad1.3;
+second pass uses hausd0.001, hmax0.06, hgrad1.3, ls and nr. The VTK seed has
+51,309 nodes and 249,432 tets. First MMG has 24,936 nodes and 115,536 tets;
+second has 33,953 nodes and 158,430 tets. Every intermediate count passes.
+Full intermediate geometry diagnostics are saved and their cost is charged.
+
+Fresh final quality is 0.0998809921, so the unrepaired Mac output is rejected.
+Distance 0.0017012390, volume error -0.4905337%, positive Jacobians, coherent
+facets and periodicity pass. Job 66 identifies one bad cell with one free
+interior vertex and no fixed-face quality obstruction. No FE precedes repair.
+Job 67 adds the existing guarded SLSQP interior relocation, explicitly enabled
+only for this exact lattice recipe. Eight controls pass, including rejection
+of a changed recipe or failed geometry. One vertex moves 1.43275e-5; complete
+star quality reaches 0.100001001. Boundary coordinates and connectivity stay
+exactly fixed, and signed volume changes by 3.70e-17. The initial failure is
+retained rather than rounded into admission.
+
+Job 68 counts straight Tet10 elevation before allocation: 238,729 nodes.
+Shared manual elevation is factored from the existing control without changing
+its midpoint construction or default behavior. A shared-edge/node-cap control
+and twelve nested controls pass. The declared curve-vertex-star priority
+then produces 250,000 nodes and 165,722 tets. Parent geometry and six affine
+control fields reproduce exactly within recorded tolerances. These controls
+are not equilibrium fields. No unnecessary parent FE solve is performed.
+Distance and volume are preserved; q0.100001001, positive sampled Jacobians,
+periodic nodes/caps and coherent facets pass under unchanged admission limits.
+
+Job 69 performs six fresh 15-point loads with the same cached block-AMG preset,
+new fields and a new hierarchy. Each load has a 240-second continuation gate,
+the stage has a 1,200-second timeout, and the RSS watchdog stays at 8 GiB.
+Solve plus final field archive takes 218.55733 seconds; peak worker RSS is
+6.10088 GiB. Independent job 70 verifies reactions within 8.74e-12,
+Hill-Mandel energy within 2.66e-12, and zero periodic jumps. Positive
+64-to-125-point energy change is 1.79e-14. Job 71 retains every original
+model and passes the unchanged 1% condition at 0.9946706124%.
+
+| Charged fresh Mac stage | Seconds |
+|---|---:|
+| VTK/MMG generation and intermediate/final geometry audits | 15.290462 |
+| Quality localization | 0.811610 |
+| Explicit interior repair and admission | 3.422781 |
+| Straight elevation, star refinement and admission | 12.487351 |
+| Six-load solve and final field archive | 218.557328 |
+| Independent field and positive-quadrature audit | 63.405356 |
+| All-model assessment | 0.053772 |
+| Total | 314.028660 |
+
+Job 72 preserves this full cost receipt. The job 71 named-stage subtotal is
+313.217050 seconds; the supplemental receipt also charges quality localization.
+Timers retain diagnostics and serialization within their named boundaries.
+Synthetic controls, untimed provenance checks, bookkeeping, queue and inspection
+gaps are excluded. Intermediate audit overhead is deliberate, and
+`timing_comparable` remains false. This is one fresh diagnostic workflow,
+not production/repeated paired timing, the default Microgen pipeline, MMG on
+a Meshers seed, or a continuum/local-stress certificate. No reference is promoted.
+
+The next Meshers action is a bounded preferred-star-only refinement budget
+preflight on the same native lattice26 domain. Its prior priority pass
+bisects 6,934 curve-vertex parent cells, then its fallback bisects 23,992
+other parents: 77.5787% of all 30,926 bisections are outside curve-vertex
+cells. This is a cell-split census, not exact node-cost attribution. Inspect
+node allocation and test repeated preferred-star refinement with bulk fallback
+suppressed, preserving the parent space and every geometry, quality and
+periodic guard. Use the unchanged 250,000-node/tet caps. No new sizing sweep,
+model-fitting geometry offset, or solve before reading the preflight is selected.
+
+Schwarz retains its five repeated Mac modified-actual-route workflow wins.
+Gyroid and spinodoid still lack admitted actual comparators in tested routes.
+Lattice native accuracy and reference convergence remain unresolved. All four
+cases remain in scope, and the full objective stays active and unachieved.
+
+Records are `runs/macbook-lattice-actual-vtk51-stage-audit-v1`,
+`runs/macbook-lattice-actual-vtk51-quality-localization-v1`,
+`runs/macbook-lattice-actual-vtk51-interior-repair-v1`,
+`runs/macbook-lattice-actual-live-preflight-v1`,
+`runs/macbook-lattice-actual-live-solve-v1`,
+`runs/macbook-lattice-actual-live-field-audit-v1`,
+`runs/macbook-lattice-actual-live-assessment-v1` and
+`runs/macbook-lattice-actual-live-costs-v1`. Jobs through 72 are terminal.
+Earlier selected-next descriptions are historical.
+
 ## A modified actual lattice control passes, 24 October 2026
 
 One saved actual Microgen-derived lattice control now passes all 24 retained

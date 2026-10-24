@@ -69,16 +69,18 @@ def repair(points, cells, surface, *, maximum_attempts=400):
         "signed_volume_difference": volume_difference, "minimum_signed_determinant": float(new_determinants.min())}
 
 
-def worker(run, source_path):
-    worker_started = time.monotonic()
-    workflow.imports()
-    from periodic import periodic_pairs
-
-    source = json.loads((source_path / "result.json").read_text())
+def validate_repair_source(source):
     case_name = source["case"]
-    assert case_name in ("gyroid", "schwarz-solid")
+    assert case_name in ("gyroid", "schwarz-solid", "smooth-lattice")
     old_route = source["route"].startswith("microgen-vtk") and len(source["mmg_calls"]) == 1
-    if old_route:
+    if case_name == "smooth-lattice":
+        assert source["route"] == "microgen-vtk-mmg-first-pass-override" and source["resolution"] == 51
+        assert source["mmg_calls"] == [
+            {"nofem": True, "hausd": .0015, "hmax": .06, "hgrad": 1.3},
+            {"hausd": .001, "hgrad": 1.3, "hmax": .06, "hmin": None, "hsiz": None, "ls": True, "nr": True}]
+        assert "periodic" in source
+        assert source["geometry"]["sampled_two_sided_max"] <= .002 and abs(source["geometry"]["relative_volume_error"]) <= .01
+    elif old_route:
         assert source["first_pass_only"]
         if case_name == "gyroid":
             assert source["first_pass_fem_override"]
@@ -89,6 +91,16 @@ def worker(run, source_path):
         assert source["route"] == "microgen-explicit-preclipping-and-cap-retriangulation-mmg-tuned"
         assert source["saved_seed_replay"] and len(source["mmg_calls"]) == 2
         assert source["geometry"]["sampled_two_sided_max"] <= .002 and abs(source["geometry"]["relative_volume_error"]) <= .01
+
+
+def worker(run, source_path):
+    worker_started = time.monotonic()
+    workflow.imports()
+    from periodic import periodic_pairs
+
+    source = json.loads((source_path / "result.json").read_text())
+    validate_repair_source(source)
+    case_name = source["case"]
     archive = np.load(source_path / "mesh.npz")
     points, cells, surface = (archive[name] for name in ("points", "tetrahedra", "surface"))
     assert len(cells) <= workflow.CAP and len(points) <= 100000
