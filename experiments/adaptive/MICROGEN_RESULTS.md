@@ -91,10 +91,14 @@ fixed-neighbor floating-point witness, not interval certification.
 The second active triangle includes another free cap vertex, 13894. The
 witness therefore does not rule out coupled cap motion or retriangulation.
 Do not apply a whole-cap single-vertex sweep from this failed local star.
-The selected next preflight closes the active free vertices into one bounded
-periodic patch and tests a shared planar translation, keeping curves fixed.
-Read that preflight before any mesh edit, MMG, or FE. Geometry rejection also
-remains unresolved, independently of cap quality.
+The active boundary edge is only 4.03873e-6 long, whereas the edge between
+the two free cap vertices is 0.0277778. A rigid shared translation preserves
+that long edge and is too narrow a next test. The selected preflight gives
+the two active free vertices independent planar motion, with their periodic
+copies and outer curves fixed. It has four unknowns. Its constraints are
+nonlinear; a failed search is inconclusive rather than an infeasibility
+certificate. Read direct candidate quality, positivity, and periodic checks
+before any mesh edit, MMG, or FE. Geometry rejection also remains unresolved.
 
 Job 20 passes 29 focused extraction, fixture, corner, planar-star, witness,
 progress, and resource controls. Independent checkpoint verification rechecks

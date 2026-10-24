@@ -11,11 +11,13 @@ no acute-corner obstruction, and every blocked face has a cap-interior vertex.
 One worst periodic cap-interior star nevertheless has a checked fixed-neighbor
 obstruction. An independent 80-digit replay at quality 0.1 passes and identifies
 another free cap vertex, 13894, in the active support. Stop single-vertex cap
-sweeps. Select one bounded preflight translating the closed active free-vertex
-patch and its periodic copies, with outer cap curves fixed and source volume
-orientation guarded. Shared translation keeps the determinant constraints
-affine and the quality residuals concave; controls must verify that extension.
-Read before applying moves, MMG, or FE. The separate distance failure remains.
+sweeps. Select one bounded preflight giving both active free-vertex orbits
+independent planar motion, with outer cap curves fixed and source volume
+orientation guarded. The active boundary edge is 4.04e-6, compared with a
+0.02778 free-vertex edge that rigid translation would preserve. Test four
+unknowns with analytic-derivative and known-feasible controls. These joint
+constraints are nonlinear; failed search is not an impossibility proof.
+Read direct candidate checks before mesh edits, MMG, or FE. Distance still fails.
 
 Job 17's unsupported two-cell manufactured control is preserved as failure;
 the corrected controls and final 29-test suite pass. Full results and source

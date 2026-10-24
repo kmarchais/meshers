@@ -246,10 +246,13 @@ The new receipt is
 All jobs through 20 are terminal. Job 17 remains a recorded failure.
 
 The selected next experiment is one bounded coupled planar-patch preflight:
-close the active free cap vertices and their periodic copies, then test a
-shared translation while outer curves stay fixed. Controls must verify
-the affine determinant and concave quality constraints for multiple vertices
-moving together. This tests a coupled motion identified by the checked
-witness, not another unchanged sweep. Read before any mesh edit or MMG.
+give the two active free cap vertices independent planar motion and move
+their periodic copies consistently, while outer curves stay fixed. The
+active boundary edge is 4.03873e-6, versus a 0.0277778 edge between free
+vertices. Rigid translation preserves that long edge and is too restricted.
+The four-variable joint constraints are nonlinear; controls must verify
+derivatives and known feasible cases. A failed search must remain inconclusive.
+Read direct cap-quality, volume-positivity, and periodic checks before any
+mesh edit or MMG. This tests motion identified by the checked witness.
 The independent geometry failure remains, so cap feasibility alone cannot
 admit this comparator. All four fixtures and the full goal remain in scope.
