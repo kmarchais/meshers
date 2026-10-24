@@ -75,12 +75,15 @@ def main():
     parser.add_argument('--case', choices=('torus', 'shell', 'disjoint', 'octahedron'), required=True)
     parser.add_argument('--tolerance', type=float, default=.002)
     parser.add_argument('--named', action='store_true', help='Preserve the octahedron planes as named constraints')
+    parser.add_argument('--no-adapt', action='store_true')
+    parser.add_argument('--optimization-passes', type=int, default=1)
     args = parser.parse_args()
     assert args.run.is_dir() and not (args.run/'result.json').exists()
     np, _, meshers, _, _, scorecard = w.imports()
     from facet_incidence_audit import audit
     import meshers._meshers
     paths = (Path(__file__), Path(w.__file__), Path(meshers._meshers.__file__),
+        Path(meshers.__file__),Path(meshers.expression.__file__),Path(meshers.intersection.__file__),
         w.HERE/'scorecard.py', w.HERE/'facet_incidence_audit.py')
     hashes = {str(p): w.digest(p) for p in paths}
     w.save(args.run/'analysis-inputs.json', hashes)
@@ -91,8 +94,8 @@ def main():
     row = dict(case=args.case, qualified=False, no_fe_solve=True,
         options=dict(bounds=w.BOUNDS, cells=24, geometry_tolerance=args.tolerance,
             minimum_quality=.1, max_tetrahedra=w.CAP, threads=1,
-            adapt=True, min_length=.002, max_length=.1, gradation=.3,
-            adapt_iterations=4, quality_guard=.3, optimize_passes=1, order=1),
+            adapt=not args.no_adapt, min_length=.002, max_length=.1, gradation=.3,
+            adapt_iterations=4, quality_guard=.3, optimize_passes=args.optimization_passes, order=1),
         gates=dict(distance=.002, relative_volume=.01, minimum_quality=.1,
             positive_jacobians=True, coherent_facets=True, exact_boundary_topology=True,
             maximum_nodes=250000, maximum_tetrahedra=w.CAP))

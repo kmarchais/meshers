@@ -21,6 +21,24 @@ Points = npt.NDArray[np.float64]
 Indices = npt.NDArray[np.int64]
 
 
+def _affine_planes(field: Scalar, scalar_mode: Sequence[bool]) -> dict[str, Scalar] | None:
+    if not isinstance(field, _meshers.CompiledField) or any(scalar_mode):
+        return None
+    halfspaces = getattr(field, "_halfspaces", None)
+    if halfspaces is None:
+        return None
+    planes: dict[str, Scalar] = {}
+    for index, coefficients in enumerate(halfspaces):
+
+        def plane(
+            x: Points, y: Points, z: Points, coefficients: Sequence[float] = coefficients
+        ) -> Points:
+            return coefficients[0] * x + coefficients[1] * y + coefficients[2] * z + coefficients[3]
+
+        planes[f"plane{index}"] = plane
+    return planes
+
+
 def _check_cancel(cancel: _meshers.CancellationToken | None) -> None:
     if cancel is not None and cancel.cancelled:
         raise _meshers.CancelledError("generation cancelled")

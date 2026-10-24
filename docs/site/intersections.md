@@ -33,6 +33,28 @@ is retried; `reverted_snap_vertices` records the rollback.
 
 ## Preserve sharp corners with named planes
 
+For eligible compiled convex polyhedra, `generate` now recovers the planes
+automatically. For example:
+
+```python
+mesh = meshers.generate(
+    lambda x, y, z: (abs(x) + abs(y) + abs(z) - 0.35) / np.sqrt(3),
+    bounds=(-0.5, 0.5)*3, cells=24,
+    geometry_tolerance=0.002, minimum_quality=0.1,
+    max_tetrahedra=250000, optimize_passes=1,
+)
+assert mesh.diagnostics["polyhedral_constraints"] == 8
+```
+
+The compiler retains an exact maximum of affine forms when the expression
+permits it, including sums of absolute values of affine expressions. The
+specialization uses the same constrained cutter as `generate_intersection`.
+It applies to nonadaptive, nonperiodic Tet4 meshes using one worker, without
+a band or interior-refinement request, and at most 20 optimization passes.
+The number of recovered planes must fit the build's constraint capacity.
+Other fields and modes keep the scalar pipeline. This does not infer arbitrary
+nonlinear creases. Quality, budget and geometric acceptance still apply.
+
 Keep sharp faces separate when their edges and corners must be represented.
 For example, an octahedron satisfies eight plane inequalities:
 
@@ -52,13 +74,13 @@ mesh = meshers.generate_intersection(
 )
 ```
 
-Four faces meet at each octahedron corner. The regression checks that all six
+Use named constraints to choose surface names explicitly. Four faces meet at
+each octahedron corner. The regression checks that all six
 corners survive, every boundary triangle lies on its assigned plane, and volume
-matches the analytic value. The equivalent fused scalar field
-`abs(x) + abs(y) + abs(z) - 0.35` does not label those features. A small forward
-surface estimate for that representation does not establish reverse distance
-from the exact corners to the mesh. Check both directions when qualifying a
-geometry, and check volume separately.
+matches the analytic value. A fused scalar field used through the ordinary
+scalar pipeline does not label those features. A small forward surface estimate
+does not establish reverse distance from exact creases to the mesh. Check both
+directions when qualifying a geometry, and check volume separately.
 
 ## Parameter maps and periodicity
 

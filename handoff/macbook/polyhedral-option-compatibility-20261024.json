@@ -1,0 +1,50 @@
+{
+  "command_code": "import json,meshers,numpy as np\nrows=[]\nfor name,options in ((\"float_threads\",{\"threads\":1.0}),(\"float_interior_nodes\",{\"interior_refine_nodes\":0.0}),(\"zero_budget\",{\"max_tetrahedra\":0}),(\"numpy_passes\",{\"optimize_passes\":np.int64(0)})):\n kw=dict(bounds=(-.5,.5)*3,cells=12,geometry_tolerance=1.,optimize_passes=0); kw.update(options)\n try:\n  m=meshers.generate(lambda x,y,z:(abs(x)+abs(y)+abs(z)-.35)/np.sqrt(3),**kw); rows.append(dict(case=name,status=\"accepted\",polyhedral_constraints=m.diagnostics.get(\"polyhedral_constraints\")))\n except Exception as e:rows.append(dict(case=name,status=\"rejected\",error_type=type(e).__name__))\nprint(json.dumps(rows))\n",
+  "baseline_pythonpath": "/Users/kmarchais/dev/meshers/.local-work/native-baselines/8565629a92065d9c852e6fe21511c0e2b7325b6fc3ee84c7d32116ffe3407efe",
+  "results": {
+    "baseline": [
+      {
+        "case": "float_threads",
+        "status": "rejected",
+        "error_type": "TypeError"
+      },
+      {
+        "case": "float_interior_nodes",
+        "status": "rejected",
+        "error_type": "TypeError"
+      },
+      {
+        "case": "zero_budget",
+        "status": "rejected",
+        "error_type": "ValueError"
+      },
+      {
+        "case": "numpy_passes",
+        "status": "accepted",
+        "polyhedral_constraints": null
+      }
+    ],
+    "candidate": [
+      {
+        "case": "float_threads",
+        "status": "rejected",
+        "error_type": "TypeError"
+      },
+      {
+        "case": "float_interior_nodes",
+        "status": "rejected",
+        "error_type": "TypeError"
+      },
+      {
+        "case": "zero_budget",
+        "status": "rejected",
+        "error_type": "ValueError"
+      },
+      {
+        "case": "numpy_passes",
+        "status": "accepted",
+        "polyhedral_constraints": 8
+      }
+    ]
+  }
+}

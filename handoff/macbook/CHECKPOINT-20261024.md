@@ -1,5 +1,19 @@
 # Native MacBook continuation, 24 October 2026
 
+Current native candidate is6ce9e397, built withRust1.95.0/experimental-surfaces.
+It adds bounded exact polyhedral metadata and default nonperiodic/nonadaptive
+Tet4 dispatch to the constrained cutter. The same scalar octahedron that the
+preserved8565629a package rejects now passes every gate with13,488tets. Final
+suite149 passes171tests1skip; Clippy138 passes. Jobs141–144 admit all four study
+controls. Audit147 proves exact geometric equality to old meshes after lattice
+relabeling and replays the historical eight cases by original library hash.
+No FE solve, reference promotion or new Microgen timing comparison occurred.
+See [polyhedral results](../../experiments/adaptive/POLYHEDRAL_RESULTS.md).
+The adaptive fused-field failure remains open; future work must preserve actual
+constraint identities through adaptive topology operations. The full goal stays
+active and unachieved. Failed jobs145 and146 are documented controls/audits,
+not interrupted work to restart. All jobs through149 are terminal.
+
 Latest goal continuation broadens failure coverage with torus, hollow shell,
 separated spheres and sharp octahedron controls. Jobs 122–134 are terminal.
 The native suite passes 143 tests with one optional skip; 11 focused controls

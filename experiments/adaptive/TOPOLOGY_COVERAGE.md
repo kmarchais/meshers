@@ -1,5 +1,9 @@
 # Failure coverage beyond the four study specimens
 
+Follow-up: [automatic polyhedral preservation](POLYHEDRAL_RESULTS.md) fixes the
+default nonadaptive scalar route. The adaptive fused-octahedron failure below
+remains recorded and uncorrected; it is not reclassified by that narrower change.
+
 Kevin prioritizes failure coverage before optimization. The four original
 specimens remain the comparison study. These additional analytic controls
 exercise a handle, an internal cavity, disconnected solids and sharp corners.

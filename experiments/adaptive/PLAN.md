@@ -1,5 +1,24 @@
 # Adaptive implicit meshing: plan and status
 
+## Native polyhedral feature preservation, 24 October 2026
+
+The initial scalar cut, not only optimization, misses octahedron crease edges.
+Jobs135–136 minimize the failure. The compiler now retains bounded exact
+max-of-affine forms and dispatches eligible default Tet4 calls through the
+existing constrained cutter. Job140 admits the same scalar function with
+13,488 tets, qmin0.317878 and distance8.28e-17. The preserved old package fails
+the regression in146. Build137, Clippy138 and final suite149 passes171tests1skip.
+Job147 verifies all four fresh study controls and exact canonical equality
+against their baselines, plus historical eight-case replay. See
+[polyhedral results](POLYHEDRAL_RESULTS.md).
+
+Next extend feature preservation only with actual constraint identities through
+the adaptive operations. The adaptive fused-field failure is still a red
+control; supported default mode is fixed. Do not bypass adaptive options,
+periodic checks, reverse distance or quality. No reference or comparative timing
+is promoted. Keep all four original cases and the remaining actual comparator
+and lattice convergence problems in scope.
+
 ## Broader topology and sharp-feature controls, 24 October 2026
 
 Jobs 122–134 establish additional failure coverage without a native patch.

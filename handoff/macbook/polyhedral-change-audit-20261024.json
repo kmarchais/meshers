@@ -1,0 +1,149 @@
+{
+  "study_controls": [
+    {
+      "case": "gyroid",
+      "verified": {
+        "run": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-polyhedral-gyroid-control-v1",
+        "input_hashes": 22,
+        "artifact_replays": 1,
+        "full_geometry_replayed": true,
+        "rows": [
+          {
+            "directory": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-polyhedral-gyroid-control-v1/repeat-0-meshers-tet4-24",
+            "qualified": true,
+            "mesh_sha256": "0b09bebf49b50d7305372df3a323973a1a40e802245c91246f123d9028fe5f5b",
+            "used_nodes": 17647,
+            "total_nodes": 17647
+          }
+        ]
+      },
+      "canonical_arrays_identical": true,
+      "raw_array_equality": {
+        "points": true,
+        "tetrahedra": true,
+        "surface": true
+      },
+      "original": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-mesh-only-gyroid-repeated-v1/repeat-0-meshers-tet4-24",
+      "current": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-polyhedral-gyroid-control-v1/repeat-0-meshers-tet4-24",
+      "elements": 72757,
+      "nodes": 17647
+    },
+    {
+      "case": "schwarz-solid",
+      "verified": {
+        "run": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-polyhedral-schwarz-control-v1",
+        "input_hashes": 22,
+        "artifact_replays": 1,
+        "full_geometry_replayed": true,
+        "rows": [
+          {
+            "directory": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-polyhedral-schwarz-control-v1/repeat-0-meshers-tet4-24",
+            "qualified": true,
+            "mesh_sha256": "60f885e202b7727c6c94e5f7aa7ff6423a51f95f5a8a45fdb8db01ec70022311",
+            "used_nodes": 19004,
+            "total_nodes": 19004
+          }
+        ]
+      },
+      "canonical_arrays_identical": true,
+      "raw_array_equality": {
+        "points": true,
+        "tetrahedra": true,
+        "surface": true
+      },
+      "original": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-mesh-only-schwarz-repeated-v1/repeat-0-meshers-tet4-24",
+      "current": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-polyhedral-schwarz-control-v1/repeat-0-meshers-tet4-24",
+      "elements": 90792,
+      "nodes": 19004
+    },
+    {
+      "case": "spinodoid",
+      "verified": {
+        "run": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-polyhedral-spinodoid-control-v1",
+        "input_hashes": 22,
+        "artifact_replays": 1,
+        "full_geometry_replayed": true,
+        "rows": [
+          {
+            "directory": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-polyhedral-spinodoid-control-v1/repeat-0-meshers-tet4-historical32",
+            "qualified": true,
+            "mesh_sha256": "ace00797498343729b2b11c2ab0bb3de78ff40228e5db763cfbafbfb4c16fbc8",
+            "used_nodes": 16732,
+            "total_nodes": 16732
+          }
+        ]
+      },
+      "canonical_arrays_identical": true,
+      "raw_array_equality": {
+        "points": true,
+        "tetrahedra": true,
+        "surface": true
+      },
+      "original": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-spinodoid-tet4-coverage-v1/repeat-0-meshers-tet4-historical32",
+      "current": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-polyhedral-spinodoid-control-v1/repeat-0-meshers-tet4-historical32",
+      "elements": 72528,
+      "nodes": 16732
+    },
+    {
+      "case": "smooth-lattice",
+      "verified": {
+        "run": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-polyhedral-lattice-control-v1",
+        "input_hashes": 22,
+        "artifact_replays": 1,
+        "full_geometry_replayed": true,
+        "rows": [
+          {
+            "directory": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-polyhedral-lattice-control-v1/repeat-0-meshers-tet4-historical32",
+            "qualified": true,
+            "mesh_sha256": "2baf497229bc5ff9d4c56b34e937211006a9423b28fe25b95efcb3c76269d75c",
+            "used_nodes": 48077,
+            "total_nodes": 48077
+          }
+        ]
+      },
+      "canonical_arrays_identical": true,
+      "raw_array_equality": {
+        "points": false,
+        "tetrahedra": false,
+        "surface": false
+      },
+      "original": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-lattice-tet4-coverage-v1/repeat-0-meshers-tet4-historical32",
+      "current": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-polyhedral-lattice-control-v1/repeat-0-meshers-tet4-historical32",
+      "elements": 218239,
+      "nodes": 48077
+    }
+  ],
+  "native_baseline_sha256": "8565629a92065d9c852e6fe21511c0e2b7325b6fc3ee84c7d32116ffe3407efe",
+  "candidate_sha256": "6ce9e3978b533a9fe0a52e9bd8cfea2b881312729290816978786f377472983e",
+  "polyhedral_reverse_distance": 7.919159918457851e-17,
+  "polyhedral_result": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-octahedron-auto-polyhedral-v1/result.json",
+  "inputs": {
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/verify_polyhedral_change.py": "7a3ea3ec2d6b05279c5edf97ff1679b64966da299228436e81ebc347e90b6622",
+    "/Users/kmarchais/dev/meshers/crates/meshers-python/python/meshers/_meshers.abi3.so": "6ce9e3978b533a9fe0a52e9bd8cfea2b881312729290816978786f377472983e",
+    "/Users/kmarchais/dev/meshers/.local-work/native-baselines/8565629a92065d9c852e6fe21511c0e2b7325b6fc3ee84c7d32116ffe3407efe/meshers/_meshers.abi3.so": "8565629a92065d9c852e6fe21511c0e2b7325b6fc3ee84c7d32116ffe3407efe",
+    "/Users/kmarchais/dev/meshers/handoff/macbook/native-baseline-before-polyhedral-20261024.json": "63ab0ec624c6db893c327d4b5d96428a7b5be8c0c03570b00aa39d2763d6b6dc",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-polyhedral-gyroid-control-v1/repeat-0-meshers-tet4-24/result.json": "b5179faa4fc0bff950bfead21b83f051ac7ec6d9db7683b4ae9c215e94b6f6ca",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-polyhedral-gyroid-control-v1/repeat-0-meshers-tet4-24/mesh.npz": "0b09bebf49b50d7305372df3a323973a1a40e802245c91246f123d9028fe5f5b",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-mesh-only-gyroid-repeated-v1/repeat-0-meshers-tet4-24/result.json": "07f943a542ebb0b4e4ac41678f372c6064d94d4769d27f0b62705d2782d0941e",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-mesh-only-gyroid-repeated-v1/repeat-0-meshers-tet4-24/mesh.npz": "0b09bebf49b50d7305372df3a323973a1a40e802245c91246f123d9028fe5f5b",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-polyhedral-schwarz-control-v1/repeat-0-meshers-tet4-24/result.json": "d2b6f1e4e4f3598adb5187cace2ea1a313719be2170067c6d2d964e6f1b9a40e",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-polyhedral-schwarz-control-v1/repeat-0-meshers-tet4-24/mesh.npz": "60f885e202b7727c6c94e5f7aa7ff6423a51f95f5a8a45fdb8db01ec70022311",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-mesh-only-schwarz-repeated-v1/repeat-0-meshers-tet4-24/result.json": "9ce967a11a9eef46bc296078073916e03dc88b595e947750b462a21716f8eaa6",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-mesh-only-schwarz-repeated-v1/repeat-0-meshers-tet4-24/mesh.npz": "60f885e202b7727c6c94e5f7aa7ff6423a51f95f5a8a45fdb8db01ec70022311",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-polyhedral-spinodoid-control-v1/repeat-0-meshers-tet4-historical32/result.json": "80f01f23c56b706263d880429373df1a33240b09596b0b25d8929c2c9a74dcef",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-polyhedral-spinodoid-control-v1/repeat-0-meshers-tet4-historical32/mesh.npz": "ace00797498343729b2b11c2ab0bb3de78ff40228e5db763cfbafbfb4c16fbc8",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-spinodoid-tet4-coverage-v1/repeat-0-meshers-tet4-historical32/result.json": "8f93d67d8ab416a27bc7a4ebc70073b671655b65c1319df2b71b9a7cdef8577b",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-spinodoid-tet4-coverage-v1/repeat-0-meshers-tet4-historical32/mesh.npz": "ace00797498343729b2b11c2ab0bb3de78ff40228e5db763cfbafbfb4c16fbc8",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-polyhedral-lattice-control-v1/repeat-0-meshers-tet4-historical32/result.json": "b414058705bc547e10ef8b4657f449e5d1ec4df587829c811850c99aa3a6c6a2",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-polyhedral-lattice-control-v1/repeat-0-meshers-tet4-historical32/mesh.npz": "2baf497229bc5ff9d4c56b34e937211006a9423b28fe25b95efcb3c76269d75c",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-lattice-tet4-coverage-v1/repeat-0-meshers-tet4-historical32/result.json": "3f23a408237e2f8906c1775a4368aa8473e3078a9abb9c2bfb0540e33ee8db8b",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-lattice-tet4-coverage-v1/repeat-0-meshers-tet4-historical32/mesh.npz": "4b68d8c3de770102c26348e0888f719a6ebbf3663cc32b08dac0886b75f3e1a2",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-octahedron-auto-polyhedral-v1/result.json": "c7beb6ccba120244a1abec85743263b8def83e240c1935b103e8fea498003e91",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-octahedron-auto-polyhedral-v1/mesh.npz": "2d72aa2e5a095a0f7351c59c76ecc1fd98e269a0cefc86ba2450f9129d3888c6",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-octahedron-auto-polyhedral-v1/reference.npz": "bd893a0238dd685ad8aee1a3d6d61f3651de42e50a2b278d5faf49e7086e4813",
+    "/Users/kmarchais/dev/meshers/handoff/macbook/polyhedral-change-audit-20261024-historical.json": "49fec139dcdc13d573d0d92a982fc8426dfd3ca49a3557cece3d984a15e25135"
+  },
+  "no_fe_solve": true,
+  "reference_promoted": false,
+  "comparative_timing_claim": false
+}

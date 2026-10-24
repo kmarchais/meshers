@@ -1,1 +1,5 @@
 *.patch whitespace=-blank-at-eol
+
+# Captured test output is evidence; retain its original whitespace.
+experiments/adaptive/runs/**/*.log -whitespace
+experiments/adaptive/runs/**/*.xml -whitespace

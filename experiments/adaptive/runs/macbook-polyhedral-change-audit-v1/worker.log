@@ -1,0 +1,29 @@
+/Users/kmarchais/dev/meshers/.local-work/macbook-runtime/venv/lib/python3.12/site-packages/fedoo/core/base.py:80: UserWarning: WARNING: no fast direct sparse solver has been found. Consider installing pypardiso (Intel) or python-mumps (any platform) to improve computation performance
+  warnings.warn(
+Traceback (most recent call last):
+  File "/Users/kmarchais/dev/meshers/experiments/adaptive/verify_polyhedral_change.py", line 83, in <module>
+    main()
+  File "/Users/kmarchais/dev/meshers/experiments/adaptive/verify_polyhedral_change.py", line 48, in main
+    np.testing.assert_array_equal(new[name], previous[name])
+  File "/Users/kmarchais/dev/meshers/.local-work/macbook-runtime/venv/lib/python3.12/site-packages/numpy/testing/_private/utils.py", line 1128, in assert_array_equal
+    assert_array_compare(operator.__eq__, actual, desired, err_msg=err_msg,
+  File "/Users/kmarchais/dev/meshers/.local-work/macbook-runtime/venv/lib/python3.12/site-packages/numpy/testing/_private/utils.py", line 988, in assert_array_compare
+    raise AssertionError(msg)
+AssertionError: 
+Arrays are not equal
+
+Mismatched elements: 1152 / 144231 (0.799%)
+First 5 mismatches are at indices:
+ [46069, 0]: -0.1764723688428579 (ACTUAL), -0.00011287775373698443 (DESIRED)
+ [46069, 1]: -0.00016995155134207196 (ACTUAL), -0.1765082585565104 (DESIRED)
+ [46069, 2]: 0.14576861366783792 (ACTUAL), 0.1457030190459601 (DESIRED)
+ [46070, 0]: -0.00011287775373698443 (ACTUAL), -0.1764723688428579 (DESIRED)
+ [46070, 1]: -0.1765082585565104 (ACTUAL), -0.00016995155134207196 (DESIRED)
+Max absolute difference among violations: 0.95217617
+Max relative difference among violations: 1562.39369805
+ ACTUAL: array([[-0.5     , -0.5     , -0.45787 ],
+       [-0.5     , -0.5     , -0.5     ],
+       [-0.462301, -0.466145, -0.462284],...
+ DESIRED: array([[-0.5     , -0.5     , -0.45787 ],
+       [-0.5     , -0.5     , -0.5     ],
+       [-0.462301, -0.466145, -0.462284],...

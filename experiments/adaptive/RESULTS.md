@@ -1,5 +1,18 @@
 # Adaptive and quadratic implicit meshing: results
 
+## Automatic exact polyhedral feature route, 24 October 2026
+
+The default fused octahedron now admits without a manual plane rewrite. Native
+compiler metadata recovers its eight affine constraints and reuses the existing
+constrained cutter. Same-input baseline rejects at error0.003240370; candidate
+has13,488tets/3,451nodes, qmin0.317878, sampled distance8.28e-17 and zero reported
+relative volume error. The old package still fails the regression. Final suite
+passes171tests1skip and Clippy/lint pass. All four fresh fixed-study controls
+pass with exact geometric equality to saved baselines, allowing lattice node
+relabeling. This does not add general adaptive/nonlinear/periodic crease support
+or prove the original Microgen/MMG objective. See
+[scope and evidence](POLYHEDRAL_RESULTS.md).
+
 ## Analytic topology coverage, 24 October 2026
 
 Eight saved Tet4 cases pass fresh replay, including all four study specimens

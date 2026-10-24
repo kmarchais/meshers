@@ -209,6 +209,7 @@ def main():
         w.HERE/'scorecard.py',w.HERE/'test_mesh_only_comparison.py',w.HERE/'interior_relocation_trial.py',w.HERE/'interior_star_probe.py',w.HERE/'microgen_tet10_control.py',w.HERE/'box_projection.py',w.HERE/'gradient_tie_probe.py',
         w.HERE/'runs/g3-spinodoid-compiled32-v1/fourier-coefficients.json']
     paths.extend(paths_modules)
+    paths.extend((Path(meshers.__file__),Path(meshers.expression.__file__),Path(meshers.intersection.__file__)))
     paths.extend((w.HERE/'facet_incidence_audit.py',w.ROOT.parent/'periodic-microgen/experiments/periodic-fea/periodic.py',
         Path(importlib.metadata.distribution('mmgpy').locate_file('mmgpy/bin/mmg3d_O3'))))
     paths.extend(source/(args.case+suffix) for suffix in ('-samples.npz','-specimen.json'))

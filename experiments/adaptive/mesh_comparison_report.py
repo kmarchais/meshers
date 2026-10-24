@@ -14,7 +14,7 @@ def distribution(values):
     return None if not values else dict(median=statistics.median(values),minimum=min(values),maximum=max(values))
 
 
-def verify_run(run,replay_geometry=False):
+def verify_run(run,replay_geometry=False,native_baseline=None):
     np,*_=w.imports()
     from periodic import periodic_pairs
     from facet_incidence_audit import audit
@@ -26,6 +26,8 @@ def verify_run(run,replay_geometry=False):
     resolved=[]
     for name,expected in hashes.items():
         path=Path(name)
+        if native_baseline is not None and path.suffix in ('.so','.pyd') and w.digest(path)!=expected:
+            path=native_baseline
         if w.digest(path)!=expected and path.suffix=='.py':
             matches=[p for p in run.glob('*.py') if w.digest(p)==expected]
             assert matches,f'Missing measured source {path}'
@@ -136,6 +138,7 @@ def main():
     parser.add_argument('--runs',type=Path,nargs='+',required=True)
     parser.add_argument('--output',type=Path,required=True)
     parser.add_argument('--verify',action='store_true')
+    parser.add_argument('--native-baseline',type=Path,help='Preserved native library; its hash must match the measured input')
     parser.add_argument('--pilots',type=Path,nargs='*',default=[])
     args=parser.parse_args()
     assert not args.output.exists()
@@ -148,7 +151,7 @@ def main():
         pilots.append(dict(run=str(p),case=pilot['case'],summary_sha256=w.digest(p/'summary.json'),
             rows=[{k:r[k] for k in ('case','config','status','qualified','generation_s','failed_attempt_s','elements','nodes','quality_quantiles','error','periodic_error') if k in r}
                 |dict(sampled_distance=r.get('geometry',{}).get('sampled_two_sided_max')) for r in pilot['rows']]))
-    verification=[verify_run(p,replay_geometry=True) for p in args.runs] if args.verify else []
+    verification=[verify_run(p,replay_geometry=True,native_baseline=args.native_baseline) for p in args.runs] if args.verify else []
     inputs={str(Path(__file__)):w.digest(Path(__file__))}
     for p in args.runs:
         for name in ('summary.json','manifest.json','analysis-inputs.json'):

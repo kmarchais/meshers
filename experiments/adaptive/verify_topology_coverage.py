@@ -11,6 +11,7 @@ from topology_coverage import boundary_topology, fixture, octahedron
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('--output', type=Path, required=True)
+    parser.add_argument('--native-baseline', type=Path, help='Preserved generation library, verified against its original recorded hash')
     args = parser.parse_args()
     assert not args.output.exists()
     np, _, _, _, _, scorecard = w.imports()
@@ -34,14 +35,16 @@ def main():
         assert row['qualified']
         run = directory if name is None else directory.parent
         measured = json.loads((run/'analysis-inputs.json').read_text())
-        assert measured[str(binary)] == w.digest(binary)
         for source, expected in measured.items():
             path = Path(source)
+            if args.native_baseline is not None and path.suffix in ('.so', '.pyd') and w.digest(path) != expected:
+                path = args.native_baseline
             if w.digest(path) != expected and path.suffix == '.py':
                 matches = [p for p in run.glob('*.py') if w.digest(p) == expected]
                 assert matches, source
                 path = matches[0]
             assert w.digest(path) == expected, source
+            inputs[str(path)] = expected
         inputs[str(directory/'result.json')] = w.digest(directory/'result.json')
         assert w.digest(directory/'mesh.npz') == row['mesh_sha256']
         inputs[str(directory/'mesh.npz')] = row['mesh_sha256']

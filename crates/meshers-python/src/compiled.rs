@@ -11,6 +11,7 @@ use pyo3::{
     prelude::*,
 };
 use std::collections::HashMap;
+mod polyhedral;
 
 pub(crate) type Kernel = unsafe extern "C" fn(f64, f64, f64, *mut f64) -> i32;
 
@@ -38,6 +39,8 @@ pub(crate) struct CompiledField {
     pub(crate) has_gradient: bool,
     #[pyo3(get)]
     node_count: usize,
+    #[pyo3(get)]
+    _halfspaces: Option<Vec<[f64; 4]>>,
     _memory: CodeMemory,
 }
 
@@ -344,6 +347,7 @@ pub(crate) fn _compile_expression(
         value_kernel,
         has_gradient: outputs.len() == 4,
         node_count: nodes.len(),
+        _halfspaces: polyhedral::halfspaces(&nodes, outputs[0]),
         _memory: memory,
     })
 }

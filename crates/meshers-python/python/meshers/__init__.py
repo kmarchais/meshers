@@ -14,7 +14,7 @@ import numpy.typing as npt
 from . import _meshers
 from ._meshers import CancellationToken, CancelledError, CompiledField, MeshingError
 from .expression import TraceError, compile_field
-from .intersection import generate_intersection
+from .intersection import _affine_planes, generate_intersection
 
 if TYPE_CHECKING:
     import fedoo
@@ -184,7 +184,8 @@ class Mesh:
                 metadata["FeatureEdges"] = self.feature_edges
 
 
-def generate(
+# Keep public option validation and pipeline dispatch together.
+def generate(  # ruff: ignore[complex-structure]
     field: str | Field | CompiledField,
     *,
     gradient: Field | None = None,
@@ -245,6 +246,8 @@ def generate(
         compile: Compile supported expressions and their first derivatives
             automatically. False selects NumPy callbacks. Unsupported operations
             emit a warning and use callbacks, which must return float64 (N,) arrays.
+            Eligible nonperiodic, nonadaptive Tet4 convex polyhedra retain exact
+            half-space constraints; diagnostics report ``polyhedral_constraints``.
         adapt: Experimental. Replace fixed surface refinement by size-driven
             adaptation: boundary edges follow the curvature needed for
             ``geometry_tolerance``, the interior grades towards ``max_length``.
@@ -298,6 +301,7 @@ def generate(
     if threads is None:
         threads = _meshers.available_threads()
     preparation_start = time.perf_counter()
+    gradient_override = gradient is not None
     evaluator = (
         "native"
         if isinstance(field, str)
@@ -313,6 +317,44 @@ def generate(
         except TraceError as error:
             warnings.warn(f"Using NumPy callbacks: {error}", RuntimeWarning, stacklevel=2)
     preparation_seconds = time.perf_counter() - preparation_start
+    scalar_mode = (
+        adapt,
+        order != 1,
+        band is not None,
+        any(periodic),
+        threads != 1,
+        interior_refine_nodes != 0,
+        gradient_override,
+        not 0 <= optimize_passes <= 20,
+        max_tetrahedra <= 0,
+        not all(
+            isinstance(value, (int, np.integer))
+            for value in (threads, interior_refine_nodes, optimize_passes, max_tetrahedra)
+        ),
+    )
+    planes = _affine_planes(field, scalar_mode)
+    if planes is not None:
+        mesh = generate_intersection(
+            planes,
+            bounds=b,
+            cells=cells,
+            geometry_tolerance=geometry_tolerance,
+            minimum_quality=minimum_quality,
+            max_tetrahedra=int(max_tetrahedra),
+            optimize_passes=int(optimize_passes),
+            snap=snap,
+            batch_size=batch_size,
+            cancel=cancel,
+        )
+        mesh.diagnostics.update(
+            threads=1,
+            evaluator="compiled",
+            polyhedral_constraints=len(planes),
+            inserted_interior_nodes=0,
+            preparation_seconds=preparation_seconds
+            + mesh.diagnostics.get("preparation_seconds", 0.0),
+        )
+        return mesh
     result = _meshers.generate(
         field,
         gradient,

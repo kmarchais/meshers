@@ -1,5 +1,16 @@
 # Meshers project tracking
 
+Meshers now preserves supported convex polyhedral features automatically in
+default nonperiodic, nonadaptive Tet4 generation. The compiler recovers exact
+affine half-spaces and reuses the constrained cutter. The formerly rejected
+scalar octahedron passes with 13,488 tets, qmin0.317878 and distance8.28e-17;
+rotated/translated and option-gating regressions pass. Final suite171pass1skip.
+Fresh controls for all four original specimens pass, with exact geometric
+mesh equality to their baselines; lattice differs only in labels/order.
+See [polyhedral results](experiments/adaptive/POLYHEDRAL_RESULTS.md).
+Adaptive/nonlinear/periodic crease handling remains open. The original actual
+comparator and lattice reference gaps persist; the complete goal is unachieved.
+
 The failure-first continuation now has an eight-case saved-artifact replay:
 all four fixed specimens plus torus, hollow shell, separated spheres and a
 sharp octahedron. New curved controls required independent volume admission;
