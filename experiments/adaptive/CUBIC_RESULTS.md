@@ -1,5 +1,28 @@
 # Reference-only cubic enrichment on G3
 
+## Completed curve-priority nested diagnostic on Mac
+
+Mac job 11 passes sixteen controls and exact-domain preflight at 249,999
+nodes and 158,967 tets. It accepts 544 of 549 preferred wall/cap curve edge
+orbits. Minimum quality is 0.10271976. Domain and old-field interpolation
+errors are below 3.34e-16, and periodic caps, coherent facets, distance,
+volume, and sampled positive Jacobians pass. Job 12 confirms actual reduced
+assembly at 6.230 GiB peak RSS under the unchanged 8 GiB watchdog.
+
+Job 13 completes six fresh loads with verified Accelerate single-thread
+mode. Worker time is 216.33 seconds at 5.472 GiB. Independent fields and
+positive quadrature pass. The largest parent-to-refined FE correction is
+-0.0132094%, with Galerkin balance error 4.82986e-10. Worst retained-model
+disagreement remains 1.2556246%, failing 1%. All 24 models remain unchanged.
+
+This gives little extra gain over longest-edge refinement at 1.2565145%.
+Stop these one-stage bisection recipes without a native feature, replacement
+reference, or workflow claim. Independent checkpoint verification rechecks
+all transferred evidence, exact measured source versions, and every full
+model score for the three Mac nested studies. The objective remains active.
+Next return to missing admitted actual-comparator coverage, using preserved
+failure evidence before selecting a new bounded experiment.
+
 ## Lattice26 fixed-domain negative control and Mac thread correction
 
 Mac job 6 adds 50,028 nodes to the best saved native lattice26 mesh, reaching

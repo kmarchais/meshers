@@ -156,12 +156,37 @@ seconds at 1.167 GiB RSS, with the corrected numerical thread policy.
 
 After reading that preflight, job 12 measures actual reduced assembly at
 721,914 DOFs, 57,483,976 stored entries, and 692,695,372 CSR bytes. It passes
-in 9.97 seconds at 6.230 GiB peak RSS. Job 13 then starts one fresh six-load
+in 9.97 seconds at 6.230 GiB peak RSS. Job 13 then completes one fresh six-load
 solve, independent field and positive-rule audits, and full Galerkin and
 24-model assessment. The 8 GiB cap and timeouts remain unchanged. The directory is
 `/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-lattice-adapt26-curve-nested-v1`.
-Read its authoritative completion before a successor. This remains an
-experimental saved-mesh study, with no public native feature or workflow win.
+All six loads, independent fields, positive quadrature, and full Galerkin
+assessment pass. Solve worker time is 216.33 seconds at 5.472 GiB RSS. The
+largest additional FE correction is only -0.0132094%, and full energy balance
+agrees within 4.82986e-10. Worst disagreement across all 24 models remains
+1.2556246%, failing 1%. Prioritizing the curve edges gives little additional
+gain over the 1.2565145% length-only result. Stop these one-stage bisection
+recipes. No public native feature, stiffness reference, or workflow win is
+promoted from either negative result.
+
+## Verification and next work
+
+[verify_checkpoint.py](verify_checkpoint.py) independently rechecks all
+3,509 transferred files and 1,650,689,800 bytes, 150 Mac input hashes, and
+72 full generalized-eigenvalue comparisons for the three completed nested
+studies. All pass. Twenty-six changed source references resolve to exact
+frozen driver or Git content, without relaxing any mesh or field hash.
+The receipt is [verification-20261024.json](verification-20261024.json).
+
+Mac jobs 0–13 are complete. No successor is queued at this checkpoint.
+The active goal remains the full four-case objective. Return to the missing
+admitted actual Microgen comparator coverage, beginning with the preserved
+Gyroid and fixed-spinodoid failures in `MICROGEN_RESULTS.md` and the current
+coherent seed/cap evidence. Select one bounded preflight from that evidence
+before any MMG or solve. Do not repeat rejected interior moves, local cavities,
+seed grids, sizing strengths, or polynomial degrees without a new reason.
+Lattice reference uncertainty remains open; these negative refinements do
+not justify selecting a favorable tensor or removing any retained model.
 
 Schwarz retains its historical repeated wins against explicitly modified
 actual Microgen routes. Gyroid and spinodoid still lack admitted actual

@@ -1,5 +1,23 @@
 # Adaptive implicit meshing: plan and status
 
+## Curve-priority diagnostic also misses, 24 October 2026
+
+Mac jobs 11–13 pass sixteen controls, geometry and memory preflights, six
+fresh loads, independent fields, positive quadrature, and full Galerkin
+assessment. Curve-priority refinement fits 249,999 nodes and 158,967 tets,
+but changes worst stiffness by only 0.0132094%. Worst 24-model disagreement
+is 1.2556246%, still failing 1%. Stop these one-stage bisection recipes.
+No native feature, reference, or workflow advantage is promoted.
+
+Independent checkpoint verification passes all 3,509 transferred file hashes,
+150 input hashes with exact historical source resolution, and 72 full model
+comparisons. All jobs are terminal and no successor is queued. The full goal
+remains active. Return to missing admitted actual Gyroid and spinodoid
+comparators, reading preserved coherent-seed and cap evidence before choosing
+one new preflight. Do not revive a rejected recipe without new evidence.
+Read `handoff/macbook/CHECKPOINT-20261024.md` for the verified Mac environment,
+threading correction, full completed sequence, and four-case limits.
+
 ## Negative bulk refinement and corrected Mac threading, 24 October 2026
 
 Mac jobs 6–8 finish the fixed-domain lattice26 longest-edge test. It fits

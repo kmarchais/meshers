@@ -10,8 +10,11 @@ disagreement. No reference is promoted. The longest-edge lattice26 refinement
 also passes audits but misses at 1.256515%, despite reaching 250,000 nodes.
 That recipe is stopped. Verified Apple Accelerate single-thread controls
 now pass 55 tests and twelve loads; earlier Mac numerical timings are excluded
-from one-thread comparison baselines. One preflight prioritizing actual
-wall/box curve edge orbits is selected next, under unchanged caps.
+from one-thread comparison baselines. Curve-priority refinement also passes
+six fresh loads and all audits, but misses at 1.255625%. Stop these one-stage
+bisection recipes. Independent checkpoint verification checks all 3,509
+transferred files, 150 input hashes, and 72 full model comparisons. Return
+to missing admitted actual-comparator coverage before another lattice recipe.
 
 Updated 24 October 2026. Covers the recorded project history on
 `handoff/g3-microgen-20261017` through commit `9a20151`, plus completed

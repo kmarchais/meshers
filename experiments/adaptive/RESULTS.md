@@ -1,5 +1,25 @@
 # Adaptive and quadratic implicit meshing: results
 
+## Curve-priority nested lattice26 remains rejected, 24 October 2026
+
+Prioritizing actual wall/cap curve edge orbits accepts 544 of 549 preferred
+orbits while retaining every guard. The mesh fits 249,999 nodes and 158,967
+tets. Geometry and old fields reproduce within 3.34e-16, and all admission
+checks pass. Six fresh loads and independent field, positive-rule, and
+Galerkin checks pass with verified single-thread Accelerate. Peak solve RSS
+is 5.472 GiB, below the unchanged 8 GiB watchdog.
+
+The largest FE correction is only -0.0132094%, and full energy balance agrees
+within 4.82986e-10. Worst disagreement across all 24 models is 1.2556246%,
+still failing 1%. This is little gain over longest-edge refinement at
+1.2565145%. Stop these one-stage bisection recipes. No native product feature,
+reference, continuum bound, or workflow advantage is promoted.
+
+Independent checkpoint verification passes 3,509 transferred hashes, 150
+Mac input hashes, and 72 full model comparisons. The four-case objective
+remains active; missing admitted actual comparators and lattice reference
+uncertainty remain unresolved. See the current Mac checkpoint.
+
 ## Lattice26 bulk refinement remains rejected, 24 October 2026
 
 The fixed-domain longest-edge refinement reaches exactly 250,000 nodes and
