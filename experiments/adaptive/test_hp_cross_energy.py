@@ -54,3 +54,32 @@ def test_nonidentity_child_maps_reproduce_exact_polynomial_cross_integrals():
     np.testing.assert_allclose(local.sum(axis=0), coefficients.T @ (basis.T @ expected @ basis) @ coefficients, atol=1e-12)
     np.testing.assert_allclose(volumes.sum(), measured_volume, atol=1e-14)
     assert np.linalg.eigvalsh(local).min() > -1e-12
+
+
+def test_cell_batches_match_grouped_nonidentity_maps_and_local_mode_grams():
+    workflow.imports()
+    from cubic_reference import register_cubic
+    from fedoo.lib_elements.tetrahedron import Tet10, Tet4
+    from hp_batched_energy import integrate_batched
+    from quadrature_audit import duffy_rule
+
+    p2, p3, linear = Tet10(), register_cubic()(), Tet4()
+    maps = np.array([np.eye(4), np.eye(4)])
+    maps[0, 1] = [.5, .5, 0., 0.]
+    maps[1, 0] = [.5, .5, 0., 0.]
+    points = (linear.shape_function(p2.xi_nd)[None] @ maps @ linear.xi_nd).reshape(-1, 3)
+    cells = np.arange(20).reshape(2, 10)
+    vectors = np.random.default_rng(2).normal(size=(6, 3))
+    h = vectors[:, None] * points[None, :, :1]**2
+    p = vectors[:, None] * p3.xi_nd[None, :, :1]**3
+    args = (points, cells, h, np.arange(20)[None], p, np.zeros(2, dtype=int), maps, duffy_rule(4))
+    grouped, volume, minimum = integrate(*args)
+    for batch_size in (1, 2, 3):
+        batched, measured_volume, measured_minimum, local, volumes = integrate_batched(*args, batch_size=batch_size)
+        np.testing.assert_allclose(batched, grouped, rtol=1e-12, atol=1e-13)
+        np.testing.assert_allclose(measured_volume, volume, atol=1e-14)
+        np.testing.assert_allclose(measured_minimum, minimum, atol=1e-14)
+        np.testing.assert_allclose(volumes.sum(), volume, atol=1e-14)
+        basis = np.vstack((-np.eye(6), np.eye(6)))
+        np.testing.assert_allclose(local.sum(axis=0), basis.T @ grouped @ basis, atol=1e-13)
+        assert np.linalg.eigvalsh(local).min() > -1e-12

@@ -1,5 +1,67 @@
 # Reference-only cubic enrichment on G3
 
+## Parent25 saved h/p trial resolves a surface signal, 24 October 2026
+
+The exact-domain parent25 trial passes positive quadrature checks, but worst
+mixed-load disagreement across all 24 retained models is 1.859718171%, above
+1%. No reference or native candidate is promoted. The six periodic cubic-minus-
+quadratic modes reduce the fine quadratic field energy by at most 0.374103334%.
+This is a saved-field trial with fixed coefficients outside those six modes,
+not a new equilibrium solution, remaining-error bound or live workflow timing.
+
+Preflight85 verifies transferred cubic data hashes, original parent embedding
+within 1.67e-16, composed maps, complete partition, original field reproduction,
+and periodic fields on both node sets. Fine quadratic counts remain 249,998
+nodes and 127,549 tets; the cubic mesh has 241,555 nodes on 48,696 parent tets.
+The physical domain is unchanged. Frozen G3 evidence is read through resolved
+path prefixes; no source hashes or inputs are rewritten.
+
+The grouped integrator finds 42,838 map patterns and projects 5,198 seconds for
+the two positive rules. Bounded cell batches avoid those singleton map loops.
+Three polynomial controls pass. On the actual fields, benchmark86 measures
+30.224 seconds grouped and 2.206 seconds batched, with all 144 entries agreeing
+within 7.50e-16. This 13.70x integrator ratio is a resource result, not a
+meshing-workflow speedup. Four-point tensors are discarded for science claims.
+
+Trial87 fails before integration because its provenance list names the wrong
+`periodic.py` path. Its log, failed source and failure note are preserved.
+Corrected trial88 finishes in 160.155 seconds at 0.8571 GiB. Positive 125- and
+216-point rules change the trial tensor by 3.86e-9 and the gain tensor by
+4.58e-7 relative. The high-rule quadratic/cubic diagonal blocks agree with
+their saved own energies within 3.17e-7 and 2.68e-5 respectively, below the
+unchanged 1e-4 cross-energy check.
+
+The normalized six-load gain puts 20.6100% in curve-vertex cells, occupying
+0.08627% of volume. Wall-vertex cells without a curve vertex carry 70.6453%;
+cap-vertex cells without a curve vertex carry 36.7881%. These last two groups
+overlap and must not be added. Cells touching neither wall nor cap carry
+3.71554%. These fractions localize this trial's gain only. They support stopping
+the coarse-bulk curve-only allocation, but do not certify the remaining error
+or justify transferring a score between different physical mesh domains.
+
+Next inspect a bounded resource preflight for re-equilibrating these six
+periodic modes against the fine quadratic space, with consistent assembly
+quadrature and full residual checks. Read that preflight before any solve.
+Keep the 8 GiB ceiling and 250,000 physical node/tet caps. Do not repeat a
+curve-only sizing sweep or treat the trial field as equilibrated. Any subsequent
+native change needs its own geometry and full-tensor evidence.
+
+The fresh explicitly modified actual lattice route remains at 0.994671%;
+native26's best saved control remains at 1.183637%, and its live candidate at
+1.268699%. No lattice matched-target timing advantage follows. Schwarz retains
+five fresh paired wins against its declared modified actual route. Gyroid and
+spinodoid still lack admitted actual comparators in tested routes. All four
+fixed specimens, every admission gate and the original unachieved goal remain.
+
+Independent replay89 passes 3,509 transferred files, 2,261 input hashes and
+288 full model comparisons, including sampled grouped checks of both positive
+rules. Receipt: `handoff/macbook/verification-20261024-parent25-hp.json`.
+
+Records are `runs/macbook-lattice-parent25-hp-preflight-v1`,
+`runs/macbook-lattice-parent25-hp-batched-benchmark-v1` and
+`runs/macbook-lattice-parent25-hp-trial-v2`. Older next-action entries below
+are historical.
+
 ## An opt-in constrained auditor admits the geometry, but parent25 still misses accuracy, 24 October 2026
 
 The unchanged rejected parent25 mesh now passes a separately versioned

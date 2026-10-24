@@ -1,14 +1,16 @@
 # Meshers project tracking
 
-An opt-in box-constrained auditor recovers the two parent25 projection
-failures on the identical mesh and samples; the historical default and failed
-record remain unchanged. Continued curve-only refinement reaches 249,998 nodes
-and passes all gates, but six fresh loads still miss the 24-model target at
-2.214327%. Stop that allocation recipe. Native26's saved control is 1.183637%;
-the fresh modified actual route passes 0.994671%, without a lattice timing win.
-Next verify cubic25 shared-domain fields/maps and resources for a bounded
-bulk-approximation energy trial before another sizing change. Schwarz repeats
-stand; Gyroid/spinodoid gaps remain. The full four-case goal stays unachieved.
+
+Parent25's fixed-domain six-mode h/p trial reduces energy by 0.374103%, but
+still misses all-24-model accuracy at 1.859718%. Both positive rules agree;
+no reference or native candidate is promoted. Most trial gain lies near the
+wall/caps outside curve-vertex cells, so stop the curve-only allocation.
+Cell batching matches the old integrator and makes this diagnostic practical.
+Next inspect consistent-coupling and memory feasibility before choosing any
+six-mode re-equilibration solve. Schwarz repeats stand; Gyroid/spinodoid actual
+comparator gaps and lattice convergence remain unresolved. The full four-case
+goal is active and unachieved.
+
 
 Preferred-only star refinement improves the audited native26 control to
 1.183637% across all 24 models, still failing 1%. Default refinement and all

@@ -55,6 +55,7 @@ def main():
     fresh_actual_replays = []
     preferred_only_replays = []
     projection_failure_replays = []
+    parent25_trial_replays = []
     for run in sorted((workflow.HERE / "runs").glob("macbook-*")):
         if not run.is_dir() or not (run / "manifest.json").exists():
             continue
@@ -85,6 +86,11 @@ def main():
             failed_runs.append(run.name)
         if (run / "result.json").exists():
             result = json.loads((run / "result.json").read_text())
+            if result.get("benchmark") and "rules" in result and (run / "local-rule-216.npz").exists():
+                from verify_parent25_trial import verify
+                replay = verify(run, result)
+                parent25_trial_replays.append(replay)
+                comparisons += replay["model_comparisons"]
             if result.get("preferred_only_repeated") and (run / "prolongation.npz").exists():
                 from verify_preferred_only import verify_preflight
                 preferred_only_replays.append(verify_preflight(run, result))
@@ -408,6 +414,8 @@ def main():
         "fresh_actual_lattice_replays": fresh_actual_replays,
         "preferred_only_refinement_replays": preferred_only_replays,
         "projection_failure_replays": projection_failure_replays,
+        "parent25_trial_replays": parent25_trial_replays,
+        "parent25_trial_verifier_sha256": workflow.digest(Path(__file__).with_name("verify_parent25_trial.py")),
         "reference_promoted": False})
     print(f"Verified {files} transferred files, {checked} input hashes and {comparisons} full model comparisons")
 

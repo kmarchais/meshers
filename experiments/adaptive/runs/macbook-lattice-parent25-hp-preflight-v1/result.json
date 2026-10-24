@@ -1,0 +1,117 @@
+{
+  "passed": true,
+  "parent25_shared_domain_preflight": true,
+  "root": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/g3-lattice-cubic-parent25-fields-v1",
+  "prepared": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-lattice-parent25-preferred-only-preflight-v4",
+  "nested": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-lattice-parent25-preferred-only-v1",
+  "cubic_mesh": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/g3-lattice-cubic25-assembly-memory-v1",
+  "cubic_solve": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/g3-lattice-cubic25-reference-blocked-symmetry-v2",
+  "cubic_audit": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/g3-lattice-cubic25-assessment-v1",
+  "frozen_npz_inputs_verified": 4,
+  "original_reproduction": {
+    "points_per_element": 12,
+    "elements_checked": 127549,
+    "maximum_geometry_error": 4.440892098500626e-16,
+    "maximum_field_error": 5.551115123125783e-16
+  },
+  "maximum_cubic_embedding_error": 1.6653345369377348e-16,
+  "minimum_reference_subcell_ratio": 3.814697265624994e-06,
+  "periodic": {
+    "nested": {
+      "maximum_six_load_jump": 0.0,
+      "periodic_pair_counts": [
+        11229,
+        11842,
+        12599
+      ],
+      "periodic_coordinate_errors": [
+        1.6653345369377348e-16,
+        1.6653345369377348e-16,
+        1.6653345369377348e-16
+      ],
+      "periodic_pair_tolerance": 1e-10,
+      "periodic_equivalence_classes": 214445,
+      "periodic_triangles_match": true
+    },
+    "cubic": {
+      "maximum_six_load_jump": 2.220446049250313e-16,
+      "periodic_pair_counts": [
+        796,
+        796,
+        796
+      ],
+      "periodic_coordinate_errors": [
+        2.220446049250313e-16,
+        2.220446049250313e-16,
+        2.220446049250313e-16
+      ],
+      "periodic_pair_tolerance": 1e-10,
+      "periodic_equivalence_classes": 239244,
+      "periodic_triangles_match": true
+    },
+    "cubic_on_nested_nodes": {
+      "maximum_six_load_jump": 4.440892098500626e-16,
+      "periodic_pair_counts": [
+        11229,
+        11842,
+        12599
+      ],
+      "periodic_coordinate_errors": [
+        1.6653345369377348e-16,
+        1.6653345369377348e-16,
+        1.6653345369377348e-16
+      ],
+      "periodic_pair_tolerance": 1e-10,
+      "periodic_equivalence_classes": 214445,
+      "periodic_triangles_match": true
+    }
+  },
+  "mode_pin_constants": [
+    [
+      0.0,
+      0.0,
+      0.0
+    ],
+    [
+      0.0,
+      0.0,
+      0.0
+    ],
+    [
+      0.0,
+      0.0,
+      0.0
+    ],
+    [
+      0.0,
+      0.0,
+      0.0
+    ],
+    [
+      0.0,
+      0.0,
+      0.0
+    ],
+    [
+      0.0,
+      0.0,
+      0.0
+    ]
+  ],
+  "map_count": 42838,
+  "map_group_size_quantiles": [
+    1.0,
+    1.0,
+    3.0,
+    47376.0
+  ],
+  "physical_nested_nodes": 249998,
+  "physical_nested_tets": 127549,
+  "cubic_nodes": 241555,
+  "four_point_benchmark_s": 30.48892633395735,
+  "conservative_positive_rule_time_estimate_s": 5198.3619399397285,
+  "resource_probe_only": true,
+  "new_equilibrium_solve": false,
+  "reference_promoted": false,
+  "scope": "Exact shared parent25 domain and field provenance/periodicity plus low-order resource timing. The four-point tensor is discarded and supports no stiffness, trial-gain, continuum or live-workflow claim."
+}

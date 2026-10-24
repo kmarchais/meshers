@@ -1,0 +1,697 @@
+{
+  "passed": true,
+  "verifier_sha256": "b76af04d388ac997f2d3f4b37f279e2be089f9236241460c85145067921e736f",
+  "fresh_actual_verifier_sha256": "16df7f8b9013d0fc74e7e46398c03fe9ebedf61cbad9d8515694cc8fa0cf5cd3",
+  "preferred_only_verifier_sha256": "4c451730e83cd22ace5f840433afd378b2b401a9b43c5cae8930c59f768c627c",
+  "repository_head_at_verification": "325f2fc6a2fcbba5c61d2a9cb753831cfd6cba86",
+  "transferred_files_checked": 3509,
+  "transferred_bytes_checked": 1650689800,
+  "mac_input_hashes_checked": 2261,
+  "sources_verified_from_frozen_driver_or_git": 208,
+  "mixed_load_comparisons": 288,
+  "worst_retained_model_scores": {
+    "macbook-lattice-actual-live-assessment-v1": 0.009946706124389824,
+    "macbook-lattice-actual-microgen-curve-star-v1": 0.009884979450651935,
+    "macbook-lattice-adapt26-curve-nested-v1": 0.012556245843246352,
+    "macbook-lattice-adapt26-curve-star-v1": 0.012304550739819762,
+    "macbook-lattice-adapt26-nested-v1": 0.01256514544294405,
+    "macbook-lattice-adapt26-preferred-only-v1": 0.011836368994632402,
+    "macbook-lattice-hp-coupled-audit-v1": 0.01826184121420493,
+    "macbook-lattice-hp-ranked-audit-v1": 0.0174132027879675,
+    "macbook-lattice-nested23-level2-v1": 0.021351167358704428,
+    "macbook-lattice-parent25-preferred-only-v1": 0.02214326638759646
+  },
+  "seed_artifact_replays": [
+    {
+      "run": "macbook-spinodoid-preclip36-five-v1",
+      "mode": "unmodified",
+      "nodes": 38712,
+      "elements": 182287,
+      "mesh_sha256": "59ab2bd01b8f23ef8e7e262a24d7cea43e103f2fc347ea511f9733d107f3e75d"
+    },
+    {
+      "run": "macbook-spinodoid-preclip36-five-v1",
+      "mode": "pretriangulated",
+      "nodes": 49032,
+      "elements": 180277,
+      "mesh_sha256": "79ad9c3ce8995a8104fe46e209ffc5e980793aee6d6f3a4dd80d79e24cdc95f9"
+    }
+  ],
+  "failed_runs_preserved": [
+    "macbook-hp-coupled-checkpoint-verification-v1",
+    "macbook-lattice-hp-ranked-localization-v1",
+    "macbook-lattice-parent25-hp-trial-v1",
+    "macbook-lattice-parent25-preferred-only-preflight-v3",
+    "macbook-schwarz-tet10-repeated-verification-v1",
+    "macbook-spinodoid-cap-coupled-v1",
+    "macbook-spinodoid-cap-plane-star-v1"
+  ],
+  "coupled_candidate_replays": [
+    {
+      "run": "macbook-spinodoid-cap-coupled-v2",
+      "attempts": 8,
+      "incident_cap_triangles": 24,
+      "incident_volume_tets": 51
+    }
+  ],
+  "geometry_witness_replays": [
+    {
+      "run": "macbook-lattice-actual-vtk51-interior-repair-v1",
+      "minimum_quality": 0.10000100099999965,
+      "unchanged_boundary_and_connectivity": true
+    },
+    {
+      "run": "macbook-schwarz-interior-repair-v1",
+      "minimum_quality": 0.10000100099999983,
+      "unchanged_boundary_and_connectivity": true
+    },
+    {
+      "run": "macbook-spinodoid-distance-localization-v1",
+      "reverse_witnesses": 32,
+      "maximum_distance": 0.004494478696968207
+    }
+  ],
+  "same_host_workflow_replays": [
+    {
+      "run": "macbook-schwarz-tet10-live-repair-v1",
+      "model_difference_ranges": {
+        "microgen": [
+          0.0005347987595988313,
+          0.0006216228535590451
+        ],
+        "meshers": [
+          0.0003146881331084206,
+          0.0009377826695040614
+        ]
+      },
+      "science_audited_workflow_s": {
+        "microgen": 132.63563658297062,
+        "meshers": 19.275081541971304
+      },
+      "repetitions": 1,
+      "explicit_interior_repair": true
+    }
+  ],
+  "coupled_modal_field_replays": [
+    {
+      "run": "macbook-lattice-hp-coupled-audit-v1",
+      "model_count": 24,
+      "worst_disagreement": 0.01826184121420493
+    },
+    {
+      "run": "macbook-lattice-hp-ranked-audit-v1",
+      "model_count": 24,
+      "worst_disagreement": 0.0174132027879675
+    }
+  ],
+  "ranked_refinement_replays": [
+    {
+      "run": "macbook-lattice-hp-ranked-preflight-v1",
+      "all_child_geometry_error": 1.1102230246251565e-16,
+      "all_child_field_error": 1.1102230246251565e-16,
+      "selected_score_fraction": 0.8880880702814813
+    }
+  ],
+  "ranked_increment_replays": [
+    {
+      "run": "macbook-lattice-hp-ranked-localization-v2",
+      "local_trace_precision": 8.082303808564e-08,
+      "geometry_precision": 0.003149684939537016,
+      "geometry_precision_passed": true,
+      "failed_projections": 11,
+      "complete_wall_geometry_interpretation_admitted": false
+    }
+  ],
+  "curve_vertex_star_replays": [
+    {
+      "run": "macbook-lattice-actual-microgen-curve-star-preflight-v1",
+      "points_per_element": 12,
+      "elements_checked": 165772,
+      "maximum_geometry_error": 3.3306690738754696e-16,
+      "maximum_field_error": 3.3306690738754696e-16,
+      "curve_vertex_element_bisection_fraction": 0.7368802026782483
+    },
+    {
+      "run": "macbook-lattice-adapt26-curve-star-preflight-v1",
+      "points_per_element": 12,
+      "elements_checked": 159226,
+      "maximum_geometry_error": 3.3306690738754696e-16,
+      "maximum_field_error": 3.3306690738754696e-16,
+      "curve_vertex_element_bisection_fraction": 0.7814718809872647
+    }
+  ],
+  "fresh_actual_lattice_replays": [
+    {
+      "run": "macbook-lattice-actual-live-assessment-v1",
+      "model_count": 24,
+      "worst_disagreement": 0.009946706124389824,
+      "passes_target_all_models": true,
+      "charged_workflow_s": 313.2170497078914
+    },
+    {
+      "run": "macbook-lattice-actual-live-costs-v1",
+      "charged_workflow_including_quality_localization_s": 314.0286596668884
+    },
+    {
+      "run": "macbook-lattice-actual-live-preflight-v1",
+      "nodes": 250000,
+      "tets": 165722,
+      "stages": [
+        {
+          "name": "vtk-seed",
+          "nodes": 51309,
+          "tets": 249432
+        },
+        {
+          "name": "mmg-stage-1",
+          "nodes": 24936,
+          "tets": 115536
+        },
+        {
+          "name": "mmg-stage-2",
+          "nodes": 33953,
+          "tets": 158430
+        }
+      ],
+      "reproduction": {
+        "points_per_element": 12,
+        "elements_checked": 165722,
+        "maximum_geometry_error": 3.3306690738754696e-16,
+        "maximum_field_error": 3.3306690738754696e-16
+      },
+      "charged_preparation_s": 31.20059387490619
+    }
+  ],
+  "preferred_only_refinement_replays": [
+    {
+      "run": "macbook-lattice-adapt26-preferred-only-preflight-v1",
+      "rounds": [
+        {
+          "level": 1,
+          "nodes": 213098,
+          "bisected_curve_parents": 6934,
+          "immediate": {
+            "points_per_element": 12,
+            "elements_checked": 135234,
+            "maximum_geometry_error": 3.3306690738754696e-16,
+            "maximum_field_error": 3.3306690738754696e-16
+          },
+          "original": {
+            "points_per_element": 12,
+            "elements_checked": 135234,
+            "maximum_geometry_error": 3.3306690738754696e-16,
+            "maximum_field_error": 3.3306690738754696e-16
+          },
+          "geometry_admitted": true,
+          "failed_projections": 0
+        },
+        {
+          "level": 2,
+          "nodes": 227732,
+          "bisected_curve_parents": 8078,
+          "immediate": {
+            "points_per_element": 12,
+            "elements_checked": 143312,
+            "maximum_geometry_error": 3.3306690738754696e-16,
+            "maximum_field_error": 3.3306690738754696e-16
+          },
+          "original": {
+            "points_per_element": 12,
+            "elements_checked": 143312,
+            "maximum_geometry_error": 3.3306690738754696e-16,
+            "maximum_field_error": 3.3306690738754696e-16
+          },
+          "geometry_admitted": true,
+          "failed_projections": 0
+        },
+        {
+          "level": 3,
+          "nodes": 244696,
+          "bisected_curve_parents": 9436,
+          "immediate": {
+            "points_per_element": 12,
+            "elements_checked": 152748,
+            "maximum_geometry_error": 3.3306690738754696e-16,
+            "maximum_field_error": 3.3306690738754696e-16
+          },
+          "original": {
+            "points_per_element": 12,
+            "elements_checked": 152748,
+            "maximum_geometry_error": 3.885780586188048e-16,
+            "maximum_field_error": 4.440892098500626e-16
+          },
+          "geometry_admitted": true,
+          "failed_projections": 0
+        },
+        {
+          "level": 4,
+          "nodes": 249996,
+          "bisected_curve_parents": 3081,
+          "immediate": {
+            "points_per_element": 12,
+            "elements_checked": 155829,
+            "maximum_geometry_error": 3.3306690738754696e-16,
+            "maximum_field_error": 3.3306690738754696e-16
+          },
+          "original": {
+            "points_per_element": 12,
+            "elements_checked": 155829,
+            "maximum_geometry_error": 3.885780586188048e-16,
+            "maximum_field_error": 4.440892098500626e-16
+          },
+          "geometry_admitted": true,
+          "failed_projections": 0
+        },
+        {
+          "level": 5,
+          "nodes": 249996,
+          "bisected_curve_parents": 0,
+          "immediate": {
+            "points_per_element": 12,
+            "elements_checked": 155829,
+            "maximum_geometry_error": 0.0,
+            "maximum_field_error": 0.0
+          },
+          "original": {
+            "points_per_element": 12,
+            "elements_checked": 155829,
+            "maximum_geometry_error": 3.885780586188048e-16,
+            "maximum_field_error": 4.440892098500626e-16
+          },
+          "geometry_admitted": true,
+          "failed_projections": 0
+        }
+      ],
+      "original_pin": 50999,
+      "stop": "no-admissible-preferred-star"
+    },
+    {
+      "run": "macbook-lattice-parent25-preferred-only-preflight-v1",
+      "rounds": [
+        {
+          "level": 1,
+          "nodes": 77388,
+          "bisected_curve_parents": 1094,
+          "immediate": {
+            "points_per_element": 12,
+            "elements_checked": 49790,
+            "maximum_geometry_error": 3.3306690738754696e-16,
+            "maximum_field_error": 3.3306690738754696e-16
+          },
+          "original": {
+            "points_per_element": 12,
+            "elements_checked": 49790,
+            "maximum_geometry_error": 3.3306690738754696e-16,
+            "maximum_field_error": 3.3306690738754696e-16
+          },
+          "geometry_admitted": true,
+          "failed_projections": 0
+        },
+        {
+          "level": 2,
+          "nodes": 80119,
+          "bisected_curve_parents": 1295,
+          "immediate": {
+            "points_per_element": 12,
+            "elements_checked": 51085,
+            "maximum_geometry_error": 2.7755575615628914e-16,
+            "maximum_field_error": 3.3306690738754696e-16
+          },
+          "original": {
+            "points_per_element": 12,
+            "elements_checked": 51085,
+            "maximum_geometry_error": 3.3306690738754696e-16,
+            "maximum_field_error": 3.3306690738754696e-16
+          },
+          "geometry_admitted": true,
+          "failed_projections": 0
+        },
+        {
+          "level": 3,
+          "nodes": 83213,
+          "bisected_curve_parents": 1602,
+          "immediate": {
+            "points_per_element": 12,
+            "elements_checked": 52687,
+            "maximum_geometry_error": 3.3306690738754696e-16,
+            "maximum_field_error": 3.3306690738754696e-16
+          },
+          "original": {
+            "points_per_element": 12,
+            "elements_checked": 52687,
+            "maximum_geometry_error": 3.3306690738754696e-16,
+            "maximum_field_error": 4.440892098500626e-16
+          },
+          "geometry_admitted": true,
+          "failed_projections": 0
+        },
+        {
+          "level": 4,
+          "nodes": 86855,
+          "bisected_curve_parents": 1771,
+          "immediate": {
+            "points_per_element": 12,
+            "elements_checked": 54458,
+            "maximum_geometry_error": 2.7755575615628914e-16,
+            "maximum_field_error": 3.3306690738754696e-16
+          },
+          "original": {
+            "points_per_element": 12,
+            "elements_checked": 54458,
+            "maximum_geometry_error": 3.885780586188048e-16,
+            "maximum_field_error": 4.440892098500626e-16
+          },
+          "geometry_admitted": true,
+          "failed_projections": 0
+        },
+        {
+          "level": 5,
+          "nodes": 91216,
+          "bisected_curve_parents": 2035,
+          "immediate": {
+            "points_per_element": 12,
+            "elements_checked": 56493,
+            "maximum_geometry_error": 3.3306690738754696e-16,
+            "maximum_field_error": 3.3306690738754696e-16
+          },
+          "original": {
+            "points_per_element": 12,
+            "elements_checked": 56493,
+            "maximum_geometry_error": 3.885780586188048e-16,
+            "maximum_field_error": 4.440892098500626e-16
+          },
+          "geometry_admitted": true,
+          "failed_projections": 0
+        },
+        {
+          "level": 6,
+          "nodes": 96260,
+          "bisected_curve_parents": 2407,
+          "immediate": {
+            "points_per_element": 12,
+            "elements_checked": 58900,
+            "maximum_geometry_error": 2.7755575615628914e-16,
+            "maximum_field_error": 3.3306690738754696e-16
+          },
+          "original": {
+            "points_per_element": 12,
+            "elements_checked": 58900,
+            "maximum_geometry_error": 3.885780586188048e-16,
+            "maximum_field_error": 4.440892098500626e-16
+          },
+          "geometry_admitted": true,
+          "failed_projections": 0
+        },
+        {
+          "level": 7,
+          "nodes": 102157,
+          "bisected_curve_parents": 2739,
+          "immediate": {
+            "points_per_element": 12,
+            "elements_checked": 61639,
+            "maximum_geometry_error": 3.3306690738754696e-16,
+            "maximum_field_error": 3.3306690738754696e-16
+          },
+          "original": {
+            "points_per_element": 12,
+            "elements_checked": 61639,
+            "maximum_geometry_error": 4.440892098500626e-16,
+            "maximum_field_error": 4.440892098500626e-16
+          },
+          "geometry_admitted": true,
+          "failed_projections": 0
+        },
+        {
+          "level": 8,
+          "nodes": 108850,
+          "bisected_curve_parents": 3077,
+          "immediate": {
+            "points_per_element": 12,
+            "elements_checked": 64716,
+            "maximum_geometry_error": 3.3306690738754696e-16,
+            "maximum_field_error": 3.3306690738754696e-16
+          },
+          "original": {
+            "points_per_element": 12,
+            "elements_checked": 64716,
+            "maximum_geometry_error": 3.885780586188048e-16,
+            "maximum_field_error": 4.440892098500626e-16
+          },
+          "geometry_admitted": true,
+          "failed_projections": 0
+        }
+      ],
+      "original_pin": 5325,
+      "stop": "round-limit"
+    },
+    {
+      "run": "macbook-lattice-parent25-preferred-only-preflight-v2",
+      "rounds": [
+        {
+          "level": 9,
+          "nodes": 116629,
+          "bisected_curve_parents": 3592,
+          "immediate": {
+            "points_per_element": 12,
+            "elements_checked": 68308,
+            "maximum_geometry_error": 3.3306690738754696e-16,
+            "maximum_field_error": 4.440892098500626e-16
+          },
+          "original": {
+            "points_per_element": 12,
+            "elements_checked": 68308,
+            "maximum_geometry_error": 4.440892098500626e-16,
+            "maximum_field_error": 4.440892098500626e-16
+          },
+          "geometry_admitted": true,
+          "failed_projections": 0
+        },
+        {
+          "level": 10,
+          "nodes": 125404,
+          "bisected_curve_parents": 3913,
+          "immediate": {
+            "points_per_element": 12,
+            "elements_checked": 72221,
+            "maximum_geometry_error": 3.3306690738754696e-16,
+            "maximum_field_error": 3.3306690738754696e-16
+          },
+          "original": {
+            "points_per_element": 12,
+            "elements_checked": 72221,
+            "maximum_geometry_error": 4.440892098500626e-16,
+            "maximum_field_error": 4.440892098500626e-16
+          },
+          "geometry_admitted": true,
+          "failed_projections": 0
+        },
+        {
+          "level": 11,
+          "nodes": 135563,
+          "bisected_curve_parents": 4529,
+          "immediate": {
+            "points_per_element": 12,
+            "elements_checked": 76750,
+            "maximum_geometry_error": 3.3306690738754696e-16,
+            "maximum_field_error": 3.3306690738754696e-16
+          },
+          "original": {
+            "points_per_element": 12,
+            "elements_checked": 76750,
+            "maximum_geometry_error": 3.885780586188048e-16,
+            "maximum_field_error": 5.551115123125783e-16
+          },
+          "geometry_admitted": true,
+          "failed_projections": 0
+        },
+        {
+          "level": 12,
+          "nodes": 147755,
+          "bisected_curve_parents": 5405,
+          "immediate": {
+            "points_per_element": 12,
+            "elements_checked": 82155,
+            "maximum_geometry_error": 3.3306690738754696e-16,
+            "maximum_field_error": 3.3306690738754696e-16
+          },
+          "original": {
+            "points_per_element": 12,
+            "elements_checked": 82155,
+            "maximum_geometry_error": 4.440892098500626e-16,
+            "maximum_field_error": 5.551115123125783e-16
+          },
+          "geometry_admitted": true,
+          "failed_projections": 0
+        },
+        {
+          "level": 13,
+          "nodes": 161494,
+          "bisected_curve_parents": 6048,
+          "immediate": {
+            "points_per_element": 12,
+            "elements_checked": 88203,
+            "maximum_geometry_error": 3.3306690738754696e-16,
+            "maximum_field_error": 3.3306690738754696e-16
+          },
+          "original": {
+            "points_per_element": 12,
+            "elements_checked": 88203,
+            "maximum_geometry_error": 4.440892098500626e-16,
+            "maximum_field_error": 5.551115123125783e-16
+          },
+          "geometry_admitted": false,
+          "failed_projections": 2
+        }
+      ],
+      "original_pin": 5325,
+      "stop": "geometry-rejected"
+    },
+    {
+      "run": "macbook-lattice-parent25-preferred-only-preflight-v4",
+      "rounds": [
+        {
+          "level": 14,
+          "nodes": 177268,
+          "bisected_curve_parents": 7033,
+          "immediate": {
+            "points_per_element": 12,
+            "elements_checked": 95236,
+            "maximum_geometry_error": 3.3306690738754696e-16,
+            "maximum_field_error": 3.3306690738754696e-16
+          },
+          "original": {
+            "points_per_element": 12,
+            "elements_checked": 95236,
+            "maximum_geometry_error": 4.440892098500626e-16,
+            "maximum_field_error": 5.551115123125783e-16
+          },
+          "geometry_admitted": true,
+          "failed_projections": 0
+        },
+        {
+          "level": 15,
+          "nodes": 196416,
+          "bisected_curve_parents": 8381,
+          "immediate": {
+            "points_per_element": 12,
+            "elements_checked": 103617,
+            "maximum_geometry_error": 3.3306690738754696e-16,
+            "maximum_field_error": 3.3306690738754696e-16
+          },
+          "original": {
+            "points_per_element": 12,
+            "elements_checked": 103617,
+            "maximum_geometry_error": 4.440892098500626e-16,
+            "maximum_field_error": 6.661338147750939e-16
+          },
+          "geometry_admitted": true,
+          "failed_projections": 0
+        },
+        {
+          "level": 16,
+          "nodes": 218704,
+          "bisected_curve_parents": 9691,
+          "immediate": {
+            "points_per_element": 12,
+            "elements_checked": 113308,
+            "maximum_geometry_error": 3.3306690738754696e-16,
+            "maximum_field_error": 3.3306690738754696e-16
+          },
+          "original": {
+            "points_per_element": 12,
+            "elements_checked": 113308,
+            "maximum_geometry_error": 4.440892098500626e-16,
+            "maximum_field_error": 5.551115123125783e-16
+          },
+          "geometry_admitted": true,
+          "failed_projections": 0
+        },
+        {
+          "level": 17,
+          "nodes": 244530,
+          "bisected_curve_parents": 11489,
+          "immediate": {
+            "points_per_element": 12,
+            "elements_checked": 124797,
+            "maximum_geometry_error": 3.3306690738754696e-16,
+            "maximum_field_error": 4.440892098500626e-16
+          },
+          "original": {
+            "points_per_element": 12,
+            "elements_checked": 124797,
+            "maximum_geometry_error": 4.440892098500626e-16,
+            "maximum_field_error": 5.551115123125783e-16
+          },
+          "geometry_admitted": true,
+          "failed_projections": 0
+        },
+        {
+          "level": 18,
+          "nodes": 249998,
+          "bisected_curve_parents": 2752,
+          "immediate": {
+            "points_per_element": 12,
+            "elements_checked": 127549,
+            "maximum_geometry_error": 3.3306690738754696e-16,
+            "maximum_field_error": 3.3306690738754696e-16
+          },
+          "original": {
+            "points_per_element": 12,
+            "elements_checked": 127549,
+            "maximum_geometry_error": 4.440892098500626e-16,
+            "maximum_field_error": 5.551115123125783e-16
+          },
+          "geometry_admitted": true,
+          "failed_projections": 0
+        },
+        {
+          "level": 19,
+          "nodes": 249998,
+          "bisected_curve_parents": 0,
+          "immediate": {
+            "points_per_element": 12,
+            "elements_checked": 127549,
+            "maximum_geometry_error": 0.0,
+            "maximum_field_error": 0.0
+          },
+          "original": {
+            "points_per_element": 12,
+            "elements_checked": 127549,
+            "maximum_geometry_error": 4.440892098500626e-16,
+            "maximum_field_error": 5.551115123125783e-16
+          },
+          "geometry_admitted": true,
+          "failed_projections": 0
+        }
+      ],
+      "original_pin": 5325,
+      "stop": "no-admissible-preferred-star"
+    }
+  ],
+  "projection_failure_replays": [
+    {
+      "run": "macbook-lattice-parent25-box-projection-reaudit-v1",
+      "legacy_failed": 2,
+      "recovered": 2,
+      "qualified": true,
+      "identical_mesh_fields_and_samples": true
+    },
+    {
+      "run": "macbook-lattice-parent25-projection-failures-v1",
+      "failed_samples": 2,
+      "feasible_bounded_targets": 2,
+      "source_rejection_preserved": true
+    }
+  ],
+  "parent25_trial_replays": [
+    {
+      "run": "macbook-lattice-parent25-hp-trial-v2",
+      "model_comparisons": 48,
+      "grouped_full_rule_sample_cells": 64,
+      "worst_disagreement": 0.0185971817133503,
+      "reference_promoted": false
+    }
+  ],
+  "parent25_trial_verifier_sha256": "29cf16d21c1f085269a202aa0d85e6be321e16c8c77b921661e26ee04c8c536a",
+  "reference_promoted": false
+}
