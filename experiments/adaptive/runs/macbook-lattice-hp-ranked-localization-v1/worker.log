@@ -1,0 +1,26 @@
+/Users/kmarchais/dev/meshers/.local-work/macbook-runtime/venv/lib/python3.12/site-packages/fedoo/core/base.py:80: UserWarning: WARNING: no fast direct sparse solver has been found. Consider installing pypardiso (Intel) or python-mumps (any platform) to improve computation performance
+  warnings.warn(
+..                                                                       [100%]
+=============================== warnings summary ===============================
+experiments/adaptive/test_hp_ranked_localization.py::test_surface_residual_reproduces_exact_planar_area_and_distance
+  /Users/kmarchais/dev/meshers/.local-work/macbook-runtime/venv/lib/python3.12/site-packages/fedoo/core/base.py:80: UserWarning: WARNING: no fast direct sparse solver has been found. Consider installing pypardiso (Intel) or python-mumps (any platform) to improve computation performance
+    warnings.warn(
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+2 passed, 1 warning in 0.72s
+Ranked increment localized at 15 points; identity 7.63701071e-14
+Ranked increment localized at 125 points; identity 1.25069699e-07
+Ranked increment localized at 216 points; identity 1.25201848e-07
+Traceback (most recent call last):
+  File "/Users/kmarchais/dev/meshers/experiments/adaptive/hp_ranked_localization.py", line 183, in <module>
+    main()
+  File "/Users/kmarchais/dev/meshers/experiments/adaptive/hp_ranked_localization.py", line 159, in main
+    residuals = [wall_residuals(root["points"], wall, case.function, order) for order in (5, 6)]
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/kmarchais/dev/meshers/experiments/adaptive/hp_ranked_localization.py", line 43, in wall_residuals
+    foot, _ = project_box_curve(function, probe)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/kmarchais/dev/meshers/experiments/adaptive/periodic_crease_audit.py", line 76, in project_box_curve
+    assert residual.max() < 1e-9 and abs(points).max() <= .5 + 1e-9
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError

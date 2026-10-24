@@ -8,6 +8,14 @@ import microgen_workflow as workflow
 from nested_refinement import EDGES, FACES, child_maps, interpolation_check, positive_quality, refine
 
 
+def test_curve_vertex_priority_includes_radial_edges_and_excludes_remote_edges():
+    from nested_preflight import curve_vertex_star_edges
+
+    cells = np.array([[0, 1, 2, 3], [0, 1, 3, 4]])
+    actual = curve_vertex_star_edges(cells, [0])
+    np.testing.assert_array_equal(actual, [[0, 1], [0, 2], [0, 3], [0, 4]])
+
+
 def test_fixture_provenance_rejects_changed_samples(tmp_path):
     from nested_preflight import fixture_inputs
 

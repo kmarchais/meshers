@@ -1,0 +1,298 @@
+{
+  "passed": false,
+  "source_audit": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-lattice-hp-ranked-audit-v1",
+  "ranked_increment_localization": true,
+  "reproduction": {
+    "points_per_element": 12,
+    "elements_checked": 162599,
+    "maximum_geometry_error": 3.3306690738754696e-16,
+    "maximum_field_error": 3.3306690738754696e-16
+  },
+  "rules": [
+    {
+      "points": 15,
+      "volume": 0.2482340234033335,
+      "minimum_sampled_jacobian": 2.4830175976257624e-07,
+      "galerkin_identity_error": 7.637010705050597e-14,
+      "correction_energy_tensor": [
+        [
+          4.474485084397304e-05,
+          1.957134325721824e-05,
+          1.7036940318227282e-05,
+          -2.6590973948059753e-07,
+          3.560764624761478e-07,
+          -1.1865296145398842e-06
+        ],
+        [
+          1.9571343257218242e-05,
+          4.88857522227088e-05,
+          2.403872452098208e-05,
+          -4.953369435156323e-07,
+          -2.3247855895361387e-07,
+          -1.1283081178277212e-07
+        ],
+        [
+          1.7036940318227282e-05,
+          2.4038724520982088e-05,
+          4.8397069442347405e-05,
+          -5.013558857066181e-07,
+          -2.5164993825195635e-09,
+          -1.731902020053453e-07
+        ],
+        [
+          -2.659097394805977e-07,
+          -4.95336943515632e-07,
+          -5.013558857066175e-07,
+          7.2644378603731874e-06,
+          4.3659646918389856e-08,
+          -8.19210620760099e-08
+        ],
+        [
+          3.560764624761471e-07,
+          -2.324785589536134e-07,
+          -2.5164993825199386e-09,
+          4.3659646918389704e-08,
+          6.624250775660305e-06,
+          -1.6860737963169697e-07
+        ],
+        [
+          -1.1865296145398836e-06,
+          -1.1283081178277097e-07,
+          -1.7319020200534506e-07,
+          -8.192106207600975e-08,
+          -1.6860737963169678e-07,
+          8.019289632636812e-06
+        ]
+      ],
+      "trace": 0.002142732642853091,
+      "local_archive_sha256": "29d495b731a1b594abcf8468ac787da6d2b5f5a2495c4729e3b2272ec913128e",
+      "groups": {
+        "curve_vertex_incident": {
+          "element_fraction": 0.024994003653159,
+          "correction_fraction": 0.6681174893928694
+        },
+        "curve_edge_incident": {
+          "element_fraction": 0.004557223599161126,
+          "correction_fraction": 0.23343411787039453
+        },
+        "cap_without_curve_vertex": {
+          "element_fraction": 0.0451724795355445,
+          "correction_fraction": 0.12498607487590492
+        },
+        "wall_without_curve_vertex": {
+          "element_fraction": 0.36313261459172563,
+          "correction_fraction": 0.22391048933631671
+        },
+        "neither_wall_nor_cap_vertex": {
+          "element_fraction": 0.5694007958228525,
+          "correction_fraction": 0.025633970717354064
+        }
+      },
+      "top_fractions": {
+        "0.01": 0.7322401249578552,
+        "0.05": 0.956353433440813,
+        "0.1": 0.9877736292419873,
+        "0.2": 0.9974272136254555
+      }
+    },
+    {
+      "points": 125,
+      "volume": 0.248234023403333,
+      "minimum_sampled_jacobian": 2.481389610487557e-07,
+      "galerkin_identity_error": 1.2506969886166963e-07,
+      "correction_energy_tensor": [
+        [
+          4.474501117542522e-05,
+          1.9571411083956263e-05,
+          1.7037037378742415e-05,
+          -2.659055890355141e-07,
+          3.5608190315999586e-07,
+          -1.1865246697844736e-06
+        ],
+        [
+          1.957141108395626e-05,
+          4.888601158701883e-05,
+          2.4038802197803636e-05,
+          -4.95334150589157e-07,
+          -2.32469443723656e-07,
+          -1.1282668596375274e-07
+        ],
+        [
+          1.703703737874241e-05,
+          2.4038802197803636e-05,
+          4.839732774895483e-05,
+          -5.013530793392492e-07,
+          -2.5147382993985833e-09,
+          -1.7318727557463085e-07
+        ],
+        [
+          -2.6590558903551415e-07,
+          -4.95334150589157e-07,
+          -5.013530793392492e-07,
+          7.264487164056555e-06,
+          4.366590112010222e-08,
+          -8.19233539069473e-08
+        ],
+        [
+          3.560819031599957e-07,
+          -2.324694437236555e-07,
+          -2.514738299399113e-09,
+          4.366590112010231e-08,
+          6.6243069375408215e-06,
+          -1.6860936126208606e-07
+        ],
+        [
+          -1.186524669784474e-06,
+          -1.1282668596375297e-07,
+          -1.7318727557463133e-07,
+          -8.192335390694706e-08,
+          -1.6860936126208593e-07,
+          8.019338300814942e-06
+        ]
+      ],
+      "trace": 0.002142744233426357,
+      "local_archive_sha256": "4d9b6a1bce6d79f33118f5fcf199a01534851b978831b7f2e939ea406496b6ca",
+      "groups": {
+        "curve_vertex_incident": {
+          "element_fraction": 0.024994003653159,
+          "correction_fraction": 0.6681169660400657
+        },
+        "curve_edge_incident": {
+          "element_fraction": 0.004557223599161126,
+          "correction_fraction": 0.23343456185382838
+        },
+        "cap_without_curve_vertex": {
+          "element_fraction": 0.0451724795355445,
+          "correction_fraction": 0.1249854643040724
+        },
+        "wall_without_curve_vertex": {
+          "element_fraction": 0.36313261459172563,
+          "correction_fraction": 0.2239115741894101
+        },
+        "neither_wall_nor_cap_vertex": {
+          "element_fraction": 0.5694007958228525,
+          "correction_fraction": 0.02563383681595362
+        }
+      },
+      "top_fractions": {
+        "0.01": 0.7322384804043574,
+        "0.05": 0.9563528537850687,
+        "0.1": 0.9877735526068165,
+        "0.2": 0.9974272179974462
+      }
+    },
+    {
+      "points": 216,
+      "volume": 0.2482340234033338,
+      "minimum_sampled_jacobian": 2.480992861663955e-07,
+      "galerkin_identity_error": 1.252018482084014e-07,
+      "correction_energy_tensor": [
+        [
+          4.474501131820725e-05,
+          1.9571411203835925e-05,
+          1.703703753828495e-05,
+          -2.659055769131178e-07,
+          3.56081893014989e-07,
+          -1.1865246611729345e-06
+        ],
+        [
+          1.9571411203835925e-05,
+          4.8886012185187144e-05,
+          2.403880241844191e-05,
+          -4.953341437497409e-07,
+          -2.3246942173984798e-07,
+          -1.1282666588727132e-07
+        ],
+        [
+          1.7037037538284953e-05,
+          2.4038802418441902e-05,
+          4.8397328482631725e-05,
+          -5.013531090968942e-07,
+          -2.5147190293920237e-09,
+          -1.7318727476112516e-07
+        ],
+        [
+          -2.659055769131182e-07,
+          -4.953341437497411e-07,
+          -5.013531090968942e-07,
+          7.264487262316406e-06,
+          4.3665863180428064e-08,
+          -8.192335575720762e-08
+        ],
+        [
+          3.5608189301498976e-07,
+          -2.3246942173984808e-07,
+          -2.5147190293918616e-09,
+          4.366586318042806e-08,
+          6.6243070517065e-06,
+          -1.686094061058003e-07
+        ],
+        [
+          -1.1865246611729349e-06,
+          -1.128266658872707e-07,
+          -1.7318727476112545e-07,
+          -8.192335575720763e-08,
+          -1.6860940610580047e-07,
+          8.01933849129948e-06
+        ]
+      ],
+      "trace": 0.0021427442598064613,
+      "local_archive_sha256": "af156403abaef9367c7b1bc595e25cef79e184004d4b379dc38df731555daf20",
+      "groups": {
+        "curve_vertex_incident": {
+          "element_fraction": 0.024994003653159,
+          "correction_fraction": 0.6681169597380844
+        },
+        "curve_edge_incident": {
+          "element_fraction": 0.004557223599161126,
+          "correction_fraction": 0.23343456014029204
+        },
+        "cap_without_curve_vertex": {
+          "element_fraction": 0.0451724795355445,
+          "correction_fraction": 0.12498546278434206
+        },
+        "wall_without_curve_vertex": {
+          "element_fraction": 0.36313261459172563,
+          "correction_fraction": 0.22391158181233886
+        },
+        "neither_wall_nor_cap_vertex": {
+          "element_fraction": 0.5694007958228525,
+          "correction_fraction": 0.025633836505411237
+        }
+      },
+      "top_fractions": {
+        "0.01": 0.7322384730495716,
+        "0.05": 0.9563528517902413,
+        "0.1": 0.9877735524661062,
+        "0.2": 0.9974272180276084
+      }
+    }
+  ],
+  "geometry": {
+    "positive_surface_rule_points": [
+      25,
+      36
+    ],
+    "squared_residual_vector_change": 0.003149684939537016,
+    "precision_gate": 0.01,
+    "precision_passed": true,
+    "failed_projection_count": 11,
+    "faces_with_failed_projections": 6,
+    "maximum_box_overshoot": 6.763897068451374e-05,
+    "maximum_remaining_field_distance": 7.03970647133525e-17,
+    "all_projections_valid": false,
+    "wall_area": 3.463665433516681,
+    "area_weighted_projection_rms": 3.669825133546938e-05,
+    "maximum_sampled_projection": 0.000569754766818478,
+    "wall_owner_correction_fraction": 0.6565116979245141,
+    "worst_geometry_decile_wall_correction_fraction": 0.029200134058301713,
+    "root_wall_cells": 8144,
+    "geometry_overlay_sha256": "6a0167e7c90a746048c85d59e01162a7ee26a4a33b71d3b8d30e5fba5f54d2b1"
+  },
+  "localization_reused_from": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-lattice-hp-ranked-localization-v1",
+  "complete_wall_geometry_interpretation_admitted": false,
+  "positive_rule_local_trace_change": 8.082303808564e-08,
+  "geometry_or_fields_modified": false,
+  "reference_promoted": false,
+  "scope": "Resolved ranked discrete correction and analytic-field Newton projection diagnostic; failed or outside-box projections invalidate complete trimmed-wall geometry interpretation. No remaining FE/geometry error estimate, stress certificate, native improvement or workflow claim."
+}

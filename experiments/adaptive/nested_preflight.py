@@ -30,6 +30,14 @@ def fixture_inputs(directory):
     return paths
 
 
+def curve_vertex_star_edges(cells, vertices):
+    import numpy as np
+    from nested_refinement import EDGES
+
+    edges = np.unique(np.sort(cells[:, EDGES].reshape(-1, 2), axis=1), axis=0)
+    return edges[np.isin(edges, vertices).any(axis=1)]
+
+
 def worker(args):
     np, *_ = workflow.imports()
     from nested_refinement import interpolation_check, refine
@@ -40,9 +48,14 @@ def worker(args):
     mesh = np.load(args.source / "mesh.npz")
     fields = np.load(args.source / "fields.npz")["displacement"]
     preferred = None
-    if args.prefer_box_curves:
+    priority = {}
+    if args.prefer_box_curves or args.prefer_box_curve_stars:
         from periodic_crease_audit import features
-        preferred = features(mesh)["curve_edges"]
+        feature = features(mesh)
+        preferred = (curve_vertex_star_edges(mesh["tetrahedra"], feature["curve_endpoints"])
+            if args.prefer_box_curve_stars else feature["curve_edges"])
+        priority = {"mode": "curve-vertex-incident-edges" if args.prefer_box_curve_stars else "literal-curve-edges",
+            "preferred_edges": len(preferred), "curve_vertices": len(feature["curve_endpoints"])}
     result = refine(mesh["points"], mesh["tetrahedra"], mesh["surface"], fields, preferred_edges=preferred)
     checks = interpolation_check(mesh["points"], mesh["tetrahedra"], fields, result)
     assert checks["elements_checked"] == len(result["tetrahedra"])
@@ -52,10 +65,17 @@ def worker(args):
     geometry = workflow.geometry(args.run, "smooth-lattice", result["points"], result["tetrahedra"], result["surface"])
     volume_change = float(geometry["volume"] / row["geometry"]["volume"] - 1)
     assert abs(volume_change) < 1e-10
+    if priority:
+        selected = np.bincount(result["parents"], minlength=len(mesh["tetrahedra"])) == 2
+        mask = feature["groups"]["curve_vertex_incident"]
+        priority.update(source_curve_vertex_elements=int(mask.sum()),
+            bisected_curve_vertex_elements=int((selected & mask).sum()),
+            curve_vertex_element_bisection_fraction=float(selected[mask].mean()))
     workflow.save(args.run / "result.json", {"case": row["case"], "source": str(args.source),
         "nodes": len(result["points"]), "elements": len(result["tetrahedra"]), "order": 2,
         "qualified": geometry["geometry_admitted"], "geometry": geometry, "relative_volume_change": volume_change,
         "refinement": result["diagnostics"], "interpolation": checks,
+        "priority": priority,
         "equilibrium_solve_performed": False, "reference_promoted": False,
         "status": "nested-preflight-passed" if geometry["geometry_admitted"] else "geometry-rejected",
         "scope": "One conforming edge-star bisection stage with exact parent Tet10 map restriction and field prolongation; no convergence or continuum claim"})
@@ -67,8 +87,11 @@ def main():
     parser.add_argument("--source", required=True, type=Path)
     parser.add_argument("--fixture-source", type=Path,
         help="Original parent/prepared directory with hash-identical fixed samples, when absent from solve output")
-    parser.add_argument("--prefer-box-curves", action="store_true",
+    preference = parser.add_mutually_exclusive_group()
+    preference.add_argument("--prefer-box-curves", action="store_true",
         help="Prioritize actual wall/cap intersection edge orbits before other edges, with every existing guard retained")
+    preference.add_argument("--prefer-box-curve-stars", action="store_true",
+        help="Prioritize all edges incident on wall/cap curve vertices, including radial edges; all guards retained")
     parser.add_argument("--worker", action="store_true")
     args = parser.parse_args()
     args.run, args.source = args.run.resolve(), args.source.resolve()
@@ -87,7 +110,7 @@ def main():
     paths.extend(workflow.HERE / name for name in ("nested_preflight.py", "nested_refinement.py",
         "test_nested_refinement.py", "job_parts.py", "test_job_parts.py", "microgen_workflow.py",
         "facet_incidence_audit.py", "scorecard.py"))
-    if args.prefer_box_curves:
+    if args.prefer_box_curves or args.prefer_box_curve_stars:
         paths.append(workflow.HERE / "periodic_crease_audit.py")
     paths.append(workflow.ROOT.parent / "periodic-microgen/experiments/periodic-fea/periodic.py")
     inputs = {str(path): workflow.digest(path) for path in paths}
@@ -107,7 +130,9 @@ def main():
         "maximum_tetrahedra": workflow.CAP, "maximum_nodes": 250000,
         "minimum_corner_quality": .1, "maximum_bisections_per_parent": 1,
         "prefer_box_curves": args.prefer_box_curves,
-        "selection": ("Wall/cap intersection orbits first, then descending physical length; complete periodic orbits and disjoint incident stars"
+        "prefer_box_curve_stars": args.prefer_box_curve_stars,
+        "selection": ("Curve-vertex-incident edge orbits first, then descending physical length; complete periodic orbits and disjoint incident stars"
+            if args.prefer_box_curve_stars else "Wall/cap intersection orbits first, then descending physical length; complete periodic orbits and disjoint incident stars"
             if args.prefer_box_curves else "Descending physical edge length, complete periodic orbits and disjoint incident stars")})
     with Job(parts=["controls", "nested-preflight"]) as job:
         for stage in ("controls", "nested-preflight"):

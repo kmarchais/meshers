@@ -1,5 +1,86 @@
 # Adaptive and quadratic implicit meshing: results
 
+## A modified actual lattice control passes, 24 October 2026
+
+One saved actual Microgen-derived lattice control now passes all 24 retained
+models at 0.988497945% worst disagreement. The new native curve-star control
+still fails at 1.230455074%. These are fresh Mac solves of saved meshes, not
+live regeneration or a matched-accuracy timing comparison. No lattice speed
+win, new reference, or continuum/local-stress certificate is claimed.
+
+Jobs 58–59 localize the complete ranked-space increment between the two
+previously audited coupled solutions. The own-rule Galerkin identity error is
+7.64e-14, and positive 125-to-216-point local-trace change is 8.08e-8.
+Curve-vertex incident cells carry 66.8117% of the correction in 2.4994% of
+cells. Literal-curve-edge cells carry 23.3435% in 0.4557% of cells. Groups
+overlap. The top 1% of cells carry 73.2238%. This is resolved discrete
+correction, not an estimate of remaining error.
+
+The first diagnostic finishes all three FE rules, then fails its wall
+projection assertion. Its source, arrays and log remain frozen. The second
+run reuses those hash-identical completed arrays and reports the projection
+failure explicitly. Eleven Newton projections on six faces leave the box,
+by up to 6.76e-5. Surface-rule stability passes, but complete trimmed-wall
+geometry interpretation does not. Neither the original geometry admission
+nor its samples are silently changed. No co-location conclusion follows.
+
+The optional `--prefer-box-curve-stars` preflight mode prioritizes all edges
+incident on actual wall/cap curve vertices, including radial edges, before
+the existing descending-length fallback. Complete periodic orbits, disjoint
+stars, exact parent maps, q0.1, positive sampled Jacobians and 250,000-node/tet
+limits remain unchanged. It is mutually exclusive with literal-edge priority;
+the default selection is unchanged. A radial-edge selection control and all
+18 queued controls pass. No size parameter sweep or oracle field is used.
+
+| Saved-mesh control | Nodes | Tets | Worst error across all 24 models | 1% target |
+|---|---:|---:|---:|---|
+| Original live native lattice26 | 199,972 | 128,300 | 1.2686985% | Fail |
+| Earlier literal-curve-edge nested native | 249,999 | 158,967 | 1.2556246% | Fail |
+| New curve-vertex-star nested native | 250,000 | 159,226 | 1.2304551% | Fail |
+| Original tuned actual Microgen straight Tet10 | 238,411 | 158,252 | 1.0043541% | Fail |
+| New star-refined actual Microgen-derived control | 249,998 | 165,772 | 0.9884979% | Pass |
+
+Jobs 60–61 retain the original native lattice26 domain and parent field to
+3.34e-16. They bisect 78.1472% of its curve-vertex incident cells. Distance
+stays 0.0003236401; quality is 0.1023041 with positive sampled Jacobians.
+All six stiffness changes are negative, largest 0.03868354%. Galerkin balance
+is 3.71e-10 and positive-rule energy change is 9.64e-9. Six fresh loads take
+212.13 seconds at 5.758 GiB. Stop this allocation recipe without promotion.
+
+The actual control's initial worst signed error is +1.0043541%; its most
+negative error across all models is -0.8937705%. That motivates one bounded
+refinement test, not rounding the original failure into admission. Jobs
+62–63 retain its affine domain exactly. Distance stays 0.0016215853, volume
+change is zero, quality is 0.1015540, and sampled Jacobians are positive.
+They bisect 73.6880% of curve-vertex incident cells. Six fresh loads take
+232.18 seconds at 6.198 GiB. Galerkin balance is 3.86e-14, the largest
+stiffness decrease is 0.09635235%, and positive-rule energy change is
+1.64e-14. Full field and periodic audits pass. The worst final error is
+negative against sensitivity model 7. More FE refinement is not automatically
+helpful to this empirical target.
+
+The passing control retains actual tuned VTK51/two-pass MMG provenance,
+manual straight Tet10 elevation/direct fedoo, and an explicitly added
+periodic star-refinement step. It is not the default Microgen pipeline or
+MMG on a Meshers seed. All 24 original models and original failures remain.
+The full parent23 reference investigation remains unresolved at 1.7413203%.
+
+Next prepare fresh Mac actual VTK51/two-pass MMG generation with this declared
+added refinement and charge every stage. Read geometry and counts before a
+new solve; the frozen G3 seed does not prove fresh Mac MMG reproduction.
+The native control still needs improvement before a matched-target pair.
+Schwarz retains the five repeated Mac workflow wins. Gyroid and spinodoid
+still lack admitted actual comparators in tested routes. All four cases and
+the unchanged objective remain active.
+
+Records are `runs/macbook-lattice-hp-ranked-localization-v1`,
+`runs/macbook-lattice-hp-ranked-localization-v2`,
+`runs/macbook-lattice-adapt26-curve-star-preflight-v1`,
+`runs/macbook-lattice-adapt26-curve-star-v1`,
+`runs/macbook-lattice-actual-microgen-curve-star-preflight-v1` and
+`runs/macbook-lattice-actual-microgen-curve-star-v1`.
+Jobs through 63 are terminal. Earlier selected-next descriptions are historical.
+
 ## Ranked nested coupled correction, 24 October 2026
 
 Mac jobs 53–56 complete the measured-score nested-space investigation.

@@ -1,0 +1,132 @@
+{
+  "passed": true,
+  "verifier_sha256": "c6e73704995da82ca1b887ef6d2a5822c9bcb84e3e105ece3f2db4e739e02084",
+  "repository_head_at_verification": "f3ee820d9c8bec67f7d4efeb6ae1b9a9fbb5b1a4",
+  "transferred_files_checked": 3509,
+  "transferred_bytes_checked": 1650689800,
+  "mac_input_hashes_checked": 1699,
+  "sources_verified_from_frozen_driver_or_git": 104,
+  "mixed_load_comparisons": 168,
+  "worst_retained_model_scores": {
+    "macbook-lattice-actual-microgen-curve-star-v1": 0.009884979450651935,
+    "macbook-lattice-adapt26-curve-nested-v1": 0.012556245843246352,
+    "macbook-lattice-adapt26-curve-star-v1": 0.012304550739819762,
+    "macbook-lattice-adapt26-nested-v1": 0.01256514544294405,
+    "macbook-lattice-hp-coupled-audit-v1": 0.01826184121420493,
+    "macbook-lattice-hp-ranked-audit-v1": 0.0174132027879675,
+    "macbook-lattice-nested23-level2-v1": 0.021351167358704428
+  },
+  "seed_artifact_replays": [
+    {
+      "run": "macbook-spinodoid-preclip36-five-v1",
+      "mode": "unmodified",
+      "nodes": 38712,
+      "elements": 182287,
+      "mesh_sha256": "59ab2bd01b8f23ef8e7e262a24d7cea43e103f2fc347ea511f9733d107f3e75d"
+    },
+    {
+      "run": "macbook-spinodoid-preclip36-five-v1",
+      "mode": "pretriangulated",
+      "nodes": 49032,
+      "elements": 180277,
+      "mesh_sha256": "79ad9c3ce8995a8104fe46e209ffc5e980793aee6d6f3a4dd80d79e24cdc95f9"
+    }
+  ],
+  "failed_runs_preserved": [
+    "macbook-hp-coupled-checkpoint-verification-v1",
+    "macbook-lattice-hp-ranked-localization-v1",
+    "macbook-schwarz-tet10-repeated-verification-v1",
+    "macbook-spinodoid-cap-coupled-v1",
+    "macbook-spinodoid-cap-plane-star-v1"
+  ],
+  "coupled_candidate_replays": [
+    {
+      "run": "macbook-spinodoid-cap-coupled-v2",
+      "attempts": 8,
+      "incident_cap_triangles": 24,
+      "incident_volume_tets": 51
+    }
+  ],
+  "geometry_witness_replays": [
+    {
+      "run": "macbook-schwarz-interior-repair-v1",
+      "minimum_quality": 0.10000100099999983,
+      "unchanged_boundary_and_connectivity": true
+    },
+    {
+      "run": "macbook-spinodoid-distance-localization-v1",
+      "reverse_witnesses": 32,
+      "maximum_distance": 0.004494478696968207
+    }
+  ],
+  "same_host_workflow_replays": [
+    {
+      "run": "macbook-schwarz-tet10-live-repair-v1",
+      "model_difference_ranges": {
+        "microgen": [
+          0.0005347987595988313,
+          0.0006216228535590451
+        ],
+        "meshers": [
+          0.0003146881331084206,
+          0.0009377826695040614
+        ]
+      },
+      "science_audited_workflow_s": {
+        "microgen": 132.63563658297062,
+        "meshers": 19.275081541971304
+      },
+      "repetitions": 1,
+      "explicit_interior_repair": true
+    }
+  ],
+  "coupled_modal_field_replays": [
+    {
+      "run": "macbook-lattice-hp-coupled-audit-v1",
+      "model_count": 24,
+      "worst_disagreement": 0.01826184121420493
+    },
+    {
+      "run": "macbook-lattice-hp-ranked-audit-v1",
+      "model_count": 24,
+      "worst_disagreement": 0.0174132027879675
+    }
+  ],
+  "ranked_refinement_replays": [
+    {
+      "run": "macbook-lattice-hp-ranked-preflight-v1",
+      "all_child_geometry_error": 1.1102230246251565e-16,
+      "all_child_field_error": 1.1102230246251565e-16,
+      "selected_score_fraction": 0.8880880702814813
+    }
+  ],
+  "ranked_increment_replays": [
+    {
+      "run": "macbook-lattice-hp-ranked-localization-v2",
+      "local_trace_precision": 8.082303808564e-08,
+      "geometry_precision": 0.003149684939537016,
+      "geometry_precision_passed": true,
+      "failed_projections": 11,
+      "complete_wall_geometry_interpretation_admitted": false
+    }
+  ],
+  "curve_vertex_star_replays": [
+    {
+      "run": "macbook-lattice-actual-microgen-curve-star-preflight-v1",
+      "points_per_element": 12,
+      "elements_checked": 165772,
+      "maximum_geometry_error": 3.3306690738754696e-16,
+      "maximum_field_error": 3.3306690738754696e-16,
+      "curve_vertex_element_bisection_fraction": 0.7368802026782483
+    },
+    {
+      "run": "macbook-lattice-adapt26-curve-star-preflight-v1",
+      "points_per_element": 12,
+      "elements_checked": 159226,
+      "maximum_geometry_error": 3.3306690738754696e-16,
+      "maximum_field_error": 3.3306690738754696e-16,
+      "curve_vertex_element_bisection_fraction": 0.7814718809872647
+    }
+  ],
+  "reference_promoted": false
+}

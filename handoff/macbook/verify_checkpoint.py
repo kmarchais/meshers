@@ -50,6 +50,8 @@ def main():
     checked, archived, comparisons, scores = 0, 0, 0, {}
     seed_replays, failed_runs, coupled_replays, geometry_replays, workflow_replays, hp_replays = [], [], [], [], [], []
     ranked_replays = []
+    increment_replays = []
+    curve_star_replays = []
     for run in sorted((workflow.HERE / "runs").glob("macbook-*")):
         if not run.is_dir() or not (run / "manifest.json").exists():
             continue
@@ -80,6 +82,101 @@ def main():
             failed_runs.append(run.name)
         if (run / "result.json").exists():
             result = json.loads((run / "result.json").read_text())
+            if result.get("priority", {}).get("mode") == "curve-vertex-incident-edges" and (run / "prolongation.npz").exists():
+                workflow.imports()
+                from nested_refinement import interpolation_check
+                from nested_preflight import curve_vertex_star_edges
+                from periodic_crease_audit import features
+                from hp_shared_domain import periodic_jumps
+                source = Path(result["source"])
+                old, new = np.load(source / "mesh.npz"), dict(np.load(run / "mesh.npz"))
+                transfer = dict(np.load(run / "prolongation.npz"))
+                fields = np.load(source / "fields.npz")["displacement"]
+                checked_transfer = interpolation_check(old["points"], old["tetrahedra"], fields, {**new, **transfer})
+                assert len(new["points"]) <= 250000 and len(new["tetrahedra"]) <= 250000
+                feature = features(old)
+                priority = result["priority"]
+                assert len(curve_vertex_star_edges(old["tetrahedra"], feature["curve_endpoints"])) == priority["preferred_edges"]
+                selected = np.bincount(transfer["parents"], minlength=len(old["tetrahedra"])) == 2
+                mask = feature["groups"]["curve_vertex_incident"]
+                assert int((mask & selected).sum()) == priority["bisected_curve_vertex_elements"]
+                np.testing.assert_allclose(selected[mask].mean(), priority["curve_vertex_element_bisection_fraction"], atol=1e-12)
+                geometry = workflow.geometry(run, "smooth-lattice", new["points"], new["tetrahedra"], new["surface"])
+                assert geometry["geometry_admitted"]
+                for key in ("sampled_two_sided_max", "relative_volume_error", "q_min_corner", "minimum_sampled_jacobian"):
+                    np.testing.assert_allclose(geometry[key], result["geometry"][key], atol=1e-13)
+                periodic_jumps(new["points"], new["surface"], transfer["displacement"])
+                curve_star_replays.append({"run": run.name, **checked_transfer,
+                    "curve_vertex_element_bisection_fraction": float(selected[mask].mean())})
+            if result.get("ranked_increment_localization"):
+                workflow.imports()
+                from hp_ranked_localization import wall_residuals
+                from hp_shared_domain import ROOT as domain_root
+                from periodic_crease_audit import features
+                audit = json.loads((Path(result["source_audit"]) / "result.json").read_text())
+                previous = json.loads((Path(audit["previous_audit"]) / "result.json").read_text())
+                solved = json.loads((Path(audit["source"]) / "result.json").read_text())
+                mesh = np.load(Path(solved["prepared"]) / "mesh.npz")
+                baseline = np.asarray(previous["rules"][-1]["energy_tensor"])
+                groups = features(mesh)["groups"]
+                values = []
+                for row in result["rules"]:
+                    path = run / f"local-{row['points']}.npz"
+                    assert workflow.digest(path) == row["local_archive_sha256"]
+                    data = np.load(path)
+                    np.testing.assert_allclose(data["energy_tensors"].sum(axis=0), row["correction_energy_tensor"], atol=1e-12)
+                    scalar = np.einsum("ij,tji->t", np.linalg.inv(baseline), data["energy_tensors"])
+                    np.testing.assert_allclose(scalar, data["six_load_normalized_trace"], atol=1e-15)
+                    for label, mask in groups.items():
+                        np.testing.assert_allclose(scalar[mask].sum()/scalar.sum(), row["groups"][label]["correction_fraction"], atol=1e-12)
+                    order = np.argsort(scalar)[::-1]
+                    for fraction, capture in row["top_fractions"].items():
+                        np.testing.assert_allclose(scalar[order[:max(1, int(np.ceil(float(fraction)*len(scalar))))]].sum()/scalar.sum(), capture, atol=1e-12)
+                    values.append(scalar)
+                precision = float(np.linalg.norm(values[-1]-values[-2])/np.linalg.norm(values[-1]))
+                assert precision < .01
+                np.testing.assert_allclose(precision, result["positive_rule_local_trace_change"], atol=1e-12)
+                gain = baseline - np.asarray(audit["rules"][-1]["energy_tensor"])
+                assert abs(eigvalsh(np.asarray(result["rules"][-1]["correction_energy_tensor"])-gain, baseline)).max() < 1e-4
+                overlay = np.load(run / "geometry-overlay.npz")
+                assert workflow.digest(run / "geometry-overlay.npz") == result["geometry"]["geometry_overlay_sha256"]
+                maps = np.load(Path(solved["coupling"]) / "root-maps.npz")
+                np.testing.assert_array_equal(overlay["root_parents"], maps["parents"])
+                root = np.load(domain_root / "mesh.npz")
+                score = np.bincount(maps["parents"], weights=values[-1], minlength=len(root["tetrahedra"]))
+                np.testing.assert_allclose(score, overlay["root_score"], atol=1e-15)
+                triangle = root["points"][root["surface"][:, :3]]
+                caps = np.any(np.all(workflow.on_box_plane(triangle, -.5), axis=1) | np.all(workflow.on_box_plane(triangle, .5), axis=1), axis=1)
+                case, _, _ = workflow.specimen("smooth-lattice")
+                replay = [wall_residuals(root["points"], root["surface"][~caps], case.function, order) for order in (5, 6)]
+                for key, value in replay[-1].items():
+                    np.testing.assert_allclose(value, overlay[key], atol=1e-14)
+                owners = overlay["wall_owners"]
+                assert np.all(np.any(root["tetrahedra"][owners, :4, None] == root["surface"][~caps, None, :3], axis=1))
+                wall_cells = np.unique(owners)
+                area, square = (np.bincount(owners, weights=replay[-1][key], minlength=len(score))
+                    for key in ("area", "squared_distance_integral"))
+                rms = np.sqrt(square[wall_cells]/area[wall_cells])
+                selected = wall_cells[np.argsort(rms)[-max(1, int(np.ceil(.1*len(wall_cells)))):]]
+                for key, value in {"wall_area": area.sum(), "area_weighted_projection_rms": np.sqrt(square.sum()/area.sum()),
+                    "maximum_sampled_projection": replay[-1]["maximum_sampled_projection"].max(),
+                    "failed_projection_count": replay[-1]["failed_projections"].sum(),
+                    "faces_with_failed_projections": np.count_nonzero(replay[-1]["failed_projections"]),
+                    "maximum_box_overshoot": replay[-1]["maximum_box_overshoot"].max(),
+                    "maximum_remaining_field_distance": replay[-1]["maximum_remaining_field_distance"].max(),
+                    "wall_owner_correction_fraction": score[wall_cells].sum()/score.sum(),
+                    "worst_geometry_decile_wall_correction_fraction": score[selected].sum()/score[wall_cells].sum()}.items():
+                    np.testing.assert_allclose(value, result["geometry"][key], atol=1e-12)
+                change = float(np.linalg.norm(replay[-1]["squared_distance_integral"]-replay[-2]["squared_distance_integral"])/np.linalg.norm(replay[-1]["squared_distance_integral"]))
+                np.testing.assert_allclose(change, result["geometry"]["squared_residual_vector_change"], atol=1e-12)
+                assert result["geometry"]["all_projections_valid"] == (not bool(replay[-1]["failed_projections"].any()))
+                assert result["passed"] == (change < .01 and not bool(replay[-1]["failed_projections"].any()))
+                assert result["complete_wall_geometry_interpretation_admitted"] == result["passed"]
+                assert not result["geometry_or_fields_modified"] and not result["reference_promoted"]
+                increment_replays.append({"run": run.name, "local_trace_precision": precision,
+                    "geometry_precision": change, "geometry_precision_passed": change < .01,
+                    "failed_projections": int(replay[-1]["failed_projections"].sum()),
+                    "complete_wall_geometry_interpretation_admitted": result["passed"]})
             if result.get("source_augmented_space_included"):
                 workflow.imports()
                 from fedoo.lib_elements.tetrahedron import Tet10, Tet4
@@ -280,6 +377,8 @@ def main():
         "geometry_witness_replays": geometry_replays, "same_host_workflow_replays": workflow_replays,
         "coupled_modal_field_replays": hp_replays,
         "ranked_refinement_replays": ranked_replays,
+        "ranked_increment_replays": increment_replays,
+        "curve_vertex_star_replays": curve_star_replays,
         "reference_promoted": False})
     print(f"Verified {files} transferred files, {checked} input hashes and {comparisons} full model comparisons")
 

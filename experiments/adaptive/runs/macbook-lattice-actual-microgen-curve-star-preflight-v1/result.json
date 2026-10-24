@@ -1,0 +1,119 @@
+{
+  "case": "smooth-lattice",
+  "source": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/g3-lattice-microgen-straight-tet10-hausd001-amg-v2",
+  "nodes": 249998,
+  "elements": 165772,
+  "order": 2,
+  "qualified": true,
+  "geometry": {
+    "sampled_forward_max": 0.0016215853460590569,
+    "sampled_reverse_max": 0.0014942733872672918,
+    "sampled_two_sided_max": 0.0016215853460590569,
+    "outward_forward_max": 0.0015820563999823791,
+    "inward_forward_max": 0.0016215853460590569,
+    "projection_failed": 0,
+    "forward_samples": 280124,
+    "reverse_samples": 34791,
+    "volume": 0.2471000241304399,
+    "relative_volume_error": -0.00487702295322423,
+    "q_min_corner": 0.10155398570635937,
+    "q_p01_corner": 0.43113500875888483,
+    "minimum_dihedral_deg_corner": 4.980073843490288,
+    "minimum_sampled_jacobian": 7.065251542034094e-08,
+    "reverse_tessellation_delta_max": 9.128982292327947e-17,
+    "quadratic_reverse_subdivisions": [
+      4,
+      8
+    ],
+    "facet_consistency": {
+      "nodes": 249998,
+      "elements": 165772,
+      "unique_faces": 344267,
+      "interior_faces": 318821,
+      "extracted_boundary_faces": 25446,
+      "same_orientation_shared_faces": 0,
+      "nonmanifold_faces": 0,
+      "duplicate_cells": 0,
+      "duplicate_surface_faces": 0,
+      "provided_boundary_matches_extraction": true,
+      "missing_provided_faces": 0,
+      "extra_provided_faces": 0,
+      "nonpositive_corner_determinants": 0,
+      "minimum_corner_determinant": 7.065251542035149e-08,
+      "oriented_facet_consistency_passed": true,
+      "conflict_examples": [],
+      "scope": "Oriented corner-face incidence and same-side neighbor diagnostics; necessary consistency, not a certificate of curved geometry or absence of nonlocal intersections"
+    },
+    "oriented_facet_consistency_passed": true,
+    "geometry_admitted": true
+  },
+  "relative_volume_change": 0.0,
+  "refinement": {
+    "accepted_edge_orbits": 1778,
+    "quality_rejected_orbits": 33,
+    "overlapping_star_orbits": 17419,
+    "budget_rejected_orbits": 182398,
+    "preferred_edge_orbits": 2506,
+    "accepted_preferred_edge_orbits": 548,
+    "source_nodes": 238411,
+    "source_elements": 158252,
+    "nodes": 249998,
+    "elements": 165772,
+    "bisected_parent_elements": 7520,
+    "shared_position_error": 5.551115123125783e-17,
+    "shared_field_error": 1.1102230246251565e-16,
+    "projected_node_upper_bound": 249998,
+    "facet_consistency": {
+      "nodes": 249998,
+      "elements": 165772,
+      "unique_faces": 344267,
+      "interior_faces": 318821,
+      "extracted_boundary_faces": 25446,
+      "same_orientation_shared_faces": 0,
+      "nonmanifold_faces": 0,
+      "duplicate_cells": 0,
+      "duplicate_surface_faces": 0,
+      "provided_boundary_matches_extraction": true,
+      "missing_provided_faces": 0,
+      "extra_provided_faces": 0,
+      "nonpositive_corner_determinants": 0,
+      "minimum_corner_determinant": 7.065251542035149e-08,
+      "oriented_facet_consistency_passed": true,
+      "conflict_examples": [],
+      "scope": "Oriented corner-face incidence and same-side neighbor diagnostics; necessary consistency, not a certificate of curved geometry or absence of nonlocal intersections"
+    },
+    "periodic": {
+      "periodic_pair_counts": [
+        1446,
+        1449,
+        1440
+      ],
+      "periodic_coordinate_errors": [
+        5.551115123125783e-17,
+        5.551115123125783e-17,
+        5.551115123125783e-17
+      ],
+      "periodic_pair_tolerance": 1e-10,
+      "periodic_equivalence_classes": 245764,
+      "periodic_triangles_match": true
+    }
+  },
+  "interpolation": {
+    "points_per_element": 12,
+    "elements_checked": 165772,
+    "maximum_geometry_error": 3.3306690738754696e-16,
+    "maximum_field_error": 3.3306690738754696e-16
+  },
+  "priority": {
+    "mode": "curve-vertex-incident-edges",
+    "preferred_edges": 3136,
+    "curve_vertices": 456,
+    "source_curve_vertex_elements": 2763,
+    "bisected_curve_vertex_elements": 2036,
+    "curve_vertex_element_bisection_fraction": 0.7368802026782483
+  },
+  "equilibrium_solve_performed": false,
+  "reference_promoted": false,
+  "status": "nested-preflight-passed",
+  "scope": "One conforming edge-star bisection stage with exact parent Tet10 map restriction and field prolongation; no convergence or continuum claim"
+}

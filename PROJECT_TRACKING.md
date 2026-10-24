@@ -1,5 +1,14 @@
 # Meshers project tracking
 
+A star-refined actual Microgen-derived saved-mesh lattice control now passes
+all 24 models at 0.988498%. The native star-refined control still fails at
+1.230455%. Both pass full field, periodic and positive-quadrature audits.
+The passing actual route includes explicit extra refinement; its frozen G3
+seed is not fresh Mac generation or a workflow timing. Prepare that fresh
+actual generation next, reading geometry before any solve. Parent23 reference
+convergence remains unresolved. Repeated Mac Schwarz wins stand; Gyroid and
+spinodoid comparator gaps remain. The full four-case goal is unachieved.
+
 Ranked nested lattice correction now passes complete-field, positive-rule,
 periodic and freshly reassembled equilibrium audits. All twelve fresh
 auxiliary responses fit at 5.769 GiB. The largest fixed-domain stiffness
