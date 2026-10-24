@@ -1,5 +1,5 @@
-//! Exact max-of-affine decomposition, bounded by the constrained cutter's capacity.
-//! Unsupported or nonconvex graphs keep their original scalar meshing path.
+//! Exact convex affine forms and bounded min/max combinations of those forms.
+//! Unsupported graphs keep their original scalar meshing path.
 use super::Node;
 use meshers_core::implicit::intersection::MAX_CONSTRAINTS;
 
@@ -17,7 +17,7 @@ fn scaled(forms: &[Plane], factor: f64) -> Option<Vec<Plane>> {
     Some(forms.iter().map(|p| p.map(|x| x * factor)).collect())
 }
 
-pub(super) fn halfspaces(nodes: &[Node], output: usize) -> Option<Vec<Plane>> {
+fn affine_forms(nodes: &[Node]) -> Vec<Option<Vec<Plane>>> {
     let mut forms: Vec<Option<Vec<Plane>>> = Vec::with_capacity(nodes.len());
     for (op, args, value) in nodes {
         let result = (|| {
@@ -88,8 +88,80 @@ pub(super) fn halfspaces(nodes: &[Node], output: usize) -> Option<Vec<Plane>> {
         });
         forms.push(result);
     }
-    let result = forms[output].take()?;
+    forms
+}
+
+pub(super) fn halfspaces(nodes: &[Node], output: usize) -> Option<Vec<Plane>> {
+    let result = affine_forms(nodes)[output].take()?;
     // Zero-gradient branches need separate full/empty-domain semantics.
     // Leave those and single-plane fields on the existing scalar path.
     (result.len() >= 2 && result.iter().all(|p| p[..3] != [0.; 3])).then_some(result)
+}
+
+pub(super) type Regions = (Vec<Plane>, Vec<u32>);
+
+/// Bounded min/max combinations of convex affine forms. Arithmetic outside a
+/// nonconvex combination is deliberately unsupported rather than approximated.
+pub(super) fn regions(nodes: &[Node], output: usize) -> Option<Regions> {
+    let convex = affine_forms(nodes);
+    let mut groups: Vec<Option<Vec<Vec<Plane>>>> = Vec::with_capacity(nodes.len());
+    for (i, (op, args, _)) in nodes.iter().enumerate() {
+        let result = if let Some(forms) = &convex[i] {
+            Some(vec![forms.clone()])
+        } else {
+            (|| {
+                let (a, b) = (
+                    groups[*args.first()?].as_ref()?,
+                    groups[*args.get(1)?].as_ref()?,
+                );
+                match op.as_str() {
+                    "minimum" => Some(a.iter().chain(b).cloned().collect()),
+                    "maximum" if a.len() * b.len() <= 32 => Some(
+                        a.iter()
+                            .flat_map(|a| {
+                                b.iter().map(move |b| {
+                                    let mut group = a.clone();
+                                    for plane in b {
+                                        if !group.contains(plane) {
+                                            group.push(*plane);
+                                        }
+                                    }
+                                    group
+                                })
+                            })
+                            .collect(),
+                    ),
+                    _ => None,
+                }
+            })()
+        };
+        groups.push(result.filter(|groups| {
+            groups.len() <= 32 && groups.iter().all(|group| group.len() <= MAX_CONSTRAINTS)
+        }));
+    }
+    let groups = groups[output].take()?;
+    let mut planes = Vec::new();
+    let mut masks = Vec::new();
+    for group in groups {
+        let mut mask = 0;
+        for plane in group {
+            if plane[..3] == [0.; 3] {
+                return None;
+            }
+            let index = if let Some(index) = planes.iter().position(|p| *p == plane) {
+                index
+            } else {
+                if planes.len() == MAX_CONSTRAINTS {
+                    return None;
+                }
+                planes.push(plane);
+                planes.len() - 1
+            };
+            mask |= 1 << index;
+        }
+        if !masks.contains(&mask) {
+            masks.push(mask);
+        }
+    }
+    (planes.len() >= 2 && masks.len() >= 2).then_some((planes, masks))
 }

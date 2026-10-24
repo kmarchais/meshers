@@ -1,0 +1,17 @@
+    Checking meshers-core v0.1.0 (/Users/kmarchais/dev/meshers/crates/meshers-core)
+error: the loop variable `j` is used to index `functions`
+  --> crates/meshers-core/tests/intersection.rs:93:18
+   |
+93 |         for j in 0..planes.len() {
+   |                  ^^^^^^^^^^^^^^^
+   |
+   = help: for further information visit https://rust-lang.github.io/rust-clippy/rust-1.95.0/index.html#needless_range_loop
+   = note: `-D clippy::needless-range-loop` implied by `-D warnings`
+   = help: to override `-D warnings` add `#[allow(clippy::needless_range_loop)]`
+help: consider using an iterator and enumerate()
+   |
+93 -         for j in 0..planes.len() {
+93 +         for (j, <item>) in functions.iter().enumerate().take(planes.len()) {
+   |
+
+error: could not compile `meshers-core` (test "intersection") due to 1 previous error

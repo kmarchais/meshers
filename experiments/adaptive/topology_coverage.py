@@ -23,13 +23,18 @@ def boundary_topology(surface, np):
 
 def fixture(name, np):
     angles = 2*np.pi*np.arange(96)/96
-    if name == 'octahedron':
-        vertices, faces = octahedron(np)
+    if name in ('octahedron', 'notched-prism'):
+        vertices, faces = octahedron(np) if name == 'octahedron' else notched_prism(np)
         bary = np.array([(i/48, j/48, 1-(i+j)/48) for i in range(49) for j in range(49-i)])
         queries = np.einsum('sn,fnd->fsd', bary, vertices[faces]).reshape(-1, 3)
+        if name == 'octahedron':
+            def field(x, y, z):
+                return (np.abs(x)+np.abs(y)+np.abs(z)-.35)/np.sqrt(3)
+            return field, queries, 4*.35**3/3, 1, 2
         def field(x, y, z):
-            return (np.abs(x)+np.abs(y)+np.abs(z)-.35)/np.sqrt(3)
-        return field, queries, 4*.35**3/3, 1, 2
+            return np.maximum(np.maximum(np.maximum(np.abs(x)-.35, np.abs(y)-.35),
+                np.abs(z)-.3), np.minimum(x-.05, y-.05))
+        return field, queries, (.7*.7-.3*.3)*.6, 1, 2
     if name == 'torus':
         major, minor = .25, .08
         def field(x, y, z):
@@ -69,14 +74,33 @@ def octahedron(np):
     return vertices, np.array(faces)
 
 
+def notched_prism(np):
+    """Exact oriented boundary of an L prism, independent of implicit meshing."""
+    polygon = np.array(((-.35, -.35), (.35, -.35), (.35, .05),
+        (.05, .05), (.05, .35), (-.35, .35)))
+    vertices = np.concatenate((np.column_stack((polygon, np.full(6, -.3))),
+        np.column_stack((polygon, np.full(6, .3)))))
+    triangles = ((0, 1, 3), (1, 2, 3), (0, 3, 5), (3, 4, 5))
+    faces = [list(reversed(t)) for t in triangles]+[[v+6 for v in t] for t in triangles]
+    for a in range(6):
+        b = (a+1)%6
+        faces.extend(((a, b, b+6), (a, b+6, a+6)))
+    return vertices, np.array(faces)
+
+
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('--run', type=Path, required=True)
-    parser.add_argument('--case', choices=('torus', 'shell', 'disjoint', 'octahedron'), required=True)
+    parser.add_argument('--case', choices=('torus', 'shell', 'disjoint', 'octahedron', 'notched-prism'), required=True)
     parser.add_argument('--tolerance', type=float, default=.002)
     parser.add_argument('--named', action='store_true', help='Preserve the octahedron planes as named constraints')
     parser.add_argument('--no-adapt', action='store_true')
     parser.add_argument('--optimization-passes', type=int, default=1)
+    parser.add_argument('--snap', type=float, default=.2)
+    parser.add_argument('--rotation', type=float, default=0., help='Rotation about z, in radians')
+    parser.add_argument('--translation', type=float, nargs=3, default=(0., 0., 0.))
+    parser.add_argument('--diagnostic-unchecked', action='store_true',
+        help='Save rejected geometry for diagnosis; external admission gates remain unchanged')
     args = parser.parse_args()
     assert args.run.is_dir() and not (args.run/'result.json').exists()
     np, _, meshers, _, _, scorecard = w.imports()
@@ -95,18 +119,34 @@ def main():
         options=dict(bounds=w.BOUNDS, cells=24, geometry_tolerance=args.tolerance,
             minimum_quality=.1, max_tetrahedra=w.CAP, threads=1,
             adapt=not args.no_adapt, min_length=.002, max_length=.1, gradation=.3,
-            adapt_iterations=4, quality_guard=.3, optimize_passes=args.optimization_passes, order=1),
+            adapt_iterations=4, quality_guard=.3, optimize_passes=args.optimization_passes, order=1, snap=args.snap),
         gates=dict(distance=.002, relative_volume=.01, minimum_quality=.1,
             positive_jacobians=True, coherent_facets=True, exact_boundary_topology=True,
             maximum_nodes=250000, maximum_tetrahedra=w.CAP))
+    row['diagnostic_unchecked'] = args.diagnostic_unchecked
+    if args.diagnostic_unchecked:
+        row['options'].update(geometry_tolerance=1., minimum_quality=0., adapt_tolerance=args.tolerance)
     row['representation'] = 'named-planes' if args.named else 'scalar-field'
+    row['transform'] = dict(rotation_z=args.rotation, translation=args.translation)
+    cosine, sine = np.cos(args.rotation), np.sin(args.rotation)
+    rotation = np.array(((cosine, -sine, 0.), (sine, cosine, 0.), (0., 0., 1.)))
+    transformed = bool(args.rotation or any(args.translation))
+    assert np.isfinite(rotation).all() and np.isfinite(args.translation).all()
+    if args.named:
+        assert not transformed
     if args.named:
         assert args.case == 'octahedron'
         row['options'] = {k: v for k, v in row['options'].items() if k in
-            ('bounds', 'cells', 'geometry_tolerance', 'minimum_quality', 'max_tetrahedra', 'optimize_passes')}
+            ('bounds', 'cells', 'geometry_tolerance', 'minimum_quality', 'max_tetrahedra', 'optimize_passes', 'snap')}
     started = time.perf_counter()
     try:
         field, queries, exact_volume, components, euler = fixture(args.case, np)
+        if transformed:
+            original = field
+            cx, cy, cz = args.translation
+            def field(x, y, z):
+                return original(cosine*(x-cx)+sine*(y-cy), -sine*(x-cx)+cosine*(y-cy), z-cz)
+            queries = queries@rotation.T+args.translation
         np.savez_compressed(args.run/'reference.npz', points=queries)
         row['reference_sha256'] = w.digest(args.run/'reference.npz')
         phase = time.perf_counter()
@@ -128,8 +168,10 @@ def main():
         row['mesh_sha256'] = w.digest(args.run/'mesh.npz')
         probes = np.einsum('sn,fnd->fsd', scorecard.BARY, points[surface]).reshape(-1, 3)
         forward = float(np.max(np.abs(field(*probes.T))))
-        if args.case == 'octahedron':
-            target_points, target_surface = octahedron(np)
+        if args.case in ('octahedron', 'notched-prism'):
+            target_points, target_surface = octahedron(np) if args.case == 'octahedron' else notched_prism(np)
+            if transformed:
+                target_points = target_points@rotation.T+args.translation
             forward = float(scorecard.distance_to_mesh(target_points, target_surface, probes).max())
         reverse = float(scorecard.distance_to_mesh(points, surface, queries).max())
         q, _, volumes = scorecard.tet_metrics(points, cells)

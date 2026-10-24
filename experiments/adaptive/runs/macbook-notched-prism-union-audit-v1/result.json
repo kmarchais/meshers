@@ -1,0 +1,51 @@
+{
+  "qualified": true,
+  "nodes": 16633,
+  "elements": 72738,
+  "forward_distance": 7.227551890309769e-14,
+  "reverse_distance": 6.705747068735946e-14,
+  "relative_volume_error": -1.532107773982716e-14,
+  "minimum_quality": 0.11379552570738939,
+  "minimum_determinant": 1.4467592592592124e-07,
+  "facets": {
+    "nodes": 16633,
+    "elements": 72738,
+    "unique_faces": 153153,
+    "interior_faces": 137799,
+    "extracted_boundary_faces": 15354,
+    "same_orientation_shared_faces": 0,
+    "nonmanifold_faces": 0,
+    "duplicate_cells": 0,
+    "duplicate_surface_faces": 0,
+    "provided_boundary_matches_extraction": true,
+    "missing_provided_faces": 0,
+    "extra_provided_faces": 0,
+    "nonpositive_corner_determinants": 0,
+    "minimum_corner_determinant": 1.446759259259212e-07,
+    "oriented_facet_consistency_passed": true,
+    "conflict_examples": [],
+    "scope": "Oriented corner-face incidence and same-side neighbor diagnostics; necessary consistency, not a certificate of curved geometry or absence of nonlocal intersections"
+  },
+  "topology": [
+    1,
+    2
+  ],
+  "boundary_volume": 0.23999999999999633,
+  "inputs": {
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/verify_union_seed.py": "d54c620f1b302185a3d671e1a86d8f46ca1a355a9dca6c52295391df6885de7f",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/topology_coverage.py": "7068d8f8babd870fb630af717e4b4330579eaa91f776490b15de3cd33e9d094d",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/scorecard.py": "8f26256c7df0e84c9f35cdd71bf4f95a74e072d45469002b213c5dcd4f1bab2a",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/facet_incidence_audit.py": "4f51afc196c85e1d0bc64d7a96507517ddc6e32ccd8380a2ac77cae0ace89610",
+    "experiments/adaptive/runs/macbook-notched-prism-union-seed-v1/mesh.json": "d6f78cd5fc2f333adba6fc18afb178a062be801ea50810cfaf68951b26084eb0"
+  },
+  "no_fe_solve": true,
+  "gates": {
+    "distance": 0.002,
+    "relative_volume": 0.01,
+    "minimum_quality": 0.1,
+    "node_cap": 250000,
+    "tet_cap": 250000
+  },
+  "production_dispatch_fixed": false,
+  "comparative_timing_claim": false
+}

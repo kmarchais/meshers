@@ -357,7 +357,7 @@ fn make_field(
 }
 
 #[allow(clippy::too_many_arguments)]
-#[pyfunction(signature = (field, gradient, bounds, cells, periodic, band, tolerance, minimum_quality, budget, passes, interior_refine_nodes, snap, threads, batch_size, cancel, adapt=None, order=1, size_field=None, halfspaces=None))]
+#[pyfunction(signature = (field, gradient, bounds, cells, periodic, band, tolerance, minimum_quality, budget, passes, interior_refine_nodes, snap, threads, batch_size, cancel, adapt=None, order=1, size_field=None, halfspaces=None, regions=None))]
 fn generate<'py>(
     py: Python<'py>,
     field: Py<PyAny>,
@@ -379,7 +379,22 @@ fn generate<'py>(
     order: u8,
     size_field: Option<Py<PyAny>>,
     halfspaces: Option<Vec<[f64; 4]>>,
+    regions: Option<Vec<u64>>,
 ) -> PyResult<Bound<'py, PyDict>> {
+    let regions = regions
+        .map(|groups| {
+            groups
+                .into_iter()
+                .map(|mask| {
+                    implicit::intersection::ConstraintMask::try_from(mask).map_err(|_| {
+                        pyo3::exceptions::PyValueError::new_err(
+                            "region mask exceeds constrained capacity",
+                        )
+                    })
+                })
+                .collect::<PyResult<Vec<_>>>()
+        })
+        .transpose()?;
     let f = make_field(
         py,
         field,
@@ -422,11 +437,12 @@ fn generate<'py>(
     };
     let start = std::time::Instant::now();
     let result = py.detach(|| {
-        implicit::generate_with_features(
+        implicit::generate_with_regions(
             &f,
             size.as_ref().map(|field| field as &dyn ScalarField),
             options,
             halfspaces.as_deref(),
+            regions.as_deref(),
         )
     });
     if let Some(error) = f.error.lock().unwrap().take() {
@@ -551,6 +567,9 @@ fn generate<'py>(
             result.diagnostics.polyhedral_constraints,
         )?;
     }
+    if result.diagnostics.polyhedral_regions > 0 {
+        diagnostics.set_item("polyhedral_regions", result.diagnostics.polyhedral_regions)?;
+    }
     diagnostics.set_item("empty", result.diagnostics.empty)?;
     diagnostics.set_item("volume", result.diagnostics.volume)?;
     diagnostics.set_item(
@@ -600,6 +619,7 @@ fn available_threads() -> usize {
 fn _meshers(m: &Bound<'_, PyModule>) -> PyResult<()> {
     m.add("IMPLICIT_API_VERSION", 1)?;
     m.add("ADAPTIVE_POLYHEDRAL", true)?;
+    m.add("POLYHEDRAL_REGIONS", true)?;
     m.add(
         "MAX_CONSTRAINTS",
         meshers_core::implicit::intersection::MAX_CONSTRAINTS,

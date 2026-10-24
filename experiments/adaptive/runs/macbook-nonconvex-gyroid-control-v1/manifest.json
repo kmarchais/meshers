@@ -1,0 +1,72 @@
+{
+  "inputs": {
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/mesh_only_comparison.py": "f459194b52ac1d14b30bd7ec2f66801d6611b89bb38f532b2bc799f3a500f5e4",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/microgen_workflow.py": "073f615481feeae8bb9142d325d9ae39251ca1e1aa2d1376f5e4f88a19aec872",
+    "/Users/kmarchais/dev/meshers/crates/meshers-python/python/meshers/_meshers.abi3.so": "317e3daf3dd6d52463cb2acd7d1b2908c10227065c73b22d525644bc7d2b9efe",
+    "/Users/kmarchais/dev/meshers/.local-work/macbook-runtime/venv/lib/python3.12/site-packages/microgen/remesh.py": "b93c8b8150c1c40ccf5312d57785331d52f114d2217a8b59296b7484cf6f2612",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/scorecard.py": "8f26256c7df0e84c9f35cdd71bf4f95a74e072d45469002b213c5dcd4f1bab2a",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/test_mesh_only_comparison.py": "bed498bbcb080673464c2ef2d80a5e2c42915a9fdfb7e91a89c66fc89d86ad95",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/interior_relocation_trial.py": "e65d4feec624edc81b93445019c827e79a52568bcdeebcbe920a2230b247e2e1",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/interior_star_probe.py": "fe5daf85f5147b77d76c37e5eb7ec9f511b16203fb5eaedb24a89e9667395616",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/microgen_tet10_control.py": "d77185fbb2e9256ab8b479f8cab34a57be723540dc80def8dfe30361a5d68ceb",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/box_projection.py": "59589b1996b3a3782f1b7f5e5ff3c7ab303d4158ef50a233515dc5369bddaf05",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/gradient_tie_probe.py": "f2fddde187144f52527bd8563b34128831cc4f8733ef720ad86cf7c5db8d2762",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/g3-spinodoid-compiled32-v1/fourier-coefficients.json": "e9ee2b6c70dcf771ab9fdb011051eb57973d2e15cf479e904bf5d8b40e3d779a",
+    "/Users/kmarchais/dev/meshers/.local-work/macbook-runtime/venv/lib/python3.12/site-packages/microgen/shape/spinodoid.py": "c755554a90d2c6279e625174ad0e6940f1d3bbb30ab35379fbaece1a95b7d724",
+    "/Users/kmarchais/dev/meshers/.local-work/macbook-runtime/venv/lib/python3.12/site-packages/microgen/shape/tpms.py": "1c2876a8f65441e6d7a0f21397a3b781b6f03a338f244c7db5c462c13348f955",
+    "/Users/kmarchais/dev/meshers/crates/meshers-python/python/meshers/__init__.py": "7d95910be949ffeeed6050cf1f124b0efab40e3c3dfd2eed9ba63a087fcbbb48",
+    "/Users/kmarchais/dev/meshers/crates/meshers-python/python/meshers/expression.py": "abf5e43d1b7e9fb05c7d081bd55c0f4ad74f1c6cc4d9ed7a89fb2881445c13f4",
+    "/Users/kmarchais/dev/meshers/crates/meshers-python/python/meshers/intersection.py": "3193fd5e8c51151f1026d1cf6f8c15c02d4f7360e0fdb6cf79dce51f230bdd2e",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/facet_incidence_audit.py": "4f51afc196c85e1d0bc64d7a96507517ddc6e32ccd8380a2ac77cae0ace89610",
+    "/Users/kmarchais/dev/periodic-microgen/experiments/periodic-fea/periodic.py": "f065de0570eed98149c45aff3babcbadc3f73aed89eb1639eca0448de4353629",
+    "/Users/kmarchais/dev/meshers/.local-work/macbook-runtime/venv/lib/python3.12/site-packages/mmgpy/bin/mmg3d_O3": "efe07a6207a9ff86f4af26513e6aa368647b32cae112859fca52e74c3e7f7cf1",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/g3-microgen-defaults-v4/gyroid-samples.npz": "d49ce7a80d95af127951750fa7dd02f52d4dd67bc87246dee02be932b51539d6",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/g3-microgen-defaults-v4/gyroid-specimen.json": "2f9171aa778f1899aed5b1057bc6255da515e8a9d96bf76c305b62e3c7bd0ed8"
+  },
+  "platform": "macOS-26.5.1-arm64-arm-64bit",
+  "architecture": "arm64",
+  "numerical_thread_policy": {
+    "environment": {
+      "OPENBLAS_NUM_THREADS": "1",
+      "OMP_NUM_THREADS": "1",
+      "MKL_NUM_THREADS": "1",
+      "VECLIB_MAXIMUM_THREADS": "1",
+      "RAYON_NUM_THREADS": "1"
+    },
+    "accelerate_blas_threading": 1,
+    "accelerate_scope": "calling thread"
+  },
+  "memory_bytes": 8589934592,
+  "worker_timeout_s": 300,
+  "tetrahedron_cap": 250000,
+  "node_cap": 250000,
+  "threads": 1,
+  "packages": {
+    "meshers": "0.1.0",
+    "microgen": "2.0.0b1",
+    "mmgpy": "0.17.1",
+    "numpy": "2.5.4",
+    "scipy": "1.18.1",
+    "pyvista": "0.49.1",
+    "vtk": "9.7.1"
+  },
+  "no_fe_solve": true,
+  "case": "gyroid",
+  "repetitions": 1,
+  "warmups": 0,
+  "strengthened": true,
+  "select": "meshers-tet4-24",
+  "command": [
+    "experiments/adaptive/mesh_only_comparison.py",
+    "--run",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-nonconvex-gyroid-control-v1",
+    "--case",
+    "gyroid",
+    "--strengthened",
+    "--select",
+    "meshers-tet4-24",
+    "--repetitions",
+    "1",
+    "--require-admitted"
+  ]
+}

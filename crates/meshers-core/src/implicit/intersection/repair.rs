@@ -384,6 +384,7 @@ pub(super) fn smooth(
     o: &Options,
     fields: &[&dyn super::ScalarField],
     map: &impl Fn(Point) -> Point,
+    regions: Option<&[super::ConstraintMask]>,
 ) -> Result<usize, String> {
     let [lo, hi] = o.bounds;
     let h = (0..3)
@@ -472,7 +473,18 @@ pub(super) fn smooth(
             {
                 continue;
             }
-            if !active.is_empty() && fields.iter().any(|f| f.value(p) > 1e-9) {
+            let outside = |mask: super::ConstraintMask| {
+                fields
+                    .iter()
+                    .enumerate()
+                    .any(|(i, f)| mask & (1 << i) != 0 && f.value(p) > 1e-9)
+            };
+            if !active.is_empty()
+                && regions.map_or_else(
+                    || outside(super::ConstraintMask::MAX),
+                    |regions| regions.iter().all(|&mask| outside(mask)),
+                )
+            {
                 continue;
             }
             let parameters: Vec<Point> = group

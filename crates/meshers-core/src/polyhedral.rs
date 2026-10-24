@@ -32,6 +32,7 @@ pub(crate) fn project(
     mask: u64,
     locked: [bool; 3],
     tolerance: f64,
+    regions: Option<&[crate::implicit::intersection::ConstraintMask]>,
 ) -> Option<Point> {
     let mut equations = Vec::new();
     for a in 0..3 {
@@ -72,10 +73,26 @@ pub(crate) fn project(
             p[a] = original[a];
         }
     }
+    let residuals: Vec<_> = planes
+        .iter()
+        .map(|plane| dot([plane[0], plane[1], plane[2]], p) + plane[3])
+        .collect();
+    let inside = regions.map_or_else(
+        || residuals.iter().all(|&r| r <= tolerance),
+        |groups| {
+            groups.iter().any(|group| {
+                residuals
+                    .iter()
+                    .enumerate()
+                    .all(|(i, &r)| group & (1 << i) == 0 || r <= tolerance)
+            })
+        },
+    );
     let valid = p.iter().all(|x| x.is_finite())
+        && inside
         && planes.iter().enumerate().all(|(i, plane)| {
             let residual = dot([plane[0], plane[1], plane[2]], p) + plane[3];
-            residual <= tolerance && (mask & (1u64 << i) == 0 || residual.abs() <= tolerance)
+            mask & (1u64 << i) == 0 || residual.abs() <= tolerance
         });
     valid.then_some(p)
 }
@@ -93,10 +110,18 @@ mod tests {
             [1., 1., 1., -1.5],
         ])
         .unwrap();
-        let face = project(&planes, [0.7, 0.1, 0.2], 1, [false, false, true], 1e-12).unwrap();
+        let face = project(
+            &planes,
+            [0.7, 0.1, 0.2],
+            1,
+            [false, false, true],
+            1e-12,
+            None,
+        )
+        .unwrap();
         assert_eq!(face, [0.5, 0.1, 0.2]);
-        assert!(project(&planes, [0.7, 0.7, 0.2], 1, [false; 3], 1e-12).is_none());
-        let corner = project(&planes, [0.7; 3], 15, [false; 3], 1e-12).unwrap();
+        assert!(project(&planes, [0.7, 0.7, 0.2], 1, [false; 3], 1e-12, None).is_none());
+        let corner = project(&planes, [0.7; 3], 15, [false; 3], 1e-12, None).unwrap();
         assert!(corner.into_iter().all(|x| (x - 0.5).abs() < 1e-12));
         assert_eq!(active(&planes, corner, 1e-12), 15);
     }
@@ -104,8 +129,41 @@ mod tests {
     #[test]
     fn plane_normalization_handles_extreme_positive_scalings() {
         let planes = normalized(&[[1e300, 0., 0., -5e299], [0., 1e-300, 0., -5e-301]]).unwrap();
-        let p = project(&planes, [0.7, 0.7, 0.2], 3, [false; 3], 1e-12).unwrap();
+        let p = project(&planes, [0.7, 0.7, 0.2], 3, [false; 3], 1e-12, None).unwrap();
         assert_eq!(p, [0.5, 0.5, 0.2]);
         assert!(normalized(&[[1e-300, 0., 0., 1e300]]).is_none());
+    }
+
+    #[test]
+    fn nonconvex_projection_admits_either_branch_but_rejects_the_notch() {
+        let planes = [[1., 0., 0., -0.05], [0., 1., 0., -0.05]];
+        let regions = [1, 2];
+        let p = [0.1, -0.1, 0.];
+        assert_eq!(
+            project(&planes, p, 0, [false; 3], 1e-12, Some(&regions)),
+            Some(p)
+        );
+        assert!(project(&planes, p, 0, [false; 3], 1e-12, None).is_none());
+        assert!(
+            project(
+                &planes,
+                [0.1, 0.1, 0.],
+                0,
+                [false; 3],
+                1e-12,
+                Some(&regions)
+            )
+            .is_none()
+        );
+        let p = project(
+            &planes,
+            [0.1, 0.1, 0.],
+            1,
+            [false; 3],
+            1e-12,
+            Some(&regions),
+        )
+        .unwrap();
+        assert!((p[0] - 0.05).abs() < 1e-12 && p[1] == 0.1);
     }
 }

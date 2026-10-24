@@ -265,8 +265,19 @@ impl<'g, G: Geometry> Tets<'g, G> {
         }
         self.masks[v] = mask;
         if let Some(planes) = self.g.halfspaces() {
-            self.features[v] =
-                crate::polyhedral::active(planes, self.points[v], self.feature_tolerance());
+            let tolerance = self.feature_tolerance();
+            self.features[v] = if self.g.halfspace_regions().is_some() {
+                self.vb[v]
+                    .iter()
+                    .filter(|face| self.faces[*face] == 0)
+                    .fold(0, |mask, face| {
+                        mask | face.iter().fold(u64::MAX, |common, &w| {
+                            common & crate::polyhedral::active(planes, self.points[w], tolerance)
+                        })
+                    })
+            } else {
+                crate::polyhedral::active(planes, self.points[v], tolerance)
+            };
         }
         self.normals[v] = if mask & WALL != 0 {
             self.outward(self.points[v])
@@ -310,8 +321,14 @@ impl<'g, G: Geometry> Tets<'g, G> {
             }
         }
         if let Some(planes) = self.g.halfspaces() {
-            let p =
-                crate::polyhedral::project(planes, p, features, locked, self.feature_tolerance())?;
+            let p = crate::polyhedral::project(
+                planes,
+                p,
+                features,
+                locked,
+                self.feature_tolerance(),
+                self.g.halfspace_regions(),
+            )?;
             return self.g.contains(p).then_some(p);
         }
         if mask & WALL == 0 {

@@ -1,5 +1,25 @@
 # Meshers project tracking
 
+Meshers now supports bounded nonconvex min/max combinations of convex affine
+fields for nonperiodic Tet4. Shared cuts preserve one conforming union; actual
+boundary facets define constraints, and smoothing accepts any complete region.
+The L-prism default adaptive control admits with 7354 tets, qmin 0.269396 and
+near-zero geometric error. Rotated adaptive controls pass; the rotated,
+unsnapped nonadaptive recipe needs two explicit optimization rounds. Its
+one-round quality failure remains rejected, and the failed reordering trial
+is reverted. See [nonconvex results](experiments/adaptive/NONCONVEX_RESULTS.md).
+Final native 83247d4d controls admit all four original specimens and exactly
+match prior meshes after canonical relabeling, with identical fixture hashes
+and configurations. Full Python suite 223 passes 190 tests / 1 skip; full native
+suite 202 passes 91 tests; final lint-clean native check 224 passes 62 unit/intersection tests.
+All-target core and all-feature binding Clippy pass. No FE solve, reference
+promotion or new actual Microgen timing ratio. The full goal stays active.
+Next investigate one nonlinear wall/cap intersection failure relevant to the
+lattice boundary limits, keeping all four original controls. General nonlinear
+and periodic feature handling, admitted actual Gyroid/spinodoid comparators
+and all 24 lattice reference convergence remain open.
+
+
 Adaptive convex polyhedral Tet4 generation now preserves exact plane constraints.
 The rotated control exposed a nonperiodic seed-welding panic; preserving vertex
 identities and checked collapse of numerical corner copies fixes it. The final

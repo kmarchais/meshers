@@ -35,6 +35,115 @@ fn simultaneous_planes_preserve_their_intersection() {
         .sum();
     assert!((volume - 0.61 * 0.73).abs() < 1e-12);
 }
+
+#[test]
+fn nonconvex_union_uses_shared_cuts_without_overlapping_volume() {
+    let planes = [
+        [1., 0., 0., -0.35],
+        [-1., 0., 0., -0.35],
+        [0., 1., 0., -0.35],
+        [0., -1., 0., -0.35],
+        [0., 0., 1., -0.3],
+        [0., 0., -1., -0.3],
+        [1., 0., 0., -0.05],
+        [0., 1., 0., -0.05],
+    ];
+    let functions: Vec<_> = planes
+        .iter()
+        .map(|&p| move |x: Point| meshers_core::dot([p[0], p[1], p[2]], x) + p[3])
+        .collect();
+    let fields: Vec<&dyn implicit::ScalarField> = functions
+        .iter()
+        .map(|f| f as &dyn implicit::ScalarField)
+        .collect();
+    let result = intersection::generate_union(
+        &fields,
+        &[0b0111_1111, 0b1011_1111],
+        implicit::Options {
+            bounds: [[-0.5; 3], [0.5; 3]],
+            cells: [24; 3],
+            periodic: [false; 3],
+            optimize_passes: 1,
+            minimum_quality: 0.,
+            max_tetrahedra: 250000,
+            ..options()
+        },
+    )
+    .unwrap();
+    let mesh = &result.mesh;
+    let volume: f64 = mesh
+        .tets
+        .iter()
+        .map(|t| meshers_core::determinant(t.map(|i| mesh.points[i])) / 6.)
+        .sum();
+    assert!((volume - 0.24).abs() < 1e-12);
+    let mut boundary = vec![false; mesh.points.len()];
+    for face in &mesh.surface {
+        for &v in face {
+            boundary[v] = true;
+        }
+    }
+    for (v, &mask) in result.constraints.iter().enumerate() {
+        if !boundary[v] {
+            assert_eq!(
+                mask, 0,
+                "interior arrangement cuts are not physical constraints"
+            );
+        }
+        for (j, function) in functions.iter().enumerate() {
+            if mask & (1 << j) != 0 {
+                assert!(mesh.surface.iter().any(|face| {
+                    face.contains(&v)
+                        && face.iter().all(|&w| function(mesh.points[w]).abs() < 1e-10)
+                }));
+            }
+        }
+    }
+    for &face in &mesh.surface {
+        let p: Point =
+            std::array::from_fn(|a| face.iter().map(|&i| mesh.points[i][a]).sum::<f64>() / 3.);
+        let value = (p[0].abs() - 0.35)
+            .max(p[1].abs() - 0.35)
+            .max(p[2].abs() - 0.3)
+            .max((p[0] - 0.05).min(p[1] - 0.05));
+        assert!(value.abs() < 1e-12);
+    }
+    assert!(result.quality.minimum_quality > 0.);
+    assert!(mesh.points.len() <= 250000 && mesh.tets.len() <= 250000);
+    if let Ok(path) = std::env::var("MESHERS_UNION_PREFLIGHT_OUTPUT") {
+        std::fs::write(
+            path,
+            serde_json::to_vec(&serde_json::json!({
+                "points": mesh.points, "tetrahedra": mesh.tets, "surface": mesh.surface,
+                "quality": result.quality, "volume": volume, "planes": planes,
+                "regions": [0b0111_1111_u8, 0b1011_1111_u8], "no_fe_solve": true,
+                "admission_not_claimed": true,
+            }))
+            .unwrap(),
+        )
+        .unwrap();
+    }
+    eprintln!(
+        "Union seed: {} nodes, {} tets, qmin {}",
+        mesh.points.len(),
+        mesh.tets.len(),
+        result.quality.minimum_quality
+    );
+}
+
+#[test]
+fn nonconvex_union_rejects_unbounded_masks_and_unsupported_periodicity() {
+    let a = |p: Point| p[0] - 0.5;
+    let b = |p: Point| p[1] - 0.5;
+    let o = implicit::Options {
+        periodic: [false; 3],
+        ..options()
+    };
+    for groups in [&[][..], &[0][..], &[4][..]] {
+        assert!(intersection::generate_union(&[&a, &b], groups, o).is_err());
+    }
+    assert!(intersection::generate_union(&[&a, &b], &[1, 2], options()).is_err());
+}
 #[test]
 fn inverted_map_and_unsupported_options_are_rejected() {
     let a = |p: Point| p[0] - 0.61;

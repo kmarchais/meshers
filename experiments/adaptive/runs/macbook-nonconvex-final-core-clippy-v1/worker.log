@@ -1,0 +1,43 @@
+    Checking crossbeam-utils v0.8.23
+    Checking serde_core v1.0.229
+    Checking crossbeam-epoch v0.9.21
+    Checking crossbeam-deque v0.8.8
+    Checking rayon-core v1.13.0
+    Checking zmij v1.0.23
+    Checking either v1.18.0
+    Checking itoa v1.0.18
+    Checking memchr v2.8.3
+    Checking rayon v1.12.0
+    Checking serde_json v1.0.151
+    Checking serde v1.0.229
+    Checking meshers-core v0.1.0 (/Users/kmarchais/dev/meshers/crates/meshers-core)
+error: this `if` statement can be collapsed
+   --> crates/meshers-core/src/implicit.rs:333:5
+    |
+333 | /     if let Some(planes) = halfspaces {
+334 | |         if !(2..=intersection::MAX_CONSTRAINTS).contains(&planes.len())
+335 | |             || planes
+336 | |                 .iter()
+...   |
+348 | |     }
+    | |_____^
+    |
+    = help: for further information visit https://rust-lang.github.io/rust-clippy/rust-1.95.0/index.html#collapsible_if
+    = note: `-D clippy::collapsible-if` implied by `-D warnings`
+    = help: to override `-D warnings` add `#[allow(clippy::collapsible_if)]`
+help: collapse nested if block
+    |
+333 ~     if let Some(planes) = halfspaces
+334 ~         && (!(2..=intersection::MAX_CONSTRAINTS).contains(&planes.len())
+335 |             || planes
+...
+343 |             || options.interior_refine_nodes != 0
+344 ~             || options.optimize_passes > 20)
+345 |         {
+346 |             return Err(MeshingError::InvalidOptions("affine features require bounded finite planes, nonperiodic adaptive Tet4, one worker and no interior-refinement request".into()));
+347 ~         }
+    |
+
+error: could not compile `meshers-core` (lib) due to 1 previous error
+warning: build failed, waiting for other jobs to finish...
+error: could not compile `meshers-core` (lib test) due to 1 previous error

@@ -4,6 +4,9 @@ pub(crate) trait Geometry: Sync {
     fn halfspaces(&self) -> Option<&[[f64; 4]]> {
         None
     }
+    fn halfspace_regions(&self) -> Option<&[crate::implicit::intersection::ConstraintMask]> {
+        None
+    }
     /// Physical reference length for dimensionless optimizer penalties.
     fn optimizer_length(&self) -> f64 {
         1.

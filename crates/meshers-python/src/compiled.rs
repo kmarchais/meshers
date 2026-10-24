@@ -41,6 +41,8 @@ pub(crate) struct CompiledField {
     node_count: usize,
     #[pyo3(get)]
     _halfspaces: Option<Vec<[f64; 4]>>,
+    #[pyo3(get)]
+    _polyhedral_regions: Option<polyhedral::Regions>,
     _memory: CodeMemory,
 }
 
@@ -342,12 +344,19 @@ pub(crate) fn _compile_expression(
     let value_address = module.get_finalized_function(value_id);
     // SAFETY: emit_kernel uses the same ABI for both output sets.
     let value_kernel = unsafe { std::mem::transmute::<*const u8, Kernel>(value_address) };
+    let halfspaces = polyhedral::halfspaces(&nodes, outputs[0]);
+    let regions = if halfspaces.is_none() {
+        polyhedral::regions(&nodes, outputs[0])
+    } else {
+        None
+    };
     Ok(CompiledField {
         kernel,
         value_kernel,
         has_gradient: outputs.len() == 4,
         node_count: nodes.len(),
-        _halfspaces: polyhedral::halfspaces(&nodes, outputs[0]),
+        _halfspaces: halfspaces,
+        _polyhedral_regions: regions,
         _memory: memory,
     })
 }

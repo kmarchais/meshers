@@ -248,6 +248,8 @@ def generate(  # ruff: ignore[complex-structure]
             emit a warning and use callbacks, which must return float64 (N,) arrays.
             Eligible nonperiodic Tet4 convex polyhedra retain exact
             half-space constraints; diagnostics report ``polyhedral_constraints``.
+            Bounded min/max combinations of convex affine fields also retain
+            nonconvex regions on the eligible path.
         adapt: Experimental. Replace fixed surface refinement by size-driven
             adaptation: boundary edges follow the curvature needed for
             ``geometry_tolerance``, the interior grades towards ``max_length``.
@@ -362,6 +364,15 @@ def generate(  # ruff: ignore[complex-structure]
         if planes is not None and adapt and getattr(_meshers, "ADAPTIVE_POLYHEDRAL", False)
         else {}
     )
+    planes = (
+        getattr(field, "_polyhedral_regions", None)
+        if isinstance(field, CompiledField)
+        and not any(scalar_mode)
+        and getattr(_meshers, "POLYHEDRAL_REGIONS", False)
+        else None
+    )
+    if planes is not None:
+        feature_options = {"halfspaces": planes[0], "regions": planes[1]}
     result = _meshers.generate(
         field,
         gradient,

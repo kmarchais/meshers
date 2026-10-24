@@ -91,6 +91,7 @@ impl Default for Options {
 #[derive(Debug)]
 pub struct Diagnostics {
     pub polyhedral_constraints: usize,
+    pub polyhedral_regions: usize,
     pub empty: bool,
     pub volume: f64,
     pub minimum_mmg_quality: f64,
@@ -118,6 +119,7 @@ pub struct Output {
 struct Context<'a, F: ScalarField> {
     field: &'a F,
     halfspaces: Option<&'a [[f64; 4]]>,
+    halfspace_regions: Option<&'a [intersection::ConstraintMask]>,
     size_field: Option<&'a dyn ScalarField>,
     options: Options,
     center: f64,
@@ -171,6 +173,9 @@ impl<F: ScalarField> Context<'_, F> {
 impl<F: ScalarField> Geometry for Context<'_, F> {
     fn halfspaces(&self) -> Option<&[[f64; 4]]> {
         self.halfspaces
+    }
+    fn halfspace_regions(&self) -> Option<&[intersection::ConstraintMask]> {
+        self.halfspace_regions
     }
     fn optimizer_length(&self) -> f64 {
         self.optimizer_length
@@ -296,21 +301,49 @@ pub fn generate_with_features<F: ScalarField>(
     options: Options,
     halfspaces: Option<&[[f64; 4]]>,
 ) -> Result<Output, MeshingError> {
-    if let Some(planes) = halfspaces {
-        if !(2..=intersection::MAX_CONSTRAINTS).contains(&planes.len())
+    generate_with_regions(field, size_field, options, halfspaces, None)
+}
+
+/// Generate a nonperiodic Tet4 union of intersections using equivalent affine
+/// hints. Region masks select nonpositive planes; callers own hint equivalence.
+pub fn generate_with_regions<F: ScalarField>(
+    field: &F,
+    size_field: Option<&dyn ScalarField>,
+    options: Options,
+    halfspaces: Option<&[[f64; 4]]>,
+    regions: Option<&[intersection::ConstraintMask]>,
+) -> Result<Output, MeshingError> {
+    if let Some(groups) = regions {
+        let count = halfspaces.map_or(0, <[_]>::len);
+        if !(2..=intersection::MAX_CONSTRAINTS).contains(&count)
+            || groups.is_empty()
+            || groups.len() > 32
+        {
+            return Err(MeshingError::InvalidOptions(
+                "bounded affine planes and 1..32 regions required".into(),
+            ));
+        }
+        let allowed = intersection::ConstraintMask::MAX >> (intersection::MAX_CONSTRAINTS - count);
+        if groups.iter().any(|&m| m == 0 || m & !allowed != 0) {
+            return Err(MeshingError::InvalidOptions(
+                "nonempty valid region masks required".into(),
+            ));
+        }
+    }
+    if let Some(planes) = halfspaces
+        && (!(2..=intersection::MAX_CONSTRAINTS).contains(&planes.len())
             || planes
                 .iter()
                 .any(|p| p.iter().any(|x| !x.is_finite()) || p[..3] == [0.; 3])
-            || options.adapt.is_none()
+            || (options.adapt.is_none() && regions.is_none())
             || options.periodic.iter().any(|&p| p)
             || !matches!(options.region, Region::Negative)
             || options.order != 1
             || options.threads != 1
             || options.interior_refine_nodes != 0
-            || options.optimize_passes > 20
-        {
-            return Err(MeshingError::InvalidOptions("affine features require bounded finite planes, nonperiodic adaptive Tet4, one worker and no interior-refinement request".into()));
-        }
+            || options.optimize_passes > 20)
+    {
+        return Err(MeshingError::InvalidOptions("affine features require bounded finite planes, nonperiodic adaptive Tet4, one worker and no interior-refinement request".into()));
     }
     let halfspaces = halfspaces.and_then(crate::polyhedral::normalized);
     if size_field.is_some() && options.adapt.is_none() {
@@ -379,6 +412,7 @@ pub fn generate_with_features<F: ScalarField>(
     let context = Context {
         field,
         halfspaces: halfspaces.as_deref(),
+        halfspace_regions: halfspaces.as_ref().and(regions),
         size_field,
         options,
         center,
@@ -662,6 +696,7 @@ fn finish<F: ScalarField>(mesh: Mesh, g: &Context<F>) -> Result<Output, String> 
         periodic_pairs: pairs,
         diagnostics: Diagnostics {
             polyhedral_constraints: g.halfspaces.map_or(0, <[_]>::len),
+            polyhedral_regions: g.halfspace_regions.map_or(0, <[_]>::len),
             empty,
             volume,
             minimum_mmg_quality: if empty { 0. } else { minimum },
@@ -698,19 +733,23 @@ fn build<F: ScalarField>(g: &Context<F>) -> Result<Output, String> {
             .collect();
         let references: Vec<&dyn ScalarField> =
             fields.iter().map(|f| f as &dyn ScalarField).collect();
-        let mut mesh = intersection::generate(
-            &references,
-            |p| p,
-            Options {
-                adapt: None,
-                geometry_tolerance: 0.,
-                minimum_quality: 0.,
-                ..o
-            },
-        )?
-        .mesh;
-        if mesh.tets.is_empty() {
-            return finish(mesh, g);
+        let seed_options = Options {
+            adapt: None,
+            geometry_tolerance: 0.,
+            minimum_quality: 0.,
+            ..o
+        };
+        let seed = if let Some(regions) = g.halfspace_regions {
+            intersection::generate_union(&references, regions, seed_options)?
+        } else {
+            intersection::generate(&references, |p| p, seed_options)?
+        };
+        let reverted_snap_vertices = seed.quality.reverted_snap_vertices;
+        let mut mesh = seed.mesh;
+        if mesh.tets.is_empty() || o.adapt.is_none() {
+            let mut output = finish(mesh, g)?;
+            output.diagnostics.reverted_snap_vertices = reverted_snap_vertices;
+            return Ok(output);
         }
         let stats = crate::tet_adapt::adapt_with_polish(
             &mut mesh,
@@ -722,6 +761,7 @@ fn build<F: ScalarField>(g: &Context<F>) -> Result<Output, String> {
             o.optimize_passes,
         )?;
         let mut output = finish(mesh, g)?;
+        output.diagnostics.reverted_snap_vertices = reverted_snap_vertices;
         output.diagnostics.adapt = Some(stats);
         return Ok(output);
     }
