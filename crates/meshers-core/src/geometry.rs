@@ -1,6 +1,9 @@
 //! Internal geometry context shared by specialized and generic algorithms.
 use crate::Point;
 pub(crate) trait Geometry: Sync {
+    fn halfspaces(&self) -> Option<&[[f64; 4]]> {
+        None
+    }
     /// Physical reference length for dimensionless optimizer penalties.
     fn optimizer_length(&self) -> f64 {
         1.

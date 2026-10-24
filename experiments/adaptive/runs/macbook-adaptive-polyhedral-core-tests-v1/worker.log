@@ -1,0 +1,73 @@
+   Compiling crossbeam-utils v0.8.23
+   Compiling proc-macro2 v1.0.107
+   Compiling quote v1.0.47
+   Compiling unicode-ident v1.0.26
+   Compiling crossbeam-epoch v0.9.21
+   Compiling crossbeam-deque v0.8.8
+   Compiling serde_core v1.0.229
+   Compiling rayon-core v1.13.0
+   Compiling zmij v1.0.23
+   Compiling syn v3.0.6
+   Compiling serde_json v1.0.151
+   Compiling serde v1.0.229
+   Compiling serde_derive v1.0.229
+   Compiling either v1.18.0
+   Compiling itoa v1.0.18
+   Compiling memchr v2.8.3
+   Compiling rayon v1.12.0
+   Compiling meshers-core v0.1.0 (/Users/kmarchais/dev/meshers/crates/meshers-core)
+    Finished `release` profile [optimized] target(s) in 31.78s
+     Running unittests src/lib.rs (target/release/deps/meshers_core-8e47bbf80036f8e5)
+
+running 48 tests
+test adaptive::tests::incremental_boundary_matches_full_edge_bisection ... ok
+test adaptive::tests::interior_quality_rejection_leaves_mesh_unchanged ... ok
+test boundary_tests::flat_boundary_rejects_same_orientation_and_nonmanifold_faces ... ok
+test implicit::intersection::repair::tests::forbids_collapsing_a_three_edge_feature_loop ... ok
+test implicit::intersection::repair::tests::permits_removing_an_interior_point_of_one_rim ... ok
+test implicit::intersection::repair::tests::rejects_creating_a_shortcut_between_separate_rims ... ok
+test implicit::topology_tests::catches_vertex_pinches_even_when_all_edges_have_two_faces ... ok
+test optimize::gpu_acceptance_tests::off_field_wall_vertex_keeps_its_boundary_constraint ... ok
+test optimize::gpu_acceptance_tests::rejects_nonfinite_outside_and_inverting_gpu_moves ... ok
+test polyhedral::tests::joint_projection_preserves_strata_locks_and_domain ... ok
+test polyhedral::tests::plane_normalization_handles_extreme_positive_scalings ... ok
+test quadratic::tests::partial_curving_keeps_periodic_copies_identical ... ok
+test quadratic::tests::periodic_quadratic_nodes_pair_on_every_axis ... ok
+test quadratic::tests::straight_jacobian_is_six_times_volume_everywhere ... ok
+test quadratic::tests::validity_fallback_retains_safe_partial_curvature ... ok
+test quadratic::tests::wall_mid_edge_nodes_lie_on_the_sphere ... ok
+test quads::tests::corner_derivatives_match_finite_differences ... ok
+test quads::tests::crease_subdivision_and_quality_optimization_preserve_cube ... ok
+test quads::tests::feature_rows_share_vertices_and_preserve_closed_topology ... ok
+test quads::tests::invalid_input_is_rejected_without_mutation ... ok
+test quads::tests::native_sphere_extraction_is_closed_and_valid ... ok
+test quads::tests::optimizer_improves_a_distorted_cube_without_moving_creases ... ok
+test quads::tests::projection_is_invariant_to_field_scale ... ok
+test quads::tests::quality_detects_a_vertex_pinch_with_two_faces_per_edge ... ok
+test quads::tests::quality_energy_derivatives_match_finite_differences ... ok
+test quads::tests::quality_rejects_reversed_and_duplicate_faces ... ok
+test quads::tests::refinement_preserves_shared_edges_and_constraints ... ok
+test remesh::tests::balanced_sphere_halves_deviation_and_volume_bias ... ok
+test remesh::tests::clipped_band_keeps_caps_and_curves ... ok
+test remesh::tests::fast_mode_meets_tolerance_with_fewer_triangles ... ok
+test remesh::tests::quadratic_max_matches_dense_sampling ... ok
+test remesh::tests::sphere_meets_tolerance_with_fewer_triangles ... ok
+test tests::adaptive_parallel_is_deterministic ... ok
+test tests::aligned_optimization_preserves_geometry_and_periodicity ... ok
+test tests::odd_resolution_and_other_band ... ok
+test tests::periodic_band ... ok
+test tests::regular_tet_quality ... ok
+test tests::rejects_underresolved_sheet ... ok
+test tests::rejects_unresolved_edge_alignment ... ok
+test tet_adapt::tests::pending_wall_projection_makes_safe_partial_progress ... ok
+test tet_adapt::tests::periodic_gyroid_band_stays_periodic ... ok
+test tet_adapt::tests::projection_cannot_move_a_wall_vertex_across_a_periodic_plane ... ok
+test tet_adapt::tests::sphere_adapts_with_fewer_tetrahedra_and_exact_walls ... ok
+test triangles::tests::clipped_sphere_band_stays_closed_after_smoothing ... ok
+test triangles::tests::invalid_input_returns_errors ... ok
+test triangles::tests::lattice_aligned_plane_band_has_shared_cap_vertices ... ok
+test triangles::tests::manifold_check_rejects_open_and_pinched_surfaces ... ok
+test triangles::tests::zero_level_roundoff_ties_do_not_create_collapsed_sphere_edges ... ok
+
+test result: ok. 48 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 3.54s
+

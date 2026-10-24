@@ -246,12 +246,15 @@ def generate(  # ruff: ignore[complex-structure]
         compile: Compile supported expressions and their first derivatives
             automatically. False selects NumPy callbacks. Unsupported operations
             emit a warning and use callbacks, which must return float64 (N,) arrays.
-            Eligible nonperiodic, nonadaptive Tet4 convex polyhedra retain exact
+            Eligible nonperiodic Tet4 convex polyhedra retain exact
             half-space constraints; diagnostics report ``polyhedral_constraints``.
         adapt: Experimental. Replace fixed surface refinement by size-driven
             adaptation: boundary edges follow the curvature needed for
             ``geometry_tolerance``, the interior grades towards ``max_length``.
             ``cells`` then only sets the starting lattice, which must resolve topology.
+            Compiled convex polyhedra preserve their exact planes and retain
+            existing crease vertices. Face/interior coarsening, splitting,
+            spatial sizing and constrained quality improvement remain active.
         min_length: Smallest adapted edge length; default ``geometry_tolerance``.
         max_length: Largest adapted edge length; default a quarter of the smallest box side.
         gradation: Maximum length growth per unit distance (MMG ``hgrad - 1``).
@@ -318,7 +321,6 @@ def generate(  # ruff: ignore[complex-structure]
             warnings.warn(f"Using NumPy callbacks: {error}", RuntimeWarning, stacklevel=2)
     preparation_seconds = time.perf_counter() - preparation_start
     scalar_mode = (
-        adapt,
         order != 1,
         band is not None,
         any(periodic),
@@ -333,10 +335,10 @@ def generate(  # ruff: ignore[complex-structure]
         ),
     )
     planes = _affine_planes(field, scalar_mode)
-    if planes is not None:
+    if planes is not None and not adapt:
         mesh = generate_intersection(
             planes,
-            bounds=b,
+            bounds=b.tolist(),
             cells=cells,
             geometry_tolerance=geometry_tolerance,
             minimum_quality=minimum_quality,
@@ -355,6 +357,11 @@ def generate(  # ruff: ignore[complex-structure]
             + mesh.diagnostics.get("preparation_seconds", 0.0),
         )
         return mesh
+    feature_options = (
+        {"halfspaces": getattr(field, "_halfspaces", None)}
+        if planes is not None and adapt and getattr(_meshers, "ADAPTIVE_POLYHEDRAL", False)
+        else {}
+    )
     result = _meshers.generate(
         field,
         gradient,
@@ -384,6 +391,7 @@ def generate(  # ruff: ignore[complex-structure]
         else None,
         int(order),
         size_field,
+        **feature_options,
     )
     quadratic = result.pop("quadratic", None)
     if quadratic is not None:

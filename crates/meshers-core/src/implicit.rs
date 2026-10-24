@@ -90,6 +90,7 @@ impl Default for Options {
 
 #[derive(Debug)]
 pub struct Diagnostics {
+    pub polyhedral_constraints: usize,
     pub empty: bool,
     pub volume: f64,
     pub minimum_mmg_quality: f64,
@@ -116,6 +117,7 @@ pub struct Output {
 
 struct Context<'a, F: ScalarField> {
     field: &'a F,
+    halfspaces: Option<&'a [[f64; 4]]>,
     size_field: Option<&'a dyn ScalarField>,
     options: Options,
     center: f64,
@@ -167,6 +169,9 @@ impl<F: ScalarField> Context<'_, F> {
     }
 }
 impl<F: ScalarField> Geometry for Context<'_, F> {
+    fn halfspaces(&self) -> Option<&[[f64; 4]]> {
+        self.halfspaces
+    }
     fn optimizer_length(&self) -> f64 {
         self.optimizer_length
     }
@@ -279,6 +284,35 @@ pub fn generate_with_size<F: ScalarField>(
     size_field: Option<&dyn ScalarField>,
     options: Options,
 ) -> Result<Output, MeshingError> {
+    generate_with_features(field, size_field, options, None)
+}
+
+/// Generate with optional equivalent max-of-affine hints for nonperiodic,
+/// adaptive Tet4. Hints must describe the same negative sublevel set. Hints
+/// whose normalized coefficients are unrepresentable retain scalar behavior.
+pub fn generate_with_features<F: ScalarField>(
+    field: &F,
+    size_field: Option<&dyn ScalarField>,
+    options: Options,
+    halfspaces: Option<&[[f64; 4]]>,
+) -> Result<Output, MeshingError> {
+    if let Some(planes) = halfspaces {
+        if !(2..=intersection::MAX_CONSTRAINTS).contains(&planes.len())
+            || planes
+                .iter()
+                .any(|p| p.iter().any(|x| !x.is_finite()) || p[..3] == [0.; 3])
+            || options.adapt.is_none()
+            || options.periodic.iter().any(|&p| p)
+            || !matches!(options.region, Region::Negative)
+            || options.order != 1
+            || options.threads != 1
+            || options.interior_refine_nodes != 0
+            || options.optimize_passes > 20
+        {
+            return Err(MeshingError::InvalidOptions("affine features require bounded finite planes, nonperiodic adaptive Tet4, one worker and no interior-refinement request".into()));
+        }
+    }
+    let halfspaces = halfspaces.and_then(crate::polyhedral::normalized);
     if size_field.is_some() && options.adapt.is_none() {
         return Err(MeshingError::InvalidOptions(
             "size_field requires adaptation".into(),
@@ -344,6 +378,7 @@ pub fn generate_with_size<F: ScalarField>(
     }
     let context = Context {
         field,
+        halfspaces: halfspaces.as_deref(),
         size_field,
         options,
         center,
@@ -626,6 +661,7 @@ fn finish<F: ScalarField>(mesh: Mesh, g: &Context<F>) -> Result<Output, String> 
         boundary_tags: tags,
         periodic_pairs: pairs,
         diagnostics: Diagnostics {
+            polyhedral_constraints: g.halfspaces.map_or(0, <[_]>::len),
             empty,
             volume,
             minimum_mmg_quality: if empty { 0. } else { minimum },
@@ -640,6 +676,55 @@ fn finish<F: ScalarField>(mesh: Mesh, g: &Context<F>) -> Result<Output, String> 
 
 fn build<F: ScalarField>(g: &Context<F>) -> Result<Output, String> {
     let o = g.options;
+    if let Some(planes) = g.halfspaces {
+        struct Affine<'a, F: ScalarField> {
+            plane: [f64; 4],
+            context: &'a Context<'a, F>,
+        }
+        impl<F: ScalarField> ScalarField for Affine<'_, F> {
+            fn value(&self, p: Point) -> f64 {
+                dot([self.plane[0], self.plane[1], self.plane[2]], p) + self.plane[3]
+            }
+            fn gradient(&self, _: Point) -> Option<Point> {
+                Some([self.plane[0], self.plane[1], self.plane[2]])
+            }
+            fn check(&self) -> Result<(), String> {
+                self.context.check()
+            }
+        }
+        let fields: Vec<_> = planes
+            .iter()
+            .map(|&plane| Affine { plane, context: g })
+            .collect();
+        let references: Vec<&dyn ScalarField> =
+            fields.iter().map(|f| f as &dyn ScalarField).collect();
+        let mut mesh = intersection::generate(
+            &references,
+            |p| p,
+            Options {
+                adapt: None,
+                geometry_tolerance: 0.,
+                minimum_quality: 0.,
+                ..o
+            },
+        )?
+        .mesh;
+        if mesh.tets.is_empty() {
+            return finish(mesh, g);
+        }
+        let stats = crate::tet_adapt::adapt_with_polish(
+            &mut mesh,
+            g,
+            0.,
+            o.periodic,
+            &o.adapt.expect("validated feature adaptation"),
+            o.max_tetrahedra,
+            o.optimize_passes,
+        )?;
+        let mut output = finish(mesh, g)?;
+        output.diagnostics.adapt = Some(stats);
+        return Ok(output);
+    }
     let [nx, ny, nz] = o.cells;
     let [lo, hi] = o.bounds;
     let step: Point = std::array::from_fn(|a| (hi[a] - lo[a]) / o.cells[a] as f64);

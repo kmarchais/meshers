@@ -34,6 +34,7 @@ def generate(
     adapt: tuple[float, float, float, float, int, float, float] | None = None,
     order: int = 1,
     size_field: Any = None,
+    halfspaces: Any = None,
 ) -> dict[str, Any]: ...
 
 class CompiledField:
@@ -59,6 +60,7 @@ def _compile_expression(
 ) -> CompiledField: ...
 
 MAX_CONSTRAINTS: int
+ADAPTIVE_POLYHEDRAL: bool
 
 def available_threads() -> int: ...
 def generate_intersection(

@@ -17,6 +17,7 @@ pub mod remesh;
 pub mod triangles;
 pub use error::MeshingError;
 use geometry::Geometry;
+mod polyhedral;
 mod profile;
 
 /// Available CPU parallelism, capped at the supported maximum of 256 workers.

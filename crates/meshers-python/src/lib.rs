@@ -357,7 +357,7 @@ fn make_field(
 }
 
 #[allow(clippy::too_many_arguments)]
-#[pyfunction(signature = (field, gradient, bounds, cells, periodic, band, tolerance, minimum_quality, budget, passes, interior_refine_nodes, snap, threads, batch_size, cancel, adapt=None, order=1, size_field=None))]
+#[pyfunction(signature = (field, gradient, bounds, cells, periodic, band, tolerance, minimum_quality, budget, passes, interior_refine_nodes, snap, threads, batch_size, cancel, adapt=None, order=1, size_field=None, halfspaces=None))]
 fn generate<'py>(
     py: Python<'py>,
     field: Py<PyAny>,
@@ -378,6 +378,7 @@ fn generate<'py>(
     adapt: Option<(f64, f64, f64, f64, usize, f64, f64)>,
     order: u8,
     size_field: Option<Py<PyAny>>,
+    halfspaces: Option<Vec<[f64; 4]>>,
 ) -> PyResult<Bound<'py, PyDict>> {
     let f = make_field(
         py,
@@ -421,10 +422,11 @@ fn generate<'py>(
     };
     let start = std::time::Instant::now();
     let result = py.detach(|| {
-        implicit::generate_with_size(
+        implicit::generate_with_features(
             &f,
             size.as_ref().map(|field| field as &dyn ScalarField),
             options,
+            halfspaces.as_deref(),
         )
     });
     if let Some(error) = f.error.lock().unwrap().take() {
@@ -543,6 +545,12 @@ fn generate<'py>(
     }
     output.set_item("periodic_pairs", pairs)?;
     let diagnostics = PyDict::new(py);
+    if result.diagnostics.polyhedral_constraints > 0 {
+        diagnostics.set_item(
+            "polyhedral_constraints",
+            result.diagnostics.polyhedral_constraints,
+        )?;
+    }
     diagnostics.set_item("empty", result.diagnostics.empty)?;
     diagnostics.set_item("volume", result.diagnostics.volume)?;
     diagnostics.set_item(
@@ -591,6 +599,7 @@ fn available_threads() -> usize {
 #[pymodule(gil_used = true)]
 fn _meshers(m: &Bound<'_, PyModule>) -> PyResult<()> {
     m.add("IMPLICIT_API_VERSION", 1)?;
+    m.add("ADAPTIVE_POLYHEDRAL", true)?;
     m.add(
         "MAX_CONSTRAINTS",
         meshers_core::implicit::intersection::MAX_CONSTRAINTS,

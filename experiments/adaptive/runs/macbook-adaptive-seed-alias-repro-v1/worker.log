@@ -1,0 +1,259 @@
+.
+thread '<unnamed>' (25234413) panicked at /Users/kmarchais/dev/meshers/crates/meshers-core/src/tet_adapt.rs:160:51:
+[DEBUG-adapt] initial [1471, 1460, 1472, 1472] original [1471, 1460, 1472, 1473] points [[0.29436131723856324, 0.08083853945915705, 0.01000000000000003], [0.2813422016330574, 0.07136501259949804, 0.029688366039313227], [0.29969820368181027, 0.07848462958948853, 0.00999999999999998], [0.29969820368181027, 0.07848462958948857, 0.010000000000000028]]
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+F
+=================================== FAILURES ===================================
+______ test_rotated_translated_polyhedron_preserves_its_exact_faces[True] ______
+
+adapt = True
+
+    @pytest.mark.parametrize("adapt", [False, True])
+    def test_rotated_translated_polyhedron_preserves_its_exact_faces(adapt):
+        cosine, sine = np.cos(0.37), np.sin(0.37)
+    
+        def field(x, y, z):
+            u = cosine * (x - 0.02) + sine * (y + 0.03)
+            v = -sine * (x - 0.02) + cosine * (y + 0.03)
+            return (abs(u) + abs(v) + abs(z - 0.01) - 0.3) / np.sqrt(3)
+    
+>       mesh = meshers.generate(
+            field,
+            bounds=(-0.5, 0.5) * 3,
+            cells=24,
+            geometry_tolerance=0.002,
+            minimum_quality=0.1,
+            max_tetrahedra=250000,
+            optimize_passes=1,
+            adapt=adapt,
+            min_length=0.002,
+            max_length=0.1,
+            adapt_tolerance=0.002,
+        )
+
+crates/meshers-python/tests/test_polyhedral.py:122: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+field = <builtins.CompiledField object at 0x10b5a2430>, gradient = None
+bounds = (-0.5, 0.5, -0.5, 0.5, -0.5, 0.5), cells = (24, 24, 24)
+periodic = (False, False, False), band = None, geometry_tolerance = 0.002
+minimum_quality = 0.1, max_tetrahedra = 250000, optimize_passes = 1
+interior_refine_nodes = 0, snap = 0.2, threads = 1, batch_size = 4096
+cancel = None, compile = True, adapt = True, min_length = 0.002
+max_length = 0.1, gradation = 0.3, layers = 0.0, adapt_iterations = 4
+quality_guard = 0.3, adapt_tolerance = 0.002, order = 1, size_field = None
+
+    def generate(  # ruff: ignore[complex-structure]
+        field: str | Field | CompiledField,
+        *,
+        gradient: Field | None = None,
+        bounds: Sequence[float] = (0.0, 1.0, 0.0, 1.0, 0.0, 1.0),
+        cells: int | Sequence[int] = 24,
+        periodic: Sequence[bool] = (False, False, False),
+        band: tuple[float, float] | None = None,
+        geometry_tolerance: float = 0.01,
+        minimum_quality: float = 0.0,
+        max_tetrahedra: int = 2_000_000,
+        optimize_passes: int = 4,
+        interior_refine_nodes: int = 0,
+        snap: float = 0.2,
+        threads: int | None = 1,
+        batch_size: int = 4096,
+        cancel: CancellationToken | None = None,
+        compile: bool = True,
+        adapt: bool = False,
+        min_length: float | None = None,
+        max_length: float | None = None,
+        gradation: float = 0.3,
+        layers: float = 0.0,
+        adapt_iterations: int = 4,
+        quality_guard: float = 0.3,
+        adapt_tolerance: float | None = None,
+        order: int = 1,
+        size_field: Field | None = None,
+    ) -> Mesh:
+        """Generate a tetrahedral mesh directly from a bounded implicit field.
+    
+        Args:
+            field: Pointwise function of physical x, y, z coordinates, or a built-in
+                name: ``gyroid``, ``schwarz_p``, ``schwarz_d``. Built-ins have period 1.
+            gradient: Optional gradient of the complete field, including grading.
+                Traced gradients return three expressions; NumPy callbacks return (N,3).
+            bounds: ``(xmin, xmax, ymin, ymax, zmin, zmax)`` in physical units.
+            cells: Background lattice intervals, 4..128 per axis. An int applies to all axes.
+            periodic: Explicit matching constraints for x, y, z. The field must match
+                across requested faces; periodicity is not inferred.
+            band: Keep ``lower < field < upper``. Without a band, keep the negative side.
+            geometry_tolerance: Maximum sampled boundary-distance estimate, in physical units.
+            minimum_quality: Required minimum MMG tetrahedron quality, 0..1. Zero disables
+                the requirement. Adaptive splitting and wall projection honor a positive
+                requested minimum. Nonempty meshes below it are rejected, and requested
+                geometry limits are not relaxed. Empty meshes remain valid.
+            max_tetrahedra: Budget for generated tetrahedra. Adaptation raises
+                MeshingError when a local topology operation exceeds this budget.
+            optimize_passes: Number of quality-optimization passes, 0..100.
+            interior_refine_nodes: Maximum new nodes in one length-ranked interior
+                bisection pass. Zero disables it. Boundary vertices and triangles stay
+                fixed. Disjoint cavities, the tetrahedron budget and a quality floor
+                of max(minimum_quality, 0.1) may limit the number inserted.
+            snap: Maximum lattice snap as a fraction of minimum spacing, 0..0.2.
+            threads: Native worker limit, default one. None uses available CPU parallelism, capped
+                at 256. One uses one worker; zero retains legacy serial update ordering.
+            batch_size: Maximum NumPy callback batch size.
+            cancel: Optional cooperative cancellation token.
+            compile: Compile supported expressions and their first derivatives
+                automatically. False selects NumPy callbacks. Unsupported operations
+                emit a warning and use callbacks, which must return float64 (N,) arrays.
+                Eligible nonperiodic Tet4 convex polyhedra retain exact
+                half-space constraints; diagnostics report ``polyhedral_constraints``.
+            adapt: Experimental. Replace fixed surface refinement by size-driven
+                adaptation: boundary edges follow the curvature needed for
+                ``geometry_tolerance``, the interior grades towards ``max_length``.
+                ``cells`` then only sets the starting lattice, which must resolve topology.
+                Compiled convex polyhedra preserve their exact planes and retain
+                existing crease vertices. Face/interior coarsening, splitting,
+                spatial sizing and constrained quality improvement remain active.
+            min_length: Smallest adapted edge length; default ``geometry_tolerance``.
+            max_length: Largest adapted edge length; default a quarter of the smallest box side.
+            gradation: Maximum length growth per unit distance (MMG ``hgrad - 1``).
+            layers: For bands, minimum element count across the local sheet thickness.
+            adapt_iterations: Split/collapse/swap/relocate rounds.
+            quality_guard: Operations may not create MMG quality below this value
+                unless the affected elements were already worse.
+            adapt_tolerance: Distance the adapter aims for; default ``geometry_tolerance``,
+                which remains the acceptance check.
+            order: 1 for linear tetrahedra, 2 for 10-node tetrahedra (VTK/Gmsh/fedoo
+                node order) with wall mid-edge nodes projected onto the field where
+                sampled validity permits. Invalid corrections are reduced or straightened;
+                ``diagnostics["quadratic"]`` records both counts. Quadratic meshes
+                report ``tetrahedra`` of shape (M, 10) and ``surface`` of shape (K, 6);
+                ``periodic_pairs`` then cover every node.
+            size_field: Optional vectorized callback returning positive physical target
+                edge lengths, shape (N,), for ``adapt=True``. Targets combine with
+                curvature sizing by taking the smaller length, then applying
+                ``min_length``, ``max_length`` and gradation. Opposite periodic traces
+                must match. This callback is evaluated in batches without tracing.
+    
+        Returns:
+            Mesh: Owned arrays and diagnostics. Empty geometries return empty arrays.
+                Timing excludes field preparation, which is reported separately.
+    
+        Raises:
+            ValueError: Options or callback outputs are invalid.
+            MeshingError: Meshing fails its geometry or topology checks.
+            CancelledError: The cancellation token is triggered.
+    
+        Note:
+            Fields must be deterministic and independent of batch contents. Tracing
+            executes a function once per preparation, so avoid side effects. Finite
+            differences need the field slightly beyond the box. Sampling cannot
+            certify arbitrarily small features. Native threads release the Python GIL;
+            Python fallback callbacks execute on the calling thread.
+        """
+        b = np.asarray(bounds, dtype=np.float64)
+        if size_field is not None and not adapt:
+            raise ValueError("size_field requires adapt=True")
+        if b.shape != (6,):
+            raise ValueError("bounds must contain xmin,xmax,ymin,ymax,zmin,zmax")
+        if isinstance(cells, (int, np.integer)):
+            cells = (int(cells),) * 3
+        if len(periodic) != 3 or any(not isinstance(v, (bool, np.bool_)) for v in periodic):
+            raise ValueError("periodic must contain three booleans")
+        if threads is None:
+            threads = _meshers.available_threads()
+        preparation_start = time.perf_counter()
+        gradient_override = gradient is not None
+        evaluator = (
+            "native"
+            if isinstance(field, str)
+            else "compiled"
+            if isinstance(field, CompiledField)
+            else "python"
+        )
+        if callable(field) and not isinstance(field, CompiledField) and compile:
+            try:
+                field = compile_field(field, gradient=gradient)
+                gradient = None
+                evaluator = "compiled"
+            except TraceError as error:
+                warnings.warn(f"Using NumPy callbacks: {error}", RuntimeWarning, stacklevel=2)
+        preparation_seconds = time.perf_counter() - preparation_start
+        scalar_mode = (
+            order != 1,
+            band is not None,
+            any(periodic),
+            threads != 1,
+            interior_refine_nodes != 0,
+            gradient_override,
+            not 0 <= optimize_passes <= 20,
+            max_tetrahedra <= 0,
+            not all(
+                isinstance(value, (int, np.integer))
+                for value in (threads, interior_refine_nodes, optimize_passes, max_tetrahedra)
+            ),
+        )
+        planes = _affine_planes(field, scalar_mode)
+        if planes is not None and not adapt:
+            mesh = generate_intersection(
+                planes,
+                bounds=b,
+                cells=cells,
+                geometry_tolerance=geometry_tolerance,
+                minimum_quality=minimum_quality,
+                max_tetrahedra=int(max_tetrahedra),
+                optimize_passes=int(optimize_passes),
+                snap=snap,
+                batch_size=batch_size,
+                cancel=cancel,
+            )
+            mesh.diagnostics.update(
+                threads=1,
+                evaluator="compiled",
+                polyhedral_constraints=len(planes),
+                inserted_interior_nodes=0,
+                preparation_seconds=preparation_seconds
+                + mesh.diagnostics.get("preparation_seconds", 0.0),
+            )
+            return mesh
+        feature_options = (
+            {"halfspaces": getattr(field, "_halfspaces", None)}
+            if planes is not None and adapt and getattr(_meshers, "ADAPTIVE_POLYHEDRAL", False)
+            else {}
+        )
+>       result = _meshers.generate(
+            field,
+            gradient,
+            [b[::2].tolist(), b[1::2].tolist()],
+            cells,
+            tuple(bool(v) for v in periodic),
+            band,
+            geometry_tolerance,
+            minimum_quality,
+            max_tetrahedra,
+            optimize_passes,
+            interior_refine_nodes,
+            snap,
+            threads,
+            batch_size,
+            cancel,
+            (
+                geometry_tolerance if min_length is None else float(min_length),
+                float(np.min(b[1::2] - b[::2])) / 4 if max_length is None else float(max_length),
+                float(gradation),
+                float(layers),
+                int(adapt_iterations),
+                float(quality_guard),
+                geometry_tolerance if adapt_tolerance is None else float(adapt_tolerance),
+            )
+            if adapt
+            else None,
+            int(order),
+            size_field,
+            **feature_options,
+        )
+E       pyo3_runtime.PanicException: [DEBUG-adapt] initial [1471, 1460, 1472, 1472] original [1471, 1460, 1472, 1473] points [[0.29436131723856324, 0.08083853945915705, 0.01000000000000003], [0.2813422016330574, 0.07136501259949804, 0.029688366039313227], [0.29969820368181027, 0.07848462958948853, 0.00999999999999998], [0.29969820368181027, 0.07848462958948857, 0.010000000000000028]]
+
+crates/meshers-python/python/meshers/__init__.py:365: PanicException
+=========================== short test summary info ============================
+FAILED crates/meshers-python/tests/test_polyhedral.py::test_rotated_translated_polyhedron_preserves_its_exact_faces[True]
+1 failed, 1 passed, 20 deselected in 0.86s

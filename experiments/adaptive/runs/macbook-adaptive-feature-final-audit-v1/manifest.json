@@ -1,0 +1,47 @@
+{
+  "command": [
+    "/Users/kmarchais/dev/meshers/.local-work/macbook-runtime/venv/bin/python",
+    "experiments/adaptive/verify_adaptive_polyhedral_change.py",
+    "--output",
+    "handoff/macbook/adaptive-polyhedral-change-audit-20261024.json"
+  ],
+  "platform": "macOS-26.5.1-arm64-arm-64bit",
+  "architecture": "arm64",
+  "python": "3.12.9 (main, Feb 12 2025, 15:09:19) [Clang 19.1.6 ]",
+  "executable": "/Users/kmarchais/dev/meshers/.local-work/macbook-runtime/venv/bin/python",
+  "memory_bytes": 8589934592,
+  "memory_enforcement": "process-tree-rss-watchdog",
+  "rss_poll_interval_s": 0.25,
+  "timeout_s": 600,
+  "numerical_threads": 1,
+  "build_jobs": 2,
+  "numerical_thread_policy": {
+    "environment": {
+      "OPENBLAS_NUM_THREADS": "1",
+      "OMP_NUM_THREADS": "1",
+      "MKL_NUM_THREADS": "1",
+      "VECLIB_MAXIMUM_THREADS": "1",
+      "RAYON_NUM_THREADS": "1"
+    },
+    "accelerate_blas_threading": 1,
+    "accelerate_scope": "calling thread"
+  },
+  "rust": "rustc 1.95.0 (59807616e 2026-04-14)",
+  "inputs": {
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/macbook_stage.py": "eb95d6e255c3bfb21e30b7c7347d8467854490772d6db9c3e2809210bb7905a1",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/microgen_workflow.py": "073f615481feeae8bb9142d325d9ae39251ca1e1aa2d1376f5e4f88a19aec872",
+    "/Users/kmarchais/dev/meshers/Cargo.lock": "c5de0b0561f9ab415ff941a24cae24bd7de5069eca73e3dd9b6da63db4273278"
+  },
+  "versions": {
+    "numpy": "2.5.4",
+    "scipy": "1.18.1",
+    "fedoo": "1.0.0b2",
+    "microgen": "2.0.0b1",
+    "mmgpy": "0.17.1",
+    "pyamg": "5.3.0",
+    "pyvista": "0.49.1",
+    "vtk": "9.7.1",
+    "maturin": "1.9.6",
+    "psutil": "7.2.2"
+  }
+}

@@ -73,7 +73,6 @@ def test_affine_scaling_translation_and_maximum_remain_exact(scale):
 @pytest.mark.parametrize(
     "options",
     [
-        {"adapt": True, "min_length": 0.01, "max_length": 0.1, "adapt_tolerance": 0.002},
         {"threads": 2},
         {"order": 2},
         {"periodic": (True,) * 3},
@@ -94,8 +93,6 @@ def test_other_modes_keep_the_scalar_pipeline(options):
         **options,
     )
     assert "polyhedral_constraints" not in mesh.diagnostics
-    if options.get("adapt"):
-        assert "adapt" in mesh.diagnostics
     if "threads" in options:
         assert mesh.diagnostics["threads"] == options["threads"]
     if "order" in options:
@@ -113,7 +110,8 @@ def test_polyhedral_route_keeps_cancellation_and_budget_gates():
         meshers.generate(octahedron, bounds=(-0.5, 0.5) * 3, cells=12, minimum_quality=1.0)
 
 
-def test_rotated_translated_polyhedron_preserves_its_exact_faces():
+@pytest.mark.parametrize("adapt", [False, True])
+def test_rotated_translated_polyhedron_preserves_its_exact_faces(adapt):
     cosine, sine = np.cos(0.37), np.sin(0.37)
 
     def field(x, y, z):
@@ -129,6 +127,10 @@ def test_rotated_translated_polyhedron_preserves_its_exact_faces():
         minimum_quality=0.1,
         max_tetrahedra=250000,
         optimize_passes=1,
+        adapt=adapt,
+        min_length=0.002,
+        max_length=0.1,
+        adapt_tolerance=0.002,
     )
     assert mesh.diagnostics["polyhedral_constraints"] == 8
     assert abs(mesh.diagnostics["volume"] - 4 * 0.3**3 / 3) < 1e-12
@@ -137,11 +139,14 @@ def test_rotated_translated_polyhedron_preserves_its_exact_faces():
         mesh.points[mesh.surface].mean(axis=1),
     ))
     assert np.max(abs(field(*probes.T))) < 1e-12
-    planes = np.asarray(meshers.compile_field(field)._halfspaces)
-    for index, plane in enumerate(planes):
-        faces = mesh.surface_for(f"plane{index}")
-        assert len(faces) > 0
-        assert np.max(abs(mesh.points[faces] @ plane[:3] + plane[3])) < 1e-12
+    if adapt:
+        assert "adapt" in mesh.diagnostics
+    else:
+        planes = np.asarray(meshers.compile_field(field)._halfspaces)
+        for index, plane in enumerate(planes):
+            faces = mesh.surface_for(f"plane{index}")
+            assert len(faces) > 0
+            assert np.max(abs(mesh.points[faces] @ plane[:3] + plane[3])) < 1e-12
 
 
 @pytest.mark.parametrize("options", [{"threads": 1.0}, {"interior_refine_nodes": 0.0}])
@@ -161,3 +166,101 @@ def test_polyhedral_dispatch_accepts_numpy_integer_options(option):
     options[option] = np.int64(options[option])
     mesh = meshers.generate(octahedron, bounds=(-0.5, 0.5) * 3, cells=12, **options)
     assert mesh.diagnostics["polyhedral_constraints"] == 8
+
+
+def test_adaptation_preserves_exact_polyhedral_faces_and_performs_work():
+    mesh = meshers.generate(
+        octahedron,
+        bounds=(-0.5, 0.5) * 3,
+        cells=24,
+        adapt=True,
+        geometry_tolerance=0.002,
+        adapt_tolerance=0.002,
+        min_length=0.002,
+        max_length=0.1,
+        gradation=0.3,
+        minimum_quality=0.1,
+        max_tetrahedra=250000,
+        optimize_passes=1,
+    )
+    probes = np.concatenate((
+        mesh.points[np.unique(mesh.surface)],
+        mesh.points[mesh.surface].mean(axis=1),
+    ))
+    assert np.max(abs(octahedron(*probes.T))) < 1e-12
+    assert abs(mesh.diagnostics["volume"] - 4 * 0.35**3 / 3) < 1e-12
+    assert mesh.diagnostics["minimum_mmg_quality"] >= 0.1
+    assert mesh.diagnostics["polyhedral_constraints"] == 8
+    assert mesh.diagnostics["adapt"]["collapses"] > 0
+
+
+def test_polyhedral_adaptation_honors_the_spatial_size_callback():
+    calls = []
+
+    def size(x, y, z):
+        calls.append(len(x))
+        return np.full_like(x, 0.035)
+
+    options = {
+        "bounds": (-0.5, 0.5) * 3,
+        "cells": 24,
+        "adapt": True,
+        "geometry_tolerance": 0.002,
+        "adapt_tolerance": 0.002,
+        "min_length": 0.002,
+        "max_length": 0.1,
+        "minimum_quality": 0.1,
+        "max_tetrahedra": 250000,
+        "optimize_passes": 1,
+    }
+    coarse = meshers.generate(octahedron, **options)
+    fine = meshers.generate(octahedron, size_field=size, **options)
+    assert calls
+    assert max(calls) <= 4096
+    assert len(fine.tetrahedra) > len(coarse.tetrahedra)
+    assert fine.diagnostics["adapt"]["splits"] > 0
+    assert fine.diagnostics["minimum_mmg_quality"] >= 0.1
+    assert abs(fine.diagnostics["volume"] - 4 * 0.35**3 / 3) < 1e-12
+    assert np.max(abs(octahedron(*fine.points[fine.surface].mean(axis=1).T))) < 1e-12
+
+
+def test_polyhedral_adaptation_preserves_callback_exceptions():
+    marker = LookupError("spatial size callback marker")
+
+    def size(x, y, z):
+        raise marker
+
+    with pytest.raises(LookupError) as caught:
+        meshers.generate(
+            octahedron,
+            bounds=(-0.5, 0.5) * 3,
+            cells=24,
+            adapt=True,
+            min_length=0.002,
+            max_length=0.1,
+            size_field=size,
+        )
+    assert caught.value is marker
+
+
+def test_polyhedral_refinement_keeps_the_hard_budget():
+    with pytest.raises(meshers.MeshingError, match="max_tetrahedra"):
+        meshers.generate(
+            octahedron,
+            bounds=(-0.5, 0.5) * 3,
+            cells=24,
+            adapt=True,
+            geometry_tolerance=0.002,
+            min_length=0.002,
+            max_length=0.1,
+            minimum_quality=0.1,
+            max_tetrahedra=20000,
+            size_field=lambda x, y, z: np.full_like(x, 0.02),
+        )
+
+
+def test_polyhedral_adaptation_keeps_invalid_sizing_rejection():
+    with pytest.raises(meshers.MeshingError, match="invalid adaptation options"):
+        meshers.generate(
+            octahedron, bounds=(-0.5, 0.5) * 3, cells=24, adapt=True, min_length=0.2, max_length=0.1
+        )

@@ -1,5 +1,17 @@
 # Meshers project tracking
 
+Adaptive convex polyhedral Tet4 generation now preserves exact plane constraints.
+The rotated control exposed a nonperiodic seed-welding panic; preserving vertex
+identities and checked collapse of numerical corner copies fixes it. The final
+adaptive octahedron admits with 2565 tets, qmin 0.300440 and distance 8.97e-17.
+All four fresh original study controls admit and exactly match their previous
+meshes after canonical relabeling. Final suite 176 pass / 1 skip, core 49 pass and
+Clippy pass. See [adaptive polyhedral results](experiments/adaptive/ADAPTIVE_POLYHEDRAL_RESULTS.md).
+General nonconvex/nonlinear/periodic feature handling, actual Gyroid/spinodoid
+comparators and lattice reference convergence remain open. No FE solve,
+reference promotion or new timing ratio; the full goal stays active.
+
+
 Meshers now preserves supported convex polyhedral features automatically in
 default nonperiodic, nonadaptive Tet4 generation. The compiler recovers exact
 affine half-spaces and reuses the constrained cutter. The formerly rejected

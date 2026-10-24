@@ -111,6 +111,7 @@ struct Tets<'g, G: Geometry> {
     points: Vec<Point>,
     /// Bit 0: implicit wall. Bits 2 + 2a + side: box plane.
     masks: Vec<u8>,
+    features: Vec<u64>,
     /// Outward wall normal for wall vertices, zero otherwise.
     normals: Vec<Point>,
     frozen: Vec<bool>,
@@ -131,29 +132,35 @@ impl<'g, G: Geometry> Tets<'g, G> {
     fn new(mesh: &Mesh, g: &'g G, threshold: f64, periodic: [bool; 3]) -> Self {
         let [lo, hi] = g.bounds();
         let period = std::array::from_fn(|a| periodic[a].then(|| hi[a] - lo[a]));
-        // Merge periodic copies; the representative lies on the lower plane.
-        let mut index = HashMap::new();
-        let mut points = Vec::new();
-        let map: Vec<usize> = mesh
-            .points
-            .iter()
-            .map(|&p| {
-                let c: Point = std::array::from_fn(|a| {
-                    if periodic[a] && p[a] == hi[a] {
-                        lo[a]
-                    } else {
-                        p[a]
-                    }
-                });
-                let key: [i64; 3] = std::array::from_fn(|a| {
-                    ((c[a] - lo[a]) / (hi[a] - lo[a]) * 1e11).round() as i64
-                });
-                *index.entry(key).or_insert_with(|| {
-                    points.push(c);
-                    points.len() - 1
+        // Coordinate buckets identify periodic copies, not distinct vertices of a
+        // nonperiodic seed. Even an ulp-wide valid cell must retain its topology.
+        let (points, map): (Vec<Point>, Vec<usize>) = if periodic.iter().any(|&axis| axis) {
+            let mut index = HashMap::new();
+            let mut points = Vec::new();
+            let map: Vec<usize> = mesh
+                .points
+                .iter()
+                .map(|&p| {
+                    let c: Point = std::array::from_fn(|a| {
+                        if periodic[a] && p[a] == hi[a] {
+                            lo[a]
+                        } else {
+                            p[a]
+                        }
+                    });
+                    let key: [i64; 3] = std::array::from_fn(|a| {
+                        ((c[a] - lo[a]) / (hi[a] - lo[a]) * 1e11).round() as i64
+                    });
+                    *index.entry(key).or_insert_with(|| {
+                        points.push(c);
+                        points.len() - 1
+                    })
                 })
-            })
-            .collect();
+                .collect();
+            (points, map)
+        } else {
+            (mesh.points.clone(), (0..mesh.points.len()).collect())
+        };
         let n = points.len();
         let tets: Vec<[usize; 4]> = mesh.tets.iter().map(|t| t.map(|i| map[i])).collect();
         let mut s = Self {
@@ -161,6 +168,11 @@ impl<'g, G: Geometry> Tets<'g, G> {
             threshold,
             points,
             masks: vec![0; n],
+            features: if g.halfspaces().is_some() {
+                vec![0; n]
+            } else {
+                Vec::new()
+            },
             normals: vec![[0.; 3]; n],
             frozen: vec![false; n],
             alive: vec![true; tets.len()],
@@ -252,6 +264,10 @@ impl<'g, G: Geometry> Tets<'g, G> {
             mask |= if label == 0 { WALL } else { 1 << label };
         }
         self.masks[v] = mask;
+        if let Some(planes) = self.g.halfspaces() {
+            self.features[v] =
+                crate::polyhedral::active(planes, self.points[v], self.feature_tolerance());
+        }
         self.normals[v] = if mask & WALL != 0 {
             self.outward(self.points[v])
         } else {
@@ -259,7 +275,16 @@ impl<'g, G: Geometry> Tets<'g, G> {
         };
         // Points fixed by three constraints (box corners, a wall crossing a box edge)
         // never move; curves and box edges slide along their line.
-        self.frozen[v] = mask.count_ones() >= 3;
+        self.frozen[v] = mask.count_ones() >= 3 || self.feature_mask(v).count_ones() >= 2;
+    }
+
+    fn feature_mask(&self, v: usize) -> u64 {
+        self.features.get(v).copied().unwrap_or(0)
+    }
+
+    fn feature_tolerance(&self) -> f64 {
+        let [lo, hi] = self.g.bounds();
+        (0..3).map(|a| hi[a] - lo[a]).fold(0., f64::max) * 1e-11
     }
 
     fn outward(&self, p: Point) -> Point {
@@ -273,7 +298,7 @@ impl<'g, G: Geometry> Tets<'g, G> {
     }
 
     /// Newton projection onto the wall through `p`, holding box coordinates in `mask`.
-    fn project(&self, mut p: Point, mask: u8, level: f64) -> Option<Point> {
+    fn project(&self, mut p: Point, mask: u8, level: f64, features: u64) -> Option<Point> {
         let [lo, hi] = self.g.bounds();
         let locked: [bool; 3] = std::array::from_fn(|a| (mask >> (2 + 2 * a)) & 3 != 0);
         for a in 0..3 {
@@ -283,6 +308,11 @@ impl<'g, G: Geometry> Tets<'g, G> {
             if mask & (1 << (3 + 2 * a)) != 0 {
                 p[a] = hi[a];
             }
+        }
+        if let Some(planes) = self.g.halfspaces() {
+            let p =
+                crate::polyhedral::project(planes, p, features, locked, self.feature_tolerance())?;
+            return self.g.contains(p).then_some(p);
         }
         if mask & WALL == 0 {
             return self.g.contains(p).then_some(p);
@@ -379,6 +409,11 @@ impl<'g, G: Geometry> Tets<'g, G> {
             }
         }
         for &[u, v] in edges {
+            // Flat patches and straight feature lines have zero curvature.
+            // Endpoint subgradients across their junction are not a curvature metric.
+            if self.g.halfspaces().is_some() {
+                continue;
+            }
             if self.masks[u] & self.masks[v] & WALL == 0 || self.edge_faces(u, v).is_empty() {
                 continue;
             }
@@ -466,6 +501,9 @@ impl<'g, G: Geometry> Tets<'g, G> {
     fn add_vertex(&mut self, p: Point) -> usize {
         self.points.push(p);
         self.masks.push(0);
+        if self.g.halfspaces().is_some() {
+            self.features.push(0);
+        }
         self.normals.push([0.; 3]);
         self.frozen.push(false);
         self.vt.push(Vec::new());
@@ -484,9 +522,14 @@ impl<'g, G: Geometry> Tets<'g, G> {
         let mid = self.wrap(std::array::from_fn(|a| self.points[u][a] + 0.5 * d[a]));
         let target = if mask & WALL != 0 {
             let level = self.level(self.points[u]);
-            self.project(mid, mask, level)?
+            self.project(
+                mid,
+                mask,
+                level,
+                self.feature_mask(u) & self.feature_mask(v),
+            )?
         } else {
-            self.project(mid, mask, 0.)?
+            self.project(mid, mask, 0., self.feature_mask(u) & self.feature_mask(v))?
         };
         // Midpoint children are naturally worse than their parent; only reject slivers.
         let floor = (0.5 * self.worst(&shell).min(guard))
@@ -539,7 +582,19 @@ impl<'g, G: Geometry> Tets<'g, G> {
     /// Merge `u` into `v`.
     fn collapse(&mut self, u: usize, v: usize, size: &[f64], o: &Options) -> bool {
         let (mu, mv) = (self.masks[u], self.masks[v]);
-        if self.frozen[u] || mu & !mv != 0 || mu.count_ones() >= 3 {
+        if self.feature_mask(u) & !self.feature_mask(v) != 0 {
+            return false;
+        }
+        // Coincident cuts may leave separate copies of the same corner a few
+        // ulps apart. Collapse those through the normal link and quality checks;
+        // freezing both would preserve a roundoff-width sliver forever.
+        let [lo, hi] = self.g.bounds();
+        let roundoff = 64. * f64::EPSILON * (0..3).map(|a| hi[a] - lo[a]).fold(0., f64::max);
+        let same_corner = self.g.halfspaces().is_some()
+            && self.feature_mask(u) == self.feature_mask(v)
+            && self.feature_mask(u).count_ones() >= 2
+            && self.length(u, v) <= roundoff;
+        if (self.frozen[u] && !same_corner) || mu & !mv != 0 || mu.count_ones() >= 3 {
             return false;
         }
         let bfaces = self.edge_faces(u, v);
@@ -617,7 +672,7 @@ impl<'g, G: Geometry> Tets<'g, G> {
                 return false;
             }
         }
-        if mu & WALL != 0 {
+        if mu & WALL != 0 && self.g.halfspaces().is_none() {
             for f in &self.vb[u] {
                 if f.contains(&v) || self.faces[f] != 0 {
                     continue;
@@ -854,7 +909,7 @@ impl<'g, G: Geometry> Tets<'g, G> {
             target = std::array::from_fn(|a| p[a] + d[a] - dot(d, n) * n[a]);
         }
         let level = if mask & WALL != 0 { self.level(p) } else { 0. };
-        let Some(q) = self.project(target, mask, level) else {
+        let Some(q) = self.project(target, mask, level, self.feature_mask(v)) else {
             return false;
         };
         let incident = self.vt[v].clone();
@@ -866,7 +921,7 @@ impl<'g, G: Geometry> Tets<'g, G> {
         if after <= before.min(o.quality_guard) || after <= 0. {
             return false;
         }
-        if mask & WALL != 0 {
+        if mask & WALL != 0 && self.g.halfspaces().is_none() {
             let n = self.outward(q);
             for f in &self.vb[v] {
                 if self.faces[f] != 0 {
@@ -941,7 +996,7 @@ impl<'g, G: Geometry> Tets<'g, G> {
             let floor = (0.5 * self.worst(&self.vt[v].clone()).min(guard))
                 .max(self.g.minimum_quality())
                 .max(1e-6);
-            let Some(q) = self.project(self.points[v], mask, level) else {
+            let Some(q) = self.project(self.points[v], mask, level, self.feature_mask(v)) else {
                 self.pending.push(v);
                 continue;
             };
@@ -1129,6 +1184,19 @@ pub(crate) fn adapt(
     o: &Options,
     maximum: usize,
 ) -> Result<Stats, String> {
+    adapt_with_polish(mesh, g, threshold, periodic, o, maximum, 0)
+}
+
+#[allow(clippy::too_many_arguments)]
+pub(crate) fn adapt_with_polish(
+    mesh: &mut Mesh,
+    g: &impl Geometry,
+    threshold: f64,
+    periodic: [bool; 3],
+    o: &Options,
+    maximum: usize,
+    polish: usize,
+) -> Result<Stats, String> {
     if !(o.tolerance > 0. && o.min_length > 0. && o.max_length >= o.min_length)
         || o.gradation.is_nan()
         || o.gradation <= 0.
@@ -1241,6 +1309,16 @@ pub(crate) fn adapt(
     }
     s.enforce(o, &mut stats, maximum)?;
     s.settle(o.quality_guard, maximum)?;
+    lap(&mut stats, 6);
+    for _ in 0..polish {
+        g.check()?;
+        for v in 0..s.points.len() {
+            if s.relocate(v, o) {
+                stats.moves += 1;
+            }
+        }
+    }
+    lap(&mut stats, 5);
     *mesh = s.into_mesh()?;
     lap(&mut stats, 6);
     Ok(stats)
@@ -1276,6 +1354,19 @@ mod tests {
     }
 
     #[test]
+    fn nonperiodic_seed_keeps_distinct_nearby_vertices() {
+        let mesh = crate::Mesh {
+            points: vec![[0., 0., 0.], [1e-13, 0., 0.], [0., 0.1, 0.], [0., 0., 0.1]],
+            tets: vec![[0, 1, 2, 3]],
+            surface: Vec::new(),
+        };
+        let tets = super::Tets::new(&mesh, &PlaneWave, 0., [false; 3]);
+        assert_eq!(tets.points, mesh.points);
+        assert_eq!(tets.tets, mesh.tets);
+        assert!(crate::determinant(tets.tet_points(tets.tets[0], None)) > 0.);
+    }
+
+    #[test]
     fn projection_cannot_move_a_wall_vertex_across_a_periodic_plane() {
         let mesh = crate::Mesh {
             points: Vec::new(),
@@ -1283,12 +1374,14 @@ mod tests {
             surface: Vec::new(),
         };
         let tets = super::Tets::new(&mesh, &PlaneWave, 0., [true; 3]);
-        assert!(tets.project([-0.4, -0.5001, 0.23], 0, 0.).is_none());
+        assert!(tets.project([-0.4, -0.5001, 0.23], 0, 0., 0).is_none());
         assert!(
-            tets.project([-0.4, -0.4999, 0.23], super::WALL, 0.)
+            tets.project([-0.4, -0.4999, 0.23], super::WALL, 0., 0)
                 .is_none()
         );
-        let point = tets.project([-0.4, 0.4999, 0.23], super::WALL, 0.).unwrap();
+        let point = tets
+            .project([-0.4, 0.4999, 0.23], super::WALL, 0., 0)
+            .unwrap();
         assert!(point[1] > 0.49 && point[1] < 0.5);
     }
 

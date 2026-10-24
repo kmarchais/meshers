@@ -1,5 +1,19 @@
 # Adaptive and quadratic implicit meshing: results
 
+## Adaptive sharp-feature continuation, 24 October 2026
+
+Adaptive convex polyhedral Tet4 generation now preserves exact plane constraints.
+The rotated control exposed a nonperiodic seed-welding panic; preserving vertex
+identities and checked collapse of numerical corner copies fixes it. The final
+adaptive octahedron admits with 2565 tets, qmin 0.300440 and distance 8.97e-17.
+All four fresh original study controls admit and exactly match their previous
+meshes after canonical relabeling. Final suite 176 pass / 1 skip, core 49 pass and
+Clippy pass. See [adaptive polyhedral results](ADAPTIVE_POLYHEDRAL_RESULTS.md).
+General nonconvex/nonlinear/periodic feature handling, actual Gyroid/spinodoid
+comparators and lattice reference convergence remain open. No FE solve,
+reference promotion or new timing ratio; the full goal stays active.
+
+
 ## Automatic exact polyhedral feature route, 24 October 2026
 
 The default fused octahedron now admits without a manual plane rewrite. Native
