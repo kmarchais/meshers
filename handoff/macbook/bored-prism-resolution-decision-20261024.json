@@ -1,0 +1,16 @@
+{
+  "baseline_result": "experiments/adaptive/runs/macbook-bored-prism-named-diagnostic-v1/result.json",
+  "baseline_sha256": "aedcc07b5568b71dd857bd53f78ac527eeabd8e11ee9b61b4672f56bcd2afe58",
+  "baseline_cells": 24,
+  "observed_distance": 0.003269071980089591,
+  "target_distance": 0.002,
+  "safety_factor": 1.1,
+  "formula": "ceil(24*sqrt(observed_distance/target_distance)*1.1)",
+  "selected_cells": 34,
+  "predicted_distance": 0.0016288801561692083,
+  "predicted_tets": 152428.09953703705,
+  "predicted_nodes": 33756.972800925934,
+  "rationale": "One curvature-resolution control using quadratic chord-error scaling; exact fresh admission remains required. No pass is inferred from this estimate.",
+  "gates_unchanged": true,
+  "no_fe_solve": true
+}

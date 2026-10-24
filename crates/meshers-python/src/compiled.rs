@@ -11,6 +11,7 @@ use pyo3::{
     prelude::*,
 };
 use std::collections::HashMap;
+use std::sync::Mutex;
 mod polyhedral;
 
 pub(crate) type Kernel = unsafe extern "C" fn(f64, f64, f64, *mut f64) -> i32;
@@ -43,6 +44,8 @@ pub(crate) struct CompiledField {
     _halfspaces: Option<Vec<[f64; 4]>>,
     #[pyo3(get)]
     _polyhedral_regions: Option<polyhedral::Regions>,
+    constraint_data: Option<(Vec<Node>, Vec<Vec<usize>>)>,
+    constraint_cache: Mutex<Option<Vec<Py<CompiledField>>>>,
     _memory: CodeMemory,
 }
 
@@ -55,6 +58,31 @@ pub(crate) fn evaluate(kernel: Kernel, p: [f64; 3]) -> Result<[f64; 4], ()> {
 }
 #[pymethods]
 impl CompiledField {
+    /// Return cached evaluators for the validated outer maximum's branches.
+    fn _intersection_fields(&self, py: Python<'_>) -> PyResult<Option<Vec<Py<CompiledField>>>> {
+        let Some((nodes, outputs)) = &self.constraint_data else {
+            return Ok(None);
+        };
+        let mut cached = self
+            .constraint_cache
+            .lock()
+            .map_err(|_| PyRuntimeError::new_err("retained constraint cache is unavailable"))?;
+        if cached.is_none() {
+            let fields = outputs
+                .iter()
+                .map(|outputs| {
+                    Py::new(
+                        py,
+                        _compile_expression(nodes.clone(), outputs.clone(), None)?,
+                    )
+                })
+                .collect::<PyResult<Vec<_>>>()?;
+            *cached = Some(fields);
+        }
+        Ok(cached
+            .as_ref()
+            .map(|fields| fields.iter().map(|f| f.clone_ref(py)).collect()))
+    }
     /// Evaluate owned point batches without a Python call per point.
     fn values<'py>(
         &self,
@@ -262,10 +290,11 @@ fn emit_kernel(
     Ok(id)
 }
 
-#[pyfunction]
+#[pyfunction(signature = (nodes, outputs, constraint_outputs=None))]
 pub(crate) fn _compile_expression(
     nodes: Vec<Node>,
     outputs: Vec<usize>,
+    constraint_outputs: Option<Vec<Vec<usize>>>,
 ) -> PyResult<CompiledField> {
     if nodes.is_empty()
         || nodes.len() > 20000
@@ -292,6 +321,36 @@ pub(crate) fn _compile_expression(
             || (op != "input" && args.iter().any(|&a| a >= i))
         {
             return Err(PyValueError::new_err("invalid expression operands"));
+        }
+    }
+    if let Some(branches) = &constraint_outputs {
+        let mut roots = Vec::new();
+        let mut pending = vec![outputs[0]];
+        let mut seen = vec![false; nodes.len()];
+        while let Some(i) = pending.pop() {
+            if seen[i] {
+                continue;
+            }
+            seen[i] = true;
+            if nodes[i].0 == "maximum" {
+                pending.push(nodes[i].1[1]);
+                pending.push(nodes[i].1[0]);
+            } else {
+                roots.push(i);
+            }
+        }
+        if !(2..=meshers_core::implicit::intersection::MAX_CONSTRAINTS).contains(&roots.len())
+            || branches.len() != roots.len()
+            || branches.iter().zip(&roots).any(|(branch, &root)| {
+                ![1, 4].contains(&branch.len())
+                    || branch.first() != Some(&root)
+                    || branch.iter().any(|&i| i >= nodes.len())
+                    || nodes[root].0 == "constant"
+            })
+        {
+            return Err(PyValueError::new_err(
+                "retained constraints must match the outer maximum branches",
+            ));
         }
     }
     let err =
@@ -350,6 +409,10 @@ pub(crate) fn _compile_expression(
     } else {
         None
     };
+    // Existing exact affine routes take precedence; do not retain an unused
+    // second representation or compile the parent evaluator a second time.
+    let constraint_outputs =
+        constraint_outputs.filter(|_| halfspaces.is_none() && regions.is_none());
     Ok(CompiledField {
         kernel,
         value_kernel,
@@ -357,6 +420,8 @@ pub(crate) fn _compile_expression(
         node_count: nodes.len(),
         _halfspaces: halfspaces,
         _polyhedral_regions: regions,
+        constraint_data: constraint_outputs.map(|outputs| (nodes, outputs)),
+        constraint_cache: Mutex::new(None),
         _memory: memory,
     })
 }

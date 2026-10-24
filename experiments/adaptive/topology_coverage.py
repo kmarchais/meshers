@@ -23,6 +23,31 @@ def boundary_topology(surface, np):
 
 def fixture(name, np):
     angles = 2*np.pi*np.arange(96)/96
+    if name == 'bored-prism':
+        half = (.35, .35, .3)
+        center, radius = np.array((.03, -.02)), .12
+        def field(x, y, z):
+            box = np.maximum(np.maximum(np.abs(x)-half[0], np.abs(y)-half[1]), np.abs(z)-half[2])
+            return np.maximum(box, radius-np.sqrt((x-center[0])**2+(y-center[1])**2))
+        grid = np.linspace(-1., 1., 65)
+        u, v = np.meshgrid(grid, grid, indexing='ij')
+        sides = []
+        for axis in (0, 1):
+            other = 1-axis
+            for sign in (-1., 1.):
+                p = np.zeros((u.size, 3))
+                p[:, axis] = sign*half[axis]
+                p[:, other] = half[other]*u.ravel()
+                p[:, 2] = half[2]*v.ravel()
+                sides.append(p)
+        xy = np.column_stack((half[0]*u.ravel(), half[1]*v.ravel()))
+        xy = xy[np.linalg.norm(xy-center, axis=1) >= radius]
+        for sign in (-1., 1.):
+            sides.append(np.column_stack((xy, np.full(len(xy), sign*half[2]))))
+        theta, z = np.meshgrid(2*np.pi*np.arange(256)/256, half[2]*grid, indexing='ij')
+        sides.append(np.column_stack((center[0]+radius*np.cos(theta.ravel()),
+            center[1]+radius*np.sin(theta.ravel()), z.ravel())))
+        return field, np.concatenate(sides), (8*np.prod(half)-np.pi*radius**2*2*half[2]), 1, 0
     if name in ('octahedron', 'notched-prism'):
         vertices, faces = octahedron(np) if name == 'octahedron' else notched_prism(np)
         bary = np.array([(i/48, j/48, 1-(i+j)/48) for i in range(49) for j in range(49-i)])
@@ -88,12 +113,63 @@ def notched_prism(np):
     return vertices, np.array(faces)
 
 
+def bored_prism_distance(points, np):
+    """Exact distance to four rectangles, two perforated caps and a finite cylinder."""
+    half = np.array((.35, .35, .3))
+    center, radius = np.array((.03, -.02)), .12
+    result = np.full(len(points), np.inf)
+    for axis in (0, 1):
+        for sign in (-1., 1.):
+            closest = np.clip(points, -half, half)
+            closest[:, axis] = sign*half[axis]
+            result = np.minimum(result, np.linalg.norm(points-closest, axis=1))
+    rho = np.linalg.norm(points[:, :2]-center, axis=1)
+    result = np.minimum(result, np.hypot(rho-radius, np.maximum(np.abs(points[:, 2])-half[2], 0.)))
+    closest_xy = np.clip(points[:, :2], -half[:2], half[:2])
+    in_hole = np.linalg.norm(closest_xy-center, axis=1) < radius
+    cap_xy_distance = np.where(in_hole, np.abs(rho-radius), np.linalg.norm(points[:, :2]-closest_xy, axis=1))
+    for sign in (-1., 1.):
+        result = np.minimum(result, np.hypot(cap_xy_distance, points[:, 2]-sign*half[2]))
+    return result
+
+
+def bored_prism_witness(point, distance, np):
+    half = np.array((.35, .35, .3))
+    edge_distance = np.inf
+    for free in range(3):
+        fixed = [a for a in range(3) if a != free]
+        for first in (-1., 1.):
+            for second in (-1., 1.):
+                q = np.clip(point, -half, half)
+                q[fixed[0]], q[fixed[1]] = first*half[fixed[0]], second*half[fixed[1]]
+                edge_distance = min(edge_distance, np.linalg.norm(point-q))
+    radial = abs(np.linalg.norm(point[:2]-np.array((.03, -.02)))-.12)
+    rim = np.hypot(radial, abs(abs(point[2])-.3))
+    return dict(point=point.tolist(), distance=float(distance),
+        distance_to_outer_edges=float(edge_distance), distance_to_bore_cap_rims=float(rim),
+        distance_to_cylinder_wall=float(radial))
+
+
+def bored_prism_constraints(np):
+    constraints = {}
+    for axis, half in enumerate((.35, .35, .3)):
+        for sign in (-1., 1.):
+            def plane(x, y, z, axis=axis, half=half, sign=sign):
+                return sign*(x, y, z)[axis]-half
+            constraints[f'box{axis}_{sign}'] = plane
+    def bore(x, y, z):
+        return .12-np.sqrt((x-.03)**2+(y+.02)**2)
+    constraints['bore'] = bore
+    return constraints
+
+
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('--run', type=Path, required=True)
-    parser.add_argument('--case', choices=('torus', 'shell', 'disjoint', 'octahedron', 'notched-prism'), required=True)
+    parser.add_argument('--case', choices=('torus', 'shell', 'disjoint', 'octahedron', 'notched-prism', 'bored-prism'), required=True)
     parser.add_argument('--tolerance', type=float, default=.002)
-    parser.add_argument('--named', action='store_true', help='Preserve the octahedron planes as named constraints')
+    parser.add_argument('--cells', type=int, default=24)
+    parser.add_argument('--named', action='store_true', help='Retain octahedron planes or bored-prism fields as named constraints')
     parser.add_argument('--no-adapt', action='store_true')
     parser.add_argument('--optimization-passes', type=int, default=1)
     parser.add_argument('--snap', type=float, default=.2)
@@ -116,7 +192,7 @@ def main():
             shutil.copyfile(path, args.run/f'input-{index}-{path.name}')
     shutil.copyfile(__file__, args.run/'analysis-driver.py')
     row = dict(case=args.case, qualified=False, no_fe_solve=True,
-        options=dict(bounds=w.BOUNDS, cells=24, geometry_tolerance=args.tolerance,
+        options=dict(bounds=w.BOUNDS, cells=args.cells, geometry_tolerance=args.tolerance,
             minimum_quality=.1, max_tetrahedra=w.CAP, threads=1,
             adapt=not args.no_adapt, min_length=.002, max_length=.1, gradation=.3,
             adapt_iterations=4, quality_guard=.3, optimize_passes=args.optimization_passes, order=1, snap=args.snap),
@@ -126,16 +202,17 @@ def main():
     row['diagnostic_unchecked'] = args.diagnostic_unchecked
     if args.diagnostic_unchecked:
         row['options'].update(geometry_tolerance=1., minimum_quality=0., adapt_tolerance=args.tolerance)
-    row['representation'] = 'named-planes' if args.named else 'scalar-field'
+    row['representation'] = ('named-constraints' if args.case == 'bored-prism' else 'named-planes') if args.named else 'scalar-field'
     row['transform'] = dict(rotation_z=args.rotation, translation=args.translation)
     cosine, sine = np.cos(args.rotation), np.sin(args.rotation)
     rotation = np.array(((cosine, -sine, 0.), (sine, cosine, 0.), (0., 0., 1.)))
     transformed = bool(args.rotation or any(args.translation))
+    assert args.case != 'bored-prism' or not transformed
     assert np.isfinite(rotation).all() and np.isfinite(args.translation).all()
     if args.named:
         assert not transformed
     if args.named:
-        assert args.case == 'octahedron'
+        assert args.case in ('octahedron', 'bored-prism')
         row['options'] = {k: v for k, v in row['options'].items() if k in
             ('bounds', 'cells', 'geometry_tolerance', 'minimum_quality', 'max_tetrahedra', 'optimize_passes', 'snap')}
     started = time.perf_counter()
@@ -152,11 +229,12 @@ def main():
         phase = time.perf_counter()
         if args.named:
             from itertools import product
-            constraints = {}
-            for index, (a, b, c) in enumerate(product((1, -1), repeat=3)):
-                def plane(x, y, z, a=a, b=b, c=c):
-                    return (a*x+b*y+c*z-.35)/np.sqrt(3)
-                constraints[f'plane{index}'] = plane
+            constraints = bored_prism_constraints(np) if args.case == 'bored-prism' else {}
+            if args.case == 'octahedron':
+                for index, (a, b, c) in enumerate(product((1, -1), repeat=3)):
+                    def plane(x, y, z, a=a, b=b, c=c):
+                        return (a*x+b*y+c*z-.35)/np.sqrt(3)
+                    constraints[f'plane{index}'] = plane
             mesh = meshers.generate_intersection(constraints, **row['options'])
         else:
             mesh = meshers.generate(field, **row['options'])
@@ -168,12 +246,19 @@ def main():
         row['mesh_sha256'] = w.digest(args.run/'mesh.npz')
         probes = np.einsum('sn,fnd->fsd', scorecard.BARY, points[surface]).reshape(-1, 3)
         forward = float(np.max(np.abs(field(*probes.T))))
+        if args.case == 'bored-prism':
+            distances = bored_prism_distance(probes, np)
+            forward = float(distances.max())
+            row['forward_witness'] = bored_prism_witness(probes[distances.argmax()], forward, np)
         if args.case in ('octahedron', 'notched-prism'):
             target_points, target_surface = octahedron(np) if args.case == 'octahedron' else notched_prism(np)
             if transformed:
                 target_points = target_points@rotation.T+args.translation
             forward = float(scorecard.distance_to_mesh(target_points, target_surface, probes).max())
-        reverse = float(scorecard.distance_to_mesh(points, surface, queries).max())
+        reverse_distances = scorecard.distance_to_mesh(points, surface, queries)
+        reverse = float(reverse_distances.max())
+        if args.case == 'bored-prism':
+            row['reverse_witness'] = bored_prism_witness(queries[reverse_distances.argmax()], reverse, np)
         q, _, volumes = scorecard.tet_metrics(points, cells)
         observed_components, observed_euler = boundary_topology(surface, np)
         corners = points[surface]

@@ -3,13 +3,14 @@
 import numpy as np
 import pytest
 
-from topology_coverage import boundary_topology, fixture, notched_prism
+from topology_coverage import bored_prism_constraints, bored_prism_distance, boundary_topology, fixture, notched_prism
 
 
-@pytest.mark.parametrize('name', ('torus', 'shell', 'disjoint', 'octahedron', 'notched-prism'))
+@pytest.mark.parametrize('name', ('torus', 'shell', 'disjoint', 'octahedron', 'notched-prism', 'bored-prism'))
 def test_reference_points_are_on_the_exact_surface(name):
     field, queries, volume, components, euler = fixture(name, np)
-    assert np.max(np.abs(field(*queries.T))) < 3e-16
+    closed = np.maximum(field(*queries.T), np.max(np.abs(queries), axis=1)-.5)
+    assert np.max(np.abs(closed)) < 3e-16
     assert volume > 0 and components > 0
     assert euler in (0, 2, 4)
 
@@ -23,6 +24,25 @@ def test_notched_prism_has_the_exact_oriented_volume_and_boundary():
     assert boundary_topology(surface, np) == (1, 2)
     edges = np.sort(surface[:, ((0, 1), (1, 2), (2, 0))].reshape(-1, 2), axis=1)
     assert np.all(np.unique(edges, axis=0, return_counts=True)[1] == 2)
+
+
+def test_bored_prism_distance_handles_void_caps_and_exterior_corners():
+    _, queries, volume, components, euler = fixture('bored-prism', np)
+    assert np.max(bored_prism_distance(queries, np)) < 1e-15
+    probes = np.array(((.03, -.02, 0.), (.03, -.02, .3), (.03, -.02, .4),
+        (.45, .45, .4), (.3, .3, .4), (.3, .3, 0.)))
+    expected = (.12, .12, np.hypot(.12, .1), np.sqrt(.03), .1, .05)
+    np.testing.assert_allclose(bored_prism_distance(probes, np), expected, atol=1e-15)
+    assert abs(volume-(.7*.7*.6-np.pi*.12**2*.6)) < 1e-15
+    assert (components, euler) == (1, 0)
+
+
+def test_named_bored_prism_is_the_identical_scalar_domain():
+    field, _, _, _, _ = fixture('bored-prism', np)
+    points = np.random.default_rng(42).uniform(-.5, .5, (1024, 3))
+    named = bored_prism_constraints(np)
+    assert len(named) == 7
+    np.testing.assert_allclose(np.max([f(*points.T) for f in named.values()], axis=0), field(*points.T), atol=1e-16)
 
 
 def test_boundary_topology_counts_disconnected_components_and_torus_handle():

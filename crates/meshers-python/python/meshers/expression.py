@@ -300,8 +300,39 @@ class _Graph:
 
 
 @lru_cache(maxsize=32)
-def _compile_cached(nodes, outputs):
+def _compile_cached(nodes, outputs, constraints=()):
+    if constraints:
+        return _meshers._compile_expression(nodes, outputs, constraints)
     return _meshers._compile_expression(nodes, outputs)
+
+
+def _compile_with_intersection(graph, value, outputs):
+    original = graph.encoded()
+    if graph.nodes[value.index][0] != "maximum" or not getattr(
+        _meshers, "RETAINED_INTERSECTIONS", False
+    ):
+        return _compile_cached(original, outputs)
+    roots, pending, seen = [], [value.index], set()
+    while pending:
+        index = pending.pop()
+        if index in seen:
+            continue
+        seen.add(index)
+        op, *args = graph.nodes[index]
+        if op == "maximum":
+            pending.extend(reversed(args))
+        else:
+            roots.append(index)
+    if not 2 <= len(roots) <= _meshers.MAX_CONSTRAINTS or any(
+        graph.nodes[index][0] == "constant" for index in roots
+    ):
+        return _compile_cached(original, outputs)
+    constraints = tuple(
+        (index, *(e.index for e in graph.derivatives(_Expression(graph, index)))) for index in roots
+    )
+    if len(graph.nodes) > 20000:
+        return _compile_cached(original, outputs)
+    return _compile_cached(graph.encoded(), outputs, constraints)
 
 
 def compile_field(
@@ -330,7 +361,8 @@ def compile_field(
         No Rust installation, Numba, SymPy or subprocess is used at runtime.
         Gradients at abs(0) are zero. Exact min/max ties average the operand
         derivatives. This is a subgradient choice at a true crease, not a
-        branch constraint. Supply a gradient callable for another policy.
+        branch constraint. Eligible meshing modes can additionally retain
+        outer-maximum branches. Supply a gradient callable for another policy.
     """
     if backend not in {"rust", "jit"}:
         raise ValueError("only the embedded Rust compiler is supported")
@@ -347,4 +379,9 @@ def compile_field(
         outputs.extend(graph.convert(v) for v in g)
     if len(graph.nodes) > 20000:
         raise TraceError("expression is too large to compile")
-    return _compile_cached(graph.encoded(), tuple(e.index for e in outputs))
+    outputs = tuple(e.index for e in outputs)
+    return (
+        _compile_with_intersection(graph, value, outputs)
+        if gradient is None
+        else _compile_cached(graph.encoded(), outputs)
+    )

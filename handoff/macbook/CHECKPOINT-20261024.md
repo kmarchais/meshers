@@ -1,5 +1,23 @@
 # Native MacBook continuation, 24 October 2026
 
+Eligible nonadaptive Tet4 calls now retain analytic outer-max branches.
+The bored-prism scalar route that failed at matched settings now admits with
+145924 tets, qmin 0.121400, distance 0.00105814 and volume error 0.05022%.
+Its mesh is exactly equal after relabeling to the admitted seven-field named
+control. All four original study meshes also replay exactly against their
+preserved baseline. Full suite 236 passes 198 tests / 1 skip; final all-feature
+binding Clippy 238, Python lint and typing pass. See
+[nonlinear constraint results](../../experiments/adaptive/NONLINEAR_CONSTRAINT_RESULTS.md).
+Adaptive nonlinear postcontrol 244 still rejects at 0.003393814; no adaptive
+option is bypassed. Next carry actual field identities through adaptive
+splitting, collapse and projection. No FE solve, reference promotion, model
+removal or new actual Microgen timing ratio. Actual Gyroid/spinodoid admission
+and all 24 lattice convergence remain open. The full goal stays active.
+
+All jobs through 244 are terminal; no successor is queued. Candidate b2814b0e,
+preserved baseline 83247d4d. Completed historical jobs must not be restarted.
+
+
 Meshers now supports bounded nonconvex min/max combinations of convex affine
 fields for nonperiodic Tet4. Shared cuts preserve one conforming union; actual
 boundary facets define constraints, and smoothing accepts any complete region.

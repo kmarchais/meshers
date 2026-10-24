@@ -620,6 +620,7 @@ fn _meshers(m: &Bound<'_, PyModule>) -> PyResult<()> {
     m.add("IMPLICIT_API_VERSION", 1)?;
     m.add("ADAPTIVE_POLYHEDRAL", true)?;
     m.add("POLYHEDRAL_REGIONS", true)?;
+    m.add("RETAINED_INTERSECTIONS", true)?;
     m.add(
         "MAX_CONSTRAINTS",
         meshers_core::implicit::intersection::MAX_CONSTRAINTS,

@@ -21,12 +21,16 @@ Points = npt.NDArray[np.float64]
 Indices = npt.NDArray[np.int64]
 
 
-def _affine_planes(field: Scalar, scalar_mode: Sequence[bool]) -> dict[str, Scalar] | None:
+def _affine_planes(
+    field: Scalar, scalar_mode: Sequence[bool], *, canonical: bool = False
+) -> dict[str, Scalar] | None:
     if not isinstance(field, _meshers.CompiledField) or any(scalar_mode):
         return None
     halfspaces = getattr(field, "_halfspaces", None)
     if halfspaces is None:
         return None
+    if canonical:
+        halfspaces = sorted(halfspaces)
     planes: dict[str, Scalar] = {}
     for index, coefficients in enumerate(halfspaces):
 
@@ -37,6 +41,25 @@ def _affine_planes(field: Scalar, scalar_mode: Sequence[bool]) -> dict[str, Scal
 
         planes[f"plane{index}"] = plane
     return planes
+
+
+def _retained_constraints(field: Scalar) -> dict[str, Scalar] | None:
+    if not isinstance(field, _meshers.CompiledField) or not getattr(
+        _meshers, "RETAINED_INTERSECTIONS", False
+    ):
+        return None
+    # This is the internal Python/native interface, gated by its capability above.
+    fields = field._intersection_fields()  # ruff: ignore[private-member-access]
+    if fields is None:
+        return None
+    constraints = {}
+    for index, branch in enumerate(fields):
+        planes = _affine_planes(branch, (), canonical=True)
+        if planes is None:
+            constraints[f"branch{index}"] = branch
+        else:
+            constraints.update((f"branch{index}_{name}", plane) for name, plane in planes.items())
+    return constraints if len(constraints) <= _meshers.MAX_CONSTRAINTS else None
 
 
 def _check_cancel(cancel: _meshers.CancellationToken | None) -> None:

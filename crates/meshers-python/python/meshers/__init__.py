@@ -14,7 +14,7 @@ import numpy.typing as npt
 from . import _meshers
 from ._meshers import CancellationToken, CancelledError, CompiledField, MeshingError
 from .expression import TraceError, compile_field
-from .intersection import _affine_planes, generate_intersection
+from .intersection import _affine_planes, _retained_constraints, generate_intersection
 
 if TYPE_CHECKING:
     import fedoo
@@ -250,6 +250,8 @@ def generate(  # ruff: ignore[complex-structure]
             half-space constraints; diagnostics report ``polyhedral_constraints``.
             Bounded min/max combinations of convex affine fields also retain
             nonconvex regions on the eligible path.
+            Eligible nonadaptive outer-max intersections also retain analytic
+            branches; diagnostics report ``retained_constraints``.
         adapt: Experimental. Replace fixed surface refinement by size-driven
             adaptation: boundary edges follow the curvature needed for
             ``geometry_tolerance``, the interior grades towards ``max_length``.
@@ -321,7 +323,6 @@ def generate(  # ruff: ignore[complex-structure]
             evaluator = "compiled"
         except TraceError as error:
             warnings.warn(f"Using NumPy callbacks: {error}", RuntimeWarning, stacklevel=2)
-    preparation_seconds = time.perf_counter() - preparation_start
     scalar_mode = (
         order != 1,
         band is not None,
@@ -337,6 +338,9 @@ def generate(  # ruff: ignore[complex-structure]
         ),
     )
     planes = _affine_planes(field, scalar_mode)
+    if planes is None and not adapt and not any(scalar_mode):
+        planes = _retained_constraints(field)
+    preparation_seconds = time.perf_counter() - preparation_start
     if planes is not None and not adapt:
         mesh = generate_intersection(
             planes,
@@ -353,11 +357,15 @@ def generate(  # ruff: ignore[complex-structure]
         mesh.diagnostics.update(
             threads=1,
             evaluator="compiled",
-            polyhedral_constraints=len(planes),
             inserted_interior_nodes=0,
             preparation_seconds=preparation_seconds
             + mesh.diagnostics.get("preparation_seconds", 0.0),
         )
+        mesh.diagnostics[
+            "polyhedral_constraints"
+            if getattr(field, "_halfspaces", None) is not None
+            else "retained_constraints"
+        ] = len(planes)
         return mesh
     feature_options = (
         {"halfspaces": getattr(field, "_halfspaces", None)}

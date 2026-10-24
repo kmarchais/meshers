@@ -1,0 +1,54 @@
+{
+  "case": "bored-prism",
+  "qualified": false,
+  "no_fe_solve": true,
+  "options": {
+    "bounds": [
+      -0.5,
+      0.5,
+      -0.5,
+      0.5,
+      -0.5,
+      0.5
+    ],
+    "cells": 24,
+    "geometry_tolerance": 0.002,
+    "minimum_quality": 0.1,
+    "max_tetrahedra": 250000,
+    "threads": 1,
+    "adapt": true,
+    "min_length": 0.002,
+    "max_length": 0.1,
+    "gradation": 0.3,
+    "adapt_iterations": 4,
+    "quality_guard": 0.3,
+    "optimize_passes": 1,
+    "order": 1,
+    "snap": 0.2
+  },
+  "gates": {
+    "distance": 0.002,
+    "relative_volume": 0.01,
+    "minimum_quality": 0.1,
+    "positive_jacobians": true,
+    "coherent_facets": true,
+    "exact_boundary_topology": true,
+    "maximum_nodes": 250000,
+    "maximum_tetrahedra": 250000
+  },
+  "diagnostic_unchecked": false,
+  "representation": "scalar-field",
+  "transform": {
+    "rotation_z": 0.0,
+    "translation": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "reference_sha256": "ed8528e24468de8f079ac647a73bd144ac6b19b14e2f2a2496d8b16931defabb",
+  "status": "failed",
+  "error": "sampled geometry error 3.393814321798236e-3 exceeds tolerance 2e-3; increase resolution or budget",
+  "traceback": "Traceback (most recent call last):\n  File \"/Users/kmarchais/dev/meshers/experiments/adaptive/topology_coverage.py\", line 208, in main\n    mesh = meshers.generate(field, **row['options'])\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/Users/kmarchais/dev/meshers/crates/meshers-python/python/meshers/__init__.py\", line 376, in generate\n    result = _meshers.generate(\n             ^^^^^^^^^^^^^^^^^^\n_meshers.MeshingFailure: sampled geometry error 3.393814321798236e-3 exceeds tolerance 2e-3; increase resolution or budget\n",
+  "total_s": 1.520466124988161
+}
