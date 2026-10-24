@@ -85,3 +85,23 @@ def test_periodic_cube_refinement_is_conforming_and_budgeted():
         assert interpolation_check(current_points, current_cells, fields, result)["maximum_geometry_error"] < 1e-12
         current_points, current_cells, current_surface = (result[key] for key in ("points", "tetrahedra", "surface"))
         fields = result["displacement"]
+
+
+def test_measured_score_selects_shorter_disjoint_star_under_one_star_budget():
+    workflow.imports()
+    from fedoo.lib_elements.tetrahedron import Tet10
+
+    reference = Tet10().xi_nd
+    points = np.vstack((reference * .3, reference * .2 + [1., 0., 0.]))
+    cells = np.arange(20).reshape(2, 10)
+    edges = {tuple(sorted(pair)): 4 + offset for offset, pair in enumerate(EDGES)}
+    surface = np.array([[int(cell[node]) for node in list(face) + [edges[tuple(sorted((face[a], face[b])))]
+        for a, b in ((0, 1), (1, 2), (2, 0))]] for cell in cells for face in FACES])
+    fields = np.random.default_rng(8).normal(size=(6, 20, 3))
+    plain = refine(points, cells, surface, fields, periodic=False, maximum_nodes=24)
+    ranked = refine(points, cells, surface, fields, periodic=False, maximum_nodes=24, element_scores=[0., 10.])
+    np.testing.assert_array_equal(np.bincount(plain["parents"]), [2, 1])
+    np.testing.assert_array_equal(np.bincount(ranked["parents"]), [1, 2])
+    assert interpolation_check(points, cells, fields, ranked)["maximum_field_error"] < 1e-12
+    with pytest.raises(AssertionError):
+        refine(points, cells, surface, fields, periodic=False, element_scores=[0., -1.])

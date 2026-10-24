@@ -1,0 +1,138 @@
+{
+  "passed": true,
+  "geometry": {
+    "sampled_forward_max": 0.0006492807854735138,
+    "sampled_reverse_max": 0.0005556316938432865,
+    "sampled_two_sided_max": 0.0006492807854735138,
+    "outward_forward_max": 0.0006492807854735138,
+    "inward_forward_max": 0.0004163176068125956,
+    "projection_failed": 0,
+    "forward_samples": 291356,
+    "reverse_samples": 34791,
+    "volume": 0.24823402340332804,
+    "relative_volume_error": -0.0003101730050040219,
+    "q_min_corner": 0.1000349479938585,
+    "q_p01_corner": 0.1618280295456608,
+    "minimum_dihedral_deg_corner": 4.608358138852793,
+    "minimum_sampled_jacobian": 2.479901815615085e-07,
+    "reverse_tessellation_delta_max": 0.0001530253260475056,
+    "quadratic_reverse_subdivisions": [
+      4,
+      8
+    ],
+    "facet_consistency": {
+      "nodes": 249999,
+      "elements": 162599,
+      "unique_faces": 337765,
+      "interior_faces": 312631,
+      "extracted_boundary_faces": 25134,
+      "same_orientation_shared_faces": 0,
+      "nonmanifold_faces": 0,
+      "duplicate_cells": 0,
+      "duplicate_surface_faces": 0,
+      "provided_boundary_matches_extraction": true,
+      "missing_provided_faces": 0,
+      "extra_provided_faces": 0,
+      "nonpositive_corner_determinants": 0,
+      "minimum_corner_determinant": 2.466438272062179e-07,
+      "oriented_facet_consistency_passed": true,
+      "conflict_examples": [],
+      "scope": "Oriented corner-face incidence and same-side neighbor diagnostics; necessary consistency, not a certificate of curved geometry or absence of nonlocal intersections"
+    },
+    "oriented_facet_consistency_passed": true,
+    "geometry_admitted": true
+  },
+  "periodic_base_field": {
+    "maximum_six_load_jump": 1.1102230246251565e-16,
+    "periodic_pair_counts": [
+      1046,
+      1004,
+      1029
+    ],
+    "periodic_coordinate_errors": [
+      5.551115123125783e-17,
+      1.1102230246251565e-16,
+      1.1102230246251565e-16
+    ],
+    "periodic_pair_tolerance": 1e-10,
+    "periodic_equivalence_classes": 246989,
+    "periodic_triangles_match": true
+  },
+  "physical_nodes": 249999,
+  "physical_tets": 162599,
+  "selection": {
+    "accepted_edge_orbits": 4723,
+    "quality_rejected_orbits": 1580,
+    "overlapping_star_orbits": 33677,
+    "budget_rejected_orbits": 143498,
+    "preferred_edge_orbits": 0,
+    "accepted_preferred_edge_orbits": 0,
+    "selection": "Measured element-score sum per added-node upper bound over complete periodic stars",
+    "input_element_score_sum": 0.008823234960374541,
+    "source_nodes": 218135,
+    "source_elements": 141144,
+    "nodes": 249999,
+    "elements": 162599,
+    "bisected_parent_elements": 21455,
+    "shared_position_error": 1.1102230246251565e-16,
+    "shared_field_error": 1.1102230246251565e-16,
+    "projected_node_upper_bound": 249999,
+    "facet_consistency": {
+      "nodes": 249999,
+      "elements": 162599,
+      "unique_faces": 337765,
+      "interior_faces": 312631,
+      "extracted_boundary_faces": 25134,
+      "same_orientation_shared_faces": 0,
+      "nonmanifold_faces": 0,
+      "duplicate_cells": 0,
+      "duplicate_surface_faces": 0,
+      "provided_boundary_matches_extraction": true,
+      "missing_provided_faces": 0,
+      "extra_provided_faces": 0,
+      "nonpositive_corner_determinants": 0,
+      "minimum_corner_determinant": 2.466438272062179e-07,
+      "oriented_facet_consistency_passed": true,
+      "conflict_examples": [],
+      "scope": "Oriented corner-face incidence and same-side neighbor diagnostics; necessary consistency, not a certificate of curved geometry or absence of nonlocal intersections"
+    },
+    "periodic": {
+      "periodic_pair_counts": [
+        1046,
+        1004,
+        1029
+      ],
+      "periodic_coordinate_errors": [
+        5.551115123125783e-17,
+        1.1102230246251565e-16,
+        1.1102230246251565e-16
+      ],
+      "periodic_pair_tolerance": 1e-10,
+      "periodic_equivalence_classes": 246989,
+      "periodic_triangles_match": true
+    }
+  },
+  "reproduction": {
+    "points_per_element": 12,
+    "elements_checked": 162599,
+    "maximum_geometry_error": 3.3306690738754696e-16,
+    "maximum_field_error": 4.440892098500626e-16
+  },
+  "relative_volume_change": 6.661338147750939e-16,
+  "selected_parent_fraction": 0.15200787847871677,
+  "selected_parent_score_fraction": 0.8880880702814813,
+  "localization_scalar_replays": {
+    "six_load_normalized_trace": 1.0659174693213897e-05,
+    "largest_correction": 1.3637907491833284e-05,
+    "worst_retained_model": 1.0186163266025884e-05
+  },
+  "source_coupled_solve": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-lattice-hp-coupled-solve-v1",
+  "preserved_source_pin_node": 4847,
+  "new_nearest_node": 4847,
+  "fixed_cubic_function_span_preserved": true,
+  "source_augmented_space_included": true,
+  "extra_scalar_mode_unknowns": 6,
+  "new_equilibrium_solve": false,
+  "reference_promoted": false,
+  "scope": "Measured six-load score per added node on complete periodic stars; exact physical-domain and FE-base prolongation, with the unchanged cubic function span; no accuracy or workflow claim."
+}

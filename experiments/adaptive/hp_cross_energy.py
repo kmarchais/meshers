@@ -15,7 +15,7 @@ from hp_shared_domain import SECOND_SOLVE, CUBIC_SOLVE, CUBIC, ROOT
 
 
 def integrate(points, cells, h_fields, cubic_cells, p_fields, parents, maps, quadrature, *, return_coupling=False,
-              additional_fields=None, return_stress=False):
+              additional_fields=None, return_stress=False, local_coefficients=None):
     """Integrate all 144 cross terms, grouping identical affine child maps."""
     from cubic_reference import register_cubic
     from fedoo.lib_elements.tetrahedron import Tet10, Tet4
@@ -29,6 +29,10 @@ def integrate(points, cells, h_fields, cubic_cells, p_fields, parents, maps, qua
     field_count = 12 + (0 if additional_fields is None else len(additional_fields))
     energy, volume, minimum = np.zeros((field_count, field_count)), 0., np.inf
     mean_stress = np.zeros((6, field_count))
+    local_energy = None if local_coefficients is None else np.zeros((len(cells), 6, 6))
+    local_volume = None if local_coefficients is None else np.zeros(len(cells))
+    if local_coefficients is not None:
+        assert local_coefficients.shape == (field_count, 6)
     coupling = np.zeros((3 * len(points), 6)) if return_coupling else None
     for group, flat in enumerate(unique):
         mapping = flat.reshape(4, 4)
@@ -58,6 +62,12 @@ def integrate(points, cells, h_fields, cubic_cells, p_fields, parents, maps, qua
                 strain = (gradients + gradients.swapaxes(-1, -2)) / 2
                 stress = 2 * strain + np.trace(strain, axis1=-2, axis2=-1)[..., None, None] * np.eye(3)
                 energy += np.einsum("t,itkl,jtkl->ij", weight * determinant, strain, stress, optimize=True)
+                if local_energy is not None:
+                    local_strain = np.einsum("ij,itkl->jtkl", local_coefficients, strain, optimize=True)
+                    local_stress = np.einsum("ij,itkl->jtkl", local_coefficients, stress, optimize=True)
+                    local_energy[subset] += np.einsum("t,itkl,jtkl->tij", weight * determinant,
+                        local_strain, local_stress, optimize=True)
+                    local_volume[subset] += weight * determinant
                 if return_stress:
                     mean = np.einsum("t,ltij->lij", weight * determinant, stress)
                     mean_stress += mean[:, [0, 1, 2, 0, 0, 1], [0, 1, 2, 1, 2, 2]].T
@@ -72,6 +82,8 @@ def integrate(points, cells, h_fields, cubic_cells, p_fields, parents, maps, qua
         result += (coupling,)
     if return_stress:
         result += (mean_stress,)
+    if local_energy is not None:
+        result += (local_energy, local_volume)
     return result
 
 

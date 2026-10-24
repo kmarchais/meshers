@@ -17,10 +17,14 @@ from hp_shared_domain import SECOND_SOLVE, CUBIC_SOLVE, CUBIC
 def inherited_inputs(source):
     """Resolve measured Python snapshots; never relax a data hash."""
     inputs = {}
-    for name, expected in json.loads((source / "analysis-inputs.json").read_text()).items():
+    measured = json.loads((source / "analysis-inputs.json").read_text())
+    snapshot_directories = {source, *(Path(name).parent for name in measured
+        if Path(name).parent.is_relative_to(workflow.HERE / "runs"))}
+    for name, expected in measured.items():
         path = Path(name)
         if workflow.digest(path) != expected and path.suffix == ".py":
-            matches = [candidate for candidate in source.glob("*.py") if workflow.digest(candidate) == expected]
+            matches = [candidate for directory in sorted(snapshot_directories) for candidate in directory.glob("*.py")
+                if workflow.digest(candidate) == expected]
             assert matches, f"Missing exact measured source: {path}"
             path = matches[0]
         assert workflow.digest(path) == expected, str(path)

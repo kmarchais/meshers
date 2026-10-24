@@ -48,3 +48,9 @@ def test_nonidentity_child_maps_reproduce_exact_polynomial_cross_integrals():
     np.testing.assert_allclose(extended, basis.T @ expected @ basis, atol=1e-13)
     packed = np.array([3 * vectors[:, 0], vectors[:, 0], vectors[:, 0], vectors[:, 1], vectors[:, 2], np.zeros(6)])
     np.testing.assert_allclose(mean, np.hstack((packed / 12, packed / 20, packed / 6)), atol=1e-13)
+    coefficients = np.random.default_rng(44).normal(size=(18, 6))
+    total, measured_volume, _, local, volumes = integrate(points, cells, h, np.arange(20)[None], p,
+        np.zeros(2, dtype=int), maps, duffy_rule(4), additional_fields=2 * h, local_coefficients=coefficients)
+    np.testing.assert_allclose(local.sum(axis=0), coefficients.T @ (basis.T @ expected @ basis) @ coefficients, atol=1e-12)
+    np.testing.assert_allclose(volumes.sum(), measured_volume, atol=1e-14)
+    assert np.linalg.eigvalsh(local).min() > -1e-12

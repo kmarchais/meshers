@@ -35,7 +35,7 @@ def worker(args):
         element_type = "tet20_reference"
     else:
         prepared = json.loads((args.prepared / "result.json").read_text())
-        assert prepared["qualified"] and prepared["geometry"]["geometry_admitted"]
+        assert prepared.get("qualified", prepared.get("passed", False)) and prepared["geometry"]["geometry_admitted"]
 
     class Capture:
         def __init__(self):

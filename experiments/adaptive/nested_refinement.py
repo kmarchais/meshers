@@ -22,7 +22,7 @@ def positive_quality(coordinates):
 
 
 def refine(points, cells, surface, fields, *, periodic=True, minimum_quality=.1,
-           maximum_nodes=250000, maximum_tets=250000, preferred_edges=None):
+           maximum_nodes=250000, maximum_tets=250000, preferred_edges=None, element_scores=None):
     from fedoo.lib_elements.tetrahedron import Tet10
     from facet_incidence_audit import audit
 
@@ -53,6 +53,17 @@ def refine(points, cells, surface, fields, *, periodic=True, minimum_quality=.1,
     priority = np.array([tuple(edge) in preferred for edge in edges])
     ordered = sorted(groups.values(), key=lambda group:
         (-int(priority[group].any()), -float(lengths[group].max()), group[0]))
+    score_by_orbit = {}
+    if element_scores is not None:
+        element_scores = np.asarray(element_scores)
+        assert element_scores.shape == (len(cells),) and np.isfinite(element_scores).all() and (element_scores >= 0).all()
+        assert not preferred, "Use one measured ranking, not mixed priority recipes"
+        for group in ordered:
+            parents = np.unique([parent for edge in group for parent, _ in incidence[edge]])
+            cost = sum(2 + len(set(cells[[parent for parent, _ in incidence[edge]], :4].ravel())
+                - set(edges[edge])) for edge in group)
+            score_by_orbit[group[0]] = float(element_scores[parents].sum() / cost)
+        ordered.sort(key=lambda group: (-score_by_orbit[group[0]], -float(lengths[group].max()), group[0]))
     allowed = np.ones((len(cells), 6), dtype=bool)
     for offset, endpoints in enumerate(EDGES):
         for endpoint in endpoints:
@@ -65,6 +76,9 @@ def refine(points, cells, surface, fields, *, periodic=True, minimum_quality=.1,
               "overlapping_star_orbits": 0, "budget_rejected_orbits": 0,
               "preferred_edge_orbits": sum(bool(priority[group].any()) for group in ordered),
               "accepted_preferred_edge_orbits": 0}
+    if element_scores is not None:
+        counts.update(selection="Measured element-score sum per added-node upper bound over complete periodic stars",
+            input_element_score_sum=float(element_scores.sum()))
     for group in ordered:
         incident = [item for edge in group for item in incidence[edge]]
         parents, offsets = np.asarray(incident).T

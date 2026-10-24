@@ -49,6 +49,7 @@ def main():
             total_bytes += item["bytes"]
     checked, archived, comparisons, scores = 0, 0, 0, {}
     seed_replays, failed_runs, coupled_replays, geometry_replays, workflow_replays, hp_replays = [], [], [], [], [], []
+    ranked_replays = []
     for run in sorted((workflow.HERE / "runs").glob("macbook-*")):
         if not run.is_dir() or not (run / "manifest.json").exists():
             continue
@@ -79,6 +80,46 @@ def main():
             failed_runs.append(run.name)
         if (run / "result.json").exists():
             result = json.loads((run / "result.json").read_text())
+            if result.get("source_augmented_space_included"):
+                workflow.imports()
+                from fedoo.lib_elements.tetrahedron import Tet10, Tet4
+                from hp_shared_domain import periodic_jumps
+                source = Path(result["source_coupled_solve"])
+                coupled = json.loads((source / "result.json").read_text())
+                parent = Path(coupled["nested_source"])
+                old, new = np.load(parent / "mesh.npz"), np.load(run / "mesh.npz")
+                modal = np.load(source / "hp-fields.npz")
+                base = np.load(parent / "fields.npz")["displacement"] - np.einsum("ij,ind->jnd",
+                    modal["mode_coefficients"], modal["response_displacement"])
+                prolonged = np.load(run / "prolongation.npz")
+                parents, mappings = prolonged["parents"], prolonged["parent_barycentric_maps"]
+                element = Tet10()
+                barycentric = Tet4().shape_function(element.xi_nd)
+                geometry_error, field_error = 0., 0.
+                for first in range(0, len(parents), 512):
+                    selection = slice(first, first + 512)
+                    mapped = np.einsum("pa,cab->cpb", barycentric, mappings[selection]) @ element.xi_nd[:4]
+                    weights = element.shape_function(mapped.reshape(-1, 3)).reshape(-1, 10, 10)
+                    old_cells, new_cells = old["tetrahedra"][parents[selection]], new["tetrahedra"][selection]
+                    geometry_error = max(geometry_error, float(abs(np.einsum("cpn,cnd->cpd", weights,
+                        old["points"][old_cells]) - new["points"][new_cells]).max()))
+                    field_error = max(field_error, float(abs(np.einsum("cpn,lcnd->lcpd", weights,
+                        base[:, old_cells]) - prolonged["displacement"][:, new_cells]).max()))
+                assert geometry_error < 1e-12 and field_error < 1e-11
+                assert len(new["points"]) == result["physical_nodes"] <= 250000
+                assert len(new["tetrahedra"]) == result["physical_tets"] <= 250000
+                geometry = workflow.geometry(run, "smooth-lattice", new["points"], new["tetrahedra"], new["surface"])
+                assert geometry["geometry_admitted"]
+                for key in ("sampled_two_sided_max", "relative_volume_error", "q_min_corner", "minimum_sampled_jacobian"):
+                    np.testing.assert_allclose(geometry[key], result["geometry"][key], atol=1e-13)
+                assert periodic_jumps(new["points"], new["surface"], prolonged["displacement"]) == result["periodic_base_field"]
+                local_paths = [Path(name) for name in inputs if Path(name).name == "local-216.npz"]
+                assert len(local_paths) == 1
+                score = np.load(local_paths[0])["six_load_normalized_trace"]
+                selected = np.bincount(parents, minlength=len(old["tetrahedra"])) == 2
+                np.testing.assert_allclose(score[selected].sum() / score.sum(), result["selected_parent_score_fraction"], atol=1e-12)
+                ranked_replays.append({"run": run.name, "all_child_geometry_error": geometry_error,
+                    "all_child_field_error": field_error, "selected_score_fraction": float(score[selected].sum() / score.sum())})
             if "complete_field_reduced_residuals" in result:
                 assert result["passed"] and result["retained_model_count"] == 24
                 assert max(result["auxiliary_reduced_residuals"]) < 2e-9
@@ -238,6 +279,7 @@ def main():
         "failed_runs_preserved": failed_runs, "coupled_candidate_replays": coupled_replays,
         "geometry_witness_replays": geometry_replays, "same_host_workflow_replays": workflow_replays,
         "coupled_modal_field_replays": hp_replays,
+        "ranked_refinement_replays": ranked_replays,
         "reference_promoted": False})
     print(f"Verified {files} transferred files, {checked} input hashes and {comparisons} full model comparisons")
 

@@ -1,5 +1,66 @@
 # Reference-only cubic enrichment on G3
 
+## Measured-score lattice allocation preflight, 24 October 2026
+
+Job 49 localizes the complete coupled correction, using all six loads and
+two declared mixed directions. Every element tensor contributes to the full
+Galerkin identity; the 15-point identity error is 1.15e-13 relative to the
+baseline. Positive 125-to-216-point local-vector changes are 1.066e-5 for
+the six-load normalized trace, 1.364e-5 for the largest-correction direction,
+and 1.019e-5 for the worst retained-model direction. All pass the 1% precision
+gate. The worker takes 155.91 seconds at 0.622 GiB.
+
+| Positive 216-point localization | Element fraction | Six-load correction fraction |
+|---|---:|---:|
+| Incident on a curve vertex | 1.98379% | 59.10487% |
+| Containing a curve edge | 0.43006% | 17.30880% |
+| Top 1% ranked by correction | about 1% | 54.1449% |
+| Top 5% ranked by correction | about 5% | 87.4500% |
+
+Geometry groups overlap; these fractions are not a partition. The trace is
+normalized by the complete baseline stiffness matrix. Localization also
+retains the worst correction and worst model mixed-strain witnesses. This
+is resolved discrete correction, not certified remaining continuum error.
+It does not justify repeating the earlier literal-curve-edge-only recipe.
+
+The nested-refinement research helper now optionally ranks complete periodic
+stars by measured element-score sum per added-node upper bound. Its default
+ordering and every quality, overlap, count, geometry and periodic guard stay
+unchanged. A disjoint-star budget regression proves that the measured score
+can select a shorter high-score star instead of the longest edge. All eleven
+nested-refinement controls pass. No product Meshers API is added.
+
+Job 50 independently replays both positive-rule localization arrays and all
+geometry-group shares, then uses the six-load normalized trace for one ranked
+preflight. It bisects 21,455 parent cells through 4,723 accepted periodic
+orbits. The selected 15.2008% of parents carry 88.80881% of the measured
+score. Final counts are 249,999 nodes and 162,599 tets, within unchanged caps.
+Quality is 0.10003495, sampled Jacobian minimum is 2.47990e-7, and distance
+remains 0.0006492808. Volume changes by 6.67e-16 relative. Geometry and the
+quadratic base reproduce within 4.45e-16. Periodicity, coherent facets and
+the original pin node 4847 are preserved. The unchanged cubic function span
+and included old quadratic space retain the old augmented space.
+
+Job 51 captures the actual reduced operator without solving. It has 740,964
+mesh unknowns and 58,642,444 nonzeros, with 706,673,188 CSR bytes. Peak RSS is
+5.394 GiB under the unchanged 8 GiB watchdog. This is mesh-operator assembly,
+not proof that coupling columns and AMG together fit. Job 52 independently
+replays all child nodal geometry and field values, score coverage, sampled
+geometry and periodic base fields from saved arrays. Maximum nodal replay
+error is 1.12e-16. All new meshes and arrays remain saved, with hashes.
+
+Next is one coupled-force and AMG resource preflight on this ranked space.
+The saved prolongation is the old coupled field's quadratic base, not a new
+Tet10 equilibrium solution. Account for its six-load residual through a
+general coupled correction or fresh macro solves; do not reuse the earlier
+formula that assumes an equilibrated base. Retain the complete modal field,
+fixed cubic span, original pin, 8 GiB and 250,000-node/tet limits. Read those
+checks before choosing any solve. No new accuracy result or reference is
+promoted; the last audited coupled disagreement remains 1.826184% across
+all 24 models. Gyroid and spinodoid actual-comparator gaps remain open, and
+the repeated Mac Schwarz result stands. The full four-case goal is active.
+
+
 ## Audited coupled lattice correction, 24 October 2026
 
 Jobs 41 to 43 establish a consistent quadrature and resource path before any

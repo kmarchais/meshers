@@ -1,5 +1,13 @@
 # Meshers project tracking
 
+Correction-energy localization now distinguishes complete curve-vertex
+neighborhoods from literal curve edges. One measured-score-per-node nested
+preflight selects parents carrying 88.8088% of the resolved six-load score
+and passes geometry at 249,999 nodes. Actual reduced assembly fits at
+5.394 GiB, without a solve. Independent saved-array replay passes. Next is
+coupling/AMG resource validation; no new accuracy or reference is claimed.
+The last coupled 24-model disagreement remains 1.826184%.
+
 The coupled parent23 reference investigation now passes complete-field,
 positive-quadrature, periodic, pin and freshly reassembled equilibrium audits.
 Its six fresh auxiliary responses fit the unchanged 8 GiB resource ceiling.
