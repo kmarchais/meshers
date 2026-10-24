@@ -1,5 +1,18 @@
 # Adaptive and quadratic implicit meshing: results
 
+## Analytic topology coverage, 24 October 2026
+
+Eight saved Tet4 cases pass fresh replay, including all four study specimens
+and four new analytic geometries. A torus and separated spheres initially
+fail only the 1% volume gate. One analytic volume/area-derived tolerance each
+reduces deficits to 0.230699% and 0.464510%. A hollow shell passes directly.
+The fused sharp octahedron fails reverse distance 0.002418269. Its exact
+named-plane route passes with 13,488 tets, minimum quality 0.317878 and sampled
+distance below 8.41e-17. A production regression now protects four-plane
+corners. No native algorithm, study reference or comparative timing claim
+changes. See [full evidence](TOPOLOGY_COVERAGE.md), including auditor/source
+provenance failures and their corrections. Universal input support remains open.
+
 ## Recovered linear coverage, 24 October 2026
 
 The resumed failure investigation corrects the native admission gap reported

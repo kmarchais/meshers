@@ -1,0 +1,10 @@
+/Users/kmarchais/dev/meshers/.local-work/macbook-runtime/venv/lib/python3.12/site-packages/fedoo/core/base.py:80: UserWarning: WARNING: no fast direct sparse solver has been found. Consider installing pypardiso (Intel) or python-mumps (any platform) to improve computation performance
+  warnings.warn(
+octahedron: rejected; 61302 tets; distance 0.002418269062892108; volume error -0.00027430902623148956
+Traceback (most recent call last):
+  File "/Users/kmarchais/dev/meshers/experiments/adaptive/topology_coverage.py", line 145, in <module>
+    main()
+  File "/Users/kmarchais/dev/meshers/experiments/adaptive/topology_coverage.py", line 141, in main
+    assert row['qualified'], 'Read result.json for the supported-input failure'
+           ~~~^^^^^^^^^^^^^
+AssertionError: Read result.json for the supported-input failure

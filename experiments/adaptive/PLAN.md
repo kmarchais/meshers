@@ -1,5 +1,24 @@
 # Adaptive implicit meshing: plan and status
 
+## Broader topology and sharp-feature controls, 24 October 2026
+
+Jobs 122–134 establish additional failure coverage without a native patch.
+The Mac suite passes 143 tests with one optional skip. Torus and separated
+spheres expose volume misses despite distance admission; one tolerance derived
+from exact volume/area each admits them. The hollow shell passes directly.
+The fused octahedron misses reverse distance; its identical-domain eight-plane
+constraint representation passes exactly, with a new production regression.
+Job 132 replays all eight saved geometries, including the unchanged four-study
+fixtures. Source-copy restoration and archive checks preserve replayability.
+See [topology coverage](TOPOLOGY_COVERAGE.md) for every failure and limit.
+
+Next use the fused octahedron as a concrete feature-handling red control before
+any proposed native change. Do not tune another resolution sweep, relax reverse
+distance, or treat tie-gradient averaging as crease preservation. Keep the exact
+named-plane control and all four original specimens. The admitted routes do
+not establish universal scalar-field support or solve the missing actual
+Gyroid/spinodoid comparators and lattice reference problem.
+
 ## Failure coverage after interruption, 24 October 2026
 
 Kevin prioritizes treating failures before optimization. Jobs 115–120 reproduce

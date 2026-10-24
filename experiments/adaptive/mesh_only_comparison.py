@@ -214,6 +214,9 @@ def main():
     paths.extend(source/(args.case+suffix) for suffix in ('-samples.npz','-specimen.json'))
     hashes={str(p):w.digest(p) for p in paths}
     w.save(args.run/'analysis-inputs.json',hashes)
+    for index,path in enumerate(paths):
+        if path.suffix=='.py':
+            shutil.copyfile(path,args.run/f'input-{index}-{path.name}')
     w.save(args.run/'manifest.json',dict(inputs=hashes,platform=platform.platform(),architecture=platform.machine(),
         numerical_thread_policy=w.NUMERICAL_THREAD_POLICY,memory_bytes=w.MEMORY,worker_timeout_s=300,
         tetrahedron_cap=w.CAP,node_cap=250000,threads=1,packages={n:importlib.metadata.version(n) for n in ('meshers','microgen','mmgpy','numpy','scipy','pyvista','vtk')},

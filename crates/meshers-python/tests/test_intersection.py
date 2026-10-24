@@ -20,6 +20,39 @@ def volume(mesh):
     return v.sum()
 
 
+def test_octahedron_preserves_four_plane_corners_and_exact_volume():
+    from itertools import product
+
+    planes = {}
+    signs = tuple(product((1, -1), repeat=3))
+    for index, normal in enumerate(signs):
+
+        def plane(x, y, z, normal=normal):
+            return (normal[0] * x + normal[1] * y + normal[2] * z - 0.35) / np.sqrt(3)
+
+        planes[f"plane{index}"] = plane
+    mesh = meshers.generate_intersection(
+        planes,
+        bounds=(-0.5, 0.5) * 3,
+        cells=24,
+        geometry_tolerance=0.002,
+        minimum_quality=0.1,
+        max_tetrahedra=250000,
+        optimize_passes=1,
+    )
+    assert abs(volume(mesh) - 4 * 0.35**3 / 3) < 1e-12
+    assert mesh.diagnostics["minimum_mmg_quality"] >= 0.1
+    assert len(mesh.feature_edges) > 0
+    for corner in 0.35 * np.concatenate((np.eye(3), -np.eye(3))):
+        index = np.argmin(np.linalg.norm(mesh.points - corner, axis=1))
+        assert np.linalg.norm(mesh.points[index] - corner) < 1e-12
+        assert int(mesh.constraint_masks[index]).bit_count() == 4
+    for index, normal in enumerate(signs):
+        faces = mesh.surface_for(f"plane{index}")
+        assert len(faces) > 0
+        assert np.max(np.abs(mesh.points[faces] @ normal - 0.35)) < 1e-12
+
+
 @pytest.mark.skipif(
     getattr(meshers._meshers, "MAX_CONSTRAINTS", 8) < 32, reason="optional wide-constraints feature"
 )

@@ -1,0 +1,111 @@
+{
+  "cases": [
+    {
+      "case": "torus",
+      "directory": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-topology-torus-volume-v1",
+      "nodes": 17687,
+      "elements": 76214,
+      "sampled_distance": 0.00040434809761992485,
+      "relative_volume_error": -0.002306991320327745,
+      "minimum_quality": 0.3989007696671948,
+      "qualified": true
+    },
+    {
+      "case": "shell",
+      "directory": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-topology-shell-v1",
+      "nodes": 2513,
+      "elements": 10275,
+      "sampled_distance": 0.001443754185987801,
+      "relative_volume_error": -0.003347391405037259,
+      "minimum_quality": 0.43698031639939905,
+      "qualified": true
+    },
+    {
+      "case": "disjoint",
+      "directory": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-topology-disjoint-volume-v1",
+      "nodes": 5333,
+      "elements": 22597,
+      "sampled_distance": 0.0004940240726171192,
+      "relative_volume_error": -0.004645103925659311,
+      "minimum_quality": 0.42037932392743443,
+      "qualified": true
+    },
+    {
+      "case": "octahedron",
+      "directory": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-topology-octahedron-named-v1",
+      "nodes": 3451,
+      "elements": 13488,
+      "sampled_distance": 7.971975713748535e-17,
+      "relative_volume_error": 2.220446049250313e-16,
+      "minimum_quality": 0.31787845737024656,
+      "qualified": true
+    },
+    {
+      "case": "gyroid",
+      "directory": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-mesh-only-gyroid-repeated-v1/repeat-0-meshers-tet4-24",
+      "nodes": 17647,
+      "elements": 72757,
+      "sampled_distance": 0.0015839886333110064,
+      "relative_volume_error": 0.0018912144339480186,
+      "minimum_quality": 0.1502542765245815,
+      "qualified": true
+    },
+    {
+      "case": "schwarz-solid",
+      "directory": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-mesh-only-schwarz-repeated-v1/repeat-0-meshers-tet4-24",
+      "nodes": 19004,
+      "elements": 90792,
+      "sampled_distance": 0.00189405995873882,
+      "relative_volume_error": 8.571779297050774e-05,
+      "minimum_quality": 0.39971373787545944,
+      "qualified": true
+    },
+    {
+      "case": "spinodoid",
+      "directory": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-spinodoid-tet4-coverage-v1/repeat-0-meshers-tet4-historical32",
+      "nodes": 16732,
+      "elements": 72528,
+      "sampled_distance": 0.0018504192719693336,
+      "relative_volume_error": 0.00044599662882216506,
+      "minimum_quality": 0.23284408222228448,
+      "qualified": true
+    },
+    {
+      "case": "smooth-lattice",
+      "directory": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-lattice-tet4-coverage-v1/repeat-0-meshers-tet4-historical32",
+      "nodes": 48077,
+      "elements": 218239,
+      "sampled_distance": 0.0017687005329694008,
+      "relative_volume_error": -0.004291234174736314,
+      "minimum_quality": 0.17190183875172857,
+      "qualified": true
+    }
+  ],
+  "inputs": {
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/verify_topology_coverage.py": "1c25cab5bf9849171cdbd4756aad73895ed9da3b5bdb717d08aee2c5c60d0ede",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/topology_coverage.py": "8ef26911066da0e07dba2f1a2b769a181ef36fd4176797934ae8bf8dce20c981",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/microgen_workflow.py": "073f615481feeae8bb9142d325d9ae39251ca1e1aa2d1376f5e4f88a19aec872",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/scorecard.py": "8f26256c7df0e84c9f35cdd71bf4f95a74e072d45469002b213c5dcd4f1bab2a",
+    "/Users/kmarchais/dev/meshers/crates/meshers-python/python/meshers/_meshers.abi3.so": "8565629a92065d9c852e6fe21511c0e2b7325b6fc3ee84c7d32116ffe3407efe",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-topology-torus-volume-v1/result.json": "c224c7e788e7901cb77294ca83232b0146a06cd988f0467509f4f70986ce634b",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-topology-torus-volume-v1/mesh.npz": "fe4d6a1db73094b8f5120f4c8ddebdefc1162060807e182bc280f75e21c67fa1",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-topology-shell-v1/result.json": "b5b944003f09f5d468cb5df89157fc5373ce9a4117ca98433fba48d9ad3e44f6",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-topology-shell-v1/mesh.npz": "0e13d4a0914946e19287b88b4c1fbf0522febfce7a071c4395d3990e69f5c1c3",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-topology-disjoint-volume-v1/result.json": "6a8663df44422543750762aebde627de673d78b3584520308eb8c6e69cd88edb",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-topology-disjoint-volume-v1/mesh.npz": "6a10a090c639a65ac64e894f41050044b6778fd203f1e790f08a89d7e8cf3d29",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-topology-octahedron-named-v1/result.json": "53b4a23d3648eeffcf900ee0c0892815db6f881ad5e75d98f0ad67a48aa7476f",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-topology-octahedron-named-v1/mesh.npz": "184da68beda22d70a432782597a95a2b9c08db61682e51adfa13560eeb0709d7",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-mesh-only-gyroid-repeated-v1/repeat-0-meshers-tet4-24/result.json": "07f943a542ebb0b4e4ac41678f372c6064d94d4769d27f0b62705d2782d0941e",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-mesh-only-gyroid-repeated-v1/repeat-0-meshers-tet4-24/mesh.npz": "0b09bebf49b50d7305372df3a323973a1a40e802245c91246f123d9028fe5f5b",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-mesh-only-schwarz-repeated-v1/repeat-0-meshers-tet4-24/result.json": "9ce967a11a9eef46bc296078073916e03dc88b595e947750b462a21716f8eaa6",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-mesh-only-schwarz-repeated-v1/repeat-0-meshers-tet4-24/mesh.npz": "60f885e202b7727c6c94e5f7aa7ff6423a51f95f5a8a45fdb8db01ec70022311",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-spinodoid-tet4-coverage-v1/repeat-0-meshers-tet4-historical32/result.json": "8f93d67d8ab416a27bc7a4ebc70073b671655b65c1319df2b71b9a7cdef8577b",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-spinodoid-tet4-coverage-v1/repeat-0-meshers-tet4-historical32/mesh.npz": "ace00797498343729b2b11c2ab0bb3de78ff40228e5db763cfbafbfb4c16fbc8",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-lattice-tet4-coverage-v1/repeat-0-meshers-tet4-historical32/result.json": "3f23a408237e2f8906c1775a4368aa8473e3078a9abb9c2bfb0540e33ee8db8b",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-lattice-tet4-coverage-v1/repeat-0-meshers-tet4-historical32/mesh.npz": "4b68d8c3de770102c26348e0888f719a6ebbf3663cc32b08dac0886b75f3e1a2"
+  },
+  "native_changed": false,
+  "new_equilibrium_solve": false,
+  "reference_promoted": false,
+  "comparative_timing_claim": false
+}

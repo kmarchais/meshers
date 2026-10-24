@@ -1,5 +1,18 @@
 # Meshers project tracking
 
+The failure-first continuation now has an eight-case saved-artifact replay:
+all four fixed specimens plus torus, hollow shell, separated spheres and a
+sharp octahedron. New curved controls required independent volume admission;
+one analytic volume/area-derived tolerance each resolves the torus and sphere
+deficits. The fused octahedron still misses reverse distance, while the exact
+named-plane route passes and has a production corner regression. No native
+algorithm change or broader comparative win is claimed. See
+[topology coverage](experiments/adaptive/TOPOLOGY_COVERAGE.md).
+Next investigate the remaining fused-field feature miss using its exact-domain
+named control; preserve all four original cases. Nine missing historical
+source copies were restored by recorded hash, and new runs archive Python
+inputs. The complete objective remains open.
+
 Current priority is failure coverage, at Kevin's request, before optimization.
 The resumed session recovered two omitted historical Tet4 recipes. Lattice
 and spinodoid each pass three fresh native Mac generations, including two

@@ -31,6 +31,35 @@ constrained optimization preserve surface identities and feature topology.
 If joint snapping pinches the solid, it is backed out and the same geometry/grid
 is retried; `reverted_snap_vertices` records the rollback.
 
+## Preserve sharp corners with named planes
+
+Keep sharp faces separate when their edges and corners must be represented.
+For example, an octahedron satisfies eight plane inequalities:
+
+```python
+from itertools import product
+
+planes = {}
+for index, (a, b, c) in enumerate(product((1, -1), repeat=3)):
+    def plane(x, y, z, a=a, b=b, c=c):
+        return (a*x + b*y + c*z - 0.35) / np.sqrt(3)
+    planes[f"plane{index}"] = plane
+
+mesh = meshers.generate_intersection(
+    planes, bounds=(-0.5, 0.5)*3, cells=24,
+    geometry_tolerance=0.002, minimum_quality=0.1,
+    max_tetrahedra=250000, optimize_passes=1,
+)
+```
+
+Four faces meet at each octahedron corner. The regression checks that all six
+corners survive, every boundary triangle lies on its assigned plane, and volume
+matches the analytic value. The equivalent fused scalar field
+`abs(x) + abs(y) + abs(z) - 0.35` does not label those features. A small forward
+surface estimate for that representation does not establish reverse distance
+from the exact corners to the mesh. Check both directions when qualifying a
+geometry, and check volume separately.
+
 ## Parameter maps and periodicity
 
 The optional `coordinate_map` returns three expressions in parameter coordinates.

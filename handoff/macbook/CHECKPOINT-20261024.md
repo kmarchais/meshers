@@ -1,5 +1,18 @@
 # Native MacBook continuation, 24 October 2026
 
+Latest goal continuation broadens failure coverage with torus, hollow shell,
+separated spheres and sharp octahedron controls. Jobs 122–134 are terminal.
+The native suite passes 143 tests with one optional skip; 11 focused controls
+pass after the new four-plane-corner regression. Job 132 replays eight saved
+geometries, including the original four fixed specimens. No native binary
+changed and no FE solve ran. The fused octahedron remains a reverse-distance
+failure; its identical-domain named-plane control passes exactly. Use that
+red/control pair before a feature-handling change. See
+[topology coverage](../../experiments/adaptive/TOPOLOGY_COVERAGE.md).
+Nine missing historical test-source copies were restored by exact recorded
+hash, with a receipt. New runs archive all Python inputs. The goal is active
+and unachieved; keep actual comparator and lattice reference gaps in scope.
+
 Latest continuation after the interruption prioritizes failures before
 optimization. Jobs 115–121 recover omitted historical Tet4 admission routes
 for lattice and spinodoid. Each passes three fresh Mac generations, four
