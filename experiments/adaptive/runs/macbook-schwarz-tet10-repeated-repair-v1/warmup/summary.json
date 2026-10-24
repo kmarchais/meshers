@@ -1,0 +1,564 @@
+{
+  "case": "schwarz-solid",
+  "stiffness_target": 0.001,
+  "both_pass_declared_reference_models": true,
+  "live_workflow_timing": true,
+  "repetitions": 1,
+  "warmups": 0,
+  "science_audited_workflow_s": {
+    "microgen": 132.54461941693444,
+    "meshers": 19.223179499967955
+  },
+  "generation_lift_solve_s": {
+    "microgen": 120.02703116589691,
+    "meshers": 17.52703333296813
+  },
+  "single_pair_workflow_ratio_microgen_over_meshers": 6.895041448120244,
+  "single_pair_phase_ratio_microgen_over_meshers": 6.848108797746597,
+  "comparison_reports": {
+    "microgen": {
+      "inputs": {
+        "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-schwarz-tet10-repeated-repair-v1/warmup/microgen-tet10/result.json": "171d6a2e986f5d6d0affb21dac414bb0fc62f6c78e2a1bb0ae79499d2f0a855c",
+        "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/g3-microgen-defaults-v4/summary.json": "614c5c123eaae0ce0455b07b1f5c8bcf451b687cabca45f93521aaa469b05f35"
+      },
+      "script_sha256": "07d2522ed9196022e6fafb2a388b99e7c57c0586a627c64d47cf261d48eb5aec",
+      "scope": "Previously justified reference comparison; not continuum certification",
+      "second_tensor_is_normalization": true,
+      "difference": {
+        "worst_relative_strain_energy_difference": 0.0006204341398003726,
+        "relative_tensor_frobenius_difference": 0.0005333232376642442,
+        "relative_energy_difference_eigenvalues": [
+          -0.0006204341398003726,
+          -0.0004702499076884772,
+          -0.00046050121746924426,
+          -0.0001289692684538079,
+          -9.811694045086621e-05,
+          -4.9478425408311465e-05
+        ]
+      },
+      "declared_order_models": [
+        {
+          "length_proxy": "uniform_seed",
+          "length_ratio": 0.8,
+          "assumed_order": 1,
+          "difference": {
+            "worst_relative_strain_energy_difference": 0.0005676293417339169,
+            "relative_tensor_frobenius_difference": 0.0003062670779002115,
+            "relative_energy_difference_eigenvalues": [
+              -0.00036243705118846564,
+              -0.0001728434753750112,
+              -0.0001597552210912877,
+              0.0004803284129262642,
+              0.0005100357452514705,
+              0.0005676293417339169
+            ]
+          }
+        },
+        {
+          "length_proxy": "uniform_seed",
+          "length_ratio": 0.8,
+          "assumed_order": 2,
+          "difference": {
+            "worst_relative_strain_energy_difference": 0.0005347987595988261,
+            "relative_tensor_frobenius_difference": 0.00044991353912485454,
+            "relative_energy_difference_eigenvalues": [
+              -0.0005347987595988261,
+              -0.00037204703328869284,
+              -0.00036116070764450107,
+              6.978700532988528e-05,
+              9.964389140234908e-05,
+              0.0001527209958280748
+            ]
+          }
+        },
+        {
+          "length_proxy": "uniform_seed",
+          "length_ratio": 0.8,
+          "assumed_order": 3,
+          "difference": {
+            "worst_relative_strain_energy_difference": 0.0005921761312342262,
+            "relative_tensor_frobenius_difference": 0.0005054192482998374,
+            "relative_energy_difference_eigenvalues": [
+              -0.0005921761312342262,
+              -0.0004379247786565945,
+              -0.0004277988051349394,
+              -6.398538097335268e-05,
+              -3.355020311163641e-05,
+              1.679874052101829e-05
+            ]
+          }
+        },
+        {
+          "length_proxy": "uniform_seed",
+          "length_ratio": 0.8,
+          "assumed_order": 4,
+          "difference": {
+            "worst_relative_strain_energy_difference": 0.0006204341398003295,
+            "relative_tensor_frobenius_difference": 0.0005333232376641648,
+            "relative_energy_difference_eigenvalues": [
+              -0.0006204341398003295,
+              -0.0004702499076883633,
+              -0.0004605012174691068,
+              -0.00012896926845378504,
+              -9.811694045074691e-05,
+              -4.9478425408453794e-05
+            ]
+          }
+        },
+        {
+          "length_proxy": "element_density",
+          "length_ratio": 0.7974307051506857,
+          "assumed_order": 1,
+          "difference": {
+            "worst_relative_strain_energy_difference": 0.0005557824563260258,
+            "relative_tensor_frobenius_difference": 0.00030949965586720264,
+            "relative_energy_difference_eigenvalues": [
+              -0.000367321713940234,
+              -0.00017850706976999127,
+              -0.00016548032777037412,
+              0.0004685797590002285,
+              0.0004982675594380579,
+              0.0005557824563260258
+            ]
+          }
+        },
+        {
+          "length_proxy": "element_density",
+          "length_ratio": 0.7974307051506857,
+          "assumed_order": 2,
+          "difference": {
+            "worst_relative_strain_energy_difference": 0.0005372521846651163,
+            "relative_tensor_frobenius_difference": 0.0004522435933146943,
+            "relative_energy_difference_eigenvalues": [
+              -0.0005372521846651163,
+              -0.0003748697648305972,
+              -0.0003640156064134513,
+              6.402595481491886e-05,
+              9.390083878372666e-05,
+              0.0001468783516184959
+            ]
+          }
+        },
+        {
+          "length_proxy": "element_density",
+          "length_ratio": 0.7974307051506857,
+          "assumed_order": 3,
+          "difference": {
+            "worst_relative_strain_energy_difference": 0.0005937959239075332,
+            "relative_tensor_frobenius_difference": 0.0005070111590357543,
+            "relative_energy_difference_eigenvalues": [
+              -0.0005937959239075332,
+              -0.0004397800116994968,
+              -0.00042967569025419074,
+              -6.772868279623755e-05,
+              -3.7272085896140784e-05,
+              1.2986200720404792e-05
+            ]
+          }
+        },
+        {
+          "length_proxy": "element_density",
+          "length_ratio": 0.7974307051506857,
+          "assumed_order": 4,
+          "difference": {
+            "worst_relative_strain_energy_difference": 0.0006216228535594523,
+            "relative_tensor_frobenius_difference": 0.0005345022981423943,
+            "relative_energy_difference_eigenvalues": [
+              -0.0006216228535594523,
+              -0.0004716077791554841,
+              -0.00046187487790859313,
+              -0.00013168697462345198,
+              -0.00010081503962423376,
+              -5.225484779114786e-05
+            ]
+          }
+        }
+      ],
+      "declared_order_difference_range": [
+        0.0005347987595988261,
+        0.0006216228535594523
+      ],
+      "passes_one_percent_under_all_declared_models": true,
+      "stiffness_target": 0.001,
+      "passes_target_under_all_declared_models": true
+    },
+    "meshers": {
+      "inputs": {
+        "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-schwarz-tet10-repeated-repair-v1/warmup/meshers-tet10/result.json": "d9cdb1f078b5610b65bb798cecd37e2e3d0667e91096fc0fe27fb272c209a6e7",
+        "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/g3-microgen-defaults-v4/summary.json": "614c5c123eaae0ce0455b07b1f5c8bcf451b687cabca45f93521aaa469b05f35"
+      },
+      "script_sha256": "07d2522ed9196022e6fafb2a388b99e7c57c0586a627c64d47cf261d48eb5aec",
+      "scope": "Previously justified reference comparison; not continuum certification",
+      "second_tensor_is_normalization": true,
+      "difference": {
+        "worst_relative_strain_energy_difference": 0.0003174801821283267,
+        "relative_tensor_frobenius_difference": 0.00015250431925688848,
+        "relative_energy_difference_eigenvalues": [
+          0.00012814293730985563,
+          0.0001498045278960953,
+          0.0001515017579953988,
+          0.0003147219488929214,
+          0.0003163926868131928,
+          0.0003174801821283267
+        ]
+      },
+      "declared_order_models": [
+        {
+          "length_proxy": "uniform_seed",
+          "length_ratio": 0.8,
+          "assumed_order": 1,
+          "difference": {
+            "worst_relative_strain_energy_difference": 0.0009377826695039707,
+            "relative_tensor_frobenius_difference": 0.0004503219193008362,
+            "relative_energy_difference_eigenvalues": [
+              0.0003783725927014227,
+              0.00044235232386964575,
+              0.0004473654874773966,
+              0.0009296302849674397,
+              0.0009345684049255214,
+              0.0009377826695039707
+            ]
+          }
+        },
+        {
+          "length_proxy": "uniform_seed",
+          "length_ratio": 0.8,
+          "assumed_order": 2,
+          "difference": {
+            "worst_relative_strain_energy_difference": 0.0005207733158289888,
+            "relative_tensor_frobenius_difference": 0.00025013060716976606,
+            "relative_energy_difference_eigenvalues": [
+              0.0002101716528666389,
+              0.00024570298431592037,
+              0.00024848697598116326,
+              0.0005162479750999685,
+              0.0005189890989258575,
+              0.0005207733158289888
+            ]
+          }
+        },
+        {
+          "length_proxy": "uniform_seed",
+          "length_ratio": 0.8,
+          "assumed_order": 3,
+          "difference": {
+            "worst_relative_strain_energy_difference": 0.00038412456521262476,
+            "relative_tensor_frobenius_difference": 0.0001845109148938525,
+            "relative_energy_difference_eigenvalues": [
+              0.00015503611560817738,
+              0.00018124461854545113,
+              0.00018329811773345559,
+              0.0003807871100086254,
+              0.000382808698866738,
+              0.00038412456521262476
+            ]
+          }
+        },
+        {
+          "length_proxy": "uniform_seed",
+          "length_ratio": 0.8,
+          "assumed_order": 4,
+          "difference": {
+            "worst_relative_strain_energy_difference": 0.00031748018212845417,
+            "relative_tensor_frobenius_difference": 0.00015250431925696562,
+            "relative_energy_difference_eigenvalues": [
+              0.0001281429373099071,
+              0.00014980452789617715,
+              0.0001515017579955599,
+              0.00031472194889292144,
+              0.0003163926868130654,
+              0.00031748018212845417
+            ]
+          }
+        },
+        {
+          "length_proxy": "element_density",
+          "length_ratio": 0.7974307051506857,
+          "assumed_order": 1,
+          "difference": {
+            "worst_relative_strain_energy_difference": 0.0009258772568862987,
+            "relative_tensor_frobenius_difference": 0.00044460779837249883,
+            "relative_energy_difference_eigenvalues": [
+              0.0003735716976840944,
+              0.0004367392820492764,
+              0.00044168880521447233,
+              0.0009178284641959603,
+              0.0009227038359261321,
+              0.0009258772568862987
+            ]
+          }
+        },
+        {
+          "length_proxy": "element_density",
+          "length_ratio": 0.7974307051506857,
+          "assumed_order": 2,
+          "difference": {
+            "worst_relative_strain_energy_difference": 0.00051490001171539,
+            "relative_tensor_frobenius_difference": 0.0002473104032154152,
+            "relative_energy_difference_eigenvalues": [
+              0.00020780205540150021,
+              0.00024293268860518645,
+              0.00024568528316082865,
+              0.0005104257341432754,
+              0.0005131359276230019,
+              0.00051490001171539
+            ]
+          }
+        },
+        {
+          "length_proxy": "element_density",
+          "length_ratio": 0.7974307051506857,
+          "assumed_order": 3,
+          "difference": {
+            "worst_relative_strain_energy_difference": 0.0003802911764716583,
+            "relative_tensor_frobenius_difference": 0.0001826699557674603,
+            "relative_energy_difference_eigenvalues": [
+              0.0001534892763730182,
+              0.0001794362426971822,
+              0.0001814692493324017,
+              0.0003769870402214552,
+              0.0003789884468621718,
+              0.0003802911764716583
+            ]
+          }
+        },
+        {
+          "length_proxy": "element_density",
+          "length_ratio": 0.7974307051506857,
+          "assumed_order": 4,
+          "difference": {
+            "worst_relative_strain_energy_difference": 0.0003146881331086912,
+            "relative_tensor_frobenius_difference": 0.00015116336129696213,
+            "relative_energy_difference_eigenvalues": [
+              0.00012701620798910167,
+              0.000148487305222776,
+              0.0001501696094688009,
+              0.0003119541645570666,
+              0.0003136102046764246,
+              0.0003146881331086912
+            ]
+          }
+        }
+      ],
+      "declared_order_difference_range": [
+        0.0003146881331086912,
+        0.0009377826695039707
+      ],
+      "passes_one_percent_under_all_declared_models": true,
+      "stiffness_target": 0.001,
+      "passes_target_under_all_declared_models": true
+    }
+  },
+  "explicit_interior_repair": true,
+  "timing_scope": "Fresh VTK/MMG parent plus immediately elevated fresh parent, versus fresh native mesh; science-audited total charges parent and final audits; subtotal uses recorded generation/lift/solve timers and retains checkpoint I/O within those phases",
+  "scope": "Single same-host pair at supplementary 0.1 percent target, explicit one-pass Microgen override plus manual straight Tet10 and direct fedoo, not default/public Microgen Tet10 or a repeated/four-fixture advantage",
+  "inputs_unchanged": true,
+  "workers": {
+    "controls": {
+      "returncode": 0,
+      "limit_failure": null,
+      "peak_rss_bytes": 287539200,
+      "wall_s": 1.8246409160783514,
+      "memory_bytes": 8589934592,
+      "memory_enforcement": "process-tree-rss-watchdog",
+      "rss_poll_interval_s": 0.25,
+      "platform": "darwin",
+      "numerical_thread_policy": {
+        "environment": {
+          "OPENBLAS_NUM_THREADS": "1",
+          "OMP_NUM_THREADS": "1",
+          "MKL_NUM_THREADS": "1",
+          "VECLIB_MAXIMUM_THREADS": "1",
+          "RAYON_NUM_THREADS": "1"
+        },
+        "accelerate_blas_threading": 1,
+        "accelerate_scope": "calling thread"
+      }
+    },
+    "microgen-parent": {
+      "returncode": 0,
+      "limit_failure": null,
+      "peak_rss_bytes": 874102784,
+      "wall_s": 6.050615333020687,
+      "memory_bytes": 8589934592,
+      "memory_enforcement": "process-tree-rss-watchdog",
+      "rss_poll_interval_s": 0.25,
+      "platform": "darwin",
+      "numerical_thread_policy": {
+        "environment": {
+          "OPENBLAS_NUM_THREADS": "1",
+          "OMP_NUM_THREADS": "1",
+          "MKL_NUM_THREADS": "1",
+          "VECLIB_MAXIMUM_THREADS": "1",
+          "RAYON_NUM_THREADS": "1"
+        },
+        "accelerate_blas_threading": 1,
+        "accelerate_scope": "calling thread"
+      }
+    },
+    "microgen-repair": {
+      "returncode": 0,
+      "limit_failure": null,
+      "peak_rss_bytes": 473825280,
+      "wall_s": 3.126983750029467,
+      "memory_bytes": 8589934592,
+      "memory_enforcement": "process-tree-rss-watchdog",
+      "rss_poll_interval_s": 0.25,
+      "platform": "darwin",
+      "numerical_thread_policy": {
+        "environment": {
+          "OPENBLAS_NUM_THREADS": "1",
+          "OMP_NUM_THREADS": "1",
+          "MKL_NUM_THREADS": "1",
+          "VECLIB_MAXIMUM_THREADS": "1",
+          "RAYON_NUM_THREADS": "1"
+        },
+        "accelerate_blas_threading": 1,
+        "accelerate_scope": "calling thread"
+      }
+    },
+    "microgen-tet10": {
+      "returncode": 0,
+      "limit_failure": null,
+      "peak_rss_bytes": 5171347456,
+      "wall_s": 125.9566685409518,
+      "memory_bytes": 8589934592,
+      "memory_enforcement": "process-tree-rss-watchdog",
+      "rss_poll_interval_s": 0.25,
+      "platform": "darwin",
+      "numerical_thread_policy": {
+        "environment": {
+          "OPENBLAS_NUM_THREADS": "1",
+          "OMP_NUM_THREADS": "1",
+          "MKL_NUM_THREADS": "1",
+          "VECLIB_MAXIMUM_THREADS": "1",
+          "RAYON_NUM_THREADS": "1"
+        },
+        "accelerate_blas_threading": 1,
+        "accelerate_scope": "calling thread"
+      }
+    },
+    "meshers-tet10": {
+      "returncode": 0,
+      "limit_failure": null,
+      "peak_rss_bytes": 2410708992,
+      "wall_s": 20.445738167036325,
+      "memory_bytes": 8589934592,
+      "memory_enforcement": "process-tree-rss-watchdog",
+      "rss_poll_interval_s": 0.25,
+      "platform": "darwin",
+      "numerical_thread_policy": {
+        "environment": {
+          "OPENBLAS_NUM_THREADS": "1",
+          "OMP_NUM_THREADS": "1",
+          "MKL_NUM_THREADS": "1",
+          "VECLIB_MAXIMUM_THREADS": "1",
+          "RAYON_NUM_THREADS": "1"
+        },
+        "accelerate_blas_threading": 1,
+        "accelerate_scope": "calling thread"
+      }
+    },
+    "microgen-audit": {
+      "returncode": 0,
+      "limit_failure": null,
+      "peak_rss_bytes": 902627328,
+      "wall_s": 2.0466744160512462,
+      "memory_bytes": 8589934592,
+      "memory_enforcement": "process-tree-rss-watchdog",
+      "rss_poll_interval_s": 0.25,
+      "platform": "darwin",
+      "numerical_thread_policy": {
+        "environment": {
+          "OPENBLAS_NUM_THREADS": "1",
+          "OMP_NUM_THREADS": "1",
+          "MKL_NUM_THREADS": "1",
+          "VECLIB_MAXIMUM_THREADS": "1",
+          "RAYON_NUM_THREADS": "1"
+        },
+        "accelerate_blas_threading": 1,
+        "accelerate_scope": "calling thread"
+      }
+    },
+    "microgen-reference": {
+      "returncode": 0,
+      "limit_failure": null,
+      "peak_rss_bytes": 208846848,
+      "wall_s": 0.9805580419488251,
+      "memory_bytes": 8589934592,
+      "memory_enforcement": "process-tree-rss-watchdog",
+      "rss_poll_interval_s": 0.25,
+      "platform": "darwin",
+      "numerical_thread_policy": {
+        "environment": {
+          "OPENBLAS_NUM_THREADS": "1",
+          "OMP_NUM_THREADS": "1",
+          "MKL_NUM_THREADS": "1",
+          "VECLIB_MAXIMUM_THREADS": "1",
+          "RAYON_NUM_THREADS": "1"
+        },
+        "accelerate_blas_threading": 1,
+        "accelerate_scope": "calling thread"
+      }
+    },
+    "meshers-audit": {
+      "returncode": 0,
+      "limit_failure": null,
+      "peak_rss_bytes": 355401728,
+      "wall_s": 1.907477332977578,
+      "memory_bytes": 8589934592,
+      "memory_enforcement": "process-tree-rss-watchdog",
+      "rss_poll_interval_s": 0.25,
+      "platform": "darwin",
+      "numerical_thread_policy": {
+        "environment": {
+          "OPENBLAS_NUM_THREADS": "1",
+          "OMP_NUM_THREADS": "1",
+          "MKL_NUM_THREADS": "1",
+          "VECLIB_MAXIMUM_THREADS": "1",
+          "RAYON_NUM_THREADS": "1"
+        },
+        "accelerate_blas_threading": 1,
+        "accelerate_scope": "calling thread"
+      }
+    },
+    "meshers-reference": {
+      "returncode": 0,
+      "limit_failure": null,
+      "peak_rss_bytes": 212484096,
+      "wall_s": 1.095498999929987,
+      "memory_bytes": 8589934592,
+      "memory_enforcement": "process-tree-rss-watchdog",
+      "rss_poll_interval_s": 0.25,
+      "platform": "darwin",
+      "numerical_thread_policy": {
+        "environment": {
+          "OPENBLAS_NUM_THREADS": "1",
+          "OMP_NUM_THREADS": "1",
+          "MKL_NUM_THREADS": "1",
+          "VECLIB_MAXIMUM_THREADS": "1",
+          "RAYON_NUM_THREADS": "1"
+        },
+        "accelerate_blas_threading": 1,
+        "accelerate_scope": "calling thread"
+      }
+    }
+  },
+  "artifact_sha256": {
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-schwarz-tet10-repeated-repair-v1/warmup/microgen-parent/result.json": "4a917d2dbb811c792dd541f60885251fee7c28bb95df389ef3726ed80935862b",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-schwarz-tet10-repeated-repair-v1/warmup/microgen-parent/mesh.npz": "4e3f91e8daefb13b8456d2ec2ebf6c034030dfd5e6746ef09be3a6a121006f25",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-schwarz-tet10-repeated-repair-v1/warmup/microgen-tet10/result.json": "171d6a2e986f5d6d0affb21dac414bb0fc62f6c78e2a1bb0ae79499d2f0a855c",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-schwarz-tet10-repeated-repair-v1/warmup/microgen-tet10/mesh.npz": "5b4244b04c34090da6349dd5fdeb4b2afb1083437e3e00c8e1a9724051ee0a28",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-schwarz-tet10-repeated-repair-v1/warmup/microgen-tet10/fields.npz": "80073d84a0ac40b437cc59dc4090c9b2a13365be0988bf010ac3e69a89633729",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-schwarz-tet10-repeated-repair-v1/warmup/meshers-tet10/result.json": "d9cdb1f078b5610b65bb798cecd37e2e3d0667e91096fc0fe27fb272c209a6e7",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-schwarz-tet10-repeated-repair-v1/warmup/meshers-tet10/mesh.npz": "dc92e7f1e6534c58903be3cf7d1b78eb8283b0ff038ca719856b671b2b6f3d27",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-schwarz-tet10-repeated-repair-v1/warmup/meshers-tet10/fields.npz": "408a8f3fe859df9825a2c0a2519ad08f87ab7884e58c24cd36ad2c963919c055",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-schwarz-tet10-repeated-repair-v1/warmup/microgen-repair/result.json": "852df145501c0a9e8f930f26e36a68656b634333526ecee39e979d312773b3dc",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-schwarz-tet10-repeated-repair-v1/warmup/microgen-repair/mesh.npz": "2f87c47162ebaa5049cbe91ed67b9a726e4f77aa4545da96d81783f80c45838e"
+  },
+  "native_first": false,
+  "elapsed_wall_s": 164.02141308784485,
+  "elapsed_monotonic_s": 164.0224157499615,
+  "wall_minus_monotonic_s": -0.0010026621166616678,
+  "timing_clock_consistent": true
+}

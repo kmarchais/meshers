@@ -44,7 +44,10 @@ def main():
     parser.add_argument("--run", type=Path, required=True)
     parser.add_argument("--output", type=Path, required=True)
     parser.add_argument("--source-ref")
+    parser.add_argument("--replay-geometry", action="store_true")
     args = parser.parse_args()
+    if args.replay_geometry:
+        workflow.imports()
     assert not args.output.exists()
     report = json.loads((args.run / "summary.json").read_text())
     assert report["repetitions"] == 5 and report["warmups_per_arm"] == 1
@@ -62,7 +65,7 @@ def main():
         verified_hashes += 1
     times = {metric: {arm: [] for arm in ("microgen", "meshers")}
         for metric in ("science_audited_workflow_s", "generation_lift_solve_s")}
-    checked = []
+    checked, geometry_replays = [], []
     maximum_reaction, maximum_energy, maximum_jump = 0., 0., 0.
     for index, pair in enumerate(report["pairs"]):
         phase = "warmup" if index == 0 else f"repeat-{index}"
@@ -87,6 +90,32 @@ def main():
             assert geometry["q_min_corner"] >= .1 and geometry["minimum_sampled_jacobian"] > 0
             assert geometry["projection_failed"] == 0 and "periodic" in row
             assert row["nodes"] <= 250000 and row["elements"] <= workflow.CAP
+            if args.replay_geometry:
+                from periodic import periodic_pairs
+                mesh = np.load(directory / f"{arm}-tet10/mesh.npz")
+                points, cells, surface = (mesh[key] for key in ("points", "tetrahedra", "surface"))
+                assert len(points) == row["nodes"] and len(cells) == row["elements"]
+                subdivisions = tuple(geometry["quadratic_reverse_subdivisions"])
+                replay = workflow.geometry(directory / f"{arm}-tet10", "schwarz-solid", points, cells, surface,
+                    reverse_subdivisions=subdivisions)
+                assert replay["geometry_admitted"]
+                for key in ("sampled_two_sided_max", "relative_volume_error", "q_min_corner", "minimum_sampled_jacobian"):
+                    np.testing.assert_allclose(replay[key], geometry[key], atol=1e-13, rtol=1e-12)
+                pairs, _, periodic = periodic_pairs(points, surface)
+                assert periodic == row["periodic"]
+                from homogenization import strain_tensor
+                fields = np.load(directory / f"{arm}-tet10/fields.npz")["displacement"]
+                assert fields.shape == (6, len(points), 3) and np.isfinite(fields).all()
+                jump_max = 0.
+                for load, engineering in enumerate(np.eye(6)):
+                    for axis, matching in enumerate(pairs):
+                        jump = fields[load, matching[:, 1]] - fields[load, matching[:, 0]]
+                        jump_max = max(jump_max, float(abs(jump - strain_tensor(engineering)[:, axis]).max(initial=0)))
+                assert jump_max < 1e-9
+                geometry_replays.append({"phase": phase, "arm": arm,
+                    "minimum_quality": replay["q_min_corner"], "sampled_distance": replay["sampled_two_sided_max"],
+                    "relative_volume_error": replay["relative_volume_error"], "periodic_caps_and_nodes_passed": True,
+                    "actual_six_load_periodic_jump_max": jump_max})
             assert len(row["solver_records"]) == 6
             assert max(load["relative_residual"] for load in row["solver_records"]) < 2e-9
             candidate = np.asarray(row["stiffness"])
@@ -97,6 +126,9 @@ def main():
             np.testing.assert_allclose([min(errors), max(errors)], comparison["declared_order_difference_range"], atol=1e-12, rtol=0)
             ranges[arm] = [min(errors), max(errors)]
             audit = json.loads((directory / "audits" / (arm + "-tet10.json")).read_text())
+            stress, energy = (np.asarray(audit[key]) for key in ("stress_integrated_stiffness", "energy_integrated_stiffness"))
+            np.testing.assert_allclose(np.linalg.norm(stress - candidate) / np.linalg.norm(stress), audit["reaction_relative_error"], atol=1e-15)
+            np.testing.assert_allclose(np.linalg.norm(stress - energy) / np.linalg.norm(stress), audit["hill_mandel_relative_error"], atol=1e-15)
             assert max(audit["reaction_relative_error"], audit["hill_mandel_relative_error"]) < 1e-7
             assert audit["periodic_jump_max"] < 1e-9
             maximum_reaction = max(maximum_reaction, audit["reaction_relative_error"])
@@ -106,6 +138,24 @@ def main():
             "meshers": rows["meshers"]["total_workflow_s"]}
         phases = {"microgen": parent["generation_s"] + rows["microgen"]["lift_and_conversion_s"] + rows["microgen"]["solve_s"],
             "meshers": rows["meshers"]["generation_s"] + rows["meshers"]["solve_s"]}
+        if saved.get("explicit_interior_repair", False):
+            from mmg_quality_localization import quality
+            repair = json.loads((directory / "microgen-repair/result.json").read_text())
+            original = np.load(directory / "microgen-parent/mesh.npz")
+            repaired = np.load(directory / "microgen-repair/mesh.npz")
+            for key in ("tetrahedra", "surface"):
+                np.testing.assert_array_equal(original[key], repaired[key])
+            boundary = np.unique(original["surface"])
+            np.testing.assert_array_equal(original["points"][boundary], repaired["points"][boundary])
+            points, cells = repaired["points"], repaired["tetrahedra"]
+            signed = np.linalg.det(points[cells[:, 1:]] - points[cells[:, :1]])
+            old_signed = np.linalg.det(original["points"][cells[:, 1:]] - original["points"][cells[:, :1]])
+            assert signed.min() > 0 and quality(points, cells).min() >= .1
+            np.testing.assert_allclose(signed.sum(), old_signed.sum(), atol=1e-12, rtol=0)
+            assert repair["qualified"] and repair["repair"]["remaining_bad_elements"] == 0
+            totals["microgen"] += repair["total_saved_mesh_study_s"]
+            phases["microgen"] += repair["repair_s"]
+        assert saved.get("explicit_interior_repair", False) == report.get("explicit_interior_repair", False)
         for metric, values in (("science_audited_workflow_s", totals), ("generation_lift_solve_s", phases)):
             assert values == saved[metric]
             if index:
@@ -128,6 +178,7 @@ def main():
         "measurement_source_ref": args.source_ref,
         "meshers_faster_in_every_measured_pair": verified_faster,
         "independent_generalized_eigenvalue_comparisons": 6 * 2 * 8, "pairs": checked,
+        "geometry_artifact_replays": geometry_replays,
         "maximum_reaction_relative_error": maximum_reaction, "maximum_hill_mandel_relative_error": maximum_energy,
         "maximum_periodic_jump": maximum_jump,
         "scope": "Independent frozen-record tensor, timing and provenance checks; not re-solving fields or continuum certification"})

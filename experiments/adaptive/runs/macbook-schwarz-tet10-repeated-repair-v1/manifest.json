@@ -1,0 +1,84 @@
+{
+  "inputs": {
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-schwarz-tet10-live-repair-v1/meshers-tet10/result.json": "248b75a53e9263d9a0cac2d7f22bad35a6d0c8a6b494457aa3d1ec9992bdfe0a",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-schwarz-tet10-live-repair-v1/meshers-tet10/mesh.npz": "dc92e7f1e6534c58903be3cf7d1b78eb8283b0ff038ca719856b671b2b6f3d27",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-schwarz-tet10-live-repair-v1/meshers-tet10/fields.npz": "408a8f3fe859df9825a2c0a2519ad08f87ab7884e58c24cd36ad2c963919c055",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-schwarz-tet10-live-repair-v1/microgen-parent/result.json": "0f3862cf5f9c74cbabea2ccfc2e9d9b1e509617b8b5e53dd94c3edec6abce31b",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-schwarz-tet10-live-repair-v1/microgen-parent/mesh.npz": "4e3f91e8daefb13b8456d2ec2ebf6c034030dfd5e6746ef09be3a6a121006f25",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-schwarz-tet10-live-repair-v1/microgen-tet10/result.json": "c88cc90c5b249460640734f8d82a001aa043a8c4838a108d4222e92f03217942",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-schwarz-tet10-live-repair-v1/microgen-tet10/mesh.npz": "5b4244b04c34090da6349dd5fdeb4b2afb1083437e3e00c8e1a9724051ee0a28",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-schwarz-tet10-live-repair-v1/microgen-tet10/fields.npz": "80073d84a0ac40b437cc59dc4090c9b2a13365be0988bf010ac3e69a89633729",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-schwarz-tet10-live-repair-v1/microgen-repair/result.json": "960f2ca03d24623a4a37286220e5a3a9e47de414dd5aefc467f2cfa2e7e4dfae",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-schwarz-tet10-live-repair-v1/microgen-repair/mesh.npz": "2f87c47162ebaa5049cbe91ed67b9a726e4f77aa4545da96d81783f80c45838e",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/schwarz_tet10_repeated.py": "39d9beccf68e19e23c276bffe689181ead7a4a50a6ba742b8d5f1cf845d92c5b",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/schwarz_tet10_live.py": "dafd7606daa0816f83af82f2fa64b519aaf2958aff3314efb9b4523b3a317567",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/test_schwarz_tet10_repeated.py": "a4a3624e8c65fa6c923fd1684f5f9e4cc44153e40405f5e17e8d8d9c6e0bfd6f",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-schwarz-tet10-live-repair-v1/summary.json": "dfa9279c1d009e6bc2de1d959a703b215f307e6e8ce748464e09b7b37c397cda",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-schwarz-live-quadrature-v1/meshers-tet10.json": "0f87034242f10ee5019539e8fa5b42d3f710f5a0feb45a93bd47cd8b66924b11",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-schwarz-live-quadrature-v1/manifest.json": "e2c0e325e515bb7b6bb944e9bcfe7f29d55a3c0d0d92293c146a547c0d182ba4"
+  },
+  "memory_bytes": 8589934592,
+  "threads": 1,
+  "whole_experiment_timeout_s": 3600,
+  "stage_timeouts_s": {
+    "controls": 120,
+    "microgen-parent": 600,
+    "microgen-tet10": 1800,
+    "meshers-tet10": 600,
+    "microgen-audit": 300,
+    "microgen-reference": 60,
+    "meshers-audit": 300,
+    "meshers-reference": 60,
+    "microgen-repair": 600
+  },
+  "platform": "macOS-26.5.1-arm64-arm-64bit",
+  "architecture": "arm64",
+  "numerical_thread_policy": {
+    "environment": {
+      "OPENBLAS_NUM_THREADS": "1",
+      "OMP_NUM_THREADS": "1",
+      "MKL_NUM_THREADS": "1",
+      "VECLIB_MAXIMUM_THREADS": "1",
+      "RAYON_NUM_THREADS": "1"
+    },
+    "accelerate_blas_threading": 1,
+    "accelerate_scope": "calling thread"
+  },
+  "memory_enforcement": "process-tree-rss-watchdog",
+  "pilot": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-schwarz-tet10-live-repair-v1",
+  "quadrature": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-schwarz-live-quadrature-v1",
+  "explicit_interior_repair": true,
+  "repetitions": 5,
+  "warmups_per_arm": 1,
+  "schedule": [
+    [
+      "warmup",
+      false
+    ],
+    [
+      "repeat-1",
+      true
+    ],
+    [
+      "repeat-2",
+      false
+    ],
+    [
+      "repeat-3",
+      true
+    ],
+    [
+      "repeat-4",
+      false
+    ],
+    [
+      "repeat-5",
+      true
+    ]
+  ],
+  "stiffness_target": 0.001,
+  "solve_node_cap": 250000,
+  "tetrahedron_cap": 250000,
+  "maximum_wall_minus_monotonic_s": 5,
+  "timing_scope": "Both recorded costs retained; warmup excluded; alternate native-first and Microgen-first; no previous-run mesh, load or preconditioner replay"
+}

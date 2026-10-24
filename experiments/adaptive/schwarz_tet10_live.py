@@ -87,6 +87,7 @@ def run_pair(run, *, native_first=False, job=None, prefix="", deadline=None, rep
     import meshers._meshers
     import microgen.remesh
     paths = [Path(__file__), Path(meshers._meshers.__file__), Path(microgen.remesh.__file__)]
+    paths.append(Path(importlib.metadata.distribution("mmgpy").locate_file("mmgpy/bin/mmg3d_O3")))
     paths.extend(workflow.HERE / name for name in ("microgen_workflow.py", "microgen_tuned.py",
         "microgen_tet10_control.py", "admission_pilot.py", "stress_recovery.py", "tet10_integration.py",
         "amg_reference.py", "stiffness_pair.py", "test_cubic_reference.py", "test_reference_admission.py",

@@ -1,0 +1,235 @@
+{
+  "case": "schwarz-solid",
+  "cells": 16,
+  "min_length": 0.01,
+  "order": 2,
+  "native_tolerance": 1.0,
+  "optimization_passes": 1,
+  "adaptive": false,
+  "adapt_tolerance": 0.002,
+  "solver_quadrature_points": 15,
+  "solve_node_cap": 100000,
+  "qualified": true,
+  "solver": "cached-elastic-block-amg-cg",
+  "generation_s": 0.09447791706770658,
+  "nodes": 42928,
+  "elements": 27492,
+  "diagnostics": {
+    "empty": false,
+    "volume": 0.5001069205728816,
+    "minimum_mmg_quality": 0.4499952972773957,
+    "sampled_surface_error": 0.0034441901693046378,
+    "elements_below_quality_01": 0,
+    "reverted_snap_vertices": 0,
+    "callback_calls": 0,
+    "inserted_interior_nodes": 0,
+    "seconds": 0.093970416,
+    "quadratic": {
+      "curved_edges": 5100,
+      "straightened_edges": 0,
+      "partially_curved_edges": 0,
+      "minimum_jacobian_ratio": 0.6278808256522844
+    },
+    "threads": 1,
+    "evaluator": "compiled",
+    "preparation_seconds": 0.0004749579820781946
+  },
+  "geometry": {
+    "sampled_forward_max": 0.00013911900441963997,
+    "sampled_reverse_max": 0.00016189052407491854,
+    "sampled_two_sided_max": 0.00016189052407491854,
+    "outward_forward_max": 0.00013911900441963997,
+    "inward_forward_max": 0.00011407806062973662,
+    "projection_failed": 0,
+    "forward_samples": 43524,
+    "reverse_samples": 50135,
+    "volume": 0.5000002737518888,
+    "relative_volume_error": 5.475037776481173e-07,
+    "q_min_corner": 0.4499952972773957,
+    "q_p01_corner": 0.5573114869460045,
+    "minimum_dihedral_deg_corner": 23.632448302111726,
+    "minimum_sampled_jacobian": 1.246260532856064e-05,
+    "reverse_tessellation_delta_max": 0.00018648450831692666,
+    "quadratic_reverse_subdivisions": [
+      4,
+      8
+    ],
+    "facet_consistency": {
+      "nodes": 42928,
+      "elements": 27492,
+      "unique_faces": 57936,
+      "interior_faces": 52032,
+      "extracted_boundary_faces": 5904,
+      "same_orientation_shared_faces": 0,
+      "nonmanifold_faces": 0,
+      "duplicate_cells": 0,
+      "duplicate_surface_faces": 0,
+      "provided_boundary_matches_extraction": true,
+      "missing_provided_faces": 0,
+      "extra_provided_faces": 0,
+      "nonpositive_corner_determinants": 0,
+      "minimum_corner_determinant": 1.2845676145940633e-05,
+      "oriented_facet_consistency_passed": true,
+      "conflict_examples": [],
+      "scope": "Oriented corner-face incidence and same-side neighbor diagnostics; necessary consistency, not a certificate of curved geometry or absence of nonlocal intersections"
+    },
+    "oriented_facet_consistency_passed": true,
+    "geometry_admitted": true
+  },
+  "periodic": {
+    "periodic_pair_counts": [
+      942,
+      942,
+      942
+    ],
+    "periodic_coordinate_errors": [
+      0.0,
+      0.0,
+      0.0
+    ],
+    "periodic_pair_tolerance": 1e-10,
+    "periodic_equivalence_classes": 40200,
+    "periodic_triangles_match": true
+  },
+  "status": "solved-needs-reference",
+  "completed_loads": 6,
+  "solver_records": [
+    {
+      "iterations": 49,
+      "relative_residual": 9.641733873708936e-13,
+      "free_dofs": 120597,
+      "seconds": 3.1268327500438318,
+      "hierarchy_setup_s": 0.6766437910264358,
+      "hierarchy_reused": false,
+      "node_reordering_s": 0.04697366710752249,
+      "elastic_blocks": true,
+      "verified_symmetry_reused": false,
+      "levels": 3,
+      "operator_complexity": 1.0648898298339144,
+      "reduced_matrix_sha256": "1a28d02e39afc17f123e8d1f58b4996e192e8bc87fb9321a82023c38b622a1c7"
+    },
+    {
+      "iterations": 49,
+      "relative_residual": 9.94084763719935e-13,
+      "free_dofs": 120597,
+      "seconds": 2.2767997920745984,
+      "hierarchy_setup_s": 0.0,
+      "hierarchy_reused": true,
+      "node_reordering_s": 0.0,
+      "elastic_blocks": true,
+      "verified_symmetry_reused": true,
+      "levels": 3,
+      "operator_complexity": 1.0648898298339144,
+      "reduced_matrix_sha256": "1a28d02e39afc17f123e8d1f58b4996e192e8bc87fb9321a82023c38b622a1c7"
+    },
+    {
+      "iterations": 48,
+      "relative_residual": 9.970585780455318e-13,
+      "free_dofs": 120597,
+      "seconds": 2.2474242500029504,
+      "hierarchy_setup_s": 0.0,
+      "hierarchy_reused": true,
+      "node_reordering_s": 0.0,
+      "elastic_blocks": true,
+      "verified_symmetry_reused": true,
+      "levels": 3,
+      "operator_complexity": 1.0648898298339144,
+      "reduced_matrix_sha256": "1a28d02e39afc17f123e8d1f58b4996e192e8bc87fb9321a82023c38b622a1c7"
+    },
+    {
+      "iterations": 54,
+      "relative_residual": 6.641134362971386e-13,
+      "free_dofs": 120597,
+      "seconds": 2.518978707958013,
+      "hierarchy_setup_s": 0.0,
+      "hierarchy_reused": true,
+      "node_reordering_s": 0.0,
+      "elastic_blocks": true,
+      "verified_symmetry_reused": true,
+      "levels": 3,
+      "operator_complexity": 1.0648898298339144,
+      "reduced_matrix_sha256": "1a28d02e39afc17f123e8d1f58b4996e192e8bc87fb9321a82023c38b622a1c7"
+    },
+    {
+      "iterations": 52,
+      "relative_residual": 9.562955241213992e-13,
+      "free_dofs": 120597,
+      "seconds": 2.4291811670409516,
+      "hierarchy_setup_s": 0.0,
+      "hierarchy_reused": true,
+      "node_reordering_s": 0.0,
+      "elastic_blocks": true,
+      "verified_symmetry_reused": true,
+      "levels": 3,
+      "operator_complexity": 1.0648898298339144,
+      "reduced_matrix_sha256": "1a28d02e39afc17f123e8d1f58b4996e192e8bc87fb9321a82023c38b622a1c7"
+    },
+    {
+      "iterations": 53,
+      "relative_residual": 9.423480219945382e-13,
+      "free_dofs": 120597,
+      "seconds": 2.477124375058338,
+      "hierarchy_setup_s": 0.0,
+      "hierarchy_reused": true,
+      "node_reordering_s": 0.0,
+      "elastic_blocks": true,
+      "verified_symmetry_reused": true,
+      "levels": 3,
+      "operator_complexity": 1.0648898298339144,
+      "reduced_matrix_sha256": "1a28d02e39afc17f123e8d1f58b4996e192e8bc87fb9321a82023c38b622a1c7"
+    }
+  ],
+  "solve_s": 17.441161416005343,
+  "stiffness": [
+    [
+      0.7977934230745992,
+      0.14338098586682424,
+      0.14338034027781518,
+      -5.090317945009711e-07,
+      -4.728191380369006e-07,
+      2.3135525676702992e-07
+    ],
+    [
+      0.14338098586682424,
+      0.7977930890739352,
+      0.14338030653505207,
+      -5.630969341736652e-07,
+      2.0172841501090813e-07,
+      -4.117063455997848e-07
+    ],
+    [
+      0.14338034027781518,
+      0.14338030653505207,
+      0.7977909257125333,
+      1.899097677538891e-07,
+      -6.034849343526751e-07,
+      -6.039711848986195e-07
+    ],
+    [
+      -5.090317945009711e-07,
+      -5.630969341736652e-07,
+      1.899097677538891e-07,
+      0.1912584639953086,
+      -4.894315771679933e-08,
+      -9.041475953651721e-08
+    ],
+    [
+      -4.728191380369006e-07,
+      2.0172841501090813e-07,
+      -6.034849343526751e-07,
+      -4.894315771679933e-08,
+      0.1912585444578977,
+      -1.1653631023092833e-07
+    ],
+    [
+      2.3135525676702992e-07,
+      -4.117063455997848e-07,
+      -6.039711848986195e-07,
+      -9.041475953651721e-08,
+      -1.1653631023092833e-07,
+      0.19125855902562494
+    ]
+  ],
+  "total_audit_workflow_s": 19.20703000004869,
+  "total_workflow_s": 19.20703000004869
+}

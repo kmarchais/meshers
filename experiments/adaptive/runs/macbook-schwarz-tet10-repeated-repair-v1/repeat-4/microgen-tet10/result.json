@@ -1,0 +1,236 @@
+{
+  "case": "schwarz-solid",
+  "route": "microgen-vtk-mmg-straight-tet10-direct-fedoo",
+  "parent_route": "microgen-vtk-single-mmg-diagnostic-override-explicit-slsqp-interior-relocation",
+  "parent_mmg_calls": [
+    {
+      "nofem": true,
+      "hausd": 0.0005,
+      "hmax": 0.1,
+      "hgrad": 1.3
+    }
+  ],
+  "source": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-schwarz-tet10-repeated-repair-v1/repeat-4/microgen-repair",
+  "nodes": 207099,
+  "elements": 136511,
+  "order": 2,
+  "solver_quadrature_points": 4,
+  "qualified": true,
+  "status": "solved-needs-reference",
+  "live_workflow_timing": false,
+  "solver": "cached-elastic-block-amg-cg",
+  "release_completed_reduced_cache": true,
+  "scope": "Saved genuine Microgen mesh; manual straight elevation and direct fedoo; no native Meshers generation or public Microgen Tet10 conversion",
+  "lift_and_conversion_s": 0.4290741248987615,
+  "geometry": {
+    "sampled_forward_max": 0.0009615151058020022,
+    "sampled_reverse_max": 0.0008367826827856791,
+    "sampled_two_sided_max": 0.0009615151058020022,
+    "outward_forward_max": 0.0009615151058020022,
+    "inward_forward_max": 0.0008338794334519799,
+    "projection_failed": 0,
+    "forward_samples": 205816,
+    "reverse_samples": 50135,
+    "volume": 0.4999443222486442,
+    "relative_volume_error": -0.00011135550271157424,
+    "q_min_corner": 0.100001001,
+    "q_p01_corner": 0.4606045828059495,
+    "minimum_dihedral_deg_corner": 4.544442843762283,
+    "minimum_sampled_jacobian": 2.1668291611691903e-08,
+    "reverse_tessellation_delta_max": 0.0,
+    "quadratic_reverse_subdivisions": [
+      1
+    ],
+    "facet_consistency": {
+      "nodes": 207099,
+      "elements": 136511,
+      "unique_faces": 285222,
+      "interior_faces": 260822,
+      "extracted_boundary_faces": 24400,
+      "same_orientation_shared_faces": 0,
+      "nonmanifold_faces": 0,
+      "duplicate_cells": 0,
+      "duplicate_surface_faces": 0,
+      "provided_boundary_matches_extraction": true,
+      "missing_provided_faces": 0,
+      "extra_provided_faces": 0,
+      "nonpositive_corner_determinants": 0,
+      "minimum_corner_determinant": 2.166829161169506e-08,
+      "oriented_facet_consistency_passed": true,
+      "conflict_examples": [],
+      "scope": "Oriented corner-face incidence and same-side neighbor diagnostics; necessary consistency, not a certificate of curved geometry or absence of nonlocal intersections"
+    },
+    "oriented_facet_consistency_passed": true,
+    "geometry_admitted": true
+  },
+  "periodic": {
+    "periodic_pair_counts": [
+      3028,
+      3028,
+      3028
+    ],
+    "periodic_coordinate_errors": [
+      0.0,
+      0.0,
+      0.0
+    ],
+    "periodic_pair_tolerance": 1e-10,
+    "periodic_equivalence_classes": 198191,
+    "periodic_triangles_match": true
+  },
+  "completed_loads": 6,
+  "solver_records": [
+    {
+      "iterations": 68,
+      "relative_residual": 8.871079796686904e-13,
+      "free_dofs": 594570,
+      "seconds": 22.092162167071365,
+      "hierarchy_setup_s": 4.026624709018506,
+      "hierarchy_reused": false,
+      "node_reordering_s": 0.24690737493801862,
+      "elastic_blocks": true,
+      "verified_symmetry_reused": false,
+      "levels": 4,
+      "operator_complexity": 1.0751953438720496,
+      "reduced_matrix_sha256": "357c40644da4db32c6ef2e6ec032cf9c9db9e1728cc5e0d34e67cc3d76b7294e"
+    },
+    {
+      "iterations": 67,
+      "relative_residual": 9.188128269225142e-13,
+      "free_dofs": 594570,
+      "seconds": 16.22226462501567,
+      "hierarchy_setup_s": 0.0,
+      "hierarchy_reused": true,
+      "node_reordering_s": 0.0,
+      "elastic_blocks": true,
+      "verified_symmetry_reused": true,
+      "levels": 4,
+      "operator_complexity": 1.0751953438720496,
+      "reduced_matrix_sha256": "357c40644da4db32c6ef2e6ec032cf9c9db9e1728cc5e0d34e67cc3d76b7294e"
+    },
+    {
+      "iterations": 66,
+      "relative_residual": 8.298205901285586e-13,
+      "free_dofs": 594570,
+      "seconds": 16.022804916952737,
+      "hierarchy_setup_s": 0.0,
+      "hierarchy_reused": true,
+      "node_reordering_s": 0.0,
+      "elastic_blocks": true,
+      "verified_symmetry_reused": true,
+      "levels": 4,
+      "operator_complexity": 1.0751953438720496,
+      "reduced_matrix_sha256": "357c40644da4db32c6ef2e6ec032cf9c9db9e1728cc5e0d34e67cc3d76b7294e"
+    },
+    {
+      "iterations": 71,
+      "relative_residual": 9.853793452977464e-13,
+      "free_dofs": 594570,
+      "seconds": 17.28679662500508,
+      "hierarchy_setup_s": 0.0,
+      "hierarchy_reused": true,
+      "node_reordering_s": 0.0,
+      "elastic_blocks": true,
+      "verified_symmetry_reused": true,
+      "levels": 4,
+      "operator_complexity": 1.0751953438720496,
+      "reduced_matrix_sha256": "357c40644da4db32c6ef2e6ec032cf9c9db9e1728cc5e0d34e67cc3d76b7294e"
+    },
+    {
+      "iterations": 72,
+      "relative_residual": 6.985980772321192e-13,
+      "free_dofs": 594570,
+      "seconds": 17.514084374997765,
+      "hierarchy_setup_s": 0.0,
+      "hierarchy_reused": true,
+      "node_reordering_s": 0.0,
+      "elastic_blocks": true,
+      "verified_symmetry_reused": true,
+      "levels": 4,
+      "operator_complexity": 1.0751953438720496,
+      "reduced_matrix_sha256": "357c40644da4db32c6ef2e6ec032cf9c9db9e1728cc5e0d34e67cc3d76b7294e"
+    },
+    {
+      "iterations": 70,
+      "relative_residual": 9.92141657359152e-13,
+      "free_dofs": 594570,
+      "seconds": 17.061589917051606,
+      "hierarchy_setup_s": 0.0,
+      "hierarchy_reused": true,
+      "node_reordering_s": 0.0,
+      "elastic_blocks": true,
+      "verified_symmetry_reused": true,
+      "levels": 4,
+      "operator_complexity": 1.0751953438720496,
+      "reduced_matrix_sha256": "357c40644da4db32c6ef2e6ec032cf9c9db9e1728cc5e0d34e67cc3d76b7294e"
+    }
+  ],
+  "solve_s": 115.25820483302232,
+  "stiffness": [
+    [
+      0.7972774336319955,
+      0.1432557701915413,
+      0.1432475172285252,
+      2.3751411404163227e-06,
+      1.6862389196642005e-05,
+      -1.4645663998318991e-06
+    ],
+    [
+      0.1432557701915413,
+      0.7972673372212598,
+      0.14324578083379857,
+      -5.998605638592616e-06,
+      -3.7963032999755877e-06,
+      1.866436463904149e-05
+    ],
+    [
+      0.1432475172285252,
+      0.14324578083379857,
+      0.797247400802217,
+      -7.300502493868972e-07,
+      2.833075141640886e-05,
+      3.0202504892580787e-05
+    ],
+    [
+      2.3751411404163227e-06,
+      -5.998605638592616e-06,
+      -7.300502493868972e-07,
+      0.19118819462318817,
+      -1.3452852017043182e-07,
+      2.0684947356473892e-06
+    ],
+    [
+      1.6862389196642005e-05,
+      -3.7963032999755877e-06,
+      2.833075141640886e-05,
+      -1.3452852017043182e-07,
+      0.19117514431518914,
+      6.254750375585616e-07
+    ],
+    [
+      -1.4645663998318991e-06,
+      1.866436463904149e-05,
+      3.0202504892580787e-05,
+      2.0684947356473892e-06,
+      6.254750375585616e-07,
+      0.19117094627736897
+    ]
+  ],
+  "quadrature_exact_for_affine_geometry": true,
+  "higher_rule_fixed_field_difference": {
+    "worst_relative_strain_energy_difference": 1.981811119152325e-11,
+    "relative_tensor_frobenius_difference": 8.732610275969133e-12,
+    "relative_energy_difference_eigenvalues": [
+      -1.9359958930150747e-11,
+      -8.1092429409065e-12,
+      -5.066416817660592e-12,
+      2.0855464058321707e-12,
+      8.712600461468262e-12,
+      1.981811119152325e-11
+    ]
+  },
+  "quadrature_sensitivity_limit": 0.0001,
+  "quadrature_sensitivity_passed": true,
+  "higher_rule_consistency_limit": 1e-07,
+  "total_saved_mesh_study_s": 124.28016779094469
+}

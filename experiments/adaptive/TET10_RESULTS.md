@@ -1,4 +1,49 @@
-# Public fedoo integration on G3
+# Public fedoo integration and Tet10 controls
+
+## Verified repeated Mac Schwarz comparison, 24 October 2026
+
+Job 33 completes one excluded warmup and five fresh interleaved pairs, with
+alternating arm order. Every pair passes all eight declared full mixed-load
+Schwarz models at the supplementary 0.1% target. Native errors span
+0.031469% to 0.093778%; Microgen errors span 0.053480% to 0.062162%.
+All geometry, quality, sampled Jacobian, coherent-facet and periodic gates pass.
+
+| Charged cost | Modified actual Microgen median | Meshers median | Five paired ratios |
+|---|---:|---:|---:|
+| Science-audited workflow | 131.85894 s | 19.14923 s | 6.7632 to 6.9203 |
+| Generation, repair/lift and solve | 119.40758 s | 17.48343 s | 6.6949 to 6.8605 |
+
+Workflow ranges are 130.16436 to 132.30789 seconds for Microgen and 19.11868
+to 19.54234 seconds for Meshers. Meshers is faster in every measured pair
+under both cost definitions. No pair is discarded, and warmup is excluded.
+
+The comparator is actual VTK30/MMG with explicit one-pass overrides, a
+charged fixed-boundary SciPy interior repair, and manual straight Tet10/direct
+fedoo. It is not Microgen's default or public Tet10 conversion. Meshers uses
+fresh nonadaptive curved16. Both use the same block-AMG preset and one
+numerical thread. Stage limits stay at 250,000 nodes/tets and 8 GiB; the
+whole study takes 980.56 seconds within its one-hour deadline. No previous
+mesh, solved prefix or preconditioner is replayed.
+
+All six pairs pass 42 controls. Five verifier unit controls also pass.
+Job 34 stops before geometry replay because the verifier omitted support-path
+initialization; its exact failed driver and log remain preserved. Job 35
+corrects initialization and independently verifies 262 hash records, all
+96 full-matrix model comparisons, every timing statistic, and all twelve
+saved mesh/field sets. Geometry and periodic field jumps are recomputed
+from actual arrays. Minimum quality is 0.100001001 for Microgen and 0.4499953
+for Meshers. Maximum reaction/energy error is 7.60e-12; periodic jumps are
+at most 5.56e-17. The timing study is not rerun after the verifier failure.
+
+This establishes the repeated Mac Schwarz result for the declared modified
+route. It does not resolve the other three fixtures or certify continuum
+or local-stress accuracy. Keep all 24 lattice models and all fixed specimens.
+The next reference investigation uses the already solved nested and cubic
+fields on their original parent23 domain; first prove the physical mappings
+and field provenance agree before computing a joint cross-energy diagnostic.
+No new solve, polynomial degree, geometry offset or sizing sweep is selected.
+Earlier selected-next descriptions below are historical.
+
 
 ## Declared live Schwarz Tet10 pilot, 20 October 2026
 

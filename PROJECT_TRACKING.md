@@ -1,5 +1,13 @@
 # Meshers project tracking
 
+Five fresh Mac Schwarz pairs now pass the supplementary 0.1% full-tensor
+target, with one excluded warmup and alternating arm order. Median charged
+workflow time is 131.85894 seconds for modified actual Microgen and 19.14923
+seconds for Meshers. All five paired ratios favor Meshers, from 6.7632 to
+6.9203. The explicit one-pass route, charged SciPy repair and manual straight
+Tet10 remain declared. Independent replay verifies all twelve mesh/field sets
+and 96 model comparisons. The other three fixtures remain unresolved.
+
 One fresh Mac Schwarz pair now passes the supplementary 0.1% full-tensor
 comparison. The actual Microgen route includes explicit one-pass overrides,
 a charged one-vertex SciPy repair, and manual straight Tet10. Workflow times
@@ -860,8 +868,9 @@ errors. Single-run and saved-mesh measurements are not repeated workflow ratios.
 
 | Fixture | Best relevant Meshers evidence | Actual Microgen/MMG evidence | Current verdict |
 |---|---|---|---|
-| Schwarz, 1% target | Curved8, 6,864 nodes, 0.25870% primary disagreement, 7.7916 s median | Explicit VTK30 one-pass variant, 32,070 Tet4 nodes, 0.92806%, 40.5036 s median | Five interleaved pairs pass; measured speedup 5.1155–5.2908 times, only for this modified comparator |
-| Schwarz, supplementary 0.1% | Curved16, 42,928 nodes, 0.031469–0.093778%, 55.19 s median common-AMG workflow | Actual VTK30 one-pass plus manual straight Tet10, 207,200 nodes, 0.053985–0.062716%, 409.28 s median | Five measured pairs pass; total ratios 7.3858–7.5401, phase ratios 7.2806–7.4331; explicitly modified comparator |
+| Schwarz, 1% target, G3 | Curved8, 6,864 nodes, 0.25870% primary disagreement, 7.7916 s median | Explicit VTK30 one-pass variant, 32,070 Tet4 nodes, 0.92806%, 40.5036 s median | Five interleaved pairs pass; measured speedup 5.1155–5.2908 times, only for this modified comparator |
+| Schwarz, supplementary 0.1%, G3 | Curved16, 42,928 nodes, 0.031469–0.093778%, 55.19 s median common-AMG workflow | Actual VTK30 one-pass plus manual straight Tet10, 207,200 nodes, 0.053985–0.062716%, 409.28 s median | Five measured pairs pass; total ratios 7.3858–7.5401, phase ratios 7.2806–7.4331; explicitly modified comparator |
+| Schwarz, supplementary 0.1%, Mac | Fresh curved16, 42,928 nodes, 0.031469% to 0.093778%, 19.14923 s median | Actual VTK30 one-pass plus charged interior repair and manual straight Tet10, 207,099 nodes, 0.053480% to 0.062162%, 131.85894 s median | Five fresh interleaved pairs pass; workflow ratios 6.7632 to 6.9203; explicitly modified comparator |
 | Gyroid, 1% | Curved9, 11,857 nodes, 0.72921–0.95990%, 20.56 s single run | Tested default and tuned routes remain unqualified | Meshers passes tested target; comparative win not established |
 | Spinodoid, 1% | Partial-settle adaptive24 at tolerance 0.003, 73,951 nodes, 0.10333–0.18439%, 364.07 s | Tested fixed-realization seeds 16–41 have retained-cap obstructions | Meshers has an admitted route; comparative win not established |
 | Lattice, 1% | Latest audited native result 1.2686985%, 199,972 nodes; eight-round curve pilot 1.439306%, 111,605 nodes | Admitted tuned two-pass parent; strongest manual straight Tet10 control, 238,411 nodes, 1.004354% | Neither passes all 24 models at 1%; no matched-accuracy win |

@@ -49,3 +49,14 @@ def test_one_slower_pair_is_not_hidden_by_median():
     rows = pairs()
     rows[-1]["report"]["generation_lift_solve_s"]["meshers"] = 11.
     assert not summarize(rows)["meshers_faster_in_every_measured_pair"]
+
+
+def test_repair_stage_preserves_dependencies_and_mixed_routes_are_rejected():
+    for native_first in (False, True):
+        names = stage_names(native_first, repair_interior=True)
+        assert names.index("microgen-parent") < names.index("microgen-repair") < names.index("microgen-tet10")
+        assert (names.index("meshers-tet10") < names.index("microgen-parent")) == native_first
+    rows = pairs()
+    rows[3]["report"]["explicit_interior_repair"] = True
+    with pytest.raises(AssertionError):
+        summarize(rows)
