@@ -1,0 +1,14 @@
+/Users/kmarchais/dev/meshers/.local-work/macbook-runtime/venv/lib/python3.12/site-packages/fedoo/core/base.py:80: UserWarning: WARNING: no fast direct sparse solver has been found. Consider installing pypardiso (Intel) or python-mumps (any platform) to improve computation performance
+  warnings.warn(
+.                                                                        [100%]
+=============================== warnings summary ===============================
+experiments/adaptive/test_hp_coupled_audit.py::test_cubic_values_at_child_nodes_reproduce_the_original_polynomial
+  /Users/kmarchais/dev/meshers/.local-work/macbook-runtime/venv/lib/python3.12/site-packages/fedoo/core/base.py:80: UserWarning: WARNING: no fast direct sparse solver has been found. Consider installing pypardiso (Intel) or python-mumps (any platform) to improve computation performance
+    warnings.warn(
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+1 passed, 1 warning in 0.67s
+Full modal fields at 15 points: energy shift 4.15106467e-13
+Full modal fields at 125 points: energy shift 2.61142603e-06
+Full modal fields at 216 points: energy shift 2.61711381e-06
+Complete coupled audit passes; 24-model disagreement 0.0171148518

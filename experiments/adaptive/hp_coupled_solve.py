@@ -50,12 +50,23 @@ def main():
     consistent = json.loads((args.consistent / "result.json").read_text())
     setup = json.loads((args.setup / "result.json").read_text())
     assert consistent["passed"] and setup["passed"] and setup["amg_setup_performed"] and not setup["cg_started"]
+    nested_source, cubic_source, cubic_mesh = SECOND_SOLVE, CUBIC_SOLVE, CUBIC
+    parent25 = consistent.get("parent25", False)
+    if parent25:
+        from hp_parent25_probe import H_SOLVE, P_MESH, P_SOLVE
+        assert consistent["nested_source"] == str(H_SOLVE) and consistent["cubic_source"] == str(P_SOLVE)
+        assert consistent["cubic_mesh"] == str(P_MESH)
+        assert setup["parent25"] and setup["nested_source"] == str(H_SOLVE)
+        assert setup["consistent_source"] == str(args.consistent)
+        nested_source, cubic_source, cubic_mesh = H_SOLVE, P_SOLVE, P_MESH
     assert json.loads((args.setup / "worker.json").read_text())["peak_rss_bytes"] < workflow.MEMORY
     inputs = {**inherited_inputs(args.consistent), **inherited_inputs(args.setup)}
     paths = [Path(__file__), args.consistent / "result.json", args.consistent / "coupling.npz",
         args.setup / "result.json", args.setup / "worker.json"]
     paths.extend(workflow.HERE / name for name in ("test_hp_coupled_solve.py", "test_hp_cross_energy.py",
         "hp_cross_energy.py", "amg_reference.py", "stress_recovery.py", "hp_coupled_preflight.py"))
+    if parent25:
+        paths.append(workflow.HERE / "hp_parent25_probe.py")
     inputs.update({str(path): workflow.digest(path) for path in paths})
     workflow.save(args.output.parent / "analysis-inputs.json", inputs)
     shutil.copyfile(__file__, args.output.parent / "analysis-driver.py")
@@ -63,10 +74,10 @@ def main():
         shutil.copyfile(workflow.HERE / name, args.output.parent / name)
     subprocess.run([sys.executable, "-m", "pytest", "-q", "experiments/adaptive/test_hp_coupled_solve.py",
         "experiments/adaptive/test_hp_cross_energy.py"], check=True, timeout=45)
-    mesh = np.load(SECOND_SOLVE / "mesh.npz")
+    mesh = np.load(nested_source / "mesh.npz")
     points, cells, surface = (mesh[key] for key in ("points", "tetrahedra", "surface"))
     assert len(points) <= 250000 and len(cells) <= workflow.CAP
-    source_fields = np.load(SECOND_SOLVE / "fields.npz")["displacement"]
+    source_fields = np.load(nested_source / "fields.npz")["displacement"]
     data = np.load(args.consistent / "coupling.npz")
     forces, energy = data["forces"], data["energy"]
 
@@ -112,7 +123,8 @@ def main():
             np.savez_compressed(args.output.parent / "hp-fields.npz", response_displacement=physical,
                 mode_coefficients=coefficients)
             workflow.save(args.output, {"status": "coupled-solved-needs-independent-audit", "consistent_source": str(args.consistent),
-                "nested_source": str(SECOND_SOLVE), "cubic_source": str(CUBIC_SOLVE), "cubic_mesh": str(CUBIC / "mesh.npz"),
+                "nested_source": str(nested_source), "cubic_source": str(cubic_source), "cubic_mesh": str(cubic_mesh / "mesh.npz"),
+                "parent25": parent25, "prepared": consistent.get("prepared"),
                 "physical_nodes": len(points), "physical_tets": len(cells), "extra_scalar_mode_unknowns": 6,
                 "reduced_mesh_unknowns": len(rhs), "augmented_unknowns": len(rhs) + 6,
                 "fresh_auxiliary_responses": 6, "saved_baseline_reduced_residuals": residuals.tolist(),

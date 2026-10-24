@@ -1,5 +1,67 @@
 # Adaptive and quadratic implicit meshing: results
 
+## Parent25 coupled field passes audits but misses the target, 24 October 2026
+
+The user explicitly resumed work after the pause. The queue and native worker
+remain healthy while another macOS user is logged in. Parent25's fresh coupled
+field passes energy, stress, periodic, pin and reassembled equilibrium audits.
+Worst mixed-load disagreement across all 24 retained models is 1.711485183%,
+still above 1%. No reference, native candidate or timing advantage is promoted.
+
+Assembly91 finishes in 10.093 seconds at 5.3634 GiB. Its constrained matrix has
+643,332 rows and 48,227,764 nonzeros. Symmetry and constraint virtual work pass;
+the saved first-load residual is 9.79e-13. Setup92 finishes in 13.364 seconds at
+4.8203 GiB, with four AMG levels and operator complexity 1.055315. It stops
+before CG. Each job is read before its successor is selected.
+
+Solve93 completes all six fresh zero-macro responses in 143.600 seconds at
+5.3803 GiB, under 240-second per-response and 1,600-second worker timeouts.
+Every saved baseline residual is below 2.15e-10. The Schur matrix is positive
+definite; response periodic jumps and pin values are zero. These are auxiliary
+responses on the frozen domain, not six fresh macro workflows or a native mesh.
+
+Audit94 finishes in 225.131 seconds at 5.1301 GiB. Its own-rule full-field energy
+agrees with the prediction within 4.16e-13, and stress-energy balance within
+3.96e-12. Positive125/216 energy changes are 5.82e-9. The complete fields have
+periodic jump below 4.45e-16 and an exact zero pin. Fresh operator replay gives
+all auxiliary residuals below 1.06e-11, complete-field residuals below 2.10e-10,
+and mode stationarity within 2.10e-12. Relative to the same-domain fine quadratic
+base, all six high-rule stiffness corrections are negative, the largest 0.513183%.
+The own15 predicted maximum reduction is 0.513381%; the two numbers use different
+quadrature and must remain distinguished.
+
+The positive-rule audit algebraically folds the original cubic and quadratic
+fields with the mode coefficients and response fields before bounded integration.
+It retains the full energy and stress. Six focused controls include comparison
+with the original unfolded18-field energy/stress formula on distinct child maps.
+Default parent23 paths remain unchanged. Exact measured Python snapshots preserve
+the source versions used by earlier runs; no frozen data or model hash is edited.
+
+All 24 models remain in scope. The 1.711485% result is a controlled fixed-domain
+correction, not a continuum certificate or proof of convergence between different
+parent geometries. It does not replace native26's live 1.268699% result or saved
+1.183637% control. The fresh explicitly modified actual lattice route remains at
+0.994671%, with no lattice matched-target timing ratio. Schwarz retains five fresh
+paired wins against its declared modified actual route. Gyroid/spinodoid actual
+comparators remain inadmissible in the tested routes. All four cases and every
+original geometry, quality, periodic, volume and resource gate remain unchanged.
+
+Next localize the resolved complete correction on this same domain before choosing
+another native boundary allocation or crease change. Use its Galerkin energy
+identity and both positive rules; distinguish correction energy from remaining
+error. Do not launch another curve-only sizing sweep or transfer cell scores
+between different physical domains without a separate justification.
+
+Independent replay95 passes3,509 transferred files,2,557 hashes and312 full
+model comparisons, including both positive-rule unfolded energy/stress samples.
+Receipt: `handoff/macbook/verification-20261024-parent25-coupled.json`.
+
+Records are `runs/macbook-lattice-parent25-hp-assembly-v1`,
+`runs/macbook-lattice-parent25-hp-setup-v1`,
+`runs/macbook-lattice-parent25-hp-solve-v1` and
+`runs/macbook-lattice-parent25-hp-audit-v1`. The prior pause and older next-action
+entries below are historical.
+
 ## User-requested pause after coupling preflight90, 24 October 2026
 
 The user requested stopping after the current job. Job90 is terminal success,

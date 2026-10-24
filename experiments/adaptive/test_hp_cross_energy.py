@@ -83,3 +83,33 @@ def test_cell_batches_match_grouped_nonidentity_maps_and_local_mode_grams():
         basis = np.vstack((-np.eye(6), np.eye(6)))
         np.testing.assert_allclose(local.sum(axis=0), basis.T @ grouped @ basis, atol=1e-13)
         assert np.linalg.eigvalsh(local).min() > -1e-12
+
+
+def test_folded_modal_fields_match_unfolded_energy_and_stress():
+    workflow.imports()
+    from cubic_reference import register_cubic
+    from fedoo.lib_elements.tetrahedron import Tet10, Tet4
+    from hp_batched_energy import integrate_batched
+    from quadrature_audit import duffy_rule
+
+    p2, p3, linear = Tet10(), register_cubic()(), Tet4()
+    maps = np.array([np.eye(4), np.eye(4)])
+    maps[0, 1] = [.5, .5, 0., 0.]
+    maps[1, 0] = [.5, .5, 0., 0.]
+    points = (linear.shape_function(p2.xi_nd)[None] @ maps @ linear.xi_nd).reshape(-1, 3)
+    cells, cubic_cells, parents = np.arange(20).reshape(2, 10), np.arange(20)[None], np.zeros(2, dtype=int)
+    rng = np.random.default_rng(99)
+    h, p, response = rng.normal(size=(6, 20, 3)), rng.normal(size=(6, 20, 3)), rng.normal(size=(6, 20, 3))
+    coefficients = rng.normal(size=(6, 6))
+    quadrature = duffy_rule(4)
+    unfolded, volume, minimum, stress = integrate(points, cells, h, cubic_cells, p, parents, maps,
+        quadrature, additional_fields=response, return_stress=True)
+    basis = np.vstack((np.eye(6)-coefficients, coefficients, -coefficients))
+    quadratic = h - np.einsum('ij,ind->jnd', coefficients, h + response)
+    cubic = np.einsum('ij,ind->jnd', coefficients, p)
+    folded, measured_volume, measured_minimum, _, _, mean = integrate_batched(points, cells, quadratic,
+        cubic_cells, cubic, parents, maps, quadrature, batch_size=1, return_stress=True)
+    summed = np.vstack((np.eye(6), np.eye(6)))
+    np.testing.assert_allclose(summed.T @ folded @ summed, basis.T @ unfolded @ basis, atol=1e-10, rtol=1e-12)
+    np.testing.assert_allclose(mean @ summed, stress @ basis, atol=1e-12, rtol=1e-12)
+    np.testing.assert_allclose([measured_volume, measured_minimum], [volume, minimum], atol=1e-13)

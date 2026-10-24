@@ -86,6 +86,9 @@ def main():
             failed_runs.append(run.name)
         if (run / "result.json").exists():
             result = json.loads((run / "result.json").read_text())
+            if result.get("parent25") and ("coupling_sha256" in result or result.get("no_solve")):
+                from verify_parent25_trial import verify_coupling_resource
+                parent25_trial_replays.append(verify_coupling_resource(run, result))
             if result.get("benchmark") and "rules" in result and (run / "local-rule-216.npz").exists():
                 from verify_parent25_trial import verify
                 replay = verify(run, result)
@@ -248,6 +251,9 @@ def main():
                 ranked_replays.append({"run": run.name, "all_child_geometry_error": geometry_error,
                     "all_child_field_error": field_error, "selected_score_fraction": float(score[selected].sum() / score.sum())})
             if "complete_field_reduced_residuals" in result and "retained_model_count" in result:
+                if result.get("parent25"):
+                    from verify_parent25_trial import verify_modal_fields
+                    parent25_trial_replays.append(verify_modal_fields(run, result))
                 assert result["passed"] and result["retained_model_count"] == 24
                 assert max(result["auxiliary_reduced_residuals"]) < 2e-9
                 assert max(result["complete_field_reduced_residuals"]) < 2e-9

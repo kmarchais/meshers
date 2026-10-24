@@ -3,7 +3,7 @@
 import numpy as np
 
 
-def integrate_batched(points, cells, h_fields, cubic_cells, p_fields, parents, maps, quadrature, *, batch_size=256):
+def integrate_batched(points, cells, h_fields, cubic_cells, p_fields, parents, maps, quadrature, *, batch_size=256, return_stress=False):
     """Return the full cross energy and per-cell p-minus-h Gram matrices."""
     from cubic_reference import register_cubic
     from fedoo.lib_elements.tetrahedron import Tet10, Tet4
@@ -17,6 +17,7 @@ def integrate_batched(points, cells, h_fields, cubic_cells, p_fields, parents, m
     barycentric = linear.shape_function(locations)
     reference = linear.shape_function_derivative([[.25] * 3])[0]
     energy, minimum = np.zeros((12, 12)), np.inf
+    mean_stress = np.zeros((6, 12))
     local_gram, volumes = np.zeros((len(cells), 6, 6)), np.zeros(len(cells))
     for start in range(0, len(cells), batch_size):
         stop = min(start + batch_size, len(cells))
@@ -44,5 +45,9 @@ def integrate_batched(points, cells, h_fields, cubic_cells, p_fields, parents, m
             energy += np.einsum('t,itkl,jtkl->ij', weighted, strain, stress, optimize=True)
             local_gram[start:stop] += np.einsum('t,itkl,jtkl->tij', weighted,
                 strain[6:] - strain[:6], stress[6:] - stress[:6], optimize=True)
+            if return_stress:
+                mean = np.einsum('t,ltij->lij', weighted, stress)
+                mean_stress += mean[:, [0, 1, 2, 0, 0, 1], [0, 1, 2, 1, 2, 2]].T
             volumes[start:stop] += weighted
-    return energy, float(volumes.sum()), minimum, local_gram, volumes
+    result = energy, float(volumes.sum()), minimum, local_gram, volumes
+    return result + (mean_stress,) if return_stress else result
