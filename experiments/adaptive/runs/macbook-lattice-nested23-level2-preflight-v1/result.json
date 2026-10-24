@@ -1,0 +1,109 @@
+{
+  "case": "smooth-lattice",
+  "source": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/g3-lattice-nested23-level1-v1",
+  "nodes": 218135,
+  "elements": 141144,
+  "order": 2,
+  "qualified": true,
+  "geometry": {
+    "sampled_forward_max": 0.0006492807854735138,
+    "sampled_reverse_max": 0.0005556316938432865,
+    "sampled_two_sided_max": 0.0006492807854735138,
+    "outward_forward_max": 0.0006492807854735138,
+    "inward_forward_max": 0.0004163176068125956,
+    "projection_failed": 0,
+    "forward_samples": 272012,
+    "reverse_samples": 34791,
+    "volume": 0.2482340234033279,
+    "relative_volume_error": -0.000310173005004577,
+    "q_min_corner": 0.10010709308563155,
+    "q_p01_corner": 0.21805193585095572,
+    "minimum_dihedral_deg_corner": 6.071690140534457,
+    "minimum_sampled_jacobian": 4.937379730384968e-07,
+    "reverse_tessellation_delta_max": 0.0001530253260475056,
+    "quadratic_reverse_subdivisions": [
+      4,
+      8
+    ],
+    "facet_consistency": {
+      "nodes": 218135,
+      "elements": 141144,
+      "unique_faces": 294010,
+      "interior_faces": 270566,
+      "extracted_boundary_faces": 23444,
+      "same_orientation_shared_faces": 0,
+      "nonmanifold_faces": 0,
+      "duplicate_cells": 0,
+      "duplicate_surface_faces": 0,
+      "provided_boundary_matches_extraction": true,
+      "missing_provided_faces": 0,
+      "extra_provided_faces": 0,
+      "nonpositive_corner_determinants": 0,
+      "minimum_corner_determinant": 4.959765982926118e-07,
+      "oriented_facet_consistency_passed": true,
+      "conflict_examples": [],
+      "scope": "Oriented corner-face incidence and same-side neighbor diagnostics; necessary consistency, not a certificate of curved geometry or absence of nonlocal intersections"
+    },
+    "oriented_facet_consistency_passed": true,
+    "geometry_admitted": true
+  },
+  "relative_volume_change": -2.5202062658991053e-14,
+  "refinement": {
+    "accepted_edge_orbits": 12861,
+    "quality_rejected_orbits": 28,
+    "overlapping_star_orbits": 89879,
+    "budget_rejected_orbits": 0,
+    "source_nodes": 123514,
+    "source_elements": 76947,
+    "nodes": 218135,
+    "elements": 141144,
+    "bisected_parent_elements": 64197,
+    "shared_position_error": 1.1102230246251565e-16,
+    "shared_field_error": 1.1102230246251565e-16,
+    "projected_node_upper_bound": 218135,
+    "facet_consistency": {
+      "nodes": 218135,
+      "elements": 141144,
+      "unique_faces": 294010,
+      "interior_faces": 270566,
+      "extracted_boundary_faces": 23444,
+      "same_orientation_shared_faces": 0,
+      "nonmanifold_faces": 0,
+      "duplicate_cells": 0,
+      "duplicate_surface_faces": 0,
+      "provided_boundary_matches_extraction": true,
+      "missing_provided_faces": 0,
+      "extra_provided_faces": 0,
+      "nonpositive_corner_determinants": 0,
+      "minimum_corner_determinant": 4.959765982926118e-07,
+      "oriented_facet_consistency_passed": true,
+      "conflict_examples": [],
+      "scope": "Oriented corner-face incidence and same-side neighbor diagnostics; necessary consistency, not a certificate of curved geometry or absence of nonlocal intersections"
+    },
+    "periodic": {
+      "periodic_pair_counts": [
+        970,
+        938,
+        952
+      ],
+      "periodic_coordinate_errors": [
+        5.551115123125783e-17,
+        1.1102230246251565e-16,
+        1.1102230246251565e-16
+      ],
+      "periodic_pair_tolerance": 1e-10,
+      "periodic_equivalence_classes": 215344,
+      "periodic_triangles_match": true
+    }
+  },
+  "interpolation": {
+    "points_per_element": 12,
+    "elements_checked": 141144,
+    "maximum_geometry_error": 2.7755575615628914e-16,
+    "maximum_field_error": 3.3306690738754696e-16
+  },
+  "equilibrium_solve_performed": false,
+  "reference_promoted": false,
+  "status": "nested-preflight-passed",
+  "scope": "One conforming edge-star bisection stage with exact parent Tet10 map restriction and field prolongation; no convergence or continuum claim"
+}

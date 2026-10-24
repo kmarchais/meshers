@@ -6,11 +6,13 @@ import importlib.metadata
 import json
 import os
 from pathlib import Path
+import platform
 import shutil
 import sys
 import time
 
 import microgen_workflow as workflow
+from job_parts import worker_part
 
 os.environ.update(OPENBLAS_NUM_THREADS="1", OMP_NUM_THREADS="1", MKL_NUM_THREADS="1")
 sys.path.insert(0, str(Path.home() / "bin"))
@@ -263,7 +265,12 @@ def main():
     if args.replay_prefix:
         paths.append(args.source / "fields.npz")
     hashes = {str(path): workflow.digest(path) for path in paths}
+    import meshers._meshers as native
     workflow.save(args.run / "manifest.json", {"inputs": hashes, "memory_bytes": workflow.MEMORY,
+        "platform": platform.platform(), "architecture": platform.machine(), "python": sys.version,
+        "native_sha256": workflow.digest(Path(native.__file__)),
+        "memory_enforcement": "rlimit-as-and-process-tree-rss" if sys.platform == "linux"
+            else "process-tree-rss-watchdog", "rss_poll_interval_s": .25,
         "worker_timeout_s": 300, "threads": 1, "pyamg": importlib.metadata.version("pyamg"),
         "elastic_blocks": args.elastic_blocks,
         "replayed_prefix_loads": args.prefix_count if args.replay_prefix else 0,
@@ -273,7 +280,7 @@ def main():
         "cg_rtol": 1e-12, "cg_atol": 1e-14})
     with Job(parts=["cube", "schwarz"]) as job:
         for case in ("cube", "schwarz"):
-            with job.part(case) as part:
+            with worker_part(job, case) as part:
                 command = [sys.executable, __file__, "--run", str(args.run), "--source", str(args.source), "--case", case]
                 if args.elastic_blocks:
                     command.append("--elastic-blocks")

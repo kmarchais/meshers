@@ -1,10 +1,13 @@
 """Bounded fixed-domain refinement preflight, without an equilibrium solve."""
 
 import argparse
+import importlib.metadata
 import json
 import os
 from pathlib import Path
+import platform
 import shutil
+import subprocess
 import sys
 
 os.environ.update(OPENBLAS_NUM_THREADS="1", OMP_NUM_THREADS="1", MKL_NUM_THREADS="1")
@@ -14,6 +17,17 @@ from job_parts import worker_part
 
 sys.path.insert(0, str(Path.home() / "bin"))
 from pueue_progress import Job
+
+
+def fixture_inputs(directory):
+    """Use saved samples only when their hashes match their frozen provenance."""
+    manifest = json.loads((directory / "manifest.json").read_text())
+    paths = [directory / ("smooth-lattice" + suffix)
+        for suffix in ("-samples.npz", "-specimen.json")]
+    for path in paths:
+        hashes = {value for name, value in manifest["inputs"].items() if Path(name).name == path.name}
+        assert hashes == {workflow.digest(path)}, f"Fixture provenance mismatch: {path}"
+    return paths
 
 
 def worker(args):
@@ -47,23 +61,39 @@ def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--run", required=True, type=Path)
     parser.add_argument("--source", required=True, type=Path)
+    parser.add_argument("--fixture-source", type=Path,
+        help="Original parent/prepared directory with hash-identical fixed samples, when absent from solve output")
     parser.add_argument("--worker", action="store_true")
     args = parser.parse_args()
+    args.run, args.source = args.run.resolve(), args.source.resolve()
+    if args.fixture_source:
+        args.fixture_source = args.fixture_source.resolve()
     if args.worker:
         worker(args)
         return
+    fixtures = fixture_inputs(args.fixture_source or args.source)
     args.run.mkdir(parents=True, exist_ok=False)
     shutil.copyfile(__file__, args.run / "driver.py")
-    for suffix in ("-samples.npz", "-specimen.json"):
-        shutil.copyfile(args.source / ("smooth-lattice" + suffix), args.run / ("smooth-lattice" + suffix))
-    paths = [args.source / name for name in ("result.json", "mesh.npz", "fields.npz",
-        "smooth-lattice-samples.npz", "smooth-lattice-specimen.json")]
+    for path in fixtures:
+        shutil.copyfile(path, args.run / path.name)
+    paths = [args.source / name for name in ("result.json", "mesh.npz", "fields.npz")]
+    paths.extend([*fixtures, (args.fixture_source or args.source) / "manifest.json"])
     paths.extend(workflow.HERE / name for name in ("nested_preflight.py", "nested_refinement.py",
         "test_nested_refinement.py", "job_parts.py", "test_job_parts.py", "microgen_workflow.py",
         "facet_incidence_audit.py", "scorecard.py"))
     paths.append(workflow.ROOT.parent / "periodic-microgen/experiments/periodic-fea/periodic.py")
     inputs = {str(path): workflow.digest(path) for path in paths}
+    import meshers._meshers as native
+    (args.run / "requirements.txt").write_text(subprocess.check_output(
+        ["uv", "pip", "freeze", "--python", sys.executable], text=True))
     workflow.save(args.run / "manifest.json", {"inputs": inputs, "memory_bytes": workflow.MEMORY,
+        "platform": platform.platform(), "architecture": platform.machine(), "python": sys.version,
+        "memory_enforcement": "rlimit-as-and-process-tree-rss" if sys.platform == "linux"
+            else "process-tree-rss-watchdog", "rss_poll_interval_s": .25,
+        "native_path": native.__file__, "native_sha256": workflow.digest(Path(native.__file__)),
+        "versions": {name: importlib.metadata.version(name) for name in
+            ("numpy", "scipy", "fedoo", "microgen", "mmgpy", "pyamg", "pyvista", "vtk")},
+        "fixture_source": str(args.fixture_source or args.source),
         "threads": 1, "controls_timeout_s": 120, "worker_timeout_s": 300,
         "maximum_tetrahedra": workflow.CAP, "maximum_nodes": 250000,
         "minimum_corner_quality": .1, "maximum_bisections_per_parent": 1,
@@ -72,7 +102,7 @@ def main():
         for stage in ("controls", "nested-preflight"):
             with worker_part(job, stage) as part:
                 arguments = (["-m", "pytest", "-q", "experiments/adaptive/test_nested_refinement.py",
-                    "experiments/adaptive/test_job_parts.py"] if stage == "controls"
+                    "experiments/adaptive/test_job_parts.py", "experiments/adaptive/test_bounded.py"] if stage == "controls"
                     else [__file__, *sys.argv[1:], "--worker"])
                 record = workflow.bounded([sys.executable, *arguments], args.run / (stage + ".log"),
                     part, timeout=120 if stage == "controls" else 300)

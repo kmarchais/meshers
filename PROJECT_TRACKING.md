@@ -1,5 +1,12 @@
 # Meshers project tracking
 
+Native MacBook continuation is recorded in the
+[24 October Mac checkpoint](handoff/macbook/CHECKPOINT-20261024.md).
+Native setup, 54 focused controls, twelve solver-control loads, the second
+nested preflight, and reduced assembly have passed. Level2 has 218,135 nodes
+and 141,144 tets. Its fresh six-load solve and independent audits are running.
+No stiffness reference or four-case comparison conclusion is promoted.
+
 Updated 24 October 2026. Covers the recorded project history on
 `handoff/g3-microgen-20261017` through commit `9a20151`, plus completed
 audit 473 and nested-refinement experiments 475–476 below. The history starts with the initial

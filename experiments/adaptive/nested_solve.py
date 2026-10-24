@@ -1,10 +1,13 @@
 """Solve and audit one admitted fixed-domain nested Tet10 refinement level."""
 
 import argparse
+import importlib.metadata
 import json
 import os
 from pathlib import Path
+import platform
 import shutil
+import subprocess
 import sys
 import time
 
@@ -13,6 +16,7 @@ os.environ.update(OPENBLAS_NUM_THREADS="1", OMP_NUM_THREADS="1", MKL_NUM_THREADS
 import microgen_workflow as workflow
 from cubic_refinement import MODEL_REPORTS
 from job_parts import worker_part
+from nested_preflight import fixture_inputs
 
 sys.path.insert(0, str(Path.home() / "bin"))
 from pueue_progress import Job
@@ -111,6 +115,7 @@ def main():
     parser.add_argument("--prepared", required=True, type=Path)
     parser.add_argument("--worker", choices=("solve", "audit", "assess"))
     args = parser.parse_args()
+    args.run, args.prepared = args.run.resolve(), args.prepared.resolve()
     if args.worker:
         worker(args)
         return
@@ -123,13 +128,27 @@ def main():
     args.run.mkdir(parents=True, exist_ok=False)
     shutil.copyfile(__file__, args.run / "driver.py")
     shutil.copyfile(args.prepared / "mesh.npz", args.run / "mesh.npz")
+    fixtures = fixture_inputs(args.prepared)
+    for path in fixtures:
+        shutil.copyfile(path, args.run / path.name)
     paths = [args.prepared / name for name in ("result.json", "mesh.npz", "prolongation.npz", "manifest.json")]
+    paths.extend(fixtures)
     paths.extend(parent / name for name in ("result.json", "mesh.npz", "fields.npz"))
     paths.extend(workflow.HERE / name for name in ("nested_solve.py", "stress_recovery.py", "amg_reference.py",
-        "tet10_integration.py", "quadrature_audit.py", "microgen_workflow.py", "job_parts.py", "cubic_refinement.py"))
+        "tet10_integration.py", "quadrature_audit.py", "microgen_workflow.py", "job_parts.py", "cubic_refinement.py",
+        "nested_preflight.py"))
     paths.extend(workflow.HERE / "runs" / name for name in MODEL_REPORTS)
     inputs = {str(path): workflow.digest(path) for path in paths}
+    import meshers._meshers as native
+    (args.run / "requirements.txt").write_text(subprocess.check_output(
+        ["uv", "pip", "freeze", "--python", sys.executable], text=True))
     workflow.save(args.run / "manifest.json", {"inputs": inputs, "memory_bytes": workflow.MEMORY,
+        "platform": platform.platform(), "architecture": platform.machine(), "python": sys.version,
+        "memory_enforcement": "rlimit-as-and-process-tree-rss" if sys.platform == "linux"
+            else "process-tree-rss-watchdog", "rss_poll_interval_s": .25,
+        "native_path": native.__file__, "native_sha256": workflow.digest(Path(native.__file__)),
+        "versions": {name: importlib.metadata.version(name) for name in
+            ("numpy", "scipy", "fedoo", "microgen", "mmgpy", "pyamg", "pyvista", "vtk")},
         "threads": 1, "timeouts_s": {"solve": 1200, "audit": 300, "assess": 300},
         "quadrature_sensitivity_limit": 1e-4, "galerkin_energy_balance_limit": 1e-4,
         "maximum_tetrahedra": workflow.CAP, "maximum_nodes": 250000, "stiffness_target": .01,

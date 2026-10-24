@@ -2,9 +2,24 @@
 
 import numpy as np
 import pytest
+import json
 
 import microgen_workflow as workflow
 from nested_refinement import EDGES, FACES, child_maps, interpolation_check, positive_quality, refine
+
+
+def test_fixture_provenance_rejects_changed_samples(tmp_path):
+    from nested_preflight import fixture_inputs
+
+    paths = [tmp_path / ("smooth-lattice" + suffix) for suffix in ("-samples.npz", "-specimen.json")]
+    for path in paths:
+        path.write_bytes(b"fixed fixture")
+    (tmp_path / "manifest.json").write_text(json.dumps({"inputs": {
+        "/home/kmarchais/dev/meshers/" + path.name: workflow.digest(path) for path in paths}}))
+    assert fixture_inputs(tmp_path) == paths
+    paths[0].write_bytes(b"different fixture")
+    with pytest.raises(AssertionError, match="provenance mismatch"):
+        fixture_inputs(tmp_path)
 
 
 @pytest.mark.parametrize("offset", range(6))

@@ -585,7 +585,8 @@ def bounded(command, logfile, part, timeout=TIMEOUT):
         resource.setrlimit(resource.RLIMIT_AS, (MEMORY, MEMORY))
     with logfile.open("w") as stream:
         process = subprocess.Popen(command, stdout=stream, stderr=subprocess.STDOUT,
-                                   start_new_session=True, preexec_fn=limit_address_space)
+                                   start_new_session=True,
+                                   preexec_fn=limit_address_space if sys.platform == "linux" else None)
         reason = None
         while process.poll() is None:
             elapsed = time.monotonic() - start
@@ -610,7 +611,10 @@ def bounded(command, logfile, part, timeout=TIMEOUT):
             time.sleep(0.25)
         code = process.wait()
     return {"returncode": code, "limit_failure": reason, "peak_rss_bytes": peak,
-            "wall_s": time.monotonic() - start}
+            "wall_s": time.monotonic() - start, "memory_bytes": MEMORY,
+            "memory_enforcement": "rlimit-as-and-process-tree-rss" if sys.platform == "linux"
+                else "process-tree-rss-watchdog", "rss_poll_interval_s": .25,
+            "platform": sys.platform}
 
 
 def main():
