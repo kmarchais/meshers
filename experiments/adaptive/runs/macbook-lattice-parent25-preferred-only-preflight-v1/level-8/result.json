@@ -1,0 +1,135 @@
+{
+  "level": 8,
+  "nodes": 108850,
+  "elements": 64716,
+  "preferred_edges": 7215,
+  "source_curve_vertex_elements": 5017,
+  "bisected_curve_vertex_elements": 3077,
+  "noncurve_bisected_elements": 0,
+  "added_nodes": 6693,
+  "immediate_reproduction": {
+    "points_per_element": 12,
+    "elements_checked": 64716,
+    "maximum_geometry_error": 3.3306690738754696e-16,
+    "maximum_field_error": 3.3306690738754696e-16
+  },
+  "original_reproduction": {
+    "points_per_element": 12,
+    "elements_checked": 64716,
+    "maximum_geometry_error": 3.885780586188048e-16,
+    "maximum_field_error": 4.440892098500626e-16
+  },
+  "geometry": {
+    "sampled_forward_max": 0.00038198208500262587,
+    "sampled_reverse_max": 0.0003468626760467465,
+    "sampled_two_sided_max": 0.00038198208500262587,
+    "outward_forward_max": 0.00038198208500262587,
+    "inward_forward_max": 0.0002696788476968095,
+    "projection_failed": 0,
+    "forward_samples": 183716,
+    "reverse_samples": 34791,
+    "volume": 0.2482327313347968,
+    "relative_volume_error": -0.00031537643259516024,
+    "q_min_corner": 0.10003015163529787,
+    "q_p01_corner": 0.11205193307651565,
+    "minimum_dihedral_deg_corner": 5.003715475280728,
+    "minimum_sampled_jacobian": 1.9277740851061785e-08,
+    "reverse_tessellation_delta_max": 0.00027151744089055213,
+    "quadratic_reverse_subdivisions": [
+      4,
+      8
+    ],
+    "facet_consistency": {
+      "nodes": 108850,
+      "elements": 64716,
+      "unique_faces": 139591,
+      "interior_faces": 119273,
+      "extracted_boundary_faces": 20318,
+      "same_orientation_shared_faces": 0,
+      "nonmanifold_faces": 0,
+      "duplicate_cells": 0,
+      "duplicate_surface_faces": 0,
+      "provided_boundary_matches_extraction": true,
+      "missing_provided_faces": 0,
+      "extra_provided_faces": 0,
+      "nonpositive_corner_determinants": 0,
+      "minimum_corner_determinant": 1.963156156707027e-08,
+      "oriented_facet_consistency_passed": true,
+      "conflict_examples": [],
+      "scope": "Oriented corner-face incidence and same-side neighbor diagnostics; necessary consistency, not a certificate of curved geometry or absence of nonlocal intersections"
+    },
+    "oriented_facet_consistency_passed": true,
+    "geometry_admitted": true
+  },
+  "relative_volume_change": 1.1102230246251565e-15,
+  "periodic": {
+    "maximum_six_load_jump": 2.220446049250313e-16,
+    "periodic_pair_counts": [
+      2248,
+      2411,
+      2452
+    ],
+    "periodic_coordinate_errors": [
+      1.1102230246251565e-16,
+      1.1102230246251565e-16,
+      1.1102230246251565e-16
+    ],
+    "periodic_pair_tolerance": 1e-10,
+    "periodic_equivalence_classes": 101826,
+    "periodic_triangles_match": true
+  },
+  "selection": {
+    "accepted_edge_orbits": 870,
+    "quality_rejected_orbits": 1681,
+    "overlapping_star_orbits": 2724,
+    "budget_rejected_orbits": 0,
+    "preferred_edge_orbits": 5275,
+    "accepted_preferred_edge_orbits": 870,
+    "preferred_only": true,
+    "skipped_nonpreferred_edge_orbits": 77051,
+    "source_nodes": 102157,
+    "source_elements": 61639,
+    "nodes": 108850,
+    "elements": 64716,
+    "bisected_parent_elements": 3077,
+    "shared_position_error": 1.1102230246251565e-16,
+    "shared_field_error": 1.1102230246251565e-16,
+    "projected_node_upper_bound": 108850,
+    "facet_consistency": {
+      "nodes": 108850,
+      "elements": 64716,
+      "unique_faces": 139591,
+      "interior_faces": 119273,
+      "extracted_boundary_faces": 20318,
+      "same_orientation_shared_faces": 0,
+      "nonmanifold_faces": 0,
+      "duplicate_cells": 0,
+      "duplicate_surface_faces": 0,
+      "provided_boundary_matches_extraction": true,
+      "missing_provided_faces": 0,
+      "extra_provided_faces": 0,
+      "nonpositive_corner_determinants": 0,
+      "minimum_corner_determinant": 1.963156156707027e-08,
+      "oriented_facet_consistency_passed": true,
+      "conflict_examples": [],
+      "scope": "Oriented corner-face incidence and same-side neighbor diagnostics; necessary consistency, not a certificate of curved geometry or absence of nonlocal intersections"
+    },
+    "periodic": {
+      "periodic_pair_counts": [
+        2248,
+        2411,
+        2452
+      ],
+      "periodic_coordinate_errors": [
+        1.1102230246251565e-16,
+        1.1102230246251565e-16,
+        1.1102230246251565e-16
+      ],
+      "periodic_pair_tolerance": 1e-10,
+      "periodic_equivalence_classes": 101826,
+      "periodic_triangles_match": true
+    }
+  },
+  "mesh_sha256": "21613137bd617f18ada97c262f649074315495e12a5b7afd1799705398965eae",
+  "prolongation_sha256": "43501777fe689063919d16c20cfc043eb73a2cd58f185b376676a0e56774ad05"
+}

@@ -113,3 +113,27 @@ def test_measured_score_selects_shorter_disjoint_star_under_one_star_budget():
     assert interpolation_check(points, cells, fields, ranked)["maximum_field_error"] < 1e-12
     with pytest.raises(AssertionError):
         refine(points, cells, surface, fields, periodic=False, element_scores=[0., -1.])
+
+
+def test_preferred_only_preserves_remote_tet_despite_available_budget():
+    workflow.imports()
+    from fedoo.lib_elements.tetrahedron import Tet10
+
+    points = np.vstack((Tet10().xi_nd, Tet10().xi_nd + [2., 0., 0.]))
+    cells = np.arange(20).reshape(2, 10)
+    edges = {tuple(sorted(pair)): 4 + offset for offset, pair in enumerate(EDGES)}
+    surface = np.array([[int(cell[node]) for node in list(face) + [edges[tuple(sorted((face[a], face[b])))]
+        for a, b in ((0, 1), (1, 2), (2, 0))]] for cell in cells for face in FACES])
+    fields = np.random.default_rng(83).normal(size=(6, 20, 3))
+    preferred = [(0, 3)]
+    default = refine(points, cells, surface, fields, periodic=False, preferred_edges=preferred)
+    focused = refine(points, cells, surface, fields, periodic=False, preferred_edges=preferred, preferred_only=True)
+    np.testing.assert_array_equal(np.bincount(default["parents"]), [2, 2])
+    np.testing.assert_array_equal(np.bincount(focused["parents"]), [2, 1])
+    np.testing.assert_array_equal(focused["tetrahedra"][-1], cells[-1])
+    assert focused["diagnostics"]["accepted_preferred_edge_orbits"] == focused["diagnostics"]["accepted_edge_orbits"] == 1
+    assert interpolation_check(points, cells, fields, focused)["maximum_field_error"] < 1e-12
+    empty = refine(points, cells, surface, fields, periodic=False, preferred_edges=[], preferred_only=True)
+    np.testing.assert_array_equal(empty["tetrahedra"], cells)
+    with pytest.raises(AssertionError, match="explicit edges"):
+        refine(points, cells, surface, fields, periodic=False, preferred_only=True)

@@ -1,5 +1,90 @@
 # Adaptive implicit meshing: plan and status
 
+## Preferred-only refinement improves the control but exposes a projection failure, 24 October 2026
+
+The new native26 fixed-domain control improves worst disagreement across all
+24 models to 1.183636899%, from 1.230455074% with a one-round curve-star
+priority plus bulk fallback. It still fails 1%. No native candidate, reference
+or workflow timing advantage is promoted. The fresh modified actual route
+remains admitted at 0.9946706124%, with its separately recorded 314.03-second
+diagnostic workflow cost.
+
+The research refiner adds an optional `preferred_only` switch. It filters
+complete periodic edge orbits and retains all quality, overlap, count,
+geometry and periodic guards. Default and measured-score behavior stay
+unchanged; preferred-only mode requires explicit edges and rejects mixed
+score ranking. A disjoint-tet control proves that a remote cell remains
+untouched despite spare budget, while default refinement still splits it.
+All thirteen nested controls and nineteen queued controls pass.
+
+Job 74 repeatedly refines only edges incident on actual wall/cap curve
+vertices. Every accepted parent is in that neighborhood; no bulk fallback
+is used. Composed maps retain the original native26 domain, old approximation
+space and pin 50999. Original geometry and six displacement fields reproduce
+within 4.45e-16. Distance stays 0.0003236401, volume changes by 8.88e-16,
+quality is 0.10021975, and minimum sampled Jacobian is 1.52083e-9.
+
+| Native26 round | Nodes | Tets | Curve parents bisected | Added nodes |
+|---|---:|---:|---:|---:|
+| 1 | 213,098 | 135,234 | 6,934 | 13,126 |
+| 2 | 227,732 | 143,312 | 8,078 | 14,634 |
+| 3 | 244,696 | 152,748 | 9,436 | 16,964 |
+| 4 | 249,996 | 155,829 | 3,081 | 5,300 |
+| 5 | 249,996 | 155,829 | 0 | 0 |
+
+The implementation accepts no additional star in the remaining budget and
+stops. Job 75 completes six fresh loads in 218.97 seconds at 5.832 GiB peak
+RSS. Independent field, periodic and positive-rule audits pass. All six
+stiffness changes from the original parent are negative, largest 0.08623610%.
+Galerkin balance is 3.92e-11 and positive-rule energy change is 9.97e-9.
+This supports the allocation change, but the target remains unmet.
+
+The already audited nonadaptive parent25 offers comparable geometry accuracy
+at 75,113 initial nodes, rather than native26's 199,972. Its distance is
+0.0003819821 and initial quality is 0.322484. It is a distinct fixed domain;
+no nested relation or monotone energy comparison to native26 is claimed.
+One bounded preflight uses the identical preferred-only rule and 250,000
+node/tet caps, without a new size parameter or seed sweep.
+
+Job 76 reaches 108,850 nodes and 64,716 tets after eight rounds. All gates pass,
+but the declared round limit stops work while stars are still being accepted.
+This is not convergence. Job 77 continues that verified geometric checkpoint
+for one more bounded eight-round block. Original source fields and composed
+maps are retained; no equilibrium solve or solved prefix is replayed.
+Rounds 9–12 pass. Round 13 stops at 161,494 nodes and 88,203 tets because two
+forward projections fail. Distance, volume, quality, sampled Jacobians,
+coherent facets and periodicity otherwise pass. The mesh remains rejected;
+no FE is selected, and no earlier round is substituted to hide the failure.
+
+Job 78 independently replays exactly those two forward samples on face 17087.
+Unbounded Newton feet leave the box by 4.00488e-6 and 2.35737e-6. Box-constrained
+SLSQP trials find valid zero-level targets at distances 2.68001e-5 and
+2.41392e-5, with field residuals at roundoff. A trimmed-plane control proves
+that a constrained target can exist when the unbounded normal foot leaves
+the box. These feasible points provide distance upper bounds, not certified
+closest points. The original rejection, samples and mesh remain unchanged.
+
+Next validate an explicitly versioned, opt-in box-constrained projection
+fallback on the same samples. Preserve the default historical auditor,
+0.002 distance, 1% volume, q0.1, positive-Jacobian and periodic gates. Keep
+failed samples in the calculation; a constrained candidate must satisfy the
+same target level and box constraints. Re-audit the unchanged rejected mesh
+before any further refinement or solve. Do not silently reclassify the old
+failure. This is an observation-method investigation, not permission to
+waive geometry admission or fit a mesh to empirical stiffness models.
+
+Schwarz retains its repeated Mac wins against the declared modified actual
+route. Gyroid and spinodoid comparator gaps remain open. Lattice native
+accuracy and reference convergence remain unresolved. All four cases and
+the unchanged objective remain active and unachieved.
+
+Records are `runs/macbook-lattice-adapt26-preferred-only-preflight-v1`,
+`runs/macbook-lattice-adapt26-preferred-only-v1`,
+`runs/macbook-lattice-parent25-preferred-only-preflight-v1`,
+`runs/macbook-lattice-parent25-preferred-only-preflight-v2` and
+`runs/macbook-lattice-parent25-projection-failures-v1`.
+Jobs through 78 are terminal. Earlier selected-next descriptions are historical.
+
 ## Fresh Mac actual lattice workflow passes, 24 October 2026
 
 The declared actual lattice route now passes fresh Mac generation and all

@@ -53,6 +53,8 @@ def main():
     increment_replays = []
     curve_star_replays = []
     fresh_actual_replays = []
+    preferred_only_replays = []
+    projection_failure_replays = []
     for run in sorted((workflow.HERE / "runs").glob("macbook-*")):
         if not run.is_dir() or not (run / "manifest.json").exists():
             continue
@@ -83,6 +85,12 @@ def main():
             failed_runs.append(run.name)
         if (run / "result.json").exists():
             result = json.loads((run / "result.json").read_text())
+            if result.get("preferred_only_repeated") and (run / "prolongation.npz").exists():
+                from verify_preferred_only import verify_preflight
+                preferred_only_replays.append(verify_preflight(run, result))
+            if result.get("projection_failure_localization"):
+                from verify_preferred_only import verify_projection_witnesses
+                projection_failure_replays.append(verify_projection_witnesses(run, result))
             if result.get("status") == "fresh-actual-preflight-passed":
                 from verify_actual_lattice import verify_prepared
                 fresh_actual_replays.append(verify_prepared(run, result))
@@ -382,6 +390,7 @@ def main():
         scores[run.name] = max(errors)
     workflow.save(output, {"passed": True, "verifier_sha256": workflow.digest(Path(__file__)),
         "fresh_actual_verifier_sha256": workflow.digest(Path(__file__).with_name("verify_actual_lattice.py")),
+        "preferred_only_verifier_sha256": workflow.digest(Path(__file__).with_name("verify_preferred_only.py")),
         "repository_head_at_verification": subprocess.check_output(["git", "rev-parse", "HEAD"], cwd=ROOT, text=True).strip(),
         "transferred_files_checked": files,
         "transferred_bytes_checked": total_bytes, "mac_input_hashes_checked": checked,
@@ -394,6 +403,8 @@ def main():
         "ranked_increment_replays": increment_replays,
         "curve_vertex_star_replays": curve_star_replays,
         "fresh_actual_lattice_replays": fresh_actual_replays,
+        "preferred_only_refinement_replays": preferred_only_replays,
+        "projection_failure_replays": projection_failure_replays,
         "reference_promoted": False})
     print(f"Verified {files} transferred files, {checked} input hashes and {comparisons} full model comparisons")
 

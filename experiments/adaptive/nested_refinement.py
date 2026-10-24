@@ -22,7 +22,8 @@ def positive_quality(coordinates):
 
 
 def refine(points, cells, surface, fields, *, periodic=True, minimum_quality=.1,
-           maximum_nodes=250000, maximum_tets=250000, preferred_edges=None, element_scores=None):
+           maximum_nodes=250000, maximum_tets=250000, preferred_edges=None, element_scores=None,
+           preferred_only=False):
     from fedoo.lib_elements.tetrahedron import Tet10
     from facet_incidence_audit import audit
 
@@ -30,6 +31,7 @@ def refine(points, cells, surface, fields, *, periodic=True, minimum_quality=.1,
     assert fields.shape == (6, len(points), 3) and np.isfinite(fields).all()
     assert len(points) <= maximum_nodes and len(cells) <= maximum_tets
     assert 0 < minimum_quality <= 1
+    assert not preferred_only or (preferred_edges is not None and element_scores is None), "Preferred-only mode needs explicit edges and no score ranking"
     original = audit(points, cells, surface)
     assert original["oriented_facet_consistency_passed"] and not original["nonpositive_corner_determinants"]
     classes = np.arange(len(points))
@@ -79,6 +81,9 @@ def refine(points, cells, surface, fields, *, periodic=True, minimum_quality=.1,
     if element_scores is not None:
         counts.update(selection="Measured element-score sum per added-node upper bound over complete periodic stars",
             input_element_score_sum=float(element_scores.sum()))
+    if preferred_only:
+        counts.update(preferred_only=True, skipped_nonpreferred_edge_orbits=sum(not priority[group].any() for group in ordered))
+        ordered = [group for group in ordered if priority[group].any()]
     for group in ordered:
         incident = [item for edge in group for item in incidence[edge]]
         parents, offsets = np.asarray(incident).T

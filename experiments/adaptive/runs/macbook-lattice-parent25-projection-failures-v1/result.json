@@ -1,0 +1,88 @@
+{
+  "projection_failure_localization": true,
+  "source": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-lattice-parent25-preferred-only-preflight-v2",
+  "case": "smooth-lattice",
+  "failed_projection_count": 2,
+  "forward_sample_count": 309166,
+  "witnesses": [
+    {
+      "face": 17087,
+      "probe_index": 7,
+      "probe": [
+        0.3418226518761255,
+        -0.3677086426635655,
+        -0.4999830824952227
+      ],
+      "original_foot": [
+        0.3418093935142898,
+        -0.36770097863759976,
+        -0.5000040048830242
+      ],
+      "original_distance": 2.592812688733448e-05,
+      "original_normalized_residual": 0.0,
+      "original_box_overshoot": 4.004883024211203e-06,
+      "locked": [
+        false,
+        false,
+        false
+      ],
+      "target_level": 0.0,
+      "constrained_foot": [
+        0.3418046562693216,
+        -0.3676982407310658,
+        -0.5
+      ],
+      "constrained_control": {
+        "solver_success": true,
+        "message": "Optimization terminated successfully",
+        "iterations": 37,
+        "absolute_field_residual": 0.0,
+        "feasible_target": true,
+        "distance": 2.680007522112913e-05
+      }
+    },
+    {
+      "face": 17087,
+      "probe_index": 9,
+      "probe": [
+        0.3428963559235207,
+        -0.36590372823840944,
+        -0.49998310113968364
+      ],
+      "original_foot": [
+        0.34288444542182417,
+        -0.3658963825056916,
+        -0.500002357374098
+      ],
+      "original_distance": 2.380383170094367e-05,
+      "original_normalized_residual": 1.3877787807697933e-17,
+      "original_box_overshoot": 2.3573740980387115e-06,
+      "locked": [
+        false,
+        false,
+        false
+      ],
+      "target_level": 0.0,
+      "constrained_foot": [
+        0.3428816842497909,
+        -0.365894679864455,
+        -0.5
+      ],
+      "constrained_control": {
+        "solver_success": true,
+        "message": "Optimization terminated successfully",
+        "iterations": 4,
+        "absolute_field_residual": 2.7755575615628914e-17,
+        "feasible_target": true,
+        "distance": 2.413923282221994e-05
+      }
+    }
+  ],
+  "all_constrained_candidates_feasible": true,
+  "mesh_modified": false,
+  "samples_regenerated": false,
+  "source_rejection_preserved": true,
+  "qualified": false,
+  "stiffness_solve_performed": false,
+  "scope": "Same failed forward probes, original projector replay and box-constrained feasible-target trials. Feasible feet are distance upper bounds, not certified closest points. The existing geometry rejection is not waived or rewritten."
+}

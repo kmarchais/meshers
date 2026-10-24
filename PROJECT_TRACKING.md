@@ -1,5 +1,16 @@
 # Meshers project tracking
 
+Preferred-only star refinement improves the audited native26 control to
+1.183637% across all 24 models, still failing 1%. Default refinement and all
+gates are unchanged. A coarser parent25 budget preflight stops at round13
+because two Newton projection feet leave the box. Valid constrained target
+feet are demonstrated on the same probes, but the mesh remains rejected.
+Next validate an opt-in constrained-projector fallback, preserving historical
+results and thresholds, then re-audit before any refinement or FE. The fresh
+modified actual lattice route still passes at 0.994671%; no lattice timing
+win follows. Schwarz repeats stand; Gyroid and spinodoid gaps remain. The
+full four-case goal is active and unachieved.
+
 One fresh Mac actual lattice workflow now passes all 24 models at 0.994671%.
 The route declares tuned VTK51/two-pass MMG, a one-vertex fixed-boundary repair,
 manual straight Tet10/direct fedoo and star refinement. Every added stage is
