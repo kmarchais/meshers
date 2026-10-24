@@ -22,7 +22,7 @@ def positive_quality(coordinates):
 
 
 def refine(points, cells, surface, fields, *, periodic=True, minimum_quality=.1,
-           maximum_nodes=250000, maximum_tets=250000):
+           maximum_nodes=250000, maximum_tets=250000, preferred_edges=None):
     from fedoo.lib_elements.tetrahedron import Tet10
     from facet_incidence_audit import audit
 
@@ -48,7 +48,11 @@ def refine(points, cells, surface, fields, *, periodic=True, minimum_quality=.1,
     for index, edge in enumerate(edges):
         groups.setdefault(tuple(sorted(classes[edge])), []).append(index)
     lengths = np.linalg.norm(points[edges[:, 1]] - points[edges[:, 0]], axis=1)
-    ordered = sorted(groups.values(), key=lambda group: (-float(lengths[group].max()), group[0]))
+    preferred = {tuple(sorted(edge)) for edge in (() if preferred_edges is None else preferred_edges)}
+    assert preferred <= set(map(tuple, edges)), "Preferred edges must exist in the parent mesh"
+    priority = np.array([tuple(edge) in preferred for edge in edges])
+    ordered = sorted(groups.values(), key=lambda group:
+        (-int(priority[group].any()), -float(lengths[group].max()), group[0]))
     allowed = np.ones((len(cells), 6), dtype=bool)
     for offset, endpoints in enumerate(EDGES):
         for endpoint in endpoints:
@@ -58,7 +62,9 @@ def refine(points, cells, surface, fields, *, periodic=True, minimum_quality=.1,
     selected = np.full(len(cells), -1, dtype=int)
     projected_nodes, projected_tets = len(points), len(cells)
     counts = {"accepted_edge_orbits": 0, "quality_rejected_orbits": 0,
-              "overlapping_star_orbits": 0, "budget_rejected_orbits": 0}
+              "overlapping_star_orbits": 0, "budget_rejected_orbits": 0,
+              "preferred_edge_orbits": sum(bool(priority[group].any()) for group in ordered),
+              "accepted_preferred_edge_orbits": 0}
     for group in ordered:
         incident = [item for edge in group for item in incidence[edge]]
         parents, offsets = np.asarray(incident).T
@@ -77,6 +83,7 @@ def refine(points, cells, surface, fields, *, periodic=True, minimum_quality=.1,
         projected_nodes += added
         projected_tets += len(parents)
         counts["accepted_edge_orbits"] += 1
+        counts["accepted_preferred_edge_orbits"] += int(priority[group].any())
     element = Tet10()
     maps = [child_maps(offset) for offset in range(6)]
     weights = []

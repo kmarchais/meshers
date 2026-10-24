@@ -6,8 +6,12 @@ Native setup, 54 focused controls, twelve solver-control loads, the second
 nested preflight, and reduced assembly have passed. Level2 has 218,135 nodes
 and 141,144 tets. Its six fresh loads and independent audits pass, with a
 0.328272% maximum additional FE correction and 2.135117% worst retained-model
-disagreement. No reference is promoted. One fixed-domain nested preflight on
-the best native lattice26 candidate is selected next, under unchanged caps.
+disagreement. No reference is promoted. The longest-edge lattice26 refinement
+also passes audits but misses at 1.256515%, despite reaching 250,000 nodes.
+That recipe is stopped. Verified Apple Accelerate single-thread controls
+now pass 55 tests and twelve loads; earlier Mac numerical timings are excluded
+from one-thread comparison baselines. One preflight prioritizing actual
+wall/box curve edge orbits is selected next, under unchanged caps.
 
 Updated 24 October 2026. Covers the recorded project history on
 `handoff/g3-microgen-20261017` through commit `9a20151`, plus completed

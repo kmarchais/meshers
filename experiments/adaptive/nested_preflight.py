@@ -39,7 +39,11 @@ def worker(args):
     assert len(row["solver_records"]) == 6 and row["geometry"]["geometry_admitted"]
     mesh = np.load(args.source / "mesh.npz")
     fields = np.load(args.source / "fields.npz")["displacement"]
-    result = refine(mesh["points"], mesh["tetrahedra"], mesh["surface"], fields)
+    preferred = None
+    if args.prefer_box_curves:
+        from periodic_crease_audit import features
+        preferred = features(mesh)["curve_edges"]
+    result = refine(mesh["points"], mesh["tetrahedra"], mesh["surface"], fields, preferred_edges=preferred)
     checks = interpolation_check(mesh["points"], mesh["tetrahedra"], fields, result)
     assert checks["elements_checked"] == len(result["tetrahedra"])
     np.savez_compressed(args.run / "mesh.npz", **{key: result[key] for key in ("points", "tetrahedra", "surface")})
@@ -63,6 +67,8 @@ def main():
     parser.add_argument("--source", required=True, type=Path)
     parser.add_argument("--fixture-source", type=Path,
         help="Original parent/prepared directory with hash-identical fixed samples, when absent from solve output")
+    parser.add_argument("--prefer-box-curves", action="store_true",
+        help="Prioritize actual wall/cap intersection edge orbits before other edges, with every existing guard retained")
     parser.add_argument("--worker", action="store_true")
     args = parser.parse_args()
     args.run, args.source = args.run.resolve(), args.source.resolve()
@@ -81,6 +87,8 @@ def main():
     paths.extend(workflow.HERE / name for name in ("nested_preflight.py", "nested_refinement.py",
         "test_nested_refinement.py", "job_parts.py", "test_job_parts.py", "microgen_workflow.py",
         "facet_incidence_audit.py", "scorecard.py"))
+    if args.prefer_box_curves:
+        paths.append(workflow.HERE / "periodic_crease_audit.py")
     paths.append(workflow.ROOT.parent / "periodic-microgen/experiments/periodic-fea/periodic.py")
     inputs = {str(path): workflow.digest(path) for path in paths}
     import meshers._meshers as native
@@ -94,10 +102,13 @@ def main():
         "versions": {name: importlib.metadata.version(name) for name in
             ("numpy", "scipy", "fedoo", "microgen", "mmgpy", "pyamg", "pyvista", "vtk")},
         "fixture_source": str(args.fixture_source or args.source),
+        "numerical_thread_policy": workflow.NUMERICAL_THREAD_POLICY,
         "threads": 1, "controls_timeout_s": 120, "worker_timeout_s": 300,
         "maximum_tetrahedra": workflow.CAP, "maximum_nodes": 250000,
         "minimum_corner_quality": .1, "maximum_bisections_per_parent": 1,
-        "selection": "Descending physical edge length, complete periodic orbits and disjoint incident stars"})
+        "prefer_box_curves": args.prefer_box_curves,
+        "selection": ("Wall/cap intersection orbits first, then descending physical length; complete periodic orbits and disjoint incident stars"
+            if args.prefer_box_curves else "Descending physical edge length, complete periodic orbits and disjoint incident stars")})
     with Job(parts=["controls", "nested-preflight"]) as job:
         for stage in ("controls", "nested-preflight"):
             with worker_part(job, stage) as part:

@@ -1,0 +1,28 @@
+{
+  "numpy_blas_build": {
+    "name": "accelerate",
+    "found": true,
+    "version": "unknown",
+    "detection method": "system",
+    "include directory": "unknown",
+    "lib directory": "unknown",
+    "openblas configuration": "unknown",
+    "pc file directory": "unknown"
+  },
+  "policy": {
+    "environment": {
+      "OPENBLAS_NUM_THREADS": "1",
+      "OMP_NUM_THREADS": "1",
+      "MKL_NUM_THREADS": "1",
+      "VECLIB_MAXIMUM_THREADS": "1",
+      "RAYON_NUM_THREADS": "1"
+    },
+    "accelerate_blas_threading": 1,
+    "accelerate_scope": "calling thread"
+  },
+  "observed_accelerate_mode_after_configuration": 1,
+  "initial_unconfigured_process_mode": 0,
+  "api_definition": "/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/System/Library/Frameworks/Accelerate.framework/Versions/A/Frameworks/vecLib.framework/Versions/A/Headers/thread_api.h",
+  "timing_scope": "Mac numerical jobs 1 through 8 are excluded from verified one-thread comparative baselines. Their measured wall times and numerical audits remain frozen. Build job 0 is unaffected.",
+  "source_history": "Completed pre-fix source hashes are preserved in Git commits 2ad9895 and 777f03d; later source edits do not rewrite their manifests."
+}

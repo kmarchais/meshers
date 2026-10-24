@@ -30,6 +30,24 @@ def test_bisection_partitions_parent_reference_tetrahedron(offset):
     np.testing.assert_allclose(determinants, .5, atol=1e-15)
 
 
+def test_preferred_short_edge_is_bisected_with_exact_parent_map():
+    workflow.imports()
+    from fedoo.lib_elements.tetrahedron import Tet10
+
+    points = Tet10().xi_nd.copy()
+    cells = np.arange(10)[None]
+    edges = {tuple(sorted(pair)): 4 + offset for offset, pair in enumerate(EDGES)}
+    surface = np.array([list(face) + [edges[tuple(sorted((face[first], face[second])))]
+        for first, second in ((0, 1), (1, 2), (2, 0))] for face in FACES])
+    fields = np.random.default_rng(19).normal(size=(6, 10, 3))
+    result = refine(points, cells, surface, fields, periodic=False, preferred_edges=[(0, 3)])
+    np.testing.assert_array_equal(result["parent_barycentric_maps"], child_maps(3))
+    assert result["diagnostics"]["accepted_preferred_edge_orbits"] == 1
+    assert interpolation_check(points, cells, fields, result)["maximum_field_error"] < 1e-12
+    with pytest.raises(AssertionError, match="must exist"):
+        refine(points, cells, surface, fields, periodic=False, preferred_edges=[(0, 99)])
+
+
 def test_curved_geometry_and_arbitrary_quadratic_fields_are_preserved():
     workflow.imports()
     from fedoo.lib_elements.tetrahedron import Tet10

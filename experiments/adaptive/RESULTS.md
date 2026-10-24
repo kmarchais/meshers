@@ -1,5 +1,23 @@
 # Adaptive and quadratic implicit meshing: results
 
+## Lattice26 bulk refinement remains rejected, 24 October 2026
+
+The fixed-domain longest-edge refinement reaches exactly 250,000 nodes and
+160,291 Tet10 elements. Geometry and old-field reproduction, periodic caps,
+sampled Jacobians, oriented facets, six fresh loads, and independent audits
+pass. The largest stiffness correction is only -0.0122671%, and the full
+Galerkin balance agrees within 6.07082e-10. Worst retained-model disagreement
+is 1.2565145%, failing 1%. Stop this recipe without a reference promotion or
+workflow claim.
+
+The initial Mac numerical timings lack explicit Apple Accelerate threading
+control and are excluded from verified one-thread comparison baselines.
+Numerical records remain frozen. The corrected native mode is now set and
+queried as single threaded. New 55-test and twelve-load controls pass.
+One preflight prioritizing actual wall/box curve edges is selected from the
+earlier localization evidence and the negative bulk test. Read the current
+Mac checkpoint before any solve.
+
 ## Native Mac second nested level, 24 October 2026
 
 Native setup passes 54 focused tests and twelve fresh AMG control loads.

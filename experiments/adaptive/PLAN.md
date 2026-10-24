@@ -1,5 +1,26 @@
 # Adaptive implicit meshing: plan and status
 
+## Negative bulk refinement and corrected Mac threading, 24 October 2026
+
+Mac jobs 6–8 finish the fixed-domain lattice26 longest-edge test. It fits
+exactly 250,000 nodes and passes every geometry, field, positive-rule, and
+Galerkin check. Its largest additional FE correction is only 0.0122671%,
+and worst 24-model disagreement remains 1.2565145%. Stop that recipe.
+
+The Mac NumPy wheel uses Apple Accelerate. The initial OpenBLAS/OMP settings
+did not explicitly select its single-thread API. Preserve those results,
+exclude their numerical timings from verified one-thread comparisons, and
+use the corrected policy recorded in `handoff/macbook/threading-clarification-20261024.json`.
+Jobs 9–10 pass 55 focused controls and twelve fresh numerical loads after
+setting and querying native Accelerate mode 1.
+
+Job 11 selects one curve-edge-first nested preflight on the same original
+lattice26 domain. Earlier full FE correction is concentrated near wall/box
+curves; the bulk test spends its cap for little gain. Change edge ordering
+only, preserving every guard and default behavior. Read the actual preferred
+orbit acceptance, counts, geometry, and field reproduction before any solve.
+Do not strengthen a sizing recipe, relax caps, or infer a new reference.
+
 ## Native Mac results and selected candidate check, 24 October 2026
 
 The native arm64 environment, shared serial queue, 54 focused tests, and

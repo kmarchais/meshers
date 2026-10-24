@@ -1,0 +1,43 @@
+{
+  "inputs": {
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/capture_reference_system.py": "3959cb975a6b2064ed0116ad083d0651ec6878ec6ab2b2aba5d6de16743c471b",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/microgen_workflow.py": "bfc8e62f33b3c63c085315511403373cf8b55531fab0db79119fb8b5a8da4d60",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/cubic_reference.py": "33bd7ce2c78126209406809af139a81bb460eeef1ecb81661da9a778373291f1",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/stress_recovery.py": "c9d74455c014c3b56ab656ca3f6a9cbf259dc11904318fecc354dcc6368651ac",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-lattice-adapt26-curve-nested-preflight-v1/mesh.npz": "458389ce0ad92a9d8f20a797b36495f9657d4552f183a57a7b948876b425ea5e",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-lattice-adapt26-curve-nested-preflight-v1/result.json": "b5ae86e6f1b733bfa5688755e557a5fef1fb7ef1b1987a04aabe63ae77254aed"
+  },
+  "memory_bytes": 8589934592,
+  "platform": "macOS-26.5.1-arm64-arm-64bit",
+  "architecture": "arm64",
+  "python": "3.12.9 (main, Feb 12 2025, 15:09:19) [Clang 19.1.6 ]",
+  "numerical_thread_policy": {
+    "environment": {
+      "OPENBLAS_NUM_THREADS": "1",
+      "OMP_NUM_THREADS": "1",
+      "MKL_NUM_THREADS": "1",
+      "VECLIB_MAXIMUM_THREADS": "1",
+      "RAYON_NUM_THREADS": "1"
+    },
+    "accelerate_blas_threading": 1,
+    "accelerate_scope": "calling thread"
+  },
+  "memory_enforcement": "process-tree-rss-watchdog",
+  "rss_poll_interval_s": 0.25,
+  "metrics_only": true,
+  "worker_timeout_s": 600,
+  "threads": 1,
+  "material": {
+    "young": 2.5,
+    "poisson": 0.25
+  },
+  "load": [
+    1,
+    0,
+    0,
+    0,
+    0,
+    0
+  ],
+  "no_fea_solution": true
+}

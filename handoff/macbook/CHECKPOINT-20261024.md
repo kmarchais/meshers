@@ -22,6 +22,21 @@ control. Tensor disagreements were below 3.45e-12 and 4.42e-11 respectively.
 Periodic, reaction, own-rule, and higher-rule checks passed. These are
 environment controls, not workflow comparisons.
 
+The first Mac numerical runs did not explicitly control Apple Accelerate,
+which is NumPy's BLAS backend here. A fresh process reports native BLAS mode
+0, allowing automatic threading. Their numerical results and audits remain
+valid, but numerical timings from jobs 1–8 are excluded from verified
+one-thread comparison baselines. Frozen values and original manifests remain
+unchanged. The correction is recorded in
+[threading-clarification-20261024.json](threading-clarification-20261024.json).
+
+The shared workflow now sets `VECLIB_MAXIMUM_THREADS=1` and calls the native
+`BLASSetThreading(1)` API on its calling thread. `BLASGetThreading()` verifies
+mode 1 before numerical work. Jobs 9–10 pass 55 focused controls and twelve
+fresh cube/Schwarz loads with the corrected policy, without changing tensors.
+New manifests and worker records include the actual policy. The Apple API
+is thread local; these workers perform numerical work on their main thread.
+
 Pueue 4.0.4 runs through its Homebrew user service. Its shared `gpu` group
 has one worker. The restored workbench checkout and external environment
 support `qrun --check-start`. A user launch agent serves the local Queue tab
@@ -100,9 +115,53 @@ same-domain FE softening is a relevant hypothesis. The edge-selection rule
 is unchanged and uses lengths, periodicity, quality, and budgets. It does
 not use oracle fields to tune a size function. The new preflight is
 `/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-lattice-adapt26-nested-preflight-v1`.
-Read its counts, mapping and field reproduction, geometry, and resource
-record before deciding on a solve. All 24 models and both 250,000 caps remain.
-The source's three independent field-audit input hashes were rechecked.
+Job 6 passes at exactly 250,000 nodes and 160,291 tets. It accepts 7,971 edge
+orbits, bisects 31,991 parents, and stops further orbits at the unchanged
+node cap. Map and field errors are 3.33e-16. Volume change is -1.11e-15.
+Distance 0.0003236401, quality 0.14932885, positive sampled Jacobians,
+periodic caps, and oriented facets pass. Worker time is 11.27 seconds at
+1.140 GiB peak RSS. The source's three independent field-audit input hashes
+were rechecked.
+
+After reading that result, job 7 measures actual reduced assembly at
+726,645 DOFs, 57,890,122 stored entries, and 697,588,048 CSR bytes. It passes
+in 10.85 seconds at 5.270 GiB peak RSS. Job 8 then completes six fresh loads and
+the same independent audits, under unchanged timeouts and the 8 GiB watchdog.
+Its directory is
+`/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-lattice-adapt26-nested-v1`.
+All fields, positive-rule checks, and Galerkin assessment pass. Peak solve
+RSS is 5.038 GiB. The largest FE correction is only -0.0122671%, with full
+Galerkin balance error 6.07082e-10. Worst disagreement across all 24 models
+is 1.2565145%, still failing 1%. Stop this longest-edge recipe. Spending the
+remaining node budget there does not establish a useful candidate improvement.
+
+After reading the negative result and passing corrected thread controls,
+job 11 preflights one change to edge ordering. It prioritizes actual
+wall/cap intersection edge orbits, then uses the existing length order.
+Earlier same-domain correction localization places 75.02% of the correction
+trace near curve vertices, whereas the longest-edge test resolves little.
+There is no sizing-strength parameter or change to physical geometry.
+Every periodic, quality, map-restriction, and field-nesting guard remains.
+The default length-only path is unchanged. A short-edge control checks the
+requested bisection and exact parent map; nonexistent preferred edges reject.
+
+The new preflight directory is
+`/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-lattice-adapt26-curve-nested-preflight-v1`.
+Job 11 passes sixteen controls. It accepts 544 of 549 preferred edge orbits
+and fits 249,999 nodes and 158,967 tets. Map and old-field errors are below
+3.34e-16. Relative volume change is -3.77e-15. Distance is unchanged at
+0.0003236401, corner quality is 0.10271976, sampled curved Jacobians are
+positive, and periodic caps and oriented facets pass. Worker time is 13.37
+seconds at 1.167 GiB RSS, with the corrected numerical thread policy.
+
+After reading that preflight, job 12 measures actual reduced assembly at
+721,914 DOFs, 57,483,976 stored entries, and 692,695,372 CSR bytes. It passes
+in 9.97 seconds at 6.230 GiB peak RSS. Job 13 then starts one fresh six-load
+solve, independent field and positive-rule audits, and full Galerkin and
+24-model assessment. The 8 GiB cap and timeouts remain unchanged. The directory is
+`/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-lattice-adapt26-curve-nested-v1`.
+Read its authoritative completion before a successor. This remains an
+experimental saved-mesh study, with no public native feature or workflow win.
 
 Schwarz retains its historical repeated wins against explicitly modified
 actual Microgen routes. Gyroid and spinodoid still lack admitted actual

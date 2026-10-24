@@ -24,6 +24,27 @@ CAP = 250_000
 TIMEOUT = 1200
 
 
+def configure_numerical_threads():
+    settings = {name: "1" for name in ("OPENBLAS_NUM_THREADS", "OMP_NUM_THREADS",
+        "MKL_NUM_THREADS", "VECLIB_MAXIMUM_THREADS", "RAYON_NUM_THREADS")}
+    os.environ.update(settings)
+    policy = {"environment": settings}
+    if sys.platform == "darwin":
+        import ctypes
+        accelerate = ctypes.CDLL("/System/Library/Frameworks/Accelerate.framework/Accelerate")
+        accelerate.BLASSetThreading.argtypes = [ctypes.c_uint]
+        accelerate.BLASSetThreading.restype = ctypes.c_int
+        accelerate.BLASGetThreading.restype = ctypes.c_uint
+        # Apple's thread_api.h defines 1 as SINGLE_THREADED. This API is thread local.
+        assert accelerate.BLASSetThreading(1) == 0
+        assert accelerate.BLASGetThreading() == 1
+        policy.update(accelerate_blas_threading=1, accelerate_scope="calling thread")
+    return policy
+
+
+NUMERICAL_THREAD_POLICY = configure_numerical_threads()
+
+
 def save(path, data):
     temporary = path.with_suffix(path.suffix + ".tmp")
     temporary.write_text(json.dumps(data, indent=2, allow_nan=False) + "\n")
@@ -614,7 +635,7 @@ def bounded(command, logfile, part, timeout=TIMEOUT):
             "wall_s": time.monotonic() - start, "memory_bytes": MEMORY,
             "memory_enforcement": "rlimit-as-and-process-tree-rss" if sys.platform == "linux"
                 else "process-tree-rss-watchdog", "rss_poll_interval_s": .25,
-            "platform": sys.platform}
+            "platform": sys.platform, "numerical_thread_policy": NUMERICAL_THREAD_POLICY}
 
 
 def main():

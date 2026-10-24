@@ -144,6 +144,7 @@ def main():
         ["uv", "pip", "freeze", "--python", sys.executable], text=True))
     workflow.save(args.run / "manifest.json", {"inputs": inputs, "memory_bytes": workflow.MEMORY,
         "platform": platform.platform(), "architecture": platform.machine(), "python": sys.version,
+        "numerical_thread_policy": workflow.NUMERICAL_THREAD_POLICY,
         "memory_enforcement": "rlimit-as-and-process-tree-rss" if sys.platform == "linux"
             else "process-tree-rss-watchdog", "rss_poll_interval_s": .25,
         "native_path": native.__file__, "native_sha256": workflow.digest(Path(native.__file__)),

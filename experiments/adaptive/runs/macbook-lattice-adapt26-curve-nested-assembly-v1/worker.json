@@ -1,0 +1,21 @@
+{
+  "returncode": 0,
+  "limit_failure": null,
+  "peak_rss_bytes": 6689226752,
+  "wall_s": 9.968061708030291,
+  "memory_bytes": 8589934592,
+  "memory_enforcement": "process-tree-rss-watchdog",
+  "rss_poll_interval_s": 0.25,
+  "platform": "darwin",
+  "numerical_thread_policy": {
+    "environment": {
+      "OPENBLAS_NUM_THREADS": "1",
+      "OMP_NUM_THREADS": "1",
+      "MKL_NUM_THREADS": "1",
+      "VECLIB_MAXIMUM_THREADS": "1",
+      "RAYON_NUM_THREADS": "1"
+    },
+    "accelerate_blas_threading": 1,
+    "accelerate_scope": "calling thread"
+  }
+}

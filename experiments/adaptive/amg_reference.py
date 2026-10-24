@@ -268,6 +268,7 @@ def main():
     import meshers._meshers as native
     workflow.save(args.run / "manifest.json", {"inputs": hashes, "memory_bytes": workflow.MEMORY,
         "platform": platform.platform(), "architecture": platform.machine(), "python": sys.version,
+        "numerical_thread_policy": workflow.NUMERICAL_THREAD_POLICY,
         "native_sha256": workflow.digest(Path(native.__file__)),
         "memory_enforcement": "rlimit-as-and-process-tree-rss" if sys.platform == "linux"
             else "process-tree-rss-watchdog", "rss_poll_interval_s": .25,

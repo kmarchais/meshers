@@ -1,5 +1,36 @@
 # Reference-only cubic enrichment on G3
 
+## Lattice26 fixed-domain negative control and Mac thread correction
+
+Mac job 6 adds 50,028 nodes to the best saved native lattice26 mesh, reaching
+exactly 250,000 nodes and 160,291 tets. It preserves the original curved
+physical domain and six old fields within 3.33e-16. Every admission gate
+passes. Job 7 confirms actual reduced assembly at 5.270 GiB RSS.
+
+Job 8 completes six fresh loads and independent field, positive-rule, and
+Galerkin checks. The largest generalized FE correction is -0.0122671%, and
+the full balance agrees within 6.07082e-10. Worst disagreement across all
+24 retained models is 1.2565145%, still above 1%. Stop this bulk longest-edge
+recipe. This negative test does not refute targeted refinement, promote a
+reference, or establish a live workflow timing.
+
+The installed Mac NumPy BLAS is Apple Accelerate. Initial OpenBLAS/OMP
+settings did not explicitly control its native threading mode. Numerical
+timings from Mac jobs 1–8 are excluded from verified one-thread comparisons;
+their tensor and field evidence remains frozen. The shared runner now uses
+`VECLIB_MAXIMUM_THREADS=1` and verifies `BLASSetThreading(1)` with
+`BLASGetThreading()`. The SDK defines mode 1 as single threaded on the
+calling thread. Jobs 9–10 pass 55 focused tests and twelve fresh AMG loads.
+The separate clarification preserves original manifests and source hashes.
+
+Job 11 then tests one geometry-only ordering change on original lattice26:
+prioritize actual wall/cap intersection edge orbits before descending length.
+The earlier full correction is concentrated near curve vertices, while the
+bulk test resolves little within its budget. No field-derived sizing strength,
+geometry projection, specimen change, or cap relaxation is introduced.
+All parent-map, field-nesting, quality, and periodic guards remain. Read the
+preflight before selecting any solve. No native API change is promoted.
+
 ## Second nested correction on native Mac, 24 October 2026
 
 Mac jobs 0–2 establish the native environment and queue, pass 54 focused

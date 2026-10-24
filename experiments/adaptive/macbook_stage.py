@@ -37,6 +37,7 @@ def main():
         "python": sys.version, "executable": sys.executable, "memory_bytes": workflow.MEMORY,
         "memory_enforcement": "process-tree-rss-watchdog", "rss_poll_interval_s": .25,
         "timeout_s": args.timeout, "numerical_threads": 1, "build_jobs": 2,
+        "numerical_thread_policy": workflow.NUMERICAL_THREAD_POLICY,
         "rust": subprocess.check_output(["rustc", "+1.95.0", "--version"], text=True).strip(),
         "inputs": {str(path): workflow.digest(path) for path in
             (Path(__file__), Path(workflow.__file__), workflow.ROOT / "Cargo.lock")},
