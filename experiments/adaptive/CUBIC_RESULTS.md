@@ -1,5 +1,52 @@
 # Reference-only cubic enrichment on G3
 
+## Ranked nested coupled correction, 24 October 2026
+
+Mac jobs 53–56 complete the measured-score nested-space investigation.
+The 249,999-node, 162,599-tet mesh retains the original parent23 curved
+physical domain and the previous approximation space. Root-map geometry
+reproduction is within 1.67e-16. Fifteen versus positive 216-point integration
+changes the mode Gram matrix by 0.020572% and the fixed-lift trial gain by
+0.025114%, below the declared 1% precision gate.
+
+The prolonged quadratic base is not equilibrated on the refined space.
+Its six reduced residuals are 19.29–31.69% of their internal-force norms.
+The generalized correction therefore includes six fresh lift-residual
+responses as well as six fresh mode responses. A dense full augmented-system
+control verifies the condensation and rejects dropping the lift residual.
+Combined AMG setup fits at 5.584 GiB. All twelve responses finish in 467.17
+seconds at 5.769 GiB, under the unchanged 8 GiB ceiling and explicit timeouts.
+These are reference-research auxiliary responses, not twelve macro workflows.
+
+The complete modal field audit takes 174.96 seconds at 5.580 GiB. Own-rule
+energy agrees with the predicted tensor within 3.96e-14, and stress-energy
+balance is 2.46e-14 relative. Positive 125-to-216-point energy change is
+4.37e-9. Fresh operator replay checks all twelve auxiliary responses below
+5.56e-12, all six complete equilibrium states below 1.66e-12, and mode
+stationarity within 2.56e-12. Periodic jumps are below 4.45e-16 and the pin
+is exactly zero. All six signed stiffness changes from the preceding coupled
+space are negative; the largest decrease is 0.09312825%.
+
+Worst disagreement across every retained model improves from 1.82618412%
+to 1.74132028%. It still fails 1%. No model is deleted, reference promoted,
+or native candidate promoted. This controlled fixed-domain result is not a
+live Meshers regeneration, same-host competitor timing, or continuum/local
+stress certificate. The best live lattice candidate remains the audited
+adapt26 result at 1.2686985%. The reference problem remains open.
+
+Read the remaining correction and geometry evidence before selecting a
+native change. Do not repeat the exhausted literal-curve-edge sizing recipe
+or assume this parent23 investigation resolves geometry bias. Gyroid and
+spinodoid still lack admitted actual comparators in tested routes. The five
+fresh Mac Schwarz pairs retain their explicitly modified actual-route win.
+All four cases and their original admission gates remain in scope.
+
+Records are `runs/macbook-lattice-hp-ranked-coupling-v1`,
+`runs/macbook-lattice-hp-ranked-setup-v1`,
+`runs/macbook-lattice-hp-ranked-solve-v1` and
+`runs/macbook-lattice-hp-ranked-audit-v1`. Jobs through 56 are terminal.
+Earlier selected-next descriptions are historical.
+
 ## Measured-score lattice allocation preflight, 24 October 2026
 
 Job 49 localizes the complete coupled correction, using all six loads and

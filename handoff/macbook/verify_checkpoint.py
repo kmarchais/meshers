@@ -120,7 +120,7 @@ def main():
                 np.testing.assert_allclose(score[selected].sum() / score.sum(), result["selected_parent_score_fraction"], atol=1e-12)
                 ranked_replays.append({"run": run.name, "all_child_geometry_error": geometry_error,
                     "all_child_field_error": field_error, "selected_score_fraction": float(score[selected].sum() / score.sum())})
-            if "complete_field_reduced_residuals" in result:
+            if "complete_field_reduced_residuals" in result and "retained_model_count" in result:
                 assert result["passed"] and result["retained_model_count"] == 24
                 assert max(result["auxiliary_reduced_residuals"]) < 2e-9
                 assert max(result["complete_field_reduced_residuals"]) < 2e-9

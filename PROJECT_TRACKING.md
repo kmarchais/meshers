@@ -1,5 +1,14 @@
 # Meshers project tracking
 
+Ranked nested lattice correction now passes complete-field, positive-rule,
+periodic and freshly reassembled equilibrium audits. All twelve fresh
+auxiliary responses fit at 5.769 GiB. The largest fixed-domain stiffness
+decrease is 0.093128%; worst disagreement across all 24 models improves to
+1.741320%, still failing 1%. No reference or native candidate is promoted.
+Inspect remaining correction and geometry evidence before another native
+change. Gyroid and spinodoid comparator gaps remain; repeated Mac Schwarz
+wins stand. All four cases remain active and the full goal is unachieved.
+
 Correction-energy localization now distinguishes complete curve-vertex
 neighborhoods from literal curve edges. One measured-score-per-node nested
 preflight selects parents carrying 88.8088% of the resolved six-load score
