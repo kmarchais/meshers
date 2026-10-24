@@ -1,0 +1,1362 @@
+{
+  "case": "smooth-lattice",
+  "rows": [
+    {
+      "vtk_backend": "Sequential",
+      "vtk_threads": 1,
+      "case": "smooth-lattice",
+      "config": {
+        "name": "actual-default",
+        "arm": "microgen",
+        "resolution": null,
+        "order": 1
+      },
+      "status": "geometry-or-periodicity-rejected",
+      "qualified": false,
+      "mmg_calls": [
+        {
+          "nofem": true,
+          "output_tetrahedra": 19053
+        },
+        {
+          "hausd": null,
+          "hgrad": null,
+          "hmax": null,
+          "hmin": null,
+          "hsiz": null,
+          "ls": true,
+          "nr": true,
+          "output_tetrahedra": 27084
+        }
+      ],
+      "solve_performed": false,
+      "instrumentation_s": 0.09755020891316235,
+      "actual_resolution": null,
+      "seed_nodes": 48353,
+      "seed_elements": 233532,
+      "reoriented_tets": 0,
+      "generation_wall_s": 4.936170790926553,
+      "nodes": 6596,
+      "elements": 27084,
+      "generation_s": 4.838620582013391,
+      "mesh_sha256": "32922e3c54e727913573a9dc88827ceeb8199be6dab50dea369769a829db4191",
+      "geometry": {
+        "sampled_forward_max": 0.010210140283691979,
+        "sampled_reverse_max": 0.008779023106281314,
+        "sampled_two_sided_max": 0.010210140283691979,
+        "outward_forward_max": 0.010210140283691979,
+        "inward_forward_max": 0.008298288814537263,
+        "projection_failed": 0,
+        "forward_samples": 43472,
+        "reverse_samples": 34791,
+        "volume": 0.24123533552214643,
+        "relative_volume_error": -0.02849533868538512,
+        "q_min_corner": 0.010288182196537089,
+        "q_p01_corner": 0.26118587812462973,
+        "minimum_dihedral_deg_corner": 0.48262821385139887,
+        "minimum_sampled_jacobian": 3.503542125756137e-08,
+        "reverse_tessellation_delta_max": 0.0,
+        "quadratic_reverse_subdivisions": null,
+        "projection_method": "newton-box-slsqp-v1",
+        "unbounded_projection_failed": 0,
+        "box_projection_attempts": 0,
+        "box_projection_recovered": 0,
+        "box_projection_witnesses": [],
+        "facet_consistency": {
+          "nodes": 6596,
+          "elements": 27084,
+          "unique_faces": 57556,
+          "interior_faces": 50780,
+          "extracted_boundary_faces": 6776,
+          "same_orientation_shared_faces": 0,
+          "nonmanifold_faces": 0,
+          "duplicate_cells": 0,
+          "duplicate_surface_faces": 0,
+          "provided_boundary_matches_extraction": true,
+          "missing_provided_faces": 0,
+          "extra_provided_faces": 0,
+          "nonpositive_corner_determinants": 0,
+          "minimum_corner_determinant": 3.503542125756141e-08,
+          "oriented_facet_consistency_passed": true,
+          "conflict_examples": [],
+          "scope": "Oriented corner-face incidence and same-side neighbor diagnostics; necessary consistency, not a certificate of curved geometry or absence of nonlocal intersections"
+        },
+        "oriented_facet_consistency_passed": true,
+        "geometry_admitted": false
+      },
+      "quality_quantiles": {
+        "min": 0.010288182196537089,
+        "p01": 0.26118587812462973,
+        "p05": 0.46991571262946835,
+        "median": 0.7517124089487847,
+        "p95": 0.931002817233502
+      },
+      "elements_below_q01": 191,
+      "periodic": {
+        "periodic_pair_counts": [
+          360,
+          360,
+          360
+        ],
+        "periodic_coordinate_errors": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "periodic_pair_tolerance": 1e-10,
+        "periodic_equivalence_classes": 5569,
+        "periodic_triangles_match": true
+      },
+      "audit_s": 1.3852378749288619,
+      "wall_s": 6.3491330000106245,
+      "worker": {
+        "returncode": 0,
+        "limit_failure": null,
+        "peak_rss_bytes": 1289781248,
+        "wall_s": 7.340062083094381,
+        "memory_bytes": 8589934592,
+        "memory_enforcement": "process-tree-rss-watchdog",
+        "rss_poll_interval_s": 0.25,
+        "platform": "darwin",
+        "numerical_thread_policy": {
+          "environment": {
+            "OPENBLAS_NUM_THREADS": "1",
+            "OMP_NUM_THREADS": "1",
+            "MKL_NUM_THREADS": "1",
+            "VECLIB_MAXIMUM_THREADS": "1",
+            "RAYON_NUM_THREADS": "1"
+          },
+          "accelerate_blas_threading": 1,
+          "accelerate_scope": "calling thread"
+        }
+      },
+      "directory": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-mesh-only-lattice-strengthened-v1/repeat-0-actual-default",
+      "warmup": false
+    },
+    {
+      "vtk_backend": "Sequential",
+      "vtk_threads": 1,
+      "case": "smooth-lattice",
+      "config": {
+        "name": "actual-explicit-tuned",
+        "arm": "microgen",
+        "order": 1,
+        "resolution": 51,
+        "mmg": {
+          "hausd": 0.001,
+          "hmax": 0.06,
+          "hgrad": 1.3
+        },
+        "first_hausd": 0.0015,
+        "first_hmax": 0.06,
+        "first_only": false,
+        "repair": true
+      },
+      "status": "admitted",
+      "qualified": true,
+      "mmg_calls": [
+        {
+          "nofem": true,
+          "hausd": 0.0015,
+          "hmax": 0.06,
+          "hgrad": 1.3,
+          "output_tetrahedra": 115536
+        },
+        {
+          "hausd": 0.001,
+          "hgrad": 1.3,
+          "hmax": 0.06,
+          "hmin": null,
+          "hsiz": null,
+          "ls": true,
+          "nr": true,
+          "output_tetrahedra": 158430
+        }
+      ],
+      "solve_performed": false,
+      "instrumentation_s": 0.24839708395302296,
+      "actual_resolution": null,
+      "seed_nodes": 51309,
+      "seed_elements": 249432,
+      "reoriented_tets": 0,
+      "repair": {
+        "initial_bad_elements": 1,
+        "remaining_bad_elements": 0,
+        "initial_minimum_quality": 0.099880992130727,
+        "final_minimum_quality": 0.10000100099999965,
+        "accepted_moves": 1,
+        "moved_vertices": 1,
+        "attempts": [
+          {
+            "node": 25192,
+            "incident_tets": 34,
+            "quality_target": 0.100001,
+            "initial_minimum_quality": 0.099880992130727,
+            "fixed_opposite_face_upper_bound": 0.2208704033548743,
+            "target_attained": true,
+            "status": "feasible-numerically",
+            "numerical_quality_guard": 1e-09,
+            "solver_success": true,
+            "solver_message": "Optimization terminated successfully",
+            "iterations": 5,
+            "seconds": 0.0015733749605715275,
+            "final_minimum_quality": 0.10000100099999965,
+            "maximum_move": 1.4327478192475384e-05,
+            "minimum_normalized_constraint": -2.3418766925686896e-17,
+            "candidate_coordinates": [
+              -0.4835429629306696,
+              0.3516150876251875,
+              0.45194615169767366
+            ],
+            "minimum_signed_determinant": 3.76398457753741e-07,
+            "element": 54685,
+            "sweep": 0
+          }
+        ],
+        "maximum_attempts": 400,
+        "maximum_sweeps": 2,
+        "boundary_coordinates_unchanged": true,
+        "signed_volume_difference": 3.700743415417188e-17,
+        "minimum_signed_determinant": 1.3632390347101505e-07
+      },
+      "repair_s": 0.38687983294948936,
+      "generation_wall_s": 8.812400792026892,
+      "nodes": 33953,
+      "elements": 158430,
+      "generation_s": 8.56400370807387,
+      "mesh_sha256": "dfeca5ba6f6eb4e6109ecffe46f79818ab29001a3bf807010ec00008b8b591a2",
+      "geometry": {
+        "sampled_forward_max": 0.0017012390155748264,
+        "sampled_reverse_max": 0.0014631743789666586,
+        "sampled_two_sided_max": 0.0017012390155748264,
+        "outward_forward_max": 0.0017012390155748264,
+        "inward_forward_max": 0.0012580213593465764,
+        "projection_failed": 0,
+        "forward_samples": 275132,
+        "reverse_samples": 34791,
+        "volume": 0.24709299343401592,
+        "relative_volume_error": -0.0049053370239361405,
+        "q_min_corner": 0.1000010009999996,
+        "q_p01_corner": 0.4897432696461668,
+        "minimum_dihedral_deg_corner": 5.232361200827825,
+        "minimum_sampled_jacobian": 1.36323903471015e-07,
+        "reverse_tessellation_delta_max": 0.0,
+        "quadratic_reverse_subdivisions": null,
+        "projection_method": "newton-box-slsqp-v1",
+        "unbounded_projection_failed": 0,
+        "box_projection_attempts": 0,
+        "box_projection_recovered": 0,
+        "box_projection_witnesses": [],
+        "facet_consistency": {
+          "nodes": 33953,
+          "elements": 158430,
+          "unique_faces": 329254,
+          "interior_faces": 304466,
+          "extracted_boundary_faces": 24788,
+          "same_orientation_shared_faces": 0,
+          "nonmanifold_faces": 0,
+          "duplicate_cells": 0,
+          "duplicate_surface_faces": 0,
+          "provided_boundary_matches_extraction": true,
+          "missing_provided_faces": 0,
+          "extra_provided_faces": 0,
+          "nonpositive_corner_determinants": 0,
+          "minimum_corner_determinant": 1.3632390347101505e-07,
+          "oriented_facet_consistency_passed": true,
+          "conflict_examples": [],
+          "scope": "Oriented corner-face incidence and same-side neighbor diagnostics; necessary consistency, not a certificate of curved geometry or absence of nonlocal intersections"
+        },
+        "oriented_facet_consistency_passed": true,
+        "geometry_admitted": true
+      },
+      "quality_quantiles": {
+        "min": 0.1000010009999996,
+        "p01": 0.4897432696461668,
+        "p05": 0.5946263730257411,
+        "median": 0.8037069194314429,
+        "p95": 0.9460626751789675
+      },
+      "elements_below_q01": 0,
+      "periodic": {
+        "periodic_pair_counts": [
+          376,
+          376,
+          376
+        ],
+        "periodic_coordinate_errors": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "periodic_pair_tolerance": 1e-10,
+        "periodic_equivalence_classes": 32878,
+        "periodic_triangles_match": true
+      },
+      "audit_s": 2.060750874923542,
+      "wall_s": 11.041109125013463,
+      "worker": {
+        "returncode": 0,
+        "limit_failure": null,
+        "peak_rss_bytes": 1320828928,
+        "wall_s": 12.09389908297453,
+        "memory_bytes": 8589934592,
+        "memory_enforcement": "process-tree-rss-watchdog",
+        "rss_poll_interval_s": 0.25,
+        "platform": "darwin",
+        "numerical_thread_policy": {
+          "environment": {
+            "OPENBLAS_NUM_THREADS": "1",
+            "OMP_NUM_THREADS": "1",
+            "MKL_NUM_THREADS": "1",
+            "VECLIB_MAXIMUM_THREADS": "1",
+            "RAYON_NUM_THREADS": "1"
+          },
+          "accelerate_blas_threading": 1,
+          "accelerate_scope": "calling thread"
+        }
+      },
+      "directory": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-mesh-only-lattice-strengthened-v1/repeat-0-actual-explicit-tuned",
+      "warmup": false
+    },
+    {
+      "vtk_backend": "Sequential",
+      "vtk_threads": 1,
+      "case": "smooth-lattice",
+      "config": {
+        "name": "actual-explicit-tuned-tet10",
+        "arm": "microgen",
+        "order": 2,
+        "resolution": 51,
+        "mmg": {
+          "hausd": 0.001,
+          "hmax": 0.06,
+          "hgrad": 1.3
+        },
+        "first_hausd": 0.0015,
+        "first_hmax": 0.06,
+        "first_only": false,
+        "repair": true
+      },
+      "status": "failed",
+      "qualified": false,
+      "mmg_calls": [
+        {
+          "nofem": true,
+          "hausd": 0.0015,
+          "hmax": 0.06,
+          "hgrad": 1.3,
+          "output_tetrahedra": 115536
+        },
+        {
+          "hausd": 0.001,
+          "hgrad": 1.3,
+          "hmax": 0.06,
+          "hmin": null,
+          "hsiz": null,
+          "ls": true,
+          "nr": true,
+          "output_tetrahedra": 158430
+        }
+      ],
+      "solve_performed": false,
+      "instrumentation_s": 0.24905633309390396,
+      "actual_resolution": null,
+      "seed_nodes": 51309,
+      "seed_elements": 249432,
+      "reoriented_tets": 0,
+      "repair": {
+        "initial_bad_elements": 1,
+        "remaining_bad_elements": 0,
+        "initial_minimum_quality": 0.099880992130727,
+        "final_minimum_quality": 0.10000100099999965,
+        "accepted_moves": 1,
+        "moved_vertices": 1,
+        "attempts": [
+          {
+            "node": 25192,
+            "incident_tets": 34,
+            "quality_target": 0.100001,
+            "initial_minimum_quality": 0.099880992130727,
+            "fixed_opposite_face_upper_bound": 0.2208704033548743,
+            "target_attained": true,
+            "status": "feasible-numerically",
+            "numerical_quality_guard": 1e-09,
+            "solver_success": true,
+            "solver_message": "Optimization terminated successfully",
+            "iterations": 5,
+            "seconds": 0.0016232500784099102,
+            "final_minimum_quality": 0.10000100099999965,
+            "maximum_move": 1.4327478192475384e-05,
+            "minimum_normalized_constraint": -2.3418766925686896e-17,
+            "candidate_coordinates": [
+              -0.4835429629306696,
+              0.3516150876251875,
+              0.45194615169767366
+            ],
+            "minimum_signed_determinant": 3.76398457753741e-07,
+            "element": 54685,
+            "sweep": 0
+          }
+        ],
+        "maximum_attempts": 400,
+        "maximum_sweeps": 2,
+        "boundary_coordinates_unchanged": true,
+        "signed_volume_difference": 3.700743415417188e-17,
+        "minimum_signed_determinant": 1.3632390347101505e-07
+      },
+      "repair_s": 0.3976023340364918,
+      "error": "too many values to unpack (expected 3)",
+      "traceback": "Traceback (most recent call last):\n  File \"/Users/kmarchais/dev/meshers/experiments/adaptive/mesh_only_comparison.py\", line 122, in worker\n    phase=time.perf_counter();points,tets,surface=straight_elevation(points,tets,surface)\n                              ^^^^^^^^^^^^^^^^^^^\nValueError: too many values to unpack (expected 3)\n",
+      "failed_attempt_s": 9.318481666967273,
+      "wall_s": 9.318482917034999,
+      "worker": {
+        "returncode": 0,
+        "limit_failure": null,
+        "peak_rss_bytes": 1320796160,
+        "wall_s": 10.233175709028728,
+        "memory_bytes": 8589934592,
+        "memory_enforcement": "process-tree-rss-watchdog",
+        "rss_poll_interval_s": 0.25,
+        "platform": "darwin",
+        "numerical_thread_policy": {
+          "environment": {
+            "OPENBLAS_NUM_THREADS": "1",
+            "OMP_NUM_THREADS": "1",
+            "MKL_NUM_THREADS": "1",
+            "VECLIB_MAXIMUM_THREADS": "1",
+            "RAYON_NUM_THREADS": "1"
+          },
+          "accelerate_blas_threading": 1,
+          "accelerate_scope": "calling thread"
+        }
+      },
+      "directory": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-mesh-only-lattice-strengthened-v1/repeat-0-actual-explicit-tuned-tet10",
+      "warmup": false
+    },
+    {
+      "vtk_backend": "Sequential",
+      "vtk_threads": 1,
+      "case": "smooth-lattice",
+      "config": {
+        "name": "meshers-tet4-24",
+        "arm": "meshers",
+        "cells": 24,
+        "order": 1,
+        "adapt": false,
+        "tolerance": 1.0
+      },
+      "status": "geometry-or-periodicity-rejected",
+      "qualified": false,
+      "mmg_calls": [],
+      "solve_performed": false,
+      "instrumentation_s": 0.0,
+      "positive_void_clamp": 0.02,
+      "field_representation": "Value-identical symmetric min; fixed original cubic smooth-union order",
+      "diagnostics": {
+        "empty": false,
+        "volume": 0.24616448206110605,
+        "minimum_mmg_quality": 0.34102176039778975,
+        "sampled_surface_error": 0.005341218461470616,
+        "elements_below_quality_01": 0,
+        "reverted_snap_vertices": 0,
+        "callback_calls": 0,
+        "inserted_interior_nodes": 0,
+        "seconds": 0.710174792,
+        "threads": 1,
+        "evaluator": "compiled",
+        "preparation_seconds": 0.006737290997989476
+      },
+      "generation_wall_s": 0.7181211670394987,
+      "nodes": 9907,
+      "elements": 44976,
+      "generation_s": 0.7181211670394987,
+      "fixed_field_identity_checked": 4096,
+      "mesh_sha256": "2397b156c79893df84b5a9326083c8a2f7cea8287fd473175fa2cd00a028c34a",
+      "geometry": {
+        "sampled_forward_max": 0.0053439523136918875,
+        "sampled_reverse_max": 0.004269612620001098,
+        "sampled_two_sided_max": 0.0053439523136918875,
+        "outward_forward_max": 0.0053439523136918875,
+        "inward_forward_max": 0.00486171144503251,
+        "projection_failed": 0,
+        "forward_samples": 99996,
+        "reverse_samples": 34791,
+        "volume": 0.24616448206104138,
+        "relative_volume_error": -0.00864464463812098,
+        "q_min_corner": 0.34102176039778975,
+        "q_p01_corner": 0.6084119487919026,
+        "minimum_dihedral_deg_corner": 18.80977924215472,
+        "minimum_sampled_jacobian": 3.746974799440761e-06,
+        "reverse_tessellation_delta_max": 0.0,
+        "quadratic_reverse_subdivisions": null,
+        "projection_method": "newton-box-slsqp-v1",
+        "unbounded_projection_failed": 2,
+        "box_projection_attempts": 2,
+        "box_projection_recovered": 2,
+        "box_projection_witnesses": [
+          {
+            "sample_index": 89486,
+            "original_foot": [
+              -0.36342409770231504,
+              0.5000096482384773,
+              0.344491357560339
+            ],
+            "candidate": [
+              -0.36341663693323395,
+              0.5,
+              0.3444802341128438
+            ],
+            "solver_success": true,
+            "message": "Optimization terminated successfully",
+            "iterations": 7,
+            "absolute_field_residual": 0.0,
+            "normalized_field_residual": 0.0,
+            "feasible_target": true,
+            "distance": 0.0015654143649914722
+          },
+          {
+            "sample_index": 89487,
+            "original_foot": [
+              -0.3451501081728237,
+              0.5000224719094246,
+              0.3624954154179463
+            ],
+            "candidate": [
+              -0.34512440689837753,
+              0.5,
+              0.3624775715033621
+            ],
+            "solver_success": true,
+            "message": "Optimization terminated successfully",
+            "iterations": 107,
+            "absolute_field_residual": 1.249000902703301e-16,
+            "normalized_field_residual": 1.249000902720181e-16,
+            "feasible_target": true,
+            "distance": 0.001580002961054505
+          }
+        ],
+        "facet_consistency": {
+          "nodes": 9907,
+          "elements": 44976,
+          "unique_faces": 94188,
+          "interior_faces": 85716,
+          "extracted_boundary_faces": 8472,
+          "same_orientation_shared_faces": 0,
+          "nonmanifold_faces": 0,
+          "duplicate_cells": 0,
+          "duplicate_surface_faces": 0,
+          "provided_boundary_matches_extraction": true,
+          "missing_provided_faces": 0,
+          "extra_provided_faces": 0,
+          "nonpositive_corner_determinants": 0,
+          "minimum_corner_determinant": 3.746974799440762e-06,
+          "oriented_facet_consistency_passed": true,
+          "conflict_examples": [],
+          "scope": "Oriented corner-face incidence and same-side neighbor diagnostics; necessary consistency, not a certificate of curved geometry or absence of nonlocal intersections"
+        },
+        "oriented_facet_consistency_passed": true,
+        "geometry_admitted": false
+      },
+      "quality_quantiles": {
+        "min": 0.34102176039778975,
+        "p01": 0.6084119487919026,
+        "p05": 0.6772657586806506,
+        "median": 0.9295160030897794,
+        "p95": 0.9435242793657137
+      },
+      "elements_below_q01": 0,
+      "periodic": {
+        "periodic_pair_counts": [
+          102,
+          102,
+          102
+        ],
+        "periodic_coordinate_errors": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "periodic_pair_tolerance": 1e-10,
+        "periodic_equivalence_classes": 9630,
+        "periodic_triangles_match": true
+      },
+      "audit_s": 1.3740707500837743,
+      "wall_s": 2.119689582963474,
+      "worker": {
+        "returncode": 0,
+        "limit_failure": null,
+        "peak_rss_bytes": 394706944,
+        "wall_s": 3.0710750420112163,
+        "memory_bytes": 8589934592,
+        "memory_enforcement": "process-tree-rss-watchdog",
+        "rss_poll_interval_s": 0.25,
+        "platform": "darwin",
+        "numerical_thread_policy": {
+          "environment": {
+            "OPENBLAS_NUM_THREADS": "1",
+            "OMP_NUM_THREADS": "1",
+            "MKL_NUM_THREADS": "1",
+            "VECLIB_MAXIMUM_THREADS": "1",
+            "RAYON_NUM_THREADS": "1"
+          },
+          "accelerate_blas_threading": 1,
+          "accelerate_scope": "calling thread"
+        }
+      },
+      "directory": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-mesh-only-lattice-strengthened-v1/repeat-0-meshers-tet4-24",
+      "warmup": false
+    },
+    {
+      "vtk_backend": "Sequential",
+      "vtk_threads": 1,
+      "case": "smooth-lattice",
+      "config": {
+        "name": "meshers-tet4-32",
+        "arm": "meshers",
+        "cells": 32,
+        "order": 1,
+        "adapt": false,
+        "tolerance": 1.0
+      },
+      "status": "geometry-or-periodicity-rejected",
+      "qualified": false,
+      "mmg_calls": [],
+      "solve_performed": false,
+      "instrumentation_s": 0.0,
+      "positive_void_clamp": 0.02,
+      "field_representation": "Value-identical symmetric min; fixed original cubic smooth-union order",
+      "diagnostics": {
+        "empty": false,
+        "volume": 0.24752187057721542,
+        "minimum_mmg_quality": 0.276880314760693,
+        "sampled_surface_error": 0.004287891273620197,
+        "elements_below_quality_01": 0,
+        "reverted_snap_vertices": 0,
+        "callback_calls": 0,
+        "inserted_interior_nodes": 0,
+        "seconds": 2.215427208,
+        "threads": 1,
+        "evaluator": "compiled",
+        "preparation_seconds": 0.0067270840518176556
+      },
+      "generation_wall_s": 2.223095708992332,
+      "nodes": 27503,
+      "elements": 121420,
+      "generation_s": 2.223095708992332,
+      "fixed_field_identity_checked": 4096,
+      "mesh_sha256": "b74d00a88bb9c9d216d0e6565ac1f832bcc7a36ef8231fa7e2b5b0dae13be772",
+      "geometry": {
+        "sampled_forward_max": 0.004628834070944665,
+        "sampled_reverse_max": 0.003675358932394084,
+        "sampled_two_sided_max": 0.004628834070944665,
+        "outward_forward_max": 0.0042871561556394305,
+        "inward_forward_max": 0.004628834070944665,
+        "projection_failed": 0,
+        "forward_samples": 312468,
+        "reverse_samples": 34791,
+        "volume": 0.247521870577394,
+        "relative_volume_error": -0.0031781599376222713,
+        "q_min_corner": 0.276880314760693,
+        "q_p01_corner": 0.4881938519310868,
+        "minimum_dihedral_deg_corner": 15.689998041802028,
+        "minimum_sampled_jacobian": 1.0329931357065778e-06,
+        "reverse_tessellation_delta_max": 0.0,
+        "quadratic_reverse_subdivisions": null,
+        "projection_method": "newton-box-slsqp-v1",
+        "unbounded_projection_failed": 20,
+        "box_projection_attempts": 20,
+        "box_projection_recovered": 20,
+        "box_projection_witnesses": [
+          {
+            "sample_index": 1658,
+            "original_foot": [
+              0.34442784927466125,
+              -0.3644240079430321,
+              -0.500371518569222
+            ],
+            "candidate": [
+              0.3439970171984407,
+              -0.3641426357965195,
+              -0.5
+            ],
+            "solver_success": true,
+            "message": "Optimization terminated successfully",
+            "iterations": 21,
+            "absolute_field_residual": 0.0,
+            "normalized_field_residual": 0.0,
+            "feasible_target": true,
+            "distance": 0.0016911870768582446
+          },
+          {
+            "sample_index": 1660,
+            "original_foot": [
+              0.3620928723945797,
+              -0.346004640348196,
+              -0.5003562291546202
+            ],
+            "candidate": [
+              0.36180464232380943,
+              -0.3455997283668302,
+              -0.5
+            ],
+            "solver_success": true,
+            "message": "Optimization terminated successfully",
+            "iterations": 8,
+            "absolute_field_residual": 2.7755575615628914e-17,
+            "normalized_field_residual": 2.775557561593049e-17,
+            "feasible_target": true,
+            "distance": 0.0016615273159477039
+          },
+          {
+            "sample_index": 6702,
+            "original_foot": [
+              0.34555463884340465,
+              0.3625226485739537,
+              -0.5002715571869314
+            ],
+            "candidate": [
+              0.34524457873447306,
+              0.3623058762469508,
+              -0.5
+            ],
+            "solver_success": true,
+            "message": "Optimization terminated successfully",
+            "iterations": 6,
+            "absolute_field_residual": 1.3877787807814457e-17,
+            "normalized_field_residual": 1.3877787808035002e-17,
+            "feasible_target": true,
+            "distance": 0.0014552731098883673
+          },
+          {
+            "sample_index": 6703,
+            "original_foot": [
+              0.36252264857395233,
+              0.3455546388433999,
+              -0.5002715571869281
+            ],
+            "candidate": [
+              0.3623058761706073,
+              0.3452445787880741,
+              -0.5
+            ],
+            "solver_success": true,
+            "message": "Optimization terminated successfully",
+            "iterations": 6,
+            "absolute_field_residual": 1.3877787807814457e-17,
+            "normalized_field_residual": 1.387778780804e-17,
+            "feasible_target": true,
+            "distance": 0.0014552731098888734
+          },
+          {
+            "sample_index": 22692,
+            "original_foot": [
+              0.3443288281189733,
+              -0.5003398878357787,
+              -0.36449482189236293
+            ],
+            "candidate": [
+              0.3439344167616112,
+              -0.5,
+              -0.36423809703872667
+            ],
+            "solver_success": true,
+            "message": "Optimization terminated successfully",
+            "iterations": 6,
+            "absolute_field_residual": 0.0,
+            "normalized_field_residual": 0.0,
+            "feasible_target": true,
+            "distance": 0.0016352648781507025
+          },
+          {
+            "sample_index": 22693,
+            "original_foot": [
+              0.3616377663758517,
+              -0.5003147364355678,
+              -0.3462618873268096
+            ],
+            "candidate": [
+              0.3613801220382431,
+              -0.5,
+              -0.34590564573305194
+            ],
+            "solver_success": true,
+            "message": "Optimization terminated successfully",
+            "iterations": 13,
+            "absolute_field_residual": 0.0,
+            "normalized_field_residual": 0.0,
+            "feasible_target": true,
+            "distance": 0.0015881567084113405
+          },
+          {
+            "sample_index": 30219,
+            "original_foot": [
+              -0.5001756883433652,
+              0.345596751062837,
+              -0.36223134263689244
+            ],
+            "candidate": [
+              -0.5,
+              0.34539654112071094,
+              -0.3620902853032958
+            ],
+            "solver_success": true,
+            "message": "Optimization terminated successfully",
+            "iterations": 6,
+            "absolute_field_residual": 4.163336342344337e-17,
+            "normalized_field_residual": 4.1633363423955384e-17,
+            "feasible_target": true,
+            "distance": 0.0014857439211899922
+          },
+          {
+            "sample_index": 30221,
+            "original_foot": [
+              -0.5001979379264972,
+              0.36330125206703484,
+              -0.3448906688548791
+            ],
+            "candidate": [
+              -0.5,
+              0.3631469705790033,
+              -0.3446629781357527
+            ],
+            "solver_success": true,
+            "message": "Optimization terminated successfully",
+            "iterations": 11,
+            "absolute_field_residual": 2.7755575615628914e-17,
+            "normalized_field_residual": 2.7755575616036225e-17,
+            "feasible_target": true,
+            "distance": 0.0015220473978244191
+          },
+          {
+            "sample_index": 30466,
+            "original_foot": [
+              0.5001623914151907,
+              0.3455991310388995,
+              -0.36219592863777184
+            ],
+            "candidate": [
+              0.5,
+              0.34541411704123826,
+              -0.3620654590001991
+            ],
+            "solver_success": true,
+            "message": "Optimization terminated successfully",
+            "iterations": 9,
+            "absolute_field_residual": 0.0,
+            "normalized_field_residual": 0.0,
+            "feasible_target": true,
+            "distance": 0.0014838535105237609
+          },
+          {
+            "sample_index": 30467,
+            "original_foot": [
+              0.5001801153067857,
+              0.36330585728203824,
+              -0.344857555308365
+            ],
+            "candidate": [
+              0.5,
+              0.36316554166090903,
+              -0.3446503358117249
+            ],
+            "solver_success": true,
+            "message": "Optimization terminated successfully",
+            "iterations": 10,
+            "absolute_field_residual": 8.326672684688674e-17,
+            "normalized_field_residual": 8.326672684803763e-17,
+            "feasible_target": true,
+            "distance": 0.0015127137531234342
+          },
+          {
+            "sample_index": 31662,
+            "original_foot": [
+              0.34432061062974134,
+              0.5003630096601994,
+              -0.36456571406177624
+            ],
+            "candidate": [
+              0.3438991980345573,
+              0.5,
+              -0.3642919480131905
+            ],
+            "solver_success": true,
+            "message": "Optimization terminated successfully",
+            "iterations": 7,
+            "absolute_field_residual": 1.3877787807814457e-17,
+            "normalized_field_residual": 1.3877787808020272e-17,
+            "feasible_target": true,
+            "distance": 0.001643931201625194
+          },
+          {
+            "sample_index": 31664,
+            "original_foot": [
+              0.3616245701182446,
+              0.5003474964791691,
+              -0.34632812004544894
+            ],
+            "candidate": [
+              0.361339798048662,
+              0.5,
+              -0.3459349517114861
+            ],
+            "solver_success": true,
+            "message": "Optimization terminated successfully",
+            "iterations": 9,
+            "absolute_field_residual": 4.163336342344337e-17,
+            "normalized_field_residual": 4.163336342445624e-17,
+            "feasible_target": true,
+            "distance": 0.0016133406987395521
+          },
+          {
+            "sample_index": 280937,
+            "original_foot": [
+              0.34555696939480895,
+              -0.5002729511143265,
+              0.36252271116228413
+            ],
+            "candidate": [
+              0.3452453206538419,
+              -0.5,
+              0.3623048195552983
+            ],
+            "solver_success": true,
+            "message": "Optimization terminated successfully",
+            "iterations": 6,
+            "absolute_field_residual": 4.163336342344337e-17,
+            "normalized_field_residual": 4.1633363424409016e-17,
+            "feasible_target": true,
+            "distance": 0.0014561916614039092
+          },
+          {
+            "sample_index": 280939,
+            "original_foot": [
+              0.36252511071071825,
+              -0.5002726879526728,
+              0.3455548330080478
+            ],
+            "candidate": [
+              0.3623074450990474,
+              -0.5,
+              0.34524347727204757
+            ],
+            "solver_success": true,
+            "message": "Optimization terminated successfully",
+            "iterations": 6,
+            "absolute_field_residual": 1.3877787807814457e-17,
+            "normalized_field_residual": 1.3877787807951426e-17,
+            "feasible_target": true,
+            "distance": 0.001455742658549441
+          },
+          {
+            "sample_index": 289816,
+            "original_foot": [
+              0.3453906101777989,
+              0.500107528521324,
+              0.36235861990834406
+            ],
+            "candidate": [
+              0.34526787897351174,
+              0.5,
+              0.3622727098605867
+            ],
+            "solver_success": true,
+            "message": "Optimization terminated successfully",
+            "iterations": 34,
+            "absolute_field_residual": 4.163336342344337e-17,
+            "normalized_field_residual": 4.163336342377245e-17,
+            "feasible_target": true,
+            "distance": 0.0013910418788395105
+          },
+          {
+            "sample_index": 289817,
+            "original_foot": [
+              0.36235861990835255,
+              0.5001075285213267,
+              0.3453906101777974
+            ],
+            "candidate": [
+              0.3622727096863562,
+              0.5,
+              0.345267879095987
+            ],
+            "solver_success": true,
+            "message": "Optimization terminated successfully",
+            "iterations": 6,
+            "absolute_field_residual": 4.163336342344337e-17,
+            "normalized_field_residual": 4.163336342415646e-17,
+            "feasible_target": true,
+            "distance": 0.0013910418788395447
+          },
+          {
+            "sample_index": 310408,
+            "original_foot": [
+              0.34425091583638495,
+              -0.36428712410427894,
+              0.5002104903229503
+            ],
+            "candidate": [
+              0.34400686552601745,
+              -0.36412764769069633,
+              0.5
+            ],
+            "solver_success": true,
+            "message": "Optimization terminated successfully",
+            "iterations": 6,
+            "absolute_field_residual": 0.0,
+            "normalized_field_residual": 0.0,
+            "feasible_target": true,
+            "distance": 0.0016052823215333535
+          },
+          {
+            "sample_index": 310409,
+            "original_foot": [
+              0.3619133993191555,
+              -0.3458653435943222,
+              0.5002001534606277
+            ],
+            "candidate": [
+              0.36175122305524443,
+              -0.34563796283316667,
+              0.5
+            ],
+            "solver_success": true,
+            "message": "Optimization terminated successfully",
+            "iterations": 10,
+            "absolute_field_residual": 1.3877787807814457e-17,
+            "normalized_field_residual": 1.3877787808063694e-17,
+            "feasible_target": true,
+            "distance": 0.0015855111107909547
+          },
+          {
+            "sample_index": 311955,
+            "original_foot": [
+              0.3453906101777989,
+              0.36235861990834406,
+              0.500107528521324
+            ],
+            "candidate": [
+              0.34526787900691136,
+              0.36227270981307325,
+              0.5
+            ],
+            "solver_success": true,
+            "message": "Optimization terminated successfully",
+            "iterations": 6,
+            "absolute_field_residual": 6.938893903907228e-17,
+            "normalized_field_residual": 6.938893904038739e-17,
+            "feasible_target": true,
+            "distance": 0.0013910418788394832
+          },
+          {
+            "sample_index": 311957,
+            "original_foot": [
+              0.36235861990834406,
+              0.3453906101777989,
+              0.500107528521324
+            ],
+            "candidate": [
+              0.3622727100988846,
+              0.3452678788060003,
+              0.5
+            ],
+            "solver_success": true,
+            "message": "Optimization terminated successfully",
+            "iterations": 6,
+            "absolute_field_residual": 6.938893903907228e-17,
+            "normalized_field_residual": 6.938893903963077e-17,
+            "feasible_target": true,
+            "distance": 0.001391041878839509
+          }
+        ],
+        "facet_consistency": {
+          "nodes": 27503,
+          "elements": 121420,
+          "unique_faces": 255602,
+          "interior_faces": 230078,
+          "extracted_boundary_faces": 25524,
+          "same_orientation_shared_faces": 0,
+          "nonmanifold_faces": 0,
+          "duplicate_cells": 0,
+          "duplicate_surface_faces": 0,
+          "provided_boundary_matches_extraction": true,
+          "missing_provided_faces": 0,
+          "extra_provided_faces": 0,
+          "nonpositive_corner_determinants": 0,
+          "minimum_corner_determinant": 1.032993135706578e-06,
+          "oriented_facet_consistency_passed": true,
+          "conflict_examples": [],
+          "scope": "Oriented corner-face incidence and same-side neighbor diagnostics; necessary consistency, not a certificate of curved geometry or absence of nonlocal intersections"
+        },
+        "oriented_facet_consistency_passed": true,
+        "geometry_admitted": false
+      },
+      "quality_quantiles": {
+        "min": 0.276880314760693,
+        "p01": 0.4881938519310868,
+        "p05": 0.5749399238573165,
+        "median": 0.9204063262579294,
+        "p95": 0.9359947204055252
+      },
+      "elements_below_q01": 0,
+      "periodic": {
+        "periodic_pair_counts": [
+          176,
+          176,
+          176
+        ],
+        "periodic_coordinate_errors": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "periodic_pair_tolerance": 1e-10,
+        "periodic_equivalence_classes": 27010,
+        "periodic_triangles_match": true
+      },
+      "audit_s": 2.1666362920077518,
+      "wall_s": 4.459890416939743,
+      "worker": {
+        "returncode": 0,
+        "limit_failure": null,
+        "peak_rss_bytes": 586760192,
+        "wall_s": 5.632173666032031,
+        "memory_bytes": 8589934592,
+        "memory_enforcement": "process-tree-rss-watchdog",
+        "rss_poll_interval_s": 0.25,
+        "platform": "darwin",
+        "numerical_thread_policy": {
+          "environment": {
+            "OPENBLAS_NUM_THREADS": "1",
+            "OMP_NUM_THREADS": "1",
+            "MKL_NUM_THREADS": "1",
+            "VECLIB_MAXIMUM_THREADS": "1",
+            "RAYON_NUM_THREADS": "1"
+          },
+          "accelerate_blas_threading": 1,
+          "accelerate_scope": "calling thread"
+        }
+      },
+      "directory": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-mesh-only-lattice-strengthened-v1/repeat-0-meshers-tet4-32",
+      "warmup": false
+    },
+    {
+      "vtk_backend": "Sequential",
+      "vtk_threads": 1,
+      "case": "smooth-lattice",
+      "config": {
+        "name": "meshers-tet4-adaptive",
+        "arm": "meshers",
+        "cells": 16,
+        "order": 1,
+        "adapt": true,
+        "tolerance": 1.0,
+        "min_length": 0.002,
+        "adapt_tolerance": 0.001
+      },
+      "status": "failed",
+      "qualified": false,
+      "mmg_calls": [],
+      "solve_performed": false,
+      "instrumentation_s": 0.0,
+      "positive_void_clamp": 0.02,
+      "field_representation": "Value-identical symmetric min; fixed original cubic smooth-union order",
+      "error": "adaptation exceeded max_tetrahedra: 250005 > 250000",
+      "traceback": "Traceback (most recent call last):\n  File \"/Users/kmarchais/dev/meshers/experiments/adaptive/mesh_only_comparison.py\", line 132, in worker\n    mesh=meshers.generate(field,bounds=w.BOUNDS,cells=config['cells'],band=case.band,\n         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/Users/kmarchais/dev/meshers/crates/meshers-python/python/meshers/__init__.py\", line 316, in generate\n    result = _meshers.generate(\n             ^^^^^^^^^^^^^^^^^^\n_meshers.MeshingFailure: adaptation exceeded max_tetrahedra: 250005 > 250000\n",
+      "failed_attempt_s": 1.5385648340452462,
+      "wall_s": 1.5385684589855373,
+      "worker": {
+        "returncode": 0,
+        "limit_failure": null,
+        "peak_rss_bytes": 330809344,
+        "wall_s": 2.707382541964762,
+        "memory_bytes": 8589934592,
+        "memory_enforcement": "process-tree-rss-watchdog",
+        "rss_poll_interval_s": 0.25,
+        "platform": "darwin",
+        "numerical_thread_policy": {
+          "environment": {
+            "OPENBLAS_NUM_THREADS": "1",
+            "OMP_NUM_THREADS": "1",
+            "MKL_NUM_THREADS": "1",
+            "VECLIB_MAXIMUM_THREADS": "1",
+            "RAYON_NUM_THREADS": "1"
+          },
+          "accelerate_blas_threading": 1,
+          "accelerate_scope": "calling thread"
+        }
+      },
+      "directory": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-mesh-only-lattice-strengthened-v1/repeat-0-meshers-tet4-adaptive",
+      "warmup": false
+    },
+    {
+      "vtk_backend": "Sequential",
+      "vtk_threads": 1,
+      "case": "smooth-lattice",
+      "config": {
+        "name": "meshers-curved-known",
+        "arm": "meshers",
+        "cells": 26,
+        "order": 2,
+        "adapt": true,
+        "tolerance": 1.0,
+        "min_length": 0.002,
+        "adapt_tolerance": 0.0028
+      },
+      "status": "admitted",
+      "qualified": true,
+      "mmg_calls": [],
+      "solve_performed": false,
+      "instrumentation_s": 0.0,
+      "positive_void_clamp": 0.02,
+      "field_representation": "Value-identical symmetric min; fixed original cubic smooth-union order",
+      "diagnostics": {
+        "empty": false,
+        "volume": 0.24694936922020988,
+        "minimum_mmg_quality": 0.14932884688282982,
+        "sampled_surface_error": 0.002270644115086228,
+        "elements_below_quality_01": 0,
+        "reverted_snap_vertices": 0,
+        "callback_calls": 0,
+        "inserted_interior_nodes": 0,
+        "adapt": {
+          "splits": 23374,
+          "collapses": 11736,
+          "swaps": 7205,
+          "moves": 81980,
+          "error_splits": 2071,
+          "maximum_error": 0.009554879369075288,
+          "seconds": [
+            0.20186099899999999,
+            0.06215562499999999,
+            0.561873666,
+            0.133216042,
+            0.201938626,
+            0.307000457,
+            0.175203292
+          ]
+        },
+        "seconds": 2.679156084,
+        "quadratic": {
+          "curved_edges": 29841,
+          "straightened_edges": 0,
+          "partially_curved_edges": 0,
+          "minimum_jacobian_ratio": 0.26447737425487705
+        },
+        "threads": 1,
+        "evaluator": "compiled",
+        "preparation_seconds": 0.006648625014349818
+      },
+      "generation_wall_s": 2.6866971250856295,
+      "nodes": 199972,
+      "elements": 128300,
+      "generation_s": 2.6866971250856295,
+      "fixed_field_identity_checked": 4096,
+      "mesh_sha256": "dc4c27170447239f437afa97d4196a0b966db833c5e9a57c86124cbf3ee3b7f0",
+      "geometry": {
+        "sampled_forward_max": 0.0003236400768516191,
+        "sampled_reverse_max": 0.000313126154655877,
+        "sampled_two_sided_max": 0.0003236400768516191,
+        "outward_forward_max": 0.0003236400768516191,
+        "inward_forward_max": 0.0002550954429284902,
+        "projection_failed": 0,
+        "forward_samples": 253864,
+        "reverse_samples": 34791,
+        "volume": 0.2482330970459069,
+        "relative_volume_error": -0.0003139036382079352,
+        "q_min_corner": 0.14932884688282982,
+        "q_p01_corner": 0.2935275996179917,
+        "minimum_dihedral_deg_corner": 8.014200725852021,
+        "minimum_sampled_jacobian": 2.5104482261911397e-09,
+        "reverse_tessellation_delta_max": 0.0001280006542399589,
+        "quadratic_reverse_subdivisions": [
+          4,
+          8
+        ],
+        "projection_method": "newton-box-slsqp-v1",
+        "unbounded_projection_failed": 0,
+        "box_projection_attempts": 0,
+        "box_projection_recovered": 0,
+        "box_projection_witnesses": [],
+        "facet_consistency": {
+          "nodes": 199972,
+          "elements": 128300,
+          "unique_faces": 269809,
+          "interior_faces": 243391,
+          "extracted_boundary_faces": 26418,
+          "same_orientation_shared_faces": 0,
+          "nonmanifold_faces": 0,
+          "duplicate_cells": 0,
+          "duplicate_surface_faces": 0,
+          "provided_boundary_matches_extraction": true,
+          "missing_provided_faces": 0,
+          "extra_provided_faces": 0,
+          "nonpositive_corner_determinants": 0,
+          "minimum_corner_determinant": 2.5104482261922994e-09,
+          "oriented_facet_consistency_passed": true,
+          "conflict_examples": [],
+          "scope": "Oriented corner-face incidence and same-side neighbor diagnostics; necessary consistency, not a certificate of curved geometry or absence of nonlocal intersections"
+        },
+        "oriented_facet_consistency_passed": true,
+        "geometry_admitted": true
+      },
+      "quality_quantiles": {
+        "min": 0.14932884688282982,
+        "p01": 0.2935275996179917,
+        "p05": 0.5104356163044649,
+        "median": 0.7336770511200974,
+        "p95": 0.9271168316966085
+      },
+      "elements_below_q01": 0,
+      "periodic": {
+        "periodic_pair_counts": [
+          2441,
+          2563,
+          2579
+        ],
+        "periodic_coordinate_errors": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "periodic_pair_tolerance": 1e-10,
+        "periodic_equivalence_classes": 192460,
+        "periodic_triangles_match": true
+      },
+      "audit_s": 3.0475984999211505,
+      "wall_s": 6.147567042033188,
+      "worker": {
+        "returncode": 0,
+        "limit_failure": null,
+        "peak_rss_bytes": 931659776,
+        "wall_s": 7.259355667047203,
+        "memory_bytes": 8589934592,
+        "memory_enforcement": "process-tree-rss-watchdog",
+        "rss_poll_interval_s": 0.25,
+        "platform": "darwin",
+        "numerical_thread_policy": {
+          "environment": {
+            "OPENBLAS_NUM_THREADS": "1",
+            "OMP_NUM_THREADS": "1",
+            "MKL_NUM_THREADS": "1",
+            "VECLIB_MAXIMUM_THREADS": "1",
+            "RAYON_NUM_THREADS": "1"
+          },
+          "accelerate_blas_threading": 1,
+          "accelerate_scope": "calling thread"
+        }
+      },
+      "directory": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-mesh-only-lattice-strengthened-v1/repeat-0-meshers-curved-known",
+      "warmup": false
+    }
+  ],
+  "repetitions": 1,
+  "warmups": 0,
+  "strengthened": true,
+  "primary": "Tet4 versus Tet4; curved Tet10 is a separate capability tier",
+  "timing_scope": "Fresh in-process specimen/field preparation, extraction, meshing and output conversion. Imports, archive writes, validation, measured MMG instrumentation and FE excluded. Failed attempts are not successful mesh timings.",
+  "gates": "distance.002 absolute-volume1percent q.1 positive sampled Jacobians coherent facets periodic nodes/caps;250000nodes/tets8GiB",
+  "geometry_auditor": "box-constrained observer enabled identically for both arms; no changed geometry thresholds",
+  "dominance": "Fewer elements with no worse generation time, quality quantiles and geometry/volume error is stronger than equal-count parity; no success ratio for rejected competitors",
+  "actual_default_and_explicit_variants_separate": true,
+  "new_equilibrium_solve": false
+}

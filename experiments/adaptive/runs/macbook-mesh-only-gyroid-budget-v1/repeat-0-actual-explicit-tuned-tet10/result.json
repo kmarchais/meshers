@@ -1,0 +1,63 @@
+{
+  "vtk_backend": "Sequential",
+  "vtk_threads": 1,
+  "case": "gyroid",
+  "config": {
+    "name": "actual-explicit-tuned-tet10",
+    "arm": "microgen",
+    "order": 2,
+    "resolution": 24,
+    "mmg": {
+      "hausd": 0.0005,
+      "hmax": 0.06,
+      "hgrad": 1.3
+    },
+    "first_hausd": 0.0005,
+    "first_hmax": 0.1,
+    "first_only": true,
+    "repair": false
+  },
+  "status": "failed",
+  "qualified": false,
+  "mmg_calls": [
+    {
+      "nofem": true,
+      "hausd": 0.0005,
+      "hmax": 0.1,
+      "hgrad": 1.3
+    },
+    {
+      "nofem": true,
+      "hausd": 0.0005,
+      "hmax": 0.1,
+      "hgrad": 1.3
+    },
+    {
+      "nofem": true,
+      "hausd": 0.0005,
+      "hmax": 0.1,
+      "hgrad": 1.3
+    },
+    {
+      "nofem": true,
+      "hausd": 0.0005,
+      "hmax": 0.1,
+      "hgrad": 1.3
+    },
+    {
+      "nofem": true,
+      "hausd": 0.0005,
+      "hmax": 0.1,
+      "hgrad": 1.3
+    }
+  ],
+  "solve_performed": false,
+  "instrumentation_s": 0.0015473341336473823,
+  "actual_resolution": 24,
+  "seed_nodes": 12016,
+  "seed_elements": 49050,
+  "error": "mmg command 'mmg3d_O3 -in /var/folders/9j/2ng9zhc51k3cnz_pvgn3kdl00000gp/T/tmplp_jqcjk.mesh -out /var/folders/9j/2ng9zhc51k3cnz_pvgn3kdl00000gp/T/tmprmo4amyy.mesh -hausd 0.0005 -hgrad 1.3 -hmax 0.1 -nofem' failed",
+  "traceback": "Traceback (most recent call last):\n  File \"/Users/kmarchais/dev/meshers/.local-work/macbook-runtime/venv/lib/python3.12/site-packages/microgen/external.py\", line 316, in _run_mmg_command\n    subprocess.check_output(cmd, stderr=subprocess.STDOUT)\n  File \"/Users/kmarchais/.local/share/uv/python/cpython-3.12.9-macos-aarch64-none/lib/python3.12/subprocess.py\", line 468, in check_output\n    return run(*popenargs, stdout=PIPE, timeout=timeout, check=True,\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/Users/kmarchais/.local/share/uv/python/cpython-3.12.9-macos-aarch64-none/lib/python3.12/subprocess.py\", line 573, in run\n    raise CalledProcessError(retcode, process.args,\nsubprocess.CalledProcessError: Command '['mmg3d_O3', '-in', '/var/folders/9j/2ng9zhc51k3cnz_pvgn3kdl00000gp/T/tmplp_jqcjk.mesh', '-out', '/var/folders/9j/2ng9zhc51k3cnz_pvgn3kdl00000gp/T/tmprmo4amyy.mesh', '-hausd', '0.0005', '-hgrad', '1.3', '-hmax', '0.1', '-nofem']' returned non-zero exit status 1.\n\nThe above exception was the direct cause of the following exception:\n\nTraceback (most recent call last):\n  File \"/Users/kmarchais/dev/meshers/experiments/adaptive/mesh_only_comparison.py\", line 108, in worker\n    grid=remesh_keeping_boundaries_for_fem(grid,periodic=True,**config.get('mmg',{}))\n         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/Users/kmarchais/dev/meshers/.local-work/macbook-runtime/venv/lib/python3.12/site-packages/microgen/remesh.py\", line 164, in remesh_keeping_boundaries_for_fem\n    raise last_error\n  File \"/Users/kmarchais/dev/meshers/.local-work/macbook-runtime/venv/lib/python3.12/site-packages/microgen/remesh.py\", line 136, in remesh_keeping_boundaries_for_fem\n    output_mesh = _run_mmg_pipeline(\n                  ^^^^^^^^^^^^^^^^^^\n  File \"/Users/kmarchais/dev/meshers/.local-work/macbook-runtime/venv/lib/python3.12/site-packages/microgen/remesh.py\", line 194, in _run_mmg_pipeline\n    Mmg.mmg3d(\n  File \"/Users/kmarchais/dev/meshers/experiments/adaptive/mesh_only_comparison.py\", line 98, in record\n    result=original(**parameters)\n           ^^^^^^^^^^^^^^^^^^^^^^\n  File \"/Users/kmarchais/dev/meshers/.local-work/macbook-runtime/venv/lib/python3.12/site-packages/microgen/external.py\", line 639, in mmg3d\n    Mmg._run_mmg_command(cmd)\n  File \"/Users/kmarchais/dev/meshers/.local-work/macbook-runtime/venv/lib/python3.12/site-packages/microgen/external.py\", line 319, in _run_mmg_command\n    raise MmgError(\nmicrogen.external.MmgError: mmg command 'mmg3d_O3 -in /var/folders/9j/2ng9zhc51k3cnz_pvgn3kdl00000gp/T/tmplp_jqcjk.mesh -out /var/folders/9j/2ng9zhc51k3cnz_pvgn3kdl00000gp/T/tmprmo4amyy.mesh -hausd 0.0005 -hgrad 1.3 -hmax 0.1 -nofem' failed\n",
+  "failed_attempt_s": 28.239405583008192,
+  "wall_s": 28.23940666601993
+}

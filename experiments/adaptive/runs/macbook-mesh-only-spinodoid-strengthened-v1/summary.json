@@ -1,0 +1,720 @@
+{
+  "case": "spinodoid",
+  "rows": [
+    {
+      "vtk_backend": "Sequential",
+      "vtk_threads": 1,
+      "case": "spinodoid",
+      "config": {
+        "name": "actual-default",
+        "arm": "microgen",
+        "resolution": null,
+        "order": 1
+      },
+      "status": "failed",
+      "qualified": false,
+      "mmg_calls": [
+        {
+          "nofem": true,
+          "output_tetrahedra": 20639
+        },
+        {
+          "hausd": null,
+          "hgrad": null,
+          "hmax": null,
+          "hmin": null,
+          "hsiz": null,
+          "ls": true,
+          "nr": true,
+          "output_tetrahedra": 23304
+        },
+        {
+          "nofem": true,
+          "output_tetrahedra": 20639
+        },
+        {
+          "hausd": null,
+          "hgrad": null,
+          "hmax": null,
+          "hmin": null,
+          "hsiz": null,
+          "ls": true,
+          "nr": true,
+          "output_tetrahedra": 23304
+        },
+        {
+          "nofem": true,
+          "output_tetrahedra": 20639
+        },
+        {
+          "hausd": null,
+          "hgrad": null,
+          "hmax": null,
+          "hmin": null,
+          "hsiz": null,
+          "ls": true,
+          "nr": true,
+          "output_tetrahedra": 23304
+        },
+        {
+          "nofem": true,
+          "output_tetrahedra": 20639
+        },
+        {
+          "hausd": null,
+          "hgrad": null,
+          "hmax": null,
+          "hmin": null,
+          "hsiz": null,
+          "ls": true,
+          "nr": true,
+          "output_tetrahedra": 23304
+        },
+        {
+          "nofem": true,
+          "output_tetrahedra": 20639
+        },
+        {
+          "hausd": null,
+          "hgrad": null,
+          "hmax": null,
+          "hmin": null,
+          "hsiz": null,
+          "ls": true,
+          "nr": true,
+          "output_tetrahedra": 23304
+        }
+      ],
+      "solve_performed": false,
+      "instrumentation_s": 0.450327416183427,
+      "actual_resolution": 16,
+      "seed_nodes": 5268,
+      "seed_elements": 20702,
+      "error": "Something went wrong: output mesh is not periodic",
+      "traceback": "Traceback (most recent call last):\n  File \"/Users/kmarchais/dev/meshers/experiments/adaptive/mesh_only_comparison.py\", line 108, in worker\n    grid=remesh_keeping_boundaries_for_fem(grid,periodic=True,**config.get('mmg',{}))\n         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/Users/kmarchais/dev/meshers/.local-work/macbook-runtime/venv/lib/python3.12/site-packages/microgen/remesh.py\", line 164, in remesh_keeping_boundaries_for_fem\n    raise last_error\nmicrogen.remesh.OutputMeshNotPeriodicError: Something went wrong: output mesh is not periodic\n",
+      "failed_attempt_s": 7.775289875105955,
+      "wall_s": 7.77529120806139,
+      "worker": {
+        "returncode": 0,
+        "limit_failure": null,
+        "peak_rss_bytes": 1207894016,
+        "wall_s": 8.68183116603177,
+        "memory_bytes": 8589934592,
+        "memory_enforcement": "process-tree-rss-watchdog",
+        "rss_poll_interval_s": 0.25,
+        "platform": "darwin",
+        "numerical_thread_policy": {
+          "environment": {
+            "OPENBLAS_NUM_THREADS": "1",
+            "OMP_NUM_THREADS": "1",
+            "MKL_NUM_THREADS": "1",
+            "VECLIB_MAXIMUM_THREADS": "1",
+            "RAYON_NUM_THREADS": "1"
+          },
+          "accelerate_blas_threading": 1,
+          "accelerate_scope": "calling thread"
+        }
+      },
+      "directory": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-mesh-only-spinodoid-strengthened-v1/repeat-0-actual-default",
+      "warmup": false
+    },
+    {
+      "vtk_backend": "Sequential",
+      "vtk_threads": 1,
+      "case": "spinodoid",
+      "config": {
+        "name": "actual-explicit-tuned",
+        "arm": "microgen",
+        "order": 1,
+        "resolution": 36,
+        "mmg": {
+          "hausd": 0.0005,
+          "hmax": 0.06,
+          "hgrad": 1.3
+        },
+        "first_hausd": 0.0015,
+        "first_hmax": 0.06,
+        "first_only": false,
+        "repair": false
+      },
+      "status": "failed",
+      "qualified": false,
+      "mmg_calls": [
+        {
+          "nofem": true,
+          "hausd": 0.0015,
+          "hmax": 0.06,
+          "hgrad": 1.3,
+          "output_tetrahedra": 143585
+        },
+        {
+          "hausd": 0.0005,
+          "hgrad": 1.3,
+          "hmax": 0.06,
+          "hmin": null,
+          "hsiz": null,
+          "ls": true,
+          "nr": true,
+          "output_tetrahedra": 525089
+        }
+      ],
+      "solve_performed": false,
+      "instrumentation_s": 0.4984890001360327,
+      "fft_realization_resolution": 16,
+      "sampling_resolution": 36,
+      "actual_resolution": 36,
+      "seed_nodes": 38712,
+      "seed_elements": 182287,
+      "error": "Intermediate MMG tetrahedron cap exceeded",
+      "traceback": "Traceback (most recent call last):\n  File \"/Users/kmarchais/dev/meshers/experiments/adaptive/mesh_only_comparison.py\", line 108, in worker\n    grid=remesh_keeping_boundaries_for_fem(grid,periodic=True,**config.get('mmg',{}))\n         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/Users/kmarchais/dev/meshers/.local-work/macbook-runtime/venv/lib/python3.12/site-packages/microgen/remesh.py\", line 136, in remesh_keeping_boundaries_for_fem\n    output_mesh = _run_mmg_pipeline(\n                  ^^^^^^^^^^^^^^^^^^\n  File \"/Users/kmarchais/dev/meshers/.local-work/macbook-runtime/venv/lib/python3.12/site-packages/microgen/remesh.py\", line 199, in _run_mmg_pipeline\n    Mmg.mmg3d(\n  File \"/Users/kmarchais/dev/meshers/experiments/adaptive/mesh_only_comparison.py\", line 105, in record\n    if count>w.CAP:raise ValueError('Intermediate MMG tetrahedron cap exceeded')\n                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nValueError: Intermediate MMG tetrahedron cap exceeded\n",
+      "failed_attempt_s": 18.479414082947187,
+      "wall_s": 18.479493667022325,
+      "worker": {
+        "returncode": 0,
+        "limit_failure": null,
+        "peak_rss_bytes": 1320009728,
+        "wall_s": 19.31139545806218,
+        "memory_bytes": 8589934592,
+        "memory_enforcement": "process-tree-rss-watchdog",
+        "rss_poll_interval_s": 0.25,
+        "platform": "darwin",
+        "numerical_thread_policy": {
+          "environment": {
+            "OPENBLAS_NUM_THREADS": "1",
+            "OMP_NUM_THREADS": "1",
+            "MKL_NUM_THREADS": "1",
+            "VECLIB_MAXIMUM_THREADS": "1",
+            "RAYON_NUM_THREADS": "1"
+          },
+          "accelerate_blas_threading": 1,
+          "accelerate_scope": "calling thread"
+        }
+      },
+      "directory": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-mesh-only-spinodoid-strengthened-v1/repeat-0-actual-explicit-tuned",
+      "warmup": false
+    },
+    {
+      "vtk_backend": "Sequential",
+      "vtk_threads": 1,
+      "case": "spinodoid",
+      "config": {
+        "name": "actual-explicit-tuned-tet10",
+        "arm": "microgen",
+        "order": 2,
+        "resolution": 36,
+        "mmg": {
+          "hausd": 0.0005,
+          "hmax": 0.06,
+          "hgrad": 1.3
+        },
+        "first_hausd": 0.0015,
+        "first_hmax": 0.06,
+        "first_only": false,
+        "repair": false
+      },
+      "status": "failed",
+      "qualified": false,
+      "mmg_calls": [
+        {
+          "nofem": true,
+          "hausd": 0.0015,
+          "hmax": 0.06,
+          "hgrad": 1.3,
+          "output_tetrahedra": 143585
+        },
+        {
+          "hausd": 0.0005,
+          "hgrad": 1.3,
+          "hmax": 0.06,
+          "hmin": null,
+          "hsiz": null,
+          "ls": true,
+          "nr": true,
+          "output_tetrahedra": 525089
+        }
+      ],
+      "solve_performed": false,
+      "instrumentation_s": 0.5000483330804855,
+      "fft_realization_resolution": 16,
+      "sampling_resolution": 36,
+      "actual_resolution": 36,
+      "seed_nodes": 38712,
+      "seed_elements": 182287,
+      "error": "Intermediate MMG tetrahedron cap exceeded",
+      "traceback": "Traceback (most recent call last):\n  File \"/Users/kmarchais/dev/meshers/experiments/adaptive/mesh_only_comparison.py\", line 108, in worker\n    grid=remesh_keeping_boundaries_for_fem(grid,periodic=True,**config.get('mmg',{}))\n         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/Users/kmarchais/dev/meshers/.local-work/macbook-runtime/venv/lib/python3.12/site-packages/microgen/remesh.py\", line 136, in remesh_keeping_boundaries_for_fem\n    output_mesh = _run_mmg_pipeline(\n                  ^^^^^^^^^^^^^^^^^^\n  File \"/Users/kmarchais/dev/meshers/.local-work/macbook-runtime/venv/lib/python3.12/site-packages/microgen/remesh.py\", line 199, in _run_mmg_pipeline\n    Mmg.mmg3d(\n  File \"/Users/kmarchais/dev/meshers/experiments/adaptive/mesh_only_comparison.py\", line 105, in record\n    if count>w.CAP:raise ValueError('Intermediate MMG tetrahedron cap exceeded')\n                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nValueError: Intermediate MMG tetrahedron cap exceeded\n",
+      "failed_attempt_s": 18.807613791897893,
+      "wall_s": 18.807694916962646,
+      "worker": {
+        "returncode": 0,
+        "limit_failure": null,
+        "peak_rss_bytes": 1312980992,
+        "wall_s": 19.643651625025086,
+        "memory_bytes": 8589934592,
+        "memory_enforcement": "process-tree-rss-watchdog",
+        "rss_poll_interval_s": 0.25,
+        "platform": "darwin",
+        "numerical_thread_policy": {
+          "environment": {
+            "OPENBLAS_NUM_THREADS": "1",
+            "OMP_NUM_THREADS": "1",
+            "MKL_NUM_THREADS": "1",
+            "VECLIB_MAXIMUM_THREADS": "1",
+            "RAYON_NUM_THREADS": "1"
+          },
+          "accelerate_blas_threading": 1,
+          "accelerate_scope": "calling thread"
+        }
+      },
+      "directory": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-mesh-only-spinodoid-strengthened-v1/repeat-0-actual-explicit-tuned-tet10",
+      "warmup": false
+    },
+    {
+      "vtk_backend": "Sequential",
+      "vtk_threads": 1,
+      "case": "spinodoid",
+      "config": {
+        "name": "meshers-tet4-24",
+        "arm": "meshers",
+        "cells": 24,
+        "order": 1,
+        "adapt": false,
+        "tolerance": 1.0
+      },
+      "status": "failed",
+      "qualified": false,
+      "mmg_calls": [],
+      "solve_performed": false,
+      "instrumentation_s": 0.0,
+      "error": "minimum MMG quality 3.4377816604818916e-2 is below required 1e-1; mesh rejected (13 elements below 0.1). Improve resolution/optimization or use a quality remesher",
+      "traceback": "Traceback (most recent call last):\n  File \"/Users/kmarchais/dev/meshers/experiments/adaptive/mesh_only_comparison.py\", line 132, in worker\n    mesh=meshers.generate(field,bounds=w.BOUNDS,cells=config['cells'],band=case.band,\n         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/Users/kmarchais/dev/meshers/crates/meshers-python/python/meshers/__init__.py\", line 316, in generate\n    result = _meshers.generate(\n             ^^^^^^^^^^^^^^^^^^\n_meshers.MeshingFailure: minimum MMG quality 3.4377816604818916e-2 is below required 1e-1; mesh rejected (13 elements below 0.1). Improve resolution/optimization or use a quality remesher\n",
+      "failed_attempt_s": 2.4579444580012932,
+      "wall_s": 2.4579467080766335,
+      "worker": {
+        "returncode": 0,
+        "limit_failure": null,
+        "peak_rss_bytes": 267239424,
+        "wall_s": 3.3870132089359686,
+        "memory_bytes": 8589934592,
+        "memory_enforcement": "process-tree-rss-watchdog",
+        "rss_poll_interval_s": 0.25,
+        "platform": "darwin",
+        "numerical_thread_policy": {
+          "environment": {
+            "OPENBLAS_NUM_THREADS": "1",
+            "OMP_NUM_THREADS": "1",
+            "MKL_NUM_THREADS": "1",
+            "VECLIB_MAXIMUM_THREADS": "1",
+            "RAYON_NUM_THREADS": "1"
+          },
+          "accelerate_blas_threading": 1,
+          "accelerate_scope": "calling thread"
+        }
+      },
+      "directory": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-mesh-only-spinodoid-strengthened-v1/repeat-0-meshers-tet4-24",
+      "warmup": false
+    },
+    {
+      "vtk_backend": "Sequential",
+      "vtk_threads": 1,
+      "case": "spinodoid",
+      "config": {
+        "name": "meshers-tet4-32",
+        "arm": "meshers",
+        "cells": 32,
+        "order": 1,
+        "adapt": false,
+        "tolerance": 1.0
+      },
+      "status": "failed",
+      "qualified": false,
+      "mmg_calls": [],
+      "solve_performed": false,
+      "instrumentation_s": 0.0,
+      "error": "minimum MMG quality 3.2734563909968935e-2 is below required 1e-1; mesh rejected (21 elements below 0.1). Improve resolution/optimization or use a quality remesher",
+      "traceback": "Traceback (most recent call last):\n  File \"/Users/kmarchais/dev/meshers/experiments/adaptive/mesh_only_comparison.py\", line 132, in worker\n    mesh=meshers.generate(field,bounds=w.BOUNDS,cells=config['cells'],band=case.band,\n         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/Users/kmarchais/dev/meshers/crates/meshers-python/python/meshers/__init__.py\", line 316, in generate\n    result = _meshers.generate(\n             ^^^^^^^^^^^^^^^^^^\n_meshers.MeshingFailure: minimum MMG quality 3.2734563909968935e-2 is below required 1e-1; mesh rejected (21 elements below 0.1). Improve resolution/optimization or use a quality remesher\n",
+      "failed_attempt_s": 4.225159417022951,
+      "wall_s": 4.2251621671020985,
+      "worker": {
+        "returncode": 0,
+        "limit_failure": null,
+        "peak_rss_bytes": 319832064,
+        "wall_s": 5.201670875074342,
+        "memory_bytes": 8589934592,
+        "memory_enforcement": "process-tree-rss-watchdog",
+        "rss_poll_interval_s": 0.25,
+        "platform": "darwin",
+        "numerical_thread_policy": {
+          "environment": {
+            "OPENBLAS_NUM_THREADS": "1",
+            "OMP_NUM_THREADS": "1",
+            "MKL_NUM_THREADS": "1",
+            "VECLIB_MAXIMUM_THREADS": "1",
+            "RAYON_NUM_THREADS": "1"
+          },
+          "accelerate_blas_threading": 1,
+          "accelerate_scope": "calling thread"
+        }
+      },
+      "directory": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-mesh-only-spinodoid-strengthened-v1/repeat-0-meshers-tet4-32",
+      "warmup": false
+    },
+    {
+      "vtk_backend": "Sequential",
+      "vtk_threads": 1,
+      "case": "spinodoid",
+      "config": {
+        "name": "meshers-tet4-adaptive",
+        "arm": "meshers",
+        "cells": 24,
+        "order": 1,
+        "adapt": true,
+        "tolerance": 1.0,
+        "min_length": 0.002,
+        "adapt_tolerance": 0.001
+      },
+      "status": "geometry-or-periodicity-rejected",
+      "qualified": false,
+      "mmg_calls": [],
+      "solve_performed": false,
+      "instrumentation_s": 0.0,
+      "diagnostics": {
+        "empty": false,
+        "volume": 0.5023263274309483,
+        "minimum_mmg_quality": 0.15288371218084668,
+        "sampled_surface_error": 0.004853506024274053,
+        "elements_below_quality_01": 0,
+        "reverted_snap_vertices": 0,
+        "callback_calls": 0,
+        "inserted_interior_nodes": 0,
+        "adapt": {
+          "splits": 19513,
+          "collapses": 12187,
+          "swaps": 8520,
+          "moves": 99568,
+          "error_splits": 37,
+          "maximum_error": 0.006709921206532169,
+          "seconds": [
+            0.28523596100000004,
+            0.085379335,
+            0.839651334,
+            0.166923458,
+            0.22737616800000005,
+            0.48095670999999995,
+            0.197836375
+          ]
+        },
+        "seconds": 4.135274042,
+        "threads": 1,
+        "evaluator": "compiled",
+        "preparation_seconds": 7.0908572524786e-07
+      },
+      "generation_wall_s": 4.142317957943305,
+      "nodes": 30499,
+      "elements": 131598,
+      "generation_s": 4.142317957943305,
+      "fixed_field_identity_checked": 4096,
+      "mesh_sha256": "a524fc8f57830f0738d359228726b1ea9e62249320a690cdf31891352b04cd01",
+      "geometry": {
+        "sampled_forward_max": 0.004834254803044882,
+        "sampled_reverse_max": 0.0012344396243902933,
+        "sampled_two_sided_max": 0.004834254803044882,
+        "outward_forward_max": 0.004834254803044882,
+        "inward_forward_max": 0.001535221714521054,
+        "projection_failed": 0,
+        "forward_samples": 315016,
+        "reverse_samples": 41325,
+        "volume": 0.5023263274309484,
+        "relative_volume_error": 0.0003785764712116446,
+        "q_min_corner": 0.1528837121808466,
+        "q_p01_corner": 0.5204656954524243,
+        "minimum_dihedral_deg_corner": 8.022492002794479,
+        "minimum_sampled_jacobian": 1.1964844248302268e-07,
+        "reverse_tessellation_delta_max": 0.0,
+        "quadratic_reverse_subdivisions": null,
+        "projection_method": "newton-box-slsqp-v1",
+        "unbounded_projection_failed": 2,
+        "box_projection_attempts": 2,
+        "box_projection_recovered": 2,
+        "box_projection_witnesses": [
+          {
+            "sample_index": 79372,
+            "original_foot": [
+              0.5002277869698523,
+              -0.026664050258941047,
+              0.06693580651553996
+            ],
+            "candidate": [
+              0.5,
+              -0.026040499475190142,
+              0.0672961906643039
+            ],
+            "solver_success": true,
+            "message": "Optimization terminated successfully",
+            "iterations": 10,
+            "absolute_field_residual": 4.163336342344337e-17,
+            "normalized_field_residual": 2.1004146888150538e-17,
+            "feasible_target": true,
+            "distance": 0.0016347141249303517
+          },
+          {
+            "sample_index": 302257,
+            "original_foot": [
+              -0.3968542425967507,
+              -0.5000028071322378,
+              0.23295496541413233
+            ],
+            "candidate": [
+              -0.3968571689492812,
+              -0.5,
+              0.23297608202349895
+            ],
+            "solver_success": false,
+            "message": "Iteration limit reached",
+            "iterations": 300,
+            "absolute_field_residual": 1.0820337681405334e-15,
+            "normalized_field_residual": 1.0481002230611335e-15,
+            "feasible_target": true,
+            "distance": 7.471161425218778e-05
+          }
+        ],
+        "facet_consistency": {
+          "nodes": 30499,
+          "elements": 131598,
+          "unique_faces": 278417,
+          "interior_faces": 247975,
+          "extracted_boundary_faces": 30442,
+          "same_orientation_shared_faces": 0,
+          "nonmanifold_faces": 0,
+          "duplicate_cells": 0,
+          "duplicate_surface_faces": 0,
+          "provided_boundary_matches_extraction": true,
+          "missing_provided_faces": 0,
+          "extra_provided_faces": 0,
+          "nonpositive_corner_determinants": 0,
+          "minimum_corner_determinant": 1.1964844248302268e-07,
+          "oriented_facet_consistency_passed": true,
+          "conflict_examples": [],
+          "scope": "Oriented corner-face incidence and same-side neighbor diagnostics; necessary consistency, not a certificate of curved geometry or absence of nonlocal intersections"
+        },
+        "oriented_facet_consistency_passed": true,
+        "geometry_admitted": false
+      },
+      "quality_quantiles": {
+        "min": 0.1528837121808466,
+        "p01": 0.5204656954524243,
+        "p05": 0.5814856726017258,
+        "median": 0.7668901222880753,
+        "p95": 0.9444587142665343
+      },
+      "elements_below_q01": 0,
+      "periodic": {
+        "periodic_pair_counts": [
+          619,
+          710,
+          581
+        ],
+        "periodic_coordinate_errors": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "periodic_pair_tolerance": 1e-10,
+        "periodic_equivalence_classes": 28638,
+        "periodic_triangles_match": true
+      },
+      "audit_s": 5.035967583069578,
+      "wall_s": 9.294807333033532,
+      "worker": {
+        "returncode": 0,
+        "limit_failure": null,
+        "peak_rss_bytes": 582238208,
+        "wall_s": 10.29687375004869,
+        "memory_bytes": 8589934592,
+        "memory_enforcement": "process-tree-rss-watchdog",
+        "rss_poll_interval_s": 0.25,
+        "platform": "darwin",
+        "numerical_thread_policy": {
+          "environment": {
+            "OPENBLAS_NUM_THREADS": "1",
+            "OMP_NUM_THREADS": "1",
+            "MKL_NUM_THREADS": "1",
+            "VECLIB_MAXIMUM_THREADS": "1",
+            "RAYON_NUM_THREADS": "1"
+          },
+          "accelerate_blas_threading": 1,
+          "accelerate_scope": "calling thread"
+        }
+      },
+      "directory": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-mesh-only-spinodoid-strengthened-v1/repeat-0-meshers-tet4-adaptive",
+      "warmup": false
+    },
+    {
+      "vtk_backend": "Sequential",
+      "vtk_threads": 1,
+      "case": "spinodoid",
+      "config": {
+        "name": "meshers-curved-known",
+        "arm": "meshers",
+        "cells": 24,
+        "order": 2,
+        "adapt": true,
+        "tolerance": 1.0,
+        "min_length": 0.002,
+        "adapt_tolerance": 0.003
+      },
+      "status": "admitted",
+      "qualified": true,
+      "mmg_calls": [],
+      "solve_performed": false,
+      "instrumentation_s": 0.0,
+      "diagnostics": {
+        "empty": false,
+        "volume": 0.5023979137612794,
+        "minimum_mmg_quality": 0.2685813353609659,
+        "sampled_surface_error": 0.006318759207002859,
+        "elements_below_quality_01": 0,
+        "reverted_snap_vertices": 0,
+        "callback_calls": 0,
+        "inserted_interior_nodes": 0,
+        "adapt": {
+          "splits": 707,
+          "collapses": 12077,
+          "swaps": 3165,
+          "moves": 39907,
+          "error_splits": 15,
+          "maximum_error": 0.006709921206532169,
+          "seconds": [
+            0.124460083,
+            0.0044592090000000004,
+            0.43061133399999996,
+            0.066849499,
+            0.079627167,
+            0.178553209,
+            0.073852166
+          ]
+        },
+        "seconds": 1.795070125,
+        "quadratic": {
+          "curved_edges": 13528,
+          "straightened_edges": 0,
+          "partially_curved_edges": 8,
+          "minimum_jacobian_ratio": 0.034127738344367255
+        },
+        "threads": 1,
+        "evaluator": "compiled",
+        "preparation_seconds": 7.080379873514175e-07
+      },
+      "generation_wall_s": 1.8020842500263825,
+      "nodes": 73951,
+      "elements": 45994,
+      "generation_s": 1.8020842500263825,
+      "fixed_field_identity_checked": 4096,
+      "mesh_sha256": "eaaa84102d4e7764d1d0aec9010899fc637a1e8afb141ac12a23afbdf1cedfbf",
+      "geometry": {
+        "sampled_forward_max": 0.0013329848158457264,
+        "sampled_reverse_max": 0.0002951380420179453,
+        "sampled_two_sided_max": 0.0013329848158457264,
+        "outward_forward_max": 0.0013329848158457264,
+        "inward_forward_max": 0.00030124520203684456,
+        "projection_failed": 0,
+        "forward_samples": 114504,
+        "reverse_samples": 41325,
+        "volume": 0.5022660954966524,
+        "relative_volume_error": 0.0002586250902092413,
+        "q_min_corner": 0.2685813353609659,
+        "q_p01_corner": 0.5263518729174667,
+        "minimum_dihedral_deg_corner": 13.26468334132906,
+        "minimum_sampled_jacobian": 6.245422455668473e-08,
+        "reverse_tessellation_delta_max": 0.000139428457792814,
+        "quadratic_reverse_subdivisions": [
+          4,
+          8
+        ],
+        "projection_method": "newton-box-slsqp-v1",
+        "unbounded_projection_failed": 0,
+        "box_projection_attempts": 0,
+        "box_projection_recovered": 0,
+        "box_projection_witnesses": [],
+        "facet_consistency": {
+          "nodes": 73951,
+          "elements": 45994,
+          "unique_faces": 98048,
+          "interior_faces": 85928,
+          "extracted_boundary_faces": 12120,
+          "same_orientation_shared_faces": 0,
+          "nonmanifold_faces": 0,
+          "duplicate_cells": 0,
+          "duplicate_surface_faces": 0,
+          "provided_boundary_matches_extraction": true,
+          "missing_provided_faces": 0,
+          "extra_provided_faces": 0,
+          "nonpositive_corner_determinants": 0,
+          "minimum_corner_determinant": 3.6439742951926656e-07,
+          "oriented_facet_consistency_passed": true,
+          "conflict_examples": [],
+          "scope": "Oriented corner-face incidence and same-side neighbor diagnostics; necessary consistency, not a certificate of curved geometry or absence of nonlocal intersections"
+        },
+        "oriented_facet_consistency_passed": true,
+        "geometry_admitted": true
+      },
+      "quality_quantiles": {
+        "min": 0.2685813353609659,
+        "p01": 0.5263518729174667,
+        "p05": 0.5924619742098607,
+        "median": 0.7850767041570372,
+        "p95": 0.9399142499067382
+      },
+      "elements_below_q01": 0,
+      "periodic": {
+        "periodic_pair_counts": [
+          1240,
+          1376,
+          1159
+        ],
+        "periodic_coordinate_errors": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "periodic_pair_tolerance": 1e-10,
+        "periodic_equivalence_classes": 70249,
+        "periodic_triangles_match": true
+      },
+      "audit_s": 2.8716855420498177,
+      "wall_s": 4.817233457928523,
+      "worker": {
+        "returncode": 0,
+        "limit_failure": null,
+        "peak_rss_bytes": 618364928,
+        "wall_s": 5.782538790954277,
+        "memory_bytes": 8589934592,
+        "memory_enforcement": "process-tree-rss-watchdog",
+        "rss_poll_interval_s": 0.25,
+        "platform": "darwin",
+        "numerical_thread_policy": {
+          "environment": {
+            "OPENBLAS_NUM_THREADS": "1",
+            "OMP_NUM_THREADS": "1",
+            "MKL_NUM_THREADS": "1",
+            "VECLIB_MAXIMUM_THREADS": "1",
+            "RAYON_NUM_THREADS": "1"
+          },
+          "accelerate_blas_threading": 1,
+          "accelerate_scope": "calling thread"
+        }
+      },
+      "directory": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-mesh-only-spinodoid-strengthened-v1/repeat-0-meshers-curved-known",
+      "warmup": false
+    }
+  ],
+  "repetitions": 1,
+  "warmups": 0,
+  "strengthened": true,
+  "primary": "Tet4 versus Tet4; curved Tet10 is a separate capability tier",
+  "timing_scope": "Fresh in-process specimen/field preparation, extraction, meshing and output conversion. Imports, archive writes, validation, measured MMG instrumentation and FE excluded. Failed attempts are not successful mesh timings.",
+  "gates": "distance.002 absolute-volume1percent q.1 positive sampled Jacobians coherent facets periodic nodes/caps;250000nodes/tets8GiB",
+  "geometry_auditor": "box-constrained observer enabled identically for both arms; no changed geometry thresholds",
+  "dominance": "Fewer elements with no worse generation time, quality quantiles and geometry/volume error is stronger than equal-count parity; no success ratio for rejected competitors",
+  "actual_default_and_explicit_variants_separate": true,
+  "new_equilibrium_solve": false
+}

@@ -1,0 +1,19 @@
+{
+  "case": "spinodoid",
+  "config": {
+    "name": "meshers-tet4-16",
+    "arm": "meshers",
+    "cells": 16,
+    "order": 1,
+    "adapt": false,
+    "tolerance": 0.002
+  },
+  "status": "failed",
+  "qualified": false,
+  "mmg_calls": [],
+  "solve_performed": false,
+  "error": "sampled geometry error 1.1421919621093818e-2 exceeds tolerance 2e-3; increase resolution or budget",
+  "traceback": "Traceback (most recent call last):\n  File \"/Users/kmarchais/dev/meshers/experiments/adaptive/mesh_only_comparison.py\", line 89, in worker\n    mesh=meshers.generate(field,bounds=w.BOUNDS,cells=config['cells'],band=case.band,\n         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/Users/kmarchais/dev/meshers/crates/meshers-python/python/meshers/__init__.py\", line 316, in generate\n    result = _meshers.generate(\n             ^^^^^^^^^^^^^^^^^^\n_meshers.MeshingFailure: sampled geometry error 1.1421919621093818e-2 exceeds tolerance 2e-3; increase resolution or budget\n",
+  "failed_attempt_s": 1.3128088749945164,
+  "wall_s": 1.3128122499911115
+}

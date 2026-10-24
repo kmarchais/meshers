@@ -1,0 +1,22 @@
+{
+  "vtk_backend": "Sequential",
+  "vtk_threads": 1,
+  "case": "spinodoid",
+  "config": {
+    "name": "meshers-tet4-24",
+    "arm": "meshers",
+    "cells": 24,
+    "order": 1,
+    "adapt": false,
+    "tolerance": 1.0
+  },
+  "status": "failed",
+  "qualified": false,
+  "mmg_calls": [],
+  "solve_performed": false,
+  "instrumentation_s": 0.0,
+  "error": "minimum MMG quality 3.4377816604818916e-2 is below required 1e-1; mesh rejected (13 elements below 0.1). Improve resolution/optimization or use a quality remesher",
+  "traceback": "Traceback (most recent call last):\n  File \"/Users/kmarchais/dev/meshers/experiments/adaptive/mesh_only_comparison.py\", line 132, in worker\n    mesh=meshers.generate(field,bounds=w.BOUNDS,cells=config['cells'],band=case.band,\n         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/Users/kmarchais/dev/meshers/crates/meshers-python/python/meshers/__init__.py\", line 316, in generate\n    result = _meshers.generate(\n             ^^^^^^^^^^^^^^^^^^\n_meshers.MeshingFailure: minimum MMG quality 3.4377816604818916e-2 is below required 1e-1; mesh rejected (13 elements below 0.1). Improve resolution/optimization or use a quality remesher\n",
+  "failed_attempt_s": 2.4579444580012932,
+  "wall_s": 2.4579467080766335
+}

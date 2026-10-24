@@ -1,0 +1,1401 @@
+{
+  "vtk_backend": "Sequential",
+  "vtk_threads": 1,
+  "case": "spinodoid",
+  "config": {
+    "name": "actual-explicit-tuned",
+    "arm": "microgen",
+    "order": 1,
+    "resolution": 36,
+    "mmg": {
+      "hausd": 0.0005,
+      "hmax": 0.06,
+      "hgrad": 1.3
+    },
+    "first_hausd": 0.0015,
+    "first_hmax": 0.06,
+    "first_only": true,
+    "repair": false
+  },
+  "status": "geometry-or-periodicity-rejected",
+  "qualified": false,
+  "mmg_calls": [
+    {
+      "nofem": true,
+      "hausd": 0.0015,
+      "hmax": 0.06,
+      "hgrad": 1.3,
+      "output_tetrahedra": 143585
+    }
+  ],
+  "solve_performed": false,
+  "instrumentation_s": 0.1475009168498218,
+  "fft_realization_resolution": 16,
+  "sampling_resolution": 36,
+  "actual_resolution": 36,
+  "seed_nodes": 38712,
+  "seed_elements": 182287,
+  "omitted_second_pass": true,
+  "reoriented_tets": 0,
+  "generation_wall_s": 6.345588833093643,
+  "nodes": 31787,
+  "elements": 143585,
+  "generation_s": 6.198087916243821,
+  "mesh_sha256": "f0e89131f50d255c4bd814020436f5feff26e158c63e5d29ad533827f19cd9ae",
+  "geometry": {
+    "sampled_forward_max": 0.03995742818256027,
+    "sampled_reverse_max": 0.003505766296371692,
+    "sampled_two_sided_max": 0.03995742818256027,
+    "outward_forward_max": 0.03995742818256027,
+    "inward_forward_max": 0.0032543582496405727,
+    "projection_failed": 0,
+    "forward_samples": 263146,
+    "reverse_samples": 41325,
+    "volume": 0.5022123997960178,
+    "relative_volume_error": 0.00015169056253272473,
+    "q_min_corner": 2.3278497124767503e-07,
+    "q_p01_corner": 0.17769683161924804,
+    "minimum_dihedral_deg_corner": 0.0011607576308847456,
+    "minimum_sampled_jacobian": 1.7678001968057096e-18,
+    "reverse_tessellation_delta_max": 0.0,
+    "quadratic_reverse_subdivisions": null,
+    "projection_method": "newton-box-slsqp-v1",
+    "unbounded_projection_failed": 65,
+    "box_projection_attempts": 65,
+    "box_projection_recovered": 65,
+    "box_projection_witnesses": [
+      {
+        "sample_index": 6307,
+        "original_foot": [
+          0.5003119771727373,
+          -0.18694819540446225,
+          0.04354411021210956
+        ],
+        "candidate": [
+          0.5,
+          -0.1875457637431679,
+          0.04387526153372644
+        ],
+        "solver_success": true,
+        "message": "Optimization terminated successfully",
+        "iterations": 33,
+        "absolute_field_residual": 9.410874857174178e-17,
+        "normalized_field_residual": 4.7351746382048476e-17,
+        "feasible_target": true,
+        "distance": 0.0009080441675208142
+      },
+      {
+        "sample_index": 6319,
+        "original_foot": [
+          0.5001597709218817,
+          -0.1907755506678012,
+          0.036555320709637115
+        ],
+        "candidate": [
+          0.5,
+          -0.19109457001340033,
+          0.03669483814174941
+        ],
+        "solver_success": true,
+        "message": "Optimization terminated successfully",
+        "iterations": 10,
+        "absolute_field_residual": 5.767955557622884e-17,
+        "normalized_field_residual": 2.8949489326823655e-17,
+        "feasible_target": true,
+        "distance": 0.0005215490117138338
+      },
+      {
+        "sample_index": 6332,
+        "original_foot": [
+          0.5003119771727373,
+          -0.18694819540446225,
+          0.04354411021210956
+        ],
+        "candidate": [
+          0.5,
+          -0.1875457637431679,
+          0.04387526153372644
+        ],
+        "solver_success": true,
+        "message": "Optimization terminated successfully",
+        "iterations": 33,
+        "absolute_field_residual": 9.410874857174178e-17,
+        "normalized_field_residual": 4.7351746382048476e-17,
+        "feasible_target": true,
+        "distance": 0.0009080441675208142
+      },
+      {
+        "sample_index": 6333,
+        "original_foot": [
+          0.5001597709218817,
+          -0.1907755506678012,
+          0.036555320709637115
+        ],
+        "candidate": [
+          0.5,
+          -0.19109457001340033,
+          0.03669483814174941
+        ],
+        "solver_success": true,
+        "message": "Optimization terminated successfully",
+        "iterations": 10,
+        "absolute_field_residual": 5.767955557622884e-17,
+        "normalized_field_residual": 2.8949489326823655e-17,
+        "feasible_target": true,
+        "distance": 0.0005215490117138338
+      },
+      {
+        "sample_index": 6336,
+        "original_foot": [
+          0.5002711116579162,
+          -0.18887706283201017,
+          0.04005546427125978
+        ],
+        "candidate": [
+          0.5,
+          -0.18940860616745256,
+          0.04031785347206693
+        ],
+        "solver_success": true,
+        "message": "Optimization terminated successfully",
+        "iterations": 22,
+        "absolute_field_residual": 2.0383000842727483e-17,
+        "normalized_field_residual": 1.0244384200304992e-17,
+        "feasible_target": true,
+        "distance": 0.0008040297740700496
+      },
+      {
+        "sample_index": 6342,
+        "original_foot": [
+          0.500224163740809,
+          -0.18983020925118868,
+          0.03830657199648421
+        ],
+        "candidate": [
+          0.5,
+          -0.19027400854441917,
+          0.038512924342374626
+        ],
+        "solver_success": false,
+        "message": "Positive directional derivative for linesearch",
+        "iterations": 56,
+        "absolute_field_residual": 2.08904074594507e-15,
+        "normalized_field_residual": 1.0492462588910043e-15,
+        "feasible_target": true,
+        "distance": 0.000683947483191526
+      },
+      {
+        "sample_index": 6420,
+        "original_foot": [
+          0.5000702616044365,
+          -0.1987711840096794,
+          0.005038659250438203
+        ],
+        "candidate": [
+          0.5,
+          -0.19891726622474068,
+          0.005051955352590463
+        ],
+        "solver_success": true,
+        "message": "Optimization terminated successfully",
+        "iterations": 58,
+        "absolute_field_residual": 2.7321894746634712e-17,
+        "normalized_field_residual": 1.3523356265969118e-17,
+        "feasible_target": true,
+        "distance": 0.00037568647993670054
+      },
+      {
+        "sample_index": 8622,
+        "original_foot": [
+          0.5000996083076408,
+          -0.1971839198336292,
+          0.015994650995740448
+        ],
+        "candidate": [
+          0.5,
+          -0.19739158714620336,
+          0.016033814595403886
+        ],
+        "solver_success": true,
+        "message": "Optimization terminated successfully",
+        "iterations": 68,
+        "absolute_field_residual": 1.6046192152785466e-17,
+        "normalized_field_residual": 7.976917007443257e-18,
+        "feasible_target": true,
+        "distance": 0.0005129924544629166
+      },
+      {
+        "sample_index": 8627,
+        "original_foot": [
+          0.5001195596452659,
+          -0.19584369414114539,
+          0.02189747891220566
+        ],
+        "candidate": [
+          0.5,
+          -0.19609199396659638,
+          0.0219595608511782
+        ],
+        "solver_success": true,
+        "message": "Optimization terminated successfully",
+        "iterations": 9,
+        "absolute_field_residual": 3.0357660829594124e-18,
+        "normalized_field_residual": 1.5133200651180747e-18,
+        "feasible_target": true,
+        "distance": 0.0004156374719131335
+      },
+      {
+        "sample_index": 8628,
+        "original_foot": [
+          0.5002124269099021,
+          -0.19816281003187491,
+          0.007999628277720891
+        ],
+        "candidate": [
+          0.5,
+          -0.19860571996531656,
+          0.00805104606386468
+        ],
+        "solver_success": false,
+        "message": "Positive directional derivative for linesearch",
+        "iterations": 43,
+        "absolute_field_residual": 2.3623681136286656e-13,
+        "normalized_field_residual": 1.170518913397697e-13,
+        "feasible_target": true,
+        "distance": 0.0006408643348237809
+      },
+      {
+        "sample_index": 148023,
+        "original_foot": [
+          0.5000010646891907,
+          -0.1936596033589988,
+          0.030131457929877217
+        ],
+        "candidate": [
+          0.49999999999999967,
+          -0.1936617799390288,
+          0.030132207605961452
+        ],
+        "solver_success": false,
+        "message": "Iteration limit reached",
+        "iterations": 300,
+        "absolute_field_residual": 6.960577947356938e-16,
+        "normalized_field_residual": 3.4834185168947403e-16,
+        "feasible_target": true,
+        "distance": 0.00010471871188280486
+      },
+      {
+        "sample_index": 148029,
+        "original_foot": [
+          0.5000036773820006,
+          -0.19405311434787886,
+          0.028954808036595215
+        ],
+        "candidate": [
+          0.5,
+          -0.19406065024670538,
+          0.028957308813032035
+        ],
+        "solver_success": true,
+        "message": "Optimization terminated successfully",
+        "iterations": 12,
+        "absolute_field_residual": 4.90059381963448e-17,
+        "normalized_field_residual": 2.4511448682611453e-17,
+        "feasible_target": true,
+        "distance": 5.650447330484521e-05
+      },
+      {
+        "sample_index": 157584,
+        "original_foot": [
+          0.5000000586422404,
+          -0.19444450644477196,
+          0.027774833418649354
+        ],
+        "candidate": [
+          0.5,
+          -0.19444462694367157,
+          0.027774871666685786
+        ],
+        "solver_success": false,
+        "message": "Iteration limit reached",
+        "iterations": 300,
+        "absolute_field_residual": 5.913021808301444e-14,
+        "normalized_field_residual": 2.955871808935536e-14,
+        "feasible_target": true,
+        "distance": 2.0813333148013916e-07
+      },
+      {
+        "sample_index": 197173,
+        "original_foot": [
+          0.5001597709218817,
+          -0.1907755506678012,
+          0.036555320709637115
+        ],
+        "candidate": [
+          0.5,
+          -0.19109457001340033,
+          0.03669483814174941
+        ],
+        "solver_success": true,
+        "message": "Optimization terminated successfully",
+        "iterations": 10,
+        "absolute_field_residual": 5.767955557622884e-17,
+        "normalized_field_residual": 2.8949489326823655e-17,
+        "feasible_target": true,
+        "distance": 0.0005215490117138338
+      },
+      {
+        "sample_index": 197177,
+        "original_foot": [
+          0.5000795622827274,
+          -0.19182488007992624,
+          0.03452037421597624
+        ],
+        "candidate": [
+          0.5,
+          -0.19198509972660793,
+          0.03458553250205894
+        ],
+        "solver_success": true,
+        "message": "Optimization terminated successfully",
+        "iterations": 255,
+        "absolute_field_residual": 5.637851296924623e-18,
+        "normalized_field_residual": 2.8271426910740422e-18,
+        "feasible_target": true,
+        "distance": 0.00033871554622565554
+      },
+      {
+        "sample_index": 197183,
+        "original_foot": [
+          0.5000309865597262,
+          -0.19234560802897852,
+          0.03350201399231704
+        ],
+        "candidate": [
+          0.5,
+          -0.19240824119179906,
+          0.03352654678723066
+        ],
+        "solver_success": true,
+        "message": "Optimization terminated successfully",
+        "iterations": 211,
+        "absolute_field_residual": 9.75781955236954e-17,
+        "normalized_field_residual": 4.890864839954832e-17,
+        "feasible_target": true,
+        "distance": 0.000245336639833897
+      },
+      {
+        "sample_index": 197185,
+        "original_foot": [
+          0.5001597709218817,
+          -0.1907755506678012,
+          0.036555320709637115
+        ],
+        "candidate": [
+          0.5,
+          -0.19109457001340033,
+          0.03669483814174941
+        ],
+        "solver_success": true,
+        "message": "Optimization terminated successfully",
+        "iterations": 10,
+        "absolute_field_residual": 5.767955557622884e-17,
+        "normalized_field_residual": 2.8949489326823655e-17,
+        "feasible_target": true,
+        "distance": 0.0005215490117138338
+      },
+      {
+        "sample_index": 197187,
+        "original_foot": [
+          0.5000773441194345,
+          -0.19270920730337027,
+          0.03227488900941461
+        ],
+        "candidate": [
+          0.5,
+          -0.19286624645843758,
+          0.03233388611351402
+        ],
+        "solver_success": true,
+        "message": "Optimization terminated successfully",
+        "iterations": 7,
+        "absolute_field_residual": 1.5178830414797062e-17,
+        "normalized_field_residual": 7.603948556266356e-18,
+        "feasible_target": true,
+        "distance": 0.0002823853894341837
+      },
+      {
+        "sample_index": 197188,
+        "original_foot": [
+          0.5000795622827274,
+          -0.19182488007992624,
+          0.03452037421597624
+        ],
+        "candidate": [
+          0.5,
+          -0.19198509972660793,
+          0.03458553250205894
+        ],
+        "solver_success": true,
+        "message": "Optimization terminated successfully",
+        "iterations": 255,
+        "absolute_field_residual": 5.637851296924623e-18,
+        "normalized_field_residual": 2.8271426910740422e-18,
+        "feasible_target": true,
+        "distance": 0.00033871554622565554
+      },
+      {
+        "sample_index": 197189,
+        "original_foot": [
+          0.5001275368223916,
+          -0.1926319361592251,
+          0.03217071192832599
+        ],
+        "candidate": [
+          0.5,
+          -0.19289104794967324,
+          0.03226783234944498
+        ],
+        "solver_success": true,
+        "message": "Optimization terminated successfully",
+        "iterations": 12,
+        "absolute_field_residual": 4.336808689942018e-19,
+        "normalized_field_residual": 2.172491697593553e-19,
+        "feasible_target": true,
+        "distance": 0.00038146845554104845
+      },
+      {
+        "sample_index": 197190,
+        "original_foot": [
+          0.5000010646891907,
+          -0.1936596033589988,
+          0.030131457929877217
+        ],
+        "candidate": [
+          0.49999999999999967,
+          -0.1936617799390288,
+          0.030132207605961452
+        ],
+        "solver_success": false,
+        "message": "Iteration limit reached",
+        "iterations": 300,
+        "absolute_field_residual": 6.960577947356938e-16,
+        "normalized_field_residual": 3.4834185168947403e-16,
+        "feasible_target": true,
+        "distance": 0.00010471871188280486
+      },
+      {
+        "sample_index": 197191,
+        "original_foot": [
+          0.5000271064443284,
+          -0.19278645229134764,
+          0.0323790469013518
+        ],
+        "candidate": [
+          0.5,
+          -0.19284145794629887,
+          0.03239974951461276
+        ],
+        "solver_success": false,
+        "message": "Positive directional derivative for linesearch",
+        "iterations": 215,
+        "absolute_field_residual": 1.2945373939476923e-15,
+        "normalized_field_residual": 6.485275187304399e-16,
+        "feasible_target": true,
+        "distance": 0.00020788026579843363
+      },
+      {
+        "sample_index": 197192,
+        "original_foot": [
+          0.5001303765726923,
+          -0.19174777976139418,
+          0.0344164416598354
+        ],
+        "candidate": [
+          0.5,
+          -0.19201049615470078,
+          0.03452306729716159
+        ],
+        "solver_success": true,
+        "message": "Optimization terminated successfully",
+        "iterations": 99,
+        "absolute_field_residual": 3.0357660829594124e-18,
+        "normalized_field_residual": 1.5222664747644615e-18,
+        "feasible_target": true,
+        "distance": 0.0004306379311459492
+      },
+      {
+        "sample_index": 197193,
+        "original_foot": [
+          0.5000506850753033,
+          -0.19358218776393946,
+          0.030027080005390627
+        ],
+        "candidate": [
+          0.5,
+          -0.19368578933566574,
+          0.030062921996400836
+        ],
+        "solver_success": true,
+        "message": "Optimization terminated successfully",
+        "iterations": 43,
+        "absolute_field_residual": 6.288372600415926e-17,
+        "normalized_field_residual": 3.146911623785579e-17,
+        "feasible_target": true,
+        "distance": 0.00017031611168274373
+      },
+      {
+        "sample_index": 197194,
+        "original_foot": [
+          0.5001225049221867,
+          -0.19130151706071397,
+          0.035538174298451686
+        ],
+        "candidate": [
+          0.5,
+          -0.1915472134837178,
+          0.03564182212174433
+        ],
+        "solver_success": true,
+        "message": "Optimization terminated successfully",
+        "iterations": 15,
+        "absolute_field_residual": 1.3010426069826053e-18,
+        "normalized_field_residual": 6.5271145530869845e-19,
+        "feasible_target": true,
+        "distance": 0.00043430339752320845
+      },
+      {
+        "sample_index": 197195,
+        "original_foot": [
+          0.5000754784040017,
+          -0.19354347018520665,
+          0.029974884287294383
+        ],
+        "candidate": [
+          0.5,
+          -0.19369779586041622,
+          0.030028207127516436
+        ],
+        "solver_success": false,
+        "message": "Positive directional derivative for linesearch",
+        "iterations": 255,
+        "absolute_field_residual": 7.144024954941486e-15,
+        "normalized_field_residual": 3.575050545505795e-15,
+        "feasible_target": true,
+        "distance": 0.00022062863183625555
+      },
+      {
+        "sample_index": 200863,
+        "original_foot": [
+          0.5001597709218817,
+          -0.1907755506678012,
+          0.036555320709637115
+        ],
+        "candidate": [
+          0.5,
+          -0.19109457001340033,
+          0.03669483814174941
+        ],
+        "solver_success": true,
+        "message": "Optimization terminated successfully",
+        "iterations": 10,
+        "absolute_field_residual": 5.767955557622884e-17,
+        "normalized_field_residual": 2.8949489326823655e-17,
+        "feasible_target": true,
+        "distance": 0.0005215490117138338
+      },
+      {
+        "sample_index": 200864,
+        "original_foot": [
+          0.5003119771727373,
+          -0.18694819540446225,
+          0.04354411021210956
+        ],
+        "candidate": [
+          0.5,
+          -0.1875457637431679,
+          0.04387526153372644
+        ],
+        "solver_success": true,
+        "message": "Optimization terminated successfully",
+        "iterations": 33,
+        "absolute_field_residual": 9.410874857174178e-17,
+        "normalized_field_residual": 4.7351746382048476e-17,
+        "feasible_target": true,
+        "distance": 0.0009080441675208142
+      },
+      {
+        "sample_index": 200866,
+        "original_foot": [
+          0.5002674946922132,
+          -0.190772216368282,
+          0.035972591452537735
+        ],
+        "candidate": [
+          0.5,
+          -0.19130800848603355,
+          0.03620301815441635
+        ],
+        "solver_success": false,
+        "message": "Positive directional derivative for linesearch",
+        "iterations": 36,
+        "absolute_field_residual": 5.603590508274081e-15,
+        "normalized_field_residual": 2.8118861650672188e-15,
+        "feasible_target": true,
+        "distance": 0.0007610173630470388
+      },
+      {
+        "sample_index": 200867,
+        "original_foot": [
+          0.5002711116579162,
+          -0.18887706283201017,
+          0.04005546427125978
+        ],
+        "candidate": [
+          0.5,
+          -0.18940860616745256,
+          0.04031785347206693
+        ],
+        "solver_success": true,
+        "message": "Optimization terminated successfully",
+        "iterations": 22,
+        "absolute_field_residual": 2.0383000842727483e-17,
+        "normalized_field_residual": 1.0244384200304992e-17,
+        "feasible_target": true,
+        "distance": 0.0008040297740700496
+      },
+      {
+        "sample_index": 200868,
+        "original_foot": [
+          0.5003208717315112,
+          -0.19077036238112915,
+          0.03568103681373775
+        ],
+        "candidate": [
+          0.5,
+          -0.19141406405248848,
+          0.03595553281007349
+        ],
+        "solver_success": true,
+        "message": "Optimization terminated successfully",
+        "iterations": 18,
+        "absolute_field_residual": 3.0357660829594124e-18,
+        "normalized_field_residual": 1.5231933552942943e-18,
+        "feasible_target": true,
+        "distance": 0.000884832806397631
+      },
+      {
+        "sample_index": 200869,
+        "original_foot": [
+          0.5001275368223916,
+          -0.1926319361592251,
+          0.03217071192832599
+        ],
+        "candidate": [
+          0.5,
+          -0.19289104794967324,
+          0.03226783234944498
+        ],
+        "solver_success": true,
+        "message": "Optimization terminated successfully",
+        "iterations": 12,
+        "absolute_field_residual": 4.336808689942018e-19,
+        "normalized_field_residual": 2.172491697593553e-19,
+        "feasible_target": true,
+        "distance": 0.00038146845554104845
+      },
+      {
+        "sample_index": 200870,
+        "original_foot": [
+          0.5002137944292758,
+          -0.1907739456757252,
+          0.03626401989284508
+        ],
+        "candidate": [
+          0.5,
+          -0.1912015077962124,
+          0.036449454600746084
+        ],
+        "solver_success": false,
+        "message": "Iteration limit reached",
+        "iterations": 300,
+        "absolute_field_residual": 1.2025970497209215e-15,
+        "normalized_field_residual": 6.03525423484152e-16,
+        "feasible_target": true,
+        "distance": 0.0006392428977582786
+      },
+      {
+        "sample_index": 200871,
+        "original_foot": [
+          0.500329577990411,
+          -0.18887703029235112,
+          0.03976536718373374
+        ],
+        "candidate": [
+          0.5,
+          -0.18952441074417356,
+          0.04008247447438304
+        ],
+        "solver_success": false,
+        "message": "Iteration limit reached",
+        "iterations": 300,
+        "absolute_field_residual": 9.753482743679598e-16,
+        "normalized_field_residual": 4.901639487290507e-16,
+        "feasible_target": true,
+        "distance": 0.0009389174044593359
+      },
+      {
+        "sample_index": 200872,
+        "original_foot": [
+          0.5001762436802774,
+          -0.19262829772513268,
+          0.031878157178535205
+        ],
+        "candidate": [
+          0.5,
+          -0.19298681174005297,
+          0.03201130522683456
+        ],
+        "solver_success": true,
+        "message": "Optimization terminated successfully",
+        "iterations": 140,
+        "absolute_field_residual": 5.767955557622884e-17,
+        "normalized_field_residual": 2.889077148849137e-17,
+        "feasible_target": true,
+        "distance": 0.0004905349605280314
+      },
+      {
+        "sample_index": 200873,
+        "original_foot": [
+          0.5003004337492987,
+          -0.1879163172628878,
+          0.0418014842619807
+        ],
+        "candidate": [
+          0.5,
+          -0.18849889750258114,
+          0.0421063929264552
+        ],
+        "solver_success": false,
+        "message": "Positive directional derivative for linesearch",
+        "iterations": 27,
+        "absolute_field_residual": 1.7345933717161088e-14,
+        "normalized_field_residual": 8.723182534296988e-15,
+        "feasible_target": true,
+        "distance": 0.0008791338322613792
+      },
+      {
+        "sample_index": 200874,
+        "original_foot": [
+          0.5002004777898461,
+          -0.19262643035490654,
+          0.03173184071644104
+        ],
+        "candidate": [
+          0.5,
+          -0.19303449466586292,
+          0.0318826867225767
+        ],
+        "solver_success": true,
+        "message": "Optimization terminated successfully",
+        "iterations": 10,
+        "absolute_field_residual": 4.336808689942018e-19,
+        "normalized_field_residual": 2.1721110913994822e-19,
+        "feasible_target": true,
+        "distance": 0.0005462262982642769
+      },
+      {
+        "sample_index": 200875,
+        "original_foot": [
+          0.5001557668388165,
+          -0.1917092197680558,
+          0.034364467749237224
+        ],
+        "candidate": [
+          0.5,
+          -0.19202320189921693,
+          0.0344917651145838
+        ],
+        "solver_success": false,
+        "message": "Positive directional derivative for linesearch",
+        "iterations": 90,
+        "absolute_field_residual": 5.999107460796793e-15,
+        "normalized_field_residual": 3.008175247579348e-15,
+        "feasible_target": true,
+        "distance": 0.0004817571856803026
+      },
+      {
+        "sample_index": 210491,
+        "original_foot": [
+          -0.5003929010295841,
+          0.18013749652285588,
+          -0.38263975444037895
+        ],
+        "candidate": [
+          -0.5,
+          0.18057492074031176,
+          -0.38303322561675246
+        ],
+        "solver_success": false,
+        "message": "Positive directional derivative for linesearch",
+        "iterations": 40,
+        "absolute_field_residual": 1.062995177991688e-14,
+        "normalized_field_residual": 6.765766572030207e-15,
+        "feasible_target": true,
+        "distance": 0.0014364655769979228
+      },
+      {
+        "sample_index": 215987,
+        "original_foot": [
+          0.4305754786502743,
+          0.5000420174541126,
+          -0.3917913209806382
+        ],
+        "candidate": [
+          0.43058257392079696,
+          0.5,
+          -0.39182695178057986
+        ],
+        "solver_success": true,
+        "message": "Optimization terminated successfully",
+        "iterations": 8,
+        "absolute_field_residual": 6.7220534694101275e-18,
+        "normalized_field_residual": 2.9549046917498555e-18,
+        "feasible_target": true,
+        "distance": 0.00014691752065858145
+      },
+      {
+        "sample_index": 215993,
+        "original_foot": [
+          0.4236169871797846,
+          0.5000063664565616,
+          -0.3931245264781527
+        ],
+        "candidate": [
+          0.4236179639133247,
+          0.5,
+          -0.39313004388152006
+        ],
+        "solver_success": true,
+        "message": "Optimization terminated successfully",
+        "iterations": 21,
+        "absolute_field_residual": 2.6454533008646308e-17,
+        "normalized_field_residual": 1.1805011050659323e-17,
+        "feasible_target": true,
+        "distance": 4.595710043605857e-05
+      },
+      {
+        "sample_index": 217948,
+        "original_foot": [
+          0.4350572687991585,
+          0.5000592073124706,
+          -0.3908600933466816
+        ],
+        "candidate": [
+          0.4350677738999102,
+          0.5,
+          -0.3909096296290192
+        ],
+        "solver_success": true,
+        "message": "Optimization terminated successfully",
+        "iterations": 49,
+        "absolute_field_residual": 3.2526065174565133e-18,
+        "normalized_field_residual": 1.4177623314244406e-18,
+        "feasible_target": true,
+        "distance": 0.00015955086371119263
+      },
+      {
+        "sample_index": 217949,
+        "original_foot": [
+          0.4305754786502743,
+          0.5000420174541126,
+          -0.3917913209806382
+        ],
+        "candidate": [
+          0.43058257392079696,
+          0.5,
+          -0.39182695178057986
+        ],
+        "solver_success": true,
+        "message": "Optimization terminated successfully",
+        "iterations": 8,
+        "absolute_field_residual": 6.7220534694101275e-18,
+        "normalized_field_residual": 2.9549046917498555e-18,
+        "feasible_target": true,
+        "distance": 0.00014691752065858145
+      },
+      {
+        "sample_index": 217952,
+        "original_foot": [
+          0.4258629385224189,
+          0.5000420965845714,
+          -0.39268913722392973
+        ],
+        "candidate": [
+          0.42586960173253885,
+          0.5,
+          -0.39272536216030324
+        ],
+        "solver_success": true,
+        "message": "Optimization terminated successfully",
+        "iterations": 10,
+        "absolute_field_residual": 4.401860820291148e-17,
+        "normalized_field_residual": 1.9542675655337848e-17,
+        "feasible_target": true,
+        "distance": 0.00010401367124454933
+      },
+      {
+        "sample_index": 217954,
+        "original_foot": [
+          0.4395318766519069,
+          0.5000484341008181,
+          -0.3898966085385398
+        ],
+        "candidate": [
+          0.43954085339211757,
+          0.5,
+          -0.38993660642803973
+        ],
+        "solver_success": true,
+        "message": "Optimization terminated successfully",
+        "iterations": 7,
+        "absolute_field_residual": 1.8214596497756474e-17,
+        "normalized_field_residual": 7.88047184376399e-18,
+        "feasible_target": true,
+        "distance": 0.00011774884743952414
+      },
+      {
+        "sample_index": 217955,
+        "original_foot": [
+          0.4375192251291624,
+          0.5000063801290863,
+          -0.3903778718669221
+        ],
+        "candidate": [
+          0.43752040498776384,
+          0.5,
+          -0.39038316768409026
+        ],
+        "solver_success": true,
+        "message": "Optimization terminated successfully",
+        "iterations": 99,
+        "absolute_field_residual": 5.5294310796760726e-18,
+        "normalized_field_residual": 2.400070555533339e-18,
+        "feasible_target": true,
+        "distance": 0.00011884568681002462
+      },
+      {
+        "sample_index": 222946,
+        "original_foot": [
+          -0.4215985498008221,
+          0.5000343595735967,
+          0.26386816526791623
+        ],
+        "candidate": [
+          -0.42154436972359444,
+          0.5,
+          0.26398851417793257
+        ],
+        "solver_success": false,
+        "message": "Positive directional derivative for linesearch",
+        "iterations": 34,
+        "absolute_field_residual": 1.891715950552708e-14,
+        "normalized_field_residual": 1.6208198790338856e-14,
+        "feasible_target": true,
+        "distance": 0.0007750358461304203
+      },
+      {
+        "sample_index": 236594,
+        "original_foot": [
+          -0.3939689810380839,
+          0.500423716736093,
+          0.23719081815896606
+        ],
+        "candidate": [
+          -0.3939001557579945,
+          0.5,
+          0.23320572762381636
+        ],
+        "solver_success": true,
+        "message": "Optimization terminated successfully",
+        "iterations": 60,
+        "absolute_field_residual": 9.768661574094395e-17,
+        "normalized_field_residual": 9.593945435110592e-17,
+        "feasible_target": true,
+        "distance": 0.004075407440969322
+      },
+      {
+        "sample_index": 236599,
+        "original_foot": [
+          -0.38958698191660585,
+          0.5005345426390634,
+          0.23808719612759074
+        ],
+        "candidate": [
+          -0.39020942389743685,
+          0.5,
+          0.23300679169375746
+        ],
+        "solver_success": true,
+        "message": "Optimization terminated successfully",
+        "iterations": 44,
+        "absolute_field_residual": 2.1141942363467336e-17,
+        "normalized_field_residual": 2.1125052137183892e-17,
+        "feasible_target": true,
+        "distance": 0.005238526208585923
+      },
+      {
+        "sample_index": 236607,
+        "original_foot": [
+          -0.3856169032297828,
+          0.5005159413800168,
+          0.23645656921529656
+        ],
+        "candidate": [
+          -0.38660980080870805,
+          0.5,
+          0.23233925457118734
+        ],
+        "solver_success": true,
+        "message": "Optimization terminated successfully",
+        "iterations": 24,
+        "absolute_field_residual": 4.8030156241107846e-17,
+        "normalized_field_residual": 4.8798904004188665e-17,
+        "feasible_target": true,
+        "distance": 0.004343352058196348
+      },
+      {
+        "sample_index": 236659,
+        "original_foot": [
+          -0.4164180518074079,
+          0.5000524660429506,
+          0.2241236230785753
+        ],
+        "candidate": [
+          -0.4162966774028784,
+          0.5,
+          0.22395291940577314
+        ],
+        "solver_success": true,
+        "message": "Optimization terminated successfully",
+        "iterations": 9,
+        "absolute_field_residual": 4.336808689942018e-18,
+        "normalized_field_residual": 3.854916264156381e-18,
+        "feasible_target": true,
+        "distance": 0.00045283681994089163
+      },
+      {
+        "sample_index": 253637,
+        "original_foot": [
+          0.5000000758837395,
+          -0.19444436334105203,
+          0.0277751613593683
+        ],
+        "candidate": [
+          0.5,
+          -0.1944445192737612,
+          0.02777521083532175
+        ],
+        "solver_success": true,
+        "message": "Optimization terminated successfully",
+        "iterations": 4,
+        "absolute_field_residual": 4.7271214720367993e-17,
+        "normalized_field_residual": 2.3630501988565757e-17,
+        "feasible_target": true,
+        "distance": 2.3053407053672757e-07
+      },
+      {
+        "sample_index": 256764,
+        "original_foot": [
+          0.5003119771727373,
+          -0.18694819540446225,
+          0.04354411021210956
+        ],
+        "candidate": [
+          0.5,
+          -0.1875457637431679,
+          0.04387526153372644
+        ],
+        "solver_success": true,
+        "message": "Optimization terminated successfully",
+        "iterations": 33,
+        "absolute_field_residual": 9.410874857174178e-17,
+        "normalized_field_residual": 4.7351746382048476e-17,
+        "feasible_target": true,
+        "distance": 0.0009080441675208142
+      },
+      {
+        "sample_index": 256766,
+        "original_foot": [
+          0.5005610673564787,
+          -0.18695455123210003,
+          0.0423900206530004
+        ],
+        "candidate": [
+          0.5,
+          -0.18803847462331127,
+          0.04297346997027487
+        ],
+        "solver_success": true,
+        "message": "Optimization terminated successfully",
+        "iterations": 43,
+        "absolute_field_residual": 2.6454533008646308e-17,
+        "normalized_field_residual": 1.3307399202092049e-17,
+        "feasible_target": true,
+        "distance": 0.001509472321859926
+      },
+      {
+        "sample_index": 256767,
+        "original_foot": [
+          0.5003208717315112,
+          -0.19077036238112915,
+          0.03568103681373775
+        ],
+        "candidate": [
+          0.5,
+          -0.19141406405248848,
+          0.03595553281007349
+        ],
+        "solver_success": true,
+        "message": "Optimization terminated successfully",
+        "iterations": 18,
+        "absolute_field_residual": 3.0357660829594124e-18,
+        "normalized_field_residual": 1.5231933552942943e-18,
+        "feasible_target": true,
+        "distance": 0.000884832806397631
+      },
+      {
+        "sample_index": 256768,
+        "original_foot": [
+          0.5003921092685932,
+          -0.18302036767703425,
+          0.04961776322723035
+        ],
+        "candidate": [
+          0.5,
+          -0.1837318525572038,
+          0.050098055645962467
+        ],
+        "solver_success": true,
+        "message": "Optimization terminated successfully",
+        "iterations": 11,
+        "absolute_field_residual": 5.637851296924623e-18,
+        "normalized_field_residual": 2.8402146787905467e-18,
+        "feasible_target": true,
+        "distance": 0.0010745174496678202
+      },
+      {
+        "sample_index": 256770,
+        "original_foot": [
+          0.5004262578428763,
+          -0.19076702767784168,
+          0.035098024621168476
+        ],
+        "candidate": [
+          0.5,
+          -0.19162475492646455,
+          0.03545755834595006
+        ],
+        "solver_success": true,
+        "message": "Optimization terminated successfully",
+        "iterations": 33,
+        "absolute_field_residual": 2.168404344971009e-18,
+        "normalized_field_residual": 1.0877679479542176e-18,
+        "feasible_target": true,
+        "distance": 0.0011365971575758521
+      },
+      {
+        "sample_index": 256771,
+        "original_foot": [
+          0.5004371736267028,
+          -0.18695159952636473,
+          0.04296741361349185
+        ],
+        "candidate": [
+          0.5,
+          -0.18779258766445536,
+          0.043426777227395685
+        ],
+        "solver_success": true,
+        "message": "Optimization terminated successfully",
+        "iterations": 28,
+        "absolute_field_residual": 4.336808689942018e-19,
+        "normalized_field_residual": 2.1818309508120893e-19,
+        "feasible_target": true,
+        "distance": 0.0012076896753732344
+      },
+      {
+        "sample_index": 256772,
+        "original_foot": [
+          0.500533427634491,
+          -0.18302831734696093,
+          0.049047566549277
+        ],
+        "candidate": [
+          0.5,
+          -0.1840013780428056,
+          0.0496962149540037
+        ],
+        "solver_success": false,
+        "message": "Positive directional derivative for linesearch",
+        "iterations": 46,
+        "absolute_field_residual": 3.1584977688847715e-15,
+        "normalized_field_residual": 1.5911042096580866e-15,
+        "feasible_target": true,
+        "distance": 0.0014234390235686974
+      },
+      {
+        "sample_index": 256773,
+        "original_foot": [
+          0.5003586888672131,
+          -0.1888769690671464,
+          0.03962026315762614
+        ],
+        "candidate": [
+          0.5,
+          -0.18958218683799122,
+          0.0399643560901244
+        ],
+        "solver_success": true,
+        "message": "Optimization terminated successfully",
+        "iterations": 34,
+        "absolute_field_residual": 9.410874857174178e-17,
+        "normalized_field_residual": 4.7292619910427793e-17,
+        "feasible_target": true,
+        "distance": 0.0010070556937440973
+      },
+      {
+        "sample_index": 256774,
+        "original_foot": [
+          0.5003427744216602,
+          -0.18102358865040838,
+          0.05263048823847589
+        ],
+        "candidate": [
+          0.5,
+          -0.18162502181748122,
+          0.05307620354621483
+        ],
+        "solver_success": false,
+        "message": "Positive directional derivative for linesearch",
+        "iterations": 45,
+        "absolute_field_residual": 1.1982602410309795e-15,
+        "normalized_field_residual": 6.037521231165621e-16,
+        "feasible_target": true,
+        "distance": 0.0009233449591613999
+      },
+      {
+        "sample_index": 258570,
+        "original_foot": [
+          0.5003119771727373,
+          -0.18694819540446225,
+          0.04354411021210956
+        ],
+        "candidate": [
+          0.5,
+          -0.1875457637431679,
+          0.04387526153372644
+        ],
+        "solver_success": true,
+        "message": "Optimization terminated successfully",
+        "iterations": 33,
+        "absolute_field_residual": 9.410874857174178e-17,
+        "normalized_field_residual": 4.7351746382048476e-17,
+        "feasible_target": true,
+        "distance": 0.0009080441675208142
+      },
+      {
+        "sample_index": 258576,
+        "original_foot": [
+          0.5003921092685932,
+          -0.18302036767703425,
+          0.04961776322723035
+        ],
+        "candidate": [
+          0.5,
+          -0.1837318525572038,
+          0.050098055645962467
+        ],
+        "solver_success": true,
+        "message": "Optimization terminated successfully",
+        "iterations": 11,
+        "absolute_field_residual": 5.637851296924623e-18,
+        "normalized_field_residual": 2.8402146787905467e-18,
+        "feasible_target": true,
+        "distance": 0.0010745174496678202
+      },
+      {
+        "sample_index": 258582,
+        "original_foot": [
+          0.5003817508741026,
+          -0.18499582510922447,
+          0.04658793444569165
+        ],
+        "candidate": [
+          0.5,
+          -0.1857090875494182,
+          0.047024968735255974
+        ],
+        "solver_success": false,
+        "message": "Positive directional derivative for linesearch",
+        "iterations": 69,
+        "absolute_field_residual": 3.9036916060775084e-14,
+        "normalized_field_residual": 1.9656625124022923e-14,
+        "feasible_target": true,
+        "distance": 0.0010685979729146084
+      },
+      {
+        "sample_index": 259370,
+        "original_foot": [
+          0.5001483432023074,
+          -0.030290196376603858,
+          0.07257304993991599
+        ],
+        "candidate": [
+          0.5,
+          -0.02993427771975002,
+          0.07286805096673353
+        ],
+        "solver_success": false,
+        "message": "Iteration limit reached",
+        "iterations": 300,
+        "absolute_field_residual": 4.881078180529741e-15,
+        "normalized_field_residual": 2.4756759233037952e-15,
+        "feasible_target": true,
+        "distance": 0.0008248323921724239
+      }
+    ],
+    "facet_consistency": {
+      "nodes": 31787,
+      "elements": 143585,
+      "unique_faces": 301832,
+      "interior_faces": 272508,
+      "extracted_boundary_faces": 29324,
+      "same_orientation_shared_faces": 0,
+      "nonmanifold_faces": 0,
+      "duplicate_cells": 0,
+      "duplicate_surface_faces": 0,
+      "provided_boundary_matches_extraction": true,
+      "missing_provided_faces": 0,
+      "extra_provided_faces": 0,
+      "nonpositive_corner_determinants": 0,
+      "minimum_corner_determinant": 1.767800196805707e-18,
+      "oriented_facet_consistency_passed": true,
+      "conflict_examples": [],
+      "scope": "Oriented corner-face incidence and same-side neighbor diagnostics; necessary consistency, not a certificate of curved geometry or absence of nonlocal intersections"
+    },
+    "oriented_facet_consistency_passed": true,
+    "geometry_admitted": false
+  },
+  "quality_quantiles": {
+    "min": 2.3278497124767503e-07,
+    "p01": 0.17769683161924804,
+    "p05": 0.5034713350406563,
+    "median": 0.7236024000144237,
+    "p95": 0.924259245066428
+  },
+  "elements_below_q01": 775,
+  "periodic_error": "Opposite-face triangulations differ on axis 1",
+  "audit_s": 6.837318417034112,
+  "wall_s": 13.345027875038795
+}

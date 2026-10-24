@@ -1,0 +1,944 @@
+{
+  "case": "gyroid",
+  "rows": [
+    {
+      "case": "gyroid",
+      "config": {
+        "name": "actual-default",
+        "arm": "microgen",
+        "resolution": null,
+        "order": 1
+      },
+      "status": "geometry-or-periodicity-rejected",
+      "qualified": false,
+      "mmg_calls": [
+        {
+          "nofem": true,
+          "output_tetrahedra": 12087
+        },
+        {
+          "hausd": null,
+          "hgrad": null,
+          "hmax": null,
+          "hmin": null,
+          "hsiz": null,
+          "ls": true,
+          "nr": true,
+          "output_tetrahedra": 12250
+        }
+      ],
+      "solve_performed": false,
+      "actual_resolution": 20,
+      "seed_nodes": 7808,
+      "seed_elements": 30642,
+      "reoriented_tets": 0,
+      "generation_s": 2.1027263751020655,
+      "nodes": 3533,
+      "elements": 12250,
+      "mesh_sha256": "e432169259663196f4a363a45389d4f2a052b15b6af1506c9aa578f31a098d06",
+      "geometry": {
+        "sampled_forward_max": 0.009925479340060186,
+        "sampled_reverse_max": 0.00846118511572807,
+        "sampled_two_sided_max": 0.009925479340060186,
+        "outward_forward_max": 0.009925479340060186,
+        "inward_forward_max": 0.005052306818151305,
+        "projection_failed": 0,
+        "forward_samples": 39884,
+        "reverse_samples": 36260,
+        "volume": 0.3644595598992662,
+        "relative_volume_error": 0.022489277770463723,
+        "q_min_corner": 0.000546158165265545,
+        "q_p01_corner": 0.05429049412701715,
+        "minimum_dihedral_deg_corner": 0.19269768428415546,
+        "minimum_sampled_jacobian": 4.3080097068179926e-09,
+        "reverse_tessellation_delta_max": 0.0,
+        "quadratic_reverse_subdivisions": null,
+        "projection_method": "newton-box-slsqp-v1",
+        "unbounded_projection_failed": 0,
+        "box_projection_attempts": 0,
+        "box_projection_recovered": 0,
+        "box_projection_witnesses": [],
+        "facet_consistency": {
+          "nodes": 3533,
+          "elements": 12250,
+          "unique_faces": 27048,
+          "interior_faces": 21952,
+          "extracted_boundary_faces": 5096,
+          "same_orientation_shared_faces": 4,
+          "nonmanifold_faces": 0,
+          "duplicate_cells": 0,
+          "duplicate_surface_faces": 0,
+          "provided_boundary_matches_extraction": true,
+          "missing_provided_faces": 0,
+          "extra_provided_faces": 0,
+          "nonpositive_corner_determinants": 0,
+          "minimum_corner_determinant": 4.308009706818021e-09,
+          "oriented_facet_consistency_passed": false,
+          "conflict_examples": [
+            {
+              "face": [
+                194,
+                608,
+                746
+              ],
+              "incident_elements": [
+                3362,
+                6303
+              ],
+              "orientation_sum": 2,
+              "opposite_vertices": [
+                186,
+                681
+              ],
+              "signed_plane_products": [
+                -1.0995553460349584e-05,
+                -3.6865563112412176e-06
+              ],
+              "same_physical_side": true
+            },
+            {
+              "face": [
+                194,
+                746,
+                3377
+              ],
+              "incident_elements": [
+                4497,
+                6129
+              ],
+              "orientation_sum": 2,
+              "opposite_vertices": [
+                2575,
+                681
+              ],
+              "signed_plane_products": [
+                -3.18798821793097e-05,
+                -2.575634980923817e-06
+              ],
+              "same_physical_side": true
+            },
+            {
+              "face": [
+                608,
+                681,
+                746
+              ],
+              "incident_elements": [
+                766,
+                6303
+              ],
+              "orientation_sum": 2,
+              "opposite_vertices": [
+                186,
+                194
+              ],
+              "signed_plane_products": [
+                -8.075334039609072e-06,
+                -3.6865563112412185e-06
+              ],
+              "same_physical_side": true
+            },
+            {
+              "face": [
+                681,
+                746,
+                3377
+              ],
+              "incident_elements": [
+                1692,
+                6129
+              ],
+              "orientation_sum": -2,
+              "opposite_vertices": [
+                2575,
+                194
+              ],
+              "signed_plane_products": [
+                2.4250574421624145e-05,
+                2.575634980923816e-06
+              ],
+              "same_physical_side": true
+            }
+          ],
+          "scope": "Oriented corner-face incidence and same-side neighbor diagnostics; necessary consistency, not a certificate of curved geometry or absence of nonlocal intersections"
+        },
+        "oriented_facet_consistency_passed": false,
+        "geometry_admitted": false
+      },
+      "quality_quantiles": {
+        "min": 0.000546158165265545,
+        "p01": 0.05429049412701715,
+        "p05": 0.20307269419303123,
+        "median": 0.7159256735200327,
+        "p95": 0.9273285805194147
+      },
+      "elements_below_q01": 240,
+      "periodic": {
+        "periodic_pair_counts": [
+          250,
+          250,
+          250
+        ],
+        "periodic_coordinate_errors": [
+          9.992007221626409e-16,
+          1.0547118733938987e-15,
+          9.992007221626409e-16
+        ],
+        "periodic_pair_tolerance": 1e-10,
+        "periodic_equivalence_classes": 2818,
+        "periodic_triangles_match": true
+      },
+      "audit_s": 1.2451339160325006,
+      "wall_s": 3.362318209023215,
+      "worker": {
+        "returncode": 0,
+        "limit_failure": null,
+        "peak_rss_bytes": 1208582144,
+        "wall_s": 4.509896791074425,
+        "memory_bytes": 8589934592,
+        "memory_enforcement": "process-tree-rss-watchdog",
+        "rss_poll_interval_s": 0.25,
+        "platform": "darwin",
+        "numerical_thread_policy": {
+          "environment": {
+            "OPENBLAS_NUM_THREADS": "1",
+            "OMP_NUM_THREADS": "1",
+            "MKL_NUM_THREADS": "1",
+            "VECLIB_MAXIMUM_THREADS": "1",
+            "RAYON_NUM_THREADS": "1"
+          },
+          "accelerate_blas_threading": 1,
+          "accelerate_scope": "calling thread"
+        }
+      },
+      "directory": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-mesh-only-gyroid-pilot-v1/repeat-0-actual-default"
+    },
+    {
+      "case": "gyroid",
+      "config": {
+        "name": "actual-resolution30",
+        "arm": "microgen",
+        "resolution": 30,
+        "order": 1
+      },
+      "status": "geometry-or-periodicity-rejected",
+      "qualified": false,
+      "mmg_calls": [
+        {
+          "nofem": true,
+          "output_tetrahedra": 16986
+        },
+        {
+          "hausd": null,
+          "hgrad": null,
+          "hmax": null,
+          "hmin": null,
+          "hsiz": null,
+          "ls": true,
+          "nr": true,
+          "output_tetrahedra": 24604
+        }
+      ],
+      "solve_performed": false,
+      "actual_resolution": 30,
+      "seed_nodes": 20716,
+      "seed_elements": 88462,
+      "reoriented_tets": 0,
+      "generation_s": 3.7290892909513786,
+      "nodes": 6540,
+      "elements": 24604,
+      "mesh_sha256": "bc0b565ba5a33e7d4a02ae0aeedad7eedc3772864c579321e1ed6d191961009a",
+      "geometry": {
+        "sampled_forward_max": 0.009311119357722004,
+        "sampled_reverse_max": 0.008320513762508489,
+        "sampled_two_sided_max": 0.009311119357722004,
+        "outward_forward_max": 0.009311119357722004,
+        "inward_forward_max": 0.005835167045613043,
+        "projection_failed": 0,
+        "forward_samples": 51168,
+        "reverse_samples": 36260,
+        "volume": 0.3628450251266375,
+        "relative_volume_error": 0.01795970940338143,
+        "q_min_corner": 0.014405873716950197,
+        "q_p01_corner": 0.07761243507578498,
+        "minimum_dihedral_deg_corner": 0.900115036949984,
+        "minimum_sampled_jacobian": 4.0129334626882204e-08,
+        "reverse_tessellation_delta_max": 0.0,
+        "quadratic_reverse_subdivisions": null,
+        "projection_method": "newton-box-slsqp-v1",
+        "unbounded_projection_failed": 0,
+        "box_projection_attempts": 0,
+        "box_projection_recovered": 0,
+        "box_projection_witnesses": [],
+        "facet_consistency": {
+          "nodes": 6540,
+          "elements": 24604,
+          "unique_faces": 53222,
+          "interior_faces": 45194,
+          "extracted_boundary_faces": 8028,
+          "same_orientation_shared_faces": 20,
+          "nonmanifold_faces": 0,
+          "duplicate_cells": 0,
+          "duplicate_surface_faces": 0,
+          "provided_boundary_matches_extraction": true,
+          "missing_provided_faces": 0,
+          "extra_provided_faces": 0,
+          "nonpositive_corner_determinants": 0,
+          "minimum_corner_determinant": 4.01293346268823e-08,
+          "oriented_facet_consistency_passed": false,
+          "conflict_examples": [
+            {
+              "face": [
+                859,
+                860,
+                6235
+              ],
+              "incident_elements": [
+                16178,
+                16611
+              ],
+              "orientation_sum": -2,
+              "opposite_vertices": [
+                4275,
+                867
+              ],
+              "signed_plane_products": [
+                1.3543070060675264e-05,
+                9.04327786377272e-07
+              ],
+              "same_physical_side": true
+            },
+            {
+              "face": [
+                859,
+                867,
+                6235
+              ],
+              "incident_elements": [
+                5855,
+                16611
+              ],
+              "orientation_sum": 2,
+              "opposite_vertices": [
+                4275,
+                860
+              ],
+              "signed_plane_products": [
+                -2.620192312585297e-05,
+                -9.043277863772722e-07
+              ],
+              "same_physical_side": true
+            },
+            {
+              "face": [
+                860,
+                868,
+                6235
+              ],
+              "incident_elements": [
+                3246,
+                20295
+              ],
+              "orientation_sum": -2,
+              "opposite_vertices": [
+                4560,
+                867
+              ],
+              "signed_plane_products": [
+                7.1987813546962115e-06,
+                1.4569601815777333e-06
+              ],
+              "same_physical_side": true
+            },
+            {
+              "face": [
+                867,
+                868,
+                6235
+              ],
+              "incident_elements": [
+                16610,
+                20295
+              ],
+              "orientation_sum": 2,
+              "opposite_vertices": [
+                4288,
+                860
+              ],
+              "signed_plane_products": [
+                -5.3515108882369406e-06,
+                -1.4569601815777329e-06
+              ],
+              "same_physical_side": true
+            },
+            {
+              "face": [
+                1645,
+                1646,
+                6187
+              ],
+              "incident_elements": [
+                12804,
+                20145
+              ],
+              "orientation_sum": 2,
+              "opposite_vertices": [
+                4332,
+                1674
+              ],
+              "signed_plane_products": [
+                -2.603358249541549e-05,
+                -1.7895072267584629e-06
+              ],
+              "same_physical_side": true
+            },
+            {
+              "face": [
+                1645,
+                1674,
+                6187
+              ],
+              "incident_elements": [
+                15854,
+                20145
+              ],
+              "orientation_sum": -2,
+              "opposite_vertices": [
+                4332,
+                1646
+              ],
+              "signed_plane_products": [
+                2.943818304679161e-05,
+                1.7895072267584618e-06
+              ],
+              "same_physical_side": true
+            },
+            {
+              "face": [
+                1646,
+                1675,
+                6187
+              ],
+              "incident_elements": [
+                15702,
+                15703
+              ],
+              "orientation_sum": 2,
+              "opposite_vertices": [
+                1674,
+                2506
+              ],
+              "signed_plane_products": [
+                -2.1762014233029775e-06,
+                -4.948307876663322e-06
+              ],
+              "same_physical_side": true
+            },
+            {
+              "face": [
+                1674,
+                1675,
+                6187
+              ],
+              "incident_elements": [
+                15702,
+                15982
+              ],
+              "orientation_sum": -2,
+              "opposite_vertices": [
+                1646,
+                6393
+              ],
+              "signed_plane_products": [
+                2.176201423302977e-06,
+                1.6924335188982492e-05
+              ],
+              "same_physical_side": true
+            },
+            {
+              "face": [
+                2314,
+                3516,
+                6467
+              ],
+              "incident_elements": [
+                15226,
+                17698
+              ],
+              "orientation_sum": 2,
+              "opposite_vertices": [
+                3358,
+                3523
+              ],
+              "signed_plane_products": [
+                -1.0283767114725574e-05,
+                -7.856436734552703e-06
+              ],
+              "same_physical_side": true
+            },
+            {
+              "face": [
+                2314,
+                3523,
+                6467
+              ],
+              "incident_elements": [
+                17698,
+                17754
+              ],
+              "orientation_sum": -2,
+              "opposite_vertices": [
+                3516,
+                6439
+              ],
+              "signed_plane_products": [
+                7.8564367345527e-06,
+                1.5835700049497622e-05
+              ],
+              "same_physical_side": true
+            }
+          ],
+          "scope": "Oriented corner-face incidence and same-side neighbor diagnostics; necessary consistency, not a certificate of curved geometry or absence of nonlocal intersections"
+        },
+        "oriented_facet_consistency_passed": false,
+        "geometry_admitted": false
+      },
+      "quality_quantiles": {
+        "min": 0.014405873716950197,
+        "p01": 0.07761243507578498,
+        "p05": 0.2572015424083686,
+        "median": 0.692481808270479,
+        "p95": 0.910214008638525
+      },
+      "elements_below_q01": 372,
+      "periodic": {
+        "periodic_pair_counts": [
+          458,
+          458,
+          458
+        ],
+        "periodic_coordinate_errors": [
+          9.992007221626409e-16,
+          1.97758476261356e-16,
+          9.992007221626409e-16
+        ],
+        "periodic_pair_tolerance": 1e-10,
+        "periodic_equivalence_classes": 5213,
+        "periodic_triangles_match": true
+      },
+      "audit_s": 0.9621322500752285,
+      "wall_s": 4.718210541061126,
+      "worker": {
+        "returncode": 0,
+        "limit_failure": null,
+        "peak_rss_bytes": 1235206144,
+        "wall_s": 5.593823209055699,
+        "memory_bytes": 8589934592,
+        "memory_enforcement": "process-tree-rss-watchdog",
+        "rss_poll_interval_s": 0.25,
+        "platform": "darwin",
+        "numerical_thread_policy": {
+          "environment": {
+            "OPENBLAS_NUM_THREADS": "1",
+            "OMP_NUM_THREADS": "1",
+            "MKL_NUM_THREADS": "1",
+            "VECLIB_MAXIMUM_THREADS": "1",
+            "RAYON_NUM_THREADS": "1"
+          },
+          "accelerate_blas_threading": 1,
+          "accelerate_scope": "calling thread"
+        }
+      },
+      "directory": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-mesh-only-gyroid-pilot-v1/repeat-0-actual-resolution30"
+    },
+    {
+      "case": "gyroid",
+      "config": {
+        "name": "meshers-tet4-16",
+        "arm": "meshers",
+        "cells": 16,
+        "order": 1,
+        "adapt": false,
+        "tolerance": 0.002
+      },
+      "status": "geometry-or-periodicity-rejected",
+      "qualified": false,
+      "mmg_calls": [],
+      "solve_performed": false,
+      "diagnostics": {
+        "empty": false,
+        "volume": 0.3574432232574903,
+        "minimum_mmg_quality": 0.15510070633684084,
+        "sampled_surface_error": 0.001999727057433883,
+        "elements_below_quality_01": 0,
+        "reverted_snap_vertices": 0,
+        "callback_calls": 0,
+        "inserted_interior_nodes": 0,
+        "seconds": 0.207353458,
+        "threads": 1,
+        "evaluator": "compiled",
+        "preparation_seconds": 0.0012136660516262054
+      },
+      "generation_s": 0.20996587502304465,
+      "nodes": 7680,
+      "elements": 26382,
+      "mesh_sha256": "624c0ccadf586d2321e077f880b2b1be940f50810be05a633aeefd4f5f97f2e7",
+      "geometry": {
+        "sampled_forward_max": 0.002112341761948862,
+        "sampled_reverse_max": 0.0019438005613788068,
+        "sampled_two_sided_max": 0.002112341761948862,
+        "outward_forward_max": 0.0019945335356826746,
+        "inward_forward_max": 0.002112341761948862,
+        "projection_failed": 0,
+        "forward_samples": 126282,
+        "reverse_samples": 36260,
+        "volume": 0.35744322325749156,
+        "relative_volume_error": 0.002804984162071422,
+        "q_min_corner": 0.15510070633684084,
+        "q_p01_corner": 0.37395427929864145,
+        "minimum_dihedral_deg_corner": 11.314449378276493,
+        "minimum_sampled_jacobian": 3.0326803976008595e-06,
+        "reverse_tessellation_delta_max": 0.0,
+        "quadratic_reverse_subdivisions": null,
+        "projection_method": "newton-box-slsqp-v1",
+        "unbounded_projection_failed": 0,
+        "box_projection_attempts": 0,
+        "box_projection_recovered": 0,
+        "box_projection_witnesses": [],
+        "facet_consistency": {
+          "nodes": 7680,
+          "elements": 26382,
+          "unique_faces": 58397,
+          "interior_faces": 47131,
+          "extracted_boundary_faces": 11266,
+          "same_orientation_shared_faces": 0,
+          "nonmanifold_faces": 0,
+          "duplicate_cells": 0,
+          "duplicate_surface_faces": 0,
+          "provided_boundary_matches_extraction": true,
+          "missing_provided_faces": 0,
+          "extra_provided_faces": 0,
+          "nonpositive_corner_determinants": 0,
+          "minimum_corner_determinant": 3.0326803976008624e-06,
+          "oriented_facet_consistency_passed": true,
+          "conflict_examples": [],
+          "scope": "Oriented corner-face incidence and same-side neighbor diagnostics; necessary consistency, not a certificate of curved geometry or absence of nonlocal intersections"
+        },
+        "oriented_facet_consistency_passed": true,
+        "geometry_admitted": false
+      },
+      "quality_quantiles": {
+        "min": 0.15510070633684084,
+        "p01": 0.37395427929864145,
+        "p05": 0.5166546240372106,
+        "median": 0.764358587005326,
+        "p95": 0.9490884686803364
+      },
+      "elements_below_q01": 0,
+      "periodic": {
+        "periodic_pair_counts": [
+          213,
+          221,
+          213
+        ],
+        "periodic_coordinate_errors": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "periodic_pair_tolerance": 1e-10,
+        "periodic_equivalence_classes": 7065,
+        "periodic_triangles_match": true
+      },
+      "audit_s": 1.0489045419963077,
+      "wall_s": 1.2792878750478849,
+      "worker": {
+        "returncode": 0,
+        "limit_failure": null,
+        "peak_rss_bytes": 402620416,
+        "wall_s": 2.43816737504676,
+        "memory_bytes": 8589934592,
+        "memory_enforcement": "process-tree-rss-watchdog",
+        "rss_poll_interval_s": 0.25,
+        "platform": "darwin",
+        "numerical_thread_policy": {
+          "environment": {
+            "OPENBLAS_NUM_THREADS": "1",
+            "OMP_NUM_THREADS": "1",
+            "MKL_NUM_THREADS": "1",
+            "VECLIB_MAXIMUM_THREADS": "1",
+            "RAYON_NUM_THREADS": "1"
+          },
+          "accelerate_blas_threading": 1,
+          "accelerate_scope": "calling thread"
+        }
+      },
+      "directory": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-mesh-only-gyroid-pilot-v1/repeat-0-meshers-tet4-16"
+    },
+    {
+      "case": "gyroid",
+      "config": {
+        "name": "meshers-tet4-24",
+        "arm": "meshers",
+        "cells": 24,
+        "order": 1,
+        "adapt": false,
+        "tolerance": 0.002
+      },
+      "status": "admitted",
+      "qualified": true,
+      "mmg_calls": [],
+      "solve_performed": false,
+      "diagnostics": {
+        "empty": false,
+        "volume": 0.35711751606411324,
+        "minimum_mmg_quality": 0.1502542765245815,
+        "sampled_surface_error": 0.0014220159679012839,
+        "elements_below_quality_01": 0,
+        "reverted_snap_vertices": 0,
+        "callback_calls": 0,
+        "inserted_interior_nodes": 0,
+        "seconds": 0.394289666,
+        "threads": 1,
+        "evaluator": "compiled",
+        "preparation_seconds": 0.0005122500006109476
+      },
+      "generation_s": 0.396224582917057,
+      "nodes": 17647,
+      "elements": 72757,
+      "mesh_sha256": "0b09bebf49b50d7305372df3a323973a1a40e802245c91246f123d9028fe5f5b",
+      "geometry": {
+        "sampled_forward_max": 0.0015839886333110064,
+        "sampled_reverse_max": 0.001301324964415392,
+        "sampled_two_sided_max": 0.0015839886333110064,
+        "outward_forward_max": 0.0015839886333110064,
+        "inward_forward_max": 0.0014358139401946777,
+        "projection_failed": 0,
+        "forward_samples": 216424,
+        "reverse_samples": 36260,
+        "volume": 0.35711751606407505,
+        "relative_volume_error": 0.0018912144339480186,
+        "q_min_corner": 0.1502542765245815,
+        "q_p01_corner": 0.5133146505942614,
+        "minimum_dihedral_deg_corner": 12.536647239376492,
+        "minimum_sampled_jacobian": 7.012621936346326e-07,
+        "reverse_tessellation_delta_max": 0.0,
+        "quadratic_reverse_subdivisions": null,
+        "projection_method": "newton-box-slsqp-v1",
+        "unbounded_projection_failed": 0,
+        "box_projection_attempts": 0,
+        "box_projection_recovered": 0,
+        "box_projection_witnesses": [],
+        "facet_consistency": {
+          "nodes": 17647,
+          "elements": 72757,
+          "unique_faces": 155250,
+          "interior_faces": 135778,
+          "extracted_boundary_faces": 19472,
+          "same_orientation_shared_faces": 0,
+          "nonmanifold_faces": 0,
+          "duplicate_cells": 0,
+          "duplicate_surface_faces": 0,
+          "provided_boundary_matches_extraction": true,
+          "missing_provided_faces": 0,
+          "extra_provided_faces": 0,
+          "nonpositive_corner_determinants": 0,
+          "minimum_corner_determinant": 7.012621936346312e-07,
+          "oriented_facet_consistency_passed": true,
+          "conflict_examples": [],
+          "scope": "Oriented corner-face incidence and same-side neighbor diagnostics; necessary consistency, not a certificate of curved geometry or absence of nonlocal intersections"
+        },
+        "oriented_facet_consistency_passed": true,
+        "geometry_admitted": true
+      },
+      "quality_quantiles": {
+        "min": 0.1502542765245815,
+        "p01": 0.5133146505942614,
+        "p05": 0.5949889288828702,
+        "median": 0.8825366594819207,
+        "p95": 0.95083886151794
+      },
+      "elements_below_q01": 0,
+      "periodic": {
+        "periodic_pair_counts": [
+          347,
+          349,
+          347
+        ],
+        "periodic_coordinate_errors": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "periodic_pair_tolerance": 1e-10,
+        "periodic_equivalence_classes": 16648,
+        "periodic_triangles_match": true
+      },
+      "audit_s": 1.2124978329520673,
+      "wall_s": 1.6536844579968601,
+      "worker": {
+        "returncode": 0,
+        "limit_failure": null,
+        "peak_rss_bytes": 487964672,
+        "wall_s": 2.762834208086133,
+        "memory_bytes": 8589934592,
+        "memory_enforcement": "process-tree-rss-watchdog",
+        "rss_poll_interval_s": 0.25,
+        "platform": "darwin",
+        "numerical_thread_policy": {
+          "environment": {
+            "OPENBLAS_NUM_THREADS": "1",
+            "OMP_NUM_THREADS": "1",
+            "MKL_NUM_THREADS": "1",
+            "VECLIB_MAXIMUM_THREADS": "1",
+            "RAYON_NUM_THREADS": "1"
+          },
+          "accelerate_blas_threading": 1,
+          "accelerate_scope": "calling thread"
+        }
+      },
+      "directory": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-mesh-only-gyroid-pilot-v1/repeat-0-meshers-tet4-24"
+    },
+    {
+      "case": "gyroid",
+      "config": {
+        "name": "meshers-curved-known",
+        "arm": "meshers",
+        "cells": 9,
+        "order": 2,
+        "adapt": false,
+        "tolerance": 1.0
+      },
+      "status": "admitted",
+      "qualified": true,
+      "mmg_calls": [],
+      "solve_performed": false,
+      "diagnostics": {
+        "empty": false,
+        "volume": 0.36091703292693045,
+        "minimum_mmg_quality": 0.14469000390080416,
+        "sampled_surface_error": 0.012473840641593658,
+        "elements_below_quality_01": 0,
+        "reverted_snap_vertices": 0,
+        "callback_calls": 0,
+        "inserted_interior_nodes": 0,
+        "seconds": 0.063334542,
+        "quadratic": {
+          "curved_edges": 4598,
+          "straightened_edges": 0,
+          "partially_curved_edges": 0,
+          "minimum_jacobian_ratio": 0.165333879708146
+        },
+        "threads": 1,
+        "evaluator": "compiled",
+        "preparation_seconds": 0.0005202909233048558
+      },
+      "generation_s": 0.0652481249999255,
+      "nodes": 11857,
+      "elements": 6008,
+      "mesh_sha256": "eccd95e001ff0e7350960409cf4370e81ab3c9b6be803a7cb7931d3012a2ddcf",
+      "geometry": {
+        "sampled_forward_max": 0.0011893416581181381,
+        "sampled_reverse_max": 0.0010012247939772917,
+        "sampled_two_sided_max": 0.0011893416581181381,
+        "outward_forward_max": 0.001149011104089992,
+        "inward_forward_max": 0.0011893416581181381,
+        "projection_failed": 0,
+        "forward_samples": 38194,
+        "reverse_samples": 36260,
+        "volume": 0.35634956213272473,
+        "relative_volume_error": -0.0002632760693176417,
+        "q_min_corner": 0.14469000390080416,
+        "q_p01_corner": 0.33790399858766784,
+        "minimum_dihedral_deg_corner": 11.919392693170039,
+        "minimum_sampled_jacobian": 1.704483190366829e-05,
+        "reverse_tessellation_delta_max": 0.0006741275123839228,
+        "quadratic_reverse_subdivisions": [
+          4,
+          8
+        ],
+        "projection_method": "newton-box-slsqp-v1",
+        "unbounded_projection_failed": 0,
+        "box_projection_attempts": 0,
+        "box_projection_recovered": 0,
+        "box_projection_witnesses": [],
+        "facet_consistency": {
+          "nodes": 11857,
+          "elements": 6008,
+          "unique_faces": 13778,
+          "interior_faces": 10254,
+          "extracted_boundary_faces": 3524,
+          "same_orientation_shared_faces": 0,
+          "nonmanifold_faces": 0,
+          "duplicate_cells": 0,
+          "duplicate_surface_faces": 0,
+          "provided_boundary_matches_extraction": true,
+          "missing_provided_faces": 0,
+          "extra_provided_faces": 0,
+          "nonpositive_corner_determinants": 0,
+          "minimum_corner_determinant": 1.748446100327744e-05,
+          "oriented_facet_consistency_passed": true,
+          "conflict_examples": [],
+          "scope": "Oriented corner-face incidence and same-side neighbor diagnostics; necessary consistency, not a certificate of curved geometry or absence of nonlocal intersections"
+        },
+        "oriented_facet_consistency_passed": true,
+        "geometry_admitted": true
+      },
+      "quality_quantiles": {
+        "min": 0.14469000390080416,
+        "p01": 0.33790399858766784,
+        "p05": 0.45746507552377413,
+        "median": 0.6737377406241142,
+        "p95": 0.9245745296680258
+      },
+      "elements_below_q01": 0,
+      "periodic": {
+        "periodic_pair_counts": [
+          285,
+          282,
+          285
+        ],
+        "periodic_coordinate_errors": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "periodic_pair_tolerance": 1e-10,
+        "periodic_equivalence_classes": 11043,
+        "periodic_triangles_match": true
+      },
+      "audit_s": 1.0629542908864096,
+      "wall_s": 1.1480530840344727,
+      "worker": {
+        "returncode": 0,
+        "limit_failure": null,
+        "peak_rss_bytes": 416989184,
+        "wall_s": 2.1524179170373827,
+        "memory_bytes": 8589934592,
+        "memory_enforcement": "process-tree-rss-watchdog",
+        "rss_poll_interval_s": 0.25,
+        "platform": "darwin",
+        "numerical_thread_policy": {
+          "environment": {
+            "OPENBLAS_NUM_THREADS": "1",
+            "OMP_NUM_THREADS": "1",
+            "MKL_NUM_THREADS": "1",
+            "VECLIB_MAXIMUM_THREADS": "1",
+            "RAYON_NUM_THREADS": "1"
+          },
+          "accelerate_blas_threading": 1,
+          "accelerate_scope": "calling thread"
+        }
+      },
+      "directory": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-mesh-only-gyroid-pilot-v1/repeat-0-meshers-curved-known"
+    }
+  ],
+  "repetitions": 1,
+  "primary": "Tet4 versus Tet4; curved Tet10 is a separate capability tier",
+  "timing_scope": "Fresh in-process specimen/field preparation, extraction, meshing and output conversion. Imports, archive writes, validation and FE excluded. Failed attempts are not successful mesh timings.",
+  "gates": "distance.002 absolute-volume1percent q.1 positive sampled Jacobians coherent facets periodic nodes/caps;250000nodes/tets8GiB",
+  "geometry_auditor": "box-constrained observer enabled identically for both arms; no changed geometry thresholds",
+  "dominance": "Fewer elements with no worse generation time, quality quantiles and geometry/volume error is stronger than equal-count parity; no success ratio for rejected competitors",
+  "default_actual_pipeline": true,
+  "new_equilibrium_solve": false
+}

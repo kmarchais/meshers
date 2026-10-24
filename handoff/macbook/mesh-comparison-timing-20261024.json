@@ -1,0 +1,50 @@
+{
+  "rows": [
+    {
+      "task": 108,
+      "run": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-mesh-only-schwarz-repeated-v1",
+      "pueue_elapsed_wall_s": 171.690732,
+      "sum_bounded_worker_monotonic_s": 169.94473650236614,
+      "unattributed_parent_overhead_s": 1.7459954976338565,
+      "status": "Success"
+    },
+    {
+      "task": 113,
+      "run": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-mesh-only-lattice-repeated-v2",
+      "pueue_elapsed_wall_s": 253.120232,
+      "sum_bounded_worker_monotonic_s": 251.7780363727361,
+      "unattributed_parent_overhead_s": 1.3421956272638909,
+      "status": "Success"
+    },
+    {
+      "task": 111,
+      "run": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-mesh-only-gyroid-repeated-v1",
+      "pueue_elapsed_wall_s": 117.776639,
+      "sum_bounded_worker_monotonic_s": 116.22216724825557,
+      "unattributed_parent_overhead_s": 1.5544717517444298,
+      "status": "Success"
+    },
+    {
+      "task": 112,
+      "run": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-mesh-only-spinodoid-repeated-v1",
+      "pueue_elapsed_wall_s": 327.616126,
+      "sum_bounded_worker_monotonic_s": 326.32868437841535,
+      "unattributed_parent_overhead_s": 1.2874416215846622,
+      "status": "Success"
+    }
+  ],
+  "scope": "Pueue UTC elapsed versus summed monotonic worker durations; the difference includes parent imports, file copies, hashes, progress and bookkeeping. This is supporting clock evidence, not proof of CPU isolation.",
+  "power_log_check": {
+    "timed_window_start": "2026-10-24T17:36:29+02:00",
+    "timed_window_end": "2026-10-24T18:18:04+02:00",
+    "sleep_events_during_timed_window": [],
+    "verification_finished": "2026-10-24T18:23:09+02:00",
+    "later_sleep": "2026-10-24T18:24:35+02:00",
+    "later_wake": "2026-10-24T18:26:04+02:00",
+    "source": "pmset -g log; later sleep does not overlap timed experiments or verification"
+  },
+  "binary_architecture_check": [
+    "/Users/kmarchais/dev/meshers/crates/meshers-python/python/meshers/_meshers.abi3.so:                            Mach-O 64-bit dynamically linked shared library arm64",
+    "/Users/kmarchais/dev/meshers/.local-work/macbook-runtime/venv/lib/python3.12/site-packages/mmgpy/bin/mmg3d_O3: Mach-O 64-bit executable arm64"
+  ]
+}

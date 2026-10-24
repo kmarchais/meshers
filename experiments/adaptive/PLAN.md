@@ -1,5 +1,44 @@
 # Adaptive implicit meshing: plan and status
 
+## Four-case mesh-generation comparison, 24 October 2026
+
+Kevin explicitly prioritized generation speed, quality and geometry fidelity
+at fewer or equivalent elements. The completed comparison separates Tet4 from
+matched-order Tet10, excludes FE solve time, and uses fresh same-host workers,
+one warmup and five alternating-order measured repetitions per setting.
+
+Schwarz Tet10 fast generation is 45.31 times faster than the declared repaired
+actual route, with 4.97 times fewer tetrahedra, 4.82 times fewer nodes and 5.94 times
+lower sampled distance. All five reported quality quantiles improve. Four-pass
+native generation is 18.68 times faster. Both sides pass every mesh gate 5/5.
+
+Lattice's geometry-only uniform 25 recipe is 10.90 times faster, with 3.25times
+fewer tetrahedra, 3.18 times fewer nodes and 4.45 times lower sampled distance.
+Four-pass generation is 3.32 times faster with 7.44 times lower sampled distance.
+Minimum, p1, p5 and median quality improve; p95 is slightly lower. This is not
+strict dominance of every listed quality quantile. Both sides pass 5/5.
+The larger FE-oriented adaptive 26 recipe is retained as supporting evidence,
+but it is not the appropriate mesh-only Pareto point.
+
+The linear Tet4 comparison is weaker. Schwarz native adaptation uses fewer
+cells and improves the low-quality tail, but has 3.3 percent larger sampled
+surface error and slightly lower median quality. The actual lattice Tet4
+control passes; the tested native Tet4 settings miss fidelity or budget.
+Gyroid native Tet4/Tet10 and spinodoid native Tet10 pass 5/5, while the tested
+actual routes reject. No admitted speedup is claimed from those failures.
+
+Independent job 114 passes 138 saved-mesh replays and 76 input hash checks,
+including counts, quality, geometry, Jacobians, facets, periodicity and affine
+Tet10 mapping. No unused nodes are found. Three fixed-recipe/Fourier controls
+pass. The native field domain and fixed specimens are unchanged. No FE solve,
+reference promotion or four-case project completion follows from this benchmark.
+
+Next use these mesh-only gaps to prioritize linear lattice/spinodoid admission
+and robust quality/fidelity improvements, rather than resuming the older
+stiffness-reference sequence automatically. Keep all four cases and every
+original gate in scope. [Mesh comparison results](/Users/kmarchais/dev/meshers/experiments/adaptive/MESH_COMPARISON_RESULTS.md) contains all measured settings, ranges,
+versions, caveats and source links.
+
 ## Complete parent25 correction localization, 24 October 2026
 
 Saved-field job96 passes in157.422seconds at0.7823GiB, without another solve.

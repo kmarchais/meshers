@@ -1,0 +1,21 @@
+{
+  "case": "smooth-lattice",
+  "config": {
+    "name": "meshers-tet4-16",
+    "arm": "meshers",
+    "cells": 16,
+    "order": 1,
+    "adapt": false,
+    "tolerance": 1.0
+  },
+  "status": "failed",
+  "qualified": false,
+  "mmg_calls": [],
+  "solve_performed": false,
+  "instrumentation_s": 0.0,
+  "field_representation": "Value-identical symmetric min; fixed original cubic smooth-union order",
+  "error": "field/grading is incompatible with periodic axis 0",
+  "traceback": "Traceback (most recent call last):\n  File \"/Users/kmarchais/dev/meshers/experiments/adaptive/mesh_only_comparison.py\", line 94, in worker\n    mesh=meshers.generate(field,bounds=w.BOUNDS,cells=config['cells'],band=case.band,\n         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/Users/kmarchais/dev/meshers/crates/meshers-python/python/meshers/__init__.py\", line 316, in generate\n    result = _meshers.generate(\n             ^^^^^^^^^^^^^^^^^^\nValueError: field/grading is incompatible with periodic axis 0\n",
+  "failed_attempt_s": 0.008741708006709814,
+  "wall_s": 0.00874279101844877
+}

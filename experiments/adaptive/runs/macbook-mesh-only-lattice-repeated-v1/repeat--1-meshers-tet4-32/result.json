@@ -1,0 +1,510 @@
+{
+  "vtk_backend": "Sequential",
+  "vtk_threads": 1,
+  "case": "smooth-lattice",
+  "config": {
+    "name": "meshers-tet4-32",
+    "arm": "meshers",
+    "cells": 32,
+    "order": 1,
+    "adapt": false,
+    "tolerance": 1.0
+  },
+  "status": "geometry-or-periodicity-rejected",
+  "qualified": false,
+  "mmg_calls": [],
+  "solve_performed": false,
+  "instrumentation_s": 0.0,
+  "positive_void_clamp": 0.02,
+  "field_representation": "Value-identical symmetric min; fixed original cubic smooth-union order",
+  "diagnostics": {
+    "empty": false,
+    "volume": 0.24752187057721542,
+    "minimum_mmg_quality": 0.276880314760693,
+    "sampled_surface_error": 0.004287891273620197,
+    "elements_below_quality_01": 0,
+    "reverted_snap_vertices": 0,
+    "callback_calls": 0,
+    "inserted_interior_nodes": 0,
+    "seconds": 2.165634583,
+    "threads": 1,
+    "evaluator": "compiled",
+    "preparation_seconds": 0.006583667011000216
+  },
+  "generation_wall_s": 2.1730989580973983,
+  "nodes": 27503,
+  "elements": 121420,
+  "generation_s": 2.1730989580973983,
+  "fixed_field_identity_checked": 4096,
+  "mesh_sha256": "b74d00a88bb9c9d216d0e6565ac1f832bcc7a36ef8231fa7e2b5b0dae13be772",
+  "geometry": {
+    "sampled_forward_max": 0.004628834070944665,
+    "sampled_reverse_max": 0.003675358932394084,
+    "sampled_two_sided_max": 0.004628834070944665,
+    "outward_forward_max": 0.0042871561556394305,
+    "inward_forward_max": 0.004628834070944665,
+    "projection_failed": 0,
+    "forward_samples": 312468,
+    "reverse_samples": 34791,
+    "volume": 0.247521870577394,
+    "relative_volume_error": -0.0031781599376222713,
+    "q_min_corner": 0.276880314760693,
+    "q_p01_corner": 0.4881938519310868,
+    "minimum_dihedral_deg_corner": 15.689998041802028,
+    "minimum_sampled_jacobian": 1.0329931357065778e-06,
+    "reverse_tessellation_delta_max": 0.0,
+    "quadratic_reverse_subdivisions": null,
+    "projection_method": "newton-box-slsqp-v1",
+    "unbounded_projection_failed": 20,
+    "box_projection_attempts": 20,
+    "box_projection_recovered": 20,
+    "box_projection_witnesses": [
+      {
+        "sample_index": 1658,
+        "original_foot": [
+          0.34442784927466125,
+          -0.3644240079430321,
+          -0.500371518569222
+        ],
+        "candidate": [
+          0.3439970171984407,
+          -0.3641426357965195,
+          -0.5
+        ],
+        "solver_success": true,
+        "message": "Optimization terminated successfully",
+        "iterations": 21,
+        "absolute_field_residual": 0.0,
+        "normalized_field_residual": 0.0,
+        "feasible_target": true,
+        "distance": 0.0016911870768582446
+      },
+      {
+        "sample_index": 1660,
+        "original_foot": [
+          0.3620928723945797,
+          -0.346004640348196,
+          -0.5003562291546202
+        ],
+        "candidate": [
+          0.36180464232380943,
+          -0.3455997283668302,
+          -0.5
+        ],
+        "solver_success": true,
+        "message": "Optimization terminated successfully",
+        "iterations": 8,
+        "absolute_field_residual": 2.7755575615628914e-17,
+        "normalized_field_residual": 2.775557561593049e-17,
+        "feasible_target": true,
+        "distance": 0.0016615273159477039
+      },
+      {
+        "sample_index": 6702,
+        "original_foot": [
+          0.34555463884340465,
+          0.3625226485739537,
+          -0.5002715571869314
+        ],
+        "candidate": [
+          0.34524457873447306,
+          0.3623058762469508,
+          -0.5
+        ],
+        "solver_success": true,
+        "message": "Optimization terminated successfully",
+        "iterations": 6,
+        "absolute_field_residual": 1.3877787807814457e-17,
+        "normalized_field_residual": 1.3877787808035002e-17,
+        "feasible_target": true,
+        "distance": 0.0014552731098883673
+      },
+      {
+        "sample_index": 6703,
+        "original_foot": [
+          0.36252264857395233,
+          0.3455546388433999,
+          -0.5002715571869281
+        ],
+        "candidate": [
+          0.3623058761706073,
+          0.3452445787880741,
+          -0.5
+        ],
+        "solver_success": true,
+        "message": "Optimization terminated successfully",
+        "iterations": 6,
+        "absolute_field_residual": 1.3877787807814457e-17,
+        "normalized_field_residual": 1.387778780804e-17,
+        "feasible_target": true,
+        "distance": 0.0014552731098888734
+      },
+      {
+        "sample_index": 22692,
+        "original_foot": [
+          0.3443288281189733,
+          -0.5003398878357787,
+          -0.36449482189236293
+        ],
+        "candidate": [
+          0.3439344167616112,
+          -0.5,
+          -0.36423809703872667
+        ],
+        "solver_success": true,
+        "message": "Optimization terminated successfully",
+        "iterations": 6,
+        "absolute_field_residual": 0.0,
+        "normalized_field_residual": 0.0,
+        "feasible_target": true,
+        "distance": 0.0016352648781507025
+      },
+      {
+        "sample_index": 22693,
+        "original_foot": [
+          0.3616377663758517,
+          -0.5003147364355678,
+          -0.3462618873268096
+        ],
+        "candidate": [
+          0.3613801220382431,
+          -0.5,
+          -0.34590564573305194
+        ],
+        "solver_success": true,
+        "message": "Optimization terminated successfully",
+        "iterations": 13,
+        "absolute_field_residual": 0.0,
+        "normalized_field_residual": 0.0,
+        "feasible_target": true,
+        "distance": 0.0015881567084113405
+      },
+      {
+        "sample_index": 30219,
+        "original_foot": [
+          -0.5001756883433652,
+          0.345596751062837,
+          -0.36223134263689244
+        ],
+        "candidate": [
+          -0.5,
+          0.34539654112071094,
+          -0.3620902853032958
+        ],
+        "solver_success": true,
+        "message": "Optimization terminated successfully",
+        "iterations": 6,
+        "absolute_field_residual": 4.163336342344337e-17,
+        "normalized_field_residual": 4.1633363423955384e-17,
+        "feasible_target": true,
+        "distance": 0.0014857439211899922
+      },
+      {
+        "sample_index": 30221,
+        "original_foot": [
+          -0.5001979379264972,
+          0.36330125206703484,
+          -0.3448906688548791
+        ],
+        "candidate": [
+          -0.5,
+          0.3631469705790033,
+          -0.3446629781357527
+        ],
+        "solver_success": true,
+        "message": "Optimization terminated successfully",
+        "iterations": 11,
+        "absolute_field_residual": 2.7755575615628914e-17,
+        "normalized_field_residual": 2.7755575616036225e-17,
+        "feasible_target": true,
+        "distance": 0.0015220473978244191
+      },
+      {
+        "sample_index": 30466,
+        "original_foot": [
+          0.5001623914151907,
+          0.3455991310388995,
+          -0.36219592863777184
+        ],
+        "candidate": [
+          0.5,
+          0.34541411704123826,
+          -0.3620654590001991
+        ],
+        "solver_success": true,
+        "message": "Optimization terminated successfully",
+        "iterations": 9,
+        "absolute_field_residual": 0.0,
+        "normalized_field_residual": 0.0,
+        "feasible_target": true,
+        "distance": 0.0014838535105237609
+      },
+      {
+        "sample_index": 30467,
+        "original_foot": [
+          0.5001801153067857,
+          0.36330585728203824,
+          -0.344857555308365
+        ],
+        "candidate": [
+          0.5,
+          0.36316554166090903,
+          -0.3446503358117249
+        ],
+        "solver_success": true,
+        "message": "Optimization terminated successfully",
+        "iterations": 10,
+        "absolute_field_residual": 8.326672684688674e-17,
+        "normalized_field_residual": 8.326672684803763e-17,
+        "feasible_target": true,
+        "distance": 0.0015127137531234342
+      },
+      {
+        "sample_index": 31662,
+        "original_foot": [
+          0.34432061062974134,
+          0.5003630096601994,
+          -0.36456571406177624
+        ],
+        "candidate": [
+          0.3438991980345573,
+          0.5,
+          -0.3642919480131905
+        ],
+        "solver_success": true,
+        "message": "Optimization terminated successfully",
+        "iterations": 7,
+        "absolute_field_residual": 1.3877787807814457e-17,
+        "normalized_field_residual": 1.3877787808020272e-17,
+        "feasible_target": true,
+        "distance": 0.001643931201625194
+      },
+      {
+        "sample_index": 31664,
+        "original_foot": [
+          0.3616245701182446,
+          0.5003474964791691,
+          -0.34632812004544894
+        ],
+        "candidate": [
+          0.361339798048662,
+          0.5,
+          -0.3459349517114861
+        ],
+        "solver_success": true,
+        "message": "Optimization terminated successfully",
+        "iterations": 9,
+        "absolute_field_residual": 4.163336342344337e-17,
+        "normalized_field_residual": 4.163336342445624e-17,
+        "feasible_target": true,
+        "distance": 0.0016133406987395521
+      },
+      {
+        "sample_index": 280937,
+        "original_foot": [
+          0.34555696939480895,
+          -0.5002729511143265,
+          0.36252271116228413
+        ],
+        "candidate": [
+          0.3452453206538419,
+          -0.5,
+          0.3623048195552983
+        ],
+        "solver_success": true,
+        "message": "Optimization terminated successfully",
+        "iterations": 6,
+        "absolute_field_residual": 4.163336342344337e-17,
+        "normalized_field_residual": 4.1633363424409016e-17,
+        "feasible_target": true,
+        "distance": 0.0014561916614039092
+      },
+      {
+        "sample_index": 280939,
+        "original_foot": [
+          0.36252511071071825,
+          -0.5002726879526728,
+          0.3455548330080478
+        ],
+        "candidate": [
+          0.3623074450990474,
+          -0.5,
+          0.34524347727204757
+        ],
+        "solver_success": true,
+        "message": "Optimization terminated successfully",
+        "iterations": 6,
+        "absolute_field_residual": 1.3877787807814457e-17,
+        "normalized_field_residual": 1.3877787807951426e-17,
+        "feasible_target": true,
+        "distance": 0.001455742658549441
+      },
+      {
+        "sample_index": 289816,
+        "original_foot": [
+          0.3453906101777989,
+          0.500107528521324,
+          0.36235861990834406
+        ],
+        "candidate": [
+          0.34526787897351174,
+          0.5,
+          0.3622727098605867
+        ],
+        "solver_success": true,
+        "message": "Optimization terminated successfully",
+        "iterations": 34,
+        "absolute_field_residual": 4.163336342344337e-17,
+        "normalized_field_residual": 4.163336342377245e-17,
+        "feasible_target": true,
+        "distance": 0.0013910418788395105
+      },
+      {
+        "sample_index": 289817,
+        "original_foot": [
+          0.36235861990835255,
+          0.5001075285213267,
+          0.3453906101777974
+        ],
+        "candidate": [
+          0.3622727096863562,
+          0.5,
+          0.345267879095987
+        ],
+        "solver_success": true,
+        "message": "Optimization terminated successfully",
+        "iterations": 6,
+        "absolute_field_residual": 4.163336342344337e-17,
+        "normalized_field_residual": 4.163336342415646e-17,
+        "feasible_target": true,
+        "distance": 0.0013910418788395447
+      },
+      {
+        "sample_index": 310408,
+        "original_foot": [
+          0.34425091583638495,
+          -0.36428712410427894,
+          0.5002104903229503
+        ],
+        "candidate": [
+          0.34400686552601745,
+          -0.36412764769069633,
+          0.5
+        ],
+        "solver_success": true,
+        "message": "Optimization terminated successfully",
+        "iterations": 6,
+        "absolute_field_residual": 0.0,
+        "normalized_field_residual": 0.0,
+        "feasible_target": true,
+        "distance": 0.0016052823215333535
+      },
+      {
+        "sample_index": 310409,
+        "original_foot": [
+          0.3619133993191555,
+          -0.3458653435943222,
+          0.5002001534606277
+        ],
+        "candidate": [
+          0.36175122305524443,
+          -0.34563796283316667,
+          0.5
+        ],
+        "solver_success": true,
+        "message": "Optimization terminated successfully",
+        "iterations": 10,
+        "absolute_field_residual": 1.3877787807814457e-17,
+        "normalized_field_residual": 1.3877787808063694e-17,
+        "feasible_target": true,
+        "distance": 0.0015855111107909547
+      },
+      {
+        "sample_index": 311955,
+        "original_foot": [
+          0.3453906101777989,
+          0.36235861990834406,
+          0.500107528521324
+        ],
+        "candidate": [
+          0.34526787900691136,
+          0.36227270981307325,
+          0.5
+        ],
+        "solver_success": true,
+        "message": "Optimization terminated successfully",
+        "iterations": 6,
+        "absolute_field_residual": 6.938893903907228e-17,
+        "normalized_field_residual": 6.938893904038739e-17,
+        "feasible_target": true,
+        "distance": 0.0013910418788394832
+      },
+      {
+        "sample_index": 311957,
+        "original_foot": [
+          0.36235861990834406,
+          0.3453906101777989,
+          0.500107528521324
+        ],
+        "candidate": [
+          0.3622727100988846,
+          0.3452678788060003,
+          0.5
+        ],
+        "solver_success": true,
+        "message": "Optimization terminated successfully",
+        "iterations": 6,
+        "absolute_field_residual": 6.938893903907228e-17,
+        "normalized_field_residual": 6.938893903963077e-17,
+        "feasible_target": true,
+        "distance": 0.001391041878839509
+      }
+    ],
+    "facet_consistency": {
+      "nodes": 27503,
+      "elements": 121420,
+      "unique_faces": 255602,
+      "interior_faces": 230078,
+      "extracted_boundary_faces": 25524,
+      "same_orientation_shared_faces": 0,
+      "nonmanifold_faces": 0,
+      "duplicate_cells": 0,
+      "duplicate_surface_faces": 0,
+      "provided_boundary_matches_extraction": true,
+      "missing_provided_faces": 0,
+      "extra_provided_faces": 0,
+      "nonpositive_corner_determinants": 0,
+      "minimum_corner_determinant": 1.032993135706578e-06,
+      "oriented_facet_consistency_passed": true,
+      "conflict_examples": [],
+      "scope": "Oriented corner-face incidence and same-side neighbor diagnostics; necessary consistency, not a certificate of curved geometry or absence of nonlocal intersections"
+    },
+    "oriented_facet_consistency_passed": true,
+    "geometry_admitted": false
+  },
+  "quality_quantiles": {
+    "min": 0.276880314760693,
+    "p01": 0.4881938519310868,
+    "p05": 0.5749399238573165,
+    "median": 0.9204063262579294,
+    "p95": 0.9359947204055252
+  },
+  "elements_below_q01": 0,
+  "periodic": {
+    "periodic_pair_counts": [
+      176,
+      176,
+      176
+    ],
+    "periodic_coordinate_errors": [
+      0.0,
+      0.0,
+      0.0
+    ],
+    "periodic_pair_tolerance": 1e-10,
+    "periodic_equivalence_classes": 27010,
+    "periodic_triangles_match": true
+  },
+  "audit_s": 2.147984292008914,
+  "wall_s": 4.389621583046392
+}

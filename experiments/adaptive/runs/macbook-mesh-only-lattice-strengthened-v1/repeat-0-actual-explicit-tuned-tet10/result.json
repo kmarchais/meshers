@@ -1,0 +1,92 @@
+{
+  "vtk_backend": "Sequential",
+  "vtk_threads": 1,
+  "case": "smooth-lattice",
+  "config": {
+    "name": "actual-explicit-tuned-tet10",
+    "arm": "microgen",
+    "order": 2,
+    "resolution": 51,
+    "mmg": {
+      "hausd": 0.001,
+      "hmax": 0.06,
+      "hgrad": 1.3
+    },
+    "first_hausd": 0.0015,
+    "first_hmax": 0.06,
+    "first_only": false,
+    "repair": true
+  },
+  "status": "failed",
+  "qualified": false,
+  "mmg_calls": [
+    {
+      "nofem": true,
+      "hausd": 0.0015,
+      "hmax": 0.06,
+      "hgrad": 1.3,
+      "output_tetrahedra": 115536
+    },
+    {
+      "hausd": 0.001,
+      "hgrad": 1.3,
+      "hmax": 0.06,
+      "hmin": null,
+      "hsiz": null,
+      "ls": true,
+      "nr": true,
+      "output_tetrahedra": 158430
+    }
+  ],
+  "solve_performed": false,
+  "instrumentation_s": 0.24905633309390396,
+  "actual_resolution": null,
+  "seed_nodes": 51309,
+  "seed_elements": 249432,
+  "reoriented_tets": 0,
+  "repair": {
+    "initial_bad_elements": 1,
+    "remaining_bad_elements": 0,
+    "initial_minimum_quality": 0.099880992130727,
+    "final_minimum_quality": 0.10000100099999965,
+    "accepted_moves": 1,
+    "moved_vertices": 1,
+    "attempts": [
+      {
+        "node": 25192,
+        "incident_tets": 34,
+        "quality_target": 0.100001,
+        "initial_minimum_quality": 0.099880992130727,
+        "fixed_opposite_face_upper_bound": 0.2208704033548743,
+        "target_attained": true,
+        "status": "feasible-numerically",
+        "numerical_quality_guard": 1e-09,
+        "solver_success": true,
+        "solver_message": "Optimization terminated successfully",
+        "iterations": 5,
+        "seconds": 0.0016232500784099102,
+        "final_minimum_quality": 0.10000100099999965,
+        "maximum_move": 1.4327478192475384e-05,
+        "minimum_normalized_constraint": -2.3418766925686896e-17,
+        "candidate_coordinates": [
+          -0.4835429629306696,
+          0.3516150876251875,
+          0.45194615169767366
+        ],
+        "minimum_signed_determinant": 3.76398457753741e-07,
+        "element": 54685,
+        "sweep": 0
+      }
+    ],
+    "maximum_attempts": 400,
+    "maximum_sweeps": 2,
+    "boundary_coordinates_unchanged": true,
+    "signed_volume_difference": 3.700743415417188e-17,
+    "minimum_signed_determinant": 1.3632390347101505e-07
+  },
+  "repair_s": 0.3976023340364918,
+  "error": "too many values to unpack (expected 3)",
+  "traceback": "Traceback (most recent call last):\n  File \"/Users/kmarchais/dev/meshers/experiments/adaptive/mesh_only_comparison.py\", line 122, in worker\n    phase=time.perf_counter();points,tets,surface=straight_elevation(points,tets,surface)\n                              ^^^^^^^^^^^^^^^^^^^\nValueError: too many values to unpack (expected 3)\n",
+  "failed_attempt_s": 9.318481666967273,
+  "wall_s": 9.318482917034999
+}

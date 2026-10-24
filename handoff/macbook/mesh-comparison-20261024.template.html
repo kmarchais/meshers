@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="en">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<style>
+body{margin:0;font-family:var(--font-sans,system-ui);color:var(--foreground);font-size:var(--font-size-base,14px)}
+#mesh-compare h1{font-size:1.25em;font-weight:500;margin:0 0 8px}#mesh-compare h2{font-size:1.1em;font-weight:500;margin:16px 0 8px}
+#mesh-compare .context{color:var(--muted-foreground);margin:0 0 12px}#mesh-compare .table-wrap{overflow-x:auto}
+#mesh-compare table{border-collapse:collapse;width:100%;min-width:650px}#mesh-compare td,#mesh-compare th{padding:4px 5px;vertical-align:top;border-bottom:1px solid var(--border,currentColor);text-align:left;font-weight:400}
+#mesh-compare th{font-weight:500}#mesh-compare .case-row th{padding-top:10px}#mesh-compare .num{font-variant-numeric:tabular-nums;text-align:right;white-space:nowrap}
+#mesh-compare .sub{display:block;color:var(--muted-foreground);font-size:.88em;margin-top:1px}#mesh-compare .status{max-width:110px}#mesh-compare .pass{color:var(--foreground);font-weight:500}#mesh-compare .fail{color:var(--foreground);font-weight:500}
+#mesh-compare details{margin:16px 0}#mesh-compare summary{font-weight:500}#mesh-compare .method{min-width:135px;max-width:180px}#mesh-compare .legend{margin-top:9px;color:var(--muted-foreground)}
+</style></head>
+<body><main id="mesh-compare">
+<h1>Meshers and actual Microgen+MMG</h1>
+<div class="context">Fresh M4 Mac measurements · one thread · five measured repetitions per setting · one excluded warmup · no FE time · unit-cell side = 1</div>
+<div id="headline"></div>
+<h2>Primary Tet4 comparison</h2>
+<div class="table-wrap"><table aria-label="Tet4 mesh comparison"><thead><tr><th>Method</th><th class="num">Tets / nodes<br>thousands</th><th class="num">Generation<br>seconds</th><th class="num">Sampled error<br>|volume error|</th><th class="num">Corner quality<br>min / p1 / median</th><th>Admission</th></tr></thead><tbody id="tet4"></tbody></table></div>
+<h2>Matched Tet10: curved native and explicitly elevated actual meshes</h2>
+<div class="table-wrap"><table aria-label="Matched Tet10 mesh comparison"><thead><tr><th>Method</th><th class="num">Tets / nodes<br>thousands</th><th class="num">Generation<br>seconds</th><th class="num">Sampled error<br>|volume error|</th><th class="num">Corner quality<br>min / p1 / median</th><th>Admission</th></tr></thead><tbody id="tet10"></tbody></table></div>
+<div class="legend">Lower time, counts and errors are better. Higher quality is better. Time ranges are observed minimum–maximum, not confidence intervals. Volume is relative to the frozen reference estimate; its sampling uncertainty remains.</div>
+<details><summary>All measured settings and failure records</summary><div id="all-settings"></div></details>
+<div class="context">Admission: sampled distance ≤ 0.002; absolute volume error ≤ 1%; minimum corner quality ≥ 0.1; positive sampled Jacobians, coherent facets and periodic nodes/caps. Speedup ratios require both methods to pass all five measured runs. Curved Jacobian positivity is sampled, not globally certified.</div>
+</main>
+<script id="bench-data" type="application/json">__BENCH_DATA__</script>
+<script>
+(function(){
+ const root=document.getElementById('mesh-compare'),data=JSON.parse(document.getElementById('bench-data').textContent);
+ const names={'schwarz-solid':'Schwarz P solid','smooth-lattice':'Smooth-union lattice','gyroid':'Gyroid sheet','spinodoid':'Fixed spinodoid'};
+ const labels={'actual-default':'Microgen+MMG defaults','actual-default-tet10':'Defaults + straight Tet10','actual-explicit-tuned':'Actual tuned¹','actual-explicit-tuned-tet10':'Actual tuned + straight Tet10¹','meshers-curved-known':'Meshers · fast, 1 pass','meshers-curved-opt4':'Meshers · 4 passes','meshers-curved-uniform25':'Meshers · uniform 25, fast','meshers-curved-uniform25-opt4':'Meshers · uniform 25, 4 passes','meshers-tet4-24':'Meshers · uniform 24','meshers-tet4-32':'Meshers · uniform 32','meshers-tet4-adaptive':'Meshers · adaptive'};
+ const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+ const med=x=>x?x.median:null;
+ const fmt=x=>x==null?'—':Number(x).toPrecision(3);
+ const quality=r=>['min','p01','median'].map(k=>r.quality[k]?med(r.quality[k]).toFixed(3):'—').join(' / ')+`<span class="sub">p5 ${r.quality.p05?med(r.quality.p05).toFixed(3):'—'} · p95 ${r.quality.p95?med(r.quality.p95).toFixed(3):'—'}</span>`;
+ const counts=r=>r.elements?`${(med(r.elements)/1000).toFixed(1)} / ${(med(r.nodes)/1000).toFixed(1)}`:'—';
+ const status=r=>r.qualified_repetitions===5?'<span class="pass">Pass 5/5</span>':`<span class="fail">Rejected ${5-r.qualified_repetitions}/5</span><span class="sub">${esc(r.failed_gates.join(', '))}</span>`;
+ const time=r=>r.generation_s?`${fmt(med(r.generation_s))}<span class="sub">${fmt(r.generation_s.minimum)}–${fmt(r.generation_s.maximum)}</span>`:`—<span class="sub">failed in ${fmt(med(r.failed_attempt_s))} s</span>`;
+ const row=r=>`<tr><td class="method">${esc(labels[r.name]||r.name)}</td><td class="num">${counts(r)}</td><td class="num">${time(r)}</td><td class="num">${fmt(med(r.sampled_distance))}<span class="sub">ΔV ${r.absolute_relative_volume_error?fmt(100*med(r.absolute_relative_volume_error))+'%':'—'}</span></td><td class="num">${quality(r)}</td><td class="status">${status(r)}</td></tr>`;
+ const order=['schwarz-solid','smooth-lattice','gyroid','spinodoid'];
+ for(const key of order){
+  const c=data.cases.find(c=>c.case===key);if(!c)continue;
+  const actual10=c.rows.find(r=>r.name==='actual-explicit-tuned-tet10')||c.rows.find(r=>r.name==='actual-default-tet10');
+  const nativeNames=key==='smooth-lattice'?['meshers-curved-uniform25','meshers-curved-uniform25-opt4']:['meshers-curved-known','meshers-curved-opt4'];
+  const q=[actual10,...c.rows.filter(r=>nativeNames.includes(r.name))].filter(Boolean);
+  root.querySelector('#tet10').insertAdjacentHTML('beforeend',`<tr class="case-row"><th colspan="6">${names[key]}</th></tr>`+q.map(row).join(''));
+  const primaryNames=key==='schwarz-solid'?['actual-explicit-tuned','meshers-tet4-adaptive','meshers-tet4-24']:key==='smooth-lattice'?['actual-explicit-tuned','meshers-tet4-32']:key==='gyroid'?['actual-default','meshers-tet4-24','meshers-tet4-adaptive']:['actual-explicit-tuned','meshers-tet4-adaptive'];
+  const p=primaryNames.map(n=>c.rows.find(r=>r.name===n)).filter(Boolean);
+  root.querySelector('#tet4').insertAdjacentHTML('beforeend',`<tr class="case-row"><th colspan="6">${names[key]}</th></tr>`+p.map(row).join(''));
+  const body=c.rows.map(r=>`<tr><td>${esc(labels[r.name]||r.name)}</td><td>${r.config.order===2?'Tet10':'Tet4'}</td><td>${status(r)}</td><td>${esc([...r.error_messages,...r.periodic_errors].join('; ')||r.statuses[0])}</td></tr>`).join('');
+  root.querySelector('#all-settings').insertAdjacentHTML('beforeend',`<h2>${names[key]}</h2><div class="table-wrap"><table><thead><tr><th>Setting</th><th>Order</th><th>Admission</th><th>Result / failure</th></tr></thead><tbody>${body}</tbody></table></div>`);
+ }
+ root.querySelector('#headline').textContent='¹ Actual tuned routes are explicit variants, not defaults. Schwarz and lattice include charged interior repair; Schwarz and spinodoid omit the second MMG pass. Gyroid defaults are shown where stronger routes failed before a budget-compliant output.';
+ console.log('mesh comparison rendered',data.cases.length,'cases',root.querySelectorAll('#tet10 tr').length,'Tet10 rows');
+ console.log('layout',window.innerWidth,document.documentElement.scrollWidth);
+})();
+</script></body></html>

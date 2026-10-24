@@ -1,0 +1,118 @@
+{
+  "vtk_backend": "Sequential",
+  "vtk_threads": 1,
+  "case": "schwarz-solid",
+  "config": {
+    "name": "meshers-curved-opt4",
+    "arm": "meshers",
+    "cells": 16,
+    "order": 2,
+    "adapt": false,
+    "tolerance": 1.0,
+    "min_length": 0.002,
+    "adapt_tolerance": 0.002,
+    "optimization_passes": 4
+  },
+  "status": "admitted",
+  "qualified": true,
+  "mmg_calls": [],
+  "solve_performed": false,
+  "instrumentation_s": 0.0,
+  "diagnostics": {
+    "empty": false,
+    "volume": 0.5000995574882051,
+    "minimum_mmg_quality": 0.4872721810452263,
+    "sampled_surface_error": 0.0033773495105774124,
+    "elements_below_quality_01": 0,
+    "reverted_snap_vertices": 0,
+    "callback_calls": 0,
+    "inserted_interior_nodes": 0,
+    "seconds": 0.220088625,
+    "quadratic": {
+      "curved_edges": 5100,
+      "straightened_edges": 0,
+      "partially_curved_edges": 0,
+      "minimum_jacobian_ratio": 0.6570475018731599
+    },
+    "threads": 1,
+    "evaluator": "compiled",
+    "preparation_seconds": 0.0004236670210957527
+  },
+  "generation_wall_s": 0.22177454200573266,
+  "nodes": 42928,
+  "elements": 27492,
+  "generation_s": 0.22177454200573266,
+  "mesh_sha256": "b046a79155297de2c3ac411db7e2ae2fed5cf3205260cf2ca95b5e5bfd25d7cb",
+  "geometry": {
+    "sampled_forward_max": 0.0001340006493325668,
+    "sampled_reverse_max": 0.00015749839430025572,
+    "sampled_two_sided_max": 0.00015749839430025572,
+    "outward_forward_max": 0.0001340006493325668,
+    "inward_forward_max": 0.00010891850583978988,
+    "projection_failed": 0,
+    "forward_samples": 43524,
+    "reverse_samples": 50135,
+    "volume": 0.5000001996614116,
+    "relative_volume_error": 3.9932282325239044e-07,
+    "q_min_corner": 0.4872721810452261,
+    "q_p01_corner": 0.5629168508408827,
+    "minimum_dihedral_deg_corner": 26.423031953517068,
+    "minimum_sampled_jacobian": 1.264165734659085e-05,
+    "reverse_tessellation_delta_max": 0.00018363846583899164,
+    "quadratic_reverse_subdivisions": [
+      4,
+      8
+    ],
+    "projection_method": "newton-box-slsqp-v1",
+    "unbounded_projection_failed": 0,
+    "box_projection_attempts": 0,
+    "box_projection_recovered": 0,
+    "box_projection_witnesses": [],
+    "facet_consistency": {
+      "nodes": 42928,
+      "elements": 27492,
+      "unique_faces": 57936,
+      "interior_faces": 52032,
+      "extracted_boundary_faces": 5904,
+      "same_orientation_shared_faces": 0,
+      "nonmanifold_faces": 0,
+      "duplicate_cells": 0,
+      "duplicate_surface_faces": 0,
+      "provided_boundary_matches_extraction": true,
+      "missing_provided_faces": 0,
+      "extra_provided_faces": 0,
+      "nonpositive_corner_determinants": 0,
+      "minimum_corner_determinant": 1.3413660852438016e-05,
+      "oriented_facet_consistency_passed": true,
+      "conflict_examples": [],
+      "scope": "Oriented corner-face incidence and same-side neighbor diagnostics; necessary consistency, not a certificate of curved geometry or absence of nonlocal intersections"
+    },
+    "oriented_facet_consistency_passed": true,
+    "geometry_admitted": true
+  },
+  "quality_quantiles": {
+    "min": 0.4872721810452261,
+    "p01": 0.5629168508408827,
+    "p05": 0.6209147556607018,
+    "median": 0.9149435785312352,
+    "p95": 0.9741419359854907
+  },
+  "elements_below_q01": 0,
+  "periodic": {
+    "periodic_pair_counts": [
+      942,
+      942,
+      942
+    ],
+    "periodic_coordinate_errors": [
+      0.0,
+      0.0,
+      0.0
+    ],
+    "periodic_pair_tolerance": 1e-10,
+    "periodic_equivalence_classes": 40200,
+    "periodic_triangles_match": true
+  },
+  "audit_s": 1.3926536249928176,
+  "wall_s": 1.6832534580025822
+}

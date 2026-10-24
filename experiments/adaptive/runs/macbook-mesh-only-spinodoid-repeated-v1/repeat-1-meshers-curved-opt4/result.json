@@ -1,0 +1,136 @@
+{
+  "vtk_backend": "Sequential",
+  "vtk_threads": 1,
+  "case": "spinodoid",
+  "config": {
+    "name": "meshers-curved-opt4",
+    "arm": "meshers",
+    "cells": 24,
+    "order": 2,
+    "adapt": true,
+    "tolerance": 1.0,
+    "min_length": 0.002,
+    "adapt_tolerance": 0.003,
+    "optimization_passes": 4
+  },
+  "status": "admitted",
+  "qualified": true,
+  "mmg_calls": [],
+  "solve_performed": false,
+  "instrumentation_s": 0.0,
+  "diagnostics": {
+    "empty": false,
+    "volume": 0.5023960047109172,
+    "minimum_mmg_quality": 0.3334528075661409,
+    "sampled_surface_error": 0.005026752907564158,
+    "elements_below_quality_01": 0,
+    "reverted_snap_vertices": 0,
+    "callback_calls": 0,
+    "inserted_interior_nodes": 0,
+    "adapt": {
+      "splits": 707,
+      "collapses": 12077,
+      "swaps": 3165,
+      "moves": 39907,
+      "error_splits": 15,
+      "maximum_error": 0.006709921206532169,
+      "seconds": [
+        0.125300083,
+        0.004366333,
+        0.443202582,
+        0.068659834,
+        0.081557125,
+        0.1811895,
+        0.07523925
+      ]
+    },
+    "seconds": 3.563533125,
+    "quadratic": {
+      "curved_edges": 13528,
+      "straightened_edges": 0,
+      "partially_curved_edges": 8,
+      "minimum_jacobian_ratio": 0.15394501781087916
+    },
+    "threads": 1,
+    "evaluator": "compiled",
+    "preparation_seconds": 9.160721674561501e-07
+  },
+  "generation_wall_s": 3.570654666982591,
+  "nodes": 73951,
+  "elements": 45994,
+  "generation_s": 3.570654666982591,
+  "fixed_field_identity_checked": 4096,
+  "mesh_sha256": "b34824de7e58e0244d7fb4d04a40edfab0bb021de696b6a8cf7f10b9bd92620f",
+  "geometry": {
+    "sampled_forward_max": 0.0013329848158457264,
+    "sampled_reverse_max": 0.000543730803398553,
+    "sampled_two_sided_max": 0.0013329848158457264,
+    "outward_forward_max": 0.0013329848158457264,
+    "inward_forward_max": 0.0005173823073382875,
+    "projection_failed": 0,
+    "forward_samples": 114504,
+    "reverse_samples": 41325,
+    "volume": 0.5022661487773039,
+    "relative_volume_error": 0.0002587311981703255,
+    "q_min_corner": 0.3334528075661409,
+    "q_p01_corner": 0.5345796874081354,
+    "minimum_dihedral_deg_corner": 15.970288647070447,
+    "minimum_sampled_jacobian": 9.06039872757567e-08,
+    "reverse_tessellation_delta_max": 0.00011043789973593429,
+    "quadratic_reverse_subdivisions": [
+      4,
+      8
+    ],
+    "projection_method": "newton-box-slsqp-v1",
+    "unbounded_projection_failed": 0,
+    "box_projection_attempts": 0,
+    "box_projection_recovered": 0,
+    "box_projection_witnesses": [],
+    "facet_consistency": {
+      "nodes": 73951,
+      "elements": 45994,
+      "unique_faces": 98048,
+      "interior_faces": 85928,
+      "extracted_boundary_faces": 12120,
+      "same_orientation_shared_faces": 0,
+      "nonmanifold_faces": 0,
+      "duplicate_cells": 0,
+      "duplicate_surface_faces": 0,
+      "provided_boundary_matches_extraction": true,
+      "missing_provided_faces": 0,
+      "extra_provided_faces": 0,
+      "nonpositive_corner_determinants": 0,
+      "minimum_corner_determinant": 4.488363248562419e-07,
+      "oriented_facet_consistency_passed": true,
+      "conflict_examples": [],
+      "scope": "Oriented corner-face incidence and same-side neighbor diagnostics; necessary consistency, not a certificate of curved geometry or absence of nonlocal intersections"
+    },
+    "oriented_facet_consistency_passed": true,
+    "geometry_admitted": true
+  },
+  "quality_quantiles": {
+    "min": 0.3334528075661409,
+    "p01": 0.5345796874081354,
+    "p05": 0.5973704107887794,
+    "median": 0.7804256538089736,
+    "p95": 0.9351246857176846
+  },
+  "elements_below_q01": 0,
+  "periodic": {
+    "periodic_pair_counts": [
+      1240,
+      1376,
+      1159
+    ],
+    "periodic_coordinate_errors": [
+      0.0,
+      0.0,
+      0.0
+    ],
+    "periodic_pair_tolerance": 1e-10,
+    "periodic_equivalence_classes": 70249,
+    "periodic_triangles_match": true
+  },
+  "audit_s": 2.894315875018947,
+  "wall_s": 6.610864166985266
+}

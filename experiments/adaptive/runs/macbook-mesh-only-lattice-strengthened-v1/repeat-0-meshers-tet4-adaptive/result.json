@@ -1,0 +1,26 @@
+{
+  "vtk_backend": "Sequential",
+  "vtk_threads": 1,
+  "case": "smooth-lattice",
+  "config": {
+    "name": "meshers-tet4-adaptive",
+    "arm": "meshers",
+    "cells": 16,
+    "order": 1,
+    "adapt": true,
+    "tolerance": 1.0,
+    "min_length": 0.002,
+    "adapt_tolerance": 0.001
+  },
+  "status": "failed",
+  "qualified": false,
+  "mmg_calls": [],
+  "solve_performed": false,
+  "instrumentation_s": 0.0,
+  "positive_void_clamp": 0.02,
+  "field_representation": "Value-identical symmetric min; fixed original cubic smooth-union order",
+  "error": "adaptation exceeded max_tetrahedra: 250005 > 250000",
+  "traceback": "Traceback (most recent call last):\n  File \"/Users/kmarchais/dev/meshers/experiments/adaptive/mesh_only_comparison.py\", line 132, in worker\n    mesh=meshers.generate(field,bounds=w.BOUNDS,cells=config['cells'],band=case.band,\n         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/Users/kmarchais/dev/meshers/crates/meshers-python/python/meshers/__init__.py\", line 316, in generate\n    result = _meshers.generate(\n             ^^^^^^^^^^^^^^^^^^\n_meshers.MeshingFailure: adaptation exceeded max_tetrahedra: 250005 > 250000\n",
+  "failed_attempt_s": 1.5385648340452462,
+  "wall_s": 1.5385684589855373
+}

@@ -1,0 +1,52 @@
+{
+  "vtk_backend": "Sequential",
+  "vtk_threads": 1,
+  "case": "spinodoid",
+  "config": {
+    "name": "actual-explicit-tuned-tet10",
+    "arm": "microgen",
+    "order": 2,
+    "resolution": 36,
+    "mmg": {
+      "hausd": 0.0005,
+      "hmax": 0.06,
+      "hgrad": 1.3
+    },
+    "first_hausd": 0.0015,
+    "first_hmax": 0.06,
+    "first_only": false,
+    "repair": false
+  },
+  "status": "failed",
+  "qualified": false,
+  "mmg_calls": [
+    {
+      "nofem": true,
+      "hausd": 0.0015,
+      "hmax": 0.06,
+      "hgrad": 1.3,
+      "output_tetrahedra": 143585
+    },
+    {
+      "hausd": 0.0005,
+      "hgrad": 1.3,
+      "hmax": 0.06,
+      "hmin": null,
+      "hsiz": null,
+      "ls": true,
+      "nr": true,
+      "output_tetrahedra": 525089
+    }
+  ],
+  "solve_performed": false,
+  "instrumentation_s": 0.5000483330804855,
+  "fft_realization_resolution": 16,
+  "sampling_resolution": 36,
+  "actual_resolution": 36,
+  "seed_nodes": 38712,
+  "seed_elements": 182287,
+  "error": "Intermediate MMG tetrahedron cap exceeded",
+  "traceback": "Traceback (most recent call last):\n  File \"/Users/kmarchais/dev/meshers/experiments/adaptive/mesh_only_comparison.py\", line 108, in worker\n    grid=remesh_keeping_boundaries_for_fem(grid,periodic=True,**config.get('mmg',{}))\n         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/Users/kmarchais/dev/meshers/.local-work/macbook-runtime/venv/lib/python3.12/site-packages/microgen/remesh.py\", line 136, in remesh_keeping_boundaries_for_fem\n    output_mesh = _run_mmg_pipeline(\n                  ^^^^^^^^^^^^^^^^^^\n  File \"/Users/kmarchais/dev/meshers/.local-work/macbook-runtime/venv/lib/python3.12/site-packages/microgen/remesh.py\", line 199, in _run_mmg_pipeline\n    Mmg.mmg3d(\n  File \"/Users/kmarchais/dev/meshers/experiments/adaptive/mesh_only_comparison.py\", line 105, in record\n    if count>w.CAP:raise ValueError('Intermediate MMG tetrahedron cap exceeded')\n                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nValueError: Intermediate MMG tetrahedron cap exceeded\n",
+  "failed_attempt_s": 18.807613791897893,
+  "wall_s": 18.807694916962646
+}

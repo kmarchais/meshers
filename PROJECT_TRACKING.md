@@ -1,5 +1,15 @@
 # Meshers project tracking
 
+The mesh-only comparison is complete across all four fixed cases. See
+[Mesh comparison results](/Users/kmarchais/dev/meshers/experiments/adaptive/MESH_COMPARISON_RESULTS.md).
+Matched Tet10 shows 45.31 times faster generation on Schwarz with 4.97 times
+fewer tetrahedra, and 10.90 times faster on lattice uniform 25 with 3.25 times
+fewer. Lattice p95 quality is slightly lower despite better minimum, low-tail
+and median quality. Tet4 remains the primary comparison and has trade-offs;
+native lattice/spinodoid admission and admitted actual Gyroid/spinodoid controls
+remain gaps. All 138 saved meshes were replayed. No FE reference or full-goal
+completion is promoted. Next follow the mesh-only quality/fidelity evidence,
+rather than the historical FE investigation sequence.
 
 The complete parent25 correction map passes both positive rules and independent
 saved-array replay. Wall cells without curve vertices carry74.60% of its
