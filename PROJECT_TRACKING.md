@@ -1,6 +1,16 @@
 # Meshers project tracking
 
 
+The complete parent25 correction map passes both positive rules and independent
+saved-array replay. Wall cells without curve vertices carry74.60% of its
+normalized energy; curve-vertex cells16.37%. Stop curve-only allocation and
+keep closed cap-length/energy-sizing recipes closed. Next review native periodic
+normal/feature handling against existing branch evidence before selecting a
+controlled regression. The audited field still fails all24 accuracy at1.711485%.
+No reference, native candidate or timing ratio is promoted. All four cases and
+the original unachieved objective remain in scope; work resumed explicitly.
+
+
 Resumed at the user's explicit instruction. Parent25's six fresh coupled
 responses pass complete-field, positive-rule and freshly assembled equilibrium
 audits, but all24-model disagreement remains1.711485%, failing1%. No reference

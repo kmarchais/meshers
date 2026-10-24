@@ -155,3 +155,42 @@ def verify_modal_fields(run, result):
         np.testing.assert_allclose([volume,minimum],[measured_volume,measured_minimum],atol=1e-12)
     return dict(run=run.name, full_nodal_field_reconstructed=True, positive_rule_grouped_sample_cells=64,
         unfolded_energy_and_stress_replayed=True)
+
+
+def verify_localization(run, result):
+    workflow.imports()
+    from periodic_crease_audit import features
+    assert result['passed'] and result['parent25_coupled_localization']
+    assert not result['new_equilibrium_solve'] and not result['reference_promoted']
+    audit = json.loads((Path(result['audit'])/'result.json').read_text())
+    solved = json.loads((Path(audit['source'])/'result.json').read_text())
+    consistent = json.loads((Path(solved['consistent_source'])/'result.json').read_text())
+    trial = json.loads((Path(consistent['source'])/'result.json').read_text())
+    mesh = np.load(Path(solved['nested_source'])/'mesh.npz')
+    groups = features(mesh)['groups']
+    for record in result['rules']:
+        path = run/f'local-{record["points"]}.npz'
+        assert workflow.digest(path) == record['archive_sha256']
+        local = np.load(path)
+        energy = local['correction_energy']
+        total = energy.sum(axis=0)
+        np.testing.assert_allclose(total,record['total_correction_energy'],atol=1e-12)
+        assert np.linalg.eigvalsh(energy).min() > -1e-12
+        base = np.asarray(next(row for row in trial['rules'] if row['positive_rule_points']==record['points'])['energy_matrix'])[:6,:6]
+        corrected = np.asarray(next(row for row in audit['rules'] if row['points']==record['points'])['energy_tensor'])
+        identity = np.linalg.norm(total-(base-corrected))/np.linalg.norm(base-corrected)
+        np.testing.assert_allclose(identity,record['galerkin_identity_relative_error'],atol=1e-12)
+        assert identity <= .01
+        scores = np.einsum('ij,tji->t',np.linalg.inv(base),energy)
+        np.testing.assert_allclose(scores,local['normalized_trace'],atol=1e-14)
+        np.testing.assert_allclose(local['volumes'].sum(),record['volume'],atol=1e-12)
+        for name,mask in groups.items():
+            saved = record['localization'][name]
+            assert saved['tets'] == int(mask.sum())
+            np.testing.assert_allclose(saved['normalized_correction_fraction'],scores[mask].sum()/scores.sum(),atol=1e-12)
+            np.testing.assert_allclose(saved['volume_fraction'],local['volumes'][mask].sum()/record['volume'],atol=1e-12)
+    precision = np.linalg.norm(np.asarray(result['rules'][1]['total_correction_energy'])-result['rules'][0]['total_correction_energy'])/np.linalg.norm(result['rules'][1]['total_correction_energy'])
+    np.testing.assert_allclose(precision,result['correction_rule_relative_change'],atol=1e-12)
+    assert precision <= .01
+    return dict(run=run.name,local_energy_archives_replayed=True,group_fractions_replayed=True,
+        galerkin_identity_relative_error=float(identity),positive_rule_relative_change=float(precision))

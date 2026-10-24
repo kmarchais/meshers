@@ -86,6 +86,9 @@ def main():
             failed_runs.append(run.name)
         if (run / "result.json").exists():
             result = json.loads((run / "result.json").read_text())
+            if result.get("parent25_coupled_localization"):
+                from verify_parent25_trial import verify_localization
+                parent25_trial_replays.append(verify_localization(run, result))
             if result.get("parent25") and ("coupling_sha256" in result or result.get("no_solve")):
                 from verify_parent25_trial import verify_coupling_resource
                 parent25_trial_replays.append(verify_coupling_resource(run, result))

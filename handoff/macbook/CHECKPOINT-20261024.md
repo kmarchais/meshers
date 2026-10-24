@@ -1218,3 +1218,45 @@ formula on64 actual cells under both rules. Resource captures are identified
 as captures; matrix equilibrium is independently reassembled in audit94.
 Receipt: `handoff/macbook/verification-20261024-parent25-coupled.json`.
 Jobs through95 are terminal. No native/ref promotion or four-case completion.
+
+## Complete parent25 correction localization, 24 October 2026
+
+Saved-field job96 passes in157.422seconds at0.7823GiB, without another solve.
+Both positive rules localize the complete coupled-minus-base field, including
+all relaxed quadratic responses. The cell matrices sum to its global correction
+energy. Galerkin identity differences against the independently audited stiffness
+reduction are0.0779213% and0.0780281%, below the declared1% gate. Positive-rule
+correction tensors differ by5.03e-7 relative. Every local matrix is positive
+semidefinite within1e-12. On64 actual cells per rule, the original grouped
+integrator reproduces the local correction matrices independently.
+
+At216points, curve-vertex cells carry16.3654% of normalized six-load correction
+energy in0.08627% of volume. Wall-vertex cells without curve vertices carry
+74.6016%, cap-vertex cells without curve vertices32.9546%, and cells touching
+neither wall nor cap4.86065%. Wall and cap groups overlap and are not additive.
+This is the resolved correction's distribution, not remaining-error certification.
+It replaces the trial-only20.6100% curve fraction for this purpose; that older
+result remains correct for its different, unrelaxed trial field.
+
+A direct independent replay reads both local archives, checks exact input
+hashes, recomputes PSD, global sums, normalization, group fractions and Galerkin
+identities. It passes67 input hashes. Receipt:
+`handoff/macbook/verification-20261024-parent25-localization.json`. This is a
+localization replay; full checkpoint95 remains the last complete replay. No
+claim is made that95 already covered96. The new replay branch is available to
+future full checkpoint checks.
+
+Stop curve-only allocation. Previously rejected cap-length and energy-sizing
+recipes also remain closed; this map does not revive them or justify copying
+cell scores to a different physical domain. Next review the native periodic
+normal/feature path against the existing normal-jump evidence and this full
+correction map. Select a controlled geometry regression only if it tests a
+mechanism distinct from those closed recipes. Do not infer a new native win
+from reference-only auxiliary work.
+
+The full field still misses all24 models at1.711485183%. No reference, native
+candidate or workflow ratio is promoted. Schwarz's repeated modified-actual-
+route wins stand; Gyroid/spinodoid actual-comparator gaps and lattice reference
+convergence remain. All four specimens and original gates remain in scope.
+Record: `runs/macbook-lattice-parent25-hp-localization-v1`. Jobs through96 are
+terminal and no successor is queued at this checkpoint.

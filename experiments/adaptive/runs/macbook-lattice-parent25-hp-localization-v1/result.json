@@ -1,0 +1,184 @@
+{
+  "passed": true,
+  "parent25_coupled_localization": true,
+  "audit": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-lattice-parent25-hp-audit-v1",
+  "rules": [
+    {
+      "points": 125,
+      "total_correction_energy": [
+        [
+          0.00027465852035906394,
+          0.00010411402587483952,
+          0.00010810571011937568,
+          -2.9981822761006984e-07,
+          -1.7353612845133022e-07,
+          2.3689811053179165e-06
+        ],
+        [
+          0.00010411402587483952,
+          0.00026297533473278883,
+          0.00010774392897485565,
+          1.618912093914864e-07,
+          2.5136290306659605e-07,
+          5.193393156754851e-07
+        ],
+        [
+          0.00010810571011937568,
+          0.00010774392897485565,
+          0.0002699560724526943,
+          8.794136911520731e-07,
+          1.588438649979966e-08,
+          4.818764303755174e-07
+        ],
+        [
+          -2.998182276100702e-07,
+          1.6189120939148616e-07,
+          8.794136911520725e-07,
+          7.230570243822848e-05,
+          3.8467045848199397e-07,
+          -1.0803280882745761e-08
+        ],
+        [
+          -1.7353612845133038e-07,
+          2.51362903066597e-07,
+          1.5884386499800558e-08,
+          3.8467045848199296e-07,
+          7.316614299883209e-05,
+          1.0414513882983804e-07
+        ],
+        [
+          2.3689811053179182e-06,
+          5.193393156754862e-07,
+          4.81876430375516e-07,
+          -1.0803280882746162e-08,
+          1.0414513882983795e-07,
+          7.402128028479566e-05
+        ]
+      ],
+      "galerkin_identity_relative_error": 0.0007792129741708702,
+      "localization": {
+        "curve_vertex_incident": {
+          "tets": 28129,
+          "volume_fraction": 0.0008626867933967276,
+          "normalized_correction_fraction": 0.16365452007932402
+        },
+        "curve_edge_incident": {
+          "tets": 7800,
+          "volume_fraction": 0.00012479261909596208,
+          "normalized_correction_fraction": 0.035723382379950645
+        },
+        "cap_without_curve_vertex": {
+          "tets": 44448,
+          "volume_fraction": 0.0595622993735926,
+          "normalized_correction_fraction": 0.32954666376872827
+        },
+        "wall_without_curve_vertex": {
+          "tets": 60631,
+          "volume_fraction": 0.38922998873464315,
+          "normalized_correction_fraction": 0.7460158831594805
+        },
+        "neither_wall_nor_cap_vertex": {
+          "tets": 27829,
+          "volume_fraction": 0.5596736199421262,
+          "normalized_correction_fraction": 0.048606544903148925
+        }
+      },
+      "volume": 0.24823273133478993,
+      "minimum_sampled_jacobian": 2.7561614078404273e-11,
+      "grouped_control_cells": 64,
+      "archive_sha256": "713f71af95b0d9e3c72afc5fc7eaf7a3a3d9b63e0dcf24f55c5c8e35fdc18eec",
+      "seconds": 56.14987754100002
+    },
+    {
+      "points": 216,
+      "total_correction_energy": [
+        [
+          0.0002746586176670417,
+          0.00010411407869683536,
+          0.00010810575418645435,
+          -2.9981822290520707e-07,
+          -1.7353189893067115e-07,
+          2.368984849963611e-06
+        ],
+        [
+          0.00010411407869683536,
+          0.0002629755023051518,
+          0.00010774396715866812,
+          1.6189317199411542e-07,
+          2.513730970893095e-07,
+          5.193461336210073e-07
+        ],
+        [
+          0.00010810575418645436,
+          0.00010774396715866812,
+          0.0002699561941348667,
+          8.794135926227869e-07,
+          1.587120088602745e-08,
+          4.818811037879291e-07
+        ],
+        [
+          -2.9981822290520707e-07,
+          1.6189317199411537e-07,
+          8.794135926227854e-07,
+          7.230575536603187e-05,
+          3.8467193202100333e-07,
+          -1.0794088756104929e-08
+        ],
+        [
+          -1.73531898930672e-07,
+          2.5137309708931107e-07,
+          1.5871200886028764e-08,
+          3.8467193202100434e-07,
+          7.316620076374171e-05,
+          1.0413298768528227e-07
+        ],
+        [
+          2.3689848499636093e-06,
+          5.193461336210072e-07,
+          4.818811037879292e-07,
+          -1.079408875610481e-08,
+          1.04132987685282e-07,
+          7.402134319047204e-05
+        ]
+      ],
+      "galerkin_identity_relative_error": 0.0007802812614166426,
+      "localization": {
+        "curve_vertex_incident": {
+          "tets": 28129,
+          "volume_fraction": 0.0008626867933967278,
+          "normalized_correction_fraction": 0.16365445333000242
+        },
+        "curve_edge_incident": {
+          "tets": 7800,
+          "volume_fraction": 0.0001247926190959621,
+          "normalized_correction_fraction": 0.03572337007242571
+        },
+        "cap_without_curve_vertex": {
+          "tets": 44448,
+          "volume_fraction": 0.0595622993735926,
+          "normalized_correction_fraction": 0.3295464949361527
+        },
+        "wall_without_curve_vertex": {
+          "tets": 60631,
+          "volume_fraction": 0.38922998873464315,
+          "normalized_correction_fraction": 0.7460159991524127
+        },
+        "neither_wall_nor_cap_vertex": {
+          "tets": 27829,
+          "volume_fraction": 0.5596736199421265,
+          "normalized_correction_fraction": 0.04860651803806463
+        }
+      },
+      "volume": 0.24823273133479012,
+      "minimum_sampled_jacobian": 2.7561522122962485e-11,
+      "grouped_control_cells": 64,
+      "archive_sha256": "bb518e8c4c6c767ca0b687225f6d4b006bc22fae1e3210e2df5f8557f02898dc",
+      "seconds": 99.44465874996968
+    }
+  ],
+  "correction_rule_relative_change": 5.020163123965642e-07,
+  "precision_gate": 0.01,
+  "new_equilibrium_solve": false,
+  "reference_promoted": false,
+  "scope": "Resolved same-domain six-load correction energy only; overlapping groups are not additive. No remaining-error, continuum, native-candidate or workflow timing claim."
+}
