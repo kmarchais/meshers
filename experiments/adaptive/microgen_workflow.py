@@ -67,6 +67,26 @@ def imports():
     return np, fd, meshers, microgen, pv, scorecard
 
 
+def restore_fixed_spinodoid(shape):
+    import numpy as np
+
+    source = HERE / "runs/g3-spinodoid-compiled32-v1/fourier-coefficients.json"
+    frozen = json.loads(source.read_text())
+    expected = np.asarray(frozen["coefficients"])
+    frep = shape._frep
+    assert shape.resolution == 16 and "grid" not in shape.__dict__
+    assert expected.shape == (52, 5) and frep.threshold == frozen["threshold"]
+    np.testing.assert_array_equal(frep.modes / frep.cell_size, expected[:, :3])
+    actual = np.column_stack((frep.modes / frep.cell_size, frep.amplitudes, frep.phases))
+    difference = float(abs(actual - expected).max())
+    assert difference < 1e-12, "FFT realization changed beyond platform roundoff"
+    frep.amplitudes, frep.phases = expected[:, 3].copy(), expected[:, 4].copy()
+    np.testing.assert_array_equal(np.column_stack((frep.modes / frep.cell_size,
+        frep.amplitudes, frep.phases)), expected)
+    return {"source": str(source), "sha256": digest(source), "coefficient_rows": len(expected),
+        "raw_fft_maximum_coefficient_difference": difference, "coefficients_loaded_exactly": True}
+
+
 def specimen(name):
     np, _, _, microgen, _, scorecard = imports()
     from microgen.shape import from_field, surface_functions
@@ -85,6 +105,7 @@ def specimen(name):
             k0=4 * np.pi, bandwidth=3, offset=0, cell_size=1,
             resolution=16, seed=20261010, mode_amplitude_threshold=0.05,
         )
+        shape._fixed_field_provenance = restore_fixed_spinodoid(shape)
         def field(x, y, z):
             arrays = np.broadcast_arrays(x, y, z)
             coordinates = [array.ravel() + 0.5 for array in arrays]

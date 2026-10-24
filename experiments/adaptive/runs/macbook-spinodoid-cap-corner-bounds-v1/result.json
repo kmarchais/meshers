@@ -1,0 +1,71 @@
+{
+  "source": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-spinodoid-preclip36-five-v1/pretriangulated",
+  "case": "spinodoid",
+  "planes": [
+    {
+      "axis": 0,
+      "side": -0.5,
+      "boundary_corners": 356,
+      "ambiguous_boundary_nodes": [],
+      "obstructing_corners": 0
+    },
+    {
+      "axis": 0,
+      "side": 0.5,
+      "boundary_corners": 356,
+      "ambiguous_boundary_nodes": [],
+      "obstructing_corners": 0
+    },
+    {
+      "axis": 1,
+      "side": -0.5,
+      "boundary_corners": 446,
+      "ambiguous_boundary_nodes": [],
+      "obstructing_corners": 0
+    },
+    {
+      "axis": 1,
+      "side": 0.5,
+      "boundary_corners": 446,
+      "ambiguous_boundary_nodes": [],
+      "obstructing_corners": 0
+    },
+    {
+      "axis": 2,
+      "side": -0.5,
+      "boundary_corners": 392,
+      "ambiguous_boundary_nodes": [],
+      "obstructing_corners": 0
+    },
+    {
+      "axis": 2,
+      "side": 0.5,
+      "boundary_corners": 392,
+      "ambiguous_boundary_nodes": [],
+      "obstructing_corners": 0
+    }
+  ],
+  "witnesses": [],
+  "obstructing_corner_count": 0,
+  "fixed_polygon_corner_obstruction": false,
+  "periodic_source": {
+    "periodic_pair_counts": [
+      973,
+      1093,
+      1004
+    ],
+    "periodic_coordinate_errors": [
+      5.551115123125783e-16,
+      1.7763568394002505e-15,
+      5.551115123125783e-16
+    ],
+    "periodic_pair_tolerance": 1e-10,
+    "periodic_equivalence_classes": 46033,
+    "periodic_triangles_match": true
+  },
+  "qualified": false,
+  "source_mesh_unchanged": true,
+  "mmg_calls": [],
+  "stiffness_solve_performed": false,
+  "scope": "Necessary quality bound for triangles inside each fixed convex polygon wedge, combined with the retained-face tet bound; 80-digit replay of floating-point coordinates, not interval certification or impossibility after boundary changes"
+}

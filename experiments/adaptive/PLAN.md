@@ -1,5 +1,27 @@
 # Adaptive implicit meshing: plan and status
 
+## Spinodoid coverage and next cap patch, 24 October 2026
+
+Mac jobs 14–20 preserve the exact FFT16/52-mode realization and compare one
+sampling36 extraction pair. Five-tet preclipping removes all 282 oriented
+face conflicts, but geometry and 164 retained-cap obstructions still reject.
+Only 58 blocked faces have a passing single flip. Polygon-corner bounds find
+no acute-corner obstruction, and every blocked face has a cap-interior vertex.
+
+One worst periodic cap-interior star nevertheless has a checked fixed-neighbor
+obstruction. An independent 80-digit replay at quality 0.1 passes and identifies
+another free cap vertex, 13894, in the active support. Stop single-vertex cap
+sweeps. Select one bounded preflight translating the closed active free-vertex
+patch and its periodic copies, with outer cap curves fixed and source volume
+orientation guarded. Shared translation keeps the determinant constraints
+affine and the quality residuals concave; controls must verify that extension.
+Read before applying moves, MMG, or FE. The separate distance failure remains.
+
+Job 17's unsupported two-cell manufactured control is preserved as failure;
+the corrected controls and final 29-test suite pass. Full results and source
+provenance are in `MICROGEN_RESULTS.md` and the current Mac checkpoint.
+No reference, admitted comparator, or workflow win is promoted.
+
 ## Curve-priority diagnostic also misses, 24 October 2026
 
 Mac jobs 11–13 pass sixteen controls, geometry and memory preflights, six

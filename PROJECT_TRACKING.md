@@ -1,5 +1,15 @@
 # Meshers project tracking
 
+Latest Mac comparison work is in
+[fixed-spinodoid extraction and cap feasibility](experiments/adaptive/MICROGEN_RESULTS.md).
+The exact frozen coefficients now survive cross-platform FFT roundoff.
+Paired preclipping removes 282 spinodoid source face conflicts, but the
+coherent seed still fails geometry and retained-cap feasibility. A checked
+cap-only obstruction rules out one fixed-neighbor periodic vertex move;
+another free cap vertex participates, so coupled motion remains untested.
+No MMG or FE follows. Twenty-nine focused controls and expanded provenance
+verification pass. The next selected preflight is one closed active cap patch.
+
 Native MacBook continuation is recorded in the
 [24 October Mac checkpoint](handoff/macbook/CHECKPOINT-20261024.md).
 Native setup, 54 focused controls, twelve solver-control loads, the second

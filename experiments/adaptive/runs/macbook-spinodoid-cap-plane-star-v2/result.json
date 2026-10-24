@@ -1,0 +1,133 @@
+{
+  "source": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-spinodoid-preclip36-five-v1/pretriangulated",
+  "case": "spinodoid",
+  "worst_cap_face": [
+    13320,
+    37253,
+    37254
+  ],
+  "initial_worst_cap_ceiling": 4.9189024145789913e-05,
+  "diagnostics": [
+    {
+      "nodes": [
+        13306,
+        13320
+      ],
+      "axis": 0,
+      "target_cap_quality": 0.100001,
+      "volume_seed_guards": [
+        1e-12,
+        1e-12
+      ],
+      "candidate_coordinates": [
+        [
+          -0.5,
+          -0.196042100329163,
+          0.027873230431179417
+        ],
+        [
+          0.5,
+          -0.196042100329163,
+          0.027873230431179417
+        ]
+      ],
+      "candidate_minimum_cap_quality": 0.004322290735168577,
+      "candidate_minimum_volume_determinant": 2.0877515077815967e-15,
+      "positive_candidate_at_cap_target": false,
+      "checked_tangent_upper_bound": -0.0006357059753455036,
+      "fixed_neighbor_obstruction": true,
+      "weights": [
+        0.0,
+        0.0,
+        0.0,
+        0.9934982219997653,
+        0.006501778000234697,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "normalized_expansion_point": [
+        -0.05751561184986651,
+        0.0034362955224585307
+      ],
+      "scale": 0.02777777777777779,
+      "slack_optimizer_success": true,
+      "slack_optimizer_message": "Optimization terminated successfully",
+      "linear_solver_warnings": [
+        "Unrecognized options detected: {'threads': 1}. These will be passed to HiGHS verbatim."
+      ],
+      "incident_cap_triangles": [
+        [
+          13306,
+          13289,
+          37235
+        ],
+        [
+          13306,
+          13894,
+          13289
+        ],
+        [
+          13306,
+          37235,
+          37236
+        ],
+        [
+          13306,
+          37236,
+          37998
+        ],
+        [
+          13306,
+          37998,
+          13894
+        ],
+        [
+          13320,
+          13305,
+          37253
+        ],
+        [
+          13320,
+          13906,
+          13305
+        ],
+        [
+          13320,
+          37253,
+          37254
+        ],
+        [
+          13320,
+          37254,
+          38018
+        ],
+        [
+          13320,
+          38018,
+          13906
+        ]
+      ],
+      "incident_volume_tets": 12
+    }
+  ],
+  "source_mesh_unchanged": true,
+  "qualified": false,
+  "mmg_calls": [],
+  "stiffness_solve_performed": false,
+  "scope": "One worst cap face and each of at most two periodic free-vertex orbits, fixed neighbors and cap polygon; cap target plus seed orientation guards are not final tet-quality admission. No move is applied."
+}

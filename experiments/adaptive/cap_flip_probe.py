@@ -2,6 +2,7 @@
 
 import argparse
 from collections import defaultdict
+import json
 import os
 from pathlib import Path
 import shutil
@@ -75,11 +76,12 @@ def flip_pair(points, triangles, indices):
     return alternative, row
 
 
-def worker(run):
+def worker(run, source=SOURCE, maximum_blocked_faces=100):
     workflow.imports()
     from periodic import periodic_pairs
 
-    mesh = np.load(SOURCE / "mesh.npz")
+    source_row = json.loads((source / "result.json").read_text())
+    mesh = np.load(source / "mesh.npz")
     points, cells, surface = (mesh[key] for key in ("points", "tetrahedra", "surface"))
     assert len(cells) <= workflow.CAP
     assert audit(points, cells, surface)["oriented_facet_consistency_passed"]
@@ -87,7 +89,7 @@ def worker(run):
     cap_faces, triangles = caps(mesh)
     ceiling, _ = bounds(triangles)
     blocked = np.flatnonzero(ceiling < .1)
-    assert len(blocked) <= 100, "Bound the local candidate count before enumeration"
+    assert len(blocked) <= maximum_blocked_faces, "Bound the local candidate count before enumeration"
     adjacency = defaultdict(list)
     for index, face in enumerate(cap_faces):
         for first, second in ((0, 1), (1, 2), (2, 0)):
@@ -110,7 +112,7 @@ def worker(run):
             candidates.append(row)
     feasible = [row for row in candidates if row["local_target_passed"]]
     covered = {index for row in feasible for index in row["triangles"]}
-    workflow.save(run / "result.json", {"source": str(SOURCE), "case": "gyroid",
+    workflow.save(run / "result.json", {"source": str(source), "case": source_row["case"],
         "blocked_cap_faces": list(map(int, blocked)), "blocked_count": len(blocked),
         "candidate_count": len(candidates), "locally_feasible_count": len(feasible),
         "blocked_faces_with_local_alternative": len(covered & set(blocked)),
@@ -124,26 +126,32 @@ def worker(run):
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--run", type=Path, required=True)
+    parser.add_argument("--source", type=Path, default=SOURCE)
+    parser.add_argument("--maximum-blocked-faces", type=int, choices=(100, 256), default=100)
     parser.add_argument("--worker", action="store_true")
     args = parser.parse_args()
+    args.run, args.source = args.run.resolve(), args.source.resolve()
     if args.worker:
-        worker(args.run)
+        worker(args.run, args.source, args.maximum_blocked_faces)
         return
     args.run.mkdir(parents=True, exist_ok=False)
     shutil.copyfile(__file__, args.run / "driver.py")
     shutil.copyfile(workflow.HERE / "test_cap_flip_probe.py", args.run / "test_cap_flip_probe.py")
-    paths = [Path(__file__), SOURCE / "mesh.npz", SOURCE / "result.json"]
+    paths = [Path(__file__), args.source / "mesh.npz", args.source / "result.json"]
     paths.extend(workflow.HERE / name for name in ("test_cap_flip_probe.py", "cap_quality_bound.py",
         "facet_incidence_audit.py", "microgen_workflow.py", "job_parts.py", "test_job_parts.py"))
     hashes = {str(path): workflow.digest(path) for path in paths}
     workflow.save(args.run / "manifest.json", {"inputs": hashes, "memory_bytes": workflow.MEMORY,
+        "numerical_thread_policy": workflow.NUMERICAL_THREAD_POLICY,
+        "platform": sys.platform,
         "threads": 1, "worker_timeout_s": 120, "tet_cap": workflow.CAP,
-        "maximum_blocked_faces": 100, "no_mmg_or_fea": True})
+        "maximum_blocked_faces": args.maximum_blocked_faces, "no_mmg_or_fea": True})
     with Job(parts=["controls", "cap-flips"]) as job:
         for stage in ("controls", "cap-flips"):
             with worker_part(job, stage) as part:
                 arguments = (["-m", "pytest", "-q", "experiments/adaptive/test_cap_flip_probe.py", "experiments/adaptive/test_job_parts.py"]
-                    if stage == "controls" else [__file__, "--run", str(args.run), "--worker"])
+                    if stage == "controls" else [__file__, "--run", str(args.run), "--worker",
+                        "--source", str(args.source), "--maximum-blocked-faces", str(args.maximum_blocked_faces)])
                 record = workflow.bounded([sys.executable, *arguments], args.run / (stage + ".log"), part, timeout=120)
                 workflow.save(args.run / (stage + "-worker.json"), record)
                 assert record["returncode"] == 0, f"Read {stage}.log"

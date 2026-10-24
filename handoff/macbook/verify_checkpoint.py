@@ -28,17 +28,49 @@ def main():
             files += 1
             total_bytes += item["bytes"]
     checked, archived, comparisons, scores = 0, 0, 0, {}
+    seed_replays, failed_runs = [], []
     for run in sorted((workflow.HERE / "runs").glob("macbook-*")):
         if not run.is_dir() or not (run / "manifest.json").exists():
             continue
         manifest = json.loads((run / "manifest.json").read_text())
         source_ref = "2779c4a" if "numerical_thread_policy" in manifest else "2ad9895"
-        for name, expected in manifest["inputs"].items():
+        inputs = dict(manifest["inputs"])
+        if (run / "analysis-inputs.json").exists():
+            inputs.update(json.loads((run / "analysis-inputs.json").read_text()))
+        for name, expected in inputs.items():
             # Frozen Linux prefixes are resolved for reading, never rewritten on disk.
             path = Path(name.replace("/home/kmarchais/dev/", str(ROOT.parent) + "/", 1))
             path = path if path.is_absolute() else ROOT / path
-            archived += verify_hash(path, expected, run, source_ref)
+            snapshots = [candidate for candidate in run.glob("*.py")
+                if path.suffix == ".py" and workflow.digest(candidate) == expected]
+            if workflow.digest(path) != expected and snapshots:
+                archived += 1
+            else:
+                archived += verify_hash(path, expected, run, source_ref)
             checked += 1
+        if (run / "worker.json").exists() and json.loads((run / "worker.json").read_text())["returncode"] != 0:
+            failed_runs.append(run.name)
+        if (run / "summary.json").exists():
+            summary = json.loads((run / "summary.json").read_text())
+            if summary.get("sampled_field_identical"):
+                workflow.imports()
+                from cap_quality_bound import bounds, caps
+                from facet_incidence_audit import audit
+                from periodic import periodic_pairs
+                rows = summary["rows"]
+                assert rows["unmodified"]["sampled_inputs"] == rows["pretriangulated"]["sampled_inputs"]
+                for mode, row in rows.items():
+                    mesh = np.load(run / mode / "mesh.npz")
+                    points, cells, surface = (mesh[name] for name in ("points", "tetrahedra", "surface"))
+                    assert len(points) == row["nodes"] and len(cells) == row["elements"]
+                    assert audit(points, cells, surface) == row["facet_consistency"]
+                    _, triangles = caps(mesh)
+                    assert int((bounds(triangles)[0] < .1).sum()) == row["cap_faces_below_quality_gate"]
+                    _, _, periodic = periodic_pairs(points, surface)
+                    assert periodic == row["periodic"]
+                    assert row["mmg_calls"] == [] and not row["stiffness_solve_performed"]
+                    seed_replays.append({"run": run.name, "mode": mode, "nodes": len(points),
+                        "elements": len(cells), "mesh_sha256": workflow.digest(run / mode / "mesh.npz")})
         if not (run / "assessment.json").exists():
             continue
         assessment = json.loads((run / "assessment.json").read_text())
@@ -61,7 +93,8 @@ def main():
     workflow.save(output, {"passed": True, "transferred_files_checked": files,
         "transferred_bytes_checked": total_bytes, "mac_input_hashes_checked": checked,
         "sources_verified_from_frozen_driver_or_git": archived, "mixed_load_comparisons": comparisons,
-        "worst_retained_model_scores": scores, "reference_promoted": False})
+        "worst_retained_model_scores": scores, "seed_artifact_replays": seed_replays,
+        "failed_runs_preserved": failed_runs, "reference_promoted": False})
     print(f"Verified {files} transferred files, {checked} input hashes and {comparisons} full model comparisons")
 
 

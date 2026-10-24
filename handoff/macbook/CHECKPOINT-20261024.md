@@ -169,7 +169,7 @@ gain over the 1.2565145% length-only result. Stop these one-stage bisection
 recipes. No public native feature, stiffness reference, or workflow win is
 promoted from either negative result.
 
-## Verification and next work
+## Initial verification and return to comparison coverage
 
 [verify_checkpoint.py](verify_checkpoint.py) independently rechecks all
 3,509 transferred files and 1,650,689,800 bytes, 150 Mac input hashes, and
@@ -197,3 +197,59 @@ Jacobians, periodic gates, coherent facets, and node/tet caps are unchanged.
 
 The append-only decision trail is
 [macbook-continuation.tsv](../../.audit/macbook-continuation.tsv).
+
+## Spinodoid comparator work, jobs 14–20
+
+The subsequent primary continuation moves to missing actual-comparator
+coverage. Read the new opening section of
+`/Users/kmarchais/dev/meshers/experiments/adaptive/MICROGEN_RESULTS.md`
+for full recipes, gates, failures, and interpretation.
+
+The shared fixed-specimen loader now restores the exact transferred 52-mode
+coefficients before spinodoid sampling. The raw Mac FFT differs in 33 entries
+by up to 8.88e-16; the new regression is red before restoration and green
+afterward. Mode indices, threshold, and the stored fixture remain unchanged.
+
+Job 14 compares actual Microgen sampling36 extraction with five-tet
+pretriangulation. Background coordinates and scalar hashes match. The
+233,280-tet background fits the cap. Original extraction has 282 oriented
+face conflicts. Pretriangulation removes them at 49,032 nodes and 180,277
+tets, but leaves 164 analytically obstructing cap faces. Its finite reverse
+sample maximum is 0.00449448 and 148 forward projections are unresolved.
+Quality also fails. Both seeds remain rejected, with no MMG or FE.
+
+Job 15 finds a passing individual flip for only 58 of 164 blocked faces.
+Job 16 scans 2,388 unambiguous cap boundary corner instances and finds no
+acute-corner obstruction. Every blocked face has at least one cap-interior
+vertex. A planar motion diagnostic is therefore relevant, but these necessary
+checks do not establish a valid cap or volume replacement.
+
+Job 17 fails its manufactured control before production analysis, because
+`cells=2` is unsupported. The failed log and exact original test are preserved.
+Job 18 corrects the control to `cells=4`, passes derivatives, concavity,
+periodicity, and known feasible/obstructed cases, and tests the worst cap face.
+Its one free periodic orbit, nodes 13306/13320, cannot meet the cap target with
+all neighbors fixed. No move is applied, and the source mesh is unchanged.
+
+Job 19 independently verifies a cap-only supporting-plane witness with
+80-digit Decimal arithmetic. At the unchanged 0.1 gate, its residual upper
+bound is -0.00063315085191554. The second active cap triangle contains another
+free cap vertex, 13894. This does not rule out coupled cap motion or changes
+to connectivity. Do not run a whole-cap single-vertex sweep from this result.
+
+Job 20 passes 29 focused controls. The expanded verifier independently
+replays both saved seed incidence, cap bounds, and periodicity, verifies
+210 input hashes including archived failed-control sources, rehashes all
+3,509 transferred files, and reproduces all 72 earlier lattice comparisons.
+The new receipt is
+[verification-20261024-spinodoid.json](verification-20261024-spinodoid.json).
+All jobs through 20 are terminal. Job 17 remains a recorded failure.
+
+The selected next experiment is one bounded coupled planar-patch preflight:
+close the active free cap vertices and their periodic copies, then test a
+shared translation while outer curves stay fixed. Controls must verify
+the affine determinant and concave quality constraints for multiple vertices
+moving together. This tests a coupled motion identified by the checked
+witness, not another unchanged sweep. Read before any mesh edit or MMG.
+The independent geometry failure remains, so cap feasibility alone cannot
+admit this comparator. All four fixtures and the full goal remain in scope.

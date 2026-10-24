@@ -1,0 +1,47 @@
+{
+  "source": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-spinodoid-cap-plane-star-v2",
+  "source_result_sha256": "0906cdf322f498cc3a56a58e77a7777792075af072c66913ccb5459771adb253",
+  "source_mesh_sha256": "79ad9c3ce8995a8104fe46e209ffc5e980793aee6d6f3a4dd80d79e24cdc95f9",
+  "verifier_sha256": "5939393372755b300ea49862bf224e4d323484c4b6fcd6d336948cfca0b45d66",
+  "decimal_precision": 80,
+  "weights_normalized_in_decimal": true,
+  "passed": true,
+  "diagnostics": [
+    {
+      "nodes": [
+        13306,
+        13320
+      ],
+      "target_replay_upper_bound_decimal80": "-0.00063570597534547699841459173706164101504242319026572926964302533336173844665555668",
+      "gate_target": 0.1,
+      "gate_replay_upper_bound_decimal80": "-0.00063315085191554367451512336260948318261781621656950640219511896367154590015859098",
+      "checked_gate_obstruction": true,
+      "active_cap_constraints": [
+        {
+          "triangle": [
+            13306,
+            37236,
+            37998
+          ],
+          "weight": 0.9934982219997653,
+          "other_free_cap_vertices": []
+        },
+        {
+          "triangle": [
+            13306,
+            37998,
+            13894
+          ],
+          "weight": 0.006501778000234697,
+          "other_free_cap_vertices": [
+            13894
+          ]
+        }
+      ],
+      "other_free_cap_vertices_in_support": [
+        13894
+      ]
+    }
+  ],
+  "scope": "Independent cap-area and squared-edge derivatives and box support at the original 0.1 gate; fixed-neighbor periodic translation only, not coupled cap motion or interval certification"
+}

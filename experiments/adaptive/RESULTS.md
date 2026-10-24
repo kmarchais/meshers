@@ -1,5 +1,26 @@
 # Adaptive and quadratic implicit meshing: results
 
+## Fixed-spinodoid comparator preflights, 24 October 2026
+
+The shared experiment fixture loader now restores all 52 frozen Fourier
+coefficients exactly, after a regression catches Mac FFT roundoff up to
+8.88e-16. A paired actual Microgen extraction at sampling36 preserves those
+coefficients and identical sampled inputs. Five-tet preclipping removes all
+282 source face conflicts, but the coherent 180,277-tet seed still fails
+distance, quality, and retained-cap feasibility. No MMG or FE runs.
+
+Single flips cover only 58 of 164 blocked caps. Fixed polygon-corner bounds
+find no obstruction. One complete periodic cap-interior star has a checked
+fixed-neighbor obstruction, independently replayed at the original 0.1 gate
+with 80-digit arithmetic. Its active support includes another free cap vertex,
+so coupled motion is not excluded. A whole-cap single-vertex sweep is not
+selected. One closed active patch preflight is next.
+
+Twenty-nine focused controls pass. The failed initial manufactured control
+is retained. Independent replay verifies both saved seeds, 210 input hashes,
+all 3,509 transferred files, and 72 earlier lattice model comparisons.
+The four-case goal remains active. Details are in `MICROGEN_RESULTS.md`.
+
 ## Curve-priority nested lattice26 remains rejected, 24 October 2026
 
 Prioritizing actual wall/cap curve edge orbits accepts 544 of 549 preferred

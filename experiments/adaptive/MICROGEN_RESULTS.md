@@ -1,5 +1,116 @@
 # G3 Microgen workflow results, 17 October 2026
 
+## Fixed-spinodoid extraction and cap feasibility on Mac, 24 October 2026
+
+Mac jobs 14–20 investigate missing actual-comparator coverage. No MMG or FE
+solve runs in this sequence. All final mesh admission gates and the
+250,000-node/tet caps remain unchanged.
+
+### Exact field across FFT backends
+
+The Mac FFT constructor differs from the frozen G3 realization in 33 of
+260 coefficient entries, by at most 8.88e-16. The new exact-coefficient
+regression fails before correction. `microgen_workflow.specimen` now restores
+the authoritative 52-mode amplitudes and phases before any spinodoid grid
+sampling. It first checks identical mode indices and threshold and rejects
+differences beyond platform roundoff. The source fixture is
+`runs/g3-spinodoid-compiled32-v1/fourier-coefficients.json`, unchanged.
+Its hash and raw-constructor difference are recorded per new seed.
+
+Three focused controls verify exact coefficients, rejection of a changed
+mode set, and unchanged field values when sampling resolution changes.
+The constructor FFT remains 16. This loads the specified fixed specimen;
+it does not regenerate a different realization or alter the stored samples.
+
+### Paired extraction at one sampling resolution
+
+Job 14 compares original Microgen extraction with explicit five-tet
+background triangulation before scalar clipping, at 36 sampling cells.
+The 233,280 background tets fit the existing cap. Ten queued controls pass.
+All 52 coefficients, background coordinates and scalar arrays match between
+arms. Field values at 4,096 probes remain bitwise unchanged within each arm.
+Both call the actual `Spinodoid.generate_volume_mesh` implementation.
+The frozen-field load and non-default sampling are explicitly labeled.
+
+Original extraction has 38,712 nodes and 182,287 tets, reproducing the old
+seed36 counts and 122 obstructing cap triangles. It also has 282 oriented
+shared-face conflicts. Pretriangulation produces 49,032 nodes and 180,277
+tets with zero such conflicts and matching periodic cap triangles. Its
+164 obstructing caps have minimum adjacent-tet quality ceiling 0.0000491890.
+Actual minimum corner quality is 1.40805e-9. Both arms remain rejected.
+
+The coherent arm's reverse sampled distance is 0.00449448, above 0.002.
+It also has 148 unresolved forward projections; its raw forward maximum is
+not promoted as a reliable complete distance bound. Absolute volume error
+is 0.00528745%. No MMG follows on analytically blocked caps, and no stiffness
+diagnostic or comparison timing is inferred.
+
+### Necessary planar cap checks
+
+Job 15 tests 348 individual planar alternatives incident on the 164 blocked
+faces. Only 58 blocked faces have a passing single-edge alternative; 106
+do not. Alternatives are not applied or claimed jointly compatible.
+
+Job 16 scans all 2,388 cap-plane boundary corner instances. Each planar
+boundary link is unambiguous, and none has the acute-corner obstruction.
+For a fixed convex wedge of angle `a <= 60 degrees`, every contained
+triangle has quality at most `sqrt(3)*sin(a)/(2-cos(a))`. Equal adjacent
+lengths attain this bound. Combining it with the existing retained-face
+tet bound gives a necessary fixed-polygon condition, not a sufficient
+triangulation theorem. Five controls cover actual triangle/tet quality,
+orientation, reflex corners, and 80-digit arithmetic.
+
+Every blocked face has at least one cap-interior vertex. The per-plane
+counts by one or two free vertices are 24/5 on each x face, 24/6 on each
+y face, and 19/4 on each z face. No blocked face has zero free cap-interior
+vertices. This motivates a planar-star test rather than another fixed-volume
+interior relocation sweep.
+
+### One periodic cap-interior star
+
+Job 17 stops in its manufactured control because it incorrectly uses
+`cells=2`; the native API requires at least four. No production diagnostic
+runs. Its failed log, input hashes, and original control source remain.
+Job 18 uses the corrected four-cell control, passes analytic-gradient,
+concavity, periodic, feasible and obstructed-star checks, then tests the
+worst real cap face, nodes 13320/37253/37254.
+
+That face has one free cap-interior orbit, nodes 13306 and 13320. The test
+allows one common planar displacement, fixes all neighbors and the outer
+cap polygon, and checks all incident cap triangles plus positive volume
+seed guards. These guards preserve a valid seed; they are not the final
+tet-quality admission gate. No proposed move is applied.
+
+The complete star cannot attain the cap target with fixed neighbors. Its
+supporting-plane certificate uses only two cap triangles. Job 19 independently
+replays their area and squared-edge derivatives and box support using
+80-digit Decimal arithmetic and normalized weights. At the original 0.1
+gate, the residual upper bound is -0.00063315085191554. This is a checked
+fixed-neighbor floating-point witness, not interval certification.
+
+The second active triangle includes another free cap vertex, 13894. The
+witness therefore does not rule out coupled cap motion or retriangulation.
+Do not apply a whole-cap single-vertex sweep from this failed local star.
+The selected next preflight closes the active free vertices into one bounded
+periodic patch and tests a shared planar translation, keeping curves fixed.
+Read that preflight before any mesh edit, MMG, or FE. Geometry rejection also
+remains unresolved, independently of cap quality.
+
+Job 20 passes 29 focused extraction, fixture, corner, planar-star, witness,
+progress, and resource controls. Independent checkpoint verification rechecks
+both saved seed artifacts, 210 input hashes, all 3,509 transferred files,
+and the previous 72 full lattice model comparisons. The failed job 17 is
+explicitly retained in the receipt. Neither new spinodoid seed is an admitted
+actual comparator, and the four-case objective remains unachieved.
+
+Records are `runs/macbook-spinodoid-preclip36-five-v1`,
+`runs/macbook-spinodoid-cap-flip-preflight-v1`,
+`runs/macbook-spinodoid-cap-corner-bounds-v1`,
+`runs/macbook-spinodoid-cap-plane-star-v1`,
+`runs/macbook-spinodoid-cap-plane-star-v2`,
+`runs/macbook-spinodoid-cap-plane-witness-v1`, and
+`runs/macbook-spinodoid-preflight-controls-v1`.
+
 ## Valid-source interior repair remains incomplete, 20 October 2026
 
 Classification 364 confirms all 104 bad cells have free interior vertices.

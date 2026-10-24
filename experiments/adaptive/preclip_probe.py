@@ -63,29 +63,54 @@ def triangulate_background(grid, cap=workflow.CAP, tetra_per_cell=6):
     return converted
 
 
-def worker(run, mode, tetra_per_cell):
+def worker(run, mode, tetra_per_cell, case_name="gyroid", resolution=31):
     _, _, _, microgen, pv, _ = workflow.imports()
     from microgen.shape import surface_functions
     from periodic import periodic_pairs
 
     started = time.monotonic()
-    shape = microgen.Tpms(surface_functions.gyroid, offset=1.1, resolution=31)
+    field_verification = None
+    if case_name == "spinodoid":
+        case, shape, _ = workflow.specimen(case_name)
+        frozen = json.loads((run / "fourier-coefficients.json").read_text())
+        coefficients = np.column_stack((shape._frep.modes / shape._frep.cell_size,
+            shape._frep.amplitudes, shape._frep.phases))
+        np.testing.assert_array_equal(coefficients, frozen["coefficients"])
+        queries = np.random.default_rng(20261018).uniform(-.5, .5, (4096, 3))
+        values_before = case.function(*queries.T)
+        shape.resolution = resolution
+        assert "grid_solid" not in shape.__dict__
+    else:
+        assert case_name == "gyroid"
+        shape = microgen.Tpms(surface_functions.gyroid, offset=1.1, resolution=resolution)
     sampled = sampled_inputs(shape.grid)
     background_cells = shape.grid.n_cells
-    assert background_cells <= workflow.CAP and shape._grid_sheet is None
+    assert background_cells <= workflow.CAP
+    if case_name == "gyroid":
+        assert shape._grid_sheet is None
     if mode == "pretriangulated":
         shape.grid = triangulate_background(shape.grid, tetra_per_cell=tetra_per_cell)
         assert sampled_inputs(shape.grid) == sampled
     background_tets = shape.grid.n_cells if mode == "pretriangulated" else None
-    grid = shape.generate_volume_mesh(type_part="sheet").triangulate()
-    row = {"case": "gyroid", "resolution": 31, "offset": 1.1, "mode": mode,
+    grid = shape.generate_volume_mesh(**({"type_part": "sheet"} if case_name == "gyroid" else {})).triangulate()
+    if case_name == "spinodoid":
+        grid.translate((-.5,) * 3, inplace=True)
+        np.testing.assert_array_equal(values_before, case.function(*queries.T))
+        np.testing.assert_array_equal(np.column_stack((shape._frep.modes / shape._frep.cell_size,
+            shape._frep.amplitudes, shape._frep.phases)), frozen["coefficients"])
+        field_verification = {"fft_resolution": 16, "sampling_resolution_cells": resolution,
+            "fourier_modes": len(coefficients), "unchanged_evaluation_points": len(queries),
+            "coefficients_unchanged": True, "field_values_bitwise_unchanged": True,
+            "frozen_field_provenance": shape._fixed_field_provenance}
+    row = {"case": case_name, "resolution": resolution, "offset": 1.1 if case_name == "gyroid" else 0,
+        "mode": mode, "field_verification": field_verification,
         "microgen_generate_volume_mesh_called": True, "mmg_calls": [], "qualified": False,
         "background_cells_original": background_cells, "preclipped_background_tetrahedra": background_tets,
         "background_tetrahedra_per_cell": tetra_per_cell if mode == "pretriangulated" else None,
         "sampled_inputs": sampled, "sample_values_and_coordinates_unchanged": True,
         "nodes": grid.n_points, "elements": grid.n_cells, "generation_s": time.monotonic() - started,
-        "route": "microgen-vtk-unmodified-extraction-at31" if mode == "unmodified" else "microgen-vtk-explicit-preclipping-background-triangulation-at31",
-        "default_microgen_pipeline": mode == "unmodified", "default_resolution": False,
+        "route": ("microgen-vtk-original-extraction" if mode == "unmodified" else "microgen-vtk-explicit-preclipping-background-triangulation") + f"-at{resolution}",
+        "default_microgen_pipeline": mode == "unmodified" and case_name == "gyroid", "default_resolution": False,
         "status": "seed-element-cap", "stiffness_solve_performed": False}
     output = run / mode
     if grid.n_cells <= workflow.CAP:
@@ -111,13 +136,13 @@ def worker(run, mode, tetra_per_cell):
         if row["zero_volume_tets"]:
             row["status"] = "degenerate-seed"
         else:
-            row["geometry"] = workflow.geometry(output, "gyroid", points, cells, surface)
+            row["geometry"] = workflow.geometry(output, case_name, points, cells, surface)
             row["status"] = "seed-audited-no-mmg"
         row["necessary_fixed_cap_feasibility"] = bool(row["facet_consistency"]["oriented_facet_consistency_passed"]
             and not row["cap_faces_below_quality_gate"] and not row["nonfinite_cap_ceilings"] and "periodic" in row
             and not row["zero_volume_tets"])
     row.update(total_diagnostic_s=time.monotonic() - started,
-        scope="Fixed analytic Gyroid and identical sampled field; one extraction-order variant, not default resolution or a Meshers seed; seed checks do not establish an admitted MMG or matched-accuracy workflow")
+        scope="Fixed analytic specimen and identical sampled field; one extraction-order variant, not default resolution or a Meshers seed; seed checks do not establish an admitted MMG or matched-accuracy workflow")
     workflow.save(output / "result.json", row)
 
 
@@ -126,9 +151,12 @@ def main():
     parser.add_argument("--run", required=True, type=Path)
     parser.add_argument("--worker", choices=("unmodified", "pretriangulated"))
     parser.add_argument("--background-tets", type=int, choices=(5, 6), default=6)
+    parser.add_argument("--case", choices=("gyroid", "spinodoid"), default="gyroid")
+    parser.add_argument("--resolution", type=int, default=31)
     args = parser.parse_args()
+    args.run = args.run.resolve()
     if args.worker:
-        worker(args.run, args.worker, args.background_tets)
+        worker(args.run, args.worker, args.background_tets, args.case, args.resolution)
         return
     args.run.mkdir(parents=True, exist_ok=False)
     shutil.copyfile(__file__, args.run / "driver.py")
@@ -136,19 +164,28 @@ def main():
     source = workflow.HERE / "runs/g3-microgen-defaults-v4"
     paths = [Path(__file__)]
     paths.extend(workflow.HERE / name for name in ("test_preclip_probe.py", "microgen_workflow.py",
-        "facet_incidence_audit.py", "cap_quality_bound.py", "job_parts.py", "test_job_parts.py"))
+        "facet_incidence_audit.py", "cap_quality_bound.py", "job_parts.py", "test_job_parts.py", "test_fixed_spinodoid.py"))
     import microgen.shape.tpms
     paths.append(Path(microgen.shape.tpms.__file__))
+    if args.case == "spinodoid":
+        for module in ("microgen.shape.spinodoid", "microgen.shape._frep_grf"):
+            paths.append(Path(importlib.import_module(module).__file__))
+        coefficients = workflow.HERE / "runs/g3-spinodoid-compiled32-v1/fourier-coefficients.json"
+        paths.append(coefficients)
+        shutil.copyfile(coefficients, args.run / "fourier-coefficients.json")
     for mode in ("unmodified", "pretriangulated"):
         output = args.run / mode
         output.mkdir()
         for suffix in ("-samples.npz", "-specimen.json"):
-            path = source / ("gyroid" + suffix)
+            path = source / (args.case + suffix)
             paths.append(path)
             shutil.copyfile(path, output / path.name)
     hashes = {str(path): workflow.digest(path) for path in paths}
     workflow.save(args.run / "manifest.json", {"inputs": hashes, "memory_bytes": workflow.MEMORY,
-        "threads": 1, "worker_timeout_s": 120, "resolution": 31, "offset": 1.1,
+        "threads": 1, "numerical_thread_policy": workflow.NUMERICAL_THREAD_POLICY,
+        "platform": sys.platform, "memory_enforcement": "rlimit-as-and-process-tree-rss" if sys.platform == "linux" else "process-tree-rss-watchdog",
+        "worker_timeout_s": 120, "case": args.case, "resolution": args.resolution,
+        "offset": 1.1 if args.case == "gyroid" else 0,
         "background_tet_cap": workflow.CAP, "material_tet_cap": workflow.CAP,
         "background_tetrahedra_per_cell": args.background_tets,
         "no_mmg_or_fea": True, "one_extraction_order_variant": True,
@@ -157,9 +194,10 @@ def main():
     with Job(parts=["controls", "unmodified", "pretriangulated"]) as job:
         for stage in ("controls", "unmodified", "pretriangulated"):
             with worker_part(job, stage) as part:
-                arguments = (["-m", "pytest", "-q", "experiments/adaptive/test_preclip_probe.py", "experiments/adaptive/test_job_parts.py"]
+                arguments = (["-m", "pytest", "-q", "experiments/adaptive/test_preclip_probe.py", "experiments/adaptive/test_job_parts.py", "experiments/adaptive/test_fixed_spinodoid.py"]
                     if stage == "controls" else [__file__, "--run", str(args.run), "--worker", stage,
-                        "--background-tets", str(args.background_tets)])
+                        "--background-tets", str(args.background_tets), "--case", args.case,
+                        "--resolution", str(args.resolution)])
                 record = workflow.bounded([sys.executable, *arguments], args.run / (stage + ".log"), part, timeout=120)
                 workflow.save(args.run / (stage + "-worker.json"), record)
                 assert record["returncode"] == 0, f"Read {stage}.log"
