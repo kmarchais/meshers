@@ -44,6 +44,10 @@ def configs(case, strengthened=False):
         if case=='smooth-lattice':
             uniform=dict(name='meshers-curved-uniform25',arm='meshers',cells=25,order=2,adapt=False,tolerance=1.,min_length=.01,adapt_tolerance=.002)
             points.extend((uniform,dict(uniform,name='meshers-curved-uniform25-opt4',optimization_passes=4)))
+        if case in ('spinodoid','smooth-lattice'):
+            points.append(dict(name='meshers-tet4-historical32',arm='meshers',cells=32,
+                order=1,adapt=True,tolerance=.002,min_length=.002,adapt_tolerance=.002,
+                lattice_field='original' if case=='smooth-lattice' else None))
     return points
 
 
@@ -137,9 +141,11 @@ def worker(run,case_name,config):
             field=spin_field(shape,meshers,np) if case_name=='spinodoid' else case.function
             if case_name=='smooth-lattice':
                 from gradient_tie_probe import symmetric_lattice
-                def field(x,y,z):return np.minimum(symmetric_lattice(x,y,z),.02)
+                lattice=case.function if config.get('lattice_field')=='original' else symmetric_lattice
+                def field(x,y,z):return np.minimum(lattice(x,y,z),.02)
                 row['positive_void_clamp']=.02
-                row['field_representation']='Value-identical symmetric min; fixed original cubic smooth-union order'
+                row['field_representation']=('Original fixed cubic smooth-union order' if config.get('lattice_field')=='original'
+                    else 'Value-identical symmetric min; fixed original cubic smooth-union order')
             mesh=meshers.generate(field,bounds=w.BOUNDS,cells=config['cells'],band=case.band,
                 periodic=(True,)*3,threads=1,optimize_passes=config.get('optimization_passes',1),minimum_quality=.1,max_tetrahedra=w.CAP,
                 order=config['order'],geometry_tolerance=config['tolerance'],adapt=config['adapt'],
@@ -185,6 +191,8 @@ def main():
     parser.add_argument('--strengthened',action='store_true')
     parser.add_argument('--warmups',type=int,default=0)
     parser.add_argument('--select',help='Comma-separated declared configuration names')
+    parser.add_argument('--require-admitted',action='store_true',
+        help='Fail after saving evidence if any selected mesh misses admission')
     args=parser.parse_args()
     if args.worker is not None:return worker(args.run,args.case,args.worker)
     args.run.mkdir(parents=True,exist_ok=False)
@@ -242,6 +250,8 @@ def main():
         actual_default_and_explicit_variants_separate=True,new_equilibrium_solve=False))
     signal.alarm(0)
     assert all(w.digest(Path(p))==h for p,h in hashes.items())
+    if args.require_admitted:
+        assert all(row.get('qualified',False) for row in rows),'Mesh admission failed; read summary.json'
 
 
 if __name__=='__main__':main()

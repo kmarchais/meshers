@@ -1,5 +1,17 @@
 # Adaptive and quadratic implicit meshing: results
 
+## Recovered linear coverage, 24 October 2026
+
+The resumed failure investigation corrects the native admission gap reported
+below. Historical adaptive32 recipes pass three fresh generations each on
+the Mac. Lattice has 218,239 Tet4, distance 0.001768701 and minimum quality
+0.171902. Spinodoid has 72,528 Tet4, distance 0.001850419 and minimum quality
+0.232844. Jobs 118–119 require admission, and independent job 120 reproduces
+all four saved meshes' geometry, quality, facets and periodicity. No native
+patch, threshold relaxation or reference promotion occurred. All four fixed
+specimens have verified linear routes; arbitrary-input coverage remains open.
+See [Tet4 coverage correction](TET4_COVERAGE.md).
+
 ## Four-case mesh-generation comparison, 24 October 2026
 
 Kevin explicitly prioritized generation speed, quality and geometry fidelity

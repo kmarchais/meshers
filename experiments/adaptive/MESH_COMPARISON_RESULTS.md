@@ -1,5 +1,13 @@
 # Mesh-generation comparison, 24 October 2026
 
+Coverage correction after the failure investigation: the tested Tet4 settings
+below omitted two historical admitted recipes. Fresh Mac reproduction admits
+both lattice and spinodoid in three runs each. The original tables and failures
+remain evidence for their exact settings, but they do not establish missing
+native Tet4 capability on either specimen. See [recovered Tet4 coverage](TET4_COVERAGE.md).
+The additional runs are acceptance checks, separate from the five-repeat timing
+protocol below. They introduce no new speedup claim.
+
 Fresh M4 Mac measurements, one excluded warmup and five measured repetitions per setting. Meshers and the numerical libraries use one configured thread; VTK uses its sequential backend. The unit-cell side length is 1. Configuration order alternates between repetitions. No FE solve time is included. Ratios below are ratios of median generation times.
 
 Tested packages: Meshers 0.1.0 native experimental build, Microgen 2.0.0b1, mmgpy 0.17.1, NumPy 2.5.4 and VTK 9.7.1. Both the Meshers library and MMG executable are native arm64. The manifests pin the actual source and executable hashes.
@@ -18,7 +26,7 @@ Generation includes fresh specimen/field preparation, native compilation where n
 
 Every timed generator runs in a bounded worker with 8 GiB RSS, a 300-second timeout and 250,000 node/tet caps, through the shared one-worker queue. Mesh admission is sampled distance ≤ 0.002, absolute relative volume error ≤ 1%, minimum corner quality ≥ 0.1, positive sampled Jacobians, coherent facets and periodic nodes/caps. The same box-constrained observer is used for both arms.
 
-Internal Meshers geometry_tolerance=1.0 follows the documented recipes; the independently checked output gate remains 0.002. Native adaptation tolerance is a separate parameter. This prevents an internal parameter name from being mistaken for the measured output error.
+The original timed Meshers settings use geometry_tolerance=1.0; the independently checked output gate remains 0.002. Native adaptation tolerance is a separate parameter. The recovered historical Tet4 routes instead use geometry_tolerance=0.002 and adapt_tolerance=0.002. The internal geometry tolerance also constrains surface relocation, so loosening it is not an equivalent recipe even when the external admission gate is unchanged.
 
 Corner quality is the common normalized tetrahedron metric. Higher is better. Curved Jacobian positivity is checked separately and is sampled, not globally certified. Surface distances are sampled; forward feasible-foot distances are conservative observations, not certified closest-point or Hausdorff bounds.
 

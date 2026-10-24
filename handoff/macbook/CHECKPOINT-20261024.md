@@ -1,5 +1,16 @@
 # Native MacBook continuation, 24 October 2026
 
+Latest continuation after the interruption prioritizes failures before
+optimization. Jobs 115–121 recover omitted historical Tet4 admission routes
+for lattice and spinodoid. Each passes three fresh Mac generations, four
+saved acceptance meshes pass independent replay, and five focused controls
+pass. The known rejected uniform lattice makes the new `--require-admitted`
+command exit 1 while saving its evidence. This expected failed job must not
+be restarted automatically. No native patch or gate changed. All four fixed
+specimens have admitted linear routes, but general input coverage and the
+full objective remain open. See
+[Tet4 coverage correction](../../experiments/adaptive/TET4_COVERAGE.md).
+
 This MacBook session owns primary Meshers continuation on
 `handoff/g3-microgen-20261017`, starting at `0b24b564`.
 The user explicitly resumed the four-case objective after the recorded pause. It remains unachieved. G3 job 476 is complete

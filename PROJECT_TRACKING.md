@@ -1,5 +1,15 @@
 # Meshers project tracking
 
+Current priority is failure coverage, at Kevin's request, before optimization.
+The resumed session recovered two omitted historical Tet4 recipes. Lattice
+and spinodoid each pass three fresh native Mac generations, including two
+required-admission runs and independent replay. All four fixed specimens
+therefore have verified Tet4 routes. No native code or gate changed.
+See [Tet4 coverage correction](experiments/adaptive/TET4_COVERAGE.md).
+This corrects the missing-native-admission assessment below. General input
+coverage, admitted actual Gyroid/spinodoid comparators and lattice reference
+convergence remain unresolved. The full goal is unachieved.
+
 The mesh-only comparison is complete across all four fixed cases. See
 [Mesh comparison results](/Users/kmarchais/dev/meshers/experiments/adaptive/MESH_COMPARISON_RESULTS.md).
 Matched Tet10 shows 45.31 times faster generation on Schwarz with 4.97 times

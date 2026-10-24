@@ -1,5 +1,21 @@
 # Adaptive implicit meshing: plan and status
 
+## Failure coverage after interruption, 24 October 2026
+
+Kevin prioritizes treating failures before optimization. Jobs 115–120 reproduce
+the lattice Tet4 failure, recover the historical lattice/spinodoid Tet4 routes,
+and independently replay four fresh acceptance meshes. Both routes pass three
+fresh generations under unchanged gates and budgets. The recent mesh-only
+selection omitted these known routes; this is a benchmark coverage correction,
+not a native mesher fix. See [Tet4 coverage](TET4_COVERAGE.md).
+
+Keep all four fixed specimens in coverage checks. Do not repeat speculative
+sizing sweeps or start FE solves. Before another native change, reproduce a
+specific remaining input failure and distinguish the public field contract
+from missing meshing capability. Raw lattice scalar periodicity and true crease
+handling remain limits; four successful fixtures do not prove arbitrary input
+support. Keep the older rejected recipes rejected.
+
 ## Four-case mesh-generation comparison, 24 October 2026
 
 Kevin explicitly prioritized generation speed, quality and geometry fidelity
