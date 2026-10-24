@@ -1,0 +1,66 @@
+{
+  "passed": true,
+  "root": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/g3-lattice-cubic-parent23-fields-v1",
+  "nested": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-lattice-nested23-level2-v1",
+  "cubic": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/g3-lattice-cubic23-reference-v1",
+  "cubic_mesh": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/g3-lattice-cubic23-assembly-memory-v1/mesh.npz",
+  "frozen_npz_inputs_verified": 8,
+  "nested_nodes": 218135,
+  "nested_tets": 141144,
+  "cubic_nodes": 218508,
+  "cubic_tets": 43844,
+  "first_level_field_reproduction": {
+    "points_per_element": 12,
+    "elements_checked": 76947,
+    "maximum_geometry_error": 2.7755575615628914e-16,
+    "maximum_field_error": 3.3306690738754696e-16
+  },
+  "second_level_field_reproduction": {
+    "points_per_element": 12,
+    "elements_checked": 141144,
+    "maximum_geometry_error": 2.7755575615628914e-16,
+    "maximum_field_error": 3.3306690738754696e-16
+  },
+  "maximum_composed_geometry_error": 1.6653345369377348e-16,
+  "maximum_cubic_geometry_error": 1.6653345369377348e-16,
+  "periodic": {
+    "nested": {
+      "maximum_six_load_jump": 0.0,
+      "periodic_pair_counts": [
+        970,
+        938,
+        952
+      ],
+      "periodic_coordinate_errors": [
+        5.551115123125783e-17,
+        1.1102230246251565e-16,
+        1.1102230246251565e-16
+      ],
+      "periodic_pair_tolerance": 1e-10,
+      "periodic_equivalence_classes": 215344,
+      "periodic_triangles_match": true
+    },
+    "cubic": {
+      "maximum_six_load_jump": 2.220446049250313e-16,
+      "periodic_pair_counts": [
+        772,
+        772,
+        772
+      ],
+      "periodic_coordinate_errors": [
+        2.220446049250313e-16,
+        2.220446049250313e-16,
+        2.220446049250313e-16
+      ],
+      "periodic_pair_tolerance": 1e-10,
+      "periodic_equivalence_classes": 216269,
+      "periodic_triangles_match": true
+    }
+  },
+  "composed_maps_sha256": "775735995565df350958f3c104106e26fdca00795170e2264d33daae328501cd",
+  "unisolvent_geometry_checks": "All ten Tet10 child nodes and all twenty cubic parent nodes; affine child maps preserve polynomial degrees",
+  "source_meshes_and_fields_unchanged": true,
+  "new_equilibrium_solve": false,
+  "reference_promoted": false,
+  "scope": "Shared physical-domain and field-provenance preflight; different equilibrium fields are not asserted equal or combined into a new reference."
+}

@@ -1,5 +1,13 @@
 # Meshers project tracking
 
+The latest lattice reference diagnostic proves that saved nested and cubic
+fields share the original parent23 physical domain, then measures a resolved
+0.2593816% trial-energy gain from their six periodic difference fields.
+Independent constrained-basis replay passes, but the trial still misses the
+24-model target at 1.899837%. No reference or native candidate is promoted.
+Next is one quadrature/resource preflight for the coupled space, before any
+new equilibrium solve. See the current Mac checkpoint for all four cases.
+
 Five fresh Mac Schwarz pairs now pass the supplementary 0.1% full-tensor
 target, with one excluded warmup and alternating arm order. Median charged
 workflow time is 131.85894 seconds for modified actual Microgen and 19.14923

@@ -414,3 +414,61 @@ The complete checkpoint receipt is
 [verification-20261024-schwarz-repeated.json](verification-20261024-schwarz-repeated.json).
 Jobs through 36 are terminal. Job 34 remains a recorded verifier failure.
 No successor is queued, and no reference is promoted. The full goal is active.
+
+## Shared-domain lattice field combination, 24 October 2026
+
+Job 37 proves that the saved second nested Tet10 level and cubic23 fields
+use the same original curved parent23 physical domain. Both solve-to-mesh
+provenance links and eight transferred NPZ hashes pass. All ten child Tet10
+nodes reproduce the composed quadratic map, and all twenty cubic nodes
+reproduce the original quadratic geometry, within 1.67e-16. Reference-volume
+fractions sum to one for every original parent. The two prolongation checks
+cover all 76,947 and 141,144 children, reproducing fields within 3.34e-16.
+Periodic caps/nodes and all six affine field jumps pass.
+
+The nested mesh has 218,135 nodes and 141,144 tets; the cubic mesh has
+218,508 nodes and 43,844 tets. Neither mesh, physical geometry, field array,
+fixture, quality threshold or count limit changes. The original cubic mesh
+is read from its hash-identical prepared directory, not regenerated.
+
+Job 38 integrates all 144 cross terms between the twelve saved load fields.
+It optimizes six global periodic cubic-minus-nested difference fields. Source
+coefficient arrays remain immutable; mode weights vary, without independent
+nodal re-equilibration. Two controls check exact mixed polynomial integrals
+under nonidentity child maps and cancellation of manufactured opposing errors.
+
+| Positive rule | Maximum relative trial-energy reduction | Direct energy-identity error |
+|---|---:|---:|
+| 125 points | 0.259381777% | 1.31e-16 |
+| 216 points | 0.259381631% | 1.98e-16 |
+
+The gain-matrix rule change is 6.71442e-7 relative, below the existing 1%
+precision gate. The gain exceeds the existing 0.05% signal screen. Own-field
+energy differences from solved tensors stay below 7.69e-6; minimum sampled
+Jacobian is 4.94816e-7. The worker takes 90.98 seconds at 0.472 GiB, under
+its 600-second timeout and unchanged 8 GiB watchdog. These are diagnostic
+costs, not live meshing-workflow timings.
+
+Job 39 independently solves the 18-by-18 constrained-basis system instead
+of reusing the six-mode formula. Both rule results reproduce, with saddle
+residual below 1.44e-16. Every original lattice model is retained. Trial
+worst disagreement is 1.89983697% across all 24, still failing 1%. This is
+not a new equilibrium tensor, native candidate, reference or continuum bound.
+
+The resolved gain justifies one coupled-space feasibility preflight. First
+check a consistently assembled quadrature rule against the positive-rule
+screen, then measure coupling storage and reduced assembly under the existing
+8 GiB and 250,000-node/tet caps. Record the six extra scalar mode unknowns
+explicitly. Do not apply AMG blindly to globally dense mode rows. No full
+coupled solve follows before those checks pass. This uses already solved
+spaces, with no higher degree, offset or speculative sizing sweep.
+Gyroid and spinodoid comparator coverage remain open; the repeated Mac
+Schwarz result stands. The full four-fixture objective remains active.
+
+Records are `runs/macbook-lattice-hp-shared-domain-v1`,
+`runs/macbook-lattice-hp-cross-energy-v1` and
+`runs/macbook-lattice-hp-cross-assessment-v1`.
+The provenance receipt is
+[verification-20261024-hp.json](verification-20261024-hp.json).
+All jobs through 40 are terminal. No successor is queued. Earlier selected-next
+instructions above are historical. Keep the full goal active.
