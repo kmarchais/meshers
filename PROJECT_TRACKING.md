@@ -1,6 +1,13 @@
 # Meshers project tracking
 
 
+Paused at the user's request after job90 finished successfully. No successor
+is queued. The parent25 coupling/rule preflight passes; reduced assembly,
+AMG setup and auxiliary solves have not run. Resume only on explicit user
+instruction, beginning with the pause section in `experiments/adaptive/PLAN.md`
+and `handoff/macbook/pause-20261024.json`. The four-case goal is unachieved.
+
+
 Parent25's fixed-domain six-mode h/p trial reduces energy by 0.374103%, but
 still misses all-24-model accuracy at 1.859718%. Both positive rules agree;
 no reference or native candidate is promoted. Most trial gain lies near the

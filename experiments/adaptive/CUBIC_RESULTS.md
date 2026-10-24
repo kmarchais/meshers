@@ -1,5 +1,33 @@
 # Reference-only cubic enrichment on G3
 
+## User-requested pause after coupling preflight90, 24 October 2026
+
+The user requested stopping after the current job. Job90 is terminal success,
+78.101 seconds at 0.50165 GiB. No successor is queued. The goal is paused,
+not achieved. Resume only on explicit user instruction.
+
+The parent25 15-point coupling preflight passes. Its mode Gram and gain differ
+from the positive216 rule by 0.0265102% and 0.0288212% respectively, below the
+unchanged 1% consistency gate. Virtual-work error is 6.66e-16 and all six mode
+Gram eigenvalues are positive. The saved coupling has 749,994 by six entries,
+35,999,712 bytes. Four focused controls pass before submission; three cross-
+energy controls also pass inside the worker. Saved coupling algebra, force
+balance and exact input hashes were rechecked directly after completion.
+
+This is a force/rule preflight only. No reduced matrix assembly, AMG setup,
+auxiliary solve, reference promotion or native-candidate promotion follows.
+A further full checkpoint replay was not queued after the stop request.
+The prior full replay89 remains the last complete evidence audit. Receipt:
+`handoff/macbook/pause-20261024.json`.
+
+On explicit resume, first read job90's saved result and source metadata, then
+inspect one bounded reduced-assembly memory preflight using the existing
+`hp_coupled_preflight.py --parent25 --assembly` route. Read it before choosing
+AMG setup or a solve. Do not restart completed jobs or run older next-action
+instructions automatically. All four cases and every gate remain in scope.
+Schwarz's five modified-actual-route paired wins stand; Gyroid/spinodoid actual
+comparators and lattice native accuracy/reference convergence remain unresolved.
+
 ## Parent25 saved h/p trial resolves a surface signal, 24 October 2026
 
 The exact-domain parent25 trial passes positive quadrature checks, but worst

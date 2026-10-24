@@ -35,6 +35,7 @@ def inherited_inputs(source):
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--source", type=Path, required=True)
+    parser.add_argument("--parent25", action="store_true", help="Use the qualified parent25 saved-field trial and exact source meshes")
     parser.add_argument("--output", type=Path, required=True)
     parser.add_argument("--assembly", type=Path, help="Read a passed consistent-rule result and measure reduced assembly")
     parser.add_argument("--amg-setup-only", action="store_true")
@@ -47,11 +48,26 @@ def main():
     from hp_cross_energy import integrate, combine
 
     report = json.loads((args.source / "result.json").read_text())
-    assert report["precision_passed"] and report["signal_passed"]
-    shared = Path(report["preflight"])
+    nested_source, cubic_source, cubic_mesh = SECOND_SOLVE, CUBIC_SOLVE, CUBIC
+    if args.parent25:
+        from hp_parent25_probe import PREPARED, H_SOLVE, P_MESH, P_SOLVE
+        assert report["passed"] and not report["new_equilibrium_solve"] and not report["reference_promoted"]
+        assert report["gain_rule_relative_change"] <= .01
+        assert report["rules"][-1]["maximum_relative_gain"] >= .0005
+        benchmark = json.loads((Path(report["benchmark"]) / "result.json").read_text())
+        preflight = json.loads((Path(benchmark["preflight"]) / "result.json").read_text())
+        assert benchmark["passed"] and preflight["passed"] and preflight["parent25_shared_domain_preflight"]
+        assert preflight["prepared"] == str(PREPARED) and preflight["nested"] == str(H_SOLVE)
+        assert preflight["cubic_mesh"] == str(P_MESH) and preflight["cubic_solve"] == str(P_SOLVE)
+        nested_source, cubic_source, cubic_mesh, shared = H_SOLVE, P_SOLVE, P_MESH, PREPARED
+    else:
+        assert report["precision_passed"] and report["signal_passed"]
+        shared = Path(report["preflight"])
     paths = [Path(__file__), workflow.HERE / "hp_cross_energy.py", workflow.HERE / "test_hp_cross_energy.py",
         workflow.HERE / "stress_recovery.py", workflow.HERE / "capture_reference_system.py",
         args.source / "result.json", args.source / "analysis-inputs.json"]
+    if args.parent25:
+        paths.append(workflow.HERE / "hp_parent25_probe.py")
     inputs = inherited_inputs(args.source)
     if args.assembly:
         paths.extend((args.assembly / "result.json", args.assembly / "coupling.npz", args.assembly / "analysis-inputs.json"))
@@ -65,15 +81,15 @@ def main():
     shutil.copyfile(__file__, args.output.parent / "analysis-driver.py")
     shutil.copyfile(workflow.HERE / "hp_cross_energy.py", args.output.parent / "hp_cross_energy.py")
     shutil.copyfile(workflow.HERE / "test_hp_cross_energy.py", args.output.parent / "test_hp_cross_energy.py")
-    mesh = np.load(SECOND_SOLVE / "mesh.npz")
+    mesh = np.load(nested_source / "mesh.npz")
     points, cells = mesh["points"], mesh["tetrahedra"]
     assert len(points) <= 250000 and len(cells) <= workflow.CAP
     if not args.assembly:
         subprocess.run([sys.executable, "-m", "pytest", "-q", "experiments/adaptive/test_hp_cross_energy.py"], check=True, timeout=45)
-        cubic = np.load(CUBIC / "mesh.npz")
-        h_fields = np.load(SECOND_SOLVE / "fields.npz")["displacement"]
-        p_fields = np.load(CUBIC_SOLVE / "fields.npz")["displacement"]
-        maps = np.load(shared / "composed-maps.npz")
+        cubic = np.load(cubic_mesh / "mesh.npz")
+        h_fields = np.load(nested_source / "fields.npz")["displacement"]
+        p_fields = np.load(cubic_source / "fields.npz")["displacement"]
+        maps = np.load(shared / ("prolongation.npz" if args.parent25 else "composed-maps.npz"))
         element = Tet10(15)
         energy, volume, minimum, coupling = integrate(points, cells, h_fields, cubic["tetrahedra"], p_fields,
             maps["parents"], maps["parent_barycentric_maps"], (element.xi_pg, element.w_pg), return_coupling=True)
@@ -90,7 +106,9 @@ def main():
         assert np.linalg.norm(coupling.reshape(3, len(points), 6).sum(axis=1)) < 1e-10
         np.savez_compressed(args.output.parent / "coupling.npz", forces=coupling, energy=energy, mode_matrix=matrix)
         workflow.save(args.output, {"passed": gram_difference <= .01 and gain_difference <= .01,
-            "source": str(args.source), "quadrature_points": 15, "positive_rule_points_compared": higher["positive_rule_points"],
+            "source": str(args.source), "quadrature_points": 15,
+            "parent25": args.parent25, "nested_source": str(nested_source), "cubic_source": str(cubic_source),
+            "cubic_mesh": str(cubic_mesh), "prepared": str(shared), "positive_rule_points_compared": higher["positive_rule_points"],
             "mode_gram_relative_difference": gram_difference, "gain_relative_difference": gain_difference,
             "precision_gate": .01, "volume": volume, "minimum_sampled_jacobian": minimum,
             "full_coupling_shape": list(coupling.shape), "coupling_bytes": coupling.nbytes,
@@ -107,6 +125,9 @@ def main():
 
         consistent = json.loads((args.assembly / "result.json").read_text())
         assert consistent["passed"] and consistent["coupling_sha256"] == workflow.digest(args.assembly / "coupling.npz")
+        if args.parent25:
+            assert consistent["parent25"] and consistent["nested_source"] == str(nested_source)
+            assert consistent["cubic_source"] == str(cubic_source) and consistent["cubic_mesh"] == str(cubic_mesh)
         coupling = np.load(args.assembly / "coupling.npz")["forces"]
 
         class Capture:
@@ -128,7 +149,7 @@ def main():
                 rng = np.random.default_rng(20261024)
                 vector = rng.normal(size=len(rhs))
                 np.testing.assert_allclose(vector @ reduced, (transform @ vector) @ padded, atol=1e-10)
-                fields = np.load(SECOND_SOLVE / "fields.npz")["displacement"]
+                fields = np.load(nested_source / "fields.npz")["displacement"]
                 first_field = fields[0].T.ravel()[self.problem._dof_free]
                 residual = float(np.linalg.norm(matrix @ first_field - rhs) / np.linalg.norm(rhs))
                 assert residual < 2e-9
@@ -151,6 +172,7 @@ def main():
                         "amg_operator_complexity": amg.hierarchy.operator_complexity(),
                         "amg_level_shapes": [list(level.A.shape) for level in amg.hierarchy.levels]}
                 workflow.save(args.output, {"passed": True, "no_solve": True, "physical_nodes": len(points),
+                    "parent25": args.parent25, "consistent_source": str(args.assembly), "nested_source": str(nested_source),
                     "physical_tets": len(cells), "matrix_shape": list(matrix.shape), "matrix_nonzeros": matrix.nnz,
                     "matrix_csr_bytes": matrix.data.nbytes + matrix.indices.nbytes + matrix.indptr.nbytes,
                     "full_coupling_bytes": coupling.nbytes, "reduced_coupling_bytes": reduced.nbytes,
