@@ -1,0 +1,11 @@
+/Users/kmarchais/dev/meshers/.local-work/macbook-runtime/venv/lib/python3.12/site-packages/fedoo/core/base.py:80: UserWarning: WARNING: no fast direct sparse solver has been found. Consider installing pypardiso (Intel) or python-mumps (any platform) to improve computation performance
+  warnings.warn(
+Traceback (most recent call last):
+  File "/Users/kmarchais/dev/meshers/experiments/adaptive/nested_star_budget.py", line 175, in <module>
+    main()
+  File "/Users/kmarchais/dev/meshers/experiments/adaptive/nested_star_budget.py", line 128, in main
+    worker(args.run, args.source, args.continue_from, args.box_projection_fallback)
+  File "/Users/kmarchais/dev/meshers/experiments/adaptive/nested_star_budget.py", line 53, in worker
+    offset = previous.get("total_rounds", previous["completed_rounds"])
+                                          ~~~~~~~~^^^^^^^^^^^^^^^^^^^^
+KeyError: 'completed_rounds'

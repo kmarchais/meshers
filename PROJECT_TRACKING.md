@@ -1,5 +1,15 @@
 # Meshers project tracking
 
+An opt-in box-constrained auditor recovers the two parent25 projection
+failures on the identical mesh and samples; the historical default and failed
+record remain unchanged. Continued curve-only refinement reaches 249,998 nodes
+and passes all gates, but six fresh loads still miss the 24-model target at
+2.214327%. Stop that allocation recipe. Native26's saved control is 1.183637%;
+the fresh modified actual route passes 0.994671%, without a lattice timing win.
+Next verify cubic25 shared-domain fields/maps and resources for a bounded
+bulk-approximation energy trial before another sizing change. Schwarz repeats
+stand; Gyroid/spinodoid gaps remain. The full four-case goal stays unachieved.
+
 Preferred-only star refinement improves the audited native26 control to
 1.183637% across all 24 models, still failing 1%. Default refinement and all
 gates are unchanged. A coarser parent25 budget preflight stops at round13

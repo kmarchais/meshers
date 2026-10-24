@@ -81,7 +81,7 @@ def main():
             else:
                 archived += verify_hash(path, expected, run, source_ref)
             checked += 1
-        if (run / "worker.json").exists() and json.loads((run / "worker.json").read_text())["returncode"] != 0:
+        if any(json.loads(path.read_text()).get("returncode", 0) != 0 for path in run.glob("*worker.json")):
             failed_runs.append(run.name)
         if (run / "result.json").exists():
             result = json.loads((run / "result.json").read_text())
@@ -91,6 +91,9 @@ def main():
             if result.get("projection_failure_localization"):
                 from verify_preferred_only import verify_projection_witnesses
                 projection_failure_replays.append(verify_projection_witnesses(run, result))
+            if result.get("projection_reaudit"):
+                from verify_preferred_only import verify_projection_reaudit
+                projection_failure_replays.append(verify_projection_reaudit(run, result))
             if result.get("status") == "fresh-actual-preflight-passed":
                 from verify_actual_lattice import verify_prepared
                 fresh_actual_replays.append(verify_prepared(run, result))

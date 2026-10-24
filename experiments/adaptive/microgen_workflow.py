@@ -294,7 +294,7 @@ def geometry_is_admitted(row):
 
 
 def geometry(run, name, points, tets, surface, detail_count=0, reverse_subdivisions=(4, 8),
-             *, element_type=None, quadrature=None):
+             *, element_type=None, quadrature=None, box_projection_fallback=False):
     np, fd, _, _, _, scorecard = imports()
     if tets.shape[1] not in (4, 10) and element_type is None:
         raise ValueError("Nonstandard geometry requires an explicit registered element type")
@@ -324,6 +324,18 @@ def geometry(run, name, points, tets, surface, detail_count=0, reverse_subdivisi
             break
     residual = np.abs(case.function(*foot.T) - levels) / np.maximum(np.linalg.norm(scorecard.gradient(case.function, foot), axis=1), 1e-30)
     failed = (residual > 1e-9) | np.any(np.abs(foot) > 0.5 + 1e-9, axis=1)
+    fallback_rows = []
+    if box_projection_fallback:
+        from box_projection import constrained_foot
+        initial_failed = int(failed.sum())
+        for index in np.flatnonzero(failed):
+            candidate, info = constrained_foot(case.function, probes[index], levels[index], locked[index], foot[index])
+            fallback_rows.append(dict(sample_index=int(index), original_foot=foot[index].tolist(),
+                candidate=candidate.tolist(), **info))
+            if info["feasible_target"]:
+                foot[index] = candidate
+        residual = np.abs(case.function(*foot.T)-levels)/np.maximum(np.linalg.norm(scorecard.gradient(case.function, foot), axis=1), 1e-30)
+        failed = (~np.isfinite(foot).all(axis=1)) | (~np.isfinite(residual)) | (residual > 1e-9) | np.any(np.abs(foot) > .5+1e-9, axis=1)
     forward = np.linalg.norm(foot - probes, axis=1)
     outside = (values < case.levels[0]) | (values > case.levels[1])
     queries = np.concatenate([samples["walls"], samples["caps"]])
@@ -358,6 +370,10 @@ def geometry(run, name, points, tets, surface, detail_count=0, reverse_subdivisi
            "minimum_sampled_jacobian": minimum,
            "reverse_tessellation_delta_max": float(np.max(np.abs(reverse_values[-1] - reverse_values[0]))),
            "quadratic_reverse_subdivisions": list(reverse_subdivisions) if tets.shape[1] == 10 else None}
+    if box_projection_fallback:
+        row.update(projection_method="newton-box-slsqp-v1", unbounded_projection_failed=initial_failed,
+            box_projection_attempts=len(fallback_rows), box_projection_recovered=initial_failed-int(failed.sum()),
+            box_projection_witnesses=fallback_rows)
     if element_type is not None:
         row.update(element_type=element_type, curved_reverse_subdivisions=list(reverse_subdivisions),
                    volume_quadrature_points=len(locations))

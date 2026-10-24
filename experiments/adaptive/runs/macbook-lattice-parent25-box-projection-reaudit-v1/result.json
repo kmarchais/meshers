@@ -1,0 +1,175 @@
+{
+  "projection_reaudit": true,
+  "audited_source": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-lattice-parent25-preferred-only-preflight-v2",
+  "source": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/g3-lattice-cubic-parent25-fields-v1",
+  "source_rejection_preserved": true,
+  "box_projection_fallback": true,
+  "case": "smooth-lattice",
+  "order": 2,
+  "qualified": true,
+  "status": "nested-preflight-passed",
+  "stop_reason": "auditor-updated-geometry-passed",
+  "total_rounds": 13,
+  "nodes": 161494,
+  "elements": 88203,
+  "geometry": {
+    "sampled_forward_max": 0.00038198208500262587,
+    "sampled_reverse_max": 0.0003468626760467465,
+    "sampled_two_sided_max": 0.00038198208500262587,
+    "outward_forward_max": 0.00038198208500262587,
+    "inward_forward_max": 0.0002696788476968095,
+    "projection_failed": 0,
+    "forward_samples": 309166,
+    "reverse_samples": 34791,
+    "volume": 0.24823273133479667,
+    "relative_volume_error": -0.00031537643259571535,
+    "q_min_corner": 0.10000758254417201,
+    "q_p01_corner": 0.10653978180362116,
+    "minimum_dihedral_deg_corner": 4.651941700128276,
+    "minimum_sampled_jacobian": 6.091928871751847e-10,
+    "reverse_tessellation_delta_max": 0.00027151744089055213,
+    "quadratic_reverse_subdivisions": [
+      4,
+      8
+    ],
+    "projection_method": "newton-box-slsqp-v1",
+    "unbounded_projection_failed": 2,
+    "box_projection_attempts": 2,
+    "box_projection_recovered": 2,
+    "box_projection_witnesses": [
+      {
+        "sample_index": 165276,
+        "original_foot": [
+          0.3418093935142898,
+          -0.36770097863759976,
+          -0.5000040048830242
+        ],
+        "candidate": [
+          0.3418046562693216,
+          -0.3676982407310658,
+          -0.5
+        ],
+        "solver_success": true,
+        "message": "Optimization terminated successfully",
+        "iterations": 37,
+        "absolute_field_residual": 0.0,
+        "normalized_field_residual": 0.0,
+        "feasible_target": true,
+        "distance": 2.680007522112913e-05
+      },
+      {
+        "sample_index": 165278,
+        "original_foot": [
+          0.34288444542182417,
+          -0.3658963825056916,
+          -0.500002357374098
+        ],
+        "candidate": [
+          0.3428816842497909,
+          -0.365894679864455,
+          -0.5
+        ],
+        "solver_success": true,
+        "message": "Optimization terminated successfully",
+        "iterations": 4,
+        "absolute_field_residual": 2.7755575615628914e-17,
+        "normalized_field_residual": 2.775557561597722e-17,
+        "feasible_target": true,
+        "distance": 2.413923282221994e-05
+      }
+    ],
+    "facet_consistency": {
+      "nodes": 161494,
+      "elements": 88203,
+      "unique_faces": 195878,
+      "interior_faces": 156934,
+      "extracted_boundary_faces": 38944,
+      "same_orientation_shared_faces": 0,
+      "nonmanifold_faces": 0,
+      "duplicate_cells": 0,
+      "duplicate_surface_faces": 0,
+      "provided_boundary_matches_extraction": true,
+      "missing_provided_faces": 0,
+      "extra_provided_faces": 0,
+      "nonpositive_corner_determinants": 0,
+      "minimum_corner_determinant": 6.126354632451741e-10,
+      "oriented_facet_consistency_passed": true,
+      "conflict_examples": [],
+      "scope": "Oriented corner-face incidence and same-side neighbor diagnostics; necessary consistency, not a certificate of curved geometry or absence of nonlocal intersections"
+    },
+    "oriented_facet_consistency_passed": true,
+    "geometry_admitted": true
+  },
+  "legacy_geometry": {
+    "sampled_forward_max": 0.00038198208500262587,
+    "sampled_reverse_max": 0.0003468626760467465,
+    "sampled_two_sided_max": 0.00038198208500262587,
+    "outward_forward_max": 0.00038198208500262587,
+    "inward_forward_max": 0.0002696788476968095,
+    "projection_failed": 2,
+    "forward_samples": 309166,
+    "reverse_samples": 34791,
+    "volume": 0.24823273133479667,
+    "relative_volume_error": -0.00031537643259571535,
+    "q_min_corner": 0.10000758254417201,
+    "q_p01_corner": 0.10653978180362116,
+    "minimum_dihedral_deg_corner": 4.651941700128276,
+    "minimum_sampled_jacobian": 6.091928871751847e-10,
+    "reverse_tessellation_delta_max": 0.00027151744089055213,
+    "quadratic_reverse_subdivisions": [
+      4,
+      8
+    ],
+    "facet_consistency": {
+      "nodes": 161494,
+      "elements": 88203,
+      "unique_faces": 195878,
+      "interior_faces": 156934,
+      "extracted_boundary_faces": 38944,
+      "same_orientation_shared_faces": 0,
+      "nonmanifold_faces": 0,
+      "duplicate_cells": 0,
+      "duplicate_surface_faces": 0,
+      "provided_boundary_matches_extraction": true,
+      "missing_provided_faces": 0,
+      "extra_provided_faces": 0,
+      "nonpositive_corner_determinants": 0,
+      "minimum_corner_determinant": 6.126354632451741e-10,
+      "oriented_facet_consistency_passed": true,
+      "conflict_examples": [],
+      "scope": "Oriented corner-face incidence and same-side neighbor diagnostics; necessary consistency, not a certificate of curved geometry or absence of nonlocal intersections"
+    },
+    "oriented_facet_consistency_passed": true,
+    "geometry_admitted": false
+  },
+  "periodic": {
+    "maximum_six_load_jump": 3.3306690738754696e-16,
+    "periodic_pair_counts": [
+      5288,
+      5901,
+      6092
+    ],
+    "periodic_coordinate_errors": [
+      1.6653345369377348e-16,
+      1.1102230246251565e-16,
+      1.1102230246251565e-16
+    ],
+    "periodic_pair_tolerance": 1e-10,
+    "periodic_equivalence_classes": 144320,
+    "periodic_triangles_match": true
+  },
+  "interpolation": {
+    "points_per_element": 12,
+    "elements_checked": 88203,
+    "maximum_geometry_error": 4.440892098500626e-16,
+    "maximum_field_error": 5.551115123125783e-16
+  },
+  "original_pin": 5325,
+  "relative_volume_change": 6.661338147750939e-16,
+  "equilibrium_solve_performed": false,
+  "reference_promoted": false,
+  "native_candidate_promoted": false,
+  "mesh_sha256": "61acd12a6cd1eeb771c48dc7e9623159fc5a20b7f63b0fbff5d63753d783008e",
+  "prolongation_sha256": "62906b652497d834b591587973e645b93abaf9e8948351ab5e89c8041f2d232d",
+  "scope": "Hash-identical rejected geometry, fields and samples re-audited with opt-in box-constrained feet. Historical default and rejection retained; thresholds unchanged. No refinement, equilibrium solve, reference or workflow promotion."
+}

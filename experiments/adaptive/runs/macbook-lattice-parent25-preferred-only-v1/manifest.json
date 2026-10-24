@@ -1,0 +1,67 @@
+{
+  "inputs": {
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-lattice-parent25-preferred-only-preflight-v4/result.json": "8ccfde167bd336a73d04ebda2d36b8266480dd5c9364a8f61c99b6b9001c8689",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-lattice-parent25-preferred-only-preflight-v4/mesh.npz": "74525e850005b301f1aaecff275c0c523d9b6c44c5dc40ffa28f270e954dc980",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-lattice-parent25-preferred-only-preflight-v4/prolongation.npz": "588078deabc9f0a220014a6a95345ea7d99715514c272437b315fcb023870211",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-lattice-parent25-preferred-only-preflight-v4/manifest.json": "d6abb407959c40c07647bd9c35f7b0407b1371c09dc09505d1ac9351d2c0fcbe",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-lattice-parent25-preferred-only-preflight-v4/smooth-lattice-samples.npz": "a2b4375d2c99901f03b34e913563c887a4cdcff00bca35983adb7ef9d5311abe",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-lattice-parent25-preferred-only-preflight-v4/smooth-lattice-specimen.json": "0e5b34b76183341a6e0d454f13cd404668ab82675f9a51cd9d2ecf3c91be3316",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/g3-lattice-cubic-parent25-fields-v1/result.json": "973e7f55378aad1ef9fe2846da23cdfe07073c81c2b6f0d700f922bea40651b2",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/g3-lattice-cubic-parent25-fields-v1/mesh.npz": "5277c4d61d59e6caa1b700367adc5eaf6a7ea15905a49d5cac2179b43db20cd2",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/g3-lattice-cubic-parent25-fields-v1/fields.npz": "90be8015c68226d57054022b1ccbf792744e7e0e83e92b29074bf6172e03ae3e",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/nested_solve.py": "d0d76f962cdac37c34c3c738eb178c759e95e621b75e04a0da6ddbb86c986390",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/stress_recovery.py": "c9d74455c014c3b56ab656ca3f6a9cbf259dc11904318fecc354dcc6368651ac",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/amg_reference.py": "41f8bbdfc6fc175beec8eda9ba28b5db195e2615a656cd6d0d1ff33654d2354b",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/tet10_integration.py": "b5adbf4a96ee90953d546c654992d4380843e3b1a865e64e043cd14529e3865d",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/quadrature_audit.py": "020677df452ec86864e687c9b35e2c69e70f8587ec54240ce0c4eaa4b717319e",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/microgen_workflow.py": "073f615481feeae8bb9142d325d9ae39251ca1e1aa2d1376f5e4f88a19aec872",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/job_parts.py": "7082e64a3d6f1029dfe871702e6ef53cc514f08a0687b4065f1412d65b427b78",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/cubic_refinement.py": "a6f79b051b80ed3dcd774ba42a7ccf969cf10dca489e5da1fe3a44737eeb6006",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/nested_preflight.py": "cfb4d9c4dd6d8bc2515438e1de2e6235d07118307e349b2f0a327fea0b4a1134",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/g3-lattice-curve-grading-reference-comparison-v1.json": "bec8af1d841a1b3d0299d3746f96c0562ec0db13927ce8370cce6d22924a23b9",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/g3-lattice-reference-sensitivity-v2.json": "0bc21b6b9c07819795697047ee827aab8c23363790dc5137ea7d2d1a5aa0ac07",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/g3-lattice-microgen-reference-comparison-v1.json": "6acf432121761aa9028ffd81be1e146cbd5010e84f6183fab9cd455c966dfdd4"
+  },
+  "memory_bytes": 8589934592,
+  "platform": "macOS-26.5.1-arm64-arm-64bit",
+  "architecture": "arm64",
+  "python": "3.12.9 (main, Feb 12 2025, 15:09:19) [Clang 19.1.6 ]",
+  "numerical_thread_policy": {
+    "environment": {
+      "OPENBLAS_NUM_THREADS": "1",
+      "OMP_NUM_THREADS": "1",
+      "MKL_NUM_THREADS": "1",
+      "VECLIB_MAXIMUM_THREADS": "1",
+      "RAYON_NUM_THREADS": "1"
+    },
+    "accelerate_blas_threading": 1,
+    "accelerate_scope": "calling thread"
+  },
+  "memory_enforcement": "process-tree-rss-watchdog",
+  "rss_poll_interval_s": 0.25,
+  "native_path": "/Users/kmarchais/dev/meshers/crates/meshers-python/python/meshers/_meshers.abi3.so",
+  "native_sha256": "8565629a92065d9c852e6fe21511c0e2b7325b6fc3ee84c7d32116ffe3407efe",
+  "versions": {
+    "numpy": "2.5.4",
+    "scipy": "1.18.1",
+    "fedoo": "1.0.0b2",
+    "microgen": "2.0.0b1",
+    "mmgpy": "0.17.1",
+    "pyamg": "5.3.0",
+    "pyvista": "0.49.1",
+    "vtk": "9.7.1"
+  },
+  "threads": 1,
+  "timeouts_s": {
+    "solve": 1200,
+    "audit": 300,
+    "assess": 300
+  },
+  "quadrature_sensitivity_limit": 0.0001,
+  "galerkin_energy_balance_limit": 0.0001,
+  "maximum_tetrahedra": 250000,
+  "maximum_nodes": 250000,
+  "stiffness_target": 0.01,
+  "source_preflight": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-lattice-parent25-preferred-only-preflight-v4",
+  "no_live_workflow_timing": true
+}

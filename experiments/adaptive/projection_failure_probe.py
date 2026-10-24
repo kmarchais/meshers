@@ -8,27 +8,9 @@ import subprocess
 import sys
 
 import numpy as np
-from scipy.optimize import minimize
 
 import microgen_workflow as workflow
-
-
-def constrained_foot(function, probe, level, locked, initial):
-    scale = max(float(np.linalg.norm(initial-probe)), 1e-3)
-    lower, upper = np.full(3, -.5), np.full(3, .5)
-    lower[locked] = upper[locked] = np.sign(probe[locked])*.5
-    start = np.clip(initial, lower, upper)
-    def residual(displacement):
-        point = probe+scale*displacement
-        return float(function(*point[None].T)[0]-level)/scale
-    result = minimize(lambda displacement: float(displacement @ displacement), (start-probe)/scale,
-        method="SLSQP", bounds=list(zip((lower-probe)/scale, (upper-probe)/scale)),
-        constraints={"type": "eq", "fun": residual}, options={"maxiter": 300, "ftol": 1e-13})
-    foot = probe+scale*result.x
-    remaining = abs(float(function(*foot[None].T)[0]-level))
-    feasible = bool(remaining < 1e-9 and abs(foot).max() <= .5+1e-12)
-    return foot, dict(solver_success=bool(result.success), message=str(result.message), iterations=int(result.nit),
-        absolute_field_residual=remaining, feasible_target=feasible, distance=float(np.linalg.norm(foot-probe)))
+from box_projection import constrained_foot
 
 
 def main():
@@ -40,7 +22,7 @@ def main():
     _, _, _, _, _, scorecard = workflow.imports()
     source = json.loads((args.source / "result.json").read_text())
     paths = [Path(__file__), args.source / "mesh.npz", args.source / "result.json", Path(workflow.__file__), Path(scorecard.__file__),
-        workflow.HERE / "test_projection_failure_probe.py"]
+        workflow.HERE / "test_projection_failure_probe.py", workflow.HERE / "box_projection.py"]
     paths.extend(args.source / (source["case"]+suffix) for suffix in ("-samples.npz", "-specimen.json"))
     inputs = {str(path): workflow.digest(path) for path in paths}
     workflow.save(args.output.parent / "analysis-inputs.json", inputs)

@@ -1,5 +1,88 @@
 # Adaptive and quadratic implicit meshing: results
 
+## An opt-in constrained auditor admits the geometry, but parent25 still misses accuracy, 24 October 2026
+
+The unchanged rejected parent25 mesh now passes a separately versioned
+geometry audit. The subsequent cap-budget correction also passes geometry
+and FE consistency, but worst disagreement across all 24 models is
+2.214326639%, failing 1%. Stop the coarse-bulk, curve-only allocation recipe.
+No native candidate, reference or timing advantage is promoted. Native26's
+best saved control remains 1.183636899%; the fresh modified actual route
+passes at 0.9946706124%.
+
+`geometry(..., box_projection_fallback=True)` opts into
+`newton-box-slsqp-v1`. The default historical auditor is unchanged. Only
+failed unbounded Newton samples enter SLSQP; every attempted sample remains
+in the result. A recovered target must meet the same finite level, normalized
+field-residual tolerance of 1e-9, fixed box and original locked coordinates.
+The forward distance is measured to that feasible point, a conservative
+upper bound rather than a certified closest point. Distance 0.002, volume 1%,
+quality 0.1, positive sampled Jacobians, coherent facets and periodic gates stay fixed.
+Failed constrained trials remain failed. Ten controls cover a trimmed plane,
+locked coordinates, an unreachable level, fixed corners and facet admission.
+
+Job 80 re-audits the exact rejected round13 mesh, prolongation and sample
+files. Their hashes are identical. The default still returns two failures;
+the opt-in method recovers both. Counts, distance, volume, quality and sampled
+Jacobians are unchanged. No refinement or FE occurs in this re-audit, and
+job77's rejected result remains frozen. The corrected record explicitly
+identifies the changed observation method before continuation is allowed.
+
+Job 81 stops before refining because the checkpoint reader eagerly evaluates
+a missing legacy-field fallback. Its exact source and failed log are retained.
+The reader and independent replay are corrected; a regression covers a
+record with `total_rounds` but no `completed_rounds`, legacy records, and
+cumulative counts. Job 82 passes twenty queued controls and continues only
+from the explicit same-mesh re-audit, using the same selection rule and caps.
+
+| Continued round | Nodes | Tets | Curve parents bisected |
+|---|---:|---:|---:|
+| 14 | 177,268 | 95,236 | 7,033 |
+| 15 | 196,416 | 103,617 | 8,381 |
+| 16 | 218,704 | 113,308 | 9,691 |
+| 17 | 244,530 | 124,797 | 11,489 |
+| 18 | 249,998 | 127,549 | 2,752 |
+| 19 | 249,998 | 127,549 | 0 |
+
+Every accepted parent is curve-vertex incident; no bulk fallback is used.
+The implementation finds no further accepted star in the remaining budget.
+All fifty-one unbounded projection failures at the final mesh are recovered
+by valid box-constrained targets. Distance stays 0.0003819821, quality is
+0.1000034664 and minimum sampled Jacobian is 2.75613e-11. The original parent25
+domain, approximation space and pin are retained through composed maps.
+This domain is distinct from native26; their controls are not nested.
+
+Job 83 completes six fresh loads in 162.95 seconds at 5.715 GiB peak RSS.
+All reduced residuals are below 9.79e-13. Independent field, periodic and
+positive-rule audits pass. The largest stiffness decrease from parent25 is
+0.64684004%; all six signed changes are negative. Galerkin balance is
+4.20e-8, and positive-rule energy change is 8.02e-8. These verified corrections
+still do not meet the retained target. The shorter saved-mesh solve is not
+a matched-accuracy or live timing win.
+
+Next inspect the available cubic25 fields for one shared-domain bulk
+approximation probe, before another sizing change. The prepared mesh is
+`runs/g3-lattice-cubic25-assembly-memory-v1/mesh.npz`; all six fields are in
+`runs/g3-lattice-cubic25-reference-blocked-symmetry-v2/fields.npz`, with audit
+`runs/g3-lattice-cubic25-assessment-v1`. First verify exact parent25 embedding,
+composed maps, periodic fields, unique-map count and resource feasibility.
+Then decide on a bounded positive-rule cross-energy trial without a new
+equilibrium solve. Keep every model and distinguish a trial subspace gain
+from remaining-error, reference or live-candidate certification. Do not
+assume that still deeper curve-only refinement fixes the unresolved bulk.
+
+The fresh actual lattice control remains admitted with its explicit extra
+repair/refinement and diagnostic cost of 314.03 seconds. Schwarz retains five repeated
+Mac wins against its declared modified actual route. Gyroid and spinodoid
+actual-comparator gaps remain. All four cases, fixed specimens, original
+thresholds and the full unachieved objective stay in scope.
+
+Records are `runs/macbook-lattice-parent25-box-projection-reaudit-v1`,
+`runs/macbook-lattice-parent25-preferred-only-preflight-v3`,
+`runs/macbook-lattice-parent25-preferred-only-preflight-v4` and
+`runs/macbook-lattice-parent25-preferred-only-v1`. Jobs through 83 are terminal.
+Earlier selected-next descriptions are historical.
+
 ## Preferred-only refinement improves the control but exposes a projection failure, 24 October 2026
 
 The new native26 fixed-domain control improves worst disagreement across all
@@ -202,7 +285,7 @@ nor its samples are silently changed. No co-location conclusion follows.
 The optional `--prefer-box-curve-stars` preflight mode prioritizes all edges
 incident on actual wall/cap curve vertices, including radial edges, before
 the existing descending-length fallback. Complete periodic orbits, disjoint
-stars, exact parent maps, q0.1, positive sampled Jacobians and 250,000-node/tet
+stars, exact parent maps, quality 0.1, positive sampled Jacobians and 250,000-node/tet
 limits remain unchanged. It is mutually exclusive with literal-edge priority;
 the default selection is unchanged. A radial-edge selection control and all
 18 queued controls pass. No size parameter sweep or oracle field is used.
