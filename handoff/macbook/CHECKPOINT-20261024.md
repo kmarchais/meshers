@@ -472,3 +472,78 @@ The provenance receipt is
 [verification-20261024-hp.json](verification-20261024-hp.json).
 All jobs through 40 are terminal. No successor is queued. Earlier selected-next
 instructions above are historical. Keep the full goal active.
+
+## Audited coupled lattice correction, 24 October 2026
+
+Jobs 41 to 43 establish a consistent quadrature and resource path before any
+coupled solve. The 15-point mode Gram matrix differs from the positive
+216-point result by 0.0478437%; its trial gain differs by 0.0572437%, both
+below the fixed 1% precision gate. Assembled mode forces satisfy direct
+virtual work within 5.03e-16 and annihilate rigid translations. Full and
+reduced coupling storage is 31,411,440 and 31,009,392 bytes.
+
+Reduced assembly has 646,029 unknowns and 51,030,214 nonzeros. The six global
+scalar modes give 646,035 augmented unknowns, with the same 218,135 physical
+nodes and 141,144 tets. The sparse mesh operator stays separate from those
+six columns. Assembly peaks at 6.044 GiB; setup of the validated four-level
+block AMG peaks at 5.359 GiB and stops before CG. The 8 GiB ceiling and all
+250,000-node/tet admission caps stay unchanged.
+
+Job 44 then solves six fresh auxiliary mode responses with a 240-second
+limit per response and a 1,800-second worker timeout. It uses saved baseline
+fields as explicit reference inputs; it is not six fresh macro workflows.
+Every baseline load is checked against the assembled operator. The positive
+six-by-six Schur system gives a 0.3254513% own-rule energy reduction from the
+nested baseline. The worker takes 177.49 seconds at 5.991 GiB. No dense
+augmented graph is passed to AMG, and no solved prefix is replayed.
+
+The complete displacement representation combines quadratic response fields
+with the frozen cubic-minus-nested modes. It is saved as `hp-fields.npz`;
+ordinary nodal Tet10 interpolation would lose its cubic part. Job 45 checks
+that representation independently, including the constant pin gauge:
+
+| Check | Result |
+|---|---:|
+| Own-rule energy versus Schur prediction | 1.23e-13 maximum mixed-load difference |
+| Own-rule stress/energy relative difference | 2.14e-12 |
+| Positive 216-point energy shift | 3.003e-6 |
+| Positive 125-to-216-point energy difference | 6.001e-9 |
+| Freshly reassembled auxiliary reduced residual | at most 1.075e-11 |
+| Freshly reassembled complete-field reduced residual | at most 2.038e-10 |
+| Mode-equilibrium relative residual | 1.594e-12 |
+| Six-load periodic jump | at most 4.45e-16 |
+| Pin displacement | 0 |
+
+The full-field audit takes 139.39 seconds at 5.720 GiB. Every sampled
+Jacobian remains positive. All 24 original model tensors are retained.
+Worst disagreement is 1.82618412%, so the 1% target still fails. This is an
+audited equilibrium in the stated augmented space on the frozen approximate
+parent23 domain. It is not a promoted reference, a best native Meshers
+candidate, a live workflow timing, or continuum/local-stress certification.
+
+Job 46 records a provenance-verifier failure: its old source lookup tried
+a commit predating the h/p helper. Job 47 verifies the exact committed
+source bytes. Job 48 generalizes that lookup to exact same-path Python blobs
+on the current branch and records the verifier hash and repository head.
+A regression checks historical lookup after HEAD changes and rejects wrong
+bytes. Data hashes never use this fallback. No solve or field audit is rerun.
+
+Next, localize the resolved complete-field correction energy, using all six
+loads and the full Galerkin energy identity. Check positive-rule precision
+and concentration on actual geometry groups before selecting any new
+refinement or Meshers change. This is resolved correction, not a certified
+estimate of remaining continuum error. Do not revive curve-only sorting,
+raise caps, tune an offset or add another polynomial degree from this result.
+Gyroid and spinodoid comparator coverage remain open; the verified repeated
+Mac Schwarz comparison stands. The full four-fixture goal remains active.
+
+Records are `runs/macbook-lattice-hp-consistent-rule-v1`,
+`runs/macbook-lattice-hp-coupled-assembly-v1`,
+`runs/macbook-lattice-hp-amg-setup-v1`,
+`runs/macbook-lattice-hp-coupled-solve-v1` and
+`runs/macbook-lattice-hp-coupled-audit-v1`.
+The final provenance and full-model replay receipt is
+[verification-20261024-hp-coupled-sources.json](verification-20261024-hp-coupled-sources.json).
+The earlier successful receipt and failed job 46 are preserved separately.
+Jobs through 48 are terminal. No successor is queued. Earlier selected-next
+instructions above are historical. Keep the full goal active.

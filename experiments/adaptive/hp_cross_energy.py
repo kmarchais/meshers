@@ -14,7 +14,8 @@ from scipy.linalg import eigvalsh
 from hp_shared_domain import SECOND_SOLVE, CUBIC_SOLVE, CUBIC, ROOT
 
 
-def integrate(points, cells, h_fields, cubic_cells, p_fields, parents, maps, quadrature):
+def integrate(points, cells, h_fields, cubic_cells, p_fields, parents, maps, quadrature, *, return_coupling=False,
+              additional_fields=None, return_stress=False):
     """Integrate all 144 cross terms, grouping identical affine child maps."""
     from cubic_reference import register_cubic
     from fedoo.lib_elements.tetrahedron import Tet10, Tet4
@@ -25,7 +26,10 @@ def integrate(points, cells, h_fields, cubic_cells, p_fields, parents, maps, qua
     barycentric = linear.shape_function(locations)
     unique, groups = np.unique(maps.reshape(-1, 16), axis=0, return_inverse=True)
     reference_derivative = linear.shape_function_derivative([[.25] * 3])[0]
-    energy, volume, minimum = np.zeros((12, 12)), 0., np.inf
+    field_count = 12 + (0 if additional_fields is None else len(additional_fields))
+    energy, volume, minimum = np.zeros((field_count, field_count)), 0., np.inf
+    mean_stress = np.zeros((6, field_count))
+    coupling = np.zeros((3 * len(points), 6)) if return_coupling else None
     for group, flat in enumerate(unique):
         mapping = flat.reshape(4, 4)
         selected = np.flatnonzero(groups == group)
@@ -38,6 +42,7 @@ def integrate(points, cells, h_fields, cubic_cells, p_fields, parents, maps, qua
             geometry = points[cells[subset]]
             h_values = h_fields[:, cells[subset]]
             p_values = p_fields[:, cubic_cells[parents[subset]]]
+            extra_values = None if additional_fields is None else additional_fields[:, cells[subset]]
             for derivative_h, derivative_p, weight in zip(child_derivatives, p_derivatives, weights, strict=True):
                 jacobian = np.einsum("an,tnb->tab", derivative_h, geometry)
                 determinant = np.linalg.det(jacobian)
@@ -48,11 +53,26 @@ def integrate(points, cells, h_fields, cubic_cells, p_fields, parents, maps, qua
                 gradient_p = np.einsum("tba,an->tbn", inverse, derivative_p)
                 gradients = np.concatenate((np.einsum("ltni,tjn->ltij", h_values, gradient_h),
                     np.einsum("ltni,tjn->ltij", p_values, gradient_p)))
+                if extra_values is not None:
+                    gradients = np.concatenate((gradients, np.einsum("ltni,tjn->ltij", extra_values, gradient_h)))
                 strain = (gradients + gradients.swapaxes(-1, -2)) / 2
                 stress = 2 * strain + np.trace(strain, axis1=-2, axis2=-1)[..., None, None] * np.eye(3)
                 energy += np.einsum("t,itkl,jtkl->ij", weight * determinant, strain, stress, optimize=True)
+                if return_stress:
+                    mean = np.einsum("t,ltij->lij", weight * determinant, stress)
+                    mean_stress += mean[:, [0, 1, 2, 0, 0, 1], [0, 1, 2, 1, 2, 2]].T
+                if coupling is not None:
+                    force = np.einsum("t,tin,ktji->tnjk", weight * determinant, gradient_h, stress[6:12] - stress[:6], optimize=True)
+                    for component in range(3):
+                        np.add.at(coupling[component * len(points):(component + 1) * len(points)],
+                            cells[subset].ravel(), force[:, :, component].reshape(-1, 6))
                 volume += float(weight * determinant.sum())
-    return energy, volume, minimum
+    result = (energy, volume, minimum)
+    if return_coupling:
+        result += (coupling,)
+    if return_stress:
+        result += (mean_stress,)
+    return result
 
 
 def combine(energy):

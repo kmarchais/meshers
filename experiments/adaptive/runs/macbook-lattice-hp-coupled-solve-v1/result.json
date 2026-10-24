@@ -1,0 +1,290 @@
+{
+  "status": "coupled-solved-needs-independent-audit",
+  "consistent_source": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-lattice-hp-consistent-rule-v1",
+  "nested_source": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-lattice-nested23-level2-v1",
+  "cubic_source": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/g3-lattice-cubic23-reference-v1",
+  "cubic_mesh": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/g3-lattice-cubic23-assembly-memory-v1/mesh.npz",
+  "physical_nodes": 218135,
+  "physical_tets": 141144,
+  "extra_scalar_mode_unknowns": 6,
+  "reduced_mesh_unknowns": 646029,
+  "augmented_unknowns": 646035,
+  "fresh_auxiliary_responses": 6,
+  "saved_baseline_reduced_residuals": [
+    1.8267862552177326e-10,
+    2.004948157227938e-10,
+    2.0508943087055016e-10,
+    9.525649105267035e-11,
+    9.929433861375421e-11,
+    9.712393364017623e-11
+  ],
+  "solver_records": [
+    {
+      "iterations": 115,
+      "relative_residual": 3.802888787940799e-12,
+      "free_dofs": 646029,
+      "seconds": 32.23875783407129,
+      "hierarchy_setup_s": 3.8527250420302153,
+      "hierarchy_reused": false,
+      "node_reordering_s": 0.22855649993289262,
+      "elastic_blocks": true,
+      "verified_symmetry_reused": false,
+      "levels": 4,
+      "operator_complexity": 1.046049243486027,
+      "reduced_matrix_sha256": "0fd415e0339f038ff6f4a4413a0eba933e443f302cd8297e3ee465da77ad11af"
+    },
+    {
+      "iterations": 115,
+      "relative_residual": 3.537964142389592e-12,
+      "free_dofs": 646029,
+      "seconds": 27.367610833025537,
+      "hierarchy_setup_s": 0.0,
+      "hierarchy_reused": true,
+      "node_reordering_s": 0.0,
+      "elastic_blocks": true,
+      "verified_symmetry_reused": true,
+      "levels": 4,
+      "operator_complexity": 1.046049243486027,
+      "reduced_matrix_sha256": "0fd415e0339f038ff6f4a4413a0eba933e443f302cd8297e3ee465da77ad11af"
+    },
+    {
+      "iterations": 116,
+      "relative_residual": 2.8736480698385247e-12,
+      "free_dofs": 646029,
+      "seconds": 28.10036699997727,
+      "hierarchy_setup_s": 0.0,
+      "hierarchy_reused": true,
+      "node_reordering_s": 0.0,
+      "elastic_blocks": true,
+      "verified_symmetry_reused": true,
+      "levels": 4,
+      "operator_complexity": 1.046049243486027,
+      "reduced_matrix_sha256": "0fd415e0339f038ff6f4a4413a0eba933e443f302cd8297e3ee465da77ad11af"
+    },
+    {
+      "iterations": 110,
+      "relative_residual": 1.0745552412689388e-11,
+      "free_dofs": 646029,
+      "seconds": 26.343356583965942,
+      "hierarchy_setup_s": 0.0,
+      "hierarchy_reused": true,
+      "node_reordering_s": 0.0,
+      "elastic_blocks": true,
+      "verified_symmetry_reused": true,
+      "levels": 4,
+      "operator_complexity": 1.046049243486027,
+      "reduced_matrix_sha256": "0fd415e0339f038ff6f4a4413a0eba933e443f302cd8297e3ee465da77ad11af"
+    },
+    {
+      "iterations": 109,
+      "relative_residual": 1.022985217067104e-11,
+      "free_dofs": 646029,
+      "seconds": 26.17720333393663,
+      "hierarchy_setup_s": 0.0,
+      "hierarchy_reused": true,
+      "node_reordering_s": 0.0,
+      "elastic_blocks": true,
+      "verified_symmetry_reused": true,
+      "levels": 4,
+      "operator_complexity": 1.046049243486027,
+      "reduced_matrix_sha256": "0fd415e0339f038ff6f4a4413a0eba933e443f302cd8297e3ee465da77ad11af"
+    },
+    {
+      "iterations": 109,
+      "relative_residual": 9.114322662219287e-12,
+      "free_dofs": 646029,
+      "seconds": 26.298897208063863,
+      "hierarchy_setup_s": 0.0,
+      "hierarchy_reused": true,
+      "node_reordering_s": 0.0,
+      "elastic_blocks": true,
+      "verified_symmetry_reused": true,
+      "levels": 4,
+      "operator_complexity": 1.046049243486027,
+      "reduced_matrix_sha256": "0fd415e0339f038ff6f4a4413a0eba933e443f302cd8297e3ee465da77ad11af"
+    }
+  ],
+  "mode_coefficients": [
+    [
+      0.9601372687905949,
+      0.051908822680361705,
+      0.04077173638054082,
+      -0.0008265174491303536,
+      -0.00036394096523871685,
+      0.0009565308435995218
+    ],
+    [
+      0.005704178883549163,
+      0.8603689134858571,
+      -0.017369652635538173,
+      0.0008899024801364621,
+      -0.0021169082048933447,
+      0.0007111378296322565
+    ],
+    [
+      -0.029490138893647502,
+      -0.0405494321480356,
+      0.814353993310748,
+      0.001716413676552018,
+      0.0005326584578679754,
+      8.086156505402253e-05
+    ],
+    [
+      0.00555587580463551,
+      -0.0015966966691168315,
+      0.005411531146708962,
+      0.9800611508630779,
+      0.0015183020286825167,
+      -0.0016022292919834777
+    ],
+    [
+      -0.004214711569375599,
+      -0.004688551638580024,
+      -0.0004910009360074069,
+      0.0023550649718895966,
+      0.9619193861384681,
+      0.0009387944014586286
+    ],
+    [
+      0.003359949191671626,
+      -0.003960904367747952,
+      -0.0017309971920021494,
+      -0.0004524951163388874,
+      0.0001210921593798123,
+      0.9296994461078999
+    ]
+  ],
+  "schur_eigenvalues": [
+    6.246804449745239e-05,
+    6.45569668508742e-05,
+    6.5598545069983e-05,
+    0.0001283636855492585,
+    0.00013280656166245322,
+    0.0004041189075478543
+  ],
+  "predicted_energy_tensor": [
+    [
+      0.13895341180688564,
+      0.10671747382520762,
+      0.1067092197418965,
+      1.02936798779491e-05,
+      8.641138954978674e-06,
+      4.850498288243875e-06
+    ],
+    [
+      0.1067174738252076,
+      0.13901946136267954,
+      0.10674950919771248,
+      1.3010465805148626e-05,
+      4.6664125832808096e-06,
+      8.624549097932475e-06
+    ],
+    [
+      0.1067092197418965,
+      0.10674950919771246,
+      0.13900174010634944,
+      5.212461296396231e-06,
+      1.2958031460913991e-05,
+      8.665822061745171e-06
+    ],
+    [
+      1.0293679877949931e-05,
+      1.3010465805148245e-05,
+      5.21246129639647e-06,
+      0.10318307350897368,
+      5.210584756474989e-06,
+      5.791388899849236e-06
+    ],
+    [
+      8.641138954979065e-06,
+      4.6664125832811035e-06,
+      1.2958031460913983e-05,
+      5.210584756474706e-06,
+      0.1031839946157078,
+      6.589315656929119e-06
+    ],
+    [
+      4.8504982882440625e-06,
+      8.624549097932539e-06,
+      8.66582206174527e-06,
+      5.791388899849529e-06,
+      6.589315656929505e-06,
+      0.10320048139633727
+    ]
+  ],
+  "energy_gain_tensor": [
+    [
+      0.0001971087790544951,
+      8.064340268312715e-05,
+      7.107972532562118e-05,
+      -3.7156319800321643e-07,
+      -5.931198195935447e-07,
+      8.968125206417182e-07
+    ],
+    [
+      8.064340268312717e-05,
+      0.0001674947392212106,
+      6.304733463663677e-05,
+      9.402272187280849e-07,
+      -3.191776503046374e-07,
+      -1.1246304385789729e-07
+    ],
+    [
+      7.107972532562117e-05,
+      6.304733463663678e-05,
+      0.000151812882230275,
+      1.6996993181602746e-07,
+      5.990796299177614e-07,
+      -2.0732199134289755e-08
+    ],
+    [
+      -3.7156319800321643e-07,
+      9.402272187280852e-07,
+      1.6996993181602743e-07,
+      6.229321813814734e-05,
+      -9.49188805744762e-09,
+      -8.774671414831448e-07
+    ],
+    [
+      -5.931198195935446e-07,
+      -3.1917765030463733e-07,
+      5.990796299177614e-07,
+      -9.491888057447608e-09,
+      5.865973481968323e-05,
+      -9.470608523290417e-07
+    ],
+    [
+      8.968125206417182e-07,
+      -1.1246304385789735e-07,
+      -2.0732199134289752e-08,
+      -8.774671414831447e-07,
+      -9.470608523290417e-07,
+      5.5681085321406886e-05
+    ]
+  ],
+  "maximum_relative_gain": 0.0032545129236479045,
+  "zero_macro_response_jump_max": 0.0,
+  "response_pin_max": 0.0,
+  "periodic": {
+    "periodic_pair_counts": [
+      970,
+      938,
+      952
+    ],
+    "periodic_coordinate_errors": [
+      5.551115123125783e-17,
+      1.1102230246251565e-16,
+      1.1102230246251565e-16
+    ],
+    "periodic_pair_tolerance": 1e-10,
+    "periodic_equivalence_classes": 215344,
+    "periodic_triangles_match": true
+  },
+  "auxiliary_solve_s": 167.32215191598516,
+  "field_archive_sha256": "a376bb0af71522dc50a23e239476c4e033fe23b1711399be7c10ff04de31873f",
+  "field_representation": "Immutable h/p baseline fields plus six quadratic zero-macro response fields and a common 6x6 mode coefficient matrix; nodal interpolation alone is not the complete field",
+  "pin_gauge": "Subtract each p-minus-h mode value at the fine pin when reconstructing displacements; constant shifts do not change energy",
+  "reference_promoted": false,
+  "native_candidate_promoted": false,
+  "scope": "Six auxiliary zero-macro mode responses and Schur correction on the frozen domain, not fresh macro workflow timings or continuum certification."
+}

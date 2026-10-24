@@ -4,6 +4,8 @@ import hashlib
 import json
 from pathlib import Path
 import sys
+import subprocess
+from functools import lru_cache
 
 ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT / "experiments/adaptive"))
@@ -12,6 +14,24 @@ from verify_schwarz_tet10_repeated import verify_hash
 
 import numpy as np
 from scipy.linalg import eigvalsh
+
+
+@lru_cache(maxsize=None)
+def committed_python_ref(relative, expected, legacy_ref):
+    """Find exact measured Python bytes on this branch; never substitute data."""
+    assert relative.endswith(".py")
+    tried = set()
+    def matches(ref):
+        if ref in tried:
+            return False
+        tried.add(ref)
+        result = subprocess.run(["git", "show", f"{ref}:{relative}"], cwd=ROOT, capture_output=True)
+        return result.returncode == 0 and hashlib.sha256(result.stdout).hexdigest() == expected
+    for ref in ("HEAD", legacy_ref):
+        if matches(ref):
+            return ref
+    history = subprocess.check_output(["git", "log", "--format=%H", "--", relative], cwd=ROOT).decode().splitlines()
+    return next((ref for ref in history if matches(ref)), None)
 
 
 def main():
@@ -28,7 +48,7 @@ def main():
             files += 1
             total_bytes += item["bytes"]
     checked, archived, comparisons, scores = 0, 0, 0, {}
-    seed_replays, failed_runs, coupled_replays, geometry_replays, workflow_replays = [], [], [], [], []
+    seed_replays, failed_runs, coupled_replays, geometry_replays, workflow_replays, hp_replays = [], [], [], [], [], []
     for run in sorted((workflow.HERE / "runs").glob("macbook-*")):
         if not run.is_dir() or not (run / "manifest.json").exists():
             continue
@@ -46,6 +66,12 @@ def main():
                 if path.suffix == ".py" and workflow.digest(candidate) == expected]
             if workflow.digest(path) != expected and snapshots:
                 archived += 1
+            elif workflow.digest(path) != expected and path.suffix == ".py" and path.resolve().is_relative_to(ROOT):
+                relative = path.resolve().relative_to(ROOT).as_posix()
+                if committed_python_ref(relative, expected, source_ref) is not None:
+                    archived += 1
+                else:
+                    archived += verify_hash(path, expected, run, source_ref)
             else:
                 archived += verify_hash(path, expected, run, source_ref)
             checked += 1
@@ -53,6 +79,28 @@ def main():
             failed_runs.append(run.name)
         if (run / "result.json").exists():
             result = json.loads((run / "result.json").read_text())
+            if "complete_field_reduced_residuals" in result:
+                assert result["passed"] and result["retained_model_count"] == 24
+                assert max(result["auxiliary_reduced_residuals"]) < 2e-9
+                assert max(result["complete_field_reduced_residuals"]) < 2e-9
+                assert result["mode_equilibrium_relative_residual"] < 2e-9
+                assert result["positive_rule_energy_difference"] < 1e-4
+                tensor = np.asarray(result["rules"][-1]["energy_tensor"])
+                assert result["rules"][-1]["points"] == 216
+                errors = []
+                for model in result["models"]:
+                    path = Path(model["source"])
+                    reference = np.asarray(json.loads(path.read_text())["models"][model["index"]]["stiffness"])
+                    values = eigvalsh(tensor - reference, reference)
+                    np.testing.assert_allclose(values, model["signed_relative_energy_eigenvalues"], atol=1e-12)
+                    errors.append(float(abs(values).max()))
+                assert len(errors) == 24
+                np.testing.assert_allclose(max(errors), result["worst_retained_model_disagreement"], atol=1e-12)
+                assert result["passes_target_all_models"] == (max(errors) <= .01)
+                assert not result["reference_promoted"] and not result["native_candidate_promoted"]
+                comparisons += len(errors)
+                scores[run.name] = max(errors)
+                hp_replays.append({"run": run.name, "model_count": len(errors), "worst_disagreement": max(errors)})
             if "worst_reverse_samples" in result:
                 import scorecard
                 source_mesh = np.load(Path(result["source"]) / "mesh.npz")
@@ -181,12 +229,15 @@ def main():
         assert assessment["passes_target_all_models"] == (max(errors) <= .01)
         comparisons += len(errors)
         scores[run.name] = max(errors)
-    workflow.save(output, {"passed": True, "transferred_files_checked": files,
+    workflow.save(output, {"passed": True, "verifier_sha256": workflow.digest(Path(__file__)),
+        "repository_head_at_verification": subprocess.check_output(["git", "rev-parse", "HEAD"], cwd=ROOT, text=True).strip(),
+        "transferred_files_checked": files,
         "transferred_bytes_checked": total_bytes, "mac_input_hashes_checked": checked,
         "sources_verified_from_frozen_driver_or_git": archived, "mixed_load_comparisons": comparisons,
         "worst_retained_model_scores": scores, "seed_artifact_replays": seed_replays,
         "failed_runs_preserved": failed_runs, "coupled_candidate_replays": coupled_replays,
         "geometry_witness_replays": geometry_replays, "same_host_workflow_replays": workflow_replays,
+        "coupled_modal_field_replays": hp_replays,
         "reference_promoted": False})
     print(f"Verified {files} transferred files, {checked} input hashes and {comparisons} full model comparisons")
 

@@ -1,5 +1,12 @@
 # Meshers project tracking
 
+The coupled parent23 reference investigation now passes complete-field,
+positive-quadrature, periodic, pin and freshly reassembled equilibrium audits.
+Its six fresh auxiliary responses fit the unchanged 8 GiB resource ceiling.
+Worst disagreement remains 1.826184% across all 24 models, so no reference or
+native candidate is promoted. Next is correction-energy localization before
+any new mesher change. The current Mac checkpoint records all four cases.
+
 The latest lattice reference diagnostic proves that saved nested and cubic
 fields share the original parent23 physical domain, then measures a resolved
 0.2593816% trial-energy gain from their six periodic difference fields.

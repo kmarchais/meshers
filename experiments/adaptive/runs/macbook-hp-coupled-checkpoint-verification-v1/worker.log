@@ -1,0 +1,16 @@
+fatal: path 'experiments/adaptive/hp_cross_energy.py' exists on disk, but not in '2779c4a'
+Traceback (most recent call last):
+  File "/Users/kmarchais/dev/meshers/handoff/macbook/verify_checkpoint.py", line 218, in <module>
+    main()
+  File "/Users/kmarchais/dev/meshers/handoff/macbook/verify_checkpoint.py", line 50, in main
+    archived += verify_hash(path, expected, run, source_ref)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/kmarchais/dev/meshers/experiments/adaptive/verify_schwarz_tet10_repeated.py", line 36, in verify_hash
+    content = subprocess.check_output(["git", "show", f"{source_ref}:{relative}"], cwd=workflow.ROOT)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/kmarchais/.local/share/uv/python/cpython-3.12.9-macos-aarch64-none/lib/python3.12/subprocess.py", line 468, in check_output
+    return run(*popenargs, stdout=PIPE, timeout=timeout, check=True,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/kmarchais/.local/share/uv/python/cpython-3.12.9-macos-aarch64-none/lib/python3.12/subprocess.py", line 573, in run
+    raise CalledProcessError(retcode, process.args,
+subprocess.CalledProcessError: Command '['git', 'show', '2779c4a:experiments/adaptive/hp_cross_energy.py']' returned non-zero exit status 128.
