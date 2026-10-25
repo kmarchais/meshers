@@ -1,5 +1,20 @@
 # Meshers project tracking
 
+## Periodic normal-jump failure isolated to a feasible input,25 October2026
+
+The invariant affine fix is committed/pushed as6c843b6. The next exact tapered
+prism has matching periodic scalar traces and a33.4degree wall-normal jump.
+Raw adaptive272 rejects error0.0106425; mapped273 rejects0.00234375; zero-round
+mapped274 rejects q0.045969. None is reclassified. A separate manufactured
+20tet mesh passes all gates at q0.171170,proving geometric/quality feasibility
+without claiming a native workaround. Independent replay276 passes;12fixture
+controls pass. No production source,native image,FE result or reference changed.
+See [periodic normal-jump investigation](experiments/adaptive/PERIODIC_SEAM_RESULTS.md). Next inspect one physical
+six-plane seed and actual periodic end correspondence before a native change.
+Keep the mapped recipe closed and preserve all four cases and24 lattice models.
+Earlier selected-next descriptions below are historical.
+
+
 ## Explicit resume and verified periodic affine recovery, 25 October 2026
 
 Kevin resumed from the pause checkpoint. Native test265 had finished; it was

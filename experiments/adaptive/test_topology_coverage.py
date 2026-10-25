@@ -76,3 +76,37 @@ def test_periodic_column_preserves_exact_domain_and_cap_pairing():
     np.testing.assert_array_equal(field(*probes.T), field(*shifted.T))
     with pytest.raises(AssertionError):
         audit_column_periodicity(points, faces[1:], np)
+
+
+def test_periodic_wedge_has_exact_volume_matching_caps_and_an_unchanged_normal_jump():
+    from topology_coverage import audit_column_periodicity, mapped_wedge_input, periodic_wedge
+
+    points, faces = periodic_wedge(np)
+    field, queries, volume, components, euler = fixture('periodic-wedge', np)
+    closed = np.maximum(field(*queries.T), np.max(abs(queries), axis=1)-.5)
+    assert abs(closed).max() < 2e-16
+    triangles = points[faces]
+    actual_volume = np.einsum('ij,ij->i', triangles[:, 0], np.cross(triangles[:, 1], triangles[:, 2])).sum()/6
+    assert abs(actual_volume-volume) < 1e-15 and abs(volume-.22) < 1e-15
+    assert boundary_topology(faces, np) == (components, euler) == (1, 2)
+    assert audit_column_periodicity(points, faces, np)['pair_count'] == 4
+    constraints, mapping, transforms = mapped_wedge_input(np)
+    probes = np.random.default_rng(42).uniform(-.5, .5, (1024, 3))
+    physical = np.column_stack(mapping(*probes.T))
+    parameter_inside = np.max([f(*probes.T) for f in constraints.values()], axis=0) <= 0
+    np.testing.assert_array_equal(field(*physical.T) <= 0, parameter_inside)
+    low = probes.copy(); low[:, 2] = -.5
+    high = low.copy(); high[:, 2] = .5
+    np.testing.assert_array_equal(field(*low.T), field(*high.T))
+    np.testing.assert_allclose(np.column_stack(mapping(*high.T))-np.column_stack(mapping(*low.T)),
+        np.broadcast_to((0, 0, 1), high.shape), atol=1e-15)
+    assert transforms[2][2][3] == 1
+    limits = np.array(((.2, 0., -.5+1e-6), (.2, 0., .5-1e-6)))
+    gradients = []
+    for axis in range(3):
+        step = np.eye(3)[axis]*1e-7
+        gradients.append((field(*(limits+step).T)-field(*(limits-step).T))/2e-7)
+    np.testing.assert_allclose(np.column_stack(gradients), ((1, 0, -.3), (1, 0, .3)), atol=1e-8)
+    cosine = (1-.3**2)/(1+.3**2)
+    assert abs(np.degrees(np.arccos(cosine))-2*np.degrees(np.arctan(.3))) < 1e-12
+    assert np.degrees(np.arccos(cosine)) > 30

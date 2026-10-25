@@ -23,6 +23,13 @@ def boundary_topology(surface, np):
 
 def fixture(name, np):
     angles = 2*np.pi*np.arange(96)/96
+    if name == 'periodic-wedge':
+        def field(x, y, z):
+            return np.maximum(np.abs(x)+.3*np.abs(z)-.35, np.abs(y)-.2)
+        vertices, faces = periodic_wedge(np)
+        bary = np.array([(i/48, j/48, 1-(i+j)/48) for i in range(49) for j in range(49-i)])
+        queries = np.einsum('sn,fnd->fsd', bary, vertices[faces]).reshape(-1, 3)
+        return field, queries, .22, 1, 2
     if name == 'periodic-column':
         c, s = float(np.cos(.31)), float(np.sin(.31))
         def field(x, y, z):
@@ -92,6 +99,37 @@ def fixture(name, np):
         return np.minimum(np.sqrt((x-offset)**2+y*y+z*z)-radius,
             np.sqrt((x+offset)**2+y*y+z*z)-radius)
     return field, np.concatenate((radius*sphere+[offset, 0, 0], radius*sphere-[offset, 0, 0])), 8*np.pi/3*radius**3, 2, 4
+
+
+def periodic_wedge(np):
+    """Exact tapered-prism boundary; paired z caps have wall-normal jumps."""
+    polygon = np.array(((-.2, -.5), (.2, -.5), (.35, 0.), (.2, .5), (-.2, .5), (-.35, 0.)))
+    vertices = np.concatenate([np.column_stack((polygon[:, 0], np.full(6, y), polygon[:, 1])) for y in (-.2, .2)])
+    faces = []
+    for i in range(1, 5):
+        faces.extend(((0, i, i+1), (6, i+7, i+6)))
+    for a in range(6):
+        b = (a+1)%6
+        if a == 3:
+            # Match the low-z cap diagonal after the periodic translation.
+            faces.extend(((a, a+6, b), (b, a+6, b+6)))
+        else:
+            faces.extend(((a, b+6, b), (a, a+6, b+6)))
+    return vertices, np.array(faces)
+
+
+def mapped_wedge_input(np):
+    """An identical physical domain from a periodic parameter-space column."""
+    constraints = {}
+    for axis in (0, 1):
+        for sign in (-1, 1):
+            def plane(x, y, z, axis=axis, sign=sign):
+                return sign*(x if axis == 0 else y)-.2
+            constraints[f'plane{axis}_{sign}'] = plane
+    def mapping(x, y, z):
+        return x*(.35-.3*np.abs(z))/.2, y, z
+    transform = np.eye(4); transform[2, 3] = 1.
+    return constraints, mapping, {2: transform.tolist()}
 
 
 def periodic_column(np):
@@ -221,10 +259,11 @@ def bored_prism_constraints(np):
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('--run', type=Path, required=True)
-    parser.add_argument('--case', choices=('torus', 'shell', 'disjoint', 'octahedron', 'notched-prism', 'bored-prism', 'periodic-column'), required=True)
+    parser.add_argument('--case', choices=('torus', 'shell', 'disjoint', 'octahedron', 'notched-prism', 'bored-prism', 'periodic-column', 'periodic-wedge'), required=True)
     parser.add_argument('--tolerance', type=float, default=.002)
     parser.add_argument('--cells', type=int, default=24)
     parser.add_argument('--named', action='store_true', help='Retain octahedron planes or bored-prism fields as named constraints')
+    parser.add_argument('--mapped', action='store_true', help='Use the exact periodic-wedge mapped-domain control')
     parser.add_argument('--no-adapt', action='store_true')
     parser.add_argument('--optimization-passes', type=int, default=1)
     parser.add_argument('--snap', type=float, default=.2)
@@ -254,22 +293,27 @@ def main():
         gates=dict(distance=.002, relative_volume=.01, minimum_quality=.1,
             positive_jacobians=True, coherent_facets=True, exact_boundary_topology=True,
             maximum_nodes=250000, maximum_tetrahedra=w.CAP))
-    if args.case == 'periodic-column':
+    if args.case in ('periodic-column', 'periodic-wedge'):
         row['options']['periodic'] = (False, False, True)
     row['diagnostic_unchecked'] = args.diagnostic_unchecked
     if args.diagnostic_unchecked:
         row['options'].update(geometry_tolerance=1., minimum_quality=0., adapt_tolerance=args.tolerance)
     row['representation'] = ('named-constraints' if args.case == 'bored-prism' else 'named-planes') if args.named else 'scalar-field'
+    assert not (args.named and args.mapped)
+    assert not args.mapped or args.case == 'periodic-wedge'
+    if args.mapped:
+        row['representation'] = 'mapped-named-planes'
     row['transform'] = dict(rotation_z=args.rotation, translation=args.translation)
     cosine, sine = np.cos(args.rotation), np.sin(args.rotation)
     rotation = np.array(((cosine, -sine, 0.), (sine, cosine, 0.), (0., 0., 1.)))
     transformed = bool(args.rotation or any(args.translation))
-    assert args.case not in ('bored-prism', 'periodic-column') or not transformed
+    assert args.case not in ('bored-prism', 'periodic-column', 'periodic-wedge') or not transformed
     assert np.isfinite(rotation).all() and np.isfinite(args.translation).all()
     if args.named:
         assert not transformed
     if args.named:
         assert args.case in ('octahedron', 'bored-prism', 'periodic-column')
+    if args.named or args.mapped:
         row['options'] = {k: v for k, v in row['options'].items() if k in
             ('bounds', 'cells', 'geometry_tolerance', 'minimum_quality', 'max_tetrahedra', 'optimize_passes', 'snap', 'periodic')}
     started = time.perf_counter()
@@ -284,7 +328,11 @@ def main():
         np.savez_compressed(args.run/'reference.npz', points=queries)
         row['reference_sha256'] = w.digest(args.run/'reference.npz')
         phase = time.perf_counter()
-        if args.named:
+        if args.mapped:
+            constraints, mapping, transforms = mapped_wedge_input(np)
+            mesh = meshers.generate_intersection(constraints, coordinate_map=mapping,
+                periodic_transforms=transforms, **row['options'])
+        elif args.named:
             from itertools import product
             constraints = bored_prism_constraints(np) if args.case == 'bored-prism' else {}
             if args.case == 'periodic-column':
@@ -309,14 +357,21 @@ def main():
             distances = bored_prism_distance(probes, np)
             forward = float(distances.max())
             row['forward_witness'] = bored_prism_witness(probes[distances.argmax()], forward, np)
-        if args.case in ('octahedron', 'notched-prism', 'periodic-column'):
-            target_points, target_surface = (periodic_column(np) if args.case == 'periodic-column'
+        if args.case in ('octahedron', 'notched-prism', 'periodic-column', 'periodic-wedge'):
+            target_points, target_surface = (periodic_wedge(np) if args.case == 'periodic-wedge'
+                else periodic_column(np) if args.case == 'periodic-column'
                 else octahedron(np) if args.case == 'octahedron' else notched_prism(np))
             if transformed:
                 target_points = target_points@rotation.T+args.translation
             forward = float(scorecard.distance_to_mesh(target_points, target_surface, probes).max())
         reverse_distances = scorecard.distance_to_mesh(points, surface, queries)
         reverse = float(reverse_distances.max())
+        if args.case == 'periodic-wedge':
+            witness = queries[reverse_distances.argmax()]
+            row['reverse_witness'] = dict(point=witness.tolist(), distance=reverse,
+                distance_to_periodic_seam=float(abs(abs(witness[2])-.5)),
+                distance_to_midplane_crease=float(abs(witness[2])),
+                distance_to_y_side=float(abs(abs(witness[1])-.2)))
         if args.case == 'bored-prism':
             row['reverse_witness'] = bored_prism_witness(queries[reverse_distances.argmax()], reverse, np)
         q, _, volumes = scorecard.tet_metrics(points, cells)
@@ -332,8 +387,8 @@ def main():
             expected_boundary_components=components, boundary_components=observed_components,
             expected_boundary_euler=euler, boundary_euler=observed_euler,
             boundary_volume=boundary_volume, volume_balance=abs(abs(boundary_volume)-float(volumes.sum())),
-            periodic_requested=args.case == 'periodic-column', used_nodes=len(np.unique(cells)))
-        if args.case == 'periodic-column':
+            periodic_requested=args.case in ('periodic-column', 'periodic-wedge'), used_nodes=len(np.unique(cells)))
+        if args.case in ('periodic-column', 'periodic-wedge'):
             row['periodic'] = audit_column_periodicity(points, surface, np)
             assert len(mesh.periodic_pairs[2]) == row['periodic']['pair_count']
             assert all(len(mesh.periodic_pairs[a]) == 0 for a in (0, 1))
