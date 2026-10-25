@@ -1,0 +1,302 @@
+{
+  "date": "2026-10-25",
+  "status": "trial-signal-rejected",
+  "trial": {
+    "status": "trial-verified-resource-pending",
+    "qualified": false,
+    "case": "smooth-lattice",
+    "source": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-split-patch-bulk90-level5-solve-v1",
+    "nodes": 206426,
+    "elements": 135587,
+    "order": 2,
+    "geometry": {
+      "sampled_forward_max": 0.00033587990515847115,
+      "sampled_reverse_max": 0.00027249023645900517,
+      "sampled_two_sided_max": 0.00033587990515847115,
+      "outward_forward_max": 0.00033587990515847115,
+      "inward_forward_max": 0.0002698333618777867,
+      "projection_failed": 0,
+      "forward_samples": 222976,
+      "reverse_samples": 34791,
+      "volume": 0.2482331060071548,
+      "relative_volume_error": -0.0003138675494065435,
+      "q_min_corner": 0.10004528670813667,
+      "q_p01_corner": 0.12717242076425483,
+      "minimum_dihedral_deg_corner": 4.98792491724717,
+      "minimum_sampled_jacobian": 4.569089960610478e-08,
+      "reverse_tessellation_delta_max": 0.00011226605259304778,
+      "quadratic_reverse_subdivisions": [
+        4,
+        8
+      ],
+      "facet_consistency": {
+        "nodes": 206426,
+        "elements": 135587,
+        "unique_faces": 280750,
+        "interior_faces": 261598,
+        "extracted_boundary_faces": 19152,
+        "same_orientation_shared_faces": 0,
+        "nonmanifold_faces": 0,
+        "duplicate_cells": 0,
+        "duplicate_surface_faces": 0,
+        "provided_boundary_matches_extraction": true,
+        "missing_provided_faces": 0,
+        "extra_provided_faces": 0,
+        "nonpositive_corner_determinants": 0,
+        "minimum_corner_determinant": 4.6082338126879e-08,
+        "oriented_facet_consistency_passed": true,
+        "conflict_examples": [],
+        "scope": "Oriented corner-face incidence and same-side neighbor diagnostics; necessary consistency, not a certificate of curved geometry or absence of nonlocal intersections"
+      },
+      "oriented_facet_consistency_passed": true,
+      "geometry_admitted": true
+    },
+    "relative_volume_change": -4.440892098500626e-16,
+    "reproduction": {
+      "points_per_element": 12,
+      "elements_checked": 135587,
+      "maximum_geometry_error": 3.3306690738754696e-16,
+      "maximum_field_error": 3.3306690738754696e-16
+    },
+    "periodic": {
+      "maximum_six_load_jump": 2.220446049250313e-16,
+      "periodic_pair_counts": [
+        757,
+        759,
+        734
+      ],
+      "periodic_coordinate_errors": [
+        5.551115123125783e-17,
+        1.1102230246251565e-16,
+        5.551115123125783e-17
+      ],
+      "periodic_pair_tolerance": 1e-10,
+      "periodic_equivalence_classes": 204227,
+      "periodic_triangles_match": true
+    },
+    "selection": {
+      "accepted_edge_orbits": 5225,
+      "quality_rejected_orbits": 0,
+      "overlapping_star_orbits": 0,
+      "budget_rejected_orbits": 0,
+      "preferred_edge_orbits": 0,
+      "accepted_preferred_edge_orbits": 0,
+      "selection": "Measured edge-residual score per added-node upper bound over complete periodic stars",
+      "scored_physical_edges": 5283,
+      "positive_score_edge_orbits": 5225,
+      "input_edge_score_sum": 0.0010280588342673083,
+      "source_nodes": 168615,
+      "source_elements": 109059,
+      "nodes": 206426,
+      "elements": 135587,
+      "bisected_parent_elements": 26528,
+      "shared_position_error": 5.551115123125783e-17,
+      "shared_field_error": 1.1102230246251565e-16,
+      "projected_node_upper_bound": 206426,
+      "facet_consistency": {
+        "nodes": 206426,
+        "elements": 135587,
+        "unique_faces": 280750,
+        "interior_faces": 261598,
+        "extracted_boundary_faces": 19152,
+        "same_orientation_shared_faces": 0,
+        "nonmanifold_faces": 0,
+        "duplicate_cells": 0,
+        "duplicate_surface_faces": 0,
+        "provided_boundary_matches_extraction": true,
+        "missing_provided_faces": 0,
+        "extra_provided_faces": 0,
+        "nonpositive_corner_determinants": 0,
+        "minimum_corner_determinant": 4.6082338126879e-08,
+        "oriented_facet_consistency_passed": true,
+        "conflict_examples": [],
+        "scope": "Oriented corner-face incidence and same-side neighbor diagnostics; necessary consistency, not a certificate of curved geometry or absence of nonlocal intersections"
+      },
+      "periodic": {
+        "periodic_pair_counts": [
+          757,
+          759,
+          734
+        ],
+        "periodic_coordinate_errors": [
+          5.551115123125783e-17,
+          1.1102230246251565e-16,
+          5.551115123125783e-17
+        ],
+        "periodic_pair_tolerance": 1e-10,
+        "periodic_equivalence_classes": 204227,
+        "periodic_triangles_match": true
+      }
+    },
+    "bulk": {
+      "requested_fraction": 0.9,
+      "unpruned_nodes": 250000,
+      "unpruned_elements": 165473,
+      "unpruned_orbits": 11515,
+      "unpruned_normalized_gain": 0.0011422617103366234,
+      "retained_orbits": 5225,
+      "retained_normalized_gain_fraction": 0.9000203937190021
+    },
+    "resources": null,
+    "construction": [
+      {
+        "minimum_jacobian": 4.6016499243099267e-08,
+        "volume": 0.2482331060071548
+      },
+      {
+        "minimum_jacobian": 4.71001898460791e-08,
+        "volume": 0.24823310600715479
+      },
+      {
+        "minimum_jacobian": 4.7097089117246135e-08,
+        "volume": 0.2482331060071545
+      },
+      {
+        "minimum_jacobian": 4.727709999090671e-08,
+        "volume": 0.2482331060071545
+      },
+      {
+        "minimum_jacobian": 4.7160945975900004e-08,
+        "volume": 0.2482331060071534
+      },
+      {
+        "minimum_jacobian": 4.707463359051381e-08,
+        "volume": 0.24823310600715534
+      }
+    ],
+    "trial_gain": [
+      [
+        2.078328339194315e-05,
+        8.527660104251494e-06,
+        8.976410011521381e-06,
+        -1.9438857289000962e-07,
+        -1.8391908610351136e-07,
+        -2.0861303381645133e-07
+      ],
+      [
+        8.527660104251494e-06,
+        2.146607517605092e-05,
+        9.010769567456869e-06,
+        -1.1186580361944691e-07,
+        -1.2215732278479014e-07,
+        -8.810331166094769e-08
+      ],
+      [
+        8.976410011521381e-06,
+        9.010769567456869e-06,
+        2.1405184958325012e-05,
+        -4.626452344523971e-07,
+        -9.677323888609541e-08,
+        -5.9029729170107856e-08
+      ],
+      [
+        -1.9438857289000962e-07,
+        -1.1186580361944691e-07,
+        -4.626452344523971e-07,
+        4.958535787839731e-06,
+        -5.842746254909256e-08,
+        -4.989294941319556e-08
+      ],
+      [
+        -1.8391908610351136e-07,
+        -1.2215732278479014e-07,
+        -9.677323888609541e-08,
+        -5.842746254909256e-08,
+        5.06488557065218e-06,
+        -1.069549321463321e-07
+      ],
+      [
+        -2.0861303381645133e-07,
+        -8.810331166094769e-08,
+        -5.9029729170107856e-08,
+        -4.989294941319556e-08,
+        -1.069549321463321e-07,
+        5.06331516923878e-06
+      ]
+    ],
+    "trial_gain_eigenvalues": [
+      4.716334299734874e-05,
+      4.874488252615545e-05,
+      5.0126467074136564e-05,
+      0.0001105832998082872,
+      0.00037701732395949557,
+      0.00039442351790188406
+    ],
+    "trial_energy_balance": 2.4242205393375978e-11,
+    "trial_delta_periodic_jump": 0.0,
+    "trial_precision": [
+      {
+        "points": 64,
+        "volume": 0.24823310600715434,
+        "vs_previous": null,
+        "gain_relative_error": 1.657681114885977e-07
+      },
+      {
+        "points": 125,
+        "volume": 0.2482331060071543,
+        "vs_previous": {
+          "worst_relative_strain_energy_difference": 1.6843863927401653e-09,
+          "relative_tensor_frobenius_difference": 3.4971723353147306e-10,
+          "relative_energy_difference_eigenvalues": [
+            1.6592008887147366e-10,
+            2.0954879961189205e-10,
+            2.3220681287178122e-10,
+            3.1548759231734424e-10,
+            1.5027093347153094e-09,
+            1.6843863927401653e-09
+          ]
+        },
+        "gain_relative_error": 1.971277038237818e-07
+      }
+    ],
+    "trial_globally_equilibrated": false,
+    "selection_scope": "Exact fixed-old-node six-load split gains per physical added-node upper bound; all regions eligible",
+    "trial_signal_threshold": 0.0005,
+    "trial_signal_passed": false,
+    "same_mesh_verified": null,
+    "old_quadratic_space_preserved": true,
+    "original_curved_domain_preserved": true,
+    "equilibrium_solve_performed": false,
+    "reference_promoted": false,
+    "native_candidate_promoted": false,
+    "comparative_timing_claim": false
+  },
+  "worker": {
+    "returncode": 1,
+    "limit_failure": null,
+    "peak_rss_bytes": 2438348800,
+    "wall_s": 154.33800966700073,
+    "memory_bytes": 8589934592,
+    "memory_enforcement": "process-tree-rss-watchdog",
+    "rss_poll_interval_s": 0.25,
+    "platform": "darwin",
+    "numerical_thread_policy": {
+      "environment": {
+        "OPENBLAS_NUM_THREADS": "1",
+        "OMP_NUM_THREADS": "1",
+        "MKL_NUM_THREADS": "1",
+        "VECLIB_MAXIMUM_THREADS": "1",
+        "RAYON_NUM_THREADS": "1"
+      },
+      "accelerate_blas_threading": 1,
+      "accelerate_scope": "calling thread"
+    }
+  },
+  "source_artifact_sha256": {
+    "experiments/adaptive/runs/macbook-split-patch-bulk90-level6-preflight-v1/trial-screen.json": "2d49342144dfb6fb253bca83b971ca1147ff0184bcd82ce5b1826d5b8671b98a",
+    "experiments/adaptive/runs/macbook-split-patch-bulk90-level6-preflight-v1/worker.json": "05397feb0e46c2ceef6d4753762305f166438f21897a08b714df660120055758",
+    "experiments/adaptive/runs/macbook-split-patch-bulk90-level6-preflight-v1/worker.log": "5178242caeae7ec6418e556a64898be2d57b4711700dc7ebf10284c21cee4962",
+    "experiments/adaptive/runs/macbook-split-patch-bulk90-level6-preflight-v1/manifest.json": "9dfc64fc04b2312a0201140d10550ee56a8f8ccfa63f5817b05502e4b1121d61",
+    "experiments/adaptive/runs/macbook-split-patch-bulk90-level6-preflight-v1/analysis-inputs.json": "2940eb73dda3e1b2f71485408a6bce10b0144fc3dadb9b8adee4bbac36ea4404",
+    "experiments/adaptive/runs/macbook-split-patch-bulk90-level6-preflight-v1/mesh.npz": "91b64b00a39420745bde86e1233fbd6e593afaa22e4376459b6e5a54103d6f3d",
+    "experiments/adaptive/runs/macbook-split-patch-bulk90-level6-preflight-v1/prolongation.npz": "0eddf2dc1b982abc15c40428b84a41274ca17303b6c03386ea4ab3cd74adcadb",
+    "experiments/adaptive/runs/macbook-split-patch-bulk90-level6-preflight-v1/split-gains.npz": "4275cc9f94f1aa1aeb7cf9332652467c29ed2a718c79006fe7000eccb848013b",
+    "experiments/adaptive/runs/macbook-split-patch-bulk90-level6-preflight-v1/trial-fields.npz": "1bd64ce7654e44f9aa5c342979e34d65c0be7e06734581b3667ffe8265fabbc0"
+  },
+  "resource_setup_started": false,
+  "equilibrium_solve_started": false,
+  "reference_promoted": false,
+  "native_candidate_promoted": false,
+  "comparative_timing_claim": false,
+  "scope": "Geometry and exact-space trial pass, but existing0.05percent signal rejects another solve; not a remaining-error bound or convergence certificate"
+}

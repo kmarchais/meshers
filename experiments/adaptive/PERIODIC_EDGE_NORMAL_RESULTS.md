@@ -196,6 +196,42 @@ checks pass. Minimum quality is 0.100032836, and the largest trial gain is
 Fresh coupled job 418 is selected from this complete replay. Its six loads
 and independent all-model assessment must pass before another decision.
 
+Fresh coupled job 418 completes six loads and independent field, positive
+quadrature, periodic, Galerkin, and all-model audits. Worst disagreement
+improves to **1.325163420%**, still failing 1%. The largest negative stiffness
+correction is 0.093753393%, and Galerkin balance is within 1.006e-9. Solve,
+audit, and assessment workers take 157.648, 37.302, and 46.088 seconds. Solve
+peak RAM is 4.308 GiB. See [the fifth-level evidence](../../handoff/macbook/split-patch-bulk90-level5-evidence-20261025.json).
+One sixth-level preflight screens the declining gain with the same 90% rule
+and existing 0.05% trial signal. No native candidate, reference, matched-accuracy
+or comparative timing victory is promoted.
+
+Sixth-level trial 419 has 206,426 nodes and 135,587 tets. It retains 5,225 stars
+and 90.002039% of the budget-admissible normalized gain. The unpruned greedy
+allocation reaches exactly 250,000 nodes. Geometry, parent-space reproduction,
+periodicity, coherent facets, and positive 64-point and 125-point energy
+checks pass. Trial energy balance is within 2.425e-11 relative.
+
+Its largest gain is **0.039442352%**, below the unchanged 0.05% signal threshold.
+The worker exits at that screen after saving `trial-screen.json`, with
+`trial_signal_passed=false` and `qualified=false`. No resource setup or CG
+starts. Its 154.338-second worker peaks at 2.271 GiB. The archive's provisional
+status string says resource pending, but the explicit false signal and failed
+worker are authoritative. No resource job is pending. See
+[the sixth-level screen](../../handoff/macbook/split-patch-level6-screen-20261025.json).
+Close this h sequence. The last complete coupled result is job 418 at
+1.325163420%, still failing 1%. A small additional trial is not a bound on
+remaining error or a convergence certificate. No later solve is selected.
+
+The next native investigation replays the fixed spinodoid linear adaptive
+failure. Job 420 reproduces its 30,499 nodes, 131,598 tets, and distance
+0.004834255 on the current binary. Corner quality is 0.152883712, so quality
+admission passes while distance fails. One explicit internal guard ablation
+checks whether the default 0.3 comfort guard obstructs otherwise admissible
+geometry repair. The hard quality gate remains 0.1, and no sizing parameter,
+specimen, curved candidate, or default changes. No success follows from this
+ablation before its full result and local repair mechanism are read.
+
 All four cases and all 24 model tensors remain in scope. Schwarz retains its
 measured comparison win against explicitly modified actual Microgen routes.
 Gyroid and spinodoid still lack admitted actual comparators in the tested

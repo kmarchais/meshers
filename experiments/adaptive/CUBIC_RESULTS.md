@@ -37,8 +37,18 @@ showing that retained analysis memory inflated the combined peak. Full replay
 replay gates pass at 4.590 GiB, with exact 415 mesh-array equality and the same
 operator hash as independent 416. The 168,615-node, 109,059-tet trial has a
 0.065557630% largest gain and minimum quality 0.100032836. Failed 415 remains
-failed. Coupled job 418 is selected from the complete replay, requiring its
-own independent field, Galerkin, and all-model audit before any successor.
+failed. Coupled job 418 completes six fresh loads and independent field,
+positive quadrature, Galerkin, and all-model audits. Worst disagreement improves
+to 1.325163420%, still failing 1%. Galerkin balance is within 1.006e-9. A
+sixth-level trial 419 preserves geometry and parent fields at 206,426 nodes
+and 135,587 tets, but its largest gain is 0.039442352%, below the unchanged
+0.05% signal. No resource setup or solve starts. Close this h sequence without
+convergence or native/reference promotion. Native investigation isolates a
+periodic cap-star obstruction in the fixed linear spinodoid route. Local repair
+controls pass, but whole-field candidates still fail. Quarter-edge insertion
+reduces native sampled error from 0.004610 to 0.003089, still above 0.002.
+No repaired native candidate is promoted. The curved spinodoid remains admitted.
+All four cases, the 0.1 quality gate, and all 24 lattice models remain in scope.
 See [physical edge normal investigation](PERIODIC_EDGE_NORMAL_RESULTS.md).
 Earlier next-step descriptions below are historical. All four cases remain
 in scope, and the full objective is incomplete.

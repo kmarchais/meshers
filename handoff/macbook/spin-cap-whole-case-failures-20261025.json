@@ -1,0 +1,169 @@
+{
+  "scope": "Closed strict whole-field native controls. All fail the fixed 0.002 gate; no native promotion or comparative timing claim.",
+  "runs": {
+    "446": {
+      "run": "experiments/adaptive/runs/macbook-spinodoid-postquality-closure-v1",
+      "worker": {
+        "returncode": 101,
+        "limit_failure": null,
+        "peak_rss_bytes": 745799680,
+        "wall_s": 50.81680987495929,
+        "memory_bytes": 8589934592,
+        "memory_enforcement": "process-tree-rss-watchdog",
+        "rss_poll_interval_s": 0.25,
+        "platform": "darwin",
+        "numerical_thread_policy": {
+          "environment": {
+            "OPENBLAS_NUM_THREADS": "1",
+            "OMP_NUM_THREADS": "1",
+            "MKL_NUM_THREADS": "1",
+            "VECLIB_MAXIMUM_THREADS": "1",
+            "RAYON_NUM_THREADS": "1"
+          },
+          "accelerate_blas_threading": 1,
+          "accelerate_scope": "calling thread"
+        }
+      },
+      "sha256": {
+        "experiments/adaptive/runs/macbook-spinodoid-postquality-closure-v1/native-inputs.json": "8a373b63eda553d93bce0f504270840c760f05ae860dcea1f1fca0c21af2005c",
+        "experiments/adaptive/runs/macbook-spinodoid-postquality-closure-v1/implicit.rs": "b58ff5a15686a9d78d01b11a09ea28aa4cc2c487a89fd50d2bf8311a876c0f7d",
+        "experiments/adaptive/runs/macbook-spinodoid-postquality-closure-v1/worker.log": "6731d4a58a8803227dff2b465576c330d5d1f180ec2403145e6f50302b0163f5",
+        "experiments/adaptive/runs/macbook-spinodoid-postquality-closure-v1/worker.json": "e712a12df4e3dde3ae0f884965a80e8f7704cb43a302ad3432ad92cb8f5336b4",
+        "experiments/adaptive/runs/macbook-spinodoid-postquality-closure-v1/spinodoid-cap-star.json": "c6b2093bd95e646b09e22cc932f66ce13a36a4ea693b8b4d580584ffac692d5f",
+        "experiments/adaptive/runs/macbook-spinodoid-postquality-closure-v1/manifest.json": "3027cf069f041661cd60b36c8c2bfcb8a5410ad2b4de35c98b976c8dff421ee6",
+        "experiments/adaptive/runs/macbook-spinodoid-postquality-closure-v1/tet_adapt.rs": "4dd55e9cdfd65d862f40440242dbfb3eecb700489e4825d3075858236031883d"
+      }
+    },
+    "447": {
+      "run": "experiments/adaptive/runs/macbook-spinodoid-remaining-cap-trace-v1",
+      "worker": {
+        "returncode": 101,
+        "limit_failure": null,
+        "peak_rss_bytes": 740196352,
+        "wall_s": 50.33489108399954,
+        "memory_bytes": 8589934592,
+        "memory_enforcement": "process-tree-rss-watchdog",
+        "rss_poll_interval_s": 0.25,
+        "platform": "darwin",
+        "numerical_thread_policy": {
+          "environment": {
+            "OPENBLAS_NUM_THREADS": "1",
+            "OMP_NUM_THREADS": "1",
+            "MKL_NUM_THREADS": "1",
+            "VECLIB_MAXIMUM_THREADS": "1",
+            "RAYON_NUM_THREADS": "1"
+          },
+          "accelerate_blas_threading": 1,
+          "accelerate_scope": "calling thread"
+        }
+      },
+      "sha256": {
+        "experiments/adaptive/runs/macbook-spinodoid-remaining-cap-trace-v1/worker.log": "5c22ec643dbe43b1cb1aaf435f8dfc66bb2712e88a17302f46174253f2de356a",
+        "experiments/adaptive/runs/macbook-spinodoid-remaining-cap-trace-v1/worker.json": "89e3a70c8d4679872ca9fb08540d291c23447f4bcfaf397539e2a1898fa75589",
+        "experiments/adaptive/runs/macbook-spinodoid-remaining-cap-trace-v1/manifest.json": "1a1f431707a213dd788a6e70ba8001ab8e377165bc6c99338730293b479b707d",
+        "experiments/adaptive/runs/macbook-spinodoid-remaining-cap-trace-v1/source-receipt.json": "925bb506f8abfbc9496547c7d24608bf1071a954cc81f3d20bf432eb17369425",
+        "experiments/adaptive/runs/macbook-spinodoid-remaining-cap-trace-v1/input-tet_adapt.rs": "9919a04ed8b1c4b7ecd920d9856b8dac059f882acc1693e3a8eb4afd5f2c17d7"
+      }
+    },
+    "448": {
+      "run": "experiments/adaptive/runs/macbook-spinodoid-blocked-cavity-swaps-v1",
+      "worker": {
+        "returncode": 101,
+        "limit_failure": null,
+        "peak_rss_bytes": 751206400,
+        "wall_s": 42.73050416703336,
+        "memory_bytes": 8589934592,
+        "memory_enforcement": "process-tree-rss-watchdog",
+        "rss_poll_interval_s": 0.25,
+        "platform": "darwin",
+        "numerical_thread_policy": {
+          "environment": {
+            "OPENBLAS_NUM_THREADS": "1",
+            "OMP_NUM_THREADS": "1",
+            "MKL_NUM_THREADS": "1",
+            "VECLIB_MAXIMUM_THREADS": "1",
+            "RAYON_NUM_THREADS": "1"
+          },
+          "accelerate_blas_threading": 1,
+          "accelerate_scope": "calling thread"
+        }
+      },
+      "sha256": {
+        "experiments/adaptive/runs/macbook-spinodoid-blocked-cavity-swaps-v1/worker.log": "4c02868ae65679b05491723e64fa5567a3c968dfab8a30936ee0134c0f086fe2",
+        "experiments/adaptive/runs/macbook-spinodoid-blocked-cavity-swaps-v1/worker.json": "86eb466c5fe763b3c5415b8a0e3e285044f57c48baf84990acaa5557633e55fa",
+        "experiments/adaptive/runs/macbook-spinodoid-blocked-cavity-swaps-v1/manifest.json": "0920879d6036afe34d8da811eaf8342376fc859d51bcaf8962a53f305272a4d1",
+        "experiments/adaptive/runs/macbook-spinodoid-blocked-cavity-swaps-v1/source-receipt.json": "a55d951fbbb9bebf90025d888136e127fc4031b6137c6878762f45de9557cb7f",
+        "experiments/adaptive/runs/macbook-spinodoid-blocked-cavity-swaps-v1/input-tet_adapt.rs": "6a5c9ee3bb8e22a14d4f82d0b395d0a628da77cc5a5ea301878763ccb99a792b"
+      }
+    },
+    "449": {
+      "run": "experiments/adaptive/runs/macbook-spinodoid-cap-quality-feasibility-v1",
+      "worker": {
+        "returncode": 101,
+        "limit_failure": null,
+        "peak_rss_bytes": 780582912,
+        "wall_s": 50.87079408403952,
+        "memory_bytes": 8589934592,
+        "memory_enforcement": "process-tree-rss-watchdog",
+        "rss_poll_interval_s": 0.25,
+        "platform": "darwin",
+        "numerical_thread_policy": {
+          "environment": {
+            "OPENBLAS_NUM_THREADS": "1",
+            "OMP_NUM_THREADS": "1",
+            "MKL_NUM_THREADS": "1",
+            "VECLIB_MAXIMUM_THREADS": "1",
+            "RAYON_NUM_THREADS": "1"
+          },
+          "accelerate_blas_threading": 1,
+          "accelerate_scope": "calling thread"
+        }
+      },
+      "sha256": {
+        "experiments/adaptive/runs/macbook-spinodoid-cap-quality-feasibility-v1/worker.log": "1b0c78a8aac2aadffe3dcf8fa116d5b662a341bbc9364e522b003e7b352d5d5c",
+        "experiments/adaptive/runs/macbook-spinodoid-cap-quality-feasibility-v1/worker.json": "372970ca1e5690e22de91691b51af56d6228d119998e475f2113d4b2f54063d8",
+        "experiments/adaptive/runs/macbook-spinodoid-cap-quality-feasibility-v1/manifest.json": "1a1f431707a213dd788a6e70ba8001ab8e377165bc6c99338730293b479b707d",
+        "experiments/adaptive/runs/macbook-spinodoid-cap-quality-feasibility-v1/source-receipt.json": "bd7530b50587f317afd5e320f8c429cd9b48d4833d05e731b9e13988a90a2560",
+        "experiments/adaptive/runs/macbook-spinodoid-cap-quality-feasibility-v1/input-tet_adapt.rs": "a4ac30e648b8fe0459a81da351d7378a04087c8bd605df5b2e2e72bd7c9ba317"
+      }
+    },
+    "450": {
+      "run": "experiments/adaptive/runs/macbook-spinodoid-quarter-insertion-v1",
+      "worker": {
+        "returncode": 101,
+        "limit_failure": null,
+        "peak_rss_bytes": 739000320,
+        "wall_s": 49.71328399993945,
+        "memory_bytes": 8589934592,
+        "memory_enforcement": "process-tree-rss-watchdog",
+        "rss_poll_interval_s": 0.25,
+        "platform": "darwin",
+        "numerical_thread_policy": {
+          "environment": {
+            "OPENBLAS_NUM_THREADS": "1",
+            "OMP_NUM_THREADS": "1",
+            "MKL_NUM_THREADS": "1",
+            "VECLIB_MAXIMUM_THREADS": "1",
+            "RAYON_NUM_THREADS": "1"
+          },
+          "accelerate_blas_threading": 1,
+          "accelerate_scope": "calling thread"
+        }
+      },
+      "sha256": {
+        "experiments/adaptive/runs/macbook-spinodoid-quarter-insertion-v1/worker.log": "a2722416abd05ade6553ce2b5c2d74da1ad17746a157408df1d689c2e5f70849",
+        "experiments/adaptive/runs/macbook-spinodoid-quarter-insertion-v1/worker.json": "0a3b6024a7b143b82c02e9f98ce43783b65a6445b9820df5635b86e0c697025d",
+        "experiments/adaptive/runs/macbook-spinodoid-quarter-insertion-v1/manifest.json": "0920879d6036afe34d8da811eaf8342376fc859d51bcaf8962a53f305272a4d1",
+        "experiments/adaptive/runs/macbook-spinodoid-quarter-insertion-v1/source-receipt.json": "a3cf1a1d68abfce98acf0eb1fd7be7ae4e22ca80f95d6efadf6a3e70d1622e42",
+        "experiments/adaptive/runs/macbook-spinodoid-quarter-insertion-v1/input-tet_adapt.rs": "a7ac929ccc0a69b8b75259a0cf0de0edcbf639357c396c5e22116bb2e8b3592e"
+      }
+    }
+  },
+  "quarter_insertion_sampled_error": 0.003089485589934887,
+  "quality_gate": 0.1,
+  "geometry_gate": 0.002,
+  "max_nodes": 250000,
+  "max_tets": 250000,
+  "candidate_promoted": false,
+  "final_suites_passed": false
+}
