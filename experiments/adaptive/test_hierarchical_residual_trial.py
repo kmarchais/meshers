@@ -55,9 +55,13 @@ def test_scattered_residual_matches_direct_cross_energy_and_renumbering(cube):
     fields = affine+.01*noise[:, classes]
     space = topology(mesh.points, mesh.tetrahedra, mesh.surface)
     coefficients, residual, _ = build_modes(mesh.points, mesh.tetrahedra, fields, space, rule)
-    energy, _, _ = integrate(mesh.points, mesh.tetrahedra, fields, space, coefficients, rule)
+    energy, _, _, coupling = integrate(mesh.points, mesh.tetrahedra, fields, space, coefficients, rule,
+        return_coupling=True)
     cross = np.einsum('fcl,fcm->lm', residual, coefficients)
     np.testing.assert_allclose(energy[:6, 6:], cross, atol=1e-12, rtol=1e-10)
+    work = fields.transpose(0,2,1).reshape(6,-1)@coupling
+    np.testing.assert_allclose(work, energy[:6,6:], atol=1e-12, rtol=1e-10)
+    assert np.linalg.norm(coupling.reshape(3,len(mesh.points),6).sum(axis=1)) < 1e-10
     assert trace_check(space, coefficients)['maximum_trace_jump'] < 1e-12
     optimized = trial(energy)
     assert optimized['maximum_relative_gain'] > 0

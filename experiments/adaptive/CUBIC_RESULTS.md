@@ -1,5 +1,29 @@
 # Reference-only cubic enrichment on G3
 
+## Current-domain hierarchical coupling preflight passes, 25 October 2026
+
+Eight virtual-work/force-balance/Schur controls pass. Job 359 then verifies
+consistent 15-point mode coupling against positive 125-point integration:
+mode Gram and gain changes are 6.655e-5 and 4.023e-5 relative, within 1%.
+The actual sparse parent has 545,136 free rows and 44,320,304 stored entries,
+534,024,196 CSR bytes. Six coupling columns need 26,166,528 reduced bytes.
+All saved-field residuals pass, and the exact parent operator SHA reproduces
+the six-load run. Four-level AMG setup passes at 5.018 GiB with CG intercepted
+before entry. No dense global mode rows are passed to AMG or matrix saved.
+
+Parser failure 357 and key-comparison failure 358 remain frozen. The latter
+compared the (shape,SHA) tuple with a SHA string; comparing its SHA member
+passes without changing the exact identity or physics gates. No numerical
+operator discrepancy was established. Worker 359 takes 43.46 seconds.
+See [coupling preflight](../../handoff/macbook/lattice26-hierarchical-coupled-preflight-20261025.json).
+Next permit six fresh auxiliary zero-macro response solves and a 6x6 Schur
+correction, followed by independent complete-field and positive-quadrature
+audits. Geometry, original Tet10 space and node/tet caps remain fixed. No
+reference, native candidate or timing victory is promoted; all four cases
+and all 24 model tensors remain in scope.
+Earlier selected-next descriptions below are historical.
+
+
 ## Lattice26 same-domain residual trial resolves a correction, 25 October 2026
 
 After three passing analytic controls, job 355 builds six global trial modes

@@ -93,7 +93,7 @@ def build_modes(points, cells, fields, space, quadrature, batch=1024):
         residual_maximum=float(abs(residual).max()), diagonal_minimum_eigenvalue=float(np.linalg.eigvalsh(diagonal).min()))
 
 
-def integrate(points, cells, fields, space, coefficients, quadrature, batch=1024):
+def integrate(points, cells, fields, space, coefficients, quadrature, batch=1024, *, return_coupling=False):
     from fedoo.lib_elements.tetrahedron import Tet10
 
     locations, weights = quadrature
@@ -101,6 +101,7 @@ def integrate(points, cells, fields, space, coefficients, quadrature, batch=1024
     _, bubbles = basis(locations)
     energy = np.zeros((12, 12))
     local_modes = np.zeros((len(cells), 6, 6))
+    coupling = np.zeros((3*len(points), 6)) if return_coupling else None
     minimum, volume = np.inf, 0.
     for start in range(0, len(cells), batch):
         subset = slice(start, min(start+batch, len(cells)))
@@ -121,9 +122,15 @@ def integrate(points, cells, fields, space, coefficients, quadrature, batch=1024
             weighted = weight*determinant
             energy += np.einsum('t,itkl,jtkl->ij', weighted, strain, sigma, optimize=True)
             local_modes[subset] += np.einsum('t,itkl,jtkl->tij', weighted, strain[6:], sigma[6:], optimize=True)
+            if coupling is not None:
+                force = np.einsum('t,tin,ktji->tnjk', weighted, grad, sigma[6:], optimize=True)
+                for component in range(3):
+                    np.add.at(coupling[component*len(points):(component+1)*len(points)],
+                        cells[subset].ravel(), force[:, :, component].reshape(-1, 6))
             volume += float(weighted.sum())
     np.testing.assert_allclose(local_modes.sum(axis=0), energy[6:, 6:], atol=1e-12, rtol=1e-10)
-    return energy, local_modes, dict(minimum_sampled_jacobian=minimum, volume=volume)
+    result = energy, local_modes, dict(minimum_sampled_jacobian=minimum, volume=volume)
+    return result if coupling is None else (*result, coupling)
 
 
 def trace_check(space, coefficients, batch=8192):
