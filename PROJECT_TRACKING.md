@@ -1,5 +1,27 @@
 # Meshers project tracking
 
+## Public periodic affine normal-jump recipe recovered, 25 October 2026
+
+The unchanged public tapered-prism recipe now admits 3,811 tets / 844 nodes,
+qmin 0.309003 and roundoff geometry/volume error, with 45 periodic node pairs
+and 66 matching cap triangles per end. Complete normalized affine end-trace
+multisets must match before physical cutting; the actual seed must then pass
+the existing node/cap gate before coupled torus adaptation. Named fields keep
+their individual trace requirement. Red 311 rejects; green 314 and independent
+replay 317 pass. No old failure was reclassified. Full suite 316 passes 99 native
+tests / one explicit research skip; Python 318 passes 208 / one optional skip.
+Fresh controls 319–323 and independent replay 325 prove all four study meshes
+and the periodic column exactly unchanged from native 99817e40. Audit 324
+selected the earlier failed spinodoid CLI directory; its failure is retained,
+and 325 explicitly selects the valid v2 predecessor. No FE solve, reference
+promotion or comparative timing claim follows.
+See [periodic affine trace results](experiments/adaptive/PERIODIC_AFFINE_TRACE_RESULTS.md).
+Next check one rotated version of the recovered prism for orientation
+robustness before optimization. Original four specimens and all 24 lattice
+model tensors remain fixed and in scope. The full objective remains open.
+Earlier selected-next descriptions below are historical.
+
+
 ## Verified affine curve mobility, 25 October 2026
 
 The adapter incorrectly froze vertices on two affine planes. Rank-aware

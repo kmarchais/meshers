@@ -650,6 +650,16 @@ fn generate<'py>(
     Ok(output)
 }
 
+/// Shared native certificate for complete affine end traces.
+#[pyfunction]
+fn _periodic_affine_traces(
+    planes: Vec<[f64; 4]>,
+    bounds: [[f64; 3]; 2],
+    periodic: [bool; 3],
+) -> bool {
+    meshers_core::implicit::periodic_affine_traces(&planes, bounds, periodic)
+}
+
 /// Return the available native CPU worker count.
 #[pyfunction]
 fn available_threads() -> usize {
@@ -669,6 +679,7 @@ fn _meshers(m: &Bound<'_, PyModule>) -> PyResult<()> {
         meshers_core::implicit::intersection::MAX_CONSTRAINTS,
     )?;
     m.add_function(wrap_pyfunction!(available_threads, m)?)?;
+    m.add_function(wrap_pyfunction!(_periodic_affine_traces, m)?)?;
     m.add_class::<compiled::CompiledField>()?;
     m.add_function(wrap_pyfunction!(compiled::_compile_expression, m)?)?;
     m.add_function(wrap_pyfunction!(generate, m)?)?;

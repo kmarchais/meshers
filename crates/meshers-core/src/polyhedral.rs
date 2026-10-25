@@ -24,6 +24,36 @@ pub(crate) fn active(planes: &[[f64; 4]], p: Point, tolerance: f64) -> u64 {
     })
 }
 
+/// Matching multisets of restricted affine equations certify equal max-field traces.
+/// Matching is exact in the represented coefficients; ambiguous near-matches reject.
+pub(crate) fn periodic_traces(
+    planes: &[[f64; 4]],
+    bounds: [Point; 2],
+    periodic: [bool; 3],
+) -> bool {
+    let [lo, hi] = bounds;
+    (0..3).all(|a| {
+        !periodic[a] || {
+            let trace = |plane: &[f64; 4], side: f64| {
+                let mut p = *plane;
+                p[3] += p[a] * side;
+                p[a] = 0.;
+                p
+            };
+            let mut upper: Vec<_> = planes.iter().map(|p| trace(p, hi[a])).collect();
+            planes.iter().all(|p| {
+                let lower = trace(p, lo[a]);
+                if let Some(i) = upper.iter().position(|q| *q == lower) {
+                    upper.swap_remove(i);
+                    true
+                } else {
+                    false
+                }
+            })
+        }
+    })
+}
+
 /// Number of independent affine normals, including held box coordinates.
 pub(crate) fn constraint_rank(planes: &[[f64; 4]], mask: u64, locked: [bool; 3]) -> usize {
     let mut basis = [[0.; 3]; 3];
@@ -159,7 +189,7 @@ mod tests {
             Some(&[[1., 0., 0., -0.2], [0., 0., 1., -0.2]]),
         );
         assert!(
-            matches!(result, Err(crate::MeshingError::InvalidOptions(message)) if message.contains("planes invariant on periodic axes"))
+            matches!(result, Err(crate::MeshingError::InvalidOptions(message)) if message.contains("matching affine end traces"))
         );
     }
 

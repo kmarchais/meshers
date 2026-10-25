@@ -21,12 +21,19 @@ Points = npt.NDArray[np.float64]
 Indices = npt.NDArray[np.int64]
 
 
-def _periodic_affine(field: Scalar, periodic: Sequence[bool]) -> bool:
+def _periodic_affine(
+    field: Scalar, periodic: Sequence[bool], bounds: np.ndarray | None = None
+) -> bool:
     if not isinstance(field, _meshers.CompiledField) or not getattr(
         _meshers, "PERIODIC_POLYHEDRAL", False
     ):
         return False
     planes = getattr(field, "_halfspaces", None)
+    certificate = getattr(_meshers, "_periodic_affine_traces", None)
+    if planes is not None and bounds is not None and certificate is not None:
+        return certificate(
+            planes, [bounds[::2].tolist(), bounds[1::2].tolist()], tuple(bool(v) for v in periodic)
+        )
     return planes is not None and all(
         not enabled or all(plane[axis] == 0 for plane in planes)
         for axis, enabled in enumerate(periodic)

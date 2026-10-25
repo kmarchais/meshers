@@ -1,0 +1,106 @@
+{
+  "passed": true,
+  "public_recipe_recovered": true,
+  "recovered": {
+    "run": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-periodic-affine-traces-prism-v1",
+    "qualified": true,
+    "nodes": 844,
+    "elements": 3811,
+    "minimum_quality": 0.3090026468404539,
+    "forward_distance": 1.1443916996305594e-16,
+    "reverse_distance": 1.2412670766236366e-16,
+    "relative_volume_error": 2.220446049250313e-16,
+    "periodic": {
+      "axis": 2,
+      "pair_count": 45,
+      "cap_count": 66,
+      "coordinate_error": 0.0,
+      "matching_caps": true,
+      "bijective_nodes": true
+    },
+    "options": {
+      "bounds": [
+        -0.5,
+        0.5,
+        -0.5,
+        0.5,
+        -0.5,
+        0.5
+      ],
+      "cells": 24,
+      "geometry_tolerance": 0.002,
+      "minimum_quality": 0.1,
+      "max_tetrahedra": 250000,
+      "threads": 1,
+      "adapt": true,
+      "min_length": 0.002,
+      "max_length": 0.1,
+      "gradation": 0.3,
+      "adapt_iterations": 4,
+      "quality_guard": 0.3,
+      "optimize_passes": 1,
+      "order": 1,
+      "snap": 0.2,
+      "periodic": [
+        false,
+        false,
+        true
+      ]
+    },
+    "reverse_witness": [
+      -0.26874999999999993,
+      5.0885221961986346e-18,
+      -0.2708333333333333
+    ],
+    "reverse_witness_distance_to_corner_line": null
+  },
+  "previous_rejection": {
+    "run": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-periodic-wedge-public-wrapped-v1",
+    "error": "sampled geometry error 1.0642514280235028e-2 exceeds tolerance 2e-3; increase resolution or budget",
+    "qualified": false
+  },
+  "fixed_options_and_gates": true,
+  "fixed_sample_hash": "15e4c70dd9c23804489ce51d136c5b6305f0c55d287bae21f1f8bca8110aec7f",
+  "complete_normalized_affine_trace_multiset_equal": true,
+  "red_green_controls": [
+    {
+      "run": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-periodic-affine-traces-red-v1",
+      "returncode": 1
+    },
+    {
+      "run": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-periodic-affine-traces-green-v1",
+      "returncode": 0
+    }
+  ],
+  "inputs": {
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/verify_periodic_affine_recovery.py": "d395e7e464168948fbfa2b17a3a454f8ec709698cdbc52456e66da7eb12074a7",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/verify_adaptive_polyhedral_change.py": "a10aceaf6dc6c2c8813142d07df527e5fec48f28253626e3aa82f8b7d350cbc1",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/topology_coverage.py": "3b50fdd05a16ba36669f3a71eeedfcc91d8438c137e7eb6a382b8958a02970ea",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/facet_incidence_audit.py": "4f51afc196c85e1d0bc64d7a96507517ddc6e32ccd8380a2ac77cae0ace89610",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/scorecard.py": "8f26256c7df0e84c9f35cdd71bf4f95a74e072d45469002b213c5dcd4f1bab2a",
+    "/Users/kmarchais/dev/meshers/crates/meshers-python/python/meshers/_meshers.abi3.so": "02d1c61873b8a2ac34e721fb9d47aaea5471f6dc7f3d325452124cae6d8faef6",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/microgen_workflow.py": "073f615481feeae8bb9142d325d9ae39251ca1e1aa2d1376f5e4f88a19aec872",
+    "/Users/kmarchais/dev/meshers/crates/meshers-python/python/meshers/__init__.py": "5099f9cb757bc19b162bf4b172cb97d364cef44138e608785ef1bff6b3e34832",
+    "/Users/kmarchais/dev/meshers/crates/meshers-python/python/meshers/expression.py": "b4a6a51513e49415563d00cf49745c2359a1325aa3daf561c1c697171068e301",
+    "/Users/kmarchais/dev/meshers/crates/meshers-python/python/meshers/intersection.py": "c1940da37501ae576bd8afb3119ac91426c8f9cfcaf64b3355d0c798d17c479c",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-periodic-affine-traces-prism-v1/mesh.npz": "b67a5b83ccd2596a9c67535d36faf5bbcb707103ef73825f967ced4d08cd8ca1",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-periodic-affine-traces-prism-v1/reference.npz": "15e4c70dd9c23804489ce51d136c5b6305f0c55d287bae21f1f8bca8110aec7f",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-periodic-affine-traces-prism-v1/result.json": "30bd4a5fcdad5114bbd70f938f3b874af896685b34955507c39a13f33f29c72b",
+    "/Users/kmarchais/dev/meshers/.local-work/native-baselines/30506b13042653a08eb6149dac264ebd2de39b0c033f0df5822abc3d7662aab1/meshers/_meshers.abi3.so": "30506b13042653a08eb6149dac264ebd2de39b0c033f0df5822abc3d7662aab1",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-periodic-wedge-public-wrapped-v1/input-3-__init__.py": "7c3acaecc87d4a8241968a6768e42dbe72c8ecdc025a9e22bbc5c042f46f4486",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-periodic-wedge-public-wrapped-v1/input-5-intersection.py": "43fdc25933834907c624254454837366d218a45ef65c45a11183d582d3263699",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-periodic-affine-traces-red-v1/worker.json": "a330b7da27f118fc503abb5945ac8dc16620a009586165387ae027c9a7c1f6c9",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-periodic-affine-traces-red-v1/worker.log": "9629bf61705b57a7a11a23ccc6789f4806d7e947319bb828103715c7e7515044",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-periodic-affine-traces-red-v1/manifest.json": "c93434abdd8591904e3c6cd8e6dfd24b3f9518d922583af551df0166c373e015",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-periodic-affine-traces-green-v1/worker.json": "f63d81487e8ed04ee41e3f9045228345a52f9ecdfb3fd2e7e9579b93021059a1",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-periodic-affine-traces-green-v1/worker.log": "0fc440c708b8062bd05d6f72174bb278f97340e23c153cb23a029ed1add7672e",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-periodic-affine-traces-green-v1/manifest.json": "1edcd874ce0dd5931688e15187ab6b9acab9e5f12cde96cf69788e1734cfb05c",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-periodic-wedge-public-wrapped-v1/result.json": "ad256c708522fa999b89d4b76f7100e628d3f00f64d96ad9e5f4cb9671aff990",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-periodic-wedge-public-wrapped-v1/reference.npz": "15e4c70dd9c23804489ce51d136c5b6305f0c55d287bae21f1f8bca8110aec7f",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-periodic-wedge-public-wrapped-v1/worker.json": "4cd845ee10ac221e87faebb22bc89e3b431bcda5309f59c4cee26306f59f4b6e"
+  },
+  "no_fe_solve": true,
+  "reference_promoted": false,
+  "comparative_timing_claim": false,
+  "scope": "One previously rejected public periodic affine prism recipe recovered; no universal coverage or original study FE convergence claim"
+}

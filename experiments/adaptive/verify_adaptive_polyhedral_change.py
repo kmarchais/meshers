@@ -11,9 +11,10 @@ from verify_polyhedral_change import canonical_mesh
 
 def replay_periodic_column(run, np, scorecard, hashes, baseline=None):
     from facet_incidence_audit import audit
-    from topology_coverage import audit_column_periodicity, boundary_topology, fixture, periodic_column
+    from topology_coverage import audit_column_periodicity, boundary_topology, fixture, periodic_column, periodic_wedge
     record = json.loads((run/'result.json').read_text())
-    assert record['case'] == 'periodic-column' and record['periodic_requested']
+    case = record['case']
+    assert case in ('periodic-column', 'periodic-wedge') and record['periodic_requested']
     inputs = json.loads((run/'analysis-inputs.json').read_text())
     for source, expected in inputs.items():
         path = Path(source)
@@ -35,9 +36,9 @@ def replay_periodic_column(run, np, scorecard, hashes, baseline=None):
     assert audit(p, t, f)['oriented_facet_consistency_passed']
     periodic = audit_column_periodicity(p, f, np)
     assert periodic == record['periodic']
-    _, queries, exact_volume, components, euler = fixture('periodic-column', np)
+    _, queries, exact_volume, components, euler = fixture(case, np)
     np.testing.assert_array_equal(queries, np.load(run/'reference.npz')['points'])
-    target, faces = periodic_column(np)
+    target, faces = periodic_column(np) if case == 'periodic-column' else periodic_wedge(np)
     bary = np.array([(i/4, j/4, 1-(i+j)/4) for i in range(5) for j in range(5-i)])
     probes = np.einsum('sn,fnd->fsd', bary, p[f]).reshape(-1, 3)
     forward = float(scorecard.distance_to_mesh(target, faces, probes).max())
@@ -58,7 +59,8 @@ def replay_periodic_column(run, np, scorecard, hashes, baseline=None):
     return dict(run=str(run), qualified=qualified, nodes=len(p), elements=len(t),
         minimum_quality=float(q.min()), forward_distance=forward, reverse_distance=reverse,
         relative_volume_error=volume_error, periodic=periodic, options=record['options'],
-        reverse_witness=witness.tolist(), reverse_witness_distance_to_corner_line=float(np.linalg.norm(abs(local_xy)-.2)))
+        reverse_witness=witness.tolist(), reverse_witness_distance_to_corner_line=(float(np.linalg.norm(abs(local_xy)-.2))
+            if case == 'periodic-column' else None))
 
 
 def main():
@@ -75,11 +77,15 @@ def main():
     parser.add_argument('--named-periodic-run')
     parser.add_argument('--allow-changed-adaptive-controls', action='store_true')
     parser.add_argument('--control-run', nargs=2, action='append', default=[], metavar=('CASE', 'DIRECTORY'))
+    parser.add_argument('--previous-control-run', nargs=2, action='append', default=[], metavar=('CASE', 'DIRECTORY'))
     args = parser.parse_args()
     assert not args.output.exists()
     overrides = dict(args.control_run)
     assert len(overrides) == len(args.control_run)
     assert overrides.keys() <= {'gyroid', 'schwarz-solid', 'spinodoid', 'smooth-lattice'}
+    previous_overrides = dict(args.previous_control_run)
+    assert len(previous_overrides) == len(args.previous_control_run)
+    assert previous_overrides.keys() <= {'gyroid', 'schwarz-solid', 'spinodoid', 'smooth-lattice'}
     np, _, _, _, _, scorecard = w.imports()
     import meshers._meshers
     from facet_incidence_audit import audit
@@ -97,7 +103,7 @@ def main():
         ('smooth-lattice', 'lattice', 'meshers-tet4-historical32'),
     ):
         current = w.HERE/'runs'/overrides.get(case, f'{args.prefix}-{label}-control-v1')
-        old = w.HERE/'runs'/f'{args.previous_prefix}-{label}-control-v1'
+        old = w.HERE/'runs'/previous_overrides.get(case, f'{args.previous_prefix}-{label}-control-v1')
         verification = verify_run(current, replay_geometry=True)
         previous_verification = verify_run(old, replay_geometry=True, native_baseline=baseline)
         directories = [run/f'repeat-0-{config}' for run in (current, old)]

@@ -302,8 +302,27 @@ pub fn generate_with_size<F: ScalarField>(
     generate_with_features(field, size_field, options, None)
 }
 
+/// Whether finite affine hints certify equal complete max-field traces at the ends.
+/// This is conservative: each restricted affine equation must have an exact match.
+/// A matching trace does not certify that a generated seed has matching cap facets.
+pub fn periodic_affine_traces(
+    planes: &[[f64; 4]],
+    bounds: [Point; 2],
+    periodic: [bool; 3],
+) -> bool {
+    if !(2..=intersection::MAX_CONSTRAINTS).contains(&planes.len())
+        || (0..3).any(|a| {
+            !bounds[0][a].is_finite() || !bounds[1][a].is_finite() || bounds[0][a] >= bounds[1][a]
+        })
+    {
+        return false;
+    }
+    crate::polyhedral::normalized(planes)
+        .is_some_and(|planes| crate::polyhedral::periodic_traces(&planes, bounds, periodic))
+}
+
 /// Generate with optional equivalent max-of-affine hints for adaptive Tet4.
-/// Every hinted plane must be invariant along requested periodic axes.
+/// The complete plane set must have matching traces on requested periodic ends.
 /// Hints must describe the same negative sublevel set. Hints
 /// whose normalized coefficients are unrepresentable retain scalar behavior.
 pub fn generate_with_features<F: ScalarField>(
@@ -384,18 +403,22 @@ fn generate_internal<F: ScalarField>(
                 .iter()
                 .any(|p| p.iter().any(|x| !x.is_finite()) || p[..3] == [0.; 3])
             || (options.adapt.is_none() && regions.is_none())
-            || planes
-                .iter()
-                .any(|p| (0..3).any(|a| options.periodic[a] && p[a] != 0.))
             || !matches!(options.region, Region::Negative)
             || options.order != 1
             || options.threads != 1
             || options.interior_refine_nodes != 0
             || options.optimize_passes > 20)
     {
-        return Err(MeshingError::InvalidOptions("affine features require bounded finite planes invariant on periodic axes, adaptive Tet4, one worker and no interior-refinement request".into()));
+        return Err(MeshingError::InvalidOptions("affine features require bounded finite planes, adaptive Tet4, one worker and no interior-refinement request".into()));
     }
     let halfspaces = halfspaces.and_then(crate::polyhedral::normalized);
+    if let Some(planes) = &halfspaces
+        && !crate::polyhedral::periodic_traces(planes, options.bounds, options.periodic)
+    {
+        return Err(MeshingError::InvalidOptions(
+            "periodic features require matching affine end traces".into(),
+        ));
+    }
     if size_field.is_some() && options.adapt.is_none() {
         return Err(MeshingError::InvalidOptions(
             "size_field requires adaptation".into(),
@@ -598,6 +621,60 @@ pub(crate) fn nonmanifold_vertices(surface: &[[usize; 3]], point_count: usize) -
         .collect()
 }
 
+fn periodic_pairs(
+    mesh: &Mesh,
+    tags: &[u8],
+    bounds: [Point; 2],
+    periodic: [bool; 3],
+) -> Result<[Vec<[usize; 2]>; 3], String> {
+    let [lo, hi] = bounds;
+    let mut pairs: [Vec<[usize; 2]>; 3] = std::array::from_fn(|_| Vec::new());
+    for (a, pair) in pairs.iter_mut().enumerate() {
+        if !periodic[a] {
+            continue;
+        }
+        let mut maps = [BTreeMap::new(), BTreeMap::new()];
+        // Preserve other coordinates here: pairing on x must not collapse y/z corners.
+        let key = |p: Point| {
+            std::array::from_fn::<_, 3, _>(|axis| {
+                if axis == a {
+                    0
+                } else {
+                    ((p[axis] - lo[axis]) / (hi[axis] - lo[axis]) * 1e11).round() as i64
+                }
+            })
+        };
+        for (i, &p) in mesh.points.iter().enumerate() {
+            for (side, value) in [lo[a], hi[a]].iter().enumerate() {
+                if p[a] == *value && maps[side].insert(key(p), i).is_some() {
+                    return Err("ambiguous periodic node match".into());
+                }
+            }
+        }
+        if maps[0].keys().ne(maps[1].keys()) {
+            return Err(format!("periodic node mismatch on axis {a}"));
+        }
+        for (k, &i) in &maps[0] {
+            pair.push([i, maps[1][k]]);
+        }
+        let mut faces = [Vec::new(), Vec::new()];
+        for (f, &tag) in mesh.surface.iter().zip(tags) {
+            for (side, list) in faces.iter_mut().enumerate() {
+                if tag == 1 + 2 * a as u8 + side as u8 {
+                    let mut keys = f.map(|i| key(mesh.points[i]));
+                    keys.sort_unstable();
+                    list.push(keys);
+                }
+            }
+        }
+        faces.iter_mut().for_each(|f| f.sort_unstable());
+        if faces[0] != faces[1] {
+            return Err(format!("periodic triangle mismatch on axis {a}"));
+        }
+    }
+    Ok(pairs)
+}
+
 fn finish<F: ScalarField>(mesh: Mesh, g: &Context<F>) -> Result<Output, String> {
     let mut volume = 0.;
     let mut minimum: f64 = 1.;
@@ -689,50 +766,7 @@ fn finish<F: ScalarField>(mesh: Mesh, g: &Context<F>) -> Result<Output, String> 
             g.options.geometry_tolerance
         ));
     }
-    let mut pairs: [Vec<[usize; 2]>; 3] = std::array::from_fn(|_| Vec::new());
-    for (a, pair) in pairs.iter_mut().enumerate() {
-        if !g.options.periodic[a] {
-            continue;
-        }
-        let mut maps = [BTreeMap::new(), BTreeMap::new()];
-        // Preserve other coordinates here: pairing on x must not collapse y/z corners.
-        let key = |p: Point| {
-            std::array::from_fn::<_, 3, _>(|axis| {
-                if axis == a {
-                    0
-                } else {
-                    ((p[axis] - lo[axis]) / (hi[axis] - lo[axis]) * 1e11).round() as i64
-                }
-            })
-        };
-        for (i, &p) in mesh.points.iter().enumerate() {
-            for (side, value) in [lo[a], hi[a]].iter().enumerate() {
-                if p[a] == *value && maps[side].insert(key(p), i).is_some() {
-                    return Err("ambiguous periodic node match".into());
-                }
-            }
-        }
-        if maps[0].keys().ne(maps[1].keys()) {
-            return Err(format!("periodic node mismatch on axis {a}"));
-        }
-        for (k, &i) in &maps[0] {
-            pair.push([i, maps[1][k]]);
-        }
-        let mut faces = [Vec::new(), Vec::new()];
-        for (f, &tag) in mesh.surface.iter().zip(&tags) {
-            for (side, list) in faces.iter_mut().enumerate() {
-                if tag == 1 + 2 * a as u8 + side as u8 {
-                    let mut keys = f.map(|i| key(mesh.points[i]));
-                    keys.sort_unstable();
-                    list.push(keys);
-                }
-            }
-        }
-        faces.iter_mut().for_each(|f| f.sort_unstable());
-        if faces[0] != faces[1] {
-            return Err(format!("periodic triangle mismatch on axis {a}"));
-        }
-    }
+    let pairs = periodic_pairs(&mesh, &tags, g.bounds(), g.options.periodic)?;
     let empty = mesh.tets.is_empty();
     if !empty && minimum < g.options.minimum_quality {
         return Err(format!(
@@ -815,7 +849,12 @@ fn build<F: ScalarField>(g: &Context<F>) -> Result<Output, String> {
             .collect();
         let references: Vec<&dyn ScalarField> =
             fields.iter().map(|f| f as &dyn ScalarField).collect();
+        let permuting = planes
+            .iter()
+            .any(|p| (0..3).any(|a| o.periodic[a] && p[a] != 0.));
         let seed_options = Options {
+            periodic: if permuting { [false; 3] } else { o.periodic },
+            optimize_passes: if permuting { 0 } else { o.optimize_passes },
             adapt: None,
             geometry_tolerance: 0.,
             minimum_quality: 0.,
@@ -826,6 +865,26 @@ fn build<F: ScalarField>(g: &Context<F>) -> Result<Output, String> {
         } else {
             intersection::generate(&references, |p| p, seed_options)?
         };
+        if permuting {
+            let tags: Vec<_> = seed
+                .mesh
+                .surface
+                .iter()
+                .map(|f| {
+                    let mut tag = 0;
+                    for a in 0..3 {
+                        if f.iter().all(|&v| seed.mesh.points[v][a] == o.bounds[0][a]) {
+                            tag = 1 + 2 * a as u8;
+                        }
+                        if f.iter().all(|&v| seed.mesh.points[v][a] == o.bounds[1][a]) {
+                            tag = 2 + 2 * a as u8;
+                        }
+                    }
+                    tag
+                })
+                .collect();
+            periodic_pairs(&seed.mesh, &tags, o.bounds, o.periodic)?;
+        }
         let reverted_snap_vertices = seed.quality.reverted_snap_vertices;
         let mut mesh = seed.mesh;
         if mesh.tets.is_empty() || o.adapt.is_none() {
@@ -1307,6 +1366,62 @@ fn distance_batch<F: ScalarField>(
 #[cfg(test)]
 mod topology_tests {
     use super::nonmanifold_vertices;
+
+    #[test]
+    fn periodic_seed_requires_both_bijective_nodes_and_matching_caps() {
+        let mut mesh = crate::Mesh {
+            points: vec![
+                [-0.2, -0.2, -0.5],
+                [0.2, -0.2, -0.5],
+                [0.2, 0.2, -0.5],
+                [-0.2, 0.2, -0.5],
+                [-0.2, -0.2, 0.5],
+                [0.2, -0.2, 0.5],
+                [0.2, 0.2, 0.5],
+                [-0.2, 0.2, 0.5],
+            ],
+            tets: Vec::new(),
+            surface: vec![[0, 1, 2], [0, 2, 3], [4, 5, 6], [4, 6, 7]],
+        };
+        let check = |mesh: &crate::Mesh| {
+            super::periodic_pairs(
+                mesh,
+                &[5, 5, 6, 6],
+                [[-0.5; 3], [0.5; 3]],
+                [false, false, true],
+            )
+        };
+        assert_eq!(check(&mesh).unwrap()[2].len(), 4);
+        mesh.surface[2] = [4, 5, 7];
+        mesh.surface[3] = [5, 6, 7];
+        assert!(check(&mesh).unwrap_err().contains("triangle mismatch"));
+        mesh.points[4][0] += 0.01;
+        assert!(check(&mesh).unwrap_err().contains("node mismatch"));
+    }
+
+    #[test]
+    fn complete_affine_trace_certificate_keeps_plane_multiplicities() {
+        let planes = [
+            [1., 0., 0.3, -0.35],
+            [1., 0., -0.3, -0.35],
+            [-1., 0., 0.3, -0.35],
+            [-1., 0., -0.3, -0.35],
+            [0., 1., 0., -0.2],
+            [0., -1., 0., -0.2],
+        ];
+        let check = |p: &[[f64; 4]], b| super::periodic_affine_traces(p, b, [false, false, true]);
+        assert!(check(&planes, [[-0.5; 3], [0.5; 3]]));
+        assert!(!check(&planes, [[-0.5; 3], [0.6; 3]]));
+        let mut wrong = planes;
+        wrong[1] = wrong[0];
+        assert!(!check(&wrong, [[-0.5; 3], [0.5; 3]]));
+        wrong = planes;
+        wrong[1][3] -= 0.01;
+        assert!(!check(&wrong, [[-0.5; 3], [0.5; 3]]));
+        wrong = planes;
+        wrong[0][3] = f64::NAN;
+        assert!(!check(&wrong, [[-0.5; 3], [0.5; 3]]));
+    }
 
     #[test]
     fn catches_vertex_pinches_even_when_all_edges_have_two_faces() {

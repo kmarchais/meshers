@@ -330,3 +330,52 @@ def test_periodic_feature_path_keeps_nonperiodic_sizing_rejection():
             max_length=0.1,
             size_field=lambda x, y, z: 0.06 + 0.01 * z,
         )
+
+
+def test_periodic_affine_normal_jump_uses_a_verified_physical_seed():
+    def field(x, y, z):
+        return np.maximum(abs(x) + 0.3 * abs(z) - 0.35, abs(y) - 0.2)
+
+    mesh = meshers.generate(
+        field, bounds=(-0.5, 0.5) * 3, cells=24, periodic=(False, False, True),
+        adapt=True, min_length=0.002, max_length=0.1, gradation=0.3,
+        layers=0, adapt_iterations=4, quality_guard=0.3,
+        optimize_passes=1, geometry_tolerance=0.002, minimum_quality=0.1,
+        max_tetrahedra=250000,
+    )
+    assert mesh.diagnostics["polyhedral_constraints"] == 6
+    assert mesh.diagnostics["minimum_mmg_quality"] >= 0.1
+    assert abs(mesh.diagnostics["volume"] - 0.22) < 1e-12
+    p = mesh.points[mesh.tetrahedra]
+    assert np.all(np.linalg.det(p[:, 1:] - p[:, :1]) > 0)
+    boundary = mesh.points[mesh.surface]
+    wall = boundary[np.ptp(boundary[:, :, 2], axis=1) > 0]
+    probes = np.concatenate((wall.reshape(-1, 3), wall.mean(axis=1)))
+    assert np.max(abs(field(*probes.T))) < 1e-12
+    pairs = mesh.periodic_pairs[2]
+    assert len(pairs) > 0
+    np.testing.assert_array_equal(mesh.points[pairs[:, 0], :2], mesh.points[pairs[:, 1], :2])
+    mapping = np.arange(len(mesh.points))
+    mapping[pairs[:, 1]] = pairs[:, 0]
+    low = mesh.surface[np.all(np.equal(boundary[:, :, 2], -0.5), axis=1)]
+    high = mesh.surface[np.all(np.equal(boundary[:, :, 2], 0.5), axis=1)]
+    assert len(low) > 0
+    assert {tuple(sorted(f)) for f in low} == {tuple(sorted(f)) for f in mapping[high]}
+
+
+def test_complete_affine_trace_dispatch_keeps_named_plane_rejection():
+    from meshers.intersection import _periodic_affine
+
+    field = meshers.compile_field(
+        lambda x, y, z: np.maximum(abs(x) + 0.3 * abs(z) - 0.35, abs(y) - 0.2)
+    )
+    bounds = np.array((-0.5, 0.5) * 3)
+    assert _periodic_affine(field, (False, False, True), bounds)
+    bounds[-1] = 0.6
+    assert not _periodic_affine(field, (False, False, True), bounds)
+    with pytest.raises(meshers.MeshingError, match="periodic"):
+        meshers.generate_intersection(
+            {"slope": lambda x, y, z: x + 0.3 * z - 0.35,
+             "side": lambda x, y, z: abs(y) - 0.2},
+            bounds=(-0.5, 0.5) * 3, cells=4, periodic=(False, False, True),
+        )

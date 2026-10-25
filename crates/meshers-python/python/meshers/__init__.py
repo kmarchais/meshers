@@ -331,7 +331,7 @@ def generate(  # ruff: ignore[complex-structure]
     scalar_mode = (
         order != 1,
         band is not None,
-        any(periodic) and not _periodic_affine(field, periodic),
+        any(periodic) and not _periodic_affine(field, periodic, b if adapt else None),
         threads != 1,
         interior_refine_nodes != 0,
         gradient_override,
