@@ -651,13 +651,18 @@ fn generate<'py>(
 }
 
 /// Shared native certificate for complete affine end traces.
-#[pyfunction]
+#[pyfunction(signature = (planes, bounds, periodic, regions=None))]
 fn _periodic_affine_traces(
     planes: Vec<[f64; 4]>,
     bounds: [[f64; 3]; 2],
     periodic: [bool; 3],
+    regions: Option<Vec<meshers_core::implicit::intersection::ConstraintMask>>,
 ) -> bool {
-    meshers_core::implicit::periodic_affine_traces(&planes, bounds, periodic)
+    if let Some(regions) = regions {
+        meshers_core::implicit::periodic_affine_region_traces(&planes, bounds, periodic, &regions)
+    } else {
+        meshers_core::implicit::periodic_affine_traces(&planes, bounds, periodic)
+    }
 }
 
 /// Return the available native CPU worker count.
@@ -671,6 +676,7 @@ fn _meshers(m: &Bound<'_, PyModule>) -> PyResult<()> {
     m.add("IMPLICIT_API_VERSION", 1)?;
     m.add("ADAPTIVE_POLYHEDRAL", true)?;
     m.add("PERIODIC_POLYHEDRAL", true)?;
+    m.add("PERIODIC_AFFINE_REGIONS", true)?;
     m.add("POLYHEDRAL_REGIONS", true)?;
     m.add("RETAINED_INTERSECTIONS", true)?;
     m.add("ADAPTIVE_RETAINED_INTERSECTIONS", true)?;

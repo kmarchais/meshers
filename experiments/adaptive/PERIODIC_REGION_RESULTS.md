@@ -59,3 +59,40 @@ private result remains explicitly unqualified as a public workflow. The next
 step is a conservative complete-region end-trace certificate, not a sizing
 change. Receipts are `handoff/macbook/periodic-region-investigation-audit-20261025.json`
 and `handoff/macbook/periodic-region-local-artifacts-20261025.json`.
+
+## Public recipe recovered
+
+The conservative region certificate now compares the full multiset of
+conjunction traces at opposite ends. It preserves plane membership within
+each region and region multiplicities. Matching the unrestricted plane list
+alone is insufficient. Signed zero is canonicalized; nonfinite equations,
+invalid masks and unmatched branch multisets reject. Periodic regions must
+use coupled adaptation. Nonadaptive periodic region generation is rejected.
+Named individual-field periodic admission is unchanged.
+
+Red public regression 333 fails on the preceding image. Focused native
+controls 334 pass, including wrong branch grouping and multiplicity, invalid
+masks, trace overflow and the mandatory adaptation gate. Build 335 installs
+arm64 image `7bad4a454648f1bed28636929230411e68c9ed5c494664f134010809fcc5e59f`.
+Public regression 336 passes. The full fixture record 337 admits 3,896 tets /
+898 nodes, qmin 0.301404653, roundoff distance and zero nominal volume error,
+with 54 paired nodes and 82 matching cap triangles per end.
+
+Independent replay 339 verifies the public result at exactly the failed
+recipe's options, gates and fixed sample hash. Its canonical mesh arrays are
+identical to the private saved-seed recovery. Historical rejection 328 remains
+unchanged. This is an actual public generation result, distinct from the
+manufactured feasibility control and private adaptation.
+
+Full native suite 338 passes 101 tests with one explicit research skip.
+Python suite 340 passes 211 tests with one optional skip. Production Python
+type checks, changed Python lint, and core/binding Clippy with warnings denied
+pass. No FE reference, stiffness accuracy or comparative workflow speed
+claim follows from this public failure recovery.
+
+Fresh fixed controls 341–344 admit all four study cases. Column control 345
+also admits. Independent audit 346 proves all four canonical study meshes
+and the column exactly unchanged from native 02d1c618. These are geometry
+controls, not refreshed stiffness or comparative timing results. The next
+main-study control is the unchanged recorded lattice26 curved Tet10 recipe,
+starting with geometry and resources. All 24 reference models remain retained.

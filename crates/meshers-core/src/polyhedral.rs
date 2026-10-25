@@ -24,26 +24,49 @@ pub(crate) fn active(planes: &[[f64; 4]], p: Point, tolerance: f64) -> u64 {
     })
 }
 
-/// Matching multisets of restricted affine equations certify equal max-field traces.
-/// Matching is exact in the represented coefficients; ambiguous near-matches reject.
+/// Equal multisets of complete conjunction traces certify a union's end geometry.
+/// Matches are exact in finite represented coefficients, with signed zeros unified.
 pub(crate) fn periodic_traces(
     planes: &[[f64; 4]],
     bounds: [Point; 2],
     periodic: [bool; 3],
+    regions: Option<&[crate::implicit::intersection::ConstraintMask]>,
 ) -> bool {
+    use crate::implicit::intersection::{ConstraintMask, MAX_CONSTRAINTS};
+    let full = [ConstraintMask::MAX >> (MAX_CONSTRAINTS - planes.len())];
+    let groups = regions.unwrap_or(&full);
     let [lo, hi] = bounds;
     (0..3).all(|a| {
         !periodic[a] || {
-            let trace = |plane: &[f64; 4], side: f64| {
-                let mut p = *plane;
-                p[3] += p[a] * side;
-                p[a] = 0.;
-                p
+            let traces = |side: f64| -> Option<Vec<Vec<[f64; 4]>>> {
+                groups
+                    .iter()
+                    .map(|&mask| {
+                        let mut equations: Vec<_> = planes
+                            .iter()
+                            .enumerate()
+                            .filter(|(i, _)| mask & (1 << i) != 0)
+                            .map(|(_, plane)| {
+                                let mut p = *plane;
+                                p[3] += p[a] * side;
+                                p[a] = 0.;
+                                p.map(|x| if x == 0. { 0. } else { x })
+                            })
+                            .collect();
+                        if equations.iter().flatten().any(|x| !x.is_finite()) {
+                            return None;
+                        }
+                        // Bit ordering gives each finite coefficient multiset a stable signature.
+                        equations.sort_by_key(|p| p.map(f64::to_bits));
+                        Some(equations)
+                    })
+                    .collect()
             };
-            let mut upper: Vec<_> = planes.iter().map(|p| trace(p, hi[a])).collect();
-            planes.iter().all(|p| {
-                let lower = trace(p, lo[a]);
-                if let Some(i) = upper.iter().position(|q| *q == lower) {
+            let (Some(lower), Some(mut upper)) = (traces(lo[a]), traces(hi[a])) else {
+                return false;
+            };
+            lower.into_iter().all(|trace| {
+                if let Some(i) = upper.iter().position(|other| *other == trace) {
                     upper.swap_remove(i);
                     true
                 } else {

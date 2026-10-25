@@ -1,5 +1,26 @@
 # Adaptive implicit meshing: plan and status
 
+## Public re-entrant periodic recipe recovered, 25 October 2026
+
+Complete region-conjunction end traces now receive a conservative native
+certificate before physical seed construction and the existing periodic gate.
+Red 333 fails; green 336 and independent public replay 339 pass. The unchanged
+public notched recipe admits 3,896 tets / 898 nodes, qmin 0.301405 and roundoff
+geometry/volume, with 54 paired nodes and 82 matching cap triangles per end.
+The public arrays exactly match the earlier private recovery. Historical
+failure 328 is unchanged. Full native suite 338 passes 101 tests / one explicit
+research skip; Python 340 passes 211 / one optional skip. Independent audit
+346 proves all four fresh fixed study meshes and the periodic column exactly
+unchanged from native 02d1c618. Final arm64 image is 7bad4a45.
+See [periodic region results](PERIODIC_REGION_RESULTS.md).
+No FE solve, reference promotion or comparative timing victory follows.
+Next replay the recorded lattice26 curved Tet10 recipe as one geometry and
+resource preflight on the new native image, before considering fresh loads.
+Keep its settings, 250,000-node/tet caps, fixed specimen and all 24 models.
+The full objective remains open. Earlier selected-next descriptions below
+are historical.
+
+
 ## Re-entrant periodic failure has a controlled private recovery, 25 October 2026
 
 The new auxiliary notched prism fails the public scalar recipe 328 at error

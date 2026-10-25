@@ -88,5 +88,6 @@ def generate_intersection(
 ) -> dict[str, Any]: ...
 
 def _periodic_affine_traces(
-    planes: Sequence[Sequence[float]], bounds: Sequence[Sequence[float]], periodic: Sequence[bool]
+    planes: Sequence[Sequence[float]], bounds: Sequence[Sequence[float]], periodic: Sequence[bool],
+    regions: Sequence[int] | None = None,
 ) -> bool: ...

@@ -310,15 +310,39 @@ pub fn periodic_affine_traces(
     bounds: [Point; 2],
     periodic: [bool; 3],
 ) -> bool {
+    if !(2..=intersection::MAX_CONSTRAINTS).contains(&planes.len()) {
+        return false;
+    }
+    let full = intersection::ConstraintMask::MAX >> (intersection::MAX_CONSTRAINTS - planes.len());
+    periodic_affine_region_traces(planes, bounds, periodic, &[full])
+}
+
+/// Conservative complete-region trace certificate for a union of intersections.
+/// Each conjunction of normalized restricted planes must have an exact end match.
+/// Periodic seed nodes and cap facets still require independent validation.
+pub fn periodic_affine_region_traces(
+    planes: &[[f64; 4]],
+    bounds: [Point; 2],
+    periodic: [bool; 3],
+    regions: &[intersection::ConstraintMask],
+) -> bool {
     if !(2..=intersection::MAX_CONSTRAINTS).contains(&planes.len())
+        || regions.is_empty()
+        || regions.len() > 32
         || (0..3).any(|a| {
             !bounds[0][a].is_finite() || !bounds[1][a].is_finite() || bounds[0][a] >= bounds[1][a]
         })
     {
         return false;
     }
-    crate::polyhedral::normalized(planes)
-        .is_some_and(|planes| crate::polyhedral::periodic_traces(&planes, bounds, periodic))
+    let allowed =
+        intersection::ConstraintMask::MAX >> (intersection::MAX_CONSTRAINTS - planes.len());
+    if regions.iter().any(|&m| m == 0 || m & !allowed != 0) {
+        return false;
+    }
+    crate::polyhedral::normalized(planes).is_some_and(|planes| {
+        crate::polyhedral::periodic_traces(&planes, bounds, periodic, Some(regions))
+    })
 }
 
 /// Generate with optional equivalent max-of-affine hints for adaptive Tet4.
@@ -334,8 +358,9 @@ pub fn generate_with_features<F: ScalarField>(
     generate_with_regions(field, size_field, options, halfspaces, None)
 }
 
-/// Generate a nonperiodic Tet4 union of intersections using equivalent affine
-/// hints. Region masks select nonpositive planes; callers own hint equivalence.
+/// Generate a Tet4 union of intersections using equivalent affine hints.
+/// Periodic regions require adaptation and certified complete end traces.
+/// Region masks select nonpositive planes; callers own hint equivalence.
 pub fn generate_with_regions<F: ScalarField>(
     field: &F,
     size_field: Option<&dyn ScalarField>,
@@ -384,10 +409,10 @@ fn generate_internal<F: ScalarField>(
         if !(2..=intersection::MAX_CONSTRAINTS).contains(&count)
             || groups.is_empty()
             || groups.len() > 32
-            || options.periodic.iter().any(|&axis| axis)
+            || (options.periodic.iter().any(|&axis| axis) && options.adapt.is_none())
         {
             return Err(MeshingError::InvalidOptions(
-                "bounded affine planes and 1..32 nonperiodic regions required".into(),
+                "bounded affine planes and 1..32 regions required; periodic regions need adaptation".into(),
             ));
         }
         let allowed = intersection::ConstraintMask::MAX >> (intersection::MAX_CONSTRAINTS - count);
@@ -413,7 +438,7 @@ fn generate_internal<F: ScalarField>(
     }
     let halfspaces = halfspaces.and_then(crate::polyhedral::normalized);
     if let Some(planes) = &halfspaces
-        && !crate::polyhedral::periodic_traces(planes, options.bounds, options.periodic)
+        && !crate::polyhedral::periodic_traces(planes, options.bounds, options.periodic, regions)
     {
         return Err(MeshingError::InvalidOptions(
             "periodic features require matching affine end traces".into(),
@@ -1421,6 +1446,57 @@ mod topology_tests {
         wrong = planes;
         wrong[0][3] = f64::NAN;
         assert!(!check(&wrong, [[-0.5; 3], [0.5; 3]]));
+    }
+
+    #[test]
+    fn complete_region_traces_preserve_conjunctions_and_branch_multiplicities() {
+        let planes = [[1., 0., 0.3, -0.35], [1., -0., -0.3, -0.35]];
+        let check = |groups: &[super::intersection::ConstraintMask]| {
+            super::periodic_affine_region_traces(
+                &planes,
+                [[-0.5; 3], [0.5; 3]],
+                [false, false, true],
+                groups,
+            )
+        };
+        assert!(super::periodic_affine_traces(
+            &planes,
+            [[-0.5; 3], [0.5; 3]],
+            [false, false, true]
+        ));
+        assert!(check(&[3]));
+        assert!(check(&[1, 2]));
+        assert!(!check(&[1]));
+        assert!(!check(&[1, 1, 2]));
+        assert!(!check(&[]));
+        assert!(!check(&[0]));
+        assert!(!check(&[4]));
+        let huge = [[0., 0., 1., 1e308], [0., 0., -1., 1e308]];
+        assert!(!super::periodic_affine_region_traces(
+            &huge,
+            [[-0.5, -0.5, -1e308], [0.5, 0.5, 1e308]],
+            [false, false, true],
+            &[1, 2]
+        ));
+    }
+
+    #[test]
+    fn periodic_regions_cannot_skip_coupled_adaptation() {
+        let planes = [[1., 0., 0.3, -0.35], [1., 0., -0.3, -0.35]];
+        let result = super::generate_with_regions(
+            &|p: crate::Point| p[0] - 0.3 * p[2].abs() - 0.35,
+            None,
+            super::Options {
+                periodic: [false, false, true],
+                ..Default::default()
+            },
+            Some(&planes),
+            Some(&[1, 2]),
+        );
+        assert!(
+            matches!(result, Err(crate::MeshingError::InvalidOptions(message))
+            if message.contains("periodic regions need adaptation"))
+        );
     }
 
     #[test]

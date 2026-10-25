@@ -30,6 +30,11 @@ def _periodic_affine(
         return False
     planes = getattr(field, "_halfspaces", None)
     certificate = getattr(_meshers, "_periodic_affine_traces", None)
+    groups = getattr(field, "_polyhedral_regions", None)
+    if (planes is None and groups is not None and bounds is not None and certificate is not None
+        and getattr(_meshers, "PERIODIC_AFFINE_REGIONS", False)):
+        return certificate(groups[0], [bounds[::2].tolist(), bounds[1::2].tolist()],
+            tuple(bool(v) for v in periodic), groups[1])
     if planes is not None and bounds is not None and certificate is not None:
         return certificate(
             planes, [bounds[::2].tolist(), bounds[1::2].tolist()], tuple(bool(v) for v in periodic)

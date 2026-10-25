@@ -1,0 +1,631 @@
+{
+  "study_controls": [
+    {
+      "case": "gyroid",
+      "current": {
+        "run": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-periodic-region-gyroid-control-v1",
+        "input_hashes": 22,
+        "artifact_replays": 1,
+        "full_geometry_replayed": true,
+        "rows": [
+          {
+            "directory": "experiments/adaptive/runs/macbook-periodic-region-gyroid-control-v1/repeat-0-meshers-tet4-24",
+            "qualified": true,
+            "mesh_sha256": "0b09bebf49b50d7305372df3a323973a1a40e802245c91246f123d9028fe5f5b",
+            "used_nodes": 17647,
+            "total_nodes": 17647
+          }
+        ]
+      },
+      "baseline": {
+        "run": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-periodic-traces-gyroid-control-v1",
+        "input_hashes": 22,
+        "artifact_replays": 1,
+        "full_geometry_replayed": true,
+        "rows": [
+          {
+            "directory": "experiments/adaptive/runs/macbook-periodic-traces-gyroid-control-v1/repeat-0-meshers-tet4-24",
+            "qualified": true,
+            "mesh_sha256": "0b09bebf49b50d7305372df3a323973a1a40e802245c91246f123d9028fe5f5b",
+            "used_nodes": 17647,
+            "total_nodes": 17647
+          }
+        ]
+      },
+      "canonical_arrays_identical": true,
+      "current_mesh": {
+        "nodes": 17647,
+        "elements": 72757,
+        "geometry": {
+          "sampled_forward_max": 0.0015839886333110064,
+          "sampled_reverse_max": 0.001301324964415392,
+          "sampled_two_sided_max": 0.0015839886333110064,
+          "outward_forward_max": 0.0015839886333110064,
+          "inward_forward_max": 0.0014358139401946777,
+          "projection_failed": 0,
+          "forward_samples": 216424,
+          "reverse_samples": 36260,
+          "volume": 0.35711751606407505,
+          "relative_volume_error": 0.0018912144339480186,
+          "q_min_corner": 0.1502542765245815,
+          "q_p01_corner": 0.5133146505942614,
+          "minimum_dihedral_deg_corner": 12.536647239376492,
+          "minimum_sampled_jacobian": 7.012621936346326e-07,
+          "reverse_tessellation_delta_max": 0.0,
+          "quadratic_reverse_subdivisions": null,
+          "projection_method": "newton-box-slsqp-v1",
+          "unbounded_projection_failed": 0,
+          "box_projection_attempts": 0,
+          "box_projection_recovered": 0,
+          "box_projection_witnesses": [],
+          "facet_consistency": {
+            "nodes": 17647,
+            "elements": 72757,
+            "unique_faces": 155250,
+            "interior_faces": 135778,
+            "extracted_boundary_faces": 19472,
+            "same_orientation_shared_faces": 0,
+            "nonmanifold_faces": 0,
+            "duplicate_cells": 0,
+            "duplicate_surface_faces": 0,
+            "provided_boundary_matches_extraction": true,
+            "missing_provided_faces": 0,
+            "extra_provided_faces": 0,
+            "nonpositive_corner_determinants": 0,
+            "minimum_corner_determinant": 7.012621936346312e-07,
+            "oriented_facet_consistency_passed": true,
+            "conflict_examples": [],
+            "scope": "Oriented corner-face incidence and same-side neighbor diagnostics; necessary consistency, not a certificate of curved geometry or absence of nonlocal intersections"
+          },
+          "oriented_facet_consistency_passed": true,
+          "geometry_admitted": true
+        }
+      },
+      "baseline_mesh": {
+        "nodes": 17647,
+        "elements": 72757,
+        "geometry": {
+          "sampled_forward_max": 0.0015839886333110064,
+          "sampled_reverse_max": 0.001301324964415392,
+          "sampled_two_sided_max": 0.0015839886333110064,
+          "outward_forward_max": 0.0015839886333110064,
+          "inward_forward_max": 0.0014358139401946777,
+          "projection_failed": 0,
+          "forward_samples": 216424,
+          "reverse_samples": 36260,
+          "volume": 0.35711751606407505,
+          "relative_volume_error": 0.0018912144339480186,
+          "q_min_corner": 0.1502542765245815,
+          "q_p01_corner": 0.5133146505942614,
+          "minimum_dihedral_deg_corner": 12.536647239376492,
+          "minimum_sampled_jacobian": 7.012621936346326e-07,
+          "reverse_tessellation_delta_max": 0.0,
+          "quadratic_reverse_subdivisions": null,
+          "projection_method": "newton-box-slsqp-v1",
+          "unbounded_projection_failed": 0,
+          "box_projection_attempts": 0,
+          "box_projection_recovered": 0,
+          "box_projection_witnesses": [],
+          "facet_consistency": {
+            "nodes": 17647,
+            "elements": 72757,
+            "unique_faces": 155250,
+            "interior_faces": 135778,
+            "extracted_boundary_faces": 19472,
+            "same_orientation_shared_faces": 0,
+            "nonmanifold_faces": 0,
+            "duplicate_cells": 0,
+            "duplicate_surface_faces": 0,
+            "provided_boundary_matches_extraction": true,
+            "missing_provided_faces": 0,
+            "extra_provided_faces": 0,
+            "nonpositive_corner_determinants": 0,
+            "minimum_corner_determinant": 7.012621936346312e-07,
+            "oriented_facet_consistency_passed": true,
+            "conflict_examples": [],
+            "scope": "Oriented corner-face incidence and same-side neighbor diagnostics; necessary consistency, not a certificate of curved geometry or absence of nonlocal intersections"
+          },
+          "oriented_facet_consistency_passed": true,
+          "geometry_admitted": true
+        }
+      }
+    },
+    {
+      "case": "schwarz-solid",
+      "current": {
+        "run": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-periodic-region-schwarz-control-v1",
+        "input_hashes": 22,
+        "artifact_replays": 1,
+        "full_geometry_replayed": true,
+        "rows": [
+          {
+            "directory": "experiments/adaptive/runs/macbook-periodic-region-schwarz-control-v1/repeat-0-meshers-tet4-24",
+            "qualified": true,
+            "mesh_sha256": "60f885e202b7727c6c94e5f7aa7ff6423a51f95f5a8a45fdb8db01ec70022311",
+            "used_nodes": 19004,
+            "total_nodes": 19004
+          }
+        ]
+      },
+      "baseline": {
+        "run": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-periodic-traces-schwarz-control-v1",
+        "input_hashes": 22,
+        "artifact_replays": 1,
+        "full_geometry_replayed": true,
+        "rows": [
+          {
+            "directory": "experiments/adaptive/runs/macbook-periodic-traces-schwarz-control-v1/repeat-0-meshers-tet4-24",
+            "qualified": true,
+            "mesh_sha256": "60f885e202b7727c6c94e5f7aa7ff6423a51f95f5a8a45fdb8db01ec70022311",
+            "used_nodes": 19004,
+            "total_nodes": 19004
+          }
+        ]
+      },
+      "canonical_arrays_identical": true,
+      "current_mesh": {
+        "nodes": 19004,
+        "elements": 90792,
+        "geometry": {
+          "sampled_forward_max": 0.00189405995873882,
+          "sampled_reverse_max": 0.001671580931989117,
+          "sampled_two_sided_max": 0.00189405995873882,
+          "outward_forward_max": 0.00189405995873882,
+          "inward_forward_max": 0.0016058749426349666,
+          "projection_failed": 0,
+          "forward_samples": 107016,
+          "reverse_samples": 50135,
+          "volume": 0.5000428588964853,
+          "relative_volume_error": 8.571779297050774e-05,
+          "q_min_corner": 0.39971373787545944,
+          "q_p01_corner": 0.5442332400585576,
+          "minimum_dihedral_deg_corner": 23.563440561764594,
+          "minimum_sampled_jacobian": 1.8679462778612267e-06,
+          "reverse_tessellation_delta_max": 0.0,
+          "quadratic_reverse_subdivisions": null,
+          "projection_method": "newton-box-slsqp-v1",
+          "unbounded_projection_failed": 0,
+          "box_projection_attempts": 0,
+          "box_projection_recovered": 0,
+          "box_projection_witnesses": [],
+          "facet_consistency": {
+            "nodes": 19004,
+            "elements": 90792,
+            "unique_faces": 188568,
+            "interior_faces": 174600,
+            "extracted_boundary_faces": 13968,
+            "same_orientation_shared_faces": 0,
+            "nonmanifold_faces": 0,
+            "duplicate_cells": 0,
+            "duplicate_surface_faces": 0,
+            "provided_boundary_matches_extraction": true,
+            "missing_provided_faces": 0,
+            "extra_provided_faces": 0,
+            "nonpositive_corner_determinants": 0,
+            "minimum_corner_determinant": 1.8679462778612258e-06,
+            "oriented_facet_consistency_passed": true,
+            "conflict_examples": [],
+            "scope": "Oriented corner-face incidence and same-side neighbor diagnostics; necessary consistency, not a certificate of curved geometry or absence of nonlocal intersections"
+          },
+          "oriented_facet_consistency_passed": true,
+          "geometry_admitted": true
+        }
+      },
+      "baseline_mesh": {
+        "nodes": 19004,
+        "elements": 90792,
+        "geometry": {
+          "sampled_forward_max": 0.00189405995873882,
+          "sampled_reverse_max": 0.001671580931989117,
+          "sampled_two_sided_max": 0.00189405995873882,
+          "outward_forward_max": 0.00189405995873882,
+          "inward_forward_max": 0.0016058749426349666,
+          "projection_failed": 0,
+          "forward_samples": 107016,
+          "reverse_samples": 50135,
+          "volume": 0.5000428588964853,
+          "relative_volume_error": 8.571779297050774e-05,
+          "q_min_corner": 0.39971373787545944,
+          "q_p01_corner": 0.5442332400585576,
+          "minimum_dihedral_deg_corner": 23.563440561764594,
+          "minimum_sampled_jacobian": 1.8679462778612267e-06,
+          "reverse_tessellation_delta_max": 0.0,
+          "quadratic_reverse_subdivisions": null,
+          "projection_method": "newton-box-slsqp-v1",
+          "unbounded_projection_failed": 0,
+          "box_projection_attempts": 0,
+          "box_projection_recovered": 0,
+          "box_projection_witnesses": [],
+          "facet_consistency": {
+            "nodes": 19004,
+            "elements": 90792,
+            "unique_faces": 188568,
+            "interior_faces": 174600,
+            "extracted_boundary_faces": 13968,
+            "same_orientation_shared_faces": 0,
+            "nonmanifold_faces": 0,
+            "duplicate_cells": 0,
+            "duplicate_surface_faces": 0,
+            "provided_boundary_matches_extraction": true,
+            "missing_provided_faces": 0,
+            "extra_provided_faces": 0,
+            "nonpositive_corner_determinants": 0,
+            "minimum_corner_determinant": 1.8679462778612258e-06,
+            "oriented_facet_consistency_passed": true,
+            "conflict_examples": [],
+            "scope": "Oriented corner-face incidence and same-side neighbor diagnostics; necessary consistency, not a certificate of curved geometry or absence of nonlocal intersections"
+          },
+          "oriented_facet_consistency_passed": true,
+          "geometry_admitted": true
+        }
+      }
+    },
+    {
+      "case": "spinodoid",
+      "current": {
+        "run": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-periodic-region-spinodoid-control-v1",
+        "input_hashes": 22,
+        "artifact_replays": 1,
+        "full_geometry_replayed": true,
+        "rows": [
+          {
+            "directory": "experiments/adaptive/runs/macbook-periodic-region-spinodoid-control-v1/repeat-0-meshers-tet4-historical32",
+            "qualified": true,
+            "mesh_sha256": "ace00797498343729b2b11c2ab0bb3de78ff40228e5db763cfbafbfb4c16fbc8",
+            "used_nodes": 16732,
+            "total_nodes": 16732
+          }
+        ]
+      },
+      "baseline": {
+        "run": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-periodic-traces-spinodoid-control-v1",
+        "input_hashes": 22,
+        "artifact_replays": 1,
+        "full_geometry_replayed": true,
+        "rows": [
+          {
+            "directory": "experiments/adaptive/runs/macbook-periodic-traces-spinodoid-control-v1/repeat-0-meshers-tet4-historical32",
+            "qualified": true,
+            "mesh_sha256": "ace00797498343729b2b11c2ab0bb3de78ff40228e5db763cfbafbfb4c16fbc8",
+            "used_nodes": 16732,
+            "total_nodes": 16732
+          }
+        ]
+      },
+      "canonical_arrays_identical": true,
+      "current_mesh": {
+        "nodes": 16732,
+        "elements": 72528,
+        "geometry": {
+          "sampled_forward_max": 0.0018504192719693336,
+          "sampled_reverse_max": 0.0015335097051593016,
+          "sampled_two_sided_max": 0.0018504192719693336,
+          "outward_forward_max": 0.0018504192719693336,
+          "inward_forward_max": 0.001464767101847577,
+          "projection_failed": 0,
+          "forward_samples": 170430,
+          "reverse_samples": 41325,
+          "volume": 0.5023601815347485,
+          "relative_volume_error": 0.00044599662882216506,
+          "q_min_corner": 0.23284408222228448,
+          "q_p01_corner": 0.5275060954847259,
+          "minimum_dihedral_deg_corner": 11.789761857131026,
+          "minimum_sampled_jacobian": 6.092593161791528e-07,
+          "reverse_tessellation_delta_max": 0.0,
+          "quadratic_reverse_subdivisions": null,
+          "projection_method": "newton-box-slsqp-v1",
+          "unbounded_projection_failed": 0,
+          "box_projection_attempts": 0,
+          "box_projection_recovered": 0,
+          "box_projection_witnesses": [],
+          "facet_consistency": {
+            "nodes": 16732,
+            "elements": 72528,
+            "unique_faces": 153806,
+            "interior_faces": 136306,
+            "extracted_boundary_faces": 17500,
+            "same_orientation_shared_faces": 0,
+            "nonmanifold_faces": 0,
+            "duplicate_cells": 0,
+            "duplicate_surface_faces": 0,
+            "provided_boundary_matches_extraction": true,
+            "missing_provided_faces": 0,
+            "extra_provided_faces": 0,
+            "nonpositive_corner_determinants": 0,
+            "minimum_corner_determinant": 6.092593161791531e-07,
+            "oriented_facet_consistency_passed": true,
+            "conflict_examples": [],
+            "scope": "Oriented corner-face incidence and same-side neighbor diagnostics; necessary consistency, not a certificate of curved geometry or absence of nonlocal intersections"
+          },
+          "oriented_facet_consistency_passed": true,
+          "geometry_admitted": true
+        }
+      },
+      "baseline_mesh": {
+        "nodes": 16732,
+        "elements": 72528,
+        "geometry": {
+          "sampled_forward_max": 0.0018504192719693336,
+          "sampled_reverse_max": 0.0015335097051593016,
+          "sampled_two_sided_max": 0.0018504192719693336,
+          "outward_forward_max": 0.0018504192719693336,
+          "inward_forward_max": 0.001464767101847577,
+          "projection_failed": 0,
+          "forward_samples": 170430,
+          "reverse_samples": 41325,
+          "volume": 0.5023601815347485,
+          "relative_volume_error": 0.00044599662882216506,
+          "q_min_corner": 0.23284408222228448,
+          "q_p01_corner": 0.5275060954847259,
+          "minimum_dihedral_deg_corner": 11.789761857131026,
+          "minimum_sampled_jacobian": 6.092593161791528e-07,
+          "reverse_tessellation_delta_max": 0.0,
+          "quadratic_reverse_subdivisions": null,
+          "projection_method": "newton-box-slsqp-v1",
+          "unbounded_projection_failed": 0,
+          "box_projection_attempts": 0,
+          "box_projection_recovered": 0,
+          "box_projection_witnesses": [],
+          "facet_consistency": {
+            "nodes": 16732,
+            "elements": 72528,
+            "unique_faces": 153806,
+            "interior_faces": 136306,
+            "extracted_boundary_faces": 17500,
+            "same_orientation_shared_faces": 0,
+            "nonmanifold_faces": 0,
+            "duplicate_cells": 0,
+            "duplicate_surface_faces": 0,
+            "provided_boundary_matches_extraction": true,
+            "missing_provided_faces": 0,
+            "extra_provided_faces": 0,
+            "nonpositive_corner_determinants": 0,
+            "minimum_corner_determinant": 6.092593161791531e-07,
+            "oriented_facet_consistency_passed": true,
+            "conflict_examples": [],
+            "scope": "Oriented corner-face incidence and same-side neighbor diagnostics; necessary consistency, not a certificate of curved geometry or absence of nonlocal intersections"
+          },
+          "oriented_facet_consistency_passed": true,
+          "geometry_admitted": true
+        }
+      }
+    },
+    {
+      "case": "smooth-lattice",
+      "current": {
+        "run": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-periodic-region-lattice-control-v1",
+        "input_hashes": 22,
+        "artifact_replays": 1,
+        "full_geometry_replayed": true,
+        "rows": [
+          {
+            "directory": "experiments/adaptive/runs/macbook-periodic-region-lattice-control-v1/repeat-0-meshers-tet4-historical32",
+            "qualified": true,
+            "mesh_sha256": "513e6d6751ea4adeb013e26bfbe3a72d11be1816c902cef8166ada127f2efedf",
+            "used_nodes": 46131,
+            "total_nodes": 46131
+          }
+        ]
+      },
+      "baseline": {
+        "run": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-periodic-traces-lattice-control-v1",
+        "input_hashes": 22,
+        "artifact_replays": 1,
+        "full_geometry_replayed": true,
+        "rows": [
+          {
+            "directory": "experiments/adaptive/runs/macbook-periodic-traces-lattice-control-v1/repeat-0-meshers-tet4-historical32",
+            "qualified": true,
+            "mesh_sha256": "25acb6f4a5fa25408418238e6cac704e615fbf4ba4d4de87dc208def81308dda",
+            "used_nodes": 46131,
+            "total_nodes": 46131
+          }
+        ]
+      },
+      "canonical_arrays_identical": true,
+      "current_mesh": {
+        "nodes": 46131,
+        "elements": 213800,
+        "geometry": {
+          "sampled_forward_max": 0.0017687005329694008,
+          "sampled_reverse_max": 0.0013875022327286958,
+          "sampled_two_sided_max": 0.0017687005329694008,
+          "outward_forward_max": 0.0017687005329694008,
+          "inward_forward_max": 0.0010401217883951402,
+          "projection_failed": 0,
+          "forward_samples": 305734,
+          "reverse_samples": 34791,
+          "volume": 0.24724535067762204,
+          "relative_volume_error": -0.004291762847383529,
+          "q_min_corner": 0.17905194914302425,
+          "q_p01_corner": 0.5171939066298991,
+          "minimum_dihedral_deg_corner": 9.803060383377499,
+          "minimum_sampled_jacobian": 2.6968453508850986e-09,
+          "reverse_tessellation_delta_max": 0.0,
+          "quadratic_reverse_subdivisions": null,
+          "projection_method": "newton-box-slsqp-v1",
+          "unbounded_projection_failed": 0,
+          "box_projection_attempts": 0,
+          "box_projection_recovered": 0,
+          "box_projection_witnesses": [],
+          "facet_consistency": {
+            "nodes": 46131,
+            "elements": 213800,
+            "unique_faces": 445100,
+            "interior_faces": 410100,
+            "extracted_boundary_faces": 35000,
+            "same_orientation_shared_faces": 0,
+            "nonmanifold_faces": 0,
+            "duplicate_cells": 0,
+            "duplicate_surface_faces": 0,
+            "provided_boundary_matches_extraction": true,
+            "missing_provided_faces": 0,
+            "extra_provided_faces": 0,
+            "nonpositive_corner_determinants": 0,
+            "minimum_corner_determinant": 2.6968453508850973e-09,
+            "oriented_facet_consistency_passed": true,
+            "conflict_examples": [],
+            "scope": "Oriented corner-face incidence and same-side neighbor diagnostics; necessary consistency, not a certificate of curved geometry or absence of nonlocal intersections"
+          },
+          "oriented_facet_consistency_passed": true,
+          "geometry_admitted": true
+        }
+      },
+      "baseline_mesh": {
+        "nodes": 46131,
+        "elements": 213800,
+        "geometry": {
+          "sampled_forward_max": 0.0017687005329694008,
+          "sampled_reverse_max": 0.0013875022327286958,
+          "sampled_two_sided_max": 0.0017687005329694008,
+          "outward_forward_max": 0.0017687005329694008,
+          "inward_forward_max": 0.0010401217883951402,
+          "projection_failed": 0,
+          "forward_samples": 305734,
+          "reverse_samples": 34791,
+          "volume": 0.24724535067762204,
+          "relative_volume_error": -0.004291762847383529,
+          "q_min_corner": 0.17905194914302425,
+          "q_p01_corner": 0.5171939066298991,
+          "minimum_dihedral_deg_corner": 9.803060383377499,
+          "minimum_sampled_jacobian": 2.6968453508850986e-09,
+          "reverse_tessellation_delta_max": 0.0,
+          "quadratic_reverse_subdivisions": null,
+          "projection_method": "newton-box-slsqp-v1",
+          "unbounded_projection_failed": 0,
+          "box_projection_attempts": 0,
+          "box_projection_recovered": 0,
+          "box_projection_witnesses": [],
+          "facet_consistency": {
+            "nodes": 46131,
+            "elements": 213800,
+            "unique_faces": 445100,
+            "interior_faces": 410100,
+            "extracted_boundary_faces": 35000,
+            "same_orientation_shared_faces": 0,
+            "nonmanifold_faces": 0,
+            "duplicate_cells": 0,
+            "duplicate_surface_faces": 0,
+            "provided_boundary_matches_extraction": true,
+            "missing_provided_faces": 0,
+            "extra_provided_faces": 0,
+            "nonpositive_corner_determinants": 0,
+            "minimum_corner_determinant": 2.6968453508850973e-09,
+            "oriented_facet_consistency_passed": true,
+            "conflict_examples": [],
+            "scope": "Oriented corner-face incidence and same-side neighbor diagnostics; necessary consistency, not a certificate of curved geometry or absence of nonlocal intersections"
+          },
+          "oriented_facet_consistency_passed": true,
+          "geometry_admitted": true
+        }
+      }
+    }
+  ],
+  "inputs": {
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/verify_adaptive_polyhedral_change.py": "c894c9c44842d69f39babce9d236b982c20266b2d6519ae37ca2c1205df9e8bb",
+    "/Users/kmarchais/dev/meshers/crates/meshers-python/python/meshers/_meshers.abi3.so": "7bad4a454648f1bed28636929230411e68c9ed5c494664f134010809fcc5e59f",
+    "/Users/kmarchais/dev/meshers/.local-work/native-baselines/02d1c61873b8a2ac34e721fb9d47aaea5471f6dc7f3d325452124cae6d8faef6/meshers/_meshers.abi3.so": "02d1c61873b8a2ac34e721fb9d47aaea5471f6dc7f3d325452124cae6d8faef6",
+    "/Users/kmarchais/dev/meshers/handoff/macbook/native-baseline-before-periodic-regions-20261025.json": "535200453c5b21efda375aae77f6408253a12c05e0780a86b47be5b994d293d9",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-periodic-region-gyroid-control-v1/repeat-0-meshers-tet4-24/mesh.npz": "0b09bebf49b50d7305372df3a323973a1a40e802245c91246f123d9028fe5f5b",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-periodic-region-gyroid-control-v1/repeat-0-meshers-tet4-24/result.json": "873279269b9cf8bae13079f8bb5f52e76753bb1ca1f7117b80cf1b22db893c2d",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-periodic-traces-gyroid-control-v1/repeat-0-meshers-tet4-24/mesh.npz": "0b09bebf49b50d7305372df3a323973a1a40e802245c91246f123d9028fe5f5b",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-periodic-traces-gyroid-control-v1/repeat-0-meshers-tet4-24/result.json": "af38f985aa79f9b71dd271dc13bdb4954c645129f76146460bd7b90f7009d9ad",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-periodic-region-schwarz-control-v1/repeat-0-meshers-tet4-24/mesh.npz": "60f885e202b7727c6c94e5f7aa7ff6423a51f95f5a8a45fdb8db01ec70022311",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-periodic-region-schwarz-control-v1/repeat-0-meshers-tet4-24/result.json": "a00280b615ba0d7ff804c8ad8942e559ecd57324f912e7d5d761f1c1a106cf2b",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-periodic-traces-schwarz-control-v1/repeat-0-meshers-tet4-24/mesh.npz": "60f885e202b7727c6c94e5f7aa7ff6423a51f95f5a8a45fdb8db01ec70022311",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-periodic-traces-schwarz-control-v1/repeat-0-meshers-tet4-24/result.json": "692ff3013563f5c104c6e59d43695590cd8333d33e8b63a11297ec117fef64b7",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-periodic-region-spinodoid-control-v1/repeat-0-meshers-tet4-historical32/mesh.npz": "ace00797498343729b2b11c2ab0bb3de78ff40228e5db763cfbafbfb4c16fbc8",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-periodic-region-spinodoid-control-v1/repeat-0-meshers-tet4-historical32/result.json": "a9945aee8ec01f910b308cbf8c96259c7dbf72a2403fa4c77e9642bdb09de67f",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-periodic-traces-spinodoid-control-v1/repeat-0-meshers-tet4-historical32/mesh.npz": "ace00797498343729b2b11c2ab0bb3de78ff40228e5db763cfbafbfb4c16fbc8",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-periodic-traces-spinodoid-control-v1/repeat-0-meshers-tet4-historical32/result.json": "04d4092e4bbd3c02b298c9ead286e933f4fbd5b4808cd5dce7450329145438e6",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-periodic-region-lattice-control-v1/repeat-0-meshers-tet4-historical32/mesh.npz": "513e6d6751ea4adeb013e26bfbe3a72d11be1816c902cef8166ada127f2efedf",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-periodic-region-lattice-control-v1/repeat-0-meshers-tet4-historical32/result.json": "c1bb5c826d837313c13aa6589dad304f7e110040fc916c9bbafe2202899c1412",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-periodic-traces-lattice-control-v1/repeat-0-meshers-tet4-historical32/mesh.npz": "25acb6f4a5fa25408418238e6cac704e615fbf4ba4d4de87dc208def81308dda",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-periodic-traces-lattice-control-v1/repeat-0-meshers-tet4-historical32/result.json": "7d3052af023d4859d888a8fa611a9cae466532e70dbffd12c2c4a4f29332baad",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-periodic-region-column-control-v1/result.json": "4557f1efe903bf259bab3009667707e72fd2ba6b83f17148b74b75940d280ac8",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-periodic-region-column-control-v1/mesh.npz": "c9d65b06f2f7b2a198f57a3f145430d1d518d7eff5420b6d71b666d78e900130",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-periodic-region-column-control-v1/reference.npz": "b947ff0f0f338cbf5d30a5225f752322f3a21c42c97cfaf9dcc056114ddb2e30",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/topology_coverage.py": "7b2c5bd88ddd2b92aa139f148182365aee0af6656f50f43af93597d16b3de70f",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/microgen_workflow.py": "073f615481feeae8bb9142d325d9ae39251ca1e1aa2d1376f5e4f88a19aec872",
+    "/Users/kmarchais/dev/meshers/crates/meshers-python/python/meshers/__init__.py": "5099f9cb757bc19b162bf4b172cb97d364cef44138e608785ef1bff6b3e34832",
+    "/Users/kmarchais/dev/meshers/crates/meshers-python/python/meshers/expression.py": "b4a6a51513e49415563d00cf49745c2359a1325aa3daf561c1c697171068e301",
+    "/Users/kmarchais/dev/meshers/crates/meshers-python/python/meshers/intersection.py": "970bbce85bb1a3043af9b309c5d0895abb6967fa4f34e50586865054c5253078",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/scorecard.py": "8f26256c7df0e84c9f35cdd71bf4f95a74e072d45469002b213c5dcd4f1bab2a",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/facet_incidence_audit.py": "4f51afc196c85e1d0bc64d7a96507517ddc6e32ccd8380a2ac77cae0ace89610",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-periodic-traces-column-control-v1/result.json": "10261f0749cfd477653b5c738c08c5aaef7a351b83321a50711d0486199dd4bc",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-periodic-traces-column-control-v1/mesh.npz": "c9d65b06f2f7b2a198f57a3f145430d1d518d7eff5420b6d71b666d78e900130",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-periodic-traces-column-control-v1/reference.npz": "b947ff0f0f338cbf5d30a5225f752322f3a21c42c97cfaf9dcc056114ddb2e30",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/mesh_comparison_report.py": "7e5ea672bfb4f9bc51184a47ee3f9b0af0ba01bbf77260e2d276ebefe745ca3a"
+  },
+  "feature_case": "periodic-column",
+  "matched_feature": {
+    "run": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-periodic-traces-column-control-v1",
+    "canonical_arrays_identical": true,
+    "matched_geometry_and_quality_settings": true
+  },
+  "shell_regression": null,
+  "periodic_feature": {
+    "candidate": {
+      "run": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-periodic-region-column-control-v1",
+      "qualified": true,
+      "nodes": 604,
+      "elements": 2614,
+      "minimum_quality": 0.32154993454073455,
+      "forward_distance": 5.721958498152797e-17,
+      "reverse_distance": 6.206335383118183e-17,
+      "relative_volume_error": 2.220446049250313e-16,
+      "periodic": {
+        "axis": 2,
+        "pair_count": 39,
+        "cap_count": 57,
+        "coordinate_error": 0.0,
+        "matching_caps": true,
+        "bijective_nodes": true
+      },
+      "options": {
+        "bounds": [
+          -0.5,
+          0.5,
+          -0.5,
+          0.5,
+          -0.5,
+          0.5
+        ],
+        "cells": 24,
+        "geometry_tolerance": 0.002,
+        "minimum_quality": 0.1,
+        "max_tetrahedra": 250000,
+        "threads": 1,
+        "adapt": true,
+        "min_length": 0.002,
+        "max_length": 0.1,
+        "gradation": 0.3,
+        "adapt_iterations": 4,
+        "quality_guard": 0.3,
+        "optimize_passes": 1,
+        "order": 1,
+        "snap": 0.2,
+        "periodic": [
+          false,
+          false,
+          true
+        ]
+      },
+      "reverse_witness": [
+        0.2117978758539267,
+        -0.14216576320693083,
+        0.4166666666666667
+      ],
+      "reverse_witness_distance_to_corner_line": 0.04166666666666663
+    },
+    "no_comparative_timing_claim": true
+  },
+  "native_baseline_sha256": "02d1c61873b8a2ac34e721fb9d47aaea5471f6dc7f3d325452124cae6d8faef6",
+  "candidate_sha256": "7bad4a454648f1bed28636929230411e68c9ed5c494664f134010809fcc5e59f",
+  "polyhedral_reverse_distance": 6.206335383118183e-17,
+  "polyhedral_forward_distance": 6.206335383118183e-17,
+  "polyhedral_result": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-periodic-region-column-control-v1/result.json",
+  "no_fe_solve": true,
+  "reference_promoted": false,
+  "comparative_timing_claim": false
+}
