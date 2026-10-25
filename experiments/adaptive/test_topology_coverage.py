@@ -110,3 +110,30 @@ def test_periodic_wedge_has_exact_volume_matching_caps_and_an_unchanged_normal_j
     cosine = (1-.3**2)/(1+.3**2)
     assert abs(np.degrees(np.arccos(cosine))-2*np.degrees(np.arctan(.3))) < 1e-12
     assert np.degrees(np.arccos(cosine)) > 30
+
+
+def test_rotated_periodic_wedge_preserves_volume_caps_and_physical_domain():
+    from topology_coverage import audit_column_periodicity, periodic_wedge
+
+    angle = .37
+    c, s = np.cos(angle), np.sin(angle)
+    rotation = np.array(((c, -s, 0.), (s, c, 0.), (0., 0., 1.)))
+    translation = np.array((.02, -.03, 0.))
+    original, faces = periodic_wedge(np)
+    points = original@rotation.T+translation
+    assert np.max(abs(points[:, :2])) < .5
+    assert audit_column_periodicity(points, faces, np)['matching_caps']
+    triangles = points[faces]
+    volume = np.einsum('ij,ij->i', triangles[:, 0], np.cross(triangles[:, 1], triangles[:, 2])).sum()/6
+    assert abs(volume-.22) < 1e-15
+    field, queries, _, _, _ = fixture('periodic-wedge', np)
+    transformed = queries@rotation.T+translation
+    recovered = (transformed-translation)@rotation
+    closed = np.maximum(field(*recovered.T), np.max(abs(transformed), axis=1)-.5)
+    assert abs(closed).max() < 5e-16
+    rng = np.random.default_rng(42)
+    probes = rng.uniform(-.5, .5, (1024, 3))
+    probes[:, 2] = -.5
+    opposite = probes.copy(); opposite[:, 2] = .5
+    np.testing.assert_array_equal(field(*((probes-translation)@rotation).T),
+        field(*((opposite-translation)@rotation).T))

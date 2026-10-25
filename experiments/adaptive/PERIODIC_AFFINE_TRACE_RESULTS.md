@@ -81,3 +81,14 @@ The candidate, recovery, study and local artifact receipts use the prefix
 The source receipt for audit 317 resolves its helper hash to a hash-identical
 archived copy after the later audit-directory CLI option was added. Frozen
 audit output is unchanged.
+
+## Rigid orientation control
+
+Job 326 rotates the same prism 0.37 radians about z and translates it
+by (0.02,-0.03,0), preserving the box ends, exact volume and unclipped walls.
+At unchanged settings it admits 3,879 tets / 865 nodes, qmin 0.304040718,
+distance 1.89e-16 and volume error at roundoff, with 46 node pairs and
+68 matching cap triangles per end. Independent replay 327 passes and
+13 fixture controls pass. This adds one orientation control to the
+public recovery, with no universal coverage or timing claim. Native image
+02d1c618 and the four fixed study specimens are unchanged.

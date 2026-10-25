@@ -11,6 +11,7 @@ from verify_adaptive_polyhedral_change import replay_periodic_column
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('--output', type=Path, required=True)
+    parser.add_argument('--orientation-run')
     args = parser.parse_args()
     assert not args.output.exists()
     np, _, meshers, _, _, scorecard = w.imports()
@@ -64,7 +65,17 @@ def main():
         controls.append(dict(run=str(control), returncode=code))
     for name in ('result.json', 'reference.npz', 'worker.json'):
         hashes[str(old/name)] = w.digest(old/name)
+    orientation = None
+    if args.orientation_run:
+        oriented = w.HERE/'runs'/args.orientation_run
+        other = json.loads((oriented/'result.json').read_text())
+        assert other['case'] == record['case'] and other['options'] == record['options']
+        assert other['gates'] == record['gates'] and other['transform']['rotation_z'] != 0
+        orientation = replay_periodic_column(oriented, np, scorecard, hashes)
+        assert orientation['qualified']
+        orientation['transform'] = other['transform']
     w.save(args.output, dict(passed=True, public_recipe_recovered=True, recovered=recovered,
+        orientation_control=orientation,
         previous_rejection=dict(run=str(old), error=failed['error'], qualified=False),
         fixed_options_and_gates=True, fixed_sample_hash=record['reference_sha256'],
         complete_normalized_affine_trace_multiset_equal=True, red_green_controls=controls,

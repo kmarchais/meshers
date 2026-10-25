@@ -307,7 +307,12 @@ def main():
     cosine, sine = np.cos(args.rotation), np.sin(args.rotation)
     rotation = np.array(((cosine, -sine, 0.), (sine, cosine, 0.), (0., 0., 1.)))
     transformed = bool(args.rotation or any(args.translation))
-    assert args.case not in ('bored-prism', 'periodic-column', 'periodic-wedge') or not transformed
+    assert args.case not in ('bored-prism', 'periodic-column') or not transformed
+    if args.case == 'periodic-wedge' and transformed:
+        assert not args.mapped and args.translation[2] == 0
+        target, _ = periodic_wedge(np)
+        target = target@rotation.T+args.translation
+        assert np.max(abs(target[:, :2])) < .5, 'Rigid diagnostic must not clip a side wall'
     assert np.isfinite(rotation).all() and np.isfinite(args.translation).all()
     if args.named:
         assert not transformed
@@ -368,10 +373,11 @@ def main():
         reverse = float(reverse_distances.max())
         if args.case == 'periodic-wedge':
             witness = queries[reverse_distances.argmax()]
+            local = (witness-args.translation)@rotation
             row['reverse_witness'] = dict(point=witness.tolist(), distance=reverse,
-                distance_to_periodic_seam=float(abs(abs(witness[2])-.5)),
-                distance_to_midplane_crease=float(abs(witness[2])),
-                distance_to_y_side=float(abs(abs(witness[1])-.2)))
+                distance_to_periodic_seam=float(abs(abs(local[2])-.5)),
+                distance_to_midplane_crease=float(abs(local[2])),
+                distance_to_y_side=float(abs(abs(local[1])-.2)))
         if args.case == 'bored-prism':
             row['reverse_witness'] = bored_prism_witness(queries[reverse_distances.argmax()], reverse, np)
         q, _, volumes = scorecard.tet_metrics(points, cells)

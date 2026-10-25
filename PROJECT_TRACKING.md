@@ -1,5 +1,18 @@
 # Meshers project tracking
 
+## Periodic prism orientation control passed, 25 October 2026
+
+Job 326 admits the recovered prism rotated 0.37 radians about z and translated
+(0.02,-0.03,0), without clipping the side walls or changing its volume/end
+traces. It uses 3,879 tets / 865 nodes, qmin 0.304041, roundoff distance/volume,
+46 node pairs and 68 matching cap triangles per end. Independent replay 327
+passes at identical options/gates. Thirteen fixture controls pass. Native
+02d1c618 and all four fixed study specimens are unchanged. No FE/reference
+or speed claim follows. Next run one periodic re-entrant notched-prism
+control to test nonconvex branch coverage; no sizing sweep is queued.
+Earlier selected-next descriptions below are historical.
+
+
 ## Public periodic affine normal-jump recipe recovered, 25 October 2026
 
 The unchanged public tapered-prism recipe now admits 3,811 tets / 844 nodes,

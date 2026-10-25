@@ -37,8 +37,16 @@ def replay_periodic_column(run, np, scorecard, hashes, baseline=None):
     periodic = audit_column_periodicity(p, f, np)
     assert periodic == record['periodic']
     _, queries, exact_volume, components, euler = fixture(case, np)
-    np.testing.assert_array_equal(queries, np.load(run/'reference.npz')['points'])
     target, faces = periodic_column(np) if case == 'periodic-column' else periodic_wedge(np)
+    pose = record.get('transform', dict(rotation_z=0., translation=(0., 0., 0.)))
+    if pose['rotation_z'] or any(pose['translation']):
+        assert case == 'periodic-wedge' and pose['translation'][2] == 0
+        c, s = np.cos(pose['rotation_z']), np.sin(pose['rotation_z'])
+        rotation = np.array(((c, -s, 0.), (s, c, 0.), (0., 0., 1.)))
+        target = target@rotation.T+pose['translation']
+        queries = queries@rotation.T+pose['translation']
+        assert np.max(abs(target[:, :2])) < .5
+    np.testing.assert_array_equal(queries, np.load(run/'reference.npz')['points'])
     bary = np.array([(i/4, j/4, 1-(i+j)/4) for i in range(5) for j in range(5-i)])
     probes = np.einsum('sn,fnd->fsd', bary, p[f]).reshape(-1, 3)
     forward = float(scorecard.distance_to_mesh(target, faces, probes).max())
