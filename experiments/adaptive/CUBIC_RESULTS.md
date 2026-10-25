@@ -1,5 +1,31 @@
 # Reference-only cubic enrichment on G3
 
+## Native periodic normals corrected, compact lattice accuracy still fails, 25 October 2026
+
+Jobs 379 through 403 reproduce and fix physical periodic cap gradients and
+cached edge normal images. The rebuilt arm64 native library passes 101 core
+tests and 182 Python tests, with one skip in each suite. All four fixed-case
+geometry, quality, and periodic gates pass. Gyroid, Schwarz, and spinodoid
+keep their meshes within 4e-14. The unchanged lattice26 recipe drops from
+123,694 to 41,131 tets and from 189,180 to 65,382 nodes. Minimum corner quality
+improves from 0.20735 to 0.36161, and sampled distance improves slightly.
+
+The smaller quadratic space still fails all-model stiffness at 2.427923243%.
+The independently audited full cubic space on the same physical domain also
+fails at 1.647040948%, correctly normalized against each of all 24 models.
+Neither result promotes a reference, native cubic API, or matched-accuracy win.
+
+Three independent FE controls verify exact variational gains of periodic
+edge-star splits. Preflight 406 passes at 116,569 nodes and 73,294 tets, with
+exact domain and parent-space preservation, 0.306408% largest trial gain, and
+3.425 GiB peak RAM. All regions remain eligible, and reference tensors do not
+enter the ranking. One globally coupled six-load solve is selected, with
+independent audits and all 24 model comparisons required before a successor.
+See [physical edge normal investigation](PERIODIC_EDGE_NORMAL_RESULTS.md).
+Earlier next-step descriptions below are historical. All four cases remain
+in scope, and the full objective is incomplete.
+
+
 ## Measured edge refinement improves lattice error but still fails, 25 October 2026
 
 Jobs 369–374 replay all 24 reference formulas, verify exact parent provenance,

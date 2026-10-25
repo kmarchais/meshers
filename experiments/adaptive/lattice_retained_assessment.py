@@ -3,6 +3,7 @@
 import argparse
 import hashlib
 import json
+import shutil
 from pathlib import Path
 
 import microgen_workflow as w
@@ -29,6 +30,9 @@ def main():
     parser.add_argument('--preflight', type=Path, required=True)
     parser.add_argument('--field-audit', type=Path, required=True)
     parser.add_argument('--output', type=Path, required=True)
+    parser.add_argument('--previous-source', type=Path,
+        default=w.HERE/'runs/g3-lattice-adapt26-tol0028-amg-solve-v1',
+        help='Exact recorded same-recipe source for the before/after assessment')
     args = parser.parse_args()
     assert not args.output.exists()
     np, *_ = w.imports()
@@ -50,6 +54,10 @@ def main():
     audit_manifest = json.loads((args.field_audit/'manifest.json').read_text())
     audited = {Path(p).resolve(): h for p, h in audit_manifest['inputs'].items()}
     hashes = {str(Path(__file__).resolve()): w.digest(Path(__file__))}
+    snapshot = args.output.parent/'input-lattice_retained_assessment.py'
+    assert not snapshot.exists()
+    shutil.copyfile(__file__,snapshot)
+    hashes[str(snapshot.resolve())] = w.digest(snapshot)
     for path, expected in audit_manifest['source_sha256'].items():
         assert w.digest(Path(path)) == expected
         hashes[path] = expected
@@ -71,7 +79,7 @@ def main():
     sensitivity = max(r['energy_vs_solved_tensor']['worst_relative_strain_energy_difference'] for r in quad['rules'])
     assert sensitivity <= 1e-4
     assert quad['rules'][-1]['energy_vs_previous_rule']['worst_relative_strain_energy_difference'] <= 1e-4
-    previous = w.HERE/'runs/g3-lattice-adapt26-tol0028-amg-solve-v1'
+    previous = args.previous_source
     old = json.loads((previous/'result.json').read_text())
     for key in ('case', 'cells', 'min_length', 'order', 'native_tolerance', 'optimization_passes',
         'adaptive', 'adapt_tolerance', 'solve_node_cap', 'solver_quadrature_points'):
@@ -111,6 +119,7 @@ def main():
         own_path, quad_path, quad_worker, args.field_audit/'manifest.json'):
         hashes[str(path)] = w.digest(path)
     passed = max(errors) <= .01
+    w.save(args.output.parent/'analysis-inputs.json',hashes)
     w.save(args.output, dict(source=str(source), field_audit_passed=True, complete_six_load_fields=True,
         fixed_recipe_and_specimen=True, preflight_mesh_identical_up_to_numbering=True,
         full_tet10_and_tri6_local_associations_preserved=True,

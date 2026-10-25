@@ -222,8 +222,9 @@ impl<F: ScalarField> Geometry for Context<'_, F> {
             .collect()
     }
     fn gradients(&self, points: &[Point]) -> Vec<Point> {
-        let canonical: Vec<_> = points.iter().map(|&p| self.canonical(p)).collect();
-        let gradients = self.field.gradients(&canonical);
+        // Equal periodic traces can meet with different physical normal derivatives.
+        // Keep the closed-cell side when evaluating normals, including exact caps.
+        let gradients = self.field.gradients(points);
         if gradients.len() != points.len() {
             self.invalid.store(true, Ordering::Relaxed);
             return vec![[0.; 3]; points.len()];
@@ -243,7 +244,6 @@ impl<F: ScalarField> Geometry for Context<'_, F> {
         self.checked((self.field.value(self.canonical(p)) - self.center) / self.scale)
     }
     fn gradient(&self, p: Point) -> Point {
-        let p = self.canonical(p);
         if let Some(g) = self.field.gradient(p) {
             return g.map(|v| self.checked(v / self.scale));
         }
@@ -1391,6 +1391,55 @@ fn distance_batch<F: ScalarField>(
 #[cfg(test)]
 mod topology_tests {
     use super::nonmanifold_vertices;
+
+    #[test]
+    fn periodic_cap_gradients_keep_the_physical_side() {
+        use super::{Context, Options, ScalarField};
+        use crate::geometry::Geometry;
+        use std::sync::atomic::AtomicBool;
+
+        struct Taper(bool);
+        impl ScalarField for Taper {
+            fn value(&self, p: crate::Point) -> f64 {
+                p[0] * p[0] + p[1] * p[1] - 0.04 - 0.1 * p[2] * p[2]
+            }
+            fn gradient(&self, p: crate::Point) -> Option<crate::Point> {
+                self.0.then_some([2. * p[0], 2. * p[1], -0.2 * p[2]])
+            }
+        }
+        for analytical in [true, false] {
+            let field = Taper(analytical);
+            let context = Context {
+                field: &field,
+                constraints: None,
+                halfspaces: None,
+                halfspace_regions: None,
+                size_field: None,
+                options: Options {
+                    bounds: [[-0.5; 3], [0.5; 3]],
+                    periodic: [false, false, true],
+                    ..Default::default()
+                },
+                center: 0.,
+                scale: 1.,
+                optimizer_length: 1.,
+                invalid: AtomicBool::new(false),
+            };
+            let points = [[0.2, 0., -0.5], [0.2, 0., 0.5]];
+            assert_eq!(context.value(points[0]), context.value(points[1]));
+            for (p, batched) in points.into_iter().zip(context.gradients(&points)) {
+                let expected = [0.4, 0., -0.2 * p[2]];
+                for measured in [context.gradient(p), batched] {
+                    for (value, target) in measured.into_iter().zip(expected) {
+                        assert!(
+                            (value - target).abs() < 1e-9,
+                            "{measured:?} != {expected:?}"
+                        );
+                    }
+                }
+            }
+        }
+    }
 
     #[test]
     fn periodic_seed_requires_both_bijective_nodes_and_matching_caps() {

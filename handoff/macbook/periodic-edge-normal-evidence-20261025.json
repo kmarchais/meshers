@@ -1,0 +1,142 @@
+{
+  "date": "2026-10-25",
+  "native_sha256": "eab1823f1234fd39223a89ec103df7d87db90c2418f59dceb7cfeebf59ceabd7",
+  "physical_edge_normals_corrected": true,
+  "fixed_specimen_hashes_unchanged": true,
+  "all_four_geometry_quality_periodic_gates_pass": true,
+  "cases": [
+    {
+      "case": "gyroid",
+      "before": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-mesh-only-gyroid-repeated-v1/repeat-0-meshers-curved-known",
+      "after": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-periodic-edge-normal-gyroid-curved-v1/repeat-0-meshers-curved-known",
+      "before_nodes": 11857,
+      "after_nodes": 11857,
+      "before_tets": 6008,
+      "after_tets": 6008,
+      "identical_connectivity": true,
+      "maximum_same_index_coordinate_change": 5.551115123125783e-17,
+      "before_metrics": {
+        "sampled_two_sided_max": 0.0011893416581181381,
+        "relative_volume_error": -0.0002632760693176417,
+        "q_min_corner": 0.14469000390080416,
+        "geometry_admitted": true
+      },
+      "after_metrics": {
+        "sampled_two_sided_max": 0.0011893416581181303,
+        "relative_volume_error": -0.0002632760693176417,
+        "q_min_corner": 0.14469000390080416,
+        "geometry_admitted": true
+      }
+    },
+    {
+      "case": "schwarz-solid",
+      "before": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-mesh-only-schwarz-repeated-v1/repeat-0-meshers-curved-known",
+      "after": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-periodic-edge-normal-schwarz-curved-v1/repeat-0-meshers-curved-known",
+      "before_nodes": 42928,
+      "after_nodes": 42928,
+      "before_tets": 27492,
+      "after_tets": 27492,
+      "identical_connectivity": true,
+      "maximum_same_index_coordinate_change": 0.0,
+      "before_metrics": {
+        "sampled_two_sided_max": 0.00016189052407491854,
+        "relative_volume_error": 5.475037776481173e-07,
+        "q_min_corner": 0.4499952972773957,
+        "geometry_admitted": true
+      },
+      "after_metrics": {
+        "sampled_two_sided_max": 0.00016189052407491854,
+        "relative_volume_error": 5.475037776481173e-07,
+        "q_min_corner": 0.4499952972773957,
+        "geometry_admitted": true
+      }
+    },
+    {
+      "case": "spinodoid",
+      "before": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-mesh-only-spinodoid-repeated-v1/repeat-0-meshers-curved-known",
+      "after": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-periodic-edge-normal-spinodoid-curved-v1/repeat-0-meshers-curved-known",
+      "before_nodes": 73951,
+      "after_nodes": 73951,
+      "before_tets": 45994,
+      "after_tets": 45994,
+      "identical_connectivity": true,
+      "maximum_same_index_coordinate_change": 3.909719770156528e-14,
+      "before_metrics": {
+        "sampled_two_sided_max": 0.0013329848158457264,
+        "relative_volume_error": 0.0002586250902092413,
+        "q_min_corner": 0.2685813353609659,
+        "geometry_admitted": true
+      },
+      "after_metrics": {
+        "sampled_two_sided_max": 0.0013329848158457264,
+        "relative_volume_error": 0.0002586250902092413,
+        "q_min_corner": 0.2685813353609367,
+        "geometry_admitted": true
+      }
+    },
+    {
+      "case": "smooth-lattice",
+      "before": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-lattice26-current-native-amg-v1",
+      "after": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-periodic-edge-normal-lattice26-amg-v1",
+      "before_nodes": 189180,
+      "after_nodes": 65382,
+      "before_tets": 123694,
+      "after_tets": 41131,
+      "identical_connectivity": false,
+      "maximum_same_index_coordinate_change": null,
+      "before_metrics": {
+        "sampled_two_sided_max": 0.00034316224776001817,
+        "relative_volume_error": -0.00031403517909334155,
+        "q_min_corner": 0.20735426940730667,
+        "geometry_admitted": true
+      },
+      "after_metrics": {
+        "sampled_two_sided_max": 0.00033587990515847115,
+        "relative_volume_error": -0.0003138675494085419,
+        "q_min_corner": 0.3616116538338163,
+        "geometry_admitted": true
+      }
+    }
+  ],
+  "lattice_quadratic_worst_model_disagreement": 0.024279232429015647,
+  "lattice_cubic_worst_model_disagreement": 0.016470409483638773,
+  "retained_models": 24,
+  "passes_one_percent_all_models": false,
+  "native_cubic_api": false,
+  "reference_promoted": false,
+  "matched_accuracy_timing_win": false,
+  "source_artifact_sha256": {
+    "experiments/adaptive/runs/macbook-periodic-edge-normal-core-controls-v1/worker.json": "321ca8d42816069f8f90310da767c9d97fcee2e8c664196091197b8004595ebc",
+    "experiments/adaptive/runs/macbook-periodic-edge-normal-core-controls-v1/manifest.json": "4fd8b4f77757f0cd1d88daa014ac75df3973dde15fd9d4b3ca3eb156f75b101c",
+    "experiments/adaptive/runs/macbook-periodic-edge-normal-python-controls-v1/worker.json": "2718d410ff1d01def07158da06885f508996c2a8cb41045254d7f0e6594f0686",
+    "experiments/adaptive/runs/macbook-periodic-edge-normal-python-controls-v1/manifest.json": "dcce879093b0ff73bb6318fd087ebbb30798be32b52987ee1437d497f9b02717",
+    "experiments/adaptive/runs/macbook-periodic-edge-normal-lattice26-amg-v1/result.json": "844eb09ff272a8822fcd7b32db17abaaa9360f8e9d9a4b58e8fb299236037c4a",
+    "experiments/adaptive/runs/macbook-periodic-edge-normal-lattice26-amg-v1/worker.json": "a881f212413b69069a138b86ccc4ff8991e64e61dc61b1161ceb5c47b6f98373",
+    "experiments/adaptive/runs/macbook-periodic-edge-normal-lattice26-amg-v1/manifest.json": "7ad8c29545f9375523bd0622b416c55bf3b347065eba547a6b92b9f908f69a3c",
+    "experiments/adaptive/runs/macbook-periodic-edge-normal-lattice26-field-audit-v1/manifest.json": "df324a2fda2e9f74d272241aacc55d905d052f092070935188a7eb31228b5694",
+    "experiments/adaptive/runs/macbook-periodic-edge-normal-lattice26-field-audit-v1/macbook-periodic-edge-normal-lattice26-amg-v1-worker.json": "e6a11229b18c3939638b3c45cff9e0a16843b57bad7f813d2163abd2eb1c0654",
+    "experiments/adaptive/runs/macbook-periodic-edge-normal-lattice26-assessment-v1/result.json": "575cd27108f83a754bd29e4ce7b2bed36dbb808d752ea788c0860843501c0d9d",
+    "experiments/adaptive/runs/macbook-periodic-edge-normal-lattice26-assessment-v1/worker.json": "6b7402a10e0adb1ed88b45208b409adc018a63add76a5f6ee244acad606e2ef9",
+    "experiments/adaptive/runs/macbook-periodic-edge-normal-lattice26-assessment-v1/manifest.json": "bda11e5fc7c62509fe329293bd6a3af5ef9c942718c8d907cdd464951202d3ca",
+    "experiments/adaptive/runs/macbook-periodic-edge-normal-four-case-replay-v1/result.json": "5019a588cbd36245eb11f65b9a3ecb434e3ae10d30cf4b7f1b14b49d7d800c99",
+    "experiments/adaptive/runs/macbook-periodic-edge-normal-four-case-replay-v1/worker.json": "e34561de2d239da9444b35603e94d7b5ba091f3e0219b5b506c035ed32c0f5b4",
+    "experiments/adaptive/runs/macbook-periodic-edge-normal-four-case-replay-v1/manifest.json": "dbf39b85cf954fa2aaacf62ddf8f13d86cc3e9266016df4134bf70a47f07e33d",
+    "experiments/adaptive/runs/macbook-periodic-edge-normal-cubic-gates-v1/result.json": "ea2e7d05a4e2ca1660bcc8197dd48dd2b418f68fc8cfc901e02dcd1ec85a7c6e",
+    "experiments/adaptive/runs/macbook-periodic-edge-normal-cubic-gates-v1/worker.json": "33acb9538beecee798688c7e9bbd5a74242261183b667c4cd57f676b37e2d310",
+    "experiments/adaptive/runs/macbook-periodic-edge-normal-cubic-gates-v1/manifest.json": "21379a1b0acdbd45ec94644ad9eb76aed2a75baf37271cf850e6c304c3133d30",
+    "experiments/adaptive/runs/macbook-periodic-edge-normal-cubic-solve-v1/result.json": "ee2f378f1cdeb870985ada66ad89c0b8913a537f3f772b0e03a2376f8d17dbde",
+    "experiments/adaptive/runs/macbook-periodic-edge-normal-cubic-solve-v1/worker.json": "eb137351d623a79fc9b7f1281e7ce3896dd5a4de4a1d31e7754671f88da1dfa0",
+    "experiments/adaptive/runs/macbook-periodic-edge-normal-cubic-solve-v1/manifest.json": "47283d2fd490fa302b192fdfb8baf6b9eb70a200b55ffb861015579ca5e74988",
+    "experiments/adaptive/runs/macbook-periodic-edge-normal-cubic-assessment-v1/result.json": "407693d1fac2bb8a14556aab3ff4944041895aa1446bcd336f6a2312756a0e5f",
+    "experiments/adaptive/runs/macbook-periodic-edge-normal-cubic-assessment-v1/worker.json": "ad1d8267106648ad76656fdd520807065c6eb50137f3109529d33144928ce6e0",
+    "experiments/adaptive/runs/macbook-periodic-edge-normal-cubic-assessment-v1/manifest.json": "a571845497b1bd6ce465c7f59eea3aecbc8763c6227639306370edb91ea04ca9",
+    "experiments/adaptive/runs/macbook-periodic-edge-normal-cubic-balance-v1/result.json": "82c3ca2a5101ab9b50ddb2f3e8c5c08de8261fd642d0316f0eeaf63ed9ea0896",
+    "experiments/adaptive/runs/macbook-periodic-edge-normal-cubic-balance-v1/worker.json": "e304e6332509569d758379e8515cd9c3bfd819d81a14f104a39c331f7089aed3",
+    "experiments/adaptive/runs/macbook-periodic-edge-normal-cubic-balance-v1/manifest.json": "1fb72766b77d038168c8a7baeb4590512c68abdcf7669ee8bb5825752b683294",
+    "experiments/adaptive/runs/macbook-split-patch-controls-v1/worker.json": "9d0d388461dca25c0e8d26c6aecc014bc9d85c136dae304bd0dd82db4f359148",
+    "experiments/adaptive/runs/macbook-split-patch-controls-v1/manifest.json": "35c097a52f9407e5255b1e721145bafb0be5489c50bae725a330839cfdc012c5",
+    "crates/meshers-core/src/implicit.rs": "4b587078ed24b49e303c933a22cd594c2696b69b21195295cc913548ad211cc5",
+    "crates/meshers-core/src/tet_adapt.rs": "1a6a883b4942cbb6c8f82c40f56f71fd60ce319e9b9b22e8747a84a3d7f61f84"
+  },
+  "scope": "Native normal-image bug fix and four-case mesh replay. Both compact lattice stiffness spaces still fail the retained target. Cubic is a fixed-domain reference experiment only."
+}

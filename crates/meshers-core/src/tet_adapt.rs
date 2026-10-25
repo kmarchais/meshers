@@ -450,11 +450,40 @@ impl<'g, G: Geometry> Tets<'g, G> {
         })
     }
 
+    /// A canonical cut-plane vertex can represent the opposite endpoint image.
+    /// Use that side's wall normal for the edge, without changing its node identity.
+    fn edge_image_normal(&self, p: Point, toward: Point, normal: Point) -> Point {
+        let [lo, hi] = self.g.bounds();
+        let mut image = p;
+        for a in 0..3 {
+            if let Some(period) = self.period[a]
+                && p[a] == lo[a]
+            {
+                let difference = toward[a] - p[a];
+                if difference - period * (difference / period).round() < 0. {
+                    image[a] = hi[a];
+                }
+            }
+        }
+        if image == p || normal == [0.; 3] {
+            normal
+        } else {
+            self.outward(image)
+        }
+    }
+
+    fn edge_turn(&self, p: Point, n: Point, q: Point, m: Point) -> f64 {
+        angle(
+            self.edge_image_normal(p, q, n),
+            self.edge_image_normal(q, p, m),
+        )
+    }
+
     fn sag(&self, pu: Point, nu: Point, pv: Point, nv: Point) -> f64 {
         if norm(nu) == 0. || norm(nv) == 0. {
             return 0.;
         }
-        norm(self.delta(pu, pv)) * angle(nu, nv) / 6.
+        norm(self.delta(pu, pv)) * self.edge_turn(pu, nu, pv, nv) / 6.
     }
 
     fn constraint_gradient(&self, field: &dyn crate::implicit::ScalarField, p: Point) -> Point {
@@ -510,7 +539,12 @@ impl<'g, G: Geometry> Tets<'g, G> {
                     })
                     .fold(0., f64::max)
             } else {
-                angle(self.normals[u], self.normals[v])
+                self.edge_turn(
+                    self.points[u],
+                    self.normals[u],
+                    self.points[v],
+                    self.normals[v],
+                )
             };
             let mut target = (6. * tol * l / theta.max(1e-12)).sqrt();
             let locked = self.locked(u, v);
@@ -1588,6 +1622,61 @@ mod tests {
             assert!(nonperiodic.distance([x, 0., z], [false; 3]) > 1e-3);
         }
         assert!(periodic.distance([x, 0., 0.49], [false; 3]) < 1e-12);
+        // The canonical lower-cap node represents an upper-cap endpoint in
+        // this edge's physical image. Its straight wall has zero turning.
+        let join = [0.2, 0., -0.5];
+        let upper_neighbor = [x, 0., 0.49];
+        assert!(
+            periodic.sag(
+                join,
+                periodic.outward(join),
+                upper_neighbor,
+                periodic.outward(upper_neighbor),
+            ) < 1e-12
+        );
+        assert!(
+            periodic.sag(
+                upper_neighbor,
+                periodic.outward(upper_neighbor),
+                join,
+                periodic.outward(join),
+            ) < 1e-12
+        );
+        let lower = [0.347, 0., -0.01];
+        let upper = [0.347, 0., 0.01];
+        assert!(
+            periodic.sag(
+                lower,
+                periodic.outward(lower),
+                upper,
+                periodic.outward(upper)
+            ) > 1e-4
+        );
+        // A single genuine wall patch is enough to check the sizing path.
+        let patch = crate::Mesh {
+            points: vec![
+                [0.2, 0., 0.5],
+                upper_neighbor,
+                [0.2, 0.01, 0.5],
+                [0.19, 0., 0.49],
+            ],
+            tets: vec![[0, 2, 1, 3]],
+            surface: vec![[0, 1, 2]],
+        };
+        let adapter = super::Tets::new(&patch, &field, 0., [false, false, true]);
+        let sizes = adapter
+            .sizes(
+                &super::Options {
+                    tolerance: 1e-5,
+                    min_length: 1e-5,
+                    max_length: 0.1,
+                    ..Default::default()
+                },
+                &[[0, 1]],
+            )
+            .unwrap();
+        assert_eq!(sizes[0], 0.1);
+        assert_eq!(sizes[1], 0.1);
     }
 
     #[test]
