@@ -14,7 +14,12 @@ import numpy.typing as npt
 from . import _meshers
 from ._meshers import CancellationToken, CancelledError, CompiledField, MeshingError
 from .expression import TraceError, compile_field
-from .intersection import _affine_planes, _retained_constraints, generate_intersection
+from .intersection import (
+    _affine_planes,
+    _periodic_affine,
+    _retained_constraints,
+    generate_intersection,
+)
 
 if TYPE_CHECKING:
     import fedoo
@@ -246,12 +251,12 @@ def generate(  # ruff: ignore[complex-structure]
         compile: Compile supported expressions and their first derivatives
             automatically. False selects NumPy callbacks. Unsupported operations
             emit a warning and use callbacks, which must return float64 (N,) arrays.
-            Eligible nonperiodic Tet4 convex polyhedra retain exact
-            half-space constraints; diagnostics report ``polyhedral_constraints``.
-            Bounded min/max combinations of convex affine fields also retain
-            nonconvex regions on the eligible path.
-            Eligible nonadaptive outer-max intersections also retain analytic
-            branches; diagnostics report ``retained_constraints``.
+            Eligible Tet4 convex polyhedra retain exact half-space constraints;
+            requested periodic axes must leave every plane invariant. Diagnostics
+            report ``polyhedral_constraints``. Bounded min/max combinations of
+            convex affine fields retain nonconvex regions on the nonperiodic path.
+            Eligible nonperiodic outer-max intersections retain analytic branches;
+            diagnostics report ``retained_constraints``.
         adapt: Experimental. Replace fixed surface refinement by size-driven
             adaptation: boundary edges follow the curvature needed for
             ``geometry_tolerance``, the interior grades towards ``max_length``.
@@ -326,7 +331,7 @@ def generate(  # ruff: ignore[complex-structure]
     scalar_mode = (
         order != 1,
         band is not None,
-        any(periodic),
+        any(periodic) and not _periodic_affine(field, periodic),
         threads != 1,
         interior_refine_nodes != 0,
         gradient_override,
@@ -348,6 +353,7 @@ def generate(  # ruff: ignore[complex-structure]
     if planes is not None and not adapt:
         mesh = generate_intersection(
             planes,
+            periodic=periodic,
             bounds=b.tolist(),
             cells=cells,
             geometry_tolerance=geometry_tolerance,

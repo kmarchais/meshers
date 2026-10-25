@@ -302,8 +302,9 @@ pub fn generate_with_size<F: ScalarField>(
     generate_with_features(field, size_field, options, None)
 }
 
-/// Generate with optional equivalent max-of-affine hints for nonperiodic,
-/// adaptive Tet4. Hints must describe the same negative sublevel set. Hints
+/// Generate with optional equivalent max-of-affine hints for adaptive Tet4.
+/// Every hinted plane must be invariant along requested periodic axes.
+/// Hints must describe the same negative sublevel set. Hints
 /// whose normalized coefficients are unrepresentable retain scalar behavior.
 pub fn generate_with_features<F: ScalarField>(
     field: &F,
@@ -364,9 +365,10 @@ fn generate_internal<F: ScalarField>(
         if !(2..=intersection::MAX_CONSTRAINTS).contains(&count)
             || groups.is_empty()
             || groups.len() > 32
+            || options.periodic.iter().any(|&axis| axis)
         {
             return Err(MeshingError::InvalidOptions(
-                "bounded affine planes and 1..32 regions required".into(),
+                "bounded affine planes and 1..32 nonperiodic regions required".into(),
             ));
         }
         let allowed = intersection::ConstraintMask::MAX >> (intersection::MAX_CONSTRAINTS - count);
@@ -382,14 +384,16 @@ fn generate_internal<F: ScalarField>(
                 .iter()
                 .any(|p| p.iter().any(|x| !x.is_finite()) || p[..3] == [0.; 3])
             || (options.adapt.is_none() && regions.is_none())
-            || options.periodic.iter().any(|&p| p)
+            || planes
+                .iter()
+                .any(|p| (0..3).any(|a| options.periodic[a] && p[a] != 0.))
             || !matches!(options.region, Region::Negative)
             || options.order != 1
             || options.threads != 1
             || options.interior_refine_nodes != 0
             || options.optimize_passes > 20)
     {
-        return Err(MeshingError::InvalidOptions("affine features require bounded finite planes, nonperiodic adaptive Tet4, one worker and no interior-refinement request".into()));
+        return Err(MeshingError::InvalidOptions("affine features require bounded finite planes invariant on periodic axes, adaptive Tet4, one worker and no interior-refinement request".into()));
     }
     let halfspaces = halfspaces.and_then(crate::polyhedral::normalized);
     if size_field.is_some() && options.adapt.is_none() {

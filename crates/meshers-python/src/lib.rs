@@ -660,6 +660,7 @@ fn available_threads() -> usize {
 fn _meshers(m: &Bound<'_, PyModule>) -> PyResult<()> {
     m.add("IMPLICIT_API_VERSION", 1)?;
     m.add("ADAPTIVE_POLYHEDRAL", true)?;
+    m.add("PERIODIC_POLYHEDRAL", true)?;
     m.add("POLYHEDRAL_REGIONS", true)?;
     m.add("RETAINED_INTERSECTIONS", true)?;
     m.add("ADAPTIVE_RETAINED_INTERSECTIONS", true)?;

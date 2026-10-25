@@ -9,16 +9,70 @@ from mesh_comparison_report import verify_run
 from verify_polyhedral_change import canonical_mesh
 
 
+def replay_periodic_column(run, np, scorecard, hashes, baseline=None):
+    from facet_incidence_audit import audit
+    from topology_coverage import audit_column_periodicity, boundary_topology, fixture, periodic_column
+    record = json.loads((run/'result.json').read_text())
+    assert record['case'] == 'periodic-column' and record['periodic_requested']
+    inputs = json.loads((run/'analysis-inputs.json').read_text())
+    for source, expected in inputs.items():
+        path = Path(source)
+        if w.digest(path) != expected and path.suffix == '.so' and baseline is not None:
+            path = baseline
+        if w.digest(path) != expected and path.suffix == '.py':
+            matches = [p for p in run.glob('*.py') if w.digest(p) == expected]
+            assert matches, source
+            path = matches[0]
+        assert w.digest(path) == expected, source
+        hashes[str(path)] = expected
+    for name, key in (('mesh.npz', 'mesh_sha256'), ('reference.npz', 'reference_sha256')):
+        assert w.digest(run/name) == record[key]
+        hashes[str(run/name)] = record[key]
+    hashes[str(run/'result.json')] = w.digest(run/'result.json')
+    mesh = np.load(run/'mesh.npz')
+    p, t, f = (mesh[k] for k in ('points', 'tetrahedra', 'surface'))
+    assert len(p) <= 250000 and len(t) <= 250000 and len(np.unique(t)) == len(p)
+    assert audit(p, t, f)['oriented_facet_consistency_passed']
+    periodic = audit_column_periodicity(p, f, np)
+    assert periodic == record['periodic']
+    _, queries, exact_volume, components, euler = fixture('periodic-column', np)
+    np.testing.assert_array_equal(queries, np.load(run/'reference.npz')['points'])
+    target, faces = periodic_column(np)
+    bary = np.array([(i/4, j/4, 1-(i+j)/4) for i in range(5) for j in range(5-i)])
+    probes = np.einsum('sn,fnd->fsd', bary, p[f]).reshape(-1, 3)
+    forward = float(scorecard.distance_to_mesh(target, faces, probes).max())
+    distances = scorecard.distance_to_mesh(p, f, queries)
+    reverse = float(distances.max())
+    q, _, volumes = scorecard.tet_metrics(p, t)
+    assert q.min() >= .1 and volumes.min() > 0
+    volume_error = float(volumes.sum()/exact_volume-1)
+    assert abs(volume_error) <= .01
+    assert boundary_topology(f, np) == (components, euler)
+    boundary_volume = np.einsum('ij,ij->i', p[f[:, 0]], np.cross(p[f[:, 1]], p[f[:, 2]])).sum()/6
+    assert abs(boundary_volume-volumes.sum()) < 1e-12
+    qualified = max(forward, reverse) <= .002
+    assert qualified == record['qualified']
+    witness = queries[distances.argmax()]
+    c, s = np.cos(.31), np.sin(.31)
+    local_xy = np.array((c*witness[0]+s*witness[1], -s*witness[0]+c*witness[1]))
+    return dict(run=str(run), qualified=qualified, nodes=len(p), elements=len(t),
+        minimum_quality=float(q.min()), forward_distance=forward, reverse_distance=reverse,
+        relative_volume_error=volume_error, periodic=periodic, options=record['options'],
+        reverse_witness=witness.tolist(), reverse_witness_distance_to_corner_line=float(np.linalg.norm(abs(local_xy)-.2)))
+
+
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('--output', type=Path, required=True)
     parser.add_argument('--prefix', default='macbook-adaptive-feature')
     parser.add_argument('--previous-prefix', default='macbook-polyhedral')
     parser.add_argument('--baseline-receipt', default='native-baseline-before-adaptive-polyhedral-20261024.json')
-    parser.add_argument('--feature-case', choices=('octahedron', 'notched-prism', 'bored-prism'), default='octahedron')
+    parser.add_argument('--feature-case', choices=('octahedron', 'notched-prism', 'bored-prism', 'periodic-column'), default='octahedron')
     parser.add_argument('--feature-run', default='macbook-adaptive-feature-octahedron-final-v1')
     parser.add_argument('--matched-feature-run')
     parser.add_argument('--shell-run')
+    parser.add_argument('--failure-run')
+    parser.add_argument('--named-periodic-run')
     args = parser.parse_args()
     assert not args.output.exists()
     np, _, _, _, _, scorecard = w.imports()
@@ -61,7 +115,7 @@ def main():
     if args.feature_case == 'bored-prism':
         assert row['diagnostics']['retained_constraints'] == 7
     else:
-        assert row['diagnostics']['polyhedral_constraints'] == 8
+        assert row['diagnostics']['polyhedral_constraints'] == (4 if args.feature_case == 'periodic-column' else 8)
     if args.feature_case == 'notched-prism':
         assert row['diagnostics']['polyhedral_regions'] == 2
     assert w.digest(poly/'mesh.npz') == row['mesh_sha256']
@@ -70,9 +124,10 @@ def main():
     assert audit(points, cells, surface)['oriented_facet_consistency_passed']
     q, _, volumes = scorecard.tet_metrics(points, cells)
     reverse = float(scorecard.distance_to_mesh(points, surface, np.load(poly/'reference.npz')['points']).max())
-    from topology_coverage import bored_prism_distance, boundary_topology, fixture, notched_prism, octahedron
+    from topology_coverage import bored_prism_distance, boundary_topology, fixture, notched_prism, octahedron, periodic_column
     _, queries, exact_volume, _, _ = fixture(args.feature_case, np)
-    target, faces = notched_prism(np) if args.feature_case == 'notched-prism' else octahedron(np)
+    target, faces = (periodic_column(np) if args.feature_case == 'periodic-column'
+        else notched_prism(np) if args.feature_case == 'notched-prism' else octahedron(np))
     transform = row.get('transform', dict(rotation_z=0., translation=(0., 0., 0.)))
     angle, translation = transform['rotation_z'], transform['translation']
     if angle or any(translation):
@@ -91,6 +146,21 @@ def main():
     assert len(points) <= 250000 and len(cells) <= 250000
     for name in ('result.json', 'mesh.npz', 'reference.npz'):
         hashes[str(poly/name)] = w.digest(poly/name)
+    periodic_result = None
+    if args.feature_case == 'periodic-column':
+        assert args.failure_run and args.named_periodic_run
+        candidate = replay_periodic_column(poly, np, scorecard, hashes)
+        failed = replay_periodic_column(w.HERE/'runs'/args.failure_run, np, scorecard, hashes, baseline)
+        named = replay_periodic_column(w.HERE/'runs'/args.named_periodic_run, np, scorecard, hashes, baseline)
+        assert candidate['qualified'] and named['qualified'] and not failed['qualified']
+        assert failed['reverse_distance'] > .002
+        for other in (failed, named):
+            for key in ('bounds', 'cells', 'periodic', 'geometry_tolerance', 'minimum_quality',
+                'max_tetrahedra', 'optimize_passes', 'snap'):
+                assert other['options'][key] == candidate['options'][key]
+        assert failed['options'] == candidate['options']
+        periodic_result = dict(candidate=candidate, rejected_scalar=failed, named_seed=named,
+            fixed_domain_and_gates=True, no_comparative_timing_claim=True)
     matched_result = None
     if args.matched_feature_run:
         matched = w.HERE/'runs'/args.matched_feature_run
@@ -145,7 +215,7 @@ def main():
     assert not archived_source.exists()
     copyfile(__file__, archived_source)
     w.save(args.output, dict(study_controls=controls, inputs=hashes, feature_case=args.feature_case,
-        matched_feature=matched_result, shell_regression=shell_result,
+        matched_feature=matched_result, shell_regression=shell_result, periodic_feature=periodic_result,
         native_baseline_sha256=w.digest(baseline), candidate_sha256=w.digest(binary),
         polyhedral_reverse_distance=reverse, polyhedral_forward_distance=forward, polyhedral_result=str(poly/'result.json'),
         no_fe_solve=True, reference_promoted=False, comparative_timing_claim=False))

@@ -102,6 +102,24 @@ mod tests {
     use super::{active, normalized, project};
 
     #[test]
+    fn periodic_hints_reject_noninvariant_planes() {
+        use crate::implicit::{Options, generate_with_features};
+        let result = generate_with_features(
+            &|p: crate::Point| p[0].max(p[2]) - 0.2,
+            None,
+            Options {
+                periodic: [false, false, true],
+                adapt: Some(Default::default()),
+                ..Options::default()
+            },
+            Some(&[[1., 0., 0., -0.2], [0., 0., 1., -0.2]]),
+        );
+        assert!(
+            matches!(result, Err(crate::MeshingError::InvalidOptions(message)) if message.contains("planes invariant on periodic axes"))
+        );
+    }
+
+    #[test]
     fn joint_projection_preserves_strata_locks_and_domain() {
         let planes = normalized(&[
             [1., 0., 0., -0.5],

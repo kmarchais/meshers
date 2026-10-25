@@ -23,6 +23,14 @@ def boundary_topology(surface, np):
 
 def fixture(name, np):
     angles = 2*np.pi*np.arange(96)/96
+    if name == 'periodic-column':
+        c, s = float(np.cos(.31)), float(np.sin(.31))
+        def field(x, y, z):
+            return np.maximum(np.abs(c*x+s*y)-.2, np.abs(-s*x+c*y)-.2)
+        vertices, faces = periodic_column(np)
+        bary = np.array([(i/48, j/48, 1-(i+j)/48) for i in range(49) for j in range(49-i)])
+        queries = np.einsum('sn,fnd->fsd', bary, vertices[faces]).reshape(-1, 3)
+        return field, queries, .16, 1, 2
     if name == 'bored-prism':
         half = (.35, .35, .3)
         center, radius = np.array((.03, -.02)), .12
@@ -84,6 +92,53 @@ def fixture(name, np):
         return np.minimum(np.sqrt((x-offset)**2+y*y+z*z)-radius,
             np.sqrt((x+offset)**2+y*y+z*z)-radius)
     return field, np.concatenate((radius*sphere+[offset, 0, 0], radius*sphere-[offset, 0, 0])), 8*np.pi/3*radius**3, 2, 4
+
+
+def periodic_column(np):
+    """Exact square-column boundary, including the two periodic end caps."""
+    polygon = .2*np.array(((-1, -1), (1, -1), (1, 1), (-1, 1)))
+    c, s = np.cos(.31), np.sin(.31)
+    polygon = polygon@np.array(((c, s), (-s, c)))
+    vertices = np.concatenate((np.column_stack((polygon, np.full(4, -.5))),
+        np.column_stack((polygon, np.full(4, .5)))))
+    faces = [(0, 2, 1), (0, 3, 2), (4, 5, 6), (4, 6, 7)]
+    for a in range(4):
+        b = (a+1)%4
+        faces.extend(((a, b, b+4), (a, b+4, a+4)))
+    return vertices, np.array(faces)
+
+
+def periodic_column_constraints(np):
+    c, s = float(np.cos(.31)), float(np.sin(.31))
+    result = {}
+    for i, (a, b) in enumerate(((c, s), (-s, c))):
+        for sign in (-1, 1):
+            def plane(x, y, z, a=a, b=b, sign=sign):
+                return sign*(a*x+b*y)-.2
+            result[f'plane{i}_{sign}'] = plane
+    return result
+
+
+def audit_column_periodicity(points, surface, np):
+    """Independent z-pair bijection and cap-facet replay at tolerance1e-10."""
+    low = np.flatnonzero(abs(points[:, 2]+.5) <= 1e-10)
+    high = np.flatnonzero(abs(points[:, 2]-.5) <= 1e-10)
+    assert len(low) and len(low) == len(high)
+    def keys(indices):
+        return [tuple(p) for p in np.rint(points[indices, :2]/1e-10).astype(np.int64)]
+    lower = dict(zip(keys(low), low, strict=True))
+    assert len(lower) == len(low) and set(lower) == set(keys(high))
+    mapped = np.array([lower[k] for k in keys(high)])
+    error = float(abs(points[high]-points[mapped]-(0, 0, 1)).max())
+    assert error <= 1e-10
+    mapping = np.arange(len(points)); mapping[high] = mapped
+    caps = []
+    for z in (-.5, .5):
+        selected = np.all(abs(points[surface, 2]-z) <= 1e-10, axis=1)
+        caps.append({tuple(sorted(f)) for f in mapping[surface[selected]]})
+    assert caps[0] and caps[0] == caps[1]
+    return dict(axis=2, pair_count=len(low), cap_count=len(caps[0]), coordinate_error=error,
+        matching_caps=True, bijective_nodes=True)
 
 
 def octahedron(np):
@@ -166,7 +221,7 @@ def bored_prism_constraints(np):
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('--run', type=Path, required=True)
-    parser.add_argument('--case', choices=('torus', 'shell', 'disjoint', 'octahedron', 'notched-prism', 'bored-prism'), required=True)
+    parser.add_argument('--case', choices=('torus', 'shell', 'disjoint', 'octahedron', 'notched-prism', 'bored-prism', 'periodic-column'), required=True)
     parser.add_argument('--tolerance', type=float, default=.002)
     parser.add_argument('--cells', type=int, default=24)
     parser.add_argument('--named', action='store_true', help='Retain octahedron planes or bored-prism fields as named constraints')
@@ -199,6 +254,8 @@ def main():
         gates=dict(distance=.002, relative_volume=.01, minimum_quality=.1,
             positive_jacobians=True, coherent_facets=True, exact_boundary_topology=True,
             maximum_nodes=250000, maximum_tetrahedra=w.CAP))
+    if args.case == 'periodic-column':
+        row['options']['periodic'] = (False, False, True)
     row['diagnostic_unchecked'] = args.diagnostic_unchecked
     if args.diagnostic_unchecked:
         row['options'].update(geometry_tolerance=1., minimum_quality=0., adapt_tolerance=args.tolerance)
@@ -207,14 +264,14 @@ def main():
     cosine, sine = np.cos(args.rotation), np.sin(args.rotation)
     rotation = np.array(((cosine, -sine, 0.), (sine, cosine, 0.), (0., 0., 1.)))
     transformed = bool(args.rotation or any(args.translation))
-    assert args.case != 'bored-prism' or not transformed
+    assert args.case not in ('bored-prism', 'periodic-column') or not transformed
     assert np.isfinite(rotation).all() and np.isfinite(args.translation).all()
     if args.named:
         assert not transformed
     if args.named:
-        assert args.case in ('octahedron', 'bored-prism')
+        assert args.case in ('octahedron', 'bored-prism', 'periodic-column')
         row['options'] = {k: v for k, v in row['options'].items() if k in
-            ('bounds', 'cells', 'geometry_tolerance', 'minimum_quality', 'max_tetrahedra', 'optimize_passes', 'snap')}
+            ('bounds', 'cells', 'geometry_tolerance', 'minimum_quality', 'max_tetrahedra', 'optimize_passes', 'snap', 'periodic')}
     started = time.perf_counter()
     try:
         field, queries, exact_volume, components, euler = fixture(args.case, np)
@@ -230,6 +287,8 @@ def main():
         if args.named:
             from itertools import product
             constraints = bored_prism_constraints(np) if args.case == 'bored-prism' else {}
+            if args.case == 'periodic-column':
+                constraints = periodic_column_constraints(np)
             if args.case == 'octahedron':
                 for index, (a, b, c) in enumerate(product((1, -1), repeat=3)):
                     def plane(x, y, z, a=a, b=b, c=c):
@@ -250,8 +309,9 @@ def main():
             distances = bored_prism_distance(probes, np)
             forward = float(distances.max())
             row['forward_witness'] = bored_prism_witness(probes[distances.argmax()], forward, np)
-        if args.case in ('octahedron', 'notched-prism'):
-            target_points, target_surface = octahedron(np) if args.case == 'octahedron' else notched_prism(np)
+        if args.case in ('octahedron', 'notched-prism', 'periodic-column'):
+            target_points, target_surface = (periodic_column(np) if args.case == 'periodic-column'
+                else octahedron(np) if args.case == 'octahedron' else notched_prism(np))
             if transformed:
                 target_points = target_points@rotation.T+args.translation
             forward = float(scorecard.distance_to_mesh(target_points, target_surface, probes).max())
@@ -272,7 +332,11 @@ def main():
             expected_boundary_components=components, boundary_components=observed_components,
             expected_boundary_euler=euler, boundary_euler=observed_euler,
             boundary_volume=boundary_volume, volume_balance=abs(abs(boundary_volume)-float(volumes.sum())),
-            periodic_requested=False, used_nodes=len(np.unique(cells)))
+            periodic_requested=args.case == 'periodic-column', used_nodes=len(np.unique(cells)))
+        if args.case == 'periodic-column':
+            row['periodic'] = audit_column_periodicity(points, surface, np)
+            assert len(mesh.periodic_pairs[2]) == row['periodic']['pair_count']
+            assert all(len(mesh.periodic_pairs[a]) == 0 for a in (0, 1))
         row['qualified'] = bool(max(forward, reverse) <= .002 and abs(row['relative_volume_error']) <= .01
             and q.min() >= .1 and volumes.min() > 0 and facets['oriented_facet_consistency_passed']
             and observed_components == components and observed_euler == euler

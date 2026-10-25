@@ -1,0 +1,26 @@
+{
+  "binary": "/Users/kmarchais/dev/meshers/crates/meshers-python/python/meshers/_meshers.abi3.so",
+  "binary_sha256": "7685573407b7276e230077215bacbbc1d1ffb3e17fc3f404e74c65d969892e52",
+  "file": "/Users/kmarchais/dev/meshers/crates/meshers-python/python/meshers/_meshers.abi3.so: Mach-O 64-bit dynamically linked shared library arm64",
+  "base_commit": "6661943b5887fbe7a9f83d85afab9862d26939c3",
+  "build_run": "experiments/adaptive/runs/macbook-periodic-polyhedral-build-v2",
+  "sources": {
+    "crates/meshers-core/src/implicit.rs": "0eb964c0b6c9d35f937391de149295e48c7931b533d63729918c6e8cafe09e83",
+    "crates/meshers-core/src/polyhedral.rs": "a91e1a7c497b8f629dc382b2914a6d7cfbfe704c9d48997ff3d64f13270669c1",
+    "crates/meshers-python/python/meshers/__init__.py": "7c3acaecc87d4a8241968a6768e42dbe72c8ecdc025a9e22bbc5c042f46f4486",
+    "crates/meshers-python/python/meshers/_meshers.pyi": "def865aa294f8debf3a5090961f800bdd7e551862c129e39312ea3dcfa4b76d2",
+    "crates/meshers-python/python/meshers/intersection.py": "43fdc25933834907c624254454837366d218a45ef65c45a11183d582d3263699",
+    "crates/meshers-python/src/lib.rs": "5d4fb8d36eab4a9a288fc06674bab29ec2358be9015d46edea06f619711dfa1f",
+    "crates/meshers-python/tests/test_polyhedral.py": "bb6a81ea172eda018c33136df26cec3eabb6055d8780aa0082ac0f7eb62b9768",
+    "experiments/adaptive/test_topology_coverage.py": "c43e5a2e1a2c1b5254248f49a3c1145ee2874c02405d11d6457180a0b441eeef",
+    "experiments/adaptive/topology_coverage.py": "e83235b77e46001095d583835aa7ecbec4c7a08a77f81875d8a013e719421c93",
+    "experiments/adaptive/verify_adaptive_polyhedral_change.py": "816e3a9e2c99b6e1b4b888f45fd8ae66ef6acf13c4f92807fdb4725be9e18b9a",
+    "Cargo.lock": "c5de0b0561f9ab415ff941a24cae24bd7de5069eca73e3dd9b6da63db4273278",
+    "crates/meshers-python/Cargo.lock": "7b11f1f129ed55d1f6fae69498e7191b6f6e08b7cca51dda7af9690deff17eac"
+  },
+  "scope": "Compiled affine Tet4 features with each plane invariant along enabled periodic axes; original four study meshes independently verified unchanged",
+  "independent_audit": "handoff/macbook/periodic-polyhedral-change-audit-20261025.json",
+  "no_fe_solve": true,
+  "reference_promoted": false,
+  "comparative_timing_claim": false
+}

@@ -21,6 +21,18 @@ Points = npt.NDArray[np.float64]
 Indices = npt.NDArray[np.int64]
 
 
+def _periodic_affine(field: Scalar, periodic: Sequence[bool]) -> bool:
+    if not isinstance(field, _meshers.CompiledField) or not getattr(
+        _meshers, "PERIODIC_POLYHEDRAL", False
+    ):
+        return False
+    planes = getattr(field, "_halfspaces", None)
+    return planes is not None and all(
+        not enabled or all(plane[axis] == 0 for plane in planes)
+        for axis, enabled in enumerate(periodic)
+    )
+
+
 def _affine_planes(
     field: Scalar, scalar_mode: Sequence[bool], *, canonical: bool = False
 ) -> dict[str, Scalar] | None:

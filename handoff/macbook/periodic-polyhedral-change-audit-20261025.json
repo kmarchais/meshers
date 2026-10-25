@@ -1,0 +1,349 @@
+{
+  "study_controls": [
+    {
+      "case": "gyroid",
+      "current": {
+        "run": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-periodic-feature-gyroid-control-v1",
+        "input_hashes": 22,
+        "artifact_replays": 1,
+        "full_geometry_replayed": true,
+        "rows": [
+          {
+            "directory": "experiments/adaptive/runs/macbook-periodic-feature-gyroid-control-v1/repeat-0-meshers-tet4-24",
+            "qualified": true,
+            "mesh_sha256": "0b09bebf49b50d7305372df3a323973a1a40e802245c91246f123d9028fe5f5b",
+            "used_nodes": 17647,
+            "total_nodes": 17647
+          }
+        ]
+      },
+      "baseline": {
+        "run": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-adaptive-nonlinear-gyroid-control-v1",
+        "input_hashes": 22,
+        "artifact_replays": 1,
+        "full_geometry_replayed": true,
+        "rows": [
+          {
+            "directory": "experiments/adaptive/runs/macbook-adaptive-nonlinear-gyroid-control-v1/repeat-0-meshers-tet4-24",
+            "qualified": true,
+            "mesh_sha256": "0b09bebf49b50d7305372df3a323973a1a40e802245c91246f123d9028fe5f5b",
+            "used_nodes": 17647,
+            "total_nodes": 17647
+          }
+        ]
+      },
+      "canonical_arrays_identical": true
+    },
+    {
+      "case": "schwarz-solid",
+      "current": {
+        "run": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-periodic-feature-schwarz-control-v1",
+        "input_hashes": 22,
+        "artifact_replays": 1,
+        "full_geometry_replayed": true,
+        "rows": [
+          {
+            "directory": "experiments/adaptive/runs/macbook-periodic-feature-schwarz-control-v1/repeat-0-meshers-tet4-24",
+            "qualified": true,
+            "mesh_sha256": "60f885e202b7727c6c94e5f7aa7ff6423a51f95f5a8a45fdb8db01ec70022311",
+            "used_nodes": 19004,
+            "total_nodes": 19004
+          }
+        ]
+      },
+      "baseline": {
+        "run": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-adaptive-nonlinear-schwarz-control-v1",
+        "input_hashes": 22,
+        "artifact_replays": 1,
+        "full_geometry_replayed": true,
+        "rows": [
+          {
+            "directory": "experiments/adaptive/runs/macbook-adaptive-nonlinear-schwarz-control-v1/repeat-0-meshers-tet4-24",
+            "qualified": true,
+            "mesh_sha256": "60f885e202b7727c6c94e5f7aa7ff6423a51f95f5a8a45fdb8db01ec70022311",
+            "used_nodes": 19004,
+            "total_nodes": 19004
+          }
+        ]
+      },
+      "canonical_arrays_identical": true
+    },
+    {
+      "case": "spinodoid",
+      "current": {
+        "run": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-periodic-feature-spinodoid-control-v1",
+        "input_hashes": 22,
+        "artifact_replays": 1,
+        "full_geometry_replayed": true,
+        "rows": [
+          {
+            "directory": "experiments/adaptive/runs/macbook-periodic-feature-spinodoid-control-v1/repeat-0-meshers-tet4-historical32",
+            "qualified": true,
+            "mesh_sha256": "ace00797498343729b2b11c2ab0bb3de78ff40228e5db763cfbafbfb4c16fbc8",
+            "used_nodes": 16732,
+            "total_nodes": 16732
+          }
+        ]
+      },
+      "baseline": {
+        "run": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-adaptive-nonlinear-spinodoid-control-v1",
+        "input_hashes": 22,
+        "artifact_replays": 1,
+        "full_geometry_replayed": true,
+        "rows": [
+          {
+            "directory": "experiments/adaptive/runs/macbook-adaptive-nonlinear-spinodoid-control-v1/repeat-0-meshers-tet4-historical32",
+            "qualified": true,
+            "mesh_sha256": "ace00797498343729b2b11c2ab0bb3de78ff40228e5db763cfbafbfb4c16fbc8",
+            "used_nodes": 16732,
+            "total_nodes": 16732
+          }
+        ]
+      },
+      "canonical_arrays_identical": true
+    },
+    {
+      "case": "smooth-lattice",
+      "current": {
+        "run": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-periodic-feature-lattice-control-v1",
+        "input_hashes": 22,
+        "artifact_replays": 1,
+        "full_geometry_replayed": true,
+        "rows": [
+          {
+            "directory": "experiments/adaptive/runs/macbook-periodic-feature-lattice-control-v1/repeat-0-meshers-tet4-historical32",
+            "qualified": true,
+            "mesh_sha256": "1cfa1cac40cea865aed89b8e6913aa502a9b51e81c40d1b10bdfb9fefe5b5e77",
+            "used_nodes": 48077,
+            "total_nodes": 48077
+          }
+        ]
+      },
+      "baseline": {
+        "run": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-adaptive-nonlinear-lattice-control-v1",
+        "input_hashes": 22,
+        "artifact_replays": 1,
+        "full_geometry_replayed": true,
+        "rows": [
+          {
+            "directory": "experiments/adaptive/runs/macbook-adaptive-nonlinear-lattice-control-v1/repeat-0-meshers-tet4-historical32",
+            "qualified": true,
+            "mesh_sha256": "bd74ea1856bf1ca6f5ea221a26624d2c39a2d304bac9d933004a3b1e8272e654",
+            "used_nodes": 48077,
+            "total_nodes": 48077
+          }
+        ]
+      },
+      "canonical_arrays_identical": true
+    }
+  ],
+  "inputs": {
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/verify_adaptive_polyhedral_change.py": "816e3a9e2c99b6e1b4b888f45fd8ae66ef6acf13c4f92807fdb4725be9e18b9a",
+    "/Users/kmarchais/dev/meshers/crates/meshers-python/python/meshers/_meshers.abi3.so": "7685573407b7276e230077215bacbbc1d1ffb3e17fc3f404e74c65d969892e52",
+    "/Users/kmarchais/dev/meshers/.local-work/native-baselines/dc707190517fecbe8b8242593c5304a800fd265323335275fe8807085b9e6268/meshers/_meshers.abi3.so": "dc707190517fecbe8b8242593c5304a800fd265323335275fe8807085b9e6268",
+    "/Users/kmarchais/dev/meshers/handoff/macbook/native-baseline-before-periodic-polyhedral-20261025.json": "a7702af870ebf42058be88354deea1344e8b7c323fff0ecf4ba552b6f9443b64",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-periodic-feature-gyroid-control-v1/repeat-0-meshers-tet4-24/mesh.npz": "0b09bebf49b50d7305372df3a323973a1a40e802245c91246f123d9028fe5f5b",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-periodic-feature-gyroid-control-v1/repeat-0-meshers-tet4-24/result.json": "932e01c607ef8fe2edd527be4997b7d4d6378a93a29c06adfde4d7e387c55d44",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-adaptive-nonlinear-gyroid-control-v1/repeat-0-meshers-tet4-24/mesh.npz": "0b09bebf49b50d7305372df3a323973a1a40e802245c91246f123d9028fe5f5b",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-adaptive-nonlinear-gyroid-control-v1/repeat-0-meshers-tet4-24/result.json": "8b6c91dd8c6b4b40bc1ed53b0a63a7ab0ae632f3878db196b59d3a0bf84e84ab",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-periodic-feature-schwarz-control-v1/repeat-0-meshers-tet4-24/mesh.npz": "60f885e202b7727c6c94e5f7aa7ff6423a51f95f5a8a45fdb8db01ec70022311",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-periodic-feature-schwarz-control-v1/repeat-0-meshers-tet4-24/result.json": "5c14ad22d553d91660424a4cd22a9cbe23294a0e2f0f7477a373ba2b45c89a7d",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-adaptive-nonlinear-schwarz-control-v1/repeat-0-meshers-tet4-24/mesh.npz": "60f885e202b7727c6c94e5f7aa7ff6423a51f95f5a8a45fdb8db01ec70022311",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-adaptive-nonlinear-schwarz-control-v1/repeat-0-meshers-tet4-24/result.json": "a016eee20c3881ace2f450e8dc8cddfac14f2034aafd95dfbf4a0e91b546184f",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-periodic-feature-spinodoid-control-v1/repeat-0-meshers-tet4-historical32/mesh.npz": "ace00797498343729b2b11c2ab0bb3de78ff40228e5db763cfbafbfb4c16fbc8",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-periodic-feature-spinodoid-control-v1/repeat-0-meshers-tet4-historical32/result.json": "4fe678c6b39367b0584dc17cdbc8400afd4982c4cd9d69679685c7080501f9d4",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-adaptive-nonlinear-spinodoid-control-v1/repeat-0-meshers-tet4-historical32/mesh.npz": "ace00797498343729b2b11c2ab0bb3de78ff40228e5db763cfbafbfb4c16fbc8",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-adaptive-nonlinear-spinodoid-control-v1/repeat-0-meshers-tet4-historical32/result.json": "631ee848a679db058e802806e35f00b7497358c01c56cdef602666a28b068a2f",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-periodic-feature-lattice-control-v1/repeat-0-meshers-tet4-historical32/mesh.npz": "1cfa1cac40cea865aed89b8e6913aa502a9b51e81c40d1b10bdfb9fefe5b5e77",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-periodic-feature-lattice-control-v1/repeat-0-meshers-tet4-historical32/result.json": "11f83df1699c68e3890e2ef8dccefddf6629b5bab8c09ede082564b37ad4368b",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-adaptive-nonlinear-lattice-control-v1/repeat-0-meshers-tet4-historical32/mesh.npz": "bd74ea1856bf1ca6f5ea221a26624d2c39a2d304bac9d933004a3b1e8272e654",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-adaptive-nonlinear-lattice-control-v1/repeat-0-meshers-tet4-historical32/result.json": "3436d00008a34a8813632dbaca26e98c0d1d9246d86e0d6e69f11023ac9bb520",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-periodic-column-retained-v1/result.json": "ab343649255687bd25c3058b340c04f1b41bb43f5b73a2bfa48afebdee364034",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-periodic-column-retained-v1/mesh.npz": "a7c8717bde48d6297361a30a04b7acdb6f6e2bc9336959febcee0c8a88847841",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-periodic-column-retained-v1/reference.npz": "b947ff0f0f338cbf5d30a5225f752322f3a21c42c97cfaf9dcc056114ddb2e30",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/topology_coverage.py": "e83235b77e46001095d583835aa7ecbec4c7a08a77f81875d8a013e719421c93",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/microgen_workflow.py": "073f615481feeae8bb9142d325d9ae39251ca1e1aa2d1376f5e4f88a19aec872",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-periodic-column-retained-v1/input-3-__init__.py": "42737f6f7f8c50cb524e448caed95ed76c37988272c214a1492c53a44d12a810",
+    "/Users/kmarchais/dev/meshers/crates/meshers-python/python/meshers/expression.py": "b4a6a51513e49415563d00cf49745c2359a1325aa3daf561c1c697171068e301",
+    "/Users/kmarchais/dev/meshers/crates/meshers-python/python/meshers/intersection.py": "43fdc25933834907c624254454837366d218a45ef65c45a11183d582d3263699",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/scorecard.py": "8f26256c7df0e84c9f35cdd71bf4f95a74e072d45469002b213c5dcd4f1bab2a",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/facet_incidence_audit.py": "4f51afc196c85e1d0bc64d7a96507517ddc6e32ccd8380a2ac77cae0ace89610",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-periodic-column-scalar-v1/input-3-__init__.py": "762264e5e0680003791fbf26f6593b8eb2d650ebb94a354b915e7a158c941a08",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-periodic-column-scalar-v1/input-5-intersection.py": "303657d6952b0d14b76bd8d0807350b08cb67332a1a1b3e9c00044192b035fd8",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-periodic-column-scalar-v1/mesh.npz": "2696fea44e60cf7255beb02390fa7ba01ae6c980a6df44f56f4fcaed6b49a275",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-periodic-column-scalar-v1/reference.npz": "b947ff0f0f338cbf5d30a5225f752322f3a21c42c97cfaf9dcc056114ddb2e30",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-periodic-column-scalar-v1/result.json": "9548b4507fea2a4ba42d117418ff0321593560b9015be1fec4ccce8abb985976",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-periodic-column-named-v1/input-3-__init__.py": "762264e5e0680003791fbf26f6593b8eb2d650ebb94a354b915e7a158c941a08",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-periodic-column-named-v1/input-5-intersection.py": "303657d6952b0d14b76bd8d0807350b08cb67332a1a1b3e9c00044192b035fd8",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-periodic-column-named-v1/mesh.npz": "29af501586288682b73c25468a957b85194642b065fb7c8915ac7ad61d4dfa17",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-periodic-column-named-v1/reference.npz": "b947ff0f0f338cbf5d30a5225f752322f3a21c42c97cfaf9dcc056114ddb2e30",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-periodic-column-named-v1/result.json": "b048eab615bfb9b22ebfd4541b6acbf1c1717841eca60574029eb2c0e90060ab",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/mesh_comparison_report.py": "7e5ea672bfb4f9bc51184a47ee3f9b0af0ba01bbf77260e2d276ebefe745ca3a"
+  },
+  "feature_case": "periodic-column",
+  "matched_feature": null,
+  "shell_regression": null,
+  "periodic_feature": {
+    "candidate": {
+      "run": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-periodic-column-retained-v1",
+      "qualified": true,
+      "nodes": 655,
+      "elements": 2663,
+      "minimum_quality": 0.30225109173699627,
+      "forward_distance": 5.815852873680767e-17,
+      "reverse_distance": 6.206335383118183e-17,
+      "relative_volume_error": 2.220446049250313e-16,
+      "periodic": {
+        "axis": 2,
+        "pair_count": 36,
+        "cap_count": 51,
+        "coordinate_error": 0.0,
+        "matching_caps": true,
+        "bijective_nodes": true
+      },
+      "options": {
+        "bounds": [
+          -0.5,
+          0.5,
+          -0.5,
+          0.5,
+          -0.5,
+          0.5
+        ],
+        "cells": 24,
+        "geometry_tolerance": 0.002,
+        "minimum_quality": 0.1,
+        "max_tetrahedra": 250000,
+        "threads": 1,
+        "adapt": true,
+        "min_length": 0.002,
+        "max_length": 0.1,
+        "gradation": 0.3,
+        "adapt_iterations": 4,
+        "quality_guard": 0.3,
+        "optimize_passes": 1,
+        "order": 1,
+        "snap": 0.2,
+        "periodic": [
+          false,
+          false,
+          true
+        ]
+      },
+      "reverse_witness": [
+        0.1483089711948791,
+        -0.16250300563649367,
+        -0.4583333333333333
+      ],
+      "reverse_witness_distance_to_corner_line": 0.10833333333333334
+    },
+    "rejected_scalar": {
+      "run": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-periodic-column-scalar-v1",
+      "qualified": false,
+      "nodes": 15383,
+      "elements": 65827,
+      "minimum_quality": 0.12069849118244261,
+      "forward_distance": 0.001999664552017626,
+      "reverse_distance": 0.0030738186934977946,
+      "relative_volume_error": -0.00014501397908506242,
+      "periodic": {
+        "axis": 2,
+        "pair_count": 195,
+        "cap_count": 317,
+        "coordinate_error": 0.0,
+        "matching_caps": true,
+        "bijective_nodes": true
+      },
+      "options": {
+        "bounds": [
+          -0.5,
+          0.5,
+          -0.5,
+          0.5,
+          -0.5,
+          0.5
+        ],
+        "cells": 24,
+        "geometry_tolerance": 0.002,
+        "minimum_quality": 0.1,
+        "max_tetrahedra": 250000,
+        "threads": 1,
+        "adapt": true,
+        "min_length": 0.002,
+        "max_length": 0.1,
+        "gradation": 0.3,
+        "adapt_iterations": 4,
+        "quality_guard": 0.3,
+        "optimize_passes": 1,
+        "order": 1,
+        "snap": 0.2,
+        "periodic": [
+          false,
+          false,
+          true
+        ]
+      },
+      "reverse_witness": [
+        -0.12945498668845398,
+        -0.2514784412658314,
+        0.125
+      ],
+      "reverse_witness_distance_to_corner_line": 0.0
+    },
+    "named_seed": {
+      "run": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-periodic-column-named-v1",
+      "qualified": true,
+      "nodes": 7103,
+      "elements": 31738,
+      "minimum_quality": 0.16649797018113324,
+      "forward_distance": 5.721958498152797e-17,
+      "reverse_distance": 6.206335383118183e-17,
+      "relative_volume_error": 0.0,
+      "periodic": {
+        "axis": 2,
+        "pair_count": 144,
+        "cap_count": 227,
+        "coordinate_error": 0.0,
+        "matching_caps": true,
+        "bijective_nodes": true
+      },
+      "options": {
+        "bounds": [
+          -0.5,
+          0.5,
+          -0.5,
+          0.5,
+          -0.5,
+          0.5
+        ],
+        "cells": 24,
+        "geometry_tolerance": 0.002,
+        "minimum_quality": 0.1,
+        "max_tetrahedra": 250000,
+        "optimize_passes": 1,
+        "snap": 0.2,
+        "periodic": [
+          false,
+          false,
+          true
+        ]
+      },
+      "reverse_witness": [
+        0.24354232818345045,
+        -0.13199714199214932,
+        0.020833333333333315
+      ],
+      "reverse_witness_distance_to_corner_line": 0.008333333333333331
+    },
+    "fixed_domain_and_gates": true,
+    "no_comparative_timing_claim": true
+  },
+  "native_baseline_sha256": "dc707190517fecbe8b8242593c5304a800fd265323335275fe8807085b9e6268",
+  "candidate_sha256": "7685573407b7276e230077215bacbbc1d1ffb3e17fc3f404e74c65d969892e52",
+  "polyhedral_reverse_distance": 6.206335383118183e-17,
+  "polyhedral_forward_distance": 5.815852873680767e-17,
+  "polyhedral_result": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-periodic-column-retained-v1/result.json",
+  "no_fe_solve": true,
+  "reference_promoted": false,
+  "comparative_timing_claim": false
+}

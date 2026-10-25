@@ -1,5 +1,23 @@
 # Adaptive and quadratic implicit meshing: results
 
+## Explicit resume and verified periodic affine recovery, 25 October 2026
+
+Kevin resumed from the pause checkpoint. Native test265 had finished; it was
+not restarted. The periodic column now admits 2,663 tets / 655 nodes, qmin 0.302251
+and distance 6.21e-17 at unchanged settings. Independent replay 271 reproduces
+the rejected scalar corner witness and exact named-domain control, and proves
+all four freshly generated study meshes exactly unchanged after relabeling.
+Python/fixture/tools suite 264 passes 205 tests / 1 optional skip; full native
+release suite 265 passes 94 tests. Final build 266 reproduces the measured image.
+See [periodic affine results](PERIODIC_POLYHEDRAL_RESULTS.md). No new FE/reference/timing claim follows.
+The supported periodic planes must each be invariant along requested axes;
+non-affine normal jumps and branch permutations remain open. Next diagnose
+one actual periodic-seam feature mechanism before any further native change.
+All four cases and all 24 lattice models remain in scope. Earlier pause and
+selected-next descriptions below are historical.
+
+
+
 Eligible nonadaptive Tet4 calls now retain analytic outer-max branches.
 The bored-prism scalar route that failed at matched settings now admits with
 145924 tets, qmin 0.121400, distance 0.00105814 and volume error 0.05022%.

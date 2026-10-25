@@ -55,3 +55,24 @@ def test_boundary_topology_counts_disconnected_components_and_torus_handle():
             a, b, c, d = 4*i+j, 4*((i+1)%4)+j, 4*((i+1)%4)+(j+1)%4, 4*i+(j+1)%4
             faces.extend(((a, b, c), (a, c, d)))
     assert boundary_topology(np.array(faces), np) == (1, 0)
+
+
+def test_periodic_column_preserves_exact_domain_and_cap_pairing():
+    from topology_coverage import audit_column_periodicity, periodic_column, periodic_column_constraints
+
+    points, faces = periodic_column(np)
+    field, queries, volume, components, euler = fixture('periodic-column', np)
+    closed = np.maximum(field(*queries.T), np.max(abs(queries), axis=1)-.5)
+    assert abs(closed).max() < 2e-16
+    triangles = points[faces]
+    actual_volume = np.einsum('ij,ij->i', triangles[:, 0], np.cross(triangles[:, 1], triangles[:, 2])).sum()/6
+    assert abs(actual_volume-volume) < 1e-15
+    assert boundary_topology(faces, np) == (components, euler) == (1, 2)
+    assert audit_column_periodicity(points, faces, np)['pair_count'] == 4
+    rng = np.random.default_rng(42)
+    probes = rng.uniform(-.5, .5, (1024, 3))
+    np.testing.assert_allclose(field(*probes.T), np.max([f(*probes.T) for f in periodic_column_constraints(np).values()], axis=0), atol=1e-16)
+    shifted = probes.copy();shifted[:, 2] += 1
+    np.testing.assert_array_equal(field(*probes.T), field(*shifted.T))
+    with pytest.raises(AssertionError):
+        audit_column_periodicity(points, faces[1:], np)

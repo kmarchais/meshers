@@ -264,3 +264,69 @@ def test_polyhedral_adaptation_keeps_invalid_sizing_rejection():
         meshers.generate(
             octahedron, bounds=(-0.5, 0.5) * 3, cells=24, adapt=True, min_length=0.2, max_length=0.1
         )
+
+
+def periodic_column(x, y, z):
+    c, s = float(np.cos(0.31)), float(np.sin(0.31))
+    return np.maximum(abs(c * x + s * y) - 0.2, abs(-s * x + c * y) - 0.2)
+
+
+@pytest.mark.parametrize("adapt", [False, True])
+def test_periodic_extrusion_keeps_exact_creases_and_paired_caps(adapt):
+    mesh = meshers.generate(
+        periodic_column,
+        bounds=(-0.5, 0.5) * 3,
+        cells=24,
+        periodic=(False, False, True),
+        adapt=adapt,
+        min_length=0.002,
+        max_length=0.1,
+        geometry_tolerance=0.002,
+        minimum_quality=0.1,
+        max_tetrahedra=250000,
+        optimize_passes=1,
+    )
+    assert mesh.diagnostics["polyhedral_constraints"] == 4
+    assert mesh.diagnostics["minimum_mmg_quality"] >= 0.1
+    assert abs(mesh.diagnostics["volume"] - 0.16) < 1e-12
+    pairs = mesh.periodic_pairs[2]
+    assert len(pairs) > 0
+    assert all(len(p) == 0 for p in mesh.periodic_pairs[:2])
+    np.testing.assert_array_equal(
+        mesh.points[pairs[:, 1]] - mesh.points[pairs[:, 0]],
+        np.broadcast_to((0, 0, 1), (len(pairs), 3)),
+    )
+    low = mesh.surface[np.all(np.equal(mesh.points[mesh.surface, 2], -0.5), axis=1)]
+    high = mesh.surface[np.all(np.equal(mesh.points[mesh.surface, 2], 0.5), axis=1)]
+    mapping = np.arange(len(mesh.points))
+    mapping[pairs[:, 1]] = pairs[:, 0]
+    assert len(low) > 0
+    assert {tuple(sorted(f)) for f in low} == {tuple(sorted(f)) for f in mapping[high]}
+    wall = mesh.surface[np.ptp(mesh.points[mesh.surface, 2], axis=1) > 0]
+    assert np.max(abs(periodic_column(*mesh.points[wall].mean(axis=1).T))) < 1e-12
+    if adapt:
+        assert mesh.diagnostics["adapt"]["collapses"] > 0
+
+
+def test_periodic_feature_dispatch_rejects_noninvariant_planes():
+    from meshers.intersection import _periodic_affine
+
+    field = meshers.compile_field(periodic_column)
+    assert _periodic_affine(field, (False, False, True))
+    assert not _periodic_affine(field, (True, False, True))
+    assert not _periodic_affine(meshers.compile_field(octahedron), (True,) * 3)
+    assert not _periodic_affine(field, (True,) * 3)
+
+
+def test_periodic_feature_path_keeps_nonperiodic_sizing_rejection():
+    with pytest.raises(ValueError, match="incompatible with periodic"):
+        meshers.generate(
+            periodic_column,
+            bounds=(-0.5, 0.5) * 3,
+            cells=12,
+            periodic=(False, False, True),
+            adapt=True,
+            min_length=0.002,
+            max_length=0.1,
+            size_field=lambda x, y, z: 0.06 + 0.01 * z,
+        )
