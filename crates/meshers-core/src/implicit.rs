@@ -1138,8 +1138,16 @@ fn build<F: ScalarField>(g: &Context<F>) -> Result<Output, String> {
                 *total += elapsed;
             }
         }
+        let inserted_interior_nodes = crate::adaptive::refine_interior(
+            &mut mesh,
+            o.interior_refine_nodes,
+            o.minimum_quality.max(0.1),
+            o.max_tetrahedra,
+            g,
+        )?;
         let mut output = finish(mesh, g)?;
         output.diagnostics.reverted_snap_vertices = reverted_snap_vertices;
+        output.diagnostics.inserted_interior_nodes = inserted_interior_nodes;
         output.diagnostics.adapt = Some(stats);
         return Ok(output);
     }

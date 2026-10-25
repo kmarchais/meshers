@@ -27,6 +27,26 @@ def test_optional_interior_refinement_preserves_periodic_boundary():
     np.testing.assert_array_equal(bounded.tetrahedra, seed.tetrahedra)
 
 
+def test_adaptive_interior_refinement_preserves_periodic_boundary():
+    def field(x, y, z):
+        return -1 + 0.05 * np.cos(2 * np.pi * x)
+
+    options = {
+        "cells": 4, "optimize_passes": 0, "minimum_quality": 0.1,
+        "periodic": (True,) * 3, "adapt": True, "adapt_iterations": 1,
+    }
+    seed = meshers.generate(field, **options)
+    refined = meshers.generate(field, interior_refine_nodes=20, **options)
+    assert 0 < refined.diagnostics["inserted_interior_nodes"] <= 20
+    np.testing.assert_array_equal(refined.points[:len(seed.points)], seed.points)
+    np.testing.assert_array_equal(refined.surface, seed.surface)
+    np.testing.assert_array_equal(refined.boundary_tags, seed.boundary_tags)
+    for old, new in zip(seed.periodic_pairs, refined.periodic_pairs, strict=True):
+        np.testing.assert_array_equal(old, new)
+    assert abs(refined.diagnostics["volume"] - seed.diagnostics["volume"]) < 1e-12
+    assert refined.diagnostics["minimum_mmg_quality"] >= 0.1
+
+
 def test_minimum_quality_gate_and_diagnostics():
     args = {
         "bounds": (0, 1, 0, 1, 0, 0.001),

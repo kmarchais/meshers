@@ -240,7 +240,9 @@ def generate(  # ruff: ignore[complex-structure]
             MeshingError when a local topology operation exceeds this budget.
         optimize_passes: Number of quality-optimization passes, 0..100.
         interior_refine_nodes: Maximum new nodes in one length-ranked interior
-            bisection pass. Zero disables it. Boundary vertices and triangles stay
+            bisection pass after scalar surface generation or adaptation. Zero
+            disables it. For order=2, this counts new corner nodes; quadratic
+            edge nodes are additional. Boundary vertices and triangles stay
             fixed. Disjoint cavities, the tetrahedron budget and a quality floor
             of max(minimum_quality, 0.1) may limit the number inserted.
         snap: Maximum lattice snap as a fraction of minimum spacing, 0..0.2.

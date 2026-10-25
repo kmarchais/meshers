@@ -74,6 +74,42 @@ fn interior_refinement_is_nested_and_preserves_periodic_boundaries() {
 }
 
 #[test]
+fn adaptive_interior_refinement_preserves_the_boundary() {
+    let field = |p: Point| -1. + 0.05 * (TAU * p[0]).cos();
+    let options = Options {
+        cells: [4; 3],
+        optimize_passes: 0,
+        minimum_quality: 0.1,
+        periodic: [true; 3],
+        adapt: Some(meshers_core::tet_adapt::Options {
+            iterations: 1,
+            ..Default::default()
+        }),
+        ..Options::default()
+    };
+    let seed = generate(&field, options).unwrap();
+    let refined = generate(
+        &field,
+        Options {
+            interior_refine_nodes: 20,
+            ..options
+        },
+    )
+    .unwrap();
+    assert!(refined.diagnostics.inserted_interior_nodes > 0);
+    assert!(refined.diagnostics.inserted_interior_nodes <= 20);
+    assert_eq!(
+        &refined.mesh.points[..seed.mesh.points.len()],
+        &seed.mesh.points
+    );
+    assert_eq!(refined.mesh.surface, seed.mesh.surface);
+    assert_eq!(refined.boundary_tags, seed.boundary_tags);
+    assert_eq!(refined.periodic_pairs, seed.periodic_pairs);
+    assert!((refined.diagnostics.volume - seed.diagnostics.volume).abs() < 1e-12);
+    assert!(refined.diagnostics.minimum_mmg_quality >= 0.1);
+}
+
+#[test]
 fn requested_quality_allows_tighter_curvature_refinement() {
     let mesh = generate(
         &gyroid,

@@ -1,0 +1,62 @@
+{
+  "scope": "Validated adaptive scalar interior-option fix. All four unchanged-default arrays exactly reproduced, so prior default fields remain applicable. No new density accuracy or timing claim.",
+  "native_sha256": "19f1536993017f6f610e7b199a3cd271b9e322fb60094fa4cb7984df59f567e8",
+  "core_passed": 105,
+  "core_ignored": 1,
+  "both_clippy_passed": true,
+  "python_passed": 183,
+  "python_skipped": 1,
+  "cases": {
+    "gyroid": {
+      "run": "experiments/adaptive/runs/macbook-interior-default-gyroid-v1/repeat-0-meshers-curved-known",
+      "nodes": 11857,
+      "tets": 6008,
+      "admitted": true,
+      "default_arrays_exactly_unchanged": true
+    },
+    "schwarz": {
+      "run": "experiments/adaptive/runs/macbook-interior-default-schwarz-v1/repeat-0-meshers-curved-known",
+      "nodes": 42928,
+      "tets": 27492,
+      "admitted": true,
+      "default_arrays_exactly_unchanged": true
+    },
+    "spinodoid": {
+      "run": "experiments/adaptive/runs/macbook-interior-default-spinodoid-v1/repeat-0-meshers-curved-known",
+      "nodes": 73811,
+      "tets": 45923,
+      "admitted": true,
+      "default_arrays_exactly_unchanged": true
+    },
+    "lattice": {
+      "run": "experiments/adaptive/runs/macbook-interior-default-lattice-v1/repeat-0-meshers-curved-known",
+      "nodes": 65721,
+      "tets": 41340,
+      "admitted": true,
+      "default_arrays_exactly_unchanged": true
+    }
+  },
+  "inputs": {
+    "experiments/adaptive/runs/macbook-interior-default-gyroid-v1/repeat-0-meshers-curved-known/mesh.npz": "79a51c01129afeb63213431a780f755d5a0db3cf849db2f7d4eb0378cd57e9d0",
+    "experiments/adaptive/runs/macbook-interior-default-gyroid-v1/repeat-0-meshers-curved-known/result.json": "d7c525632fad0d5dbb9d5bbc1e008339a0c89adf1b008a81e8f32a1b1ed50049",
+    "experiments/adaptive/runs/macbook-cap-phase-curved-gyroid-v1/repeat-0-meshers-curved-known/mesh.npz": "79a51c01129afeb63213431a780f755d5a0db3cf849db2f7d4eb0378cd57e9d0",
+    "experiments/adaptive/runs/macbook-cap-phase-curved-gyroid-v1/repeat-0-meshers-curved-known/result.json": "1a779380d23af2253269c85387267ffc4a6892ca058dddec255e75acbda8067f",
+    "experiments/adaptive/runs/macbook-interior-default-schwarz-v1/repeat-0-meshers-curved-known/mesh.npz": "dc92e7f1e6534c58903be3cf7d1b78eb8283b0ff038ca719856b671b2b6f3d27",
+    "experiments/adaptive/runs/macbook-interior-default-schwarz-v1/repeat-0-meshers-curved-known/result.json": "67db3e3036499c062d8cf4d98e2b3c5b618c0b5c3c5e4a699d6bc48c217082b6",
+    "experiments/adaptive/runs/macbook-cap-phase-curved-schwarz-v1/repeat-0-meshers-curved-known/mesh.npz": "dc92e7f1e6534c58903be3cf7d1b78eb8283b0ff038ca719856b671b2b6f3d27",
+    "experiments/adaptive/runs/macbook-cap-phase-curved-schwarz-v1/repeat-0-meshers-curved-known/result.json": "2d04dbed54ab7235b2170e21252c04f06263dd6c1c553dfcc25260213860dd99",
+    "experiments/adaptive/runs/macbook-interior-default-spinodoid-v1/repeat-0-meshers-curved-known/mesh.npz": "3bfbb279a6778d64f0f6d7896a353477a0258a1580f47d9f89773853d121fb30",
+    "experiments/adaptive/runs/macbook-interior-default-spinodoid-v1/repeat-0-meshers-curved-known/result.json": "15adc383a9e488e52b5639dfd8d72ed7c081c7fe3cf8f5ceca609f541a991d25",
+    "experiments/adaptive/runs/macbook-cap-phase-curved-spinodoid-v1/repeat-0-meshers-curved-known/mesh.npz": "3bfbb279a6778d64f0f6d7896a353477a0258a1580f47d9f89773853d121fb30",
+    "experiments/adaptive/runs/macbook-cap-phase-curved-spinodoid-v1/repeat-0-meshers-curved-known/result.json": "51b387175cbb2e62ab2f1fc02ff993e51d8030c872275ff50b1b50486a3e72b2",
+    "experiments/adaptive/runs/macbook-interior-default-lattice-v1/repeat-0-meshers-curved-known/mesh.npz": "de8b38a4c87fb092248230cc2ddc52626b3d6e75186dc494fd2ee6f148237755",
+    "experiments/adaptive/runs/macbook-interior-default-lattice-v1/repeat-0-meshers-curved-known/result.json": "80c2d704889be4cb8f7e7690c9bd11106e42ed8ae231107f164fea2cffb8ab0d",
+    "experiments/adaptive/runs/macbook-cap-phase-curved-lattice-v1/repeat-0-meshers-curved-known/mesh.npz": "de8b38a4c87fb092248230cc2ddc52626b3d6e75186dc494fd2ee6f148237755",
+    "experiments/adaptive/runs/macbook-cap-phase-curved-lattice-v1/repeat-0-meshers-curved-known/result.json": "8e720b4c2be371adb599455b4b9bb116930fda697fd664c07ea4656fc2e0df19",
+    "experiments/adaptive/runs/macbook-adaptive-interior-core-v1/worker.json": "8856d294a3884d34ed0d9ebc0c10c2af8fa626d59a4f20d6c6bedd644fd695a0",
+    "experiments/adaptive/runs/macbook-adaptive-interior-core-clippy-v1/worker.json": "da2d8420ae98e69bd8c64b4c18b53a868277decfdec1ba3d6457b095cde9a145",
+    "experiments/adaptive/runs/macbook-adaptive-interior-python-clippy-v1/worker.json": "ce8b16275cf20269fa9e14453a9bf0572747306cb8193acba950ee4b1861e56f",
+    "experiments/adaptive/runs/macbook-adaptive-interior-native-build-v1/worker.json": "e9e5a2db54071d56f1d52bd780faeef2f33e281b5df4e3a0722d361d36573924",
+    "experiments/adaptive/runs/macbook-adaptive-interior-python-suite-v1/worker.json": "ab0564b7cc96fd929062bd482c1aa340c328f02e82c347a316317e655dd3fd68"
+  }
+}
