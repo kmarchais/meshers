@@ -46,6 +46,15 @@ def test_periodic_affine_patch_has_zero_hierarchical_residual(cube):
     energy, _, checked = integrate(mesh.points, mesh.tetrahedra, fields, space, coefficients, rule)
     np.testing.assert_allclose(energy[:6, :6], MATERIAL, atol=1e-12, rtol=1e-12)
     assert abs(checked['volume']-1) < 1e-12
+    _, enriched_residual, _ = build_modes(mesh.points, mesh.tetrahedra, .75*fields, space, rule,
+        parent_coefficients=.2*coefficients)
+    enriched_cross = np.einsum('fcl,fcm->lm', enriched_residual, coefficients)
+    np.testing.assert_allclose(enriched_cross, .75*energy[:6,6:]+.2*energy[6:,6:], atol=1e-12, rtol=1e-10)
+    enriched, _, _ = integrate(mesh.points, mesh.tetrahedra, .75*fields, space, coefficients, rule,
+        parent_coefficients=.2*coefficients)
+    np.testing.assert_allclose(enriched[:6,:6], .5625*energy[:6,:6]
+        +.15*(energy[:6,6:]+energy[6:,:6])+.04*energy[6:,6:], atol=1e-12, rtol=1e-10)
+    np.testing.assert_allclose(enriched[:6,6:], enriched_cross, atol=1e-12, rtol=1e-10)
     assert trace_check(space, coefficients)['maximum_trace_jump'] < 1e-12
 
 
@@ -70,6 +79,15 @@ def test_scattered_residual_matches_direct_cross_energy_and_renumbering(cube):
     mean = np.asarray(baseline['mean_stress_matrix'])
     np.testing.assert_allclose(np.asarray(measured['mean_stress_matrix'])[:,6:],
         mean[:,6:]-.25*mean[:,:6], atol=1e-12, rtol=1e-10)
+    _, enriched_residual, _ = build_modes(mesh.points, mesh.tetrahedra, .75*fields, space, rule,
+        parent_coefficients=.2*coefficients)
+    enriched_cross = np.einsum('fcl,fcm->lm', enriched_residual, coefficients)
+    np.testing.assert_allclose(enriched_cross, .75*energy[:6,6:]+.2*energy[6:,6:], atol=1e-12, rtol=1e-10)
+    enriched, _, _ = integrate(mesh.points, mesh.tetrahedra, .75*fields, space, coefficients, rule,
+        parent_coefficients=.2*coefficients)
+    np.testing.assert_allclose(enriched[:6,:6], .5625*energy[:6,:6]
+        +.15*(energy[:6,6:]+energy[6:,:6])+.04*energy[6:,6:], atol=1e-12, rtol=1e-10)
+    np.testing.assert_allclose(enriched[:6,6:], enriched_cross, atol=1e-12, rtol=1e-10)
     assert trace_check(space, coefficients)['maximum_trace_jump'] < 1e-12
     optimized = trial(energy)
     assert optimized['maximum_relative_gain'] > 0

@@ -1,5 +1,31 @@
 # Meshers project tracking
 
+## Remaining hierarchical residual screen closes another solve, 25 October 2026
+
+Four reconstruction/Schur controls pass in job 364. They check the enriched
+parent gradient and scattered residual against independent quadratic/bubble
+energy decomposition. Job 365 then screens six new residual directions of
+the complete audited field, including the analytic bubble contribution.
+The geometry, original Tet10 space, cubic degree and all physical nodes/tets
+remain unchanged. This is a fixed-parent trial, not another equilibrium solve.
+
+Largest additional trial gain is 0.017533229%, below the existing 0.05% signal
+screen. Positive 64/125-point gain matrices differ by 9.703e-6 relative, well
+within 1%. The trial still fails all 24-model admission at 1.119427778% worst
+disagreement. Worker time is 75.50 seconds at 1.238 GiB. No further auxiliary
+solve is selected from this screen, and it does not bound the full remaining
+FE error or establish convergence. No reference or native candidate is promoted.
+
+The last independently equilibrated enriched result remains 1.136813109%;
+the current native workflow remains 1.283822914%. Preserve that distinction.
+The next investigation should compare geometric error on the fixed native
+and admitted actual domains before another allocation or solve. Keep all 24
+models and all four cases. No fitted geometry offset, new sizing sweep or
+change to the 1% stiffness, distance, quality, periodic or count gates follows.
+See [remaining residual trial](handoff/macbook/lattice26-hierarchical-remaining-trial-20261025.json).
+Earlier selected-next descriptions below are historical.
+
+
 ## Complete hierarchical fields audited; lattice target still fails, 25 October 2026
 
 Six fresh zero-macro auxiliary responses finish in job 361, using the exact

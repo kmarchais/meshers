@@ -58,7 +58,7 @@ def stress(gradient):
     return strain, 2*strain+np.trace(strain, axis1=-2, axis2=-1)[..., None, None]*np.eye(3)
 
 
-def build_modes(points, cells, fields, space, quadrature, batch=1024):
+def build_modes(points, cells, fields, space, quadrature, batch=1024, *, parent_coefficients=None):
     from fedoo.lib_elements.tetrahedron import Tet10
 
     locations, weights = quadrature
@@ -79,7 +79,10 @@ def build_modes(points, cells, fields, space, quadrature, batch=1024):
             inverse = np.linalg.inv(jacobian)
             grad = np.einsum('tba,an->tbn', inverse, d)
             bubble_grad = np.einsum('tba,ak->tkb', inverse, db)*signs[:, :, None]
-            _, sigma = stress(np.einsum('ltni,tjn->ltij', old, grad))
+            gradient = np.einsum('ltni,tjn->ltij', old, grad)
+            if parent_coefficients is not None:
+                gradient += np.einsum('tkcl,tkj->ltcj', parent_coefficients[ids], bubble_grad, optimize=True)
+            _, sigma = stress(gradient)
             weighted = weight*determinant
             blocks = ((bubble_grad*bubble_grad).sum(axis=-1)[:, :, None, None]*np.eye(3)
                 +2*np.einsum('tki,tkj->tkij', bubble_grad, bubble_grad))*weighted[:, None, None, None]
@@ -94,7 +97,7 @@ def build_modes(points, cells, fields, space, quadrature, batch=1024):
 
 
 def integrate(points, cells, fields, space, coefficients, quadrature, batch=1024, *,
-              return_coupling=False, responses=None, return_stress=False):
+              return_coupling=False, responses=None, return_stress=False, parent_coefficients=None):
     from fedoo.lib_elements.tetrahedron import Tet10
 
     locations, weights = quadrature
@@ -121,6 +124,9 @@ def integrate(points, cells, fields, space, coefficients, quadrature, batch=1024
             grad = np.einsum('tba,an->tbn', inverse, d)
             bubble_grad = np.einsum('tba,ak->tkb', inverse, db)*signs[:, :, None]
             parent_gradient = np.einsum('ltni,tjn->ltij', old, grad)
+            if parent_coefficients is not None:
+                parent_gradient += np.einsum('tkcl,tkj->ltcj', parent_coefficients[space['ids'][subset]],
+                    bubble_grad, optimize=True)
             mode_gradient = np.einsum('tkcm,tkj->mtcj', c, bubble_grad, optimize=True)
             if response_values is not None:
                 mode_gradient -= np.einsum('ltni,tjn->ltij', response_values, grad)
