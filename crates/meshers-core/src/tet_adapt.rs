@@ -1061,7 +1061,17 @@ impl<'g, G: Geometry> Tets<'g, G> {
 
     /// First-order wall distance moving only along unlocked axes: a chord in a box
     /// plane must follow the wall/plane curve inside that plane.
-    fn distance(&self, p: Point, locked: [bool; 3]) -> f64 {
+    fn distance(&self, mut p: Point, locked: [bool; 3]) -> f64 {
+        // Local simplices can extend outside the fundamental cell. Evaluate
+        // their actual periodic image, preserving a join's one-sided normal.
+        let [lo, hi] = self.g.bounds();
+        for a in 0..3 {
+            if let Some(period) = self.period[a]
+                && (p[a] < lo[a] || p[a] > hi[a])
+            {
+                p[a] = lo[a] + (p[a] - lo[a]).rem_euclid(period);
+            }
+        }
         let r = self.g.residual(p, self.threshold).abs();
         if r == 0. {
             return 0.;
@@ -1482,6 +1492,43 @@ mod tests {
         fn band(&self) -> bool {
             false
         }
+    }
+
+    #[test]
+    fn periodic_distance_uses_the_correct_image_of_a_normal_jump() {
+        struct C0Wall;
+        impl crate::geometry::Geometry for C0Wall {
+            fn value(&self, p: Point) -> f64 {
+                p[0] + 0.3 * p[2].abs() - 0.35
+            }
+            fn gradient(&self, p: Point) -> Point {
+                [1., 0., if p[2] < 0. { -0.3 } else { 0.3 }]
+            }
+            fn bounds(&self) -> [Point; 2] {
+                [[-0.5; 3], [0.5; 3]]
+            }
+            fn rank(&self, _: Point) -> [i64; 3] {
+                [0; 3]
+            }
+            fn band(&self) -> bool {
+                false
+            }
+        }
+        let mesh = crate::Mesh {
+            points: Vec::new(),
+            tets: Vec::new(),
+            surface: Vec::new(),
+        };
+        let field = C0Wall;
+        let periodic = super::Tets::new(&mesh, &field, 0., [false, false, true]);
+        let nonperiodic = super::Tets::new(&mesh, &field, 0., [false; 3]);
+        let x = 0.35 - 0.3 * 0.49;
+        for z in [-0.51, 0.51] {
+            assert!(periodic.distance([x, 0., z], [false; 3]) < 1e-12);
+            assert!(periodic.distance([x, 0., z], [false, false, true]) < 1e-12);
+            assert!(nonperiodic.distance([x, 0., z], [false; 3]) > 1e-3);
+        }
+        assert!(periodic.distance([x, 0., 0.49], [false; 3]) < 1e-12);
     }
 
     #[test]

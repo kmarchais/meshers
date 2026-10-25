@@ -1316,3 +1316,6 @@ mod topology_tests {
         assert!(nonmanifold_vertices(&separated, 8).is_empty());
     }
 }
+
+#[cfg(test)]
+mod periodic_feature_research;

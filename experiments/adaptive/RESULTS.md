@@ -1,5 +1,25 @@
 # Adaptive and quadratic implicit meshing: results
 
+## Verified periodic image-query correction, 25 October 2026
+
+The red/green normal-jump regression proves local out-of-cell error queries
+needed the prescribed periodic image. The correction changes no field, gradient
+policy or admission gate. Native suite 283 passes 95 tests / one explicit
+research skip; Python suite 286 passes 206 tests / one optional skip. Fresh
+controls 287–290 admit all four cases, independently replayed in 292. Gyroid,
+Schwarz and spinodoid are exactly unchanged. Lattice uses 213,800 tets / 46,131
+nodes instead of 218,239 / 48,077, with unchanged distance 0.001768701 and
+improved reported quality quantiles. Nominal volume error is slightly worse
+(0.429176% versus 0.429123%), within the same 1% gate. No timing ratio or FE
+accuracy claim follows. The original periodic affine control remains exact.
+See [periodic distance results](PERIODIC_DISTANCE_RESULTS.md). Saved-seed replay 293 removes 111
+false error splits, but ten bad cells remain and the public tapered-prism
+recipe still rejects. All ten touch affine curves; inspect their actual
+constraint freedom before another native change. Original four cases and
+all 24 lattice models remain in scope; the full objective is unachieved.
+Earlier selected-next descriptions below are historical.
+
+
 ## Periodic normal-jump failure isolated to a feasible input,25 October2026
 
 The invariant affine fix is committed/pushed as6c843b6. The next exact tapered

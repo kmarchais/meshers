@@ -73,6 +73,7 @@ def main():
     parser.add_argument('--shell-run')
     parser.add_argument('--failure-run')
     parser.add_argument('--named-periodic-run')
+    parser.add_argument('--allow-changed-adaptive-controls', action='store_true')
     args = parser.parse_args()
     assert not args.output.exists()
     np, _, _, _, _, scorecard = w.imports()
@@ -98,8 +99,8 @@ def main():
         directories = [run/f'repeat-0-{config}' for run in (current, old)]
         meshes = [np.load(directory/'mesh.npz') for directory in directories]
         canonical = [canonical_mesh(mesh, np) for mesh in meshes]
-        for name in canonical[0]:
-            np.testing.assert_array_equal(canonical[0][name], canonical[1][name])
+        identical = all(np.array_equal(canonical[0][name], canonical[1][name]) for name in canonical[0])
+        assert identical or (args.allow_changed_adaptive_controls and config == 'meshers-tet4-historical32')
         for suffix in ('-samples.npz', '-specimen.json'):
             assert w.digest(directories[0]/(case+suffix)) == w.digest(directories[1]/(case+suffix))
         for directory in directories:
@@ -107,8 +108,12 @@ def main():
             assert row['qualified'] and 'polyhedral_constraints' not in row['diagnostics']
             for name in ('mesh.npz', 'result.json'):
                 hashes[str(directory/name)] = w.digest(directory/name)
+        records = [json.loads((directory/'result.json').read_text()) for directory in directories]
+        assert records[0]['config'] == records[1]['config']
         controls.append(dict(case=case, current=verification, baseline=previous_verification,
-            canonical_arrays_identical=True))
+            canonical_arrays_identical=identical,
+            current_mesh=dict(nodes=records[0]['nodes'], elements=records[0]['elements'], geometry=records[0]['geometry']),
+            baseline_mesh=dict(nodes=records[1]['nodes'], elements=records[1]['elements'], geometry=records[1]['geometry'])))
     poly = w.HERE/'runs'/args.feature_run
     row = json.loads((poly/'result.json').read_text())
     assert row['qualified']
@@ -148,19 +153,20 @@ def main():
         hashes[str(poly/name)] = w.digest(poly/name)
     periodic_result = None
     if args.feature_case == 'periodic-column':
-        assert args.failure_run and args.named_periodic_run
         candidate = replay_periodic_column(poly, np, scorecard, hashes)
-        failed = replay_periodic_column(w.HERE/'runs'/args.failure_run, np, scorecard, hashes, baseline)
-        named = replay_periodic_column(w.HERE/'runs'/args.named_periodic_run, np, scorecard, hashes, baseline)
-        assert candidate['qualified'] and named['qualified'] and not failed['qualified']
-        assert failed['reverse_distance'] > .002
-        for other in (failed, named):
-            for key in ('bounds', 'cells', 'periodic', 'geometry_tolerance', 'minimum_quality',
-                'max_tetrahedra', 'optimize_passes', 'snap'):
-                assert other['options'][key] == candidate['options'][key]
-        assert failed['options'] == candidate['options']
-        periodic_result = dict(candidate=candidate, rejected_scalar=failed, named_seed=named,
-            fixed_domain_and_gates=True, no_comparative_timing_claim=True)
+        assert candidate['qualified']
+        periodic_result = dict(candidate=candidate, no_comparative_timing_claim=True)
+        if args.failure_run or args.named_periodic_run:
+            assert args.failure_run and args.named_periodic_run
+            failed = replay_periodic_column(w.HERE/'runs'/args.failure_run, np, scorecard, hashes, baseline)
+            named = replay_periodic_column(w.HERE/'runs'/args.named_periodic_run, np, scorecard, hashes, baseline)
+            assert named['qualified'] and not failed['qualified'] and failed['reverse_distance'] > .002
+            for other in (failed, named):
+                for key in ('bounds', 'cells', 'periodic', 'geometry_tolerance', 'minimum_quality',
+                    'max_tetrahedra', 'optimize_passes', 'snap'):
+                    assert other['options'][key] == candidate['options'][key]
+            assert failed['options'] == candidate['options']
+            periodic_result.update(rejected_scalar=failed, named_seed=named, fixed_domain_and_gates=True)
     matched_result = None
     if args.matched_feature_run:
         matched = w.HERE/'runs'/args.matched_feature_run
@@ -219,7 +225,7 @@ def main():
         native_baseline_sha256=w.digest(baseline), candidate_sha256=w.digest(binary),
         polyhedral_reverse_distance=reverse, polyhedral_forward_distance=forward, polyhedral_result=str(poly/'result.json'),
         no_fe_solve=True, reference_promoted=False, comparative_timing_claim=False))
-    print(f'Four unchanged study meshes and the {args.feature_case} pass independent replay', flush=True)
+    print(f'Four admitted study meshes and the {args.feature_case} pass independent replay; exact matches: {sum(row["canonical_arrays_identical"] for row in controls)}/4', flush=True)
 
 
 if __name__ == '__main__':

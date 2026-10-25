@@ -1,0 +1,1008 @@
+{
+  "fixed_seed_controls": [
+    {
+      "run": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-periodic-wedge-fixed-seed-adapt-v1",
+      "nodes": 1662,
+      "elements": 5797,
+      "minimum_quality": 0.06360265751545699,
+      "sampled_distance": 1.2412670766236366e-16,
+      "periodic": {
+        "axis": 2,
+        "pair_count": 53,
+        "cap_count": 77,
+        "coordinate_error": 0.0,
+        "matching_caps": true,
+        "bijective_nodes": true
+      },
+      "adapt": {
+        "collapses": 8619,
+        "error_splits": 111,
+        "maximum_error": 0.0152681024823096,
+        "moves": 8962,
+        "splits": 1,
+        "swaps": 2800
+      },
+      "native_finish_error": "minimum MMG quality 6.360265751545699e-2 is below required 1e-1; mesh rejected (10 elements below 0.1). Improve resolution/optimization or use a quality remesher",
+      "bad_cells": [
+        {
+          "cell": 373,
+          "quality": 0.08873669544373909,
+          "points": [
+            [
+              -0.25999999999999995,
+              -0.2,
+              -0.30000000000000004
+            ],
+            [
+              -0.2596153846153846,
+              -0.2,
+              -0.30128205128205127
+            ],
+            [
+              -0.26089988904050593,
+              -0.1785262005964977,
+              -0.29700036986498035
+            ],
+            [
+              -0.24672487502592538,
+              -0.2,
+              -0.29911252772509184
+            ]
+          ],
+          "vertices": [
+            256,
+            257,
+            258,
+            259
+          ],
+          "on_low_cap": false,
+          "on_high_cap": false,
+          "on_midplane": false,
+          "active_plane_counts": [
+            2,
+            2,
+            1,
+            1
+          ]
+        },
+        {
+          "cell": 2295,
+          "quality": 0.09129106312152194,
+          "points": [
+            [
+              0.24892799312013544,
+              -0.2,
+              0.29372284584520547
+            ],
+            [
+              0.2596153846153846,
+              -0.2,
+              0.30128205128205127
+            ],
+            [
+              0.25999999999999995,
+              -0.2,
+              0.3
+            ],
+            [
+              0.25712562822588075,
+              -0.18983618728444013,
+              0.3095812392470642
+            ]
+          ],
+          "vertices": [
+            1230,
+            1293,
+            1245,
+            1244
+          ],
+          "on_low_cap": false,
+          "on_high_cap": false,
+          "on_midplane": false,
+          "active_plane_counts": [
+            1,
+            2,
+            2,
+            1
+          ]
+        },
+        {
+          "cell": 2363,
+          "quality": 0.08368326468416663,
+          "points": [
+            [
+              -0.24038461538461536,
+              -0.2,
+              0.36538461538461536
+            ],
+            [
+              -0.2397759300247632,
+              -0.1839071076162319,
+              0.3674135665841228
+            ],
+            [
+              -0.24,
+              -0.2,
+              0.36666666666666664
+            ],
+            [
+              -0.2166666666666667,
+              -0.2,
+              0.36666666666666664
+            ]
+          ],
+          "vertices": [
+            1328,
+            1297,
+            1329,
+            1330
+          ],
+          "on_low_cap": false,
+          "on_high_cap": false,
+          "on_midplane": false,
+          "active_plane_counts": [
+            2,
+            1,
+            2,
+            1
+          ]
+        },
+        {
+          "cell": 2580,
+          "quality": 0.06360265751545699,
+          "points": [
+            [
+              -0.20558567302463632,
+              -0.16656366228467087,
+              0.48138108991787903
+            ],
+            [
+              -0.20249999999999996,
+              -0.2,
+              0.49166666666666664
+            ],
+            [
+              -0.17521064346541004,
+              -0.2,
+              0.5
+            ],
+            [
+              -0.2019230769230769,
+              -0.2,
+              0.49358974358974356
+            ]
+          ],
+          "vertices": [
+            1432,
+            1464,
+            1465,
+            1466
+          ],
+          "on_low_cap": false,
+          "on_high_cap": true,
+          "on_midplane": false,
+          "active_plane_counts": [
+            1,
+            2,
+            1,
+            2
+          ]
+        },
+        {
+          "cell": 2763,
+          "quality": 0.06540758081728211,
+          "points": [
+            [
+              -0.22916666666666669,
+              -0.1875,
+              -0.3541666666666667
+            ],
+            [
+              -0.24038461538461536,
+              -0.2,
+              -0.36538461538461536
+            ],
+            [
+              -0.24,
+              -0.2,
+              -0.36666666666666664
+            ],
+            [
+              -0.2166666666666667,
+              -0.2,
+              -0.36666666666666664
+            ]
+          ],
+          "vertices": [
+            227,
+            225,
+            1510,
+            175
+          ],
+          "on_low_cap": false,
+          "on_high_cap": false,
+          "on_midplane": false,
+          "active_plane_counts": [
+            0,
+            2,
+            2,
+            1
+          ]
+        },
+        {
+          "cell": 2764,
+          "quality": 0.09611100202279232,
+          "points": [
+            [
+              -0.22916666666666669,
+              -0.1875,
+              -0.3541666666666667
+            ],
+            [
+              -0.24,
+              -0.2,
+              -0.36666666666666664
+            ],
+            [
+              -0.24038461538461536,
+              -0.2,
+              -0.36538461538461536
+            ],
+            [
+              -0.24139339823992215,
+              -0.1838547771509974,
+              -0.3620220058669263
+            ]
+          ],
+          "vertices": [
+            227,
+            1510,
+            225,
+            230
+          ],
+          "on_low_cap": false,
+          "on_high_cap": false,
+          "on_midplane": false,
+          "active_plane_counts": [
+            0,
+            2,
+            2,
+            1
+          ]
+        },
+        {
+          "cell": 2781,
+          "quality": 0.09804543889733086,
+          "points": [
+            [
+              0.22695795534568444,
+              -0.2,
+              -0.35806889594183966
+            ],
+            [
+              0.24038461538461536,
+              -0.2,
+              -0.3653846153846154
+            ],
+            [
+              0.24,
+              -0.2,
+              -0.3666666666666667
+            ],
+            [
+              0.24126858502253193,
+              -0.18001015099922882,
+              -0.36243804992489354
+            ]
+          ],
+          "vertices": [
+            189,
+            1515,
+            190,
+            236
+          ],
+          "on_low_cap": false,
+          "on_high_cap": false,
+          "on_midplane": false,
+          "active_plane_counts": [
+            1,
+            2,
+            2,
+            1
+          ]
+        },
+        {
+          "cell": 2922,
+          "quality": 0.09861650528388476,
+          "points": [
+            [
+              0.27083333333333326,
+              0.2,
+              -0.1875
+            ],
+            [
+              0.285,
+              0.2,
+              -0.21666666666666665
+            ],
+            [
+              0.28805526881511545,
+              0.17884902979340842,
+              -0.2064824372829485
+            ],
+            [
+              0.28409090909090906,
+              0.2,
+              -0.21969696969696967
+            ]
+          ],
+          "vertices": [
+            424,
+            1520,
+            423,
+            1519
+          ],
+          "on_low_cap": false,
+          "on_high_cap": false,
+          "on_midplane": false,
+          "active_plane_counts": [
+            1,
+            2,
+            1,
+            2
+          ]
+        },
+        {
+          "cell": 2926,
+          "quality": 0.06695548110715731,
+          "points": [
+            [
+              0.2993119266055046,
+              0.16666666666666663,
+              -0.16896024464831808
+            ],
+            [
+              0.2975,
+              0.2,
+              -0.17499999999999996
+            ],
+            [
+              0.27083333333333326,
+              0.2,
+              -0.1875
+            ],
+            [
+              0.2981442869057548,
+              0.2,
+              -0.17285237698081737
+            ]
+          ],
+          "vertices": [
+            466,
+            482,
+            424,
+            486
+          ],
+          "on_low_cap": false,
+          "on_high_cap": false,
+          "on_midplane": false,
+          "active_plane_counts": [
+            1,
+            2,
+            1,
+            2
+          ]
+        },
+        {
+          "cell": 4271,
+          "quality": 0.098388589915702,
+          "points": [
+            [
+              0.22251956285223595,
+              -0.2,
+              0.361132321642603
+            ],
+            [
+              0.2403846153846154,
+              -0.2,
+              0.36538461538461536
+            ],
+            [
+              0.24174907517535218,
+              -0.1826621129846736,
+              0.3608364160821595
+            ],
+            [
+              0.24000000000000002,
+              -0.2,
+              0.36666666666666664
+            ]
+          ],
+          "vertices": [
+            1337,
+            1537,
+            1338,
+            1530
+          ],
+          "on_low_cap": false,
+          "on_high_cap": false,
+          "on_midplane": false,
+          "active_plane_counts": [
+            1,
+            2,
+            1,
+            2
+          ]
+        }
+      ]
+    },
+    {
+      "run": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-periodic-wedge-fixed-seed-adapt-v2",
+      "nodes": 1551,
+      "elements": 5547,
+      "minimum_quality": 0.06200198878129411,
+      "sampled_distance": 1.2412670766236366e-16,
+      "periodic": {
+        "axis": 2,
+        "pair_count": 53,
+        "cap_count": 77,
+        "coordinate_error": 0.0,
+        "matching_caps": true,
+        "bijective_nodes": true
+      },
+      "adapt": {
+        "collapses": 8619,
+        "error_splits": 0,
+        "maximum_error": 1.0634007954437045e-16,
+        "moves": 8930,
+        "splits": 1,
+        "swaps": 2800
+      },
+      "native_finish_error": "minimum MMG quality 6.200198878129414e-2 is below required 1e-1; mesh rejected (10 elements below 0.1). Improve resolution/optimization or use a quality remesher",
+      "bad_cells": [
+        {
+          "cell": 373,
+          "quality": 0.08873669544373909,
+          "points": [
+            [
+              -0.25999999999999995,
+              -0.2,
+              -0.30000000000000004
+            ],
+            [
+              -0.2596153846153846,
+              -0.2,
+              -0.30128205128205127
+            ],
+            [
+              -0.26089988904050593,
+              -0.1785262005964977,
+              -0.29700036986498035
+            ],
+            [
+              -0.24672487502592538,
+              -0.2,
+              -0.29911252772509184
+            ]
+          ],
+          "vertices": [
+            256,
+            257,
+            258,
+            259
+          ],
+          "on_low_cap": false,
+          "on_high_cap": false,
+          "on_midplane": false,
+          "active_plane_counts": [
+            2,
+            2,
+            1,
+            1
+          ]
+        },
+        {
+          "cell": 2295,
+          "quality": 0.09129106312151825,
+          "points": [
+            [
+              0.24892799312012248,
+              -0.2,
+              0.29372284584520514
+            ],
+            [
+              0.2596153846153846,
+              -0.2,
+              0.30128205128205127
+            ],
+            [
+              0.25999999999999995,
+              -0.2,
+              0.3
+            ],
+            [
+              0.25712562822588075,
+              -0.18983618728444013,
+              0.3095812392470642
+            ]
+          ],
+          "vertices": [
+            1230,
+            1293,
+            1245,
+            1244
+          ],
+          "on_low_cap": false,
+          "on_high_cap": false,
+          "on_midplane": false,
+          "active_plane_counts": [
+            1,
+            2,
+            2,
+            1
+          ]
+        },
+        {
+          "cell": 2363,
+          "quality": 0.08368326468416663,
+          "points": [
+            [
+              -0.24038461538461536,
+              -0.2,
+              0.36538461538461536
+            ],
+            [
+              -0.2397759300247632,
+              -0.1839071076162319,
+              0.3674135665841228
+            ],
+            [
+              -0.24,
+              -0.2,
+              0.36666666666666664
+            ],
+            [
+              -0.2166666666666667,
+              -0.2,
+              0.36666666666666664
+            ]
+          ],
+          "vertices": [
+            1328,
+            1297,
+            1329,
+            1330
+          ],
+          "on_low_cap": false,
+          "on_high_cap": false,
+          "on_midplane": false,
+          "active_plane_counts": [
+            2,
+            1,
+            2,
+            1
+          ]
+        },
+        {
+          "cell": 2596,
+          "quality": 0.06200198878129411,
+          "points": [
+            [
+              -0.20494099275448543,
+              -0.1627157284771616,
+              0.4835300241517153
+            ],
+            [
+              -0.20249999999999996,
+              -0.2,
+              0.49166666666666664
+            ],
+            [
+              -0.17521064346541004,
+              -0.2,
+              0.5
+            ],
+            [
+              -0.2019230769230769,
+              -0.2,
+              0.49358974358974356
+            ]
+          ],
+          "vertices": [
+            1428,
+            1476,
+            1470,
+            1477
+          ],
+          "on_low_cap": false,
+          "on_high_cap": true,
+          "on_midplane": false,
+          "active_plane_counts": [
+            1,
+            2,
+            1,
+            2
+          ]
+        },
+        {
+          "cell": 2820,
+          "quality": 0.06540758081728211,
+          "points": [
+            [
+              -0.22916666666666669,
+              -0.1875,
+              -0.3541666666666667
+            ],
+            [
+              -0.24038461538461536,
+              -0.2,
+              -0.36538461538461536
+            ],
+            [
+              -0.24,
+              -0.2,
+              -0.36666666666666664
+            ],
+            [
+              -0.2166666666666667,
+              -0.2,
+              -0.36666666666666664
+            ]
+          ],
+          "vertices": [
+            227,
+            225,
+            1525,
+            175
+          ],
+          "on_low_cap": false,
+          "on_high_cap": false,
+          "on_midplane": false,
+          "active_plane_counts": [
+            0,
+            2,
+            2,
+            1
+          ]
+        },
+        {
+          "cell": 2821,
+          "quality": 0.09611100202279232,
+          "points": [
+            [
+              -0.22916666666666669,
+              -0.1875,
+              -0.3541666666666667
+            ],
+            [
+              -0.24,
+              -0.2,
+              -0.36666666666666664
+            ],
+            [
+              -0.24038461538461536,
+              -0.2,
+              -0.36538461538461536
+            ],
+            [
+              -0.24139339823992215,
+              -0.1838547771509974,
+              -0.3620220058669263
+            ]
+          ],
+          "vertices": [
+            227,
+            1525,
+            225,
+            230
+          ],
+          "on_low_cap": false,
+          "on_high_cap": false,
+          "on_midplane": false,
+          "active_plane_counts": [
+            0,
+            2,
+            2,
+            1
+          ]
+        },
+        {
+          "cell": 2838,
+          "quality": 0.09804550209571022,
+          "points": [
+            [
+              0.22695795534568444,
+              -0.2,
+              -0.35806889594183966
+            ],
+            [
+              0.24038461538461536,
+              -0.2,
+              -0.3653846153846154
+            ],
+            [
+              0.24,
+              -0.2,
+              -0.3666666666666667
+            ],
+            [
+              0.24126857209050465,
+              -0.18001015391954367,
+              -0.36243809303165114
+            ]
+          ],
+          "vertices": [
+            189,
+            1530,
+            190,
+            236
+          ],
+          "on_low_cap": false,
+          "on_high_cap": false,
+          "on_midplane": false,
+          "active_plane_counts": [
+            1,
+            2,
+            2,
+            1
+          ]
+        },
+        {
+          "cell": 2979,
+          "quality": 0.09861650528388476,
+          "points": [
+            [
+              0.27083333333333326,
+              0.2,
+              -0.1875
+            ],
+            [
+              0.285,
+              0.2,
+              -0.21666666666666665
+            ],
+            [
+              0.28805526881511545,
+              0.17884902979340842,
+              -0.2064824372829485
+            ],
+            [
+              0.28409090909090906,
+              0.2,
+              -0.21969696969696967
+            ]
+          ],
+          "vertices": [
+            424,
+            1535,
+            423,
+            1534
+          ],
+          "on_low_cap": false,
+          "on_high_cap": false,
+          "on_midplane": false,
+          "active_plane_counts": [
+            1,
+            2,
+            1,
+            2
+          ]
+        },
+        {
+          "cell": 2983,
+          "quality": 0.06695548110715731,
+          "points": [
+            [
+              0.2993119266055046,
+              0.16666666666666663,
+              -0.16896024464831808
+            ],
+            [
+              0.2975,
+              0.2,
+              -0.17499999999999996
+            ],
+            [
+              0.27083333333333326,
+              0.2,
+              -0.1875
+            ],
+            [
+              0.2981442869057548,
+              0.2,
+              -0.17285237698081737
+            ]
+          ],
+          "vertices": [
+            466,
+            482,
+            424,
+            486
+          ],
+          "on_low_cap": false,
+          "on_high_cap": false,
+          "on_midplane": false,
+          "active_plane_counts": [
+            1,
+            2,
+            1,
+            2
+          ]
+        },
+        {
+          "cell": 4334,
+          "quality": 0.098388589915702,
+          "points": [
+            [
+              0.22251956285223595,
+              -0.2,
+              0.361132321642603
+            ],
+            [
+              0.2403846153846154,
+              -0.2,
+              0.36538461538461536
+            ],
+            [
+              0.24174907517535218,
+              -0.1826621129846736,
+              0.3608364160821595
+            ],
+            [
+              0.24000000000000002,
+              -0.2,
+              0.36666666666666664
+            ]
+          ],
+          "vertices": [
+            1337,
+            1549,
+            1338,
+            1544
+          ],
+          "on_low_cap": false,
+          "on_high_cap": false,
+          "on_midplane": false,
+          "active_plane_counts": [
+            1,
+            2,
+            1,
+            2
+          ]
+        }
+      ]
+    }
+  ],
+  "exact_seed_bits_identical": true,
+  "changed_input_sources": [
+    "/Users/kmarchais/dev/meshers/crates/meshers-core/src/tet_adapt.rs"
+  ],
+  "public_generator_controls": [
+    {
+      "run": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-periodic-wedge-scalar-v1",
+      "options": {
+        "bounds": [
+          -0.5,
+          0.5,
+          -0.5,
+          0.5,
+          -0.5,
+          0.5
+        ],
+        "cells": 24,
+        "geometry_tolerance": 0.002,
+        "minimum_quality": 0.1,
+        "max_tetrahedra": 250000,
+        "threads": 1,
+        "adapt": true,
+        "min_length": 0.002,
+        "max_length": 0.1,
+        "gradation": 0.3,
+        "adapt_iterations": 4,
+        "quality_guard": 0.3,
+        "optimize_passes": 1,
+        "order": 1,
+        "snap": 0.2,
+        "periodic": [
+          false,
+          false,
+          true
+        ]
+      },
+      "error": "sampled geometry error 1.0642514280234978e-2 exceeds tolerance 2e-3; increase resolution or budget"
+    },
+    {
+      "run": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-periodic-wedge-public-wrapped-v1",
+      "options": {
+        "bounds": [
+          -0.5,
+          0.5,
+          -0.5,
+          0.5,
+          -0.5,
+          0.5
+        ],
+        "cells": 24,
+        "geometry_tolerance": 0.002,
+        "minimum_quality": 0.1,
+        "max_tetrahedra": 250000,
+        "threads": 1,
+        "adapt": true,
+        "min_length": 0.002,
+        "max_length": 0.1,
+        "gradation": 0.3,
+        "adapt_iterations": 4,
+        "quality_guard": 0.3,
+        "optimize_passes": 1,
+        "order": 1,
+        "snap": 0.2,
+        "periodic": [
+          false,
+          false,
+          true
+        ]
+      },
+      "error": "sampled geometry error 1.0642514280235028e-2 exceeds tolerance 2e-3; increase resolution or budget"
+    }
+  ],
+  "inputs": {
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/verify_periodic_distance_research.py": "52ddb407e4727b06306e6347923632c43303517923e78f59366d849d37615d5d",
+    "/Users/kmarchais/dev/meshers/handoff/macbook/native-baseline-before-periodic-distance-20261025.json": "1d0605f188473c4961780f4b5fa2eb023404db3b06992178dc84df8a3fe0976c",
+    "/Users/kmarchais/dev/meshers/.local-work/native-baselines/7685573407b7276e230077215bacbbc1d1ffb3e17fc3f404e74c65d969892e52/meshers/_meshers.abi3.so": "7685573407b7276e230077215bacbbc1d1ffb3e17fc3f404e74c65d969892e52",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/topology_coverage.py": "3b50fdd05a16ba36669f3a71eeedfcc91d8438c137e7eb6a382b8958a02970ea",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/scorecard.py": "8f26256c7df0e84c9f35cdd71bf4f95a74e072d45469002b213c5dcd4f1bab2a",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/facet_incidence_audit.py": "4f51afc196c85e1d0bc64d7a96507517ddc6e32ccd8380a2ac77cae0ace89610",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/periodic_wedge_adapt_preflight.py": "2e191c59dcce4b6b502b6bad1a44f8b99df7aa92ac934b72a4e335c082325a3a",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/microgen_workflow.py": "073f615481feeae8bb9142d325d9ae39251ca1e1aa2d1376f5e4f88a19aec872",
+    "/Users/kmarchais/dev/meshers/Cargo.lock": "c5de0b0561f9ab415ff941a24cae24bd7de5069eca73e3dd9b6da63db4273278",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-periodic-wedge-physical-seed-construction-v1/mesh.npz": "0720e9e64a4878b50db581bc39fb6ea88f277de0226a5244b85e6d893a230bb2",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-periodic-wedge-physical-seed-construction-v1/result.json": "5571a5450bd716d84da747c6707bc880ed6020d7fedb3eac735a9d7f6ce325c7",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-periodic-wedge-fixed-seed-adapt-v1/seed-bits.json": "e625e30476ffeb6e27d1df4bd3d90fbfd4c0ee4e9154dac670b7b56b55e56d9b",
+    "/Users/kmarchais/dev/meshers/crates/meshers-core/src/accelerator.rs": "496365ec7c5fa7cbccb521937c91d7daa19a9bd8d01aa5398639345d4290b20c",
+    "/Users/kmarchais/dev/meshers/crates/meshers-core/src/adaptive.rs": "a3de8e081d5100c92508ad2d0b481136a78412580455a3ff4e8b841dd4a90a77",
+    "/Users/kmarchais/dev/meshers/crates/meshers-core/src/error.rs": "b8c8c922e662107c4304f823cff8f46d18b898d5c0bd5af1b8b28317d2566d81",
+    "/Users/kmarchais/dev/meshers/crates/meshers-core/src/geometry.rs": "b00a2c883484ab6f09300f2b7ad13efa51b3685f8ac259d86e9bb0d199b5bc08",
+    "/Users/kmarchais/dev/meshers/crates/meshers-core/src/implicit/intersection/repair.rs": "dcbde4728b7efcf104db508c7d656d08959a0888de1aacadb433149bbfa67373",
+    "/Users/kmarchais/dev/meshers/crates/meshers-core/src/implicit/intersection.rs": "c01e84b8c19f853990c6a057dc52ce7341505cdf71aea04f31351cef16847a13",
+    "/Users/kmarchais/dev/meshers/crates/meshers-core/src/implicit/periodic_feature_research.rs": "d0d74cb5a018aa6b716d11bf6ba2a4317b507633f6d22dd7b3d6cc69fa5adce5",
+    "/Users/kmarchais/dev/meshers/crates/meshers-core/src/implicit.rs": "90b8b9167dbb61e1179a581091189ff9ffd04cbbdc339b097ed1282eb17c50c7",
+    "/Users/kmarchais/dev/meshers/crates/meshers-core/src/lib.rs": "e72b01ac4ed690e58cd12dcf204fe7167e69ff5c80d41156f6a8206ba252e0d3",
+    "/Users/kmarchais/dev/meshers/crates/meshers-core/src/optimize.rs": "55c62786bd57500b841c86bcd4e7520ae31b5c761fa8a39a3ad6fec0564e68ee",
+    "/Users/kmarchais/dev/meshers/crates/meshers-core/src/optimize_batch.rs": "6571614ef842ec9ca291976e51f7efe04662b7b643160114fa4fb825a3aaf112",
+    "/Users/kmarchais/dev/meshers/crates/meshers-core/src/polyhedral.rs": "a91e1a7c497b8f629dc382b2914a6d7cfbfe704c9d48997ff3d64f13270669c1",
+    "/Users/kmarchais/dev/meshers/crates/meshers-core/src/profile.rs": "70f91e99631bcde8ca521c82f06f7f645cf9ee340d685a4e4928cb2ebc348c58",
+    "/Users/kmarchais/dev/meshers/crates/meshers-core/src/projection.rs": "926d1ab1c848cf80cc392295764d7bf8f2254dfb62f219639db7e5a4194acf84",
+    "/Users/kmarchais/dev/meshers/crates/meshers-core/src/quadratic.rs": "60de8c989157aa7a98379d55deac2195623f4be2e50067f3e5ec5d58adfcc0cc",
+    "/Users/kmarchais/dev/meshers/crates/meshers-core/src/quads.rs": "9579d9478c57b8b4ad8cead2a717d01cfc626140ce40cd5f11014db717acc2ef",
+    "/Users/kmarchais/dev/meshers/crates/meshers-core/src/remesh.rs": "499b779e55252258cdad7b81a0b2917f3ea0dc4f3b4d446fb60c3e9a3fdec085",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-periodic-wedge-fixed-seed-adapt-v1/input-26-tet_adapt.rs": "d1e1b032a7ffa8d36020fb802ec8ca0edad96955f4df8210cc44fa4aa843a75d",
+    "/Users/kmarchais/dev/meshers/crates/meshers-core/src/triangles.rs": "897d3aee83d8c6c5de0d3e0df332ee3e56ef8390e74b3af1e052e7859f7dc8fc",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-periodic-wedge-fixed-seed-adapt-v1/mesh.npz": "38d63cdec67e7a62fa06a009400afa379feb8295af5659787e364c458359eacd",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-periodic-wedge-fixed-seed-adapt-v1/result.json": "51679fece5dd243b0c1a297a5cb8ec6ac586dc1d909212fd09e903af2485ae2b",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-periodic-wedge-fixed-seed-adapt-v1/adapted-bits.json": "2b950f7fa6977cce44a951577c2fd1b7949bc52e9c0969e597ee64841c81a37e",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-periodic-wedge-fixed-seed-adapt-v1/preflight.json": "0c0af99d942ac2220f085d76d29c38a4dd16dc5aa530b004adf4970f6bb2af69",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-periodic-wedge-fixed-seed-adapt-v2/seed-bits.json": "e625e30476ffeb6e27d1df4bd3d90fbfd4c0ee4e9154dac670b7b56b55e56d9b",
+    "/Users/kmarchais/dev/meshers/crates/meshers-core/src/tet_adapt.rs": "34bf03a4ec642e5773d06fcdfe3f59762933697ffd06d4b2508da044307d4bb3",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-periodic-wedge-fixed-seed-adapt-v2/mesh.npz": "d7dbc24313a68ad69f30ab718abc4b40876f518eeabae218cd9e705e18e67d99",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-periodic-wedge-fixed-seed-adapt-v2/result.json": "312873e951e735259d8ccc7df08835f17653b5de19e70ba3d4c4dc9a9c979de4",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-periodic-wedge-fixed-seed-adapt-v2/adapted-bits.json": "805bf24a7e4afa3be2ebb4385ec23d8f9466912a596d109edae147d5d2448988",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-periodic-wedge-fixed-seed-adapt-v2/preflight.json": "0c0af99d942ac2220f085d76d29c38a4dd16dc5aa530b004adf4970f6bb2af69",
+    "/Users/kmarchais/dev/meshers/crates/meshers-python/python/meshers/__init__.py": "7c3acaecc87d4a8241968a6768e42dbe72c8ecdc025a9e22bbc5c042f46f4486",
+    "/Users/kmarchais/dev/meshers/crates/meshers-python/python/meshers/expression.py": "b4a6a51513e49415563d00cf49745c2359a1325aa3daf561c1c697171068e301",
+    "/Users/kmarchais/dev/meshers/crates/meshers-python/python/meshers/intersection.py": "43fdc25933834907c624254454837366d218a45ef65c45a11183d582d3263699",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-periodic-wedge-scalar-v1/result.json": "05b2d4967d37b6568d08817a8f54b0ecc23995a1d1d18704feebb29f1e302ea7",
+    "/Users/kmarchais/dev/meshers/crates/meshers-python/python/meshers/_meshers.abi3.so": "30506b13042653a08eb6149dac264ebd2de39b0c033f0df5822abc3d7662aab1",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-periodic-wedge-public-wrapped-v1/result.json": "ad256c708522fa999b89d4b76f7100e628d3f00f64d96ad9e5f4cb9671aff990",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-periodic-distance-red-v1/worker.json": "21f1978140737a953db7f305c64bd9f1936344f3369345ebd256930ec2806712",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-periodic-distance-red-v1/worker.log": "2162d9314a06b52e1047c66398129a7c06de422a3b05e092b0e1466b9af3a72d",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-periodic-distance-red-v1/manifest.json": "7843934678f90693f500974340f75f1327c0d21396042dfe41d13679e9698691",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-periodic-distance-green-v1/worker.json": "65270b1f7833e73c6196c629ea3e83d3ba335c7cf19586f4aa091e122e79ef61",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-periodic-distance-green-v1/worker.log": "ff06c5f6e1e69b226c7bbab809942cb3eec612b3e76f292e5e60dd7c84b71882",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-periodic-distance-green-v1/manifest.json": "7843934678f90693f500974340f75f1327c0d21396042dfe41d13679e9698691"
+  },
+  "no_fe_solve": true,
+  "reference_promoted": false,
+  "comparative_timing_claim": false,
+  "public_periodic_wedge_admitted": false,
+  "scope": "Verified periodic image-query correction and removal of false error splits; both saved-seed quality failures and the original public feature failure remain rejected"
+}
