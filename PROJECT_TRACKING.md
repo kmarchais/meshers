@@ -1,5 +1,25 @@
 # Meshers project tracking
 
+## Verified affine curve mobility, 25 October 2026
+
+The adapter incorrectly froze vertices on two affine planes. Rank-aware
+classification now permits their valid line motion and holds endpoints fixed
+by an independent third constraint. The exact saved periodic-prism seed
+recovers from ten cells below q = 0.1 to none, qmin 0.304656, 3770 tets / 838 nodes,
+with geometry, positive Jacobians, periodic caps and coherent facets admitted.
+This is private-core research; the public prism route is still rejected.
+Full native suite 297 passes 97 tests / one explicit research skip; Python 301
+passes 206 / one optional skip. Independent study audit 308 proves all four
+fresh fixed study meshes exactly unchanged against native 30506b13. The
+periodic affine column remains admitted, now 2614 tets / 604 nodes, qmin 0.321550
+and roundoff distance. No timing, FE accuracy or reference claim follows.
+See [affine curve results](experiments/adaptive/AFFINE_CURVE_RESULTS.md).
+The next failure is the public construction of a verified periodic seed with
+permuting end traces. Keep the individual named-field periodic gate intact.
+All four cases and all 24 lattice models remain in scope; the full objective
+is unachieved. Earlier selected-next descriptions below are historical.
+
+
 ## Verified periodic image-query correction, 25 October 2026
 
 The red/green normal-jump regression proves local out-of-cell error queries

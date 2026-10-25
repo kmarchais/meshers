@@ -24,6 +24,35 @@ pub(crate) fn active(planes: &[[f64; 4]], p: Point, tolerance: f64) -> u64 {
     })
 }
 
+/// Number of independent affine normals, including held box coordinates.
+pub(crate) fn constraint_rank(planes: &[[f64; 4]], mask: u64, locked: [bool; 3]) -> usize {
+    let mut basis = [[0.; 3]; 3];
+    let mut rank = 0;
+    let axes = (0..3).filter(|&a| locked[a]).map(|a| {
+        let mut n = [0.; 3];
+        n[a] = 1.;
+        n
+    });
+    let normals = planes.iter().enumerate().filter_map(|(i, plane)| {
+        (mask & (1u64 << i) != 0).then_some([plane[0], plane[1], plane[2]])
+    });
+    for mut n in axes.chain(normals) {
+        for q in &basis[..rank] {
+            let factor = dot(n, *q);
+            n = std::array::from_fn(|a| n[a] - factor * q[a]);
+        }
+        let length = norm(n);
+        if length > 1e-10 {
+            basis[rank] = n.map(|x| x / length);
+            rank += 1;
+            if rank == 3 {
+                break;
+            }
+        }
+    }
+    rank
+}
+
 /// Orthogonal projection onto active planes and held coordinates. Redundant
 /// equations are checked for consistency rather than counted as extra rank.
 pub(crate) fn project(
@@ -100,6 +129,21 @@ pub(crate) fn project(
 #[cfg(test)]
 mod tests {
     use super::{active, normalized, project};
+
+    #[test]
+    fn affine_rank_ignores_redundant_planes_and_box_locks() {
+        let planes = normalized(&[
+            [1., 0., 0., 0.],
+            [0., 1., 0., 0.],
+            [0., 0., 1., 0.],
+            [1., 1., 0., 0.],
+        ])
+        .unwrap();
+        assert_eq!(super::constraint_rank(&planes, 3, [false; 3]), 2);
+        assert_eq!(super::constraint_rank(&planes, 3, [false, false, true]), 3);
+        assert_eq!(super::constraint_rank(&planes, 5, [false, false, true]), 2);
+        assert_eq!(super::constraint_rank(&planes, 11, [false; 3]), 2);
+    }
 
     #[test]
     fn periodic_hints_reject_noninvariant_planes() {

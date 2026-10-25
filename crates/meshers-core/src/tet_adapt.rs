@@ -313,7 +313,14 @@ impl<'g, G: Geometry> Tets<'g, G> {
         };
         // Points fixed by three constraints (box corners, a wall crossing a box edge)
         // never move; curves and box edges slide along their line.
-        self.frozen[v] = mask.count_ones() >= 3 || self.feature_mask(v).count_ones() >= 2;
+        self.frozen[v] = if let Some(planes) = self.g.halfspaces()
+            && self.feature_mask(v) != 0
+        {
+            let locked = std::array::from_fn(|a| (mask >> (2 + 2 * a)) & 3 != 0);
+            crate::polyhedral::constraint_rank(planes, self.feature_mask(v), locked) == 3
+        } else {
+            mask.count_ones() >= 3 || self.feature_mask(v).count_ones() >= 2
+        };
     }
 
     fn feature_mask(&self, v: usize) -> u64 {
@@ -1492,6 +1499,58 @@ mod tests {
         fn band(&self) -> bool {
             false
         }
+    }
+
+    #[test]
+    fn affine_curve_mobility_counts_independent_constraints() {
+        struct Column;
+        impl crate::geometry::Geometry for Column {
+            fn value(&self, p: Point) -> f64 {
+                p[0].abs().max(p[1].abs()) - 0.2
+            }
+            fn gradient(&self, _: Point) -> Point {
+                [1., 0., 0.]
+            }
+            fn bounds(&self) -> [Point; 2] {
+                [[-0.5; 3], [0.5; 3]]
+            }
+            fn rank(&self, _: Point) -> [i64; 3] {
+                [0; 3]
+            }
+            fn band(&self) -> bool {
+                false
+            }
+            fn halfspaces(&self) -> Option<&[[f64; 4]]> {
+                Some(&[
+                    [1., 0., 0., -0.2],
+                    [-1., 0., 0., -0.2],
+                    [0., 1., 0., -0.2],
+                    [0., -1., 0., -0.2],
+                ])
+            }
+        }
+        let mesh = crate::Mesh {
+            points: vec![
+                [0.2, 0.2, 0.],
+                [0.2, 0.2, 0.5],
+                [0.2, 0., 0.5],
+                [0., 0.2, 0.5],
+            ],
+            tets: Vec::new(),
+            surface: vec![[0, 1, 2], [0, 1, 3], [1, 2, 3]],
+        };
+        let tets = super::Tets::new(&mesh, &Column, 0., [false; 3]);
+        assert!(!tets.frozen[0], "two planes leave a movable line");
+        assert!(tets.frozen[1], "the cap fixes the line endpoint");
+        assert!(!tets.frozen[2] && !tets.frozen[3]);
+        let moved = tets
+            .project([0.21, 0.21, 0.1], tets.masks[0], 0., tets.features[0])
+            .unwrap();
+        assert_eq!(moved, [0.2, 0.2, 0.1]);
+        let held = tets
+            .project([0.21, 0.21, 0.1], tets.masks[1], 0., tets.features[1])
+            .unwrap();
+        assert_eq!(held, [0.2, 0.2, 0.5]);
     }
 
     #[test]

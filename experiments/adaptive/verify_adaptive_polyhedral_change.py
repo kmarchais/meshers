@@ -74,8 +74,12 @@ def main():
     parser.add_argument('--failure-run')
     parser.add_argument('--named-periodic-run')
     parser.add_argument('--allow-changed-adaptive-controls', action='store_true')
+    parser.add_argument('--control-run', nargs=2, action='append', default=[], metavar=('CASE', 'DIRECTORY'))
     args = parser.parse_args()
     assert not args.output.exists()
+    overrides = dict(args.control_run)
+    assert len(overrides) == len(args.control_run)
+    assert overrides.keys() <= {'gyroid', 'schwarz-solid', 'spinodoid', 'smooth-lattice'}
     np, _, _, _, _, scorecard = w.imports()
     import meshers._meshers
     from facet_incidence_audit import audit
@@ -92,7 +96,7 @@ def main():
         ('spinodoid', 'spinodoid', 'meshers-tet4-historical32'),
         ('smooth-lattice', 'lattice', 'meshers-tet4-historical32'),
     ):
-        current = w.HERE/'runs'/f'{args.prefix}-{label}-control-v1'
+        current = w.HERE/'runs'/overrides.get(case, f'{args.prefix}-{label}-control-v1')
         old = w.HERE/'runs'/f'{args.previous_prefix}-{label}-control-v1'
         verification = verify_run(current, replay_geometry=True)
         previous_verification = verify_run(old, replay_geometry=True, native_baseline=baseline)
