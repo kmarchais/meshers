@@ -1,0 +1,74 @@
+{
+  "scope": "Count-selected native interior refinement passes all admission gates and frozen count interval. No stiffness or comparative timing claim.",
+  "native_sha256": "19f1536993017f6f610e7b199a3cd271b9e322fb60094fa4cb7984df59f567e8",
+  "request": 341,
+  "nodes": 235258,
+  "tets": 164180,
+  "geometry": {
+    "sampled_forward_max": 0.00025507362705323315,
+    "sampled_reverse_max": 0.00019734707091892406,
+    "sampled_two_sided_max": 0.00025507362705323315,
+    "outward_forward_max": 0.00025507362705323315,
+    "inward_forward_max": 0.00020868027452747008,
+    "projection_failed": 0,
+    "forward_samples": 126204,
+    "reverse_samples": 34791,
+    "volume": 0.24823309999791662,
+    "relative_volume_error": -0.00031389174985341217,
+    "q_min_corner": 0.3132387917045933,
+    "q_p01_corner": 0.5639335237096768,
+    "minimum_dihedral_deg_corner": 19.196520167244643,
+    "minimum_sampled_jacobian": 4.0008321257684894e-07,
+    "reverse_tessellation_delta_max": 0.00010711818244872328,
+    "quadratic_reverse_subdivisions": [
+      4,
+      8
+    ],
+    "facet_consistency": {
+      "nodes": 235258,
+      "elements": 164180,
+      "unique_faces": 334745,
+      "interior_faces": 321975,
+      "extracted_boundary_faces": 12770,
+      "same_orientation_shared_faces": 0,
+      "nonmanifold_faces": 0,
+      "duplicate_cells": 0,
+      "duplicate_surface_faces": 0,
+      "provided_boundary_matches_extraction": true,
+      "missing_provided_faces": 0,
+      "extra_provided_faces": 0,
+      "nonpositive_corner_determinants": 0,
+      "minimum_corner_determinant": 6.618087684677149e-07,
+      "oriented_facet_consistency_passed": true,
+      "conflict_examples": [],
+      "scope": "Oriented corner-face incidence and same-side neighbor diagnostics; necessary consistency, not a certificate of curved geometry or absence of nonlocal intersections"
+    },
+    "oriented_facet_consistency_passed": true,
+    "geometry_admitted": true
+  },
+  "periodic": {
+    "periodic_pair_counts": [
+      1131,
+      1128,
+      1128
+    ],
+    "periodic_coordinate_errors": [
+      0.0,
+      0.0,
+      0.0
+    ],
+    "periodic_pair_tolerance": 1e-10,
+    "periodic_equivalence_classes": 231960,
+    "periodic_triangles_match": true
+  },
+  "boundary_point_max_difference": 0.0,
+  "original_corner_prefix_exact": true,
+  "oriented_corner_boundary_exact": true,
+  "quadratic_space_nesting_claim": false,
+  "inputs": {
+    "experiments/adaptive/runs/macbook-lattice-interior-count-plan-v1/result.json": "a32318f25a1da5434d40dea132b699a72ec092eed4c1f75e02eb28ebd859cb9a",
+    "experiments/adaptive/runs/macbook-lattice-count-interior341-preflight-v1/result.json": "8c85bc367e0c0a329fe1268b611ac7314b062ba679c9ac3a21cb11e9c0053b0f",
+    "experiments/adaptive/runs/macbook-lattice-count-interior341-preflight-v1/mesh.npz": "528330794d36297a159ada87405c14e2407b8ac9bd453f9743206d5cc3a3384b",
+    "experiments/adaptive/runs/macbook-lattice-count-h02814-preflight-v1/mesh.npz": "b5f00672217ee75716bd01aae4b78574be3a1be57f98f7834cfeba4434f6aeb2"
+  }
+}

@@ -6,19 +6,22 @@ body{font:14px/1.5 var(--font-sans,system-ui);color:var(--foreground);margin:0}h
 <section class="case"><h3>Schwarz P solid</h3><p class="status pass">Last paired comparison: Meshers win</p><p>About 45× faster mesh generation and 5× fewer tets, with better sampled geometry and minimum quality.</p><p class="muted small">Explicitly modified actual route. Both meet the supplementary 0.1% mixed-load target. Current mesh arrays are unchanged.</p></section>
 <section class="case"><h3>Gyroid sheet</h3><p class="status pending">Matched comparison incomplete</p><p>Native geometry and stiffness pass. Tested actual routes remain inadmissible.</p><p class="muted small">Current mesh arrays are unchanged. No matched speed victory against rejected competitors.</p></section>
 <section class="case"><h3>Fixed spinodoid</h3><p class="status pending">Native repair verified; comparison incomplete</p><p>Curved distance improves 0.001333 → 0.000304; corner quality 0.269 → 0.301, with fewer tets. Fresh stiffness disagreement is 0.183%.</p><p class="muted small">Fixed 52 modes. Linear geometry failure is also repaired; its minimum quality drops to 0.10065. Actual routes still lack admission.</p></section>
-<section class="case"><h3>Smooth-union lattice</h3><p class="status fail">Native stiffness accuracy still fails</p><p>Fresh six loads and independent audits pass, but worst disagreement is 2.412%, above 1%.</p><p class="muted small">All 24 retained tensors stay in scope. Actual admitted route reaches 0.995%.</p></section>
+<section class="case"><h3>Smooth-union lattice</h3><p class="status fail">Native stiffness accuracy still fails</p><p>At comparable element count, fresh six loads and independent audits pass. Worst disagreement improves to 1.935% and still fails 1%.</p><p class="muted small">All 24 retained tensors stay in scope. Actual admitted route reaches 0.995%.</p></section>
 </div>
-<h2>Current lattice versus admitted actual route</h2>
+<h2>Lattice at comparable element count</h2>
 <div class="scroll"><table class="numbers"><thead><tr><th>Metric</th><th>Meshers</th><th>Actual Microgen+MMG</th></tr></thead><tbody>
-<tr><td>Tets</td><td>41,340</td><td>165,722</td></tr>
-<tr><td>Nodes</td><td>65,721</td><td>250,000</td></tr>
-<tr><td>Minimum corner quality ↑</td><td>0.3659</td><td>0.1000</td></tr>
-<tr><td>Sampled distance ↓</td><td>0.0002787</td><td>0.0017012</td></tr>
-<tr><td>Absolute volume error ↓</td><td>0.03124%</td><td>0.49053%</td></tr>
-<tr><td>Worst stiffness disagreement ↓</td><td class="fail">2.412%</td><td>0.995%</td></tr>
+<tr><td>Tets</td><td>164,180</td><td>165,722</td></tr>
+<tr><td>Nodes</td><td>235,258</td><td>250,000</td></tr>
+<tr><td>Minimum corner quality ↑</td><td>0.3132</td><td>0.1000</td></tr>
+<tr><td>Median corner quality ↑</td><td class="fail">0.6800</td><td>0.7961</td></tr>
+<tr><td>Sampled distance ↓</td><td>0.0002551</td><td>0.0017012</td></tr>
+<tr><td>Absolute volume error ↓</td><td>0.03139%</td><td>0.49053%</td></tr>
+<tr><td>Worst stiffness disagreement ↓</td><td class="fail">1.935%</td><td>0.995%</td></tr>
 </tbody></table></div>
-<p class="muted small">Geometry, quality, sampled curved Jacobians, facets and periodic gates pass for both. Native uses about one quarter as many elements and fails accuracy. Timing superiority is unsupported at these accuracy levels.</p>
+<p class="muted small">Geometry, quality, sampled curved Jacobians, facets and periodic gates pass for both. Native uses 99.1% of actual elements and fewer nodes. Its minimum quality and geometry are better, but median quality and stiffness accuracy lag. No matched timing superiority is established.</p>
+<h2>Uniform-seed check</h2>
+<p>A separately selected uniform mesh uses 157,521 tets and 231,026 nodes. Median quality improves to 0.9295 and sampled distance to 0.0001783, but complete fresh fields give 2.085% worst stiffness disagreement. It also fails 1%. No nearby resolution retry is selected.</p>
 <h2>What improved</h2>
-<p>The periodic cap repair passes 104 native tests, 182 Python tests and all four curved geometry replays. Fresh complete fields support the changed spinodoid and lattice results. Idle-sleep protection and clock-gap records now guard Mac workers.</p>
-<p class="muted small">The earlier fixed-domain lattice refinement investigation reaches 1.325% and still fails. It is separate from the current live native mesh. No new reference, local-stress certificate or four-case victory is claimed.</p>
+<p>The adaptive scalar path now honors its existing interior-node request. The fix passes 105 native tests, 183 Python tests and both Clippy checks. Every default mesh array on all four cases is exactly unchanged. The count-selected lattice has complete fresh fields and independent audits.</p>
+<p class="muted small">Compact native lattice remains at 2.412%; the earlier fixed-domain investigation reaches 1.325%. These are separate meshes and approximation spaces. Global density adjustments stop. No reference, local-stress certificate or four-case victory is claimed.</p>
 </body></html>

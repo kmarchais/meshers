@@ -1,0 +1,15 @@
+{
+  "scope": "Correct the raw-repetition link in the frozen uniform37 selection receipt. Its numerical basis came from the correct committed results table and remains unchanged.",
+  "wrong_raw_source": "macbook-mesh-only-lattice-repeated-v1/summary.json",
+  "correct_raw_source": "experiments/adaptive/runs/macbook-mesh-only-lattice-repeated-v2/summary.json",
+  "verified_uniform25_rows": 6,
+  "seed_nodes": 75113,
+  "seed_tets": 48696,
+  "selected_cells_unchanged": 37,
+  "failed_assertion": "The v1 summary contains zero uniform25 rows; six were expected. The initial shell continued to queue the preflight after this assertion. Preserve the failed check and correct provenance before interpreting results.",
+  "candidate_stiffness_used": false,
+  "inputs": {
+    "experiments/adaptive/runs/macbook-mesh-only-lattice-repeated-v2/summary.json": "f7585b68465e87a8858f5cd09b1fa394777ace82be2951b792f37dfd184619a4",
+    "handoff/macbook/lattice-uniform37-selection-20261025.json": "efa8f0d64b9b18e214dff03601fe2033e958c04353e9fb2af0a252017b8a4e07"
+  }
+}

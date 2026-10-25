@@ -230,3 +230,152 @@ The last complete lattice reference investigation remains the fixed-domain
 quadratic level5 result at 1.325163420% worst disagreement, still failing 1%.
 The next level is below its existing trial-gain screen and is not solved.
 All four original cases and all 24 lattice models remain in scope.
+
+## Element-budget comparison follow-up
+
+The current compact lattice is not an equivalent-count comparison. Read-only
+job 486 checks the admitted actual live route, not a saved-seed substitute.
+It has 165,722 Tet10 cells and 250,000 nodes, versus 41,340 and 65,721 for
+native. Median corner RMS edge length is 0.02443 versus 0.03676. Mesh-size
+selection in this follow-up uses counts alone, before any new stiffness score.
+The target is 98–100% of the actual element count, with at most 250,000 nodes.
+The specimen, union order, quality, distance, volume and periodic gates stay fixed.
+
+A volume/count initial estimate, 0.0233372, hits the normal 250,000 temporary
+tet limit in 488. A quarantined resource probe 489 permits a temporary limit
+of 500,000 under the same 8 GiB watchdog. It ends with 378,425 tets and
+527,370 nodes, so its output is also too large. It is explicitly ineligible
+for comparison and receives no FE solve. The normal protocol is never widened;
+488 and prior actual intermediate-cap failures remain rejected.
+
+Count corrections and interpolation produce the following distinct trials.
+No continuum model is refitted, and no candidate stiffness score is used to
+select or adjust these sizes.
+
+| Mac job | Maximum length | Tets | Nodes | Preflight outcome |
+|---|---:|---:|---:|---|
+| 488 | 0.0233372030 | No output | No output | Intermediate tet cap exceeded |
+| 489 | 0.0233372030 | 378,425 | 527,370 | Resource diagnostic only, ineligible |
+| 490 | 0.0307313771 | 75,991 | 114,716 | Geometry passes; below count target |
+| 491 | 0.0268861286 | 201,041 | 285,139 | Node cap exceeded |
+| 492 | 0.02765 | 182,538 | 258,536 | Node cap exceeded |
+| 493 | 0.02835 | 148,115 | 213,960 | Geometry passes; below count target |
+| 494 | 0.02803 | 168,594 | 240,686 | Geometry passes; above count target |
+| 495 | 0.0281 | 166,504 | 238,071 | Geometry passes; above count target |
+| 496 | 0.02814 | 162,336 | 232,732 | Geometry passes; 72 tets below count band |
+
+Job 496 misses the frozen lower count bound by 72 tets. The bound is not
+relaxed. Further global length interpolation stops here. The experiment driver
+exposes the native maximum-length option, with its old 0.1 default unchanged.
+A declared maximum-length variant is reported as a changed recipe on the
+same fixed specimen.
+
+## Adaptive interior-node option repaired
+
+While investigating a controlled count adjustment, the existing public
+`interior_refine_nodes` option was found to be ignored by scalar adaptation.
+The adaptive branch returned before calling the existing interior pass.
+Regression 497 fails with zero inserted nodes. The first attempted placement
+was in a different return branch and still fails in 498. Correcting the scalar
+branch makes the unchanged regression pass in 499.
+
+The fix calls the existing length-ranked pass after scalar adaptation and
+reports its actual inserted nodes. The zero default, quality floor, disjoint
+cavity rule, intermediate tet cap and retained-feature restrictions stay fixed.
+Order 2 counts requested corner nodes; quadratic edge nodes are additional.
+No new refinement algorithm or changed specimen is introduced.
+
+The exact rebuilt arm64 library is
+`19f1536993017f6f610e7b199a3cd271b9e322fb60094fa4cb7984df59f567e8`.
+It passes 105 core tests, both feature Clippy checks and 183 Python tests.
+There is one ignored core test and one skipped Python test. All four default
+curved meshes pass independent admission and reproduce every previous point,
+tetrahedron and surface array exactly in 505 through 508. Existing default
+mechanical evidence therefore remains applicable.
+
+Count-only plan 509 selects 341 interior corner nodes on the frozen 496
+recipe. It uses eligible edge-star counts and the predeclared 98–100% actual
+element interval, without reading any candidate stiffness. Preflight 510
+inserts all 341 nodes, giving 164,180 Tet10 elements and 235,258 nodes.
+Original corner coordinates, oriented corner boundary and all curved boundary
+points are exactly unchanged. Sampled distance remains 0.000255074 and minimum
+quality remains 0.313238792. All admission gates pass. This does not assert
+nesting of the full quadratic displacement spaces.
+
+Fresh resource setup 511 assembles 695,877 reduced rows and 57,765,127 nonzeros.
+The four-level AMG setup passes at 5.452 GiB process-tree peak RSS under the
+unchanged 8 GiB watchdog. It stops before CG. Job 512 completes fresh generation
+and all six loads at the frozen settings. Its arrays exactly reproduce 510.
+Solve time is 310.262 seconds, worker time 319.464 seconds and peak RSS
+5.004 GiB. These single diagnostic timers do not establish a matched speedup.
+
+Independent audit 513 gives reaction, energy and skew errors below 5.1e-12,
+zero periodic jumps and positive 64/125-point energy sensitivity 6.872e-8.
+Assessment 514 retains all 24 distinct model tensors. Worst disagreement is
+**1.935110817%**, versus 2.412306220% for the compact default. This still fails
+1%, and the admitted actual route remains ahead at 0.9946706124%.
+The size changes are explicitly declared; the fixed specimen is unchanged.
+No reference, native winner or four-case completion is promoted.
+
+Read-only count-matched quality comparison 515 also finds a tradeoff.
+Native minimum quality is 0.313239 versus actual 0.100001, but median quality
+is 0.680021 versus 0.796052. Native p1 is better, p90 is worse. Counts alone
+therefore do not establish all-metric quality superiority.
+
+Saved-domain projection diagnostic 516 uses four surface rules. At 64 points
+per wall face, native RMS projection is 1.274e-5 versus actual 4.300e-4.
+Its signed normal integral is 2.197e-7 versus 0.001139. This is a geometric
+diagnostic, not a stiffness shape derivative or error bound. Unconstrained
+projections leave the box at two native points and 4,659 actual points; these
+are reported explicitly and do not reclassify either independent admission.
+Both fixed meshes and all original gates remain unchanged.
+
+Global density adjustments stop. Historical cap-only sizing and resolved
+correction maps do not justify restarting those closed recipes. One existing
+same-domain six-mode residual trial follows in 517, with the current complete
+fields, positive 64/125-point rules, the unchanged 0.05% gain-signal screen
+and 1% gain-precision screen. It changes no mesh and performs no equilibrium
+solve. Its outcome must be read before selecting another meshing change.
+
+Trial 517 passes with a 0.317401987% largest mixed-load energy gain. Positive
+rule gain change is 2.052e-5 relative; full cubic traces have zero jump.
+Curve-vertex incident cells carry 85.37% of the largest-direction trial gain
+in 1,899 of 164,180 cells. This is a resolved trial correction, not remaining
+error certification. Consistent 15-point coupling, positive-rule precision,
+saved parent residuals, exact operator SHA and actual AMG setup pass in 518.
+No CG solve occurs in that preflight. Its peak RSS is 4.426 GiB.
+
+## One uniform-seed alternative also fails stiffness
+
+Repeated uniform25 evidence already had much better median quality than dense
+adaptation. A single uniform37 choice is frozen from those measured counts,
+limited by both actual element and node counts, before its stiffness evaluation.
+The initial receipt links the earlier v1 repetition file by mistake. A failed
+source assertion detects zero uniform25 rows there, but the shell continues and
+launches 519. The committed results table supplied the correct counts. The
+correct v2 file verifies six admitted rows at exactly 48,696 tets and 75,113
+nodes. Both the original receipt and explicit correction are preserved. The
+37-cell choice and numerical count basis do not change. Dependent commands
+subsequently use shell fail-fast execution.
+
+Preflight 519 admits 157,521 tets and 231,026 nodes. Sampled distance is
+0.000178307, minimum quality 0.339372 and median quality 0.929516. Actual
+median is 0.796052. Native p1, p10 and p90 improve, but p99 and maximum are
+slightly worse. Exact operator/AMG resource check 520 passes at 4.793 GiB.
+The assessment accepts only the exact declared density/seed recipe; other
+geometry, quadrature, specimen and admission checks remain strict. Default
+control 522 reproduces every one of the prior 24 model scores and hashes.
+
+Six fresh loads 523 reproduce the preflight arrays exactly. Solve time is
+208.294 seconds, worker time 216.867 seconds and peak RSS 4.770 GiB.
+Independent audit 524 passes; positive-rule sensitivity is 1.186e-7.
+Assessment 525 retains all 24 unchanged tensors and finds **2.085389679%**
+worst disagreement, still above 1% and worse than dense adaptation's 1.935%.
+No nearby uniform resolution retry is selected. No new reference, native
+winner, repeated timing ratio or four-case completion is promoted.
+
+With both count alternatives closed, job 526 uses the passed 518 preflight
+for six fresh zero-macro auxiliary responses on the exact adaptive domain.
+It preserves geometry and all parent Tet10 functions. These are reference
+research fields, not another mesh or native workflow. Complete-field audits
+are required before using their corrected tensor or localization.

@@ -1,5 +1,38 @@
 # Reference-only cubic enrichment on G3
 
+## Matched lattice count study still fails accuracy, 25 October 2026
+
+The adaptive scalar path now honors its existing interior-node request.
+Commit `0fc144c` passes 105 core tests, 183 Python tests and both feature
+Clippy checks. One core test is ignored and one Python test is skipped.
+All four default point, tetrahedron and surface arrays reproduce exactly.
+
+A count-only selection produces 164,180 Tet10 elements and 235,258 nodes,
+versus the admitted actual route's 165,722 and 250,000. All geometry, quality
+and periodic gates pass. Six fresh loads and independent field/positive-rule
+audits pass, but worst disagreement across all 24 retained lattice tensors
+is **1.935110817%**, above 1%. Compact native remains at 2.412306220%.
+Minimum quality improves on actual, but median quality is 0.680 versus 0.796.
+No new reference, native winner or comparative timing claim follows.
+Global maximum-length adjustments stop, and earlier failures stay rejected.
+
+One existing uniform-seed alternative is selected from recorded quality and
+count scaling before its stiffness evaluation. Its 37-cell preflight passes
+at 157,521 tets and 231,026 nodes, minimum quality 0.339372, median 0.929516
+and sampled distance 0.000178307. The upper quality tail remains slightly
+worse than actual. Exact operator/AMG memory setup and six fresh loads pass.
+Independent field audits and positive-rule checks also pass. Worst disagreement
+is **2.085389679%**, still failing 1% and worse than the dense adaptive result.
+This distinct topology choice is closed without a nearby resolution retry.
+Both count-selected native alternatives remain rejected on accuracy. The source-link error in the initial selection receipt is preserved
+and corrected without changing its counts or 37-cell choice.
+
+Schwarz's repeated modified-actual-route win stands. Gyroid and spinodoid
+still lack admitted actual comparators in the tested routes. Lattice reference
+convergence remains unresolved. All four fixed cases, all 24 lattice models,
+original admission gates and 250,000-node/tet caps remain in scope.
+Earlier active and queued descriptions below are historical.
+
 ## Native cap repair passes four-case geometry checks, 25 October 2026
 
 The fixed linear spinodoid now passes strict independent admission. Distance

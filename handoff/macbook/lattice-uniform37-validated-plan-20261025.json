@@ -1,0 +1,46 @@
+{
+  "scope": "Validated frozen uniform37 plan with corrected raw-source provenance. Original pre-generation choice and counts unchanged; no uniform37 stiffness evaluated.",
+  "cells": 37,
+  "cell_upper_from_tets": 37.60413770547093,
+  "cell_upper_from_nodes": 37.326302862706825,
+  "predicted_tets": 157862.30323199998,
+  "predicted_nodes": 243500.72249599997,
+  "selection_uses_candidate_stiffness": false,
+  "recipe": {
+    "case": "smooth-lattice",
+    "cells": 37,
+    "min_length": 0.01,
+    "max_length": 0.1,
+    "interior_refine_nodes": 0,
+    "order": 2,
+    "native_tolerance": 1.0,
+    "optimization_passes": 1,
+    "adaptive": false,
+    "adapt_tolerance": 0.002,
+    "solver_quadrature_points": 15,
+    "solve_node_cap": 250000
+  },
+  "criteria": {
+    "node_cap": 250000,
+    "tet_cap": 250000,
+    "geometry_distance": 0.002,
+    "abs_volume_relative": 0.01,
+    "quality_min": 0.1,
+    "stiffness_target": 0.01,
+    "retained_models": 24
+  },
+  "count_scope": "Fewer elements are allowed by the user if every other comparison metric improves. The previous98to100percent count study remains a failed frozen study; its band is not relaxed or reclassified.",
+  "coupled_reference_solve_selected": false,
+  "inputs": {
+    "experiments/adaptive/runs/macbook-lattice-actual-live-assessment-v1/result.json": "9d17ae59e43a2bdcb3b7d15210d1e008325ef205421633c521088933909e437d",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-lattice-actual-live-solve-v1/result.json": "f0d717c9f6e5e22fd4cbd467b8773c1f6f844d6f17b64f78a85dd09b21d1e85f",
+    "experiments/adaptive/MESH_COMPARISON_RESULTS.md": "9935d72dbf009373be36b1f68122370d913afcf28dffa5350d797d583e119d0e",
+    "experiments/adaptive/runs/macbook-lattice-count-interior341-assessment-v1/result.json": "cfdd6f05279b8a6a0e1e8344d6ae0ddd400d61769066f14dfa49a80171560804",
+    "experiments/adaptive/runs/macbook-lattice-count-interior341-resolution-v1/result.json": "1b9f98e2ac9d9b7e9705ff6c3efe213d1f655036524bf7ebbafa3e941b311f6a",
+    "experiments/adaptive/runs/macbook-lattice-count-interior341-coupled-preflight-v1/result.json": "7a5a85cd2340f4ced8439a1e0a7ddd41ca64a305f12fa464127335ced68fd619",
+    "experiments/adaptive/runs/macbook-mesh-only-lattice-repeated-v2/summary.json": "f7585b68465e87a8858f5cd09b1fa394777ace82be2951b792f37dfd184619a4",
+    "handoff/macbook/lattice-uniform37-selection-20261025.json": "efa8f0d64b9b18e214dff03601fe2033e958c04353e9fb2af0a252017b8a4e07",
+    "handoff/macbook/lattice-uniform37-selection-source-correction-20261025.json": "6bd975fa3321e28e6f7b492dfbadda541ab1b22b5e0e64d01af79f43223aa0c6"
+  },
+  "source_correction": "handoff/macbook/lattice-uniform37-selection-source-correction-20261025.json"
+}

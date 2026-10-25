@@ -27,6 +27,7 @@ def worker(args):
     from periodic import periodic_pairs
 
     row = {"case": args.case, "cells": args.cells, "min_length": args.min_length,
+           "max_length": args.max_length, "interior_refine_nodes": args.interior_refine_nodes,
            "order": args.order, "native_tolerance": args.native_tolerance,
            "optimization_passes": args.optimization_passes,
            "adaptive": not args.no_adapt, "adapt_tolerance": args.adapt_tolerance,
@@ -132,9 +133,9 @@ def worker(args):
             band=case.band, periodic=(True, True, True), threads=1, optimize_passes=args.optimization_passes,
             minimum_quality=0.1,
             geometry_tolerance=args.native_tolerance, max_tetrahedra=workflow.CAP,
-            adapt=not args.no_adapt, min_length=args.min_length, max_length=0.1, gradation=0.3,
+            adapt=not args.no_adapt, min_length=args.min_length, max_length=args.max_length, gradation=0.3,
             adapt_iterations=4, quality_guard=0.3, adapt_tolerance=args.adapt_tolerance, order=args.order,
-            size_field=size_field)
+            size_field=size_field, interior_refine_nodes=args.interior_refine_nodes)
         row.update(generation_s=time.perf_counter() - phase, nodes=len(mesh.points),
                    elements=len(mesh.tetrahedra), diagnostics=mesh.diagnostics)
         np.savez_compressed(args.run / "mesh.npz", points=mesh.points,
@@ -197,6 +198,8 @@ def main():
     parser.add_argument("--case", default="spinodoid")
     parser.add_argument("--cells", type=int, default=16)
     parser.add_argument("--min-length", type=float, default=0.01)
+    parser.add_argument("--max-length", type=float, default=0.1)
+    parser.add_argument("--interior-refine-nodes", type=int, default=0)
     parser.add_argument("--compiled-spinodoid", action="store_true")
     parser.add_argument("--order", type=int, default=1, choices=(1, 2))
     parser.add_argument("--native-tolerance", type=float, default=0.002)
@@ -216,6 +219,7 @@ def main():
     parser.add_argument("--cap-band", type=float, default=.05)
     parser.add_argument("--amg", action="store_true")
     args = parser.parse_args()
+    assert args.interior_refine_nodes >= 0
     assert args.cap_length is None or (not args.no_adapt and 0 < args.cap_length < .1 and 0 < args.cap_band < .5)
     if args.worker:
         worker(args)
@@ -244,6 +248,8 @@ def main():
         "packages": {name: importlib.metadata.version(name) for name in
             ("meshers", "numpy", "scipy", "fedoo", "microgen", "mmgpy", "pyamg", "pyvista", "vtk")},
         "memory_bytes": workflow.MEMORY, "threads": 1, "timeout_s": args.worker_timeout,
+        "max_length": args.max_length,
+        "interior_refine_nodes": args.interior_refine_nodes,
         "python_source_sha256": source_hashes,
         "solver": "cached-elastic-block-amg-cg" if args.amg else "jacobi-cg",
         "pyamg": importlib.metadata.version("pyamg") if args.amg else None})
@@ -276,6 +282,8 @@ def main():
         with worker_part(job, "adaptive-admission") as part:
             command = [sys.executable, __file__, "--run", str(args.run),
                 "--case", args.case, "--cells", str(args.cells), "--min-length", str(args.min_length),
+                "--max-length", str(args.max_length),
+                "--interior-refine-nodes", str(args.interior_refine_nodes),
                 "--order", str(args.order), "--native-tolerance", str(args.native_tolerance),
                 "--optimization-passes", str(args.optimization_passes),
                 "--adapt-tolerance", str(args.adapt_tolerance),

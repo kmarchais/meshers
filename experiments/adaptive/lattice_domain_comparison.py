@@ -11,13 +11,15 @@ import microgen_workflow as w
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('--run',type=Path,required=True)
+    parser.add_argument('--native-source',type=Path,
+        default=w.HERE/'runs/macbook-lattice26-current-native-amg-v1')
     args = parser.parse_args()
     assert args.run.is_dir() and not (args.run/'result.json').exists()
     np, *_ = w.imports()
     from hp_ranked_localization import wall_residuals
     from periodic_crease_audit import features
     case,_,_ = w.specimen('smooth-lattice')
-    sources = dict(native=w.HERE/'runs/macbook-lattice26-current-native-amg-v1',
+    sources = dict(native=args.native_source,
                    actual=w.HERE/'runs/macbook-lattice-actual-live-solve-v1')
     paths = [Path(__file__),w.HERE/'hp_ranked_localization.py',w.HERE/'periodic_crease_audit.py',Path(w.__file__)]
     paths.extend(p/name for p in sources.values() for name in

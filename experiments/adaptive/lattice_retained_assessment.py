@@ -37,9 +37,15 @@ def main():
     parser.add_argument('--preflight', type=Path, required=True)
     parser.add_argument('--field-audit', type=Path, required=True)
     parser.add_argument('--output', type=Path, required=True)
+    parser.add_argument('--allow-max-length-change', action='store_true',
+        help='Declare a count-selected maximum-length variant; keep all other recipe checks')
+    parser.add_argument('--allow-interior-refinement-change', action='store_true',
+        help='Declare a count-selected interior-refinement variant; keep all other recipe checks')
+    parser.add_argument('--planned-recipe', type=Path,
+        help='Frozen exact density/seed recipe selected before candidate stiffness evaluation')
     parser.add_argument('--previous-source', type=Path,
         default=w.HERE/'runs/g3-lattice-adapt26-tol0028-amg-solve-v1',
-        help='Exact recorded same-recipe source for the before/after assessment')
+        help='Recorded baseline; density changes require the explicit declaration flags')
     args = parser.parse_args()
     assert not args.output.exists()
     np, *_ = w.imports()
@@ -89,9 +95,28 @@ def main():
     assert quad['rules'][-1]['energy_vs_previous_rule']['worst_relative_strain_energy_difference'] <= 1e-4
     previous = args.previous_source
     old = json.loads((previous/'result.json').read_text())
-    for key in ('case', 'cells', 'min_length', 'order', 'native_tolerance', 'optimization_passes',
-        'adaptive', 'adapt_tolerance', 'solver_quadrature_points'):
-        assert old[key] == row[key]
+    recipe_keys = ('case', 'cells', 'min_length', 'order', 'native_tolerance', 'optimization_passes',
+        'adaptive', 'adapt_tolerance', 'solver_quadrature_points')
+    planned_changes = {}
+    if args.planned_recipe:
+        plan = json.loads(args.planned_recipe.read_text())
+        expected = plan['recipe']
+        assert set(expected) == set(recipe_keys) | {'max_length', 'interior_refine_nodes', 'solve_node_cap'}
+        assert not plan['selection_uses_candidate_stiffness']
+        assert all(row.get(key, {'max_length': .1, 'interior_refine_nodes': 0}.get(key)) == value
+            for key, value in expected.items())
+        density_keys = {'cells', 'min_length', 'max_length', 'interior_refine_nodes', 'adaptive', 'adapt_tolerance'}
+        planned_changes = {key: [old.get(key, {'max_length': .1, 'interior_refine_nodes': 0}.get(key)), value]
+            for key, value in expected.items()
+            if old.get(key, {'max_length': .1, 'interior_refine_nodes': 0}.get(key)) != value}
+        assert set(planned_changes) <= density_keys
+        hashes[str(args.planned_recipe)] = w.digest(args.planned_recipe)
+    for key in recipe_keys:
+        assert old[key] == row[key] or key in planned_changes
+    old_maximum, new_maximum = old.get('max_length', .1), row.get('max_length', .1)
+    assert old_maximum == new_maximum or args.allow_max_length_change or 'max_length' in planned_changes
+    old_interior, new_interior = old.get('interior_refine_nodes', 0), row.get('interior_refine_nodes', 0)
+    assert old_interior == new_interior or args.allow_interior_refinement_change or 'interior_refine_nodes' in planned_changes
     if lattice:
         assert old['solve_node_cap'] == row['solve_node_cap']
         assert old['void_clamp']['positive_ceiling'] == row['void_clamp']['positive_ceiling'] == .02
@@ -138,7 +163,13 @@ def main():
     passed = max(errors) <= .01
     w.save(args.output.parent/'analysis-inputs.json',hashes)
     w.save(args.output, dict(case=row['case'], source=str(source), field_audit_passed=True, complete_six_load_fields=True,
-        fixed_recipe_and_specimen=True, preflight_mesh_identical_up_to_numbering=True,
+        fixed_recipe_and_specimen=not planned_changes and old_maximum == new_maximum and old_interior == new_interior,
+        fixed_specimen=True,
+        planned_recipe=None if args.planned_recipe is None else str(args.planned_recipe),
+        declared_planned_recipe_changes=planned_changes,
+        declared_max_length_change=None if old_maximum == new_maximum else [old_maximum, new_maximum],
+        declared_interior_refinement_change=None if old_interior == new_interior else [old_interior, new_interior],
+        preflight_mesh_identical_up_to_numbering=True,
         full_tet10_and_tri6_local_associations_preserved=True,
         retained_model_count=24, retained_model_tensor_hashes=model_bytes, retained_models_unchanged=True,
         distinct_retained_model_tensors=len(set(model_bytes)), reference_report_count=len(reports),

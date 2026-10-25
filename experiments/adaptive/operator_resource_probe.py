@@ -51,14 +51,17 @@ def main():
     parser.add_argument('--run',required=True,type=Path)
     source=parser.add_mutually_exclusive_group(required=True)
     source.add_argument('--prepared',type=Path)
+    source.add_argument('--admitted-preflight',type=Path)
     source.add_argument('--finalize-trial',action='store_true')
     args=parser.parse_args()
     assert args.run.is_dir() and not (args.run/'result.json').exists()
     np,*_=w.imports()
-    prepared=args.run if args.finalize_trial else args.prepared
+    prepared=args.run if args.finalize_trial else (args.admitted_preflight or args.prepared)
     paths=[Path(__file__),prepared/'mesh.npz',prepared/'manifest.json']
     paths.extend([prepared/'trial-screen.json',prepared/'analysis-inputs.json'] if args.finalize_trial
         else [prepared/'worker.json'])
+    if args.admitted_preflight:
+        paths.append(prepared/'result.json')
     paths.extend(w.HERE/name for name in ('stress_recovery.py','amg_reference.py','microgen_workflow.py'))
     hashes={str(p.resolve()):w.digest(p) for p in paths}
     for i,p in enumerate(paths):
@@ -69,6 +72,12 @@ def main():
         assert trial['status']=='trial-verified-resource-pending' and not trial['qualified']
         assert trial['trial_signal_passed'] and trial['geometry']['geometry_admitted']
         assert all(w.digest(Path(p))==h for p,h in trial['inputs'].items())
+    elif args.admitted_preflight:
+        observed=json.loads((prepared/'result.json').read_text())
+        worker=json.loads((prepared/'worker.json').read_text())
+        assert observed['qualified'] and observed['geometry']['geometry_admitted']
+        assert observed['status']=='admitted-needs-reference' and observed['order']==2
+        assert worker['returncode']==0 and worker['limit_failure'] is None
     else:
         failed=json.loads((prepared/'worker.json').read_text())
         assert failed['limit_failure']=='memory-cap' and failed['returncode']!=0
@@ -84,6 +93,7 @@ def main():
         w.save(args.run/'analysis-inputs.json',hashes)
         w.save(args.run/'result.json',dict(passed=True,prepared=str(prepared.resolve()),
         nodes=len(points),elements=len(cells),resources=resource,inputs=hashes,
+        prepared_geometry_admitted=bool(args.admitted_preflight),
         cg_started=False,admission_performed=False,reference_promoted=False,
         comparative_timing_claim=False,scope='Fresh-process resource diagnosis of the exact saved mesh; not admission or an equilibrium result'))
     assert all(w.digest(Path(p))==h for p,h in hashes.items())

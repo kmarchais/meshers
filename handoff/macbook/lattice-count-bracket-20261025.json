@@ -1,0 +1,25 @@
+{
+  "scope": "One bracketed mesh-count calibration; target from admitted actual counts, no stiffness scores.",
+  "max_length": 0.02688612863603646,
+  "targets": {
+    "tets": 165722,
+    "nodes": 250000
+  },
+  "count_interpolations": {
+    "elements": {
+      "fraction": 0.485670437960788,
+      "max_length": 0.02688612863603646
+    },
+    "nodes": {
+      "fraction": 0.5106722899676358,
+      "max_length": 0.02670174968787669
+    }
+  },
+  "normal_intermediate_and_output_caps": 250000,
+  "lower_size_observation_comparison_eligible": false,
+  "inputs": {
+    "experiments/adaptive/runs/macbook-lattice-count-transient-probe-v1/output-observation.json": "4bb86bfdcd2624357b63910e49984b472a470a30a0fbcd6ef3b363da4a3675e3",
+    "experiments/adaptive/runs/macbook-lattice-count-h030731-preflight-v1/result.json": "ff1e94e2c310602ec2badbf98f160b664c87f12d42994739c1a32fe96d246a4c",
+    "experiments/adaptive/runs/macbook-lattice-resolution-comparison-v1/result.json": "2ea1a603b818e35d33c6989b9f0670b2d4bb2ed07cfc3cdc8c25d60e26541ada"
+  }
+}

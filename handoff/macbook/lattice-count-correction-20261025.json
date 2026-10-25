@@ -1,0 +1,17 @@
+{
+  "scope": "One count-only correction after an over-budget noncandidate resource diagnostic. No stiffness score enters selection.",
+  "previous_max_length": 0.023337203032290147,
+  "observed_nodes": 527370,
+  "observed_tets": 378425,
+  "target_nodes": 250000,
+  "target_tets": 165722,
+  "count_ratio": 2.2834928374023966,
+  "corrected_max_length": 0.030731377146132742,
+  "formula": "h_new = h_old * max(T_observed/T_target, N_observed/N_target)^(1/3)",
+  "normal_intermediate_and_output_caps": 250000,
+  "inputs": {
+    "experiments/adaptive/runs/macbook-lattice-count-transient-probe-v1/result.json": "a531e0fe849ead9462b2f08a1ad4c770009c45e72b6d1a4eb05e36c396829b0b",
+    "experiments/adaptive/runs/macbook-lattice-resolution-comparison-v1/result.json": "2ea1a603b818e35d33c6989b9f0670b2d4bb2ed07cfc3cdc8c25d60e26541ada",
+    "experiments/adaptive/runs/macbook-lattice-count-h023337-preflight-v1/result.json": "ae3d0e7f7b63577ca25ea25eb7070626d2e16a1cd7166310941a86e27280b94e"
+  }
+}

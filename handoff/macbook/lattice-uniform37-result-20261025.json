@@ -1,0 +1,146 @@
+{
+  "scope": "One frozen alternative to dense adaptation: better quality andgeometry withfewer elements, but fresh accuracy still fails all-model1percent. Not a winner orreference.",
+  "recipe": {
+    "cells": [
+      26,
+      37
+    ],
+    "min_length": [
+      0.002,
+      0.01
+    ],
+    "adaptive": [
+      true,
+      false
+    ],
+    "adapt_tolerance": [
+      0.0028,
+      0.002
+    ]
+  },
+  "nodes": 231026,
+  "tets": 157521,
+  "geometry": {
+    "sampled_forward_max": 0.00017830657102929696,
+    "sampled_reverse_max": 0.00017534114544158654,
+    "sampled_two_sided_max": 0.00017830657102929696,
+    "outward_forward_max": 0.00017830657102929696,
+    "inward_forward_max": 0.0001462606609592072,
+    "projection_failed": 0,
+    "forward_samples": 234832,
+    "reverse_samples": 34791,
+    "volume": 0.24823288363554386,
+    "relative_volume_error": -0.00031476308594191593,
+    "q_min_corner": 0.3393720556551816,
+    "q_p01_corner": 0.5772869727798284,
+    "minimum_dihedral_deg_corner": 20.074078039822695,
+    "minimum_sampled_jacobian": 2.5724274389162885e-07,
+    "reverse_tessellation_delta_max": 0.0001954595333418548,
+    "quadratic_reverse_subdivisions": [
+      4,
+      8
+    ],
+    "facet_consistency": {
+      "nodes": 231026,
+      "elements": 157521,
+      "unique_faces": 325016,
+      "interior_faces": 305068,
+      "extracted_boundary_faces": 19948,
+      "same_orientation_shared_faces": 0,
+      "nonmanifold_faces": 0,
+      "duplicate_cells": 0,
+      "duplicate_surface_faces": 0,
+      "provided_boundary_matches_extraction": true,
+      "missing_provided_faces": 0,
+      "extra_provided_faces": 0,
+      "nonpositive_corner_determinants": 0,
+      "minimum_corner_determinant": 2.598609452387391e-07,
+      "oriented_facet_consistency_passed": true,
+      "conflict_examples": [],
+      "scope": "Oriented corner-face incidence and same-side neighbor diagnostics; necessary consistency, not a certificate of curved geometry or absence of nonlocal intersections"
+    },
+    "oriented_facet_consistency_passed": true,
+    "geometry_admitted": true
+  },
+  "native_quality_quantiles": [
+    0.3393720556551816,
+    0.5772869727798284,
+    0.8068337313746584,
+    0.9295160030897798,
+    0.9295160030897832,
+    0.9689816922873177,
+    0.9966724828231764
+  ],
+  "actual_quality_quantiles": [
+    0.1000010009999996,
+    0.42997535703086776,
+    0.6249515899696043,
+    0.7960523050557462,
+    0.9221098777398999,
+    0.9732119243989564,
+    0.998569317670846
+  ],
+  "quality_quantile_fractions": [
+    0,
+    0.01,
+    0.1,
+    0.5,
+    0.9,
+    0.99,
+    1
+  ],
+  "complete_fresh_six_loads": true,
+  "independent_field_audit_passed": true,
+  "quadrature_sensitivity": 1.1864921192634984e-07,
+  "worst_model_disagreement": 0.020853896791642533,
+  "passes_one_percent_all_models": false,
+  "retained_models": 24,
+  "retained_model_tensor_hashes": [
+    "1dc2276ae93d3a194cb332b06f5c7562f512d21c6df8746cc427bdb5cf5e4483",
+    "05aa92ece78bb3d56b2e1f1746d82d8ab6b7ec504988fb2831dca28bbd1af699",
+    "bc97fc91658a12a023b42b599cee06057e95708952068834f62e510ffb377e90",
+    "6a3d66a8a9b8d006a80f6a07a519887c64ad569df9ded79f58396165b7d185c0",
+    "cf5dbd88b110410ca94f5263ca1d47dc97987c3cc10790d836fc9895f3527889",
+    "fbfe07add640ae33f49cb0677b3df2ed43034a3d6d3fb3fd879b388c5a819ee1",
+    "1777cef43e1d246879ff5bcfd964a13baf885baa13faafef4f77fe97f48ec84a",
+    "c328664caccc5082c37d300421d51519d3893948b0e5f7e31584f8ce47aafee3",
+    "368dd8a49825c6d08e96d559fb79cb12d6244749a163b30582589eedb831a72b",
+    "f22e43514f0f9b8b8f43087aa8bdfa59bb64f3f893029ca490e5defc7764f35c",
+    "809ca2045bd26faeb9c225bff2b3febe9e5c290eccc35c2b444f8421c832a0d4",
+    "c010ae7f8e57aebad23a3a42d3f248c7ea0ff6ed31e290a3dff62bbfeabeaef7",
+    "2aa3d0453da7fc045fb21d9d818a50d7612b9e9f66542cf7fb75fbf4b8e29f76",
+    "2323cd67c181e81b13a4164333f002387e2e807e2cbc2a27052dc6c54f5c026f",
+    "acd72b95c9f71e32265b05d2b9ad5a4367ed10ec7d47c72541826ded75dc7474",
+    "46d12a65100eea687c4d994e19328ed1f60a8b01f66f84f4c5f9b5bb2edac406",
+    "a9e148d4d1187745a4b5bb0631b020775900bb903aa9e6ac918417ed5061d903",
+    "a16219ac2de2e13355bc6b03929cfc7b4b4b65221b65d184e53113fcfaf578c6",
+    "3f11bc9270b573e6aff65e7b435df249dbaded408637d09e88ec4366977b0b0c",
+    "698df2172b607b3660d5edb02cc5418a56f758cdac945a657dd02ef5807443dd",
+    "9574face72643c530171ec8a3599d0b9d2f1e3c7b049fe868b26a1201ac64545",
+    "2b2a3fc524801d1906bc4911c8d9922e59c4ce6e85acfdfca83df4a65b059400",
+    "ded13a9eb3b71fe54bcd5c89e03378cb7442879e56095a24f4391a4c242dbaea",
+    "948e95978a44e3c8b251004c9f5fad6b47765cbfdad570db91d9ab49ba6d622c"
+  ],
+  "reference_promoted": false,
+  "comparative_timing_claim": false,
+  "nearby_resolution_retry_selected": false,
+  "full_objective_complete": false,
+  "inputs": {
+    "experiments/adaptive/runs/macbook-lattice-uniform37-preflight-v1/result.json": "d71d8d8f1b9bfa24d362bb96462aa3ed1e6a847f5e9fb17055ee2fc6d3198aaa",
+    "experiments/adaptive/runs/macbook-lattice-uniform37-resource-v1/result.json": "46e54396e55025a9176a7cc319781e553061432e7cc27c4603bfd6ad7d083792",
+    "experiments/adaptive/runs/macbook-lattice-uniform37-amg-v1/result.json": "6c229e847af24fd0262262d986d0714ff73ce90d4e2c54d5129eff39d34330cd",
+    "experiments/adaptive/runs/macbook-lattice-uniform37-assessment-v1/result.json": "a6230bb480518934e5a8523d9a204a4382deb6281c128ff0bc13b2c152e76b0e",
+    "experiments/adaptive/runs/macbook-lattice-uniform37-resolution-v1/result.json": "2e6be98832e937829ffdb6ee6f7c12ea7b4fe9b07e0d88c9619d0860b7452895",
+    "experiments/adaptive/runs/macbook-lattice-uniform37-amg-v1/manifest.json": "7d64ef544fe3f9bf4c691b2e6eeeb80ddc63ecc711048adb3bc12f7d8babdd67",
+    "experiments/adaptive/runs/macbook-lattice-uniform37-amg-v1/worker.json": "b324bc5e83a2deb4a68da5b22c1ec74c5a50d59d18eadd2dc1d9c3c81fa1d3d7",
+    "experiments/adaptive/runs/macbook-lattice-uniform37-amg-v1/mesh.npz": "2de0d1a48fa842b96ff7e190bde346a886698e04f2177f8a06f879fee515f253",
+    "experiments/adaptive/runs/macbook-lattice-uniform37-amg-v1/fields.npz": "285dd3ef6341dfeaa884db01542cbd69fd2682712a19beac27be7008f9662a7b",
+    "experiments/adaptive/runs/macbook-lattice-uniform37-field-audit-v1/manifest.json": "d86b48212f6e9c241e3107318c81b7a7841a84f89e87a076dc8d893c2bdaa66f",
+    "experiments/adaptive/runs/macbook-lattice-uniform37-field-audit-v1/macbook-lattice-uniform37-amg-v1.json": "b343742e9ffee20a5df8f35474757ceb55ae317003295e951606630c63890c21",
+    "experiments/adaptive/runs/macbook-lattice-uniform37-field-audit-v1/macbook-lattice-uniform37-amg-v1-consistency.json": "c957e78aff2118918f399b376a14684e788a2a351955fbcbd5b76c7885f8c511",
+    "experiments/adaptive/runs/macbook-lattice-uniform37-field-audit-v1/macbook-lattice-uniform37-amg-v1-worker.json": "147b9e621ef3c4b193dc833602b2c55f00117cda7096731a5b6db2e949357c30",
+    "handoff/macbook/lattice-uniform37-selection-20261025.json": "efa8f0d64b9b18e214dff03601fe2033e958c04353e9fb2af0a252017b8a4e07",
+    "handoff/macbook/lattice-uniform37-selection-source-correction-20261025.json": "6bd975fa3321e28e6f7b492dfbadda541ab1b22b5e0e64d01af79f43223aa0c6",
+    "handoff/macbook/lattice-uniform37-validated-plan-20261025.json": "e344e3266d147d970b4b50e74a5fd31d3cd6df471c8152fe586577e3c33c45f9"
+  }
+}
