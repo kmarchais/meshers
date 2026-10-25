@@ -12,7 +12,13 @@ import microgen_workflow as w
 def main():
     parser=argparse.ArgumentParser()
     parser.add_argument('--run',type=Path,required=True)
+    parser.add_argument('--source',type=Path,
+        default=w.HERE/'runs/macbook-periodic-edge-normal-lattice26-amg-v1')
+    parser.add_argument('--bulk-fraction',type=float,default=1.,
+        help='Retain this fraction of the admissible disjoint-star normalized gain')
     args=parser.parse_args()
+    args.source=args.source.resolve()
+    assert 0<args.bulk_fraction<=1
     assert args.run.is_dir() and not (args.run/'result.json').exists()
     np,*_=w.imports()
     from fedoo.lib_elements.tetrahedron import Tet4,Tet10
@@ -26,7 +32,7 @@ def main():
     from split_patch_energy import local_blocks,patch_structure,assemble_patches,solve_patches
     from stress_recovery import solve
     from tet10_integration import integrated_tensors
-    source=w.HERE/'runs/macbook-periodic-edge-normal-lattice26-amg-v1'
+    source=args.source
     fixtures=fixture_inputs(source)
     paths=[Path(__file__),*(source/name for name in ('result.json','mesh.npz','fields.npz','manifest.json'))]
     paths.extend(w.HERE/name for name in ('split_patch_energy.py','test_split_patch_energy.py',
@@ -74,13 +80,40 @@ def main():
     edge_scores={tuple(edge):float(value) for edge,value in zip(edges,physical,strict=True)}
     print('Select disjoint complete periodic stars by exact gain per added node',flush=True)
     refined=refine(points,cells,surface,fields,edge_scores=edge_scores)
-    reproduction=interpolation_check(points,cells,fields,refined)
     mapping_offsets={tuple(mapping.ravel()):offset for offset in range(6) for mapping in child_maps(offset)}
-    selected=set()
-    for parent,mapping in zip(refined['parents'],refined['parent_barycentric_maps'],strict=True):
-        if np.array_equal(mapping,np.eye(4)):continue
-        offset=mapping_offsets[tuple(mapping.ravel())]
-        selected.add(int(structure['ids'][parent,offset]))
+
+    def selected_groups(candidate):
+        groups=set()
+        for parent,mapping in zip(candidate['parents'],candidate['parent_barycentric_maps'],strict=True):
+            if np.array_equal(mapping,np.eye(4)):continue
+            offset=mapping_offsets[tuple(mapping.ravel())]
+            groups.add(int(structure['ids'][parent,offset]))
+        return groups
+
+    selected=selected_groups(refined)
+    bulk=dict(requested_fraction=args.bulk_fraction,unpruned_nodes=len(refined['points']),
+        unpruned_elements=len(refined['tetrahedra']),unpruned_orbits=len(selected),
+        unpruned_normalized_gain=float(scalar[sorted(selected)].sum()))
+    if args.bulk_fraction<1:
+        costs={}
+        for group in selected:
+            copies={}
+            for parent,offset in structure['incidence'][group]:
+                edge=tuple(sorted(cells[parent,EDGES[offset]]))
+                copies.setdefault(edge,[]).append(parent)
+            costs[group]=sum(2+len(set(cells[parents,:4].ravel())-set(edge)) for edge,parents in copies.items())
+        ranked=sorted(selected,key=lambda group:(-scalar[group]/costs[group],group))
+        cumulative=np.cumsum(scalar[ranked])
+        count=int(np.searchsorted(cumulative,args.bulk_fraction*cumulative[-1]))+1
+        retained=set(ranked[:count])
+        filtered={tuple(edge):float(value) for edge,value,group in zip(edges,physical,ids,strict=True) if group in retained}
+        print(f'Retain {count}/{len(selected)} admissible stars for fixed gain fraction {args.bulk_fraction}',flush=True)
+        refined=refine(points,cells,surface,fields,edge_scores=filtered)
+        selected=selected_groups(refined)
+        assert selected==retained
+    bulk.update(retained_orbits=len(selected),
+        retained_normalized_gain_fraction=float(scalar[sorted(selected)].sum()/bulk['unpruned_normalized_gain']))
+    reproduction=interpolation_check(points,cells,fields,refined)
     assert len(selected)==refined['diagnostics']['accepted_edge_orbits']
     incident=[parent for group in selected for parent,_ in structure['incidence'][group]]
     assert len(set(incident))==len(incident)==refined['diagnostics']['bisected_parent_elements']
@@ -165,7 +198,7 @@ def main():
     w.save(args.run/'result.json',dict(status='nested-preflight-passed',qualified=True,case='smooth-lattice',
         source=str(source),nodes=len(refined['points']),elements=len(refined['tetrahedra']),order=2,
         geometry=geometry,relative_volume_change=volume_change,reproduction=reproduction,periodic=periodic,
-        selection=refined['diagnostics'],resources=resources,construction=construction,
+        selection=refined['diagnostics'],bulk=bulk,resources=resources,construction=construction,
         trial_gain=gain.tolist(),trial_gain_eigenvalues=gain_eigenvalues.tolist(),trial_energy_balance=balance,
         trial_delta_periodic_jump=delta_jump,trial_precision=precision,trial_globally_equilibrated=False,
         selection_scope='Exact fixed-old-node six-load split gains per physical added-node upper bound; all regions eligible',

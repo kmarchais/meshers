@@ -90,8 +90,47 @@ The reconstructed trial energy agrees with the summed patch gain to 3.43e-12
 relative. Its largest directional energy reduction is 0.306408133%. This trial
 holds the old coefficients fixed. It is not globally equilibrated and is not
 an admitted stiffness result. One fresh globally coupled six-load solve is
-selected from these gates. Its independent audits and all-model assessment
-must be read before a successor is chosen.
+selected from these gates. Job 407 completes six fresh loads in a 97.150-second
+worker at 3.148 GiB peak. Its independent field audit takes 27.237 seconds,
+and its Galerkin and all-model assessment takes 34.516 seconds.
+
+The largest negative stiffness correction is 0.462598229%. Galerkin energy
+balance is within 2.493e-9, and all positive quadrature and periodic audits
+pass. Worst disagreement against all 24 unchanged models improves from
+2.427923243% to **1.962342587%**, still failing 1%. No native candidate, reference,
+or comparative timing victory is promoted. The full result is saved in
+[the first split evidence receipt](../../handoff/macbook/split-patch-level1-evidence-20261025.json).
+
+Second-level preflight 408 passes at 202,738 nodes and 130,306 tets. Its
+largest trial gain is 0.202002161%, and peak RAM is 4.430 GiB. No solve is
+selected for that allocation. Of its 12,651 accepted disjoint stars, 613 carry
+90% of the normalized gain when sorted by gain alone. The first level has
+similar concentration, with 446 of 8,237 stars carrying 90%.
+
+The next preflight retains a fixed 90% of the admissible normalized gain in
+gain-per-added-node order. This is an allocation rule, not a change to any
+admission threshold. It retains the complete first-level approximation space
+and original curved domain. All regions remain eligible, and no reference
+tensor enters selection. Actual trial energy and geometry/resource gates must
+pass before a coupled solve. No sizing sweep or empirical reference fitting
+is selected.
+
+Preflight 409 retains 618 stars and 90.0004509% of the admissible balanced
+gain. It adds 4,224 nodes, compared with 86,169 for the full second level.
+The smaller mesh has 120,793 nodes and 76,027 tets. Minimum corner quality is
+0.151628329. Its largest trial gain is 0.183889578%, energy balance is within
+2.012e-12 relative, and all geometry, periodic, and resource gates pass.
+
+Job 410 completes six fresh coupled loads. Independent field and positive
+quadrature checks pass. The largest negative stiffness correction is
+0.253313240%, and Galerkin balance is within 1.064e-9. Worst disagreement
+against all 24 models improves to **1.723104796%**, still failing 1%. The solve
+worker takes 102.836 seconds at 3.827 GiB peak, with separate 26.631-second
+field audit and 34.195-second assessment. This is not a live workflow timing
+or accuracy admission. See [the allocation receipt](../../handoff/macbook/split-patch-allocation-20261025.json)
+and [the second-level evidence](../../handoff/macbook/split-patch-bulk90-level2-evidence-20261025.json).
+One third-level preflight is selected from these fresh fields using the same
+fixed 90% rule. Its actual gates must be read before another solve.
 
 All four cases and all 24 model tensors remain in scope. Schwarz retains its
 measured comparison win against explicitly modified actual Microgen routes.

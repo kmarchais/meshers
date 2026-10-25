@@ -16,11 +16,15 @@ fails at 1.647040948%, correctly normalized against each of all 24 models.
 Neither result promotes a reference, native cubic API, or matched-accuracy win.
 
 Three independent FE controls verify exact variational gains of periodic
-edge-star splits. Preflight 406 passes at 116,569 nodes and 73,294 tets, with
-exact domain and parent-space preservation, 0.306408% largest trial gain, and
-3.425 GiB peak RAM. All regions remain eligible, and reference tensors do not
-enter the ranking. One globally coupled six-load solve is selected, with
-independent audits and all 24 model comparisons required before a successor.
+edge-star splits. Fresh coupled first-level solve 407 improves worst disagreement
+to 1.962342587% at 116,569 nodes and 73,294 tets. Full second-level preflight 408
+passes but is not solved, because most selected stars carry very little gain.
+A fixed 90% bulk rule in gain-per-added-node order retains 618 stars. Preflight
+409 and six fresh loads in 410 pass all independent field, positive quadrature,
+periodic, and Galerkin checks. Only 4,224 added nodes reduce worst all-model
+disagreement to 1.723104796% at 120,793 nodes and 76,027 tets, still failing 1%.
+All regions remain eligible. No reference tensor enters allocation. One
+third-level preflight uses the same rule, with no automatic coupled solve.
 See [physical edge normal investigation](experiments/adaptive/PERIODIC_EDGE_NORMAL_RESULTS.md).
 Earlier next-step descriptions below are historical. All four cases remain
 in scope, and the full objective is incomplete.

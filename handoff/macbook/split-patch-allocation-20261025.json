@@ -1,0 +1,212 @@
+{
+  "date": "2026-10-25",
+  "records": [
+    {
+      "run": "macbook-split-patch-level2-preflight-v1",
+      "nodes": 202738,
+      "elements": 130306,
+      "relative_volume_change": 2.886579864025407e-15,
+      "reproduction": {
+        "points_per_element": 12,
+        "elements_checked": 130306,
+        "maximum_geometry_error": 3.3306690738754696e-16,
+        "maximum_field_error": 3.3306690738754696e-16
+      },
+      "trial_gain_eigenvalues": [
+        0.00024625036172712985,
+        0.00025664680293749765,
+        0.00026745768800233606,
+        0.0005839432538735925,
+        0.0019164491437339386,
+        0.0020200216100932696
+      ],
+      "trial_energy_balance": 5.367499984669292e-12,
+      "trial_precision": [
+        {
+          "points": 64,
+          "volume": 0.2482331060071544,
+          "vs_previous": null,
+          "gain_relative_error": 3.107934905613444e-07
+        },
+        {
+          "points": 125,
+          "volume": 0.24823310600715437,
+          "vs_previous": {
+            "worst_relative_strain_energy_difference": 2.4324414043778864e-09,
+            "relative_tensor_frobenius_difference": 4.954520847369813e-10,
+            "relative_energy_difference_eigenvalues": [
+              2.9189968094530476e-10,
+              3.6678763109290853e-10,
+              3.9793836876678667e-10,
+              5.298053348438504e-10,
+              1.8962981604682986e-09,
+              2.4324414043778864e-09
+            ]
+          },
+          "gain_relative_error": 4.2620608972167546e-07
+        }
+      ],
+      "resources": {
+        "reduced_shape": [
+          602316,
+          602316
+        ],
+        "nnz": 47307777,
+        "matrix_sha256": "045cc80450289879cabb5336db9324c87eaaff9c50c4849baf21a18066e66f9c",
+        "levels": 4,
+        "operator_complexity": 1.0505773314415536,
+        "cg_started": false,
+        "amg_setup_passed": true
+      },
+      "bulk": null,
+      "geometry": {
+        "geometry_admitted": true,
+        "q_min_corner": 0.11358870579705709,
+        "sampled_two_sided_max": 0.00033587990515847115,
+        "minimum_sampled_jacobian": 8.280770190734111e-08
+      },
+      "worker": {
+        "returncode": 0,
+        "limit_failure": null,
+        "peak_rss_bytes": 4756963328,
+        "wall_s": 140.9990872089984,
+        "memory_bytes": 8589934592,
+        "memory_enforcement": "process-tree-rss-watchdog",
+        "rss_poll_interval_s": 0.25,
+        "platform": "darwin",
+        "numerical_thread_policy": {
+          "environment": {
+            "OPENBLAS_NUM_THREADS": "1",
+            "OMP_NUM_THREADS": "1",
+            "MKL_NUM_THREADS": "1",
+            "VECLIB_MAXIMUM_THREADS": "1",
+            "RAYON_NUM_THREADS": "1"
+          },
+          "accelerate_blas_threading": 1,
+          "accelerate_scope": "calling thread"
+        }
+      }
+    },
+    {
+      "run": "macbook-split-patch-bulk90-level2-preflight-v1",
+      "nodes": 120793,
+      "elements": 76027,
+      "relative_volume_change": 1.7763568394002505e-15,
+      "reproduction": {
+        "points_per_element": 12,
+        "elements_checked": 76027,
+        "maximum_geometry_error": 3.3306690738754696e-16,
+        "maximum_field_error": 3.3306690738754696e-16
+      },
+      "trial_gain_eigenvalues": [
+        0.00020574865954206087,
+        0.00021611968245170853,
+        0.00022623149459391676,
+        0.0005394557518781032,
+        0.0017352644645323263,
+        0.001838895777880587
+      ],
+      "trial_energy_balance": 2.0112843357542943e-12,
+      "trial_precision": [
+        {
+          "points": 64,
+          "volume": 0.24823310600715445,
+          "vs_previous": null,
+          "gain_relative_error": 2.8313488179143306e-07
+        },
+        {
+          "points": 125,
+          "volume": 0.24823310600715423,
+          "vs_previous": {
+            "worst_relative_strain_energy_difference": 4.895765957439097e-09,
+            "relative_tensor_frobenius_difference": 9.663001685503064e-10,
+            "relative_energy_difference_eigenvalues": [
+              5.621294132256136e-10,
+              7.121138038589674e-10,
+              8.480519771328607e-10,
+              8.693713479432409e-10,
+              3.854433432750849e-09,
+              4.895765957439097e-09
+            ]
+          },
+          "gain_relative_error": 3.978577063451218e-07
+        }
+      ],
+      "resources": {
+        "reduced_shape": [
+          357369,
+          357369
+        ],
+        "nnz": 27801400,
+        "matrix_sha256": "4187747b5759954340e60ba51f7069362c7ae86d83f9238e687fd51eb5c96022",
+        "levels": 3,
+        "operator_complexity": 1.0507340937188718,
+        "cg_started": false,
+        "amg_setup_passed": true
+      },
+      "bulk": {
+        "requested_fraction": 0.9,
+        "unpruned_nodes": 202738,
+        "unpruned_elements": 130306,
+        "unpruned_orbits": 12651,
+        "unpruned_normalized_gain": 0.0052907688603677635,
+        "retained_orbits": 618,
+        "retained_normalized_gain_fraction": 0.9000045090890091
+      },
+      "geometry": {
+        "geometry_admitted": true,
+        "q_min_corner": 0.1516283289086412,
+        "sampled_two_sided_max": 0.00033587990515847115,
+        "minimum_sampled_jacobian": 1.5453821612625592e-07
+      },
+      "worker": {
+        "returncode": 0,
+        "limit_failure": null,
+        "peak_rss_bytes": 3912499200,
+        "wall_s": 106.27187837497331,
+        "memory_bytes": 8589934592,
+        "memory_enforcement": "process-tree-rss-watchdog",
+        "rss_poll_interval_s": 0.25,
+        "platform": "darwin",
+        "numerical_thread_policy": {
+          "environment": {
+            "OPENBLAS_NUM_THREADS": "1",
+            "OMP_NUM_THREADS": "1",
+            "MKL_NUM_THREADS": "1",
+            "VECLIB_MAXIMUM_THREADS": "1",
+            "RAYON_NUM_THREADS": "1"
+          },
+          "accelerate_blas_threading": 1,
+          "accelerate_scope": "calling thread"
+        }
+      }
+    }
+  ],
+  "source_artifact_sha256": {
+    "experiments/adaptive/runs/macbook-split-patch-level2-preflight-v1/result.json": "56b2fa264e38b0736e64c75a34a9fa9b9ce4f05722a41ba93eb134614749a45e",
+    "experiments/adaptive/runs/macbook-split-patch-level2-preflight-v1/analysis-inputs.json": "71b8a3ea2192a0fc00f3889062f083acaeedaaf3edd25db5d46ca7285e9d6e80",
+    "experiments/adaptive/runs/macbook-split-patch-level2-preflight-v1/worker.json": "5de66f154715c389bdfbf0b66ef8e892a56a422658abd555f1c140cc651776f5",
+    "experiments/adaptive/runs/macbook-split-patch-bulk90-level2-preflight-v1/result.json": "3d25281c5feae3ca234923e5534d4efe278f623f93a513f1832f695456203a21",
+    "experiments/adaptive/runs/macbook-split-patch-bulk90-level2-preflight-v1/analysis-inputs.json": "92e7ed9b732f1b1a54f74c672f7daee468f51a5189c81c928d81a4714db72d50",
+    "experiments/adaptive/runs/macbook-split-patch-bulk90-level2-preflight-v1/worker.json": "0bca8cc860206ed59390e4af658df034a60699c197a1a5e0728775acfc80ab3b"
+  },
+  "selected": "macbook-split-patch-bulk90-level2-preflight-v1",
+  "full_second_level_solve_selected": false,
+  "admission_rules_unchanged": true,
+  "all_regions_eligible": true,
+  "model_tensors_used_for_selection": false,
+  "decision": "Retain fixed90percent admissible normalized gain in gain-per-physical-added-node order, preserving the original domain and complete first-level space",
+  "concentration_by_gain_only": {
+    "level1": {
+      "orbits": 8237,
+      "orbits_for_90percent": 446
+    },
+    "level2": {
+      "orbits": 12651,
+      "orbits_for_90percent": 613
+    }
+  },
+  "equilibrium_solve_performed": false,
+  "reference_promoted": false,
+  "comparative_timing_claim": false
+}
