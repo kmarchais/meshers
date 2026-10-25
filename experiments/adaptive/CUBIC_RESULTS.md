@@ -1,5 +1,36 @@
 # Reference-only cubic enrichment on G3
 
+## Lattice26 same-domain residual trial resolves a correction, 25 October 2026
+
+After three passing analytic controls, job 355 builds six global trial modes
+from shared cubic edge/face bubbles on the immutable current lattice26 mesh.
+All original Tet10 nodal functions and geometry maps remain available; this
+trial holds the original solved coefficients fixed and optimizes only six
+extra scalar mode amplitudes per load. It is not a new equilibrium solve,
+full cubic nodal discretization, native mesh candidate or workflow timing.
+The 411,670 support features and 7,410,060 fixed coefficient entries are
+reported explicitly. No new geometric nodes/tets are created or admitted.
+
+The largest fixed-domain energy gain is 0.117081127%, above the existing
+0.05% signal screen. Positive 64/125-point gain matrices differ by 8.564e-6
+relative, within the unchanged 1% gain-precision gate. The complete cubic
+trace check covers 494,776 shared/periodic face records, using the six exact
+P2 zeros and four complementary points; maximum jump is zero. About 60.18%
+of the largest-direction correction energy lies in the 7,548 curve-vertex
+incident cells, 6.10% of the mesh. This localizes this trial correction only.
+
+Worst disagreement remains 1.167137138% over all 24 unchanged models, failing
+1%. Worker time is 68.12 seconds at 1.091 GiB under the unchanged 8 GiB cap.
+The failed first control 352 exposed an installed Tet4 derivative-list type;
+its source is preserved, conversion is corrected, and controls 353–354 pass.
+See [hierarchical trial](../../handoff/macbook/lattice26-hierarchical-trial-20261025.json).
+Next check consistent 15-point coupling, actual reduced assembly and AMG
+setup feasibility before any fresh auxiliary response solve. Do not feed
+six dense global mode rows to AMG. No reference or native workflow is promoted;
+all four cases and all 24 models remain in scope.
+Earlier selected-next descriptions below are historical.
+
+
 ## Fresh lattice26 fields pass; all-model target still fails, 25 October 2026
 
 The unchanged recorded curved Tet10 recipe on native 7bad4a45 admits 189,180
