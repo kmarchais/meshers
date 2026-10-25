@@ -23,7 +23,7 @@ def positive_quality(coordinates):
 
 def refine(points, cells, surface, fields, *, periodic=True, minimum_quality=.1,
            maximum_nodes=250000, maximum_tets=250000, preferred_edges=None, element_scores=None,
-           preferred_only=False):
+           preferred_only=False, edge_scores=None):
     from fedoo.lib_elements.tetrahedron import Tet10
     from facet_incidence_audit import audit
 
@@ -56,6 +56,17 @@ def refine(points, cells, surface, fields, *, periodic=True, minimum_quality=.1,
     ordered = sorted(groups.values(), key=lambda group:
         (-int(priority[group].any()), -float(lengths[group].max()), group[0]))
     score_by_orbit = {}
+    if edge_scores is not None:
+        assert element_scores is None and not preferred and not preferred_only, "Use one measured ranking"
+        assert all(len(key) == 2 and key[0] < key[1] for key in edge_scores)
+        assert set(edge_scores) <= set(map(tuple, edges)), "Scored edges must exist"
+        assert all(np.isfinite(value) and value >= 0 for value in edge_scores.values())
+        for group in ordered:
+            cost = sum(2 + len(set(cells[[parent for parent, _ in incidence[edge]], :4].ravel())
+                - set(edges[edge])) for edge in group)
+            score_by_orbit[group[0]] = sum(edge_scores.get(tuple(edges[edge]), 0.) for edge in group) / cost
+        ordered.sort(key=lambda group: (-score_by_orbit[group[0]], -float(lengths[group].max()), group[0]))
+        ordered = [group for group in ordered if score_by_orbit[group[0]] > 0]
     if element_scores is not None:
         element_scores = np.asarray(element_scores)
         assert element_scores.shape == (len(cells),) and np.isfinite(element_scores).all() and (element_scores >= 0).all()
@@ -81,6 +92,10 @@ def refine(points, cells, surface, fields, *, periodic=True, minimum_quality=.1,
     if element_scores is not None:
         counts.update(selection="Measured element-score sum per added-node upper bound over complete periodic stars",
             input_element_score_sum=float(element_scores.sum()))
+    if edge_scores is not None:
+        counts.update(selection="Measured edge-residual score per added-node upper bound over complete periodic stars",
+            scored_physical_edges=len(edge_scores), positive_score_edge_orbits=len(ordered),
+            input_edge_score_sum=float(sum(edge_scores.values())))
     if preferred_only:
         counts.update(preferred_only=True, skipped_nonpreferred_edge_orbits=sum(not priority[group].any() for group in ordered))
         ordered = [group for group in ordered if priority[group].any()]

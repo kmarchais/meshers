@@ -109,6 +109,21 @@ def worker(args):
             "reference_promoted": False, "scope": "Audited fixed-domain FE refinement correction and unchanged empirical model comparisons; no continuum convergence inferred from one correction"})
 
 
+def verify_parent_inputs(prepared, parent):
+    """Accept either recorded preflight format, never conflicting or absent hashes."""
+    manifest = json.loads((prepared / "manifest.json").read_text())["inputs"]
+    analysis_path = prepared / "analysis-inputs.json"
+    analysis = json.loads(analysis_path.read_text()) if analysis_path.exists() else {}
+    for name in ("result.json", "mesh.npz", "fields.npz"):
+        path = parent / name
+        key = str(path)
+        if key in manifest and key in analysis:
+            assert manifest[key] == analysis[key], f"Conflicting parent provenance: {path}"
+        expected = manifest.get(key, analysis.get(key))
+        assert expected is not None, f"Missing parent provenance: {path}"
+        assert workflow.digest(path) == expected, f"Changed parent input: {path}"
+
+
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--run", required=True, type=Path)
@@ -122,9 +137,7 @@ def main():
     prepared = json.loads((args.prepared / "result.json").read_text())
     parent = Path(prepared["source"])
     assert prepared["status"] == "nested-preflight-passed" and prepared["qualified"]
-    manifest = json.loads((args.prepared / "manifest.json").read_text())
-    for name in ("result.json", "mesh.npz", "fields.npz"):
-        assert workflow.digest(parent / name) == manifest["inputs"][str(parent / name)]
+    verify_parent_inputs(args.prepared, parent)
     args.run.mkdir(parents=True, exist_ok=False)
     shutil.copyfile(__file__, args.run / "driver.py")
     shutil.copyfile(args.prepared / "mesh.npz", args.run / "mesh.npz")
@@ -133,6 +146,8 @@ def main():
         shutil.copyfile(path, args.run / path.name)
     paths = [args.prepared / name for name in ("result.json", "mesh.npz", "prolongation.npz", "manifest.json")]
     paths.extend(fixtures)
+    if (args.prepared / "analysis-inputs.json").exists():
+        paths.append(args.prepared / "analysis-inputs.json")
     paths.extend(parent / name for name in ("result.json", "mesh.npz", "fields.npz"))
     paths.extend(workflow.HERE / name for name in ("nested_solve.py", "stress_recovery.py", "amg_reference.py",
         "tet10_integration.py", "quadrature_audit.py", "microgen_workflow.py", "job_parts.py", "cubic_refinement.py",

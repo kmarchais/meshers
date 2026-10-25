@@ -1,5 +1,20 @@
 # Reference-only cubic enrichment on G3
 
+## Measured edge refinement improves lattice error but still fails, 25 October 2026
+
+Jobs 369–374 replay all 24 reference formulas, verify exact parent provenance,
+and evaluate one residual-ranked periodic edge-star Tet10 refinement on the
+unchanged current native domain. At 249,998 nodes / 163,802 tets, geometry,
+quality, periodicity and the 8 GiB resource limit pass. Six fresh loads and
+independent field/quadrature/Galerkin checks pass. Worst all-model disagreement
+improves from 1.283822914% to 1.216217882%, still failing 1%. No production
+default, native candidate, reference or timing victory is promoted. Do not
+repeat this h recipe automatically. See [edge residual investigation](EDGE_RESIDUAL_RESULTS.md).
+All four cases and all 24 models remain in scope. Earlier next-step descriptions
+below are historical; a separately reproduced physical-side gradient control
+must pass before any native evaluation change is retained.
+
+
 ## Fixed native and actual wall geometry inspected, 25 October 2026
 
 Three existing surface-projection controls pass in job 366, including exact

@@ -137,3 +137,26 @@ def test_preferred_only_preserves_remote_tet_despite_available_budget():
     np.testing.assert_array_equal(empty["tetrahedra"], cells)
     with pytest.raises(AssertionError, match="explicit edges"):
         refine(points, cells, surface, fields, periodic=False, preferred_only=True)
+
+
+def test_edge_residual_score_selects_its_edge_without_length_fallback():
+    workflow.imports()
+    from fedoo.lib_elements.tetrahedron import Tet10
+
+    points = Tet10().xi_nd.copy()
+    cells = np.arange(10)[None]
+    edge_nodes = {tuple(sorted(pair)):4+offset for offset,pair in enumerate(EDGES)}
+    surface = np.array([list(face)+[edge_nodes[tuple(sorted((face[a],face[b])))]
+        for a,b in ((0,1),(1,2),(2,0))] for face in FACES])
+    fields = np.random.default_rng(73).normal(size=(6,10,3))
+    result = refine(points,cells,surface,fields,periodic=False,edge_scores={(0,3):1.})
+    np.testing.assert_array_equal(result['parent_barycentric_maps'],child_maps(3))
+    assert result['diagnostics']['accepted_edge_orbits'] == 1
+    assert interpolation_check(points,cells,fields,result)['maximum_field_error'] < 1e-12
+    empty = refine(points,cells,surface,fields,periodic=False,edge_scores={})
+    np.testing.assert_array_equal(empty['tetrahedra'],cells)
+    for invalid in ({(0,99):1.},{(0,3):-1.},{(0,3):np.nan}):
+        with pytest.raises(AssertionError):
+            refine(points,cells,surface,fields,periodic=False,edge_scores=invalid)
+    with pytest.raises(AssertionError):
+        refine(points,cells,surface,fields,periodic=False,edge_scores={(0,3):1.},element_scores=[1.])
