@@ -3,10 +3,17 @@ use super::{Context, Options, ScalarField, finish};
 use crate::{Mesh, Point};
 use std::sync::atomic::AtomicBool;
 
-struct Wedge;
+struct Wedge {
+    notched: bool,
+}
 impl ScalarField for Wedge {
     fn value(&self, p: Point) -> f64 {
-        (p[0].abs() + 0.3 * p[2].abs() - 0.35).max(p[1].abs() - 0.2)
+        let base = (p[0].abs() + 0.3 * p[2].abs() - 0.35).max(p[1].abs() - 0.2);
+        if self.notched {
+            base.max((p[0] - 0.05).min(p[1] - 0.05))
+        } else {
+            base
+        }
     }
     fn gradient(&self, p: Point) -> Option<Point> {
         let sign = |v: f64| {
@@ -22,12 +29,29 @@ impl ScalarField for Wedge {
         let b = p[1].abs() - 0.2;
         let x = [sign(p[0]), 0., 0.3 * sign(p[2])];
         let y = [0., sign(p[1]), 0.];
-        Some(if a > b {
+        let base = if a > b {
             x
         } else if b > a {
             y
         } else {
             std::array::from_fn(|i| 0.5 * x[i] + 0.5 * y[i])
+        };
+        if !self.notched {
+            return Some(base);
+        }
+        let cut = if p[0] < p[1] {
+            [1., 0., 0.]
+        } else if p[1] < p[0] {
+            [0., 1., 0.]
+        } else {
+            [0.5, 0.5, 0.]
+        };
+        Some(if a.max(b) > (p[0] - 0.05).min(p[1] - 0.05) {
+            base
+        } else if a.max(b) < (p[0] - 0.05).min(p[1] - 0.05) {
+            cut
+        } else {
+            std::array::from_fn(|i| 0.5 * base[i] + 0.5 * cut[i])
         })
     }
 }
@@ -45,6 +69,12 @@ fn adapt_saved_wedge_seed() {
         .map(|p| p.map(f64::from_bits))
         .collect();
     let planes = crate::polyhedral::normalized(&raw_planes).unwrap();
+    let regions: Option<Vec<super::intersection::ConstraintMask>> = data
+        .get("region_masks")
+        .map(|value| serde_json::from_value(value.clone()).unwrap());
+    let field = Wedge {
+        notched: regions.is_some(),
+    };
     let mut mesh = Mesh {
         points: bits.into_iter().map(|p| p.map(f64::from_bits)).collect(),
         tets: serde_json::from_value(data["tetrahedra"].clone()).unwrap(),
@@ -76,15 +106,15 @@ fn adapt_saved_wedge_seed() {
     for x in [0., 0.23, 0.61, 1.] {
         for y in [0., 0.23, 0.61, 1.] {
             for z in [0., 0.23, 0.61, 1.] {
-                scale = scale.max(Wedge.value([x - 0.5, y - 0.5, z - 0.5]).abs());
+                scale = scale.max(field.value([x - 0.5, y - 0.5, z - 0.5]).abs());
             }
         }
     }
     let context = Context {
-        field: &Wedge,
+        field: &field,
         constraints: None,
         halfspaces: Some(&planes),
-        halfspace_regions: None,
+        halfspace_regions: regions.as_deref(),
         size_field: None,
         options,
         center: 0.,
@@ -114,14 +144,14 @@ fn adapt_saved_wedge_seed() {
     result["probe_value_bits"] = serde_json::to_value(
         probes
             .iter()
-            .map(|&p| Wedge.value(p).to_bits())
+            .map(|&p| field.value(p).to_bits())
             .collect::<Vec<_>>(),
     )
     .unwrap();
     result["probe_gradient_bits"] = serde_json::to_value(
         probes
             .iter()
-            .map(|&p| Wedge.gradient(p).unwrap().map(f64::to_bits))
+            .map(|&p| field.gradient(p).unwrap().map(f64::to_bits))
             .collect::<Vec<_>>(),
     )
     .unwrap();

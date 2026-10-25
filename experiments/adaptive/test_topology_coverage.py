@@ -137,3 +137,24 @@ def test_rotated_periodic_wedge_preserves_volume_caps_and_physical_domain():
     opposite = probes.copy(); opposite[:, 2] = .5
     np.testing.assert_array_equal(field(*((probes-translation)@rotation).T),
         field(*((opposite-translation)@rotation).T))
+
+
+def test_periodic_notched_wedge_has_exact_volume_caps_and_reentrant_boundary():
+    from topology_coverage import audit_column_periodicity, periodic_notched_wedge
+
+    p, f = periodic_notched_wedge(np)
+    field, queries, volume, components, euler = fixture('periodic-notched-wedge', np)
+    assert abs(np.maximum(field(*queries.T), np.max(abs(queries), axis=1)-.5)).max() < 3e-16
+    triangles = p[f]
+    actual = np.einsum('ij,ij->i', triangles[:, 0], np.cross(triangles[:, 1], triangles[:, 2])).sum()/6
+    assert abs(volume-(.22-.15*(.275-.05))) < 1e-15
+    assert abs(actual-volume) < 1e-15
+    assert boundary_topology(f, np) == (components, euler) == (1, 2)
+    edges = np.sort(f[:, ((0,1),(1,2),(2,0))].reshape(-1,2), axis=1)
+    assert np.all(np.unique(edges, axis=0, return_counts=True)[1] == 2)
+    periodic = audit_column_periodicity(p, f, np)
+    assert periodic['pair_count'] == 6 and periodic['cap_count'] == 4
+    assert field(.1,.1,0.) > 0 and field(.0,.1,0.) < 0 and field(.1,.0,0.) < 0
+    low = np.random.default_rng(42).uniform(-.5,.5,(1024,3)); low[:,2] = -.5
+    high = low.copy(); high[:,2] = .5
+    np.testing.assert_array_equal(field(*low.T), field(*high.T))

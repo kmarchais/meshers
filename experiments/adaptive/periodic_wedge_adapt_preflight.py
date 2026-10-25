@@ -13,25 +13,30 @@ import microgen_workflow as w
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('--run', type=Path, required=True)
+    parser.add_argument('--case', choices=('periodic-wedge', 'periodic-notched-wedge'), default='periodic-wedge')
     args = parser.parse_args()
     assert args.run.is_dir() and not (args.run/'result.json').exists()
     np, _, meshers, _, _, scorecard = w.imports()
     from facet_incidence_audit import audit
-    from topology_coverage import audit_column_periodicity, boundary_topology, fixture, periodic_wedge
-    parent = w.HERE/'runs/macbook-periodic-wedge-physical-seed-construction-v1'
+    from topology_coverage import audit_column_periodicity, boundary_topology, fixture, periodic_wedge, periodic_notched_wedge
+    parent = w.HERE/'runs'/('macbook-periodic-notched-wedge-physical-seed-v1'
+        if args.case == 'periodic-notched-wedge' else 'macbook-periodic-wedge-physical-seed-construction-v1')
     source = json.loads((parent/'result.json').read_text())
     assert not source['qualified'] and source['end_correspondence']['caps_match']
     assert w.digest(parent/'mesh.npz') == source['mesh_sha256']
     seed = np.load(parent/'mesh.npz')
     p, t, f, planes = (seed[key] for key in ('points', 'tetrahedra', 'surface', 'planes'))
-    function, queries, exact_volume, components, euler = fixture('periodic-wedge', np)
+    function, queries, exact_volume, components, euler = fixture(args.case, np)
     field = meshers.compile_field(function)
     probes = np.vstack((np.random.default_rng(42).uniform(-.5, .5, (1024, 3)),
         ((.35, .2, 0.), (.2, .2, -.5), (.2, .2, .5), (0., 0., 0.))))
     input_path = args.run.resolve()/'seed-bits.json'
     output_path = args.run.resolve()/'adapted-bits.json'
-    w.save(input_path, dict(point_bits=p.view(np.uint64).tolist(), tetrahedra=t.tolist(),
-        surface=f.tolist(), plane_bits=planes.view(np.uint64).tolist(), probe_bits=probes.view(np.uint64).tolist()))
+    encoded_input = dict(point_bits=p.view(np.uint64).tolist(), tetrahedra=t.tolist(),
+        surface=f.tolist(), plane_bits=planes.view(np.uint64).tolist(), probe_bits=probes.view(np.uint64).tolist())
+    if args.case == 'periodic-notched-wedge':
+        encoded_input['region_masks'] = source['region_masks']
+    w.save(input_path, encoded_input)
     encoded = json.loads(input_path.read_text())
     np.testing.assert_array_equal(np.asarray(encoded['point_bits'], dtype=np.uint64).view(np.float64), p)
     command = ['cargo', '+1.95.0', 'test', '--release', '--locked', '-p', 'meshers-core',
@@ -64,7 +69,7 @@ def main():
     assert len(p) <= 250000 and len(t) <= 250000 and len(np.unique(t)) == len(p)
     facets = audit(p, t, f)
     quality, _, volumes = scorecard.tet_metrics(p, t)
-    target, target_faces = periodic_wedge(np)
+    target, target_faces = (periodic_notched_wedge(np) if args.case == 'periodic-notched-wedge' else periodic_wedge(np))
     samples = np.einsum('sn,fnd->fsd', scorecard.BARY, p[f]).reshape(-1, 3)
     forward = float(scorecard.distance_to_mesh(target, target_faces, samples).max())
     reverse = float(scorecard.distance_to_mesh(p, f, queries).max())
@@ -80,7 +85,7 @@ def main():
         and facets['oriented_facet_consistency_passed'] and max(forward, reverse) <= .002
         and abs(volume_error) <= .01 and periodic is not None and topology == (components, euler))
     np.savez_compressed(args.run/'mesh.npz', points=p, tetrahedra=t, surface=f)
-    w.save(args.run/'result.json', dict(case='periodic-wedge', qualified=False,
+    w.save(args.run/'result.json', dict(case=args.case, qualified=False,
         fixed_seed_private_core_research=True, parent=str(parent), native_finish_admitted=raw['native_finish_admitted'],
         native_finish_error=raw.get('native_finish_error'), external_geometry_admitted=geometry_admitted,
         nodes=len(p), elements=len(t), minimum_quality=float(quality.min()), minimum_jacobian=float(6*volumes.min()),

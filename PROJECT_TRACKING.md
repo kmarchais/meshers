@@ -1,5 +1,23 @@
 # Meshers project tracking
 
+## Re-entrant periodic failure has a controlled private recovery, 25 October 2026
+
+The new auxiliary notched prism fails the public scalar recipe 328 at error
+0.0106363 against 0.002. Its fixed volume is 0.18625 and its compiled graph has
+eight planes / two region masks. Manufactured 329 proves feasibility at qmin
+0.111168. Physical seed 330 has 54,534 tets / 12,264 nodes and exact geometry,
+160 matching end nodes and 252 cap triangles per end, but qmin 0.0062124 and
+is explicitly unqualified. Private coupled adaptation 331 of the exact seed
+bits passes native final and independent geometry gates at 3,896 tets / 898
+nodes, qmin 0.301405, roundoff distance/volume and 54 paired nodes / 82 matching
+cap triangles. Independent investigation replay 332 passes. This does not
+recover the public route or promote a reference. Native 02d1c618 and all four
+fixed study meshes are unchanged. See [periodic region results](experiments/adaptive/PERIODIC_REGION_RESULTS.md).
+Next certify complete region end traces before considering public dispatch.
+All four study cases and all 24 lattice tensors remain in scope.
+Earlier selected-next descriptions below are historical.
+
+
 ## Periodic prism orientation control passed, 25 October 2026
 
 Job 326 admits the recovered prism rotated 0.37 radians about z and translated

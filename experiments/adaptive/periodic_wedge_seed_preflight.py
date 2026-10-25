@@ -11,12 +11,13 @@ def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('--run', type=Path, required=True)
     parser.add_argument('--construction-only', action='store_true')
+    parser.add_argument('--case', choices=('periodic-wedge', 'periodic-notched-wedge'), default='periodic-wedge')
     args = parser.parse_args()
     assert args.run.is_dir() and not (args.run/'result.json').exists()
     np, _, meshers, _, _, scorecard = w.imports()
     import meshers._meshers
     from facet_incidence_audit import audit
-    from topology_coverage import fixture, periodic_wedge
+    from topology_coverage import fixture, periodic_wedge, periodic_notched_wedge
     paths = [Path(__file__), Path(w.__file__), Path(meshers.__file__),
         Path(meshers.expression.__file__), Path(meshers.intersection.__file__),
         Path(meshers._meshers.__file__), Path(scorecard.__file__),
@@ -34,23 +35,32 @@ def main():
             minimum_quality=.1, positive_jacobians=True, coherent_facets=True,
             matching_periodic_nodes_and_caps=True, maximum_nodes=250000, maximum_tetrahedra=250000),
         scope='Diagnostic nonperiodic retained-plane seed, generation quality floor0 to expose the actual seed; no periodic candidate is admitted'))
-    function, queries, exact_volume, _, _ = fixture('periodic-wedge', np)
+    function, queries, exact_volume, _, _ = fixture(args.case, np)
     field = meshers.compile_field(function)
-    planes = np.asarray(field._halfspaces)
-    assert planes.shape == (6, 4)
+    regions = None
+    if args.case == 'periodic-notched-wedge':
+        raw_planes, regions = field._polyhedral_regions
+    else:
+        raw_planes = field._halfspaces
+    planes = np.asarray(raw_planes)
+    assert planes.shape == (8 if regions else 6, 4)
     probes = np.random.default_rng(42).uniform(-.5, .5, (1024, 3))
-    np.testing.assert_allclose(np.max(probes@planes[:, :3].T+planes[:, 3], axis=1),
-        field.values(probes), atol=3e-16)
+    values = probes@planes[:, :3].T+planes[:, 3]
+    reproduced = (np.min([values[:, [i for i in range(len(planes)) if mask & (1 << i)]].max(axis=1)
+        for mask in regions], axis=0) if regions else values.max(axis=1))
+    np.testing.assert_allclose(reproduced, field.values(probes), atol=3e-16)
     mesh = meshers.generate(field, **options)
-    assert mesh.diagnostics['polyhedral_constraints'] == 6
+    assert mesh.diagnostics['polyhedral_constraints'] == len(planes)
+    if regions:
+        assert mesh.diagnostics['polyhedral_regions'] == len(regions)
     p, t, f, masks = mesh.points, mesh.tetrahedra, mesh.surface, mesh.constraint_masks
-    assert masks is not None and len(p) <= 250000 and len(t) <= 250000
+    assert len(p) <= 250000 and len(t) <= 250000
     assert all(len(pair) == 0 for pair in mesh.periodic_pairs)
     facets = audit(p, t, f)
     quality, _, volumes = scorecard.tet_metrics(p, t)
     assert facets['oriented_facet_consistency_passed'] and volumes.min() > 0
     assert len(np.unique(t)) == len(p)
-    target, target_faces = periodic_wedge(np)
+    target, target_faces = (periodic_notched_wedge(np) if regions else periodic_wedge(np))
     samples = np.einsum('sn,fnd->fsd', scorecard.BARY, p[f]).reshape(-1, 3)
     forward = float(scorecard.distance_to_mesh(target, target_faces, samples).max())
     reverse = float(scorecard.distance_to_mesh(p, f, queries).max())
@@ -78,14 +88,20 @@ def main():
         correspondence.update(caps_match=bool(a) and a == b,
             low_only_caps=len(a-b), high_only_caps=len(b-a),
             maximum_coordinate_error=float(abs(p[high]-p[paired]-(0, 0, 1)).max()),
-            raw_mask_mismatch_count=int(np.sum(masks[high] != masks[paired])))
-        if unique_permutation:
+            raw_mask_mismatch_count=(int(np.sum(masks[high] != masks[paired])) if masks is not None else None))
+        if unique_permutation and masks is not None:
             converted = np.array([sum(1 << j for i, j in enumerate(permutation) if int(mask) & (1 << i)) for mask in masks[paired]], dtype=np.uint64)
             correspondence['permuted_mask_mismatch_count'] = int(np.sum(converted != masks[high]))
+    if unique_permutation and regions:
+        mapped_regions = [sum(1 << j for i,j in enumerate(permutation) if mask & (1 << i)) for mask in regions]
+        correspondence.update(permuted_region_masks=mapped_regions,
+            region_trace_set_matches=sorted(mapped_regions) == sorted(regions),
+            exact_plane_trace_match=bool(np.array_equal(signatures[0], signatures[1][permutation])))
     np.savez_compressed(args.run/'mesh.npz', points=p, tetrahedra=t, surface=f,
-        constraint_masks=masks, planes=planes)
+        constraint_masks=masks if masks is not None else np.empty(0, dtype=np.uint64), planes=planes)
     np.savez_compressed(args.run/'reference.npz', points=queries)
-    w.save(args.run/'result.json', dict(case='periodic-wedge', qualified=False,
+    w.save(args.run/'result.json', dict(case=args.case, qualified=False,
+        region_masks=regions, constraint_masks_available=masks is not None,
         diagnostic_nonperiodic_seed=True, native_periodic_request=False, no_fe_solve=True,
         reference_promoted=False, comparative_timing_claim=False, options=options,
         nodes=len(p), elements=len(t), minimum_quality=float(quality.min()),
@@ -94,7 +110,7 @@ def main():
         end_correspondence=correspondence, low_to_high_plane_trace_permutation=permutation,
         unique_trace_permutation=unique_permutation, trace_signature_tolerance=1e-13,
         mesh_sha256=w.digest(args.run/'mesh.npz'), reference_sha256=w.digest(args.run/'reference.npz'),
-        scope='Physical six-plane seed with generator periodicity off; independently inspect end geometry and labels before designing a periodic native change; never a periodic admission'))
+        scope='Physical affine seed with generator periodicity off; independently inspect end geometry and labels before designing a periodic native change; never a periodic admission'))
     assert all(w.digest(Path(p)) == h for p, h in hashes.items())
     print(f'Physical seed: {len(t)} tets, qmin {quality.min():.6f}, end nodes match {nodes_match}, caps match {correspondence.get("caps_match")}; no periodic candidate admitted', flush=True)
 
