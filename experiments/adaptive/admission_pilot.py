@@ -4,6 +4,7 @@ import argparse
 import importlib.metadata
 import json
 import os
+import platform
 from pathlib import Path
 import shutil
 import sys
@@ -15,7 +16,7 @@ from job_parts import worker_part
 
 os.environ.update(OPENBLAS_NUM_THREADS="1", OMP_NUM_THREADS="1", MKL_NUM_THREADS="1", RAYON_NUM_THREADS="1")
 os.environ.update(CARGO_BUILD_JOBS="2", RUSTUP_TOOLCHAIN="1.95.0",
-    VIRTUAL_ENV=str(workflow.ROOT / ".venv"),
+    VIRTUAL_ENV=str(Path(sys.executable).parent.parent),
     PATH=str(Path.home() / ".cargo/bin") + os.pathsep + os.environ["PATH"])
 sys.path.insert(0, str(Path.home() / "bin"))
 from pueue_progress import Job
@@ -138,6 +139,8 @@ def worker(args):
                    elements=len(mesh.tetrahedra), diagnostics=mesh.diagnostics)
         np.savez_compressed(args.run / "mesh.npz", points=mesh.points,
                             tetrahedra=mesh.tetrahedra, surface=mesh.surface)
+        if len(mesh.points) > workflow.CAP or len(mesh.tetrahedra) > workflow.CAP:
+            raise ValueError("Mesh node/tetrahedron admission cap exceeded")
         row["geometry"] = workflow.geometry(args.run, args.case, mesh.points, mesh.tetrahedra, mesh.surface)
         _, _, row["periodic"] = periodic_pairs(mesh.points, mesh.surface)
         row["qualified"] = row["geometry"]["geometry_admitted"]
@@ -234,6 +237,12 @@ def main():
     import meshers._meshers
     workflow.save(args.run / "manifest.json", {"script_sha256": workflow.digest(Path(__file__)),
         "native_sha256": workflow.digest(Path(meshers._meshers.__file__)), "inputs": hashes,
+        "platform": platform.platform(), "architecture": platform.machine(),
+        "python": sys.version, "executable": sys.executable,
+        "virtual_env": os.environ["VIRTUAL_ENV"],
+        "numerical_thread_policy": workflow.NUMERICAL_THREAD_POLICY,
+        "packages": {name: importlib.metadata.version(name) for name in
+            ("meshers", "numpy", "scipy", "fedoo", "microgen", "mmgpy", "pyamg", "pyvista", "vtk")},
         "memory_bytes": workflow.MEMORY, "threads": 1, "timeout_s": args.worker_timeout,
         "python_source_sha256": source_hashes,
         "solver": "cached-elastic-block-amg-cg" if args.amg else "jacobi-cg",
@@ -244,7 +253,7 @@ def main():
     with Job(parts=parts) as job:
         if args.build:
             commands = [
-                ("build", [str(workflow.ROOT / ".venv/bin/maturin"), "develop", "--release", "--locked",
+                ("build", [str(Path(sys.executable).with_name("maturin")), "develop", "--release", "--locked",
                     "--manifest-path", str(workflow.ROOT / "crates/meshers-python/Cargo.toml"),
                     "--features", "experimental-surfaces"]),
                 ("core-tests", ["cargo", "test", "--release", "--locked", "-p", "meshers-core", "--lib",
@@ -293,7 +302,13 @@ def main():
             assert result["returncode"] == 0, "Read worker.log"
             row = json.loads((args.run / "result.json").read_text())
             job.result("adaptive-admission", qualified=int(row["qualified"]),
-                       nodes=row.get("nodes", 0), seconds=row["total_audit_workflow_s"])
+                       nodes=row.get("nodes", 0), seconds=row["total_audit_workflow_s"],
+                       completed_loads=row.get("completed_loads", 0))
+            assert row["qualified"], "Read result.json: geometry admission failed"
+            if args.solve:
+                assert (row["status"] == "solved-needs-reference"
+                    and row.get("completed_loads") == 6 and (args.run / "fields.npz").exists()), \
+                    "Read result.json: six fresh loads did not complete"
     assert all(workflow.digest(Path(path)) == value for path, value in hashes.items())
     assert all(workflow.digest(Path(path)) == value for path, value in source_hashes.items())
     manifest = json.loads((args.run / "manifest.json").read_text())

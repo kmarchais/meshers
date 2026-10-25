@@ -1,5 +1,37 @@
 # Reference-only cubic enrichment on G3
 
+## Fresh lattice26 fields pass; all-model target still fails, 25 October 2026
+
+The unchanged recorded curved Tet10 recipe on native 7bad4a45 admits 189,180
+nodes / 123,694 tets, versus 199,972 / 128,300 historically. Minimum corner
+quality rises from 0.149329 to 0.207354 and q_p01 from 0.293528 to 0.522231.
+Sampled distance is slightly worse, 0.000343162 versus 0.000323640, within
+0.002. Volume error is also nominally slightly worse; all original geometry,
+positive Jacobian, facet and periodic gates pass. No all-metric win follows.
+
+Fresh Mac workflow 348 completes all six AMG loads in 151.245 seconds including
+generation/workflow checks, at 5.380 GiB RSS under the unchanged 8 GiB cap.
+Independent audit 349 passes reactions, energy and periodic jumps; positive
+125-point fixed-field reintegration shifts worst mixed-load energy by only
+4.10e-8, below 1e-4. Assessment 351 preserves all 24 model tensors and reports
+worst disagreement 1.283822914%, versus previous 1.268698522%. The 1% target
+still fails. No reference is promoted, and no comparative timing ratio is
+claimed. The existing admitted modified actual lattice route remains a case
+where Meshers is behind on the retained-model target.
+
+Assessment 350's raw-label identity requirement failed on numbering alone.
+Its source/failure is preserved; 351 proves exact coordinates and all local
+Tet10/Tri6 associations after node/whole-row canonicalization, without sorting
+local shape nodes or changing any scientific gate. The pilot now uses the
+active venv, records actual host/dependency/thread metadata, enforces both
+250,000-node/tet caps and fails the queue stage on incomplete requested loads.
+See [current lattice assessment](../../handoff/macbook/lattice26-current-native-assessment-20261025.json).
+Next use these fully audited fields for one same-domain hierarchical residual
+trial, with no sizing sweep, geometry change, new reference or native workflow
+claim. Keep all four cases and all 24 models in scope; the full goal is open.
+Earlier selected-next descriptions below are historical.
+
+
 ## Complete parent25 correction localization, 24 October 2026
 
 Saved-field job96 passes in157.422seconds at0.7823GiB, without another solve.
