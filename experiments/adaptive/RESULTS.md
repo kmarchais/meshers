@@ -1,5 +1,48 @@
 # Adaptive and quadratic implicit meshing: results
 
+## Complete hierarchical fields audited; lattice target still fails, 25 October 2026
+
+Six fresh zero-macro auxiliary responses finish in job 361, using the exact
+current lattice26 sparse parent operator. The 6x6 Schur correction preserves
+the curved geometry, all original Tet10 functions and the 189,180 nodes /
+123,694 tets. Its six extra scalar mode amplitudes do not turn it into a native
+Tet10 mesh workflow. Nodal displacements alone omit its analytic cubic bubbles.
+Worker time is 123.82 seconds at 5.148 GiB under the unchanged 8 GiB watchdog.
+
+Independent job 362 reconstructs the complete fields with positive 15, 64 and
+125 point integration and freshly assembles all coarse equilibrium rows.
+The operator SHA reproduces exactly. Maximum coarse residual is 2.057e-10,
+auxiliary residual 1.775e-11, modal residual 6.730e-13 and reaction/energy
+relative difference 3.650e-12. Galerkin correction-energy balance differs by
+2.169e-11 relative. Positive 125-point fixed-field energy differs from the
+solved tensor by at most 1.185e-7 across mixed loads. Complete cubic traces
+and zero-macro response periodic jumps pass. Audit takes 58.66 seconds at
+4.820 GiB. No additional equilibrium solve occurs during the audit.
+
+The largest stiffness correction is 0.147582534%. Worst disagreement across
+all 24 unchanged models drops from 1.283822914% for the native parent to
+1.136813109% for the enriched field. This still fails 1%. No reference,
+native candidate or comparative timing claim is promoted. The admitted
+modified actual Microgen route remains ahead on this lattice accuracy gate.
+
+Saved-array replay 363 checks local positive semidefiniteness, global gain
+balance and rule agreement. Curve-vertex incident cells carry 54.81% of the
+largest-direction correction in 6.10% of cells, down from the unrelaxed trial's
+60.18%. Wall cells without curve vertices carry 25.43%; cells touching neither
+wall nor cap carry 17.32%. Groups overlap. This maps the resolved correction,
+not the remaining error, and does not justify another curve-only sizing sweep
+or copying scores to a different domain. Before another native allocation
+change, distinguish unresolved approximation error from geometric error with
+a same-domain residual check of these complete equilibrated fields.
+
+See [complete-field audit](../../handoff/macbook/lattice26-hierarchical-coupled-audit-20261025.json) and
+[localization replay](../../handoff/macbook/lattice26-hierarchical-localization-20261025.json). Schwarz's repeatable modified-actual-route
+wins stand. Gyroid and spinodoid still lack admitted actual comparators in
+tested routes. All four specimens, all 24 lattice models, fixed geometry,
+quality, periodic gates and 250,000-node/tet caps remain in scope.
+Earlier selected-next descriptions below are historical.
+
+
 ## Current-domain hierarchical coupling preflight passes, 25 October 2026
 
 Eight virtual-work/force-balance/Schur controls pass. Job 359 then verifies

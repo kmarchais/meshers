@@ -1,0 +1,264 @@
+{
+  "status": "coupled-solved-needs-independent-audit",
+  "source": "experiments/adaptive/runs/macbook-lattice26-current-native-amg-v1",
+  "trial": "experiments/adaptive/runs/macbook-lattice26-hierarchical-residual-v1",
+  "preflight": "experiments/adaptive/runs/macbook-lattice26-hierarchical-coupled-preflight-v3",
+  "geometry_unchanged": true,
+  "old_approximation_space_preserved": true,
+  "physical_nodes": 189180,
+  "physical_tets": 123694,
+  "extra_scalar_mode_unknowns": 6,
+  "reduced_parent_unknowns": 545136,
+  "augmented_unknowns": 545142,
+  "fresh_auxiliary_responses": 6,
+  "saved_parent_reduced_residuals": [
+    1.7810115955353183e-10,
+    1.8585360387966267e-10,
+    2.0599867831685255e-10,
+    7.356698970049378e-11,
+    8.455837467870239e-11,
+    8.080477653624416e-11
+  ],
+  "solver_records": [
+    {
+      "iterations": 92,
+      "relative_residual": 1.020892806770954e-11,
+      "free_dofs": 545136,
+      "seconds": 22.87075783300679,
+      "hierarchy_setup_s": 3.08067266701255,
+      "hierarchy_reused": false,
+      "node_reordering_s": 0.2084495829185471,
+      "elastic_blocks": true,
+      "verified_symmetry_reused": false,
+      "levels": 4,
+      "operator_complexity": 1.0594977347908108,
+      "reduced_matrix_sha256": "cfe6354195a0fc432135b6b3ab5269e8fb48f35c3a37b0710797f008f43a9d49"
+    },
+    {
+      "iterations": 93,
+      "relative_residual": 7.607421473550851e-12,
+      "free_dofs": 545136,
+      "seconds": 19.11724958301056,
+      "hierarchy_setup_s": 0.0,
+      "hierarchy_reused": true,
+      "node_reordering_s": 0.0,
+      "elastic_blocks": true,
+      "verified_symmetry_reused": true,
+      "levels": 4,
+      "operator_complexity": 1.0594977347908108,
+      "reduced_matrix_sha256": "cfe6354195a0fc432135b6b3ab5269e8fb48f35c3a37b0710797f008f43a9d49"
+    },
+    {
+      "iterations": 93,
+      "relative_residual": 8.667590086085422e-12,
+      "free_dofs": 545136,
+      "seconds": 19.378129917080514,
+      "hierarchy_setup_s": 0.0,
+      "hierarchy_reused": true,
+      "node_reordering_s": 0.0,
+      "elastic_blocks": true,
+      "verified_symmetry_reused": true,
+      "levels": 4,
+      "operator_complexity": 1.0594977347908108,
+      "reduced_matrix_sha256": "cfe6354195a0fc432135b6b3ab5269e8fb48f35c3a37b0710797f008f43a9d49"
+    },
+    {
+      "iterations": 87,
+      "relative_residual": 1.775049681885154e-11,
+      "free_dofs": 545136,
+      "seconds": 18.217669915989973,
+      "hierarchy_setup_s": 0.0,
+      "hierarchy_reused": true,
+      "node_reordering_s": 0.0,
+      "elastic_blocks": true,
+      "verified_symmetry_reused": true,
+      "levels": 4,
+      "operator_complexity": 1.0594977347908108,
+      "reduced_matrix_sha256": "cfe6354195a0fc432135b6b3ab5269e8fb48f35c3a37b0710797f008f43a9d49"
+    },
+    {
+      "iterations": 86,
+      "relative_residual": 1.4244538348448287e-11,
+      "free_dofs": 545136,
+      "seconds": 18.12709954206366,
+      "hierarchy_setup_s": 0.0,
+      "hierarchy_reused": true,
+      "node_reordering_s": 0.0,
+      "elastic_blocks": true,
+      "verified_symmetry_reused": true,
+      "levels": 4,
+      "operator_complexity": 1.0594977347908108,
+      "reduced_matrix_sha256": "cfe6354195a0fc432135b6b3ab5269e8fb48f35c3a37b0710797f008f43a9d49"
+    },
+    {
+      "iterations": 81,
+      "relative_residual": 1.5876139740392252e-11,
+      "free_dofs": 545136,
+      "seconds": 17.05626420909539,
+      "hierarchy_setup_s": 0.0,
+      "hierarchy_reused": true,
+      "node_reordering_s": 0.0,
+      "elastic_blocks": true,
+      "verified_symmetry_reused": true,
+      "levels": 4,
+      "operator_complexity": 1.0594977347908108,
+      "reduced_matrix_sha256": "cfe6354195a0fc432135b6b3ab5269e8fb48f35c3a37b0710797f008f43a9d49"
+    }
+  ],
+  "predicted_energy_tensor": [
+    [
+      0.1385860450396709,
+      0.10655492623960777,
+      0.106557685921925,
+      1.0394349824317542e-05,
+      8.580346676584857e-06,
+      3.1275534547191185e-06
+    ],
+    [
+      0.10655492623960774,
+      0.13860456821565073,
+      0.10656592109214691,
+      1.3467505545039738e-05,
+      4.693173614820405e-06,
+      6.895367915812437e-06
+    ],
+    [
+      0.10655768592192501,
+      0.10656592109214696,
+      0.13861250513223172,
+      5.572753888506074e-06,
+      1.306155209566657e-05,
+      8.590029825566112e-06
+    ],
+    [
+      1.0394349824317582e-05,
+      1.3467505545039862e-05,
+      5.5727538885052525e-06,
+      0.10313188575706632,
+      4.578592689512715e-06,
+      5.982583102938219e-06
+    ],
+    [
+      8.580346676586566e-06,
+      4.6931736148201935e-06,
+      1.3061552095666899e-05,
+      4.578592689511885e-06,
+      0.10313530075756966,
+      6.876998198954951e-06
+    ],
+    [
+      3.1275534547158033e-06,
+      6.895367915816659e-06,
+      8.590029825570113e-06,
+      5.982583102937762e-06,
+      6.876998198954547e-06,
+      0.10314736821860551
+    ]
+  ],
+  "energy_gain_tensor": [
+    [
+      7.960554063384098e-05,
+      3.275112258580538e-05,
+      3.27319977637212e-05,
+      -7.166137309775088e-08,
+      -3.072634068569264e-08,
+      3.0942826925959985e-08
+    ],
+    [
+      3.2751122585805377e-05,
+      7.946656046172812e-05,
+      3.2181936752680066e-05,
+      -1.6410714992123318e-07,
+      -1.7813251983189864e-07,
+      5.2632077183641626e-08
+    ],
+    [
+      3.2731997763721195e-05,
+      3.218193675268007e-05,
+      7.960825910200397e-05,
+      -1.984828407583858e-07,
+      -2.2944827717081005e-07,
+      5.5759143310857617e-08
+    ],
+    [
+      -7.166137309775088e-08,
+      -1.6410714992123315e-07,
+      -1.984828407583858e-07,
+      2.083924591846974e-05,
+      1.3638641570510991e-07,
+      -4.3710517095712435e-08
+    ],
+    [
+      -3.072634068569264e-08,
+      -1.7813251983189864e-07,
+      -2.2944827717081007e-07,
+      1.3638641570510994e-07,
+      2.0799022690367623e-05,
+      -1.1101631785586985e-07
+    ],
+    [
+      3.094282692595996e-08,
+      5.263207718364162e-08,
+      5.5759143310857617e-08,
+      -4.371051709571245e-08,
+      -1.1101631785586986e-07,
+      2.0496743210325752e-05
+    ]
+  ],
+  "maximum_relative_gain": 0.001475825342404093,
+  "schur_eigenvalues": [
+    1.764994337924567e-05,
+    1.796506506392269e-05,
+    1.8229446116952347e-05,
+    4.2662956244127426e-05,
+    4.2868027614816484e-05,
+    0.00013105266391981533
+  ],
+  "modal_relative_residual": 5.829610746631962e-13,
+  "zero_macro_response_jump_max": 0.0,
+  "response_pin_max": 0.0,
+  "periodic": {
+    "periodic_pair_counts": [
+      2426,
+      2548,
+      2564
+    ],
+    "periodic_coordinate_errors": [
+      0.0,
+      0.0,
+      0.0
+    ],
+    "periodic_pair_tolerance": 1e-10,
+    "periodic_equivalence_classes": 181713,
+    "periodic_triangles_match": true
+  },
+  "auxiliary_solve_s": 116.03808933391701,
+  "field_archive_sha256": "f906bce99df221edcc2a66c7e3310f9ca316911098c926c8df7e1be82c62fe19",
+  "field_representation": "Immutable parent Tet10 fields plus (analytic cubic bubbles minus quadratic responses) times a 6x6 coefficient matrix; nodal values alone omit the bubble field",
+  "reference_promoted": false,
+  "native_candidate_promoted": false,
+  "comparative_timing_claim": false,
+  "scope": "Coupled same-domain six-mode equilibrium awaiting independent complete-field and positive-rule audits; not native workflow timing or continuum/local stress certification",
+  "worker": {
+    "returncode": 0,
+    "limit_failure": null,
+    "peak_rss_bytes": 5527764992,
+    "wall_s": 123.82474595797248,
+    "memory_bytes": 8589934592,
+    "memory_enforcement": "process-tree-rss-watchdog",
+    "rss_poll_interval_s": 0.25,
+    "platform": "darwin",
+    "numerical_thread_policy": {
+      "environment": {
+        "OPENBLAS_NUM_THREADS": "1",
+        "OMP_NUM_THREADS": "1",
+        "MKL_NUM_THREADS": "1",
+        "VECLIB_MAXIMUM_THREADS": "1",
+        "RAYON_NUM_THREADS": "1"
+      },
+      "accelerate_blas_threading": 1,
+      "accelerate_scope": "calling thread"
+    }
+  },
+  "run": "experiments/adaptive/runs/macbook-lattice26-hierarchical-coupled-solve-v1"
+}

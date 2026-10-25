@@ -93,7 +93,8 @@ def build_modes(points, cells, fields, space, quadrature, batch=1024):
         residual_maximum=float(abs(residual).max()), diagonal_minimum_eigenvalue=float(np.linalg.eigvalsh(diagonal).min()))
 
 
-def integrate(points, cells, fields, space, coefficients, quadrature, batch=1024, *, return_coupling=False):
+def integrate(points, cells, fields, space, coefficients, quadrature, batch=1024, *,
+              return_coupling=False, responses=None, return_stress=False):
     from fedoo.lib_elements.tetrahedron import Tet10
 
     locations, weights = quadrature
@@ -102,10 +103,13 @@ def integrate(points, cells, fields, space, coefficients, quadrature, batch=1024
     energy = np.zeros((12, 12))
     local_modes = np.zeros((len(cells), 6, 6))
     coupling = np.zeros((3*len(points), 6)) if return_coupling else None
+    mean_stress = np.zeros((6,12)) if return_stress else None
+    assert responses is None or responses.shape == fields.shape
     minimum, volume = np.inf, 0.
     for start in range(0, len(cells), batch):
         subset = slice(start, min(start+batch, len(cells)))
         geometry, old = points[cells[subset]], fields[:, cells[subset]]
+        response_values = None if responses is None else responses[:, cells[subset]]
         c = coefficients[space['ids'][subset]]
         signs = space['signs'][subset]
         for d, db, weight in zip(derivatives, bubbles, weights, strict=True):
@@ -118,10 +122,15 @@ def integrate(points, cells, fields, space, coefficients, quadrature, batch=1024
             bubble_grad = np.einsum('tba,ak->tkb', inverse, db)*signs[:, :, None]
             parent_gradient = np.einsum('ltni,tjn->ltij', old, grad)
             mode_gradient = np.einsum('tkcm,tkj->mtcj', c, bubble_grad, optimize=True)
+            if response_values is not None:
+                mode_gradient -= np.einsum('ltni,tjn->ltij', response_values, grad)
             strain, sigma = stress(np.concatenate((parent_gradient, mode_gradient)))
             weighted = weight*determinant
             energy += np.einsum('t,itkl,jtkl->ij', weighted, strain, sigma, optimize=True)
             local_modes[subset] += np.einsum('t,itkl,jtkl->tij', weighted, strain[6:], sigma[6:], optimize=True)
+            if mean_stress is not None:
+                mean = np.einsum('t,ltij->lij', weighted, sigma)
+                mean_stress += mean[:, [0,1,2,0,0,1], [0,1,2,1,2,2]].T
             if coupling is not None:
                 force = np.einsum('t,tin,ktji->tnjk', weighted, grad, sigma[6:], optimize=True)
                 for component in range(3):
@@ -129,7 +138,10 @@ def integrate(points, cells, fields, space, coefficients, quadrature, batch=1024
                         cells[subset].ravel(), force[:, :, component].reshape(-1, 6))
             volume += float(weighted.sum())
     np.testing.assert_allclose(local_modes.sum(axis=0), energy[6:, 6:], atol=1e-12, rtol=1e-10)
-    result = energy, local_modes, dict(minimum_sampled_jacobian=minimum, volume=volume)
+    checked = dict(minimum_sampled_jacobian=minimum, volume=volume)
+    if mean_stress is not None:
+        checked['mean_stress_matrix'] = mean_stress.tolist()
+    result = energy, local_modes, checked
     return result if coupling is None else (*result, coupling)
 
 
