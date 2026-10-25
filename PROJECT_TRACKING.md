@@ -23,8 +23,22 @@ A fixed 90% bulk rule in gain-per-added-node order retains 618 stars. Preflight
 409 and six fresh loads in 410 pass all independent field, positive quadrature,
 periodic, and Galerkin checks. Only 4,224 added nodes reduce worst all-model
 disagreement to 1.723104796% at 120,793 nodes and 76,027 tets, still failing 1%.
-All regions remain eligible. No reference tensor enters allocation. One
-third-level preflight uses the same rule, with no automatic coupled solve.
+All regions remain eligible. No reference tensor enters allocation. Third-level
+preflight 411 and coupled solve 412 pass all checks at 129,269 nodes and 81,751
+tets. Worst all-model disagreement improves to 1.549508124%, still failing 1%.
+Galerkin balance is within 1.600e-9. Fourth-level preflight 413 and fresh
+coupled job 414 pass at 144,106 nodes and 91,996 tets, with minimum quality
+0.100152291. Worst disagreement improves to 1.415999636%, still failing 1%.
+Its Galerkin balance is within 1.601e-9. Fifth-level preflight 415 is stopped
+by the unchanged 8 GiB watchdog during sparse setup. No solve starts. The exact
+saved mesh's fresh-process operator and AMG setup pass in 416 at 5.040 GiB,
+showing that retained analysis memory inflated the combined peak. Full replay
+417 saves the trial checkpoint and replaces the process before setup. All
+replay gates pass at 4.590 GiB, with exact 415 mesh-array equality and the same
+operator hash as independent 416. The 168,615-node, 109,059-tet trial has a
+0.065557630% largest gain and minimum quality 0.100032836. Failed 415 remains
+failed. Coupled job 418 is selected from the complete replay, requiring its
+own independent field, Galerkin, and all-model audit before any successor.
 See [physical edge normal investigation](experiments/adaptive/PERIODIC_EDGE_NORMAL_RESULTS.md).
 Earlier next-step descriptions below are historical. All four cases remain
 in scope, and the full objective is incomplete.

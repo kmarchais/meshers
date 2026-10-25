@@ -1,0 +1,311 @@
+{
+  "date": "2026-10-25",
+  "preflight": {
+    "status": "nested-preflight-passed",
+    "qualified": true,
+    "case": "smooth-lattice",
+    "source": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-split-patch-bulk90-level4-solve-v1",
+    "nodes": 168615,
+    "elements": 109059,
+    "order": 2,
+    "geometry": {
+      "sampled_forward_max": 0.00033587990515847115,
+      "sampled_reverse_max": 0.00027249023645900517,
+      "sampled_two_sided_max": 0.00033587990515847115,
+      "outward_forward_max": 0.00033587990515847115,
+      "inward_forward_max": 0.0002698333618777867,
+      "projection_failed": 0,
+      "forward_samples": 207116,
+      "reverse_samples": 34791,
+      "volume": 0.24823310600715492,
+      "relative_volume_error": -0.0003138675494060994,
+      "q_min_corner": 0.10003283640829982,
+      "q_p01_corner": 0.13942054619227537,
+      "minimum_dihedral_deg_corner": 5.551639551200054,
+      "minimum_sampled_jacobian": 7.726910806312973e-08,
+      "reverse_tessellation_delta_max": 0.00011226605259304778,
+      "quadratic_reverse_subdivisions": [
+        4,
+        8
+      ],
+      "facet_consistency": {
+        "nodes": 168615,
+        "elements": 109059,
+        "unique_faces": 226977,
+        "interior_faces": 209259,
+        "extracted_boundary_faces": 17718,
+        "same_orientation_shared_faces": 0,
+        "nonmanifold_faces": 0,
+        "duplicate_cells": 0,
+        "duplicate_surface_faces": 0,
+        "provided_boundary_matches_extraction": true,
+        "missing_provided_faces": 0,
+        "extra_provided_faces": 0,
+        "nonpositive_corner_determinants": 0,
+        "minimum_corner_determinant": 9.244623818826617e-08,
+        "oriented_facet_consistency_passed": true,
+        "conflict_examples": [],
+        "scope": "Oriented corner-face incidence and same-side neighbor diagnostics; necessary consistency, not a certificate of curved geometry or absence of nonlocal intersections"
+      },
+      "oriented_facet_consistency_passed": true,
+      "geometry_admitted": true
+    },
+    "relative_volume_change": 1.5543122344752192e-15,
+    "reproduction": {
+      "points_per_element": 12,
+      "elements_checked": 109059,
+      "maximum_geometry_error": 3.3306690738754696e-16,
+      "maximum_field_error": 3.3306690738754696e-16
+    },
+    "periodic": {
+      "maximum_six_load_jump": 2.220446049250313e-16,
+      "periodic_pair_counts": [
+        687,
+        675,
+        665
+      ],
+      "periodic_coordinate_errors": [
+        5.551115123125783e-17,
+        1.1102230246251565e-16,
+        5.551115123125783e-17
+      ],
+      "periodic_pair_tolerance": 1e-10,
+      "periodic_equivalence_classes": 166639,
+      "periodic_triangles_match": true
+    },
+    "selection": {
+      "accepted_edge_orbits": 3404,
+      "quality_rejected_orbits": 0,
+      "overlapping_star_orbits": 0,
+      "budget_rejected_orbits": 0,
+      "preferred_edge_orbits": 0,
+      "accepted_preferred_edge_orbits": 0,
+      "selection": "Measured edge-residual score per added-node upper bound over complete periodic stars",
+      "scored_physical_edges": 3449,
+      "positive_score_edge_orbits": 3404,
+      "input_edge_score_sum": 0.001708078566670174,
+      "source_nodes": 144106,
+      "source_elements": 91996,
+      "nodes": 168615,
+      "elements": 109059,
+      "bisected_parent_elements": 17063,
+      "shared_position_error": 1.1102230246251565e-16,
+      "shared_field_error": 1.1102230246251565e-16,
+      "projected_node_upper_bound": 168615,
+      "facet_consistency": {
+        "nodes": 168615,
+        "elements": 109059,
+        "unique_faces": 226977,
+        "interior_faces": 209259,
+        "extracted_boundary_faces": 17718,
+        "same_orientation_shared_faces": 0,
+        "nonmanifold_faces": 0,
+        "duplicate_cells": 0,
+        "duplicate_surface_faces": 0,
+        "provided_boundary_matches_extraction": true,
+        "missing_provided_faces": 0,
+        "extra_provided_faces": 0,
+        "nonpositive_corner_determinants": 0,
+        "minimum_corner_determinant": 9.244623818826617e-08,
+        "oriented_facet_consistency_passed": true,
+        "conflict_examples": [],
+        "scope": "Oriented corner-face incidence and same-side neighbor diagnostics; necessary consistency, not a certificate of curved geometry or absence of nonlocal intersections"
+      },
+      "periodic": {
+        "periodic_pair_counts": [
+          687,
+          675,
+          665
+        ],
+        "periodic_coordinate_errors": [
+          5.551115123125783e-17,
+          1.1102230246251565e-16,
+          5.551115123125783e-17
+        ],
+        "periodic_pair_tolerance": 1e-10,
+        "periodic_equivalence_classes": 166639,
+        "periodic_triangles_match": true
+      }
+    },
+    "bulk": {
+      "requested_fraction": 0.9,
+      "unpruned_nodes": 249151,
+      "unpruned_elements": 162032,
+      "unpruned_orbits": 15384,
+      "unpruned_normalized_gain": 0.001897842046892439,
+      "retained_orbits": 3404,
+      "retained_normalized_gain_fraction": 0.9000109200167699
+    },
+    "resources": {
+      "reduced_shape": [
+        499914,
+        499914
+      ],
+      "nnz": 39464528,
+      "matrix_sha256": "717f1d1ee1c9db7e6a04b9245a87b0c61a464f013202ee767ac94910e3b02d8e",
+      "csr_bytes": 475573996,
+      "rss_before_amg_bytes": 3772186624,
+      "cg_started": false,
+      "amg_setup_passed": true,
+      "levels": 3,
+      "operator_complexity": 1.0491909827934185,
+      "rss_after_amg_bytes": 4537483264
+    },
+    "construction": [
+      {
+        "minimum_jacobian": 5.3284069254315834e-08,
+        "volume": 0.2482331060071545
+      },
+      {
+        "minimum_jacobian": 5.197584238030467e-08,
+        "volume": 0.24823310600715434
+      },
+      {
+        "minimum_jacobian": 5.1937490417903e-08,
+        "volume": 0.24823310600715442
+      },
+      {
+        "minimum_jacobian": 5.2002443898524534e-08,
+        "volume": 0.2482331060071544
+      },
+      {
+        "minimum_jacobian": 5.196411579164326e-08,
+        "volume": 0.24823310600715434
+      },
+      {
+        "minimum_jacobian": 5.061935890540224e-08,
+        "volume": 0.24823310600715526
+      }
+    ],
+    "trial_gain": [
+      [
+        3.507894751706777e-05,
+        1.448472207029565e-05,
+        1.4992835939005293e-05,
+        -2.7392932022956603e-07,
+        -9.289859685455376e-08,
+        -2.558997357312916e-07
+      ],
+      [
+        1.448472207029565e-05,
+        3.599514608441345e-05,
+        1.5587251026824017e-05,
+        -2.5029857128387707e-07,
+        -7.939215996899842e-08,
+        1.335547742664171e-09
+      ],
+      [
+        1.4992835939005293e-05,
+        1.5587251026824017e-05,
+        3.6004485680396714e-05,
+        -7.101885868899318e-07,
+        -1.2113202397037744e-07,
+        -1.6556104562815693e-08
+      ],
+      [
+        -2.7392932022956603e-07,
+        -2.5029857128387707e-07,
+        -7.101885868899318e-07,
+        7.909862287935989e-06,
+        2.0284386139869707e-09,
+        -8.753662697853635e-08
+      ],
+      [
+        -9.289859685455376e-08,
+        -7.939215996899842e-08,
+        -1.2113202397037744e-07,
+        2.0284386139869707e-09,
+        8.137738442382173e-06,
+        -1.598132361495728e-07
+      ],
+      [
+        -2.558997357312916e-07,
+        1.335547742664171e-09,
+        -1.6556104562815693e-08,
+        -8.753662697853635e-08,
+        -1.598132361495728e-07,
+        8.163111871900965e-06
+      ]
+    ],
+    "trial_gain_eigenvalues": [
+      7.610455794604325e-05,
+      7.768083121797888e-05,
+      8.063156787157826e-05,
+      0.00018674317636095333,
+      0.0006313421287471084,
+      0.0006555763045265131
+    ],
+    "trial_energy_balance": 1.4888127339194623e-11,
+    "trial_delta_periodic_jump": 0.0,
+    "trial_precision": [
+      {
+        "points": 64,
+        "volume": 0.24823310600715437,
+        "vs_previous": null,
+        "gain_relative_error": 2.604145894138033e-07
+      },
+      {
+        "points": 125,
+        "volume": 0.24823310600715423,
+        "vs_previous": {
+          "worst_relative_strain_energy_difference": 2.4753899356533824e-09,
+          "relative_tensor_frobenius_difference": 5.153176945400309e-10,
+          "relative_energy_difference_eigenvalues": [
+            2.584414424677124e-10,
+            2.9941843891378547e-10,
+            3.2609039028953714e-10,
+            4.6537279722049083e-10,
+            2.273187268233706e-09,
+            2.4753899356533824e-09
+          ]
+        },
+        "gain_relative_error": 2.999626489870252e-07
+      }
+    ],
+    "trial_globally_equilibrated": false,
+    "selection_scope": "Exact fixed-old-node six-load split gains per physical added-node upper bound; all regions eligible",
+    "trial_signal_threshold": 0.0005,
+    "trial_signal_passed": true,
+    "same_mesh_verified": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-split-patch-bulk90-level5-preflight-v1",
+    "old_quadratic_space_preserved": true,
+    "original_curved_domain_preserved": true,
+    "equilibrium_solve_performed": false,
+    "reference_promoted": false,
+    "native_candidate_promoted": false,
+    "comparative_timing_claim": false,
+    "fresh_process_resource_setup": true
+  },
+  "worker": {
+    "returncode": 0,
+    "limit_failure": null,
+    "peak_rss_bytes": 4927946752,
+    "wall_s": 141.0542748750886,
+    "memory_bytes": 8589934592,
+    "memory_enforcement": "process-tree-rss-watchdog",
+    "rss_poll_interval_s": 0.25,
+    "platform": "darwin",
+    "numerical_thread_policy": {
+      "environment": {
+        "OPENBLAS_NUM_THREADS": "1",
+        "OMP_NUM_THREADS": "1",
+        "MKL_NUM_THREADS": "1",
+        "VECLIB_MAXIMUM_THREADS": "1",
+        "RAYON_NUM_THREADS": "1"
+      },
+      "accelerate_blas_threading": 1,
+      "accelerate_scope": "calling thread"
+    }
+  },
+  "source_artifact_sha256": {
+    "experiments/adaptive/runs/macbook-split-patch-bulk90-level5-preflight-v2/result.json": "ab7ed54f131f656343a48cd8d3c6016ce1e9f2145e1a804d17417a357b59d4c5",
+    "experiments/adaptive/runs/macbook-split-patch-bulk90-level5-preflight-v2/trial-screen.json": "16a8cf612e0f150ca79931055548362bc690194cbb199df615b8f45d75f76469",
+    "experiments/adaptive/runs/macbook-split-patch-bulk90-level5-preflight-v2/manifest.json": "8b6ac2838878daf4218e771c2d951268e5db0001a64530a9ebde820ddf594120",
+    "experiments/adaptive/runs/macbook-split-patch-bulk90-level5-preflight-v2/analysis-inputs.json": "b346ebab5293d4a28bdfef04841a529e902793f0a07f52972903dbccff1f6890",
+    "experiments/adaptive/runs/macbook-split-patch-bulk90-level5-preflight-v2/resource-inputs.json": "a79ac6343f3d5570f229befc891e4129c91eb7f9a43b51fb59bf731bcd2503c4",
+    "experiments/adaptive/runs/macbook-split-patch-bulk90-level5-preflight-v2/worker.json": "a5a662f00ca1d6d9d0d41a699502a51e499b7554d4df6d4cb0be2776a34db50e",
+    "experiments/adaptive/runs/macbook-split-patch-bulk90-level5-preflight-v2/operator.json": "8c327085bf71ad7accd16ef4fd0c0c3a59d8700e8e164432605ac8d6f44cdd5a"
+  },
+  "failed415_reclassified": false,
+  "memory_limit_increased": false,
+  "scope": "Complete fixed-domain replay with exact saved mesh and independent operator identity; no equilibrium or accuracy admission from this preflight"
+}

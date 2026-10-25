@@ -132,6 +132,70 @@ and [the second-level evidence](../../handoff/macbook/split-patch-bulk90-level2-
 One third-level preflight is selected from these fresh fields using the same
 fixed 90% rule. Its actual gates must be read before another solve.
 
+Third-level preflight 411 passes at 129,269 nodes and 81,751 tets. It retains
+1,210 stars and 90.007396% of the admissible balanced gain. Its largest trial
+gain is 0.131802511%, and minimum corner quality is 0.102818534. The domain,
+parent fields, positive quadrature, periodicity, and actual AMG resource gates
+pass. Preflight worker time is 109.672 seconds at 3.717 GiB peak.
+
+Fresh coupled job 412 improves worst all-model disagreement to **1.549508124%**,
+still failing 1%. The largest negative stiffness correction is 0.175968727%,
+and Galerkin balance is within 1.600e-9. All independent field and positive
+quadrature checks pass. Solve, audit, and assessment workers take 115.365,
+28.850, and 34.983 seconds respectively. Solve peak RAM is 4.115 GiB. See
+[the third-level evidence](../../handoff/macbook/split-patch-bulk90-level3-evidence-20261025.json).
+A fourth-level preflight continues the same fixed rule. No further solve,
+reference promotion, or native workflow timing win follows automatically.
+
+Fourth-level preflight 413 passes at 144,106 nodes and 91,996 tets. It retains
+2,101 stars and 90.000915% of the admissible balanced gain. Its largest trial
+gain is 0.093758658%, above the existing 0.05% signal threshold. Minimum corner
+quality is 0.100152291, above the unchanged 0.1 gate. Original domain and
+parent-space checks, positive quadrature, periodicity, and actual reduced AMG
+setup pass at 4.287 GiB peak.
+
+Fresh coupled job 414 improves worst all-model disagreement to **1.415999636%**,
+still failing 1%. The largest negative stiffness correction is 0.132695399%,
+and Galerkin balance is within 1.601e-9. All independent field and quadrature
+checks pass. Solve, audit, and assessment workers take 146.280, 31.676, and
+38.656 seconds respectively. Solve peak RAM is 3.536 GiB. See
+[the fourth-level evidence](../../handoff/macbook/split-patch-bulk90-level4-evidence-20261025.json).
+One fifth-level preflight is selected from these fresh fields, with the same
+fixed rule and all geometry, count, quality, resource, and accuracy gates.
+
+Fifth-level preflight 415 is stopped during sparse-operator or AMG setup by
+the unchanged process-tree RSS watchdog, at 8.008621 GiB. It had written the
+mesh, prolongation, gains, and trial fields, and passed its earlier geometry
+and trial assertions. It has no final admitted preflight result. No CG solve
+starts. The failed result is preserved, not reclassified.
+
+Resource-only job 416 loads exactly that saved mesh in a fresh process. It
+passes reduced operator and AMG setup in 11.212 seconds at 5.040 GiB. The mesh
+has 168,615 nodes and 109,059 tets. Its reduced operator has 499,914 rows and
+39,464,528 nonzeros, with SHA256
+`717f1d1ee1c9db7e6a04b9245a87b0c61a464f013202ee767ac94910e3b02d8e`.
+There are three AMG levels and operator complexity 1.049191. CG is stopped
+before it begins. This resource result does not admit the incomplete preflight.
+
+The replay saves a full trial checkpoint before resource setup, then uses
+`os.execv` to replace the worker process. The queue wrapper and 8 GiB watchdog
+stay active, while patch construction and integration allocations are released.
+Job 417 reruns the complete preflight and requires exact point, Tet10, and Tri6
+array equality with failed 415 before setup. No new specimen samples or
+geometry are substituted. The failure and isolated diagnosis are saved in
+[the resource receipt](../../handoff/macbook/split-patch-level5-resource-20261025.json).
+No further solve follows before every replay gate is read.
+
+Complete replay 417 passes at 4.590 GiB peak under the same 8 GiB watchdog.
+The original failed 415 remains failed. Point, Tet10, and Tri6 arrays match
+415 exactly. The reduced-operator hash matches independent 416 exactly. All
+trial, fixed-domain, parent-space, positive quadrature, facet, and periodic
+checks pass. Minimum quality is 0.100032836, and the largest trial gain is
+0.065557630%, above the existing 0.05% signal threshold. See
+[the complete replay receipt](../../handoff/macbook/split-patch-level5-replay-20261025.json).
+Fresh coupled job 418 is selected from this complete replay. Its six loads
+and independent all-model assessment must pass before another decision.
+
 All four cases and all 24 model tensors remain in scope. Schwarz retains its
 measured comparison win against explicitly modified actual Microgen routes.
 Gyroid and spinodoid still lack admitted actual comparators in the tested

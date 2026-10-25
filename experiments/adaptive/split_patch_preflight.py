@@ -2,9 +2,10 @@
 
 import argparse
 import json
+import os
 from pathlib import Path
 import shutil
-from unittest.mock import patch
+import sys
 
 import microgen_workflow as w
 
@@ -16,28 +17,29 @@ def main():
         default=w.HERE/'runs/macbook-periodic-edge-normal-lattice26-amg-v1')
     parser.add_argument('--bulk-fraction',type=float,default=1.,
         help='Retain this fraction of the admissible disjoint-star normalized gain')
+    parser.add_argument('--same-mesh',type=Path,
+        help='Require exact mesh-array equality with this preserved run')
     args=parser.parse_args()
     args.source=args.source.resolve()
     assert 0<args.bulk_fraction<=1
     assert args.run.is_dir() and not (args.run/'result.json').exists()
     np,*_=w.imports()
     from fedoo.lib_elements.tetrahedron import Tet4,Tet10
-    from amg_reference import AuditedAMG
-    from capture_reference_system import CapturedSystem
     from hp_shared_domain import periodic_jumps
     from nested_preflight import fixture_inputs
     from nested_refinement import EDGES,child_maps,refine,interpolation_check
     from periodic import periodic_pairs,tensor_difference
     from quadrature_audit import duffy_rule
     from split_patch_energy import local_blocks,patch_structure,assemble_patches,solve_patches
-    from stress_recovery import solve
     from tet10_integration import integrated_tensors
     source=args.source
     fixtures=fixture_inputs(source)
     paths=[Path(__file__),*(source/name for name in ('result.json','mesh.npz','fields.npz','manifest.json'))]
     paths.extend(w.HERE/name for name in ('split_patch_energy.py','test_split_patch_energy.py',
         'nested_refinement.py','nested_preflight.py','amg_reference.py','stress_recovery.py',
-        'tet10_integration.py','quadrature_audit.py','hp_shared_domain.py','hierarchical_residual_trial.py'))
+        'tet10_integration.py','quadrature_audit.py','hp_shared_domain.py','hierarchical_residual_trial.py',
+        'operator_resource_probe.py'))
+    if args.same_mesh:paths.append(args.same_mesh/'mesh.npz')
     hashes={str(p.resolve()):w.digest(p) for p in paths}
     for i,path in enumerate(paths):
         if path.suffix=='.py':shutil.copyfile(path,args.run/f'input-{i}-{path.name}')
@@ -114,6 +116,10 @@ def main():
     bulk.update(retained_orbits=len(selected),
         retained_normalized_gain_fraction=float(scalar[sorted(selected)].sum()/bulk['unpruned_normalized_gain']))
     reproduction=interpolation_check(points,cells,fields,refined)
+    if args.same_mesh:
+        original=np.load(args.same_mesh/'mesh.npz')
+        for key in ('points','tetrahedra','surface'):
+            np.testing.assert_array_equal(refined[key],original[key])
     assert len(selected)==refined['diagnostics']['accepted_edge_orbits']
     incident=[parent for group in selected for parent,_ in structure['incidence'][group]]
     assert len(set(incident))==len(incident)==refined['diagnostics']['bisected_parent_elements']
@@ -171,42 +177,28 @@ def main():
     gain_eigenvalues=np.linalg.eigvalsh(np.linalg.solve(np.linalg.cholesky(baseline),
         np.linalg.solve(np.linalg.cholesky(baseline),gain).T).T)
     assert gain_eigenvalues.min()>-1e-10
-    assert gain_eigenvalues.max()>=.0005, 'Read trial before spending on an unresolved solve'
-    resources={}
-
-    class Capture:
-        def __init__(self):self.problem,self.records=None,[]
-        def __call__(self,matrix,rhs,**kwargs):
-            matrix=matrix.tocsr();amg=AuditedAMG(elastic_blocks=True);amg.problem=self.problem
-            with patch('scipy.sparse.linalg.cg',side_effect=CapturedSystem) as intercepted:
-                try:amg(matrix,rhs)
-                except CapturedSystem:assert intercepted.call_count==1 and not amg.records
-                else:raise AssertionError('Stop at CG boundary')
-            resources.update(reduced_shape=list(matrix.shape),nnz=int(matrix.nnz),matrix_sha256=amg.key[1],
-                levels=len(amg.hierarchy.levels),operator_complexity=amg.hierarchy.operator_complexity(),
-                cg_started=False,amg_setup_passed=True)
-            raise CapturedSystem()
-
-    print('Measure reduced quadratic operator and AMG setup, stopping before CG',flush=True)
-    try:solve(*args_energy,n_elm_gp=15,solver=Capture(),release_reduced_cache=True)
-    except CapturedSystem:pass
-    else:raise AssertionError('Capture must not return a fake solution')
-    assert resources
     for name in ('mesh','prolongation','split-gains','trial-fields'):
         path=args.run/f'{name}.npz';hashes[str(path.resolve())]=w.digest(path)
     w.save(args.run/'analysis-inputs.json',hashes)
-    w.save(args.run/'result.json',dict(status='nested-preflight-passed',qualified=True,case='smooth-lattice',
+    w.save(args.run/'trial-screen.json',dict(status='trial-verified-resource-pending',qualified=False,case='smooth-lattice',
         source=str(source),nodes=len(refined['points']),elements=len(refined['tetrahedra']),order=2,
         geometry=geometry,relative_volume_change=volume_change,reproduction=reproduction,periodic=periodic,
-        selection=refined['diagnostics'],bulk=bulk,resources=resources,construction=construction,
+        selection=refined['diagnostics'],bulk=bulk,resources=None,construction=construction,
         trial_gain=gain.tolist(),trial_gain_eigenvalues=gain_eigenvalues.tolist(),trial_energy_balance=balance,
         trial_delta_periodic_jump=delta_jump,trial_precision=precision,trial_globally_equilibrated=False,
         selection_scope='Exact fixed-old-node six-load split gains per physical added-node upper bound; all regions eligible',
+        trial_signal_threshold=.0005,trial_signal_passed=bool(gain_eigenvalues.max()>=.0005),
+        same_mesh_verified=str(args.same_mesh.resolve()) if args.same_mesh else None,
         old_quadratic_space_preserved=True,original_curved_domain_preserved=True,
         equilibrium_solve_performed=False,reference_promoted=False,native_candidate_promoted=False,
         comparative_timing_claim=False,inputs=hashes))
     assert all(w.digest(Path(p))==h for p,h in hashes.items())
-    print(f'Preflight passes: {len(refined["points"])} nodes, {len(refined["tetrahedra"])} tets; maximum trial gain {gain_eigenvalues.max():.6%}',flush=True)
+    print(f'Trial verified: {len(refined["points"])} nodes, {len(refined["tetrahedra"])} tets; maximum trial gain {gain_eigenvalues.max():.6%}',flush=True)
+    assert gain_eigenvalues.max()>=.0005, 'Read saved trial-screen.json before spending on an unresolved solve'
+    # Release all patch construction and integration allocations before FE setup.
+    # Replacing this process keeps the queue wrapper and its RSS watchdog active.
+    os.execv(sys.executable,[sys.executable,str(w.HERE/'operator_resource_probe.py'),
+        '--run',str(args.run.resolve()),'--finalize-trial'])
 
 
 if __name__=='__main__':main()

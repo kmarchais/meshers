@@ -1,0 +1,101 @@
+{
+  "date": "2026-10-25",
+  "failed_run": "experiments/adaptive/runs/macbook-split-patch-bulk90-level5-preflight-v1",
+  "failed_worker": {
+    "returncode": -9,
+    "limit_failure": "memory-cap",
+    "peak_rss_bytes": 8599191552,
+    "wall_s": 130.45866158395074,
+    "memory_bytes": 8589934592,
+    "memory_enforcement": "process-tree-rss-watchdog",
+    "rss_poll_interval_s": 0.25,
+    "platform": "darwin",
+    "numerical_thread_policy": {
+      "environment": {
+        "OPENBLAS_NUM_THREADS": "1",
+        "OMP_NUM_THREADS": "1",
+        "MKL_NUM_THREADS": "1",
+        "VECLIB_MAXIMUM_THREADS": "1",
+        "RAYON_NUM_THREADS": "1"
+      },
+      "accelerate_blas_threading": 1,
+      "accelerate_scope": "calling thread"
+    }
+  },
+  "fresh_process_probe": {
+    "passed": true,
+    "prepared": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-split-patch-bulk90-level5-preflight-v1",
+    "nodes": 168615,
+    "elements": 109059,
+    "resources": {
+      "reduced_shape": [
+        499914,
+        499914
+      ],
+      "nnz": 39464528,
+      "matrix_sha256": "717f1d1ee1c9db7e6a04b9245a87b0c61a464f013202ee767ac94910e3b02d8e",
+      "csr_bytes": 475573996,
+      "rss_before_amg_bytes": 3936403456,
+      "cg_started": false,
+      "amg_setup_passed": true,
+      "levels": 3,
+      "operator_complexity": 1.0491909827934185,
+      "rss_after_amg_bytes": 5413109760
+    },
+    "inputs": {
+      "/Users/kmarchais/dev/meshers/experiments/adaptive/operator_resource_probe.py": "4c68ddc1ce281cafb97cf0b56c54a851264d102f370088ed7a832f9bafc45696",
+      "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-split-patch-bulk90-level5-preflight-v1/mesh.npz": "4b639c220b1b4842674fb2f9303aaefa1dd2c818aa4807f347b608589b5f5174",
+      "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-split-patch-bulk90-level5-preflight-v1/worker.json": "b21e2cacdd5ee1fb4621e638eeba0587b19ab08f6a976f47414631c143aebc57",
+      "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-split-patch-bulk90-level5-preflight-v1/manifest.json": "ae0cf8c8f8f8f1bd56a056c8d687650cca1de5184bd02d5e431044535db08d4a",
+      "/Users/kmarchais/dev/meshers/experiments/adaptive/stress_recovery.py": "c9d74455c014c3b56ab656ca3f6a9cbf259dc11904318fecc354dcc6368651ac",
+      "/Users/kmarchais/dev/meshers/experiments/adaptive/amg_reference.py": "41f8bbdfc6fc175beec8eda9ba28b5db195e2615a656cd6d0d1ff33654d2354b",
+      "/Users/kmarchais/dev/meshers/experiments/adaptive/microgen_workflow.py": "073f615481feeae8bb9142d325d9ae39251ca1e1aa2d1376f5e4f88a19aec872"
+    },
+    "cg_started": false,
+    "admission_performed": false,
+    "reference_promoted": false,
+    "comparative_timing_claim": false,
+    "scope": "Fresh-process resource diagnosis of the exact saved mesh; not admission or an equilibrium result"
+  },
+  "probe_worker": {
+    "returncode": 0,
+    "limit_failure": null,
+    "peak_rss_bytes": 5411389440,
+    "wall_s": 11.211730041075498,
+    "memory_bytes": 8589934592,
+    "memory_enforcement": "process-tree-rss-watchdog",
+    "rss_poll_interval_s": 0.25,
+    "platform": "darwin",
+    "numerical_thread_policy": {
+      "environment": {
+        "OPENBLAS_NUM_THREADS": "1",
+        "OMP_NUM_THREADS": "1",
+        "MKL_NUM_THREADS": "1",
+        "VECLIB_MAXIMUM_THREADS": "1",
+        "RAYON_NUM_THREADS": "1"
+      },
+      "accelerate_blas_threading": 1,
+      "accelerate_scope": "calling thread"
+    }
+  },
+  "source_artifact_sha256": {
+    "experiments/adaptive/runs/macbook-split-patch-bulk90-level5-preflight-v1/manifest.json": "ae0cf8c8f8f8f1bd56a056c8d687650cca1de5184bd02d5e431044535db08d4a",
+    "experiments/adaptive/runs/macbook-split-patch-bulk90-level5-preflight-v1/worker.json": "b21e2cacdd5ee1fb4621e638eeba0587b19ab08f6a976f47414631c143aebc57",
+    "experiments/adaptive/runs/macbook-split-patch-bulk90-level5-preflight-v1/worker.log": "b29efb527813f395b44f2f29cf7f01dcac1cc0a895708c0ed57c4b49f6412fac",
+    "experiments/adaptive/runs/macbook-split-patch-bulk90-level5-preflight-v1/mesh.npz": "4b639c220b1b4842674fb2f9303aaefa1dd2c818aa4807f347b608589b5f5174",
+    "experiments/adaptive/runs/macbook-split-patch-bulk90-level5-preflight-v1/prolongation.npz": "13a588b4485e3d94e3c10cfc69011ac617becb4a5940658ff5869bf3ce4ee5c4",
+    "experiments/adaptive/runs/macbook-split-patch-bulk90-level5-preflight-v1/split-gains.npz": "dcb5263bfca272354fdef5c72066fdc62ec1c081d89325ce709dbe0236dd19be",
+    "experiments/adaptive/runs/macbook-split-patch-bulk90-level5-preflight-v1/trial-fields.npz": "fdd7fb3dfe76b1033e19ff781c76b2074b8637780645e2cb581019a6cac2e379",
+    "experiments/adaptive/runs/macbook-split-patch-bulk90-level5-preflight-v1/input-0-split_patch_preflight.py": "76060527a53ebbc6f045b59438b7f0ec282b4f958204df42507696f74ab4671c",
+    "experiments/adaptive/runs/macbook-split-patch-level5-resource-probe-v1/manifest.json": "895d024ab926c3650b40e8ef14c6a17ccde979ea394c8cf8736474da3102a592",
+    "experiments/adaptive/runs/macbook-split-patch-level5-resource-probe-v1/worker.json": "68811bf9cd69d760fc76bfd3a9011037f576ced49bf664a92f3c811157db194a",
+    "experiments/adaptive/runs/macbook-split-patch-level5-resource-probe-v1/result.json": "aa917f0edd48858b1e9d0b734c79006994d4b2742a63c6d48d4212bc7c1505d9",
+    "experiments/adaptive/runs/macbook-split-patch-level5-resource-probe-v1/operator.json": "20fa1241eb44a09cda70cbc6b4033f6aebcf2a543c8e5462cd2339c9476d0b54",
+    "experiments/adaptive/runs/macbook-split-patch-level5-resource-probe-v1/input-0-operator_resource_probe.py": "4c68ddc1ce281cafb97cf0b56c54a851264d102f370088ed7a832f9bafc45696"
+  },
+  "failed_preflight_reclassified": false,
+  "memory_limit_increased": false,
+  "equilibrium_solve_started": false,
+  "reference_promoted": false,
+  "scope": "Exact saved-mesh resource diagnosis. Complete new preflight replay must pass all gates before any solve."
+}
