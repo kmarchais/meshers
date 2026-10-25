@@ -13,6 +13,16 @@ class Part:
         pass
 
 
+@pytest.mark.skipif(sys.platform != "darwin", reason="macOS idle-sleep assertions")
+def test_worker_holds_idle_sleep_assertion(tmp_path):
+    source = "import subprocess; print(subprocess.check_output(['/usr/bin/pmset', '-g', 'assertions'], text=True))"
+    record = workflow.bounded([sys.executable, '-c', source], tmp_path / 'assertions.log', Part(), timeout=5)
+    assert record['returncode'] == 0
+    assertions = (tmp_path / 'assertions.log').read_text()
+    assert 'caffeinate' in assertions and 'PreventUserIdleSystemSleep' in assertions
+    assert record['idle_sleep_prevention'] == ['/usr/bin/caffeinate', '-i']
+
+
 @pytest.mark.skipif(sys.platform != "darwin", reason="Apple Accelerate control")
 def test_accelerate_runs_with_verified_single_thread_policy():
     import ctypes
@@ -27,12 +37,13 @@ def test_accelerate_runs_with_verified_single_thread_policy():
     assert accelerate.BLASGetThreading() == 1
 
 
-@pytest.mark.parametrize("mode", ["success", "timeout", "memory"])
+@pytest.mark.parametrize("mode", ["success", "failure", "timeout", "memory"])
 def test_real_bounded_worker(tmp_path, monkeypatch, mode):
     # A low RSS ceiling is a controlled watchdog test, not a scientific cap change.
     monkeypatch.setattr(workflow, "MEMORY", 64 * 1024**2 if mode == "memory" else 8 * 1024**3)
     source = {
         "success": "print('worker complete')",
+        "failure": "import sys; sys.exit(7)",
         "timeout": "import time; time.sleep(10)",
         "memory": "import time; data=bytearray(96*1024**2); time.sleep(10)",
     }[mode]
@@ -41,10 +52,13 @@ def test_real_bounded_worker(tmp_path, monkeypatch, mode):
         monkeypatch.setattr(sys, "platform", "darwin")
     record = workflow.bounded([sys.executable, "-c", source], tmp_path / "worker.log",
         Part(), timeout=.5 if mode == "timeout" else 5)
-    assert record["limit_failure"] == {"success": None, "timeout": "timeout", "memory": "memory-cap"}[mode]
+    assert record["limit_failure"] == {"success": None, "failure": None, "timeout": "timeout", "memory": "memory-cap"}[mode]
     assert (record["returncode"] == 0) == (mode == "success")
     assert record["wall_s"] < 6
     assert record["memory_bytes"] == workflow.MEMORY
+    assert abs(record["suspension_or_clock_adjustment_s"]) < .1
+    if mode == "failure":
+        assert record["returncode"] == 7
     if mode == "success":
         assert (tmp_path / "worker.log").read_text().strip() == "worker complete"
     if mode == "memory":

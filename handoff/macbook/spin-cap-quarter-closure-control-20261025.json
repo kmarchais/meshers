@@ -1,0 +1,39 @@
+{
+  "scope": "First strict whole native spinodoid regression pass. Independent Python artifact and final suites pending.",
+  "worker": {
+    "returncode": 0,
+    "limit_failure": null,
+    "peak_rss_bytes": 736690176,
+    "wall_s": 49.910736915888265,
+    "memory_bytes": 8589934592,
+    "memory_enforcement": "process-tree-rss-watchdog",
+    "rss_poll_interval_s": 0.25,
+    "platform": "darwin",
+    "numerical_thread_policy": {
+      "environment": {
+        "OPENBLAS_NUM_THREADS": "1",
+        "OMP_NUM_THREADS": "1",
+        "MKL_NUM_THREADS": "1",
+        "VECLIB_MAXIMUM_THREADS": "1",
+        "RAYON_NUM_THREADS": "1"
+      },
+      "accelerate_blas_threading": 1,
+      "accelerate_scope": "calling thread"
+    }
+  },
+  "geometry_gate": 0.002,
+  "quality_gate": 0.1,
+  "max_nodes": 250000,
+  "max_tets": 250000,
+  "strict_native_passed": true,
+  "independent_admission_pending": true,
+  "candidate_promoted": false,
+  "source_artifact_sha256": {
+    "experiments/adaptive/runs/macbook-spinodoid-quarter-closure-v1/worker.json": "31b0d5ff4dd2a16180f078cd346a9274ea33de831e30526b968fcc577b3552da",
+    "experiments/adaptive/runs/macbook-spinodoid-quarter-closure-v1/worker.log": "caf8ebb9c68e4dac0b29fde411c78ab6858daf497171daa43189c139e2f30d66",
+    "experiments/adaptive/runs/macbook-spinodoid-quarter-closure-v1/source-receipt.json": "d223619e8c20e0e0c233419a726dc06b46cc5b5cc63fda097644d8f815a4982f",
+    "experiments/adaptive/runs/macbook-spinodoid-quarter-closure-v1/tet_adapt.rs": "a7ac929ccc0a69b8b75259a0cf0de0edcbf639357c396c5e22116bb2e8b3592e",
+    "experiments/adaptive/runs/macbook-spinodoid-quarter-closure-v1/implicit.rs": "6b3f865491c260cbd1117a74a66bbad9a69d3856f902e829cb9890534716a2b5",
+    "experiments/adaptive/runs/macbook-spinodoid-quarter-closure-v1/spinodoid-cap-star.json": "c6b2093bd95e646b09e22cc932f66ce13a36a4ea693b8b4d580584ffac692d5f"
+  }
+}

@@ -638,6 +638,11 @@ def self_check():
 def bounded(command, logfile, part, timeout=TIMEOUT):
     import psutil
     start = time.monotonic()
+    realtime_start = time.time()
+    # Scope the assertion to this worker; do not change the user's power settings.
+    awake = shutil.which('caffeinate') if sys.platform == 'darwin' else None
+    if awake:
+        command = [awake, '-i', *command]
     peak = 0
     def limit_address_space():
         resource.setrlimit(resource.RLIMIT_AS, (MEMORY, MEMORY))
@@ -668,8 +673,12 @@ def bounded(command, logfile, part, timeout=TIMEOUT):
                 break
             time.sleep(0.25)
         code = process.wait()
+    elapsed = time.monotonic() - start
+    realtime_elapsed = time.time() - realtime_start
     return {"returncode": code, "limit_failure": reason, "peak_rss_bytes": peak,
-            "wall_s": time.monotonic() - start, "memory_bytes": MEMORY,
+            "wall_s": elapsed, "wall_s_clock": "monotonic", "elapsed_realtime_s": realtime_elapsed,
+            "suspension_or_clock_adjustment_s": realtime_elapsed - elapsed,
+            "idle_sleep_prevention": [awake, '-i'] if awake else None, "memory_bytes": MEMORY,
             "memory_enforcement": "rlimit-as-and-process-tree-rss" if sys.platform == "linux"
                 else "process-tree-rss-watchdog", "rss_poll_interval_s": .25,
             "platform": sys.platform, "numerical_thread_policy": NUMERICAL_THREAD_POLICY}

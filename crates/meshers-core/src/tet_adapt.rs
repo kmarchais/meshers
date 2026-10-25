@@ -638,7 +638,7 @@ impl<'g, G: Geometry> Tets<'g, G> {
         self.points.len() - 1
     }
 
-    fn split(&mut self, u: usize, v: usize, guard: f64) -> Option<usize> {
+    fn split(&mut self, u: usize, v: usize, guard: f64, during_sizing: bool) -> Option<usize> {
         let shell = self.shell(u, v);
         if shell.is_empty() {
             return None;
@@ -646,42 +646,53 @@ impl<'g, G: Geometry> Tets<'g, G> {
         let bfaces = self.edge_faces(u, v);
         let mask = self.edge_mask(&bfaces);
         let d = self.delta(self.points[u], self.points[v]);
-        let mid = self.wrap(std::array::from_fn(|a| self.points[u][a] + 0.5 * d[a]));
-        let target = if mask & WALL != 0 {
-            let level = self.level(self.points[u]);
-            self.project(
-                mid,
-                mask,
-                level,
-                self.feature_mask(u) & self.feature_mask(v),
-            )?
-        } else {
-            self.project(mid, mask, 0., self.feature_mask(u) & self.feature_mask(v))?
-        };
         // Midpoint children are naturally worse than their parent; only reject slivers.
         let floor = (0.5 * self.worst(&shell).min(guard))
             .max(self.g.minimum_quality())
             .max(1e-9);
-        // A deep concave sag can invert neighbours if the vertex goes straight onto the
-        // surface; insert it part of the way and finish the projection later.
-        let offset = self.delta(mid, target);
+        let level = if mask & WALL != 0 {
+            self.level(self.points[u])
+        } else {
+            0.
+        };
         let mut chosen = None;
-        for fraction in [1., 0.75, 0.5, 0.25] {
-            let p = self.wrap(std::array::from_fn(|a| mid[a] + fraction * offset[a]));
-            let mut planned = Vec::new();
-            let valid = shell.iter().all(|&t| {
-                let tet = self.tets[t];
-                let a = tet.map(|i| if i == v { usize::MAX } else { i });
-                let b = tet.map(|i| if i == u { usize::MAX } else { i });
-                planned.push((t, a, b));
-                [a, b].iter().all(|c| {
-                    mmg(self.local(c.map(|i| if i == usize::MAX { p } else { self.points[i] })))
-                        >= floor
-                })
-            });
-            if valid {
-                chosen = Some((p, fraction, planned));
-                break;
+        // Early sizing is followed by a full quality stage. Late error repair
+        // only uses off-center insertion on the constrained wall/box curves.
+        let positions: &[f64] = if during_sizing || (mask & WALL != 0 && mask & !WALL != 0) {
+            &[0.5, 0.25, 0.75]
+        } else {
+            &[0.5]
+        };
+        'positions: for &along in positions {
+            let mid = self.wrap(std::array::from_fn(|a| self.points[u][a] + along * d[a]));
+            let Some(target) = self.project(
+                mid,
+                mask,
+                level,
+                self.feature_mask(u) & self.feature_mask(v),
+            ) else {
+                continue;
+            };
+            // A deep concave sag can invert neighbours at full projection;
+            // insert part of the way and finish projection after local repair.
+            let offset = self.delta(mid, target);
+            for fraction in [1., 0.75, 0.5, 0.25] {
+                let p = self.wrap(std::array::from_fn(|a| mid[a] + fraction * offset[a]));
+                let mut planned = Vec::new();
+                let valid = shell.iter().all(|&t| {
+                    let tet = self.tets[t];
+                    let a = tet.map(|i| if i == v { usize::MAX } else { i });
+                    let b = tet.map(|i| if i == u { usize::MAX } else { i });
+                    planned.push((t, a, b));
+                    [a, b].iter().all(|c| {
+                        mmg(self.local(c.map(|i| if i == usize::MAX { p } else { self.points[i] })))
+                            >= floor
+                    })
+                });
+                if valid {
+                    chosen = Some((p, fraction, planned));
+                    break 'positions;
+                }
             }
         }
         let (p, fraction, planned) = chosen?;
@@ -816,6 +827,13 @@ impl<'g, G: Geometry> Tets<'g, G> {
                     unreachable!()
                 };
                 for w in [a, b] {
+                    let old_error = self.edge_error(
+                        self.points[u],
+                        self.normals[u],
+                        self.points[w],
+                        self.normals[w],
+                        self.feature_mask(u) & self.feature_mask(w),
+                    );
                     if self.masks[w] & WALL != 0
                         && self.edge_error(
                             self.points[v],
@@ -823,7 +841,7 @@ impl<'g, G: Geometry> Tets<'g, G> {
                             self.points[w],
                             self.normals[w],
                             self.feature_mask(v) & self.feature_mask(w),
-                        ) > o.tolerance * SIZING_SAFETY
+                        ) > (o.tolerance * SIZING_SAFETY).max(old_error)
                     {
                         return false;
                     }
@@ -1069,7 +1087,13 @@ impl<'g, G: Geometry> Tets<'g, G> {
                             self.points[w],
                             self.normals[w],
                             self.feature_mask(v) & self.feature_mask(w),
-                        ) > o.tolerance * SIZING_SAFETY
+                        ) > (o.tolerance * SIZING_SAFETY).max(self.edge_error(
+                            p,
+                            self.normals[v],
+                            self.points[w],
+                            self.normals[w],
+                            self.feature_mask(v) & self.feature_mask(w),
+                        ))
                     {
                         return false;
                     }
@@ -1082,14 +1106,25 @@ impl<'g, G: Geometry> Tets<'g, G> {
     }
 
     fn edge_error(&self, p: Point, n: Point, q: Point, m: Point, features: u64) -> f64 {
+        let [lo, hi] = self.g.bounds();
+        let locked = std::array::from_fn(|a| {
+            let p_cap = p[a] == lo[a] || p[a] == hi[a];
+            let q_cap = q[a] == lo[a] || q[a] == hi[a];
+            p_cap && q_cap && (p[a] == q[a] || self.period[a].is_some())
+        });
+        let delta = self.delta(p, q);
+        let midpoint = std::array::from_fn(|a| p[a] + 0.5 * delta[a]);
         if self.g.constraints().is_none() {
-            return self.sag(p, n, q, m);
+            let sag = self.sag(p, n, q, m);
+            // Near a tangent cap, a small 3D wall error can hide a much larger
+            // error of its trace. Collapse and relocation must preserve that trace.
+            return if locked.iter().any(|&axis| axis) {
+                sag.max(self.distance(midpoint, locked))
+            } else {
+                sag
+            };
         }
-        self.constraint_distance(
-            std::array::from_fn(|a| (p[a] + q[a]) * 0.5),
-            [false; 3],
-            features,
-        )
+        self.constraint_distance(midpoint, locked, features)
     }
 
     fn constraint_distance(&self, p: Point, locked: [bool; 3], features: u64) -> f64 {
@@ -1151,7 +1186,8 @@ impl<'g, G: Geometry> Tets<'g, G> {
     }
 
     /// Move partially inserted wall vertices onto the surface where now valid.
-    fn settle(&mut self, guard: f64, maximum: usize) -> Result<(), String> {
+    fn settle(&mut self, guard: f64, maximum: usize) -> Result<bool, String> {
+        let mut changed = false;
         let pending = std::mem::take(&mut self.pending);
         for v in pending {
             if self.vt[v].is_empty() {
@@ -1173,6 +1209,7 @@ impl<'g, G: Geometry> Tets<'g, G> {
                 .filter(|&t| mmg(self.tet_points(self.tets[t], Some((v, q)))) < floor)
                 .collect();
             if blocking.is_empty() {
+                changed |= self.points[v] != q;
                 self.points[v] = q;
                 self.refresh(v);
                 continue;
@@ -1195,6 +1232,7 @@ impl<'g, G: Geometry> Tets<'g, G> {
                 .then_some(candidate)
             });
             if let Some(candidate) = partial {
+                changed = true;
                 self.points[v] = candidate;
                 self.refresh(v);
                 self.pending.push(v);
@@ -1216,19 +1254,19 @@ impl<'g, G: Geometry> Tets<'g, G> {
             }
             for [a, b] in facing {
                 if !self.shell(a, b).is_empty() {
-                    self.split(a, b, guard);
+                    changed |= self.split(a, b, guard, false).is_some();
                     self.check_budget(maximum)?;
                 }
             }
             self.pending.push(v);
         }
-        Ok(())
+        Ok(changed)
     }
 
     fn enforce(&mut self, o: &Options, stats: &mut Stats, maximum: usize) -> Result<(), String> {
         for _ in 0..16 {
             self.g.check()?;
-            self.settle(o.quality_guard, maximum)?;
+            let settled = self.settle(o.quality_guard, maximum)?;
             let mut flagged = Vec::new();
             let mut worst = 0f64;
             let wall: Vec<Face> = self
@@ -1254,33 +1292,61 @@ impl<'g, G: Geometry> Tets<'g, G> {
                     );
                     worst = worst.max(d);
                     let l = self.length(f[i], f[j]);
+                    let edge = [f[i].min(f[j]), f[i].max(f[j])];
                     if l > longest.0 {
-                        longest = (l, [f[i], f[j]]);
+                        longest = (l, edge);
                     }
                     if d > o.tolerance {
-                        flagged.push((l, [f[i], f[j]]));
+                        flagged.push((d, l, edge));
                         any = true;
                     }
                 }
                 if dc > o.tolerance && !any {
-                    flagged.push(longest);
+                    flagged.push((dc, longest.0, longest.1));
                 }
             }
             stats.maximum_error = worst;
             if flagged.is_empty() {
                 return Ok(());
             }
-            flagged.sort_by(|a, b| b.0.total_cmp(&a.0));
-            flagged.dedup_by_key(|e| e.1);
-            let mut progress = false;
-            for (_, [a, b]) in flagged {
-                if self.shell(a, b).is_empty() || self.length(a, b) < o.min_length {
+            // Preserve the worst report for a shared edge, then repair the largest
+            // defect before another split spends its cavity's quality margin.
+            flagged.sort_by(|a, b| a.2.cmp(&b.2).then_with(|| b.0.total_cmp(&a.0)));
+            flagged.dedup_by_key(|e| e.2);
+            flagged.sort_by(|a, b| {
+                b.0.total_cmp(&a.0)
+                    .then_with(|| b.1.total_cmp(&a.1))
+                    .then_with(|| a.2.cmp(&b.2))
+            });
+            let mut progress = settled;
+            let mut blocked_vertices = Vec::new();
+            for (_, _, [a, b]) in flagged {
+                let shell = self.shell(a, b);
+                if shell.is_empty() {
                     continue;
                 }
-                if self.split(a, b, o.quality_guard).is_some() {
+                if self.length(a, b) >= o.min_length
+                    && self.split(a, b, o.quality_guard, false).is_some()
+                {
                     self.check_budget(maximum)?;
                     stats.error_splits += 1;
                     progress = true;
+                } else {
+                    for t in shell {
+                        blocked_vertices.extend(self.tets[t]);
+                    }
+                }
+            }
+            if !blocked_vertices.is_empty() {
+                // Error insertion may need room that the preceding quality pass
+                // could not see before its new wall nodes existed.
+                blocked_vertices.sort_unstable();
+                blocked_vertices.dedup();
+                for v in blocked_vertices {
+                    if self.relocate(v, o) {
+                        stats.moves += 1;
+                        progress = true;
+                    }
                 }
             }
             if !progress {
@@ -1415,7 +1481,7 @@ pub(crate) fn adapt_with_polish(
             .collect();
         long.sort_by(|a, b| b.0.total_cmp(&a.0));
         for (_, [u, v]) in long {
-            if s.split(u, v, o.quality_guard).is_some() {
+            if s.split(u, v, o.quality_guard, true).is_some() {
                 s.check_budget(maximum)?;
                 stats.splits += 1;
             }
@@ -1511,7 +1577,213 @@ mod tests {
     use crate::implicit::{Options, Region, generate};
     use crate::{Point, dot};
 
+    #[derive(serde::Deserialize)]
+    struct CapStar {
+        points: Vec<Point>,
+        tets: Vec<[usize; 4]>,
+        surface: Vec<[usize; 3]>,
+        bad_coordinates: [Point; 2],
+        coefficients: Vec<[f64; 5]>,
+        threshold: f64,
+    }
+
+    impl crate::geometry::Geometry for CapStar {
+        fn value(&self, p: Point) -> f64 {
+            self.coefficients
+                .iter()
+                .fold(self.threshold, |value, &[a, b, c, amplitude, phase]| {
+                    value
+                        - amplitude
+                            * (std::f64::consts::TAU
+                                * (a * (p[0] + 0.5) + b * (p[1] + 0.5) + c * (p[2] + 0.5))
+                                + phase)
+                                .cos()
+                })
+        }
+        fn gradient(&self, p: Point) -> Point {
+            self.coefficients
+                .iter()
+                .fold([0.; 3], |mut gradient, &[a, b, c, amplitude, phase]| {
+                    let factor = amplitude
+                        * std::f64::consts::TAU
+                        * (std::f64::consts::TAU
+                            * (a * (p[0] + 0.5) + b * (p[1] + 0.5) + c * (p[2] + 0.5))
+                            + phase)
+                            .sin();
+                    for (value, mode) in gradient.iter_mut().zip([a, b, c]) {
+                        *value += factor * mode;
+                    }
+                    gradient
+                })
+        }
+        fn bounds(&self) -> [Point; 2] {
+            [[-0.5; 3], [0.5; 3]]
+        }
+        fn rank(&self, p: Point) -> [i64; 3] {
+            p.map(|x| (x * 1e11).round() as i64)
+        }
+        fn band(&self) -> bool {
+            false
+        }
+        fn minimum_quality(&self) -> f64 {
+            0.1
+        }
+        fn geometry_tolerance(&self) -> Option<f64> {
+            Some(0.002)
+        }
+    }
+
+    #[test]
+    fn periodic_cap_curve_split_and_enforcement() {
+        use crate::geometry::Geometry;
+        let fixture: CapStar =
+            serde_json::from_str(include_str!("testdata/spinodoid-cap-star.json")).unwrap();
+        let mesh = crate::Mesh {
+            points: fixture.points.clone(),
+            tets: fixture.tets.clone(),
+            surface: fixture.surface.clone(),
+        };
+        let mut state = super::Tets::new(&mesh, &fixture, 0., [true; 3]);
+        let [u, v] = fixture
+            .bad_coordinates
+            .map(|point| state.points.iter().position(|p| *p == point).unwrap());
+        let mid = std::array::from_fn(|a| 0.5 * (state.points[u][a] + state.points[v][a]));
+        let faces = state.edge_faces(u, v);
+        let mask = state.edge_mask(&faces);
+        let target = state.project(mid, mask, 0., 0);
+        assert_eq!(state.shell(u, v).len(), 3);
+        assert!(state.distance(mid, [true, false, false]) > 0.002);
+        assert!(target.is_some(), "the exact cap trace has a nearby root");
+        assert!(fixture.value(target.unwrap()).abs() < 1e-10);
+        let inserted = state.split(u, v, 0.3, false);
+        assert!(
+            inserted.is_some(),
+            "a quarter projection keeps every child above quality 0.1"
+        );
+        let options = super::Options {
+            tolerance: 0.001,
+            min_length: 0.002,
+            max_length: 0.1,
+            ..Default::default()
+        };
+        let mut stats = super::Stats::default();
+        state.enforce(&options, &mut stats, 5000).unwrap();
+        assert!(
+            stats.maximum_error <= fixture.geometry_tolerance().unwrap(),
+            "periodic cap curve must pass the fixed geometry gate with its internal aim unchanged"
+        );
+        assert!(state.pending.is_empty());
+        assert!(
+            state
+                .tets
+                .iter()
+                .enumerate()
+                .filter(|(t, _)| state.alive[*t])
+                .all(|(_, &tet)| super::mmg(state.tet_points(tet, None)) >= 0.1)
+        );
+        let mut rebuilt = super::Tets::new(&mesh, &fixture, 0., [true; 3]);
+        let mut rebuilt_stats = super::Stats::default();
+        rebuilt.enforce(&options, &mut rebuilt_stats, 5000).unwrap();
+        assert!(
+            rebuilt_stats.maximum_error <= fixture.geometry_tolerance().unwrap(),
+            "the post-quality star must repair without a manually inserted midpoint"
+        );
+        assert!(rebuilt.pending.is_empty());
+        assert!(
+            rebuilt
+                .tets
+                .iter()
+                .enumerate()
+                .filter(|(t, _)| rebuilt.alive[*t])
+                .all(|(_, &tet)| super::mmg(rebuilt.tet_points(tet, None)) >= 0.1)
+        );
+    }
+
+    #[test]
+    fn periodic_spinodoid_closes_geometry_after_quality() {
+        struct Field<'a>(&'a CapStar);
+        impl crate::implicit::ScalarField for Field<'_> {
+            fn value(&self, p: Point) -> f64 {
+                crate::geometry::Geometry::value(self.0, p)
+            }
+            fn gradient(&self, p: Point) -> Option<Point> {
+                Some(crate::geometry::Geometry::gradient(self.0, p))
+            }
+        }
+        let fixture: CapStar =
+            serde_json::from_str(include_str!("testdata/spinodoid-cap-star.json")).unwrap();
+        let output = generate(
+            &Field(&fixture),
+            Options {
+                bounds: [[-0.5; 3], [0.5; 3]],
+                cells: [24; 3],
+                periodic: [true; 3],
+                geometry_tolerance: 0.002,
+                minimum_quality: 0.1,
+                max_tetrahedra: 250_000,
+                optimize_passes: 1,
+                adapt: Some(super::Options {
+                    tolerance: 0.001,
+                    min_length: 0.002,
+                    max_length: 0.1,
+                    ..Default::default()
+                }),
+                ..Default::default()
+            },
+        )
+        .unwrap();
+        assert!(output.diagnostics.maximum_sampled_surface_error <= 0.002);
+        assert!(output.diagnostics.minimum_mmg_quality >= 0.1);
+        assert!(output.mesh.points.len() <= 250_000 && output.mesh.tets.len() <= 250_000);
+        assert!(output.periodic_pairs.iter().all(|pairs| !pairs.is_empty()));
+    }
+
     struct PlaneWave;
+
+    #[test]
+    fn cap_curve_edge_error_respects_the_held_plane() {
+        struct ShallowWall;
+        impl crate::geometry::Geometry for ShallowWall {
+            fn value(&self, p: Point) -> f64 {
+                (std::f64::consts::TAU * (p[0] + 0.5)).sin() + 0.01 * (p[2] - 10. * p[1] * p[1])
+            }
+            fn gradient(&self, p: Point) -> Point {
+                [
+                    std::f64::consts::TAU * (std::f64::consts::TAU * (p[0] + 0.5)).cos(),
+                    -0.2 * p[1],
+                    0.01,
+                ]
+            }
+            fn bounds(&self) -> [Point; 2] {
+                [[-0.5; 3], [0.5; 3]]
+            }
+            fn rank(&self, _: Point) -> [i64; 3] {
+                [0; 3]
+            }
+            fn band(&self) -> bool {
+                false
+            }
+        }
+        let mesh = crate::Mesh {
+            points: Vec::new(),
+            tets: Vec::new(),
+            surface: Vec::new(),
+        };
+        let state = super::Tets::new(&mesh, &ShallowWall, 0., [true, false, false]);
+        for x in [-0.5, 0.5] {
+            let p = [x, -0.025, 0.00625];
+            let q = [x, 0.025, 0.00625];
+            let (n, m) = (state.outward(p), state.outward(q));
+            assert!(
+                state.sag(p, n, q, m) < 0.0001,
+                "3D normal turning understates the held-plane chord"
+            );
+            assert!(
+                state.edge_error(p, n, q, m, 0) > 0.006,
+                "cap-curve geometry guards must measure error inside the cap plane"
+            );
+        }
+    }
 
     impl crate::geometry::Geometry for PlaneWave {
         fn value(&self, point: Point) -> f64 {

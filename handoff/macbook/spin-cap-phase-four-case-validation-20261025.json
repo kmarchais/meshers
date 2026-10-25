@@ -1,0 +1,456 @@
+{
+  "scope": "Allfour fixed curved geometry admissions on one native source. Changed spin/lattice require fresh stiffness evidence. No comparative or reference promotion.",
+  "native_sha256": "0f94afb012903f917b1d2c18ee7e7f5330a048cb8f2394fb3a446da74bf0f33e",
+  "core_passed": 104,
+  "core_ignored": 1,
+  "clippy_passed": true,
+  "python_passed": 182,
+  "python_skipped": 1,
+  "awake_and_recipe_controls_passed": 11,
+  "cases": {
+    "gyroid": {
+      "nodes": 11857,
+      "tets": 6008,
+      "geometry": {
+        "sampled_forward_max": 0.0011893416581181303,
+        "sampled_reverse_max": 0.0010012247939772917,
+        "sampled_two_sided_max": 0.0011893416581181303,
+        "outward_forward_max": 0.001149011104089992,
+        "inward_forward_max": 0.0011893416581181303,
+        "projection_failed": 0,
+        "forward_samples": 38194,
+        "reverse_samples": 36260,
+        "volume": 0.35634956213272473,
+        "relative_volume_error": -0.0002632760693176417,
+        "q_min_corner": 0.14469000390080416,
+        "q_p01_corner": 0.33790399858766784,
+        "minimum_dihedral_deg_corner": 11.919392693170039,
+        "minimum_sampled_jacobian": 1.704483190366829e-05,
+        "reverse_tessellation_delta_max": 0.0006741275123839228,
+        "quadratic_reverse_subdivisions": [
+          4,
+          8
+        ],
+        "projection_method": "newton-box-slsqp-v1",
+        "unbounded_projection_failed": 0,
+        "box_projection_attempts": 0,
+        "box_projection_recovered": 0,
+        "box_projection_witnesses": [],
+        "facet_consistency": {
+          "nodes": 11857,
+          "elements": 6008,
+          "unique_faces": 13778,
+          "interior_faces": 10254,
+          "extracted_boundary_faces": 3524,
+          "same_orientation_shared_faces": 0,
+          "nonmanifold_faces": 0,
+          "duplicate_cells": 0,
+          "duplicate_surface_faces": 0,
+          "provided_boundary_matches_extraction": true,
+          "missing_provided_faces": 0,
+          "extra_provided_faces": 0,
+          "nonpositive_corner_determinants": 0,
+          "minimum_corner_determinant": 1.748446100327744e-05,
+          "oriented_facet_consistency_passed": true,
+          "conflict_examples": [],
+          "scope": "Oriented corner-face incidence and same-side neighbor diagnostics; necessary consistency, not a certificate of curved geometry or absence of nonlocal intersections"
+        },
+        "oriented_facet_consistency_passed": true,
+        "geometry_admitted": true
+      },
+      "periodic": {
+        "periodic_pair_counts": [
+          285,
+          282,
+          285
+        ],
+        "periodic_coordinate_errors": [
+          6.938893903907228e-18,
+          5.551115123125783e-17,
+          2.7755575615628914e-17
+        ],
+        "periodic_pair_tolerance": 1e-10,
+        "periodic_equivalence_classes": 11043,
+        "periodic_triangles_match": true
+      },
+      "worker": {
+        "returncode": 0,
+        "limit_failure": null,
+        "peak_rss_bytes": 419708928,
+        "wall_s": 2.288209041929804,
+        "wall_s_clock": "monotonic",
+        "elapsed_realtime_s": 2.288215160369873,
+        "suspension_or_clock_adjustment_s": 6.118440069258213e-06,
+        "idle_sleep_prevention": [
+          "/usr/bin/caffeinate",
+          "-i"
+        ],
+        "memory_bytes": 8589934592,
+        "memory_enforcement": "process-tree-rss-watchdog",
+        "rss_poll_interval_s": 0.25,
+        "platform": "darwin",
+        "numerical_thread_policy": {
+          "environment": {
+            "OPENBLAS_NUM_THREADS": "1",
+            "OMP_NUM_THREADS": "1",
+            "MKL_NUM_THREADS": "1",
+            "VECLIB_MAXIMUM_THREADS": "1",
+            "RAYON_NUM_THREADS": "1"
+          },
+          "accelerate_blas_threading": 1,
+          "accelerate_scope": "calling thread"
+        }
+      },
+      "previous_source": "experiments/adaptive/runs/macbook-periodic-edge-normal-gyroid-curved-v1/repeat-0-meshers-curved-known/result.json",
+      "previous_nodes": 11857,
+      "previous_tets": 6008,
+      "previous_geometry": {
+        "sampled_two_sided_max": 0.0011893416581181303,
+        "q_min_corner": 0.14469000390080416,
+        "relative_volume_error": -0.0002632760693176417
+      },
+      "changed_node_or_tet_counts": false
+    },
+    "schwarz-solid": {
+      "nodes": 42928,
+      "tets": 27492,
+      "geometry": {
+        "sampled_forward_max": 0.00013911900441963997,
+        "sampled_reverse_max": 0.00016189052407491854,
+        "sampled_two_sided_max": 0.00016189052407491854,
+        "outward_forward_max": 0.00013911900441963997,
+        "inward_forward_max": 0.00011407806062973662,
+        "projection_failed": 0,
+        "forward_samples": 43524,
+        "reverse_samples": 50135,
+        "volume": 0.5000002737518888,
+        "relative_volume_error": 5.475037776481173e-07,
+        "q_min_corner": 0.4499952972773957,
+        "q_p01_corner": 0.5573114869460045,
+        "minimum_dihedral_deg_corner": 23.632448302111726,
+        "minimum_sampled_jacobian": 1.246260532856064e-05,
+        "reverse_tessellation_delta_max": 0.00018648450831692666,
+        "quadratic_reverse_subdivisions": [
+          4,
+          8
+        ],
+        "projection_method": "newton-box-slsqp-v1",
+        "unbounded_projection_failed": 0,
+        "box_projection_attempts": 0,
+        "box_projection_recovered": 0,
+        "box_projection_witnesses": [],
+        "facet_consistency": {
+          "nodes": 42928,
+          "elements": 27492,
+          "unique_faces": 57936,
+          "interior_faces": 52032,
+          "extracted_boundary_faces": 5904,
+          "same_orientation_shared_faces": 0,
+          "nonmanifold_faces": 0,
+          "duplicate_cells": 0,
+          "duplicate_surface_faces": 0,
+          "provided_boundary_matches_extraction": true,
+          "missing_provided_faces": 0,
+          "extra_provided_faces": 0,
+          "nonpositive_corner_determinants": 0,
+          "minimum_corner_determinant": 1.2845676145940633e-05,
+          "oriented_facet_consistency_passed": true,
+          "conflict_examples": [],
+          "scope": "Oriented corner-face incidence and same-side neighbor diagnostics; necessary consistency, not a certificate of curved geometry or absence of nonlocal intersections"
+        },
+        "oriented_facet_consistency_passed": true,
+        "geometry_admitted": true
+      },
+      "periodic": {
+        "periodic_pair_counts": [
+          942,
+          942,
+          942
+        ],
+        "periodic_coordinate_errors": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "periodic_pair_tolerance": 1e-10,
+        "periodic_equivalence_classes": 40200,
+        "periodic_triangles_match": true
+      },
+      "worker": {
+        "returncode": 0,
+        "limit_failure": null,
+        "peak_rss_bytes": 485605376,
+        "wall_s": 3.1074472500476986,
+        "wall_s_clock": "monotonic",
+        "elapsed_realtime_s": 3.1074531078338623,
+        "suspension_or_clock_adjustment_s": 5.857786163687706e-06,
+        "idle_sleep_prevention": [
+          "/usr/bin/caffeinate",
+          "-i"
+        ],
+        "memory_bytes": 8589934592,
+        "memory_enforcement": "process-tree-rss-watchdog",
+        "rss_poll_interval_s": 0.25,
+        "platform": "darwin",
+        "numerical_thread_policy": {
+          "environment": {
+            "OPENBLAS_NUM_THREADS": "1",
+            "OMP_NUM_THREADS": "1",
+            "MKL_NUM_THREADS": "1",
+            "VECLIB_MAXIMUM_THREADS": "1",
+            "RAYON_NUM_THREADS": "1"
+          },
+          "accelerate_blas_threading": 1,
+          "accelerate_scope": "calling thread"
+        }
+      },
+      "previous_source": "experiments/adaptive/runs/macbook-periodic-edge-normal-schwarz-curved-v1/repeat-0-meshers-curved-known/result.json",
+      "previous_nodes": 42928,
+      "previous_tets": 27492,
+      "previous_geometry": {
+        "sampled_two_sided_max": 0.00016189052407491854,
+        "q_min_corner": 0.4499952972773957,
+        "relative_volume_error": 5.475037776481173e-07
+      },
+      "changed_node_or_tet_counts": false
+    },
+    "spinodoid": {
+      "nodes": 73811,
+      "tets": 45923,
+      "geometry": {
+        "sampled_forward_max": 0.00030398374880642373,
+        "sampled_reverse_max": 0.000286185856614389,
+        "sampled_two_sided_max": 0.00030398374880642373,
+        "outward_forward_max": 0.00030398374880642373,
+        "inward_forward_max": 0.0002740337952978249,
+        "projection_failed": 0,
+        "forward_samples": 114036,
+        "reverse_samples": 41325,
+        "volume": 0.5022662426745905,
+        "relative_volume_error": 0.00025891819381196335,
+        "q_min_corner": 0.30128192824668354,
+        "q_p01_corner": 0.5281437742180667,
+        "minimum_dihedral_deg_corner": 15.204946252610455,
+        "minimum_sampled_jacobian": 8.65800669338645e-07,
+        "reverse_tessellation_delta_max": 0.00013225857282422423,
+        "quadratic_reverse_subdivisions": [
+          4,
+          8
+        ],
+        "projection_method": "newton-box-slsqp-v1",
+        "unbounded_projection_failed": 0,
+        "box_projection_attempts": 0,
+        "box_projection_recovered": 0,
+        "box_projection_witnesses": [],
+        "facet_consistency": {
+          "nodes": 73811,
+          "elements": 45923,
+          "unique_faces": 97885,
+          "interior_faces": 85807,
+          "extracted_boundary_faces": 12078,
+          "same_orientation_shared_faces": 0,
+          "nonmanifold_faces": 0,
+          "duplicate_cells": 0,
+          "duplicate_surface_faces": 0,
+          "provided_boundary_matches_extraction": true,
+          "missing_provided_faces": 0,
+          "extra_provided_faces": 0,
+          "nonpositive_corner_determinants": 0,
+          "minimum_corner_determinant": 1.4554685354108074e-06,
+          "oriented_facet_consistency_passed": true,
+          "conflict_examples": [],
+          "scope": "Oriented corner-face incidence and same-side neighbor diagnostics; necessary consistency, not a certificate of curved geometry or absence of nonlocal intersections"
+        },
+        "oriented_facet_consistency_passed": true,
+        "geometry_admitted": true
+      },
+      "periodic": {
+        "periodic_pair_counts": [
+          1239,
+          1370,
+          1159
+        ],
+        "periodic_coordinate_errors": [
+          1.6653345369377348e-16,
+          2.7755575615628914e-17,
+          2.7755575615628914e-17
+        ],
+        "periodic_pair_tolerance": 1e-10,
+        "periodic_equivalence_classes": 70116,
+        "periodic_triangles_match": true
+      },
+      "worker": {
+        "returncode": 0,
+        "limit_failure": null,
+        "peak_rss_bytes": 606175232,
+        "wall_s": 6.037430832977407,
+        "wall_s_clock": "monotonic",
+        "elapsed_realtime_s": 6.0374369621276855,
+        "suspension_or_clock_adjustment_s": 6.129150278866291e-06,
+        "idle_sleep_prevention": [
+          "/usr/bin/caffeinate",
+          "-i"
+        ],
+        "memory_bytes": 8589934592,
+        "memory_enforcement": "process-tree-rss-watchdog",
+        "rss_poll_interval_s": 0.25,
+        "platform": "darwin",
+        "numerical_thread_policy": {
+          "environment": {
+            "OPENBLAS_NUM_THREADS": "1",
+            "OMP_NUM_THREADS": "1",
+            "MKL_NUM_THREADS": "1",
+            "VECLIB_MAXIMUM_THREADS": "1",
+            "RAYON_NUM_THREADS": "1"
+          },
+          "accelerate_blas_threading": 1,
+          "accelerate_scope": "calling thread"
+        }
+      },
+      "previous_source": "experiments/adaptive/runs/macbook-periodic-edge-normal-spinodoid-curved-v1/repeat-0-meshers-curved-known/result.json",
+      "previous_nodes": 73951,
+      "previous_tets": 45994,
+      "previous_geometry": {
+        "sampled_two_sided_max": 0.0013329848158457264,
+        "q_min_corner": 0.2685813353609367,
+        "relative_volume_error": 0.0002586250902092413
+      },
+      "changed_node_or_tet_counts": true
+    },
+    "smooth-lattice": {
+      "nodes": 65721,
+      "tets": 41340,
+      "geometry": {
+        "sampled_forward_max": 0.00027866151779207363,
+        "sampled_reverse_max": 0.00024170346305041107,
+        "sampled_two_sided_max": 0.00027866151779207363,
+        "outward_forward_max": 0.00027866151779207363,
+        "inward_forward_max": 0.0002215619839823279,
+        "projection_failed": 0,
+        "forward_samples": 116376,
+        "reverse_samples": 34791,
+        "volume": 0.24823346607910796,
+        "relative_volume_error": -0.0003124174650723788,
+        "q_min_corner": 0.365931094329415,
+        "q_p01_corner": 0.5257562465582704,
+        "minimum_dihedral_deg_corner": 20.304467683366056,
+        "minimum_sampled_jacobian": 2.968883356143718e-07,
+        "reverse_tessellation_delta_max": 0.00010611274415476316,
+        "quadratic_reverse_subdivisions": [
+          4,
+          8
+        ],
+        "projection_method": "newton-box-slsqp-v1",
+        "unbounded_projection_failed": 0,
+        "box_projection_attempts": 0,
+        "box_projection_recovered": 0,
+        "box_projection_witnesses": [],
+        "facet_consistency": {
+          "nodes": 65721,
+          "elements": 41340,
+          "unique_faces": 87736,
+          "interior_faces": 77624,
+          "extracted_boundary_faces": 10112,
+          "same_orientation_shared_faces": 0,
+          "nonmanifold_faces": 0,
+          "duplicate_cells": 0,
+          "duplicate_surface_faces": 0,
+          "provided_boundary_matches_extraction": true,
+          "missing_provided_faces": 0,
+          "extra_provided_faces": 0,
+          "nonpositive_corner_determinants": 0,
+          "minimum_corner_determinant": 6.497581256174787e-07,
+          "oriented_facet_consistency_passed": true,
+          "conflict_examples": [],
+          "scope": "Oriented corner-face incidence and same-side neighbor diagnostics; necessary consistency, not a certificate of curved geometry or absence of nonlocal intersections"
+        },
+        "oriented_facet_consistency_passed": true,
+        "geometry_admitted": true
+      },
+      "periodic": {
+        "periodic_pair_counts": [
+          465,
+          452,
+          471
+        ],
+        "periodic_coordinate_errors": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "periodic_pair_tolerance": 1e-10,
+        "periodic_equivalence_classes": 64380,
+        "periodic_triangles_match": true
+      },
+      "worker": {
+        "returncode": 0,
+        "limit_failure": null,
+        "peak_rss_bytes": 593215488,
+        "wall_s": 4.511237040976994,
+        "wall_s_clock": "monotonic",
+        "elapsed_realtime_s": 4.511245012283325,
+        "suspension_or_clock_adjustment_s": 7.971306331455708e-06,
+        "idle_sleep_prevention": [
+          "/usr/bin/caffeinate",
+          "-i"
+        ],
+        "memory_bytes": 8589934592,
+        "memory_enforcement": "process-tree-rss-watchdog",
+        "rss_poll_interval_s": 0.25,
+        "platform": "darwin",
+        "numerical_thread_policy": {
+          "environment": {
+            "OPENBLAS_NUM_THREADS": "1",
+            "OMP_NUM_THREADS": "1",
+            "MKL_NUM_THREADS": "1",
+            "VECLIB_MAXIMUM_THREADS": "1",
+            "RAYON_NUM_THREADS": "1"
+          },
+          "accelerate_blas_threading": 1,
+          "accelerate_scope": "calling thread"
+        }
+      },
+      "previous_source": "experiments/adaptive/runs/macbook-periodic-edge-normal-lattice26-preflight-v1/result.json",
+      "previous_nodes": 65382,
+      "previous_tets": 41131,
+      "previous_geometry": {
+        "sampled_two_sided_max": 0.00033587990515847115,
+        "q_min_corner": 0.3616116538338163,
+        "relative_volume_error": -0.0003138675494085419
+      },
+      "changed_node_or_tet_counts": true
+    }
+  },
+  "source_artifact_sha256": {
+    "experiments/adaptive/runs/macbook-cap-phase-curved-gyroid-v1/summary.json": "6aa7c9caf3531c84e78d4d439caae1cef35be636452fc66c6cb04498dc320e82",
+    "experiments/adaptive/runs/macbook-cap-phase-curved-gyroid-v1/manifest.json": "f570e053cdcf7d7af243cb7e451710a07a13b64026380153fbe814d10982f159",
+    "experiments/adaptive/runs/macbook-cap-phase-curved-gyroid-v1/analysis-inputs.json": "2556a5711208cfa7a817ed1cb9e6433c6c7d01dd4f0c6adad2c45573839dd5f4",
+    "experiments/adaptive/runs/macbook-periodic-edge-normal-gyroid-curved-v1/repeat-0-meshers-curved-known/result.json": "e0ac557441e011e48b8ed6c543ec3309763fea550e4e8417732c2aee48376e4b",
+    "experiments/adaptive/runs/macbook-cap-phase-curved-schwarz-v1/summary.json": "2ac581bcb9836a73d9b4c7c6fc416acf3c90b97c5e44e3e4dcd901a4a62a1992",
+    "experiments/adaptive/runs/macbook-cap-phase-curved-schwarz-v1/manifest.json": "e5133616fee8c13706f680b5172ac49af38554318f8f940f5e49f249f3a2cf2b",
+    "experiments/adaptive/runs/macbook-cap-phase-curved-schwarz-v1/analysis-inputs.json": "990e23b653214371f8c38f0d983412c40e8e435194a7d5237d9b7e4f7ddc4b22",
+    "experiments/adaptive/runs/macbook-periodic-edge-normal-schwarz-curved-v1/repeat-0-meshers-curved-known/result.json": "14549b47aa8f73e8f9b9c54c49a58b2ba878a849449d425205433e5a11298435",
+    "experiments/adaptive/runs/macbook-cap-phase-curved-spinodoid-v1/summary.json": "55d76f657a3bf4e67fe967459ea14fee5b946e8fa6768fedbef6734f672af992",
+    "experiments/adaptive/runs/macbook-cap-phase-curved-spinodoid-v1/manifest.json": "9312a477f1d6b7e0419374f3169fa416bf12fa0e27c589b6c9d5ad8b360d5d53",
+    "experiments/adaptive/runs/macbook-cap-phase-curved-spinodoid-v1/analysis-inputs.json": "17c3403a7eecb33be01cf8a62f0dfbc9247c0411ff4205de8b8d6ad13f543e3e",
+    "experiments/adaptive/runs/macbook-periodic-edge-normal-spinodoid-curved-v1/repeat-0-meshers-curved-known/result.json": "78e1d8ed7e136d16a3ba61c36c2f2587ee3bc88cb7aeb25b0670de26c4f9d91d",
+    "experiments/adaptive/runs/macbook-cap-phase-curved-lattice-v1/summary.json": "e6c370c86aee59a265cad8db28a0843cbbb9eed6e9bbf7629cbbef1ee5d12e82",
+    "experiments/adaptive/runs/macbook-cap-phase-curved-lattice-v1/manifest.json": "5e712014918dd09ac2a9b0f0187b01867dedd01cd8b35da76f05276a832ef09d",
+    "experiments/adaptive/runs/macbook-cap-phase-curved-lattice-v1/analysis-inputs.json": "5afbe7dcd334ca19f4aeac791aa2619b2995d4574f3ccfb35caa205dbaf4ea04",
+    "experiments/adaptive/runs/macbook-periodic-edge-normal-lattice26-preflight-v1/result.json": "d0ce6bbb5806c7b6d9c13175ebc2e5c3100d90285db704199261881f140f6e53",
+    "experiments/adaptive/runs/macbook-cap-quarter-phase-core-v1/worker.json": "760e6daa9e9d0708e42ea93d11380da85060ecf36cebcb561e7b37985e327e0e",
+    "experiments/adaptive/runs/macbook-cap-quarter-phase-core-v1/worker.log": "4be222a2ca4338fa7daa4e58f37b2f50724b6481c2004e5aad9f730225dc3abd",
+    "experiments/adaptive/runs/macbook-cap-quarter-phase-core-v1/manifest.json": "e47a661cf11a19904b48317353ea22cdc3bddaa8ac5585dd3d324d5a302516a4",
+    "experiments/adaptive/runs/macbook-cap-quarter-phase-clippy-v1/worker.json": "20e5b3b437a3b4fac5cdb9cf8ae3003488760ff2a9de8c681a20bc1f14f5561d",
+    "experiments/adaptive/runs/macbook-cap-quarter-phase-clippy-v1/worker.log": "67cda836755d2bb9c6e515528836958e68da4da700b204f9c90e15d683513a41",
+    "experiments/adaptive/runs/macbook-cap-quarter-phase-clippy-v1/manifest.json": "fedd91db3fdd033cf84b927e30ca59b55a7bd5fe62d358da731a2c35b1cbdece",
+    "experiments/adaptive/runs/macbook-awake-and-recipe-controls-v1/worker.json": "ab417223f8fc32e059055c6bdd2073f57bb71daebba377ce3aa02e7774779698",
+    "experiments/adaptive/runs/macbook-awake-and-recipe-controls-v1/worker.log": "23ab690183700daadbb1d4502fe04cd6fbd897fb0d4eaf91501cc064277e9e30",
+    "experiments/adaptive/runs/macbook-awake-and-recipe-controls-v1/manifest.json": "71f4189384aee73af334ef08f929b96b6b2825eaa15855bd7ce1bceac27a7d18",
+    "experiments/adaptive/runs/macbook-cap-phase-python-suite-v1/worker.json": "b278fbb5272e9ab1cbd1e44bf7fd39a2e4e682151a8ae51846d9d8058f73b3e1",
+    "experiments/adaptive/runs/macbook-cap-phase-python-suite-v1/worker.log": "d719b845f4b3953bd0dc6f72cd051074dd44f05f4085535306dfdfcf5473fbad",
+    "experiments/adaptive/runs/macbook-cap-phase-python-suite-v1/manifest.json": "fee9259a07ea7250bd5828bbc08f0bc5a366ae420e2b04ed89c3ca2ab3328496"
+  },
+  "matched_accuracy_pending": true,
+  "candidate_promoted_for_comparison": false
+}

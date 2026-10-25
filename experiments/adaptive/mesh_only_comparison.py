@@ -149,7 +149,7 @@ def worker(run,case_name,config):
             mesh=meshers.generate(field,bounds=w.BOUNDS,cells=config['cells'],band=case.band,
                 periodic=(True,)*3,threads=1,optimize_passes=config.get('optimization_passes',1),minimum_quality=.1,max_tetrahedra=w.CAP,
                 order=config['order'],geometry_tolerance=config['tolerance'],adapt=config['adapt'],
-                min_length=config.get('min_length',.01),max_length=.1,gradation=.3,adapt_iterations=4,quality_guard=.3,adapt_tolerance=config.get('adapt_tolerance',.002))
+                min_length=config.get('min_length',.01),max_length=.1,gradation=.3,adapt_iterations=4,quality_guard=config.get('quality_guard',.3),adapt_tolerance=config.get('adapt_tolerance',.002))
             points,tets,surface=np.asarray(mesh.points),np.asarray(mesh.tetrahedra),np.asarray(mesh.surface)
             row['diagnostics']=mesh.diagnostics
         row.update(generation_wall_s=time.perf_counter()-started,nodes=len(points),elements=len(tets))
@@ -191,6 +191,10 @@ def main():
     parser.add_argument('--strengthened',action='store_true')
     parser.add_argument('--warmups',type=int,default=0)
     parser.add_argument('--select',help='Comma-separated declared configuration names')
+    parser.add_argument('--quality-guard',type=float,
+        help='One explicit native adaptive guard ablation, keeping admission quality unchanged')
+    parser.add_argument('--native-tolerance',type=float,
+        help='One explicit native acceptance-tolerance control, with external gates unchanged')
     parser.add_argument('--require-admitted',action='store_true',
         help='Fail after saving evidence if any selected mesh misses admission')
     args=parser.parse_args()
@@ -221,13 +225,22 @@ def main():
     w.save(args.run/'manifest.json',dict(inputs=hashes,platform=platform.platform(),architecture=platform.machine(),
         numerical_thread_policy=w.NUMERICAL_THREAD_POLICY,memory_bytes=w.MEMORY,worker_timeout_s=300,
         tetrahedron_cap=w.CAP,node_cap=250000,threads=1,packages={n:importlib.metadata.version(n) for n in ('meshers','microgen','mmgpy','numpy','scipy','pyvista','vtk')},
-        no_fe_solve=True,case=args.case,repetitions=args.repetitions,warmups=args.warmups,strengthened=args.strengthened,select=args.select,command=sys.argv))
+        no_fe_solve=True,case=args.case,repetitions=args.repetitions,warmups=args.warmups,strengthened=args.strengthened,select=args.select,
+        quality_guard_override=args.quality_guard,native_tolerance_override=args.native_tolerance,command=sys.argv))
     shutil.copyfile(__file__,args.run/'analysis-driver.py')
     selected=configs(args.case,args.strengthened)
     if args.select:
         requested=args.select.split(',')
         assert set(requested)<=set(c['name'] for c in selected)
         selected=[c for c in selected if c['name'] in requested]
+    if args.quality_guard is not None:
+        assert args.select and 0<=args.quality_guard<1
+        assert all(c['arm']=='meshers' and c['adapt'] for c in selected)
+        selected=[dict(c,name=f'{c["name"]}-guard{args.quality_guard:g}',quality_guard=args.quality_guard) for c in selected]
+    if args.native_tolerance is not None:
+        assert args.select and 0<args.native_tolerance<float('inf')
+        assert all(c['arm']=='meshers' for c in selected)
+        selected=[dict(c,name=f'{c["name"]}-native-tol{args.native_tolerance:g}',tolerance=args.native_tolerance) for c in selected]
     tasks=[(f'repeat-{repeat}-{c["name"]}',c) for repeat in range(-args.warmups,args.repetitions) for c in (selected if repeat%2==0 else list(reversed(selected)))]
     def deadline(*_):raise TimeoutError('Whole mesh comparison deadline exceeded')
     signal.signal(signal.SIGALRM,deadline)

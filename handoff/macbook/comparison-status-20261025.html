@@ -1,25 +1,24 @@
 <!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><style>
 body{font:14px/1.5 var(--font-sans,system-ui);color:var(--foreground);margin:0}h2{font-size:18px;margin:22px 0 10px}p{margin:6px 0 14px}.muted{color:var(--muted-foreground)}.cases{display:grid;grid-template-columns:1fr 1fr;gap:12px}.case{border:1px solid var(--border);border-radius:var(--radius,8px);padding:16px}.case h3{margin:0 0 7px;font-size:15px}.case p{margin:4px 0}.status{font-size:12px;font-weight:600}.pass{color:var(--success-foreground,#287c52)}.pending{color:var(--warning-foreground,#a36a14)}.fail{color:var(--destructive,#bf4949)}table{border-collapse:collapse;width:100%;font-size:13px}th,td{text-align:right;padding:9px 6px;border-bottom:1px solid var(--border)}th:first-child,td:first-child{text-align:left}th{font-weight:600}.scroll{overflow-x:auto}.small{font-size:12px}.numbers{font-variant-numeric:tabular-nums}@media(max-width:520px){.cases{grid-template-columns:1fr}table{font-size:12px}}
 </style></head><body>
-<p>Meshers versus actual Microgen+MMG, fixed four-case study. Evidence through 25 October 2026.</p>
+<p>Meshers versus actual Microgen+MMG. Fixed four-case study, 25 October 2026.</p>
 <div class="cases">
-<section class="case"><h3>Schwarz P solid</h3><p class="status pass">Measured comparison win</p><p>About 45× faster mesh generation and 5× fewer tets, with better sampled geometry and minimum quality.</p><p class="muted small">Both routes meet the supplementary 0.1% mixed-load target. Actual route uses explicit Microgen/MMG modifications and charged repair.</p></section>
-<section class="case"><h3>Gyroid sheet</h3><p class="status pending">Matched comparison incomplete</p><p>Meshers passes the tested geometry and stiffness gates. Tested actual routes remain inadmissible.</p><p class="muted small">No matched speed victory claimed against a rejected competitor.</p></section>
-<section class="case"><h3>Fixed spinodoid</h3><p class="status pending">Matched comparison incomplete</p><p>Meshers passes the tested geometry and stiffness gates. Tested actual routes remain inadmissible.</p><p class="muted small">The same fixed 52-mode specimen is retained.</p></section>
-<section class="case"><h3>Smooth-union lattice</h3><p class="status fail">Meshers stiffness remains the weak point</p><p>The corrected native geometry mesh is smaller and has better distance and quality. Its worst retained-model stiffness disagreement is 2.428%, above 1%.</p><p class="muted small">Actual admitted route reaches 0.995%. No native all-metric win.</p></section>
+<section class="case"><h3>Schwarz P solid</h3><p class="status pass">Last paired comparison: Meshers win</p><p>About 45× faster mesh generation and 5× fewer tets, with better sampled geometry and minimum quality.</p><p class="muted small">Explicitly modified actual route. Both meet the supplementary 0.1% mixed-load target. Current mesh arrays are unchanged.</p></section>
+<section class="case"><h3>Gyroid sheet</h3><p class="status pending">Matched comparison incomplete</p><p>Native geometry and stiffness pass. Tested actual routes remain inadmissible.</p><p class="muted small">Current mesh arrays are unchanged. No matched speed victory against rejected competitors.</p></section>
+<section class="case"><h3>Fixed spinodoid</h3><p class="status pending">Native repair verified; comparison incomplete</p><p>Curved distance improves 0.001333 → 0.000304; corner quality 0.269 → 0.301, with fewer tets. Fresh stiffness disagreement is 0.183%.</p><p class="muted small">Fixed 52 modes. Linear geometry failure is also repaired; its minimum quality drops to 0.10065. Actual routes still lack admission.</p></section>
+<section class="case"><h3>Smooth-union lattice</h3><p class="status fail">Native stiffness accuracy still fails</p><p>Fresh six loads and independent audits pass, but worst disagreement is 2.412%, above 1%.</p><p class="muted small">All 24 retained tensors stay in scope. Actual admitted route reaches 0.995%.</p></section>
 </div>
-<h2>Lattice geometry mesh</h2>
-<div class="scroll"><table class="numbers"><thead><tr><th>Metric</th><th>Previous Meshers</th><th>Corrected Meshers</th><th>Actual Microgen+MMG</th></tr></thead><tbody>
-<tr><td>Tets</td><td>123,694</td><td>41,131</td><td>165,722</td></tr>
-<tr><td>Nodes</td><td>189,180</td><td>65,382</td><td>250,000</td></tr>
-<tr><td>Minimum corner quality ↑</td><td>0.2074</td><td>0.3616</td><td>0.1000</td></tr>
-<tr><td>Sampled distance ↓</td><td>0.0003432</td><td>0.0003359</td><td>0.0017012</td></tr>
-<tr><td>Absolute volume error ↓</td><td>0.03140%</td><td>0.03139%</td><td>0.49053%</td></tr>
-<tr><td>Worst stiffness disagreement ↓</td><td>1.284%</td><td class="fail">2.428%</td><td>0.995%</td></tr>
+<h2>Current lattice versus admitted actual route</h2>
+<div class="scroll"><table class="numbers"><thead><tr><th>Metric</th><th>Meshers</th><th>Actual Microgen+MMG</th></tr></thead><tbody>
+<tr><td>Tets</td><td>41,340</td><td>165,722</td></tr>
+<tr><td>Nodes</td><td>65,721</td><td>250,000</td></tr>
+<tr><td>Minimum corner quality ↑</td><td>0.3659</td><td>0.1000</td></tr>
+<tr><td>Sampled distance ↓</td><td>0.0002787</td><td>0.0017012</td></tr>
+<tr><td>Absolute volume error ↓</td><td>0.03124%</td><td>0.49053%</td></tr>
+<tr><td>Worst stiffness disagreement ↓</td><td class="fail">2.412%</td><td>0.995%</td></tr>
 </tbody></table></div>
-<p class="muted small">All listed lattice meshes pass geometry, quality, curved-Jacobian, facet, and periodic gates. Stiffness uses all 24 retained tensors and a 1% target. Timings are omitted here because the native candidates do not match that accuracy.</p>
-<h2>Current accuracy work</h2>
-<p>A verified periodic-normal fix removed false wall curvature. Fresh four-case replay preserves the other three meshes within floating-point roundoff.</p>
-<p>On the compact lattice, a full cubic reference experiment still fails at 1.647%. The first measured quadratic edge-star refinement reaches 1.962%. A second allocation adds only 4,224 nodes and reaches 1.723%. Subsequent levels improve worst disagreement to <strong>1.325%</strong> at 168,615 nodes and 109,059 tets. Independent six-load, quadrature, and Galerkin audits pass. These are fixed-domain investigations, not production timing wins.</p>
-<p class="muted small">The sixth-level trial is below its existing gain screen, so no further h solve is selected. Native repair diagnosis now checks the fixed spinodoid linear route. Physical geometry, parent approximation spaces, all four cases, all 24 models, and every admission gate stay in scope.</p>
+<p class="muted small">Geometry, quality, sampled curved Jacobians, facets and periodic gates pass for both. Native uses about one quarter as many elements and fails accuracy. Timing superiority is unsupported at these accuracy levels.</p>
+<h2>What improved</h2>
+<p>The periodic cap repair passes 104 native tests, 182 Python tests and all four curved geometry replays. Fresh complete fields support the changed spinodoid and lattice results. Idle-sleep protection and clock-gap records now guard Mac workers.</p>
+<p class="muted small">The earlier fixed-domain lattice refinement investigation reaches 1.325% and still fails. It is separate from the current live native mesh. No new reference, local-stress certificate or four-case victory is claimed.</p>
 </body></html>

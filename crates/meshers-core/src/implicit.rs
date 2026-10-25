@@ -1096,7 +1096,7 @@ fn build<F: ScalarField>(g: &Context<F>) -> Result<Output, String> {
         return finish(mesh, g);
     }
     if let Some(adapt) = o.adapt {
-        let stats = crate::tet_adapt::adapt(
+        let mut stats = crate::tet_adapt::adapt(
             &mut mesh,
             g,
             threshold,
@@ -1114,6 +1114,30 @@ fn build<F: ScalarField>(g: &Context<F>) -> Result<Output, String> {
             None,
             g,
         )?;
+        if o.optimize_passes > 0 {
+            // Quality improvement can make a blocked wall insertion feasible.
+            // Close geometry after that pass without repeating size adaptation.
+            let closing = crate::tet_adapt::adapt(
+                &mut mesh,
+                g,
+                threshold,
+                o.periodic,
+                &crate::tet_adapt::Options {
+                    iterations: 0,
+                    ..adapt
+                },
+                o.max_tetrahedra,
+            )?;
+            stats.splits += closing.splits;
+            stats.collapses += closing.collapses;
+            stats.swaps += closing.swaps;
+            stats.moves += closing.moves;
+            stats.error_splits += closing.error_splits;
+            stats.maximum_error = closing.maximum_error;
+            for (total, elapsed) in stats.seconds.iter_mut().zip(closing.seconds) {
+                *total += elapsed;
+            }
+        }
         let mut output = finish(mesh, g)?;
         output.diagnostics.reverted_snap_vertices = reverted_snap_vertices;
         output.diagnostics.adapt = Some(stats);

@@ -1,11 +1,38 @@
 # Native periodic cap repair investigation
 
-The fixed linear spinodoid route fails geometry at sampled distance
-0.004834255. The curved route remains admitted. The current native repair
-candidate passes a local periodic cap-star regression, but whole-specimen
-replays still fail. Later guard corrections also need complete regression checks.
-It is not an admitted performance result or a four-case victory. The last
-fully checked four-case native build remains `eab1823f1234fd39223a89ec103df7d87db90c2418f59dceb7cfeebf59ceabd7`.
+The fixed linear spinodoid failure now passes independent strict mesh admission
+in job 470. The unchanged 52-mode specimen and fixed samples are hash-identical
+to the baseline. Distance improves from 0.004834255 to 0.001079175. The repaired
+mesh has 30,336 nodes and 131,011 tets, versus 30,499 nodes and 131,598 tets.
+Volume, coherent facets, positive determinants, periodic nodes and caps pass.
+Minimum quality is 0.100652964, down from 0.152883712 and just above the
+unchanged 0.1 gate. This fixes the geometry failure; it is not dominance on
+all quality measures or a matched-accuracy performance victory.
+
+The final source passes 104 native tests, one ignored research test, Clippy,
+and 11 awake-worker/frozen-recipe controls. Rebuilt arm64 binary SHA256 is
+`0f94afb012903f917b1d2c18ee7e7f5330a048cb8f2394fb3a446da74bf0f33e`.
+Complete Python suite 471 passes 182 tests with one skip. All four curved
+routes pass in 472 through 475. Spinodoid and lattice meshes change and need
+fresh mechanical evidence. Lattice preflight 476 passes at 65,721 nodes and
+41,340 tets. Job 477 completes six fresh AMG loads and audit 478 passes reactions,
+energy, periodicity and positive 64/125-point reintegration. All 24 lattice
+models remain retained. Assessment 479 gives 2.412306220% worst disagreement,
+versus 2.427923243% before repair, still failing 1%.
+
+Fresh curved-spinodoid loads 481 and field audit 482 pass. Assessment 483
+checks every entry in four archived reports. They contain six distinct model
+tensors repeated across 24 entries, not 24 independent reference tensors.
+Worst disagreement is 0.183380673%, versus 0.184393513% before repair, passing
+1%. Both old and new meshes fit the smaller historical 100,000-node solve
+guard despite different recorded guard values. Study admission stays 250,000.
+The shared assessor replay 484 preserves every lattice tensor and comparison
+exactly. Python-feature Clippy 485 passes. Gyroid and Schwarz have exactly
+identical point, Tet10 and Tri6 arrays to the accepted periodic-normal build.
+No new solve is needed for their unchanged approximation spaces.
+
+No stiffness solve is performed for the new linear spinodoid route, and no
+new reference or four-case comparative winner is promoted.
 
 ## Fixed failure and negative guard ablation
 
@@ -139,13 +166,65 @@ Trace 451 leaves two pending wall nodes through the late repair rounds with
 no further error splits. Candidate 452 tests existing relocation at the hard
 user quality floor only inside blocked repair stars and only after ordinary
 relocation fails. This is a diagnostic quality trade, not a new default guard.
-No native candidate or whole-case result is promoted.
+Job 452 still fails at 0.003132254, slightly worse than quarter insertion
+alone. Its hard-floor relocation is reverted. Build 453 preserves the
+quarter-insertion candidate as SHA256
+`cfae5059346e6cc855f9c251d30c1324f21a34a6c226e8149b771bda3288d263`.
+This package still fails the strict native whole-field control. Job 454
+replays the unchanged loose native call with independent external gates so
+its remaining bad patch can be extracted without changing admission.
+Independent whole-field audit 454 rejects that package at distance
+0.003085223, with 30,320 nodes and 130,980 tets. Compared with baseline 420,
+minimum quality improves from 0.152883712 to 0.196677363. The periodic pairs,
+cap triangles, positive determinants, facets and volume gate pass. Geometry
+still fails 0.002. Audit 455 finds only two off-field wall vertices, both below
+0.000338 first-order wall distance. The worst distance remains a cap chord.
+
+Read-only extraction 456 finds that the final quality-improved cap star admits
+a valid partially projected midpoint. This differs from the earlier pre-quality
+obstruction. Candidate 457 closes geometry after the final quality pass using
+zero additional sizing rounds. The strict public whole-field regression passes
+for the first time, including its original 0.002 distance, 0.1 quality and
+250,000-node/tet checks. Full native suite 458 finds a regression in the local cap-star control. The
+whole spinodoid test passes, but the small control leaves a pending wall
+vertex. The suite stops with 62 passed, one failed and one ignored unit
+test before the integration tests. Diagnostic 459 inspects that pending
+projection without changing assertions. The candidate remains held.
+Scheduling-only candidate 460 leaves the local pending regression and is
+rejected. Restricting quarter insertion to cap curves in 461 restores the
+local control but misses strict full geometry at 0.002048200. Concurrent
+quality repair in 462 improves that to 0.002031349 and still fails. Extra
+interior edge and face swaps in 463 change it by less than 5e-10; those
+ineffective additions are removed.
+
+Candidate 464 distinguishes the operation phases. During early sizing, the
+midpoint-first fallback can use quarter positions before the full quality
+stage. During late error repair, quarter insertion is restricted to wall-cap
+curves. Existing quality-improving relocation acts on blocked stars. All ten
+adaptation controls pass together, including the unchanged pending-empty
+local control, strict whole fixed spinodoid, periodic image controls, sphere,
+and Gyroid band. No threshold or sizing-round count changes. Complete native
+suite 465 passes 104 tests, with one ignored research test. Clippy 467 also
+passes. The failed archives remain failed. The queue reports a 116-second
+progress gap in 465; macOS logs confirm idle sleep during that verification
+run. Its duration is not a comparative performance measurement.
+
+Bounded Mac workers now hold a per-command `caffeinate -i` assertion and record
+monotonic and real elapsed time so suspension or clock differences remain
+visible. This changes no persistent power setting, timeout or memory ceiling.
+Controls 466 check real success, exit-code propagation, timeout, RSS stop and
+one-thread BLAS. Expanded controls 468 also observe the actual macOS assertion
+and verify frozen specimen/recipe identities. All 11 pass. Native Python
+build 469 is next; independent full-mesh and four-case checks remain pending.
+
+No rebuilt package, independent admission or performance result is promoted
+from the native regression alone.
 No sizing sweep or gate relaxation follows from these failures.
 
-Final complete native and Python checks, followed by all four known curved
-study cases, are required before retaining a repaired native candidate. Any
-changed lattice mesh requires fresh fields and all 24 retained model
-comparisons before an accuracy claim. A local control alone is insufficient.
+The complete native/Python checks and all four curved geometry replays are
+completed in 465 through 475. Changed lattice and spinodoid meshes receive
+fresh six-load fields and independent audits in 477 through 484. This
+validates the native bug fix while preserving the lattice accuracy failure.
 
 The last complete lattice reference investigation remains the fixed-domain
 quadratic level5 result at 1.325163420% worst disagreement, still failing 1%.

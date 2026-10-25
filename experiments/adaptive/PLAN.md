@@ -1,5 +1,26 @@
 # Adaptive implicit meshing: plan and status
 
+## Native cap repair passes four-case geometry checks, 25 October 2026
+
+The fixed linear spinodoid now passes strict independent admission. Distance
+improves from 0.004834255 to 0.001079175 at 30,336 nodes and 131,011 tets.
+Minimum quality is 0.100652964, above the unchanged 0.1 gate but lower than
+the old 0.152883712. This fixes a failure; it is not all-metric dominance.
+The exact source passes 104 native tests, Clippy, 182 Python tests and all
+four curved geometry/quality/periodic gates. Curved spinodoid improves distance
+from 0.001333 to 0.000304 and minimum quality from 0.269 to 0.301, with slightly
+fewer elements. Curved lattice also improves geometry and quality at nearly
+the same count. Both changed meshes need fresh fields before accuracy claims.
+Lattice preflight 476, six fresh loads 477 and independent audit 478 pass.
+Worst disagreement across all 24 retained tensors is 2.412306220%, still
+failing 1%. Fresh spinodoid loads and independent audit also pass; its six
+distinct archived model tensors give 0.183380673% worst disagreement. Every
+entry in all four archived spinodoid reports is checked without refitting.
+Gyroid and Schwarz arrays are exactly unchanged. No new reference or
+four-case performance winner is promoted.
+See [native cap repair evidence](NATIVE_CAP_REPAIR_RESULTS.md). Earlier checkpoints below are historical.
+
+
 ## Native periodic normals corrected, compact lattice accuracy still fails, 25 October 2026
 
 Jobs 379 through 403 reproduce and fix physical periodic cap gradients and

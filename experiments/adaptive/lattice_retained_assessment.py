@@ -1,4 +1,4 @@
-"""Assess one fully field-audited lattice tensor against all 24 frozen models."""
+"""Assess a field-audited lattice or spinodoid tensor against frozen models."""
 
 import argparse
 import hashlib
@@ -8,6 +8,13 @@ from pathlib import Path
 
 import microgen_workflow as w
 from cubic_refinement import MODEL_REPORTS
+
+SPIN_REPORTS = (
+    'g3-spinodoid-reference-sensitivity-v1.json',
+    'g3-spinodoid-partial-settle-reference-sensitivity-v1.json',
+    'g3-spinodoid-partial-settle003-reference-sensitivity-v1.json',
+    'g3-spinodoid-reference-tool-regression-v1.json',
+)
 
 
 def canonical_ordered_mesh(mesh, np):
@@ -39,7 +46,8 @@ def main():
     from periodic import tensor_difference
     source = args.source
     row = json.loads((source/'result.json').read_text())
-    assert row['case'] == 'smooth-lattice' and row['order'] == 2
+    assert row['case'] in ('smooth-lattice', 'spinodoid') and row['order'] == 2
+    lattice = row['case'] == 'smooth-lattice'
     assert row['qualified'] and row['geometry']['geometry_admitted']
     assert row['status'] == 'solved-needs-reference' and row['completed_loads'] == 6
     assert len(row['solver_records']) == 6
@@ -82,10 +90,17 @@ def main():
     previous = args.previous_source
     old = json.loads((previous/'result.json').read_text())
     for key in ('case', 'cells', 'min_length', 'order', 'native_tolerance', 'optimization_passes',
-        'adaptive', 'adapt_tolerance', 'solve_node_cap', 'solver_quadrature_points'):
+        'adaptive', 'adapt_tolerance', 'solver_quadrature_points'):
         assert old[key] == row[key]
-    assert old['void_clamp']['positive_ceiling'] == row['void_clamp']['positive_ceiling'] == .02
-    assert old['symmetric_union']['identity'] == row['symmetric_union']['identity']
+    if lattice:
+        assert old['solve_node_cap'] == row['solve_node_cap']
+        assert old['void_clamp']['positive_ceiling'] == row['void_clamp']['positive_ceiling'] == .02
+        assert old['symmetric_union']['identity'] == row['symmetric_union']['identity']
+    else:
+        # Both solves fit the smaller historical guard, so its changed value
+        # cannot affect the mesh or tensor. Keep the study-wide cap unchanged.
+        assert max(old['nodes'], row['nodes']) <= min(old['solve_node_cap'], row['solve_node_cap'])
+        assert row['compiled_field']['modes'] == 52
     for suffix in ('-samples.npz', '-specimen.json'):
         name = row['case']+suffix
         assert w.digest(source/name) == w.digest(previous/name) == w.digest(args.preflight/name)
@@ -99,10 +114,12 @@ def main():
     tensor = np.asarray(row['stiffness'])
     assert tensor.shape == (6, 6) and np.isfinite(tensor).all() and np.linalg.eigvalsh(tensor).min() > 0
     models, model_bytes = [], []
-    for filename in MODEL_REPORTS:
+    reports = MODEL_REPORTS if lattice else SPIN_REPORTS
+    for filename in reports:
         path = w.HERE/'runs'/filename
         report = json.loads(path.read_text())
-        assert report['case'] == row['case'] and len(report['models']) == 8 and report['stiffness_target'] == .01
+        assert report['case'] == row['case'] and len(report['models']) == (8 if lattice else 6)
+        assert report['stiffness_target'] == .01
         hashes[str(path)] = w.digest(path)
         for index, model in enumerate(report['models']):
             matrix = np.asarray(model['stiffness'], dtype=np.float64)
@@ -120,10 +137,13 @@ def main():
         hashes[str(path)] = w.digest(path)
     passed = max(errors) <= .01
     w.save(args.output.parent/'analysis-inputs.json',hashes)
-    w.save(args.output, dict(source=str(source), field_audit_passed=True, complete_six_load_fields=True,
+    w.save(args.output, dict(case=row['case'], source=str(source), field_audit_passed=True, complete_six_load_fields=True,
         fixed_recipe_and_specimen=True, preflight_mesh_identical_up_to_numbering=True,
         full_tet10_and_tri6_local_associations_preserved=True,
         retained_model_count=24, retained_model_tensor_hashes=model_bytes, retained_models_unchanged=True,
+        distinct_retained_model_tensors=len(set(model_bytes)), reference_report_count=len(reports),
+        previous_and_current_solve_node_guards=[old['solve_node_cap'], row['solve_node_cap']],
+        both_meshes_fit_smaller_solve_guard=max(old['nodes'], row['nodes']) <= min(old['solve_node_cap'], row['solve_node_cap']),
         models=models, minimum_model_disagreement=min(errors), worst_model_disagreement=max(errors),
         previous_worst_model_disagreement=max(old_errors), passes_one_percent_all_models=passed,
         quadrature_sensitivity=sensitivity, quadrature_sensitivity_limit=1e-4,
@@ -131,8 +151,8 @@ def main():
         geometry=row['geometry'], previous_geometry=old['geometry'],
         tensor_change_from_previous=tensor_difference(tensor, np.asarray(old['stiffness'])),
         reference_promoted=False, comparative_timing_claim=False, full_objective_complete=False,
-        inputs=hashes, scope='Fresh same-host lattice workflow and complete retained-model assessment; no continuum, local stress or four-case timing victory'))
-    print(f'All 24 models retained: worst disagreement {max(errors):.9%}; passes 1% {passed}; no reference promoted', flush=True)
+        inputs=hashes, scope=f'Fresh same-host {row["case"]} workflow and complete archived-model assessment; no continuum, local stress or four-case timing victory'))
+    print(f'All 24 archived entries retained, {len(set(model_bytes))} distinct tensors: worst disagreement {max(errors):.9%}; passes 1% {passed}; no reference promoted', flush=True)
 
 
 if __name__ == '__main__':
