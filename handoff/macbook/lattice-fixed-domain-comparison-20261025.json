@@ -1,0 +1,433 @@
+{
+  "passed": true,
+  "domains": {
+    "native": {
+      "source": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-lattice26-current-native-amg-v1",
+      "nodes": 189180,
+      "tets": 123694,
+      "geometry": {
+        "sampled_forward_max": 0.00034316224776001817,
+        "sampled_reverse_max": 0.00030413433985365456,
+        "sampled_two_sided_max": 0.00034316224776001817,
+        "outward_forward_max": 0.00034316224776001817,
+        "inward_forward_max": 0.00027590108687667377,
+        "projection_failed": 0,
+        "forward_samples": 200642,
+        "reverse_samples": 34791,
+        "volume": 0.24823306438285248,
+        "relative_volume_error": -0.00031403517909334155,
+        "q_min_corner": 0.20735426940730667,
+        "q_p01_corner": 0.5222310696262715,
+        "minimum_dihedral_deg_corner": 11.973140948781491,
+        "minimum_sampled_jacobian": 1.7503929924297542e-08,
+        "reverse_tessellation_delta_max": 0.0001280006542399589,
+        "quadratic_reverse_subdivisions": [
+          4,
+          8
+        ],
+        "facet_consistency": {
+          "nodes": 189180,
+          "elements": 123694,
+          "unique_faces": 258535,
+          "interior_faces": 236241,
+          "extracted_boundary_faces": 22294,
+          "same_orientation_shared_faces": 0,
+          "nonmanifold_faces": 0,
+          "duplicate_cells": 0,
+          "duplicate_surface_faces": 0,
+          "provided_boundary_matches_extraction": true,
+          "missing_provided_faces": 0,
+          "extra_provided_faces": 0,
+          "nonpositive_corner_determinants": 0,
+          "minimum_corner_determinant": 1.7503929924300215e-08,
+          "oriented_facet_consistency_passed": true,
+          "conflict_examples": [],
+          "scope": "Oriented corner-face incidence and same-side neighbor diagnostics; necessary consistency, not a certificate of curved geometry or absence of nonlocal intersections"
+        },
+        "oriented_facet_consistency_passed": true,
+        "geometry_admitted": true
+      },
+      "wall_rules": [
+        {
+          "surface_points_per_face": 9,
+          "groups": {
+            "all": {
+              "faces": 15434,
+              "area": 3.4637167569281786,
+              "rms_projection": 1.4338797633105604e-05,
+              "signed_normal_integral": 2.773522841074914e-07,
+              "maximum_projection": 0.00027694207991834144,
+              "failed_projection_points": 0,
+              "maximum_box_overshoot": 0.0,
+              "maximum_remaining_field_distance": 6.630733361000964e-17
+            },
+            "curve_vertex_incident": {
+              "faces": 2315,
+              "area": 0.05692366263456798,
+              "rms_projection": 6.39475884683241e-08,
+              "signed_normal_integral": -1.0106961771412615e-09,
+              "maximum_projection": 5.207742330167492e-07,
+              "failed_projection_points": 0,
+              "maximum_box_overshoot": 0.0,
+              "maximum_remaining_field_distance": 4.1633363425206856e-17
+            },
+            "without_curve_vertex": {
+              "faces": 13119,
+              "area": 3.4067930942936107,
+              "rms_projection": 1.445809156019886e-05,
+              "signed_normal_integral": 2.7836298028463263e-07,
+              "maximum_projection": 0.00027694207991834144,
+              "failed_projection_points": 0,
+              "maximum_box_overshoot": 0.0,
+              "maximum_remaining_field_distance": 6.630733361000964e-17
+            }
+          }
+        },
+        {
+          "surface_points_per_face": 16,
+          "groups": {
+            "all": {
+              "faces": 15434,
+              "area": 3.463716773274933,
+              "rms_projection": 1.5775240957612164e-05,
+              "signed_normal_integral": 2.5291188795960947e-07,
+              "maximum_projection": 0.0002613449291794032,
+              "failed_projection_points": 0,
+              "maximum_box_overshoot": 0.0,
+              "maximum_remaining_field_distance": 6.850017045537807e-17
+            },
+            "curve_vertex_incident": {
+              "faces": 2315,
+              "area": 0.056923662634308134,
+              "rms_projection": 7.050946787092783e-08,
+              "signed_normal_integral": -1.0106959848605186e-09,
+              "maximum_projection": 6.023054991563409e-07,
+              "failed_projection_points": 0,
+              "maximum_box_overshoot": 0.0,
+              "maximum_remaining_field_distance": 4.16333634251559e-17
+            },
+            "without_curve_vertex": {
+              "faces": 13119,
+              "area": 3.406793110640625,
+              "rms_projection": 1.5906485593227127e-05,
+              "signed_normal_integral": 2.5392258394447e-07,
+              "maximum_projection": 0.0002613449291794032,
+              "failed_projection_points": 0,
+              "maximum_box_overshoot": 0.0,
+              "maximum_remaining_field_distance": 6.850017045537807e-17
+            }
+          }
+        },
+        {
+          "surface_points_per_face": 36,
+          "groups": {
+            "all": {
+              "faces": 15434,
+              "area": 3.4637167731554754,
+              "rms_projection": 1.5790369419682314e-05,
+              "signed_normal_integral": 2.5600976957448785e-07,
+              "maximum_projection": 0.0003434321098432329,
+              "failed_projection_points": 0,
+              "maximum_box_overshoot": 0.0,
+              "maximum_remaining_field_distance": 8.3469000461648e-17
+            },
+            "curve_vertex_incident": {
+              "faces": 2315,
+              "area": 0.05692366263430815,
+              "rms_projection": 7.047424851057822e-08,
+              "signed_normal_integral": -1.0106959922431618e-09,
+              "maximum_projection": 6.777017577176503e-07,
+              "failed_projection_points": 0,
+              "maximum_box_overshoot": 0.0,
+              "maximum_remaining_field_distance": 4.1633363425229043e-17
+            },
+            "without_curve_vertex": {
+              "faces": 13119,
+              "area": 3.4067931105211673,
+              "rms_projection": 1.5921739926568542e-05,
+              "signed_normal_integral": 2.5702046556673095e-07,
+              "maximum_projection": 0.0003434321098432329,
+              "failed_projection_points": 0,
+              "maximum_box_overshoot": 0.0,
+              "maximum_remaining_field_distance": 8.3469000461648e-17
+            }
+          }
+        },
+        {
+          "surface_points_per_face": 64,
+          "groups": {
+            "all": {
+              "faces": 15434,
+              "area": 3.4637167731554555,
+              "rms_projection": 1.579071988120399e-05,
+              "signed_normal_integral": 2.5622115974597495e-07,
+              "maximum_projection": 0.0003466071951242664,
+              "failed_projection_points": 0,
+              "maximum_box_overshoot": 0.0,
+              "maximum_remaining_field_distance": 8.889237281825025e-17
+            },
+            "curve_vertex_incident": {
+              "faces": 2315,
+              "area": 0.05692366263430815,
+              "rms_projection": 7.047424851568346e-08,
+              "signed_normal_integral": -1.0106959924868407e-09,
+              "maximum_projection": 7.002983835133914e-07,
+              "failed_projection_points": 0,
+              "maximum_box_overshoot": 0.0,
+              "maximum_remaining_field_distance": 4.163336342523607e-17
+            },
+            "without_curve_vertex": {
+              "faces": 13119,
+              "area": 3.4067931105211473,
+              "rms_projection": 1.5922093303926645e-05,
+              "signed_normal_integral": 2.572318557384618e-07,
+              "maximum_projection": 0.0003466071951242664,
+              "failed_projection_points": 0,
+              "maximum_box_overshoot": 0.0,
+              "maximum_remaining_field_distance": 8.889237281825025e-17
+            }
+          }
+        }
+      ]
+    },
+    "actual": {
+      "source": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-lattice-actual-live-solve-v1",
+      "nodes": 250000,
+      "tets": 165722,
+      "geometry": {
+        "sampled_forward_max": 0.0017012390155748264,
+        "sampled_reverse_max": 0.0014631743789666777,
+        "sampled_two_sided_max": 0.0017012390155748264,
+        "outward_forward_max": 0.0017012390155748264,
+        "inward_forward_max": 0.0012580213593466976,
+        "projection_failed": 0,
+        "forward_samples": 281190,
+        "reverse_samples": 34791,
+        "volume": 0.24709299343401572,
+        "relative_volume_error": -0.004905337023936918,
+        "q_min_corner": 0.1000010009999996,
+        "q_p01_corner": 0.42997535703086776,
+        "minimum_dihedral_deg_corner": 5.232361200827825,
+        "minimum_sampled_jacobian": 7.244107635974441e-08,
+        "reverse_tessellation_delta_max": 9.042246118529107e-17,
+        "quadratic_reverse_subdivisions": [
+          4,
+          8
+        ],
+        "facet_consistency": {
+          "nodes": 250000,
+          "elements": 165722,
+          "unique_faces": 344215,
+          "interior_faces": 318673,
+          "extracted_boundary_faces": 25542,
+          "same_orientation_shared_faces": 0,
+          "nonmanifold_faces": 0,
+          "duplicate_cells": 0,
+          "duplicate_surface_faces": 0,
+          "provided_boundary_matches_extraction": true,
+          "missing_provided_faces": 0,
+          "extra_provided_faces": 0,
+          "nonpositive_corner_determinants": 0,
+          "minimum_corner_determinant": 7.244107635975676e-08,
+          "oriented_facet_consistency_passed": true,
+          "conflict_examples": [],
+          "scope": "Oriented corner-face incidence and same-side neighbor diagnostics; necessary consistency, not a certificate of curved geometry or absence of nonlocal intersections"
+        },
+        "oriented_facet_consistency_passed": true,
+        "geometry_admitted": true
+      },
+      "wall_rules": [
+        {
+          "surface_points_per_face": 9,
+          "groups": {
+            "all": {
+              "faces": 21630,
+              "area": 3.459193862263014,
+              "rms_projection": 0.00043002985740334343,
+              "signed_normal_integral": 0.0011386810195124684,
+              "maximum_projection": 0.0016672946872211413,
+              "failed_projection_points": 257,
+              "maximum_box_overshoot": 0.000293836658649238,
+              "maximum_remaining_field_distance": 6.831546629898833e-17
+            },
+            "curve_vertex_incident": {
+              "faces": 1112,
+              "area": 0.09660876082398769,
+              "rms_projection": 0.0004091181089469836,
+              "signed_normal_integral": 3.601922998180881e-05,
+              "maximum_projection": 0.0011158159914193197,
+              "failed_projection_points": 257,
+              "maximum_box_overshoot": 0.000293836658649238,
+              "maximum_remaining_field_distance": 5.5511151230872604e-17
+            },
+            "without_curve_vertex": {
+              "faces": 20518,
+              "area": 3.3625851014390262,
+              "rms_projection": 0.00043061565530410153,
+              "signed_normal_integral": 0.0011026617895306596,
+              "maximum_projection": 0.0016672946872211413,
+              "failed_projection_points": 0,
+              "maximum_box_overshoot": 0.0,
+              "maximum_remaining_field_distance": 6.831546629898833e-17
+            }
+          }
+        },
+        {
+          "surface_points_per_face": 16,
+          "groups": {
+            "all": {
+              "faces": 21630,
+              "area": 3.459193862263014,
+              "rms_projection": 0.00043002383687736176,
+              "signed_normal_integral": 0.001138681061305862,
+              "maximum_projection": 0.0016568602572383361,
+              "failed_projection_points": 622,
+              "maximum_box_overshoot": 0.0003726594100584846,
+              "maximum_remaining_field_distance": 6.766789105393275e-17
+            },
+            "curve_vertex_incident": {
+              "faces": 1112,
+              "area": 0.09660876082398773,
+              "rms_projection": 0.000409116837739274,
+              "signed_normal_integral": 3.601922798427852e-05,
+              "maximum_projection": 0.0011211539328783659,
+              "failed_projection_points": 622,
+              "maximum_box_overshoot": 0.0003726594100584846,
+              "maximum_remaining_field_distance": 5.5511151231072e-17
+            },
+            "without_curve_vertex": {
+              "faces": 20518,
+              "area": 3.362585101439026,
+              "rms_projection": 0.00043060950492930327,
+              "signed_normal_integral": 0.0011026618333215836,
+              "maximum_projection": 0.0016568602572383361,
+              "failed_projection_points": 0,
+              "maximum_box_overshoot": 0.0,
+              "maximum_remaining_field_distance": 6.766789105393275e-17
+            }
+          }
+        },
+        {
+          "surface_points_per_face": 36,
+          "groups": {
+            "all": {
+              "faces": 21630,
+              "area": 3.4591938622630143,
+              "rms_projection": 0.00043002384935062274,
+              "signed_normal_integral": 0.0011386810311047623,
+              "maximum_projection": 0.0017092123360168277,
+              "failed_projection_points": 2139,
+              "maximum_box_overshoot": 0.0004096246105789181,
+              "maximum_remaining_field_distance": 9.1492017636595e-17
+            },
+            "curve_vertex_incident": {
+              "faces": 1112,
+              "area": 0.09660876082398773,
+              "rms_projection": 0.0004091168386402216,
+              "signed_normal_integral": 3.601922798626406e-05,
+              "maximum_projection": 0.0011581744786425103,
+              "failed_projection_points": 2139,
+              "maximum_box_overshoot": 0.0004096246105789181,
+              "maximum_remaining_field_distance": 5.551115123134191e-17
+            },
+            "without_curve_vertex": {
+              "faces": 20518,
+              "area": 3.3625851014390267,
+              "rms_projection": 0.00043060951771888245,
+              "signed_normal_integral": 0.0011026618031184981,
+              "maximum_projection": 0.0017092123360168277,
+              "failed_projection_points": 0,
+              "maximum_box_overshoot": 0.0,
+              "maximum_remaining_field_distance": 9.1492017636595e-17
+            }
+          }
+        },
+        {
+          "surface_points_per_face": 64,
+          "groups": {
+            "all": {
+              "faces": 21630,
+              "area": 3.459193862263014,
+              "rms_projection": 0.00043002385027996566,
+              "signed_normal_integral": 0.0011386810365323918,
+              "maximum_projection": 0.0017240352102986759,
+              "failed_projection_points": 4659,
+              "maximum_box_overshoot": 0.00041713752691885375,
+              "maximum_remaining_field_distance": 6.910598816693142e-17
+            },
+            "curve_vertex_incident": {
+              "faces": 1112,
+              "area": 0.09660876082398771,
+              "rms_projection": 0.00040911683864021826,
+              "signed_normal_integral": 3.60192279862635e-05,
+              "maximum_projection": 0.0011645176256403224,
+              "failed_projection_points": 4659,
+              "maximum_box_overshoot": 0.00041713752691885375,
+              "maximum_remaining_field_distance": 5.551115123152308e-17
+            },
+            "without_curve_vertex": {
+              "faces": 20518,
+              "area": 3.3625851014390262,
+              "rms_projection": 0.0004306095186736257,
+              "signed_normal_integral": 0.0011026618085461283,
+              "maximum_projection": 0.0017240352102986759,
+              "failed_projection_points": 0,
+              "maximum_box_overshoot": 0.0,
+              "maximum_remaining_field_distance": 6.910598816693142e-17
+            }
+          }
+        }
+      ]
+    }
+  },
+  "identical_fixed_specimen_inputs": true,
+  "meshes_unchanged": true,
+  "no_solve": true,
+  "no_geometry_offset": true,
+  "no_reference_promoted": true,
+  "inputs": {
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/lattice_domain_comparison.py": "4a1c3809b59d542dae7320ac063fb333e675615b9b18c2418ac3736215c6e50f",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/hp_ranked_localization.py": "6dd754316bdd451ec2e2d0679ad0f6c744f73a7cf022015585a524e0ee5f5b16",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/periodic_crease_audit.py": "d326ff63068dc2ba9988163991cf5e5d228991777e9dd6f85f53b1a7b5c14133",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/microgen_workflow.py": "073f615481feeae8bb9142d325d9ae39251ca1e1aa2d1376f5e4f88a19aec872",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-lattice26-current-native-amg-v1/mesh.npz": "ca05ffc25f6392b92c00b8c0e34216727d23898b1ed0bc69f84b0ff09aa7537a",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-lattice26-current-native-amg-v1/result.json": "1ea33dc051aed3b3150cb2d44cca787b4474098dc6a3071fdff8d9cffefdac91",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-lattice26-current-native-amg-v1/smooth-lattice-specimen.json": "0e5b34b76183341a6e0d454f13cd404668ab82675f9a51cd9d2ecf3c91be3316",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-lattice26-current-native-amg-v1/smooth-lattice-samples.npz": "a2b4375d2c99901f03b34e913563c887a4cdcff00bca35983adb7ef9d5311abe",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-lattice-actual-live-solve-v1/mesh.npz": "b99192aa8bd0d7159b3ce3292eecb85463430932b1182bec5478a7048b06df70",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-lattice-actual-live-solve-v1/result.json": "f0d717c9f6e5e22fd4cbd467b8773c1f6f844d6f17b64f78a85dd09b21d1e85f",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-lattice-actual-live-solve-v1/smooth-lattice-specimen.json": "0e5b34b76183341a6e0d454f13cd404668ab82675f9a51cd9d2ecf3c91be3316",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-lattice-actual-live-solve-v1/smooth-lattice-samples.npz": "a2b4375d2c99901f03b34e913563c887a4cdcff00bca35983adb7ef9d5311abe",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-lattice-fixed-domain-comparison-v2/native-wall-64.npz": "7a73a2c08b2f2abee0a2de16a290a96cac890b7f4757df341e36e07d79ecff9b",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-lattice-fixed-domain-comparison-v2/actual-wall-64.npz": "f45a4679b1870cd57e9479a9e99984855df9563dce8fd364429e839c5888c9c8",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-lattice-fixed-domain-comparison-v2/actual-wall-9.npz": "c27c4122f74c5f93225271668139e443a8babba009069160ffd2344b2869944a",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-lattice-fixed-domain-comparison-v2/actual-wall-16.npz": "43993073f7ab59966f2a613725a7a192f5692f8270e529accab2436abfe13d13",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-lattice-fixed-domain-comparison-v2/native-wall-16.npz": "2dd3ee2439ea44c53544971f8e57a402db4e6f88f107b431d85f7fd717d54e98",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-lattice-fixed-domain-comparison-v2/actual-wall-36.npz": "64cfc6b7ae685246c99bb2d3727ec04fee3d3268f0a18088df1b2b9b4a305835",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-lattice-fixed-domain-comparison-v2/native-wall-36.npz": "d93f9cc6160a10c2f51a038c17695465312b35fdbda3e0445423818187dca436",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-lattice-fixed-domain-comparison-v2/native-wall-9.npz": "d74a1d9297832ebdb36dd76af50f0e611ff76594333fff8ebf7b3a5166a1f30b"
+  },
+  "scope": "Sampled wall projection diagnostics on saved domains, not stiffness shape derivatives, continuum bounds or fresh workflow timing",
+  "worker": {
+    "returncode": 0,
+    "limit_failure": null,
+    "peak_rss_bytes": 324255744,
+    "wall_s": 13.352851958014071,
+    "memory_bytes": 8589934592,
+    "memory_enforcement": "process-tree-rss-watchdog",
+    "rss_poll_interval_s": 0.25,
+    "platform": "darwin",
+    "numerical_thread_policy": {
+      "environment": {
+        "OPENBLAS_NUM_THREADS": "1",
+        "OMP_NUM_THREADS": "1",
+        "MKL_NUM_THREADS": "1",
+        "VECLIB_MAXIMUM_THREADS": "1",
+        "RAYON_NUM_THREADS": "1"
+      },
+      "accelerate_blas_threading": 1,
+      "accelerate_scope": "calling thread"
+    }
+  },
+  "run": "experiments/adaptive/runs/macbook-lattice-fixed-domain-comparison-v2"
+}

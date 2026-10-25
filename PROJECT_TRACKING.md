@@ -1,5 +1,44 @@
 # Meshers project tracking
 
+## Fixed native and actual wall geometry inspected, 25 October 2026
+
+Three existing surface-projection controls pass in job 366, including exact
+planar area/distance and explicit rejection reporting for feet outside the box.
+Read-only jobs 367 and 368 compare the saved native lattice26 and admitted
+actual lattice meshes against the same ordered implicit wall. The frozen
+specimen JSON and sample NPZ hashes match between routes. No mesh coordinate,
+connectivity, sample or material field is regenerated or changed.
+
+Positive 9/16-point sampling initially changes native RMS by about 10%, so
+job 368 adds 36/64 points per wall face. Native full-wall RMS settles at
+1.579072e-5, changing 0.00222% from 36 to 64 points. All 987,776 native wall
+probes project within the box. The curve-incident wall geometry is especially
+close to the analytic wall, although this does not certify local stress.
+
+Actual wall faces without curve vertices have RMS 4.306095e-4, stable across
+the denser rules, with zero failed projections in that group. The two routes'
+excluded curve strips differ, so these group values are not a comparison on
+identical wall patches. Actual curve-incident probes include 4,659 projections
+outside the box at 64 points per face. Their raw RMS and signed integrals are
+saved with explicit failures and must not be treated as fully valid bounded
+wall-projection metrics. This diagnostic does not replace the original
+admission method or silently reclassify the admitted actual competitor.
+
+The native mesh already has better original sampled distance, smaller absolute
+volume error, higher minimum corner quality and fewer nodes/tets than this
+actual route. It still fails the retained-model stiffness target. These new
+geometric observations do not prove the cause of that disagreement, justify
+fitting a geometry offset, or certify a converged reference. Worker 368 takes
+13.35 seconds at 0.302 GiB, solely a saved-domain diagnostic, not new workflow
+timing. See [fixed-domain diagnostic](handoff/macbook/lattice-fixed-domain-comparison-20261025.json).
+
+Next audit the original lattice reference extrapolation assumptions and their
+fixed-domain evidence before choosing another mesh allocation change. Retain
+all 24 model tensors and all four cases. The residual screen remains below
+its threshold for another solve, and no native/reference victory is declared.
+Earlier selected-next descriptions below are historical.
+
+
 ## Remaining hierarchical residual screen closes another solve, 25 October 2026
 
 Four reconstruction/Schur controls pass in job 364. They check the enriched
