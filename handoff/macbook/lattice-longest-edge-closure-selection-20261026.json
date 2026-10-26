@@ -1,0 +1,72 @@
+{
+  "scope": "Test one longest-edge dependency closure rule to prevent greedy short-edge bisections from trapping refinement at the quality floor. Same geometry-only law, ratio, pass guard and admission caps.",
+  "selection_uses_candidate_stiffness": false,
+  "recipe": {
+    "case": "smooth-lattice",
+    "cells": 26,
+    "min_length": 0.002,
+    "max_length": 0.1,
+    "interior_refine_nodes": 0,
+    "order": 2,
+    "native_tolerance": 1.0,
+    "optimization_passes": 1,
+    "adaptive": true,
+    "adapt_tolerance": 0.0028,
+    "solver_quadrature_points": 15,
+    "solve_node_cap": 250000,
+    "crease_grading_requested": false,
+    "crease_bisection_requested": true,
+    "crease_longest_closure_requested": true
+  },
+  "crease_metric": {
+    "kind": "periodic-reentrant-curve-distance",
+    "exponent": 0.75,
+    "minimum_length": 0.002,
+    "maximum_length": 0.1,
+    "transition_distance": 0.038461538461538464,
+    "curve_sample_spacing_target": 0.0005,
+    "minimum_reentrant_angle_deg": 190
+  },
+  "mechanism": "All278 examined single-plane curve points are reentrant with232to289degree openings. Distance is to sampled freshly regenerated reentrant curves, not all cap planes. Both native generations and feature controls are charged. No FE fields enter sizing.",
+  "theory_scope": "A power law is motivated by local traction-free corner singularities and graded-mesh research. The exponent is an a priori experimental choice, not a proven optimal3D elasticity rule or error bound.",
+  "theory_sources": [
+    "https://authors.library.caltech.edu/records/2zph7-ee089",
+    "https://link.springer.com/article/10.1186/s40323-014-0013-5",
+    "https://www.unibw.de/imcs/publikationen/publikationen-thomas-apel-1/anftp.pdf"
+  ],
+  "controls": {
+    "geometry_distance": 0.002,
+    "abs_volume_relative": 0.01,
+    "quality_min": 0.1,
+    "node_cap": 250000,
+    "tet_cap": 250000,
+    "memory_gib": 8,
+    "numerical_threads": 1,
+    "stiffness_target": 0.01,
+    "retained_model_count": 24
+  },
+  "after_preflight": "Read every level count, map reproduction, volume, quality, curved Jacobian and periodic result before selecting any resource setup or six-load solve. Retain all failures and all24 models.",
+  "inputs": {
+    "handoff/macbook/lattice-directional-endpoint-selection-20261025.json": "5c8f7529f2f8a16c0a1d176e0904a9fc897c2891e7ee7a956bea146a939f41c4",
+    "experiments/adaptive/runs/macbook-lattice-directional-nesting-audit-v1/result.json": "df44f045f9d656e5d3e9f30dac9a3fd218549bbbb636a5fdbabd6345480dadcf",
+    "experiments/adaptive/runs/macbook-lattice-red-split-feasibility-v1/result.json": "3a23cc1183386eb991ee7f2f8de9ad7d564671ecbfdca967cd8bb4add0ea5738",
+    "experiments/adaptive/runs/macbook-longest-edge-closure-controls-v2/worker.json": "06c60585f7a2830388622af746658b3862ff19251a116e0221ada4b575400d90",
+    "experiments/adaptive/longest_edge_closure.py": "5126f1969c138e3498b537f1e471be4e65d43134bae940fd0d14ba096ff0a128",
+    "experiments/adaptive/test_longest_edge_closure.py": "603aa1ebbc9d8395808f7c7e79f73782f0079af7aa31a672de35d4b67a045df6",
+    "experiments/adaptive/crease_directional_refinement.py": "8338d0594f81cbacd772403e658a8b1bbf95951c25dca5fefbd5c8ea83acd2c7",
+    "experiments/adaptive/admission_pilot.py": "502e698924649c476cc60c76e76be82dfb41ca0d1c518b13f0030e8ae4f83b32",
+    "experiments/adaptive/lattice_retained_assessment.py": "8f2dd09477977709c44b25a040ddc89cc9a82ff542daa74133ef06f8acc75094"
+  },
+  "directional_ratio": 5.0,
+  "maximum_refinement_passes": 15,
+  "refinement": "Before bisection, propagate requested edge orbits to strictly longer edges in incident tets until locally longest leaves are reached. Preserve complete periodic orbits. Use maximum inherited geometry-only metric excess per added-node bound. No FE fields enter selection. Existing exact-map bisection and every quality/geometry/periodic/cap gate remain unchanged.",
+  "field_controls": "Six affine strains plus deterministic nonlinear periodic nodal perturbations. They only verify nesting and periodicity; no equilibrium fields enter generation.",
+  "score_parameters_unchanged_from_tensor_control": true,
+  "native_only": false,
+  "saved_seed_replayed": false,
+  "fe_fields_used": false,
+  "edge_metric_sampling": "Maximum at both endpoints and quadratic edge midpoint",
+  "selection_uses_previous_failure_evidence": true,
+  "previous_evidence": "2710 of2767 requested orbits quality-blocked; 723 blocking tets have no legal single midpoint split. Full-edge red splitting also fails681of1011 globally single-edge-blocked tets. Treat shape-degrading split order before selecting any new density law.",
+  "controls_result": "18 controls pass in549. Initial548 failed because the test misidentified Tet10 edge03 as short and requested an unsupported3-cell cube. Corrected fixtures use measured short02 and supported4cells; algorithm unchanged."
+}

@@ -36,6 +36,7 @@ def worker(args):
     row["solver"] = "cached-elastic-block-amg-cg" if args.amg else "jacobi-cg"
     row["crease_grading_requested"] = getattr(args, "crease_grading", False)
     row["crease_bisection_requested"] = getattr(args, "crease_bisection", False)
+    row["crease_longest_closure_requested"] = getattr(args, "crease_longest_closure", False)
     started = time.perf_counter()
     if args.order == 2 and args.quadrature_points == 4:
         row.update(timing_comparable=False,
@@ -184,6 +185,14 @@ def worker(args):
         if row["qualified"] and args.solve:
             if len(mesh.points) > args.solve_node_cap:
                 row["status"] = "solve-node-cap"
+            elif args.isolate_solve:
+                import psutil
+                row.update(solve_process_boundary="exec-replace", generation_process_id=os.getpid(),
+                    generation_memory_before_exec_bytes=psutil.Process().memory_info().rss,
+                    solve_exec_clock=time.perf_counter(), solve_mesh_sha256=workflow.digest(args.run / "mesh.npz"))
+                workflow.save(args.run / "result.json", row)
+                os.execv(sys.executable, [sys.executable, str(workflow.HERE / "fresh_mesh_solve.py"),
+                    "--run", str(args.run), "--started", str(started)])
             else:
                 from stress_recovery import solve, vector_first_reactions
                 phase = time.perf_counter()
@@ -236,12 +245,14 @@ def main():
     parser.add_argument("--interior-refine-nodes", type=int, default=0)
     parser.add_argument("--crease-grading", action="store_true")
     parser.add_argument("--crease-bisection", action="store_true")
+    parser.add_argument("--crease-longest-closure", action="store_true")
     parser.add_argument("--compiled-spinodoid", action="store_true")
     parser.add_argument("--order", type=int, default=1, choices=(1, 2))
     parser.add_argument("--native-tolerance", type=float, default=0.002)
     parser.add_argument("--optimization-passes", type=int, default=1)
     parser.add_argument("--adapt-tolerance", type=float, default=0.002)
     parser.add_argument("--solve", action="store_true")
+    parser.add_argument("--isolate-solve", action="store_true")
     parser.add_argument("--clip-void", type=float)
     parser.add_argument("--no-adapt", action="store_true")
     parser.add_argument("--symmetric-union", action="store_true")
@@ -256,7 +267,9 @@ def main():
     parser.add_argument("--amg", action="store_true")
     args = parser.parse_args()
     assert args.interior_refine_nodes >= 0
+    assert not args.isolate_solve or (args.solve and args.amg and args.order == 2 and args.quadrature_points == 15)
     assert not (args.crease_grading and args.crease_bisection)
+    assert not args.crease_longest_closure or args.crease_bisection
     assert not (args.crease_grading or args.crease_bisection) or (args.case == "smooth-lattice" and not args.no_adapt
         and args.order == 2 and args.cap_length is None and args.interior_refine_nodes == 0)
     assert args.cap_length is None or (not args.no_adapt and 0 < args.cap_length < .1 and 0 < args.cap_band < .5)
@@ -283,6 +296,11 @@ def main():
     if args.crease_bisection:
         source_hashes.update({str(workflow.HERE/name): workflow.digest(workflow.HERE/name)
             for name in ("crease_directional_refinement.py", "test_crease_directional_refinement.py", "nested_refinement.py", "test_nested_refinement.py", "hp_shared_domain.py")})
+    if args.crease_longest_closure:
+        source_hashes.update({str(workflow.HERE/name): workflow.digest(workflow.HERE/name)
+            for name in ("longest_edge_closure.py", "test_longest_edge_closure.py")})
+    if args.isolate_solve:
+        source_hashes[str(workflow.HERE / "fresh_mesh_solve.py")] = workflow.digest(workflow.HERE / "fresh_mesh_solve.py")
     if args.amg:
         source_hashes[str(workflow.HERE / "amg_reference.py")] = workflow.digest(workflow.HERE / "amg_reference.py")
     for index, path in enumerate(source_hashes):
@@ -301,6 +319,8 @@ def main():
         "interior_refine_nodes": args.interior_refine_nodes,
         "crease_grading_requested": args.crease_grading,
         "crease_bisection_requested": args.crease_bisection,
+        "crease_longest_closure_requested": args.crease_longest_closure,
+        "solve_process_boundary": "exec-replace" if args.isolate_solve else "same-process",
         "python_source_sha256": source_hashes,
         "solver": "cached-elastic-block-amg-cg" if args.amg else "jacobi-cg",
         "pyamg": importlib.metadata.version("pyamg") if args.amg else None})
@@ -348,12 +368,16 @@ def main():
                 command.append("--crease-grading")
             if args.crease_bisection:
                 command.append("--crease-bisection")
+            if args.crease_longest_closure:
+                command.append("--crease-longest-closure")
             if args.amg:
                 command.append("--amg")
             if args.cap_length is not None:
                 command.extend(["--cap-length", str(args.cap_length), "--cap-band", str(args.cap_band)])
             if args.solve:
                 command.append("--solve")
+            if args.isolate_solve:
+                command.append("--isolate-solve")
             if args.clip_void is not None:
                 command.extend(["--clip-void", str(args.clip_void)])
             if args.no_adapt:

@@ -35,6 +35,44 @@ earlier win and the Gyroid/spinodoid actual-comparator gaps remain as recorded.
 Evidence is retained in
 `handoff/macbook/lattice-directional-assessment-20261026.json`.
 
+### Longest-edge closure and memory handoff
+
+The experimental refinement now propagates short-edge requests to longer
+incident edges before bisection. Eighteen periodic, directionality and nesting
+controls pass. The initial control attempt used two invalid test fixtures;
+the corrected short edge and supported four-cell cube pass without changing
+the closure algorithm. Both attempts remain recorded.
+
+Geometry preflight 551 reaches **250,000 nodes and 162,365 tets** in 34 levels.
+All levels pass geometry, coherent facets, periodicity and sampled curved
+Jacobians. Quality rejects no orbit. Final minimum quality is **0.206873413**,
+versus 0.100030317 for the earlier greedy prototype. Maximum volume drift is
+3.775e-15 and map/control-field errors stay below 3.886e-16. It stops at the
+unchanged node cap, not at the 60-pass guard. Its 10,077 remaining requested
+edges make clear that the metric is still incomplete. No stiffness result is
+yet available for this mesh.
+
+Fresh operator/AMG setup 552 passes at 7.2485 GiB, but the combined live
+workflow 553 hits the unchanged 8 GiB watchdog before completing load one,
+with 8.595 GiB observed RSS. That attempt remains a resource failure. Exact
+regenerated arrays match the preflight. The retained-generation-memory
+hypothesis is tested by replacing the worker process image at the solver
+boundary with `os.execv`, keeping the same PID, exact mesh hash and original
+workflow clock. Imports and reload remain charged to the workflow.
+
+Full compact control 554 completes six loads through this handoff. The
+runnable verifier reproduces the baseline mesh, fields, stiffness tensor and
+operator hash exactly. Boundary RSS falls from 574,603,264 to 215,105,536
+bytes. This validates the transition, not the large candidate's memory use.
+Job **555** retries the frozen large recipe with only process isolation
+changed, under the same 8 GiB and 1,200-second bounds. Its outcome, independent
+field audits and all-24-model assessment remain pending. No new native-only
+feature, reference or comparative performance winner is claimed.
+
+Selection receipts, the failed resource attempt and compact control evidence
+are recorded in `handoff/macbook/lattice-longest-edge-preflight-evidence-20261026.json`
+and `handoff/macbook/lattice-exec-memory-protocol-20261026.json`.
+
 ## Daily pause summary, 25 October 2026
 
 **Paused at Kevin's request.** Today improved Meshers correctness and produced

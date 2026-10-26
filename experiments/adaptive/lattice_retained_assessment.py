@@ -62,6 +62,13 @@ def main():
     manifest = json.loads((source/'manifest.json').read_text())
     assert manifest['architecture'] == 'arm64' and manifest['threads'] == 1
     assert manifest['native_sha256'] == manifest['native_sha256_after']
+    boundary = manifest.get('solve_process_boundary', 'same-process')
+    assert row.get('solve_process_boundary', 'same-process') == boundary
+    if boundary == 'exec-replace':
+        assert row['generation_process_id'] == row['solver_process_id']
+        assert w.digest(source/'mesh.npz') == row['solve_mesh_sha256']
+        assert row['total_workflow_s'] >= row['generation_s']+row['solve_s']+row['exec_and_reload_seconds']
+        assert not row['solver_records'][0]['hierarchy_reused']
     worker = json.loads((source/'worker.json').read_text())
     assert worker['returncode'] == 0 and worker['limit_failure'] is None
     assert worker['memory_bytes'] == w.MEMORY and worker['memory_enforcement'] == 'process-tree-rss-watchdog'
@@ -99,19 +106,20 @@ def main():
         'adaptive', 'adapt_tolerance', 'solver_quadrature_points')
     planned_changes = {}
     defaults = {'max_length': .1, 'interior_refine_nodes': 0, 'crease_grading_requested': False,
-        'crease_bisection_requested': False}
+        'crease_bisection_requested': False, 'crease_longest_closure_requested': False}
     plan = None
     if args.planned_recipe:
         plan = json.loads(args.planned_recipe.read_text())
         expected = plan['recipe']
         required = set(recipe_keys) | {'max_length', 'interior_refine_nodes', 'solve_node_cap'}
-        assert required <= set(expected) <= required | {'crease_grading_requested', 'crease_bisection_requested'}
-        expected = {'crease_grading_requested': False, 'crease_bisection_requested': False, **expected}
+        assert required <= set(expected) <= required | {'crease_grading_requested', 'crease_bisection_requested', 'crease_longest_closure_requested'}
+        expected = {'crease_grading_requested': False, 'crease_bisection_requested': False,
+            'crease_longest_closure_requested': False, **expected}
         assert not plan['selection_uses_candidate_stiffness']
         assert all(row.get(key, defaults.get(key)) == value
             for key, value in expected.items())
         density_keys = {'cells', 'min_length', 'max_length', 'interior_refine_nodes', 'adaptive',
-            'adapt_tolerance', 'crease_grading_requested', 'crease_bisection_requested'}
+            'adapt_tolerance', 'crease_grading_requested', 'crease_bisection_requested', 'crease_longest_closure_requested'}
         planned_changes = {key: [old.get(key, defaults.get(key)), value]
             for key, value in expected.items()
             if old.get(key, defaults.get(key)) != value}
@@ -132,6 +140,7 @@ def main():
         assert row['crease_bisection']['maximum_passes'] == plan['maximum_refinement_passes']
         assert row['crease_bisection']['edge_metric_sampling'] == plan['edge_metric_sampling']
         assert not row['crease_bisection']['fe_fields_used'] and not row['crease_bisection']['saved_fe_fields_replayed']
+        assert row['crease_bisection'].get('longest_edge_closure', False) == row.get('crease_longest_closure_requested', False)
         for key in ('law', 'edge_metric_sampling'):
             before = old.get('crease_bisection', {}).get(key)
             if before != row['crease_bisection'][key]:

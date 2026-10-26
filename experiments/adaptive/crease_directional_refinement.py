@@ -35,6 +35,10 @@ def generate(seed, function, args, seed_volume):
         controls[load, :, load % 3] += modulation
     # Guard the fixed-point loop; disjoint stars may need separate directional passes.
     maximum_passes = 3*int(np.ceil(np.log2((1/args.cells)/args.min_length)))
+    if getattr(args, 'crease_longest_closure', False):
+        # Closure must first split longer neighbors. The 15-pass pilot still
+        # accepted 507 orbits at its guard, without a quality/budget rejection.
+        maximum_passes *= 4
     assert maximum_passes > 0
     history = []
     directory = args.run/'directional-refinement'
@@ -49,11 +53,18 @@ def generate(seed, function, args, seed_volume):
         if not scores:
             history.append(dict(step=step+1, status='metric-satisfied', nodes=len(points), tets=len(cells)))
             break
+        closure = None
+        if getattr(args, 'crease_longest_closure', False):
+            from longest_edge_closure import closure_scores
+            scores, closure = closure_scores(points, cells, surface, scores)
         result = refine(points, cells, surface, controls, maximum_nodes=w.CAP,
             maximum_tets=w.CAP, minimum_quality=.1, edge_scores=scores)
         check = interpolation_check(points, cells, controls, result)
         diagnostics = result['diagnostics']
         diagnostics['selection'] = 'Geometry-only directional edge-metric excess per added-node upper bound'
+        if closure is not None:
+            diagnostics['longest_edge_closure'] = closure
+            diagnostics['selection'] = closure['selection']+'; inherited metric excess per node bound'
         diagnostics['fe_residual_scores_used'] = False
         diagnostics['score_units'] = 'Squared normalized metric-length excess, dimensionless'
         points, cells, surface, controls = (result[k] for k in ('points', 'tetrahedra', 'surface', 'displacement'))
@@ -88,6 +99,7 @@ def generate(seed, function, args, seed_volume):
     remaining_ratio = np.sqrt(edge_metric_squared(points, edges, mids, tensor))
     _, _, final_periodic = periodic_pairs(points, surface)
     metadata.update(maximum_passes=maximum_passes, directional_ratio=5., history=history,
+        longest_edge_closure=getattr(args, 'crease_longest_closure', False),
         edge_metric_sampling='Maximum at both endpoints and quadratic edge midpoint',
         remaining_edges_above_metric_split_threshold=int((remaining_ratio > 4/3).sum()),
         maximum_remaining_metric_edge_ratio=float(remaining_ratio.max()),

@@ -1,0 +1,78 @@
+{
+  "scope": "Preserve the combined workflow memory failure and test process-image replacement at the generation/solve boundary. No memory or mesh admission cap changes.",
+  "failed_worker": {
+    "returncode": -9,
+    "limit_failure": "memory-cap",
+    "peak_rss_bytes": 9228812288,
+    "wall_s": 295.41264154199985,
+    "wall_s_clock": "monotonic",
+    "elapsed_realtime_s": 295.41313886642456,
+    "suspension_or_clock_adjustment_s": 0.0004973244247139519,
+    "idle_sleep_prevention": [
+      "/usr/bin/caffeinate",
+      "-i"
+    ],
+    "memory_bytes": 8589934592,
+    "memory_enforcement": "process-tree-rss-watchdog",
+    "rss_poll_interval_s": 0.25,
+    "platform": "darwin",
+    "numerical_thread_policy": {
+      "environment": {
+        "OPENBLAS_NUM_THREADS": "1",
+        "OMP_NUM_THREADS": "1",
+        "MKL_NUM_THREADS": "1",
+        "VECLIB_MAXIMUM_THREADS": "1",
+        "RAYON_NUM_THREADS": "1"
+      },
+      "accelerate_blas_threading": 1,
+      "accelerate_scope": "calling thread"
+    }
+  },
+  "resource_worker": {
+    "returncode": 0,
+    "limit_failure": null,
+    "peak_rss_bytes": 7783006208,
+    "wall_s": 15.81882633400005,
+    "wall_s_clock": "monotonic",
+    "elapsed_realtime_s": 15.818856239318848,
+    "suspension_or_clock_adjustment_s": 2.9905318797318614e-05,
+    "idle_sleep_prevention": [
+      "/usr/bin/caffeinate",
+      "-i"
+    ],
+    "memory_bytes": 8589934592,
+    "memory_enforcement": "process-tree-rss-watchdog",
+    "rss_poll_interval_s": 0.25,
+    "platform": "darwin",
+    "numerical_thread_policy": {
+      "environment": {
+        "OPENBLAS_NUM_THREADS": "1",
+        "OMP_NUM_THREADS": "1",
+        "MKL_NUM_THREADS": "1",
+        "VECLIB_MAXIMUM_THREADS": "1",
+        "RAYON_NUM_THREADS": "1"
+      },
+      "accelerate_blas_threading": 1,
+      "accelerate_scope": "calling thread"
+    }
+  },
+  "mesh_arrays_identical_to_preflight": true,
+  "mesh_identity_verification": "points, tetrahedra, surface all np.array_equal against admitted preflight-v2",
+  "ranked_hypotheses": [
+    "Generation retains memory into assembly: exec should reduce RSS and permit the same solve under8GiB.",
+    "Actual CG and load-state memory exceed setup-only probe: exec will still hit8GiB.",
+    "Mesh/operator mismatch at handoff: mesh arrays are already ruled out by exact equality; require first-operator SHA equality in completed fields."
+  ],
+  "mechanism": "os.execv replaces the generation process image without concurrent parent/solver heaps. Same PID, original workflow monotonic start, exact saved mesh SHA, imports and reload charged to full workflow, six cold loads, original8GiB watchdog. No saved seed or field replay.",
+  "control": "One full compact lattice workflow through the same exec path, compared against recorded six-load fields/tensor and exact default arrays before rerunning the large candidate.",
+  "memory_bytes": 8589934592,
+  "geometry_and_quality_caps_unchanged": true,
+  "first_large_attempt_remains_failed": true,
+  "inputs": {
+    "experiments/adaptive/runs/macbook-lattice-longest-edge-closure-amg-v1/worker.json": "f59ba0cc12d709adcb5c958d103d80df55a1644b7875e89b5da8e1f7257597e9",
+    "experiments/adaptive/runs/macbook-lattice-longest-edge-closure-amg-v1/manifest.json": "976d61b7f138c3b7323b4c5905d360eac2293237973d6ee94a7b20b3822a7da4",
+    "experiments/adaptive/runs/macbook-lattice-longest-edge-closure-amg-v1/result.json": "fc731f2b4602a90a6008f2ab7a6d781fe7a8ddadbd746d72fa1711872781752a",
+    "experiments/adaptive/runs/macbook-lattice-longest-edge-closure-resource-v1/worker.json": "33cf4fb4e8385c35af69d25b8cd09b20f34805fd657d45aea2bb931f85dcf9f8",
+    "experiments/adaptive/runs/macbook-lattice-longest-edge-closure-resource-v1/result.json": "76be535a6ef03a3086abdd294a52ffcddf02f22de43af3ad3a031398af2693d4"
+  }
+}
