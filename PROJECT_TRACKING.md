@@ -2,7 +2,7 @@
 
 ## Resumed investigation, 26 October 2026
 
-Latest completed result: the longest-edge closure prototype reaches
+Best completed mesh-workflow score: the longest-edge closure prototype reaches
 **1.216071201% worst disagreement across all 24 retained lattice models** at
 250,000 nodes and 162,365 tets. This improves on the earlier directional
 prototype's 1.608556732%, but still fails the unchanged 1% target. Six fresh
@@ -119,9 +119,25 @@ recipe is frozen in
 `handoff/macbook/lattice-quality-closure-solve-selection-20261026.json` and
 preflight evidence in
 `handoff/macbook/lattice-quality-closure-preflight-evidence-20261026.json`.
-Its stiffness accuracy and comparative performance remain unassessed. The
-latest completed mesh-workflow score remains 1.216071201% from the earlier
-mandatory-longest-edge route.
+The fresh workflow completes six loads at the exact preflight arrays and
+operator hash. Field/positive-quadrature audit 572 passes, followed by all-24
+assessment 573 at **1.315624132%** worst disagreement, still failing 1% and
+worse than mandatory-longest-edge's 1.216071201%. Median quality is 0.577905,
+also worse than the earlier prototype's 0.664257 and actual's 0.796052.
+The full diagnostic workflow takes 934.233 seconds. No performance win is
+claimed.
+
+Nested audit 574 passes with Galerkin balance 2.7953e-10. None of the 1,385
+blocking tets lacks every legal single-edge split, so the real dead-end
+regression is addressed. However, 1,407 of 1,732 remaining requested edge
+orbits remain quality-blocked. Fewer nodes/tets is a recorded tradeoff, not
+promotion. This closure-policy variant receives no further density or nearby
+policy retry. The best completed mesh-workflow score remains 1.216071201%
+from the mandatory-longest-edge route. The next diagnostic concerns existing
+edge-removal topology operations after refinement, with unchanged curved
+cavity boundaries, rather than another sizing-law choice.
+Evidence is recorded in
+`handoff/macbook/lattice-quality-closure-assessment-20261026.json`.
 
 ### Longest-edge closure and memory handoff
 
