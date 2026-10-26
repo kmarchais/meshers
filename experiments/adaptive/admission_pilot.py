@@ -253,6 +253,7 @@ def main():
     parser.add_argument("--adapt-tolerance", type=float, default=0.002)
     parser.add_argument("--solve", action="store_true")
     parser.add_argument("--isolate-solve", action="store_true")
+    parser.add_argument("--memory-gib", type=int, choices=(8, 10, 12), default=8)
     parser.add_argument("--clip-void", type=float)
     parser.add_argument("--no-adapt", action="store_true")
     parser.add_argument("--symmetric-union", action="store_true")
@@ -314,7 +315,7 @@ def main():
         "numerical_thread_policy": workflow.NUMERICAL_THREAD_POLICY,
         "packages": {name: importlib.metadata.version(name) for name in
             ("meshers", "numpy", "scipy", "fedoo", "microgen", "mmgpy", "pyamg", "pyvista", "vtk")},
-        "memory_bytes": workflow.MEMORY, "threads": 1, "timeout_s": args.worker_timeout,
+        "memory_bytes": args.memory_gib*1024**3, "threads": 1, "timeout_s": args.worker_timeout,
         "max_length": args.max_length,
         "interior_refine_nodes": args.interior_refine_nodes,
         "crease_grading_requested": args.crease_grading,
@@ -350,7 +351,7 @@ def main():
                 workflow.save(args.run / "python-tests.json", result)
                 assert result["returncode"] == 0, "Read python-tests.log"
                 job.result("python-tests", seconds=result["wall_s"], peak_gib=result["peak_rss_bytes"] / 1024**3)
-        with worker_part(job, "adaptive-admission") as part:
+        with worker_part(job, "adaptive-admission", memory_bytes=args.memory_gib*1024**3) as part:
             command = [sys.executable, __file__, "--run", str(args.run),
                 "--case", args.case, "--cells", str(args.cells), "--min-length", str(args.min_length),
                 "--max-length", str(args.max_length),
@@ -361,6 +362,7 @@ def main():
                 "--solve-node-cap", str(args.solve_node_cap),
                 "--quadrature-points", str(args.quadrature_points),
                 "--worker-timeout", str(args.worker_timeout),
+                "--memory-gib", str(args.memory_gib),
                 "--worker"]
             if args.compiled_spinodoid:
                 command.append("--compiled-spinodoid")
@@ -384,7 +386,8 @@ def main():
                 command.append("--no-adapt")
             if args.symmetric_union:
                 command.append("--symmetric-union")
-            result = workflow.bounded(command, args.run / "worker.log", part, timeout=args.worker_timeout)
+            result = workflow.bounded(command, args.run / "worker.log", part, timeout=args.worker_timeout,
+                memory_bytes=args.memory_gib*1024**3)
             workflow.save(args.run / "worker.json", result)
             assert result["returncode"] == 0, "Read worker.log"
             row = json.loads((args.run / "result.json").read_text())

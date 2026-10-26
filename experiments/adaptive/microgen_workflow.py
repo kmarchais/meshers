@@ -635,8 +635,9 @@ def self_check():
     print("Interpolation, curved tessellation, volume weights, mixed-load score and native Tet10 fedoo affine patch checks pass")
 
 
-def bounded(command, logfile, part, timeout=TIMEOUT):
+def bounded(command, logfile, part, timeout=TIMEOUT, *, memory_bytes=MEMORY):
     import psutil
+    assert memory_bytes == MEMORY or (sys.platform == 'darwin' and memory_bytes in (10*1024**3, 12*1024**3))
     start = time.monotonic()
     realtime_start = time.time()
     # Scope the assertion to this worker; do not change the user's power settings.
@@ -645,7 +646,7 @@ def bounded(command, logfile, part, timeout=TIMEOUT):
         command = [awake, '-i', *command]
     peak = 0
     def limit_address_space():
-        resource.setrlimit(resource.RLIMIT_AS, (MEMORY, MEMORY))
+        resource.setrlimit(resource.RLIMIT_AS, (memory_bytes, memory_bytes))
     with logfile.open("w") as stream:
         process = subprocess.Popen(command, stdout=stream, stderr=subprocess.STDOUT,
                                    start_new_session=True,
@@ -662,13 +663,14 @@ def bounded(command, logfile, part, timeout=TIMEOUT):
             try:
                 part.update(min(elapsed / timeout, 0.99), f"{logfile.stem}: {elapsed:.0f}s / {timeout}s cap",
                             rss_gib=rss / 1024**3, peak_gib=peak / 1024**3,
-                            elapsed_s=elapsed, timeout_remaining_s=max(timeout - elapsed, 0))
+                            elapsed_s=elapsed, timeout_remaining_s=max(timeout - elapsed, 0),
+                            memory_ceiling_gib=memory_bytes / 1024**3)
             except Exception:
                 os.killpg(process.pid, signal.SIGKILL)
                 process.wait()
                 raise
-            if peak > MEMORY or elapsed > timeout:
-                reason = "memory-cap" if peak > MEMORY else "timeout"
+            if peak > memory_bytes or elapsed > timeout:
+                reason = "memory-cap" if peak > memory_bytes else "timeout"
                 os.killpg(process.pid, signal.SIGKILL)
                 break
             time.sleep(0.25)
@@ -678,7 +680,7 @@ def bounded(command, logfile, part, timeout=TIMEOUT):
     return {"returncode": code, "limit_failure": reason, "peak_rss_bytes": peak,
             "wall_s": elapsed, "wall_s_clock": "monotonic", "elapsed_realtime_s": realtime_elapsed,
             "suspension_or_clock_adjustment_s": realtime_elapsed - elapsed,
-            "idle_sleep_prevention": [awake, '-i'] if awake else None, "memory_bytes": MEMORY,
+            "idle_sleep_prevention": [awake, '-i'] if awake else None, "memory_bytes": memory_bytes,
             "memory_enforcement": "rlimit-as-and-process-tree-rss" if sys.platform == "linux"
                 else "process-tree-rss-watchdog", "rss_poll_interval_s": .25,
             "platform": sys.platform, "numerical_thread_policy": NUMERICAL_THREAD_POLICY}

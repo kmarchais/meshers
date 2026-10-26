@@ -64,10 +64,23 @@ Full compact control 554 completes six loads through this handoff. The
 runnable verifier reproduces the baseline mesh, fields, stiffness tensor and
 operator hash exactly. Boundary RSS falls from 574,603,264 to 215,105,536
 bytes. This validates the transition, not the large candidate's memory use.
-Job **555** retries the frozen large recipe with only process isolation
-changed, under the same 8 GiB and 1,200-second bounds. Its outcome, independent
-field audits and all-24-model assessment remain pending. No new native-only
-feature, reference or comparative performance winner is claimed.
+Job **555** completes the first fresh load with the exact expected operator
+hash, then hits the same 8 GiB limit at 8.092239 GiB observed RSS on the next
+load. This second attempt remains failed. The process handoff reduces
+boundary RSS from 1,413,283,840 to 221,904,896 bytes, but full multi-load memory
+still exceeds setup-only feasibility.
+
+A recorded resource decision selects **10 GiB**, about 24% above that measured
+failure, while the 24 GiB host has 13.9 GiB available. This uses Kevin's prior
+authorization for a conservative measured Mac ceiling around 12 GiB. Default
+workers remain at 8 GiB. Larger Mac workers require an explicit argument,
+matching manifest/watchdog records and a matching declared assessment plan.
+Control 556 verifies the 10 GiB configuration and result metadata. Job **557**
+regenerates the same frozen geometry and attempts six cold loads under this
+declared ceiling and the unchanged 1,200-second bound. Both earlier 8 GiB
+failures stay failed. Its outcome, independent field audits and all-24-model
+assessment remain pending. No new native-only feature, reference or
+comparative performance winner is claimed.
 
 Selection receipts, the failed resource attempt and compact control evidence
 are recorded in `handoff/macbook/lattice-longest-edge-preflight-evidence-20261026.json`

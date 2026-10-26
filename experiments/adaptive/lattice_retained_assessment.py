@@ -71,7 +71,10 @@ def main():
         assert not row['solver_records'][0]['hierarchy_reused']
     worker = json.loads((source/'worker.json').read_text())
     assert worker['returncode'] == 0 and worker['limit_failure'] is None
-    assert worker['memory_bytes'] == w.MEMORY and worker['memory_enforcement'] == 'process-tree-rss-watchdog'
+    memory_bytes = manifest['memory_bytes']
+    assert worker['memory_bytes'] == memory_bytes and worker['memory_enforcement'] == 'process-tree-rss-watchdog'
+    assert memory_bytes in (w.MEMORY, 10*1024**3, 12*1024**3)
+    assert memory_bytes == w.MEMORY or args.planned_recipe is not None
     audit_manifest = json.loads((args.field_audit/'manifest.json').read_text())
     audited = {Path(p).resolve(): h for p, h in audit_manifest['inputs'].items()}
     hashes = {str(Path(__file__).resolve()): w.digest(Path(__file__))}
@@ -110,6 +113,7 @@ def main():
     plan = None
     if args.planned_recipe:
         plan = json.loads(args.planned_recipe.read_text())
+        assert plan['controls']['memory_gib']*1024**3 == memory_bytes
         expected = plan['recipe']
         required = set(recipe_keys) | {'max_length', 'interior_refine_nodes', 'solve_node_cap'}
         assert required <= set(expected) <= required | {'crease_grading_requested', 'crease_bisection_requested', 'crease_longest_closure_requested'}
@@ -214,6 +218,7 @@ def main():
         previous_worst_model_disagreement=max(old_errors), passes_one_percent_all_models=passed,
         quadrature_sensitivity=sensitivity, quadrature_sensitivity_limit=1e-4,
         workflow_seconds=row['total_workflow_s'], peak_rss_gib=worker['peak_rss_bytes']/1024**3,
+        worker_memory_limit_bytes=memory_bytes,
         geometry=row['geometry'], previous_geometry=old['geometry'],
         tensor_change_from_previous=tensor_difference(tensor, np.asarray(old['stiffness'])),
         reference_promoted=False, comparative_timing_claim=False, full_objective_complete=False,
