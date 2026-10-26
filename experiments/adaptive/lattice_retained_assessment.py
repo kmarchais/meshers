@@ -42,7 +42,7 @@ def main():
     parser.add_argument('--allow-interior-refinement-change', action='store_true',
         help='Declare a count-selected interior-refinement variant; keep all other recipe checks')
     parser.add_argument('--planned-recipe', type=Path,
-        help='Frozen exact density/seed recipe selected before candidate stiffness evaluation')
+        help='Frozen exact generation variant selected before candidate stiffness evaluation')
     parser.add_argument('--previous-source', type=Path,
         default=w.HERE/'runs/g3-lattice-adapt26-tol0028-amg-solve-v1',
         help='Recorded baseline; density changes require the explicit declaration flags')
@@ -98,19 +98,44 @@ def main():
     recipe_keys = ('case', 'cells', 'min_length', 'order', 'native_tolerance', 'optimization_passes',
         'adaptive', 'adapt_tolerance', 'solver_quadrature_points')
     planned_changes = {}
+    defaults = {'max_length': .1, 'interior_refine_nodes': 0, 'crease_grading_requested': False,
+        'crease_bisection_requested': False}
+    plan = None
     if args.planned_recipe:
         plan = json.loads(args.planned_recipe.read_text())
         expected = plan['recipe']
-        assert set(expected) == set(recipe_keys) | {'max_length', 'interior_refine_nodes', 'solve_node_cap'}
+        required = set(recipe_keys) | {'max_length', 'interior_refine_nodes', 'solve_node_cap'}
+        assert required <= set(expected) <= required | {'crease_grading_requested', 'crease_bisection_requested'}
+        expected = {'crease_grading_requested': False, 'crease_bisection_requested': False, **expected}
         assert not plan['selection_uses_candidate_stiffness']
-        assert all(row.get(key, {'max_length': .1, 'interior_refine_nodes': 0}.get(key)) == value
+        assert all(row.get(key, defaults.get(key)) == value
             for key, value in expected.items())
-        density_keys = {'cells', 'min_length', 'max_length', 'interior_refine_nodes', 'adaptive', 'adapt_tolerance'}
-        planned_changes = {key: [old.get(key, {'max_length': .1, 'interior_refine_nodes': 0}.get(key)), value]
+        density_keys = {'cells', 'min_length', 'max_length', 'interior_refine_nodes', 'adaptive',
+            'adapt_tolerance', 'crease_grading_requested', 'crease_bisection_requested'}
+        planned_changes = {key: [old.get(key, defaults.get(key)), value]
             for key, value in expected.items()
-            if old.get(key, {'max_length': .1, 'interior_refine_nodes': 0}.get(key)) != value}
+            if old.get(key, defaults.get(key)) != value}
         assert set(planned_changes) <= density_keys
         hashes[str(args.planned_recipe)] = w.digest(args.planned_recipe)
+    old_crease, new_crease = (r.get('crease_grading_requested', False) for r in (old, row))
+    assert old_crease == new_crease or 'crease_grading_requested' in planned_changes
+    if new_crease:
+        assert plan is not None and row['crease_grading']['law'] == plan['crease_metric']
+        assert not row['crease_grading']['fe_fields_used'] and not row['crease_grading']['saved_seed_replayed']
+        if old.get('crease_grading', {}).get('law') != row['crease_grading']['law']:
+            planned_changes['crease_grading_law'] = [old.get('crease_grading', {}).get('law'), row['crease_grading']['law']]
+    old_bisection, new_bisection = (r.get('crease_bisection_requested', False) for r in (old, row))
+    assert old_bisection == new_bisection or 'crease_bisection_requested' in planned_changes
+    if new_bisection:
+        assert plan is not None and row['crease_bisection']['law'] == plan['crease_metric']
+        assert row['crease_bisection']['directional_ratio'] == plan['directional_ratio']
+        assert row['crease_bisection']['maximum_passes'] == plan['maximum_refinement_passes']
+        assert row['crease_bisection']['edge_metric_sampling'] == plan['edge_metric_sampling']
+        assert not row['crease_bisection']['fe_fields_used'] and not row['crease_bisection']['saved_fe_fields_replayed']
+        for key in ('law', 'edge_metric_sampling'):
+            before = old.get('crease_bisection', {}).get(key)
+            if before != row['crease_bisection'][key]:
+                planned_changes['crease_bisection_'+key] = [before, row['crease_bisection'][key]]
     for key in recipe_keys:
         assert old[key] == row[key] or key in planned_changes
     old_maximum, new_maximum = old.get('max_length', .1), row.get('max_length', .1)
@@ -163,6 +188,7 @@ def main():
     passed = max(errors) <= .01
     w.save(args.output.parent/'analysis-inputs.json',hashes)
     w.save(args.output, dict(case=row['case'], source=str(source), field_audit_passed=True, complete_six_load_fields=True,
+        generation_route=row.get('route', 'native-meshers'), native_only=row.get('native_only', True),
         fixed_recipe_and_specimen=not planned_changes and old_maximum == new_maximum and old_interior == new_interior,
         fixed_specimen=True,
         planned_recipe=None if args.planned_recipe is None else str(args.planned_recipe),

@@ -1,0 +1,12 @@
+{
+  "scope": "Complete the public native adapter setup before rerunning the unchanged diagnostic.",
+  "cause": "Triangle storage must be allocated with set_mesh_size before set_triangles. Attempt v2 stopped before MMG remeshing.",
+  "correction": "A shared helper allocates vertices, tetrahedra and triangles, then fills them and verifies the tensor round trip.",
+  "control": "Tiny tetrahedron passes native anisotropic remeshing with the actual frozen options; a test-only optim flag was removed because MMG rejects optim with input metrics.",
+  "lattice_parameter_changes": false,
+  "inputs": {
+    "experiments/adaptive/runs/macbook-lattice-crease-tensor-control-v2/result.json": "7422a6dd747baf19ce6ba678918c17524dae0e1ab6ba424f30989d689765b297",
+    "handoff/macbook/lattice-tensor-native-adapter-control-20261025.json": "7635bcd95463ba3c73709e2d9ceae2fd4b51cc389094f3b281c4e3d8df6d5490",
+    "experiments/adaptive/crease_tensor_control.py": "33acffeb2d938635038362b827b30d0e36a177c3a91201e4cc9abdb90dc580d2"
+  }
+}

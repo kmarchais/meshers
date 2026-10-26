@@ -1,0 +1,13 @@
+{
+  "scope": "Correct a Python adapter failure before MMG was called. Geometry, tensor values, directional ratio, MMG settings and all gates are unchanged.",
+  "failed_run": "macbook-lattice-crease-tensor-control-v1",
+  "cause": "mmgpy.Mesh is not exported by the pinned installed package; verified public MmgMesh3D accepts arrays and tensor solution fields.",
+  "correction": "Use MmgMesh3D with int32 connectivity, set_field tensor, verify its exact round trip, and call the native remesh API.",
+  "parameter_changes": false,
+  "mmg_was_called_in_failed_run": false,
+  "inputs": {
+    "handoff/macbook/lattice-crease-tensor-control-selection-20261025.json": "243dc7273ee5d570a29c288e6d6400c7b5939a60f745fa46cfeadf0ed1247712",
+    "experiments/adaptive/runs/macbook-lattice-crease-tensor-control-v1/result.json": "381e6735f80fcba5127b6f00464876b8640ca8db18543d392b7885486857aca2",
+    "experiments/adaptive/crease_tensor_control.py": "678d0d4a9e702403383a022adb694d5a967407e588162f3a41a13705ccc6ebbf"
+  }
+}

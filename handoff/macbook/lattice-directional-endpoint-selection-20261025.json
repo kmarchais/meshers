@@ -1,0 +1,67 @@
+{
+  "scope": "Correct endpoint sampling in the same geometry-only directional exact-map prototype. Material, field law, ratio5,15-pass guard, quality and caps are unchanged.",
+  "selection_uses_candidate_stiffness": false,
+  "recipe": {
+    "case": "smooth-lattice",
+    "cells": 26,
+    "min_length": 0.002,
+    "max_length": 0.1,
+    "interior_refine_nodes": 0,
+    "order": 2,
+    "native_tolerance": 1.0,
+    "optimization_passes": 1,
+    "adaptive": true,
+    "adapt_tolerance": 0.0028,
+    "solver_quadrature_points": 15,
+    "solve_node_cap": 250000,
+    "crease_grading_requested": false,
+    "crease_bisection_requested": true
+  },
+  "crease_metric": {
+    "kind": "periodic-reentrant-curve-distance",
+    "exponent": 0.75,
+    "minimum_length": 0.002,
+    "maximum_length": 0.1,
+    "transition_distance": 0.038461538461538464,
+    "curve_sample_spacing_target": 0.0005,
+    "minimum_reentrant_angle_deg": 190
+  },
+  "mechanism": "All278 examined single-plane curve points are reentrant with232to289degree openings. Distance is to sampled freshly regenerated reentrant curves, not all cap planes. Both native generations and feature controls are charged. No FE fields enter sizing.",
+  "theory_scope": "A power law is motivated by local traction-free corner singularities and graded-mesh research. The exponent is an a priori experimental choice, not a proven optimal3D elasticity rule or error bound.",
+  "theory_sources": [
+    "https://authors.library.caltech.edu/records/2zph7-ee089",
+    "https://link.springer.com/article/10.1186/s40323-014-0013-5",
+    "https://www.unibw.de/imcs/publikationen/publikationen-thomas-apel-1/anftp.pdf"
+  ],
+  "controls": {
+    "geometry_distance": 0.002,
+    "abs_volume_relative": 0.01,
+    "quality_min": 0.1,
+    "node_cap": 250000,
+    "tet_cap": 250000,
+    "memory_gib": 8,
+    "numerical_threads": 1,
+    "stiffness_target": 0.01,
+    "retained_model_count": 24
+  },
+  "after_preflight": "Read every level count, map reproduction, volume, quality, curved Jacobian and periodic result before selecting any resource setup or six-load solve. Retain all failures and all24 models.",
+  "inputs": {
+    "handoff/macbook/lattice-directional-restriction-selection-20261025.json": "537d5a2db189aaf30e2fed667731015499f1e6f45f3a9edbd9ba015c483ef473",
+    "experiments/adaptive/runs/macbook-lattice-directional-restriction-preflight-v1/result.json": "3783e9055c062de418ee65e0bdeefa8c5e1a73979e55403ab3f2850bd30df036",
+    "experiments/adaptive/runs/macbook-directional-endpoint-red-v1/source-receipt.json": "733ad87b57452c62e04179c2de258b31e4bfc757ce7ebeb206791bc325d3ab87",
+    "experiments/adaptive/runs/macbook-directional-endpoint-green-v1/worker.json": "c77466995b7860673a9582dc4d29c89825f2c79a9389c79c233f75a1727de223",
+    "experiments/adaptive/crease_directional_refinement.py": "20701f5d4e7f86532b0830eee76f94ba3a9ffa21cce60a05aefd802701fe77b9",
+    "experiments/adaptive/test_crease_directional_refinement.py": "a3b19f6d4b5a847b13ef40287b7e53c0c71bc3ae7e5455ac9bc567add74d4824",
+    "experiments/adaptive/admission_pilot.py": "e07283b19b287b0b5225075d3701fe28013d59371574edd85d973f3583399f6e"
+  },
+  "directional_ratio": 5.0,
+  "maximum_refinement_passes": 15,
+  "refinement": "Use existing conforming periodic edge-star bisection with exact parent Tet10 restriction, geometry-only squared metric-length excess per added-node upper bound, disjoint stars, physical q>=0.1, and both250000 caps. Stop on metric satisfaction or no admissible orbit. Fifteen is a resource guard derived as3*ceil(log2(seed_spacing/minimum_length)), not an accuracy promise.",
+  "field_controls": "Six affine strains plus deterministic nonlinear periodic nodal perturbations. They only verify nesting and periodicity; no equilibrium fields enter generation.",
+  "score_parameters_unchanged_from_tensor_control": true,
+  "native_only": false,
+  "saved_seed_replayed": false,
+  "fe_fields_used": false,
+  "edge_metric_sampling": "Maximum at both endpoints and quadratic edge midpoint",
+  "correction_reason": "The first geometry-admitted prototype has68332nodes42303tets, but midpoint-only sampling misses fine requested targets at curve endpoints. The new regression fails at0.301717 for the old sampler and passes with endpoint-aware scoring. No stiffness was evaluated for that prototype."
+}

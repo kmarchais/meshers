@@ -34,6 +34,8 @@ def worker(args):
            "solver_quadrature_points": args.quadrature_points if args.order == 2 else 4,
            "solve_node_cap": args.solve_node_cap, "qualified": False}
     row["solver"] = "cached-elastic-block-amg-cg" if args.amg else "jacobi-cg"
+    row["crease_grading_requested"] = getattr(args, "crease_grading", False)
+    row["crease_bisection_requested"] = getattr(args, "crease_bisection", False)
     started = time.perf_counter()
     if args.order == 2 and args.quadrature_points == 4:
         row.update(timing_comparable=False,
@@ -129,13 +131,45 @@ def worker(args):
                 "transition_band": args.cap_band, "interior_maximum_length": .1,
                 "formula": "cap + (0.1-cap)*smoothstep(min_box_plane_distance/band)",
                 "periodic_verification_points_per_axis": len(queries)}
-        mesh = meshers.generate(field, bounds=workflow.BOUNDS, cells=args.cells,
+        generation_options = dict(bounds=workflow.BOUNDS, cells=args.cells,
             band=case.band, periodic=(True, True, True), threads=1, optimize_passes=args.optimization_passes,
             minimum_quality=0.1,
             geometry_tolerance=args.native_tolerance, max_tetrahedra=workflow.CAP,
             adapt=not args.no_adapt, min_length=args.min_length, max_length=args.max_length, gradation=0.3,
             adapt_iterations=4, quality_guard=0.3, adapt_tolerance=args.adapt_tolerance, order=args.order,
             size_field=size_field, interior_refine_nodes=args.interior_refine_nodes)
+        mesh = None
+        if getattr(args, "crease_grading", False) or getattr(args, "crease_bisection", False):
+            seed = meshers.generate(field, **generation_options)
+            assert max(len(seed.points), len(seed.tetrahedra)) <= workflow.CAP
+            directory = args.run / "feature-seed"
+            directory.mkdir(exist_ok=False)
+            for suffix in ("-samples.npz", "-specimen.json"):
+                shutil.copyfile(args.run / (args.case+suffix), directory / (args.case+suffix))
+            np.savez_compressed(directory / "mesh.npz", points=seed.points,
+                tetrahedra=seed.tetrahedra, surface=seed.surface)
+            seed_geometry = workflow.geometry(directory, args.case, seed.points, seed.tetrahedra, seed.surface)
+            _, _, seed_periodic = periodic_pairs(seed.points, seed.surface)
+            assert seed_geometry["geometry_admitted"]
+            if getattr(args, "crease_bisection", False):
+                from crease_directional_refinement import generate
+                mesh, metadata = generate(seed, case.function, args, seed_geometry["volume"])
+                row.update(route="meshers-experimental-exact-map-directional-refinement",
+                    native_only=False, saved_seed_replayed=False)
+            else:
+                from periodic_crease_grading import make_metric
+                target, metadata, cloud = make_metric(seed, case.function, args.min_length, args.max_length, args.cells)
+                np.savez_compressed(args.run / "crease-cloud.npz", canonical_points=cloud)
+                generation_options["size_field"] = target
+            metadata.update(seed_nodes=len(seed.points), seed_tets=len(seed.tetrahedra),
+                seed_mesh_sha256=workflow.digest(directory / "mesh.npz"),
+                seed_geometry=seed_geometry, seed_periodic=seed_periodic)
+            row["crease_bisection" if getattr(args, "crease_bisection", False) else "crease_grading"] = metadata
+            row.update(timing_comparable=False,
+                timing_scope="Fresh native seed, geometry controls and declared grading/refinement stages are charged; no paired timing")
+            del seed
+        if mesh is None:
+            mesh = meshers.generate(field, **generation_options)
         row.update(generation_s=time.perf_counter() - phase, nodes=len(mesh.points),
                    elements=len(mesh.tetrahedra), diagnostics=mesh.diagnostics)
         np.savez_compressed(args.run / "mesh.npz", points=mesh.points,
@@ -200,6 +234,8 @@ def main():
     parser.add_argument("--min-length", type=float, default=0.01)
     parser.add_argument("--max-length", type=float, default=0.1)
     parser.add_argument("--interior-refine-nodes", type=int, default=0)
+    parser.add_argument("--crease-grading", action="store_true")
+    parser.add_argument("--crease-bisection", action="store_true")
     parser.add_argument("--compiled-spinodoid", action="store_true")
     parser.add_argument("--order", type=int, default=1, choices=(1, 2))
     parser.add_argument("--native-tolerance", type=float, default=0.002)
@@ -220,6 +256,9 @@ def main():
     parser.add_argument("--amg", action="store_true")
     args = parser.parse_args()
     assert args.interior_refine_nodes >= 0
+    assert not (args.crease_grading and args.crease_bisection)
+    assert not (args.crease_grading or args.crease_bisection) or (args.case == "smooth-lattice" and not args.no_adapt
+        and args.order == 2 and args.cap_length is None and args.interior_refine_nodes == 0)
     assert args.cap_length is None or (not args.no_adapt and 0 < args.cap_length < .1 and 0 < args.cap_band < .5)
     if args.worker:
         worker(args)
@@ -235,9 +274,19 @@ def main():
                       workflow.HERE / "tet10_integration.py",
                       workflow.HERE / "job_parts.py", workflow.HERE / "facet_incidence_audit.py",
                       workflow.HERE / "gradient_tie_probe.py", workflow.ROOT / "crates/meshers-python/python/meshers/expression.py"]
+    python_sources.extend(workflow.ROOT.parent / "periodic-microgen/experiments/periodic-fea" / name
+        for name in ("homogenization.py", "periodic.py"))
     source_hashes = {str(path): workflow.digest(path) for path in python_sources}
+    if args.crease_grading or args.crease_bisection:
+        source_hashes.update({str(workflow.HERE/name): workflow.digest(workflow.HERE/name)
+            for name in ("periodic_crease_grading.py", "lattice_crease_mechanism.py", "periodic_crease_audit.py")})
+    if args.crease_bisection:
+        source_hashes.update({str(workflow.HERE/name): workflow.digest(workflow.HERE/name)
+            for name in ("crease_directional_refinement.py", "test_crease_directional_refinement.py", "nested_refinement.py", "test_nested_refinement.py", "hp_shared_domain.py")})
     if args.amg:
         source_hashes[str(workflow.HERE / "amg_reference.py")] = workflow.digest(workflow.HERE / "amg_reference.py")
+    for index, path in enumerate(source_hashes):
+        shutil.copyfile(path, args.run / f"input-{index}-{Path(path).name}")
     import meshers._meshers
     workflow.save(args.run / "manifest.json", {"script_sha256": workflow.digest(Path(__file__)),
         "native_sha256": workflow.digest(Path(meshers._meshers.__file__)), "inputs": hashes,
@@ -250,6 +299,8 @@ def main():
         "memory_bytes": workflow.MEMORY, "threads": 1, "timeout_s": args.worker_timeout,
         "max_length": args.max_length,
         "interior_refine_nodes": args.interior_refine_nodes,
+        "crease_grading_requested": args.crease_grading,
+        "crease_bisection_requested": args.crease_bisection,
         "python_source_sha256": source_hashes,
         "solver": "cached-elastic-block-amg-cg" if args.amg else "jacobi-cg",
         "pyamg": importlib.metadata.version("pyamg") if args.amg else None})
@@ -293,6 +344,10 @@ def main():
                 "--worker"]
             if args.compiled_spinodoid:
                 command.append("--compiled-spinodoid")
+            if args.crease_grading:
+                command.append("--crease-grading")
+            if args.crease_bisection:
+                command.append("--crease-bisection")
             if args.amg:
                 command.append("--amg")
             if args.cap_length is not None:

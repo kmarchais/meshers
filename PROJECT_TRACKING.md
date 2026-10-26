@@ -1,5 +1,153 @@
 # Meshers project tracking
 
+## Resumed investigation, 26 October 2026
+
+Job 543 was not restarted. Independent field audit 544 passes reactions,
+Hill–Mandel energy, periodic jumps and positive 64/125-point integration.
+Quadrature sensitivity is 4.1774e-8. Assessment 545 retains all 24 unchanged
+lattice model tensors and gives **1.608556732% worst disagreement**, improving
+on compact native's 2.412306220%, dense native's 1.935110817% and Uniform37's
+2.085389679%. It still fails the unchanged 1% target. The prototype has 68,476
+tets and 115,618 nodes. It includes experimental Python refinement and is
+not a native-only Meshers performance result. No comparative timing or
+reference promotion follows.
+
+Read-only audit 546 composes all 15 saved parent maps and prolongs the actual
+parent's six equilibrium fields for verification only. The freshly generated
+seed arrays exactly match the parent. Mapping and field reproduction errors
+are at most 4.441e-16; periodicity passes. The Galerkin energy balance agrees
+within 1.3812e-9. The improvement is a consistent fixed-domain FE correction.
+No parent solution entered mesh generation.
+
+The same audit identifies 2,710 quality-blocked requested edge orbits out of
+2,767. Of 2,706 blocking tets, 723 have no legal single-edge midpoint split.
+A separate local full-edge template check, job 547, shows that full red splits
+are not a sufficient repair. Across the whole final mesh, 1,011 tets have no
+legal single-edge split; only 330 admit one of the three local red templates,
+while 681 still fail quality. These counts cover different populations from
+the 723 blocking tets. No conforming red/green mesh, curved child admission,
+periodic closure or budget admission is inferred from this local check.
+
+The next change must address how greedy directional splits create poor
+shapes, rather than add another nearby sizing choice. The quality floor,
+geometry gates and both 250,000 admission caps remain unchanged. Schwarz's
+earlier win and the Gyroid/spinodoid actual-comparator gaps remain as recorded.
+Evidence is retained in
+`handoff/macbook/lattice-directional-assessment-20261026.json`.
+
+## Daily pause summary, 25 October 2026
+
+**Paused at Kevin's request.** Today improved Meshers correctness and produced
+better geometry and quality on some routes. We have **not** demonstrated that
+Meshers beats actual Microgen+MMG on all four cases. Lattice stiffness accuracy
+remains the main unresolved native weakness; the Gyroid and spinodoid actual
+comparator gaps also remain.
+
+### Confirmed improvements
+
+- The cap repair improved the curved spinodoid's
+  sampled distance from 0.001333 to 0.000304 and minimum quality from 0.269
+  to 0.301, with slightly fewer elements. Six fresh loads and independent
+  audits give 0.183380673% worst retained-model disagreement.
+- The strict linear spinodoid failure is repaired. Distance improves from
+  0.004834255 to 0.001079175 at 131,011 tets. Minimum quality is 0.100653,
+  above the unchanged 0.1 gate but below the old result's 0.152884.
+- Commit `0fc144c` fixes an existing public option: scalar adaptation had
+  silently ignored `interior_refine_nodes`. The rebuilt arm64 package passes
+  105 core tests and 183 Python tests, with one ignored core test and one
+  skipped Python test. Both feature Clippy checks pass. All four default
+  point, tetrahedron and surface arrays reproduce exactly.
+
+### Latest completed lattice comparison
+
+Sizes were chosen before evaluating each new candidate's stiffness. All
+figures below retain the fixed specimen, all 24 lattice model tensors and
+the original geometry, quality, curved-Jacobian and periodic gates.
+
+| Route | Tets | Nodes | Worst stiffness disagreement | Result |
+|---|---:|---:|---:|---|
+| Current compact native default | 41,340 | 65,721 | 2.412306220% | Fails 1% |
+| Native adaptation at comparable count | 164,180 | 235,258 | 1.935110817% | Fails 1% |
+| Uniform37 native alternative | 157,521 | 231,026 | 2.085389679% | Fails 1% |
+| Admitted modified actual Microgen+MMG route | 165,722 | 250,000 | 0.994670612% | Passes 1% |
+
+Both new native alternatives completed six fresh loads and independent field
+and positive-quadrature audits. Dense adaptation has better minimum quality
+and geometry than actual, but worse median quality, 0.680 versus 0.796.
+Uniform37 improves median quality to 0.930 and sampled distance to 0.0001783,
+but does not close accuracy. Its extreme upper quality tail is slightly worse
+than actual. Neither is an all-metric win. No new paired timing ratio is
+claimed. These two size choices are closed without nearby parameter retries.
+Their evidence and tools are committed and pushed in `32389d2`.
+
+### What the failure investigation established
+
+The dense native domain supports a separately audited enriched FE result at
+1.516977609% worst disagreement. It still fails 1%, and is not a native mesh
+workflow. A further trial offers only 0.044029171% gain, below its existing
+0.05% solve screen, so no additional auxiliary solve follows. The earlier
+fixed-domain h5 result remains at 1.325163420%, also failing. No reference is
+promoted.
+
+A signed geometry audit finds re-entrant periodic wall junctions at all 278
+examined single-plane points, with openings about 232–289 degrees. This is
+geometry evidence, not a continuum or local-stress certificate. One fixed
+curve-distance grading pilot exceeds the unchanged intermediate tet cap,
+250,002 versus 250,000, and receives no solve.
+
+A separate MMG tensor control on a saved Meshers seed is explicitly ineligible
+as either native Meshers performance or an actual Microgen comparator.
+Adapter errors and their corrections are preserved. After boundary roundoff
+is measured and exact source coordinates restored, the control fails sampled
+curved-Jacobian positivity. It receives no solve. It does not establish that
+an arbitrary directional metric is feasible, especially because MMG can
+modify metrics at required boundaries.
+
+### Experimental Meshers refinement and stopping point
+
+The new prototype combines a fresh native seed with Python exact-map,
+periodic edge-star bisection. Its ranking uses geometry only, with no FE
+fields or MMG calls. Each orbit is checked against physical quality and both
+250,000 admission caps before allocation. A regression exposed midpoint-only
+metric sampling that missed fine curve-endpoint targets. Endpoint-aware
+sampling fixes it; all 16 directionality and nesting controls pass.
+
+The corrected preflight reaches **115,618 nodes and 68,476 tets**. All 15
+levels pass geometry, quality, sampled curved Jacobians and periodic checks.
+Volume changes by at most 1.554e-15 relative, and map/control-field
+reproduction errors stay below 3.331e-16. Minimum quality is 0.100030317.
+The metric is still incomplete: 3,511 edges exceed its split threshold and
+quality checks block further requested splits. Operator/AMG setup passes at
+3.927 GiB peak RSS. This is an experimental route, not a shipped native
+feature or a performance winner.
+
+Local queue job **543** finished successfully before stopping. Its output is
+[the directional workflow](/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-lattice-directional-restriction-amg-v1/result.json).
+All six fresh load fields are complete and finite. Regenerated point, Tet10
+and Tri6 arrays exactly match the admitted preflight. The reduced operator
+hash also matches the resource preflight. Generation took
+124.251 seconds, the six-load solve 142.622 seconds,
+and peak process-tree RSS was 4.026 GiB. These are single
+diagnostic timings, not a comparative speedup.
+
+**The new prototype's stiffness accuracy is not yet assessed.** Independent
+complete-field/positive-quadrature audits and the all-24-model assessment
+remain for the next working session. No new reference or native winner is
+promoted. No job from this session remains running or queued.
+
+On resumption, read job 543's `worker.json`, `result.json` and complete fields
+first; do not restart this completed job. Audit those fields, retain the exact
+preflight-array and operator identity checks, then assess all 24 retained models using
+the frozen endpoint-aware recipe. Read the outcome before selecting another
+change. Do not resume closed size sweeps or overwrite frozen results.
+
+Schwarz's earlier repeated win against an explicitly modified actual route
+stands. Gyroid and spinodoid still lack admitted actual comparators in the
+tested routes. All four cases remain in scope. The 1% stiffness target,
+distance 0.002, absolute volume 1%, q 0.1, positive sampled curved Jacobians,
+coherent facets, periodic gates and 250,000-node/tet admission caps stay fixed.
+All earlier active or queued descriptions below are historical.
+
 ## Matched lattice count study still fails accuracy, 25 October 2026
 
 The adaptive scalar path now honors its existing interior-node request.

@@ -1,0 +1,54 @@
+{
+  "scope": "One a priori geometry-only curve-distance grading preflight, not a cap-length sweep or transferred FE cell map. Freeze all parameters before generated counts or stiffness.",
+  "selection_uses_candidate_stiffness": false,
+  "recipe": {
+    "case": "smooth-lattice",
+    "cells": 26,
+    "min_length": 0.002,
+    "max_length": 0.1,
+    "interior_refine_nodes": 0,
+    "order": 2,
+    "native_tolerance": 1.0,
+    "optimization_passes": 1,
+    "adaptive": true,
+    "adapt_tolerance": 0.0028,
+    "solver_quadrature_points": 15,
+    "solve_node_cap": 250000,
+    "crease_grading_requested": true
+  },
+  "crease_metric": {
+    "kind": "periodic-reentrant-curve-distance",
+    "exponent": 0.75,
+    "minimum_length": 0.002,
+    "maximum_length": 0.1,
+    "transition_distance": 0.038461538461538464,
+    "curve_sample_spacing_target": 0.0005,
+    "minimum_reentrant_angle_deg": 190
+  },
+  "mechanism": "All278 examined single-plane curve points are reentrant with232to289degree openings. Distance is to sampled freshly regenerated reentrant curves, not all cap planes. Both native generations and feature controls are charged. No FE fields enter sizing.",
+  "theory_scope": "A power law is motivated by local traction-free corner singularities and graded-mesh research. The exponent is an a priori experimental choice, not a proven optimal3D elasticity rule or error bound.",
+  "theory_sources": [
+    "https://authors.library.caltech.edu/records/2zph7-ee089",
+    "https://link.springer.com/article/10.1186/s40323-014-0013-5",
+    "https://www.unibw.de/imcs/publikationen/publikationen-thomas-apel-1/anftp.pdf"
+  ],
+  "controls": {
+    "geometry_distance": 0.002,
+    "abs_volume_relative": 0.01,
+    "quality_min": 0.1,
+    "node_cap": 250000,
+    "tet_cap": 250000,
+    "memory_gib": 8,
+    "numerical_threads": 1,
+    "stiffness_target": 0.01,
+    "retained_model_count": 24
+  },
+  "after_preflight": "Read every count, geometry, quality, periodic and sampling check before any resource setup or six-load solve. No parameter successor is preselected.",
+  "inputs": {
+    "experiments/adaptive/runs/macbook-lattice-count-interior341-crease-mechanism-v1/result.json": "46e42147a220b15bb02b76eaf813cd6110426c87dd4457b4741bb5044123d5fb",
+    "experiments/adaptive/runs/macbook-lattice-count-interior341-remaining-trial-v1/result.json": "f3b986e5ec88c540d1ec64054920455a1806d009b39bb091c3924fa88e3a011b",
+    "experiments/adaptive/admission_pilot.py": "8ef4d36691f74ccf79a57e761a76b1fdc83ad43645e35a620733369ab731f4f8",
+    "experiments/adaptive/periodic_crease_grading.py": "8717ecb63b0633790bd15ab5d43c8e200ea3124a605995e84b6e0cf4556758b2",
+    "experiments/adaptive/lattice_crease_mechanism.py": "32e567a0c358a7592f5da6aea2b8211825841f87fe2ec071f917a66f3ac562a8"
+  }
+}

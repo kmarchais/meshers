@@ -1,0 +1,11 @@
+{
+  "scope": "Diagnose exact-boundary rejection after MMG executes. No metric parameter or scientific gate changes.",
+  "observed": "Attempt v3 returns6940corner nodes and24680tets, then exact coordinate-key boundary equality fails. Raw output was not saved before that check, so the cause is not yet established.",
+  "protocol": "Save raw arrays first. Require identical boundary-node counts, one-to-one nearest correspondence within64 machine eps times bounding-box diagonal, and exactly identical corner-face connectivity. Only then restore those roundoff-scale coordinates to the exact source, before restoring source quadratic boundary nodes. Reject every larger change or topology change.",
+  "previous_attempt_remains_rejected": true,
+  "comparison_eligible": false,
+  "inputs": {
+    "experiments/adaptive/runs/macbook-lattice-crease-tensor-control-v3/result.json": "f64ed3a6c4bc1cd87aac0fbe3bccbabcb17bccd1c556b5c84da4fe4849161ee2",
+    "experiments/adaptive/crease_tensor_control.py": "f91d1655fa4b9e497eae817af0e1241a6cf10604ec4646f4f862bdd7d0ca2fbd"
+  }
+}

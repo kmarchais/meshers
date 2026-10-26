@@ -1,0 +1,65 @@
+{
+  "scope": "One experimental Meshers geometry-only exact-map directional-refinement preflight. Fresh native seed, no MMG and no FE oracle. Not a native-only performance claim.",
+  "selection_uses_candidate_stiffness": false,
+  "recipe": {
+    "case": "smooth-lattice",
+    "cells": 26,
+    "min_length": 0.002,
+    "max_length": 0.1,
+    "interior_refine_nodes": 0,
+    "order": 2,
+    "native_tolerance": 1.0,
+    "optimization_passes": 1,
+    "adaptive": true,
+    "adapt_tolerance": 0.0028,
+    "solver_quadrature_points": 15,
+    "solve_node_cap": 250000,
+    "crease_grading_requested": false,
+    "crease_bisection_requested": true
+  },
+  "crease_metric": {
+    "kind": "periodic-reentrant-curve-distance",
+    "exponent": 0.75,
+    "minimum_length": 0.002,
+    "maximum_length": 0.1,
+    "transition_distance": 0.038461538461538464,
+    "curve_sample_spacing_target": 0.0005,
+    "minimum_reentrant_angle_deg": 190
+  },
+  "mechanism": "All278 examined single-plane curve points are reentrant with232to289degree openings. Distance is to sampled freshly regenerated reentrant curves, not all cap planes. Both native generations and feature controls are charged. No FE fields enter sizing.",
+  "theory_scope": "A power law is motivated by local traction-free corner singularities and graded-mesh research. The exponent is an a priori experimental choice, not a proven optimal3D elasticity rule or error bound.",
+  "theory_sources": [
+    "https://authors.library.caltech.edu/records/2zph7-ee089",
+    "https://link.springer.com/article/10.1186/s40323-014-0013-5",
+    "https://www.unibw.de/imcs/publikationen/publikationen-thomas-apel-1/anftp.pdf"
+  ],
+  "controls": {
+    "geometry_distance": 0.002,
+    "abs_volume_relative": 0.01,
+    "quality_min": 0.1,
+    "node_cap": 250000,
+    "tet_cap": 250000,
+    "memory_gib": 8,
+    "numerical_threads": 1,
+    "stiffness_target": 0.01,
+    "retained_model_count": 24
+  },
+  "after_preflight": "Read every level count, map reproduction, volume, quality, curved Jacobian and periodic result before selecting any resource setup or six-load solve. Retain all failures and all24 models.",
+  "inputs": {
+    "handoff/macbook/lattice-crease-distance-selection-20261025.json": "7109f596918399a6bd4ee8d0deed359de4e4c15056d781fb637a6213cb00b671",
+    "experiments/adaptive/crease_directional_refinement.py": "e594bfb42c5e8075d3a835e4db57836452bc9fa1afc2342ffb3c5437fdee1680",
+    "experiments/adaptive/periodic_crease_grading.py": "adecc9004529aadb92822608270a75c19ef0bdce85e0192eaee507af142be6e8",
+    "experiments/adaptive/admission_pilot.py": "e07283b19b287b0b5225075d3701fe28013d59371574edd85d973f3583399f6e",
+    "experiments/adaptive/nested_refinement.py": "7f78251d150ebcee928db1b49e22b64ee89efde5cdc238c1f5b9994aad36a6b8",
+    "experiments/adaptive/runs/macbook-crease-directional-controls-v1/worker.json": "002f2c6047d97d9b62cf32f58715656c6be57f9a20867a93b0097440d0dbddc5",
+    "experiments/adaptive/runs/macbook-directional-driver-default-control-v1/result.json": "afcf1d1b5157d50d0f794d01cabd3fa48ebc75bd81c53e78c089fb2401cdbb53"
+  },
+  "directional_ratio": 5.0,
+  "maximum_refinement_passes": 15,
+  "refinement": "Use existing conforming periodic edge-star bisection with exact parent Tet10 restriction, geometry-only squared metric-length excess per added-node upper bound, disjoint stars, physical q>=0.1, and both250000 caps. Stop on metric satisfaction or no admissible orbit. Fifteen is a resource guard derived as3*ceil(log2(seed_spacing/minimum_length)), not an accuracy promise.",
+  "field_controls": "Six affine strains plus deterministic nonlinear periodic nodal perturbations. They only verify nesting and periodicity; no equilibrium fields enter generation.",
+  "score_parameters_unchanged_from_tensor_control": true,
+  "native_only": false,
+  "saved_seed_replayed": false,
+  "fe_fields_used": false
+}
