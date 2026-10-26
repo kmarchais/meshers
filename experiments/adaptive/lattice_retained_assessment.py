@@ -110,7 +110,7 @@ def main():
     planned_changes = {}
     defaults = {'max_length': .1, 'interior_refine_nodes': 0, 'crease_grading_requested': False,
         'crease_bisection_requested': False, 'crease_longest_closure_requested': False,
-        'crease_quality_closure_requested': False}
+        'crease_quality_closure_requested': False, 'quadratic_quality_pass_requested': False}
     plan = None
     if args.planned_recipe:
         plan = json.loads(args.planned_recipe.read_text())
@@ -118,21 +118,46 @@ def main():
         expected = plan['recipe']
         required = set(recipe_keys) | {'max_length', 'interior_refine_nodes', 'solve_node_cap'}
         assert required <= set(expected) <= required | {'crease_grading_requested', 'crease_bisection_requested',
-            'crease_longest_closure_requested', 'crease_quality_closure_requested'}
+            'crease_longest_closure_requested', 'crease_quality_closure_requested', 'quadratic_quality_pass_requested'}
         expected = {'crease_grading_requested': False, 'crease_bisection_requested': False,
-            'crease_longest_closure_requested': False, 'crease_quality_closure_requested': False, **expected}
+            'crease_longest_closure_requested': False, 'crease_quality_closure_requested': False,
+            'quadratic_quality_pass_requested': False, **expected}
         assert not plan['selection_uses_candidate_stiffness']
         assert all(row.get(key, defaults.get(key)) == value
             for key, value in expected.items())
-        density_keys = {'cells', 'min_length', 'max_length', 'interior_refine_nodes', 'adaptive',
+        generation_keys = {'cells', 'min_length', 'max_length', 'interior_refine_nodes', 'adaptive',
             'adapt_tolerance', 'crease_grading_requested', 'crease_bisection_requested',
-            'crease_longest_closure_requested', 'crease_quality_closure_requested'}
+            'crease_longest_closure_requested', 'crease_quality_closure_requested', 'quadratic_quality_pass_requested'}
         planned_changes = {key: [old.get(key, defaults.get(key)), value]
             for key, value in expected.items()
             if old.get(key, defaults.get(key)) != value}
-        assert set(planned_changes) <= density_keys
+        assert set(planned_changes) <= generation_keys
         hashes[str(args.planned_recipe)] = w.digest(args.planned_recipe)
     old_crease, new_crease = (r.get('crease_grading_requested', False) for r in (old, row))
+    old_quality,new_quality = (r.get('quadratic_quality_pass_requested',False) for r in (old,row))
+    assert old_quality==new_quality or 'quadratic_quality_pass_requested' in planned_changes
+    if new_quality:
+        quality = row['quadratic_quality_pass']
+        assert plan is not None and quality['policy']==plan['quality_pass_policy']
+        assert quality['curved_boundary_coordinates_identical'] and not quality['fe_fields_used']
+        assert not quality['field_transfer_performed'] and not row['saved_seed_replayed']
+        assert row['old_approximation_space_preserved']==(quality['accepted_disjoint_operations']==0)
+        assert w.digest(source/'quality-source/mesh.npz')==quality['source_mesh_sha256']
+        assert w.digest(source/'quality-operations.json')==quality['operations_sha256']
+        quality_before = np.load(source/'quality-source/mesh.npz')
+        quality_after = np.load(source/'mesh.npz')
+        assert np.array_equal(quality_before['points'][quality_before['surface']],
+            quality_after['points'][quality_after['surface']])
+        assert len(quality_after['points'])<=len(quality_before['points'])
+        assert len(quality_after['tetrahedra'])<=len(quality_before['tetrahedra'])
+        from quadratic_edge_removal_probe import measure
+        measure_path = w.HERE/'quadratic_edge_removal_probe.py'
+        hashes[str(measure_path)] = w.digest(measure_path)
+        shutil.copyfile(measure_path,args.output.parent/'input-quadratic_edge_removal_probe.py')
+        _,source_volume = measure(quality_before['points'][quality_before['tetrahedra']],positive_rule=False)
+        assert abs(row['geometry']['volume']/float(source_volume.sum())-1)<1e-10
+        hashes[str(source/'quality-source/mesh.npz')] = quality['source_mesh_sha256']
+        hashes[str(source/'quality-operations.json')] = quality['operations_sha256']
     assert old_crease == new_crease or 'crease_grading_requested' in planned_changes
     if new_crease:
         assert plan is not None and row['crease_grading']['law'] == plan['crease_metric']

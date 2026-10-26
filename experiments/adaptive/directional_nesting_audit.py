@@ -55,6 +55,7 @@ def main():
         'hp_shared_domain.py', 'quadrature_audit.py', 'tet10_integration.py',
         'periodic_crease_grading.py', 'crease_directional_refinement.py')]
     row = json.loads((args.source/'result.json').read_text())
+    assert row.get('old_approximation_space_preserved',True),'Topology changes require fresh fields, not a nested-space audit'
     root = np.load(args.parent/'mesh.npz')
     seed = np.load(args.source/'feature-seed/mesh.npz')
     assert all(np.array_equal(root[k], seed[k]) for k in root.files)

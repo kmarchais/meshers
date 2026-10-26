@@ -166,6 +166,21 @@ are recorded in
 `handoff/macbook/lattice-quadratic-edge-removal-feasibility-20261026.json` and
 `handoff/macbook/lattice-quadratic-quality-preflight-evidence-20261026.json`.
 
+The curved pass is integrated into the experimental fresh-generation driver.
+Controls 578 pass all 23 checks, including no-op behavior and rejection of
+overlapping operations. Live compact control 579 passes; its saved pre-pass
+arrays reproduce the original native baseline exactly. A nonzero quality
+pass explicitly marks the old approximation space as not preserved and is
+rejected by the nested-field audit. The all-model assessor independently
+checks the saved pre-pass boundary and volume instead.
+
+Job **580** regenerates the mandatory-longest-edge source, applies the same
+one-pass policy and solves six cold loads with the verified exec transition,
+10 GiB and a 1,200-second whole-worker deadline. No saved mesh or FE field is
+replayed in that live workflow. Its completed field audits and all-24-model
+accuracy remain pending. The recipe and unchanged admission gates are frozen
+in `handoff/macbook/lattice-quadratic-quality-solve-selection-20261026.json`.
+
 ### Longest-edge closure and memory handoff
 
 The experimental refinement now propagates short-edge requests to longer

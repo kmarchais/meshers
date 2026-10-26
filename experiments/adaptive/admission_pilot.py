@@ -38,6 +38,7 @@ def worker(args):
     row["crease_bisection_requested"] = getattr(args, "crease_bisection", False)
     row["crease_longest_closure_requested"] = getattr(args, "crease_longest_closure", False)
     row["crease_quality_closure_requested"] = getattr(args, "crease_quality_closure", False)
+    row["quadratic_quality_pass_requested"] = getattr(args, "quadratic_quality_pass", False)
     started = time.perf_counter()
     if args.order == 2 and args.quadrature_points == 4:
         row.update(timing_comparable=False,
@@ -172,6 +173,40 @@ def worker(args):
             del seed
         if mesh is None:
             mesh = meshers.generate(field, **generation_options)
+        if args.quadratic_quality_pass:
+            from types import SimpleNamespace
+            from quadratic_quality_preflight import apply_patches,QUALITY_PASS_POLICY
+            from quadratic_edge_removal_probe import feasible_patches,measure
+            assert max(len(mesh.points),len(mesh.tetrahedra)) <= workflow.CAP
+            directory = args.run / "quality-source"
+            directory.mkdir(exist_ok=False)
+            np.savez_compressed(directory / "mesh.npz",points=mesh.points,
+                tetrahedra=mesh.tetrahedra,surface=mesh.surface)
+            for suffix in ("-samples.npz","-specimen.json"):
+                shutil.copyfile(args.run/(args.case+suffix),directory/(args.case+suffix))
+            _,volume = measure(mesh.points[mesh.tetrahedra],positive_rule=False)
+            before_volume = float(volume.sum())
+            _,_,before_periodic = periodic_pairs(mesh.points,mesh.surface)
+            patches,statistics = feasible_patches(mesh.points,mesh.tetrahedra,mesh.surface,before_volume)
+            out,operations = apply_patches(mesh.points,mesh.tetrahedra,mesh.surface,patches)
+            _,_,after_periodic = periodic_pairs(out['points'],out['surface'])
+            assert before_periodic['periodic_pair_counts']==after_periodic['periodic_pair_counts']
+            workflow.save(args.run / "quality-operations.json",operations)
+            quality = dict(policy=QUALITY_PASS_POLICY,source_nodes=len(mesh.points),
+                source_elements=len(mesh.tetrahedra),source_volume=before_volume,
+                source_mesh_sha256=workflow.digest(directory / "mesh.npz"),
+                operations_sha256=workflow.digest(args.run / "quality-operations.json"),
+                accepted_disjoint_operations=len(operations),local_statistics=statistics,
+                curved_boundary_coordinates_identical=True,old_approximation_space_preserved=not bool(operations),
+                fe_fields_used=False,field_transfer_performed=False)
+            mesh = SimpleNamespace(**out,diagnostics=dict(source="Curved disjoint quality edge removal",
+                before_quality_pass=mesh.diagnostics,quadratic_quality_pass=quality))
+            row.update(quadratic_quality_pass=quality,old_approximation_space_preserved=not bool(operations),
+                route="meshers-experimental-curved-quality-edge-removal",native_only=False,
+                saved_seed_replayed=False,timing_comparable=False,
+                timing_scope="Fresh source generation and curved quality operation charged; no paired timing")
+            if args.crease_bisection and operations:
+                row['crease_bisection']['approximation_space_scope'] = 'Nested only before subsequent quality retopology'
         row.update(generation_s=time.perf_counter() - phase, nodes=len(mesh.points),
                    elements=len(mesh.tetrahedra), diagnostics=mesh.diagnostics)
         np.savez_compressed(args.run / "mesh.npz", points=mesh.points,
@@ -179,6 +214,8 @@ def worker(args):
         if len(mesh.points) > workflow.CAP or len(mesh.tetrahedra) > workflow.CAP:
             raise ValueError("Mesh node/tetrahedron admission cap exceeded")
         row["geometry"] = workflow.geometry(args.run, args.case, mesh.points, mesh.tetrahedra, mesh.surface)
+        if args.quadratic_quality_pass:
+            assert abs(row['geometry']['volume']/row['quadratic_quality_pass']['source_volume']-1)<1e-10
         _, _, row["periodic"] = periodic_pairs(mesh.points, mesh.surface)
         row["qualified"] = row["geometry"]["geometry_admitted"]
         row["status"] = "admitted-needs-reference" if row["qualified"] else "geometry-rejected"
@@ -248,6 +285,7 @@ def main():
     parser.add_argument("--crease-bisection", action="store_true")
     parser.add_argument("--crease-longest-closure", action="store_true")
     parser.add_argument("--crease-quality-closure", action="store_true")
+    parser.add_argument("--quadratic-quality-pass", action="store_true")
     parser.add_argument("--compiled-spinodoid", action="store_true")
     parser.add_argument("--order", type=int, default=1, choices=(1, 2))
     parser.add_argument("--native-tolerance", type=float, default=0.002)
@@ -270,6 +308,7 @@ def main():
     parser.add_argument("--amg", action="store_true")
     args = parser.parse_args()
     assert args.interior_refine_nodes >= 0
+    assert not args.quadratic_quality_pass or args.order == 2
     assert not args.isolate_solve or (args.solve and args.amg and args.order == 2 and args.quadrature_points == 15)
     assert not (args.crease_grading and args.crease_bisection)
     assert not args.crease_longest_closure or args.crease_bisection
@@ -309,6 +348,10 @@ def main():
                 "longest_edge_closure.py", "test_longest_edge_closure.py", "fixtures/quality-split-trap.json")})
     if args.isolate_solve:
         source_hashes[str(workflow.HERE / "fresh_mesh_solve.py")] = workflow.digest(workflow.HERE / "fresh_mesh_solve.py")
+    if args.quadratic_quality_pass:
+        source_hashes.update({str(workflow.HERE/name):workflow.digest(workflow.HERE/name)
+            for name in ('quadratic_quality_preflight.py','quadratic_edge_removal_probe.py',
+                'test_quadratic_quality_pass.py','nested_refinement.py','quadrature_audit.py')})
     if args.amg:
         source_hashes[str(workflow.HERE / "amg_reference.py")] = workflow.digest(workflow.HERE / "amg_reference.py")
     for index, path in enumerate(source_hashes):
@@ -329,6 +372,7 @@ def main():
         "crease_bisection_requested": args.crease_bisection,
         "crease_longest_closure_requested": args.crease_longest_closure,
         "crease_quality_closure_requested": args.crease_quality_closure,
+        "quadratic_quality_pass_requested": args.quadratic_quality_pass,
         "solve_process_boundary": "exec-replace" if args.isolate_solve else "same-process",
         "python_source_sha256": source_hashes,
         "solver": "cached-elastic-block-amg-cg" if args.amg else "jacobi-cg",
@@ -382,6 +426,8 @@ def main():
                 command.append("--crease-longest-closure")
             if args.crease_quality_closure:
                 command.append("--crease-quality-closure")
+            if args.quadratic_quality_pass:
+                command.append("--quadratic-quality-pass")
             if args.amg:
                 command.append("--amg")
             if args.cap_length is not None:

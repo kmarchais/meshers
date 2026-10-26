@@ -10,6 +10,11 @@ import microgen_workflow as w
 from nested_refinement import EDGES,FACES,positive_quality
 from quadratic_edge_removal_probe import controls,feasible_patches,measure,summary
 
+QUALITY_PASS_POLICY = dict(passes=1,valences=[3,4],minimum_corner_quality_gain=1e-6,
+    selection='Descending local minimum-quality gain, then edge and diagonal IDs',
+    disjoint_old_cells=True,node_and_tet_increase_allowed=False,
+    boundary_Tri6_coordinates_unchanged=True,old_approximation_space_preserved=False)
+
 
 def apply_patches(points,cells,surface,patches):
     assert len(np.unique(cells))==len(points)
@@ -31,7 +36,8 @@ def apply_patches(points,cells,surface,patches):
         operations.append(dict(summary(patch),parents=parents.tolist(),
             removed_mid=patch['removed_mid'],diagonal=diagonal,
             new_point=None if patch['new_point'] is None else patch['new_point'].tolist()))
-    assert operations,'A quality pass with no accepted operation is not an improvement'
+    if not operations:
+        return dict(points=points.copy(),tetrahedra=cells.copy(),surface=surface.copy()),[]
     out = np.concatenate([cells[~removed],*additions])
     assert len(out)<=len(cells)
     used = np.unique(out.ravel());ranks = np.full(len(points),-1,dtype=np.int64)
@@ -68,6 +74,9 @@ def check_application():
         minimum,volume = measure(out['points'][out['tetrahedra']])
         _,old = measure(points[cells])
         assert minimum.min()>0 and abs(volume.sum()/old.sum()-1)<1e-10
+        same,empty = apply_patches(points,cells,surface,[])
+        assert not empty and all(np.array_equal(same[k],v) for k,v in
+            zip(('points','tetrahedra','surface'),(points,cells,surface),strict=True))
 
 
 def main():
@@ -114,7 +123,7 @@ def main():
         old_approximation_space_preserved=False,fe_fields_used=False,saved_seed_replayed=True,native_only=False,
         comparative_timing_claim=False,reference_promoted=False,stiffness_assessed=False,
         mesh_sha256=w.digest(args.run/'mesh.npz'),operations_sha256=w.digest(args.run/'operations.json'),
-        selection='One disjoint pass, descending local minimum-quality gain; edge and diagonal break ties',
+        quality_pass_policy=QUALITY_PASS_POLICY,
         inputs=hashes,scope='Saved Meshers prototype with geometry-only curved quality retopology; not live generation, a nested-space correction or an accuracy/performance result'))
     assert all(w.digest(Path(p))==h for p,h in hashes.items())
     print(f'{len(operations)} disjoint curved quality operations; median {np.median(old_q):.6f} to {np.median(new_q):.6f}; '
