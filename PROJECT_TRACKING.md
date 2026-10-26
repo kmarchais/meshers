@@ -1,5 +1,33 @@
 # Meshers project tracking
 
+## Evidence-ranked next improvements, 26 October 2026
+
+[The improvement investigation](experiments/adaptive/IMPROVEMENT_IDEAS.md)
+reconciles the nine-case dashboard, previous negative experiments, current
+code paths and primary research. Lattice stiffness remains the most important
+scientific gap. Its next experiment needs an error-source diagnostic and
+energy-based net allocation benefit, rather than another edge-length or
+shape proxy. The earlier closed enrichment family remains closed.
+
+Two concrete implementation opportunities are native evaluation of the frozen
+linear-density lookup and Tet10 refinement driven by the final curved faces.
+The rejected density Tet10 seed has 25,787 tets at distance 0.002020511;
+the admitted adaptive mesh has 141,392 tets at 0.000583760. This is evidence
+for investigating local curved-error allocation, not proof that a cheap
+repair exists. A coupled high-order patch optimizer is a further quality
+experiment; prior centroid motion and fixed-vertex cavity results do not
+establish it will improve stiffness.
+
+The native-lookup feasibility control passes 8,965 points, including all 257
+knots and adjacent floating-point values, using existing comparison/select
+operations. Direct np.interp tracing still rejects. The native field differs
+by at most 4.44e-16, uses 2,071 graph nodes, and the two evaluator preparations
+take 0.0142 s. Analytical gradients are disabled to isolate the evaluator.
+See [the control receipt](handoff/macbook/graded-lookup-preflight-20261026.json).
+It is a short field-only check run with the queue idle. No production code,
+meshes, FE solves, frozen benchmark data or generation-speed result changes.
+The next queued experiment remains bounded and must be read before a successor.
+
 ## Comparison dashboard, 26 October 2026
 
 [Open the dashboard](experiments/adaptive/comparison-dashboard.html).
