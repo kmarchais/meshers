@@ -1,0 +1,109 @@
+{
+  "scope": "Evidence-ranked improvement directions; no new global mesh, FE accuracy, comparative timing or reference promotion.",
+  "audit_run": "experiments/adaptive/runs/macbook-lattice-improvement-audit-v3",
+  "local_probe_run": "experiments/adaptive/runs/macbook-curved-relocation-probe-v1",
+  "closure_nodes_fraction": 0.5877555228756397,
+  "closure_totals": {
+    "nodes_added": 184279,
+    "tets_added": 121025,
+    "physical_cut_edges": 26983,
+    "cut_edges_already_below_split_threshold": 15210,
+    "tets_added_on_already_below_threshold_cuts": 75206,
+    "nodes_added_only_for_already_below_threshold_cuts": 108311,
+    "nodes_added_with_mixed_cut_attribution": 0
+  },
+  "remaining_metric": {
+    "edges": 213178,
+    "above_split_threshold": 9826,
+    "maximum_ratio": 8.666196503199483,
+    "short_interior_edges": 112356,
+    "short_all_edges": 200705,
+    "scope": "Length-only coarsening candidates, not link/quality/new-edge/curved-Jacobian-admitted collapses"
+  },
+  "interior_quality": {
+    "meshers_median": 0.6968403235602048,
+    "actual_median": 0.8238631090744981,
+    "meshers_low_quality_interior_share": 0.3894840294840295,
+    "actual_low_quality_interior_share": 0.08425126525751712
+  },
+  "local_moves": {
+    "gyroid": {
+      "examined_vertices": 64,
+      "curved_path_admitted_local_proposals": 7,
+      "all_local_quantiles_no_worse": 1
+    },
+    "schwarz": {
+      "examined_vertices": 64,
+      "curved_path_admitted_local_proposals": 3,
+      "all_local_quantiles_no_worse": 0
+    },
+    "spinodoid": {
+      "examined_vertices": 64,
+      "curved_path_admitted_local_proposals": 12,
+      "all_local_quantiles_no_worse": 0
+    },
+    "lattice": {
+      "examined_vertices": 256,
+      "curved_path_admitted_local_proposals": 135,
+      "all_local_quantiles_no_worse": 22
+    }
+  },
+  "priorities": [
+    {
+      "direction": "Consistent directional refinement/coarsening and cavity optimisation",
+      "reason": "Current one-way Euclidean-longest closure spends58.8percent of addednodes on below-threshold supporting cuts;112356 interior edges are short in the prescribed metric. Neither count proves the corresponding cuts can be removed safely.",
+      "first_bounded_check": "Admit one complete periodic coarsening/refinement cavity on the unchanged curved domain, with new-edge metric, link, quality, exact boundary-trace, volume, Jacobian and cap checks. Measure budget released and true metric requests completed before another global candidate or solve.",
+      "accuracy_risk": "Coarsening alone can discard useful approximation space. New allocation changes require fresh complete fields and all24-model assessment; never reuse parent fields or claim nesting after retopology."
+    },
+    {
+      "direction": "Interior Tet10 shape optimisation with the curved boundary fixed",
+      "reason": "Interior median remains .69684 versus .82386 actual.135of256 local lattice proposals pass positive-J/volume/path checks;22of135 preserve every recorded local quantile.",
+      "first_bounded_check": "Build one disjoint global pass with overlap and point-role checks, then independently admit full geometry/periodic/facet/positive-J/count gates and quality distribution. Local moves are not a global mesh."
+    },
+    {
+      "direction": "Native incremental implementation after admissible accuracy and quality",
+      "reason": "Prototype rebuilds connectivity, sorting, mapping and full audits repeatedly; no profiling-based speedup or native timing victory is established.",
+      "first_bounded_check": "Profile the admitted recipe, then port only measured bottlenecks and compare fresh same-host whole-workflow repetitions."
+    }
+  ],
+  "closed_shortcuts": [
+    "No nearby global hmax or uniform-resolution sweep",
+    "No relaxed q/geometry/periodic/node/tet gates",
+    "No further solve of the closed cubic residual family",
+    "No stiffness promise from quality alone",
+    "No benchmark win against inadmissible actual routes"
+  ],
+  "all_four_cases_retained": true,
+  "retained_lattice_models": 24,
+  "reference_promoted": false,
+  "objective_complete": false,
+  "previous_table_correction": "Native scalar-grading cap failure and the admitted actual route use different recipes. This is a Meshers route limitation, not a matched universal-robustness comparison.",
+  "audit_failures_preserved": {
+    "594": "Unsorted local edge-order control assumption",
+    "595": "Attempted percentile of the final zero-cut cap-limited level"
+  },
+  "technical_sources": {
+    "metric_pipeline": "https://mmgtools.org/documentation/mmg3d/documentation_mmg3d_metric.html",
+    "fixed_curved_boundary_optimisation": "https://doc.nektar.info/userguide/latest/user-guidese19.html"
+  },
+  "fixture_inputs": {
+    "experiments/adaptive/runs/macbook-lattice-quadratic-quality-amg-v1/smooth-lattice-samples.npz": "a2b4375d2c99901f03b34e913563c887a4cdcff00bca35983adb7ef9d5311abe",
+    "experiments/adaptive/runs/macbook-lattice-quadratic-quality-amg-v1/feature-seed/smooth-lattice-samples.npz": "a2b4375d2c99901f03b34e913563c887a4cdcff00bca35983adb7ef9d5311abe",
+    "experiments/adaptive/runs/macbook-lattice-quadratic-quality-amg-v1/quality-source/smooth-lattice-samples.npz": "a2b4375d2c99901f03b34e913563c887a4cdcff00bca35983adb7ef9d5311abe",
+    "experiments/adaptive/runs/macbook-lattice-uniform37-amg-v1/smooth-lattice-samples.npz": "a2b4375d2c99901f03b34e913563c887a4cdcff00bca35983adb7ef9d5311abe",
+    "experiments/adaptive/runs/macbook-lattice-actual-live-solve-v1/smooth-lattice-samples.npz": "a2b4375d2c99901f03b34e913563c887a4cdcff00bca35983adb7ef9d5311abe",
+    "experiments/adaptive/runs/macbook-lattice-quadratic-quality-amg-v1/smooth-lattice-specimen.json": "0e5b34b76183341a6e0d454f13cd404668ab82675f9a51cd9d2ecf3c91be3316",
+    "experiments/adaptive/runs/macbook-lattice-quadratic-quality-amg-v1/feature-seed/smooth-lattice-specimen.json": "0e5b34b76183341a6e0d454f13cd404668ab82675f9a51cd9d2ecf3c91be3316",
+    "experiments/adaptive/runs/macbook-lattice-quadratic-quality-amg-v1/quality-source/smooth-lattice-specimen.json": "0e5b34b76183341a6e0d454f13cd404668ab82675f9a51cd9d2ecf3c91be3316",
+    "experiments/adaptive/runs/macbook-lattice-uniform37-amg-v1/smooth-lattice-specimen.json": "0e5b34b76183341a6e0d454f13cd404668ab82675f9a51cd9d2ecf3c91be3316",
+    "experiments/adaptive/runs/macbook-lattice-actual-live-solve-v1/smooth-lattice-specimen.json": "0e5b34b76183341a6e0d454f13cd404668ab82675f9a51cd9d2ecf3c91be3316"
+  },
+  "inputs": {
+    "experiments/adaptive/runs/macbook-lattice-improvement-audit-v3/result.json": "16d859561b73274eb06b73a3fcc595722baf260e81fca8393012901e74402014",
+    "experiments/adaptive/runs/macbook-lattice-improvement-audit-v3/worker.json": "983a3a2a787eba3fcc328eb3defbccfb343bdbfc3f92f5709573d0ae2c564e24",
+    "experiments/adaptive/runs/macbook-curved-relocation-probe-v1/result.json": "733d3238b05d8bf517efb72ba003d6ae83eb4d3a06cad07c08200b0f52af11c1",
+    "experiments/adaptive/runs/macbook-curved-relocation-probe-v1/worker.json": "19f1fafea087fc64955fb1c78682b796adc75a7e58223f03b03cb4973b745a62",
+    "experiments/adaptive/lattice_improvement_audit.py": "60463a968cc7da4ee67aa5c35d84c9ecd35da80ea6791eee0f06aaf4c7d0ade2",
+    "experiments/adaptive/curved_relocation_probe.py": "f4f85e7356ab22892c51dc49a6930a2169ca2f7346f849f9bc2fa18b75ec4781"
+  }
+}

@@ -1,0 +1,31 @@
+{
+  "scope": "One local curved interior relocation probe, no global mesh or FE solve.",
+  "basis": {
+    "closure_only_added_nodes": 108311,
+    "total_added_nodes": 184279,
+    "interior_bad_quality_share_meshers": 0.3894840294840295,
+    "interior_bad_quality_share_actual": 0.08425126525751712
+  },
+  "policy": {
+    "lattice_vertices": 256,
+    "other_cases_vertices": 64,
+    "half_Laplacian_step": true,
+    "interior_only": true,
+    "all_cavity_Tri6_coordinates_fixed": true,
+    "counts_unchanged": true,
+    "quality_floor": 0.1,
+    "path_fractions": [
+      0.25,
+      0.5,
+      0.75,
+      1.0
+    ],
+    "positive125_checks": true,
+    "fields_used": false
+  },
+  "decision": "Measure a cheap existing-native-style relocation before designing a full optimiser. Local overlapping proposals are not a global admitted mesh or an accuracy claim.",
+  "inputs": {
+    "experiments/adaptive/runs/macbook-lattice-improvement-audit-v3/result.json": "16d859561b73274eb06b73a3fcc595722baf260e81fca8393012901e74402014",
+    "experiments/adaptive/curved_relocation_probe.py": "f4f85e7356ab22892c51dc49a6930a2169ca2f7346f849f9bc2fa18b75ec4781"
+  }
+}

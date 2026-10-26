@@ -226,6 +226,51 @@ fix does not repair lattice grading. Replay evidence is in
 Evidence is in
 `handoff/macbook/adaptation-budget-recovery-validation-20261026.json`.
 
+### Evidence-ranked improvement directions
+
+Read-only audit **596** reconstructs the complete 34-level closure history.
+Of 184,279 added nodes, **108,311, or 58.8%**, support cuts already below the
+metric split threshold. These cuts may be needed for quality and conformity;
+the count is not a claim that they can all be removed. After the curved
+quality pass, 9,826 edges still violate the split threshold while 112,356
+interior edges are shorter than the collapse threshold. The latter are
+length-only candidates, not admitted coarsenings. The next allocation change
+should couple refinement with coarsening and metric-aware cavity operations,
+rather than change the nearby global size again.
+
+The quality deficit is also in the bulk. Interior median quality is 0.696840
+versus actual's 0.823863. Interior cells account for 38.95% of Meshers tets
+below q=0.5, versus 8.43% for actual. This is a share of the low-quality
+population, not a fraction of all interior cells. Native uniform37's excellent
+median 0.929516 still gives 2.085390% stiffness disagreement. Better shapes
+alone do not imply enough stiffness accuracy.
+
+Local curved-star probe **597** uses the native half-centroid displacement,
+moving attached edge midpoints by half the corner displacement. It tests
+256 interior lattice vertices and 64 in each other fixed case. Locally
+feasible counts are 135 lattice, 7 Gyroid, 3 Schwarz and 12 spinodoid. Each
+passes the minimum-quality gain without a median decrease, exact cavity Tri6
+trace, volume and sampled positive-Jacobian checks along four motion
+fractions. Only 22 lattice proposals avoid worsening every recorded local
+quantile. The proposals may overlap, so there is no global mesh admission or
+new stiffness/timing claim. A disjoint global pass and fresh fields are
+required before claiming a mesh-workflow improvement.
+
+Audit 594 catches an unsorted local-edge control assumption. Audit 595 catches
+an empty percentile at the terminal zero-cut level. Both failures are saved;
+596 handles both and passes without changing any source mesh or old result.
+The prior comparison table's budget row was too broad: the failed native
+grading and admitted actual route use different recipes. The native failure
+is a route limitation, not a matched universal-robustness comparison.
+
+The prioritized next tests and primary method references are recorded in
+`experiments/adaptive/PLAN.md` and
+`handoff/macbook/lattice-improvement-directions-20261026.json`.
+No production code changes in this investigation. Native SHA remains
+`2005c3e01892098a9d734567220a56ed3ea5d748b20a4f96754fbb55168060b1`.
+All four cases, all 24 lattice models and the unchanged admission caps remain
+in scope. No new reference or overall winner is promoted.
+
 ### Longest-edge closure and memory handoff
 
 The experimental refinement now propagates short-edge requests to longer

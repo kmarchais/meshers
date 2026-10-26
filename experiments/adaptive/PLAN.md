@@ -1,5 +1,61 @@
 # Adaptive implicit meshing: plan and status
 
+## Improvement directions from measured allocation, 26 October 2026
+
+The next accuracy work should replace one-way refinement with a consistent
+refinement/coarsening loop. Read-only audit 596 reconstructs all 34 saved
+longest-edge levels. Of 184,279 added nodes, 108,311, or **58.8%**, belong to
+cuts whose own sampled metric length was already below the split threshold.
+Those supporting cuts can be necessary for quality and conformity. They are
+not assumed removable. The final quality-pass mesh still has 9,826 edges
+above the threshold, maximum ratio 8.666, while 112,356 interior edges are
+shorter than the metric collapse threshold. These short-edge counts are
+length-only opportunities, not admitted coarsening operations.
+
+1. **Improve allocation first.** Use the same directional metric for split,
+   collapse, cavity-quality and relocation decisions. Begin with one complete
+   periodic coarsening/refinement cavity under the unchanged domain and caps.
+   Check link conditions, new-edge metric lengths, exact curved cavity traces,
+   quality, volume and positive Jacobians before a global candidate. Coarsening
+   alone can discard useful FE space. Any changed topology or node positions
+   require fresh fields and all 24 retained models; do not claim old-field
+   transfer or nested-space accuracy after such changes.
+2. **Improve interior shapes.** The best lattice interior median quality is
+   0.696840 versus actual's 0.823863. Local probe 597 tests one native-style
+   half-centroid move at 256 interior lattice vertices. **135** improve the
+   incident minimum without reducing median quality, and retain the cavity Tri6 boundary,
+   volume and sampled positive Jacobians along four motion fractions. Only
+   **22** avoid worsening every recorded local quality quantile. The proposals
+   overlap and are not a new global mesh. A disjoint global pass must receive
+   full independent admission and a fresh stiffness assessment.
+3. **Address speed after admission.** Profile the successful complete recipe
+   before porting measured bottlenecks to Rust and maintaining local adjacency
+   incrementally. No speedup is inferred from code inspection or the current
+   experimental timings. Comparative claims need fresh same-host repetitions.
+
+Uniform37 already has median quality 0.929516 but fails stiffness at 2.085390%.
+The curved quality pass changes stiffness only from 1.216071% to 1.215176%.
+Those results rule out treating shape optimization alone as an accuracy fix.
+Local relocation controls also pass on the other three fixed cases, with
+7/64 Gyroid, 3/64 Schwarz and 12/64 spinodoid proposals locally feasible.
+They do not replace full-mesh regression checks or supply actual comparators.
+
+The geometry, quality, periodic and 250,000-node/tet admission gates remain
+unchanged. All four specimens and all 24 lattice tensors stay in scope. No
+nearby global sizing sweep or extra solve of the closed cubic residual family
+is selected. Schwarz's modified-route win stands; Gyroid and spinodoid still
+lack admitted actual competitors in the tested routes. No new reference or
+four-case performance victory follows.
+
+These proposed operations follow established mechanisms, but their usefulness
+for Meshers remains subject to the tests above. See the official
+[MMG metric pipeline](https://mmgtools.org/documentation/mmg3d/documentation_mmg3d_metric.html)
+and [NekMesh fixed-boundary variational optimization](https://doc.nektar.info/userguide/latest/user-guidese19.html).
+Local evidence and limitations are recorded in
+`handoff/macbook/lattice-improvement-directions-20261026.json`.
+Earlier queued or next-step descriptions below are historical.
+
+
 ## Matched lattice count study still fails accuracy, 25 October 2026
 
 The adaptive scalar path now honors its existing interior-node request.
