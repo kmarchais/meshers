@@ -103,12 +103,25 @@ safe short-edge acceptance and already-completed metric handling. Source and
 fixture hashes are frozen in
 `handoff/macbook/lattice-quality-closure-selection-20261026.json`.
 
-Geometry-only job **569** is running from a fresh native seed under the
-unchanged 250,000-node/tet caps, 10 GiB and 1,200-second bounds. Its counts,
-stopping reason, continuation/direct/fallback diagnostics, complete geometry
-and periodic admission and operator memory feasibility must be read before
-selecting a solve. No new stiffness or comparative performance result is
-claimed for this policy.
+Geometry-only job **569** completes 60 levels at **224,358 nodes and 140,781
+tets**. Every level passes geometry and periodic gates; maximum volume drift
+is 4.663e-15. Final minimum quality is 0.100020510 and distance remains
+0.000278662. It stops at the pass guard with two orbits still accepted in the
+last pass. The 2,194 unresolved metric edges, maximum ratio 16.224, are not
+reclassified as complete refinement. The node cap is not reached.
+
+Exact operator/AMG probe 570 passes at 6.1954 GiB. Job **571** regenerates this
+same frozen recipe and computes six fresh loads with the verified exec
+transition and declared 10 GiB ceiling. Its combined deadline is explicitly
+1,800 seconds after measured geometry admission takes 711.95 seconds. This
+extends only the resource deadline, not an admission or accuracy gate. The
+recipe is frozen in
+`handoff/macbook/lattice-quality-closure-solve-selection-20261026.json` and
+preflight evidence in
+`handoff/macbook/lattice-quality-closure-preflight-evidence-20261026.json`.
+Its stiffness accuracy and comparative performance remain unassessed. The
+latest completed mesh-workflow score remains 1.216071201% from the earlier
+mandatory-longest-edge route.
 
 ### Longest-edge closure and memory handoff
 
