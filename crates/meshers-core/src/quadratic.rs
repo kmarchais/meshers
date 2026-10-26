@@ -263,43 +263,11 @@ pub(crate) fn elevate(
 /// Opposite node pairs over all quadratic nodes, per periodic axis.
 pub(crate) fn node_pairs(
     points: &[Point],
+    surface: &[[usize; 6]],
     bounds: [Point; 2],
     periodic: [bool; 3],
 ) -> Result<[Vec<[usize; 2]>; 3], String> {
-    let [lo, hi] = bounds;
-    let mut pairs: [Vec<[usize; 2]>; 3] = std::array::from_fn(|_| Vec::new());
-    for (a, pair) in pairs.iter_mut().enumerate() {
-        if !periodic[a] {
-            continue;
-        }
-        let key = |p: Point| -> [i64; 3] {
-            std::array::from_fn(|c| {
-                if c == a {
-                    0
-                } else {
-                    ((p[c] - lo[c]) / (hi[c] - lo[c]) * 1e11).round() as i64
-                }
-            })
-        };
-        let mut maps = [
-            std::collections::BTreeMap::new(),
-            std::collections::BTreeMap::new(),
-        ];
-        for (i, &p) in points.iter().enumerate() {
-            for (side, value) in [lo[a], hi[a]].iter().enumerate() {
-                if p[a] == *value && maps[side].insert(key(p), i).is_some() {
-                    return Err("ambiguous periodic quadratic node match".into());
-                }
-            }
-        }
-        if maps[0].keys().ne(maps[1].keys()) {
-            return Err(format!("periodic quadratic node mismatch on axis {a}"));
-        }
-        for (k, &i) in &maps[0] {
-            pair.push([i, maps[1][k]]);
-        }
-    }
-    Ok(pairs)
+    crate::implicit::periodic_pairs(points, surface, bounds, periodic)
 }
 
 #[cfg(test)]
@@ -407,7 +375,13 @@ mod tests {
         };
         let quadratic = elevate(&mesh, &tags, &geometry, 0., [true, false, false]).unwrap();
         assert!(quadratic.partially_curved_edges > 0);
-        let pairs = node_pairs(&quadratic.points, geometry.bounds(), [true, false, false]).unwrap();
+        let pairs = node_pairs(
+            &quadratic.points,
+            &quadratic.surface,
+            geometry.bounds(),
+            [true, false, false],
+        )
+        .unwrap();
         assert_eq!(pairs[0].len(), 3);
         for &[lower, upper] in &pairs[0] {
             assert_eq!(

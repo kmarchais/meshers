@@ -37,6 +37,25 @@ and [homogenization implementation](https://github.com/3MAH/fedoo/blob/v1.0.0b2/
 Both loading paths use fedoo's constraints and assembly. The independent checks
 use Meshers pair metadata and physical tetrahedral gradients.
 
+## Material traces at periodic box contacts
+
+Use the returned `periodic_pairs` to build constraints. Every node of a
+material cap and its complete Tri3 or Tri6 facet must match the opposite cap.
+All existing periodic images of edge and corner nodes must form one connected
+constraint class.
+
+A wall can touch a box corner whose opposite image has no material volume.
+For example, the Schwarz D zero-level solid has a supported node at
+`(-0.5, 0.5, 0.5)` and no supported node at `(0.5, 0.5, 0.5)`.
+The first node is constrained through its other periodic cap traces.
+Requiring a phantom node in the empty corner would create an unused degree
+of freedom. The matcher checks the actual material traces and complete
+existing node classes at the unchanged coordinate tolerance.
+
+The earlier full-box and Gyroid results below retain their original pair
+lists and constraint spaces. This matching correction adds no new stiffness
+or continuum-accuracy result for Schwarz D.
+
 ## Measured results
 
 The solid-cell test recovers `E=2.5` and `nu=0.25` to numerical precision.

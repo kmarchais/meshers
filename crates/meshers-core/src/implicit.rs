@@ -577,8 +577,12 @@ fn generate_internal<F: ScalarField>(
                 context.threshold(),
                 options.periodic,
             )?;
-            let periodic_pairs =
-                crate::quadratic::node_pairs(&elements.points, options.bounds, options.periodic)?;
+            let periodic_pairs = crate::quadratic::node_pairs(
+                &elements.points,
+                &elements.surface,
+                options.bounds,
+                options.periodic,
+            )?;
             output.quadratic = Some(QuadraticOutput {
                 elements,
                 periodic_pairs,
@@ -646,20 +650,31 @@ pub(crate) fn nonmanifold_vertices(surface: &[[usize; 3]], point_count: usize) -
         .collect()
 }
 
-fn periodic_pairs(
-    mesh: &Mesh,
-    tags: &[u8],
+/// Match every material cap node and facet, then verify complete node classes.
+/// A wall may touch a box edge/corner without a positive-area cap on that
+/// axis. Its empty opposite image needs no node; all existing images must
+/// still be connected by the returned translational pairs.
+pub(crate) fn periodic_pairs<const N: usize>(
+    points: &[Point],
+    surface: &[[usize; N]],
     bounds: [Point; 2],
     periodic: [bool; 3],
 ) -> Result<[Vec<[usize; 2]>; 3], String> {
+    fn root(parent: &mut [usize], mut node: usize) -> usize {
+        while parent[node] != node {
+            parent[node] = parent[parent[node]];
+            node = parent[node];
+        }
+        node
+    }
     let [lo, hi] = bounds;
     let mut pairs: [Vec<[usize; 2]>; 3] = std::array::from_fn(|_| Vec::new());
+    let mut parent: Vec<_> = (0..points.len()).collect();
     for (a, pair) in pairs.iter_mut().enumerate() {
         if !periodic[a] {
             continue;
         }
-        let mut maps = [BTreeMap::new(), BTreeMap::new()];
-        // Preserve other coordinates here: pairing on x must not collapse y/z corners.
+        // Transverse box corners remain distinct within each face.
         let key = |p: Point| {
             std::array::from_fn::<_, 3, _>(|axis| {
                 if axis == a {
@@ -669,32 +684,72 @@ fn periodic_pairs(
                 }
             })
         };
-        for (i, &p) in mesh.points.iter().enumerate() {
-            for (side, value) in [lo[a], hi[a]].iter().enumerate() {
-                if p[a] == *value && maps[side].insert(key(p), i).is_some() {
+        let mut maps = [BTreeMap::new(), BTreeMap::new()];
+        let mut cap_nodes = [
+            std::collections::BTreeSet::new(),
+            std::collections::BTreeSet::new(),
+        ];
+        let mut faces = [Vec::new(), Vec::new()];
+        for f in surface {
+            for (side, &value) in [lo[a], hi[a]].iter().enumerate() {
+                if f[..3].iter().all(|&i| points[i][a] == value) {
+                    if !f.iter().all(|&i| points[i][a] == value) {
+                        return Err(format!("periodic cap node leaves axis {a} plane"));
+                    }
+                    cap_nodes[side].extend(f.iter().copied());
+                    let mut keys = f.map(|i| key(points[i]));
+                    keys.sort_unstable();
+                    faces[side].push(keys);
+                }
+            }
+        }
+        for (i, &p) in points.iter().enumerate() {
+            for (side, &value) in [lo[a], hi[a]].iter().enumerate() {
+                if p[a] == value && maps[side].insert(key(p), i).is_some() {
                     return Err("ambiguous periodic node match".into());
                 }
             }
         }
-        if maps[0].keys().ne(maps[1].keys()) {
-            return Err(format!("periodic node mismatch on axis {a}"));
+        for side in 0..2 {
+            if maps[side]
+                .iter()
+                .any(|(k, i)| !maps[1 - side].contains_key(k) && cap_nodes[side].contains(i))
+            {
+                return Err(format!("periodic cap node mismatch on axis {a}"));
+            }
         }
         for (k, &i) in &maps[0] {
-            pair.push([i, maps[1][k]]);
-        }
-        let mut faces = [Vec::new(), Vec::new()];
-        for (f, &tag) in mesh.surface.iter().zip(tags) {
-            for (side, list) in faces.iter_mut().enumerate() {
-                if tag == 1 + 2 * a as u8 + side as u8 {
-                    let mut keys = f.map(|i| key(mesh.points[i]));
-                    keys.sort_unstable();
-                    list.push(keys);
-                }
+            if let Some(&j) = maps[1].get(k) {
+                pair.push([i, j]);
+                let ri = root(&mut parent, i);
+                let rj = root(&mut parent, j);
+                parent[rj] = ri;
             }
         }
         faces.iter_mut().for_each(|f| f.sort_unstable());
         if faces[0] != faces[1] {
             return Err(format!("periodic triangle mismatch on axis {a}"));
+        }
+    }
+    let mut classes = BTreeMap::new();
+    for (i, p) in points.iter().enumerate() {
+        if !(0..3).any(|a| periodic[a] && (p[a] == lo[a] || p[a] == hi[a])) {
+            continue;
+        }
+        let key = std::array::from_fn::<_, 3, _>(|a| {
+            let x = if periodic[a] && p[a] == hi[a] {
+                lo[a]
+            } else {
+                p[a]
+            };
+            ((x - lo[a]) / (hi[a] - lo[a]) * 1e11).round() as i64
+        });
+        let representative = root(&mut parent, i);
+        if classes
+            .insert(key, representative)
+            .is_some_and(|old| old != representative)
+        {
+            return Err("disconnected periodic edge/corner node class".into());
         }
     }
     Ok(pairs)
@@ -791,7 +846,7 @@ fn finish<F: ScalarField>(mesh: Mesh, g: &Context<F>) -> Result<Output, String> 
             g.options.geometry_tolerance
         ));
     }
-    let pairs = periodic_pairs(&mesh, &tags, g.bounds(), g.options.periodic)?;
+    let pairs = periodic_pairs(&mesh.points, &mesh.surface, g.bounds(), g.options.periodic)?;
     let empty = mesh.tets.is_empty();
     if !empty && minimum < g.options.minimum_quality {
         return Err(format!(
@@ -891,24 +946,7 @@ fn build<F: ScalarField>(g: &Context<F>) -> Result<Output, String> {
             intersection::generate(&references, |p| p, seed_options)?
         };
         if permuting {
-            let tags: Vec<_> = seed
-                .mesh
-                .surface
-                .iter()
-                .map(|f| {
-                    let mut tag = 0;
-                    for a in 0..3 {
-                        if f.iter().all(|&v| seed.mesh.points[v][a] == o.bounds[0][a]) {
-                            tag = 1 + 2 * a as u8;
-                        }
-                        if f.iter().all(|&v| seed.mesh.points[v][a] == o.bounds[1][a]) {
-                            tag = 2 + 2 * a as u8;
-                        }
-                    }
-                    tag
-                })
-                .collect();
-            periodic_pairs(&seed.mesh, &tags, o.bounds, o.periodic)?;
+            periodic_pairs(&seed.mesh.points, &seed.mesh.surface, o.bounds, o.periodic)?;
         }
         let reverted_snap_vertices = seed.quality.reverted_snap_vertices;
         let mut mesh = seed.mesh;
@@ -1425,6 +1463,80 @@ mod topology_tests {
     use super::nonmanifold_vertices;
 
     #[test]
+    fn schwarz_d_zero_level_periodic_regression() {
+        let field = |p: crate::Point| {
+            let [x, y, z] = p.map(|a| std::f64::consts::TAU * a);
+            x.sin() * y.sin() * z.sin()
+                + x.sin() * y.cos() * z.cos()
+                + x.cos() * y.sin() * z.cos()
+                + x.cos() * y.cos() * z.sin()
+        };
+        let output = super::generate(
+            &field,
+            super::Options {
+                bounds: [[-0.5; 3], [0.5; 3]],
+                cells: [4; 3],
+                periodic: [true; 3],
+                snap: 0.,
+                optimize_passes: 0,
+                geometry_tolerance: 1.,
+                ..Default::default()
+            },
+        )
+        .unwrap();
+        assert!(output.periodic_pairs.iter().all(|pairs| !pairs.is_empty()));
+        assert!(output.mesh.points.contains(&[-0.5, 0.5, 0.5]));
+        assert!(!output.mesh.points.contains(&[0.5, 0.5, 0.5]));
+    }
+
+    #[test]
+    fn periodic_contact_nodes_still_require_complete_existing_image_classes() {
+        let surface: Vec<[usize; 3]> = Vec::new();
+        let mut points = vec![[-0.5, -0.5, 0.1], [0.5, 0.5, 0.1]];
+        let check = |points: &[crate::Point]| {
+            super::periodic_pairs(points, &surface, [[-0.5; 3], [0.5; 3]], [true, true, false])
+        };
+        assert!(
+            check(&points)
+                .unwrap_err()
+                .contains("disconnected periodic")
+        );
+        points.push([0.5, -0.5, 0.1]);
+        let pairs = check(&points).unwrap();
+        assert_eq!(pairs[0], vec![[0, 2]]);
+        assert_eq!(pairs[1], vec![[2, 1]]);
+    }
+
+    #[test]
+    fn periodic_quadratic_caps_require_every_midpoint_on_the_matching_trace() {
+        let lower = [
+            [-0.5, -0.2, -0.2],
+            [-0.5, 0.2, -0.2],
+            [-0.5, 0., 0.2],
+            [-0.5, 0., -0.2],
+            [-0.5, 0.1, 0.],
+            [-0.5, -0.1, 0.],
+        ];
+        let mut points = lower.to_vec();
+        points.extend(lower.map(|p| [0.5, p[1], p[2]]));
+        let surface = [[0, 1, 2, 3, 4, 5], [6, 7, 8, 9, 10, 11]];
+        let check = |points: &[crate::Point]| {
+            super::periodic_pairs(
+                points,
+                &surface,
+                [[-0.5; 3], [0.5; 3]],
+                [true, false, false],
+            )
+        };
+        assert_eq!(check(&points).unwrap()[0].len(), 6);
+        points[9][1] += 0.001;
+        assert!(check(&points).unwrap_err().contains("cap node mismatch"));
+        points[9][1] -= 0.001;
+        points[9][0] -= 0.001;
+        assert!(check(&points).unwrap_err().contains("cap node leaves"));
+    }
+
+    #[test]
     fn periodic_cap_gradients_keep_the_physical_side() {
         use super::{Context, Options, ScalarField};
         use crate::geometry::Geometry;
@@ -1491,8 +1603,8 @@ mod topology_tests {
         };
         let check = |mesh: &crate::Mesh| {
             super::periodic_pairs(
-                mesh,
-                &[5, 5, 6, 6],
+                &mesh.points,
+                &mesh.surface,
                 [[-0.5; 3], [0.5; 3]],
                 [false, false, true],
             )

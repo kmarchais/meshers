@@ -40,6 +40,10 @@ class Mesh:
         surface: Boundary triangles, shape ``(K, 3)`` or ``(K, 6)``.
         boundary_tags: Zero for implicit faces, 1 and 2 for x-/x+, then y and z.
         periodic_pairs: Three arrays of paired point IDs, one for each box axis.
+            For scalar fields, every material-cap node is matched. Existing
+            edge/corner images form complete constraint classes. A wall-only
+            contact can lack an opposite image when that image has no
+            tetrahedral material support.
         diagnostics: Quality, timing, sampled error, evaluator and worker count.
         parameters: Parameter coordinates for mapped intersections, otherwise None.
         constraint_masks: Bit j marks membership in constraint j, otherwise None.
@@ -280,7 +284,8 @@ def generate(  # ruff: ignore[complex-structure]
             sampled validity permits. Invalid corrections are reduced or straightened;
             ``diagnostics["quadratic"]`` records both counts. Quadratic meshes
             report ``tetrahedra`` of shape (M, 10) and ``surface`` of shape (K, 6);
-            ``periodic_pairs`` then cover every node.
+            ``periodic_pairs`` then include cap midpoint nodes and preserve
+            complete constraint classes for existing periodic node images.
         size_field: Optional vectorized callback returning positive physical target
             edge lengths, shape (N,), for ``adapt=True``. Targets combine with
             curvature sizing by taking the smaller length, then applying

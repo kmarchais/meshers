@@ -1,0 +1,43 @@
+{
+  "issue": "Schwarz D solid zero level passes through periodic box corners",
+  "diagnosis": "The old matcher demanded every coordinate-plane node have every opposite image, including an empty material corner. Actual cap facets match and all present periodic node images are connected.",
+  "observed_contact": [
+    -0.5,
+    0.5,
+    0.5
+  ],
+  "absent_empty_image": [
+    0.5,
+    0.5,
+    0.5
+  ],
+  "minimal_cells": 4,
+  "snapping": 0,
+  "optimization_passes": 0,
+  "unchanged_geometry": true,
+  "no_added_orphan_nodes": true,
+  "unchanged_tolerances": true,
+  "rule": "Require bijective matching for every material-cap node, identical complete Tri3/Tri6 cap facets, no ambiguous face matches, and one connected translational constraint class for every set of existing periodic node images. Keep all available old pairs, including noncap contacts. An absent noncap image requires no phantom node.",
+  "negative_controls": [
+    "Unmatched cap vertex",
+    "Mismatched cap triangulation",
+    "Off-plane or unmatched quadratic cap midpoint",
+    "Disconnected edge/corner class"
+  ],
+  "historical_gate": "The old all-coordinate-plane rule and earlier Schwarz D failures remain frozen. A corrected trace audit is opt-in for new experimental receipts, applied identically to both arms.",
+  "required_regressions": [
+    "Native red tests become green",
+    "Independent trace audit agrees with native constraints",
+    "Original admitted four meshes and complete equivalence classes unchanged",
+    "Strict distance/volume/quality/Jacobian/facet/node/tet caps remain"
+  ],
+  "fixture": "experiments/adaptive/fixtures/schwarz-d-zero4-periodic-contact.json",
+  "fixture_sha256": "ee153007526b4c121c8adaf4f6617c71a99016b45a33b160f8135762c83c61f2",
+  "evidence": {
+    "diagnostic": "experiments/adaptive/runs/macbook-schwarz-d-periodic-diagnostic-v2/mesh.json",
+    "diagnostic_sha256": "ee153007526b4c121c8adaf4f6617c71a99016b45a33b160f8135762c83c61f2",
+    "core_worker": "experiments/adaptive/runs/macbook-schwarz-d-periodic-core-v1/worker.log"
+  },
+  "full_objective_complete": false,
+  "reference_promoted": false
+}
