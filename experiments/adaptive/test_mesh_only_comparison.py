@@ -28,6 +28,17 @@ def test_compiled_spinodoid_preserves_frozen_field():
     np.testing.assert_allclose(compiled.values(points),case.function(*points.T),atol=1e-12,rtol=1e-12)
 
 
+def test_comparison_spectral_expression_matches_original_compiler_inputs():
+    import comparison_fixtures
+    import meshers
+    case,shape,_=w.specimen('spinodoid')
+    original=spin_field(shape,meshers,np)
+    current=meshers.compile_field(comparison_fixtures.spectral_field(
+        comparison_fixtures.coefficients_path('spinodoid',w.HERE)))
+    points=np.random.default_rng(20261026).uniform(-.5,.5,(4096,3))
+    np.testing.assert_array_equal(current.values(points),original.values(points))
+
+
 @pytest.mark.parametrize('case,source',[
     ('spinodoid','g3-spinodoid-compiled32-v1'),
     ('smooth-lattice','g3-lattice-void-clamp32-v1')])

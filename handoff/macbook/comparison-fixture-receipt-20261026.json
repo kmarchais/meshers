@@ -1,0 +1,195 @@
+{
+  "prepared": {
+    "passed": true,
+    "cases": {
+      "gyroid": {
+        "periodic_axes": [
+          true,
+          true,
+          true
+        ],
+        "field_identity_points": 4096,
+        "periodic_field_errors": [
+          8.881784197001252e-16,
+          8.881784197001252e-16,
+          8.881784197001252e-16
+        ],
+        "fixture_hashes": {
+          "gyroid-samples.npz": "d49ce7a80d95af127951750fa7dd02f52d4dd67bc87246dee02be932b51539d6",
+          "gyroid-specimen.json": "2f9171aa778f1899aed5b1057bc6255da515e8a9d96bf76c305b62e3c7bd0ed8"
+        }
+      },
+      "schwarz-solid": {
+        "periodic_axes": [
+          true,
+          true,
+          true
+        ],
+        "field_identity_points": 4096,
+        "periodic_field_errors": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "fixture_hashes": {
+          "schwarz-solid-specimen.json": "42848bc582c5921aafc817735129dfef5e756c6689e178b5e642ef2c90b1d095",
+          "schwarz-solid-samples.npz": "d8ae76c147379fbffd28ef546d83c7bc59113292d89968a255c20a840ac59ece"
+        }
+      },
+      "spinodoid": {
+        "periodic_axes": [
+          true,
+          true,
+          true
+        ],
+        "field_identity_points": 4096,
+        "periodic_field_errors": [
+          4.718447854656915e-16,
+          4.753142324176451e-16,
+          3.608224830031759e-16
+        ],
+        "fixture_hashes": {
+          "spinodoid-samples.npz": "1f5f91f1ebc3e4e76dc7ddfc1e7ea7093595735684fbe41f1f7d85356138442c",
+          "spinodoid-specimen.json": "6140bf66acc68303bc18767a3632e24a068181201eba350ce32217dc50a67eee"
+        }
+      },
+      "smooth-lattice": {
+        "periodic_axes": [
+          true,
+          true,
+          true
+        ],
+        "field_identity_points": 4096,
+        "periodic_field_errors": [
+          7.441498960458759e-05,
+          2.357336754421624e-05,
+          5.451061404038171e-06
+        ],
+        "fixture_hashes": {
+          "smooth-lattice-samples.npz": "a2b4375d2c99901f03b34e913563c887a4cdcff00bca35983adb7ef9d5311abe",
+          "smooth-lattice-specimen.json": "0e5b34b76183341a6e0d454f13cd404668ab82675f9a51cd9d2ecf3c91be3316"
+        }
+      },
+      "schwarz-d-solid": {
+        "periodic_axes": [
+          true,
+          true,
+          true
+        ],
+        "field_identity_points": 4096,
+        "periodic_field_errors": [
+          2.7755575615628914e-16,
+          4.440892098500626e-16,
+          4.440892098500626e-16
+        ],
+        "fixture_hashes": {
+          "schwarz-d-solid-samples.npz": "fe35202efd172138f0e4214ab8de10350af7f7eb9844a97a6fa32ba55b3dd796",
+          "schwarz-d-solid-specimen.json": "a534744167c7d691ca076d1bdff53fef87a83c5377dbfb3124bb0a508193d684"
+        }
+      },
+      "graded-gyroid-periodic": {
+        "periodic_axes": [
+          true,
+          true,
+          true
+        ],
+        "field_identity_points": 4096,
+        "periodic_field_errors": [
+          1.3322676295501878e-15,
+          1.3322676295501878e-15,
+          1.3322676295501878e-15
+        ],
+        "fixture_hashes": {
+          "graded-gyroid-periodic-specimen.json": "d29cb9023b8efe2f1959b062d4222050f64b37f987b855c475a6848847438a89",
+          "graded-gyroid-periodic-samples.npz": "75be3ee3ec7722aed6b214d1408b4174c148405bd6aa6feb7bd66b0b457af613"
+        }
+      },
+      "graded-gyroid-linear": {
+        "periodic_axes": [
+          false,
+          false,
+          false
+        ],
+        "field_identity_points": 4096,
+        "periodic_field_errors": [
+          1.3322676295501878e-15,
+          1.3322676295501878e-15,
+          1.3712136395656627
+        ],
+        "fixture_hashes": {
+          "graded-gyroid-linear-samples.npz": "583146b0bb252ebb81f0f56919721e91743f42c796492802c78df5bf37f60273",
+          "graded-gyroid-linear-specimen.json": "4b3d9d250960d00d2b28dd8c58c2acf4b51e6bc04d264dcb1d001980ab907c7a"
+        }
+      },
+      "spinodoid-anisotropic": {
+        "periodic_axes": [
+          true,
+          true,
+          true
+        ],
+        "field_identity_points": 4096,
+        "periodic_field_errors": [
+          3.7470027081099033e-16,
+          3.3306690738754696e-16,
+          2.7755575615628914e-16
+        ],
+        "fixture_hashes": {
+          "spinodoid-anisotropic-specimen.json": "4c3cb9c37a0f4a2e42f8d448511e78a2e1e0d57f846e28140deab57b3d1712f0",
+          "spinodoid-anisotropic-samples.npz": "68402aca3566073307f3a2cd26d76473a7d946f1ded4a4a1098aedf0dda23cb8"
+        }
+      }
+    },
+    "fixed_original_four_preserved": true,
+    "added_cases": [
+      "schwarz-d-solid",
+      "graded-gyroid-periodic",
+      "graded-gyroid-linear",
+      "spinodoid-anisotropic"
+    ],
+    "linear_grading_is_nonperiodic": true,
+    "full_mechanical_accuracy_not_inferred": true
+  },
+  "controls": {
+    "regular_quality_and_volume": true,
+    "affine_Tet10_measure": true,
+    "analytic_plane_distance": true,
+    "analytic_sphere_distance": true,
+    "shared_quadratic_edge": true,
+    "deliberate_quadratic_crack_rejected": true
+  },
+  "preparation_worker": {
+    "returncode": 0,
+    "limit_failure": null,
+    "peak_rss_bytes": 387858432,
+    "wall_s": 3.6080594579980243,
+    "wall_s_clock": "monotonic",
+    "elapsed_realtime_s": 3.6080901622772217,
+    "suspension_or_clock_adjustment_s": 3.070427919737995e-05,
+    "idle_sleep_prevention": [
+      "/usr/bin/caffeinate",
+      "-i"
+    ],
+    "memory_bytes": 8589934592,
+    "memory_enforcement": "process-tree-rss-watchdog",
+    "rss_poll_interval_s": 0.25,
+    "platform": "darwin",
+    "numerical_thread_policy": {
+      "environment": {
+        "OPENBLAS_NUM_THREADS": "1",
+        "OMP_NUM_THREADS": "1",
+        "MKL_NUM_THREADS": "1",
+        "VECLIB_MAXIMUM_THREADS": "1",
+        "RAYON_NUM_THREADS": "1"
+      },
+      "accelerate_blas_threading": 1,
+      "accelerate_scope": "calling thread"
+    }
+  },
+  "anisotropic_coefficients_copy": "handoff/macbook/comparison-spinodoid-anisotropic-coefficients-20261026.json",
+  "anisotropic_coefficients_sha256": "6472b7e24af7aec153ec8797ff9025ea82c5690705da3d5ebc836dc94fa00b7e",
+  "sources": {
+    "experiments/adaptive/runs/macbook-comparison-fixtures-v1/result.json": "6903fc3239ce1bbfeb423bb76e749f5b107b7f6e63eaa90459fff0163fd7e18d",
+    "experiments/adaptive/runs/macbook-comparison-fixtures-v1/controls.json": "a245d74c773f46cf3d24b22147d2956e5da1afb993b3e5b7400033c88459dc08"
+  },
+  "scope": "Original four samples and specimen descriptors copied hash-identically. New graded and Schwarz D fixtures are fixed Sobol samples. Additional spinodoid field coefficients saved exactly for future restoration. Hash-identical inputs only; no replacement sample regeneration."
+}

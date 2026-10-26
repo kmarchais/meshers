@@ -1,0 +1,20 @@
+{
+  "cases": [
+    "spinodoid",
+    "spinodoid-anisotropic"
+  ],
+  "configs": [
+    {
+      "name": "actual-public-sampling32-default-mmg-tet4",
+      "arm": "microgen",
+      "resolution": 32,
+      "order": 1
+    }
+  ],
+  "reason": "Installed Spinodoid constructor sampling/FFT resolution default is32. Existing actual-default uses the frozen study FFT16 and sampling16. Verify public sampling32 on that same frozen Fourier field, keeping both public MMG passes unchanged.",
+  "scope": "No regenerated Fourier realization and no changed fixed material geometry. Existing route labels mean MMG defaults on fixed study inputs, not literal all constructor defaults. Retain both controls. No Meshers seeds.",
+  "inputs": {
+    ".local-work/macbook-runtime/venv/lib/python3.12/site-packages/microgen/shape/spinodoid.py": "c755554a90d2c6279e625174ad0e6940f1d3bbb30ab35379fbaece1a95b7d724",
+    "handoff/macbook/comparison-protocol-20261026.json": "d61bb3303b722a2e49225d0874236bc9876ec1dfcab2304edbdba2552e20e4f8"
+  }
+}

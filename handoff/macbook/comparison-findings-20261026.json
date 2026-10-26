@@ -1,0 +1,4478 @@
+{
+  "rows": [
+    {
+      "case": "graded-gyroid-linear",
+      "name": "meshers-curved-tet10",
+      "config": {
+        "arm": "meshers",
+        "cells": 16,
+        "order": 2,
+        "adapt": false,
+        "tolerance": 1.0,
+        "min_length": 0.002,
+        "adapt_tolerance": 0.002,
+        "name": "meshers-curved-tet10"
+      },
+      "samples": 5,
+      "qualified": 5,
+      "generation_s": {
+        "median": 0.20594987499862327,
+        "minimum": 0.20584099999905447,
+        "maximum": 0.20680620899656788
+      },
+      "failed_attempt_s": null,
+      "nodes": {
+        "median": 44841,
+        "minimum": 44841,
+        "maximum": 44841
+      },
+      "elements": {
+        "median": 25624,
+        "minimum": 25624,
+        "maximum": 25624
+      },
+      "sampled_distance": {
+        "median": 0.0002772495848381698,
+        "minimum": 0.0002772495848381698,
+        "maximum": 0.0002772495848381698
+      },
+      "sampled_reverse_only": null,
+      "abs_relative_volume": {
+        "median": 0.00010834337528786708,
+        "minimum": 0.00010834337528786708,
+        "maximum": 0.00010834337528786708
+      },
+      "quality": {
+        "min": {
+          "median": 0.15909209094828733,
+          "minimum": 0.15909209094828733,
+          "maximum": 0.15909209094828733
+        },
+        "p01": {
+          "median": 0.4557143019064846,
+          "minimum": 0.4557143019064846,
+          "maximum": 0.4557143019064846
+        },
+        "p10": {
+          "median": 0.5790073043469118,
+          "minimum": 0.5790073043469118,
+          "maximum": 0.5790073043469118
+        },
+        "median": {
+          "median": 0.7929932300982632,
+          "minimum": 0.7929932300982632,
+          "maximum": 0.7929932300982632
+        },
+        "p90": {
+          "median": 0.931006807399101,
+          "minimum": 0.931006807399101,
+          "maximum": 0.931006807399101
+        },
+        "p99": {
+          "median": 0.9726401867194664,
+          "minimum": 0.9726401867194664,
+          "maximum": 0.9726401867194664
+        },
+        "max": {
+          "median": 0.9985340563397778,
+          "minimum": 0.9985340563397778,
+          "maximum": 0.9985340563397778
+        }
+      },
+      "failed_gates": [],
+      "errors": [],
+      "source_rows": [
+        "experiments/adaptive/runs/macbook-verified-graded-linear-repeated-v1/repeat-0-meshers-curved-tet10",
+        "experiments/adaptive/runs/macbook-verified-graded-linear-repeated-v1/repeat-1-meshers-curved-tet10",
+        "experiments/adaptive/runs/macbook-verified-graded-linear-repeated-v1/repeat-2-meshers-curved-tet10",
+        "experiments/adaptive/runs/macbook-verified-graded-linear-repeated-v1/repeat-3-meshers-curved-tet10",
+        "experiments/adaptive/runs/macbook-verified-graded-linear-repeated-v1/repeat-4-meshers-curved-tet10"
+      ]
+    },
+    {
+      "case": "graded-gyroid-periodic",
+      "name": "meshers-tet4",
+      "config": {
+        "arm": "meshers",
+        "cells": 24,
+        "order": 1,
+        "adapt": false,
+        "tolerance": 1.0,
+        "min_length": 0.002,
+        "adapt_tolerance": 0.002,
+        "name": "meshers-tet4"
+      },
+      "samples": 5,
+      "qualified": 5,
+      "generation_s": {
+        "median": 0.47769495800093864,
+        "minimum": 0.47172375000081956,
+        "maximum": 0.4796886670010281
+      },
+      "failed_attempt_s": null,
+      "nodes": {
+        "median": 19595,
+        "minimum": 19595,
+        "maximum": 19595
+      },
+      "elements": {
+        "median": 78602,
+        "minimum": 78602,
+        "maximum": 78602
+      },
+      "sampled_distance": {
+        "median": 0.0014829191229624214,
+        "minimum": 0.0014829191229624214,
+        "maximum": 0.0014829191229624214
+      },
+      "sampled_reverse_only": null,
+      "abs_relative_volume": {
+        "median": 0.0019671321003655873,
+        "minimum": 0.0019671321003655873,
+        "maximum": 0.0019671321003655873
+      },
+      "quality": {
+        "min": {
+          "median": 0.12262065253601798,
+          "minimum": 0.12262065253601798,
+          "maximum": 0.12262065253601798
+        },
+        "p01": {
+          "median": 0.4722620899560459,
+          "minimum": 0.4722620899560459,
+          "maximum": 0.4722620899560459
+        },
+        "p10": {
+          "median": 0.5983828712231808,
+          "minimum": 0.5983828712231808,
+          "maximum": 0.5983828712231808
+        },
+        "median": {
+          "median": 0.8611282735319766,
+          "minimum": 0.8611282735319766,
+          "maximum": 0.8611282735319766
+        },
+        "p90": {
+          "median": 0.9344721346270041,
+          "minimum": 0.9344721346270041,
+          "maximum": 0.9344721346270041
+        },
+        "p99": {
+          "median": 0.9733786805787301,
+          "minimum": 0.9733786805787301,
+          "maximum": 0.9733786805787301
+        },
+        "max": {
+          "median": 0.9986160440492443,
+          "minimum": 0.9986160440492443,
+          "maximum": 0.9986160440492443
+        }
+      },
+      "failed_gates": [],
+      "errors": [],
+      "source_rows": [
+        "experiments/adaptive/runs/macbook-verified-graded-periodic-repeated-v1/repeat-0-meshers-tet4",
+        "experiments/adaptive/runs/macbook-verified-graded-periodic-repeated-v1/repeat-1-meshers-tet4",
+        "experiments/adaptive/runs/macbook-verified-graded-periodic-repeated-v1/repeat-2-meshers-tet4",
+        "experiments/adaptive/runs/macbook-verified-graded-periodic-repeated-v1/repeat-3-meshers-tet4",
+        "experiments/adaptive/runs/macbook-verified-graded-periodic-repeated-v1/repeat-4-meshers-tet4"
+      ]
+    },
+    {
+      "case": "graded-gyroid-periodic",
+      "name": "meshers-curved-tet10",
+      "config": {
+        "arm": "meshers",
+        "cells": 16,
+        "order": 2,
+        "adapt": false,
+        "tolerance": 1.0,
+        "min_length": 0.002,
+        "adapt_tolerance": 0.002,
+        "name": "meshers-curved-tet10"
+      },
+      "samples": 5,
+      "qualified": 5,
+      "generation_s": {
+        "median": 0.20815199999924516,
+        "minimum": 0.2055991660017753,
+        "maximum": 0.2082581670001673
+      },
+      "failed_attempt_s": null,
+      "nodes": {
+        "median": 44857,
+        "minimum": 44857,
+        "maximum": 44857
+      },
+      "elements": {
+        "median": 25744,
+        "minimum": 25744,
+        "maximum": 25744
+      },
+      "sampled_distance": {
+        "median": 0.0003891265882822149,
+        "minimum": 0.0003891265882822149,
+        "maximum": 0.0003891265882822149
+      },
+      "sampled_reverse_only": null,
+      "abs_relative_volume": {
+        "median": 1.690243614960174e-05,
+        "minimum": 1.690243614960174e-05,
+        "maximum": 1.690243614960174e-05
+      },
+      "quality": {
+        "min": {
+          "median": 0.3211584196119146,
+          "minimum": 0.3211584196119146,
+          "maximum": 0.3211584196119146
+        },
+        "p01": {
+          "median": 0.47154781179151617,
+          "minimum": 0.47154781179151617,
+          "maximum": 0.47154781179151617
+        },
+        "p10": {
+          "median": 0.5751791816568067,
+          "minimum": 0.5751791816568067,
+          "maximum": 0.5751791816568067
+        },
+        "median": {
+          "median": 0.7950670991635653,
+          "minimum": 0.7950670991635653,
+          "maximum": 0.7950670991635653
+        },
+        "p90": {
+          "median": 0.9310681482970886,
+          "minimum": 0.9310681482970886,
+          "maximum": 0.9310681482970886
+        },
+        "p99": {
+          "median": 0.971376656346003,
+          "minimum": 0.971376656346003,
+          "maximum": 0.971376656346003
+        },
+        "max": {
+          "median": 0.9981148274589365,
+          "minimum": 0.9981148274589365,
+          "maximum": 0.9981148274589365
+        }
+      },
+      "failed_gates": [],
+      "errors": [],
+      "source_rows": [
+        "experiments/adaptive/runs/macbook-verified-graded-periodic-repeated-v1/repeat-0-meshers-curved-tet10",
+        "experiments/adaptive/runs/macbook-verified-graded-periodic-repeated-v1/repeat-1-meshers-curved-tet10",
+        "experiments/adaptive/runs/macbook-verified-graded-periodic-repeated-v1/repeat-2-meshers-curved-tet10",
+        "experiments/adaptive/runs/macbook-verified-graded-periodic-repeated-v1/repeat-3-meshers-curved-tet10",
+        "experiments/adaptive/runs/macbook-verified-graded-periodic-repeated-v1/repeat-4-meshers-curved-tet10"
+      ]
+    },
+    {
+      "case": "gyroid",
+      "name": "meshers-tet4",
+      "config": {
+        "name": "meshers-tet4",
+        "arm": "meshers",
+        "cells": 24,
+        "order": 1,
+        "adapt": false,
+        "tolerance": 1.0
+      },
+      "samples": 5,
+      "qualified": 5,
+      "generation_s": {
+        "median": 0.3971079169969016,
+        "minimum": 0.39579062499979045,
+        "maximum": 0.40603004199874704
+      },
+      "failed_attempt_s": null,
+      "nodes": {
+        "median": 17647,
+        "minimum": 17647,
+        "maximum": 17647
+      },
+      "elements": {
+        "median": 72757,
+        "minimum": 72757,
+        "maximum": 72757
+      },
+      "sampled_distance": {
+        "median": 0.0015839886333110064,
+        "minimum": 0.0015839886333110064,
+        "maximum": 0.0015839886333110064
+      },
+      "sampled_reverse_only": null,
+      "abs_relative_volume": {
+        "median": 0.0018912144339480186,
+        "minimum": 0.0018912144339480186,
+        "maximum": 0.0018912144339480186
+      },
+      "quality": {
+        "min": {
+          "median": 0.1502542765245815,
+          "minimum": 0.1502542765245815,
+          "maximum": 0.1502542765245815
+        },
+        "p01": {
+          "median": 0.5133146505942704,
+          "minimum": 0.5133146505942704,
+          "maximum": 0.5133146505942704
+        },
+        "p10": {
+          "median": 0.6356369105218947,
+          "minimum": 0.6356369105218947,
+          "maximum": 0.6356369105218947
+        },
+        "median": {
+          "median": 0.8825366594819207,
+          "minimum": 0.8825366594819207,
+          "maximum": 0.8825366594819207
+        },
+        "p90": {
+          "median": 0.9371854939377064,
+          "minimum": 0.9371854939377064,
+          "maximum": 0.9371854939377064
+        },
+        "p99": {
+          "median": 0.9784595338630738,
+          "minimum": 0.9784595338630738,
+          "maximum": 0.9784595338630738
+        },
+        "max": {
+          "median": 0.9993001766017738,
+          "minimum": 0.9993001766017738,
+          "maximum": 0.9993001766017738
+        }
+      },
+      "failed_gates": [],
+      "errors": [],
+      "source_rows": [
+        "experiments/adaptive/runs/macbook-verified-gyroid-repeated-v1/repeat-0-meshers-tet4",
+        "experiments/adaptive/runs/macbook-verified-gyroid-repeated-v1/repeat-1-meshers-tet4",
+        "experiments/adaptive/runs/macbook-verified-gyroid-repeated-v1/repeat-2-meshers-tet4",
+        "experiments/adaptive/runs/macbook-verified-gyroid-repeated-v1/repeat-3-meshers-tet4",
+        "experiments/adaptive/runs/macbook-verified-gyroid-repeated-v1/repeat-4-meshers-tet4"
+      ]
+    },
+    {
+      "case": "gyroid",
+      "name": "meshers-curved-tet10",
+      "config": {
+        "name": "meshers-curved-tet10",
+        "arm": "meshers",
+        "cells": 9,
+        "order": 2,
+        "adapt": false,
+        "tolerance": 1.0,
+        "min_length": 0.002,
+        "adapt_tolerance": 0.002
+      },
+      "samples": 5,
+      "qualified": 5,
+      "generation_s": {
+        "median": 0.06630620899886708,
+        "minimum": 0.06512562499847263,
+        "maximum": 0.06790879199979827
+      },
+      "failed_attempt_s": null,
+      "nodes": {
+        "median": 11857,
+        "minimum": 11857,
+        "maximum": 11857
+      },
+      "elements": {
+        "median": 6008,
+        "minimum": 6008,
+        "maximum": 6008
+      },
+      "sampled_distance": {
+        "median": 0.0011893416581181303,
+        "minimum": 0.0011893416581181303,
+        "maximum": 0.0011893416581181303
+      },
+      "sampled_reverse_only": null,
+      "abs_relative_volume": {
+        "median": 0.0002632760693176417,
+        "minimum": 0.0002632760693176417,
+        "maximum": 0.0002632760693176417
+      },
+      "quality": {
+        "min": {
+          "median": 0.14469000390080416,
+          "minimum": 0.14469000390080416,
+          "maximum": 0.14469000390080416
+        },
+        "p01": {
+          "median": 0.33790399858766784,
+          "minimum": 0.33790399858766784,
+          "maximum": 0.33790399858766784
+        },
+        "p10": {
+          "median": 0.5105163773662875,
+          "minimum": 0.5105163773662875,
+          "maximum": 0.5105163773662875
+        },
+        "median": {
+          "median": 0.6737377406241142,
+          "minimum": 0.6737377406241142,
+          "maximum": 0.6737377406241142
+        },
+        "p90": {
+          "median": 0.886108049708601,
+          "minimum": 0.886108049708601,
+          "maximum": 0.886108049708601
+        },
+        "p99": {
+          "median": 0.9636473236753227,
+          "minimum": 0.9636473236753227,
+          "maximum": 0.9636473236753227
+        },
+        "max": {
+          "median": 0.9971716501237312,
+          "minimum": 0.9971716501237312,
+          "maximum": 0.9971716501237312
+        }
+      },
+      "failed_gates": [],
+      "errors": [],
+      "source_rows": [
+        "experiments/adaptive/runs/macbook-verified-gyroid-repeated-v1/repeat-0-meshers-curved-tet10",
+        "experiments/adaptive/runs/macbook-verified-gyroid-repeated-v1/repeat-1-meshers-curved-tet10",
+        "experiments/adaptive/runs/macbook-verified-gyroid-repeated-v1/repeat-2-meshers-curved-tet10",
+        "experiments/adaptive/runs/macbook-verified-gyroid-repeated-v1/repeat-3-meshers-curved-tet10",
+        "experiments/adaptive/runs/macbook-verified-gyroid-repeated-v1/repeat-4-meshers-curved-tet10"
+      ]
+    },
+    {
+      "case": "smooth-lattice",
+      "name": "actual-modified-tet4",
+      "config": {
+        "name": "actual-modified-tet4",
+        "arm": "microgen",
+        "order": 1,
+        "resolution": 51,
+        "mmg": {
+          "hausd": 0.001,
+          "hmax": 0.06,
+          "hgrad": 1.3
+        },
+        "first_hausd": 0.0015,
+        "first_hmax": 0.06,
+        "first_only": false,
+        "repair": true
+      },
+      "samples": 5,
+      "qualified": 5,
+      "generation_s": {
+        "median": 8.790747291001026,
+        "minimum": 8.752038290997007,
+        "maximum": 8.874605206994602
+      },
+      "failed_attempt_s": null,
+      "nodes": {
+        "median": 33953,
+        "minimum": 33953,
+        "maximum": 33953
+      },
+      "elements": {
+        "median": 158430,
+        "minimum": 158430,
+        "maximum": 158430
+      },
+      "sampled_distance": {
+        "median": 0.0017012390155748264,
+        "minimum": 0.0017012390155748264,
+        "maximum": 0.0017012390155748264
+      },
+      "sampled_reverse_only": null,
+      "abs_relative_volume": {
+        "median": 0.0049053370239361405,
+        "minimum": 0.0049053370239361405,
+        "maximum": 0.0049053370239361405
+      },
+      "quality": {
+        "min": {
+          "median": 0.1000010009999996,
+          "minimum": 0.1000010009999996,
+          "maximum": 0.1000010009999996
+        },
+        "p01": {
+          "median": 0.4897432696461668,
+          "minimum": 0.4897432696461668,
+          "maximum": 0.4897432696461668
+        },
+        "p10": {
+          "median": 0.6404562756877363,
+          "minimum": 0.6404562756877363,
+          "maximum": 0.6404562756877363
+        },
+        "median": {
+          "median": 0.8037069194314429,
+          "minimum": 0.8037069194314429,
+          "maximum": 0.8037069194314429
+        },
+        "p90": {
+          "median": 0.9242349692131192,
+          "minimum": 0.9242349692131192,
+          "maximum": 0.9242349692131192
+        },
+        "p99": {
+          "median": 0.9737301546813646,
+          "minimum": 0.9737301546813646,
+          "maximum": 0.9737301546813646
+        },
+        "max": {
+          "median": 0.998569317670846,
+          "minimum": 0.998569317670846,
+          "maximum": 0.998569317670846
+        }
+      },
+      "failed_gates": [],
+      "errors": [],
+      "source_rows": [
+        "experiments/adaptive/runs/macbook-verified-lattice-repeated-v1/repeat-0-actual-modified-tet4",
+        "experiments/adaptive/runs/macbook-verified-lattice-repeated-v1/repeat-1-actual-modified-tet4",
+        "experiments/adaptive/runs/macbook-verified-lattice-repeated-v1/repeat-2-actual-modified-tet4",
+        "experiments/adaptive/runs/macbook-verified-lattice-repeated-v1/repeat-3-actual-modified-tet4",
+        "experiments/adaptive/runs/macbook-verified-lattice-repeated-v1/repeat-4-actual-modified-tet4"
+      ]
+    },
+    {
+      "case": "smooth-lattice",
+      "name": "meshers-tet4",
+      "config": {
+        "name": "meshers-tet4",
+        "arm": "meshers",
+        "cells": 32,
+        "order": 1,
+        "adapt": true,
+        "tolerance": 0.002,
+        "min_length": 0.002,
+        "adapt_tolerance": 0.002,
+        "lattice_field": "original"
+      },
+      "samples": 5,
+      "qualified": 5,
+      "generation_s": {
+        "median": 2.0420795409991115,
+        "minimum": 2.0207239169976674,
+        "maximum": 2.0565083749970654
+      },
+      "failed_attempt_s": null,
+      "nodes": {
+        "median": 13698,
+        "minimum": 13698,
+        "maximum": 13698
+      },
+      "elements": {
+        "median": 58847,
+        "minimum": 58847,
+        "maximum": 58847
+      },
+      "sampled_distance": {
+        "median": 0.001885108653760798,
+        "minimum": 0.001885108653760798,
+        "maximum": 0.001885108653760798
+      },
+      "sampled_reverse_only": null,
+      "abs_relative_volume": {
+        "median": 0.004767996157475141,
+        "minimum": 0.004767996157475141,
+        "maximum": 0.004767996157475141
+      },
+      "quality": {
+        "min": {
+          "median": 0.38546532281020346,
+          "minimum": 0.38546532281020346,
+          "maximum": 0.38546532281020346
+        },
+        "p01": {
+          "median": 0.5284176357005607,
+          "minimum": 0.5284176357005607,
+          "maximum": 0.5284176357005607
+        },
+        "p10": {
+          "median": 0.6301077340575348,
+          "minimum": 0.6301077340575348,
+          "maximum": 0.6301077340575348
+        },
+        "median": {
+          "median": 0.7776572314280809,
+          "minimum": 0.7776572314280809,
+          "maximum": 0.7776572314280809
+        },
+        "p90": {
+          "median": 0.9090312744899117,
+          "minimum": 0.9090312744899117,
+          "maximum": 0.9090312744899117
+        },
+        "p99": {
+          "median": 0.9660875011003223,
+          "minimum": 0.9660875011003223,
+          "maximum": 0.9660875011003223
+        },
+        "max": {
+          "median": 0.998477997485143,
+          "minimum": 0.998477997485143,
+          "maximum": 0.998477997485143
+        }
+      },
+      "failed_gates": [],
+      "errors": [],
+      "source_rows": [
+        "experiments/adaptive/runs/macbook-verified-lattice-repeated-v1/repeat-0-meshers-tet4",
+        "experiments/adaptive/runs/macbook-verified-lattice-repeated-v1/repeat-1-meshers-tet4",
+        "experiments/adaptive/runs/macbook-verified-lattice-repeated-v1/repeat-2-meshers-tet4",
+        "experiments/adaptive/runs/macbook-verified-lattice-repeated-v1/repeat-3-meshers-tet4",
+        "experiments/adaptive/runs/macbook-verified-lattice-repeated-v1/repeat-4-meshers-tet4"
+      ]
+    },
+    {
+      "case": "smooth-lattice",
+      "name": "meshers-curved-tet10",
+      "config": {
+        "name": "meshers-curved-tet10",
+        "arm": "meshers",
+        "cells": 26,
+        "order": 2,
+        "adapt": true,
+        "tolerance": 1.0,
+        "min_length": 0.002,
+        "adapt_tolerance": 0.0028
+      },
+      "samples": 5,
+      "qualified": 5,
+      "generation_s": {
+        "median": 1.3250105000006442,
+        "minimum": 1.3194776669988642,
+        "maximum": 1.3317919169967354
+      },
+      "failed_attempt_s": null,
+      "nodes": {
+        "median": 65721,
+        "minimum": 65721,
+        "maximum": 65721
+      },
+      "elements": {
+        "median": 41340,
+        "minimum": 41340,
+        "maximum": 41340
+      },
+      "sampled_distance": {
+        "median": 0.00027866151779207363,
+        "minimum": 0.00027866151779207363,
+        "maximum": 0.00027866151779207363
+      },
+      "sampled_reverse_only": null,
+      "abs_relative_volume": {
+        "median": 0.0003124174650723788,
+        "minimum": 0.0003124174650723788,
+        "maximum": 0.0003124174650723788
+      },
+      "quality": {
+        "min": {
+          "median": 0.365931094329415,
+          "minimum": 0.365931094329415,
+          "maximum": 0.365931094329415
+        },
+        "p01": {
+          "median": 0.5257562465582704,
+          "minimum": 0.5257562465582704,
+          "maximum": 0.5257562465582704
+        },
+        "p10": {
+          "median": 0.6131802973709943,
+          "minimum": 0.6131802973709943,
+          "maximum": 0.6131802973709943
+        },
+        "median": {
+          "median": 0.7680997682899071,
+          "minimum": 0.7680997682899071,
+          "maximum": 0.7680997682899071
+        },
+        "p90": {
+          "median": 0.9110613853060454,
+          "minimum": 0.9110613853060454,
+          "maximum": 0.9110613853060454
+        },
+        "p99": {
+          "median": 0.9659106971480201,
+          "minimum": 0.9659106971480201,
+          "maximum": 0.9659106971480201
+        },
+        "max": {
+          "median": 0.9970982341192842,
+          "minimum": 0.9970982341192842,
+          "maximum": 0.9970982341192842
+        }
+      },
+      "failed_gates": [],
+      "errors": [],
+      "source_rows": [
+        "experiments/adaptive/runs/macbook-verified-lattice-repeated-v1/repeat-0-meshers-curved-tet10",
+        "experiments/adaptive/runs/macbook-verified-lattice-repeated-v1/repeat-1-meshers-curved-tet10",
+        "experiments/adaptive/runs/macbook-verified-lattice-repeated-v1/repeat-2-meshers-curved-tet10",
+        "experiments/adaptive/runs/macbook-verified-lattice-repeated-v1/repeat-3-meshers-curved-tet10",
+        "experiments/adaptive/runs/macbook-verified-lattice-repeated-v1/repeat-4-meshers-curved-tet10"
+      ]
+    },
+    {
+      "case": "smooth-lattice",
+      "name": "actual-modified-straight-tet10",
+      "config": {
+        "name": "actual-modified-straight-tet10",
+        "arm": "microgen",
+        "order": 2,
+        "resolution": 51,
+        "mmg": {
+          "hausd": 0.001,
+          "hmax": 0.06,
+          "hgrad": 1.3
+        },
+        "first_hausd": 0.0015,
+        "first_hmax": 0.06,
+        "first_only": false,
+        "repair": true
+      },
+      "samples": 10,
+      "qualified": 10,
+      "generation_s": {
+        "median": 9.197805020998203,
+        "minimum": 9.171342792003998,
+        "maximum": 9.271617084003083
+      },
+      "failed_attempt_s": null,
+      "nodes": {
+        "median": 238729.0,
+        "minimum": 238729,
+        "maximum": 238729
+      },
+      "elements": {
+        "median": 158430.0,
+        "minimum": 158430,
+        "maximum": 158430
+      },
+      "sampled_distance": {
+        "median": 0.0017012390155748264,
+        "minimum": 0.0017012390155748264,
+        "maximum": 0.0017012390155748264
+      },
+      "sampled_reverse_only": null,
+      "abs_relative_volume": {
+        "median": 0.0049053370239361405,
+        "minimum": 0.0049053370239361405,
+        "maximum": 0.0049053370239361405
+      },
+      "quality": {
+        "min": {
+          "median": 0.1000010009999996,
+          "minimum": 0.1000010009999996,
+          "maximum": 0.1000010009999996
+        },
+        "p01": {
+          "median": 0.4897432696461668,
+          "minimum": 0.4897432696461668,
+          "maximum": 0.4897432696461668
+        },
+        "p10": {
+          "median": 0.6404562756877363,
+          "minimum": 0.6404562756877363,
+          "maximum": 0.6404562756877363
+        },
+        "median": {
+          "median": 0.8037069194314429,
+          "minimum": 0.8037069194314429,
+          "maximum": 0.8037069194314429
+        },
+        "p90": {
+          "median": 0.9242349692131192,
+          "minimum": 0.9242349692131192,
+          "maximum": 0.9242349692131192
+        },
+        "p99": {
+          "median": 0.9737301546813646,
+          "minimum": 0.9737301546813646,
+          "maximum": 0.9737301546813646
+        },
+        "max": {
+          "median": 0.998569317670846,
+          "minimum": 0.998569317670846,
+          "maximum": 0.998569317670846
+        }
+      },
+      "failed_gates": [],
+      "errors": [],
+      "source_rows": [
+        "experiments/adaptive/runs/macbook-verified-lattice-repeated-v1/repeat-0-actual-modified-straight-tet10",
+        "experiments/adaptive/runs/macbook-verified-lattice-repeated-v1/repeat-1-actual-modified-straight-tet10",
+        "experiments/adaptive/runs/macbook-verified-lattice-repeated-v1/repeat-2-actual-modified-straight-tet10",
+        "experiments/adaptive/runs/macbook-verified-lattice-repeated-v1/repeat-3-actual-modified-straight-tet10",
+        "experiments/adaptive/runs/macbook-verified-lattice-repeated-v1/repeat-4-actual-modified-straight-tet10",
+        "experiments/adaptive/runs/macbook-verified-lattice-uniform37-repeated-v1/repeat-0-actual-modified-straight-tet10",
+        "experiments/adaptive/runs/macbook-verified-lattice-uniform37-repeated-v1/repeat-1-actual-modified-straight-tet10",
+        "experiments/adaptive/runs/macbook-verified-lattice-uniform37-repeated-v1/repeat-2-actual-modified-straight-tet10",
+        "experiments/adaptive/runs/macbook-verified-lattice-uniform37-repeated-v1/repeat-3-actual-modified-straight-tet10",
+        "experiments/adaptive/runs/macbook-verified-lattice-uniform37-repeated-v1/repeat-4-actual-modified-straight-tet10"
+      ]
+    },
+    {
+      "case": "smooth-lattice",
+      "name": "meshers-uniform37-curved-tet10",
+      "config": {
+        "arm": "meshers",
+        "cells": 37,
+        "adapt": false,
+        "tolerance": 1.0,
+        "min_length": 0.01,
+        "adapt_tolerance": 0.002,
+        "name": "meshers-uniform37-curved-tet10",
+        "order": 2
+      },
+      "samples": 5,
+      "qualified": 5,
+      "generation_s": {
+        "median": 1.8895286250008212,
+        "minimum": 1.8535368339980778,
+        "maximum": 1.9009675000015704
+      },
+      "failed_attempt_s": null,
+      "nodes": {
+        "median": 231026,
+        "minimum": 231026,
+        "maximum": 231026
+      },
+      "elements": {
+        "median": 157521,
+        "minimum": 157521,
+        "maximum": 157521
+      },
+      "sampled_distance": {
+        "median": 0.00017830657102929696,
+        "minimum": 0.00017830657102929696,
+        "maximum": 0.00017830657102929696
+      },
+      "sampled_reverse_only": null,
+      "abs_relative_volume": {
+        "median": 0.00031476308594191593,
+        "minimum": 0.00031476308594191593,
+        "maximum": 0.00031476308594191593
+      },
+      "quality": {
+        "min": {
+          "median": 0.3393720556551816,
+          "minimum": 0.3393720556551816,
+          "maximum": 0.3393720556551816
+        },
+        "p01": {
+          "median": 0.5772869727798284,
+          "minimum": 0.5772869727798284,
+          "maximum": 0.5772869727798284
+        },
+        "p10": {
+          "median": 0.8068337313746584,
+          "minimum": 0.8068337313746584,
+          "maximum": 0.8068337313746584
+        },
+        "median": {
+          "median": 0.9295160030897798,
+          "minimum": 0.9295160030897798,
+          "maximum": 0.9295160030897798
+        },
+        "p90": {
+          "median": 0.9295160030897832,
+          "minimum": 0.9295160030897832,
+          "maximum": 0.9295160030897832
+        },
+        "p99": {
+          "median": 0.9689816922873177,
+          "minimum": 0.9689816922873177,
+          "maximum": 0.9689816922873177
+        },
+        "max": {
+          "median": 0.9966724828231764,
+          "minimum": 0.9966724828231764,
+          "maximum": 0.9966724828231764
+        }
+      },
+      "failed_gates": [],
+      "errors": [],
+      "source_rows": [
+        "experiments/adaptive/runs/macbook-verified-lattice-uniform37-repeated-v1/repeat-0-meshers-uniform37-curved-tet10",
+        "experiments/adaptive/runs/macbook-verified-lattice-uniform37-repeated-v1/repeat-1-meshers-uniform37-curved-tet10",
+        "experiments/adaptive/runs/macbook-verified-lattice-uniform37-repeated-v1/repeat-2-meshers-uniform37-curved-tet10",
+        "experiments/adaptive/runs/macbook-verified-lattice-uniform37-repeated-v1/repeat-3-meshers-uniform37-curved-tet10",
+        "experiments/adaptive/runs/macbook-verified-lattice-uniform37-repeated-v1/repeat-4-meshers-uniform37-curved-tet10"
+      ]
+    },
+    {
+      "case": "schwarz-solid",
+      "name": "actual-modified-tet4",
+      "config": {
+        "name": "actual-modified-tet4",
+        "arm": "microgen",
+        "order": 1,
+        "resolution": 30,
+        "mmg": {
+          "hausd": 0.001,
+          "hmax": 0.06,
+          "hgrad": 1.3
+        },
+        "first_hausd": 0.0005,
+        "first_hmax": 0.1,
+        "first_only": true,
+        "repair": true
+      },
+      "samples": 5,
+      "qualified": 5,
+      "generation_s": {
+        "median": 3.776076374000695,
+        "minimum": 3.7544460839999374,
+        "maximum": 3.8093723340025463
+      },
+      "failed_attempt_s": null,
+      "nodes": {
+        "median": 29192,
+        "minimum": 29192,
+        "maximum": 29192
+      },
+      "elements": {
+        "median": 136511,
+        "minimum": 136511,
+        "maximum": 136511
+      },
+      "sampled_distance": {
+        "median": 0.0009615151058020022,
+        "minimum": 0.0009615151058020022,
+        "maximum": 0.0009615151058020022
+      },
+      "sampled_reverse_only": null,
+      "abs_relative_volume": {
+        "median": 0.0001113555027069113,
+        "minimum": 0.0001113555027069113,
+        "maximum": 0.0001113555027069113
+      },
+      "quality": {
+        "min": {
+          "median": 0.100001001,
+          "minimum": 0.100001001,
+          "maximum": 0.100001001
+        },
+        "p01": {
+          "median": 0.4606045828059495,
+          "minimum": 0.4606045828059495,
+          "maximum": 0.4606045828059495
+        },
+        "p10": {
+          "median": 0.600511664962122,
+          "minimum": 0.600511664962122,
+          "maximum": 0.600511664962122
+        },
+        "median": {
+          "median": 0.7470467024358244,
+          "minimum": 0.7470467024358244,
+          "maximum": 0.7470467024358244
+        },
+        "p90": {
+          "median": 0.9052406050455045,
+          "minimum": 0.9052406050455045,
+          "maximum": 0.9052406050455045
+        },
+        "p99": {
+          "median": 0.9694162242547777,
+          "minimum": 0.9694162242547777,
+          "maximum": 0.9694162242547777
+        },
+        "max": {
+          "median": 1.0000000000000009,
+          "minimum": 1.0000000000000009,
+          "maximum": 1.0000000000000009
+        }
+      },
+      "failed_gates": [],
+      "errors": [],
+      "source_rows": [
+        "experiments/adaptive/runs/macbook-verified-schwarz-p-repeated-v1/repeat-0-actual-modified-tet4",
+        "experiments/adaptive/runs/macbook-verified-schwarz-p-repeated-v1/repeat-1-actual-modified-tet4",
+        "experiments/adaptive/runs/macbook-verified-schwarz-p-repeated-v1/repeat-2-actual-modified-tet4",
+        "experiments/adaptive/runs/macbook-verified-schwarz-p-repeated-v1/repeat-3-actual-modified-tet4",
+        "experiments/adaptive/runs/macbook-verified-schwarz-p-repeated-v1/repeat-4-actual-modified-tet4"
+      ]
+    },
+    {
+      "case": "schwarz-solid",
+      "name": "meshers-tet4",
+      "config": {
+        "name": "meshers-tet4",
+        "arm": "meshers",
+        "cells": 16,
+        "order": 1,
+        "adapt": true,
+        "tolerance": 1.0,
+        "min_length": 0.002,
+        "adapt_tolerance": 0.001
+      },
+      "samples": 5,
+      "qualified": 5,
+      "generation_s": {
+        "median": 0.5908126670001366,
+        "minimum": 0.5854595419987163,
+        "maximum": 0.595512083000358
+      },
+      "failed_attempt_s": null,
+      "nodes": {
+        "median": 8701,
+        "minimum": 8701,
+        "maximum": 8701
+      },
+      "elements": {
+        "median": 35994,
+        "minimum": 35994,
+        "maximum": 35994
+      },
+      "sampled_distance": {
+        "median": 0.0009933902047420445,
+        "minimum": 0.0009933902047420445,
+        "maximum": 0.0009933902047420445
+      },
+      "sampled_reverse_only": null,
+      "abs_relative_volume": {
+        "median": 1.4454342309289103e-05,
+        "minimum": 1.4454342309289103e-05,
+        "maximum": 1.4454342309289103e-05
+      },
+      "quality": {
+        "min": {
+          "median": 0.4379105665209021,
+          "minimum": 0.4379105665209021,
+          "maximum": 0.4379105665209021
+        },
+        "p01": {
+          "median": 0.5280444598384111,
+          "minimum": 0.5280444598384111,
+          "maximum": 0.5280444598384111
+        },
+        "p10": {
+          "median": 0.6144255088109439,
+          "minimum": 0.6144255088109439,
+          "maximum": 0.6144255088109439
+        },
+        "median": {
+          "median": 0.7456629299166343,
+          "minimum": 0.7456629299166343,
+          "maximum": 0.7456629299166343
+        },
+        "p90": {
+          "median": 0.9080449422980614,
+          "minimum": 0.9080449422980614,
+          "maximum": 0.9080449422980614
+        },
+        "p99": {
+          "median": 0.970413525438765,
+          "minimum": 0.970413525438765,
+          "maximum": 0.970413525438765
+        },
+        "max": {
+          "median": 0.9963789042004753,
+          "minimum": 0.9963789042004753,
+          "maximum": 0.9963789042004753
+        }
+      },
+      "failed_gates": [],
+      "errors": [],
+      "source_rows": [
+        "experiments/adaptive/runs/macbook-verified-schwarz-p-repeated-v1/repeat-0-meshers-tet4",
+        "experiments/adaptive/runs/macbook-verified-schwarz-p-repeated-v1/repeat-1-meshers-tet4",
+        "experiments/adaptive/runs/macbook-verified-schwarz-p-repeated-v1/repeat-2-meshers-tet4",
+        "experiments/adaptive/runs/macbook-verified-schwarz-p-repeated-v1/repeat-3-meshers-tet4",
+        "experiments/adaptive/runs/macbook-verified-schwarz-p-repeated-v1/repeat-4-meshers-tet4"
+      ]
+    },
+    {
+      "case": "schwarz-solid",
+      "name": "meshers-curved-tet10",
+      "config": {
+        "name": "meshers-curved-tet10",
+        "arm": "meshers",
+        "cells": 16,
+        "order": 2,
+        "adapt": false,
+        "tolerance": 1.0,
+        "min_length": 0.002,
+        "adapt_tolerance": 0.002
+      },
+      "samples": 5,
+      "qualified": 5,
+      "generation_s": {
+        "median": 0.0902210410022235,
+        "minimum": 0.0898841669986723,
+        "maximum": 0.09039808300076402
+      },
+      "failed_attempt_s": null,
+      "nodes": {
+        "median": 42928,
+        "minimum": 42928,
+        "maximum": 42928
+      },
+      "elements": {
+        "median": 27492,
+        "minimum": 27492,
+        "maximum": 27492
+      },
+      "sampled_distance": {
+        "median": 0.00014660000722713386,
+        "minimum": 0.00014660000722713386,
+        "maximum": 0.00014660000722713386
+      },
+      "sampled_reverse_only": null,
+      "abs_relative_volume": {
+        "median": 5.475037776481173e-07,
+        "minimum": 5.475037776481173e-07,
+        "maximum": 5.475037776481173e-07
+      },
+      "quality": {
+        "min": {
+          "median": 0.4499952972773957,
+          "minimum": 0.4499952972773957,
+          "maximum": 0.4499952972773957
+        },
+        "p01": {
+          "median": 0.5573114869460045,
+          "minimum": 0.5573114869460045,
+          "maximum": 0.5573114869460045
+        },
+        "p10": {
+          "median": 0.6826483551219754,
+          "minimum": 0.6826483551219754,
+          "maximum": 0.6826483551219754
+        },
+        "median": {
+          "median": 0.9162334664244732,
+          "minimum": 0.9162334664244732,
+          "maximum": 0.9162334664244732
+        },
+        "p90": {
+          "median": 0.9409625309243609,
+          "minimum": 0.9409625309243609,
+          "maximum": 0.9409625309243609
+        },
+        "p99": {
+          "median": 0.983319235126485,
+          "minimum": 0.983319235126485,
+          "maximum": 0.983319235126485
+        },
+        "max": {
+          "median": 0.9979938071721144,
+          "minimum": 0.9979938071721144,
+          "maximum": 0.9979938071721144
+        }
+      },
+      "failed_gates": [],
+      "errors": [],
+      "source_rows": [
+        "experiments/adaptive/runs/macbook-verified-schwarz-p-repeated-v1/repeat-0-meshers-curved-tet10",
+        "experiments/adaptive/runs/macbook-verified-schwarz-p-repeated-v1/repeat-1-meshers-curved-tet10",
+        "experiments/adaptive/runs/macbook-verified-schwarz-p-repeated-v1/repeat-2-meshers-curved-tet10",
+        "experiments/adaptive/runs/macbook-verified-schwarz-p-repeated-v1/repeat-3-meshers-curved-tet10",
+        "experiments/adaptive/runs/macbook-verified-schwarz-p-repeated-v1/repeat-4-meshers-curved-tet10"
+      ]
+    },
+    {
+      "case": "schwarz-solid",
+      "name": "actual-modified-straight-tet10",
+      "config": {
+        "name": "actual-modified-straight-tet10",
+        "arm": "microgen",
+        "order": 2,
+        "resolution": 30,
+        "mmg": {
+          "hausd": 0.001,
+          "hmax": 0.06,
+          "hgrad": 1.3
+        },
+        "first_hausd": 0.0005,
+        "first_hmax": 0.1,
+        "first_only": true,
+        "repair": true
+      },
+      "samples": 5,
+      "qualified": 5,
+      "generation_s": {
+        "median": 4.110316125996178,
+        "minimum": 4.099127667002904,
+        "maximum": 4.140029959002277
+      },
+      "failed_attempt_s": null,
+      "nodes": {
+        "median": 207099,
+        "minimum": 207099,
+        "maximum": 207099
+      },
+      "elements": {
+        "median": 136511,
+        "minimum": 136511,
+        "maximum": 136511
+      },
+      "sampled_distance": {
+        "median": 0.0009615151058020022,
+        "minimum": 0.0009615151058020022,
+        "maximum": 0.0009615151058020022
+      },
+      "sampled_reverse_only": null,
+      "abs_relative_volume": {
+        "median": 0.0001113555027069113,
+        "minimum": 0.0001113555027069113,
+        "maximum": 0.0001113555027069113
+      },
+      "quality": {
+        "min": {
+          "median": 0.100001001,
+          "minimum": 0.100001001,
+          "maximum": 0.100001001
+        },
+        "p01": {
+          "median": 0.4606045828059495,
+          "minimum": 0.4606045828059495,
+          "maximum": 0.4606045828059495
+        },
+        "p10": {
+          "median": 0.600511664962122,
+          "minimum": 0.600511664962122,
+          "maximum": 0.600511664962122
+        },
+        "median": {
+          "median": 0.7470467024358244,
+          "minimum": 0.7470467024358244,
+          "maximum": 0.7470467024358244
+        },
+        "p90": {
+          "median": 0.9052406050455045,
+          "minimum": 0.9052406050455045,
+          "maximum": 0.9052406050455045
+        },
+        "p99": {
+          "median": 0.9694162242547777,
+          "minimum": 0.9694162242547777,
+          "maximum": 0.9694162242547777
+        },
+        "max": {
+          "median": 1.0000000000000009,
+          "minimum": 1.0000000000000009,
+          "maximum": 1.0000000000000009
+        }
+      },
+      "failed_gates": [],
+      "errors": [],
+      "source_rows": [
+        "experiments/adaptive/runs/macbook-verified-schwarz-p-repeated-v1/repeat-0-actual-modified-straight-tet10",
+        "experiments/adaptive/runs/macbook-verified-schwarz-p-repeated-v1/repeat-1-actual-modified-straight-tet10",
+        "experiments/adaptive/runs/macbook-verified-schwarz-p-repeated-v1/repeat-2-actual-modified-straight-tet10",
+        "experiments/adaptive/runs/macbook-verified-schwarz-p-repeated-v1/repeat-3-actual-modified-straight-tet10",
+        "experiments/adaptive/runs/macbook-verified-schwarz-p-repeated-v1/repeat-4-actual-modified-straight-tet10"
+      ]
+    },
+    {
+      "case": "spinodoid-anisotropic",
+      "name": "meshers-tet4",
+      "config": {
+        "arm": "meshers",
+        "cells": 32,
+        "order": 1,
+        "adapt": true,
+        "tolerance": 0.002,
+        "min_length": 0.002,
+        "adapt_tolerance": 0.002,
+        "name": "meshers-tet4"
+      },
+      "samples": 5,
+      "qualified": 5,
+      "generation_s": {
+        "median": 2.542854333001742,
+        "minimum": 2.5251158750033937,
+        "maximum": 2.6179007920000004
+      },
+      "failed_attempt_s": null,
+      "nodes": {
+        "median": 14005,
+        "minimum": 14005,
+        "maximum": 14005
+      },
+      "elements": {
+        "median": 61868,
+        "minimum": 61868,
+        "maximum": 61868
+      },
+      "sampled_distance": {
+        "median": 0.00183504460785085,
+        "minimum": 0.00183504460785085,
+        "maximum": 0.00183504460785085
+      },
+      "sampled_reverse_only": null,
+      "abs_relative_volume": {
+        "median": 0.000550964749152616,
+        "minimum": 0.000550964749152616,
+        "maximum": 0.000550964749152616
+      },
+      "quality": {
+        "min": {
+          "median": 0.12184851658000719,
+          "minimum": 0.12184851658000719,
+          "maximum": 0.12184851658000719
+        },
+        "p01": {
+          "median": 0.5261816943772627,
+          "minimum": 0.5261816943772627,
+          "maximum": 0.5261816943772627
+        },
+        "p10": {
+          "median": 0.6285172283972948,
+          "minimum": 0.6285172283972948,
+          "maximum": 0.6285172283972948
+        },
+        "median": {
+          "median": 0.7800501762774087,
+          "minimum": 0.7800501762774087,
+          "maximum": 0.7800501762774087
+        },
+        "p90": {
+          "median": 0.9118953410016751,
+          "minimum": 0.9118953410016751,
+          "maximum": 0.9118953410016751
+        },
+        "p99": {
+          "median": 0.9689233315959093,
+          "minimum": 0.9689233315959093,
+          "maximum": 0.9689233315959093
+        },
+        "max": {
+          "median": 0.9973408098294334,
+          "minimum": 0.9973408098294334,
+          "maximum": 0.9973408098294334
+        }
+      },
+      "failed_gates": [],
+      "errors": [],
+      "source_rows": [
+        "experiments/adaptive/runs/macbook-verified-spinodoid-anisotropic-repeated-v1/repeat-0-meshers-tet4",
+        "experiments/adaptive/runs/macbook-verified-spinodoid-anisotropic-repeated-v1/repeat-1-meshers-tet4",
+        "experiments/adaptive/runs/macbook-verified-spinodoid-anisotropic-repeated-v1/repeat-2-meshers-tet4",
+        "experiments/adaptive/runs/macbook-verified-spinodoid-anisotropic-repeated-v1/repeat-3-meshers-tet4",
+        "experiments/adaptive/runs/macbook-verified-spinodoid-anisotropic-repeated-v1/repeat-4-meshers-tet4"
+      ]
+    },
+    {
+      "case": "spinodoid-anisotropic",
+      "name": "meshers-curved-tet10",
+      "config": {
+        "arm": "meshers",
+        "cells": 24,
+        "order": 2,
+        "adapt": true,
+        "tolerance": 1.0,
+        "min_length": 0.002,
+        "adapt_tolerance": 0.003,
+        "name": "meshers-curved-tet10"
+      },
+      "samples": 5,
+      "qualified": 5,
+      "generation_s": {
+        "median": 1.405668750001496,
+        "minimum": 1.396307708000677,
+        "maximum": 1.4089547919975303
+      },
+      "failed_attempt_s": null,
+      "nodes": {
+        "median": 63919,
+        "minimum": 63919,
+        "maximum": 63919
+      },
+      "elements": {
+        "median": 40351,
+        "minimum": 40351,
+        "maximum": 40351
+      },
+      "sampled_distance": {
+        "median": 0.0011455047666780445,
+        "minimum": 0.0011455047666780445,
+        "maximum": 0.0011455047666780445
+      },
+      "sampled_reverse_only": null,
+      "abs_relative_volume": {
+        "median": 4.211725609237771e-05,
+        "minimum": 4.211725609237771e-05,
+        "maximum": 4.211725609237771e-05
+      },
+      "quality": {
+        "min": {
+          "median": 0.13848054739375984,
+          "minimum": 0.13848054739375984,
+          "maximum": 0.13848054739375984
+        },
+        "p01": {
+          "median": 0.5290794330420465,
+          "minimum": 0.5290794330420465,
+          "maximum": 0.5290794330420465
+        },
+        "p10": {
+          "median": 0.6331920242927335,
+          "minimum": 0.6331920242927335,
+          "maximum": 0.6331920242927335
+        },
+        "median": {
+          "median": 0.7853974383370107,
+          "minimum": 0.7853974383370107,
+          "maximum": 0.7853974383370107
+        },
+        "p90": {
+          "median": 0.9156530945027389,
+          "minimum": 0.9156530945027389,
+          "maximum": 0.9156530945027389
+        },
+        "p99": {
+          "median": 0.9685749639015666,
+          "minimum": 0.9685749639015666,
+          "maximum": 0.9685749639015666
+        },
+        "max": {
+          "median": 0.9988309329871945,
+          "minimum": 0.9988309329871945,
+          "maximum": 0.9988309329871945
+        }
+      },
+      "failed_gates": [],
+      "errors": [],
+      "source_rows": [
+        "experiments/adaptive/runs/macbook-verified-spinodoid-anisotropic-repeated-v1/repeat-0-meshers-curved-tet10",
+        "experiments/adaptive/runs/macbook-verified-spinodoid-anisotropic-repeated-v1/repeat-1-meshers-curved-tet10",
+        "experiments/adaptive/runs/macbook-verified-spinodoid-anisotropic-repeated-v1/repeat-2-meshers-curved-tet10",
+        "experiments/adaptive/runs/macbook-verified-spinodoid-anisotropic-repeated-v1/repeat-3-meshers-curved-tet10",
+        "experiments/adaptive/runs/macbook-verified-spinodoid-anisotropic-repeated-v1/repeat-4-meshers-curved-tet10"
+      ]
+    },
+    {
+      "case": "spinodoid",
+      "name": "meshers-tet4",
+      "config": {
+        "name": "meshers-tet4",
+        "arm": "meshers",
+        "cells": 32,
+        "order": 1,
+        "adapt": true,
+        "tolerance": 0.002,
+        "min_length": 0.002,
+        "adapt_tolerance": 0.002,
+        "lattice_field": null
+      },
+      "samples": 5,
+      "qualified": 5,
+      "generation_s": {
+        "median": 3.28449137500138,
+        "minimum": 3.2820561669977906,
+        "maximum": 3.3063611249999667
+      },
+      "failed_attempt_s": null,
+      "nodes": {
+        "median": 16702,
+        "minimum": 16702,
+        "maximum": 16702
+      },
+      "elements": {
+        "median": 72378,
+        "minimum": 72378,
+        "maximum": 72378
+      },
+      "sampled_distance": {
+        "median": 0.0018644960021393733,
+        "minimum": 0.0018644960021393733,
+        "maximum": 0.0018644960021393733
+      },
+      "sampled_reverse_only": null,
+      "abs_relative_volume": {
+        "median": 0.000450567298528437,
+        "minimum": 0.000450567298528437,
+        "maximum": 0.000450567298528437
+      },
+      "quality": {
+        "min": {
+          "median": 0.23317041205131583,
+          "minimum": 0.23317041205131583,
+          "maximum": 0.23317041205131583
+        },
+        "p01": {
+          "median": 0.5275178888163384,
+          "minimum": 0.5275178888163384,
+          "maximum": 0.5275178888163384
+        },
+        "p10": {
+          "median": 0.6293643066202192,
+          "minimum": 0.6293643066202192,
+          "maximum": 0.6293643066202192
+        },
+        "median": {
+          "median": 0.7831518748900055,
+          "minimum": 0.7831518748900055,
+          "maximum": 0.7831518748900055
+        },
+        "p90": {
+          "median": 0.9120700718976502,
+          "minimum": 0.9120700718976502,
+          "maximum": 0.9120700718976502
+        },
+        "p99": {
+          "median": 0.9679116914381676,
+          "minimum": 0.9679116914381676,
+          "maximum": 0.9679116914381676
+        },
+        "max": {
+          "median": 0.9980049652953971,
+          "minimum": 0.9980049652953971,
+          "maximum": 0.9980049652953971
+        }
+      },
+      "failed_gates": [],
+      "errors": [],
+      "source_rows": [
+        "experiments/adaptive/runs/macbook-verified-spinodoid-repeated-v1/repeat-0-meshers-tet4",
+        "experiments/adaptive/runs/macbook-verified-spinodoid-repeated-v1/repeat-1-meshers-tet4",
+        "experiments/adaptive/runs/macbook-verified-spinodoid-repeated-v1/repeat-2-meshers-tet4",
+        "experiments/adaptive/runs/macbook-verified-spinodoid-repeated-v1/repeat-3-meshers-tet4",
+        "experiments/adaptive/runs/macbook-verified-spinodoid-repeated-v1/repeat-4-meshers-tet4"
+      ]
+    },
+    {
+      "case": "spinodoid",
+      "name": "meshers-curved-tet10",
+      "config": {
+        "name": "meshers-curved-tet10",
+        "arm": "meshers",
+        "cells": 24,
+        "order": 2,
+        "adapt": true,
+        "tolerance": 1.0,
+        "min_length": 0.002,
+        "adapt_tolerance": 0.003
+      },
+      "samples": 5,
+      "qualified": 5,
+      "generation_s": {
+        "median": 1.9035468330002914,
+        "minimum": 1.8962089999986347,
+        "maximum": 1.9147184589965036
+      },
+      "failed_attempt_s": null,
+      "nodes": {
+        "median": 73811,
+        "minimum": 73811,
+        "maximum": 73811
+      },
+      "elements": {
+        "median": 45923,
+        "minimum": 45923,
+        "maximum": 45923
+      },
+      "sampled_distance": {
+        "median": 0.00030398374880648445,
+        "minimum": 0.00030398374880648445,
+        "maximum": 0.00030398374880648445
+      },
+      "sampled_reverse_only": null,
+      "abs_relative_volume": {
+        "median": 0.00025891819381196335,
+        "minimum": 0.00025891819381196335,
+        "maximum": 0.00025891819381196335
+      },
+      "quality": {
+        "min": {
+          "median": 0.30128192824668354,
+          "minimum": 0.30128192824668354,
+          "maximum": 0.30128192824668354
+        },
+        "p01": {
+          "median": 0.5281437742180667,
+          "minimum": 0.5281437742180667,
+          "maximum": 0.5281437742180667
+        },
+        "p10": {
+          "median": 0.6325365233409228,
+          "minimum": 0.6325365233409228,
+          "maximum": 0.6325365233409228
+        },
+        "median": {
+          "median": 0.7867264147045736,
+          "minimum": 0.7867264147045736,
+          "maximum": 0.7867264147045736
+        },
+        "p90": {
+          "median": 0.9170582715630593,
+          "minimum": 0.9170582715630593,
+          "maximum": 0.9170582715630593
+        },
+        "p99": {
+          "median": 0.9694013927113185,
+          "minimum": 0.9694013927113185,
+          "maximum": 0.9694013927113185
+        },
+        "max": {
+          "median": 0.9971251654642896,
+          "minimum": 0.9971251654642896,
+          "maximum": 0.9971251654642896
+        }
+      },
+      "failed_gates": [],
+      "errors": [],
+      "source_rows": [
+        "experiments/adaptive/runs/macbook-verified-spinodoid-repeated-v1/repeat-0-meshers-curved-tet10",
+        "experiments/adaptive/runs/macbook-verified-spinodoid-repeated-v1/repeat-1-meshers-curved-tet10",
+        "experiments/adaptive/runs/macbook-verified-spinodoid-repeated-v1/repeat-2-meshers-curved-tet10",
+        "experiments/adaptive/runs/macbook-verified-spinodoid-repeated-v1/repeat-3-meshers-curved-tet10",
+        "experiments/adaptive/runs/macbook-verified-spinodoid-repeated-v1/repeat-4-meshers-curved-tet10"
+      ]
+    },
+    {
+      "case": "graded-gyroid-linear",
+      "name": "actual-default-tet4",
+      "config": {
+        "name": "actual-default-tet4",
+        "arm": "microgen",
+        "resolution": null,
+        "order": 1
+      },
+      "samples": 1,
+      "qualified": 0,
+      "generation_s": {
+        "median": 1.847414874999231,
+        "minimum": 1.847414874999231,
+        "maximum": 1.847414874999231
+      },
+      "failed_attempt_s": null,
+      "nodes": {
+        "median": 3462,
+        "minimum": 3462,
+        "maximum": 3462
+      },
+      "elements": {
+        "median": 12048,
+        "minimum": 12048,
+        "maximum": 12048
+      },
+      "sampled_distance": null,
+      "sampled_reverse_only": {
+        "median": 0.009040382638124289,
+        "minimum": 0.009040382638124289,
+        "maximum": 0.009040382638124289
+      },
+      "abs_relative_volume": {
+        "median": 0.02311856101047871,
+        "minimum": 0.02311856101047871,
+        "maximum": 0.02311856101047871
+      },
+      "quality": {
+        "min": {
+          "median": 3.207526310837803e-06,
+          "minimum": 3.207526310837803e-06,
+          "maximum": 3.207526310837803e-06
+        },
+        "p01": {
+          "median": 0.0821330788391217,
+          "minimum": 0.0821330788391217,
+          "maximum": 0.0821330788391217
+        },
+        "p10": {
+          "median": 0.37154906477401434,
+          "minimum": 0.37154906477401434,
+          "maximum": 0.37154906477401434
+        },
+        "median": {
+          "median": 0.7153681070411047,
+          "minimum": 0.7153681070411047,
+          "maximum": 0.7153681070411047
+        },
+        "p90": {
+          "median": 0.8934699469822289,
+          "minimum": 0.8934699469822289,
+          "maximum": 0.8934699469822289
+        },
+        "p99": {
+          "median": 0.9637599214098084,
+          "minimum": 0.9637599214098084,
+          "maximum": 0.9637599214098084
+        },
+        "max": {
+          "median": 0.9924597811355167,
+          "minimum": 0.9924597811355167,
+          "maximum": 0.9924597811355167
+        }
+      },
+      "failed_gates": [
+        "quality",
+        "volume"
+      ],
+      "errors": [],
+      "source_rows": [
+        "experiments/adaptive/runs/macbook-verified-graded-linear-pilot-v1/repeat-0-actual-default-tet4"
+      ]
+    },
+    {
+      "case": "graded-gyroid-linear",
+      "name": "actual-modified-tet4",
+      "config": {
+        "arm": "microgen",
+        "order": 1,
+        "resolution": 30,
+        "first_only": true,
+        "first_hausd": 0.0005,
+        "first_hmax": 0.1,
+        "mmg": {
+          "hausd": 0.0005,
+          "hmax": 0.06,
+          "hgrad": 1.3
+        },
+        "repair": true,
+        "name": "actual-modified-tet4"
+      },
+      "samples": 1,
+      "qualified": 0,
+      "generation_s": null,
+      "failed_attempt_s": {
+        "median": 9.075966625001456,
+        "minimum": 9.075966625001456,
+        "maximum": 9.075966625001456
+      },
+      "nodes": null,
+      "elements": null,
+      "sampled_distance": null,
+      "sampled_reverse_only": null,
+      "abs_relative_volume": null,
+      "quality": {
+        "min": null,
+        "p01": null,
+        "p10": null,
+        "median": null,
+        "p90": null,
+        "p99": null,
+        "max": null
+      },
+      "failed_gates": [],
+      "errors": [
+        "Intermediate MMG cap exceeded"
+      ],
+      "source_rows": [
+        "experiments/adaptive/runs/macbook-verified-graded-linear-pilot-v1/repeat-0-actual-modified-tet4"
+      ]
+    },
+    {
+      "case": "graded-gyroid-linear",
+      "name": "meshers-tet4",
+      "config": {
+        "arm": "meshers",
+        "cells": 24,
+        "order": 1,
+        "adapt": false,
+        "tolerance": 1.0,
+        "min_length": 0.002,
+        "adapt_tolerance": 0.002,
+        "name": "meshers-tet4"
+      },
+      "samples": 1,
+      "qualified": 0,
+      "generation_s": {
+        "median": 0.4746774169980199,
+        "minimum": 0.4746774169980199,
+        "maximum": 0.4746774169980199
+      },
+      "failed_attempt_s": null,
+      "nodes": {
+        "median": 19589,
+        "minimum": 19589,
+        "maximum": 19589
+      },
+      "elements": {
+        "median": 78261,
+        "minimum": 78261,
+        "maximum": 78261
+      },
+      "sampled_distance": {
+        "median": 0.0020028357581312294,
+        "minimum": 0.0020028357581312294,
+        "maximum": 0.0020028357581312294
+      },
+      "sampled_reverse_only": null,
+      "abs_relative_volume": {
+        "median": 0.0017897031869653635,
+        "minimum": 0.0017897031869653635,
+        "maximum": 0.0017897031869653635
+      },
+      "quality": {
+        "min": {
+          "median": 0.1632202464181996,
+          "minimum": 0.1632202464181996,
+          "maximum": 0.1632202464181996
+        },
+        "p01": {
+          "median": 0.4924580613007079,
+          "minimum": 0.4924580613007079,
+          "maximum": 0.4924580613007079
+        },
+        "p10": {
+          "median": 0.5976760890508135,
+          "minimum": 0.5976760890508135,
+          "maximum": 0.5976760890508135
+        },
+        "median": {
+          "median": 0.8612632702279263,
+          "minimum": 0.8612632702279263,
+          "maximum": 0.8612632702279263
+        },
+        "p90": {
+          "median": 0.9359519436120023,
+          "minimum": 0.9359519436120023,
+          "maximum": 0.9359519436120023
+        },
+        "p99": {
+          "median": 0.9754554436162033,
+          "minimum": 0.9754554436162033,
+          "maximum": 0.9754554436162033
+        },
+        "max": {
+          "median": 0.9973953180209895,
+          "minimum": 0.9973953180209895,
+          "maximum": 0.9973953180209895
+        }
+      },
+      "failed_gates": [
+        "geometry"
+      ],
+      "errors": [],
+      "source_rows": [
+        "experiments/adaptive/runs/macbook-verified-graded-linear-pilot-v1/repeat-0-meshers-tet4"
+      ]
+    },
+    {
+      "case": "graded-gyroid-periodic",
+      "name": "actual-default-tet4",
+      "config": {
+        "name": "actual-default-tet4",
+        "arm": "microgen",
+        "resolution": null,
+        "order": 1
+      },
+      "samples": 1,
+      "qualified": 0,
+      "generation_s": {
+        "median": 1.9150115400007053,
+        "minimum": 1.9150115400007053,
+        "maximum": 1.9150115400007053
+      },
+      "failed_attempt_s": null,
+      "nodes": {
+        "median": 3514,
+        "minimum": 3514,
+        "maximum": 3514
+      },
+      "elements": {
+        "median": 12458,
+        "minimum": 12458,
+        "maximum": 12458
+      },
+      "sampled_distance": null,
+      "sampled_reverse_only": {
+        "median": 0.0096535271415876,
+        "minimum": 0.0096535271415876,
+        "maximum": 0.0096535271415876
+      },
+      "abs_relative_volume": {
+        "median": 0.022970072079549153,
+        "minimum": 0.022970072079549153,
+        "maximum": 0.022970072079549153
+      },
+      "quality": {
+        "min": {
+          "median": 1.2229534555349784e-05,
+          "minimum": 1.2229534555349784e-05,
+          "maximum": 1.2229534555349784e-05
+        },
+        "p01": {
+          "median": 0.07028635553475258,
+          "minimum": 0.07028635553475258,
+          "maximum": 0.07028635553475258
+        },
+        "p10": {
+          "median": 0.35551328363329987,
+          "minimum": 0.35551328363329987,
+          "maximum": 0.35551328363329987
+        },
+        "median": {
+          "median": 0.7197644176071669,
+          "minimum": 0.7197644176071669,
+          "maximum": 0.7197644176071669
+        },
+        "p90": {
+          "median": 0.8950311993589473,
+          "minimum": 0.8950311993589473,
+          "maximum": 0.8950311993589473
+        },
+        "p99": {
+          "median": 0.9654204687765962,
+          "minimum": 0.9654204687765962,
+          "maximum": 0.9654204687765962
+        },
+        "max": {
+          "median": 0.995921742095538,
+          "minimum": 0.995921742095538,
+          "maximum": 0.995921742095538
+        }
+      },
+      "failed_gates": [
+        "facets",
+        "quality",
+        "volume"
+      ],
+      "errors": [],
+      "source_rows": [
+        "experiments/adaptive/runs/macbook-verified-graded-periodic-pilot-v1/repeat-0-actual-default-tet4"
+      ]
+    },
+    {
+      "case": "graded-gyroid-periodic",
+      "name": "actual-modified-tet4",
+      "config": {
+        "arm": "microgen",
+        "order": 1,
+        "resolution": 30,
+        "first_only": true,
+        "first_hausd": 0.0005,
+        "first_hmax": 0.1,
+        "mmg": {
+          "hausd": 0.0005,
+          "hmax": 0.06,
+          "hgrad": 1.3
+        },
+        "repair": true,
+        "name": "actual-modified-tet4"
+      },
+      "samples": 1,
+      "qualified": 0,
+      "generation_s": null,
+      "failed_attempt_s": null,
+      "nodes": null,
+      "elements": null,
+      "sampled_distance": null,
+      "sampled_reverse_only": null,
+      "abs_relative_volume": null,
+      "quality": {
+        "min": null,
+        "p01": null,
+        "p10": null,
+        "median": null,
+        "p90": null,
+        "p99": null,
+        "max": null
+      },
+      "failed_gates": [],
+      "errors": [
+        "Worker returncode -9",
+        "Worker timeout"
+      ],
+      "source_rows": [
+        "experiments/adaptive/runs/macbook-verified-graded-periodic-pilot-v1/repeat-0-actual-modified-tet4"
+      ]
+    },
+    {
+      "case": "gyroid",
+      "name": "actual-default-tet4",
+      "config": {
+        "name": "actual-default-tet4",
+        "arm": "microgen",
+        "resolution": null,
+        "order": 1
+      },
+      "samples": 1,
+      "qualified": 0,
+      "generation_s": {
+        "median": 1.8757461239983968,
+        "minimum": 1.8757461239983968,
+        "maximum": 1.8757461239983968
+      },
+      "failed_attempt_s": null,
+      "nodes": {
+        "median": 3533,
+        "minimum": 3533,
+        "maximum": 3533
+      },
+      "elements": {
+        "median": 12250,
+        "minimum": 12250,
+        "maximum": 12250
+      },
+      "sampled_distance": null,
+      "sampled_reverse_only": {
+        "median": 0.00846118511572807,
+        "minimum": 0.00846118511572807,
+        "maximum": 0.00846118511572807
+      },
+      "abs_relative_volume": {
+        "median": 0.022489277770463723,
+        "minimum": 0.022489277770463723,
+        "maximum": 0.022489277770463723
+      },
+      "quality": {
+        "min": {
+          "median": 0.000546158165265545,
+          "minimum": 0.000546158165265545,
+          "maximum": 0.000546158165265545
+        },
+        "p01": {
+          "median": 0.05429049412701715,
+          "minimum": 0.05429049412701715,
+          "maximum": 0.05429049412701715
+        },
+        "p10": {
+          "median": 0.3524595037922851,
+          "minimum": 0.3524595037922851,
+          "maximum": 0.3524595037922851
+        },
+        "median": {
+          "median": 0.7159256735200327,
+          "minimum": 0.7159256735200327,
+          "maximum": 0.7159256735200327
+        },
+        "p90": {
+          "median": 0.8928257993197789,
+          "minimum": 0.8928257993197789,
+          "maximum": 0.8928257993197789
+        },
+        "p99": {
+          "median": 0.9654969400861091,
+          "minimum": 0.9654969400861091,
+          "maximum": 0.9654969400861091
+        },
+        "max": {
+          "median": 0.99790962768556,
+          "minimum": 0.99790962768556,
+          "maximum": 0.99790962768556
+        }
+      },
+      "failed_gates": [
+        "facets",
+        "quality",
+        "volume"
+      ],
+      "errors": [],
+      "source_rows": [
+        "experiments/adaptive/runs/macbook-verified-gyroid-pilot-v1/repeat-0-actual-default-tet4"
+      ]
+    },
+    {
+      "case": "gyroid",
+      "name": "actual-modified-tet4",
+      "config": {
+        "name": "actual-modified-tet4",
+        "arm": "microgen",
+        "order": 1,
+        "resolution": 24,
+        "mmg": {
+          "hausd": 0.0005,
+          "hmax": 0.06,
+          "hgrad": 1.3
+        },
+        "first_hausd": 0.0005,
+        "first_hmax": 0.1,
+        "first_only": true,
+        "repair": false
+      },
+      "samples": 1,
+      "qualified": 0,
+      "generation_s": null,
+      "failed_attempt_s": {
+        "median": 31.811078499998985,
+        "minimum": 31.811078499998985,
+        "maximum": 31.811078499998985
+      },
+      "nodes": null,
+      "elements": null,
+      "sampled_distance": null,
+      "sampled_reverse_only": null,
+      "abs_relative_volume": null,
+      "quality": {
+        "min": null,
+        "p01": null,
+        "p10": null,
+        "median": null,
+        "p90": null,
+        "p99": null,
+        "max": null
+      },
+      "failed_gates": [],
+      "errors": [
+        "mmg command 'mmg3d_O3 -in /var/folders/9j/2ng9zhc51k3cnz_pvgn3kdl00000gp/T/tmp3ovii_gv.mesh -out /var/folders/9j/2ng9zhc51k3cnz_pvgn3kdl00000gp/T/tmplot4kns0.mesh -hausd 0.0005 -hgrad 1.3 -hmax 0.1 -nofem' failed"
+      ],
+      "source_rows": [
+        "experiments/adaptive/runs/macbook-verified-gyroid-pilot-v1/repeat-0-actual-modified-tet4"
+      ]
+    },
+    {
+      "case": "smooth-lattice",
+      "name": "actual-default-tet4",
+      "config": {
+        "name": "actual-default-tet4",
+        "arm": "microgen",
+        "resolution": null,
+        "order": 1
+      },
+      "samples": 1,
+      "qualified": 0,
+      "generation_s": {
+        "median": 4.974958039998455,
+        "minimum": 4.974958039998455,
+        "maximum": 4.974958039998455
+      },
+      "failed_attempt_s": null,
+      "nodes": {
+        "median": 6596,
+        "minimum": 6596,
+        "maximum": 6596
+      },
+      "elements": {
+        "median": 27084,
+        "minimum": 27084,
+        "maximum": 27084
+      },
+      "sampled_distance": null,
+      "sampled_reverse_only": {
+        "median": 0.008779023106281314,
+        "minimum": 0.008779023106281314,
+        "maximum": 0.008779023106281314
+      },
+      "abs_relative_volume": {
+        "median": 0.02849533868538512,
+        "minimum": 0.02849533868538512,
+        "maximum": 0.02849533868538512
+      },
+      "quality": {
+        "min": {
+          "median": 0.010288182196537089,
+          "minimum": 0.010288182196537089,
+          "maximum": 0.010288182196537089
+        },
+        "p01": {
+          "median": 0.26118587812462973,
+          "minimum": 0.26118587812462973,
+          "maximum": 0.26118587812462973
+        },
+        "p10": {
+          "median": 0.5457365584861792,
+          "minimum": 0.5457365584861792,
+          "maximum": 0.5457365584861792
+        },
+        "median": {
+          "median": 0.7517124089487847,
+          "minimum": 0.7517124089487847,
+          "maximum": 0.7517124089487847
+        },
+        "p90": {
+          "median": 0.9023490126918249,
+          "minimum": 0.9023490126918249,
+          "maximum": 0.9023490126918249
+        },
+        "p99": {
+          "median": 0.9669878293427034,
+          "minimum": 0.9669878293427034,
+          "maximum": 0.9669878293427034
+        },
+        "max": {
+          "median": 0.9969897309399817,
+          "minimum": 0.9969897309399817,
+          "maximum": 0.9969897309399817
+        }
+      },
+      "failed_gates": [
+        "quality",
+        "volume"
+      ],
+      "errors": [],
+      "source_rows": [
+        "experiments/adaptive/runs/macbook-verified-lattice-pilot-v1/repeat-0-actual-default-tet4"
+      ]
+    },
+    {
+      "case": "smooth-lattice",
+      "name": "meshers-uniform37-tet4",
+      "config": {
+        "arm": "meshers",
+        "cells": 37,
+        "adapt": false,
+        "tolerance": 1.0,
+        "min_length": 0.01,
+        "adapt_tolerance": 0.002,
+        "name": "meshers-uniform37-tet4",
+        "order": 1
+      },
+      "samples": 1,
+      "qualified": 0,
+      "generation_s": {
+        "median": 1.7784836249993532,
+        "minimum": 1.7784836249993532,
+        "maximum": 1.7784836249993532
+      },
+      "failed_attempt_s": null,
+      "nodes": {
+        "median": 31766,
+        "minimum": 31766,
+        "maximum": 31766
+      },
+      "elements": {
+        "median": 157521,
+        "minimum": 157521,
+        "maximum": 157521
+      },
+      "sampled_distance": {
+        "median": 0.003424939221242595,
+        "minimum": 0.003424939221242595,
+        "maximum": 0.003424939221242595
+      },
+      "sampled_reverse_only": null,
+      "abs_relative_volume": {
+        "median": 0.003901876470417731,
+        "minimum": 0.003901876470417731,
+        "maximum": 0.003901876470417731
+      },
+      "quality": {
+        "min": {
+          "median": 0.3393720556551816,
+          "minimum": 0.3393720556551816,
+          "maximum": 0.3393720556551816
+        },
+        "p01": {
+          "median": 0.5772869727798284,
+          "minimum": 0.5772869727798284,
+          "maximum": 0.5772869727798284
+        },
+        "p10": {
+          "median": 0.8068337313746584,
+          "minimum": 0.8068337313746584,
+          "maximum": 0.8068337313746584
+        },
+        "median": {
+          "median": 0.9295160030897798,
+          "minimum": 0.9295160030897798,
+          "maximum": 0.9295160030897798
+        },
+        "p90": {
+          "median": 0.9295160030897832,
+          "minimum": 0.9295160030897832,
+          "maximum": 0.9295160030897832
+        },
+        "p99": {
+          "median": 0.9689816922873177,
+          "minimum": 0.9689816922873177,
+          "maximum": 0.9689816922873177
+        },
+        "max": {
+          "median": 0.9966724828231764,
+          "minimum": 0.9966724828231764,
+          "maximum": 0.9966724828231764
+        }
+      },
+      "failed_gates": [
+        "geometry"
+      ],
+      "errors": [],
+      "source_rows": [
+        "experiments/adaptive/runs/macbook-verified-lattice-uniform37-pilot-v1/repeat-0-meshers-uniform37-tet4"
+      ]
+    },
+    {
+      "case": "schwarz-d-solid",
+      "name": "actual-default-tet4",
+      "config": {
+        "name": "actual-default-tet4",
+        "arm": "microgen",
+        "resolution": null,
+        "order": 1
+      },
+      "samples": 3,
+      "qualified": 0,
+      "generation_s": null,
+      "failed_attempt_s": {
+        "median": 0.037982334000844276,
+        "minimum": 0.03751841699704528,
+        "maximum": 0.03910954100138042
+      },
+      "nodes": null,
+      "elements": null,
+      "sampled_distance": null,
+      "sampled_reverse_only": null,
+      "abs_relative_volume": null,
+      "quality": {
+        "min": null,
+        "p01": null,
+        "p10": null,
+        "median": null,
+        "p90": null,
+        "p99": null,
+        "max": null
+      },
+      "failed_gates": [],
+      "errors": [
+        "Input mesh is not periodic"
+      ],
+      "source_rows": [
+        "experiments/adaptive/runs/macbook-verified-schwarz-d-pilot-v1/repeat-0-actual-default-tet4",
+        "experiments/adaptive/runs/macbook-verified-schwarz-d-reproduced-v1/repeat-0-actual-default-tet4",
+        "experiments/adaptive/runs/macbook-verified-schwarz-d-reproduced-v1/repeat-1-actual-default-tet4"
+      ]
+    },
+    {
+      "case": "schwarz-d-solid",
+      "name": "actual-modified-tet4",
+      "config": {
+        "arm": "microgen",
+        "order": 1,
+        "resolution": 30,
+        "first_only": true,
+        "first_hausd": 0.0005,
+        "first_hmax": 0.1,
+        "mmg": {
+          "hausd": 0.0005,
+          "hmax": 0.06,
+          "hgrad": 1.3
+        },
+        "repair": true,
+        "name": "actual-modified-tet4"
+      },
+      "samples": 3,
+      "qualified": 0,
+      "generation_s": null,
+      "failed_attempt_s": {
+        "median": 0.06996691599852056,
+        "minimum": 0.0680279590014834,
+        "maximum": 0.0705069169998751
+      },
+      "nodes": null,
+      "elements": null,
+      "sampled_distance": null,
+      "sampled_reverse_only": null,
+      "abs_relative_volume": null,
+      "quality": {
+        "min": null,
+        "p01": null,
+        "p10": null,
+        "median": null,
+        "p90": null,
+        "p99": null,
+        "max": null
+      },
+      "failed_gates": [],
+      "errors": [
+        "Input mesh is not periodic"
+      ],
+      "source_rows": [
+        "experiments/adaptive/runs/macbook-verified-schwarz-d-pilot-v1/repeat-0-actual-modified-tet4",
+        "experiments/adaptive/runs/macbook-verified-schwarz-d-reproduced-v1/repeat-0-actual-modified-tet4",
+        "experiments/adaptive/runs/macbook-verified-schwarz-d-reproduced-v1/repeat-1-actual-modified-tet4"
+      ]
+    },
+    {
+      "case": "schwarz-d-solid",
+      "name": "meshers-tet4",
+      "config": {
+        "arm": "meshers",
+        "cells": 24,
+        "order": 1,
+        "adapt": false,
+        "tolerance": 1.0,
+        "min_length": 0.002,
+        "adapt_tolerance": 0.002,
+        "name": "meshers-tet4"
+      },
+      "samples": 3,
+      "qualified": 0,
+      "generation_s": null,
+      "failed_attempt_s": {
+        "median": 0.32802366699979757,
+        "minimum": 0.3241047500014247,
+        "maximum": 0.33674299999984214
+      },
+      "nodes": null,
+      "elements": null,
+      "sampled_distance": null,
+      "sampled_reverse_only": null,
+      "abs_relative_volume": null,
+      "quality": {
+        "min": null,
+        "p01": null,
+        "p10": null,
+        "median": null,
+        "p90": null,
+        "p99": null,
+        "max": null
+      },
+      "failed_gates": [],
+      "errors": [
+        "periodic node mismatch on axis 0"
+      ],
+      "source_rows": [
+        "experiments/adaptive/runs/macbook-verified-schwarz-d-pilot-v1/repeat-0-meshers-tet4",
+        "experiments/adaptive/runs/macbook-verified-schwarz-d-reproduced-v1/repeat-0-meshers-tet4",
+        "experiments/adaptive/runs/macbook-verified-schwarz-d-reproduced-v1/repeat-1-meshers-tet4"
+      ]
+    },
+    {
+      "case": "schwarz-d-solid",
+      "name": "meshers-curved-tet10",
+      "config": {
+        "arm": "meshers",
+        "cells": 16,
+        "order": 2,
+        "adapt": false,
+        "tolerance": 1.0,
+        "min_length": 0.002,
+        "adapt_tolerance": 0.002,
+        "name": "meshers-curved-tet10"
+      },
+      "samples": 3,
+      "qualified": 0,
+      "generation_s": null,
+      "failed_attempt_s": {
+        "median": 0.11640770799931488,
+        "minimum": 0.11233899999933783,
+        "maximum": 0.11932120799974655
+      },
+      "nodes": null,
+      "elements": null,
+      "sampled_distance": null,
+      "sampled_reverse_only": null,
+      "abs_relative_volume": null,
+      "quality": {
+        "min": null,
+        "p01": null,
+        "p10": null,
+        "median": null,
+        "p90": null,
+        "p99": null,
+        "max": null
+      },
+      "failed_gates": [],
+      "errors": [
+        "periodic node mismatch on axis 0"
+      ],
+      "source_rows": [
+        "experiments/adaptive/runs/macbook-verified-schwarz-d-pilot-v1/repeat-0-meshers-curved-tet10",
+        "experiments/adaptive/runs/macbook-verified-schwarz-d-reproduced-v1/repeat-0-meshers-curved-tet10",
+        "experiments/adaptive/runs/macbook-verified-schwarz-d-reproduced-v1/repeat-1-meshers-curved-tet10"
+      ]
+    },
+    {
+      "case": "schwarz-solid",
+      "name": "actual-default-tet4",
+      "config": {
+        "name": "actual-default-tet4",
+        "arm": "microgen",
+        "resolution": null,
+        "order": 1
+      },
+      "samples": 1,
+      "qualified": 0,
+      "generation_s": {
+        "median": 1.2205750829998578,
+        "minimum": 1.2205750829998578,
+        "maximum": 1.2205750829998578
+      },
+      "failed_attempt_s": null,
+      "nodes": {
+        "median": 3151,
+        "minimum": 3151,
+        "maximum": 3151
+      },
+      "elements": {
+        "median": 10829,
+        "minimum": 10829,
+        "maximum": 10829
+      },
+      "sampled_distance": null,
+      "sampled_reverse_only": {
+        "median": 0.008112452066995793,
+        "minimum": 0.008112452066995793,
+        "maximum": 0.008112452066995793
+      },
+      "abs_relative_volume": {
+        "median": 0.0005514980988746698,
+        "minimum": 0.0005514980988746698,
+        "maximum": 0.0005514980988746698
+      },
+      "quality": {
+        "min": {
+          "median": 0.05483889301141988,
+          "minimum": 0.05483889301141988,
+          "maximum": 0.05483889301141988
+        },
+        "p01": {
+          "median": 0.13582599182201013,
+          "minimum": 0.13582599182201013,
+          "maximum": 0.13582599182201013
+        },
+        "p10": {
+          "median": 0.477526761863978,
+          "minimum": 0.477526761863978,
+          "maximum": 0.477526761863978
+        },
+        "median": {
+          "median": 0.679020938472782,
+          "minimum": 0.679020938472782,
+          "maximum": 0.679020938472782
+        },
+        "p90": {
+          "median": 0.8614899349916277,
+          "minimum": 0.8614899349916277,
+          "maximum": 0.8614899349916277
+        },
+        "p99": {
+          "median": 0.9591808000088149,
+          "minimum": 0.9591808000088149,
+          "maximum": 0.9591808000088149
+        },
+        "max": {
+          "median": 0.9973749371075616,
+          "minimum": 0.9973749371075616,
+          "maximum": 0.9973749371075616
+        }
+      },
+      "failed_gates": [
+        "quality"
+      ],
+      "errors": [],
+      "source_rows": [
+        "experiments/adaptive/runs/macbook-verified-schwarz-p-pilot-v1/repeat-0-actual-default-tet4"
+      ]
+    },
+    {
+      "case": "spinodoid-anisotropic",
+      "name": "actual-default-tet4",
+      "config": {
+        "name": "actual-default-tet4",
+        "arm": "microgen",
+        "resolution": null,
+        "order": 1
+      },
+      "samples": 1,
+      "qualified": 0,
+      "generation_s": {
+        "median": 1.3771860420056328,
+        "minimum": 1.3771860420056328,
+        "maximum": 1.3771860420056328
+      },
+      "failed_attempt_s": null,
+      "nodes": {
+        "median": 3574,
+        "minimum": 3574,
+        "maximum": 3574
+      },
+      "elements": {
+        "median": 14105,
+        "minimum": 14105,
+        "maximum": 14105
+      },
+      "sampled_distance": null,
+      "sampled_reverse_only": {
+        "median": 0.02118914587261413,
+        "minimum": 0.02118914587261413,
+        "maximum": 0.02118914587261413
+      },
+      "abs_relative_volume": {
+        "median": 0.0023190189493578206,
+        "minimum": 0.0023190189493578206,
+        "maximum": 0.0023190189493578206
+      },
+      "quality": {
+        "min": {
+          "median": 0.0006498531193928795,
+          "minimum": 0.0006498531193928795,
+          "maximum": 0.0006498531193928795
+        },
+        "p01": {
+          "median": 0.13317231450704145,
+          "minimum": 0.13317231450704145,
+          "maximum": 0.13317231450704145
+        },
+        "p10": {
+          "median": 0.5055804537274312,
+          "minimum": 0.5055804537274312,
+          "maximum": 0.5055804537274312
+        },
+        "median": {
+          "median": 0.7646886105807879,
+          "minimum": 0.7646886105807879,
+          "maximum": 0.7646886105807879
+        },
+        "p90": {
+          "median": 0.9119596370178245,
+          "minimum": 0.9119596370178245,
+          "maximum": 0.9119596370178245
+        },
+        "p99": {
+          "median": 0.9693740421449696,
+          "minimum": 0.9693740421449696,
+          "maximum": 0.9693740421449696
+        },
+        "max": {
+          "median": 0.9943069493857655,
+          "minimum": 0.9943069493857655,
+          "maximum": 0.9943069493857655
+        }
+      },
+      "failed_gates": [
+        "facets",
+        "periodicity",
+        "quality"
+      ],
+      "errors": [],
+      "source_rows": [
+        "experiments/adaptive/runs/macbook-verified-spinodoid-anisotropic-pilot-v1/repeat-0-actual-default-tet4"
+      ]
+    },
+    {
+      "case": "spinodoid-anisotropic",
+      "name": "actual-modified-tet4",
+      "config": {
+        "arm": "microgen",
+        "order": 1,
+        "resolution": 36,
+        "first_only": true,
+        "first_hausd": 0.0015,
+        "first_hmax": 0.06,
+        "mmg": {
+          "hausd": 0.0005,
+          "hmax": 0.06,
+          "hgrad": 1.3
+        },
+        "repair": false,
+        "name": "actual-modified-tet4"
+      },
+      "samples": 1,
+      "qualified": 0,
+      "generation_s": {
+        "median": 4.848552082999959,
+        "minimum": 4.848552082999959,
+        "maximum": 4.848552082999959
+      },
+      "failed_attempt_s": null,
+      "nodes": {
+        "median": 27701,
+        "minimum": 27701,
+        "maximum": 27701
+      },
+      "elements": {
+        "median": 126562,
+        "minimum": 126562,
+        "maximum": 126562
+      },
+      "sampled_distance": null,
+      "sampled_reverse_only": {
+        "median": 0.008648934310797737,
+        "minimum": 0.008648934310797737,
+        "maximum": 0.008648934310797737
+      },
+      "abs_relative_volume": {
+        "median": 0.0003837388452148094,
+        "minimum": 0.0003837388452148094,
+        "maximum": 0.0003837388452148094
+      },
+      "quality": {
+        "min": {
+          "median": 9.058821744194067e-06,
+          "minimum": 9.058821744194067e-06,
+          "maximum": 9.058821744194067e-06
+        },
+        "p01": {
+          "median": 0.3762283925981956,
+          "minimum": 0.3762283925981956,
+          "maximum": 0.3762283925981956
+        },
+        "p10": {
+          "median": 0.5834121286922874,
+          "minimum": 0.5834121286922874,
+          "maximum": 0.5834121286922874
+        },
+        "median": {
+          "median": 0.7359501732267226,
+          "minimum": 0.7359501732267226,
+          "maximum": 0.7359501732267226
+        },
+        "p90": {
+          "median": 0.8929517129063925,
+          "minimum": 0.8929517129063925,
+          "maximum": 0.8929517129063925
+        },
+        "p99": {
+          "median": 0.9682468468876083,
+          "minimum": 0.9682468468876083,
+          "maximum": 0.9682468468876083
+        },
+        "max": {
+          "median": 1.0000000000000009,
+          "minimum": 1.0000000000000009,
+          "maximum": 1.0000000000000009
+        }
+      },
+      "failed_gates": [
+        "quality"
+      ],
+      "errors": [],
+      "source_rows": [
+        "experiments/adaptive/runs/macbook-verified-spinodoid-anisotropic-pilot-v1/repeat-0-actual-modified-tet4"
+      ]
+    },
+    {
+      "case": "spinodoid-anisotropic",
+      "name": "actual-public-sampling32-default-mmg-tet4",
+      "config": {
+        "name": "actual-public-sampling32-default-mmg-tet4",
+        "arm": "microgen",
+        "resolution": 32,
+        "order": 1
+      },
+      "samples": 1,
+      "qualified": 0,
+      "generation_s": {
+        "median": 3.827030874999764,
+        "minimum": 3.827030874999764,
+        "maximum": 3.827030874999764
+      },
+      "failed_attempt_s": null,
+      "nodes": {
+        "median": 8863,
+        "minimum": 8863,
+        "maximum": 8863
+      },
+      "elements": {
+        "median": 34721,
+        "minimum": 34721,
+        "maximum": 34721
+      },
+      "sampled_distance": null,
+      "sampled_reverse_only": {
+        "median": 0.011133246126011777,
+        "minimum": 0.011133246126011777,
+        "maximum": 0.011133246126011777
+      },
+      "abs_relative_volume": {
+        "median": 0.001979822121699115,
+        "minimum": 0.001979822121699115,
+        "maximum": 0.001979822121699115
+      },
+      "quality": {
+        "min": {
+          "median": 0.00022387371247391014,
+          "minimum": 0.00022387371247391014,
+          "maximum": 0.00022387371247391014
+        },
+        "p01": {
+          "median": 0.13438262065652,
+          "minimum": 0.13438262065652,
+          "maximum": 0.13438262065652
+        },
+        "p10": {
+          "median": 0.4684767926059582,
+          "minimum": 0.4684767926059582,
+          "maximum": 0.4684767926059582
+        },
+        "median": {
+          "median": 0.7158917630803295,
+          "minimum": 0.7158917630803295,
+          "maximum": 0.7158917630803295
+        },
+        "p90": {
+          "median": 0.8884785707386481,
+          "minimum": 0.8884785707386481,
+          "maximum": 0.8884785707386481
+        },
+        "p99": {
+          "median": 0.9618393167186197,
+          "minimum": 0.9618393167186197,
+          "maximum": 0.9618393167186197
+        },
+        "max": {
+          "median": 0.998681954178377,
+          "minimum": 0.998681954178377,
+          "maximum": 0.998681954178377
+        }
+      },
+      "failed_gates": [
+        "quality"
+      ],
+      "errors": [],
+      "source_rows": [
+        "experiments/adaptive/runs/macbook-verified-spinodoid-anisotropic-public32-pilot-v1/repeat-0-actual-public-sampling32-default-mmg-tet4"
+      ]
+    },
+    {
+      "case": "spinodoid",
+      "name": "actual-default-tet4",
+      "config": {
+        "name": "actual-default-tet4",
+        "arm": "microgen",
+        "resolution": null,
+        "order": 1
+      },
+      "samples": 1,
+      "qualified": 0,
+      "generation_s": null,
+      "failed_attempt_s": {
+        "median": 8.206405124998128,
+        "minimum": 8.206405124998128,
+        "maximum": 8.206405124998128
+      },
+      "nodes": null,
+      "elements": null,
+      "sampled_distance": null,
+      "sampled_reverse_only": null,
+      "abs_relative_volume": null,
+      "quality": {
+        "min": null,
+        "p01": null,
+        "p10": null,
+        "median": null,
+        "p90": null,
+        "p99": null,
+        "max": null
+      },
+      "failed_gates": [],
+      "errors": [
+        "Something went wrong: output mesh is not periodic"
+      ],
+      "source_rows": [
+        "experiments/adaptive/runs/macbook-verified-spinodoid-pilot-v1/repeat-0-actual-default-tet4"
+      ]
+    },
+    {
+      "case": "spinodoid",
+      "name": "actual-modified-tet4",
+      "config": {
+        "name": "actual-modified-tet4",
+        "arm": "microgen",
+        "order": 1,
+        "resolution": 36,
+        "mmg": {
+          "hausd": 0.0005,
+          "hmax": 0.06,
+          "hgrad": 1.3
+        },
+        "first_hausd": 0.0015,
+        "first_hmax": 0.06,
+        "first_only": true,
+        "repair": false
+      },
+      "samples": 1,
+      "qualified": 0,
+      "generation_s": {
+        "median": 6.34728541700315,
+        "minimum": 6.34728541700315,
+        "maximum": 6.34728541700315
+      },
+      "failed_attempt_s": null,
+      "nodes": {
+        "median": 31787,
+        "minimum": 31787,
+        "maximum": 31787
+      },
+      "elements": {
+        "median": 143585,
+        "minimum": 143585,
+        "maximum": 143585
+      },
+      "sampled_distance": null,
+      "sampled_reverse_only": {
+        "median": 0.003505766296371692,
+        "minimum": 0.003505766296371692,
+        "maximum": 0.003505766296371692
+      },
+      "abs_relative_volume": {
+        "median": 0.00015169056253272473,
+        "minimum": 0.00015169056253272473,
+        "maximum": 0.00015169056253272473
+      },
+      "quality": {
+        "min": {
+          "median": 2.3278497124767503e-07,
+          "minimum": 2.3278497124767503e-07,
+          "maximum": 2.3278497124767503e-07
+        },
+        "p01": {
+          "median": 0.17769683161924804,
+          "minimum": 0.17769683161924804,
+          "maximum": 0.17769683161924804
+        },
+        "p10": {
+          "median": 0.5697086922186447,
+          "minimum": 0.5697086922186447,
+          "maximum": 0.5697086922186447
+        },
+        "median": {
+          "median": 0.7236024000144237,
+          "minimum": 0.7236024000144237,
+          "maximum": 0.7236024000144237
+        },
+        "p90": {
+          "median": 0.8893578486525279,
+          "minimum": 0.8893578486525279,
+          "maximum": 0.8893578486525279
+        },
+        "p99": {
+          "median": 0.9664959615899659,
+          "minimum": 0.9664959615899659,
+          "maximum": 0.9664959615899659
+        },
+        "max": {
+          "median": 1.0000000000000009,
+          "minimum": 1.0000000000000009,
+          "maximum": 1.0000000000000009
+        }
+      },
+      "failed_gates": [
+        "periodicity",
+        "quality"
+      ],
+      "errors": [],
+      "source_rows": [
+        "experiments/adaptive/runs/macbook-verified-spinodoid-pilot-v1/repeat-0-actual-modified-tet4"
+      ]
+    },
+    {
+      "case": "spinodoid",
+      "name": "actual-public-sampling32-default-mmg-tet4",
+      "config": {
+        "name": "actual-public-sampling32-default-mmg-tet4",
+        "arm": "microgen",
+        "resolution": 32,
+        "order": 1
+      },
+      "samples": 1,
+      "qualified": 0,
+      "generation_s": {
+        "median": 4.450366335004219,
+        "minimum": 4.450366335004219,
+        "maximum": 4.450366335004219
+      },
+      "failed_attempt_s": null,
+      "nodes": {
+        "median": 10404,
+        "minimum": 10404,
+        "maximum": 10404
+      },
+      "elements": {
+        "median": 41295,
+        "minimum": 41295,
+        "maximum": 41295
+      },
+      "sampled_distance": null,
+      "sampled_reverse_only": {
+        "median": 0.009027997524160473,
+        "minimum": 0.009027997524160473,
+        "maximum": 0.009027997524160473
+      },
+      "abs_relative_volume": {
+        "median": 0.000998187947654161,
+        "minimum": 0.000998187947654161,
+        "maximum": 0.000998187947654161
+      },
+      "quality": {
+        "min": {
+          "median": 2.812479107734715e-05,
+          "minimum": 2.812479107734715e-05,
+          "maximum": 2.812479107734715e-05
+        },
+        "p01": {
+          "median": 0.11912133744782054,
+          "minimum": 0.11912133744782054,
+          "maximum": 0.11912133744782054
+        },
+        "p10": {
+          "median": 0.4571764606609635,
+          "minimum": 0.4571764606609635,
+          "maximum": 0.4571764606609635
+        },
+        "median": {
+          "median": 0.7233248695956533,
+          "minimum": 0.7233248695956533,
+          "maximum": 0.7233248695956533
+        },
+        "p90": {
+          "median": 0.8925141988514901,
+          "minimum": 0.8925141988514901,
+          "maximum": 0.8925141988514901
+        },
+        "p99": {
+          "median": 0.9639423457355871,
+          "minimum": 0.9639423457355871,
+          "maximum": 0.9639423457355871
+        },
+        "max": {
+          "median": 0.9956875709000853,
+          "minimum": 0.9956875709000853,
+          "maximum": 0.9956875709000853
+        }
+      },
+      "failed_gates": [
+        "facets",
+        "periodicity",
+        "quality"
+      ],
+      "errors": [],
+      "source_rows": [
+        "experiments/adaptive/runs/macbook-verified-spinodoid-public32-pilot-v1/repeat-0-actual-public-sampling32-default-mmg-tet4"
+      ]
+    }
+  ],
+  "admitted_same_order_ratios": [
+    {
+      "case": "schwarz-solid",
+      "order": 1,
+      "actual": "actual-modified-tet4",
+      "native": "meshers-tet4",
+      "run": "experiments/adaptive/runs/macbook-verified-schwarz-p-repeated-v1",
+      "paired_samples": 5,
+      "speed_actual_over_native": 6.391326024158893,
+      "tets_actual_over_native": 3.792604322942713,
+      "nodes_actual_over_native": 3.355016664751178,
+      "distance_actual_over_native": 0.9679128113123288,
+      "quality_native_minus_actual": {
+        "min": 0.3379095655209021,
+        "p01": 0.06743987703246157,
+        "p10": 0.013913843848821883,
+        "median": -0.0013837725191900851,
+        "p90": 0.00280433725255691,
+        "p99": 0.0009973011839873314,
+        "max": -0.003621095799525631
+      },
+      "stiffness_matched": false
+    },
+    {
+      "case": "schwarz-solid",
+      "order": 2,
+      "actual": "actual-modified-straight-tet10",
+      "native": "meshers-curved-tet10",
+      "run": "experiments/adaptive/runs/macbook-verified-schwarz-p-repeated-v1",
+      "paired_samples": 5,
+      "speed_actual_over_native": 45.558287516266624,
+      "tets_actual_over_native": 4.965480867161356,
+      "nodes_actual_over_native": 4.824333768169959,
+      "distance_actual_over_native": 6.558765746254599,
+      "quality_native_minus_actual": {
+        "min": 0.34999429627739564,
+        "p01": 0.096706904140055,
+        "p10": 0.08213669015985336,
+        "median": 0.16918676398864885,
+        "p90": 0.035721925878856364,
+        "p99": 0.013903010871707311,
+        "max": -0.0020061928278864993
+      },
+      "stiffness_matched": false
+    },
+    {
+      "case": "smooth-lattice",
+      "order": 1,
+      "actual": "actual-modified-tet4",
+      "native": "meshers-tet4",
+      "run": "experiments/adaptive/runs/macbook-verified-lattice-repeated-v1",
+      "paired_samples": 5,
+      "speed_actual_over_native": 4.304801607629862,
+      "tets_actual_over_native": 2.692235797916631,
+      "nodes_actual_over_native": 2.4786830194188934,
+      "distance_actual_over_native": 0.9024620475752678,
+      "quality_native_minus_actual": {
+        "min": 0.28546432181020387,
+        "p01": 0.03867436605439384,
+        "p10": -0.010348541630201491,
+        "median": -0.026049688003362048,
+        "p90": -0.015203694723207484,
+        "p99": -0.007642653581042325,
+        "max": -9.132018570301437e-05
+      },
+      "stiffness_matched": false
+    },
+    {
+      "case": "smooth-lattice",
+      "order": 2,
+      "actual": "actual-modified-straight-tet10",
+      "native": "meshers-curved-tet10",
+      "run": "experiments/adaptive/runs/macbook-verified-lattice-repeated-v1",
+      "paired_samples": 5,
+      "speed_actual_over_native": 6.952131164996324,
+      "tets_actual_over_native": 3.832365747460087,
+      "nodes_actual_over_native": 3.632461465893702,
+      "distance_actual_over_native": 6.105037498734306,
+      "quality_native_minus_actual": {
+        "min": 0.2659300933294154,
+        "p01": 0.036012976912103534,
+        "p10": -0.027275978316742,
+        "median": -0.03560715114153579,
+        "p90": -0.013173583907073794,
+        "p99": -0.007819457533344454,
+        "max": -0.0014710835515617804
+      },
+      "stiffness_matched": false
+    },
+    {
+      "case": "smooth-lattice",
+      "order": 2,
+      "actual": "actual-modified-straight-tet10",
+      "native": "meshers-uniform37-curved-tet10",
+      "run": "experiments/adaptive/runs/macbook-verified-lattice-uniform37-repeated-v1",
+      "paired_samples": 5,
+      "speed_actual_over_native": 4.856584138275737,
+      "tets_actual_over_native": 1.0057706591502085,
+      "nodes_actual_over_native": 1.0333425675032248,
+      "distance_actual_over_native": 9.541089853022306,
+      "quality_native_minus_actual": {
+        "min": 0.239371054655182,
+        "p01": 0.08754370313366161,
+        "p10": 0.16637745568692208,
+        "median": 0.12580908365833687,
+        "p90": 0.00528103387666401,
+        "p99": -0.004748462394046915,
+        "max": -0.0018968348476695596
+      },
+      "stiffness_matched": false
+    }
+  ],
+  "sources": [
+    {
+      "run": "experiments/adaptive/runs/macbook-verified-graded-linear-pilot-v1",
+      "sha256": "dfe783a001759e7ed5e16b029ce9f4b93b4ca2e61a73d1f0799cbe99ccf1785d"
+    },
+    {
+      "run": "experiments/adaptive/runs/macbook-verified-graded-periodic-pilot-v1",
+      "sha256": "d06e422f174efe01d089f6f7b6b0f30a78b840c0f2ca96a1fcf699eb601bbe2b"
+    },
+    {
+      "run": "experiments/adaptive/runs/macbook-verified-gyroid-pilot-v1",
+      "sha256": "a60ce4706f36fe10409e32cea51d8e1c90eab63d5d03c532aa5fa568d5a199b6"
+    },
+    {
+      "run": "experiments/adaptive/runs/macbook-verified-lattice-pilot-v1",
+      "sha256": "2396ef2b1e0ec45c35f8bd1add04ae396f71024a3384e2b762adf10f5ba7e891"
+    },
+    {
+      "run": "experiments/adaptive/runs/macbook-verified-lattice-uniform37-pilot-v1",
+      "sha256": "080103bc4b0b0479021df9c0f2ffee91e3d105e726dab572ea08e34e10920b0f"
+    },
+    {
+      "run": "experiments/adaptive/runs/macbook-verified-schwarz-d-pilot-v1",
+      "sha256": "a31de33bf60c13cf04d0e7fba5c6d9766e1a9f3ec01e65cbb23059ecb451efa5"
+    },
+    {
+      "run": "experiments/adaptive/runs/macbook-verified-schwarz-p-pilot-v1",
+      "sha256": "548571a5ea0542a82529c254ba43f81f5795424d967d449a639156cc5f40a166"
+    },
+    {
+      "run": "experiments/adaptive/runs/macbook-verified-spinodoid-anisotropic-pilot-v1",
+      "sha256": "bfd71bd93d1bd2c11c9c2b16a73ce9c2d5cd739caa59f0fbd88272d8773edaf8"
+    },
+    {
+      "run": "experiments/adaptive/runs/macbook-verified-spinodoid-anisotropic-public32-pilot-v1",
+      "sha256": "ed068f9329ecb46783d028e58ba7071bfdaaad46caf95a930b60fa981f223cfd"
+    },
+    {
+      "run": "experiments/adaptive/runs/macbook-verified-spinodoid-pilot-v1",
+      "sha256": "636328e35439f48b406491dd99404a0ca82779760a514ca359738dfc00c3842d"
+    },
+    {
+      "run": "experiments/adaptive/runs/macbook-verified-spinodoid-public32-pilot-v1",
+      "sha256": "1945d63943e9eea0a510567f31da173c8fd0bb93a8f2706fab297820be0bb297"
+    },
+    {
+      "run": "experiments/adaptive/runs/macbook-verified-graded-linear-repeated-v1",
+      "sha256": "2330771df0be0a18381969442eecacc2d6137a87ebdf6216945efcc65930eb37"
+    },
+    {
+      "run": "experiments/adaptive/runs/macbook-verified-graded-periodic-repeated-v1",
+      "sha256": "d99c7e2932a634ae35a1a5b874fdac6a31571b59d5c878c6afc54c5db425db3e"
+    },
+    {
+      "run": "experiments/adaptive/runs/macbook-verified-gyroid-repeated-v1",
+      "sha256": "7b09b332c74fe306da06c68fcc2b119f44f6387bbf649a58b04d7c9385a5424a"
+    },
+    {
+      "run": "experiments/adaptive/runs/macbook-verified-lattice-repeated-v1",
+      "sha256": "1d1b34a2868be06dc7a4dce06c020463201176083dd989219d6a31a896d96e54"
+    },
+    {
+      "run": "experiments/adaptive/runs/macbook-verified-lattice-uniform37-repeated-v1",
+      "sha256": "984639a57253bd1436dae753fd371a05e958d81c21f2d228fb7fcf015d071331"
+    },
+    {
+      "run": "experiments/adaptive/runs/macbook-verified-schwarz-p-repeated-v1",
+      "sha256": "44b37037e88ee1815e5dc253e9ff6a2d33715298ce2aee4c7434f863b4dcd730"
+    },
+    {
+      "run": "experiments/adaptive/runs/macbook-verified-spinodoid-anisotropic-repeated-v1",
+      "sha256": "bd92e28bb41617a118f2015b10c6cf21843ae349becf1172f15ec3f31c19eaf9"
+    },
+    {
+      "run": "experiments/adaptive/runs/macbook-verified-spinodoid-repeated-v1",
+      "sha256": "3fd36dbb0de126c5c1f9ab27139f17b0feda74887229366807ed1c8effc9f1f9"
+    },
+    {
+      "run": "experiments/adaptive/runs/macbook-verified-schwarz-d-reproduced-v1",
+      "sha256": "f5454704cd6d1dd964ad068b0dde2dba3fb14ff9c4ae24644e775936c75f600f"
+    }
+  ],
+  "pilots_retained_outside_repeated_timing_pool": [
+    "experiments/adaptive/runs/macbook-verified-graded-linear-pilot-v1/repeat-0-meshers-curved-tet10",
+    "experiments/adaptive/runs/macbook-verified-graded-periodic-pilot-v1/repeat-0-meshers-tet4",
+    "experiments/adaptive/runs/macbook-verified-graded-periodic-pilot-v1/repeat-0-meshers-curved-tet10",
+    "experiments/adaptive/runs/macbook-verified-gyroid-pilot-v1/repeat-0-meshers-tet4",
+    "experiments/adaptive/runs/macbook-verified-gyroid-pilot-v1/repeat-0-meshers-curved-tet10",
+    "experiments/adaptive/runs/macbook-verified-lattice-pilot-v1/repeat-0-actual-modified-tet4",
+    "experiments/adaptive/runs/macbook-verified-lattice-pilot-v1/repeat-0-meshers-tet4",
+    "experiments/adaptive/runs/macbook-verified-lattice-pilot-v1/repeat-0-meshers-curved-tet10",
+    "experiments/adaptive/runs/macbook-verified-lattice-uniform37-pilot-v1/repeat-0-meshers-uniform37-curved-tet10",
+    "experiments/adaptive/runs/macbook-verified-schwarz-p-pilot-v1/repeat-0-actual-modified-tet4",
+    "experiments/adaptive/runs/macbook-verified-schwarz-p-pilot-v1/repeat-0-meshers-tet4",
+    "experiments/adaptive/runs/macbook-verified-schwarz-p-pilot-v1/repeat-0-meshers-curved-tet10",
+    "experiments/adaptive/runs/macbook-verified-spinodoid-anisotropic-pilot-v1/repeat-0-meshers-tet4",
+    "experiments/adaptive/runs/macbook-verified-spinodoid-anisotropic-pilot-v1/repeat-0-meshers-curved-tet10",
+    "experiments/adaptive/runs/macbook-verified-spinodoid-pilot-v1/repeat-0-meshers-tet4",
+    "experiments/adaptive/runs/macbook-verified-spinodoid-pilot-v1/repeat-0-meshers-curved-tet10"
+  ],
+  "verification": [
+    {
+      "run": "experiments/adaptive/runs/macbook-verified-graded-linear-pilot-v1",
+      "inputs": 28,
+      "replays": [
+        {
+          "mesh": "experiments/adaptive/runs/macbook-verified-graded-linear-pilot-v1/repeat-0-actual-default-tet4/mesh.npz",
+          "sha256": "77517aad1d97431d023d428a2d1d85be489e82a9d1585c991107df5353452281",
+          "qualified": false,
+          "full_distance": false
+        },
+        {
+          "mesh": "experiments/adaptive/runs/macbook-verified-graded-linear-pilot-v1/repeat-0-meshers-tet4/mesh.npz",
+          "sha256": "96c6d963fb36e4a8cddbb8df76fd6e12de8306b4deb1babd16067c2fc189d9d9",
+          "qualified": false,
+          "full_distance": true
+        },
+        {
+          "mesh": "experiments/adaptive/runs/macbook-verified-graded-linear-pilot-v1/repeat-0-meshers-curved-tet10/mesh.npz",
+          "sha256": "598fd9c1c9c3be69d136cb27e96b1502234432de5d63ed92018f2cedb6e0ed0c",
+          "qualified": true,
+          "full_distance": true
+        }
+      ]
+    },
+    {
+      "run": "experiments/adaptive/runs/macbook-verified-graded-periodic-pilot-v1",
+      "inputs": 28,
+      "replays": [
+        {
+          "mesh": "experiments/adaptive/runs/macbook-verified-graded-periodic-pilot-v1/repeat-0-actual-default-tet4/mesh.npz",
+          "sha256": "eb106fc69d775347b7d2c67ea3e7d7fc6c66912b89517760d2d9c3ca09c67735",
+          "qualified": false,
+          "full_distance": false
+        },
+        {
+          "mesh": "experiments/adaptive/runs/macbook-verified-graded-periodic-pilot-v1/repeat-0-meshers-tet4/mesh.npz",
+          "sha256": "f1af09eee148ae548c0b0b1ce37d156e12a60f27bdd7a31ddc6c5fd86f19b7d0",
+          "qualified": true,
+          "full_distance": true
+        },
+        {
+          "mesh": "experiments/adaptive/runs/macbook-verified-graded-periodic-pilot-v1/repeat-0-meshers-curved-tet10/mesh.npz",
+          "sha256": "d9d5cdb7aa1bec97c0acca5892c46218e477b2c93fbbed27cc32cad9abb85434",
+          "qualified": true,
+          "full_distance": true
+        }
+      ]
+    },
+    {
+      "run": "experiments/adaptive/runs/macbook-verified-gyroid-pilot-v1",
+      "inputs": 28,
+      "replays": [
+        {
+          "mesh": "experiments/adaptive/runs/macbook-verified-gyroid-pilot-v1/repeat-0-actual-default-tet4/mesh.npz",
+          "sha256": "e432169259663196f4a363a45389d4f2a052b15b6af1506c9aa578f31a098d06",
+          "qualified": false,
+          "full_distance": false
+        },
+        {
+          "mesh": "experiments/adaptive/runs/macbook-verified-gyroid-pilot-v1/repeat-0-meshers-tet4/mesh.npz",
+          "sha256": "dbbca07e30560d3c5f6f6afb42316bdbf38a6d7a97fc78cf221e294b8f868b40",
+          "qualified": true,
+          "full_distance": true
+        },
+        {
+          "mesh": "experiments/adaptive/runs/macbook-verified-gyroid-pilot-v1/repeat-0-meshers-curved-tet10/mesh.npz",
+          "sha256": "79a51c01129afeb63213431a780f755d5a0db3cf849db2f7d4eb0378cd57e9d0",
+          "qualified": true,
+          "full_distance": true,
+          "prior_field_mesh_arrays_exact": true,
+          "prior_field_mesh_source": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-interior-default-gyroid-v1/repeat-0-meshers-curved-known/mesh.npz"
+        }
+      ]
+    },
+    {
+      "run": "experiments/adaptive/runs/macbook-verified-lattice-pilot-v1",
+      "inputs": 28,
+      "replays": [
+        {
+          "mesh": "experiments/adaptive/runs/macbook-verified-lattice-pilot-v1/repeat-0-actual-default-tet4/mesh.npz",
+          "sha256": "32922e3c54e727913573a9dc88827ceeb8199be6dab50dea369769a829db4191",
+          "qualified": false,
+          "full_distance": false
+        },
+        {
+          "mesh": "experiments/adaptive/runs/macbook-verified-lattice-pilot-v1/repeat-0-actual-modified-tet4/mesh.npz",
+          "sha256": "dfeca5ba6f6eb4e6109ecffe46f79818ab29001a3bf807010ec00008b8b591a2",
+          "qualified": true,
+          "full_distance": true
+        },
+        {
+          "mesh": "experiments/adaptive/runs/macbook-verified-lattice-pilot-v1/repeat-0-meshers-tet4/mesh.npz",
+          "sha256": "422d0384f6904f0ae8d3c1c4e763afd163fe62c98406ec12229641ada448c108",
+          "qualified": true,
+          "full_distance": true
+        },
+        {
+          "mesh": "experiments/adaptive/runs/macbook-verified-lattice-pilot-v1/repeat-0-meshers-curved-tet10/mesh.npz",
+          "sha256": "de8b38a4c87fb092248230cc2ddc52626b3d6e75186dc494fd2ee6f148237755",
+          "qualified": true,
+          "full_distance": true,
+          "prior_field_mesh_arrays_exact": true,
+          "prior_field_mesh_source": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-interior-default-lattice-v1/repeat-0-meshers-curved-known/mesh.npz"
+        }
+      ]
+    },
+    {
+      "run": "experiments/adaptive/runs/macbook-verified-lattice-uniform37-pilot-v1",
+      "inputs": 29,
+      "replays": [
+        {
+          "mesh": "experiments/adaptive/runs/macbook-verified-lattice-uniform37-pilot-v1/repeat-0-meshers-uniform37-tet4/mesh.npz",
+          "sha256": "1f3d05a8191a703feb31645653c1f0909039be2dd24039dedd063c66e0913eae",
+          "qualified": false,
+          "full_distance": true
+        },
+        {
+          "mesh": "experiments/adaptive/runs/macbook-verified-lattice-uniform37-pilot-v1/repeat-0-meshers-uniform37-curved-tet10/mesh.npz",
+          "sha256": "2de0d1a48fa842b96ff7e190bde346a886698e04f2177f8a06f879fee515f253",
+          "qualified": true,
+          "full_distance": true,
+          "prior_field_mesh_arrays_exact": false,
+          "prior_field_mesh_source": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-interior-default-lattice-v1/repeat-0-meshers-curved-known/mesh.npz"
+        }
+      ]
+    },
+    {
+      "run": "experiments/adaptive/runs/macbook-verified-schwarz-d-pilot-v1",
+      "inputs": 28,
+      "replays": []
+    },
+    {
+      "run": "experiments/adaptive/runs/macbook-verified-schwarz-p-pilot-v1",
+      "inputs": 28,
+      "replays": [
+        {
+          "mesh": "experiments/adaptive/runs/macbook-verified-schwarz-p-pilot-v1/repeat-0-actual-default-tet4/mesh.npz",
+          "sha256": "cdffabf8fb4d9d9d8d24baa273afe19f0da4958f1e2716a6f4140c05cd17036b",
+          "qualified": false,
+          "full_distance": false
+        },
+        {
+          "mesh": "experiments/adaptive/runs/macbook-verified-schwarz-p-pilot-v1/repeat-0-actual-modified-tet4/mesh.npz",
+          "sha256": "2f87c47162ebaa5049cbe91ed67b9a726e4f77aa4545da96d81783f80c45838e",
+          "qualified": true,
+          "full_distance": true
+        },
+        {
+          "mesh": "experiments/adaptive/runs/macbook-verified-schwarz-p-pilot-v1/repeat-0-meshers-tet4/mesh.npz",
+          "sha256": "6efdb19de5c983a5c7c3280921c43d087b86511d5e36ded93840bfedcc0c81c9",
+          "qualified": true,
+          "full_distance": true
+        },
+        {
+          "mesh": "experiments/adaptive/runs/macbook-verified-schwarz-p-pilot-v1/repeat-0-meshers-curved-tet10/mesh.npz",
+          "sha256": "dc92e7f1e6534c58903be3cf7d1b78eb8283b0ff038ca719856b671b2b6f3d27",
+          "qualified": true,
+          "full_distance": true,
+          "prior_field_mesh_arrays_exact": true,
+          "prior_field_mesh_source": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-interior-default-schwarz-v1/repeat-0-meshers-curved-known/mesh.npz"
+        }
+      ]
+    },
+    {
+      "run": "experiments/adaptive/runs/macbook-verified-spinodoid-anisotropic-pilot-v1",
+      "inputs": 28,
+      "replays": [
+        {
+          "mesh": "experiments/adaptive/runs/macbook-verified-spinodoid-anisotropic-pilot-v1/repeat-0-actual-default-tet4/mesh.npz",
+          "sha256": "a28f0801687e637947433290a172a10803412168f9e2e535baa191d43b7057fa",
+          "qualified": false,
+          "full_distance": false
+        },
+        {
+          "mesh": "experiments/adaptive/runs/macbook-verified-spinodoid-anisotropic-pilot-v1/repeat-0-actual-modified-tet4/mesh.npz",
+          "sha256": "cb950af070cb31d70ea28501de331bc553089e232ffc2eb307cb6709d6e22f62",
+          "qualified": false,
+          "full_distance": false
+        },
+        {
+          "mesh": "experiments/adaptive/runs/macbook-verified-spinodoid-anisotropic-pilot-v1/repeat-0-meshers-tet4/mesh.npz",
+          "sha256": "3da4add8211b644ad88ec3fde1c917cd5efa8cbbecf4d26b98d217ea4d67f046",
+          "qualified": true,
+          "full_distance": true
+        },
+        {
+          "mesh": "experiments/adaptive/runs/macbook-verified-spinodoid-anisotropic-pilot-v1/repeat-0-meshers-curved-tet10/mesh.npz",
+          "sha256": "a6d79122d5b7650f23f16c3a7db428405bf9c0078181381b476e58ed9dfc49fb",
+          "qualified": true,
+          "full_distance": true
+        }
+      ]
+    },
+    {
+      "run": "experiments/adaptive/runs/macbook-verified-spinodoid-anisotropic-public32-pilot-v1",
+      "inputs": 29,
+      "replays": [
+        {
+          "mesh": "experiments/adaptive/runs/macbook-verified-spinodoid-anisotropic-public32-pilot-v1/repeat-0-actual-public-sampling32-default-mmg-tet4/mesh.npz",
+          "sha256": "fe1e1e3933fd1edf14af1b677360bce4186ddef015d8055256fe2529bc3cf2b4",
+          "qualified": false,
+          "full_distance": false
+        }
+      ]
+    },
+    {
+      "run": "experiments/adaptive/runs/macbook-verified-spinodoid-pilot-v1",
+      "inputs": 28,
+      "replays": [
+        {
+          "mesh": "experiments/adaptive/runs/macbook-verified-spinodoid-pilot-v1/repeat-0-actual-modified-tet4/mesh.npz",
+          "sha256": "f0e89131f50d255c4bd814020436f5feff26e158c63e5d29ad533827f19cd9ae",
+          "qualified": false,
+          "full_distance": false
+        },
+        {
+          "mesh": "experiments/adaptive/runs/macbook-verified-spinodoid-pilot-v1/repeat-0-meshers-tet4/mesh.npz",
+          "sha256": "9a8981586d1aa51cb24a6d6f5ce8e2ee6015f9d3da9a38d495c37401fcf7ab73",
+          "qualified": true,
+          "full_distance": true
+        },
+        {
+          "mesh": "experiments/adaptive/runs/macbook-verified-spinodoid-pilot-v1/repeat-0-meshers-curved-tet10/mesh.npz",
+          "sha256": "3bfbb279a6778d64f0f6d7896a353477a0258a1580f47d9f89773853d121fb30",
+          "qualified": true,
+          "full_distance": true,
+          "prior_field_mesh_arrays_exact": true,
+          "prior_field_mesh_source": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-interior-default-spinodoid-v1/repeat-0-meshers-curved-known/mesh.npz"
+        }
+      ]
+    },
+    {
+      "run": "experiments/adaptive/runs/macbook-verified-spinodoid-public32-pilot-v1",
+      "inputs": 29,
+      "replays": [
+        {
+          "mesh": "experiments/adaptive/runs/macbook-verified-spinodoid-public32-pilot-v1/repeat-0-actual-public-sampling32-default-mmg-tet4/mesh.npz",
+          "sha256": "c1a82be853b8baf1190d81ed66dd295217464380144c98f2da514f04d0ac8f89",
+          "qualified": false,
+          "full_distance": false
+        }
+      ]
+    },
+    {
+      "run": "experiments/adaptive/runs/macbook-verified-graded-linear-repeated-v1",
+      "inputs": 28,
+      "replays": [
+        {
+          "mesh": "experiments/adaptive/runs/macbook-verified-graded-linear-repeated-v1/repeat--1-meshers-curved-tet10/mesh.npz",
+          "sha256": "598fd9c1c9c3be69d136cb27e96b1502234432de5d63ed92018f2cedb6e0ed0c",
+          "qualified": true,
+          "full_distance": true
+        },
+        {
+          "mesh": "experiments/adaptive/runs/macbook-verified-graded-linear-repeated-v1/repeat-0-meshers-curved-tet10/mesh.npz",
+          "sha256": "598fd9c1c9c3be69d136cb27e96b1502234432de5d63ed92018f2cedb6e0ed0c",
+          "qualified": true,
+          "full_distance": true
+        },
+        {
+          "mesh": "experiments/adaptive/runs/macbook-verified-graded-linear-repeated-v1/repeat-1-meshers-curved-tet10/mesh.npz",
+          "sha256": "598fd9c1c9c3be69d136cb27e96b1502234432de5d63ed92018f2cedb6e0ed0c",
+          "qualified": true,
+          "full_distance": true
+        },
+        {
+          "mesh": "experiments/adaptive/runs/macbook-verified-graded-linear-repeated-v1/repeat-2-meshers-curved-tet10/mesh.npz",
+          "sha256": "598fd9c1c9c3be69d136cb27e96b1502234432de5d63ed92018f2cedb6e0ed0c",
+          "qualified": true,
+          "full_distance": true
+        },
+        {
+          "mesh": "experiments/adaptive/runs/macbook-verified-graded-linear-repeated-v1/repeat-3-meshers-curved-tet10/mesh.npz",
+          "sha256": "598fd9c1c9c3be69d136cb27e96b1502234432de5d63ed92018f2cedb6e0ed0c",
+          "qualified": true,
+          "full_distance": true
+        },
+        {
+          "mesh": "experiments/adaptive/runs/macbook-verified-graded-linear-repeated-v1/repeat-4-meshers-curved-tet10/mesh.npz",
+          "sha256": "598fd9c1c9c3be69d136cb27e96b1502234432de5d63ed92018f2cedb6e0ed0c",
+          "qualified": true,
+          "full_distance": true
+        }
+      ]
+    },
+    {
+      "run": "experiments/adaptive/runs/macbook-verified-graded-periodic-repeated-v1",
+      "inputs": 28,
+      "replays": [
+        {
+          "mesh": "experiments/adaptive/runs/macbook-verified-graded-periodic-repeated-v1/repeat--1-meshers-curved-tet10/mesh.npz",
+          "sha256": "d9d5cdb7aa1bec97c0acca5892c46218e477b2c93fbbed27cc32cad9abb85434",
+          "qualified": true,
+          "full_distance": true
+        },
+        {
+          "mesh": "experiments/adaptive/runs/macbook-verified-graded-periodic-repeated-v1/repeat--1-meshers-tet4/mesh.npz",
+          "sha256": "f1af09eee148ae548c0b0b1ce37d156e12a60f27bdd7a31ddc6c5fd86f19b7d0",
+          "qualified": true,
+          "full_distance": true
+        },
+        {
+          "mesh": "experiments/adaptive/runs/macbook-verified-graded-periodic-repeated-v1/repeat-0-meshers-tet4/mesh.npz",
+          "sha256": "f1af09eee148ae548c0b0b1ce37d156e12a60f27bdd7a31ddc6c5fd86f19b7d0",
+          "qualified": true,
+          "full_distance": true
+        },
+        {
+          "mesh": "experiments/adaptive/runs/macbook-verified-graded-periodic-repeated-v1/repeat-0-meshers-curved-tet10/mesh.npz",
+          "sha256": "d9d5cdb7aa1bec97c0acca5892c46218e477b2c93fbbed27cc32cad9abb85434",
+          "qualified": true,
+          "full_distance": true
+        },
+        {
+          "mesh": "experiments/adaptive/runs/macbook-verified-graded-periodic-repeated-v1/repeat-1-meshers-curved-tet10/mesh.npz",
+          "sha256": "d9d5cdb7aa1bec97c0acca5892c46218e477b2c93fbbed27cc32cad9abb85434",
+          "qualified": true,
+          "full_distance": true
+        },
+        {
+          "mesh": "experiments/adaptive/runs/macbook-verified-graded-periodic-repeated-v1/repeat-1-meshers-tet4/mesh.npz",
+          "sha256": "f1af09eee148ae548c0b0b1ce37d156e12a60f27bdd7a31ddc6c5fd86f19b7d0",
+          "qualified": true,
+          "full_distance": true
+        },
+        {
+          "mesh": "experiments/adaptive/runs/macbook-verified-graded-periodic-repeated-v1/repeat-2-meshers-tet4/mesh.npz",
+          "sha256": "f1af09eee148ae548c0b0b1ce37d156e12a60f27bdd7a31ddc6c5fd86f19b7d0",
+          "qualified": true,
+          "full_distance": true
+        },
+        {
+          "mesh": "experiments/adaptive/runs/macbook-verified-graded-periodic-repeated-v1/repeat-2-meshers-curved-tet10/mesh.npz",
+          "sha256": "d9d5cdb7aa1bec97c0acca5892c46218e477b2c93fbbed27cc32cad9abb85434",
+          "qualified": true,
+          "full_distance": true
+        },
+        {
+          "mesh": "experiments/adaptive/runs/macbook-verified-graded-periodic-repeated-v1/repeat-3-meshers-curved-tet10/mesh.npz",
+          "sha256": "d9d5cdb7aa1bec97c0acca5892c46218e477b2c93fbbed27cc32cad9abb85434",
+          "qualified": true,
+          "full_distance": true
+        },
+        {
+          "mesh": "experiments/adaptive/runs/macbook-verified-graded-periodic-repeated-v1/repeat-3-meshers-tet4/mesh.npz",
+          "sha256": "f1af09eee148ae548c0b0b1ce37d156e12a60f27bdd7a31ddc6c5fd86f19b7d0",
+          "qualified": true,
+          "full_distance": true
+        },
+        {
+          "mesh": "experiments/adaptive/runs/macbook-verified-graded-periodic-repeated-v1/repeat-4-meshers-tet4/mesh.npz",
+          "sha256": "f1af09eee148ae548c0b0b1ce37d156e12a60f27bdd7a31ddc6c5fd86f19b7d0",
+          "qualified": true,
+          "full_distance": true
+        },
+        {
+          "mesh": "experiments/adaptive/runs/macbook-verified-graded-periodic-repeated-v1/repeat-4-meshers-curved-tet10/mesh.npz",
+          "sha256": "d9d5cdb7aa1bec97c0acca5892c46218e477b2c93fbbed27cc32cad9abb85434",
+          "qualified": true,
+          "full_distance": true
+        }
+      ]
+    },
+    {
+      "run": "experiments/adaptive/runs/macbook-verified-gyroid-repeated-v1",
+      "inputs": 28,
+      "replays": [
+        {
+          "mesh": "experiments/adaptive/runs/macbook-verified-gyroid-repeated-v1/repeat--1-meshers-curved-tet10/mesh.npz",
+          "sha256": "79a51c01129afeb63213431a780f755d5a0db3cf849db2f7d4eb0378cd57e9d0",
+          "qualified": true,
+          "full_distance": true,
+          "prior_field_mesh_arrays_exact": true,
+          "prior_field_mesh_source": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-interior-default-gyroid-v1/repeat-0-meshers-curved-known/mesh.npz"
+        },
+        {
+          "mesh": "experiments/adaptive/runs/macbook-verified-gyroid-repeated-v1/repeat--1-meshers-tet4/mesh.npz",
+          "sha256": "dbbca07e30560d3c5f6f6afb42316bdbf38a6d7a97fc78cf221e294b8f868b40",
+          "qualified": true,
+          "full_distance": true
+        },
+        {
+          "mesh": "experiments/adaptive/runs/macbook-verified-gyroid-repeated-v1/repeat-0-meshers-tet4/mesh.npz",
+          "sha256": "dbbca07e30560d3c5f6f6afb42316bdbf38a6d7a97fc78cf221e294b8f868b40",
+          "qualified": true,
+          "full_distance": true
+        },
+        {
+          "mesh": "experiments/adaptive/runs/macbook-verified-gyroid-repeated-v1/repeat-0-meshers-curved-tet10/mesh.npz",
+          "sha256": "79a51c01129afeb63213431a780f755d5a0db3cf849db2f7d4eb0378cd57e9d0",
+          "qualified": true,
+          "full_distance": true,
+          "prior_field_mesh_arrays_exact": true,
+          "prior_field_mesh_source": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-interior-default-gyroid-v1/repeat-0-meshers-curved-known/mesh.npz"
+        },
+        {
+          "mesh": "experiments/adaptive/runs/macbook-verified-gyroid-repeated-v1/repeat-1-meshers-curved-tet10/mesh.npz",
+          "sha256": "79a51c01129afeb63213431a780f755d5a0db3cf849db2f7d4eb0378cd57e9d0",
+          "qualified": true,
+          "full_distance": true,
+          "prior_field_mesh_arrays_exact": true,
+          "prior_field_mesh_source": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-interior-default-gyroid-v1/repeat-0-meshers-curved-known/mesh.npz"
+        },
+        {
+          "mesh": "experiments/adaptive/runs/macbook-verified-gyroid-repeated-v1/repeat-1-meshers-tet4/mesh.npz",
+          "sha256": "dbbca07e30560d3c5f6f6afb42316bdbf38a6d7a97fc78cf221e294b8f868b40",
+          "qualified": true,
+          "full_distance": true
+        },
+        {
+          "mesh": "experiments/adaptive/runs/macbook-verified-gyroid-repeated-v1/repeat-2-meshers-tet4/mesh.npz",
+          "sha256": "dbbca07e30560d3c5f6f6afb42316bdbf38a6d7a97fc78cf221e294b8f868b40",
+          "qualified": true,
+          "full_distance": true
+        },
+        {
+          "mesh": "experiments/adaptive/runs/macbook-verified-gyroid-repeated-v1/repeat-2-meshers-curved-tet10/mesh.npz",
+          "sha256": "79a51c01129afeb63213431a780f755d5a0db3cf849db2f7d4eb0378cd57e9d0",
+          "qualified": true,
+          "full_distance": true,
+          "prior_field_mesh_arrays_exact": true,
+          "prior_field_mesh_source": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-interior-default-gyroid-v1/repeat-0-meshers-curved-known/mesh.npz"
+        },
+        {
+          "mesh": "experiments/adaptive/runs/macbook-verified-gyroid-repeated-v1/repeat-3-meshers-curved-tet10/mesh.npz",
+          "sha256": "79a51c01129afeb63213431a780f755d5a0db3cf849db2f7d4eb0378cd57e9d0",
+          "qualified": true,
+          "full_distance": true,
+          "prior_field_mesh_arrays_exact": true,
+          "prior_field_mesh_source": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-interior-default-gyroid-v1/repeat-0-meshers-curved-known/mesh.npz"
+        },
+        {
+          "mesh": "experiments/adaptive/runs/macbook-verified-gyroid-repeated-v1/repeat-3-meshers-tet4/mesh.npz",
+          "sha256": "dbbca07e30560d3c5f6f6afb42316bdbf38a6d7a97fc78cf221e294b8f868b40",
+          "qualified": true,
+          "full_distance": true
+        },
+        {
+          "mesh": "experiments/adaptive/runs/macbook-verified-gyroid-repeated-v1/repeat-4-meshers-tet4/mesh.npz",
+          "sha256": "dbbca07e30560d3c5f6f6afb42316bdbf38a6d7a97fc78cf221e294b8f868b40",
+          "qualified": true,
+          "full_distance": true
+        },
+        {
+          "mesh": "experiments/adaptive/runs/macbook-verified-gyroid-repeated-v1/repeat-4-meshers-curved-tet10/mesh.npz",
+          "sha256": "79a51c01129afeb63213431a780f755d5a0db3cf849db2f7d4eb0378cd57e9d0",
+          "qualified": true,
+          "full_distance": true,
+          "prior_field_mesh_arrays_exact": true,
+          "prior_field_mesh_source": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-interior-default-gyroid-v1/repeat-0-meshers-curved-known/mesh.npz"
+        }
+      ]
+    },
+    {
+      "run": "experiments/adaptive/runs/macbook-verified-lattice-repeated-v1",
+      "inputs": 28,
+      "replays": [
+        {
+          "mesh": "experiments/adaptive/runs/macbook-verified-lattice-repeated-v1/repeat--1-actual-modified-straight-tet10/mesh.npz",
+          "sha256": "38754aa5b9464a4f9fe1b2280e1e5e0021808127f041a6a91e904045cfc295b5",
+          "qualified": true,
+          "full_distance": true
+        },
+        {
+          "mesh": "experiments/adaptive/runs/macbook-verified-lattice-repeated-v1/repeat--1-meshers-curved-tet10/mesh.npz",
+          "sha256": "de8b38a4c87fb092248230cc2ddc52626b3d6e75186dc494fd2ee6f148237755",
+          "qualified": true,
+          "full_distance": true,
+          "prior_field_mesh_arrays_exact": true,
+          "prior_field_mesh_source": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-interior-default-lattice-v1/repeat-0-meshers-curved-known/mesh.npz"
+        },
+        {
+          "mesh": "experiments/adaptive/runs/macbook-verified-lattice-repeated-v1/repeat--1-meshers-tet4/mesh.npz",
+          "sha256": "422d0384f6904f0ae8d3c1c4e763afd163fe62c98406ec12229641ada448c108",
+          "qualified": true,
+          "full_distance": true
+        },
+        {
+          "mesh": "experiments/adaptive/runs/macbook-verified-lattice-repeated-v1/repeat--1-actual-modified-tet4/mesh.npz",
+          "sha256": "dfeca5ba6f6eb4e6109ecffe46f79818ab29001a3bf807010ec00008b8b591a2",
+          "qualified": true,
+          "full_distance": true
+        },
+        {
+          "mesh": "experiments/adaptive/runs/macbook-verified-lattice-repeated-v1/repeat-0-actual-modified-tet4/mesh.npz",
+          "sha256": "dfeca5ba6f6eb4e6109ecffe46f79818ab29001a3bf807010ec00008b8b591a2",
+          "qualified": true,
+          "full_distance": true
+        },
+        {
+          "mesh": "experiments/adaptive/runs/macbook-verified-lattice-repeated-v1/repeat-0-meshers-tet4/mesh.npz",
+          "sha256": "422d0384f6904f0ae8d3c1c4e763afd163fe62c98406ec12229641ada448c108",
+          "qualified": true,
+          "full_distance": true
+        },
+        {
+          "mesh": "experiments/adaptive/runs/macbook-verified-lattice-repeated-v1/repeat-0-meshers-curved-tet10/mesh.npz",
+          "sha256": "de8b38a4c87fb092248230cc2ddc52626b3d6e75186dc494fd2ee6f148237755",
+          "qualified": true,
+          "full_distance": true,
+          "prior_field_mesh_arrays_exact": true,
+          "prior_field_mesh_source": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-interior-default-lattice-v1/repeat-0-meshers-curved-known/mesh.npz"
+        },
+        {
+          "mesh": "experiments/adaptive/runs/macbook-verified-lattice-repeated-v1/repeat-0-actual-modified-straight-tet10/mesh.npz",
+          "sha256": "38754aa5b9464a4f9fe1b2280e1e5e0021808127f041a6a91e904045cfc295b5",
+          "qualified": true,
+          "full_distance": true
+        },
+        {
+          "mesh": "experiments/adaptive/runs/macbook-verified-lattice-repeated-v1/repeat-1-actual-modified-straight-tet10/mesh.npz",
+          "sha256": "38754aa5b9464a4f9fe1b2280e1e5e0021808127f041a6a91e904045cfc295b5",
+          "qualified": true,
+          "full_distance": true
+        },
+        {
+          "mesh": "experiments/adaptive/runs/macbook-verified-lattice-repeated-v1/repeat-1-meshers-curved-tet10/mesh.npz",
+          "sha256": "de8b38a4c87fb092248230cc2ddc52626b3d6e75186dc494fd2ee6f148237755",
+          "qualified": true,
+          "full_distance": true,
+          "prior_field_mesh_arrays_exact": true,
+          "prior_field_mesh_source": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-interior-default-lattice-v1/repeat-0-meshers-curved-known/mesh.npz"
+        },
+        {
+          "mesh": "experiments/adaptive/runs/macbook-verified-lattice-repeated-v1/repeat-1-meshers-tet4/mesh.npz",
+          "sha256": "422d0384f6904f0ae8d3c1c4e763afd163fe62c98406ec12229641ada448c108",
+          "qualified": true,
+          "full_distance": true
+        },
+        {
+          "mesh": "experiments/adaptive/runs/macbook-verified-lattice-repeated-v1/repeat-1-actual-modified-tet4/mesh.npz",
+          "sha256": "dfeca5ba6f6eb4e6109ecffe46f79818ab29001a3bf807010ec00008b8b591a2",
+          "qualified": true,
+          "full_distance": true
+        },
+        {
+          "mesh": "experiments/adaptive/runs/macbook-verified-lattice-repeated-v1/repeat-2-actual-modified-tet4/mesh.npz",
+          "sha256": "dfeca5ba6f6eb4e6109ecffe46f79818ab29001a3bf807010ec00008b8b591a2",
+          "qualified": true,
+          "full_distance": true
+        },
+        {
+          "mesh": "experiments/adaptive/runs/macbook-verified-lattice-repeated-v1/repeat-2-meshers-tet4/mesh.npz",
+          "sha256": "422d0384f6904f0ae8d3c1c4e763afd163fe62c98406ec12229641ada448c108",
+          "qualified": true,
+          "full_distance": true
+        },
+        {
+          "mesh": "experiments/adaptive/runs/macbook-verified-lattice-repeated-v1/repeat-2-meshers-curved-tet10/mesh.npz",
+          "sha256": "de8b38a4c87fb092248230cc2ddc52626b3d6e75186dc494fd2ee6f148237755",
+          "qualified": true,
+          "full_distance": true,
+          "prior_field_mesh_arrays_exact": true,
+          "prior_field_mesh_source": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-interior-default-lattice-v1/repeat-0-meshers-curved-known/mesh.npz"
+        },
+        {
+          "mesh": "experiments/adaptive/runs/macbook-verified-lattice-repeated-v1/repeat-2-actual-modified-straight-tet10/mesh.npz",
+          "sha256": "38754aa5b9464a4f9fe1b2280e1e5e0021808127f041a6a91e904045cfc295b5",
+          "qualified": true,
+          "full_distance": true
+        },
+        {
+          "mesh": "experiments/adaptive/runs/macbook-verified-lattice-repeated-v1/repeat-3-actual-modified-straight-tet10/mesh.npz",
+          "sha256": "38754aa5b9464a4f9fe1b2280e1e5e0021808127f041a6a91e904045cfc295b5",
+          "qualified": true,
+          "full_distance": true
+        },
+        {
+          "mesh": "experiments/adaptive/runs/macbook-verified-lattice-repeated-v1/repeat-3-meshers-curved-tet10/mesh.npz",
+          "sha256": "de8b38a4c87fb092248230cc2ddc52626b3d6e75186dc494fd2ee6f148237755",
+          "qualified": true,
+          "full_distance": true,
+          "prior_field_mesh_arrays_exact": true,
+          "prior_field_mesh_source": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-interior-default-lattice-v1/repeat-0-meshers-curved-known/mesh.npz"
+        },
+        {
+          "mesh": "experiments/adaptive/runs/macbook-verified-lattice-repeated-v1/repeat-3-meshers-tet4/mesh.npz",
+          "sha256": "422d0384f6904f0ae8d3c1c4e763afd163fe62c98406ec12229641ada448c108",
+          "qualified": true,
+          "full_distance": true
+        },
+        {
+          "mesh": "experiments/adaptive/runs/macbook-verified-lattice-repeated-v1/repeat-3-actual-modified-tet4/mesh.npz",
+          "sha256": "dfeca5ba6f6eb4e6109ecffe46f79818ab29001a3bf807010ec00008b8b591a2",
+          "qualified": true,
+          "full_distance": true
+        },
+        {
+          "mesh": "experiments/adaptive/runs/macbook-verified-lattice-repeated-v1/repeat-4-actual-modified-tet4/mesh.npz",
+          "sha256": "dfeca5ba6f6eb4e6109ecffe46f79818ab29001a3bf807010ec00008b8b591a2",
+          "qualified": true,
+          "full_distance": true
+        },
+        {
+          "mesh": "experiments/adaptive/runs/macbook-verified-lattice-repeated-v1/repeat-4-meshers-tet4/mesh.npz",
+          "sha256": "422d0384f6904f0ae8d3c1c4e763afd163fe62c98406ec12229641ada448c108",
+          "qualified": true,
+          "full_distance": true
+        },
+        {
+          "mesh": "experiments/adaptive/runs/macbook-verified-lattice-repeated-v1/repeat-4-meshers-curved-tet10/mesh.npz",
+          "sha256": "de8b38a4c87fb092248230cc2ddc52626b3d6e75186dc494fd2ee6f148237755",
+          "qualified": true,
+          "full_distance": true,
+          "prior_field_mesh_arrays_exact": true,
+          "prior_field_mesh_source": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-interior-default-lattice-v1/repeat-0-meshers-curved-known/mesh.npz"
+        },
+        {
+          "mesh": "experiments/adaptive/runs/macbook-verified-lattice-repeated-v1/repeat-4-actual-modified-straight-tet10/mesh.npz",
+          "sha256": "38754aa5b9464a4f9fe1b2280e1e5e0021808127f041a6a91e904045cfc295b5",
+          "qualified": true,
+          "full_distance": true
+        }
+      ]
+    },
+    {
+      "run": "experiments/adaptive/runs/macbook-verified-lattice-uniform37-repeated-v1",
+      "inputs": 29,
+      "replays": [
+        {
+          "mesh": "experiments/adaptive/runs/macbook-verified-lattice-uniform37-repeated-v1/repeat--1-actual-modified-straight-tet10/mesh.npz",
+          "sha256": "38754aa5b9464a4f9fe1b2280e1e5e0021808127f041a6a91e904045cfc295b5",
+          "qualified": true,
+          "full_distance": true
+        },
+        {
+          "mesh": "experiments/adaptive/runs/macbook-verified-lattice-uniform37-repeated-v1/repeat--1-meshers-uniform37-curved-tet10/mesh.npz",
+          "sha256": "2de0d1a48fa842b96ff7e190bde346a886698e04f2177f8a06f879fee515f253",
+          "qualified": true,
+          "full_distance": true,
+          "prior_field_mesh_arrays_exact": false,
+          "prior_field_mesh_source": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-interior-default-lattice-v1/repeat-0-meshers-curved-known/mesh.npz"
+        },
+        {
+          "mesh": "experiments/adaptive/runs/macbook-verified-lattice-uniform37-repeated-v1/repeat-0-meshers-uniform37-curved-tet10/mesh.npz",
+          "sha256": "2de0d1a48fa842b96ff7e190bde346a886698e04f2177f8a06f879fee515f253",
+          "qualified": true,
+          "full_distance": true,
+          "prior_field_mesh_arrays_exact": false,
+          "prior_field_mesh_source": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-interior-default-lattice-v1/repeat-0-meshers-curved-known/mesh.npz"
+        },
+        {
+          "mesh": "experiments/adaptive/runs/macbook-verified-lattice-uniform37-repeated-v1/repeat-0-actual-modified-straight-tet10/mesh.npz",
+          "sha256": "38754aa5b9464a4f9fe1b2280e1e5e0021808127f041a6a91e904045cfc295b5",
+          "qualified": true,
+          "full_distance": true
+        },
+        {
+          "mesh": "experiments/adaptive/runs/macbook-verified-lattice-uniform37-repeated-v1/repeat-1-actual-modified-straight-tet10/mesh.npz",
+          "sha256": "38754aa5b9464a4f9fe1b2280e1e5e0021808127f041a6a91e904045cfc295b5",
+          "qualified": true,
+          "full_distance": true
+        },
+        {
+          "mesh": "experiments/adaptive/runs/macbook-verified-lattice-uniform37-repeated-v1/repeat-1-meshers-uniform37-curved-tet10/mesh.npz",
+          "sha256": "2de0d1a48fa842b96ff7e190bde346a886698e04f2177f8a06f879fee515f253",
+          "qualified": true,
+          "full_distance": true,
+          "prior_field_mesh_arrays_exact": false,
+          "prior_field_mesh_source": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-interior-default-lattice-v1/repeat-0-meshers-curved-known/mesh.npz"
+        },
+        {
+          "mesh": "experiments/adaptive/runs/macbook-verified-lattice-uniform37-repeated-v1/repeat-2-meshers-uniform37-curved-tet10/mesh.npz",
+          "sha256": "2de0d1a48fa842b96ff7e190bde346a886698e04f2177f8a06f879fee515f253",
+          "qualified": true,
+          "full_distance": true,
+          "prior_field_mesh_arrays_exact": false,
+          "prior_field_mesh_source": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-interior-default-lattice-v1/repeat-0-meshers-curved-known/mesh.npz"
+        },
+        {
+          "mesh": "experiments/adaptive/runs/macbook-verified-lattice-uniform37-repeated-v1/repeat-2-actual-modified-straight-tet10/mesh.npz",
+          "sha256": "38754aa5b9464a4f9fe1b2280e1e5e0021808127f041a6a91e904045cfc295b5",
+          "qualified": true,
+          "full_distance": true
+        },
+        {
+          "mesh": "experiments/adaptive/runs/macbook-verified-lattice-uniform37-repeated-v1/repeat-3-actual-modified-straight-tet10/mesh.npz",
+          "sha256": "38754aa5b9464a4f9fe1b2280e1e5e0021808127f041a6a91e904045cfc295b5",
+          "qualified": true,
+          "full_distance": true
+        },
+        {
+          "mesh": "experiments/adaptive/runs/macbook-verified-lattice-uniform37-repeated-v1/repeat-3-meshers-uniform37-curved-tet10/mesh.npz",
+          "sha256": "2de0d1a48fa842b96ff7e190bde346a886698e04f2177f8a06f879fee515f253",
+          "qualified": true,
+          "full_distance": true,
+          "prior_field_mesh_arrays_exact": false,
+          "prior_field_mesh_source": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-interior-default-lattice-v1/repeat-0-meshers-curved-known/mesh.npz"
+        },
+        {
+          "mesh": "experiments/adaptive/runs/macbook-verified-lattice-uniform37-repeated-v1/repeat-4-meshers-uniform37-curved-tet10/mesh.npz",
+          "sha256": "2de0d1a48fa842b96ff7e190bde346a886698e04f2177f8a06f879fee515f253",
+          "qualified": true,
+          "full_distance": true,
+          "prior_field_mesh_arrays_exact": false,
+          "prior_field_mesh_source": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-interior-default-lattice-v1/repeat-0-meshers-curved-known/mesh.npz"
+        },
+        {
+          "mesh": "experiments/adaptive/runs/macbook-verified-lattice-uniform37-repeated-v1/repeat-4-actual-modified-straight-tet10/mesh.npz",
+          "sha256": "38754aa5b9464a4f9fe1b2280e1e5e0021808127f041a6a91e904045cfc295b5",
+          "qualified": true,
+          "full_distance": true
+        }
+      ]
+    },
+    {
+      "run": "experiments/adaptive/runs/macbook-verified-schwarz-p-repeated-v1",
+      "inputs": 28,
+      "replays": [
+        {
+          "mesh": "experiments/adaptive/runs/macbook-verified-schwarz-p-repeated-v1/repeat--1-actual-modified-straight-tet10/mesh.npz",
+          "sha256": "5b4244b04c34090da6349dd5fdeb4b2afb1083437e3e00c8e1a9724051ee0a28",
+          "qualified": true,
+          "full_distance": true
+        },
+        {
+          "mesh": "experiments/adaptive/runs/macbook-verified-schwarz-p-repeated-v1/repeat--1-meshers-curved-tet10/mesh.npz",
+          "sha256": "dc92e7f1e6534c58903be3cf7d1b78eb8283b0ff038ca719856b671b2b6f3d27",
+          "qualified": true,
+          "full_distance": true,
+          "prior_field_mesh_arrays_exact": true,
+          "prior_field_mesh_source": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-interior-default-schwarz-v1/repeat-0-meshers-curved-known/mesh.npz"
+        },
+        {
+          "mesh": "experiments/adaptive/runs/macbook-verified-schwarz-p-repeated-v1/repeat--1-meshers-tet4/mesh.npz",
+          "sha256": "6efdb19de5c983a5c7c3280921c43d087b86511d5e36ded93840bfedcc0c81c9",
+          "qualified": true,
+          "full_distance": true
+        },
+        {
+          "mesh": "experiments/adaptive/runs/macbook-verified-schwarz-p-repeated-v1/repeat--1-actual-modified-tet4/mesh.npz",
+          "sha256": "2f87c47162ebaa5049cbe91ed67b9a726e4f77aa4545da96d81783f80c45838e",
+          "qualified": true,
+          "full_distance": true
+        },
+        {
+          "mesh": "experiments/adaptive/runs/macbook-verified-schwarz-p-repeated-v1/repeat-0-actual-modified-tet4/mesh.npz",
+          "sha256": "2f87c47162ebaa5049cbe91ed67b9a726e4f77aa4545da96d81783f80c45838e",
+          "qualified": true,
+          "full_distance": true
+        },
+        {
+          "mesh": "experiments/adaptive/runs/macbook-verified-schwarz-p-repeated-v1/repeat-0-meshers-tet4/mesh.npz",
+          "sha256": "6efdb19de5c983a5c7c3280921c43d087b86511d5e36ded93840bfedcc0c81c9",
+          "qualified": true,
+          "full_distance": true
+        },
+        {
+          "mesh": "experiments/adaptive/runs/macbook-verified-schwarz-p-repeated-v1/repeat-0-meshers-curved-tet10/mesh.npz",
+          "sha256": "dc92e7f1e6534c58903be3cf7d1b78eb8283b0ff038ca719856b671b2b6f3d27",
+          "qualified": true,
+          "full_distance": true,
+          "prior_field_mesh_arrays_exact": true,
+          "prior_field_mesh_source": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-interior-default-schwarz-v1/repeat-0-meshers-curved-known/mesh.npz"
+        },
+        {
+          "mesh": "experiments/adaptive/runs/macbook-verified-schwarz-p-repeated-v1/repeat-0-actual-modified-straight-tet10/mesh.npz",
+          "sha256": "5b4244b04c34090da6349dd5fdeb4b2afb1083437e3e00c8e1a9724051ee0a28",
+          "qualified": true,
+          "full_distance": true
+        },
+        {
+          "mesh": "experiments/adaptive/runs/macbook-verified-schwarz-p-repeated-v1/repeat-1-actual-modified-straight-tet10/mesh.npz",
+          "sha256": "5b4244b04c34090da6349dd5fdeb4b2afb1083437e3e00c8e1a9724051ee0a28",
+          "qualified": true,
+          "full_distance": true
+        },
+        {
+          "mesh": "experiments/adaptive/runs/macbook-verified-schwarz-p-repeated-v1/repeat-1-meshers-curved-tet10/mesh.npz",
+          "sha256": "dc92e7f1e6534c58903be3cf7d1b78eb8283b0ff038ca719856b671b2b6f3d27",
+          "qualified": true,
+          "full_distance": true,
+          "prior_field_mesh_arrays_exact": true,
+          "prior_field_mesh_source": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-interior-default-schwarz-v1/repeat-0-meshers-curved-known/mesh.npz"
+        },
+        {
+          "mesh": "experiments/adaptive/runs/macbook-verified-schwarz-p-repeated-v1/repeat-1-meshers-tet4/mesh.npz",
+          "sha256": "6efdb19de5c983a5c7c3280921c43d087b86511d5e36ded93840bfedcc0c81c9",
+          "qualified": true,
+          "full_distance": true
+        },
+        {
+          "mesh": "experiments/adaptive/runs/macbook-verified-schwarz-p-repeated-v1/repeat-1-actual-modified-tet4/mesh.npz",
+          "sha256": "2f87c47162ebaa5049cbe91ed67b9a726e4f77aa4545da96d81783f80c45838e",
+          "qualified": true,
+          "full_distance": true
+        },
+        {
+          "mesh": "experiments/adaptive/runs/macbook-verified-schwarz-p-repeated-v1/repeat-2-actual-modified-tet4/mesh.npz",
+          "sha256": "2f87c47162ebaa5049cbe91ed67b9a726e4f77aa4545da96d81783f80c45838e",
+          "qualified": true,
+          "full_distance": true
+        },
+        {
+          "mesh": "experiments/adaptive/runs/macbook-verified-schwarz-p-repeated-v1/repeat-2-meshers-tet4/mesh.npz",
+          "sha256": "6efdb19de5c983a5c7c3280921c43d087b86511d5e36ded93840bfedcc0c81c9",
+          "qualified": true,
+          "full_distance": true
+        },
+        {
+          "mesh": "experiments/adaptive/runs/macbook-verified-schwarz-p-repeated-v1/repeat-2-meshers-curved-tet10/mesh.npz",
+          "sha256": "dc92e7f1e6534c58903be3cf7d1b78eb8283b0ff038ca719856b671b2b6f3d27",
+          "qualified": true,
+          "full_distance": true,
+          "prior_field_mesh_arrays_exact": true,
+          "prior_field_mesh_source": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-interior-default-schwarz-v1/repeat-0-meshers-curved-known/mesh.npz"
+        },
+        {
+          "mesh": "experiments/adaptive/runs/macbook-verified-schwarz-p-repeated-v1/repeat-2-actual-modified-straight-tet10/mesh.npz",
+          "sha256": "5b4244b04c34090da6349dd5fdeb4b2afb1083437e3e00c8e1a9724051ee0a28",
+          "qualified": true,
+          "full_distance": true
+        },
+        {
+          "mesh": "experiments/adaptive/runs/macbook-verified-schwarz-p-repeated-v1/repeat-3-actual-modified-straight-tet10/mesh.npz",
+          "sha256": "5b4244b04c34090da6349dd5fdeb4b2afb1083437e3e00c8e1a9724051ee0a28",
+          "qualified": true,
+          "full_distance": true
+        },
+        {
+          "mesh": "experiments/adaptive/runs/macbook-verified-schwarz-p-repeated-v1/repeat-3-meshers-curved-tet10/mesh.npz",
+          "sha256": "dc92e7f1e6534c58903be3cf7d1b78eb8283b0ff038ca719856b671b2b6f3d27",
+          "qualified": true,
+          "full_distance": true,
+          "prior_field_mesh_arrays_exact": true,
+          "prior_field_mesh_source": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-interior-default-schwarz-v1/repeat-0-meshers-curved-known/mesh.npz"
+        },
+        {
+          "mesh": "experiments/adaptive/runs/macbook-verified-schwarz-p-repeated-v1/repeat-3-meshers-tet4/mesh.npz",
+          "sha256": "6efdb19de5c983a5c7c3280921c43d087b86511d5e36ded93840bfedcc0c81c9",
+          "qualified": true,
+          "full_distance": true
+        },
+        {
+          "mesh": "experiments/adaptive/runs/macbook-verified-schwarz-p-repeated-v1/repeat-3-actual-modified-tet4/mesh.npz",
+          "sha256": "2f87c47162ebaa5049cbe91ed67b9a726e4f77aa4545da96d81783f80c45838e",
+          "qualified": true,
+          "full_distance": true
+        },
+        {
+          "mesh": "experiments/adaptive/runs/macbook-verified-schwarz-p-repeated-v1/repeat-4-actual-modified-tet4/mesh.npz",
+          "sha256": "2f87c47162ebaa5049cbe91ed67b9a726e4f77aa4545da96d81783f80c45838e",
+          "qualified": true,
+          "full_distance": true
+        },
+        {
+          "mesh": "experiments/adaptive/runs/macbook-verified-schwarz-p-repeated-v1/repeat-4-meshers-tet4/mesh.npz",
+          "sha256": "6efdb19de5c983a5c7c3280921c43d087b86511d5e36ded93840bfedcc0c81c9",
+          "qualified": true,
+          "full_distance": true
+        },
+        {
+          "mesh": "experiments/adaptive/runs/macbook-verified-schwarz-p-repeated-v1/repeat-4-meshers-curved-tet10/mesh.npz",
+          "sha256": "dc92e7f1e6534c58903be3cf7d1b78eb8283b0ff038ca719856b671b2b6f3d27",
+          "qualified": true,
+          "full_distance": true,
+          "prior_field_mesh_arrays_exact": true,
+          "prior_field_mesh_source": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-interior-default-schwarz-v1/repeat-0-meshers-curved-known/mesh.npz"
+        },
+        {
+          "mesh": "experiments/adaptive/runs/macbook-verified-schwarz-p-repeated-v1/repeat-4-actual-modified-straight-tet10/mesh.npz",
+          "sha256": "5b4244b04c34090da6349dd5fdeb4b2afb1083437e3e00c8e1a9724051ee0a28",
+          "qualified": true,
+          "full_distance": true
+        }
+      ]
+    },
+    {
+      "run": "experiments/adaptive/runs/macbook-verified-spinodoid-anisotropic-repeated-v1",
+      "inputs": 28,
+      "replays": [
+        {
+          "mesh": "experiments/adaptive/runs/macbook-verified-spinodoid-anisotropic-repeated-v1/repeat--1-meshers-curved-tet10/mesh.npz",
+          "sha256": "a6d79122d5b7650f23f16c3a7db428405bf9c0078181381b476e58ed9dfc49fb",
+          "qualified": true,
+          "full_distance": true
+        },
+        {
+          "mesh": "experiments/adaptive/runs/macbook-verified-spinodoid-anisotropic-repeated-v1/repeat--1-meshers-tet4/mesh.npz",
+          "sha256": "3da4add8211b644ad88ec3fde1c917cd5efa8cbbecf4d26b98d217ea4d67f046",
+          "qualified": true,
+          "full_distance": true
+        },
+        {
+          "mesh": "experiments/adaptive/runs/macbook-verified-spinodoid-anisotropic-repeated-v1/repeat-0-meshers-tet4/mesh.npz",
+          "sha256": "3da4add8211b644ad88ec3fde1c917cd5efa8cbbecf4d26b98d217ea4d67f046",
+          "qualified": true,
+          "full_distance": true
+        },
+        {
+          "mesh": "experiments/adaptive/runs/macbook-verified-spinodoid-anisotropic-repeated-v1/repeat-0-meshers-curved-tet10/mesh.npz",
+          "sha256": "a6d79122d5b7650f23f16c3a7db428405bf9c0078181381b476e58ed9dfc49fb",
+          "qualified": true,
+          "full_distance": true
+        },
+        {
+          "mesh": "experiments/adaptive/runs/macbook-verified-spinodoid-anisotropic-repeated-v1/repeat-1-meshers-curved-tet10/mesh.npz",
+          "sha256": "a6d79122d5b7650f23f16c3a7db428405bf9c0078181381b476e58ed9dfc49fb",
+          "qualified": true,
+          "full_distance": true
+        },
+        {
+          "mesh": "experiments/adaptive/runs/macbook-verified-spinodoid-anisotropic-repeated-v1/repeat-1-meshers-tet4/mesh.npz",
+          "sha256": "3da4add8211b644ad88ec3fde1c917cd5efa8cbbecf4d26b98d217ea4d67f046",
+          "qualified": true,
+          "full_distance": true
+        },
+        {
+          "mesh": "experiments/adaptive/runs/macbook-verified-spinodoid-anisotropic-repeated-v1/repeat-2-meshers-tet4/mesh.npz",
+          "sha256": "3da4add8211b644ad88ec3fde1c917cd5efa8cbbecf4d26b98d217ea4d67f046",
+          "qualified": true,
+          "full_distance": true
+        },
+        {
+          "mesh": "experiments/adaptive/runs/macbook-verified-spinodoid-anisotropic-repeated-v1/repeat-2-meshers-curved-tet10/mesh.npz",
+          "sha256": "a6d79122d5b7650f23f16c3a7db428405bf9c0078181381b476e58ed9dfc49fb",
+          "qualified": true,
+          "full_distance": true
+        },
+        {
+          "mesh": "experiments/adaptive/runs/macbook-verified-spinodoid-anisotropic-repeated-v1/repeat-3-meshers-curved-tet10/mesh.npz",
+          "sha256": "a6d79122d5b7650f23f16c3a7db428405bf9c0078181381b476e58ed9dfc49fb",
+          "qualified": true,
+          "full_distance": true
+        },
+        {
+          "mesh": "experiments/adaptive/runs/macbook-verified-spinodoid-anisotropic-repeated-v1/repeat-3-meshers-tet4/mesh.npz",
+          "sha256": "3da4add8211b644ad88ec3fde1c917cd5efa8cbbecf4d26b98d217ea4d67f046",
+          "qualified": true,
+          "full_distance": true
+        },
+        {
+          "mesh": "experiments/adaptive/runs/macbook-verified-spinodoid-anisotropic-repeated-v1/repeat-4-meshers-tet4/mesh.npz",
+          "sha256": "3da4add8211b644ad88ec3fde1c917cd5efa8cbbecf4d26b98d217ea4d67f046",
+          "qualified": true,
+          "full_distance": true
+        },
+        {
+          "mesh": "experiments/adaptive/runs/macbook-verified-spinodoid-anisotropic-repeated-v1/repeat-4-meshers-curved-tet10/mesh.npz",
+          "sha256": "a6d79122d5b7650f23f16c3a7db428405bf9c0078181381b476e58ed9dfc49fb",
+          "qualified": true,
+          "full_distance": true
+        }
+      ]
+    },
+    {
+      "run": "experiments/adaptive/runs/macbook-verified-spinodoid-repeated-v1",
+      "inputs": 28,
+      "replays": [
+        {
+          "mesh": "experiments/adaptive/runs/macbook-verified-spinodoid-repeated-v1/repeat--1-meshers-curved-tet10/mesh.npz",
+          "sha256": "3bfbb279a6778d64f0f6d7896a353477a0258a1580f47d9f89773853d121fb30",
+          "qualified": true,
+          "full_distance": true,
+          "prior_field_mesh_arrays_exact": true,
+          "prior_field_mesh_source": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-interior-default-spinodoid-v1/repeat-0-meshers-curved-known/mesh.npz"
+        },
+        {
+          "mesh": "experiments/adaptive/runs/macbook-verified-spinodoid-repeated-v1/repeat--1-meshers-tet4/mesh.npz",
+          "sha256": "9a8981586d1aa51cb24a6d6f5ce8e2ee6015f9d3da9a38d495c37401fcf7ab73",
+          "qualified": true,
+          "full_distance": true
+        },
+        {
+          "mesh": "experiments/adaptive/runs/macbook-verified-spinodoid-repeated-v1/repeat-0-meshers-tet4/mesh.npz",
+          "sha256": "9a8981586d1aa51cb24a6d6f5ce8e2ee6015f9d3da9a38d495c37401fcf7ab73",
+          "qualified": true,
+          "full_distance": true
+        },
+        {
+          "mesh": "experiments/adaptive/runs/macbook-verified-spinodoid-repeated-v1/repeat-0-meshers-curved-tet10/mesh.npz",
+          "sha256": "3bfbb279a6778d64f0f6d7896a353477a0258a1580f47d9f89773853d121fb30",
+          "qualified": true,
+          "full_distance": true,
+          "prior_field_mesh_arrays_exact": true,
+          "prior_field_mesh_source": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-interior-default-spinodoid-v1/repeat-0-meshers-curved-known/mesh.npz"
+        },
+        {
+          "mesh": "experiments/adaptive/runs/macbook-verified-spinodoid-repeated-v1/repeat-1-meshers-curved-tet10/mesh.npz",
+          "sha256": "3bfbb279a6778d64f0f6d7896a353477a0258a1580f47d9f89773853d121fb30",
+          "qualified": true,
+          "full_distance": true,
+          "prior_field_mesh_arrays_exact": true,
+          "prior_field_mesh_source": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-interior-default-spinodoid-v1/repeat-0-meshers-curved-known/mesh.npz"
+        },
+        {
+          "mesh": "experiments/adaptive/runs/macbook-verified-spinodoid-repeated-v1/repeat-1-meshers-tet4/mesh.npz",
+          "sha256": "9a8981586d1aa51cb24a6d6f5ce8e2ee6015f9d3da9a38d495c37401fcf7ab73",
+          "qualified": true,
+          "full_distance": true
+        },
+        {
+          "mesh": "experiments/adaptive/runs/macbook-verified-spinodoid-repeated-v1/repeat-2-meshers-tet4/mesh.npz",
+          "sha256": "9a8981586d1aa51cb24a6d6f5ce8e2ee6015f9d3da9a38d495c37401fcf7ab73",
+          "qualified": true,
+          "full_distance": true
+        },
+        {
+          "mesh": "experiments/adaptive/runs/macbook-verified-spinodoid-repeated-v1/repeat-2-meshers-curved-tet10/mesh.npz",
+          "sha256": "3bfbb279a6778d64f0f6d7896a353477a0258a1580f47d9f89773853d121fb30",
+          "qualified": true,
+          "full_distance": true,
+          "prior_field_mesh_arrays_exact": true,
+          "prior_field_mesh_source": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-interior-default-spinodoid-v1/repeat-0-meshers-curved-known/mesh.npz"
+        },
+        {
+          "mesh": "experiments/adaptive/runs/macbook-verified-spinodoid-repeated-v1/repeat-3-meshers-curved-tet10/mesh.npz",
+          "sha256": "3bfbb279a6778d64f0f6d7896a353477a0258a1580f47d9f89773853d121fb30",
+          "qualified": true,
+          "full_distance": true,
+          "prior_field_mesh_arrays_exact": true,
+          "prior_field_mesh_source": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-interior-default-spinodoid-v1/repeat-0-meshers-curved-known/mesh.npz"
+        },
+        {
+          "mesh": "experiments/adaptive/runs/macbook-verified-spinodoid-repeated-v1/repeat-3-meshers-tet4/mesh.npz",
+          "sha256": "9a8981586d1aa51cb24a6d6f5ce8e2ee6015f9d3da9a38d495c37401fcf7ab73",
+          "qualified": true,
+          "full_distance": true
+        },
+        {
+          "mesh": "experiments/adaptive/runs/macbook-verified-spinodoid-repeated-v1/repeat-4-meshers-tet4/mesh.npz",
+          "sha256": "9a8981586d1aa51cb24a6d6f5ce8e2ee6015f9d3da9a38d495c37401fcf7ab73",
+          "qualified": true,
+          "full_distance": true
+        },
+        {
+          "mesh": "experiments/adaptive/runs/macbook-verified-spinodoid-repeated-v1/repeat-4-meshers-curved-tet10/mesh.npz",
+          "sha256": "3bfbb279a6778d64f0f6d7896a353477a0258a1580f47d9f89773853d121fb30",
+          "qualified": true,
+          "full_distance": true,
+          "prior_field_mesh_arrays_exact": true,
+          "prior_field_mesh_source": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-interior-default-spinodoid-v1/repeat-0-meshers-curved-known/mesh.npz"
+        }
+      ]
+    },
+    {
+      "run": "experiments/adaptive/runs/macbook-verified-schwarz-d-reproduced-v1",
+      "inputs": 28,
+      "replays": []
+    }
+  ],
+  "full_mesh_replays": 30,
+  "seconds": 43.303464124997845,
+  "lattice_stiffness": {
+    "retained_model_count": 24,
+    "retained_model_tensor_hashes": [
+      "1dc2276ae93d3a194cb332b06f5c7562f512d21c6df8746cc427bdb5cf5e4483",
+      "05aa92ece78bb3d56b2e1f1746d82d8ab6b7ec504988fb2831dca28bbd1af699",
+      "bc97fc91658a12a023b42b599cee06057e95708952068834f62e510ffb377e90",
+      "6a3d66a8a9b8d006a80f6a07a519887c64ad569df9ded79f58396165b7d185c0",
+      "cf5dbd88b110410ca94f5263ca1d47dc97987c3cc10790d836fc9895f3527889",
+      "fbfe07add640ae33f49cb0677b3df2ed43034a3d6d3fb3fd879b388c5a819ee1",
+      "1777cef43e1d246879ff5bcfd964a13baf885baa13faafef4f77fe97f48ec84a",
+      "c328664caccc5082c37d300421d51519d3893948b0e5f7e31584f8ce47aafee3",
+      "368dd8a49825c6d08e96d559fb79cb12d6244749a163b30582589eedb831a72b",
+      "f22e43514f0f9b8b8f43087aa8bdfa59bb64f3f893029ca490e5defc7764f35c",
+      "809ca2045bd26faeb9c225bff2b3febe9e5c290eccc35c2b444f8421c832a0d4",
+      "c010ae7f8e57aebad23a3a42d3f248c7ea0ff6ed31e290a3dff62bbfeabeaef7",
+      "2aa3d0453da7fc045fb21d9d818a50d7612b9e9f66542cf7fb75fbf4b8e29f76",
+      "2323cd67c181e81b13a4164333f002387e2e807e2cbc2a27052dc6c54f5c026f",
+      "acd72b95c9f71e32265b05d2b9ad5a4367ed10ec7d47c72541826ded75dc7474",
+      "46d12a65100eea687c4d994e19328ed1f60a8b01f66f84f4c5f9b5bb2edac406",
+      "a9e148d4d1187745a4b5bb0631b020775900bb903aa9e6ac918417ed5061d903",
+      "a16219ac2de2e13355bc6b03929cfc7b4b4b65221b65d184e53113fcfaf578c6",
+      "3f11bc9270b573e6aff65e7b435df249dbaded408637d09e88ec4366977b0b0c",
+      "698df2172b607b3660d5edb02cc5418a56f758cdac945a657dd02ef5807443dd",
+      "9574face72643c530171ec8a3599d0b9d2f1e3c7b049fe868b26a1201ac64545",
+      "2b2a3fc524801d1906bc4911c8d9922e59c4ce6e85acfdfca83df4a65b059400",
+      "ded13a9eb3b71fe54bcd5c89e03378cb7442879e56095a24f4391a4c242dbaea",
+      "948e95978a44e3c8b251004c9f5fad6b47765cbfdad570db91d9ab49ba6d622c"
+    ],
+    "rows": [
+      {
+        "route": "compact-native",
+        "source": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-cap-phase-lattice26-amg-v1/result.json",
+        "nodes": 65721,
+        "elements": 41340,
+        "worst_model_disagreement": 0.02412306220321992,
+        "all24_model_disagreements": [
+          0.022268474437950898,
+          0.016857995669302513,
+          0.015073191733302946,
+          0.014185135710317707,
+          0.023058131348843557,
+          0.017247030428297335,
+          0.01533096331601252,
+          0.014377746280094491,
+          0.02412306220321992,
+          0.012293999232103905,
+          0.008445670960715405,
+          0.006555270550680462,
+          0.02123052729119208,
+          0.010890015311840244,
+          0.007527153220032381,
+          0.005879001412548531,
+          0.019070604122351554,
+          0.014915364404496768,
+          0.01354873676649854,
+          0.012873939680114408,
+          0.020383233379596903,
+          0.01555875188980004,
+          0.013973102179781089,
+          0.013188418232354003
+        ],
+        "passes_one_percent": false
+      },
+      {
+        "route": "uniform37-native",
+        "source": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-lattice-uniform37-amg-v1/result.json",
+        "nodes": 231026,
+        "elements": 157521,
+        "worst_model_disagreement": 0.020853896791642533,
+        "all24_model_disagreements": [
+          0.018609238674899227,
+          0.013272241799069212,
+          0.011516874897447031,
+          0.010644290660869365,
+          0.01939002921849653,
+          0.01365519273039236,
+          0.011770249673857482,
+          0.010833506009320525,
+          0.020853896791642533,
+          0.009182467863264536,
+          0.0054032145215719965,
+          0.0035489028638061863,
+          0.017993355063223478,
+          0.007802687871263783,
+          0.004502191582316647,
+          0.0028854357835047307,
+          0.01599572374117517,
+          0.011617541231543422,
+          0.010177203853681241,
+          0.00946612917655755,
+          0.01737177323348024,
+          0.012295702711589584,
+          0.01062442762268048,
+          0.009797502827809211
+        ],
+        "passes_one_percent": false
+      },
+      {
+        "route": "experimental-saved-relocation",
+        "source": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-lattice-relocation-solve-v1/result.json",
+        "nodes": 249824,
+        "elements": 162189,
+        "worst_model_disagreement": 0.012132469822236085,
+        "all24_model_disagreements": [
+          0.009974149893692963,
+          0.004600855018067216,
+          0.002824549126240204,
+          0.0019403009852804738,
+          0.010757249649740097,
+          0.004987775986226869,
+          0.003081197568937957,
+          0.0021320729705718126,
+          0.012132469822236085,
+          0.0014122498174796334,
+          0.0045564883337748,
+          0.006268585173624918,
+          0.009285357958783559,
+          0.0024447170799898454,
+          0.005383561802411766,
+          0.006889439370491403,
+          0.007159474336699068,
+          0.0028155383454025974,
+          0.0013887315926335052,
+          0.000688141307588036,
+          0.00852479895893231,
+          0.0034881978964970578,
+          0.0018312443007478746,
+          0.0010139052461499932
+        ],
+        "passes_one_percent": false
+      },
+      {
+        "route": "modified-actual-with-star-refinement",
+        "source": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-lattice-actual-live-solve-v1/result.json",
+        "nodes": 250000,
+        "elements": 165722,
+        "worst_model_disagreement": 0.009946706124389824,
+        "all24_model_disagreements": [
+          0.006942750755411098,
+          0.004378528033999957,
+          0.004595615729476854,
+          0.0047051285175851686,
+          0.007722628738882135,
+          0.0043315979449200384,
+          0.004564047926031974,
+          0.0046812619743211385,
+          0.009152596537358232,
+          0.005129328197936988,
+          0.007612348401919797,
+          0.009324544998581092,
+          0.006317203927606549,
+          0.005591584179086092,
+          0.008438340207156687,
+          0.009946706124389824,
+          0.004275036225707491,
+          0.0044215459947583285,
+          0.004666468820522187,
+          0.004789125169182811,
+          0.0056366023053160165,
+          0.004307308576206671,
+          0.004590012881181494,
+          0.0047317676894833675
+        ],
+        "passes_one_percent": true
+      }
+    ],
+    "inputs": {
+      "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/g3-lattice-curve-grading-reference-comparison-v1.json": "bec8af1d841a1b3d0299d3746f96c0562ec0db13927ce8370cce6d22924a23b9",
+      "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/g3-lattice-reference-sensitivity-v2.json": "0bc21b6b9c07819795697047ee827aab8c23363790dc5137ea7d2d1a5aa0ac07",
+      "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/g3-lattice-microgen-reference-comparison-v1.json": "6acf432121761aa9028ffd81be1e146cbd5010e84f6183fab9cd455c966dfdd4",
+      "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-lattice-relocation-assessment-v1/result.json": "bcf774a816cd09ef28a140413700b18ec2c46cd629e70309959a5981773beccb",
+      "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-lattice-actual-live-assessment-v1/result.json": "9d17ae59e43a2bdcb3b7d15210d1e008325ef205421633c521088933909e437d",
+      "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-cap-phase-lattice26-amg-v1/result.json": "30d8dffd392e4ccff45e08967cbb0294e0e6180afa71e370b5edc6bbe5dac772",
+      "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-lattice-uniform37-amg-v1/result.json": "6c229e847af24fd0262262d986d0714ff73ce90d4e2c54d5129eff39d34330cd",
+      "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-lattice-relocation-solve-v1/result.json": "faf5c7e4ee76205598846b84dc4f73ca1c1335d89ba60b9f6e8da99b1ffd396b",
+      "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-lattice-actual-live-solve-v1/result.json": "f0d717c9f6e5e22fd4cbd467b8773c1f6f844d6f17b64f78a85dd09b21d1e85f"
+    },
+    "scope": "Re-evaluated saved full six-load stiffness tensors and unchanged models; no fresh FE solve or comparative workflow timing. The actual star-refined mesh differs from the mesh-only route."
+  },
+  "protocol_sha256": "d61bb3303b722a2e49225d0874236bc9876ec1dfcab2304edbdba2552e20e4f8",
+  "scope": "Finite mesh-generation comparison only; no new stiffness/local-stress/continuum certification. Failed actual routes do not support admitted speed ratios.",
+  "audit_receipt": {
+    "source": "experiments/adaptive/runs/macbook-comparison-final-audit-v1/result.json",
+    "sha256": "5beefb849fa0bcf41c8a0d65f310ce4c018999bdeb0a3f49d9e50f72e7b4a807",
+    "attempts": 158,
+    "runs": 20,
+    "distinct_mesh_replays": 30,
+    "projection_control_source": "experiments/adaptive/runs/macbook-comparison-grade-projection-control-v1/result.json",
+    "projection_control_sha256": "6548e83af29da704e55a27146eca7065de673ec8e67512ca2f44e6f5eaec308f",
+    "optimized_linear_grade_worst_witness": 0.0020028349632686096,
+    "uniform37_prior_preflight_archive": "experiments/adaptive/runs/macbook-lattice-uniform37-preflight-v1/mesh.npz",
+    "uniform37_fresh_archive": "experiments/adaptive/runs/macbook-verified-lattice-uniform37-repeated-v1/repeat-0-meshers-uniform37-curved-tet10/mesh.npz",
+    "uniform37_archives_identical_sha256": "2de0d1a48fa842b96ff7e190bde346a886698e04f2177f8a06f879fee515f253",
+    "field_link_note": "The generic prior_field_mesh_arrays_exact checks compare core outputs to the compact defaults. Uniform37 is expected to differ from that default; its fresh archive is byte-identical to its own prior Uniform37 preflight as checked here.",
+    "native_code_changed_in_this_comparison": false,
+    "full_objective_complete": false
+  }
+}

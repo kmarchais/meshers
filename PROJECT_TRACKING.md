@@ -1,5 +1,99 @@
 # Meshers project tracking
 
+## Verified broad comparison, 26 October 2026
+
+The requested comparison now covers eight fixed specimens. The final audit
+passes for **158 attempts across 20 runs**, including independent replay of
+**30 distinct produced meshes**, measured input/artifact hashes, frozen
+configuration checks and all required admission gates. Each selected admitted
+recipe has five fresh measured samples after an excluded warmup. Same-order
+comparisons use five interleaved pairs on the M4. The native binary remains
+`2005c3e01892098a9d734567220a56ed3ea5d748b20a4f96754fbb55168060b1`.
+No production meshing code changed in this comparison.
+
+The full metrics, ranges and method are in
+[the verified comparison](experiments/adaptive/VERIFIED_COMPARISON.md).
+The machine-readable evidence is
+[the comparison findings](handoff/macbook/comparison-findings-20261026.json).
+
+| Fixed specimen | Native Tet4 | Native curved Tet10 | Actual Microgen+MMG tested routes |
+|---|---|---|---|
+| Gyroid sheet | Pass | Pass | No admitted tested route |
+| Schwarz P solid | Pass, metric tradeoffs | Pass, strong result | Explicitly modified route passes |
+| Schwarz D solid | Periodic node failure | Periodic node failure | Periodic input failure |
+| Fixed spinodoid | Pass | Pass | No admitted tested route |
+| Second anisotropic spinodoid | Pass | Pass | No admitted tested route |
+| Ordered smooth-union lattice | Pass, metric tradeoffs | Compact and Uniform37 pass | Explicitly modified route passes |
+| Periodically graded Gyroid | Pass | Pass | Default fails; modified times out at 300 s |
+| Linearly graded Gyroid | Distance 0.002002836 rejects | Pass | Default fails; modified exceeds tet cap |
+
+Schwarz D failures repeat three times per route, including both native
+orders. This is a new demonstrated coverage gap, not a parameter sweep or
+proof of impossibility. The linear grade has unequal opposite-z material
+traces, so both arms use bounded nonperiodic meshing for that added case.
+All other cases retain full periodic gates. Original four specimen/sample
+hashes, ordered cubic union, 0.002 distance, 1% absolute volume, q0.1,
+positive sampled curved Jacobians and both 250,000 caps remain unchanged.
+
+The fresh same-order Schwarz P curved comparison gives 27,492 versus 136,511
+tets and 42,928 versus 207,099 nodes. Median generation is 0.090221 versus
+4.110316 s, **45.56x faster**. Minimum/median q are 0.449995/0.916233 versus
+0.100001/0.747047, and sampled distance is 0.000146600 versus 0.000961515.
+The linear comparison is not an all-metric win: native median q is slightly
+lower and distance slightly higher, despite fewer tets and faster generation.
+
+The known Uniform37 lattice recipe supplies a useful near-equal-count
+comparison. Native has **157,521 tets and 231,026 nodes**, actual **158,430
+tets and 238,729 nodes**. Its five paired median generation times are
+**1.889529 versus 9.176655 s**, or **4.86x faster**. Native minimum/median q
+are **0.339372/0.929516 versus 0.100001/0.803707**, and distance is
+**0.000178307 versus 0.001701239**. However, native q99 is lower,
+0.968982 versus 0.973730. Straight Tet4 at the same Uniform37 connectivity
+fails distance at 0.003424939. No all-quality-distribution win is declared.
+The prior failed mechanical count band is not reclassified around the
+separate 158,430-tet mesh-only comparison.
+
+Method verification found a real gap in corner-only topology checks: they
+can miss inconsistent shared Tet10 midpoint IDs. A deliberate cracked
+control proves that gap, and the new comparison observer rejects it.
+Analytic quality, volume, affine Tet10, plane and sphere controls pass.
+The current focused suite passes 12 tests. Curved geometry uses positive
+125-point Jacobian checks and reverse subdivisions 8/16. Distances remain
+finite observations, not certified Hausdorff bounds. Cheap gate rejections
+retain reverse observations without claiming a complete forward audit.
+
+The independent eight-witness constrained minimization for linear grading
+leaves the worst distance at **0.002002834963**, above 0.002. It supports
+retaining the rejection and does not certify a global closest-distance bound.
+
+Default terminology is explicit. The default arm uses public MMG defaults
+on the fixed study input. The spinodoid FFT16 realization remains fixed;
+extra controls use the installed constructor's public sampling32 without
+regenerating its field. Both sampling32 controls still fail. All actual
+routes start from genuine Microgen output. No Meshers seed is substituted.
+Modified first passes, omitted second passes, explicit SciPy repair and
+straight Tet10 elevation are named and charged. Failed competitors do not
+support admitted speed ratios.
+
+Saved full six-load lattice tensors are freshly compared against all 24
+unchanged retained model tensors. Compact native remains **2.412306220%**,
+Uniform37 **2.085389679%**, and the best saved experimental relocation
+**1.213246982%**. Each fails 1%. The modified actual route with additional
+star refinement remains **0.994670612%** and passes. That actual stiffness
+mesh has 165,722 tets and 250,000 nodes; it differs from the mesh-only timing
+route. No complete matched-stiffness workflow timing or reference is promoted.
+
+The original four curved default meshes reproduce the prior field arrays
+exactly. Fresh Uniform37 is also byte-identical to its own prior preflight
+archive. Its comparison against the compact-default archive is expected to
+differ and is explained in the findings receipt.
+
+Next failure work should start with Schwarz D periodic matching, then the
+linear-grade Tet4 distance miss. Lattice quality allocation and full-model
+stiffness remain open. The added cases establish mesh coverage only, without
+new mechanical-reference or local-stress claims. The full objective remains
+incomplete.
+
 ## Resumed investigation, 26 October 2026
 
 Best tested saved-mesh lattice result is now **1.213246982%** across all 24

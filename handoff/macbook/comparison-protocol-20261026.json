@@ -1,0 +1,380 @@
+{
+  "date": "2026-10-26",
+  "status": "Frozen before first eight-case measurement",
+  "fixtures": "experiments/adaptive/runs/macbook-comparison-fixtures-v1",
+  "fixture_receipt_sha256": "6903fc3239ce1bbfeb423bb76e749f5b107b7f6e63eaa90459fff0163fd7e18d",
+  "cases": {
+    "gyroid": [
+      {
+        "name": "actual-default-tet4",
+        "arm": "microgen",
+        "resolution": null,
+        "order": 1
+      },
+      {
+        "name": "actual-modified-tet4",
+        "arm": "microgen",
+        "order": 1,
+        "resolution": 24,
+        "mmg": {
+          "hausd": 0.0005,
+          "hmax": 0.06,
+          "hgrad": 1.3
+        },
+        "first_hausd": 0.0005,
+        "first_hmax": 0.1,
+        "first_only": true,
+        "repair": false
+      },
+      {
+        "name": "meshers-tet4",
+        "arm": "meshers",
+        "cells": 24,
+        "order": 1,
+        "adapt": false,
+        "tolerance": 1.0
+      },
+      {
+        "name": "meshers-curved-tet10",
+        "arm": "meshers",
+        "cells": 9,
+        "order": 2,
+        "adapt": false,
+        "tolerance": 1.0,
+        "min_length": 0.002,
+        "adapt_tolerance": 0.002
+      }
+    ],
+    "schwarz-solid": [
+      {
+        "name": "actual-default-tet4",
+        "arm": "microgen",
+        "resolution": null,
+        "order": 1
+      },
+      {
+        "name": "actual-modified-tet4",
+        "arm": "microgen",
+        "order": 1,
+        "resolution": 30,
+        "mmg": {
+          "hausd": 0.001,
+          "hmax": 0.06,
+          "hgrad": 1.3
+        },
+        "first_hausd": 0.0005,
+        "first_hmax": 0.1,
+        "first_only": true,
+        "repair": true
+      },
+      {
+        "name": "meshers-tet4",
+        "arm": "meshers",
+        "cells": 16,
+        "order": 1,
+        "adapt": true,
+        "tolerance": 1.0,
+        "min_length": 0.002,
+        "adapt_tolerance": 0.001
+      },
+      {
+        "name": "meshers-curved-tet10",
+        "arm": "meshers",
+        "cells": 16,
+        "order": 2,
+        "adapt": false,
+        "tolerance": 1.0,
+        "min_length": 0.002,
+        "adapt_tolerance": 0.002
+      }
+    ],
+    "spinodoid": [
+      {
+        "name": "actual-default-tet4",
+        "arm": "microgen",
+        "resolution": null,
+        "order": 1
+      },
+      {
+        "name": "actual-modified-tet4",
+        "arm": "microgen",
+        "order": 1,
+        "resolution": 36,
+        "mmg": {
+          "hausd": 0.0005,
+          "hmax": 0.06,
+          "hgrad": 1.3
+        },
+        "first_hausd": 0.0015,
+        "first_hmax": 0.06,
+        "first_only": true,
+        "repair": false
+      },
+      {
+        "name": "meshers-tet4",
+        "arm": "meshers",
+        "cells": 32,
+        "order": 1,
+        "adapt": true,
+        "tolerance": 0.002,
+        "min_length": 0.002,
+        "adapt_tolerance": 0.002,
+        "lattice_field": null
+      },
+      {
+        "name": "meshers-curved-tet10",
+        "arm": "meshers",
+        "cells": 24,
+        "order": 2,
+        "adapt": true,
+        "tolerance": 1.0,
+        "min_length": 0.002,
+        "adapt_tolerance": 0.003
+      }
+    ],
+    "smooth-lattice": [
+      {
+        "name": "actual-default-tet4",
+        "arm": "microgen",
+        "resolution": null,
+        "order": 1
+      },
+      {
+        "name": "actual-modified-tet4",
+        "arm": "microgen",
+        "order": 1,
+        "resolution": 51,
+        "mmg": {
+          "hausd": 0.001,
+          "hmax": 0.06,
+          "hgrad": 1.3
+        },
+        "first_hausd": 0.0015,
+        "first_hmax": 0.06,
+        "first_only": false,
+        "repair": true
+      },
+      {
+        "name": "meshers-tet4",
+        "arm": "meshers",
+        "cells": 32,
+        "order": 1,
+        "adapt": true,
+        "tolerance": 0.002,
+        "min_length": 0.002,
+        "adapt_tolerance": 0.002,
+        "lattice_field": "original"
+      },
+      {
+        "name": "meshers-curved-tet10",
+        "arm": "meshers",
+        "cells": 26,
+        "order": 2,
+        "adapt": true,
+        "tolerance": 1.0,
+        "min_length": 0.002,
+        "adapt_tolerance": 0.0028
+      }
+    ],
+    "schwarz-d-solid": [
+      {
+        "name": "actual-default-tet4",
+        "arm": "microgen",
+        "resolution": null,
+        "order": 1
+      },
+      {
+        "arm": "microgen",
+        "order": 1,
+        "resolution": 30,
+        "first_only": true,
+        "first_hausd": 0.0005,
+        "first_hmax": 0.1,
+        "mmg": {
+          "hausd": 0.0005,
+          "hmax": 0.06,
+          "hgrad": 1.3
+        },
+        "repair": true,
+        "name": "actual-modified-tet4"
+      },
+      {
+        "arm": "meshers",
+        "cells": 24,
+        "order": 1,
+        "adapt": false,
+        "tolerance": 1.0,
+        "min_length": 0.002,
+        "adapt_tolerance": 0.002,
+        "name": "meshers-tet4"
+      },
+      {
+        "arm": "meshers",
+        "cells": 16,
+        "order": 2,
+        "adapt": false,
+        "tolerance": 1.0,
+        "min_length": 0.002,
+        "adapt_tolerance": 0.002,
+        "name": "meshers-curved-tet10"
+      }
+    ],
+    "graded-gyroid-periodic": [
+      {
+        "name": "actual-default-tet4",
+        "arm": "microgen",
+        "resolution": null,
+        "order": 1
+      },
+      {
+        "arm": "microgen",
+        "order": 1,
+        "resolution": 30,
+        "first_only": true,
+        "first_hausd": 0.0005,
+        "first_hmax": 0.1,
+        "mmg": {
+          "hausd": 0.0005,
+          "hmax": 0.06,
+          "hgrad": 1.3
+        },
+        "repair": true,
+        "name": "actual-modified-tet4"
+      },
+      {
+        "arm": "meshers",
+        "cells": 24,
+        "order": 1,
+        "adapt": false,
+        "tolerance": 1.0,
+        "min_length": 0.002,
+        "adapt_tolerance": 0.002,
+        "name": "meshers-tet4"
+      },
+      {
+        "arm": "meshers",
+        "cells": 16,
+        "order": 2,
+        "adapt": false,
+        "tolerance": 1.0,
+        "min_length": 0.002,
+        "adapt_tolerance": 0.002,
+        "name": "meshers-curved-tet10"
+      }
+    ],
+    "graded-gyroid-linear": [
+      {
+        "name": "actual-default-tet4",
+        "arm": "microgen",
+        "resolution": null,
+        "order": 1
+      },
+      {
+        "arm": "microgen",
+        "order": 1,
+        "resolution": 30,
+        "first_only": true,
+        "first_hausd": 0.0005,
+        "first_hmax": 0.1,
+        "mmg": {
+          "hausd": 0.0005,
+          "hmax": 0.06,
+          "hgrad": 1.3
+        },
+        "repair": true,
+        "name": "actual-modified-tet4"
+      },
+      {
+        "arm": "meshers",
+        "cells": 24,
+        "order": 1,
+        "adapt": false,
+        "tolerance": 1.0,
+        "min_length": 0.002,
+        "adapt_tolerance": 0.002,
+        "name": "meshers-tet4"
+      },
+      {
+        "arm": "meshers",
+        "cells": 16,
+        "order": 2,
+        "adapt": false,
+        "tolerance": 1.0,
+        "min_length": 0.002,
+        "adapt_tolerance": 0.002,
+        "name": "meshers-curved-tet10"
+      }
+    ],
+    "spinodoid-anisotropic": [
+      {
+        "name": "actual-default-tet4",
+        "arm": "microgen",
+        "resolution": null,
+        "order": 1
+      },
+      {
+        "arm": "microgen",
+        "order": 1,
+        "resolution": 36,
+        "first_only": true,
+        "first_hausd": 0.0015,
+        "first_hmax": 0.06,
+        "mmg": {
+          "hausd": 0.0005,
+          "hmax": 0.06,
+          "hgrad": 1.3
+        },
+        "repair": false,
+        "name": "actual-modified-tet4"
+      },
+      {
+        "arm": "meshers",
+        "cells": 32,
+        "order": 1,
+        "adapt": true,
+        "tolerance": 0.002,
+        "min_length": 0.002,
+        "adapt_tolerance": 0.002,
+        "name": "meshers-tet4"
+      },
+      {
+        "arm": "meshers",
+        "cells": 24,
+        "order": 2,
+        "adapt": true,
+        "tolerance": 1.0,
+        "min_length": 0.002,
+        "adapt_tolerance": 0.003,
+        "name": "meshers-curved-tet10"
+      }
+    ]
+  },
+  "unchanged_original_four": true,
+  "extra_boundary_policy": {
+    "graded-gyroid-periodic": "Full periodic x,y,z",
+    "graded-gyroid-linear": "Bounded nonperiodic for both arms; not a full-periodic comparison"
+  },
+  "limits": {
+    "nodes": 250000,
+    "tetrahedra_including_intermediates": 250000,
+    "worker_rss_gib": 8,
+    "worker_seconds": 300,
+    "numerical_threads": 1
+  },
+  "gates": {
+    "sampled_two_sided_distance": 0.002,
+    "absolute_relative_volume": 0.01,
+    "corner_quality_minimum": 0.1,
+    "sampled_curved_J": "positive125 plus nodes and centroid",
+    "facets": "Oriented corner incidence and full shared quadratic edges",
+    "periodic": "Matching nodes and complete Tri3/Tri6 caps where required"
+  },
+  "metric_scope": "Sampled two-sided observations with feasible implicit feet, not certified Hausdorff or closest-distance bounds. Reject cheap gate failures before forward projection. Additional quadratic conformity control rejects a deliberate shared-edge crack.",
+  "volume_scope": "Original four hash-identical fixtures; new cases four Sobol scrambles of 2^20 each, plus exact Schwarz D volume .5. Spread is empirical, not a confidence interval.",
+  "timing": "Same M4 one heavy lane; fresh process per sample; exclude imports/common reference fixtures/audit/archive/measured observer I/O; include fresh arm-specific shape or field preparation, native compilation, extraction, MMG retries, explicit relocation or elevation and conversion to common arrays.",
+  "repetitions": "Pilot every declared route; retain all failures. After pilot read, one excluded warmup and five measured repetitions of admitted choices, alternating order. No admitted speed ratio for a failed competitor.",
+  "comparison": "Primary Tet4 versus Tet4; native curved Tet10 versus explicitly straight-elevated actual Microgen Tet10 separately. Compare element and node counts as well as every reported quality quantile, distance and absolute volume error; no winner by speed alone.",
+  "mechanical_scope": "Mesh benchmark does not establish matched stiffness, local stress, continuum accuracy or universal geometry coverage. Original four full mixed-load evidence and all24 lattice tensors remain mandatory for whole objective.",
+  "native_binary_sha256": "2005c3e01892098a9d734567220a56ed3ea5d748b20a4f96754fbb55168060b1",
+  "actual_source": "Microgen2.0.0b1 public generate_volume_mesh and remesh_keeping_boundaries_for_fem; mmgpy0.17.1 MMG. Default arm unchanged; modified arm overrides first call, may omit second pass, may apply explicit bounded400-attempt SciPy repair; every call recorded. No Meshers seed."
+}

@@ -1,0 +1,40 @@
+{
+  "case": "smooth-lattice",
+  "decision": "Measure the already fixed Uniform37 recipe freshly against actual158430-tet geometry route, plus its same-resolution Tet4 control. Read pilot before repeating admitted choices.",
+  "configs": [
+    {
+      "arm": "meshers",
+      "cells": 37,
+      "adapt": false,
+      "tolerance": 1.0,
+      "min_length": 0.01,
+      "adapt_tolerance": 0.002,
+      "name": "meshers-uniform37-tet4",
+      "order": 1
+    },
+    {
+      "arm": "meshers",
+      "cells": 37,
+      "adapt": false,
+      "tolerance": 1.0,
+      "min_length": 0.01,
+      "adapt_tolerance": 0.002,
+      "name": "meshers-uniform37-curved-tet10",
+      "order": 2
+    }
+  ],
+  "inputs": {
+    "handoff/macbook/comparison-protocol-20261026.json": "d61bb3303b722a2e49225d0874236bc9876ec1dfcab2304edbdba2552e20e4f8",
+    "handoff/macbook/lattice-uniform37-validated-plan-20261025.json": "e344e3266d147d970b4b50e74a5fd31d3cd6df471c8152fe586577e3c33c45f9",
+    "experiments/adaptive/runs/macbook-lattice-uniform37-preflight-v1/result.json": "d71d8d8f1b9bfa24d362bb96462aa3ed1e6a847f5e9fb17055ee2fc6d3198aaa",
+    "experiments/adaptive/runs/macbook-lattice-uniform37-assessment-v1/result.json": "a6230bb480518934e5a8523d9a204a4382deb6281c128ff0bc13b2c152e76b0e"
+  },
+  "expected_curved_tets": 157521,
+  "actual_mesh_only_tets": 158430,
+  "expected_curved_nodes": 231026,
+  "actual_mesh_only_straight_tet10_nodes": 238729,
+  "scope": "Near equal mesh-only element counts, with native0.574% fewer tets and3.226% fewer quadratic nodes. Original failed98to100percent mechanical count study against165722tets is not reclassified. Uniform37 all24 stiffness remains2.085389679percent and fails1percent. No nearby sizing sweep or reference change.",
+  "gates_unchanged": true,
+  "same_host_timings_required": true,
+  "selection_is_new_native_code_improvement": false
+}
