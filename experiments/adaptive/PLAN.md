@@ -1,5 +1,38 @@
 # Adaptive implicit meshing: plan and status
 
+## Budget and shape experiment results, 26 October 2026
+
+Experiments 598 through 605 complete the first tests of the directions below.
+Reversible periodic coarsening works on the exact curved domain, but one
+naive leaf exchange releases only 1,852 nodes and finishes with more
+metric-violating edges and slightly worse p01 quality. Do not repeat that
+exchange automatically or interpret local edge-length progress as FE accuracy.
+
+A global disjoint half-centroid motion pass admits geometry on all four
+cases. Its local minimum/median guard nevertheless lowers the global Gyroid
+and Schwarz medians. Requiring the entire sorted local quality distribution
+to be non-decreasing prevents global distribution regressions, which the
+full sorted output vectors independently verify. That stricter policy
+accepts 140 lattice corner operations and zero on the other three cases,
+so its gain is small.
+
+The larger lattice-only pass accepts 2,982 corner operations. Median quality
+rises from 0.685789 to 0.690140 with the exact physical curved boundary and
+unchanged counts. Most quality quantiles improve, but maximum quality falls
+slightly. Six fresh loads and independent field/positive-rule audits pass.
+Worst disagreement against all 24 unchanged model tensors moves only from
+1.215176% to **1.213247%**, still failing 1%. The strict-policy variant is
+not stiffness-assessed. No native default, reference or comparative timing
+win is promoted. Keep further accuracy work focused on net allocation
+benefit; shape improvement alone has now been directly tested and is too
+small to close the gap in this experiment.
+
+See `PROJECT_TRACKING.md` and
+`handoff/macbook/metric-exchange-relocation-findings-20261026.json` for counts,
+failures, guards and provenance. All four cases and original admission gates
+remain in scope. Earlier planned next steps below are historical.
+
+
 ## Improvement directions from measured allocation, 26 October 2026
 
 The next accuracy work should replace one-way refinement with a consistent

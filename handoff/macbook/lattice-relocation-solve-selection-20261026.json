@@ -1,0 +1,26 @@
+{
+  "scope": "Select one saved-mesh six-load stiffness experiment before evaluating candidate stiffness. Not a live workflow or production default.",
+  "choice": "Lattice from the larger minimum/median-guarded disjoint relocation pass, 2982 moves",
+  "reason": "Global lattice minimum,p01,p10,median,p90,p99 improve and all geometry/PBC/positive-J/volume gates pass. Maximum quality falls slightly. The separate strict-distribution pass is conservative but changes only140 lattice vertices. Test the larger shape change for informative stiffness evidence; do not promote the other cases where global medians regressed.",
+  "geometry_source": "experiments/adaptive/runs/macbook-curved-relocation-pass-v1/lattice",
+  "nodes": 249824,
+  "tets": 162189,
+  "six_fresh_loads": true,
+  "fields_replayed": false,
+  "original_fine_space_preserved": false,
+  "memory_gib": 10,
+  "timeout_s": 900,
+  "resource_peak_gib": 6.5358734130859375,
+  "expected_operator_sha256": "fc2d89a8c37eede61efdd2229823aee976d187aed3cfc50d6c766ac7e5081bcb",
+  "stiffness_target": 0.01,
+  "retained_lattice_models": 24,
+  "reference_promoted": false,
+  "comparative_timing_claim": false,
+  "inputs": {
+    "experiments/adaptive/runs/macbook-curved-relocation-pass-v1/lattice/result.json": "f098bc05bb1a22a92a33a82659de39ac504cc27b2e74bc24c0305e55576e5740",
+    "experiments/adaptive/runs/macbook-curved-relocation-pass-v1/lattice/mesh.npz": "6f3dada530e858da70f3e1ac7d0ee9682b7d2377a71d6fc6bac3f5f6ed01bc81",
+    "experiments/adaptive/runs/macbook-curved-relocation-dominance-v1/result.json": "1606a86770d1553f91c3f017c9f11fa621875ff9b5e99cd30fdd407a90b42aa7",
+    "experiments/adaptive/runs/macbook-lattice-relocation-resource-v1/operator.json": "411671af09a6cd8c81f49667a16f96082acffea0c29d54fc3dad2a22dafa64b9",
+    "experiments/adaptive/saved_mesh_evaluation.py": "48d4ad6744a8e9d1fc8769cdd2ae6e8942236871d8a15b508d8d49007edab755"
+  }
+}

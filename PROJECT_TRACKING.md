@@ -2,9 +2,10 @@
 
 ## Resumed investigation, 26 October 2026
 
-Best completed mesh-workflow score is now **1.215175763%** across all 24
-retained lattice models, after the curved quality pass described below. It
-still fails 1%.
+Best tested saved-mesh lattice result is now **1.213246982%** across all 24
+retained models after the interior-relocation experiment below. The best
+fresh-generation experimental workflow remains **1.215175763%**. Both fail
+1%; neither is a native default or comparative timing victory.
 
 The preceding longest-edge closure prototype reaches
 **1.216071201% worst disagreement across all 24 retained lattice models** at
@@ -225,6 +226,95 @@ fix does not repair lattice grading. Replay evidence is in
 `handoff/macbook/lattice-budget-recovery-replay-result-20261026.json`.
 Evidence is in
 `handoff/macbook/adaptation-budget-recovery-validation-20261026.json`.
+
+### Budget-exchange and global curved-quality experiments
+
+The user requested experiments, including negative results. Production code
+and admission gates remain unchanged in this phase.
+
+| Experiment | Result | Interpretation |
+|---|---|---|
+| 598, warped periodic exchange control | Restore 80 periodic sibling orbits, including 28 boundary orbits; release 680 nodes and refine 81 metric-requested orbits within the original caps | Exact curved parent maps and six synthetic periodic control fields reproduce. Positive sampled Jacobians and volume pass. This validates the reversible operation, not a stiffness result. |
+| 599, one lattice leaf exchange | Coarsen 235 periodic orbits, including 56 boundary orbits; release 1,852 nodes. Refinement accepts 237 requested orbits at 249,997 nodes and 162,129 tets | Both stages pass geometry, coherent facets, curved positive-Jacobian, periodic and common-coarser-space checks. The original fine space is not preserved. |
+| 600, minimum/median-guarded interior motion | Geometry admits all four cases; 13 Gyroid, 255 Schwarz, 420 spinodoid and 2,982 lattice corner operations | A local minimum/median rule does not protect the global quality distribution. Gyroid and Schwarz medians fall slightly. |
+| 601, full local distribution guard | Full sorted global quality vectors are non-decreasing on all four cases; 140 lattice corner operations and zero on the other three | A valid conservative guard, but the lattice median gain is small, 0.685789 to 0.686363. |
+
+The exchange starts from the unpolished longest-edge mesh. Its original
+10,077 metric-violating edges become 10,007 after coarsening and 10,109 after
+refinement. First-percentile quality falls from 0.383975 to 0.381938 and median
+from 0.664257 to 0.664240. An edge-violation count is not an FE-error estimate;
+this result establishes no accuracy benefit. The simple exchange is not
+selected for a stiffness solve or repeated automatically. The measured
+1,852-node release is also much smaller than the audit's 108,311-node support
+cost, so that earlier cost must not be treated as freely recoverable capacity.
+
+All motion operations keep the complete curved cavity boundary fixed and
+transport incident edge midpoints by half the corner displacement. The
+selected stars are disjoint, and each accepted motion passes positive sampled
+Jacobians along four motion fractions and a 1e-10 relative volume guard.
+Whole meshes pass independent geometry, volume, point uniqueness, coherent
+facets, positive125 Jacobians and periodic pairing. Counts and complete
+physical boundary coordinates are unchanged. These are changed approximation
+spaces; no old FE field is transferred or called a nested correction.
+
+The larger pass gives these median changes:
+
+| Case | Before | After | Other quality findings |
+|---|---:|---:|---|
+| Gyroid | 0.673738 | 0.673579 | Median regresses; no default promotion. |
+| Schwarz | 0.916233 | 0.915926 | Minimum improves, but p01, p10 and median regress. |
+| Spinodoid | 0.786726 | 0.787318 | Median improves, but p10 regresses. |
+| Lattice | 0.685789 | 0.690140 | Minimum, p01, p10, median, p90 and p99 improve; maximum falls slightly. |
+
+The stricter rule compares every sorted local quality value, not only seven
+quantiles. Together with disjoint stars it prevents a global distribution
+regression, which is independently verified on every full sorted output
+vector. A small control rejects a proposal with improved local minimum and
+median but a worse upper tail. This addresses the actual regression observed
+in experiment 600 rather than changing a sizing parameter.
+
+Resource check **602** assembles the exact larger lattice-pass operator and
+four-level AMG at **6.5359 GiB**, without CG. Its matrix SHA is
+`fc2d89a8c37eede61efdd2229823aee976d187aed3cfc50d6c766ac7e5081bcb`.
+The larger lattice-only pass is selected for six fresh loads in **603**, with
+an explicitly declared 10 GiB ceiling and 900-second deadline. This choice
+is frozen before evaluating its stiffness. The other changed cases are not
+promoted. Independent complete-field and positive-quadrature audits and all
+24 retained lattice models are required. Job 603 completes all six finite
+fields with the exact resource-check matrix hash and a freshly built first
+hierarchy. The other five loads reuse only that same operator's hierarchy;
+no solution field is replayed. Saved-mesh solve time is 210.624 seconds and
+peak RSS is **8.1401 GiB** under the declared 10 GiB limit.
+
+Independent field/positive-rule audit **604** passes reactions, energy and
+periodic jumps. Positive125 versus positive64 energy sensitivity is
+**7.6467e-9**; positive125 versus the solved tensor is 3.9242e-8. Assessment
+**605** retains all 24 tensor hashes unchanged and gives **1.213246982%**
+worst disagreement, versus 1.215175763% before relocation. This is only
+0.001928781 percentage points of improvement and still fails 1%. The score
+belongs to the larger 2,982-corner-operation pass, not the strict 140-operation
+variant. That stricter variant has no stiffness assessment.
+
+The shape pass improves lattice minimum quality from 0.222689 to 0.234225,
+first percentile from 0.413661 to 0.425978, and median from 0.685789 to
+0.690140, with identical counts and physical curved boundary. Maximum
+quality drops from 0.997098 to 0.996325. It remains below actual's 0.796052
+median and above actual's 0.994670612% model disagreement. This is component
+progress, not all-metric dominance. No production default, new reference,
+continuum/local-stress claim or live workflow timing is promoted.
+
+What works: reversible periodic sibling coarsening on the exact old domain;
+full-mesh curved motion admission; and the strict local distribution guard
+with an independently verified global non-regression result. What does not
+work well enough: the naive one-pass budget exchange, local minimum/median
+acceptance as a global quality guard, and relying on shape improvement alone
+to close the stiffness gap. The next allocation experiment needs a measured
+net benefit beyond local edge lengths. Do not repeat the same exchange,
+nearby sizing choices or closed enrichment family automatically.
+Evidence and limitations are recorded in
+`handoff/macbook/metric-exchange-relocation-findings-20261026.json`.
+The selection is recorded in
+`handoff/macbook/lattice-relocation-solve-selection-20261026.json`.
 
 ### Evidence-ranked improvement directions
 
