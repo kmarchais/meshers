@@ -1,0 +1,229 @@
+{
+  "macbook-lattice-quadratic-quality-preflight-v1": {
+    "result.json": {
+      "status": "admitted-needs-reference",
+      "qualified": true,
+      "case": "smooth-lattice",
+      "order": 2,
+      "nodes": 249824,
+      "elements": 162189,
+      "geometry": {
+        "sampled_forward_max": 0.00027866151779207363,
+        "sampled_reverse_max": 0.00024170346305041107,
+        "sampled_two_sided_max": 0.00027866151779207363,
+        "outward_forward_max": 0.00027866151779207363,
+        "inward_forward_max": 0.0002215619839823279,
+        "projection_failed": 0,
+        "forward_samples": 240552,
+        "reverse_samples": 34791,
+        "volume": 0.24823346607910812,
+        "relative_volume_error": -0.00031241746507171264,
+        "q_min_corner": 0.22268897020668904,
+        "q_p01_corner": 0.4136610247703045,
+        "minimum_dihedral_deg_corner": 15.919715138492222,
+        "minimum_sampled_jacobian": 1.1807929390454177e-09,
+        "reverse_tessellation_delta_max": 0.00010611274415476316,
+        "quadratic_reverse_subdivisions": [
+          4,
+          8
+        ],
+        "facet_consistency": {
+          "nodes": 249824,
+          "elements": 162189,
+          "unique_faces": 338722,
+          "interior_faces": 310034,
+          "extracted_boundary_faces": 28688,
+          "same_orientation_shared_faces": 0,
+          "nonmanifold_faces": 0,
+          "duplicate_cells": 0,
+          "duplicate_surface_faces": 0,
+          "provided_boundary_matches_extraction": true,
+          "missing_provided_faces": 0,
+          "extra_provided_faces": 0,
+          "nonpositive_corner_determinants": 0,
+          "minimum_corner_determinant": 1.1807929390457701e-09,
+          "oriented_facet_consistency_passed": true,
+          "conflict_examples": [],
+          "scope": "Oriented corner-face incidence and same-side neighbor diagnostics; necessary consistency, not a certificate of curved geometry or absence of nonlocal intersections"
+        },
+        "oriented_facet_consistency_passed": true,
+        "geometry_admitted": true
+      },
+      "periodic": {
+        "periodic_pair_counts": [
+          3601,
+          4000,
+          3495
+        ],
+        "periodic_coordinate_errors": [
+          1.1102230246251565e-16,
+          1.6653345369377348e-16,
+          1.6653345369377348e-16
+        ],
+        "periodic_pair_tolerance": 1e-10,
+        "periodic_equivalence_classes": 238815,
+        "periodic_triangles_match": true
+      },
+      "source": "experiments/adaptive/runs/macbook-lattice-longest-edge-closure-amg-v3",
+      "source_nodes": 250000,
+      "source_elements": 162365,
+      "local_statistics": {
+        "examined_edges": {
+          "valence3": 18369,
+          "valence4": 69854
+        },
+        "corner_improving_variants": 10876,
+        "locally_curved_admitted_variants": 10876,
+        "locally_curved_admitted_edges": 9306,
+        "valence3_admitted": 192,
+        "valence4_admitted": 10684
+      },
+      "accepted_disjoint_operations": 8508,
+      "valence3_operations": 176,
+      "valence4_operations": 8332,
+      "passes": 1,
+      "old_quality_quantiles": {
+        "min": 0.20687341294930375,
+        "p01": 0.3839749740524472,
+        "p10": 0.5017060652826143,
+        "median": 0.664256848863906,
+        "p90": 0.8495032459327098,
+        "p99": 0.9459218249544799,
+        "max": 0.9970982341192843
+      },
+      "quality_quantiles": {
+        "min": 0.22268897020668854,
+        "p01": 0.41366102477030403,
+        "p10": 0.5275477559728612,
+        "median": 0.6857893365507817,
+        "p90": 0.863176478093998,
+        "p99": 0.9492236970314721,
+        "max": 0.9970982341192843
+      },
+      "curved_boundary_coordinates_identical": true,
+      "all_boundary_Tri6_associations_preserved": true,
+      "old_approximation_space_preserved": false,
+      "fe_fields_used": false,
+      "saved_seed_replayed": true,
+      "native_only": false,
+      "comparative_timing_claim": false,
+      "reference_promoted": false,
+      "stiffness_assessed": false,
+      "mesh_sha256": "b19d4951d6b679e09c33ad418a5fbb0f66a47162c0d1ae2aa621b69963492f96",
+      "operations_sha256": "2fa413ad2494b69876bf55c4375d8aa6832babca0b49e610341a539d817d4bc0",
+      "selection": "One disjoint pass, descending local minimum-quality gain; edge and diagonal break ties",
+      "inputs": {
+        "/Users/kmarchais/dev/meshers/experiments/adaptive/quadratic_quality_preflight.py": "7792cbf94ab527714a26cab2c78cf515fc4942bd67a6298e4375b66c29742eee",
+        "/Users/kmarchais/dev/meshers/experiments/adaptive/quadratic_edge_removal_probe.py": "f26a4be16f7aeb4fce6d89732754fab0e5d39e86b4d4c62466a3afd547cec6ed",
+        "/Users/kmarchais/dev/meshers/experiments/adaptive/nested_refinement.py": "7f78251d150ebcee928db1b49e22b64ee89efde5cdc238c1f5b9994aad36a6b8",
+        "/Users/kmarchais/dev/meshers/experiments/adaptive/facet_incidence_audit.py": "4f51afc196c85e1d0bc64d7a96507517ddc6e32ccd8380a2ac77cae0ace89610",
+        "/Users/kmarchais/dev/meshers/experiments/adaptive/microgen_workflow.py": "9f513dfd3e6e5a72a71a54f70c0c2cf7c7a1ebe7256886ee3feaf7d7ad7de161",
+        "/Users/kmarchais/dev/meshers/experiments/adaptive/scorecard.py": "8f26256c7df0e84c9f35cdd71bf4f95a74e072d45469002b213c5dcd4f1bab2a",
+        "/Users/kmarchais/dev/meshers/experiments/adaptive/quadrature_audit.py": "020677df452ec86864e687c9b35e2c69e70f8587ec54240ce0c4eaa4b717319e",
+        "/Users/kmarchais/dev/meshers/crates/meshers-core/src/tet_adapt.rs": "2176ce0b548db1a1304961d3f8c10da102fb3aeba42fc65dea03d9cfb87ded15",
+        "experiments/adaptive/runs/macbook-lattice-longest-edge-closure-amg-v3/mesh.npz": "34ece26da768190ac33b1305db8cce58d3d967b9d1116f5221a01faaadf7c034",
+        "experiments/adaptive/runs/macbook-lattice-longest-edge-closure-amg-v3/result.json": "5340f00352f5d7d82811e594c12c39650b565d7bd3f4142d0c4609f2cab3a352",
+        "experiments/adaptive/runs/macbook-lattice-longest-edge-closure-amg-v3/smooth-lattice-samples.npz": "a2b4375d2c99901f03b34e913563c887a4cdcff00bca35983adb7ef9d5311abe",
+        "experiments/adaptive/runs/macbook-lattice-longest-edge-closure-amg-v3/smooth-lattice-specimen.json": "0e5b34b76183341a6e0d454f13cd404668ab82675f9a51cd9d2ecf3c91be3316"
+      },
+      "scope": "Saved Meshers prototype with geometry-only curved quality retopology; not live generation, a nested-space correction or an accuracy/performance result"
+    },
+    "worker.json": {
+      "returncode": 0,
+      "limit_failure": null,
+      "peak_rss_bytes": 1080950784,
+      "wall_s": 24.89946500000042,
+      "wall_s_clock": "monotonic",
+      "elapsed_realtime_s": 24.899469137191772,
+      "suspension_or_clock_adjustment_s": 4.1371913539478555e-06,
+      "idle_sleep_prevention": [
+        "/usr/bin/caffeinate",
+        "-i"
+      ],
+      "memory_bytes": 8589934592,
+      "memory_enforcement": "process-tree-rss-watchdog",
+      "rss_poll_interval_s": 0.25,
+      "platform": "darwin",
+      "numerical_thread_policy": {
+        "environment": {
+          "OPENBLAS_NUM_THREADS": "1",
+          "OMP_NUM_THREADS": "1",
+          "MKL_NUM_THREADS": "1",
+          "VECLIB_MAXIMUM_THREADS": "1",
+          "RAYON_NUM_THREADS": "1"
+        },
+        "accelerate_blas_threading": 1,
+        "accelerate_scope": "calling thread"
+      }
+    },
+    "result_sha256": "5226326cb48c9e2123c98a30e4db14e36a7618dacdd4d777dd8effc1a912bfa4"
+  },
+  "macbook-lattice-quadratic-quality-resource-v1": {
+    "result.json": {
+      "passed": true,
+      "prepared": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-lattice-quadratic-quality-preflight-v1",
+      "nodes": 249824,
+      "elements": 162189,
+      "resources": {
+        "reduced_shape": [
+          716442,
+          716442
+        ],
+        "nnz": 58016240,
+        "matrix_sha256": "38613af1ee364d4857cc5d92497067dd3d1a323775556504793d220b490ab971",
+        "csr_bytes": 699060652,
+        "rss_before_amg_bytes": 4947918848,
+        "cg_started": false,
+        "amg_setup_passed": true,
+        "levels": 4,
+        "operator_complexity": 1.0564414269487818,
+        "rss_after_amg_bytes": 6990954496
+      },
+      "inputs": {
+        "/Users/kmarchais/dev/meshers/experiments/adaptive/operator_resource_probe.py": "1c9d94ed99876e538693002bb6ac67d40e2e26bc971baa2741c65eaa0611122d",
+        "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-lattice-quadratic-quality-preflight-v1/mesh.npz": "b19d4951d6b679e09c33ad418a5fbb0f66a47162c0d1ae2aa621b69963492f96",
+        "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-lattice-quadratic-quality-preflight-v1/manifest.json": "48eee20734d2cb31a996680ce39ebfc494725ef9a3eed435dc33e6b0cedb28c4",
+        "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-lattice-quadratic-quality-preflight-v1/worker.json": "db0d223d01a5ffa0ff67846c3433b7be3baafef1fda68657a574c460e2467948",
+        "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-lattice-quadratic-quality-preflight-v1/result.json": "5226326cb48c9e2123c98a30e4db14e36a7618dacdd4d777dd8effc1a912bfa4",
+        "/Users/kmarchais/dev/meshers/experiments/adaptive/stress_recovery.py": "c9d74455c014c3b56ab656ca3f6a9cbf259dc11904318fecc354dcc6368651ac",
+        "/Users/kmarchais/dev/meshers/experiments/adaptive/amg_reference.py": "41f8bbdfc6fc175beec8eda9ba28b5db195e2615a656cd6d0d1ff33654d2354b",
+        "/Users/kmarchais/dev/meshers/experiments/adaptive/microgen_workflow.py": "9f513dfd3e6e5a72a71a54f70c0c2cf7c7a1ebe7256886ee3feaf7d7ad7de161"
+      },
+      "prepared_geometry_admitted": true,
+      "cg_started": false,
+      "admission_performed": false,
+      "reference_promoted": false,
+      "comparative_timing_claim": false,
+      "scope": "Fresh-process resource diagnosis of the exact saved mesh; not admission or an equilibrium result"
+    },
+    "worker.json": {
+      "returncode": 0,
+      "limit_failure": null,
+      "peak_rss_bytes": 6991511552,
+      "wall_s": 16.12293412500003,
+      "wall_s_clock": "monotonic",
+      "elapsed_realtime_s": 16.122936010360718,
+      "suspension_or_clock_adjustment_s": 1.8853606889024377e-06,
+      "idle_sleep_prevention": [
+        "/usr/bin/caffeinate",
+        "-i"
+      ],
+      "memory_bytes": 10737418240,
+      "memory_enforcement": "process-tree-rss-watchdog",
+      "rss_poll_interval_s": 0.25,
+      "platform": "darwin",
+      "numerical_thread_policy": {
+        "environment": {
+          "OPENBLAS_NUM_THREADS": "1",
+          "OMP_NUM_THREADS": "1",
+          "MKL_NUM_THREADS": "1",
+          "VECLIB_MAXIMUM_THREADS": "1",
+          "RAYON_NUM_THREADS": "1"
+        },
+        "accelerate_blas_threading": 1,
+        "accelerate_scope": "calling thread"
+      }
+    },
+    "result_sha256": "99c5cc59f4e084b3d1a240f33b82fdbae769e3ae9a17f0f6b82826fc490d251b"
+  }
+}

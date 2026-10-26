@@ -1,0 +1,31 @@
+{
+  "scope": "One geometry-only disjoint valence3/4 quality pass on the best admitted saved Meshers prototype. No FE data in selection and no native/live timing claim.",
+  "source": "experiments/adaptive/runs/macbook-lattice-longest-edge-closure-amg-v3",
+  "passes": 1,
+  "selection": "Descending local minimum-quality gain, then edge and diagonal IDs; require disjoint old cells and distinct new diagonals.",
+  "quality_gain_minimum": 1e-06,
+  "curved_boundary_trace_identity": true,
+  "node_and_tet_increase_allowed": false,
+  "new_periodic_boundary_nodes_allowed": false,
+  "old_approximation_space_preserved": false,
+  "field_transfer_allowed": false,
+  "requires_fresh_six_loads_if_admitted": true,
+  "controls": {
+    "node_cap": 250000,
+    "tet_cap": 250000,
+    "quality_min": 0.1,
+    "distance": 0.002,
+    "absolute_volume_error": 0.01,
+    "local_curved_volume_difference": 1e-10,
+    "global_curved_volume_difference": 1e-10,
+    "memory_gib": 8,
+    "timeout_s": 600,
+    "numerical_threads": 1
+  },
+  "after_preflight": "Read global geometry, oriented facets, boundary Tri6 identity, periodic counts, positive Jacobians, point uniqueness, counts and actual quality quantiles. No fields or reference promotion before global admission and resource feasibility.",
+  "inputs": {
+    "experiments/adaptive/quadratic_quality_preflight.py": "7792cbf94ab527714a26cab2c78cf515fc4942bd67a6298e4375b66c29742eee",
+    "experiments/adaptive/quadratic_edge_removal_probe.py": "f26a4be16f7aeb4fce6d89732754fab0e5d39e86b4d4c62466a3afd547cec6ed",
+    "handoff/macbook/lattice-quadratic-edge-removal-feasibility-20261026.json": "3a0623c9b52574ea5d2bbf80735e8893ce9b7c43d2b3785d6815c12a01850a52"
+  }
+}

@@ -146,11 +146,25 @@ on the mandatory-longest-edge prototype. Curved bipyramid controls pass.
 It finds 10,876 locally feasible variants on 9,306 edges after checking
 corner-quality improvement, exact cavity Tri6 boundary traces, volume and
 positive Jacobians at the admission points plus a positive 125-point rule.
-These variants overlap. No global mesh is changed or admitted by this probe.
-The next check is one disjoint pass, with no node/tet increase and full global
-admission. This changes the approximation space and requires fresh solves;
-it is not a nested-field correction or a timing result. Evidence is in
-`handoff/macbook/lattice-quadratic-edge-removal-feasibility-20261026.json`.
+These variants overlap. No global mesh is changed or admitted by that probe.
+
+Global preflight 576 then admits one disjoint pass with **8,508 operations**,
+176 valence-3 and 8,332 valence-4. Counts decrease from 250,000 nodes and
+162,365 tets to **249,824 nodes and 162,189 tets**. Curved boundary coordinates
+and all boundary Tri6 associations are identical. Global geometry, volume,
+coherent facets, point uniqueness, positive sampled Jacobians and periodic
+counts pass. Every recorded corner-quality quantile improves or stays equal.
+Minimum rises from 0.206873 to **0.222689**, first percentile from 0.383975 to
+0.413661, and median from 0.664257 to **0.685789**. Median remains below
+actual's 0.796052. No stiffness result exists for this new approximation
+space yet.
+
+Exact operator/AMG resource check 577 passes at **6.5114 GiB** under its
+declared 10 GiB ceiling. This topology change requires fresh fields and is
+not a nested-field correction or a timing result. Local and global evidence
+are recorded in
+`handoff/macbook/lattice-quadratic-edge-removal-feasibility-20261026.json` and
+`handoff/macbook/lattice-quadratic-quality-preflight-evidence-20261026.json`.
 
 ### Longest-edge closure and memory handoff
 
