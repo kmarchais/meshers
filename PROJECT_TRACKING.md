@@ -85,6 +85,31 @@ earlier win and the Gyroid/spinodoid actual-comparator gaps remain as recorded.
 Evidence is retained in
 `handoff/macbook/lattice-directional-assessment-20261026.json`.
 
+### Quality-aware continuation preflight
+
+The next policy keeps the same curve-distance law, ratio 5, physical domain,
+60-pass resource guard and admission caps. It accepts a requested short-edge
+split when both children pass q 0.1 and each child either satisfies the sampled
+metric or retains a legal locally-longest split. Other requests use longer-edge
+closure, whose leaves receive the same check. This is a one-step local guard,
+not a guarantee that all later global refinement will be possible. No FE
+fields enter selection.
+
+A geometry-only regression extracted from level 3 of the earlier greedy run
+has an admitted child at q 0.114833 that cannot split any of its six edges.
+Frozen baseline 566 fails this regression. Green 567 passes 20 controls;
+expanded controls 568 pass all 22, including periodic macro jumps, exact maps,
+safe short-edge acceptance and already-completed metric handling. Source and
+fixture hashes are frozen in
+`handoff/macbook/lattice-quality-closure-selection-20261026.json`.
+
+Geometry-only job **569** is running from a fresh native seed under the
+unchanged 250,000-node/tet caps, 10 GiB and 1,200-second bounds. Its counts,
+stopping reason, continuation/direct/fallback diagnostics, complete geometry
+and periodic admission and operator memory feasibility must be read before
+selecting a solve. No new stiffness or comparative performance result is
+claimed for this policy.
+
 ### Longest-edge closure and memory handoff
 
 The experimental refinement now propagates short-edge requests to longer

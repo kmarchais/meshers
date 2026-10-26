@@ -109,21 +109,24 @@ def main():
         'adaptive', 'adapt_tolerance', 'solver_quadrature_points')
     planned_changes = {}
     defaults = {'max_length': .1, 'interior_refine_nodes': 0, 'crease_grading_requested': False,
-        'crease_bisection_requested': False, 'crease_longest_closure_requested': False}
+        'crease_bisection_requested': False, 'crease_longest_closure_requested': False,
+        'crease_quality_closure_requested': False}
     plan = None
     if args.planned_recipe:
         plan = json.loads(args.planned_recipe.read_text())
         assert plan['controls']['memory_gib']*1024**3 == memory_bytes
         expected = plan['recipe']
         required = set(recipe_keys) | {'max_length', 'interior_refine_nodes', 'solve_node_cap'}
-        assert required <= set(expected) <= required | {'crease_grading_requested', 'crease_bisection_requested', 'crease_longest_closure_requested'}
+        assert required <= set(expected) <= required | {'crease_grading_requested', 'crease_bisection_requested',
+            'crease_longest_closure_requested', 'crease_quality_closure_requested'}
         expected = {'crease_grading_requested': False, 'crease_bisection_requested': False,
-            'crease_longest_closure_requested': False, **expected}
+            'crease_longest_closure_requested': False, 'crease_quality_closure_requested': False, **expected}
         assert not plan['selection_uses_candidate_stiffness']
         assert all(row.get(key, defaults.get(key)) == value
             for key, value in expected.items())
         density_keys = {'cells', 'min_length', 'max_length', 'interior_refine_nodes', 'adaptive',
-            'adapt_tolerance', 'crease_grading_requested', 'crease_bisection_requested', 'crease_longest_closure_requested'}
+            'adapt_tolerance', 'crease_grading_requested', 'crease_bisection_requested',
+            'crease_longest_closure_requested', 'crease_quality_closure_requested'}
         planned_changes = {key: [old.get(key, defaults.get(key)), value]
             for key, value in expected.items()
             if old.get(key, defaults.get(key)) != value}
@@ -145,6 +148,9 @@ def main():
         assert row['crease_bisection']['edge_metric_sampling'] == plan['edge_metric_sampling']
         assert not row['crease_bisection']['fe_fields_used'] and not row['crease_bisection']['saved_fe_fields_replayed']
         assert row['crease_bisection'].get('longest_edge_closure', False) == row.get('crease_longest_closure_requested', False)
+        assert row['crease_bisection'].get('quality_split_closure', False) == row.get('crease_quality_closure_requested', False)
+        if row.get('crease_quality_closure_requested', False):
+            assert row['crease_bisection']['quality_split_policy'] == plan['quality_split_policy']
         for key in ('law', 'edge_metric_sampling'):
             before = old.get('crease_bisection', {}).get(key)
             if before != row['crease_bisection'][key]:

@@ -37,6 +37,7 @@ def worker(args):
     row["crease_grading_requested"] = getattr(args, "crease_grading", False)
     row["crease_bisection_requested"] = getattr(args, "crease_bisection", False)
     row["crease_longest_closure_requested"] = getattr(args, "crease_longest_closure", False)
+    row["crease_quality_closure_requested"] = getattr(args, "crease_quality_closure", False)
     started = time.perf_counter()
     if args.order == 2 and args.quadrature_points == 4:
         row.update(timing_comparable=False,
@@ -246,6 +247,7 @@ def main():
     parser.add_argument("--crease-grading", action="store_true")
     parser.add_argument("--crease-bisection", action="store_true")
     parser.add_argument("--crease-longest-closure", action="store_true")
+    parser.add_argument("--crease-quality-closure", action="store_true")
     parser.add_argument("--compiled-spinodoid", action="store_true")
     parser.add_argument("--order", type=int, default=1, choices=(1, 2))
     parser.add_argument("--native-tolerance", type=float, default=0.002)
@@ -271,6 +273,7 @@ def main():
     assert not args.isolate_solve or (args.solve and args.amg and args.order == 2 and args.quadrature_points == 15)
     assert not (args.crease_grading and args.crease_bisection)
     assert not args.crease_longest_closure or args.crease_bisection
+    assert not args.crease_quality_closure or (args.crease_bisection and not args.crease_longest_closure)
     assert not (args.crease_grading or args.crease_bisection) or (args.case == "smooth-lattice" and not args.no_adapt
         and args.order == 2 and args.cap_length is None and args.interior_refine_nodes == 0)
     assert args.cap_length is None or (not args.no_adapt and 0 < args.cap_length < .1 and 0 < args.cap_band < .5)
@@ -300,6 +303,10 @@ def main():
     if args.crease_longest_closure:
         source_hashes.update({str(workflow.HERE/name): workflow.digest(workflow.HERE/name)
             for name in ("longest_edge_closure.py", "test_longest_edge_closure.py")})
+    if args.crease_quality_closure:
+        source_hashes.update({str(workflow.HERE/name): workflow.digest(workflow.HERE/name)
+            for name in ("quality_split_closure.py", "test_quality_split_closure.py",
+                "longest_edge_closure.py", "test_longest_edge_closure.py", "fixtures/quality-split-trap.json")})
     if args.isolate_solve:
         source_hashes[str(workflow.HERE / "fresh_mesh_solve.py")] = workflow.digest(workflow.HERE / "fresh_mesh_solve.py")
     if args.amg:
@@ -321,6 +328,7 @@ def main():
         "crease_grading_requested": args.crease_grading,
         "crease_bisection_requested": args.crease_bisection,
         "crease_longest_closure_requested": args.crease_longest_closure,
+        "crease_quality_closure_requested": args.crease_quality_closure,
         "solve_process_boundary": "exec-replace" if args.isolate_solve else "same-process",
         "python_source_sha256": source_hashes,
         "solver": "cached-elastic-block-amg-cg" if args.amg else "jacobi-cg",
@@ -372,6 +380,8 @@ def main():
                 command.append("--crease-bisection")
             if args.crease_longest_closure:
                 command.append("--crease-longest-closure")
+            if args.crease_quality_closure:
+                command.append("--crease-quality-closure")
             if args.amg:
                 command.append("--amg")
             if args.cap_length is not None:
