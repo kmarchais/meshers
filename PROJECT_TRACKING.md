@@ -2,6 +2,14 @@
 
 ## Verified broad comparison, 26 October 2026
 
+The user selected **linear density/thickness grading** as the emphasis for
+the added graded TPMS cases. Periodic modulation remains a secondary control.
+The current linear specimen grades a level-set thickness parameter; it is
+not a calibrated linear density ramp or verified linear physical thickness.
+Any density-calibrated ramp requires a separately frozen specimen. This
+priority addendum preserves the measured protocol and all recorded failures:
+[grading priority](handoff/macbook/comparison-grading-priority-20261026.json).
+
 The requested comparison now covers eight fixed specimens. The final audit
 passes for **158 attempts across 20 runs**, including independent replay of
 **30 distinct produced meshes**, measured input/artifact hashes, frozen

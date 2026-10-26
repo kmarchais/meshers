@@ -6,6 +6,12 @@ The strongest generation results are Schwarz P curved Tet10 and the lattice Unif
 
 ## Coverage under the unchanged gates
 
+The user selected linear density/thickness grading as the primary added
+graded-TPMS benchmark. Periodic modulation remains a secondary control.
+The existing linear case varies the level-set thickness parameter. A
+prescribed linear density ramp needs a separate calibrated, frozen specimen.
+This priority change leaves the measured protocol and results unchanged.
+
 Pass means five measured successes after an excluded warmup. The linear-grade case is bounded and nonperiodic for both arms. Every other case requires full periodic nodes and cap facets. Schwarz D failures repeat in three fresh attempts per route.
 
 | Fixed specimen | Meshers Tet4 | Meshers curved Tet10 | Actual Microgen+MMG tested routes |

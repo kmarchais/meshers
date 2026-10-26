@@ -1,0 +1,20 @@
+{
+  "date": "2026-10-26",
+  "source": "User selection: Linear density/thickness gradient",
+  "scope": "Priority within the added graded-TPMS cases; original four specimens and overall failure priorities remain in scope.",
+  "primary_existing_case": "graded-gyroid-linear",
+  "secondary_control": "graded-gyroid-periodic",
+  "existing_linear_definition": {
+    "level_set_half_width": "0.55*(1+0.5*z)",
+    "z_interval": [-0.5, 0.5],
+    "meaning": "Linear level-set thickness parameter; neither prescribed linear material density nor verified linear physical wall thickness.",
+    "boundary_policy": "Bounded nonperiodic meshing for both workflows because opposite-z material traces differ."
+  },
+  "followup": "Emphasize admission and fidelity of the existing linear case. If a prescribed density ramp is added, calibrate and freeze it as a separate specimen before measurement; use the identical field and samples in both arms.",
+  "historical_protocol": "handoff/macbook/comparison-protocol-20261026.json",
+  "historical_results": "handoff/macbook/comparison-findings-20261026.json",
+  "historical_protocol_and_results_unchanged": true,
+  "existing_tet4_distance_rejection_retained": true,
+  "admission_gates_unchanged": true,
+  "new_mesh_or_solve_performed": false
+}
