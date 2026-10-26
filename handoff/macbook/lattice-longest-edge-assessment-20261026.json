@@ -1,0 +1,650 @@
+{
+  "assessment": {
+    "case": "smooth-lattice",
+    "source": "experiments/adaptive/runs/macbook-lattice-longest-edge-closure-amg-v3",
+    "field_audit_passed": true,
+    "complete_six_load_fields": true,
+    "generation_route": "meshers-experimental-exact-map-directional-refinement",
+    "native_only": false,
+    "fixed_recipe_and_specimen": false,
+    "fixed_specimen": true,
+    "planned_recipe": "handoff/macbook/lattice-longest-edge-memory10-selection-20261026.json",
+    "declared_planned_recipe_changes": {
+      "crease_bisection_requested": [
+        false,
+        true
+      ],
+      "crease_longest_closure_requested": [
+        false,
+        true
+      ],
+      "crease_bisection_law": [
+        null,
+        {
+          "kind": "periodic-reentrant-curve-distance",
+          "exponent": 0.75,
+          "minimum_length": 0.002,
+          "maximum_length": 0.1,
+          "transition_distance": 0.038461538461538464,
+          "curve_sample_spacing_target": 0.0005,
+          "minimum_reentrant_angle_deg": 190
+        }
+      ],
+      "crease_bisection_edge_metric_sampling": [
+        null,
+        "Maximum at both endpoints and quadratic edge midpoint"
+      ]
+    },
+    "declared_max_length_change": null,
+    "declared_interior_refinement_change": null,
+    "preflight_mesh_identical_up_to_numbering": true,
+    "full_tet10_and_tri6_local_associations_preserved": true,
+    "retained_model_count": 24,
+    "retained_model_tensor_hashes": [
+      "1dc2276ae93d3a194cb332b06f5c7562f512d21c6df8746cc427bdb5cf5e4483",
+      "05aa92ece78bb3d56b2e1f1746d82d8ab6b7ec504988fb2831dca28bbd1af699",
+      "bc97fc91658a12a023b42b599cee06057e95708952068834f62e510ffb377e90",
+      "6a3d66a8a9b8d006a80f6a07a519887c64ad569df9ded79f58396165b7d185c0",
+      "cf5dbd88b110410ca94f5263ca1d47dc97987c3cc10790d836fc9895f3527889",
+      "fbfe07add640ae33f49cb0677b3df2ed43034a3d6d3fb3fd879b388c5a819ee1",
+      "1777cef43e1d246879ff5bcfd964a13baf885baa13faafef4f77fe97f48ec84a",
+      "c328664caccc5082c37d300421d51519d3893948b0e5f7e31584f8ce47aafee3",
+      "368dd8a49825c6d08e96d559fb79cb12d6244749a163b30582589eedb831a72b",
+      "f22e43514f0f9b8b8f43087aa8bdfa59bb64f3f893029ca490e5defc7764f35c",
+      "809ca2045bd26faeb9c225bff2b3febe9e5c290eccc35c2b444f8421c832a0d4",
+      "c010ae7f8e57aebad23a3a42d3f248c7ea0ff6ed31e290a3dff62bbfeabeaef7",
+      "2aa3d0453da7fc045fb21d9d818a50d7612b9e9f66542cf7fb75fbf4b8e29f76",
+      "2323cd67c181e81b13a4164333f002387e2e807e2cbc2a27052dc6c54f5c026f",
+      "acd72b95c9f71e32265b05d2b9ad5a4367ed10ec7d47c72541826ded75dc7474",
+      "46d12a65100eea687c4d994e19328ed1f60a8b01f66f84f4c5f9b5bb2edac406",
+      "a9e148d4d1187745a4b5bb0631b020775900bb903aa9e6ac918417ed5061d903",
+      "a16219ac2de2e13355bc6b03929cfc7b4b4b65221b65d184e53113fcfaf578c6",
+      "3f11bc9270b573e6aff65e7b435df249dbaded408637d09e88ec4366977b0b0c",
+      "698df2172b607b3660d5edb02cc5418a56f758cdac945a657dd02ef5807443dd",
+      "9574face72643c530171ec8a3599d0b9d2f1e3c7b049fe868b26a1201ac64545",
+      "2b2a3fc524801d1906bc4911c8d9922e59c4ce6e85acfdfca83df4a65b059400",
+      "ded13a9eb3b71fe54bcd5c89e03378cb7442879e56095a24f4391a4c242dbaea",
+      "948e95978a44e3c8b251004c9f5fad6b47765cbfdad570db91d9ab49ba6d622c"
+    ],
+    "retained_models_unchanged": true,
+    "distinct_retained_model_tensors": 24,
+    "reference_report_count": 3,
+    "previous_and_current_solve_node_guards": [
+      250000,
+      250000
+    ],
+    "both_meshes_fit_smaller_solve_guard": true,
+    "models": [
+      {
+        "source": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/g3-lattice-curve-grading-reference-comparison-v1.json",
+        "index": 0,
+        "worst_model_disagreement": 0.010005802839618385
+      },
+      {
+        "source": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/g3-lattice-curve-grading-reference-comparison-v1.json",
+        "index": 1,
+        "worst_model_disagreement": 0.004632421889494588
+      },
+      {
+        "source": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/g3-lattice-curve-grading-reference-comparison-v1.json",
+        "index": 2,
+        "worst_model_disagreement": 0.0028560938245248365
+      },
+      {
+        "source": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/g3-lattice-curve-grading-reference-comparison-v1.json",
+        "index": 3,
+        "worst_model_disagreement": 0.001971809743241253
+      },
+      {
+        "source": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/g3-lattice-curve-grading-reference-comparison-v1.json",
+        "index": 4,
+        "worst_model_disagreement": 0.010788919709704916
+      },
+      {
+        "source": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/g3-lattice-curve-grading-reference-comparison-v1.json",
+        "index": 5,
+        "worst_model_disagreement": 0.0050193468308228645
+      },
+      {
+        "source": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/g3-lattice-curve-grading-reference-comparison-v1.json",
+        "index": 6,
+        "worst_model_disagreement": 0.0031127471784705343
+      },
+      {
+        "source": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/g3-lattice-curve-grading-reference-comparison-v1.json",
+        "index": 7,
+        "worst_model_disagreement": 0.002163593543140334
+      },
+      {
+        "source": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/g3-lattice-reference-sensitivity-v2.json",
+        "index": 0,
+        "worst_model_disagreement": 0.012160712008430368
+      },
+      {
+        "source": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/g3-lattice-reference-sensitivity-v2.json",
+        "index": 1,
+        "worst_model_disagreement": 0.0013885214885016157
+      },
+      {
+        "source": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/g3-lattice-reference-sensitivity-v2.json",
+        "index": 2,
+        "worst_model_disagreement": 0.004528986100060927
+      },
+      {
+        "source": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/g3-lattice-reference-sensitivity-v2.json",
+        "index": 3,
+        "worst_model_disagreement": 0.0062409417415929805
+      },
+      {
+        "source": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/g3-lattice-reference-sensitivity-v2.json",
+        "index": 4,
+        "worst_model_disagreement": 0.009313237355148125
+      },
+      {
+        "source": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/g3-lattice-reference-sensitivity-v2.json",
+        "index": 5,
+        "worst_model_disagreement": 0.002417825089612046
+      },
+      {
+        "source": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/g3-lattice-reference-sensitivity-v2.json",
+        "index": 6,
+        "worst_model_disagreement": 0.005356002126577047
+      },
+      {
+        "source": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/g3-lattice-reference-sensitivity-v2.json",
+        "index": 7,
+        "worst_model_disagreement": 0.006861718628165895
+      },
+      {
+        "source": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/g3-lattice-microgen-reference-comparison-v1.json",
+        "index": 0,
+        "worst_model_disagreement": 0.007183759775563054
+      },
+      {
+        "source": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/g3-lattice-microgen-reference-comparison-v1.json",
+        "index": 1,
+        "worst_model_disagreement": 0.0028393467685234462
+      },
+      {
+        "source": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/g3-lattice-microgen-reference-comparison-v1.json",
+        "index": 2,
+        "worst_model_disagreement": 0.0014121792652472024
+      },
+      {
+        "source": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/g3-lattice-microgen-reference-comparison-v1.json",
+        "index": 3,
+        "worst_model_disagreement": 0.0007116385967394861
+      },
+      {
+        "source": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/g3-lattice-microgen-reference-comparison-v1.json",
+        "index": 4,
+        "worst_model_disagreement": 0.008549163701431349
+      },
+      {
+        "source": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/g3-lattice-microgen-reference-comparison-v1.json",
+        "index": 5,
+        "worst_model_disagreement": 0.003512125983935139
+      },
+      {
+        "source": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/g3-lattice-microgen-reference-comparison-v1.json",
+        "index": 6,
+        "worst_model_disagreement": 0.001854813597898148
+      },
+      {
+        "source": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/g3-lattice-microgen-reference-comparison-v1.json",
+        "index": 7,
+        "worst_model_disagreement": 0.0010372954243023486
+      }
+    ],
+    "minimum_model_disagreement": 0.0007116385967394861,
+    "worst_model_disagreement": 0.012160712008430368,
+    "previous_worst_model_disagreement": 0.02412306220321992,
+    "passes_one_percent_all_models": false,
+    "quadrature_sensitivity": 3.965083599086807e-08,
+    "quadrature_sensitivity_limit": 0.0001,
+    "workflow_seconds": 502.3206717089997,
+    "peak_rss_gib": 7.939544677734375,
+    "worker_memory_limit_bytes": 10737418240,
+    "geometry": {
+      "sampled_forward_max": 0.00027866151779207363,
+      "sampled_reverse_max": 0.00024170346305041107,
+      "sampled_two_sided_max": 0.00027866151779207363,
+      "outward_forward_max": 0.00027866151779207363,
+      "inward_forward_max": 0.0002215619839823279,
+      "projection_failed": 0,
+      "forward_samples": 240552,
+      "reverse_samples": 34791,
+      "volume": 0.24823346607910785,
+      "relative_volume_error": -0.00031241746507282286,
+      "q_min_corner": 0.20687341294930375,
+      "q_p01_corner": 0.3839749740524468,
+      "minimum_dihedral_deg_corner": 15.919715138492222,
+      "minimum_sampled_jacobian": 1.2043452668031487e-09,
+      "reverse_tessellation_delta_max": 0.00010611274415476316,
+      "quadratic_reverse_subdivisions": [
+        4,
+        8
+      ],
+      "facet_consistency": {
+        "nodes": 250000,
+        "elements": 162365,
+        "unique_faces": 339074,
+        "interior_faces": 310386,
+        "extracted_boundary_faces": 28688,
+        "same_orientation_shared_faces": 0,
+        "nonmanifold_faces": 0,
+        "duplicate_cells": 0,
+        "duplicate_surface_faces": 0,
+        "provided_boundary_matches_extraction": true,
+        "missing_provided_faces": 0,
+        "extra_provided_faces": 0,
+        "nonpositive_corner_determinants": 0,
+        "minimum_corner_determinant": 1.2194903359858424e-09,
+        "oriented_facet_consistency_passed": true,
+        "conflict_examples": [],
+        "scope": "Oriented corner-face incidence and same-side neighbor diagnostics; necessary consistency, not a certificate of curved geometry or absence of nonlocal intersections"
+      },
+      "oriented_facet_consistency_passed": true,
+      "geometry_admitted": true
+    },
+    "previous_geometry": {
+      "sampled_forward_max": 0.00027866151779207363,
+      "sampled_reverse_max": 0.00024170346305041107,
+      "sampled_two_sided_max": 0.00027866151779207363,
+      "outward_forward_max": 0.00027866151779207363,
+      "inward_forward_max": 0.0002215619839823279,
+      "projection_failed": 0,
+      "forward_samples": 116376,
+      "reverse_samples": 34791,
+      "volume": 0.24823346607910796,
+      "relative_volume_error": -0.0003124174650723788,
+      "q_min_corner": 0.365931094329415,
+      "q_p01_corner": 0.5257562465582704,
+      "minimum_dihedral_deg_corner": 20.304467683366056,
+      "minimum_sampled_jacobian": 2.968883356143718e-07,
+      "reverse_tessellation_delta_max": 0.00010611274415476316,
+      "quadratic_reverse_subdivisions": [
+        4,
+        8
+      ],
+      "facet_consistency": {
+        "nodes": 65721,
+        "elements": 41340,
+        "unique_faces": 87736,
+        "interior_faces": 77624,
+        "extracted_boundary_faces": 10112,
+        "same_orientation_shared_faces": 0,
+        "nonmanifold_faces": 0,
+        "duplicate_cells": 0,
+        "duplicate_surface_faces": 0,
+        "provided_boundary_matches_extraction": true,
+        "missing_provided_faces": 0,
+        "extra_provided_faces": 0,
+        "nonpositive_corner_determinants": 0,
+        "minimum_corner_determinant": 6.497581256174787e-07,
+        "oriented_facet_consistency_passed": true,
+        "conflict_examples": [],
+        "scope": "Oriented corner-face incidence and same-side neighbor diagnostics; necessary consistency, not a certificate of curved geometry or absence of nonlocal intersections"
+      },
+      "oriented_facet_consistency_passed": true,
+      "geometry_admitted": true
+    },
+    "tensor_change_from_previous": {
+      "worst_relative_strain_energy_difference": 0.012055561391545946,
+      "relative_tensor_frobenius_difference": 0.0034834706209011116,
+      "relative_energy_difference_eigenvalues": [
+        -0.012055561391545946,
+        -0.011543543356234351,
+        -0.0035410164949742974,
+        -0.0014947146995543078,
+        -0.0014703323323670776,
+        -0.0014094081269492196
+      ]
+    },
+    "reference_promoted": false,
+    "comparative_timing_claim": false,
+    "full_objective_complete": false,
+    "inputs": {
+      "/Users/kmarchais/dev/meshers/experiments/adaptive/lattice_retained_assessment.py": "7c0a981fc699951531757da60507aff8c6f7f0166df8cab9b9ce656adf340243",
+      "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-lattice-longest-edge-closure-assessment-v1/input-lattice_retained_assessment.py": "7c0a981fc699951531757da60507aff8c6f7f0166df8cab9b9ce656adf340243",
+      "/Users/kmarchais/dev/meshers/experiments/adaptive/quadrature_audit.py": "020677df452ec86864e687c9b35e2c69e70f8587ec54240ce0c4eaa4b717319e",
+      "/Users/kmarchais/dev/meshers/experiments/adaptive/tet10_integration.py": "b5adbf4a96ee90953d546c654992d4380843e3b1a865e64e043cd14529e3865d",
+      "/Users/kmarchais/dev/meshers/experiments/adaptive/microgen_workflow.py": "9f513dfd3e6e5a72a71a54f70c0c2cf7c7a1ebe7256886ee3feaf7d7ad7de161",
+      "/Users/kmarchais/dev/meshers/experiments/adaptive/job_parts.py": "cc220d52685be4035a3cf38b85e8e2d8354e55f36c42245cd6e1faad9a44bcab",
+      "experiments/adaptive/runs/macbook-lattice-longest-edge-closure-amg-v3/result.json": "5340f00352f5d7d82811e594c12c39650b565d7bd3f4142d0c4609f2cab3a352",
+      "experiments/adaptive/runs/macbook-lattice-longest-edge-closure-amg-v3/mesh.npz": "34ece26da768190ac33b1305db8cce58d3d967b9d1116f5221a01faaadf7c034",
+      "experiments/adaptive/runs/macbook-lattice-longest-edge-closure-amg-v3/fields.npz": "de340828b85b075a8899f6adce0fbcb4169cfd06c64a572dbfd24bff7090512b",
+      "handoff/macbook/lattice-longest-edge-memory10-selection-20261026.json": "e46d1fba0d40939a9719c3da21d2650657678443fd373e81ce3fa0bc907f54f6",
+      "experiments/adaptive/runs/macbook-lattice-longest-edge-closure-amg-v3/smooth-lattice-samples.npz": "a2b4375d2c99901f03b34e913563c887a4cdcff00bca35983adb7ef9d5311abe",
+      "experiments/adaptive/runs/macbook-cap-phase-lattice26-amg-v1/smooth-lattice-samples.npz": "a2b4375d2c99901f03b34e913563c887a4cdcff00bca35983adb7ef9d5311abe",
+      "experiments/adaptive/runs/macbook-lattice-longest-edge-closure-amg-v3/smooth-lattice-specimen.json": "0e5b34b76183341a6e0d454f13cd404668ab82675f9a51cd9d2ecf3c91be3316",
+      "experiments/adaptive/runs/macbook-cap-phase-lattice26-amg-v1/smooth-lattice-specimen.json": "0e5b34b76183341a6e0d454f13cd404668ab82675f9a51cd9d2ecf3c91be3316",
+      "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/g3-lattice-curve-grading-reference-comparison-v1.json": "bec8af1d841a1b3d0299d3746f96c0562ec0db13927ce8370cce6d22924a23b9",
+      "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/g3-lattice-reference-sensitivity-v2.json": "0bc21b6b9c07819795697047ee827aab8c23363790dc5137ea7d2d1a5aa0ac07",
+      "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/g3-lattice-microgen-reference-comparison-v1.json": "6acf432121761aa9028ffd81be1e146cbd5010e84f6183fab9cd455c966dfdd4",
+      "experiments/adaptive/runs/macbook-lattice-longest-edge-closure-amg-v3/manifest.json": "f8fb0ad581a860701827466722051590465a286f1828778fde055ac152383140",
+      "experiments/adaptive/runs/macbook-lattice-longest-edge-closure-amg-v3/worker.json": "ba1049c5f4947cab11f76333e14b8e8713b0a4e4ab2a8a7622b5ea87ca5ad5e7",
+      "experiments/adaptive/runs/macbook-lattice-longest-edge-closure-preflight-v2/result.json": "89705796da6698f3404cbf7f9a8407f1d153a3f14a0dbf2e95081fe322693413",
+      "experiments/adaptive/runs/macbook-lattice-longest-edge-closure-preflight-v2/mesh.npz": "34ece26da768190ac33b1305db8cce58d3d967b9d1116f5221a01faaadf7c034",
+      "experiments/adaptive/runs/macbook-cap-phase-lattice26-amg-v1/result.json": "30d8dffd392e4ccff45e08967cbb0294e0e6180afa71e370b5edc6bbe5dac772",
+      "experiments/adaptive/runs/macbook-cap-phase-lattice26-amg-v1/mesh.npz": "de8b38a4c87fb092248230cc2ddc52626b3d6e75186dc494fd2ee6f148237755",
+      "experiments/adaptive/runs/macbook-cap-phase-lattice26-amg-v1/fields.npz": "c02922d6f88bffc9ad5f0476a6024ce022b0f44b68cfba7b4905f10a5dacb35f",
+      "experiments/adaptive/runs/macbook-lattice-longest-edge-closure-field-audit-v1/macbook-lattice-longest-edge-closure-amg-v3-consistency.json": "26ff297ea80d5b9d30b72ccca6be4071047b169619927791878c82db19357988",
+      "experiments/adaptive/runs/macbook-lattice-longest-edge-closure-field-audit-v1/macbook-lattice-longest-edge-closure-amg-v3.json": "91f4bf3394224de83c1411140ffccb7de834d1a3dc6e3f670e2d783e4fcbde3a",
+      "experiments/adaptive/runs/macbook-lattice-longest-edge-closure-field-audit-v1/macbook-lattice-longest-edge-closure-amg-v3-worker.json": "abcda05b30ecd61382490d6e9fe237fcbb3073058c746ad7618b5298a0648853",
+      "experiments/adaptive/runs/macbook-lattice-longest-edge-closure-field-audit-v1/manifest.json": "685cec07af876222106a443dc707e41470cc08998162916c625b7909387306a5"
+    },
+    "scope": "Fresh same-host smooth-lattice workflow and complete archived-model assessment; no continuum, local stress or four-case timing victory"
+  },
+  "nesting": {
+    "source": "experiments/adaptive/runs/macbook-lattice-longest-edge-closure-amg-v3",
+    "parent": "experiments/adaptive/runs/macbook-cap-phase-lattice26-amg-v1",
+    "inputs": {
+      "experiments/adaptive/runs/macbook-lattice-longest-edge-closure-amg-v3/result.json": "5340f00352f5d7d82811e594c12c39650b565d7bd3f4142d0c4609f2cab3a352",
+      "experiments/adaptive/runs/macbook-lattice-longest-edge-closure-amg-v3/mesh.npz": "34ece26da768190ac33b1305db8cce58d3d967b9d1116f5221a01faaadf7c034",
+      "experiments/adaptive/runs/macbook-lattice-longest-edge-closure-amg-v3/fields.npz": "de340828b85b075a8899f6adce0fbcb4169cfd06c64a572dbfd24bff7090512b",
+      "experiments/adaptive/runs/macbook-cap-phase-lattice26-amg-v1/result.json": "30d8dffd392e4ccff45e08967cbb0294e0e6180afa71e370b5edc6bbe5dac772",
+      "experiments/adaptive/runs/macbook-cap-phase-lattice26-amg-v1/mesh.npz": "de8b38a4c87fb092248230cc2ddc52626b3d6e75186dc494fd2ee6f148237755",
+      "experiments/adaptive/runs/macbook-cap-phase-lattice26-amg-v1/fields.npz": "c02922d6f88bffc9ad5f0476a6024ce022b0f44b68cfba7b4905f10a5dacb35f",
+      "experiments/adaptive/runs/macbook-lattice-longest-edge-closure-amg-v3/feature-seed/mesh.npz": "de8b38a4c87fb092248230cc2ddc52626b3d6e75186dc494fd2ee6f148237755",
+      "experiments/adaptive/runs/macbook-lattice-longest-edge-closure-field-audit-v1/macbook-lattice-longest-edge-closure-amg-v3.json": "91f4bf3394224de83c1411140ffccb7de834d1a3dc6e3f670e2d783e4fcbde3a",
+      "/Users/kmarchais/dev/meshers/experiments/adaptive/directional_nesting_audit.py": "d5729f0391245c2e0be69a52de3c65e4aeb5cbdd073efa40cc85f01bf44946c6",
+      "/Users/kmarchais/dev/meshers/experiments/adaptive/nested_refinement.py": "7f78251d150ebcee928db1b49e22b64ee89efde5cdc238c1f5b9994aad36a6b8",
+      "/Users/kmarchais/dev/meshers/experiments/adaptive/hp_shared_domain.py": "2745632e4ffde4387f6ab34070109054e249a9c57a518453103e41dff44f139e",
+      "/Users/kmarchais/dev/meshers/experiments/adaptive/quadrature_audit.py": "020677df452ec86864e687c9b35e2c69e70f8587ec54240ce0c4eaa4b717319e",
+      "/Users/kmarchais/dev/meshers/experiments/adaptive/tet10_integration.py": "b5adbf4a96ee90953d546c654992d4380843e3b1a865e64e043cd14529e3865d",
+      "/Users/kmarchais/dev/meshers/experiments/adaptive/periodic_crease_grading.py": "adecc9004529aadb92822608270a75c19ef0bdce85e0192eaee507af142be6e8",
+      "/Users/kmarchais/dev/meshers/experiments/adaptive/crease_directional_refinement.py": "421df891e7b440d630711667bdf6b7e8c21bb74c6e9ba7c68ace9db4152f846a",
+      "experiments/adaptive/runs/macbook-lattice-longest-edge-closure-amg-v3/directional-refinement/level-1/parent-map.npz": "7a0a4e50409036eeb8cf7316600a05040b362b4419f192ae9cfd2e9051cdd88d",
+      "experiments/adaptive/runs/macbook-lattice-longest-edge-closure-amg-v3/directional-refinement/level-2/parent-map.npz": "54418e9cd38fc2faa7eb98f1523655adc73f79f685010b330f86da3e20ac0a73",
+      "experiments/adaptive/runs/macbook-lattice-longest-edge-closure-amg-v3/directional-refinement/level-3/parent-map.npz": "1412fb5bf72876bd08aa2ea86066863a40312487580f38e5eaaa2c525ac60f47",
+      "experiments/adaptive/runs/macbook-lattice-longest-edge-closure-amg-v3/directional-refinement/level-4/parent-map.npz": "74d2a5e7d21547cfc4ddf8947f581896705fff53d6529f1099d8065c29dcd8a8",
+      "experiments/adaptive/runs/macbook-lattice-longest-edge-closure-amg-v3/directional-refinement/level-5/parent-map.npz": "6362c7d33132317092ac6752d1361f36128aac0c79bfd4f13f8fe21d348828ea",
+      "experiments/adaptive/runs/macbook-lattice-longest-edge-closure-amg-v3/directional-refinement/level-6/parent-map.npz": "6adaacc4eee7f72e815f7c9e696915368fa846c2fae13d32ff2f68bd4c1972c6",
+      "experiments/adaptive/runs/macbook-lattice-longest-edge-closure-amg-v3/directional-refinement/level-7/parent-map.npz": "0f2b1377026f99308d08ced244a193b7786c4605f11c8b3b424ec9621f864b61",
+      "experiments/adaptive/runs/macbook-lattice-longest-edge-closure-amg-v3/directional-refinement/level-8/parent-map.npz": "ce98ddfcf66a85c39621df0ef89267bc292d1a7f8a15a8c16e25baaf980c9af0",
+      "experiments/adaptive/runs/macbook-lattice-longest-edge-closure-amg-v3/directional-refinement/level-9/parent-map.npz": "8effd62f182b4d359cbd19dc0cd2d086da28be930d7387a926bfb72bba0e6acb",
+      "experiments/adaptive/runs/macbook-lattice-longest-edge-closure-amg-v3/directional-refinement/level-10/parent-map.npz": "99069f2b9dad99fc515163f17c1c4072a5246b7bf5229430e0e6189aeb228351",
+      "experiments/adaptive/runs/macbook-lattice-longest-edge-closure-amg-v3/directional-refinement/level-11/parent-map.npz": "14280937db00c0d267002c604ebbb390b2ad7639a00af48e582e8cc21fdcc166",
+      "experiments/adaptive/runs/macbook-lattice-longest-edge-closure-amg-v3/directional-refinement/level-12/parent-map.npz": "b0e80018ab6408692202a8d638a56061c7f19ee5ef438dc254fe3df78adf66cf",
+      "experiments/adaptive/runs/macbook-lattice-longest-edge-closure-amg-v3/directional-refinement/level-13/parent-map.npz": "163c0c61de1714baf13f7dd75f80287ae48c0c00af490dd24c41e5188adbe8c9",
+      "experiments/adaptive/runs/macbook-lattice-longest-edge-closure-amg-v3/directional-refinement/level-14/parent-map.npz": "7f80d7712a207d99412f80dd1a9cac60fae655a860e11ba57626fc029f2ac716",
+      "experiments/adaptive/runs/macbook-lattice-longest-edge-closure-amg-v3/directional-refinement/level-15/parent-map.npz": "43087fc4fed0c73b4d5e2bce64f7e4ca540a4765cb52aaad8a18b6573b6c6265",
+      "experiments/adaptive/runs/macbook-lattice-longest-edge-closure-amg-v3/directional-refinement/level-16/parent-map.npz": "ea8fada7448bd16e5b3915c824a58e1fbd8b2f97b4d0fd82a8031cda8e91cc8f",
+      "experiments/adaptive/runs/macbook-lattice-longest-edge-closure-amg-v3/directional-refinement/level-17/parent-map.npz": "d3f809380662acd7a7aa5366914c9e60be6257ad739a510708161904e17e09c8",
+      "experiments/adaptive/runs/macbook-lattice-longest-edge-closure-amg-v3/directional-refinement/level-18/parent-map.npz": "4474b4bffe8fde8b1b4280f4fd8f9040e90acb01eedd8e76748ec11cffecf5df",
+      "experiments/adaptive/runs/macbook-lattice-longest-edge-closure-amg-v3/directional-refinement/level-19/parent-map.npz": "1f754c76f5803e94677c74373e5abc0a528409d0b088e706a81abb7d93c6d31a",
+      "experiments/adaptive/runs/macbook-lattice-longest-edge-closure-amg-v3/directional-refinement/level-20/parent-map.npz": "5322e60a22de9c936b62151aa0b832d2d0f4eac72be92abb0e188b29ff366fc0",
+      "experiments/adaptive/runs/macbook-lattice-longest-edge-closure-amg-v3/directional-refinement/level-21/parent-map.npz": "7e9987faadf1bdd3048d3464dc51a2e0d3aad8823bda5333e4f181a4911fb3f4",
+      "experiments/adaptive/runs/macbook-lattice-longest-edge-closure-amg-v3/directional-refinement/level-22/parent-map.npz": "d07506ae8f3d1aeef4aa20abcdc8ae3ddf484e728faa7335dcb5ce8218e568db",
+      "experiments/adaptive/runs/macbook-lattice-longest-edge-closure-amg-v3/directional-refinement/level-23/parent-map.npz": "bd63c4d7019bc92be4ac6bd4a71f4a5ba8828eeea6eb6f1f0d924ddb83ff5dfb",
+      "experiments/adaptive/runs/macbook-lattice-longest-edge-closure-amg-v3/directional-refinement/level-24/parent-map.npz": "8c727ca485e26d362e6be531edb3ae662fd0f43db8bff81245f2fc5e9c8088c8",
+      "experiments/adaptive/runs/macbook-lattice-longest-edge-closure-amg-v3/directional-refinement/level-25/parent-map.npz": "e8e2e390696774ec8ae0fed154d8d9fbce71166d62907719f4db732c0cddbfe7",
+      "experiments/adaptive/runs/macbook-lattice-longest-edge-closure-amg-v3/directional-refinement/level-26/parent-map.npz": "79d9a5d1735e3e613643b5a1b546281f2080c68ed51cb5e16006b7355c46a453",
+      "experiments/adaptive/runs/macbook-lattice-longest-edge-closure-amg-v3/directional-refinement/level-27/parent-map.npz": "5090a6bb8317a429833460eb90aa9bd1490f9c3954ad99102d61e332f38bec59",
+      "experiments/adaptive/runs/macbook-lattice-longest-edge-closure-amg-v3/directional-refinement/level-28/parent-map.npz": "00656ab82e78d4631bc30013a4f6ecf56788fe78a3bebc3b8235883542cbd0fe",
+      "experiments/adaptive/runs/macbook-lattice-longest-edge-closure-amg-v3/directional-refinement/level-29/parent-map.npz": "dd4193781882d7c8be54cec5490f3f22682f21444c9382c3baace5678c915f2c",
+      "experiments/adaptive/runs/macbook-lattice-longest-edge-closure-amg-v3/directional-refinement/level-30/parent-map.npz": "d8fd1ea168bd42401b3d2d7dfc610c172c17ac1811802e416cb725960f38a063",
+      "experiments/adaptive/runs/macbook-lattice-longest-edge-closure-amg-v3/directional-refinement/level-31/parent-map.npz": "241a65fd5ea3ac42b0ff84f839017cf78e39600ed499cd6188e6535f519a7d2a",
+      "experiments/adaptive/runs/macbook-lattice-longest-edge-closure-amg-v3/directional-refinement/level-32/parent-map.npz": "1125e5a7f56f76b6688906d481b99a7f26791a58647ee2940b30cbe10aa0928f",
+      "experiments/adaptive/runs/macbook-lattice-longest-edge-closure-amg-v3/directional-refinement/level-33/parent-map.npz": "2f56356bd56742d9211272ae8d852859172925c5493200815107539a05346cf4",
+      "experiments/adaptive/runs/macbook-lattice-longest-edge-closure-amg-v3/directional-refinement/level-34/parent-map.npz": "204525799a982531c019022825de24bc7c70d00aa942c599f3590856456e99ed"
+    },
+    "exact_seed_arrays": true,
+    "mapping_and_field_reproduction": {
+      "points_per_element": 12,
+      "elements_checked": 162365,
+      "maximum_geometry_error": 3.885780586188048e-16,
+      "maximum_field_error": 5.551115123125783e-16
+    },
+    "periodic": {
+      "maximum_six_load_jump": 2.220446049250313e-16,
+      "periodic_pair_counts": [
+        3601,
+        4000,
+        3495
+      ],
+      "periodic_coordinate_errors": [
+        1.1102230246251565e-16,
+        1.6653345369377348e-16,
+        1.6653345369377348e-16
+      ],
+      "periodic_pair_tolerance": 1e-10,
+      "periodic_equivalence_classes": 238991,
+      "periodic_triangles_match": true
+    },
+    "galerkin_energy_balance": {
+      "worst_relative_strain_energy_difference": 4.2920668613819047e-10,
+      "relative_tensor_frobenius_difference": 5.2240331331937895e-11,
+      "relative_energy_difference_eigenvalues": [
+        5.760644088085996e-12,
+        1.1833608622958579e-11,
+        1.3629755983235111e-11,
+        1.7202247361194768e-11,
+        4.0984902573513814e-10,
+        4.2920668613819047e-10
+      ]
+    },
+    "inherited_energy_difference": {
+      "worst_relative_strain_energy_difference": 4.938212402109728e-08,
+      "relative_tensor_frobenius_difference": 1.1628819358550026e-08,
+      "relative_energy_difference_eigenvalues": [
+        8.423583851783681e-09,
+        1.0043222677630933e-08,
+        1.1391491837260763e-08,
+        1.1904397366260027e-08,
+        4.641311119273849e-08,
+        4.938212402109728e-08
+      ]
+    },
+    "correction_energy_tensor": [
+      [
+        0.0006680682318247655,
+        0.000290717530937824,
+        0.000278103852271595,
+        -1.3203405735391799e-06,
+        -6.032864148684597e-08,
+        -1.5724408688042133e-06
+      ],
+      [
+        0.000290717530937824,
+        0.000681108230941638,
+        0.0002991308218474877,
+        -1.5933620944268773e-06,
+        8.936091450516145e-07,
+        -1.3493559596031526e-06
+      ],
+      [
+        0.000278103852271595,
+        0.0002991308218474876,
+        0.0006673900305706571,
+        -2.9186811209944436e-06,
+        5.84563168721753e-07,
+        -2.3669554041921837e-06
+      ],
+      [
+        -1.3203405735391805e-06,
+        -1.593362094426877e-06,
+        -2.9186811209944436e-06,
+        0.00015209258072677894,
+        2.6903359651254333e-07,
+        -5.958413805974342e-07
+      ],
+      [
+        -6.032864148684609e-08,
+        8.93609145051615e-07,
+        5.845631687217532e-07,
+        2.690335965125432e-07,
+        0.00014613012213861,
+        -2.0857990291413268e-06
+      ],
+      [
+        -1.5724408688042127e-06,
+        -1.3493559596031533e-06,
+        -2.3669554041921837e-06,
+        -5.958413805974341e-07,
+        -2.0857990291413264e-06,
+        0.00015370983992926132
+      ]
+    ],
+    "quality_obstruction": {
+      "requested_edges": 10077,
+      "requested_orbits": 8697,
+      "quality_blocked_requested_orbits": 1,
+      "blocking_cells": 1,
+      "blocking_cells_with_some_legal_alternative": 1,
+      "blocking_cells_with_no_legal_edge": 0,
+      "scope": "Legal alternatives are per-element only; no conforming periodic closure is inferred"
+    },
+    "passed": true,
+    "reference_promoted": false,
+    "mesh_changed": false,
+    "scope": "Read-only fixed-domain nesting and obstruction audit; no new solve or sizing choice"
+  },
+  "quality": {
+    "routes": [
+      {
+        "source": "experiments/adaptive/runs/macbook-lattice-longest-edge-closure-amg-v3",
+        "nodes": 250000,
+        "elements": 162365,
+        "quality_quantiles": {
+          "min": 0.20687341294930375,
+          "p01": 0.3839749740524472,
+          "p10": 0.5017060652826143,
+          "median": 0.664256848863906,
+          "p90": 0.8495032459327095,
+          "p99": 0.9459218249544802,
+          "max": 0.9970982341192849
+        },
+        "distance": 0.00027866151779207363,
+        "absolute_relative_volume_error": 0.00031241746507282286
+      },
+      {
+        "source": "experiments/adaptive/runs/macbook-lattice-actual-live-solve-v1",
+        "nodes": 250000,
+        "elements": 165722,
+        "quality_quantiles": {
+          "min": 0.10000100099999965,
+          "p01": 0.4299753570308676,
+          "p10": 0.6249515899696046,
+          "median": 0.7960523050557469,
+          "p90": 0.9221098777398984,
+          "p99": 0.973211924398956,
+          "max": 0.9985693176708444
+        },
+        "distance": 0.0017012390155748264,
+        "absolute_relative_volume_error": 0.004905337023936918
+      }
+    ],
+    "identical_specimen_and_samples": true,
+    "all_quality_quantiles_no_worse": false,
+    "comparative_timing_claim": false,
+    "objective_complete": false,
+    "inputs": {
+      "/Users/kmarchais/dev/meshers/experiments/adaptive/lattice_pair_metrics.py": "3fceb538b27b9bf2d5baa852c58aed7324a0d4045d3d8199f8494401af69c18e",
+      "/Users/kmarchais/dev/meshers/experiments/adaptive/mmg_quality_localization.py": "03ef27a978fcd5101f36745ccaf67309f49ce6ece172fad28b84246d6d457ebc",
+      "experiments/adaptive/runs/macbook-lattice-longest-edge-closure-amg-v3/mesh.npz": "34ece26da768190ac33b1305db8cce58d3d967b9d1116f5221a01faaadf7c034",
+      "experiments/adaptive/runs/macbook-lattice-longest-edge-closure-amg-v3/result.json": "5340f00352f5d7d82811e594c12c39650b565d7bd3f4142d0c4609f2cab3a352",
+      "experiments/adaptive/runs/macbook-lattice-longest-edge-closure-amg-v3/smooth-lattice-samples.npz": "a2b4375d2c99901f03b34e913563c887a4cdcff00bca35983adb7ef9d5311abe",
+      "experiments/adaptive/runs/macbook-lattice-longest-edge-closure-amg-v3/smooth-lattice-specimen.json": "0e5b34b76183341a6e0d454f13cd404668ab82675f9a51cd9d2ecf3c91be3316",
+      "experiments/adaptive/runs/macbook-lattice-actual-live-solve-v1/mesh.npz": "b99192aa8bd0d7159b3ce3292eecb85463430932b1182bec5478a7048b06df70",
+      "experiments/adaptive/runs/macbook-lattice-actual-live-solve-v1/result.json": "f0d717c9f6e5e22fd4cbd467b8773c1f6f844d6f17b64f78a85dd09b21d1e85f",
+      "experiments/adaptive/runs/macbook-lattice-actual-live-solve-v1/smooth-lattice-samples.npz": "a2b4375d2c99901f03b34e913563c887a4cdcff00bca35983adb7ef9d5311abe",
+      "experiments/adaptive/runs/macbook-lattice-actual-live-solve-v1/smooth-lattice-specimen.json": "0e5b34b76183341a6e0d454f13cd404668ab82675f9a51cd9d2ecf3c91be3316"
+    }
+  },
+  "successful_worker": {
+    "returncode": 0,
+    "limit_failure": null,
+    "peak_rss_bytes": 8525021184,
+    "wall_s": 503.4036899580001,
+    "wall_s_clock": "monotonic",
+    "elapsed_realtime_s": 503.41382694244385,
+    "suspension_or_clock_adjustment_s": 0.010136984443761321,
+    "idle_sleep_prevention": [
+      "/usr/bin/caffeinate",
+      "-i"
+    ],
+    "memory_bytes": 10737418240,
+    "memory_enforcement": "process-tree-rss-watchdog",
+    "rss_poll_interval_s": 0.25,
+    "platform": "darwin",
+    "numerical_thread_policy": {
+      "environment": {
+        "OPENBLAS_NUM_THREADS": "1",
+        "OMP_NUM_THREADS": "1",
+        "MKL_NUM_THREADS": "1",
+        "VECLIB_MAXIMUM_THREADS": "1",
+        "RAYON_NUM_THREADS": "1"
+      },
+      "accelerate_blas_threading": 1,
+      "accelerate_scope": "calling thread"
+    }
+  },
+  "combined_failure": {
+    "returncode": -9,
+    "limit_failure": "memory-cap",
+    "peak_rss_bytes": 9228812288,
+    "wall_s": 295.41264154199985,
+    "wall_s_clock": "monotonic",
+    "elapsed_realtime_s": 295.41313886642456,
+    "suspension_or_clock_adjustment_s": 0.0004973244247139519,
+    "idle_sleep_prevention": [
+      "/usr/bin/caffeinate",
+      "-i"
+    ],
+    "memory_bytes": 8589934592,
+    "memory_enforcement": "process-tree-rss-watchdog",
+    "rss_poll_interval_s": 0.25,
+    "platform": "darwin",
+    "numerical_thread_policy": {
+      "environment": {
+        "OPENBLAS_NUM_THREADS": "1",
+        "OMP_NUM_THREADS": "1",
+        "MKL_NUM_THREADS": "1",
+        "VECLIB_MAXIMUM_THREADS": "1",
+        "RAYON_NUM_THREADS": "1"
+      },
+      "accelerate_blas_threading": 1,
+      "accelerate_scope": "calling thread"
+    }
+  },
+  "isolated_failure": {
+    "returncode": -9,
+    "limit_failure": "memory-cap",
+    "peak_rss_bytes": 8688975872,
+    "wall_s": 333.73830629199983,
+    "wall_s_clock": "monotonic",
+    "elapsed_realtime_s": 333.74065613746643,
+    "suspension_or_clock_adjustment_s": 0.0023498454665968893,
+    "idle_sleep_prevention": [
+      "/usr/bin/caffeinate",
+      "-i"
+    ],
+    "memory_bytes": 8589934592,
+    "memory_enforcement": "process-tree-rss-watchdog",
+    "rss_poll_interval_s": 0.25,
+    "platform": "darwin",
+    "numerical_thread_policy": {
+      "environment": {
+        "OPENBLAS_NUM_THREADS": "1",
+        "OMP_NUM_THREADS": "1",
+        "MKL_NUM_THREADS": "1",
+        "VECLIB_MAXIMUM_THREADS": "1",
+        "RAYON_NUM_THREADS": "1"
+      },
+      "accelerate_blas_threading": 1,
+      "accelerate_scope": "calling thread"
+    }
+  },
+  "original_result_hashes": {
+    "experiments/adaptive/runs/macbook-lattice-longest-edge-closure-assessment-v1/result.json": "d6cc18d0678de916cfb92773a7b9e86ed3b2c869b3ea304cc38bffc5b398f0c3",
+    "experiments/adaptive/runs/macbook-lattice-longest-edge-closure-nesting-audit-v1/result.json": "a1dbb341aedd823df9b1bc57f4558fef2b34c82a8639a4c3636ee9711792e168",
+    "experiments/adaptive/runs/macbook-lattice-longest-edge-closure-assessment-v1/quality-comparison.json": "689a25dd0439164aaeaaee70063a94df181f78d98c9afdf720fdbd7e79974580",
+    "experiments/adaptive/runs/macbook-lattice-longest-edge-closure-amg-v3/worker.json": "ba1049c5f4947cab11f76333e14b8e8713b0a4e4ab2a8a7622b5ea87ca5ad5e7",
+    "experiments/adaptive/runs/macbook-lattice-longest-edge-closure-amg-v1/worker.json": "f59ba0cc12d709adcb5c958d103d80df55a1644b7875e89b5da8e1f7257597e9",
+    "experiments/adaptive/runs/macbook-lattice-longest-edge-closure-amg-v2/worker.json": "24223cc6af3d1ad8b9cc779f376a07675ac101f6265fcb37894bca80fee360f1"
+  },
+  "full_workflow_seconds": 502.3206717089997,
+  "scope": "Audited experimental Python refinement and all24 unchanged empirical models. Still fails1%; no native-only or timing victory, continuum/local-stress certificate or reference promotion. Original8GiB failures preserved."
+}

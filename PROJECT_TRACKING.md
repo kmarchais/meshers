@@ -2,6 +2,47 @@
 
 ## Resumed investigation, 26 October 2026
 
+Latest completed result: the longest-edge closure prototype reaches
+**1.216071201% worst disagreement across all 24 retained lattice models** at
+250,000 nodes and 162,365 tets. This improves on the earlier directional
+prototype's 1.608556732%, but still fails the unchanged 1% target. Six fresh
+loads, independent reaction/energy/periodic and positive 64/125-point audits
+pass. Exact preflight arrays, native binary and first operator are verified.
+The full diagnostic workflow takes 502.321 seconds and peaks at 7.9395 GiB
+under its explicitly declared 10 GiB ceiling. Neither earlier 8 GiB failure
+is reclassified.
+
+Composed-map verification of the actual parent fields passes, with a
+Galerkin balance of 4.2921e-10. Only one of 8,697 remaining requested edge
+orbits is quality-blocked. This replaces the earlier quality obstruction
+with the unchanged node-cap obstruction; it does not satisfy the whole metric.
+
+Against admitted modified actual Microgen+MMG, it has 162,365 versus 165,722
+tets at the same 250,000 nodes, sampled distance 0.000278662 versus
+0.001701239, absolute volume error 0.03124% versus 0.49053%, and minimum
+quality 0.206873 versus 0.100001. However, median quality is worse, 0.664257
+versus 0.796052, as is the first percentile, 0.383975 versus 0.429975.
+Stiffness disagreement remains worse than actual's 0.994670612%. This is an
+experimental Python route and an explicit tradeoff, not an all-metric win.
+
+Residual screen 561 passes positive 64/125-point checks and finds a
+0.102410865% possible energy correction, above the unchanged 0.05% solve
+screen. Its hypothetical 1.116215063% all-model disagreement still fails 1%
+and is not an equilibrated result. The largest-gain direction is 48.18% in
+curve-vertex cells, 28.78% in other wall cells and 19.43% in neither group.
+The remaining signal is less concentrated at the curves than in the earlier
+dense-mesh investigation.
+
+Consistent coupling preflight 562 reproduces the parent operator, passes
+15/125-point Gram and gain checks within 8.83e-5, and completes four-level
+AMG setup at 7.6076 GiB under the declared 10 GiB ceiling. Job 563 computes
+six fresh zero-macro auxiliary responses on the unchanged physical domain.
+It is a reference/error investigation, not another mesh or native workflow.
+Complete analytic-bubble/field and positive-rule audits are required before
+assessing its tensor. No new density choice or reference is promoted.
+Reviewed evidence is in
+`handoff/macbook/lattice-longest-edge-assessment-20261026.json`.
+
 Job 543 was not restarted. Independent field audit 544 passes reactions,
 Hill–Mandel energy, periodic jumps and positive 64/125-point integration.
 Quadrature sensitivity is 4.1774e-8. Assessment 545 retains all 24 unchanged
@@ -76,11 +117,12 @@ authorization for a conservative measured Mac ceiling around 12 GiB. Default
 workers remain at 8 GiB. Larger Mac workers require an explicit argument,
 matching manifest/watchdog records and a matching declared assessment plan.
 Control 556 verifies the 10 GiB configuration and result metadata. Job **557**
-regenerates the same frozen geometry and attempts six cold loads under this
-declared ceiling and the unchanged 1,200-second bound. Both earlier 8 GiB
-failures stay failed. Its outcome, independent field audits and all-24-model
-assessment remain pending. No new native-only feature, reference or
-comparative performance winner is claimed.
+then completes the same frozen geometry and all six cold loads under this
+declared ceiling and the unchanged 1,200-second bound. Jobs 558, 559 and 560
+complete its independent field audit, all-24-model assessment and nested
+energy audit, as reported at the top of this entry. Both earlier 8 GiB
+failures stay failed. No new native-only feature, reference or comparative
+performance winner is claimed.
 
 Selection receipts, the failed resource attempt and compact control evidence
 are recorded in `handoff/macbook/lattice-longest-edge-preflight-evidence-20261026.json`
