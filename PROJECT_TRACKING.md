@@ -35,11 +35,20 @@ dense-mesh investigation.
 
 Consistent coupling preflight 562 reproduces the parent operator, passes
 15/125-point Gram and gain checks within 8.83e-5, and completes four-level
-AMG setup at 7.6076 GiB under the declared 10 GiB ceiling. Job 563 computes
+AMG setup at 7.6076 GiB under the declared 10 GiB ceiling. Job 563 completes
 six fresh zero-macro auxiliary responses on the unchanged physical domain.
-It is a reference/error investigation, not another mesh or native workflow.
-Complete analytic-bubble/field and positive-rule audits are required before
-assessing its tensor. No new density choice or reference is promoted.
+Complete analytic-bubble/P2 field audit 564 passes positive 15/64/125-point
+integration, fresh coarse/modal equilibrium, reactions and periodicity.
+Galerkin balance agrees within 3.800e-11. The enriched diagnostic gives
+**1.091221736%** worst disagreement across all 24 models, still failing 1%.
+It is not a native mesh candidate or workflow timing result. Job 565 screens
+the residual of this complete enriched field against the unchanged 0.05%
+signal threshold. It finds only **0.015002691%** additional trial gain,
+below 0.05%, so this residual family receives no further auxiliary solve.
+Its hypothetical 1.076536305% disagreement is not a new equilibrium tensor
+or error bound. No new density choice or reference is promoted. The complete
+reference investigation is recorded in
+`handoff/macbook/lattice-closure-reference-investigation-20261026.json`.
 Reviewed evidence is in
 `handoff/macbook/lattice-longest-edge-assessment-20261026.json`.
 

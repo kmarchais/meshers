@@ -1,0 +1,301 @@
+{
+  "scope": "Complete fixed-domain reference/error investigation. Not a native mesh candidate, remaining-error bound, continuum/local stress certificate or comparative timing result. No reference promoted.",
+  "inputs": {
+    "experiments/adaptive/runs/macbook-lattice-longest-edge-closure-residual-v1/result.json": "8f734108d114458c7b9956e2244b1e8433b75c77df9f5c4efe1217b8394b58fd",
+    "experiments/adaptive/runs/macbook-lattice-longest-edge-closure-coupled-preflight-v1/result.json": "681174bd7b1d4cb2d3528fc2f07f2331ec363ced3eb6d0d38ac9a475c9638087",
+    "experiments/adaptive/runs/macbook-lattice-longest-edge-closure-coupled-solve-v1/result.json": "6617651328866249c6b6ab8b5b9c8fa2e647ec7142729c780b9171756eace9cb",
+    "experiments/adaptive/runs/macbook-lattice-longest-edge-closure-coupled-audit-v1/result.json": "459b4504d5b651337229de185cc67b873c7becdeeb7b116a5efee6b089924851",
+    "experiments/adaptive/runs/macbook-lattice-longest-edge-closure-remaining-trial-v1/result.json": "7f43a29ced33338417632c0410302102f349160e00d403c246ef7894f2b723f7"
+  },
+  "residual": {
+    "passed": true,
+    "source": "experiments/adaptive/runs/macbook-lattice-longest-edge-closure-amg-v3",
+    "native_candidate": false,
+    "geometry_unchanged": true,
+    "old_approximation_space_preserved": true,
+    "original_nodes": 250000,
+    "original_elements": 162365,
+    "extra_scalar_trial_unknowns": 6,
+    "potential_cubic_features": 539289,
+    "mode_construction": {
+      "minimum_sampled_jacobian": 1.2084698970427363e-09,
+      "residual_maximum": 7.5883250247433756e-06,
+      "diagonal_minimum_eigenvalue": 3.1875804884519053e-06
+    },
+    "complete_cubic_trace_check": {
+      "shared_and_periodic_face_records": 649460,
+      "probes_per_face": 4,
+      "zero_p2_trace_nodes": 6,
+      "complete_cubic_trace_check": true,
+      "maximum_trace_jump": 0.0
+    },
+    "gain_signal_passed": true,
+    "gain_signal_screen": 0.0005,
+    "positive_rule_precision_passed": true,
+    "largest_gain_witness": [
+      -4.5677923649374055,
+      2.033019957234932,
+      2.485137430963208,
+      -0.0012658941426842466,
+      -0.0004592300757157587,
+      0.019558064665133375
+    ],
+    "retained_model_count": 24,
+    "trial_worst_model_disagreement": 0.011162150631242028,
+    "trial_passes_one_percent_all_models": false,
+    "equilibrium_solve_performed": false,
+    "reference_promoted": false,
+    "comparative_timing_claim": false,
+    "scope": "Six-mode admissible fixed-domain energy trial, not a newly equilibrated tensor, native workflow or continuum/local stress certificate"
+  },
+  "coupled_preflight": {
+    "passed": true,
+    "source": "experiments/adaptive/runs/macbook-lattice-longest-edge-closure-amg-v3",
+    "trial": "experiments/adaptive/runs/macbook-lattice-longest-edge-closure-residual-v1",
+    "physical_nodes": 250000,
+    "physical_tets": 162365,
+    "extra_scalar_mode_unknowns": 6,
+    "consistent_rule_passed": true,
+    "mode_gram_relative_difference": 8.821028494832975e-05,
+    "gain_relative_difference": 6.327504693216016e-05,
+    "resources": {
+      "reduced_shape": [
+        716970,
+        716970
+      ],
+      "reduced_nnz": 58074840,
+      "csr_bytes": 699765964,
+      "reduced_coupling_shape": [
+        716970,
+        6
+      ],
+      "reduced_coupling_bytes": 34414560,
+      "matrix_sha256": "a2da473f64c325882119451805f9d6954954ab94c671983af4e49537bc20eda1",
+      "saved_field_relative_residuals": [
+        2.221742937584674e-10,
+        1.9145811349317712e-10,
+        2.0719401508790333e-10,
+        8.600662251155059e-11,
+        9.13897713729577e-11,
+        8.512124207863188e-11
+      ],
+      "first_saved_field_rhs_residual": 9.127711409566276e-13,
+      "amg_setup_performed": true,
+      "amg_levels": 4,
+      "amg_operator_complexity": 1.053700348842435,
+      "cg_started": false,
+      "dense_mode_rows_added_to_sparse_matrix": false
+    },
+    "new_equilibrium_solve": false,
+    "reference_promoted": false,
+    "native_candidate": false,
+    "scope": "Consistent-rule and actual sparse-parent/setup feasibility only; no CG response or fake solution"
+  },
+  "coupled_solve": {
+    "status": "coupled-solved-needs-independent-audit",
+    "source": "experiments/adaptive/runs/macbook-lattice-longest-edge-closure-amg-v3",
+    "trial": "experiments/adaptive/runs/macbook-lattice-longest-edge-closure-residual-v1",
+    "preflight": "experiments/adaptive/runs/macbook-lattice-longest-edge-closure-coupled-preflight-v1",
+    "geometry_unchanged": true,
+    "old_approximation_space_preserved": true,
+    "physical_nodes": 250000,
+    "physical_tets": 162365,
+    "extra_scalar_mode_unknowns": 6,
+    "reduced_parent_unknowns": 716970,
+    "augmented_unknowns": 716976,
+    "fresh_auxiliary_responses": 6,
+    "saved_parent_reduced_residuals": [
+      2.221742937584674e-10,
+      1.9145811349317712e-10,
+      2.0719401508790333e-10,
+      8.600662251155059e-11,
+      9.13897713729577e-11,
+      8.512124207863188e-11
+    ],
+    "solver_records": [
+      {
+        "iterations": 105,
+        "relative_residual": 1.0297857555210461e-11,
+        "free_dofs": 716970,
+        "seconds": 34.75766058299996,
+        "hierarchy_setup_s": 4.101573916999769,
+        "hierarchy_reused": false,
+        "node_reordering_s": 0.2810505000006742,
+        "elastic_blocks": true,
+        "verified_symmetry_reused": false,
+        "levels": 4,
+        "operator_complexity": 1.053700348842435,
+        "reduced_matrix_sha256": "a2da473f64c325882119451805f9d6954954ab94c671983af4e49537bc20eda1"
+      },
+      {
+        "iterations": 104,
+        "relative_residual": 1.1305436297234042e-11,
+        "free_dofs": 716970,
+        "seconds": 29.08955424999931,
+        "hierarchy_setup_s": 0.0,
+        "hierarchy_reused": true,
+        "node_reordering_s": 0.0,
+        "elastic_blocks": true,
+        "verified_symmetry_reused": true,
+        "levels": 4,
+        "operator_complexity": 1.053700348842435,
+        "reduced_matrix_sha256": "a2da473f64c325882119451805f9d6954954ab94c671983af4e49537bc20eda1"
+      },
+      {
+        "iterations": 106,
+        "relative_residual": 1.0188780249079074e-11,
+        "free_dofs": 716970,
+        "seconds": 32.187177458000406,
+        "hierarchy_setup_s": 0.0,
+        "hierarchy_reused": true,
+        "node_reordering_s": 0.0,
+        "elastic_blocks": true,
+        "verified_symmetry_reused": true,
+        "levels": 4,
+        "operator_complexity": 1.053700348842435,
+        "reduced_matrix_sha256": "a2da473f64c325882119451805f9d6954954ab94c671983af4e49537bc20eda1"
+      },
+      {
+        "iterations": 101,
+        "relative_residual": 1.494119800333863e-11,
+        "free_dofs": 716970,
+        "seconds": 29.194771458000105,
+        "hierarchy_setup_s": 0.0,
+        "hierarchy_reused": true,
+        "node_reordering_s": 0.0,
+        "elastic_blocks": true,
+        "verified_symmetry_reused": true,
+        "levels": 4,
+        "operator_complexity": 1.053700348842435,
+        "reduced_matrix_sha256": "a2da473f64c325882119451805f9d6954954ab94c671983af4e49537bc20eda1"
+      },
+      {
+        "iterations": 100,
+        "relative_residual": 1.452162738044346e-11,
+        "free_dofs": 716970,
+        "seconds": 27.748163332999866,
+        "hierarchy_setup_s": 0.0,
+        "hierarchy_reused": true,
+        "node_reordering_s": 0.0,
+        "elastic_blocks": true,
+        "verified_symmetry_reused": true,
+        "levels": 4,
+        "operator_complexity": 1.053700348842435,
+        "reduced_matrix_sha256": "a2da473f64c325882119451805f9d6954954ab94c671983af4e49537bc20eda1"
+      },
+      {
+        "iterations": 100,
+        "relative_residual": 1.7053495701068117e-11,
+        "free_dofs": 716970,
+        "seconds": 27.540687083000194,
+        "hierarchy_setup_s": 0.0,
+        "hierarchy_reused": true,
+        "node_reordering_s": 0.0,
+        "elastic_blocks": true,
+        "verified_symmetry_reused": true,
+        "levels": 4,
+        "operator_complexity": 1.053700348842435,
+        "reduced_matrix_sha256": "a2da473f64c325882119451805f9d6954954ab94c671983af4e49537bc20eda1"
+      }
+    ],
+    "maximum_relative_gain": 0.0012844248643394606,
+    "modal_relative_residual": 4.406364383283376e-13,
+    "zero_macro_response_jump_max": 0.0,
+    "response_pin_max": 0.0,
+    "auxiliary_solve_s": 182.1632805829995,
+    "field_archive_sha256": "f0e1b7333c76fe58927dc3a62a6952a18900753975a1fcf93c93aad0c9fa1879",
+    "field_representation": "Immutable parent Tet10 fields plus (analytic cubic bubbles minus quadratic responses) times a 6x6 coefficient matrix; nodal values alone omit the bubble field",
+    "reference_promoted": false,
+    "native_candidate_promoted": false,
+    "comparative_timing_claim": false,
+    "scope": "Coupled same-domain six-mode equilibrium awaiting independent complete-field and positive-rule audits; not native workflow timing or continuum/local stress certification"
+  },
+  "coupled_audit": {
+    "passed": true,
+    "source": "experiments/adaptive/runs/macbook-lattice-longest-edge-closure-amg-v3",
+    "solve": "experiments/adaptive/runs/macbook-lattice-longest-edge-closure-coupled-solve-v1",
+    "geometry_unchanged": true,
+    "old_approximation_space_preserved": true,
+    "physical_nodes": 250000,
+    "physical_tets": 162365,
+    "complete_field_representation": "Immutable parent Tet10 fields plus (analytic cubic bubbles minus quadratic responses) times a 6x6 coefficient matrix; nodal values alone omit the bubble field",
+    "response_jump_max": 0.0,
+    "cubic_trace_check": {
+      "shared_and_periodic_face_records": 649460,
+      "probes_per_face": 4,
+      "zero_p2_trace_nodes": 6,
+      "complete_cubic_trace_check": true,
+      "maximum_trace_jump": 0.0
+    },
+    "galerkin_energy_balance_relative_error": 3.799574509364027e-11,
+    "equilibrium": {
+      "matrix_sha256": "a2da473f64c325882119451805f9d6954954ab94c671983af4e49537bc20eda1",
+      "nnz": 58074840,
+      "response_residuals": [
+        1.029785755520757e-11,
+        1.1305436297231263e-11,
+        1.0188780249075745e-11,
+        1.49411980033348e-11,
+        1.4521627380439794e-11,
+        1.705349570106537e-11
+      ],
+      "coarse_equilibrium_residuals": [
+        2.2194154149259874e-10,
+        1.9125479938656786e-10,
+        2.0696207896511182e-10,
+        8.588005530354644e-11,
+        9.126173445119192e-11,
+        8.501368300244962e-11
+      ],
+      "modal_relative_residual": 6.854036838544742e-13,
+      "reaction_relative_error": 7.478391295423656e-12,
+      "fresh_operator": true,
+      "cg_started": false
+    },
+    "retained_model_count": 24,
+    "worst_model_disagreement": 0.010912217356265774,
+    "passes_one_percent_all_models": false,
+    "reference_promoted": false,
+    "native_candidate_promoted": false,
+    "comparative_timing_claim": false,
+    "scope": "Same-domain six-mode enriched FE diagnostic; not a native mesh workflow or continuum/local stress certificate"
+  },
+  "remaining_trial": {
+    "passed": true,
+    "audit": "experiments/adaptive/runs/macbook-lattice-longest-edge-closure-coupled-audit-v1",
+    "source": "experiments/adaptive/runs/macbook-lattice-longest-edge-closure-amg-v3",
+    "physical_nodes": 250000,
+    "physical_tets": 162365,
+    "geometry_unchanged": true,
+    "parent_field_includes_all_bubbles": true,
+    "old_approximation_space_preserved": true,
+    "new_trial_scalar_unknowns": 6,
+    "polynomial_degree_unchanged": true,
+    "construction": {
+      "minimum_sampled_jacobian": 1.2084698970427363e-09,
+      "residual_maximum": 3.2133715166585648e-06,
+      "diagonal_minimum_eigenvalue": 3.1875804884519053e-06
+    },
+    "traces": {
+      "shared_and_periodic_face_records": 649460,
+      "probes_per_face": 4,
+      "zero_p2_trace_nodes": 6,
+      "complete_cubic_trace_check": true,
+      "maximum_trace_jump": 0.0
+    },
+    "maximum_additional_trial_gain": 0.0001500269108738091,
+    "gain_signal_screen": 0.0005,
+    "gain_signal_passed": false,
+    "retained_model_count": 24,
+    "trial_worst_model_disagreement": 0.010765363053754244,
+    "trial_passes_one_percent_all_models": false,
+    "equilibrium_solve_performed": false,
+    "reference_promoted": false,
+    "native_candidate_promoted": false,
+    "scope": "Residual screen of complete equilibrated enriched field; a fixed-parent trial, not remaining-error bound or mesh workflow",
+    "positive_rule_points": [
+      64,
+      125
+    ]
+  }
+}
