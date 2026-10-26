@@ -31,6 +31,15 @@ Supported operations include powers, sin/cos/tan, exp/log, sqrt, sinh/cosh/tanh,
 abs, minimum/maximum, comparisons and `np.where`. Python branches on coordinates,
 arbitrary array operations and arbitrary Python programs are not traceable.
 
+`np.interp` also traces finite real one-dimensional tables with strictly
+increasing knots. The table is frozen when the field is prepared. Default
+endpoint clamping and finite constant `left`/`right` values follow NumPy.
+Periodic interpolation, complex tables and tables exceeding the expression
+limit use callbacks. The derivative at an interior knot uses the right
+interval; at either endpoint it is zero. These are conventions at points
+without a unique derivative. Use `compile_field(field, gradient=False)` to
+retain finite differences while compiling the values.
+
 Unsupported operations produce a warning and use batched NumPy callbacks.
 `compile=False` selects that path explicitly. Callbacks must return float64 `(N,)`
 arrays; supplied gradient callbacks return `(N,3)`. Avoid side effects and

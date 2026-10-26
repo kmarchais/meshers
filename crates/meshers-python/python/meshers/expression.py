@@ -103,6 +103,8 @@ class _Expression:
         raise TraceError(f"array attribute {name} requires the NumPy callback path")
 
     def __array_function__(self, func, types, args, kwargs):
+        if func is np.interp:
+            return self._interp(*args, **kwargs)
         if func is np.where and len(args) == 3 and not kwargs:
             return self.graph.node("select", *(self.graph.convert(a) for a in args))
         if func is np.clip and len(args) == 3 and not kwargs:
@@ -114,6 +116,66 @@ class _Expression:
                 result = self.graph.node("minimum", result, self.graph.convert(upper))
             return result
         raise TraceError(f"unsupported traced NumPy function: {func.__name__}")
+
+    def _interp(self, x, xp, fp, left=None, right=None, period=None):  # ruff: ignore[too-many-arguments, too-many-positional-arguments]
+        # Match NumPy's signature; only finite, static, increasing real tables trace.
+        if period is not None:
+            raise TraceError("np.interp with period requires the NumPy callback path")
+        try:
+            knots, values = np.asarray(xp), np.asarray(fp)
+        except (TypeError, ValueError) as error:
+            raise TraceError("np.interp requires constant real tables") from error
+        if (
+            any(table.ndim != 1 or table.dtype.kind not in "biuf" for table in (knots, values))
+            or not len(knots)
+            or len(knots) != len(values)
+        ):
+            raise TraceError("np.interp requires equal nonempty one-dimensional real tables")
+        knots, values = knots.astype(np.float64), values.astype(np.float64)
+        with np.errstate(over="ignore", invalid="ignore", divide="ignore"):
+            spans = np.diff(knots)
+            slopes = np.diff(values) / spans
+        if (
+            not np.isfinite(knots).all()
+            or not np.isfinite(values).all()
+            or not (spans > 0).all()
+            or not np.isfinite(slopes).all()
+            or any(
+                v is not None
+                and (
+                    not isinstance(v, (int, float, np.integer, np.floating))
+                    or not math.isfinite(float(v))
+                )
+                for v in (left, right)
+            )
+        ):
+            raise TraceError("np.interp requires finite constants and strictly increasing knots")
+        if len(self.graph.nodes) + 8 * len(knots) > 20000:
+            raise TraceError("np.interp table exceeds the native expression graph limit")
+        x = self.graph.convert(x)
+
+        def branch(lo, hi):
+            if lo == hi:
+                return float(values[lo])
+            if hi - lo == 1:
+                return float(values[lo]) + float(slopes[lo]) * (x - float(knots[lo]))
+            middle = (lo + hi) // 2
+            return np.where(x < float(knots[middle]), branch(lo, middle), branch(middle, hi))
+
+        # ponytail: eager selection costs O(table size); add a lookup kernel only
+        # if profiles justify it. Existing native operations preserve the table.
+        value = branch(0, len(knots) - 1)
+        lower = (
+            float(values[0])
+            if left is None
+            else np.where(x == float(knots[0]), float(values[0]), float(left))
+        )
+        upper = (
+            float(values[-1])
+            if right is None
+            else np.where(x == float(knots[-1]), float(values[-1]), float(right))
+        )
+        return np.where(x <= float(knots[0]), lower, np.where(x >= float(knots[-1]), upper, value))
 
     def __array__(self, *args, **kwargs):
         raise TraceError("array construction is unsupported by the Rust scalar tracer")
