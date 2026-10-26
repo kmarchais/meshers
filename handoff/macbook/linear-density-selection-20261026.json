@@ -1,0 +1,17 @@
+{
+  "user_direction": "Emphasize linear density/thickness grading in added TPMS benchmarks",
+  "new_case": "graded-gyroid-density-linear",
+  "definition": "Linear cross-sectional material area fraction rho(z)=0.27+0.18*(z+0.5), z in[-0.5,0.5]",
+  "range_source": "Agent-selected baseline before calibration or meshing; mean0.36 remains close to the existing Gyroid sheet fraction. The user specified the grading type, not these endpoint values.",
+  "geometry": "Gyroid sheet abs(raw_gyroid)<=t(z); t(z) calibrated from fixed2D Sobol quantiles at257planes and frozen with piecewise-linear interpolation",
+  "calibration_samples_per_plane": 262144,
+  "independent_validation": "Four independent2D Sobol scrambles of131072points on66fixed validation planes; require maximum absolute density discrepancy<=0.001 before meshing",
+  "geometry_reference": "Frozen four-scramble3D volume estimate and fixed wall/cap samples, not the ideal target0.36 substituted as an exact volume",
+  "boundary_policy": "Bounded nonperiodic meshing for both arms; linear density differs at opposite-z faces",
+  "native_configs": "Same predeclared new-TPMS recipes: uniform24 Tet4 and uniform16 curvedTet10",
+  "actual_configs": "Genuine Microgen defaults and previously declared resolution30 first-pass override/explicit bounded repair; no Meshers seed",
+  "unchanged_cases": "Original four plus all four previously added cases, including the original linear level-set-width ramp",
+  "limits": {"tets":250000,"nodes":250000,"worker_rss_gib":8,"worker_timeout_s":300},
+  "admission": {"sampled_distance":0.002,"absolute_relative_volume":0.01,"minimum_corner_quality":0.1,"sampled_curved_jacobians":"positive125","facets":"coherent and full quadratic associations"},
+  "scope": "New calibrated density specimen, not a reclassification or repair of the old linear-thickness Tet4 distance rejection. No stiffness or continuum claim."
+}

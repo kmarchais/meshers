@@ -58,6 +58,18 @@ def worker(run,name,config,fixture_root):
             if name.startswith('spinodoid'):grid.translate((-.5,)*3,inplace=True)
             row.update(actual_resolution=getattr(shape,'resolution',None),seed_nodes=grid.n_points,seed_elements=grid.n_cells)
             if grid.n_cells>w.CAP or grid.n_points>w.CAP:raise ValueError('Microgen seed cap exceeded')
+            if config.get('material_trace_remesh'):
+                import inspect
+                from periodic_trace import periodic_pairs
+                seed_surface=grid.extract_surface(pass_pointid=True,algorithm='dataset_surface').triangulate()
+                seed_faces=np.asarray(seed_surface.point_data['vtkOriginalPointIds'])[seed_surface.faces.reshape(-1,4)[:,1:]]
+                input_tolerance=inspect.signature(remesh_keeping_boundaries_for_fem).parameters['tol'].default
+                # Match the public input node-check scope. MMG may replace
+                # seed triangulations; the final audit always requires full caps.
+                _,_,row['seed_material_trace']=periodic_pairs(np.asarray(grid.points),seed_faces,
+                    tolerance=input_tolerance,require_facets=False)
+                expected_bounds=np.asarray(grid.points).copy()
+                row['periodic_validator_override']='Explicit material-cap/full-existing-class input/output checks; public MMG passes unchanged'
             binary=Path(importlib.metadata.distribution('mmgpy').locate_file('mmgpy/bin/mmg3d_O3'))
             os.environ['PATH']=str(binary.parent)+os.pathsep+os.environ['PATH']
             original=microgen.Mmg.mmg3d
@@ -83,7 +95,11 @@ def worker(run,name,config,fixture_root):
                 if max(call['output_tetrahedra'],call['output_nodes'])>w.CAP:raise ValueError('Intermediate MMG cap exceeded')
                 return result
             with patch.object(microgen.Mmg,'mmg3d',record):
-                grid=remesh_keeping_boundaries_for_fem(grid,periodic=fixtures.periodic(name),**config.get('mmg',{}))
+                grid=remesh_keeping_boundaries_for_fem(grid,periodic=fixtures.periodic(name) and not config.get('material_trace_remesh',False),**config.get('mmg',{}))
+            if config.get('material_trace_remesh'):
+                import inspect
+                from microgen.remesh import _snap_to_expected_bounds
+                _snap_to_expected_bounds(grid,expected_bounds,inspect.signature(remesh_keeping_boundaries_for_fem).parameters['tol'].default)
             points=np.asarray(grid.points).copy();cells=np.asarray(grid.cells_dict[pv.CellType.TETRA]).copy()
             poly=grid.extract_surface(pass_pointid=True,algorithm='dataset_surface').triangulate()
             surface=np.asarray(poly.point_data['vtkOriginalPointIds'])[poly.faces.reshape(-1,4)[:,1:]]
@@ -130,7 +146,20 @@ def worker(run,name,config,fixture_root):
         row['mesh_sha256']=w.digest(run/'mesh.npz')
         w.save(run/'result.json',row)
         audit=time.perf_counter()
-        row['geometry'],row['periodic'],row['quality_quantiles']=observe(run,name,target,points,cells,surface,fixtures.periodic(name))
+        periodic_auditor=None
+        if config.get('periodic_trace'):
+            from periodic_trace import periodic_pairs as periodic_auditor
+            from periodic import periodic_pairs as historical_pairs
+            try:
+                historical_pairs(points,surface);row['historical_all_plane_periodic_gate']=dict(passed=True)
+            except ValueError as error:row['historical_all_plane_periodic_gate']=dict(passed=False,error=str(error))
+        row['geometry'],row['periodic'],row['quality_quantiles']=observe(run,name,target,points,cells,surface,fixtures.periodic(name),
+            periodic_auditor=periodic_auditor)
+        if periodic_auditor is not None and config['arm']=='meshers':
+            checked,_,_=periodic_auditor(points,surface)
+            for native,independent in zip(mesh.periodic_pairs,checked,strict=True):
+                assert {tuple(map(int,p)) for p in native}=={tuple(map(int,p)) for p in independent}
+            row['native_and_independent_pairs_agree']=True
         row.update(audit_s=time.perf_counter()-audit,qualified=row['geometry']['geometry_admitted'])
         row['status']='admitted' if row['qualified'] else 'admission-rejected'
     except Exception as error:
@@ -147,6 +176,9 @@ def main():
     p.add_argument('--actual-tet10',action='store_true',help='Also repeat explicit straight Tet10 elevation of selected actual routes')
     p.add_argument('--lattice-uniform37',action='store_true',help='Load the separately frozen matched-count lattice selection')
     p.add_argument('--spin-default-sampling',action='store_true',help='Control public sampling32 on the frozen FFT16 spinodoid field')
+    p.add_argument('--periodic-trace',action='store_true',help='Explicit corrected material-cap and complete existing node-class audit')
+    p.add_argument('--material-trace-remesh',action='store_true',help='Actual control: replace coordinate-only periodic validation, retain public MMG calls')
+    p.add_argument('--density-adaptive','--grading-adaptive',action='store_true',help='One declared geometry-adaptive ablation on a linear grading case')
     a=p.parse_args()
     if a.worker is not None:return worker(a.run,a.case,a.worker,a.fixtures)
     a.run.mkdir(parents=True,exist_ok=False)
@@ -176,6 +208,13 @@ def main():
                 if name.startswith('actual-') and name.endswith('-tet4'))
         assert set(wanted)<=set(c['name'] for c in selected)
         selected=[c for c in selected if c['name'] in wanted]
+    if a.periodic_trace:selected=[dict(c,periodic_trace=True) for c in selected]
+    if a.material_trace_remesh:
+        assert a.periodic_trace and fixtures.periodic(a.case) and all(c['arm']=='microgen' for c in selected)
+        selected=[dict(c,name=c['name']+'-material-trace',material_trace_remesh=True) for c in selected]
+    if a.density_adaptive:
+        assert a.case in ('graded-gyroid-density-linear','graded-gyroid-linear') and all(c['arm']=='meshers' for c in selected)
+        selected=[dict(c,name=c['name']+'-adaptive001',adapt=True,adapt_tolerance=.001,min_length=.002) for c in selected]
     paths=[Path(__file__),Path(w.__file__),Path(fixtures.__file__),w.HERE/'comparison_mesh_audit.py',w.HERE/'mesh_only_comparison.py',
         Path(meshers._meshers.__file__),Path(meshers.__file__),Path(meshers.expression.__file__),Path(meshers.intersection.__file__),
         Path(microgen.remesh.__file__),Path(microgen.shape.tpms.__file__),Path(microgen.shape.spinodoid.__file__),
@@ -188,6 +227,11 @@ def main():
     paths.extend((a.fixtures/a.case).iterdir())
     if a.lattice_uniform37:paths.append(w.ROOT/'handoff/macbook/comparison-matched-count-selection-20261026.json')
     if a.spin_default_sampling:paths.append(w.ROOT/'handoff/macbook/comparison-spin-sampling-selection-20261026.json')
+    if a.periodic_trace:paths.extend((w.HERE/'periodic_trace.py',w.ROOT/'handoff/macbook/schwarz-d-periodic-trace-decision-20261026.json'))
+    if a.case=='graded-gyroid-density-linear':paths.extend((a.fixtures/'linear-density-calibration.json',
+        a.fixtures/'density-controls.json',w.HERE/'linear_density_fixture.py',w.ROOT/'handoff/macbook/linear-density-selection-20261026.json'))
+    if a.density_adaptive:paths.append(w.ROOT/'handoff/macbook'/('linear-density-adaptation-selection-20261026.json'
+        if a.case=='graded-gyroid-density-linear' else 'linear-thickness-adaptation-selection-20261026.json'))
     hashes={str(path):w.digest(path) for path in paths}
     w.save(a.run/'manifest.json',dict(inputs=hashes,configs=selected,platform=platform.platform(),architecture=platform.machine(),
         native_sha256=w.digest(Path(meshers._meshers.__file__)),numerical_thread_policy=w.NUMERICAL_THREAD_POLICY,

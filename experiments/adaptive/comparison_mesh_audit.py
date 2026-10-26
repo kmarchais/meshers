@@ -21,9 +21,10 @@ def quadratic_conformity(points,cells,surface):
     return dict(passed=True,order=2,unique_edges=len(edges))
 
 
-def observe(run,name,case,points,cells,surface,periodic_required):
+def observe(run,name,case,points,cells,surface,periodic_required,*,periodic_auditor=None):
     import scorecard
     from periodic import periodic_pairs
+    if periodic_auditor is not None:periodic_pairs=periodic_auditor
     from quadratic_edge_removal_probe import measure
     from microgen_workflow import tessellate
     try:topology=quadratic_conformity(points,cells,surface)

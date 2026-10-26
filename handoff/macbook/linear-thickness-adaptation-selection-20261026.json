@@ -1,0 +1,9 @@
+{
+  "case": "graded-gyroid-linear",
+  "reason": "The uniform24 Tet4 mesh misses0.002 at0.002002835; independent constrained feet leave0.002002834963. Test the same single geometry-adaptive policy that admits the separately calibrated density ramp.",
+  "selected_config": "meshers-tet4-adaptive001",
+  "unchanged": {"cells":24,"order":1,"native_tolerance":1,"max_length":0.1,"minimum_quality":0.1,"node_cap":250000,"tet_cap":250000},
+  "changes": {"adapt":true,"adapt_tolerance":0.001,"min_length":0.002},
+  "specimen": "Exact existing linear level-set half-width0.55*(1+0.5*z), fixed samples and reference volume",
+  "scope": "One adaptive-on ablation; no global resolution sweep, geometry offset, fixture regeneration or reclassification of uniform failure."
+}

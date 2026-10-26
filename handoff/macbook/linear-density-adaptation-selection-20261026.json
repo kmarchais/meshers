@@ -1,0 +1,29 @@
+{
+  "reason": "Both uniform recipes miss the distance gate; independent minimized curved witness0.002018558 remains above0.002. Use existing geometry adaptation rather than another global-resolution sweep.",
+  "case": "graded-gyroid-density-linear",
+  "changes": {
+    "adapt": true,
+    "adapt_tolerance": 0.001,
+    "min_length": 0.002
+  },
+  "unchanged": {
+    "cells": {
+      "Tet4": 24,
+      "Tet10": 16
+    },
+    "native_tolerance": 1.0,
+    "max_length": 0.1,
+    "gradation": 0.3,
+    "adapt_iterations": 4,
+    "quality_guard": 0.3,
+    "minimum_quality": 0.1,
+    "node_cap": 250000,
+    "tet_cap": 250000
+  },
+  "scope": "One fixed adaptive-on ablation in both polynomial orders. Same frozen cross-sectional density field, samples and thresholds; no offset, new reference or hidden density recalibration.",
+  "inputs": {
+    "handoff/macbook/linear-density-selection-20261026.json": "1906f04729aa4692f2daa8956e5ef62ed85e60194287a07a2790028881a12f07",
+    "experiments/adaptive/runs/macbook-linear-density-comparison-pilot-v1/summary.json": "9d9c34bf6946dee54671d1228fc66841510879c6d14a7264882e78a65955524a",
+    "experiments/adaptive/runs/macbook-linear-density-projection-control-v1/result.json": "b915bcc73b03282c0dda7e05ac55fdcee0c5ab37ec78df556de83312aaa3222f"
+  }
+}

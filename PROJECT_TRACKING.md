@@ -1,5 +1,71 @@
 # Meshers project tracking
 
+## Schwarz D fixed and linear grading admitted, 26 October 2026
+
+The native Schwarz D periodic failure is fixed in both Tet4 and Tet10.
+The matcher had demanded an empty opposite corner with no tetrahedral
+material support. It now keeps every available pair, requires every
+material-cap node and complete Tri3/Tri6 facet to match, and rejects
+incomplete existing edge/corner constraint classes. The field, geometry
+and coordinate tolerances are unchanged, and no orphan node is added.
+The old all-plane rule and all historical rejections remain frozen.
+
+A calibrated **linear cross-sectional density ramp from 27% to 45%** now
+admits in both orders. The endpoint values are an explicitly recorded
+agent-selected baseline. Four independent validation scrambles on 66 planes
+show a maximum density discrepancy of **0.046685 percentage points**.
+Both arms share the same frozen width table, field and samples. The ideal
+mean 0.36 is not substituted for the measured frozen volume 0.3599233627.
+
+The original linear thickness-parameter Tet4 case also admits with the
+same declared geometry-adaptive policy. Its former uniform rejection is
+retained. This is a recipe recovery, not a new meshing algorithm or a claim
+that adaptation improves every quality statistic and timing.
+
+| Fixed case and mode | Tets | Nodes | Sampled distance | Minimum q | Median generation s |
+|---|---:|---:|---:|---:|---:|
+| Schwarz D solid Tet4 | 94,332 | 20,431 | 0.001352064 | 0.445715 | 0.321319 |
+| Schwarz D solid Tet10 | 27,900 | 44,079 | 0.000129866 | 0.457266 | 0.120475 |
+| Linear density Gyroid Tet4 | 132,812 | 31,318 | 0.000992296 | 0.261089 | 10.920944 |
+| Linear density Gyroid Tet10 | 141,392 | 218,792 | 0.000583760 | 0.266349 | 11.392458 |
+| Linear thickness-parameter Gyroid Tet4 | 79,809 | 19,797 | 0.000997822 | 0.349324 | 1.226776 |
+
+Each admitted recipe passes five measured repetitions after an excluded
+warmup. The gates remain distance 0.002, absolute volume 1%, corner q 0.1,
+positive 125-point curved Jacobians, full facet/quadratic consistency and
+both 250,000 caps.
+The periodic audit correction is explicit and independently checked.
+
+Native release checks pass **110 tests**, with one ignored. Clippy passes
+all targets/features with warnings denied. The public Python suite passes
+**185 tests**, with one skipped; final independent controls pass 11 tests.
+All seven previously admitted curved meshes regenerate identical point,
+tet and Tri6 arrays, including the original four field meshes. The final
+audit replays 41 new attempts and seven distinct meshes, plus all 20 frozen
+historical runs and 30 distinct meshes under their original rules. All 24 lattice model
+inputs remain unchanged.
+
+The actual Schwarz D controls with corrected input validation still reject
+ambiguous seed nodes. For the new density case, actual defaults exceed the
+intermediate cap and the modified route fails MMG. No admitted competitor
+or successful comparative ratio is invented. Density fields currently use
+Python callbacks and cost about 11 seconds to generate; performance work remains.
+Selected native recipes now cover all nine fixed specimens, without a
+universal-geometry or new stiffness claim. Lattice full-model accuracy and
+the overall matched-stiffness objective remain unresolved.
+
+Read [the full follow-up](experiments/adaptive/PERIODIC_GRADING_RESULTS.md)
+and [the audited findings](handoff/macbook/periodic-grading-findings-20261026.json).
+The new native SHA256 is
+`6394fdcd5e13c42955f96625c2e91800e5b4c2cb2817fb3349de3366dbcfab0a`.
+The baseline 2005 binary and the prior comparison below remain preserved.
+
+## Historical comparison before the matching fix
+
+The following eight-case comparison is the prior frozen baseline. Its
+former Schwarz D and linear-thickness failure priorities have now been
+handled as described above; its figures are not silently reclassified.
+
 ## Verified broad comparison, 26 October 2026
 
 The user selected **linear density/thickness grading** as the emphasis for

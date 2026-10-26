@@ -1,5 +1,7 @@
 # Verified Meshers versus actual Microgen+MMG, 26 October 2026
 
+Follow-up: Schwarz D now passes after correcting material-trace matching. The original linear-thickness Tet4 case and a new calibrated linear-density case also admit with geometry adaptation. See [the follow-up results](PERIODIC_GRADING_RESULTS.md). The eight-case tables below retain the historical baseline binary and its original failures.
+
 Meshers has admitted meshes for seven of these eight specimens with curved Tet10 and six with Tet4. The tested modified actual routes admit Schwarz P and the lattice. Default MMG on the fixed study inputs admits none. The additional public-sampling32 controls on both frozen spinodoids also fail. These are bounded results for named routes, not universal geometry support.
 
 The strongest generation results are Schwarz P curved Tet10 and the lattice Uniform37 curved Tet10. The latter uses almost equal element counts. Meshers still has periodic-matching failures on Schwarz D, a Tet4 distance rejection on linear grading, quality-distribution tradeoffs and unresolved lattice stiffness. No native meshing code changed during this comparison.

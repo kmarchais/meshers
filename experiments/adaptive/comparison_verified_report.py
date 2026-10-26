@@ -80,6 +80,9 @@ def verify(run,fixture_root,cache):
         path=Path(name)
         if not path.exists() or w.digest(path)!=expected:
             copies=[p for p in run.glob('input-*.py') if w.digest(p)==expected]
+            if path.suffix in ('.so','.pyd'):
+                baseline=w.ROOT/'.local-work/native-baselines'/expected/'meshers'/path.name
+                if baseline.exists() and w.digest(baseline)==expected:copies.append(baseline)
             assert copies,f'Unresolved measured input {name}'
         else:assert w.digest(path)==expected
     replays=[]

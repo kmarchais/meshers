@@ -7,12 +7,12 @@ from scorecard import Case
 
 CORE=('gyroid','schwarz-solid','spinodoid','smooth-lattice')
 EXTRA=('schwarz-d-solid','graded-gyroid-periodic','graded-gyroid-linear','spinodoid-anisotropic')
-CASES=CORE+EXTRA
+CASES=CORE+EXTRA+('graded-gyroid-density-linear',)
 ORIGINAL_SPECIMEN=w.specimen
 
 
 def periodic(name):
-    return name!='graded-gyroid-linear'
+    return name not in ('graded-gyroid-linear','graded-gyroid-density-linear')
 
 
 def raw_gyroid(x,y,z):
@@ -45,6 +45,9 @@ def spectral_field(path):
 
 
 def case(name,fixtures):
+    if name=='graded-gyroid-density-linear':
+        from linear_density_fixture import field
+        return Case(name,field(fixtures),(-1.,1.))
     if name in ('spinodoid','spinodoid-anisotropic'):
         return Case(name,spectral_field(coefficients_path(name,fixtures)),(-np.inf,0.))
     if name in CORE:return ORIGINAL_SPECIMEN(name)[0]
@@ -67,6 +70,11 @@ def actual_shape(name,fixtures,resolution=None):
             elif name=='spinodoid':shape.resolution=resolution
         return shape,part
     if name=='schwarz-d-solid':return microgen.Tpms(surface_functions.schwarz_d,offset=0.,**({} if resolution is None else dict(resolution=resolution))),'lower skeletal'
+    if name=='graded-gyroid-density-linear':
+        from linear_density_fixture import width
+        thickness=width(fixtures)
+        def offset(x,y,z):return 2*thickness(x,y,z)
+        return microgen.Tpms(surface_functions.gyroid,offset=offset,**({} if resolution is None else dict(resolution=resolution))),'sheet'
     if name.startswith('graded-gyroid'):
         def offset(x,y,z):return 2*half_width(name,x,y,z)
         return microgen.Tpms(surface_functions.gyroid,offset=offset,**({} if resolution is None else dict(resolution=resolution))),'sheet'
@@ -94,7 +102,8 @@ def prepare(root):
     w.save(root/'spinodoid-anisotropic-coefficients.json',dict(coefficients=np.column_stack((f.modes/f.cell_size,f.amplitudes,f.phases)).tolist(),
         threshold=float(f.threshold),seed=20261026,anisotropy=[1.,1.,2.],fft_resolution=16))
     rows={}
-    for name in CASES:
+    # The separately calibrated density ramp has its own immutable preparation.
+    for name in CORE+EXTRA:
         directory=root/name;directory.mkdir()
         target=case(name,root)
         if name in CORE:
