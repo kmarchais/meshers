@@ -1,0 +1,10 @@
+{
+  "reason": "The saved-mesh tangent fit admits with one midpoint move and unchanged corner quality. Test a fresh workflow with automatic marking before making any workflow claim.",
+  "baseline": "Admitted public automatic density Tet10 recipe: cells16, adaptive001",
+  "candidate": "Same field, cells16 and order2, adapt=False, then one charged Python cap-edge fitting pass",
+  "marking": "Find all physical-wall cap-intersection edges and evaluate 16 Gauss samples per edge. No frozen benchmark sample, saved seed, known edge ID or FE field participates.",
+  "fitting": "Reuse the previously frozen 10% edge-length tangent bound, 48-iteration limit, 65-point non-regression check, disjoint stars and positive125 Jacobian path checks",
+  "limits": "At most eight marked edges, one pass, all original admission gates and 250000 caps",
+  "timing": "Include fresh generation, compilation, detection, fitting and output conversion; independent full-mesh audit remains outside generation time for both routes",
+  "scope": "Experimental Meshers plus Python route; not a native library default, matched-stiffness comparison, universal geometry support or Microgen+MMG speed ratio"
+}

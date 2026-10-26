@@ -13,6 +13,7 @@ HERE = Path(__file__).resolve().parent
 ROOT = HERE.parents[1]
 BASE = "handoff/macbook/comparison-findings-20261026.json"
 FOLLOW = "handoff/macbook/periodic-grading-findings-20261026.json"
+LOOKUP = "handoff/macbook/density-lookup-findings-20261026.json"
 CASES = [
     ("gyroid", "Gyroid sheet", "TPMS"),
     ("schwarz-solid", "Schwarz P solid", "TPMS"),
@@ -38,9 +39,20 @@ def build_data():
         inputs[str(path.relative_to(ROOT))] = digest(path)
         return json.loads(path.read_text())
 
-    base, follow = read(BASE), read(FOLLOW)
+    base, follow, lookup = read(BASE), read(FOLLOW), read(LOOKUP)
     assert not base["audit_receipt"]["full_objective_complete"]
     assert not follow["full_objective_complete"]
+    assert not lookup["full_objective_complete"]
+    for key in ("finite_difference", "automatic", "curved_fitting"):
+        study = lookup[key]
+        audit = ROOT / study["audit_source"]
+        assert digest(audit) == study["audit_sha256"]
+        inputs[study["audit_source"]] = study["audit_sha256"]
+        for source in study["resolved_inputs"]:
+            path = Path(source["resolved_path"])
+            assert digest(path) == source["sha256"], path
+            name = str(path.relative_to(ROOT)) if path.is_relative_to(ROOT) else str(path)
+            inputs[name] = source["sha256"]
     for source in base["sources"]:
         assert digest(ROOT / source["run"] / "summary.json") == source["sha256"]
     for source in follow["checks"]:
@@ -68,7 +80,8 @@ def build_data():
                 return statistics.median(values) if values else None
 
             volume = abs(geometry["relative_volume_error"]) if newer and geometry else med(r.get("abs_relative_volume"))
-            superseded = snapshot == "baseline" and r["case"] == "schwarz-d-solid" and r["config"]["arm"] == "meshers"
+            superseded = (snapshot == "baseline" and r["case"] == "schwarz-d-solid" and r["config"]["arm"] == "meshers") or (
+                newer and r["case"] == "graded-gyroid-density-linear" and admitted)
             rows.append(dict(
                 id=f"{snapshot}-{index}", case=r["case"], name=r["name"], config=r["config"],
                 arm=r["config"]["arm"], order=r["config"]["order"], snapshot=snapshot,
@@ -88,6 +101,19 @@ def build_data():
                 errors=r["errors"], source=FOLLOW if newer else BASE, directories=directories,
                 native_sha256=follow["native_sha256"] if newer else follow["baseline_native_sha256"],
             ))
+
+    for pair in lookup['automatic']['pairs']:
+        stats=pair['native_lookup'];geometry=stats['geometry'];order=pair['order']
+        config=next(c for c in lookup['automatic']['configs'] if c['order']==order and c.get('native_interp_auto'))
+        directories=lookup['automatic']['directories'][config['name']]
+        assert stats['samples']==5 and len(directories)==5
+        rows.append(dict(id=f'lookup-{order}',case='graded-gyroid-density-linear',name=config['name'],config=config,
+            arm='meshers',order=order,snapshot='lookup',historical=False,samples=5,passes=5,admitted=True,
+            generation=stats['generation_median_s'],time_range=stats['generation_range_s'],nodes=stats['nodes'],
+            elements=stats['elements'],distance=geometry['sampled_two_sided_max'],forward=geometry['sampled_forward_max'],
+            reverse=geometry['sampled_reverse_max'],reverse_only=None,volume_pct=100*abs(geometry['relative_volume_error']),
+            quality=stats['quality'],failed_gates=[],errors=[],source=LOOKUP,directories=directories,
+            native_sha256=lookup['native_binary_sha256']))
 
     cases = []
     for name, label, family in CASES:
@@ -121,12 +147,12 @@ def build_data():
         assert len(r["all24_model_disagreements"]) == 24
         assert r["worst_model_disagreement"] == max(r["all24_model_disagreements"])
         assert r["passes_one_percent"] == (r["worst_model_disagreement"] <= .01)
-    assert len(rows) == 49 and len(pairs) == 5
+    assert len(rows) == 51 and len(pairs) == 5
     assert all(any(r["case"] == c[0] and r["order"] == order and r["admitted"] for r in rows)
                for c in CASES for order in (1, 2))
     return dict(date="2026-10-26", host="Apple M4 · 24 GiB · one numerical thread",
-                cases=cases, rows=rows, pairs=pairs, fea=fea,
-                inputs=inputs, sources=[BASE, FOLLOW], model_hashes=base["lattice_stiffness"]["retained_model_tensor_hashes"],
+                cases=cases, rows=rows, pairs=pairs, fea=fea, lookup=lookup,
+                inputs=inputs, sources=[BASE, FOLLOW, LOOKUP], model_hashes=base["lattice_stiffness"]["retained_model_tensor_hashes"],
                 full_objective_complete=False)
 
 

@@ -1,5 +1,11 @@
 # Improvement directions after the nine-case comparison
 
+Update after the experiments:
+[native lookup and curved cap-fitting results](LOOKUP_AND_CURVED_RESULTS.md)
+record the implemented evaluator gain and the independently replayed fitting
+tradeoff. The investigation below preserves the hypotheses and evidence
+available before those experiments. Lattice error diagnosis remains open.
+
 26 October 2026. These are ranked hypotheses and experiment designs. Only
 the native-lookup feasibility control below has run in this investigation.
 No production change, admitted new mesh, FEA result or speedup is claimed.

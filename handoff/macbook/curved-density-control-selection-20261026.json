@@ -1,0 +1,8 @@
+{
+  "reason": "The frozen uniform16 curved recipe has one above-gate forward sample on a cap-intersection edge. Check the exact same resolution and mesh settings under the newly supported default evaluator before introducing geometric fitting or local refinement.",
+  "case": "graded-gyroid-density-linear",
+  "source": "experiments/adaptive/runs/macbook-linear-density-comparison-pilot-v1/repeat-0-meshers-curved-tet10",
+  "unchanged": "Frozen field/table, samples, bounds, band, cells16, order2, adapt=False, optimization1, q0.1, distance0.002, volume1%, positive125, all facet/association checks and 250000 caps",
+  "change": "Public automatic compilation and its default analytic derivatives",
+  "decision": "Read admission and the complete observed geometry before selecting a single local fitting/refinement experiment; no size sweep or retrospective reclassification"
+}

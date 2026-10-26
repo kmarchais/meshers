@@ -118,6 +118,16 @@ def worker(run,name,config,fixture_root):
                 row.update(straight_elevation_s=time.perf_counter()-phase,straight_elevation_explicit=True)
         else:
             field=target.function
+            if config.get('native_density_lookup'):
+                assert name=='graded-gyroid-density-linear'
+                from graded_lookup_preflight import native_width
+                prepare=time.perf_counter()
+                width=native_width(json.loads((fixture_root/'linear-density-calibration.json').read_text()))
+                def native_field(x,y,z):return fixtures.raw_gyroid(x,y,z)/width(x,y,z)
+                field=meshers.compile_field(native_field,gradient=False)
+                assert not field.has_gradient
+                row.update(field_prepare_s=time.perf_counter()-prepare,native_graph_nodes=field.node_count,
+                    native_analytic_gradient_enabled=False)
             if name=='smooth-lattice':
                 from gradient_tie_probe import symmetric_lattice
                 lattice=target.function if config.get('lattice_field')=='original' else symmetric_lattice
@@ -129,15 +139,31 @@ def worker(run,name,config,fixture_root):
                 periodic=(fixtures.periodic(name),)*3,threads=1,optimize_passes=config.get('optimization_passes',1),
                 minimum_quality=.1,max_tetrahedra=w.CAP,order=config['order'],geometry_tolerance=config['tolerance'],
                 adapt=config['adapt'],min_length=config.get('min_length',.01),max_length=.1,gradation=.3,
-                adapt_iterations=4,quality_guard=.3,adapt_tolerance=config.get('adapt_tolerance',.002))
+                adapt_iterations=4,quality_guard=.3,adapt_tolerance=config.get('adapt_tolerance',.002),
+                compile=config.get('compile',True))
             points,cells,surface=np.asarray(mesh.points),np.asarray(mesh.tetrahedra),np.asarray(mesh.surface)
             row['diagnostics']=mesh.diagnostics
+            if config.get('fit_cap_edges'):
+                assert name=='graded-gyroid-density-linear' and config['order']==2 and not fixtures.periodic(name)
+                from curved_edge_fit import fit_cap_edges
+                phase=time.perf_counter();points,fit_info=fit_cap_edges(target,points,cells,surface)
+                row.update(curved_cap_fit=fit_info,curved_cap_fit_s=time.perf_counter()-phase,
+                    native_only=False,diagnostics_scope='Native seed before the charged experimental Python fitting pass')
+            if config.get('native_interp_auto'):
+                assert row['diagnostics']['evaluator']=='compiled' and row['diagnostics']['callback_calls']==0
+                row['public_auto_interp']=True
         row.update(generation_wall_s=time.perf_counter()-started,nodes=len(points),elements=len(cells))
         row['generation_s']=row['generation_wall_s']-row['instrumentation_s']
         if config['arm']=='meshers':
             probes=np.random.default_rng(20261026).uniform(-.5,.5,(4096,3))
             expected=target.function(*probes.T)
-            actual=field.values(probes) if hasattr(field,'values') else field(*probes.T)
+            identity_field=field
+            if mesh.diagnostics['evaluator']=='compiled' and not hasattr(field,'values'):
+                # Automatic preparation does not replace this caller's Python
+                # variable. Inspect an owned compiled evaluator, not the same
+                # Python callable twice. This check is outside generation time.
+                identity_field=meshers.compile_field(field)
+            actual=identity_field.values(probes) if hasattr(identity_field,'values') else identity_field(*probes.T)
             np.testing.assert_allclose(actual,np.minimum(expected,.02) if name=='smooth-lattice' else expected,rtol=1e-12,atol=1e-12)
             np.testing.assert_array_equal(actual<0,expected<0)
             row['generated_field_identity_checked']=4096
@@ -179,6 +205,10 @@ def main():
     p.add_argument('--periodic-trace',action='store_true',help='Explicit corrected material-cap and complete existing node-class audit')
     p.add_argument('--material-trace-remesh',action='store_true',help='Actual control: replace coordinate-only periodic validation, retain public MMG calls')
     p.add_argument('--density-adaptive','--grading-adaptive',action='store_true',help='One declared geometry-adaptive ablation on a linear grading case')
+    p.add_argument('--density-lookup',nargs='?',const='finite',choices=('finite','automatic'),
+        help='Pair NumPy with native finite-difference or public automatic interpolation')
+    p.add_argument('--density-auto-interp',action='store_true',help='Control the newly supported public automatic interpolation path')
+    p.add_argument('--density-cap-fit',action='store_true',help='Compare admitted adaptive Tet10 with one fresh uniform16 plus generic cap-fit prototype')
     a=p.parse_args()
     if a.worker is not None:return worker(a.run,a.case,a.worker,a.fixtures)
     a.run.mkdir(parents=True,exist_ok=False)
@@ -215,6 +245,21 @@ def main():
     if a.density_adaptive:
         assert a.case in ('graded-gyroid-density-linear','graded-gyroid-linear') and all(c['arm']=='meshers' for c in selected)
         selected=[dict(c,name=c['name']+'-adaptive001',adapt=True,adapt_tolerance=.001,min_length=.002) for c in selected]
+    if a.density_lookup:
+        assert a.case=='graded-gyroid-density-linear' and a.density_adaptive and all(c['arm']=='meshers' for c in selected)
+        native=('-native-lookup',dict(compile=False,native_density_lookup=True)) if a.density_lookup=='finite' else (
+            '-auto-interp',dict(compile=True,native_interp_auto=True))
+        selected=[dict(c,name=c['name']+suffix,**extra) for c in selected
+            for suffix,extra in (('-numpy',dict(compile=False)),native)]
+    if a.density_auto_interp:
+        assert a.case=='graded-gyroid-density-linear' and a.density_adaptive and not a.density_lookup
+        assert all(c['arm']=='meshers' for c in selected)
+        selected=[dict(c,name=c['name']+'-auto-interp',compile=True,native_interp_auto=True) for c in selected]
+    if a.density_cap_fit:
+        assert a.case=='graded-gyroid-density-linear' and a.density_adaptive and not a.density_lookup and not a.density_auto_interp
+        assert len(selected)==1 and selected[0]['name']=='meshers-curved-tet10-adaptive001'
+        baseline=dict(selected[0],name='meshers-curved-tet10-adaptive001-auto-interp',compile=True,native_interp_auto=True)
+        selected=[baseline,dict(baseline,name='meshers-uniform16-auto-interp-cap-fit',adapt=False,fit_cap_edges=True)]
     paths=[Path(__file__),Path(w.__file__),Path(fixtures.__file__),w.HERE/'comparison_mesh_audit.py',w.HERE/'mesh_only_comparison.py',
         Path(meshers._meshers.__file__),Path(meshers.__file__),Path(meshers.expression.__file__),Path(meshers.intersection.__file__),
         Path(microgen.remesh.__file__),Path(microgen.shape.tpms.__file__),Path(microgen.shape.spinodoid.__file__),
@@ -232,6 +277,12 @@ def main():
         a.fixtures/'density-controls.json',w.HERE/'linear_density_fixture.py',w.ROOT/'handoff/macbook/linear-density-selection-20261026.json'))
     if a.density_adaptive:paths.append(w.ROOT/'handoff/macbook'/('linear-density-adaptation-selection-20261026.json'
         if a.case=='graded-gyroid-density-linear' else 'linear-thickness-adaptation-selection-20261026.json'))
+    if a.density_lookup:paths.extend((w.HERE/'graded_lookup_preflight.py',
+        w.ROOT/'handoff/macbook/graded-lookup-experiment-selection-20261026.json'))
+    if a.density_auto_interp or a.density_lookup=='automatic':
+        paths.append(w.ROOT/'handoff/macbook/native-interp-auto-selection-20261026.json')
+    if a.density_cap_fit:paths.extend((w.HERE/'curved_edge_fit.py',
+        w.ROOT/'handoff/macbook/curved-density-live-fit-selection-20261026.json'))
     hashes={str(path):w.digest(path) for path in paths}
     w.save(a.run/'manifest.json',dict(inputs=hashes,configs=selected,platform=platform.platform(),architecture=platform.machine(),
         native_sha256=w.digest(Path(meshers._meshers.__file__)),numerical_thread_policy=w.NUMERICAL_THREAD_POLICY,

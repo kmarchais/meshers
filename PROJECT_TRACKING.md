@@ -1,6 +1,89 @@
 # Meshers project tracking
 
+## Native density lookup improved and fresh cap fitting validated, 26 October 2026
+
+[Updated dashboard](experiments/adaptive/comparison-dashboard.html),
+[detailed results](experiments/adaptive/LOOKUP_AND_CURVED_RESULTS.md) and
+[numeric evidence](handoff/macbook/density-lookup-findings-20261026.json).
+
+Static finite real `np.interp` tables now compile through existing native
+operations. The public feature is committed as `dfb6fe9`. It preserves the
+frozen table and endpoint values, documents knot derivative conventions, and
+retains callback fallback for unsupported tables. No native rebuild or new
+dependency is required; the native binary remains 6394.
+
+Two separate studies each pass 24 attempts, with one excluded warmup and five
+interleaved measured pairs per order. Independent replays pass.
+
+| Order / gradient policy | Callback median s | Native median s | Speedup | Counts |
+|---|---:|---:|---:|---|
+| Tet4, finite differences | 10.893693 | 5.934124 | 1.83577x | Identical 132,812 tets / 31,318 nodes |
+| Tet10, finite differences | 11.300277 | 6.048265 | 1.86835x | Identical 141,392 tets / 218,792 nodes |
+| Tet4, public analytic default | 10.924949 | 3.947524 | 2.76754x | 132,822 tets / 31,330 nodes |
+| Tet10, public analytic default | 11.303363 | 4.153106 | 2.72167x | 141,437 tets / 219,006 nodes |
+
+The finite-difference native graph is the exact same cached compiled object
+as the measured prototype. Tiny coordinate changes still prevent a bitwise
+old-domain claim. Default analytic derivatives change meshes and some quality
+quantiles slightly; the differences are retained. These are Meshers-versus-
+callback gains. There is no admitted actual density comparator, no new FEA
+result and no whole-objective victory.
+
+Full Python/API and tool checks pass 208 tests with one skipped. The updated
+interpolation and Schwarz D controls pass 15 tests. All seven old admitted
+curved meshes regenerate exact point/tet/Tri6 arrays, including the original
+four. All retained lattice source/model hashes remain unchanged. The failed
+665 audit-script syntax check is preserved; corrected 666 passes. Expected
+red669 has six failures; green670 passes 13. Changed source lint/format pass;
+repository-wide legacy handoff lint and formatting findings remain recorded
+without editing frozen scientific scripts.
+
+The new coarse uniform16 control still rejects distance at 0.002099825.
+Localization finds one above-gate sample on a box-cap intersection edge.
+One saved-mesh tangent fit moves a single midpoint, preserving 25,747 tets,
+45,262 nodes and the exact corner-quality vector, and passes full geometry
+at distance 0.001860206. Dense 65-point edge error also decreases. It changes
+the curved approximation and FE space, so no field or stiffness score is
+transferred.
+
+A fresh workflow with a generic Gauss-edge marker reproduces the fit. It
+inspects all 694 cap-intersection edges without fixed benchmark samples,
+a saved seed or known edge ID. The pilot/replay and all 12 repeated attempts
+pass; the independent repeated audit replays both unique outputs.
+
+| Metric | Adaptive analytic native | Uniform16 + Python cap fit |
+|---|---:|---:|
+| Median generation s | 3.996870 | 1.103007 |
+| Tets / nodes | 141,437 / 219,006 | 25,747 / 45,262 |
+| Boundary error | 0.000588878 | 0.001860206 |
+| Abs. relative volume error % | 0.0203610 | 0.0232222 |
+| q min / median | 0.271434 / 0.733067 | 0.163388 / 0.792875 |
+
+This is 3.62361x faster with 81.796% fewer tets, at worse boundary error and
+lower-tail quality. Both pass unchanged gates; they do not have matched
+geometry, quality or FEA accuracy. Python detection/fitting and its import
+are charged. The fitter remains experimental and nonperiodic, not a native
+default. Jobs 680–683 and the measured source snapshots preserve the trail.
+
+The dashboard now retains 51 main route summaries with 23 current admitted
+summaries, four evaluator comparisons and a separate experimental fitting
+table. It keeps all five actual workflow comparisons and all 24 lattice
+models. Original callback recipes remain in history; no rejected actual
+route produces a speed ratio. The full four-case objective remains open.
+Lattice stiffness is unchanged at 1.213247% for the best saved native result
+versus 0.994671% for the separate modified actual star-refined route. The next
+scientific priority remains an error-source diagnostic, not another sizing
+sweep.
+
+The updated dashboard checks 221 hashed source artifacts. Deterministic
+rebuild and browser checks pass at 1440, 728 and 360 px, including the new
+lookup provenance, exports, order filters and red fitting tradeoff cells.
+See [the new dashboard receipt](handoff/macbook/dashboard-lookup-verification-20261026.json).
+
 ## Evidence-ranked next improvements, 26 October 2026
+
+Historical investigation before the implementation above. Its planned
+lookup and curved-fitting experiments are now reported in the current section.
 
 [The improvement investigation](experiments/adaptive/IMPROVEMENT_IDEAS.md)
 reconciles the nine-case dashboard, previous negative experiments, current
@@ -28,7 +111,7 @@ It is a short field-only check run with the queue idle. No production code,
 meshes, FE solves, frozen benchmark data or generation-speed result changes.
 The next queued experiment remains bounded and must be read before a successor.
 
-## Comparison dashboard, 26 October 2026
+## Initial comparison dashboard, 26 October 2026
 
 [Open the dashboard](experiments/adaptive/comparison-dashboard.html).
 It covers nine fixed specimens, with 49 retained route summaries, 23 admitted

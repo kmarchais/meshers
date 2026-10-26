@@ -1,0 +1,31 @@
+{
+  "case": "graded-gyroid-density-linear",
+  "purpose": "Isolate native evaluation of the immutable calibrated lookup at unchanged admitted Tet4/Tet10 recipes",
+  "baseline": "Explicit compile=False keeps the accepted NumPy callback path, including finite-difference gradients",
+  "candidate": "Existing comparisons and selections encode the identical piecewise-linear lookup; explicitly compile gradient=False and charge preparation in generation time",
+  "unchanged": {
+    "Tet4_cells": 24,
+    "Tet10_cells": 16,
+    "adapt": true,
+    "adapt_tolerance": 0.001,
+    "min_length": 0.002,
+    "max_length": 0.1,
+    "gradation": 0.3,
+    "adapt_iterations": 4,
+    "quality_guard": 0.3,
+    "minimum_quality": 0.1,
+    "optimization_passes": 1,
+    "node_cap": 250000,
+    "tetrahedron_cap": 250000,
+    "geometry_tolerance_internal": 1.0,
+    "distance_gate": 0.002,
+    "absolute_relative_volume_gate": 0.01
+  },
+  "execution": "One four-worker pilot, then read admission, resource, output and timing results before deciding on five interleaved measurements after one warmup",
+  "algorithm_caveat": "Compiled fields do not prefer callback batches. Backend-dependent search paths and floating-point differences may change mesh arrays; record differences and independently audit every unique output",
+  "claims": "No speedup against rejected Microgen+MMG routes, no old FE score transferred, no whole-objective completion",
+  "inputs": {
+    "handoff/macbook/linear-density-calibration-20261026.json": "b4db7ab7afe47f7832106e2eaf1523c7b0d854f291ef6030bdbe65df9e06e7e1",
+    "handoff/macbook/graded-lookup-preflight-20261026.json": "36cf18761254386b200708e9267dc39bc57322ef832f10a0704af68028b6e16e"
+  }
+}

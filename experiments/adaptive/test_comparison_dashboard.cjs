@@ -22,6 +22,8 @@ const { chromium } = require('playwright');
     await page.waitForFunction(() => window.meshDashboard);
     assert.equal(await page.locator('#metrics tbody tr').count(), 12);
     assert.equal(await page.locator('#pairs tbody tr').count(), 3);
+    assert.equal(await page.locator('#lookup-metrics tbody tr').count(), 2);
+    assert.match(await page.locator('#lookup-metrics caption').innerText(), /Meshers evaluators/);
     assert.equal(await page.locator('#coverage button').count(), 9);
     assert.equal(await page.locator('#models tbody td.model').count(), 96);
     assert.equal(await page.evaluate(() => {
@@ -33,6 +35,8 @@ const { chromium } = require('playwright');
     await page.selectOption('#order', 'all');
     assert.equal(await page.locator('#metrics tbody tr').count(), 23);
     assert.equal(await page.locator('#pairs tbody tr').count(), 5);
+    assert.equal(await page.locator('#lookup-metrics tbody tr').count(), 4);
+    assert.match(await page.locator('#lookup-metrics tbody tr').first().innerText(), /≈ equal/);
     await page.selectOption('#goal', 'counts');
     assert.equal(await page.evaluate(() => window.meshDashboard.visiblePairs().length), 1);
     assert.match(await page.locator('#pairs tbody').innerText(), /Uniform37/);
@@ -46,11 +50,12 @@ const { chromium } = require('playwright');
     assert.equal(await page.locator('#metrics tbody tr[data-row]').count(), 47);
     assert.equal(await page.locator('#metrics tr.rejected td.num[style*="color-mix"]').count(), 0);
     await page.check('#history');
-    assert.equal(await page.locator('#metrics tbody tr[data-row]').count(), 49);
+    assert.equal(await page.locator('#metrics tbody tr[data-row]').count(), 51);
     await page.selectOption('#case', 'schwarz-d-solid');
     assert.equal(await page.locator('#metrics tbody tr[data-row]').count(), 8);
     assert.equal(await page.evaluate(() => window.meshDashboard.visiblePairs().length), 0);
     assert.equal(await page.locator('#fea-plot').isVisible(), false);
+    assert.equal(await page.locator('#lookup-section').isVisible(), false);
     await page.locator('#metrics tbody tr[data-row="followup-0"] button[data-detail]').click();
     assert.match(await page.locator('#detail').innerText(), /94|Admitted in every measured repetition/);
     assert.match(await page.locator('#detail').innerText(), /0\.001352064/);
@@ -67,6 +72,24 @@ const { chromium } = require('playwright');
     await page.uncheck('#failures');
     await page.selectOption('#order', '2');
     assert.equal(await page.locator('#metrics tbody tr[data-row]').count(), 3);
+    assert.equal(await page.locator('#lookup-section').isVisible(), true);
+    await page.locator('#cap-fit-details summary').click();
+    const prototype = page.locator('#cap-fit tbody tr').nth(1);
+    assert.match(await prototype.innerText(), /25,747/);
+    assert.match(await prototype.locator('td').nth(4).getAttribute('style'), /destructive/);
+    assert.match(await prototype.locator('td').nth(5).getAttribute('style'), /destructive/);
+    assert.match(await prototype.locator('td').nth(6).getAttribute('style'), /success/);
+    assert.match(await page.locator('#cap-fit-note').innerText(), /FEA accuracy is unmeasured/);
+    await page.selectOption('#order', '1');
+    assert.equal(await page.locator('#cap-fit-details').isVisible(), false);
+    await page.selectOption('#order', '2');
+    await page.locator('#metrics tbody tr[data-row="lookup-2"] button[data-detail]').click();
+    assert.match(await page.locator('#detail').innerText(), /native lookup|auto-interp/);
+    for (const href of await page.locator('a[href]').evaluateAll(as => as.map(a => a.href))) {
+      assert.equal(fs.existsSync(fileURLToPath(href)), true, `Missing lookup evidence link: ${href}`);
+    }
+    await page.click('#close-detail');
+    await page.locator('#cap-fit-details summary').click();
     const downloadPromise = page.waitForEvent('download');
     await page.click('#export');
     const download = await downloadPromise;
@@ -74,7 +97,7 @@ const { chromium } = require('playwright');
     let csv = '';
     for await (const chunk of stream) csv += chunk;
     assert.equal(csv.split('\r\n').length, 4);
-    assert.match(csv, /141392/);
+    assert.match(csv, /141437/);
     assert.match(csv, /boundary_sampled_max/);
     await page.selectOption('#family', 'all');
     await page.selectOption('#case', 'smooth-lattice');
@@ -105,9 +128,9 @@ const { chromium } = require('playwright');
     if (out) await page.screenshot({ path: path.join(out, 'mobile-light.png'), fullPage: true });
     assert.deepEqual(errors, []);
     assert.deepEqual(remoteRequests, []);
-    console.log(JSON.stringify({ passed: true, cases: 9, retained_routes: 49, admitted_routes: 23,
+    console.log(JSON.stringify({ passed: true, cases: 9, retained_routes: 51, admitted_routes: 23,
       paired_comparisons: 5, model_cells: 96, widths: [1440, 728, 360], external_requests: 0,
       checked: ['filters', 'historical failures', 'failure color exclusion', 'quality-tail tradeoff',
-        'paired sample ratio', 'strict no-worse screen', 'evidence detail', 'CSV export', 'FEA scope', 'chart bounds'] }));
+        'paired sample ratio', 'strict no-worse screen', 'evidence detail', 'CSV export', 'FEA scope', 'chart bounds', 'evaluator gains', 'cap-fitting tradeoff colors', 'lookup provenance'] }));
   } finally { await browser.close(); }
 })().catch(e => { console.error(e); process.exitCode = 1; });

@@ -1,0 +1,18 @@
+{
+  "source": "experiments/adaptive/runs/macbook-curved-density-native-uniform-v1/mesh",
+  "localization": "experiments/adaptive/runs/macbook-curved-density-native-localization-v1/result.json",
+  "reason": "One failing sampled point lies on one cap-intersection edge with one tangential midpoint degree of freedom. Test local curved fitting before adding elements.",
+  "policy": {
+    "maximum_localized_edges": 8,
+    "disjoint_element_stars_only": true,
+    "maximum_tangent_scalar_shift_fraction_of_edge": 0.1,
+    "objective": "Maximum feasible projected distance at 16 Gauss edge samples",
+    "independent_local_validation": "65 uniformly spaced edge samples must not regress",
+    "maximum_scalar_iterations": 48,
+    "minimum_objective_gain": 1e-8,
+    "positive_jacobian_rule": 125,
+    "motion_path_fractions": [0.25, 0.5, 0.75, 1.0]
+  },
+  "preserved": "Fixed field/table/samples, corner nodes, node/tet counts, all facet and midpoint associations, cap coordinates, q0.1, distance0.002, volume1%, positive sampled curved Jacobians and 250000 caps",
+  "scope": "Nonperiodic cap-edge prototype on a saved seed. Curved domain and FE space change. No field transfer, stiffness or native generation timing claim. Source rejection remains frozen."
+}

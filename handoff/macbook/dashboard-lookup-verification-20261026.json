@@ -1,0 +1,53 @@
+{
+  "at": "2026-10-26T21:16:37.153671+00:00",
+  "artifact": "experiments/adaptive/comparison-dashboard.html",
+  "source_artifact_count": 221,
+  "browser": {
+    "passed": true,
+    "cases": 9,
+    "retained_routes": 51,
+    "admitted_routes": 23,
+    "paired_comparisons": 5,
+    "model_cells": 96,
+    "widths": [
+      1440,
+      728,
+      360
+    ],
+    "external_requests": 0,
+    "checked": [
+      "filters",
+      "historical failures",
+      "failure color exclusion",
+      "quality-tail tradeoff",
+      "paired sample ratio",
+      "strict no-worse screen",
+      "evidence detail",
+      "CSV export",
+      "FEA scope",
+      "chart bounds",
+      "evaluator gains",
+      "cap-fitting tradeoff colors",
+      "lookup provenance"
+    ]
+  },
+  "deterministic_build_check": true,
+  "full_objective_complete": false,
+  "inputs": {
+    "experiments/adaptive/build_comparison_dashboard.py": "f2123ca6c8c9fbae0b8b097952f3e0ea8431cbfdbbd7d34912a7d716a989b929",
+    "experiments/adaptive/comparison_dashboard.template.html": "d26682c8369298e22b8fa4a66e3c907a30b2d51422cc327b70c9d3d54d28946c",
+    "experiments/adaptive/test_comparison_dashboard.cjs": "18036ad8ff3f3c743b6fc7a9b02bcfee9e34797d22fe24e4e69aa4bbdde4611d",
+    "experiments/adaptive/comparison-dashboard.html": "b15eb32340141cc93d12bfae995bcfc1c91732db029e4b95bbb83575680c007a",
+    "handoff/macbook/comparison-findings-20261026.json": "e37247280a0c14f622ec6c6ebf5a777dc2531ccba6d5c1fd51dcb063913a45b0",
+    "handoff/macbook/periodic-grading-findings-20261026.json": "e32ab53239c5709843daade4adae160ebb3254234d5250114a2b3a37da3fad68",
+    "handoff/macbook/density-lookup-findings-20261026.json": "b24217ef4a60377e21aea34a20afd1c4df3b5dfec3e935d5643df5ea02922b45",
+    "experiments/adaptive/LOOKUP_AND_CURVED_RESULTS.md": "a225d29deb501ccbf47c05037b859384df39c7be1e1e028b45432518d1b44525"
+  },
+  "screenshots": {
+    ".local-work/dashboard-lookup-verification/desktop.png": "9b9022242d71c70aebe2d245fc15627d5866bfbf3a01db39c8d163ba7966f45b",
+    ".local-work/dashboard-lookup-verification/width-728.png": "15800eaf2b3dc61932715ea2b699e142213f782d23612b138f6619f1ad5df5cb",
+    ".local-work/dashboard-lookup-verification/width-360.png": "451ffe5501b347fe5c369e3585e5de9bc6fc99e943a69816a6365a4e53f24196",
+    ".local-work/dashboard-lookup-verification/mobile-light.png": "8e45a8eb15a42e441e83d4736f19bdda7b0b4b349401ef86337351dd489e1d42"
+  },
+  "scope": "Offline display of independent replay findings. Public native interpolation gains compare Meshers to callbacks; the fresh cap-fitting route is experimental Python and preserves explicit quality/geometry tradeoffs. No new FEA or actual density speed ratio."
+}

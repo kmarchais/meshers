@@ -1,0 +1,1992 @@
+{
+  "case": "graded-gyroid-density-linear",
+  "host": "Apple M4, one numerical thread",
+  "date": "2026-10-26",
+  "native_binary_sha256": "6394fdcd5e13c42955f96625c2e91800e5b4c2cb2817fb3349de3366dbcfab0a",
+  "expression_sha256": "dc8d5e612395b13cb61ea71b147e9e4d45423c988e5dca4358f251d011974dd1",
+  "finite_difference": {
+    "audit_source": "experiments/adaptive/runs/macbook-density-lookup-repeated-audit-v1/result.json",
+    "audit_sha256": "55e415639590959127e0ccce8c44eaa4992974ea2e82bff0d54d4ab3c2b1b660",
+    "run": "experiments/adaptive/runs/macbook-density-native-lookup-repeated-v1",
+    "attempts": 24,
+    "configs": [
+      {
+        "arm": "meshers",
+        "cells": 24,
+        "order": 1,
+        "adapt": true,
+        "tolerance": 1.0,
+        "min_length": 0.002,
+        "adapt_tolerance": 0.001,
+        "name": "meshers-tet4-adaptive001-numpy",
+        "compile": false
+      },
+      {
+        "arm": "meshers",
+        "cells": 24,
+        "order": 1,
+        "adapt": true,
+        "tolerance": 1.0,
+        "min_length": 0.002,
+        "adapt_tolerance": 0.001,
+        "name": "meshers-tet4-adaptive001-native-lookup",
+        "compile": false,
+        "native_density_lookup": true
+      },
+      {
+        "arm": "meshers",
+        "cells": 16,
+        "order": 2,
+        "adapt": true,
+        "tolerance": 1.0,
+        "min_length": 0.002,
+        "adapt_tolerance": 0.001,
+        "name": "meshers-curved-tet10-adaptive001-numpy",
+        "compile": false
+      },
+      {
+        "arm": "meshers",
+        "cells": 16,
+        "order": 2,
+        "adapt": true,
+        "tolerance": 1.0,
+        "min_length": 0.002,
+        "adapt_tolerance": 0.001,
+        "name": "meshers-curved-tet10-adaptive001-native-lookup",
+        "compile": false,
+        "native_density_lookup": true
+      }
+    ],
+    "directories": {
+      "meshers-tet4-adaptive001-numpy": [
+        "experiments/adaptive/runs/macbook-density-native-lookup-repeated-v1/repeat-0-meshers-tet4-adaptive001-numpy",
+        "experiments/adaptive/runs/macbook-density-native-lookup-repeated-v1/repeat-1-meshers-tet4-adaptive001-numpy",
+        "experiments/adaptive/runs/macbook-density-native-lookup-repeated-v1/repeat-2-meshers-tet4-adaptive001-numpy",
+        "experiments/adaptive/runs/macbook-density-native-lookup-repeated-v1/repeat-3-meshers-tet4-adaptive001-numpy",
+        "experiments/adaptive/runs/macbook-density-native-lookup-repeated-v1/repeat-4-meshers-tet4-adaptive001-numpy"
+      ],
+      "meshers-tet4-adaptive001-native-lookup": [
+        "experiments/adaptive/runs/macbook-density-native-lookup-repeated-v1/repeat-0-meshers-tet4-adaptive001-native-lookup",
+        "experiments/adaptive/runs/macbook-density-native-lookup-repeated-v1/repeat-1-meshers-tet4-adaptive001-native-lookup",
+        "experiments/adaptive/runs/macbook-density-native-lookup-repeated-v1/repeat-2-meshers-tet4-adaptive001-native-lookup",
+        "experiments/adaptive/runs/macbook-density-native-lookup-repeated-v1/repeat-3-meshers-tet4-adaptive001-native-lookup",
+        "experiments/adaptive/runs/macbook-density-native-lookup-repeated-v1/repeat-4-meshers-tet4-adaptive001-native-lookup"
+      ],
+      "meshers-curved-tet10-adaptive001-numpy": [
+        "experiments/adaptive/runs/macbook-density-native-lookup-repeated-v1/repeat-0-meshers-curved-tet10-adaptive001-numpy",
+        "experiments/adaptive/runs/macbook-density-native-lookup-repeated-v1/repeat-1-meshers-curved-tet10-adaptive001-numpy",
+        "experiments/adaptive/runs/macbook-density-native-lookup-repeated-v1/repeat-2-meshers-curved-tet10-adaptive001-numpy",
+        "experiments/adaptive/runs/macbook-density-native-lookup-repeated-v1/repeat-3-meshers-curved-tet10-adaptive001-numpy",
+        "experiments/adaptive/runs/macbook-density-native-lookup-repeated-v1/repeat-4-meshers-curved-tet10-adaptive001-numpy"
+      ],
+      "meshers-curved-tet10-adaptive001-native-lookup": [
+        "experiments/adaptive/runs/macbook-density-native-lookup-repeated-v1/repeat-0-meshers-curved-tet10-adaptive001-native-lookup",
+        "experiments/adaptive/runs/macbook-density-native-lookup-repeated-v1/repeat-1-meshers-curved-tet10-adaptive001-native-lookup",
+        "experiments/adaptive/runs/macbook-density-native-lookup-repeated-v1/repeat-2-meshers-curved-tet10-adaptive001-native-lookup",
+        "experiments/adaptive/runs/macbook-density-native-lookup-repeated-v1/repeat-3-meshers-curved-tet10-adaptive001-native-lookup",
+        "experiments/adaptive/runs/macbook-density-native-lookup-repeated-v1/repeat-4-meshers-curved-tet10-adaptive001-native-lookup"
+      ]
+    },
+    "resolved_inputs": [
+      {
+        "measured_path": "experiments/adaptive/runs/macbook-density-native-lookup-repeated-v1/manifest.json",
+        "resolved_path": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-density-native-lookup-repeated-v1/manifest.json",
+        "sha256": "086bee7dba00b60f75ba1ea013edf8531d024bc50ad6150f6e97def829c1896b"
+      },
+      {
+        "measured_path": "experiments/adaptive/runs/macbook-density-native-lookup-repeated-v1/summary.json",
+        "resolved_path": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-density-native-lookup-repeated-v1/summary.json",
+        "sha256": "7e53cda3f00873d2016e5563d4c29edbca4783342ebc07ed6013fcb2073c8b77"
+      },
+      {
+        "measured_path": "/Users/kmarchais/dev/meshers/experiments/adaptive/verify_density_lookup.py",
+        "resolved_path": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-density-lookup-repeated-audit-v1/input-verify_density_lookup.py",
+        "sha256": "392206616604a27a20e3c93df7f0dad03af7ec34f89e7098af6b60fc2a682ea7"
+      },
+      {
+        "measured_path": "/Users/kmarchais/dev/meshers/experiments/adaptive/comparison_benchmark.py",
+        "resolved_path": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-density-native-lookup-repeated-v1/input-0-comparison_benchmark.py",
+        "sha256": "7fba59eb6fb1529b3500fbaec3fa538750615234142b25a59f5075fa7b07444d"
+      },
+      {
+        "measured_path": "/Users/kmarchais/dev/meshers/experiments/adaptive/microgen_workflow.py",
+        "resolved_path": "/Users/kmarchais/dev/meshers/experiments/adaptive/microgen_workflow.py",
+        "sha256": "9f513dfd3e6e5a72a71a54f70c0c2cf7c7a1ebe7256886ee3feaf7d7ad7de161"
+      },
+      {
+        "measured_path": "/Users/kmarchais/dev/meshers/experiments/adaptive/comparison_fixtures.py",
+        "resolved_path": "/Users/kmarchais/dev/meshers/experiments/adaptive/comparison_fixtures.py",
+        "sha256": "4fa77af6b3b4858eb7611045f46f6e4ca672c6c46ab28d7ee969e14b31e11b9b"
+      },
+      {
+        "measured_path": "/Users/kmarchais/dev/meshers/experiments/adaptive/comparison_mesh_audit.py",
+        "resolved_path": "/Users/kmarchais/dev/meshers/experiments/adaptive/comparison_mesh_audit.py",
+        "sha256": "6797327ecf6b6c62a973f52812d0bad95b2ef861541247425609109c24d8af94"
+      },
+      {
+        "measured_path": "/Users/kmarchais/dev/meshers/experiments/adaptive/mesh_only_comparison.py",
+        "resolved_path": "/Users/kmarchais/dev/meshers/experiments/adaptive/mesh_only_comparison.py",
+        "sha256": "510231127f10b840a1e68bc948d9f08fd17cfe4eb56e6504c989738ac8b1baf8"
+      },
+      {
+        "measured_path": "/Users/kmarchais/dev/meshers/crates/meshers-python/python/meshers/_meshers.abi3.so",
+        "resolved_path": "/Users/kmarchais/dev/meshers/crates/meshers-python/python/meshers/_meshers.abi3.so",
+        "sha256": "6394fdcd5e13c42955f96625c2e91800e5b4c2cb2817fb3349de3366dbcfab0a"
+      },
+      {
+        "measured_path": "/Users/kmarchais/dev/meshers/crates/meshers-python/python/meshers/__init__.py",
+        "resolved_path": "/Users/kmarchais/dev/meshers/crates/meshers-python/python/meshers/__init__.py",
+        "sha256": "c710a37fb6a6376611f6219df3d301ee407bdb7e378e3bcf6edb17286908bab9"
+      },
+      {
+        "measured_path": "/Users/kmarchais/dev/meshers/crates/meshers-python/python/meshers/expression.py",
+        "resolved_path": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-density-native-lookup-repeated-v1/input-7-expression.py",
+        "sha256": "b4a6a51513e49415563d00cf49745c2359a1325aa3daf561c1c697171068e301"
+      },
+      {
+        "measured_path": "/Users/kmarchais/dev/meshers/crates/meshers-python/python/meshers/intersection.py",
+        "resolved_path": "/Users/kmarchais/dev/meshers/crates/meshers-python/python/meshers/intersection.py",
+        "sha256": "970bbce85bb1a3043af9b309c5d0895abb6967fa4f34e50586865054c5253078"
+      },
+      {
+        "measured_path": "/Users/kmarchais/dev/meshers/.local-work/macbook-runtime/venv/lib/python3.12/site-packages/microgen/remesh.py",
+        "resolved_path": "/Users/kmarchais/dev/meshers/.local-work/macbook-runtime/venv/lib/python3.12/site-packages/microgen/remesh.py",
+        "sha256": "b93c8b8150c1c40ccf5312d57785331d52f114d2217a8b59296b7484cf6f2612"
+      },
+      {
+        "measured_path": "/Users/kmarchais/dev/meshers/.local-work/macbook-runtime/venv/lib/python3.12/site-packages/microgen/shape/tpms.py",
+        "resolved_path": "/Users/kmarchais/dev/meshers/.local-work/macbook-runtime/venv/lib/python3.12/site-packages/microgen/shape/tpms.py",
+        "sha256": "1c2876a8f65441e6d7a0f21397a3b781b6f03a338f244c7db5c462c13348f955"
+      },
+      {
+        "measured_path": "/Users/kmarchais/dev/meshers/.local-work/macbook-runtime/venv/lib/python3.12/site-packages/microgen/shape/spinodoid.py",
+        "resolved_path": "/Users/kmarchais/dev/meshers/.local-work/macbook-runtime/venv/lib/python3.12/site-packages/microgen/shape/spinodoid.py",
+        "sha256": "c755554a90d2c6279e625174ad0e6940f1d3bbb30ab35379fbaece1a95b7d724"
+      },
+      {
+        "measured_path": "/Users/kmarchais/dev/meshers/.local-work/macbook-runtime/venv/lib/python3.12/site-packages/mmgpy/bin/mmg3d_O3",
+        "resolved_path": "/Users/kmarchais/dev/meshers/.local-work/macbook-runtime/venv/lib/python3.12/site-packages/mmgpy/bin/mmg3d_O3",
+        "sha256": "efe07a6207a9ff86f4af26513e6aa368647b32cae112859fca52e74c3e7f7cf1"
+      },
+      {
+        "measured_path": "/Users/kmarchais/dev/meshers/experiments/adaptive/scorecard.py",
+        "resolved_path": "/Users/kmarchais/dev/meshers/experiments/adaptive/scorecard.py",
+        "sha256": "8f26256c7df0e84c9f35cdd71bf4f95a74e072d45469002b213c5dcd4f1bab2a"
+      },
+      {
+        "measured_path": "/Users/kmarchais/dev/meshers/experiments/adaptive/facet_incidence_audit.py",
+        "resolved_path": "/Users/kmarchais/dev/meshers/experiments/adaptive/facet_incidence_audit.py",
+        "sha256": "4f51afc196c85e1d0bc64d7a96507517ddc6e32ccd8380a2ac77cae0ace89610"
+      },
+      {
+        "measured_path": "/Users/kmarchais/dev/meshers/experiments/adaptive/box_projection.py",
+        "resolved_path": "/Users/kmarchais/dev/meshers/experiments/adaptive/box_projection.py",
+        "sha256": "59589b1996b3a3782f1b7f5e5ff3c7ab303d4158ef50a233515dc5369bddaf05"
+      },
+      {
+        "measured_path": "/Users/kmarchais/dev/meshers/experiments/adaptive/gradient_tie_probe.py",
+        "resolved_path": "/Users/kmarchais/dev/meshers/experiments/adaptive/gradient_tie_probe.py",
+        "sha256": "f2fddde187144f52527bd8563b34128831cc4f8733ef720ad86cf7c5db8d2762"
+      },
+      {
+        "measured_path": "/Users/kmarchais/dev/meshers/experiments/adaptive/interior_relocation_trial.py",
+        "resolved_path": "/Users/kmarchais/dev/meshers/experiments/adaptive/interior_relocation_trial.py",
+        "sha256": "e65d4feec624edc81b93445019c827e79a52568bcdeebcbe920a2230b247e2e1"
+      },
+      {
+        "measured_path": "/Users/kmarchais/dev/meshers/experiments/adaptive/interior_star_probe.py",
+        "resolved_path": "/Users/kmarchais/dev/meshers/experiments/adaptive/interior_star_probe.py",
+        "sha256": "fe5daf85f5147b77d76c37e5eb7ec9f511b16203fb5eaedb24a89e9667395616"
+      },
+      {
+        "measured_path": "/Users/kmarchais/dev/meshers/experiments/adaptive/microgen_tet10_control.py",
+        "resolved_path": "/Users/kmarchais/dev/meshers/experiments/adaptive/microgen_tet10_control.py",
+        "sha256": "d77185fbb2e9256ab8b479f8cab34a57be723540dc80def8dfe30361a5d68ceb"
+      },
+      {
+        "measured_path": "/Users/kmarchais/dev/meshers/experiments/adaptive/quadratic_edge_removal_probe.py",
+        "resolved_path": "/Users/kmarchais/dev/meshers/experiments/adaptive/quadratic_edge_removal_probe.py",
+        "sha256": "f26a4be16f7aeb4fce6d89732754fab0e5d39e86b4d4c62466a3afd547cec6ed"
+      },
+      {
+        "measured_path": "/Users/kmarchais/dev/meshers/experiments/adaptive/nested_refinement.py",
+        "resolved_path": "/Users/kmarchais/dev/meshers/experiments/adaptive/nested_refinement.py",
+        "sha256": "7f78251d150ebcee928db1b49e22b64ee89efde5cdc238c1f5b9994aad36a6b8"
+      },
+      {
+        "measured_path": "/Users/kmarchais/dev/periodic-microgen/experiments/periodic-fea/periodic.py",
+        "resolved_path": "/Users/kmarchais/dev/periodic-microgen/experiments/periodic-fea/periodic.py",
+        "sha256": "f065de0570eed98149c45aff3babcbadc3f73aed89eb1639eca0448de4353629"
+      },
+      {
+        "measured_path": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/g3-spinodoid-compiled32-v1/fourier-coefficients.json",
+        "resolved_path": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/g3-spinodoid-compiled32-v1/fourier-coefficients.json",
+        "sha256": "e9ee2b6c70dcf771ab9fdb011051eb57973d2e15cf479e904bf5d8b40e3d779a"
+      },
+      {
+        "measured_path": "experiments/adaptive/runs/macbook-linear-density-fixtures-v1/spinodoid-anisotropic-coefficients.json",
+        "resolved_path": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-linear-density-fixtures-v1/spinodoid-anisotropic-coefficients.json",
+        "sha256": "6472b7e24af7aec153ec8797ff9025ea82c5690705da3d5ebc836dc94fa00b7e"
+      },
+      {
+        "measured_path": "experiments/adaptive/runs/macbook-linear-density-fixtures-v1/result.json",
+        "resolved_path": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-linear-density-fixtures-v1/result.json",
+        "sha256": "befde3eb3a7c63e32393f58ca3079e9b9d90e2a6812234bbc378f6298037fb30"
+      },
+      {
+        "measured_path": "experiments/adaptive/runs/macbook-linear-density-fixtures-v1/graded-gyroid-density-linear/graded-gyroid-density-linear-samples.npz",
+        "resolved_path": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-linear-density-fixtures-v1/graded-gyroid-density-linear/graded-gyroid-density-linear-samples.npz",
+        "sha256": "7118dc4e84d4c1617e8034553e3a052b170e49d6f3412e4dd2886c2616e8c56c"
+      },
+      {
+        "measured_path": "experiments/adaptive/runs/macbook-linear-density-fixtures-v1/graded-gyroid-density-linear/graded-gyroid-density-linear-specimen.json",
+        "resolved_path": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-linear-density-fixtures-v1/graded-gyroid-density-linear/graded-gyroid-density-linear-specimen.json",
+        "sha256": "345f1f0e92b651ba2dabc4caa9ed436babd9349fcb48a6aecb8fea85845b72ae"
+      },
+      {
+        "measured_path": "experiments/adaptive/runs/macbook-linear-density-fixtures-v1/linear-density-calibration.json",
+        "resolved_path": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-linear-density-fixtures-v1/linear-density-calibration.json",
+        "sha256": "b4db7ab7afe47f7832106e2eaf1523c7b0d854f291ef6030bdbe65df9e06e7e1"
+      },
+      {
+        "measured_path": "experiments/adaptive/runs/macbook-linear-density-fixtures-v1/density-controls.json",
+        "resolved_path": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-linear-density-fixtures-v1/density-controls.json",
+        "sha256": "4c63bbe9a11b6a5b7310f63163dec02b9b926c42d1e29aa6aa3855699074f5ac"
+      },
+      {
+        "measured_path": "/Users/kmarchais/dev/meshers/experiments/adaptive/linear_density_fixture.py",
+        "resolved_path": "/Users/kmarchais/dev/meshers/experiments/adaptive/linear_density_fixture.py",
+        "sha256": "99b619d8f4885673bd1a7f7b7ced3af01211bff4b52f1b206cbecaf654fca3f8"
+      },
+      {
+        "measured_path": "/Users/kmarchais/dev/meshers/handoff/macbook/linear-density-selection-20261026.json",
+        "resolved_path": "/Users/kmarchais/dev/meshers/handoff/macbook/linear-density-selection-20261026.json",
+        "sha256": "1906f04729aa4692f2daa8956e5ef62ed85e60194287a07a2790028881a12f07"
+      },
+      {
+        "measured_path": "/Users/kmarchais/dev/meshers/handoff/macbook/linear-density-adaptation-selection-20261026.json",
+        "resolved_path": "/Users/kmarchais/dev/meshers/handoff/macbook/linear-density-adaptation-selection-20261026.json",
+        "sha256": "8aa2902cdda1fb852d576470adb65a2921cd72baf159755067b29b9f68b4ded9"
+      },
+      {
+        "measured_path": "/Users/kmarchais/dev/meshers/experiments/adaptive/graded_lookup_preflight.py",
+        "resolved_path": "/Users/kmarchais/dev/meshers/experiments/adaptive/graded_lookup_preflight.py",
+        "sha256": "caf5176ca48bbd735dc121e4e7fdfa4e24c088fee4339100791c92c09924ba46"
+      },
+      {
+        "measured_path": "/Users/kmarchais/dev/meshers/handoff/macbook/graded-lookup-experiment-selection-20261026.json",
+        "resolved_path": "/Users/kmarchais/dev/meshers/handoff/macbook/graded-lookup-experiment-selection-20261026.json",
+        "sha256": "dbdb5658c4e86e2f2f53d767c4cd5140f8fd5e13c7a5d8215a8c16c92a69a4b5"
+      }
+    ],
+    "pairs": [
+      {
+        "order": 1,
+        "baseline": {
+          "samples": 5,
+          "generation_median_s": 10.893692582998483,
+          "generation_range_s": [
+            10.82330729199748,
+            10.925347874996078
+          ],
+          "nodes": 31318,
+          "elements": 132812,
+          "callback_calls": [
+            2001416,
+            2001416,
+            2001416,
+            2001416,
+            2001416
+          ],
+          "geometry": {
+            "volume": 0.3603639628452293,
+            "relative_volume_error": 0.001224149802200758,
+            "q_min_corner": 0.26108865479421,
+            "q_p01_corner": 0.5289520107384544,
+            "minimum_sampled_jacobian": 6.615532969130503e-07,
+            "facet_consistency": {
+              "nodes": 31318,
+              "elements": 132812,
+              "unique_faces": 281595,
+              "interior_faces": 249653,
+              "extracted_boundary_faces": 31942,
+              "same_orientation_shared_faces": 0,
+              "nonmanifold_faces": 0,
+              "duplicate_cells": 0,
+              "duplicate_surface_faces": 0,
+              "provided_boundary_matches_extraction": true,
+              "missing_provided_faces": 0,
+              "extra_provided_faces": 0,
+              "nonpositive_corner_determinants": 0,
+              "minimum_corner_determinant": 6.615532969130508e-07,
+              "oriented_facet_consistency_passed": true,
+              "conflict_examples": [],
+              "scope": "Oriented corner-face incidence and same-side neighbor diagnostics; necessary consistency, not a certificate of curved geometry or absence of nonlocal intersections"
+            },
+            "oriented_facet_consistency_passed": true,
+            "quadratic_conformity": {
+              "passed": true,
+              "order": 1
+            },
+            "exact_straight_reduction_verified": false,
+            "geometry_admitted": true,
+            "sampled_forward_max": 0.0009922964540455671,
+            "sampled_reverse_max": 0.0009220689454875717,
+            "sampled_two_sided_max": 0.0009922964540455671,
+            "outward_forward_max": 0.0009910789358694963,
+            "inward_forward_max": 0.0009922964540455671,
+            "projection_failed": 0,
+            "forward_samples": 356447,
+            "reverse_samples": 36910,
+            "minimum_dihedral_deg_corner": 14.83476674972573,
+            "reverse_tessellation_delta_max": 0.0,
+            "quadratic_reverse_subdivisions": null,
+            "projection_method": "newton-box-slsqp-v1",
+            "unbounded_projection_failed": 0,
+            "box_projection_attempts": 0,
+            "box_projection_recovered": 0,
+            "box_projection_witnesses": [],
+            "distance_audit_complete": true,
+            "failed_gates": []
+          },
+          "quality": {
+            "min": 0.26108865479421,
+            "p01": 0.5289520107384544,
+            "p10": 0.6179263775690138,
+            "median": 0.7534118320076159,
+            "p90": 0.9205038196299822,
+            "p99": 0.9737837763365893,
+            "max": 0.9994859168942162
+          },
+          "adapt_phase_median_s": [
+            0.294104457,
+            0.5924059589999999,
+            1.155692999,
+            0.145865292,
+            0.206322126,
+            2.9932928320000003,
+            3.6913264590000003
+          ]
+        },
+        "native_lookup": {
+          "samples": 5,
+          "generation_median_s": 5.934123624996573,
+          "generation_range_s": [
+            5.821692541001539,
+            5.973927332997846
+          ],
+          "nodes": 31318,
+          "elements": 132812,
+          "callback_calls": [
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "geometry": {
+            "volume": 0.36036396284522926,
+            "relative_volume_error": 0.001224149802200536,
+            "q_min_corner": 0.2610886547941777,
+            "q_p01_corner": 0.5289520107383257,
+            "minimum_sampled_jacobian": 6.615532969128424e-07,
+            "facet_consistency": {
+              "nodes": 31318,
+              "elements": 132812,
+              "unique_faces": 281595,
+              "interior_faces": 249653,
+              "extracted_boundary_faces": 31942,
+              "same_orientation_shared_faces": 0,
+              "nonmanifold_faces": 0,
+              "duplicate_cells": 0,
+              "duplicate_surface_faces": 0,
+              "provided_boundary_matches_extraction": true,
+              "missing_provided_faces": 0,
+              "extra_provided_faces": 0,
+              "nonpositive_corner_determinants": 0,
+              "minimum_corner_determinant": 6.615532969128428e-07,
+              "oriented_facet_consistency_passed": true,
+              "conflict_examples": [],
+              "scope": "Oriented corner-face incidence and same-side neighbor diagnostics; necessary consistency, not a certificate of curved geometry or absence of nonlocal intersections"
+            },
+            "oriented_facet_consistency_passed": true,
+            "quadratic_conformity": {
+              "passed": true,
+              "order": 1
+            },
+            "exact_straight_reduction_verified": false,
+            "geometry_admitted": true,
+            "sampled_forward_max": 0.0009922964540453852,
+            "sampled_reverse_max": 0.0009220689454967565,
+            "sampled_two_sided_max": 0.0009922964540453852,
+            "outward_forward_max": 0.0009910789358691693,
+            "inward_forward_max": 0.0009922964540453852,
+            "projection_failed": 0,
+            "forward_samples": 356447,
+            "reverse_samples": 36910,
+            "minimum_dihedral_deg_corner": 14.834766749727919,
+            "reverse_tessellation_delta_max": 0.0,
+            "quadratic_reverse_subdivisions": null,
+            "projection_method": "newton-box-slsqp-v1",
+            "unbounded_projection_failed": 0,
+            "box_projection_attempts": 0,
+            "box_projection_recovered": 0,
+            "box_projection_witnesses": [],
+            "distance_audit_complete": true,
+            "failed_gates": []
+          },
+          "quality": {
+            "min": 0.2610886547941777,
+            "p01": 0.5289520107383257,
+            "p10": 0.6179263775690151,
+            "median": 0.7534118320080208,
+            "p90": 0.9205038196300334,
+            "p99": 0.9737837763367166,
+            "max": 0.9994859168942165
+          },
+          "adapt_phase_median_s": [
+            0.29168446000000003,
+            0.11407383400000001,
+            0.777573708,
+            0.145375833,
+            0.205494583,
+            0.650865543,
+            0.55185975
+          ]
+        },
+        "mesh_comparisons": [
+          {
+            "exact_arrays": {
+              "points": false,
+              "tetrahedra": false,
+              "surface": false
+            },
+            "same_counts": true,
+            "maximum_matched_point_distance": 1.2437502952457146e-10,
+            "bijective_node_map": true,
+            "same_cell_and_facet_node_sets": true,
+            "equivalent_up_to_numbering": false,
+            "scope": "Node-set equivalence after matching within 1e-10, with independent quadratic association checks on both meshes; not bitwise geometry or inherited FE-field certification"
+          },
+          {
+            "exact_arrays": {
+              "points": false,
+              "tetrahedra": false,
+              "surface": false
+            },
+            "same_counts": true,
+            "maximum_matched_point_distance": 1.2437502952457146e-10,
+            "bijective_node_map": true,
+            "same_cell_and_facet_node_sets": true,
+            "equivalent_up_to_numbering": false,
+            "scope": "Node-set equivalence after matching within 1e-10, with independent quadratic association checks on both meshes; not bitwise geometry or inherited FE-field certification"
+          },
+          {
+            "exact_arrays": {
+              "points": false,
+              "tetrahedra": false,
+              "surface": false
+            },
+            "same_counts": true,
+            "maximum_matched_point_distance": 1.2437502952457146e-10,
+            "bijective_node_map": true,
+            "same_cell_and_facet_node_sets": true,
+            "equivalent_up_to_numbering": false,
+            "scope": "Node-set equivalence after matching within 1e-10, with independent quadratic association checks on both meshes; not bitwise geometry or inherited FE-field certification"
+          },
+          {
+            "exact_arrays": {
+              "points": false,
+              "tetrahedra": false,
+              "surface": false
+            },
+            "same_counts": true,
+            "maximum_matched_point_distance": 1.2437502952457146e-10,
+            "bijective_node_map": true,
+            "same_cell_and_facet_node_sets": true,
+            "equivalent_up_to_numbering": false,
+            "scope": "Node-set equivalence after matching within 1e-10, with independent quadratic association checks on both meshes; not bitwise geometry or inherited FE-field certification"
+          },
+          {
+            "exact_arrays": {
+              "points": false,
+              "tetrahedra": false,
+              "surface": false
+            },
+            "same_counts": true,
+            "maximum_matched_point_distance": 1.2437502952457146e-10,
+            "bijective_node_map": true,
+            "same_cell_and_facet_node_sets": true,
+            "equivalent_up_to_numbering": false,
+            "scope": "Node-set equivalence after matching within 1e-10, with independent quadratic association checks on both meshes; not bitwise geometry or inherited FE-field certification"
+          }
+        ],
+        "speedup": 1.8357710879346187,
+        "pilot_ratio": null,
+        "accuracy_matched_FEA_claim": false
+      },
+      {
+        "order": 2,
+        "baseline": {
+          "samples": 5,
+          "generation_median_s": 11.300277250004001,
+          "generation_range_s": [
+            11.240623582998523,
+            11.33251654200285
+          ],
+          "nodes": 218792,
+          "elements": 141392,
+          "callback_calls": [
+            2025555,
+            2025555,
+            2025555,
+            2025555,
+            2025555
+          ],
+          "geometry": {
+            "volume": 0.35999657657532547,
+            "relative_volume_error": 0.00020341509046861717,
+            "q_min_corner": 0.26634893170382007,
+            "q_p01_corner": 0.5334612323096534,
+            "minimum_sampled_jacobian": 6.788142497538906e-07,
+            "facet_consistency": {
+              "nodes": 218792,
+              "elements": 141392,
+              "unique_faces": 297395,
+              "interior_faces": 268173,
+              "extracted_boundary_faces": 29222,
+              "same_orientation_shared_faces": 0,
+              "nonmanifold_faces": 0,
+              "duplicate_cells": 0,
+              "duplicate_surface_faces": 0,
+              "provided_boundary_matches_extraction": true,
+              "missing_provided_faces": 0,
+              "extra_provided_faces": 0,
+              "nonpositive_corner_determinants": 0,
+              "minimum_corner_determinant": 8.122042002231755e-07,
+              "oriented_facet_consistency_passed": true,
+              "conflict_examples": [],
+              "scope": "Oriented corner-face incidence and same-side neighbor diagnostics; necessary consistency, not a certificate of curved geometry or absence of nonlocal intersections"
+            },
+            "oriented_facet_consistency_passed": true,
+            "quadratic_conformity": {
+              "passed": true,
+              "order": 2,
+              "unique_edges": 187398
+            },
+            "exact_straight_reduction_verified": false,
+            "geometry_admitted": true,
+            "sampled_forward_max": 0.0005837604965731204,
+            "sampled_reverse_max": 0.0004630036253076012,
+            "sampled_two_sided_max": 0.0005837604965731204,
+            "outward_forward_max": 0.0005073059865237407,
+            "inward_forward_max": 0.0005837604965731204,
+            "projection_failed": 0,
+            "forward_samples": 322738,
+            "reverse_samples": 36910,
+            "minimum_dihedral_deg_corner": 14.033555874331796,
+            "reverse_tessellation_delta_max": 1.4424244317842293e-05,
+            "quadratic_reverse_subdivisions": [
+              8,
+              16
+            ],
+            "projection_method": "newton-box-slsqp-v1",
+            "unbounded_projection_failed": 0,
+            "box_projection_attempts": 0,
+            "box_projection_recovered": 0,
+            "box_projection_witnesses": [],
+            "distance_audit_complete": true,
+            "failed_gates": []
+          },
+          "quality": {
+            "min": 0.26634893170382007,
+            "p01": 0.5334612323096534,
+            "p10": 0.614459984565363,
+            "median": 0.7327995149060051,
+            "p90": 0.8976853359007729,
+            "p99": 0.9669914030768286,
+            "max": 0.9980290189246712
+          },
+          "adapt_phase_median_s": [
+            0.290960833,
+            0.881035292,
+            1.2547451250000001,
+            0.19395004300000002,
+            0.292868168,
+            2.602284251,
+            3.3519728329999996
+          ]
+        },
+        "native_lookup": {
+          "samples": 5,
+          "generation_median_s": 6.048265125005855,
+          "generation_range_s": [
+            5.96509687499929,
+            6.086297290996299
+          ],
+          "nodes": 218792,
+          "elements": 141392,
+          "callback_calls": [
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "geometry": {
+            "volume": 0.35999657657532474,
+            "relative_volume_error": 0.00020341509046661876,
+            "q_min_corner": 0.26634893170382007,
+            "q_p01_corner": 0.5334612323096708,
+            "minimum_sampled_jacobian": 6.788142497534095e-07,
+            "facet_consistency": {
+              "nodes": 218792,
+              "elements": 141392,
+              "unique_faces": 297395,
+              "interior_faces": 268173,
+              "extracted_boundary_faces": 29222,
+              "same_orientation_shared_faces": 0,
+              "nonmanifold_faces": 0,
+              "duplicate_cells": 0,
+              "duplicate_surface_faces": 0,
+              "provided_boundary_matches_extraction": true,
+              "missing_provided_faces": 0,
+              "extra_provided_faces": 0,
+              "nonpositive_corner_determinants": 0,
+              "minimum_corner_determinant": 8.122042002225898e-07,
+              "oriented_facet_consistency_passed": true,
+              "conflict_examples": [],
+              "scope": "Oriented corner-face incidence and same-side neighbor diagnostics; necessary consistency, not a certificate of curved geometry or absence of nonlocal intersections"
+            },
+            "oriented_facet_consistency_passed": true,
+            "quadratic_conformity": {
+              "passed": true,
+              "order": 2,
+              "unique_edges": 187398
+            },
+            "exact_straight_reduction_verified": false,
+            "geometry_admitted": true,
+            "sampled_forward_max": 0.000583760496574393,
+            "sampled_reverse_max": 0.00046300362530747027,
+            "sampled_two_sided_max": 0.000583760496574393,
+            "outward_forward_max": 0.0005073059865236565,
+            "inward_forward_max": 0.000583760496574393,
+            "projection_failed": 0,
+            "forward_samples": 322738,
+            "reverse_samples": 36910,
+            "minimum_dihedral_deg_corner": 14.033555874332023,
+            "reverse_tessellation_delta_max": 1.4424244317890945e-05,
+            "quadratic_reverse_subdivisions": [
+              8,
+              16
+            ],
+            "projection_method": "newton-box-slsqp-v1",
+            "unbounded_projection_failed": 0,
+            "box_projection_attempts": 0,
+            "box_projection_recovered": 0,
+            "box_projection_witnesses": [],
+            "distance_audit_complete": true,
+            "failed_gates": []
+          },
+          "quality": {
+            "min": 0.26634893170382007,
+            "p01": 0.5334612323096708,
+            "p10": 0.614459984565361,
+            "median": 0.7327995149060146,
+            "p90": 0.8976853359007725,
+            "p99": 0.9669914030768266,
+            "max": 0.9980290189246772
+          },
+          "adapt_phase_median_s": [
+            0.290234709,
+            0.177615835,
+            0.9435414580000001,
+            0.19463225099999998,
+            0.295545082,
+            0.619680165,
+            0.5096168750000001
+          ]
+        },
+        "mesh_comparisons": [
+          {
+            "exact_arrays": {
+              "points": false,
+              "tetrahedra": false,
+              "surface": false
+            },
+            "same_counts": true,
+            "maximum_matched_point_distance": 2.9353244046687077e-12,
+            "bijective_node_map": true,
+            "same_cell_and_facet_node_sets": true,
+            "equivalent_up_to_numbering": true,
+            "scope": "Node-set equivalence after matching within 1e-10, with independent quadratic association checks on both meshes; not bitwise geometry or inherited FE-field certification"
+          },
+          {
+            "exact_arrays": {
+              "points": false,
+              "tetrahedra": false,
+              "surface": false
+            },
+            "same_counts": true,
+            "maximum_matched_point_distance": 2.9353244046687077e-12,
+            "bijective_node_map": true,
+            "same_cell_and_facet_node_sets": true,
+            "equivalent_up_to_numbering": true,
+            "scope": "Node-set equivalence after matching within 1e-10, with independent quadratic association checks on both meshes; not bitwise geometry or inherited FE-field certification"
+          },
+          {
+            "exact_arrays": {
+              "points": false,
+              "tetrahedra": false,
+              "surface": false
+            },
+            "same_counts": true,
+            "maximum_matched_point_distance": 2.9353244046687077e-12,
+            "bijective_node_map": true,
+            "same_cell_and_facet_node_sets": true,
+            "equivalent_up_to_numbering": true,
+            "scope": "Node-set equivalence after matching within 1e-10, with independent quadratic association checks on both meshes; not bitwise geometry or inherited FE-field certification"
+          },
+          {
+            "exact_arrays": {
+              "points": false,
+              "tetrahedra": false,
+              "surface": false
+            },
+            "same_counts": true,
+            "maximum_matched_point_distance": 2.9353244046687077e-12,
+            "bijective_node_map": true,
+            "same_cell_and_facet_node_sets": true,
+            "equivalent_up_to_numbering": true,
+            "scope": "Node-set equivalence after matching within 1e-10, with independent quadratic association checks on both meshes; not bitwise geometry or inherited FE-field certification"
+          },
+          {
+            "exact_arrays": {
+              "points": false,
+              "tetrahedra": false,
+              "surface": false
+            },
+            "same_counts": true,
+            "maximum_matched_point_distance": 2.9353244046687077e-12,
+            "bijective_node_map": true,
+            "same_cell_and_facet_node_sets": true,
+            "equivalent_up_to_numbering": true,
+            "scope": "Node-set equivalence after matching within 1e-10, with independent quadratic association checks on both meshes; not bitwise geometry or inherited FE-field certification"
+          }
+        ],
+        "speedup": 1.8683501824819662,
+        "pilot_ratio": null,
+        "accuracy_matched_FEA_claim": false
+      }
+    ]
+  },
+  "automatic": {
+    "audit_source": "experiments/adaptive/runs/macbook-native-interp-auto-audit-v1/result.json",
+    "audit_sha256": "e66257cf7c930d2f7b52d7670adecab40c7a1cdcdb65b05163a28e89ee44b19b",
+    "run": "experiments/adaptive/runs/macbook-native-interp-auto-repeated-v1",
+    "attempts": 24,
+    "configs": [
+      {
+        "arm": "meshers",
+        "cells": 24,
+        "order": 1,
+        "adapt": true,
+        "tolerance": 1.0,
+        "min_length": 0.002,
+        "adapt_tolerance": 0.001,
+        "name": "meshers-tet4-adaptive001-numpy",
+        "compile": false
+      },
+      {
+        "arm": "meshers",
+        "cells": 24,
+        "order": 1,
+        "adapt": true,
+        "tolerance": 1.0,
+        "min_length": 0.002,
+        "adapt_tolerance": 0.001,
+        "name": "meshers-tet4-adaptive001-auto-interp",
+        "compile": true,
+        "native_interp_auto": true
+      },
+      {
+        "arm": "meshers",
+        "cells": 16,
+        "order": 2,
+        "adapt": true,
+        "tolerance": 1.0,
+        "min_length": 0.002,
+        "adapt_tolerance": 0.001,
+        "name": "meshers-curved-tet10-adaptive001-numpy",
+        "compile": false
+      },
+      {
+        "arm": "meshers",
+        "cells": 16,
+        "order": 2,
+        "adapt": true,
+        "tolerance": 1.0,
+        "min_length": 0.002,
+        "adapt_tolerance": 0.001,
+        "name": "meshers-curved-tet10-adaptive001-auto-interp",
+        "compile": true,
+        "native_interp_auto": true
+      }
+    ],
+    "directories": {
+      "meshers-tet4-adaptive001-numpy": [
+        "experiments/adaptive/runs/macbook-native-interp-auto-repeated-v1/repeat-0-meshers-tet4-adaptive001-numpy",
+        "experiments/adaptive/runs/macbook-native-interp-auto-repeated-v1/repeat-1-meshers-tet4-adaptive001-numpy",
+        "experiments/adaptive/runs/macbook-native-interp-auto-repeated-v1/repeat-2-meshers-tet4-adaptive001-numpy",
+        "experiments/adaptive/runs/macbook-native-interp-auto-repeated-v1/repeat-3-meshers-tet4-adaptive001-numpy",
+        "experiments/adaptive/runs/macbook-native-interp-auto-repeated-v1/repeat-4-meshers-tet4-adaptive001-numpy"
+      ],
+      "meshers-tet4-adaptive001-auto-interp": [
+        "experiments/adaptive/runs/macbook-native-interp-auto-repeated-v1/repeat-0-meshers-tet4-adaptive001-auto-interp",
+        "experiments/adaptive/runs/macbook-native-interp-auto-repeated-v1/repeat-1-meshers-tet4-adaptive001-auto-interp",
+        "experiments/adaptive/runs/macbook-native-interp-auto-repeated-v1/repeat-2-meshers-tet4-adaptive001-auto-interp",
+        "experiments/adaptive/runs/macbook-native-interp-auto-repeated-v1/repeat-3-meshers-tet4-adaptive001-auto-interp",
+        "experiments/adaptive/runs/macbook-native-interp-auto-repeated-v1/repeat-4-meshers-tet4-adaptive001-auto-interp"
+      ],
+      "meshers-curved-tet10-adaptive001-numpy": [
+        "experiments/adaptive/runs/macbook-native-interp-auto-repeated-v1/repeat-0-meshers-curved-tet10-adaptive001-numpy",
+        "experiments/adaptive/runs/macbook-native-interp-auto-repeated-v1/repeat-1-meshers-curved-tet10-adaptive001-numpy",
+        "experiments/adaptive/runs/macbook-native-interp-auto-repeated-v1/repeat-2-meshers-curved-tet10-adaptive001-numpy",
+        "experiments/adaptive/runs/macbook-native-interp-auto-repeated-v1/repeat-3-meshers-curved-tet10-adaptive001-numpy",
+        "experiments/adaptive/runs/macbook-native-interp-auto-repeated-v1/repeat-4-meshers-curved-tet10-adaptive001-numpy"
+      ],
+      "meshers-curved-tet10-adaptive001-auto-interp": [
+        "experiments/adaptive/runs/macbook-native-interp-auto-repeated-v1/repeat-0-meshers-curved-tet10-adaptive001-auto-interp",
+        "experiments/adaptive/runs/macbook-native-interp-auto-repeated-v1/repeat-1-meshers-curved-tet10-adaptive001-auto-interp",
+        "experiments/adaptive/runs/macbook-native-interp-auto-repeated-v1/repeat-2-meshers-curved-tet10-adaptive001-auto-interp",
+        "experiments/adaptive/runs/macbook-native-interp-auto-repeated-v1/repeat-3-meshers-curved-tet10-adaptive001-auto-interp",
+        "experiments/adaptive/runs/macbook-native-interp-auto-repeated-v1/repeat-4-meshers-curved-tet10-adaptive001-auto-interp"
+      ]
+    },
+    "resolved_inputs": [
+      {
+        "measured_path": "experiments/adaptive/runs/macbook-native-interp-auto-repeated-v1/manifest.json",
+        "resolved_path": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-native-interp-auto-repeated-v1/manifest.json",
+        "sha256": "748e2c26b612c70a0836c97d6074d4bcacf2e973ad5e9e3815e19cb815495e64"
+      },
+      {
+        "measured_path": "experiments/adaptive/runs/macbook-native-interp-auto-repeated-v1/summary.json",
+        "resolved_path": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-native-interp-auto-repeated-v1/summary.json",
+        "sha256": "c035c12c2c276ebb135963a303fbb789a2f01d621ccbc94bb7320026e8cfcda7"
+      },
+      {
+        "measured_path": "/Users/kmarchais/dev/meshers/experiments/adaptive/verify_density_lookup.py",
+        "resolved_path": "/Users/kmarchais/dev/meshers/experiments/adaptive/verify_density_lookup.py",
+        "sha256": "5cc8d43948eb5372e2780a70d202d25904a352400cf787e6817d8c314abfaffd"
+      },
+      {
+        "measured_path": "experiments/adaptive/runs/macbook-native-interp-auto-repeated-v1/input-0-comparison_benchmark.py",
+        "resolved_path": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-native-interp-auto-repeated-v1/input-0-comparison_benchmark.py",
+        "sha256": "87fc0029984f6fadcbf026646a9e3e8e8a2021fbeec5ad31f0b13f922eac8ba6"
+      },
+      {
+        "measured_path": "/Users/kmarchais/dev/meshers/experiments/adaptive/microgen_workflow.py",
+        "resolved_path": "/Users/kmarchais/dev/meshers/experiments/adaptive/microgen_workflow.py",
+        "sha256": "9f513dfd3e6e5a72a71a54f70c0c2cf7c7a1ebe7256886ee3feaf7d7ad7de161"
+      },
+      {
+        "measured_path": "/Users/kmarchais/dev/meshers/experiments/adaptive/comparison_fixtures.py",
+        "resolved_path": "/Users/kmarchais/dev/meshers/experiments/adaptive/comparison_fixtures.py",
+        "sha256": "4fa77af6b3b4858eb7611045f46f6e4ca672c6c46ab28d7ee969e14b31e11b9b"
+      },
+      {
+        "measured_path": "/Users/kmarchais/dev/meshers/experiments/adaptive/comparison_mesh_audit.py",
+        "resolved_path": "/Users/kmarchais/dev/meshers/experiments/adaptive/comparison_mesh_audit.py",
+        "sha256": "6797327ecf6b6c62a973f52812d0bad95b2ef861541247425609109c24d8af94"
+      },
+      {
+        "measured_path": "/Users/kmarchais/dev/meshers/experiments/adaptive/mesh_only_comparison.py",
+        "resolved_path": "/Users/kmarchais/dev/meshers/experiments/adaptive/mesh_only_comparison.py",
+        "sha256": "510231127f10b840a1e68bc948d9f08fd17cfe4eb56e6504c989738ac8b1baf8"
+      },
+      {
+        "measured_path": "/Users/kmarchais/dev/meshers/crates/meshers-python/python/meshers/_meshers.abi3.so",
+        "resolved_path": "/Users/kmarchais/dev/meshers/crates/meshers-python/python/meshers/_meshers.abi3.so",
+        "sha256": "6394fdcd5e13c42955f96625c2e91800e5b4c2cb2817fb3349de3366dbcfab0a"
+      },
+      {
+        "measured_path": "/Users/kmarchais/dev/meshers/crates/meshers-python/python/meshers/__init__.py",
+        "resolved_path": "/Users/kmarchais/dev/meshers/crates/meshers-python/python/meshers/__init__.py",
+        "sha256": "c710a37fb6a6376611f6219df3d301ee407bdb7e378e3bcf6edb17286908bab9"
+      },
+      {
+        "measured_path": "/Users/kmarchais/dev/meshers/crates/meshers-python/python/meshers/expression.py",
+        "resolved_path": "/Users/kmarchais/dev/meshers/crates/meshers-python/python/meshers/expression.py",
+        "sha256": "dc8d5e612395b13cb61ea71b147e9e4d45423c988e5dca4358f251d011974dd1"
+      },
+      {
+        "measured_path": "/Users/kmarchais/dev/meshers/crates/meshers-python/python/meshers/intersection.py",
+        "resolved_path": "/Users/kmarchais/dev/meshers/crates/meshers-python/python/meshers/intersection.py",
+        "sha256": "970bbce85bb1a3043af9b309c5d0895abb6967fa4f34e50586865054c5253078"
+      },
+      {
+        "measured_path": "/Users/kmarchais/dev/meshers/.local-work/macbook-runtime/venv/lib/python3.12/site-packages/microgen/remesh.py",
+        "resolved_path": "/Users/kmarchais/dev/meshers/.local-work/macbook-runtime/venv/lib/python3.12/site-packages/microgen/remesh.py",
+        "sha256": "b93c8b8150c1c40ccf5312d57785331d52f114d2217a8b59296b7484cf6f2612"
+      },
+      {
+        "measured_path": "/Users/kmarchais/dev/meshers/.local-work/macbook-runtime/venv/lib/python3.12/site-packages/microgen/shape/tpms.py",
+        "resolved_path": "/Users/kmarchais/dev/meshers/.local-work/macbook-runtime/venv/lib/python3.12/site-packages/microgen/shape/tpms.py",
+        "sha256": "1c2876a8f65441e6d7a0f21397a3b781b6f03a338f244c7db5c462c13348f955"
+      },
+      {
+        "measured_path": "/Users/kmarchais/dev/meshers/.local-work/macbook-runtime/venv/lib/python3.12/site-packages/microgen/shape/spinodoid.py",
+        "resolved_path": "/Users/kmarchais/dev/meshers/.local-work/macbook-runtime/venv/lib/python3.12/site-packages/microgen/shape/spinodoid.py",
+        "sha256": "c755554a90d2c6279e625174ad0e6940f1d3bbb30ab35379fbaece1a95b7d724"
+      },
+      {
+        "measured_path": "/Users/kmarchais/dev/meshers/.local-work/macbook-runtime/venv/lib/python3.12/site-packages/mmgpy/bin/mmg3d_O3",
+        "resolved_path": "/Users/kmarchais/dev/meshers/.local-work/macbook-runtime/venv/lib/python3.12/site-packages/mmgpy/bin/mmg3d_O3",
+        "sha256": "efe07a6207a9ff86f4af26513e6aa368647b32cae112859fca52e74c3e7f7cf1"
+      },
+      {
+        "measured_path": "/Users/kmarchais/dev/meshers/experiments/adaptive/scorecard.py",
+        "resolved_path": "/Users/kmarchais/dev/meshers/experiments/adaptive/scorecard.py",
+        "sha256": "8f26256c7df0e84c9f35cdd71bf4f95a74e072d45469002b213c5dcd4f1bab2a"
+      },
+      {
+        "measured_path": "/Users/kmarchais/dev/meshers/experiments/adaptive/facet_incidence_audit.py",
+        "resolved_path": "/Users/kmarchais/dev/meshers/experiments/adaptive/facet_incidence_audit.py",
+        "sha256": "4f51afc196c85e1d0bc64d7a96507517ddc6e32ccd8380a2ac77cae0ace89610"
+      },
+      {
+        "measured_path": "/Users/kmarchais/dev/meshers/experiments/adaptive/box_projection.py",
+        "resolved_path": "/Users/kmarchais/dev/meshers/experiments/adaptive/box_projection.py",
+        "sha256": "59589b1996b3a3782f1b7f5e5ff3c7ab303d4158ef50a233515dc5369bddaf05"
+      },
+      {
+        "measured_path": "/Users/kmarchais/dev/meshers/experiments/adaptive/gradient_tie_probe.py",
+        "resolved_path": "/Users/kmarchais/dev/meshers/experiments/adaptive/gradient_tie_probe.py",
+        "sha256": "f2fddde187144f52527bd8563b34128831cc4f8733ef720ad86cf7c5db8d2762"
+      },
+      {
+        "measured_path": "/Users/kmarchais/dev/meshers/experiments/adaptive/interior_relocation_trial.py",
+        "resolved_path": "/Users/kmarchais/dev/meshers/experiments/adaptive/interior_relocation_trial.py",
+        "sha256": "e65d4feec624edc81b93445019c827e79a52568bcdeebcbe920a2230b247e2e1"
+      },
+      {
+        "measured_path": "/Users/kmarchais/dev/meshers/experiments/adaptive/interior_star_probe.py",
+        "resolved_path": "/Users/kmarchais/dev/meshers/experiments/adaptive/interior_star_probe.py",
+        "sha256": "fe5daf85f5147b77d76c37e5eb7ec9f511b16203fb5eaedb24a89e9667395616"
+      },
+      {
+        "measured_path": "/Users/kmarchais/dev/meshers/experiments/adaptive/microgen_tet10_control.py",
+        "resolved_path": "/Users/kmarchais/dev/meshers/experiments/adaptive/microgen_tet10_control.py",
+        "sha256": "d77185fbb2e9256ab8b479f8cab34a57be723540dc80def8dfe30361a5d68ceb"
+      },
+      {
+        "measured_path": "/Users/kmarchais/dev/meshers/experiments/adaptive/quadratic_edge_removal_probe.py",
+        "resolved_path": "/Users/kmarchais/dev/meshers/experiments/adaptive/quadratic_edge_removal_probe.py",
+        "sha256": "f26a4be16f7aeb4fce6d89732754fab0e5d39e86b4d4c62466a3afd547cec6ed"
+      },
+      {
+        "measured_path": "/Users/kmarchais/dev/meshers/experiments/adaptive/nested_refinement.py",
+        "resolved_path": "/Users/kmarchais/dev/meshers/experiments/adaptive/nested_refinement.py",
+        "sha256": "7f78251d150ebcee928db1b49e22b64ee89efde5cdc238c1f5b9994aad36a6b8"
+      },
+      {
+        "measured_path": "/Users/kmarchais/dev/periodic-microgen/experiments/periodic-fea/periodic.py",
+        "resolved_path": "/Users/kmarchais/dev/periodic-microgen/experiments/periodic-fea/periodic.py",
+        "sha256": "f065de0570eed98149c45aff3babcbadc3f73aed89eb1639eca0448de4353629"
+      },
+      {
+        "measured_path": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/g3-spinodoid-compiled32-v1/fourier-coefficients.json",
+        "resolved_path": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/g3-spinodoid-compiled32-v1/fourier-coefficients.json",
+        "sha256": "e9ee2b6c70dcf771ab9fdb011051eb57973d2e15cf479e904bf5d8b40e3d779a"
+      },
+      {
+        "measured_path": "experiments/adaptive/runs/macbook-linear-density-fixtures-v1/spinodoid-anisotropic-coefficients.json",
+        "resolved_path": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-linear-density-fixtures-v1/spinodoid-anisotropic-coefficients.json",
+        "sha256": "6472b7e24af7aec153ec8797ff9025ea82c5690705da3d5ebc836dc94fa00b7e"
+      },
+      {
+        "measured_path": "experiments/adaptive/runs/macbook-linear-density-fixtures-v1/result.json",
+        "resolved_path": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-linear-density-fixtures-v1/result.json",
+        "sha256": "befde3eb3a7c63e32393f58ca3079e9b9d90e2a6812234bbc378f6298037fb30"
+      },
+      {
+        "measured_path": "experiments/adaptive/runs/macbook-linear-density-fixtures-v1/graded-gyroid-density-linear/graded-gyroid-density-linear-samples.npz",
+        "resolved_path": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-linear-density-fixtures-v1/graded-gyroid-density-linear/graded-gyroid-density-linear-samples.npz",
+        "sha256": "7118dc4e84d4c1617e8034553e3a052b170e49d6f3412e4dd2886c2616e8c56c"
+      },
+      {
+        "measured_path": "experiments/adaptive/runs/macbook-linear-density-fixtures-v1/graded-gyroid-density-linear/graded-gyroid-density-linear-specimen.json",
+        "resolved_path": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-linear-density-fixtures-v1/graded-gyroid-density-linear/graded-gyroid-density-linear-specimen.json",
+        "sha256": "345f1f0e92b651ba2dabc4caa9ed436babd9349fcb48a6aecb8fea85845b72ae"
+      },
+      {
+        "measured_path": "experiments/adaptive/runs/macbook-linear-density-fixtures-v1/linear-density-calibration.json",
+        "resolved_path": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-linear-density-fixtures-v1/linear-density-calibration.json",
+        "sha256": "b4db7ab7afe47f7832106e2eaf1523c7b0d854f291ef6030bdbe65df9e06e7e1"
+      },
+      {
+        "measured_path": "experiments/adaptive/runs/macbook-linear-density-fixtures-v1/density-controls.json",
+        "resolved_path": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-linear-density-fixtures-v1/density-controls.json",
+        "sha256": "4c63bbe9a11b6a5b7310f63163dec02b9b926c42d1e29aa6aa3855699074f5ac"
+      },
+      {
+        "measured_path": "/Users/kmarchais/dev/meshers/experiments/adaptive/linear_density_fixture.py",
+        "resolved_path": "/Users/kmarchais/dev/meshers/experiments/adaptive/linear_density_fixture.py",
+        "sha256": "99b619d8f4885673bd1a7f7b7ced3af01211bff4b52f1b206cbecaf654fca3f8"
+      },
+      {
+        "measured_path": "/Users/kmarchais/dev/meshers/handoff/macbook/linear-density-selection-20261026.json",
+        "resolved_path": "/Users/kmarchais/dev/meshers/handoff/macbook/linear-density-selection-20261026.json",
+        "sha256": "1906f04729aa4692f2daa8956e5ef62ed85e60194287a07a2790028881a12f07"
+      },
+      {
+        "measured_path": "/Users/kmarchais/dev/meshers/handoff/macbook/linear-density-adaptation-selection-20261026.json",
+        "resolved_path": "/Users/kmarchais/dev/meshers/handoff/macbook/linear-density-adaptation-selection-20261026.json",
+        "sha256": "8aa2902cdda1fb852d576470adb65a2921cd72baf159755067b29b9f68b4ded9"
+      },
+      {
+        "measured_path": "/Users/kmarchais/dev/meshers/experiments/adaptive/graded_lookup_preflight.py",
+        "resolved_path": "/Users/kmarchais/dev/meshers/experiments/adaptive/graded_lookup_preflight.py",
+        "sha256": "caf5176ca48bbd735dc121e4e7fdfa4e24c088fee4339100791c92c09924ba46"
+      },
+      {
+        "measured_path": "/Users/kmarchais/dev/meshers/handoff/macbook/graded-lookup-experiment-selection-20261026.json",
+        "resolved_path": "/Users/kmarchais/dev/meshers/handoff/macbook/graded-lookup-experiment-selection-20261026.json",
+        "sha256": "dbdb5658c4e86e2f2f53d767c4cd5140f8fd5e13c7a5d8215a8c16c92a69a4b5"
+      },
+      {
+        "measured_path": "/Users/kmarchais/dev/meshers/handoff/macbook/native-interp-auto-selection-20261026.json",
+        "resolved_path": "/Users/kmarchais/dev/meshers/handoff/macbook/native-interp-auto-selection-20261026.json",
+        "sha256": "cda6411a25379bfc48194d445b6a88e628f7a31f6126c1e5154ac22c891594d6"
+      }
+    ],
+    "pairs": [
+      {
+        "order": 1,
+        "baseline": {
+          "samples": 5,
+          "generation_median_s": 10.924949499996728,
+          "generation_range_s": [
+            10.875613416996202,
+            10.978607291006483
+          ],
+          "nodes": 31318,
+          "elements": 132812,
+          "callback_calls": [
+            2001416,
+            2001416,
+            2001416,
+            2001416,
+            2001416
+          ],
+          "geometry": {
+            "volume": 0.3603639628452293,
+            "relative_volume_error": 0.001224149802200758,
+            "q_min_corner": 0.26108865479421,
+            "q_p01_corner": 0.5289520107384544,
+            "minimum_sampled_jacobian": 6.615532969130503e-07,
+            "facet_consistency": {
+              "nodes": 31318,
+              "elements": 132812,
+              "unique_faces": 281595,
+              "interior_faces": 249653,
+              "extracted_boundary_faces": 31942,
+              "same_orientation_shared_faces": 0,
+              "nonmanifold_faces": 0,
+              "duplicate_cells": 0,
+              "duplicate_surface_faces": 0,
+              "provided_boundary_matches_extraction": true,
+              "missing_provided_faces": 0,
+              "extra_provided_faces": 0,
+              "nonpositive_corner_determinants": 0,
+              "minimum_corner_determinant": 6.615532969130508e-07,
+              "oriented_facet_consistency_passed": true,
+              "conflict_examples": [],
+              "scope": "Oriented corner-face incidence and same-side neighbor diagnostics; necessary consistency, not a certificate of curved geometry or absence of nonlocal intersections"
+            },
+            "oriented_facet_consistency_passed": true,
+            "quadratic_conformity": {
+              "passed": true,
+              "order": 1
+            },
+            "exact_straight_reduction_verified": false,
+            "geometry_admitted": true,
+            "sampled_forward_max": 0.0009922964540455671,
+            "sampled_reverse_max": 0.0009220689454875717,
+            "sampled_two_sided_max": 0.0009922964540455671,
+            "outward_forward_max": 0.0009910789358694963,
+            "inward_forward_max": 0.0009922964540455671,
+            "projection_failed": 0,
+            "forward_samples": 356447,
+            "reverse_samples": 36910,
+            "minimum_dihedral_deg_corner": 14.83476674972573,
+            "reverse_tessellation_delta_max": 0.0,
+            "quadratic_reverse_subdivisions": null,
+            "projection_method": "newton-box-slsqp-v1",
+            "unbounded_projection_failed": 0,
+            "box_projection_attempts": 0,
+            "box_projection_recovered": 0,
+            "box_projection_witnesses": [],
+            "distance_audit_complete": true,
+            "failed_gates": []
+          },
+          "quality": {
+            "min": 0.26108865479421,
+            "p01": 0.5289520107384544,
+            "p10": 0.6179263775690138,
+            "median": 0.7534118320076159,
+            "p90": 0.9205038196299822,
+            "p99": 0.9737837763365893,
+            "max": 0.9994859168942162
+          },
+          "adapt_phase_median_s": [
+            0.292830334,
+            0.593148669,
+            1.160312583,
+            0.146330834,
+            0.211351916,
+            3.0087210429999995,
+            3.7202677919999996
+          ]
+        },
+        "native_lookup": {
+          "samples": 5,
+          "generation_median_s": 3.947523708004155,
+          "generation_range_s": [
+            3.8963608749982086,
+            3.9686350409974693
+          ],
+          "nodes": 31330,
+          "elements": 132822,
+          "callback_calls": [
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "geometry": {
+            "volume": 0.3603618239282851,
+            "relative_volume_error": 0.0012182071011546114,
+            "q_min_corner": 0.2612064457211263,
+            "q_p01_corner": 0.5296296789808679,
+            "minimum_sampled_jacobian": 6.456216934848786e-07,
+            "facet_consistency": {
+              "nodes": 31330,
+              "elements": 132822,
+              "unique_faces": 281656,
+              "interior_faces": 249632,
+              "extracted_boundary_faces": 32024,
+              "same_orientation_shared_faces": 0,
+              "nonmanifold_faces": 0,
+              "duplicate_cells": 0,
+              "duplicate_surface_faces": 0,
+              "provided_boundary_matches_extraction": true,
+              "missing_provided_faces": 0,
+              "extra_provided_faces": 0,
+              "nonpositive_corner_determinants": 0,
+              "minimum_corner_determinant": 6.456216934848784e-07,
+              "oriented_facet_consistency_passed": true,
+              "conflict_examples": [],
+              "scope": "Oriented corner-face incidence and same-side neighbor diagnostics; necessary consistency, not a certificate of curved geometry or absence of nonlocal intersections"
+            },
+            "oriented_facet_consistency_passed": true,
+            "quadratic_conformity": {
+              "passed": true,
+              "order": 1
+            },
+            "exact_straight_reduction_verified": false,
+            "geometry_admitted": true,
+            "sampled_forward_max": 0.0009966084858245303,
+            "sampled_reverse_max": 0.0009589263764828873,
+            "sampled_two_sided_max": 0.0009966084858245303,
+            "outward_forward_max": 0.000994896042283548,
+            "inward_forward_max": 0.0009966084858245303,
+            "projection_failed": 0,
+            "forward_samples": 356694,
+            "reverse_samples": 36910,
+            "minimum_dihedral_deg_corner": 14.829381750758131,
+            "reverse_tessellation_delta_max": 0.0,
+            "quadratic_reverse_subdivisions": null,
+            "projection_method": "newton-box-slsqp-v1",
+            "unbounded_projection_failed": 0,
+            "box_projection_attempts": 0,
+            "box_projection_recovered": 0,
+            "box_projection_witnesses": [],
+            "distance_audit_complete": true,
+            "failed_gates": []
+          },
+          "quality": {
+            "min": 0.2612064457211263,
+            "p01": 0.5296296789808679,
+            "p10": 0.6187953931983255,
+            "median": 0.752532453950638,
+            "p90": 0.9203330978211859,
+            "p99": 0.9735590636173577,
+            "max": 0.9996273236064109
+          },
+          "adapt_phase_median_s": [
+            0.29355370699999994,
+            0.07506812300000001,
+            0.759192416,
+            0.14890858399999998,
+            0.211499669,
+            0.46694791700000005,
+            0.262673543
+          ]
+        },
+        "mesh_comparisons": [
+          {
+            "exact_arrays": {
+              "points": false,
+              "tetrahedra": false,
+              "surface": false
+            },
+            "same_counts": false,
+            "equivalent_up_to_numbering": false
+          },
+          {
+            "exact_arrays": {
+              "points": false,
+              "tetrahedra": false,
+              "surface": false
+            },
+            "same_counts": false,
+            "equivalent_up_to_numbering": false
+          },
+          {
+            "exact_arrays": {
+              "points": false,
+              "tetrahedra": false,
+              "surface": false
+            },
+            "same_counts": false,
+            "equivalent_up_to_numbering": false
+          },
+          {
+            "exact_arrays": {
+              "points": false,
+              "tetrahedra": false,
+              "surface": false
+            },
+            "same_counts": false,
+            "equivalent_up_to_numbering": false
+          },
+          {
+            "exact_arrays": {
+              "points": false,
+              "tetrahedra": false,
+              "surface": false
+            },
+            "same_counts": false,
+            "equivalent_up_to_numbering": false
+          }
+        ],
+        "speedup": 2.7675449998805246,
+        "pilot_ratio": null,
+        "accuracy_matched_FEA_claim": false
+      },
+      {
+        "order": 2,
+        "baseline": {
+          "samples": 5,
+          "generation_median_s": 11.303362833998108,
+          "generation_range_s": [
+            11.247238500000094,
+            11.611922042000515
+          ],
+          "nodes": 218792,
+          "elements": 141392,
+          "callback_calls": [
+            2025555,
+            2025555,
+            2025555,
+            2025555,
+            2025555
+          ],
+          "geometry": {
+            "volume": 0.35999657657532547,
+            "relative_volume_error": 0.00020341509046861717,
+            "q_min_corner": 0.26634893170382007,
+            "q_p01_corner": 0.5334612323096534,
+            "minimum_sampled_jacobian": 6.788142497538906e-07,
+            "facet_consistency": {
+              "nodes": 218792,
+              "elements": 141392,
+              "unique_faces": 297395,
+              "interior_faces": 268173,
+              "extracted_boundary_faces": 29222,
+              "same_orientation_shared_faces": 0,
+              "nonmanifold_faces": 0,
+              "duplicate_cells": 0,
+              "duplicate_surface_faces": 0,
+              "provided_boundary_matches_extraction": true,
+              "missing_provided_faces": 0,
+              "extra_provided_faces": 0,
+              "nonpositive_corner_determinants": 0,
+              "minimum_corner_determinant": 8.122042002231755e-07,
+              "oriented_facet_consistency_passed": true,
+              "conflict_examples": [],
+              "scope": "Oriented corner-face incidence and same-side neighbor diagnostics; necessary consistency, not a certificate of curved geometry or absence of nonlocal intersections"
+            },
+            "oriented_facet_consistency_passed": true,
+            "quadratic_conformity": {
+              "passed": true,
+              "order": 2,
+              "unique_edges": 187398
+            },
+            "exact_straight_reduction_verified": false,
+            "geometry_admitted": true,
+            "sampled_forward_max": 0.0005837604965731204,
+            "sampled_reverse_max": 0.0004630036253076012,
+            "sampled_two_sided_max": 0.0005837604965731204,
+            "outward_forward_max": 0.0005073059865237407,
+            "inward_forward_max": 0.0005837604965731204,
+            "projection_failed": 0,
+            "forward_samples": 322738,
+            "reverse_samples": 36910,
+            "minimum_dihedral_deg_corner": 14.033555874331796,
+            "reverse_tessellation_delta_max": 1.4424244317842293e-05,
+            "quadratic_reverse_subdivisions": [
+              8,
+              16
+            ],
+            "projection_method": "newton-box-slsqp-v1",
+            "unbounded_projection_failed": 0,
+            "box_projection_attempts": 0,
+            "box_projection_recovered": 0,
+            "box_projection_witnesses": [],
+            "distance_audit_complete": true,
+            "failed_gates": []
+          },
+          "quality": {
+            "min": 0.26634893170382007,
+            "p01": 0.5334612323096534,
+            "p10": 0.614459984565363,
+            "median": 0.7327995149060051,
+            "p90": 0.8976853359007729,
+            "p99": 0.9669914030768286,
+            "max": 0.9980290189246712
+          },
+          "adapt_phase_median_s": [
+            0.29325358300000004,
+            0.893415667,
+            1.2520429180000001,
+            0.192301333,
+            0.29510683400000004,
+            2.6125344179999996,
+            3.349498958
+          ]
+        },
+        "native_lookup": {
+          "samples": 5,
+          "generation_median_s": 4.153105790996051,
+          "generation_range_s": [
+            4.1300217079988215,
+            4.167845625001064
+          ],
+          "nodes": 219006,
+          "elements": 141437,
+          "callback_calls": [
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "geometry": {
+            "volume": 0.35999664687554733,
+            "relative_volume_error": 0.00020361041044258954,
+            "q_min_corner": 0.27143433015587154,
+            "q_p01_corner": 0.5315346455597731,
+            "minimum_sampled_jacobian": 4.05687469073007e-07,
+            "facet_consistency": {
+              "nodes": 219006,
+              "elements": 141437,
+              "unique_faces": 297556,
+              "interior_faces": 268192,
+              "extracted_boundary_faces": 29364,
+              "same_orientation_shared_faces": 0,
+              "nonmanifold_faces": 0,
+              "duplicate_cells": 0,
+              "duplicate_surface_faces": 0,
+              "provided_boundary_matches_extraction": true,
+              "missing_provided_faces": 0,
+              "extra_provided_faces": 0,
+              "nonpositive_corner_determinants": 0,
+              "minimum_corner_determinant": 4.4328298374157253e-07,
+              "oriented_facet_consistency_passed": true,
+              "conflict_examples": [],
+              "scope": "Oriented corner-face incidence and same-side neighbor diagnostics; necessary consistency, not a certificate of curved geometry or absence of nonlocal intersections"
+            },
+            "oriented_facet_consistency_passed": true,
+            "quadratic_conformity": {
+              "passed": true,
+              "order": 2,
+              "unique_edges": 187563
+            },
+            "exact_straight_reduction_verified": false,
+            "geometry_admitted": true,
+            "sampled_forward_max": 0.0005888777558978364,
+            "sampled_reverse_max": 0.0004393997259132801,
+            "sampled_two_sided_max": 0.0005888777558978364,
+            "outward_forward_max": 0.000489302624179909,
+            "inward_forward_max": 0.0005888777558978364,
+            "projection_failed": 0,
+            "forward_samples": 323908,
+            "reverse_samples": 36910,
+            "minimum_dihedral_deg_corner": 14.079134895324444,
+            "reverse_tessellation_delta_max": 1.3545250596687693e-05,
+            "quadratic_reverse_subdivisions": [
+              8,
+              16
+            ],
+            "projection_method": "newton-box-slsqp-v1",
+            "unbounded_projection_failed": 0,
+            "box_projection_attempts": 0,
+            "box_projection_recovered": 0,
+            "box_projection_witnesses": [],
+            "distance_audit_complete": true,
+            "failed_gates": []
+          },
+          "quality": {
+            "min": 0.27143433015587154,
+            "p01": 0.5315346455597731,
+            "p10": 0.6143485429761041,
+            "median": 0.7330673722843187,
+            "p90": 0.8976615790355088,
+            "p99": 0.9674372348440698,
+            "max": 0.9993978974842813
+          },
+          "adapt_phase_median_s": [
+            0.292636582,
+            0.12066991800000001,
+            0.908286001,
+            0.192770834,
+            0.296232207,
+            0.46438799999999997,
+            0.250439832
+          ]
+        },
+        "mesh_comparisons": [
+          {
+            "exact_arrays": {
+              "points": false,
+              "tetrahedra": false,
+              "surface": false
+            },
+            "same_counts": false,
+            "equivalent_up_to_numbering": false
+          },
+          {
+            "exact_arrays": {
+              "points": false,
+              "tetrahedra": false,
+              "surface": false
+            },
+            "same_counts": false,
+            "equivalent_up_to_numbering": false
+          },
+          {
+            "exact_arrays": {
+              "points": false,
+              "tetrahedra": false,
+              "surface": false
+            },
+            "same_counts": false,
+            "equivalent_up_to_numbering": false
+          },
+          {
+            "exact_arrays": {
+              "points": false,
+              "tetrahedra": false,
+              "surface": false
+            },
+            "same_counts": false,
+            "equivalent_up_to_numbering": false
+          },
+          {
+            "exact_arrays": {
+              "points": false,
+              "tetrahedra": false,
+              "surface": false
+            },
+            "same_counts": false,
+            "equivalent_up_to_numbering": false
+          }
+        ],
+        "speedup": 2.7216650388496824,
+        "pilot_ratio": null,
+        "accuracy_matched_FEA_claim": false
+      }
+    ],
+    "compiled_field_identity": {
+      "probes": 8963,
+      "maximum_field_difference": 4.440892098500626e-16,
+      "analytical_gradient_enabled": true,
+      "native_graph_nodes": 2616,
+      "expression_sha256": "dc8d5e612395b13cb61ea71b147e9e4d45423c988e5dca4358f251d011974dd1",
+      "scope": "Independent owned compiled-field check from unchanged measured inputs; the worker callable check alone does not inspect automatic compilation"
+    }
+  },
+  "curved_fitting": {
+    "audit_source": "experiments/adaptive/runs/macbook-curved-density-live-fit-repeated-audit-v1/result.json",
+    "audit_sha256": "c97d20df5deaef305cfd3cd17c7aae13a5082da5cac3ac679e2b9b52932136b9",
+    "run": "experiments/adaptive/runs/macbook-curved-density-live-fit-repeated-v1",
+    "attempts": 12,
+    "configs": [
+      {
+        "arm": "meshers",
+        "cells": 16,
+        "order": 2,
+        "adapt": true,
+        "tolerance": 1.0,
+        "min_length": 0.002,
+        "adapt_tolerance": 0.001,
+        "name": "meshers-curved-tet10-adaptive001-auto-interp",
+        "compile": true,
+        "native_interp_auto": true
+      },
+      {
+        "arm": "meshers",
+        "cells": 16,
+        "order": 2,
+        "adapt": false,
+        "tolerance": 1.0,
+        "min_length": 0.002,
+        "adapt_tolerance": 0.001,
+        "name": "meshers-uniform16-auto-interp-cap-fit",
+        "compile": true,
+        "native_interp_auto": true,
+        "fit_cap_edges": true
+      }
+    ],
+    "directories": {
+      "meshers-curved-tet10-adaptive001-auto-interp": [
+        "experiments/adaptive/runs/macbook-curved-density-live-fit-repeated-v1/repeat-0-meshers-curved-tet10-adaptive001-auto-interp",
+        "experiments/adaptive/runs/macbook-curved-density-live-fit-repeated-v1/repeat-1-meshers-curved-tet10-adaptive001-auto-interp",
+        "experiments/adaptive/runs/macbook-curved-density-live-fit-repeated-v1/repeat-2-meshers-curved-tet10-adaptive001-auto-interp",
+        "experiments/adaptive/runs/macbook-curved-density-live-fit-repeated-v1/repeat-3-meshers-curved-tet10-adaptive001-auto-interp",
+        "experiments/adaptive/runs/macbook-curved-density-live-fit-repeated-v1/repeat-4-meshers-curved-tet10-adaptive001-auto-interp"
+      ],
+      "meshers-uniform16-auto-interp-cap-fit": [
+        "experiments/adaptive/runs/macbook-curved-density-live-fit-repeated-v1/repeat-0-meshers-uniform16-auto-interp-cap-fit",
+        "experiments/adaptive/runs/macbook-curved-density-live-fit-repeated-v1/repeat-1-meshers-uniform16-auto-interp-cap-fit",
+        "experiments/adaptive/runs/macbook-curved-density-live-fit-repeated-v1/repeat-2-meshers-uniform16-auto-interp-cap-fit",
+        "experiments/adaptive/runs/macbook-curved-density-live-fit-repeated-v1/repeat-3-meshers-uniform16-auto-interp-cap-fit",
+        "experiments/adaptive/runs/macbook-curved-density-live-fit-repeated-v1/repeat-4-meshers-uniform16-auto-interp-cap-fit"
+      ]
+    },
+    "resolved_inputs": [
+      {
+        "measured_path": "/Users/kmarchais/dev/meshers/experiments/adaptive/comparison_benchmark.py",
+        "resolved_path": "/Users/kmarchais/dev/meshers/experiments/adaptive/comparison_benchmark.py",
+        "sha256": "d7b5da9febf95c916341a229d61a66645490d05adc8bd70cd8564a4cac96062d"
+      },
+      {
+        "measured_path": "/Users/kmarchais/dev/meshers/experiments/adaptive/microgen_workflow.py",
+        "resolved_path": "/Users/kmarchais/dev/meshers/experiments/adaptive/microgen_workflow.py",
+        "sha256": "9f513dfd3e6e5a72a71a54f70c0c2cf7c7a1ebe7256886ee3feaf7d7ad7de161"
+      },
+      {
+        "measured_path": "/Users/kmarchais/dev/meshers/experiments/adaptive/comparison_fixtures.py",
+        "resolved_path": "/Users/kmarchais/dev/meshers/experiments/adaptive/comparison_fixtures.py",
+        "sha256": "4fa77af6b3b4858eb7611045f46f6e4ca672c6c46ab28d7ee969e14b31e11b9b"
+      },
+      {
+        "measured_path": "/Users/kmarchais/dev/meshers/experiments/adaptive/comparison_mesh_audit.py",
+        "resolved_path": "/Users/kmarchais/dev/meshers/experiments/adaptive/comparison_mesh_audit.py",
+        "sha256": "6797327ecf6b6c62a973f52812d0bad95b2ef861541247425609109c24d8af94"
+      },
+      {
+        "measured_path": "/Users/kmarchais/dev/meshers/experiments/adaptive/mesh_only_comparison.py",
+        "resolved_path": "/Users/kmarchais/dev/meshers/experiments/adaptive/mesh_only_comparison.py",
+        "sha256": "510231127f10b840a1e68bc948d9f08fd17cfe4eb56e6504c989738ac8b1baf8"
+      },
+      {
+        "measured_path": "/Users/kmarchais/dev/meshers/crates/meshers-python/python/meshers/_meshers.abi3.so",
+        "resolved_path": "/Users/kmarchais/dev/meshers/crates/meshers-python/python/meshers/_meshers.abi3.so",
+        "sha256": "6394fdcd5e13c42955f96625c2e91800e5b4c2cb2817fb3349de3366dbcfab0a"
+      },
+      {
+        "measured_path": "/Users/kmarchais/dev/meshers/crates/meshers-python/python/meshers/__init__.py",
+        "resolved_path": "/Users/kmarchais/dev/meshers/crates/meshers-python/python/meshers/__init__.py",
+        "sha256": "c710a37fb6a6376611f6219df3d301ee407bdb7e378e3bcf6edb17286908bab9"
+      },
+      {
+        "measured_path": "/Users/kmarchais/dev/meshers/crates/meshers-python/python/meshers/expression.py",
+        "resolved_path": "/Users/kmarchais/dev/meshers/crates/meshers-python/python/meshers/expression.py",
+        "sha256": "dc8d5e612395b13cb61ea71b147e9e4d45423c988e5dca4358f251d011974dd1"
+      },
+      {
+        "measured_path": "/Users/kmarchais/dev/meshers/crates/meshers-python/python/meshers/intersection.py",
+        "resolved_path": "/Users/kmarchais/dev/meshers/crates/meshers-python/python/meshers/intersection.py",
+        "sha256": "970bbce85bb1a3043af9b309c5d0895abb6967fa4f34e50586865054c5253078"
+      },
+      {
+        "measured_path": "/Users/kmarchais/dev/meshers/.local-work/macbook-runtime/venv/lib/python3.12/site-packages/microgen/remesh.py",
+        "resolved_path": "/Users/kmarchais/dev/meshers/.local-work/macbook-runtime/venv/lib/python3.12/site-packages/microgen/remesh.py",
+        "sha256": "b93c8b8150c1c40ccf5312d57785331d52f114d2217a8b59296b7484cf6f2612"
+      },
+      {
+        "measured_path": "/Users/kmarchais/dev/meshers/.local-work/macbook-runtime/venv/lib/python3.12/site-packages/microgen/shape/tpms.py",
+        "resolved_path": "/Users/kmarchais/dev/meshers/.local-work/macbook-runtime/venv/lib/python3.12/site-packages/microgen/shape/tpms.py",
+        "sha256": "1c2876a8f65441e6d7a0f21397a3b781b6f03a338f244c7db5c462c13348f955"
+      },
+      {
+        "measured_path": "/Users/kmarchais/dev/meshers/.local-work/macbook-runtime/venv/lib/python3.12/site-packages/microgen/shape/spinodoid.py",
+        "resolved_path": "/Users/kmarchais/dev/meshers/.local-work/macbook-runtime/venv/lib/python3.12/site-packages/microgen/shape/spinodoid.py",
+        "sha256": "c755554a90d2c6279e625174ad0e6940f1d3bbb30ab35379fbaece1a95b7d724"
+      },
+      {
+        "measured_path": "/Users/kmarchais/dev/meshers/.local-work/macbook-runtime/venv/lib/python3.12/site-packages/mmgpy/bin/mmg3d_O3",
+        "resolved_path": "/Users/kmarchais/dev/meshers/.local-work/macbook-runtime/venv/lib/python3.12/site-packages/mmgpy/bin/mmg3d_O3",
+        "sha256": "efe07a6207a9ff86f4af26513e6aa368647b32cae112859fca52e74c3e7f7cf1"
+      },
+      {
+        "measured_path": "/Users/kmarchais/dev/meshers/experiments/adaptive/scorecard.py",
+        "resolved_path": "/Users/kmarchais/dev/meshers/experiments/adaptive/scorecard.py",
+        "sha256": "8f26256c7df0e84c9f35cdd71bf4f95a74e072d45469002b213c5dcd4f1bab2a"
+      },
+      {
+        "measured_path": "/Users/kmarchais/dev/meshers/experiments/adaptive/facet_incidence_audit.py",
+        "resolved_path": "/Users/kmarchais/dev/meshers/experiments/adaptive/facet_incidence_audit.py",
+        "sha256": "4f51afc196c85e1d0bc64d7a96507517ddc6e32ccd8380a2ac77cae0ace89610"
+      },
+      {
+        "measured_path": "/Users/kmarchais/dev/meshers/experiments/adaptive/box_projection.py",
+        "resolved_path": "/Users/kmarchais/dev/meshers/experiments/adaptive/box_projection.py",
+        "sha256": "59589b1996b3a3782f1b7f5e5ff3c7ab303d4158ef50a233515dc5369bddaf05"
+      },
+      {
+        "measured_path": "/Users/kmarchais/dev/meshers/experiments/adaptive/gradient_tie_probe.py",
+        "resolved_path": "/Users/kmarchais/dev/meshers/experiments/adaptive/gradient_tie_probe.py",
+        "sha256": "f2fddde187144f52527bd8563b34128831cc4f8733ef720ad86cf7c5db8d2762"
+      },
+      {
+        "measured_path": "/Users/kmarchais/dev/meshers/experiments/adaptive/interior_relocation_trial.py",
+        "resolved_path": "/Users/kmarchais/dev/meshers/experiments/adaptive/interior_relocation_trial.py",
+        "sha256": "e65d4feec624edc81b93445019c827e79a52568bcdeebcbe920a2230b247e2e1"
+      },
+      {
+        "measured_path": "/Users/kmarchais/dev/meshers/experiments/adaptive/interior_star_probe.py",
+        "resolved_path": "/Users/kmarchais/dev/meshers/experiments/adaptive/interior_star_probe.py",
+        "sha256": "fe5daf85f5147b77d76c37e5eb7ec9f511b16203fb5eaedb24a89e9667395616"
+      },
+      {
+        "measured_path": "/Users/kmarchais/dev/meshers/experiments/adaptive/microgen_tet10_control.py",
+        "resolved_path": "/Users/kmarchais/dev/meshers/experiments/adaptive/microgen_tet10_control.py",
+        "sha256": "d77185fbb2e9256ab8b479f8cab34a57be723540dc80def8dfe30361a5d68ceb"
+      },
+      {
+        "measured_path": "/Users/kmarchais/dev/meshers/experiments/adaptive/quadratic_edge_removal_probe.py",
+        "resolved_path": "/Users/kmarchais/dev/meshers/experiments/adaptive/quadratic_edge_removal_probe.py",
+        "sha256": "f26a4be16f7aeb4fce6d89732754fab0e5d39e86b4d4c62466a3afd547cec6ed"
+      },
+      {
+        "measured_path": "/Users/kmarchais/dev/meshers/experiments/adaptive/nested_refinement.py",
+        "resolved_path": "/Users/kmarchais/dev/meshers/experiments/adaptive/nested_refinement.py",
+        "sha256": "7f78251d150ebcee928db1b49e22b64ee89efde5cdc238c1f5b9994aad36a6b8"
+      },
+      {
+        "measured_path": "/Users/kmarchais/dev/periodic-microgen/experiments/periodic-fea/periodic.py",
+        "resolved_path": "/Users/kmarchais/dev/periodic-microgen/experiments/periodic-fea/periodic.py",
+        "sha256": "f065de0570eed98149c45aff3babcbadc3f73aed89eb1639eca0448de4353629"
+      },
+      {
+        "measured_path": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/g3-spinodoid-compiled32-v1/fourier-coefficients.json",
+        "resolved_path": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/g3-spinodoid-compiled32-v1/fourier-coefficients.json",
+        "sha256": "e9ee2b6c70dcf771ab9fdb011051eb57973d2e15cf479e904bf5d8b40e3d779a"
+      },
+      {
+        "measured_path": "experiments/adaptive/runs/macbook-linear-density-fixtures-v1/spinodoid-anisotropic-coefficients.json",
+        "resolved_path": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-linear-density-fixtures-v1/spinodoid-anisotropic-coefficients.json",
+        "sha256": "6472b7e24af7aec153ec8797ff9025ea82c5690705da3d5ebc836dc94fa00b7e"
+      },
+      {
+        "measured_path": "experiments/adaptive/runs/macbook-linear-density-fixtures-v1/result.json",
+        "resolved_path": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-linear-density-fixtures-v1/result.json",
+        "sha256": "befde3eb3a7c63e32393f58ca3079e9b9d90e2a6812234bbc378f6298037fb30"
+      },
+      {
+        "measured_path": "experiments/adaptive/runs/macbook-linear-density-fixtures-v1/graded-gyroid-density-linear/graded-gyroid-density-linear-samples.npz",
+        "resolved_path": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-linear-density-fixtures-v1/graded-gyroid-density-linear/graded-gyroid-density-linear-samples.npz",
+        "sha256": "7118dc4e84d4c1617e8034553e3a052b170e49d6f3412e4dd2886c2616e8c56c"
+      },
+      {
+        "measured_path": "experiments/adaptive/runs/macbook-linear-density-fixtures-v1/graded-gyroid-density-linear/graded-gyroid-density-linear-specimen.json",
+        "resolved_path": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-linear-density-fixtures-v1/graded-gyroid-density-linear/graded-gyroid-density-linear-specimen.json",
+        "sha256": "345f1f0e92b651ba2dabc4caa9ed436babd9349fcb48a6aecb8fea85845b72ae"
+      },
+      {
+        "measured_path": "experiments/adaptive/runs/macbook-linear-density-fixtures-v1/linear-density-calibration.json",
+        "resolved_path": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-linear-density-fixtures-v1/linear-density-calibration.json",
+        "sha256": "b4db7ab7afe47f7832106e2eaf1523c7b0d854f291ef6030bdbe65df9e06e7e1"
+      },
+      {
+        "measured_path": "experiments/adaptive/runs/macbook-linear-density-fixtures-v1/density-controls.json",
+        "resolved_path": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-linear-density-fixtures-v1/density-controls.json",
+        "sha256": "4c63bbe9a11b6a5b7310f63163dec02b9b926c42d1e29aa6aa3855699074f5ac"
+      },
+      {
+        "measured_path": "/Users/kmarchais/dev/meshers/experiments/adaptive/linear_density_fixture.py",
+        "resolved_path": "/Users/kmarchais/dev/meshers/experiments/adaptive/linear_density_fixture.py",
+        "sha256": "99b619d8f4885673bd1a7f7b7ced3af01211bff4b52f1b206cbecaf654fca3f8"
+      },
+      {
+        "measured_path": "/Users/kmarchais/dev/meshers/handoff/macbook/linear-density-selection-20261026.json",
+        "resolved_path": "/Users/kmarchais/dev/meshers/handoff/macbook/linear-density-selection-20261026.json",
+        "sha256": "1906f04729aa4692f2daa8956e5ef62ed85e60194287a07a2790028881a12f07"
+      },
+      {
+        "measured_path": "/Users/kmarchais/dev/meshers/handoff/macbook/linear-density-adaptation-selection-20261026.json",
+        "resolved_path": "/Users/kmarchais/dev/meshers/handoff/macbook/linear-density-adaptation-selection-20261026.json",
+        "sha256": "8aa2902cdda1fb852d576470adb65a2921cd72baf159755067b29b9f68b4ded9"
+      },
+      {
+        "measured_path": "/Users/kmarchais/dev/meshers/experiments/adaptive/curved_edge_fit.py",
+        "resolved_path": "/Users/kmarchais/dev/meshers/experiments/adaptive/curved_edge_fit.py",
+        "sha256": "b62eb71cd48f2804ded55142a86e090af3aa11857f80c970c427bee1dce7f078"
+      },
+      {
+        "measured_path": "/Users/kmarchais/dev/meshers/handoff/macbook/curved-density-live-fit-selection-20261026.json",
+        "resolved_path": "/Users/kmarchais/dev/meshers/handoff/macbook/curved-density-live-fit-selection-20261026.json",
+        "sha256": "146ac1f1b059930244fde2886bfe86bc818e547db763a30d728167a552905d9b"
+      },
+      {
+        "measured_path": "experiments/adaptive/runs/macbook-curved-density-live-fit-repeated-v1/summary.json",
+        "resolved_path": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-curved-density-live-fit-repeated-v1/summary.json",
+        "sha256": "9de81b1bc00aa08b3bb8e5917b738324c9264519bfb4f6a90187f9e6a6d192d6"
+      },
+      {
+        "measured_path": "experiments/adaptive/runs/macbook-curved-density-live-fit-repeated-v1/manifest.json",
+        "resolved_path": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-curved-density-live-fit-repeated-v1/manifest.json",
+        "sha256": "64923b3a253c3825de0ed798dde299bd9abf66cacddd58375becb3a21dd1132b"
+      },
+      {
+        "measured_path": "/Users/kmarchais/dev/meshers/handoff/macbook/comparison-findings-20261026.json",
+        "resolved_path": "/Users/kmarchais/dev/meshers/handoff/macbook/comparison-findings-20261026.json",
+        "sha256": "e37247280a0c14f622ec6c6ebf5a777dc2531ccba6d5c1fd51dcb063913a45b0"
+      },
+      {
+        "measured_path": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-schwarz-d-periodic-default-regression-v1/checks/result.json",
+        "resolved_path": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-schwarz-d-periodic-default-regression-v1/checks/result.json",
+        "sha256": "e91cc9f977f661c565cf2af630e17dd1c05cc46cf573e09d63fafeae7c474cdc"
+      }
+    ],
+    "pair": {
+      "order": 2,
+      "baseline": {
+        "samples": 5,
+        "generation_median_s": 3.9968695839997963,
+        "generation_range_s": [
+          3.8696435000019846,
+          4.069761541999469
+        ],
+        "nodes": 219006,
+        "elements": 141437,
+        "geometry": {
+          "volume": 0.35999664687554733,
+          "relative_volume_error": 0.00020361041044258954,
+          "q_min_corner": 0.27143433015587154,
+          "q_p01_corner": 0.5315346455597731,
+          "minimum_sampled_jacobian": 4.05687469073007e-07,
+          "facet_consistency": {
+            "nodes": 219006,
+            "elements": 141437,
+            "unique_faces": 297556,
+            "interior_faces": 268192,
+            "extracted_boundary_faces": 29364,
+            "same_orientation_shared_faces": 0,
+            "nonmanifold_faces": 0,
+            "duplicate_cells": 0,
+            "duplicate_surface_faces": 0,
+            "provided_boundary_matches_extraction": true,
+            "missing_provided_faces": 0,
+            "extra_provided_faces": 0,
+            "nonpositive_corner_determinants": 0,
+            "minimum_corner_determinant": 4.4328298374157253e-07,
+            "oriented_facet_consistency_passed": true,
+            "conflict_examples": [],
+            "scope": "Oriented corner-face incidence and same-side neighbor diagnostics; necessary consistency, not a certificate of curved geometry or absence of nonlocal intersections"
+          },
+          "oriented_facet_consistency_passed": true,
+          "quadratic_conformity": {
+            "passed": true,
+            "order": 2,
+            "unique_edges": 187563
+          },
+          "exact_straight_reduction_verified": false,
+          "geometry_admitted": true,
+          "sampled_forward_max": 0.0005888777558978364,
+          "sampled_reverse_max": 0.0004393997259132801,
+          "sampled_two_sided_max": 0.0005888777558978364,
+          "outward_forward_max": 0.000489302624179909,
+          "inward_forward_max": 0.0005888777558978364,
+          "projection_failed": 0,
+          "forward_samples": 323908,
+          "reverse_samples": 36910,
+          "minimum_dihedral_deg_corner": 14.079134895324444,
+          "reverse_tessellation_delta_max": 1.3545250596687693e-05,
+          "quadratic_reverse_subdivisions": [
+            8,
+            16
+          ],
+          "projection_method": "newton-box-slsqp-v1",
+          "unbounded_projection_failed": 0,
+          "box_projection_attempts": 0,
+          "box_projection_recovered": 0,
+          "box_projection_witnesses": [],
+          "distance_audit_complete": true,
+          "failed_gates": []
+        },
+        "quality": {
+          "min": 0.27143433015587154,
+          "p01": 0.5315346455597731,
+          "p10": 0.6143485429761041,
+          "median": 0.7330673722843187,
+          "p90": 0.8976615790355088,
+          "p99": 0.9674372348440698,
+          "max": 0.9993978974842813
+        }
+      },
+      "prototype": {
+        "samples": 5,
+        "generation_median_s": 1.103007166995667,
+        "generation_range_s": [
+          1.0825731250006356,
+          1.1209006249991944
+        ],
+        "nodes": 45262,
+        "elements": 25747,
+        "geometry": {
+          "volume": 0.36000694472622974,
+          "relative_volume_error": 0.0002322216420231893,
+          "q_min_corner": 0.16338848086303534,
+          "q_p01_corner": 0.4332578448975542,
+          "minimum_sampled_jacobian": 1.1271108578060718e-06,
+          "facet_consistency": {
+            "nodes": 45262,
+            "elements": 25747,
+            "unique_faces": 56572,
+            "interior_faces": 46416,
+            "extracted_boundary_faces": 10156,
+            "same_orientation_shared_faces": 0,
+            "nonmanifold_faces": 0,
+            "duplicate_cells": 0,
+            "duplicate_surface_faces": 0,
+            "provided_boundary_matches_extraction": true,
+            "missing_provided_faces": 0,
+            "extra_provided_faces": 0,
+            "nonpositive_corner_determinants": 0,
+            "minimum_corner_determinant": 1.1321710539436848e-06,
+            "oriented_facet_consistency_passed": true,
+            "conflict_examples": [],
+            "scope": "Oriented corner-face incidence and same-side neighbor diagnostics; necessary consistency, not a certificate of curved geometry or absence of nonlocal intersections"
+          },
+          "oriented_facet_consistency_passed": true,
+          "quadratic_conformity": {
+            "passed": true,
+            "order": 2,
+            "unique_edges": 38044
+          },
+          "exact_straight_reduction_verified": false,
+          "geometry_admitted": true,
+          "sampled_forward_max": 0.0018602057203589918,
+          "sampled_reverse_max": 0.0013059086513045528,
+          "sampled_two_sided_max": 0.0018602057203589918,
+          "outward_forward_max": 0.0017427234896913774,
+          "inward_forward_max": 0.0018602057203589918,
+          "projection_failed": 0,
+          "forward_samples": 111878,
+          "reverse_samples": 36910,
+          "minimum_dihedral_deg_corner": 9.582901139972137,
+          "reverse_tessellation_delta_max": 6.399567191601111e-05,
+          "quadratic_reverse_subdivisions": [
+            8,
+            16
+          ],
+          "projection_method": "newton-box-slsqp-v1",
+          "unbounded_projection_failed": 0,
+          "box_projection_attempts": 0,
+          "box_projection_recovered": 0,
+          "box_projection_witnesses": [],
+          "distance_audit_complete": true,
+          "failed_gates": []
+        },
+        "quality": {
+          "min": 0.16338848086303534,
+          "p01": 0.4332578448975542,
+          "p10": 0.5716140061714161,
+          "median": 0.7928748766006681,
+          "p90": 0.9295160030897804,
+          "p99": 0.9697817107683845,
+          "max": 0.9976783883355304
+        }
+      },
+      "speedup": 3.6236116170362997,
+      "tets_reduction_fraction": 0.8179613538183078,
+      "nodes_reduction_fraction": 0.7933298631087733,
+      "matched_stiffness": false,
+      "quality_geometry_tradeoffs_retained": true
+    },
+    "native_only": false,
+    "scope": "Fresh native seed plus charged generic Python cap-edge detection/fitting. Both recipes admit but quality and geometry are not matched; no FEA comparison."
+  },
+  "compiled_graph_bridge": {
+    "same_cached_object": true,
+    "probes": 8192,
+    "values_exactly_equal": true
+  },
+  "tests": {
+    "full_python_and_tools_passed": 208,
+    "skipped": 1,
+    "focused_interp_and_Schwarz_D_passed": 15,
+    "seven_historical_curved_meshes_exact": true
+  },
+  "retained_lattice_model_tensor_hashes": [
+    "1dc2276ae93d3a194cb332b06f5c7562f512d21c6df8746cc427bdb5cf5e4483",
+    "05aa92ece78bb3d56b2e1f1746d82d8ab6b7ec504988fb2831dca28bbd1af699",
+    "bc97fc91658a12a023b42b599cee06057e95708952068834f62e510ffb377e90",
+    "6a3d66a8a9b8d006a80f6a07a519887c64ad569df9ded79f58396165b7d185c0",
+    "cf5dbd88b110410ca94f5263ca1d47dc97987c3cc10790d836fc9895f3527889",
+    "fbfe07add640ae33f49cb0677b3df2ed43034a3d6d3fb3fd879b388c5a819ee1",
+    "1777cef43e1d246879ff5bcfd964a13baf885baa13faafef4f77fe97f48ec84a",
+    "c328664caccc5082c37d300421d51519d3893948b0e5f7e31584f8ce47aafee3",
+    "368dd8a49825c6d08e96d559fb79cb12d6244749a163b30582589eedb831a72b",
+    "f22e43514f0f9b8b8f43087aa8bdfa59bb64f3f893029ca490e5defc7764f35c",
+    "809ca2045bd26faeb9c225bff2b3febe9e5c290eccc35c2b444f8421c832a0d4",
+    "c010ae7f8e57aebad23a3a42d3f248c7ea0ff6ed31e290a3dff62bbfeabeaef7",
+    "2aa3d0453da7fc045fb21d9d818a50d7612b9e9f66542cf7fb75fbf4b8e29f76",
+    "2323cd67c181e81b13a4164333f002387e2e807e2cbc2a27052dc6c54f5c026f",
+    "acd72b95c9f71e32265b05d2b9ad5a4367ed10ec7d47c72541826ded75dc7474",
+    "46d12a65100eea687c4d994e19328ed1f60a8b01f66f84f4c5f9b5bb2edac406",
+    "a9e148d4d1187745a4b5bb0631b020775900bb903aa9e6ac918417ed5061d903",
+    "a16219ac2de2e13355bc6b03929cfc7b4b4b65221b65d184e53113fcfaf578c6",
+    "3f11bc9270b573e6aff65e7b435df249dbaded408637d09e88ec4366977b0b0c",
+    "698df2172b607b3660d5edb02cc5418a56f758cdac945a657dd02ef5807443dd",
+    "9574face72643c530171ec8a3599d0b9d2f1e3c7b049fe868b26a1201ac64545",
+    "2b2a3fc524801d1906bc4911c8d9922e59c4ce6e85acfdfca83df4a65b059400",
+    "ded13a9eb3b71fe54bcd5c89e03378cb7442879e56095a24f4391a4c242dbaea",
+    "948e95978a44e3c8b251004c9f5fad6b47765cbfdad570db91d9ab49ba6d622c"
+  ],
+  "inputs": {
+    "experiments/adaptive/collect_lookup_findings.py": "208936ff0ab0050e983ecacffa9ed6749f5dd0002856cec891733ef57a7573d6",
+    "handoff/macbook/comparison-findings-20261026.json": "e37247280a0c14f622ec6c6ebf5a777dc2531ccba6d5c1fd51dcb063913a45b0",
+    "experiments/adaptive/runs/macbook-native-interp-originals-regression-v1/result.json": "a8a2f916ef0b8bf8a9f21d4a65e329c1b22313aa20e30436d2f1fe0e993093ca",
+    "experiments/adaptive/runs/macbook-native-interp-python-full-v1/worker.log": "dbb8bde33c18dbbd00d9ed372aac3988041e5b609bea554bb685751a85c5a181",
+    "experiments/adaptive/runs/macbook-native-interp-green-v1/worker.log": "2a90d6320f5e5f95c7802671d4db2609c26fc7e489c78e76f20f334d9b4ee1c6",
+    "experiments/adaptive/runs/macbook-curved-density-edge-fit-v1/result.json": "78e6f95c6eec00e63bb8c9913fa5558f33bc5e860759bc90356d32b2d5ccd089",
+    "experiments/adaptive/runs/macbook-curved-density-native-uniform-v1/result.json": "ce4be5855e28ac63423f4678e58f390abe709826888d900ac81f4d0c206cb59a"
+  },
+  "failures_preserved": {
+    "audit665": "Verifier syntax error; corrected replay666 passes",
+    "red669": "Expected public API regression failures before implementation",
+    "uniform677": "New automatic evaluator alone still rejects the fixed coarse recipe"
+  },
+  "new_FE_solve": false,
+  "reference_promoted": false,
+  "actual_Microgen_speedup_claim": false,
+  "full_objective_complete": false,
+  "scope": "Measured Meshers evaluator gains and an explicit hybrid geometry/cost tradeoff. Fixed specimens, gates, caps, old failures and all 24 lattice tensors remain unchanged."
+}

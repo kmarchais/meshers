@@ -10,7 +10,7 @@ from comparison_mesh_audit import observe
 from periodic_trace import periodic_pairs
 
 
-def verify(runs):
+def verify(runs, *, replay_history=True):
     import meshers._meshers
     native=w.digest(Path(meshers._meshers.__file__))
     assert native!='2005c3e01892098a9d734567220a56ed3ea5d748b20a4f96754fbb55168060b1'
@@ -93,7 +93,7 @@ def verify(runs):
     from comparison_verified_report import verify as verify_historical
     historical_cache={}
     historical_checks=[verify_historical(Path(row['run']),w.HERE/'runs/macbook-comparison-fixtures-v1',historical_cache)
-        for row in historical['sources']]
+        for row in historical['sources']] if replay_history else []
     return dict(native_sha256=native,baseline_native_sha256='2005c3e01892098a9d734567220a56ed3ea5d748b20a4f96754fbb55168060b1',
         checks=checks,unique_mesh_replays=len(cache),rows=statistics_rows,inputs=inputs,
         historical_runs_replayed=len(historical_checks),historical_unique_mesh_replays=len(historical_cache),
@@ -105,4 +105,5 @@ def verify(runs):
 
 if __name__=='__main__':
     p=argparse.ArgumentParser();p.add_argument('--runs',type=Path,nargs='+',required=True);p.add_argument('--output',type=Path,required=True)
-    a=p.parse_args();assert not a.output.exists();w.imports();w.save(a.output,verify(a.runs))
+    p.add_argument('--skip-history',action='store_true',help='Replay only the supplied new meshes; retain historical evidence and model hashes without re-running 20 unchanged runs')
+    a=p.parse_args();assert not a.output.exists();w.imports();w.save(a.output,verify(a.runs,replay_history=not a.skip_history))
