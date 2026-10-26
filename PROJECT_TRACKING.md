@@ -1,5 +1,33 @@
 # Meshers project tracking
 
+## Comparison dashboard, 26 October 2026
+
+[Open the dashboard](experiments/adaptive/comparison-dashboard.html).
+It covers nine fixed specimens, with 49 retained route summaries, 23 admitted
+route summaries, five interleaved same-order comparisons and the complete
+24-model lattice stiffness evidence. Case family, specimen, element order,
+rejected routes and historical Schwarz D failures can be inspected separately.
+Numbers use green/red scales only when the comparison is supported. The raw
+metric table includes boundary/volume errors, quality quantiles, element/node
+counts, generation time and available stiffness scores. CSV and evidence JSON
+exports retain numerical precision and source provenance.
+
+The similar-count screen uses a declared 10% element-count window. A separate
+strict screen requires fewer elements, no more nodes and no worse geometry or
+any recorded quality quantile; no present pair passes that stronger screen.
+Reference-volume differences below the empirical scramble spread remain
+unranked. Failed actual routes never supply speedups. Actual star-refined FEA
+results stay separate from the mesh-only actual timing route. No comparable
+convergence score is established here for the other eight specimens.
+
+The artifact builds with the standard library from 167 hashed source files.
+The build freshness check and real-browser tests pass at 1440, 728 and 360 px,
+including filters, color exclusion for failures, paired timing, source links,
+CSV download and chart bounds. Browser checks caught and corrected a mobile
+summary-grid overflow before delivery. See the
+[verification receipt](handoff/macbook/dashboard-verification-20261026.json).
+No native code, frozen evidence, meshes, solves or numerical findings change.
+
 ## Schwarz D fixed and linear grading admitted, 26 October 2026
 
 The native Schwarz D periodic failure is fixed in both Tet4 and Tet10.

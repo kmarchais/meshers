@@ -1,0 +1,43 @@
+{
+  "at": "2026-10-26T18:45:14.174889+00:00",
+  "artifact": "experiments/adaptive/comparison-dashboard.html",
+  "source_artifact_count": 167,
+  "browser": {
+    "passed": true,
+    "cases": 9,
+    "retained_routes": 49,
+    "admitted_routes": 23,
+    "paired_comparisons": 5,
+    "model_cells": 96,
+    "widths": [
+      1440,
+      728,
+      360
+    ],
+    "external_requests": 0,
+    "checked": [
+      "filters",
+      "historical failures",
+      "failure color exclusion",
+      "quality-tail tradeoff",
+      "paired sample ratio",
+      "strict no-worse screen",
+      "evidence detail",
+      "CSV export",
+      "FEA scope",
+      "chart bounds"
+    ]
+  },
+  "deterministic_build_check": true,
+  "new_numerical_experiments": false,
+  "full_objective_complete": false,
+  "inputs": {
+    "experiments/adaptive/build_comparison_dashboard.py": "4aeb4525ce05f91f5508df1ac00b5debf08c68ee455683812ee282bfce917ff8",
+    "experiments/adaptive/comparison_dashboard.template.html": "0838e1705234d8ce19e1ac1279811e5f90a484c3c3408530933e358bf3be52ba",
+    "experiments/adaptive/test_comparison_dashboard.cjs": "0805cec7eae504f44fc12f3d266579733b0d240f8bc6a0e5c2e3d7cf14e43858",
+    "experiments/adaptive/comparison-dashboard.html": "950f3a601204638e4733cb6fadcd203ad639a076c6a249c76cbe3a1abe1a9b4e",
+    "handoff/macbook/comparison-findings-20261026.json": "e37247280a0c14f622ec6c6ebf5a777dc2531ccba6d5c1fd51dcb063913a45b0",
+    "handoff/macbook/periodic-grading-findings-20261026.json": "e32ab53239c5709843daade4adae160ebb3254234d5250114a2b3a37da3fad68"
+  },
+  "scope": "Offline display of audited snapshots, not new mesh or FE evidence. Historical and repaired timing builds stay distinct; rejected routes cannot create speed ratios. Model disagreement is not certified continuum convergence."
+}
