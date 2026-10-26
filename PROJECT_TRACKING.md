@@ -2,7 +2,11 @@
 
 ## Resumed investigation, 26 October 2026
 
-Best completed mesh-workflow score: the longest-edge closure prototype reaches
+Best completed mesh-workflow score is now **1.215175763%** across all 24
+retained lattice models, after the curved quality pass described below. It
+still fails 1%.
+
+The preceding longest-edge closure prototype reaches
 **1.216071201% worst disagreement across all 24 retained lattice models** at
 250,000 nodes and 162,365 tets. This improves on the earlier directional
 prototype's 1.608556732%, but still fails the unchanged 1% target. Six fresh
@@ -156,8 +160,7 @@ coherent facets, point uniqueness, positive sampled Jacobians and periodic
 counts pass. Every recorded corner-quality quantile improves or stays equal.
 Minimum rises from 0.206873 to **0.222689**, first percentile from 0.383975 to
 0.413661, and median from 0.664257 to **0.685789**. Median remains below
-actual's 0.796052. No stiffness result exists for this new approximation
-space yet.
+actual's 0.796052. Fresh fields and accuracy are assessed below.
 
 Exact operator/AMG resource check 577 passes at **6.5114 GiB** under its
 declared 10 GiB ceiling. This topology change requires fresh fields and is
@@ -177,8 +180,17 @@ checks the saved pre-pass boundary and volume instead.
 Job **580** regenerates the mandatory-longest-edge source, applies the same
 one-pass policy and solves six cold loads with the verified exec transition,
 10 GiB and a 1,200-second whole-worker deadline. No saved mesh or FE field is
-replayed in that live workflow. Its completed field audits and all-24-model
-accuracy remain pending. The recipe and unchanged admission gates are frozen
+replayed in that live workflow. It completes at exact preflight arrays and operator hash. Independent field
+audit 581 passes reactions, energy and periodic jumps, with positive125
+quadrature sensitivity 4.0481e-8. Assessment 582 gives **1.215175763%** worst
+disagreement across all 24 unchanged models. This tiny accuracy change from
+1.216071201% accompanies the quality/count improvement, but still fails 1%.
+The fresh diagnostic workflow takes 525.337 seconds and peaks at 8.0744 GiB
+under its declared 10 GiB ceiling. Approximation spaces change, so no nested
+field or Galerkin-transfer claim is made. No reference is promoted and no
+comparative timing victory follows. Evidence is in
+`handoff/macbook/lattice-quadratic-quality-assessment-20261026.json`.
+The recipe and unchanged admission gates are frozen
 in `handoff/macbook/lattice-quadratic-quality-solve-selection-20261026.json`.
 
 ### Longest-edge closure and memory handoff
