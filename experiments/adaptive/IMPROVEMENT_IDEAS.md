@@ -3,7 +3,10 @@
 Update after the experiments:
 [native lookup and curved cap-fitting results](LOOKUP_AND_CURVED_RESULTS.md)
 record the implemented evaluator gain and the independently replayed fitting
-tradeoff. The investigation below preserves the hypotheses and evidence
+tradeoff. [Small lattice diagnostics](LATTICE_SMALL_DIAGNOSTICS.md) now show
+substantial traction residual outside curve patches and narrow mixed-load
+softening room; they do not yet produce an improved mesh. The investigation
+below preserves the hypotheses and evidence
 available before those experiments. Lattice error diagnosis remains open.
 
 26 October 2026. These are ranked hypotheses and experiment designs. Only

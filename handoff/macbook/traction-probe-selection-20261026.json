@@ -1,0 +1,15 @@
+{
+  "question": "Where do saved native and actual six-load FE fields violate pointwise traction equilibrium?",
+  "hypotheses": [
+    "Unresolved traction jumps concentrate in curve-incident patches",
+    "Important equilibrium defects also lie in ordinary wall or bulk regions",
+    "A small local residual correction cannot by itself explain the retained-model disagreement"
+  ],
+  "sources": ["macbook-lattice-relocation-solve-v1", "macbook-lattice-actual-live-solve-v1"],
+  "selection": "At most 512 uniformly sampled faces per geometry-defined stratum, selected before reading stress values, fixed seed 20261026; a second seed can test sampling stability after reading this run",
+  "measurement": "h_F times surface integral of six-load traction Gram; normalize trace by each route's complete stiffness tensor and divide by six. Expand sampled stratum sums by population/sample count. No rigorous error constant or sampling confidence interval is asserted.",
+  "quadrature": "Positive 9 and 16 point triangle rules; check per-face Gram stability before trusting group rankings",
+  "controls": "Affine and exact quadratic fields have zero jump; continuous kink is detected; orientation reversal preserves Gram; tangential stress gives zero free-wall traction; generic stress gives nonzero traction",
+  "limits": "Saved-field diagnostic only, 180 seconds and 8 GiB, one numerical thread, no mesh/field/reference changes or new FE solve",
+  "next_decision": "Read group shares, periodic mismatches and quadrature sensitivity before selecting another diagnostic. No allocation or stiffness claim follows from residual magnitude alone."
+}

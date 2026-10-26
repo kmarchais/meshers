@@ -1,0 +1,7 @@
+{
+  "trigger": "Job685 has a 5.9588% per-face Gram change in the native ordinary-wall group between positive9 and16 rules; other native groups are below0.053%. Actual affine groups agree near roundoff.",
+  "experiment": "Replay exactly the original selected faces with positive36 and64 surface points; no reselection or field changes",
+  "controls": "Affine physical fields on curved two-tet maps must have zero interface jump; independent central differences of P2 shape values must reproduce analytic saved-field stress within1e-7 relative on two sampled faces per side and group",
+  "acceptance": "Require final per-face Gram-vector relative change below1% in every group before trusting group rankings; failure triggers evidence review, not a new solve",
+  "limits": "180seconds,8GiB,one numerical thread; all24 model tensors retained; no FEA correction or continuum bound is claimed"
+}

@@ -1,5 +1,33 @@
 # Meshers project tracking
 
+## Small lattice diagnostics narrow the next change, 26 October 2026
+
+[Detailed results](experiments/adaptive/LATTICE_SMALL_DIAGNOSTICS.md) and
+[numeric evidence](handoff/macbook/lattice-small-diagnostics-20261026.json).
+Jobs 684–689 finish successfully. Each takes under six worker seconds and
+0.5 GiB. All meshes, saved six-load fields, material definitions and 24 model
+tensors remain unchanged. No new FE solve or candidate is produced.
+
+| Experiment | Finding | Consequence |
+|---|---|---|
+| Two independent stratified traction samples, all six loads | Native curve-incident share 52.45–52.47%; bulk interfaces 14.65–14.91% | Curve-only work misses almost half of this residual signal. |
+| Positive9/16 then36/64 surface rules and independent stress evaluation | Initial 5.96% wall-group integration change falls to 0.00530%; independent stress agrees within 4.60e-9 relative | The dense diagnostic is stable; the coarse wall observation is not treated as converged. |
+| Compare saved native/actual residual scores | Actual has larger residual scores despite better retained-model agreement | Raw traction residual is not a replacement stiffness target or continuum-error estimate. |
+| All24-model stiffness-decreasing screen | Best-native necessary floor 0.688944%; enriched positive125 floor 0.813475%, both below1% | No simple monotonicity obstruction is found, but attainable improvement is unproved. |
+| Uniform algebraic softening control | Compact and Uniform37 still miss1%; best saved and enriched matrices have narrow feasible scalar intervals | A balanced mixed-load correction matters; no physical scaling is performed or promoted. |
+
+Six traction controls, a curved-map control, independent finite-difference
+stress checks and five matrix controls pass. The enriched positive125
+disagreement is 1.091235%; its historical solved-rule value remains
+1.091221736%. Neither is a native candidate or a new reference. Original
+native/actual comparison values and dashboard rows remain unchanged.
+
+Next test a genuinely equilibrated stress reconstruction on a tiny control,
+including free-wall and periodic traction conditions and rigid-body
+compatibility, before using it for allocation. Do not revive the closed
+bubble family, curve-only refinement, reference-fitted geometry/material
+changes or global sizing sweeps. The full four-case objective is still open.
+
 ## Native density lookup improved and fresh cap fitting validated, 26 October 2026
 
 [Updated dashboard](experiments/adaptive/comparison-dashboard.html),

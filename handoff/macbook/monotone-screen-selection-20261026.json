@@ -1,0 +1,8 @@
+{
+  "question": "Can a tensor no stiffer than the saved parent satisfy all24 retained reference targets?",
+  "test": "For each fixed candidate C and reference M, compute min eigenvalue of (C-M)v=lambda Mv. For any X<=C, its worst model disagreement is at least max(0,-lambda_min). Take maximum over all24 references and replay the witness Rayleigh quotient.",
+  "scope": "Necessary conditional algebraic test for stiffness-decreasing corrections; a floor above1% obstructs that class for the recorded matrix. A floor below1% is not a feasibility or attainable-FE proof. Changed physical domains are not constrained by this test.",
+  "cases": "All four saved dashboard lattice tensors and the independently audited complete enriched diagnostic under its recorded integration rules",
+  "controls": "Too-stiff, too-soft and mixed diagonal matrices; nonorthogonal basis invariance; below-target control",
+  "limits": "60seconds,8GiB,one numerical thread, no mesh/field/model changes, no FE solve or promoted reference"
+}
