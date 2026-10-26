@@ -1,0 +1,181 @@
+{
+  "result": {
+    "source": "experiments/adaptive/runs/macbook-lattice-longest-edge-closure-amg-v3",
+    "controls_passed": true,
+    "examined_edges": {
+      "valence3": 18369,
+      "valence4": 69854
+    },
+    "corner_improving_variants": 10876,
+    "locally_curved_admitted_variants": 10876,
+    "locally_curved_admitted_edges": 9306,
+    "valence3_admitted": 192,
+    "valence4_admitted": 10684,
+    "examples": [
+      {
+        "edge": [
+          10387,
+          116589
+        ],
+        "old_tets": 4,
+        "new_tets": 4,
+        "before": 0.34271314336682224,
+        "after": 0.8095794516508592,
+        "minimum_sampled_jacobian": 1.701656852191667e-08,
+        "relative_volume_difference": 9.769962616701378e-15
+      },
+      {
+        "edge": [
+          7305,
+          93287
+        ],
+        "old_tets": 4,
+        "new_tets": 4,
+        "before": 0.354462859913752,
+        "after": 0.8045962522084141,
+        "minimum_sampled_jacobian": 9.758482965267227e-07,
+        "relative_volume_difference": 3.774758283725532e-15
+      },
+      {
+        "edge": [
+          48867,
+          87709
+        ],
+        "old_tets": 4,
+        "new_tets": 4,
+        "before": 0.38014028024609847,
+        "after": 0.8256991086794633,
+        "minimum_sampled_jacobian": 2.7081775481021723e-07,
+        "relative_volume_difference": 2.3314683517128287e-15
+      },
+      {
+        "edge": [
+          8200,
+          68121
+        ],
+        "old_tets": 4,
+        "new_tets": 4,
+        "before": 0.41804183983011384,
+        "after": 0.8623702191330257,
+        "minimum_sampled_jacobian": 3.6089753485721475e-06,
+        "relative_volume_difference": 2.4424906541753444e-15
+      },
+      {
+        "edge": [
+          54712,
+          72572
+        ],
+        "old_tets": 4,
+        "new_tets": 4,
+        "before": 0.33227851501625033,
+        "after": 0.7735016192042218,
+        "minimum_sampled_jacobian": 2.605950129629929e-07,
+        "relative_volume_difference": 3.1086244689504383e-15
+      },
+      {
+        "edge": [
+          63844,
+          115490
+        ],
+        "old_tets": 4,
+        "new_tets": 4,
+        "before": 0.36928104887548224,
+        "after": 0.8103609135114209,
+        "minimum_sampled_jacobian": 5.7575447446288205e-08,
+        "relative_volume_difference": 5.218048215738236e-15
+      },
+      {
+        "edge": [
+          8176,
+          75928
+        ],
+        "old_tets": 4,
+        "new_tets": 4,
+        "before": 0.3429864523441957,
+        "after": 0.781165295423454,
+        "minimum_sampled_jacobian": 1.1529499044232206e-06,
+        "relative_volume_difference": 0.0
+      },
+      {
+        "edge": [
+          8294,
+          65716
+        ],
+        "old_tets": 4,
+        "new_tets": 4,
+        "before": 0.37220930882802167,
+        "after": 0.8076221686480873,
+        "minimum_sampled_jacobian": 1.6268755596660404e-06,
+        "relative_volume_difference": 1.2212453270876722e-15
+      },
+      {
+        "edge": [
+          8223,
+          90685
+        ],
+        "old_tets": 4,
+        "new_tets": 4,
+        "before": 0.36957261152823023,
+        "after": 0.8030891665963824,
+        "minimum_sampled_jacobian": 7.972953802992644e-07,
+        "relative_volume_difference": 2.4424906541753444e-15
+      },
+      {
+        "edge": [
+          63837,
+          120541
+        ],
+        "old_tets": 4,
+        "new_tets": 4,
+        "before": 0.40307944332653933,
+        "after": 0.8360759114953613,
+        "minimum_sampled_jacobian": 1.3406081364837562e-07,
+        "relative_volume_difference": 3.774758283725532e-15
+      }
+    ],
+    "physical_mesh_changed": false,
+    "global_mesh_admitted": false,
+    "approximation_space_preserved": false,
+    "fe_fields_used": false,
+    "new_equilibrium_solve": false,
+    "reference_promoted": false,
+    "scope": "Independent local edge-removal feasibility only. Cavity boundary Tet10 traces retained; no disjoint global mesh, field transfer, nested-space or performance claim.",
+    "inputs": {
+      "/Users/kmarchais/dev/meshers/experiments/adaptive/quadratic_edge_removal_probe.py": "63634df4e0bfe3f70b42d1119354c002f58473460de36ba912e1a127cf5f001c",
+      "/Users/kmarchais/dev/meshers/experiments/adaptive/nested_refinement.py": "7f78251d150ebcee928db1b49e22b64ee89efde5cdc238c1f5b9994aad36a6b8",
+      "/Users/kmarchais/dev/meshers/experiments/adaptive/quadrature_audit.py": "020677df452ec86864e687c9b35e2c69e70f8587ec54240ce0c4eaa4b717319e",
+      "/Users/kmarchais/dev/meshers/crates/meshers-core/src/tet_adapt.rs": "2176ce0b548db1a1304961d3f8c10da102fb3aeba42fc65dea03d9cfb87ded15",
+      "experiments/adaptive/runs/macbook-lattice-longest-edge-closure-amg-v3/mesh.npz": "34ece26da768190ac33b1305db8cce58d3d967b9d1116f5221a01faaadf7c034",
+      "experiments/adaptive/runs/macbook-lattice-longest-edge-closure-amg-v3/result.json": "5340f00352f5d7d82811e594c12c39650b565d7bd3f4142d0c4609f2cab3a352"
+    }
+  },
+  "worker": {
+    "returncode": 0,
+    "limit_failure": null,
+    "peak_rss_bytes": 521650176,
+    "wall_s": 19.04283070800011,
+    "wall_s_clock": "monotonic",
+    "elapsed_realtime_s": 19.043001174926758,
+    "suspension_or_clock_adjustment_s": 0.0001704669266473502,
+    "idle_sleep_prevention": [
+      "/usr/bin/caffeinate",
+      "-i"
+    ],
+    "memory_bytes": 8589934592,
+    "memory_enforcement": "process-tree-rss-watchdog",
+    "rss_poll_interval_s": 0.25,
+    "platform": "darwin",
+    "numerical_thread_policy": {
+      "environment": {
+        "OPENBLAS_NUM_THREADS": "1",
+        "OMP_NUM_THREADS": "1",
+        "MKL_NUM_THREADS": "1",
+        "VECLIB_MAXIMUM_THREADS": "1",
+        "RAYON_NUM_THREADS": "1"
+      },
+      "accelerate_blas_threading": 1,
+      "accelerate_scope": "calling thread"
+    }
+  },
+  "original_result_sha256": "e3f3076831ff2ba5901ee6cb1856f5d757db4703703fc257063f3e898a04d271"
+}

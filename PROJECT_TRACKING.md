@@ -139,6 +139,19 @@ cavity boundaries, rather than another sizing-law choice.
 Evidence is recorded in
 `handoff/macbook/lattice-quality-closure-assessment-20261026.json`.
 
+### Curved edge-removal feasibility
+
+Read-only probe 575 mirrors existing native valence-3/4 edge-removal patterns
+on the mandatory-longest-edge prototype. Curved bipyramid controls pass.
+It finds 10,876 locally feasible variants on 9,306 edges after checking
+corner-quality improvement, exact cavity Tri6 boundary traces, volume and
+positive Jacobians at the admission points plus a positive 125-point rule.
+These variants overlap. No global mesh is changed or admitted by this probe.
+The next check is one disjoint pass, with no node/tet increase and full global
+admission. This changes the approximation space and requires fresh solves;
+it is not a nested-field correction or a timing result. Evidence is in
+`handoff/macbook/lattice-quadratic-edge-removal-feasibility-20261026.json`.
+
 ### Longest-edge closure and memory handoff
 
 The experimental refinement now propagates short-edge requests to longer
