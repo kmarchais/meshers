@@ -16,6 +16,7 @@ def main():
     parser.add_argument('--source',type=Path,required=True)
     parser.add_argument('--stage',choices=('resource','solve','assess'),required=True)
     parser.add_argument('--resource',type=Path);parser.add_argument('--field-audit',type=Path)
+    parser.add_argument('--baseline-assessment',type=Path)
     args=parser.parse_args();assert args.run.is_dir() and not (args.run/'result.json').exists()
     w.imports();shutil.copyfile(__file__,args.run/'evaluation-driver.py')
     row=json.loads((args.source/'result.json').read_text())
@@ -62,7 +63,7 @@ def main():
         np.savez_compressed(args.run/'fields.npz',displacement=fields)
         result.pop('partial_stiffness_columns',None)
         result.update(status='solved-needs-reference',stiffness=tensor.tolist(),solver_records=records,
-            saved_mesh_solve_s=time.monotonic()-started,completed_loads=6,new_equilibrium_fields=True,equilibrium_solve_performed=True)
+            saved_mesh_solve_s=time.monotonic()-started,completed_loads=6,new_equilibrium_fields=True,new_fields=True,equilibrium_solve_performed=True)
         paths.extend((args.resource/'operator.json',args.resource/'result.json'))
     else:
         assert args.field_audit is not None and row['case']=='smooth-lattice'
@@ -90,7 +91,7 @@ def main():
                 hashes.append(hashlib.sha256(matrix.tobytes()).hexdigest())
                 models.append(dict(source=str(path),index=index,difference=tensor_difference(np.asarray(row['stiffness']),matrix)))
             paths.append(path)
-        previous_path=w.HERE/'runs/macbook-lattice-quadratic-quality-assessment-v1/result.json'
+        previous_path=args.baseline_assessment or w.HERE/'runs/macbook-lattice-quadratic-quality-assessment-v1/result.json'
         previous=json.loads(previous_path.read_text())
         assert len(models)==len(set(hashes))==24 and hashes==previous['retained_model_tensor_hashes']
         worst=max(m['difference']['worst_relative_strain_energy_difference'] for m in models)

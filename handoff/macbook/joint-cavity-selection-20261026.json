@@ -1,0 +1,35 @@
+{
+  "scope": "One bounded joint-cavity search after complete curved controls. No global mesh or FE solve preselected.",
+  "maximum_examined_orbits": 256,
+  "valences": [
+    3,
+    4,
+    5,
+    6,
+    7
+  ],
+  "source": "experiments/adaptive/runs/macbook-lattice-relocation-solve-v1",
+  "metric_source": "experiments/adaptive/runs/macbook-lattice-quadratic-quality-amg-v1",
+  "policy": {
+    "quality_distribution_non_decreasing": true,
+    "minimum_quality": 0.1,
+    "minimum_quality_gain": 1e-06,
+    "complete_cavity_metric_excess_strictly_decreasing": true,
+    "maximum_metric_length_non_increasing": true,
+    "new_overlong_edges_allowed": false,
+    "exact_cavity_Tri6_boundary": true,
+    "positive125": true,
+    "relative_volume_guard": 1e-10,
+    "node_cap": 250000,
+    "tet_cap": 250000
+  },
+  "limitations": "Interior cavities only; periodic boundary traces are fixed. This does not implement cap-crossing cavity surgery or prove all cavities are remeshable.",
+  "fields_used_for_selection": false,
+  "reference_promoted": false,
+  "inputs": {
+    "experiments/adaptive/joint_cavity_remesh.py": "d0b61f0973a4a92f2fb4d188b3cae9bc7d71506f08ad0b87613f828e30467bdc",
+    "experiments/adaptive/runs/macbook-joint-cavity-controls-v2/result.json": "4e6e49cf4e8e3c91fe4c716c684cf28f278f73b79e16c7c89085be1644504fa1",
+    "experiments/adaptive/runs/macbook-lattice-relocation-solve-v1/mesh.npz": "6f3dada530e858da70f3e1ac7d0ee9682b7d2377a71d6fc6bac3f5f6ed01bc81",
+    "experiments/adaptive/runs/macbook-lattice-relocation-solve-v1/result.json": "faf5c7e4ee76205598846b84dc4f73ca1c1335d89ba60b9f6e8da99b1ffd396b"
+  }
+}

@@ -1,0 +1,116 @@
+{
+  "scope": "Complete joint-cavity geometry, resource and fresh FE experiment; no native default, reference, live timing or full-objective promotion.",
+  "jobs": [
+    606,
+    607,
+    608,
+    609,
+    610,
+    611,
+    612,
+    613,
+    614,
+    615
+  ],
+  "source": "experiments/adaptive/runs/macbook-lattice-relocation-solve-v1",
+  "canonical_prepared": "experiments/adaptive/runs/macbook-lattice-joint-cavity-pass-v2",
+  "nodes": 249833,
+  "tets": 162198,
+  "complete_cavities": 61,
+  "accepted_valences": {
+    "4": 54,
+    "5": 5,
+    "6": 2
+  },
+  "metric_before": {
+    "violating_edges": 9845,
+    "excess": 54335.80707346282,
+    "maximum_ratio": 8.666196503199483
+  },
+  "metric_after": {
+    "violating_edges": 9784,
+    "excess": 53814.941766060845,
+    "maximum_ratio": 8.666196503199483
+  },
+  "quality_before": {
+    "min": 0.23422543549914124,
+    "p01": 0.42597751249594745,
+    "p10": 0.5337198396453935,
+    "median": 0.6901395764021249,
+    "p90": 0.8639885952197451,
+    "p99": 0.9501023843492695,
+    "max": 0.9963252481878516
+  },
+  "quality_after": {
+    "min": 0.23422543549914124,
+    "p01": 0.4263209187238697,
+    "p10": 0.533959803430215,
+    "median": 0.6904034513553434,
+    "p90": 0.8641334389891934,
+    "p99": 0.9502156284487527,
+    "max": 0.9963252481878516
+  },
+  "all_seven_reported_quality_quantiles_non_decreasing": true,
+  "full_empirical_quality_cdf_non_decreasing": false,
+  "physical_curved_boundary_identical": true,
+  "original_fine_space_preserved": false,
+  "metadata_repeat_arrays_identical": true,
+  "retained_models": 24,
+  "retained_model_hashes_unchanged": true,
+  "worst_model_disagreement": 0.01213444590564789,
+  "baseline_disagreement": 0.012132469822236085,
+  "passes_one_percent_all_models": false,
+  "positive125_vs64_energy_sensitivity": 7.646690520528465e-09,
+  "complete_six_fresh_fields": true,
+  "first_operator_matches_resource_check": true,
+  "saved_mesh_solve_s": 210.48777166700165,
+  "solve_peak_gib": 7.248504638671875,
+  "declared_memory_gib": 10,
+  "limitations": [
+    "Complete interior edge-star family only, valences3through7. No paired cap-crossing cavity surgery.",
+    "Worst metric ratio8.66620 remains unchanged; most severe size constraints remain.",
+    "All seven reported global quality quantiles are non-decreasing, but full empirical-CDF dominance is false with changed counts.",
+    "No stiffness benefit:1.213444591percent is slightly worse than1.213246982percent. A better metric/quality proxy is not an FE accuracy guarantee."
+  ],
+  "failures_preserved": {
+    "606": "Unequal-count CDF tolerance bug caught by control; corrected before data search.",
+    "608": "NumPy integer JSON output error; calculation repeated without algorithm change.",
+    "610": "Stale global_mesh_changed flag despite valid global mesh. Corrected611 repeats all arrays exactly;610 left unchanged."
+  },
+  "decision": "Retain cavity validity and joint guards as reusable controls, but do not promote this pass or blindly repeat this fixed-vertex family as an accuracy fix. A broader change needs independently justified FE accuracy evidence, not just a lower metric objective.",
+  "all_four_cases_remain_in_scope": true,
+  "reference_promoted": false,
+  "comparative_timing_claim": false,
+  "objective_complete": false,
+  "inputs": {
+    "experiments/adaptive/joint_cavity_remesh.py": "f03b24481c44e86e59b30bcc5498099fb0c6e230dafaa266a4fa359b8ab30f93",
+    "experiments/adaptive/saved_mesh_evaluation.py": "17569e0bf33a92dec2a6e60c1f2ad8348cd2597908b9981bd71af7b3a51a85f3",
+    "handoff/macbook/joint-cavity-selection-20261026.json": "8e19929ab624a777827d50687a57eee556b88add17bd318cc114b72ff1440b32",
+    "handoff/macbook/joint-cavity-solve-selection-20261026.json": "0293e2646fd36f4c3e8fa0ec72764a8468013f00b6d19dde3d113262e70176db",
+    "experiments/adaptive/runs/macbook-lattice-joint-cavity-pass-v2/result.json": "4d589c216548f4b132f719a6f345ce9507bec181859eba73fa841f79a1de55c3",
+    "experiments/adaptive/runs/macbook-lattice-joint-cavity-pass-v2/mesh.npz": "525c305493a64d3626f707ec5eb0a8f2fbfd5df3861f8dd74a07ee703df21cf6",
+    "experiments/adaptive/runs/macbook-lattice-joint-cavity-solve-v1/result.json": "6244d43c33cbbc4e2f6f541f28d3ef102b3f57908df34572b57a5b36a3b2f128",
+    "experiments/adaptive/runs/macbook-lattice-joint-cavity-solve-v1/mesh.npz": "525c305493a64d3626f707ec5eb0a8f2fbfd5df3861f8dd74a07ee703df21cf6",
+    "experiments/adaptive/runs/macbook-lattice-joint-cavity-solve-v1/fields.npz": "15f1640ef800e9dcc3f643c7a8af25001105e34a20794217b502de8466d94dcd",
+    "experiments/adaptive/runs/macbook-lattice-joint-cavity-solve-v1/worker.json": "36e3c09e18a59a435835ef19c9e4504cf3f367a35c39cdf719807874c5b30044",
+    "experiments/adaptive/runs/macbook-lattice-joint-cavity-assessment-v1/result.json": "20b5fd2280df11b3543a169ee143ddb7f0d1a8c525aa5b15dc31247e490d41e5",
+    "experiments/adaptive/runs/macbook-lattice-joint-cavity-field-audit-v1/macbook-lattice-joint-cavity-solve-v1.json": "dfe6f14d4707c0f2264955b13a6c8638800f0f44fe8eeb03d8c04731f5171cb4",
+    "experiments/adaptive/runs/macbook-lattice-joint-cavity-field-audit-v1/macbook-lattice-joint-cavity-solve-v1-consistency.json": "13b9551afda2e3daf0f563a06c270916b75b265ceecbdce57b6ec1ac9df12a58",
+    "experiments/adaptive/runs/macbook-joint-cavity-controls-v1/worker.log": "3ed0adef40a7d1405c621ab03295f34206a308e3cf73a3fed01572e3e8fd85cb",
+    "experiments/adaptive/runs/macbook-lattice-joint-cavity-search-v1/worker.log": "2223e4973c140c7931d433c55dcb8776e2268b061d04cdb39decd42d89d6817f",
+    "experiments/adaptive/runs/macbook-joint-cavity-controls-v2/result.json": "4e6e49cf4e8e3c91fe4c716c684cf28f278f73b79e16c7c89085be1644504fa1",
+    "experiments/adaptive/runs/macbook-lattice-joint-cavity-search-v2/result.json": "5095cac16866f4910e6deb54255d90590343c32391d5be9ba83ee4a417c14dc1",
+    "experiments/adaptive/runs/macbook-lattice-joint-cavity-pass-v1/result.json": "72aa5b6c77a2b22010efe8ac91bd64919d78b063a7a20c74d7ba446fa66a7485",
+    "experiments/adaptive/runs/macbook-lattice-joint-cavity-resource-v1/result.json": "a163576c7cb2bb8f6fc0b2d6476453b4e040bbb96cc41e02fa78c2a3e18546f3"
+  },
+  "historical_code_resolutions": {
+    "experiments/adaptive/runs/macbook-lattice-joint-cavity-search-v2/joint-driver.py": {
+      "original": "/Users/kmarchais/dev/meshers/experiments/adaptive/joint_cavity_remesh.py",
+      "sha256": "25aeb4c60dbbb65c4ba2e2aa1295ce4a7a608f9838a96d0603e718432b29830a"
+    },
+    "experiments/adaptive/runs/macbook-lattice-joint-cavity-pass-v1/joint-driver.py": {
+      "original": "/Users/kmarchais/dev/meshers/experiments/adaptive/joint_cavity_remesh.py",
+      "sha256": "8626746267622a09c018ba20006b3528ef14f5dcbe989d2ca8f69215b6b525a7"
+    }
+  }
+}

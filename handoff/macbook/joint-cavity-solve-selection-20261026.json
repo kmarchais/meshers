@@ -1,0 +1,43 @@
+{
+  "scope": "Frozen saved-mesh cavity accuracy experiment; not a fresh generation timing or reference promotion.",
+  "source": "experiments/adaptive/runs/macbook-lattice-joint-cavity-pass-v2",
+  "accepted_operations": 61,
+  "nodes": 249833,
+  "tets": 162198,
+  "metrics": [
+    {
+      "violating_edges": 9845,
+      "excess": 54335.80707346282,
+      "maximum_ratio": 8.666196503199483
+    },
+    {
+      "violating_edges": 9784,
+      "excess": 53814.941766060845,
+      "maximum_ratio": 8.666196503199483
+    }
+  ],
+  "all_seven_reported_quality_quantiles_non_decreasing": true,
+  "full_quality_cdf_non_decreasing": false,
+  "physical_boundary_fixed": true,
+  "old_approximation_space_preserved": false,
+  "six_fresh_loads": true,
+  "solution_fields_replayed": false,
+  "resource_peak_gib": 6.4054107666015625,
+  "memory_limit_gib": 10,
+  "timeout_s": 900,
+  "expected_operator_sha256": "fe469f23532c965a56d19354e221f2deb3ef446c0fd466e4d5dd5f5ede9096f2",
+  "baseline_assessment": "experiments/adaptive/runs/macbook-lattice-relocation-assessment-v1/result.json",
+  "baseline_worst_disagreement": 0.012132469822236085,
+  "stiffness_target": 0.01,
+  "retained_models": 24,
+  "reference_promoted": false,
+  "inputs": {
+    "experiments/adaptive/runs/macbook-lattice-joint-cavity-pass-v2/result.json": "4d589c216548f4b132f719a6f345ce9507bec181859eba73fa841f79a1de55c3",
+    "experiments/adaptive/runs/macbook-lattice-joint-cavity-pass-v2/mesh.npz": "525c305493a64d3626f707ec5eb0a8f2fbfd5df3861f8dd74a07ee703df21cf6",
+    "experiments/adaptive/runs/macbook-lattice-joint-cavity-resource-v1/result.json": "a163576c7cb2bb8f6fc0b2d6476453b4e040bbb96cc41e02fa78c2a3e18546f3",
+    "experiments/adaptive/runs/macbook-lattice-joint-cavity-resource-v1/operator.json": "4d34adead378ebe7cf9a1e05a5a729c32bbf16a9dbd9e9ff0836ef5473eaa3f3",
+    "experiments/adaptive/runs/macbook-lattice-relocation-assessment-v1/result.json": "bcf774a816cd09ef28a140413700b18ec2c46cd629e70309959a5981773beccb",
+    "experiments/adaptive/joint_cavity_remesh.py": "f03b24481c44e86e59b30bcc5498099fb0c6e230dafaa266a4fa359b8ab30f93",
+    "experiments/adaptive/saved_mesh_evaluation.py": "17569e0bf33a92dec2a6e60c1f2ad8348cd2597908b9981bd71af7b3a51a85f3"
+  }
+}

@@ -1,5 +1,31 @@
 # Adaptive implicit meshing: plan and status
 
+## Joint cavity test completes without an accuracy win, 26 October 2026
+
+The complete-cavity experiment admits 61 disjoint interior replacements,
+including four-to-four, five-to-six and six-to-eight patterns. Fixed curved
+boundary, volume, positive125 Jacobians, coherent facets and periodic gates
+pass at 249,833 nodes and 162,198 tets. Metric-violating edges fall from 9,845
+to 9,784 and metric excess falls 0.9586%. All seven reported global quality
+quantiles improve or remain equal. Full empirical-CDF dominance is false
+and the worst metric length remains 8.66620.
+
+Six fresh loads, exact operator verification and independent field/positive
+quadrature audits pass. All 24 retained tensor hashes are unchanged. Worst
+model disagreement is **1.213444591%**, slightly worse than the previous
+1.213246982%, and still failing 1%. No accuracy benefit or native default is
+promoted. Do not repeat the same fixed-vertex edge-star family simply because
+its metric objective improved. This result separates admissible local
+remeshing from demonstrably better FE accuracy. A broader allocation/point
+placement change needs independently justified accuracy evidence; the
+interior-only experiment does not implement paired cap-crossing cavities.
+
+See `PROJECT_TRACKING.md` and `handoff/macbook/joint-cavity-findings-20261026.json`
+for failures, source snapshots, metadata correction and full results. All
+four cases and the original gates remain in scope; earlier proposals below
+are historical rather than queued work.
+
+
 ## Budget and shape experiment results, 26 October 2026
 
 Experiments 598 through 605 complete the first tests of the directions below.

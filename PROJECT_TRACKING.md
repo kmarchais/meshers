@@ -227,6 +227,100 @@ fix does not repair lattice grading. Replay evidence is in
 Evidence is in
 `handoff/macbook/adaptation-budget-recovery-validation-20261026.json`.
 
+### Joint complete-cavity replacement experiment
+
+The next test replaces a complete interior edge-star cavity and evaluates
+its metric and quality together. It reuses the native-style polygon-ring
+retriangulations for valences 3 through 7. All cavity boundary Tri6 nodes and
+associations stay fixed. These are interior periodic orbits only; paired
+cap-crossing cavity surgery is not implemented or claimed.
+
+Control **606** catches a quality-CDF tolerance bug for unequal old/new tet
+counts. Corrected **607** passes joint metric/quality controls, rejects a new
+overlong diagonal, and checks curved positive-Jacobian/volume partitions for
+all 5, 14 and 42 triangulations of the five-, six- and seven-tet fixtures.
+The first search **608** completes its calculation but fails JSON output on
+a NumPy integer. That output type is corrected without changing selection.
+Both failures and their original script snapshots remain preserved.
+
+Bounded search **609** examines 256 of 4,331 eligible interior orbits. Of
+1,526 geometrically consistent local variants, 1,511 fail the quality guard
+and 15 pass all joint checks. Each accepted variant improves the complete
+cavity metric excess and local empirical quality CDF, creates no new overlong
+edge, and passes fixed curved boundary, positive125 and volume checks. No FE
+solution enters ranking or acceptance.
+
+A whole saved-mesh pass examines all 4,331 eligible orbits under a fixed
+10,000-orbit resource guard. It finds 164 locally admissible variants from
+17,104 geometric candidates. Global selection rejects overlaps and any
+operation that would lower one of the seven reported quality quantiles or
+exceed either 250,000 cap. **61 operations** survive: 54 four-to-four,
+five five-to-six, and two six-to-eight replacements. The last two families
+add nine nodes and nine tets in total.
+
+Global admission **610** passes, but an inherited flag incorrectly says that
+no global mesh changed. The flag is corrected and the identical experiment
+is rerun as **611**. Point, Tet10 and Tri6 arrays reproduce exactly. The old
+result and incorrect flag remain preserved; 611 is the canonical prepared
+candidate for subsequent evaluation.
+
+| Quantity | Before | After |
+|---|---:|---:|
+| Nodes | 249,824 | 249,833 |
+| Tets | 162,189 | 162,198 |
+| Metric-violating edges | 9,845 | 9,784 |
+| Sum of squared metric-length excess | 54,335.8071 | 53,814.9418 |
+| Worst metric length ratio | 8.66620 | 8.66620 |
+| Minimum corner quality | 0.234225 | 0.234225 |
+| Median corner quality | 0.690140 | 0.690403 |
+
+The metric excess drops **0.9586%**, with no new overlong edge. Every reported
+quality quantile is non-decreasing. Full empirical-CDF dominance of the
+entire changed-count mesh is false and is explicitly reported. It must not
+be confused with the seven-quantile result or the fixed-count dominance
+experiment. Ninety-five otherwise locally valid variants are rejected by
+the global upper-quality quantile checks, including p99. The worst metric
+length is unchanged, so the most severe unresolved size constraint remains.
+
+Full geometry, volume, coherent facets, point uniqueness, positive125 curved
+Jacobians and periodic pairing pass. The complete physical Tri6 boundary
+coordinates and all periodic pair counts are identical. The original fine
+FE approximation space is not preserved. Source geometry, union order,
+fixtures, admission gates and caps are unchanged.
+
+Exact operator check **612** passes at **6.4054 GiB**, without CG. Its matrix
+SHA is `fe469f23532c965a56d19354e221f2deb3ef446c0fd466e4d5dd5f5ede9096f2`.
+Six fresh loads in **613** are selected before stiffness evaluation, under
+10 GiB and a 900-second deadline. They must match the operator hash, pass
+independent complete-field and positive-quadrature audits, and retain all
+24 model tensors. Job 613 completes six finite fields at the exact expected
+operator, with a newly built first hierarchy and no solution replay. The
+saved-mesh solve takes 210.488 seconds and peaks at **7.2485 GiB** under the
+declared 10 GiB ceiling. These are diagnostic saved-mesh times, not live
+workflow comparisons.
+
+Independent complete-field and positive-quadrature audit **614** passes
+reactions, energy and periodicity. Positive125 versus positive64 energy
+sensitivity is **7.6467e-9**. Assessment **615** retains all 24 model hashes
+unchanged and gives **1.213444591%** worst disagreement, slightly worse than
+the current saved-mesh baseline **1.213246982%**. The increase is
+0.000197608 percentage points. Both still fail the unchanged 1% target.
+
+The joint-cavity operation therefore works as a geometry/metric/quality
+operation but **does not improve the decisive stiffness-agreement metric in
+this test**. Lower metric excess must not be treated as an FE error estimate.
+Do not promote the candidate, redefine success around its improved proxies,
+or blindly repeat this fixed-vertex cavity family as an accuracy fix. The
+worst unresolved metric length is unchanged, and the interior-only family
+also leaves paired cap-crossing operations outside its scope. The next
+broader change needs independently justified accuracy evidence. All four
+specimens and all original admission gates remain in scope.
+Evidence is recorded in `handoff/macbook/joint-cavity-findings-20261026.json`.
+The baseline is the current saved-mesh result of 1.213246982%, not the older
+1.215175763% result.
+No new native default, reference or timing comparison is promoted.
+See `handoff/macbook/joint-cavity-solve-selection-20261026.json`.
+
 ### Budget-exchange and global curved-quality experiments
 
 The user requested experiments, including negative results. Production code
