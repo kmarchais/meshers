@@ -216,8 +216,13 @@ skipped, and both feature Clippy checks. All four fixed study defaults are
 admitted and reproduce point, tetrahedron and surface arrays exactly. Native
 arm64 SHA is `2005c3e01892098a9d734567220a56ed3ea5d748b20a4f96754fbb55168060b1`.
 No new FE solve or comparative timing follows from identical default arrays.
-The previously failed lattice scalar-grading route still requires a direct
-unchanged-recipe replay before claiming this fix helps that specimen.
+Unchanged-recipe lattice replay **593** still fails the cap, at 250,003
+versus 250,000 tets. Seed arrays and curve-cloud arrays are exactly identical
+to failed job 531, the size law is unchanged, and fixed sample/specimen files
+are hash-identical. No fields are solved. The original failure remains a
+failure; this replay closes without a nearby sizing retry. The generic box
+fix does not repair lattice grading. Replay evidence is in
+`handoff/macbook/lattice-budget-recovery-replay-result-20261026.json`.
 Evidence is in
 `handoff/macbook/adaptation-budget-recovery-validation-20261026.json`.
 

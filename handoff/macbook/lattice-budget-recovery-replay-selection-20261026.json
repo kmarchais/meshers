@@ -1,0 +1,40 @@
+{
+  "scope": "Replay the failed native scalar curve-grading recipe after cap recovery. Geometry only, no FE solve or sizing change. Preserve prior failure.",
+  "previous_job": 531,
+  "previous_error": "adaptation exceeded max_tetrahedra: 250002 > 250000",
+  "new_run": "experiments/adaptive/runs/macbook-lattice-crease-distance-budget-recovery-v1",
+  "native_commit": "d9cab3a",
+  "native_sha256": "2005c3e01892098a9d734567220a56ed3ea5d748b20a4f96754fbb55168060b1",
+  "unchanged_options": {
+    "case": "smooth-lattice",
+    "cells": 26,
+    "min_length": 0.002,
+    "max_length": 0.1,
+    "order": 2,
+    "native_tolerance": 1,
+    "optimization_passes": 1,
+    "adapt_tolerance": 0.0028,
+    "solve_node_cap": 250000,
+    "clip_void": 0.02,
+    "symmetric_union": true,
+    "amg": true,
+    "crease_grading": true
+  },
+  "gates": {
+    "distance": 0.002,
+    "absolute_volume_error": 0.01,
+    "quality": 0.1,
+    "nodes": 250000,
+    "tets": 250000,
+    "positive_sampled_curved_jacobians": true,
+    "coherent_facets": true,
+    "periodic_caps_and_nodes": true
+  },
+  "decision": "Read actual counts, same seed and curve cloud, admission and resource outcome before considering a solve. A recovered cap alone does not establish all-metric superiority.",
+  "inputs": {
+    "experiments/adaptive/runs/macbook-lattice-crease-distance-preflight-v1/result.json": "c27c87d1ba044e3688b8030428177361f626bbe3ec63f8174ff9b3a523660d2f",
+    "handoff/macbook/adaptation-budget-recovery-validation-20261026.json": "a6649430286d27e1ab5ed5b3d61b5f22fc61478f42e86c84cb9b82aa01dc9c69",
+    "experiments/adaptive/periodic_crease_grading.py": "adecc9004529aadb92822608270a75c19ef0bdce85e0192eaee507af142be6e8",
+    "experiments/adaptive/admission_pilot.py": "362daa271c5fa560ecf746a87ba35d757ec404954b03cf6cbd3a394c734d2f26"
+  }
+}

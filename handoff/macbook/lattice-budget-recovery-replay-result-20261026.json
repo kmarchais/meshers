@@ -1,0 +1,54 @@
+{
+  "scope": "Unchanged native scalar grading replay after cap-recovery fix. Not admitted; no FE solve or comparative timing claim.",
+  "job": 593,
+  "old_job": 531,
+  "previous_error": "adaptation exceeded max_tetrahedra: 250002 > 250000",
+  "current_error": "adaptation exceeded max_tetrahedra: 250003 > 250000",
+  "qualified": false,
+  "same_seed_arrays": true,
+  "same_curve_cloud_arrays": true,
+  "same_size_law": true,
+  "hash_identical_fixed_samples_and_specimen": true,
+  "mesh_tet_cap": 250000,
+  "mesh_node_cap": 250000,
+  "completed_loads": 0,
+  "decision": "Close this scalar-grading replay without a solve or nearby sizing retry. Generic small-box cap recovery is validated but does not repair this lattice route. No change to retained references or competitor status.",
+  "worker": {
+    "returncode": 0,
+    "limit_failure": null,
+    "peak_rss_bytes": 585826304,
+    "wall_s": 10.172564082999088,
+    "wall_s_clock": "monotonic",
+    "elapsed_realtime_s": 10.17252779006958,
+    "suspension_or_clock_adjustment_s": -3.629292950790841e-05,
+    "idle_sleep_prevention": [
+      "/usr/bin/caffeinate",
+      "-i"
+    ],
+    "memory_bytes": 8589934592,
+    "memory_enforcement": "process-tree-rss-watchdog",
+    "rss_poll_interval_s": 0.25,
+    "platform": "darwin",
+    "numerical_thread_policy": {
+      "environment": {
+        "OPENBLAS_NUM_THREADS": "1",
+        "OMP_NUM_THREADS": "1",
+        "MKL_NUM_THREADS": "1",
+        "VECLIB_MAXIMUM_THREADS": "1",
+        "RAYON_NUM_THREADS": "1"
+      },
+      "accelerate_blas_threading": 1,
+      "accelerate_scope": "calling thread"
+    }
+  },
+  "inputs": {
+    "experiments/adaptive/runs/macbook-lattice-crease-distance-budget-recovery-v1/result.json": "6738b2ba8c023d7bf3f31622824e91f606ba7d6ca95a4d15b717b326da5c0238",
+    "experiments/adaptive/runs/macbook-lattice-crease-distance-budget-recovery-v1/worker.json": "293e9f1ce9c151de1557fb668d57fab66f3c5fafeeccd33b944eb23a2536a471",
+    "experiments/adaptive/runs/macbook-lattice-crease-distance-preflight-v1/result.json": "c27c87d1ba044e3688b8030428177361f626bbe3ec63f8174ff9b3a523660d2f",
+    "experiments/adaptive/runs/macbook-lattice-crease-distance-preflight-v1/feature-seed/mesh.npz": "de8b38a4c87fb092248230cc2ddc52626b3d6e75186dc494fd2ee6f148237755",
+    "experiments/adaptive/runs/macbook-lattice-crease-distance-budget-recovery-v1/feature-seed/mesh.npz": "de8b38a4c87fb092248230cc2ddc52626b3d6e75186dc494fd2ee6f148237755",
+    "experiments/adaptive/runs/macbook-lattice-crease-distance-preflight-v1/crease-cloud.npz": "3018b914cd0cb8be1f59d79ed9535123a1176eafb623b0292000e525ae44c15b",
+    "experiments/adaptive/runs/macbook-lattice-crease-distance-budget-recovery-v1/crease-cloud.npz": "3018b914cd0cb8be1f59d79ed9535123a1176eafb623b0292000e525ae44c15b",
+    "handoff/macbook/lattice-budget-recovery-replay-selection-20261026.json": "61a2c7a23f4eabfb3eaf003e231f23f7831f954f512f4c3a9d3ca9d7aec9f7fe"
+  }
+}
