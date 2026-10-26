@@ -193,6 +193,34 @@ comparative timing victory follows. Evidence is in
 The recipe and unchanged admission gates are frozen
 in `handoff/macbook/lattice-quadratic-quality-solve-selection-20261026.json`.
 
+### Native adaptation budget recovery
+
+Native adaptation previously split long edges before its guarded short-edge
+collapse pass. On the smallest supported graded box, the old binary fails at
+770 tets against a 768-tet cap. Existing guarded coarsening first permits
+refinement to finish at 427 tets. The native loop now tries the same collapse
+logic once per pass when a pending split would exceed the cap. It retains the
+original link, feature, size, geometry and quality guards and the hard error
+if the budget remains insufficient.
+
+Public Python verification reproduces the old failure and admits the same
+box under the new binary at 133 nodes and 427 tets, minimum quality 0.276016
+and volume exactly 1. A finer sizing field still fails the unchanged cap.
+This is a demonstrated robustness fix, not permission to accept partial
+refinement. The first diagnostic used a missing clone method; a later helper
+extraction had a typo. Both compile failures and the finer-field failure
+remain recorded.
+
+Validation passes 106 core tests with one ignored, 183 Python tests with one
+skipped, and both feature Clippy checks. All four fixed study defaults are
+admitted and reproduce point, tetrahedron and surface arrays exactly. Native
+arm64 SHA is `2005c3e01892098a9d734567220a56ed3ea5d748b20a4f96754fbb55168060b1`.
+No new FE solve or comparative timing follows from identical default arrays.
+The previously failed lattice scalar-grading route still requires a direct
+unchanged-recipe replay before claiming this fix helps that specimen.
+Evidence is in
+`handoff/macbook/adaptation-budget-recovery-validation-20261026.json`.
+
 ### Longest-edge closure and memory handoff
 
 The experimental refinement now propagates short-edge requests to longer

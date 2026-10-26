@@ -1,0 +1,94 @@
+{
+  "scope": "Native adaptation budget-recovery correctness. No lattice admission, new stiffness, reference promotion or performance win inferred.",
+  "native_sha256": "2005c3e01892098a9d734567220a56ed3ea5d748b20a4f96754fbb55168060b1",
+  "baseline_sha256": "19f1536993017f6f610e7b199a3cd271b9e322fb60094fa4cb7984df59f567e8",
+  "core_passed": 106,
+  "core_ignored": 1,
+  "python_passed": 183,
+  "python_skipped": 1,
+  "both_clippy_passed": true,
+  "public_box": {
+    "baseline": {
+      "binary_sha256": "19f1536993017f6f610e7b199a3cd271b9e322fb60094fa4cb7984df59f567e8",
+      "rows": [
+        {
+          "fine": 0.2,
+          "status": "budget-rejected",
+          "error": "adaptation exceeded max_tetrahedra: 770 > 768"
+        },
+        {
+          "fine": 0.1,
+          "status": "budget-rejected",
+          "error": "adaptation exceeded max_tetrahedra: 770 > 768"
+        }
+      ]
+    },
+    "candidate": {
+      "binary_sha256": "2005c3e01892098a9d734567220a56ed3ea5d748b20a4f96754fbb55168060b1",
+      "rows": [
+        {
+          "fine": 0.2,
+          "status": "admitted",
+          "nodes": 133,
+          "tets": 427,
+          "minimum_quality": 0.27601597315955967,
+          "volume": 1.0
+        },
+        {
+          "fine": 0.1,
+          "status": "budget-rejected",
+          "error": "adaptation exceeded max_tetrahedra: 771 > 768"
+        }
+      ]
+    }
+  },
+  "default_cases": {
+    "gyroid": {
+      "admitted": true,
+      "arrays_exactly_unchanged": true,
+      "nodes": 11857,
+      "tets": 6008,
+      "source": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-interior-default-gyroid-v1/repeat-0-meshers-curved-known"
+    },
+    "schwarz-solid": {
+      "admitted": true,
+      "arrays_exactly_unchanged": true,
+      "nodes": 42928,
+      "tets": 27492,
+      "source": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-interior-default-schwarz-v1/repeat-0-meshers-curved-known"
+    },
+    "spinodoid": {
+      "admitted": true,
+      "arrays_exactly_unchanged": true,
+      "nodes": 73811,
+      "tets": 45923,
+      "source": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-interior-default-spinodoid-v1/repeat-0-meshers-curved-known"
+    },
+    "smooth-lattice": {
+      "admitted": true,
+      "arrays_exactly_unchanged": true,
+      "nodes": 65721,
+      "tets": 41340,
+      "source": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-interior-default-lattice-v1/repeat-0-meshers-curved-known"
+    }
+  },
+  "failures_preserved": {
+    "583": "Diagnostic clone compile error",
+    "584": "Finer field still exceeds768 after existing coarsening; not ordering alone",
+    "586": "Mechanical helper extraction typo; corrected before valid suite"
+  },
+  "inputs": {
+    "experiments/adaptive/runs/macbook-sizing-budget-recovery-controls-v1/result.json": "3e6f51bd45c71fb4fff54edec0f131fdd90eb6633bb576337d5a1c5c4c530dae",
+    "experiments/adaptive/runs/macbook-sizing-budget-order-probe-v2/worker.log": "f8887e37f4ff1b67647c60c4b7ab818cdd2cbd230cfe58a4a4939c2fd4bcff91",
+    "experiments/adaptive/runs/macbook-sizing-budget-order-probe-v3/worker.log": "928c486215ecd9ff067c8aadbf0408ce58236f1c2cb1c754ba752558c73b60f9",
+    "crates/meshers-core/src/tet_adapt.rs": "671e2343d3a72bdd60ddbad8911f75427556ed5cc94e89de88f9db824d29bf36",
+    "experiments/adaptive/verify_adaptation_budget.py": "266c13a83e7cd05df6497e7b29eee284751dfb0912c41eb4d4ecf64584e5336c",
+    "experiments/adaptive/runs/macbook-sizing-budget-recovery-core-v1/worker.json": "86026a5f5927b4ce19a338a9301a03cc5cfc31fc20cb686ce6c0304d23293a30",
+    "experiments/adaptive/runs/macbook-sizing-budget-recovery-core-v2/worker.json": "c5263677bd84b0e1c9d570c3ef5316556f89fb956c6ea2be9a8cbad6129fe364",
+    "experiments/adaptive/runs/macbook-sizing-budget-recovery-native-v1/worker.json": "8d6f6dc75ddfca27b7e66bdf31dbd0bb6583958bbf6ae4cf7cb995ee960a1c2c",
+    "experiments/adaptive/runs/macbook-sizing-budget-recovery-controls-stage-v1/worker.json": "fcf389c737580dc13b31fac1494e21654b76d366718aa99b6f0e21ec4dea07b5",
+    "experiments/adaptive/runs/macbook-sizing-budget-recovery-core-clippy-v1/worker.json": "84e9e734f97bc88973aaa19f7d9ca1268d13959aa1ee3edfc376aace68a667c2",
+    "experiments/adaptive/runs/macbook-sizing-budget-recovery-python-clippy-v1/worker.json": "e261335cd819301c267e166cdf85feae3ac7eaebe5156ee47c42dda5f13dcc09",
+    "experiments/adaptive/runs/macbook-sizing-budget-recovery-python-suite-v1/worker.json": "b4bbf3e0a382bccc99d6ed4f35ed4c3a9bcf06e9580dd584b4e2793155f37b6a"
+  }
+}

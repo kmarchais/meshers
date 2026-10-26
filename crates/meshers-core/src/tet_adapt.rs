@@ -721,6 +721,33 @@ impl<'g, G: Geometry> Tets<'g, G> {
         Some(m)
     }
 
+    /// Apply the existing guarded short-edge collapses, shortest first.
+    fn coarsen(&mut self, edges: &[[usize; 2]], size: &[f64], o: &Options) -> usize {
+        let mut count = 0;
+        let mut short: Vec<(f64, [usize; 2])> = edges
+            .iter()
+            .filter_map(|&[u, v]| {
+                let r = self.length(u, v) / (0.5 * (size[u] + size[v]));
+                (r < COLLAPSE).then_some((r, [u, v]))
+            })
+            .collect();
+        short.sort_by(|a, b| a.0.total_cmp(&b.0));
+        for (_, [u, v]) in short {
+            if self.vt[u].is_empty() || self.vt[v].is_empty() || self.shell(u, v).is_empty() {
+                continue;
+            }
+            let (remove, keep) = if self.masks[u].count_ones() <= self.masks[v].count_ones() {
+                (u, v)
+            } else {
+                (v, u)
+            };
+            if self.collapse(remove, keep, size, o) || self.collapse(keep, remove, size, o) {
+                count += 1;
+            }
+        }
+        count
+    }
+
     /// Merge `u` into `v`.
     fn collapse(&mut self, u: usize, v: usize, size: &[f64], o: &Options) -> bool {
         let (mu, mv) = (self.masks[u], self.masks[v]);
@@ -1480,7 +1507,21 @@ pub(crate) fn adapt_with_polish(
             })
             .collect();
         long.sort_by(|a, b| b.0.total_cmp(&a.0));
+        let mut reclaimed_budget = false;
         for (_, [u, v]) in long {
+            if !reclaimed_budget && s.live_tetrahedra.saturating_add(s.shell(u, v).len()) > maximum
+            {
+                // A split adds one cell per incident tet. Reclaim overresolved
+                // cells before failing the cap, using the normal size, link,
+                // feature, geometry and quality guards. Try once per pass.
+                lap(&mut stats, 1);
+                let edges = s.edges();
+                let size = s.sizes(o, &edges)?;
+                lap(&mut stats, 0);
+                stats.collapses += s.coarsen(&edges, &size, o);
+                lap(&mut stats, 2);
+                reclaimed_budget = true;
+            }
             if s.split(u, v, o.quality_guard, true).is_some() {
                 s.check_budget(maximum)?;
                 stats.splits += 1;
@@ -1488,30 +1529,9 @@ pub(crate) fn adapt_with_polish(
         }
         lap(&mut stats, 1);
         let edges = s.edges();
-        let mut size = s.sizes(o, &edges)?;
+        let size = s.sizes(o, &edges)?;
         lap(&mut stats, 0);
-        let mut short: Vec<(f64, [usize; 2])> = edges
-            .iter()
-            .filter_map(|&[u, v]| {
-                let r = s.length(u, v) / (0.5 * (size[u] + size[v]));
-                (r < COLLAPSE).then_some((r, [u, v]))
-            })
-            .collect();
-        short.sort_by(|a, b| a.0.total_cmp(&b.0));
-        size.resize(s.points.len(), o.max_length);
-        for (_, [u, v]) in short {
-            if s.vt[u].is_empty() || s.vt[v].is_empty() || s.shell(u, v).is_empty() {
-                continue;
-            }
-            let (remove, keep) = if s.masks[u].count_ones() <= s.masks[v].count_ones() {
-                (u, v)
-            } else {
-                (v, u)
-            };
-            if s.collapse(remove, keep, &size, o) || s.collapse(keep, remove, &size, o) {
-                stats.collapses += 1;
-            }
-        }
+        stats.collapses += s.coarsen(&edges, &size, o);
         lap(&mut stats, 2);
         // Edge removal only pays off around poor elements.
         let mut candidates = Vec::new();
@@ -2038,6 +2058,112 @@ mod tests {
                 assert!(super::mmg(state.tet_points(*tetrahedron, None)) >= 0.1);
             }
         }
+    }
+
+    #[test]
+    fn graded_sizing_reclaims_short_edges_before_exhausting_budget() {
+        use crate::geometry::Geometry;
+        struct GradedBox {
+            fine: f64,
+        }
+        impl Geometry for GradedBox {
+            fn value(&self, _: Point) -> f64 {
+                -1.
+            }
+            fn gradient(&self, _: Point) -> Point {
+                [0.; 3]
+            }
+            fn bounds(&self) -> [Point; 2] {
+                [[0.; 3], [1.; 3]]
+            }
+            fn rank(&self, p: Point) -> [i64; 3] {
+                p.map(|x| (x * 1e11).round() as i64)
+            }
+            fn band(&self) -> bool {
+                false
+            }
+            fn minimum_quality(&self) -> f64 {
+                0.1
+            }
+            fn target_lengths(&self, p: &[Point]) -> Option<Vec<f64>> {
+                Some(
+                    p.iter()
+                        .map(|p| self.fine + (0.6 - self.fine) * p[0])
+                        .collect(),
+                )
+            }
+        }
+        let mut seed = generate(
+            &|_: Point| -1.,
+            Options {
+                cells: [4; 3],
+                optimize_passes: 0,
+                minimum_quality: 0.1,
+                ..Default::default()
+            },
+        )
+        .unwrap()
+        .mesh;
+        let maximum = seed.tets.len();
+        let o = super::Options {
+            min_length: 0.1,
+            max_length: 0.6,
+            gradation: 0.5,
+            iterations: 1,
+            quality_guard: 0.1,
+            ..Default::default()
+        };
+        let stats = super::adapt(
+            &mut seed,
+            &GradedBox { fine: 0.2 },
+            0.,
+            [false; 3],
+            &o,
+            maximum,
+        )
+        .expect("coarsenable bulk must not block refinement under the same cap");
+        assert!(stats.splits > 0 && stats.collapses > 0);
+        assert!(seed.tets.len() <= maximum);
+        let mut volume = 0.;
+        for tet in &seed.tets {
+            let points = tet.map(|i| seed.points[i]);
+            assert!(super::mmg(points) >= 0.1);
+            volume += crate::determinant(points) / 6.;
+        }
+        assert!((volume - 1.).abs() < 1e-12);
+        assert!(
+            seed.points
+                .iter()
+                .flatten()
+                .all(|&x| (0.0..=1.0).contains(&x))
+        );
+        println!(
+            "cap={maximum}, admitted={}, splits={}, collapses={}",
+            seed.tets.len(),
+            stats.splits,
+            stats.collapses
+        );
+        let mut insufficient = generate(
+            &|_: Point| -1.,
+            Options {
+                cells: [4; 3],
+                optimize_passes: 0,
+                minimum_quality: 0.1,
+                ..Default::default()
+            },
+        )
+        .unwrap()
+        .mesh;
+        let error = super::adapt(
+            &mut insufficient,
+            &GradedBox { fine: 0.1 },
+            0.,
+            [false; 3],
+            &o,
+            maximum,
+        )
+        .expect_err("a genuinely insufficient cap must still fail");
+        assert!(error.contains("exceeded max_tetrahedra"), "{error}");
     }
 
     fn adapt(tolerance: f64) -> Option<super::Options> {
