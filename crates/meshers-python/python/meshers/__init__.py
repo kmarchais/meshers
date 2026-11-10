@@ -194,7 +194,7 @@ class Mesh:
 
 
 # Keep public option validation and pipeline dispatch together.
-def generate(  # ruff: ignore[complex-structure]
+def generate(  # ruff: ignore[complex-structure, too-many-branches]
     field: str | Field | CompiledField,
     *,
     gradient: Field | None = None,
@@ -222,6 +222,7 @@ def generate(  # ruff: ignore[complex-structure]
     adapt_tolerance: float | None = None,
     order: int = 1,
     size_field: Field | None = None,
+    curved_fit: bool = False,
 ) -> Mesh:
     """Generate a tetrahedral mesh directly from a bounded implicit field.
 
@@ -291,6 +292,12 @@ def generate(  # ruff: ignore[complex-structure]
             curvature sizing by taking the smaller length, then applying
             ``min_length``, ``max_length`` and gradation. Opposite periodic traces
             must match. This callback is evaluated in batches without tracing.
+        curved_fit: Experimental bounded fitting of the final quadratic wall faces.
+            Requires order=2. Corners and connectivity stay fixed; wall edge nodes
+            may move off the exact implicit surface to improve the complete patch.
+            Cap coordinates and periodic aliases stay coupled. Sampled validity
+            guards each accepted move. This changes the discrete geometry and FE
+            space; it does not transfer an old solution or certify convergence.
 
     Returns:
         Mesh: Owned arrays and diagnostics. Empty geometries return empty arrays.
@@ -309,6 +316,8 @@ def generate(  # ruff: ignore[complex-structure]
         Python fallback callbacks execute on the calling thread.
     """
     b = np.asarray(bounds, dtype=np.float64)
+    if curved_fit and order != 2:
+        raise ValueError("curved_fit requires order 2")
     if size_field is not None and not adapt:
         raise ValueError("size_field requires adapt=True")
     if b.shape != (6,):
@@ -432,6 +441,7 @@ def generate(  # ruff: ignore[complex-structure]
         else None,
         int(order),
         size_field,
+        curved_fit=curved_fit,
         **feature_options,
     )
     quadratic = result.pop("quadratic", None)

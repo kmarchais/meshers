@@ -232,6 +232,11 @@ impl ScalarField for Field {
         self.gradients(&[p])[0]
     }
     fn gradients(&self, points: &[Point]) -> Vec<Option<Point>> {
+        if self.compiled.is_some() {
+            // Compiled callbacks accept scalars, not NumPy batches. Preserve
+            // None for value-only kernels so the core uses native differences.
+            return points.iter().map(|&p| self.gradient(p)).collect();
+        }
         if let Some(name) = self.native.as_ref().filter(|_| self.derivative.is_none()) {
             return points
                 .iter()
@@ -357,7 +362,7 @@ fn make_field(
 }
 
 #[allow(clippy::too_many_arguments)]
-#[pyfunction(signature = (field, gradient, bounds, cells, periodic, band, tolerance, minimum_quality, budget, passes, interior_refine_nodes, snap, threads, batch_size, cancel, adapt=None, order=1, size_field=None, halfspaces=None, regions=None, constraints=None))]
+#[pyfunction(signature = (field, gradient, bounds, cells, periodic, band, tolerance, minimum_quality, budget, passes, interior_refine_nodes, snap, threads, batch_size, cancel, adapt=None, order=1, size_field=None, halfspaces=None, regions=None, constraints=None, curved_fit=false))]
 fn generate<'py>(
     py: Python<'py>,
     field: Py<PyAny>,
@@ -381,6 +386,7 @@ fn generate<'py>(
     halfspaces: Option<Vec<[f64; 4]>>,
     regions: Option<Vec<u64>>,
     constraints: Option<Vec<Py<PyAny>>>,
+    curved_fit: bool,
 ) -> PyResult<Bound<'py, PyDict>> {
     let regions = regions
         .map(|groups| {
@@ -450,6 +456,7 @@ fn generate<'py>(
             },
         ),
         order,
+        curved_fit,
     };
     let start = std::time::Instant::now();
     let result = py.detach(|| {
@@ -550,6 +557,16 @@ fn generate<'py>(
         quadratic.set_item("straightened_edges", q.elements.straightened_edges)?;
         quadratic.set_item("partially_curved_edges", q.elements.partially_curved_edges)?;
         quadratic.set_item("minimum_jacobian_ratio", q.elements.minimum_jacobian_ratio)?;
+        if let Some(fit) = q.elements.fit {
+            let stats = PyDict::new(py);
+            stats.set_item("selected_groups", fit.selected_groups)?;
+            stats.set_item("affected_faces", fit.affected_faces)?;
+            stats.set_item("accepted_steps", fit.accepted_steps)?;
+            stats.set_item("moved_nodes", fit.moved_nodes)?;
+            stats.set_item("initial_distance_estimate", fit.initial_distance_estimate)?;
+            stats.set_item("final_distance_estimate", fit.final_distance_estimate)?;
+            quadratic.set_item("fit", stats)?;
+        }
         output.set_item("quadratic", quadratic)?;
     }
     let points = Array2::from_shape_vec(

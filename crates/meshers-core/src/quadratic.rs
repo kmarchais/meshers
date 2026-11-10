@@ -9,6 +9,9 @@
 //! reductions. Sampling is a strong check but not a proof of positivity everywhere.
 use crate::{Mesh, Point, geometry::Geometry, norm};
 use std::collections::{HashMap, HashSet};
+mod fit;
+pub use fit::FitStats;
+pub(crate) use fit::improve;
 
 /// VTK / fedoo / Gmsh-compatible mid-edge order after the four vertices.
 pub const EDGES: [[usize; 2]; 6] = [[0, 1], [1, 2], [2, 0], [0, 3], [1, 3], [2, 3]];
@@ -24,6 +27,8 @@ pub struct Quadratic {
     pub partially_curved_edges: usize,
     /// Smallest ratio of minimum to maximum sampled Jacobian over all elements.
     pub minimum_jacobian_ratio: f64,
+    /// Optional experimental fitting, without changing corners or connectivity.
+    pub fit: Option<FitStats>,
 }
 
 fn key(a: usize, b: usize) -> [usize; 2] {
@@ -257,6 +262,7 @@ pub(crate) fn elevate(
             .filter(|&edge| curved[edge] && reductions[edge] > 0)
             .count(),
         minimum_jacobian_ratio: minimum_ratio,
+        fit: None,
     })
 }
 

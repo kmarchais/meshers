@@ -10,6 +10,86 @@ fn gyroid(p: Point) -> f64 {
 }
 
 #[test]
+fn curved_fit_preserves_corners_connectivity_and_periodic_traces() {
+    let options = Options {
+        bounds: [[-0.5; 3], [0.5; 3]],
+        cells: [9; 3],
+        region: Region::Band {
+            lower: -0.55,
+            upper: 0.55,
+        },
+        periodic: [true; 3],
+        geometry_tolerance: 1.,
+        optimize_passes: 1,
+        order: 2,
+        ..Options::default()
+    };
+    let before = generate(&gyroid, options).unwrap();
+    let after = generate(
+        &gyroid,
+        Options {
+            curved_fit: true,
+            ..options
+        },
+    )
+    .unwrap();
+    assert_eq!(before.mesh.points, after.mesh.points);
+    let a = before.quadratic.unwrap();
+    let b = after.quadratic.unwrap();
+    assert_eq!(a.elements.tets, b.elements.tets);
+    assert_eq!(a.elements.surface, b.elements.surface);
+    assert_eq!(a.elements.points.len(), b.elements.points.len());
+    assert_eq!(a.periodic_pairs, b.periodic_pairs);
+    let stats = b.elements.fit.unwrap();
+    assert!(stats.selected_groups > 0 && stats.moved_nodes > 0);
+    assert!(stats.final_distance_estimate <= stats.initial_distance_estimate);
+    assert!(b.elements.minimum_jacobian_ratio > 1e-3);
+    for (axis, pairs) in b.periodic_pairs.iter().enumerate() {
+        for &[lo, hi] in pairs {
+            for component in 0..3 {
+                let shift = if component == axis { 1. } else { 0. };
+                let before_error =
+                    (a.elements.points[hi][component] - a.elements.points[lo][component] - shift)
+                        .abs();
+                let after_error =
+                    (b.elements.points[hi][component] - b.elements.points[lo][component] - shift)
+                        .abs();
+                // Baseline projection has a 5.72e-15 residual in this FD control.
+                // The fit must not increase it; moved transverse copies agree exactly.
+                assert!(
+                    before_error < 1e-12 && after_error <= before_error + f64::EPSILON,
+                    "axis={axis} component={component} pair={lo},{hi} before={before_error:e} after={after_error:e} old={:?},{:?} new={:?},{:?}",
+                    a.elements.points[lo],
+                    a.elements.points[hi],
+                    b.elements.points[lo],
+                    b.elements.points[hi]
+                );
+                if component != axis
+                    && (b.elements.points[hi] != a.elements.points[hi]
+                        || b.elements.points[lo] != a.elements.points[lo])
+                {
+                    assert_eq!(
+                        b.elements.points[hi][component],
+                        b.elements.points[lo][component]
+                    );
+                }
+            }
+        }
+    }
+    assert!(
+        generate(
+            &gyroid,
+            Options {
+                order: 1,
+                curved_fit: true,
+                ..options
+            }
+        )
+        .is_err()
+    );
+}
+
+#[test]
 fn interior_refinement_is_nested_and_preserves_periodic_boundaries() {
     let options = Options {
         cells: [4; 3],

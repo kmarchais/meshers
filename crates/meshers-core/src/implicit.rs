@@ -67,6 +67,8 @@ pub struct Options {
     pub adapt: Option<crate::tet_adapt::Options>,
     /// Element order: 1 (linear) or 2 (10-node, wall edges curved onto the field).
     pub order: u8,
+    /// Experimental local fitting of quadratic wall faces. Requires order two.
+    pub curved_fit: bool,
 }
 impl Default for Options {
     fn default() -> Self {
@@ -84,6 +86,7 @@ impl Default for Options {
             threads: 1,
             adapt: None,
             order: 1,
+            curved_fit: false,
         }
     }
 }
@@ -390,6 +393,11 @@ fn generate_internal<F: ScalarField>(
     regions: Option<&[intersection::ConstraintMask]>,
     constraints: Option<&[&dyn ScalarField]>,
 ) -> Result<Output, MeshingError> {
+    if options.curved_fit && options.order != 2 {
+        return Err(MeshingError::InvalidOptions(
+            "curved_fit requires order 2".into(),
+        ));
+    }
     if let Some(fields) = constraints
         && (!(2..=intersection::MAX_CONSTRAINTS).contains(&fields.len())
             || options.adapt.is_none()
@@ -570,13 +578,21 @@ fn generate_internal<F: ScalarField>(
     }
     let result = build(&context).and_then(|mut output| {
         if options.order == 2 && !output.mesh.tets.is_empty() {
-            let elements = crate::quadratic::elevate(
+            let mut elements = crate::quadratic::elevate(
                 &output.mesh,
                 &output.boundary_tags,
                 &context,
                 context.threshold(),
                 options.periodic,
             )?;
+            if options.curved_fit {
+                elements.fit = Some(crate::quadratic::improve(
+                    &mut elements,
+                    &context,
+                    context.threshold(),
+                    options.periodic,
+                )?);
+            }
             let periodic_pairs = crate::quadratic::node_pairs(
                 &elements.points,
                 &elements.surface,
