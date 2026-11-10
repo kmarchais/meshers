@@ -79,6 +79,24 @@ and background volume remain fixed. Raw clipping still has 215 elements below
 q 0.1 versus 120 before refinement. The next preflight checks this rule on the
 complete periodic background before trying native clipping and quality repair.
 
+Job 742 passes that global background preflight. It selects 1,620 face centers
+and 252 tet centers, including 96 exactly paired physical-boundary face centers.
+The background changes from 9,009 nodes / 49,152 tets to 10,881 nodes / 56,292 tets.
+Minimum q is 0.122091 with no element below 0.1. All original nodes remain bitwise
+identical, every parent volume agrees within 1.78e-15 relative error, all six cap
+areas remain one, and complete periodic node/facet matching has zero coordinate
+error. The separate affine-background observer changes 68 false-material samples
+to zero; these are not the 91 clipped-occupancy samples reported by 738/740.
+No PMY material clipping, curving or FEA is performed in this preflight.
+
+The next bounded native experiment should apply this frozen field-based sampling
+rule before root clipping, retain the existing snapping and quality guards, and
+archive the returned mesh even if admission fails. Check topology, full Tet10
+counts and all unchanged gates before accepting it. Do not repeat a sizing sweep
+or promote the background result as a solved PMY case. After that, localize the
+CAD union's boundary and volume errors, including its sharp intersection ridge.
+Periodic retained nonlinear unions remain a separate implementation gap.
+
 The exact CAD preflight adds one new `CustomLattice` specimen, two intersecting
 flat-ended cylinders without joint spheres. Its implicit union is verified
 against the actual CAD solid by analytic volume and 512 memberships. The optional

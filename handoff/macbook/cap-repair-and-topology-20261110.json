@@ -8,6 +8,7 @@
     "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-pmy-failure-probe-v1/result.json": "6e892e22adf9f923827c4d59a85d72658fb6bcc4ab703f199fef3fa93151a0b4",
     "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-pmy-neck-control-v1/result.json": "89a14b1d5561d678b23011d70fd380b1b59e93e50d095e5da2ff9ad11c48de6e",
     "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-pmy-barycenter-control-v1/result.json": "04ba48a4d849095a57ad98d54a3f39ad8a2d415abc50cfc5e16cb43064f09477",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-pmy-global-preclip-preflight-v1/result.json": "19415fd568dbc83833bed0467d6bef025699bee5cf2722bc77bf482f3e8c9bc0",
     "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-cad-union-pair-v1/summary.json": "5fb18e15f6391ac9d1befa7e786fa577331e01b171a2ffdd77988b680c1df7e8",
     "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-cad-union-declared-control-v1/summary.json": "bce705e3d47e8130467abb07c624b19d341b2623f944831fc6d14a5640e0ca11",
     "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-cad-union-mmg-tolerance-v1/summary.json": "10c37046dd35d547dc0c913653626114dffe587e4f5178df89453e48beab2ca5"
@@ -5821,6 +5822,308 @@
     "input_hashes_verified": true,
     "limits": "Finite barycenter tests can miss features between samples. Subdivision does not guarantee quality after clipping. Path witnesses observe this one local control; they do not choose insertion points or establish global topology."
   },
+  "pmy_global_preflight": {
+    "inputs": {
+      "/Users/kmarchais/dev/meshers/experiments/adaptive/pmy_global_preclip_preflight.py": "d47294dd5c897e1f6cb70587bbee462e53e5de34c65fb0ce702a0741c64c82f1",
+      "/Users/kmarchais/dev/meshers/experiments/adaptive/microgen_workflow.py": "9f513dfd3e6e5a72a71a54f70c0c2cf7c7a1ebe7256886ee3feaf7d7ad7de161",
+      "/Users/kmarchais/dev/meshers/experiments/adaptive/pmy_neck_control.py": "aacab3dd12c99ad5586e8c4efb59b74556e736041fbe20653381c53d577b8668",
+      "/Users/kmarchais/dev/meshers/experiments/adaptive/pmy_barycenter_control.py": "c08a3b73ce0834ba9306794c862f528e66b473e0966a01d11288e6be3e681bf5",
+      "/Users/kmarchais/dev/meshers/experiments/adaptive/tpms_family_fixtures.py": "794418f5d2e3d2158542af51a5cf322c41befff8f8d7c98f769d379baedd3bc6",
+      "/Users/kmarchais/dev/meshers/.local-work/macbook-runtime/venv/lib/python3.12/site-packages/microgen/shape/surface_functions.py": "578c20eb2ef424b95f50618d9cfffdce3676d6b5bdcd90a3278e0ca5ef1af4b4",
+      "/Users/kmarchais/dev/meshers/crates/meshers-python/python/meshers/_meshers.abi3.so": "f8cd88ba67161ec7d2d4168be8fac1a4131863c4f3e20b6b878100599a6677b7",
+      "/Users/kmarchais/dev/meshers/crates/meshers-python/python/meshers/__init__.py": "c02de55208342f18ce7f89e2c19dfcfe18220eaf64e8c2eb9cc734632bad04fa",
+      "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-tpms-family-fixtures-v1/result.json": "1f3907ba0acf691628d0eb588b0f4325c2abdc8c24efb75a251f60ccca5681f2",
+      "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-tpms-family-fixtures-v1/protocol.json": "7a0e06b00a1d2802d39ad726181fa09450bb7d0caa6d707e402f2f1882270319",
+      "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-pmy-neck-control-v1/result.json": "89a14b1d5561d678b23011d70fd380b1b59e93e50d095e5da2ff9ad11c48de6e",
+      "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-tpms-family-fixtures-v1/tpms-pmy-sheet/tpms-pmy-sheet-specimen.json": "65f653b5b5df833c4f7b9ebeef839555c76690e1a4e95c6011719d042a77c67a",
+      "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-tpms-family-fixtures-v1/tpms-pmy-sheet/tpms-pmy-sheet-samples.npz": "66cd3e81d5bad83b63c3bbc96696d732170ed37049dd4ff1dad868b39dbaf2f1",
+      "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-tpms-family-fixtures-v1/tpms-pmy-sheet/tpms-pmy-sheet-definition.json": "a0b3623510422678fd46dbfec702d7ebfb03e14272f7016b002e5b2594a662b6",
+      "/Users/kmarchais/dev/meshers/experiments/adaptive/scorecard.py": "8f26256c7df0e84c9f35cdd71bf4f95a74e072d45469002b213c5dcd4f1bab2a",
+      "/Users/kmarchais/dev/meshers/experiments/adaptive/periodic_trace.py": "16d51906318ba9110f8979b48a540500d1cce5835685d72e780ca1893f3b8654",
+      "/Users/kmarchais/dev/meshers/experiments/adaptive/mmg_quality_localization.py": "03ef27a978fcd5101f36745ccaf67309f49ce6ece172fad28b84246d6d457ebc"
+    },
+    "cells": 16,
+    "rounds": 1,
+    "periodic": [
+      true,
+      true,
+      true
+    ],
+    "physical_specimen_unchanged": true,
+    "original_grid_and_phase_unchanged": true,
+    "admission_gates_unchanged": true,
+    "admitted": false,
+    "clipping_performed": false,
+    "solve_performed": false,
+    "controls": {
+      "asymmetric_periodic_selection_paired": true,
+      "exact_periodic_new_nodes_and_faces": true,
+      "coherent_descendant_subdivision": true,
+      "per_parent_volume_preserved": true,
+      "original_nodes_unchanged": true,
+      "cap_area_preserved": true
+    },
+    "selection": {
+      "face_samples": 99840,
+      "tet_samples": 49152,
+      "requested_faces": 1620,
+      "selected_faces": 1620,
+      "selected_internal_faces": 1524,
+      "selected_physical_boundary_faces": 96,
+      "selected_tets": 252,
+      "paired_boundary_classes": 1536,
+      "forced_pair_members": [],
+      "frozen_before_insertion": true
+    },
+    "selection_sha256": "7b2a42ce4ce13a336c0e45361372336e0adcd6f199fc1bae24eac2a526d254c3",
+    "subdivision": {
+      "original_nodes_bitwise_unchanged": true,
+      "local_descendant_visits": 4428,
+      "maximum_descendants_per_original_tet": 12,
+      "global_searches_during_insertion": 0,
+      "peak_live_nodes": 10881,
+      "peak_live_tets": 56292
+    },
+    "background": {
+      "baseline": {
+        "nodes": 9009,
+        "tets": 49152,
+        "boundary_faces": 3072,
+        "unique_faces": 99840,
+        "minimum_quality": 0.6651075101064498,
+        "below_quality_gate": 0,
+        "quality_floor_met": true,
+        "minimum_determinant": 0.00012207031250000008,
+        "volume": 1.0000000000000004,
+        "coherent_oriented_faces": true,
+        "nonmanifold_faces": 0,
+        "exact_periodic_nodes_and_facets": true,
+        "periodic": {
+          "periodic_pair_counts": [
+            289,
+            289,
+            289
+          ],
+          "periodic_coordinate_errors": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "periodic_pair_tolerance": 1e-10,
+          "periodic_equivalence_classes": 8192,
+          "periodic_triangles_match": true,
+          "full_facet_check_required": true,
+          "complete_existing_node_classes": true,
+          "unmatched_noncap_contact_nodes": [
+            [
+              [],
+              []
+            ],
+            [
+              [],
+              []
+            ],
+            [
+              [],
+              []
+            ]
+          ],
+          "declared_bounds": [
+            [
+              -0.5,
+              -0.5,
+              -0.5
+            ],
+            [
+              0.5,
+              0.5,
+              0.5
+            ]
+          ],
+          "periodic_gate": "declared-cell-material-cap-and-complete-node-classes-v1"
+        },
+        "caps": [
+          {
+            "axis": 0,
+            "side": -0.5,
+            "faces": 512,
+            "area": 1.0
+          },
+          {
+            "axis": 0,
+            "side": 0.5,
+            "faces": 512,
+            "area": 1.0
+          },
+          {
+            "axis": 1,
+            "side": -0.5,
+            "faces": 512,
+            "area": 1.0
+          },
+          {
+            "axis": 1,
+            "side": 0.5,
+            "faces": 512,
+            "area": 1.0
+          },
+          {
+            "axis": 2,
+            "side": -0.5,
+            "faces": 512,
+            "area": 1.0
+          },
+          {
+            "axis": 2,
+            "side": 0.5,
+            "faces": 512,
+            "area": 1.0
+          }
+        ],
+        "within_caps": true
+      },
+      "one_round": {
+        "nodes": 10881,
+        "tets": 56292,
+        "boundary_faces": 3264,
+        "unique_faces": 114216,
+        "minimum_quality": 0.12209118400217503,
+        "below_quality_gate": 0,
+        "quality_floor_met": true,
+        "minimum_determinant": 3.3908420138888764e-06,
+        "volume": 1.0000000000000007,
+        "coherent_oriented_faces": true,
+        "nonmanifold_faces": 0,
+        "exact_periodic_nodes_and_facets": true,
+        "periodic": {
+          "periodic_pair_counts": [
+            305,
+            305,
+            305
+          ],
+          "periodic_coordinate_errors": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "periodic_pair_tolerance": 1e-10,
+          "periodic_equivalence_classes": 10016,
+          "periodic_triangles_match": true,
+          "full_facet_check_required": true,
+          "complete_existing_node_classes": true,
+          "unmatched_noncap_contact_nodes": [
+            [
+              [],
+              []
+            ],
+            [
+              [],
+              []
+            ],
+            [
+              [],
+              []
+            ]
+          ],
+          "declared_bounds": [
+            [
+              -0.5,
+              -0.5,
+              -0.5
+            ],
+            [
+              0.5,
+              0.5,
+              0.5
+            ]
+          ],
+          "periodic_gate": "declared-cell-material-cap-and-complete-node-classes-v1"
+        },
+        "caps": [
+          {
+            "axis": 0,
+            "side": -0.5,
+            "faces": 544,
+            "area": 1.0
+          },
+          {
+            "axis": 0,
+            "side": 0.5,
+            "faces": 544,
+            "area": 1.0
+          },
+          {
+            "axis": 1,
+            "side": -0.5,
+            "faces": 544,
+            "area": 1.0
+          },
+          {
+            "axis": 1,
+            "side": 0.5,
+            "faces": 544,
+            "area": 1.0
+          },
+          {
+            "axis": 2,
+            "side": -0.5,
+            "faces": 544,
+            "area": 1.0
+          },
+          {
+            "axis": 2,
+            "side": 0.5,
+            "faces": 544,
+            "area": 1.0
+          }
+        ],
+        "within_caps": true
+      }
+    },
+    "maximum_parent_volume_error": 1.7763568394002493e-15,
+    "preflight_passed": true,
+    "field_node_class_counts": {
+      "-1": 3919,
+      "0": 3038,
+      "1": 3924
+    },
+    "path_affine_observer": {
+      "baseline": {
+        "samples": 258,
+        "falsely_material": 68,
+        "wrongly_below_lower_wall": 0,
+        "true_upper_void_class": 190,
+        "critical_affine_value": 0.3212965800015154,
+        "critical_affine_class": 0
+      },
+      "one_round": {
+        "samples": 258,
+        "falsely_material": 0,
+        "wrongly_below_lower_wall": 0,
+        "true_upper_void_class": 258,
+        "critical_affine_value": 0.3747331129188382,
+        "critical_affine_class": 1
+      },
+      "physical_void_margins": [
+        {
+          "sampled_minimum": 0.015088377349228188,
+          "second_derivative_bound": 0.8394651716645323,
+          "conservative_minimum": 0.01508677619548072
+        },
+        {
+          "sampled_minimum": 0.015088377349228188,
+          "second_derivative_bound": 0.9292976866328054,
+          "conservative_minimum": 0.015086604853556113
+        }
+      ],
+      "scope": "Affine background classification only. These counts are not clipped-mesh occupancy or admission evidence."
+    },
+    "complete": true,
+    "status": "preflight-complete",
+    "input_hashes_verified": true,
+    "limits": "Background feasibility only, before original-node snapping and root clipping. No clipped quality, physical boundary accuracy, admission, or solve is established. Finite barycenter tests can miss other features."
+  },
+  "native_commit": "d49a6b4",
   "cad": {
     "rows": [
       {
