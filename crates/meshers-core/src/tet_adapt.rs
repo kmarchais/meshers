@@ -1212,6 +1212,94 @@ impl<'g, G: Geometry> Tets<'g, G> {
         Ok(())
     }
 
+    /// Complete a wall/cap projection together with a nearby cap-only move.
+    /// A thin cap triangle can make the wall move impossible for every interior
+    /// apex. Search a bounded set of in-plane displacements before adding cells.
+    /// Periodic copies are already one vertex here, so both stars move together.
+    fn settle_with_cap_neighbor(&mut self, v: usize, target: Point, guard: f64) -> bool {
+        let plane = self.masks[v] & !WALL;
+        if plane.count_ones() != 1 || self.feature_mask(v) != 0 {
+            return false;
+        }
+        let mut neighbors: Vec<usize> = self
+            .adjacent(v)
+            .into_iter()
+            .filter(|&w| self.masks[w] == plane && self.feature_mask(w) == 0)
+            .collect();
+        neighbors.sort_by(|&a, &b| {
+            self.length(v, a)
+                .total_cmp(&self.length(v, b))
+                .then(a.cmp(&b))
+        });
+        let axes: Vec<usize> = (0..3).filter(|a| (plane >> (2 + 2 * a)) & 3 == 0).collect();
+        for w in neighbors.into_iter().take(4) {
+            let mut support = self.vt[v].clone();
+            support.extend(&self.vt[w]);
+            support.sort_unstable();
+            support.dedup();
+            let floor = (0.5 * self.worst(&support).min(guard))
+                .max(self.g.minimum_quality())
+                .max(1e-6);
+            let radius = 0.25
+                * self.vt[w]
+                    .iter()
+                    .flat_map(|&t| {
+                        let tet = self.tets[t];
+                        [(0, 1), (0, 2), (0, 3), (1, 2), (1, 3), (2, 3)]
+                            .map(|(a, b)| self.length(tet[a], tet[b]))
+                    })
+                    .fold(0., f64::max);
+            let mut best = None;
+            let mut best_quality = floor;
+            for halvings in 0..7 {
+                let step = radius * 0.5f64.powi(halvings);
+                for [dx, dy] in [
+                    [1., 0.],
+                    [-1., 0.],
+                    [0., 1.],
+                    [0., -1.],
+                    [1., 1.],
+                    [1., -1.],
+                    [-1., 1.],
+                    [-1., -1.],
+                ] {
+                    let mut cap = self.points[w];
+                    cap[axes[0]] += step * dx;
+                    cap[axes[1]] += step * dy;
+                    if !self.g.contains(cap) || self.g.residual(cap, self.threshold) > 0. {
+                        continue;
+                    }
+                    let quality = support
+                        .iter()
+                        .map(|&t| {
+                            mmg(self.local(self.tets[t].map(|node| {
+                                if node == v {
+                                    target
+                                } else if node == w {
+                                    cap
+                                } else {
+                                    self.points[node]
+                                }
+                            })))
+                        })
+                        .fold(1., f64::min);
+                    if quality > best_quality {
+                        best_quality = quality;
+                        best = Some(cap);
+                    }
+                }
+            }
+            if let Some(cap) = best {
+                self.points[v] = target;
+                self.points[w] = cap;
+                self.refresh(v);
+                self.refresh(w);
+                return true;
+            }
+        }
+        false
+    }
+
     /// Move partially inserted wall vertices onto the surface where now valid.
     fn settle(&mut self, guard: f64, maximum: usize) -> Result<bool, String> {
         let mut changed = false;
@@ -1239,6 +1327,10 @@ impl<'g, G: Geometry> Tets<'g, G> {
                 changed |= self.points[v] != q;
                 self.points[v] = q;
                 self.refresh(v);
+                continue;
+            }
+            if self.settle_with_cap_neighbor(v, q, guard) {
+                changed = true;
                 continue;
             }
             let origin = self.points[v];
@@ -1596,6 +1688,94 @@ pub(crate) fn adapt_with_polish(
 mod tests {
     use crate::implicit::{Options, Region, generate};
     use crate::{Point, dot};
+
+    #[test]
+    fn pending_wall_projection_repairs_periodic_cap_star_without_splitting() {
+        use crate::geometry::Geometry;
+        #[derive(serde::Deserialize)]
+        struct FrdStar {
+            points: Vec<Point>,
+            tets: Vec<[usize; 4]>,
+            surface: Vec<[usize; 3]>,
+            wall_vertices: [usize; 2],
+            offset: f64,
+        }
+        impl Geometry for FrdStar {
+            fn value(&self, p: Point) -> f64 {
+                let a = p.map(|x| x * std::f64::consts::TAU);
+                let c = a.map(f64::cos);
+                let d = a.map(|x| (2. * x).cos());
+                self.offset / 2. - 4. * c[0] * c[1] * c[2] + d[0] * d[1] + d[1] * d[2] + d[2] * d[0]
+            }
+            fn gradient(&self, p: Point) -> Point {
+                let a = p.map(|x| x * std::f64::consts::TAU);
+                std::array::from_fn(|i| {
+                    let j = (i + 1) % 3;
+                    let k = (i + 2) % 3;
+                    std::f64::consts::TAU
+                        * (4. * a[i].sin() * a[j].cos() * a[k].cos()
+                            - 2. * (2. * a[i]).sin() * ((2. * a[j]).cos() + (2. * a[k]).cos()))
+                })
+            }
+            fn bounds(&self) -> [Point; 2] {
+                [[-0.5; 3], [0.5; 3]]
+            }
+            fn rank(&self, p: Point) -> [i64; 3] {
+                p.map(|x| (x * 1e11).round() as i64)
+            }
+            fn band(&self) -> bool {
+                false
+            }
+            fn minimum_quality(&self) -> f64 {
+                0.1
+            }
+        }
+        let fixture: FrdStar =
+            serde_json::from_str(include_str!("testdata/frd-cap-star.json")).unwrap();
+        let mesh = crate::Mesh {
+            points: fixture.points.clone(),
+            tets: fixture.tets.clone(),
+            surface: fixture.surface.clone(),
+        };
+        let mut state = super::Tets::new(&mesh, &fixture, 0., [true; 3]);
+        let mut wall = fixture.points[fixture.wall_vertices[0]];
+        wall[1] = -0.5;
+        let v = state.points.iter().position(|&p| p == wall).unwrap();
+        let target = state.project(wall, state.masks[v], 0., 0).unwrap();
+        assert!(
+            state.vt[v]
+                .iter()
+                .any(|&t| super::mmg(state.tet_points(state.tets[t], Some((v, target)))) < 0.1)
+        );
+        let original = state.points.clone();
+        let original_tets = state.tets.clone();
+        state.pending.push(v);
+        state.settle(0.3, mesh.tets.len()).unwrap();
+        assert!(
+            state.pending.is_empty(),
+            "the coupled move must complete the projection"
+        );
+        assert!(fixture.value(state.points[v]).abs() < 1e-10);
+        assert_eq!(
+            state.tets, original_tets,
+            "repair must not add or reconnect elements"
+        );
+        assert_eq!(state.points.len(), original.len());
+        let moved: Vec<usize> = (0..original.len())
+            .filter(|&i| original[i] != state.points[i])
+            .collect();
+        assert_eq!(moved.len(), 2, "only the wall and cap vertex classes move");
+        for i in moved {
+            assert_eq!(
+                original[i][1], state.points[i][1],
+                "cap coordinate is exact"
+            );
+            if i != v {
+                assert!(fixture.value(state.points[i]) <= 0.);
+            }
+        }
+        assert!(state.worst(&(0..state.tets.len()).collect::<Vec<_>>()) >= 0.1);
+    }
 
     #[derive(serde::Deserialize)]
     struct CapStar {
