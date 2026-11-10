@@ -1,0 +1,388 @@
+{
+  "date": "2026-11-10",
+  "native_commit": "310ad9ea6c2309b02e23a03ee75ea91ebd8af612",
+  "native_extension": "/Users/kmarchais/dev/meshers/crates/meshers-python/python/meshers/_meshers.abi3.so",
+  "native_sha256": "b9ee9e9491f5a629f28e1cbf5455f2feba6a84750abcc11c3ea2c47d968537c3",
+  "measured_build": "macbook-native-face-fit-build-v2",
+  "valid_recipe_paths_unchanged_by_final_python_option_guard": true,
+  "validation": {
+    "rust_passed": 111,
+    "rust_ignored": 1,
+    "python_passed": 212,
+    "python_skipped": 1,
+    "release_clippy": true,
+    "ruff": "0.17.4",
+    "rust_format": true,
+    "independent_original_mesh_replays": 9,
+    "independent_primitive_mesh_replays": 6
+  },
+  "gates": {
+    "distance": 0.002,
+    "absolute_relative_volume": 0.01,
+    "corner_quality": 0.1,
+    "node_cap": 250000,
+    "tet_cap": 250000
+  },
+  "runs": [
+    {
+      "run": "experiments/adaptive/runs/macbook-local-face-fit-pilot-v1",
+      "text_files": 12,
+      "text_bytes": 60153,
+      "root_artifacts": {
+        "worker.json": "3ec14644e8022ba1a6cd0a5286bd2728683435fee8a88e1fe90d878342de87b0",
+        "manifest.json": "f4e39482c32f55edf09bb9e606dd7e4b4ed37b784002eb6c9fd3d57fe15d56df",
+        "selection.json": "c0ac9afe54068f8a5bf68f5eeff7f7d32239a2aaad592f70c2f63fe9d8ac53b9"
+      },
+      "ignored_meshes": 2
+    },
+    {
+      "run": "experiments/adaptive/runs/macbook-native-face-fit-core-v1",
+      "text_files": 5,
+      "text_bytes": 7551,
+      "root_artifacts": {
+        "worker.json": "fc97a113f10266213a12be8a0fa59b30886dbcbe963ba5ae6b7ef42dbcfe6b24",
+        "manifest.json": "5e63df4d295e21819201b3478e74018cf0524c8030504f7facae3f4f08f4ded9"
+      },
+      "ignored_meshes": 0
+    },
+    {
+      "run": "experiments/adaptive/runs/macbook-native-face-fit-core-v2",
+      "text_files": 5,
+      "text_bytes": 7649,
+      "root_artifacts": {
+        "worker.json": "e6e301ae59955fb7e5420ae0210887c33d4210c4eb69d26badfe3a1dfb3dd892",
+        "manifest.json": "ccefa4b1e91426fd1a64f40c40657c195477e0614f52e58e818532626a277b5b"
+      },
+      "ignored_meshes": 0
+    },
+    {
+      "run": "experiments/adaptive/runs/macbook-native-face-fit-core-v3",
+      "text_files": 5,
+      "text_bytes": 7410,
+      "root_artifacts": {
+        "worker.json": "79a1070aed05a44c6615416e7a8cc56cd5bfd7bd22c1975947679328ab637325",
+        "manifest.json": "f6822ad273b26ea8c38d3bb91bfb809d9e69937088f59db355f5c46b0bbce6f9"
+      },
+      "ignored_meshes": 0
+    },
+    {
+      "run": "experiments/adaptive/runs/macbook-native-face-fit-build-v1",
+      "text_files": 5,
+      "text_bytes": 24440,
+      "root_artifacts": {
+        "worker.json": "e2551d15ce1f1a2726860f431fbda7d2874f9835472b30f42a710f6645f7871e",
+        "manifest.json": "9c1d8a8751748d6335ea81e75856c069cd2b8ca3b0f1c55ecc5630e0a872ebdc"
+      },
+      "ignored_meshes": 0
+    },
+    {
+      "run": "experiments/adaptive/runs/macbook-native-face-fit-build-v2",
+      "text_files": 5,
+      "text_bytes": 8710,
+      "root_artifacts": {
+        "worker.json": "1a403d12527cb109384b50656a7e4f695be3dae891f988421cfe8f9157dddc64",
+        "manifest.json": "9c1d8a8751748d6335ea81e75856c069cd2b8ca3b0f1c55ecc5630e0a872ebdc"
+      },
+      "ignored_meshes": 0
+    },
+    {
+      "run": "experiments/adaptive/runs/macbook-native-face-fit-pilot-v1",
+      "text_files": 62,
+      "text_bytes": 828241,
+      "root_artifacts": {
+        "summary.json": "8dd4d6df418161dbb933c6827ba1881de839fef97df3c64b4d1524a5cba45e71",
+        "manifest.json": "790950c13a153ed1aecac9e1f60ba6d2ef59f143c2388e98092507e7870ec45c"
+      },
+      "ignored_meshes": 4
+    },
+    {
+      "run": "experiments/adaptive/runs/macbook-native-face-fit-nine-v1",
+      "text_files": 118,
+      "text_bytes": 1005841,
+      "root_artifacts": {
+        "summary.json": "f06e97c198f98f3167923b6df322192a65a16258fba90facf2c7fb7500e621f9",
+        "manifest.json": "48787f81ecfec48cfb12b8448248498856ea82d67f4847938676a75227097f61"
+      },
+      "ignored_meshes": 18
+    },
+    {
+      "run": "experiments/adaptive/runs/macbook-local-coupled-fit-v1",
+      "text_files": 18,
+      "text_bytes": 115790,
+      "root_artifacts": {
+        "worker.json": "e5530ad4476af472e65b1e9b1e968ecbab74dd1e9500cd21ed7def55c583c152",
+        "manifest.json": "04b7b4ffa406012f83dd42e221bad4433ac0e0ac7151b3eef796f056861be916",
+        "selection.json": "94ddf0639ec35783e214f1993700188a731f8f91ddc8c132d7be4c29bc80c77e"
+      },
+      "ignored_meshes": 4
+    },
+    {
+      "run": "experiments/adaptive/runs/macbook-tpms-family-prepare-v1",
+      "text_files": 5,
+      "text_bytes": 9484,
+      "root_artifacts": {
+        "worker.json": "76da058b9c19de6d34fc76a1ae5e5c6337034bfb0cf82cc1998f24e73c251852",
+        "manifest.json": "ddffeda5a105175b8d4ad399003458cad040fe761613c2efca19ef34fa962157"
+      },
+      "ignored_meshes": 0
+    },
+    {
+      "run": "experiments/adaptive/runs/macbook-tpms-family-fixtures-v1",
+      "text_files": 98,
+      "text_bytes": 109153,
+      "root_artifacts": {
+        "result.json": "1f3907ba0acf691628d0eb588b0f4325c2abdc8c24efb75a251f60ccca5681f2",
+        "protocol.json": "7a0e06b00a1d2802d39ad726181fa09450bb7d0caa6d707e402f2f1882270319"
+      },
+      "ignored_meshes": 0
+    },
+    {
+      "run": "experiments/adaptive/runs/macbook-tpms-family-pilot-v1",
+      "text_files": 106,
+      "text_bytes": 516271,
+      "root_artifacts": {
+        "summary.json": "586da622a0c4e2dcb980d10396be6f677cdef10a89db14cf4ad8178308e8e13f",
+        "manifest.json": "003f985c79fe3ce2963a7a2fd4d8793949955872ca16318a5112aa122e4827b2"
+      },
+      "ignored_meshes": 18
+    },
+    {
+      "run": "experiments/adaptive/runs/macbook-tpms-coverage-audit-v1",
+      "text_files": 8,
+      "text_bytes": 73732,
+      "root_artifacts": {
+        "controls.json": "d715770c8cd570cbe32473b36b0c98a1b69f3877915763c22204fa9bd9f6bbab",
+        "result.json": "56461de2c2daaf7fe258a5639817e483c29deccdd7dae01f52af1004698c6ff4",
+        "worker.json": "299b3249d6038698a29ea16553c04ce1228192ed9e1f964a3d1d467a968fc699",
+        "manifest.json": "94023ce930a7d5e7dc0c300e70f3320d6634a866ae506e14d42dfe77744671e6"
+      },
+      "ignored_meshes": 0
+    },
+    {
+      "run": "experiments/adaptive/runs/macbook-tpms-sheet-adaptation-v1",
+      "text_files": 26,
+      "text_bytes": 336663,
+      "root_artifacts": {
+        "summary.json": "d394ea164d569516213b548bf476e1335f1978f17285ce0627bead579ac44322",
+        "manifest.json": "1a124f893cdb23bba2047928126fa5c0b7e38c2450ed5eeab9d6e23a5e0bf73b"
+      },
+      "ignored_meshes": 2
+    },
+    {
+      "run": "experiments/adaptive/runs/macbook-tpms-family-remaining-v1",
+      "text_files": 411,
+      "text_bytes": 1333834,
+      "root_artifacts": {
+        "summary.json": "6180c6e66a702372dc8c7f8e83b409f111f26d7d67a55f181fcda9c386376389",
+        "manifest.json": "1916d8107e5c63715c2f4bb4e8e08c108254cb16288a49a787d18b6c2d13e983"
+      },
+      "ignored_meshes": 71
+    },
+    {
+      "run": "experiments/adaptive/runs/macbook-tpms-remaining-adaptation-v1",
+      "text_files": 46,
+      "text_bytes": 389075,
+      "root_artifacts": {
+        "summary.json": "bf4feb464af6d328919b17d11384351c1bed39f1825e7685adf4847dd507c677",
+        "manifest.json": "2ecea28e9585422639dfcb822ea7a4fc139dd1d475a5390e138c0db2481be972"
+      },
+      "ignored_meshes": 5
+    },
+    {
+      "run": "experiments/adaptive/runs/macbook-tpms-hard-failures-v1",
+      "text_files": 8,
+      "text_bytes": 62629,
+      "root_artifacts": {
+        "controls.json": "d715770c8cd570cbe32473b36b0c98a1b69f3877915763c22204fa9bd9f6bbab",
+        "result.json": "8827f38d48180df8206136e4d909d656ab23cf3c8a1b02a2b472dd8fe06d8b77",
+        "worker.json": "4e8ab20dff449507eccf6fac417391037778bfa3343c61350feecd24f49f3249",
+        "manifest.json": "38f292531d28c8c907ce90c6ff799d78d9e1e7938ed9207e63cbe60417fd3ad9"
+      },
+      "ignored_meshes": 0
+    },
+    {
+      "run": "experiments/adaptive/runs/macbook-schoen-frd-eight-pass-v1",
+      "text_files": 21,
+      "text_bytes": 323541,
+      "root_artifacts": {
+        "summary.json": "17a7ff98d8a3c3854f18cc45b309f7a322a59e1c89f9b004530b06cf1e7cba5d",
+        "manifest.json": "ad6f7081ca4eee1c382d1e1a657560a8572c13b136e7f4ca726e85f4378d8bb8"
+      },
+      "ignored_meshes": 1
+    },
+    {
+      "run": "experiments/adaptive/runs/macbook-schoen-frd-sixteen-pass-v1",
+      "text_files": 21,
+      "text_bytes": 323693,
+      "root_artifacts": {
+        "summary.json": "590990b8b49afbeac877b6d1b94c9d21d041957a34f8c40e2e480d32ec8be1cc",
+        "manifest.json": "8678395727a7aed6ad11fc8c323cdba4e92b5fd0eaa96bf09965da6b72daa988"
+      },
+      "ignored_meshes": 1
+    },
+    {
+      "run": "experiments/adaptive/runs/macbook-tpms-actual-modified-controls-v1",
+      "text_files": 36,
+      "text_bytes": 495886,
+      "root_artifacts": {
+        "summary.json": "ed75bd8144bea2560efff5b5da0d39e8bb14856bb8b763c810640d7d56058458",
+        "manifest.json": "c496c0c74686189343ed97fc4aeee682d8f9a7088ea0f8bf87972abf5710d187"
+      },
+      "ignored_meshes": 2
+    },
+    {
+      "run": "experiments/adaptive/runs/macbook-curved-harmonic-schoen-v1",
+      "text_files": 8,
+      "text_bytes": 27308,
+      "root_artifacts": {
+        "result.json": "3a32c64fa25d8ed8647bbc3aa0e2dc193bed105c4e70278a093f7b0eac7722e0",
+        "tpms-schoen-frd-upper-specimen.json": "544fa8b73d3a5aa5a853cad99b4127aad59a4c1195f5ed36e380d912c069969d",
+        "worker.json": "4c0ab2906eace84439fa9017225b5909a4c0377a4b52fa1d210448003b8f9fd7",
+        "manifest.json": "936ee9cb62fc8627ed4a4d2df3d5d97b846d407f401cbfdea6b0aec23deabd91"
+      },
+      "ignored_meshes": 1
+    },
+    {
+      "run": "experiments/adaptive/runs/macbook-native-face-fit-audit-v1",
+      "text_files": 16,
+      "text_bytes": 343001,
+      "root_artifacts": {
+        "schwarz-d-solid.json": "2fc0926aa7df1e5faeb135e10f5f0d22e9eeda40aaa31e5646c5b1d06a6749b1",
+        "schwarz-solid.json": "5b072858a9ad03050f702d153af35f0692fd1e11be2b640d5a5cecd786c0db30",
+        "result.json": "97696c84856a8484cb9d01cbd99a9c2af7f6c46f244bf813387582fe7b09578f",
+        "gyroid.json": "6c5ea0447402825be87f8b2714dfbdb6e1c587000811005e278d0e6d2dd3b8fd",
+        "spinodoid.json": "8bdbb956dfbcc31f12eda669893879cc07b5c07e4691307017301d7c1b596bc6",
+        "spinodoid-anisotropic.json": "b42df79d5e37c04f47774da8fd124fec7614afd25d2f8e747ce8e282f8f52897",
+        "worker.json": "ac220f4da1c0a64be254ab4f431a13e45749500d4dab03d9bf706069e80d5032",
+        "graded-gyroid-periodic.json": "c0f468fbaf316c44c9cd1c9d5df8e8907c6473888b9f2532bbbf0460353eadbf",
+        "smooth-lattice.json": "95df5a368d56c61a29a1bb92713294006be792befb42b1a4034cdd31ef002f83",
+        "graded-gyroid-density-linear.json": "0e40a39f56314fe39645e8874b27e7cdf1738a079bf721e08b8e86a33d69b529",
+        "manifest.json": "f70c471ed08989ba6a57189324fd615a6a99fb73da74a1a8945584134a1ecb54",
+        "graded-gyroid-linear.json": "fa17152fc28745bb6b80b1dab72175b68a81c39c3b4c09ac701382811e025c30"
+      },
+      "ignored_meshes": 0
+    },
+    {
+      "run": "experiments/adaptive/runs/macbook-native-face-fit-full-tests-v1",
+      "text_files": 6,
+      "text_bytes": 18199,
+      "root_artifacts": {
+        "worker.json": "68e5a2532074fa49479c2c7b0c9e02c02c3468bd6247a1aeb5bcafdef0f62262",
+        "manifest.json": "fa68b3fb38c99312296c25c513e22d0b1d2d5ca184a5ed1631956c85dacc7012"
+      },
+      "ignored_meshes": 0
+    },
+    {
+      "run": "experiments/adaptive/runs/macbook-primitive-family-prepare-v1",
+      "text_files": 6,
+      "text_bytes": 12566,
+      "root_artifacts": {
+        "worker.json": "330b3bb0ce34a28a9412bf7e05254ac07045f57756280d1c0d43330c687f295e",
+        "manifest.json": "57bead1439cda5b8f968020c434bb3a7e68ee35ecade78811e34715a24c258b0"
+      },
+      "ignored_meshes": 0
+    },
+    {
+      "run": "experiments/adaptive/runs/macbook-primitive-family-fixtures-v1",
+      "text_files": 12,
+      "text_bytes": 10669,
+      "root_artifacts": {
+        "result.json": "a8cdf14cbb62aaaa3c2533942fc3a1511ab3b2e16dd70779dbafc9ee67412083",
+        "protocol.json": "55b1c8f1f8a2216152a577feddf9e5bd316be0649c1e7caec28965b3bc63170f"
+      },
+      "ignored_meshes": 0
+    },
+    {
+      "run": "experiments/adaptive/runs/macbook-primitive-family-pilot-v1",
+      "text_files": 66,
+      "text_bytes": 370154,
+      "root_artifacts": {
+        "summary.json": "ba1cff8fdcacd6da3a2bdb4574b4490b8cf8620844cb5313c087c7b89eedc146",
+        "manifest.json": "f5853d5214c47364972ccd82f75d31ea3bbe96fe7872fc108b17c2da3650a2a4"
+      },
+      "ignored_meshes": 5
+    },
+    {
+      "run": "experiments/adaptive/runs/macbook-primitive-retained-features-v1",
+      "text_files": 26,
+      "text_bytes": 310106,
+      "root_artifacts": {
+        "summary.json": "f7c9c0005a658d0db0601c451f1fa4e4a6dfe60338360e3d2e081e0667fdd2fa",
+        "manifest.json": "5fb03643a2cd43e337c173ca78b459a79786868be507550f72c5f17e08e4bd1e"
+      },
+      "ignored_meshes": 2
+    },
+    {
+      "run": "experiments/adaptive/runs/macbook-primitive-actual-modified-v1",
+      "text_files": 41,
+      "text_bytes": 346271,
+      "root_artifacts": {
+        "summary.json": "da5e6b3a514baa99b8b7d218edec887ea1b70a62154967f1a3166da3da0c91a5",
+        "manifest.json": "3c7aefb6ba089ae82a47eadd5a1dc92d89bdc85e5149ca3a211576b67cb9fbac"
+      },
+      "ignored_meshes": 5
+    },
+    {
+      "run": "experiments/adaptive/runs/macbook-primitive-same-order-pilot-v1",
+      "text_files": 46,
+      "text_bytes": 359413,
+      "root_artifacts": {
+        "summary.json": "96c9d4443d05397de42db14d7f8e20ab96258e5aa6fd1ca8834a8affedc3eafe",
+        "manifest.json": "867ac24c400d7a1a073ab86de7c0ba4ad754552d4debeae384c586e466c52227"
+      },
+      "ignored_meshes": 6
+    },
+    {
+      "run": "experiments/adaptive/runs/macbook-primitive-same-order-repeated-v1",
+      "text_files": 196,
+      "text_bytes": 718121,
+      "root_artifacts": {
+        "summary.json": "feb0f3dd6a3e866456241a23d1fc6b65144808d5da6e3bb66f29cc5d32ecd7f7",
+        "manifest.json": "de787cb8999d3839372cedee254699891f53fe4a169b76c8acc7406ec9a1cfb7"
+      },
+      "ignored_meshes": 36
+    },
+    {
+      "run": "experiments/adaptive/runs/macbook-primitive-same-order-audit-v1",
+      "text_files": 7,
+      "text_bytes": 51783,
+      "root_artifacts": {
+        "result.json": "d7d62c89f4ac05490035172911e98f8221fb4734a650a435b6861c6d07db1ecf",
+        "worker.json": "f0c4cd87701f48b3bc5084f940c3169a2d7afc2310bcb926b26812af14d8f180",
+        "manifest.json": "9e2b809090d130a83369217a9cbe5c0ab618cdfc5ab1c099139c42d31f963ca6"
+      },
+      "ignored_meshes": 0
+    },
+    {
+      "run": "experiments/adaptive/runs/macbook-native-fit-dispatch-red-v1",
+      "text_files": 6,
+      "text_bytes": 10131,
+      "root_artifacts": {
+        "worker.json": "074d15fbdd107227758fa0ac36e2083d6f1e7d2a0db211a4ccc80e491a190858",
+        "manifest.json": "62c4ec656d5a9e9445d9f08939f17822d068803d26f4fadadf6736e8811bea7e"
+      },
+      "ignored_meshes": 0
+    },
+    {
+      "run": "experiments/adaptive/runs/macbook-native-fit-dispatch-green-v1",
+      "text_files": 5,
+      "text_bytes": 6814,
+      "root_artifacts": {
+        "worker.json": "53d42a88871e918fc798ffd539a442acb2f840f9a93ca18a886d499569e51d82",
+        "manifest.json": "36833c7b5f23fc0a17f88d483eb22d84d980e6f9e9ba3c2f6d192ddd6b93be95"
+      },
+      "ignored_meshes": 0
+    }
+  ],
+  "FEA_performed": false,
+  "reference_promoted": false,
+  "full_objective_complete": false,
+  "visualization": {
+    "desktop_width": 728,
+    "desktop_height": 1328,
+    "mobile_width": 390,
+    "mobile_coverage_height": 2560,
+    "console_errors": []
+  },
+  "excluded_artifacts": "Meshes, sample arrays and native binaries remain local ignored files, referenced by frozen SHA256 manifests. Small metadata/source/log artifacts are committed."
+}

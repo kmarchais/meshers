@@ -1,0 +1,50 @@
+RUN cargo +1.95.0 clippy --locked --release -p meshers-core --all-targets --features experimental-quads -- -D warnings
+    Finished `release` profile [optimized] target(s) in 0.05s
+RUN cargo +1.95.0 test --locked --release -p meshers-core --features experimental-quads curved_fit -- --nocapture
+    Finished `release` profile [optimized] target(s) in 0.03s
+     Running unittests src/lib.rs (target/release/deps/meshers_core-8e47bbf80036f8e5)
+
+running 1 test
+test quadratic::fit::tests::curved_fit_controls_exact_sphere_plane_and_face_order ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 68 filtered out; finished in 0.00s
+
+     Running tests/batching.rs (target/release/deps/batching-ef17329fc7db775a)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 2 filtered out; finished in 0.00s
+
+     Running tests/implicit.rs (target/release/deps/implicit-6c587d5364ab31f4)
+
+running 1 test
+test curved_fit_preserves_corners_connectivity_and_periodic_traces ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 25 filtered out; finished in 0.14s
+
+     Running tests/intersection.rs (target/release/deps/intersection-e88d1c216195542e)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 12 filtered out; finished in 0.00s
+
+     Running tests/public_api.rs (target/release/deps/public_api-180200e71b636d6b)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 3 filtered out; finished in 0.00s
+
+RUN /Users/kmarchais/dev/meshers/.local-work/macbook-runtime/venv/bin/python -m maturin develop --release --manifest-path crates/meshers-python/Cargo.toml --features experimental-surfaces
+🍹 Building a mixed python/rust project
+🔗 Found pyo3 bindings with abi3 support
+🐍 Not using a specific python interpreter
+Using Python 3.12.9 environment at: .local-work/macbook-runtime/venv
+Audited 5 packages in 0.68ms
+   Compiling meshers-python v0.1.0 (/Users/kmarchais/dev/meshers/crates/meshers-python)
+    Finished `release` profile [optimized] target(s) in 24.52s
+📦 Built wheel for abi3 Python ≥ 3.10 to /var/folders/9j/2ng9zhc51k3cnz_pvgn3kdl00000gp/T/.tmpfoh53b/meshers-0.1.0-cp310-abi3-macosx_11_0_arm64.whl
+✏️ Setting installed package as editable
+🛠 Installed meshers-0.1.0
+RUN /Users/kmarchais/dev/meshers/.local-work/macbook-runtime/venv/bin/python -m pytest -q crates/meshers-python/tests/test_curved_fit.py
+...                                                                      [100%]
+3 passed in 0.54s

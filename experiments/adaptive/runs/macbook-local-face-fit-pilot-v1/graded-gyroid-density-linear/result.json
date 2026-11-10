@@ -1,0 +1,250 @@
+{
+  "case": "graded-gyroid-density-linear",
+  "source": "experiments/adaptive/runs/macbook-curved-density-native-uniform-v1/mesh",
+  "inputs": {
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/curved_face_fit.py": "b086b03f2908e8d0d35b24311d390c66c10c68b4a25f41497c1e9bf75f9a76ce",
+    "experiments/adaptive/runs/macbook-curved-density-native-uniform-v1/mesh/result.json": "e589edb5e5a6be5ac142d3017ec9789db2142c798c3257ec3444074b71e2a3cd",
+    "experiments/adaptive/runs/macbook-curved-density-native-uniform-v1/mesh/mesh.npz": "4f255bf917947cf49071fed1acc6a27376c742e203b157e05b9505c921652bf6",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/microgen_workflow.py": "9f513dfd3e6e5a72a71a54f70c0c2cf7c7a1ebe7256886ee3feaf7d7ad7de161",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/comparison_mesh_audit.py": "6797327ecf6b6c62a973f52812d0bad95b2ef861541247425609109c24d8af94",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/periodic_trace.py": "4cb675451b51cf167f3fc42bb0355d55c8bb6369977220f82e33bd52f191fe2e",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/scorecard.py": "8f26256c7df0e84c9f35cdd71bf4f95a74e072d45469002b213c5dcd4f1bab2a",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/comparison_fixtures.py": "4fa77af6b3b4858eb7611045f46f6e4ca672c6c46ab28d7ee969e14b31e11b9b",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/quadratic_edge_removal_probe.py": "f26a4be16f7aeb4fce6d89732754fab0e5d39e86b4d4c62466a3afd547cec6ed",
+    "experiments/adaptive/runs/macbook-curved-density-native-uniform-v1/mesh/graded-gyroid-density-linear-samples.npz": "7118dc4e84d4c1617e8034553e3a052b170e49d6f3412e4dd2886c2616e8c56c",
+    "experiments/adaptive/runs/macbook-curved-density-native-uniform-v1/mesh/graded-gyroid-density-linear-specimen.json": "345f1f0e92b651ba2dabc4caa9ed436babd9349fcb48a6aecb8fea85845b72ae",
+    "experiments/adaptive/runs/macbook-linear-density-fixtures-v1/linear-density-calibration.json": "b4db7ab7afe47f7832106e2eaf1523c7b0d854f291ef6030bdbe65df9e06e7e1"
+  },
+  "controls": {
+    "sphere_exact_max_before": 6.175098864713569e-05,
+    "sphere_exact_max_after": 2.9973146312922694e-05,
+    "plane_unchanged": true,
+    "fixed_corners": true,
+    "face_permutation_invariant": true
+  },
+  "nodes": 45262,
+  "elements": 25747,
+  "fit_seconds": 1.9929816249932628,
+  "diagnostics": {
+    "seconds": 0.9319127910130192,
+    "wall_faces": 8606,
+    "movable_nodes": 13256,
+    "scalar_unknowns": 13256,
+    "local_diagonal": true,
+    "active_scalar_unknowns": 170,
+    "fitted_faces": 199,
+    "fit_degree": 6,
+    "holdout_degree": 11,
+    "iterations": [
+      {
+        "iteration": 0,
+        "accepted": true,
+        "objective_before": 0.0006972299192234821,
+        "objective_after": 0.0006504707377301082,
+        "step_fraction": 0.5
+      },
+      {
+        "iteration": 1,
+        "accepted": true,
+        "objective_before": 0.0006504707377301082,
+        "objective_after": 0.0005992733257830064,
+        "step_fraction": 0.25
+      },
+      {
+        "iteration": 2,
+        "accepted": true,
+        "objective_before": 0.0005992733257830064,
+        "objective_after": 0.0005856791474061945,
+        "step_fraction": 0.125
+      },
+      {
+        "iteration": 3,
+        "accepted": false,
+        "objective_before": 0.0005856791474061945,
+        "objective_after": 0.000581715227374878,
+        "step_fraction": 0.0
+      },
+      {
+        "iteration": 4,
+        "accepted": false,
+        "objective_before": 0.0005856791474061945,
+        "objective_after": 0.000581715227374878,
+        "step_fraction": 0.0
+      },
+      {
+        "iteration": 5,
+        "accepted": false,
+        "objective_before": 0.0005856791474061945,
+        "objective_after": 0.000581715227374878,
+        "step_fraction": 0.0
+      }
+    ],
+    "loss_power": 8,
+    "cap_constrained_distance": true,
+    "max_displacement": 0.0008377464821821227,
+    "displacement_bound_fraction_of_shortest_edge": 0.02,
+    "holdout_before": {
+      "max": 0.002159918933073515,
+      "rms": 0.00010467366848886139
+    },
+    "holdout_after": {
+      "max": 0.0017231795062504843,
+      "rms": 0.00010476536144182119
+    },
+    "objective": "Corner-area weighted p-norm of normalized implicit residual on symmetric barycentric samples",
+    "constraints": "Fixed corners, fixed cap coordinates, common periodic-class scalar displacement and direction",
+    "benchmark_samples_used_for_fit": false,
+    "volume_or_stiffness_target_used": false,
+    "native_field": true
+  },
+  "before": {
+    "geometry": {
+      "volume": 0.360007065463719,
+      "relative_volume_error": 0.0002325570953496392,
+      "q_min_corner": 0.16338848086303534,
+      "q_p01_corner": 0.4332578448975542,
+      "minimum_sampled_jacobian": 1.1271108578060718e-06,
+      "facet_consistency": {
+        "nodes": 45262,
+        "elements": 25747,
+        "unique_faces": 56572,
+        "interior_faces": 46416,
+        "extracted_boundary_faces": 10156,
+        "same_orientation_shared_faces": 0,
+        "nonmanifold_faces": 0,
+        "duplicate_cells": 0,
+        "duplicate_surface_faces": 0,
+        "provided_boundary_matches_extraction": true,
+        "missing_provided_faces": 0,
+        "extra_provided_faces": 0,
+        "nonpositive_corner_determinants": 0,
+        "minimum_corner_determinant": 1.1321710539436848e-06,
+        "oriented_facet_consistency_passed": true,
+        "conflict_examples": [],
+        "scope": "Oriented corner-face incidence and same-side neighbor diagnostics; necessary consistency, not a certificate of curved geometry or absence of nonlocal intersections"
+      },
+      "oriented_facet_consistency_passed": true,
+      "quadratic_conformity": {
+        "passed": true,
+        "order": 2,
+        "unique_edges": 38044
+      },
+      "exact_straight_reduction_verified": false,
+      "geometry_admitted": false,
+      "sampled_forward_max": 0.002099825469610395,
+      "sampled_reverse_max": 0.0013059086513045528,
+      "sampled_two_sided_max": 0.002099825469610395,
+      "outward_forward_max": 0.002099825469610395,
+      "inward_forward_max": 0.0018602057203589918,
+      "projection_failed": 0,
+      "forward_samples": 111878,
+      "reverse_samples": 36910,
+      "minimum_dihedral_deg_corner": 9.582901139972137,
+      "reverse_tessellation_delta_max": 6.399567191601111e-05,
+      "quadratic_reverse_subdivisions": [
+        8,
+        16
+      ],
+      "projection_method": "newton-box-slsqp-v1",
+      "unbounded_projection_failed": 0,
+      "box_projection_attempts": 0,
+      "box_projection_recovered": 0,
+      "box_projection_witnesses": [],
+      "distance_audit_complete": true,
+      "failed_gates": [
+        "geometry"
+      ]
+    },
+    "periodic": {
+      "required": false,
+      "reason": "Linear thickness grading has unequal opposite-z material traces; bounded nonperiodic case for both arms"
+    },
+    "quality": {
+      "min": 0.16338848086303534,
+      "p01": 0.4332578448975542,
+      "p10": 0.5716140061714161,
+      "median": 0.7928748766006681,
+      "p90": 0.9295160030897804,
+      "p99": 0.9697817107683845,
+      "max": 0.9976783883355304
+    }
+  },
+  "after": {
+    "geometry": {
+      "volume": 0.3599996074019763,
+      "relative_volume_error": 0.0002118358460088121,
+      "q_min_corner": 0.16338848086303534,
+      "q_p01_corner": 0.4332578448975542,
+      "minimum_sampled_jacobian": 1.1271108578060718e-06,
+      "facet_consistency": {
+        "nodes": 45262,
+        "elements": 25747,
+        "unique_faces": 56572,
+        "interior_faces": 46416,
+        "extracted_boundary_faces": 10156,
+        "same_orientation_shared_faces": 0,
+        "nonmanifold_faces": 0,
+        "duplicate_cells": 0,
+        "duplicate_surface_faces": 0,
+        "provided_boundary_matches_extraction": true,
+        "missing_provided_faces": 0,
+        "extra_provided_faces": 0,
+        "nonpositive_corner_determinants": 0,
+        "minimum_corner_determinant": 1.1321710539436848e-06,
+        "oriented_facet_consistency_passed": true,
+        "conflict_examples": [],
+        "scope": "Oriented corner-face incidence and same-side neighbor diagnostics; necessary consistency, not a certificate of curved geometry or absence of nonlocal intersections"
+      },
+      "oriented_facet_consistency_passed": true,
+      "quadratic_conformity": {
+        "passed": true,
+        "order": 2,
+        "unique_edges": 38044
+      },
+      "exact_straight_reduction_verified": false,
+      "geometry_admitted": true,
+      "sampled_forward_max": 0.001691085802392627,
+      "sampled_reverse_max": 0.0011065212926072497,
+      "sampled_two_sided_max": 0.001691085802392627,
+      "outward_forward_max": 0.001691085802392627,
+      "inward_forward_max": 0.0015080956773176446,
+      "projection_failed": 0,
+      "forward_samples": 111878,
+      "reverse_samples": 36910,
+      "minimum_dihedral_deg_corner": 9.582901139972137,
+      "reverse_tessellation_delta_max": 6.399567191601111e-05,
+      "quadratic_reverse_subdivisions": [
+        8,
+        16
+      ],
+      "projection_method": "newton-box-slsqp-v1",
+      "unbounded_projection_failed": 0,
+      "box_projection_attempts": 0,
+      "box_projection_recovered": 0,
+      "box_projection_witnesses": [],
+      "distance_audit_complete": true,
+      "failed_gates": []
+    },
+    "periodic": {
+      "required": false,
+      "reason": "Linear thickness grading has unequal opposite-z material traces; bounded nonperiodic case for both arms"
+    },
+    "quality": {
+      "min": 0.16338848086303534,
+      "p01": 0.4332578448975542,
+      "p10": 0.5716140061714161,
+      "median": 0.7928748766006681,
+      "p90": 0.9295160030897804,
+      "p99": 0.9697817107683845,
+      "max": 0.9976783883355304
+    }
+  },
+  "admitted": true,
+  "mesh_sha256": "35d0fd46944e1d0e46756816d4cec221e1b0fa3129b061111171ae974edd1463",
+  "source_unchanged": true,
+  "native_only": false,
+  "new_FE_solve": false,
+  "old_domain_preserved": false,
+  "reference_promoted": false,
+  "comparative_workflow_timing": false
+}

@@ -1,0 +1,42 @@
+{
+  "case": "tpms-split-p-lower",
+  "config": {
+    "name": "actual-default-tet4",
+    "arm": "microgen",
+    "resolution": null,
+    "order": 1,
+    "periodic_trace": true,
+    "declared_unit_cell": true
+  },
+  "status": "failed",
+  "qualified": false,
+  "mmg_calls": [
+    {
+      "nofem": true
+    },
+    {
+      "nofem": true
+    },
+    {
+      "nofem": true
+    },
+    {
+      "nofem": true
+    },
+    {
+      "nofem": true
+    }
+  ],
+  "instrumentation_s": 0.004473541979677975,
+  "vtk_backend": "Sequential",
+  "vtk_threads": 1,
+  "periodic_required": true,
+  "solve_performed": false,
+  "actual_resolution": 20,
+  "seed_nodes": 6348,
+  "seed_elements": 23138,
+  "error": "mmg command 'mmg3d_O3 -in /var/folders/9j/2ng9zhc51k3cnz_pvgn3kdl00000gp/T/tmp13l2b6vj.mesh -out /var/folders/9j/2ng9zhc51k3cnz_pvgn3kdl00000gp/T/tmpce_xewp6.mesh -nofem' failed",
+  "traceback": "Traceback (most recent call last):\n  File \"/Users/kmarchais/dev/meshers/.local-work/macbook-runtime/venv/lib/python3.12/site-packages/microgen/external.py\", line 316, in _run_mmg_command\n    subprocess.check_output(cmd, stderr=subprocess.STDOUT)\n  File \"/Users/kmarchais/.local/share/uv/python/cpython-3.12.9-macos-aarch64-none/lib/python3.12/subprocess.py\", line 468, in check_output\n    return run(*popenargs, stdout=PIPE, timeout=timeout, check=True,\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/Users/kmarchais/.local/share/uv/python/cpython-3.12.9-macos-aarch64-none/lib/python3.12/subprocess.py\", line 573, in run\n    raise CalledProcessError(retcode, process.args,\nsubprocess.CalledProcessError: Command '['mmg3d_O3', '-in', '/var/folders/9j/2ng9zhc51k3cnz_pvgn3kdl00000gp/T/tmp13l2b6vj.mesh', '-out', '/var/folders/9j/2ng9zhc51k3cnz_pvgn3kdl00000gp/T/tmpce_xewp6.mesh', '-nofem']' returned non-zero exit status 1.\n\nThe above exception was the direct cause of the following exception:\n\nTraceback (most recent call last):\n  File \"/Users/kmarchais/dev/meshers/experiments/adaptive/comparison_benchmark.py\", line 98, in worker\n    grid=remesh_keeping_boundaries_for_fem(grid,periodic=fixtures.periodic(name) and not config.get('material_trace_remesh',False),**config.get('mmg',{}))\n         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/Users/kmarchais/dev/meshers/.local-work/macbook-runtime/venv/lib/python3.12/site-packages/microgen/remesh.py\", line 164, in remesh_keeping_boundaries_for_fem\n    raise last_error\n  File \"/Users/kmarchais/dev/meshers/.local-work/macbook-runtime/venv/lib/python3.12/site-packages/microgen/remesh.py\", line 136, in remesh_keeping_boundaries_for_fem\n    output_mesh = _run_mmg_pipeline(\n                  ^^^^^^^^^^^^^^^^^^\n  File \"/Users/kmarchais/dev/meshers/.local-work/macbook-runtime/venv/lib/python3.12/site-packages/microgen/remesh.py\", line 194, in _run_mmg_pipeline\n    Mmg.mmg3d(\n  File \"/Users/kmarchais/dev/meshers/experiments/adaptive/comparison_benchmark.py\", line 86, in record\n    try:result=original(**parameters)\n               ^^^^^^^^^^^^^^^^^^^^^^\n  File \"/Users/kmarchais/dev/meshers/.local-work/macbook-runtime/venv/lib/python3.12/site-packages/microgen/external.py\", line 639, in mmg3d\n    Mmg._run_mmg_command(cmd)\n  File \"/Users/kmarchais/dev/meshers/.local-work/macbook-runtime/venv/lib/python3.12/site-packages/microgen/external.py\", line 319, in _run_mmg_command\n    raise MmgError(\nmicrogen.external.MmgError: mmg command 'mmg3d_O3 -in /var/folders/9j/2ng9zhc51k3cnz_pvgn3kdl00000gp/T/tmp13l2b6vj.mesh -out /var/folders/9j/2ng9zhc51k3cnz_pvgn3kdl00000gp/T/tmpce_xewp6.mesh -nofem' failed\n",
+  "failed_attempt_s": 2.8481720830022823,
+  "wall_s": 2.8481742079893593
+}

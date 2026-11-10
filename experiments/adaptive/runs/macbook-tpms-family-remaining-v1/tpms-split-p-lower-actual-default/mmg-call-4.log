@@ -1,0 +1,53 @@
+  -- MMG3D, Release 5.8.0 (Oct. 30, 2024) 
+     Copyright (c) Bdx INP/CNRS/Inria/UPMC, 2004-
+     Oct  8 2026 10:46:10
+
+  -- INPUT DATA
+  %% /var/folders/9j/2ng9zhc51k3cnz_pvgn3kdl00000gp/T/tmp13l2b6vj.mesh OPENED
+
+     $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$ 
+         BAD ORIENTATION : vol < 0 --    19936 tetra reoriented
+     $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$ 
+
+  ** /var/folders/9j/2ng9zhc51k3cnz_pvgn3kdl00000gp/T/tmp13l2b6vj.sol  NOT FOUND. USE DEFAULT METRIC.
+  -- DATA READING COMPLETED.     0.031s
+
+  &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
+   MODULE MMG3D: 5.8.0 (Oct. 30, 2024)
+  &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
+     git branch: HEAD
+     git commit: 4d8232c8aebfed877935d75d4d4a67e850962422
+     git date:   2024-10-29 11:41:45 +0100
+
+
+  -- MMG3DLIB: INPUT DATA
+  --  INPUT DATA COMPLETED.     0.000s
+
+  -- PHASE 1 : ANALYSIS
+
+  -- MESH QUALITY  23138
+     BEST   0.920780  AVRG.   0.487210  WRST.   0.000010 (13666)
+  -- PHASE 1 COMPLETED.     0.019s
+
+  -- PHASE 2 : ISOTROPIC MESHING
+                               2 splitted,       24 collapsed,     4955 swapped, 5 iter.
+
+  -- GRADATION : 1.300000 (2.300000)
+                             446 splitted,      745 collapsed,     1603 swapped, 6 iter.
+
+  ## Warning: MMG3D_findEdge: at least one wrong edge's shell.
+
+  ## Error: MMG5_adptet_delone: unable to complete mesh. Exit program.
+
+  ## Unable to adapt. Exit program.
+     NUMBER OF VERTICES       6381   CORNERS      272
+     NUMBER OF TETRAHEDRA    24362
+     NUMBER OF EDGES          4618   RIDGES      1040
+     NUMBER OF TRIANGLES      8606
+
+  -- WRITING DATA FILE /var/folders/9j/2ng9zhc51k3cnz_pvgn3kdl00000gp/T/tmpa5yd6v8r.mesh
+  %% /var/folders/9j/2ng9zhc51k3cnz_pvgn3kdl00000gp/T/tmpa5yd6v8r.mesh OPENED
+  %% /var/folders/9j/2ng9zhc51k3cnz_pvgn3kdl00000gp/T/tmpa5yd6v8r.sol OPENED
+  -- WRITING COMPLETED
+
+   ELAPSED TIME  0.495s

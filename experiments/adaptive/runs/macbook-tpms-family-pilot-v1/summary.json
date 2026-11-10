@@ -1,0 +1,2985 @@
+{
+  "rows": [
+    {
+      "case": "tpms-neovius-sheet",
+      "config": {
+        "name": "native-uniform16-fit-tet10",
+        "arm": "meshers",
+        "cells": 16,
+        "order": 2,
+        "adapt": false,
+        "tolerance": 1.0,
+        "curved_fit": true,
+        "periodic_trace": true
+      },
+      "status": "admission-rejected",
+      "qualified": false,
+      "mmg_calls": [],
+      "instrumentation_s": 0.0,
+      "vtk_backend": "Sequential",
+      "vtk_threads": 1,
+      "periodic_required": true,
+      "solve_performed": false,
+      "diagnostics": {
+        "empty": false,
+        "volume": 0.3019860323735154,
+        "minimum_mmg_quality": 0.33029839112151155,
+        "sampled_surface_error": 0.02110539686059019,
+        "elements_below_quality_01": 0,
+        "reverted_snap_vertices": 0,
+        "callback_calls": 0,
+        "inserted_interior_nodes": 0,
+        "seconds": 0.189460416,
+        "quadratic": {
+          "curved_edges": 12380,
+          "straightened_edges": 0,
+          "partially_curved_edges": 115,
+          "minimum_jacobian_ratio": 0.0028394800690697635,
+          "fit": {
+            "selected_groups": 32,
+            "affected_faces": 36,
+            "accepted_steps": 2,
+            "moved_nodes": 38,
+            "initial_distance_estimate": 0.0078549647318693,
+            "final_distance_estimate": 0.007476298683918834
+          }
+        },
+        "threads": 1,
+        "evaluator": "compiled",
+        "preparation_seconds": 0.0004952080198563635
+      },
+      "generation_wall_s": 0.1899982919858303,
+      "nodes": 40028,
+      "elements": 22452,
+      "generation_s": 0.1899982919858303,
+      "generated_field_identity_checked": 4096,
+      "mesh_sha256": "e3010d2a0c542892199c49f22d8876f00ecfeb10b421694f8624271a36daa024",
+      "historical_all_plane_periodic_gate": {
+        "passed": true
+      },
+      "geometry": {
+        "volume": 0.30015378592997355,
+        "relative_volume_error": 0.000532657594842334,
+        "q_min_corner": 0.33029839112151155,
+        "q_p01_corner": 0.43645397779245587,
+        "minimum_sampled_jacobian": 1.5211629585733818e-07,
+        "facet_consistency": {
+          "nodes": 40028,
+          "elements": 22452,
+          "unique_faces": 49602,
+          "interior_faces": 40206,
+          "extracted_boundary_faces": 9396,
+          "same_orientation_shared_faces": 0,
+          "nonmanifold_faces": 0,
+          "duplicate_cells": 0,
+          "duplicate_surface_faces": 0,
+          "provided_boundary_matches_extraction": true,
+          "missing_provided_faces": 0,
+          "extra_provided_faces": 0,
+          "nonpositive_corner_determinants": 0,
+          "minimum_corner_determinant": 2.9810882315492483e-06,
+          "oriented_facet_consistency_passed": true,
+          "conflict_examples": [],
+          "scope": "Oriented corner-face incidence and same-side neighbor diagnostics; necessary consistency, not a certificate of curved geometry or absence of nonlocal intersections"
+        },
+        "oriented_facet_consistency_passed": true,
+        "quadratic_conformity": {
+          "passed": true,
+          "order": 2,
+          "unique_edges": 33590
+        },
+        "exact_straight_reduction_verified": false,
+        "geometry_admitted": false,
+        "sampled_forward_max": 0.006541838019056838,
+        "sampled_reverse_max": 0.007084011479548922,
+        "sampled_two_sided_max": 0.007084011479548922,
+        "outward_forward_max": 0.006541838019056838,
+        "inward_forward_max": 0.0006151631316713227,
+        "projection_failed": 0,
+        "forward_samples": 104546,
+        "reverse_samples": 39264,
+        "minimum_dihedral_deg_corner": 20.01737522578975,
+        "reverse_tessellation_delta_max": 0.00021330223494559085,
+        "quadratic_reverse_subdivisions": [
+          8,
+          16
+        ],
+        "projection_method": "newton-box-slsqp-v1",
+        "unbounded_projection_failed": 0,
+        "box_projection_attempts": 0,
+        "box_projection_recovered": 0,
+        "box_projection_witnesses": [],
+        "distance_audit_complete": true,
+        "failed_gates": [
+          "geometry"
+        ]
+      },
+      "periodic": {
+        "periodic_pair_counts": [
+          269,
+          715,
+          715
+        ],
+        "periodic_coordinate_errors": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "periodic_pair_tolerance": 1e-10,
+        "periodic_equivalence_classes": 38347,
+        "periodic_triangles_match": true,
+        "full_facet_check_required": true,
+        "complete_existing_node_classes": true,
+        "unmatched_noncap_contact_nodes": [
+          [
+            [],
+            []
+          ],
+          [
+            [],
+            []
+          ],
+          [
+            [],
+            []
+          ]
+        ],
+        "periodic_gate": "material-cap-and-complete-node-classes-v1"
+      },
+      "quality_quantiles": {
+        "min": 0.33029839112151155,
+        "p01": 0.43645397779245587,
+        "p10": 0.5645257761959812,
+        "median": 0.7681462969641899,
+        "p90": 0.9324979604827349,
+        "p99": 0.9785947656941802,
+        "max": 0.9979222059869998
+      },
+      "native_and_independent_pairs_agree": true,
+      "audit_s": 2.6840722920023836,
+      "wall_s": 2.9403354589885566,
+      "worker": {
+        "returncode": 0,
+        "limit_failure": null,
+        "peak_rss_bytes": 1021542400,
+        "wall_s": 3.7450622920005117,
+        "wall_s_clock": "monotonic",
+        "elapsed_realtime_s": 3.7450640201568604,
+        "suspension_or_clock_adjustment_s": 1.7281563486903906e-06,
+        "idle_sleep_prevention": [
+          "/usr/bin/caffeinate",
+          "-i"
+        ],
+        "memory_bytes": 8589934592,
+        "memory_enforcement": "process-tree-rss-watchdog",
+        "rss_poll_interval_s": 0.25,
+        "platform": "darwin",
+        "numerical_thread_policy": {
+          "environment": {
+            "OPENBLAS_NUM_THREADS": "1",
+            "OMP_NUM_THREADS": "1",
+            "MKL_NUM_THREADS": "1",
+            "VECLIB_MAXIMUM_THREADS": "1",
+            "RAYON_NUM_THREADS": "1"
+          },
+          "accelerate_blas_threading": 1,
+          "accelerate_scope": "calling thread"
+        }
+      },
+      "directory": "experiments/adaptive/runs/macbook-tpms-family-pilot-v1/tpms-neovius-sheet-native-fit"
+    },
+    {
+      "case": "tpms-neovius-sheet",
+      "config": {
+        "name": "actual-default-tet4",
+        "arm": "microgen",
+        "resolution": null,
+        "order": 1,
+        "periodic_trace": true
+      },
+      "status": "admission-rejected",
+      "qualified": false,
+      "mmg_calls": [
+        {
+          "nofem": true,
+          "output_tetrahedra": 29864,
+          "output_nodes": 6858
+        },
+        {
+          "hausd": null,
+          "hgrad": null,
+          "hmax": null,
+          "hmin": null,
+          "hsiz": null,
+          "ls": true,
+          "nr": true,
+          "output_tetrahedra": 15023,
+          "output_nodes": 3916
+        }
+      ],
+      "instrumentation_s": 0.1369778330263216,
+      "vtk_backend": "Sequential",
+      "vtk_threads": 1,
+      "periodic_required": true,
+      "solve_performed": false,
+      "actual_resolution": 20,
+      "seed_nodes": 5800,
+      "seed_elements": 22616,
+      "reoriented_tets": 0,
+      "generation_wall_s": 2.4698930000013206,
+      "nodes": 3916,
+      "elements": 15023,
+      "generation_s": 2.332915166974999,
+      "mesh_sha256": "9cf2780ddb4347003a97e8175934705ec4c89c5b19d9abdfa124bcac61b5a857",
+      "historical_all_plane_periodic_gate": {
+        "passed": true
+      },
+      "geometry": {
+        "volume": 0.3049258222106472,
+        "relative_volume_error": 0.016439763771258553,
+        "q_min_corner": 0.004509861233251846,
+        "q_p01_corner": 0.04019115385596677,
+        "minimum_sampled_jacobian": 5.528391820480018e-08,
+        "facet_consistency": {
+          "nodes": 3916,
+          "elements": 15023,
+          "unique_faces": 32541,
+          "interior_faces": 27551,
+          "extracted_boundary_faces": 4990,
+          "same_orientation_shared_faces": 0,
+          "nonmanifold_faces": 0,
+          "duplicate_cells": 0,
+          "duplicate_surface_faces": 0,
+          "provided_boundary_matches_extraction": true,
+          "missing_provided_faces": 0,
+          "extra_provided_faces": 0,
+          "nonpositive_corner_determinants": 0,
+          "minimum_corner_determinant": 5.5283918204800133e-08,
+          "oriented_facet_consistency_passed": true,
+          "conflict_examples": [],
+          "scope": "Oriented corner-face incidence and same-side neighbor diagnostics; necessary consistency, not a certificate of curved geometry or absence of nonlocal intersections"
+        },
+        "oriented_facet_consistency_passed": true,
+        "quadratic_conformity": {
+          "passed": true,
+          "order": 1
+        },
+        "exact_straight_reduction_verified": false,
+        "geometry_admitted": false,
+        "sampled_reverse_max": 0.02345308795064584,
+        "distance_audit_complete": false,
+        "projection_failed": null,
+        "audit_scope": "Fail-fast after required quality/volume/topology/periodicity rejection; no forward-distance or successful speed claim",
+        "failed_gates": [
+          "quality",
+          "volume"
+        ]
+      },
+      "periodic": {
+        "periodic_pair_counts": [
+          136,
+          260,
+          260
+        ],
+        "periodic_coordinate_errors": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "periodic_pair_tolerance": 1e-10,
+        "periodic_equivalence_classes": 3280,
+        "periodic_triangles_match": true,
+        "full_facet_check_required": true,
+        "complete_existing_node_classes": true,
+        "unmatched_noncap_contact_nodes": [
+          [
+            [],
+            []
+          ],
+          [
+            [],
+            []
+          ],
+          [
+            [],
+            []
+          ]
+        ],
+        "periodic_gate": "material-cap-and-complete-node-classes-v1"
+      },
+      "quality_quantiles": {
+        "min": 0.004509861233251846,
+        "p01": 0.04019115385596677,
+        "p10": 0.4448296970774518,
+        "median": 0.7274335102786837,
+        "p90": 0.8941429254539365,
+        "p99": 0.9638674356219854,
+        "max": 0.997100550797777
+      },
+      "audit_s": 0.9482072910177521,
+      "wall_s": 3.435139249981148,
+      "worker": {
+        "returncode": 0,
+        "limit_failure": null,
+        "peak_rss_bytes": 1208909824,
+        "wall_s": 4.473662749980576,
+        "wall_s_clock": "monotonic",
+        "elapsed_realtime_s": 4.473667144775391,
+        "suspension_or_clock_adjustment_s": 4.394794814288616e-06,
+        "idle_sleep_prevention": [
+          "/usr/bin/caffeinate",
+          "-i"
+        ],
+        "memory_bytes": 8589934592,
+        "memory_enforcement": "process-tree-rss-watchdog",
+        "rss_poll_interval_s": 0.25,
+        "platform": "darwin",
+        "numerical_thread_policy": {
+          "environment": {
+            "OPENBLAS_NUM_THREADS": "1",
+            "OMP_NUM_THREADS": "1",
+            "MKL_NUM_THREADS": "1",
+            "VECLIB_MAXIMUM_THREADS": "1",
+            "RAYON_NUM_THREADS": "1"
+          },
+          "accelerate_blas_threading": 1,
+          "accelerate_scope": "calling thread"
+        }
+      },
+      "directory": "experiments/adaptive/runs/macbook-tpms-family-pilot-v1/tpms-neovius-sheet-actual-default"
+    },
+    {
+      "case": "tpms-neovius-lower",
+      "config": {
+        "name": "native-uniform16-fit-tet10",
+        "arm": "meshers",
+        "cells": 16,
+        "order": 2,
+        "adapt": false,
+        "tolerance": 1.0,
+        "curved_fit": true,
+        "periodic_trace": true
+      },
+      "status": "admitted",
+      "qualified": true,
+      "mmg_calls": [],
+      "instrumentation_s": 0.0,
+      "vtk_backend": "Sequential",
+      "vtk_threads": 1,
+      "periodic_required": true,
+      "solve_performed": false,
+      "diagnostics": {
+        "empty": false,
+        "volume": 0.2993806120670481,
+        "minimum_mmg_quality": 0.41786045788900855,
+        "sampled_surface_error": 0.010839424414688143,
+        "elements_below_quality_01": 0,
+        "reverted_snap_vertices": 0,
+        "callback_calls": 0,
+        "inserted_interior_nodes": 0,
+        "seconds": 0.101704708,
+        "quadratic": {
+          "curved_edges": 5600,
+          "straightened_edges": 0,
+          "partially_curved_edges": 0,
+          "minimum_jacobian_ratio": 0.5107457466560228,
+          "fit": {
+            "selected_groups": 266,
+            "affected_faces": 293,
+            "accepted_steps": 1,
+            "moved_nodes": 277,
+            "initial_distance_estimate": 0.0002463588567267764,
+            "final_distance_estimate": 0.00022094304190005724
+          }
+        },
+        "threads": 1,
+        "evaluator": "compiled",
+        "preparation_seconds": 0.0005093340005259961
+      },
+      "generation_wall_s": 0.10225099997478537,
+      "nodes": 30142,
+      "elements": 18216,
+      "generation_s": 0.10225099997478537,
+      "generated_field_identity_checked": 4096,
+      "mesh_sha256": "94f6a79a6f1db0acfbbdf3d5b7b32f3a29d96e59fe16b62d225e643ff920b620",
+      "historical_all_plane_periodic_gate": {
+        "passed": true
+      },
+      "geometry": {
+        "volume": 0.29999836326120966,
+        "relative_volume_error": 5.113177341375952e-05,
+        "q_min_corner": 0.41786045788900855,
+        "q_p01_corner": 0.49616526881313877,
+        "minimum_sampled_jacobian": 4.409120713742419e-06,
+        "facet_consistency": {
+          "nodes": 30142,
+          "elements": 18216,
+          "unique_faces": 39128,
+          "interior_faces": 33736,
+          "extracted_boundary_faces": 5392,
+          "same_orientation_shared_faces": 0,
+          "nonmanifold_faces": 0,
+          "duplicate_cells": 0,
+          "duplicate_surface_faces": 0,
+          "provided_boundary_matches_extraction": true,
+          "missing_provided_faces": 0,
+          "extra_provided_faces": 0,
+          "nonpositive_corner_determinants": 0,
+          "minimum_corner_determinant": 4.409120713742325e-06,
+          "oriented_facet_consistency_passed": true,
+          "conflict_examples": [],
+          "scope": "Oriented corner-face incidence and same-side neighbor diagnostics; necessary consistency, not a certificate of curved geometry or absence of nonlocal intersections"
+        },
+        "oriented_facet_consistency_passed": true,
+        "quadratic_conformity": {
+          "passed": true,
+          "order": 2,
+          "unique_edges": 25526
+        },
+        "exact_straight_reduction_verified": false,
+        "geometry_admitted": true,
+        "sampled_forward_max": 0.00024065444797644102,
+        "sampled_reverse_max": 0.00021882044731594367,
+        "sampled_two_sided_max": 0.00024065444797644102,
+        "outward_forward_max": 0.00024065444797644102,
+        "inward_forward_max": 0.00019790091753854903,
+        "projection_failed": 0,
+        "forward_samples": 47112,
+        "reverse_samples": 37362,
+        "minimum_dihedral_deg_corner": 24.250903484685693,
+        "reverse_tessellation_delta_max": 0.0001297479514239595,
+        "quadratic_reverse_subdivisions": [
+          8,
+          16
+        ],
+        "projection_method": "newton-box-slsqp-v1",
+        "unbounded_projection_failed": 0,
+        "box_projection_attempts": 0,
+        "box_projection_recovered": 0,
+        "box_projection_witnesses": [],
+        "distance_audit_complete": true,
+        "failed_gates": []
+      },
+      "periodic": {
+        "periodic_pair_counts": [
+          989,
+          544,
+          544
+        ],
+        "periodic_coordinate_errors": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "periodic_pair_tolerance": 1e-10,
+        "periodic_equivalence_classes": 28138,
+        "periodic_triangles_match": true,
+        "full_facet_check_required": true,
+        "complete_existing_node_classes": true,
+        "unmatched_noncap_contact_nodes": [
+          [
+            [],
+            []
+          ],
+          [
+            [],
+            []
+          ],
+          [
+            [],
+            []
+          ]
+        ],
+        "periodic_gate": "material-cap-and-complete-node-classes-v1"
+      },
+      "quality_quantiles": {
+        "min": 0.41786045788900855,
+        "p01": 0.49616526881313877,
+        "p10": 0.6252258290972417,
+        "median": 0.8737785780639724,
+        "p90": 0.9436725533346745,
+        "p99": 0.9840136843366663,
+        "max": 0.9989976814374452
+      },
+      "native_and_independent_pairs_agree": true,
+      "audit_s": 2.24492037500022,
+      "wall_s": 2.395447916991543,
+      "worker": {
+        "returncode": 0,
+        "limit_failure": null,
+        "peak_rss_bytes": 758317056,
+        "wall_s": 3.503673416998936,
+        "wall_s_clock": "monotonic",
+        "elapsed_realtime_s": 3.5036749839782715,
+        "suspension_or_clock_adjustment_s": 1.5669793356209993e-06,
+        "idle_sleep_prevention": [
+          "/usr/bin/caffeinate",
+          "-i"
+        ],
+        "memory_bytes": 8589934592,
+        "memory_enforcement": "process-tree-rss-watchdog",
+        "rss_poll_interval_s": 0.25,
+        "platform": "darwin",
+        "numerical_thread_policy": {
+          "environment": {
+            "OPENBLAS_NUM_THREADS": "1",
+            "OMP_NUM_THREADS": "1",
+            "MKL_NUM_THREADS": "1",
+            "VECLIB_MAXIMUM_THREADS": "1",
+            "RAYON_NUM_THREADS": "1"
+          },
+          "accelerate_blas_threading": 1,
+          "accelerate_scope": "calling thread"
+        }
+      },
+      "directory": "experiments/adaptive/runs/macbook-tpms-family-pilot-v1/tpms-neovius-lower-native-fit"
+    },
+    {
+      "case": "tpms-neovius-lower",
+      "config": {
+        "name": "actual-default-tet4",
+        "arm": "microgen",
+        "resolution": null,
+        "order": 1,
+        "periodic_trace": true
+      },
+      "status": "admission-rejected",
+      "qualified": false,
+      "mmg_calls": [
+        {
+          "nofem": true,
+          "output_tetrahedra": 7614,
+          "output_nodes": 2321
+        },
+        {
+          "hausd": null,
+          "hgrad": null,
+          "hmax": null,
+          "hmin": null,
+          "hsiz": null,
+          "ls": true,
+          "nr": true,
+          "output_tetrahedra": 8177,
+          "output_nodes": 2418
+        }
+      ],
+      "instrumentation_s": 0.08435695801745169,
+      "vtk_backend": "Sequential",
+      "vtk_threads": 1,
+      "periodic_required": true,
+      "solve_performed": false,
+      "actual_resolution": 20,
+      "seed_nodes": 4112,
+      "seed_elements": 16584,
+      "reoriented_tets": 0,
+      "generation_wall_s": 1.0374839580035768,
+      "nodes": 2418,
+      "elements": 8177,
+      "generation_s": 0.9531269999861252,
+      "mesh_sha256": "28501c22215fe3a0d4cae3053eb8b49175cd162cd44de11fc197398b5491f49e",
+      "historical_all_plane_periodic_gate": {
+        "passed": true
+      },
+      "geometry": {
+        "volume": 0.29784870783397527,
+        "relative_volume_error": -0.007114791798831788,
+        "q_min_corner": 0.00028339789087026174,
+        "q_p01_corner": 0.1108935165010578,
+        "minimum_sampled_jacobian": 1.7053853406011874e-08,
+        "facet_consistency": {
+          "nodes": 2418,
+          "elements": 8177,
+          "unique_faces": 18146,
+          "interior_faces": 14562,
+          "extracted_boundary_faces": 3584,
+          "same_orientation_shared_faces": 0,
+          "nonmanifold_faces": 0,
+          "duplicate_cells": 0,
+          "duplicate_surface_faces": 0,
+          "provided_boundary_matches_extraction": true,
+          "missing_provided_faces": 0,
+          "extra_provided_faces": 0,
+          "nonpositive_corner_determinants": 0,
+          "minimum_corner_determinant": 1.7053853406011884e-08,
+          "oriented_facet_consistency_passed": true,
+          "conflict_examples": [],
+          "scope": "Oriented corner-face incidence and same-side neighbor diagnostics; necessary consistency, not a certificate of curved geometry or absence of nonlocal intersections"
+        },
+        "oriented_facet_consistency_passed": true,
+        "quadratic_conformity": {
+          "passed": true,
+          "order": 1
+        },
+        "exact_straight_reduction_verified": false,
+        "geometry_admitted": false,
+        "sampled_reverse_max": 0.008386099497561854,
+        "distance_audit_complete": false,
+        "projection_failed": null,
+        "audit_scope": "Fail-fast after required quality/volume/topology/periodicity rejection; no forward-distance or successful speed claim",
+        "failed_gates": [
+          "quality"
+        ]
+      },
+      "periodic": {
+        "periodic_pair_counts": [
+          368,
+          200,
+          200
+        ],
+        "periodic_coordinate_errors": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "periodic_pair_tolerance": 1e-10,
+        "periodic_equivalence_classes": 1695,
+        "periodic_triangles_match": true,
+        "full_facet_check_required": true,
+        "complete_existing_node_classes": true,
+        "unmatched_noncap_contact_nodes": [
+          [
+            [],
+            []
+          ],
+          [
+            [],
+            []
+          ],
+          [
+            [],
+            []
+          ]
+        ],
+        "periodic_gate": "material-cap-and-complete-node-classes-v1"
+      },
+      "quality_quantiles": {
+        "min": 0.00028339789087026174,
+        "p01": 0.1108935165010578,
+        "p10": 0.4797102790881547,
+        "median": 0.7120917555755858,
+        "p90": 0.8785729809181841,
+        "p99": 0.9631507317394197,
+        "max": 0.9971205573974986
+      },
+      "audit_s": 0.8834007499972358,
+      "wall_s": 1.9312527080182917,
+      "worker": {
+        "returncode": 0,
+        "limit_failure": null,
+        "peak_rss_bytes": 1196032000,
+        "wall_s": 3.0014232080138754,
+        "wall_s_clock": "monotonic",
+        "elapsed_realtime_s": 3.0014257431030273,
+        "suspension_or_clock_adjustment_s": 2.5350891519337893e-06,
+        "idle_sleep_prevention": [
+          "/usr/bin/caffeinate",
+          "-i"
+        ],
+        "memory_bytes": 8589934592,
+        "memory_enforcement": "process-tree-rss-watchdog",
+        "rss_poll_interval_s": 0.25,
+        "platform": "darwin",
+        "numerical_thread_policy": {
+          "environment": {
+            "OPENBLAS_NUM_THREADS": "1",
+            "OMP_NUM_THREADS": "1",
+            "MKL_NUM_THREADS": "1",
+            "VECLIB_MAXIMUM_THREADS": "1",
+            "RAYON_NUM_THREADS": "1"
+          },
+          "accelerate_blas_threading": 1,
+          "accelerate_scope": "calling thread"
+        }
+      },
+      "directory": "experiments/adaptive/runs/macbook-tpms-family-pilot-v1/tpms-neovius-lower-actual-default"
+    },
+    {
+      "case": "tpms-neovius-upper",
+      "config": {
+        "name": "native-uniform16-fit-tet10",
+        "arm": "meshers",
+        "cells": 16,
+        "order": 2,
+        "adapt": false,
+        "tolerance": 1.0,
+        "curved_fit": true,
+        "periodic_trace": true
+      },
+      "status": "failed",
+      "qualified": false,
+      "mmg_calls": [],
+      "instrumentation_s": 0.0,
+      "vtk_backend": "Sequential",
+      "vtk_threads": 1,
+      "periodic_required": true,
+      "solve_performed": false,
+      "diagnostics": {
+        "empty": false,
+        "volume": 0.2991884401392491,
+        "minimum_mmg_quality": 0.33424384681719954,
+        "sampled_surface_error": 0.00443541499221454,
+        "elements_below_quality_01": 0,
+        "reverted_snap_vertices": 0,
+        "callback_calls": 0,
+        "inserted_interior_nodes": 0,
+        "seconds": 0.109302083,
+        "quadratic": {
+          "curved_edges": 5632,
+          "straightened_edges": 0,
+          "partially_curved_edges": 0,
+          "minimum_jacobian_ratio": 0.5427096160000605,
+          "fit": {
+            "selected_groups": 768,
+            "affected_faces": 802,
+            "accepted_steps": 1,
+            "moved_nodes": 778,
+            "initial_distance_estimate": 0.000173048338391324,
+            "final_distance_estimate": 0.00016763647632339222
+          }
+        },
+        "threads": 1,
+        "evaluator": "compiled",
+        "preparation_seconds": 0.0005540419952012599
+      },
+      "generation_wall_s": 0.1098967079888098,
+      "nodes": 28941,
+      "elements": 18312,
+      "generation_s": 0.1098967079888098,
+      "generated_field_identity_checked": 4096,
+      "mesh_sha256": "d8253f6d1878002904f54b8328d7fa6556fb25af8eecae3f5e6d144cc061046a",
+      "historical_all_plane_periodic_gate": {
+        "passed": false,
+        "error": "Periodic specimen does not span the declared unit cube"
+      },
+      "geometry": {
+        "volume": 0.29994408378156234,
+        "relative_volume_error": 6.651206452135128e-05,
+        "q_min_corner": 0.33424384681719954,
+        "q_p01_corner": 0.5024230605883431,
+        "minimum_sampled_jacobian": 5.641268479317276e-06,
+        "facet_consistency": {
+          "nodes": 28941,
+          "elements": 18312,
+          "unique_faces": 38720,
+          "interior_faces": 34528,
+          "extracted_boundary_faces": 4192,
+          "same_orientation_shared_faces": 0,
+          "nonmanifold_faces": 0,
+          "duplicate_cells": 0,
+          "duplicate_surface_faces": 0,
+          "provided_boundary_matches_extraction": true,
+          "missing_provided_faces": 0,
+          "extra_provided_faces": 0,
+          "nonpositive_corner_determinants": 0,
+          "minimum_corner_determinant": 5.641268479317245e-06,
+          "oriented_facet_consistency_passed": true,
+          "conflict_examples": [],
+          "scope": "Oriented corner-face incidence and same-side neighbor diagnostics; necessary consistency, not a certificate of curved geometry or absence of nonlocal intersections"
+        },
+        "oriented_facet_consistency_passed": true,
+        "quadratic_conformity": {
+          "passed": true,
+          "order": 2,
+          "unique_edges": 24674
+        },
+        "exact_straight_reduction_verified": false,
+        "geometry_admitted": false,
+        "sampled_reverse_max": 0.00017651414672815814,
+        "distance_audit_complete": false,
+        "projection_failed": null,
+        "audit_scope": "Fail-fast after required quality/volume/topology/periodicity rejection; no forward-distance or successful speed claim",
+        "failed_gates": [
+          "periodicity"
+        ]
+      },
+      "periodic": {
+        "error": "Periodic specimen does not span the declared unit cube"
+      },
+      "quality_quantiles": {
+        "min": 0.33424384681719954,
+        "p01": 0.5024230605883431,
+        "p10": 0.6256359770912594,
+        "median": 0.9127317913660613,
+        "p90": 0.9342335962715188,
+        "p99": 0.9767661645363689,
+        "max": 0.9978159291329406
+      },
+      "error": "Periodic specimen does not span the declared unit cube",
+      "traceback": "Traceback (most recent call last):\n  File \"/Users/kmarchais/dev/meshers/experiments/adaptive/comparison_benchmark.py\", line 186, in worker\n    checked,_,_=periodic_auditor(points,surface)\n                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/Users/kmarchais/dev/meshers/experiments/adaptive/periodic_trace.py\", line 18, in periodic_pairs\n    raise ValueError('Periodic specimen does not span the declared unit cube')\nValueError: Periodic specimen does not span the declared unit cube\n",
+      "failed_attempt_s": 1.9082021659996826,
+      "wall_s": 1.908204624982318,
+      "worker": {
+        "returncode": 0,
+        "limit_failure": null,
+        "peak_rss_bytes": 435453952,
+        "wall_s": 3.069683542009443,
+        "wall_s_clock": "monotonic",
+        "elapsed_realtime_s": 3.0696871280670166,
+        "suspension_or_clock_adjustment_s": 3.5860575735569e-06,
+        "idle_sleep_prevention": [
+          "/usr/bin/caffeinate",
+          "-i"
+        ],
+        "memory_bytes": 8589934592,
+        "memory_enforcement": "process-tree-rss-watchdog",
+        "rss_poll_interval_s": 0.25,
+        "platform": "darwin",
+        "numerical_thread_policy": {
+          "environment": {
+            "OPENBLAS_NUM_THREADS": "1",
+            "OMP_NUM_THREADS": "1",
+            "MKL_NUM_THREADS": "1",
+            "VECLIB_MAXIMUM_THREADS": "1",
+            "RAYON_NUM_THREADS": "1"
+          },
+          "accelerate_blas_threading": 1,
+          "accelerate_scope": "calling thread"
+        }
+      },
+      "directory": "experiments/adaptive/runs/macbook-tpms-family-pilot-v1/tpms-neovius-upper-native-fit"
+    },
+    {
+      "case": "tpms-neovius-upper",
+      "config": {
+        "name": "actual-default-tet4",
+        "arm": "microgen",
+        "resolution": null,
+        "order": 1,
+        "periodic_trace": true
+      },
+      "status": "admission-rejected",
+      "qualified": false,
+      "mmg_calls": [
+        {
+          "nofem": true,
+          "output_tetrahedra": 5346,
+          "output_nodes": 1391
+        },
+        {
+          "hausd": null,
+          "hgrad": null,
+          "hmax": null,
+          "hmin": null,
+          "hsiz": null,
+          "ls": true,
+          "nr": true,
+          "output_tetrahedra": 5035,
+          "output_nodes": 1324
+        }
+      ],
+      "instrumentation_s": 0.0750712500012014,
+      "vtk_backend": "Sequential",
+      "vtk_threads": 1,
+      "periodic_required": true,
+      "solve_performed": false,
+      "actual_resolution": 20,
+      "seed_nodes": 3640,
+      "seed_elements": 16738,
+      "reoriented_tets": 0,
+      "generation_wall_s": 0.8595766669895966,
+      "nodes": 1324,
+      "elements": 5035,
+      "generation_s": 0.7845054169883952,
+      "mesh_sha256": "d6f27c6f16179b19ae20a2c957e3722cb8ca03a1173440cae4c119c3c8d5af8c",
+      "historical_all_plane_periodic_gate": {
+        "passed": false,
+        "error": "Periodic specimen does not span the declared unit cube"
+      },
+      "geometry": {
+        "volume": 0.2977743681507955,
+        "relative_volume_error": -0.0071677027787129255,
+        "q_min_corner": 0.1298474902078079,
+        "q_p01_corner": 0.3210459841205793,
+        "minimum_sampled_jacobian": 1.1661162215147804e-05,
+        "facet_consistency": {
+          "nodes": 1324,
+          "elements": 5035,
+          "unique_faces": 10890,
+          "interior_faces": 9250,
+          "extracted_boundary_faces": 1640,
+          "same_orientation_shared_faces": 0,
+          "nonmanifold_faces": 0,
+          "duplicate_cells": 0,
+          "duplicate_surface_faces": 0,
+          "provided_boundary_matches_extraction": true,
+          "missing_provided_faces": 0,
+          "extra_provided_faces": 0,
+          "nonpositive_corner_determinants": 0,
+          "minimum_corner_determinant": 1.166116221514779e-05,
+          "oriented_facet_consistency_passed": true,
+          "conflict_examples": [],
+          "scope": "Oriented corner-face incidence and same-side neighbor diagnostics; necessary consistency, not a certificate of curved geometry or absence of nonlocal intersections"
+        },
+        "oriented_facet_consistency_passed": true,
+        "quadratic_conformity": {
+          "passed": true,
+          "order": 1
+        },
+        "exact_straight_reduction_verified": false,
+        "geometry_admitted": false,
+        "sampled_reverse_max": 0.008648652126353407,
+        "distance_audit_complete": false,
+        "projection_failed": null,
+        "audit_scope": "Fail-fast after required quality/volume/topology/periodicity rejection; no forward-distance or successful speed claim",
+        "failed_gates": [
+          "periodicity"
+        ]
+      },
+      "periodic": {
+        "error": "Periodic specimen does not span the declared unit cube"
+      },
+      "quality_quantiles": {
+        "min": 0.1298474902078079,
+        "p01": 0.3210459841205793,
+        "p10": 0.5538155319075504,
+        "median": 0.7740232657984519,
+        "p90": 0.9159890820330376,
+        "p99": 0.969318531579416,
+        "max": 0.9963455505628
+      },
+      "audit_s": 0.866294832987478,
+      "wall_s": 1.7320894169970416,
+      "worker": {
+        "returncode": 0,
+        "limit_failure": null,
+        "peak_rss_bytes": 716374016,
+        "wall_s": 2.747550333995605,
+        "wall_s_clock": "monotonic",
+        "elapsed_realtime_s": 2.747551918029785,
+        "suspension_or_clock_adjustment_s": 1.5840341802686453e-06,
+        "idle_sleep_prevention": [
+          "/usr/bin/caffeinate",
+          "-i"
+        ],
+        "memory_bytes": 8589934592,
+        "memory_enforcement": "process-tree-rss-watchdog",
+        "rss_poll_interval_s": 0.25,
+        "platform": "darwin",
+        "numerical_thread_policy": {
+          "environment": {
+            "OPENBLAS_NUM_THREADS": "1",
+            "OMP_NUM_THREADS": "1",
+            "MKL_NUM_THREADS": "1",
+            "VECLIB_MAXIMUM_THREADS": "1",
+            "RAYON_NUM_THREADS": "1"
+          },
+          "accelerate_blas_threading": 1,
+          "accelerate_scope": "calling thread"
+        }
+      },
+      "directory": "experiments/adaptive/runs/macbook-tpms-family-pilot-v1/tpms-neovius-upper-actual-default"
+    },
+    {
+      "case": "tpms-schoen-iwp-sheet",
+      "config": {
+        "name": "native-uniform16-fit-tet10",
+        "arm": "meshers",
+        "cells": 16,
+        "order": 2,
+        "adapt": false,
+        "tolerance": 1.0,
+        "curved_fit": true,
+        "periodic_trace": true
+      },
+      "status": "admitted",
+      "qualified": true,
+      "mmg_calls": [],
+      "instrumentation_s": 0.0,
+      "vtk_backend": "Sequential",
+      "vtk_threads": 1,
+      "periodic_required": true,
+      "solve_performed": false,
+      "diagnostics": {
+        "empty": false,
+        "volume": 0.30209338802676095,
+        "minimum_mmg_quality": 0.3624472159236751,
+        "sampled_surface_error": 0.006041086874277196,
+        "elements_below_quality_01": 0,
+        "reverted_snap_vertices": 0,
+        "callback_calls": 0,
+        "inserted_interior_nodes": 0,
+        "seconds": 0.29857125,
+        "quadratic": {
+          "curved_edges": 13932,
+          "straightened_edges": 0,
+          "partially_curved_edges": 0,
+          "minimum_jacobian_ratio": 0.2500728319641731,
+          "fit": {
+            "selected_groups": 766,
+            "affected_faces": 904,
+            "accepted_steps": 1,
+            "moved_nodes": 778,
+            "initial_distance_estimate": 0.00028381219121921336,
+            "final_distance_estimate": 0.000256172613424353
+          }
+        },
+        "threads": 1,
+        "evaluator": "compiled",
+        "preparation_seconds": 0.0006630000134464353
+      },
+      "generation_wall_s": 0.2992822919914033,
+      "nodes": 39762,
+      "elements": 21504,
+      "generation_s": 0.2992822919914033,
+      "generated_field_identity_checked": 4096,
+      "mesh_sha256": "05660b104c9d8d71aa2df181e813bcf8203351386cf27c5f20999c6ecaee490c",
+      "historical_all_plane_periodic_gate": {
+        "passed": true
+      },
+      "geometry": {
+        "volume": 0.3000728318375031,
+        "relative_volume_error": -1.2967554469334175e-05,
+        "q_min_corner": 0.36244721592367535,
+        "q_p01_corner": 0.4444931327905078,
+        "minimum_sampled_jacobian": 5.167114091178754e-06,
+        "facet_consistency": {
+          "nodes": 39762,
+          "elements": 21504,
+          "unique_faces": 48132,
+          "interior_faces": 37884,
+          "extracted_boundary_faces": 10248,
+          "same_orientation_shared_faces": 0,
+          "nonmanifold_faces": 0,
+          "duplicate_cells": 0,
+          "duplicate_surface_faces": 0,
+          "provided_boundary_matches_extraction": true,
+          "missing_provided_faces": 0,
+          "extra_provided_faces": 0,
+          "nonpositive_corner_determinants": 0,
+          "minimum_corner_determinant": 5.258423953605754e-06,
+          "oriented_facet_consistency_passed": true,
+          "conflict_examples": [],
+          "scope": "Oriented corner-face incidence and same-side neighbor diagnostics; necessary consistency, not a certificate of curved geometry or absence of nonlocal intersections"
+        },
+        "oriented_facet_consistency_passed": true,
+        "quadratic_conformity": {
+          "passed": true,
+          "order": 2,
+          "unique_edges": 33198
+        },
+        "exact_straight_reduction_verified": false,
+        "geometry_admitted": true,
+        "sampled_forward_max": 0.00027723882057627996,
+        "sampled_reverse_max": 0.0002542750404919067,
+        "sampled_two_sided_max": 0.00027723882057627996,
+        "outward_forward_max": 0.00023854816351201883,
+        "inward_forward_max": 0.00027723882057627996,
+        "projection_failed": 0,
+        "forward_samples": 117312,
+        "reverse_samples": 35589,
+        "minimum_dihedral_deg_corner": 22.0778569649691,
+        "reverse_tessellation_delta_max": 8.30055973716338e-05,
+        "quadratic_reverse_subdivisions": [
+          8,
+          16
+        ],
+        "projection_method": "newton-box-slsqp-v1",
+        "unbounded_projection_failed": 0,
+        "box_projection_attempts": 0,
+        "box_projection_recovered": 0,
+        "box_projection_witnesses": [],
+        "distance_audit_complete": true,
+        "failed_gates": []
+      },
+      "periodic": {
+        "periodic_pair_counts": [
+          552,
+          552,
+          552
+        ],
+        "periodic_coordinate_errors": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "periodic_pair_tolerance": 1e-10,
+        "periodic_equivalence_classes": 38124,
+        "periodic_triangles_match": true,
+        "full_facet_check_required": true,
+        "complete_existing_node_classes": true,
+        "unmatched_noncap_contact_nodes": [
+          [
+            [],
+            []
+          ],
+          [
+            [],
+            []
+          ],
+          [
+            [],
+            []
+          ]
+        ],
+        "periodic_gate": "material-cap-and-complete-node-classes-v1"
+      },
+      "quality_quantiles": {
+        "min": 0.36244721592367535,
+        "p01": 0.4444931327905078,
+        "p10": 0.5634823670754884,
+        "median": 0.7545986166451109,
+        "p90": 0.922854800214511,
+        "p99": 0.9741655006572152,
+        "max": 0.9966193776654164
+      },
+      "native_and_independent_pairs_agree": true,
+      "audit_s": 2.670895624993136,
+      "wall_s": 3.038826292002341,
+      "worker": {
+        "returncode": 0,
+        "limit_failure": null,
+        "peak_rss_bytes": 1093484544,
+        "wall_s": 3.9732803750084713,
+        "wall_s_clock": "monotonic",
+        "elapsed_realtime_s": 3.973280906677246,
+        "suspension_or_clock_adjustment_s": 5.316687747836113e-07,
+        "idle_sleep_prevention": [
+          "/usr/bin/caffeinate",
+          "-i"
+        ],
+        "memory_bytes": 8589934592,
+        "memory_enforcement": "process-tree-rss-watchdog",
+        "rss_poll_interval_s": 0.25,
+        "platform": "darwin",
+        "numerical_thread_policy": {
+          "environment": {
+            "OPENBLAS_NUM_THREADS": "1",
+            "OMP_NUM_THREADS": "1",
+            "MKL_NUM_THREADS": "1",
+            "VECLIB_MAXIMUM_THREADS": "1",
+            "RAYON_NUM_THREADS": "1"
+          },
+          "accelerate_blas_threading": 1,
+          "accelerate_scope": "calling thread"
+        }
+      },
+      "directory": "experiments/adaptive/runs/macbook-tpms-family-pilot-v1/tpms-schoen-iwp-sheet-native-fit"
+    },
+    {
+      "case": "tpms-schoen-iwp-sheet",
+      "config": {
+        "name": "actual-default-tet4",
+        "arm": "microgen",
+        "resolution": null,
+        "order": 1,
+        "periodic_trace": true
+      },
+      "status": "admission-rejected",
+      "qualified": false,
+      "mmg_calls": [
+        {
+          "nofem": true,
+          "output_tetrahedra": 15178,
+          "output_nodes": 4245
+        },
+        {
+          "hausd": null,
+          "hgrad": null,
+          "hmax": null,
+          "hmin": null,
+          "hsiz": null,
+          "ls": true,
+          "nr": true,
+          "output_tetrahedra": 12785,
+          "output_nodes": 3627
+        }
+      ],
+      "instrumentation_s": 0.08657687396043912,
+      "vtk_backend": "Sequential",
+      "vtk_threads": 1,
+      "periodic_required": true,
+      "solve_performed": false,
+      "actual_resolution": 20,
+      "seed_nodes": 7128,
+      "seed_elements": 27216,
+      "reoriented_tets": 0,
+      "generation_wall_s": 1.7916773339966312,
+      "nodes": 3627,
+      "elements": 12785,
+      "generation_s": 1.705100460036192,
+      "mesh_sha256": "2febabdd70d846377ad0ca476e96c3c27c8c250223f4e3fdca51c87547d7981b",
+      "historical_all_plane_periodic_gate": {
+        "passed": true
+      },
+      "geometry": {
+        "volume": 0.30978362000447457,
+        "relative_volume_error": 0.03234805021022957,
+        "q_min_corner": 0.02098515704300961,
+        "q_p01_corner": 0.07552091760136855,
+        "minimum_sampled_jacobian": 1.0991096355264188e-06,
+        "facet_consistency": {
+          "nodes": 3627,
+          "elements": 12785,
+          "unique_faces": 28240,
+          "interior_faces": 22900,
+          "extracted_boundary_faces": 5340,
+          "same_orientation_shared_faces": 0,
+          "nonmanifold_faces": 0,
+          "duplicate_cells": 0,
+          "duplicate_surface_faces": 0,
+          "provided_boundary_matches_extraction": true,
+          "missing_provided_faces": 0,
+          "extra_provided_faces": 0,
+          "nonpositive_corner_determinants": 0,
+          "minimum_corner_determinant": 1.099109635526419e-06,
+          "oriented_facet_consistency_passed": true,
+          "conflict_examples": [],
+          "scope": "Oriented corner-face incidence and same-side neighbor diagnostics; necessary consistency, not a certificate of curved geometry or absence of nonlocal intersections"
+        },
+        "oriented_facet_consistency_passed": true,
+        "quadratic_conformity": {
+          "passed": true,
+          "order": 1
+        },
+        "exact_straight_reduction_verified": false,
+        "geometry_admitted": false,
+        "sampled_reverse_max": 0.010581540112138977,
+        "distance_audit_complete": false,
+        "projection_failed": null,
+        "audit_scope": "Fail-fast after required quality/volume/topology/periodicity rejection; no forward-distance or successful speed claim",
+        "failed_gates": [
+          "quality",
+          "volume"
+        ]
+      },
+      "periodic": {
+        "periodic_pair_counts": [
+          192,
+          192,
+          192
+        ],
+        "periodic_coordinate_errors": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "periodic_pair_tolerance": 1e-10,
+        "periodic_equivalence_classes": 3075,
+        "periodic_triangles_match": true,
+        "full_facet_check_required": true,
+        "complete_existing_node_classes": true,
+        "unmatched_noncap_contact_nodes": [
+          [
+            [],
+            []
+          ],
+          [
+            [],
+            []
+          ],
+          [
+            [],
+            []
+          ]
+        ],
+        "periodic_gate": "material-cap-and-complete-node-classes-v1"
+      },
+      "quality_quantiles": {
+        "min": 0.02098515704300961,
+        "p01": 0.07552091760136855,
+        "p10": 0.49237743778403437,
+        "median": 0.7491247456997363,
+        "p90": 0.8979784714741009,
+        "p99": 0.9613328641453651,
+        "max": 0.99322312144525
+      },
+      "audit_s": 0.9121720000111964,
+      "wall_s": 2.7190899589913897,
+      "worker": {
+        "returncode": 0,
+        "limit_failure": null,
+        "peak_rss_bytes": 1208778752,
+        "wall_s": 3.6378363750118297,
+        "wall_s_clock": "monotonic",
+        "elapsed_realtime_s": 3.6378371715545654,
+        "suspension_or_clock_adjustment_s": 7.965427357703447e-07,
+        "idle_sleep_prevention": [
+          "/usr/bin/caffeinate",
+          "-i"
+        ],
+        "memory_bytes": 8589934592,
+        "memory_enforcement": "process-tree-rss-watchdog",
+        "rss_poll_interval_s": 0.25,
+        "platform": "darwin",
+        "numerical_thread_policy": {
+          "environment": {
+            "OPENBLAS_NUM_THREADS": "1",
+            "OMP_NUM_THREADS": "1",
+            "MKL_NUM_THREADS": "1",
+            "VECLIB_MAXIMUM_THREADS": "1",
+            "RAYON_NUM_THREADS": "1"
+          },
+          "accelerate_blas_threading": 1,
+          "accelerate_scope": "calling thread"
+        }
+      },
+      "directory": "experiments/adaptive/runs/macbook-tpms-family-pilot-v1/tpms-schoen-iwp-sheet-actual-default"
+    },
+    {
+      "case": "tpms-schoen-iwp-lower",
+      "config": {
+        "name": "native-uniform16-fit-tet10",
+        "arm": "meshers",
+        "cells": 16,
+        "order": 2,
+        "adapt": false,
+        "tolerance": 1.0,
+        "curved_fit": true,
+        "periodic_trace": true
+      },
+      "status": "admitted",
+      "qualified": true,
+      "mmg_calls": [],
+      "instrumentation_s": 0.0,
+      "vtk_backend": "Sequential",
+      "vtk_threads": 1,
+      "periodic_required": true,
+      "solve_performed": false,
+      "diagnostics": {
+        "empty": false,
+        "volume": 0.2987300653023211,
+        "minimum_mmg_quality": 0.4278646532083713,
+        "sampled_surface_error": 0.004635036862086707,
+        "elements_below_quality_01": 0,
+        "reverted_snap_vertices": 0,
+        "callback_calls": 0,
+        "inserted_interior_nodes": 0,
+        "seconds": 0.178905917,
+        "quadratic": {
+          "curved_edges": 7428,
+          "straightened_edges": 0,
+          "partially_curved_edges": 0,
+          "minimum_jacobian_ratio": 0.4908886050519725,
+          "fit": {
+            "selected_groups": 110,
+            "affected_faces": 132,
+            "accepted_steps": 1,
+            "moved_nodes": 131,
+            "initial_distance_estimate": 0.00029601536312311123,
+            "final_distance_estimate": 0.0002917206857392913
+          }
+        },
+        "threads": 1,
+        "evaluator": "compiled",
+        "preparation_seconds": 0.0007058339833747596
+      },
+      "generation_wall_s": 0.17967295800917782,
+      "nodes": 32022,
+      "elements": 18552,
+      "generation_s": 0.17967295800917782,
+      "generated_field_identity_checked": 4096,
+      "mesh_sha256": "5cbe509214b671535c8be3903aef05291968ef3ac391b1952064ca2baee9adf0",
+      "historical_all_plane_periodic_gate": {
+        "passed": true
+      },
+      "geometry": {
+        "volume": 0.2998785941576623,
+        "relative_volume_error": 6.350099349905491e-06,
+        "q_min_corner": 0.4278646532083713,
+        "q_p01_corner": 0.5302722633640531,
+        "minimum_sampled_jacobian": 7.965266541234323e-06,
+        "facet_consistency": {
+          "nodes": 32022,
+          "elements": 18552,
+          "unique_faces": 40440,
+          "interior_faces": 33768,
+          "extracted_boundary_faces": 6672,
+          "same_orientation_shared_faces": 0,
+          "nonmanifold_faces": 0,
+          "duplicate_cells": 0,
+          "duplicate_surface_faces": 0,
+          "provided_boundary_matches_extraction": true,
+          "missing_provided_faces": 0,
+          "extra_provided_faces": 0,
+          "nonpositive_corner_determinants": 0,
+          "minimum_corner_determinant": 8.429576002449193e-06,
+          "oriented_facet_consistency_passed": true,
+          "conflict_examples": [],
+          "scope": "Oriented corner-face incidence and same-side neighbor diagnostics; necessary consistency, not a certificate of curved geometry or absence of nonlocal intersections"
+        },
+        "oriented_facet_consistency_passed": true,
+        "quadratic_conformity": {
+          "passed": true,
+          "order": 2,
+          "unique_edges": 26958
+        },
+        "exact_straight_reduction_verified": false,
+        "geometry_admitted": true,
+        "sampled_forward_max": 0.0003019531919352682,
+        "sampled_reverse_max": 0.0002823858450803142,
+        "sampled_two_sided_max": 0.0003019531919352682,
+        "outward_forward_max": 0.0003019531919352682,
+        "inward_forward_max": 0.0002923254107795449,
+        "projection_failed": 0,
+        "forward_samples": 62556,
+        "reverse_samples": 39434,
+        "minimum_dihedral_deg_corner": 25.17855608569323,
+        "reverse_tessellation_delta_max": 5.758933100822263e-05,
+        "quadratic_reverse_subdivisions": [
+          8,
+          16
+        ],
+        "projection_method": "newton-box-slsqp-v1",
+        "unbounded_projection_failed": 0,
+        "box_projection_attempts": 0,
+        "box_projection_recovered": 0,
+        "box_projection_witnesses": [],
+        "distance_audit_complete": true,
+        "failed_gates": []
+      },
+      "periodic": {
+        "periodic_pair_counts": [
+          715,
+          715,
+          715
+        ],
+        "periodic_coordinate_errors": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "periodic_pair_tolerance": 1e-10,
+        "periodic_equivalence_classes": 29916,
+        "periodic_triangles_match": true,
+        "full_facet_check_required": true,
+        "complete_existing_node_classes": true,
+        "unmatched_noncap_contact_nodes": [
+          [
+            [],
+            []
+          ],
+          [
+            [],
+            []
+          ],
+          [
+            [],
+            []
+          ]
+        ],
+        "periodic_gate": "material-cap-and-complete-node-classes-v1"
+      },
+      "quality_quantiles": {
+        "min": 0.4278646532083713,
+        "p01": 0.5302722633640531,
+        "p10": 0.617581165389291,
+        "median": 0.8332455731718205,
+        "p90": 0.9431887595159362,
+        "p99": 0.9835937296632906,
+        "max": 0.9993781693908561
+      },
+      "native_and_independent_pairs_agree": true,
+      "audit_s": 2.407393792003859,
+      "wall_s": 2.6456472080026288,
+      "worker": {
+        "returncode": 0,
+        "limit_failure": null,
+        "peak_rss_bytes": 844840960,
+        "wall_s": 3.7351628330070525,
+        "wall_s_clock": "monotonic",
+        "elapsed_realtime_s": 3.735166072845459,
+        "suspension_or_clock_adjustment_s": 3.239838406443596e-06,
+        "idle_sleep_prevention": [
+          "/usr/bin/caffeinate",
+          "-i"
+        ],
+        "memory_bytes": 8589934592,
+        "memory_enforcement": "process-tree-rss-watchdog",
+        "rss_poll_interval_s": 0.25,
+        "platform": "darwin",
+        "numerical_thread_policy": {
+          "environment": {
+            "OPENBLAS_NUM_THREADS": "1",
+            "OMP_NUM_THREADS": "1",
+            "MKL_NUM_THREADS": "1",
+            "VECLIB_MAXIMUM_THREADS": "1",
+            "RAYON_NUM_THREADS": "1"
+          },
+          "accelerate_blas_threading": 1,
+          "accelerate_scope": "calling thread"
+        }
+      },
+      "directory": "experiments/adaptive/runs/macbook-tpms-family-pilot-v1/tpms-schoen-iwp-lower-native-fit"
+    },
+    {
+      "case": "tpms-schoen-iwp-lower",
+      "config": {
+        "name": "actual-default-tet4",
+        "arm": "microgen",
+        "resolution": null,
+        "order": 1,
+        "periodic_trace": true
+      },
+      "status": "admission-rejected",
+      "qualified": false,
+      "mmg_calls": [
+        {
+          "nofem": true,
+          "output_tetrahedra": 9900,
+          "output_nodes": 2959
+        },
+        {
+          "hausd": null,
+          "hgrad": null,
+          "hmax": null,
+          "hmin": null,
+          "hsiz": null,
+          "ls": true,
+          "nr": true,
+          "output_tetrahedra": 9868,
+          "output_nodes": 2907
+        }
+      ],
+      "instrumentation_s": 0.08261854297597893,
+      "vtk_backend": "Sequential",
+      "vtk_threads": 1,
+      "periodic_required": true,
+      "solve_performed": false,
+      "actual_resolution": 20,
+      "seed_nodes": 5328,
+      "seed_elements": 20364,
+      "reoriented_tets": 0,
+      "generation_wall_s": 1.2466325410059653,
+      "nodes": 2907,
+      "elements": 9868,
+      "generation_s": 1.1640139980299864,
+      "mesh_sha256": "ada0706e61161887115f69a219b158a1dc3b0812a7ec6bc8fb35cc0ac1dc0812",
+      "historical_all_plane_periodic_gate": {
+        "passed": true
+      },
+      "geometry": {
+        "volume": 0.29415455782865285,
+        "relative_volume_error": -0.019081616793676814,
+        "q_min_corner": 0.0014244541308012558,
+        "q_p01_corner": 0.0661547609563135,
+        "minimum_sampled_jacobian": 9.313624315075495e-08,
+        "facet_consistency": {
+          "nodes": 2907,
+          "elements": 9868,
+          "unique_faces": 21920,
+          "interior_faces": 17552,
+          "extracted_boundary_faces": 4368,
+          "same_orientation_shared_faces": 0,
+          "nonmanifold_faces": 0,
+          "duplicate_cells": 0,
+          "duplicate_surface_faces": 0,
+          "provided_boundary_matches_extraction": true,
+          "missing_provided_faces": 0,
+          "extra_provided_faces": 0,
+          "nonpositive_corner_determinants": 0,
+          "minimum_corner_determinant": 9.313624315075478e-08,
+          "oriented_facet_consistency_passed": true,
+          "conflict_examples": [],
+          "scope": "Oriented corner-face incidence and same-side neighbor diagnostics; necessary consistency, not a certificate of curved geometry or absence of nonlocal intersections"
+        },
+        "oriented_facet_consistency_passed": true,
+        "quadratic_conformity": {
+          "passed": true,
+          "order": 1
+        },
+        "exact_straight_reduction_verified": false,
+        "geometry_admitted": false,
+        "sampled_reverse_max": 0.008186659976212908,
+        "distance_audit_complete": false,
+        "projection_failed": null,
+        "audit_scope": "Fail-fast after required quality/volume/topology/periodicity rejection; no forward-distance or successful speed claim",
+        "failed_gates": [
+          "quality",
+          "volume"
+        ]
+      },
+      "periodic": {
+        "periodic_pair_counts": [
+          260,
+          260,
+          260
+        ],
+        "periodic_coordinate_errors": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "periodic_pair_tolerance": 1e-10,
+        "periodic_equivalence_classes": 2151,
+        "periodic_triangles_match": true,
+        "full_facet_check_required": true,
+        "complete_existing_node_classes": true,
+        "unmatched_noncap_contact_nodes": [
+          [
+            [],
+            []
+          ],
+          [
+            [],
+            []
+          ],
+          [
+            [],
+            []
+          ]
+        ],
+        "periodic_gate": "material-cap-and-complete-node-classes-v1"
+      },
+      "quality_quantiles": {
+        "min": 0.0014244541308012558,
+        "p01": 0.0661547609563135,
+        "p10": 0.47878535216094215,
+        "median": 0.7244289746926392,
+        "p90": 0.8884537164502112,
+        "p99": 0.9623234438781576,
+        "max": 0.9982751052350053
+      },
+      "audit_s": 0.9235143330006395,
+      "wall_s": 2.1824295410187915,
+      "worker": {
+        "returncode": 0,
+        "limit_failure": null,
+        "peak_rss_bytes": 1196769280,
+        "wall_s": 3.2121262079745065,
+        "wall_s_clock": "monotonic",
+        "elapsed_realtime_s": 3.2121269702911377,
+        "suspension_or_clock_adjustment_s": 7.623166311532259e-07,
+        "idle_sleep_prevention": [
+          "/usr/bin/caffeinate",
+          "-i"
+        ],
+        "memory_bytes": 8589934592,
+        "memory_enforcement": "process-tree-rss-watchdog",
+        "rss_poll_interval_s": 0.25,
+        "platform": "darwin",
+        "numerical_thread_policy": {
+          "environment": {
+            "OPENBLAS_NUM_THREADS": "1",
+            "OMP_NUM_THREADS": "1",
+            "MKL_NUM_THREADS": "1",
+            "VECLIB_MAXIMUM_THREADS": "1",
+            "RAYON_NUM_THREADS": "1"
+          },
+          "accelerate_blas_threading": 1,
+          "accelerate_scope": "calling thread"
+        }
+      },
+      "directory": "experiments/adaptive/runs/macbook-tpms-family-pilot-v1/tpms-schoen-iwp-lower-actual-default"
+    },
+    {
+      "case": "tpms-schoen-iwp-upper",
+      "config": {
+        "name": "native-uniform16-fit-tet10",
+        "arm": "meshers",
+        "cells": 16,
+        "order": 2,
+        "adapt": false,
+        "tolerance": 1.0,
+        "curved_fit": true,
+        "periodic_trace": true
+      },
+      "status": "admitted",
+      "qualified": true,
+      "mmg_calls": [],
+      "instrumentation_s": 0.0,
+      "vtk_backend": "Sequential",
+      "vtk_threads": 1,
+      "periodic_required": true,
+      "solve_performed": false,
+      "diagnostics": {
+        "empty": false,
+        "volume": 0.29900246171641076,
+        "minimum_mmg_quality": 0.4542045576286515,
+        "sampled_surface_error": 0.00589048318593192,
+        "elements_below_quality_01": 0,
+        "reverted_snap_vertices": 0,
+        "callback_calls": 0,
+        "inserted_interior_nodes": 0,
+        "seconds": 0.18000275,
+        "quadratic": {
+          "curved_edges": 8244,
+          "straightened_edges": 0,
+          "partially_curved_edges": 0,
+          "minimum_jacobian_ratio": 0.5320552144553878,
+          "fit": {
+            "selected_groups": 90,
+            "affected_faces": 108,
+            "accepted_steps": 1,
+            "moved_nodes": 108,
+            "initial_distance_estimate": 0.0008448818175519702,
+            "final_distance_estimate": 0.0007445517368966035
+          }
+        },
+        "threads": 1,
+        "evaluator": "compiled",
+        "preparation_seconds": 0.0007067919941619039
+      },
+      "generation_wall_s": 0.18075066700112075,
+      "nodes": 33245,
+      "elements": 19836,
+      "generation_s": 0.18075066700112075,
+      "generated_field_identity_checked": 4096,
+      "mesh_sha256": "c28945d22752a202bd35fea4b3b0a627182347937b64f17335445c19998f67a5",
+      "historical_all_plane_periodic_gate": {
+        "passed": true
+      },
+      "geometry": {
+        "volume": 0.300137101530379,
+        "relative_volume_error": 4.865368128870173e-05,
+        "q_min_corner": 0.4542045576286515,
+        "q_p01_corner": 0.5140545103277887,
+        "minimum_sampled_jacobian": 6.051898417473373e-06,
+        "facet_consistency": {
+          "nodes": 33245,
+          "elements": 19836,
+          "unique_faces": 42792,
+          "interior_faces": 36552,
+          "extracted_boundary_faces": 6240,
+          "same_orientation_shared_faces": 0,
+          "nonmanifold_faces": 0,
+          "duplicate_cells": 0,
+          "duplicate_surface_faces": 0,
+          "provided_boundary_matches_extraction": true,
+          "missing_provided_faces": 0,
+          "extra_provided_faces": 0,
+          "nonpositive_corner_determinants": 0,
+          "minimum_corner_determinant": 6.051898417473395e-06,
+          "oriented_facet_consistency_passed": true,
+          "conflict_examples": [],
+          "scope": "Oriented corner-face incidence and same-side neighbor diagnostics; necessary consistency, not a certificate of curved geometry or absence of nonlocal intersections"
+        },
+        "oriented_facet_consistency_passed": true,
+        "quadratic_conformity": {
+          "passed": true,
+          "order": 2,
+          "unique_edges": 28100
+        },
+        "exact_straight_reduction_verified": false,
+        "geometry_admitted": true,
+        "sampled_forward_max": 0.0008181962826043901,
+        "sampled_reverse_max": 0.0007281872684727527,
+        "sampled_two_sided_max": 0.0008181962826043901,
+        "outward_forward_max": 0.0008181962826043901,
+        "inward_forward_max": 0.0006546799763773191,
+        "projection_failed": 0,
+        "forward_samples": 70356,
+        "reverse_samples": 36078,
+        "minimum_dihedral_deg_corner": 24.617004994844734,
+        "reverse_tessellation_delta_max": 8.085697508004314e-05,
+        "quadratic_reverse_subdivisions": [
+          8,
+          16
+        ],
+        "projection_method": "newton-box-slsqp-v1",
+        "unbounded_projection_failed": 0,
+        "box_projection_attempts": 0,
+        "box_projection_recovered": 0,
+        "box_projection_witnesses": [],
+        "distance_audit_complete": true,
+        "failed_gates": []
+      },
+      "periodic": {
+        "periodic_pair_counts": [
+          354,
+          354,
+          354
+        ],
+        "periodic_coordinate_errors": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "periodic_pair_tolerance": 1e-10,
+        "periodic_equivalence_classes": 32236,
+        "periodic_triangles_match": true,
+        "full_facet_check_required": true,
+        "complete_existing_node_classes": true,
+        "unmatched_noncap_contact_nodes": [
+          [
+            [],
+            []
+          ],
+          [
+            [],
+            []
+          ],
+          [
+            [],
+            []
+          ]
+        ],
+        "periodic_gate": "material-cap-and-complete-node-classes-v1"
+      },
+      "quality_quantiles": {
+        "min": 0.4542045576286515,
+        "p01": 0.5140545103277887,
+        "p10": 0.6037394802719678,
+        "median": 0.84937738327052,
+        "p90": 0.9362120833685021,
+        "p99": 0.9761512645836562,
+        "max": 0.9970672628024972
+      },
+      "native_and_independent_pairs_agree": true,
+      "audit_s": 2.445314042008249,
+      "wall_s": 2.68279029201949,
+      "worker": {
+        "returncode": 0,
+        "limit_failure": null,
+        "peak_rss_bytes": 813678592,
+        "wall_s": 3.8295593340008054,
+        "wall_s_clock": "monotonic",
+        "elapsed_realtime_s": 3.829562187194824,
+        "suspension_or_clock_adjustment_s": 2.8531940188258886e-06,
+        "idle_sleep_prevention": [
+          "/usr/bin/caffeinate",
+          "-i"
+        ],
+        "memory_bytes": 8589934592,
+        "memory_enforcement": "process-tree-rss-watchdog",
+        "rss_poll_interval_s": 0.25,
+        "platform": "darwin",
+        "numerical_thread_policy": {
+          "environment": {
+            "OPENBLAS_NUM_THREADS": "1",
+            "OMP_NUM_THREADS": "1",
+            "MKL_NUM_THREADS": "1",
+            "VECLIB_MAXIMUM_THREADS": "1",
+            "RAYON_NUM_THREADS": "1"
+          },
+          "accelerate_blas_threading": 1,
+          "accelerate_scope": "calling thread"
+        }
+      },
+      "directory": "experiments/adaptive/runs/macbook-tpms-family-pilot-v1/tpms-schoen-iwp-upper-native-fit"
+    },
+    {
+      "case": "tpms-schoen-iwp-upper",
+      "config": {
+        "name": "actual-default-tet4",
+        "arm": "microgen",
+        "resolution": null,
+        "order": 1,
+        "periodic_trace": true
+      },
+      "status": "admission-rejected",
+      "qualified": false,
+      "mmg_calls": [
+        {
+          "nofem": true,
+          "output_tetrahedra": 10531,
+          "output_nodes": 2758
+        },
+        {
+          "hausd": null,
+          "hgrad": null,
+          "hmax": null,
+          "hmin": null,
+          "hsiz": null,
+          "ls": true,
+          "nr": true,
+          "output_tetrahedra": 9431,
+          "output_nodes": 2535
+        }
+      ],
+      "instrumentation_s": 0.08730712396209128,
+      "vtk_backend": "Sequential",
+      "vtk_threads": 1,
+      "periodic_required": true,
+      "solve_performed": false,
+      "actual_resolution": 20,
+      "seed_nodes": 4712,
+      "seed_elements": 19530,
+      "reoriented_tets": 0,
+      "generation_wall_s": 1.1417242080206051,
+      "nodes": 2535,
+      "elements": 9431,
+      "generation_s": 1.0544170840585139,
+      "mesh_sha256": "27b750e3063776844bdac2dc4f6a18295e51c7fe6f3077da67bdd187784c65c1",
+      "historical_all_plane_periodic_gate": {
+        "passed": true
+      },
+      "geometry": {
+        "volume": 0.2937791733374956,
+        "relative_volume_error": -0.021135790018190992,
+        "q_min_corner": 0.11675445734284327,
+        "q_p01_corner": 0.27702802920438546,
+        "minimum_sampled_jacobian": 8.014786416152425e-06,
+        "facet_consistency": {
+          "nodes": 2535,
+          "elements": 9431,
+          "unique_faces": 20488,
+          "interior_faces": 17236,
+          "extracted_boundary_faces": 3252,
+          "same_orientation_shared_faces": 0,
+          "nonmanifold_faces": 0,
+          "duplicate_cells": 0,
+          "duplicate_surface_faces": 0,
+          "provided_boundary_matches_extraction": true,
+          "missing_provided_faces": 0,
+          "extra_provided_faces": 0,
+          "nonpositive_corner_determinants": 0,
+          "minimum_corner_determinant": 8.014786416152433e-06,
+          "oriented_facet_consistency_passed": true,
+          "conflict_examples": [],
+          "scope": "Oriented corner-face incidence and same-side neighbor diagnostics; necessary consistency, not a certificate of curved geometry or absence of nonlocal intersections"
+        },
+        "oriented_facet_consistency_passed": true,
+        "quadratic_conformity": {
+          "passed": true,
+          "order": 1
+        },
+        "exact_straight_reduction_verified": false,
+        "geometry_admitted": false,
+        "sampled_reverse_max": 0.010591251173195574,
+        "distance_audit_complete": false,
+        "projection_failed": null,
+        "audit_scope": "Fail-fast after required quality/volume/topology/periodicity rejection; no forward-distance or successful speed claim",
+        "failed_gates": [
+          "volume"
+        ]
+      },
+      "periodic": {
+        "periodic_pair_counts": [
+          140,
+          140,
+          140
+        ],
+        "periodic_coordinate_errors": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "periodic_pair_tolerance": 1e-10,
+        "periodic_equivalence_classes": 2150,
+        "periodic_triangles_match": true,
+        "full_facet_check_required": true,
+        "complete_existing_node_classes": true,
+        "unmatched_noncap_contact_nodes": [
+          [
+            [],
+            []
+          ],
+          [
+            [],
+            []
+          ],
+          [
+            [],
+            []
+          ]
+        ],
+        "periodic_gate": "material-cap-and-complete-node-classes-v1"
+      },
+      "quality_quantiles": {
+        "min": 0.11675445734284327,
+        "p01": 0.27702802920438546,
+        "p10": 0.5766093044696273,
+        "median": 0.7846963599705729,
+        "p90": 0.9178821410783281,
+        "p99": 0.971620322078922,
+        "max": 0.9941275962671332
+      },
+      "audit_s": 0.933932707994245,
+      "wall_s": 2.0876513330149464,
+      "worker": {
+        "returncode": 0,
+        "limit_failure": null,
+        "peak_rss_bytes": 722354176,
+        "wall_s": 3.1196686670009512,
+        "wall_s_clock": "monotonic",
+        "elapsed_realtime_s": 3.1196706295013428,
+        "suspension_or_clock_adjustment_s": 1.9625003915280104e-06,
+        "idle_sleep_prevention": [
+          "/usr/bin/caffeinate",
+          "-i"
+        ],
+        "memory_bytes": 8589934592,
+        "memory_enforcement": "process-tree-rss-watchdog",
+        "rss_poll_interval_s": 0.25,
+        "platform": "darwin",
+        "numerical_thread_policy": {
+          "environment": {
+            "OPENBLAS_NUM_THREADS": "1",
+            "OMP_NUM_THREADS": "1",
+            "MKL_NUM_THREADS": "1",
+            "VECLIB_MAXIMUM_THREADS": "1",
+            "RAYON_NUM_THREADS": "1"
+          },
+          "accelerate_blas_threading": 1,
+          "accelerate_scope": "calling thread"
+        }
+      },
+      "directory": "experiments/adaptive/runs/macbook-tpms-family-pilot-v1/tpms-schoen-iwp-upper-actual-default"
+    },
+    {
+      "case": "tpms-honeycomb-sheet",
+      "config": {
+        "name": "native-uniform16-fit-tet10",
+        "arm": "meshers",
+        "cells": 16,
+        "order": 2,
+        "adapt": false,
+        "tolerance": 1.0,
+        "curved_fit": true,
+        "periodic_trace": true
+      },
+      "status": "admission-rejected",
+      "qualified": false,
+      "mmg_calls": [],
+      "instrumentation_s": 0.0,
+      "vtk_backend": "Sequential",
+      "vtk_threads": 1,
+      "periodic_required": true,
+      "solve_performed": false,
+      "diagnostics": {
+        "empty": false,
+        "volume": 0.30181320242371046,
+        "minimum_mmg_quality": 0.17036790903938126,
+        "sampled_surface_error": 0.008107132397565902,
+        "elements_below_quality_01": 0,
+        "reverted_snap_vertices": 0,
+        "callback_calls": 0,
+        "inserted_interior_nodes": 0,
+        "seconds": 0.209134084,
+        "quadratic": {
+          "curved_edges": 12784,
+          "straightened_edges": 0,
+          "partially_curved_edges": 68,
+          "minimum_jacobian_ratio": 0.01724747723115545,
+          "fit": {
+            "selected_groups": 65,
+            "affected_faces": 68,
+            "accepted_steps": 0,
+            "moved_nodes": 0,
+            "initial_distance_estimate": 0.005920666171957499,
+            "final_distance_estimate": 0.005920666171957499
+          }
+        },
+        "threads": 1,
+        "evaluator": "compiled",
+        "preparation_seconds": 0.0004550419980660081
+      },
+      "generation_wall_s": 0.209634166007163,
+      "nodes": 42426,
+      "elements": 23920,
+      "generation_s": 0.209634166007163,
+      "generated_field_identity_checked": 4096,
+      "mesh_sha256": "d3a87a6295720324a8dfbc6931b23f13d01152f26f54ceaa2d973a34f33a0088",
+      "historical_all_plane_periodic_gate": {
+        "passed": true
+      },
+      "geometry": {
+        "volume": 0.30000795881362263,
+        "relative_volume_error": 0.00013399108203815402,
+        "q_min_corner": 0.17036790903938126,
+        "q_p01_corner": 0.3874995752346156,
+        "minimum_sampled_jacobian": 8.961736528621044e-07,
+        "facet_consistency": {
+          "nodes": 42426,
+          "elements": 23920,
+          "unique_faces": 52782,
+          "interior_faces": 42898,
+          "extracted_boundary_faces": 9884,
+          "same_orientation_shared_faces": 0,
+          "nonmanifold_faces": 0,
+          "duplicate_cells": 0,
+          "duplicate_surface_faces": 0,
+          "provided_boundary_matches_extraction": true,
+          "missing_provided_faces": 0,
+          "extra_provided_faces": 0,
+          "nonpositive_corner_determinants": 0,
+          "minimum_corner_determinant": 2.8523767672386525e-06,
+          "oriented_facet_consistency_passed": true,
+          "conflict_examples": [],
+          "scope": "Oriented corner-face incidence and same-side neighbor diagnostics; necessary consistency, not a certificate of curved geometry or absence of nonlocal intersections"
+        },
+        "oriented_facet_consistency_passed": true,
+        "quadratic_conformity": {
+          "passed": true,
+          "order": 2,
+          "unique_edges": 35644
+        },
+        "exact_straight_reduction_verified": false,
+        "geometry_admitted": false,
+        "sampled_forward_max": 0.006263430671418795,
+        "sampled_reverse_max": 0.0061649767474153926,
+        "sampled_two_sided_max": 0.006263430671418795,
+        "outward_forward_max": 0.006263430671418795,
+        "inward_forward_max": 0.00048619751999380117,
+        "projection_failed": 0,
+        "forward_samples": 108186,
+        "reverse_samples": 37447,
+        "minimum_dihedral_deg_corner": 15.235450273644261,
+        "reverse_tessellation_delta_max": 8.923663687337015e-05,
+        "quadratic_reverse_subdivisions": [
+          8,
+          16
+        ],
+        "projection_method": "newton-box-slsqp-v1",
+        "unbounded_projection_failed": 0,
+        "box_projection_attempts": 0,
+        "box_projection_recovered": 0,
+        "box_projection_witnesses": [],
+        "distance_audit_complete": true,
+        "failed_gates": [
+          "geometry"
+        ]
+      },
+      "periodic": {
+        "periodic_pair_counts": [
+          692,
+          692,
+          547
+        ],
+        "periodic_coordinate_errors": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "periodic_pair_tolerance": 1e-10,
+        "periodic_equivalence_classes": 40531,
+        "periodic_triangles_match": true,
+        "full_facet_check_required": true,
+        "complete_existing_node_classes": true,
+        "unmatched_noncap_contact_nodes": [
+          [
+            [],
+            []
+          ],
+          [
+            [],
+            []
+          ],
+          [
+            [],
+            []
+          ]
+        ],
+        "periodic_gate": "material-cap-and-complete-node-classes-v1"
+      },
+      "quality_quantiles": {
+        "min": 0.17036790903938126,
+        "p01": 0.3874995752346156,
+        "p10": 0.5520607414765982,
+        "median": 0.7653094196686567,
+        "p90": 0.926009708631104,
+        "p99": 0.9727265666915096,
+        "max": 0.9995076570908055
+      },
+      "native_and_independent_pairs_agree": true,
+      "audit_s": 2.7860243339964654,
+      "wall_s": 3.071149499999592,
+      "worker": {
+        "returncode": 0,
+        "limit_failure": null,
+        "peak_rss_bytes": 1048887296,
+        "wall_s": 4.00394429199514,
+        "wall_s_clock": "monotonic",
+        "elapsed_realtime_s": 4.0039448738098145,
+        "suspension_or_clock_adjustment_s": 5.818146746605635e-07,
+        "idle_sleep_prevention": [
+          "/usr/bin/caffeinate",
+          "-i"
+        ],
+        "memory_bytes": 8589934592,
+        "memory_enforcement": "process-tree-rss-watchdog",
+        "rss_poll_interval_s": 0.25,
+        "platform": "darwin",
+        "numerical_thread_policy": {
+          "environment": {
+            "OPENBLAS_NUM_THREADS": "1",
+            "OMP_NUM_THREADS": "1",
+            "MKL_NUM_THREADS": "1",
+            "VECLIB_MAXIMUM_THREADS": "1",
+            "RAYON_NUM_THREADS": "1"
+          },
+          "accelerate_blas_threading": 1,
+          "accelerate_scope": "calling thread"
+        }
+      },
+      "directory": "experiments/adaptive/runs/macbook-tpms-family-pilot-v1/tpms-honeycomb-sheet-native-fit"
+    },
+    {
+      "case": "tpms-honeycomb-sheet",
+      "config": {
+        "name": "actual-default-tet4",
+        "arm": "microgen",
+        "resolution": null,
+        "order": 1,
+        "periodic_trace": true
+      },
+      "status": "admission-rejected",
+      "qualified": false,
+      "mmg_calls": [
+        {
+          "nofem": true,
+          "output_tetrahedra": 14005,
+          "output_nodes": 3738
+        },
+        {
+          "hausd": null,
+          "hgrad": null,
+          "hmax": null,
+          "hmin": null,
+          "hsiz": null,
+          "ls": true,
+          "nr": true,
+          "output_tetrahedra": 13426,
+          "output_nodes": 3555
+        }
+      ],
+      "instrumentation_s": 0.08597299995017238,
+      "vtk_backend": "Sequential",
+      "vtk_threads": 1,
+      "periodic_required": true,
+      "solve_performed": false,
+      "actual_resolution": 20,
+      "seed_nodes": 6398,
+      "seed_elements": 25032,
+      "reoriented_tets": 0,
+      "generation_wall_s": 2.014177875011228,
+      "nodes": 3555,
+      "elements": 13426,
+      "generation_s": 1.9282048750610556,
+      "mesh_sha256": "7be974f5f2f706a86df092fd9810fb0d14deabb1823367e9ae89cab38d51602a",
+      "historical_all_plane_periodic_gate": {
+        "passed": true
+      },
+      "geometry": {
+        "volume": 0.30537350466495256,
+        "relative_volume_error": 0.01802106583780483,
+        "q_min_corner": 0.0014005259104401485,
+        "q_p01_corner": 0.04461974172720026,
+        "minimum_sampled_jacobian": 4.8905006362172695e-09,
+        "facet_consistency": {
+          "nodes": 3555,
+          "elements": 13426,
+          "unique_faces": 29170,
+          "interior_faces": 24534,
+          "extracted_boundary_faces": 4636,
+          "same_orientation_shared_faces": 0,
+          "nonmanifold_faces": 0,
+          "duplicate_cells": 0,
+          "duplicate_surface_faces": 0,
+          "provided_boundary_matches_extraction": true,
+          "missing_provided_faces": 0,
+          "extra_provided_faces": 0,
+          "nonpositive_corner_determinants": 0,
+          "minimum_corner_determinant": 4.890500636217268e-09,
+          "oriented_facet_consistency_passed": true,
+          "conflict_examples": [],
+          "scope": "Oriented corner-face incidence and same-side neighbor diagnostics; necessary consistency, not a certificate of curved geometry or absence of nonlocal intersections"
+        },
+        "oriented_facet_consistency_passed": true,
+        "quadratic_conformity": {
+          "passed": true,
+          "order": 1
+        },
+        "exact_straight_reduction_verified": false,
+        "geometry_admitted": false,
+        "sampled_reverse_max": 0.014800722029291391,
+        "distance_audit_complete": false,
+        "projection_failed": null,
+        "audit_scope": "Fail-fast after required quality/volume/topology/periodicity rejection; no forward-distance or successful speed claim",
+        "failed_gates": [
+          "quality",
+          "volume"
+        ]
+      },
+      "periodic": {
+        "periodic_pair_counts": [
+          250,
+          250,
+          198
+        ],
+        "periodic_coordinate_errors": [
+          1.1102230246251565e-16,
+          9.992007221626409e-16,
+          0.0
+        ],
+        "periodic_pair_tolerance": 1e-10,
+        "periodic_equivalence_classes": 2883,
+        "periodic_triangles_match": true,
+        "full_facet_check_required": true,
+        "complete_existing_node_classes": true,
+        "unmatched_noncap_contact_nodes": [
+          [
+            [],
+            []
+          ],
+          [
+            [],
+            []
+          ],
+          [
+            [],
+            []
+          ]
+        ],
+        "periodic_gate": "material-cap-and-complete-node-classes-v1"
+      },
+      "quality_quantiles": {
+        "min": 0.0014005259104401485,
+        "p01": 0.04461974172720026,
+        "p10": 0.35347413597097826,
+        "median": 0.7056643933106637,
+        "p90": 0.8842965653160253,
+        "p99": 0.9603978907584684,
+        "max": 0.9975980503623035
+      },
+      "audit_s": 0.9446362500020768,
+      "wall_s": 2.974442375008948,
+      "worker": {
+        "returncode": 0,
+        "limit_failure": null,
+        "peak_rss_bytes": 1207386112,
+        "wall_s": 4.0857685830269475,
+        "wall_s_clock": "monotonic",
+        "elapsed_realtime_s": 4.0857720375061035,
+        "suspension_or_clock_adjustment_s": 3.454479156062007e-06,
+        "idle_sleep_prevention": [
+          "/usr/bin/caffeinate",
+          "-i"
+        ],
+        "memory_bytes": 8589934592,
+        "memory_enforcement": "process-tree-rss-watchdog",
+        "rss_poll_interval_s": 0.25,
+        "platform": "darwin",
+        "numerical_thread_policy": {
+          "environment": {
+            "OPENBLAS_NUM_THREADS": "1",
+            "OMP_NUM_THREADS": "1",
+            "MKL_NUM_THREADS": "1",
+            "VECLIB_MAXIMUM_THREADS": "1",
+            "RAYON_NUM_THREADS": "1"
+          },
+          "accelerate_blas_threading": 1,
+          "accelerate_scope": "calling thread"
+        }
+      },
+      "directory": "experiments/adaptive/runs/macbook-tpms-family-pilot-v1/tpms-honeycomb-sheet-actual-default"
+    },
+    {
+      "case": "tpms-honeycomb-lower",
+      "config": {
+        "name": "native-uniform16-fit-tet10",
+        "arm": "meshers",
+        "cells": 16,
+        "order": 2,
+        "adapt": false,
+        "tolerance": 1.0,
+        "curved_fit": true,
+        "periodic_trace": true
+      },
+      "status": "admitted",
+      "qualified": true,
+      "mmg_calls": [],
+      "instrumentation_s": 0.0,
+      "vtk_backend": "Sequential",
+      "vtk_threads": 1,
+      "periodic_required": true,
+      "solve_performed": false,
+      "diagnostics": {
+        "empty": false,
+        "volume": 0.29893546661460696,
+        "minimum_mmg_quality": 0.15161241817467286,
+        "sampled_surface_error": 0.003619358992041393,
+        "elements_below_quality_01": 0,
+        "reverted_snap_vertices": 0,
+        "callback_calls": 0,
+        "inserted_interior_nodes": 0,
+        "seconds": 0.095058542,
+        "quadratic": {
+          "curved_edges": 4956,
+          "straightened_edges": 0,
+          "partially_curved_edges": 0,
+          "minimum_jacobian_ratio": 0.6419565229511913,
+          "fit": {
+            "selected_groups": 86,
+            "affected_faces": 100,
+            "accepted_steps": 1,
+            "moved_nodes": 91,
+            "initial_distance_estimate": 0.00030893990870104257,
+            "final_distance_estimate": 0.00030650465175354564
+          }
+        },
+        "threads": 1,
+        "evaluator": "compiled",
+        "preparation_seconds": 0.00047695799730718136
+      },
+      "generation_wall_s": 0.09557533299084753,
+      "nodes": 28455,
+      "elements": 17531,
+      "generation_s": 0.09557533299084753,
+      "generated_field_identity_checked": 4096,
+      "mesh_sha256": "836bca4b74a0ae408051240bc844b53a44b04f3462228bdd8cbdac356b09e148",
+      "historical_all_plane_periodic_gate": {
+        "passed": true
+      },
+      "geometry": {
+        "volume": 0.2998749822373551,
+        "relative_volume_error": -7.803898028213574e-05,
+        "q_min_corner": 0.15161241817467286,
+        "q_p01_corner": 0.481773670654428,
+        "minimum_sampled_jacobian": 2.630038412799263e-06,
+        "facet_consistency": {
+          "nodes": 28455,
+          "elements": 17531,
+          "unique_faces": 37384,
+          "interior_faces": 32740,
+          "extracted_boundary_faces": 4644,
+          "same_orientation_shared_faces": 0,
+          "nonmanifold_faces": 0,
+          "duplicate_cells": 0,
+          "duplicate_surface_faces": 0,
+          "provided_boundary_matches_extraction": true,
+          "missing_provided_faces": 0,
+          "extra_provided_faces": 0,
+          "nonpositive_corner_determinants": 0,
+          "minimum_corner_determinant": 2.6303837646021797e-06,
+          "oriented_facet_consistency_passed": true,
+          "conflict_examples": [],
+          "scope": "Oriented corner-face incidence and same-side neighbor diagnostics; necessary consistency, not a certificate of curved geometry or absence of nonlocal intersections"
+        },
+        "oriented_facet_consistency_passed": true,
+        "quadratic_conformity": {
+          "passed": true,
+          "order": 2,
+          "unique_edges": 24151
+        },
+        "exact_straight_reduction_verified": false,
+        "geometry_admitted": true,
+        "sampled_forward_max": 0.00030982588055705377,
+        "sampled_reverse_max": 0.00030521233451613204,
+        "sampled_two_sided_max": 0.00030982588055705377,
+        "outward_forward_max": 0.00030982588055705377,
+        "inward_forward_max": 0.00030866420471613656,
+        "projection_failed": 0,
+        "forward_samples": 41626,
+        "reverse_samples": 34178,
+        "minimum_dihedral_deg_corner": 13.683009280575817,
+        "reverse_tessellation_delta_max": 5.530063162097649e-05,
+        "quadratic_reverse_subdivisions": [
+          8,
+          16
+        ],
+        "projection_method": "newton-box-slsqp-v1",
+        "unbounded_projection_failed": 0,
+        "box_projection_attempts": 0,
+        "box_projection_recovered": 0,
+        "box_projection_witnesses": [],
+        "distance_audit_complete": true,
+        "failed_gates": []
+      },
+      "periodic": {
+        "periodic_pair_counts": [
+          455,
+          458,
+          797
+        ],
+        "periodic_coordinate_errors": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "periodic_pair_tolerance": 1e-10,
+        "periodic_equivalence_classes": 26802,
+        "periodic_triangles_match": true,
+        "full_facet_check_required": true,
+        "complete_existing_node_classes": true,
+        "unmatched_noncap_contact_nodes": [
+          [
+            [],
+            []
+          ],
+          [
+            [],
+            []
+          ],
+          [
+            [],
+            []
+          ]
+        ],
+        "periodic_gate": "material-cap-and-complete-node-classes-v1"
+      },
+      "quality_quantiles": {
+        "min": 0.15161241817467286,
+        "p01": 0.481773670654428,
+        "p10": 0.6354545301374851,
+        "median": 0.9046124262502498,
+        "p90": 0.9388212272236675,
+        "p99": 0.9833711363999125,
+        "max": 0.9960239941004834
+      },
+      "native_and_independent_pairs_agree": true,
+      "audit_s": 2.186765332997311,
+      "wall_s": 2.3302576660062186,
+      "worker": {
+        "returncode": 0,
+        "limit_failure": null,
+        "peak_rss_bytes": 679215104,
+        "wall_s": 3.3745552919863258,
+        "wall_s_clock": "monotonic",
+        "elapsed_realtime_s": 3.3745579719543457,
+        "suspension_or_clock_adjustment_s": 2.6799680199474096e-06,
+        "idle_sleep_prevention": [
+          "/usr/bin/caffeinate",
+          "-i"
+        ],
+        "memory_bytes": 8589934592,
+        "memory_enforcement": "process-tree-rss-watchdog",
+        "rss_poll_interval_s": 0.25,
+        "platform": "darwin",
+        "numerical_thread_policy": {
+          "environment": {
+            "OPENBLAS_NUM_THREADS": "1",
+            "OMP_NUM_THREADS": "1",
+            "MKL_NUM_THREADS": "1",
+            "VECLIB_MAXIMUM_THREADS": "1",
+            "RAYON_NUM_THREADS": "1"
+          },
+          "accelerate_blas_threading": 1,
+          "accelerate_scope": "calling thread"
+        }
+      },
+      "directory": "experiments/adaptive/runs/macbook-tpms-family-pilot-v1/tpms-honeycomb-lower-native-fit"
+    },
+    {
+      "case": "tpms-honeycomb-lower",
+      "config": {
+        "name": "actual-default-tet4",
+        "arm": "microgen",
+        "resolution": null,
+        "order": 1,
+        "periodic_trace": true
+      },
+      "status": "admission-rejected",
+      "qualified": false,
+      "mmg_calls": [
+        {
+          "nofem": true,
+          "output_tetrahedra": 8199,
+          "output_nodes": 2346
+        },
+        {
+          "hausd": null,
+          "hgrad": null,
+          "hmax": null,
+          "hmin": null,
+          "hsiz": null,
+          "ls": true,
+          "nr": true,
+          "output_tetrahedra": 7813,
+          "output_nodes": 2252
+        }
+      ],
+      "instrumentation_s": 0.07970720800221898,
+      "vtk_backend": "Sequential",
+      "vtk_threads": 1,
+      "periodic_required": true,
+      "solve_performed": false,
+      "actual_resolution": 20,
+      "seed_nodes": 4242,
+      "seed_elements": 17386,
+      "reoriented_tets": 0,
+      "generation_wall_s": 1.1232312500069384,
+      "nodes": 2252,
+      "elements": 7813,
+      "generation_s": 1.0435240420047194,
+      "mesh_sha256": "38d28d654ff8ef1806698881172bd8570f85c37b6a4aa19b02ec1e38b85a6512",
+      "historical_all_plane_periodic_gate": {
+        "passed": true
+      },
+      "geometry": {
+        "volume": 0.29673992949582606,
+        "relative_volume_error": -0.01053175559852515,
+        "q_min_corner": 0.009644093164831141,
+        "q_p01_corner": 0.08310284154301102,
+        "minimum_sampled_jacobian": 1.1593083911115042e-07,
+        "facet_consistency": {
+          "nodes": 2252,
+          "elements": 7813,
+          "unique_faces": 17185,
+          "interior_faces": 14067,
+          "extracted_boundary_faces": 3118,
+          "same_orientation_shared_faces": 0,
+          "nonmanifold_faces": 0,
+          "duplicate_cells": 0,
+          "duplicate_surface_faces": 0,
+          "provided_boundary_matches_extraction": true,
+          "missing_provided_faces": 0,
+          "extra_provided_faces": 0,
+          "nonpositive_corner_determinants": 0,
+          "minimum_corner_determinant": 1.1593083911115055e-07,
+          "oriented_facet_consistency_passed": true,
+          "conflict_examples": [],
+          "scope": "Oriented corner-face incidence and same-side neighbor diagnostics; necessary consistency, not a certificate of curved geometry or absence of nonlocal intersections"
+        },
+        "oriented_facet_consistency_passed": true,
+        "quadratic_conformity": {
+          "passed": true,
+          "order": 1
+        },
+        "exact_straight_reduction_verified": false,
+        "geometry_admitted": false,
+        "sampled_reverse_max": 0.009359532579189762,
+        "distance_audit_complete": false,
+        "projection_failed": null,
+        "audit_scope": "Fail-fast after required quality/volume/topology/periodicity rejection; no forward-distance or successful speed claim",
+        "failed_gates": [
+          "quality",
+          "volume"
+        ]
+      },
+      "periodic": {
+        "periodic_pair_counts": [
+          168,
+          168,
+          307
+        ],
+        "periodic_coordinate_errors": [
+          9.992007221626409e-16,
+          1.0928757898653885e-16,
+          0.0
+        ],
+        "periodic_pair_tolerance": 1e-10,
+        "periodic_equivalence_classes": 1646,
+        "periodic_triangles_match": true,
+        "full_facet_check_required": true,
+        "complete_existing_node_classes": true,
+        "unmatched_noncap_contact_nodes": [
+          [
+            [],
+            []
+          ],
+          [
+            [],
+            []
+          ],
+          [
+            [],
+            []
+          ]
+        ],
+        "periodic_gate": "material-cap-and-complete-node-classes-v1"
+      },
+      "quality_quantiles": {
+        "min": 0.009644093164831141,
+        "p01": 0.08310284154301102,
+        "p10": 0.40390830936669064,
+        "median": 0.7035036778770831,
+        "p90": 0.8841459225905309,
+        "p99": 0.9618773611947673,
+        "max": 0.9928799943775107
+      },
+      "audit_s": 0.906059083994478,
+      "wall_s": 2.039156541984994,
+      "worker": {
+        "returncode": 0,
+        "limit_failure": null,
+        "peak_rss_bytes": 714227712,
+        "wall_s": 3.0601242079865187,
+        "wall_s_clock": "monotonic",
+        "elapsed_realtime_s": 3.060127019882202,
+        "suspension_or_clock_adjustment_s": 2.8118956834077835e-06,
+        "idle_sleep_prevention": [
+          "/usr/bin/caffeinate",
+          "-i"
+        ],
+        "memory_bytes": 8589934592,
+        "memory_enforcement": "process-tree-rss-watchdog",
+        "rss_poll_interval_s": 0.25,
+        "platform": "darwin",
+        "numerical_thread_policy": {
+          "environment": {
+            "OPENBLAS_NUM_THREADS": "1",
+            "OMP_NUM_THREADS": "1",
+            "MKL_NUM_THREADS": "1",
+            "VECLIB_MAXIMUM_THREADS": "1",
+            "RAYON_NUM_THREADS": "1"
+          },
+          "accelerate_blas_threading": 1,
+          "accelerate_scope": "calling thread"
+        }
+      },
+      "directory": "experiments/adaptive/runs/macbook-tpms-family-pilot-v1/tpms-honeycomb-lower-actual-default"
+    },
+    {
+      "case": "tpms-honeycomb-upper",
+      "config": {
+        "name": "native-uniform16-fit-tet10",
+        "arm": "meshers",
+        "cells": 16,
+        "order": 2,
+        "adapt": false,
+        "tolerance": 1.0,
+        "curved_fit": true,
+        "periodic_trace": true
+      },
+      "status": "failed",
+      "qualified": false,
+      "mmg_calls": [],
+      "instrumentation_s": 0.0,
+      "vtk_backend": "Sequential",
+      "vtk_threads": 1,
+      "periodic_required": true,
+      "solve_performed": false,
+      "diagnostics": {
+        "empty": false,
+        "volume": 0.29908834068363604,
+        "minimum_mmg_quality": 0.15053638312347123,
+        "sampled_surface_error": 0.0039152710025071895,
+        "elements_below_quality_01": 0,
+        "reverted_snap_vertices": 0,
+        "callback_calls": 0,
+        "inserted_interior_nodes": 0,
+        "seconds": 0.097132166,
+        "quadratic": {
+          "curved_edges": 4836,
+          "straightened_edges": 0,
+          "partially_curved_edges": 0,
+          "minimum_jacobian_ratio": 0.6612870283036122,
+          "fit": {
+            "selected_groups": 310,
+            "affected_faces": 328,
+            "accepted_steps": 2,
+            "moved_nodes": 320,
+            "initial_distance_estimate": 0.0002125369019742312,
+            "final_distance_estimate": 0.00019955705767030706
+          }
+        },
+        "threads": 1,
+        "evaluator": "compiled",
+        "preparation_seconds": 0.0004935420001856983
+      },
+      "generation_wall_s": 0.09766525001032278,
+      "nodes": 27538,
+      "elements": 17477,
+      "generation_s": 0.09766525001032278,
+      "generated_field_identity_checked": 4096,
+      "mesh_sha256": "b8b8ffdbc761da6b0d1b6fa827e37c474b844c3415f2b8801d15a9c961210eef",
+      "historical_all_plane_periodic_gate": {
+        "passed": false,
+        "error": "Periodic specimen does not span the declared unit cube"
+      },
+      "geometry": {
+        "volume": 0.3000714119631007,
+        "relative_volume_error": -0.00011064844527319817,
+        "q_min_corner": 0.15053638312347123,
+        "q_p01_corner": 0.4889824957823452,
+        "minimum_sampled_jacobian": 2.5120904981722794e-06,
+        "facet_consistency": {
+          "nodes": 27538,
+          "elements": 17477,
+          "unique_faces": 36904,
+          "interior_faces": 33004,
+          "extracted_boundary_faces": 3900,
+          "same_orientation_shared_faces": 0,
+          "nonmanifold_faces": 0,
+          "duplicate_cells": 0,
+          "duplicate_surface_faces": 0,
+          "provided_boundary_matches_extraction": true,
+          "missing_provided_faces": 0,
+          "extra_provided_faces": 0,
+          "nonpositive_corner_determinants": 0,
+          "minimum_corner_determinant": 2.5123856183248198e-06,
+          "oriented_facet_consistency_passed": true,
+          "conflict_examples": [],
+          "scope": "Oriented corner-face incidence and same-side neighbor diagnostics; necessary consistency, not a certificate of curved geometry or absence of nonlocal intersections"
+        },
+        "oriented_facet_consistency_passed": true,
+        "quadratic_conformity": {
+          "passed": true,
+          "order": 2,
+          "unique_edges": 23481
+        },
+        "exact_straight_reduction_verified": false,
+        "geometry_admitted": false,
+        "sampled_reverse_max": 0.00019677780157943825,
+        "distance_audit_complete": false,
+        "projection_failed": null,
+        "audit_scope": "Fail-fast after required quality/volume/topology/periodicity rejection; no forward-distance or successful speed claim",
+        "failed_gates": [
+          "periodicity"
+        ]
+      },
+      "periodic": {
+        "error": "Periodic specimen does not span the declared unit cube"
+      },
+      "quality_quantiles": {
+        "min": 0.15053638312347123,
+        "p01": 0.4889824957823452,
+        "p10": 0.6406656454749807,
+        "median": 0.9199976818291943,
+        "p90": 0.9338287127649935,
+        "p99": 0.9828313938037315,
+        "max": 0.9983807868637166
+      },
+      "error": "Periodic specimen does not span the declared unit cube",
+      "traceback": "Traceback (most recent call last):\n  File \"/Users/kmarchais/dev/meshers/experiments/adaptive/comparison_benchmark.py\", line 186, in worker\n    checked,_,_=periodic_auditor(points,surface)\n                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/Users/kmarchais/dev/meshers/experiments/adaptive/periodic_trace.py\", line 18, in periodic_pairs\n    raise ValueError('Periodic specimen does not span the declared unit cube')\nValueError: Periodic specimen does not span the declared unit cube\n",
+      "failed_attempt_s": 1.8830191250017378,
+      "wall_s": 1.8830213340115733,
+      "worker": {
+        "returncode": 0,
+        "limit_failure": null,
+        "peak_rss_bytes": 396181504,
+        "wall_s": 2.9142460830044,
+        "wall_s_clock": "monotonic",
+        "elapsed_realtime_s": 2.914247989654541,
+        "suspension_or_clock_adjustment_s": 1.9066501408815384e-06,
+        "idle_sleep_prevention": [
+          "/usr/bin/caffeinate",
+          "-i"
+        ],
+        "memory_bytes": 8589934592,
+        "memory_enforcement": "process-tree-rss-watchdog",
+        "rss_poll_interval_s": 0.25,
+        "platform": "darwin",
+        "numerical_thread_policy": {
+          "environment": {
+            "OPENBLAS_NUM_THREADS": "1",
+            "OMP_NUM_THREADS": "1",
+            "MKL_NUM_THREADS": "1",
+            "VECLIB_MAXIMUM_THREADS": "1",
+            "RAYON_NUM_THREADS": "1"
+          },
+          "accelerate_blas_threading": 1,
+          "accelerate_scope": "calling thread"
+        }
+      },
+      "directory": "experiments/adaptive/runs/macbook-tpms-family-pilot-v1/tpms-honeycomb-upper-native-fit"
+    },
+    {
+      "case": "tpms-honeycomb-upper",
+      "config": {
+        "name": "actual-default-tet4",
+        "arm": "microgen",
+        "resolution": null,
+        "order": 1,
+        "periodic_trace": true
+      },
+      "status": "admission-rejected",
+      "qualified": false,
+      "mmg_calls": [
+        {
+          "nofem": true,
+          "output_tetrahedra": 5331,
+          "output_nodes": 1493
+        },
+        {
+          "hausd": null,
+          "hgrad": null,
+          "hmax": null,
+          "hmin": null,
+          "hsiz": null,
+          "ls": true,
+          "nr": true,
+          "output_tetrahedra": 5649,
+          "output_nodes": 1534
+        }
+      ],
+      "instrumentation_s": 0.07355891598854214,
+      "vtk_backend": "Sequential",
+      "vtk_threads": 1,
+      "periodic_required": true,
+      "solve_performed": false,
+      "actual_resolution": 20,
+      "seed_nodes": 3928,
+      "seed_elements": 17314,
+      "reoriented_tets": 0,
+      "generation_wall_s": 0.9462164170108736,
+      "nodes": 1534,
+      "elements": 5649,
+      "generation_s": 0.8726575010223314,
+      "mesh_sha256": "fd76103c824c829b83b44421ddbc28eda7f480685a82f41d7ab60fb40125498b",
+      "historical_all_plane_periodic_gate": {
+        "passed": false,
+        "error": "Periodic specimen does not span the declared unit cube"
+      },
+      "geometry": {
+        "volume": 0.2969677276659909,
+        "relative_volume_error": -0.010452656232570745,
+        "q_min_corner": 0.012831726897021547,
+        "q_p01_corner": 0.1342787188036182,
+        "minimum_sampled_jacobian": 5.102060155098301e-07,
+        "facet_consistency": {
+          "nodes": 1534,
+          "elements": 5649,
+          "unique_faces": 12276,
+          "interior_faces": 10320,
+          "extracted_boundary_faces": 1956,
+          "same_orientation_shared_faces": 0,
+          "nonmanifold_faces": 0,
+          "duplicate_cells": 0,
+          "duplicate_surface_faces": 0,
+          "provided_boundary_matches_extraction": true,
+          "missing_provided_faces": 0,
+          "extra_provided_faces": 0,
+          "nonpositive_corner_determinants": 0,
+          "minimum_corner_determinant": 5.102060155098305e-07,
+          "oriented_facet_consistency_passed": true,
+          "conflict_examples": [],
+          "scope": "Oriented corner-face incidence and same-side neighbor diagnostics; necessary consistency, not a certificate of curved geometry or absence of nonlocal intersections"
+        },
+        "oriented_facet_consistency_passed": true,
+        "quadratic_conformity": {
+          "passed": true,
+          "order": 1
+        },
+        "exact_straight_reduction_verified": false,
+        "geometry_admitted": false,
+        "sampled_reverse_max": 0.011619949798084126,
+        "distance_audit_complete": false,
+        "projection_failed": null,
+        "audit_scope": "Fail-fast after required quality/volume/topology/periodicity rejection; no forward-distance or successful speed claim",
+        "failed_gates": [
+          "quality",
+          "volume",
+          "periodicity"
+        ]
+      },
+      "periodic": {
+        "error": "Periodic specimen does not span the declared unit cube"
+      },
+      "quality_quantiles": {
+        "min": 0.012831726897021547,
+        "p01": 0.1342787188036182,
+        "p10": 0.44999391572991043,
+        "median": 0.7315852758968092,
+        "p90": 0.905174155009149,
+        "p99": 0.9677797570835522,
+        "max": 0.9945461050126615
+      },
+      "audit_s": 0.9016577920119744,
+      "wall_s": 1.8553415829956066,
+      "worker": {
+        "returncode": 0,
+        "limit_failure": null,
+        "peak_rss_bytes": 1202470912,
+        "wall_s": 2.7162597920105327,
+        "wall_s_clock": "monotonic",
+        "elapsed_realtime_s": 2.716261148452759,
+        "suspension_or_clock_adjustment_s": 1.3564422260969877e-06,
+        "idle_sleep_prevention": [
+          "/usr/bin/caffeinate",
+          "-i"
+        ],
+        "memory_bytes": 8589934592,
+        "memory_enforcement": "process-tree-rss-watchdog",
+        "rss_poll_interval_s": 0.25,
+        "platform": "darwin",
+        "numerical_thread_policy": {
+          "environment": {
+            "OPENBLAS_NUM_THREADS": "1",
+            "OMP_NUM_THREADS": "1",
+            "MKL_NUM_THREADS": "1",
+            "VECLIB_MAXIMUM_THREADS": "1",
+            "RAYON_NUM_THREADS": "1"
+          },
+          "accelerate_blas_threading": 1,
+          "accelerate_scope": "calling thread"
+        }
+      },
+      "directory": "experiments/adaptive/runs/macbook-tpms-family-pilot-v1/tpms-honeycomb-upper-actual-default"
+    }
+  ],
+  "complete": true,
+  "attempted": 18,
+  "planned": 18
+}

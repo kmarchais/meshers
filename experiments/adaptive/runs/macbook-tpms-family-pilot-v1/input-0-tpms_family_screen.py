@@ -1,0 +1,182 @@
+"""One declared coverage screen using actual Microgen seeds and shared mesh admission."""
+
+import argparse
+import importlib.metadata
+import json
+from pathlib import Path
+import platform
+import shutil
+import signal
+import sys
+
+import microgen_workflow as w
+
+
+def main():
+    p = argparse.ArgumentParser()
+    p.add_argument("--run", type=Path, required=True)
+    p.add_argument("--fixtures", type=Path, required=True)
+    p.add_argument("--parts", default="sheet,lower skeletal,upper skeletal")
+    p.add_argument("--names")
+    p.add_argument("--arms", default="native-fit,actual-default")
+    p.add_argument("--worker", type=json.loads)
+    a = p.parse_args()
+    _, _, meshers, *_ = w.imports()
+    import comparison_benchmark as benchmark
+    import tpms_family_fixtures as fixtures
+
+    if a.worker:
+        benchmark.fixtures.case = fixtures.case
+        benchmark.fixtures.actual_shape = fixtures.actual_shape
+        benchmark.fixtures.periodic = lambda _: True
+        return benchmark.worker(a.run, a.worker["case"], a.worker["config"], a.fixtures)
+
+    from job_parts import worker_part
+
+    sys.path.insert(0, str(Path.home() / "bin"))
+    from pueue_progress import Job
+
+    frozen = json.loads((a.fixtures / "result.json").read_text())
+    assert frozen["passed"]
+    assert all(w.digest(Path(f)) == h for f, h in frozen["inputs"].items())
+    selected = [e for e in frozen["cases"] if e["part"] in a.parts.split(",")]
+    if a.names:
+        selected = [e for e in selected if e["surface_function"] in a.names.split(",")]
+    assert selected
+    arms = {
+        "native": dict(
+            name="native-uniform16-tet10",
+            arm="meshers",
+            cells=16,
+            order=2,
+            adapt=False,
+            tolerance=1.0,
+            curved_fit=False,
+            periodic_trace=True,
+        ),
+        "native-fit": dict(
+            name="native-uniform16-fit-tet10",
+            arm="meshers",
+            cells=16,
+            order=2,
+            adapt=False,
+            tolerance=1.0,
+            curved_fit=True,
+            periodic_trace=True,
+        ),
+        "actual-default": dict(
+            name="actual-default-tet4",
+            arm="microgen",
+            resolution=None,
+            order=1,
+            periodic_trace=True,
+        ),
+    }
+    tasks = [
+        (e["name"] + "-" + name, e, arms[name]) for e in selected for name in a.arms.split(",")
+    ]
+    a.run.mkdir(parents=True, exist_ok=False)
+    paths = [
+        Path(__file__),
+        Path(fixtures.__file__),
+        Path(benchmark.__file__),
+        Path(meshers._meshers.__file__),
+        a.fixtures / "result.json",
+    ]
+    paths += [
+        w.HERE / n
+        for n in (
+            "microgen_workflow.py",
+            "scorecard.py",
+            "comparison_mesh_audit.py",
+            "periodic_trace.py",
+            "box_projection.py",
+            "facet_incidence_audit.py",
+            "quadratic_edge_removal_probe.py",
+        )
+    ]
+    paths += [Path(meshers.__file__), Path(meshers.expression.__file__)]
+    import microgen.remesh
+
+    paths += [
+        Path(microgen.remesh.__file__),
+        Path(microgen.shape.tpms.__file__),
+        Path(importlib.metadata.distribution("mmgpy").locate_file("mmgpy/bin/mmg3d_O3")),
+    ]
+    hashes = {str(f): w.digest(f) for f in paths}
+    w.save(
+        a.run / "manifest.json",
+        dict(
+            inputs=hashes,
+            fixture_hashes=frozen["inputs"],
+            selected=selected,
+            arms={n: arms[n] for n in a.arms.split(",")},
+            worker_timeout_s=180,
+            memory_bytes=w.MEMORY,
+            node_cap=w.CAP,
+            tetrahedron_cap=w.CAP,
+            numerical_threads=w.NUMERICAL_THREAD_POLICY,
+            platform=platform.platform(),
+            command=sys.argv,
+            coverage_screen_only=True,
+            claim_limits="Single generation observations, differing element orders, no FEA or matched-accuracy superiority claim. All admission gates unchanged; defaults and failures retained.",
+        ),
+    )
+    for i, f in enumerate(paths):
+        if f.suffix == ".py":
+            shutil.copyfile(f, a.run / f"input-{i}-{f.name}")
+    signal.signal(signal.SIGALRM, lambda *_: (_ for _ in ()).throw(TimeoutError("Screen deadline")))
+    signal.alarm(len(tasks) * 190 + 60)
+    rows = []
+    with Job(parts=[t[0] for t in tasks]) as job:
+        for name, e, config in tasks:
+            directory = a.run / name
+            directory.mkdir()
+            for f in (a.fixtures / e["name"]).iterdir():
+                shutil.copyfile(f, directory / f.name)
+            with worker_part(job, name) as part:
+                record = w.bounded(
+                    [
+                        sys.executable,
+                        __file__,
+                        "--run",
+                        str(directory),
+                        "--fixtures",
+                        str(a.fixtures),
+                        "--worker",
+                        json.dumps(dict(case=e["name"], config=config)),
+                    ],
+                    directory / "worker.log",
+                    part,
+                    timeout=180,
+                )
+                w.save(directory / "worker.json", record)
+                row = (
+                    json.loads((directory / "result.json").read_text())
+                    if (directory / "result.json").exists()
+                    else dict(status="no-result", qualified=False)
+                )
+                row.update(worker=record, directory=str(directory))
+                rows.append(row)
+                job.result(
+                    name,
+                    qualified=row["qualified"],
+                    seconds=record["wall_s"],
+                    generation_s=row.get("generation_s"),
+                    elements=row.get("elements"),
+                )
+                w.save(
+                    a.run / "summary.json",
+                    dict(
+                        rows=rows,
+                        complete=len(rows) == len(tasks),
+                        attempted=len(rows),
+                        planned=len(tasks),
+                    ),
+                )
+    signal.alarm(0)
+    assert all(w.digest(Path(f)) == h for f, h in {**hashes, **frozen["inputs"]}.items())
+
+
+if __name__ == "__main__":
+    main()

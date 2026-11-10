@@ -1,0 +1,1853 @@
+{
+  "case": "tpms-neovius-lower",
+  "config": {
+    "name": "actual-modified40-first-pass-repair-tet4",
+    "arm": "microgen",
+    "resolution": 40,
+    "order": 1,
+    "periodic_trace": true,
+    "first_only": true,
+    "first_hausd": 0.0005,
+    "first_hmax": 0.1,
+    "mmg": {
+      "hausd": 0.0005,
+      "hmax": 0.1,
+      "hgrad": 1.3
+    },
+    "repair": true,
+    "declared_unit_cell": true
+  },
+  "status": "admission-rejected",
+  "qualified": false,
+  "mmg_calls": [
+    {
+      "nofem": true,
+      "hausd": 0.0005,
+      "hmax": 0.1,
+      "hgrad": 1.3,
+      "output_tetrahedra": 117591,
+      "output_nodes": 26383
+    }
+  ],
+  "instrumentation_s": 0.12949575000675395,
+  "vtk_backend": "Sequential",
+  "vtk_threads": 1,
+  "periodic_required": true,
+  "solve_performed": false,
+  "actual_resolution": 40,
+  "seed_nodes": 26112,
+  "seed_elements": 124780,
+  "omitted_second_pass": true,
+  "reoriented_tets": 0,
+  "repair": {
+    "initial_bad_elements": 165,
+    "remaining_bad_elements": 165,
+    "initial_minimum_quality": 0.0009434618674295242,
+    "final_minimum_quality": 0.0009434618674295242,
+    "accepted_moves": 0,
+    "moved_vertices": 0,
+    "attempts": [
+      {
+        "element": 33637,
+        "sweep": 0,
+        "status": "all-boundary",
+        "target_attained": false
+      },
+      {
+        "node": 3667,
+        "incident_tets": 22,
+        "quality_target": 0.100001,
+        "initial_minimum_quality": 0.0010919578688580818,
+        "fixed_opposite_face_upper_bound": 0.001470392507198643,
+        "target_attained": false,
+        "status": "fixed-face-obstructed",
+        "numerical_quality_guard": 1e-09,
+        "element": 19345,
+        "sweep": 0
+      },
+      {
+        "node": 9075,
+        "incident_tets": 26,
+        "quality_target": 0.100001,
+        "initial_minimum_quality": 0.0011274678961238902,
+        "fixed_opposite_face_upper_bound": 0.001470392507198643,
+        "target_attained": false,
+        "status": "fixed-face-obstructed",
+        "numerical_quality_guard": 1e-09,
+        "element": 98105,
+        "sweep": 0
+      },
+      {
+        "element": 111845,
+        "sweep": 0,
+        "status": "all-boundary",
+        "target_attained": false
+      },
+      {
+        "node": 6229,
+        "incident_tets": 26,
+        "quality_target": 0.100001,
+        "initial_minimum_quality": 0.0011376034306954425,
+        "fixed_opposite_face_upper_bound": 0.001470392507198643,
+        "target_attained": false,
+        "status": "fixed-face-obstructed",
+        "numerical_quality_guard": 1e-09,
+        "element": 98446,
+        "sweep": 0
+      },
+      {
+        "node": 9075,
+        "incident_tets": 26,
+        "quality_target": 0.100001,
+        "initial_minimum_quality": 0.0011274678961238902,
+        "fixed_opposite_face_upper_bound": 0.001470392507198643,
+        "target_attained": false,
+        "status": "fixed-face-obstructed",
+        "numerical_quality_guard": 1e-09,
+        "element": 37221,
+        "sweep": 0
+      },
+      {
+        "node": 11677,
+        "incident_tets": 32,
+        "quality_target": 0.100001,
+        "initial_minimum_quality": 0.001252369171892266,
+        "fixed_opposite_face_upper_bound": 0.0020094305133422277,
+        "target_attained": false,
+        "status": "fixed-face-obstructed",
+        "numerical_quality_guard": 1e-09,
+        "element": 44868,
+        "sweep": 0
+      },
+      {
+        "node": 25568,
+        "incident_tets": 20,
+        "quality_target": 0.100001,
+        "initial_minimum_quality": 0.001278629032209599,
+        "fixed_opposite_face_upper_bound": 0.001470392507198643,
+        "target_attained": false,
+        "status": "fixed-face-obstructed",
+        "numerical_quality_guard": 1e-09,
+        "element": 74412,
+        "sweep": 0
+      },
+      {
+        "node": 25568,
+        "incident_tets": 20,
+        "quality_target": 0.100001,
+        "initial_minimum_quality": 0.001278629032209599,
+        "fixed_opposite_face_upper_bound": 0.001470392507198643,
+        "target_attained": false,
+        "status": "fixed-face-obstructed",
+        "numerical_quality_guard": 1e-09,
+        "element": 28575,
+        "sweep": 0
+      },
+      {
+        "element": 109714,
+        "sweep": 0,
+        "status": "all-boundary",
+        "target_attained": false
+      },
+      {
+        "element": 21338,
+        "sweep": 0,
+        "status": "all-boundary",
+        "target_attained": false
+      },
+      {
+        "node": 11677,
+        "incident_tets": 32,
+        "quality_target": 0.100001,
+        "initial_minimum_quality": 0.001252369171892266,
+        "fixed_opposite_face_upper_bound": 0.0020094305133422277,
+        "target_attained": false,
+        "status": "fixed-face-obstructed",
+        "numerical_quality_guard": 1e-09,
+        "element": 115779,
+        "sweep": 0
+      },
+      {
+        "node": 1001,
+        "incident_tets": 12,
+        "quality_target": 0.100001,
+        "initial_minimum_quality": 0.0015852766734915334,
+        "fixed_opposite_face_upper_bound": 0.0020094305133422277,
+        "target_attained": false,
+        "status": "fixed-face-obstructed",
+        "numerical_quality_guard": 1e-09,
+        "element": 26515,
+        "sweep": 0
+      },
+      {
+        "element": 73687,
+        "sweep": 0,
+        "status": "all-boundary",
+        "target_attained": false
+      },
+      {
+        "node": 9399,
+        "incident_tets": 26,
+        "quality_target": 0.100001,
+        "initial_minimum_quality": 0.0016770848733026083,
+        "fixed_opposite_face_upper_bound": 0.0020094305133422277,
+        "target_attained": false,
+        "status": "fixed-face-obstructed",
+        "numerical_quality_guard": 1e-09,
+        "element": 56015,
+        "sweep": 0
+      },
+      {
+        "node": 9046,
+        "incident_tets": 24,
+        "quality_target": 0.100001,
+        "initial_minimum_quality": 0.0017512619439036285,
+        "fixed_opposite_face_upper_bound": 0.0020094305133422277,
+        "target_attained": false,
+        "status": "fixed-face-obstructed",
+        "numerical_quality_guard": 1e-09,
+        "element": 45677,
+        "sweep": 0
+      },
+      {
+        "element": 59238,
+        "sweep": 0,
+        "status": "all-boundary",
+        "target_attained": false
+      },
+      {
+        "node": 6342,
+        "incident_tets": 24,
+        "quality_target": 0.100001,
+        "initial_minimum_quality": 0.0017808040278334374,
+        "fixed_opposite_face_upper_bound": 0.0020094305133422277,
+        "target_attained": false,
+        "status": "fixed-face-obstructed",
+        "numerical_quality_guard": 1e-09,
+        "element": 36152,
+        "sweep": 0
+      },
+      {
+        "element": 14961,
+        "sweep": 0,
+        "status": "all-boundary",
+        "target_attained": false
+      },
+      {
+        "node": 9399,
+        "incident_tets": 26,
+        "quality_target": 0.100001,
+        "initial_minimum_quality": 0.0016770848733026083,
+        "fixed_opposite_face_upper_bound": 0.0020094305133422277,
+        "target_attained": false,
+        "status": "fixed-face-obstructed",
+        "numerical_quality_guard": 1e-09,
+        "element": 61115,
+        "sweep": 0
+      },
+      {
+        "node": 1256,
+        "incident_tets": 18,
+        "quality_target": 0.100001,
+        "initial_minimum_quality": 0.0018779457939415295,
+        "fixed_opposite_face_upper_bound": 0.0020094305133422277,
+        "target_attained": false,
+        "status": "fixed-face-obstructed",
+        "numerical_quality_guard": 1e-09,
+        "element": 82829,
+        "sweep": 0
+      },
+      {
+        "element": 17605,
+        "sweep": 0,
+        "status": "all-boundary",
+        "target_attained": false
+      },
+      {
+        "node": 1256,
+        "incident_tets": 18,
+        "quality_target": 0.100001,
+        "initial_minimum_quality": 0.0018779457939415295,
+        "fixed_opposite_face_upper_bound": 0.0020094305133422277,
+        "target_attained": false,
+        "status": "fixed-face-obstructed",
+        "numerical_quality_guard": 1e-09,
+        "element": 73168,
+        "sweep": 0
+      },
+      {
+        "node": 9046,
+        "incident_tets": 24,
+        "quality_target": 0.100001,
+        "initial_minimum_quality": 0.0017512619439036285,
+        "fixed_opposite_face_upper_bound": 0.0020094305133422277,
+        "target_attained": false,
+        "status": "fixed-face-obstructed",
+        "numerical_quality_guard": 1e-09,
+        "element": 25173,
+        "sweep": 0
+      },
+      {
+        "node": 6229,
+        "incident_tets": 26,
+        "quality_target": 0.100001,
+        "initial_minimum_quality": 0.0011376034306954425,
+        "fixed_opposite_face_upper_bound": 0.001470392507198643,
+        "target_attained": false,
+        "status": "fixed-face-obstructed",
+        "numerical_quality_guard": 1e-09,
+        "element": 38949,
+        "sweep": 0
+      },
+      {
+        "node": 1001,
+        "incident_tets": 12,
+        "quality_target": 0.100001,
+        "initial_minimum_quality": 0.0015852766734915334,
+        "fixed_opposite_face_upper_bound": 0.0020094305133422277,
+        "target_attained": false,
+        "status": "fixed-face-obstructed",
+        "numerical_quality_guard": 1e-09,
+        "element": 28883,
+        "sweep": 0
+      },
+      {
+        "node": 6342,
+        "incident_tets": 24,
+        "quality_target": 0.100001,
+        "initial_minimum_quality": 0.0017808040278334374,
+        "fixed_opposite_face_upper_bound": 0.0020094305133422277,
+        "target_attained": false,
+        "status": "fixed-face-obstructed",
+        "numerical_quality_guard": 1e-09,
+        "element": 32411,
+        "sweep": 0
+      },
+      {
+        "node": 3667,
+        "incident_tets": 22,
+        "quality_target": 0.100001,
+        "initial_minimum_quality": 0.0010919578688580818,
+        "fixed_opposite_face_upper_bound": 0.001470392507198643,
+        "target_attained": false,
+        "status": "fixed-face-obstructed",
+        "numerical_quality_guard": 1e-09,
+        "element": 47169,
+        "sweep": 0
+      },
+      {
+        "node": 837,
+        "incident_tets": 36,
+        "quality_target": 0.100001,
+        "initial_minimum_quality": 0.009495673148676278,
+        "fixed_opposite_face_upper_bound": 0.016862847974772274,
+        "target_attained": false,
+        "status": "fixed-face-obstructed",
+        "numerical_quality_guard": 1e-09,
+        "element": 1508,
+        "sweep": 0
+      },
+      {
+        "node": 15292,
+        "incident_tets": 38,
+        "quality_target": 0.100001,
+        "initial_minimum_quality": 0.00992880202375318,
+        "fixed_opposite_face_upper_bound": 0.016862847974772274,
+        "target_attained": false,
+        "status": "fixed-face-obstructed",
+        "numerical_quality_guard": 1e-09,
+        "element": 47281,
+        "sweep": 0
+      },
+      {
+        "element": 115835,
+        "sweep": 0,
+        "status": "all-boundary",
+        "target_attained": false
+      },
+      {
+        "node": 9655,
+        "incident_tets": 14,
+        "quality_target": 0.100001,
+        "initial_minimum_quality": 0.015276087574972912,
+        "fixed_opposite_face_upper_bound": 0.016862847974772274,
+        "target_attained": false,
+        "status": "fixed-face-obstructed",
+        "numerical_quality_guard": 1e-09,
+        "element": 47257,
+        "sweep": 0
+      },
+      {
+        "element": 1532,
+        "sweep": 0,
+        "status": "all-boundary",
+        "target_attained": false
+      },
+      {
+        "element": 113466,
+        "sweep": 0,
+        "status": "all-boundary",
+        "target_attained": false
+      },
+      {
+        "element": 101854,
+        "sweep": 0,
+        "status": "all-boundary",
+        "target_attained": false
+      },
+      {
+        "element": 102649,
+        "sweep": 0,
+        "status": "all-boundary",
+        "target_attained": false
+      },
+      {
+        "node": 9655,
+        "incident_tets": 14,
+        "quality_target": 0.100001,
+        "initial_minimum_quality": 0.015276087574972912,
+        "fixed_opposite_face_upper_bound": 0.016862847974772274,
+        "target_attained": false,
+        "status": "fixed-face-obstructed",
+        "numerical_quality_guard": 1e-09,
+        "element": 51674,
+        "sweep": 0
+      },
+      {
+        "node": 837,
+        "incident_tets": 36,
+        "quality_target": 0.100001,
+        "initial_minimum_quality": 0.009495673148676278,
+        "fixed_opposite_face_upper_bound": 0.016862847974772274,
+        "target_attained": false,
+        "status": "fixed-face-obstructed",
+        "numerical_quality_guard": 1e-09,
+        "element": 1510,
+        "sweep": 0
+      },
+      {
+        "element": 29511,
+        "sweep": 0,
+        "status": "all-boundary",
+        "target_attained": false
+      },
+      {
+        "node": 23869,
+        "incident_tets": 30,
+        "quality_target": 0.100001,
+        "initial_minimum_quality": 0.02869102287443163,
+        "fixed_opposite_face_upper_bound": 0.040413023449106716,
+        "target_attained": false,
+        "status": "fixed-face-obstructed",
+        "numerical_quality_guard": 1e-09,
+        "element": 21156,
+        "sweep": 0
+      },
+      {
+        "node": 2132,
+        "incident_tets": 24,
+        "quality_target": 0.100001,
+        "initial_minimum_quality": 0.028700391187375128,
+        "fixed_opposite_face_upper_bound": 0.05237997251712117,
+        "target_attained": false,
+        "status": "fixed-face-obstructed",
+        "numerical_quality_guard": 1e-09,
+        "element": 9377,
+        "sweep": 0
+      },
+      {
+        "node": 23869,
+        "incident_tets": 30,
+        "quality_target": 0.100001,
+        "initial_minimum_quality": 0.02869102287443163,
+        "fixed_opposite_face_upper_bound": 0.040413023449106716,
+        "target_attained": false,
+        "status": "fixed-face-obstructed",
+        "numerical_quality_guard": 1e-09,
+        "element": 20835,
+        "sweep": 0
+      },
+      {
+        "node": 25265,
+        "incident_tets": 30,
+        "quality_target": 0.100001,
+        "initial_minimum_quality": 0.02901396427010683,
+        "fixed_opposite_face_upper_bound": 0.04041302344910666,
+        "target_attained": false,
+        "status": "fixed-face-obstructed",
+        "numerical_quality_guard": 1e-09,
+        "element": 1518,
+        "sweep": 0
+      },
+      {
+        "node": 15641,
+        "incident_tets": 38,
+        "quality_target": 0.100001,
+        "initial_minimum_quality": 0.03008250640160291,
+        "fixed_opposite_face_upper_bound": 0.07778225287890522,
+        "target_attained": false,
+        "status": "fixed-face-obstructed",
+        "numerical_quality_guard": 1e-09,
+        "element": 100610,
+        "sweep": 0
+      },
+      {
+        "node": 10276,
+        "incident_tets": 38,
+        "quality_target": 0.100001,
+        "initial_minimum_quality": 0.032474868532718325,
+        "fixed_opposite_face_upper_bound": 0.040413023449106716,
+        "target_attained": false,
+        "status": "fixed-face-obstructed",
+        "numerical_quality_guard": 1e-09,
+        "element": 114507,
+        "sweep": 0
+      },
+      {
+        "node": 4704,
+        "incident_tets": 44,
+        "quality_target": 0.100001,
+        "initial_minimum_quality": 0.032793483362856084,
+        "fixed_opposite_face_upper_bound": 0.040413023449106716,
+        "target_attained": false,
+        "status": "fixed-face-obstructed",
+        "numerical_quality_guard": 1e-09,
+        "element": 113147,
+        "sweep": 0
+      },
+      {
+        "node": 8322,
+        "incident_tets": 24,
+        "quality_target": 0.100001,
+        "initial_minimum_quality": 0.03380293147816283,
+        "fixed_opposite_face_upper_bound": 0.040413023449106716,
+        "target_attained": false,
+        "status": "fixed-face-obstructed",
+        "numerical_quality_guard": 1e-09,
+        "element": 3604,
+        "sweep": 0
+      },
+      {
+        "node": 8322,
+        "incident_tets": 24,
+        "quality_target": 0.100001,
+        "initial_minimum_quality": 0.03380293147816283,
+        "fixed_opposite_face_upper_bound": 0.040413023449106716,
+        "target_attained": false,
+        "status": "fixed-face-obstructed",
+        "numerical_quality_guard": 1e-09,
+        "element": 71617,
+        "sweep": 0
+      },
+      {
+        "node": 1599,
+        "incident_tets": 36,
+        "quality_target": 0.100001,
+        "initial_minimum_quality": 0.035097228001703284,
+        "fixed_opposite_face_upper_bound": 0.04041302344910666,
+        "target_attained": false,
+        "status": "fixed-face-obstructed",
+        "numerical_quality_guard": 1e-09,
+        "element": 61077,
+        "sweep": 0
+      },
+      {
+        "node": 1599,
+        "incident_tets": 36,
+        "quality_target": 0.100001,
+        "initial_minimum_quality": 0.035097228001703284,
+        "fixed_opposite_face_upper_bound": 0.04041302344910666,
+        "target_attained": false,
+        "status": "fixed-face-obstructed",
+        "numerical_quality_guard": 1e-09,
+        "element": 59241,
+        "sweep": 0
+      },
+      {
+        "node": 4704,
+        "incident_tets": 44,
+        "quality_target": 0.100001,
+        "initial_minimum_quality": 0.032793483362856084,
+        "fixed_opposite_face_upper_bound": 0.040413023449106716,
+        "target_attained": false,
+        "status": "fixed-face-obstructed",
+        "numerical_quality_guard": 1e-09,
+        "element": 65055,
+        "sweep": 0
+      },
+      {
+        "node": 2365,
+        "incident_tets": 40,
+        "quality_target": 0.100001,
+        "initial_minimum_quality": 0.036000404653315735,
+        "fixed_opposite_face_upper_bound": 0.04041302344910666,
+        "target_attained": false,
+        "status": "fixed-face-obstructed",
+        "numerical_quality_guard": 1e-09,
+        "element": 99828,
+        "sweep": 0
+      },
+      {
+        "node": 10276,
+        "incident_tets": 38,
+        "quality_target": 0.100001,
+        "initial_minimum_quality": 0.032474868532718325,
+        "fixed_opposite_face_upper_bound": 0.040413023449106716,
+        "target_attained": false,
+        "status": "fixed-face-obstructed",
+        "numerical_quality_guard": 1e-09,
+        "element": 5832,
+        "sweep": 0
+      },
+      {
+        "node": 16134,
+        "incident_tets": 32,
+        "quality_target": 0.100001,
+        "initial_minimum_quality": 0.03816769218108723,
+        "fixed_opposite_face_upper_bound": 0.04041302344910666,
+        "target_attained": false,
+        "status": "fixed-face-obstructed",
+        "numerical_quality_guard": 1e-09,
+        "element": 54749,
+        "sweep": 0
+      },
+      {
+        "node": 8754,
+        "incident_tets": 30,
+        "quality_target": 0.100001,
+        "initial_minimum_quality": 0.03891841826135625,
+        "fixed_opposite_face_upper_bound": 0.052379972517121266,
+        "target_attained": false,
+        "status": "fixed-face-obstructed",
+        "numerical_quality_guard": 1e-09,
+        "element": 69426,
+        "sweep": 0
+      },
+      {
+        "node": 1545,
+        "incident_tets": 36,
+        "quality_target": 0.100001,
+        "initial_minimum_quality": 0.03967499328265966,
+        "fixed_opposite_face_upper_bound": 0.05237997251712117,
+        "target_attained": false,
+        "status": "fixed-face-obstructed",
+        "numerical_quality_guard": 1e-09,
+        "element": 31780,
+        "sweep": 0
+      },
+      {
+        "node": 2365,
+        "incident_tets": 40,
+        "quality_target": 0.100001,
+        "initial_minimum_quality": 0.036000404653315735,
+        "fixed_opposite_face_upper_bound": 0.04041302344910666,
+        "target_attained": false,
+        "status": "fixed-face-obstructed",
+        "numerical_quality_guard": 1e-09,
+        "element": 117157,
+        "sweep": 0
+      },
+      {
+        "node": 10703,
+        "incident_tets": 34,
+        "quality_target": 0.100001,
+        "initial_minimum_quality": 0.04167401207006323,
+        "fixed_opposite_face_upper_bound": 0.052379972517121266,
+        "target_attained": false,
+        "status": "fixed-face-obstructed",
+        "numerical_quality_guard": 1e-09,
+        "element": 103573,
+        "sweep": 0
+      },
+      {
+        "node": 14511,
+        "incident_tets": 30,
+        "quality_target": 0.100001,
+        "initial_minimum_quality": 0.04212193462355496,
+        "fixed_opposite_face_upper_bound": 0.052379972517121266,
+        "target_attained": false,
+        "status": "fixed-face-obstructed",
+        "numerical_quality_guard": 1e-09,
+        "element": 6214,
+        "sweep": 0
+      },
+      {
+        "node": 15292,
+        "incident_tets": 38,
+        "quality_target": 0.100001,
+        "initial_minimum_quality": 0.00992880202375318,
+        "fixed_opposite_face_upper_bound": 0.016862847974772274,
+        "target_attained": false,
+        "status": "fixed-face-obstructed",
+        "numerical_quality_guard": 1e-09,
+        "element": 1472,
+        "sweep": 0
+      },
+      {
+        "node": 16134,
+        "incident_tets": 32,
+        "quality_target": 0.100001,
+        "initial_minimum_quality": 0.03816769218108723,
+        "fixed_opposite_face_upper_bound": 0.04041302344910666,
+        "target_attained": false,
+        "status": "fixed-face-obstructed",
+        "numerical_quality_guard": 1e-09,
+        "element": 29647,
+        "sweep": 0
+      },
+      {
+        "node": 26073,
+        "incident_tets": 28,
+        "quality_target": 0.100001,
+        "initial_minimum_quality": 0.044898682699072545,
+        "fixed_opposite_face_upper_bound": 0.052379972517121266,
+        "target_attained": false,
+        "status": "fixed-face-obstructed",
+        "numerical_quality_guard": 1e-09,
+        "element": 116658,
+        "sweep": 0
+      },
+      {
+        "node": 3183,
+        "incident_tets": 30,
+        "quality_target": 0.100001,
+        "initial_minimum_quality": 0.04574850496114806,
+        "fixed_opposite_face_upper_bound": 0.06769933726782415,
+        "target_attained": false,
+        "status": "fixed-face-obstructed",
+        "numerical_quality_guard": 1e-09,
+        "element": 47171,
+        "sweep": 0
+      },
+      {
+        "node": 15641,
+        "incident_tets": 38,
+        "quality_target": 0.100001,
+        "initial_minimum_quality": 0.03008250640160291,
+        "fixed_opposite_face_upper_bound": 0.07778225287890522,
+        "target_attained": false,
+        "status": "fixed-face-obstructed",
+        "numerical_quality_guard": 1e-09,
+        "element": 57035,
+        "sweep": 0
+      },
+      {
+        "node": 10703,
+        "incident_tets": 34,
+        "quality_target": 0.100001,
+        "initial_minimum_quality": 0.04167401207006323,
+        "fixed_opposite_face_upper_bound": 0.052379972517121266,
+        "target_attained": false,
+        "status": "fixed-face-obstructed",
+        "numerical_quality_guard": 1e-09,
+        "element": 105827,
+        "sweep": 0
+      },
+      {
+        "node": 25644,
+        "incident_tets": 28,
+        "quality_target": 0.100001,
+        "initial_minimum_quality": 0.049754246124026104,
+        "fixed_opposite_face_upper_bound": 0.05237997251712117,
+        "target_attained": false,
+        "status": "fixed-face-obstructed",
+        "numerical_quality_guard": 1e-09,
+        "element": 116588,
+        "sweep": 0
+      },
+      {
+        "node": 26073,
+        "incident_tets": 28,
+        "quality_target": 0.100001,
+        "initial_minimum_quality": 0.044898682699072545,
+        "fixed_opposite_face_upper_bound": 0.052379972517121266,
+        "target_attained": false,
+        "status": "fixed-face-obstructed",
+        "numerical_quality_guard": 1e-09,
+        "element": 113458,
+        "sweep": 0
+      },
+      {
+        "node": 4848,
+        "incident_tets": 32,
+        "quality_target": 0.100001,
+        "initial_minimum_quality": 0.050613926080833364,
+        "fixed_opposite_face_upper_bound": 0.0883541913441163,
+        "target_attained": false,
+        "status": "fixed-face-obstructed",
+        "numerical_quality_guard": 1e-09,
+        "element": 116830,
+        "sweep": 0
+      },
+      {
+        "node": 3183,
+        "incident_tets": 30,
+        "quality_target": 0.100001,
+        "initial_minimum_quality": 0.04574850496114806,
+        "fixed_opposite_face_upper_bound": 0.06769933726782415,
+        "target_attained": false,
+        "status": "fixed-face-obstructed",
+        "numerical_quality_guard": 1e-09,
+        "element": 16062,
+        "sweep": 0
+      },
+      {
+        "node": 1545,
+        "incident_tets": 36,
+        "quality_target": 0.100001,
+        "initial_minimum_quality": 0.03967499328265966,
+        "fixed_opposite_face_upper_bound": 0.05237997251712117,
+        "target_attained": false,
+        "status": "fixed-face-obstructed",
+        "numerical_quality_guard": 1e-09,
+        "element": 98847,
+        "sweep": 0
+      },
+      {
+        "node": 4640,
+        "incident_tets": 38,
+        "quality_target": 0.100001,
+        "initial_minimum_quality": 0.05546709756864648,
+        "fixed_opposite_face_upper_bound": 0.06683784774189763,
+        "target_attained": false,
+        "status": "fixed-face-obstructed",
+        "numerical_quality_guard": 1e-09,
+        "element": 55337,
+        "sweep": 0
+      },
+      {
+        "node": 4607,
+        "incident_tets": 34,
+        "quality_target": 0.100001,
+        "initial_minimum_quality": 0.05589125964896295,
+        "fixed_opposite_face_upper_bound": 0.06683784774189763,
+        "target_attained": false,
+        "status": "fixed-face-obstructed",
+        "numerical_quality_guard": 1e-09,
+        "element": 28629,
+        "sweep": 0
+      },
+      {
+        "node": 16287,
+        "incident_tets": 40,
+        "quality_target": 0.100001,
+        "initial_minimum_quality": 0.05694873550234479,
+        "fixed_opposite_face_upper_bound": 0.06683784774189763,
+        "target_attained": false,
+        "status": "fixed-face-obstructed",
+        "numerical_quality_guard": 1e-09,
+        "element": 16864,
+        "sweep": 0
+      },
+      {
+        "node": 25644,
+        "incident_tets": 28,
+        "quality_target": 0.100001,
+        "initial_minimum_quality": 0.049754246124026104,
+        "fixed_opposite_face_upper_bound": 0.05237997251712117,
+        "target_attained": false,
+        "status": "fixed-face-obstructed",
+        "numerical_quality_guard": 1e-09,
+        "element": 69561,
+        "sweep": 0
+      },
+      {
+        "node": 4640,
+        "incident_tets": 38,
+        "quality_target": 0.100001,
+        "initial_minimum_quality": 0.05546709756864648,
+        "fixed_opposite_face_upper_bound": 0.06683784774189763,
+        "target_attained": false,
+        "status": "fixed-face-obstructed",
+        "numerical_quality_guard": 1e-09,
+        "element": 64190,
+        "sweep": 0
+      },
+      {
+        "node": 4607,
+        "incident_tets": 34,
+        "quality_target": 0.100001,
+        "initial_minimum_quality": 0.05589125964896295,
+        "fixed_opposite_face_upper_bound": 0.06683784774189763,
+        "target_attained": false,
+        "status": "fixed-face-obstructed",
+        "numerical_quality_guard": 1e-09,
+        "element": 55285,
+        "sweep": 0
+      },
+      {
+        "node": 24900,
+        "incident_tets": 24,
+        "quality_target": 0.100001,
+        "initial_minimum_quality": 0.05812744938304365,
+        "fixed_opposite_face_upper_bound": 0.06769933726782414,
+        "target_attained": false,
+        "status": "fixed-face-obstructed",
+        "numerical_quality_guard": 1e-09,
+        "element": 24015,
+        "sweep": 0
+      },
+      {
+        "node": 2430,
+        "incident_tets": 34,
+        "quality_target": 0.100001,
+        "initial_minimum_quality": 0.05815105347378356,
+        "fixed_opposite_face_upper_bound": 0.06683784774189763,
+        "target_attained": false,
+        "status": "fixed-face-obstructed",
+        "numerical_quality_guard": 1e-09,
+        "element": 11680,
+        "sweep": 0
+      },
+      {
+        "node": 2430,
+        "incident_tets": 34,
+        "quality_target": 0.100001,
+        "initial_minimum_quality": 0.05815105347378356,
+        "fixed_opposite_face_upper_bound": 0.06683784774189763,
+        "target_attained": false,
+        "status": "fixed-face-obstructed",
+        "numerical_quality_guard": 1e-09,
+        "element": 22679,
+        "sweep": 0
+      },
+      {
+        "element": 51786,
+        "sweep": 0,
+        "status": "all-boundary",
+        "target_attained": false
+      },
+      {
+        "node": 24900,
+        "incident_tets": 24,
+        "quality_target": 0.100001,
+        "initial_minimum_quality": 0.05812744938304365,
+        "fixed_opposite_face_upper_bound": 0.06769933726782414,
+        "target_attained": false,
+        "status": "fixed-face-obstructed",
+        "numerical_quality_guard": 1e-09,
+        "element": 86742,
+        "sweep": 0
+      },
+      {
+        "node": 20279,
+        "incident_tets": 30,
+        "quality_target": 0.100001,
+        "initial_minimum_quality": 0.059347465512228414,
+        "fixed_opposite_face_upper_bound": 0.06683784774189763,
+        "target_attained": false,
+        "status": "fixed-face-obstructed",
+        "numerical_quality_guard": 1e-09,
+        "element": 9208,
+        "sweep": 0
+      },
+      {
+        "node": 18344,
+        "incident_tets": 26,
+        "quality_target": 0.100001,
+        "initial_minimum_quality": 0.0603781986148168,
+        "fixed_opposite_face_upper_bound": 0.09211654901968389,
+        "target_attained": false,
+        "status": "fixed-face-obstructed",
+        "numerical_quality_guard": 1e-09,
+        "element": 82409,
+        "sweep": 0
+      },
+      {
+        "node": 4848,
+        "incident_tets": 32,
+        "quality_target": 0.100001,
+        "initial_minimum_quality": 0.050613926080833364,
+        "fixed_opposite_face_upper_bound": 0.0883541913441163,
+        "target_attained": false,
+        "status": "fixed-face-obstructed",
+        "numerical_quality_guard": 1e-09,
+        "element": 113439,
+        "sweep": 0
+      },
+      {
+        "node": 16287,
+        "incident_tets": 40,
+        "quality_target": 0.100001,
+        "initial_minimum_quality": 0.05694873550234479,
+        "fixed_opposite_face_upper_bound": 0.06683784774189763,
+        "target_attained": false,
+        "status": "fixed-face-obstructed",
+        "numerical_quality_guard": 1e-09,
+        "element": 77414,
+        "sweep": 0
+      },
+      {
+        "node": 1231,
+        "incident_tets": 18,
+        "quality_target": 0.100001,
+        "initial_minimum_quality": 0.0613572753493289,
+        "fixed_opposite_face_upper_bound": 0.06769933726782415,
+        "target_attained": false,
+        "status": "fixed-face-obstructed",
+        "numerical_quality_guard": 1e-09,
+        "element": 105000,
+        "sweep": 0
+      },
+      {
+        "element": 7862,
+        "sweep": 0,
+        "status": "all-boundary",
+        "target_attained": false
+      },
+      {
+        "node": 1494,
+        "incident_tets": 36,
+        "quality_target": 0.100001,
+        "initial_minimum_quality": 0.0621726155497251,
+        "fixed_opposite_face_upper_bound": 0.06683784774189763,
+        "target_attained": false,
+        "status": "fixed-face-obstructed",
+        "numerical_quality_guard": 1e-09,
+        "element": 70174,
+        "sweep": 0
+      },
+      {
+        "element": 35592,
+        "sweep": 0,
+        "status": "all-boundary",
+        "target_attained": false
+      },
+      {
+        "node": 20279,
+        "incident_tets": 30,
+        "quality_target": 0.100001,
+        "initial_minimum_quality": 0.059347465512228414,
+        "fixed_opposite_face_upper_bound": 0.06683784774189763,
+        "target_attained": false,
+        "status": "fixed-face-obstructed",
+        "numerical_quality_guard": 1e-09,
+        "element": 78722,
+        "sweep": 0
+      },
+      {
+        "node": 8754,
+        "incident_tets": 30,
+        "quality_target": 0.100001,
+        "initial_minimum_quality": 0.03891841826135625,
+        "fixed_opposite_face_upper_bound": 0.052379972517121266,
+        "target_attained": false,
+        "status": "fixed-face-obstructed",
+        "numerical_quality_guard": 1e-09,
+        "element": 49646,
+        "sweep": 0
+      },
+      {
+        "node": 9257,
+        "incident_tets": 24,
+        "quality_target": 0.100001,
+        "initial_minimum_quality": 0.06371421713543504,
+        "fixed_opposite_face_upper_bound": 0.06769933726782415,
+        "target_attained": false,
+        "status": "fixed-face-obstructed",
+        "numerical_quality_guard": 1e-09,
+        "element": 56302,
+        "sweep": 0
+      },
+      {
+        "node": 1494,
+        "incident_tets": 36,
+        "quality_target": 0.100001,
+        "initial_minimum_quality": 0.0621726155497251,
+        "fixed_opposite_face_upper_bound": 0.06683784774189763,
+        "target_attained": false,
+        "status": "fixed-face-obstructed",
+        "numerical_quality_guard": 1e-09,
+        "element": 99598,
+        "sweep": 0
+      },
+      {
+        "node": 2042,
+        "incident_tets": 38,
+        "quality_target": 0.100001,
+        "initial_minimum_quality": 0.06393530204659943,
+        "fixed_opposite_face_upper_bound": 0.06683784774189763,
+        "target_attained": false,
+        "status": "fixed-face-obstructed",
+        "numerical_quality_guard": 1e-09,
+        "element": 99325,
+        "sweep": 0
+      },
+      {
+        "node": 5370,
+        "incident_tets": 40,
+        "quality_target": 0.100001,
+        "initial_minimum_quality": 0.06437113520123336,
+        "fixed_opposite_face_upper_bound": 0.06683784774189763,
+        "target_attained": false,
+        "status": "fixed-face-obstructed",
+        "numerical_quality_guard": 1e-09,
+        "element": 41244,
+        "sweep": 0
+      },
+      {
+        "node": 22999,
+        "incident_tets": 30,
+        "quality_target": 0.100001,
+        "initial_minimum_quality": 0.0646653099975387,
+        "fixed_opposite_face_upper_bound": 0.07881193512370166,
+        "target_attained": false,
+        "status": "fixed-face-obstructed",
+        "numerical_quality_guard": 1e-09,
+        "element": 5071,
+        "sweep": 0
+      },
+      {
+        "node": 22999,
+        "incident_tets": 30,
+        "quality_target": 0.100001,
+        "initial_minimum_quality": 0.0646653099975387,
+        "fixed_opposite_face_upper_bound": 0.07881193512370166,
+        "target_attained": false,
+        "status": "fixed-face-obstructed",
+        "numerical_quality_guard": 1e-09,
+        "element": 54936,
+        "sweep": 0
+      },
+      {
+        "element": 103352,
+        "sweep": 0,
+        "status": "all-boundary",
+        "target_attained": false
+      },
+      {
+        "element": 10393,
+        "sweep": 0,
+        "status": "all-boundary",
+        "target_attained": false
+      },
+      {
+        "node": 2042,
+        "incident_tets": 38,
+        "quality_target": 0.100001,
+        "initial_minimum_quality": 0.06393530204659943,
+        "fixed_opposite_face_upper_bound": 0.06683784774189763,
+        "target_attained": false,
+        "status": "fixed-face-obstructed",
+        "numerical_quality_guard": 1e-09,
+        "element": 102064,
+        "sweep": 0
+      },
+      {
+        "node": 12341,
+        "incident_tets": 20,
+        "quality_target": 0.100001,
+        "initial_minimum_quality": 0.06713925813151904,
+        "fixed_opposite_face_upper_bound": 0.07881193512370166,
+        "target_attained": false,
+        "status": "fixed-face-obstructed",
+        "numerical_quality_guard": 1e-09,
+        "element": 87471,
+        "sweep": 0
+      },
+      {
+        "node": 14511,
+        "incident_tets": 30,
+        "quality_target": 0.100001,
+        "initial_minimum_quality": 0.04212193462355496,
+        "fixed_opposite_face_upper_bound": 0.052379972517121266,
+        "target_attained": false,
+        "status": "fixed-face-obstructed",
+        "numerical_quality_guard": 1e-09,
+        "element": 90859,
+        "sweep": 0
+      },
+      {
+        "element": 37517,
+        "sweep": 0,
+        "status": "all-boundary",
+        "target_attained": false
+      },
+      {
+        "node": 12341,
+        "incident_tets": 20,
+        "quality_target": 0.100001,
+        "initial_minimum_quality": 0.06713925813151904,
+        "fixed_opposite_face_upper_bound": 0.07881193512370166,
+        "target_attained": false,
+        "status": "fixed-face-obstructed",
+        "numerical_quality_guard": 1e-09,
+        "element": 64004,
+        "sweep": 0
+      },
+      {
+        "node": 2906,
+        "incident_tets": 28,
+        "quality_target": 0.100001,
+        "initial_minimum_quality": 0.06783759293096021,
+        "fixed_opposite_face_upper_bound": 0.09046022484505484,
+        "target_attained": false,
+        "status": "fixed-face-obstructed",
+        "numerical_quality_guard": 1e-09,
+        "element": 47730,
+        "sweep": 0
+      },
+      {
+        "element": 83748,
+        "sweep": 0,
+        "status": "all-boundary",
+        "target_attained": false
+      },
+      {
+        "element": 18585,
+        "sweep": 0,
+        "status": "all-boundary",
+        "target_attained": false
+      },
+      {
+        "node": 2906,
+        "incident_tets": 28,
+        "quality_target": 0.100001,
+        "initial_minimum_quality": 0.06783759293096021,
+        "fixed_opposite_face_upper_bound": 0.09046022484505484,
+        "target_attained": false,
+        "status": "fixed-face-obstructed",
+        "numerical_quality_guard": 1e-09,
+        "element": 79776,
+        "sweep": 0
+      },
+      {
+        "node": 25265,
+        "incident_tets": 30,
+        "quality_target": 0.100001,
+        "initial_minimum_quality": 0.02901396427010683,
+        "fixed_opposite_face_upper_bound": 0.04041302344910666,
+        "target_attained": false,
+        "status": "fixed-face-obstructed",
+        "numerical_quality_guard": 1e-09,
+        "element": 5913,
+        "sweep": 0
+      },
+      {
+        "element": 82098,
+        "sweep": 0,
+        "status": "all-boundary",
+        "target_attained": false
+      },
+      {
+        "element": 56659,
+        "sweep": 0,
+        "status": "all-boundary",
+        "target_attained": false
+      },
+      {
+        "node": 11959,
+        "incident_tets": 28,
+        "quality_target": 0.100001,
+        "initial_minimum_quality": 0.07083080911063759,
+        "fixed_opposite_face_upper_bound": 0.09046022484505484,
+        "target_attained": false,
+        "status": "fixed-face-obstructed",
+        "numerical_quality_guard": 1e-09,
+        "element": 73908,
+        "sweep": 0
+      },
+      {
+        "node": 11959,
+        "incident_tets": 28,
+        "quality_target": 0.100001,
+        "initial_minimum_quality": 0.07083080911063759,
+        "fixed_opposite_face_upper_bound": 0.09046022484505484,
+        "target_attained": false,
+        "status": "fixed-face-obstructed",
+        "numerical_quality_guard": 1e-09,
+        "element": 73845,
+        "sweep": 0
+      },
+      {
+        "element": 26323,
+        "sweep": 0,
+        "status": "all-boundary",
+        "target_attained": false
+      },
+      {
+        "node": 17820,
+        "incident_tets": 26,
+        "quality_target": 0.100001,
+        "initial_minimum_quality": 0.07228186074209793,
+        "fixed_opposite_face_upper_bound": 0.07778225287890532,
+        "target_attained": false,
+        "status": "fixed-face-obstructed",
+        "numerical_quality_guard": 1e-09,
+        "element": 117563,
+        "sweep": 0
+      },
+      {
+        "node": 18344,
+        "incident_tets": 26,
+        "quality_target": 0.100001,
+        "initial_minimum_quality": 0.0603781986148168,
+        "fixed_opposite_face_upper_bound": 0.09211654901968389,
+        "target_attained": false,
+        "status": "fixed-face-obstructed",
+        "numerical_quality_guard": 1e-09,
+        "element": 117563,
+        "sweep": 0
+      },
+      {
+        "node": 5370,
+        "incident_tets": 40,
+        "quality_target": 0.100001,
+        "initial_minimum_quality": 0.06437113520123336,
+        "fixed_opposite_face_upper_bound": 0.06683784774189763,
+        "target_attained": false,
+        "status": "fixed-face-obstructed",
+        "numerical_quality_guard": 1e-09,
+        "element": 23436,
+        "sweep": 0
+      },
+      {
+        "node": 17820,
+        "incident_tets": 26,
+        "quality_target": 0.100001,
+        "initial_minimum_quality": 0.07228186074209793,
+        "fixed_opposite_face_upper_bound": 0.07778225287890532,
+        "target_attained": false,
+        "status": "fixed-face-obstructed",
+        "numerical_quality_guard": 1e-09,
+        "element": 110978,
+        "sweep": 0
+      },
+      {
+        "node": 10223,
+        "incident_tets": 20,
+        "quality_target": 0.100001,
+        "initial_minimum_quality": 0.07339879069400357,
+        "fixed_opposite_face_upper_bound": 0.07778225287890532,
+        "target_attained": false,
+        "status": "fixed-face-obstructed",
+        "numerical_quality_guard": 1e-09,
+        "element": 79375,
+        "sweep": 0
+      },
+      {
+        "element": 100587,
+        "sweep": 0,
+        "status": "all-boundary",
+        "target_attained": false
+      },
+      {
+        "element": 4334,
+        "sweep": 0,
+        "status": "all-boundary",
+        "target_attained": false
+      },
+      {
+        "element": 21818,
+        "sweep": 0,
+        "status": "all-boundary",
+        "target_attained": false
+      },
+      {
+        "node": 12436,
+        "incident_tets": 22,
+        "quality_target": 0.100001,
+        "initial_minimum_quality": 0.07350795983700725,
+        "fixed_opposite_face_upper_bound": 0.09046022484505484,
+        "target_attained": false,
+        "status": "fixed-face-obstructed",
+        "numerical_quality_guard": 1e-09,
+        "element": 73683,
+        "sweep": 0
+      },
+      {
+        "node": 3002,
+        "incident_tets": 16,
+        "quality_target": 0.100001,
+        "initial_minimum_quality": 0.07371104247568788,
+        "fixed_opposite_face_upper_bound": 0.07778225287890532,
+        "target_attained": false,
+        "status": "fixed-face-obstructed",
+        "numerical_quality_guard": 1e-09,
+        "element": 6302,
+        "sweep": 0
+      },
+      {
+        "node": 12436,
+        "incident_tets": 22,
+        "quality_target": 0.100001,
+        "initial_minimum_quality": 0.07350795983700725,
+        "fixed_opposite_face_upper_bound": 0.09046022484505484,
+        "target_attained": false,
+        "status": "fixed-face-obstructed",
+        "numerical_quality_guard": 1e-09,
+        "element": 76788,
+        "sweep": 0
+      },
+      {
+        "element": 24625,
+        "sweep": 0,
+        "status": "all-boundary",
+        "target_attained": false
+      },
+      {
+        "node": 19437,
+        "incident_tets": 26,
+        "quality_target": 0.100001,
+        "initial_minimum_quality": 0.07477172561496935,
+        "fixed_opposite_face_upper_bound": 0.07881193512370166,
+        "target_attained": false,
+        "status": "fixed-face-obstructed",
+        "numerical_quality_guard": 1e-09,
+        "element": 110609,
+        "sweep": 0
+      },
+      {
+        "node": 4897,
+        "incident_tets": 24,
+        "quality_target": 0.100001,
+        "initial_minimum_quality": 0.07558742069916904,
+        "fixed_opposite_face_upper_bound": 0.07881193512370166,
+        "target_attained": false,
+        "status": "fixed-face-obstructed",
+        "numerical_quality_guard": 1e-09,
+        "element": 81225,
+        "sweep": 0
+      },
+      {
+        "node": 1531,
+        "incident_tets": 22,
+        "quality_target": 0.100001,
+        "initial_minimum_quality": 0.07604579083751453,
+        "fixed_opposite_face_upper_bound": 0.07881193512370166,
+        "target_attained": false,
+        "status": "fixed-face-obstructed",
+        "numerical_quality_guard": 1e-09,
+        "element": 2921,
+        "sweep": 0
+      },
+      {
+        "element": 54393,
+        "sweep": 0,
+        "status": "all-boundary",
+        "target_attained": false
+      },
+      {
+        "node": 8472,
+        "incident_tets": 22,
+        "quality_target": 0.100001,
+        "initial_minimum_quality": 0.07628446200793207,
+        "fixed_opposite_face_upper_bound": 0.07881193512370166,
+        "target_attained": false,
+        "status": "fixed-face-obstructed",
+        "numerical_quality_guard": 1e-09,
+        "element": 85527,
+        "sweep": 0
+      },
+      {
+        "element": 64685,
+        "sweep": 0,
+        "status": "all-boundary",
+        "target_attained": false
+      },
+      {
+        "element": 55124,
+        "sweep": 0,
+        "status": "all-boundary",
+        "target_attained": false
+      },
+      {
+        "node": 1531,
+        "incident_tets": 22,
+        "quality_target": 0.100001,
+        "initial_minimum_quality": 0.07604579083751453,
+        "fixed_opposite_face_upper_bound": 0.07881193512370166,
+        "target_attained": false,
+        "status": "fixed-face-obstructed",
+        "numerical_quality_guard": 1e-09,
+        "element": 6076,
+        "sweep": 0
+      },
+      {
+        "node": 1774,
+        "incident_tets": 38,
+        "quality_target": 0.100001,
+        "initial_minimum_quality": 0.07745493773298422,
+        "fixed_opposite_face_upper_bound": 0.07881193512370166,
+        "target_attained": false,
+        "status": "fixed-face-obstructed",
+        "numerical_quality_guard": 1e-09,
+        "element": 45364,
+        "sweep": 0
+      },
+      {
+        "element": 58230,
+        "sweep": 0,
+        "status": "all-boundary",
+        "target_attained": false
+      },
+      {
+        "element": 1823,
+        "sweep": 0,
+        "status": "all-boundary",
+        "target_attained": false
+      },
+      {
+        "node": 2132,
+        "incident_tets": 24,
+        "quality_target": 0.100001,
+        "initial_minimum_quality": 0.028700391187375128,
+        "fixed_opposite_face_upper_bound": 0.05237997251712117,
+        "target_attained": false,
+        "status": "fixed-face-obstructed",
+        "numerical_quality_guard": 1e-09,
+        "element": 12868,
+        "sweep": 0
+      },
+      {
+        "node": 3183,
+        "incident_tets": 30,
+        "quality_target": 0.100001,
+        "initial_minimum_quality": 0.04574850496114806,
+        "fixed_opposite_face_upper_bound": 0.06769933726782415,
+        "target_attained": false,
+        "status": "fixed-face-obstructed",
+        "numerical_quality_guard": 1e-09,
+        "element": 60267,
+        "sweep": 0
+      },
+      {
+        "element": 1988,
+        "sweep": 0,
+        "status": "all-boundary",
+        "target_attained": false
+      },
+      {
+        "node": 19437,
+        "incident_tets": 26,
+        "quality_target": 0.100001,
+        "initial_minimum_quality": 0.07477172561496935,
+        "fixed_opposite_face_upper_bound": 0.07881193512370166,
+        "target_attained": false,
+        "status": "fixed-face-obstructed",
+        "numerical_quality_guard": 1e-09,
+        "element": 66411,
+        "sweep": 0
+      },
+      {
+        "node": 4897,
+        "incident_tets": 24,
+        "quality_target": 0.100001,
+        "initial_minimum_quality": 0.07558742069916904,
+        "fixed_opposite_face_upper_bound": 0.07881193512370166,
+        "target_attained": false,
+        "status": "fixed-face-obstructed",
+        "numerical_quality_guard": 1e-09,
+        "element": 62780,
+        "sweep": 0
+      },
+      {
+        "element": 76943,
+        "sweep": 0,
+        "status": "all-boundary",
+        "target_attained": false
+      },
+      {
+        "node": 19449,
+        "incident_tets": 18,
+        "quality_target": 0.100001,
+        "initial_minimum_quality": 0.0819883942584079,
+        "fixed_opposite_face_upper_bound": 0.0883541913441163,
+        "target_attained": false,
+        "status": "fixed-face-obstructed",
+        "numerical_quality_guard": 1e-09,
+        "element": 105826,
+        "sweep": 0
+      },
+      {
+        "element": 9982,
+        "sweep": 0,
+        "status": "all-boundary",
+        "target_attained": false
+      },
+      {
+        "element": 43493,
+        "sweep": 0,
+        "status": "all-boundary",
+        "target_attained": false
+      },
+      {
+        "node": 1774,
+        "incident_tets": 38,
+        "quality_target": 0.100001,
+        "initial_minimum_quality": 0.07745493773298422,
+        "fixed_opposite_face_upper_bound": 0.07881193512370166,
+        "target_attained": false,
+        "status": "fixed-face-obstructed",
+        "numerical_quality_guard": 1e-09,
+        "element": 22624,
+        "sweep": 0
+      },
+      {
+        "element": 20891,
+        "sweep": 0,
+        "status": "all-boundary",
+        "target_attained": false
+      },
+      {
+        "element": 13718,
+        "sweep": 0,
+        "status": "all-boundary",
+        "target_attained": false
+      },
+      {
+        "node": 5062,
+        "incident_tets": 28,
+        "quality_target": 0.100001,
+        "initial_minimum_quality": 0.08702245918973382,
+        "fixed_opposite_face_upper_bound": 0.09046022484505484,
+        "target_attained": false,
+        "status": "fixed-face-obstructed",
+        "numerical_quality_guard": 1e-09,
+        "element": 81283,
+        "sweep": 0
+      },
+      {
+        "node": 8472,
+        "incident_tets": 22,
+        "quality_target": 0.100001,
+        "initial_minimum_quality": 0.07628446200793207,
+        "fixed_opposite_face_upper_bound": 0.07881193512370166,
+        "target_attained": false,
+        "status": "fixed-face-obstructed",
+        "numerical_quality_guard": 1e-09,
+        "element": 53418,
+        "sweep": 0
+      },
+      {
+        "node": 5062,
+        "incident_tets": 28,
+        "quality_target": 0.100001,
+        "initial_minimum_quality": 0.08702245918973382,
+        "fixed_opposite_face_upper_bound": 0.09046022484505484,
+        "target_attained": false,
+        "status": "fixed-face-obstructed",
+        "numerical_quality_guard": 1e-09,
+        "element": 85025,
+        "sweep": 0
+      },
+      {
+        "node": 24900,
+        "incident_tets": 24,
+        "quality_target": 0.100001,
+        "initial_minimum_quality": 0.05812744938304365,
+        "fixed_opposite_face_upper_bound": 0.06769933726782414,
+        "target_attained": false,
+        "status": "fixed-face-obstructed",
+        "numerical_quality_guard": 1e-09,
+        "element": 85025,
+        "sweep": 0
+      },
+      {
+        "node": 19449,
+        "incident_tets": 18,
+        "quality_target": 0.100001,
+        "initial_minimum_quality": 0.0819883942584079,
+        "fixed_opposite_face_upper_bound": 0.0883541913441163,
+        "target_attained": false,
+        "status": "fixed-face-obstructed",
+        "numerical_quality_guard": 1e-09,
+        "element": 105831,
+        "sweep": 0
+      },
+      {
+        "element": 2774,
+        "sweep": 0,
+        "status": "all-boundary",
+        "target_attained": false
+      },
+      {
+        "element": 17022,
+        "sweep": 0,
+        "status": "all-boundary",
+        "target_attained": false
+      },
+      {
+        "element": 56902,
+        "sweep": 0,
+        "status": "all-boundary",
+        "target_attained": false
+      },
+      {
+        "element": 100371,
+        "sweep": 0,
+        "status": "all-boundary",
+        "target_attained": false
+      },
+      {
+        "element": 76614,
+        "sweep": 0,
+        "status": "all-boundary",
+        "target_attained": false
+      },
+      {
+        "element": 100370,
+        "sweep": 0,
+        "status": "all-boundary",
+        "target_attained": false
+      },
+      {
+        "element": 86596,
+        "sweep": 0,
+        "status": "all-boundary",
+        "target_attained": false
+      },
+      {
+        "element": 10644,
+        "sweep": 0,
+        "status": "all-boundary",
+        "target_attained": false
+      },
+      {
+        "element": 24668,
+        "sweep": 0,
+        "status": "all-boundary",
+        "target_attained": false
+      },
+      {
+        "element": 13936,
+        "sweep": 0,
+        "status": "all-boundary",
+        "target_attained": false
+      },
+      {
+        "element": 57126,
+        "sweep": 0,
+        "status": "all-boundary",
+        "target_attained": false
+      },
+      {
+        "element": 36925,
+        "sweep": 0,
+        "status": "all-boundary",
+        "target_attained": false
+      },
+      {
+        "node": 3002,
+        "incident_tets": 16,
+        "quality_target": 0.100001,
+        "initial_minimum_quality": 0.07371104247568788,
+        "fixed_opposite_face_upper_bound": 0.07778225287890532,
+        "target_attained": false,
+        "status": "fixed-face-obstructed",
+        "numerical_quality_guard": 1e-09,
+        "element": 70081,
+        "sweep": 0
+      }
+    ],
+    "maximum_attempts": 400,
+    "maximum_sweeps": 2,
+    "boundary_coordinates_unchanged": true,
+    "signed_volume_difference": 0.0,
+    "minimum_signed_determinant": 1.792252263496666e-09
+  },
+  "repair_s": 0.31702083299751393,
+  "generation_wall_s": 4.3455468750034925,
+  "nodes": 26383,
+  "elements": 117591,
+  "generation_s": 4.2160511249967385,
+  "mesh_sha256": "4647f492914170dedc699915327c06e4b9a021c9bf172bc229380f4d5ebb25bf",
+  "historical_all_plane_periodic_gate": {
+    "passed": true
+  },
+  "geometry": {
+    "volume": 0.2997800726833412,
+    "relative_volume_error": -0.0006765446614830362,
+    "q_min_corner": 0.0009434618674295259,
+    "q_p01_corner": 0.38048245406156966,
+    "minimum_sampled_jacobian": 1.7922522634966625e-09,
+    "facet_consistency": {
+      "nodes": 26383,
+      "elements": 117591,
+      "unique_faces": 247947,
+      "interior_faces": 222417,
+      "extracted_boundary_faces": 25530,
+      "same_orientation_shared_faces": 0,
+      "nonmanifold_faces": 0,
+      "duplicate_cells": 0,
+      "duplicate_surface_faces": 0,
+      "provided_boundary_matches_extraction": true,
+      "missing_provided_faces": 0,
+      "extra_provided_faces": 0,
+      "nonpositive_corner_determinants": 0,
+      "minimum_corner_determinant": 1.792252263496666e-09,
+      "oriented_facet_consistency_passed": true,
+      "conflict_examples": [],
+      "scope": "Oriented corner-face incidence and same-side neighbor diagnostics; necessary consistency, not a certificate of curved geometry or absence of nonlocal intersections"
+    },
+    "oriented_facet_consistency_passed": true,
+    "quadratic_conformity": {
+      "passed": true,
+      "order": 1
+    },
+    "exact_straight_reduction_verified": false,
+    "geometry_admitted": false,
+    "sampled_reverse_max": 0.0013885092465278281,
+    "distance_audit_complete": false,
+    "projection_failed": null,
+    "audit_scope": "Fail-fast after required quality/volume/topology/periodicity rejection; no forward-distance or successful speed claim",
+    "failed_gates": [
+      "quality"
+    ]
+  },
+  "periodic": {
+    "periodic_pair_counts": [
+      1376,
+      664,
+      664
+    ],
+    "periodic_coordinate_errors": [
+      0.0,
+      0.0,
+      0.0
+    ],
+    "periodic_pair_tolerance": 1e-10,
+    "periodic_equivalence_classes": 23762,
+    "periodic_triangles_match": true,
+    "full_facet_check_required": true,
+    "complete_existing_node_classes": true,
+    "unmatched_noncap_contact_nodes": [
+      [
+        [],
+        []
+      ],
+      [
+        [],
+        []
+      ],
+      [
+        [],
+        []
+      ]
+    ],
+    "declared_bounds": [
+      [
+        -0.5,
+        -0.5,
+        -0.5
+      ],
+      [
+        0.5,
+        0.5,
+        0.5
+      ]
+    ],
+    "periodic_gate": "declared-cell-material-cap-and-complete-node-classes-v1"
+  },
+  "quality_quantiles": {
+    "min": 0.0009434618674295259,
+    "p01": 0.38048245406156966,
+    "p10": 0.5743625078358205,
+    "median": 0.7224715266085974,
+    "p90": 0.8919218071838237,
+    "p99": 0.9688261390648601,
+    "max": 1.0000000000000009
+  },
+  "audit_s": 1.1266074589802884,
+  "wall_s": 5.6062467909941915
+}

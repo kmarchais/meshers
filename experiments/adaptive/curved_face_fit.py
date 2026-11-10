@@ -32,7 +32,18 @@ def barycentric(degree):
     )
 
 
-def fit(target, points, surface, classes, *, degree=6, power=2, constrained=False):
+def fit(
+    target,
+    points,
+    surface,
+    classes,
+    *,
+    degree=6,
+    power=2,
+    constrained=False,
+    local=False,
+    coupled=False,
+):
     original = points.copy()
     corners = points[surface[:, :3]]
     caps = np.any(
@@ -91,6 +102,16 @@ def fit(target, points, surface, classes, *, degree=6, power=2, constrained=Fals
 
     holdout_basis = w.tri_values(barycentric(11))
     held_before = residual(points, holdout_basis)[0]
+    full_wall, full_levels = wall, selected
+    active = np.ones(len(roots), dtype=bool)
+    if local:
+        initial = residual(points, basis)[0].reshape(len(wall), len(basis))
+        marked = np.max(abs(initial), axis=1) >= 0.5 * abs(initial).max()
+        active[:] = False
+        active[np.unique(columns[wall[marked, 3:]])] = True
+        support = np.any(active[columns[wall[:, 3:]]], axis=1)
+        wall, selected, area = wall[support], selected[support], area[support]
+        weights = np.repeat(np.sqrt(area / len(basis)), len(basis))
     records = []
     offsets = np.zeros(len(roots))
     started = time.perf_counter()
@@ -110,10 +131,18 @@ def fit(target, points, surface, classes, *, degree=6, power=2, constrained=Fals
         )
         iteration_weights = weights * irls
         matrix = matrix.multiply(iteration_weights[:, None]).tocsr()
-        normal = (matrix.T @ matrix).tocsc()
-        diagonal = normal.diagonal()
-        normal += diags(np.maximum(diagonal, diagonal.max() * 1e-12) * 1e-10)
-        step = spsolve(normal, -matrix.T @ (distance * iteration_weights))
+        rhs = -matrix.T @ (distance * iteration_weights)
+        if local and not coupled:
+            diagonal = np.asarray(matrix.power(2).sum(axis=0)).ravel()
+            step = rhs / np.maximum(diagonal, diagonal.max() * 1e-10)
+            step[~active] = 0
+        else:
+            restricted = matrix[:, active]
+            normal = (restricted.T @ restricted).tocsc()
+            diagonal = normal.diagonal()
+            normal += diags(np.maximum(diagonal, diagonal.max() * 1e-12) * 1e-10)
+            step = np.zeros(len(roots))
+            step[active] = spsolve(normal, rhs[active])
         step = np.clip(offsets + step, -limits, limits) - offsets
         objective = lambda d: float(np.sum(abs(d) ** power * weights**2) ** (1 / power))
         before = objective(distance)
@@ -122,8 +151,10 @@ def fit(target, points, surface, classes, *, degree=6, power=2, constrained=Fals
             trial_offsets = offsets + fraction * step
             trial = original.copy()
             trial[mids] += directions[mids] * trial_offsets[inverse, None]
-            after = objective(residual(trial, basis)[0])
-            if after < before - 1e-14:
+            trial_residual = residual(trial, basis)[0]
+            after = objective(trial_residual)
+            maximum_ok = not local or abs(trial_residual).max() <= abs(distance).max() + 1e-14
+            if after < before - 1e-14 and maximum_ok:
                 points, offsets, accepted = trial, trial_offsets, True
                 break
         records.append(
@@ -135,6 +166,8 @@ def fit(target, points, surface, classes, *, degree=6, power=2, constrained=Fals
                 step_fraction=fraction if accepted else 0.0,
             )
         )
+    fitted_faces = len(wall)
+    wall, selected = full_wall, full_levels
     held_after = residual(points, holdout_basis)[0]
     assert np.array_equal(points[locked], original[locked])
     assert np.array_equal(points[np.unique(surface[:, :3])], original[np.unique(surface[:, :3])])
@@ -143,6 +176,10 @@ def fit(target, points, surface, classes, *, degree=6, power=2, constrained=Fals
         wall_faces=len(wall),
         movable_nodes=len(mids),
         scalar_unknowns=len(roots),
+        local_diagonal=local and not coupled,
+        local_coupled=local and coupled,
+        active_scalar_unknowns=int(active.sum()),
+        fitted_faces=fitted_faces,
         fit_degree=degree,
         holdout_degree=11,
         iterations=records,
@@ -197,7 +234,17 @@ def controls():
     )
 
 
-def run(source, fixture_root, output, *, power=2, constrained=False):
+def run(
+    source,
+    fixture_root,
+    output,
+    *,
+    power=2,
+    constrained=False,
+    local=False,
+    native_field=False,
+    coupled=False,
+):
     w.imports()
     control = controls()
     saved = json.loads((source / "result.json").read_text())
@@ -250,8 +297,34 @@ def run(source, fixture_root, output, *, power=2, constrained=False):
         rtol=0,
     )
     started = time.perf_counter()
-    moved, diagnostics = fit(target, points, surface, classes, power=power, constrained=constrained)
+    fit_target = target
+    if native_field:
+        import meshers
+        from scorecard import Case
+
+        compiled = meshers.compile_field(target.function, gradient=False)
+
+        def native(x, y, z):
+            return compiled.values(np.column_stack((x, y, z)))
+
+        fit_target = Case(name, native, target.levels)
+    moved, diagnostics = fit(
+        fit_target,
+        points,
+        surface,
+        classes,
+        power=power,
+        constrained=constrained,
+        local=local,
+        coupled=coupled,
+    )
     fit_seconds = time.perf_counter() - started
+    diagnostics["native_field"] = native_field
+    if native_field:
+        probes = np.random.default_rng(20261110).uniform(-0.5, 0.5, (4096, 3))
+        np.testing.assert_allclose(
+            fit_target.function(*probes.T), target.function(*probes.T), rtol=1e-12, atol=1e-12
+        )
     after = observe(
         output,
         name,
@@ -299,6 +372,9 @@ if __name__ == "__main__":
     parser.add_argument("--loss-power", type=int, choices=(2, 8), default=2)
     parser.add_argument("--constrained-distance", action="store_true")
     parser.add_argument("--selection", type=Path)
+    parser.add_argument("--local", action="store_true")
+    parser.add_argument("--native-field", action="store_true")
+    parser.add_argument("--coupled", action="store_true")
     args = parser.parse_args()
     assert not (args.run / "result.json").exists()
     if args.selection:
@@ -308,7 +384,14 @@ if __name__ == "__main__":
             directory = args.run / entry["case"]
             directory.mkdir()
             run(
-                Path(entry["source"]), Path(entry["fixtures"]), directory, power=8, constrained=True
+                Path(entry["source"]),
+                Path(entry["fixtures"]),
+                directory,
+                power=8,
+                constrained=True,
+                local=args.local,
+                native_field=args.native_field,
+                coupled=args.coupled,
             )
     else:
         run(
@@ -317,4 +400,7 @@ if __name__ == "__main__":
             args.run,
             power=args.loss_power,
             constrained=args.constrained_distance,
+            local=args.local,
+            native_field=args.native_field,
+            coupled=args.coupled,
         )

@@ -1,0 +1,29 @@
+{
+  "date": "2026-11-10",
+  "purpose": "Local diagonal p8 fitting on complete support of marked periodic node classes, native finite-difference field evaluation",
+  "fit_degree": 6,
+  "holdout_degree": 11,
+  "iterations": 6,
+  "max_edge_fraction": 0.02,
+  "pilot_jobs": [
+    690,
+    691,
+    692
+  ],
+  "cases": [
+    {
+      "case": "spinodoid-anisotropic",
+      "source": "experiments/adaptive/runs/macbook-verified-spinodoid-anisotropic-repeated-v1/repeat-0-meshers-curved-tet10",
+      "fixtures": "experiments/adaptive/runs/macbook-comparison-fixtures-v1"
+    },
+    {
+      "case": "graded-gyroid-density-linear",
+      "source": "experiments/adaptive/runs/macbook-curved-density-native-uniform-v1/mesh",
+      "fixtures": "experiments/adaptive/runs/macbook-linear-density-fixtures-v1"
+    }
+  ],
+  "promotion_rule": "Geometry and volume improvement assessed separately; every admission gate unchanged; no inherited FEA or live timing claim",
+  "mark_fraction_of_maximum_error": 0.5,
+  "solver": "diagonal IRLS",
+  "maximum_proxy_may_increase": false
+}

@@ -1,0 +1,107 @@
+{
+  "case": "tpms-honeycomb-gyroid-upper",
+  "config": {
+    "name": "actual-default-tet4",
+    "arm": "microgen",
+    "resolution": null,
+    "order": 1,
+    "periodic_trace": true,
+    "declared_unit_cell": true
+  },
+  "status": "failed",
+  "qualified": false,
+  "mmg_calls": [
+    {
+      "nofem": true,
+      "output_tetrahedra": 4675,
+      "output_nodes": 1379
+    },
+    {
+      "hausd": null,
+      "hgrad": null,
+      "hmax": null,
+      "hmin": null,
+      "hsiz": null,
+      "ls": true,
+      "nr": true,
+      "output_tetrahedra": 6121,
+      "output_nodes": 1643
+    },
+    {
+      "nofem": true,
+      "output_tetrahedra": 4675,
+      "output_nodes": 1379
+    },
+    {
+      "hausd": null,
+      "hgrad": null,
+      "hmax": null,
+      "hmin": null,
+      "hsiz": null,
+      "ls": true,
+      "nr": true,
+      "output_tetrahedra": 6121,
+      "output_nodes": 1643
+    },
+    {
+      "nofem": true,
+      "output_tetrahedra": 4675,
+      "output_nodes": 1379
+    },
+    {
+      "hausd": null,
+      "hgrad": null,
+      "hmax": null,
+      "hmin": null,
+      "hsiz": null,
+      "ls": true,
+      "nr": true,
+      "output_tetrahedra": 6121,
+      "output_nodes": 1643
+    },
+    {
+      "nofem": true,
+      "output_tetrahedra": 4675,
+      "output_nodes": 1379
+    },
+    {
+      "hausd": null,
+      "hgrad": null,
+      "hmax": null,
+      "hmin": null,
+      "hsiz": null,
+      "ls": true,
+      "nr": true,
+      "output_tetrahedra": 6121,
+      "output_nodes": 1643
+    },
+    {
+      "nofem": true,
+      "output_tetrahedra": 4675,
+      "output_nodes": 1379
+    },
+    {
+      "hausd": null,
+      "hgrad": null,
+      "hmax": null,
+      "hmin": null,
+      "hsiz": null,
+      "ls": true,
+      "nr": true,
+      "output_tetrahedra": 6121,
+      "output_nodes": 1643
+    }
+  ],
+  "instrumentation_s": 0.31672841595718637,
+  "vtk_backend": "Sequential",
+  "vtk_threads": 1,
+  "periodic_required": true,
+  "solve_performed": false,
+  "actual_resolution": 20,
+  "seed_nodes": 3440,
+  "seed_elements": 15390,
+  "error": "Something went wrong: output mesh is not periodic",
+  "traceback": "Traceback (most recent call last):\n  File \"/Users/kmarchais/dev/meshers/experiments/adaptive/comparison_benchmark.py\", line 98, in worker\n    grid=remesh_keeping_boundaries_for_fem(grid,periodic=fixtures.periodic(name) and not config.get('material_trace_remesh',False),**config.get('mmg',{}))\n         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/Users/kmarchais/dev/meshers/.local-work/macbook-runtime/venv/lib/python3.12/site-packages/microgen/remesh.py\", line 164, in remesh_keeping_boundaries_for_fem\n    raise last_error\nmicrogen.remesh.OutputMeshNotPeriodicError: Something went wrong: output mesh is not periodic\n",
+  "failed_attempt_s": 3.6327647080179304,
+  "wall_s": 3.632766166992951
+}

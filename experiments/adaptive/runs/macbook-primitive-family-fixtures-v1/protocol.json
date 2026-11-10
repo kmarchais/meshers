@@ -1,0 +1,91 @@
+{
+  "sources": {
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/primitive_family_fixtures.py": "668a6776e53cbee93872cc60aa391f46943a055a62eb7bdc94e9ccd9ed2845e0",
+    "/Users/kmarchais/dev/meshers/.local-work/macbook-runtime/venv/lib/python3.12/site-packages/microgen/shape/box.py": "92a56ebfae046817b0cb30bcc9d7090f066ea1adb82d6059a5f1aa7c29bb1d3c",
+    "/Users/kmarchais/dev/meshers/.local-work/macbook-runtime/venv/lib/python3.12/site-packages/microgen/shape/capsule.py": "6ba42418b8dc9e93fc7b18606bfca7aee1763c3b05f32eb6c7394502aa58acb5",
+    "/Users/kmarchais/dev/meshers/.local-work/macbook-runtime/venv/lib/python3.12/site-packages/microgen/shape/cylinder.py": "776eba54c1ae8faac80eb45cd8ddc92d8709e5d1f7a744ae432a3b19100698f9",
+    "/Users/kmarchais/dev/meshers/.local-work/macbook-runtime/venv/lib/python3.12/site-packages/microgen/shape/ellipsoid.py": "27d4b546dd781e24716efd14575dbd5eada3552cb7e3fcf47dcb86d34d47f0d0",
+    "/Users/kmarchais/dev/meshers/.local-work/macbook-runtime/venv/lib/python3.12/site-packages/microgen/shape/sphere.py": "479dd1893e8cffab88fd29d34236ba9f83d212b1087eddf3615a045e3e7ebc1f"
+  },
+  "unit_domain": [
+    [
+      -0.5,
+      -0.5,
+      -0.5
+    ],
+    [
+      0.5,
+      0.5,
+      0.5
+    ]
+  ],
+  "cases": [
+    {
+      "api": "Box",
+      "parameters": {
+        "dim": [
+          0.6,
+          0.5,
+          0.4
+        ]
+      },
+      "volume": 0.12,
+      "name": "primitive-box",
+      "part": "solid",
+      "surface_function": "Box",
+      "periodic": false
+    },
+    {
+      "api": "Capsule",
+      "parameters": {
+        "height": 0.4,
+        "radius": 0.15
+      },
+      "volume": 0.042411500823462206,
+      "name": "primitive-capsule",
+      "part": "solid",
+      "surface_function": "Capsule",
+      "periodic": false
+    },
+    {
+      "api": "Cylinder",
+      "parameters": {
+        "height": 0.6,
+        "radius": 0.23
+      },
+      "volume": 0.09971415082494003,
+      "name": "primitive-cylinder",
+      "part": "solid",
+      "surface_function": "Cylinder",
+      "periodic": false
+    },
+    {
+      "api": "Ellipsoid",
+      "parameters": {
+        "radii": [
+          0.35,
+          0.25,
+          0.18
+        ]
+      },
+      "volume": 0.06597344572538565,
+      "name": "primitive-ellipsoid",
+      "part": "solid",
+      "surface_function": "Ellipsoid",
+      "periodic": false
+    },
+    {
+      "api": "Sphere",
+      "parameters": {
+        "radius": 0.35
+      },
+      "volume": 0.17959438003021647,
+      "name": "primitive-sphere",
+      "part": "solid",
+      "surface_function": "Sphere",
+      "periodic": false
+    }
+  ],
+  "actual_bounds": "Public shape-specific bounds, enclosing the same complete solid",
+  "scope": "Five implicit basic solids; no CAD route or arbitrary pose claim. Original study unchanged."
+}

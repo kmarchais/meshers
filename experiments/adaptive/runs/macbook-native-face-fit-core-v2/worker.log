@@ -1,0 +1,32 @@
+   Compiling meshers-core v0.1.0 (/Users/kmarchais/dev/meshers/crates/meshers-core)
+    Finished `release` profile [optimized] target(s) in 2m 23s
+     Running unittests src/lib.rs (target/release/deps/meshers_core-8e47bbf80036f8e5)
+
+running 1 test
+test quadratic::fit::tests::curved_fit_controls_exact_sphere_plane_and_face_order ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 68 filtered out; finished in 0.00s
+
+     Running tests/batching.rs (target/release/deps/batching-ef17329fc7db775a)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 2 filtered out; finished in 0.00s
+
+     Running tests/implicit.rs (target/release/deps/implicit-6c587d5364ab31f4)
+
+running 1 test
+
+thread 'curved_fit_preserves_corners_connectivity_and_periodic_traces' (9759902) panicked at crates/meshers-core/tests/implicit.rs:59:17:
+assertion failed: after_error <= 4. * f64::EPSILON && after_error <= before_error + f64::EPSILON
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+test curved_fit_preserves_corners_connectivity_and_periodic_traces ... FAILED
+
+failures:
+
+failures:
+    curved_fit_preserves_corners_connectivity_and_periodic_traces
+
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 25 filtered out; finished in 0.17s
+
+error: test failed, to rerun pass `-p meshers-core --test implicit`

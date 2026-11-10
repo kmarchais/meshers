@@ -54,6 +54,7 @@ def worker(run,name,config,fixture_root):
             shape,part=fixtures.actual_shape(name,fixture_root,config['resolution'])
             options=dict(type_part=part) if isinstance(shape,microgen.Tpms) else (
                 dict(resolution=config['resolution']) if name=='smooth-lattice' and config['resolution'] is not None else {})
+            options.update(config.get('actual_generate_options',{}))
             grid=shape.generate_volume_mesh(**options).triangulate()
             if name.startswith('spinodoid'):grid.translate((-.5,)*3,inplace=True)
             row.update(actual_resolution=getattr(shape,'resolution',None),seed_nodes=grid.n_points,seed_elements=grid.n_cells)
@@ -118,6 +119,12 @@ def worker(run,name,config,fixture_root):
                 row.update(straight_elevation_s=time.perf_counter()-phase,straight_elevation_explicit=True)
         else:
             field=target.function
+            if config.get('primitive_retained'):
+                from primitive_family_fixtures import retained_field
+                field=retained_field(name,fixture_root)
+                samples=np.load(run/(name+'-samples.npz'))['walls']
+                assert np.max(np.abs(field(*samples.T)))<1e-9
+                row['field_equivalence']='Exact analytic intersection with the same negative sublevel set; SDF values outside the solid differ'
             if config.get('native_density_lookup'):
                 assert name=='graded-gyroid-density-linear'
                 from graded_lookup_preflight import native_width
@@ -139,7 +146,8 @@ def worker(run,name,config,fixture_root):
                 periodic=(fixtures.periodic(name),)*3,threads=1,optimize_passes=config.get('optimization_passes',1),
                 minimum_quality=.1,max_tetrahedra=w.CAP,order=config['order'],geometry_tolerance=config['tolerance'],
                 adapt=config['adapt'],min_length=config.get('min_length',.01),max_length=.1,gradation=.3,
-                adapt_iterations=4,quality_guard=.3,adapt_tolerance=config.get('adapt_tolerance',.002),
+                adapt_iterations=config.get('adapt_iterations',4),quality_guard=.3,adapt_tolerance=config.get('adapt_tolerance',.002),
+                curved_fit=config.get('curved_fit',False),
                 compile=config.get('compile',True))
             points,cells,surface=np.asarray(mesh.points),np.asarray(mesh.tetrahedra),np.asarray(mesh.surface)
             row['diagnostics']=mesh.diagnostics
@@ -164,7 +172,9 @@ def worker(run,name,config,fixture_root):
                 # Python callable twice. This check is outside generation time.
                 identity_field=meshers.compile_field(field)
             actual=identity_field.values(probes) if hasattr(identity_field,'values') else identity_field(*probes.T)
-            np.testing.assert_allclose(actual,np.minimum(expected,.02) if name=='smooth-lattice' else expected,rtol=1e-12,atol=1e-12)
+            identity_expected=field(*probes.T) if config.get('primitive_retained') else (
+                np.minimum(expected,.02) if name=='smooth-lattice' else expected)
+            np.testing.assert_allclose(actual,identity_expected,rtol=1e-12,atol=1e-12)
             np.testing.assert_array_equal(actual<0,expected<0)
             row['generated_field_identity_checked']=4096
         if max(len(cells),len(points))>w.CAP:raise ValueError('Final node/tetrahedron cap exceeded')
@@ -173,14 +183,19 @@ def worker(run,name,config,fixture_root):
         w.save(run/'result.json',row)
         audit=time.perf_counter()
         periodic_auditor=None
-        if config.get('periodic_trace'):
+        if config.get('periodic_trace') and fixtures.periodic(name):
             from periodic_trace import periodic_pairs as periodic_auditor
+            if config.get('declared_unit_cell'):
+                from functools import partial
+                periodic_auditor=partial(periodic_auditor,declared_bounds=([-.5]*3,[.5]*3))
             from periodic import periodic_pairs as historical_pairs
             try:
                 historical_pairs(points,surface);row['historical_all_plane_periodic_gate']=dict(passed=True)
             except ValueError as error:row['historical_all_plane_periodic_gate']=dict(passed=False,error=str(error))
         row['geometry'],row['periodic'],row['quality_quantiles']=observe(run,name,target,points,cells,surface,fixtures.periodic(name),
             periodic_auditor=periodic_auditor)
+        if not fixtures.periodic(name) and config.get('nonperiodic_reason'):
+            row['periodic']['reason']=config['nonperiodic_reason']
         if periodic_auditor is not None and config['arm']=='meshers':
             checked,_,_=periodic_auditor(points,surface)
             for native,independent in zip(mesh.periodic_pairs,checked,strict=True):
@@ -209,6 +224,7 @@ def main():
         help='Pair NumPy with native finite-difference or public automatic interpolation')
     p.add_argument('--density-auto-interp',action='store_true',help='Control the newly supported public automatic interpolation path')
     p.add_argument('--density-cap-fit',action='store_true',help='Compare admitted adaptive Tet10 with one fresh uniform16 plus generic cap-fit prototype')
+    p.add_argument('--native-curved-fit',action='store_true',help='Pair fresh native Tet10 projection and experimental local fitting')
     a=p.parse_args()
     if a.worker is not None:return worker(a.run,a.case,a.worker,a.fixtures)
     a.run.mkdir(parents=True,exist_ok=False)
@@ -260,6 +276,11 @@ def main():
         assert len(selected)==1 and selected[0]['name']=='meshers-curved-tet10-adaptive001'
         baseline=dict(selected[0],name='meshers-curved-tet10-adaptive001-auto-interp',compile=True,native_interp_auto=True)
         selected=[baseline,dict(baseline,name='meshers-uniform16-auto-interp-cap-fit',adapt=False,fit_cap_edges=True)]
+    if a.native_curved_fit:
+        assert all(c['arm']=='meshers' and c['order']==2 for c in selected)
+        assert not a.density_cap_fit
+        selected=[dict(c,name=c['name']+suffix,curved_fit=value) for c in selected
+            for suffix,value in (('',False),('-native-fit',True))]
     paths=[Path(__file__),Path(w.__file__),Path(fixtures.__file__),w.HERE/'comparison_mesh_audit.py',w.HERE/'mesh_only_comparison.py',
         Path(meshers._meshers.__file__),Path(meshers.__file__),Path(meshers.expression.__file__),Path(meshers.intersection.__file__),
         Path(microgen.remesh.__file__),Path(microgen.shape.tpms.__file__),Path(microgen.shape.spinodoid.__file__),

@@ -1,0 +1,102 @@
+{
+  "case": "tpms-neovius-upper",
+  "config": {
+    "name": "actual-default-tet4",
+    "arm": "microgen",
+    "resolution": null,
+    "order": 1,
+    "periodic_trace": true
+  },
+  "status": "admission-rejected",
+  "qualified": false,
+  "mmg_calls": [
+    {
+      "nofem": true,
+      "output_tetrahedra": 5346,
+      "output_nodes": 1391
+    },
+    {
+      "hausd": null,
+      "hgrad": null,
+      "hmax": null,
+      "hmin": null,
+      "hsiz": null,
+      "ls": true,
+      "nr": true,
+      "output_tetrahedra": 5035,
+      "output_nodes": 1324
+    }
+  ],
+  "instrumentation_s": 0.0750712500012014,
+  "vtk_backend": "Sequential",
+  "vtk_threads": 1,
+  "periodic_required": true,
+  "solve_performed": false,
+  "actual_resolution": 20,
+  "seed_nodes": 3640,
+  "seed_elements": 16738,
+  "reoriented_tets": 0,
+  "generation_wall_s": 0.8595766669895966,
+  "nodes": 1324,
+  "elements": 5035,
+  "generation_s": 0.7845054169883952,
+  "mesh_sha256": "d6f27c6f16179b19ae20a2c957e3722cb8ca03a1173440cae4c119c3c8d5af8c",
+  "historical_all_plane_periodic_gate": {
+    "passed": false,
+    "error": "Periodic specimen does not span the declared unit cube"
+  },
+  "geometry": {
+    "volume": 0.2977743681507955,
+    "relative_volume_error": -0.0071677027787129255,
+    "q_min_corner": 0.1298474902078079,
+    "q_p01_corner": 0.3210459841205793,
+    "minimum_sampled_jacobian": 1.1661162215147804e-05,
+    "facet_consistency": {
+      "nodes": 1324,
+      "elements": 5035,
+      "unique_faces": 10890,
+      "interior_faces": 9250,
+      "extracted_boundary_faces": 1640,
+      "same_orientation_shared_faces": 0,
+      "nonmanifold_faces": 0,
+      "duplicate_cells": 0,
+      "duplicate_surface_faces": 0,
+      "provided_boundary_matches_extraction": true,
+      "missing_provided_faces": 0,
+      "extra_provided_faces": 0,
+      "nonpositive_corner_determinants": 0,
+      "minimum_corner_determinant": 1.166116221514779e-05,
+      "oriented_facet_consistency_passed": true,
+      "conflict_examples": [],
+      "scope": "Oriented corner-face incidence and same-side neighbor diagnostics; necessary consistency, not a certificate of curved geometry or absence of nonlocal intersections"
+    },
+    "oriented_facet_consistency_passed": true,
+    "quadratic_conformity": {
+      "passed": true,
+      "order": 1
+    },
+    "exact_straight_reduction_verified": false,
+    "geometry_admitted": false,
+    "sampled_reverse_max": 0.008648652126353407,
+    "distance_audit_complete": false,
+    "projection_failed": null,
+    "audit_scope": "Fail-fast after required quality/volume/topology/periodicity rejection; no forward-distance or successful speed claim",
+    "failed_gates": [
+      "periodicity"
+    ]
+  },
+  "periodic": {
+    "error": "Periodic specimen does not span the declared unit cube"
+  },
+  "quality_quantiles": {
+    "min": 0.1298474902078079,
+    "p01": 0.3210459841205793,
+    "p10": 0.5538155319075504,
+    "median": 0.7740232657984519,
+    "p90": 0.9159890820330376,
+    "p99": 0.969318531579416,
+    "max": 0.9963455505628
+  },
+  "audit_s": 0.866294832987478,
+  "wall_s": 1.7320894169970416
+}

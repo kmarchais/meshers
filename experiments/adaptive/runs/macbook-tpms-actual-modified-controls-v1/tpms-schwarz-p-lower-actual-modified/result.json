@@ -1,0 +1,611 @@
+{
+  "case": "tpms-schwarz-p-lower",
+  "config": {
+    "name": "actual-modified40-first-pass-repair-tet4",
+    "arm": "microgen",
+    "resolution": 40,
+    "order": 1,
+    "periodic_trace": true,
+    "first_only": true,
+    "first_hausd": 0.0005,
+    "first_hmax": 0.1,
+    "mmg": {
+      "hausd": 0.0005,
+      "hmax": 0.1,
+      "hgrad": 1.3
+    },
+    "repair": true,
+    "declared_unit_cell": true
+  },
+  "status": "admission-rejected",
+  "qualified": false,
+  "mmg_calls": [
+    {
+      "nofem": true,
+      "hausd": 0.0005,
+      "hmax": 0.1,
+      "hgrad": 1.3,
+      "output_tetrahedra": 123958,
+      "output_nodes": 28227
+    }
+  ],
+  "instrumentation_s": 0.1396401250094641,
+  "vtk_backend": "Sequential",
+  "vtk_threads": 1,
+  "periodic_required": true,
+  "solve_performed": false,
+  "actual_resolution": 40,
+  "seed_nodes": 28008,
+  "seed_elements": 129644,
+  "omitted_second_pass": true,
+  "reoriented_tets": 0,
+  "repair": {
+    "initial_bad_elements": 40,
+    "remaining_bad_elements": 40,
+    "initial_minimum_quality": 0.0208666822620637,
+    "final_minimum_quality": 0.0208666822620637,
+    "accepted_moves": 0,
+    "moved_vertices": 0,
+    "attempts": [
+      {
+        "element": 64297,
+        "sweep": 0,
+        "status": "all-boundary",
+        "target_attained": false
+      },
+      {
+        "node": 11730,
+        "incident_tets": 26,
+        "quality_target": 0.100001,
+        "initial_minimum_quality": 0.031436002755737116,
+        "fixed_opposite_face_upper_bound": 0.05443880690701152,
+        "target_attained": false,
+        "status": "fixed-face-obstructed",
+        "numerical_quality_guard": 1e-09,
+        "element": 24974,
+        "sweep": 0
+      },
+      {
+        "node": 4307,
+        "incident_tets": 36,
+        "quality_target": 0.100001,
+        "initial_minimum_quality": 0.03756744701873142,
+        "fixed_opposite_face_upper_bound": 0.054438806907011646,
+        "target_attained": false,
+        "status": "fixed-face-obstructed",
+        "numerical_quality_guard": 1e-09,
+        "element": 81047,
+        "sweep": 0
+      },
+      {
+        "node": 24460,
+        "incident_tets": 34,
+        "quality_target": 0.100001,
+        "initial_minimum_quality": 0.03873901278707703,
+        "fixed_opposite_face_upper_bound": 0.05443880690701171,
+        "target_attained": false,
+        "status": "fixed-face-obstructed",
+        "numerical_quality_guard": 1e-09,
+        "element": 29092,
+        "sweep": 0
+      },
+      {
+        "element": 33044,
+        "sweep": 0,
+        "status": "all-boundary",
+        "target_attained": false
+      },
+      {
+        "node": 22051,
+        "incident_tets": 28,
+        "quality_target": 0.100001,
+        "initial_minimum_quality": 0.040764453153241176,
+        "fixed_opposite_face_upper_bound": 0.054438806907011646,
+        "target_attained": false,
+        "status": "fixed-face-obstructed",
+        "numerical_quality_guard": 1e-09,
+        "element": 79717,
+        "sweep": 0
+      },
+      {
+        "node": 22051,
+        "incident_tets": 28,
+        "quality_target": 0.100001,
+        "initial_minimum_quality": 0.040764453153241176,
+        "fixed_opposite_face_upper_bound": 0.054438806907011646,
+        "target_attained": false,
+        "status": "fixed-face-obstructed",
+        "numerical_quality_guard": 1e-09,
+        "element": 79718,
+        "sweep": 0
+      },
+      {
+        "node": 3716,
+        "incident_tets": 28,
+        "quality_target": 0.100001,
+        "initial_minimum_quality": 0.041766557735510294,
+        "fixed_opposite_face_upper_bound": 0.05443880690701171,
+        "target_attained": false,
+        "status": "fixed-face-obstructed",
+        "numerical_quality_guard": 1e-09,
+        "element": 22397,
+        "sweep": 0
+      },
+      {
+        "element": 51343,
+        "sweep": 0,
+        "status": "all-boundary",
+        "target_attained": false
+      },
+      {
+        "node": 13056,
+        "incident_tets": 28,
+        "quality_target": 0.100001,
+        "initial_minimum_quality": 0.04266988675362555,
+        "fixed_opposite_face_upper_bound": 0.054438806907011646,
+        "target_attained": false,
+        "status": "fixed-face-obstructed",
+        "numerical_quality_guard": 1e-09,
+        "element": 119808,
+        "sweep": 0
+      },
+      {
+        "node": 1998,
+        "incident_tets": 40,
+        "quality_target": 0.100001,
+        "initial_minimum_quality": 0.042893714573344614,
+        "fixed_opposite_face_upper_bound": 0.05443880690701171,
+        "target_attained": false,
+        "status": "fixed-face-obstructed",
+        "numerical_quality_guard": 1e-09,
+        "element": 82487,
+        "sweep": 0
+      },
+      {
+        "element": 92682,
+        "sweep": 0,
+        "status": "all-boundary",
+        "target_attained": false
+      },
+      {
+        "node": 10086,
+        "incident_tets": 36,
+        "quality_target": 0.100001,
+        "initial_minimum_quality": 0.043073343415868125,
+        "fixed_opposite_face_upper_bound": 0.05443880690701171,
+        "target_attained": false,
+        "status": "fixed-face-obstructed",
+        "numerical_quality_guard": 1e-09,
+        "element": 87745,
+        "sweep": 0
+      },
+      {
+        "node": 2733,
+        "incident_tets": 34,
+        "quality_target": 0.100001,
+        "initial_minimum_quality": 0.043621065630121976,
+        "fixed_opposite_face_upper_bound": 0.054438806907011646,
+        "target_attained": false,
+        "status": "fixed-face-obstructed",
+        "numerical_quality_guard": 1e-09,
+        "element": 81331,
+        "sweep": 0
+      },
+      {
+        "node": 5586,
+        "incident_tets": 30,
+        "quality_target": 0.100001,
+        "initial_minimum_quality": 0.045513800222340764,
+        "fixed_opposite_face_upper_bound": 0.05443880690701152,
+        "target_attained": false,
+        "status": "fixed-face-obstructed",
+        "numerical_quality_guard": 1e-09,
+        "element": 29458,
+        "sweep": 0
+      },
+      {
+        "element": 20166,
+        "sweep": 0,
+        "status": "all-boundary",
+        "target_attained": false
+      },
+      {
+        "node": 18573,
+        "incident_tets": 36,
+        "quality_target": 0.100001,
+        "initial_minimum_quality": 0.04668253265619551,
+        "fixed_opposite_face_upper_bound": 0.054438806907011646,
+        "target_attained": false,
+        "status": "fixed-face-obstructed",
+        "numerical_quality_guard": 1e-09,
+        "element": 27281,
+        "sweep": 0
+      },
+      {
+        "node": 7373,
+        "incident_tets": 28,
+        "quality_target": 0.100001,
+        "initial_minimum_quality": 0.0467351559642104,
+        "fixed_opposite_face_upper_bound": 0.05443880690701171,
+        "target_attained": false,
+        "status": "fixed-face-obstructed",
+        "numerical_quality_guard": 1e-09,
+        "element": 1222,
+        "sweep": 0
+      },
+      {
+        "node": 13056,
+        "incident_tets": 28,
+        "quality_target": 0.100001,
+        "initial_minimum_quality": 0.04266988675362555,
+        "fixed_opposite_face_upper_bound": 0.054438806907011646,
+        "target_attained": false,
+        "status": "fixed-face-obstructed",
+        "numerical_quality_guard": 1e-09,
+        "element": 110648,
+        "sweep": 0
+      },
+      {
+        "node": 25277,
+        "incident_tets": 22,
+        "quality_target": 0.100001,
+        "initial_minimum_quality": 0.04773152004677742,
+        "fixed_opposite_face_upper_bound": 0.05443880690701172,
+        "target_attained": false,
+        "status": "fixed-face-obstructed",
+        "numerical_quality_guard": 1e-09,
+        "element": 119914,
+        "sweep": 0
+      },
+      {
+        "node": 26957,
+        "incident_tets": 28,
+        "quality_target": 0.100001,
+        "initial_minimum_quality": 0.049026316539153736,
+        "fixed_opposite_face_upper_bound": 0.05443880690701152,
+        "target_attained": false,
+        "status": "fixed-face-obstructed",
+        "numerical_quality_guard": 1e-09,
+        "element": 71345,
+        "sweep": 0
+      },
+      {
+        "node": 27471,
+        "incident_tets": 28,
+        "quality_target": 0.100001,
+        "initial_minimum_quality": 0.0494506788036408,
+        "fixed_opposite_face_upper_bound": 0.05443880690701172,
+        "target_attained": false,
+        "status": "fixed-face-obstructed",
+        "numerical_quality_guard": 1e-09,
+        "element": 41746,
+        "sweep": 0
+      },
+      {
+        "node": 27471,
+        "incident_tets": 28,
+        "quality_target": 0.100001,
+        "initial_minimum_quality": 0.0494506788036408,
+        "fixed_opposite_face_upper_bound": 0.05443880690701172,
+        "target_attained": false,
+        "status": "fixed-face-obstructed",
+        "numerical_quality_guard": 1e-09,
+        "element": 57450,
+        "sweep": 0
+      },
+      {
+        "node": 8894,
+        "incident_tets": 24,
+        "quality_target": 0.100001,
+        "initial_minimum_quality": 0.04953303601449327,
+        "fixed_opposite_face_upper_bound": 0.054438806907011646,
+        "target_attained": false,
+        "status": "fixed-face-obstructed",
+        "numerical_quality_guard": 1e-09,
+        "element": 114077,
+        "sweep": 0
+      },
+      {
+        "node": 21315,
+        "incident_tets": 24,
+        "quality_target": 0.100001,
+        "initial_minimum_quality": 0.05004262609249161,
+        "fixed_opposite_face_upper_bound": 0.05443880690701171,
+        "target_attained": false,
+        "status": "fixed-face-obstructed",
+        "numerical_quality_guard": 1e-09,
+        "element": 80251,
+        "sweep": 0
+      },
+      {
+        "node": 4112,
+        "incident_tets": 36,
+        "quality_target": 0.100001,
+        "initial_minimum_quality": 0.050618988735318275,
+        "fixed_opposite_face_upper_bound": 0.05443880690701152,
+        "target_attained": false,
+        "status": "fixed-face-obstructed",
+        "numerical_quality_guard": 1e-09,
+        "element": 19082,
+        "sweep": 0
+      },
+      {
+        "node": 2264,
+        "incident_tets": 26,
+        "quality_target": 0.100001,
+        "initial_minimum_quality": 0.05132305472411531,
+        "fixed_opposite_face_upper_bound": 0.054438806907011646,
+        "target_attained": false,
+        "status": "fixed-face-obstructed",
+        "numerical_quality_guard": 1e-09,
+        "element": 6908,
+        "sweep": 0
+      },
+      {
+        "node": 21387,
+        "incident_tets": 30,
+        "quality_target": 0.100001,
+        "initial_minimum_quality": 0.05259153383334893,
+        "fixed_opposite_face_upper_bound": 0.054438806907011646,
+        "target_attained": false,
+        "status": "fixed-face-obstructed",
+        "numerical_quality_guard": 1e-09,
+        "element": 12539,
+        "sweep": 0
+      },
+      {
+        "node": 6802,
+        "incident_tets": 28,
+        "quality_target": 0.100001,
+        "initial_minimum_quality": 0.052675407541233246,
+        "fixed_opposite_face_upper_bound": 0.054438806907011646,
+        "target_attained": false,
+        "status": "fixed-face-obstructed",
+        "numerical_quality_guard": 1e-09,
+        "element": 50583,
+        "sweep": 0
+      },
+      {
+        "node": 21315,
+        "incident_tets": 24,
+        "quality_target": 0.100001,
+        "initial_minimum_quality": 0.05004262609249161,
+        "fixed_opposite_face_upper_bound": 0.05443880690701171,
+        "target_attained": false,
+        "status": "fixed-face-obstructed",
+        "numerical_quality_guard": 1e-09,
+        "element": 54737,
+        "sweep": 0
+      },
+      {
+        "node": 26957,
+        "incident_tets": 28,
+        "quality_target": 0.100001,
+        "initial_minimum_quality": 0.049026316539153736,
+        "fixed_opposite_face_upper_bound": 0.05443880690701152,
+        "target_attained": false,
+        "status": "fixed-face-obstructed",
+        "numerical_quality_guard": 1e-09,
+        "element": 20295,
+        "sweep": 0
+      },
+      {
+        "node": 8894,
+        "incident_tets": 24,
+        "quality_target": 0.100001,
+        "initial_minimum_quality": 0.04953303601449327,
+        "fixed_opposite_face_upper_bound": 0.054438806907011646,
+        "target_attained": false,
+        "status": "fixed-face-obstructed",
+        "numerical_quality_guard": 1e-09,
+        "element": 39403,
+        "sweep": 0
+      },
+      {
+        "node": 4112,
+        "incident_tets": 36,
+        "quality_target": 0.100001,
+        "initial_minimum_quality": 0.050618988735318275,
+        "fixed_opposite_face_upper_bound": 0.05443880690701152,
+        "target_attained": false,
+        "status": "fixed-face-obstructed",
+        "numerical_quality_guard": 1e-09,
+        "element": 30809,
+        "sweep": 0
+      },
+      {
+        "node": 10086,
+        "incident_tets": 36,
+        "quality_target": 0.100001,
+        "initial_minimum_quality": 0.043073343415868125,
+        "fixed_opposite_face_upper_bound": 0.05443880690701171,
+        "target_attained": false,
+        "status": "fixed-face-obstructed",
+        "numerical_quality_guard": 1e-09,
+        "element": 89946,
+        "sweep": 0
+      },
+      {
+        "node": 7373,
+        "incident_tets": 28,
+        "quality_target": 0.100001,
+        "initial_minimum_quality": 0.0467351559642104,
+        "fixed_opposite_face_upper_bound": 0.05443880690701171,
+        "target_attained": false,
+        "status": "fixed-face-obstructed",
+        "numerical_quality_guard": 1e-09,
+        "element": 28403,
+        "sweep": 0
+      },
+      {
+        "node": 5586,
+        "incident_tets": 30,
+        "quality_target": 0.100001,
+        "initial_minimum_quality": 0.045513800222340764,
+        "fixed_opposite_face_upper_bound": 0.05443880690701152,
+        "target_attained": false,
+        "status": "fixed-face-obstructed",
+        "numerical_quality_guard": 1e-09,
+        "element": 64443,
+        "sweep": 0
+      },
+      {
+        "node": 4307,
+        "incident_tets": 36,
+        "quality_target": 0.100001,
+        "initial_minimum_quality": 0.03756744701873142,
+        "fixed_opposite_face_upper_bound": 0.054438806907011646,
+        "target_attained": false,
+        "status": "fixed-face-obstructed",
+        "numerical_quality_guard": 1e-09,
+        "element": 62107,
+        "sweep": 0
+      },
+      {
+        "node": 3716,
+        "incident_tets": 28,
+        "quality_target": 0.100001,
+        "initial_minimum_quality": 0.041766557735510294,
+        "fixed_opposite_face_upper_bound": 0.05443880690701171,
+        "target_attained": false,
+        "status": "fixed-face-obstructed",
+        "numerical_quality_guard": 1e-09,
+        "element": 22392,
+        "sweep": 0
+      },
+      {
+        "node": 2264,
+        "incident_tets": 26,
+        "quality_target": 0.100001,
+        "initial_minimum_quality": 0.05132305472411531,
+        "fixed_opposite_face_upper_bound": 0.054438806907011646,
+        "target_attained": false,
+        "status": "fixed-face-obstructed",
+        "numerical_quality_guard": 1e-09,
+        "element": 13239,
+        "sweep": 0
+      },
+      {
+        "node": 6802,
+        "incident_tets": 28,
+        "quality_target": 0.100001,
+        "initial_minimum_quality": 0.052675407541233246,
+        "fixed_opposite_face_upper_bound": 0.054438806907011646,
+        "target_attained": false,
+        "status": "fixed-face-obstructed",
+        "numerical_quality_guard": 1e-09,
+        "element": 44179,
+        "sweep": 0
+      }
+    ],
+    "maximum_attempts": 400,
+    "maximum_sweeps": 2,
+    "boundary_coordinates_unchanged": true,
+    "signed_volume_difference": 0.0,
+    "minimum_signed_determinant": 4.9952349736100885e-08
+  },
+  "repair_s": 0.2830578749999404,
+  "generation_wall_s": 4.557683624996571,
+  "nodes": 28227,
+  "elements": 123958,
+  "generation_s": 4.418043499987107,
+  "mesh_sha256": "c38e7f3b8ff511f8593345f042df4c3b117f52a74164724c118e24835621612f",
+  "historical_all_plane_periodic_gate": {
+    "passed": true
+  },
+  "geometry": {
+    "volume": 0.299635792413423,
+    "relative_volume_error": -0.0012368851621291643,
+    "q_min_corner": 0.020866682262063754,
+    "q_p01_corner": 0.3719647722921424,
+    "minimum_sampled_jacobian": 4.9952349736101004e-08,
+    "facet_consistency": {
+      "nodes": 28227,
+      "elements": 123958,
+      "unique_faces": 262086,
+      "interior_faces": 233746,
+      "extracted_boundary_faces": 28340,
+      "same_orientation_shared_faces": 0,
+      "nonmanifold_faces": 0,
+      "duplicate_cells": 0,
+      "duplicate_surface_faces": 0,
+      "provided_boundary_matches_extraction": true,
+      "missing_provided_faces": 0,
+      "extra_provided_faces": 0,
+      "nonpositive_corner_determinants": 0,
+      "minimum_corner_determinant": 4.9952349736100885e-08,
+      "oriented_facet_consistency_passed": true,
+      "conflict_examples": [],
+      "scope": "Oriented corner-face incidence and same-side neighbor diagnostics; necessary consistency, not a certificate of curved geometry or absence of nonlocal intersections"
+    },
+    "oriented_facet_consistency_passed": true,
+    "quadratic_conformity": {
+      "passed": true,
+      "order": 1
+    },
+    "exact_straight_reduction_verified": false,
+    "geometry_admitted": false,
+    "sampled_reverse_max": 0.0008688148670762453,
+    "distance_audit_complete": false,
+    "projection_failed": null,
+    "audit_scope": "Fail-fast after required quality/volume/topology/periodicity rejection; no forward-distance or successful speed claim",
+    "failed_gates": [
+      "quality"
+    ]
+  },
+  "periodic": {
+    "periodic_pair_counts": [
+      1156,
+      1156,
+      1156
+    ],
+    "periodic_coordinate_errors": [
+      0.0,
+      0.0,
+      0.0
+    ],
+    "periodic_pair_tolerance": 1e-10,
+    "periodic_equivalence_classes": 24878,
+    "periodic_triangles_match": true,
+    "full_facet_check_required": true,
+    "complete_existing_node_classes": true,
+    "unmatched_noncap_contact_nodes": [
+      [
+        [],
+        []
+      ],
+      [
+        [],
+        []
+      ],
+      [
+        [],
+        []
+      ]
+    ],
+    "declared_bounds": [
+      [
+        -0.5,
+        -0.5,
+        -0.5
+      ],
+      [
+        0.5,
+        0.5,
+        0.5
+      ]
+    ],
+    "periodic_gate": "declared-cell-material-cap-and-complete-node-classes-v1"
+  },
+  "quality_quantiles": {
+    "min": 0.020866682262063754,
+    "p01": 0.3719647722921424,
+    "p10": 0.5756068320520465,
+    "median": 0.7284406160724155,
+    "p90": 0.8955352326739348,
+    "p99": 0.9677582705052677,
+    "max": 1.0000000000000009
+  },
+  "audit_s": 1.1400456659903284,
+  "wall_s": 5.825161415996263
+}

@@ -9,11 +9,13 @@ import numpy as np
 from scipy.spatial import cKDTree
 
 
-def periodic_pairs(points, surface, tolerance=1e-10, *, require_facets=True):
+def periodic_pairs(points, surface, tolerance=1e-10, *, require_facets=True, declared_bounds=None):
     points, surface = np.asarray(points), np.asarray(surface)
     if surface.ndim != 2 or surface.shape[1] not in (3, 6):
         raise ValueError('Expected Tri3 or Tri6 surface')
-    lower, upper = points.min(axis=0), points.max(axis=0)
+    lower, upper = (points.min(axis=0), points.max(axis=0)) if declared_bounds is None else np.asarray(declared_bounds, dtype=float)
+    if declared_bounds is not None and (np.any(points < lower-tolerance) or np.any(points > upper+tolerance)):
+        raise ValueError('Mesh leaves the declared periodic cell')
     if not np.allclose(upper-lower, 1, atol=tolerance, rtol=0):
         raise ValueError('Periodic specimen does not span the declared unit cube')
     parent = np.arange(len(points))
@@ -34,7 +36,7 @@ def periodic_pairs(points, surface, tolerance=1e-10, *, require_facets=True):
                 raise ValueError(f'Periodic cap node leaves axis {axis} plane')
         low, high = [np.flatnonzero(abs(points[:, axis]-value) <= tolerance)
             for value in (lower[axis], upper[axis])]
-        if not len(low) or not len(high):
+        if declared_bounds is None and (not len(low) or not len(high)):
             raise ValueError(f'Missing opposite periodic face on axis {axis}')
         shift = np.eye(3)[axis]
         candidates = cKDTree(points[low]).query_ball_point(points[high]-shift, tolerance)
@@ -50,7 +52,7 @@ def periodic_pairs(points, surface, tolerance=1e-10, *, require_facets=True):
             raise ValueError(f'Unmatched periodic cap node on axis {axis}')
         mapping = np.arange(len(points)); mapping[matched_high] = mapped
         faces = [{tuple(sorted(row)) for row in mapping[cap]} for cap in caps]
-        matched_facets=bool(faces[0]) and faces[0]==faces[1] and len(caps[0])==len(caps[1])
+        matched_facets=(bool(faces[0]) or declared_bounds is not None) and faces[0]==faces[1] and len(caps[0])==len(caps[1])
         facet_checks.append(matched_facets)
         if require_facets and not matched_facets:
             raise ValueError(f'Opposite-face triangulations differ on axis {axis}')
@@ -74,4 +76,5 @@ def periodic_pairs(points, surface, tolerance=1e-10, *, require_facets=True):
         periodic_equivalence_classes=len(np.unique(classes)), periodic_triangles_match=all(facet_checks),
         full_facet_check_required=require_facets,
         complete_existing_node_classes=True, unmatched_noncap_contact_nodes=contacts,
-        periodic_gate='material-cap-and-complete-node-classes-v1')
+        declared_bounds=None if declared_bounds is None else np.asarray(declared_bounds).tolist(),
+        periodic_gate='material-cap-and-complete-node-classes-v1' if declared_bounds is None else 'declared-cell-material-cap-and-complete-node-classes-v1')

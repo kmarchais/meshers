@@ -44,6 +44,11 @@ def main():
             (Path(__file__), Path(workflow.__file__), workflow.ROOT / "Cargo.lock")},
         "versions": {name: importlib.metadata.version(name) for name in
             ("numpy", "scipy", "fedoo", "microgen", "mmgpy", "pyamg", "pyvista", "vtk", "maturin", "psutil")}}
+    for index, argument in enumerate(command):
+        source = Path(argument)
+        if source.suffix == ".py" and source.is_file():
+            manifest["inputs"][str(source.resolve())] = workflow.digest(source)
+            shutil.copyfile(source, args.run / f"input-command-{index}-{source.name}")
     workflow.save(args.run / "manifest.json", manifest)
     with Job(parts=["worker"]) as job:
         with worker_part(job, "worker", memory_bytes=args.memory_gib*1024**3) as part:

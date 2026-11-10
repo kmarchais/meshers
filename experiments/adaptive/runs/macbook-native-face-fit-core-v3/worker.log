@@ -1,0 +1,19 @@
+   Compiling meshers-core v0.1.0 (/Users/kmarchais/dev/meshers/crates/meshers-core)
+    Finished `release` profile [optimized] target(s) in 1m 17s
+     Running tests/implicit.rs (target/release/deps/implicit-6c587d5364ab31f4)
+
+running 1 test
+
+thread 'curved_fit_preserves_corners_connectivity_and_periodic_traces' (9775089) panicked at crates/meshers-core/tests/implicit.rs:59:17:
+axis=0 component=1 pair=4755,4896 before=5.717648576819556e-15 after=5.717648576819556e-15 old=[-0.5, -0.3334937291205887, -0.18180739047725178],[0.5, -0.33349372912059444, -0.18180739047725078] new=[-0.5, -0.3334937291205887, -0.18180739047725178],[0.5, -0.33349372912059444, -0.18180739047725078]
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+test curved_fit_preserves_corners_connectivity_and_periodic_traces ... FAILED
+
+failures:
+
+failures:
+    curved_fit_preserves_corners_connectivity_and_periodic_traces
+
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 25 filtered out; finished in 0.17s
+
+error: test failed, to rerun pass `-p meshers-core --test implicit`

@@ -1,5 +1,146 @@
 # Meshers project tracking
 
+## Native fitting and broader Microgen coverage, 10 November 2026
+
+Work continues from `ddcc870` on the MacBook. The objective remains better
+boundary and volume fidelity, mesh quality and generation time at comparable
+element/node cost, with precise periodic matching. The original four cases,
+expanded nine specimens and all 24 lattice models remain unchanged. The full
+objective is open.
+
+[Interactive findings](handoff/macbook/native-fit-and-coverage-20261110.html),
+[numeric report](handoff/macbook/native-fit-and-coverage-20261110.json) and
+[Microgen coverage inventory](handoff/macbook/microgen-coverage-20261110.json).
+The earlier dashboard and its frozen evidence remain intact.
+
+The native Rust implementation now exposes experimental `curved_fit=True` for
+Tet10. It fits complete quadratic wall patches while fixing corners and
+connectivity. Periodic midpoint classes move together, cap coordinates stay
+locked, and moves are limited to 2% of the shortest incident wall edge. Each
+accepted move passes sampled curved-Jacobian checks. The option remains off by
+default because it adds generation time and does not improve every metric.
+
+Job 702 reproduces every unfitted baseline with identical point, tet and Tri6
+arrays. All nine fitted meshes pass the original admission gates. Boundary
+error improves on seven original sample grids; Gyroid and periodic grading
+worsen by 0.224% and 0.267%. The independent degree13 replay in 715 improves
+all nine denser maxima. Both measurements remain visible. Absolute volume
+error increases on four cases. Corner quality and counts are unchanged.
+The coarse linear-density case recovers admission at 25,747 tets / 45,262
+nodes and distance 0.001691086. Anisotropic spinodoid distance falls 40.83% on
+the original grid and 40.22% on the dense grid. No old FE score transfers to
+these changed curved domains.
+
+The broader inventory has 80 explicit entries, including all 16 installed
+Microgen 2.0.0b1 TPMS functions in sheet, lower-solid and upper-solid forms.
+Job 704 freezes 48 new TPMS specimens at about 30% material volume. A single
+offset defines each physical specimen for both arms at every resolution.
+These differ from the earlier study fixtures and do not replace them.
+Jobs 705 and 708 screen all 48, then 707 and 709 apply the same .002 geometry
+adaptation policy only to failures. Native coverage rises from 40/48 coarse
+passes to 46/48 admitted selected recipes. All tested actual defaults fail
+at least one unchanged gate, including four 180-second timeouts. Three
+explicitly modified resolution40 actual controls in 713 also fail. Rejected
+actual routes do not support successful performance ratios.
+
+| Recovered TPMS sheet | Adaptive boundary error | Tets / nodes | Single generation s |
+|---|---:|---:|---:|
+| Neovius | 0.001074014 | 56,592 / 91,240 | 1.091 |
+| Honeycomb | 0.000989982 | 34,755 / 56,450 | 0.656 |
+| Schoen FRD | 0.000200472 | 119,534 / 193,609 | 2.769 |
+| Fischer Koch S | 0.000162953 | 107,950 / 179,424 | 2.969 |
+| Lidinoid | 0.001582297 | 145,481 / 234,314 | 3.786 |
+| Honeycomb Lidinoid | 0.000159814 | 93,095 / 149,185 | 2.120 |
+
+Two TPMS failures remain. Schoen FRD upper gives distance 0.004236, 0.002573
+and 0.003014 with four, eight and sixteen adaptation passes. More passes do
+not converge monotonically. Job 714 tests harmonic extension of wall motion
+into nearby interior midpoints at fixed corners. All four trial step sizes
+produce negative sampled Jacobians, so it retains the original mesh exactly.
+PMY sheet exceeds the node cap at 254,941 nodes / 163,088 tets after adaptation
+and still reports a large linear distance estimate of 0.04634. This is not
+just a small cap miss. No gate or cap was relaxed.
+
+Five basic solids are now frozen with analytic volumes, independent formulas,
+4,096-point actual-field identity checks, and exact box-edge/cylinder-rim
+samples. The SDF route passes capsule, ellipsoid and sphere but rounds sharp
+box and cylinder features. An explicit equivalent retained-constraint Tet4
+route in 719 fixes both: box 2,600 tets / 615 nodes with distance 2.89e-14;
+cylinder 4,401 tets / 1,086 nodes with distance 0.001615816. The analytic
+negative sublevel sets are identical. This uses an existing API and does not
+claim automatic sharp-feature recognition for arbitrary SDFs. Its one-off
+generation observation also charges the extra fixture-equivalence check.
+The original SDF failures remain recorded.
+
+Actual public sampling50 seeds exceed the cap on all five basic solids.
+The explicit resolution24 first-pass MMG route, with charged repair, admits
+capsule, ellipsoid and sphere. It still rejects box and cylinder geometry.
+After the same-order pilot 721, job 722 performs one excluded warmup and five
+interleaved measured pairs per admitted solid. Independent job 723 verifies
+all 36 attempts and replays the six distinct meshes. Every attempt admits.
+
+| Fixed solid, both Tet10 | Meshers / actual median s | Meshers / actual tets | Speedup | Actual / native boundary error |
+|---|---:|---:|---:|---:|
+| Capsule | 0.016375 / 1.859272 | 2,720 / 42,590 | 113.55x | 3.66x |
+| Ellipsoid | 0.027814 / 1.645801 | 4,376 / 37,217 | 59.17x | 10.72x |
+| Sphere | 0.050588 / 1.792424 | 11,424 / 46,874 | 35.43x | 122.91x |
+
+Native absolute volume error, minimum q, p01 and median q improve on all
+three. Actual maximum q is higher on all three, and actual sphere q99 is
+higher. The report retains all seven quality quantiles and timing ranges.
+The actual route includes explicit straight Tet10 elevation and differs from
+public defaults. These compare admitted recipes, not optimal competitors or
+matched FEA accuracy. No new stiffness solve or reference was produced.
+
+The expanded screen therefore has 51/53 admitted selected native recipes
+and three admitted tested actual recipes. This is not complete Microgen
+coverage. The 13 CAD strut classes, two CAD-only basic solids, five mapped or
+clipped TPMS classes, and arbitrary boolean/custom-field coverage still need
+matching physical fixtures. The six spectral/graded/composed entries already
+have study representatives, but parameter coverage remains incomplete.
+
+The new periodic observer accepts explicitly declared physical cell bounds.
+This is necessary for periodic solids with paired empty material-cap traces;
+mesh extrema are not the cell bounds. Job 706 passes six controls, including
+rejection of one-sided caps, displaced nodes and outside-cell nodes. Full
+nonempty cap-node/facet matching and existing equivalence classes remain
+required. The historical observer default and frozen failures are unchanged.
+All new attempts retain distance .002, absolute volume 1%, q .1, positive
+sampled curved Jacobians, coherent facets, and 250,000-node/tet caps, including
+actual intermediate meshes. Work uses one numerical thread and the shared
+one-worker queue, with timeouts and the native macOS RSS watchdog.
+
+Validation retains failed controls as evidence. Jobs 696–698 identify an
+unchanged periodic baseline discrepancy of 5.72e-15. Job 699 exposes compiled
+batch-gradient dispatch and 700 fixes it. Job 701 incorrectly post-checks
+periodicity on the nonperiodic density case; corrected 702 preserves its
+scope. The coupled local fitting control 703 does not remove the two small
+original-grid regressions. Full native validation 716 passes 111 Rust tests
+with one ignored, release clippy, and 211 Python tests with one skipped.
+Final API review adds a retained-intersection control: 724 exposes an invalid
+`curved_fit=True, order=1` combination bypassing native validation. The check
+now runs before Python dispatch. Full Python validation 725 passes 212 tests
+with one skipped. The measured native binary and all valid recipe paths are
+unchanged by that final validation fix.
+
+Next work should address the final curved geometry when choosing boundary
+connectivity, rather than repeating the closed pass-count or fixed-corner
+harmonic experiments. Retained sharp features must extend to exact CAD
+lattice unions without replacing their flat-ended cylinders by capsule
+unions. The expanded actual TPMS routes still need admitted comparators.
+Lattice mechanics remains separate and unresolved: the best saved native
+worst-model disagreement is 1.213247%, versus 0.994671% for the separately
+refined actual mesh, across all 24 tensors. The earlier mesh-only speed ratios
+do not apply to that stiffness workflow. All four original cases remain in
+scope; basic-solid wins do not complete the objective.
+
+The decision trail is `.audit/macbook-continuation.tsv`. Each new run retains
+small manifests, source snapshots, results and logs; meshes and sample arrays
+remain local ignored artifacts with recorded hashes. Generic bounded stages
+now snapshot the Python command source as well as their driver. Only a
+missing hash-identical source copy was restored for 706; no frozen result was
+overwritten.
+
 ## Reassessment and curved-face fitting, 10 November 2026
 
 [Project and study reassessment](experiments/adaptive/REASSESSMENT-20261110.md),

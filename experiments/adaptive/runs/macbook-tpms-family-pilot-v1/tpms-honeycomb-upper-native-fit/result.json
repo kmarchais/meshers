@@ -1,0 +1,116 @@
+{
+  "case": "tpms-honeycomb-upper",
+  "config": {
+    "name": "native-uniform16-fit-tet10",
+    "arm": "meshers",
+    "cells": 16,
+    "order": 2,
+    "adapt": false,
+    "tolerance": 1.0,
+    "curved_fit": true,
+    "periodic_trace": true
+  },
+  "status": "failed",
+  "qualified": false,
+  "mmg_calls": [],
+  "instrumentation_s": 0.0,
+  "vtk_backend": "Sequential",
+  "vtk_threads": 1,
+  "periodic_required": true,
+  "solve_performed": false,
+  "diagnostics": {
+    "empty": false,
+    "volume": 0.29908834068363604,
+    "minimum_mmg_quality": 0.15053638312347123,
+    "sampled_surface_error": 0.0039152710025071895,
+    "elements_below_quality_01": 0,
+    "reverted_snap_vertices": 0,
+    "callback_calls": 0,
+    "inserted_interior_nodes": 0,
+    "seconds": 0.097132166,
+    "quadratic": {
+      "curved_edges": 4836,
+      "straightened_edges": 0,
+      "partially_curved_edges": 0,
+      "minimum_jacobian_ratio": 0.6612870283036122,
+      "fit": {
+        "selected_groups": 310,
+        "affected_faces": 328,
+        "accepted_steps": 2,
+        "moved_nodes": 320,
+        "initial_distance_estimate": 0.0002125369019742312,
+        "final_distance_estimate": 0.00019955705767030706
+      }
+    },
+    "threads": 1,
+    "evaluator": "compiled",
+    "preparation_seconds": 0.0004935420001856983
+  },
+  "generation_wall_s": 0.09766525001032278,
+  "nodes": 27538,
+  "elements": 17477,
+  "generation_s": 0.09766525001032278,
+  "generated_field_identity_checked": 4096,
+  "mesh_sha256": "b8b8ffdbc761da6b0d1b6fa827e37c474b844c3415f2b8801d15a9c961210eef",
+  "historical_all_plane_periodic_gate": {
+    "passed": false,
+    "error": "Periodic specimen does not span the declared unit cube"
+  },
+  "geometry": {
+    "volume": 0.3000714119631007,
+    "relative_volume_error": -0.00011064844527319817,
+    "q_min_corner": 0.15053638312347123,
+    "q_p01_corner": 0.4889824957823452,
+    "minimum_sampled_jacobian": 2.5120904981722794e-06,
+    "facet_consistency": {
+      "nodes": 27538,
+      "elements": 17477,
+      "unique_faces": 36904,
+      "interior_faces": 33004,
+      "extracted_boundary_faces": 3900,
+      "same_orientation_shared_faces": 0,
+      "nonmanifold_faces": 0,
+      "duplicate_cells": 0,
+      "duplicate_surface_faces": 0,
+      "provided_boundary_matches_extraction": true,
+      "missing_provided_faces": 0,
+      "extra_provided_faces": 0,
+      "nonpositive_corner_determinants": 0,
+      "minimum_corner_determinant": 2.5123856183248198e-06,
+      "oriented_facet_consistency_passed": true,
+      "conflict_examples": [],
+      "scope": "Oriented corner-face incidence and same-side neighbor diagnostics; necessary consistency, not a certificate of curved geometry or absence of nonlocal intersections"
+    },
+    "oriented_facet_consistency_passed": true,
+    "quadratic_conformity": {
+      "passed": true,
+      "order": 2,
+      "unique_edges": 23481
+    },
+    "exact_straight_reduction_verified": false,
+    "geometry_admitted": false,
+    "sampled_reverse_max": 0.00019677780157943825,
+    "distance_audit_complete": false,
+    "projection_failed": null,
+    "audit_scope": "Fail-fast after required quality/volume/topology/periodicity rejection; no forward-distance or successful speed claim",
+    "failed_gates": [
+      "periodicity"
+    ]
+  },
+  "periodic": {
+    "error": "Periodic specimen does not span the declared unit cube"
+  },
+  "quality_quantiles": {
+    "min": 0.15053638312347123,
+    "p01": 0.4889824957823452,
+    "p10": 0.6406656454749807,
+    "median": 0.9199976818291943,
+    "p90": 0.9338287127649935,
+    "p99": 0.9828313938037315,
+    "max": 0.9983807868637166
+  },
+  "error": "Periodic specimen does not span the declared unit cube",
+  "traceback": "Traceback (most recent call last):\n  File \"/Users/kmarchais/dev/meshers/experiments/adaptive/comparison_benchmark.py\", line 186, in worker\n    checked,_,_=periodic_auditor(points,surface)\n                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/Users/kmarchais/dev/meshers/experiments/adaptive/periodic_trace.py\", line 18, in periodic_pairs\n    raise ValueError('Periodic specimen does not span the declared unit cube')\nValueError: Periodic specimen does not span the declared unit cube\n",
+  "failed_attempt_s": 1.8830191250017378,
+  "wall_s": 1.8830213340115733
+}

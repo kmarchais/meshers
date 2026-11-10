@@ -1,0 +1,28 @@
+{
+  "case": "primitive-capsule",
+  "config": {
+    "name": "actual-default-tet4",
+    "arm": "microgen",
+    "resolution": null,
+    "order": 1,
+    "periodic_trace": true,
+    "declared_unit_cell": true,
+    "nonperiodic_reason": "Complete bounded basic solid; no periodic identification",
+    "actual_generate_options": {}
+  },
+  "status": "failed",
+  "qualified": false,
+  "mmg_calls": [],
+  "instrumentation_s": 0.0,
+  "vtk_backend": "Sequential",
+  "vtk_threads": 1,
+  "periodic_required": false,
+  "solve_performed": false,
+  "actual_resolution": null,
+  "seed_nodes": 57744,
+  "seed_elements": 316090,
+  "error": "Microgen seed cap exceeded",
+  "traceback": "Traceback (most recent call last):\n  File \"/Users/kmarchais/dev/meshers/experiments/adaptive/comparison_benchmark.py\", line 61, in worker\n    if grid.n_cells>w.CAP or grid.n_points>w.CAP:raise ValueError('Microgen seed cap exceeded')\n                                                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nValueError: Microgen seed cap exceeded\n",
+  "failed_attempt_s": 0.0713977910054382,
+  "wall_s": 0.07139887500670739
+}

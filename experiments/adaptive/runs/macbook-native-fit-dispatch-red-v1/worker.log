@@ -1,0 +1,16 @@
+F                                                                        [100%]
+=================================== FAILURES ===================================
+_____ test_curved_fit_rejects_linear_retained_intersection_before_dispatch _____
+
+    def test_curved_fit_rejects_linear_retained_intersection_before_dispatch():
+        def intersection(x, y, _z):
+            return np.maximum(x - 0.15, y - 0.2)
+    
+>       with pytest.raises(ValueError, match="curved_fit requires order 2"):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE ValueError
+
+crates/meshers-python/tests/test_curved_fit.py:62: Failed
+=========================== short test summary info ============================
+FAILED crates/meshers-python/tests/test_curved_fit.py::test_curved_fit_rejects_linear_retained_intersection_before_dispatch
+1 failed, 3 deselected in 0.04s
