@@ -1,0 +1,61 @@
+{
+  "date": "2026-11-10",
+  "purpose": "Single fixed p8 policy across all nine specimens; no reference or volume target fitting",
+  "fit_degree": 6,
+  "holdout_degree": 11,
+  "iterations": 6,
+  "max_edge_fraction": 0.02,
+  "pilot_jobs": [
+    690,
+    691,
+    692
+  ],
+  "cases": [
+    {
+      "case": "graded-gyroid-linear",
+      "source": "experiments/adaptive/runs/macbook-verified-graded-linear-repeated-v1/repeat-0-meshers-curved-tet10",
+      "fixtures": "experiments/adaptive/runs/macbook-comparison-fixtures-v1"
+    },
+    {
+      "case": "graded-gyroid-periodic",
+      "source": "experiments/adaptive/runs/macbook-verified-graded-periodic-repeated-v1/repeat-0-meshers-curved-tet10",
+      "fixtures": "experiments/adaptive/runs/macbook-comparison-fixtures-v1"
+    },
+    {
+      "case": "gyroid",
+      "source": "experiments/adaptive/runs/macbook-verified-gyroid-repeated-v1/repeat-0-meshers-curved-tet10",
+      "fixtures": "experiments/adaptive/runs/macbook-comparison-fixtures-v1"
+    },
+    {
+      "case": "smooth-lattice",
+      "source": "experiments/adaptive/runs/macbook-verified-lattice-repeated-v1/repeat-0-meshers-curved-tet10",
+      "fixtures": "experiments/adaptive/runs/macbook-comparison-fixtures-v1"
+    },
+    {
+      "case": "schwarz-solid",
+      "source": "experiments/adaptive/runs/macbook-verified-schwarz-p-repeated-v1/repeat-0-meshers-curved-tet10",
+      "fixtures": "experiments/adaptive/runs/macbook-comparison-fixtures-v1"
+    },
+    {
+      "case": "spinodoid-anisotropic",
+      "source": "experiments/adaptive/runs/macbook-verified-spinodoid-anisotropic-repeated-v1/repeat-0-meshers-curved-tet10",
+      "fixtures": "experiments/adaptive/runs/macbook-comparison-fixtures-v1"
+    },
+    {
+      "case": "spinodoid",
+      "source": "experiments/adaptive/runs/macbook-verified-spinodoid-repeated-v1/repeat-0-meshers-curved-tet10",
+      "fixtures": "experiments/adaptive/runs/macbook-comparison-fixtures-v1"
+    },
+    {
+      "case": "schwarz-d-solid",
+      "source": "experiments/adaptive/runs/macbook-schwarz-d-periodic-repeated-v1/repeat-0-meshers-curved-tet10",
+      "fixtures": "experiments/adaptive/runs/macbook-comparison-fixtures-v1"
+    },
+    {
+      "case": "graded-gyroid-density-linear",
+      "source": "experiments/adaptive/runs/macbook-curved-density-native-uniform-v1/mesh",
+      "fixtures": "experiments/adaptive/runs/macbook-linear-density-fixtures-v1"
+    }
+  ],
+  "promotion_rule": "Geometry and volume improvement assessed separately; every admission gate unchanged; no inherited FEA or live timing claim"
+}

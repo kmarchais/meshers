@@ -1,5 +1,72 @@
 # Meshers project tracking
 
+## Reassessment and curved-face fitting, 10 November 2026
+
+[Project and study reassessment](experiments/adaptive/REASSESSMENT-20261110.md),
+[numeric findings](handoff/macbook/face-fit-findings-20261110.json) and
+[experiment chart](handoff/macbook/face-fit-20261110.html).
+
+Resumed from clean `ca2390e`. The shared Mac queue was idle. Jobs 690–694
+completed sequentially with one numerical thread, explicit timeouts, standard
+progress and the unchanged 8 GiB watchdog. No native production code, old
+meshes, fields, samples, material definitions or reference tensors changed.
+
+The review separates a product opportunity from the unresolved mechanics target.
+Linear adaptation precedes quadratic elevation, and nodal projection does not
+minimize error over the final curved faces. The retained lattice models have
+an existing algebraic disagreement floor of 0.901931%; this leaves little room
+under 1%, but does not excuse failure or justify discarding models.
+
+One generic face-fitting prototype keeps all corners, counts and connectivity
+fixed. It moves quadratic wall nodes within 2% of their incident edge length,
+locks cap coordinates and couples periodic copies. Its L8 objective uses the
+fixed implicit field, without benchmark samples, volume targets or stiffness
+tensors. Nodes can move off the exact wall to improve the whole curved patch.
+
+| Specimen | Standard boundary-error reduction | Independent dense reduction |
+|---|---:|---:|
+| Gyroid sheet | 1.62% | 1.66% |
+| Schwarz P solid | 7.81% | 7.81% |
+| Schwarz D solid | 24.60% | 25.14% |
+| Fixed spinodoid | 3.72% | 4.89% |
+| Anisotropic spinodoid | 40.83% | 40.22% |
+| Smooth-union lattice | 9.27% | 10.15% |
+| Linear thickness Gyroid | 2.52% | 2.33% |
+| Periodically graded Gyroid | 4.12% | 3.95% |
+| Linear density Gyroid | 18.80% | 20.76% |
+
+All nine fitted meshes pass the unchanged standard gates and the denser
+supplementary geometry check. Corner-quality distributions remain identical.
+The 25,747-tet density seed improves from distance 0.002099825 to 0.001704960,
+recovering admission. The earlier tangent-fit prototype already recovered
+that seed; this is a broader fitting method, not its first recovery.
+
+The tradeoffs remain visible. Volume error increases in five cases; sampled
+volume uncertainty prevents ranking many tiny changes. Minimum sampled lattice
+Jacobian falls 1.94%, staying positive. The Python fit adds 0.45–13.63 s in
+single saved-mesh observations, including diagnostic holdout work. It is not
+a production default or a complete-workflow speed improvement. No FE score
+transfers to these changed domains.
+
+The initial Gyroid L2 fit lowered RMS error but worsened the standard maximum
+by 6.55%. Correct cap scaling alone still worsened it 2.38%. Those negative
+controls are retained. The fixed L8 policy then improved every specimen.
+The nine-case screen took 78.27 s at 1.575 GiB. The independent audit took
+83.58 s at 1.779 GiB, replayed all standard metrics and checked a degree13
+surface grid with zero failed projections. Analytic sphere/plane and face-order
+controls pass. The findings resolve 82 input hashes and verify unchanged
+lattice evidence. Sampling is not global geometry or continuum certification.
+
+Next test native evaluation and a bounded local fitting pass on defective
+curved patches, beginning with density recovery and the anisotropic spinodoid,
+then replay all nine. Measure fresh complete generation before claiming speed
+or element economy. Keep a separate, explicitly budgeted lattice reference
+investigation; do not repeat closed enrichment families or sizing sweeps.
+The best saved native lattice disagreement remains 1.213247% versus 0.994671%
+for the separate modified actual star-refined route. Actual competitors and
+FEA comparisons remain missing for other specimens. All four original cases,
+all 24 models and both 250,000 admission caps remain in force.
+
 ## Small lattice diagnostics narrow the next change, 26 October 2026
 
 [Detailed results](experiments/adaptive/LATTICE_SMALL_DIAGNOSTICS.md) and
