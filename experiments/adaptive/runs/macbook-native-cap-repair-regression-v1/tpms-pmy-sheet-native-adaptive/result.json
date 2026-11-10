@@ -1,0 +1,78 @@
+{
+  "case": "tpms-pmy-sheet",
+  "config": {
+    "name": "native-adaptive002-fit-tet10",
+    "arm": "meshers",
+    "cells": 16,
+    "order": 2,
+    "adapt": true,
+    "tolerance": 1.0,
+    "curved_fit": true,
+    "periodic_trace": true,
+    "adapt_tolerance": 0.002,
+    "min_length": 0.002,
+    "declared_unit_cell": true
+  },
+  "status": "failed",
+  "qualified": false,
+  "mmg_calls": [],
+  "instrumentation_s": 0.0,
+  "vtk_backend": "Sequential",
+  "vtk_threads": 1,
+  "periodic_required": true,
+  "solve_performed": false,
+  "diagnostics": {
+    "empty": false,
+    "volume": 0.3039033924764807,
+    "minimum_mmg_quality": 0.1000002216874892,
+    "sampled_surface_error": 0.046336488018840744,
+    "elements_below_quality_01": 0,
+    "reverted_snap_vertices": 48,
+    "callback_calls": 0,
+    "inserted_interior_nodes": 0,
+    "adapt": {
+      "splits": 48529,
+      "collapses": 28313,
+      "swaps": 22294,
+      "moves": 125428,
+      "error_splits": 1118,
+      "maximum_error": 0.046336488018840744,
+      "seconds": [
+        0.317649169,
+        0.117754875,
+        0.976367541,
+        0.280740834,
+        0.421605958,
+        0.35157899899999995,
+        0.8465699170000001
+      ]
+    },
+    "seconds": 4.282033083,
+    "quadratic": {
+      "curved_edges": 50144,
+      "straightened_edges": 0,
+      "partially_curved_edges": 6182,
+      "minimum_jacobian_ratio": 0.001057876403036926,
+      "fit": {
+        "selected_groups": 79,
+        "affected_faces": 94,
+        "accepted_steps": 0,
+        "moved_nodes": 0,
+        "initial_distance_estimate": 0.04925257318075691,
+        "final_distance_estimate": 0.04925257318075691
+      }
+    },
+    "threads": 1,
+    "evaluator": "compiled",
+    "preparation_seconds": 0.0007010000117588788
+  },
+  "generation_wall_s": 4.282783542003017,
+  "nodes": 254989,
+  "elements": 163093,
+  "generation_s": 4.282783542003017,
+  "generated_field_identity_checked": 4096,
+  "error": "Final node/tetrahedron cap exceeded",
+  "traceback": "Traceback (most recent call last):\n  File \"/Users/kmarchais/dev/meshers/experiments/adaptive/comparison_benchmark.py\", line 180, in worker\n    if max(len(cells),len(points))>w.CAP:raise ValueError('Final node/tetrahedron cap exceeded')\n                                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nValueError: Final node/tetrahedron cap exceeded\n",
+  "failed_attempt_s": 4.285176542005502,
+  "wall_s": 4.285177917015972
+}

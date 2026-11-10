@@ -1,0 +1,91 @@
+{
+  "original_public_call_rejected": true,
+  "public_coordinate_check": false,
+  "axes": [
+    {
+      "axis": 0,
+      "inferred_planes": [
+        -0.5,
+        0.5
+      ],
+      "low_nodes": 41,
+      "high_nodes": 41,
+      "max_signed_transverse_difference": 9.325873406851315e-16,
+      "max_absolute_transverse_difference": 9.325873406851315e-16,
+      "public_rejects": false
+    },
+    {
+      "axis": 1,
+      "inferred_planes": [
+        -0.5,
+        0.5
+      ],
+      "low_nodes": 41,
+      "high_nodes": 41,
+      "max_signed_transverse_difference": 3.885780586188048e-16,
+      "max_absolute_transverse_difference": 5.995204332975315e-16,
+      "public_rejects": false
+    },
+    {
+      "axis": 2,
+      "inferred_planes": [
+        -0.15,
+        0.15
+      ],
+      "low_nodes": 5,
+      "high_nodes": 37,
+      "public_rejects": true
+    }
+  ],
+  "declared_cell": {
+    "periodic_pair_counts": [
+      41,
+      41,
+      0
+    ],
+    "periodic_coordinate_errors": [
+      9.325873406851315e-16,
+      5.995204332975315e-16,
+      0.0
+    ],
+    "periodic_pair_tolerance": 1e-10,
+    "periodic_equivalence_classes": 840,
+    "periodic_triangles_match": true,
+    "full_facet_check_required": true,
+    "complete_existing_node_classes": true,
+    "unmatched_noncap_contact_nodes": [
+      [
+        [],
+        []
+      ],
+      [
+        [],
+        []
+      ],
+      [
+        [],
+        []
+      ]
+    ],
+    "declared_bounds": [
+      [
+        -0.5,
+        -0.5,
+        -0.5
+      ],
+      [
+        0.5,
+        0.5,
+        0.5
+      ]
+    ],
+    "periodic_gate": "declared-cell-material-cap-and-complete-node-classes-v1"
+  },
+  "source_mesh_sha256": "7ae297ecb359d168d0b302593ecb6e8206f695ad7201d6f37d822923ef740b1d",
+  "hypotheses": [
+    "Mesh extrema substitute for physical empty Z faces",
+    "Physical X/Y caps mismatch",
+    "Public sorting rejects otherwise paired X/Y nodes"
+  ],
+  "recorded_failure": "OutputMeshNotPeriodicError from the unmodified public post-Gmsh check"
+}

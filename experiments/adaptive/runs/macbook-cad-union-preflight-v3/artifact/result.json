@@ -1,0 +1,102 @@
+{
+  "preflight_completed": true,
+  "mesh_admission": "not tested",
+  "fixture": {
+    "api": "microgen.CustomLattice",
+    "base_vertices": [
+      [
+        -0.5,
+        0,
+        0
+      ],
+      [
+        0.5,
+        0,
+        0
+      ],
+      [
+        0,
+        -0.5,
+        0
+      ],
+      [
+        0,
+        0.5,
+        0
+      ]
+    ],
+    "strut_vertex_pairs": [
+      [
+        0,
+        1
+      ],
+      [
+        2,
+        3
+      ]
+    ],
+    "strut_radius": 0.15,
+    "strut_heights": 1.0,
+    "cell_size": 1.0,
+    "strut_joints": false,
+    "bounds": [
+      -0.5,
+      0.5,
+      -0.5,
+      0.5,
+      -0.5,
+      0.5
+    ],
+    "periodic_axes": [
+      true,
+      true,
+      true
+    ],
+    "nonempty_material_cap_axes": [
+      true,
+      true,
+      false
+    ],
+    "analytic_volume": 0.1233716694115407,
+    "volume_formula": "2*pi*r^2*L - 16*r^3/3",
+    "native_field": "min(sqrt(y*y+z*z)-r, sqrt(x*x+z*z)-r), restricted to BOUNDS",
+    "periodic_semantics": "Cylinders end on the cell faces and remain inside the other axes. Periodic splitting leaves them unchanged. The final box clip changes no material."
+  },
+  "checks": {
+    "public_cylinder_membership_points": 4096,
+    "ridge_points": 4096,
+    "paired_cap_probes_per_axis": 1024
+  },
+  "native_retained_constraint_count": null,
+  "native_periodic_affine_eligible": false,
+  "versions": {
+    "microgen": "2.0.0b1",
+    "gmsh": "4.15.2"
+  },
+  "cad": {
+    "available": true,
+    "status": "verified",
+    "valid": true,
+    "volume": 0.12337166944279454,
+    "membership_points": 512,
+    "solid_count": 1,
+    "relative_volume_error": 2.5333091180357314e-10,
+    "step_file": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-cad-union-preflight-v3/artifact/crossed-flat-cylinders.step",
+    "step_sha256": "35beb6ddf579df0c2ef68ebef3dac0ff6b44acfffe572a01e2158913e18e6474"
+  },
+  "scope": "One CustomLattice representative. No geometry or performance coverage claim for the other twelve lattice classes, CAD-only solids, or mapped TPMS.",
+  "inputs": {
+    "/Users/kmarchais/dev/meshers/.local-work/macbook-runtime/venv/lib/python3.12/site-packages/microgen/cad.py": "ee2e9cbbe9953979786e50b08de509c39485f32f962f9acd329f77a2156e699a",
+    "/Users/kmarchais/dev/meshers/.local-work/macbook-runtime/venv/lib/python3.12/site-packages/microgen/periodic.py": "c6f97e378c157787a59abc410f1c521b09d3b5de1bcf26be6be41fa54db8e647",
+    "/Users/kmarchais/dev/meshers/.local-work/macbook-runtime/venv/lib/python3.12/site-packages/microgen/shape/cylinder.py": "776eba54c1ae8faac80eb45cd8ddc92d8709e5d1f7a744ae432a3b19100698f9",
+    "/Users/kmarchais/dev/meshers/.local-work/macbook-runtime/venv/lib/python3.12/site-packages/microgen/shape/strut_lattice/abstract_lattice.py": "86b7b47a83af764cc4d592592cc1a0b79279449cc940f2babef5928b8b360328",
+    "/Users/kmarchais/dev/meshers/.local-work/macbook-runtime/venv/lib/python3.12/site-packages/microgen/shape/strut_lattice/custom_lattice.py": "e03e35f335f2b30f3a61ebdf6f03ec5c7f9a388ff286b5771045e46d248edaeb",
+    "/Users/kmarchais/dev/meshers/crates/meshers-python/python/meshers/__init__.py": "c02de55208342f18ce7f89e2c19dfcfe18220eaf64e8c2eb9cc734632bad04fa",
+    "/Users/kmarchais/dev/meshers/crates/meshers-python/python/meshers/expression.py": "dc8d5e612395b13cb61ea71b147e9e4d45423c988e5dca4358f251d011974dd1",
+    "/Users/kmarchais/dev/meshers/crates/meshers-python/python/meshers/intersection.py": "970bbce85bb1a3043af9b309c5d0895abb6967fa4f34e50586865054c5253078",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/cad_coverage_preflight.py": "6a4f22d13e1859480f6c2785f116ab464cd559dfa0cb3b4e9281ccc5bc670b1b"
+  },
+  "samples": {
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-cad-union-preflight-v3/artifact/field-and-ridge-probes.npz": "51d474a38d5ffaef32d014f8453d4e2f0b39de073cf19b4d60de427883de9a00"
+  }
+}

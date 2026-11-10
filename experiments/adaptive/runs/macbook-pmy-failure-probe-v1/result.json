@@ -1,0 +1,848 @@
+{
+  "source_geometry": {
+    "volume": 0.3022149262011844,
+    "relative_volume_error": 0.007498546533380113,
+    "q_min_corner": 0.21834899227576837,
+    "q_p01_corner": 0.3126171389066503,
+    "minimum_sampled_jacobian": 6.261759405423547e-08,
+    "facet_consistency": {
+      "nodes": 76143,
+      "elements": 40295,
+      "unique_faces": 91320,
+      "interior_faces": 69860,
+      "extracted_boundary_faces": 21460,
+      "same_orientation_shared_faces": 0,
+      "nonmanifold_faces": 0,
+      "duplicate_cells": 0,
+      "duplicate_surface_faces": 0,
+      "provided_boundary_matches_extraction": true,
+      "missing_provided_faces": 0,
+      "extra_provided_faces": 0,
+      "nonpositive_corner_determinants": 0,
+      "minimum_corner_determinant": 2.65599894575728e-06,
+      "oriented_facet_consistency_passed": true,
+      "conflict_examples": [],
+      "scope": "Oriented corner-face incidence and same-side neighbor diagnostics; necessary consistency, not a certificate of curved geometry or absence of nonlocal intersections"
+    },
+    "oriented_facet_consistency_passed": true,
+    "quadratic_conformity": {
+      "passed": true,
+      "order": 2,
+      "unique_edges": 63583
+    },
+    "exact_straight_reduction_verified": false,
+    "geometry_admitted": false,
+    "sampled_forward_max": 0.06847655093023211,
+    "sampled_reverse_max": 0.016698025346282664,
+    "sampled_two_sided_max": 0.06847655093023211,
+    "outward_forward_max": 0.06847655093023211,
+    "inward_forward_max": 0.0019705160153494564,
+    "projection_failed": 0,
+    "forward_samples": 255554,
+    "reverse_samples": 35990,
+    "minimum_dihedral_deg_corner": 12.890855754057384,
+    "reverse_tessellation_delta_max": 0.00012250749098076792,
+    "quadratic_reverse_subdivisions": [
+      8,
+      16
+    ],
+    "projection_method": "newton-box-slsqp-v1",
+    "unbounded_projection_failed": 0,
+    "box_projection_attempts": 0,
+    "box_projection_recovered": 0,
+    "box_projection_witnesses": [],
+    "distance_audit_complete": true,
+    "failed_gates": [
+      "geometry"
+    ]
+  },
+  "adaptive_attempt": {
+    "nodes": 254941,
+    "elements": 163088,
+    "error": "Final node/tetrahedron cap exceeded",
+    "diagnostics": {
+      "empty": false,
+      "volume": 0.3038954097925574,
+      "minimum_mmg_quality": 0.10000020989835459,
+      "sampled_surface_error": 0.046336488018840744,
+      "elements_below_quality_01": 0,
+      "reverted_snap_vertices": 48,
+      "callback_calls": 0,
+      "inserted_interior_nodes": 0,
+      "adapt": {
+        "splits": 48518,
+        "collapses": 28296,
+        "swaps": 22275,
+        "moves": 125557,
+        "error_splits": 1105,
+        "maximum_error": 0.046336488018840744,
+        "seconds": [
+          0.32091125,
+          0.12938075000000002,
+          1.028366916,
+          0.36101362600000003,
+          0.458917333,
+          0.42530737500000004,
+          0.915069125
+        ]
+      },
+      "seconds": 4.608497334,
+      "quadratic": {
+        "curved_edges": 50075,
+        "straightened_edges": 0,
+        "partially_curved_edges": 6109,
+        "minimum_jacobian_ratio": 0.0012916155464459576,
+        "fit": {
+          "selected_groups": 84,
+          "affected_faces": 99,
+          "accepted_steps": 0,
+          "moved_nodes": 0,
+          "initial_distance_estimate": 0.04925257318075691,
+          "final_distance_estimate": 0.04925257318075691
+        }
+      },
+      "threads": 1,
+      "evaluator": "compiled",
+      "preparation_seconds": 0.0007459170010406524
+    },
+    "mesh_available": false
+  },
+  "gates_unchanged": true,
+  "candidate_generated": false,
+  "inputs": {
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/pmy_failure_probe.py": "6a3b57434d5c8586dea67aa67bd8e2ca69ca4e16f0098a0cd4834463109883f7",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/microgen_workflow.py": "9f513dfd3e6e5a72a71a54f70c0c2cf7c7a1ebe7256886ee3feaf7d7ad7de161",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/tpms_family_fixtures.py": "794418f5d2e3d2158542af51a5cf322c41befff8f8d7c98f769d379baedd3bc6",
+    "/Users/kmarchais/dev/meshers/.local-work/macbook-runtime/venv/lib/python3.12/site-packages/microgen/shape/surface_functions.py": "578c20eb2ef424b95f50618d9cfffdce3676d6b5bdcd90a3278e0ca5ef1af4b4",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-tpms-family-remaining-v1/tpms-pmy-sheet-native-fit/mesh.npz": "bf61791bd075c9a11695604765ff3d21d133301517dabdd209b697c6bd7e1c0a",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-tpms-family-remaining-v1/tpms-pmy-sheet-native-fit/result.json": "577826b51807028f97c0067be72af153d6c7776fa2278e52a3a65e0c322f0daa",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-tpms-hard-failures-v1/result.json": "8827f38d48180df8206136e4d909d656ab23cf3c8a1b02a2b472dd8fe06d8b77",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-tpms-remaining-adaptation-v1/tpms-pmy-sheet-native-adaptive/result.json": "8ae71c8d532d26a3efff62657c1b0fd8a27ff84e447de8e0e741c87e9a53cf35",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-tpms-family-fixtures-v1/result.json": "1f3907ba0acf691628d0eb588b0f4325c2abdc8c24efb75a251f60ccca5681f2",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-tpms-family-fixtures-v1/tpms-pmy-sheet/tpms-pmy-sheet-specimen.json": "65f653b5b5df833c4f7b9ebeef839555c76690e1a4e95c6011719d042a77c67a",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-tpms-family-fixtures-v1/tpms-pmy-sheet/tpms-pmy-sheet-samples.npz": "66cd3e81d5bad83b63c3bbc96696d732170ed37049dd4ff1dad868b39dbaf2f1",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-tpms-family-fixtures-v1/tpms-pmy-sheet/tpms-pmy-sheet-definition.json": "a0b3623510422678fd46dbfec702d7ebfb03e14272f7016b002e5b2594a662b6",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/scorecard.py": "8f26256c7df0e84c9f35cdd71bf4f95a74e072d45469002b213c5dcd4f1bab2a",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/quadratic_edge_removal_probe.py": "f26a4be16f7aeb4fce6d89732754fab0e5d39e86b4d4c62466a3afd547cec6ed",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/quadrature_audit.py": "020677df452ec86864e687c9b35e2c69e70f8587ec54240ce0c4eaa4b717319e",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/nested_refinement.py": "7f78251d150ebcee928db1b49e22b64ee89efde5cdc238c1f5b9994aad36a6b8",
+    "/Users/kmarchais/dev/meshers/crates/meshers-core/src/projection.rs": "926d1ab1c848cf80cc392295764d7bf8f2254dfb62f219639db7e5a4194acf84",
+    "/Users/kmarchais/dev/meshers/crates/meshers-core/src/tet_adapt.rs": "671e2343d3a72bdd60ddbad8911f75427556ed5cc94e89de88f9db824d29bf36",
+    "/Users/kmarchais/dev/meshers/crates/meshers-core/src/quadratic.rs": "fff22efd06011a427b139e2612bce70dc46e85e6b4a07047c2bcc6a8a3b2428c",
+    "/Users/kmarchais/dev/meshers/crates/meshers-core/src/quadratic/fit.rs": "bc310e4624599686286909ed40db4e9f8b10cce06a713b4fba2a9b598ef4eae3"
+  },
+  "controls": {
+    "plane_far_excluded": true,
+    "plane_near_retained": true,
+    "curved_patch_retained": true,
+    "analytic_plane_distance": true,
+    "analytic_newton_branch_jump_detected": true
+  },
+  "forward_witnesses": [
+    {
+      "face": 7880,
+      "probe": [
+        -0.4070865335452394,
+        -0.26635399703771656,
+        -0.12758064505162614
+      ],
+      "historic": {
+        "distance": 0.06847655093023214,
+        "level": -0.36027239477618084,
+        "residual_distance": 3.803650815144246e-17,
+        "feasible": true
+      },
+      "closest_feasible": {
+        "foot": [
+          -0.4196953056382078,
+          -0.27185541037749406,
+          -0.11622438907109424
+        ],
+        "distance": 0.017838476177153336,
+        "level": -0.36027239477618084,
+        "residual_distance": 2.861625969249935e-16,
+        "optimizer_success": true
+      },
+      "forward_overstatement_at_least": 0.0506380747530788,
+      "first_order_distance": 0.014648194753410495
+    },
+    {
+      "face": 18914,
+      "probe": [
+        0.09270392963694893,
+        0.2340606398490547,
+        0.372419007783941
+      ],
+      "historic": {
+        "distance": 0.062049612353104536,
+        "level": 0.36027239477618084,
+        "residual_distance": 2.810513588202726e-17,
+        "feasible": true
+      },
+      "closest_feasible": {
+        "foot": [
+          0.07970131578592728,
+          0.22896004025217923,
+          0.38347190192770897
+        ],
+        "distance": 0.017811528630630413,
+        "level": 0.36027239477618084,
+        "residual_distance": 6.604862009008928e-12,
+        "optimizer_success": false
+      },
+      "forward_overstatement_at_least": 0.04423808372247412,
+      "first_order_distance": 0.014626761306247878
+    },
+    {
+      "face": 12814,
+      "probe": [
+        -0.09425121714088375,
+        -0.2541737676497603,
+        0.10268704493334771
+      ],
+      "historic": {
+        "distance": 0.03120412301287318,
+        "level": 0.36027239477618084,
+        "residual_distance": 0.0,
+        "feasible": true
+      },
+      "closest_feasible": {
+        "foot": [
+          -0.10766670720030928,
+          -0.2506995488912102,
+          0.11106544222409896
+        ],
+        "distance": 0.016193922028911793,
+        "level": 0.36027239477618084,
+        "residual_distance": 7.640545495687416e-15,
+        "optimizer_success": true
+      },
+      "forward_overstatement_at_least": 0.015010200983961386,
+      "first_order_distance": 0.01461214736077233
+    },
+    {
+      "face": 8534,
+      "probe": [
+        0.09138721218829919,
+        0.26607301599334876,
+        -0.12799350967692377
+      ],
+      "historic": {
+        "distance": 0.031036528892603533,
+        "level": 0.36027239477618084,
+        "residual_distance": 4.0602643310288736e-17,
+        "feasible": true
+      },
+      "closest_feasible": {
+        "foot": [
+          0.078386543333129,
+          0.2699093739245662,
+          -0.11765670298412559
+        ],
+        "distance": 0.017046542331583977,
+        "level": 0.36027239477618084,
+        "residual_distance": 1.0165982550637147e-11,
+        "optimizer_success": false
+      },
+      "forward_overstatement_at_least": 0.013989986561019557,
+      "first_order_distance": 0.014476151411465415
+    }
+  ],
+  "reverse_witnesses": [
+    {
+      "query_index": 11934,
+      "kind": "wall",
+      "probe": [
+        -0.41958922844887314,
+        0.24700850874623337,
+        -0.3767595633851943
+      ],
+      "target_residual_distance": 7.09203114723499e-17,
+      "tessellation4_distance": 0.016803664830194465,
+      "nearest_tessellation_face": 3053,
+      "exact_patch_feasible_upper_bound": {
+        "foot": [
+          -0.4175802169324292,
+          0.2581350314544109,
+          -0.36447972589681543
+        ],
+        "distance": 0.01669221505941586,
+        "barycentric": [
+          0.6724404172549795,
+          2.710505431213761e-20,
+          0.3275595827450205
+        ]
+      },
+      "complete_surface_ball_exclusion": {
+        "excluded": true,
+        "lower_bound": 0.008888933447525282,
+        "radius": 0.002,
+        "depth": 0,
+        "visited_boxes": 21460,
+        "unresolved_boxes": 0
+      }
+    },
+    {
+      "query_index": 15431,
+      "kind": "wall",
+      "probe": [
+        0.08279844479397827,
+        0.24548504529546009,
+        -0.12429397588391952
+      ],
+      "target_residual_distance": 0.0,
+      "tessellation4_distance": 0.015430500323684536,
+      "nearest_tessellation_face": 8534,
+      "exact_patch_feasible_upper_bound": {
+        "foot": [
+          0.08443372347129541,
+          0.25553600910173885,
+          -0.13575845775345877
+        ],
+        "distance": 0.015333960816586424,
+        "barycentric": [
+          0.6210337415138685,
+          1.3552527156068805e-20,
+          0.3789662584861315
+        ]
+      },
+      "complete_surface_ball_exclusion": {
+        "excluded": true,
+        "lower_bound": 0.008111252264472874,
+        "radius": 0.002,
+        "depth": 0,
+        "visited_boxes": 21460,
+        "unresolved_boxes": 0
+      }
+    },
+    {
+      "query_index": 13370,
+      "kind": "wall",
+      "probe": [
+        -0.27200509611158485,
+        0.103098179532776,
+        -0.10533919561837515
+      ],
+      "target_residual_distance": 3.399177642865892e-17,
+      "tessellation4_distance": 0.014733911966404755,
+      "nearest_tessellation_face": 8324,
+      "exact_patch_feasible_upper_bound": {
+        "foot": [
+          -0.26368717886647347,
+          0.09185650296107506,
+          -0.10086001141589426
+        ],
+        "distance": 0.01468421365136743,
+        "barycentric": [
+          0.3516995536121188,
+          0.2769789846154947,
+          0.37132146177238656
+        ]
+      },
+      "complete_surface_ball_exclusion": {
+        "excluded": true,
+        "lower_bound": 0.0024946966805777515,
+        "radius": 0.002,
+        "depth": 1,
+        "visited_boxes": 21472,
+        "unresolved_boxes": 0
+      }
+    },
+    {
+      "query_index": 3284,
+      "kind": "wall",
+      "probe": [
+        -0.37847664307214157,
+        -0.07828380147974105,
+        -0.2506842867080084
+      ],
+      "target_residual_distance": 6.885738441700816e-17,
+      "tessellation4_distance": 0.014422043962652677,
+      "nearest_tessellation_face": 6821,
+      "exact_patch_feasible_upper_bound": {
+        "foot": [
+          -0.36690558028860465,
+          -0.07944350322978197,
+          -0.2422655244629651
+        ],
+        "distance": 0.01435653021548619,
+        "barycentric": [
+          0.004929980346314016,
+          0.20368114141499674,
+          0.7913888782386893
+        ]
+      },
+      "complete_surface_ball_exclusion": {
+        "excluded": true,
+        "lower_bound": 0.006866668281925392,
+        "radius": 0.002,
+        "depth": 0,
+        "visited_boxes": 21460,
+        "unresolved_boxes": 0
+      }
+    },
+    {
+      "query_index": 15338,
+      "kind": "wall",
+      "probe": [
+        -0.41425988182570095,
+        -0.25653318246192003,
+        0.3769490557769071
+      ],
+      "target_residual_distance": 3.568237578158305e-17,
+      "tessellation4_distance": 0.014390706126672264,
+      "nearest_tessellation_face": 18334,
+      "exact_patch_feasible_upper_bound": {
+        "foot": [
+          -0.4132135273671224,
+          -0.26064881092105824,
+          0.39052364394219014
+        ],
+        "distance": 0.014223315335170525,
+        "barycentric": [
+          0.46250946713231283,
+          0.42594588123166943,
+          0.11154465163601768
+        ]
+      },
+      "complete_surface_ball_exclusion": {
+        "excluded": true,
+        "lower_bound": 0.009354716468382956,
+        "radius": 0.002,
+        "depth": 0,
+        "visited_boxes": 21460,
+        "unresolved_boxes": 0
+      }
+    },
+    {
+      "query_index": 25275,
+      "kind": "wall",
+      "probe": [
+        0.25557947929134994,
+        -0.3757073817609406,
+        0.41502511678273635
+      ],
+      "target_residual_distance": 3.557810949374349e-17,
+      "tessellation4_distance": 0.01436720699781877,
+      "nearest_tessellation_face": 19372,
+      "exact_patch_feasible_upper_bound": {
+        "foot": [
+          0.2580020734422445,
+          -0.3898513506103887,
+          0.41466666336678015
+        ],
+        "distance": 0.014354417650518545,
+        "barycentric": [
+          0.5196176657487649,
+          0.2661336922015101,
+          0.21424864204972494
+        ]
+      },
+      "complete_surface_ball_exclusion": {
+        "excluded": true,
+        "lower_bound": 0.007894643479886165,
+        "radius": 0.002,
+        "depth": 0,
+        "visited_boxes": 21460,
+        "unresolved_boxes": 0
+      }
+    },
+    {
+      "query_index": 2535,
+      "kind": "wall",
+      "probe": [
+        0.10632036606417763,
+        -0.10297801084391354,
+        -0.2742234702780772
+      ],
+      "target_residual_distance": 1.0786366950502353e-16,
+      "tessellation4_distance": 0.01424201859260767,
+      "nearest_tessellation_face": 5297,
+      "exact_patch_feasible_upper_bound": {
+        "foot": [
+          0.11940047976278914,
+          -0.09995312544659195,
+          -0.27890183556253156
+        ],
+        "distance": 0.014217116717897535,
+        "barycentric": [
+          0.72516502682582,
+          0.2748349731741801,
+          0.0
+        ]
+      },
+      "complete_surface_ball_exclusion": {
+        "excluded": true,
+        "lower_bound": 0.003288224093243919,
+        "radius": 0.002,
+        "depth": 1,
+        "visited_boxes": 21468,
+        "unresolved_boxes": 0
+      }
+    },
+    {
+      "query_index": 10007,
+      "kind": "wall",
+      "probe": [
+        0.3931878674784166,
+        -0.39157538441519874,
+        -0.23109283657503712
+      ],
+      "target_residual_distance": 3.4413518108665565e-17,
+      "tessellation4_distance": 0.014087297222682857,
+      "nearest_tessellation_face": 4916,
+      "exact_patch_feasible_upper_bound": {
+        "foot": [
+          0.40343546283590936,
+          -0.3965448534865995,
+          -0.23915149595145987
+        ],
+        "distance": 0.013951731950110076,
+        "barycentric": [
+          0.3319370857058347,
+          0.10494372889556484,
+          0.5631191853986004
+        ]
+      },
+      "complete_surface_ball_exclusion": {
+        "excluded": true,
+        "lower_bound": 0.0036203827728779614,
+        "radius": 0.002,
+        "depth": 1,
+        "visited_boxes": 21464,
+        "unresolved_boxes": 0
+      }
+    }
+  ],
+  "reverse_selection": {
+    "queries": 35990,
+    "subdivisions": 4,
+    "max_distance": 0.016803664830194465,
+    "above_gate": 1142
+  },
+  "local_star_trials": [
+    {
+      "face": 7880,
+      "completed": true,
+      "affected_tets": 5,
+      "minimum_original_jacobian": 8.960492989153082e-06,
+      "minimum_trial_jacobian": -0.00010876947392801192,
+      "invalid_trial_tets": 5,
+      "midpoint_displacements": [
+        0.011586549742448842,
+        0.008605272599570002,
+        0.006579102632076311
+      ],
+      "midpoint_target": [
+        [
+          -0.40540583036569594,
+          -0.24560268880889785,
+          -0.13352841929522438
+        ],
+        [
+          -0.3868712233337049,
+          -0.2698279463789102,
+          -0.11904768115142712
+        ],
+        [
+          -0.4239600419384442,
+          -0.2720856222232261,
+          -0.12096590824215014
+        ]
+      ],
+      "corner_normal_min_cosine": -0.03330321013624965,
+      "node_field_values": [
+        -0.3602723947761809,
+        -0.3602723947761805,
+        -0.3602723947761806,
+        -0.3887889029426768,
+        -0.3808994014880774,
+        -0.3789378639755261
+      ],
+      "scope": "Local sensitivity only. Periodic copies and global gates are not evaluated; no mesh is published."
+    },
+    {
+      "face": 18914,
+      "completed": true,
+      "affected_tets": 5,
+      "minimum_original_jacobian": 8.513638853604153e-06,
+      "minimum_trial_jacobian": -0.00010722095671140272,
+      "invalid_trial_tets": 5,
+      "midpoint_displacements": [
+        0.011536793635239788,
+        0.008597758742469892,
+        0.006421186046788671
+      ],
+      "midpoint_target": [
+        [
+          0.09444767236153885,
+          0.2544532714364575,
+          0.3663017011330618
+        ],
+        [
+          0.1129263573881066,
+          0.23081113859596997,
+          0.3809928806274647
+        ],
+        [
+          0.075743382180307,
+          0.22866808179388842,
+          0.37884521169738067
+        ]
+      ],
+      "corner_normal_min_cosine": -0.05966791157233131,
+      "node_field_values": [
+        0.36027239477618106,
+        0.36027239477618056,
+        0.3602723947760813,
+        0.38889805813019157,
+        0.3804650315409814,
+        0.37827397697906817
+      ],
+      "scope": "Local sensitivity only. Periodic copies and global gates are not evaluated; no mesh is published."
+    },
+    {
+      "face": 12814,
+      "completed": true,
+      "affected_tets": 5,
+      "minimum_original_jacobian": 8.776805948201398e-06,
+      "minimum_trial_jacobian": -1.4951397579472152e-05,
+      "invalid_trial_tets": 5,
+      "midpoint_displacements": [
+        0.00908305605594082,
+        0.0034876353119301304,
+        0.008500697571381277
+      ],
+      "midpoint_target": [
+        [
+          -0.09939769235956564,
+          -0.23968192833217922,
+          0.11482567247411649
+        ],
+        [
+          -0.07934476063384197,
+          -0.2637696714350625,
+          0.10033855671705781
+        ],
+        [
+          -0.11311392256128701,
+          -0.25880092982684,
+          0.10241707512513862
+        ]
+      ],
+      "corner_normal_min_cosine": -0.19296780523556073,
+      "node_field_values": [
+        0.3602723947761807,
+        0.3602723947761807,
+        0.3602723947761638,
+        0.38140504271090253,
+        0.36977987138007895,
+        0.3818675447939391
+      ],
+      "scope": "Local sensitivity only. Periodic copies and global gates are not evaluated; no mesh is published."
+    },
+    {
+      "face": 8534,
+      "completed": true,
+      "affected_tets": 5,
+      "minimum_original_jacobian": 6.624156291707163e-06,
+      "minimum_trial_jacobian": -9.521788505199464e-05,
+      "invalid_trial_tets": 5,
+      "midpoint_displacements": [
+        0.005696794897417733,
+        0.010434726390733628,
+        0.010209713406409754
+      ],
+      "midpoint_target": [
+        [
+          0.07634135030007574,
+          0.273909952830068,
+          -0.12103131482717791
+        ],
+        [
+          0.11297144658386846,
+          0.26777651740856295,
+          -0.11987876444633447
+        ],
+        [
+          0.08999123648948786,
+          0.24487324175243683,
+          -0.13446876638966362
+        ]
+      ],
+      "corner_normal_min_cosine": -0.07430576662268251,
+      "node_field_values": [
+        0.3602723947761809,
+        0.36027239477618084,
+        0.360272394776181,
+        0.37744618428411614,
+        0.3847623644146855,
+        0.3855758370528114
+      ],
+      "scope": "Local sensitivity only. Periodic copies and global gates are not evaluated; no mesh is published."
+    },
+    {
+      "face": 3053,
+      "completed": true,
+      "affected_tets": 5,
+      "minimum_original_jacobian": 9.181354635327768e-06,
+      "minimum_trial_jacobian": -5.40169206662061e-05,
+      "invalid_trial_tets": 3,
+      "midpoint_displacements": [
+        0.00432360067189968,
+        0.002607596738330424,
+        0.01274302804507501
+      ],
+      "midpoint_target": [
+        [
+          -0.42236604634399955,
+          0.24570407878293146,
+          -0.3550904565397728
+        ],
+        [
+          -0.39443668001655396,
+          0.24705847351956306,
+          -0.35638387311644837
+        ],
+        [
+          -0.40683398587932573,
+          0.24530255483932825,
+          -0.36650644152119227
+        ]
+      ],
+      "corner_normal_min_cosine": -0.014785432968947299,
+      "node_field_values": [
+        0.3602723947761807,
+        0.36027239477618395,
+        0.3602723947761805,
+        0.376769938909821,
+        0.37203622309957735,
+        0.39068214193699596
+      ],
+      "scope": "Local sensitivity only. Periodic copies and global gates are not evaluated; no mesh is published."
+    },
+    {
+      "face": 8324,
+      "completed": true,
+      "affected_tets": 4,
+      "minimum_original_jacobian": 5.288223184368824e-07,
+      "minimum_trial_jacobian": -7.109723137435308e-05,
+      "invalid_trial_tets": 3,
+      "midpoint_displacements": [
+        0.009463424093940326,
+        0.013332800099624917,
+        0.000822790702753649
+      ],
+      "midpoint_target": [
+        [
+          -0.25757671913383035,
+          0.09924110013440247,
+          -0.115500989820906
+        ],
+        [
+          -0.25135422126796053,
+          0.10804709154165457,
+          -0.10975986356001759
+        ],
+        [
+          -0.275781869112447,
+          0.08416622026514256,
+          -0.09737239922581765
+        ]
+      ],
+      "corner_normal_min_cosine": -0.23785419668788227,
+      "node_field_values": [
+        0.36027239477620765,
+        0.36027239477616857,
+        0.3602723947761807,
+        0.38991916319802644,
+        0.38934364005140387,
+        0.3634834809693429
+      ],
+      "scope": "Local sensitivity only. Periodic copies and global gates are not evaluated; no mesh is published."
+    },
+    {
+      "face": 6821,
+      "completed": true,
+      "affected_tets": 5,
+      "minimum_original_jacobian": 6.116124296274123e-06,
+      "minimum_trial_jacobian": -9.531438525480836e-05,
+      "invalid_trial_tets": 5,
+      "midpoint_displacements": [
+        0.00891208299488829,
+        0.011983658015469722,
+        0.004929492486057737
+      ],
+      "midpoint_target": [
+        [
+          -0.3822713459439633,
+          -0.11279644138713094,
+          -0.22754732824159604
+        ],
+        [
+          -0.36891005094007534,
+          -0.09823290917095796,
+          -0.25286728438995704
+        ],
+        [
+          -0.3797542579901243,
+          -0.07682911179211258,
+          -0.22734669936496565
+        ]
+      ],
+      "corner_normal_min_cosine": -0.06399553423342774,
+      "node_field_values": [
+        0.360272394776157,
+        0.3602723947761808,
+        0.3602723947761808,
+        0.381209147196639,
+        0.3874362485968985,
+        0.3742520271881562
+      ],
+      "scope": "Local sensitivity only. Periodic copies and global gates are not evaluated; no mesh is published."
+    },
+    {
+      "face": 18334,
+      "completed": true,
+      "affected_tets": 5,
+      "minimum_original_jacobian": 6.490838028278131e-06,
+      "minimum_trial_jacobian": -5.604185665420876e-05,
+      "invalid_trial_tets": 5,
+      "midpoint_displacements": [
+        0.00590888437743708,
+        0.009331641468163768,
+        0.00547948060339018
+      ],
+      "midpoint_target": [
+        [
+          -0.4131000474054193,
+          -0.2671577728308964,
+          0.3836539263553548
+        ],
+        [
+          -0.39001512730507526,
+          -0.2439466671451194,
+          0.39154500889966803
+        ],
+        [
+          -0.4259956158580029,
+          -0.24399215725473886,
+          0.39580915208569983
+        ]
+      ],
+      "corner_normal_min_cosine": -0.29694860197225964,
+      "node_field_values": [
+        -0.3602723947761882,
+        -0.3602723947761811,
+        -0.36027239477618067,
+        -0.37588959542796124,
+        -0.3780079805792145,
+        -0.3748290067632032
+      ],
+      "scope": "Local sensitivity only. Periodic copies and global gates are not evaluated; no mesh is published."
+    }
+  ],
+  "complete": true,
+  "input_hashes_verified": true,
+  "interpretation_limits": "Feasible forward feet prove overstatement only. Complete Bezier exclusion establishes geometric gaps at frozen samples with floating-point padding. Local star trials are not admitted meshes. Global topological equivalence is not certified."
+}

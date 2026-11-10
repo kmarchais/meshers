@@ -1,0 +1,1787 @@
+{
+  "case": "tpms-schoen-frd-upper",
+  "inputs": {
+    "/Users/kmarchais/bin/pueue_progress.py": "bc615cea84a6174c16fec2454b11164f3df33e9dae83643921a2291ab319dce5",
+    "/Users/kmarchais/dev/meshers/.local-work/macbook-runtime/venv/lib/python3.12/site-packages/fedoo/lib_elements/element_base.py": "bd57608d15c205972e616df10e39f4a073505e1f516943fbcfdc5a7fa0d0663b",
+    "/Users/kmarchais/dev/meshers/.local-work/macbook-runtime/venv/lib/python3.12/site-packages/fedoo/lib_elements/tetrahedron.py": "80ecf2bdba73468bd89a19f2c9956e856d3d0f2b3a7419a9339aabc54446d960",
+    "/Users/kmarchais/dev/meshers/.local-work/macbook-runtime/venv/lib/python3.12/site-packages/microgen/shape/surface_functions.py": "578c20eb2ef424b95f50618d9cfffdce3676d6b5bdcd90a3278e0ca5ef1af4b4",
+    "/Users/kmarchais/dev/meshers/.local-work/macbook-runtime/venv/lib/python3.12/site-packages/scipy/optimize/_minimize.py": "6b20ec664e77e2f8f7d725eba541c3765ca9037e9d759b18627da9bdf8933ca6",
+    "/Users/kmarchais/dev/meshers/.local-work/macbook-runtime/venv/lib/python3.12/site-packages/scipy/optimize/_slsqp_py.py": "9e97132bfb5773096675f03b0adb6f5ed67510666f7f2c5da22d0e9669c2e338",
+    "/Users/kmarchais/dev/meshers/Cargo.lock": "c5de0b0561f9ab415ff941a24cae24bd7de5069eca73e3dd9b6da63db4273278",
+    "/Users/kmarchais/dev/meshers/crates/meshers-core/src/accelerator.rs": "496365ec7c5fa7cbccb521937c91d7daa19a9bd8d01aa5398639345d4290b20c",
+    "/Users/kmarchais/dev/meshers/crates/meshers-core/src/adaptive.rs": "a3de8e081d5100c92508ad2d0b481136a78412580455a3ff4e8b841dd4a90a77",
+    "/Users/kmarchais/dev/meshers/crates/meshers-core/src/error.rs": "b8c8c922e662107c4304f823cff8f46d18b898d5c0bd5af1b8b28317d2566d81",
+    "/Users/kmarchais/dev/meshers/crates/meshers-core/src/geometry.rs": "b00a2c883484ab6f09300f2b7ad13efa51b3685f8ac259d86e9bb0d199b5bc08",
+    "/Users/kmarchais/dev/meshers/crates/meshers-core/src/implicit/intersection/repair.rs": "dcbde4728b7efcf104db508c7d656d08959a0888de1aacadb433149bbfa67373",
+    "/Users/kmarchais/dev/meshers/crates/meshers-core/src/implicit/intersection.rs": "c01e84b8c19f853990c6a057dc52ce7341505cdf71aea04f31351cef16847a13",
+    "/Users/kmarchais/dev/meshers/crates/meshers-core/src/implicit/periodic_feature_research.rs": "e08f1f6db9b53b85dded2616687aa607af634689e119ef99f9c6d4c18b5b9024",
+    "/Users/kmarchais/dev/meshers/crates/meshers-core/src/implicit.rs": "8c3e5f146024bd2cd87ca3dcff7d492f50bf7fde150ad14bf4d438ca37ee664b",
+    "/Users/kmarchais/dev/meshers/crates/meshers-core/src/lib.rs": "e72b01ac4ed690e58cd12dcf204fe7167e69ff5c80d41156f6a8206ba252e0d3",
+    "/Users/kmarchais/dev/meshers/crates/meshers-core/src/optimize.rs": "55c62786bd57500b841c86bcd4e7520ae31b5c761fa8a39a3ad6fec0564e68ee",
+    "/Users/kmarchais/dev/meshers/crates/meshers-core/src/optimize_batch.rs": "6571614ef842ec9ca291976e51f7efe04662b7b643160114fa4fb825a3aaf112",
+    "/Users/kmarchais/dev/meshers/crates/meshers-core/src/polyhedral.rs": "45e737dce0921435b135a5baaa2763e0e30002d92fe0a633d81f4dabe70bb473",
+    "/Users/kmarchais/dev/meshers/crates/meshers-core/src/profile.rs": "70f91e99631bcde8ca521c82f06f7f645cf9ee340d685a4e4928cb2ebc348c58",
+    "/Users/kmarchais/dev/meshers/crates/meshers-core/src/projection.rs": "926d1ab1c848cf80cc392295764d7bf8f2254dfb62f219639db7e5a4194acf84",
+    "/Users/kmarchais/dev/meshers/crates/meshers-core/src/quadratic/fit.rs": "bc310e4624599686286909ed40db4e9f8b10cce06a713b4fba2a9b598ef4eae3",
+    "/Users/kmarchais/dev/meshers/crates/meshers-core/src/quadratic.rs": "fff22efd06011a427b139e2612bce70dc46e85e6b4a07047c2bcc6a8a3b2428c",
+    "/Users/kmarchais/dev/meshers/crates/meshers-core/src/quads.rs": "9579d9478c57b8b4ad8cead2a717d01cfc626140ce40cd5f11014db717acc2ef",
+    "/Users/kmarchais/dev/meshers/crates/meshers-core/src/remesh.rs": "499b779e55252258cdad7b81a0b2917f3ea0dc4f3b4d446fb60c3e9a3fdec085",
+    "/Users/kmarchais/dev/meshers/crates/meshers-core/src/tet_adapt.rs": "4b93b945209d139c3b8a6d23130527e4587a6f48bda6b85c015178fae4d69b70",
+    "/Users/kmarchais/dev/meshers/crates/meshers-core/src/triangles.rs": "897d3aee83d8c6c5de0d3e0df332ee3e56ef8390e74b3af1e052e7859f7dc8fc",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/box_projection.py": "59589b1996b3a3782f1b7f5e5ff3c7ab303d4158ef50a233515dc5369bddaf05",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/comparison_mesh_audit.py": "6797327ecf6b6c62a973f52812d0bad95b2ef861541247425609109c24d8af94",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/facet_incidence_audit.py": "4f51afc196c85e1d0bc64d7a96507517ddc6e32ccd8380a2ac77cae0ace89610",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/frd_failure_probe.py": "7dd6978744262b026c587111a54afd63ba07cd3249fe78ca2d8d1987e348e0eb",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/job_parts.py": "cc220d52685be4035a3cf38b85e8e2d8354e55f36c42245cd6e1faad9a44bcab",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/microgen_catalog.py": "a5618b5d4ec231ac52d689b0e10cf6cc5d679fbefd902fbc2463fe616ba641ce",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/microgen_workflow.py": "9f513dfd3e6e5a72a71a54f70c0c2cf7c7a1ebe7256886ee3feaf7d7ad7de161",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/nested_refinement.py": "7f78251d150ebcee928db1b49e22b64ee89efde5cdc238c1f5b9994aad36a6b8",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/periodic_trace.py": "16d51906318ba9110f8979b48a540500d1cce5835685d72e780ca1893f3b8654",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/quadratic_edge_removal_probe.py": "f26a4be16f7aeb4fce6d89732754fab0e5d39e86b4d4c62466a3afd547cec6ed",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/quadrature_audit.py": "020677df452ec86864e687c9b35e2c69e70f8587ec54240ce0c4eaa4b717319e",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-schoen-frd-eight-pass-v1/tpms-schoen-frd-upper-native-adaptive8/mesh.npz": "476e2329379258577b438093d5bd9f6d9d06f5961ecfaefb7a4d6561ca04878d",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-schoen-frd-eight-pass-v1/tpms-schoen-frd-upper-native-adaptive8/result.json": "a14ad6ca9ec7d98e24a7ee8ad257e8b8adbdf7be3bd8c0985c71a151c7c4b708",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-schoen-frd-eight-pass-v1/tpms-schoen-frd-upper-native-adaptive8/tpms-schoen-frd-upper-definition.json": "0d48c2f57badd04844c8318ba428242a2be1c33a563dd275f9334911560a017c",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-schoen-frd-eight-pass-v1/tpms-schoen-frd-upper-native-adaptive8/tpms-schoen-frd-upper-samples.npz": "6a8fecfe065201d77da3a6bdf1ee2e7880fd87815560ab0fc1e6433f858546ee",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-schoen-frd-eight-pass-v1/tpms-schoen-frd-upper-native-adaptive8/tpms-schoen-frd-upper-specimen.json": "544fa8b73d3a5aa5a853cad99b4127aad59a4c1195f5ed36e380d912c069969d",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-tpms-family-fixtures-v1/protocol.json": "7a0e06b00a1d2802d39ad726181fa09450bb7d0caa6d707e402f2f1882270319",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-tpms-family-fixtures-v1/result.json": "1f3907ba0acf691628d0eb588b0f4325c2abdc8c24efb75a251f60ccca5681f2",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-tpms-family-fixtures-v1/tpms-schoen-frd-upper/tpms-schoen-frd-upper-definition.json": "0d48c2f57badd04844c8318ba428242a2be1c33a563dd275f9334911560a017c",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-tpms-family-fixtures-v1/tpms-schoen-frd-upper/tpms-schoen-frd-upper-samples.npz": "6a8fecfe065201d77da3a6bdf1ee2e7880fd87815560ab0fc1e6433f858546ee",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-tpms-family-fixtures-v1/tpms-schoen-frd-upper/tpms-schoen-frd-upper-specimen.json": "544fa8b73d3a5aa5a853cad99b4127aad59a4c1195f5ed36e380d912c069969d",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/scorecard.py": "8f26256c7df0e84c9f35cdd71bf4f95a74e072d45469002b213c5dcd4f1bab2a",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/tpms_family_fixtures.py": "794418f5d2e3d2158542af51a5cf322c41befff8f8d7c98f769d379baedd3bc6",
+    "/Users/kmarchais/dev/periodic-microgen/experiments/periodic-fea/periodic.py": "f065de0570eed98149c45aff3babcbadc3f73aed89eb1639eca0448de4353629"
+  },
+  "input_integrity": {
+    "inputs": {
+      "/Users/kmarchais/bin/pueue_progress.py": "bc615cea84a6174c16fec2454b11164f3df33e9dae83643921a2291ab319dce5",
+      "/Users/kmarchais/dev/meshers/.local-work/macbook-runtime/venv/lib/python3.12/site-packages/fedoo/lib_elements/element_base.py": "bd57608d15c205972e616df10e39f4a073505e1f516943fbcfdc5a7fa0d0663b",
+      "/Users/kmarchais/dev/meshers/.local-work/macbook-runtime/venv/lib/python3.12/site-packages/fedoo/lib_elements/tetrahedron.py": "80ecf2bdba73468bd89a19f2c9956e856d3d0f2b3a7419a9339aabc54446d960",
+      "/Users/kmarchais/dev/meshers/.local-work/macbook-runtime/venv/lib/python3.12/site-packages/microgen/shape/surface_functions.py": "578c20eb2ef424b95f50618d9cfffdce3676d6b5bdcd90a3278e0ca5ef1af4b4",
+      "/Users/kmarchais/dev/meshers/.local-work/macbook-runtime/venv/lib/python3.12/site-packages/scipy/optimize/_minimize.py": "6b20ec664e77e2f8f7d725eba541c3765ca9037e9d759b18627da9bdf8933ca6",
+      "/Users/kmarchais/dev/meshers/.local-work/macbook-runtime/venv/lib/python3.12/site-packages/scipy/optimize/_slsqp_py.py": "9e97132bfb5773096675f03b0adb6f5ed67510666f7f2c5da22d0e9669c2e338",
+      "/Users/kmarchais/dev/meshers/Cargo.lock": "c5de0b0561f9ab415ff941a24cae24bd7de5069eca73e3dd9b6da63db4273278",
+      "/Users/kmarchais/dev/meshers/crates/meshers-core/src/accelerator.rs": "496365ec7c5fa7cbccb521937c91d7daa19a9bd8d01aa5398639345d4290b20c",
+      "/Users/kmarchais/dev/meshers/crates/meshers-core/src/adaptive.rs": "a3de8e081d5100c92508ad2d0b481136a78412580455a3ff4e8b841dd4a90a77",
+      "/Users/kmarchais/dev/meshers/crates/meshers-core/src/error.rs": "b8c8c922e662107c4304f823cff8f46d18b898d5c0bd5af1b8b28317d2566d81",
+      "/Users/kmarchais/dev/meshers/crates/meshers-core/src/geometry.rs": "b00a2c883484ab6f09300f2b7ad13efa51b3685f8ac259d86e9bb0d199b5bc08",
+      "/Users/kmarchais/dev/meshers/crates/meshers-core/src/implicit/intersection/repair.rs": "dcbde4728b7efcf104db508c7d656d08959a0888de1aacadb433149bbfa67373",
+      "/Users/kmarchais/dev/meshers/crates/meshers-core/src/implicit/intersection.rs": "c01e84b8c19f853990c6a057dc52ce7341505cdf71aea04f31351cef16847a13",
+      "/Users/kmarchais/dev/meshers/crates/meshers-core/src/implicit/periodic_feature_research.rs": "e08f1f6db9b53b85dded2616687aa607af634689e119ef99f9c6d4c18b5b9024",
+      "/Users/kmarchais/dev/meshers/crates/meshers-core/src/implicit.rs": "8c3e5f146024bd2cd87ca3dcff7d492f50bf7fde150ad14bf4d438ca37ee664b",
+      "/Users/kmarchais/dev/meshers/crates/meshers-core/src/lib.rs": "e72b01ac4ed690e58cd12dcf204fe7167e69ff5c80d41156f6a8206ba252e0d3",
+      "/Users/kmarchais/dev/meshers/crates/meshers-core/src/optimize.rs": "55c62786bd57500b841c86bcd4e7520ae31b5c761fa8a39a3ad6fec0564e68ee",
+      "/Users/kmarchais/dev/meshers/crates/meshers-core/src/optimize_batch.rs": "6571614ef842ec9ca291976e51f7efe04662b7b643160114fa4fb825a3aaf112",
+      "/Users/kmarchais/dev/meshers/crates/meshers-core/src/polyhedral.rs": "45e737dce0921435b135a5baaa2763e0e30002d92fe0a633d81f4dabe70bb473",
+      "/Users/kmarchais/dev/meshers/crates/meshers-core/src/profile.rs": "70f91e99631bcde8ca521c82f06f7f645cf9ee340d685a4e4928cb2ebc348c58",
+      "/Users/kmarchais/dev/meshers/crates/meshers-core/src/projection.rs": "926d1ab1c848cf80cc392295764d7bf8f2254dfb62f219639db7e5a4194acf84",
+      "/Users/kmarchais/dev/meshers/crates/meshers-core/src/quadratic/fit.rs": "bc310e4624599686286909ed40db4e9f8b10cce06a713b4fba2a9b598ef4eae3",
+      "/Users/kmarchais/dev/meshers/crates/meshers-core/src/quadratic.rs": "fff22efd06011a427b139e2612bce70dc46e85e6b4a07047c2bcc6a8a3b2428c",
+      "/Users/kmarchais/dev/meshers/crates/meshers-core/src/quads.rs": "9579d9478c57b8b4ad8cead2a717d01cfc626140ce40cd5f11014db717acc2ef",
+      "/Users/kmarchais/dev/meshers/crates/meshers-core/src/remesh.rs": "499b779e55252258cdad7b81a0b2917f3ea0dc4f3b4d446fb60c3e9a3fdec085",
+      "/Users/kmarchais/dev/meshers/crates/meshers-core/src/tet_adapt.rs": "4b93b945209d139c3b8a6d23130527e4587a6f48bda6b85c015178fae4d69b70",
+      "/Users/kmarchais/dev/meshers/crates/meshers-core/src/triangles.rs": "897d3aee83d8c6c5de0d3e0df332ee3e56ef8390e74b3af1e052e7859f7dc8fc",
+      "/Users/kmarchais/dev/meshers/experiments/adaptive/box_projection.py": "59589b1996b3a3782f1b7f5e5ff3c7ab303d4158ef50a233515dc5369bddaf05",
+      "/Users/kmarchais/dev/meshers/experiments/adaptive/comparison_mesh_audit.py": "6797327ecf6b6c62a973f52812d0bad95b2ef861541247425609109c24d8af94",
+      "/Users/kmarchais/dev/meshers/experiments/adaptive/facet_incidence_audit.py": "4f51afc196c85e1d0bc64d7a96507517ddc6e32ccd8380a2ac77cae0ace89610",
+      "/Users/kmarchais/dev/meshers/experiments/adaptive/frd_failure_probe.py": "7dd6978744262b026c587111a54afd63ba07cd3249fe78ca2d8d1987e348e0eb",
+      "/Users/kmarchais/dev/meshers/experiments/adaptive/job_parts.py": "cc220d52685be4035a3cf38b85e8e2d8354e55f36c42245cd6e1faad9a44bcab",
+      "/Users/kmarchais/dev/meshers/experiments/adaptive/microgen_catalog.py": "a5618b5d4ec231ac52d689b0e10cf6cc5d679fbefd902fbc2463fe616ba641ce",
+      "/Users/kmarchais/dev/meshers/experiments/adaptive/microgen_workflow.py": "9f513dfd3e6e5a72a71a54f70c0c2cf7c7a1ebe7256886ee3feaf7d7ad7de161",
+      "/Users/kmarchais/dev/meshers/experiments/adaptive/nested_refinement.py": "7f78251d150ebcee928db1b49e22b64ee89efde5cdc238c1f5b9994aad36a6b8",
+      "/Users/kmarchais/dev/meshers/experiments/adaptive/periodic_trace.py": "16d51906318ba9110f8979b48a540500d1cce5835685d72e780ca1893f3b8654",
+      "/Users/kmarchais/dev/meshers/experiments/adaptive/quadratic_edge_removal_probe.py": "f26a4be16f7aeb4fce6d89732754fab0e5d39e86b4d4c62466a3afd547cec6ed",
+      "/Users/kmarchais/dev/meshers/experiments/adaptive/quadrature_audit.py": "020677df452ec86864e687c9b35e2c69e70f8587ec54240ce0c4eaa4b717319e",
+      "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-schoen-frd-eight-pass-v1/tpms-schoen-frd-upper-native-adaptive8/mesh.npz": "476e2329379258577b438093d5bd9f6d9d06f5961ecfaefb7a4d6561ca04878d",
+      "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-schoen-frd-eight-pass-v1/tpms-schoen-frd-upper-native-adaptive8/result.json": "a14ad6ca9ec7d98e24a7ee8ad257e8b8adbdf7be3bd8c0985c71a151c7c4b708",
+      "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-schoen-frd-eight-pass-v1/tpms-schoen-frd-upper-native-adaptive8/tpms-schoen-frd-upper-definition.json": "0d48c2f57badd04844c8318ba428242a2be1c33a563dd275f9334911560a017c",
+      "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-schoen-frd-eight-pass-v1/tpms-schoen-frd-upper-native-adaptive8/tpms-schoen-frd-upper-samples.npz": "6a8fecfe065201d77da3a6bdf1ee2e7880fd87815560ab0fc1e6433f858546ee",
+      "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-schoen-frd-eight-pass-v1/tpms-schoen-frd-upper-native-adaptive8/tpms-schoen-frd-upper-specimen.json": "544fa8b73d3a5aa5a853cad99b4127aad59a4c1195f5ed36e380d912c069969d",
+      "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-tpms-family-fixtures-v1/protocol.json": "7a0e06b00a1d2802d39ad726181fa09450bb7d0caa6d707e402f2f1882270319",
+      "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-tpms-family-fixtures-v1/result.json": "1f3907ba0acf691628d0eb588b0f4325c2abdc8c24efb75a251f60ccca5681f2",
+      "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-tpms-family-fixtures-v1/tpms-schoen-frd-upper/tpms-schoen-frd-upper-definition.json": "0d48c2f57badd04844c8318ba428242a2be1c33a563dd275f9334911560a017c",
+      "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-tpms-family-fixtures-v1/tpms-schoen-frd-upper/tpms-schoen-frd-upper-samples.npz": "6a8fecfe065201d77da3a6bdf1ee2e7880fd87815560ab0fc1e6433f858546ee",
+      "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-tpms-family-fixtures-v1/tpms-schoen-frd-upper/tpms-schoen-frd-upper-specimen.json": "544fa8b73d3a5aa5a853cad99b4127aad59a4c1195f5ed36e380d912c069969d",
+      "/Users/kmarchais/dev/meshers/experiments/adaptive/scorecard.py": "8f26256c7df0e84c9f35cdd71bf4f95a74e072d45469002b213c5dcd4f1bab2a",
+      "/Users/kmarchais/dev/meshers/experiments/adaptive/tpms_family_fixtures.py": "794418f5d2e3d2158542af51a5cf322c41befff8f8d7c98f769d379baedd3bc6",
+      "/Users/kmarchais/dev/periodic-microgen/experiments/periodic-fea/periodic.py": "f065de0570eed98149c45aff3babcbadc3f73aed89eb1639eca0448de4353629"
+    },
+    "source_mesh_matches_frozen_result": true,
+    "fixture_files_match_frozen_manifest": true,
+    "field_sources_match_frozen_protocol": true,
+    "selected_specimen_files": {
+      "-definition.json": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-schoen-frd-eight-pass-v1/tpms-schoen-frd-upper-native-adaptive8/tpms-schoen-frd-upper-definition.json",
+      "-samples.npz": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-schoen-frd-eight-pass-v1/tpms-schoen-frd-upper-native-adaptive8/tpms-schoen-frd-upper-samples.npz",
+      "-specimen.json": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-schoen-frd-eight-pass-v1/tpms-schoen-frd-upper-native-adaptive8/tpms-schoen-frd-upper-specimen.json"
+    },
+    "versions": {
+      "numpy": "2.5.4",
+      "scipy": "1.18.1",
+      "fedoo": "1.0.0b2",
+      "microgen": "2.0.0b1",
+      "pyvista": "0.49.1",
+      "vtk": "9.7.1",
+      "autograd": "1.9.1"
+    },
+    "python": "3.12.9 (main, Feb 12 2025, 15:09:19) [Clang 19.1.6 ]",
+    "executable": "/Users/kmarchais/dev/meshers/.local-work/macbook-runtime/venv/bin/python"
+  },
+  "baseline_forward": {
+    "maximum": 0.0025728862702913535,
+    "failed_faces": 34,
+    "projection_failed": 0,
+    "wall_face": 13343,
+    "probe": 1,
+    "barycentric": [
+      0.0,
+      1.0,
+      0.0
+    ],
+    "nodes": [
+      16189,
+      16190,
+      13219,
+      105488,
+      105490,
+      105487
+    ],
+    "point": [
+      0.47985265070761685,
+      0.5,
+      -0.03213073365928009
+    ],
+    "foot": [
+      0.4784939646559248,
+      0.5,
+      -0.0343156171739763
+    ]
+  },
+  "corners": [
+    {
+      "group": 16192,
+      "copies": [
+        16190,
+        16192
+      ],
+      "incident": [
+        63735,
+        63737,
+        63755,
+        63759,
+        63851,
+        63852
+      ],
+      "distance": 0.0025728862702913535,
+      "q_before": 0.2827221481561867,
+      "q_after_full_projection": 0.12006522721852379,
+      "minimum_oriented_face_ratio": 0.3651913316398727,
+      "boundary_apex_bound": 0.3448587936737512,
+      "intrinsically_blocking_boundary_faces": []
+    },
+    {
+      "group": 13207,
+      "copies": [
+        13205,
+        13207
+      ],
+      "incident": [
+        31984,
+        31985,
+        63796,
+        63798
+      ],
+      "distance": 0.002310633454488721,
+      "q_before": 0.10006462377879284,
+      "q_after_full_projection": 0.05865983179332246,
+      "minimum_oriented_face_ratio": 0.209265260284505,
+      "boundary_apex_bound": 0.060175460414251876,
+      "intrinsically_blocking_boundary_faces": [
+        3055,
+        14582
+      ]
+    },
+    {
+      "group": 13226,
+      "copies": [
+        13225,
+        13226
+      ],
+      "incident": [
+        31992,
+        31993,
+        62990,
+        62991
+      ],
+      "distance": 0.0022209383855596545,
+      "q_before": 0.27181598592063694,
+      "q_after_full_projection": 0.06468764648455617,
+      "minimum_oriented_face_ratio": 0.2368186414017351,
+      "boundary_apex_bound": 0.0669439389853415,
+      "intrinsically_blocking_boundary_faces": [
+        3037,
+        3064
+      ]
+    },
+    {
+      "group": 13228,
+      "copies": [
+        13227,
+        13228
+      ],
+      "incident": [
+        31994,
+        31995,
+        62988,
+        62989
+      ],
+      "distance": 0.0022122628385566963,
+      "q_before": 0.4153802764878493,
+      "q_after_full_projection": 0.23129809909033905,
+      "minimum_oriented_face_ratio": 0.5470710119560217,
+      "boundary_apex_bound": 0.241047616838182,
+      "intrinsically_blocking_boundary_faces": []
+    },
+    {
+      "group": 14944,
+      "copies": [
+        14943,
+        14944
+      ],
+      "incident": [
+        47711,
+        47713,
+        61106,
+        63007,
+        63009,
+        63012,
+        63014,
+        63122,
+        63124,
+        63601,
+        63608,
+        63609,
+        63662,
+        63663,
+        63664,
+        63665,
+        63854,
+        63856,
+        63858,
+        63860
+      ],
+      "distance": 0.002034752068882649,
+      "q_before": 0.10010925348527352,
+      "q_after_full_projection": 0.02622591759981198,
+      "minimum_oriented_face_ratio": 0.6189913274447054,
+      "boundary_apex_bound": 0.3036441903540813,
+      "intrinsically_blocking_boundary_faces": []
+    },
+    {
+      "group": 16028,
+      "copies": [
+        16026,
+        16028
+      ],
+      "incident": [
+        62997,
+        62999,
+        63002,
+        63004,
+        63096,
+        63098,
+        63758,
+        63874,
+        63894,
+        63896,
+        63898,
+        63900,
+        63902,
+        63904
+      ],
+      "distance": 0.0020325105904118548,
+      "q_before": 0.10022775582186477,
+      "q_after_full_projection": 0.0507787200411341,
+      "minimum_oriented_face_ratio": 0.18745791539403162,
+      "boundary_apex_bound": 0.054063285229285406,
+      "intrinsically_blocking_boundary_faces": [
+        15663,
+        15672,
+        18725,
+        18726
+      ]
+    },
+    {
+      "group": 16198,
+      "copies": [
+        16196,
+        16198
+      ],
+      "incident": [
+        63742,
+        63743,
+        63779,
+        63825,
+        63826
+      ],
+      "distance": 0.001976805749363958,
+      "q_before": 0.17458497006036888,
+      "q_after_full_projection": 0.1394446505734328,
+      "minimum_oriented_face_ratio": 0.13079793120982228,
+      "boundary_apex_bound": 0.22317125649344774,
+      "intrinsically_blocking_boundary_faces": []
+    },
+    {
+      "group": 16235,
+      "copies": [
+        16235
+      ],
+      "incident": [
+        63853,
+        63854,
+        63855,
+        63856
+      ],
+      "distance": 0.0017859016222939242,
+      "q_before": 0.10010925348527352,
+      "q_after_full_projection": 0.0,
+      "minimum_oriented_face_ratio": 0.8966904299397114,
+      "boundary_apex_bound": 0.5086222651943169,
+      "intrinsically_blocking_boundary_faces": []
+    },
+    {
+      "group": 16210,
+      "copies": [
+        16210
+      ],
+      "incident": [
+        63780,
+        63864,
+        63872,
+        63880,
+        63885,
+        63886,
+        63892,
+        63911,
+        63912
+      ],
+      "distance": 0.0017440176976391132,
+      "q_before": 0.10056515165748589,
+      "q_after_full_projection": 0.0,
+      "minimum_oriented_face_ratio": 0.6343712014726794,
+      "boundary_apex_bound": 0.1312887002899757,
+      "intrinsically_blocking_boundary_faces": []
+    },
+    {
+      "group": 16012,
+      "copies": [
+        16012
+      ],
+      "incident": [
+        62979,
+        62980,
+        62981,
+        63431,
+        63432
+      ],
+      "distance": 0.0015759535890833307,
+      "q_before": 0.23442599189553265,
+      "q_after_full_projection": 0.020712923572048687,
+      "minimum_oriented_face_ratio": 0.9180803665319328,
+      "boundary_apex_bound": 0.5758157677174082,
+      "intrinsically_blocking_boundary_faces": []
+    },
+    {
+      "group": 16135,
+      "copies": [
+        16135
+      ],
+      "incident": [
+        63404,
+        63405,
+        63406,
+        63426,
+        63428,
+        63430
+      ],
+      "distance": 0.001572921929104401,
+      "q_before": 0.19513828019772364,
+      "q_after_full_projection": 0.19366967318744474,
+      "minimum_oriented_face_ratio": 0.9359039631598602,
+      "boundary_apex_bound": 0.590679250676716,
+      "intrinsically_blocking_boundary_faces": []
+    },
+    {
+      "group": 13210,
+      "copies": [
+        13210,
+        15999
+      ],
+      "incident": [
+        31987,
+        62964,
+        62965,
+        63833,
+        63834
+      ],
+      "distance": 0.0015283874087128186,
+      "q_before": 0.3784908788785035,
+      "q_after_full_projection": 0.268085324746614,
+      "minimum_oriented_face_ratio": 0.6957460566925908,
+      "boundary_apex_bound": 0.31161967407824853,
+      "intrinsically_blocking_boundary_faces": []
+    },
+    {
+      "group": 13209,
+      "copies": [
+        13209,
+        15996
+      ],
+      "incident": [
+        31986,
+        62962,
+        62963,
+        63831,
+        63832
+      ],
+      "distance": 0.001516352857934062,
+      "q_before": 0.32695283543271225,
+      "q_after_full_projection": 0.2219553508214929,
+      "minimum_oriented_face_ratio": 0.6681234663176552,
+      "boundary_apex_bound": 0.26473143113032643,
+      "intrinsically_blocking_boundary_faces": []
+    },
+    {
+      "group": 16142,
+      "copies": [
+        16142
+      ],
+      "incident": [
+        63431,
+        63432,
+        63433,
+        63434
+      ],
+      "distance": 0.0015098241171564726,
+      "q_before": 0.426328084495657,
+      "q_after_full_projection": 0.25285255703769993,
+      "minimum_oriented_face_ratio": 0.9878579677081757,
+      "boundary_apex_bound": 0.6250850826782858,
+      "intrinsically_blocking_boundary_faces": []
+    },
+    {
+      "group": 16140,
+      "copies": [
+        16140
+      ],
+      "incident": [
+        63420,
+        63421,
+        63422,
+        63423,
+        63424,
+        63433,
+        63434
+      ],
+      "distance": 0.0014884971972481506,
+      "q_before": 0.426328084495657,
+      "q_after_full_projection": 0.26779661969785057,
+      "minimum_oriented_face_ratio": 0.9552823381734962,
+      "boundary_apex_bound": 0.5801607070785801,
+      "intrinsically_blocking_boundary_faces": []
+    },
+    {
+      "group": 16009,
+      "copies": [
+        16009
+      ],
+      "incident": [
+        62976,
+        62977,
+        62978,
+        63412,
+        63413
+      ],
+      "distance": 0.0014721632618665875,
+      "q_before": 0.2879058310539934,
+      "q_after_full_projection": 0.12255626783777117,
+      "minimum_oriented_face_ratio": 0.9354131256928272,
+      "boundary_apex_bound": 0.5897769069480655,
+      "intrinsically_blocking_boundary_faces": []
+    },
+    {
+      "group": 16185,
+      "copies": [
+        16185
+      ],
+      "incident": [
+        63712,
+        63713,
+        63730,
+        63731,
+        63732,
+        63733
+      ],
+      "distance": 0.0014393958234110262,
+      "q_before": 0.15602825632364167,
+      "q_after_full_projection": 0.0,
+      "minimum_oriented_face_ratio": 0.9937349518797283,
+      "boundary_apex_bound": 0.6307453745113846,
+      "intrinsically_blocking_boundary_faces": []
+    },
+    {
+      "group": 16180,
+      "copies": [
+        16180
+      ],
+      "incident": [
+        63678,
+        63679,
+        63717,
+        63718,
+        63719,
+        63724,
+        63725
+      ],
+      "distance": 0.0014199553439998532,
+      "q_before": 0.13394104112771107,
+      "q_after_full_projection": 0.0,
+      "minimum_oriented_face_ratio": 0.9568750397218699,
+      "boundary_apex_bound": 0.5905050592064848,
+      "intrinsically_blocking_boundary_faces": []
+    },
+    {
+      "group": 16017,
+      "copies": [
+        16015,
+        16017
+      ],
+      "incident": [
+        62983,
+        62986,
+        63409,
+        63410,
+        63422,
+        63423,
+        63797,
+        63799
+      ],
+      "distance": 0.0013732603525619866,
+      "q_before": 0.21743872535755918,
+      "q_after_full_projection": 0.169501300164297,
+      "minimum_oriented_face_ratio": 0.6631122711677729,
+      "boundary_apex_bound": 0.39966055324462946,
+      "intrinsically_blocking_boundary_faces": []
+    },
+    {
+      "group": 16014,
+      "copies": [
+        16014
+      ],
+      "incident": [
+        62982,
+        62983,
+        62984,
+        63421,
+        63423,
+        63424
+      ],
+      "distance": 0.0013503377616411883,
+      "q_before": 0.2700284946629706,
+      "q_after_full_projection": 0.1709185803771517,
+      "minimum_oriented_face_ratio": 1.0177289955153122,
+      "boundary_apex_bound": 0.5573378199015703,
+      "intrinsically_blocking_boundary_faces": []
+    },
+    {
+      "group": 16136,
+      "copies": [
+        16136
+      ],
+      "incident": [
+        63407,
+        63408,
+        63409,
+        63410,
+        63411,
+        63414,
+        63415
+      ],
+      "distance": 0.0013403506341952837,
+      "q_before": 0.41689433199023873,
+      "q_after_full_projection": 0.3332852501752579,
+      "minimum_oriented_face_ratio": 0.9750473600436848,
+      "boundary_apex_bound": 0.573298277527038,
+      "intrinsically_blocking_boundary_faces": []
+    },
+    {
+      "group": 16139,
+      "copies": [
+        16139
+      ],
+      "incident": [
+        63417,
+        63419,
+        63500,
+        63501,
+        63502,
+        63503,
+        63744,
+        63748,
+        63750
+      ],
+      "distance": 0.001314504894953005,
+      "q_before": 0.27434469768482767,
+      "q_after_full_projection": 0.2605619944277813,
+      "minimum_oriented_face_ratio": 0.9525564179106376,
+      "boundary_apex_bound": 0.7258462652800461,
+      "intrinsically_blocking_boundary_faces": []
+    },
+    {
+      "group": 16016,
+      "copies": [
+        16016
+      ],
+      "incident": [
+        62985,
+        62986,
+        62987,
+        63408,
+        63410,
+        63411
+      ],
+      "distance": 0.0013067784696145321,
+      "q_before": 0.2657633696415497,
+      "q_after_full_projection": 0.25562016795962733,
+      "minimum_oriented_face_ratio": 1.009262199462119,
+      "boundary_apex_bound": 0.5402749969537015,
+      "intrinsically_blocking_boundary_faces": []
+    },
+    {
+      "group": 16137,
+      "copies": [
+        16137
+      ],
+      "incident": [
+        63412,
+        63413,
+        63414,
+        63415
+      ],
+      "distance": 0.0012499997131632733,
+      "q_before": 0.41689433199023873,
+      "q_after_full_projection": 0.32661031279696273,
+      "minimum_oriented_face_ratio": 1.000773280799113,
+      "boundary_apex_bound": 0.6129704074180066,
+      "intrinsically_blocking_boundary_faces": []
+    },
+    {
+      "group": 14942,
+      "copies": [
+        14941,
+        14942
+      ],
+      "incident": [
+        47707,
+        47709,
+        62917,
+        63084,
+        63086,
+        63088,
+        63090,
+        63092,
+        63094,
+        63726,
+        63728,
+        63730,
+        63732,
+        63813,
+        63815,
+        63817
+      ],
+      "distance": 0.001172016033611615,
+      "q_before": 0.15602825632364167,
+      "q_after_full_projection": 0.07171921032538076,
+      "minimum_oriented_face_ratio": 0.781753638574291,
+      "boundary_apex_bound": 0.3566541579000808,
+      "intrinsically_blocking_boundary_faces": []
+    },
+    {
+      "group": 16191,
+      "copies": [
+        16189,
+        16191
+      ],
+      "incident": [
+        63734,
+        63735,
+        63736,
+        63737
+      ],
+      "distance": 0.0011522187483319062,
+      "q_before": 0.10010670337508029,
+      "q_after_full_projection": 0.0,
+      "minimum_oriented_face_ratio": -0.00018062642870390032,
+      "boundary_apex_bound": 1.8502662995071383e-05,
+      "intrinsically_blocking_boundary_faces": [
+        17695,
+        17699
+      ]
+    },
+    {
+      "group": 16216,
+      "copies": [
+        15991,
+        16216
+      ],
+      "incident": [
+        62917,
+        63708,
+        63709,
+        63712,
+        63726,
+        63727,
+        63730,
+        63731,
+        63789,
+        63791,
+        63812,
+        63813
+      ],
+      "distance": 0.0011032492968222043,
+      "q_before": 0.16395082904468974,
+      "q_after_full_projection": 0.2131635956331886,
+      "minimum_oriented_face_ratio": 0.7524281040306661,
+      "boundary_apex_bound": 0.5429108445319689,
+      "intrinsically_blocking_boundary_faces": []
+    },
+    {
+      "group": 16021,
+      "copies": [
+        16020,
+        16021
+      ],
+      "incident": [
+        62990,
+        62991,
+        63146,
+        63148,
+        63484,
+        63485,
+        63490,
+        63491
+      ],
+      "distance": 0.0010838810707307002,
+      "q_before": 0.24484009701582926,
+      "q_after_full_projection": 0.18103859961634308,
+      "minimum_oriented_face_ratio": 0.7232631142147116,
+      "boundary_apex_bound": 0.4544731276406563,
+      "intrinsically_blocking_boundary_faces": []
+    },
+    {
+      "group": 16019,
+      "copies": [
+        16018,
+        16019
+      ],
+      "incident": [
+        62988,
+        62989,
+        63142,
+        63144,
+        63536,
+        63537,
+        63542,
+        63543
+      ],
+      "distance": 0.0010753967104635087,
+      "q_before": 0.3601835169474994,
+      "q_after_full_projection": 0.3034741865972985,
+      "minimum_oriented_face_ratio": 0.8178121582620287,
+      "boundary_apex_bound": 0.4923391537078725,
+      "intrinsically_blocking_boundary_faces": []
+    },
+    {
+      "group": 16211,
+      "copies": [
+        16211
+      ],
+      "incident": [
+        63781,
+        63782,
+        63783,
+        63843,
+        63844
+      ],
+      "distance": 0.0010494263456199604,
+      "q_before": 0.10011311705256652,
+      "q_after_full_projection": 0.00687199449872183,
+      "minimum_oriented_face_ratio": 0.9789394921565922,
+      "boundary_apex_bound": 0.43455425854536883,
+      "intrinsically_blocking_boundary_faces": []
+    },
+    {
+      "group": 15847,
+      "copies": [
+        15847,
+        16061
+      ],
+      "incident": [
+        61103,
+        61104,
+        63112,
+        63113,
+        63118,
+        63119,
+        63805,
+        63807
+      ],
+      "distance": 0.0010297631832605666,
+      "q_before": 0.267732933328152,
+      "q_after_full_projection": 0.23396182814868274,
+      "minimum_oriented_face_ratio": 0.8606219004669174,
+      "boundary_apex_bound": 0.35103232953264923,
+      "intrinsically_blocking_boundary_faces": []
+    },
+    {
+      "group": 16138,
+      "copies": [
+        16138
+      ],
+      "incident": [
+        63416,
+        63417,
+        63418,
+        63419,
+        63743,
+        63744,
+        63746,
+        63824,
+        63825
+      ],
+      "distance": 0.0009896939568956758,
+      "q_before": 0.2569930811148852,
+      "q_after_full_projection": 0.27421687392307786,
+      "minimum_oriented_face_ratio": 0.9375846276859421,
+      "boundary_apex_bound": 0.39085651008377637,
+      "intrinsically_blocking_boundary_faces": []
+    },
+    {
+      "group": 16194,
+      "copies": [
+        16193,
+        16194
+      ],
+      "incident": [
+        63738,
+        63739,
+        63740,
+        63741
+      ],
+      "distance": 0.0009717632303652062,
+      "q_before": 0.10026927415862069,
+      "q_after_full_projection": 0.012736815995671837,
+      "minimum_oriented_face_ratio": 0.12759815370407482,
+      "boundary_apex_bound": 0.01287682268583607,
+      "intrinsically_blocking_boundary_faces": [
+        17641,
+        17653
+      ]
+    },
+    {
+      "group": 16063,
+      "copies": [
+        16063
+      ],
+      "incident": [
+        63118,
+        63119,
+        63120,
+        63121
+      ],
+      "distance": 0.0009584837191496618,
+      "q_before": 0.2717993508583092,
+      "q_after_full_projection": 0.1893637761786435,
+      "minimum_oriented_face_ratio": 1.0087137087261215,
+      "boundary_apex_bound": 0.565992989653885,
+      "intrinsically_blocking_boundary_faces": []
+    },
+    {
+      "group": 16141,
+      "copies": [
+        16141
+      ],
+      "incident": [
+        63425,
+        63426,
+        63427,
+        63428,
+        63429,
+        63430
+      ],
+      "distance": 0.0009459595797007787,
+      "q_before": 0.341102194153243,
+      "q_after_full_projection": 0.2820828507887559,
+      "minimum_oriented_face_ratio": 0.9533434646265905,
+      "boundary_apex_bound": 0.4856260941388582,
+      "intrinsically_blocking_boundary_faces": []
+    },
+    {
+      "group": 16187,
+      "copies": [
+        16187
+      ],
+      "incident": [
+        63720,
+        63721,
+        63722,
+        63723,
+        63724,
+        63725
+      ],
+      "distance": 0.0009326753333262134,
+      "q_before": 0.14107980078486596,
+      "q_after_full_projection": 0.026436709342198092,
+      "minimum_oriented_face_ratio": 0.9767207105313895,
+      "boundary_apex_bound": 0.6526989529470602,
+      "intrinsically_blocking_boundary_faces": []
+    },
+    {
+      "group": 14953,
+      "copies": [
+        14951,
+        14953
+      ],
+      "incident": [
+        47722,
+        47724,
+        61104,
+        63100,
+        63102,
+        63104,
+        63106,
+        63108,
+        63110,
+        63112,
+        63114,
+        63116,
+        63118,
+        63120
+      ],
+      "distance": 0.000897584548243099,
+      "q_before": 0.4453532924388897,
+      "q_after_full_projection": 0.4334171095025985,
+      "minimum_oriented_face_ratio": 0.8711203218489049,
+      "boundary_apex_bound": 0.5248268342411475,
+      "intrinsically_blocking_boundary_faces": []
+    },
+    {
+      "group": 16075,
+      "copies": [
+        16075
+      ],
+      "incident": [
+        63143,
+        63144,
+        63145,
+        63540,
+        63542,
+        63544
+      ],
+      "distance": 0.000782695835694756,
+      "q_before": 0.3601835169474994,
+      "q_after_full_projection": 0.3611398711116857,
+      "minimum_oriented_face_ratio": 1.00172861042284,
+      "boundary_apex_bound": 0.5257994149905824,
+      "intrinsically_blocking_boundary_faces": []
+    },
+    {
+      "group": 16077,
+      "copies": [
+        16077
+      ],
+      "incident": [
+        63147,
+        63148,
+        63149,
+        63489,
+        63491,
+        63493
+      ],
+      "distance": 0.0007796384298584225,
+      "q_before": 0.26706306206307456,
+      "q_after_full_projection": 0.25920889811974207,
+      "minimum_oriented_face_ratio": 1.0010940196306366,
+      "boundary_apex_bound": 0.5260162757759056,
+      "intrinsically_blocking_boundary_faces": []
+    },
+    {
+      "group": 16076,
+      "copies": [
+        16076
+      ],
+      "incident": [
+        63146,
+        63484,
+        63486,
+        63517,
+        63518,
+        63519,
+        63560,
+        63561,
+        63566,
+        63567
+      ],
+      "distance": 0.0007780062381663552,
+      "q_before": 0.24074777364427383,
+      "q_after_full_projection": 0.2621952173257743,
+      "minimum_oriented_face_ratio": 0.9771446218581973,
+      "boundary_apex_bound": 0.4920125072745925,
+      "intrinsically_blocking_boundary_faces": []
+    },
+    {
+      "group": 16074,
+      "copies": [
+        16074
+      ],
+      "incident": [
+        63142,
+        63509,
+        63510,
+        63511,
+        63537,
+        63539,
+        63632,
+        63633,
+        63636,
+        63637
+      ],
+      "distance": 0.0007536935415053028,
+      "q_before": 0.32533290036199125,
+      "q_after_full_projection": 0.25171221467943566,
+      "minimum_oriented_face_ratio": 0.9996178849881042,
+      "boundary_apex_bound": 0.5257984646124272,
+      "intrinsically_blocking_boundary_faces": []
+    },
+    {
+      "group": 16068,
+      "copies": [
+        16066,
+        16068
+      ],
+      "incident": [
+        63126,
+        63128,
+        63130,
+        63132,
+        63444,
+        63485,
+        63487,
+        63488,
+        63490,
+        63492,
+        63558,
+        63559,
+        63562,
+        63563,
+        63572,
+        63573,
+        63578,
+        63579,
+        63584,
+        63585,
+        63590,
+        63591
+      ],
+      "distance": 0.0007265303473623231,
+      "q_before": 0.31381200213165594,
+      "q_after_full_projection": 0.319819342930117,
+      "minimum_oriented_face_ratio": 0.8205874983961354,
+      "boundary_apex_bound": 0.37273335746135594,
+      "intrinsically_blocking_boundary_faces": []
+    },
+    {
+      "group": 16070,
+      "copies": [
+        16070,
+        16072
+      ],
+      "incident": [
+        63134,
+        63136,
+        63138,
+        63140,
+        63446,
+        63536,
+        63538,
+        63541,
+        63543,
+        63545,
+        63628,
+        63629,
+        63634,
+        63635,
+        63642,
+        63643,
+        63648,
+        63649,
+        63654,
+        63655,
+        63660,
+        63661
+      ],
+      "distance": 0.0007265303473621293,
+      "q_before": 0.21262398744418157,
+      "q_after_full_projection": 0.21294275149772182,
+      "minimum_oriented_face_ratio": 0.8366583309431407,
+      "boundary_apex_bound": 0.2778717594596137,
+      "intrinsically_blocking_boundary_faces": []
+    },
+    {
+      "group": 16230,
+      "copies": [
+        16230,
+        16231
+      ],
+      "incident": [
+        63841,
+        63842,
+        63843,
+        63844
+      ],
+      "distance": 0.0006534161260318687,
+      "q_before": 0.10011311705256652,
+      "q_after_full_projection": 0.05497546000219034,
+      "minimum_oriented_face_ratio": 0.548229241532112,
+      "boundary_apex_bound": 0.07182186001156128,
+      "intrinsically_blocking_boundary_faces": [
+        14593,
+        17694
+      ]
+    },
+    {
+      "group": 16013,
+      "copies": [
+        16013
+      ],
+      "incident": [
+        62981,
+        62984,
+        63424,
+        63432,
+        63434,
+        63461,
+        63467,
+        63618,
+        63619,
+        63622,
+        63623
+      ],
+      "distance": 0.0006424753382221587,
+      "q_before": 0.28308690632784306,
+      "q_after_full_projection": 0.24683675943643063,
+      "minimum_oriented_face_ratio": 1.0018883707472945,
+      "boundary_apex_bound": 0.5547070047693891,
+      "intrinsically_blocking_boundary_faces": []
+    },
+    {
+      "group": 16036,
+      "copies": [
+        16036
+      ],
+      "incident": [
+        63029,
+        63030,
+        63031,
+        63032
+      ],
+      "distance": 0.0006383716078247905,
+      "q_before": 0.3716567499790723,
+      "q_after_full_projection": 0.3083179263229269,
+      "minimum_oriented_face_ratio": 1.0050844502165417,
+      "boundary_apex_bound": 0.7087101184144334,
+      "intrinsically_blocking_boundary_faces": []
+    },
+    {
+      "group": 16042,
+      "copies": [
+        16042
+      ],
+      "incident": [
+        63041,
+        63042,
+        63043,
+        63044
+      ],
+      "distance": 0.0006358681896275114,
+      "q_before": 0.37705648778250844,
+      "q_after_full_projection": 0.3137887663972553,
+      "minimum_oriented_face_ratio": 1.0025861064124277,
+      "boundary_apex_bound": 0.6637691918268537,
+      "intrinsically_blocking_boundary_faces": []
+    },
+    {
+      "group": 16134,
+      "copies": [
+        16133,
+        16134
+      ],
+      "incident": [
+        63400,
+        63401,
+        63402,
+        63403
+      ],
+      "distance": 0.0006283097103644714,
+      "q_before": 0.5465837304128642,
+      "q_after_full_projection": 0.49871164304783894,
+      "minimum_oriented_face_ratio": 0.8979001197335142,
+      "boundary_apex_bound": 0.5832629294799292,
+      "intrinsically_blocking_boundary_faces": []
+    },
+    {
+      "group": 13223,
+      "copies": [
+        13220,
+        13223
+      ],
+      "incident": [
+        31990,
+        31991,
+        61105,
+        63520,
+        63521,
+        63530,
+        63531,
+        63532,
+        63751,
+        63752
+      ],
+      "distance": 0.0006063715591899767,
+      "q_before": 0.1000202677447064,
+      "q_after_full_projection": 0.12178073297803564,
+      "minimum_oriented_face_ratio": 0.868954588681991,
+      "boundary_apex_bound": 0.27643617596795705,
+      "intrinsically_blocking_boundary_faces": []
+    },
+    {
+      "group": 16219,
+      "copies": [
+        16218,
+        16219
+      ],
+      "incident": [
+        63796,
+        63797,
+        63798,
+        63799
+      ],
+      "distance": 0.0005699905743374102,
+      "q_before": 0.10006462377879284,
+      "q_after_full_projection": 0.04736340121174927,
+      "minimum_oriented_face_ratio": 0.474507652169379,
+      "boundary_apex_bound": 0.10013982713809184,
+      "intrinsically_blocking_boundary_faces": []
+    },
+    {
+      "group": 16010,
+      "copies": [
+        16010
+      ],
+      "incident": [
+        62978,
+        62987,
+        63411,
+        63413,
+        63415,
+        63474,
+        63475,
+        63481,
+        63482
+      ],
+      "distance": 0.00046496790338658786,
+      "q_before": 0.3458363023887859,
+      "q_after_full_projection": 0.3200859493084609,
+      "minimum_oriented_face_ratio": 0.9974412722804988,
+      "boundary_apex_bound": 0.5549581128627675,
+      "intrinsically_blocking_boundary_faces": []
+    },
+    {
+      "group": 16236,
+      "copies": [
+        16236
+      ],
+      "incident": [
+        63857,
+        63858,
+        63859,
+        63860
+      ],
+      "distance": 0.000417553486697574,
+      "q_before": 0.10005373096816157,
+      "q_after_full_projection": 0.04712045435808027,
+      "minimum_oriented_face_ratio": 1.0027798180545981,
+      "boundary_apex_bound": 0.5073511505852547,
+      "intrinsically_blocking_boundary_faces": []
+    },
+    {
+      "group": 16163,
+      "copies": [
+        16163
+      ],
+      "incident": [
+        63540,
+        63541,
+        63542,
+        63543,
+        63544,
+        63545
+      ],
+      "distance": 0.00039340781120079704,
+      "q_before": 0.40887463785591754,
+      "q_after_full_projection": 0.37382482952137647,
+      "minimum_oriented_face_ratio": 1.011059107674291,
+      "boundary_apex_bound": 0.6519488316372335,
+      "intrinsically_blocking_boundary_faces": []
+    },
+    {
+      "group": 16156,
+      "copies": [
+        16156
+      ],
+      "incident": [
+        63488,
+        63489,
+        63490,
+        63491,
+        63492,
+        63493
+      ],
+      "distance": 0.0003860165689863831,
+      "q_before": 0.31381200213165594,
+      "q_after_full_projection": 0.27552655392940606,
+      "minimum_oriented_face_ratio": 1.0120186613820845,
+      "boundary_apex_bound": 0.6800003301954874,
+      "intrinsically_blocking_boundary_faces": []
+    },
+    {
+      "group": 16162,
+      "copies": [
+        16162
+      ],
+      "incident": [
+        63536,
+        63537,
+        63538,
+        63539,
+        63634,
+        63635,
+        63636,
+        63637
+      ],
+      "distance": 0.000311795200394975,
+      "q_before": 0.27896523627231323,
+      "q_after_full_projection": 0.23899459453608832,
+      "minimum_oriented_face_ratio": 1.0091056394523177,
+      "boundary_apex_bound": 0.6964187373448685,
+      "intrinsically_blocking_boundary_faces": []
+    },
+    {
+      "group": 16233,
+      "copies": [
+        16233,
+        16234
+      ],
+      "incident": [
+        63851,
+        63852,
+        63876,
+        63899,
+        63900,
+        63903,
+        63904
+      ],
+      "distance": 0.00030832586521207335,
+      "q_before": 0.10022775582186477,
+      "q_after_full_projection": 0.0247399629864017,
+      "minimum_oriented_face_ratio": 0.25046979153639126,
+      "boundary_apex_bound": 0.031878462057304546,
+      "intrinsically_blocking_boundary_faces": [
+        17698,
+        17702,
+        18725,
+        18726
+      ]
+    },
+    {
+      "group": 16001,
+      "copies": [
+        16000,
+        16001
+      ],
+      "incident": [
+        62964,
+        62965,
+        63047,
+        63048,
+        63053,
+        63054
+      ],
+      "distance": 0.00025273773894506454,
+      "q_before": 0.3113051910810092,
+      "q_after_full_projection": 0.297603089620529,
+      "minimum_oriented_face_ratio": 0.9528204436252963,
+      "boundary_apex_bound": 0.47286810238094285,
+      "intrinsically_blocking_boundary_faces": []
+    },
+    {
+      "group": 16003,
+      "copies": [
+        16003
+      ],
+      "incident": [
+        62967,
+        63027,
+        63028,
+        63406,
+        63429,
+        63430,
+        63468,
+        63469
+      ],
+      "distance": 0.0002388252127552037,
+      "q_before": 0.341102194153243,
+      "q_after_full_projection": 0.3337648629748734,
+      "minimum_oriented_face_ratio": 1.0021014828518922,
+      "boundary_apex_bound": 0.4840300790963752,
+      "intrinsically_blocking_boundary_faces": []
+    },
+    {
+      "group": 15998,
+      "copies": [
+        15997,
+        15998
+      ],
+      "incident": [
+        62962,
+        62963,
+        63059,
+        63060,
+        63065,
+        63066
+      ],
+      "distance": 0.00023683193496917948,
+      "q_before": 0.3082922046924229,
+      "q_after_full_projection": 0.2973540932734219,
+      "minimum_oriented_face_ratio": 0.9613725775802544,
+      "boundary_apex_bound": 0.4716988763756312,
+      "intrinsically_blocking_boundary_faces": []
+    },
+    {
+      "group": 16034,
+      "copies": [
+        16034
+      ],
+      "incident": [
+        63024,
+        63025,
+        63026,
+        63027,
+        63028,
+        63402,
+        63403
+      ],
+      "distance": 9.393046437978486e-05,
+      "q_before": 0.3141724928485201,
+      "q_after_full_projection": 0.3126896875053882,
+      "minimum_oriented_face_ratio": 1.0017243319736406,
+      "boundary_apex_bound": 0.5252133612907276,
+      "intrinsically_blocking_boundary_faces": []
+    },
+    {
+      "group": 16202,
+      "copies": [
+        16202
+      ],
+      "incident": [
+        63751,
+        63752,
+        63753,
+        63754
+      ],
+      "distance": 5.5214868968523714e-05,
+      "q_before": 0.1000202677447064,
+      "q_after_full_projection": 0.0938583688841832,
+      "minimum_oriented_face_ratio": 1.0010423159886987,
+      "boundary_apex_bound": 0.7187831467755061,
+      "intrinsically_blocking_boundary_faces": []
+    },
+    {
+      "group": 16238,
+      "copies": [
+        16238
+      ],
+      "incident": [
+        63865,
+        63866,
+        63867,
+        63868,
+        63869,
+        63870,
+        63871,
+        63872,
+        63883,
+        63884,
+        63885,
+        63886
+      ],
+      "distance": 7.138124242264028e-07,
+      "q_before": 0.10000335070327669,
+      "q_after_full_projection": 0.09993407838053997,
+      "minimum_oriented_face_ratio": 0.9999689626467285,
+      "boundary_apex_bound": 0.2735099426092688,
+      "intrinsically_blocking_boundary_faces": []
+    }
+  ],
+  "elements": 63913,
+  "nodes": 105755,
+  "policies": {
+    "full_absolute": {
+      "trace": [
+        {
+          "sweep": 1,
+          "moved_classes": 43,
+          "maximum_corner_distance": 0.002310633454488721,
+          "classes_over_gate": 4
+        },
+        {
+          "sweep": 2,
+          "moved_classes": 1,
+          "maximum_corner_distance": 0.002310633454488721,
+          "classes_over_gate": 4
+        },
+        {
+          "sweep": 3,
+          "moved_classes": 0,
+          "maximum_corner_distance": 0.002310633454488721,
+          "classes_over_gate": 4
+        }
+      ],
+      "minimum_quality": 0.10000335070327669,
+      "remaining": [
+        {
+          "group": 13207,
+          "distance": 0.002310633454488721
+        },
+        {
+          "group": 13226,
+          "distance": 0.0022209383855596545
+        },
+        {
+          "group": 14944,
+          "distance": 0.002034752068882649
+        },
+        {
+          "group": 16028,
+          "distance": 0.0020325105904118548
+        }
+      ]
+    },
+    "settle_halves": {
+      "trace": [
+        {
+          "sweep": 1,
+          "moved_classes": 55,
+          "maximum_corner_distance": 0.0020166316014241727,
+          "classes_over_gate": 1
+        },
+        {
+          "sweep": 2,
+          "moved_classes": 12,
+          "maximum_corner_distance": 0.0020166316014241727,
+          "classes_over_gate": 1
+        },
+        {
+          "sweep": 3,
+          "moved_classes": 9,
+          "maximum_corner_distance": 0.0020166316014241727,
+          "classes_over_gate": 1
+        },
+        {
+          "sweep": 4,
+          "moved_classes": 6,
+          "maximum_corner_distance": 0.0020166316014241727,
+          "classes_over_gate": 1
+        },
+        {
+          "sweep": 5,
+          "moved_classes": 2,
+          "maximum_corner_distance": 0.0020166316014241727,
+          "classes_over_gate": 1
+        },
+        {
+          "sweep": 6,
+          "moved_classes": 1,
+          "maximum_corner_distance": 0.0020166316014241727,
+          "classes_over_gate": 1
+        },
+        {
+          "sweep": 7,
+          "moved_classes": 0,
+          "maximum_corner_distance": 0.0020166316014241727,
+          "classes_over_gate": 1
+        }
+      ],
+      "minimum_quality": 0.10000013743025735,
+      "remaining": [
+        {
+          "group": 16028,
+          "distance": 0.0020166316014241727
+        }
+      ]
+    }
+  },
+  "mechanical_solve_performed": false,
+  "reconstruction_scope": "Diagnostic Python reconstruction; bitwise/native equivalence unestablished",
+  "exact_native_reproduction_verified": false,
+  "cap_trials": [
+    {
+      "wall_group": 16028,
+      "cap_group": 16244,
+      "cap_nodes": [
+        16243,
+        16244
+      ],
+      "support_tets": 20,
+      "radius": 0.005449182152490251,
+      "delta": [
+        -0.00032885009534227704,
+        0.0,
+        -0.0006946648297847282
+      ],
+      "iterations": 8,
+      "optimizer_success": true,
+      "minimum_quality": 0.1149652567285465,
+      "accepted": true
+    }
+  ],
+  "candidate_corner_maximum": 0.0017440176976391132,
+  "candidate_corner_minimum_quality": 0.10000013743025735,
+  "candidate_corners_sha256": "42305da5a3454d7a9394bf60b9b8a875ebe805b01ee0ee5cebf28fa16a6e5036",
+  "corner_file_scope": "Corner changes only; existing quadratic nodes are stale until re-elevation",
+  "elevation": {
+    "iterations": 4,
+    "minimum_jacobian_ratio": 0.02013438158780629,
+    "partially_curved_edges": 170
+  },
+  "geometry": {
+    "volume": 0.29994674998576154,
+    "relative_volume_error": 7.037231385398357e-06,
+    "q_min_corner": 0.10000013743025735,
+    "q_p01_corner": 0.4966202730370408,
+    "minimum_sampled_jacobian": 7.824268346895664e-10,
+    "facet_consistency": {
+      "nodes": 105755,
+      "elements": 63913,
+      "unique_faces": 137190,
+      "interior_faces": 118462,
+      "extracted_boundary_faces": 18728,
+      "same_orientation_shared_faces": 0,
+      "nonmanifold_faces": 0,
+      "duplicate_cells": 0,
+      "duplicate_surface_faces": 0,
+      "provided_boundary_matches_extraction": true,
+      "missing_provided_faces": 0,
+      "extra_provided_faces": 0,
+      "nonpositive_corner_determinants": 0,
+      "minimum_corner_determinant": 1.276545608267911e-08,
+      "oriented_facet_consistency_passed": true,
+      "conflict_examples": [],
+      "scope": "Oriented corner-face incidence and same-side neighbor diagnostics; necessary consistency, not a certificate of curved geometry or absence of nonlocal intersections"
+    },
+    "oriented_facet_consistency_passed": true,
+    "quadratic_conformity": {
+      "passed": true,
+      "order": 2,
+      "unique_edges": 89509
+    },
+    "exact_straight_reduction_verified": false,
+    "geometry_admitted": true,
+    "sampled_forward_max": 0.0017440176976391132,
+    "sampled_reverse_max": 0.0014672262082323063,
+    "sampled_two_sided_max": 0.0017440176976391132,
+    "outward_forward_max": 0.0017440176976391132,
+    "inward_forward_max": 0.000180271829425987,
+    "projection_failed": 0,
+    "forward_samples": 174408,
+    "reverse_samples": 42019,
+    "minimum_dihedral_deg_corner": 5.054400347401469,
+    "reverse_tessellation_delta_max": 2.6907839807572257e-05,
+    "quadratic_reverse_subdivisions": [
+      8,
+      16
+    ],
+    "projection_method": "newton-box-slsqp-v1",
+    "unbounded_projection_failed": 0,
+    "box_projection_attempts": 0,
+    "box_projection_recovered": 0,
+    "box_projection_witnesses": [],
+    "distance_audit_complete": true,
+    "failed_gates": []
+  },
+  "periodic": {
+    "periodic_pair_counts": [
+      2001,
+      1978,
+      1963
+    ],
+    "periodic_coordinate_errors": [
+      0.0,
+      0.0,
+      0.0
+    ],
+    "periodic_pair_tolerance": 1e-10,
+    "periodic_equivalence_classes": 99879,
+    "periodic_triangles_match": true,
+    "full_facet_check_required": true,
+    "complete_existing_node_classes": true,
+    "unmatched_noncap_contact_nodes": [
+      [
+        [],
+        []
+      ],
+      [
+        [],
+        []
+      ],
+      [
+        [],
+        []
+      ]
+    ],
+    "declared_bounds": [
+      [
+        -0.5,
+        -0.5,
+        -0.5
+      ],
+      [
+        0.5,
+        0.5,
+        0.5
+      ]
+    ],
+    "periodic_gate": "declared-cell-material-cap-and-complete-node-classes-v1"
+  },
+  "quality": {
+    "min": 0.10000013743025735,
+    "p01": 0.4966202730370408,
+    "p10": 0.619251936362809,
+    "median": 0.7378081669579095,
+    "p90": 0.8830776298992766,
+    "p99": 0.9581236209048811,
+    "max": 0.9992375177216438
+  },
+  "admitted": true,
+  "mesh_sha256": "577a5a1f02684f5a13bcd3f1c7c2394670b384618bd4ac5bbc7d24a27abce0db"
+}

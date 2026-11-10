@@ -1,0 +1,336 @@
+{
+  "inputs": {
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/pmy_neck_control.py": "aacab3dd12c99ad5586e8c4efb59b74556e736041fbe20653381c53d577b8668",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/microgen_workflow.py": "9f513dfd3e6e5a72a71a54f70c0c2cf7c7a1ebe7256886ee3feaf7d7ad7de161",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/tpms_family_fixtures.py": "794418f5d2e3d2158542af51a5cf322c41befff8f8d7c98f769d379baedd3bc6",
+    "/Users/kmarchais/dev/meshers/.local-work/macbook-runtime/venv/lib/python3.12/site-packages/microgen/shape/surface_functions.py": "578c20eb2ef424b95f50618d9cfffdce3676d6b5bdcd90a3278e0ca5ef1af4b4",
+    "/Users/kmarchais/dev/meshers/crates/meshers-python/python/meshers/_meshers.abi3.so": "f8cd88ba67161ec7d2d4168be8fac1a4131863c4f3e20b6b878100599a6677b7",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-tpms-family-remaining-v1/tpms-pmy-sheet-native-fit/mesh.npz": "bf61791bd075c9a11695604765ff3d21d133301517dabdd209b697c6bd7e1c0a",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-tpms-family-remaining-v1/tpms-pmy-sheet-native-fit/result.json": "577826b51807028f97c0067be72af153d6c7776fa2278e52a3a65e0c322f0daa",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-tpms-family-fixtures-v1/protocol.json": "7a0e06b00a1d2802d39ad726181fa09450bb7d0caa6d707e402f2f1882270319",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-tpms-family-fixtures-v1/result.json": "1f3907ba0acf691628d0eb588b0f4325c2abdc8c24efb75a251f60ccca5681f2",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-tpms-family-fixtures-v1/tpms-pmy-sheet/tpms-pmy-sheet-specimen.json": "65f653b5b5df833c4f7b9ebeef839555c76690e1a4e95c6011719d042a77c67a",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-tpms-family-fixtures-v1/tpms-pmy-sheet/tpms-pmy-sheet-samples.npz": "66cd3e81d5bad83b63c3bbc96696d732170ed37049dd4ff1dad868b39dbaf2f1",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-tpms-family-fixtures-v1/tpms-pmy-sheet/tpms-pmy-sheet-definition.json": "a0b3623510422678fd46dbfec702d7ebfb03e14272f7016b002e5b2594a662b6",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/scorecard.py": "8f26256c7df0e84c9f35cdd71bf4f95a74e072d45469002b213c5dcd4f1bab2a",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/bistellar_probe.py": "470c29e21c1dc85ea6d7f81a83e9f24f73041c47d280e2b3ca9b13a96b2d3084",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/mmg_quality_localization.py": "03ef27a978fcd5101f36745ccaf67309f49ce6ece172fad28b84246d6d457ebc"
+  },
+  "cell": [
+    1,
+    12,
+    1
+  ],
+  "cells": 16,
+  "unchanged_physical_specimen": true,
+  "unchanged_base_grid": true,
+  "unchanged_admission_gates": true,
+  "admitted": false,
+  "scope": "Local preclip topology experiment. No global candidate or FEA result.",
+  "controls": {
+    "stellar_boundary_unchanged": true,
+    "stellar_volume_unchanged": true,
+    "analytic_plane_clip": true,
+    "hidden_void_recovered": true
+  },
+  "critical": {
+    "point": [
+      -0.4068610201485682,
+      0.2591307289709475,
+      -0.3857739432213416
+    ],
+    "value": 0.375360772125409,
+    "gradient_norm": 2.928274889482209e-13,
+    "hessian_eigenvalues": [
+      -144.76074218358875,
+      -77.26743802394171,
+      142.2490105345509
+    ],
+    "positive_axis": [
+      0.02173824504273797,
+      0.4814360441985136,
+      0.8762116091726634
+    ]
+  },
+  "stationary_points": [
+    {
+      "point": [
+        -0.4068610201485682,
+        0.2591307289709475,
+        -0.3857739432213416
+      ],
+      "value": 0.375360772125409,
+      "gradient_norm": 2.928274889482209e-13,
+      "hessian_eigenvalues": [
+        -144.76074218358875,
+        -77.26743802394171,
+        142.2490105345509
+      ],
+      "positive_axis": [
+        0.02173824504273797,
+        0.4814360441985136,
+        0.8762116091726634
+      ]
+    }
+  ],
+  "saved_curved_occupancy": {
+    "element": 4438,
+    "barycentric": [
+      0.3180939130553144,
+      0.30865117032986494,
+      0.0534378255061463,
+      0.31981709110867435
+    ],
+    "map_residual": 1.7554167342883506e-16,
+    "point_in_material": true,
+    "corner_coordinates": [
+      [
+        -0.43811825427535545,
+        0.2506893706379454,
+        -0.375974361743835
+      ],
+      [
+        -0.4078546607080737,
+        0.2722201341595018,
+        -0.40367638726190513
+      ],
+      [
+        -0.40574335766849895,
+        0.2884217346891293,
+        -0.40518468990862516
+      ],
+      [
+        -0.375,
+        0.25,
+        -0.375
+      ]
+    ]
+  },
+  "containing_raw_tetrahedra": [
+    {
+      "cell": 175,
+      "corners": [
+        [
+          -0.4375,
+          0.25,
+          -0.375
+        ],
+        [
+          -0.40625,
+          0.21875,
+          -0.40625
+        ],
+        [
+          -0.40625,
+          0.28125,
+          -0.40625
+        ],
+        [
+          -0.375,
+          0.25,
+          -0.375
+        ]
+      ],
+      "field_values": [
+        0.3244233488214578,
+        0.44998811156820784,
+        0.3357068468188942,
+        0.2928932188134523
+      ],
+      "barycentric": [
+        0.3373932308356249,
+        0.026291428006305573,
+        0.31847475507662626,
+        0.3178405860814433
+      ],
+      "interpolated_value": 0.3212965800015154,
+      "all_corners_material": false
+    }
+  ],
+  "void_path_endpoints": [
+    {
+      "node": 25,
+      "point": [
+        -0.40625,
+        0.21875,
+        -0.40625
+      ],
+      "sampled_minimum": 0.015088377349228188,
+      "second_derivative_bound": 0.8394651716645323,
+      "conservative_minimum": 0.01508677619548072
+    },
+    {
+      "node": 86,
+      "point": [
+        -0.40625,
+        0.28125,
+        -0.34375
+      ],
+      "sampled_minimum": 0.015088377349228188,
+      "second_derivative_bound": 0.9292976866328054,
+      "conservative_minimum": 0.015086604853556113
+    }
+  ],
+  "background_before": {
+    "nodes": 127,
+    "tets": 396,
+    "minimum_quality": 0.6651075101064498,
+    "below_quality_gate": 0,
+    "minimum_determinant": 0.00012207031250000008,
+    "volume": 0.008056640625000003,
+    "oriented_faces_consistent": true,
+    "nonmanifold_faces": 0,
+    "within_caps": true
+  },
+  "background_after": {
+    "nodes": 129,
+    "tets": 403,
+    "minimum_quality": 0.025998219943815293,
+    "below_quality_gate": 3,
+    "minimum_determinant": 9.959293756395313e-07,
+    "volume": 0.008056640625000003,
+    "oriented_faces_consistent": true,
+    "nonmanifold_faces": 0,
+    "within_caps": true
+  },
+  "original_nodes_bitwise_unchanged": true,
+  "outer_facets_identical": true,
+  "inserted_nodes": 2,
+  "void_edge_path": [
+    25,
+    127,
+    128,
+    86
+  ],
+  "clipped_before": {
+    "nodes": 292,
+    "tets": 748,
+    "minimum_quality": 1.6876020188122375e-07,
+    "below_quality_gate": 120,
+    "minimum_determinant": 6.85112886565425e-12,
+    "volume": 0.004894230966280546,
+    "oriented_faces_consistent": true,
+    "nonmanifold_faces": 0,
+    "within_caps": true
+  },
+  "clipped_after": {
+    "nodes": 298,
+    "tets": 769,
+    "minimum_quality": 1.6876020188122375e-07,
+    "below_quality_gate": 134,
+    "minimum_determinant": 6.85112886565425e-12,
+    "volume": 0.004879857691219225,
+    "oriented_faces_consistent": true,
+    "nonmanifold_faces": 0,
+    "within_caps": true
+  },
+  "void_path_checks": {
+    "before": {
+      "material_samples": 91,
+      "sample_indices": [
+        77,
+        78,
+        79,
+        80,
+        81,
+        82,
+        83,
+        84,
+        85,
+        86,
+        87,
+        88,
+        89,
+        90,
+        91,
+        92,
+        93,
+        94,
+        95,
+        96,
+        97,
+        98,
+        99,
+        100,
+        101,
+        102,
+        103,
+        104,
+        105,
+        106,
+        107,
+        108,
+        109,
+        110,
+        111,
+        112,
+        113,
+        114,
+        115,
+        116,
+        117,
+        118,
+        119,
+        120,
+        121,
+        122,
+        123,
+        124,
+        125,
+        126,
+        127,
+        128,
+        219,
+        220,
+        221,
+        222,
+        223,
+        224,
+        225,
+        226,
+        227,
+        228,
+        229,
+        230,
+        231,
+        232,
+        233,
+        234,
+        235,
+        236,
+        237,
+        238,
+        239,
+        240,
+        241,
+        242,
+        243,
+        244,
+        245,
+        246,
+        247,
+        248,
+        249,
+        250,
+        251,
+        252,
+        253,
+        254,
+        255,
+        256,
+        257
+      ],
+      "critical_point_in_material": true
+    },
+    "after": {
+      "material_samples": 0,
+      "sample_indices": [],
+      "critical_point_in_material": false
+    }
+  },
+  "raw_clipping_already_misses_void": true,
+  "local_topology_recovered": true,
+  "complete": true,
+  "input_hashes_verified": true,
+  "limits": "Local edge-root clipping replay, not an integrated native change. Root-sampled path exclusion is finite; the physical void path has a separate analytic interpolation bound. Quality, distance, volume, periodicity and count gates still apply to any future global candidate."
+}

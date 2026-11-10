@@ -1,5 +1,127 @@
 # Meshers project tracking
 
+## Periodic cap repair and remaining geometry failures, 10 November 2026
+
+Continuation from `ccf4ca0`. The native mesher now repairs a blocked wall/cap
+corner by moving a nearby cap-only vertex within its plane at the same time.
+The search is bounded to four neighbors, eight directions and seven step
+sizes. Every tetrahedron incident to either vertex must satisfy the existing
+quality floor. The folded periodic representation applies both moves to the
+complete periodic classes. No new option, relaxed gate or extra cell is
+needed for this operation.
+
+[New findings and chart](handoff/macbook/cap-repair-and-topology-20261110.html)
+and [numeric evidence](handoff/macbook/cap-repair-and-topology-20261110.json).
+Earlier reports and rejected attempts remain unchanged.
+
+Job 731 establishes the mechanism on the saved FRD eight-pass mesh. Its worst
+boundary witness is an off-wall corner, so fitting fixed-corner midside nodes
+cannot remove the error. Safe corner completion leaves one blocked periodic
+class. Its two thin cap triangles limit the best possible incident tet quality
+to 0.0541 and 0.0811, below the unchanged 0.1 gate even with an optimal interior
+apex. Moving the cap neighbor removes that obstruction. The diagnostic Python
+reconstruction passes all gates at the original 63,913 tets / 105,755 nodes,
+with distance 0.001744018. It is a feasibility experiment, not an exact native
+replay or a generation timing.
+
+Job 733 builds the native implementation and passes the measured 20-tet star
+regression. Job 734 then generates a fresh native mesh through the ordinary
+API and independently audits its returned Tet10 arrays.
+
+| Schoen FRD upper, same eight-pass recipe | Before | Native cap repair |
+|---|---:|---:|
+| Admission | Rejected | Passed |
+| Sampled two-sided distance | 0.002572886 | 0.001113373 |
+| Absolute relative volume error | 0.001335% | 0.000222% |
+| Minimum corner q | 0.100003 | 0.183842 |
+| Tetrahedra | 63,913 | 63,524 |
+| Nodes | 105,755 | 104,927 |
+| Generation, single observation | 1.849 s | 1.718 s |
+
+The new mesh has positive sampled curved Jacobians, coherent oriented facets,
+shared quadratic face nodes, zero periodic coordinate mismatch, and matching
+complete caps. The timing observations do not establish a stable speed ratio.
+This is a native failure recovery; the actual FRD competitor remains rejected.
+
+Job 735 repeats all eight previously difficult adaptive TPMS cases with the
+same four-pass policy. All six earlier successes still pass. Neovius sheet
+improves from distance 0.001074014 to 0.000110239 with 31 fewer tets. Honeycomb
+Lidinoid has effectively unchanged boundary error but 546 more tets, a 0.59%
+count increase. Four-pass FRD still fails at 0.002195370, so the eight-pass
+recipe remains explicit. PMY still exceeds the cap at 254,989 nodes / 163,093
+tets. Selected native TPMS coverage rises from 46/48 to 47/48, not to universal
+coverage or an automatic fallback policy.
+
+Job 727 separates PMY's estimator problem from its real geometry failure.
+Multistart feasible projection reduces the worst forward witness from 0.068477
+to an upper bound of 0.017838, but all eight selected reverse witnesses exclude
+the entire quadratic boundary within radius 0.002 using padded Bernstein
+bounds. These are floating-point bounds, not interval certificates. All eight
+full midpoint-projection controls create negative sampled Jacobians. Repeating
+midpoint fitting is therefore not the next experiment. The next control targets
+a narrow void neck before surface clipping and quadratic elevation.
+
+Job 738 confirms that the saved curved mesh fills an actual void saddle. The
+raw background interpolation already misses part of a field-proved void path,
+before projection or smoothing. Inserting two local background samples before
+clipping changes 91 falsely occupied path samples to zero. All original nodes,
+outer facets and background volume stay fixed. However, the inserted background
+star has q minimum 0.026 and clipped elements remain below 0.1. This local
+control is not an admitted global candidate. A general field-based detection
+rule and quality-preserving cavity repair are still required.
+
+Job 740 tests a general selection rule on the same local patch: compare the
+actual field and its affine interpolation at all original face and tet centers.
+One frozen round selects 22 internal faces and four tets without consulting the
+neck witnesses. It again removes all 91 false-material path samples, now with
+background q minimum 0.253 instead of 0.026. All original nodes, outer facets
+and background volume remain fixed. Raw clipping still has 215 elements below
+q 0.1 versus 120 before refinement. The next preflight checks this rule on the
+complete periodic background before trying native clipping and quality repair.
+
+The exact CAD preflight adds one new `CustomLattice` specimen, two intersecting
+flat-ended cylinders without joint spheres. Its implicit union is verified
+against the actual CAD solid by analytic volume and 512 memberships. The optional
+arm64 backend is pinned to `cadquery-ocp-novtk==7.9.3.1.1`; the initial 8.0.1.1.0
+wheel lacked `TopTools_ListOfShape`, which the pinned Microgen implementation
+requires. Jobs 728–732 preserve that failure and the compatible replacement.
+No other Python dependency changed.
+
+Job 736 compares one Tet4 pair. Native admission passes at 49,422 tets / 10,147
+nodes, distance 0.001997038, absolute volume error 0.696069%, q minimum 0.309336,
+and exact periodic matching. The actual CAD/Gmsh seed has 3,275 tets / 922 nodes,
+but fails volume at 1.678177% and its public periodic validator. The independent
+observer finds matching x/y caps and paired empty z traces. The seed is retained;
+MMG did not run after the public failure. This is no successful performance ratio.
+A separately labeled finer actual control must resolve the validator semantics
+without altering the meshing algorithm or excusing a missing material cap.
+
+Job 739 confirms the empty-z-face diagnosis and proves that all 848 triangles
+selected as required by `BoxMesh` are exactly the physical caps. The explicit
+size .03 / declared-cell-validator control admits direct actual CAD/Gmsh at
+22,214 tets / 4,942 nodes, distance 0.001260650, absolute volume error 0.435573%,
+and q minimum 0.250147. This reveals a native efficiency weakness: Meshers uses
+more elements and has larger geometry errors, although its minimum q is higher.
+The following unchanged public MMG passes coarsen to 5,955 tets and fail at
+2.885227% volume error and at least 0.007238714 reverse distance. Direct CAD/Gmsh
+is a valid separate comparator; it is not relabeled as a successful MMG workflow.
+
+Job 741 obtains an admitted actual Microgen+MMG candidate by explicitly applying
+`hausd=.0003` and `hmax=.03` to both MMG passes. Exact binary arguments are saved
+before execution. All intermediate counts stay below 250,000. The result has
+200,057 tets / 40,350 nodes, distance 0.001354617, absolute volume error 0.133705%,
+and q minimum 0.299140. Meshers uses about four times fewer tets and has a slightly
+higher minimum q, but its boundary and volume errors are larger. Pilot generation
+is 0.480 s native versus 5.416 s actual, with no repeated timing claim. This is
+a useful admitted comparison, not dominance on every metric or a matched-FEA win.
+
+Job 737 passes the full release core suite, 112 tests with one research test
+ignored, Python/tools 212 passed with one skipped, and strict Python-binding
+Clippy. Job 733 also passes strict core Clippy and the targeted native tests.
+No new FEA solve, lattice reference promotion or local-stress certification was
+performed. All original four cases, the expanded nine specimens, all 24 lattice
+tensors, fixed fields and samples remain in scope. The full objective remains open.
+
 ## Native fitting and broader Microgen coverage, 10 November 2026
 
 Work continues from `ddcc870` on the MacBook. The objective remains better

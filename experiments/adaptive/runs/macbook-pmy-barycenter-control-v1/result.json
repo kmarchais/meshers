@@ -1,0 +1,985 @@
+{
+  "inputs": {
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/pmy_barycenter_control.py": "c08a3b73ce0834ba9306794c862f528e66b473e0966a01d11288e6be3e681bf5",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/microgen_workflow.py": "9f513dfd3e6e5a72a71a54f70c0c2cf7c7a1ebe7256886ee3feaf7d7ad7de161",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/pmy_neck_control.py": "aacab3dd12c99ad5586e8c4efb59b74556e736041fbe20653381c53d577b8668",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/tpms_family_fixtures.py": "794418f5d2e3d2158542af51a5cf322c41befff8f8d7c98f769d379baedd3bc6",
+    "/Users/kmarchais/dev/meshers/.local-work/macbook-runtime/venv/lib/python3.12/site-packages/microgen/shape/surface_functions.py": "578c20eb2ef424b95f50618d9cfffdce3676d6b5bdcd90a3278e0ca5ef1af4b4",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-pmy-neck-control-v1/background-before.npz": "c83893728ce694ee0882c6af8bf7cd7d56decfe5834f530c29f47203b0d8f9fe",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-pmy-neck-control-v1/result.json": "89a14b1d5561d678b23011d70fd380b1b59e93e50d095e5da2ff9ad11c48de6e",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-tpms-family-fixtures-v1/protocol.json": "7a0e06b00a1d2802d39ad726181fa09450bb7d0caa6d707e402f2f1882270319",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-tpms-family-fixtures-v1/result.json": "1f3907ba0acf691628d0eb588b0f4325c2abdc8c24efb75a251f60ccca5681f2",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-tpms-family-fixtures-v1/tpms-pmy-sheet/tpms-pmy-sheet-specimen.json": "65f653b5b5df833c4f7b9ebeef839555c76690e1a4e95c6011719d042a77c67a",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-tpms-family-fixtures-v1/tpms-pmy-sheet/tpms-pmy-sheet-samples.npz": "66cd3e81d5bad83b63c3bbc96696d732170ed37049dd4ff1dad868b39dbaf2f1",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-tpms-family-fixtures-v1/tpms-pmy-sheet/tpms-pmy-sheet-definition.json": "a0b3623510422678fd46dbfec702d7ebfb03e14272f7016b002e5b2594a662b6",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/scorecard.py": "8f26256c7df0e84c9f35cdd71bf4f95a74e072d45469002b213c5dcd4f1bab2a",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/bistellar_probe.py": "470c29e21c1dc85ea6d7f81a83e9f24f73041c47d280e2b3ca9b13a96b2d3084",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/mmg_quality_localization.py": "03ef27a978fcd5101f36745ccaf67309f49ce6ece172fad28b84246d6d457ebc"
+  },
+  "rounds": 1,
+  "physical_specimen_unchanged": true,
+  "original_nodes_unchanged": true,
+  "outer_facets_unchanged": true,
+  "admitted": false,
+  "admission_gates_unchanged": true,
+  "local_bounds": {
+    "nodes": 2048,
+    "tets": 20000
+  },
+  "scope": "One field-only barycenter-sign refinement on an archived local background. No global candidate.",
+  "controls": {
+    "all_three_band_classes": true,
+    "affine_field_unchanged": true,
+    "complete_internal_face_star": true,
+    "outer_mismatch_skipped": true,
+    "upper_hidden_void_detected": true,
+    "lower_hidden_void_detected": true
+  },
+  "selection": {
+    "face_samples": 882,
+    "tet_samples": 396,
+    "records": [
+      {
+        "kind": "face",
+        "index": 84,
+        "vertices": [
+          8,
+          21,
+          23
+        ],
+        "point": [
+          -0.4583333333333333,
+          0.25,
+          -0.4583333333333333
+        ],
+        "actual_value": 0.3705904774487399,
+        "affine_value": 0.34595120601616514,
+        "actual_class": 1,
+        "affine_class": 0,
+        "selected": true,
+        "reason": "classification-mismatch"
+      },
+      {
+        "kind": "face",
+        "index": 176,
+        "vertices": [
+          19,
+          35,
+          40
+        ],
+        "point": [
+          -0.4166666666666667,
+          0.2916666666666667,
+          -0.5
+        ],
+        "actual_value": 0.38822856765378083,
+        "affine_value": 0.34532163826775947,
+        "actual_class": 1,
+        "affine_class": 0,
+        "selected": false,
+        "reason": "outer-facet-preservation"
+      },
+      {
+        "kind": "face",
+        "index": 183,
+        "vertices": [
+          20,
+          25,
+          69
+        ],
+        "point": [
+          -0.4375,
+          0.20833333333333334,
+          -0.3958333333333333
+        ],
+        "actual_value": 0.38839769932473317,
+        "affine_value": 0.3404195350362764,
+        "actual_class": 1,
+        "affine_class": 0,
+        "selected": true,
+        "reason": "classification-mismatch"
+      },
+      {
+        "kind": "face",
+        "index": 184,
+        "vertices": [
+          20,
+          25,
+          76
+        ],
+        "point": [
+          -0.4375,
+          0.22916666666666666,
+          -0.3958333333333333
+        ],
+        "actual_value": 0.36519623846685345,
+        "affine_value": 0.35836130128572957,
+        "actual_class": 1,
+        "affine_class": 0,
+        "selected": true,
+        "reason": "classification-mismatch"
+      },
+      {
+        "kind": "face",
+        "index": 211,
+        "vertices": [
+          21,
+          41,
+          76
+        ],
+        "point": [
+          -0.4270833333333333,
+          0.2604166666666667,
+          -0.40625
+        ],
+        "actual_value": 0.3580045475549924,
+        "affine_value": 0.36554630891793366,
+        "actual_class": 0,
+        "affine_class": 1,
+        "selected": true,
+        "reason": "classification-mismatch"
+      },
+      {
+        "kind": "face",
+        "index": 240,
+        "vertices": [
+          25,
+          26,
+          29
+        ],
+        "point": [
+          -0.375,
+          0.22916666666666666,
+          -0.4166666666666667
+        ],
+        "actual_value": 0.40952418763053644,
+        "affine_value": 0.35185674433986724,
+        "actual_class": 1,
+        "affine_class": 0,
+        "selected": true,
+        "reason": "classification-mismatch"
+      },
+      {
+        "kind": "face",
+        "index": 246,
+        "vertices": [
+          25,
+          41,
+          79
+        ],
+        "point": [
+          -0.3958333333333333,
+          0.25,
+          -0.3958333333333333
+        ],
+        "actual_value": 0.37790743996090564,
+        "affine_value": 0.3595293924001848,
+        "actual_class": 1,
+        "affine_class": 0,
+        "selected": true,
+        "reason": "classification-mismatch"
+      },
+      {
+        "kind": "face",
+        "index": 253,
+        "vertices": [
+          25,
+          76,
+          79
+        ],
+        "point": [
+          -0.40625,
+          0.23958333333333334,
+          -0.3854166666666667
+        ],
+        "actual_value": 0.3667934561001786,
+        "affine_value": 0.35576822640103933,
+        "actual_class": 1,
+        "affine_class": 0,
+        "selected": true,
+        "reason": "classification-mismatch"
+      },
+      {
+        "kind": "face",
+        "index": 261,
+        "vertices": [
+          26,
+          30,
+          31
+        ],
+        "point": [
+          -0.34375,
+          0.2604166666666667,
+          -0.4479166666666667
+        ],
+        "actual_value": 0.3888757090922475,
+        "affine_value": 0.334604470105522,
+        "actual_class": 1,
+        "affine_class": 0,
+        "selected": true,
+        "reason": "classification-mismatch"
+      },
+      {
+        "kind": "face",
+        "index": 264,
+        "vertices": [
+          26,
+          31,
+          45
+        ],
+        "point": [
+          -0.3541666666666667,
+          0.2708333333333333,
+          -0.4375
+        ],
+        "actual_value": 0.3489007679338281,
+        "affine_value": 0.37343512313325183,
+        "actual_class": 0,
+        "affine_class": 1,
+        "selected": true,
+        "reason": "classification-mismatch"
+      },
+      {
+        "kind": "face",
+        "index": 286,
+        "vertices": [
+          28,
+          33,
+          44
+        ],
+        "point": [
+          -0.3020833333333333,
+          0.28125,
+          -0.4895833333333333
+        ],
+        "actual_value": 0.3733428338254611,
+        "affine_value": 0.3558316816037608,
+        "actual_class": 1,
+        "affine_class": 0,
+        "selected": false,
+        "reason": "outer-facet-preservation"
+      },
+      {
+        "kind": "face",
+        "index": 290,
+        "vertices": [
+          29,
+          32,
+          74
+        ],
+        "point": [
+          -0.3125,
+          0.20833333333333334,
+          -0.3958333333333333
+        ],
+        "actual_value": -0.35661054351043137,
+        "affine_value": -0.37934066145695494,
+        "actual_class": 0,
+        "affine_class": -1,
+        "selected": true,
+        "reason": "classification-mismatch"
+      },
+      {
+        "kind": "face",
+        "index": 362,
+        "vertices": [
+          37,
+          38,
+          39
+        ],
+        "point": [
+          -0.46875,
+          0.3229166666666667,
+          -0.4479166666666667
+        ],
+        "actual_value": -0.3420681412897829,
+        "affine_value": -0.3605290548992613,
+        "actual_class": 0,
+        "affine_class": -1,
+        "selected": true,
+        "reason": "classification-mismatch"
+      },
+      {
+        "kind": "face",
+        "index": 383,
+        "vertices": [
+          38,
+          52,
+          93
+        ],
+        "point": [
+          -0.4895833333333333,
+          0.34375,
+          -0.40625
+        ],
+        "actual_value": -0.360517518371946,
+        "affine_value": -0.3280999131596601,
+        "actual_class": -1,
+        "affine_class": 0,
+        "selected": true,
+        "reason": "classification-mismatch"
+      },
+      {
+        "kind": "face",
+        "index": 414,
+        "vertices": [
+          41,
+          76,
+          79
+        ],
+        "point": [
+          -0.40625,
+          0.2604166666666667,
+          -0.3854166666666667
+        ],
+        "actual_value": 0.37537490960854497,
+        "affine_value": 0.31767447148460143,
+        "actual_class": 1,
+        "affine_class": 0,
+        "selected": true,
+        "reason": "classification-mismatch"
+      },
+      {
+        "kind": "face",
+        "index": 610,
+        "vertices": [
+          73,
+          74,
+          80
+        ],
+        "point": [
+          -0.3333333333333333,
+          0.1875,
+          -0.3541666666666667
+        ],
+        "actual_value": -0.36443577219893963,
+        "affine_value": -0.34950459460204386,
+        "actual_class": -1,
+        "affine_class": 0,
+        "selected": true,
+        "reason": "classification-mismatch"
+      },
+      {
+        "kind": "face",
+        "index": 613,
+        "vertices": [
+          73,
+          80,
+          105
+        ],
+        "point": [
+          -0.3333333333333333,
+          0.1875,
+          -0.3333333333333333
+        ],
+        "actual_value": -0.3709275743219843,
+        "affine_value": -0.3420728716885925,
+        "actual_class": -1,
+        "affine_class": 0,
+        "selected": true,
+        "reason": "classification-mismatch"
+      },
+      {
+        "kind": "face",
+        "index": 654,
+        "vertices": [
+          78,
+          79,
+          86
+        ],
+        "point": [
+          -0.3958333333333333,
+          0.25,
+          -0.3541666666666667
+        ],
+        "actual_value": 0.3779074399609057,
+        "affine_value": 0.35952939240018483,
+        "actual_class": 1,
+        "affine_class": 0,
+        "selected": true,
+        "reason": "classification-mismatch"
+      },
+      {
+        "kind": "face",
+        "index": 676,
+        "vertices": [
+          79,
+          88,
+          110
+        ],
+        "point": [
+          -0.3645833333333333,
+          0.2604166666666667,
+          -0.34375
+        ],
+        "actual_value": 0.35532523346546735,
+        "affine_value": 0.37620002187744883,
+        "actual_class": 0,
+        "affine_class": 1,
+        "selected": true,
+        "reason": "classification-mismatch"
+      },
+      {
+        "kind": "face",
+        "index": 677,
+        "vertices": [
+          80,
+          81,
+          82
+        ],
+        "point": [
+          -0.3125,
+          0.22916666666666666,
+          -0.3541666666666667
+        ],
+        "actual_value": -0.33586114618312457,
+        "affine_value": -0.3610922556595522,
+        "actual_class": 0,
+        "affine_class": -1,
+        "selected": true,
+        "reason": "classification-mismatch"
+      },
+      {
+        "kind": "face",
+        "index": 792,
+        "vertices": [
+          91,
+          115,
+          122
+        ],
+        "point": [
+          -0.4895833333333333,
+          0.34375,
+          -0.3229166666666667
+        ],
+        "actual_value": 0.39485050036802183,
+        "affine_value": 0.34791471315244965,
+        "actual_class": 1,
+        "affine_class": 0,
+        "selected": true,
+        "reason": "classification-mismatch"
+      },
+      {
+        "kind": "face",
+        "index": 828,
+        "vertices": [
+          96,
+          98,
+          119
+        ],
+        "point": [
+          -0.3125,
+          0.3333333333333333,
+          -0.3333333333333333
+        ],
+        "actual_value": 0.37092757432198425,
+        "affine_value": 0.34207287168859235,
+        "actual_class": 1,
+        "affine_class": 0,
+        "selected": true,
+        "reason": "classification-mismatch"
+      },
+      {
+        "kind": "face",
+        "index": 829,
+        "vertices": [
+          96,
+          98,
+          126
+        ],
+        "point": [
+          -0.3125,
+          0.3541666666666667,
+          -0.3333333333333333
+        ],
+        "actual_value": 0.3644357721989396,
+        "affine_value": 0.3495045946020438,
+        "actual_class": 1,
+        "affine_class": 0,
+        "selected": true,
+        "reason": "classification-mismatch"
+      },
+      {
+        "kind": "face",
+        "index": 831,
+        "vertices": [
+          96,
+          101,
+          126
+        ],
+        "point": [
+          -0.3333333333333333,
+          0.375,
+          -0.3333333333333333
+        ],
+        "actual_value": 0.3748444488869598,
+        "affine_value": 0.32956877209006,
+        "actual_class": 1,
+        "affine_class": 0,
+        "selected": true,
+        "reason": "classification-mismatch"
+      },
+      {
+        "kind": "tet",
+        "index": 175,
+        "vertices": [
+          76,
+          25,
+          41,
+          79
+        ],
+        "point": [
+          -0.40625,
+          0.25,
+          -0.390625
+        ],
+        "actual_value": 0.37898442573546814,
+        "affine_value": 0.35075288150550304,
+        "actual_class": 1,
+        "affine_class": 0,
+        "selected": true,
+        "reason": "classification-mismatch"
+      },
+      {
+        "kind": "tet",
+        "index": 237,
+        "vertices": [
+          93,
+          52,
+          65,
+          92
+        ],
+        "point": [
+          -0.46875,
+          0.375,
+          -0.390625
+        ],
+        "actual_value": -0.35854668161045455,
+        "affine_value": -0.36442880365676056,
+        "actual_class": 0,
+        "affine_class": -1,
+        "selected": true,
+        "reason": "classification-mismatch"
+      },
+      {
+        "kind": "tet",
+        "index": 303,
+        "vertices": [
+          76,
+          78,
+          79,
+          86
+        ],
+        "point": [
+          -0.40625,
+          0.25,
+          -0.359375
+        ],
+        "actual_value": 0.3789844257354681,
+        "affine_value": 0.35075288150550304,
+        "actual_class": 1,
+        "affine_class": 0,
+        "selected": true,
+        "reason": "classification-mismatch"
+      },
+      {
+        "kind": "tet",
+        "index": 330,
+        "vertices": [
+          83,
+          76,
+          84,
+          86
+        ],
+        "point": [
+          -0.4375,
+          0.28125,
+          -0.359375
+        ],
+        "actual_value": 0.38532190407364253,
+        "affine_value": 0.3566227527992756,
+        "actual_class": 1,
+        "affine_class": 0,
+        "selected": true,
+        "reason": "classification-mismatch"
+      }
+    ],
+    "class_labels": {
+      "-1": "below lower wall",
+      "0": "inside band",
+      "1": "above upper wall"
+    },
+    "selected_faces": 22,
+    "selected_tets": 4,
+    "skipped_outer_faces": 2,
+    "selection_scope": "Original face and tet centers only; one frozen round; no witness coordinates"
+  },
+  "operations": [
+    {
+      "kind": "face",
+      "original_index": 84,
+      "node": 127,
+      "added": true,
+      "incident_tets": 2,
+      "carrier_size": 3
+    },
+    {
+      "kind": "face",
+      "original_index": 183,
+      "node": 128,
+      "added": true,
+      "incident_tets": 2,
+      "carrier_size": 3
+    },
+    {
+      "kind": "face",
+      "original_index": 184,
+      "node": 129,
+      "added": true,
+      "incident_tets": 2,
+      "carrier_size": 3
+    },
+    {
+      "kind": "face",
+      "original_index": 211,
+      "node": 130,
+      "added": true,
+      "incident_tets": 2,
+      "carrier_size": 3
+    },
+    {
+      "kind": "face",
+      "original_index": 240,
+      "node": 131,
+      "added": true,
+      "incident_tets": 2,
+      "carrier_size": 3
+    },
+    {
+      "kind": "face",
+      "original_index": 246,
+      "node": 132,
+      "added": true,
+      "incident_tets": 2,
+      "carrier_size": 3
+    },
+    {
+      "kind": "face",
+      "original_index": 253,
+      "node": 133,
+      "added": true,
+      "incident_tets": 2,
+      "carrier_size": 3
+    },
+    {
+      "kind": "face",
+      "original_index": 261,
+      "node": 134,
+      "added": true,
+      "incident_tets": 2,
+      "carrier_size": 3
+    },
+    {
+      "kind": "face",
+      "original_index": 264,
+      "node": 135,
+      "added": true,
+      "incident_tets": 2,
+      "carrier_size": 3
+    },
+    {
+      "kind": "face",
+      "original_index": 290,
+      "node": 136,
+      "added": true,
+      "incident_tets": 2,
+      "carrier_size": 3
+    },
+    {
+      "kind": "face",
+      "original_index": 362,
+      "node": 137,
+      "added": true,
+      "incident_tets": 2,
+      "carrier_size": 3
+    },
+    {
+      "kind": "face",
+      "original_index": 383,
+      "node": 138,
+      "added": true,
+      "incident_tets": 2,
+      "carrier_size": 3
+    },
+    {
+      "kind": "face",
+      "original_index": 414,
+      "node": 139,
+      "added": true,
+      "incident_tets": 2,
+      "carrier_size": 3
+    },
+    {
+      "kind": "face",
+      "original_index": 610,
+      "node": 140,
+      "added": true,
+      "incident_tets": 2,
+      "carrier_size": 3
+    },
+    {
+      "kind": "face",
+      "original_index": 613,
+      "node": 141,
+      "added": true,
+      "incident_tets": 2,
+      "carrier_size": 3
+    },
+    {
+      "kind": "face",
+      "original_index": 654,
+      "node": 142,
+      "added": true,
+      "incident_tets": 2,
+      "carrier_size": 3
+    },
+    {
+      "kind": "face",
+      "original_index": 676,
+      "node": 143,
+      "added": true,
+      "incident_tets": 2,
+      "carrier_size": 3
+    },
+    {
+      "kind": "face",
+      "original_index": 677,
+      "node": 144,
+      "added": true,
+      "incident_tets": 2,
+      "carrier_size": 3
+    },
+    {
+      "kind": "face",
+      "original_index": 792,
+      "node": 145,
+      "added": true,
+      "incident_tets": 2,
+      "carrier_size": 3
+    },
+    {
+      "kind": "face",
+      "original_index": 828,
+      "node": 146,
+      "added": true,
+      "incident_tets": 2,
+      "carrier_size": 3
+    },
+    {
+      "kind": "face",
+      "original_index": 829,
+      "node": 147,
+      "added": true,
+      "incident_tets": 2,
+      "carrier_size": 3
+    },
+    {
+      "kind": "face",
+      "original_index": 831,
+      "node": 148,
+      "added": true,
+      "incident_tets": 2,
+      "carrier_size": 3
+    },
+    {
+      "kind": "tet",
+      "original_index": 175,
+      "node": 149,
+      "added": true,
+      "incident_tets": 5,
+      "carrier_size": 2
+    },
+    {
+      "kind": "tet",
+      "original_index": 237,
+      "node": 150,
+      "added": true,
+      "incident_tets": 1,
+      "carrier_size": 4
+    },
+    {
+      "kind": "tet",
+      "original_index": 303,
+      "node": 151,
+      "added": true,
+      "incident_tets": 3,
+      "carrier_size": 2
+    },
+    {
+      "kind": "tet",
+      "original_index": 330,
+      "node": 152,
+      "added": true,
+      "incident_tets": 1,
+      "carrier_size": 4
+    }
+  ],
+  "background": {
+    "baseline": {
+      "nodes": 127,
+      "tets": 396,
+      "minimum_quality": 0.6651075101064498,
+      "below_quality_gate": 0,
+      "minimum_determinant": 0.00012207031250000008,
+      "volume": 0.008056640625000003,
+      "oriented_faces_consistent": true,
+      "nonmanifold_faces": 0,
+      "within_caps": true
+    },
+    "one_round": {
+      "nodes": 153,
+      "tets": 498,
+      "minimum_quality": 0.2530770368290749,
+      "below_quality_gate": 0,
+      "minimum_determinant": 3.3908420138888823e-06,
+      "volume": 0.008056640625000003,
+      "oriented_faces_consistent": true,
+      "nonmanifold_faces": 0,
+      "within_caps": true
+    }
+  },
+  "clipped": {
+    "baseline": {
+      "nodes": 292,
+      "tets": 748,
+      "minimum_quality": 1.6876020188122375e-07,
+      "below_quality_gate": 120,
+      "minimum_determinant": 6.85112886565425e-12,
+      "volume": 0.004894230966280546,
+      "oriented_faces_consistent": true,
+      "nonmanifold_faces": 0,
+      "within_caps": true
+    },
+    "one_round": {
+      "nodes": 358,
+      "tets": 940,
+      "minimum_quality": 1.6876020188122375e-07,
+      "below_quality_gate": 215,
+      "minimum_determinant": 6.85112886565425e-12,
+      "volume": 0.004864412663936169,
+      "oriented_faces_consistent": true,
+      "nonmanifold_faces": 0,
+      "within_caps": true
+    }
+  },
+  "void_path_observer": {
+    "baseline": {
+      "samples": 258,
+      "material_samples": 91,
+      "sample_indices": [
+        77,
+        78,
+        79,
+        80,
+        81,
+        82,
+        83,
+        84,
+        85,
+        86,
+        87,
+        88,
+        89,
+        90,
+        91,
+        92,
+        93,
+        94,
+        95,
+        96,
+        97,
+        98,
+        99,
+        100,
+        101,
+        102,
+        103,
+        104,
+        105,
+        106,
+        107,
+        108,
+        109,
+        110,
+        111,
+        112,
+        113,
+        114,
+        115,
+        116,
+        117,
+        118,
+        119,
+        120,
+        121,
+        122,
+        123,
+        124,
+        125,
+        126,
+        127,
+        128,
+        219,
+        220,
+        221,
+        222,
+        223,
+        224,
+        225,
+        226,
+        227,
+        228,
+        229,
+        230,
+        231,
+        232,
+        233,
+        234,
+        235,
+        236,
+        237,
+        238,
+        239,
+        240,
+        241,
+        242,
+        243,
+        244,
+        245,
+        246,
+        247,
+        248,
+        249,
+        250,
+        251,
+        252,
+        253,
+        254,
+        255,
+        256,
+        257
+      ],
+      "critical_point_in_material": true
+    },
+    "one_round": {
+      "samples": 258,
+      "material_samples": 0,
+      "sample_indices": [],
+      "critical_point_in_material": false
+    }
+  },
+  "false_material_samples_removed": 91,
+  "complete": true,
+  "input_hashes_verified": true,
+  "limits": "Finite barycenter tests can miss features between samples. Subdivision does not guarantee quality after clipping. Path witnesses observe this one local control; they do not choose insertion points or establish global topology."
+}

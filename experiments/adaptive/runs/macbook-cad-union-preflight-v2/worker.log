@@ -1,0 +1,21 @@
+Traceback (most recent call last):
+  File "/Users/kmarchais/dev/meshers/experiments/adaptive/cad_coverage_preflight.py", line 180, in <module>
+    main()
+  File "/Users/kmarchais/dev/meshers/experiments/adaptive/cad_coverage_preflight.py", line 140, in main
+    cad = shape.generate_cad()
+          ^^^^^^^^^^^^^^^^^^^^
+  File "/Users/kmarchais/dev/meshers/.local-work/macbook-runtime/venv/lib/python3.12/site-packages/microgen/shape/strut_lattice/abstract_lattice.py", line 228, in generate_cad
+    self._cad_shape = self._generate_cad()
+                      ^^^^^^^^^^^^^^^^^^^^
+  File "/Users/kmarchais/dev/meshers/.local-work/macbook-runtime/venv/lib/python3.12/site-packages/microgen/shape/strut_lattice/abstract_lattice.py", line 257, in _generate_cad
+    periodic_phase = periodic_split_and_translate(phase=phase, rve=self.rve)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/kmarchais/dev/meshers/.local-work/macbook-runtime/venv/lib/python3.12/site-packages/microgen/periodic.py", line 297, in periodic_split_and_translate
+    intersected_faces, rve_planes, partitions = _detect_intersected_faces(shape, rve)
+                                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/kmarchais/dev/meshers/.local-work/macbook-runtime/venv/lib/python3.12/site-packages/microgen/periodic.py", line 115, in _detect_intersected_faces
+    partitions[face] = split_shape(shape, plane)
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/kmarchais/dev/meshers/.local-work/macbook-runtime/venv/lib/python3.12/site-packages/microgen/cad.py", line 1139, in split_shape
+    from OCP.TopTools import TopTools_ListOfShape
+ImportError: cannot import name 'TopTools_ListOfShape' from 'OCP.TopTools' (/Users/kmarchais/dev/meshers/.local-work/macbook-runtime/venv/lib/python3.12/site-packages/OCP/TopTools/__init__.py)

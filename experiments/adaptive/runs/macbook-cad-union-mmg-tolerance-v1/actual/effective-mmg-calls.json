@@ -1,0 +1,116 @@
+{
+  "control": {
+    "name": "actual-cad-size003-declared-cell-mmg-hausd0003-hmax003-both-passes",
+    "gmsh_size": 0.03,
+    "declared_bounds": [
+      [
+        -0.5,
+        -0.5,
+        -0.5
+      ],
+      [
+        0.5,
+        0.5,
+        0.5
+      ]
+    ],
+    "tolerance": 1e-10,
+    "modifications": [
+      "Gmsh size .06 to .03",
+      "Replace periodic predicates with full declared-cell node/facet/class validation",
+      "Request hausd=.0003 and hmax=.03 in both public MMG calls, including the first nofem pass"
+    ],
+    "unchanged": "CAD generation, Gmsh periodic constraints, BoxMesh construction and required triangles, both MMG algorithm modes, retry policy, other MMG arguments and output snapping",
+    "required_triangle_condition": "BoxMesh-selected required triangles must equal declared-cell material-cap triangles exactly",
+    "size_rationale": "Halving chord length predicts about one quarter of the coarse .004369 reverse distance and 1.678% volume error; admission must be measured",
+    "mmg_requested_both_passes": {
+      "hausd": 0.0003,
+      "hmax": 0.03
+    },
+    "resource_rationale": "Radius .15 and hausd .0003 imply a circular chord scale near .019. This is one bounded trial, not a node-count guarantee. Each intermediate retains the 250000-node/tet cap and the worker retains 180 seconds and 8 GiB.",
+    "geometric_scope": "MMG controls distance to its input mesh. Independent analytic geometry admission remains required."
+  },
+  "requested_both_passes": {
+    "hausd": 0.0003,
+    "hmax": 0.03
+  },
+  "calls": [
+    {
+      "call": 1,
+      "status": "returned",
+      "pass_kind": "first-nofem",
+      "control_requested_arguments": {
+        "hausd": 0.0003,
+        "hmax": 0.03
+      },
+      "public_call_arguments": {
+        "nofem": true
+      },
+      "effective_arguments": {
+        "nofem": true,
+        "hausd": 0.0003,
+        "hmax": 0.03
+      },
+      "input": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-cad-union-mmg-tolerance-v1/actual/temporary/tmpzn74_vbg.mesh",
+      "output": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-cad-union-mmg-tolerance-v1/actual/temporary/tmppx308mkv.mesh",
+      "binary_argv": [
+        "mmg3d_O3",
+        "-in",
+        "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-cad-union-mmg-tolerance-v1/actual/temporary/tmpzn74_vbg.mesh",
+        "-out",
+        "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-cad-union-mmg-tolerance-v1/actual/temporary/tmppx308mkv.mesh",
+        "-hausd",
+        "0.0003",
+        "-hmax",
+        "0.03",
+        "-nofem"
+      ],
+      "command_s": 1.727762624999741
+    },
+    {
+      "call": 2,
+      "status": "returned",
+      "pass_kind": "second-level-set",
+      "control_requested_arguments": {
+        "hausd": 0.0003,
+        "hmax": 0.03
+      },
+      "public_call_arguments": {
+        "hausd": 0.0003,
+        "hgrad": null,
+        "hmax": 0.03,
+        "hmin": null,
+        "hsiz": null,
+        "ls": true,
+        "nr": true
+      },
+      "effective_arguments": {
+        "hausd": 0.0003,
+        "hgrad": null,
+        "hmax": 0.03,
+        "hmin": null,
+        "hsiz": null,
+        "ls": true,
+        "nr": true
+      },
+      "input": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-cad-union-mmg-tolerance-v1/actual/temporary/tmppx308mkv.mesh",
+      "output": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-cad-union-mmg-tolerance-v1/actual/temporary/tmpj7nq51t9.mesh",
+      "binary_argv": [
+        "mmg3d_O3",
+        "-in",
+        "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-cad-union-mmg-tolerance-v1/actual/temporary/tmppx308mkv.mesh",
+        "-out",
+        "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-cad-union-mmg-tolerance-v1/actual/temporary/tmpj7nq51t9.mesh",
+        "-hausd",
+        "0.0003",
+        "-hmax",
+        "0.03",
+        "-ls",
+        "0",
+        "-nr"
+      ],
+      "command_s": 2.375313208991429
+    }
+  ],
+  "scope": "Effective keyword arguments and exact binary argv are recorded before their respective calls"
+}

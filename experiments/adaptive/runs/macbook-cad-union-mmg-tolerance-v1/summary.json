@@ -1,0 +1,580 @@
+{
+  "rows": [
+    {
+      "arm": "actual",
+      "control": {
+        "name": "actual-cad-size003-declared-cell-mmg-hausd0003-hmax003-both-passes",
+        "gmsh_size": 0.03,
+        "declared_bounds": [
+          [
+            -0.5,
+            -0.5,
+            -0.5
+          ],
+          [
+            0.5,
+            0.5,
+            0.5
+          ]
+        ],
+        "tolerance": 1e-10,
+        "modifications": [
+          "Gmsh size .06 to .03",
+          "Replace periodic predicates with full declared-cell node/facet/class validation",
+          "Request hausd=.0003 and hmax=.03 in both public MMG calls, including the first nofem pass"
+        ],
+        "unchanged": "CAD generation, Gmsh periodic constraints, BoxMesh construction and required triangles, both MMG algorithm modes, retry policy, other MMG arguments and output snapping",
+        "required_triangle_condition": "BoxMesh-selected required triangles must equal declared-cell material-cap triangles exactly",
+        "size_rationale": "Halving chord length predicts about one quarter of the coarse .004369 reverse distance and 1.678% volume error; admission must be measured",
+        "mmg_requested_both_passes": {
+          "hausd": 0.0003,
+          "hmax": 0.03
+        },
+        "resource_rationale": "Radius .15 and hausd .0003 imply a circular chord scale near .019. This is one bounded trial, not a node-count guarantee. Each intermediate retains the 250000-node/tet cap and the worker retains 180 seconds and 8 GiB.",
+        "geometric_scope": "MMG controls distance to its input mesh. Independent analytic geometry admission remains required."
+      },
+      "status": "admitted",
+      "qualified": true,
+      "phase_seconds": {
+        "shape_setup": 0.0002373750030528754,
+        "cad_generate": 0.28236541600199416,
+        "cad_volume_check": 0.0004309999931138009,
+        "step_export": 0.0017926250002346933,
+        "public_cad_gmsh": 0.27959454199299216,
+        "gmsh_read": 0.010907624993706122,
+        "gmsh_seed_extract": 0.004391791007947177,
+        "direct_archive_audit": 1.14556858400465,
+        "public_mmg": 5.04540554099367,
+        "final_grid_archive": 0.10994791600387543,
+        "final_extract": 0.0597732920141425,
+        "final_archive_audit": 1.4891233749804087
+      },
+      "mmg_calls": [
+        {
+          "arguments": {
+            "nofem": true,
+            "hausd": 0.0003,
+            "hmax": 0.03
+          },
+          "status": "returned",
+          "input_artifacts": {
+            "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-cad-union-mmg-tolerance-v1/actual/mmg-call-1/input.mesh": "d3cd22b40918dc7d2d4ec64968eb6d444143b93e75f77705a451ee474d43e180"
+          },
+          "command_s": 1.7284269589872565,
+          "output_artifacts": {
+            "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-cad-union-mmg-tolerance-v1/actual/mmg-call-1/output.mesh": "7e0d0a95aada1216b40c68ba7a2d486404f7f28a5771e5755d73dac1a93ecf42",
+            "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-cad-union-mmg-tolerance-v1/actual/mmg-call-1/output.sol": "8b969abe18d7bec5a07490e2edcf06adb2f7889709df14bc88ecdc877e8d20c5"
+          },
+          "output_nodes": 27210,
+          "output_tetrahedra": 130989,
+          "within_node_tetrahedron_cap": true,
+          "public_call_arguments": {
+            "nofem": true
+          },
+          "control_requested_arguments": {
+            "hausd": 0.0003,
+            "hmax": 0.03
+          },
+          "effective_arguments": {
+            "nofem": true,
+            "hausd": 0.0003,
+            "hmax": 0.03
+          },
+          "binary_argv": [
+            "mmg3d_O3",
+            "-in",
+            "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-cad-union-mmg-tolerance-v1/actual/temporary/tmpzn74_vbg.mesh",
+            "-out",
+            "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-cad-union-mmg-tolerance-v1/actual/temporary/tmppx308mkv.mesh",
+            "-hausd",
+            "0.0003",
+            "-hmax",
+            "0.03",
+            "-nofem"
+          ],
+          "arguments_scope": "Effective arguments passed to the original Mmg.mmg3d wrapper"
+        },
+        {
+          "arguments": {
+            "hausd": 0.0003,
+            "hgrad": null,
+            "hmax": 0.03,
+            "hmin": null,
+            "hsiz": null,
+            "ls": true,
+            "nr": true
+          },
+          "status": "returned",
+          "input_artifacts": {
+            "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-cad-union-mmg-tolerance-v1/actual/mmg-call-2/input.mesh": "7e0d0a95aada1216b40c68ba7a2d486404f7f28a5771e5755d73dac1a93ecf42",
+            "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-cad-union-mmg-tolerance-v1/actual/mmg-call-2/input.sol": "8b969abe18d7bec5a07490e2edcf06adb2f7889709df14bc88ecdc877e8d20c5"
+          },
+          "command_s": 2.3760697499965318,
+          "output_artifacts": {
+            "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-cad-union-mmg-tolerance-v1/actual/mmg-call-2/output.mesh": "0deb43f8194d8c0eec2ba657fd50f627fd89e669dfeb5b33ce7147a7a3dbc6c1",
+            "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-cad-union-mmg-tolerance-v1/actual/mmg-call-2/output.sol": "b9a1497262a7fe69e461a0324bf0658252a80cf6f5c13c680a74540a13722f58"
+          },
+          "output_nodes": 40350,
+          "output_tetrahedra": 200057,
+          "within_node_tetrahedron_cap": true,
+          "public_call_arguments": {
+            "hausd": 0.0003,
+            "hgrad": null,
+            "hmax": 0.03,
+            "hmin": null,
+            "hsiz": null,
+            "ls": true,
+            "nr": true
+          },
+          "control_requested_arguments": {
+            "hausd": 0.0003,
+            "hmax": 0.03
+          },
+          "effective_arguments": {
+            "hausd": 0.0003,
+            "hgrad": null,
+            "hmax": 0.03,
+            "hmin": null,
+            "hsiz": null,
+            "ls": true,
+            "nr": true
+          },
+          "binary_argv": [
+            "mmg3d_O3",
+            "-in",
+            "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-cad-union-mmg-tolerance-v1/actual/temporary/tmppx308mkv.mesh",
+            "-out",
+            "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-cad-union-mmg-tolerance-v1/actual/temporary/tmpj7nq51t9.mesh",
+            "-hausd",
+            "0.0003",
+            "-hmax",
+            "0.03",
+            "-ls",
+            "0",
+            "-nr"
+          ],
+          "arguments_scope": "Effective arguments passed to the original Mmg.mmg3d wrapper"
+        }
+      ],
+      "mmg_instrumentation_s": 0.2986779160273727,
+      "vtk_backend": "Sequential",
+      "numerical_threads": 1,
+      "solve_performed": false,
+      "diagnosis_s": 0.00423466699430719,
+      "active_phase": "final_archive_audit",
+      "cad_volume": 0.12337166944279454,
+      "cad_step_sha256": "13a284aeb889d09eb144236335c41b54ea05743e0dd17ccdb1d8dbe1072d2d1a",
+      "gmsh_seed_sha256": "1ba21ee68f41cbf17e025fac455fdc490dd21dc52fbc920f814d9656fb4c2c9c",
+      "seed_nodes": 4942,
+      "seed_elements": 22214,
+      "cad_gmsh_read_s": 0.5753285829850938,
+      "direct_generation_s": 0.583381914999336,
+      "direct": {
+        "nodes": 4942,
+        "elements": 22214,
+        "order": 1,
+        "qualified": true,
+        "mesh_file": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-cad-union-mmg-tolerance-v1/actual/actual-cad-gmsh-direct/mesh.npz",
+        "raw_mesh_sha256": "bc634663df80b465428fbca659fd7764f3c7e4246bf67c574ba0c50265c4547b",
+        "reoriented_tetrahedra": 0,
+        "reorientation_s": 0.0036615410062950104,
+        "mesh_sha256": "bc634663df80b465428fbca659fd7764f3c7e4246bf67c574ba0c50265c4547b",
+        "geometry": {
+          "volume": 0.1228342963467879,
+          "relative_volume_error": -0.004355725000042221,
+          "q_min_corner": 0.2501468683814856,
+          "q_p01_corner": 0.3243943867081623,
+          "minimum_sampled_jacobian": 7.092417758290545e-06,
+          "facet_consistency": {
+            "nodes": 4942,
+            "elements": 22214,
+            "unique_faces": 47008,
+            "interior_faces": 41848,
+            "extracted_boundary_faces": 5160,
+            "same_orientation_shared_faces": 0,
+            "nonmanifold_faces": 0,
+            "duplicate_cells": 0,
+            "duplicate_surface_faces": 0,
+            "provided_boundary_matches_extraction": true,
+            "missing_provided_faces": 0,
+            "extra_provided_faces": 0,
+            "nonpositive_corner_determinants": 0,
+            "minimum_corner_determinant": 7.092417758290544e-06,
+            "oriented_facet_consistency_passed": true,
+            "conflict_examples": [],
+            "scope": "Oriented corner-face incidence and same-side neighbor diagnostics; necessary consistency, not a certificate of curved geometry or absence of nonlocal intersections"
+          },
+          "oriented_facet_consistency_passed": true,
+          "quadratic_conformity": {
+            "passed": true,
+            "order": 1
+          },
+          "exact_straight_reduction_verified": false,
+          "geometry_admitted": true,
+          "sampled_forward_max": 0.0012606502171909199,
+          "sampled_reverse_max": 0.0011040650678918796,
+          "sampled_two_sided_max": 0.0012606502171909199,
+          "outward_forward_max": 3.579810805799007e-14,
+          "inward_forward_max": 0.0012606502171909199,
+          "projection_failed": 0,
+          "forward_samples": 56056,
+          "reverse_samples": 53248,
+          "minimum_dihedral_deg_corner": 11.831254892649042,
+          "reverse_tessellation_delta_max": 0.0,
+          "quadratic_reverse_subdivisions": null,
+          "projection_method": "newton-box-slsqp-v1",
+          "unbounded_projection_failed": 0,
+          "box_projection_attempts": 0,
+          "box_projection_recovered": 0,
+          "box_projection_witnesses": [],
+          "distance_audit_complete": true,
+          "failed_gates": []
+        },
+        "periodic": {
+          "periodic_pair_counts": [
+            123,
+            123,
+            0
+          ],
+          "periodic_coordinate_errors": [
+            9.325873406851315e-16,
+            5.995204332975315e-16,
+            0.0
+          ],
+          "periodic_pair_tolerance": 1e-10,
+          "periodic_equivalence_classes": 4696,
+          "periodic_triangles_match": true,
+          "full_facet_check_required": true,
+          "complete_existing_node_classes": true,
+          "unmatched_noncap_contact_nodes": [
+            [
+              [],
+              []
+            ],
+            [
+              [],
+              []
+            ],
+            [
+              [],
+              []
+            ]
+          ],
+          "declared_bounds": [
+            [
+              -0.5,
+              -0.5,
+              -0.5
+            ],
+            [
+              0.5,
+              0.5,
+              0.5
+            ]
+          ],
+          "periodic_gate": "declared-cell-material-cap-and-complete-node-classes-v1"
+        },
+        "quality_quantiles": {
+          "min": 0.2501468683814856,
+          "p01": 0.3243943867081623,
+          "p10": 0.5575887857950242,
+          "median": 0.7707758031705341,
+          "p90": 0.9029047430650292,
+          "p99": 0.9685102894980945,
+          "max": 0.9996303150682782
+        },
+        "status": "admitted",
+        "audit_s": 1.096751667006174,
+        "route": "Explicit actual CAD/Gmsh size .03 and declared-cell validation, without MMG",
+        "generation_s": 0.583381914999336,
+        "control": {
+          "name": "actual-cad-size003-declared-cell-mmg-hausd0003-hmax003-both-passes",
+          "gmsh_size": 0.03,
+          "declared_bounds": [
+            [
+              -0.5,
+              -0.5,
+              -0.5
+            ],
+            [
+              0.5,
+              0.5,
+              0.5
+            ]
+          ],
+          "tolerance": 1e-10,
+          "modifications": [
+            "Gmsh size .06 to .03",
+            "Replace periodic predicates with full declared-cell node/facet/class validation",
+            "Request hausd=.0003 and hmax=.03 in both public MMG calls, including the first nofem pass"
+          ],
+          "unchanged": "CAD generation, Gmsh periodic constraints, BoxMesh construction and required triangles, both MMG algorithm modes, retry policy, other MMG arguments and output snapping",
+          "required_triangle_condition": "BoxMesh-selected required triangles must equal declared-cell material-cap triangles exactly",
+          "size_rationale": "Halving chord length predicts about one quarter of the coarse .004369 reverse distance and 1.678% volume error; admission must be measured",
+          "mmg_requested_both_passes": {
+            "hausd": 0.0003,
+            "hmax": 0.03
+          },
+          "resource_rationale": "Radius .15 and hausd .0003 imply a circular chord scale near .019. This is one bounded trial, not a node-count guarantee. Each intermediate retains the 250000-node/tet cap and the worker retains 180 seconds and 8 GiB.",
+          "geometric_scope": "MMG controls distance to its input mesh. Independent analytic geometry admission remains required."
+        }
+      },
+      "mmg_generation_s": 4.746727624966297,
+      "final_grid_sha256": "98b34ad796fb7e97e2eea65109cbbcbe3e449e87653ae70e867d2214a011dbda",
+      "generation_s": 5.415775291970931,
+      "final": {
+        "nodes": 40350,
+        "elements": 200057,
+        "order": 1,
+        "qualified": true,
+        "mesh_file": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-cad-union-mmg-tolerance-v1/actual/actual-cad-gmsh-public-mmg/mesh.npz",
+        "raw_mesh_sha256": "3675483ac0c3c7074c5379ffd13ff4917810e721497e473fe3077452ee16d655",
+        "reoriented_tetrahedra": 0,
+        "reorientation_s": 0.03394579200539738,
+        "mesh_sha256": "3675483ac0c3c7074c5379ffd13ff4917810e721497e473fe3077452ee16d655",
+        "geometry": {
+          "volume": 0.12320671484324244,
+          "relative_volume_error": -0.0013370538721333425,
+          "q_min_corner": 0.29914002071969775,
+          "q_p01_corner": 0.521696635908945,
+          "minimum_sampled_jacobian": 1.0905151196972124e-08,
+          "facet_consistency": {
+            "nodes": 40350,
+            "elements": 200057,
+            "unique_faces": 410965,
+            "interior_faces": 389263,
+            "extracted_boundary_faces": 21702,
+            "same_orientation_shared_faces": 0,
+            "nonmanifold_faces": 0,
+            "duplicate_cells": 0,
+            "duplicate_surface_faces": 0,
+            "provided_boundary_matches_extraction": true,
+            "missing_provided_faces": 0,
+            "extra_provided_faces": 0,
+            "nonpositive_corner_determinants": 0,
+            "minimum_corner_determinant": 1.0905151196972158e-08,
+            "oriented_facet_consistency_passed": true,
+            "conflict_examples": [],
+            "scope": "Oriented corner-face incidence and same-side neighbor diagnostics; necessary consistency, not a certificate of curved geometry or absence of nonlocal intersections"
+          },
+          "oriented_facet_consistency_passed": true,
+          "quadratic_conformity": {
+            "passed": true,
+            "order": 1
+          },
+          "exact_straight_reduction_verified": false,
+          "geometry_admitted": true,
+          "sampled_forward_max": 0.0013546170822552228,
+          "sampled_reverse_max": 0.0013497007273197974,
+          "sampled_two_sided_max": 0.0013546170822552228,
+          "outward_forward_max": 0.0003028090278399102,
+          "inward_forward_max": 0.0013546170822552228,
+          "projection_failed": 0,
+          "forward_samples": 271102,
+          "reverse_samples": 53248,
+          "minimum_dihedral_deg_corner": 18.646069334703498,
+          "reverse_tessellation_delta_max": 0.0,
+          "quadratic_reverse_subdivisions": null,
+          "projection_method": "newton-box-slsqp-v1",
+          "unbounded_projection_failed": 0,
+          "box_projection_attempts": 0,
+          "box_projection_recovered": 0,
+          "box_projection_witnesses": [],
+          "distance_audit_complete": true,
+          "failed_gates": []
+        },
+        "periodic": {
+          "periodic_pair_counts": [
+            123,
+            123,
+            0
+          ],
+          "periodic_coordinate_errors": [
+            9.43689570931383e-16,
+            9.992007221626409e-16,
+            0.0
+          ],
+          "periodic_pair_tolerance": 1e-10,
+          "periodic_equivalence_classes": 40104,
+          "periodic_triangles_match": true,
+          "full_facet_check_required": true,
+          "complete_existing_node_classes": true,
+          "unmatched_noncap_contact_nodes": [
+            [
+              [],
+              []
+            ],
+            [
+              [],
+              []
+            ],
+            [
+              [],
+              []
+            ]
+          ],
+          "declared_bounds": [
+            [
+              -0.5,
+              -0.5,
+              -0.5
+            ],
+            [
+              0.5,
+              0.5,
+              0.5
+            ]
+          ],
+          "periodic_gate": "declared-cell-material-cap-and-complete-node-classes-v1"
+        },
+        "quality_quantiles": {
+          "min": 0.29914002071969775,
+          "p01": 0.521696635908945,
+          "p10": 0.6502057966291623,
+          "median": 0.8141311411870682,
+          "p90": 0.931007221191863,
+          "p99": 0.9769231073861537,
+          "max": 0.9991499086221316
+        },
+        "status": "admitted",
+        "audit_s": 1.0238574579998385,
+        "route": "Explicit actual CAD/Gmsh size .03 and declared-cell validation plus public MMG with explicit hausd=.0003 and hmax=.03 in both calls",
+        "generation_s": 5.415775291970931,
+        "control": {
+          "name": "actual-cad-size003-declared-cell-mmg-hausd0003-hmax003-both-passes",
+          "gmsh_size": 0.03,
+          "declared_bounds": [
+            [
+              -0.5,
+              -0.5,
+              -0.5
+            ],
+            [
+              0.5,
+              0.5,
+              0.5
+            ]
+          ],
+          "tolerance": 1e-10,
+          "modifications": [
+            "Gmsh size .06 to .03",
+            "Replace periodic predicates with full declared-cell node/facet/class validation",
+            "Request hausd=.0003 and hmax=.03 in both public MMG calls, including the first nofem pass"
+          ],
+          "unchanged": "CAD generation, Gmsh periodic constraints, BoxMesh construction and required triangles, both MMG algorithm modes, retry policy, other MMG arguments and output snapping",
+          "required_triangle_condition": "BoxMesh-selected required triangles must equal declared-cell material-cap triangles exactly",
+          "size_rationale": "Halving chord length predicts about one quarter of the coarse .004369 reverse distance and 1.678% volume error; admission must be measured",
+          "mmg_requested_both_passes": {
+            "hausd": 0.0003,
+            "hmax": 0.03
+          },
+          "resource_rationale": "Radius .15 and hausd .0003 imply a circular chord scale near .019. This is one bounded trial, not a node-count guarantee. Each intermediate retains the 250000-node/tet cap and the worker retains 180 seconds and 8 GiB.",
+          "geometric_scope": "MMG controls distance to its input mesh. Independent analytic geometry admission remains required."
+        }
+      },
+      "wall_s": 8.440646000002744,
+      "effective_mmg_journal": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-cad-union-mmg-tolerance-v1/actual/effective-mmg-calls.json",
+      "effective_mmg_journal_sha256": "b6102521233e80ae40381e9524b2957c5f1dedc2efe6524df93d6aa9b3a3978f",
+      "worker": {
+        "returncode": 0,
+        "limit_failure": null,
+        "peak_rss_bytes": 1650327552,
+        "wall_s": 9.442624165996676,
+        "wall_s_clock": "monotonic",
+        "elapsed_realtime_s": 9.442584753036499,
+        "suspension_or_clock_adjustment_s": -3.941296017728746e-05,
+        "idle_sleep_prevention": [
+          "/usr/bin/caffeinate",
+          "-i"
+        ],
+        "memory_bytes": 8589934592,
+        "memory_enforcement": "process-tree-rss-watchdog",
+        "rss_poll_interval_s": 0.25,
+        "platform": "darwin",
+        "numerical_thread_policy": {
+          "environment": {
+            "OPENBLAS_NUM_THREADS": "1",
+            "OMP_NUM_THREADS": "1",
+            "MKL_NUM_THREADS": "1",
+            "VECLIB_MAXIMUM_THREADS": "1",
+            "RAYON_NUM_THREADS": "1"
+          },
+          "accelerate_blas_threading": 1,
+          "accelerate_scope": "calling thread"
+        }
+      },
+      "directory": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-cad-union-mmg-tolerance-v1/actual"
+    }
+  ],
+  "control": {
+    "name": "actual-cad-size003-declared-cell-mmg-hausd0003-hmax003-both-passes",
+    "gmsh_size": 0.03,
+    "declared_bounds": [
+      [
+        -0.5,
+        -0.5,
+        -0.5
+      ],
+      [
+        0.5,
+        0.5,
+        0.5
+      ]
+    ],
+    "tolerance": 1e-10,
+    "modifications": [
+      "Gmsh size .06 to .03",
+      "Replace periodic predicates with full declared-cell node/facet/class validation",
+      "Request hausd=.0003 and hmax=.03 in both public MMG calls, including the first nofem pass"
+    ],
+    "unchanged": "CAD generation, Gmsh periodic constraints, BoxMesh construction and required triangles, both MMG algorithm modes, retry policy, other MMG arguments and output snapping",
+    "required_triangle_condition": "BoxMesh-selected required triangles must equal declared-cell material-cap triangles exactly",
+    "size_rationale": "Halving chord length predicts about one quarter of the coarse .004369 reverse distance and 1.678% volume error; admission must be measured",
+    "mmg_requested_both_passes": {
+      "hausd": 0.0003,
+      "hmax": 0.03
+    },
+    "resource_rationale": "Radius .15 and hausd .0003 imply a circular chord scale near .019. This is one bounded trial, not a node-count guarantee. Each intermediate retains the 250000-node/tet cap and the worker retains 180 seconds and 8 GiB.",
+    "geometric_scope": "MMG controls distance to its input mesh. Independent analytic geometry admission remains required."
+  },
+  "references": {
+    "saved_native": {
+      "qualified": true,
+      "nodes": 10147,
+      "elements": 49422,
+      "sampled_two_sided_max": 0.0019970384490119583,
+      "sampled_reverse_max": 0.0019790729232667618,
+      "relative_volume_error": -0.006960687364443552,
+      "q_min_corner": 0.309336140652259,
+      "mesh_file": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-cad-union-pair-v1/native/native-tet4/mesh.npz",
+      "mesh_sha256": "b1c89359371b02fb97193c4b29241480b2dc71a3fd7614714fbd2726644fcdc4"
+    },
+    "admitted_direct_cad_gmsh": {
+      "qualified": true,
+      "nodes": 4942,
+      "elements": 22214,
+      "sampled_two_sided_max": 0.0012606502171909199,
+      "sampled_reverse_max": 0.0011040650678918796,
+      "relative_volume_error": -0.004355725000042221,
+      "q_min_corner": 0.2501468683814856,
+      "mesh_file": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-cad-union-declared-control-v1/actual/actual-cad-gmsh-direct/mesh.npz",
+      "mesh_sha256": "bc634663df80b465428fbca659fd7764f3c7e4246bf67c574ba0c50265c4547b"
+    },
+    "rejected_public_mmg": {
+      "qualified": false,
+      "nodes": 1517,
+      "elements": 5955,
+      "sampled_two_sided_max": null,
+      "sampled_reverse_max": 0.007238713807651102,
+      "relative_volume_error": -0.028852267167380097,
+      "q_min_corner": 0.24757468262000795,
+      "mesh_file": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-cad-union-declared-control-v1/actual/actual-cad-gmsh-public-mmg/mesh.npz",
+      "mesh_sha256": "e28c7f5cdc71c66d030ae3aac7c2549d46f9ba3e27d1318682b041950bf4124e"
+    },
+    "observation": "The admitted direct CAD/Gmsh seed uses fewer tetrahedra and nodes and has lower distance and volume error than the saved native mesh. Native minimum quality is higher. No successful speed ratio is asserted."
+  },
+  "complete": true,
+  "original_results_unchanged": true,
+  "successful_performance_ratio": null,
+  "mechanical_accuracy_claim": false
+}

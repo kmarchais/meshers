@@ -1,0 +1,214 @@
+{
+  "control": {
+    "name": "actual-cad-size003-declared-cell-validation",
+    "gmsh_size": 0.03,
+    "declared_bounds": [
+      [
+        -0.5,
+        -0.5,
+        -0.5
+      ],
+      [
+        0.5,
+        0.5,
+        0.5
+      ]
+    ],
+    "tolerance": 1e-10,
+    "modifications": [
+      "Gmsh size .06 to .03",
+      "Replace periodic predicates with full declared-cell node/facet/class validation"
+    ],
+    "unchanged": "CAD generation, Gmsh periodic constraints, BoxMesh construction and required triangles, both public MMG passes, MMG arguments/retries and output snapping",
+    "required_triangle_condition": "BoxMesh-selected required triangles must equal declared-cell material-cap triangles exactly",
+    "size_rationale": "Halving chord length predicts about one quarter of the coarse .004369 reverse distance and 1.678% volume error; admission must be measured"
+  },
+  "validators": [
+    {
+      "phase": "gmsh-output",
+      "passed": true,
+      "mesh_file": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-cad-union-declared-control-v1/actual/validation-1-gmsh-output.vtu",
+      "mesh_sha256": "236a544a51a18c659c13bb08319cb6541ff27f6fa3e6b57d651b57702830e4d4",
+      "periodic": {
+        "periodic_pair_counts": [
+          123,
+          123,
+          0
+        ],
+        "periodic_coordinate_errors": [
+          9.325873406851315e-16,
+          5.995204332975315e-16,
+          0.0
+        ],
+        "periodic_pair_tolerance": 1e-10,
+        "periodic_equivalence_classes": 4696,
+        "periodic_triangles_match": true,
+        "full_facet_check_required": true,
+        "complete_existing_node_classes": true,
+        "unmatched_noncap_contact_nodes": [
+          [
+            [],
+            []
+          ],
+          [
+            [],
+            []
+          ],
+          [
+            [],
+            []
+          ]
+        ],
+        "declared_bounds": [
+          [
+            -0.5,
+            -0.5,
+            -0.5
+          ],
+          [
+            0.5,
+            0.5,
+            0.5
+          ]
+        ],
+        "periodic_gate": "declared-cell-material-cap-and-complete-node-classes-v1"
+      }
+    },
+    {
+      "phase": "mmg-input",
+      "passed": true,
+      "mesh_file": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-cad-union-declared-control-v1/actual/validation-2-mmg-input.vtu",
+      "mesh_sha256": "236a544a51a18c659c13bb08319cb6541ff27f6fa3e6b57d651b57702830e4d4",
+      "periodic": {
+        "periodic_pair_counts": [
+          123,
+          123,
+          0
+        ],
+        "periodic_coordinate_errors": [
+          9.325873406851315e-16,
+          5.995204332975315e-16,
+          0.0
+        ],
+        "periodic_pair_tolerance": 1e-10,
+        "periodic_equivalence_classes": 4696,
+        "periodic_triangles_match": true,
+        "full_facet_check_required": true,
+        "complete_existing_node_classes": true,
+        "unmatched_noncap_contact_nodes": [
+          [
+            [],
+            []
+          ],
+          [
+            [],
+            []
+          ],
+          [
+            [],
+            []
+          ]
+        ],
+        "declared_bounds": [
+          [
+            -0.5,
+            -0.5,
+            -0.5
+          ],
+          [
+            0.5,
+            0.5,
+            0.5
+          ]
+        ],
+        "periodic_gate": "declared-cell-material-cap-and-complete-node-classes-v1"
+      }
+    },
+    {
+      "phase": "mmg-output",
+      "passed": true,
+      "mesh_file": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-cad-union-declared-control-v1/actual/validation-3-mmg-output.vtu",
+      "mesh_sha256": "5582c5951a7853d9f218f9e0b67734bafe070d35ce84ff3d63bf58b1d032b96c",
+      "periodic": {
+        "periodic_pair_counts": [
+          123,
+          123,
+          0
+        ],
+        "periodic_coordinate_errors": [
+          9.43689570931383e-16,
+          9.992007221626409e-16,
+          0.0
+        ],
+        "periodic_pair_tolerance": 1e-10,
+        "periodic_equivalence_classes": 1271,
+        "periodic_triangles_match": true,
+        "full_facet_check_required": true,
+        "complete_existing_node_classes": true,
+        "unmatched_noncap_contact_nodes": [
+          [
+            [],
+            []
+          ],
+          [
+            [],
+            []
+          ],
+          [
+            [],
+            []
+          ]
+        ],
+        "declared_bounds": [
+          [
+            -0.5,
+            -0.5,
+            -0.5
+          ],
+          [
+            0.5,
+            0.5,
+            0.5
+          ]
+        ],
+        "periodic_gate": "declared-cell-material-cap-and-complete-node-classes-v1"
+      }
+    }
+  ],
+  "required_triangles": [
+    {
+      "boxmesh_bounds": [
+        [
+          -0.5,
+          -0.5,
+          -0.15
+        ],
+        [
+          0.5,
+          0.5,
+          0.15
+        ]
+      ],
+      "declared_bounds": [
+        [
+          -0.5,
+          -0.5,
+          -0.5
+        ],
+        [
+          0.5,
+          0.5,
+          0.5
+        ]
+      ],
+      "selected_triangles": 848,
+      "declared_cap_triangles": 848,
+      "duplicate_selections": 0,
+      "extra_selected_ids": [],
+      "missing_cap_ids": [],
+      "equal": true,
+      "mesh_file": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-cad-union-declared-control-v1/actual/boxmesh-required-triangles.vtp",
+      "mesh_sha256": "cf3b2d56ad50bf5df806c15f7bcae07e7769a72aeb25c46de3ba39b97b563884"
+    }
+  ]
+}

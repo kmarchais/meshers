@@ -1,0 +1,44 @@
+{
+  "inputs": {
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/pmy_failure_probe.py": "6a3b57434d5c8586dea67aa67bd8e2ca69ca4e16f0098a0cd4834463109883f7",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/microgen_workflow.py": "9f513dfd3e6e5a72a71a54f70c0c2cf7c7a1ebe7256886ee3feaf7d7ad7de161",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/tpms_family_fixtures.py": "794418f5d2e3d2158542af51a5cf322c41befff8f8d7c98f769d379baedd3bc6",
+    "/Users/kmarchais/dev/meshers/.local-work/macbook-runtime/venv/lib/python3.12/site-packages/microgen/shape/surface_functions.py": "578c20eb2ef424b95f50618d9cfffdce3676d6b5bdcd90a3278e0ca5ef1af4b4",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-tpms-family-remaining-v1/tpms-pmy-sheet-native-fit/mesh.npz": "bf61791bd075c9a11695604765ff3d21d133301517dabdd209b697c6bd7e1c0a",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-tpms-family-remaining-v1/tpms-pmy-sheet-native-fit/result.json": "577826b51807028f97c0067be72af153d6c7776fa2278e52a3a65e0c322f0daa",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-tpms-hard-failures-v1/result.json": "8827f38d48180df8206136e4d909d656ab23cf3c8a1b02a2b472dd8fe06d8b77",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-tpms-remaining-adaptation-v1/tpms-pmy-sheet-native-adaptive/result.json": "8ae71c8d532d26a3efff62657c1b0fd8a27ff84e447de8e0e741c87e9a53cf35",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-tpms-family-fixtures-v1/result.json": "1f3907ba0acf691628d0eb588b0f4325c2abdc8c24efb75a251f60ccca5681f2",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-tpms-family-fixtures-v1/tpms-pmy-sheet/tpms-pmy-sheet-specimen.json": "65f653b5b5df833c4f7b9ebeef839555c76690e1a4e95c6011719d042a77c67a",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-tpms-family-fixtures-v1/tpms-pmy-sheet/tpms-pmy-sheet-samples.npz": "66cd3e81d5bad83b63c3bbc96696d732170ed37049dd4ff1dad868b39dbaf2f1",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-tpms-family-fixtures-v1/tpms-pmy-sheet/tpms-pmy-sheet-definition.json": "a0b3623510422678fd46dbfec702d7ebfb03e14272f7016b002e5b2594a662b6",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/scorecard.py": "8f26256c7df0e84c9f35cdd71bf4f95a74e072d45469002b213c5dcd4f1bab2a",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/quadratic_edge_removal_probe.py": "f26a4be16f7aeb4fce6d89732754fab0e5d39e86b4d4c62466a3afd547cec6ed",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/quadrature_audit.py": "020677df452ec86864e687c9b35e2c69e70f8587ec54240ce0c4eaa4b717319e",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/nested_refinement.py": "7f78251d150ebcee928db1b49e22b64ee89efde5cdc238c1f5b9994aad36a6b8",
+    "/Users/kmarchais/dev/meshers/crates/meshers-core/src/projection.rs": "926d1ab1c848cf80cc392295764d7bf8f2254dfb62f219639db7e5a4194acf84",
+    "/Users/kmarchais/dev/meshers/crates/meshers-core/src/tet_adapt.rs": "671e2343d3a72bdd60ddbad8911f75427556ed5cc94e89de88f9db824d29bf36",
+    "/Users/kmarchais/dev/meshers/crates/meshers-core/src/quadratic.rs": "fff22efd06011a427b139e2612bce70dc46e85e6b4a07047c2bcc6a8a3b2428c",
+    "/Users/kmarchais/dev/meshers/crates/meshers-core/src/quadratic/fit.rs": "bc310e4624599686286909ed40db4e9f8b10cce06a713b4fba2a9b598ef4eae3"
+  },
+  "numerical_threads": {
+    "environment": {
+      "OPENBLAS_NUM_THREADS": "1",
+      "OMP_NUM_THREADS": "1",
+      "MKL_NUM_THREADS": "1",
+      "VECLIB_MAXIMUM_THREADS": "1",
+      "RAYON_NUM_THREADS": "1"
+    },
+    "accelerate_blas_threading": 1,
+    "accelerate_scope": "calling thread"
+  },
+  "gate_distance": 0.002,
+  "gate_nodes": 250000,
+  "gate_tets": 250000,
+  "timeout_s": 180,
+  "memory_bytes": 8589934592,
+  "protocol": "Saved coarse PMY mesh only. Adaptive attempt has no saved mesh because the cap check preceded saving.",
+  "witness_budget": 8,
+  "no_generation": true,
+  "no_admission_claim": true
+}

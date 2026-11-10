@@ -1,0 +1,8 @@
+controls: passed True]7717;result;{"name": "controls", "values": {"passed": true}, "at": "2026-11-10T19:40:34+01:00"}
+forward: largest_overstatement 0.05064]7717;result;{"name": "forward", "values": {"largest_overstatement": 0.0506380747530788}, "at": "2026-11-10T19:40:34+01:00"}
+/Users/kmarchais/dev/meshers/experiments/adaptive/pmy_failure_probe.py:181: DeprecationWarning: Call to deprecated method SetCells. (Use ImportLegacyFormat or SetData instead.) -- Deprecated since version 9.6.0.
+  cells.SetCells(len(faces), numpy_to_vtkIdTypeArray(np.column_stack((np.full(len(faces), 3), faces)).astype(np.int64).ravel(), deep=True))
+reverse: proven_gaps 8]7717;result;{"name": "reverse", "values": {"proven_gaps": 8}, "at": "2026-11-10T19:40:35+01:00"}
+/Users/kmarchais/dev/meshers/.local-work/macbook-runtime/venv/lib/python3.12/site-packages/fedoo/core/base.py:80: UserWarning: WARNING: no fast direct sparse solver has been found. Consider installing pypardiso (Intel) or python-mumps (any platform) to improve computation performance
+  warnings.warn(
+local-stars: blocked_faces 8]7717;result;{"name": "local-stars", "values": {"blocked_faces": 8}, "at": "2026-11-10T19:40:35+01:00"}

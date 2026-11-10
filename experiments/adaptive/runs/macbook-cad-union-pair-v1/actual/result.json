@@ -1,0 +1,150 @@
+{
+  "arm": "actual",
+  "status": "failed",
+  "qualified": false,
+  "phase_seconds": {
+    "shape_setup": 0.0013585419801529497,
+    "cad_generate": 0.7430367080087308,
+    "cad_volume_check": 0.0016453750140499324,
+    "step_export": 0.01725350000197068,
+    "public_cad_gmsh": 0.12517658399883658,
+    "gmsh_read": 0.029839082999387756,
+    "gmsh_seed_extract": 0.01723845797823742,
+    "direct_archive_audit": 1.0344630419858731
+  },
+  "mmg_calls": [],
+  "mmg_instrumentation_s": 0.0,
+  "vtk_backend": "Sequential",
+  "numerical_threads": 1,
+  "solve_performed": false,
+  "active_phase": "direct_archive_audit",
+  "cad_volume": 0.12337166944279454,
+  "cad_step_sha256": "5f73bea71e5ee06c4544b7dc67c5c6ba3fbea5b313f8366ba9bcbddbaf224352",
+  "gmsh_public_error": {
+    "type": "OutputMeshNotPeriodicError",
+    "message": "Something went wrong: output mesh from mesh_periodic is not periodic.\n Try changing tolerance value or mesh size parameter",
+    "traceback": "Traceback (most recent call last):\n  File \"/Users/kmarchais/dev/meshers/experiments/adaptive/cad_union_comparison.py\", line 212, in actual_worker\n    microgen.mesh_periodic(mesh_file=str(step), rve=shape.rve,\n  File \"/Users/kmarchais/dev/meshers/.local-work/macbook-runtime/venv/lib/python3.12/site-packages/microgen/mesh.py\", line 80, in mesh_periodic\n    _check_output_mesh_periodicity(output_file, tol)\n  File \"/Users/kmarchais/dev/meshers/.local-work/macbook-runtime/venv/lib/python3.12/site-packages/microgen/mesh.py\", line 293, in _check_output_mesh_periodicity\n    raise OutputMeshNotPeriodicError(err_msg)\nmicrogen.mesh.OutputMeshNotPeriodicError: Something went wrong: output mesh from mesh_periodic is not periodic.\n Try changing tolerance value or mesh size parameter\n"
+  },
+  "gmsh_seed_sha256": "6113e8ece7da6449b8def24df2784cbcaafab44ea8d58d686a8135b06d2f3b43",
+  "seed_nodes": 922,
+  "seed_elements": 3275,
+  "cad_gmsh_read_s": 0.9183097920031287,
+  "direct_generation_s": 0.9361946249846369,
+  "direct": {
+    "nodes": 922,
+    "elements": 3275,
+    "order": 1,
+    "qualified": false,
+    "mesh_file": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-cad-union-pair-v1/actual/actual-cad-gmsh-direct/mesh.npz",
+    "raw_mesh_sha256": "7ae297ecb359d168d0b302593ecb6e8206f695ad7201d6f37d822923ef740b1d",
+    "reoriented_tetrahedra": 0,
+    "reorientation_s": 0.0006463750032708049,
+    "mesh_sha256": "7ae297ecb359d168d0b302593ecb6e8206f695ad7201d6f37d822923ef740b1d",
+    "geometry": {
+      "volume": 0.12130127395096961,
+      "relative_volume_error": -0.01678177389060609,
+      "q_min_corner": 0.24613070306259355,
+      "q_p01_corner": 0.29647534665644404,
+      "minimum_sampled_jacobian": 6.22284813016289e-05,
+      "facet_consistency": {
+        "nodes": 922,
+        "elements": 3275,
+        "unique_faces": 7252,
+        "interior_faces": 5848,
+        "extracted_boundary_faces": 1404,
+        "same_orientation_shared_faces": 0,
+        "nonmanifold_faces": 0,
+        "duplicate_cells": 0,
+        "duplicate_surface_faces": 0,
+        "provided_boundary_matches_extraction": true,
+        "missing_provided_faces": 0,
+        "extra_provided_faces": 0,
+        "nonpositive_corner_determinants": 0,
+        "minimum_corner_determinant": 6.222848130162884e-05,
+        "oriented_facet_consistency_passed": true,
+        "conflict_examples": [],
+        "scope": "Oriented corner-face incidence and same-side neighbor diagnostics; necessary consistency, not a certificate of curved geometry or absence of nonlocal intersections"
+      },
+      "oriented_facet_consistency_passed": true,
+      "quadratic_conformity": {
+        "passed": true,
+        "order": 1
+      },
+      "exact_straight_reduction_verified": false,
+      "geometry_admitted": false,
+      "sampled_reverse_max": 0.0043692670811704745,
+      "distance_audit_complete": false,
+      "projection_failed": null,
+      "audit_scope": "Fail-fast after required quality/volume/topology/periodicity rejection; no forward-distance or successful speed claim",
+      "failed_gates": [
+        "volume"
+      ]
+    },
+    "periodic": {
+      "periodic_pair_counts": [
+        41,
+        41,
+        0
+      ],
+      "periodic_coordinate_errors": [
+        9.325873406851315e-16,
+        5.995204332975315e-16,
+        0.0
+      ],
+      "periodic_pair_tolerance": 1e-10,
+      "periodic_equivalence_classes": 840,
+      "periodic_triangles_match": true,
+      "full_facet_check_required": true,
+      "complete_existing_node_classes": true,
+      "unmatched_noncap_contact_nodes": [
+        [
+          [],
+          []
+        ],
+        [
+          [],
+          []
+        ],
+        [
+          [],
+          []
+        ]
+      ],
+      "declared_bounds": [
+        [
+          -0.5,
+          -0.5,
+          -0.5
+        ],
+        [
+          0.5,
+          0.5,
+          0.5
+        ]
+      ],
+      "periodic_gate": "declared-cell-material-cap-and-complete-node-classes-v1"
+    },
+    "quality_quantiles": {
+      "min": 0.24613070306259355,
+      "p01": 0.29647534665644404,
+      "p10": 0.5278839748607914,
+      "median": 0.7267876255553702,
+      "p90": 0.8852182314138932,
+      "p99": 0.9519396364628401,
+      "max": 0.999529023534509
+    },
+    "status": "public-route-failed",
+    "audit_s": 1.0256617920240387,
+    "route": "Actual Microgen CAD/STEP/Gmsh, without MMG",
+    "generation_s": 0.9361946249846369,
+    "public_route_error": {
+      "type": "OutputMeshNotPeriodicError",
+      "message": "Something went wrong: output mesh from mesh_periodic is not periodic.\n Try changing tolerance value or mesh size parameter",
+      "traceback": "Traceback (most recent call last):\n  File \"/Users/kmarchais/dev/meshers/experiments/adaptive/cad_union_comparison.py\", line 212, in actual_worker\n    microgen.mesh_periodic(mesh_file=str(step), rve=shape.rve,\n  File \"/Users/kmarchais/dev/meshers/.local-work/macbook-runtime/venv/lib/python3.12/site-packages/microgen/mesh.py\", line 80, in mesh_periodic\n    _check_output_mesh_periodicity(output_file, tol)\n  File \"/Users/kmarchais/dev/meshers/.local-work/macbook-runtime/venv/lib/python3.12/site-packages/microgen/mesh.py\", line 293, in _check_output_mesh_periodicity\n    raise OutputMeshNotPeriodicError(err_msg)\nmicrogen.mesh.OutputMeshNotPeriodicError: Something went wrong: output mesh from mesh_periodic is not periodic.\n Try changing tolerance value or mesh size parameter\n"
+    }
+  },
+  "error_type": "OutputMeshNotPeriodicError",
+  "error": "Something went wrong: output mesh from mesh_periodic is not periodic.\n Try changing tolerance value or mesh size parameter",
+  "traceback": "Traceback (most recent call last):\n  File \"/Users/kmarchais/dev/meshers/experiments/adaptive/cad_union_comparison.py\", line 354, in worker\n    actual_worker(run, row)\n  File \"/Users/kmarchais/dev/meshers/experiments/adaptive/cad_union_comparison.py\", line 244, in actual_worker\n    raise public_error\n  File \"/Users/kmarchais/dev/meshers/experiments/adaptive/cad_union_comparison.py\", line 212, in actual_worker\n    microgen.mesh_periodic(mesh_file=str(step), rve=shape.rve,\n  File \"/Users/kmarchais/dev/meshers/.local-work/macbook-runtime/venv/lib/python3.12/site-packages/microgen/mesh.py\", line 80, in mesh_periodic\n    _check_output_mesh_periodicity(output_file, tol)\n  File \"/Users/kmarchais/dev/meshers/.local-work/macbook-runtime/venv/lib/python3.12/site-packages/microgen/mesh.py\", line 293, in _check_output_mesh_periodicity\n    raise OutputMeshNotPeriodicError(err_msg)\nmicrogen.mesh.OutputMeshNotPeriodicError: Something went wrong: output mesh from mesh_periodic is not periodic.\n Try changing tolerance value or mesh size parameter\n",
+  "wall_s": 1.9735837080224883
+}
