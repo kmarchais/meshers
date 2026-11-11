@@ -1,5 +1,28 @@
 # Meshers project tracking
 
+## MMG backend and launch drafts, 11 November 2026
+
+Microgen integration commit `2a534cd` adds `backend="mmg"` to Shape, Cartesian
+and mapped TPMS volume paths, and Spinodoid. It calls the existing VTK volume
+method and then `remesh_keeping_boundaries_for_fem` with unchanged options,
+defaults and failures. The remesher's `periodic=True` default is retained;
+nonperiodic specimens need `periodic=False`. VTK remains the default backend.
+No new Meshers algorithm or runtime dependency is introduced.
+
+Job 865 passes 45 selected tests, including dispatch checks for three shape
+entry points and a real MMG CLI run. Job 866 executes the article's periodic
+Gyroid example successfully, returning 12,095 nodes and 50,655 Tet4 elements.
+This is an API check, not a new independent scientific admission result.
+
+Website branch `codex/meshers-article-draft` contains a hidden draft MDX article,
+a LinkedIn draft, two PNG/SVG figures, exported CSV/JSON metrics and a script
+that checks source summaries against frozen study commit `4eea25a`. Job 867
+passes the website production build. No article was deployed or post sent.
+The lead comparison is the three admitted Tet4 capsule/ellipsoid/sphere pairs
+against explicitly modified actual Microgen+MMG, not defaults. Spinodoid native
+before/after results and quality tradeoffs are separate. The complete failures,
+strict gates and unresolved lattice stiffness references remain unchanged.
+
 ## Microgen integration and release scope audit, 11 November 2026
 
 Microgen's `codex/meshers-backend-integration` branch adds an optional volume
