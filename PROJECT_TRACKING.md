@@ -1,5 +1,55 @@
 # Meshers project tracking
 
+## PR #6 readiness review and TPMS video, 11 November 2026
+
+Kevin requested a subagent review of PR #6 before v0.2.0. Two read-only
+reviewers checked standards/packaging and correctness/compatibility against
+head `009f666cd235a4926d6defd5142e4ed19ea0e528`, base `d1324b7`.
+The verdict is **not ready to publish**:
+
+- All three CPU-core CI jobs fail because stable Clippy rejects the new
+  `chunks_exact(2)` in `implicit.rs:709`. Those jobs stop before their native
+  tests, crate packaging and rustdoc checks. Wheel builds on all four hosts,
+  the sdist, all nine Python jobs, coverage and performance pass.
+- Cargo and Python distributions still identify as 0.1.0. A coordinated
+  manifest/dependency/lockfile bump is needed before final v0.2.0 artifacts.
+- Opt-in Tet10 VTKHDF `Volume` and public volume diagnostics still describe
+  the four-corner linear parent. The sphere control with cells=6 and order=2
+  has 936 cells: exported volume 0.25703727625983835 versus exact curved-cell
+  integration 0.2680271830844921, a 4.1003% underestimate. Maximum per-cell
+  discrepancy is 24.37%. The parent independently reproduced the export bug
+  in `.local-work/release-readiness-20261111/tet10_volume.py`, with its JSON
+  receipt. Fix curved volumes or label parent metrics explicitly. Corner-based
+  MMG quality also needs clear interpretation for quadratic cells.
+
+No integration-critical Tet4 blocker was found in the inspected paths.
+Fresh reviewer controls reproduce the 10,832-tet / 3,283-node Gyroid, while
+Tet10 retains 10,832 cells with 19,931 nodes. Periodic shifts match within
+1e-14. These are API/regression controls, not a new admitted scientific result.
+No release source was changed, no review posted, and nothing merged or tagged.
+The final versioned commit still needs complete green checks and inspected
+artifacts under the repository's release procedure.
+
+The website draft now contains one actual Meshers Gyroid viewer and plots for
+runtime, counts, periodic node error, all six quality summaries and the full
+quality CDF. The dual-mesh poster and large tables were removed. Kevin selected
+a TPMS morph as the LinkedIn opening. The 14-second, 1080x1350, 30-fps video
+morphs illustrative Gyroid/P/Diamond fields, then shows the actual Gyroid Tet4
+mesh and a whole-cell cutaway. The opening is explicitly labeled illustration;
+no live timing or qualified speedup is implied. Benchmark meshes, hashes,
+measurements and admission gates remain unchanged. Both coarse Gyroid routes
+still miss the strict boundary target.
+
+Media checks: job 874 failed vendor-code lint; separating Three.js from the
+authored seek-driven script resolved it. Jobs 875–877 pass lint/runtime/layout/
+contrast and keyframe review. Job 878 completed the one-worker video render
+with peak process-tree RSS 1.160 GiB. Its 420 H.264 frames decode without errors.
+Job 879 passes the final single-Gyroid article production build.
+Editorial sources and receipts are in website branch
+`codex/meshers-article-draft`, under `content/drafts/meshers`; they remain outside
+the release PR. No website deployment or LinkedIn post was sent.
+
+
 ## Gyroid flagship and PR scope correction, 11 November 2026
 
 Kevin selected the Gyroid unit cell as the editorial flagship. The article,
