@@ -1,0 +1,1145 @@
+{
+  "passed": true,
+  "attempts": 214,
+  "returned_artifacts": 209,
+  "distinct_array_sets": 41,
+  "repeated_cases": 14,
+  "measured_pairs": 70,
+  "source_snapshots_resolved": [
+    {
+      "original": "/Users/kmarchais/dev/meshers/experiments/adaptive/tpms_tet4_count_benchmark.py",
+      "archived": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-tpms-tet4-count-pilot-v1/study/driver.py",
+      "sha256": "f22f6c91de677841a22a94a60decdce960497ad64334e32701d5feba03401e9d"
+    }
+  ],
+  "artifacts": {
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-tpms-tet4-count-pilot-v1/study/repeat-0-tpms-gyroid-sheet-actual/mesh.npz": {
+      "sha256": "cd733a49f71fad803baea5a5f173525c69622d8190f2044fb5948193de87e809",
+      "array_sha256": "c14acb10049a9653e920ed0350c0a3657ff2945d7ff89cecb560d167358295e7"
+    },
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-tpms-tet4-count-pilot-v1/study/repeat-0-tpms-gyroid-sheet-native/mesh.npz": {
+      "sha256": "61299c16f15874e6dc3f27ceafbe8cf31cd56e88bce96ee9a1b50d07358f34a5",
+      "array_sha256": "b52403b41318d8d776ef797e7f92c6974220bea72620262922f26eb8abeed47f"
+    },
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-tpms-tet4-count-pilot-v1/study/repeat-0-tpms-schwarz-p-sheet-actual/mesh.npz": {
+      "sha256": "972f35f7d8c3100806e4658dddde08714935a5ce26595c855489108dc3fbc381",
+      "array_sha256": "a6ad310c567fbf44dadbe997c4d60ef202b344a071f09cda24d0d8773e0289a7"
+    },
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-tpms-tet4-count-pilot-v1/study/repeat-0-tpms-schwarz-p-sheet-native/mesh.npz": {
+      "sha256": "885db88afda67cba0277c8007fd0409898925a6b86a81732fecdfeb77dfa0952",
+      "array_sha256": "2e22f299de5ace5393f2b0f8c9541e6a11e460b0795bb32627175a514a19e506"
+    },
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-tpms-tet4-count-pilot-v1/study/repeat-0-tpms-schwarz-d-sheet-actual/mesh.npz": {
+      "sha256": "323fe0530404720f55921fd2b0ce7142f04901d2821b2e51cbcbf095e65a8570",
+      "array_sha256": "cdb2821c1427ce4edecd67d654b7e3138bc558d962d00e130ab67c9f97aecdad"
+    },
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-tpms-tet4-count-pilot-v1/study/repeat-0-tpms-schwarz-d-sheet-native/mesh.npz": {
+      "sha256": "ad9434733f189193efb578080cda85f1587656b7b29e7fe94d028ce2dd25fae5",
+      "array_sha256": "e18401d56671a7cafff0851969168bdfa23e452305559a85cc03d69539f91f4a"
+    },
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-tpms-tet4-count-pilot-v1/study/repeat-0-tpms-neovius-sheet-actual/mesh.npz": {
+      "sha256": "9cf2780ddb4347003a97e8175934705ec4c89c5b19d9abdfa124bcac61b5a857",
+      "array_sha256": "07378cc7ed4091432ab7cd1d59ebaf405113a3ab5570bd86c6dae3fb0e865d97"
+    },
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-tpms-tet4-count-pilot-v1/study/repeat-0-tpms-neovius-sheet-native/mesh.npz": {
+      "sha256": "eb199adbce19678baa32e77009bf4ae6396f328667dac355809cda15417848cf",
+      "array_sha256": "aaaa3b0c781cb5abef4565bf302c2be990c92208d44c814cb1c115d37ac541ff"
+    },
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-tpms-tet4-count-pilot-v1/study/repeat-0-tpms-schoen-iwp-sheet-actual/mesh.npz": {
+      "sha256": "2febabdd70d846377ad0ca476e96c3c27c8c250223f4e3fdca51c87547d7981b",
+      "array_sha256": "a60199b1b9279c762c583b56fe7eb6ab0d9306642cd17b8b406e57bd17f3cdc9"
+    },
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-tpms-tet4-count-pilot-v1/study/repeat-0-tpms-schoen-iwp-sheet-native/mesh.npz": {
+      "sha256": "d49c4744764d7727df94b404cad2e4354c2e2621d5a48c3700737440be09cf96",
+      "array_sha256": "78f2c2d41840240d1c72c773ba4661c36fa2c9c611e2a1c41bb56381bf1832bd"
+    },
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-tpms-tet4-count-pilot-v1/study/repeat-0-tpms-schoen-frd-sheet-actual/mesh.npz": {
+      "sha256": "e8f2f89581a1183c360be9d6813a9ad4b6cbec8399dc239c88f03a9f1a7105ab",
+      "array_sha256": "fadd24a84e71248297fb5b7a9c7b92227bdad28ab19c0d347ff0957050d58139"
+    },
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-tpms-tet4-count-pilot-v1/study/repeat-0-tpms-schoen-frd-sheet-native/mesh.npz": {
+      "sha256": "8189cb843377e320c73c0250046307e0ad0df3d26eea839552ee2ddc86dc7e8c",
+      "array_sha256": "565938cf2dd8122185b06203b1e0b2d9ba6fc38ddcdc5c4f8032df77901657c7"
+    },
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-tpms-tet4-count-pilot-v1/study/repeat-0-tpms-pmy-sheet-actual/mesh.npz": {
+      "sha256": "9ac950a7cb36db5013a2fcb91fd21ac3fb6f1386046784ee69c9926bd9e5ec01",
+      "array_sha256": "59b14ad66e8e50cf531fe08f535d5ee55f2a80b0c0505c9caf2ec77c6caefbc6"
+    },
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-tpms-tet4-count-pilot-v1/study/repeat-0-tpms-pmy-sheet-native/mesh.npz": {
+      "sha256": "a1590ede0925903caf0f9e5c47c36ab3791fbca347cbfd4c59d868402c07b13a",
+      "array_sha256": "0564be3ab679f6016874027b0d119301b3284ba4bf875122601072f5c32c2fb1"
+    },
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-tpms-tet4-count-pilot-v1/study/repeat-0-tpms-honeycomb-sheet-actual/mesh.npz": {
+      "sha256": "7be974f5f2f706a86df092fd9810fb0d14deabb1823367e9ae89cab38d51602a",
+      "array_sha256": "15a750d97811f1079a5260e930527cbb5a4a0ea8c004913fd6665814eb9cac2c"
+    },
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-tpms-tet4-count-pilot-v1/study/repeat-0-tpms-lidinoid-sheet-actual/mesh.npz": {
+      "sha256": "0a5b2bce68fe6bd730a2ef991fba2d4f6ad1ab11ed7344c4469d37119ae493f5",
+      "array_sha256": "cbc48cc1a2a4fb36b690cf1247ab9b6304d8f3e5b6de1c2b1b22ead5ac3ea5cd"
+    },
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-tpms-tet4-count-pilot-v1/study/repeat-0-tpms-lidinoid-sheet-native/mesh.npz": {
+      "sha256": "8afa85a9d713dcfd9e2e598fd18d20ca7ae8880ada6cd7e474fb8ee4ba2f5882",
+      "array_sha256": "93f66089d2f1c8b1d940af8ab3cdc85e7a780e1cb8576e627179f217b288c633"
+    },
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-tpms-tet4-count-pilot-v1/study/repeat-0-tpms-split-p-sheet-native/mesh.npz": {
+      "sha256": "74e74c5de2594489938f58f53c40ee490b95fafe43cf9350cc028ece2d46a5e7",
+      "array_sha256": "9fd42fc8bb3fc0a5525110b23d19fbad46dd73b12a3afc5d06ac25f151b2f41e"
+    },
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-tpms-tet4-count-pilot-v1/study/repeat-0-tpms-honeycomb-gyroid-sheet-actual/mesh.npz": {
+      "sha256": "94f0c3948d348d7b7fa29bc1411ecc164d367c64a8c5f7cad5a771f560c182f5",
+      "array_sha256": "f3d6ab2326e34cb85dde2735001b20107f314a16a76e582cecdf337dddd8c4ae"
+    },
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-tpms-tet4-count-pilot-v1/study/repeat-0-tpms-honeycomb-gyroid-sheet-native/mesh.npz": {
+      "sha256": "775f74044f4dd39dfef2de58af20091f2864ae825922bc5c812c07b13f51e313",
+      "array_sha256": "fdde4ac322a9defb213b9c1538eb6b3e34e000b643e86262b544b3eeab188f84"
+    },
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-tpms-tet4-count-pilot-v1/study/repeat-0-tpms-honeycomb-schwarz-p-sheet-actual/mesh.npz": {
+      "sha256": "e897c94f34ea7915299b4a16c7e279db0784363dd1c23a1c3b613d69dd2be7cf",
+      "array_sha256": "728b5a692bb6946b0f37da3010bd7774722a615fe1d0935f4a8895534074be7f"
+    },
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-tpms-tet4-count-pilot-v1/study/repeat-0-tpms-honeycomb-schwarz-p-sheet-native/mesh.npz": {
+      "sha256": "b8dff2dbe0392a9b82157efa617269deca93c9739ad8783f22f7bf6faa0c45c9",
+      "array_sha256": "3b9c19446df3c39c5f727b4877ad829472c1037110c598b69e27a36fa66f5ee6"
+    },
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-tpms-tet4-count-pilot-v1/study/repeat-0-tpms-honeycomb-schwarz-d-sheet-actual/mesh.npz": {
+      "sha256": "b2efab1e9b96f0434400e394c84b8a63e26129f325105ab8b1d14327e9be5159",
+      "array_sha256": "3d7318e062d0b66a484b9184e7aae3e55f1effff5a642da024aef6b8171fcc58"
+    },
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-tpms-tet4-count-pilot-v1/study/repeat-0-tpms-honeycomb-schwarz-d-sheet-native/mesh.npz": {
+      "sha256": "a5b3b466499b8ecc64cddc1d3e4648e032340272c0ce7246bd411fc743d91c41",
+      "array_sha256": "489f02927ce64ef5df63103a0b69a10cb36e38fa66a8d91f496e05244238fe1e"
+    },
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-tpms-tet4-count-pilot-v1/study/repeat-0-tpms-honeycomb-schoen-iwp-sheet-actual/mesh.npz": {
+      "sha256": "931a93f3dd00ac4e873bd5d43a09141806f0745c2809d4bd238ccebed0ddc82e",
+      "array_sha256": "dbc63eecea6bafaa1b9afdcdbbc585bb4ae5804c44db3d1b589d1077f24152a8"
+    },
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-tpms-tet4-count-pilot-v1/study/repeat-0-tpms-honeycomb-schoen-iwp-sheet-native/mesh.npz": {
+      "sha256": "b463f5c31c7d31bc5580f7426ef75cbd3e93bba9e07192fc991652afd789b76a",
+      "array_sha256": "05bd16323144bd7c982e26c71e996682a14ae0ab8812469dde1d212130c238e4"
+    },
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-tpms-tet4-count-pilot-v1/study/repeat-0-tpms-honeycomb-lidinoid-sheet-actual/mesh.npz": {
+      "sha256": "bae40c32313fc8b9413a282ea13d83b1ada0cf2d72cda908e7ef0c2cf05044e9",
+      "array_sha256": "6f8930db08971eed6dfb9a4886a44c37021fc4e0e34712fb938b2cae46520557"
+    },
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-tpms-tet4-count-pilot-v1/study/repeat-0-tpms-honeycomb-lidinoid-sheet-native/mesh.npz": {
+      "sha256": "68a12da3072efe8fa11020f1cd9f94a628be66c0e7eb24dabd70d7782e75cac1",
+      "array_sha256": "21805b9903d41c3d479389a1a111f0222010761761cad0b6a2cfd4dc4a33beed"
+    },
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-tpms-tet4-count-pilot-v1/study/repeat-0-schwarz-solid-actual/mesh.npz": {
+      "sha256": "cdffabf8fb4d9d9d8d24baa273afe19f0da4958f1e2716a6f4140c05cd17036b",
+      "array_sha256": "14180f86b55f4538d439a6f971e3ad6d403e81a0c151996eefac3494ce1a206d"
+    },
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-tpms-tet4-count-pilot-v1/study/repeat-0-schwarz-solid-native/mesh.npz": {
+      "sha256": "9629851d4ddf2b2103ed2b4d71c601b2e015f99a7d638c9677814c593d2db5fa",
+      "array_sha256": "6ac913d9806bb64a61c22d7410c909925e5093e0dda7a032e5212cbe04134af2"
+    },
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-tpms-tet4-count-pilot-v1/study/repeat-0-schwarz-d-solid-native/mesh.npz": {
+      "sha256": "e84902b43e0e0605435b77bd8594aa4512d023f2339475aa0433455547999588",
+      "array_sha256": "5a87a94acbaafe16902e1585e4ab4c080d82af5aac82198df68f3c6d1ee29679"
+    },
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-tpms-tet4-count-correction-v1/study/repeat-0-tpms-gyroid-sheet-native/mesh.npz": {
+      "sha256": "c7f09ee64d6316dede5d9ea5612ad3b897902cd27d088ae0166bf29cce4be64b",
+      "array_sha256": "37ecf758142f3d9bdf58d66d87a449144a0613eb7ef6891f061a731188c838f8"
+    },
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-tpms-tet4-count-correction-v1/study/repeat-0-tpms-schwarz-p-sheet-native/mesh.npz": {
+      "sha256": "84b712feb6ae953ffab390601a1367d225cadc05ea01b09eafb72f293d3b7a78",
+      "array_sha256": "18ed5f588c244b79ec3a0eab9a3f4894c608cb9380352009ead48e53185c16f3"
+    },
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-tpms-tet4-count-correction-v1/study/repeat-0-tpms-schwarz-d-sheet-native/mesh.npz": {
+      "sha256": "efa6655357a7c600f4a308830dfd630c228527acdeac5167c242f1b782f3d1b1",
+      "array_sha256": "4be58b624de51d8060cd2a5964e8320a2b2176f01b587af1beb81f95ca8a2072"
+    },
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-tpms-tet4-count-correction-v1/study/repeat-0-tpms-schoen-iwp-sheet-native/mesh.npz": {
+      "sha256": "79066856c3b655cf0f3e96f13d1c430b6bb786e5238522020830d3422a11c228",
+      "array_sha256": "e962970cbabca139f914930ebc9ba3a5e67260901e4e62235bb98123dba21dc1"
+    },
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-tpms-tet4-count-correction-v1/study/repeat-0-tpms-schoen-frd-sheet-native/mesh.npz": {
+      "sha256": "8d6ac068dbec00112c640346ff5c3156b6dc512e196618bb04b20cd53c9d87f5",
+      "array_sha256": "0196518c835f93b650a11c4dcb42e5c51e11cd1636dc1e9e24321b1019de77a6"
+    },
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-tpms-tet4-count-correction-v1/study/repeat-0-tpms-honeycomb-gyroid-sheet-native/mesh.npz": {
+      "sha256": "c69f0d95480a74fcc9ce52772714b9e6f1dfe43f2cf4a44220a3c6c58aa7713e",
+      "array_sha256": "59a73c63af784f2fe29d535058af539c3b37fefa13e0bccb2deed07cac347921"
+    },
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-tpms-tet4-count-correction-v1/study/repeat-0-tpms-honeycomb-schwarz-p-sheet-native/mesh.npz": {
+      "sha256": "d358e4c4dc21d643ce05996c988275f72b1d8793bd5e2c2030c092d1c53dfe98",
+      "array_sha256": "31fd0538b4434eb524a62c96462b91a07f213e4efe5d4eb3f39071dfa93cd33e"
+    },
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-tpms-tet4-count-correction-v1/study/repeat-0-tpms-honeycomb-schwarz-d-sheet-native/mesh.npz": {
+      "sha256": "5991d31786ddadb352dc270e783a4aa66144b50e82d691dd585562d5582961cf",
+      "array_sha256": "8de4d7a3c0c024f886dcdf914eea0a528b330aae2462c5e3722d7f846c3c7dcc"
+    },
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-tpms-tet4-count-correction-v1/study/repeat-0-tpms-honeycomb-schoen-iwp-sheet-native/mesh.npz": {
+      "sha256": "292211055590abe001b42f92b526cc2c26dd029e4c64fd369400eb41c97606e1",
+      "array_sha256": "8004236f43bfffc1753f98eb19800932736ccf20cb95cd587124c9a8218882aa"
+    },
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-tpms-tet4-count-correction-v1/study/repeat-0-tpms-honeycomb-lidinoid-sheet-native/mesh.npz": {
+      "sha256": "9825baa3d30e63af951baa4724e19ea4b1de777668e045725f3d55649658f847",
+      "array_sha256": "75d1c9162bb8ebd69b4cb0d8f1e6b94effac13c6150df138a31eebc3052e4f44"
+    },
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-tpms-tet4-count-repeated-v1/study/repeat--1-tpms-gyroid-sheet-native/mesh.npz": {
+      "sha256": "c7f09ee64d6316dede5d9ea5612ad3b897902cd27d088ae0166bf29cce4be64b",
+      "array_sha256": "37ecf758142f3d9bdf58d66d87a449144a0613eb7ef6891f061a731188c838f8"
+    },
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-tpms-tet4-count-repeated-v1/study/repeat--1-tpms-gyroid-sheet-actual/mesh.npz": {
+      "sha256": "cd733a49f71fad803baea5a5f173525c69622d8190f2044fb5948193de87e809",
+      "array_sha256": "c14acb10049a9653e920ed0350c0a3657ff2945d7ff89cecb560d167358295e7"
+    },
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-tpms-tet4-count-repeated-v1/study/repeat--1-tpms-schwarz-p-sheet-native/mesh.npz": {
+      "sha256": "84b712feb6ae953ffab390601a1367d225cadc05ea01b09eafb72f293d3b7a78",
+      "array_sha256": "18ed5f588c244b79ec3a0eab9a3f4894c608cb9380352009ead48e53185c16f3"
+    },
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-tpms-tet4-count-repeated-v1/study/repeat--1-tpms-schwarz-p-sheet-actual/mesh.npz": {
+      "sha256": "972f35f7d8c3100806e4658dddde08714935a5ce26595c855489108dc3fbc381",
+      "array_sha256": "a6ad310c567fbf44dadbe997c4d60ef202b344a071f09cda24d0d8773e0289a7"
+    },
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-tpms-tet4-count-repeated-v1/study/repeat--1-tpms-schwarz-d-sheet-native/mesh.npz": {
+      "sha256": "ad9434733f189193efb578080cda85f1587656b7b29e7fe94d028ce2dd25fae5",
+      "array_sha256": "e18401d56671a7cafff0851969168bdfa23e452305559a85cc03d69539f91f4a"
+    },
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-tpms-tet4-count-repeated-v1/study/repeat--1-tpms-schwarz-d-sheet-actual/mesh.npz": {
+      "sha256": "323fe0530404720f55921fd2b0ce7142f04901d2821b2e51cbcbf095e65a8570",
+      "array_sha256": "cdb2821c1427ce4edecd67d654b7e3138bc558d962d00e130ab67c9f97aecdad"
+    },
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-tpms-tet4-count-repeated-v1/study/repeat--1-tpms-neovius-sheet-native/mesh.npz": {
+      "sha256": "eb199adbce19678baa32e77009bf4ae6396f328667dac355809cda15417848cf",
+      "array_sha256": "aaaa3b0c781cb5abef4565bf302c2be990c92208d44c814cb1c115d37ac541ff"
+    },
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-tpms-tet4-count-repeated-v1/study/repeat--1-tpms-neovius-sheet-actual/mesh.npz": {
+      "sha256": "9cf2780ddb4347003a97e8175934705ec4c89c5b19d9abdfa124bcac61b5a857",
+      "array_sha256": "07378cc7ed4091432ab7cd1d59ebaf405113a3ab5570bd86c6dae3fb0e865d97"
+    },
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-tpms-tet4-count-repeated-v1/study/repeat--1-tpms-schoen-iwp-sheet-native/mesh.npz": {
+      "sha256": "79066856c3b655cf0f3e96f13d1c430b6bb786e5238522020830d3422a11c228",
+      "array_sha256": "e962970cbabca139f914930ebc9ba3a5e67260901e4e62235bb98123dba21dc1"
+    },
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-tpms-tet4-count-repeated-v1/study/repeat--1-tpms-schoen-iwp-sheet-actual/mesh.npz": {
+      "sha256": "2febabdd70d846377ad0ca476e96c3c27c8c250223f4e3fdca51c87547d7981b",
+      "array_sha256": "a60199b1b9279c762c583b56fe7eb6ab0d9306642cd17b8b406e57bd17f3cdc9"
+    },
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-tpms-tet4-count-repeated-v1/study/repeat--1-tpms-schoen-frd-sheet-native/mesh.npz": {
+      "sha256": "8d6ac068dbec00112c640346ff5c3156b6dc512e196618bb04b20cd53c9d87f5",
+      "array_sha256": "0196518c835f93b650a11c4dcb42e5c51e11cd1636dc1e9e24321b1019de77a6"
+    },
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-tpms-tet4-count-repeated-v1/study/repeat--1-tpms-schoen-frd-sheet-actual/mesh.npz": {
+      "sha256": "e8f2f89581a1183c360be9d6813a9ad4b6cbec8399dc239c88f03a9f1a7105ab",
+      "array_sha256": "fadd24a84e71248297fb5b7a9c7b92227bdad28ab19c0d347ff0957050d58139"
+    },
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-tpms-tet4-count-repeated-v1/study/repeat--1-tpms-pmy-sheet-native/mesh.npz": {
+      "sha256": "a1590ede0925903caf0f9e5c47c36ab3791fbca347cbfd4c59d868402c07b13a",
+      "array_sha256": "0564be3ab679f6016874027b0d119301b3284ba4bf875122601072f5c32c2fb1"
+    },
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-tpms-tet4-count-repeated-v1/study/repeat--1-tpms-pmy-sheet-actual/mesh.npz": {
+      "sha256": "9ac950a7cb36db5013a2fcb91fd21ac3fb6f1386046784ee69c9926bd9e5ec01",
+      "array_sha256": "59b14ad66e8e50cf531fe08f535d5ee55f2a80b0c0505c9caf2ec77c6caefbc6"
+    },
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-tpms-tet4-count-repeated-v1/study/repeat--1-tpms-lidinoid-sheet-native/mesh.npz": {
+      "sha256": "8afa85a9d713dcfd9e2e598fd18d20ca7ae8880ada6cd7e474fb8ee4ba2f5882",
+      "array_sha256": "93f66089d2f1c8b1d940af8ab3cdc85e7a780e1cb8576e627179f217b288c633"
+    },
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-tpms-tet4-count-repeated-v1/study/repeat--1-tpms-lidinoid-sheet-actual/mesh.npz": {
+      "sha256": "0a5b2bce68fe6bd730a2ef991fba2d4f6ad1ab11ed7344c4469d37119ae493f5",
+      "array_sha256": "cbc48cc1a2a4fb36b690cf1247ab9b6304d8f3e5b6de1c2b1b22ead5ac3ea5cd"
+    },
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-tpms-tet4-count-repeated-v1/study/repeat--1-tpms-honeycomb-gyroid-sheet-native/mesh.npz": {
+      "sha256": "775f74044f4dd39dfef2de58af20091f2864ae825922bc5c812c07b13f51e313",
+      "array_sha256": "fdde4ac322a9defb213b9c1538eb6b3e34e000b643e86262b544b3eeab188f84"
+    },
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-tpms-tet4-count-repeated-v1/study/repeat--1-tpms-honeycomb-gyroid-sheet-actual/mesh.npz": {
+      "sha256": "94f0c3948d348d7b7fa29bc1411ecc164d367c64a8c5f7cad5a771f560c182f5",
+      "array_sha256": "f3d6ab2326e34cb85dde2735001b20107f314a16a76e582cecdf337dddd8c4ae"
+    },
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-tpms-tet4-count-repeated-v1/study/repeat--1-tpms-honeycomb-schwarz-p-sheet-native/mesh.npz": {
+      "sha256": "d358e4c4dc21d643ce05996c988275f72b1d8793bd5e2c2030c092d1c53dfe98",
+      "array_sha256": "31fd0538b4434eb524a62c96462b91a07f213e4efe5d4eb3f39071dfa93cd33e"
+    },
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-tpms-tet4-count-repeated-v1/study/repeat--1-tpms-honeycomb-schwarz-p-sheet-actual/mesh.npz": {
+      "sha256": "e897c94f34ea7915299b4a16c7e279db0784363dd1c23a1c3b613d69dd2be7cf",
+      "array_sha256": "728b5a692bb6946b0f37da3010bd7774722a615fe1d0935f4a8895534074be7f"
+    },
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-tpms-tet4-count-repeated-v1/study/repeat--1-tpms-honeycomb-schwarz-d-sheet-native/mesh.npz": {
+      "sha256": "5991d31786ddadb352dc270e783a4aa66144b50e82d691dd585562d5582961cf",
+      "array_sha256": "8de4d7a3c0c024f886dcdf914eea0a528b330aae2462c5e3722d7f846c3c7dcc"
+    },
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-tpms-tet4-count-repeated-v1/study/repeat--1-tpms-honeycomb-schwarz-d-sheet-actual/mesh.npz": {
+      "sha256": "b2efab1e9b96f0434400e394c84b8a63e26129f325105ab8b1d14327e9be5159",
+      "array_sha256": "3d7318e062d0b66a484b9184e7aae3e55f1effff5a642da024aef6b8171fcc58"
+    },
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-tpms-tet4-count-repeated-v1/study/repeat--1-tpms-honeycomb-schoen-iwp-sheet-native/mesh.npz": {
+      "sha256": "292211055590abe001b42f92b526cc2c26dd029e4c64fd369400eb41c97606e1",
+      "array_sha256": "8004236f43bfffc1753f98eb19800932736ccf20cb95cd587124c9a8218882aa"
+    },
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-tpms-tet4-count-repeated-v1/study/repeat--1-tpms-honeycomb-schoen-iwp-sheet-actual/mesh.npz": {
+      "sha256": "931a93f3dd00ac4e873bd5d43a09141806f0745c2809d4bd238ccebed0ddc82e",
+      "array_sha256": "dbc63eecea6bafaa1b9afdcdbbc585bb4ae5804c44db3d1b589d1077f24152a8"
+    },
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-tpms-tet4-count-repeated-v1/study/repeat--1-tpms-honeycomb-lidinoid-sheet-native/mesh.npz": {
+      "sha256": "9825baa3d30e63af951baa4724e19ea4b1de777668e045725f3d55649658f847",
+      "array_sha256": "75d1c9162bb8ebd69b4cb0d8f1e6b94effac13c6150df138a31eebc3052e4f44"
+    },
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-tpms-tet4-count-repeated-v1/study/repeat--1-tpms-honeycomb-lidinoid-sheet-actual/mesh.npz": {
+      "sha256": "bae40c32313fc8b9413a282ea13d83b1ada0cf2d72cda908e7ef0c2cf05044e9",
+      "array_sha256": "6f8930db08971eed6dfb9a4886a44c37021fc4e0e34712fb938b2cae46520557"
+    },
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-tpms-tet4-count-repeated-v1/study/repeat--1-schwarz-solid-native/mesh.npz": {
+      "sha256": "9629851d4ddf2b2103ed2b4d71c601b2e015f99a7d638c9677814c593d2db5fa",
+      "array_sha256": "6ac913d9806bb64a61c22d7410c909925e5093e0dda7a032e5212cbe04134af2"
+    },
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-tpms-tet4-count-repeated-v1/study/repeat--1-schwarz-solid-actual/mesh.npz": {
+      "sha256": "cdffabf8fb4d9d9d8d24baa273afe19f0da4958f1e2716a6f4140c05cd17036b",
+      "array_sha256": "14180f86b55f4538d439a6f971e3ad6d403e81a0c151996eefac3494ce1a206d"
+    },
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-tpms-tet4-count-repeated-v1/study/repeat-0-tpms-gyroid-sheet-actual/mesh.npz": {
+      "sha256": "cd733a49f71fad803baea5a5f173525c69622d8190f2044fb5948193de87e809",
+      "array_sha256": "c14acb10049a9653e920ed0350c0a3657ff2945d7ff89cecb560d167358295e7"
+    },
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-tpms-tet4-count-repeated-v1/study/repeat-0-tpms-gyroid-sheet-native/mesh.npz": {
+      "sha256": "c7f09ee64d6316dede5d9ea5612ad3b897902cd27d088ae0166bf29cce4be64b",
+      "array_sha256": "37ecf758142f3d9bdf58d66d87a449144a0613eb7ef6891f061a731188c838f8"
+    },
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-tpms-tet4-count-repeated-v1/study/repeat-0-tpms-schwarz-p-sheet-actual/mesh.npz": {
+      "sha256": "972f35f7d8c3100806e4658dddde08714935a5ce26595c855489108dc3fbc381",
+      "array_sha256": "a6ad310c567fbf44dadbe997c4d60ef202b344a071f09cda24d0d8773e0289a7"
+    },
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-tpms-tet4-count-repeated-v1/study/repeat-0-tpms-schwarz-p-sheet-native/mesh.npz": {
+      "sha256": "84b712feb6ae953ffab390601a1367d225cadc05ea01b09eafb72f293d3b7a78",
+      "array_sha256": "18ed5f588c244b79ec3a0eab9a3f4894c608cb9380352009ead48e53185c16f3"
+    },
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-tpms-tet4-count-repeated-v1/study/repeat-0-tpms-schwarz-d-sheet-actual/mesh.npz": {
+      "sha256": "323fe0530404720f55921fd2b0ce7142f04901d2821b2e51cbcbf095e65a8570",
+      "array_sha256": "cdb2821c1427ce4edecd67d654b7e3138bc558d962d00e130ab67c9f97aecdad"
+    },
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-tpms-tet4-count-repeated-v1/study/repeat-0-tpms-schwarz-d-sheet-native/mesh.npz": {
+      "sha256": "ad9434733f189193efb578080cda85f1587656b7b29e7fe94d028ce2dd25fae5",
+      "array_sha256": "e18401d56671a7cafff0851969168bdfa23e452305559a85cc03d69539f91f4a"
+    },
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-tpms-tet4-count-repeated-v1/study/repeat-0-tpms-neovius-sheet-actual/mesh.npz": {
+      "sha256": "9cf2780ddb4347003a97e8175934705ec4c89c5b19d9abdfa124bcac61b5a857",
+      "array_sha256": "07378cc7ed4091432ab7cd1d59ebaf405113a3ab5570bd86c6dae3fb0e865d97"
+    },
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-tpms-tet4-count-repeated-v1/study/repeat-0-tpms-neovius-sheet-native/mesh.npz": {
+      "sha256": "eb199adbce19678baa32e77009bf4ae6396f328667dac355809cda15417848cf",
+      "array_sha256": "aaaa3b0c781cb5abef4565bf302c2be990c92208d44c814cb1c115d37ac541ff"
+    },
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-tpms-tet4-count-repeated-v1/study/repeat-0-tpms-schoen-iwp-sheet-actual/mesh.npz": {
+      "sha256": "2febabdd70d846377ad0ca476e96c3c27c8c250223f4e3fdca51c87547d7981b",
+      "array_sha256": "a60199b1b9279c762c583b56fe7eb6ab0d9306642cd17b8b406e57bd17f3cdc9"
+    },
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-tpms-tet4-count-repeated-v1/study/repeat-0-tpms-schoen-iwp-sheet-native/mesh.npz": {
+      "sha256": "79066856c3b655cf0f3e96f13d1c430b6bb786e5238522020830d3422a11c228",
+      "array_sha256": "e962970cbabca139f914930ebc9ba3a5e67260901e4e62235bb98123dba21dc1"
+    },
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-tpms-tet4-count-repeated-v1/study/repeat-0-tpms-schoen-frd-sheet-actual/mesh.npz": {
+      "sha256": "e8f2f89581a1183c360be9d6813a9ad4b6cbec8399dc239c88f03a9f1a7105ab",
+      "array_sha256": "fadd24a84e71248297fb5b7a9c7b92227bdad28ab19c0d347ff0957050d58139"
+    },
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-tpms-tet4-count-repeated-v1/study/repeat-0-tpms-schoen-frd-sheet-native/mesh.npz": {
+      "sha256": "8d6ac068dbec00112c640346ff5c3156b6dc512e196618bb04b20cd53c9d87f5",
+      "array_sha256": "0196518c835f93b650a11c4dcb42e5c51e11cd1636dc1e9e24321b1019de77a6"
+    },
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-tpms-tet4-count-repeated-v1/study/repeat-0-tpms-pmy-sheet-actual/mesh.npz": {
+      "sha256": "9ac950a7cb36db5013a2fcb91fd21ac3fb6f1386046784ee69c9926bd9e5ec01",
+      "array_sha256": "59b14ad66e8e50cf531fe08f535d5ee55f2a80b0c0505c9caf2ec77c6caefbc6"
+    },
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-tpms-tet4-count-repeated-v1/study/repeat-0-tpms-pmy-sheet-native/mesh.npz": {
+      "sha256": "a1590ede0925903caf0f9e5c47c36ab3791fbca347cbfd4c59d868402c07b13a",
+      "array_sha256": "0564be3ab679f6016874027b0d119301b3284ba4bf875122601072f5c32c2fb1"
+    },
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-tpms-tet4-count-repeated-v1/study/repeat-0-tpms-lidinoid-sheet-actual/mesh.npz": {
+      "sha256": "0a5b2bce68fe6bd730a2ef991fba2d4f6ad1ab11ed7344c4469d37119ae493f5",
+      "array_sha256": "cbc48cc1a2a4fb36b690cf1247ab9b6304d8f3e5b6de1c2b1b22ead5ac3ea5cd"
+    },
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-tpms-tet4-count-repeated-v1/study/repeat-0-tpms-lidinoid-sheet-native/mesh.npz": {
+      "sha256": "8afa85a9d713dcfd9e2e598fd18d20ca7ae8880ada6cd7e474fb8ee4ba2f5882",
+      "array_sha256": "93f66089d2f1c8b1d940af8ab3cdc85e7a780e1cb8576e627179f217b288c633"
+    },
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-tpms-tet4-count-repeated-v1/study/repeat-0-tpms-honeycomb-gyroid-sheet-actual/mesh.npz": {
+      "sha256": "94f0c3948d348d7b7fa29bc1411ecc164d367c64a8c5f7cad5a771f560c182f5",
+      "array_sha256": "f3d6ab2326e34cb85dde2735001b20107f314a16a76e582cecdf337dddd8c4ae"
+    },
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-tpms-tet4-count-repeated-v1/study/repeat-0-tpms-honeycomb-gyroid-sheet-native/mesh.npz": {
+      "sha256": "775f74044f4dd39dfef2de58af20091f2864ae825922bc5c812c07b13f51e313",
+      "array_sha256": "fdde4ac322a9defb213b9c1538eb6b3e34e000b643e86262b544b3eeab188f84"
+    },
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-tpms-tet4-count-repeated-v1/study/repeat-0-tpms-honeycomb-schwarz-p-sheet-actual/mesh.npz": {
+      "sha256": "e897c94f34ea7915299b4a16c7e279db0784363dd1c23a1c3b613d69dd2be7cf",
+      "array_sha256": "728b5a692bb6946b0f37da3010bd7774722a615fe1d0935f4a8895534074be7f"
+    },
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-tpms-tet4-count-repeated-v1/study/repeat-0-tpms-honeycomb-schwarz-p-sheet-native/mesh.npz": {
+      "sha256": "d358e4c4dc21d643ce05996c988275f72b1d8793bd5e2c2030c092d1c53dfe98",
+      "array_sha256": "31fd0538b4434eb524a62c96462b91a07f213e4efe5d4eb3f39071dfa93cd33e"
+    },
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-tpms-tet4-count-repeated-v1/study/repeat-0-tpms-honeycomb-schwarz-d-sheet-actual/mesh.npz": {
+      "sha256": "b2efab1e9b96f0434400e394c84b8a63e26129f325105ab8b1d14327e9be5159",
+      "array_sha256": "3d7318e062d0b66a484b9184e7aae3e55f1effff5a642da024aef6b8171fcc58"
+    },
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-tpms-tet4-count-repeated-v1/study/repeat-0-tpms-honeycomb-schwarz-d-sheet-native/mesh.npz": {
+      "sha256": "5991d31786ddadb352dc270e783a4aa66144b50e82d691dd585562d5582961cf",
+      "array_sha256": "8de4d7a3c0c024f886dcdf914eea0a528b330aae2462c5e3722d7f846c3c7dcc"
+    },
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-tpms-tet4-count-repeated-v1/study/repeat-0-tpms-honeycomb-schoen-iwp-sheet-actual/mesh.npz": {
+      "sha256": "931a93f3dd00ac4e873bd5d43a09141806f0745c2809d4bd238ccebed0ddc82e",
+      "array_sha256": "dbc63eecea6bafaa1b9afdcdbbc585bb4ae5804c44db3d1b589d1077f24152a8"
+    },
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-tpms-tet4-count-repeated-v1/study/repeat-0-tpms-honeycomb-schoen-iwp-sheet-native/mesh.npz": {
+      "sha256": "292211055590abe001b42f92b526cc2c26dd029e4c64fd369400eb41c97606e1",
+      "array_sha256": "8004236f43bfffc1753f98eb19800932736ccf20cb95cd587124c9a8218882aa"
+    },
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-tpms-tet4-count-repeated-v1/study/repeat-0-tpms-honeycomb-lidinoid-sheet-actual/mesh.npz": {
+      "sha256": "bae40c32313fc8b9413a282ea13d83b1ada0cf2d72cda908e7ef0c2cf05044e9",
+      "array_sha256": "6f8930db08971eed6dfb9a4886a44c37021fc4e0e34712fb938b2cae46520557"
+    },
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-tpms-tet4-count-repeated-v1/study/repeat-0-tpms-honeycomb-lidinoid-sheet-native/mesh.npz": {
+      "sha256": "9825baa3d30e63af951baa4724e19ea4b1de777668e045725f3d55649658f847",
+      "array_sha256": "75d1c9162bb8ebd69b4cb0d8f1e6b94effac13c6150df138a31eebc3052e4f44"
+    },
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-tpms-tet4-count-repeated-v1/study/repeat-0-schwarz-solid-actual/mesh.npz": {
+      "sha256": "cdffabf8fb4d9d9d8d24baa273afe19f0da4958f1e2716a6f4140c05cd17036b",
+      "array_sha256": "14180f86b55f4538d439a6f971e3ad6d403e81a0c151996eefac3494ce1a206d"
+    },
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-tpms-tet4-count-repeated-v1/study/repeat-0-schwarz-solid-native/mesh.npz": {
+      "sha256": "9629851d4ddf2b2103ed2b4d71c601b2e015f99a7d638c9677814c593d2db5fa",
+      "array_sha256": "6ac913d9806bb64a61c22d7410c909925e5093e0dda7a032e5212cbe04134af2"
+    },
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-tpms-tet4-count-repeated-v1/study/repeat-1-tpms-gyroid-sheet-native/mesh.npz": {
+      "sha256": "c7f09ee64d6316dede5d9ea5612ad3b897902cd27d088ae0166bf29cce4be64b",
+      "array_sha256": "37ecf758142f3d9bdf58d66d87a449144a0613eb7ef6891f061a731188c838f8"
+    },
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-tpms-tet4-count-repeated-v1/study/repeat-1-tpms-gyroid-sheet-actual/mesh.npz": {
+      "sha256": "cd733a49f71fad803baea5a5f173525c69622d8190f2044fb5948193de87e809",
+      "array_sha256": "c14acb10049a9653e920ed0350c0a3657ff2945d7ff89cecb560d167358295e7"
+    },
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-tpms-tet4-count-repeated-v1/study/repeat-1-tpms-schwarz-p-sheet-native/mesh.npz": {
+      "sha256": "84b712feb6ae953ffab390601a1367d225cadc05ea01b09eafb72f293d3b7a78",
+      "array_sha256": "18ed5f588c244b79ec3a0eab9a3f4894c608cb9380352009ead48e53185c16f3"
+    },
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-tpms-tet4-count-repeated-v1/study/repeat-1-tpms-schwarz-p-sheet-actual/mesh.npz": {
+      "sha256": "972f35f7d8c3100806e4658dddde08714935a5ce26595c855489108dc3fbc381",
+      "array_sha256": "a6ad310c567fbf44dadbe997c4d60ef202b344a071f09cda24d0d8773e0289a7"
+    },
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-tpms-tet4-count-repeated-v1/study/repeat-1-tpms-schwarz-d-sheet-native/mesh.npz": {
+      "sha256": "ad9434733f189193efb578080cda85f1587656b7b29e7fe94d028ce2dd25fae5",
+      "array_sha256": "e18401d56671a7cafff0851969168bdfa23e452305559a85cc03d69539f91f4a"
+    },
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-tpms-tet4-count-repeated-v1/study/repeat-1-tpms-schwarz-d-sheet-actual/mesh.npz": {
+      "sha256": "323fe0530404720f55921fd2b0ce7142f04901d2821b2e51cbcbf095e65a8570",
+      "array_sha256": "cdb2821c1427ce4edecd67d654b7e3138bc558d962d00e130ab67c9f97aecdad"
+    },
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-tpms-tet4-count-repeated-v1/study/repeat-1-tpms-neovius-sheet-native/mesh.npz": {
+      "sha256": "eb199adbce19678baa32e77009bf4ae6396f328667dac355809cda15417848cf",
+      "array_sha256": "aaaa3b0c781cb5abef4565bf302c2be990c92208d44c814cb1c115d37ac541ff"
+    },
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-tpms-tet4-count-repeated-v1/study/repeat-1-tpms-neovius-sheet-actual/mesh.npz": {
+      "sha256": "9cf2780ddb4347003a97e8175934705ec4c89c5b19d9abdfa124bcac61b5a857",
+      "array_sha256": "07378cc7ed4091432ab7cd1d59ebaf405113a3ab5570bd86c6dae3fb0e865d97"
+    },
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-tpms-tet4-count-repeated-v1/study/repeat-1-tpms-schoen-iwp-sheet-native/mesh.npz": {
+      "sha256": "79066856c3b655cf0f3e96f13d1c430b6bb786e5238522020830d3422a11c228",
+      "array_sha256": "e962970cbabca139f914930ebc9ba3a5e67260901e4e62235bb98123dba21dc1"
+    },
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-tpms-tet4-count-repeated-v1/study/repeat-1-tpms-schoen-iwp-sheet-actual/mesh.npz": {
+      "sha256": "2febabdd70d846377ad0ca476e96c3c27c8c250223f4e3fdca51c87547d7981b",
+      "array_sha256": "a60199b1b9279c762c583b56fe7eb6ab0d9306642cd17b8b406e57bd17f3cdc9"
+    },
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-tpms-tet4-count-repeated-v1/study/repeat-1-tpms-schoen-frd-sheet-native/mesh.npz": {
+      "sha256": "8d6ac068dbec00112c640346ff5c3156b6dc512e196618bb04b20cd53c9d87f5",
+      "array_sha256": "0196518c835f93b650a11c4dcb42e5c51e11cd1636dc1e9e24321b1019de77a6"
+    },
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-tpms-tet4-count-repeated-v1/study/repeat-1-tpms-schoen-frd-sheet-actual/mesh.npz": {
+      "sha256": "e8f2f89581a1183c360be9d6813a9ad4b6cbec8399dc239c88f03a9f1a7105ab",
+      "array_sha256": "fadd24a84e71248297fb5b7a9c7b92227bdad28ab19c0d347ff0957050d58139"
+    },
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-tpms-tet4-count-repeated-v1/study/repeat-1-tpms-pmy-sheet-native/mesh.npz": {
+      "sha256": "a1590ede0925903caf0f9e5c47c36ab3791fbca347cbfd4c59d868402c07b13a",
+      "array_sha256": "0564be3ab679f6016874027b0d119301b3284ba4bf875122601072f5c32c2fb1"
+    },
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-tpms-tet4-count-repeated-v1/study/repeat-1-tpms-pmy-sheet-actual/mesh.npz": {
+      "sha256": "9ac950a7cb36db5013a2fcb91fd21ac3fb6f1386046784ee69c9926bd9e5ec01",
+      "array_sha256": "59b14ad66e8e50cf531fe08f535d5ee55f2a80b0c0505c9caf2ec77c6caefbc6"
+    },
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-tpms-tet4-count-repeated-v1/study/repeat-1-tpms-lidinoid-sheet-native/mesh.npz": {
+      "sha256": "8afa85a9d713dcfd9e2e598fd18d20ca7ae8880ada6cd7e474fb8ee4ba2f5882",
+      "array_sha256": "93f66089d2f1c8b1d940af8ab3cdc85e7a780e1cb8576e627179f217b288c633"
+    },
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-tpms-tet4-count-repeated-v1/study/repeat-1-tpms-lidinoid-sheet-actual/mesh.npz": {
+      "sha256": "0a5b2bce68fe6bd730a2ef991fba2d4f6ad1ab11ed7344c4469d37119ae493f5",
+      "array_sha256": "cbc48cc1a2a4fb36b690cf1247ab9b6304d8f3e5b6de1c2b1b22ead5ac3ea5cd"
+    },
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-tpms-tet4-count-repeated-v1/study/repeat-1-tpms-honeycomb-gyroid-sheet-native/mesh.npz": {
+      "sha256": "775f74044f4dd39dfef2de58af20091f2864ae825922bc5c812c07b13f51e313",
+      "array_sha256": "fdde4ac322a9defb213b9c1538eb6b3e34e000b643e86262b544b3eeab188f84"
+    },
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-tpms-tet4-count-repeated-v1/study/repeat-1-tpms-honeycomb-gyroid-sheet-actual/mesh.npz": {
+      "sha256": "94f0c3948d348d7b7fa29bc1411ecc164d367c64a8c5f7cad5a771f560c182f5",
+      "array_sha256": "f3d6ab2326e34cb85dde2735001b20107f314a16a76e582cecdf337dddd8c4ae"
+    },
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-tpms-tet4-count-repeated-v1/study/repeat-1-tpms-honeycomb-schwarz-p-sheet-native/mesh.npz": {
+      "sha256": "d358e4c4dc21d643ce05996c988275f72b1d8793bd5e2c2030c092d1c53dfe98",
+      "array_sha256": "31fd0538b4434eb524a62c96462b91a07f213e4efe5d4eb3f39071dfa93cd33e"
+    },
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-tpms-tet4-count-repeated-v1/study/repeat-1-tpms-honeycomb-schwarz-p-sheet-actual/mesh.npz": {
+      "sha256": "e897c94f34ea7915299b4a16c7e279db0784363dd1c23a1c3b613d69dd2be7cf",
+      "array_sha256": "728b5a692bb6946b0f37da3010bd7774722a615fe1d0935f4a8895534074be7f"
+    },
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-tpms-tet4-count-repeated-v1/study/repeat-1-tpms-honeycomb-schwarz-d-sheet-native/mesh.npz": {
+      "sha256": "5991d31786ddadb352dc270e783a4aa66144b50e82d691dd585562d5582961cf",
+      "array_sha256": "8de4d7a3c0c024f886dcdf914eea0a528b330aae2462c5e3722d7f846c3c7dcc"
+    },
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-tpms-tet4-count-repeated-v1/study/repeat-1-tpms-honeycomb-schwarz-d-sheet-actual/mesh.npz": {
+      "sha256": "b2efab1e9b96f0434400e394c84b8a63e26129f325105ab8b1d14327e9be5159",
+      "array_sha256": "3d7318e062d0b66a484b9184e7aae3e55f1effff5a642da024aef6b8171fcc58"
+    },
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-tpms-tet4-count-repeated-v1/study/repeat-1-tpms-honeycomb-schoen-iwp-sheet-native/mesh.npz": {
+      "sha256": "292211055590abe001b42f92b526cc2c26dd029e4c64fd369400eb41c97606e1",
+      "array_sha256": "8004236f43bfffc1753f98eb19800932736ccf20cb95cd587124c9a8218882aa"
+    },
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-tpms-tet4-count-repeated-v1/study/repeat-1-tpms-honeycomb-schoen-iwp-sheet-actual/mesh.npz": {
+      "sha256": "931a93f3dd00ac4e873bd5d43a09141806f0745c2809d4bd238ccebed0ddc82e",
+      "array_sha256": "dbc63eecea6bafaa1b9afdcdbbc585bb4ae5804c44db3d1b589d1077f24152a8"
+    },
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-tpms-tet4-count-repeated-v1/study/repeat-1-tpms-honeycomb-lidinoid-sheet-native/mesh.npz": {
+      "sha256": "9825baa3d30e63af951baa4724e19ea4b1de777668e045725f3d55649658f847",
+      "array_sha256": "75d1c9162bb8ebd69b4cb0d8f1e6b94effac13c6150df138a31eebc3052e4f44"
+    },
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-tpms-tet4-count-repeated-v1/study/repeat-1-tpms-honeycomb-lidinoid-sheet-actual/mesh.npz": {
+      "sha256": "bae40c32313fc8b9413a282ea13d83b1ada0cf2d72cda908e7ef0c2cf05044e9",
+      "array_sha256": "6f8930db08971eed6dfb9a4886a44c37021fc4e0e34712fb938b2cae46520557"
+    },
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-tpms-tet4-count-repeated-v1/study/repeat-1-schwarz-solid-native/mesh.npz": {
+      "sha256": "9629851d4ddf2b2103ed2b4d71c601b2e015f99a7d638c9677814c593d2db5fa",
+      "array_sha256": "6ac913d9806bb64a61c22d7410c909925e5093e0dda7a032e5212cbe04134af2"
+    },
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-tpms-tet4-count-repeated-v1/study/repeat-1-schwarz-solid-actual/mesh.npz": {
+      "sha256": "cdffabf8fb4d9d9d8d24baa273afe19f0da4958f1e2716a6f4140c05cd17036b",
+      "array_sha256": "14180f86b55f4538d439a6f971e3ad6d403e81a0c151996eefac3494ce1a206d"
+    },
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-tpms-tet4-count-repeated-v1/study/repeat-2-tpms-gyroid-sheet-actual/mesh.npz": {
+      "sha256": "cd733a49f71fad803baea5a5f173525c69622d8190f2044fb5948193de87e809",
+      "array_sha256": "c14acb10049a9653e920ed0350c0a3657ff2945d7ff89cecb560d167358295e7"
+    },
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-tpms-tet4-count-repeated-v1/study/repeat-2-tpms-gyroid-sheet-native/mesh.npz": {
+      "sha256": "c7f09ee64d6316dede5d9ea5612ad3b897902cd27d088ae0166bf29cce4be64b",
+      "array_sha256": "37ecf758142f3d9bdf58d66d87a449144a0613eb7ef6891f061a731188c838f8"
+    },
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-tpms-tet4-count-repeated-v1/study/repeat-2-tpms-schwarz-p-sheet-actual/mesh.npz": {
+      "sha256": "972f35f7d8c3100806e4658dddde08714935a5ce26595c855489108dc3fbc381",
+      "array_sha256": "a6ad310c567fbf44dadbe997c4d60ef202b344a071f09cda24d0d8773e0289a7"
+    },
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-tpms-tet4-count-repeated-v1/study/repeat-2-tpms-schwarz-p-sheet-native/mesh.npz": {
+      "sha256": "84b712feb6ae953ffab390601a1367d225cadc05ea01b09eafb72f293d3b7a78",
+      "array_sha256": "18ed5f588c244b79ec3a0eab9a3f4894c608cb9380352009ead48e53185c16f3"
+    },
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-tpms-tet4-count-repeated-v1/study/repeat-2-tpms-schwarz-d-sheet-actual/mesh.npz": {
+      "sha256": "323fe0530404720f55921fd2b0ce7142f04901d2821b2e51cbcbf095e65a8570",
+      "array_sha256": "cdb2821c1427ce4edecd67d654b7e3138bc558d962d00e130ab67c9f97aecdad"
+    },
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-tpms-tet4-count-repeated-v1/study/repeat-2-tpms-schwarz-d-sheet-native/mesh.npz": {
+      "sha256": "ad9434733f189193efb578080cda85f1587656b7b29e7fe94d028ce2dd25fae5",
+      "array_sha256": "e18401d56671a7cafff0851969168bdfa23e452305559a85cc03d69539f91f4a"
+    },
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-tpms-tet4-count-repeated-v1/study/repeat-2-tpms-neovius-sheet-actual/mesh.npz": {
+      "sha256": "9cf2780ddb4347003a97e8175934705ec4c89c5b19d9abdfa124bcac61b5a857",
+      "array_sha256": "07378cc7ed4091432ab7cd1d59ebaf405113a3ab5570bd86c6dae3fb0e865d97"
+    },
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-tpms-tet4-count-repeated-v1/study/repeat-2-tpms-neovius-sheet-native/mesh.npz": {
+      "sha256": "eb199adbce19678baa32e77009bf4ae6396f328667dac355809cda15417848cf",
+      "array_sha256": "aaaa3b0c781cb5abef4565bf302c2be990c92208d44c814cb1c115d37ac541ff"
+    },
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-tpms-tet4-count-repeated-v1/study/repeat-2-tpms-schoen-iwp-sheet-actual/mesh.npz": {
+      "sha256": "2febabdd70d846377ad0ca476e96c3c27c8c250223f4e3fdca51c87547d7981b",
+      "array_sha256": "a60199b1b9279c762c583b56fe7eb6ab0d9306642cd17b8b406e57bd17f3cdc9"
+    },
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-tpms-tet4-count-repeated-v1/study/repeat-2-tpms-schoen-iwp-sheet-native/mesh.npz": {
+      "sha256": "79066856c3b655cf0f3e96f13d1c430b6bb786e5238522020830d3422a11c228",
+      "array_sha256": "e962970cbabca139f914930ebc9ba3a5e67260901e4e62235bb98123dba21dc1"
+    },
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-tpms-tet4-count-repeated-v1/study/repeat-2-tpms-schoen-frd-sheet-actual/mesh.npz": {
+      "sha256": "e8f2f89581a1183c360be9d6813a9ad4b6cbec8399dc239c88f03a9f1a7105ab",
+      "array_sha256": "fadd24a84e71248297fb5b7a9c7b92227bdad28ab19c0d347ff0957050d58139"
+    },
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-tpms-tet4-count-repeated-v1/study/repeat-2-tpms-schoen-frd-sheet-native/mesh.npz": {
+      "sha256": "8d6ac068dbec00112c640346ff5c3156b6dc512e196618bb04b20cd53c9d87f5",
+      "array_sha256": "0196518c835f93b650a11c4dcb42e5c51e11cd1636dc1e9e24321b1019de77a6"
+    },
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-tpms-tet4-count-repeated-v1/study/repeat-2-tpms-pmy-sheet-actual/mesh.npz": {
+      "sha256": "9ac950a7cb36db5013a2fcb91fd21ac3fb6f1386046784ee69c9926bd9e5ec01",
+      "array_sha256": "59b14ad66e8e50cf531fe08f535d5ee55f2a80b0c0505c9caf2ec77c6caefbc6"
+    },
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-tpms-tet4-count-repeated-v1/study/repeat-2-tpms-pmy-sheet-native/mesh.npz": {
+      "sha256": "a1590ede0925903caf0f9e5c47c36ab3791fbca347cbfd4c59d868402c07b13a",
+      "array_sha256": "0564be3ab679f6016874027b0d119301b3284ba4bf875122601072f5c32c2fb1"
+    },
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-tpms-tet4-count-repeated-v1/study/repeat-2-tpms-lidinoid-sheet-actual/mesh.npz": {
+      "sha256": "0a5b2bce68fe6bd730a2ef991fba2d4f6ad1ab11ed7344c4469d37119ae493f5",
+      "array_sha256": "cbc48cc1a2a4fb36b690cf1247ab9b6304d8f3e5b6de1c2b1b22ead5ac3ea5cd"
+    },
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-tpms-tet4-count-repeated-v1/study/repeat-2-tpms-lidinoid-sheet-native/mesh.npz": {
+      "sha256": "8afa85a9d713dcfd9e2e598fd18d20ca7ae8880ada6cd7e474fb8ee4ba2f5882",
+      "array_sha256": "93f66089d2f1c8b1d940af8ab3cdc85e7a780e1cb8576e627179f217b288c633"
+    },
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-tpms-tet4-count-repeated-v1/study/repeat-2-tpms-honeycomb-gyroid-sheet-actual/mesh.npz": {
+      "sha256": "94f0c3948d348d7b7fa29bc1411ecc164d367c64a8c5f7cad5a771f560c182f5",
+      "array_sha256": "f3d6ab2326e34cb85dde2735001b20107f314a16a76e582cecdf337dddd8c4ae"
+    },
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-tpms-tet4-count-repeated-v1/study/repeat-2-tpms-honeycomb-gyroid-sheet-native/mesh.npz": {
+      "sha256": "775f74044f4dd39dfef2de58af20091f2864ae825922bc5c812c07b13f51e313",
+      "array_sha256": "fdde4ac322a9defb213b9c1538eb6b3e34e000b643e86262b544b3eeab188f84"
+    },
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-tpms-tet4-count-repeated-v1/study/repeat-2-tpms-honeycomb-schwarz-p-sheet-actual/mesh.npz": {
+      "sha256": "e897c94f34ea7915299b4a16c7e279db0784363dd1c23a1c3b613d69dd2be7cf",
+      "array_sha256": "728b5a692bb6946b0f37da3010bd7774722a615fe1d0935f4a8895534074be7f"
+    },
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-tpms-tet4-count-repeated-v1/study/repeat-2-tpms-honeycomb-schwarz-p-sheet-native/mesh.npz": {
+      "sha256": "d358e4c4dc21d643ce05996c988275f72b1d8793bd5e2c2030c092d1c53dfe98",
+      "array_sha256": "31fd0538b4434eb524a62c96462b91a07f213e4efe5d4eb3f39071dfa93cd33e"
+    },
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-tpms-tet4-count-repeated-v1/study/repeat-2-tpms-honeycomb-schwarz-d-sheet-actual/mesh.npz": {
+      "sha256": "b2efab1e9b96f0434400e394c84b8a63e26129f325105ab8b1d14327e9be5159",
+      "array_sha256": "3d7318e062d0b66a484b9184e7aae3e55f1effff5a642da024aef6b8171fcc58"
+    },
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-tpms-tet4-count-repeated-v1/study/repeat-2-tpms-honeycomb-schwarz-d-sheet-native/mesh.npz": {
+      "sha256": "5991d31786ddadb352dc270e783a4aa66144b50e82d691dd585562d5582961cf",
+      "array_sha256": "8de4d7a3c0c024f886dcdf914eea0a528b330aae2462c5e3722d7f846c3c7dcc"
+    },
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-tpms-tet4-count-repeated-v1/study/repeat-2-tpms-honeycomb-schoen-iwp-sheet-actual/mesh.npz": {
+      "sha256": "931a93f3dd00ac4e873bd5d43a09141806f0745c2809d4bd238ccebed0ddc82e",
+      "array_sha256": "dbc63eecea6bafaa1b9afdcdbbc585bb4ae5804c44db3d1b589d1077f24152a8"
+    },
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-tpms-tet4-count-repeated-v1/study/repeat-2-tpms-honeycomb-schoen-iwp-sheet-native/mesh.npz": {
+      "sha256": "292211055590abe001b42f92b526cc2c26dd029e4c64fd369400eb41c97606e1",
+      "array_sha256": "8004236f43bfffc1753f98eb19800932736ccf20cb95cd587124c9a8218882aa"
+    },
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-tpms-tet4-count-repeated-v1/study/repeat-2-tpms-honeycomb-lidinoid-sheet-actual/mesh.npz": {
+      "sha256": "bae40c32313fc8b9413a282ea13d83b1ada0cf2d72cda908e7ef0c2cf05044e9",
+      "array_sha256": "6f8930db08971eed6dfb9a4886a44c37021fc4e0e34712fb938b2cae46520557"
+    },
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-tpms-tet4-count-repeated-v1/study/repeat-2-tpms-honeycomb-lidinoid-sheet-native/mesh.npz": {
+      "sha256": "9825baa3d30e63af951baa4724e19ea4b1de777668e045725f3d55649658f847",
+      "array_sha256": "75d1c9162bb8ebd69b4cb0d8f1e6b94effac13c6150df138a31eebc3052e4f44"
+    },
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-tpms-tet4-count-repeated-v1/study/repeat-2-schwarz-solid-actual/mesh.npz": {
+      "sha256": "cdffabf8fb4d9d9d8d24baa273afe19f0da4958f1e2716a6f4140c05cd17036b",
+      "array_sha256": "14180f86b55f4538d439a6f971e3ad6d403e81a0c151996eefac3494ce1a206d"
+    },
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-tpms-tet4-count-repeated-v1/study/repeat-2-schwarz-solid-native/mesh.npz": {
+      "sha256": "9629851d4ddf2b2103ed2b4d71c601b2e015f99a7d638c9677814c593d2db5fa",
+      "array_sha256": "6ac913d9806bb64a61c22d7410c909925e5093e0dda7a032e5212cbe04134af2"
+    },
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-tpms-tet4-count-repeated-v1/study/repeat-3-tpms-gyroid-sheet-native/mesh.npz": {
+      "sha256": "c7f09ee64d6316dede5d9ea5612ad3b897902cd27d088ae0166bf29cce4be64b",
+      "array_sha256": "37ecf758142f3d9bdf58d66d87a449144a0613eb7ef6891f061a731188c838f8"
+    },
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-tpms-tet4-count-repeated-v1/study/repeat-3-tpms-gyroid-sheet-actual/mesh.npz": {
+      "sha256": "cd733a49f71fad803baea5a5f173525c69622d8190f2044fb5948193de87e809",
+      "array_sha256": "c14acb10049a9653e920ed0350c0a3657ff2945d7ff89cecb560d167358295e7"
+    },
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-tpms-tet4-count-repeated-v1/study/repeat-3-tpms-schwarz-p-sheet-native/mesh.npz": {
+      "sha256": "84b712feb6ae953ffab390601a1367d225cadc05ea01b09eafb72f293d3b7a78",
+      "array_sha256": "18ed5f588c244b79ec3a0eab9a3f4894c608cb9380352009ead48e53185c16f3"
+    },
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-tpms-tet4-count-repeated-v1/study/repeat-3-tpms-schwarz-p-sheet-actual/mesh.npz": {
+      "sha256": "972f35f7d8c3100806e4658dddde08714935a5ce26595c855489108dc3fbc381",
+      "array_sha256": "a6ad310c567fbf44dadbe997c4d60ef202b344a071f09cda24d0d8773e0289a7"
+    },
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-tpms-tet4-count-repeated-v1/study/repeat-3-tpms-schwarz-d-sheet-native/mesh.npz": {
+      "sha256": "ad9434733f189193efb578080cda85f1587656b7b29e7fe94d028ce2dd25fae5",
+      "array_sha256": "e18401d56671a7cafff0851969168bdfa23e452305559a85cc03d69539f91f4a"
+    },
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-tpms-tet4-count-repeated-v1/study/repeat-3-tpms-schwarz-d-sheet-actual/mesh.npz": {
+      "sha256": "323fe0530404720f55921fd2b0ce7142f04901d2821b2e51cbcbf095e65a8570",
+      "array_sha256": "cdb2821c1427ce4edecd67d654b7e3138bc558d962d00e130ab67c9f97aecdad"
+    },
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-tpms-tet4-count-repeated-v1/study/repeat-3-tpms-neovius-sheet-native/mesh.npz": {
+      "sha256": "eb199adbce19678baa32e77009bf4ae6396f328667dac355809cda15417848cf",
+      "array_sha256": "aaaa3b0c781cb5abef4565bf302c2be990c92208d44c814cb1c115d37ac541ff"
+    },
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-tpms-tet4-count-repeated-v1/study/repeat-3-tpms-neovius-sheet-actual/mesh.npz": {
+      "sha256": "9cf2780ddb4347003a97e8175934705ec4c89c5b19d9abdfa124bcac61b5a857",
+      "array_sha256": "07378cc7ed4091432ab7cd1d59ebaf405113a3ab5570bd86c6dae3fb0e865d97"
+    },
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-tpms-tet4-count-repeated-v1/study/repeat-3-tpms-schoen-iwp-sheet-native/mesh.npz": {
+      "sha256": "79066856c3b655cf0f3e96f13d1c430b6bb786e5238522020830d3422a11c228",
+      "array_sha256": "e962970cbabca139f914930ebc9ba3a5e67260901e4e62235bb98123dba21dc1"
+    },
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-tpms-tet4-count-repeated-v1/study/repeat-3-tpms-schoen-iwp-sheet-actual/mesh.npz": {
+      "sha256": "2febabdd70d846377ad0ca476e96c3c27c8c250223f4e3fdca51c87547d7981b",
+      "array_sha256": "a60199b1b9279c762c583b56fe7eb6ab0d9306642cd17b8b406e57bd17f3cdc9"
+    },
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-tpms-tet4-count-repeated-v1/study/repeat-3-tpms-schoen-frd-sheet-native/mesh.npz": {
+      "sha256": "8d6ac068dbec00112c640346ff5c3156b6dc512e196618bb04b20cd53c9d87f5",
+      "array_sha256": "0196518c835f93b650a11c4dcb42e5c51e11cd1636dc1e9e24321b1019de77a6"
+    },
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-tpms-tet4-count-repeated-v1/study/repeat-3-tpms-schoen-frd-sheet-actual/mesh.npz": {
+      "sha256": "e8f2f89581a1183c360be9d6813a9ad4b6cbec8399dc239c88f03a9f1a7105ab",
+      "array_sha256": "fadd24a84e71248297fb5b7a9c7b92227bdad28ab19c0d347ff0957050d58139"
+    },
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-tpms-tet4-count-repeated-v1/study/repeat-3-tpms-pmy-sheet-native/mesh.npz": {
+      "sha256": "a1590ede0925903caf0f9e5c47c36ab3791fbca347cbfd4c59d868402c07b13a",
+      "array_sha256": "0564be3ab679f6016874027b0d119301b3284ba4bf875122601072f5c32c2fb1"
+    },
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-tpms-tet4-count-repeated-v1/study/repeat-3-tpms-pmy-sheet-actual/mesh.npz": {
+      "sha256": "9ac950a7cb36db5013a2fcb91fd21ac3fb6f1386046784ee69c9926bd9e5ec01",
+      "array_sha256": "59b14ad66e8e50cf531fe08f535d5ee55f2a80b0c0505c9caf2ec77c6caefbc6"
+    },
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-tpms-tet4-count-repeated-v1/study/repeat-3-tpms-lidinoid-sheet-native/mesh.npz": {
+      "sha256": "8afa85a9d713dcfd9e2e598fd18d20ca7ae8880ada6cd7e474fb8ee4ba2f5882",
+      "array_sha256": "93f66089d2f1c8b1d940af8ab3cdc85e7a780e1cb8576e627179f217b288c633"
+    },
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-tpms-tet4-count-repeated-v1/study/repeat-3-tpms-lidinoid-sheet-actual/mesh.npz": {
+      "sha256": "0a5b2bce68fe6bd730a2ef991fba2d4f6ad1ab11ed7344c4469d37119ae493f5",
+      "array_sha256": "cbc48cc1a2a4fb36b690cf1247ab9b6304d8f3e5b6de1c2b1b22ead5ac3ea5cd"
+    },
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-tpms-tet4-count-repeated-v1/study/repeat-3-tpms-honeycomb-gyroid-sheet-native/mesh.npz": {
+      "sha256": "775f74044f4dd39dfef2de58af20091f2864ae825922bc5c812c07b13f51e313",
+      "array_sha256": "fdde4ac322a9defb213b9c1538eb6b3e34e000b643e86262b544b3eeab188f84"
+    },
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-tpms-tet4-count-repeated-v1/study/repeat-3-tpms-honeycomb-gyroid-sheet-actual/mesh.npz": {
+      "sha256": "94f0c3948d348d7b7fa29bc1411ecc164d367c64a8c5f7cad5a771f560c182f5",
+      "array_sha256": "f3d6ab2326e34cb85dde2735001b20107f314a16a76e582cecdf337dddd8c4ae"
+    },
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-tpms-tet4-count-repeated-v1/study/repeat-3-tpms-honeycomb-schwarz-p-sheet-native/mesh.npz": {
+      "sha256": "d358e4c4dc21d643ce05996c988275f72b1d8793bd5e2c2030c092d1c53dfe98",
+      "array_sha256": "31fd0538b4434eb524a62c96462b91a07f213e4efe5d4eb3f39071dfa93cd33e"
+    },
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-tpms-tet4-count-repeated-v1/study/repeat-3-tpms-honeycomb-schwarz-p-sheet-actual/mesh.npz": {
+      "sha256": "e897c94f34ea7915299b4a16c7e279db0784363dd1c23a1c3b613d69dd2be7cf",
+      "array_sha256": "728b5a692bb6946b0f37da3010bd7774722a615fe1d0935f4a8895534074be7f"
+    },
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-tpms-tet4-count-repeated-v1/study/repeat-3-tpms-honeycomb-schwarz-d-sheet-native/mesh.npz": {
+      "sha256": "5991d31786ddadb352dc270e783a4aa66144b50e82d691dd585562d5582961cf",
+      "array_sha256": "8de4d7a3c0c024f886dcdf914eea0a528b330aae2462c5e3722d7f846c3c7dcc"
+    },
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-tpms-tet4-count-repeated-v1/study/repeat-3-tpms-honeycomb-schwarz-d-sheet-actual/mesh.npz": {
+      "sha256": "b2efab1e9b96f0434400e394c84b8a63e26129f325105ab8b1d14327e9be5159",
+      "array_sha256": "3d7318e062d0b66a484b9184e7aae3e55f1effff5a642da024aef6b8171fcc58"
+    },
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-tpms-tet4-count-repeated-v1/study/repeat-3-tpms-honeycomb-schoen-iwp-sheet-native/mesh.npz": {
+      "sha256": "292211055590abe001b42f92b526cc2c26dd029e4c64fd369400eb41c97606e1",
+      "array_sha256": "8004236f43bfffc1753f98eb19800932736ccf20cb95cd587124c9a8218882aa"
+    },
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-tpms-tet4-count-repeated-v1/study/repeat-3-tpms-honeycomb-schoen-iwp-sheet-actual/mesh.npz": {
+      "sha256": "931a93f3dd00ac4e873bd5d43a09141806f0745c2809d4bd238ccebed0ddc82e",
+      "array_sha256": "dbc63eecea6bafaa1b9afdcdbbc585bb4ae5804c44db3d1b589d1077f24152a8"
+    },
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-tpms-tet4-count-repeated-v1/study/repeat-3-tpms-honeycomb-lidinoid-sheet-native/mesh.npz": {
+      "sha256": "9825baa3d30e63af951baa4724e19ea4b1de777668e045725f3d55649658f847",
+      "array_sha256": "75d1c9162bb8ebd69b4cb0d8f1e6b94effac13c6150df138a31eebc3052e4f44"
+    },
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-tpms-tet4-count-repeated-v1/study/repeat-3-tpms-honeycomb-lidinoid-sheet-actual/mesh.npz": {
+      "sha256": "bae40c32313fc8b9413a282ea13d83b1ada0cf2d72cda908e7ef0c2cf05044e9",
+      "array_sha256": "6f8930db08971eed6dfb9a4886a44c37021fc4e0e34712fb938b2cae46520557"
+    },
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-tpms-tet4-count-repeated-v1/study/repeat-3-schwarz-solid-native/mesh.npz": {
+      "sha256": "9629851d4ddf2b2103ed2b4d71c601b2e015f99a7d638c9677814c593d2db5fa",
+      "array_sha256": "6ac913d9806bb64a61c22d7410c909925e5093e0dda7a032e5212cbe04134af2"
+    },
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-tpms-tet4-count-repeated-v1/study/repeat-3-schwarz-solid-actual/mesh.npz": {
+      "sha256": "cdffabf8fb4d9d9d8d24baa273afe19f0da4958f1e2716a6f4140c05cd17036b",
+      "array_sha256": "14180f86b55f4538d439a6f971e3ad6d403e81a0c151996eefac3494ce1a206d"
+    },
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-tpms-tet4-count-repeated-v1/study/repeat-4-tpms-gyroid-sheet-actual/mesh.npz": {
+      "sha256": "cd733a49f71fad803baea5a5f173525c69622d8190f2044fb5948193de87e809",
+      "array_sha256": "c14acb10049a9653e920ed0350c0a3657ff2945d7ff89cecb560d167358295e7"
+    },
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-tpms-tet4-count-repeated-v1/study/repeat-4-tpms-gyroid-sheet-native/mesh.npz": {
+      "sha256": "c7f09ee64d6316dede5d9ea5612ad3b897902cd27d088ae0166bf29cce4be64b",
+      "array_sha256": "37ecf758142f3d9bdf58d66d87a449144a0613eb7ef6891f061a731188c838f8"
+    },
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-tpms-tet4-count-repeated-v1/study/repeat-4-tpms-schwarz-p-sheet-actual/mesh.npz": {
+      "sha256": "972f35f7d8c3100806e4658dddde08714935a5ce26595c855489108dc3fbc381",
+      "array_sha256": "a6ad310c567fbf44dadbe997c4d60ef202b344a071f09cda24d0d8773e0289a7"
+    },
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-tpms-tet4-count-repeated-v1/study/repeat-4-tpms-schwarz-p-sheet-native/mesh.npz": {
+      "sha256": "84b712feb6ae953ffab390601a1367d225cadc05ea01b09eafb72f293d3b7a78",
+      "array_sha256": "18ed5f588c244b79ec3a0eab9a3f4894c608cb9380352009ead48e53185c16f3"
+    },
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-tpms-tet4-count-repeated-v1/study/repeat-4-tpms-schwarz-d-sheet-actual/mesh.npz": {
+      "sha256": "323fe0530404720f55921fd2b0ce7142f04901d2821b2e51cbcbf095e65a8570",
+      "array_sha256": "cdb2821c1427ce4edecd67d654b7e3138bc558d962d00e130ab67c9f97aecdad"
+    },
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-tpms-tet4-count-repeated-v1/study/repeat-4-tpms-schwarz-d-sheet-native/mesh.npz": {
+      "sha256": "ad9434733f189193efb578080cda85f1587656b7b29e7fe94d028ce2dd25fae5",
+      "array_sha256": "e18401d56671a7cafff0851969168bdfa23e452305559a85cc03d69539f91f4a"
+    },
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-tpms-tet4-count-repeated-v1/study/repeat-4-tpms-neovius-sheet-actual/mesh.npz": {
+      "sha256": "9cf2780ddb4347003a97e8175934705ec4c89c5b19d9abdfa124bcac61b5a857",
+      "array_sha256": "07378cc7ed4091432ab7cd1d59ebaf405113a3ab5570bd86c6dae3fb0e865d97"
+    },
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-tpms-tet4-count-repeated-v1/study/repeat-4-tpms-neovius-sheet-native/mesh.npz": {
+      "sha256": "eb199adbce19678baa32e77009bf4ae6396f328667dac355809cda15417848cf",
+      "array_sha256": "aaaa3b0c781cb5abef4565bf302c2be990c92208d44c814cb1c115d37ac541ff"
+    },
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-tpms-tet4-count-repeated-v1/study/repeat-4-tpms-schoen-iwp-sheet-actual/mesh.npz": {
+      "sha256": "2febabdd70d846377ad0ca476e96c3c27c8c250223f4e3fdca51c87547d7981b",
+      "array_sha256": "a60199b1b9279c762c583b56fe7eb6ab0d9306642cd17b8b406e57bd17f3cdc9"
+    },
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-tpms-tet4-count-repeated-v1/study/repeat-4-tpms-schoen-iwp-sheet-native/mesh.npz": {
+      "sha256": "79066856c3b655cf0f3e96f13d1c430b6bb786e5238522020830d3422a11c228",
+      "array_sha256": "e962970cbabca139f914930ebc9ba3a5e67260901e4e62235bb98123dba21dc1"
+    },
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-tpms-tet4-count-repeated-v1/study/repeat-4-tpms-schoen-frd-sheet-actual/mesh.npz": {
+      "sha256": "e8f2f89581a1183c360be9d6813a9ad4b6cbec8399dc239c88f03a9f1a7105ab",
+      "array_sha256": "fadd24a84e71248297fb5b7a9c7b92227bdad28ab19c0d347ff0957050d58139"
+    },
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-tpms-tet4-count-repeated-v1/study/repeat-4-tpms-schoen-frd-sheet-native/mesh.npz": {
+      "sha256": "8d6ac068dbec00112c640346ff5c3156b6dc512e196618bb04b20cd53c9d87f5",
+      "array_sha256": "0196518c835f93b650a11c4dcb42e5c51e11cd1636dc1e9e24321b1019de77a6"
+    },
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-tpms-tet4-count-repeated-v1/study/repeat-4-tpms-pmy-sheet-actual/mesh.npz": {
+      "sha256": "9ac950a7cb36db5013a2fcb91fd21ac3fb6f1386046784ee69c9926bd9e5ec01",
+      "array_sha256": "59b14ad66e8e50cf531fe08f535d5ee55f2a80b0c0505c9caf2ec77c6caefbc6"
+    },
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-tpms-tet4-count-repeated-v1/study/repeat-4-tpms-pmy-sheet-native/mesh.npz": {
+      "sha256": "a1590ede0925903caf0f9e5c47c36ab3791fbca347cbfd4c59d868402c07b13a",
+      "array_sha256": "0564be3ab679f6016874027b0d119301b3284ba4bf875122601072f5c32c2fb1"
+    },
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-tpms-tet4-count-repeated-v1/study/repeat-4-tpms-lidinoid-sheet-actual/mesh.npz": {
+      "sha256": "0a5b2bce68fe6bd730a2ef991fba2d4f6ad1ab11ed7344c4469d37119ae493f5",
+      "array_sha256": "cbc48cc1a2a4fb36b690cf1247ab9b6304d8f3e5b6de1c2b1b22ead5ac3ea5cd"
+    },
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-tpms-tet4-count-repeated-v1/study/repeat-4-tpms-lidinoid-sheet-native/mesh.npz": {
+      "sha256": "8afa85a9d713dcfd9e2e598fd18d20ca7ae8880ada6cd7e474fb8ee4ba2f5882",
+      "array_sha256": "93f66089d2f1c8b1d940af8ab3cdc85e7a780e1cb8576e627179f217b288c633"
+    },
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-tpms-tet4-count-repeated-v1/study/repeat-4-tpms-honeycomb-gyroid-sheet-actual/mesh.npz": {
+      "sha256": "94f0c3948d348d7b7fa29bc1411ecc164d367c64a8c5f7cad5a771f560c182f5",
+      "array_sha256": "f3d6ab2326e34cb85dde2735001b20107f314a16a76e582cecdf337dddd8c4ae"
+    },
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-tpms-tet4-count-repeated-v1/study/repeat-4-tpms-honeycomb-gyroid-sheet-native/mesh.npz": {
+      "sha256": "775f74044f4dd39dfef2de58af20091f2864ae825922bc5c812c07b13f51e313",
+      "array_sha256": "fdde4ac322a9defb213b9c1538eb6b3e34e000b643e86262b544b3eeab188f84"
+    },
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-tpms-tet4-count-repeated-v1/study/repeat-4-tpms-honeycomb-schwarz-p-sheet-actual/mesh.npz": {
+      "sha256": "e897c94f34ea7915299b4a16c7e279db0784363dd1c23a1c3b613d69dd2be7cf",
+      "array_sha256": "728b5a692bb6946b0f37da3010bd7774722a615fe1d0935f4a8895534074be7f"
+    },
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-tpms-tet4-count-repeated-v1/study/repeat-4-tpms-honeycomb-schwarz-p-sheet-native/mesh.npz": {
+      "sha256": "d358e4c4dc21d643ce05996c988275f72b1d8793bd5e2c2030c092d1c53dfe98",
+      "array_sha256": "31fd0538b4434eb524a62c96462b91a07f213e4efe5d4eb3f39071dfa93cd33e"
+    },
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-tpms-tet4-count-repeated-v1/study/repeat-4-tpms-honeycomb-schwarz-d-sheet-actual/mesh.npz": {
+      "sha256": "b2efab1e9b96f0434400e394c84b8a63e26129f325105ab8b1d14327e9be5159",
+      "array_sha256": "3d7318e062d0b66a484b9184e7aae3e55f1effff5a642da024aef6b8171fcc58"
+    },
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-tpms-tet4-count-repeated-v1/study/repeat-4-tpms-honeycomb-schwarz-d-sheet-native/mesh.npz": {
+      "sha256": "5991d31786ddadb352dc270e783a4aa66144b50e82d691dd585562d5582961cf",
+      "array_sha256": "8de4d7a3c0c024f886dcdf914eea0a528b330aae2462c5e3722d7f846c3c7dcc"
+    },
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-tpms-tet4-count-repeated-v1/study/repeat-4-tpms-honeycomb-schoen-iwp-sheet-actual/mesh.npz": {
+      "sha256": "931a93f3dd00ac4e873bd5d43a09141806f0745c2809d4bd238ccebed0ddc82e",
+      "array_sha256": "dbc63eecea6bafaa1b9afdcdbbc585bb4ae5804c44db3d1b589d1077f24152a8"
+    },
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-tpms-tet4-count-repeated-v1/study/repeat-4-tpms-honeycomb-schoen-iwp-sheet-native/mesh.npz": {
+      "sha256": "292211055590abe001b42f92b526cc2c26dd029e4c64fd369400eb41c97606e1",
+      "array_sha256": "8004236f43bfffc1753f98eb19800932736ccf20cb95cd587124c9a8218882aa"
+    },
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-tpms-tet4-count-repeated-v1/study/repeat-4-tpms-honeycomb-lidinoid-sheet-actual/mesh.npz": {
+      "sha256": "bae40c32313fc8b9413a282ea13d83b1ada0cf2d72cda908e7ef0c2cf05044e9",
+      "array_sha256": "6f8930db08971eed6dfb9a4886a44c37021fc4e0e34712fb938b2cae46520557"
+    },
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-tpms-tet4-count-repeated-v1/study/repeat-4-tpms-honeycomb-lidinoid-sheet-native/mesh.npz": {
+      "sha256": "9825baa3d30e63af951baa4724e19ea4b1de777668e045725f3d55649658f847",
+      "array_sha256": "75d1c9162bb8ebd69b4cb0d8f1e6b94effac13c6150df138a31eebc3052e4f44"
+    },
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-tpms-tet4-count-repeated-v1/study/repeat-4-schwarz-solid-actual/mesh.npz": {
+      "sha256": "cdffabf8fb4d9d9d8d24baa273afe19f0da4958f1e2716a6f4140c05cd17036b",
+      "array_sha256": "14180f86b55f4538d439a6f971e3ad6d403e81a0c151996eefac3494ce1a206d"
+    },
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-tpms-tet4-count-repeated-v1/study/repeat-4-schwarz-solid-native/mesh.npz": {
+      "sha256": "9629851d4ddf2b2103ed2b4d71c601b2e015f99a7d638c9677814c593d2db5fa",
+      "array_sha256": "6ac913d9806bb64a61c22d7410c909925e5093e0dda7a032e5212cbe04134af2"
+    }
+  },
+  "distinct_meshes": {
+    "c14acb10049a9653e920ed0350c0a3657ff2945d7ff89cecb560d167358295e7": {
+      "case": "tpms-gyroid-sheet",
+      "arm": "actual",
+      "nodes": 3103,
+      "tets": 10566,
+      "nonpositive_tets": 0
+    },
+    "b52403b41318d8d776ef797e7f92c6974220bea72620262922f26eb8abeed47f": {
+      "case": "tpms-gyroid-sheet",
+      "arm": "native",
+      "nodes": 3733,
+      "tets": 11672,
+      "nonpositive_tets": 0
+    },
+    "a6ad310c567fbf44dadbe997c4d60ef202b344a071f09cda24d0d8773e0289a7": {
+      "case": "tpms-schwarz-p-sheet",
+      "arm": "actual",
+      "nodes": 2408,
+      "tets": 8644,
+      "nonpositive_tets": 0
+    },
+    "2e22f299de5ace5393f2b0f8c9541e6a11e460b0795bb32627175a514a19e506": {
+      "case": "tpms-schwarz-p-sheet",
+      "arm": "native",
+      "nodes": 3036,
+      "tets": 10098,
+      "nonpositive_tets": 0
+    },
+    "cdb2821c1427ce4edecd67d654b7e3138bc558d962d00e130ab67c9f97aecdad": {
+      "case": "tpms-schwarz-d-sheet",
+      "arm": "actual",
+      "nodes": 4753,
+      "tets": 16840,
+      "nonpositive_tets": 0
+    },
+    "e18401d56671a7cafff0851969168bdfa23e452305559a85cc03d69539f91f4a": {
+      "case": "tpms-schwarz-d-sheet",
+      "arm": "native",
+      "nodes": 5965,
+      "tets": 19197,
+      "nonpositive_tets": 0
+    },
+    "07378cc7ed4091432ab7cd1d59ebaf405113a3ab5570bd86c6dae3fb0e865d97": {
+      "case": "tpms-neovius-sheet",
+      "arm": "actual",
+      "nodes": 3916,
+      "tets": 15023,
+      "nonpositive_tets": 0
+    },
+    "aaaa3b0c781cb5abef4565bf302c2be990c92208d44c814cb1c115d37ac541ff": {
+      "case": "tpms-neovius-sheet",
+      "arm": "native",
+      "nodes": 4596,
+      "tets": 15480,
+      "nonpositive_tets": 0
+    },
+    "a60199b1b9279c762c583b56fe7eb6ab0d9306642cd17b8b406e57bd17f3cdc9": {
+      "case": "tpms-schoen-iwp-sheet",
+      "arm": "actual",
+      "nodes": 3627,
+      "tets": 12785,
+      "nonpositive_tets": 0
+    },
+    "78f2c2d41840240d1c72c773ba4661c36fa2c9c611e2a1c41bb56381bf1832bd": {
+      "case": "tpms-schoen-iwp-sheet",
+      "arm": "native",
+      "nodes": 5424,
+      "tets": 16992,
+      "nonpositive_tets": 0
+    },
+    "fadd24a84e71248297fb5b7a9c7b92227bdad28ab19c0d347ff0957050d58139": {
+      "case": "tpms-schoen-frd-sheet",
+      "arm": "actual",
+      "nodes": 6233,
+      "tets": 23394,
+      "nonpositive_tets": 0
+    },
+    "565938cf2dd8122185b06203b1e0b2d9ba6fc38ddcdc5c4f8032df77901657c7": {
+      "case": "tpms-schoen-frd-sheet",
+      "arm": "native",
+      "nodes": 7872,
+      "tets": 24324,
+      "nonpositive_tets": 0
+    },
+    "59b14ad66e8e50cf531fe08f535d5ee55f2a80b0c0505c9caf2ec77c6caefbc6": {
+      "case": "tpms-pmy-sheet",
+      "arm": "actual",
+      "nodes": 8415,
+      "tets": 33147,
+      "nonpositive_tets": 0
+    },
+    "0564be3ab679f6016874027b0d119301b3284ba4bf875122601072f5c32c2fb1": {
+      "case": "tpms-pmy-sheet",
+      "arm": "native",
+      "nodes": 8136,
+      "tets": 25558,
+      "nonpositive_tets": 0
+    },
+    "15a750d97811f1079a5260e930527cbb5a4a0ea8c004913fd6665814eb9cac2c": {
+      "case": "tpms-honeycomb-sheet",
+      "arm": "actual",
+      "nodes": 3555,
+      "tets": 13426,
+      "nonpositive_tets": 0
+    },
+    "cbc48cc1a2a4fb36b690cf1247ab9b6304d8f3e5b6de1c2b1b22ead5ac3ea5cd": {
+      "case": "tpms-lidinoid-sheet",
+      "arm": "actual",
+      "nodes": 20583,
+      "tets": 97708,
+      "nonpositive_tets": 0
+    },
+    "93f66089d2f1c8b1d940af8ab3cdc85e7a780e1cb8576e627179f217b288c633": {
+      "case": "tpms-lidinoid-sheet",
+      "arm": "native",
+      "nodes": 21530,
+      "tets": 73296,
+      "nonpositive_tets": 0
+    },
+    "9fd42fc8bb3fc0a5525110b23d19fbad46dd73b12a3afc5d06ac25f151b2f41e": {
+      "case": "tpms-split-p-sheet",
+      "arm": "native",
+      "nodes": 10292,
+      "tets": 31688,
+      "nonpositive_tets": 0
+    },
+    "f3d6ab2326e34cb85dde2735001b20107f314a16a76e582cecdf337dddd8c4ae": {
+      "case": "tpms-honeycomb-gyroid-sheet",
+      "arm": "actual",
+      "nodes": 2645,
+      "tets": 9596,
+      "nonpositive_tets": 0
+    },
+    "fdde4ac322a9defb213b9c1538eb6b3e34e000b643e86262b544b3eeab188f84": {
+      "case": "tpms-honeycomb-gyroid-sheet",
+      "arm": "native",
+      "nodes": 2297,
+      "tets": 7864,
+      "nonpositive_tets": 0
+    },
+    "728b5a692bb6946b0f37da3010bd7774722a615fe1d0935f4a8895534074be7f": {
+      "case": "tpms-honeycomb-schwarz-p-sheet",
+      "arm": "actual",
+      "nodes": 2396,
+      "tets": 8630,
+      "nonpositive_tets": 0
+    },
+    "3b9c19446df3c39c5f727b4877ad829472c1037110c598b69e27a36fa66f5ee6": {
+      "case": "tpms-honeycomb-schwarz-p-sheet",
+      "arm": "native",
+      "nodes": 3416,
+      "tets": 11504,
+      "nonpositive_tets": 0
+    },
+    "3d7318e062d0b66a484b9184e7aae3e55f1effff5a642da024aef6b8171fcc58": {
+      "case": "tpms-honeycomb-schwarz-d-sheet",
+      "arm": "actual",
+      "nodes": 3161,
+      "tets": 11584,
+      "nonpositive_tets": 0
+    },
+    "489f02927ce64ef5df63103a0b69a10cb36e38fa66a8d91f496e05244238fe1e": {
+      "case": "tpms-honeycomb-schwarz-d-sheet",
+      "arm": "native",
+      "nodes": 4720,
+      "tets": 15378,
+      "nonpositive_tets": 0
+    },
+    "dbc63eecea6bafaa1b9afdcdbbc585bb4ae5804c44db3d1b589d1077f24152a8": {
+      "case": "tpms-honeycomb-schoen-iwp-sheet",
+      "arm": "actual",
+      "nodes": 1483,
+      "tets": 5246,
+      "nonpositive_tets": 0
+    },
+    "05bd16323144bd7c982e26c71e996682a14ae0ab8812469dde1d212130c238e4": {
+      "case": "tpms-honeycomb-schoen-iwp-sheet",
+      "arm": "native",
+      "nodes": 1780,
+      "tets": 5936,
+      "nonpositive_tets": 0
+    },
+    "6f8930db08971eed6dfb9a4886a44c37021fc4e0e34712fb938b2cae46520557": {
+      "case": "tpms-honeycomb-lidinoid-sheet",
+      "arm": "actual",
+      "nodes": 5599,
+      "tets": 21348,
+      "nonpositive_tets": 0
+    },
+    "21805b9903d41c3d479389a1a111f0222010761761cad0b6a2cfd4dc4a33beed": {
+      "case": "tpms-honeycomb-lidinoid-sheet",
+      "arm": "native",
+      "nodes": 8161,
+      "tets": 25256,
+      "nonpositive_tets": 0
+    },
+    "14180f86b55f4538d439a6f971e3ad6d403e81a0c151996eefac3494ce1a206d": {
+      "case": "schwarz-solid",
+      "arm": "actual",
+      "nodes": 3151,
+      "tets": 10829,
+      "nonpositive_tets": 0
+    },
+    "6ac913d9806bb64a61c22d7410c909925e5093e0dda7a032e5212cbe04134af2": {
+      "case": "schwarz-solid",
+      "arm": "native",
+      "nodes": 2972,
+      "tets": 11976,
+      "nonpositive_tets": 0
+    },
+    "5a87a94acbaafe16902e1585e4ab4c080d82af5aac82198df68f3c6d1ee29679": {
+      "case": "schwarz-d-solid",
+      "arm": "native",
+      "nodes": 6491,
+      "tets": 27900,
+      "nonpositive_tets": 0
+    },
+    "37ecf758142f3d9bdf58d66d87a449144a0613eb7ef6891f061a731188c838f8": {
+      "case": "tpms-gyroid-sheet",
+      "arm": "native",
+      "nodes": 3045,
+      "tets": 9162,
+      "nonpositive_tets": 0
+    },
+    "18ed5f588c244b79ec3a0eab9a3f4894c608cb9380352009ead48e53185c16f3": {
+      "case": "tpms-schwarz-p-sheet",
+      "arm": "native",
+      "nodes": 2284,
+      "tets": 7668,
+      "nonpositive_tets": 0
+    },
+    "4be58b624de51d8060cd2a5964e8320a2b2176f01b587af1beb81f95ca8a2072": {
+      "case": "tpms-schwarz-d-sheet",
+      "arm": "native",
+      "nodes": 4267,
+      "tets": 13239,
+      "nonpositive_tets": 0
+    },
+    "e962970cbabca139f914930ebc9ba3a5e67260901e4e62235bb98123dba21dc1": {
+      "case": "tpms-schoen-iwp-sheet",
+      "arm": "native",
+      "nodes": 2958,
+      "tets": 8880,
+      "nonpositive_tets": 0
+    },
+    "0196518c835f93b650a11c4dcb42e5c51e11cd1636dc1e9e24321b1019de77a6": {
+      "case": "tpms-schoen-frd-sheet",
+      "arm": "native",
+      "nodes": 6982,
+      "tets": 21576,
+      "nonpositive_tets": 0
+    },
+    "59a73c63af784f2fe29d535058af539c3b37fefa13e0bccb2deed07cac347921": {
+      "case": "tpms-honeycomb-gyroid-sheet",
+      "arm": "native",
+      "nodes": 3768,
+      "tets": 12956,
+      "nonpositive_tets": 0
+    },
+    "31fd0538b4434eb524a62c96462b91a07f213e4efe5d4eb3f39071dfa93cd33e": {
+      "case": "tpms-honeycomb-schwarz-p-sheet",
+      "arm": "native",
+      "nodes": 1878,
+      "tets": 6178,
+      "nonpositive_tets": 0
+    },
+    "8de4d7a3c0c024f886dcdf914eea0a528b330aae2462c5e3722d7f846c3c7dcc": {
+      "case": "tpms-honeycomb-schwarz-d-sheet",
+      "arm": "native",
+      "nodes": 3052,
+      "tets": 9388,
+      "nonpositive_tets": 0
+    },
+    "8004236f43bfffc1753f98eb19800932736ccf20cb95cd587124c9a8218882aa": {
+      "case": "tpms-honeycomb-schoen-iwp-sheet",
+      "arm": "native",
+      "nodes": 1624,
+      "tets": 5212,
+      "nonpositive_tets": 0
+    },
+    "75d1c9162bb8ebd69b4cb0d8f1e6b94effac13c6150df138a31eebc3052e4f44": {
+      "case": "tpms-honeycomb-lidinoid-sheet",
+      "arm": "native",
+      "nodes": 5326,
+      "tets": 15942,
+      "nonpositive_tets": 0
+    }
+  },
+  "report_sha256": "53988ca0211cd65c68efe7f9412fc98de21ff239e8a339363547d85fa583b86e",
+  "selection_sha256": "d11bc393668f7cfd66d78fd44910dc56a308d59aaabfd279982771e33d601843",
+  "scope": "Actual Tet4 arrays, hashes, frozen input copies, positive determinants, counts, volume and quality replay. Existing complete periodic/geometry audits remain in the per-worker evidence. No new FEA or admitted-speed claim."
+}

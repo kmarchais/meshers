@@ -1,0 +1,714 @@
+{
+  "cases": [
+    {
+      "case": "tpms-gyroid-sheet",
+      "fixture_kind": "tpms",
+      "fixtures": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-tpms-family-fixtures-v1",
+      "native": {
+        "name": "native-tet4-budget",
+        "arm": "meshers",
+        "cells": 11,
+        "order": 1,
+        "adapt": false,
+        "tolerance": 1.0,
+        "periodic_trace": true,
+        "declared_unit_cell": true
+      },
+      "actual": {
+        "name": "actual-default-tet4",
+        "arm": "microgen",
+        "resolution": null,
+        "order": 1,
+        "periodic_trace": true,
+        "declared_unit_cell": true
+      },
+      "historical_actual_tets": 10566,
+      "historical_native_tets": 23506,
+      "selection": "Cubic count estimate from uniform16 historical tetrahedra",
+      "historical_sources": [
+        "experiments/adaptive/runs/macbook-tpms-family-remaining-v1/tpms-gyroid-sheet-actual-default",
+        "experiments/adaptive/runs/macbook-tpms-family-remaining-v1/tpms-gyroid-sheet-native-fit"
+      ],
+      "chosen_native_directory": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-tpms-tet4-count-correction-v1/study/repeat-0-tpms-gyroid-sheet-native",
+      "actual_directory": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-tpms-tet4-count-pilot-v1/study/repeat-0-tpms-gyroid-sheet-actual",
+      "repeat": true,
+      "elements_ratio": 0.8671209540034072,
+      "nodes_ratio": 0.9813084112149533,
+      "count_deviation": 0.1425768032775737,
+      "action": "repeat-frozen-count-nearest-produced"
+    },
+    {
+      "case": "tpms-schwarz-p-sheet",
+      "fixture_kind": "tpms",
+      "fixtures": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-tpms-family-fixtures-v1",
+      "native": {
+        "name": "native-tet4-budget",
+        "arm": "meshers",
+        "cells": 11,
+        "order": 1,
+        "adapt": false,
+        "tolerance": 1.0,
+        "periodic_trace": true,
+        "declared_unit_cell": true
+      },
+      "actual": {
+        "name": "actual-default-tet4",
+        "arm": "microgen",
+        "resolution": null,
+        "order": 1,
+        "periodic_trace": true,
+        "declared_unit_cell": true
+      },
+      "historical_actual_tets": 8644,
+      "historical_native_tets": 20856,
+      "selection": "Cubic count estimate from uniform16 historical tetrahedra",
+      "historical_sources": [
+        "experiments/adaptive/runs/macbook-tpms-family-remaining-v1/tpms-schwarz-p-sheet-actual-default",
+        "experiments/adaptive/runs/macbook-tpms-family-remaining-v1/tpms-schwarz-p-sheet-native-fit"
+      ],
+      "chosen_native_directory": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-tpms-tet4-count-correction-v1/study/repeat-0-tpms-schwarz-p-sheet-native",
+      "actual_directory": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-tpms-tet4-count-pilot-v1/study/repeat-0-tpms-schwarz-p-sheet-actual",
+      "repeat": true,
+      "elements_ratio": 0.8870893105043961,
+      "nodes_ratio": 0.9485049833887044,
+      "count_deviation": 0.1198096134612415,
+      "action": "repeat-frozen-count-nearest-produced"
+    },
+    {
+      "case": "tpms-schwarz-d-sheet",
+      "fixture_kind": "tpms",
+      "fixtures": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-tpms-family-fixtures-v1",
+      "native": {
+        "name": "native-tet4-budget",
+        "arm": "meshers",
+        "cells": 14,
+        "order": 1,
+        "adapt": false,
+        "tolerance": 1.0,
+        "periodic_trace": true,
+        "declared_unit_cell": true
+      },
+      "actual": {
+        "name": "actual-default-tet4",
+        "arm": "microgen",
+        "resolution": null,
+        "order": 1,
+        "periodic_trace": true,
+        "declared_unit_cell": true
+      },
+      "historical_actual_tets": 16840,
+      "historical_native_tets": 25185,
+      "selection": "Cubic count estimate from uniform16 historical tetrahedra",
+      "historical_sources": [
+        "experiments/adaptive/runs/macbook-tpms-family-remaining-v1/tpms-schwarz-d-sheet-actual-default",
+        "experiments/adaptive/runs/macbook-tpms-family-remaining-v1/tpms-schwarz-d-sheet-native-fit"
+      ],
+      "chosen_native_directory": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-tpms-tet4-count-pilot-v1/study/repeat-0-tpms-schwarz-d-sheet-native",
+      "actual_directory": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-tpms-tet4-count-pilot-v1/study/repeat-0-tpms-schwarz-d-sheet-actual",
+      "repeat": true,
+      "elements_ratio": 1.1399643705463183,
+      "nodes_ratio": 1.2549968440984642,
+      "count_deviation": 0.22713305791800714,
+      "action": "repeat-frozen-count-nearest-produced"
+    },
+    {
+      "case": "tpms-neovius-sheet",
+      "fixture_kind": "tpms",
+      "fixtures": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-tpms-family-fixtures-v1",
+      "native": {
+        "name": "native-tet4-budget",
+        "arm": "meshers",
+        "cells": 14,
+        "order": 1,
+        "adapt": false,
+        "tolerance": 1.0,
+        "periodic_trace": true,
+        "declared_unit_cell": true
+      },
+      "actual": {
+        "name": "actual-default-tet4",
+        "arm": "microgen",
+        "resolution": null,
+        "order": 1,
+        "periodic_trace": true,
+        "declared_unit_cell": true
+      },
+      "historical_actual_tets": 15023,
+      "historical_native_tets": 22452,
+      "selection": "Cubic count estimate from uniform16 historical tetrahedra",
+      "historical_sources": [
+        "experiments/adaptive/runs/macbook-tpms-family-pilot-v1/tpms-neovius-sheet-actual-default",
+        "experiments/adaptive/runs/macbook-tpms-family-pilot-v1/tpms-neovius-sheet-native-fit"
+      ],
+      "chosen_native_directory": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-tpms-tet4-count-pilot-v1/study/repeat-0-tpms-neovius-sheet-native",
+      "actual_directory": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-tpms-tet4-count-pilot-v1/study/repeat-0-tpms-neovius-sheet-actual",
+      "repeat": true,
+      "elements_ratio": 1.0304200226319644,
+      "nodes_ratio": 1.1736465781409602,
+      "count_deviation": 0.16011563531824533,
+      "action": "repeat-frozen-count-nearest-produced"
+    },
+    {
+      "case": "tpms-schoen-iwp-sheet",
+      "fixture_kind": "tpms",
+      "fixtures": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-tpms-family-fixtures-v1",
+      "native": {
+        "name": "native-tet4-budget",
+        "arm": "meshers",
+        "cells": 11,
+        "order": 1,
+        "adapt": false,
+        "tolerance": 1.0,
+        "periodic_trace": true,
+        "declared_unit_cell": true
+      },
+      "actual": {
+        "name": "actual-default-tet4",
+        "arm": "microgen",
+        "resolution": null,
+        "order": 1,
+        "periodic_trace": true,
+        "declared_unit_cell": true
+      },
+      "historical_actual_tets": 12785,
+      "historical_native_tets": 21504,
+      "selection": "Cubic count estimate from uniform16 historical tetrahedra",
+      "historical_sources": [
+        "experiments/adaptive/runs/macbook-tpms-family-pilot-v1/tpms-schoen-iwp-sheet-actual-default",
+        "experiments/adaptive/runs/macbook-tpms-family-pilot-v1/tpms-schoen-iwp-sheet-native-fit"
+      ],
+      "chosen_native_directory": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-tpms-tet4-count-correction-v1/study/repeat-0-tpms-schoen-iwp-sheet-native",
+      "actual_directory": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-tpms-tet4-count-pilot-v1/study/repeat-0-tpms-schoen-iwp-sheet-actual",
+      "repeat": true,
+      "elements_ratio": 0.6945639421196715,
+      "nodes_ratio": 0.815550041356493,
+      "count_deviation": 0.3644710517390712,
+      "action": "repeat-frozen-count-nearest-produced"
+    },
+    {
+      "case": "tpms-schoen-frd-sheet",
+      "fixture_kind": "tpms",
+      "fixtures": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-tpms-family-fixtures-v1",
+      "native": {
+        "name": "native-tet4-budget",
+        "arm": "meshers",
+        "cells": 14,
+        "order": 1,
+        "adapt": false,
+        "tolerance": 1.0,
+        "periodic_trace": true,
+        "declared_unit_cell": true
+      },
+      "actual": {
+        "name": "actual-default-tet4",
+        "arm": "microgen",
+        "resolution": null,
+        "order": 1,
+        "periodic_trace": true,
+        "declared_unit_cell": true
+      },
+      "historical_actual_tets": 23394,
+      "historical_native_tets": 25908,
+      "selection": "Cubic count estimate from uniform16 historical tetrahedra",
+      "historical_sources": [
+        "experiments/adaptive/runs/macbook-tpms-family-remaining-v1/tpms-schoen-frd-sheet-actual-default",
+        "experiments/adaptive/runs/macbook-tpms-family-remaining-v1/tpms-schoen-frd-sheet-native-fit"
+      ],
+      "chosen_native_directory": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-tpms-tet4-count-correction-v1/study/repeat-0-tpms-schoen-frd-sheet-native",
+      "actual_directory": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-tpms-tet4-count-pilot-v1/study/repeat-0-tpms-schoen-frd-sheet-actual",
+      "repeat": true,
+      "elements_ratio": 0.9222877660938702,
+      "nodes_ratio": 1.1201668538424514,
+      "count_deviation": 0.1134776508561307,
+      "action": "repeat-frozen-count-nearest-produced"
+    },
+    {
+      "case": "tpms-pmy-sheet",
+      "fixture_kind": "tpms",
+      "fixtures": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-tpms-family-fixtures-v1",
+      "native": {
+        "name": "native-tet4-budget",
+        "arm": "meshers",
+        "cells": 15,
+        "order": 1,
+        "adapt": false,
+        "tolerance": 1.0,
+        "periodic_trace": true,
+        "declared_unit_cell": true
+      },
+      "actual": {
+        "name": "actual-default-tet4",
+        "arm": "microgen",
+        "resolution": null,
+        "order": 1,
+        "periodic_trace": true,
+        "declared_unit_cell": true
+      },
+      "historical_actual_tets": 33147,
+      "historical_native_tets": 40295,
+      "selection": "Cubic count estimate from uniform16 historical tetrahedra",
+      "historical_sources": [
+        "experiments/adaptive/runs/macbook-tpms-family-remaining-v1/tpms-pmy-sheet-actual-default",
+        "experiments/adaptive/runs/macbook-tpms-family-remaining-v1/tpms-pmy-sheet-native-fit"
+      ],
+      "chosen_native_directory": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-tpms-tet4-count-pilot-v1/study/repeat-0-tpms-pmy-sheet-native",
+      "actual_directory": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-tpms-tet4-count-pilot-v1/study/repeat-0-tpms-pmy-sheet-actual",
+      "repeat": true,
+      "elements_ratio": 0.7710501704528313,
+      "nodes_ratio": 0.9668449197860962,
+      "count_deviation": 0.2600018356126361,
+      "action": "repeat-frozen-count-nearest-produced"
+    },
+    {
+      "case": "tpms-lidinoid-sheet",
+      "fixture_kind": "tpms",
+      "fixtures": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-tpms-family-fixtures-v1",
+      "native": {
+        "name": "native-tet4-budget",
+        "arm": "meshers",
+        "cells": 23,
+        "order": 1,
+        "adapt": false,
+        "tolerance": 1.0,
+        "periodic_trace": true,
+        "declared_unit_cell": true
+      },
+      "actual": {
+        "name": "actual-default-tet4",
+        "arm": "microgen",
+        "resolution": null,
+        "order": 1,
+        "periodic_trace": true,
+        "declared_unit_cell": true
+      },
+      "historical_actual_tets": 97708,
+      "historical_native_tets": 31410,
+      "selection": "Cubic count estimate from uniform16 historical tetrahedra",
+      "historical_sources": [
+        "experiments/adaptive/runs/macbook-tpms-family-remaining-v1/tpms-lidinoid-sheet-actual-default",
+        "experiments/adaptive/runs/macbook-tpms-family-remaining-v1/tpms-lidinoid-sheet-native-fit"
+      ],
+      "chosen_native_directory": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-tpms-tet4-count-pilot-v1/study/repeat-0-tpms-lidinoid-sheet-native",
+      "actual_directory": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-tpms-tet4-count-pilot-v1/study/repeat-0-tpms-lidinoid-sheet-actual",
+      "repeat": true,
+      "elements_ratio": 0.7501535186473983,
+      "nodes_ratio": 1.0460088422484575,
+      "count_deviation": 0.2874774018683694,
+      "action": "repeat-frozen-count-nearest-produced"
+    },
+    {
+      "case": "tpms-honeycomb-gyroid-sheet",
+      "fixture_kind": "tpms",
+      "fixtures": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-tpms-family-fixtures-v1",
+      "native": {
+        "name": "native-tet4-budget",
+        "arm": "meshers",
+        "cells": 12,
+        "order": 1,
+        "adapt": false,
+        "tolerance": 1.0,
+        "periodic_trace": true,
+        "declared_unit_cell": true
+      },
+      "actual": {
+        "name": "actual-default-tet4",
+        "arm": "microgen",
+        "resolution": null,
+        "order": 1,
+        "periodic_trace": true,
+        "declared_unit_cell": true
+      },
+      "historical_actual_tets": 9596,
+      "historical_native_tets": 21202,
+      "selection": "Cubic count estimate from uniform16 historical tetrahedra",
+      "historical_sources": [
+        "experiments/adaptive/runs/macbook-tpms-family-remaining-v1/tpms-honeycomb-gyroid-sheet-actual-default",
+        "experiments/adaptive/runs/macbook-tpms-family-remaining-v1/tpms-honeycomb-gyroid-sheet-native-fit"
+      ],
+      "chosen_native_directory": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-tpms-tet4-count-pilot-v1/study/repeat-0-tpms-honeycomb-gyroid-sheet-native",
+      "actual_directory": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-tpms-tet4-count-pilot-v1/study/repeat-0-tpms-honeycomb-gyroid-sheet-actual",
+      "repeat": true,
+      "elements_ratio": 0.8195081283868278,
+      "nodes_ratio": 0.8684310018903592,
+      "count_deviation": 0.1990509621325827,
+      "action": "repeat-frozen-count-nearest-produced"
+    },
+    {
+      "case": "tpms-honeycomb-schwarz-p-sheet",
+      "fixture_kind": "tpms",
+      "fixtures": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-tpms-family-fixtures-v1",
+      "native": {
+        "name": "native-tet4-budget",
+        "arm": "meshers",
+        "cells": 11,
+        "order": 1,
+        "adapt": false,
+        "tolerance": 1.0,
+        "periodic_trace": true,
+        "declared_unit_cell": true
+      },
+      "actual": {
+        "name": "actual-default-tet4",
+        "arm": "microgen",
+        "resolution": null,
+        "order": 1,
+        "periodic_trace": true,
+        "declared_unit_cell": true
+      },
+      "historical_actual_tets": 8630,
+      "historical_native_tets": 18840,
+      "selection": "Cubic count estimate from uniform16 historical tetrahedra",
+      "historical_sources": [
+        "experiments/adaptive/runs/macbook-tpms-family-remaining-v1/tpms-honeycomb-schwarz-p-sheet-actual-default",
+        "experiments/adaptive/runs/macbook-tpms-family-remaining-v1/tpms-honeycomb-schwarz-p-sheet-native-fit"
+      ],
+      "chosen_native_directory": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-tpms-tet4-count-correction-v1/study/repeat-0-tpms-honeycomb-schwarz-p-sheet-native",
+      "actual_directory": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-tpms-tet4-count-pilot-v1/study/repeat-0-tpms-honeycomb-schwarz-p-sheet-actual",
+      "repeat": true,
+      "elements_ratio": 0.715874855156431,
+      "nodes_ratio": 0.7838063439065108,
+      "count_deviation": 0.33424991059894665,
+      "action": "repeat-frozen-count-nearest-produced"
+    },
+    {
+      "case": "tpms-honeycomb-schwarz-d-sheet",
+      "fixture_kind": "tpms",
+      "fixtures": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-tpms-family-fixtures-v1",
+      "native": {
+        "name": "native-tet4-budget",
+        "arm": "meshers",
+        "cells": 11,
+        "order": 1,
+        "adapt": false,
+        "tolerance": 1.0,
+        "periodic_trace": true,
+        "declared_unit_cell": true
+      },
+      "actual": {
+        "name": "actual-default-tet4",
+        "arm": "microgen",
+        "resolution": null,
+        "order": 1,
+        "periodic_trace": true,
+        "declared_unit_cell": true
+      },
+      "historical_actual_tets": 11584,
+      "historical_native_tets": 21840,
+      "selection": "Cubic count estimate from uniform16 historical tetrahedra",
+      "historical_sources": [
+        "experiments/adaptive/runs/macbook-tpms-family-remaining-v1/tpms-honeycomb-schwarz-d-sheet-actual-default",
+        "experiments/adaptive/runs/macbook-tpms-family-remaining-v1/tpms-honeycomb-schwarz-d-sheet-native-fit"
+      ],
+      "chosen_native_directory": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-tpms-tet4-count-correction-v1/study/repeat-0-tpms-honeycomb-schwarz-d-sheet-native",
+      "actual_directory": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-tpms-tet4-count-pilot-v1/study/repeat-0-tpms-honeycomb-schwarz-d-sheet-actual",
+      "repeat": true,
+      "elements_ratio": 0.8104281767955801,
+      "nodes_ratio": 0.9655172413793104,
+      "count_deviation": 0.21019255765458347,
+      "action": "repeat-frozen-count-nearest-produced"
+    },
+    {
+      "case": "tpms-honeycomb-schoen-iwp-sheet",
+      "fixture_kind": "tpms",
+      "fixtures": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-tpms-family-fixtures-v1",
+      "native": {
+        "name": "native-tet4-budget",
+        "arm": "meshers",
+        "cells": 9,
+        "order": 1,
+        "adapt": false,
+        "tolerance": 1.0,
+        "periodic_trace": true,
+        "declared_unit_cell": true
+      },
+      "actual": {
+        "name": "actual-default-tet4",
+        "arm": "microgen",
+        "resolution": null,
+        "order": 1,
+        "periodic_trace": true,
+        "declared_unit_cell": true
+      },
+      "historical_actual_tets": 5246,
+      "historical_native_tets": 21752,
+      "selection": "Cubic count estimate from uniform16 historical tetrahedra",
+      "historical_sources": [
+        "experiments/adaptive/runs/macbook-tpms-family-remaining-v1/tpms-honeycomb-schoen-iwp-sheet-actual-default",
+        "experiments/adaptive/runs/macbook-tpms-family-remaining-v1/tpms-honeycomb-schoen-iwp-sheet-native-fit"
+      ],
+      "chosen_native_directory": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-tpms-tet4-count-correction-v1/study/repeat-0-tpms-honeycomb-schoen-iwp-sheet-native",
+      "actual_directory": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-tpms-tet4-count-pilot-v1/study/repeat-0-tpms-honeycomb-schoen-iwp-sheet-actual",
+      "repeat": true,
+      "elements_ratio": 0.993518871521159,
+      "nodes_ratio": 1.0950775455158464,
+      "count_deviation": 0.09082517858369125,
+      "action": "repeat-frozen-count-nearest-produced"
+    },
+    {
+      "case": "tpms-honeycomb-lidinoid-sheet",
+      "fixture_kind": "tpms",
+      "fixtures": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-tpms-family-fixtures-v1",
+      "native": {
+        "name": "native-tet4-budget",
+        "arm": "meshers",
+        "cells": 13,
+        "order": 1,
+        "adapt": false,
+        "tolerance": 1.0,
+        "periodic_trace": true,
+        "declared_unit_cell": true
+      },
+      "actual": {
+        "name": "actual-default-tet4",
+        "arm": "microgen",
+        "resolution": null,
+        "order": 1,
+        "periodic_trace": true,
+        "declared_unit_cell": true
+      },
+      "historical_actual_tets": 21348,
+      "historical_native_tets": 25002,
+      "selection": "Cubic count estimate from uniform16 historical tetrahedra",
+      "historical_sources": [
+        "experiments/adaptive/runs/macbook-tpms-family-remaining-v1/tpms-honeycomb-lidinoid-sheet-actual-default",
+        "experiments/adaptive/runs/macbook-tpms-family-remaining-v1/tpms-honeycomb-lidinoid-sheet-native-fit"
+      ],
+      "chosen_native_directory": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-tpms-tet4-count-correction-v1/study/repeat-0-tpms-honeycomb-lidinoid-sheet-native",
+      "actual_directory": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-tpms-tet4-count-pilot-v1/study/repeat-0-tpms-honeycomb-lidinoid-sheet-actual",
+      "repeat": true,
+      "elements_ratio": 0.7467678471051152,
+      "nodes_ratio": 0.9512412930880514,
+      "count_deviation": 0.29200092246596693,
+      "action": "repeat-frozen-count-nearest-produced"
+    },
+    {
+      "case": "schwarz-solid",
+      "fixture_kind": "study",
+      "fixtures": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-comparison-fixtures-v1",
+      "native": {
+        "name": "native-tet4-budget",
+        "arm": "meshers",
+        "cells": 12,
+        "order": 1,
+        "adapt": false,
+        "tolerance": 1.0,
+        "periodic_trace": true,
+        "declared_unit_cell": true
+      },
+      "actual": {
+        "name": "actual-default-tet4",
+        "arm": "microgen",
+        "resolution": null,
+        "order": 1,
+        "periodic_trace": true,
+        "declared_unit_cell": true
+      },
+      "historical_actual_tets": 10829,
+      "historical_native_tets": 27492,
+      "selection": "Cubic count estimate from historical tetrahedra",
+      "historical_sources": [
+        "experiments/adaptive/runs/macbook-verified-schwarz-p-pilot-v1/repeat-0-actual-default-tet4",
+        "experiments/adaptive/runs/macbook-verified-schwarz-p-repeated-v1/repeat-0-meshers-curved-tet10"
+      ],
+      "chosen_native_directory": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-tpms-tet4-count-pilot-v1/study/repeat-0-schwarz-solid-native",
+      "actual_directory": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-tpms-tet4-count-pilot-v1/study/repeat-0-schwarz-solid-actual",
+      "repeat": true,
+      "elements_ratio": 1.1059192907932405,
+      "nodes_ratio": 0.9431926372580133,
+      "count_deviation": 0.10067692647108495,
+      "action": "repeat-frozen-count-nearest-produced"
+    }
+  ],
+  "inputs": {
+    "experiments/adaptive/runs/macbook-tpms-family-pilot-v1/summary.json": "586da622a0c4e2dcb980d10396be6f677cdef10a89db14cf4ad8178308e8e13f",
+    "experiments/adaptive/runs/macbook-tpms-family-remaining-v1/summary.json": "6180c6e66a702372dc8c7f8e83b409f111f26d7d67a55f181fcda9c386376389",
+    "handoff/macbook/comparison-findings-20261026.json": "e37247280a0c14f622ec6c6ebf5a777dc2531ccba6d5c1fd51dcb063913a45b0"
+  },
+  "all_orders": 1,
+  "all_periodic": true,
+  "specimens": "16 frozen approx30percent sheet specimens plus original Schwarz P andD half-solid specimens. Gyroid sheet here differs from original35.6percent sheet.",
+  "phase_policy": "Pilot both routes once; inspect before at most one count correction per case. Repeat only cases with returned meshes from both arms, five interleaved pairs plus excluded warmup. Preserve failures and show remaining count ratios.",
+  "gates": {
+    "distance": 0.002,
+    "absolute_relative_volume": 0.01,
+    "minimum_quality": 0.1,
+    "max_nodes": 250000,
+    "max_tets": 250000
+  },
+  "timing_scope": "Raw default comparisons if either mesh rejects; no admitted-speed-ratio claim. No FEA transfer.",
+  "volume_scope": "Frozen independent sampled references; retain empirical scramble spread and avoid ranking improvements below its uncertainty.",
+  "decisions": [
+    {
+      "case": "tpms-gyroid-sheet",
+      "chosen_native_directory": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-tpms-tet4-count-correction-v1/study/repeat-0-tpms-gyroid-sheet-native",
+      "actual_directory": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-tpms-tet4-count-pilot-v1/study/repeat-0-tpms-gyroid-sheet-actual",
+      "repeat": true,
+      "elements_ratio": 0.8671209540034072,
+      "nodes_ratio": 0.9813084112149533,
+      "count_deviation": 0.1425768032775737,
+      "action": "repeat-frozen-count-nearest-produced"
+    },
+    {
+      "case": "tpms-schwarz-p-sheet",
+      "chosen_native_directory": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-tpms-tet4-count-correction-v1/study/repeat-0-tpms-schwarz-p-sheet-native",
+      "actual_directory": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-tpms-tet4-count-pilot-v1/study/repeat-0-tpms-schwarz-p-sheet-actual",
+      "repeat": true,
+      "elements_ratio": 0.8870893105043961,
+      "nodes_ratio": 0.9485049833887044,
+      "count_deviation": 0.1198096134612415,
+      "action": "repeat-frozen-count-nearest-produced"
+    },
+    {
+      "case": "tpms-schwarz-d-sheet",
+      "chosen_native_directory": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-tpms-tet4-count-pilot-v1/study/repeat-0-tpms-schwarz-d-sheet-native",
+      "actual_directory": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-tpms-tet4-count-pilot-v1/study/repeat-0-tpms-schwarz-d-sheet-actual",
+      "repeat": true,
+      "elements_ratio": 1.1399643705463183,
+      "nodes_ratio": 1.2549968440984642,
+      "count_deviation": 0.22713305791800714,
+      "action": "repeat-frozen-count-nearest-produced"
+    },
+    {
+      "case": "tpms-neovius-sheet",
+      "chosen_native_directory": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-tpms-tet4-count-pilot-v1/study/repeat-0-tpms-neovius-sheet-native",
+      "actual_directory": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-tpms-tet4-count-pilot-v1/study/repeat-0-tpms-neovius-sheet-actual",
+      "repeat": true,
+      "elements_ratio": 1.0304200226319644,
+      "nodes_ratio": 1.1736465781409602,
+      "count_deviation": 0.16011563531824533,
+      "action": "repeat-frozen-count-nearest-produced"
+    },
+    {
+      "case": "tpms-schoen-iwp-sheet",
+      "chosen_native_directory": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-tpms-tet4-count-correction-v1/study/repeat-0-tpms-schoen-iwp-sheet-native",
+      "actual_directory": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-tpms-tet4-count-pilot-v1/study/repeat-0-tpms-schoen-iwp-sheet-actual",
+      "repeat": true,
+      "elements_ratio": 0.6945639421196715,
+      "nodes_ratio": 0.815550041356493,
+      "count_deviation": 0.3644710517390712,
+      "action": "repeat-frozen-count-nearest-produced"
+    },
+    {
+      "case": "tpms-schoen-frd-sheet",
+      "chosen_native_directory": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-tpms-tet4-count-correction-v1/study/repeat-0-tpms-schoen-frd-sheet-native",
+      "actual_directory": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-tpms-tet4-count-pilot-v1/study/repeat-0-tpms-schoen-frd-sheet-actual",
+      "repeat": true,
+      "elements_ratio": 0.9222877660938702,
+      "nodes_ratio": 1.1201668538424514,
+      "count_deviation": 0.1134776508561307,
+      "action": "repeat-frozen-count-nearest-produced"
+    },
+    {
+      "case": "tpms-fischer-koch-s-sheet",
+      "chosen_native_directory": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-tpms-tet4-count-pilot-v1/study/repeat-0-tpms-fischer-koch-s-sheet-native",
+      "actual_directory": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-tpms-tet4-count-pilot-v1/study/repeat-0-tpms-fischer-koch-s-sheet-actual",
+      "repeat": false,
+      "action": "no-returned-pair-no-repeated-timing"
+    },
+    {
+      "case": "tpms-pmy-sheet",
+      "chosen_native_directory": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-tpms-tet4-count-pilot-v1/study/repeat-0-tpms-pmy-sheet-native",
+      "actual_directory": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-tpms-tet4-count-pilot-v1/study/repeat-0-tpms-pmy-sheet-actual",
+      "repeat": true,
+      "elements_ratio": 0.7710501704528313,
+      "nodes_ratio": 0.9668449197860962,
+      "count_deviation": 0.2600018356126361,
+      "action": "repeat-frozen-count-nearest-produced"
+    },
+    {
+      "case": "tpms-honeycomb-sheet",
+      "chosen_native_directory": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-tpms-tet4-count-pilot-v1/study/repeat-0-tpms-honeycomb-sheet-native",
+      "actual_directory": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-tpms-tet4-count-pilot-v1/study/repeat-0-tpms-honeycomb-sheet-actual",
+      "repeat": false,
+      "action": "no-returned-pair-no-repeated-timing"
+    },
+    {
+      "case": "tpms-lidinoid-sheet",
+      "chosen_native_directory": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-tpms-tet4-count-pilot-v1/study/repeat-0-tpms-lidinoid-sheet-native",
+      "actual_directory": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-tpms-tet4-count-pilot-v1/study/repeat-0-tpms-lidinoid-sheet-actual",
+      "repeat": true,
+      "elements_ratio": 0.7501535186473983,
+      "nodes_ratio": 1.0460088422484575,
+      "count_deviation": 0.2874774018683694,
+      "action": "repeat-frozen-count-nearest-produced"
+    },
+    {
+      "case": "tpms-split-p-sheet",
+      "chosen_native_directory": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-tpms-tet4-count-pilot-v1/study/repeat-0-tpms-split-p-sheet-native",
+      "actual_directory": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-tpms-tet4-count-pilot-v1/study/repeat-0-tpms-split-p-sheet-actual",
+      "repeat": false,
+      "action": "no-returned-pair-no-repeated-timing"
+    },
+    {
+      "case": "tpms-honeycomb-gyroid-sheet",
+      "chosen_native_directory": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-tpms-tet4-count-pilot-v1/study/repeat-0-tpms-honeycomb-gyroid-sheet-native",
+      "actual_directory": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-tpms-tet4-count-pilot-v1/study/repeat-0-tpms-honeycomb-gyroid-sheet-actual",
+      "repeat": true,
+      "elements_ratio": 0.8195081283868278,
+      "nodes_ratio": 0.8684310018903592,
+      "count_deviation": 0.1990509621325827,
+      "action": "repeat-frozen-count-nearest-produced"
+    },
+    {
+      "case": "tpms-honeycomb-schwarz-p-sheet",
+      "chosen_native_directory": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-tpms-tet4-count-correction-v1/study/repeat-0-tpms-honeycomb-schwarz-p-sheet-native",
+      "actual_directory": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-tpms-tet4-count-pilot-v1/study/repeat-0-tpms-honeycomb-schwarz-p-sheet-actual",
+      "repeat": true,
+      "elements_ratio": 0.715874855156431,
+      "nodes_ratio": 0.7838063439065108,
+      "count_deviation": 0.33424991059894665,
+      "action": "repeat-frozen-count-nearest-produced"
+    },
+    {
+      "case": "tpms-honeycomb-schwarz-d-sheet",
+      "chosen_native_directory": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-tpms-tet4-count-correction-v1/study/repeat-0-tpms-honeycomb-schwarz-d-sheet-native",
+      "actual_directory": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-tpms-tet4-count-pilot-v1/study/repeat-0-tpms-honeycomb-schwarz-d-sheet-actual",
+      "repeat": true,
+      "elements_ratio": 0.8104281767955801,
+      "nodes_ratio": 0.9655172413793104,
+      "count_deviation": 0.21019255765458347,
+      "action": "repeat-frozen-count-nearest-produced"
+    },
+    {
+      "case": "tpms-honeycomb-schoen-iwp-sheet",
+      "chosen_native_directory": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-tpms-tet4-count-correction-v1/study/repeat-0-tpms-honeycomb-schoen-iwp-sheet-native",
+      "actual_directory": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-tpms-tet4-count-pilot-v1/study/repeat-0-tpms-honeycomb-schoen-iwp-sheet-actual",
+      "repeat": true,
+      "elements_ratio": 0.993518871521159,
+      "nodes_ratio": 1.0950775455158464,
+      "count_deviation": 0.09082517858369125,
+      "action": "repeat-frozen-count-nearest-produced"
+    },
+    {
+      "case": "tpms-honeycomb-lidinoid-sheet",
+      "chosen_native_directory": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-tpms-tet4-count-correction-v1/study/repeat-0-tpms-honeycomb-lidinoid-sheet-native",
+      "actual_directory": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-tpms-tet4-count-pilot-v1/study/repeat-0-tpms-honeycomb-lidinoid-sheet-actual",
+      "repeat": true,
+      "elements_ratio": 0.7467678471051152,
+      "nodes_ratio": 0.9512412930880514,
+      "count_deviation": 0.29200092246596693,
+      "action": "repeat-frozen-count-nearest-produced"
+    },
+    {
+      "case": "schwarz-solid",
+      "chosen_native_directory": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-tpms-tet4-count-pilot-v1/study/repeat-0-schwarz-solid-native",
+      "actual_directory": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-tpms-tet4-count-pilot-v1/study/repeat-0-schwarz-solid-actual",
+      "repeat": true,
+      "elements_ratio": 1.1059192907932405,
+      "nodes_ratio": 0.9431926372580133,
+      "count_deviation": 0.10067692647108495,
+      "action": "repeat-frozen-count-nearest-produced"
+    },
+    {
+      "case": "schwarz-d-solid",
+      "chosen_native_directory": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-tpms-tet4-count-pilot-v1/study/repeat-0-schwarz-d-solid-native",
+      "actual_directory": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-tpms-tet4-count-pilot-v1/study/repeat-0-schwarz-d-solid-actual",
+      "repeat": false,
+      "action": "no-returned-pair-no-repeated-timing"
+    }
+  ],
+  "selection_policy": "Count proximity only, independent of timing, distance, quality or admission. One correction when joint log count deviation exceeds log1.2; this20percent trigger is a research scheduling rule, not an admission gate.",
+  "source_selection_sha256": "8c8c73c4ca855ba77e5135b8a959e83d662dc6afe0f9e4e0f932ebe0dc3c982d",
+  "pilot_sha256": "5ad9c985f13935369371afde1bd1078c9f67b802b71446c8f6244792a6fd7cec",
+  "correction_sha256": "f8d06992d5bc72ac702c4982f79a5b272f6326d45f2b0a593aebfc5f44df8399"
+}

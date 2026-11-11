@@ -1,5 +1,24 @@
 # Adaptive implicit meshing: plan and status
 
+## TPMS Tet4 count comparisons complete, 11 November 2026
+
+Jobs 820 through 823 extend the count-selected comparison to 16 frozen sheet families
+and the two original Schwarz solids. Fourteen returned pairs have five fresh
+interleaved measurements each. Four cases retain bounded route failures.
+All 214 attempts and 209 returned artifacts are accounted for and verified.
+
+The native recipes have lower raw generation time and higher minimum quality
+in all 14 returned-pair cases. Median quality improves on seven and the common
+reverse boundary measure improves on eleven. None of these coarse selected
+pairs passes every strict gate. Preserve all failures and count ratios; do not
+infer an admitted speedup or FEA convergence from this raw comparison.
+
+Next controls should address accurate Tet4 allocation/coarsening and the
+specific boundary/median-quality tradeoffs. Keep Honeycomb and Fischer–Koch S
+coarse quality rejections as failure controls. See PROJECT_TRACKING.md and
+handoff/macbook/tpms-tet4-findings-20261111.json. All original cases and 24 lattice
+models remain in scope.
+
 ## Tet4 efficiency priority, 11 November 2026
 
 Kevin prioritizes direct Tet4 comparisons at comparable element and node counts.

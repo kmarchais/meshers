@@ -1,5 +1,63 @@
 # Meshers project tracking
 
+## Direct Tet4 comparison across TPMS families, 11 November 2026
+
+The extension covers all 16 pinned TPMS families in sheet form at approximately
+30% material volume, plus the original Schwarz P and Schwarz D half-solid
+specimens. The new 30% Gyroid sheet differs from the original 35.6% study sheet.
+All physical definitions, offsets and samples stay frozen across both arms.
+Every delivered mesh is Tet4. This comparison changes no meshing code or default.
+
+Jobs 820 through 823 complete 214 attempts: 36 pilot generations, 10 count corrections,
+168 warmup/measured generations, then read-only verification. Fourteen specimens
+return meshes from both routes and receive five fresh interleaved pairs after
+one excluded warmup pair. Selections depend only on element/node proximity,
+never on timing, quality or boundary scores. Native-to-actual count ratios
+range 0.695–1.140 for tets and 0.784–1.255 for nodes, so budgets are not identical.
+All ratios and superseded attempts remain visible.
+
+| Raw metric | Native better in returned-pair cases |
+|---|---:|
+| Generation time | 14/14 |
+| Minimum quality | 14/14 |
+| Median quality | 7/14 |
+| Common sampled reverse boundary distance | 11/14 |
+| Tetrahedron count | 11/14 |
+| Node count | 9/14 |
+| Volume discrepancy against the recorded reference | 13/14 |
+
+These are raw observations on coarse budgets, not 14 admitted wins. Neither
+arm supplies a selected pair passing every strict admission gate. The common
+boundary column measures the same frozen wall/cap queries against produced
+triangles. Full two-sided distance is separate and can be absent after cheap
+quality, topology or volume rejection. Volume from inconsistent actual facets
+is diagnostic. The 16 sheet references retain their empirical Sobol spread;
+the original Schwarz solids retain the exact half-cell reference.
+
+Native reverse distance is higher on Schwarz P sheet, Schoen IWP sheet and
+Honeycomb Lidinoid sheet at their selected lower element counts. Median quality
+is lower on seven specimens. The coarse Honeycomb recipe rejects one sub-0.1
+tet; Fischer–Koch S rejects five. Actual defaults time out at 180 seconds on
+Fischer–Koch S and Split P, and reject the original Schwarz D seed as nonperiodic.
+These are failures of the tested routes and budgets, not universal geometry
+impossibility results. Four specimens therefore have no returned comparison pair.
+
+Verification checks 209 returned artifacts comprising 41 distinct array sets,
+frozen sample/specimen copies, binary/source hashes, Tet4 connectivity, counts,
+volumes, quality quantiles and positive-volume gate consistency. Every measured
+route reproduces identical arrays over its five repetitions. The progress
+audit passes for the new single-plan runner. No new FEA result or reference is
+promoted, and all four original cases and 24 lattice tensors remain in scope.
+
+The next Tet4 work remains accurate allocation/coarsening and coarse-quality
+recovery. This dataset adds specific boundary/median-quality tradeoffs and the
+Honeycomb/Fischer–Koch S rejection controls. It does not replace the previously
+admitted higher-resolution or explicitly modified actual routes.
+
+[Color comparison](handoff/macbook/tpms-tet4-comparison-20261111.html),
+[numeric metrics](handoff/macbook/tpms-tet4-comparison-20261111.json), and
+[verified findings](handoff/macbook/tpms-tet4-findings-20261111.json).
+
 ## Tet4 comparison becomes the primary performance priority, 11 November 2026
 
 Kevin requires a direct Tet4 comparison with comparable element and node counts.

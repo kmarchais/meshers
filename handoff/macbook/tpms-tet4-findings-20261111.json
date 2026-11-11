@@ -1,0 +1,92 @@
+{
+  "specimens": 18,
+  "families": 16,
+  "repeated_returned_pairs": 14,
+  "measured_pairs": 70,
+  "attempts": 214,
+  "returned_artifacts": 209,
+  "distinct_meshes": 41,
+  "better_raw_metric_cases": {
+    "lower_generation_time": 14,
+    "fewer_tets": 11,
+    "fewer_nodes": 9,
+    "higher_minimum_quality": 14,
+    "higher_median_quality": 7,
+    "lower_common_reverse_distance": 11,
+    "lower_volume_discrepancy": 13
+  },
+  "worse_or_equal_cases": {
+    "lower_generation_time": [],
+    "fewer_tets": [
+      "tpms-schwarz-d-sheet",
+      "tpms-neovius-sheet",
+      "schwarz-solid"
+    ],
+    "fewer_nodes": [
+      "tpms-schwarz-d-sheet",
+      "tpms-neovius-sheet",
+      "tpms-schoen-frd-sheet",
+      "tpms-lidinoid-sheet",
+      "tpms-honeycomb-schoen-iwp-sheet"
+    ],
+    "higher_minimum_quality": [],
+    "higher_median_quality": [
+      "tpms-gyroid-sheet",
+      "tpms-schwarz-d-sheet",
+      "tpms-schoen-iwp-sheet",
+      "tpms-schoen-frd-sheet",
+      "tpms-pmy-sheet",
+      "tpms-honeycomb-schwarz-d-sheet",
+      "tpms-honeycomb-schoen-iwp-sheet"
+    ],
+    "lower_common_reverse_distance": [
+      "tpms-schwarz-p-sheet",
+      "tpms-schoen-iwp-sheet",
+      "tpms-honeycomb-lidinoid-sheet"
+    ],
+    "lower_volume_discrepancy": [
+      "schwarz-solid"
+    ]
+  },
+  "cases_without_returned_pair": [
+    "tpms-fischer-koch-s-sheet",
+    "tpms-honeycomb-sheet",
+    "tpms-split-p-sheet",
+    "schwarz-d-solid"
+  ],
+  "repeated_arrays_identical_within_each_route": true,
+  "array_groups": {
+    "tpms-gyroid-sheet-actual": "c14acb10049a9653e920ed0350c0a3657ff2945d7ff89cecb560d167358295e7",
+    "tpms-gyroid-sheet-native": "37ecf758142f3d9bdf58d66d87a449144a0613eb7ef6891f061a731188c838f8",
+    "tpms-schwarz-p-sheet-actual": "a6ad310c567fbf44dadbe997c4d60ef202b344a071f09cda24d0d8773e0289a7",
+    "tpms-schwarz-p-sheet-native": "18ed5f588c244b79ec3a0eab9a3f4894c608cb9380352009ead48e53185c16f3",
+    "tpms-schwarz-d-sheet-actual": "cdb2821c1427ce4edecd67d654b7e3138bc558d962d00e130ab67c9f97aecdad",
+    "tpms-schwarz-d-sheet-native": "e18401d56671a7cafff0851969168bdfa23e452305559a85cc03d69539f91f4a",
+    "tpms-neovius-sheet-actual": "07378cc7ed4091432ab7cd1d59ebaf405113a3ab5570bd86c6dae3fb0e865d97",
+    "tpms-neovius-sheet-native": "aaaa3b0c781cb5abef4565bf302c2be990c92208d44c814cb1c115d37ac541ff",
+    "tpms-schoen-iwp-sheet-actual": "a60199b1b9279c762c583b56fe7eb6ab0d9306642cd17b8b406e57bd17f3cdc9",
+    "tpms-schoen-iwp-sheet-native": "e962970cbabca139f914930ebc9ba3a5e67260901e4e62235bb98123dba21dc1",
+    "tpms-schoen-frd-sheet-actual": "fadd24a84e71248297fb5b7a9c7b92227bdad28ab19c0d347ff0957050d58139",
+    "tpms-schoen-frd-sheet-native": "0196518c835f93b650a11c4dcb42e5c51e11cd1636dc1e9e24321b1019de77a6",
+    "tpms-pmy-sheet-actual": "59b14ad66e8e50cf531fe08f535d5ee55f2a80b0c0505c9caf2ec77c6caefbc6",
+    "tpms-pmy-sheet-native": "0564be3ab679f6016874027b0d119301b3284ba4bf875122601072f5c32c2fb1",
+    "tpms-lidinoid-sheet-actual": "cbc48cc1a2a4fb36b690cf1247ab9b6304d8f3e5b6de1c2b1b22ead5ac3ea5cd",
+    "tpms-lidinoid-sheet-native": "93f66089d2f1c8b1d940af8ab3cdc85e7a780e1cb8576e627179f217b288c633",
+    "tpms-honeycomb-gyroid-sheet-actual": "f3d6ab2326e34cb85dde2735001b20107f314a16a76e582cecdf337dddd8c4ae",
+    "tpms-honeycomb-gyroid-sheet-native": "fdde4ac322a9defb213b9c1538eb6b3e34e000b643e86262b544b3eeab188f84",
+    "tpms-honeycomb-schwarz-p-sheet-actual": "728b5a692bb6946b0f37da3010bd7774722a615fe1d0935f4a8895534074be7f",
+    "tpms-honeycomb-schwarz-p-sheet-native": "31fd0538b4434eb524a62c96462b91a07f213e4efe5d4eb3f39071dfa93cd33e",
+    "tpms-honeycomb-schwarz-d-sheet-actual": "3d7318e062d0b66a484b9184e7aae3e55f1effff5a642da024aef6b8171fcc58",
+    "tpms-honeycomb-schwarz-d-sheet-native": "8de4d7a3c0c024f886dcdf914eea0a528b330aae2462c5e3722d7f846c3c7dcc",
+    "tpms-honeycomb-schoen-iwp-sheet-actual": "dbc63eecea6bafaa1b9afdcdbbc585bb4ae5804c44db3d1b589d1077f24152a8",
+    "tpms-honeycomb-schoen-iwp-sheet-native": "8004236f43bfffc1753f98eb19800932736ccf20cb95cd587124c9a8218882aa",
+    "tpms-honeycomb-lidinoid-sheet-actual": "6f8930db08971eed6dfb9a4886a44c37021fc4e0e34712fb938b2cae46520557",
+    "tpms-honeycomb-lidinoid-sheet-native": "75d1c9162bb8ebd69b4cb0d8f1e6b94effac13c6150df138a31eebc3052e4f44",
+    "schwarz-solid-actual": "14180f86b55f4538d439a6f971e3ad6d403e81a0c151996eefac3494ce1a206d",
+    "schwarz-solid-native": "6ac913d9806bb64a61c22d7410c909925e5093e0dda7a032e5212cbe04134af2"
+  },
+  "strictly_admitted_pairs": 0,
+  "report_sha256": "53988ca0211cd65c68efe7f9412fc98de21ff239e8a339363547d85fa583b86e",
+  "verification_sha256": "f6a45044932ac451d6ad4a1942540831e01a2291a00e4f8e9cd11818f9613449",
+  "scope": "Raw default-route Tet4 comparisons at count-selected coarse budgets. No admitted speedup, full distribution dominance, FEA transfer, default promotion or overall goal completion."
+}
