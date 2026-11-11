@@ -1,0 +1,26 @@
+{
+  "inputs": {
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-pmy-native-background-v2/baseline/input.json": "f0a14e1415f45aadf20477c08c6589b7c06f1a6d0806d2357540113c0653c312",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/pmy_snap_topology_probe.py": "e94ec25d75a9cbc13c98e7d2100167cf6c4fc267950d2c6b217855f261f70ea0",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/pmy_native_background_control.py": "9a8ca2c79ab7e5367b05371c3433dd1e6c20c1d4f031c9473f74890e93adaee9",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/pmy_neck_control.py": "aacab3dd12c99ad5586e8c4efb59b74556e736041fbe20653381c53d577b8668",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/tpms_family_fixtures.py": "794418f5d2e3d2158542af51a5cf322c41befff8f8d7c98f769d379baedd3bc6",
+    "/Users/kmarchais/dev/meshers/crates/meshers-core/src/implicit.rs": "0f6eb8c66b80ca3f49060c275abed876841f403e279e219269d378e4694b4f53",
+    "/Users/kmarchais/dev/meshers/crates/meshers-core/src/lib.rs": "e72b01ac4ed690e58cd12dcf204fe7167e69ff5c80d41156f6a8206ba252e0d3",
+    "/Users/kmarchais/dev/meshers/crates/meshers-core/examples/pmy_background.rs": "98862c07ce8b1f27ac0ee606ab95ef14f14329f2c60f6a96badf8d00ad3c858a"
+  },
+  "timeout_s": 180,
+  "memory_bytes": 8589934592,
+  "numerical_threads": {
+    "environment": {
+      "OPENBLAS_NUM_THREADS": "1",
+      "OMP_NUM_THREADS": "1",
+      "MKL_NUM_THREADS": "1",
+      "VECLIB_MAXIMUM_THREADS": "1",
+      "RAYON_NUM_THREADS": "1"
+    },
+    "accelerate_blas_threading": 1,
+    "accelerate_scope": "calling thread"
+  },
+  "scope": "Isolate post-snap cap triangulation in the PMY background control.\n\nThis replays only the bounded scalar snapping equations and Builder rank rule.\nIt does not generate a candidate or claim native bitwise snapping equivalence.\n"
+}

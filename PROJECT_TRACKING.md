@@ -1,5 +1,165 @@
 # Meshers project tracking
 
+## PMY, CAD intersections and volume fidelity, 11 November 2026
+
+Three scoped agents investigated the three ideas requested by Kevin. The parent
+read the evidence and ran every experiment sequentially in the shared queue.
+The experimental native implementation is committed as `e6102ab`.
+All fixed specimens, the original four cases, all 24 lattice models, and the
+existing geometry, quality, periodicity and 250,000-node/tet gates remain in
+scope. No new FEA solve or reference promotion was performed.
+
+[Results chart](handoff/macbook/three-investigations-20261111.html) and
+[numeric evidence with source hashes](handoff/macbook/three-investigations-20261111.json).
+
+### CAD intersections: distinguish the ridge from smooth-wall chord error
+
+Job 743 independently reproduces the saved native Tet4 and admitted modified
+actual Microgen+MMG meshes. Every native wall corner is already on the analytic
+wall within 9.51e-14. The largest native error is on smooth cylinder patches,
+not at the intersection. Native smooth-patch forward error is 0.001997038;
+ridge reverse error is 0.001478612, versus 0.000329150 on the actual route.
+Native has the higher minimum corner quality, but actual MMG has higher p01,
+p10, median, p90, p99 and maximum quality. Minimum quality alone does not
+establish a generally better quality distribution.
+
+Job 747 tests one fixed-count ridge projection, with all cap nodes fixed and
+the original global minimum q preserved. It accepts 177 vertex moves. Ridge
+maximum improves only 0.94%, to 0.001464701; global boundary maximum does not
+change. Absolute volume error worsens from 0.696069% to 0.698986%, and p01
+quality falls from 0.518744 to 0.517459. This control is not promoted.
+
+Job 751 instead generates native Tet10 with the same recipe and
+`curved_fit=False`. An exact straight Tet10 elevation first reproduces the
+original domain and admission. Native curving preserves every corner, tet
+corner tuple and surface corner tuple bitwise.
+
+| Same CAD union and linear topology | Original Tet4 | Native curved Tet10 |
+|---|---:|---:|
+| Tetrahedra | 49,422 | 49,422 |
+| Nodes | 10,147 | 72,793 |
+| Sampled two-sided boundary distance | 0.001997038 | 0.001196276 |
+| Absolute relative volume error | 0.696069% | 0.000108171% |
+| Smooth-patch forward maximum | 0.001997038 | 0.000003789 |
+| Minimum corner q | 0.309336 | 0.309336 |
+
+Positive125, coherent Tri6 associations and complete periodic caps pass, with
+zero coordinate mismatch and agreement between native and independent pairs.
+The native minimum sampled Jacobian ratio is 0.028268; unchanged corner q does
+not imply unchanged curved distortion. The remaining maximum is on the ridge.
+Near-zero net volume error can also hide local errors of opposite sign.
+
+This is a useful recipe improvement using existing native functionality. It
+uses more nodes than the admitted actual Tet4 mesh, which has 40,350 nodes.
+There is no matched-order FEA comparison, and the 0.506-second generation
+observation does not establish a repeated timing advantage. Native diagnostic
+volume and surface error still describe the linear mesh; the table uses the
+independent final curved-mesh audit.
+
+The next CAD implementation should retain union branch identities and make
+their intersection a shared mesh edge before elevation. A smooth quadratic
+face straddling two branches cannot represent the crease exactly. Start with
+a saved ridge cavity, then select production cavities from branch identities,
+with exposure, quality and periodic guards. Another normal projection of
+already-correct smooth-wall corners would not address chord error.
+
+### Volume fidelity: useful exact controls, but no universal safeguard yet
+
+Jobs 748 and 750 test one signed boundary-bias correction on all nine existing
+specimens. It integrates the unchanged implicit field over curved faces using
+Gauss6 and checks Gauss8 stability. It uses neither reference volume nor frozen
+boundary samples to choose motion. Corners, connectivity, periodic classes and
+the original total 2%-of-edge movement budget remain fixed. The controller
+checks affected curved Jacobians; independent standard and degree13 boundary
+audits then check the complete meshes.
+
+| Analytic exact-volume control | Absolute relative error before | After |
+|---|---:|---:|
+| Schwarz D solid | 2.076073e-6 | 4.444665e-10 |
+| Schwarz P solid | 4.711358e-7 | 1.810226e-10 |
+
+These are dimensionless relative errors, not percentages. All nine candidates
+pass admission. Eight preserve or improve both sampled boundary maxima.
+The fixed spinodoid worsens by 1.09979e-8 on the standard grid, about 0.00374%,
+and by 1.04122e-8 on the dense grid. Prototype correction costs range from
+0.416 to 5.704 seconds, excluding the independent audits; these are not live
+generation speedups or transferred FE scores.
+
+Most other volume references are sampled. For example, the original native
+Gyroid fit changed volume by 3.66e-6 while its frozen Sobol estimates span
+0.000190735. That spread is not a rigorous uncertainty bound, but it prevents
+a defensible physical ranking of such a small change. Preserve the raw scores;
+do not treat their last digits as exact geometry evidence.
+
+Job 753 changes only the distance safeguard to each face's own original
+degree6 residual maximum. It still permits the same spinodoid boundary
+regression while sacrificing much of the exact-volume gain. Gauss6 and Gauss8
+maxima move in opposite directions. The native port is deferred. The next
+diagnostic should compare physical-gradient residual, cap-constrained residual
+and projected distance at identical points on the offending saved patches,
+before choosing another safeguard.
+
+### PMY: bring the frozen background through native clipping
+
+An experimental Rust-core entry point accepts an independently preflighted
+background while retaining native field normalization, snapping, clipping,
+optimization and elevation. It is feature-gated and does not change the Python
+API or default sampling policy. The ordinary path shares the extracted clipping
+routine. A native regression exercises a hidden void recovered by added sampling
+and rejects invalid indices. Job 744 exposes one missing research Context
+initializer; 745 fixes it and passes the targeted regression and strict Clippy.
+
+Jobs 746 and 749 preserve a failed baseline-equivalence check rather than
+attributing its differences to refinement. Reordering the supplied nodes and
+raw tetrahedra does not recover identical output. Job 752 explains the control
+design mismatch: ordinary BCC clipping chooses cap diagonals after snapping,
+while a supplied background fixes those diagonals beforehand. An analytic
+first-snap replay changes 164 cap pyramids, or 328 tets, with no interior tet-set
+differences. This is not a bitwise trace of native topology rollback.
+
+Job 754 therefore uses an explicitly labeled fixed-triangulation ablation.
+It retains the ordinary native baseline and failed equality result, then
+compares the fixed background with its frozen field-only refinement. Every
+physical admission gate stays unchanged. The refined case reaches native
+clipping but rejects at the background determinant cutoff.
+
+Job 755 distinguishes size from actual collapse. All original refined tets
+pass the cutoff before snapping. After the first-snap replay, 116 positive
+tets fall below the absolute cutoff; 68 still have q at least 0.1. None invert
+or fall below 2% of their original determinant. The original BCC cutoff is 2%
+of each tet's determinant, but reaches 72% for the smallest refined tets.
+A local-scale guard is now implemented only on the experimental supplied
+background path. It retains the 2% original-volume safeguard and explicitly
+rejects inverted snapped tets. No snapping displacement or final admission
+threshold changes. Job 756 passes 11 native topology tests and strict Clippy,
+including a small healthy-tet regression that the old cell-scale guard rejects,
+and controls rejecting actual near-collapse and inversion.
+
+Job 757 returns a complete refined Tet10 mesh at 86,520 nodes / 45,038 tets.
+Minimum corner q is 0.174781, absolute volume error is 0.402969%, positive125
+and coherent facets pass, and complete periodic caps agree to 5.56e-17.
+The only failing gate is geometry. Reverse sampled distance is 0.012559859,
+well above 0.002; the forward projection estimate is 0.033679297 and is not
+a certified nearest-distance value. The fixed-background baseline has reverse
+distance 0.015321194, q minimum 0.236763 and volume error 0.736724%.
+
+The known void saddle maps inside both old baseline meshes. It no longer maps
+inside the refined candidate in the bounded 162-tet inverse search. Absence in
+that search is not a global exclusion proof. This is partial feature recovery,
+not an admitted PMY result. Localize the remaining reverse-distance witnesses
+and inspect their topology before another sizing or pass-count experiment.
+
+The raw-JSON progress warning in job 754 is fixed in the driver; 757 reports
+through the standard result helper and passes its progress audit. Job 758
+rebuilds the native Python binding and passes 114 Rust tests with one research
+test ignored, 212 Python/tools tests with one skipped, strict binding Clippy,
+and the core check without experimental features. The stage takes 250 seconds
+and peaks at 1.39 GiB. Core strict Clippy also passes in 756.
+
+Run directories retain source snapshots, input hashes, failed controls and
+returned meshes. Large mesh arrays and native binaries remain local ignored
+artifacts. The full objective remains open.
+
 ## Periodic cap repair and remaining geometry failures, 10 November 2026
 
 Continuation from `ccf4ca0`. The native mesher now repairs a blocked wall/cap

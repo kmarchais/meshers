@@ -1,0 +1,30 @@
+<!doctype html><html><head><meta charset="utf-8"><style>
+body{margin:0;font-family:var(--font-sans,system-ui);color:var(--foreground,#17212e)}
+section{background:var(--card);border:1px solid var(--border,#bbb);border-radius:var(--radius,8px);padding:16px;margin-bottom:12px}
+h3{font-size:16px;margin:0 0 10px}p,.note{font-size:12px;line-height:1.5;color:var(--muted-foreground,#666)}
+.barrow{display:grid;grid-template-columns:130px minmax(30px,1fr) 85px;gap:8px;align-items:center;font-size:12px;margin:12px 0}
+.track{height:18px;background:var(--secondary,#ddd)}.track>div{height:18px}
+table{width:100%;border-collapse:collapse;font-size:12px}td,th{text-align:left;padding:7px 4px;border-bottom:1px solid var(--border,#ddd);font-variant-numeric:tabular-nums}
+.case{display:flex;justify-content:space-between;gap:12px;font-size:12px;padding:5px 0}
+.status{color:var(--destructive,#c22);font-weight:600}b{text-align:right;font-variant-numeric:tabular-nums}
+@media(max-width:450px){.barrow{grid-template-columns:95px minmax(20px,1fr) 70px;font-size:11px}.case{display:block}}
+</style></head><body>
+<section><h3>PMY · feature recovery still blocked</h3>
+<div class="status">admission-rejected: reverse distance 0.0125599 exceeds 0.002; minimum corner quality 0.174781</div>
+<p>The refined mesh passes volume, quality, curved-Jacobian and periodicity checks, but boundary accuracy still fails. Ordinary and fixed-background baselines remain distinct because snapping changes cap diagonals. Admission requirements are unchanged.</p></section>
+<section><h3>CAD union · curved geometry reduces boundary error</h3>
+<p>Same 49,422 tetrahedra and identical corners. Lower boundary distance is better; bars start at zero.</p>
+<div class="barrow"><span>Straight geometry</span><div class="track"><div style="width:90.774475%;background:var(--warning)"></div></div><b>0.0019970</b></div>
+<div class="barrow"><span>Native curved Tet10</span><div class="track"><div style="width:54.376185%;background:var(--success)"></div></div><b>0.0011963</b></div>
+<table><tr><th>Metric</th><th>Original Tet4</th><th>Curved Tet10</th></tr>
+<tr><td>Nodes</td><td>10,147</td><td>72,793</td></tr>
+<tr><td>Absolute volume error</td><td>0.696069%</td><td>0.000108171%</td></tr>
+<tr><td>Minimum corner quality</td><td>0.309336</td><td>0.309336</td></tr></table>
+<p>All admission gates pass. The ridge now limits accuracy. More nodes and a different approximation order prevent a matched-cost FEA claim. The separate ridge-only motion was not promoted.</p></section>
+<section><h3>Volume correction · strong exact-volume controls, one regression</h3>
+<table><tr><th>Exact reference case</th><th>Before |ΔV/V|</th><th>After |ΔV/V|</th><th>Reduction</th></tr><tr><td>schwarz-d-solid</td><td>2.07607e-06</td><td style="color:var(--success)">4.44466e-10</td><td>4,671×</td></tr><tr><td>schwarz-solid</td><td>4.71136e-07</td><td style="color:var(--success)">1.81023e-10</td><td>2,603×</td></tr></table>
+<p>The controller uses the implicit field, never these reference volumes. All nine meshes pass admission; eight preserve or improve both independent boundary maxima.</p>
+<div class="case"><span>schwarz-d-solid</span><span style="color:var(--success)">No sampled boundary regression</span></div><div class="case"><span>gyroid</span><span style="color:var(--success)">No sampled boundary regression</span></div><div class="case"><span>graded-gyroid-linear</span><span style="color:var(--success)">No sampled boundary regression</span></div><div class="case"><span>graded-gyroid-periodic</span><span style="color:var(--success)">No sampled boundary regression</span></div><div class="case"><span>smooth-lattice</span><span style="color:var(--success)">No sampled boundary regression</span></div><div class="case"><span>schwarz-solid</span><span style="color:var(--success)">No sampled boundary regression</span></div><div class="case"><span>spinodoid-anisotropic</span><span style="color:var(--success)">No sampled boundary regression</span></div><div class="case"><span>spinodoid</span><span style="color:var(--destructive)">Small boundary regression</span></div><div class="case"><span>graded-gyroid-density-linear</span><span style="color:var(--success)">No sampled boundary regression</span></div>
+<p>The fixed spinodoid's boundary maximum increases by about 0.004%. Per-face guards do not remove it. Native integration is deferred. Small changes against sampled volume references remain uncertain.</p></section>
+<p class="note">Bounded experiments on the MacBook, 11 November 2026. No new stiffness reference, FEA comparison, or universal performance win. Source hashes and numeric evidence accompany this report.</p>
+</body></html>

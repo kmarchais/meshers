@@ -1,0 +1,107 @@
+{
+  "rows": [
+    {
+      "case": "spinodoid",
+      "worker": {
+        "returncode": 0,
+        "limit_failure": null,
+        "peak_rss_bytes": 1426604032,
+        "wall_s": 45.375061583006755,
+        "wall_s_clock": "monotonic",
+        "elapsed_realtime_s": 45.375282287597656,
+        "suspension_or_clock_adjustment_s": 0.00022070459090173244,
+        "idle_sleep_prevention": [
+          "/usr/bin/caffeinate",
+          "-i"
+        ],
+        "memory_bytes": 8589934592,
+        "memory_enforcement": "process-tree-rss-watchdog",
+        "rss_poll_interval_s": 0.25,
+        "platform": "darwin",
+        "numerical_thread_policy": {
+          "environment": {
+            "OPENBLAS_NUM_THREADS": "1",
+            "OMP_NUM_THREADS": "1",
+            "MKL_NUM_THREADS": "1",
+            "VECLIB_MAXIMUM_THREADS": "1",
+            "RAYON_NUM_THREADS": "1"
+          },
+          "accelerate_blas_threading": 1,
+          "accelerate_scope": "calling thread"
+        }
+      },
+      "directory": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-volume-facewise-pilot-v1/spinodoid",
+      "complete": true,
+      "admitted": true
+    },
+    {
+      "case": "schwarz-d-solid",
+      "worker": {
+        "returncode": 0,
+        "limit_failure": null,
+        "peak_rss_bytes": 980664320,
+        "wall_s": 12.351699499995448,
+        "wall_s_clock": "monotonic",
+        "elapsed_realtime_s": 12.351762056350708,
+        "suspension_or_clock_adjustment_s": 6.255635526031256e-05,
+        "idle_sleep_prevention": [
+          "/usr/bin/caffeinate",
+          "-i"
+        ],
+        "memory_bytes": 8589934592,
+        "memory_enforcement": "process-tree-rss-watchdog",
+        "rss_poll_interval_s": 0.25,
+        "platform": "darwin",
+        "numerical_thread_policy": {
+          "environment": {
+            "OPENBLAS_NUM_THREADS": "1",
+            "OMP_NUM_THREADS": "1",
+            "MKL_NUM_THREADS": "1",
+            "VECLIB_MAXIMUM_THREADS": "1",
+            "RAYON_NUM_THREADS": "1"
+          },
+          "accelerate_blas_threading": 1,
+          "accelerate_scope": "calling thread"
+        }
+      },
+      "directory": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-volume-facewise-pilot-v1/schwarz-d-solid",
+      "complete": true,
+      "admitted": true
+    },
+    {
+      "case": "schwarz-solid",
+      "worker": {
+        "returncode": 0,
+        "limit_failure": null,
+        "peak_rss_bytes": 899399680,
+        "wall_s": 10.65176199999405,
+        "wall_s_clock": "monotonic",
+        "elapsed_realtime_s": 10.651814222335815,
+        "suspension_or_clock_adjustment_s": 5.2222341764718294e-05,
+        "idle_sleep_prevention": [
+          "/usr/bin/caffeinate",
+          "-i"
+        ],
+        "memory_bytes": 8589934592,
+        "memory_enforcement": "process-tree-rss-watchdog",
+        "rss_poll_interval_s": 0.25,
+        "platform": "darwin",
+        "numerical_thread_policy": {
+          "environment": {
+            "OPENBLAS_NUM_THREADS": "1",
+            "OMP_NUM_THREADS": "1",
+            "MKL_NUM_THREADS": "1",
+            "VECLIB_MAXIMUM_THREADS": "1",
+            "RAYON_NUM_THREADS": "1"
+          },
+          "accelerate_blas_threading": 1,
+          "accelerate_scope": "calling thread"
+        }
+      },
+      "directory": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-volume-facewise-pilot-v1/schwarz-solid",
+      "complete": true,
+      "admitted": true
+    }
+  ],
+  "complete": true
+}

@@ -1,0 +1,28 @@
+{
+  "inputs": {
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/pmy_snap_guard_probe.py": "a6f99abec14d0ff3b21cd0c6dda6dda5e3590921fdf4efeb9aa1c1a09de6e596",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/pmy_snap_topology_probe.py": "e94ec25d75a9cbc13c98e7d2100167cf6c4fc267950d2c6b217855f261f70ea0",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/pmy_neck_control.py": "aacab3dd12c99ad5586e8c4efb59b74556e736041fbe20653381c53d577b8668",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/tpms_family_fixtures.py": "794418f5d2e3d2158542af51a5cf322c41befff8f8d7c98f769d379baedd3bc6",
+    "/Users/kmarchais/dev/meshers/crates/meshers-core/src/implicit.rs": "0f6eb8c66b80ca3f49060c275abed876841f403e279e219269d378e4694b4f53",
+    "/Users/kmarchais/dev/meshers/crates/meshers-core/examples/pmy_background.rs": "98862c07ce8b1f27ac0ee606ab95ef14f14329f2c60f6a96badf8d00ad3c858a",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-pmy-native-background-v3/baseline/input.json": "f0a14e1415f45aadf20477c08c6589b7c06f1a6d0806d2357540113c0653c312",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-pmy-native-background-v3/one-round/input.json": "1ce238228c359ac20b85734b97694f2e2772ac50ed6e9812cd2a224ca9482998",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-pmy-native-background-v3/result.json": "a70807d8d9823938e0f8e398561958b38bfd214a3500d81c092d45fc1a636902",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-tpms-family-fixtures-v1/tpms-pmy-sheet/tpms-pmy-sheet-definition.json": "a0b3623510422678fd46dbfec702d7ebfb03e14272f7016b002e5b2594a662b6"
+  },
+  "timeout_s": 180,
+  "memory_bytes": 8589934592,
+  "numerical_threads": {
+    "environment": {
+      "OPENBLAS_NUM_THREADS": "1",
+      "OMP_NUM_THREADS": "1",
+      "MKL_NUM_THREADS": "1",
+      "VECLIB_MAXIMUM_THREADS": "1",
+      "RAYON_NUM_THREADS": "1"
+    },
+    "accelerate_blas_threading": 1,
+    "accelerate_scope": "calling thread"
+  },
+  "scope": "Compare absolute and relative determinant guards on frozen PMY backgrounds.\n\nThis is an analytic replay of the first scalar snap pass. It changes no native\nguard, generates no mesh, and makes no admission claim. All original positive\ndeterminants, signed post-snap determinants, and local quality values are retained.\n"
+}

@@ -1,0 +1,73 @@
+{
+  "rows": [
+    {
+      "case": "schwarz-d-solid",
+      "worker": {
+        "returncode": 0,
+        "limit_failure": null,
+        "peak_rss_bytes": 982728704,
+        "wall_s": 13.099089416995412,
+        "wall_s_clock": "monotonic",
+        "elapsed_realtime_s": 13.099245071411133,
+        "suspension_or_clock_adjustment_s": 0.00015565441572107375,
+        "idle_sleep_prevention": [
+          "/usr/bin/caffeinate",
+          "-i"
+        ],
+        "memory_bytes": 8589934592,
+        "memory_enforcement": "process-tree-rss-watchdog",
+        "rss_poll_interval_s": 0.25,
+        "platform": "darwin",
+        "numerical_thread_policy": {
+          "environment": {
+            "OPENBLAS_NUM_THREADS": "1",
+            "OMP_NUM_THREADS": "1",
+            "MKL_NUM_THREADS": "1",
+            "VECLIB_MAXIMUM_THREADS": "1",
+            "RAYON_NUM_THREADS": "1"
+          },
+          "accelerate_blas_threading": 1,
+          "accelerate_scope": "calling thread"
+        }
+      },
+      "directory": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-volume-bias-pilot-v1/schwarz-d-solid",
+      "complete": true,
+      "admitted": true
+    },
+    {
+      "case": "gyroid",
+      "worker": {
+        "returncode": 0,
+        "limit_failure": null,
+        "peak_rss_bytes": 747618304,
+        "wall_s": 5.720435541996267,
+        "wall_s_clock": "monotonic",
+        "elapsed_realtime_s": 5.7204883098602295,
+        "suspension_or_clock_adjustment_s": 5.276786396279931e-05,
+        "idle_sleep_prevention": [
+          "/usr/bin/caffeinate",
+          "-i"
+        ],
+        "memory_bytes": 8589934592,
+        "memory_enforcement": "process-tree-rss-watchdog",
+        "rss_poll_interval_s": 0.25,
+        "platform": "darwin",
+        "numerical_thread_policy": {
+          "environment": {
+            "OPENBLAS_NUM_THREADS": "1",
+            "OMP_NUM_THREADS": "1",
+            "MKL_NUM_THREADS": "1",
+            "VECLIB_MAXIMUM_THREADS": "1",
+            "RAYON_NUM_THREADS": "1"
+          },
+          "accelerate_blas_threading": 1,
+          "accelerate_scope": "calling thread"
+        }
+      },
+      "directory": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-volume-bias-pilot-v1/gyroid",
+      "complete": true,
+      "admitted": true
+    }
+  ],
+  "complete": true
+}

@@ -1,0 +1,1182 @@
+{
+  "complete": true,
+  "input_hashes_verified": true,
+  "arms": {
+    "baseline": {
+      "nodes": 9009,
+      "tetrahedra": 49152,
+      "snapping": {
+        "scale": 2.793293402429083,
+        "initial_eligible": 1248,
+        "accepted": 1200,
+        "maximum_move": 0.012200597775000288,
+        "locked_coordinates_preserved": true
+      },
+      "absolute_cutoff": 2.44140625e-06,
+      "original_minimum_determinant": 0.00012207031250000008,
+      "original_below_absolute_cutoff": 0,
+      "largest_cutoff_fraction_of_original": 0.019999999999999987,
+      "original_minimum_quality": 0.6651075101064498,
+      "snapped_minimum_signed_determinant": 8.242197576448874e-05,
+      "minimum_signed_determinant_ratio": 0.6752008254626913,
+      "original_bcc_det_ratio_cutoff": 0.02,
+      "absolute_guard_failure": {
+        "all_background": 0,
+        "used_by_clipping": 0
+      },
+      "relative_guard_failure": {
+        "all_background": 0,
+        "used_by_clipping": 0
+      },
+      "nonpositive_orientation": {
+        "all_background": 0,
+        "used_by_clipping": 0
+      },
+      "positive_moderate_shrink_absolute_only": {
+        "all_background": 0,
+        "used_by_clipping": 0
+      },
+      "absolute_only_with_quality_floor": {
+        "all_background": 0,
+        "used_by_clipping": 0
+      },
+      "first_native_guard_failure": null,
+      "witnesses": [],
+      "arrays_sha256": "4023d810175e732310914fe9f34f61d993513185e4af3209e9a6bf085b4dcb43"
+    },
+    "one-round": {
+      "nodes": 10881,
+      "tetrahedra": 56292,
+      "snapping": {
+        "scale": 2.793293402429083,
+        "initial_eligible": 3024,
+        "accepted": 2976,
+        "maximum_move": 0.012200597775000288,
+        "locked_coordinates_preserved": true
+      },
+      "absolute_cutoff": 2.44140625e-06,
+      "original_minimum_determinant": 3.3908420138888764e-06,
+      "original_below_absolute_cutoff": 0,
+      "largest_cutoff_fraction_of_original": 0.7200000000000026,
+      "original_minimum_quality": 0.12209118400217499,
+      "snapped_minimum_signed_determinant": 2.02281746807423e-06,
+      "minimum_signed_determinant_ratio": 0.06628368279385634,
+      "original_bcc_det_ratio_cutoff": 0.02,
+      "absolute_guard_failure": {
+        "all_background": 116,
+        "used_by_clipping": 116
+      },
+      "relative_guard_failure": {
+        "all_background": 0,
+        "used_by_clipping": 0
+      },
+      "nonpositive_orientation": {
+        "all_background": 0,
+        "used_by_clipping": 0
+      },
+      "positive_moderate_shrink_absolute_only": {
+        "all_background": 116,
+        "used_by_clipping": 116
+      },
+      "absolute_only_with_quality_floor": {
+        "all_background": 68,
+        "used_by_clipping": 68
+      },
+      "first_native_guard_failure": 707,
+      "witnesses": [
+        {
+          "tet": 707,
+          "vertices": [
+            4957,
+            10631,
+            335,
+            336
+          ],
+          "original_determinant": 3.0517578125000014e-05,
+          "snapped_determinant": 2.0228174680742515e-06,
+          "determinant_ratio": 0.06628368279385705,
+          "minimum_original_quality": 0.4076503562154888,
+          "snapped_quality_magnitude": 0.033064280368014135,
+          "absolute_guard_rejects": true,
+          "relative_guard_rejects": false,
+          "positive_orientation": true,
+          "contains_added_samples": true,
+          "original_points": [
+            [
+              0.28125,
+              -0.34375,
+              -0.46875
+            ],
+            [
+              0.28125,
+              -0.359375,
+              -0.4375
+            ],
+            [
+              0.25,
+              -0.375,
+              -0.4375
+            ],
+            [
+              0.3125,
+              -0.375,
+              -0.4375
+            ]
+          ],
+          "snapped_points": [
+            [
+              0.2836676175521026,
+              -0.339565827325815,
+              -0.46290169752869925
+            ],
+            [
+              0.2805443611558104,
+              -0.3627504732621126,
+              -0.44040111602285203
+            ],
+            [
+              0.25,
+              -0.375,
+              -0.4375
+            ],
+            [
+              0.308074465699126,
+              -0.3655930199368366,
+              -0.4319801982444325
+            ]
+          ],
+          "displacement": [
+            0.007586489134735105,
+            0.004506464257010736,
+            0.0,
+            0.01177050717589227
+          ]
+        },
+        {
+          "tet": 1347,
+          "vertices": [
+            4996,
+            10634,
+            395,
+            394
+          ],
+          "original_determinant": 3.0517578125000014e-05,
+          "snapped_determinant": 2.022817468074273e-06,
+          "determinant_ratio": 0.06628368279385775,
+          "minimum_original_quality": 0.4076503562154888,
+          "snapped_quality_magnitude": 0.033064280368014516,
+          "absolute_guard_rejects": true,
+          "relative_guard_rejects": false,
+          "positive_orientation": true,
+          "contains_added_samples": true,
+          "original_points": [
+            [
+              -0.28125,
+              -0.15625,
+              -0.46875
+            ],
+            [
+              -0.28125,
+              -0.140625,
+              -0.4375
+            ],
+            [
+              -0.25,
+              -0.125,
+              -0.4375
+            ],
+            [
+              -0.3125,
+              -0.125,
+              -0.4375
+            ]
+          ],
+          "snapped_points": [
+            [
+              -0.2836676175521026,
+              -0.16043417267418508,
+              -0.46290169752869925
+            ],
+            [
+              -0.28054436115581044,
+              -0.1372495267378874,
+              -0.44040111602285203
+            ],
+            [
+              -0.25,
+              -0.125,
+              -0.4375
+            ],
+            [
+              -0.30807446569912594,
+              -0.13440698006316337,
+              -0.43198019824443257
+            ]
+          ],
+          "displacement": [
+            0.0075864891347351355,
+            0.004506464257010707,
+            0.0,
+            0.011770507175892266
+          ]
+        },
+        {
+          "tet": 2686,
+          "vertices": [
+            5084,
+            10640,
+            470,
+            471
+          ],
+          "original_determinant": 3.0517578125000014e-05,
+          "snapped_determinant": 2.0228174680743125e-06,
+          "determinant_ratio": 0.06628368279385904,
+          "minimum_original_quality": 0.4076503562154888,
+          "snapped_quality_magnitude": 0.03306428036801517,
+          "absolute_guard_rejects": true,
+          "relative_guard_rejects": false,
+          "positive_orientation": true,
+          "contains_added_samples": true,
+          "original_points": [
+            [
+              0.21875,
+              0.15625,
+              -0.46875
+            ],
+            [
+              0.21875,
+              0.140625,
+              -0.4375
+            ],
+            [
+              0.1875,
+              0.125,
+              -0.4375
+            ],
+            [
+              0.25,
+              0.125,
+              -0.4375
+            ]
+          ],
+          "snapped_points": [
+            [
+              0.2163323824478974,
+              0.16043417267418505,
+              -0.4629016975286992
+            ],
+            [
+              0.21945563884418962,
+              0.13724952673788743,
+              -0.44040111602285203
+            ],
+            [
+              0.19192553430087403,
+              0.13440698006316334,
+              -0.4319801982444325
+            ],
+            [
+              0.25,
+              0.125,
+              -0.4375
+            ]
+          ],
+          "displacement": [
+            0.0075864891347351545,
+            0.004506464257010695,
+            0.011770507175892259,
+            0.0
+          ]
+        },
+        {
+          "tet": 3356,
+          "vertices": [
+            5125,
+            10643,
+            532,
+            531
+          ],
+          "original_determinant": 3.0517578125000014e-05,
+          "snapped_determinant": 2.022817468074431e-06,
+          "determinant_ratio": 0.06628368279386293,
+          "minimum_original_quality": 0.4076503562154888,
+          "snapped_quality_magnitude": 0.03306428036801713,
+          "absolute_guard_rejects": true,
+          "relative_guard_rejects": false,
+          "positive_orientation": true,
+          "contains_added_samples": true,
+          "original_points": [
+            [
+              -0.21875,
+              0.34375,
+              -0.46875
+            ],
+            [
+              -0.21875,
+              0.359375,
+              -0.4375
+            ],
+            [
+              -0.1875,
+              0.375,
+              -0.4375
+            ],
+            [
+              -0.25,
+              0.375,
+              -0.4375
+            ]
+          ],
+          "snapped_points": [
+            [
+              -0.21633238244789738,
+              0.339565827325815,
+              -0.46290169752869925
+            ],
+            [
+              -0.21945563884418962,
+              0.36275047326211257,
+              -0.440401116022852
+            ],
+            [
+              -0.19192553430087403,
+              0.36559301993683657,
+              -0.43198019824443257
+            ],
+            [
+              -0.25,
+              0.375,
+              -0.4375
+            ]
+          ],
+          "displacement": [
+            0.007586489134735105,
+            0.004506464257010658,
+            0.011770507175892298,
+            0.0
+          ]
+        },
+        {
+          "tet": 4373,
+          "vertices": [
+            9030,
+            10649,
+            9029,
+            624
+          ],
+          "original_determinant": 3.3908420138888823e-06,
+          "snapped_determinant": 2.3719855797831186e-06,
+          "determinant_ratio": 0.6995270113050004,
+          "minimum_original_quality": 0.2917084831060636,
+          "snapped_quality_magnitude": 0.2243117724021384,
+          "absolute_guard_rejects": true,
+          "relative_guard_rejects": false,
+          "positive_orientation": true,
+          "contains_added_samples": true,
+          "original_points": [
+            [
+              0.25,
+              -0.3958333333333333,
+              -0.3958333333333333
+            ],
+            [
+              0.25,
+              -0.390625,
+              -0.40625
+            ],
+            [
+              0.23958333333333334,
+              -0.3854166666666667,
+              -0.40625
+            ],
+            [
+              0.25,
+              -0.375,
+              -0.375
+            ]
+          ],
+          "snapped_points": [
+            [
+              0.25069035163322867,
+              -0.39032863713473753,
+              -0.39143737026979386
+            ],
+            [
+              0.25,
+              -0.390625,
+              -0.40625
+            ],
+            [
+              0.23861643771513977,
+              -0.382869962888623,
+              -0.4053210251394752
+            ],
+            [
+              0.25,
+              -0.375,
+              -0.375
+            ]
+          ],
+          "displacement": [
+            0.007078330090659769,
+            0.0,
+            0.002878121185959841,
+            0.0
+          ]
+        },
+        {
+          "tet": 4741,
+          "vertices": [
+            9067,
+            9066,
+            652,
+            10651
+          ],
+          "original_determinant": 3.3908420138888883e-06,
+          "snapped_determinant": 2.3719855797831355e-06,
+          "determinant_ratio": 0.6995270113050042,
+          "minimum_original_quality": 0.29170848310606395,
+          "snapped_quality_magnitude": 0.22431177240213948,
+          "absolute_guard_rejects": true,
+          "relative_guard_rejects": false,
+          "positive_orientation": true,
+          "contains_added_samples": true,
+          "original_points": [
+            [
+              -0.09375,
+              -0.2604166666666667,
+              -0.3854166666666667
+            ],
+            [
+              -0.10416666666666667,
+              -0.25,
+              -0.3958333333333333
+            ],
+            [
+              -0.125,
+              -0.25,
+              -0.375
+            ],
+            [
+              -0.09375,
+              -0.25,
+              -0.390625
+            ]
+          ],
+          "snapped_points": [
+            [
+              -0.09467897486052475,
+              -0.26138356228486026,
+              -0.382869962888623
+            ],
+            [
+              -0.10856262973020615,
+              -0.24930964836677136,
+              -0.39032863713473753
+            ],
+            [
+              -0.125,
+              -0.25,
+              -0.375
+            ],
+            [
+              -0.09375,
+              -0.25,
+              -0.390625
+            ]
+          ],
+          "displacement": [
+            0.002878121185959828,
+            0.007078330090659783,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "tet": 4746,
+          "vertices": [
+            9066,
+            9079,
+            652,
+            10651
+          ],
+          "original_determinant": 3.3908420138888823e-06,
+          "snapped_determinant": 2.4267994194189187e-06,
+          "determinant_ratio": 0.7156922703796735,
+          "minimum_original_quality": 0.29170848310606357,
+          "snapped_quality_magnitude": 0.23219555502049707,
+          "absolute_guard_rejects": true,
+          "relative_guard_rejects": false,
+          "positive_orientation": true,
+          "contains_added_samples": true,
+          "original_points": [
+            [
+              -0.10416666666666667,
+              -0.25,
+              -0.3958333333333333
+            ],
+            [
+              -0.09375,
+              -0.23958333333333334,
+              -0.3854166666666667
+            ],
+            [
+              -0.125,
+              -0.25,
+              -0.375
+            ],
+            [
+              -0.09375,
+              -0.25,
+              -0.390625
+            ]
+          ],
+          "snapped_points": [
+            [
+              -0.10856262973020615,
+              -0.24930964836677136,
+              -0.39032863713473753
+            ],
+            [
+              -0.09375,
+              -0.23958333333333334,
+              -0.3854166666666667
+            ],
+            [
+              -0.125,
+              -0.25,
+              -0.375
+            ],
+            [
+              -0.09375,
+              -0.25,
+              -0.390625
+            ]
+          ],
+          "displacement": [
+            0.007078330090659783,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "tet": 4804,
+          "vertices": [
+            9072,
+            9071,
+            10652,
+            656
+          ],
+          "original_determinant": 3.3908420138888883e-06,
+          "snapped_determinant": 2.4267994194189445e-06,
+          "determinant_ratio": 0.7156922703796799,
+          "minimum_original_quality": 0.2917084831060639,
+          "snapped_quality_magnitude": 0.23219555502049918,
+          "absolute_guard_rejects": true,
+          "relative_guard_rejects": false,
+          "positive_orientation": true,
+          "contains_added_samples": true,
+          "original_points": [
+            [
+              0.09375,
+              -0.2604166666666667,
+              -0.3854166666666667
+            ],
+            [
+              0.10416666666666667,
+              -0.25,
+              -0.3958333333333333
+            ],
+            [
+              0.09375,
+              -0.25,
+              -0.390625
+            ],
+            [
+              0.125,
+              -0.25,
+              -0.375
+            ]
+          ],
+          "snapped_points": [
+            [
+              0.09375,
+              -0.2604166666666667,
+              -0.3854166666666667
+            ],
+            [
+              0.10856262973020614,
+              -0.25069035163322867,
+              -0.3903286371347376
+            ],
+            [
+              0.09375,
+              -0.25,
+              -0.390625
+            ],
+            [
+              0.125,
+              -0.25,
+              -0.375
+            ]
+          ],
+          "displacement": [
+            0.0,
+            0.007078330090659734,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "tet": 4809,
+          "vertices": [
+            9071,
+            9083,
+            10652,
+            656
+          ],
+          "original_determinant": 3.3908420138888823e-06,
+          "snapped_determinant": 2.3719855797831732e-06,
+          "determinant_ratio": 0.6995270113050165,
+          "minimum_original_quality": 0.29170848310606357,
+          "snapped_quality_magnitude": 0.2243117724021422,
+          "absolute_guard_rejects": true,
+          "relative_guard_rejects": false,
+          "positive_orientation": true,
+          "contains_added_samples": true,
+          "original_points": [
+            [
+              0.10416666666666667,
+              -0.25,
+              -0.3958333333333333
+            ],
+            [
+              0.09375,
+              -0.23958333333333334,
+              -0.3854166666666667
+            ],
+            [
+              0.09375,
+              -0.25,
+              -0.390625
+            ],
+            [
+              0.125,
+              -0.25,
+              -0.375
+            ]
+          ],
+          "snapped_points": [
+            [
+              0.10856262973020614,
+              -0.25069035163322867,
+              -0.3903286371347376
+            ],
+            [
+              0.09467897486052476,
+              -0.23861643771513963,
+              -0.382869962888623
+            ],
+            [
+              0.09375,
+              -0.25,
+              -0.390625
+            ],
+            [
+              0.125,
+              -0.25,
+              -0.375
+            ]
+          ],
+          "displacement": [
+            0.007078330090659734,
+            0.0028781211859598786,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "tet": 5398,
+          "vertices": [
+            9103,
+            10655,
+            684,
+            9093
+          ],
+          "original_determinant": 3.390842013888894e-06,
+          "snapped_determinant": 2.4267994194189445e-06,
+          "determinant_ratio": 0.7156922703796786,
+          "minimum_original_quality": 0.2917084831060644,
+          "snapped_quality_magnitude": 0.23219555502049918,
+          "absolute_guard_rejects": true,
+          "relative_guard_rejects": false,
+          "positive_orientation": true,
+          "contains_added_samples": true,
+          "original_points": [
+            [
+              -0.25,
+              -0.10416666666666667,
+              -0.3958333333333333
+            ],
+            [
+              -0.25,
+              -0.109375,
+              -0.40625
+            ],
+            [
+              -0.25,
+              -0.125,
+              -0.375
+            ],
+            [
+              -0.2604166666666667,
+              -0.11458333333333333,
+              -0.40625
+            ]
+          ],
+          "snapped_points": [
+            [
+              -0.25069035163322867,
+              -0.10967136286526241,
+              -0.39143737026979386
+            ],
+            [
+              -0.25,
+              -0.109375,
+              -0.40625
+            ],
+            [
+              -0.25,
+              -0.125,
+              -0.375
+            ],
+            [
+              -0.2604166666666667,
+              -0.11458333333333333,
+              -0.40625
+            ]
+          ],
+          "displacement": [
+            0.0070783300906597365,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "tet": 6096,
+          "vertices": [
+            9124,
+            10658,
+            9123,
+            760
+          ],
+          "original_determinant": 3.3908420138888823e-06,
+          "snapped_determinant": 2.4267994194189356e-06,
+          "determinant_ratio": 0.7156922703796785,
+          "minimum_original_quality": 0.29170848310606345,
+          "snapped_quality_magnitude": 0.23219555502049852,
+          "absolute_guard_rejects": true,
+          "relative_guard_rejects": false,
+          "positive_orientation": true,
+          "contains_added_samples": true,
+          "original_points": [
+            [
+              0.25,
+              0.10416666666666667,
+              -0.3958333333333333
+            ],
+            [
+              0.25,
+              0.109375,
+              -0.40625
+            ],
+            [
+              0.23958333333333334,
+              0.11458333333333333,
+              -0.40625
+            ],
+            [
+              0.25,
+              0.125,
+              -0.375
+            ]
+          ],
+          "snapped_points": [
+            [
+              0.24930964836677136,
+              0.10967136286526241,
+              -0.39143737026979386
+            ],
+            [
+              0.25,
+              0.109375,
+              -0.40625
+            ],
+            [
+              0.23958333333333334,
+              0.11458333333333333,
+              -0.40625
+            ],
+            [
+              0.25,
+              0.125,
+              -0.375
+            ]
+          ],
+          "displacement": [
+            0.007078330090659733,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "tet": 6406,
+          "vertices": [
+            9149,
+            9148,
+            10662,
+            784
+          ],
+          "original_determinant": 3.3908420138888823e-06,
+          "snapped_determinant": 2.3719855797831398e-06,
+          "determinant_ratio": 0.6995270113050067,
+          "minimum_original_quality": 0.2917084831060636,
+          "snapped_quality_magnitude": 0.22431177240214017,
+          "absolute_guard_rejects": true,
+          "relative_guard_rejects": false,
+          "positive_orientation": true,
+          "contains_added_samples": true,
+          "original_points": [
+            [
+              -0.40625,
+              0.23958333333333334,
+              -0.3854166666666667
+            ],
+            [
+              -0.3958333333333333,
+              0.25,
+              -0.3958333333333333
+            ],
+            [
+              -0.40625,
+              0.25,
+              -0.390625
+            ],
+            [
+              -0.375,
+              0.25,
+              -0.375
+            ]
+          ],
+          "snapped_points": [
+            [
+              -0.4053210251394752,
+              0.23861643771513974,
+              -0.38286996288862307
+            ],
+            [
+              -0.3914373702697939,
+              0.25069035163322867,
+              -0.3903286371347376
+            ],
+            [
+              -0.40625,
+              0.25,
+              -0.390625
+            ],
+            [
+              -0.375,
+              0.25,
+              -0.375
+            ]
+          ],
+          "displacement": [
+            0.0028781211859598014,
+            0.0070783300906596906,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "tet": 6411,
+          "vertices": [
+            9148,
+            9172,
+            10662,
+            784
+          ],
+          "original_determinant": 3.390842013888894e-06,
+          "snapped_determinant": 2.4267994194189356e-06,
+          "determinant_ratio": 0.715692270379676,
+          "minimum_original_quality": 0.2917084831060645,
+          "snapped_quality_magnitude": 0.23219555502049852,
+          "absolute_guard_rejects": true,
+          "relative_guard_rejects": false,
+          "positive_orientation": true,
+          "contains_added_samples": true,
+          "original_points": [
+            [
+              -0.3958333333333333,
+              0.25,
+              -0.3958333333333333
+            ],
+            [
+              -0.40625,
+              0.2604166666666667,
+              -0.3854166666666667
+            ],
+            [
+              -0.40625,
+              0.25,
+              -0.390625
+            ],
+            [
+              -0.375,
+              0.25,
+              -0.375
+            ]
+          ],
+          "snapped_points": [
+            [
+              -0.3914373702697939,
+              0.25069035163322867,
+              -0.3903286371347376
+            ],
+            [
+              -0.40625,
+              0.2604166666666667,
+              -0.3854166666666667
+            ],
+            [
+              -0.40625,
+              0.25,
+              -0.390625
+            ],
+            [
+              -0.375,
+              0.25,
+              -0.375
+            ]
+          ],
+          "displacement": [
+            0.0070783300906596906,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "tet": 6603,
+          "vertices": [
+            9168,
+            9167,
+            796,
+            10663
+          ],
+          "original_determinant": 3.3908420138888823e-06,
+          "snapped_determinant": 2.4267994194189356e-06,
+          "determinant_ratio": 0.7156922703796785,
+          "minimum_original_quality": 0.29170848310606357,
+          "snapped_quality_magnitude": 0.23219555502049852,
+          "absolute_guard_rejects": true,
+          "relative_guard_rejects": false,
+          "positive_orientation": true,
+          "contains_added_samples": true,
+          "original_points": [
+            [
+              0.40625,
+              0.23958333333333334,
+              -0.3854166666666667
+            ],
+            [
+              0.3958333333333333,
+              0.25,
+              -0.3958333333333333
+            ],
+            [
+              0.375,
+              0.25,
+              -0.375
+            ],
+            [
+              0.40625,
+              0.25,
+              -0.390625
+            ]
+          ],
+          "snapped_points": [
+            [
+              0.40625,
+              0.23958333333333334,
+              -0.3854166666666667
+            ],
+            [
+              0.39143737026979386,
+              0.24930964836677136,
+              -0.3903286371347376
+            ],
+            [
+              0.375,
+              0.25,
+              -0.375
+            ],
+            [
+              0.40625,
+              0.25,
+              -0.390625
+            ]
+          ],
+          "displacement": [
+            0.0,
+            0.007078330090659723,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "tet": 6608,
+          "vertices": [
+            9167,
+            9183,
+            796,
+            10663
+          ],
+          "original_determinant": 3.390842013888894e-06,
+          "snapped_determinant": 2.3719855797831775e-06,
+          "determinant_ratio": 0.6995270113050154,
+          "minimum_original_quality": 0.2917084831060645,
+          "snapped_quality_magnitude": 0.2243117724021424,
+          "absolute_guard_rejects": true,
+          "relative_guard_rejects": false,
+          "positive_orientation": true,
+          "contains_added_samples": true,
+          "original_points": [
+            [
+              0.3958333333333333,
+              0.25,
+              -0.3958333333333333
+            ],
+            [
+              0.40625,
+              0.2604166666666667,
+              -0.3854166666666667
+            ],
+            [
+              0.375,
+              0.25,
+              -0.375
+            ],
+            [
+              0.40625,
+              0.25,
+              -0.390625
+            ]
+          ],
+          "snapped_points": [
+            [
+              0.39143737026979386,
+              0.24930964836677136,
+              -0.3903286371347376
+            ],
+            [
+              0.40532102513947527,
+              0.26138356228486037,
+              -0.382869962888623
+            ],
+            [
+              0.375,
+              0.25,
+              -0.375
+            ],
+            [
+              0.40625,
+              0.25,
+              -0.390625
+            ]
+          ],
+          "displacement": [
+            0.007078330090659723,
+            0.0028781211859598603,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "tet": 7135,
+          "vertices": [
+            9195,
+            10666,
+            820,
+            9187
+          ],
+          "original_determinant": 3.390842013888894e-06,
+          "snapped_determinant": 2.371985579783144e-06,
+          "determinant_ratio": 0.6995270113050055,
+          "minimum_original_quality": 0.2917084831060645,
+          "snapped_quality_magnitude": 0.22431177240214042,
+          "absolute_guard_rejects": true,
+          "relative_guard_rejects": false,
+          "positive_orientation": true,
+          "contains_added_samples": true,
+          "original_points": [
+            [
+              -0.25,
+              0.3958333333333333,
+              -0.3958333333333333
+            ],
+            [
+              -0.25,
+              0.390625,
+              -0.40625
+            ],
+            [
+              -0.25,
+              0.375,
+              -0.375
+            ],
+            [
+              -0.2604166666666667,
+              0.3854166666666667,
+              -0.40625
+            ]
+          ],
+          "snapped_points": [
+            [
+              -0.24930964836677136,
+              0.39032863713473753,
+              -0.39143737026979386
+            ],
+            [
+              -0.25,
+              0.390625,
+              -0.40625
+            ],
+            [
+              -0.25,
+              0.375,
+              -0.375
+            ],
+            [
+              -0.2613835622848603,
+              0.38286996288862307,
+              -0.4053210251394752
+            ]
+          ],
+          "displacement": [
+            0.007078330090659766,
+            0.0,
+            0.0,
+            0.0028781211859598105
+          ]
+        }
+      ],
+      "arrays_sha256": "66507156e4e503caf2170785e44484b45177b4dab2e0e34f68c89c0df2ea4e2d"
+    }
+  },
+  "guard_unchanged": true,
+  "generated_candidate": false,
+  "scope": "Analytic first-snap replay. Absolute criterion uses abs(det); signed orientation is independently reported. No native rollback, clipping, optimization or admission."
+}

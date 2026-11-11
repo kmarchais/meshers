@@ -1,0 +1,40 @@
+RUN cargo +1.95.0 test --locked --release -p meshers-core --features experimental-quads implicit::topology_tests::preflighted_background_recovers_a_sampled_void_and_rejects_invalid_input -- --nocapture
+   Compiling meshers-core v0.1.0 (/Users/kmarchais/dev/meshers/crates/meshers-core)
+    Finished `release` profile [optimized] target(s) in 2m 35s
+     Running unittests src/lib.rs (target/release/deps/meshers_core-8e47bbf80036f8e5)
+
+running 1 test
+test implicit::topology_tests::preflighted_background_recovers_a_sampled_void_and_rejects_invalid_input ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 70 filtered out; finished in 0.01s
+
+     Running tests/batching.rs (target/release/deps/batching-ef17329fc7db775a)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 2 filtered out; finished in 0.00s
+
+     Running tests/implicit.rs (target/release/deps/implicit-6c587d5364ab31f4)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 26 filtered out; finished in 0.00s
+
+     Running tests/intersection.rs (target/release/deps/intersection-e88d1c216195542e)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 12 filtered out; finished in 0.00s
+
+     Running tests/public_api.rs (target/release/deps/public_api-180200e71b636d6b)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 3 filtered out; finished in 0.00s
+
+RUN cargo +1.95.0 build --locked --release -p meshers-core --features experimental-quads --example pmy_background
+   Compiling meshers-core v0.1.0 (/Users/kmarchais/dev/meshers/crates/meshers-core)
+    Finished `release` profile [optimized] target(s) in 8.84s
+RUN cargo +1.95.0 clippy --locked --release -p meshers-core --all-targets --features experimental-quads -- -D warnings
+    Checking meshers-core v0.1.0 (/Users/kmarchais/dev/meshers/crates/meshers-core)
+    Finished `release` profile [optimized] target(s) in 1.23s

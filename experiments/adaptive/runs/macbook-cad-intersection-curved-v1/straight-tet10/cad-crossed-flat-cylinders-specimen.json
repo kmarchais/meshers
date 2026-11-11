@@ -1,0 +1,85 @@
+{
+  "volume": 0.1233716694115407,
+  "volume_reference": "analytic: 2*pi*r^2*L - 16*r^3/3",
+  "volume_scramble_spread": 0,
+  "wall_samples": 45056,
+  "cap_samples": 8192,
+  "periodic_axes": [
+    true,
+    true,
+    true
+  ],
+  "declared_bounds": [
+    [
+      -0.5,
+      -0.5,
+      -0.5
+    ],
+    [
+      0.5,
+      0.5,
+      0.5
+    ]
+  ],
+  "definition": {
+    "api": "microgen.CustomLattice",
+    "base_vertices": [
+      [
+        -0.5,
+        0,
+        0
+      ],
+      [
+        0.5,
+        0,
+        0
+      ],
+      [
+        0,
+        -0.5,
+        0
+      ],
+      [
+        0,
+        0.5,
+        0
+      ]
+    ],
+    "strut_vertex_pairs": [
+      [
+        0,
+        1
+      ],
+      [
+        2,
+        3
+      ]
+    ],
+    "strut_radius": 0.15,
+    "strut_heights": 1.0,
+    "cell_size": 1.0,
+    "strut_joints": false,
+    "bounds": [
+      -0.5,
+      0.5,
+      -0.5,
+      0.5,
+      -0.5,
+      0.5
+    ],
+    "periodic_axes": [
+      true,
+      true,
+      true
+    ],
+    "nonempty_material_cap_axes": [
+      true,
+      true,
+      false
+    ],
+    "analytic_volume": 0.1233716694115407,
+    "volume_formula": "2*pi*r^2*L - 16*r^3/3",
+    "native_field": "min(sqrt(y*y+z*z)-r, sqrt(x*x+z*z)-r), restricted to BOUNDS",
+    "periodic_semantics": "Cylinders end on the cell faces and remain inside the other axes. Periodic splitting leaves them unchanged. The final box clip changes no material."
+  }
+}

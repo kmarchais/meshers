@@ -1,0 +1,119 @@
+{
+  "status": "prepared",
+  "complete": true,
+  "frozen_selection_and_subdivision_reproduced_exactly": true,
+  "background": {
+    "nodes": 10881,
+    "tets": 56292,
+    "boundary_faces": 3264,
+    "unique_faces": 114216,
+    "minimum_quality": 0.12209118400217503,
+    "below_quality_gate": 0,
+    "quality_floor_met": true,
+    "minimum_determinant": 3.3908420138888764e-06,
+    "volume": 1.0000000000000007,
+    "coherent_oriented_faces": true,
+    "nonmanifold_faces": 0,
+    "exact_periodic_nodes_and_facets": true,
+    "periodic": {
+      "periodic_pair_counts": [
+        305,
+        305,
+        305
+      ],
+      "periodic_coordinate_errors": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "periodic_pair_tolerance": 1e-10,
+      "periodic_equivalence_classes": 10016,
+      "periodic_triangles_match": true,
+      "full_facet_check_required": true,
+      "complete_existing_node_classes": true,
+      "unmatched_noncap_contact_nodes": [
+        [
+          [],
+          []
+        ],
+        [
+          [],
+          []
+        ],
+        [
+          [],
+          []
+        ]
+      ],
+      "declared_bounds": [
+        [
+          -0.5,
+          -0.5,
+          -0.5
+        ],
+        [
+          0.5,
+          0.5,
+          0.5
+        ]
+      ],
+      "periodic_gate": "declared-cell-material-cap-and-complete-node-classes-v1"
+    },
+    "caps": [
+      {
+        "axis": 0,
+        "side": -0.5,
+        "faces": 544,
+        "area": 1.0
+      },
+      {
+        "axis": 0,
+        "side": 0.5,
+        "faces": 544,
+        "area": 1.0
+      },
+      {
+        "axis": 1,
+        "side": -0.5,
+        "faces": 544,
+        "area": 1.0
+      },
+      {
+        "axis": 1,
+        "side": 0.5,
+        "faces": 544,
+        "area": 1.0
+      },
+      {
+        "axis": 2,
+        "side": -0.5,
+        "faces": 544,
+        "area": 1.0
+      },
+      {
+        "axis": 2,
+        "side": 0.5,
+        "faces": 544,
+        "area": 1.0
+      }
+    ],
+    "within_caps": true
+  },
+  "field_probe_count": 1024,
+  "ordering_control": {
+    "all_original_nodes_exact": true,
+    "raw_bcc_geometric_tet_set_identical": true,
+    "refined_geometric_tet_set_identical": true,
+    "original_parent_tuple_order_restored": true
+  },
+  "source_array_hashes": {
+    "background-before.npz": "e0b04804b1c51d8c704edf4b6449d5df1247f360b40b35661fcea88cce00b6a6",
+    "background-one-round.npz": "d15f5e0e78106682b2e5fc4c29c2a97eb21f50d14ba8ea280a32ce7429a770ff",
+    "selection.npz": "7b2a42ce4ce13a336c0e45361372336e0adcd6f199fc1bae24eac2a526d254c3"
+  },
+  "generated_input_hashes": {
+    "builtin": "37269258a6ca9446fcde681eef7ca5405e0d460ae724f6cd6b3d7f4dff8d41f5",
+    "baseline": "f0a14e1415f45aadf20477c08c6589b7c06f1a6d0806d2357540113c0653c312",
+    "one-round": "1ce238228c359ac20b85734b97694f2e2772ac50ed6e9812cd2a224ca9482998"
+  }
+}

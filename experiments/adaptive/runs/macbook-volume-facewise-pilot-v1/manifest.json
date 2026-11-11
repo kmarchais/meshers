@@ -1,0 +1,25 @@
+{
+  "cases": [
+    "spinodoid",
+    "schwarz-d-solid",
+    "schwarz-solid"
+  ],
+  "source": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-native-face-fit-nine-v1",
+  "numerical_threads": {
+    "environment": {
+      "OPENBLAS_NUM_THREADS": "1",
+      "OMP_NUM_THREADS": "1",
+      "MKL_NUM_THREADS": "1",
+      "VECLIB_MAXIMUM_THREADS": "1",
+      "RAYON_NUM_THREADS": "1"
+    },
+    "accelerate_blas_threading": 1,
+    "accelerate_scope": "calling thread"
+  },
+  "memory_bytes": 8589934592,
+  "worker_timeout_s": 300,
+  "nodes_and_tets_cap": 250000,
+  "facewise_distance_guard": true,
+  "method": "One bounded signed wall residual correction. Reference volume is held out.",
+  "no_native_changes": true
+}
