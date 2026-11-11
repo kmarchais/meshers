@@ -1,0 +1,54 @@
+{
+  "inputs": {
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/volume_residual_probe.py": "1c3440218f52eaa3145e191e8e20c8e961aacb4320e24e7cb307cfe52fb44457",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/volume_fidelity_control.py": "fcb6ad90ac8a4922df5955a08d9f5546b947f68d76a989c4c76998fd544079c9",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/comparison_fixtures.py": "4fa77af6b3b4858eb7611045f46f6e4ca672c6c46ab28d7ee969e14b31e11b9b",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/microgen_workflow.py": "9f513dfd3e6e5a72a71a54f70c0c2cf7c7a1ebe7256886ee3feaf7d7ad7de161",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/scorecard.py": "8f26256c7df0e84c9f35cdd71bf4f95a74e072d45469002b213c5dcd4f1bab2a",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/box_projection.py": "59589b1996b3a3782f1b7f5e5ff3c7ab303d4158ef50a233515dc5369bddaf05",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/g3-spinodoid-compiled32-v1/fourier-coefficients.json": "e9ee2b6c70dcf771ab9fdb011051eb57973d2e15cf479e904bf5d8b40e3d779a",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-native-face-fit-nine-v1/spinodoid-repeat-0-fit/result.json": "5b5fe9f601a39c6e577898d12057a03cf7bc727fcc0d1aa73065e40df034d56c",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-native-face-fit-nine-v1/spinodoid-repeat-0-fit/mesh.npz": "392e2e7b39aed7044f6652ecdc951de42a431a617b50813ead1cb70cc4c26e23",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-native-face-fit-nine-v1/spinodoid-repeat-0-fit/spinodoid-samples.npz": "1f5f91f1ebc3e4e76dc7ddfc1e7ea7093595735684fbe41f1f7d85356138442c",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-native-face-fit-nine-v1/spinodoid-repeat-0-fit/spinodoid-specimen.json": "6140bf66acc68303bc18767a3632e24a068181201eba350ce32217dc50a67eee",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-volume-bias-seven-v1/spinodoid/result.json": "3920cad963bc67dc35a19a0a5f5c064b1fa16968080030ea50b2ad1fed39fe18",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-volume-bias-seven-v1/spinodoid/mesh.npz": "42409fab9da93b32fb4c94308b7e8b356da6f3694c792efc0f594f127fcb8857",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-volume-bias-seven-v1/spinodoid/spinodoid-samples.npz": "1f5f91f1ebc3e4e76dc7ddfc1e7ea7093595735684fbe41f1f7d85356138442c",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-volume-bias-seven-v1/spinodoid/spinodoid-specimen.json": "6140bf66acc68303bc18767a3632e24a068181201eba350ce32217dc50a67eee",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-volume-facewise-pilot-v1/spinodoid/result.json": "b9e8c3337568c917d8f0493d70fd4fe0492af66ee016eba4ca9c29b62a842638",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-volume-facewise-pilot-v1/spinodoid/mesh.npz": "a2cfc10ca72e5541149d3cf74abd21aff7cd3588aedc9f757f8252af22d35278",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-volume-facewise-pilot-v1/spinodoid/spinodoid-samples.npz": "1f5f91f1ebc3e4e76dc7ddfc1e7ea7093595735684fbe41f1f7d85356138442c",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-volume-facewise-pilot-v1/spinodoid/spinodoid-specimen.json": "6140bf66acc68303bc18767a3632e24a068181201eba350ce32217dc50a67eee"
+  },
+  "cases": [
+    "spinodoid"
+  ],
+  "modes": [
+    "baseline",
+    "global",
+    "facewise"
+  ],
+  "grids": {
+    "degree6": 28,
+    "gauss6": 36,
+    "gauss8": 64,
+    "standard": 13,
+    "dense13": 115
+  },
+  "worker_timeout_s": 300,
+  "memory_bytes": 8589934592,
+  "numerical_threads": {
+    "environment": {
+      "OPENBLAS_NUM_THREADS": "1",
+      "OMP_NUM_THREADS": "1",
+      "MKL_NUM_THREADS": "1",
+      "VECLIB_MAXIMUM_THREADS": "1",
+      "RAYON_NUM_THREADS": "1"
+    },
+    "accelerate_blas_threading": 1,
+    "accelerate_scope": "calling thread"
+  },
+  "no_mesh_changes": true,
+  "no_regenerated_specimen_samples": true,
+  "scope": "Compare three saved meshes and metrics at identical surface probes; no admission or nearest-distance certificate"
+}

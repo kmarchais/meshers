@@ -1,0 +1,911 @@
+{
+  "inputs": {
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/box_projection.py": "59589b1996b3a3782f1b7f5e5ff3c7ab303d4158ef50a233515dc5369bddaf05",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/cad_coverage_preflight.py": "6a4f22d13e1859480f6c2785f116ab464cd559dfa0cb3b4e9281ccc5bc670b1b",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/cad_intersection_curved_control.py": "ea78e66f5e18f6dca2ad44e0e99408feaddde9ede8fab100f0739c72dff46ef5",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/cad_intersection_probe.py": "27e7016b5c1ee2944f3de1ee22c2d904faf3ea4052841ed7a310aff611fd77fb",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/cad_ridge_cavity_control.py": "e7606008e1308fd46acf044bfd49f3fbbb368ac3df5ab9409a29ec9b1147d659",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/cad_ridge_chain_control.py": "23211a3ea54b118085d0489c61472a8236b7bc26aeb1579d5a5822783537de4f",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/cad_union_comparison.py": "af342f64a9d7718ea7b7f2c88698ab08d67cddc406365187438e2b8f4e4d5e9e",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/comparison_mesh_audit.py": "6797327ecf6b6c62a973f52812d0bad95b2ef861541247425609109c24d8af94",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/facet_incidence_audit.py": "4f51afc196c85e1d0bc64d7a96507517ddc6e32ccd8380a2ac77cae0ace89610",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/microgen_workflow.py": "9f513dfd3e6e5a72a71a54f70c0c2cf7c7a1ebe7256886ee3feaf7d7ad7de161",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/nested_refinement.py": "7f78251d150ebcee928db1b49e22b64ee89efde5cdc238c1f5b9994aad36a6b8",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/periodic_trace.py": "16d51906318ba9110f8979b48a540500d1cce5835685d72e780ca1893f3b8654",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/quadratic_edge_removal_probe.py": "f26a4be16f7aeb4fce6d89732754fab0e5d39e86b4d4c62466a3afd547cec6ed",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/quadrature_audit.py": "020677df452ec86864e687c9b35e2c69e70f8587ec54240ce0c4eaa4b717319e",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-cad-intersection-curved-v1/native-curved-tet10/cad-crossed-flat-cylinders-samples.npz": "3c5dd96a8b2bc18f572a084d90b4805f535b3812dcaa45d511c022de7b4274d8",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-cad-intersection-curved-v1/native-curved-tet10/cad-crossed-flat-cylinders-specimen.json": "ea3664a483b55a3d42ef347ae4bffe3284caa625058cf002651b93bb7e486aa0",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-cad-intersection-curved-v1/native-curved-tet10/mesh.npz": "0e1f026fe770c93a7c54c41ab86265958058d35fe5454ba65f0de7f85719a1f3",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-cad-intersection-curved-v1/native-curved-tet10/result.json": "61b1574cf0185fc2cb7e66eea687187ef1e5cf05b91be40c96551ffd8321ef1f",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-cad-intersection-curved-v1/result.json": "14869ffe678b8a7ace57163bc443596b144576210593745a123b2ba5fb011ae0",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-cad-intersection-ridge-v1/result.json": "fa6f1abd8e23b9892bbdf208f298748d50404d5806b1759ff70b565ca4e8bc79",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-cad-intersection-ridge-v1/ridge-control/mesh.npz": "d26c937d78290dac8daba41644e7e824529ed75b379081f1a3e9e9163d4a6d50",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/scorecard.py": "8f26256c7df0e84c9f35cdd71bf4f95a74e072d45469002b213c5dcd4f1bab2a"
+  },
+  "source": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-cad-intersection-curved-v1/native-curved-tet10",
+  "provenance": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-cad-intersection-ridge-v1",
+  "chain": [
+    3184,
+    4797,
+    9548
+  ],
+  "complete": true,
+  "numerical_threads": 1,
+  "vtk_backend": "Sequential",
+  "ridge_fallback_enabled": true,
+  "admitted": true,
+  "production_change": false,
+  "solve_performed": false,
+  "generation_timing_claim": false,
+  "scope": "One simultaneous isolated curved chain motion, not a replay of all177 sequential Tet4 moves",
+  "projection_controls": {
+    "hidden_single_branch_foot_rejected": true,
+    "exposed_joint_foot_on_both_walls": true,
+    "initial_hidden_foot_preserved": true,
+    "exposed_single_branch_projection_unchanged": true
+  },
+  "prior_sequential_corner_records": [
+    {
+      "node": 3184,
+      "requested_displacement": 6.027620140645119e-06,
+      "shortest_original_wall_edge": 0.00829925698360985,
+      "displacement_ratio": 0.0007262843110592946,
+      "candidate_incident_q_min": 0.5116576892632446,
+      "candidate_minimum_determinant": 2.3463409741293922e-07,
+      "status": "accepted",
+      "point": [
+        -0.14323971540860797,
+        -0.14323971540860797,
+        0.04452397028187176
+      ]
+    },
+    {
+      "node": 4797,
+      "requested_displacement": 0.0014180592179330062,
+      "shortest_original_wall_edge": 0.006149977902411457,
+      "displacement_ratio": 0.23057956311956396,
+      "candidate_incident_q_min": 0.4876547662664331,
+      "candidate_minimum_determinant": 1.0545538372534798e-07,
+      "status": "accepted",
+      "point": [
+        -0.14599543927410286,
+        -0.14599543927410286,
+        0.0344286466646852
+      ]
+    },
+    {
+      "node": 9548,
+      "requested_displacement": 0.00029767123229893834,
+      "shortest_original_wall_edge": 0.0052045516817580345,
+      "displacement_ratio": 0.057194404148637176,
+      "candidate_incident_q_min": 0.5928976593980606,
+      "candidate_minimum_determinant": 9.68533670694191e-08,
+      "status": "accepted",
+      "point": [
+        -0.14724404863997537,
+        -0.14724404863997537,
+        0.028621497866264115
+      ]
+    }
+  ],
+  "prior_records_are_not_isolated_feasibility_proof": true,
+  "cavity_tetrahedra": 47,
+  "cavity_nodes": 131,
+  "cavity_interface_faces": 39,
+  "periodic_cap_clearance": 0.34254259723494257,
+  "motion": {
+    "corner_displacements": {
+      "3184": [
+        5.956264495787789e-06,
+        -2.744858172698539e-07,
+        -8.830488957278781e-07
+      ],
+      "4797": [
+        0.0014083091892357902,
+        -3.819124571888266e-05,
+        -0.00016155061692621486
+      ],
+      "9548": [
+        -5.496235821605966e-06,
+        0.000296275660514711,
+        -2.826104946270641e-05
+      ]
+    },
+    "affected_midpoints": [
+      24569,
+      24570,
+      24573,
+      25272,
+      25273,
+      25431,
+      30997,
+      30998,
+      31001,
+      34305,
+      34306,
+      34307,
+      34390,
+      34393,
+      39258,
+      39259,
+      39261,
+      39262,
+      39293,
+      39294,
+      42773,
+      43151,
+      43152,
+      43154,
+      56488,
+      64284,
+      66726,
+      66727,
+      66728,
+      66729,
+      66730,
+      66731,
+      66732,
+      67963,
+      70460,
+      71019,
+      71941,
+      71942
+    ],
+    "projected_wall_midpoints": [
+      {
+        "edge": [
+          3136,
+          3184
+        ],
+        "midpoint": 39262,
+        "requested_constraint_mask": 2,
+        "constraint_mask": 2,
+        "initial_projection": {
+          "point": [
+            -0.14393410726066663,
+            -0.1474794991893984,
+            0.042225262190718475
+          ],
+          "branch_values": [
+            0.0034052653862659543,
+            2.7755575615628914e-17
+          ],
+          "constraint_mask": 2,
+          "exposed": true
+        },
+        "ridge_fallback_applied": false,
+        "additional_projection_displacement": 2.981989186426228e-06,
+        "branch_values": [
+          0.0034052653862659543,
+          2.7755575615628914e-17
+        ],
+        "exposed": true
+      },
+      {
+        "edge": [
+          3136,
+          4797
+        ],
+        "midpoint": 34307,
+        "requested_constraint_mask": 2,
+        "constraint_mask": 2,
+        "initial_projection": {
+          "point": [
+            -0.1453193187028799,
+            -0.14885736112214581,
+            0.03717923629838067
+          ],
+          "branch_values": [
+            0.0034301455776528933,
+            2.7755575615628914e-17
+          ],
+          "constraint_mask": 2,
+          "exposed": true
+        },
+        "ridge_fallback_applied": false,
+        "additional_projection_displacement": 0.0007022337664666997,
+        "branch_values": [
+          0.0034301455776528933,
+          2.7755575615628914e-17
+        ],
+        "exposed": true
+      },
+      {
+        "edge": [
+          3137,
+          4797
+        ],
+        "midpoint": 34305,
+        "requested_constraint_mask": 2,
+        "constraint_mask": 2,
+        "initial_projection": {
+          "point": [
+            -0.14639873972464382,
+            -0.15012342727826572,
+            0.03267122597999634
+          ],
+          "branch_values": [
+            0.003637405682368672,
+            -2.7755575615628914e-17
+          ],
+          "constraint_mask": 2,
+          "exposed": true
+        },
+        "ridge_fallback_applied": false,
+        "additional_projection_displacement": 0.0007048610085567003,
+        "branch_values": [
+          0.003637405682368672,
+          -2.7755575615628914e-17
+        ],
+        "exposed": true
+      },
+      {
+        "edge": [
+          3137,
+          9548
+        ],
+        "midpoint": 66726,
+        "requested_constraint_mask": 2,
+        "constraint_mask": 2,
+        "initial_projection": {
+          "point": [
+            -0.14701698511419153,
+            -0.15074773196120198,
+            0.02976585439616296
+          ],
+          "branch_values": [
+            0.0036583378127590382,
+            -2.7755575615628914e-17
+          ],
+          "constraint_mask": 2,
+          "exposed": true
+        },
+        "ridge_fallback_applied": false,
+        "additional_projection_displacement": 1.1127158357487573e-07,
+        "branch_values": [
+          0.0036583378127590382,
+          -2.7755575615628914e-17
+        ],
+        "exposed": true
+      },
+      {
+        "edge": [
+          3184,
+          3352
+        ],
+        "midpoint": 39294,
+        "requested_constraint_mask": 2,
+        "constraint_mask": 2,
+        "initial_projection": {
+          "point": [
+            -0.1422494917283376,
+            -0.14843115923925854,
+            0.04759287870080578
+          ],
+          "branch_values": [
+            0.005874600676761127,
+            0.0
+          ],
+          "constraint_mask": 2,
+          "exposed": true
+        },
+        "ridge_fallback_applied": false,
+        "additional_projection_displacement": 2.96434237666735e-06,
+        "branch_values": [
+          0.005874600676761127,
+          0.0
+        ],
+        "exposed": true
+      },
+      {
+        "edge": [
+          3184,
+          3476
+        ],
+        "midpoint": 25272,
+        "requested_constraint_mask": 1,
+        "constraint_mask": 1,
+        "initial_projection": {
+          "point": [
+            -0.14845290677043194,
+            -0.14230540478184187,
+            0.04742543378690518
+          ],
+          "branch_values": [
+            -2.7755575615628914e-17,
+            0.005844272587948146
+          ],
+          "constraint_mask": 1,
+          "exposed": true
+        },
+        "ridge_fallback_applied": false,
+        "additional_projection_displacement": 9.394584288069515e-09,
+        "branch_values": [
+          -2.7755575615628914e-17,
+          0.005844272587948146
+        ],
+        "exposed": true
+      },
+      {
+        "edge": [
+          3184,
+          3535
+        ],
+        "midpoint": 25431,
+        "requested_constraint_mask": 1,
+        "constraint_mask": 1,
+        "initial_projection": {
+          "point": [
+            -0.1481606352964607,
+            -0.14420643029875838,
+            0.041285656837324644
+          ],
+          "branch_values": [
+            -2.7755575615628914e-17,
+            0.0038053292702829866
+          ],
+          "constraint_mask": 1,
+          "exposed": true
+        },
+        "ridge_fallback_applied": false,
+        "additional_projection_displacement": 1.041717514272831e-08,
+        "branch_values": [
+          -2.7755575615628914e-17,
+          0.0038053292702829866
+        ],
+        "exposed": true
+      },
+      {
+        "edge": [
+          3184,
+          4797
+        ],
+        "midpoint": 39261,
+        "requested_constraint_mask": 3,
+        "constraint_mask": 3,
+        "initial_projection": {
+          "point": [
+            -0.1447026694364972,
+            -0.1447026694364972,
+            0.03951123204801154
+          ],
+          "branch_values": [
+            0.0,
+            0.0
+          ],
+          "constraint_mask": 3,
+          "exposed": true
+        },
+        "ridge_fallback_applied": false,
+        "additional_projection_displacement": 8.587795417567402e-05,
+        "branch_values": [
+          0.0,
+          0.0
+        ],
+        "exposed": true
+      },
+      {
+        "edge": [
+          3184,
+          6468
+        ],
+        "midpoint": 43151,
+        "requested_constraint_mask": 1,
+        "constraint_mask": 1,
+        "initial_projection": {
+          "point": [
+            -0.14479127208549278,
+            -0.14155179568358953,
+            0.049629518824499216
+          ],
+          "branch_values": [
+            0.0,
+            0.003060777506474599
+          ],
+          "constraint_mask": 1,
+          "exposed": true
+        },
+        "ridge_fallback_applied": false,
+        "additional_projection_displacement": 1.6571816610975233e-08,
+        "branch_values": [
+          0.0,
+          0.003060777506474599
+        ],
+        "exposed": true
+      },
+      {
+        "edge": [
+          3184,
+          6515
+        ],
+        "midpoint": 42773,
+        "requested_constraint_mask": 2,
+        "constraint_mask": 2,
+        "initial_projection": {
+          "point": [
+            -0.14152833498833575,
+            -0.14462771995177526,
+            0.049696382116099835
+          ],
+          "branch_values": [
+            0.0029277861406439842,
+            -2.7755575615628914e-17
+          ],
+          "constraint_mask": 2,
+          "exposed": true
+        },
+        "ridge_fallback_applied": false,
+        "additional_projection_displacement": 2.956216190646517e-06,
+        "branch_values": [
+          0.0029277861406439842,
+          -2.7755575615628914e-17
+        ],
+        "exposed": true
+      },
+      {
+        "edge": [
+          3184,
+          6574
+        ],
+        "midpoint": 43154,
+        "requested_constraint_mask": 2,
+        "constraint_mask": 2,
+        "initial_projection": {
+          "point": [
+            -0.14197369032421453,
+            -0.14251945218025935,
+            0.048409412883488184
+          ],
+          "branch_values": [
+            0.0005166618866006834,
+            0.0
+          ],
+          "constraint_mask": 2,
+          "exposed": true
+        },
+        "ridge_fallback_applied": false,
+        "additional_projection_displacement": 2.9612700823320797e-06,
+        "branch_values": [
+          0.0005166618866006834,
+          0.0
+        ],
+        "exposed": true
+      },
+      {
+        "edge": [
+          3257,
+          4797
+        ],
+        "midpoint": 30997,
+        "requested_constraint_mask": 1,
+        "constraint_mask": 1,
+        "initial_projection": {
+          "point": [
+            -0.15172642101958014,
+            -0.146427827743065,
+            0.03254060943570779
+          ],
+          "branch_values": [
+            -2.7755575615628914e-17,
+            0.005176667375795141
+          ],
+          "constraint_mask": 1,
+          "exposed": true
+        },
+        "ridge_fallback_applied": false,
+        "additional_projection_displacement": 1.094725251183242e-06,
+        "branch_values": [
+          -2.7755575615628914e-17,
+          0.005176667375795141
+        ],
+        "exposed": true
+      },
+      {
+        "edge": [
+          3535,
+          4797
+        ],
+        "midpoint": 31001,
+        "requested_constraint_mask": 1,
+        "constraint_mask": 1,
+        "initial_projection": {
+          "point": [
+            -0.14953849722920817,
+            -0.14555880656843398,
+            0.03623028885301947
+          ],
+          "branch_values": [
+            2.7755575615628914e-17,
+            0.0038648627333190966
+          ],
+          "constraint_mask": 1,
+          "exposed": true
+        },
+        "ridge_fallback_applied": false,
+        "additional_projection_displacement": 1.0028056704368483e-06,
+        "branch_values": [
+          2.7755575615628914e-17,
+          0.0038648627333190966
+        ],
+        "exposed": true
+      },
+      {
+        "edge": [
+          4797,
+          9263
+        ],
+        "midpoint": 64284,
+        "requested_constraint_mask": 1,
+        "constraint_mask": 1,
+        "initial_projection": {
+          "point": [
+            -0.1490651718644008,
+            -0.1468315965547446,
+            0.030667283107323296
+          ],
+          "branch_values": [
+            0.0,
+            0.0021870813050439697
+          ],
+          "constraint_mask": 1,
+          "exposed": true
+        },
+        "ridge_fallback_applied": false,
+        "additional_projection_displacement": 2.1549284240849355e-06,
+        "branch_values": [
+          0.0,
+          0.0021870813050439697
+        ],
+        "exposed": true
+      },
+      {
+        "edge": [
+          4797,
+          9548
+        ],
+        "midpoint": 66728,
+        "requested_constraint_mask": 3,
+        "constraint_mask": 3,
+        "initial_projection": {
+          "point": [
+            -0.14665102419750603,
+            -0.14665102419750603,
+            0.031519471788443734
+          ],
+          "branch_values": [
+            0.0,
+            0.0
+          ],
+          "constraint_mask": 3,
+          "exposed": true
+        },
+        "ridge_fallback_applied": false,
+        "additional_projection_displacement": 0.00014991439834506894,
+        "branch_values": [
+          0.0,
+          0.0
+        ],
+        "exposed": true
+      },
+      {
+        "edge": [
+          7882,
+          9548
+        ],
+        "midpoint": 66730,
+        "requested_constraint_mask": 2,
+        "constraint_mask": 3,
+        "initial_projection": {
+          "point": [
+            -0.1477577256519699,
+            -0.14773223045807024,
+            0.025839011400539163
+          ],
+          "branch_values": [
+            -2.5114014800542428e-05,
+            0.0
+          ],
+          "constraint_mask": 2,
+          "exposed": false
+        },
+        "ridge_fallback_applied": true,
+        "additional_projection_displacement": 2.5214174087934494e-05,
+        "branch_values": [
+          2.7755575615628914e-17,
+          2.7755575615628914e-17
+        ],
+        "exposed": true
+      },
+      {
+        "edge": [
+          9263,
+          9548
+        ],
+        "midpoint": 66732,
+        "requested_constraint_mask": 1,
+        "constraint_mask": 1,
+        "initial_projection": {
+          "point": [
+            -0.14968947654733705,
+            -0.14741001442545842,
+            0.027754056407778224
+          ],
+          "branch_values": [
+            0.0,
+            0.002240687846915307
+          ],
+          "constraint_mask": 1,
+          "exposed": true
+        },
+        "ridge_fallback_applied": false,
+        "additional_projection_displacement": 0.0001481951367397134,
+        "branch_values": [
+          0.0,
+          0.002240687846915307
+        ],
+        "exposed": true
+      }
+    ],
+    "ridge_fallback_enabled": true,
+    "ridge_fallback_count": 1,
+    "all_projected_midpoints_exposed": true,
+    "maximum_corner_displacement": 0.0014180592179330062,
+    "maximum_midpoint_displacement": 0.0007090296089665035
+  },
+  "candidate_sha256": "c4e98300bda8f5dcb21abf7c876b4c3eac1f7b780f4677f895e7acafecdb3433",
+  "local": {
+    "feasible": true,
+    "rejection_reasons": [],
+    "original_global_quality": {
+      "min": 0.3093361406522589,
+      "p01": 0.5187439842379813,
+      "p10": 0.6045485328953153,
+      "median": 0.7310007431289307,
+      "p90": 0.891811773289015,
+      "p99": 0.9636217557629784,
+      "max": 0.9981342867264323
+    },
+    "candidate_global_quality": {
+      "min": 0.3093361406522589,
+      "p01": 0.5187439842379813,
+      "p10": 0.6045309930140123,
+      "median": 0.7309994883221872,
+      "p90": 0.8918091825695369,
+      "p99": 0.9636217557629784,
+      "max": 0.9981342867264323
+    },
+    "original_local_minimum_q": 0.4965880328950353,
+    "candidate_local_minimum_q": 0.48765476626643417,
+    "original_local_minimum_jacobian": 9.298429321901911e-08,
+    "candidate_local_minimum_jacobian": 1.0077641723516719e-07,
+    "local_volume_change": -1.2906115611227197e-08,
+    "facet_audit": {
+      "nodes": 72793,
+      "elements": 49422,
+      "unique_faces": 101922,
+      "interior_faces": 95766,
+      "extracted_boundary_faces": 6156,
+      "same_orientation_shared_faces": 0,
+      "nonmanifold_faces": 0,
+      "duplicate_cells": 0,
+      "duplicate_surface_faces": 0,
+      "provided_boundary_matches_extraction": true,
+      "missing_provided_faces": 0,
+      "extra_provided_faces": 0,
+      "nonpositive_corner_determinants": 0,
+      "minimum_corner_determinant": 3.3460298593320017e-09,
+      "oriented_facet_consistency_passed": true,
+      "conflict_examples": [],
+      "scope": "Oriented corner-face incidence and same-side neighbor diagnostics; necessary consistency, not a certificate of curved geometry or absence of nonlocal intersections"
+    },
+    "quadratic_conformity": {
+      "passed": true,
+      "order": 2,
+      "unique_edges": 62646
+    },
+    "periodic": {
+      "periodic_pair_counts": [
+        193,
+        193,
+        0
+      ],
+      "periodic_coordinate_errors": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "periodic_pair_tolerance": 1e-10,
+      "periodic_equivalence_classes": 72407,
+      "periodic_triangles_match": true,
+      "full_facet_check_required": true,
+      "complete_existing_node_classes": true,
+      "unmatched_noncap_contact_nodes": [
+        [
+          [],
+          []
+        ],
+        [
+          [],
+          []
+        ],
+        [
+          [],
+          []
+        ]
+      ],
+      "declared_bounds": [
+        [
+          -0.5,
+          -0.5,
+          -0.5
+        ],
+        [
+          0.5,
+          0.5,
+          0.5
+        ]
+      ],
+      "periodic_gate": "declared-cell-material-cap-and-complete-node-classes-v1"
+    },
+    "ridge_edges": [
+      {
+        "edge": [
+          3184,
+          4797
+        ],
+        "boundary_faces": [
+          4040,
+          4042
+        ],
+        "branches": [
+          2,
+          1
+        ],
+        "opposite_exposed_branches": true
+      },
+      {
+        "edge": [
+          4797,
+          9548
+        ],
+        "boundary_faces": [
+          5954,
+          6013
+        ],
+        "branches": [
+          1,
+          2
+        ],
+        "opposite_exposed_branches": true
+      }
+    ],
+    "interface_nodes_bitwise_unchanged": true,
+    "outside_cavity_nodes_bitwise_unchanged": true,
+    "counts_and_connectivity_unchanged": true,
+    "nodes": 72793,
+    "elements": 49422,
+    "frozen_witness_distance_to_local_surface": 1.4173842446245293e-07,
+    "witness_scope": "Frozen observer only; local distance upper-bounds distance to the whole candidate surface"
+  },
+  "full_admission": {
+    "nodes": 72793,
+    "elements": 49422,
+    "order": 2,
+    "qualified": true,
+    "mesh_file": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-cad-ridge-chain-v2/chain-candidate/mesh.npz",
+    "mesh_sha256": "c4e98300bda8f5dcb21abf7c876b4c3eac1f7b780f4677f895e7acafecdb3433",
+    "status": "admitted",
+    "geometry": {
+      "volume": 0.12337178995771345,
+      "relative_volume_error": 9.77097686316597e-07,
+      "q_min_corner": 0.309336140652259,
+      "q_p01_corner": 0.5187439842379808,
+      "minimum_sampled_jacobian": 2.143163906618269e-10,
+      "facet_consistency": {
+        "nodes": 72793,
+        "elements": 49422,
+        "unique_faces": 101922,
+        "interior_faces": 95766,
+        "extracted_boundary_faces": 6156,
+        "same_orientation_shared_faces": 0,
+        "nonmanifold_faces": 0,
+        "duplicate_cells": 0,
+        "duplicate_surface_faces": 0,
+        "provided_boundary_matches_extraction": true,
+        "missing_provided_faces": 0,
+        "extra_provided_faces": 0,
+        "nonpositive_corner_determinants": 0,
+        "minimum_corner_determinant": 3.3460298593320017e-09,
+        "oriented_facet_consistency_passed": true,
+        "conflict_examples": [],
+        "scope": "Oriented corner-face incidence and same-side neighbor diagnostics; necessary consistency, not a certificate of curved geometry or absence of nonlocal intersections"
+      },
+      "oriented_facet_consistency_passed": true,
+      "quadratic_conformity": {
+        "passed": true,
+        "order": 2,
+        "unique_edges": 62646
+      },
+      "exact_straight_reduction_verified": false,
+      "geometry_admitted": true,
+      "sampled_forward_max": 0.0007696941635395615,
+      "sampled_reverse_max": 0.0010967968475687176,
+      "sampled_two_sided_max": 0.0010967968475687176,
+      "outward_forward_max": 0.0007696941635395615,
+      "inward_forward_max": 0.00021511315909289558,
+      "projection_failed": 0,
+      "forward_samples": 75660,
+      "reverse_samples": 53248,
+      "minimum_dihedral_deg_corner": 17.913116956019024,
+      "reverse_tessellation_delta_max": 3.043490874250877e-05,
+      "quadratic_reverse_subdivisions": [
+        8,
+        16
+      ],
+      "projection_method": "newton-box-slsqp-v1",
+      "unbounded_projection_failed": 0,
+      "box_projection_attempts": 0,
+      "box_projection_recovered": 0,
+      "box_projection_witnesses": [],
+      "distance_audit_complete": true,
+      "failed_gates": []
+    },
+    "periodic": {
+      "periodic_pair_counts": [
+        193,
+        193,
+        0
+      ],
+      "periodic_coordinate_errors": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "periodic_pair_tolerance": 1e-10,
+      "periodic_equivalence_classes": 72407,
+      "periodic_triangles_match": true,
+      "full_facet_check_required": true,
+      "complete_existing_node_classes": true,
+      "unmatched_noncap_contact_nodes": [
+        [
+          [],
+          []
+        ],
+        [
+          [],
+          []
+        ],
+        [
+          [],
+          []
+        ]
+      ],
+      "declared_bounds": [
+        [
+          -0.5,
+          -0.5,
+          -0.5
+        ],
+        [
+          0.5,
+          0.5,
+          0.5
+        ]
+      ],
+      "periodic_gate": "declared-cell-material-cap-and-complete-node-classes-v1"
+    },
+    "quality_quantiles": {
+      "min": 0.309336140652259,
+      "p01": 0.5187439842379808,
+      "p10": 0.6045309930140123,
+      "median": 0.7309994883221871,
+      "p90": 0.8918091825695369,
+      "p99": 0.9636217557629785,
+      "max": 0.9981342867264327
+    },
+    "jacobian_scope": "Positive125 Duffy probes plus element nodes, barycenter and 15-point integration rule"
+  },
+  "input_hashes_verified": true,
+  "original_meshes_and_samples_unchanged": true
+}

@@ -1,0 +1,34 @@
+<!doctype html><html><head><meta charset="utf-8"><style>
+body{margin:0;color:var(--foreground);font-family:var(--font-sans,system-ui)}
+section{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:16px;margin-bottom:12px}
+h3{font-size:16px;margin:0 0 9px}p{font-size:12px;line-height:1.5;color:var(--muted-foreground)}
+table{width:100%;border-collapse:collapse;font-size:12px}td,th{text-align:left;padding:6px 3px;border-bottom:1px solid var(--border);font-variant-numeric:tabular-nums}
+.bar{display:grid;grid-template-columns:145px minmax(20px,1fr) 82px;gap:8px;align-items:center;margin:10px 0;font-size:12px}
+.track,.track i{height:17px;display:block}.track{background:var(--secondary)}b{text-align:right;font-variant-numeric:tabular-nums}
+.good{color:var(--success)}.bad{color:var(--destructive)}.warn{color:var(--warning)}
+@media(max-width:450px){.bar{grid-template-columns:108px minmax(20px,1fr) 72px;font-size:11px}table{font-size:11px}}
+</style></head><body>
+<section><h3>PMY: real boundary gaps; subdivision still fails</h3>
+<p>Complete curved-surface exclusion confirms all 8 selected gaps. The refined background already places its affine wall too far away. Distances use unit-cell coordinates; smaller is better.</p>
+<div class="bar"><span>Admission limit</span><div class="track"><i style="width:16.66667%;background:var(--info)"></i></div><b>0.002</b></div>
+<div class="bar"><span>Best of 8 affine gaps</span><div class="track"><i style="width:47.00784%;background:var(--warning)"></i></div><b>0.005640941</b></div>
+<div class="bar"><span>Worst affine gap</span><div class="track"><i style="width:84.73068%;background:var(--destructive)"></i></div><b>0.01016768</b></div>
+<p>The field-only geometry rule detects all eight neighborhoods. Its center-point subdivision fits the count cap at 26,114 nodes and 117,127 tets, but creates <span class="bad">6,208 tets below q = 0.1</span>. Minimum q is 0.01177. No native meshing or solve was launched on this rejected background.</p></section>
+<section><h3>CAD: reuse an edge chain, avoid thin inserted wedges</h3>
+<p>Two insertion orders failed quality and curved Jacobians. The following control reuses three existing corners and checks all 47 affected tets. <span class="good">Full admission passes.</span></p>
+<div class="bar"><span>Saved ridge witness</span><div class="track"><i style="width:92.02124%;background:var(--warning)"></i></div><b>0.001196276</b></div>
+<div class="bar"><span>Local chain distance</span><div class="track"><i style="width:0.01090%;background:var(--success)"></i></div><b>1.417384e-07</b></div>
+<table><tr><th>Global metric</th><th>Before</th><th>After</th></tr>
+<tr><td>Boundary maximum</td><td>0.001196276</td><td>0.001096797</td></tr>
+<tr><td>Absolute volume error</td><td>0.0001081709%</td><td>9.770977e-05%</td></tr>
+<tr><td>Minimum corner q</td><td>0.3093361</td><td>0.3093361</td></tr>
+<tr><td>Nodes / tets</td><td>72,793 / 49,422</td><td>72,793 / 49,422</td></tr></table>
+<p>The local witness is an observer, not an optimization target. The p10, median and p90 corner-quality values decrease slightly. This is a saved-mesh feasibility control; no production implementation, generation speedup or matched-cost FEA win is claimed.</p></section>
+<section><h3>Volume: protect both signed error lobes</h3>
+<p>The old absolute-maximum guard let a positive lobe improve while a negative lobe worsened. Separate signed bounds use the same grid and displacement budget.</p>
+<table><tr><th>Exact volume case</th><th>Before |ΔV/V|</th><th>After</th><th>Reduction</th></tr><tr><td>schwarz-solid</td><td>4.711358e-07</td><td class="good">2.666617e-07</td><td>43.4%</td></tr><tr><td>schwarz-d-solid</td><td>2.076073e-06</td><td class="good">1.227308e-06</td><td>40.9%</td></tr></table>
+<p>Errors above are dimensionless. These gains are smaller than the aggressive control's gains. Counts, corners and corner quality stay fixed.</p>
+<table><tr><th>Case</th><th>Independent standard + dense checks</th></tr><tr><td>spinodoid</td><td style="color:var(--success)">Pass; boundary nonworse</td></tr><tr><td>schwarz-solid</td><td style="color:var(--success)">Pass; boundary nonworse</td></tr><tr><td>schwarz-d-solid</td><td style="color:var(--success)">Pass; boundary nonworse</td></tr><tr><td>graded-gyroid-linear</td><td style="color:var(--success)">Pass; boundary nonworse</td></tr><tr><td>graded-gyroid-periodic</td><td style="color:var(--success)">Pass; boundary nonworse</td></tr><tr><td>gyroid</td><td style="color:var(--success)">Pass; boundary nonworse</td></tr><tr><td>smooth-lattice</td><td style="color:var(--success)">Pass; boundary nonworse</td></tr><tr><td>spinodoid-anisotropic</td><td style="color:var(--success)">Pass; boundary nonworse</td></tr><tr><td>graded-gyroid-density-linear</td><td style="color:var(--success)">Pass; boundary nonworse</td></tr></table>
+<p>Frozen volume scores worsen for linear-thickness graded Gyroid and anisotropic spinodoid. Those references are sampled, so the physical ranking remains unresolved. Finite grids do not certify continuous extrema. Prototype correction time excludes audits and is not a workflow speedup.</p></section>
+<p>MacBook controls, 11 November 2026. All original specimens, all 24 lattice tensors and admission gates remain unchanged. No new FEA reference or universal Meshers versus Microgen+MMG win.</p>
+</body></html>

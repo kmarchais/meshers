@@ -1,5 +1,140 @@
 # Meshers project tracking
 
+## Resumed failure diagnosis and bounded controls, 11 November 2026
+
+Continuation from `c0017ed` after the MacBook lid was reopened. Job 758 had
+already finished successfully; the shared queue was idle, so no old work was
+restarted. Three agents prepared focused probes and the parent ran jobs
+759 through 767 sequentially. All original specimens, all four original study
+cases, all 24 lattice tensors and the existing admission gates remain in scope.
+This round changes experimental controls only. It does not change production
+defaults, establish a generation-time win or perform a new FEA solve.
+
+[Results chart](handoff/macbook/resumed-findings-20261111.html) and
+[numeric results with input hashes](handoff/macbook/resumed-findings-20261111.json).
+
+### PMY: useful geometry signal, rejected center subdivision
+
+Job 759 selects eight spatially separated worst reverse witnesses from the
+unchanged fixture. Complete Tri6 Bernstein bounds exclude a radius-0.002 ball
+at all eight points. These bounds cover every curved surface patch, with
+floating-point padding rather than interval arithmetic. The observed gaps are
+not artifacts of the coarse tessellation used to locate them.
+
+All eight containing refined-background tetrahedra bracket their target wall.
+Nevertheless, enumeration of affine wall and cap polygons places the nearest
+refined affine boundary 0.00564094 to 0.01016768 away. Geometry is already
+underresolved before native clipping. The analytic first-snap replay also
+remains outside tolerance; it does not identify the actual post-rollback
+native state or exclude additional downstream errors.
+
+Job 764 adds one field-only geometric selection rule. It measures normalized
+field residual at affine wall-chord midpoints and wall-polygon vertex averages,
+using the tangential gradient on physical cap faces. It retains the old
+classification selections and freezes all choices before reading witness
+coordinates. This first-order estimate is a selection heuristic, not a
+closest-distance certificate. Affine, scaling, cap-gradient and all 65 ordered
+local face-insertion controls pass.
+
+The rule adds 9,481 face and 4,244 tet selections beyond classification alone.
+It covers eight witness neighborhoods versus seven for the old rule, and
+marks seven containing tets versus none. Exact count prediction agrees with
+the constructed background at 26,114 nodes and 117,127 tetrahedra. Box volume,
+oriented conformity and exact periodic caps pass. Parent-volume reproduction
+error is at most 5.50e-15.
+
+Quality fails: minimum q falls from 0.122091 to 0.0117743, with 6,208 tets below
+0.1. The background is rejected; native clipping and FEA are not run. The next
+control keeps these frozen marks and tests complete periodic longest-edge
+stars with explicit child-quality, conformity and count guards. Uncovered or
+rejected marks must remain visible rather than becoming a success claim.
+
+### CAD: an admitted local chain repair at fixed counts
+
+Job 760 fails in the new locator's conversion of a VTK numeric reference,
+before constructing a candidate. The scalar conversion is corrected and its
+failed output retained. Job 761 tests both orders of two conforming edge-star
+splits around the saved worst ridge face. Exact parent-map reproduction is
+within 5.56e-17. Both orders produce thin wedges because the cuts lie only
+about 13% of their edge lengths from the same existing corner. Local q drops
+from 0.742435 to 0.060676 even before deformation; projection then inverts
+children. Their near-zero witness distance does not make them admissible.
+
+Job 765 instead reuses the existing chain 3184–4797–9548, identified in the
+saved linear control. It moves three corners simultaneously and updates the
+complete 47-tet stars and their midside nodes. The old sequential linear
+quality values are provenance only. Interface, outside nodes, counts,
+periodicity, minimum quality and positive125 pass in the new curved control,
+but one midpoint projected onto a cylinder is hidden inside the other union
+branch. This candidate is rejected.
+
+Job 767 changes only that projection policy. A hidden single-branch foot
+triggers the analytic two-cylinder intersection constraint, with the original
+foot retained and exposure rechecked. Four analytic projection controls pass.
+One midpoint needs the fallback. The full candidate is admitted:
+
+| CAD curved Tet10 metric | Before | After chain control |
+|---|---:|---:|
+| Nodes / tetrahedra | 72,793 / 49,422 | 72,793 / 49,422 |
+| Sampled two-sided boundary maximum | 0.0011962761 | 0.0010967968 |
+| Absolute relative volume error | 1.081709e-6 | 9.770977e-7 |
+| Minimum corner q | 0.309336 | 0.309336 |
+| Corner-quality p10 | 0.604548533 | 0.604530993 |
+| Corner-quality median | 0.731000743 | 0.730999488 |
+| Corner-quality p90 | 0.891811773 | 0.891809183 |
+
+Volume errors in this table are dimensionless. Boundary maximum improves
+8.3%, but the small quality-quantile decreases prevent an all-metrics win.
+The original ridge witness is now within 1.4174e-7 of the local candidate
+surface. It is an observer, not a selection objective. This proves one local
+curved repair is feasible; a general branch-driven chain selection and a
+quality-distribution safeguard are still needed before native integration.
+No matched-order actual-route or live generation timing comparison is added.
+
+### Volume: preserve both signed error lobes
+
+Job 762 reproduces the saved spinodoid standard and dense forward maxima.
+The offending faces 7581 and 7586 share curved edge 6913–6891. They are away
+from the caps; physical and cap-constrained residuals agree there. Independent
+local minimization confirms the distance increase, so it is not a Newton-path
+artifact. The existing degree6 grid already sees the failure: its negative
+extremum changes from -0.000281552758 to -0.000281560921 while its positive
+extremum improves from 0.000289815549 to 0.000289807449. Reducing that range to
+one absolute maximum discards the worsening negative lobe.
+
+The new explicit `--signed-envelope` mode retains separate signed extrema
+for each face in both displacement bounds and nonlinear acceptance. It uses
+the same grid, movement budget and Jacobian checks. The old global and facewise
+modes remain available. A concrete opposite-lobe control reproduces the old
+guard's false acceptance and checks the new rejection.
+
+Jobs 763 and 766 run this unchanged policy on all nine specimens. All pass
+standard and dense admission, with exactly unchanged sampled global boundary
+maxima, counts, corners and corner quality. Requested periodicity and coherent
+curved facets remain intact. On exact references:
+
+| Exact volume case | Before absolute relative error | After | Reduction |
+|---|---:|---:|---:|
+| Schwarz P solid | 4.711358e-7 | 2.666617e-7 | 43.4% |
+| Schwarz D solid | 2.076073e-6 | 1.227308e-6 | 40.9% |
+
+These gains are smaller than those of the aggressive global correction. The
+spinodoid Gauss8 residual still increases by about 2.11e-10, so the finite-grid
+checks do not certify a continuous maximum. Frozen volume scores worsen for
+linear-thickness graded Gyroid and anisotropic spinodoid; their sampled
+references do not justify resolving such small physical differences. Preserve
+those raw values. Prototype correction time ranges from 0.284 to 5.275 seconds,
+excluding audits, and is not a workflow speedup. Native integration must be
+judged against that cost and the already small exact-volume errors.
+
+### Overnight continuation authorization
+
+At 01:43 CET Kevin authorized unattended work until 08:00 Madrid time on
+11 November 2026, or 07:00 UTC. Preserve this completed round as a checkpoint,
+then prioritize PMY subdivision and general CAD ridge repair. Stop scheduling
+work that cannot finish within the deadline and leave an explicit handoff.
+The overall comparison objective remains open.
+
 ## PMY, CAD intersections and volume fidelity, 11 November 2026
 
 Three scoped agents investigated the three ideas requested by Kevin. The parent

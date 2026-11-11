@@ -1,0 +1,107 @@
+{
+  "rows": [
+    {
+      "case": "spinodoid",
+      "worker": {
+        "returncode": 0,
+        "limit_failure": null,
+        "peak_rss_bytes": 1685438464,
+        "wall_s": 44.93198404202121,
+        "wall_s_clock": "monotonic",
+        "elapsed_realtime_s": 44.93248391151428,
+        "suspension_or_clock_adjustment_s": 0.0004998694930691272,
+        "idle_sleep_prevention": [
+          "/usr/bin/caffeinate",
+          "-i"
+        ],
+        "memory_bytes": 8589934592,
+        "memory_enforcement": "process-tree-rss-watchdog",
+        "rss_poll_interval_s": 0.25,
+        "platform": "darwin",
+        "numerical_thread_policy": {
+          "environment": {
+            "OPENBLAS_NUM_THREADS": "1",
+            "OMP_NUM_THREADS": "1",
+            "MKL_NUM_THREADS": "1",
+            "VECLIB_MAXIMUM_THREADS": "1",
+            "RAYON_NUM_THREADS": "1"
+          },
+          "accelerate_blas_threading": 1,
+          "accelerate_scope": "calling thread"
+        }
+      },
+      "directory": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-volume-signed-envelope-pilot-v1/spinodoid",
+      "complete": true,
+      "admitted": true
+    },
+    {
+      "case": "schwarz-solid",
+      "worker": {
+        "returncode": 0,
+        "limit_failure": null,
+        "peak_rss_bytes": 899465216,
+        "wall_s": 10.681193583004642,
+        "wall_s_clock": "monotonic",
+        "elapsed_realtime_s": 10.681314945220947,
+        "suspension_or_clock_adjustment_s": 0.00012136221630498767,
+        "idle_sleep_prevention": [
+          "/usr/bin/caffeinate",
+          "-i"
+        ],
+        "memory_bytes": 8589934592,
+        "memory_enforcement": "process-tree-rss-watchdog",
+        "rss_poll_interval_s": 0.25,
+        "platform": "darwin",
+        "numerical_thread_policy": {
+          "environment": {
+            "OPENBLAS_NUM_THREADS": "1",
+            "OMP_NUM_THREADS": "1",
+            "MKL_NUM_THREADS": "1",
+            "VECLIB_MAXIMUM_THREADS": "1",
+            "RAYON_NUM_THREADS": "1"
+          },
+          "accelerate_blas_threading": 1,
+          "accelerate_scope": "calling thread"
+        }
+      },
+      "directory": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-volume-signed-envelope-pilot-v1/schwarz-solid",
+      "complete": true,
+      "admitted": true
+    },
+    {
+      "case": "schwarz-d-solid",
+      "worker": {
+        "returncode": 0,
+        "limit_failure": null,
+        "peak_rss_bytes": 980566016,
+        "wall_s": 11.711706333007896,
+        "wall_s_clock": "monotonic",
+        "elapsed_realtime_s": 11.71183705329895,
+        "suspension_or_clock_adjustment_s": 0.00013072029105387628,
+        "idle_sleep_prevention": [
+          "/usr/bin/caffeinate",
+          "-i"
+        ],
+        "memory_bytes": 8589934592,
+        "memory_enforcement": "process-tree-rss-watchdog",
+        "rss_poll_interval_s": 0.25,
+        "platform": "darwin",
+        "numerical_thread_policy": {
+          "environment": {
+            "OPENBLAS_NUM_THREADS": "1",
+            "OMP_NUM_THREADS": "1",
+            "MKL_NUM_THREADS": "1",
+            "VECLIB_MAXIMUM_THREADS": "1",
+            "RAYON_NUM_THREADS": "1"
+          },
+          "accelerate_blas_threading": 1,
+          "accelerate_scope": "calling thread"
+        }
+      },
+      "directory": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-volume-signed-envelope-pilot-v1/schwarz-d-solid",
+      "complete": true,
+      "admitted": true
+    }
+  ],
+  "complete": true
+}

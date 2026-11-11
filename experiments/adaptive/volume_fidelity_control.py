@@ -86,7 +86,18 @@ def integral(target, points, wall, levels, sign, degree):
                 residual_max=float(abs(values["residual"]).max()))
 
 
-def correct(target, points, cells, surface, classes, original_points, *, facewise=False):
+def signed_face_bounds(residual):
+    """Retain each error lobe; always allow residuals to move toward zero."""
+    return np.minimum(residual.min(axis=1), 0.), np.maximum(residual.max(axis=1), 0.)
+
+
+def signed_envelope_violation(residual, lower, upper):
+    return float(max(np.max(lower-residual.min(axis=1)),
+                     np.max(residual.max(axis=1)-upper)))
+
+
+def correct(target, points, cells, surface, classes, original_points, *,
+            facewise=False, signed_envelope=False):
     """One field-only linear correction, with local bounds and eight halvings."""
     wall, levels, sign = wall_data(target, points, surface)
     mids = np.unique(wall[:, 3:])
@@ -118,6 +129,7 @@ def correct(target, points, cells, surface, classes, original_points, *, facewis
     before_grid = samples(target, points, wall, levels, sign, barycentric(6))
     maximum = float(abs(before_grid["residual"]).max())
     face_maximum = np.max(abs(before_grid["residual"]), axis=1)
+    signed_lower, signed_upper = signed_face_bounds(before_grid["residual"])
     coeff = np.einsum("fsd,fed->fse", data["normals"], direction[wall[:, 3:]])
     coeff *= data["basis"][None, :, 3:]
     columns3 = np.broadcast_to(columns[wall[:, None, 3:]], coeff.shape)
@@ -139,8 +151,10 @@ def correct(target, points, cells, surface, classes, original_points, *, facewis
     nonzero = abs(grid_coeff) > 1e-14
     denominator_grid = np.where(nonzero, grid_coeff, 1)
     allowance = face_maximum[:, None] if facewise else maximum
-    lo = (-allowance-before_grid["residual"])[..., None]/(3*denominator_grid)
-    hi = (allowance-before_grid["residual"])[..., None]/(3*denominator_grid)
+    lower_allowance = signed_lower[:, None] if signed_envelope else -allowance
+    upper_allowance = signed_upper[:, None] if signed_envelope else allowance
+    lo = (lower_allowance-before_grid["residual"])[..., None]/(3*denominator_grid)
+    hi = (upper_allowance-before_grid["residual"])[..., None]/(3*denominator_grid)
     np.maximum.at(lower, gc[nonzero], np.minimum(lo, hi)[nonzero])
     np.minimum.at(upper, gc[nonzero], np.maximum(lo, hi)[nonzero])
     assert np.all(lower <= 1e-12) and np.all(upper >= -1e-12)
@@ -160,12 +174,16 @@ def correct(target, points, cells, surface, classes, original_points, *, facewis
             grid_max = float(abs(grid["residual"]).max())
             face_increase = float(np.max(np.max(abs(grid["residual"]), axis=1)-face_maximum))
             distance_ok = face_increase <= 1e-12 if facewise else grid_max <= maximum+1e-12
+            signed_violation = signed_envelope_violation(grid["residual"], signed_lower, signed_upper)
+            if signed_envelope:
+                distance_ok = signed_violation <= 1e-12
             minimum = float(measure(trial[cells[affected]])[0].min())
             accepted = bool(abs(after["signed_bias"]) < abs(before6["signed_bias"])
                             and distance_ok and minimum > 0)
             records.append(dict(fraction=fraction, signed_bias=after["signed_bias"],
                                 grid_max=grid_max, minimum_sampled_jacobian=minimum,
                                 maximum_facewise_grid_increase=face_increase,
+                                maximum_signed_envelope_violation=signed_violation,
                                 accepted=accepted))
             if accepted:
                 moved = trial
@@ -176,7 +194,8 @@ def correct(target, points, cells, surface, classes, original_points, *, facewis
                        after6=integral(target, moved, wall, levels, sign, 6),
                        after8=integral(target, moved, wall, levels, sign, 8),
                        quadrature_stable=bool(quadrature_stable), grid_max_before=maximum,
-                       distance_guard="per-face degree6 maximum" if facewise else "global degree6 maximum",
+                       distance_guard=("per-face signed degree6 envelope" if signed_envelope else
+                                       "per-face degree6 maximum" if facewise else "global degree6 maximum"),
                        active_groups=int(np.count_nonzero(step)), attempts=records,
                        maximum_move=float(np.linalg.norm(moved-points, axis=1).max()),
                        affected_elements=int(affected.sum()),
@@ -188,6 +207,16 @@ def correct(target, points, cells, surface, classes, original_points, *, facewis
 def controls():
     from scipy.spatial import ConvexHull
 
+    # The former absolute-value guard accepts an improvement of its dominant
+    # positive lobe even when the negative lobe worsens on the very same grid.
+    lobes = np.array([[-.7, 0., 1.]])
+    tradeoff = np.array([[-.8, 0., .9]])
+    lower, upper = signed_face_bounds(lobes)
+    assert abs(tradeoff).max() < abs(lobes).max()
+    assert signed_envelope_violation(tradeoff, lower, upper) > 0
+    assert signed_envelope_violation(np.array([[-.6, 0., .9]]), lower, upper) <= 0
+    positive_lower, positive_upper = signed_face_bounds(np.array([[1., 2.]]))
+    assert signed_envelope_violation(np.array([[.5, 1.5]]), positive_lower, positive_upper) <= 0
     points = np.vstack((np.eye(3), -np.eye(3)))
     faces = ConvexHull(points).simplices
     for _ in range(2):
@@ -239,7 +268,10 @@ def controls():
     return dict(sphere_exact_volume=exact, sphere_mesh_volume=volume,
                 sphere_actual_signed_error=error, sphere_predicted_signed_bias=data["signed_bias"],
                 sphere_relative_prediction_error=abs(data["signed_bias"]-error)/abs(error),
-                plane_bias_zero=True, cyclic_face_order_invariant=True)
+                plane_bias_zero=True, cyclic_face_order_invariant=True,
+                opposite_lobe_tradeoff_old_guard_accepts=True,
+                opposite_lobe_tradeoff_signed_guard_rejects=True,
+                signed_guard_allows_both_lobes_toward_zero=True)
 
 
 def worker(a):
@@ -280,7 +312,7 @@ def worker(a):
     control = controls()
     started = time.perf_counter()
     moved, correction = correct(target, points, cells, surface, classes, original_points,
-                                 facewise=a.facewise)
+                                 facewise=a.facewise, signed_envelope=a.signed_envelope)
     assert correction["total_original_budget_ratio"] <= 1+1e-10
     seconds = time.perf_counter()-started
     np.savez_compressed(a.run/"mesh.npz", points=moved, tetrahedra=cells, surface=surface)
@@ -328,7 +360,9 @@ def main():
     p.add_argument("--run", type=Path, required=True)
     p.add_argument("--source", type=Path, default=w.HERE/"runs/macbook-native-face-fit-nine-v1")
     p.add_argument("--cases", default="schwarz-d-solid,gyroid")
-    p.add_argument("--facewise", action="store_true", help="Use each face's original degree6 distance envelope")
+    guard = p.add_mutually_exclusive_group()
+    guard.add_argument("--facewise", action="store_true", help="Use each face's original degree6 distance envelope")
+    guard.add_argument("--signed-envelope", action="store_true", help="Preserve both signed degree6 extrema on every face")
     p.add_argument("--worker", action="store_true")
     p.add_argument("--case")
     a = p.parse_args()
@@ -345,6 +379,7 @@ def main():
            numerical_threads=w.NUMERICAL_THREAD_POLICY, memory_bytes=w.MEMORY,
            worker_timeout_s=300, nodes_and_tets_cap=w.CAP,
            facewise_distance_guard=a.facewise,
+           signed_envelope_distance_guard=a.signed_envelope,
            method="One bounded signed wall residual correction. Reference volume is held out.",
            no_native_changes=True))
     rows = []
@@ -355,7 +390,8 @@ def main():
             with worker_part(job, name) as part:
                 record = w.bounded([sys.executable, str(Path(__file__).resolve()), "--worker",
                                     "--case", name, "--run", str(directory), "--source", str(a.source),
-                                    *(["--facewise"] if a.facewise else [])],
+                                    *(["--facewise"] if a.facewise else []),
+                                    *(["--signed-envelope"] if a.signed_envelope else [])],
                                    directory/"worker.log", part, timeout=300)
                 w.save(directory/"worker.json", record)
                 result = json.loads((directory/"result.json").read_text()) if (directory/"result.json").exists() else {}

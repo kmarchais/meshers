@@ -1,0 +1,5486 @@
+{
+  "inputs": {
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/pmy_residual_probe.py": "9d12dd89542399dcc5dfeacb4e25d6cda250b22e6978faf978465ca9c729c09e",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/pmy_failure_probe.py": "6a3b57434d5c8586dea67aa67bd8e2ca69ca4e16f0098a0cd4834463109883f7",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/pmy_neck_control.py": "aacab3dd12c99ad5586e8c4efb59b74556e736041fbe20653381c53d577b8668",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/tpms_family_fixtures.py": "794418f5d2e3d2158542af51a5cf322c41befff8f8d7c98f769d379baedd3bc6",
+    "/Users/kmarchais/dev/meshers/.local-work/macbook-runtime/venv/lib/python3.12/site-packages/microgen/shape/surface_functions.py": "578c20eb2ef424b95f50618d9cfffdce3676d6b5bdcd90a3278e0ca5ef1af4b4",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-pmy-native-background-v4/one-round/mesh.npz": "e104e2635874bec927fa95e0d3e190aa8b361cf99157c0769994dab6b7a37c35",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-pmy-native-background-v4/one-round/result.json": "49fb18aaa9f8768e93379926e6991a19f7f610054db1b1511c072431d291bd8f",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-pmy-native-background-v4/one-round/input.json": "1ce238228c359ac20b85734b97694f2e2772ac50ed6e9812cd2a224ca9482998",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-pmy-native-background-v4/baseline/input.json": "f0a14e1415f45aadf20477c08c6589b7c06f1a6d0806d2357540113c0653c312",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-pmy-native-background-v4/manifest.json": "5622da861d30a19e16f11b0c8076cf26efe943d25b2cefcbfaa00d2e65271ae3",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-pmy-native-background-v4/prepare-result.json": "b0feab5e0ebd9608c75e1745b4a9f5208696ff97d6b1515fe218a1f598596ddb",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-pmy-snap-guard-v1/result.json": "7694036e66a898564505f466628e36ea71f52b5d0c23efc9dc59d4ed9b644579",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-pmy-snap-guard-v1/one-round-determinants.npz": "66507156e4e503caf2170785e44484b45177b4dab2e0e34f68c89c0df2ea4e2d",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-tpms-family-fixtures-v1/result.json": "1f3907ba0acf691628d0eb588b0f4325c2abdc8c24efb75a251f60ccca5681f2",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-tpms-family-fixtures-v1/tpms-pmy-sheet/tpms-pmy-sheet-specimen.json": "65f653b5b5df833c4f7b9ebeef839555c76690e1a4e95c6011719d042a77c67a",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-tpms-family-fixtures-v1/tpms-pmy-sheet/tpms-pmy-sheet-samples.npz": "66cd3e81d5bad83b63c3bbc96696d732170ed37049dd4ff1dad868b39dbaf2f1",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-tpms-family-fixtures-v1/tpms-pmy-sheet/tpms-pmy-sheet-definition.json": "a0b3623510422678fd46dbfec702d7ebfb03e14272f7016b002e5b2594a662b6",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/microgen_workflow.py": "9f513dfd3e6e5a72a71a54f70c0c2cf7c7a1ebe7256886ee3feaf7d7ad7de161",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/scorecard.py": "8f26256c7df0e84c9f35cdd71bf4f95a74e072d45469002b213c5dcd4f1bab2a",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/mmg_quality_localization.py": "03ef27a978fcd5101f36745ccaf67309f49ce6ece172fad28b84246d6d457ebc"
+  },
+  "source": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-pmy-native-background-v4/one-round",
+  "source_geometry": {
+    "volume": 0.30117438938036406,
+    "relative_volume_error": 0.004029692933829265,
+    "q_min_corner": 0.17478133133874202,
+    "q_p01_corner": 0.2480980542687042,
+    "minimum_sampled_jacobian": 2.5243564898063755e-08,
+    "facet_consistency": {
+      "nodes": 86520,
+      "elements": 45038,
+      "unique_faces": 102748,
+      "interior_faces": 77404,
+      "extracted_boundary_faces": 25344,
+      "same_orientation_shared_faces": 0,
+      "nonmanifold_faces": 0,
+      "duplicate_cells": 0,
+      "duplicate_surface_faces": 0,
+      "provided_boundary_matches_extraction": true,
+      "missing_provided_faces": 0,
+      "extra_provided_faces": 0,
+      "nonpositive_corner_determinants": 0,
+      "minimum_corner_determinant": 2.0387444582513682e-06,
+      "oriented_facet_consistency_passed": true,
+      "conflict_examples": [],
+      "scope": "Oriented corner-face incidence and same-side neighbor diagnostics; necessary consistency, not a certificate of curved geometry or absence of nonlocal intersections"
+    },
+    "oriented_facet_consistency_passed": true,
+    "quadratic_conformity": {
+      "passed": true,
+      "order": 2,
+      "unique_edges": 72138
+    },
+    "exact_straight_reduction_verified": false,
+    "geometry_admitted": false,
+    "sampled_forward_max": 0.033679296843351705,
+    "sampled_reverse_max": 0.012559859149662723,
+    "sampled_two_sided_max": 0.033679296843351705,
+    "outward_forward_max": 0.033679296843351705,
+    "inward_forward_max": 0.004785651622992811,
+    "projection_failed": 0,
+    "forward_samples": 304824,
+    "reverse_samples": 35990,
+    "minimum_dihedral_deg_corner": 10.362995271596873,
+    "reverse_tessellation_delta_max": 0.0001343942430803825,
+    "quadratic_reverse_subdivisions": [
+      8,
+      16
+    ],
+    "projection_method": "newton-box-slsqp-v1",
+    "unbounded_projection_failed": 3,
+    "box_projection_attempts": 3,
+    "box_projection_recovered": 3,
+    "box_projection_witnesses": [
+      {
+        "sample_index": 89564,
+        "original_foot": [
+          0.3160627945851791,
+          -0.500660302169044,
+          -0.1788797062530109
+        ],
+        "candidate": [
+          0.3166237163901463,
+          -0.5,
+          -0.1790801189988451
+        ],
+        "solver_success": true,
+        "message": "Optimization terminated successfully",
+        "iterations": 104,
+        "absolute_field_residual": 2.220446049250313e-16,
+        "normalized_field_residual": 2.2270521945170134e-17,
+        "feasible_target": true,
+        "distance": 0.003519000341977336
+      },
+      {
+        "sample_index": 105411,
+        "original_foot": [
+          -0.18390475668053854,
+          0.5006320020443608,
+          -0.17886650067995508
+        ],
+        "candidate": [
+          -0.18336807702773825,
+          0.5,
+          -0.1790582681013095
+        ],
+        "solver_success": true,
+        "message": "Optimization terminated successfully",
+        "iterations": 7,
+        "absolute_field_residual": 5.551115123125783e-17,
+        "normalized_field_residual": 5.567717189842901e-18,
+        "feasible_target": true,
+        "distance": 0.0035180868414961732
+      },
+      {
+        "sample_index": 207034,
+        "original_foot": [
+          -0.5007549729666101,
+          0.17888766341183418,
+          0.18403196103920608
+        ],
+        "candidate": [
+          -0.5,
+          0.17911646589537536,
+          0.18338995957183624
+        ],
+        "solver_success": true,
+        "message": "Optimization terminated successfully",
+        "iterations": 7,
+        "absolute_field_residual": 3.3306690738754696e-16,
+        "normalized_field_residual": 3.340490613631633e-17,
+        "feasible_target": true,
+        "distance": 0.00355996178670525
+      }
+    ],
+    "distance_audit_complete": true,
+    "failed_gates": [
+      "geometry"
+    ]
+  },
+  "candidate_generated": false,
+  "admission_claim": false,
+  "gates_unchanged": true,
+  "controls": {
+    "plane_far_excluded": true,
+    "plane_near_retained": true,
+    "curved_patch_retained": true,
+    "analytic_plane_distance": true,
+    "analytic_newton_branch_jump_detected": true,
+    "affine_plane_distance": true,
+    "affine_shared_interpolation": true,
+    "near_affine_wall_retained": true,
+    "empty_affine_band_excluded": true,
+    "constant_level_tet_is_inconclusive": true
+  },
+  "selection": {
+    "samples": 35990,
+    "locator_subdivisions": 4,
+    "approximate_maximum": 0.012631966720440063,
+    "above_gate": 788,
+    "selected_indices": [
+      28431,
+      22953,
+      8839,
+      18929,
+      913,
+      27848,
+      4492,
+      2263
+    ]
+  },
+  "witnesses": [
+    {
+      "query_index": 28431,
+      "kind": "wall",
+      "probe": [
+        -0.41462814871816733,
+        0.2544808199651331,
+        0.12981514993994103
+      ],
+      "wall_level": 0.36027239477618084,
+      "field_residual_distance": 0.0,
+      "locator_distance": 0.012631966720440063,
+      "locator_face": 15722,
+      "exact_patch_feasible_upper_bound": {
+        "foot": [
+          -0.4139775806986616,
+          0.2439009726014862,
+          0.12308395393069116
+        ],
+        "distance": 0.012556488709070373,
+        "barycentric": [
+          0.2944434164421352,
+          0.30479693743635156,
+          0.40075964612151327
+        ]
+      },
+      "complete_surface_ball_exclusion": {
+        "excluded": true,
+        "lower_bound": 0.0032085029493733597,
+        "radius": 0.002,
+        "depth": 0,
+        "visited_boxes": 25344,
+        "unresolved_boxes": 0
+      },
+      "neighborhood": {
+        "queries": [
+          [
+            -0.41862814871816734,
+            0.2504808199651331,
+            0.12581514993994103
+          ],
+          [
+            -0.41862814871816734,
+            0.2504808199651331,
+            0.12981514993994103
+          ],
+          [
+            -0.41862814871816734,
+            0.2504808199651331,
+            0.13381514993994104
+          ],
+          [
+            -0.41862814871816734,
+            0.2544808199651331,
+            0.12581514993994103
+          ],
+          [
+            -0.41862814871816734,
+            0.2544808199651331,
+            0.12981514993994103
+          ],
+          [
+            -0.41862814871816734,
+            0.2544808199651331,
+            0.13381514993994104
+          ],
+          [
+            -0.41862814871816734,
+            0.2584808199651331,
+            0.12581514993994103
+          ],
+          [
+            -0.41862814871816734,
+            0.2584808199651331,
+            0.12981514993994103
+          ],
+          [
+            -0.41862814871816734,
+            0.2584808199651331,
+            0.13381514993994104
+          ],
+          [
+            -0.41462814871816733,
+            0.2504808199651331,
+            0.12581514993994103
+          ],
+          [
+            -0.41462814871816733,
+            0.2504808199651331,
+            0.12981514993994103
+          ],
+          [
+            -0.41462814871816733,
+            0.2504808199651331,
+            0.13381514993994104
+          ],
+          [
+            -0.41462814871816733,
+            0.2544808199651331,
+            0.12581514993994103
+          ],
+          [
+            -0.41462814871816733,
+            0.2544808199651331,
+            0.12981514993994103
+          ],
+          [
+            -0.41462814871816733,
+            0.2544808199651331,
+            0.13381514993994104
+          ],
+          [
+            -0.41462814871816733,
+            0.2584808199651331,
+            0.12581514993994103
+          ],
+          [
+            -0.41462814871816733,
+            0.2584808199651331,
+            0.12981514993994103
+          ],
+          [
+            -0.41462814871816733,
+            0.2584808199651331,
+            0.13381514993994104
+          ],
+          [
+            -0.41062814871816733,
+            0.2504808199651331,
+            0.12581514993994103
+          ],
+          [
+            -0.41062814871816733,
+            0.2504808199651331,
+            0.12981514993994103
+          ],
+          [
+            -0.41062814871816733,
+            0.2504808199651331,
+            0.13381514993994104
+          ],
+          [
+            -0.41062814871816733,
+            0.2544808199651331,
+            0.12581514993994103
+          ],
+          [
+            -0.41062814871816733,
+            0.2544808199651331,
+            0.12981514993994103
+          ],
+          [
+            -0.41062814871816733,
+            0.2544808199651331,
+            0.13381514993994104
+          ],
+          [
+            -0.41062814871816733,
+            0.2584808199651331,
+            0.12581514993994103
+          ],
+          [
+            -0.41062814871816733,
+            0.2584808199651331,
+            0.12981514993994103
+          ],
+          [
+            -0.41062814871816733,
+            0.2584808199651331,
+            0.13381514993994104
+          ],
+          [
+            -0.41661506283739536,
+            0.262223999322133,
+            0.13012393097586097
+          ],
+          [
+            -0.41562160577778134,
+            0.25835240964363304,
+            0.129969540457901
+          ],
+          [
+            -0.4151248772479743,
+            0.25641661480438305,
+            0.129892345198921
+          ],
+          [
+            -0.4148765129830708,
+            0.2554487173847581,
+            0.12985374756943102
+          ],
+          [
+            -0.41437978445326384,
+            0.2535129225455081,
+            0.12977655231045104
+          ],
+          [
+            -0.41413142018836036,
+            0.25254502512588317,
+            0.12973795468096105
+          ],
+          [
+            -0.4136346916585533,
+            0.2506092302866332,
+            0.12966075942198108
+          ],
+          [
+            -0.4126412345989393,
+            0.24673764060813327,
+            0.1295063689040211
+          ]
+        ],
+        "exact_values": [
+          0.3635846179905897,
+          0.364253654933907,
+          0.36615691434383535,
+          0.3583809282952473,
+          0.35738057082913294,
+          0.35761856585503243,
+          0.352717622658462,
+          0.35005091288408985,
+          0.3486266336680306,
+          0.3668792572425514,
+          0.36758835276228213,
+          0.36958657566990777,
+          0.36122126890625295,
+          0.36027239477618084,
+          0.36061705157545265,
+          0.3550881259980795,
+          0.3524843162357145,
+          0.35117838879151064,
+          0.3682750837164513,
+          0.36902372332248073,
+          0.37111558275244644,
+          0.3621444713225844,
+          0.3612470594335257,
+          0.3616975562380921,
+          0.35552458050288327,
+          0.35298414270347733,
+          0.35179625011286786,
+          0.343816017086516,
+          0.3522381415093728,
+          0.3563084578355129,
+          0.35830431004071217,
+          0.362211542588954,
+          0.3641205867950511,
+          0.36784371265671223,
+          0.37487773955284853
+        ],
+        "exact_classes": [
+          1,
+          1,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          1,
+          1,
+          1,
+          1,
+          0,
+          1,
+          0,
+          0,
+          0,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          1,
+          1,
+          1,
+          1
+        ],
+        "reliable_classification_samples": 34,
+        "ignored_near_level_samples": 1,
+        "backgrounds": {
+          "original": {
+            "center": {
+              "value": 0.3060770977273617,
+              "containing_tets": [
+                33397
+              ],
+              "vertex_minimum": [
+                0.2548977895520795
+              ],
+              "vertex_maximum": [
+                0.5307971688350225
+              ],
+              "strict_wall_bracket": true,
+              "contact_wall_bracket": true
+            },
+            "boundary": {
+              "search_radius": 0.04,
+              "candidate_tets": 100,
+              "surface_triangles": 84,
+              "lower_dimensional_contacts": 0,
+              "constant_level_tets": [],
+              "nearest_distance": 0.010430030748751767,
+              "distance_lower_bound": 0.010430030748751767,
+              "nearest_is_global_for_affine_representation": true,
+              "excludes_gate_ball": true,
+              "scope": "Piecewise-affine band and physical cap polygons; floating-point local enumeration, not the physical implicit boundary"
+            },
+            "neighborhood_mismatches": 18,
+            "false_material": 18,
+            "missing_material": 0,
+            "affine_values": [
+              0.3149763693138421,
+              0.3257525863219824,
+              0.3365288033301227,
+              0.3186365108875734,
+              0.30809502604787403,
+              0.31887124305601433,
+              0.32424094823063754,
+              0.3117551676216053,
+              0.30121368278190597,
+              0.31295844099332976,
+              0.32373465800147005,
+              0.3345108750096103,
+              0.3166185825670611,
+              0.3060770977273617,
+              0.31685331473550193,
+              0.3222230199101252,
+              0.309737239301093,
+              0.29919575446139357,
+              0.3109405126728174,
+              0.32171672968095766,
+              0.33249294668909796,
+              0.3146006542465487,
+              0.3040591694068493,
+              0.3148353864149896,
+              0.32020509158961286,
+              0.3077193109805807,
+              0.29717782614088123,
+              0.31502036234385467,
+              0.30957658215094186,
+              0.3068546920544853,
+              0.3054937470062571,
+              0.3101204950550733,
+              0.31416389238278464,
+              0.3222506870382078,
+              0.3384242763490538
+            ],
+            "affine_classes": [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            "mismatch_indices": [
+              0,
+              1,
+              2,
+              9,
+              10,
+              11,
+              12,
+              14,
+              18,
+              19,
+              20,
+              21,
+              22,
+              23,
+              31,
+              32,
+              33,
+              34
+            ]
+          },
+          "refined": {
+            "center": {
+              "value": 0.306681171421518,
+              "containing_tets": [
+                38029
+              ],
+              "vertex_minimum": [
+                0.2548977895520795
+              ],
+              "vertex_maximum": [
+                0.3789844257354681
+              ],
+              "strict_wall_bracket": true,
+              "contact_wall_bracket": true
+            },
+            "boundary": {
+              "search_radius": 0.04,
+              "candidate_tets": 144,
+              "surface_triangles": 145,
+              "lower_dimensional_contacts": 0,
+              "constant_level_tets": [],
+              "nearest_distance": 0.007232926205466591,
+              "distance_lower_bound": 0.007232926205466591,
+              "nearest_is_global_for_affine_representation": true,
+              "excludes_gate_ball": true,
+              "scope": "Piecewise-affine band and physical cap polygons; floating-point local enumeration, not the physical implicit boundary"
+            },
+            "neighborhood_mismatches": 18,
+            "false_material": 18,
+            "missing_material": 0,
+            "affine_values": [
+              0.3155804430079985,
+              0.33358393533900976,
+              0.35158742767002116,
+              0.3205764238809651,
+              0.30869909974203036,
+              0.32670259207304175,
+              0.3282977053262639,
+              0.31369508061499696,
+              0.3018177564760623,
+              0.3135625146874861,
+              0.3315660070184975,
+              0.34956949934950876,
+              0.31855849556045274,
+              0.306681171421518,
+              0.32468466375252936,
+              0.32627977700575156,
+              0.3116771522944846,
+              0.29979982815554995,
+              0.3115445863669738,
+              0.3295480786979851,
+              0.3475515710289964,
+              0.3165405672399404,
+              0.3046632431010057,
+              0.322666735432017,
+              0.3242618486852392,
+              0.3096592239739723,
+              0.2977818998350376,
+              0.318777796794922,
+              0.311366833822054,
+              0.30766135233561975,
+              0.30580861159240286,
+              0.31240364510942764,
+              0.3181261187973369,
+              0.32957106617315607,
+              0.3406719761612063
+            ],
+            "affine_classes": [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            "mismatch_indices": [
+              0,
+              1,
+              2,
+              9,
+              10,
+              11,
+              12,
+              14,
+              18,
+              19,
+              20,
+              21,
+              22,
+              23,
+              31,
+              32,
+              33,
+              34
+            ]
+          },
+          "analytic-first-snap": {
+            "center": {
+              "value": 0.3077007520806976,
+              "containing_tets": [
+                38029
+              ],
+              "vertex_minimum": [
+                0.2548977895520795
+              ],
+              "vertex_maximum": [
+                0.36027239477618084
+              ],
+              "strict_wall_bracket": false,
+              "contact_wall_bracket": true
+            },
+            "boundary": {
+              "search_radius": 0.04,
+              "candidate_tets": 146,
+              "surface_triangles": 78,
+              "lower_dimensional_contacts": 63,
+              "constant_level_tets": [],
+              "nearest_distance": 0.006477948886796862,
+              "distance_lower_bound": 0.006477948886796862,
+              "nearest_is_global_for_affine_representation": true,
+              "excludes_gate_ball": true,
+              "scope": "Piecewise-affine band and physical cap polygons; floating-point local enumeration, not the physical implicit boundary"
+            },
+            "neighborhood_mismatches": 18,
+            "false_material": 18,
+            "missing_material": 0,
+            "affine_values": [
+              0.31660002366717804,
+              0.336903179171944,
+              0.3561013419613683,
+              0.32083883997563023,
+              0.30971868040121,
+              0.3399206680632527,
+              0.32884647135735195,
+              0.3139574967096622,
+              0.30283733713524186,
+              0.3145820953466657,
+              0.33488525085143156,
+              0.35408341364085594,
+              0.3188209116551179,
+              0.3077007520806976,
+              0.3379027397427404,
+              0.32682854303683967,
+              0.3119395683891498,
+              0.30081940881472957,
+              0.3125641670261533,
+              0.3328673225309193,
+              0.3520654853203436,
+              0.31680298333460566,
+              0.3056828237601853,
+              0.33588481142222804,
+              0.3248106147163273,
+              0.3099216400686375,
+              0.2988014804942172,
+              0.31928607282481025,
+              0.31160900491611926,
+              0.3077704709617736,
+              0.3058512039846009,
+              0.31625724055637977,
+              0.3248137290320615,
+              0.3333465789366763,
+              0.3410435215147452
+            ],
+            "affine_classes": [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            "mismatch_indices": [
+              0,
+              1,
+              2,
+              9,
+              10,
+              11,
+              12,
+              14,
+              18,
+              19,
+              20,
+              21,
+              22,
+              23,
+              31,
+              32,
+              33,
+              34
+            ]
+          }
+        }
+      },
+      "diagnosis": "refined affine geometry is already outside tolerance; root-clipping contribution remains unresolved"
+    },
+    {
+      "query_index": 22953,
+      "kind": "wall",
+      "probe": [
+        -0.41331198311750394,
+        0.24522859980125575,
+        -0.3704342401056367
+      ],
+      "wall_level": 0.36027239477618084,
+      "field_residual_distance": 2.858757804483547e-17,
+      "locator_distance": 0.012530796051630653,
+      "locator_face": 3508,
+      "exact_patch_feasible_upper_bound": {
+        "foot": [
+          -0.4128953789502182,
+          0.25634202023645036,
+          -0.3761150673924453
+        ],
+        "distance": 0.012488133225752783,
+        "barycentric": [
+          0.2928061962884698,
+          0.43974159950609515,
+          0.26745220420543503
+        ]
+      },
+      "complete_surface_ball_exclusion": {
+        "excluded": true,
+        "lower_bound": 0.004961439381767907,
+        "radius": 0.002,
+        "depth": 0,
+        "visited_boxes": 25344,
+        "unresolved_boxes": 0
+      },
+      "neighborhood": {
+        "queries": [
+          [
+            -0.41731198311750395,
+            0.24122859980125574,
+            -0.3744342401056367
+          ],
+          [
+            -0.41731198311750395,
+            0.24122859980125574,
+            -0.3704342401056367
+          ],
+          [
+            -0.41731198311750395,
+            0.24122859980125574,
+            -0.3664342401056367
+          ],
+          [
+            -0.41731198311750395,
+            0.24522859980125575,
+            -0.3744342401056367
+          ],
+          [
+            -0.41731198311750395,
+            0.24522859980125575,
+            -0.3704342401056367
+          ],
+          [
+            -0.41731198311750395,
+            0.24522859980125575,
+            -0.3664342401056367
+          ],
+          [
+            -0.41731198311750395,
+            0.24922859980125575,
+            -0.3744342401056367
+          ],
+          [
+            -0.41731198311750395,
+            0.24922859980125575,
+            -0.3704342401056367
+          ],
+          [
+            -0.41731198311750395,
+            0.24922859980125575,
+            -0.3664342401056367
+          ],
+          [
+            -0.41331198311750394,
+            0.24122859980125574,
+            -0.3744342401056367
+          ],
+          [
+            -0.41331198311750394,
+            0.24122859980125574,
+            -0.3704342401056367
+          ],
+          [
+            -0.41331198311750394,
+            0.24122859980125574,
+            -0.3664342401056367
+          ],
+          [
+            -0.41331198311750394,
+            0.24522859980125575,
+            -0.3744342401056367
+          ],
+          [
+            -0.41331198311750394,
+            0.24522859980125575,
+            -0.3704342401056367
+          ],
+          [
+            -0.41331198311750394,
+            0.24522859980125575,
+            -0.3664342401056367
+          ],
+          [
+            -0.41331198311750394,
+            0.24922859980125575,
+            -0.3744342401056367
+          ],
+          [
+            -0.41331198311750394,
+            0.24922859980125575,
+            -0.3704342401056367
+          ],
+          [
+            -0.41331198311750394,
+            0.24922859980125575,
+            -0.3664342401056367
+          ],
+          [
+            -0.40931198311750394,
+            0.24122859980125574,
+            -0.3744342401056367
+          ],
+          [
+            -0.40931198311750394,
+            0.24122859980125574,
+            -0.3704342401056367
+          ],
+          [
+            -0.40931198311750394,
+            0.24122859980125574,
+            -0.3664342401056367
+          ],
+          [
+            -0.40931198311750394,
+            0.24522859980125575,
+            -0.3744342401056367
+          ],
+          [
+            -0.40931198311750394,
+            0.24522859980125575,
+            -0.3704342401056367
+          ],
+          [
+            -0.40931198311750394,
+            0.24522859980125575,
+            -0.3664342401056367
+          ],
+          [
+            -0.40931198311750394,
+            0.24922859980125575,
+            -0.3744342401056367
+          ],
+          [
+            -0.40931198311750394,
+            0.24922859980125575,
+            -0.3704342401056367
+          ],
+          [
+            -0.40931198311750394,
+            0.24922859980125575,
+            -0.3664342401056367
+          ],
+          [
+            -0.41461890590215666,
+            0.23735140982719294,
+            -0.36994247700466215
+          ],
+          [
+            -0.4139654445098303,
+            0.24129000481422436,
+            -0.3701883585551494
+          ],
+          [
+            -0.4136387138136671,
+            0.24325930230774004,
+            -0.3703112993303931
+          ],
+          [
+            -0.41347534846558553,
+            0.2442439510544979,
+            -0.37037276971801486
+          ],
+          [
+            -0.41314861776942235,
+            0.2462132485480136,
+            -0.3704957104932585
+          ],
+          [
+            -0.41298525242134076,
+            0.24719789729477146,
+            -0.3705571808808803
+          ],
+          [
+            -0.4126585217251776,
+            0.24916719478828714,
+            -0.37068012165612396
+          ],
+          [
+            -0.4120050603328512,
+            0.25310578977531856,
+            -0.37092600320661123
+          ]
+        ],
+        "exact_values": [
+          0.35348377613274234,
+          0.35063846217127603,
+          0.3490542970275404,
+          0.3592270342531782,
+          0.35804426923202315,
+          0.3581185573190207,
+          0.3645103719733793,
+          0.36499339567097944,
+          0.36672932150281146,
+          0.35518577407480756,
+          0.3524009127344197,
+          0.3509324274815052,
+          0.3614062684883389,
+          0.3602723947761809,
+          0.36045052377596865,
+          0.36715178719804903,
+          0.36767213217511624,
+          0.3695000510148932,
+          0.3549375574061514,
+          0.3522136930073045,
+          0.35086063242277976,
+          0.36165200977435474,
+          0.36056708186661235,
+          0.3608482949676748,
+          0.3678778590759039,
+          0.3684350896334751,
+          0.37035374270239,
+          0.34372941745400576,
+          0.35224029934653733,
+          0.3563209872360662,
+          0.358313447990446,
+          0.36219663709990146,
+          0.3640849874283602,
+          0.36774927801257196,
+          0.37459528083887517
+        ],
+        "exact_classes": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          1,
+          1,
+          1,
+          0,
+          0,
+          0,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          0,
+          0,
+          0,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          0,
+          0,
+          0,
+          0,
+          1,
+          1,
+          1,
+          1
+        ],
+        "reliable_classification_samples": 34,
+        "ignored_near_level_samples": 1,
+        "backgrounds": {
+          "original": {
+            "center": {
+              "value": 0.30465441202490473,
+              "containing_tets": [
+                5744
+              ],
+              "vertex_minimum": [
+                0.25489778955207937
+              ],
+              "vertex_maximum": [
+                0.44998811156820784
+              ],
+              "strict_wall_bracket": true,
+              "contact_wall_bracket": true
+            },
+            "boundary": {
+              "search_radius": 0.04,
+              "candidate_tets": 100,
+              "surface_triangles": 84,
+              "lower_dimensional_contacts": 0,
+              "constant_level_tets": [],
+              "nearest_distance": 0.010933984818892562,
+              "distance_lower_bound": 0.010933984818892562,
+              "nearest_is_global_for_affine_representation": true,
+              "excludes_gate_ball": true,
+              "scope": "Piecewise-affine band and physical cap polygons; floating-point local enumeration, not the physical implicit boundary"
+            },
+            "neighborhood_mismatches": 18,
+            "false_material": 18,
+            "missing_material": 0,
+            "affine_values": [
+              0.3247625582975135,
+              0.3122767776884813,
+              0.299790997079449,
+              0.31915812095444934,
+              0.3066723403454171,
+              0.31625265628593136,
+              0.31355368361138525,
+              0.3231339995518995,
+              0.3339102165600398,
+              0.32274462997700115,
+              0.3102588493679689,
+              0.29777306875893667,
+              0.317140192633937,
+              0.30465441202490473,
+              0.314234727965419,
+              0.31153575529087285,
+              0.32111607123138713,
+              0.33189228823952743,
+              0.32072670165648876,
+              0.30824092104745654,
+              0.2957551404384243,
+              0.3151222643134246,
+              0.3026364837043924,
+              0.3122167996449067,
+              0.3095178269703605,
+              0.3190981429108748,
+              0.32987435991901504,
+              0.31481552401453883,
+              0.3097349680197218,
+              0.30719469002231337,
+              0.30592455102360894,
+              0.30755711515618633,
+              0.3116557193550942,
+              0.3198529277529093,
+              0.33624734454853994
+            ],
+            "affine_classes": [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            "mismatch_indices": [
+              6,
+              7,
+              8,
+              12,
+              14,
+              15,
+              16,
+              17,
+              21,
+              22,
+              23,
+              24,
+              25,
+              26,
+              31,
+              32,
+              33,
+              34
+            ]
+          },
+          "refined": {
+            "center": {
+              "value": 0.3047632391412824,
+              "containing_tets": [
+                6397
+              ],
+              "vertex_minimum": [
+                0.25489778955207937
+              ],
+              "vertex_maximum": [
+                0.3667934561001786
+              ],
+              "strict_wall_bracket": true,
+              "contact_wall_bracket": true
+            },
+            "boundary": {
+              "search_radius": 0.04,
+              "candidate_tets": 145,
+              "surface_triangles": 146,
+              "lower_dimensional_contacts": 0,
+              "constant_level_tets": [],
+              "nearest_distance": 0.007722594126865414,
+              "distance_lower_bound": 0.007722594126865414,
+              "nearest_is_global_for_affine_representation": true,
+              "excludes_gate_ball": true,
+              "scope": "Piecewise-affine band and physical cap polygons; floating-point local enumeration, not the physical implicit boundary"
+            },
+            "neighborhood_mismatches": 18,
+            "false_material": 18,
+            "missing_material": 0,
+            "affine_values": [
+              0.3291050736183606,
+              0.3145024489070936,
+              0.29989982419582667,
+              0.3213837921730617,
+              0.30678116746179473,
+              0.3231083768344924,
+              0.31366251072776286,
+              0.3299897201004605,
+              0.34799321243147185,
+              0.3270871452978482,
+              0.31248452058658127,
+              0.29788189587531433,
+              0.3193658638525494,
+              0.3047632391412824,
+              0.32109044851398005,
+              0.31164458240725046,
+              0.3279717917799481,
+              0.34597528411095946,
+              0.3250692169773359,
+              0.3104665922660689,
+              0.29586396755480193,
+              0.317347935532037,
+              0.30274531082077005,
+              0.3190725201934677,
+              0.3096266540867381,
+              0.3259538634594358,
+              0.3439573557904472,
+              0.31883280046061213,
+              0.31179801980094723,
+              0.30828062947111495,
+              0.30652193430619856,
+              0.30885357642527445,
+              0.3146201966675804,
+              0.3261534371521917,
+              0.3379967192208223
+            ],
+            "affine_classes": [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            "mismatch_indices": [
+              6,
+              7,
+              8,
+              12,
+              14,
+              15,
+              16,
+              17,
+              21,
+              22,
+              23,
+              24,
+              25,
+              26,
+              31,
+              32,
+              33,
+              34
+            ]
+          },
+          "analytic-first-snap": {
+            "center": {
+              "value": 0.30477796041330374,
+              "containing_tets": [
+                6397
+              ],
+              "vertex_minimum": [
+                0.25489778955207937
+              ],
+              "vertex_maximum": [
+                0.36027239477618084
+              ],
+              "strict_wall_bracket": false,
+              "contact_wall_bracket": true
+            },
+            "boundary": {
+              "search_radius": 0.04,
+              "candidate_tets": 144,
+              "surface_triangles": 79,
+              "lower_dimensional_contacts": 58,
+              "constant_level_tets": [],
+              "nearest_distance": 0.006944955078182733,
+              "distance_lower_bound": 0.006944955078182733,
+              "nearest_is_global_for_affine_representation": true,
+              "excludes_gate_ball": true,
+              "scope": "Piecewise-affine band and physical cap polygons; floating-point local enumeration, not the physical implicit boundary"
+            },
+            "neighborhood_mismatches": 18,
+            "false_material": 18,
+            "missing_material": 0,
+            "affine_values": [
+              0.3296924947632277,
+              0.31480352011553786,
+              0.299914545467848,
+              0.3216848633815059,
+              0.30679588873381614,
+              0.3346797465923078,
+              0.31367723199978426,
+              0.3343713177844455,
+              0.35356948057386983,
+              0.3276745664427154,
+              0.3127855917950255,
+              0.2978966171473357,
+              0.31966693506099364,
+              0.30477796041330374,
+              0.3326618182717955,
+              0.31165930367927186,
+              0.33235338946393317,
+              0.3515515522533575,
+              0.325656638122203,
+              0.3107676634745132,
+              0.2958786888268233,
+              0.31764900674048124,
+              0.3027600320927914,
+              0.33064388995128313,
+              0.3096413753587595,
+              0.3303354611434208,
+              0.34953362393284515,
+              0.3193762258615247,
+              0.3120770931374142,
+              0.3084275267753591,
+              0.3066027435943313,
+              0.3110417975779662,
+              0.3196237645461797,
+              0.3307018331362301,
+              0.33828589130135145
+            ],
+            "affine_classes": [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            "mismatch_indices": [
+              6,
+              7,
+              8,
+              12,
+              14,
+              15,
+              16,
+              17,
+              21,
+              22,
+              23,
+              24,
+              25,
+              26,
+              31,
+              32,
+              33,
+              34
+            ]
+          }
+        }
+      },
+      "diagnosis": "refined affine geometry is already outside tolerance; root-clipping contribution remains unresolved"
+    },
+    {
+      "query_index": 8839,
+      "kind": "wall",
+      "probe": [
+        -0.08677710345786946,
+        -0.25488356456993455,
+        -0.3715065326406107
+      ],
+      "wall_level": 0.36027239477618084,
+      "field_residual_distance": 3.009211675946488e-17,
+      "locator_distance": 0.011363042205626681,
+      "locator_face": 2683,
+      "exact_patch_feasible_upper_bound": {
+        "foot": [
+          -0.08668552211643896,
+          -0.24923235819913403,
+          -0.3812940645252814
+        ],
+        "distance": 0.011302225487970103,
+        "barycentric": [
+          0.3838893391903636,
+          0.546833605713168,
+          0.06927705509646842
+        ]
+      },
+      "complete_surface_ball_exclusion": {
+        "excluded": true,
+        "lower_bound": 0.0030900632711697296,
+        "radius": 0.002,
+        "depth": 0,
+        "visited_boxes": 25344,
+        "unresolved_boxes": 0
+      },
+      "neighborhood": {
+        "queries": [
+          [
+            -0.09077710345786946,
+            -0.25888356456993455,
+            -0.3755065326406107
+          ],
+          [
+            -0.09077710345786946,
+            -0.25888356456993455,
+            -0.3715065326406107
+          ],
+          [
+            -0.09077710345786946,
+            -0.25888356456993455,
+            -0.3675065326406107
+          ],
+          [
+            -0.09077710345786946,
+            -0.25488356456993455,
+            -0.3755065326406107
+          ],
+          [
+            -0.09077710345786946,
+            -0.25488356456993455,
+            -0.3715065326406107
+          ],
+          [
+            -0.09077710345786946,
+            -0.25488356456993455,
+            -0.3675065326406107
+          ],
+          [
+            -0.09077710345786946,
+            -0.25088356456993455,
+            -0.3755065326406107
+          ],
+          [
+            -0.09077710345786946,
+            -0.25088356456993455,
+            -0.3715065326406107
+          ],
+          [
+            -0.09077710345786946,
+            -0.25088356456993455,
+            -0.3675065326406107
+          ],
+          [
+            -0.08677710345786946,
+            -0.25888356456993455,
+            -0.3755065326406107
+          ],
+          [
+            -0.08677710345786946,
+            -0.25888356456993455,
+            -0.3715065326406107
+          ],
+          [
+            -0.08677710345786946,
+            -0.25888356456993455,
+            -0.3675065326406107
+          ],
+          [
+            -0.08677710345786946,
+            -0.25488356456993455,
+            -0.3755065326406107
+          ],
+          [
+            -0.08677710345786946,
+            -0.25488356456993455,
+            -0.3715065326406107
+          ],
+          [
+            -0.08677710345786946,
+            -0.25488356456993455,
+            -0.3675065326406107
+          ],
+          [
+            -0.08677710345786946,
+            -0.25088356456993455,
+            -0.3755065326406107
+          ],
+          [
+            -0.08677710345786946,
+            -0.25088356456993455,
+            -0.3715065326406107
+          ],
+          [
+            -0.08677710345786946,
+            -0.25088356456993455,
+            -0.3675065326406107
+          ],
+          [
+            -0.08277710345786946,
+            -0.25888356456993455,
+            -0.3755065326406107
+          ],
+          [
+            -0.08277710345786946,
+            -0.25888356456993455,
+            -0.3715065326406107
+          ],
+          [
+            -0.08277710345786946,
+            -0.25888356456993455,
+            -0.3675065326406107
+          ],
+          [
+            -0.08277710345786946,
+            -0.25488356456993455,
+            -0.3755065326406107
+          ],
+          [
+            -0.08277710345786946,
+            -0.25488356456993455,
+            -0.3715065326406107
+          ],
+          [
+            -0.08277710345786946,
+            -0.25488356456993455,
+            -0.3675065326406107
+          ],
+          [
+            -0.08277710345786946,
+            -0.25088356456993455,
+            -0.3755065326406107
+          ],
+          [
+            -0.08277710345786946,
+            -0.25088356456993455,
+            -0.3715065326406107
+          ],
+          [
+            -0.08277710345786946,
+            -0.25088356456993455,
+            -0.3675065326406107
+          ],
+          [
+            -0.08548243799410674,
+            -0.2627210000657953,
+            -0.37055866862865416
+          ],
+          [
+            -0.0861297707259881,
+            -0.2588022823178649,
+            -0.3710326006346324
+          ],
+          [
+            -0.08645343709192878,
+            -0.25684292344389975,
+            -0.37126956663762156
+          ],
+          [
+            -0.08661527027489911,
+            -0.2558632440069171,
+            -0.3713880496391161
+          ],
+          [
+            -0.0869389366408398,
+            -0.253903885132952,
+            -0.37162501564210526
+          ],
+          [
+            -0.08710076982381014,
+            -0.25292420569596935,
+            -0.3717434986435998
+          ],
+          [
+            -0.08742443618975082,
+            -0.2509648468220042,
+            -0.37198046464658896
+          ],
+          [
+            -0.08807176892163218,
+            -0.2470461290740738,
+            -0.3724543966525672
+          ]
+        ],
+        "exact_values": [
+          0.3556899704607689,
+          0.35255363282653457,
+          0.350789745487863,
+          0.3619883820001652,
+          0.3604916530657907,
+          0.36036298445182696,
+          0.36779901661562786,
+          0.3679452087323157,
+          0.36945501474482667,
+          0.3560033511742019,
+          0.35282027816433187,
+          0.3509551964909896,
+          0.36180387644857287,
+          0.3602723947761808,
+          0.3600548062067717,
+          0.36713020885054737,
+          0.3672536401145808,
+          0.3686868100237717,
+          0.35436479427455336,
+          0.35113575772875016,
+          0.34916945319736087,
+          0.3596842360636436,
+          0.35811828705421683,
+          0.35781125172392936,
+          0.36454449820167256,
+          0.3646449671998995,
+          0.36600047553372533,
+          0.34417270480350753,
+          0.3525455703270591,
+          0.3564944295397964,
+          0.35840535640281695,
+          0.36209438582363257,
+          0.36387017588431164,
+          0.36727856551161453,
+          0.37349079423585974
+        ],
+        "exact_classes": [
+          0,
+          0,
+          0,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          0,
+          0,
+          0,
+          1,
+          0,
+          0,
+          1,
+          1,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          1,
+          1,
+          1,
+          0,
+          0,
+          0,
+          0,
+          1,
+          1,
+          1,
+          1
+        ],
+        "reliable_classification_samples": 34,
+        "ignored_near_level_samples": 1,
+        "backgrounds": {
+          "original": {
+            "center": {
+              "value": 0.30811372632676104,
+              "containing_tets": [
+                4268
+              ],
+              "vertex_minimum": [
+                0.25489778955207953
+              ],
+              "vertex_maximum": [
+                0.44998811156820795
+              ],
+              "strict_wall_bracket": true,
+              "contact_wall_bracket": true
+            },
+            "boundary": {
+              "search_radius": 0.04,
+              "candidate_tets": 100,
+              "surface_triangles": 84,
+              "lower_dimensional_contacts": 0,
+              "constant_level_tets": [],
+              "nearest_distance": 0.011593884720937133,
+              "distance_lower_bound": 0.011593884720937133,
+              "nearest_is_global_for_affine_representation": true,
+              "excludes_gate_ball": true,
+              "scope": "Piecewise-affine band and physical cap polygons; floating-point local enumeration, not the physical implicit boundary"
+            },
+            "neighborhood_mismatches": 17,
+            "false_material": 17,
+            "missing_material": 0,
+            "affine_values": [
+              0.32418601595834506,
+              0.31170023534931285,
+              0.29921445474028063,
+              0.3185815786152809,
+              0.3060957980062487,
+              0.3087879055145537,
+              0.31297714127221676,
+              0.31566924878052177,
+              0.32644546578866207,
+              0.3262039442788574,
+              0.3137181636698252,
+              0.3012323830607929,
+              0.32059950693579325,
+              0.30811372632676104,
+              0.310805833835066,
+              0.3149950695927291,
+              0.3176871771010341,
+              0.32846339410917447,
+              0.32822187259936975,
+              0.31573609199033753,
+              0.3032503113813053,
+              0.3226174352563056,
+              0.3101316546472734,
+              0.3128237621555784,
+              0.31701299791324145,
+              0.3197051054215464,
+              0.33048132242968675,
+              0.3167892603695831,
+              0.31245149334817196,
+              0.31028260983746664,
+              0.3091981680821137,
+              0.3070292845714083,
+              0.3078773080313403,
+              0.3157249992357545,
+              0.3312458917966795
+            ],
+            "affine_classes": [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            "mismatch_indices": [
+              3,
+              4,
+              5,
+              6,
+              7,
+              8,
+              12,
+              15,
+              16,
+              17,
+              24,
+              25,
+              26,
+              31,
+              32,
+              33,
+              34
+            ]
+          },
+          "refined": {
+            "center": {
+              "value": 0.30884938109717996,
+              "containing_tets": [
+                4732
+              ],
+              "vertex_minimum": [
+                0.25489778955207953
+              ],
+              "vertex_maximum": [
+                0.3667934561001787
+              ],
+              "strict_wall_bracket": true,
+              "contact_wall_bracket": true
+            },
+            "boundary": {
+              "search_radius": 0.04,
+              "candidate_tets": 145,
+              "surface_triangles": 146,
+              "lower_dimensional_contacts": 0,
+              "constant_level_tets": [],
+              "nearest_distance": 0.008656796282487228,
+              "distance_lower_bound": 0.008656796282487228,
+              "nearest_is_global_for_affine_representation": true,
+              "excludes_gate_ball": true,
+              "scope": "Piecewise-affine band and physical cap polygons; floating-point local enumeration, not the physical implicit boundary"
+            },
+            "neighborhood_mismatches": 17,
+            "false_material": 17,
+            "missing_material": 0,
+            "affine_values": [
+              0.32915535893323344,
+              0.3145527342219665,
+              0.29995010951069956,
+              0.32143407748793457,
+              0.30683145277666757,
+              0.3135035270208834,
+              0.3137127960426357,
+              0.3203848702868515,
+              0.33838836261786287,
+              0.3311732872537458,
+              0.3165706625424788,
+              0.3019680378312119,
+              0.3234520058084469,
+              0.30884938109717996,
+              0.31552145534139575,
+              0.315730724363148,
+              0.3224027986073638,
+              0.3404062909383752,
+              0.33319121557425807,
+              0.3185885908629912,
+              0.3039859661517242,
+              0.32546993412895925,
+              0.3108673094176923,
+              0.3175393836619081,
+              0.31774865268366037,
+              0.32442072692787616,
+              0.34242421925888755,
+              0.32117095233065884,
+              0.31501016671391924,
+              0.31192977390554977,
+              0.3103895775013647,
+              0.3073091846929952,
+              0.3084777060879726,
+              0.31943744916556016,
+              0.33237663826792124
+            ],
+            "affine_classes": [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            "mismatch_indices": [
+              3,
+              4,
+              5,
+              6,
+              7,
+              8,
+              12,
+              15,
+              16,
+              17,
+              24,
+              25,
+              26,
+              31,
+              32,
+              33,
+              34
+            ]
+          },
+          "analytic-first-snap": {
+            "center": {
+              "value": 0.30894889465914527,
+              "containing_tets": [
+                4732
+              ],
+              "vertex_minimum": [
+                0.25489778955207953
+              ],
+              "vertex_maximum": [
+                0.36027239477618084
+              ],
+              "strict_wall_bracket": false,
+              "contact_wall_bracket": true
+            },
+            "boundary": {
+              "search_radius": 0.04,
+              "candidate_tets": 143,
+              "surface_triangles": 79,
+              "lower_dimensional_contacts": 57,
+              "constant_level_tets": [],
+              "nearest_distance": 0.007963751621036585,
+              "distance_lower_bound": 0.007963751621036585,
+              "nearest_is_global_for_affine_representation": true,
+              "excludes_gate_ball": true,
+              "scope": "Piecewise-affine band and physical cap polygons; floating-point local enumeration, not the physical implicit boundary"
+            },
+            "neighborhood_mismatches": 17,
+            "false_material": 17,
+            "missing_material": 0,
+            "affine_values": [
+              0.3298275723680446,
+              0.3149385977203547,
+              0.3000496230726648,
+              0.3218199409863228,
+              0.3069309663386329,
+              0.3214627487687858,
+              0.31381230960460105,
+              0.3248850301784504,
+              0.34408319296787465,
+              0.3318455006885569,
+              0.31695652604086705,
+              0.3020675513931772,
+              0.3238378693068351,
+              0.30894889465914527,
+              0.32348067708929806,
+              0.31583023792511333,
+              0.3269029584989627,
+              0.346101121288387,
+              0.33386342900906923,
+              0.3189744543613794,
+              0.3040854797136895,
+              0.3258557976273474,
+              0.31096682297965755,
+              0.32549860540981035,
+              0.3178481662456257,
+              0.32892088681947507,
+              0.3481190496088993,
+              0.3217636729817235,
+              0.3153562838204342,
+              0.3121525892397899,
+              0.3105507419494674,
+              0.3073470473688231,
+              0.30949108285354454,
+              0.3241140618990699,
+              0.33237663826792124
+            ],
+            "affine_classes": [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            "mismatch_indices": [
+              3,
+              4,
+              5,
+              6,
+              7,
+              8,
+              12,
+              15,
+              16,
+              17,
+              24,
+              25,
+              26,
+              31,
+              32,
+              33,
+              34
+            ]
+          }
+        }
+      },
+      "diagnosis": "refined affine geometry is already outside tolerance; root-clipping contribution remains unresolved"
+    },
+    {
+      "query_index": 18929,
+      "kind": "wall",
+      "probe": [
+        -0.25443145468400474,
+        -0.12727844954582881,
+        0.40580882456366785
+      ],
+      "wall_level": 0.36027239477618084,
+      "field_residual_distance": 2.7686727092902053e-17,
+      "locator_distance": 0.01131313343933541,
+      "locator_face": 23408,
+      "exact_patch_feasible_upper_bound": {
+        "foot": [
+          -0.25074875999536766,
+          -0.11668794563123874,
+          0.4068388967005976
+        ],
+        "distance": 0.011259754079994036,
+        "barycentric": [
+          0.16243703686342795,
+          0.234264067078775,
+          0.6032988960577971
+        ]
+      },
+      "complete_surface_ball_exclusion": {
+        "excluded": true,
+        "lower_bound": 0.003290803728349806,
+        "radius": 0.002,
+        "depth": 0,
+        "visited_boxes": 25344,
+        "unresolved_boxes": 0
+      },
+      "neighborhood": {
+        "queries": [
+          [
+            -0.25843145468400475,
+            -0.13127844954582882,
+            0.40180882456366784
+          ],
+          [
+            -0.25843145468400475,
+            -0.13127844954582882,
+            0.40580882456366785
+          ],
+          [
+            -0.25843145468400475,
+            -0.13127844954582882,
+            0.40980882456366785
+          ],
+          [
+            -0.25843145468400475,
+            -0.12727844954582881,
+            0.40180882456366784
+          ],
+          [
+            -0.25843145468400475,
+            -0.12727844954582881,
+            0.40580882456366785
+          ],
+          [
+            -0.25843145468400475,
+            -0.12727844954582881,
+            0.40980882456366785
+          ],
+          [
+            -0.25843145468400475,
+            -0.12327844954582881,
+            0.40180882456366784
+          ],
+          [
+            -0.25843145468400475,
+            -0.12327844954582881,
+            0.40580882456366785
+          ],
+          [
+            -0.25843145468400475,
+            -0.12327844954582881,
+            0.40980882456366785
+          ],
+          [
+            -0.25443145468400474,
+            -0.13127844954582882,
+            0.40180882456366784
+          ],
+          [
+            -0.25443145468400474,
+            -0.13127844954582882,
+            0.40580882456366785
+          ],
+          [
+            -0.25443145468400474,
+            -0.13127844954582882,
+            0.40980882456366785
+          ],
+          [
+            -0.25443145468400474,
+            -0.12727844954582881,
+            0.40180882456366784
+          ],
+          [
+            -0.25443145468400474,
+            -0.12727844954582881,
+            0.40580882456366785
+          ],
+          [
+            -0.25443145468400474,
+            -0.12727844954582881,
+            0.40980882456366785
+          ],
+          [
+            -0.25443145468400474,
+            -0.12327844954582881,
+            0.40180882456366784
+          ],
+          [
+            -0.25443145468400474,
+            -0.12327844954582881,
+            0.40580882456366785
+          ],
+          [
+            -0.25443145468400474,
+            -0.12327844954582881,
+            0.40980882456366785
+          ],
+          [
+            -0.25043145468400474,
+            -0.13127844954582882,
+            0.40180882456366784
+          ],
+          [
+            -0.25043145468400474,
+            -0.13127844954582882,
+            0.40580882456366785
+          ],
+          [
+            -0.25043145468400474,
+            -0.13127844954582882,
+            0.40980882456366785
+          ],
+          [
+            -0.25043145468400474,
+            -0.12727844954582881,
+            0.40180882456366784
+          ],
+          [
+            -0.25043145468400474,
+            -0.12727844954582881,
+            0.40580882456366785
+          ],
+          [
+            -0.25043145468400474,
+            -0.12727844954582881,
+            0.40980882456366785
+          ],
+          [
+            -0.25043145468400474,
+            -0.12327844954582881,
+            0.40180882456366784
+          ],
+          [
+            -0.25043145468400474,
+            -0.12327844954582881,
+            0.40580882456366785
+          ],
+          [
+            -0.25043145468400474,
+            -0.12327844954582881,
+            0.40980882456366785
+          ],
+          [
+            -0.2619913653247187,
+            -0.12828095679233775,
+            0.403391650526674
+          ],
+          [
+            -0.2582114100043617,
+            -0.12777970316908327,
+            0.40460023754517094
+          ],
+          [
+            -0.25632143234418325,
+            -0.12752907635745606,
+            0.4052045310544194
+          ],
+          [
+            -0.255376443514094,
+            -0.12740376295164244,
+            0.4055066778090436
+          ],
+          [
+            -0.2534864658539155,
+            -0.1271531361400152,
+            0.4061109713182921
+          ],
+          [
+            -0.25254147702382623,
+            -0.12702782273420157,
+            0.4064131180729163
+          ],
+          [
+            -0.2506514993636478,
+            -0.12677719592257436,
+            0.40701741158216476
+          ],
+          [
+            -0.24687154404329079,
+            -0.12627594229931988,
+            0.4082259986006617
+          ]
+        ],
+        "exact_values": [
+          0.34666242438923234,
+          0.3505290089518911,
+          0.352373344254714,
+          0.34850373996065975,
+          0.35245377004623824,
+          0.354381489868033,
+          0.35181581225969194,
+          0.3557964041781655,
+          0.3577537595270125,
+          0.356612283079482,
+          0.35997401112453076,
+          0.3613289822524206,
+          0.3568403057172419,
+          0.3602723947761809,
+          0.36169814617804075,
+          0.3585344247727652,
+          0.36198430688291994,
+          0.3634273937054774,
+          0.366050050248091,
+          0.3689178197011572,
+          0.3697958139590497,
+          0.3646618261491067,
+          0.36758686294460474,
+          0.36852302440534135,
+          0.36473498709780017,
+          0.36766503922149374,
+          0.36860622738342264,
+          0.3417388711087568,
+          0.3516201742272751,
+          0.3561032729060931,
+          0.3582274921124138,
+          0.36223717028203795,
+          0.36412101757681836,
+          0.36764277203223783,
+          0.3736809923868343
+        ],
+        "exact_classes": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          1,
+          1,
+          0,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          0,
+          0,
+          0,
+          0,
+          1,
+          1,
+          1,
+          1
+        ],
+        "reliable_classification_samples": 34,
+        "ignored_near_level_samples": 1,
+        "backgrounds": {
+          "original": {
+            "center": {
+              "value": 0.3075326159549241,
+              "containing_tets": [
+                44556
+              ],
+              "vertex_minimum": [
+                0.25489778955207953
+              ],
+              "vertex_maximum": [
+                0.4499881115682077
+              ],
+              "strict_wall_bracket": true,
+              "contact_wall_bracket": true
+            },
+            "boundary": {
+              "search_radius": 0.04,
+              "candidate_tets": 90,
+              "surface_triangles": 75,
+              "lower_dimensional_contacts": 0,
+              "constant_level_tets": [],
+              "nearest_distance": 0.012559574019887347,
+              "distance_lower_bound": 0.012559574019887347,
+              "nearest_is_global_for_affine_representation": true,
+              "excludes_gate_ball": true,
+              "scope": "Piecewise-affine band and physical cap polygons; floating-point local enumeration, not the physical implicit boundary"
+            },
+            "neighborhood_mismatches": 17,
+            "false_material": 17,
+            "missing_material": 0,
+            "affine_values": [
+              0.2986333443684437,
+              0.30065127268895603,
+              0.30266920100946837,
+              0.3111191249774759,
+              0.31313705329798824,
+              0.31515498161850053,
+              0.3236049055865081,
+              0.32562283390702046,
+              0.3276407622275328,
+              0.3037701045440499,
+              0.30578803286456224,
+              0.30780596118507464,
+              0.30551468763441175,
+              0.3075326159549241,
+              0.30955054427543643,
+              0.31800046824344397,
+              0.3200183965639563,
+              0.32203632488446865,
+              0.3214276648181583,
+              0.3234455931386706,
+              0.32546352145918295,
+              0.31065144781001797,
+              0.31266937613053036,
+              0.31468730445104265,
+              0.3118446557077945,
+              0.3138625840283069,
+              0.3158805123488192,
+              0.31377618496025217,
+              0.3106544004575882,
+              0.30909350820625614,
+              0.3083130620805901,
+              0.3067521698292581,
+              0.30597172370359205,
+              0.3109573191201124,
+              0.3261110749040958
+            ],
+            "affine_classes": [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            "mismatch_indices": [
+              11,
+              14,
+              16,
+              17,
+              18,
+              19,
+              20,
+              21,
+              22,
+              23,
+              24,
+              25,
+              26,
+              31,
+              32,
+              33,
+              34
+            ]
+          },
+          "refined": {
+            "center": {
+              "value": 0.3086720100121313,
+              "containing_tets": [
+                51145
+              ],
+              "vertex_minimum": [
+                0.25489778955207953
+              ],
+              "vertex_maximum": [
+                0.36679345610017866
+              ],
+              "strict_wall_bracket": true,
+              "contact_wall_bracket": true
+            },
+            "boundary": {
+              "search_radius": 0.04,
+              "candidate_tets": 134,
+              "surface_triangles": 135,
+              "lower_dimensional_contacts": 0,
+              "constant_level_tets": [],
+              "nearest_distance": 0.010167681697844232,
+              "distance_lower_bound": 0.010167681697844232,
+              "nearest_is_global_for_affine_representation": true,
+              "excludes_gate_ball": true,
+              "scope": "Piecewise-affine band and physical cap polygons; floating-point local enumeration, not the physical implicit boundary"
+            },
+            "neighborhood_mismatches": 17,
+            "false_material": 17,
+            "missing_material": 0,
+            "affine_values": [
+              0.2997727384256509,
+              0.3017906667461632,
+              0.30380859506667557,
+              0.31437536313691783,
+              0.31639329145743017,
+              0.3184112197779425,
+              0.32897798784818477,
+              0.33099591616869717,
+              0.33301384448920945,
+              0.3071072896406326,
+              0.3091252179611449,
+              0.3111431462816573,
+              0.306654081691619,
+              0.3086720100121313,
+              0.3106899383326437,
+              0.32125670640288595,
+              0.3232746347233983,
+              0.32529256304391063,
+              0.331992125237612,
+              0.33401005355812435,
+              0.3360279818786367,
+              0.3139886329066007,
+              0.316006561227113,
+              0.31802448954762536,
+              0.3146322861903691,
+              0.31665021451088143,
+              0.3186681428313938,
+              0.31838582919270864,
+              0.31352891960242,
+              0.31110046480727566,
+              0.30988623740970345,
+              0.30745778261455914,
+              0.30624355521698693,
+              0.3129912488604551,
+              0.3312418356878696
+            ],
+            "affine_classes": [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            "mismatch_indices": [
+              11,
+              14,
+              16,
+              17,
+              18,
+              19,
+              20,
+              21,
+              22,
+              23,
+              24,
+              25,
+              26,
+              31,
+              32,
+              33,
+              34
+            ]
+          },
+          "analytic-first-snap": {
+            "center": {
+              "value": 0.30882613823324,
+              "containing_tets": [
+                51145
+              ],
+              "vertex_minimum": [
+                0.25489778955207953
+              ],
+              "vertex_maximum": [
+                0.36027239477618084
+              ],
+              "strict_wall_bracket": false,
+              "contact_wall_bracket": true
+            },
+            "boundary": {
+              "search_radius": 0.04,
+              "candidate_tets": 134,
+              "surface_triangles": 76,
+              "lower_dimensional_contacts": 53,
+              "constant_level_tets": [],
+              "nearest_distance": 0.009557792740717153,
+              "distance_lower_bound": 0.009557792740717153,
+              "nearest_is_global_for_affine_representation": true,
+              "excludes_gate_ball": true,
+              "scope": "Piecewise-affine band and physical cap polygons; floating-point local enumeration, not the physical implicit boundary"
+            },
+            "neighborhood_mismatches": 17,
+            "false_material": 17,
+            "missing_material": 0,
+            "affine_values": [
+              0.2999268666467596,
+              0.30194479496727195,
+              0.3039627232877843,
+              0.31481584129444945,
+              0.3168337696149618,
+              0.31885169793547413,
+              0.3297048159421393,
+              0.3317227442626517,
+              0.33374067258316403,
+              0.3127399291902325,
+              0.31475785751074487,
+              0.3167757858312572,
+              0.3068082099127277,
+              0.30882613823324,
+              0.3108440665537524,
+              0.3216971845604175,
+              0.32371511288092986,
+              0.3257330412014422,
+              0.33555527722347483,
+              0.33757320554398723,
+              0.3395911338644996,
+              0.31635711443405057,
+              0.3183750427545629,
+              0.32039297107507525,
+              0.31479775046006064,
+              0.316815678780573,
+              0.3188336071010853,
+              0.31900938542507484,
+              0.3139177618291575,
+              0.3113719500311987,
+              0.3100990441322194,
+              0.3075532323342607,
+              0.30628032643528125,
+              0.316070904125068,
+              0.3312418356878696
+            ],
+            "affine_classes": [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            "mismatch_indices": [
+              11,
+              14,
+              16,
+              17,
+              18,
+              19,
+              20,
+              21,
+              22,
+              23,
+              24,
+              25,
+              26,
+              31,
+              32,
+              33,
+              34
+            ]
+          }
+        }
+      },
+      "diagnosis": "refined affine geometry is already outside tolerance; root-clipping contribution remains unresolved"
+    },
+    {
+      "query_index": 913,
+      "kind": "wall",
+      "probe": [
+        0.4146628365378058,
+        0.25445951355884505,
+        -0.36878037593347973
+      ],
+      "wall_level": -0.36027239477618084,
+      "field_residual_distance": 2.6496181865793457e-17,
+      "locator_distance": 0.010864285625270108,
+      "locator_face": 3479,
+      "exact_patch_feasible_upper_bound": {
+        "foot": [
+          0.4148231889671125,
+          0.24379437590693723,
+          -0.370430786925895
+        ],
+        "distance": 0.010793272463882843,
+        "barycentric": [
+          0.29068808474460595,
+          0.3799014684620985,
+          0.32941044679329556
+        ]
+      },
+      "complete_surface_ball_exclusion": {
+        "excluded": true,
+        "lower_bound": 0.004430036165590123,
+        "radius": 0.002,
+        "depth": 1,
+        "visited_boxes": 25348,
+        "unresolved_boxes": 0
+      },
+      "neighborhood": {
+        "queries": [
+          [
+            0.4106628365378058,
+            0.25045951355884505,
+            -0.37278037593347974
+          ],
+          [
+            0.4106628365378058,
+            0.25045951355884505,
+            -0.36878037593347973
+          ],
+          [
+            0.4106628365378058,
+            0.25045951355884505,
+            -0.36478037593347973
+          ],
+          [
+            0.4106628365378058,
+            0.25445951355884505,
+            -0.37278037593347974
+          ],
+          [
+            0.4106628365378058,
+            0.25445951355884505,
+            -0.36878037593347973
+          ],
+          [
+            0.4106628365378058,
+            0.25445951355884505,
+            -0.36478037593347973
+          ],
+          [
+            0.4106628365378058,
+            0.25845951355884506,
+            -0.37278037593347974
+          ],
+          [
+            0.4106628365378058,
+            0.25845951355884506,
+            -0.36878037593347973
+          ],
+          [
+            0.4106628365378058,
+            0.25845951355884506,
+            -0.36478037593347973
+          ],
+          [
+            0.4146628365378058,
+            0.25045951355884505,
+            -0.37278037593347974
+          ],
+          [
+            0.4146628365378058,
+            0.25045951355884505,
+            -0.36878037593347973
+          ],
+          [
+            0.4146628365378058,
+            0.25045951355884505,
+            -0.36478037593347973
+          ],
+          [
+            0.4146628365378058,
+            0.25445951355884505,
+            -0.37278037593347974
+          ],
+          [
+            0.4146628365378058,
+            0.25445951355884505,
+            -0.36878037593347973
+          ],
+          [
+            0.4146628365378058,
+            0.25445951355884505,
+            -0.36478037593347973
+          ],
+          [
+            0.4146628365378058,
+            0.25845951355884506,
+            -0.37278037593347974
+          ],
+          [
+            0.4146628365378058,
+            0.25845951355884506,
+            -0.36878037593347973
+          ],
+          [
+            0.4146628365378058,
+            0.25845951355884506,
+            -0.36478037593347973
+          ],
+          [
+            0.4186628365378058,
+            0.25045951355884505,
+            -0.37278037593347974
+          ],
+          [
+            0.4186628365378058,
+            0.25045951355884505,
+            -0.36878037593347973
+          ],
+          [
+            0.4186628365378058,
+            0.25045951355884505,
+            -0.36478037593347973
+          ],
+          [
+            0.4186628365378058,
+            0.25445951355884505,
+            -0.37278037593347974
+          ],
+          [
+            0.4186628365378058,
+            0.25445951355884505,
+            -0.36878037593347973
+          ],
+          [
+            0.4186628365378058,
+            0.25445951355884505,
+            -0.36478037593347973
+          ],
+          [
+            0.4186628365378058,
+            0.25845951355884506,
+            -0.37278037593347974
+          ],
+          [
+            0.4186628365378058,
+            0.25845951355884506,
+            -0.36878037593347973
+          ],
+          [
+            0.4186628365378058,
+            0.25845951355884506,
+            -0.36478037593347973
+          ],
+          [
+            0.41276202488844776,
+            0.24669012031364324,
+            -0.3686272626581668
+          ],
+          [
+            0.41371243071312674,
+            0.2505748169362441,
+            -0.36870381929582324
+          ],
+          [
+            0.4141876336254663,
+            0.2525171652475446,
+            -0.3687420976146515
+          ],
+          [
+            0.41442523508163603,
+            0.2534883394031948,
+            -0.36876123677406564
+          ],
+          [
+            0.4149004379939755,
+            0.2554306877144953,
+            -0.3687995150928938
+          ],
+          [
+            0.41513803945014527,
+            0.2564018618701455,
+            -0.368818654252308
+          ],
+          [
+            0.4156132423624848,
+            0.258344210181446,
+            -0.3688569325711362
+          ],
+          [
+            0.4165636481871638,
+            0.26222890680404687,
+            -0.36893348920879265
+          ]
+        ],
+        "exact_values": [
+          -0.3684151140743862,
+          -0.36964407473677185,
+          -0.3722141625063684,
+          -0.36171300720898303,
+          -0.3612973292436068,
+          -0.3622278292925982,
+          -0.3545224199456837,
+          -0.3524650965581707,
+          -0.3517589493279995,
+          -0.36699245253162427,
+          -0.3681629150754163,
+          -0.37062047315082736,
+          -0.36075858580795594,
+          -0.3602723947761809,
+          -0.36107806764120054,
+          -0.35405037950640317,
+          -0.35191053656551075,
+          -0.35106727332137005,
+          -0.3636713983070291,
+          -0.36478256036891554,
+          -0.36712597512103934,
+          -0.35788760800901287,
+          -0.357330599191481,
+          -0.35801034058991305,
+          -0.3516450332187985,
+          -0.3494228632986862,
+          -0.34844188874576865,
+          -0.3763707680095396,
+          -0.36849986258565204,
+          -0.3644259196243394,
+          -0.3623585066630877,
+          -0.35816878128339324,
+          -0.35604886388578894,
+          -0.3517649088992116,
+          -0.34305404694563
+        ],
+        "exact_classes": [
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          0,
+          0,
+          0,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          0,
+          0,
+          0,
+          -1,
+          -1,
+          -1,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          -1,
+          -1,
+          -1,
+          -1,
+          0,
+          0,
+          0,
+          0
+        ],
+        "reliable_classification_samples": 34,
+        "ignored_near_level_samples": 1,
+        "backgrounds": {
+          "original": {
+            "center": {
+              "value": -0.30997238139166605,
+              "containing_tets": [
+                8977
+              ],
+              "vertex_minimum": [
+                -0.5307971688350228
+              ],
+              "vertex_maximum": [
+                -0.25489778955207953
+              ],
+              "strict_wall_bracket": true,
+              "contact_wall_bracket": true
+            },
+            "boundary": {
+              "search_radius": 0.04,
+              "candidate_tets": 98,
+              "surface_triangles": 83,
+              "lower_dimensional_contacts": 0,
+              "constant_level_tets": [],
+              "nearest_distance": 0.009680372925911373,
+              "distance_lower_bound": 0.009680372925911373,
+              "nearest_is_global_for_affine_representation": true,
+              "excludes_gate_ball": true,
+              "scope": "Piecewise-affine band and physical cap polygons; floating-point local enumeration, not the physical implicit boundary"
+            },
+            "neighborhood_mismatches": 18,
+            "false_material": 18,
+            "missing_material": 0,
+            "affine_values": [
+              -0.3148357963371218,
+              -0.3256120133452621,
+              -0.3363882303534024,
+              -0.3102043120713106,
+              -0.30795445307115366,
+              -0.318730670079294,
+              -0.31580874941437476,
+              -0.30332296880534254,
+              -0.3010731098051856,
+              -0.3168537246576341,
+              -0.3276299416657744,
+              -0.3384061586739147,
+              -0.31222224039182295,
+              -0.30997238139166605,
+              -0.32074859839980635,
+              -0.3178266777348871,
+              -0.3053408971258549,
+              -0.30309103812569793,
+              -0.31887165297814646,
+              -0.32964786998628676,
+              -0.3404240869944271,
+              -0.3142401687123353,
+              -0.3119903097121784,
+              -0.3227665267203187,
+              -0.31984460605539944,
+              -0.3073588254463672,
+              -0.30510896644621033,
+              -0.3437230838273664,
+              -0.3268477326095164,
+              -0.3184100570005912,
+              -0.3141912191961286,
+              -0.3057535435872035,
+              -0.30281711716150617,
+              -0.30589777454022166,
+              -0.31205908929765225
+            ],
+            "affine_classes": [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            "mismatch_indices": [
+              0,
+              1,
+              2,
+              3,
+              4,
+              5,
+              9,
+              10,
+              11,
+              12,
+              14,
+              18,
+              19,
+              20,
+              27,
+              28,
+              29,
+              30
+            ]
+          },
+          "refined": {
+            "center": {
+              "value": -0.31315258220107783,
+              "containing_tets": [
+                10076
+              ],
+              "vertex_minimum": [
+                -0.3789844257354681
+              ],
+              "vertex_maximum": [
+                -0.25489778955207953
+              ],
+              "strict_wall_bracket": true,
+              "contact_wall_bracket": true
+            },
+            "boundary": {
+              "search_radius": 0.04,
+              "candidate_tets": 141,
+              "surface_triangles": 142,
+              "lower_dimensional_contacts": 0,
+              "constant_level_tets": [],
+              "nearest_distance": 0.006179831748941326,
+              "distance_lower_bound": 0.006179831748941326,
+              "nearest_is_global_for_affine_representation": true,
+              "excludes_gate_ball": true,
+              "scope": "Piecewise-affine band and physical cap polygons; floating-point local enumeration, not the physical implicit boundary"
+            },
+            "neighborhood_mismatches": 18,
+            "false_material": 18,
+            "missing_material": 0,
+            "affine_values": [
+              -0.31801599714653356,
+              -0.33601948947754484,
+              -0.35402298180855624,
+              -0.31138968628668195,
+              -0.3111346538805655,
+              -0.3291381462115768,
+              -0.3191109677319808,
+              -0.30450834302071383,
+              -0.30425331061459737,
+              -0.3200339254670459,
+              -0.33803741779805724,
+              -0.3560409101290686,
+              -0.31340761460719424,
+              -0.31315258220107783,
+              -0.3311560745320891,
+              -0.3211288960524931,
+              -0.3065262713412262,
+              -0.30627123893510977,
+              -0.32205185378755824,
+              -0.3400553461185696,
+              -0.3559944194489829,
+              -0.3154255429277066,
+              -0.3151705105215902,
+              -0.3331740028526015,
+              -0.32314682437300546,
+              -0.3085441996617385,
+              -0.30828916725562205,
+              -0.3492571127150892,
+              -0.33718520040280336,
+              -0.3251688913019406,
+              -0.3191607367515091,
+              -0.30714442765064653,
+              -0.302933816724822,
+              -0.3070626435537167,
+              -0.3153202972115058
+            ],
+            "affine_classes": [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            "mismatch_indices": [
+              0,
+              1,
+              2,
+              3,
+              4,
+              5,
+              9,
+              10,
+              11,
+              12,
+              14,
+              18,
+              19,
+              20,
+              27,
+              28,
+              29,
+              30
+            ]
+          },
+          "analytic-first-snap": {
+            "center": {
+              "value": -0.3185202571535716,
+              "containing_tets": [
+                10076
+              ],
+              "vertex_minimum": [
+                -0.36027239477618084
+              ],
+              "vertex_maximum": [
+                -0.25489778955207953
+              ],
+              "strict_wall_bracket": false,
+              "contact_wall_bracket": true
+            },
+            "boundary": {
+              "search_radius": 0.04,
+              "candidate_tets": 144,
+              "surface_triangles": 77,
+              "lower_dimensional_contacts": 62,
+              "constant_level_tets": [],
+              "nearest_distance": 0.005256723799731057,
+              "distance_lower_bound": 0.005256723799731057,
+              "nearest_is_global_for_affine_representation": true,
+              "excludes_gate_ball": true,
+              "scope": "Piecewise-affine band and physical cap polygons; floating-point local enumeration, not the physical implicit boundary"
+            },
+            "neighborhood_mismatches": 17,
+            "false_material": 17,
+            "missing_material": 0,
+            "affine_values": [
+              -0.3204766842924779,
+              -0.3396748470819022,
+              -0.35887300987132653,
+              -0.3115500343401123,
+              -0.31650232883305923,
+              -0.3467043164951018,
+              -0.3195576657218341,
+              -0.30466869107414424,
+              -0.30962098556709117,
+              -0.3224946126129903,
+              -0.3416927754024145,
+              -0.3608909381918388,
+              -0.31356796266062464,
+              -0.3185202571535716,
+              -0.3475569442173329,
+              -0.32157559404234637,
+              -0.3066866193946566,
+              -0.31163891388760345,
+              -0.3245125409335026,
+              -0.3437107037229269,
+              -0.35873367723787775,
+              -0.315585890981137,
+              -0.3205381854740839,
+              -0.3410761169637694,
+              -0.3235935223628587,
+              -0.3087045477151689,
+              -0.31365684220811585,
+              -0.35017188910491964,
+              -0.341314525007255,
+              -0.33657673242946967,
+              -0.32754849479152043,
+              -0.3094920195156228,
+              -0.30294960291923323,
+              -0.30722021782553166,
+              -0.31576144763812813
+            ],
+            "affine_classes": [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              -1,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            "mismatch_indices": [
+              0,
+              1,
+              2,
+              3,
+              4,
+              5,
+              9,
+              10,
+              12,
+              14,
+              18,
+              19,
+              20,
+              27,
+              28,
+              29,
+              30
+            ]
+          }
+        }
+      },
+      "diagnosis": "refined affine geometry is already outside tolerance; root-clipping contribution remains unresolved"
+    },
+    {
+      "query_index": 27848,
+      "kind": "wall",
+      "probe": [
+        0.41071501133649807,
+        0.24497814669799736,
+        0.13326407027659812
+      ],
+      "wall_level": -0.36027239477618084,
+      "field_residual_distance": 2.3303422733254208e-17,
+      "locator_distance": 0.01068182093123895,
+      "locator_face": 15915,
+      "exact_patch_feasible_upper_bound": {
+        "foot": [
+          0.4099561986477147,
+          0.2503587504356351,
+          0.14243576778578376
+        ],
+        "distance": 0.010660521960867676,
+        "barycentric": [
+          0.17530493649867443,
+          0.5713398871622367,
+          0.2533551763390889
+        ]
+      },
+      "complete_surface_ball_exclusion": {
+        "excluded": true,
+        "lower_bound": 0.0030182393180749334,
+        "radius": 0.002,
+        "depth": 1,
+        "visited_boxes": 25348,
+        "unresolved_boxes": 0
+      },
+      "neighborhood": {
+        "queries": [
+          [
+            0.40671501133649807,
+            0.24097814669799736,
+            0.12926407027659811
+          ],
+          [
+            0.40671501133649807,
+            0.24097814669799736,
+            0.13326407027659812
+          ],
+          [
+            0.40671501133649807,
+            0.24097814669799736,
+            0.13726407027659812
+          ],
+          [
+            0.40671501133649807,
+            0.24497814669799736,
+            0.12926407027659811
+          ],
+          [
+            0.40671501133649807,
+            0.24497814669799736,
+            0.13326407027659812
+          ],
+          [
+            0.40671501133649807,
+            0.24497814669799736,
+            0.13726407027659812
+          ],
+          [
+            0.40671501133649807,
+            0.24897814669799737,
+            0.12926407027659811
+          ],
+          [
+            0.40671501133649807,
+            0.24897814669799737,
+            0.13326407027659812
+          ],
+          [
+            0.40671501133649807,
+            0.24897814669799737,
+            0.13726407027659812
+          ],
+          [
+            0.41071501133649807,
+            0.24097814669799736,
+            0.12926407027659811
+          ],
+          [
+            0.41071501133649807,
+            0.24097814669799736,
+            0.13326407027659812
+          ],
+          [
+            0.41071501133649807,
+            0.24097814669799736,
+            0.13726407027659812
+          ],
+          [
+            0.41071501133649807,
+            0.24497814669799736,
+            0.12926407027659811
+          ],
+          [
+            0.41071501133649807,
+            0.24497814669799736,
+            0.13326407027659812
+          ],
+          [
+            0.41071501133649807,
+            0.24497814669799736,
+            0.13726407027659812
+          ],
+          [
+            0.41071501133649807,
+            0.24897814669799737,
+            0.12926407027659811
+          ],
+          [
+            0.41071501133649807,
+            0.24897814669799737,
+            0.13326407027659812
+          ],
+          [
+            0.41071501133649807,
+            0.24897814669799737,
+            0.13726407027659812
+          ],
+          [
+            0.4147150113364981,
+            0.24097814669799736,
+            0.12926407027659811
+          ],
+          [
+            0.4147150113364981,
+            0.24097814669799736,
+            0.13326407027659812
+          ],
+          [
+            0.4147150113364981,
+            0.24097814669799736,
+            0.13726407027659812
+          ],
+          [
+            0.4147150113364981,
+            0.24497814669799736,
+            0.12926407027659811
+          ],
+          [
+            0.4147150113364981,
+            0.24497814669799736,
+            0.13326407027659812
+          ],
+          [
+            0.4147150113364981,
+            0.24497814669799736,
+            0.13726407027659812
+          ],
+          [
+            0.4147150113364981,
+            0.24897814669799737,
+            0.12926407027659811
+          ],
+          [
+            0.4147150113364981,
+            0.24897814669799737,
+            0.13326407027659812
+          ],
+          [
+            0.4147150113364981,
+            0.24897814669799737,
+            0.13726407027659812
+          ],
+          [
+            0.41065773659662025,
+            0.2529554680788519,
+            0.13386328909367043
+          ],
+          [
+            0.41068637396655916,
+            0.2489668073884246,
+            0.13356367968513427
+          ],
+          [
+            0.4107006926515286,
+            0.246972477043211,
+            0.13341387498086618
+          ],
+          [
+            0.41070785199401333,
+            0.24597531187060417,
+            0.13333897262873215
+          ],
+          [
+            0.4107221706789828,
+            0.24398098152539055,
+            0.13318916792446409
+          ],
+          [
+            0.41072933002146755,
+            0.24298381635278374,
+            0.13311426557233005
+          ],
+          [
+            0.410743648706437,
+            0.24098948600757011,
+            0.13296446086806196
+          ],
+          [
+            0.4107722860763759,
+            0.23700082531714287,
+            0.1326648514595258
+          ]
+        ],
+        "exact_values": [
+          -0.3506315564905708,
+          -0.3491456532318964,
+          -0.34906266298728356,
+          -0.3592119401723961,
+          -0.3593521496352797,
+          -0.36088947072545374,
+          -0.36730327866211554,
+          -0.36907293108086103,
+          -0.37223383303182844,
+          -0.3521451014307501,
+          -0.35054724521802416,
+          -0.3502986094630595,
+          -0.36023149918459063,
+          -0.3602723947761809,
+          -0.3616569990012952,
+          -0.3678415223518525,
+          -0.3695245100129333,
+          -0.3725456340048121,
+          -0.35168025712502843,
+          -0.34997023831851004,
+          -0.34955492874366995,
+          -0.35928862047901733,
+          -0.3592294968966474,
+          -0.3604598489285703,
+          -0.3664347313153765,
+          -0.3680298528598227,
+          -0.3709091561434831,
+          -0.3788051509652617,
+          -0.36968247368584267,
+          -0.36500859852237627,
+          -0.362647694494722,
+          -0.35788388263044263,
+          -0.35548333850521807,
+          -0.35065086071779294,
+          -0.3408930975819986
+        ],
+        "exact_classes": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          -1,
+          -1,
+          -1,
+          -1,
+          0,
+          0,
+          0,
+          0,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          0,
+          0,
+          0,
+          0,
+          0,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          0,
+          0,
+          0,
+          0
+        ],
+        "reliable_classification_samples": 34,
+        "ignored_near_level_samples": 1,
+        "backgrounds": {
+          "original": {
+            "center": {
+              "value": -0.3110062363501125,
+              "containing_tets": [
+                33553
+              ],
+              "vertex_minimum": [
+                -0.5307971688350224
+              ],
+              "vertex_maximum": [
+                -0.25489778955207953
+              ],
+              "strict_wall_bracket": true,
+              "contact_wall_bracket": true
+            },
+            "boundary": {
+              "search_radius": 0.04,
+              "candidate_tets": 98,
+              "surface_triangles": 81,
+              "lower_dimensional_contacts": 0,
+              "constant_level_tets": [],
+              "nearest_distance": 0.009481404757204211,
+              "distance_lower_bound": 0.009481404757204211,
+              "nearest_is_global_for_affine_representation": true,
+              "excludes_gate_ball": true,
+              "scope": "Piecewise-affine band and physical cap polygons; floating-point local enumeration, not the physical implicit boundary"
+            },
+            "neighborhood_mismatches": 16,
+            "false_material": 16,
+            "missing_material": 0,
+            "affine_values": [
+              -0.3082234150973474,
+              -0.29573763448831525,
+              -0.3021069647636321,
+              -0.30261897775428326,
+              -0.30898830802960014,
+              -0.31976452503774044,
+              -0.3158696512955682,
+              -0.32664586830370845,
+              -0.3374220853118488,
+              -0.3102413434178598,
+              -0.29775556280882753,
+              -0.3041248930841444,
+              -0.30463690607479565,
+              -0.3110062363501125,
+              -0.32178245335825273,
+              -0.31788757961608055,
+              -0.32866379662422085,
+              -0.3394400136323611,
+              -0.31225927173837215,
+              -0.29977349112933993,
+              -0.30614282140465676,
+              -0.306654834395308,
+              -0.3130241646706248,
+              -0.3238003816787651,
+              -0.3199055079365929,
+              -0.3306817249447332,
+              -0.3414579419528735,
+              -0.34780667854932623,
+              -0.3294064574497193,
+              -0.3202063468999158,
+              -0.31560629162501413,
+              -0.30640618107521084,
+              -0.30180612580030913,
+              -0.2986893365721263,
+              -0.3052275476784892
+            ],
+            "affine_classes": [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            "mismatch_indices": [
+              5,
+              6,
+              7,
+              8,
+              14,
+              15,
+              16,
+              17,
+              23,
+              24,
+              25,
+              26,
+              27,
+              28,
+              29,
+              30
+            ]
+          },
+          "refined": {
+            "center": {
+              "value": -0.3168643350330844,
+              "containing_tets": [
+                38220
+              ],
+              "vertex_minimum": [
+                -0.3789844257354681
+              ],
+              "vertex_maximum": [
+                -0.25489778955207953
+              ],
+              "strict_wall_bracket": true,
+              "contact_wall_bracket": true
+            },
+            "boundary": {
+              "search_radius": 0.04,
+              "candidate_tets": 142,
+              "surface_triangles": 142,
+              "lower_dimensional_contacts": 0,
+              "constant_level_tets": [],
+              "nearest_distance": 0.005640941171774048,
+              "distance_lower_bound": 0.005640941171774048,
+              "nearest_is_global_for_affine_representation": true,
+              "excludes_gate_ball": true,
+              "scope": "Piecewise-affine band and physical cap polygons; floating-point local enumeration, not the physical implicit boundary"
+            },
+            "neighborhood_mismatches": 15,
+            "false_material": 15,
+            "missing_material": 0,
+            "affine_values": [
+              -0.3107412863316075,
+              -0.2961386616203405,
+              -0.30796506344660396,
+              -0.3030200048863086,
+              -0.314846406712572,
+              -0.33284989904358336,
+              -0.32172774997854015,
+              -0.33973124230955143,
+              -0.3577347346405628,
+              -0.31275921465211987,
+              -0.29815658994085287,
+              -0.3099829917671163,
+              -0.30503793320682093,
+              -0.3168643350330844,
+              -0.3348678273640957,
+              -0.3237456782990525,
+              -0.3417491706300638,
+              -0.35975266296107516,
+              -0.3147771429726322,
+              -0.3001745182613652,
+              -0.31200092008762864,
+              -0.30705586152733333,
+              -0.3188822633535967,
+              -0.3368857556846081,
+              -0.3257636066195648,
+              -0.34376709895057617,
+              -0.3604673354107761,
+              -0.35848104080741044,
+              -0.34301268329870216,
+              -0.3299385091658932,
+              -0.3234014220994888,
+              -0.31032724796668,
+              -0.30379016090027555,
+              -0.29924291941886194,
+              -0.3080505303421699
+            ],
+            "affine_classes": [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              -1,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            "mismatch_indices": [
+              5,
+              6,
+              7,
+              8,
+              14,
+              15,
+              16,
+              17,
+              23,
+              24,
+              25,
+              27,
+              28,
+              29,
+              30
+            ]
+          },
+          "analytic-first-snap": {
+            "center": {
+              "value": -0.3267518771897826,
+              "containing_tets": [
+                38220
+              ],
+              "vertex_minimum": [
+                -0.36027239477618084
+              ],
+              "vertex_maximum": [
+                -0.25489778955207953
+              ],
+              "strict_wall_bracket": false,
+              "contact_wall_bracket": true
+            },
+            "boundary": {
+              "search_radius": 0.04,
+              "candidate_tets": 137,
+              "surface_triangles": 73,
+              "lower_dimensional_contacts": 57,
+              "constant_level_tets": [],
+              "nearest_distance": 0.003986032128490641,
+              "distance_lower_bound": 0.003986032128490641,
+              "nearest_is_global_for_affine_representation": true,
+              "excludes_gate_ball": true,
+              "scope": "Piecewise-affine band and physical cap polygons; floating-point local enumeration, not the physical implicit boundary"
+            },
+            "neighborhood_mismatches": 13,
+            "false_material": 13,
+            "missing_material": 0,
+            "affine_values": [
+              -0.3110818840483171,
+              -0.29619290940062726,
+              -0.3178526056033022,
+              -0.3030742526665953,
+              -0.32473394886927026,
+              -0.3549359365313128,
+              -0.32699909174131475,
+              -0.346197254530739,
+              -0.36539541732016334,
+              -0.3130998123688295,
+              -0.2982108377211396,
+              -0.31987053392381454,
+              -0.30509218098710766,
+              -0.3267518771897826,
+              -0.3526348873786029,
+              -0.32901702006182715,
+              -0.34821518285125147,
+              -0.3674133456406757,
+              -0.31511774068934184,
+              -0.30022876604165194,
+              -0.3218884622443269,
+              -0.30711010930762,
+              -0.328769805510295,
+              -0.34615406012503924,
+              -0.3310349483823395,
+              -0.35023311117176376,
+              -0.3638116203991476,
+              -0.36024551561740914,
+              -0.3496125419879181,
+              -0.3442960551731725,
+              -0.3365583669299624,
+              -0.3169453874496029,
+              -0.3071388977094231,
+              -0.2993178037302764,
+              -0.3084324011211349
+            ],
+            "affine_classes": [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              -1,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              -1,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              -1,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            "mismatch_indices": [
+              5,
+              6,
+              7,
+              14,
+              15,
+              16,
+              23,
+              24,
+              25,
+              27,
+              28,
+              29,
+              30
+            ]
+          }
+        }
+      },
+      "diagnosis": "refined affine geometry is already outside tolerance; root-clipping contribution remains unresolved"
+    },
+    {
+      "query_index": 4492,
+      "kind": "wall",
+      "probe": [
+        -0.39856231100629036,
+        -0.11006943839737621,
+        -0.23232713573425395
+      ],
+      "wall_level": 0.36027239477618084,
+      "field_residual_distance": 8.208316303077461e-17,
+      "locator_distance": 0.010671061216535783,
+      "locator_face": 6051,
+      "exact_patch_feasible_upper_bound": {
+        "foot": [
+          -0.40605976477258593,
+          -0.10607698119198182,
+          -0.23871739143558737
+        ],
+        "distance": 0.010629529408354325,
+        "barycentric": [
+          0.04944746043538659,
+          0.5183357789379536,
+          0.4322167606266598
+        ]
+      },
+      "complete_surface_ball_exclusion": {
+        "excluded": true,
+        "lower_bound": 0.003948266662494368,
+        "radius": 0.002,
+        "depth": 2,
+        "visited_boxes": 25368,
+        "unresolved_boxes": 0
+      },
+      "neighborhood": {
+        "queries": [
+          [
+            -0.40256231100629036,
+            -0.11406943839737621,
+            -0.23632713573425396
+          ],
+          [
+            -0.40256231100629036,
+            -0.11406943839737621,
+            -0.23232713573425395
+          ],
+          [
+            -0.40256231100629036,
+            -0.11406943839737621,
+            -0.22832713573425395
+          ],
+          [
+            -0.40256231100629036,
+            -0.11006943839737621,
+            -0.23632713573425396
+          ],
+          [
+            -0.40256231100629036,
+            -0.11006943839737621,
+            -0.23232713573425395
+          ],
+          [
+            -0.40256231100629036,
+            -0.11006943839737621,
+            -0.22832713573425395
+          ],
+          [
+            -0.40256231100629036,
+            -0.1060694383973762,
+            -0.23632713573425396
+          ],
+          [
+            -0.40256231100629036,
+            -0.1060694383973762,
+            -0.23232713573425395
+          ],
+          [
+            -0.40256231100629036,
+            -0.1060694383973762,
+            -0.22832713573425395
+          ],
+          [
+            -0.39856231100629036,
+            -0.11406943839737621,
+            -0.23632713573425396
+          ],
+          [
+            -0.39856231100629036,
+            -0.11406943839737621,
+            -0.23232713573425395
+          ],
+          [
+            -0.39856231100629036,
+            -0.11406943839737621,
+            -0.22832713573425395
+          ],
+          [
+            -0.39856231100629036,
+            -0.11006943839737621,
+            -0.23632713573425396
+          ],
+          [
+            -0.39856231100629036,
+            -0.11006943839737621,
+            -0.23232713573425395
+          ],
+          [
+            -0.39856231100629036,
+            -0.11006943839737621,
+            -0.22832713573425395
+          ],
+          [
+            -0.39856231100629036,
+            -0.1060694383973762,
+            -0.23632713573425396
+          ],
+          [
+            -0.39856231100629036,
+            -0.1060694383973762,
+            -0.23232713573425395
+          ],
+          [
+            -0.39856231100629036,
+            -0.1060694383973762,
+            -0.22832713573425395
+          ],
+          [
+            -0.39456231100629036,
+            -0.11406943839737621,
+            -0.23632713573425396
+          ],
+          [
+            -0.39456231100629036,
+            -0.11406943839737621,
+            -0.23232713573425395
+          ],
+          [
+            -0.39456231100629036,
+            -0.11406943839737621,
+            -0.22832713573425395
+          ],
+          [
+            -0.39456231100629036,
+            -0.11006943839737621,
+            -0.23632713573425396
+          ],
+          [
+            -0.39456231100629036,
+            -0.11006943839737621,
+            -0.23232713573425395
+          ],
+          [
+            -0.39456231100629036,
+            -0.11006943839737621,
+            -0.22832713573425395
+          ],
+          [
+            -0.39456231100629036,
+            -0.1060694383973762,
+            -0.23632713573425396
+          ],
+          [
+            -0.39456231100629036,
+            -0.1060694383973762,
+            -0.23232713573425395
+          ],
+          [
+            -0.39456231100629036,
+            -0.1060694383973762,
+            -0.22832713573425395
+          ],
+          [
+            -0.39624389620761985,
+            -0.11632206009642651,
+            -0.22790789657916505
+          ],
+          [
+            -0.39740310360695513,
+            -0.11319574924690136,
+            -0.2301175161567095
+          ],
+          [
+            -0.3979827073066227,
+            -0.11163259382213878,
+            -0.23122232594548173
+          ],
+          [
+            -0.39827250915645657,
+            -0.11085101610975749,
+            -0.23177473083986783
+          ],
+          [
+            -0.39885211285612415,
+            -0.10928786068499492,
+            -0.23287954062864008
+          ],
+          [
+            -0.399141914705958,
+            -0.10850628297261364,
+            -0.23343194552302618
+          ],
+          [
+            -0.3997215184056256,
+            -0.10694312754785106,
+            -0.2345367553117984
+          ],
+          [
+            -0.40088072580496087,
+            -0.1038168166983259,
+            -0.23674637488934286
+          ]
+        ],
+        "exact_values": [
+          0.36139435274832266,
+          0.35640808761376563,
+          0.35056662152640317,
+          0.3690256423146736,
+          0.3633934360561728,
+          0.3569129967822148,
+          0.3746315539434457,
+          0.36837945378029513,
+          0.3612875906814186,
+          0.3563572243034264,
+          0.3529300795877731,
+          0.3486348404892039,
+          0.36433351679223,
+          0.36027239477618067,
+          0.35535011283332196,
+          0.37028959631482394,
+          0.36562018648657013,
+          0.3600980543311214,
+          0.35290872428529363,
+          0.3510413186750547,
+          0.34829308080461985,
+          0.3611851562387427,
+          0.35869615027496593,
+          0.3553332118697162,
+          0.3674455245330013,
+          0.3643602376199476,
+          0.36040942226334605,
+          0.34311022727469376,
+          0.3519230347926714,
+          0.35615609035268725,
+          0.35822888483465476,
+          0.3622865337097174,
+          0.36427122339623264,
+          0.3681519831861578,
+          0.3755575812029436
+        ],
+        "exact_classes": [
+          1,
+          0,
+          0,
+          1,
+          1,
+          0,
+          1,
+          1,
+          1,
+          0,
+          0,
+          0,
+          1,
+          0,
+          0,
+          1,
+          1,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          0,
+          1,
+          1,
+          1,
+          0,
+          0,
+          0,
+          0,
+          1,
+          1,
+          1,
+          1
+        ],
+        "reliable_classification_samples": 34,
+        "ignored_near_level_samples": 1,
+        "backgrounds": {
+          "original": {
+            "center": {
+              "value": 0.32936481753344726,
+              "containing_tets": [
+                13813
+              ],
+              "vertex_minimum": [
+                0.1703172578315486
+              ],
+              "vertex_maximum": [
+                0.4999999999999998
+              ],
+              "strict_wall_bracket": true,
+              "contact_wall_bracket": true
+            },
+            "boundary": {
+              "search_radius": 0.04,
+              "candidate_tets": 76,
+              "surface_triangles": 67,
+              "lower_dimensional_contacts": 0,
+              "constant_level_tets": [],
+              "nearest_distance": 0.00616272627642246,
+              "distance_lower_bound": 0.00616272627642246,
+              "nearest_is_global_for_affine_representation": true,
+              "excludes_gate_ball": true,
+              "scope": "Piecewise-affine band and physical cap polygons; floating-point local enumeration, not the physical implicit boundary"
+            },
+            "neighborhood_mismatches": 17,
+            "false_material": 17,
+            "missing_material": 0,
+            "affine_values": [
+              0.35039434114062884,
+              0.33203471783419625,
+              0.31367509452776354,
+              0.35750626237845795,
+              0.34261965152938634,
+              0.32426002822295374,
+              0.3570455737111715,
+              0.3497315727672155,
+              0.33484496191814384,
+              0.33713950714468977,
+              0.31877988383825717,
+              0.3004202605318246,
+              0.34425142838251893,
+              0.32936481753344726,
+              0.31100519422701467,
+              0.3437907397152325,
+              0.33647673877127643,
+              0.3215901279222048,
+              0.32388467314875075,
+              0.30552504984231815,
+              0.29824381225387475,
+              0.3309965943865799,
+              0.3161099835375083,
+              0.3088287459490649,
+              0.3305359057192935,
+              0.3232219047753374,
+              0.31941367964425504,
+              0.28930475513632714,
+              0.30710864808543115,
+              0.31823673280943915,
+              0.32380077517144323,
+              0.33492885989545135,
+              0.3404929022574555,
+              0.34445892877411427,
+              0.35198043010966595
+            ],
+            "affine_classes": [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            "mismatch_indices": [
+              0,
+              3,
+              4,
+              6,
+              7,
+              8,
+              12,
+              15,
+              16,
+              21,
+              24,
+              25,
+              26,
+              31,
+              32,
+              33,
+              34
+            ]
+          },
+          "refined": {
+            "center": {
+              "value": 0.32936481753344726,
+              "containing_tets": [
+                15960
+              ],
+              "vertex_minimum": [
+                0.1703172578315486
+              ],
+              "vertex_maximum": [
+                0.4999999999999998
+              ],
+              "strict_wall_bracket": true,
+              "contact_wall_bracket": true
+            },
+            "boundary": {
+              "search_radius": 0.04,
+              "candidate_tets": 116,
+              "surface_triangles": 122,
+              "lower_dimensional_contacts": 0,
+              "constant_level_tets": [],
+              "nearest_distance": 0.005921414100535528,
+              "distance_lower_bound": 0.005921414100535528,
+              "nearest_is_global_for_affine_representation": true,
+              "excludes_gate_ball": true,
+              "scope": "Piecewise-affine band and physical cap polygons; floating-point local enumeration, not the physical implicit boundary"
+            },
+            "neighborhood_mismatches": 16,
+            "false_material": 16,
+            "missing_material": 0,
+            "affine_values": [
+              0.35039434114062884,
+              0.33203471783419625,
+              0.31367509452776354,
+              0.35861573540921626,
+              0.34261965152938634,
+              0.32426002822295374,
+              0.36168363187358826,
+              0.3508410457979737,
+              0.33484496191814384,
+              0.33713950714468977,
+              0.31877988383825717,
+              0.3004202605318246,
+              0.34536090141327724,
+              0.32936481753344726,
+              0.31100519422701467,
+              0.34842879787764924,
+              0.33758621180203474,
+              0.3215901279222048,
+              0.32388467314875075,
+              0.30552504984231815,
+              0.29824381225387475,
+              0.33210606741733817,
+              0.3161099835375083,
+              0.3088287459490649,
+              0.33517396388171017,
+              0.32433137780609567,
+              0.31941367964425504,
+              0.28930475513632714,
+              0.30710864808543115,
+              0.31823673280943915,
+              0.32380077517144323,
+              0.33492885989545135,
+              0.3404929022574555,
+              0.3467468878653446,
+              0.3589754603930265
+            ],
+            "affine_classes": [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              1,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            "mismatch_indices": [
+              0,
+              3,
+              4,
+              7,
+              8,
+              12,
+              15,
+              16,
+              21,
+              24,
+              25,
+              26,
+              31,
+              32,
+              33,
+              34
+            ]
+          },
+          "analytic-first-snap": {
+            "center": {
+              "value": 0.32807606813217793,
+              "containing_tets": [
+                15960
+              ],
+              "vertex_minimum": [
+                0.1703172578315486
+              ],
+              "vertex_maximum": [
+                0.4999999999999998
+              ],
+              "strict_wall_bracket": true,
+              "contact_wall_bracket": true
+            },
+            "boundary": {
+              "search_radius": 0.04,
+              "candidate_tets": 117,
+              "surface_triangles": 71,
+              "lower_dimensional_contacts": 46,
+              "constant_level_tets": [],
+              "nearest_distance": 0.005141895162100594,
+              "distance_lower_bound": 0.005141895162100594,
+              "nearest_is_global_for_affine_representation": true,
+              "excludes_gate_ball": true,
+              "scope": "Piecewise-affine band and physical cap polygons; floating-point local enumeration, not the physical implicit boundary"
+            },
+            "neighborhood_mismatches": 15,
+            "false_material": 15,
+            "missing_material": 0,
+            "affine_values": [
+              0.34942181602976935,
+              0.3309040805781318,
+              0.3123863451264942,
+              0.35984863757975455,
+              0.341330902128117,
+              0.32281316667647947,
+              0.3672048093929759,
+              0.3517577236781022,
+              0.3332399882264647,
+              0.3361669820338303,
+              0.3176492465821928,
+              0.31104904129898225,
+              0.34659380358381553,
+              0.32807606813217793,
+              0.32407631924161495,
+              0.3539499753970369,
+              0.3385028896821632,
+              0.3371035971842477,
+              0.32291214803789126,
+              0.3137114863620333,
+              0.31743681788925715,
+              0.3333389695878765,
+              0.326738764304666,
+              0.33046409583188985,
+              0.34084874923063346,
+              0.33988669004387945,
+              0.3434913737745226,
+              0.3078054892105472,
+              0.3140782384624692,
+              0.3172146130884302,
+              0.32252108452164285,
+              0.33363105174271307,
+              0.3391860353532482,
+              0.3502960025743183,
+              0.36534664472953765
+            ],
+            "affine_classes": [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              1,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              1
+            ],
+            "mismatch_indices": [
+              0,
+              3,
+              4,
+              7,
+              8,
+              12,
+              15,
+              16,
+              21,
+              24,
+              25,
+              26,
+              31,
+              32,
+              33
+            ]
+          }
+        }
+      },
+      "diagnosis": "refined affine geometry is already outside tolerance; root-clipping contribution remains unresolved"
+    },
+    {
+      "query_index": 2263,
+      "kind": "wall",
+      "probe": [
+        0.3720341467381696,
+        0.4158738365399874,
+        -0.24576610419102443
+      ],
+      "wall_level": 0.36027239477618084,
+      "field_residual_distance": 3.109739186184674e-17,
+      "locator_distance": 0.010666872220309384,
+      "locator_face": 7097,
+      "exact_patch_feasible_upper_bound": {
+        "foot": [
+          0.37304748905071455,
+          0.4133291467776088,
+          -0.2560180145796105
+        ],
+        "distance": 0.010611502025856052,
+        "barycentric": [
+          0.31050436201412135,
+          0.11590103568776662,
+          0.573594602298112
+        ]
+      },
+      "complete_surface_ball_exclusion": {
+        "excluded": true,
+        "lower_bound": 0.0031362977641370138,
+        "radius": 0.002,
+        "depth": 0,
+        "visited_boxes": 25344,
+        "unresolved_boxes": 0
+      },
+      "neighborhood": {
+        "queries": [
+          [
+            0.3680341467381696,
+            0.4118738365399874,
+            -0.24976610419102444
+          ],
+          [
+            0.3680341467381696,
+            0.4118738365399874,
+            -0.24576610419102443
+          ],
+          [
+            0.3680341467381696,
+            0.4118738365399874,
+            -0.24176610419102443
+          ],
+          [
+            0.3680341467381696,
+            0.4158738365399874,
+            -0.24976610419102444
+          ],
+          [
+            0.3680341467381696,
+            0.4158738365399874,
+            -0.24576610419102443
+          ],
+          [
+            0.3680341467381696,
+            0.4158738365399874,
+            -0.24176610419102443
+          ],
+          [
+            0.3680341467381696,
+            0.4198738365399874,
+            -0.24976610419102444
+          ],
+          [
+            0.3680341467381696,
+            0.4198738365399874,
+            -0.24576610419102443
+          ],
+          [
+            0.3680341467381696,
+            0.4198738365399874,
+            -0.24176610419102443
+          ],
+          [
+            0.3720341467381696,
+            0.4118738365399874,
+            -0.24976610419102444
+          ],
+          [
+            0.3720341467381696,
+            0.4118738365399874,
+            -0.24576610419102443
+          ],
+          [
+            0.3720341467381696,
+            0.4118738365399874,
+            -0.24176610419102443
+          ],
+          [
+            0.3720341467381696,
+            0.4158738365399874,
+            -0.24976610419102444
+          ],
+          [
+            0.3720341467381696,
+            0.4158738365399874,
+            -0.24576610419102443
+          ],
+          [
+            0.3720341467381696,
+            0.4158738365399874,
+            -0.24176610419102443
+          ],
+          [
+            0.3720341467381696,
+            0.4198738365399874,
+            -0.24976610419102444
+          ],
+          [
+            0.3720341467381696,
+            0.4198738365399874,
+            -0.24576610419102443
+          ],
+          [
+            0.3720341467381696,
+            0.4198738365399874,
+            -0.24176610419102443
+          ],
+          [
+            0.3760341467381696,
+            0.4118738365399874,
+            -0.24976610419102444
+          ],
+          [
+            0.3760341467381696,
+            0.4118738365399874,
+            -0.24576610419102443
+          ],
+          [
+            0.3760341467381696,
+            0.4118738365399874,
+            -0.24176610419102443
+          ],
+          [
+            0.3760341467381696,
+            0.4158738365399874,
+            -0.24976610419102444
+          ],
+          [
+            0.3760341467381696,
+            0.4158738365399874,
+            -0.24576610419102443
+          ],
+          [
+            0.3760341467381696,
+            0.4158738365399874,
+            -0.24176610419102443
+          ],
+          [
+            0.3760341467381696,
+            0.4198738365399874,
+            -0.24976610419102444
+          ],
+          [
+            0.3760341467381696,
+            0.4198738365399874,
+            -0.24576610419102443
+          ],
+          [
+            0.3760341467381696,
+            0.4198738365399874,
+            -0.24176610419102443
+          ],
+          [
+            0.371121892607438,
+            0.4187124805934604,
+            -0.23834250046112038
+          ],
+          [
+            0.3715780196728038,
+            0.4172931585667239,
+            -0.2420543023260724
+          ],
+          [
+            0.3718060832054867,
+            0.41658349755335566,
+            -0.24391020325854842
+          ],
+          [
+            0.37192011497182814,
+            0.4162286670466715,
+            -0.24483815372478643
+          ],
+          [
+            0.37214817850451104,
+            0.4155190060333033,
+            -0.24669405465726243
+          ],
+          [
+            0.3722622102708525,
+            0.4151641755266191,
+            -0.24762200512350044
+          ],
+          [
+            0.3724902738035354,
+            0.4144545145132509,
+            -0.24947790605597647
+          ],
+          [
+            0.3729464008689012,
+            0.4130351924865144,
+            -0.2531897079209285
+          ]
+        ],
+        "exact_values": [
+          0.3702359831937898,
+          0.3617515894013994,
+          0.3527821272775008,
+          0.36813307219489844,
+          0.36009651125717057,
+          0.3515894811431849,
+          0.36414626251730386,
+          0.3565397936898975,
+          0.3484788563788111,
+          0.36868416473422316,
+          0.36184734065593316,
+          0.35452261308062505,
+          0.36664946805116816,
+          0.3602723947761809,
+          0.35342200919156885,
+          0.36273184171180833,
+          0.35679627638838096,
+          0.3504033918157384,
+          0.3684600055467345,
+          0.36327487016179916,
+          0.3575989475336264,
+          0.36643912942108725,
+          0.361725377654875,
+          0.3565354220555904,
+          0.3625354892841953,
+          0.35827438819032553,
+          0.35355306887422183,
+          0.34471208133449993,
+          0.35280100349448473,
+          0.35661808995786937,
+          0.3584661094561691,
+          0.362035915454748,
+          0.36375564787044556,
+          0.3670596886209916,
+          0.3730980692805742
+        ],
+        "exact_classes": [
+          1,
+          1,
+          0,
+          1,
+          0,
+          0,
+          1,
+          0,
+          0,
+          1,
+          1,
+          0,
+          1,
+          1,
+          0,
+          1,
+          0,
+          0,
+          1,
+          1,
+          0,
+          1,
+          1,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          1,
+          1,
+          1,
+          1
+        ],
+        "reliable_classification_samples": 34,
+        "ignored_near_level_samples": 1,
+        "backgrounds": {
+          "original": {
+            "center": {
+              "value": 0.31018773955212764,
+              "containing_tets": [
+                15686
+              ],
+              "vertex_minimum": [
+                0.2548977895520794
+              ],
+              "vertex_maximum": [
+                0.44998811156820784
+              ],
+              "strict_wall_bracket": true,
+              "contact_wall_bracket": true
+            },
+            "boundary": {
+              "search_radius": 0.04,
+              "candidate_tets": 92,
+              "surface_triangles": 82,
+              "lower_dimensional_contacts": 0,
+              "constant_level_tets": [],
+              "nearest_distance": 0.011058130677002282,
+              "distance_lower_bound": 0.011058130677002282,
+              "nearest_is_global_for_affine_representation": true,
+              "excludes_gate_ball": true,
+              "scope": "Piecewise-affine band and physical cap polygons; floating-point local enumeration, not the physical implicit boundary"
+            },
+            "neighborhood_mismatches": 17,
+            "false_material": 17,
+            "missing_material": 0,
+            "affine_values": [
+              0.329229287836323,
+              0.31157172756221463,
+              0.30128846796564723,
+              0.33124721615683533,
+              0.31358965588272697,
+              0.30330639628615963,
+              0.3332651444773477,
+              0.3156075842032393,
+              0.3053243246066719,
+              0.31845307082818275,
+              0.30816981123161535,
+              0.3137742485746795,
+              0.32047099914869503,
+              0.31018773955212764,
+              0.3157921768951918,
+              0.3224889274692074,
+              0.31220566787264004,
+              0.3178101052157042,
+              0.3147091345325509,
+              0.32065559184064757,
+              0.32626002918371166,
+              0.31672706285306323,
+              0.3226735201611599,
+              0.32827795750422406,
+              0.3187449911735756,
+              0.32469144848167225,
+              0.3302958858247364,
+              0.31917351386596354,
+              0.3146806267090456,
+              0.3124341831305867,
+              0.31131096134135716,
+              0.30906451776289817,
+              0.31003368272491055,
+              0.31725392657523466,
+              0.33120885171744596
+            ],
+            "affine_classes": [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            "mismatch_indices": [
+              0,
+              1,
+              3,
+              6,
+              9,
+              10,
+              12,
+              15,
+              18,
+              19,
+              21,
+              22,
+              24,
+              31,
+              32,
+              33,
+              34
+            ]
+          },
+          "refined": {
+            "center": {
+              "value": 0.3108588016489544,
+              "containing_tets": [
+                18133
+              ],
+              "vertex_minimum": [
+                0.2548977895520794
+              ],
+              "vertex_maximum": [
+                0.36679345610017855
+              ],
+              "strict_wall_bracket": true,
+              "contact_wall_bracket": true
+            },
+            "boundary": {
+              "search_radius": 0.04,
+              "candidate_tets": 135,
+              "surface_triangles": 142,
+              "lower_dimensional_contacts": 0,
+              "constant_level_tets": [],
+              "nearest_distance": 0.008505498268299012,
+              "distance_lower_bound": 0.008505498268299012,
+              "nearest_is_global_for_affine_representation": true,
+              "excludes_gate_ball": true,
+              "scope": "Piecewise-affine band and physical cap polygons; floating-point local enumeration, not the physical implicit boundary"
+            },
+            "neighborhood_mismatches": 17,
+            "false_material": 17,
+            "missing_material": 0,
+            "affine_values": [
+              0.3413927153297319,
+              0.31650787973275246,
+              0.301959530062474,
+              0.3434106436502442,
+              0.3185258080532648,
+              0.3039774583829863,
+              0.3454285719707566,
+              0.32054373637377714,
+              0.3059953867034987,
+              0.3233892229987205,
+              0.30884087332844207,
+              0.31656215477374094,
+              0.3254071513192329,
+              0.3108588016489544,
+              0.31858008309425323,
+              0.3274250796397452,
+              0.31287672996946675,
+              0.3205980114147656,
+              0.3175965884321099,
+              0.323443498039709,
+              0.3311647794850079,
+              0.3196145167526222,
+              0.32546142636022135,
+              0.3331827078055202,
+              0.32163244507313454,
+              0.3274793546807337,
+              0.3352006361260325,
+              0.32294679899238166,
+              0.31707462780544693,
+              0.3139667147272006,
+              0.3124127581880775,
+              0.30930484510983125,
+              0.3106837668398702,
+              0.32084521795748716,
+              0.33435544251406846
+            ],
+            "affine_classes": [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            "mismatch_indices": [
+              0,
+              1,
+              3,
+              6,
+              9,
+              10,
+              12,
+              15,
+              18,
+              19,
+              21,
+              22,
+              24,
+              31,
+              32,
+              33,
+              34
+            ]
+          },
+          "analytic-first-snap": {
+            "center": {
+              "value": 0.3109495776246436,
+              "containing_tets": [
+                18133
+              ],
+              "vertex_minimum": [
+                0.2548977895520794
+              ],
+              "vertex_maximum": [
+                0.36027239477618084
+              ],
+              "strict_wall_bracket": false,
+              "contact_wall_bracket": true
+            },
+            "boundary": {
+              "search_radius": 0.04,
+              "candidate_tets": 138,
+              "surface_triangles": 76,
+              "lower_dimensional_contacts": 55,
+              "constant_level_tets": [],
+              "nearest_distance": 0.007906728022302653,
+              "distance_lower_bound": 0.007906728022302653,
+              "nearest_is_global_for_affine_representation": true,
+              "excludes_gate_ball": true,
+              "scope": "Piecewise-affine band and physical cap polygons; floating-point local enumeration, not the physical implicit boundary"
+            },
+            "neighborhood_mismatches": 17,
+            "false_material": 17,
+            "missing_material": 0,
+            "affine_values": [
+              0.34438826191461736,
+              0.3248393222910587,
+              0.3020503060381631,
+              0.3464061902351297,
+              0.3268572506115711,
+              0.30406823435867547,
+              0.3484241185556421,
+              0.32887517893208346,
+              0.3060861626791878,
+              0.3251900991251931,
+              0.3089316493041312,
+              0.31693928068585303,
+              0.32720802744570543,
+              0.3109495776246436,
+              0.31895720900636537,
+              0.3292259557662178,
+              0.3129675059451559,
+              0.3209751373268777,
+              0.31822937200729895,
+              0.32382062395182115,
+              0.33182825533354293,
+              0.32024730032781135,
+              0.32583855227233344,
+              0.3338461836540553,
+              0.3222652286483237,
+              0.3278564805928458,
+              0.33552035321645,
+              0.3231396014696049,
+              0.31739846934910493,
+              0.31417402348687423,
+              0.3125618005557589,
+              0.3093373546935283,
+              0.31178100579740897,
+              0.3236373827856836,
+              0.33435544251406846
+            ],
+            "affine_classes": [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            "mismatch_indices": [
+              0,
+              1,
+              3,
+              6,
+              9,
+              10,
+              12,
+              15,
+              18,
+              19,
+              21,
+              22,
+              24,
+              31,
+              32,
+              33,
+              34
+            ]
+          }
+        }
+      },
+      "diagnosis": "refined affine geometry is already outside tolerance; root-clipping contribution remains unresolved"
+    }
+  ]
+}

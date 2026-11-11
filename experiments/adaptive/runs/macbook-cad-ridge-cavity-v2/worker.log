@@ -1,0 +1,9 @@
+/Users/kmarchais/dev/meshers/.local-work/macbook-runtime/venv/lib/python3.12/site-packages/fedoo/core/base.py:80: UserWarning: WARNING: no fast direct sparse solver has been found. Consider installing pypardiso (Intel) or python-mumps (any platform) to improve computation performance
+  warnings.warn(
+controls: passed True]7717;result;{"name": "controls", "values": {"passed": true}, "at": "2026-11-11T01:30:26+01:00"}
+/Users/kmarchais/dev/meshers/experiments/adaptive/cad_ridge_cavity_control.py:154: DeprecationWarning: Call to deprecated method SetCells. (Use ImportLegacyFormat or SetData instead.) -- Deprecated since version 9.6.0.
+  faces.SetCells(len(triangles), numpy_to_vtkIdTypeArray(flat, deep=True))
+cavity: face 4,041, ridge_distance 0.001196]7717;result;{"name": "cavity", "values": {"face": 4041, "ridge_distance": 0.0011962760805716921}, "at": "2026-11-11T01:30:27+01:00"}
+split-order-0: locally_accepted False, minimum_q 0, minimum_jacobian -2.00e-08, rejection corner-quality-below-0.1; nonpositive-sampled-curved-Jacobian]7717;result;{"name": "split-order-0", "values": {"locally_accepted": false, "minimum_q": 0.0, "minimum_jacobian": -1.9958856534218006e-08, "rejection": "corner-quality-below-0.1; nonpositive-sampled-curved-Jacobian"}, "at": "2026-11-11T01:30:29+01:00"}
+split-order-1: locally_accepted False, minimum_q 0, minimum_jacobian -2.00e-08, rejection corner-quality-below-0.1; nonpositive-sampled-curved-Jacobian]7717;result;{"name": "split-order-1", "values": {"locally_accepted": false, "minimum_q": 0.0, "minimum_jacobian": -1.9958856534218006e-08, "rejection": "corner-quality-below-0.1; nonpositive-sampled-curved-Jacobian"}, "at": "2026-11-11T01:30:31+01:00"}
+global-audit: admitted False, witness_distance n/a]7717;result;{"name": "global-audit", "values": {"admitted": false, "witness_distance": null}, "at": "2026-11-11T01:30:31+01:00"}

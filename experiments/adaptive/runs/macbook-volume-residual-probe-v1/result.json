@@ -1,0 +1,4881 @@
+{
+  "inputs": {
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/volume_residual_probe.py": "1c3440218f52eaa3145e191e8e20c8e961aacb4320e24e7cb307cfe52fb44457",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/volume_fidelity_control.py": "fcb6ad90ac8a4922df5955a08d9f5546b947f68d76a989c4c76998fd544079c9",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/comparison_fixtures.py": "4fa77af6b3b4858eb7611045f46f6e4ca672c6c46ab28d7ee969e14b31e11b9b",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/microgen_workflow.py": "9f513dfd3e6e5a72a71a54f70c0c2cf7c7a1ebe7256886ee3feaf7d7ad7de161",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/scorecard.py": "8f26256c7df0e84c9f35cdd71bf4f95a74e072d45469002b213c5dcd4f1bab2a",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/box_projection.py": "59589b1996b3a3782f1b7f5e5ff3c7ab303d4158ef50a233515dc5369bddaf05",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/g3-spinodoid-compiled32-v1/fourier-coefficients.json": "e9ee2b6c70dcf771ab9fdb011051eb57973d2e15cf479e904bf5d8b40e3d779a",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-native-face-fit-nine-v1/spinodoid-repeat-0-fit/result.json": "5b5fe9f601a39c6e577898d12057a03cf7bc727fcc0d1aa73065e40df034d56c",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-native-face-fit-nine-v1/spinodoid-repeat-0-fit/mesh.npz": "392e2e7b39aed7044f6652ecdc951de42a431a617b50813ead1cb70cc4c26e23",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-native-face-fit-nine-v1/spinodoid-repeat-0-fit/spinodoid-samples.npz": "1f5f91f1ebc3e4e76dc7ddfc1e7ea7093595735684fbe41f1f7d85356138442c",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-native-face-fit-nine-v1/spinodoid-repeat-0-fit/spinodoid-specimen.json": "6140bf66acc68303bc18767a3632e24a068181201eba350ce32217dc50a67eee",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-volume-bias-seven-v1/spinodoid/result.json": "3920cad963bc67dc35a19a0a5f5c064b1fa16968080030ea50b2ad1fed39fe18",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-volume-bias-seven-v1/spinodoid/mesh.npz": "42409fab9da93b32fb4c94308b7e8b356da6f3694c792efc0f594f127fcb8857",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-volume-bias-seven-v1/spinodoid/spinodoid-samples.npz": "1f5f91f1ebc3e4e76dc7ddfc1e7ea7093595735684fbe41f1f7d85356138442c",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-volume-bias-seven-v1/spinodoid/spinodoid-specimen.json": "6140bf66acc68303bc18767a3632e24a068181201eba350ce32217dc50a67eee",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-volume-facewise-pilot-v1/spinodoid/result.json": "b9e8c3337568c917d8f0493d70fd4fe0492af66ee016eba4ca9c29b62a842638",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-volume-facewise-pilot-v1/spinodoid/mesh.npz": "a2cfc10ca72e5541149d3cf74abd21aff7cd3588aedc9f757f8252af22d35278",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-volume-facewise-pilot-v1/spinodoid/spinodoid-samples.npz": "1f5f91f1ebc3e4e76dc7ddfc1e7ea7093595735684fbe41f1f7d85356138442c",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-volume-facewise-pilot-v1/spinodoid/spinodoid-specimen.json": "6140bf66acc68303bc18767a3632e24a068181201eba350ce32217dc50a67eee"
+  },
+  "complete": true,
+  "controls": {
+    "slanted_plane_physical_residual": [
+      0.0008944271909990098,
+      0.0008944271909990222
+    ],
+    "slanted_plane_cap_residual": [
+      0.000999999999998987,
+      0.0008944271909990222
+    ],
+    "slanted_plane_projected_distance": [
+      0.0009999999999999731,
+      0.0008944271909999105
+    ],
+    "cap_vs_interior_distinction_passed": true
+  },
+  "scans": {
+    "baseline": {
+      "degree6": {
+        "metrics": {
+          "physical": {
+            "maximum": 0.00028981554930232977,
+            "categories": {
+              "cap": {
+                "maximum": 0.00015647911188247773,
+                "wall_index": 1572,
+                "surface_face": 2468,
+                "probe_index": 7,
+                "barycentric": [
+                  0.16666666666666666,
+                  0.0,
+                  0.8333333333333334
+                ],
+                "point": [
+                  -0.37687158782415825,
+                  0.5000000000000001,
+                  -0.327836253887384
+                ]
+              },
+              "interior": {
+                "maximum": 0.00028981554930232977,
+                "wall_index": 5580,
+                "surface_face": 7581,
+                "probe_index": 1,
+                "barycentric": [
+                  0.0,
+                  0.16666666666666666,
+                  0.8333333333333334
+                ],
+                "point": [
+                  0.472684526414741,
+                  0.16438824402123592,
+                  0.19401321919152426
+                ]
+              }
+            },
+            "worst": [
+              {
+                "wall_index": 5580,
+                "surface_face": 7581,
+                "value": 0.00028981554930232977,
+                "probe_index": 1,
+                "barycentric": [
+                  0.0,
+                  0.16666666666666666,
+                  0.8333333333333334
+                ]
+              },
+              {
+                "wall_index": 5585,
+                "surface_face": 7586,
+                "value": 0.00028981554930232977,
+                "probe_index": 7,
+                "barycentric": [
+                  0.16666666666666666,
+                  0.0,
+                  0.8333333333333334
+                ]
+              },
+              {
+                "wall_index": 6501,
+                "surface_face": 8717,
+                "value": 0.00026771285888443436,
+                "probe_index": 26,
+                "barycentric": [
+                  0.8333333333333334,
+                  0.16666666666666666,
+                  0.0
+                ]
+              },
+              {
+                "wall_index": 6502,
+                "surface_face": 8718,
+                "value": 0.00026771285888443436,
+                "probe_index": 25,
+                "barycentric": [
+                  0.8333333333333334,
+                  0.0,
+                  0.16666666666666666
+                ]
+              }
+            ]
+          },
+          "cap_constrained": {
+            "maximum": 0.00028981554930232977,
+            "categories": {
+              "cap": {
+                "maximum": 0.00023102260562316582,
+                "wall_index": 3586,
+                "surface_face": 4962,
+                "probe_index": 12,
+                "barycentric": [
+                  0.16666666666666666,
+                  0.8333333333333334,
+                  0.0
+                ],
+                "point": [
+                  -0.1683494905101467,
+                  0.5000000000000001,
+                  -0.0480314530624904
+                ]
+              },
+              "interior": {
+                "maximum": 0.00028981554930232977,
+                "wall_index": 5580,
+                "surface_face": 7581,
+                "probe_index": 1,
+                "barycentric": [
+                  0.0,
+                  0.16666666666666666,
+                  0.8333333333333334
+                ],
+                "point": [
+                  0.472684526414741,
+                  0.16438824402123592,
+                  0.19401321919152426
+                ]
+              }
+            },
+            "worst": [
+              {
+                "wall_index": 5580,
+                "surface_face": 7581,
+                "value": 0.00028981554930232977,
+                "probe_index": 1,
+                "barycentric": [
+                  0.0,
+                  0.16666666666666666,
+                  0.8333333333333334
+                ]
+              },
+              {
+                "wall_index": 5585,
+                "surface_face": 7586,
+                "value": 0.00028981554930232977,
+                "probe_index": 7,
+                "barycentric": [
+                  0.16666666666666666,
+                  0.0,
+                  0.8333333333333334
+                ]
+              },
+              {
+                "wall_index": 6502,
+                "surface_face": 8718,
+                "value": 0.00026771285888443436,
+                "probe_index": 25,
+                "barycentric": [
+                  0.8333333333333334,
+                  0.0,
+                  0.16666666666666666
+                ]
+              },
+              {
+                "wall_index": 6501,
+                "surface_face": 8717,
+                "value": 0.00026771285888443436,
+                "probe_index": 26,
+                "barycentric": [
+                  0.8333333333333334,
+                  0.16666666666666666,
+                  0.0
+                ]
+              }
+            ]
+          }
+        },
+        "projection_failures": 0,
+        "projection_fallbacks": 0
+      },
+      "gauss6": {
+        "metrics": {
+          "physical": {
+            "maximum": 0.00028054826434327967,
+            "categories": {
+              "cap": null,
+              "interior": {
+                "maximum": 0.00028054826434327967,
+                "wall_index": 5585,
+                "surface_face": 7586,
+                "probe_index": 4,
+                "barycentric": [
+                  0.16367563308803146,
+                  0.033765242898423975,
+                  0.8025591240135446
+                ],
+                "point": [
+                  0.4720935964952729,
+                  0.16430720185234643,
+                  0.19541944340575076
+                ]
+              }
+            },
+            "worst": [
+              {
+                "wall_index": 5585,
+                "surface_face": 7586,
+                "value": 0.00028054826434327967,
+                "probe_index": 4,
+                "barycentric": [
+                  0.16367563308803146,
+                  0.033765242898423975,
+                  0.8025591240135446
+                ]
+              },
+              {
+                "wall_index": 5580,
+                "surface_face": 7581,
+                "value": 0.000279104062888896,
+                "probe_index": 29,
+                "barycentric": [
+                  0.005719673678836329,
+                  0.8306046932331322,
+                  0.16367563308803143
+                ]
+              },
+              {
+                "wall_index": 6501,
+                "surface_face": 8717,
+                "value": 0.00026240935257547263,
+                "probe_index": 24,
+                "barycentric": [
+                  0.16367563308803143,
+                  0.8306046932331322,
+                  0.005719673678836332
+                ]
+              },
+              {
+                "wall_index": 6502,
+                "surface_face": 8718,
+                "value": 0.0002512230795428999,
+                "probe_index": 4,
+                "barycentric": [
+                  0.16367563308803146,
+                  0.033765242898423975,
+                  0.8025591240135446
+                ]
+              }
+            ]
+          },
+          "cap_constrained": {
+            "maximum": 0.00028054826434327967,
+            "categories": {
+              "cap": null,
+              "interior": {
+                "maximum": 0.00028054826434327967,
+                "wall_index": 5585,
+                "surface_face": 7586,
+                "probe_index": 4,
+                "barycentric": [
+                  0.16367563308803146,
+                  0.033765242898423975,
+                  0.8025591240135446
+                ],
+                "point": [
+                  0.4720935964952729,
+                  0.16430720185234643,
+                  0.19541944340575076
+                ]
+              }
+            },
+            "worst": [
+              {
+                "wall_index": 5585,
+                "surface_face": 7586,
+                "value": 0.00028054826434327967,
+                "probe_index": 4,
+                "barycentric": [
+                  0.16367563308803146,
+                  0.033765242898423975,
+                  0.8025591240135446
+                ]
+              },
+              {
+                "wall_index": 5580,
+                "surface_face": 7581,
+                "value": 0.000279104062888896,
+                "probe_index": 29,
+                "barycentric": [
+                  0.005719673678836329,
+                  0.8306046932331322,
+                  0.16367563308803143
+                ]
+              },
+              {
+                "wall_index": 6501,
+                "surface_face": 8717,
+                "value": 0.00026240935257547263,
+                "probe_index": 24,
+                "barycentric": [
+                  0.16367563308803143,
+                  0.8306046932331322,
+                  0.005719673678836332
+                ]
+              },
+              {
+                "wall_index": 6502,
+                "surface_face": 8718,
+                "value": 0.0002512230795428999,
+                "probe_index": 4,
+                "barycentric": [
+                  0.16367563308803146,
+                  0.033765242898423975,
+                  0.8025591240135446
+                ]
+              }
+            ]
+          }
+        },
+        "projection_failures": 0,
+        "projection_fallbacks": 0
+      },
+      "gauss8": {
+        "metrics": {
+          "physical": {
+            "maximum": 0.00029539271308711156,
+            "categories": {
+              "cap": null,
+              "interior": {
+                "maximum": 0.00029539271308711156,
+                "wall_index": 5580,
+                "surface_face": 7581,
+                "probe_index": 47,
+                "barycentric": [
+                  0.004710294022372691,
+                  0.7627662049581645,
+                  0.2325235010194628
+                ],
+                "point": [
+                  0.4480460934161685,
+                  0.19684307465539116,
+                  0.19868690096491198
+                ]
+              }
+            },
+            "worst": [
+              {
+                "wall_index": 5580,
+                "surface_face": 7581,
+                "value": 0.00029539271308711156,
+                "probe_index": 47,
+                "barycentric": [
+                  0.004710294022372691,
+                  0.7627662049581645,
+                  0.2325235010194628
+                ]
+              },
+              {
+                "wall_index": 5585,
+                "surface_face": 7586,
+                "value": 0.0002893073235430848,
+                "probe_index": 2,
+                "barycentric": [
+                  0.7476214272293052,
+                  0.019855071751231912,
+                  0.2325235010194628
+                ]
+              },
+              {
+                "wall_index": 6501,
+                "surface_face": 8717,
+                "value": 0.00027260398400919575,
+                "probe_index": 40,
+                "barycentric": [
+                  0.2325235010194628,
+                  0.7627662049581645,
+                  0.004710294022372689
+                ]
+              },
+              {
+                "wall_index": 6502,
+                "surface_face": 8718,
+                "value": 0.00026427109050479783,
+                "probe_index": 5,
+                "barycentric": [
+                  0.23252350101946284,
+                  0.019855071751231912,
+                  0.7476214272293052
+                ]
+              }
+            ]
+          },
+          "cap_constrained": {
+            "maximum": 0.00029539271308711156,
+            "categories": {
+              "cap": null,
+              "interior": {
+                "maximum": 0.00029539271308711156,
+                "wall_index": 5580,
+                "surface_face": 7581,
+                "probe_index": 47,
+                "barycentric": [
+                  0.004710294022372691,
+                  0.7627662049581645,
+                  0.2325235010194628
+                ],
+                "point": [
+                  0.4480460934161685,
+                  0.19684307465539116,
+                  0.19868690096491198
+                ]
+              }
+            },
+            "worst": [
+              {
+                "wall_index": 5580,
+                "surface_face": 7581,
+                "value": 0.00029539271308711156,
+                "probe_index": 47,
+                "barycentric": [
+                  0.004710294022372691,
+                  0.7627662049581645,
+                  0.2325235010194628
+                ]
+              },
+              {
+                "wall_index": 5585,
+                "surface_face": 7586,
+                "value": 0.0002893073235430848,
+                "probe_index": 2,
+                "barycentric": [
+                  0.7476214272293052,
+                  0.019855071751231912,
+                  0.2325235010194628
+                ]
+              },
+              {
+                "wall_index": 6501,
+                "surface_face": 8717,
+                "value": 0.00027260398400919575,
+                "probe_index": 40,
+                "barycentric": [
+                  0.2325235010194628,
+                  0.7627662049581645,
+                  0.004710294022372689
+                ]
+              },
+              {
+                "wall_index": 6502,
+                "surface_face": 8718,
+                "value": 0.00026427109050479783,
+                "probe_index": 5,
+                "barycentric": [
+                  0.23252350101946284,
+                  0.019855071751231912,
+                  0.7476214272293052
+                ]
+              }
+            ]
+          }
+        },
+        "projection_failures": 0,
+        "projection_fallbacks": 0
+      },
+      "standard": {
+        "metrics": {
+          "physical": {
+            "maximum": 0.0002944774581879404,
+            "categories": {
+              "cap": {
+                "maximum": 0.00015194559272534568,
+                "wall_index": 1205,
+                "surface_face": 2049,
+                "probe_index": 10,
+                "barycentric": [
+                  0.25,
+                  0.75,
+                  0.0
+                ],
+                "point": [
+                  -0.380635104528005,
+                  -0.5,
+                  -0.3282883547361764
+                ]
+              },
+              "interior": {
+                "maximum": 0.0002944774581879404,
+                "wall_index": 5585,
+                "surface_face": 7586,
+                "probe_index": 12,
+                "barycentric": [
+                  0.75,
+                  0.0,
+                  0.25
+                ],
+                "point": [
+                  0.44857511316159393,
+                  0.1960185537597354,
+                  0.1986786215721994
+                ]
+              }
+            },
+            "worst": [
+              {
+                "wall_index": 5585,
+                "surface_face": 7586,
+                "value": 0.0002944774581879404,
+                "probe_index": 12,
+                "barycentric": [
+                  0.75,
+                  0.0,
+                  0.25
+                ]
+              },
+              {
+                "wall_index": 5580,
+                "surface_face": 7581,
+                "value": 0.00028292742187233593,
+                "probe_index": 11,
+                "barycentric": [
+                  0.0,
+                  0.25,
+                  0.75
+                ]
+              },
+              {
+                "wall_index": 6502,
+                "surface_face": 8718,
+                "value": 0.00027343099343092754,
+                "probe_index": 12,
+                "barycentric": [
+                  0.75,
+                  0.0,
+                  0.25
+                ]
+              },
+              {
+                "wall_index": 6501,
+                "surface_face": 8717,
+                "value": 0.00027065643950692156,
+                "probe_index": 10,
+                "barycentric": [
+                  0.25,
+                  0.75,
+                  0.0
+                ]
+              }
+            ]
+          },
+          "cap_constrained": {
+            "maximum": 0.0002944774581879404,
+            "categories": {
+              "cap": {
+                "maximum": 0.00021735437137812414,
+                "wall_index": 3586,
+                "surface_face": 4962,
+                "probe_index": 10,
+                "barycentric": [
+                  0.25,
+                  0.75,
+                  0.0
+                ],
+                "point": [
+                  -0.16966866884442772,
+                  0.5,
+                  -0.0512343445691451
+                ]
+              },
+              "interior": {
+                "maximum": 0.0002944774581879404,
+                "wall_index": 5585,
+                "surface_face": 7586,
+                "probe_index": 12,
+                "barycentric": [
+                  0.75,
+                  0.0,
+                  0.25
+                ],
+                "point": [
+                  0.44857511316159393,
+                  0.1960185537597354,
+                  0.1986786215721994
+                ]
+              }
+            },
+            "worst": [
+              {
+                "wall_index": 5585,
+                "surface_face": 7586,
+                "value": 0.0002944774581879404,
+                "probe_index": 12,
+                "barycentric": [
+                  0.75,
+                  0.0,
+                  0.25
+                ]
+              },
+              {
+                "wall_index": 5580,
+                "surface_face": 7581,
+                "value": 0.00028292742187233593,
+                "probe_index": 11,
+                "barycentric": [
+                  0.0,
+                  0.25,
+                  0.75
+                ]
+              },
+              {
+                "wall_index": 6502,
+                "surface_face": 8718,
+                "value": 0.00027343099343092754,
+                "probe_index": 12,
+                "barycentric": [
+                  0.75,
+                  0.0,
+                  0.25
+                ]
+              },
+              {
+                "wall_index": 6501,
+                "surface_face": 8717,
+                "value": 0.00027065643950692156,
+                "probe_index": 10,
+                "barycentric": [
+                  0.25,
+                  0.75,
+                  0.0
+                ]
+              }
+            ]
+          },
+          "projected": {
+            "maximum": 0.0002941483288309411,
+            "categories": {
+              "cap": {
+                "maximum": 0.000217601050598998,
+                "wall_index": 3586,
+                "surface_face": 4962,
+                "probe_index": 10,
+                "barycentric": [
+                  0.25,
+                  0.75,
+                  0.0
+                ],
+                "point": [
+                  -0.16966866884442772,
+                  0.5,
+                  -0.0512343445691451
+                ]
+              },
+              "interior": {
+                "maximum": 0.0002941483288309411,
+                "wall_index": 5585,
+                "surface_face": 7586,
+                "probe_index": 12,
+                "barycentric": [
+                  0.75,
+                  0.0,
+                  0.25
+                ],
+                "point": [
+                  0.44857511316159393,
+                  0.1960185537597354,
+                  0.1986786215721994
+                ]
+              }
+            },
+            "worst": [
+              {
+                "wall_index": 5585,
+                "surface_face": 7586,
+                "value": 0.0002941483288309411,
+                "probe_index": 12,
+                "barycentric": [
+                  0.75,
+                  0.0,
+                  0.25
+                ]
+              },
+              {
+                "wall_index": 5580,
+                "surface_face": 7581,
+                "value": 0.0002833450929199093,
+                "probe_index": 11,
+                "barycentric": [
+                  0.0,
+                  0.25,
+                  0.75
+                ]
+              },
+              {
+                "wall_index": 6502,
+                "surface_face": 8718,
+                "value": 0.0002734701388369677,
+                "probe_index": 12,
+                "barycentric": [
+                  0.75,
+                  0.0,
+                  0.25
+                ]
+              },
+              {
+                "wall_index": 6501,
+                "surface_face": 8717,
+                "value": 0.0002706567618375245,
+                "probe_index": 10,
+                "barycentric": [
+                  0.25,
+                  0.75,
+                  0.0
+                ]
+              }
+            ]
+          }
+        },
+        "projection_failures": 0,
+        "projection_fallbacks": 0
+      },
+      "dense13": {
+        "metrics": {
+          "physical": {
+            "maximum": 0.00029771823244088304,
+            "categories": {
+              "cap": {
+                "maximum": 0.00015660614004683567,
+                "wall_index": 1205,
+                "surface_face": 2049,
+                "probe_index": 53,
+                "barycentric": [
+                  0.23076923076923078,
+                  0.7692307692307693,
+                  0.0
+                ],
+                "point": [
+                  -0.3797688045541793,
+                  -0.5,
+                  -0.3281745152093091
+                ]
+              },
+              "interior": {
+                "maximum": 0.00029771823244088304,
+                "wall_index": 5580,
+                "surface_face": 7581,
+                "probe_index": 12,
+                "barycentric": [
+                  0.0,
+                  0.7692307692307693,
+                  0.23076923076923078
+                ],
+                "point": [
+                  0.44782103203641577,
+                  0.19708823752505183,
+                  0.19884981224915613
+                ]
+              }
+            },
+            "worst": [
+              {
+                "wall_index": 5580,
+                "surface_face": 7581,
+                "value": 0.00029771823244088304,
+                "probe_index": 12,
+                "barycentric": [
+                  0.0,
+                  0.7692307692307693,
+                  0.23076923076923078
+                ]
+              },
+              {
+                "wall_index": 5585,
+                "surface_face": 7586,
+                "value": 0.00029771823244088304,
+                "probe_index": 105,
+                "barycentric": [
+                  0.7692307692307693,
+                  0.0,
+                  0.23076923076923078
+                ]
+              },
+              {
+                "wall_index": 6502,
+                "surface_face": 8718,
+                "value": 0.0002781862422588065,
+                "probe_index": 105,
+                "barycentric": [
+                  0.7692307692307693,
+                  0.0,
+                  0.23076923076923078
+                ]
+              },
+              {
+                "wall_index": 6501,
+                "surface_face": 8717,
+                "value": 0.0002781862422588065,
+                "probe_index": 108,
+                "barycentric": [
+                  0.7692307692307693,
+                  0.23076923076923078,
+                  0.0
+                ]
+              }
+            ]
+          },
+          "cap_constrained": {
+            "maximum": 0.00029771823244088304,
+            "categories": {
+              "cap": {
+                "maximum": 0.0002270169951151468,
+                "wall_index": 3257,
+                "surface_face": 4558,
+                "probe_index": 29,
+                "barycentric": [
+                  0.15384615384615385,
+                  0.0,
+                  0.8461538461538461
+                ],
+                "point": [
+                  -0.16815568861436994,
+                  -0.5,
+                  -0.04753358357783914
+                ]
+              },
+              "interior": {
+                "maximum": 0.00029771823244088304,
+                "wall_index": 5580,
+                "surface_face": 7581,
+                "probe_index": 12,
+                "barycentric": [
+                  0.0,
+                  0.7692307692307693,
+                  0.23076923076923078
+                ],
+                "point": [
+                  0.44782103203641577,
+                  0.19708823752505183,
+                  0.19884981224915613
+                ]
+              }
+            },
+            "worst": [
+              {
+                "wall_index": 5585,
+                "surface_face": 7586,
+                "value": 0.00029771823244088304,
+                "probe_index": 105,
+                "barycentric": [
+                  0.7692307692307693,
+                  0.0,
+                  0.23076923076923078
+                ]
+              },
+              {
+                "wall_index": 5580,
+                "surface_face": 7581,
+                "value": 0.00029771823244088304,
+                "probe_index": 12,
+                "barycentric": [
+                  0.0,
+                  0.7692307692307693,
+                  0.23076923076923078
+                ]
+              },
+              {
+                "wall_index": 6502,
+                "surface_face": 8718,
+                "value": 0.0002781862422588065,
+                "probe_index": 105,
+                "barycentric": [
+                  0.7692307692307693,
+                  0.0,
+                  0.23076923076923078
+                ]
+              },
+              {
+                "wall_index": 6501,
+                "surface_face": 8717,
+                "value": 0.0002781862422588065,
+                "probe_index": 108,
+                "barycentric": [
+                  0.7692307692307693,
+                  0.23076923076923078,
+                  0.0
+                ]
+              }
+            ]
+          },
+          "projected": {
+            "maximum": 0.00029738547681597716,
+            "categories": {
+              "cap": {
+                "maximum": 0.00022735382193526073,
+                "wall_index": 3257,
+                "surface_face": 4558,
+                "probe_index": 29,
+                "barycentric": [
+                  0.15384615384615385,
+                  0.0,
+                  0.8461538461538461
+                ],
+                "point": [
+                  -0.16815568861436994,
+                  -0.5,
+                  -0.04753358357783914
+                ]
+              },
+              "interior": {
+                "maximum": 0.00029738547681597716,
+                "wall_index": 5580,
+                "surface_face": 7581,
+                "probe_index": 12,
+                "barycentric": [
+                  0.0,
+                  0.7692307692307693,
+                  0.23076923076923078
+                ],
+                "point": [
+                  0.44782103203641577,
+                  0.19708823752505183,
+                  0.19884981224915613
+                ]
+              }
+            },
+            "worst": [
+              {
+                "wall_index": 5580,
+                "surface_face": 7581,
+                "value": 0.00029738547681597716,
+                "probe_index": 12,
+                "barycentric": [
+                  0.0,
+                  0.7692307692307693,
+                  0.23076923076923078
+                ]
+              },
+              {
+                "wall_index": 5585,
+                "surface_face": 7586,
+                "value": 0.00029738547681597716,
+                "probe_index": 105,
+                "barycentric": [
+                  0.7692307692307693,
+                  0.0,
+                  0.23076923076923078
+                ]
+              },
+              {
+                "wall_index": 6502,
+                "surface_face": 8718,
+                "value": 0.0002782280710119829,
+                "probe_index": 105,
+                "barycentric": [
+                  0.7692307692307693,
+                  0.0,
+                  0.23076923076923078
+                ]
+              },
+              {
+                "wall_index": 6501,
+                "surface_face": 8717,
+                "value": 0.0002782280710119829,
+                "probe_index": 108,
+                "barycentric": [
+                  0.7692307692307693,
+                  0.23076923076923078,
+                  0.0
+                ]
+              }
+            ]
+          }
+        },
+        "projection_failures": 0,
+        "projection_fallbacks": 0
+      }
+    },
+    "global": {
+      "degree6": {
+        "metrics": {
+          "physical": {
+            "maximum": 0.0002898074487481068,
+            "categories": {
+              "cap": {
+                "maximum": 0.00015648715487763464,
+                "wall_index": 1205,
+                "surface_face": 2049,
+                "probe_index": 12,
+                "barycentric": [
+                  0.16666666666666666,
+                  0.8333333333333334,
+                  0.0
+                ],
+                "point": [
+                  -0.376871585304166,
+                  -0.5000000000000001,
+                  -0.3278362639961578
+                ]
+              },
+              "interior": {
+                "maximum": 0.0002898074487481068,
+                "wall_index": 5580,
+                "surface_face": 7581,
+                "probe_index": 1,
+                "barycentric": [
+                  0.0,
+                  0.16666666666666666,
+                  0.8333333333333334
+                ],
+                "point": [
+                  0.4726845199851339,
+                  0.16438823980596615,
+                  0.19401321649469505
+                ]
+              }
+            },
+            "worst": [
+              {
+                "wall_index": 5585,
+                "surface_face": 7586,
+                "value": 0.0002898074487481068,
+                "probe_index": 7,
+                "barycentric": [
+                  0.16666666666666666,
+                  0.0,
+                  0.8333333333333334
+                ]
+              },
+              {
+                "wall_index": 5580,
+                "surface_face": 7581,
+                "value": 0.0002898074487481068,
+                "probe_index": 1,
+                "barycentric": [
+                  0.0,
+                  0.16666666666666666,
+                  0.8333333333333334
+                ]
+              },
+              {
+                "wall_index": 6501,
+                "surface_face": 8717,
+                "value": 0.0002677047147260001,
+                "probe_index": 26,
+                "barycentric": [
+                  0.8333333333333334,
+                  0.16666666666666666,
+                  0.0
+                ]
+              },
+              {
+                "wall_index": 6502,
+                "surface_face": 8718,
+                "value": 0.0002677047147260001,
+                "probe_index": 25,
+                "barycentric": [
+                  0.8333333333333334,
+                  0.0,
+                  0.16666666666666666
+                ]
+              }
+            ]
+          },
+          "cap_constrained": {
+            "maximum": 0.0002898074487481068,
+            "categories": {
+              "cap": {
+                "maximum": 0.00023103778020226596,
+                "wall_index": 3586,
+                "surface_face": 4962,
+                "probe_index": 12,
+                "barycentric": [
+                  0.16666666666666666,
+                  0.8333333333333334,
+                  0.0
+                ],
+                "point": [
+                  -0.16834950376779056,
+                  0.5000000000000001,
+                  -0.048031445143251215
+                ]
+              },
+              "interior": {
+                "maximum": 0.0002898074487481068,
+                "wall_index": 5580,
+                "surface_face": 7581,
+                "probe_index": 1,
+                "barycentric": [
+                  0.0,
+                  0.16666666666666666,
+                  0.8333333333333334
+                ],
+                "point": [
+                  0.4726845199851339,
+                  0.16438823980596615,
+                  0.19401321649469505
+                ]
+              }
+            },
+            "worst": [
+              {
+                "wall_index": 5585,
+                "surface_face": 7586,
+                "value": 0.0002898074487481068,
+                "probe_index": 7,
+                "barycentric": [
+                  0.16666666666666666,
+                  0.0,
+                  0.8333333333333334
+                ]
+              },
+              {
+                "wall_index": 5580,
+                "surface_face": 7581,
+                "value": 0.0002898074487481068,
+                "probe_index": 1,
+                "barycentric": [
+                  0.0,
+                  0.16666666666666666,
+                  0.8333333333333334
+                ]
+              },
+              {
+                "wall_index": 6502,
+                "surface_face": 8718,
+                "value": 0.0002677047147260001,
+                "probe_index": 25,
+                "barycentric": [
+                  0.8333333333333334,
+                  0.0,
+                  0.16666666666666666
+                ]
+              },
+              {
+                "wall_index": 6501,
+                "surface_face": 8717,
+                "value": 0.0002677047147260001,
+                "probe_index": 26,
+                "barycentric": [
+                  0.8333333333333334,
+                  0.16666666666666666,
+                  0.0
+                ]
+              }
+            ]
+          }
+        },
+        "projection_failures": 0,
+        "projection_fallbacks": 0
+      },
+      "gauss6": {
+        "metrics": {
+          "physical": {
+            "maximum": 0.00028053994336521115,
+            "categories": {
+              "cap": null,
+              "interior": {
+                "maximum": 0.00028053994336521115,
+                "wall_index": 5585,
+                "surface_face": 7586,
+                "probe_index": 1,
+                "barycentric": [
+                  0.8025591240135446,
+                  0.033765242898423975,
+                  0.16367563308803143
+                ],
+                "point": [
+                  0.44586788882868633,
+                  0.19907743321009697,
+                  0.2006082661996123
+                ]
+              }
+            },
+            "worst": [
+              {
+                "wall_index": 5585,
+                "surface_face": 7586,
+                "value": 0.00028053994336521115,
+                "probe_index": 1,
+                "barycentric": [
+                  0.8025591240135446,
+                  0.033765242898423975,
+                  0.16367563308803143
+                ]
+              },
+              {
+                "wall_index": 5580,
+                "surface_face": 7581,
+                "value": 0.0002791123870033125,
+                "probe_index": 29,
+                "barycentric": [
+                  0.005719673678836329,
+                  0.8306046932331322,
+                  0.16367563308803143
+                ]
+              },
+              {
+                "wall_index": 6501,
+                "surface_face": 8717,
+                "value": 0.0002624176394504784,
+                "probe_index": 24,
+                "barycentric": [
+                  0.16367563308803143,
+                  0.8306046932331322,
+                  0.005719673678836332
+                ]
+              },
+              {
+                "wall_index": 6502,
+                "surface_face": 8718,
+                "value": 0.00025123267880408846,
+                "probe_index": 4,
+                "barycentric": [
+                  0.16367563308803146,
+                  0.033765242898423975,
+                  0.8025591240135446
+                ]
+              }
+            ]
+          },
+          "cap_constrained": {
+            "maximum": 0.00028053994336521115,
+            "categories": {
+              "cap": null,
+              "interior": {
+                "maximum": 0.00028053994336521115,
+                "wall_index": 5585,
+                "surface_face": 7586,
+                "probe_index": 1,
+                "barycentric": [
+                  0.8025591240135446,
+                  0.033765242898423975,
+                  0.16367563308803143
+                ],
+                "point": [
+                  0.44586788882868633,
+                  0.19907743321009697,
+                  0.2006082661996123
+                ]
+              }
+            },
+            "worst": [
+              {
+                "wall_index": 5585,
+                "surface_face": 7586,
+                "value": 0.00028053994336521115,
+                "probe_index": 1,
+                "barycentric": [
+                  0.8025591240135446,
+                  0.033765242898423975,
+                  0.16367563308803143
+                ]
+              },
+              {
+                "wall_index": 5580,
+                "surface_face": 7581,
+                "value": 0.0002791123870033125,
+                "probe_index": 29,
+                "barycentric": [
+                  0.005719673678836329,
+                  0.8306046932331322,
+                  0.16367563308803143
+                ]
+              },
+              {
+                "wall_index": 6501,
+                "surface_face": 8717,
+                "value": 0.0002624176394504784,
+                "probe_index": 24,
+                "barycentric": [
+                  0.16367563308803143,
+                  0.8306046932331322,
+                  0.005719673678836332
+                ]
+              },
+              {
+                "wall_index": 6502,
+                "surface_face": 8718,
+                "value": 0.00025123267880408846,
+                "probe_index": 4,
+                "barycentric": [
+                  0.16367563308803146,
+                  0.033765242898423975,
+                  0.8025591240135446
+                ]
+              }
+            ]
+          }
+        },
+        "projection_failures": 0,
+        "projection_fallbacks": 0
+      },
+      "gauss8": {
+        "metrics": {
+          "physical": {
+            "maximum": 0.0002954034145732018,
+            "categories": {
+              "cap": null,
+              "interior": {
+                "maximum": 0.0002954034145732018,
+                "wall_index": 5580,
+                "surface_face": 7581,
+                "probe_index": 47,
+                "barycentric": [
+                  0.004710294022372691,
+                  0.7627662049581645,
+                  0.2325235010194628
+                ],
+                "point": [
+                  0.4480460849937878,
+                  0.19684306913074082,
+                  0.1986868974180819
+                ]
+              }
+            },
+            "worst": [
+              {
+                "wall_index": 5580,
+                "surface_face": 7581,
+                "value": 0.0002954034145732018,
+                "probe_index": 47,
+                "barycentric": [
+                  0.004710294022372691,
+                  0.7627662049581645,
+                  0.2325235010194628
+                ]
+              },
+              {
+                "wall_index": 5585,
+                "surface_face": 7586,
+                "value": 0.0002893186833216221,
+                "probe_index": 2,
+                "barycentric": [
+                  0.7476214272293052,
+                  0.019855071751231912,
+                  0.2325235010194628
+                ]
+              },
+              {
+                "wall_index": 6501,
+                "surface_face": 8717,
+                "value": 0.00027261465309726834,
+                "probe_index": 40,
+                "barycentric": [
+                  0.2325235010194628,
+                  0.7627662049581645,
+                  0.004710294022372689
+                ]
+              },
+              {
+                "wall_index": 6502,
+                "surface_face": 8718,
+                "value": 0.00026428241727728907,
+                "probe_index": 5,
+                "barycentric": [
+                  0.23252350101946284,
+                  0.019855071751231912,
+                  0.7476214272293052
+                ]
+              }
+            ]
+          },
+          "cap_constrained": {
+            "maximum": 0.0002954034145732018,
+            "categories": {
+              "cap": null,
+              "interior": {
+                "maximum": 0.0002954034145732018,
+                "wall_index": 5580,
+                "surface_face": 7581,
+                "probe_index": 47,
+                "barycentric": [
+                  0.004710294022372691,
+                  0.7627662049581645,
+                  0.2325235010194628
+                ],
+                "point": [
+                  0.4480460849937878,
+                  0.19684306913074082,
+                  0.1986868974180819
+                ]
+              }
+            },
+            "worst": [
+              {
+                "wall_index": 5580,
+                "surface_face": 7581,
+                "value": 0.0002954034145732018,
+                "probe_index": 47,
+                "barycentric": [
+                  0.004710294022372691,
+                  0.7627662049581645,
+                  0.2325235010194628
+                ]
+              },
+              {
+                "wall_index": 5585,
+                "surface_face": 7586,
+                "value": 0.0002893186833216221,
+                "probe_index": 2,
+                "barycentric": [
+                  0.7476214272293052,
+                  0.019855071751231912,
+                  0.2325235010194628
+                ]
+              },
+              {
+                "wall_index": 6501,
+                "surface_face": 8717,
+                "value": 0.00027261465309726834,
+                "probe_index": 40,
+                "barycentric": [
+                  0.2325235010194628,
+                  0.7627662049581645,
+                  0.004710294022372689
+                ]
+              },
+              {
+                "wall_index": 6502,
+                "surface_face": 8718,
+                "value": 0.00026428241727728907,
+                "probe_index": 5,
+                "barycentric": [
+                  0.23252350101946284,
+                  0.019855071751231912,
+                  0.7476214272293052
+                ]
+              }
+            ]
+          }
+        },
+        "projection_failures": 0,
+        "projection_fallbacks": 0
+      },
+      "standard": {
+        "metrics": {
+          "physical": {
+            "maximum": 0.00029448848078897534,
+            "categories": {
+              "cap": {
+                "maximum": 0.00015195648425252734,
+                "wall_index": 1205,
+                "surface_face": 2049,
+                "probe_index": 10,
+                "barycentric": [
+                  0.25,
+                  0.75,
+                  0.0
+                ],
+                "point": [
+                  -0.3806351011260154,
+                  -0.5,
+                  -0.328288368383021
+                ]
+              },
+              "interior": {
+                "maximum": 0.00029448848078897534,
+                "wall_index": 5585,
+                "surface_face": 7586,
+                "probe_index": 12,
+                "barycentric": [
+                  0.75,
+                  0.0,
+                  0.25
+                ],
+                "point": [
+                  0.4485751044816244,
+                  0.19601854806912122,
+                  0.19867861793148
+                ]
+              }
+            },
+            "worst": [
+              {
+                "wall_index": 5585,
+                "surface_face": 7586,
+                "value": 0.00029448848078897534,
+                "probe_index": 12,
+                "barycentric": [
+                  0.75,
+                  0.0,
+                  0.25
+                ]
+              },
+              {
+                "wall_index": 5580,
+                "surface_face": 7581,
+                "value": 0.0002829164674865951,
+                "probe_index": 11,
+                "barycentric": [
+                  0.0,
+                  0.25,
+                  0.75
+                ]
+              },
+              {
+                "wall_index": 6502,
+                "surface_face": 8718,
+                "value": 0.00027341999665518113,
+                "probe_index": 12,
+                "barycentric": [
+                  0.75,
+                  0.0,
+                  0.25
+                ]
+              },
+              {
+                "wall_index": 6501,
+                "surface_face": 8717,
+                "value": 0.00027066742776659053,
+                "probe_index": 10,
+                "barycentric": [
+                  0.25,
+                  0.75,
+                  0.0
+                ]
+              }
+            ]
+          },
+          "cap_constrained": {
+            "maximum": 0.00029448848078897534,
+            "categories": {
+              "cap": {
+                "maximum": 0.00021737502657629296,
+                "wall_index": 3586,
+                "surface_face": 4962,
+                "probe_index": 10,
+                "barycentric": [
+                  0.25,
+                  0.75,
+                  0.0
+                ],
+                "point": [
+                  -0.16966868674224694,
+                  0.5,
+                  -0.05123433387817221
+                ]
+              },
+              "interior": {
+                "maximum": 0.00029448848078897534,
+                "wall_index": 5585,
+                "surface_face": 7586,
+                "probe_index": 12,
+                "barycentric": [
+                  0.75,
+                  0.0,
+                  0.25
+                ],
+                "point": [
+                  0.4485751044816244,
+                  0.19601854806912122,
+                  0.19867861793148
+                ]
+              }
+            },
+            "worst": [
+              {
+                "wall_index": 5585,
+                "surface_face": 7586,
+                "value": 0.00029448848078897534,
+                "probe_index": 12,
+                "barycentric": [
+                  0.75,
+                  0.0,
+                  0.25
+                ]
+              },
+              {
+                "wall_index": 5580,
+                "surface_face": 7581,
+                "value": 0.0002829164674865951,
+                "probe_index": 11,
+                "barycentric": [
+                  0.0,
+                  0.25,
+                  0.75
+                ]
+              },
+              {
+                "wall_index": 6502,
+                "surface_face": 8718,
+                "value": 0.00027341999665518113,
+                "probe_index": 12,
+                "barycentric": [
+                  0.75,
+                  0.0,
+                  0.25
+                ]
+              },
+              {
+                "wall_index": 6501,
+                "surface_face": 8717,
+                "value": 0.00027066742776659053,
+                "probe_index": 10,
+                "barycentric": [
+                  0.25,
+                  0.75,
+                  0.0
+                ]
+              }
+            ]
+          },
+          "projected": {
+            "maximum": 0.0002941593267453074,
+            "categories": {
+              "cap": {
+                "maximum": 0.000217621752861947,
+                "wall_index": 3586,
+                "surface_face": 4962,
+                "probe_index": 10,
+                "barycentric": [
+                  0.25,
+                  0.75,
+                  0.0
+                ],
+                "point": [
+                  -0.16966868674224694,
+                  0.5,
+                  -0.05123433387817221
+                ]
+              },
+              "interior": {
+                "maximum": 0.0002941593267453074,
+                "wall_index": 5585,
+                "surface_face": 7586,
+                "probe_index": 12,
+                "barycentric": [
+                  0.75,
+                  0.0,
+                  0.25
+                ],
+                "point": [
+                  0.4485751044816244,
+                  0.19601854806912122,
+                  0.19867861793148
+                ]
+              }
+            },
+            "worst": [
+              {
+                "wall_index": 5585,
+                "surface_face": 7586,
+                "value": 0.0002941593267453074,
+                "probe_index": 12,
+                "barycentric": [
+                  0.75,
+                  0.0,
+                  0.25
+                ]
+              },
+              {
+                "wall_index": 5580,
+                "surface_face": 7581,
+                "value": 0.0002833341061863039,
+                "probe_index": 11,
+                "barycentric": [
+                  0.0,
+                  0.25,
+                  0.75
+                ]
+              },
+              {
+                "wall_index": 6502,
+                "surface_face": 8718,
+                "value": 0.00027345913895738627,
+                "probe_index": 12,
+                "barycentric": [
+                  0.75,
+                  0.0,
+                  0.25
+                ]
+              },
+              {
+                "wall_index": 6501,
+                "surface_face": 8717,
+                "value": 0.00027066775009104076,
+                "probe_index": 10,
+                "barycentric": [
+                  0.25,
+                  0.75,
+                  0.0
+                ]
+              }
+            ]
+          }
+        },
+        "projection_failures": 0,
+        "projection_fallbacks": 0
+      },
+      "dense13": {
+        "metrics": {
+          "physical": {
+            "maximum": 0.00029772866800915134,
+            "categories": {
+              "cap": {
+                "maximum": 0.00015661644506813712,
+                "wall_index": 1572,
+                "surface_face": 2468,
+                "probe_index": 43,
+                "barycentric": [
+                  0.23076923076923078,
+                  0.0,
+                  0.7692307692307693
+                ],
+                "point": [
+                  -0.3797688013333608,
+                  0.5,
+                  -0.3281745281293986
+                ]
+              },
+              "interior": {
+                "maximum": 0.00029772866800915134,
+                "wall_index": 5580,
+                "surface_face": 7581,
+                "probe_index": 12,
+                "barycentric": [
+                  0.0,
+                  0.7692307692307693,
+                  0.23076923076923078
+                ],
+                "point": [
+                  0.4478210238186931,
+                  0.1970882321374881,
+                  0.1988498088023212
+                ]
+              }
+            },
+            "worst": [
+              {
+                "wall_index": 5580,
+                "surface_face": 7581,
+                "value": 0.00029772866800915134,
+                "probe_index": 12,
+                "barycentric": [
+                  0.0,
+                  0.7692307692307693,
+                  0.23076923076923078
+                ]
+              },
+              {
+                "wall_index": 5585,
+                "surface_face": 7586,
+                "value": 0.00029772866800915134,
+                "probe_index": 105,
+                "barycentric": [
+                  0.7692307692307693,
+                  0.0,
+                  0.23076923076923078
+                ]
+              },
+              {
+                "wall_index": 6501,
+                "surface_face": 8717,
+                "value": 0.00027817583171700633,
+                "probe_index": 108,
+                "barycentric": [
+                  0.7692307692307693,
+                  0.23076923076923078,
+                  0.0
+                ]
+              },
+              {
+                "wall_index": 6502,
+                "surface_face": 8718,
+                "value": 0.00027817583171700633,
+                "probe_index": 105,
+                "barycentric": [
+                  0.7692307692307693,
+                  0.0,
+                  0.23076923076923078
+                ]
+              }
+            ]
+          },
+          "cap_constrained": {
+            "maximum": 0.00029772866800915134,
+            "categories": {
+              "cap": {
+                "maximum": 0.00022703119572365477,
+                "wall_index": 3586,
+                "surface_face": 4962,
+                "probe_index": 40,
+                "barycentric": [
+                  0.15384615384615385,
+                  0.8461538461538461,
+                  0.0
+                ],
+                "point": [
+                  -0.16815570104046929,
+                  0.5,
+                  -0.04753357615530964
+                ]
+              },
+              "interior": {
+                "maximum": 0.00029772866800915134,
+                "wall_index": 5580,
+                "surface_face": 7581,
+                "probe_index": 12,
+                "barycentric": [
+                  0.0,
+                  0.7692307692307693,
+                  0.23076923076923078
+                ],
+                "point": [
+                  0.4478210238186931,
+                  0.1970882321374881,
+                  0.1988498088023212
+                ]
+              }
+            },
+            "worst": [
+              {
+                "wall_index": 5580,
+                "surface_face": 7581,
+                "value": 0.00029772866800915134,
+                "probe_index": 12,
+                "barycentric": [
+                  0.0,
+                  0.7692307692307693,
+                  0.23076923076923078
+                ]
+              },
+              {
+                "wall_index": 5585,
+                "surface_face": 7586,
+                "value": 0.00029772866800915134,
+                "probe_index": 105,
+                "barycentric": [
+                  0.7692307692307693,
+                  0.0,
+                  0.23076923076923078
+                ]
+              },
+              {
+                "wall_index": 6502,
+                "surface_face": 8718,
+                "value": 0.00027817583171700633,
+                "probe_index": 105,
+                "barycentric": [
+                  0.7692307692307693,
+                  0.0,
+                  0.23076923076923078
+                ]
+              },
+              {
+                "wall_index": 6501,
+                "surface_face": 8717,
+                "value": 0.00027817583171700633,
+                "probe_index": 108,
+                "barycentric": [
+                  0.7692307692307693,
+                  0.23076923076923078,
+                  0.0
+                ]
+              }
+            ]
+          },
+          "projected": {
+            "maximum": 0.0002973958890293167,
+            "categories": {
+              "cap": {
+                "maximum": 0.00022736806480677402,
+                "wall_index": 3586,
+                "surface_face": 4962,
+                "probe_index": 40,
+                "barycentric": [
+                  0.15384615384615385,
+                  0.8461538461538461,
+                  0.0
+                ],
+                "point": [
+                  -0.16815570104046929,
+                  0.5,
+                  -0.04753357615530964
+                ]
+              },
+              "interior": {
+                "maximum": 0.0002973958890293167,
+                "wall_index": 5580,
+                "surface_face": 7581,
+                "probe_index": 12,
+                "barycentric": [
+                  0.0,
+                  0.7692307692307693,
+                  0.23076923076923078
+                ],
+                "point": [
+                  0.4478210238186931,
+                  0.1970882321374881,
+                  0.1988498088023212
+                ]
+              }
+            },
+            "worst": [
+              {
+                "wall_index": 5580,
+                "surface_face": 7581,
+                "value": 0.0002973958890293167,
+                "probe_index": 12,
+                "barycentric": [
+                  0.0,
+                  0.7692307692307693,
+                  0.23076923076923078
+                ]
+              },
+              {
+                "wall_index": 5585,
+                "surface_face": 7586,
+                "value": 0.0002973958890293167,
+                "probe_index": 105,
+                "barycentric": [
+                  0.7692307692307693,
+                  0.0,
+                  0.23076923076923078
+                ]
+              },
+              {
+                "wall_index": 6501,
+                "surface_face": 8717,
+                "value": 0.0002782176573635255,
+                "probe_index": 108,
+                "barycentric": [
+                  0.7692307692307693,
+                  0.23076923076923078,
+                  0.0
+                ]
+              },
+              {
+                "wall_index": 6502,
+                "surface_face": 8718,
+                "value": 0.0002782176573635255,
+                "probe_index": 105,
+                "barycentric": [
+                  0.7692307692307693,
+                  0.0,
+                  0.23076923076923078
+                ]
+              }
+            ]
+          }
+        },
+        "projection_failures": 0,
+        "projection_fallbacks": 0
+      }
+    },
+    "facewise": {
+      "degree6": {
+        "metrics": {
+          "physical": {
+            "maximum": 0.0002898074487481068,
+            "categories": {
+              "cap": {
+                "maximum": 0.00015647911188247773,
+                "wall_index": 1572,
+                "surface_face": 2468,
+                "probe_index": 7,
+                "barycentric": [
+                  0.16666666666666666,
+                  0.0,
+                  0.8333333333333334
+                ],
+                "point": [
+                  -0.37687158782415825,
+                  0.5000000000000001,
+                  -0.327836253887384
+                ]
+              },
+              "interior": {
+                "maximum": 0.0002898074487481068,
+                "wall_index": 5580,
+                "surface_face": 7581,
+                "probe_index": 1,
+                "barycentric": [
+                  0.0,
+                  0.16666666666666666,
+                  0.8333333333333334
+                ],
+                "point": [
+                  0.4726845199851339,
+                  0.16438823980596615,
+                  0.19401321649469505
+                ]
+              }
+            },
+            "worst": [
+              {
+                "wall_index": 5580,
+                "surface_face": 7581,
+                "value": 0.0002898074487481068,
+                "probe_index": 1,
+                "barycentric": [
+                  0.0,
+                  0.16666666666666666,
+                  0.8333333333333334
+                ]
+              },
+              {
+                "wall_index": 5585,
+                "surface_face": 7586,
+                "value": 0.0002898074487481068,
+                "probe_index": 7,
+                "barycentric": [
+                  0.16666666666666666,
+                  0.0,
+                  0.8333333333333334
+                ]
+              },
+              {
+                "wall_index": 6502,
+                "surface_face": 8718,
+                "value": 0.0002677047147260001,
+                "probe_index": 25,
+                "barycentric": [
+                  0.8333333333333334,
+                  0.0,
+                  0.16666666666666666
+                ]
+              },
+              {
+                "wall_index": 6501,
+                "surface_face": 8717,
+                "value": 0.0002677047147260001,
+                "probe_index": 26,
+                "barycentric": [
+                  0.8333333333333334,
+                  0.16666666666666666,
+                  0.0
+                ]
+              }
+            ]
+          },
+          "cap_constrained": {
+            "maximum": 0.0002898074487481068,
+            "categories": {
+              "cap": {
+                "maximum": 0.00023103778020226596,
+                "wall_index": 3586,
+                "surface_face": 4962,
+                "probe_index": 12,
+                "barycentric": [
+                  0.16666666666666666,
+                  0.8333333333333334,
+                  0.0
+                ],
+                "point": [
+                  -0.16834950376779056,
+                  0.5000000000000001,
+                  -0.048031445143251215
+                ]
+              },
+              "interior": {
+                "maximum": 0.0002898074487481068,
+                "wall_index": 5580,
+                "surface_face": 7581,
+                "probe_index": 1,
+                "barycentric": [
+                  0.0,
+                  0.16666666666666666,
+                  0.8333333333333334
+                ],
+                "point": [
+                  0.4726845199851339,
+                  0.16438823980596615,
+                  0.19401321649469505
+                ]
+              }
+            },
+            "worst": [
+              {
+                "wall_index": 5580,
+                "surface_face": 7581,
+                "value": 0.0002898074487481068,
+                "probe_index": 1,
+                "barycentric": [
+                  0.0,
+                  0.16666666666666666,
+                  0.8333333333333334
+                ]
+              },
+              {
+                "wall_index": 5585,
+                "surface_face": 7586,
+                "value": 0.0002898074487481068,
+                "probe_index": 7,
+                "barycentric": [
+                  0.16666666666666666,
+                  0.0,
+                  0.8333333333333334
+                ]
+              },
+              {
+                "wall_index": 6502,
+                "surface_face": 8718,
+                "value": 0.0002677047147260001,
+                "probe_index": 25,
+                "barycentric": [
+                  0.8333333333333334,
+                  0.0,
+                  0.16666666666666666
+                ]
+              },
+              {
+                "wall_index": 6501,
+                "surface_face": 8717,
+                "value": 0.0002677047147260001,
+                "probe_index": 26,
+                "barycentric": [
+                  0.8333333333333334,
+                  0.16666666666666666,
+                  0.0
+                ]
+              }
+            ]
+          }
+        },
+        "projection_failures": 0,
+        "projection_fallbacks": 0
+      },
+      "gauss6": {
+        "metrics": {
+          "physical": {
+            "maximum": 0.00028054060056507084,
+            "categories": {
+              "cap": null,
+              "interior": {
+                "maximum": 0.00028054060056507084,
+                "wall_index": 5585,
+                "surface_face": 7586,
+                "probe_index": 4,
+                "barycentric": [
+                  0.16367563308803146,
+                  0.033765242898423975,
+                  0.8025591240135446
+                ],
+                "point": [
+                  0.472093590414231,
+                  0.16430719786559705,
+                  0.19541944085512347
+                ]
+              }
+            },
+            "worst": [
+              {
+                "wall_index": 5585,
+                "surface_face": 7586,
+                "value": 0.00028054060056507084,
+                "probe_index": 4,
+                "barycentric": [
+                  0.16367563308803146,
+                  0.033765242898423975,
+                  0.8025591240135446
+                ]
+              },
+              {
+                "wall_index": 5580,
+                "surface_face": 7581,
+                "value": 0.00027911233233371207,
+                "probe_index": 29,
+                "barycentric": [
+                  0.005719673678836329,
+                  0.8306046932331322,
+                  0.16367563308803143
+                ]
+              },
+              {
+                "wall_index": 6501,
+                "surface_face": 8717,
+                "value": 0.0002624176394504784,
+                "probe_index": 24,
+                "barycentric": [
+                  0.16367563308803143,
+                  0.8306046932331322,
+                  0.005719673678836332
+                ]
+              },
+              {
+                "wall_index": 6502,
+                "surface_face": 8718,
+                "value": 0.00025123267880408846,
+                "probe_index": 4,
+                "barycentric": [
+                  0.16367563308803146,
+                  0.033765242898423975,
+                  0.8025591240135446
+                ]
+              }
+            ]
+          },
+          "cap_constrained": {
+            "maximum": 0.00028054060056507084,
+            "categories": {
+              "cap": null,
+              "interior": {
+                "maximum": 0.00028054060056507084,
+                "wall_index": 5585,
+                "surface_face": 7586,
+                "probe_index": 4,
+                "barycentric": [
+                  0.16367563308803146,
+                  0.033765242898423975,
+                  0.8025591240135446
+                ],
+                "point": [
+                  0.472093590414231,
+                  0.16430719786559705,
+                  0.19541944085512347
+                ]
+              }
+            },
+            "worst": [
+              {
+                "wall_index": 5585,
+                "surface_face": 7586,
+                "value": 0.00028054060056507084,
+                "probe_index": 4,
+                "barycentric": [
+                  0.16367563308803146,
+                  0.033765242898423975,
+                  0.8025591240135446
+                ]
+              },
+              {
+                "wall_index": 5580,
+                "surface_face": 7581,
+                "value": 0.00027911233233371207,
+                "probe_index": 29,
+                "barycentric": [
+                  0.005719673678836329,
+                  0.8306046932331322,
+                  0.16367563308803143
+                ]
+              },
+              {
+                "wall_index": 6501,
+                "surface_face": 8717,
+                "value": 0.0002624176394504784,
+                "probe_index": 24,
+                "barycentric": [
+                  0.16367563308803143,
+                  0.8306046932331322,
+                  0.005719673678836332
+                ]
+              },
+              {
+                "wall_index": 6502,
+                "surface_face": 8718,
+                "value": 0.00025123267880408846,
+                "probe_index": 4,
+                "barycentric": [
+                  0.16367563308803146,
+                  0.033765242898423975,
+                  0.8025591240135446
+                ]
+              }
+            ]
+          }
+        },
+        "projection_failures": 0,
+        "projection_fallbacks": 0
+      },
+      "gauss8": {
+        "metrics": {
+          "physical": {
+            "maximum": 0.00029540335060107635,
+            "categories": {
+              "cap": null,
+              "interior": {
+                "maximum": 0.00029540335060107635,
+                "wall_index": 5580,
+                "surface_face": 7581,
+                "probe_index": 47,
+                "barycentric": [
+                  0.004710294022372691,
+                  0.7627662049581645,
+                  0.2325235010194628
+                ],
+                "point": [
+                  0.4480460850404204,
+                  0.1968430691669084,
+                  0.19868689744352067
+                ]
+              }
+            },
+            "worst": [
+              {
+                "wall_index": 5580,
+                "surface_face": 7581,
+                "value": 0.00029540335060107635,
+                "probe_index": 47,
+                "barycentric": [
+                  0.004710294022372691,
+                  0.7627662049581645,
+                  0.2325235010194628
+                ]
+              },
+              {
+                "wall_index": 5585,
+                "surface_face": 7586,
+                "value": 0.00028931754216972164,
+                "probe_index": 2,
+                "barycentric": [
+                  0.7476214272293052,
+                  0.019855071751231912,
+                  0.2325235010194628
+                ]
+              },
+              {
+                "wall_index": 6501,
+                "surface_face": 8717,
+                "value": 0.00027261465309726834,
+                "probe_index": 40,
+                "barycentric": [
+                  0.2325235010194628,
+                  0.7627662049581645,
+                  0.004710294022372689
+                ]
+              },
+              {
+                "wall_index": 6502,
+                "surface_face": 8718,
+                "value": 0.00026428241727728907,
+                "probe_index": 5,
+                "barycentric": [
+                  0.23252350101946284,
+                  0.019855071751231912,
+                  0.7476214272293052
+                ]
+              }
+            ]
+          },
+          "cap_constrained": {
+            "maximum": 0.00029540335060107635,
+            "categories": {
+              "cap": null,
+              "interior": {
+                "maximum": 0.00029540335060107635,
+                "wall_index": 5580,
+                "surface_face": 7581,
+                "probe_index": 47,
+                "barycentric": [
+                  0.004710294022372691,
+                  0.7627662049581645,
+                  0.2325235010194628
+                ],
+                "point": [
+                  0.4480460850404204,
+                  0.1968430691669084,
+                  0.19868689744352067
+                ]
+              }
+            },
+            "worst": [
+              {
+                "wall_index": 5580,
+                "surface_face": 7581,
+                "value": 0.00029540335060107635,
+                "probe_index": 47,
+                "barycentric": [
+                  0.004710294022372691,
+                  0.7627662049581645,
+                  0.2325235010194628
+                ]
+              },
+              {
+                "wall_index": 5585,
+                "surface_face": 7586,
+                "value": 0.00028931754216972164,
+                "probe_index": 2,
+                "barycentric": [
+                  0.7476214272293052,
+                  0.019855071751231912,
+                  0.2325235010194628
+                ]
+              },
+              {
+                "wall_index": 6501,
+                "surface_face": 8717,
+                "value": 0.00027261465309726834,
+                "probe_index": 40,
+                "barycentric": [
+                  0.2325235010194628,
+                  0.7627662049581645,
+                  0.004710294022372689
+                ]
+              },
+              {
+                "wall_index": 6502,
+                "surface_face": 8718,
+                "value": 0.00026428241727728907,
+                "probe_index": 5,
+                "barycentric": [
+                  0.23252350101946284,
+                  0.019855071751231912,
+                  0.7476214272293052
+                ]
+              }
+            ]
+          }
+        },
+        "projection_failures": 0,
+        "projection_fallbacks": 0
+      },
+      "standard": {
+        "metrics": {
+          "physical": {
+            "maximum": 0.00029448848078897534,
+            "categories": {
+              "cap": {
+                "maximum": 0.00015194559272534568,
+                "wall_index": 1205,
+                "surface_face": 2049,
+                "probe_index": 10,
+                "barycentric": [
+                  0.25,
+                  0.75,
+                  0.0
+                ],
+                "point": [
+                  -0.380635104528005,
+                  -0.5,
+                  -0.3282883547361764
+                ]
+              },
+              "interior": {
+                "maximum": 0.00029448848078897534,
+                "wall_index": 5585,
+                "surface_face": 7586,
+                "probe_index": 12,
+                "barycentric": [
+                  0.75,
+                  0.0,
+                  0.25
+                ],
+                "point": [
+                  0.4485751044816244,
+                  0.19601854806912122,
+                  0.19867861793148
+                ]
+              }
+            },
+            "worst": [
+              {
+                "wall_index": 5585,
+                "surface_face": 7586,
+                "value": 0.00029448848078897534,
+                "probe_index": 12,
+                "barycentric": [
+                  0.75,
+                  0.0,
+                  0.25
+                ]
+              },
+              {
+                "wall_index": 5580,
+                "surface_face": 7581,
+                "value": 0.0002829164674865951,
+                "probe_index": 11,
+                "barycentric": [
+                  0.0,
+                  0.25,
+                  0.75
+                ]
+              },
+              {
+                "wall_index": 6502,
+                "surface_face": 8718,
+                "value": 0.00027341999665518113,
+                "probe_index": 12,
+                "barycentric": [
+                  0.75,
+                  0.0,
+                  0.25
+                ]
+              },
+              {
+                "wall_index": 6501,
+                "surface_face": 8717,
+                "value": 0.00027066742776659053,
+                "probe_index": 10,
+                "barycentric": [
+                  0.25,
+                  0.75,
+                  0.0
+                ]
+              }
+            ]
+          },
+          "cap_constrained": {
+            "maximum": 0.00029448848078897534,
+            "categories": {
+              "cap": {
+                "maximum": 0.00021737502657629296,
+                "wall_index": 3586,
+                "surface_face": 4962,
+                "probe_index": 10,
+                "barycentric": [
+                  0.25,
+                  0.75,
+                  0.0
+                ],
+                "point": [
+                  -0.16966868674224694,
+                  0.5,
+                  -0.05123433387817221
+                ]
+              },
+              "interior": {
+                "maximum": 0.00029448848078897534,
+                "wall_index": 5585,
+                "surface_face": 7586,
+                "probe_index": 12,
+                "barycentric": [
+                  0.75,
+                  0.0,
+                  0.25
+                ],
+                "point": [
+                  0.4485751044816244,
+                  0.19601854806912122,
+                  0.19867861793148
+                ]
+              }
+            },
+            "worst": [
+              {
+                "wall_index": 5585,
+                "surface_face": 7586,
+                "value": 0.00029448848078897534,
+                "probe_index": 12,
+                "barycentric": [
+                  0.75,
+                  0.0,
+                  0.25
+                ]
+              },
+              {
+                "wall_index": 5580,
+                "surface_face": 7581,
+                "value": 0.0002829164674865951,
+                "probe_index": 11,
+                "barycentric": [
+                  0.0,
+                  0.25,
+                  0.75
+                ]
+              },
+              {
+                "wall_index": 6502,
+                "surface_face": 8718,
+                "value": 0.00027341999665518113,
+                "probe_index": 12,
+                "barycentric": [
+                  0.75,
+                  0.0,
+                  0.25
+                ]
+              },
+              {
+                "wall_index": 6501,
+                "surface_face": 8717,
+                "value": 0.00027066742776659053,
+                "probe_index": 10,
+                "barycentric": [
+                  0.25,
+                  0.75,
+                  0.0
+                ]
+              }
+            ]
+          },
+          "projected": {
+            "maximum": 0.0002941593267453074,
+            "categories": {
+              "cap": {
+                "maximum": 0.000217621752861947,
+                "wall_index": 3586,
+                "surface_face": 4962,
+                "probe_index": 10,
+                "barycentric": [
+                  0.25,
+                  0.75,
+                  0.0
+                ],
+                "point": [
+                  -0.16966868674224694,
+                  0.5,
+                  -0.05123433387817221
+                ]
+              },
+              "interior": {
+                "maximum": 0.0002941593267453074,
+                "wall_index": 5585,
+                "surface_face": 7586,
+                "probe_index": 12,
+                "barycentric": [
+                  0.75,
+                  0.0,
+                  0.25
+                ],
+                "point": [
+                  0.4485751044816244,
+                  0.19601854806912122,
+                  0.19867861793148
+                ]
+              }
+            },
+            "worst": [
+              {
+                "wall_index": 5585,
+                "surface_face": 7586,
+                "value": 0.0002941593267453074,
+                "probe_index": 12,
+                "barycentric": [
+                  0.75,
+                  0.0,
+                  0.25
+                ]
+              },
+              {
+                "wall_index": 5580,
+                "surface_face": 7581,
+                "value": 0.0002833341061863039,
+                "probe_index": 11,
+                "barycentric": [
+                  0.0,
+                  0.25,
+                  0.75
+                ]
+              },
+              {
+                "wall_index": 6502,
+                "surface_face": 8718,
+                "value": 0.00027345913895738627,
+                "probe_index": 12,
+                "barycentric": [
+                  0.75,
+                  0.0,
+                  0.25
+                ]
+              },
+              {
+                "wall_index": 6501,
+                "surface_face": 8717,
+                "value": 0.00027066775009104076,
+                "probe_index": 10,
+                "barycentric": [
+                  0.25,
+                  0.75,
+                  0.0
+                ]
+              }
+            ]
+          }
+        },
+        "projection_failures": 0,
+        "projection_fallbacks": 0
+      },
+      "dense13": {
+        "metrics": {
+          "physical": {
+            "maximum": 0.00029772866800915134,
+            "categories": {
+              "cap": {
+                "maximum": 0.00015660614004683567,
+                "wall_index": 1205,
+                "surface_face": 2049,
+                "probe_index": 53,
+                "barycentric": [
+                  0.23076923076923078,
+                  0.7692307692307693,
+                  0.0
+                ],
+                "point": [
+                  -0.3797688045541793,
+                  -0.5,
+                  -0.3281745152093091
+                ]
+              },
+              "interior": {
+                "maximum": 0.00029772866800915134,
+                "wall_index": 5580,
+                "surface_face": 7581,
+                "probe_index": 12,
+                "barycentric": [
+                  0.0,
+                  0.7692307692307693,
+                  0.23076923076923078
+                ],
+                "point": [
+                  0.4478210238186931,
+                  0.1970882321374881,
+                  0.1988498088023212
+                ]
+              }
+            },
+            "worst": [
+              {
+                "wall_index": 5585,
+                "surface_face": 7586,
+                "value": 0.00029772866800915134,
+                "probe_index": 105,
+                "barycentric": [
+                  0.7692307692307693,
+                  0.0,
+                  0.23076923076923078
+                ]
+              },
+              {
+                "wall_index": 5580,
+                "surface_face": 7581,
+                "value": 0.00029772866800915134,
+                "probe_index": 12,
+                "barycentric": [
+                  0.0,
+                  0.7692307692307693,
+                  0.23076923076923078
+                ]
+              },
+              {
+                "wall_index": 6502,
+                "surface_face": 8718,
+                "value": 0.00027817583171700633,
+                "probe_index": 105,
+                "barycentric": [
+                  0.7692307692307693,
+                  0.0,
+                  0.23076923076923078
+                ]
+              },
+              {
+                "wall_index": 6501,
+                "surface_face": 8717,
+                "value": 0.00027817583171700633,
+                "probe_index": 108,
+                "barycentric": [
+                  0.7692307692307693,
+                  0.23076923076923078,
+                  0.0
+                ]
+              }
+            ]
+          },
+          "cap_constrained": {
+            "maximum": 0.00029772866800915134,
+            "categories": {
+              "cap": {
+                "maximum": 0.00022703119572365477,
+                "wall_index": 3586,
+                "surface_face": 4962,
+                "probe_index": 40,
+                "barycentric": [
+                  0.15384615384615385,
+                  0.8461538461538461,
+                  0.0
+                ],
+                "point": [
+                  -0.16815570104046929,
+                  0.5,
+                  -0.04753357615530964
+                ]
+              },
+              "interior": {
+                "maximum": 0.00029772866800915134,
+                "wall_index": 5580,
+                "surface_face": 7581,
+                "probe_index": 12,
+                "barycentric": [
+                  0.0,
+                  0.7692307692307693,
+                  0.23076923076923078
+                ],
+                "point": [
+                  0.4478210238186931,
+                  0.1970882321374881,
+                  0.1988498088023212
+                ]
+              }
+            },
+            "worst": [
+              {
+                "wall_index": 5585,
+                "surface_face": 7586,
+                "value": 0.00029772866800915134,
+                "probe_index": 105,
+                "barycentric": [
+                  0.7692307692307693,
+                  0.0,
+                  0.23076923076923078
+                ]
+              },
+              {
+                "wall_index": 5580,
+                "surface_face": 7581,
+                "value": 0.00029772866800915134,
+                "probe_index": 12,
+                "barycentric": [
+                  0.0,
+                  0.7692307692307693,
+                  0.23076923076923078
+                ]
+              },
+              {
+                "wall_index": 6502,
+                "surface_face": 8718,
+                "value": 0.00027817583171700633,
+                "probe_index": 105,
+                "barycentric": [
+                  0.7692307692307693,
+                  0.0,
+                  0.23076923076923078
+                ]
+              },
+              {
+                "wall_index": 6501,
+                "surface_face": 8717,
+                "value": 0.00027817583171700633,
+                "probe_index": 108,
+                "barycentric": [
+                  0.7692307692307693,
+                  0.23076923076923078,
+                  0.0
+                ]
+              }
+            ]
+          },
+          "projected": {
+            "maximum": 0.0002973958890293167,
+            "categories": {
+              "cap": {
+                "maximum": 0.00022736806480677402,
+                "wall_index": 3586,
+                "surface_face": 4962,
+                "probe_index": 40,
+                "barycentric": [
+                  0.15384615384615385,
+                  0.8461538461538461,
+                  0.0
+                ],
+                "point": [
+                  -0.16815570104046929,
+                  0.5,
+                  -0.04753357615530964
+                ]
+              },
+              "interior": {
+                "maximum": 0.0002973958890293167,
+                "wall_index": 5580,
+                "surface_face": 7581,
+                "probe_index": 12,
+                "barycentric": [
+                  0.0,
+                  0.7692307692307693,
+                  0.23076923076923078
+                ],
+                "point": [
+                  0.4478210238186931,
+                  0.1970882321374881,
+                  0.1988498088023212
+                ]
+              }
+            },
+            "worst": [
+              {
+                "wall_index": 5580,
+                "surface_face": 7581,
+                "value": 0.0002973958890293167,
+                "probe_index": 12,
+                "barycentric": [
+                  0.0,
+                  0.7692307692307693,
+                  0.23076923076923078
+                ]
+              },
+              {
+                "wall_index": 5585,
+                "surface_face": 7586,
+                "value": 0.0002973958890293167,
+                "probe_index": 105,
+                "barycentric": [
+                  0.7692307692307693,
+                  0.0,
+                  0.23076923076923078
+                ]
+              },
+              {
+                "wall_index": 6502,
+                "surface_face": 8718,
+                "value": 0.0002782176573635255,
+                "probe_index": 105,
+                "barycentric": [
+                  0.7692307692307693,
+                  0.0,
+                  0.23076923076923078
+                ]
+              },
+              {
+                "wall_index": 6501,
+                "surface_face": 8717,
+                "value": 0.0002782176573635255,
+                "probe_index": 108,
+                "barycentric": [
+                  0.7692307692307693,
+                  0.23076923076923078,
+                  0.0
+                ]
+              }
+            ]
+          }
+        },
+        "projection_failures": 0,
+        "projection_fallbacks": 0
+      }
+    }
+  },
+  "patches": [
+    {
+      "wall_index": 5580,
+      "surface_face": 7581,
+      "node_ids": [
+        6903,
+        6913,
+        6891,
+        73726,
+        50329,
+        73725
+      ],
+      "grids": {
+        "degree6": {
+          "baseline": {
+            "physical": {
+              "maximum": 0.00028981554930232977,
+              "argmax": 1,
+              "barycentric": [
+                0.0,
+                0.16666666666666666,
+                0.8333333333333334
+              ],
+              "signed_value": 0.00028981554930232977
+            },
+            "cap_constrained": {
+              "maximum": 0.00028981554930232977,
+              "argmax": 1,
+              "barycentric": [
+                0.0,
+                0.16666666666666666,
+                0.8333333333333334
+              ],
+              "signed_value": 0.00028981554930232977
+            },
+            "projected": {
+              "maximum": 0.0002902796359813203,
+              "argmax": 1,
+              "barycentric": [
+                0.0,
+                0.16666666666666666,
+                0.8333333333333334
+              ],
+              "signed_value": 0.0002902796359813203
+            }
+          },
+          "global": {
+            "physical": {
+              "maximum": 0.0002898074487481068,
+              "argmax": 1,
+              "barycentric": [
+                0.0,
+                0.16666666666666666,
+                0.8333333333333334
+              ],
+              "signed_value": 0.0002898074487481068
+            },
+            "cap_constrained": {
+              "maximum": 0.0002898074487481068,
+              "argmax": 1,
+              "barycentric": [
+                0.0,
+                0.16666666666666666,
+                0.8333333333333334
+              ],
+              "signed_value": 0.0002898074487481068
+            },
+            "projected": {
+              "maximum": 0.0002902715095705091,
+              "argmax": 1,
+              "barycentric": [
+                0.0,
+                0.16666666666666666,
+                0.8333333333333334
+              ],
+              "signed_value": 0.0002902715095705091
+            }
+          },
+          "facewise": {
+            "physical": {
+              "maximum": 0.0002898074487481068,
+              "argmax": 1,
+              "barycentric": [
+                0.0,
+                0.16666666666666666,
+                0.8333333333333334
+              ],
+              "signed_value": 0.0002898074487481068
+            },
+            "cap_constrained": {
+              "maximum": 0.0002898074487481068,
+              "argmax": 1,
+              "barycentric": [
+                0.0,
+                0.16666666666666666,
+                0.8333333333333334
+              ],
+              "signed_value": 0.0002898074487481068
+            },
+            "projected": {
+              "maximum": 0.0002902715095705091,
+              "argmax": 1,
+              "barycentric": [
+                0.0,
+                0.16666666666666666,
+                0.8333333333333334
+              ],
+              "signed_value": 0.0002902715095705091
+            }
+          },
+          "same_barycentric_maximum_change": {
+            "global": {
+              "physical": 1.7925421365498173e-08,
+              "cap_constrained": 1.7925421365498173e-08,
+              "projected": 1.7909578181447253e-08
+            },
+            "facewise": {
+              "physical": 1.4676945615438633e-08,
+              "cap_constrained": 1.4676945615438633e-08,
+              "projected": 1.4667337811323348e-08
+            }
+          }
+        },
+        "gauss6": {
+          "baseline": {
+            "physical": {
+              "maximum": 0.000279104062888896,
+              "argmax": 29,
+              "barycentric": [
+                0.005719673678836329,
+                0.8306046932331322,
+                0.16367563308803143
+              ],
+              "signed_value": -0.000279104062888896
+            },
+            "cap_constrained": {
+              "maximum": 0.000279104062888896,
+              "argmax": 29,
+              "barycentric": [
+                0.005719673678836329,
+                0.8306046932331322,
+                0.16367563308803143
+              ],
+              "signed_value": -0.000279104062888896
+            },
+            "projected": {
+              "maximum": 0.0002788213804823952,
+              "argmax": 29,
+              "barycentric": [
+                0.005719673678836329,
+                0.8306046932331322,
+                0.16367563308803143
+              ],
+              "signed_value": 0.0002788213804823952
+            }
+          },
+          "global": {
+            "physical": {
+              "maximum": 0.0002791123870033125,
+              "argmax": 29,
+              "barycentric": [
+                0.005719673678836329,
+                0.8306046932331322,
+                0.16367563308803143
+              ],
+              "signed_value": -0.0002791123870033125
+            },
+            "cap_constrained": {
+              "maximum": 0.0002791123870033125,
+              "argmax": 29,
+              "barycentric": [
+                0.005719673678836329,
+                0.8306046932331322,
+                0.16367563308803143
+              ],
+              "signed_value": -0.0002791123870033125
+            },
+            "projected": {
+              "maximum": 0.0002788296877285616,
+              "argmax": 29,
+              "barycentric": [
+                0.005719673678836329,
+                0.8306046932331322,
+                0.16367563308803143
+              ],
+              "signed_value": 0.0002788296877285616
+            }
+          },
+          "facewise": {
+            "physical": {
+              "maximum": 0.00027911233233371207,
+              "argmax": 29,
+              "barycentric": [
+                0.005719673678836329,
+                0.8306046932331322,
+                0.16367563308803143
+              ],
+              "signed_value": -0.00027911233233371207
+            },
+            "cap_constrained": {
+              "maximum": 0.00027911233233371207,
+              "argmax": 29,
+              "barycentric": [
+                0.005719673678836329,
+                0.8306046932331322,
+                0.16367563308803143
+              ],
+              "signed_value": -0.00027911233233371207
+            },
+            "projected": {
+              "maximum": 0.00027882963316559235,
+              "argmax": 29,
+              "barycentric": [
+                0.005719673678836329,
+                0.8306046932331322,
+                0.16367563308803143
+              ],
+              "signed_value": 0.00027882963316559235
+            }
+          },
+          "same_barycentric_maximum_change": {
+            "global": {
+              "physical": 1.9118533768129023e-08,
+              "cap_constrained": 1.9118533768129023e-08,
+              "projected": 1.911597773108027e-08
+            },
+            "facewise": {
+              "physical": 1.3851896340675782e-08,
+              "cap_constrained": 1.3851896340675782e-08,
+              "projected": 1.383038540308623e-08
+            }
+          }
+        },
+        "gauss8": {
+          "baseline": {
+            "physical": {
+              "maximum": 0.00029539271308711156,
+              "argmax": 47,
+              "barycentric": [
+                0.004710294022372691,
+                0.7627662049581645,
+                0.2325235010194628
+              ],
+              "signed_value": -0.00029539271308711156
+            },
+            "cap_constrained": {
+              "maximum": 0.00029539271308711156,
+              "argmax": 47,
+              "barycentric": [
+                0.004710294022372691,
+                0.7627662049581645,
+                0.2325235010194628
+              ],
+              "signed_value": -0.00029539271308711156
+            },
+            "projected": {
+              "maximum": 0.00029506377114566705,
+              "argmax": 47,
+              "barycentric": [
+                0.004710294022372691,
+                0.7627662049581645,
+                0.2325235010194628
+              ],
+              "signed_value": 0.00029506377114566705
+            }
+          },
+          "global": {
+            "physical": {
+              "maximum": 0.0002954034145732018,
+              "argmax": 47,
+              "barycentric": [
+                0.004710294022372691,
+                0.7627662049581645,
+                0.2325235010194628
+              ],
+              "signed_value": -0.0002954034145732018
+            },
+            "cap_constrained": {
+              "maximum": 0.0002954034145732018,
+              "argmax": 47,
+              "barycentric": [
+                0.004710294022372691,
+                0.7627662049581645,
+                0.2325235010194628
+              ],
+              "signed_value": -0.0002954034145732018
+            },
+            "projected": {
+              "maximum": 0.00029507444876944607,
+              "argmax": 47,
+              "barycentric": [
+                0.004710294022372691,
+                0.7627662049581645,
+                0.2325235010194628
+              ],
+              "signed_value": 0.00029507444876944607
+            }
+          },
+          "facewise": {
+            "physical": {
+              "maximum": 0.00029540335060107635,
+              "argmax": 47,
+              "barycentric": [
+                0.004710294022372691,
+                0.7627662049581645,
+                0.2325235010194628
+              ],
+              "signed_value": -0.00029540335060107635
+            },
+            "cap_constrained": {
+              "maximum": 0.00029540335060107635,
+              "argmax": 47,
+              "barycentric": [
+                0.004710294022372691,
+                0.7627662049581645,
+                0.2325235010194628
+              ],
+              "signed_value": -0.00029540335060107635
+            },
+            "projected": {
+              "maximum": 0.00029507438493560085,
+              "argmax": 47,
+              "barycentric": [
+                0.004710294022372691,
+                0.7627662049581645,
+                0.2325235010194628
+              ],
+              "signed_value": 0.00029507438493560085
+            }
+          },
+          "same_barycentric_maximum_change": {
+            "global": {
+              "physical": 1.9121089594644348e-08,
+              "cap_constrained": 1.9121089594644348e-08,
+              "projected": 1.9115016239629645e-08
+            },
+            "facewise": {
+              "physical": 1.419149620585894e-08,
+              "cap_constrained": 1.419149620585894e-08,
+              "projected": 1.4172674816519842e-08
+            }
+          }
+        },
+        "standard": {
+          "baseline": {
+            "physical": {
+              "maximum": 0.00028292742187233593,
+              "argmax": 11,
+              "barycentric": [
+                0.0,
+                0.25,
+                0.75
+              ],
+              "signed_value": 0.00028292742187233593
+            },
+            "cap_constrained": {
+              "maximum": 0.00028292742187233593,
+              "argmax": 11,
+              "barycentric": [
+                0.0,
+                0.25,
+                0.75
+              ],
+              "signed_value": 0.00028292742187233593
+            },
+            "projected": {
+              "maximum": 0.0002833450929199093,
+              "argmax": 11,
+              "barycentric": [
+                0.0,
+                0.25,
+                0.75
+              ],
+              "signed_value": 0.0002833450929199093
+            }
+          },
+          "global": {
+            "physical": {
+              "maximum": 0.0002829164674865951,
+              "argmax": 11,
+              "barycentric": [
+                0.0,
+                0.25,
+                0.75
+              ],
+              "signed_value": 0.0002829164674865951
+            },
+            "cap_constrained": {
+              "maximum": 0.0002829164674865951,
+              "argmax": 11,
+              "barycentric": [
+                0.0,
+                0.25,
+                0.75
+              ],
+              "signed_value": 0.0002829164674865951
+            },
+            "projected": {
+              "maximum": 0.0002833341061863039,
+              "argmax": 11,
+              "barycentric": [
+                0.0,
+                0.25,
+                0.75
+              ],
+              "signed_value": 0.0002833341061863039
+            }
+          },
+          "facewise": {
+            "physical": {
+              "maximum": 0.0002829164674865951,
+              "argmax": 11,
+              "barycentric": [
+                0.0,
+                0.25,
+                0.75
+              ],
+              "signed_value": 0.0002829164674865951
+            },
+            "cap_constrained": {
+              "maximum": 0.0002829164674865951,
+              "argmax": 11,
+              "barycentric": [
+                0.0,
+                0.25,
+                0.75
+              ],
+              "signed_value": 0.0002829164674865951
+            },
+            "projected": {
+              "maximum": 0.0002833341061863039,
+              "argmax": 11,
+              "barycentric": [
+                0.0,
+                0.25,
+                0.75
+              ],
+              "signed_value": 0.0002833341061863039
+            }
+          },
+          "same_barycentric_maximum_change": {
+            "global": {
+              "physical": 1.4679216950780121e-08,
+              "cap_constrained": 1.4679216950780121e-08,
+              "projected": 1.4668681951183528e-08
+            },
+            "facewise": {
+              "physical": 1.4670295435442244e-08,
+              "cap_constrained": 1.4670295435442244e-08,
+              "projected": 1.466733796043164e-08
+            }
+          }
+        },
+        "dense13": {
+          "baseline": {
+            "physical": {
+              "maximum": 0.00029771823244088304,
+              "argmax": 12,
+              "barycentric": [
+                0.0,
+                0.7692307692307693,
+                0.23076923076923078
+              ],
+              "signed_value": -0.00029771823244088304
+            },
+            "cap_constrained": {
+              "maximum": 0.00029771823244088304,
+              "argmax": 12,
+              "barycentric": [
+                0.0,
+                0.7692307692307693,
+                0.23076923076923078
+              ],
+              "signed_value": -0.00029771823244088304
+            },
+            "projected": {
+              "maximum": 0.00029738547681597716,
+              "argmax": 12,
+              "barycentric": [
+                0.0,
+                0.7692307692307693,
+                0.23076923076923078
+              ],
+              "signed_value": 0.00029738547681597716
+            }
+          },
+          "global": {
+            "physical": {
+              "maximum": 0.00029772866800915134,
+              "argmax": 12,
+              "barycentric": [
+                0.0,
+                0.7692307692307693,
+                0.23076923076923078
+              ],
+              "signed_value": -0.00029772866800915134
+            },
+            "cap_constrained": {
+              "maximum": 0.00029772866800915134,
+              "argmax": 12,
+              "barycentric": [
+                0.0,
+                0.7692307692307693,
+                0.23076923076923078
+              ],
+              "signed_value": -0.00029772866800915134
+            },
+            "projected": {
+              "maximum": 0.0002973958890293167,
+              "argmax": 12,
+              "barycentric": [
+                0.0,
+                0.7692307692307693,
+                0.23076923076923078
+              ],
+              "signed_value": 0.0002973958890293167
+            }
+          },
+          "facewise": {
+            "physical": {
+              "maximum": 0.00029772866800915134,
+              "argmax": 12,
+              "barycentric": [
+                0.0,
+                0.7692307692307693,
+                0.23076923076923078
+              ],
+              "signed_value": -0.00029772866800915134
+            },
+            "cap_constrained": {
+              "maximum": 0.00029772866800915134,
+              "argmax": 12,
+              "barycentric": [
+                0.0,
+                0.7692307692307693,
+                0.23076923076923078
+              ],
+              "signed_value": -0.00029772866800915134
+            },
+            "projected": {
+              "maximum": 0.0002973958890293167,
+              "argmax": 12,
+              "barycentric": [
+                0.0,
+                0.7692307692307693,
+                0.23076923076923078
+              ],
+              "signed_value": 0.0002973958890293167
+            }
+          },
+          "same_barycentric_maximum_change": {
+            "global": {
+              "physical": 1.9419235309173566e-08,
+              "cap_constrained": 1.9419235309173566e-08,
+              "projected": 1.9417760609179556e-08
+            },
+            "facewise": {
+              "physical": 1.4670295435442244e-08,
+              "cap_constrained": 1.4670295435442244e-08,
+              "projected": 1.4667337811323348e-08
+            }
+          }
+        }
+      }
+    },
+    {
+      "wall_index": 5585,
+      "surface_face": 7586,
+      "node_ids": [
+        6913,
+        7780,
+        6891,
+        52705,
+        52706,
+        50329
+      ],
+      "grids": {
+        "degree6": {
+          "baseline": {
+            "physical": {
+              "maximum": 0.00028981554930232977,
+              "argmax": 7,
+              "barycentric": [
+                0.16666666666666666,
+                0.0,
+                0.8333333333333334
+              ],
+              "signed_value": 0.00028981554930232977
+            },
+            "cap_constrained": {
+              "maximum": 0.00028981554930232977,
+              "argmax": 7,
+              "barycentric": [
+                0.16666666666666666,
+                0.0,
+                0.8333333333333334
+              ],
+              "signed_value": 0.00028981554930232977
+            },
+            "projected": {
+              "maximum": 0.0002902796359813203,
+              "argmax": 7,
+              "barycentric": [
+                0.16666666666666666,
+                0.0,
+                0.8333333333333334
+              ],
+              "signed_value": 0.0002902796359813203
+            }
+          },
+          "global": {
+            "physical": {
+              "maximum": 0.0002898074487481068,
+              "argmax": 7,
+              "barycentric": [
+                0.16666666666666666,
+                0.0,
+                0.8333333333333334
+              ],
+              "signed_value": 0.0002898074487481068
+            },
+            "cap_constrained": {
+              "maximum": 0.0002898074487481068,
+              "argmax": 7,
+              "barycentric": [
+                0.16666666666666666,
+                0.0,
+                0.8333333333333334
+              ],
+              "signed_value": 0.0002898074487481068
+            },
+            "projected": {
+              "maximum": 0.0002902715095705091,
+              "argmax": 7,
+              "barycentric": [
+                0.16666666666666666,
+                0.0,
+                0.8333333333333334
+              ],
+              "signed_value": 0.0002902715095705091
+            }
+          },
+          "facewise": {
+            "physical": {
+              "maximum": 0.0002898074487481068,
+              "argmax": 7,
+              "barycentric": [
+                0.16666666666666666,
+                0.0,
+                0.8333333333333334
+              ],
+              "signed_value": 0.0002898074487481068
+            },
+            "cap_constrained": {
+              "maximum": 0.0002898074487481068,
+              "argmax": 7,
+              "barycentric": [
+                0.16666666666666666,
+                0.0,
+                0.8333333333333334
+              ],
+              "signed_value": 0.0002898074487481068
+            },
+            "projected": {
+              "maximum": 0.0002902715095705091,
+              "argmax": 7,
+              "barycentric": [
+                0.16666666666666666,
+                0.0,
+                0.8333333333333334
+              ],
+              "signed_value": 0.0002902715095705091
+            }
+          },
+          "same_barycentric_maximum_change": {
+            "global": {
+              "physical": 1.7917884394112087e-08,
+              "cap_constrained": 1.7917884394112087e-08,
+              "projected": 1.7903360268015393e-08
+            },
+            "facewise": {
+              "physical": 1.4669012014108896e-08,
+              "cap_constrained": 1.4669012014108896e-08,
+              "projected": 1.4665442782911542e-08
+            }
+          }
+        },
+        "gauss6": {
+          "baseline": {
+            "physical": {
+              "maximum": 0.00028054826434327967,
+              "argmax": 4,
+              "barycentric": [
+                0.16367563308803146,
+                0.033765242898423975,
+                0.8025591240135446
+              ],
+              "signed_value": 0.00028054826434327967
+            },
+            "cap_constrained": {
+              "maximum": 0.00028054826434327967,
+              "argmax": 4,
+              "barycentric": [
+                0.16367563308803146,
+                0.033765242898423975,
+                0.8025591240135446
+              ],
+              "signed_value": 0.00028054826434327967
+            },
+            "projected": {
+              "maximum": 0.00028097568670017945,
+              "argmax": 4,
+              "barycentric": [
+                0.16367563308803146,
+                0.033765242898423975,
+                0.8025591240135446
+              ],
+              "signed_value": 0.00028097568670017945
+            }
+          },
+          "global": {
+            "physical": {
+              "maximum": 0.00028053994336521115,
+              "argmax": 1,
+              "barycentric": [
+                0.8025591240135446,
+                0.033765242898423975,
+                0.16367563308803143
+              ],
+              "signed_value": -0.00028053994336521115
+            },
+            "cap_constrained": {
+              "maximum": 0.00028053994336521115,
+              "argmax": 1,
+              "barycentric": [
+                0.8025591240135446,
+                0.033765242898423975,
+                0.16367563308803143
+              ],
+              "signed_value": -0.00028053994336521115
+            },
+            "projected": {
+              "maximum": 0.0002809660907557036,
+              "argmax": 4,
+              "barycentric": [
+                0.16367563308803146,
+                0.033765242898423975,
+                0.8025591240135446
+              ],
+              "signed_value": 0.0002809660907557036
+            }
+          },
+          "facewise": {
+            "physical": {
+              "maximum": 0.00028054060056507084,
+              "argmax": 4,
+              "barycentric": [
+                0.16367563308803146,
+                0.033765242898423975,
+                0.8025591240135446
+              ],
+              "signed_value": 0.00028054060056507084
+            },
+            "cap_constrained": {
+              "maximum": 0.00028054060056507084,
+              "argmax": 4,
+              "barycentric": [
+                0.16367563308803146,
+                0.033765242898423975,
+                0.8025591240135446
+              ],
+              "signed_value": 0.00028054060056507084
+            },
+            "projected": {
+              "maximum": 0.0002809679995950579,
+              "argmax": 4,
+              "barycentric": [
+                0.16367563308803146,
+                0.033765242898423975,
+                0.8025591240135446
+              ],
+              "signed_value": 0.0002809679995950579
+            }
+          },
+          "same_barycentric_maximum_change": {
+            "global": {
+              "physical": 1.9111256323362154e-08,
+              "cap_constrained": 1.9111256323362154e-08,
+              "projected": 1.9109350309126145e-08
+            },
+            "facewise": {
+              "physical": 1.2929668872293121e-08,
+              "cap_constrained": 1.2929668872293121e-08,
+              "projected": 1.2911305791082342e-08
+            }
+          }
+        },
+        "gauss8": {
+          "baseline": {
+            "physical": {
+              "maximum": 0.0002893073235430848,
+              "argmax": 2,
+              "barycentric": [
+                0.7476214272293052,
+                0.019855071751231912,
+                0.2325235010194628
+              ],
+              "signed_value": -0.0002893073235430848
+            },
+            "cap_constrained": {
+              "maximum": 0.0002893073235430848,
+              "argmax": 2,
+              "barycentric": [
+                0.7476214272293052,
+                0.019855071751231912,
+                0.2325235010194628
+              ],
+              "signed_value": -0.0002893073235430848
+            },
+            "projected": {
+              "maximum": 0.0002889930351178087,
+              "argmax": 2,
+              "barycentric": [
+                0.7476214272293052,
+                0.019855071751231912,
+                0.2325235010194628
+              ],
+              "signed_value": 0.0002889930351178087
+            }
+          },
+          "global": {
+            "physical": {
+              "maximum": 0.0002893186833216221,
+              "argmax": 2,
+              "barycentric": [
+                0.7476214272293052,
+                0.019855071751231912,
+                0.2325235010194628
+              ],
+              "signed_value": -0.0002893186833216221
+            },
+            "cap_constrained": {
+              "maximum": 0.0002893186833216221,
+              "argmax": 2,
+              "barycentric": [
+                0.7476214272293052,
+                0.019855071751231912,
+                0.2325235010194628
+              ],
+              "signed_value": -0.0002893186833216221
+            },
+            "projected": {
+              "maximum": 0.000289004370175986,
+              "argmax": 2,
+              "barycentric": [
+                0.7476214272293052,
+                0.019855071751231912,
+                0.2325235010194628
+              ],
+              "signed_value": 0.000289004370175986
+            }
+          },
+          "facewise": {
+            "physical": {
+              "maximum": 0.00028931754216972164,
+              "argmax": 2,
+              "barycentric": [
+                0.7476214272293052,
+                0.019855071751231912,
+                0.2325235010194628
+              ],
+              "signed_value": -0.00028931754216972164
+            },
+            "cap_constrained": {
+              "maximum": 0.00028931754216972164,
+              "argmax": 2,
+              "barycentric": [
+                0.7476214272293052,
+                0.019855071751231912,
+                0.2325235010194628
+              ],
+              "signed_value": -0.00028931754216972164
+            },
+            "projected": {
+              "maximum": 0.00028900323155377667,
+              "argmax": 2,
+              "barycentric": [
+                0.7476214272293052,
+                0.019855071751231912,
+                0.2325235010194628
+              ],
+              "signed_value": 0.00028900323155377667
+            }
+          },
+          "same_barycentric_maximum_change": {
+            "global": {
+              "physical": 1.8841528460541567e-08,
+              "cap_constrained": 1.8841528460541567e-08,
+              "projected": 1.8835106538763575e-08
+            },
+            "facewise": {
+              "physical": 1.3631017597618518e-08,
+              "cap_constrained": 1.3631017597618518e-08,
+              "projected": 1.3614220376777708e-08
+            }
+          }
+        },
+        "standard": {
+          "baseline": {
+            "physical": {
+              "maximum": 0.0002944774581879404,
+              "argmax": 12,
+              "barycentric": [
+                0.75,
+                0.0,
+                0.25
+              ],
+              "signed_value": -0.0002944774581879404
+            },
+            "cap_constrained": {
+              "maximum": 0.0002944774581879404,
+              "argmax": 12,
+              "barycentric": [
+                0.75,
+                0.0,
+                0.25
+              ],
+              "signed_value": -0.0002944774581879404
+            },
+            "projected": {
+              "maximum": 0.0002941483288309411,
+              "argmax": 12,
+              "barycentric": [
+                0.75,
+                0.0,
+                0.25
+              ],
+              "signed_value": 0.0002941483288309411
+            }
+          },
+          "global": {
+            "physical": {
+              "maximum": 0.00029448848078897534,
+              "argmax": 12,
+              "barycentric": [
+                0.75,
+                0.0,
+                0.25
+              ],
+              "signed_value": -0.00029448848078897534
+            },
+            "cap_constrained": {
+              "maximum": 0.00029448848078897534,
+              "argmax": 12,
+              "barycentric": [
+                0.75,
+                0.0,
+                0.25
+              ],
+              "signed_value": -0.00029448848078897534
+            },
+            "projected": {
+              "maximum": 0.0002941593267453074,
+              "argmax": 12,
+              "barycentric": [
+                0.75,
+                0.0,
+                0.25
+              ],
+              "signed_value": 0.0002941593267453074
+            }
+          },
+          "facewise": {
+            "physical": {
+              "maximum": 0.00029448848078897534,
+              "argmax": 12,
+              "barycentric": [
+                0.75,
+                0.0,
+                0.25
+              ],
+              "signed_value": -0.00029448848078897534
+            },
+            "cap_constrained": {
+              "maximum": 0.00029448848078897534,
+              "argmax": 12,
+              "barycentric": [
+                0.75,
+                0.0,
+                0.25
+              ],
+              "signed_value": -0.00029448848078897534
+            },
+            "projected": {
+              "maximum": 0.0002941593267453074,
+              "argmax": 12,
+              "barycentric": [
+                0.75,
+                0.0,
+                0.25
+              ],
+              "signed_value": 0.0002941593267453074
+            }
+          },
+          "same_barycentric_maximum_change": {
+            "global": {
+              "physical": 1.4678451582529031e-08,
+              "cap_constrained": 1.4678451582529031e-08,
+              "projected": 1.4669810557499732e-08
+            },
+            "facewise": {
+              "physical": 1.4669012014108896e-08,
+              "cap_constrained": 1.4669012014108896e-08,
+              "projected": 1.466544272992116e-08
+            }
+          }
+        },
+        "dense13": {
+          "baseline": {
+            "physical": {
+              "maximum": 0.00029771823244088304,
+              "argmax": 105,
+              "barycentric": [
+                0.7692307692307693,
+                0.0,
+                0.23076923076923078
+              ],
+              "signed_value": -0.00029771823244088304
+            },
+            "cap_constrained": {
+              "maximum": 0.00029771823244088304,
+              "argmax": 105,
+              "barycentric": [
+                0.7692307692307693,
+                0.0,
+                0.23076923076923078
+              ],
+              "signed_value": -0.00029771823244088304
+            },
+            "projected": {
+              "maximum": 0.00029738547681597716,
+              "argmax": 105,
+              "barycentric": [
+                0.7692307692307693,
+                0.0,
+                0.23076923076923078
+              ],
+              "signed_value": 0.00029738547681597716
+            }
+          },
+          "global": {
+            "physical": {
+              "maximum": 0.00029772866800915134,
+              "argmax": 105,
+              "barycentric": [
+                0.7692307692307693,
+                0.0,
+                0.23076923076923078
+              ],
+              "signed_value": -0.00029772866800915134
+            },
+            "cap_constrained": {
+              "maximum": 0.00029772866800915134,
+              "argmax": 105,
+              "barycentric": [
+                0.7692307692307693,
+                0.0,
+                0.23076923076923078
+              ],
+              "signed_value": -0.00029772866800915134
+            },
+            "projected": {
+              "maximum": 0.0002973958890293167,
+              "argmax": 105,
+              "barycentric": [
+                0.7692307692307693,
+                0.0,
+                0.23076923076923078
+              ],
+              "signed_value": 0.0002973958890293167
+            }
+          },
+          "facewise": {
+            "physical": {
+              "maximum": 0.00029772866800915134,
+              "argmax": 105,
+              "barycentric": [
+                0.7692307692307693,
+                0.0,
+                0.23076923076923078
+              ],
+              "signed_value": -0.00029772866800915134
+            },
+            "cap_constrained": {
+              "maximum": 0.00029772866800915134,
+              "argmax": 105,
+              "barycentric": [
+                0.7692307692307693,
+                0.0,
+                0.23076923076923078
+              ],
+              "signed_value": -0.00029772866800915134
+            },
+            "projected": {
+              "maximum": 0.0002973958890293167,
+              "argmax": 105,
+              "barycentric": [
+                0.7692307692307693,
+                0.0,
+                0.23076923076923078
+              ],
+              "signed_value": 0.0002973958890293167
+            }
+          },
+          "same_barycentric_maximum_change": {
+            "global": {
+              "physical": 1.9067857197729816e-08,
+              "cap_constrained": 1.9067857197729816e-08,
+              "projected": 1.906566958788177e-08
+            },
+            "facewise": {
+              "physical": 1.4669012014108896e-08,
+              "cap_constrained": 1.4669012014108896e-08,
+              "projected": 1.4665442782911542e-08
+            }
+          }
+        }
+      }
+    }
+  ],
+  "witnesses": [
+    {
+      "wall_index": 5580,
+      "surface_face": 7581,
+      "grid": "degree6",
+      "probe_index": 1,
+      "barycentric": [
+        0.0,
+        0.16666666666666666,
+        0.8333333333333334
+      ],
+      "states": {
+        "baseline": {
+          "point": [
+            0.472684526414741,
+            0.16438824402123592,
+            0.19401321919152426
+          ],
+          "locked": [
+            false,
+            false,
+            false
+          ],
+          "raw": 0.0003740301107535346,
+          "physical_signed": 0.00028981554930232977,
+          "cap_constrained_signed": 0.00028981554930232977,
+          "gradient_norm": 1.2905798589962953,
+          "allowed_gradient_norm": 1.2905798589962953,
+          "projected": 0.0002902796359813203,
+          "foot": [
+            0.4724686407260136,
+            0.16422181156812865,
+            0.19391344006033528
+          ],
+          "independent_local_minimum": null
+        },
+        "global": {
+          "point": [
+            0.4726845199851339,
+            0.16438823980596615,
+            0.19401321649469505
+          ],
+          "locked": [
+            false,
+            false,
+            false
+          ],
+          "raw": 0.000374019623980353,
+          "physical_signed": 0.0002898074487481068,
+          "cap_constrained_signed": 0.0002898074487481068,
+          "gradient_norm": 1.2905797473323097,
+          "allowed_gradient_norm": 1.2905797473323097,
+          "projected": 0.0002902715095705091,
+          "foot": [
+            0.47246864033173663,
+            0.16422181201775565,
+            0.1939134401656947
+          ],
+          "independent_local_minimum": null
+        },
+        "facewise": {
+          "point": [
+            0.4726845199851339,
+            0.16438823980596615,
+            0.19401321649469505
+          ],
+          "locked": [
+            false,
+            false,
+            false
+          ],
+          "raw": 0.000374019623980353,
+          "physical_signed": 0.0002898074487481068,
+          "cap_constrained_signed": 0.0002898074487481068,
+          "gradient_norm": 1.2905797473323097,
+          "allowed_gradient_norm": 1.2905797473323097,
+          "projected": 0.0002902715095705091,
+          "foot": [
+            0.47246864033173663,
+            0.16422181201775565,
+            0.1939134401656947
+          ],
+          "independent_local_minimum": null
+        }
+      }
+    },
+    {
+      "wall_index": 5580,
+      "surface_face": 7581,
+      "grid": "dense13",
+      "probe_index": 12,
+      "barycentric": [
+        0.0,
+        0.7692307692307693,
+        0.23076923076923078
+      ],
+      "states": {
+        "baseline": {
+          "point": [
+            0.44782103203641577,
+            0.19708823752505183,
+            0.19884981224915613
+          ],
+          "locked": [
+            false,
+            false,
+            false
+          ],
+          "raw": -0.0004478846901478195,
+          "physical_signed": -0.00029771823244088304,
+          "cap_constrained_signed": -0.00029771823244088304,
+          "gradient_norm": 1.5043912039775882,
+          "allowed_gradient_norm": 1.5043912039775882,
+          "projected": 0.0002973854768158957,
+          "foot": [
+            0.4480586222399031,
+            0.19723918016550163,
+            0.19894575669309064
+          ],
+          "independent_local_minimum": {
+            "foot": [
+              0.44805840293523763,
+              0.19723928468770136,
+              0.19894613323387253
+            ],
+            "solver_success": true,
+            "message": "Optimization terminated successfully",
+            "iterations": 185,
+            "absolute_field_residual": 1.9081958235744878e-17,
+            "normalized_field_residual": 1.26558337174735e-17,
+            "feasible_target": true,
+            "distance": 0.00029738513925330577
+          }
+        },
+        "global": {
+          "point": [
+            0.4478210238186931,
+            0.1970882321374881,
+            0.1988498088023212
+          ],
+          "locked": [
+            false,
+            false,
+            false
+          ],
+          "raw": -0.0004479003538213052,
+          "physical_signed": -0.00029772866800915134,
+          "cap_constrained_signed": -0.00029772866800915134,
+          "gradient_norm": 1.504391084729328,
+          "allowed_gradient_norm": 1.504391084729328,
+          "projected": 0.0002973958890294425,
+          "foot": [
+            0.44805862234851335,
+            0.19723918005907848,
+            0.19894575659232397
+          ],
+          "independent_local_minimum": {
+            "foot": [
+              0.44805840292617577,
+              0.1972392839751863,
+              0.19894613437354852
+            ],
+            "solver_success": true,
+            "message": "Optimization terminated successfully",
+            "iterations": 37,
+            "absolute_field_residual": 9.433914153339495e-17,
+            "normalized_field_residual": 6.256907538934303e-17,
+            "feasible_target": true,
+            "distance": 0.0002973955514353632
+          }
+        },
+        "facewise": {
+          "point": [
+            0.4478210238186931,
+            0.1970882321374881,
+            0.1988498088023212
+          ],
+          "locked": [
+            false,
+            false,
+            false
+          ],
+          "raw": -0.0004479003538213052,
+          "physical_signed": -0.00029772866800915134,
+          "cap_constrained_signed": -0.00029772866800915134,
+          "gradient_norm": 1.504391084729328,
+          "allowed_gradient_norm": 1.504391084729328,
+          "projected": 0.0002973958890294425,
+          "foot": [
+            0.44805862234851335,
+            0.19723918005907848,
+            0.19894575659232397
+          ],
+          "independent_local_minimum": {
+            "foot": [
+              0.44805840292617577,
+              0.1972392839751863,
+              0.19894613437354852
+            ],
+            "solver_success": true,
+            "message": "Optimization terminated successfully",
+            "iterations": 37,
+            "absolute_field_residual": 9.433914153339495e-17,
+            "normalized_field_residual": 6.256907538934303e-17,
+            "feasible_target": true,
+            "distance": 0.0002973955514353632
+          }
+        }
+      }
+    },
+    {
+      "wall_index": 5580,
+      "surface_face": 7581,
+      "grid": "gauss8",
+      "probe_index": 47,
+      "barycentric": [
+        0.004710294022372691,
+        0.7627662049581645,
+        0.2325235010194628
+      ],
+      "states": {
+        "baseline": {
+          "point": [
+            0.4480460934161685,
+            0.19684307465539116,
+            0.19868690096491198
+          ],
+          "locked": [
+            false,
+            false,
+            false
+          ],
+          "raw": -0.0004437076812608335,
+          "physical_signed": -0.00029539271308711156,
+          "cap_constrained_signed": -0.00029539271308711156,
+          "gradient_norm": 1.5020942007123368,
+          "allowed_gradient_norm": 1.5020942007123368,
+          "projected": 0.00029506377114566705,
+          "foot": [
+            0.44828179781337096,
+            0.19699279641808914,
+            0.19878223962421002
+          ],
+          "independent_local_minimum": null
+        },
+        "global": {
+          "point": [
+            0.4480460849937878,
+            0.19684306913074082,
+            0.1986868974180819
+          ],
+          "locked": [
+            false,
+            false,
+            false
+          ],
+          "raw": -0.0004437237196637272,
+          "physical_signed": -0.0002954034145732018,
+          "cap_constrained_signed": -0.0002954034145732018,
+          "gradient_norm": 1.5020940780417797,
+          "allowed_gradient_norm": 1.5020940780417797,
+          "projected": 0.00029507444876944607,
+          "foot": [
+            0.4482817979283969,
+            0.19699279630766517,
+            0.19878223951405644
+          ],
+          "independent_local_minimum": null
+        },
+        "facewise": {
+          "point": [
+            0.4480460850404204,
+            0.1968430691669084,
+            0.19868689744352067
+          ],
+          "locked": [
+            false,
+            false,
+            false
+          ],
+          "raw": -0.00044372362379522623,
+          "physical_signed": -0.00029540335060107635,
+          "cap_constrained_signed": -0.00029540335060107635,
+          "gradient_norm": 1.5020940787988795,
+          "allowed_gradient_norm": 1.5020940787988795,
+          "projected": 0.00029507438493560085,
+          "foot": [
+            0.4482817979239887,
+            0.19699279631146105,
+            0.19878223951896046
+          ],
+          "independent_local_minimum": null
+        }
+      }
+    },
+    {
+      "wall_index": 5585,
+      "surface_face": 7586,
+      "grid": "degree6",
+      "probe_index": 7,
+      "barycentric": [
+        0.16666666666666666,
+        0.0,
+        0.8333333333333334
+      ],
+      "states": {
+        "baseline": {
+          "point": [
+            0.472684526414741,
+            0.16438824402123592,
+            0.19401321919152426
+          ],
+          "locked": [
+            false,
+            false,
+            false
+          ],
+          "raw": 0.0003740301107535346,
+          "physical_signed": 0.00028981554930232977,
+          "cap_constrained_signed": 0.00028981554930232977,
+          "gradient_norm": 1.2905798589962953,
+          "allowed_gradient_norm": 1.2905798589962953,
+          "projected": 0.0002902796359813203,
+          "foot": [
+            0.4724686407260136,
+            0.16422181156812865,
+            0.19391344006033528
+          ],
+          "independent_local_minimum": null
+        },
+        "global": {
+          "point": [
+            0.4726845199851339,
+            0.16438823980596615,
+            0.19401321649469505
+          ],
+          "locked": [
+            false,
+            false,
+            false
+          ],
+          "raw": 0.000374019623980353,
+          "physical_signed": 0.0002898074487481068,
+          "cap_constrained_signed": 0.0002898074487481068,
+          "gradient_norm": 1.2905797473323097,
+          "allowed_gradient_norm": 1.2905797473323097,
+          "projected": 0.0002902715095705091,
+          "foot": [
+            0.47246864033173663,
+            0.16422181201775565,
+            0.1939134401656947
+          ],
+          "independent_local_minimum": null
+        },
+        "facewise": {
+          "point": [
+            0.4726845199851339,
+            0.16438823980596615,
+            0.19401321649469505
+          ],
+          "locked": [
+            false,
+            false,
+            false
+          ],
+          "raw": 0.000374019623980353,
+          "physical_signed": 0.0002898074487481068,
+          "cap_constrained_signed": 0.0002898074487481068,
+          "gradient_norm": 1.2905797473323097,
+          "allowed_gradient_norm": 1.2905797473323097,
+          "projected": 0.0002902715095705091,
+          "foot": [
+            0.47246864033173663,
+            0.16422181201775565,
+            0.1939134401656947
+          ],
+          "independent_local_minimum": null
+        }
+      }
+    },
+    {
+      "wall_index": 5585,
+      "surface_face": 7586,
+      "grid": "dense13",
+      "probe_index": 105,
+      "barycentric": [
+        0.7692307692307693,
+        0.0,
+        0.23076923076923078
+      ],
+      "states": {
+        "baseline": {
+          "point": [
+            0.44782103203641577,
+            0.19708823752505183,
+            0.19884981224915613
+          ],
+          "locked": [
+            false,
+            false,
+            false
+          ],
+          "raw": -0.0004478846901478195,
+          "physical_signed": -0.00029771823244088304,
+          "cap_constrained_signed": -0.00029771823244088304,
+          "gradient_norm": 1.5043912039775882,
+          "allowed_gradient_norm": 1.5043912039775882,
+          "projected": 0.0002973854768158957,
+          "foot": [
+            0.4480586222399031,
+            0.19723918016550163,
+            0.19894575669309064
+          ],
+          "independent_local_minimum": {
+            "foot": [
+              0.44805840293523763,
+              0.19723928468770136,
+              0.19894613323387253
+            ],
+            "solver_success": true,
+            "message": "Optimization terminated successfully",
+            "iterations": 185,
+            "absolute_field_residual": 1.9081958235744878e-17,
+            "normalized_field_residual": 1.26558337174735e-17,
+            "feasible_target": true,
+            "distance": 0.00029738513925330577
+          }
+        },
+        "global": {
+          "point": [
+            0.4478210238186931,
+            0.1970882321374881,
+            0.1988498088023212
+          ],
+          "locked": [
+            false,
+            false,
+            false
+          ],
+          "raw": -0.0004479003538213052,
+          "physical_signed": -0.00029772866800915134,
+          "cap_constrained_signed": -0.00029772866800915134,
+          "gradient_norm": 1.504391084729328,
+          "allowed_gradient_norm": 1.504391084729328,
+          "projected": 0.0002973958890294425,
+          "foot": [
+            0.44805862234851335,
+            0.19723918005907848,
+            0.19894575659232397
+          ],
+          "independent_local_minimum": {
+            "foot": [
+              0.44805840292617577,
+              0.1972392839751863,
+              0.19894613437354852
+            ],
+            "solver_success": true,
+            "message": "Optimization terminated successfully",
+            "iterations": 37,
+            "absolute_field_residual": 9.433914153339495e-17,
+            "normalized_field_residual": 6.256907538934303e-17,
+            "feasible_target": true,
+            "distance": 0.0002973955514353632
+          }
+        },
+        "facewise": {
+          "point": [
+            0.4478210238186931,
+            0.1970882321374881,
+            0.1988498088023212
+          ],
+          "locked": [
+            false,
+            false,
+            false
+          ],
+          "raw": -0.0004479003538213052,
+          "physical_signed": -0.00029772866800915134,
+          "cap_constrained_signed": -0.00029772866800915134,
+          "gradient_norm": 1.504391084729328,
+          "allowed_gradient_norm": 1.504391084729328,
+          "projected": 0.0002973958890294425,
+          "foot": [
+            0.44805862234851335,
+            0.19723918005907848,
+            0.19894575659232397
+          ],
+          "independent_local_minimum": {
+            "foot": [
+              0.44805840292617577,
+              0.1972392839751863,
+              0.19894613437354852
+            ],
+            "solver_success": true,
+            "message": "Optimization terminated successfully",
+            "iterations": 37,
+            "absolute_field_residual": 9.433914153339495e-17,
+            "normalized_field_residual": 6.256907538934303e-17,
+            "feasible_target": true,
+            "distance": 0.0002973955514353632
+          }
+        }
+      }
+    },
+    {
+      "wall_index": 5585,
+      "surface_face": 7586,
+      "grid": "gauss6",
+      "probe_index": 1,
+      "barycentric": [
+        0.8025591240135446,
+        0.033765242898423975,
+        0.16367563308803143
+      ],
+      "states": {
+        "baseline": {
+          "point": [
+            0.4458678964380542,
+            0.19907743822290225,
+            0.20060826926957898
+          ],
+          "locked": [
+            false,
+            false,
+            false
+          ],
+          "raw": -0.0004282330756539052,
+          "physical_signed": -0.00028053030938363386,
+          "cap_constrained_signed": -0.00028053030938363386,
+          "gradient_norm": 1.526512684475328,
+          "allowed_gradient_norm": 1.526512684475328,
+          "projected": 0.00028024628255908133,
+          "foot": [
+            0.44609203151071297,
+            0.1992201756528293,
+            0.20069730563400526
+          ],
+          "independent_local_minimum": null
+        },
+        "global": {
+          "point": [
+            0.44586788882868633,
+            0.19907743321009697,
+            0.2006082661996123
+          ],
+          "locked": [
+            false,
+            false,
+            false
+          ],
+          "raw": -0.00042824775204821573,
+          "physical_signed": -0.00028053994336521115,
+          "cap_constrained_signed": -0.00028053994336521115,
+          "gradient_norm": 1.5265125775359423,
+          "allowed_gradient_norm": 1.5265125775359423,
+          "projected": 0.00028025589701238286,
+          "foot": [
+            0.44609203159723043,
+            0.19922017553403146,
+            0.20069730560705296
+          ],
+          "independent_local_minimum": null
+        },
+        "facewise": {
+          "point": [
+            0.44586789035701224,
+            0.19907743423615287,
+            0.20060826671895168
+          ],
+          "locked": [
+            false,
+            false,
+            false
+          ],
+          "raw": -0.0004282448365306796,
+          "physical_signed": -0.0002805380296197352,
+          "cap_constrained_signed": -0.0002805380296197352,
+          "gradient_norm": 1.5265125983495307,
+          "allowed_gradient_norm": 1.5265125983495307,
+          "projected": 0.00028025398717768227,
+          "foot": [
+            0.4460920315967982,
+            0.1992201755879395,
+            0.200697305521989
+          ],
+          "independent_local_minimum": null
+        }
+      }
+    },
+    {
+      "wall_index": 5585,
+      "surface_face": 7586,
+      "grid": "gauss6",
+      "probe_index": 4,
+      "barycentric": [
+        0.16367563308803146,
+        0.033765242898423975,
+        0.8025591240135446
+      ],
+      "states": {
+        "baseline": {
+          "point": [
+            0.4720935964952729,
+            0.16430720185234643,
+            0.19541944340575076
+          ],
+          "locked": [
+            false,
+            false,
+            false
+          ],
+          "raw": 0.00036462158744250336,
+          "physical_signed": 0.00028054826434327967,
+          "cap_constrained_signed": 0.00028054826434327967,
+          "gradient_norm": 1.299675078354259,
+          "allowed_gradient_norm": 1.299675078354259,
+          "projected": 0.00028097568670017945,
+          "foot": [
+            0.47188390402391145,
+            0.164146119506261,
+            0.19532442297768085
+          ],
+          "independent_local_minimum": null
+        },
+        "global": {
+          "point": [
+            0.4720935889589421,
+            0.16430719674002733,
+            0.19541944033076955
+          ],
+          "locked": [
+            false,
+            false,
+            false
+          ],
+          "raw": 0.0003646091168751761,
+          "physical_signed": 0.00028053869752389107,
+          "cap_constrained_signed": 0.00028053869752389107,
+          "gradient_norm": 1.2996749471403155,
+          "allowed_gradient_norm": 1.2996749471403155,
+          "projected": 0.0002809660907557036,
+          "foot": [
+            0.47188390363947463,
+            0.16414611990159278,
+            0.19532442315824639
+          ],
+          "independent_local_minimum": null
+        },
+        "facewise": {
+          "point": [
+            0.472093590414231,
+            0.16430719786559705,
+            0.19541944085512347
+          ],
+          "locked": [
+            false,
+            false,
+            false
+          ],
+          "raw": 0.00036461159755769206,
+          "physical_signed": 0.00028054060056507084,
+          "cap_constrained_signed": 0.00028054060056507084,
+          "gradient_norm": 1.2996749733310744,
+          "allowed_gradient_norm": 1.2996749733310744,
+          "projected": 0.0002809679995950579,
+          "foot": [
+            0.47188390367203975,
+            0.16414611993171302,
+            0.19532442303489314
+          ],
+          "independent_local_minimum": null
+        }
+      }
+    },
+    {
+      "wall_index": 5585,
+      "surface_face": 7586,
+      "grid": "standard",
+      "probe_index": 12,
+      "barycentric": [
+        0.75,
+        0.0,
+        0.25
+      ],
+      "states": {
+        "baseline": {
+          "point": [
+            0.44857511316159393,
+            0.1960185537597354,
+            0.1986786215721994
+          ],
+          "locked": [
+            false,
+            false,
+            false
+          ],
+          "raw": -0.00044128749154467097,
+          "physical_signed": -0.0002944774581879404,
+          "cap_constrained_signed": -0.0002944774581879404,
+          "gradient_norm": 1.49854421543884,
+          "allowed_gradient_norm": 1.49854421543884,
+          "projected": 0.0002941483288309411,
+          "foot": [
+            0.44881010722801534,
+            0.19616777656409382,
+            0.19877366673388674
+          ],
+          "independent_local_minimum": {
+            "foot": [
+              0.44880988907843367,
+              0.19616788462225052,
+              0.19877403439588345
+            ],
+            "solver_success": true,
+            "message": "Optimization terminated successfully",
+            "iterations": 11,
+            "absolute_field_residual": 4.6735889897703276e-17,
+            "normalized_field_residual": 3.111784888199954e-17,
+            "feasible_target": true,
+            "distance": 0.0002941479976998178
+          }
+        },
+        "global": {
+          "point": [
+            0.4485751044816244,
+            0.19601854806912122,
+            0.19867861793148
+          ],
+          "locked": [
+            false,
+            false,
+            false
+          ],
+          "raw": -0.0004413039720249975,
+          "physical_signed": -0.00029448848078897534,
+          "cap_constrained_signed": -0.00029448848078897534,
+          "gradient_norm": 1.4985440885248997,
+          "allowed_gradient_norm": 1.4985440885248997,
+          "projected": 0.0002941593267453074,
+          "foot": [
+            0.448810107342397,
+            0.19616777644867717,
+            0.19877366663307583
+          ],
+          "independent_local_minimum": {
+            "foot": [
+              0.4488098883713382,
+              0.1961678862945309,
+              0.19877403351849604
+            ],
+            "solver_success": true,
+            "message": "Optimization terminated successfully",
+            "iterations": 11,
+            "absolute_field_residual": 6.792526610621685e-17,
+            "normalized_field_residual": 4.52262312846782e-17,
+            "feasible_target": true,
+            "distance": 0.00029415899558445313
+          }
+        },
+        "facewise": {
+          "point": [
+            0.4485751044816244,
+            0.19601854806912122,
+            0.19867861793148
+          ],
+          "locked": [
+            false,
+            false,
+            false
+          ],
+          "raw": -0.0004413039720249975,
+          "physical_signed": -0.00029448848078897534,
+          "cap_constrained_signed": -0.00029448848078897534,
+          "gradient_norm": 1.4985440885248997,
+          "allowed_gradient_norm": 1.4985440885248997,
+          "projected": 0.0002941593267453074,
+          "foot": [
+            0.448810107342397,
+            0.19616777644867717,
+            0.19877366663307583
+          ],
+          "independent_local_minimum": {
+            "foot": [
+              0.4488098883713382,
+              0.1961678862945309,
+              0.19877403351849604
+            ],
+            "solver_success": true,
+            "message": "Optimization terminated successfully",
+            "iterations": 11,
+            "absolute_field_residual": 6.792526610621685e-17,
+            "normalized_field_residual": 4.52262312846782e-17,
+            "feasible_target": true,
+            "distance": 0.00029415899558445313
+          }
+        }
+      }
+    }
+  ],
+  "saved_forward_maxima_reproduced": true,
+  "arrays": {
+    "patch-metrics.npz": "2db837646e4208e6aaa17c07e53803340d951e0662f6281ec91dadd210081a66",
+    "face-maxima.npz": "333db5e9e8a0ead3b049499760d1d6ae76703bf40525892fa9bbc70d055f3451"
+  },
+  "source_meshes_and_fixtures_unchanged": true,
+  "limits": "Projected feet and local minimizers are feasible numerical targets, not global nearest-distance certificates. Finite face grids do not certify continuous maxima."
+}

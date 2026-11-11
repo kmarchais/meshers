@@ -1,0 +1,436 @@
+{
+  "inputs": {
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/pmy_interpolation_control.py": "6ee2fcd764587b9d17e68bbee1a7c4d12ff6a58d34358515c0b11809be709249",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/pmy_barycenter_control.py": "c08a3b73ce0834ba9306794c862f528e66b473e0966a01d11288e6be3e681bf5",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/pmy_global_preclip_preflight.py": "d47294dd5c897e1f6cb70587bbee462e53e5de34c65fb0ce702a0741c64c82f1",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/pmy_neck_control.py": "aacab3dd12c99ad5586e8c4efb59b74556e736041fbe20653381c53d577b8668",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/tpms_family_fixtures.py": "794418f5d2e3d2158542af51a5cf322c41befff8f8d7c98f769d379baedd3bc6",
+    "/Users/kmarchais/dev/meshers/.local-work/macbook-runtime/venv/lib/python3.12/site-packages/microgen/shape/surface_functions.py": "578c20eb2ef424b95f50618d9cfffdce3676d6b5bdcd90a3278e0ca5ef1af4b4",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-pmy-native-background-v4/one-round/input.json": "1ce238228c359ac20b85734b97694f2e2772ac50ed6e9812cd2a224ca9482998",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-pmy-native-background-v4/prepare-result.json": "b0feab5e0ebd9608c75e1745b4a9f5208696ff97d6b1515fe218a1f598596ddb",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-pmy-native-background-v4/manifest.json": "5622da861d30a19e16f11b0c8076cf26efe943d25b2cefcbfaa00d2e65271ae3",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-tpms-family-fixtures-v1/result.json": "1f3907ba0acf691628d0eb588b0f4325c2abdc8c24efb75a251f60ccca5681f2",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-tpms-family-fixtures-v1/tpms-pmy-sheet/tpms-pmy-sheet-specimen.json": "65f653b5b5df833c4f7b9ebeef839555c76690e1a4e95c6011719d042a77c67a",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-tpms-family-fixtures-v1/tpms-pmy-sheet/tpms-pmy-sheet-samples.npz": "66cd3e81d5bad83b63c3bbc96696d732170ed37049dd4ff1dad868b39dbaf2f1",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-tpms-family-fixtures-v1/tpms-pmy-sheet/tpms-pmy-sheet-definition.json": "a0b3623510422678fd46dbfec702d7ebfb03e14272f7016b002e5b2594a662b6",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-pmy-residual-probe-v1/result.json": "f6b75044445035d0ddcc8b75e0cd60b41178ded3da2070113e27a7540ed0361e",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/microgen_workflow.py": "9f513dfd3e6e5a72a71a54f70c0c2cf7c7a1ebe7256886ee3feaf7d7ad7de161",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/scorecard.py": "8f26256c7df0e84c9f35cdd71bf4f95a74e072d45469002b213c5dcd4f1bab2a",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/periodic_trace.py": "16d51906318ba9110f8979b48a540500d1cce5835685d72e780ca1893f3b8654",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/mmg_quality_localization.py": "03ef27a978fcd5101f36745ccaf67309f49ce6ece172fad28b84246d6d457ebc"
+  },
+  "admission_gates_unchanged": true,
+  "native_clipping_performed": false,
+  "candidate_generated": false,
+  "admitted": false,
+  "source": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-pmy-native-background-v4/one-round",
+  "controls": {
+    "affine_field_unselected": true,
+    "same_class_curved_error_detected": true,
+    "positive_field_rescaling_invariant": true,
+    "physical_cap_gradient_constrained": true,
+    "exact_subdivision_counts_controlled": true,
+    "ordered_face_patterns": 65
+  },
+  "selection": {
+    "faces": {
+      "class_selected": 1104,
+      "geometry_selected": 10390,
+      "geometry_only": 9481,
+      "combined": 10585,
+      "wall_active": 47924,
+      "unresolved_gradient": 0,
+      "maximum_normalized_residual": 0.043430397546857964
+    },
+    "tets": {
+      "class_selected": 404,
+      "geometry_selected": 4530,
+      "geometry_only": 4244,
+      "combined": 4648,
+      "wall_active": 28238,
+      "unresolved_gradient": 0,
+      "maximum_normalized_residual": 0.027248556687976336
+    },
+    "forced_periodic_members": [],
+    "paired_boundary_classes": 1632,
+    "frozen_before_witnesses": true
+  },
+  "selection_sha256": "e7a4f631f3b3328e004611e767458941883a63d39f0dbce670c005777ecd2740",
+  "predicted_background": {
+    "nodes": 26114,
+    "tetrahedra": 117127,
+    "original_nodes": 10881,
+    "original_tetrahedra": 56292,
+    "selected_faces": 10585,
+    "selected_tets": 4648,
+    "face_tet_growth": 41164,
+    "center_tet_growth": 19671,
+    "distinct_local_face_orders": 53,
+    "within_caps": true,
+    "scope": "Exact stellar-subdivision combinatorics; not final clipped/curved mesh counts"
+  },
+  "background": {
+    "before": {
+      "nodes": 10881,
+      "tets": 56292,
+      "boundary_faces": 3264,
+      "unique_faces": 114216,
+      "minimum_quality": 0.12209118400217499,
+      "below_quality_gate": 0,
+      "quality_floor_met": true,
+      "minimum_determinant": 3.3908420138888764e-06,
+      "volume": 1.0000000000000007,
+      "coherent_oriented_faces": true,
+      "nonmanifold_faces": 0,
+      "exact_periodic_nodes_and_facets": true,
+      "periodic": {
+        "periodic_pair_counts": [
+          305,
+          305,
+          305
+        ],
+        "periodic_coordinate_errors": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "periodic_pair_tolerance": 1e-10,
+        "periodic_equivalence_classes": 10016,
+        "periodic_triangles_match": true,
+        "full_facet_check_required": true,
+        "complete_existing_node_classes": true,
+        "unmatched_noncap_contact_nodes": [
+          [
+            [],
+            []
+          ],
+          [
+            [],
+            []
+          ],
+          [
+            [],
+            []
+          ]
+        ],
+        "declared_bounds": [
+          [
+            -0.5,
+            -0.5,
+            -0.5
+          ],
+          [
+            0.5,
+            0.5,
+            0.5
+          ]
+        ],
+        "periodic_gate": "declared-cell-material-cap-and-complete-node-classes-v1"
+      },
+      "caps": [
+        {
+          "axis": 0,
+          "side": -0.5,
+          "faces": 544,
+          "area": 1.0
+        },
+        {
+          "axis": 0,
+          "side": 0.5,
+          "faces": 544,
+          "area": 1.0
+        },
+        {
+          "axis": 1,
+          "side": -0.5,
+          "faces": 544,
+          "area": 1.0
+        },
+        {
+          "axis": 1,
+          "side": 0.5,
+          "faces": 544,
+          "area": 1.0
+        },
+        {
+          "axis": 2,
+          "side": -0.5,
+          "faces": 544,
+          "area": 1.0
+        },
+        {
+          "axis": 2,
+          "side": 0.5,
+          "faces": 544,
+          "area": 1.0
+        }
+      ],
+      "within_caps": true
+    },
+    "after": {
+      "nodes": 26114,
+      "tets": 117127,
+      "boundary_faces": 4440,
+      "unique_faces": 236474,
+      "minimum_quality": 0.011774264259204551,
+      "below_quality_gate": 6208,
+      "quality_floor_met": false,
+      "minimum_determinant": 9.41900559413556e-08,
+      "volume": 1.0000000000000007,
+      "coherent_oriented_faces": true,
+      "nonmanifold_faces": 0,
+      "exact_periodic_nodes_and_facets": true,
+      "periodic": {
+        "periodic_pair_counts": [
+          403,
+          403,
+          403
+        ],
+        "periodic_coordinate_errors": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "periodic_pair_tolerance": 1e-10,
+        "periodic_equivalence_classes": 24955,
+        "periodic_triangles_match": true,
+        "full_facet_check_required": true,
+        "complete_existing_node_classes": true,
+        "unmatched_noncap_contact_nodes": [
+          [
+            [],
+            []
+          ],
+          [
+            [],
+            []
+          ],
+          [
+            [],
+            []
+          ]
+        ],
+        "declared_bounds": [
+          [
+            -0.5,
+            -0.5,
+            -0.5
+          ],
+          [
+            0.5,
+            0.5,
+            0.5
+          ]
+        ],
+        "periodic_gate": "declared-cell-material-cap-and-complete-node-classes-v1"
+      },
+      "caps": [
+        {
+          "axis": 0,
+          "side": -0.5,
+          "faces": 740,
+          "area": 1.0
+        },
+        {
+          "axis": 0,
+          "side": 0.5,
+          "faces": 740,
+          "area": 1.0
+        },
+        {
+          "axis": 1,
+          "side": -0.5,
+          "faces": 740,
+          "area": 1.0
+        },
+        {
+          "axis": 1,
+          "side": 0.5,
+          "faces": 740,
+          "area": 1.0
+        },
+        {
+          "axis": 2,
+          "side": -0.5,
+          "faces": 740,
+          "area": 1.0
+        },
+        {
+          "axis": 2,
+          "side": 0.5,
+          "faces": 740,
+          "area": 1.0
+        }
+      ],
+      "within_caps": true
+    },
+    "subdivision": {
+      "original_nodes_bitwise_unchanged": true,
+      "local_descendant_visits": 68512,
+      "maximum_descendants_per_original_tet": 15,
+      "global_searches_during_insertion": 0,
+      "peak_live_nodes": 26114,
+      "peak_live_tets": 117127
+    },
+    "maximum_parent_volume_error": 5.495603971894515e-15,
+    "passed": false
+  },
+  "background_sha256": "dc9804f83a7b415930f3d5a0ca5013b7b13d950d5ce07833739a2ec937a2d47b",
+  "witness_observation": [
+    {
+      "query_index": 28431,
+      "containing_tets": [
+        38029
+      ],
+      "class_rule_tet": false,
+      "class_rule_face": true,
+      "geometry_rule_tet": true,
+      "geometry_rule_face": true,
+      "tet_estimates": [
+        0.0038638160040193738
+      ],
+      "face_estimates": [
+        0.0,
+        0.005084014689330519,
+        0.0033450790357667944,
+        0.002494008450608103
+      ]
+    },
+    {
+      "query_index": 22953,
+      "containing_tets": [
+        6397
+      ],
+      "class_rule_tet": false,
+      "class_rule_face": true,
+      "geometry_rule_tet": true,
+      "geometry_rule_face": true,
+      "tet_estimates": [
+        0.0020246538051278155
+      ],
+      "face_estimates": [
+        0.0,
+        0.002920958363109314,
+        0.0021216186492422112,
+        0.0008981701487253025
+      ]
+    },
+    {
+      "query_index": 8839,
+      "containing_tets": [
+        4732
+      ],
+      "class_rule_tet": false,
+      "class_rule_face": true,
+      "geometry_rule_tet": true,
+      "geometry_rule_face": true,
+      "tet_estimates": [
+        0.002024653805127898
+      ],
+      "face_estimates": [
+        0.0,
+        0.002920958363109212,
+        0.000898170148725329,
+        0.002121618649242243
+      ]
+    },
+    {
+      "query_index": 18929,
+      "containing_tets": [
+        51145
+      ],
+      "class_rule_tet": false,
+      "class_rule_face": true,
+      "geometry_rule_tet": true,
+      "geometry_rule_face": true,
+      "tet_estimates": [
+        0.0020246538051278172
+      ],
+      "face_estimates": [
+        0.0,
+        0.002920958363109317,
+        0.0008981701487253013,
+        0.0021216186492421327
+      ]
+    },
+    {
+      "query_index": 913,
+      "containing_tets": [
+        10076
+      ],
+      "class_rule_tet": false,
+      "class_rule_face": true,
+      "geometry_rule_tet": true,
+      "geometry_rule_face": true,
+      "tet_estimates": [
+        0.0038638160040193677
+      ],
+      "face_estimates": [
+        0.0,
+        0.005084014689330502,
+        0.0024940084506081006,
+        0.00334507903576679
+      ]
+    },
+    {
+      "query_index": 27848,
+      "containing_tets": [
+        38220
+      ],
+      "class_rule_tet": false,
+      "class_rule_face": true,
+      "geometry_rule_tet": true,
+      "geometry_rule_face": true,
+      "tet_estimates": [
+        0.003863816004019356
+      ],
+      "face_estimates": [
+        0.0,
+        0.005084014689330521,
+        0.0024940084506080876,
+        0.0033450790357667758
+      ]
+    },
+    {
+      "query_index": 4492,
+      "containing_tets": [
+        15960
+      ],
+      "class_rule_tet": false,
+      "class_rule_face": false,
+      "geometry_rule_tet": false,
+      "geometry_rule_face": true,
+      "tet_estimates": [
+        4.080718474877484e-05
+      ],
+      "face_estimates": [
+        0.0060198268358283335,
+        0.002646299747712993,
+        0.0021962944365976856,
+        0.0
+      ]
+    },
+    {
+      "query_index": 2263,
+      "containing_tets": [
+        18133
+      ],
+      "class_rule_tet": false,
+      "class_rule_face": true,
+      "geometry_rule_tet": true,
+      "geometry_rule_face": true,
+      "tet_estimates": [
+        0.0020246538051278155
+      ],
+      "face_estimates": [
+        0.0,
+        0.0029209583631093095,
+        0.0008981701487252557,
+        0.0021216186492421796
+      ]
+    }
+  ],
+  "complete": true,
+  "input_hashes_verified": true,
+  "interpretation": "Background-only preflight of one geometric sampling rule. Counts do not bound final Tet10 size; normalized residuals do not certify boundary distance. No native meshing or FEA claim."
+}
