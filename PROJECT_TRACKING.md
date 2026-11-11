@@ -1,5 +1,57 @@
 # Meshers project tracking
 
+## Blender solid Gyroid printing film, 11 November 2026
+
+Kevin replaced the initial morph teaser with a Blender printing animation.
+The revised 30-second film shows one conventional FDM nozzle building a capped
+solid Gyroid sheet, then smoothstep morphs through Gyroid, Schwarz P, Diamond,
+Neovius and back to Gyroid. Original Tet4 edges appear before generation-time,
+element/node-count and all-six-quality-statistic plots. Both coarse routes'
+strict boundary failure remains visible. No scientific result or admission
+threshold changed; no accuracy-qualified speedup is claimed.
+
+Blender 4.5.16 LTS was installed in user space from its official arm64 DMG,
+with the official SHA256 verified. The M4 Metal device and Cycles preview were
+verified. The final native Blender render uses Eevee, 64 samples, 1080x1350,
+24 fps. Job 896 completes 720 frames in 1344.34 seconds with peak process-tree
+RSS 0.915 GiB. Jobs use the shared one-worker gpu queue, explicit timeouts,
+restart-safe PNG checks and the standard Job progress helper.
+
+The print uses a curved Meshers Gyroid display boundary. The morphs use closed
+nodal-field illustrations with box-constrained wall projection. Damping keeps
+separate samples from coalescing on a box crease. Job 895 passes all 408
+prepared frames with positive enclosed volume and two incident triangles per
+boundary edge. Those are display controls, not FE admission or manufacturing
+certification. Job 897 checks saved Blender playback at 14 frames, verifies
+smoothstep endpoints, continuous printer retraction and bit-exact native Tet4
+positions and boundary faces. The frozen source mesh remains unchanged.
+
+Negative controls are retained in ignored local run logs. Direct VTK capping
+left rough rims; an exact plane-clipping attempt failed manifold checks.
+Using curved Meshers meshes for every interpolated field rejected the equal
+Gyroid/Schwarz-P blend at cells12 with minimum q 0.0164428573 and 49 cells below
+0.1. That rejection is preserved, not reclassified or hidden by weakening the
+quality gate. This is an interpolated display field, not a new benchmark case.
+Undamped display projection merged crease samples at frame302; damping fixed
+that topology problem. A competing watchdog fraction was removed so the child
+Job alone owns the frame plan. Subsequent geometry/render audits pass.
+
+Job 899 composes and encodes the final film. It decodes without errors as
+720 H.264 frames, 30 seconds, yuv420p, 1080x1350 at 24 fps. Representative
+encoded frames were inspected, including the printing headline contrast and
+comparison plots. Job 900 passes the final website production build.
+Sources, a cover and a hashed receipt are in website branch
+`codex/meshers-article-draft`, under `content/drafts/meshers/blender-print` and
+`content/drafts/meshers/assets`. The superseded Hyperframes source was retired;
+the previously shared MP4 remains available. The editable scene and adjacent
+geometry cache remain in `.local-work/blender-gyroid-print-final-v3`.
+
+The Meshers release PR, Microgen integration and frozen measurements are
+unchanged. PR #6 remains blocked by the previously recorded CI, version and
+Tet10 volume-reporting findings. The wider four-case/24-model scientific
+objective remains incomplete. No website deployment or LinkedIn post was sent.
+
+
 ## PR #6 readiness review and TPMS video, 11 November 2026
 
 Kevin requested a subagent review of PR #6 before v0.2.0. Two read-only
