@@ -116,6 +116,7 @@ fn adapt_saved_wedge_seed() {
         halfspaces: Some(&planes),
         halfspace_regions: regions.as_deref(),
         size_field: None,
+        background: None,
         options,
         center: 0.,
         scale,

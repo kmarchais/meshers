@@ -120,12 +120,19 @@ pub struct Output {
     pub diagnostics: Diagnostics,
 }
 
+#[derive(Clone, Copy)]
+struct Background<'a> {
+    points: &'a [Point],
+    tetrahedra: &'a [crate::Tet],
+}
+
 struct Context<'a, F: ScalarField> {
     field: &'a F,
     constraints: Option<&'a [&'a dyn ScalarField]>,
     halfspaces: Option<&'a [[f64; 4]]>,
     halfspace_regions: Option<&'a [intersection::ConstraintMask]>,
     size_field: Option<&'a dyn ScalarField>,
+    background: Option<Background<'a>>,
     options: Options,
     center: f64,
     scale: f64,
@@ -371,7 +378,7 @@ pub fn generate_with_regions<F: ScalarField>(
     halfspaces: Option<&[[f64; 4]]>,
     regions: Option<&[intersection::ConstraintMask]>,
 ) -> Result<Output, MeshingError> {
-    generate_internal(field, size_field, options, halfspaces, regions, None)
+    generate_internal(field, size_field, options, halfspaces, regions, None, None)
 }
 
 /// Adapt an equivalent retained intersection. Periodic and quadratic feature
@@ -382,7 +389,42 @@ pub fn generate_with_constraints<F: ScalarField>(
     options: Options,
     constraints: &[&dyn ScalarField],
 ) -> Result<Output, MeshingError> {
-    generate_internal(field, size_field, options, None, None, Some(constraints))
+    generate_internal(
+        field,
+        size_field,
+        options,
+        None,
+        None,
+        Some(constraints),
+        None,
+    )
+}
+
+/// Research entry point for a preflighted conforming tetrahedral background.
+///
+/// The caller supplies the complete unsnapped box partition, independently checks
+/// its conformity and geometry, and owns the sampling rule. This function retains
+/// the ordinary field normalization, snapping, clipping, quality repair and final
+/// admission checks. It does not certify that the sampling resolves every feature.
+/// Both input arrays are bounded by `max_tetrahedra`; `cells` still sets the original
+/// spacing used by snapping. The supplied background uses its original local
+/// determinant to retain the BCC path's two-percent volume safeguard.
+#[cfg(feature = "experimental-quads")]
+pub fn generate_with_background<F: ScalarField>(
+    field: &F,
+    options: Options,
+    points: &[Point],
+    tetrahedra: &[crate::Tet],
+) -> Result<Output, MeshingError> {
+    generate_internal(
+        field,
+        None,
+        options,
+        None,
+        None,
+        None,
+        Some(Background { points, tetrahedra }),
+    )
 }
 
 fn generate_internal<F: ScalarField>(
@@ -392,6 +434,7 @@ fn generate_internal<F: ScalarField>(
     halfspaces: Option<&[[f64; 4]]>,
     regions: Option<&[intersection::ConstraintMask]>,
     constraints: Option<&[&dyn ScalarField]>,
+    background: Option<Background<'_>>,
 ) -> Result<Output, MeshingError> {
     if options.curved_fit && options.order != 2 {
         return Err(MeshingError::InvalidOptions(
@@ -521,6 +564,7 @@ fn generate_internal<F: ScalarField>(
         halfspaces: halfspaces.as_deref(),
         halfspace_regions: halfspaces.as_ref().and(regions),
         size_field,
+        background,
         options,
         center,
         scale,
@@ -571,6 +615,9 @@ fn generate_internal<F: ScalarField>(
                 )));
             }
         }
+    }
+    if let Some(background) = background {
+        validate_background(background, &context).map_err(MeshingError::InvalidOptions)?;
     }
     context.check().map_err(MeshingError::GenerationFailed)?;
     if !(1..=2).contains(&options.order) {
@@ -891,6 +938,67 @@ fn finish<F: ScalarField>(mesh: Mesh, g: &Context<F>) -> Result<Output, String> 
     })
 }
 
+fn validate_background<F: ScalarField>(
+    background: Background<'_>,
+    g: &Context<F>,
+) -> Result<(), String> {
+    let o = g.options;
+    if background.points.is_empty()
+        || background.tetrahedra.is_empty()
+        || background.points.len() > o.max_tetrahedra
+        || background.tetrahedra.len() > o.max_tetrahedra
+    {
+        return Err("background arrays must be nonempty and within the declared budget".into());
+    }
+    if background.points.iter().any(|p| {
+        p.iter()
+            .enumerate()
+            .any(|(a, x)| !x.is_finite() || *x < o.bounds[0][a] || *x > o.bounds[1][a])
+    }) {
+        return Err("background point lies outside the finite physical box".into());
+    }
+    let mut used = vec![false; background.points.len()];
+    let mut volume = 0.;
+    for (index, tet) in background.tetrahedra.iter().enumerate() {
+        if index % 256 == 0 {
+            g.check()?;
+        }
+        if tet.iter().any(|&i| i >= background.points.len()) {
+            return Err("background tetrahedron has an invalid node index".into());
+        }
+        let det = determinant(tet.map(|i| background.points[i]));
+        if !det.is_finite() || det <= 0. {
+            return Err("background tetrahedra must be positively oriented".into());
+        }
+        volume += det / 6.;
+        for &i in tet {
+            used[i] = true;
+        }
+    }
+    if used.contains(&false) {
+        return Err("background contains unused nodes".into());
+    }
+    let expected = (0..3)
+        .map(|a| o.bounds[1][a] - o.bounds[0][a])
+        .product::<f64>();
+    if (volume - expected).abs() > expected * 1e-10 {
+        return Err("background volume does not cover the physical box".into());
+    }
+    let surface = crate::boundary(background.tetrahedra)?;
+    if surface.iter().any(|f| {
+        !(0..3).any(|a| {
+            (0..2).any(|side| {
+                f.iter()
+                    .all(|&i| background.points[i][a] == o.bounds[side][a])
+            })
+        })
+    }) {
+        return Err("background has a boundary facet away from the physical box caps".into());
+    }
+    periodic_pairs(background.points, &surface, o.bounds, o.periodic)?;
+    Ok(())
+}
+
 fn build<F: ScalarField>(g: &Context<F>) -> Result<Output, String> {
     let o = g.options;
     if let Some(fields) = g.constraints {
@@ -998,27 +1106,33 @@ fn build<F: ScalarField>(g: &Context<F>) -> Result<Output, String> {
         edges: HashMap::new(),
         threshold,
     };
-    for z in 0..=nz {
-        for y in 0..=ny {
-            for x in 0..=nx {
-                let ijk = [x, y, z];
-                let p = std::array::from_fn(|a| {
-                    if ijk[a] == o.cells[a] {
-                        hi[a]
-                    } else {
-                        lo[a] + ijk[a] as f64 * step[a]
-                    }
-                });
-                b.add(p, 0.);
+    if let Some(background) = g.background {
+        for &p in background.points {
+            b.add(p, 0.);
+        }
+    } else {
+        for z in 0..=nz {
+            for y in 0..=ny {
+                for x in 0..=nx {
+                    let ijk = [x, y, z];
+                    let p = std::array::from_fn(|a| {
+                        if ijk[a] == o.cells[a] {
+                            hi[a]
+                        } else {
+                            lo[a] + ijk[a] as f64 * step[a]
+                        }
+                    });
+                    b.add(p, 0.);
+                }
             }
         }
-    }
-    for z in 0..nz {
-        g.check()?;
-        for y in 0..ny {
-            for x in 0..nx {
-                let p = std::array::from_fn(|a| lo[a] + ([x, y, z][a] as f64 + 0.5) * step[a]);
-                b.add(p, 0.);
+        for z in 0..nz {
+            g.check()?;
+            for y in 0..ny {
+                for x in 0..nx {
+                    let p = std::array::from_fn(|a| lo[a] + ([x, y, z][a] as f64 + 0.5) * step[a]);
+                    b.add(p, 0.);
+                }
             }
         }
     }
@@ -1087,7 +1201,11 @@ fn build<F: ScalarField>(g: &Context<F>) -> Result<Output, String> {
         b.points.truncate(original_points.len());
         b.values.truncate(original_values.len());
         b.edges.clear();
-        let (candidate, sources) = clip_lattice(&mut b, g)?;
+        let (candidate, sources) = if let Some(background) = g.background {
+            clip_background(&mut b, g, background)?
+        } else {
+            clip_lattice(&mut b, g)?
+        };
         let bad = nonmanifold_vertices(&candidate.surface, candidate.points.len());
         // A tiny sampled component can disappear entirely if every interior
         // sample snaps onto its wall. Surface manifold tests cannot see an
@@ -1307,57 +1425,100 @@ fn clip_lattice<F: ScalarField>(
                         continue;
                     }
                     for tet in background {
-                        if tet.iter().all(|&i| b.values[i] > threshold + 1e-12)
-                            || (g.band() && tet.iter().all(|&i| b.values[i] < -threshold - 1e-12))
-                        {
-                            continue;
-                        }
-                        if determinant(tet.map(|i| b.points[i])).abs() < h * h * h * 0.01 {
-                            return Err("snapping degenerated a background tetrahedron".into());
-                        }
-                        let faces = vec![
-                            vec![tet[0], tet[1], tet[2]],
-                            vec![tet[0], tet[3], tet[1]],
-                            vec![tet[0], tet[2], tet[3]],
-                            vec![tet[1], tet[3], tet[2]],
-                        ];
-                        let faces = b.clip(faces, 1);
-                        let faces = if g.band() { b.clip(faces, -1) } else { faces };
-                        let Some(anchor) = faces
-                            .iter()
-                            .flatten()
-                            .copied()
-                            .min_by_key(|&i| g.rank(b.points[i]))
-                        else {
-                            continue;
-                        };
-                        // Pulling triangulation uses one global ordering, including on
-                        // shared and periodic faces. It needs no new interior vertices.
-                        for f in faces {
-                            if f.contains(&anchor) {
-                                continue;
-                            }
-                            for tri in b.triangulate(&f) {
-                                let mut t = [anchor, tri[0], tri[1], tri[2]];
-                                let det = determinant(t.map(|i| b.points[i]));
-                                if det.abs() < h * h * h * 1e-14 {
-                                    continue;
-                                }
-                                if det < 0. {
-                                    t.swap(2, 3);
-                                }
-                                tets.push(t);
-                                if tets.len() > o.max_tetrahedra {
-                                    return Err("tetrahedron budget exhausted".into());
-                                }
-                            }
-                        }
+                        clip_background_tet(b, g, tet, h, threshold, &mut tets)?;
                     }
                 }
             }
         }
     }
 
+    clipped_mesh(b, tets)
+}
+
+fn clip_background<F: ScalarField>(
+    b: &mut crate::Builder<'_, Context<'_, F>>,
+    g: &Context<F>,
+    background: Background<'_>,
+) -> Result<(Mesh, Vec<usize>), String> {
+    let mut tets = Vec::new();
+    for (index, &tet) in background.tetrahedra.iter().enumerate() {
+        if index % 256 == 0 {
+            g.check()?;
+        }
+        // BCC's original determinant is h^3/2. Its h^3*0.01 cutoff therefore
+        // keeps two percent of the original signed volume. Added samples can
+        // produce smaller healthy tets, so preserve that dimensionless bound.
+        let original_determinant = determinant(tet.map(|i| background.points[i]));
+        let snapped_determinant = determinant(tet.map(|i| b.points[i]));
+        if snapped_determinant <= 0. {
+            return Err("snapping inverted a supplied background tetrahedron".into());
+        }
+        let local_h = (2. * original_determinant).cbrt();
+        clip_background_tet(b, g, tet, local_h, g.threshold(), &mut tets)?;
+    }
+    clipped_mesh(b, tets)
+}
+
+fn clip_background_tet<F: ScalarField>(
+    b: &mut crate::Builder<'_, Context<'_, F>>,
+    g: &Context<F>,
+    tet: crate::Tet,
+    h: f64,
+    threshold: f64,
+    tets: &mut Vec<crate::Tet>,
+) -> Result<(), String> {
+    if tet.iter().all(|&i| b.values[i] > threshold + 1e-12)
+        || (g.band() && tet.iter().all(|&i| b.values[i] < -threshold - 1e-12))
+    {
+        return Ok(());
+    }
+    if determinant(tet.map(|i| b.points[i])).abs() < h * h * h * 0.01 {
+        return Err("snapping degenerated a background tetrahedron".into());
+    }
+    let faces = vec![
+        vec![tet[0], tet[1], tet[2]],
+        vec![tet[0], tet[3], tet[1]],
+        vec![tet[0], tet[2], tet[3]],
+        vec![tet[1], tet[3], tet[2]],
+    ];
+    let faces = b.clip(faces, 1);
+    let faces = if g.band() { b.clip(faces, -1) } else { faces };
+    let Some(anchor) = faces
+        .iter()
+        .flatten()
+        .copied()
+        .min_by_key(|&i| g.rank(b.points[i]))
+    else {
+        return Ok(());
+    };
+    // Pulling triangulation uses one global ordering, including on
+    // shared and periodic faces. It needs no new interior vertices.
+    for f in faces {
+        if f.contains(&anchor) {
+            continue;
+        }
+        for tri in b.triangulate(&f) {
+            let mut t = [anchor, tri[0], tri[1], tri[2]];
+            let det = determinant(t.map(|i| b.points[i]));
+            if det.abs() < h * h * h * 1e-14 {
+                continue;
+            }
+            if det < 0. {
+                t.swap(2, 3);
+            }
+            tets.push(t);
+            if tets.len() > g.options.max_tetrahedra {
+                return Err("tetrahedron budget exhausted".into());
+            }
+        }
+    }
+    Ok(())
+}
+
+fn clipped_mesh<F: ScalarField>(
+    b: &crate::Builder<'_, Context<'_, F>>,
+    mut tets: Vec<crate::Tet>,
+) -> Result<(Mesh, Vec<usize>), String> {
     let mut remap = vec![usize::MAX; b.points.len()];
     let mut points = Vec::new();
     let mut sources = Vec::new();
@@ -1478,6 +1639,128 @@ fn distance_batch<F: ScalarField>(
 mod topology_tests {
     use super::nonmanifold_vertices;
 
+    #[cfg(feature = "experimental-quads")]
+    #[test]
+    fn supplied_background_guard_uses_original_local_volume() {
+        let field = |_: crate::Point| -1.;
+        let points = [
+            [0.4, 0.4, 0.4],
+            [0.41, 0.4, 0.4],
+            [0.4, 0.41, 0.4],
+            [0.4, 0.4, 0.41],
+        ];
+        let tetrahedra = [[0, 1, 2, 3]];
+        let background = super::Background {
+            points: &points,
+            tetrahedra: &tetrahedra,
+        };
+        let context = super::Context {
+            field: &field,
+            constraints: None,
+            halfspaces: None,
+            halfspace_regions: None,
+            size_field: None,
+            background: Some(background),
+            options: super::Options {
+                cells: [4; 3],
+                minimum_quality: 0.1,
+                ..Default::default()
+            },
+            center: 0.,
+            scale: 1.,
+            optimizer_length: 1.,
+            invalid: std::sync::atomic::AtomicBool::new(false),
+        };
+        let mut builder = crate::Builder {
+            geometry: &context,
+            points: points.to_vec(),
+            values: vec![-1.; 4],
+            edges: std::collections::HashMap::new(),
+            threshold: 0.,
+        };
+        // The old absolute cell-scale check rejects even this untouched,
+        // positive, good-quality tet. The real shared clipping path sees it.
+        assert!(crate::quality(points).powf(1.5) > 0.1);
+        assert!(
+            super::clip_background_tet(
+                &mut builder,
+                &context,
+                tetrahedra[0],
+                0.25,
+                0.,
+                &mut Vec::new()
+            )
+            .unwrap_err()
+            .contains("snapping degenerated")
+        );
+        let (mesh, _) = super::clip_background(&mut builder, &context, background).unwrap();
+        assert_eq!(mesh.tets.len(), 1);
+        assert!(crate::quality(mesh.tets[0].map(|i| mesh.points[i])).powf(1.5) > 0.1);
+        // A true near-collapse and an inversion still fail. This is a scale
+        // correction, not a relaxation of the dimensionless volume safeguard.
+        builder.points[3][2] = 0.4001;
+        assert!(
+            super::clip_background(&mut builder, &context, background)
+                .err()
+                .unwrap()
+                .contains("snapping degenerated")
+        );
+        builder.points[3][2] = 0.39;
+        assert!(
+            super::clip_background(&mut builder, &context, background)
+                .err()
+                .unwrap()
+                .contains("snapping inverted")
+        );
+    }
+
+    #[cfg(feature = "experimental-quads")]
+    #[test]
+    fn preflighted_background_recovers_a_sampled_void_and_rejects_invalid_input() {
+        let options = super::Options {
+            bounds: [[-0.5; 3], [0.5; 3]],
+            cells: [4; 3],
+            snap: 0.,
+            optimize_passes: 0,
+            geometry_tolerance: 1.,
+            max_tetrahedra: 10_000,
+            ..Default::default()
+        };
+        let background = super::generate(&|_: crate::Point| -1., options)
+            .unwrap()
+            .mesh;
+        let first = background.tets[0];
+        let center: crate::Point = std::array::from_fn(|a| {
+            first.iter().map(|&i| background.points[i][a]).sum::<f64>() / 4.
+        });
+        let field = |p: crate::Point| {
+            0.01_f64.powi(2)
+                - p.into_iter()
+                    .zip(center)
+                    .map(|(x, c)| (x - c).powi(2))
+                    .sum::<f64>()
+        };
+        let coarse =
+            super::generate_with_background(&field, options, &background.points, &background.tets)
+                .unwrap();
+        assert!((coarse.diagnostics.volume - 1.).abs() < 1e-12);
+        let mut points = background.points.clone();
+        points.push(center);
+        let new_node = points.len() - 1;
+        let mut tets = background.tets[1..].to_vec();
+        for vertex in first {
+            tets.push(first.map(|i| if i == vertex { new_node } else { i }));
+        }
+        let refined = super::generate_with_background(&field, options, &points, &tets).unwrap();
+        assert!(refined.diagnostics.volume < 1. - 1e-8);
+        assert!(refined.boundary_tags.contains(&0));
+        tets[0][0] = points.len();
+        assert!(
+            matches!(super::generate_with_background(&field, options, &points, &tets),
+            Err(crate::MeshingError::InvalidOptions(message)) if message.contains("invalid node index"))
+        );
+    }
+
     #[test]
     fn schwarz_d_zero_level_periodic_regression() {
         let field = |p: crate::Point| {
@@ -1575,6 +1858,7 @@ mod topology_tests {
                 halfspaces: None,
                 halfspace_regions: None,
                 size_field: None,
+                background: None,
                 options: Options {
                     bounds: [[-0.5; 3], [0.5; 3]],
                     periodic: [false, false, true],
