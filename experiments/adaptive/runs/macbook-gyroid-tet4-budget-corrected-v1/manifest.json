@@ -1,0 +1,52 @@
+{
+  "inputs": {
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/gyroid_tet4_budget_control.py": "6f8c30426010a8950f55d180c30acf9e2629d48b254bb5e36897666d5ddc9967",
+    "/Users/kmarchais/dev/meshers/handoff/macbook/comparison-findings-20261026.json": "e37247280a0c14f622ec6c6ebf5a777dc2531ccba6d5c1fd51dcb063913a45b0",
+    "/Users/kmarchais/dev/meshers/crates/meshers-python/python/meshers/_meshers.abi3.so": "30561969ebc0b5138393df09caff90241c80c8c30be21ce5ef615017fc0070cd",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-gyroid-tet4-budget-v1/result.json": "15e54bc296cc229c4c8e39200f6d61ec9d07f95f2e3248197be72cefbf4cc6fa",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/comparison_benchmark.py": "8035a5fafce38fd25939a95d01bd94aa9483705480998ad60f82bfd5081e80ed",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/comparison_fixtures.py": "4fa77af6b3b4858eb7611045f46f6e4ca672c6c46ab28d7ee969e14b31e11b9b",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/comparison_mesh_audit.py": "6797327ecf6b6c62a973f52812d0bad95b2ef861541247425609109c24d8af94",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/microgen_workflow.py": "9f513dfd3e6e5a72a71a54f70c0c2cf7c7a1ebe7256886ee3feaf7d7ad7de161",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/scorecard.py": "8f26256c7df0e84c9f35cdd71bf4f95a74e072d45469002b213c5dcd4f1bab2a",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/periodic_trace.py": "16d51906318ba9110f8979b48a540500d1cce5835685d72e780ca1893f3b8654",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/box_projection.py": "59589b1996b3a3782f1b7f5e5ff3c7ab303d4158ef50a233515dc5369bddaf05",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/facet_incidence_audit.py": "4f51afc196c85e1d0bc64d7a96507517ddc6e32ccd8380a2ac77cae0ace89610",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/quadratic_edge_removal_probe.py": "f26a4be16f7aeb4fce6d89732754fab0e5d39e86b4d4c62466a3afd547cec6ed",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/job_parts.py": "cc220d52685be4035a3cf38b85e8e2d8354e55f36c42245cd6e1faad9a44bcab",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-comparison-fixtures-v1/gyroid/gyroid-samples.npz": "d49ce7a80d95af127951750fa7dd02f52d4dd67bc87246dee02be932b51539d6",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-gyroid-tet4-budget-corrected-v1/candidate/gyroid-samples.npz": "d49ce7a80d95af127951750fa7dd02f52d4dd67bc87246dee02be932b51539d6",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-comparison-fixtures-v1/gyroid/gyroid-specimen.json": "2f9171aa778f1899aed5b1057bc6255da515e8a9d96bf76c305b62e3c7bd0ed8",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-gyroid-tet4-budget-corrected-v1/candidate/gyroid-specimen.json": "2f9171aa778f1899aed5b1057bc6255da515e8a9d96bf76c305b62e3c7bd0ed8"
+  },
+  "config": {
+    "name": "meshers-tet4",
+    "arm": "meshers",
+    "cells": 12,
+    "order": 1,
+    "adapt": false,
+    "tolerance": 1.0,
+    "periodic_trace": true,
+    "declared_unit_cell": true
+  },
+  "target_tets": 12250,
+  "target_nodes": 3533,
+  "selection": "Round24*(12250/72757)^(1/3); one coarse seed, optional geometry-driven successor after coarse rejection",
+  "adaptation_scope": "Adaptive mode includes native geometry tolerance0.002, which also constrains surface motion; not an isolated switch ablation",
+  "numerical_threads": {
+    "environment": {
+      "OPENBLAS_NUM_THREADS": "1",
+      "OMP_NUM_THREADS": "1",
+      "MKL_NUM_THREADS": "1",
+      "VECLIB_MAXIMUM_THREADS": "1",
+      "RAYON_NUM_THREADS": "1"
+    },
+    "accelerate_blas_threading": 1,
+    "accelerate_scope": "calling thread"
+  },
+  "memory_bytes": 8589934592,
+  "timeout_s": 180,
+  "actual_comparator_admitted": false,
+  "gates_changed": false,
+  "scope": "Tet4 only. Count target does not qualify the rejected actual mesh. No FEA or speed-ratio claim."
+}

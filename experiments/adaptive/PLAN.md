@@ -1,5 +1,24 @@
 # Adaptive implicit meshing: plan and status
 
+## Tet4 efficiency priority, 11 November 2026
+
+Kevin prioritizes direct Tet4 comparisons at comparable element and node counts.
+Keep Tet10 as a separate supported route. Do not infer lower FEA cost from
+quadratic element counts. Preserve all existing geometry, quality, periodic,
+resource and full mixed-load reference gates across the four original cases.
+
+Gyroid jobs816–819 establish a coarse count-comparable native recipe with
+10,832 tets and3,283 nodes. It improves most recorded metrics against actual
+defaults but still fails the strict boundary gate. One geometry-adaptive
+recipe passes at42,945 tets, down from72,757, with slower generation and mixed
+quality tradeoffs. Neither result completes the matched-accuracy objective.
+
+Next: audit the saved adaptive mesh's boundary sizing, interior allocation and
+coarsening blockers. Use that evidence to select one count-reduction control.
+See PROJECT_TRACKING.md and handoff/macbook/gyroid-tet4-budget-findings-20261111.json
+for the fresh five-pair comparison and its limitations. Earlier queues below
+remain historical.
+
 ## Joint cavity test completes without an accuracy win, 26 October 2026
 
 The complete-cavity experiment admits 61 disjoint interior replacements,

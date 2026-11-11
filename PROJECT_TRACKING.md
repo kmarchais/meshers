@@ -1,5 +1,54 @@
 # Meshers project tracking
 
+## Tet4 comparison becomes the primary performance priority, 11 November 2026
+
+Kevin requires a direct Tet4 comparison with comparable element and node counts.
+Tet10 remains supported, but its lower element count cannot establish cheaper
+FEA. The prior Gyroid table compared a 72,757-tet accurate native recipe with
+a 12,250-tet rejected actual default. It did not answer the count-matched question.
+
+Jobs 816–818 test one coarse seed, one geometry-adaptive successor and one
+measured count correction, without changing the specimen or admission gates.
+Cells13 produces 15,074 tets and 4,595 nodes with distance0.00555077, so it fails
+geometry. Adaptation from that seed passes at 42,945 tets and 10,759 nodes,
+distance0.00193793 and q minimum0.211112, in0.879877 seconds. Compared with the
+old native recipe it has41% fewer tets, slower generation, a higher minimum
+quality and lower median quality. No all-metric gain is claimed.
+
+Correcting the coarse count estimate to cells12 produces 10,832 tets and
+3,283 nodes. Job819 repeats that native recipe and actual public defaults in
+five fresh interleaved pairs after one excluded warmup pair on the M4.
+
+| Metric | Actual Microgen+MMG default Tet4 | Meshers cells12 Tet4 |
+|---|---:|---:|
+| Median generation seconds | 1.780421 | 0.093008 |
+| Tetrahedra | 12,250 | 10,832 |
+| Nodes | 3,533 | 3,283 |
+| Minimum quality | 0.000546 | 0.371358 |
+| Median quality | 0.715926 | 0.751547 |
+| Maximum quality | 0.997910 | 0.989279 |
+| Sampled boundary error | at least0.00846119, reverse only | 0.00746594, two-sided |
+| Volume discrepancy against improved empirical reference | 2.27688% | 0.960259% |
+
+Both meshes fail the unchanged0.002 boundary gate. Native passes the other
+admission checks, including complete periodic matching. Actual also fails
+quality, volume and oriented facets, making its volume diagnostic. There is
+no admitted matched-accuracy speedup. Every measured repetition reproduces
+the same mesh arrays within its route. No FEA result is transferred.
+
+The next Tet4 question is how to reduce the accurate adaptive recipe's count,
+with a saved-mesh audit of boundary sizing, interior allocation and coarsening
+blockers before another parameter trial. All four original cases, expanded
+geometries and24 lattice models remain in scope. Reports: [comparison](handoff/macbook/gyroid-tet4-budget-20261111.html)
+and [numeric findings](handoff/macbook/gyroid-tet4-budget-findings-20261111.json).
+
+Job819's numerical work completes, but its progress audit reports a regressing
+fraction because outer and inner Job plans share a slot. The paired driver now
+owns its whole-family watchdog directly and leaves the plan to its child.
+Future runs use direct qrun, without macbook_stage. The changed wrapper has a
+syntax check; its future progress behavior is not claimed as runtime-verified.
+All original job819 outputs and its warning are preserved.
+
 ## Overnight continuation, 11 November 2026, in progress
 
 [Measured progress and tradeoffs](handoff/macbook/overnight-findings-20261111.html)

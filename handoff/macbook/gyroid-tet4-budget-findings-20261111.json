@@ -1,0 +1,68 @@
+{
+  "rows": [
+    {
+      "arm": "microgen",
+      "samples": 5,
+      "tets": 12250,
+      "nodes": 3533,
+      "seconds_median": 1.7804211670299992,
+      "seconds_range": [
+        1.7632680419483222,
+        1.9335583339561708
+      ],
+      "quality": {
+        "min": 0.000546158165265545,
+        "p01": 0.05429049412701715,
+        "p10": 0.3524595037922851,
+        "median": 0.7159256735200327,
+        "p90": 0.8928257993197789,
+        "p99": 0.9654969400861091,
+        "max": 0.99790962768556
+      },
+      "boundary_max": 0.00846118511572807,
+      "boundary_scope": "reverse-only lower bound",
+      "volume_error_percent": 2.2768776521686585,
+      "failed_gates": [
+        "quality",
+        "volume",
+        "facets"
+      ],
+      "same_mesh_arrays_across_repetitions": true
+    },
+    {
+      "arm": "meshers",
+      "samples": 5,
+      "tets": 10832,
+      "nodes": 3283,
+      "seconds_median": 0.09300791600253433,
+      "seconds_range": [
+        0.09031933400547132,
+        0.09894520801026374
+      ],
+      "quality": {
+        "min": 0.3713583989884227,
+        "p01": 0.46711923194191524,
+        "p10": 0.5734043748189234,
+        "median": 0.7515471900663477,
+        "p90": 0.9213199224514145,
+        "p99": 0.9660780818773247,
+        "max": 0.989278842016601
+      },
+      "boundary_max": 0.007465941267503517,
+      "boundary_scope": "two-sided",
+      "volume_error_percent": 0.9602590417057483,
+      "failed_gates": [
+        "geometry"
+      ],
+      "same_mesh_arrays_across_repetitions": true
+    }
+  ],
+  "source": "experiments/adaptive/runs/macbook-gyroid-tet4-paired-counts-v1/result.json",
+  "source_sha256": "0cbfe32f9e4a756d5b20fcaee28c14b08ba9410a205200f4576edefcd2383ba9",
+  "reference_volume": 0.35634599751739515,
+  "reference_scope": "Independent empirical Gauss128 estimate; original scores preserved",
+  "timing_scope": "Five fresh interleaved pairs after one excluded warmup pair; one numerical thread on MacBookM4",
+  "both_routes_rejected": true,
+  "admitted_speedup_established": false,
+  "progress_warning": "Job819 nested outer and inner Job plans made fraction regress; numerical workers completed and hashes verified. Driver now has one Job owner; use direct qrun without macbook_stage for future runs."
+}
