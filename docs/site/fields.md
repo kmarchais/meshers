@@ -31,15 +31,6 @@ Supported operations include powers, sin/cos/tan, exp/log, sqrt, sinh/cosh/tanh,
 abs, minimum/maximum, comparisons and `np.where`. Python branches on coordinates,
 arbitrary array operations and arbitrary Python programs are not traceable.
 
-`np.interp` also traces finite real one-dimensional tables with strictly
-increasing knots. The table is frozen when the field is prepared. Default
-endpoint clamping and finite constant `left`/`right` values follow NumPy.
-Periodic interpolation, complex tables and tables exceeding the expression
-limit use callbacks. The derivative at an interior knot uses the right
-interval; at either endpoint it is zero. These are conventions at points
-without a unique derivative. Use `compile_field(field, gradient=False)` to
-retain finite differences while compiling the values.
-
 Unsupported operations produce a warning and use batched NumPy callbacks.
 `compile=False` selects that path explicitly. Callbacks must return float64 `(N,)`
 arrays; supplied gradient callbacks return `(N,3)`. Avoid side effects and
@@ -49,58 +40,10 @@ The 32-entry cache includes captured constants, not mesh resolution. Each
 preparation retraces to observe changed parameters. An explicit `compile_field`
 call is optional and returns an immutable snapshot.
 
-At abs(0), the derivative is zero. Exact min/max ties average the operand
-derivatives; `where` uses the chosen branch. Field values do not change.
-These conventions do not make nonsmooth or discontinuous geometries smooth.
-An averaged subgradient at a true crease is not a branch constraint. Keep
-thickness positive throughout the domain.
+At abs(0), the derivative is zero; min/max ties use the first branch; `where`
+uses the chosen branch. These conventions do not make nonsmooth or discontinuous
+geometries smooth. Keep thickness positive throughout the domain.
 
-Earlier versions selected the first operand's derivative at min/max ties.
-That policy could misdifferentiate a cubic smooth union whose min and abs
-kinks cancel. The averaged policy gives the correct derivative for that
-composition without rewriting the minimum as `(a+b-abs(a-b))/2`. Verify
-gradients at equal branches for other composite formulas. Supply an explicit
-gradient callback when another tie policy is required.
-
-
-## Adaptive spinodoid meshes
-
-Keep the Fourier coefficients fixed while comparing meshing recipes. Adaptive
-remeshing can collapse and swap small cut cells; increasing `optimize_passes`
-alone only relocates vertices and can leave slivers in place.
-
-For the two unit-cell spinodoids in the fixed comparison study, the following
-Tet4 settings reduce interior density while retaining the sampled 0.002 boundary
-gate. Use `cells=24` for its isotropic specimen and `cells=16` for its anisotropic
-specimen. These are measured recipes for those fields, not new defaults.
-Pass the fixed pointwise field as `spinodoid_field`.
-
-```python
-mesh = meshers.generate(
-    spinodoid_field,
-    bounds=(-0.5, 0.5, -0.5, 0.5, -0.5, 0.5),
-    cells=24,
-    periodic=(True, True, True),
-    order=1,
-    optimize_passes=1,
-    adapt=True,
-    adapt_iterations=4,
-    adapt_tolerance=0.0018,
-    geometry_tolerance=0.002,
-    min_length=0.002,
-    max_length=0.1,
-    gradation=0.6,
-    minimum_quality=0.1,
-    max_tetrahedra=250_000,
-    threads=1,
-)
-```
-
-The tighter internal target leaves room for the independent two-sided distance
-audit. Larger gradation permits faster size growth into the interior. Compare
-both node and tetrahedron counts, and retain boundary, volume, quality and
-periodicity checks. These recipes reduce minimum quality relative to the
-previous finer native meshes while staying above the 0.1 floor.
 
 ## Coordinate maps and nonsmooth points
 

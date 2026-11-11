@@ -63,21 +63,6 @@ connectivity, metadata or diagnostics. Surface output is the closed solid bounda
 not an independent zero-level surface mesher. Small features may be missed at
 insufficient resolution; successful sampling is not geometry certification.
 
-## Experimental quadratic wall fitting
-
-This source checkout accepts `order=2, curved_fit=True` to fit small patches of
-the final curved boundary. It keeps corners, connectivity and element counts
-fixed. Wall edge nodes move by at most 2% of their shortest incident wall edge;
-cap coordinates stay fixed and periodic copies move together. Every accepted
-step passes sampled curved-Jacobian checks. Diagnostics are available under
-`mesh.diagnostics["quadratic"]["fit"]`; the other edge counts describe the
-initial quadratic elevation.
-
-Fitting minimizes an implicit-distance estimate. It can increase independently
-sampled boundary or volume error, so it remains off by default. Check the final
-geometry before using it. It changes the discrete domain and FE space, and an
-existing solution cannot be transferred unchanged.
-
 ## Validation and limits
 
 The test suite covers automatic derivatives, cache invalidation, cancellation,
