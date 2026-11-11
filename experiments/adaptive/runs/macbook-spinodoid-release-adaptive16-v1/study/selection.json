@@ -1,0 +1,63 @@
+{
+  "date": "2026-11-11",
+  "title": "Tet4 spinodoids, composed fields and basic solids",
+  "scope": "Two frozen spinodoids, ordered smooth-union lattice, three graded Gyroids and five basic solids. Actual public defaults; no universal custom-field or CAD support claim.",
+  "cases": [
+    {
+      "case": "spinodoid",
+      "fixture_kind": "study",
+      "fixtures": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-comparison-fixtures-v1",
+      "native": {
+        "name": "native-spinodoid-adaptive16-tet4",
+        "arm": "meshers",
+        "cells": 16,
+        "order": 1,
+        "adapt": true,
+        "tolerance": 0.002,
+        "periodic_trace": true,
+        "declared_unit_cell": true,
+        "min_length": 0.002,
+        "adapt_tolerance": 0.002,
+        "adapt_iterations": 4
+      },
+      "actual": {
+        "name": "actual-default-tet4",
+        "arm": "microgen",
+        "resolution": null,
+        "order": 1,
+        "periodic_trace": true,
+        "declared_unit_cell": true
+      },
+      "maximum_budget_cells": 24,
+      "selection": "Single mechanism control: same16-cell seed, replace fixed-connectivity smoothing with existing adaptive collapse/swap/refinement under unchanged strict gates"
+    },
+    {
+      "case": "spinodoid-anisotropic",
+      "fixture_kind": "study",
+      "fixtures": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-comparison-fixtures-v1",
+      "native": {
+        "name": "native-spinodoid-adaptive16-tet4",
+        "arm": "meshers",
+        "cells": 16,
+        "order": 1,
+        "adapt": true,
+        "tolerance": 0.002,
+        "periodic_trace": true,
+        "declared_unit_cell": true,
+        "min_length": 0.002,
+        "adapt_tolerance": 0.002,
+        "adapt_iterations": 4
+      },
+      "actual": {
+        "name": "actual-default-tet4",
+        "arm": "microgen",
+        "resolution": null,
+        "order": 1,
+        "periodic_trace": true,
+        "declared_unit_cell": true
+      },
+      "maximum_budget_cells": 24,
+      "selection": "Single mechanism control: same16-cell seed, replace fixed-connectivity smoothing with existing adaptive collapse/swap/refinement under unchanged strict gates"
+    }
+  ]
+}

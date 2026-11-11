@@ -1,0 +1,64 @@
+{
+  "cases": [
+    {
+      "case": "gyroid",
+      "fixture_kind": "study",
+      "fixtures": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-comparison-fixtures-v1",
+      "native": {
+        "name": "meshers-tet4",
+        "arm": "meshers",
+        "cells": 24,
+        "order": 1,
+        "adapt": false,
+        "tolerance": 1.0,
+        "periodic_trace": true,
+        "declared_unit_cell": true
+      },
+      "packages": {
+        "native": "/Users/kmarchais/dev/meshers/.local-work/macbook-spinodoid-release-native-v2/python"
+      }
+    },
+    {
+      "case": "schwarz-solid",
+      "fixture_kind": "study",
+      "fixtures": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-comparison-fixtures-v1",
+      "native": {
+        "name": "meshers-tet4",
+        "arm": "meshers",
+        "cells": 16,
+        "order": 1,
+        "adapt": true,
+        "tolerance": 1.0,
+        "min_length": 0.002,
+        "adapt_tolerance": 0.001,
+        "periodic_trace": true,
+        "declared_unit_cell": true
+      },
+      "packages": {
+        "native": "/Users/kmarchais/dev/meshers/.local-work/macbook-spinodoid-release-native-v2/python"
+      }
+    },
+    {
+      "case": "smooth-lattice",
+      "fixture_kind": "study",
+      "fixtures": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-comparison-fixtures-v1",
+      "native": {
+        "name": "meshers-tet4-historical32",
+        "arm": "meshers",
+        "cells": 32,
+        "order": 1,
+        "adapt": true,
+        "tolerance": 0.002,
+        "min_length": 0.002,
+        "adapt_tolerance": 0.002,
+        "lattice_field": "original",
+        "periodic_trace": true,
+        "declared_unit_cell": true
+      },
+      "packages": {
+        "native": "/Users/kmarchais/dev/meshers/.local-work/macbook-spinodoid-release-native-v2/python"
+      }
+    }
+  ],
+  "scope": "Previously admitted native Tet4 controls on the other original three specimens; lattice preserves original ordered field; no FEA transfer"
+}

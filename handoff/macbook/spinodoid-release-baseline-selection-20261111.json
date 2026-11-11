@@ -1,0 +1,57 @@
+{
+  "date": "2026-11-11",
+  "title": "Tet4 spinodoids, composed fields and basic solids",
+  "scope": "Two frozen spinodoids, ordered smooth-union lattice, three graded Gyroids and five basic solids. Actual public defaults; no universal custom-field or CAD support claim.",
+  "cases": [
+    {
+      "case": "spinodoid",
+      "fixture_kind": "study",
+      "fixtures": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-comparison-fixtures-v1",
+      "native": {
+        "name": "native-tet4-budget",
+        "arm": "meshers",
+        "cells": 16,
+        "order": 1,
+        "adapt": false,
+        "tolerance": 1.0,
+        "periodic_trace": true,
+        "declared_unit_cell": true
+      },
+      "actual": {
+        "name": "actual-default-tet4",
+        "arm": "microgen",
+        "resolution": null,
+        "order": 1,
+        "periodic_trace": true,
+        "declared_unit_cell": true
+      },
+      "maximum_budget_cells": 24,
+      "selection": "Uniform16 initial count control; one measured correction by element/node budgets, no outcome selection"
+    },
+    {
+      "case": "spinodoid-anisotropic",
+      "fixture_kind": "study",
+      "fixtures": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-comparison-fixtures-v1",
+      "native": {
+        "name": "native-tet4-budget",
+        "arm": "meshers",
+        "cells": 16,
+        "order": 1,
+        "adapt": false,
+        "tolerance": 1.0,
+        "periodic_trace": true,
+        "declared_unit_cell": true
+      },
+      "actual": {
+        "name": "actual-default-tet4",
+        "arm": "microgen",
+        "resolution": null,
+        "order": 1,
+        "periodic_trace": true,
+        "declared_unit_cell": true
+      },
+      "maximum_budget_cells": 24,
+      "selection": "Uniform16 initial count control; one measured correction by element/node budgets, no outcome selection"
+    }
+  ]
+}

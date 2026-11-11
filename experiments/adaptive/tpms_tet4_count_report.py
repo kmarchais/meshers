@@ -127,7 +127,7 @@ def collect(args):
                 scope="Scramble range is empirical sensitivity, not a certified reference interval.")
         result = dict(case=name, fixture_kind=entry["fixture_kind"], reference=reference,
             selection_reason=entry.get("selection"), arms={})
-        for arm in ARMS:
+        for arm in ARMS + (("before",) if "before" in entry else ()):
             rows, source_kind = arm_rows(entry, arm)
             assert all(r["config"]["order"] == 1 for r in rows)
             result["arms"][arm] = aggregate(rows, source_kind, reference)

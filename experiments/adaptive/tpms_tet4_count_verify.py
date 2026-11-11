@@ -13,6 +13,7 @@ def main():
     p.add_argument("--studies", type=Path, nargs="+", required=True)
     p.add_argument("--report", type=Path, required=True)
     p.add_argument("--output", type=Path, required=True)
+    p.add_argument("--arms", default="actual,native")
     a = p.parse_args()
     np, *_ = w.imports()
     import scorecard
@@ -89,7 +90,7 @@ def main():
     repeated_cases = [e for e in entries.values() if e["repeat"]]
     repeated_array_sets = {}
     for entry in repeated_cases:
-        for arm in ("actual", "native"):
+        for arm in a.arms.split(","):
             pool = measured[(entry["case"], arm)]
             assert len(pool) == 5 and all(r["returned_mesh_verified"] for r in pool)
             repeated_array_sets[entry["case"]+"/"+arm] = len({
@@ -97,6 +98,7 @@ def main():
     w.save(a.output, dict(passed=True, attempts=attempts, returned_artifacts=len(artifacts),
         distinct_array_sets=len(uniques), repeated_cases=len(repeated_cases), measured_pairs=5*len(repeated_cases),
         repeated_array_set_counts=repeated_array_sets,
+        verified_arms=a.arms.split(","),
         source_snapshots_resolved=fallback_sources, artifacts=artifacts, distinct_meshes=uniques,
         report_sha256=w.digest(a.report), selection_sha256=w.digest(a.selection),
         scope="Actual Tet4 arrays, hashes, frozen input copies, positive determinants, counts, volume and quality replay. Existing complete periodic/geometry audits remain in the per-worker evidence. No new FEA or admitted-speed claim."))

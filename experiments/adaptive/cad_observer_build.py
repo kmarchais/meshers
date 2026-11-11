@@ -1,4 +1,4 @@
-"""Archive and build an isolated observer wheel inside macbook_stage.py.
+"""Archive and build an isolated native wheel inside macbook_stage.py.
 
 Queue macbook_stage.py with a 1200 s timeout and 8 GiB RSS ceiling. It owns
 standard Job progress and the process-tree watchdog. The installed wheel is
@@ -19,6 +19,7 @@ import microgen_workflow as w
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--archive", type=Path, required=True)
+    parser.add_argument("--scope", default="Experimental linear snapshots only; ordinary scalar generation and admission unchanged")
     args = parser.parse_args()
     archive = args.archive.resolve()
     archive.mkdir(parents=True, exist_ok=False)
@@ -51,7 +52,7 @@ def main():
          "--features", "experimental-surfaces", "--interpreter", sys.executable, "--out", str(archive/"wheels")],
     ]
     for index, command in enumerate(commands):
-        print(f"Native observer validation {index+1}/{len(commands)}", flush=True)
+        print(f"Native validation {index+1}/{len(commands)}", flush=True)
         with (archive/f"build-{index}.log").open("w") as stream:
             subprocess.run(command, cwd=w.ROOT, stdout=stream, stderr=subprocess.STDOUT, check=True)
     wheels = list((archive/"wheels").glob("*.whl"))
@@ -75,7 +76,7 @@ def main():
     w.save(archive/"receipt.json", dict(inputs=inputs, wheel_sha256=w.digest(wheels[0]),
         native_binary_sha256=w.digest(binaries[0]), package=str(archive/"python"),
         build_job=os.environ.get("PUEUE_TASK_ID"), installed_package_changed=False,
-        scope="Experimental linear snapshots only; ordinary scalar generation and admission unchanged"))
+        scope=args.scope))
     print("Isolated observer wheel and off/on controls completed", flush=True)
 
 

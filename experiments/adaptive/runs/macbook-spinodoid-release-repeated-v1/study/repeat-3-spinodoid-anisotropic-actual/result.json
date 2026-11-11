@@ -1,0 +1,145 @@
+{
+  "case": "spinodoid-anisotropic",
+  "config": {
+    "name": "actual-public-sampling32-default-mmg-tet4",
+    "arm": "microgen",
+    "resolution": 32,
+    "order": 1,
+    "periodic_trace": true,
+    "declared_unit_cell": true
+  },
+  "status": "admission-rejected",
+  "qualified": false,
+  "mmg_calls": [
+    {
+      "nofem": true,
+      "output_tetrahedra": 29465,
+      "output_nodes": 8022
+    },
+    {
+      "hausd": null,
+      "hgrad": null,
+      "hmax": null,
+      "hmin": null,
+      "hsiz": null,
+      "ls": true,
+      "nr": true,
+      "output_tetrahedra": 34721,
+      "output_nodes": 8863
+    }
+  ],
+  "instrumentation_s": 0.11820824898313731,
+  "vtk_backend": "Sequential",
+  "vtk_threads": 1,
+  "periodic_required": true,
+  "solve_performed": false,
+  "native_binary_path": "/Users/kmarchais/dev/meshers/crates/meshers-python/python/meshers/_meshers.abi3.so",
+  "native_binary_sha256": "30561969ebc0b5138393df09caff90241c80c8c30be21ce5ef615017fc0070cd",
+  "actual_resolution": 32,
+  "seed_nodes": 27574,
+  "seed_elements": 130419,
+  "reoriented_tets": 0,
+  "generation_wall_s": 4.056247333006468,
+  "nodes": 8863,
+  "elements": 34721,
+  "generation_s": 3.9380390840233304,
+  "mesh_sha256": "fe1e1e3933fd1edf14af1b677360bce4186ddef015d8055256fe2529bc3cf2b4",
+  "historical_all_plane_periodic_gate": {
+    "passed": true
+  },
+  "geometry": {
+    "volume": 0.5228424291970128,
+    "relative_volume_error": 0.001979822121699115,
+    "q_min_corner": 0.00022387371247391014,
+    "q_p01_corner": 0.13438262065652,
+    "minimum_sampled_jacobian": 1.80370292462744e-09,
+    "facet_consistency": {
+      "nodes": 8863,
+      "elements": 34721,
+      "unique_faces": 74706,
+      "interior_faces": 64178,
+      "extracted_boundary_faces": 10528,
+      "same_orientation_shared_faces": 0,
+      "nonmanifold_faces": 0,
+      "duplicate_cells": 0,
+      "duplicate_surface_faces": 0,
+      "provided_boundary_matches_extraction": true,
+      "missing_provided_faces": 0,
+      "extra_provided_faces": 0,
+      "nonpositive_corner_determinants": 0,
+      "minimum_corner_determinant": 1.8037029246274368e-09,
+      "oriented_facet_consistency_passed": true,
+      "conflict_examples": [],
+      "scope": "Oriented corner-face incidence and same-side neighbor diagnostics; necessary consistency, not a certificate of curved geometry or absence of nonlocal intersections"
+    },
+    "oriented_facet_consistency_passed": true,
+    "quadratic_conformity": {
+      "passed": true,
+      "order": 1
+    },
+    "exact_straight_reduction_verified": false,
+    "geometry_admitted": false,
+    "sampled_reverse_max": 0.011133246126011777,
+    "distance_audit_complete": false,
+    "projection_failed": null,
+    "audit_scope": "Fail-fast after required quality/volume/topology/periodicity rejection; no forward-distance or successful speed claim",
+    "failed_gates": [
+      "quality"
+    ]
+  },
+  "periodic": {
+    "periodic_pair_counts": [
+      781,
+      655,
+      655
+    ],
+    "periodic_coordinate_errors": [
+      9.992007221626409e-16,
+      2.7026991755718655e-15,
+      1.0130785099704553e-15
+    ],
+    "periodic_pair_tolerance": 1e-10,
+    "periodic_equivalence_classes": 6839,
+    "periodic_triangles_match": true,
+    "full_facet_check_required": true,
+    "complete_existing_node_classes": true,
+    "unmatched_noncap_contact_nodes": [
+      [
+        [],
+        []
+      ],
+      [
+        [],
+        []
+      ],
+      [
+        [],
+        []
+      ]
+    ],
+    "declared_bounds": [
+      [
+        -0.5,
+        -0.5,
+        -0.5
+      ],
+      [
+        0.5,
+        0.5,
+        0.5
+      ]
+    ],
+    "periodic_gate": "declared-cell-material-cap-and-complete-node-classes-v1"
+  },
+  "quality_quantiles": {
+    "min": 0.00022387371247391014,
+    "p01": 0.13438262065652,
+    "p10": 0.4684767926059582,
+    "median": 0.7158917630803295,
+    "p90": 0.8884785707386481,
+    "p99": 0.9618393167186197,
+    "max": 0.998681954178377
+  },
+  "audit_s": 1.023146124993218,
+  "wall_s": 5.118880624999292
+}

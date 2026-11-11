@@ -1,0 +1,9 @@
+Native observer validation 1/6
+Traceback (most recent call last):
+  File "/Users/kmarchais/dev/meshers/experiments/adaptive/cad_observer_build.py", line 83, in <module>
+    main()
+  File "/Users/kmarchais/dev/meshers/experiments/adaptive/cad_observer_build.py", line 56, in main
+    subprocess.run(command, cwd=w.ROOT, stdout=stream, stderr=subprocess.STDOUT, check=True)
+  File "/Users/kmarchais/.local/share/uv/python/cpython-3.12.9-macos-aarch64-none/lib/python3.12/subprocess.py", line 573, in run
+    raise CalledProcessError(retcode, process.args,
+subprocess.CalledProcessError: Command '['cargo', '+1.95.0', 'test', '--locked', '--release', '-p', 'meshers-core', '--features', 'experimental-quads']' returned non-zero exit status 101.

@@ -1,0 +1,277 @@
+{
+  "complete": true,
+  "rows": [
+    {
+      "case": "spinodoid",
+      "config": {
+        "name": "native-spinodoid-adaptive16-tet4",
+        "arm": "meshers",
+        "cells": 16,
+        "order": 1,
+        "adapt": true,
+        "tolerance": 0.002,
+        "periodic_trace": true,
+        "declared_unit_cell": true,
+        "min_length": 0.002,
+        "adapt_tolerance": 0.002,
+        "adapt_iterations": 4
+      },
+      "status": "failed",
+      "qualified": false,
+      "mmg_calls": [],
+      "instrumentation_s": 0.0,
+      "vtk_backend": "Sequential",
+      "vtk_threads": 1,
+      "periodic_required": true,
+      "solve_performed": false,
+      "native_binary_path": "/Users/kmarchais/dev/meshers/.local-work/macbook-spinodoid-release-native-v2/python/meshers/_meshers.abi3.so",
+      "native_binary_sha256": "13845edd2a5de632863e94fc1aae11859346ab1084283001de273c58488ff409",
+      "error": "sampled geometry error 5.107583207576339e-3 exceeds tolerance 2e-3; increase resolution or budget",
+      "traceback": "Traceback (most recent call last):\n  File \"/Users/kmarchais/dev/meshers/experiments/adaptive/comparison_benchmark.py\", line 146, in worker\n    mesh=meshers.generate(field,bounds=w.BOUNDS,cells=config['cells'],band=target.band,\n         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/Users/kmarchais/dev/meshers/.local-work/macbook-spinodoid-release-native-v2/python/meshers/__init__.py\", line 415, in generate\n    result = _meshers.generate(\n             ^^^^^^^^^^^^^^^^^^\n_meshers.MeshingFailure: sampled geometry error 5.107583207576339e-3 exceeds tolerance 2e-3; increase resolution or budget\n",
+      "failed_attempt_s": 3.4583816250087693,
+      "wall_s": 3.4583861250139307,
+      "arm": "native",
+      "directory": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-spinodoid-release-candidate16-v1/study/repeat-0-spinodoid-native",
+      "repeat": 0,
+      "warmup": false,
+      "resources": {
+        "returncode": 0,
+        "limit_failure": null,
+        "peak_rss_bytes": 282312704,
+        "wall_s": 4.646691041998565,
+        "wall_s_clock": "monotonic",
+        "elapsed_realtime_s": 4.646656036376953,
+        "suspension_or_clock_adjustment_s": -3.500562161207199e-05,
+        "idle_sleep_prevention": [
+          "/usr/bin/caffeinate",
+          "-i"
+        ],
+        "memory_bytes": 8589934592,
+        "memory_enforcement": "process-tree-rss-watchdog",
+        "rss_poll_interval_s": 0.25,
+        "platform": "darwin",
+        "numerical_thread_policy": {
+          "environment": {
+            "OPENBLAS_NUM_THREADS": "1",
+            "OMP_NUM_THREADS": "1",
+            "MKL_NUM_THREADS": "1",
+            "VECLIB_MAXIMUM_THREADS": "1",
+            "RAYON_NUM_THREADS": "1"
+          },
+          "accelerate_blas_threading": 1,
+          "accelerate_scope": "calling thread"
+        }
+      },
+      "returned_mesh_verified": false
+    },
+    {
+      "case": "spinodoid-anisotropic",
+      "config": {
+        "name": "native-spinodoid-adaptive16-tet4",
+        "arm": "meshers",
+        "cells": 16,
+        "order": 1,
+        "adapt": true,
+        "tolerance": 0.002,
+        "periodic_trace": true,
+        "declared_unit_cell": true,
+        "min_length": 0.002,
+        "adapt_tolerance": 0.002,
+        "adapt_iterations": 4
+      },
+      "status": "admitted",
+      "qualified": true,
+      "mmg_calls": [],
+      "instrumentation_s": 0.0,
+      "vtk_backend": "Sequential",
+      "vtk_threads": 1,
+      "periodic_required": true,
+      "solve_performed": false,
+      "native_binary_path": "/Users/kmarchais/dev/meshers/.local-work/macbook-spinodoid-release-native-v2/python/meshers/_meshers.abi3.so",
+      "native_binary_sha256": "13845edd2a5de632863e94fc1aae11859346ab1084283001de273c58488ff409",
+      "diagnostics": {
+        "empty": false,
+        "volume": 0.5221567587235901,
+        "minimum_mmg_quality": 0.10023362641744064,
+        "sampled_surface_error": 0.0019718672395976863,
+        "elements_below_quality_01": 0,
+        "reverted_snap_vertices": 0,
+        "callback_calls": 0,
+        "inserted_interior_nodes": 0,
+        "adapt": {
+          "splits": 9919,
+          "collapses": 5307,
+          "swaps": 3926,
+          "moves": 44210,
+          "error_splits": 12,
+          "maximum_error": 0.0019718672395976863,
+          "seconds": [
+            0.12161879,
+            0.032864501000000004,
+            0.321869416,
+            0.071060583,
+            0.104830126,
+            0.190440833,
+            0.344030959
+          ]
+        },
+        "seconds": 1.6587605,
+        "threads": 1,
+        "evaluator": "compiled",
+        "preparation_seconds": 6.207992555573583e-06
+      },
+      "generation_wall_s": 1.6621993340086192,
+      "nodes": 12816,
+      "elements": 55241,
+      "generation_s": 1.6621993340086192,
+      "generated_field_identity_checked": 4096,
+      "mesh_sha256": "8466fb183c52e70e6ecea19f0b0caa956c5da1ad611ff0e71222820478c754a1",
+      "historical_all_plane_periodic_gate": {
+        "passed": true
+      },
+      "geometry": {
+        "volume": 0.522156758723593,
+        "relative_volume_error": 0.0006657972059200823,
+        "q_min_corner": 0.10023362641744064,
+        "q_p01_corner": 0.5209709749910669,
+        "minimum_sampled_jacobian": 3.496733643617998e-09,
+        "facet_consistency": {
+          "nodes": 12816,
+          "elements": 55241,
+          "unique_faces": 116944,
+          "interior_faces": 104020,
+          "extracted_boundary_faces": 12924,
+          "same_orientation_shared_faces": 0,
+          "nonmanifold_faces": 0,
+          "duplicate_cells": 0,
+          "duplicate_surface_faces": 0,
+          "provided_boundary_matches_extraction": true,
+          "missing_provided_faces": 0,
+          "extra_provided_faces": 0,
+          "nonpositive_corner_determinants": 0,
+          "minimum_corner_determinant": 3.496733643617991e-09,
+          "oriented_facet_consistency_passed": true,
+          "conflict_examples": [],
+          "scope": "Oriented corner-face incidence and same-side neighbor diagnostics; necessary consistency, not a certificate of curved geometry or absence of nonlocal intersections"
+        },
+        "oriented_facet_consistency_passed": true,
+        "quadratic_conformity": {
+          "passed": true,
+          "order": 1
+        },
+        "exact_straight_reduction_verified": false,
+        "geometry_admitted": true,
+        "sampled_forward_max": 0.0019656552830374474,
+        "sampled_reverse_max": 0.0018697890746964992,
+        "sampled_two_sided_max": 0.0019656552830374474,
+        "outward_forward_max": 0.0019656552830374474,
+        "inward_forward_max": 0.0019638732199326464,
+        "projection_failed": 0,
+        "forward_samples": 124592,
+        "reverse_samples": 41144,
+        "minimum_dihedral_deg_corner": 5.281247426851451,
+        "reverse_tessellation_delta_max": 0.0,
+        "quadratic_reverse_subdivisions": null,
+        "projection_method": "newton-box-slsqp-v1",
+        "unbounded_projection_failed": 0,
+        "box_projection_attempts": 0,
+        "box_projection_recovered": 0,
+        "box_projection_witnesses": [],
+        "distance_audit_complete": true,
+        "failed_gates": []
+      },
+      "periodic": {
+        "periodic_pair_counts": [
+          412,
+          289,
+          324
+        ],
+        "periodic_coordinate_errors": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "periodic_pair_tolerance": 1e-10,
+        "periodic_equivalence_classes": 11827,
+        "periodic_triangles_match": true,
+        "full_facet_check_required": true,
+        "complete_existing_node_classes": true,
+        "unmatched_noncap_contact_nodes": [
+          [
+            [],
+            []
+          ],
+          [
+            [],
+            []
+          ],
+          [
+            [],
+            []
+          ]
+        ],
+        "declared_bounds": [
+          [
+            -0.5,
+            -0.5,
+            -0.5
+          ],
+          [
+            0.5,
+            0.5,
+            0.5
+          ]
+        ],
+        "periodic_gate": "declared-cell-material-cap-and-complete-node-classes-v1"
+      },
+      "quality_quantiles": {
+        "min": 0.10023362641744064,
+        "p01": 0.5209709749910669,
+        "p10": 0.619769213369168,
+        "median": 0.764633502752966,
+        "p90": 0.9230983286797552,
+        "p99": 0.9723210144665944,
+        "max": 0.9974954530043055
+      },
+      "native_and_independent_pairs_agree": true,
+      "audit_s": 2.9682384580082726,
+      "wall_s": 4.680460875009885,
+      "arm": "native",
+      "directory": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-spinodoid-release-candidate16-v1/study/repeat-0-spinodoid-anisotropic-native",
+      "repeat": 0,
+      "warmup": false,
+      "resources": {
+        "returncode": 0,
+        "limit_failure": null,
+        "peak_rss_bytes": 455917568,
+        "wall_s": 5.714161042007618,
+        "wall_s_clock": "monotonic",
+        "elapsed_realtime_s": 5.714117050170898,
+        "suspension_or_clock_adjustment_s": -4.3991836719214916e-05,
+        "idle_sleep_prevention": [
+          "/usr/bin/caffeinate",
+          "-i"
+        ],
+        "memory_bytes": 8589934592,
+        "memory_enforcement": "process-tree-rss-watchdog",
+        "rss_poll_interval_s": 0.25,
+        "platform": "darwin",
+        "numerical_thread_policy": {
+          "environment": {
+            "OPENBLAS_NUM_THREADS": "1",
+            "OMP_NUM_THREADS": "1",
+            "MKL_NUM_THREADS": "1",
+            "VECLIB_MAXIMUM_THREADS": "1",
+            "RAYON_NUM_THREADS": "1"
+          },
+          "accelerate_blas_threading": 1,
+          "accelerate_scope": "calling thread"
+        }
+      },
+      "returned_mesh_verified": true
+    }
+  ],
+  "attempted": 2,
+  "planned": 2,
+  "selection_sha256": "af00de434a200a44c637aa880b237640d0c655c50c3948e2565ee730fc989e06"
+}

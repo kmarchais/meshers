@@ -1,5 +1,98 @@
 # Meshers project tracking
 
+## Spinodoid release candidate, 11 November 2026
+
+The spinodoid Tet4 count gap is substantially smaller. Five fresh interleaved
+three-route blocks, after one excluded warmup block per specimen, compare the
+previous accurate native recipe, the improved native recipe and actual Microgen
+sampling 32 plus default public MMG. The Fourier realizations, wall/cap samples,
+unit cell, quality 0.1, distance 0.002, absolute volume 1%, positive Jacobians,
+coherent facets, complete periodic matching and 250000 caps remain unchanged.
+
+| Frozen specimen | Native tets before / after | Native nodes before / after | Native generation s before / after | Full sampled distance before / after |
+|---|---:|---:|---:|---:|
+| Isotropic | 72,378 / 46,617 | 16,702 / 12,312 | 3.2814 / 2.4353 | 0.0018645 / 0.0017994 |
+| Anisotropic | 61,868 / 36,056 | 14,005 / 9,478 | 2.5634 / 1.5167 | 0.0018350 / 0.0017880 |
+
+Both before/after native routes pass every gate in all five measured runs.
+Tets decrease 35.6% and 41.7%, nodes decrease 26.3% and 32.3%, and generation
+time decreases 25.8% and 40.8%. Minimum quality decreases from 0.23317 to 0.15336
+and from 0.12185 to 0.100012; median quality also decreases. These are efficiency
+and sampled-boundary gains with an explicit quality tradeoff, not dominance
+over every metric. Volume ranking retains the frozen empirical Sobol sensitivity.
+
+Actual sampling 32 returns 41,295 tets / 10,404 nodes in 4.5257 s for isotropic,
+and 34,721 tets / 8,863 nodes in 3.9211 s for anisotropic. Improved native counts
+are now within 13% for tets and 19% for nodes of those actual meshes, instead of
+roughly 75% more tets. Native minimum and median quality and common reverse
+boundary distance improve against both actual routes. Actual minimum quality
+is 2.81 e-5 and 2.24 e-4; both actual routes still reject, and isotropic also fails
+facets/periodicity. Their raw timing comparison is not an admitted matched-
+accuracy Microgen win. No new actual comparator is promoted.
+
+The production fix is generic scalar-adaptive projection recovery. Adaptation
+can insert a wall vertex partway to its exact projection to preserve element
+quality. Geometry closing reconstructs its state after optimization; ordinary
+scalar meshes previously lost their pending projection queue. State construction
+now rediscovers off-wall scalar vertices using a scale-aware distance threshold.
+The same projection, cap-plane, quality, topology and resource guards apply.
+Retained and affine constraint policies are unchanged. A real periodic-cap-star
+regression fails before the fix and passes afterward. An older single-repair
+unit test now explicitly clears other automatically discovered requests before
+queuing its intended vertex; its two-vertex movement assertion is retained.
+
+The fix enables the previously rejected anisotropic adaptive 16 recipe. The
+measured recipes also change seed resolution and interior gradation; the entire
+speed/count gain must not be attributed to the source fix. Final settings use
+24 isotropic / 16 anisotropic cells, Tet4, adapt=True, internal target 0.0018,
+min_length 0.002, max_length 0.1, gradation 0.6, four adaptation iterations and
+one optimizer pass. Public defaults stay unchanged. The public field guide
+records these recipes as fixed-study examples.
+
+The bounded investigation retains failures rather than relaxing gates:
+
+- Jobs 832–833 reproduce native 16 quality rejections and capture stages.
+  Clipping produces 99/77 poor tets, reduced by smoothing to 14/1. Geometry
+  refinement is not the source of those slivers.
+- Jobs 834–836 show that existing adaptive 16 repairs quality but leaves an
+  isotropic 0.00821 corner and anisotropic 0.00293 chord error. The reconstructed
+  cap-star regression fails before the source fix.
+- Job 837 passes the new regression but stops on the older movement-count test.
+  After its setup is isolated, job 838 passes native tests, Clippy, default
+  compilation checks, wheel build and Python observer controls.
+- Jobs 839–840 admit anisotropic 16 at 55,241 tets, but isotropic 16 remains rejected
+  at 0.00511. Job 841 finds no valid two-vertex displacement in its bounded
+  cap-neighbor grid; no speculative repair is applied. Eight passes still
+  reject isotropic at 0.00461 in job 842.
+- Job 843's old/new 24-cell isotropic outputs are identical and miss independent
+  distance at 0.002038. The tighter internal target admits in job 844 but initially
+  uses 72,780 tets. This is not counted as a count improvement.
+- A saved anisotropic mesh has 41% wholly interior tets. Job 845 changes only
+  gradation 0.3 to 0.6: isotropic admits at 46,617 tets; anisotropic 33,054 rejects
+  distance 0.002028. Job 846's tighter internal target admits anisotropic 36,056.
+- Job 847 freezes the two recipes and completes 36 generations, comprising ten
+  measured three-route blocks plus two excluded warmup blocks. All measured
+  route arrays reproduce exactly. Job 848 keeps Gyroid, Schwarz P and the
+  original ordered lattice admitted. The lattice representation retains the
+  pre-existing positive-void clamp; no smooth-union order is changed and no
+  historical lattice count reduction is attributed to this patch.
+- Job 849 passes 208 Python tests with one skip. Job 850 independently replays
+  all 36 returned Tet4 arrays and metrics, verifies exact old/new binaries,
+  archived native sources, frozen physical inputs and the other original-case
+  controls. No FEA score or stiffness reference is inferred or promoted.
+
+The isolated Mac arm64 wheel is prepared and validated locally; publication and
+cross-platform release workflows have not run on this source yet. Follow the
+existing exact-source release procedure before publishing. The coarse isotropic
+16-cell obstruction remains a useful failure control. All four original study
+cases and all 24 lattice tensors remain in scope; the full objective is open.
+
+[Comparison](handoff/macbook/spinodoid-release-comparison-20261111.html),
+[numeric report](handoff/macbook/spinodoid-release-comparison-20261111.json),
+[verification](handoff/macbook/spinodoid-release-verification-20261111.json), and
+[frozen recipes](handoff/macbook/spinodoid-release-final-selection-20261111.json).
+
+
 ## Tet4 study extends beyond TPMS, 11 November 2026
 
 The extension benchmarks eleven immutable specimens: isotropic and anisotropic

@@ -1,0 +1,30 @@
+{
+  "case": "spinodoid",
+  "config": {
+    "name": "native-spinodoid-adaptive16-eight-tet4",
+    "arm": "meshers",
+    "cells": 16,
+    "order": 1,
+    "adapt": true,
+    "tolerance": 0.002,
+    "periodic_trace": true,
+    "declared_unit_cell": true,
+    "min_length": 0.002,
+    "adapt_tolerance": 0.002,
+    "adapt_iterations": 8
+  },
+  "status": "failed",
+  "qualified": false,
+  "mmg_calls": [],
+  "instrumentation_s": 0.0,
+  "vtk_backend": "Sequential",
+  "vtk_threads": 1,
+  "periodic_required": true,
+  "solve_performed": false,
+  "native_binary_path": "/Users/kmarchais/dev/meshers/.local-work/macbook-spinodoid-release-native-v2/python/meshers/_meshers.abi3.so",
+  "native_binary_sha256": "13845edd2a5de632863e94fc1aae11859346ab1084283001de273c58488ff409",
+  "error": "sampled geometry error 4.6101781318668945e-3 exceeds tolerance 2e-3; increase resolution or budget",
+  "traceback": "Traceback (most recent call last):\n  File \"/Users/kmarchais/dev/meshers/experiments/adaptive/comparison_benchmark.py\", line 146, in worker\n    mesh=meshers.generate(field,bounds=w.BOUNDS,cells=config['cells'],band=target.band,\n         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/Users/kmarchais/dev/meshers/.local-work/macbook-spinodoid-release-native-v2/python/meshers/__init__.py\", line 415, in generate\n    result = _meshers.generate(\n             ^^^^^^^^^^^^^^^^^^\n_meshers.MeshingFailure: sampled geometry error 4.6101781318668945e-3 exceeds tolerance 2e-3; increase resolution or budget\n",
+  "failed_attempt_s": 3.970777582988376,
+  "wall_s": 3.97078204198624
+}

@@ -1,5 +1,24 @@
 # Adaptive implicit meshing: plan and status
 
+## Spinodoid release candidate validated locally, 11 November 2026
+
+Jobs 832–850 recover scalar partial wall projections across remeshing-state
+reconstruction and establish smaller admitted Tet4 recipes on both frozen
+spinodoids. Fresh five-block measurements show 35.6% /41.7% fewer tets and
+25.8% /40.8% lower native generation time. Quality minima and medians decrease
+against the previous finer native recipes while remaining admitted. Actual
+sampling 32 workflows stay rejected; do not claim an admitted matched-accuracy
+Microgen speedup or universal superiority.
+
+Native tests, Clippy, isolated wheel checks and 208 Python tests pass. Independent
+artifact verification passes, and Gyroid, Schwarz P and the ordered lattice
+remain admitted. The prepared Mac arm64 wheel is not a published release.
+Next follow docs/site/release.md on the exact intended main source commit and
+its required cross-platform artifacts. Keep the isotropic 16-cell failure as a
+robustness control. No new FEA result transfers; all four original cases and
+all 24 lattice model tensors remain in scope.
+
+
 ## Implicit Tet4 comparison complete, 11 November 2026
 
 Jobs 824–831 add eleven frozen specimens and nineteen separately labeled

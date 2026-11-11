@@ -1,0 +1,19 @@
+   Compiling meshers-core v0.1.0 (/Users/kmarchais/dev/meshers/crates/meshers-core)
+    Finished `release` profile [optimized] target(s) in 1m 04s
+     Running unittests src/lib.rs (target/release/deps/meshers_core-8e47bbf80036f8e5)
+
+running 1 test
+
+thread 'tet_adapt::tests::rebuilt_adaptation_resumes_partial_wall_projection' (12654382) panicked at crates/meshers-core/src/tet_adapt.rs:1935:9:
+geometry closing must resume the partial projection after rebuilding its state
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+test tet_adapt::tests::rebuilt_adaptation_resumes_partial_wall_projection ... FAILED
+
+failures:
+
+failures:
+    tet_adapt::tests::rebuilt_adaptation_resumes_partial_wall_projection
+
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 81 filtered out; finished in 0.00s
+
+error: test failed, to rerun pass `-p meshers-core --lib`

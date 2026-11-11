@@ -1,0 +1,44 @@
+{
+  "returncode": 0,
+  "limit_failure": null,
+  "peak_rss_bytes": 752779264,
+  "wall_s": 15.321157375001349,
+  "wall_s_clock": "monotonic",
+  "elapsed_realtime_s": 15.321233034133911,
+  "suspension_or_clock_adjustment_s": 7.565913256257772e-05,
+  "idle_sleep_prevention": [
+    "/usr/bin/caffeinate",
+    "-i"
+  ],
+  "memory_bytes": 8589934592,
+  "memory_enforcement": "process-tree-rss-watchdog",
+  "rss_poll_interval_s": 0.25,
+  "platform": "darwin",
+  "numerical_thread_policy": {
+    "environment": {
+      "OPENBLAS_NUM_THREADS": "1",
+      "OMP_NUM_THREADS": "1",
+      "MKL_NUM_THREADS": "1",
+      "VECLIB_MAXIMUM_THREADS": "1",
+      "RAYON_NUM_THREADS": "1"
+    },
+    "accelerate_blas_threading": 1,
+    "accelerate_scope": "calling thread"
+  },
+  "timeout_s": 440,
+  "command": [
+    "/Users/kmarchais/dev/meshers/.local-work/macbook-runtime/venv/bin/python",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/tpms_tet4_count_benchmark.py",
+    "--run",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-spinodoid-release-isotropic24-v1/study",
+    "--selection",
+    "/Users/kmarchais/dev/meshers/handoff/macbook/spinodoid-release-isotropic24-selection-20261111.json",
+    "--arms",
+    "before,native",
+    "--repetitions",
+    "1",
+    "--warmups",
+    "0",
+    "--worker"
+  ]
+}

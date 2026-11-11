@@ -1,0 +1,1775 @@
+{
+  "cases": [
+    {
+      "case": "spinodoid",
+      "fixture_kind": "study",
+      "reference": {
+        "value": 0.50213623046875,
+        "interval": [
+          0.5019454956054688,
+          0.5023727416992188
+        ],
+        "spread": 0.00042724609375,
+        "kind": "frozen empirical Sobol",
+        "scope": "Scramble range is empirical sensitivity, not a certified reference interval."
+      },
+      "selection_reason": "Frozen after strict pilot admission; native24/16, internal target0.0018, gradation0.6. Before uses prior accurate32 recipe and exact original binary; actual uses sampling32/default MMG.",
+      "arms": {
+        "actual": {
+          "source_kind": "repeated",
+          "attempts": 5,
+          "returned": 5,
+          "admitted": 0,
+          "all_admitted": false,
+          "seconds": {
+            "median": 4.525740373966983,
+            "minimum": 4.481776959000854,
+            "maximum": 4.57406870907289,
+            "n": 5
+          },
+          "tets": {
+            "median": 41295.0,
+            "minimum": 41295.0,
+            "maximum": 41295.0,
+            "n": 5
+          },
+          "nodes": {
+            "median": 10404.0,
+            "minimum": 10404.0,
+            "maximum": 10404.0,
+            "n": 5
+          },
+          "quality": {
+            "min": {
+              "median": 2.812479107734715e-05,
+              "minimum": 2.812479107734715e-05,
+              "maximum": 2.812479107734715e-05,
+              "n": 5
+            },
+            "p01": {
+              "median": 0.11912133744782054,
+              "minimum": 0.11912133744782054,
+              "maximum": 0.11912133744782054,
+              "n": 5
+            },
+            "median": {
+              "median": 0.7233248695956533,
+              "minimum": 0.7233248695956533,
+              "maximum": 0.7233248695956533,
+              "n": 5
+            },
+            "max": {
+              "median": 0.9956875709000853,
+              "minimum": 0.9956875709000853,
+              "maximum": 0.9956875709000853,
+              "n": 5
+            }
+          },
+          "reverse": {
+            "median": 0.009027997524160473,
+            "minimum": 0.009027997524160473,
+            "maximum": 0.009027997524160473,
+            "n": 5
+          },
+          "two_sided": null,
+          "complete_distance_audits": 0,
+          "volume": {
+            "median": 0.5026374568020844,
+            "minimum": 0.5026374568020844,
+            "maximum": 0.5026374568020844,
+            "n": 5
+          },
+          "volume_error_percent": {
+            "median": 0.09981879476541611,
+            "minimum": 0.09981879476541611,
+            "maximum": 0.09981879476541611,
+            "n": 5
+          },
+          "volume_diagnostic_only": true,
+          "facets_pass": false,
+          "periodic_pass": false,
+          "periodic_required": true,
+          "failed_gates": [
+            "facets",
+            "periodicity",
+            "quality"
+          ],
+          "execution_failures": [],
+          "source_directories": [
+            "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-spinodoid-release-repeated-v1/study/repeat-0-spinodoid-actual",
+            "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-spinodoid-release-repeated-v1/study/repeat-1-spinodoid-actual",
+            "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-spinodoid-release-repeated-v1/study/repeat-2-spinodoid-actual",
+            "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-spinodoid-release-repeated-v1/study/repeat-3-spinodoid-actual",
+            "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-spinodoid-release-repeated-v1/study/repeat-4-spinodoid-actual"
+          ],
+          "config": {
+            "name": "actual-public-sampling32-default-mmg-tet4",
+            "arm": "microgen",
+            "resolution": 32,
+            "order": 1,
+            "periodic_trace": true,
+            "declared_unit_cell": true
+          }
+        },
+        "native": {
+          "source_kind": "repeated",
+          "attempts": 5,
+          "returned": 5,
+          "admitted": 5,
+          "all_admitted": true,
+          "seconds": {
+            "median": 2.435266957996646,
+            "minimum": 2.415241209004307,
+            "maximum": 2.4528988749952987,
+            "n": 5
+          },
+          "tets": {
+            "median": 46617.0,
+            "minimum": 46617.0,
+            "maximum": 46617.0,
+            "n": 5
+          },
+          "nodes": {
+            "median": 12312.0,
+            "minimum": 12312.0,
+            "maximum": 12312.0,
+            "n": 5
+          },
+          "quality": {
+            "min": {
+              "median": 0.1533631590150879,
+              "minimum": 0.1533631590150879,
+              "maximum": 0.1533631590150879,
+              "n": 5
+            },
+            "p01": {
+              "median": 0.4942684257207424,
+              "minimum": 0.4942684257207424,
+              "maximum": 0.4942684257207424,
+              "n": 5
+            },
+            "median": {
+              "median": 0.7333116194665928,
+              "minimum": 0.7333116194665928,
+              "maximum": 0.7333116194665928,
+              "n": 5
+            },
+            "max": {
+              "median": 0.9993470002671768,
+              "minimum": 0.9993470002671768,
+              "maximum": 0.9993470002671768,
+              "n": 5
+            }
+          },
+          "reverse": {
+            "median": 0.0015715753484029883,
+            "minimum": 0.0015715753484029883,
+            "maximum": 0.0015715753484029883,
+            "n": 5
+          },
+          "two_sided": {
+            "median": 0.0017994002343057825,
+            "minimum": 0.0017994002343057825,
+            "maximum": 0.0017994002343057825,
+            "n": 5
+          },
+          "complete_distance_audits": 5,
+          "volume": {
+            "median": 0.5023517646174493,
+            "minimum": 0.5023517646174493,
+            "maximum": 0.5023517646174493,
+            "n": 5
+          },
+          "volume_error_percent": {
+            "median": 0.04292344101484158,
+            "minimum": 0.04292344101484158,
+            "maximum": 0.04292344101484158,
+            "n": 5
+          },
+          "volume_diagnostic_only": false,
+          "facets_pass": true,
+          "periodic_pass": true,
+          "periodic_required": true,
+          "failed_gates": [],
+          "execution_failures": [],
+          "source_directories": [
+            "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-spinodoid-release-repeated-v1/study/repeat-0-spinodoid-native",
+            "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-spinodoid-release-repeated-v1/study/repeat-1-spinodoid-native",
+            "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-spinodoid-release-repeated-v1/study/repeat-2-spinodoid-native",
+            "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-spinodoid-release-repeated-v1/study/repeat-3-spinodoid-native",
+            "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-spinodoid-release-repeated-v1/study/repeat-4-spinodoid-native"
+          ],
+          "config": {
+            "name": "native-spinodoid-adaptive24-margin-tet4-gradation06",
+            "arm": "meshers",
+            "cells": 24,
+            "order": 1,
+            "adapt": true,
+            "tolerance": 0.002,
+            "periodic_trace": true,
+            "declared_unit_cell": true,
+            "min_length": 0.002,
+            "adapt_tolerance": 0.0018,
+            "adapt_iterations": 4,
+            "gradation": 0.6
+          }
+        },
+        "before": {
+          "source_kind": "repeated",
+          "attempts": 5,
+          "returned": 5,
+          "admitted": 5,
+          "all_admitted": true,
+          "seconds": {
+            "median": 3.2814345410151873,
+            "minimum": 3.258034416998271,
+            "maximum": 3.2944319999951404,
+            "n": 5
+          },
+          "tets": {
+            "median": 72378.0,
+            "minimum": 72378.0,
+            "maximum": 72378.0,
+            "n": 5
+          },
+          "nodes": {
+            "median": 16702.0,
+            "minimum": 16702.0,
+            "maximum": 16702.0,
+            "n": 5
+          },
+          "quality": {
+            "min": {
+              "median": 0.23317041205131583,
+              "minimum": 0.23317041205131583,
+              "maximum": 0.23317041205131583,
+              "n": 5
+            },
+            "p01": {
+              "median": 0.5275178888163384,
+              "minimum": 0.5275178888163384,
+              "maximum": 0.5275178888163384,
+              "n": 5
+            },
+            "median": {
+              "median": 0.7831518748900055,
+              "minimum": 0.7831518748900055,
+              "maximum": 0.7831518748900055,
+              "n": 5
+            },
+            "max": {
+              "median": 0.9980049652953971,
+              "minimum": 0.9980049652953971,
+              "maximum": 0.9980049652953971,
+              "n": 5
+            }
+          },
+          "reverse": {
+            "median": 0.0013848250110632607,
+            "minimum": 0.0013848250110632607,
+            "maximum": 0.0013848250110632607,
+            "n": 5
+          },
+          "two_sided": {
+            "median": 0.0018644960021393733,
+            "minimum": 0.0018644960021393733,
+            "maximum": 0.0018644960021393733,
+            "n": 5
+          },
+          "complete_distance_audits": 5,
+          "volume": {
+            "median": 0.5023624766336056,
+            "minimum": 0.5023624766336056,
+            "maximum": 0.5023624766336056,
+            "n": 5
+          },
+          "volume_error_percent": {
+            "median": 0.0450567298528437,
+            "minimum": 0.0450567298528437,
+            "maximum": 0.0450567298528437,
+            "n": 5
+          },
+          "volume_diagnostic_only": false,
+          "facets_pass": true,
+          "periodic_pass": true,
+          "periodic_required": true,
+          "failed_gates": [],
+          "execution_failures": [],
+          "source_directories": [
+            "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-spinodoid-release-repeated-v1/study/repeat-0-spinodoid-before",
+            "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-spinodoid-release-repeated-v1/study/repeat-1-spinodoid-before",
+            "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-spinodoid-release-repeated-v1/study/repeat-2-spinodoid-before",
+            "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-spinodoid-release-repeated-v1/study/repeat-3-spinodoid-before",
+            "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-spinodoid-release-repeated-v1/study/repeat-4-spinodoid-before"
+          ],
+          "config": {
+            "name": "before-accurate32-tet4",
+            "arm": "meshers",
+            "cells": 32,
+            "order": 1,
+            "adapt": true,
+            "tolerance": 0.002,
+            "min_length": 0.002,
+            "adapt_tolerance": 0.002,
+            "lattice_field": null,
+            "periodic_trace": true,
+            "declared_unit_cell": true
+          }
+        }
+      },
+      "count_ratios_native_over_actual": {
+        "tets": 1.1288775880857247,
+        "nodes": 1.1833910034602075
+      },
+      "volume_ranking_over_reference_interval": "native smaller",
+      "admitted_pair": false,
+      "attempt_history": [
+        {
+          "arm": "native",
+          "config": {
+            "name": "native-spinodoid-adaptive16-tet4",
+            "arm": "meshers",
+            "cells": 16,
+            "order": 1,
+            "adapt": true,
+            "tolerance": 0.002,
+            "periodic_trace": true,
+            "declared_unit_cell": true,
+            "min_length": 0.002,
+            "adapt_tolerance": 0.002,
+            "adapt_iterations": 4
+          },
+          "status": "failed",
+          "returned_mesh": false,
+          "qualified": false,
+          "directory": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-spinodoid-release-candidate16-v1/study/repeat-0-spinodoid-native",
+          "warmup": false,
+          "error": "sampled geometry error 5.107583207576339e-3 exceeds tolerance 2e-3; increase resolution or budget",
+          "failed_gates": [],
+          "limit_failure": null
+        },
+        {
+          "arm": "native",
+          "config": {
+            "name": "native-spinodoid-adaptive24-margin-tet4-gradation06",
+            "arm": "meshers",
+            "cells": 24,
+            "order": 1,
+            "adapt": true,
+            "tolerance": 0.002,
+            "periodic_trace": true,
+            "declared_unit_cell": true,
+            "min_length": 0.002,
+            "adapt_tolerance": 0.0018,
+            "adapt_iterations": 4,
+            "gradation": 0.6
+          },
+          "status": "admitted",
+          "returned_mesh": true,
+          "qualified": true,
+          "directory": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-spinodoid-release-gradation-v1/study/repeat-0-spinodoid-native",
+          "warmup": false,
+          "error": null,
+          "failed_gates": [],
+          "limit_failure": null
+        },
+        {
+          "arm": "actual",
+          "config": {
+            "name": "actual-public-sampling32-default-mmg-tet4",
+            "arm": "microgen",
+            "resolution": 32,
+            "order": 1,
+            "periodic_trace": true,
+            "declared_unit_cell": true
+          },
+          "status": "admission-rejected",
+          "returned_mesh": true,
+          "qualified": false,
+          "directory": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-spinodoid-release-repeated-v1/study/repeat--1-spinodoid-actual",
+          "warmup": true,
+          "error": null,
+          "failed_gates": [
+            "quality",
+            "facets",
+            "periodicity"
+          ],
+          "limit_failure": null
+        },
+        {
+          "arm": "native",
+          "config": {
+            "name": "native-spinodoid-adaptive24-margin-tet4-gradation06",
+            "arm": "meshers",
+            "cells": 24,
+            "order": 1,
+            "adapt": true,
+            "tolerance": 0.002,
+            "periodic_trace": true,
+            "declared_unit_cell": true,
+            "min_length": 0.002,
+            "adapt_tolerance": 0.0018,
+            "adapt_iterations": 4,
+            "gradation": 0.6
+          },
+          "status": "admitted",
+          "returned_mesh": true,
+          "qualified": true,
+          "directory": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-spinodoid-release-repeated-v1/study/repeat--1-spinodoid-native",
+          "warmup": true,
+          "error": null,
+          "failed_gates": [],
+          "limit_failure": null
+        },
+        {
+          "arm": "before",
+          "config": {
+            "name": "before-accurate32-tet4",
+            "arm": "meshers",
+            "cells": 32,
+            "order": 1,
+            "adapt": true,
+            "tolerance": 0.002,
+            "min_length": 0.002,
+            "adapt_tolerance": 0.002,
+            "lattice_field": null,
+            "periodic_trace": true,
+            "declared_unit_cell": true
+          },
+          "status": "admitted",
+          "returned_mesh": true,
+          "qualified": true,
+          "directory": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-spinodoid-release-repeated-v1/study/repeat--1-spinodoid-before",
+          "warmup": true,
+          "error": null,
+          "failed_gates": [],
+          "limit_failure": null
+        },
+        {
+          "arm": "before",
+          "config": {
+            "name": "before-accurate32-tet4",
+            "arm": "meshers",
+            "cells": 32,
+            "order": 1,
+            "adapt": true,
+            "tolerance": 0.002,
+            "min_length": 0.002,
+            "adapt_tolerance": 0.002,
+            "lattice_field": null,
+            "periodic_trace": true,
+            "declared_unit_cell": true
+          },
+          "status": "admitted",
+          "returned_mesh": true,
+          "qualified": true,
+          "directory": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-spinodoid-release-repeated-v1/study/repeat-0-spinodoid-before",
+          "warmup": false,
+          "error": null,
+          "failed_gates": [],
+          "limit_failure": null
+        },
+        {
+          "arm": "native",
+          "config": {
+            "name": "native-spinodoid-adaptive24-margin-tet4-gradation06",
+            "arm": "meshers",
+            "cells": 24,
+            "order": 1,
+            "adapt": true,
+            "tolerance": 0.002,
+            "periodic_trace": true,
+            "declared_unit_cell": true,
+            "min_length": 0.002,
+            "adapt_tolerance": 0.0018,
+            "adapt_iterations": 4,
+            "gradation": 0.6
+          },
+          "status": "admitted",
+          "returned_mesh": true,
+          "qualified": true,
+          "directory": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-spinodoid-release-repeated-v1/study/repeat-0-spinodoid-native",
+          "warmup": false,
+          "error": null,
+          "failed_gates": [],
+          "limit_failure": null
+        },
+        {
+          "arm": "actual",
+          "config": {
+            "name": "actual-public-sampling32-default-mmg-tet4",
+            "arm": "microgen",
+            "resolution": 32,
+            "order": 1,
+            "periodic_trace": true,
+            "declared_unit_cell": true
+          },
+          "status": "admission-rejected",
+          "returned_mesh": true,
+          "qualified": false,
+          "directory": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-spinodoid-release-repeated-v1/study/repeat-0-spinodoid-actual",
+          "warmup": false,
+          "error": null,
+          "failed_gates": [
+            "quality",
+            "facets",
+            "periodicity"
+          ],
+          "limit_failure": null
+        },
+        {
+          "arm": "actual",
+          "config": {
+            "name": "actual-public-sampling32-default-mmg-tet4",
+            "arm": "microgen",
+            "resolution": 32,
+            "order": 1,
+            "periodic_trace": true,
+            "declared_unit_cell": true
+          },
+          "status": "admission-rejected",
+          "returned_mesh": true,
+          "qualified": false,
+          "directory": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-spinodoid-release-repeated-v1/study/repeat-1-spinodoid-actual",
+          "warmup": false,
+          "error": null,
+          "failed_gates": [
+            "quality",
+            "facets",
+            "periodicity"
+          ],
+          "limit_failure": null
+        },
+        {
+          "arm": "native",
+          "config": {
+            "name": "native-spinodoid-adaptive24-margin-tet4-gradation06",
+            "arm": "meshers",
+            "cells": 24,
+            "order": 1,
+            "adapt": true,
+            "tolerance": 0.002,
+            "periodic_trace": true,
+            "declared_unit_cell": true,
+            "min_length": 0.002,
+            "adapt_tolerance": 0.0018,
+            "adapt_iterations": 4,
+            "gradation": 0.6
+          },
+          "status": "admitted",
+          "returned_mesh": true,
+          "qualified": true,
+          "directory": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-spinodoid-release-repeated-v1/study/repeat-1-spinodoid-native",
+          "warmup": false,
+          "error": null,
+          "failed_gates": [],
+          "limit_failure": null
+        },
+        {
+          "arm": "before",
+          "config": {
+            "name": "before-accurate32-tet4",
+            "arm": "meshers",
+            "cells": 32,
+            "order": 1,
+            "adapt": true,
+            "tolerance": 0.002,
+            "min_length": 0.002,
+            "adapt_tolerance": 0.002,
+            "lattice_field": null,
+            "periodic_trace": true,
+            "declared_unit_cell": true
+          },
+          "status": "admitted",
+          "returned_mesh": true,
+          "qualified": true,
+          "directory": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-spinodoid-release-repeated-v1/study/repeat-1-spinodoid-before",
+          "warmup": false,
+          "error": null,
+          "failed_gates": [],
+          "limit_failure": null
+        },
+        {
+          "arm": "before",
+          "config": {
+            "name": "before-accurate32-tet4",
+            "arm": "meshers",
+            "cells": 32,
+            "order": 1,
+            "adapt": true,
+            "tolerance": 0.002,
+            "min_length": 0.002,
+            "adapt_tolerance": 0.002,
+            "lattice_field": null,
+            "periodic_trace": true,
+            "declared_unit_cell": true
+          },
+          "status": "admitted",
+          "returned_mesh": true,
+          "qualified": true,
+          "directory": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-spinodoid-release-repeated-v1/study/repeat-2-spinodoid-before",
+          "warmup": false,
+          "error": null,
+          "failed_gates": [],
+          "limit_failure": null
+        },
+        {
+          "arm": "native",
+          "config": {
+            "name": "native-spinodoid-adaptive24-margin-tet4-gradation06",
+            "arm": "meshers",
+            "cells": 24,
+            "order": 1,
+            "adapt": true,
+            "tolerance": 0.002,
+            "periodic_trace": true,
+            "declared_unit_cell": true,
+            "min_length": 0.002,
+            "adapt_tolerance": 0.0018,
+            "adapt_iterations": 4,
+            "gradation": 0.6
+          },
+          "status": "admitted",
+          "returned_mesh": true,
+          "qualified": true,
+          "directory": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-spinodoid-release-repeated-v1/study/repeat-2-spinodoid-native",
+          "warmup": false,
+          "error": null,
+          "failed_gates": [],
+          "limit_failure": null
+        },
+        {
+          "arm": "actual",
+          "config": {
+            "name": "actual-public-sampling32-default-mmg-tet4",
+            "arm": "microgen",
+            "resolution": 32,
+            "order": 1,
+            "periodic_trace": true,
+            "declared_unit_cell": true
+          },
+          "status": "admission-rejected",
+          "returned_mesh": true,
+          "qualified": false,
+          "directory": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-spinodoid-release-repeated-v1/study/repeat-2-spinodoid-actual",
+          "warmup": false,
+          "error": null,
+          "failed_gates": [
+            "quality",
+            "facets",
+            "periodicity"
+          ],
+          "limit_failure": null
+        },
+        {
+          "arm": "actual",
+          "config": {
+            "name": "actual-public-sampling32-default-mmg-tet4",
+            "arm": "microgen",
+            "resolution": 32,
+            "order": 1,
+            "periodic_trace": true,
+            "declared_unit_cell": true
+          },
+          "status": "admission-rejected",
+          "returned_mesh": true,
+          "qualified": false,
+          "directory": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-spinodoid-release-repeated-v1/study/repeat-3-spinodoid-actual",
+          "warmup": false,
+          "error": null,
+          "failed_gates": [
+            "quality",
+            "facets",
+            "periodicity"
+          ],
+          "limit_failure": null
+        },
+        {
+          "arm": "native",
+          "config": {
+            "name": "native-spinodoid-adaptive24-margin-tet4-gradation06",
+            "arm": "meshers",
+            "cells": 24,
+            "order": 1,
+            "adapt": true,
+            "tolerance": 0.002,
+            "periodic_trace": true,
+            "declared_unit_cell": true,
+            "min_length": 0.002,
+            "adapt_tolerance": 0.0018,
+            "adapt_iterations": 4,
+            "gradation": 0.6
+          },
+          "status": "admitted",
+          "returned_mesh": true,
+          "qualified": true,
+          "directory": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-spinodoid-release-repeated-v1/study/repeat-3-spinodoid-native",
+          "warmup": false,
+          "error": null,
+          "failed_gates": [],
+          "limit_failure": null
+        },
+        {
+          "arm": "before",
+          "config": {
+            "name": "before-accurate32-tet4",
+            "arm": "meshers",
+            "cells": 32,
+            "order": 1,
+            "adapt": true,
+            "tolerance": 0.002,
+            "min_length": 0.002,
+            "adapt_tolerance": 0.002,
+            "lattice_field": null,
+            "periodic_trace": true,
+            "declared_unit_cell": true
+          },
+          "status": "admitted",
+          "returned_mesh": true,
+          "qualified": true,
+          "directory": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-spinodoid-release-repeated-v1/study/repeat-3-spinodoid-before",
+          "warmup": false,
+          "error": null,
+          "failed_gates": [],
+          "limit_failure": null
+        },
+        {
+          "arm": "before",
+          "config": {
+            "name": "before-accurate32-tet4",
+            "arm": "meshers",
+            "cells": 32,
+            "order": 1,
+            "adapt": true,
+            "tolerance": 0.002,
+            "min_length": 0.002,
+            "adapt_tolerance": 0.002,
+            "lattice_field": null,
+            "periodic_trace": true,
+            "declared_unit_cell": true
+          },
+          "status": "admitted",
+          "returned_mesh": true,
+          "qualified": true,
+          "directory": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-spinodoid-release-repeated-v1/study/repeat-4-spinodoid-before",
+          "warmup": false,
+          "error": null,
+          "failed_gates": [],
+          "limit_failure": null
+        },
+        {
+          "arm": "native",
+          "config": {
+            "name": "native-spinodoid-adaptive24-margin-tet4-gradation06",
+            "arm": "meshers",
+            "cells": 24,
+            "order": 1,
+            "adapt": true,
+            "tolerance": 0.002,
+            "periodic_trace": true,
+            "declared_unit_cell": true,
+            "min_length": 0.002,
+            "adapt_tolerance": 0.0018,
+            "adapt_iterations": 4,
+            "gradation": 0.6
+          },
+          "status": "admitted",
+          "returned_mesh": true,
+          "qualified": true,
+          "directory": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-spinodoid-release-repeated-v1/study/repeat-4-spinodoid-native",
+          "warmup": false,
+          "error": null,
+          "failed_gates": [],
+          "limit_failure": null
+        },
+        {
+          "arm": "actual",
+          "config": {
+            "name": "actual-public-sampling32-default-mmg-tet4",
+            "arm": "microgen",
+            "resolution": 32,
+            "order": 1,
+            "periodic_trace": true,
+            "declared_unit_cell": true
+          },
+          "status": "admission-rejected",
+          "returned_mesh": true,
+          "qualified": false,
+          "directory": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-spinodoid-release-repeated-v1/study/repeat-4-spinodoid-actual",
+          "warmup": false,
+          "error": null,
+          "failed_gates": [
+            "quality",
+            "facets",
+            "periodicity"
+          ],
+          "limit_failure": null
+        }
+      ]
+    },
+    {
+      "case": "spinodoid-anisotropic",
+      "fixture_kind": "study",
+      "reference": {
+        "value": 0.5218093395233154,
+        "interval": [
+          0.5217475891113281,
+          0.5218582153320312
+        ],
+        "spread": 0.000110626220703125,
+        "kind": "frozen empirical Sobol",
+        "scope": "Scramble range is empirical sensitivity, not a certified reference interval."
+      },
+      "selection_reason": "Frozen after strict pilot admission; native24/16, internal target0.0018, gradation0.6. Before uses prior accurate32 recipe and exact original binary; actual uses sampling32/default MMG.",
+      "arms": {
+        "actual": {
+          "source_kind": "repeated",
+          "attempts": 5,
+          "returned": 5,
+          "admitted": 0,
+          "all_admitted": false,
+          "seconds": {
+            "median": 3.921095794037683,
+            "minimum": 3.9080709999834653,
+            "maximum": 3.9380390840233304,
+            "n": 5
+          },
+          "tets": {
+            "median": 34721.0,
+            "minimum": 34721.0,
+            "maximum": 34721.0,
+            "n": 5
+          },
+          "nodes": {
+            "median": 8863.0,
+            "minimum": 8863.0,
+            "maximum": 8863.0,
+            "n": 5
+          },
+          "quality": {
+            "min": {
+              "median": 0.00022387371247391014,
+              "minimum": 0.00022387371247391014,
+              "maximum": 0.00022387371247391014,
+              "n": 5
+            },
+            "p01": {
+              "median": 0.13438262065652,
+              "minimum": 0.13438262065652,
+              "maximum": 0.13438262065652,
+              "n": 5
+            },
+            "median": {
+              "median": 0.7158917630803295,
+              "minimum": 0.7158917630803295,
+              "maximum": 0.7158917630803295,
+              "n": 5
+            },
+            "max": {
+              "median": 0.998681954178377,
+              "minimum": 0.998681954178377,
+              "maximum": 0.998681954178377,
+              "n": 5
+            }
+          },
+          "reverse": {
+            "median": 0.011133246126011777,
+            "minimum": 0.011133246126011777,
+            "maximum": 0.011133246126011777,
+            "n": 5
+          },
+          "two_sided": null,
+          "complete_distance_audits": 0,
+          "volume": {
+            "median": 0.5228424291970128,
+            "minimum": 0.5228424291970128,
+            "maximum": 0.5228424291970128,
+            "n": 5
+          },
+          "volume_error_percent": {
+            "median": 0.19798221216991152,
+            "minimum": 0.19798221216991152,
+            "maximum": 0.19798221216991152,
+            "n": 5
+          },
+          "volume_diagnostic_only": false,
+          "facets_pass": true,
+          "periodic_pass": true,
+          "periodic_required": true,
+          "failed_gates": [
+            "quality"
+          ],
+          "execution_failures": [],
+          "source_directories": [
+            "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-spinodoid-release-repeated-v1/study/repeat-0-spinodoid-anisotropic-actual",
+            "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-spinodoid-release-repeated-v1/study/repeat-1-spinodoid-anisotropic-actual",
+            "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-spinodoid-release-repeated-v1/study/repeat-2-spinodoid-anisotropic-actual",
+            "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-spinodoid-release-repeated-v1/study/repeat-3-spinodoid-anisotropic-actual",
+            "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-spinodoid-release-repeated-v1/study/repeat-4-spinodoid-anisotropic-actual"
+          ],
+          "config": {
+            "name": "actual-public-sampling32-default-mmg-tet4",
+            "arm": "microgen",
+            "resolution": 32,
+            "order": 1,
+            "periodic_trace": true,
+            "declared_unit_cell": true
+          }
+        },
+        "native": {
+          "source_kind": "repeated",
+          "attempts": 5,
+          "returned": 5,
+          "admitted": 5,
+          "all_admitted": true,
+          "seconds": {
+            "median": 1.5167058750230353,
+            "minimum": 1.5057668750232551,
+            "maximum": 1.5340926659991965,
+            "n": 5
+          },
+          "tets": {
+            "median": 36056.0,
+            "minimum": 36056.0,
+            "maximum": 36056.0,
+            "n": 5
+          },
+          "nodes": {
+            "median": 9478.0,
+            "minimum": 9478.0,
+            "maximum": 9478.0,
+            "n": 5
+          },
+          "quality": {
+            "min": {
+              "median": 0.10001223698993537,
+              "minimum": 0.10001223698993537,
+              "maximum": 0.10001223698993537,
+              "n": 5
+            },
+            "p01": {
+              "median": 0.47564446918168896,
+              "minimum": 0.47564446918168896,
+              "maximum": 0.47564446918168896,
+              "n": 5
+            },
+            "median": {
+              "median": 0.7249769454224793,
+              "minimum": 0.7249769454224793,
+              "maximum": 0.7249769454224793,
+              "n": 5
+            },
+            "max": {
+              "median": 0.9982954344811285,
+              "minimum": 0.9982954344811285,
+              "maximum": 0.9982954344811285,
+              "n": 5
+            }
+          },
+          "reverse": {
+            "median": 0.0016445328522331252,
+            "minimum": 0.0016445328522331252,
+            "maximum": 0.0016445328522331252,
+            "n": 5
+          },
+          "two_sided": {
+            "median": 0.0017879723089962438,
+            "minimum": 0.0017879723089962438,
+            "maximum": 0.0017879723089962438,
+            "n": 5
+          },
+          "complete_distance_audits": 5,
+          "volume": {
+            "median": 0.522126819484177,
+            "minimum": 0.522126819484177,
+            "maximum": 0.522126819484177,
+            "n": 5
+          },
+          "volume_error_percent": {
+            "median": 0.06084213846222486,
+            "minimum": 0.06084213846222486,
+            "maximum": 0.06084213846222486,
+            "n": 5
+          },
+          "volume_diagnostic_only": false,
+          "facets_pass": true,
+          "periodic_pass": true,
+          "periodic_required": true,
+          "failed_gates": [],
+          "execution_failures": [],
+          "source_directories": [
+            "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-spinodoid-release-repeated-v1/study/repeat-0-spinodoid-anisotropic-native",
+            "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-spinodoid-release-repeated-v1/study/repeat-1-spinodoid-anisotropic-native",
+            "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-spinodoid-release-repeated-v1/study/repeat-2-spinodoid-anisotropic-native",
+            "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-spinodoid-release-repeated-v1/study/repeat-3-spinodoid-anisotropic-native",
+            "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-spinodoid-release-repeated-v1/study/repeat-4-spinodoid-anisotropic-native"
+          ],
+          "config": {
+            "name": "native-spinodoid-adaptive16-margin-gradation06-tet4",
+            "arm": "meshers",
+            "cells": 16,
+            "order": 1,
+            "adapt": true,
+            "tolerance": 0.002,
+            "periodic_trace": true,
+            "declared_unit_cell": true,
+            "min_length": 0.002,
+            "adapt_tolerance": 0.0018,
+            "adapt_iterations": 4,
+            "gradation": 0.6
+          }
+        },
+        "before": {
+          "source_kind": "repeated",
+          "attempts": 5,
+          "returned": 5,
+          "admitted": 5,
+          "all_admitted": true,
+          "seconds": {
+            "median": 2.563384542008862,
+            "minimum": 2.543209499999648,
+            "maximum": 2.5917915000172798,
+            "n": 5
+          },
+          "tets": {
+            "median": 61868.0,
+            "minimum": 61868.0,
+            "maximum": 61868.0,
+            "n": 5
+          },
+          "nodes": {
+            "median": 14005.0,
+            "minimum": 14005.0,
+            "maximum": 14005.0,
+            "n": 5
+          },
+          "quality": {
+            "min": {
+              "median": 0.12184851658000719,
+              "minimum": 0.12184851658000719,
+              "maximum": 0.12184851658000719,
+              "n": 5
+            },
+            "p01": {
+              "median": 0.5261816943772627,
+              "minimum": 0.5261816943772627,
+              "maximum": 0.5261816943772627,
+              "n": 5
+            },
+            "median": {
+              "median": 0.7800501762774087,
+              "minimum": 0.7800501762774087,
+              "maximum": 0.7800501762774087,
+              "n": 5
+            },
+            "max": {
+              "median": 0.9973408098294334,
+              "minimum": 0.9973408098294334,
+              "maximum": 0.9973408098294334,
+              "n": 5
+            }
+          },
+          "reverse": {
+            "median": 0.001384547681902424,
+            "minimum": 0.001384547681902424,
+            "maximum": 0.001384547681902424,
+            "n": 5
+          },
+          "two_sided": {
+            "median": 0.00183504460785085,
+            "minimum": 0.00183504460785085,
+            "maximum": 0.00183504460785085,
+            "n": 5
+          },
+          "complete_distance_audits": 5,
+          "volume": {
+            "median": 0.5220968380751714,
+            "minimum": 0.5220968380751714,
+            "maximum": 0.5220968380751714,
+            "n": 5
+          },
+          "volume_error_percent": {
+            "median": 0.055096474915261595,
+            "minimum": 0.055096474915261595,
+            "maximum": 0.055096474915261595,
+            "n": 5
+          },
+          "volume_diagnostic_only": false,
+          "facets_pass": true,
+          "periodic_pass": true,
+          "periodic_required": true,
+          "failed_gates": [],
+          "execution_failures": [],
+          "source_directories": [
+            "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-spinodoid-release-repeated-v1/study/repeat-0-spinodoid-anisotropic-before",
+            "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-spinodoid-release-repeated-v1/study/repeat-1-spinodoid-anisotropic-before",
+            "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-spinodoid-release-repeated-v1/study/repeat-2-spinodoid-anisotropic-before",
+            "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-spinodoid-release-repeated-v1/study/repeat-3-spinodoid-anisotropic-before",
+            "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-spinodoid-release-repeated-v1/study/repeat-4-spinodoid-anisotropic-before"
+          ],
+          "config": {
+            "arm": "meshers",
+            "cells": 32,
+            "order": 1,
+            "adapt": true,
+            "tolerance": 0.002,
+            "min_length": 0.002,
+            "adapt_tolerance": 0.002,
+            "name": "before-accurate32-tet4",
+            "periodic_trace": true,
+            "declared_unit_cell": true
+          }
+        }
+      },
+      "count_ratios_native_over_actual": {
+        "tets": 1.0384493534172403,
+        "nodes": 1.0693895972018503
+      },
+      "volume_ranking_over_reference_interval": "native smaller",
+      "admitted_pair": false,
+      "attempt_history": [
+        {
+          "arm": "native",
+          "config": {
+            "name": "native-spinodoid-adaptive16-tet4",
+            "arm": "meshers",
+            "cells": 16,
+            "order": 1,
+            "adapt": true,
+            "tolerance": 0.002,
+            "periodic_trace": true,
+            "declared_unit_cell": true,
+            "min_length": 0.002,
+            "adapt_tolerance": 0.002,
+            "adapt_iterations": 4
+          },
+          "status": "admitted",
+          "returned_mesh": true,
+          "qualified": true,
+          "directory": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-spinodoid-release-candidate16-v1/study/repeat-0-spinodoid-anisotropic-native",
+          "warmup": false,
+          "error": null,
+          "failed_gates": [],
+          "limit_failure": null
+        },
+        {
+          "arm": "native",
+          "config": {
+            "name": "native-spinodoid-adaptive16-tet4-gradation06",
+            "arm": "meshers",
+            "cells": 16,
+            "order": 1,
+            "adapt": true,
+            "tolerance": 0.002,
+            "periodic_trace": true,
+            "declared_unit_cell": true,
+            "min_length": 0.002,
+            "adapt_tolerance": 0.002,
+            "adapt_iterations": 4,
+            "gradation": 0.6
+          },
+          "status": "admission-rejected",
+          "returned_mesh": true,
+          "qualified": false,
+          "directory": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-spinodoid-release-gradation-v1/study/repeat-0-spinodoid-anisotropic-native",
+          "warmup": false,
+          "error": null,
+          "failed_gates": [
+            "geometry"
+          ],
+          "limit_failure": null
+        },
+        {
+          "arm": "actual",
+          "config": {
+            "name": "actual-public-sampling32-default-mmg-tet4",
+            "arm": "microgen",
+            "resolution": 32,
+            "order": 1,
+            "periodic_trace": true,
+            "declared_unit_cell": true
+          },
+          "status": "admission-rejected",
+          "returned_mesh": true,
+          "qualified": false,
+          "directory": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-spinodoid-release-repeated-v1/study/repeat--1-spinodoid-anisotropic-actual",
+          "warmup": true,
+          "error": null,
+          "failed_gates": [
+            "quality"
+          ],
+          "limit_failure": null
+        },
+        {
+          "arm": "native",
+          "config": {
+            "name": "native-spinodoid-adaptive16-margin-gradation06-tet4",
+            "arm": "meshers",
+            "cells": 16,
+            "order": 1,
+            "adapt": true,
+            "tolerance": 0.002,
+            "periodic_trace": true,
+            "declared_unit_cell": true,
+            "min_length": 0.002,
+            "adapt_tolerance": 0.0018,
+            "adapt_iterations": 4,
+            "gradation": 0.6
+          },
+          "status": "admitted",
+          "returned_mesh": true,
+          "qualified": true,
+          "directory": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-spinodoid-release-repeated-v1/study/repeat--1-spinodoid-anisotropic-native",
+          "warmup": true,
+          "error": null,
+          "failed_gates": [],
+          "limit_failure": null
+        },
+        {
+          "arm": "before",
+          "config": {
+            "arm": "meshers",
+            "cells": 32,
+            "order": 1,
+            "adapt": true,
+            "tolerance": 0.002,
+            "min_length": 0.002,
+            "adapt_tolerance": 0.002,
+            "name": "before-accurate32-tet4",
+            "periodic_trace": true,
+            "declared_unit_cell": true
+          },
+          "status": "admitted",
+          "returned_mesh": true,
+          "qualified": true,
+          "directory": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-spinodoid-release-repeated-v1/study/repeat--1-spinodoid-anisotropic-before",
+          "warmup": true,
+          "error": null,
+          "failed_gates": [],
+          "limit_failure": null
+        },
+        {
+          "arm": "before",
+          "config": {
+            "arm": "meshers",
+            "cells": 32,
+            "order": 1,
+            "adapt": true,
+            "tolerance": 0.002,
+            "min_length": 0.002,
+            "adapt_tolerance": 0.002,
+            "name": "before-accurate32-tet4",
+            "periodic_trace": true,
+            "declared_unit_cell": true
+          },
+          "status": "admitted",
+          "returned_mesh": true,
+          "qualified": true,
+          "directory": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-spinodoid-release-repeated-v1/study/repeat-0-spinodoid-anisotropic-before",
+          "warmup": false,
+          "error": null,
+          "failed_gates": [],
+          "limit_failure": null
+        },
+        {
+          "arm": "native",
+          "config": {
+            "name": "native-spinodoid-adaptive16-margin-gradation06-tet4",
+            "arm": "meshers",
+            "cells": 16,
+            "order": 1,
+            "adapt": true,
+            "tolerance": 0.002,
+            "periodic_trace": true,
+            "declared_unit_cell": true,
+            "min_length": 0.002,
+            "adapt_tolerance": 0.0018,
+            "adapt_iterations": 4,
+            "gradation": 0.6
+          },
+          "status": "admitted",
+          "returned_mesh": true,
+          "qualified": true,
+          "directory": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-spinodoid-release-repeated-v1/study/repeat-0-spinodoid-anisotropic-native",
+          "warmup": false,
+          "error": null,
+          "failed_gates": [],
+          "limit_failure": null
+        },
+        {
+          "arm": "actual",
+          "config": {
+            "name": "actual-public-sampling32-default-mmg-tet4",
+            "arm": "microgen",
+            "resolution": 32,
+            "order": 1,
+            "periodic_trace": true,
+            "declared_unit_cell": true
+          },
+          "status": "admission-rejected",
+          "returned_mesh": true,
+          "qualified": false,
+          "directory": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-spinodoid-release-repeated-v1/study/repeat-0-spinodoid-anisotropic-actual",
+          "warmup": false,
+          "error": null,
+          "failed_gates": [
+            "quality"
+          ],
+          "limit_failure": null
+        },
+        {
+          "arm": "actual",
+          "config": {
+            "name": "actual-public-sampling32-default-mmg-tet4",
+            "arm": "microgen",
+            "resolution": 32,
+            "order": 1,
+            "periodic_trace": true,
+            "declared_unit_cell": true
+          },
+          "status": "admission-rejected",
+          "returned_mesh": true,
+          "qualified": false,
+          "directory": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-spinodoid-release-repeated-v1/study/repeat-1-spinodoid-anisotropic-actual",
+          "warmup": false,
+          "error": null,
+          "failed_gates": [
+            "quality"
+          ],
+          "limit_failure": null
+        },
+        {
+          "arm": "native",
+          "config": {
+            "name": "native-spinodoid-adaptive16-margin-gradation06-tet4",
+            "arm": "meshers",
+            "cells": 16,
+            "order": 1,
+            "adapt": true,
+            "tolerance": 0.002,
+            "periodic_trace": true,
+            "declared_unit_cell": true,
+            "min_length": 0.002,
+            "adapt_tolerance": 0.0018,
+            "adapt_iterations": 4,
+            "gradation": 0.6
+          },
+          "status": "admitted",
+          "returned_mesh": true,
+          "qualified": true,
+          "directory": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-spinodoid-release-repeated-v1/study/repeat-1-spinodoid-anisotropic-native",
+          "warmup": false,
+          "error": null,
+          "failed_gates": [],
+          "limit_failure": null
+        },
+        {
+          "arm": "before",
+          "config": {
+            "arm": "meshers",
+            "cells": 32,
+            "order": 1,
+            "adapt": true,
+            "tolerance": 0.002,
+            "min_length": 0.002,
+            "adapt_tolerance": 0.002,
+            "name": "before-accurate32-tet4",
+            "periodic_trace": true,
+            "declared_unit_cell": true
+          },
+          "status": "admitted",
+          "returned_mesh": true,
+          "qualified": true,
+          "directory": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-spinodoid-release-repeated-v1/study/repeat-1-spinodoid-anisotropic-before",
+          "warmup": false,
+          "error": null,
+          "failed_gates": [],
+          "limit_failure": null
+        },
+        {
+          "arm": "before",
+          "config": {
+            "arm": "meshers",
+            "cells": 32,
+            "order": 1,
+            "adapt": true,
+            "tolerance": 0.002,
+            "min_length": 0.002,
+            "adapt_tolerance": 0.002,
+            "name": "before-accurate32-tet4",
+            "periodic_trace": true,
+            "declared_unit_cell": true
+          },
+          "status": "admitted",
+          "returned_mesh": true,
+          "qualified": true,
+          "directory": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-spinodoid-release-repeated-v1/study/repeat-2-spinodoid-anisotropic-before",
+          "warmup": false,
+          "error": null,
+          "failed_gates": [],
+          "limit_failure": null
+        },
+        {
+          "arm": "native",
+          "config": {
+            "name": "native-spinodoid-adaptive16-margin-gradation06-tet4",
+            "arm": "meshers",
+            "cells": 16,
+            "order": 1,
+            "adapt": true,
+            "tolerance": 0.002,
+            "periodic_trace": true,
+            "declared_unit_cell": true,
+            "min_length": 0.002,
+            "adapt_tolerance": 0.0018,
+            "adapt_iterations": 4,
+            "gradation": 0.6
+          },
+          "status": "admitted",
+          "returned_mesh": true,
+          "qualified": true,
+          "directory": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-spinodoid-release-repeated-v1/study/repeat-2-spinodoid-anisotropic-native",
+          "warmup": false,
+          "error": null,
+          "failed_gates": [],
+          "limit_failure": null
+        },
+        {
+          "arm": "actual",
+          "config": {
+            "name": "actual-public-sampling32-default-mmg-tet4",
+            "arm": "microgen",
+            "resolution": 32,
+            "order": 1,
+            "periodic_trace": true,
+            "declared_unit_cell": true
+          },
+          "status": "admission-rejected",
+          "returned_mesh": true,
+          "qualified": false,
+          "directory": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-spinodoid-release-repeated-v1/study/repeat-2-spinodoid-anisotropic-actual",
+          "warmup": false,
+          "error": null,
+          "failed_gates": [
+            "quality"
+          ],
+          "limit_failure": null
+        },
+        {
+          "arm": "actual",
+          "config": {
+            "name": "actual-public-sampling32-default-mmg-tet4",
+            "arm": "microgen",
+            "resolution": 32,
+            "order": 1,
+            "periodic_trace": true,
+            "declared_unit_cell": true
+          },
+          "status": "admission-rejected",
+          "returned_mesh": true,
+          "qualified": false,
+          "directory": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-spinodoid-release-repeated-v1/study/repeat-3-spinodoid-anisotropic-actual",
+          "warmup": false,
+          "error": null,
+          "failed_gates": [
+            "quality"
+          ],
+          "limit_failure": null
+        },
+        {
+          "arm": "native",
+          "config": {
+            "name": "native-spinodoid-adaptive16-margin-gradation06-tet4",
+            "arm": "meshers",
+            "cells": 16,
+            "order": 1,
+            "adapt": true,
+            "tolerance": 0.002,
+            "periodic_trace": true,
+            "declared_unit_cell": true,
+            "min_length": 0.002,
+            "adapt_tolerance": 0.0018,
+            "adapt_iterations": 4,
+            "gradation": 0.6
+          },
+          "status": "admitted",
+          "returned_mesh": true,
+          "qualified": true,
+          "directory": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-spinodoid-release-repeated-v1/study/repeat-3-spinodoid-anisotropic-native",
+          "warmup": false,
+          "error": null,
+          "failed_gates": [],
+          "limit_failure": null
+        },
+        {
+          "arm": "before",
+          "config": {
+            "arm": "meshers",
+            "cells": 32,
+            "order": 1,
+            "adapt": true,
+            "tolerance": 0.002,
+            "min_length": 0.002,
+            "adapt_tolerance": 0.002,
+            "name": "before-accurate32-tet4",
+            "periodic_trace": true,
+            "declared_unit_cell": true
+          },
+          "status": "admitted",
+          "returned_mesh": true,
+          "qualified": true,
+          "directory": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-spinodoid-release-repeated-v1/study/repeat-3-spinodoid-anisotropic-before",
+          "warmup": false,
+          "error": null,
+          "failed_gates": [],
+          "limit_failure": null
+        },
+        {
+          "arm": "before",
+          "config": {
+            "arm": "meshers",
+            "cells": 32,
+            "order": 1,
+            "adapt": true,
+            "tolerance": 0.002,
+            "min_length": 0.002,
+            "adapt_tolerance": 0.002,
+            "name": "before-accurate32-tet4",
+            "periodic_trace": true,
+            "declared_unit_cell": true
+          },
+          "status": "admitted",
+          "returned_mesh": true,
+          "qualified": true,
+          "directory": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-spinodoid-release-repeated-v1/study/repeat-4-spinodoid-anisotropic-before",
+          "warmup": false,
+          "error": null,
+          "failed_gates": [],
+          "limit_failure": null
+        },
+        {
+          "arm": "native",
+          "config": {
+            "name": "native-spinodoid-adaptive16-margin-gradation06-tet4",
+            "arm": "meshers",
+            "cells": 16,
+            "order": 1,
+            "adapt": true,
+            "tolerance": 0.002,
+            "periodic_trace": true,
+            "declared_unit_cell": true,
+            "min_length": 0.002,
+            "adapt_tolerance": 0.0018,
+            "adapt_iterations": 4,
+            "gradation": 0.6
+          },
+          "status": "admitted",
+          "returned_mesh": true,
+          "qualified": true,
+          "directory": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-spinodoid-release-repeated-v1/study/repeat-4-spinodoid-anisotropic-native",
+          "warmup": false,
+          "error": null,
+          "failed_gates": [],
+          "limit_failure": null
+        },
+        {
+          "arm": "actual",
+          "config": {
+            "name": "actual-public-sampling32-default-mmg-tet4",
+            "arm": "microgen",
+            "resolution": 32,
+            "order": 1,
+            "periodic_trace": true,
+            "declared_unit_cell": true
+          },
+          "status": "admission-rejected",
+          "returned_mesh": true,
+          "qualified": false,
+          "directory": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-spinodoid-release-repeated-v1/study/repeat-4-spinodoid-anisotropic-actual",
+          "warmup": false,
+          "error": null,
+          "failed_gates": [
+            "quality"
+          ],
+          "limit_failure": null
+        }
+      ]
+    }
+  ],
+  "inputs": {
+    "experiments/adaptive/runs/macbook-spinodoid-release-candidate16-v1/study/manifest.json": "19cb0cf55a28e0c1d4c69bde77f68a698199c6d83a87e6de2900584671a46bb8",
+    "experiments/adaptive/runs/macbook-spinodoid-release-candidate16-v1/study/summary.json": "9c670dc13d64fecc51cdfa945eb3387a918eb5983640e66757cf59d7c190d8ba",
+    "experiments/adaptive/runs/macbook-spinodoid-release-candidate16-v1/study/repeat-0-spinodoid-native/result.json": "75671af2def14b4f09dd11781b144fd8f1b6e45fe2990d99e80afcac11954121",
+    "experiments/adaptive/runs/macbook-spinodoid-release-candidate16-v1/study/repeat-0-spinodoid-native/worker.json": "40378d064c4b92db50ecfadf45832c65ee08b3462e97e3f589dd06e962c0c291",
+    "experiments/adaptive/runs/macbook-spinodoid-release-candidate16-v1/study/repeat-0-spinodoid-anisotropic-native/result.json": "1b122bbda043c4db3e3ba8a0b39e0f2630b8d28f40810bb3ee442ce3621631ae",
+    "experiments/adaptive/runs/macbook-spinodoid-release-candidate16-v1/study/repeat-0-spinodoid-anisotropic-native/worker.json": "887a35d9992c5a0267268209f62cec6ce0a26201c2a22308cd56349fa1b235a9",
+    "handoff/macbook/spinodoid-release-final-selection-20261111.json": "19372ca14325c57ea75df33526d5c837b8828cbeb240ab6f8e8ea14d28446c6d",
+    "experiments/adaptive/runs/macbook-spinodoid-release-gradation-v1/study/manifest.json": "d9f59eca269e1f014a3b5c77eeeaa86310999d91ff8315690f7720a8dcf0cf00",
+    "experiments/adaptive/runs/macbook-spinodoid-release-gradation-v1/study/summary.json": "3d2b7c16a9d495d3a847f2a668c2c11e7e80f5f2dbe444c52c53f8e3bf418afe",
+    "experiments/adaptive/runs/macbook-spinodoid-release-gradation-v1/study/repeat-0-spinodoid-native/result.json": "f192c4b72787d3eb5bdbaa614940ef189ed6be44872b55ba791633fe1f5adf10",
+    "experiments/adaptive/runs/macbook-spinodoid-release-gradation-v1/study/repeat-0-spinodoid-native/worker.json": "75fc0b1a9fe2018ac2bcb36cf3cc3d1dbd951c9afce94cbdee6b99c869505d58",
+    "experiments/adaptive/runs/macbook-spinodoid-release-gradation-v1/study/repeat-0-spinodoid-anisotropic-native/result.json": "94ca6436a5b6f098d525c1a69b31b03bbd876d3eddd3e8de2ff140bfef7b314a",
+    "experiments/adaptive/runs/macbook-spinodoid-release-gradation-v1/study/repeat-0-spinodoid-anisotropic-native/worker.json": "b7122071fb560ed4855d893dd135afe3062d031a6996d0daa96007b0b5d98d27",
+    "experiments/adaptive/runs/macbook-spinodoid-release-repeated-v1/study/manifest.json": "a65d5e4d64a079749cd469f521379e4dff7c1b33971e021230d006f1a8fb9d04",
+    "experiments/adaptive/runs/macbook-spinodoid-release-repeated-v1/study/summary.json": "f89d4436aedebb2e81d24cdc940a49d0af464874ff18b46037a55180b79cbc52",
+    "experiments/adaptive/runs/macbook-spinodoid-release-repeated-v1/study/repeat--1-spinodoid-actual/result.json": "e5bfbae82ee3c2ef0fea24596ab0f4e9c8fda737745f5dd0824da2869c5b216c",
+    "experiments/adaptive/runs/macbook-spinodoid-release-repeated-v1/study/repeat--1-spinodoid-actual/worker.json": "1e48a1b00d27ddeb8506c836b4d094f215d20b5d60253d8f3aa5cafcd326296a",
+    "experiments/adaptive/runs/macbook-spinodoid-release-repeated-v1/study/repeat--1-spinodoid-native/result.json": "d00a0dee45ebf46f80becf56779fda56d11d36baa953b26514705c20b8c83de9",
+    "experiments/adaptive/runs/macbook-spinodoid-release-repeated-v1/study/repeat--1-spinodoid-native/worker.json": "9e2f95215b7660e830ee4505ef6bf572b88732bf338e87f5984d84623cc6d242",
+    "experiments/adaptive/runs/macbook-spinodoid-release-repeated-v1/study/repeat--1-spinodoid-before/result.json": "8c9b754868507e5bbe1d2e92d2e128da15d0199b3bb2d0c150f9f3847bafcf0c",
+    "experiments/adaptive/runs/macbook-spinodoid-release-repeated-v1/study/repeat--1-spinodoid-before/worker.json": "d39ce8dd92ebf4e5660f6a11b7ab4d51f70247ff8297afb4387bd94c6c76fd97",
+    "experiments/adaptive/runs/macbook-spinodoid-release-repeated-v1/study/repeat--1-spinodoid-anisotropic-actual/result.json": "c6444777f044881cb9ba166408501ad868b1ba62deb2456df10e0c16a512e3f7",
+    "experiments/adaptive/runs/macbook-spinodoid-release-repeated-v1/study/repeat--1-spinodoid-anisotropic-actual/worker.json": "afbad33685fe2ff00ef6f75b7bd35927dd741bc0c16ce7f7bb8931198a70aa7c",
+    "experiments/adaptive/runs/macbook-spinodoid-release-repeated-v1/study/repeat--1-spinodoid-anisotropic-native/result.json": "3b0064d46f9a6b7af7dc65058130757e9cee5b7878b8f8a07a3b6d1ded88d0b1",
+    "experiments/adaptive/runs/macbook-spinodoid-release-repeated-v1/study/repeat--1-spinodoid-anisotropic-native/worker.json": "e485f5fe4077e13339c597b7d07b0a2c1b9288ca048874b7b90d6ef03a33f922",
+    "experiments/adaptive/runs/macbook-spinodoid-release-repeated-v1/study/repeat--1-spinodoid-anisotropic-before/result.json": "3da77ff7df88ce1ce2d8b81a056017ad8b7d60bdfcfbdadb1b9d480eb0fa5d9f",
+    "experiments/adaptive/runs/macbook-spinodoid-release-repeated-v1/study/repeat--1-spinodoid-anisotropic-before/worker.json": "c1e29ce7550eb59337d94f5b04ff7bf13ab544dffee9519fa8f6bf4257b9642c",
+    "experiments/adaptive/runs/macbook-spinodoid-release-repeated-v1/study/repeat-0-spinodoid-before/result.json": "620269956b974efae74d4f6d49e26332c1ca960161378fcdea6a78c2f7e89619",
+    "experiments/adaptive/runs/macbook-spinodoid-release-repeated-v1/study/repeat-0-spinodoid-before/worker.json": "0ec1f2b2e3c38201ef77a3731dfae93d8088ec0accf93d79c936eed07ce1b0eb",
+    "experiments/adaptive/runs/macbook-spinodoid-release-repeated-v1/study/repeat-0-spinodoid-native/result.json": "07cdac1c5b85c104e6ac59351963989504f5092e46b53678d0000bd1d8e5b53d",
+    "experiments/adaptive/runs/macbook-spinodoid-release-repeated-v1/study/repeat-0-spinodoid-native/worker.json": "aac97e35a8bca12d5edb02373308d0c517d309358d12e698e211f11adc3ea147",
+    "experiments/adaptive/runs/macbook-spinodoid-release-repeated-v1/study/repeat-0-spinodoid-actual/result.json": "2d6a044dba97627cf712c6437523132753941338c78bfa40683240a9ae8ad269",
+    "experiments/adaptive/runs/macbook-spinodoid-release-repeated-v1/study/repeat-0-spinodoid-actual/worker.json": "b6a424c080c7a2dfe5326819cc56a2f25cb1f53e5589528eb9094e2a51f4c58f",
+    "experiments/adaptive/runs/macbook-spinodoid-release-repeated-v1/study/repeat-0-spinodoid-anisotropic-before/result.json": "d28b822f2e3a0e5fee38024861efd059cdca5148c094a994de24640f2b584618",
+    "experiments/adaptive/runs/macbook-spinodoid-release-repeated-v1/study/repeat-0-spinodoid-anisotropic-before/worker.json": "cd5dab3ae339742871a51dbee513936e2fdf57dfee13b87d93d07f298fcdb85e",
+    "experiments/adaptive/runs/macbook-spinodoid-release-repeated-v1/study/repeat-0-spinodoid-anisotropic-native/result.json": "4291ebe5e5a05b5602086364b554b2650c2f3dd171c9ee50b9c8cb230e155097",
+    "experiments/adaptive/runs/macbook-spinodoid-release-repeated-v1/study/repeat-0-spinodoid-anisotropic-native/worker.json": "49ef36fc2ce401611d3e1960b7e3503ba968bc1f05bccffdeea2e79ea06dc868",
+    "experiments/adaptive/runs/macbook-spinodoid-release-repeated-v1/study/repeat-0-spinodoid-anisotropic-actual/result.json": "f6db1a24011b5072da32faa327ae793422b3f88aa73e8fb48ef7c5d5d30e8908",
+    "experiments/adaptive/runs/macbook-spinodoid-release-repeated-v1/study/repeat-0-spinodoid-anisotropic-actual/worker.json": "b3ff81db10990d03587d8f487d4fae93d3d1099fbd8beaa994d70843f86604ce",
+    "experiments/adaptive/runs/macbook-spinodoid-release-repeated-v1/study/repeat-1-spinodoid-actual/result.json": "2314977c0cdc8663c2829e04ecf045ce86fe120d1c253929dc58c478179979d8",
+    "experiments/adaptive/runs/macbook-spinodoid-release-repeated-v1/study/repeat-1-spinodoid-actual/worker.json": "757765722a22c535ca7e12ff573a5c1a4c77dd6cf506bbeac34d73a1725d4b6e",
+    "experiments/adaptive/runs/macbook-spinodoid-release-repeated-v1/study/repeat-1-spinodoid-native/result.json": "f4f18dedb439f9bf49a51b86468522c3fb40e73662ea53779bae547af6de9e27",
+    "experiments/adaptive/runs/macbook-spinodoid-release-repeated-v1/study/repeat-1-spinodoid-native/worker.json": "3b2d07b15ba772e6d580870d477c7e9f093a116253ddea7192bcf721f6d357c3",
+    "experiments/adaptive/runs/macbook-spinodoid-release-repeated-v1/study/repeat-1-spinodoid-before/result.json": "b56818bd2ddee548a4ea979b4c2be88b7aa13b83d34f83b5f50c8c386c0cc54e",
+    "experiments/adaptive/runs/macbook-spinodoid-release-repeated-v1/study/repeat-1-spinodoid-before/worker.json": "bd38d16a09162dd984c543a8fddb2169f2e5441568de3be266eaa7355ceeba00",
+    "experiments/adaptive/runs/macbook-spinodoid-release-repeated-v1/study/repeat-1-spinodoid-anisotropic-actual/result.json": "c39198725c1866e7eafc31dc284103ebf214c7b292b5e7da133361e9186d9e6f",
+    "experiments/adaptive/runs/macbook-spinodoid-release-repeated-v1/study/repeat-1-spinodoid-anisotropic-actual/worker.json": "858b23549bccbe1227c1c50a01cf0a351271cc77febabc78ddd02828487fcfbe",
+    "experiments/adaptive/runs/macbook-spinodoid-release-repeated-v1/study/repeat-1-spinodoid-anisotropic-native/result.json": "1b60987e58b3302f5d98e685d7bae338b381e092c710255107fecd21d0d718d8",
+    "experiments/adaptive/runs/macbook-spinodoid-release-repeated-v1/study/repeat-1-spinodoid-anisotropic-native/worker.json": "9d91d5390d17007d04b86d6bc0509b3a496c28a30a819afd1904efb31b8187b2",
+    "experiments/adaptive/runs/macbook-spinodoid-release-repeated-v1/study/repeat-1-spinodoid-anisotropic-before/result.json": "64f29b538a486175a98d334f4122b957538da843214b0ed575e3873be853b5c1",
+    "experiments/adaptive/runs/macbook-spinodoid-release-repeated-v1/study/repeat-1-spinodoid-anisotropic-before/worker.json": "9b02df66f35558c4032b6a273412ca78310b10514fb23c45b1c0ab0064dda391",
+    "experiments/adaptive/runs/macbook-spinodoid-release-repeated-v1/study/repeat-2-spinodoid-before/result.json": "8afe59c4b54cce1ac474a0fbc43c2f1fe393865814977cb695c7666523e43ffa",
+    "experiments/adaptive/runs/macbook-spinodoid-release-repeated-v1/study/repeat-2-spinodoid-before/worker.json": "5f31bb0a601dfabc9558ca6923d7a0cbdacd2351ec4855b6fab68993035f8d98",
+    "experiments/adaptive/runs/macbook-spinodoid-release-repeated-v1/study/repeat-2-spinodoid-native/result.json": "cdedfcf8bbe1e0fb84b73b1e27dc13fa42d9c1d44ef7fd4a83a650e2fc586b3d",
+    "experiments/adaptive/runs/macbook-spinodoid-release-repeated-v1/study/repeat-2-spinodoid-native/worker.json": "0c9df3d40dc09515fd79d68bc6e0c77635b42202538671a29ca95e3f672118d8",
+    "experiments/adaptive/runs/macbook-spinodoid-release-repeated-v1/study/repeat-2-spinodoid-actual/result.json": "a8edeaf0cf249ba7bd6e5220cfe208b1bdb3d80a0f9f6e606f6659a2060289da",
+    "experiments/adaptive/runs/macbook-spinodoid-release-repeated-v1/study/repeat-2-spinodoid-actual/worker.json": "c6d0527d9cee1b8d5b54afa2f264731658f283768158e06bbac692ad863b26ff",
+    "experiments/adaptive/runs/macbook-spinodoid-release-repeated-v1/study/repeat-2-spinodoid-anisotropic-before/result.json": "2452e04b48fb142ce798083334e7b0921b2abd1de2deb412ee7b54fcf154c705",
+    "experiments/adaptive/runs/macbook-spinodoid-release-repeated-v1/study/repeat-2-spinodoid-anisotropic-before/worker.json": "726097e4109cf26e678295c4e9a94f748bd3d72a4a1450f32e5c348fad28342b",
+    "experiments/adaptive/runs/macbook-spinodoid-release-repeated-v1/study/repeat-2-spinodoid-anisotropic-native/result.json": "d27676692ac1e3234b0b993fa9848b7ef6d77c512b3814fa6ea23636af133445",
+    "experiments/adaptive/runs/macbook-spinodoid-release-repeated-v1/study/repeat-2-spinodoid-anisotropic-native/worker.json": "d433bd7e0fda83a63cc9111177f2ebe6400ae183a7d4c8c4b8f446326d6fd676",
+    "experiments/adaptive/runs/macbook-spinodoid-release-repeated-v1/study/repeat-2-spinodoid-anisotropic-actual/result.json": "b55abd7412db77625d983c74ff2d733e29056d4bb3ec959cb89c6b5f71fddab1",
+    "experiments/adaptive/runs/macbook-spinodoid-release-repeated-v1/study/repeat-2-spinodoid-anisotropic-actual/worker.json": "23d413147324083ba36e4a767d730b805592a3e7cee1589a4eb673c6b0bfa4b2",
+    "experiments/adaptive/runs/macbook-spinodoid-release-repeated-v1/study/repeat-3-spinodoid-actual/result.json": "8023da0b66fcbc6217e117a7557ebc7efc16ce7c42a741f83982a211a876237d",
+    "experiments/adaptive/runs/macbook-spinodoid-release-repeated-v1/study/repeat-3-spinodoid-actual/worker.json": "b4ab327562e0f967284a19d82834420a5533d1decb3b36b504a4d4aeb726203a",
+    "experiments/adaptive/runs/macbook-spinodoid-release-repeated-v1/study/repeat-3-spinodoid-native/result.json": "b5638e875b938e7672a7686aa282bc1a420ef65a10d7604364ab09251776ac4f",
+    "experiments/adaptive/runs/macbook-spinodoid-release-repeated-v1/study/repeat-3-spinodoid-native/worker.json": "9ac848cb5b693e9320574c973fde1e365e474b5dbc5a647ceadab4c2f1922a3c",
+    "experiments/adaptive/runs/macbook-spinodoid-release-repeated-v1/study/repeat-3-spinodoid-before/result.json": "9f4d4e59c7208d7972d5c7ce228cb74aa3abfb2b2be360dc6f0824b3980b37ae",
+    "experiments/adaptive/runs/macbook-spinodoid-release-repeated-v1/study/repeat-3-spinodoid-before/worker.json": "005eb285c4fe2f6c776add4e92e86abaec41f3972c7c786eeb23e35c94041058",
+    "experiments/adaptive/runs/macbook-spinodoid-release-repeated-v1/study/repeat-3-spinodoid-anisotropic-actual/result.json": "43d5715ced66d54bffacd2d12c5bc703744157b7752f8ca842079f6de24abbb3",
+    "experiments/adaptive/runs/macbook-spinodoid-release-repeated-v1/study/repeat-3-spinodoid-anisotropic-actual/worker.json": "aef5bb1de1bf5633435f57ee402f7ff565f6b24e28f6e97bf811bedabdc4655a",
+    "experiments/adaptive/runs/macbook-spinodoid-release-repeated-v1/study/repeat-3-spinodoid-anisotropic-native/result.json": "cfcb4a93549666876ddcd3ebead264c2f24e183aaf472cf7d39982f350ae6264",
+    "experiments/adaptive/runs/macbook-spinodoid-release-repeated-v1/study/repeat-3-spinodoid-anisotropic-native/worker.json": "73b4b5050353bcb12ebede7baa47170caa8a13a021fcb0681dd10c376fa7e66f",
+    "experiments/adaptive/runs/macbook-spinodoid-release-repeated-v1/study/repeat-3-spinodoid-anisotropic-before/result.json": "1e1ec5a7ce957f80b47f2c474a0f96d5ce92b68045817f7f058b0fab985a702d",
+    "experiments/adaptive/runs/macbook-spinodoid-release-repeated-v1/study/repeat-3-spinodoid-anisotropic-before/worker.json": "47e347ba1c156247e01deaeeb9ad4808c901843f6c66767c9839e1cb3ea4a3ab",
+    "experiments/adaptive/runs/macbook-spinodoid-release-repeated-v1/study/repeat-4-spinodoid-before/result.json": "43d6b79221c3d2e51e325894299ca2f11bf47af5c54299f7888b30c9024d617f",
+    "experiments/adaptive/runs/macbook-spinodoid-release-repeated-v1/study/repeat-4-spinodoid-before/worker.json": "b691d68bc2e650fd50eb56244bd25367a64f3034f1a21abe7e5bd2dad0498c5e",
+    "experiments/adaptive/runs/macbook-spinodoid-release-repeated-v1/study/repeat-4-spinodoid-native/result.json": "06bc42715ff4c522a91768c5616fe1225c601fb6e5310dd1553a440c009a0c73",
+    "experiments/adaptive/runs/macbook-spinodoid-release-repeated-v1/study/repeat-4-spinodoid-native/worker.json": "fcf937edda4e9a40fb5511751ddac71e8368d681361c57ea13396c337221f700",
+    "experiments/adaptive/runs/macbook-spinodoid-release-repeated-v1/study/repeat-4-spinodoid-actual/result.json": "74ff29014435d36812d0c668b5d14ed35e4934f50fe5e612a32d367eba5d1734",
+    "experiments/adaptive/runs/macbook-spinodoid-release-repeated-v1/study/repeat-4-spinodoid-actual/worker.json": "f0ea3045231a00c09a4e99b89cf2ce2cd03a7366d714d3f1533645baa45595bd",
+    "experiments/adaptive/runs/macbook-spinodoid-release-repeated-v1/study/repeat-4-spinodoid-anisotropic-before/result.json": "b56e9ea9b4759def76cc10c0c7a3a894b7720ed66ad9b2c34144497a03011c99",
+    "experiments/adaptive/runs/macbook-spinodoid-release-repeated-v1/study/repeat-4-spinodoid-anisotropic-before/worker.json": "e2a787b772e1322e628e54a51b7f52c80d7f8874468b964c7c06a8ed12f727e7",
+    "experiments/adaptive/runs/macbook-spinodoid-release-repeated-v1/study/repeat-4-spinodoid-anisotropic-native/result.json": "f3805355f73ed613ffb3fe7c74ee4e047030b19b625d602a6f6efa1c78393942",
+    "experiments/adaptive/runs/macbook-spinodoid-release-repeated-v1/study/repeat-4-spinodoid-anisotropic-native/worker.json": "81ff6aa43bc39ed093e79e495091caaeb82fd97f793f169812b8fa7a6e919785",
+    "experiments/adaptive/runs/macbook-spinodoid-release-repeated-v1/study/repeat-4-spinodoid-anisotropic-actual/result.json": "7b496786f421128df8160e57ee2918becd52c1ae3cdba0fb06f2428155921b8d",
+    "experiments/adaptive/runs/macbook-spinodoid-release-repeated-v1/study/repeat-4-spinodoid-anisotropic-actual/worker.json": "ee3387b2da1fcaa5e81ca3cdd0d7443be1e748360e23fa170f5a67b81874a0ad",
+    "experiments/adaptive/runs/macbook-comparison-fixtures-v1/spinodoid/spinodoid-specimen.json": "6140bf66acc68303bc18767a3632e24a068181201eba350ce32217dc50a67eee",
+    "experiments/adaptive/runs/macbook-comparison-fixtures-v1/spinodoid-anisotropic/spinodoid-anisotropic-specimen.json": "4c3cb9c37a0f4a2e42f8d448511e78a2e1e0d57f846e28140deab57b3d1712f0",
+    "experiments/adaptive/tpms_tet4_count_report.py": "fcc86484031c9a12908a1b6d6153ca3a34a06bdd23f30a9630d82b2a95508815",
+    "handoff/macbook/tpms-tet4-runtime-20261111.json": "ee8035ca708edbbe1c76df953258ee86a9a9a360956f26352139773e379e309d",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/spinodoid_release_report.py": "64616f074bd0fc58c76dd7ebdf7ba7bf686e96dc585547e4f8b5b4c0d3fceb6c"
+  },
+  "runtime": {
+    "platform": "macOS-26.5.1-arm64-arm-64bit",
+    "architecture": "arm64",
+    "python": "3.12.9 (main, Feb 12 2025, 15:09:19) [Clang 19.1.6 ]",
+    "python_executable": "/Users/kmarchais/dev/meshers/.local-work/macbook-runtime/venv/bin/python",
+    "hardware": {
+      "memory_bytes": 25769803776,
+      "cpu_cores": 10
+    },
+    "packages": {
+      "meshers": "0.1.0",
+      "microgen": "2.0.0b1",
+      "mmgpy": "0.17.1",
+      "numpy": "2.5.4",
+      "scipy": "1.18.1",
+      "pyvista": "0.49.1",
+      "vtk": "9.7.1",
+      "psutil": "7.2.2"
+    },
+    "binaries": {
+      "/Users/kmarchais/dev/meshers/crates/meshers-python/python/meshers/_meshers.abi3.so": "30561969ebc0b5138393df09caff90241c80c8c30be21ce5ef615017fc0070cd",
+      "/Users/kmarchais/dev/meshers/.local-work/macbook-runtime/venv/lib/python3.12/site-packages/mmgpy/bin/mmg3d_O3": "efe07a6207a9ff86f4af26513e6aa368647b32cae112859fca52e74c3e7f7cf1"
+    },
+    "numerical_threads": {
+      "environment": {
+        "OPENBLAS_NUM_THREADS": "1",
+        "OMP_NUM_THREADS": "1",
+        "MKL_NUM_THREADS": "1",
+        "VECLIB_MAXIMUM_THREADS": "1",
+        "RAYON_NUM_THREADS": "1"
+      },
+      "accelerate_blas_threading": 1,
+      "accelerate_scope": "calling thread"
+    },
+    "queue": "gpu, one worker",
+    "node_and_tet_cap": 250000,
+    "worker_memory_bytes": 8589934592,
+    "worker_timeout_s": 180,
+    "scope": "Runtime receipt for fresh local CPU-only Tet4 comparison; no native rebuild or dependency change in this round."
+  },
+  "case_count": 2,
+  "all_orders": 1,
+  "title": "Spinodoid release candidate: fresh three-route comparison",
+  "scope": "Two immutable Fourier realizations, Tet4, one numerical thread, same host; accurate native before/after and explicitly modified actual sampling32 workflow; unchanged strict gates",
+  "admission": {
+    "distance": 0.002,
+    "absolute_relative_volume": 0.01,
+    "minimum_quality": 0.1,
+    "max_nodes": 250000,
+    "max_tets": 250000
+  },
+  "all_four_original_cases_retained": true,
+  "all_24_lattice_models_retained": true,
+  "new_fea": false,
+  "production_defaults_changed": false,
+  "successful_speed_ratios_from_rejected_meshes": false,
+  "claim_limits": "Colors compare raw observed metrics. A pair with either route rejected is not an admitted matched-accuracy performance win. Counts and ratios remain explicit.",
+  "findings": [
+    {
+      "case": "spinodoid",
+      "change_percent": {
+        "seconds": -25.786514173668685,
+        "tets": -35.592307054629856,
+        "nodes": -26.28427733205604
+      },
+      "admitted_native_before_after": true,
+      "actual_admitted": false,
+      "quality_minimum_change": -0.07980725303622793
+    },
+    {
+      "case": "spinodoid-anisotropic",
+      "change_percent": {
+        "seconds": -40.831902113506935,
+        "tets": -41.72108359733626,
+        "nodes": -32.32416993930739
+      },
+      "admitted_native_before_after": true,
+      "actual_admitted": false,
+      "quality_minimum_change": -0.02183627959007181
+    }
+  ],
+  "interpretation": "Before/after native comparisons use admitted Tet4 meshes. Actual sampling32 workflows remain rejected and support only raw comparisons. Native minimum quality decreases versus the previous finer recipes. No new FEA result, reference, production-default change or universal superiority claim."
+}

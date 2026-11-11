@@ -1,0 +1,124 @@
+{
+  "complete": true,
+  "rows": [
+    {
+      "case": "spinodoid",
+      "config": {
+        "name": "native-tet4-budget",
+        "arm": "meshers",
+        "cells": 16,
+        "order": 1,
+        "adapt": false,
+        "tolerance": 1.0,
+        "periodic_trace": true,
+        "declared_unit_cell": true
+      },
+      "status": "failed",
+      "qualified": false,
+      "mmg_calls": [],
+      "instrumentation_s": 0.0,
+      "vtk_backend": "Sequential",
+      "vtk_threads": 1,
+      "periodic_required": true,
+      "solve_performed": false,
+      "error": "minimum MMG quality 3.9828161320745625e-2 is below required 1e-1; mesh rejected (14 elements below 0.1). Improve resolution/optimization or use a quality remesher",
+      "traceback": "Traceback (most recent call last):\n  File \"/Users/kmarchais/dev/meshers/experiments/adaptive/comparison_benchmark.py\", line 145, in worker\n    mesh=meshers.generate(field,bounds=w.BOUNDS,cells=config['cells'],band=target.band,\n         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/Users/kmarchais/dev/meshers/crates/meshers-python/python/meshers/__init__.py\", line 415, in generate\n    result = _meshers.generate(\n             ^^^^^^^^^^^^^^^^^^\n_meshers.MeshingFailure: minimum MMG quality 3.9828161320745625e-2 is below required 1e-1; mesh rejected (14 elements below 0.1). Improve resolution/optimization or use a quality remesher\n",
+      "failed_attempt_s": 1.0652173749986105,
+      "wall_s": 1.0652230420091655,
+      "arm": "native",
+      "directory": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-spinodoid-release-baseline-v1/study/repeat-0-spinodoid-native",
+      "repeat": 0,
+      "warmup": false,
+      "resources": {
+        "returncode": 0,
+        "limit_failure": null,
+        "peak_rss_bytes": 241025024,
+        "wall_s": 1.936588375014253,
+        "wall_s_clock": "monotonic",
+        "elapsed_realtime_s": 1.9365699291229248,
+        "suspension_or_clock_adjustment_s": -1.8445891328155994e-05,
+        "idle_sleep_prevention": [
+          "/usr/bin/caffeinate",
+          "-i"
+        ],
+        "memory_bytes": 8589934592,
+        "memory_enforcement": "process-tree-rss-watchdog",
+        "rss_poll_interval_s": 0.25,
+        "platform": "darwin",
+        "numerical_thread_policy": {
+          "environment": {
+            "OPENBLAS_NUM_THREADS": "1",
+            "OMP_NUM_THREADS": "1",
+            "MKL_NUM_THREADS": "1",
+            "VECLIB_MAXIMUM_THREADS": "1",
+            "RAYON_NUM_THREADS": "1"
+          },
+          "accelerate_blas_threading": 1,
+          "accelerate_scope": "calling thread"
+        }
+      },
+      "returned_mesh_verified": false
+    },
+    {
+      "case": "spinodoid-anisotropic",
+      "config": {
+        "name": "native-tet4-budget",
+        "arm": "meshers",
+        "cells": 16,
+        "order": 1,
+        "adapt": false,
+        "tolerance": 1.0,
+        "periodic_trace": true,
+        "declared_unit_cell": true
+      },
+      "status": "failed",
+      "qualified": false,
+      "mmg_calls": [],
+      "instrumentation_s": 0.0,
+      "vtk_backend": "Sequential",
+      "vtk_threads": 1,
+      "periodic_required": true,
+      "solve_performed": false,
+      "error": "minimum MMG quality 9.794051032562204e-2 is below required 1e-1; mesh rejected (1 elements below 0.1). Improve resolution/optimization or use a quality remesher",
+      "traceback": "Traceback (most recent call last):\n  File \"/Users/kmarchais/dev/meshers/experiments/adaptive/comparison_benchmark.py\", line 145, in worker\n    mesh=meshers.generate(field,bounds=w.BOUNDS,cells=config['cells'],band=target.band,\n         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/Users/kmarchais/dev/meshers/crates/meshers-python/python/meshers/__init__.py\", line 415, in generate\n    result = _meshers.generate(\n             ^^^^^^^^^^^^^^^^^^\n_meshers.MeshingFailure: minimum MMG quality 9.794051032562204e-2 is below required 1e-1; mesh rejected (1 elements below 0.1). Improve resolution/optimization or use a quality remesher\n",
+      "failed_attempt_s": 0.5739870410179719,
+      "wall_s": 0.5739955409953836,
+      "arm": "native",
+      "directory": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-spinodoid-release-baseline-v1/study/repeat-0-spinodoid-anisotropic-native",
+      "repeat": 0,
+      "warmup": false,
+      "resources": {
+        "returncode": 0,
+        "limit_failure": null,
+        "peak_rss_bytes": 234143744,
+        "wall_s": 1.5925083750043996,
+        "wall_s_clock": "monotonic",
+        "elapsed_realtime_s": 1.5924961566925049,
+        "suspension_or_clock_adjustment_s": -1.221831189468503e-05,
+        "idle_sleep_prevention": [
+          "/usr/bin/caffeinate",
+          "-i"
+        ],
+        "memory_bytes": 8589934592,
+        "memory_enforcement": "process-tree-rss-watchdog",
+        "rss_poll_interval_s": 0.25,
+        "platform": "darwin",
+        "numerical_thread_policy": {
+          "environment": {
+            "OPENBLAS_NUM_THREADS": "1",
+            "OMP_NUM_THREADS": "1",
+            "MKL_NUM_THREADS": "1",
+            "VECLIB_MAXIMUM_THREADS": "1",
+            "RAYON_NUM_THREADS": "1"
+          },
+          "accelerate_blas_threading": 1,
+          "accelerate_scope": "calling thread"
+        }
+      },
+      "returned_mesh_verified": false
+    }
+  ],
+  "attempted": 2,
+  "planned": 2,
+  "selection_sha256": "1651d059ea7ab45dafe51e8388ba6263239feeacf3fd440d1238ffb14b9626df"
+}

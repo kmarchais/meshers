@@ -46,7 +46,8 @@ def worker(run,name,config,fixture_root):
     assert vtkSMPTools.GetBackend()=='Sequential' and vtkSMPTools.GetEstimatedNumberOfThreads()==1
     target=fixtures.case(name,fixture_root)
     row=dict(case=name,config=config,status='started',qualified=False,mmg_calls=[],instrumentation_s=0.,
-        vtk_backend='Sequential',vtk_threads=1,periodic_required=fixtures.periodic(name),solve_performed=False)
+        vtk_backend='Sequential',vtk_threads=1,periodic_required=fixtures.periodic(name),solve_performed=False,
+        native_binary_path=str(Path(meshers._meshers.__file__).resolve()),native_binary_sha256=w.digest(Path(meshers._meshers.__file__)))
     w.save(run/'result.json',row)
     started=time.perf_counter()
     try:
@@ -145,7 +146,7 @@ def worker(run,name,config,fixture_root):
             mesh=meshers.generate(field,bounds=w.BOUNDS,cells=config['cells'],band=target.band,
                 periodic=(fixtures.periodic(name),)*3,threads=1,optimize_passes=config.get('optimization_passes',1),
                 minimum_quality=.1,max_tetrahedra=w.CAP,order=config['order'],geometry_tolerance=config['tolerance'],
-                adapt=config['adapt'],min_length=config.get('min_length',.01),max_length=.1,gradation=.3,
+                adapt=config['adapt'],min_length=config.get('min_length',.01),max_length=config.get('max_length',.1),gradation=config.get('gradation',.3),
                 adapt_iterations=config.get('adapt_iterations',4),quality_guard=.3,adapt_tolerance=config.get('adapt_tolerance',.002),
                 curved_fit=config.get('curved_fit',False),
                 compile=config.get('compile',True))
@@ -213,6 +214,7 @@ def main():
     p.add_argument('--run',type=Path,required=True);p.add_argument('--fixtures',type=Path,required=True)
     p.add_argument('--case',choices=fixtures.CASES,required=True)
     p.add_argument('--worker',type=json.loads);p.add_argument('--select')
+    p.add_argument('--package',type=Path,help='Isolated native package for a single controlled worker')
     p.add_argument('--repetitions',type=int,default=1);p.add_argument('--warmups',type=int,default=0)
     p.add_argument('--actual-tet10',action='store_true',help='Also repeat explicit straight Tet10 elevation of selected actual routes')
     p.add_argument('--lattice-uniform37',action='store_true',help='Load the separately frozen matched-count lattice selection')
@@ -226,6 +228,11 @@ def main():
     p.add_argument('--density-cap-fit',action='store_true',help='Compare admitted adaptive Tet10 with one fresh uniform16 plus generic cap-fit prototype')
     p.add_argument('--native-curved-fit',action='store_true',help='Pair fresh native Tet10 projection and experimental local fitting')
     a=p.parse_args()
+    if a.package:
+        assert a.worker is not None
+        sys.path.insert(0,str(a.package.resolve()))
+        import meshers
+        assert Path(meshers.__file__).resolve().is_relative_to(a.package.resolve())
     if a.worker is not None:return worker(a.run,a.case,a.worker,a.fixtures)
     a.run.mkdir(parents=True,exist_ok=False)
     np,_,meshers,*_=w.imports()

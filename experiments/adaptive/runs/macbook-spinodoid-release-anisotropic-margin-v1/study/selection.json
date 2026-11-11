@@ -1,0 +1,38 @@
+{
+  "title": "Spinodoid interior-allocation control",
+  "scope": "Two admitted starting recipes; only permitted interior size growth changes, with all external gates unchanged",
+  "cases": [
+    {
+      "case": "spinodoid-anisotropic",
+      "fixture_kind": "study",
+      "fixtures": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-comparison-fixtures-v1",
+      "native": {
+        "name": "native-spinodoid-adaptive16-margin-gradation06-tet4",
+        "arm": "meshers",
+        "cells": 16,
+        "order": 1,
+        "adapt": true,
+        "tolerance": 0.002,
+        "periodic_trace": true,
+        "declared_unit_cell": true,
+        "min_length": 0.002,
+        "adapt_tolerance": 0.0018,
+        "adapt_iterations": 4,
+        "gradation": 0.6
+      },
+      "actual": {
+        "name": "actual-default-tet4",
+        "arm": "microgen",
+        "resolution": null,
+        "order": 1,
+        "periodic_trace": true,
+        "declared_unit_cell": true
+      },
+      "maximum_budget_cells": 24,
+      "selection": "One tighter internal target after independently measured .00202805 miss at the count-matched gradation control; external .002 gate unchanged",
+      "packages": {
+        "native": "/Users/kmarchais/dev/meshers/.local-work/macbook-spinodoid-release-native-v2/python"
+      }
+    }
+  ]
+}

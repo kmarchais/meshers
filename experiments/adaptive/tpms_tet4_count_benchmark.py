@@ -22,7 +22,7 @@ def main():
     a.run, a.selection = a.run.resolve(), a.selection.resolve()
     selection = json.loads(a.selection.read_text())
     arms = a.arms.split(",")
-    assert arms and set(arms) <= {"actual", "native"}
+    assert arms and set(arms) <= {"actual", "native", "before"}
     assert a.repetitions >= 1 and a.warmups >= 0
     a.run.mkdir(parents=True, exist_ok=False)
     if not a.worker:
@@ -64,6 +64,8 @@ def main():
         Path(importlib.metadata.distribution("mmgpy").locate_file("mmgpy/bin/mmg3d_O3"))]
     fixture_files = {}
     for entry in selection["cases"]:
+        for package in entry.get("packages", {}).values():
+            files += [f for f in Path(package).rglob("*") if f.is_file() and f.suffix in (".py", ".so")]
         files += [f for f in Path(entry["fixtures"]).glob("*.json") if f.is_file()]
         if entry["case"].startswith("spinodoid"):
             from comparison_fixtures import coefficients_path
@@ -102,6 +104,8 @@ def main():
                     "--worker", json.dumps(dict(case=entry["case"], config=config))]
             else:
                 command += ["--case", entry["case"], "--worker", json.dumps(config)]
+                if entry.get("packages", {}).get(arm):
+                    command += ["--package", entry["packages"][arm]]
             with worker_part(job, name) as part:
                 record = w.bounded(command, directory/"worker.log", part, timeout=180)
             w.save(directory/"worker.json", record)
