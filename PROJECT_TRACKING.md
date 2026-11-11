@@ -1,5 +1,45 @@
 # Meshers project tracking
 
+## Microgen integration and release scope audit, 11 November 2026
+
+Microgen's `codex/meshers-backend-integration` branch adds an optional volume
+backend while retaining VTK defaults. Both backends now use the same Spinodoid
+field evaluator. The integration document and its README pointer were removed
+at Kevin's request; the shared adapter retains placement and periodic metadata,
+without experiment-specific quality or diagnostic arrays.
+
+A fresh default-feature Meshers wheel passes the combined SDK and Microgen
+selection: 340 passed, 15 skipped, two known upstream CAD failures deselected.
+Experimental surfaces and linear observations are confirmed disabled. The first
+combined attempt stopped at collection for missing h5py; installing recorded
+test dependency h5py 3.16.0 resolved it. Receipts are in
+`.local-work/microgen-release-default-build-v1` and
+`.local-work/microgen-release-default-tests-v1` and `v2`.
+
+Fetched main is `d1324b7`, newer than the local main. The study branch changes
+13,076 paths against that baseline, including 12,650 experiment paths and 363
+handoff paths. Do not merge that whole history for release. The new
+`codex/microgen-release-scope` branch starts from fetched main and carries the
+library, tests and relevant docs. Its audit classifies every changed library
+source/fixture path. The initial 85 crate files matched tested study source
+`4eea25a`; subsequent cleanup formats Python/docs and defers the unrelated fedoo
+export, tests and documentation. Rust meshing source is unchanged. Pinned Ruff,
+formatting and Ty checks pass after that cleanup.
+No additional Meshers API or runtime dependency is needed by the adapter.
+Keep measured geometry/quality/periodic fixes. Surface and observation features
+stay disabled; curved fitting and interior refinement stay opt-in. Preserve
+the complete experiments on this branch. Publication and exact-commit
+cross-platform wheel/source validation remain outstanding.
+
+The scoped release checkout also passes native default-feature tests: 93
+passed, zero failed, two ignored diagnostic tests. The bounded run peaked at
+1.484 GiB RSS; receipt `.local-work/microgen-release-scoped-rust-tests-v1`.
+The final scoped wheel was rebuilt after cleanup and tested against the scoped
+SDK tests and Microgen again: 340 passed, 14 skipped, the same two CAD failures
+deselected. Receipts: `.local-work/microgen-release-final-build-v1` and
+`.local-work/microgen-release-final-tests-v1`. This is release preparation,
+not publication or a new scientific comparison result.
+
 ## Spinodoid release candidate, 11 November 2026
 
 The spinodoid Tet4 count gap is substantially smaller. Five fresh interleaved
