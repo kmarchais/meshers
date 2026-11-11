@@ -223,9 +223,25 @@ impl<'g, G: Geometry> Tets<'g, G> {
         for v in 0..n {
             s.refresh(v);
         }
-        if constraints.is_some() {
-            s.pending = (0..n).filter(|&v| s.masks[v] & WALL != 0).collect();
-        }
+        // A preceding adaptation may have inserted a partially projected wall
+        // vertex. Rebuilding after optimization must recover that work from the
+        // geometry: the mesh itself does not carry the pending queue.
+        let projection_precision = (0..3).map(|a| hi[a] - lo[a]).fold(0., f64::max) * 1e-10;
+        s.pending = (0..n)
+            .filter(|&v| {
+                if s.masks[v] & WALL == 0 {
+                    return false;
+                }
+                if constraints.is_some() {
+                    return true;
+                }
+                if g.halfspaces().is_some() {
+                    return false;
+                }
+                let locked = std::array::from_fn(|a| (s.masks[v] >> (2 + 2 * a)) & 3 != 0);
+                s.distance(s.points[v], locked) > projection_precision
+            })
+            .collect();
         s
     }
 
@@ -1749,6 +1765,9 @@ mod tests {
         );
         let original = state.points.clone();
         let original_tets = state.tets.clone();
+        // Isolate this coupled repair from other unfinished wall projections
+        // that state construction now discovers in the fixture.
+        state.pending.clear();
         state.pending.push(v);
         state.settle(0.3, mesh.tets.len()).unwrap();
         assert!(
@@ -1895,6 +1914,61 @@ mod tests {
                 .iter()
                 .enumerate()
                 .filter(|(t, _)| rebuilt.alive[*t])
+                .all(|(_, &tet)| super::mmg(rebuilt.tet_points(tet, None)) >= 0.1)
+        );
+    }
+
+    #[test]
+    fn rebuilt_adaptation_resumes_partial_wall_projection() {
+        use crate::geometry::Geometry;
+        let fixture: CapStar =
+            serde_json::from_str(include_str!("testdata/spinodoid-cap-star.json")).unwrap();
+        let mesh = crate::Mesh {
+            points: fixture.points.clone(),
+            tets: fixture.tets.clone(),
+            surface: fixture.surface.clone(),
+        };
+        let mut state = super::Tets::new(&mesh, &fixture, 0., [true; 3]);
+        let [u, v] = fixture
+            .bad_coordinates
+            .map(|point| state.points.iter().position(|p| *p == point).unwrap());
+        let inserted = state.split(u, v, 0.3, false).unwrap();
+        let partial = state.points[inserted];
+        let initial_error = fixture.value(partial).abs();
+        assert!(initial_error > 1e-6 && !state.pending.is_empty());
+        // Geometry closing reconstructs adjacency after the optimizer. The
+        // borrowed mesh carries coordinates and facets, not the pending queue.
+        let restart = crate::Mesh {
+            points: state.points.clone(),
+            tets: state
+                .tets
+                .iter()
+                .enumerate()
+                .filter_map(|(i, &tet)| state.alive[i].then_some(tet))
+                .collect(),
+            surface: state.faces.keys().copied().collect(),
+        };
+        let mut rebuilt = super::Tets::new(&restart, &fixture, 0., [true; 3]);
+        let vertex = rebuilt.points.iter().position(|&p| p == partial).unwrap();
+        for _ in 0..16 {
+            if !rebuilt.settle(0.3, 5000).unwrap() {
+                break;
+            }
+        }
+        assert!(
+            fixture.value(rebuilt.points[vertex]).abs() < initial_error * 0.01,
+            "geometry closing must resume the partial projection after rebuilding its state"
+        );
+        assert_eq!(
+            rebuilt.points[vertex][0], partial[0],
+            "cap plane stays exact"
+        );
+        assert!(
+            rebuilt
+                .tets
+                .iter()
+                .enumerate()
+                .filter(|(i, _)| rebuilt.alive[*i])
                 .all(|(_, &tet)| super::mmg(rebuilt.tet_points(tet, None)) >= 0.1)
         );
     }

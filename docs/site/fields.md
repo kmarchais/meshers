@@ -63,6 +63,45 @@ gradients at equal branches for other composite formulas. Supply an explicit
 gradient callback when another tie policy is required.
 
 
+## Adaptive spinodoid meshes
+
+Keep the Fourier coefficients fixed while comparing meshing recipes. Adaptive
+remeshing can collapse and swap small cut cells; increasing `optimize_passes`
+alone only relocates vertices and can leave slivers in place.
+
+For the two unit-cell spinodoids in the fixed comparison study, the following
+Tet4 settings reduce interior density while retaining the sampled 0.002 boundary
+gate. Use `cells=24` for its isotropic specimen and `cells=16` for its anisotropic
+specimen. These are measured recipes for those fields, not new defaults.
+Pass the fixed pointwise field as `spinodoid_field`.
+
+```python
+mesh = meshers.generate(
+    spinodoid_field,
+    bounds=(-0.5, 0.5, -0.5, 0.5, -0.5, 0.5),
+    cells=24,
+    periodic=(True, True, True),
+    order=1,
+    optimize_passes=1,
+    adapt=True,
+    adapt_iterations=4,
+    adapt_tolerance=0.0018,
+    geometry_tolerance=0.002,
+    min_length=0.002,
+    max_length=0.1,
+    gradation=0.6,
+    minimum_quality=0.1,
+    max_tetrahedra=250_000,
+    threads=1,
+)
+```
+
+The tighter internal target leaves room for the independent two-sided distance
+audit. Larger gradation permits faster size growth into the interior. Compare
+both node and tetrahedron counts, and retain boundary, volume, quality and
+periodicity checks. These recipes reduce minimum quality relative to the
+previous finer native meshes while staying above the 0.1 floor.
+
 ## Coordinate maps and nonsmooth points
 
 The embedded compiler supports `arctan2`, `arccos`, `arcsin`, `arctan` and
