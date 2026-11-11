@@ -6,7 +6,6 @@ import warnings
 from collections.abc import Callable, Sequence
 from dataclasses import dataclass
 from pathlib import Path
-from typing import TYPE_CHECKING
 
 import numpy as np
 import numpy.typing as npt
@@ -20,9 +19,6 @@ from .intersection import (
     _retained_constraints,
     generate_intersection,
 )
-
-if TYPE_CHECKING:
-    import fedoo
 
 Field = Callable[
     [npt.NDArray[np.float64], npt.NDArray[np.float64], npt.NDArray[np.float64]],
@@ -66,27 +62,6 @@ class Mesh:
     constraint_masks: npt.NDArray[np.uint8] | npt.NDArray[np.uint32] | None = None
     constraint_names: tuple[str, ...] = ()
     periodic_transforms: npt.NDArray[np.float64] | None = None
-
-    def to_fedoo(self) -> "fedoo.Mesh":
-        """Copy linear or curved quadratic tetrahedra into a fedoo mesh.
-
-        Requires the optional fedoo package. Coordinates and the VTK/fedoo node
-        order are preserved. Boundary tags and periodic constraints are not
-        transferred; configure constraints on the returned mesh before solving.
-        Conversion does not check element validity or periodic conformity.
-
-        Returns:
-            A fedoo ``tet4`` or ``tet10`` mesh with independent arrays.
-
-        Raises:
-            ValueError: Connectivity does not have four or ten nodes per cell.
-        """
-        import fedoo
-
-        if self.tetrahedra.ndim != 2 or self.tetrahedra.shape[1] not in {4, 10}:
-            raise ValueError("fedoo conversion requires Tet4 or Tet10 connectivity")
-        element_type = "tet4" if self.tetrahedra.shape[1] == 4 else "tet10"
-        return fedoo.Mesh(self.points.copy(), self.tetrahedra.copy(), element_type)
 
     def surface_for(self, name: str) -> npt.NDArray[np.int64]:
         """Return boundary triangles assigned to a named intersection constraint.

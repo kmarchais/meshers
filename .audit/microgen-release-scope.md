@@ -10,13 +10,15 @@ or a replacement for the cross-platform release checks.
 ## Release decision
 
 Prepare this branch from current main, carrying the library changes, regression
-tests and three relevant documentation updates. Do not merge the full study
+tests and relevant documentation updates. Do not merge the full study
 branch. Its 13,076 changed paths include 12,650 experiment paths and 363 handoff
 paths. Those results stay preserved on the study branch.
 
 Every changed library source and native fixture path is classified in
-`microgen-release-scope.tsv`. All crate files in this branch were checked byte
+`microgen-release-scope.tsv`. The initial 85 crate files were checked byte
 for byte against the source used for the locally tested default-feature wheel.
+Subsequent changes only format Python/docs and defer the unrelated fedoo export.
+Rust meshing source remains byte-identical to that validated candidate.
 The crate manifests add feature switches but no new Rust dependencies relative
 to current main. Root packaging and publishing workflows already exist on main.
 
@@ -33,7 +35,7 @@ to current main. Root packaging and publishing workflows already exist on main.
 | Surface extraction/remeshing and wide constraint masks | No | Leave feature-gated and disabled in the release wheel |
 | Linear observations and supplied-background PMY experiments | No | Keep diagnostic hooks gated; do not expose or enable them through Microgen |
 | Volume correction probes and periodic feature research | No | Keep under `cfg(test)`; do not turn investigations into production corrections |
-| Direct fedoo conversion | No | Retain the small optional export; no solver dependency is added to Microgen |
+| Direct fedoo conversion | No | Defer API, tests and added documentation to the study branch; it introduces an optional solver import into core type checking |
 | Experiment meshes, solver fields, dashboards, handoffs and logs | No | Exclude from this branch; preserve on the study branch |
 
 Large shared modules are not safe to delete wholesale: scalar, periodic,
@@ -67,6 +69,22 @@ deselected the two previously reproduced upstream CAD spinodoid failures.
 The first combined test attempt stopped at collection because the new test
 environment lacked h5py. Installing the recorded test dependency `h5py==3.16.0`
 resolved collection. It is not a Microgen runtime dependency.
+
+The pinned Ruff 0.16.7 checks exposed three lint issues in the observation tests
+and eight unformatted Python/documentation files. These are corrected here.
+Ty 0.0.81 then exposed two unresolved fedoo imports from the new export API.
+Deferring that unrelated API removes the diagnostics without adding a solver
+dependency or suppressing type checks. Ruff, formatting and Ty now pass.
+Python AST comparisons confirm the production formatting changes no behavior,
+and the mesh wrapper changes only by removing the fedoo export and imports.
+Rust formatting also passes.
+
+The final wheel was rebuilt after those cleanups and installed in the Microgen
+test environment. The repeated combined selection passes 340 tests, skips 14
+and deselects the same two upstream CAD failures. The wheel exposes neither the
+deferred fedoo method nor experimental surfaces/observations. Final receipts:
+`/Users/kmarchais/dev/meshers/.local-work/microgen-release-final-build-v1` and
+`/Users/kmarchais/dev/meshers/.local-work/microgen-release-final-tests-v1`.
 
 The clean release checkout also passed `cargo +1.95.0 test --release --locked`:
 93 passed, zero failed, two ignored diagnostic tests. The bounded native run

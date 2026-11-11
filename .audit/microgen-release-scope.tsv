@@ -19,10 +19,10 @@ crates/meshers-core/src/testdata/frd-cap-star.json	362	0	test-only	Deterministic
 crates/meshers-core/src/testdata/spinodoid-cap-star.json	1258	0	test-only	Deterministic cap-topology regression fixture
 crates/meshers-core/src/tet_adapt.rs	2495	0	keep	Adaptive Tet4, wall projection, periodic resource and quality fixes
 crates/meshers-core/src/triangles.rs	1263	0	feature-gated	Not needed by volume backend; experimental-quads remains off
-crates/meshers-python/python/meshers/__init__.py	204	9	keep	Public generate and mesh arrays; optional fedoo export does not load solver eagerly
+crates/meshers-python/python/meshers/__init__.py	179	9	keep	Keep generate and mesh arrays; defer unrelated fedoo export and its optional type dependency
 crates/meshers-python/python/meshers/_meshers.pyi	29	1	keep	Types matching the native API
 crates/meshers-python/python/meshers/expression.py	106	4	keep	Compiled expressions, tie derivatives and retained constraints; interpolation support is optional
-crates/meshers-python/python/meshers/intersection.py	71	5	keep	Automatic affine/branch constraints used by generic implicit primitives
+crates/meshers-python/python/meshers/intersection.py	80	5	keep	Automatic affine/branch constraints used by generic implicit primitives
 crates/meshers-python/python/meshers/surface.py	143	0	feature-gated	Optional surface wrapper; no public surface entry point in default wheel
 crates/meshers-python/src/compiled.rs	242	67	keep	JIT batch evaluation, safety and branch metadata
 crates/meshers-python/src/compiled/polyhedral.rs	167	0	keep	Detect exact affine forms and regions for primitive preservation

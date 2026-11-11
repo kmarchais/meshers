@@ -32,13 +32,17 @@ def test_adaptive_interior_refinement_preserves_periodic_boundary():
         return -1 + 0.05 * np.cos(2 * np.pi * x)
 
     options = {
-        "cells": 4, "optimize_passes": 0, "minimum_quality": 0.1,
-        "periodic": (True,) * 3, "adapt": True, "adapt_iterations": 1,
+        "cells": 4,
+        "optimize_passes": 0,
+        "minimum_quality": 0.1,
+        "periodic": (True,) * 3,
+        "adapt": True,
+        "adapt_iterations": 1,
     }
     seed = meshers.generate(field, **options)
     refined = meshers.generate(field, interior_refine_nodes=20, **options)
     assert 0 < refined.diagnostics["inserted_interior_nodes"] <= 20
-    np.testing.assert_array_equal(refined.points[:len(seed.points)], seed.points)
+    np.testing.assert_array_equal(refined.points[: len(seed.points)], seed.points)
     np.testing.assert_array_equal(refined.surface, seed.surface)
     np.testing.assert_array_equal(refined.boundary_tags, seed.boundary_tags)
     for old, new in zip(seed.periodic_pairs, refined.periodic_pairs, strict=True):

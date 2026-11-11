@@ -39,9 +39,12 @@ automatically. For example:
 ```python
 mesh = meshers.generate(
     lambda x, y, z: (abs(x) + abs(y) + abs(z) - 0.35) / np.sqrt(3),
-    bounds=(-0.5, 0.5)*3, cells=24,
-    geometry_tolerance=0.002, minimum_quality=0.1,
-    max_tetrahedra=250000, optimize_passes=1,
+    bounds=(-0.5, 0.5) * 3,
+    cells=24,
+    geometry_tolerance=0.002,
+    minimum_quality=0.1,
+    max_tetrahedra=250000,
+    optimize_passes=1,
 )
 assert mesh.diagnostics["polyhedral_constraints"] == 8
 ```
@@ -63,14 +66,20 @@ from itertools import product
 
 planes = {}
 for index, (a, b, c) in enumerate(product((1, -1), repeat=3)):
+
     def plane(x, y, z, a=a, b=b, c=c):
-        return (a*x + b*y + c*z - 0.35) / np.sqrt(3)
+        return (a * x + b * y + c * z - 0.35) / np.sqrt(3)
+
     planes[f"plane{index}"] = plane
 
 mesh = meshers.generate_intersection(
-    planes, bounds=(-0.5, 0.5)*3, cells=24,
-    geometry_tolerance=0.002, minimum_quality=0.1,
-    max_tetrahedra=250000, optimize_passes=1,
+    planes,
+    bounds=(-0.5, 0.5) * 3,
+    cells=24,
+    geometry_tolerance=0.002,
+    minimum_quality=0.1,
+    max_tetrahedra=250000,
+    optimize_passes=1,
 )
 ```
 

@@ -113,14 +113,25 @@ def test_callback_metadata_cannot_override_the_requested_geometry():
 
 def test_periodic_reentrant_normal_jump_uses_verified_region_traces():
     def field(x, y, z):
-        return np.maximum(np.maximum(abs(x) + 0.3 * abs(z) - 0.35, abs(y) - 0.2),
-            np.minimum(x - 0.05, y - 0.05))
+        return np.maximum(
+            np.maximum(abs(x) + 0.3 * abs(z) - 0.35, abs(y) - 0.2), np.minimum(x - 0.05, y - 0.05)
+        )
 
     mesh = meshers.generate(
-        field, bounds=(-0.5, 0.5) * 3, cells=24, periodic=(False, False, True),
-        adapt=True, min_length=0.002, max_length=0.1, gradation=0.3,
-        layers=0, adapt_iterations=4, quality_guard=0.3,
-        optimize_passes=1, geometry_tolerance=0.002, minimum_quality=0.1,
+        field,
+        bounds=(-0.5, 0.5) * 3,
+        cells=24,
+        periodic=(False, False, True),
+        adapt=True,
+        min_length=0.002,
+        max_length=0.1,
+        gradation=0.3,
+        layers=0,
+        adapt_iterations=4,
+        quality_guard=0.3,
+        optimize_passes=1,
+        geometry_tolerance=0.002,
+        minimum_quality=0.1,
         max_tetrahedra=250000,
     )
     assert mesh.diagnostics["polyhedral_regions"] == 2

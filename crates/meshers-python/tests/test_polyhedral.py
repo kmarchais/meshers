@@ -337,10 +337,20 @@ def test_periodic_affine_normal_jump_uses_a_verified_physical_seed():
         return np.maximum(abs(x) + 0.3 * abs(z) - 0.35, abs(y) - 0.2)
 
     mesh = meshers.generate(
-        field, bounds=(-0.5, 0.5) * 3, cells=24, periodic=(False, False, True),
-        adapt=True, min_length=0.002, max_length=0.1, gradation=0.3,
-        layers=0, adapt_iterations=4, quality_guard=0.3,
-        optimize_passes=1, geometry_tolerance=0.002, minimum_quality=0.1,
+        field,
+        bounds=(-0.5, 0.5) * 3,
+        cells=24,
+        periodic=(False, False, True),
+        adapt=True,
+        min_length=0.002,
+        max_length=0.1,
+        gradation=0.3,
+        layers=0,
+        adapt_iterations=4,
+        quality_guard=0.3,
+        optimize_passes=1,
+        geometry_tolerance=0.002,
+        minimum_quality=0.1,
         max_tetrahedra=250000,
     )
     assert mesh.diagnostics["polyhedral_constraints"] == 6
@@ -375,7 +385,8 @@ def test_complete_affine_trace_dispatch_keeps_named_plane_rejection():
     assert not _periodic_affine(field, (False, False, True), bounds)
     with pytest.raises(meshers.MeshingError, match="periodic"):
         meshers.generate_intersection(
-            {"slope": lambda x, y, z: x + 0.3 * z - 0.35,
-             "side": lambda x, y, z: abs(y) - 0.2},
-            bounds=(-0.5, 0.5) * 3, cells=4, periodic=(False, False, True),
+            {"slope": lambda x, y, z: x + 0.3 * z - 0.35, "side": lambda x, y, z: abs(y) - 0.2},
+            bounds=(-0.5, 0.5) * 3,
+            cells=4,
+            periodic=(False, False, True),
         )
