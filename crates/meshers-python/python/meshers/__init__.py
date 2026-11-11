@@ -6,6 +6,7 @@ import warnings
 from collections.abc import Callable, Sequence
 from dataclasses import dataclass
 from pathlib import Path
+from typing import TYPE_CHECKING
 
 import numpy as np
 import numpy.typing as npt
@@ -13,7 +14,15 @@ import numpy.typing as npt
 from . import _meshers
 from ._meshers import CancellationToken, CancelledError, CompiledField, MeshingError
 from .expression import TraceError, compile_field
-from .intersection import generate_intersection
+from .intersection import (
+    _affine_planes,
+    _periodic_affine,
+    _retained_constraints,
+    generate_intersection,
+)
+
+if TYPE_CHECKING:
+    import fedoo
 
 Field = Callable[
     [npt.NDArray[np.float64], npt.NDArray[np.float64], npt.NDArray[np.float64]],
@@ -27,10 +36,14 @@ class Mesh:
 
     Attributes:
         points: Float64 coordinates, shape ``(N, 3)``.
-        tetrahedra: Int64 connectivity, shape ``(M, 4)``.
-        surface: Boundary triangles, shape ``(K, 3)``, referencing the same points.
+        tetrahedra: Int64 connectivity, shape ``(M, 4)`` or ``(M, 10)``.
+        surface: Boundary triangles, shape ``(K, 3)`` or ``(K, 6)``.
         boundary_tags: Zero for implicit faces, 1 and 2 for x-/x+, then y and z.
         periodic_pairs: Three arrays of paired point IDs, one for each box axis.
+            For scalar fields, every material-cap node is matched. Existing
+            edge/corner images form complete constraint classes. A wall-only
+            contact can lack an opposite image when that image has no
+            tetrahedral material support.
         diagnostics: Quality, timing, sampled error, evaluator and worker count.
         parameters: Parameter coordinates for mapped intersections, otherwise None.
         constraint_masks: Bit j marks membership in constraint j, otherwise None.
@@ -50,9 +63,30 @@ class Mesh:
     periodic_pairs: tuple[npt.NDArray[np.int64], ...]
     diagnostics: dict
     parameters: npt.NDArray[np.float64] | None = None
-    constraint_masks: npt.NDArray[np.uint8] | None = None
+    constraint_masks: npt.NDArray[np.uint8] | npt.NDArray[np.uint32] | None = None
     constraint_names: tuple[str, ...] = ()
     periodic_transforms: npt.NDArray[np.float64] | None = None
+
+    def to_fedoo(self) -> "fedoo.Mesh":
+        """Copy linear or curved quadratic tetrahedra into a fedoo mesh.
+
+        Requires the optional fedoo package. Coordinates and the VTK/fedoo node
+        order are preserved. Boundary tags and periodic constraints are not
+        transferred; configure constraints on the returned mesh before solving.
+        Conversion does not check element validity or periodic conformity.
+
+        Returns:
+            A fedoo ``tet4`` or ``tet10`` mesh with independent arrays.
+
+        Raises:
+            ValueError: Connectivity does not have four or ten nodes per cell.
+        """
+        import fedoo
+
+        if self.tetrahedra.ndim != 2 or self.tetrahedra.shape[1] not in {4, 10}:
+            raise ValueError("fedoo conversion requires Tet4 or Tet10 connectivity")
+        element_type = "tet4" if self.tetrahedra.shape[1] == 4 else "tet10"
+        return fedoo.Mesh(self.points.copy(), self.tetrahedra.copy(), element_type)
 
     def surface_for(self, name: str) -> npt.NDArray[np.int64]:
         """Return boundary triangles assigned to a named intersection constraint.
@@ -119,7 +153,9 @@ class Mesh:
             g["Points"] = points
             g["Connectivity"] = cells.ravel()
             g["Offsets"] = np.arange(len(cells) + 1, dtype=np.int64) * cells.shape[1]
-            g["Types"] = np.full(len(cells), 5 if surface else 10, dtype=np.uint8)
+            # Linear or quadratic triangle/tetrahedron; corners come first in both.
+            vtk_type = {3: 5, 4: 10, 6: 22, 10: 24}[cells.shape[1]]
+            g["Types"] = np.full(len(cells), vtk_type, dtype=np.uint8)
             data = g.create_group("CellData")
             if surface:
                 data["BoundaryTag"] = self.boundary_tags
@@ -157,7 +193,8 @@ class Mesh:
                 metadata["FeatureEdges"] = self.feature_edges
 
 
-def generate(
+# Keep public option validation and pipeline dispatch together.
+def generate(  # ruff: ignore[complex-structure, too-many-branches]
     field: str | Field | CompiledField,
     *,
     gradient: Field | None = None,
@@ -169,11 +206,23 @@ def generate(
     minimum_quality: float = 0.0,
     max_tetrahedra: int = 2_000_000,
     optimize_passes: int = 4,
+    interior_refine_nodes: int = 0,
     snap: float = 0.2,
     threads: int | None = 1,
     batch_size: int = 4096,
     cancel: CancellationToken | None = None,
     compile: bool = True,
+    adapt: bool = False,
+    min_length: float | None = None,
+    max_length: float | None = None,
+    gradation: float = 0.3,
+    layers: float = 0.0,
+    adapt_iterations: int = 4,
+    quality_guard: float = 0.3,
+    adapt_tolerance: float | None = None,
+    order: int = 1,
+    size_field: Field | None = None,
+    curved_fit: bool = False,
 ) -> Mesh:
     """Generate a tetrahedral mesh directly from a bounded implicit field.
 
@@ -189,10 +238,18 @@ def generate(
         band: Keep ``lower < field < upper``. Without a band, keep the negative side.
         geometry_tolerance: Maximum sampled boundary-distance estimate, in physical units.
         minimum_quality: Required minimum MMG tetrahedron quality, 0..1. Zero disables
-            the gate. A nonempty mesh below this value is rejected; no automatic
-            geometry changes are made. Empty meshes remain valid.
-        max_tetrahedra: Budget for generated tetrahedra.
+            the requirement. Adaptive splitting and wall projection honor a positive
+            requested minimum. Nonempty meshes below it are rejected, and requested
+            geometry limits are not relaxed. Empty meshes remain valid.
+        max_tetrahedra: Budget for generated tetrahedra. Adaptation raises
+            MeshingError when a local topology operation exceeds this budget.
         optimize_passes: Number of quality-optimization passes, 0..100.
+        interior_refine_nodes: Maximum new nodes in one length-ranked interior
+            bisection pass after scalar surface generation or adaptation. Zero
+            disables it. For order=2, this counts new corner nodes; quadratic
+            edge nodes are additional. Boundary vertices and triangles stay
+            fixed. Disjoint cavities, the tetrahedron budget and a quality floor
+            of max(minimum_quality, 0.1) may limit the number inserted.
         snap: Maximum lattice snap as a fraction of minimum spacing, 0..0.2.
         threads: Native worker limit, default one. None uses available CPU parallelism, capped
             at 256. One uses one worker; zero retains legacy serial update ordering.
@@ -201,6 +258,46 @@ def generate(
         compile: Compile supported expressions and their first derivatives
             automatically. False selects NumPy callbacks. Unsupported operations
             emit a warning and use callbacks, which must return float64 (N,) arrays.
+            Eligible Tet4 convex polyhedra retain exact half-space constraints;
+            requested periodic axes must leave every plane invariant. Diagnostics
+            report ``polyhedral_constraints``. Bounded min/max combinations of
+            convex affine fields retain nonconvex regions on the nonperiodic path.
+            Eligible nonperiodic outer-max intersections retain analytic branches;
+            diagnostics report ``retained_constraints``.
+        adapt: Experimental. Replace fixed surface refinement by size-driven
+            adaptation: boundary edges follow the curvature needed for
+            ``geometry_tolerance``, the interior grades towards ``max_length``.
+            ``cells`` then only sets the starting lattice, which must resolve topology.
+            Compiled convex polyhedra preserve their exact planes and retain
+            existing crease vertices. Face/interior coarsening, splitting,
+            spatial sizing and constrained quality improvement remain active.
+        min_length: Smallest adapted edge length; default ``geometry_tolerance``.
+        max_length: Largest adapted edge length; default a quarter of the smallest box side.
+        gradation: Maximum length growth per unit distance (MMG ``hgrad - 1``).
+        layers: For bands, minimum element count across the local sheet thickness.
+        adapt_iterations: Split/collapse/swap/relocate rounds.
+        quality_guard: Operations may not create MMG quality below this value
+            unless the affected elements were already worse.
+        adapt_tolerance: Distance the adapter aims for; default ``geometry_tolerance``,
+            which remains the acceptance check.
+        order: 1 for linear tetrahedra, 2 for 10-node tetrahedra (VTK/Gmsh/fedoo
+            node order) with wall mid-edge nodes projected onto the field where
+            sampled validity permits. Invalid corrections are reduced or straightened;
+            ``diagnostics["quadratic"]`` records both counts. Quadratic meshes
+            report ``tetrahedra`` of shape (M, 10) and ``surface`` of shape (K, 6);
+            ``periodic_pairs`` then include cap midpoint nodes and preserve
+            complete constraint classes for existing periodic node images.
+        size_field: Optional vectorized callback returning positive physical target
+            edge lengths, shape (N,), for ``adapt=True``. Targets combine with
+            curvature sizing by taking the smaller length, then applying
+            ``min_length``, ``max_length`` and gradation. Opposite periodic traces
+            must match. This callback is evaluated in batches without tracing.
+        curved_fit: Experimental bounded fitting of the final quadratic wall faces.
+            Requires order=2. Corners and connectivity stay fixed; wall edge nodes
+            may move off the exact implicit surface to improve the complete patch.
+            Cap coordinates and periodic aliases stay coupled. Sampled validity
+            guards each accepted move. This changes the discrete geometry and FE
+            space; it does not transfer an old solution or certify convergence.
 
     Returns:
         Mesh: Owned arrays and diagnostics. Empty geometries return empty arrays.
@@ -219,6 +316,10 @@ def generate(
         Python fallback callbacks execute on the calling thread.
     """
     b = np.asarray(bounds, dtype=np.float64)
+    if curved_fit and order != 2:
+        raise ValueError("curved_fit requires order 2")
+    if size_field is not None and not adapt:
+        raise ValueError("size_field requires adapt=True")
     if b.shape != (6,):
         raise ValueError("bounds must contain xmin,xmax,ymin,ymax,zmin,zmax")
     if isinstance(cells, (int, np.integer)):
@@ -228,6 +329,7 @@ def generate(
     if threads is None:
         threads = _meshers.available_threads()
     preparation_start = time.perf_counter()
+    gradient_override = gradient is not None
     evaluator = (
         "native"
         if isinstance(field, str)
@@ -242,7 +344,74 @@ def generate(
             evaluator = "compiled"
         except TraceError as error:
             warnings.warn(f"Using NumPy callbacks: {error}", RuntimeWarning, stacklevel=2)
+    scalar_mode = (
+        order != 1,
+        band is not None,
+        any(periodic) and not _periodic_affine(field, periodic, b if adapt else None),
+        threads != 1,
+        interior_refine_nodes != 0,
+        gradient_override,
+        not 0 <= optimize_passes <= 20,
+        max_tetrahedra <= 0,
+        not all(
+            isinstance(value, (int, np.integer))
+            for value in (threads, interior_refine_nodes, optimize_passes, max_tetrahedra)
+        ),
+    )
+    planes = _affine_planes(field, scalar_mode)
+    if (
+        planes is None
+        and (not adapt or getattr(_meshers, "ADAPTIVE_RETAINED_INTERSECTIONS", False))
+        and not any(scalar_mode)
+    ):
+        planes = _retained_constraints(field)
     preparation_seconds = time.perf_counter() - preparation_start
+    if planes is not None and not adapt:
+        mesh = generate_intersection(
+            planes,
+            periodic=periodic,
+            bounds=b.tolist(),
+            cells=cells,
+            geometry_tolerance=geometry_tolerance,
+            minimum_quality=minimum_quality,
+            max_tetrahedra=int(max_tetrahedra),
+            optimize_passes=int(optimize_passes),
+            snap=snap,
+            batch_size=batch_size,
+            cancel=cancel,
+        )
+        mesh.diagnostics.update(
+            threads=1,
+            evaluator="compiled",
+            inserted_interior_nodes=0,
+            preparation_seconds=preparation_seconds
+            + mesh.diagnostics.get("preparation_seconds", 0.0),
+        )
+        mesh.diagnostics[
+            "polyhedral_constraints"
+            if getattr(field, "_halfspaces", None) is not None
+            else "retained_constraints"
+        ] = len(planes)
+        return mesh
+    feature_options = (
+        {"halfspaces": getattr(field, "_halfspaces", None)}
+        if planes is not None and adapt and getattr(_meshers, "ADAPTIVE_POLYHEDRAL", False)
+        else {}
+    )
+    feature_options.update(
+        {"constraints": list(planes.values())}
+        if planes is not None and adapt and getattr(field, "_halfspaces", None) is None
+        else {}
+    )
+    planes = (
+        getattr(field, "_polyhedral_regions", None)
+        if isinstance(field, CompiledField)
+        and not any(scalar_mode)
+        and getattr(_meshers, "POLYHEDRAL_REGIONS", False)
+        else None
+    )
+    if planes is not None:
+        feature_options = {"halfspaces": planes[0], "regions": planes[1]}
     result = _meshers.generate(
         field,
         gradient,
@@ -254,11 +423,32 @@ def generate(
         minimum_quality,
         max_tetrahedra,
         optimize_passes,
+        interior_refine_nodes,
         snap,
         threads,
         batch_size,
         cancel,
+        (
+            geometry_tolerance if min_length is None else float(min_length),
+            float(np.min(b[1::2] - b[::2])) / 4 if max_length is None else float(max_length),
+            float(gradation),
+            float(layers),
+            int(adapt_iterations),
+            float(quality_guard),
+            geometry_tolerance if adapt_tolerance is None else float(adapt_tolerance),
+        )
+        if adapt
+        else None,
+        int(order),
+        size_field,
+        curved_fit=curved_fit,
+        **feature_options,
     )
+    quadratic = result.pop("quadratic", None)
+    if quadratic is not None:
+        for name in ("points", "tetrahedra", "surface", "periodic_pairs"):
+            result[name] = quadratic.pop(name)
+        result["diagnostics"]["quadratic"] = quadratic
     result["diagnostics"]["threads"] = threads
     result["diagnostics"]["evaluator"] = evaluator
     result["diagnostics"]["preparation_seconds"] = preparation_seconds
@@ -277,3 +467,8 @@ __all__ = [
     "generate",
     "generate_intersection",
 ]
+
+if hasattr(_meshers, "generate_surface"):
+    from .surface import SurfaceMesh, generate_surface
+
+    __all__ += ["SurfaceMesh", "generate_surface"]

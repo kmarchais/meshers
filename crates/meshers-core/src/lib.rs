@@ -9,8 +9,15 @@ pub mod accelerator;
 mod error;
 mod geometry;
 pub mod implicit;
+#[cfg(feature = "experimental-quads")]
+pub mod quads;
+#[cfg(feature = "experimental-quads")]
+pub mod remesh;
+#[cfg(feature = "experimental-quads")]
+pub mod triangles;
 pub use error::MeshingError;
 use geometry::Geometry;
+mod polyhedral;
 mod profile;
 
 /// Available CPU parallelism, capped at the supported maximum of 256 workers.
@@ -681,6 +688,9 @@ impl Mesh {
 
 mod adaptive;
 mod optimize;
+mod projection;
+pub mod quadratic;
+pub mod tet_adapt;
 
 #[cfg(test)]
 mod tests {

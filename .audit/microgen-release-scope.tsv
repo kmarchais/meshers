@@ -1,0 +1,30 @@
+path	added	removed	decision	reason
+crates/meshers-core/src/adaptive.rs	146	1	keep	Quality-constrained refinement; interior refinement stays opt-in
+crates/meshers-core/src/geometry.rs	26	0	keep	Geometry and refinement admission policies
+crates/meshers-core/src/implicit.rs	1826	131	keep	Scalar construction, periodic caps, quality closure and output validation
+crates/meshers-core/src/implicit/intersection.rs	124	17	keep	Constraint preservation and polyhedral-region cutting; wide masks stay disabled
+crates/meshers-core/src/implicit/intersection/repair.rs	44	10	keep	Feature-link, quality and volume guards shared by primitive fields
+crates/meshers-core/src/implicit/periodic_feature_research.rs	174	0	test-only	Included only under cfg(test); no wheel runtime
+crates/meshers-core/src/lib.rs	10	0	keep	Core module wiring; experimental surface modules remain gated
+crates/meshers-core/src/optimize.rs	80	15	keep	Geometry-preserving quality optimization
+crates/meshers-core/src/optimize_batch.rs	93	10	keep	Batched geometry and quality guards
+crates/meshers-core/src/polyhedral.rs	284	0	keep	Preserve affine regions and primitive/boolean boundaries
+crates/meshers-core/src/projection.rs	178	0	keep	Constrained projection and feature preservation
+crates/meshers-core/src/quadratic.rs	495	0	keep	Tet10 elevation, curved validity and periodic midside pairs
+crates/meshers-core/src/quadratic/fit.rs	442	0	opt-in	Curved fitting is not required by Microgen and defaults off
+crates/meshers-core/src/quadratic/fit/volume_probe.rs	1195	0	test-only	Volume investigations are cfg(test), not a production volume correction
+crates/meshers-core/src/quads.rs	1704	0	feature-gated	Not needed by volume backend; experimental-quads remains off
+crates/meshers-core/src/remesh.rs	1115	0	feature-gated	Not needed by volume backend; experimental-quads remains off
+crates/meshers-core/src/testdata/frd-cap-star.json	362	0	test-only	Deterministic cap-topology regression fixture
+crates/meshers-core/src/testdata/spinodoid-cap-star.json	1258	0	test-only	Deterministic cap-topology regression fixture
+crates/meshers-core/src/tet_adapt.rs	2495	0	keep	Adaptive Tet4, wall projection, periodic resource and quality fixes
+crates/meshers-core/src/triangles.rs	1263	0	feature-gated	Not needed by volume backend; experimental-quads remains off
+crates/meshers-python/python/meshers/__init__.py	204	9	keep	Public generate and mesh arrays; optional fedoo export does not load solver eagerly
+crates/meshers-python/python/meshers/_meshers.pyi	29	1	keep	Types matching the native API
+crates/meshers-python/python/meshers/expression.py	106	4	keep	Compiled expressions, tie derivatives and retained constraints; interpolation support is optional
+crates/meshers-python/python/meshers/intersection.py	71	5	keep	Automatic affine/branch constraints used by generic implicit primitives
+crates/meshers-python/python/meshers/surface.py	143	0	feature-gated	Optional surface wrapper; no public surface entry point in default wheel
+crates/meshers-python/src/compiled.rs	242	67	keep	JIT batch evaluation, safety and branch metadata
+crates/meshers-python/src/compiled/polyhedral.rs	167	0	keep	Detect exact affine forms and regions for primitive preservation
+crates/meshers-python/src/lib.rs	355	29	keep	Adaptive/Tet10 options, guards and bindings; observation hook stays disabled
+crates/meshers-python/src/surface.rs	131	0	feature-gated	Not built without experimental-surfaces

@@ -1,12 +1,34 @@
 //! Internal geometry context shared by specialized and generic algorithms.
 use crate::Point;
 pub(crate) trait Geometry: Sync {
+    fn constraints(&self) -> Option<&[&dyn crate::implicit::ScalarField]> {
+        None
+    }
+    fn halfspaces(&self) -> Option<&[[f64; 4]]> {
+        None
+    }
+    fn halfspace_regions(&self) -> Option<&[crate::implicit::intersection::ConstraintMask]> {
+        None
+    }
+    /// Physical reference length for dimensionless optimizer penalties.
+    fn optimizer_length(&self) -> f64 {
+        1.
+    }
+    fn refinement_quality_floor(&self) -> f64 {
+        0.25
+    }
+    fn minimum_quality(&self) -> f64 {
+        0.
+    }
     fn value(&self, p: Point) -> f64;
     fn batched(&self) -> bool {
         false
     }
     fn values(&self, points: &[Point]) -> Vec<f64> {
         points.iter().map(|&p| self.value(p)).collect()
+    }
+    fn target_lengths(&self, _points: &[Point]) -> Option<Vec<f64>> {
+        None
     }
     fn gradients(&self, points: &[Point]) -> Vec<Point> {
         points.iter().map(|&p| self.gradient(p)).collect()
@@ -19,6 +41,10 @@ pub(crate) trait Geometry: Sync {
     fn bounds(&self) -> [Point; 2];
     fn band(&self) -> bool {
         true
+    }
+    /// Implicit pipelines preserve this limit while improving element quality.
+    fn geometry_tolerance(&self) -> Option<f64> {
+        None
     }
     fn locked(&self, p: Point) -> [bool; 3] {
         let [lo, hi] = self.bounds();

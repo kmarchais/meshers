@@ -37,6 +37,25 @@ and [homogenization implementation](https://github.com/3MAH/fedoo/blob/v1.0.0b2/
 Both loading paths use fedoo's constraints and assembly. The independent checks
 use Meshers pair metadata and physical tetrahedral gradients.
 
+## Material traces at periodic box contacts
+
+Use the returned `periodic_pairs` to build constraints. Every node of a
+material cap and its complete Tri3 or Tri6 facet must match the opposite cap.
+All existing periodic images of edge and corner nodes must form one connected
+constraint class.
+
+A wall can touch a box corner whose opposite image has no material volume.
+For example, the Schwarz D zero-level solid has a supported node at
+`(-0.5, 0.5, 0.5)` and no supported node at `(0.5, 0.5, 0.5)`.
+The first node is constrained through its other periodic cap traces.
+Requiring a phantom node in the empty corner would create an unused degree
+of freedom. The matcher checks the actual material traces and complete
+existing node classes at the unchanged coordinate tolerance.
+
+The earlier full-box and Gyroid results below retain their original pair
+lists and constraint spaces. This matching correction adds no new stiffness
+or continuum-accuracy result for Schwarz D.
+
 ## Measured results
 
 The solid-cell test recovers `E=2.5` and `nu=0.25` to numerical precision.
@@ -63,6 +82,39 @@ stress-controlled cases for the solid and each of the four gyroid refinements.
 Hill–Mandel errors and differences between the two homogenization paths are
 below 4e-12 relative. The effective tensors are symmetric to numerical accuracy
 and have positive eigenvalues.
+
+## Direct Tet10 conversion
+
+`Mesh.to_fedoo()` copies Tet4 or Tet10 coordinates and connectivity into a
+fedoo mesh. Install `fedoo==1.0.0b2` to use the version tested here. Given a
+Meshers mesh named `mesh`:
+
+```python
+import fedoo as fd
+
+fd.ModelingSpace("3D")
+fem_mesh = mesh.to_fedoo()
+assembly = fd.Assembly.create(
+    fd.weakform.StressEquilibrium(fd.constitutivelaw.ElasticIsotrop(2.5, 0.25)),
+    fem_mesh,
+)
+```
+
+The conversion preserves curved mid-edge coordinates and node ordering.
+Fedoo receives independent arrays. Configure boundary conditions and the
+solver on the returned mesh or assembly. Boundary tags and periodic
+transforms are not transferred. Translational periodic homogenization
+requires matching opposite nodes, including mid-edge nodes, and matching
+cap faces. Check sampled curved Jacobians before solving. The conversion
+itself does not establish these properties.
+
+Microgen 2.0.0b1 rejects Tet10 in both `SingleMesh.from_pyvista` and
+`BoxMesh.from_pyvista`. The direct fedoo route avoids that conversion.
+The G3 integration experiment checks solid Tet4 and Tet10 cells, then
+reuses the admitted curved Gyroid and Schwarz P solid meshes. It compares
+VTK and fedoo interpolation, periodic displacement jumps, independently
+integrated stress, macroscopic reactions, mixed-load energy and the saved
+stiffness tensors. See `experiments/adaptive/tet10_integration.py`.
 
 ## Scope
 

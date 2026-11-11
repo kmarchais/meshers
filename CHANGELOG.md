@@ -2,6 +2,11 @@
 
 ## 0.1.0
 
+- Adaptive Tet4 sizing with quality and geometry guards, periodic wall
+  preservation and pending-projection recovery.
+- Optional curved Tet10 output with periodic midside-node correspondence.
+- Feature-preserving affine and composed fields and compiled point-batch
+  evaluation. Experimental surfaces and observations stay disabled by default.
 - Rust/Python direct tetrahedral meshing of bounded implicit functions, TPMS
   bands, callable grading and blends, with compiled expressions and gradients.
 - Named multi-constraint intersections through `generate_intersection`, retaining
