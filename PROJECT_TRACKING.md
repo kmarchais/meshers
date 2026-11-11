@@ -1,5 +1,67 @@
 # Meshers project tracking
 
+
+## Correcting the printing film, 11 November 2026
+
+Kevin rejected the previous 30-second film. Its nozzle followed an independent
+oscillating path while complete height-clipped layers appeared. The old saved
+playback tests checked data identity and motion continuity but missed causal
+deposition and shading defects. This supersedes the readiness implied by the
+previous film entry below.
+
+A red reproduction finds 893 of 897 newly exposed top faces away from the
+nozzle sweep at the sampled frame. Analytic custom normals oppose rendered
+triangles in multiple morph frames, including 95,886 of 96,055 wall triangles
+at frame217. Box-constrained projection also folds local triangles; edge
+incidence alone did not catch this. The revised shading uses triangle normals.
+
+A real PrusaSlicer G-code trial produces a causal bead build with supports.
+Kevin rejects its supports and visible tube texture, preferring a faster,
+stylized smooth solid. That trial is retained locally, not promoted as the
+final animation. The revised 36-second film gives 13.5 seconds to progressive
+deposition. One shared raster cursor controls the nozzle and an exact Boolean
+reveal volume. Previous rows and layers remain complete, the current row grows
+behind the nozzle, and travel adds no material. There are no supports or beads.
+
+The machine is rebuilt as an open-front bed-slinger. Its bed and specimen
+move together along Y; the X/Z tool carriage stays on supported rails.
+The feet stay on the floor. The head parks outside the part before the entire
+machine exits. A four-post cage control was discarded because it obscured the
+Gyroid. Denoised Metal Cycles controls also remove the grainy Eevee shadows.
+Job 922 passes 45 actual saved-scene controls: evaluated triangles remain
+inside the swept volume, travel holds geometry, nozzle alignment, head/frame
+clearance, grounded feet, bed/specimen alignment and bit-exact native Tet4
+positions and boundary faces. An earlier audit incorrectly used concave
+polygon vertex averages; the current check uses Blender's render triangles.
+Fractional playback also exposed a cache-index rounding bug, now corrected.
+
+Morph geometry uses nodal contours at spacing 1/128 and exact planar cuts.
+VTK cap trials leave open seams; constrained triangulation through Trimesh
+and Triangle passes all 228 indexed frames in job 914, including 192 distinct
+morphs. Job 915 verifies Float32 display precision, cleaning 14 frames while
+preserving closed edges and nonzero triangle areas throughout. Minimum doubled
+triangle area is 1.387379e-14. These are display controls, not FE admission.
+Job 923 completes 864 native Metal Cycles frames at 32 samples in 3829.876
+seconds, with peak process-tree RSS 2.188 GiB. The completion audit notices
+resource values cleared by the supervisor finalizer; the wrapper now restores
+its measured totals after finalization. Runtime frame progress and ETA pass.
+Job 924 repeats all 45 controls on the final saved scene. Job 925 composes and
+fully decodes the 36-second H.264/yuv420p film at 1080x1350 and 24 fps. Job 926
+checks source hashes, native arrays and encoded frames, and extracts a cover.
+Fifteen encoded phase frames are visually reviewed, including readable plots.
+The new MP4 is 6,616,390 bytes. The previous video and its receipt are retained.
+The final film is `content/drafts/meshers/assets/meshers-gyroid-smooth-print.mp4`
+in the website draft; its hashed receipt is in `blender-print/receipt.json`.
+No website deployment or LinkedIn publication occurs.
+
+Evidence is local under `.local-work/blender-print-repair-v1`,
+`.local-work/blender-gyroid-print-deposition-v4` and the final scene run
+`.local-work/blender-gyroid-smooth-deposition-v5`. Editorial sources remain in
+the website draft branch. Scientific measurements, admission gates, release PR
+and Microgen integration are unchanged. Both coarse Gyroid routes still miss
+the strict boundary target; the broader four-case/24-model study is incomplete.
+
+
 ## Blender solid Gyroid printing film, 11 November 2026
 
 Kevin replaced the initial morph teaser with a Blender printing animation.
