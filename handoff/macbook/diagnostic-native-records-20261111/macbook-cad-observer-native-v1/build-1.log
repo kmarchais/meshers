@@ -1,0 +1,25 @@
+    Checking meshers-core v0.1.0 (/Users/kmarchais/dev/meshers/crates/meshers-core)
+error: very complex type used. Consider factoring parts into `type` definitions
+   --> crates/meshers-core/src/implicit.rs:161:22
+    |
+161 |     linear_observer: Option<&'a (dyn Fn(&'static str, &Mesh) + Sync)>,
+    |                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+    = help: for further information visit https://rust-lang.github.io/rust-clippy/rust-1.95.0/index.html#type_complexity
+    = note: `-D clippy::type-complexity` implied by `-D warnings`
+    = help: to override `-D warnings` add `#[allow(clippy::type_complexity)]`
+
+error: very complex type used. Consider factoring parts into `type` definitions
+   --> crates/meshers-core/src/implicit.rs:530:61
+    |
+530 |       #[cfg(feature = "experimental-quads")] linear_observer: Option<
+    |  _____________________________________________________________^
+531 | |         &(dyn Fn(&'static str, &Mesh) + Sync),
+532 | |     >,
+    | |_____^
+    |
+    = help: for further information visit https://rust-lang.github.io/rust-clippy/rust-1.95.0/index.html#type_complexity
+
+error: could not compile `meshers-core` (lib) due to 2 previous errors
+warning: build failed, waiting for other jobs to finish...
+error: could not compile `meshers-core` (lib test) due to 2 previous errors

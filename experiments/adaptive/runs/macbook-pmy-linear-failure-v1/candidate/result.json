@@ -1,0 +1,72 @@
+{
+  "admitted": false,
+  "builtin_background": false,
+  "error": "minimum MMG quality 7.133101608413227e-2 is below required 1e-1; mesh rejected (22 elements below 0.1). Improve resolution/optimization or use a quality remesher",
+  "native_generation_s": 2.161457083,
+  "options": {
+    "adapt": false,
+    "cells": 16,
+    "curved_fit": true,
+    "geometry_tolerance": 1.0,
+    "levels": [
+      -0.36027239477618084,
+      0.36027239477618084
+    ],
+    "max_tetrahedra": 250000,
+    "minimum_quality": 0.1,
+    "optimize_passes": 4,
+    "order": 2,
+    "periodic": [
+      true,
+      true,
+      true
+    ],
+    "snap": 0.2,
+    "threads": 1
+  },
+  "scope": "Native experiment; independent unchanged admission gates are applied afterward.",
+  "status": "native-rejected",
+  "complete": true,
+  "native_output_sha256": "fd41b2af4f3b130a9a23981ba2249508addba47cc0cbe69d40e4fadaa3a529ac",
+  "native_snap_trace": {
+    "path": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-pmy-linear-failure-v1/candidate/native-snap-trace.json",
+    "sha256": "7a511065477cd11dc67d16463267b3cf215bfc4485b3d9c83c1b67264b0ac407",
+    "scans": 3
+  },
+  "native_linear_trace": [
+    {
+      "stage": "clipped",
+      "path": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-pmy-linear-failure-v1/candidate/linear-clipped.npz",
+      "sha256": "e229aa0b2f6d3f5d004d700122775f4d2a7605afaec5e7df9400d51ecccf6fcb",
+      "admitted": false,
+      "nodes": 21387,
+      "elements": 66637
+    },
+    {
+      "stage": "optimized",
+      "path": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-pmy-linear-failure-v1/candidate/linear-optimized.npz",
+      "sha256": "7e540ceb310757808b2fab5c111ae8e0cd8c35efa9325cfa955947029f662182",
+      "admitted": false,
+      "nodes": 21387,
+      "elements": 66637
+    },
+    {
+      "stage": "geometry-refined",
+      "path": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-pmy-linear-failure-v1/candidate/linear-geometry-refined.npz",
+      "sha256": "7e540ceb310757808b2fab5c111ae8e0cd8c35efa9325cfa955947029f662182",
+      "admitted": false,
+      "nodes": 21387,
+      "elements": 66637
+    },
+    {
+      "stage": "final-linear",
+      "path": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-pmy-linear-failure-v1/candidate/linear-final-linear.npz",
+      "sha256": "06e370191be2c0dcdc43684407f65b70c63548300068c0047b71a13be6b08fae",
+      "admitted": false,
+      "nodes": 21387,
+      "elements": 66637
+    }
+  ],
+  "previous_native_output_reproduced": true,
+  "native_timing_scope": "Diagnostic callback allocations and JSON snapshots included; no timing comparison"
+}

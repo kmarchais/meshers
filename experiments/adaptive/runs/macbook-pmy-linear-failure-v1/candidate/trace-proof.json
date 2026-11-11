@@ -1,0 +1,75 @@
+{
+  "status": "verified",
+  "complete": true,
+  "native_input_bits_sha256": "5dad05376184e7598a69c18b1231dd154f86615090cb47711c2fe947c49c80a5",
+  "trace_sha256": "7a511065477cd11dc67d16463267b3cf215bfc4485b3d9c83c1b67264b0ac407",
+  "preserved_prior_input_bits": true,
+  "restored_point_and_value_bits_exact": true,
+  "numerical_tolerance_used": false,
+  "python_rust_original_coordinate_differences": 912,
+  "scans": [
+    {
+      "topology_attempt": 0,
+      "validity_round": 0,
+      "native_bad_tets": 452,
+      "explicit_restored_vertices": 0,
+      "all_observed_restored_vertices": 0,
+      "independent_predicate_matches": true,
+      "independent": {
+        "inverted": 356,
+        "active_sub2_percent": 120,
+        "inactive_positive_sub2_percent": 0,
+        "guard_failures": 452,
+        "active_tets": 62339,
+        "minimum_signed_determinant": -4.368081123147546e-06,
+        "minimum_signed_ratio": -0.8573092418505776,
+        "minimum_quality_magnitude": 0.0006503855567382305,
+        "positive_below_q": 578,
+        "signed_box_volume": 1.0000000000000004
+      }
+    },
+    {
+      "topology_attempt": 0,
+      "validity_round": 1,
+      "native_bad_tets": 0,
+      "explicit_restored_vertices": 1178,
+      "all_observed_restored_vertices": 1178,
+      "independent_predicate_matches": true,
+      "independent": {
+        "inverted": 0,
+        "active_sub2_percent": 0,
+        "inactive_positive_sub2_percent": 0,
+        "guard_failures": 0,
+        "active_tets": 61277,
+        "minimum_signed_determinant": 6.940166469371069e-07,
+        "minimum_signed_ratio": 0.05288550938451088,
+        "minimum_quality_magnitude": 0.02694503779899192,
+        "positive_below_q": 112,
+        "signed_box_volume": 1.0000000000000002
+      }
+    },
+    {
+      "topology_attempt": 1,
+      "validity_round": 0,
+      "native_bad_tets": 0,
+      "explicit_restored_vertices": 0,
+      "all_observed_restored_vertices": 1192,
+      "independent_predicate_matches": true,
+      "independent": {
+        "inverted": 0,
+        "active_sub2_percent": 0,
+        "inactive_positive_sub2_percent": 0,
+        "guard_failures": 0,
+        "active_tets": 61277,
+        "minimum_signed_determinant": 6.940166469371069e-07,
+        "minimum_signed_ratio": 0.05288550938451088,
+        "minimum_quality_magnitude": 0.02694503779899192,
+        "positive_below_q": 112,
+        "signed_box_volume": 1.0000000000000002
+      }
+    }
+  ],
+  "native_total_reverted_vertices": null,
+  "trace_contract_verified": true,
+  "scope": "Actual native arrays compared to authoritative parser u64 bits; geometry admission remains independent"
+}

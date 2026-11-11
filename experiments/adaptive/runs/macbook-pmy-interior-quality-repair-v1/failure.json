@@ -1,0 +1,7 @@
+{
+  "type": "TypeError",
+  "error": "pueue_progress.report() got multiple values for keyword argument 'eta_s'",
+  "traceback": "Traceback (most recent call last):\n  File \"/Users/kmarchais/dev/meshers/experiments/adaptive/pmy_interior_quality_repair.py\", line 310, in main\n    return repair(a)\n           ^^^^^^^^^\n  File \"/Users/kmarchais/dev/meshers/experiments/adaptive/pmy_interior_quality_repair.py\", line 149, in repair\n    part.update(0, \"checking fixed-star controls and frozen source\", force=True, eta_s=WORKER_TIMEOUT_S)\n  File \"/Users/kmarchais/bin/pueue_progress.py\", line 418, in update\n    self._write(\"running\", message, values)\n  File \"/Users/kmarchais/bin/pueue_progress.py\", line 440, in _write\n    self.job._report(frac, f\"{where}: {message}\" if message else where, eta, values)\n  File \"/Users/kmarchais/bin/pueue_progress.py\", line 329, in _report\n    report(f, message, eta_s=_seconds(eta_s), **values)\nTypeError: pueue_progress.report() got multiple values for keyword argument 'eta_s'\n",
+  "complete": false,
+  "admitted": false
+}

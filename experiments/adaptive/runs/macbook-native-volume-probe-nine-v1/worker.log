@@ -1,0 +1,15 @@
+/Users/kmarchais/dev/meshers/.local-work/macbook-runtime/venv/lib/python3.12/site-packages/fedoo/core/base.py:80: UserWarning: WARNING: no fast direct sparse solver has been found. Consider installing pypardiso (Intel) or python-mumps (any platform) to improve computation performance
+  warnings.warn(
+Traceback (most recent call last):
+  File "/Users/kmarchais/dev/meshers/experiments/adaptive/native_volume_probe.py", line 369, in <module>
+    main()
+  File "/Users/kmarchais/dev/meshers/experiments/adaptive/native_volume_probe.py", line 351, in main
+    return study(args)
+           ^^^^^^^^^^^
+  File "/Users/kmarchais/dev/meshers/experiments/adaptive/native_volume_probe.py", line 321, in study
+    native_worker = run_child([info["executable"], "--ignored", "--exact", TEST,
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/kmarchais/dev/meshers/experiments/adaptive/native_volume_probe.py", line 86, in run_child
+    assert code == 0, f"Read {log}"
+           ^^^^^^^^^
+AssertionError: Read /Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-native-volume-probe-nine-v1/gyroid/native.log

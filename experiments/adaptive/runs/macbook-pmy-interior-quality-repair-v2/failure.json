@@ -1,0 +1,7 @@
+{
+  "type": "AssertionError",
+  "error": "",
+  "traceback": "Traceback (most recent call last):\n  File \"/Users/kmarchais/dev/meshers/experiments/adaptive/pmy_interior_quality_repair.py\", line 313, in main\n    return repair(a)\n           ^^^^^^^^^\n  File \"/Users/kmarchais/dev/meshers/experiments/adaptive/pmy_interior_quality_repair.py\", line 153, in repair\n    w.save(a.run / \"controls.json\", controls())\n                                    ^^^^^^^^^^\n  File \"/Users/kmarchais/dev/meshers/experiments/adaptive/pmy_interior_quality_repair.py\", line 124, in controls\n    assert solved.success and new.min() >= .1 and (after_det > 0).all()\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError\n",
+  "complete": false,
+  "admitted": false
+}

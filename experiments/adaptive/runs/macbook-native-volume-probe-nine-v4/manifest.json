@@ -1,0 +1,283 @@
+{
+  "inputs": {
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/native_volume_probe.py": "606750db0e83753f8eae2dedc2c2b3ea05e006bd9f89cbdcd69b8a7091b5d9c3",
+    "/Users/kmarchais/dev/meshers/.local-work/macbook-native-volume-probe-v6/binary.json": "44ef63fe2cf15a898192072769d9d890739c799d14d9e250b9c197b757a944cf",
+    "/Users/kmarchais/dev/meshers/handoff/macbook/face-fit-selection-20261110.json": "9dac00c460565bcb95a1d6fefc68bbaea1ff69b1dc9a78538b3b89647b4de3b4",
+    "/Users/kmarchais/dev/meshers/.local-work/macbook-native-volume-probe-v6/volume-probe-tests": "6b75f0fc354d6827cc3ea639b6588883c596b8cc9c389eca83c0a7fb60027b9b",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-gyroid-volume-rankings-v1/result.json": "6022a0f4ad3933579530493ed9f03f30e19d8f1f4d5e158ffc6755bc9ee2acb0",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-pmy-saved-trace-replay-v1/result.json": "d42d4d5223cb59ad2c40c2a668cc7c8569f609c6c0ad097038ef10c1e530bbf3",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/comparison_fixtures.py": "4fa77af6b3b4858eb7611045f46f6e4ca672c6c46ab28d7ee969e14b31e11b9b",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/comparison_mesh_audit.py": "6797327ecf6b6c62a973f52812d0bad95b2ef861541247425609109c24d8af94",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/volume_fidelity_control.py": "2ecd7b822ac2527e2e8a397f84e417fe0ca895ff103cb342d5634b4c63c322c1",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/gyroid_volume_rankings.py": "43a66fe7d90f2f703770615325983898ffe9cad49ccf690c08b3ee19011976b9",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/gradient_tie_probe.py": "f2fddde187144f52527bd8563b34128831cc4f8733ef720ad86cf7c5db8d2762",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/scorecard.py": "8f26256c7df0e84c9f35cdd71bf4f95a74e072d45469002b213c5dcd4f1bab2a",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/microgen_workflow.py": "9f513dfd3e6e5a72a71a54f70c0c2cf7c7a1ebe7256886ee3feaf7d7ad7de161",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/periodic_trace.py": "16d51906318ba9110f8979b48a540500d1cce5835685d72e780ca1893f3b8654",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/box_projection.py": "59589b1996b3a3782f1b7f5e5ff3c7ab303d4158ef50a233515dc5369bddaf05",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/facet_incidence_audit.py": "4f51afc196c85e1d0bc64d7a96507517ddc6e32ccd8380a2ac77cae0ace89610",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/quadratic_edge_removal_probe.py": "f26a4be16f7aeb4fce6d89732754fab0e5d39e86b4d4c62466a3afd547cec6ed",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/linear_density_fixture.py": "99b619d8f4885673bd1a7f7b7ced3af01211bff4b52f1b206cbecaf654fca3f8"
+  },
+  "build": {
+    "executable": "/Users/kmarchais/dev/meshers/.local-work/macbook-native-volume-probe-v6/volume-probe-tests",
+    "executable_sha256": "6b75f0fc354d6827cc3ea639b6588883c596b8cc9c389eca83c0a7fb60027b9b",
+    "inputs": {
+      "/Users/kmarchais/dev/meshers/Cargo.toml": "83ec559b8d2fdfc92e33da348144fc206708813340407de0a92c8b627e631a4e",
+      "/Users/kmarchais/dev/meshers/Cargo.lock": "c5de0b0561f9ab415ff941a24cae24bd7de5069eca73e3dd9b6da63db4273278",
+      "/Users/kmarchais/dev/meshers/crates/meshers-core/Cargo.toml": "12dd2fd9e73646d4c4853ecd94ad209d8a36f333b095262013d52dfc8be55068",
+      "/Users/kmarchais/dev/meshers/crates/meshers-core/src/accelerator.rs": "496365ec7c5fa7cbccb521937c91d7daa19a9bd8d01aa5398639345d4290b20c",
+      "/Users/kmarchais/dev/meshers/crates/meshers-core/src/adaptive.rs": "a3de8e081d5100c92508ad2d0b481136a78412580455a3ff4e8b841dd4a90a77",
+      "/Users/kmarchais/dev/meshers/crates/meshers-core/src/error.rs": "b8c8c922e662107c4304f823cff8f46d18b898d5c0bd5af1b8b28317d2566d81",
+      "/Users/kmarchais/dev/meshers/crates/meshers-core/src/geometry.rs": "b00a2c883484ab6f09300f2b7ad13efa51b3685f8ac259d86e9bb0d199b5bc08",
+      "/Users/kmarchais/dev/meshers/crates/meshers-core/src/implicit/intersection/repair.rs": "dcbde4728b7efcf104db508c7d656d08959a0888de1aacadb433149bbfa67373",
+      "/Users/kmarchais/dev/meshers/crates/meshers-core/src/implicit/intersection.rs": "c01e84b8c19f853990c6a057dc52ce7341505cdf71aea04f31351cef16847a13",
+      "/Users/kmarchais/dev/meshers/crates/meshers-core/src/implicit/periodic_feature_research.rs": "ee16d58873732ad017720af3e51238df936b7cedc5d086cea191218465486082",
+      "/Users/kmarchais/dev/meshers/crates/meshers-core/src/implicit.rs": "35d3dba8c7786ad1823a0521f47b416c923f7dafb7a9a7e6cd8dbac711ed8b73",
+      "/Users/kmarchais/dev/meshers/crates/meshers-core/src/lib.rs": "e72b01ac4ed690e58cd12dcf204fe7167e69ff5c80d41156f6a8206ba252e0d3",
+      "/Users/kmarchais/dev/meshers/crates/meshers-core/src/optimize.rs": "55c62786bd57500b841c86bcd4e7520ae31b5c761fa8a39a3ad6fec0564e68ee",
+      "/Users/kmarchais/dev/meshers/crates/meshers-core/src/optimize_batch.rs": "6571614ef842ec9ca291976e51f7efe04662b7b643160114fa4fb825a3aaf112",
+      "/Users/kmarchais/dev/meshers/crates/meshers-core/src/polyhedral.rs": "45e737dce0921435b135a5baaa2763e0e30002d92fe0a633d81f4dabe70bb473",
+      "/Users/kmarchais/dev/meshers/crates/meshers-core/src/profile.rs": "70f91e99631bcde8ca521c82f06f7f645cf9ee340d685a4e4928cb2ebc348c58",
+      "/Users/kmarchais/dev/meshers/crates/meshers-core/src/projection.rs": "926d1ab1c848cf80cc392295764d7bf8f2254dfb62f219639db7e5a4194acf84",
+      "/Users/kmarchais/dev/meshers/crates/meshers-core/src/quadratic/fit/volume_probe.rs": "ef57afb4c5b36681200631b5b3af838ec28f5d80cde3812331a9125ea44c2d17",
+      "/Users/kmarchais/dev/meshers/crates/meshers-core/src/quadratic/fit.rs": "0507a87fc576299ef00d1c1cc72e3b178a6980cf09f35beb1c427fc134868fe5",
+      "/Users/kmarchais/dev/meshers/crates/meshers-core/src/quadratic.rs": "fff22efd06011a427b139e2612bce70dc46e85e6b4a07047c2bcc6a8a3b2428c",
+      "/Users/kmarchais/dev/meshers/crates/meshers-core/src/quads.rs": "9579d9478c57b8b4ad8cead2a717d01cfc626140ce40cd5f11014db717acc2ef",
+      "/Users/kmarchais/dev/meshers/crates/meshers-core/src/remesh.rs": "499b779e55252258cdad7b81a0b2917f3ea0dc4f3b4d446fb60c3e9a3fdec085",
+      "/Users/kmarchais/dev/meshers/crates/meshers-core/src/tet_adapt.rs": "24599c83b24fc4a08de8b2521791d9bb57194cf0222aa4b02ca845f441fa565e",
+      "/Users/kmarchais/dev/meshers/crates/meshers-core/src/triangles.rs": "897d3aee83d8c6c5de0d3e0df332ee3e56ef8390e74b3af1e052e7859f7dc8fc",
+      "/Users/kmarchais/dev/meshers/experiments/adaptive/native_volume_probe.py": "606750db0e83753f8eae2dedc2c2b3ea05e006bd9f89cbdcd69b8a7091b5d9c3",
+      "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-pmy-saved-trace-replay-v1/result.json": "d42d4d5223cb59ad2c40c2a668cc7c8569f609c6c0ad097038ef10c1e530bbf3"
+    },
+    "rust": "rustc 1.95.0 (59807616e 2026-04-14)",
+    "mode": "release private core unit-test executable",
+    "build_jobs": 2,
+    "production_defaults_changed": false,
+    "compiled_python_wheel_changed": false,
+    "float_transport": {
+      "encoding": "ieee754-binary64-u64",
+      "python_roundtrip_bits_exact": true,
+      "evidence_source": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-pmy-saved-trace-replay-v1/result.json",
+      "evidence_sha256": "d42d4d5223cb59ad2c40c2a668cc7c8569f609c6c0ad097038ef10c1e530bbf3",
+      "known_parser_difference": {
+        "node": 9009,
+        "axis": 0,
+        "python": -0.23958333333333334,
+        "rust": -0.23958333333333337,
+        "python_bits": 13821171956431104683,
+        "rust_bits": 13821171956431104684
+      },
+      "controls": "positive/negative zero, subnormal endpoints, minimum normal and signed finite extremes"
+    }
+  },
+  "preparation": [
+    {
+      "case": "gyroid",
+      "source": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-native-face-fit-nine-v1/gyroid-repeat-0-fit",
+      "original": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-native-face-fit-nine-v1/gyroid-repeat-0-baseline",
+      "fixtures": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-comparison-fixtures-v1",
+      "inputs": {
+        "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-native-face-fit-nine-v1/gyroid-repeat-0-fit/mesh.npz": "bf9582aa5e81d6009744275286f5fbfa1fc4ead7da31363bdc14a8f6a2a9494d",
+        "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-native-face-fit-nine-v1/gyroid-repeat-0-baseline/mesh.npz": "79a51c01129afeb63213431a780f755d5a0db3cf849db2f7d4eb0378cd57e9d0",
+        "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-native-face-fit-nine-v1/gyroid-repeat-0-fit/result.json": "bbd778c7891f4c0a1a36faef861807c73f3f41c466ed603885314b2c4d04e405",
+        "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-native-face-fit-nine-v1/gyroid-repeat-0-baseline/result.json": "bd79f535fc1b4bf499b04cd3f49063e277f5fccb68f15e6a2cb4cd4dfa327220",
+        "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-native-face-fit-nine-v1/gyroid-repeat-0-fit/gyroid-samples.npz": "d49ce7a80d95af127951750fa7dd02f52d4dd67bc87246dee02be932b51539d6",
+        "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-native-face-fit-nine-v1/gyroid-repeat-0-fit/gyroid-specimen.json": "2f9171aa778f1899aed5b1057bc6255da515e8a9d96bf76c305b62e3c7bd0ed8"
+      },
+      "native_input_sha256": "26964cd046a87c53266ac6e402679d145570b2fb633d84b96bfeffe429f36b16",
+      "field_identity_probes": 388,
+      "original_specimen_samples_unchanged": true,
+      "float_encoding": "ieee754-binary64-u64",
+      "transport_scope": "Every scientific input float is an exact u64 bit pattern; metadata and integer connectivity retain ordinary JSON types"
+    },
+    {
+      "case": "schwarz-solid",
+      "source": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-native-face-fit-nine-v1/schwarz-solid-repeat-0-fit",
+      "original": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-native-face-fit-nine-v1/schwarz-solid-repeat-0-baseline",
+      "fixtures": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-comparison-fixtures-v1",
+      "inputs": {
+        "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-native-face-fit-nine-v1/schwarz-solid-repeat-0-fit/mesh.npz": "c3d2b5aeadb46d584f0b1392f7a155c3ba1f4d826e2140ed76aa029ca3b5c53a",
+        "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-native-face-fit-nine-v1/schwarz-solid-repeat-0-baseline/mesh.npz": "dc92e7f1e6534c58903be3cf7d1b78eb8283b0ff038ca719856b671b2b6f3d27",
+        "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-native-face-fit-nine-v1/schwarz-solid-repeat-0-fit/result.json": "354420a046180884a9568ba412d89336a1705e377722875252317e87e8ba72e4",
+        "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-native-face-fit-nine-v1/schwarz-solid-repeat-0-baseline/result.json": "5b0d40e570b6b1a5f61ba09a513d70a3c63e0fbaa2246b323c3135a284c86217",
+        "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-native-face-fit-nine-v1/schwarz-solid-repeat-0-fit/schwarz-solid-samples.npz": "d8ae76c147379fbffd28ef546d83c7bc59113292d89968a255c20a840ac59ece",
+        "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-native-face-fit-nine-v1/schwarz-solid-repeat-0-fit/schwarz-solid-specimen.json": "42848bc582c5921aafc817735129dfef5e756c6689e178b5e642ef2c90b1d095"
+      },
+      "native_input_sha256": "a00e9f2aca4402a0e2a99318d5154494b3d9923800d28571d72c236ddf58a8e5",
+      "field_identity_probes": 387,
+      "original_specimen_samples_unchanged": true,
+      "float_encoding": "ieee754-binary64-u64",
+      "transport_scope": "Every scientific input float is an exact u64 bit pattern; metadata and integer connectivity retain ordinary JSON types"
+    },
+    {
+      "case": "spinodoid",
+      "source": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-native-face-fit-nine-v1/spinodoid-repeat-0-fit",
+      "original": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-native-face-fit-nine-v1/spinodoid-repeat-0-baseline",
+      "fixtures": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-comparison-fixtures-v1",
+      "inputs": {
+        "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-native-face-fit-nine-v1/spinodoid-repeat-0-fit/mesh.npz": "392e2e7b39aed7044f6652ecdc951de42a431a617b50813ead1cb70cc4c26e23",
+        "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-native-face-fit-nine-v1/spinodoid-repeat-0-baseline/mesh.npz": "3bfbb279a6778d64f0f6d7896a353477a0258a1580f47d9f89773853d121fb30",
+        "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-native-face-fit-nine-v1/spinodoid-repeat-0-fit/result.json": "5b5fe9f601a39c6e577898d12057a03cf7bc727fcc0d1aa73065e40df034d56c",
+        "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-native-face-fit-nine-v1/spinodoid-repeat-0-baseline/result.json": "07cde5ffe248c851feadd5e6df373ffe65bf7b184b4e6a9f4cc827d4e9f479e6",
+        "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-native-face-fit-nine-v1/spinodoid-repeat-0-fit/spinodoid-samples.npz": "1f5f91f1ebc3e4e76dc7ddfc1e7ea7093595735684fbe41f1f7d85356138442c",
+        "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-native-face-fit-nine-v1/spinodoid-repeat-0-fit/spinodoid-specimen.json": "6140bf66acc68303bc18767a3632e24a068181201eba350ce32217dc50a67eee",
+        "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/g3-spinodoid-compiled32-v1/fourier-coefficients.json": "e9ee2b6c70dcf771ab9fdb011051eb57973d2e15cf479e904bf5d8b40e3d779a"
+      },
+      "native_input_sha256": "19ede8816ef485692574fa1bcce96d83c268f63ce4dcab85fbb0a55eebfe2c87",
+      "field_identity_probes": 388,
+      "original_specimen_samples_unchanged": true,
+      "float_encoding": "ieee754-binary64-u64",
+      "transport_scope": "Every scientific input float is an exact u64 bit pattern; metadata and integer connectivity retain ordinary JSON types"
+    },
+    {
+      "case": "smooth-lattice",
+      "source": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-native-face-fit-nine-v1/smooth-lattice-repeat-0-fit",
+      "original": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-native-face-fit-nine-v1/smooth-lattice-repeat-0-baseline",
+      "fixtures": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-comparison-fixtures-v1",
+      "inputs": {
+        "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-native-face-fit-nine-v1/smooth-lattice-repeat-0-fit/mesh.npz": "5ab46eff5cc253319c1d9755d1704a22e9e3a8720db4a6e750263bee845961f1",
+        "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-native-face-fit-nine-v1/smooth-lattice-repeat-0-baseline/mesh.npz": "de8b38a4c87fb092248230cc2ddc52626b3d6e75186dc494fd2ee6f148237755",
+        "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-native-face-fit-nine-v1/smooth-lattice-repeat-0-fit/result.json": "afc5c562a9162e666239f8280b3d9ae37c34a74194fad358049418957dcbf1bf",
+        "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-native-face-fit-nine-v1/smooth-lattice-repeat-0-baseline/result.json": "252b96a37c782f4d1cd11bd92e510ed7d3cc41092c351e1fced932a0e41546c2",
+        "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-native-face-fit-nine-v1/smooth-lattice-repeat-0-fit/smooth-lattice-samples.npz": "a2b4375d2c99901f03b34e913563c887a4cdcff00bca35983adb7ef9d5311abe",
+        "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-native-face-fit-nine-v1/smooth-lattice-repeat-0-fit/smooth-lattice-specimen.json": "0e5b34b76183341a6e0d454f13cd404668ab82675f9a51cd9d2ecf3c91be3316"
+      },
+      "native_input_sha256": "65fa512f29236be4cf95db1e64dfc271051c31219cf0dea0d15ab6b5f29d8caa",
+      "field_identity_probes": 394,
+      "original_specimen_samples_unchanged": true,
+      "float_encoding": "ieee754-binary64-u64",
+      "transport_scope": "Every scientific input float is an exact u64 bit pattern; metadata and integer connectivity retain ordinary JSON types"
+    },
+    {
+      "case": "schwarz-d-solid",
+      "source": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-native-face-fit-nine-v1/schwarz-d-solid-repeat-0-fit",
+      "original": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-native-face-fit-nine-v1/schwarz-d-solid-repeat-0-baseline",
+      "fixtures": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-comparison-fixtures-v1",
+      "inputs": {
+        "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-native-face-fit-nine-v1/schwarz-d-solid-repeat-0-fit/mesh.npz": "7e323a1bdf2e30077ad8400a8a89585dfb493e7ad9b2d0024d9dd218bf427ec2",
+        "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-native-face-fit-nine-v1/schwarz-d-solid-repeat-0-baseline/mesh.npz": "8f54ab1060ce67df11a97742f264e1c977156b5f2bda7aea5e05da35ccfb5205",
+        "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-native-face-fit-nine-v1/schwarz-d-solid-repeat-0-fit/result.json": "7140c4b395f49d4b4fc6113fb0b5753a9d0df97112da16a92e91c65b99f59138",
+        "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-native-face-fit-nine-v1/schwarz-d-solid-repeat-0-baseline/result.json": "153f908b19cc2006a1e87eb70cac3c67af62adf3204a76544a237947f0cc3972",
+        "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-native-face-fit-nine-v1/schwarz-d-solid-repeat-0-fit/schwarz-d-solid-samples.npz": "fe35202efd172138f0e4214ab8de10350af7f7eb9844a97a6fa32ba55b3dd796",
+        "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-native-face-fit-nine-v1/schwarz-d-solid-repeat-0-fit/schwarz-d-solid-specimen.json": "a534744167c7d691ca076d1bdff53fef87a83c5377dbfb3124bb0a508193d684"
+      },
+      "native_input_sha256": "cae724c0510d751d0772421e83568e39dee3325292c9b3a549bc53fa29085a73",
+      "field_identity_probes": 387,
+      "original_specimen_samples_unchanged": true,
+      "float_encoding": "ieee754-binary64-u64",
+      "transport_scope": "Every scientific input float is an exact u64 bit pattern; metadata and integer connectivity retain ordinary JSON types"
+    },
+    {
+      "case": "graded-gyroid-linear",
+      "source": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-native-face-fit-nine-v1/graded-gyroid-linear-repeat-0-fit",
+      "original": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-native-face-fit-nine-v1/graded-gyroid-linear-repeat-0-baseline",
+      "fixtures": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-comparison-fixtures-v1",
+      "inputs": {
+        "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-native-face-fit-nine-v1/graded-gyroid-linear-repeat-0-fit/mesh.npz": "1f2988372797268c2950ef00190704ed74d6423367e906399744d7fc2174e897",
+        "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-native-face-fit-nine-v1/graded-gyroid-linear-repeat-0-baseline/mesh.npz": "598fd9c1c9c3be69d136cb27e96b1502234432de5d63ed92018f2cedb6e0ed0c",
+        "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-native-face-fit-nine-v1/graded-gyroid-linear-repeat-0-fit/result.json": "754a9c28380e20a31c1af3f789fe4d142396ccddf547673bd8e7c075d74b5c23",
+        "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-native-face-fit-nine-v1/graded-gyroid-linear-repeat-0-baseline/result.json": "b2e2d8690c8a3a15307affefbd47e8854bf63e0d86808858dee6cd981944d589",
+        "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-native-face-fit-nine-v1/graded-gyroid-linear-repeat-0-fit/graded-gyroid-linear-samples.npz": "583146b0bb252ebb81f0f56919721e91743f42c796492802c78df5bf37f60273",
+        "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-native-face-fit-nine-v1/graded-gyroid-linear-repeat-0-fit/graded-gyroid-linear-specimen.json": "4b3d9d250960d00d2b28dd8c58c2acf4b51e6bc04d264dcb1d001980ab907c7a"
+      },
+      "native_input_sha256": "fdd3fe9adf453551075460173934bf4596442264f7dd4443aef2beaf194b7e94",
+      "field_identity_probes": 388,
+      "original_specimen_samples_unchanged": true,
+      "float_encoding": "ieee754-binary64-u64",
+      "transport_scope": "Every scientific input float is an exact u64 bit pattern; metadata and integer connectivity retain ordinary JSON types"
+    },
+    {
+      "case": "graded-gyroid-periodic",
+      "source": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-native-face-fit-nine-v1/graded-gyroid-periodic-repeat-0-fit",
+      "original": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-native-face-fit-nine-v1/graded-gyroid-periodic-repeat-0-baseline",
+      "fixtures": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-comparison-fixtures-v1",
+      "inputs": {
+        "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-native-face-fit-nine-v1/graded-gyroid-periodic-repeat-0-fit/mesh.npz": "6c8640b78f08210b4d0b411faf36ffdadc18af31f66f2afa0203949b97a94d50",
+        "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-native-face-fit-nine-v1/graded-gyroid-periodic-repeat-0-baseline/mesh.npz": "d9d5cdb7aa1bec97c0acca5892c46218e477b2c93fbbed27cc32cad9abb85434",
+        "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-native-face-fit-nine-v1/graded-gyroid-periodic-repeat-0-fit/result.json": "5ed0d30043c77449dbdd0ba5d0369b4bc3729f832db8c76a203515a159486fe7",
+        "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-native-face-fit-nine-v1/graded-gyroid-periodic-repeat-0-baseline/result.json": "3ce132bcc09edb8ae265c89305981af408b664f66b072b136b9cf6260efd16ac",
+        "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-native-face-fit-nine-v1/graded-gyroid-periodic-repeat-0-fit/graded-gyroid-periodic-samples.npz": "75be3ee3ec7722aed6b214d1408b4174c148405bd6aa6feb7bd66b0b457af613",
+        "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-native-face-fit-nine-v1/graded-gyroid-periodic-repeat-0-fit/graded-gyroid-periodic-specimen.json": "d29cb9023b8efe2f1959b062d4222050f64b37f987b855c475a6848847438a89"
+      },
+      "native_input_sha256": "3ee797591e615e4e7a80adff7f2cfae91bb664696efa71a29e375fb3ec116bf5",
+      "field_identity_probes": 388,
+      "original_specimen_samples_unchanged": true,
+      "float_encoding": "ieee754-binary64-u64",
+      "transport_scope": "Every scientific input float is an exact u64 bit pattern; metadata and integer connectivity retain ordinary JSON types"
+    },
+    {
+      "case": "spinodoid-anisotropic",
+      "source": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-native-face-fit-nine-v1/spinodoid-anisotropic-repeat-0-fit",
+      "original": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-native-face-fit-nine-v1/spinodoid-anisotropic-repeat-0-baseline",
+      "fixtures": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-comparison-fixtures-v1",
+      "inputs": {
+        "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-native-face-fit-nine-v1/spinodoid-anisotropic-repeat-0-fit/mesh.npz": "acf69d7d5ca67ae3c77fd4747f273f58a8a38093c549014aae18672147fa29b4",
+        "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-native-face-fit-nine-v1/spinodoid-anisotropic-repeat-0-baseline/mesh.npz": "a6d79122d5b7650f23f16c3a7db428405bf9c0078181381b476e58ed9dfc49fb",
+        "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-native-face-fit-nine-v1/spinodoid-anisotropic-repeat-0-fit/result.json": "3abd56e45558bf4e65d93220c78c0ff28909d42dc0bde0ab92bc8a446b846cbd",
+        "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-native-face-fit-nine-v1/spinodoid-anisotropic-repeat-0-baseline/result.json": "b963573351352754e24b16743e03e15a31812f9e0f730c53cb7cead94163f116",
+        "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-native-face-fit-nine-v1/spinodoid-anisotropic-repeat-0-fit/spinodoid-anisotropic-samples.npz": "68402aca3566073307f3a2cd26d76473a7d946f1ded4a4a1098aedf0dda23cb8",
+        "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-native-face-fit-nine-v1/spinodoid-anisotropic-repeat-0-fit/spinodoid-anisotropic-specimen.json": "4c3cb9c37a0f4a2e42f8d448511e78a2e1e0d57f846e28140deab57b3d1712f0",
+        "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-comparison-fixtures-v1/spinodoid-anisotropic-coefficients.json": "6472b7e24af7aec153ec8797ff9025ea82c5690705da3d5ebc836dc94fa00b7e"
+      },
+      "native_input_sha256": "e636ba09c82cce392b7869d9b1e95004e188a41f336dfc2459b5855f696855fa",
+      "field_identity_probes": 387,
+      "original_specimen_samples_unchanged": true,
+      "float_encoding": "ieee754-binary64-u64",
+      "transport_scope": "Every scientific input float is an exact u64 bit pattern; metadata and integer connectivity retain ordinary JSON types"
+    },
+    {
+      "case": "graded-gyroid-density-linear",
+      "source": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-native-face-fit-nine-v1/graded-gyroid-density-linear-repeat-0-fit",
+      "original": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-native-face-fit-nine-v1/graded-gyroid-density-linear-repeat-0-baseline",
+      "fixtures": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-linear-density-fixtures-v1",
+      "inputs": {
+        "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-native-face-fit-nine-v1/graded-gyroid-density-linear-repeat-0-fit/mesh.npz": "4d0274c4b4d376e46727639e03439b04172c0e6b1015e733df5e3934f94fc791",
+        "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-native-face-fit-nine-v1/graded-gyroid-density-linear-repeat-0-baseline/mesh.npz": "4f255bf917947cf49071fed1acc6a27376c742e203b157e05b9505c921652bf6",
+        "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-native-face-fit-nine-v1/graded-gyroid-density-linear-repeat-0-fit/result.json": "323cacc7bdd1efa4d986455eec26523f640eaa44c7412d9b1ce4d0a29bbf21a7",
+        "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-native-face-fit-nine-v1/graded-gyroid-density-linear-repeat-0-baseline/result.json": "dfdd01cb0cb68c73918a42401a0a6c2b471825ce8c48218853009b380b71a8cd",
+        "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-native-face-fit-nine-v1/graded-gyroid-density-linear-repeat-0-fit/graded-gyroid-density-linear-samples.npz": "7118dc4e84d4c1617e8034553e3a052b170e49d6f3412e4dd2886c2616e8c56c",
+        "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-native-face-fit-nine-v1/graded-gyroid-density-linear-repeat-0-fit/graded-gyroid-density-linear-specimen.json": "345f1f0e92b651ba2dabc4caa9ed436babd9349fcb48a6aecb8fea85845b72ae",
+        "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-linear-density-fixtures-v1/linear-density-calibration.json": "b4db7ab7afe47f7832106e2eaf1523c7b0d854f291ef6030bdbe65df9e06e7e1"
+      },
+      "native_input_sha256": "088f0e2eda4087775f562147406bfd746a026897304b0652b7de0a1be0f8594c",
+      "field_identity_probes": 387,
+      "original_specimen_samples_unchanged": true,
+      "float_encoding": "ieee754-binary64-u64",
+      "transport_scope": "Every scientific input float is an exact u64 bit pattern; metadata and integer connectivity retain ordinary JSON types"
+    }
+  ],
+  "numerical_threads": {
+    "environment": {
+      "OPENBLAS_NUM_THREADS": "1",
+      "OMP_NUM_THREADS": "1",
+      "MKL_NUM_THREADS": "1",
+      "VECLIB_MAXIMUM_THREADS": "1",
+      "RAYON_NUM_THREADS": "1"
+    },
+    "accelerate_blas_threading": 1,
+    "accelerate_scope": "calling thread"
+  },
+  "whole_timeout_s": 900,
+  "child_timeout_s": 300,
+  "memory_bytes": 8589934592,
+  "warmups": 1,
+  "timed_repetitions": 3,
+  "reference_promoted": false,
+  "float_transport": {
+    "encoding": "ieee754-binary64-u64",
+    "python_roundtrip_bits_exact": true,
+    "evidence_source": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-pmy-saved-trace-replay-v1/result.json",
+    "evidence_sha256": "d42d4d5223cb59ad2c40c2a668cc7c8569f609c6c0ad097038ef10c1e530bbf3",
+    "known_parser_difference": {
+      "node": 9009,
+      "axis": 0,
+      "python": -0.23958333333333334,
+      "rust": -0.23958333333333337,
+      "python_bits": 13821171956431104683,
+      "rust_bits": 13821171956431104684
+    },
+    "controls": "positive/negative zero, subnormal endpoints, minimum normal and signed finite extremes"
+  },
+  "method": "Signed-envelope field-only bias step; no target volume. Native cap-constrained distance maximum and min/max Jacobian ratio guards supplement the earlier Python prototype."
+}

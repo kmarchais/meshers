@@ -1,0 +1,108 @@
+{
+  "inputs": {
+    "/Users/kmarchais/dev/meshers/.local-work/macbook-native-volume-probe-v2/sources/crates/meshers-core/src/quadratic/fit/volume_probe.rs": "3acc4459ad9409f620b3807c1b9b2304570f5ad598048377fac3081f2fd68466",
+    "/Users/kmarchais/dev/meshers/.local-work/macbook-native-volume-probe-v2/volume-probe-tests": "333c0137e1889cd3024413eac18f0545e0e21542e68dfd4629ae12c4422c3897",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-native-volume-probe-nine-v1/gyroid/native-input.json": "26964cd046a87c53266ac6e402679d145570b2fb633d84b96bfeffe429f36b16"
+  },
+  "transport_equals_source": true,
+  "periodic": {
+    "periodic_pair_counts": [
+      285,
+      282,
+      285
+    ],
+    "periodic_coordinate_errors": [
+      0.0,
+      5.551115123125783e-17,
+      2.7755575615628914e-17
+    ],
+    "periodic_pair_tolerance": 1e-10,
+    "periodic_equivalence_classes": 11043,
+    "periodic_triangles_match": true,
+    "full_facet_check_required": true,
+    "complete_existing_node_classes": true,
+    "unmatched_noncap_contact_nodes": [
+      [
+        [],
+        []
+      ],
+      [
+        [],
+        []
+      ],
+      [
+        [],
+        []
+      ]
+    ],
+    "declared_bounds": null,
+    "periodic_gate": "material-cap-and-complete-node-classes-v1"
+  },
+  "original_mismatches": 5,
+  "current_nonzero_free_aliases": 2,
+  "current_max_free_alias_difference": 5.551115123125783e-17,
+  "original_max_free_alias_difference": 5.551115123125783e-17,
+  "first_examples": [
+    {
+      "node": 7214,
+      "root": 7106,
+      "axis": 2,
+      "current": -0.0035342465774332835,
+      "current_root": -0.0035342465774332835,
+      "original": -0.00355791108272799,
+      "original_root": -0.003557911082727983,
+      "original_bits": 13793722443778600516,
+      "original_root_bits": 13793722443778600500,
+      "difference": -6.938893903907228e-18
+    },
+    {
+      "node": 7456,
+      "root": 7354,
+      "axis": 2,
+      "current": -0.00048607979635757807,
+      "current_root": -0.00048607979635757807,
+      "original": -0.00044355552377299605,
+      "original_root": -0.00044355552377299865,
+      "original_bits": 13780189815728497419,
+      "original_root_bits": 13780189815728497467,
+      "difference": 2.6020852139652106e-18
+    },
+    {
+      "node": 10907,
+      "root": 9859,
+      "axis": 2,
+      "current": 0.30082439200184075,
+      "current_root": 0.3008243920018408,
+      "original": 0.30082439200184075,
+      "original_root": 0.3008243920018408,
+      "original_bits": 4599090790396799704,
+      "original_root_bits": 4599090790396799705,
+      "difference": -5.551115123125783e-17
+    },
+    {
+      "node": 11440,
+      "root": 2865,
+      "axis": 1,
+      "current": -0.0002239282436854714,
+      "current_root": -0.0002239282436854714,
+      "original": -0.000179512968390715,
+      "original_root": -0.00017951296839071083,
+      "original_bits": 13774126920443237136,
+      "original_root_bits": 13774126920443236982,
+      "difference": -4.174178364069192e-18
+    },
+    {
+      "node": 11456,
+      "root": 2912,
+      "axis": 0,
+      "current": 0.23342508939824605,
+      "current_root": 0.23342508939824602,
+      "original": 0.23342508939824605,
+      "original_root": 0.23342508939824602,
+      "original_bits": 4597578045455598349,
+      "original_root_bits": 4597578045455598348,
+      "difference": 2.7755575615628914e-17
+    }
+  ],
+  "scope": "Read-only frozen-coordinate comparison; no meshing or optimization. The existing periodic gate does not require bitwise equality of pre-fit free coordinates."
+}

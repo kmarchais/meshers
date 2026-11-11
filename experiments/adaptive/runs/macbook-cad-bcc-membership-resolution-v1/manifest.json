@@ -1,0 +1,36 @@
+{
+  "inputs": {
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-cad-bcc-coverage-v1/result.json": "c173fb8f577eff54ac4af8083915d526a304ea83cc37c3618a41ad04e31748ea",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-cad-bcc-coverage-v1/primitive-receipt.json": "cb9802854c0f0f72d532f7049bb3a1e1de623e71b3c0a65fb603b7e25db191dd",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-cad-bcc-coverage-v1/raw-primitive-receipt.json": "49dde699903594883ace1fda589804dae8c2665507fe1539f676b74efa202808",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-cad-bcc-coverage-v1/membership-probes.npz": "ee54f083300241cd46fd8943e98950e9d31d2e5484d29040060b82d0933c7ab2",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-cad-bcc-coverage-v1/membership-probes-input.npz": "c00dc2db521ad5f4ec844d9a3906ea8073fc3e3aa13423ed82cda2f4dd2640da",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-cad-bcc-coverage-v1/actual-bcc.step": "099e0528347325f7bc888c1f9d751482e4487102f025ab307cef3b483c46118d",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-cad-bcc-classifier-v1/result.json": "0e93e1c150b0efb33131e48ebfa626529e2254f7f47553b78a65e42876bf3279",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-cad-bcc-classifier-v1/manifest.json": "52ff72b1835d6fd40fbe3eede23c689e0851ff3e893233815f7df35a5340c4e1",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-cad-bcc-classifier-v1/fresh-inventory.json": "cb57697a68975cbcc904647b52ce19defcc5c96d337bce9e1e2365df63016c77",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-cad-bcc-classifier-v1/fresh-distances.json": "e0e9df35ba806ea21769c35b880636078a9a7652354e45b990071493405e6d91",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-cad-bcc-classifier-v1/fresh-classifications.json": "f0bffa39784c559c236abbd2c08fb9d76e9db83cf7875ebb890edc033446e47a",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-cad-bcc-classifier-v1/step-classifications.json": "40bd664579e8969b45f52abacc0fb0f99f8d2c1c721c83ba770ac338364b13e3",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-cad-bcc-classifier-v1/step-inventory.json": "c70666e03c5a7626b02b925f235a26417d82cfa10c122b650ccd9b5b2bef0503",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/cad_bcc_membership_resolution.py": "ac18d35936ae9aabc892fae79a45337926d82c32a70b5bf1d925e23f7bf42244",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/microgen_workflow.py": "9f513dfd3e6e5a72a71a54f70c0c2cf7c7a1ebe7256886ee3feaf7d7ad7de161",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/cad_lattice_fixture.py": "ab858e297815d7fad598203a779fdc2fdfa5b6e5b1b07890e29b657e236b0b03"
+  },
+  "worker_timeout_s": 60,
+  "memory_bytes": 8589934592,
+  "numerical_thread_policy": {
+    "environment": {
+      "OPENBLAS_NUM_THREADS": "1",
+      "OMP_NUM_THREADS": "1",
+      "MKL_NUM_THREADS": "1",
+      "VECLIB_MAXIMUM_THREADS": "1",
+      "RAYON_NUM_THREADS": "1"
+    },
+    "accelerate_blas_threading": 1,
+    "accelerate_scope": "calling thread"
+  },
+  "new_cad_operations": false,
+  "new_samples": false,
+  "scope": "Read-only fixture-verification proposal; original classifier failures remain archived"
+}

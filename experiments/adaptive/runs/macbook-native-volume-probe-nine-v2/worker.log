@@ -1,0 +1,18 @@
+/Users/kmarchais/dev/meshers/.local-work/macbook-runtime/venv/lib/python3.12/site-packages/fedoo/core/base.py:80: UserWarning: WARNING: no fast direct sparse solver has been found. Consider installing pypardiso (Intel) or python-mumps (any platform) to improve computation performance
+  warnings.warn(
+gyroid: native_stage_s 0.04182, admitted True, dense_admitted True, boundary_nonworse True]7717;result;{"name": "gyroid", "values": {"native_stage_s": 0.041823333, "admitted": true, "dense_admitted": true, "boundary_nonworse": true}, "at": "2026-11-11T03:16:08+01:00"}
+schwarz-solid: native_stage_s 0.0577, admitted True, dense_admitted True, boundary_nonworse True]7717;result;{"name": "schwarz-solid", "values": {"native_stage_s": 0.057702708, "admitted": true, "dense_admitted": true, "boundary_nonworse": true}, "at": "2026-11-11T03:16:18+01:00"}
+spinodoid: native_stage_s 0.8716, admitted True, dense_admitted True, boundary_nonworse True]7717;result;{"name": "spinodoid", "values": {"native_stage_s": 0.871624333, "admitted": true, "dense_admitted": true, "boundary_nonworse": true}, "at": "2026-11-11T03:17:01+01:00"}
+Traceback (most recent call last):
+  File "/Users/kmarchais/dev/meshers/experiments/adaptive/native_volume_probe.py", line 369, in <module>
+    main()
+  File "/Users/kmarchais/dev/meshers/experiments/adaptive/native_volume_probe.py", line 351, in main
+    return study(args)
+           ^^^^^^^^^^^
+  File "/Users/kmarchais/dev/meshers/experiments/adaptive/native_volume_probe.py", line 321, in study
+    native_worker = run_child([info["executable"], "--ignored", "--exact", TEST,
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/kmarchais/dev/meshers/experiments/adaptive/native_volume_probe.py", line 86, in run_child
+    assert code == 0, f"Read {log}"
+           ^^^^^^^^^
+AssertionError: Read /Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-native-volume-probe-nine-v2/smooth-lattice/native.log

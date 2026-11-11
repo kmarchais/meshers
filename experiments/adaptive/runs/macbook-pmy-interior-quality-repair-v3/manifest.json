@@ -1,0 +1,86 @@
+{
+  "inputs": {
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/pmy_interior_quality_repair.py": "afe196a1bd10c4c0ca461fbc7f29699487f7993af9e6f1e946ead42dd97dee83",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-pmy-linear-failure-v1/candidate/linear-final-linear.npz": "06e370191be2c0dcdc43684407f65b70c63548300068c0047b71a13be6b08fae",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-pmy-linear-failure-v1/candidate/result.json": "7970c44eb514676cfbd60ed6f67de9385a9bc482159fceef013320157a6660fb",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-pmy-linear-failure-v1/candidate/input.json": "c77a2b521ec1a81c718aea78a46de862a40ebe439b66b90bea0e6be8773a21a0",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-pmy-interior-quality-synthetic-diagnosis-v1/result.json": "43ada7b0b9918a371bedd21215c137b73df3ef019b1cd6fe6590211c2ea529df",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/cad_ridge_quality_restore.py": "a077615cc6f94069b8b31a89d6ab3b6c3c0c1f96715bd65c0e60ec20f3cde2af",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/cad_ridge_cavity_control.py": "e7606008e1308fd46acf044bfd49f3fbbb368ac3df5ab9409a29ec9b1147d659",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/cad_intersection_curved_control.py": "ea78e66f5e18f6dca2ad44e0e99408feaddde9ede8fab100f0739c72dff46ef5",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/cad_union_comparison.py": "af342f64a9d7718ea7b7f2c88698ab08d67cddc406365187438e2b8f4e4d5e9e",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/nested_refinement.py": "7f78251d150ebcee928db1b49e22b64ee89efde5cdc238c1f5b9994aad36a6b8",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/mmg_quality_localization.py": "03ef27a978fcd5101f36745ccaf67309f49ce6ece172fad28b84246d6d457ebc",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/facet_incidence_audit.py": "4f51afc196c85e1d0bc64d7a96507517ddc6e32ccd8380a2ac77cae0ace89610",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/periodic_trace.py": "16d51906318ba9110f8979b48a540500d1cce5835685d72e780ca1893f3b8654",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/microgen_workflow.py": "9f513dfd3e6e5a72a71a54f70c0c2cf7c7a1ebe7256886ee3feaf7d7ad7de161",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/job_parts.py": "cc220d52685be4035a3cf38b85e8e2d8354e55f36c42245cd6e1faad9a44bcab"
+  },
+  "source": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-pmy-linear-failure-v1/candidate/linear-final-linear.npz",
+  "source_sha256": "06e370191be2c0dcdc43684407f65b70c63548300068c0047b71a13be6b08fae",
+  "platform": "Darwin",
+  "architecture": "arm64",
+  "python": "3.12.9 (main, Feb 12 2025, 15:09:19) [Clang 19.1.6 ]",
+  "packages": {
+    "numpy": "2.5.4",
+    "scipy": "1.18.1"
+  },
+  "numerical_threads": {
+    "environment": {
+      "OPENBLAS_NUM_THREADS": "1",
+      "OMP_NUM_THREADS": "1",
+      "MKL_NUM_THREADS": "1",
+      "VECLIB_MAXIMUM_THREADS": "1",
+      "RAYON_NUM_THREADS": "1"
+    },
+    "accelerate_blas_threading": 1,
+    "accelerate_scope": "calling thread"
+  },
+  "memory_bytes": 8589934592,
+  "worker_timeout_s": 240,
+  "optimization_timeout_s": 180,
+  "max_iterations_per_node": 100,
+  "target_quality": 0.100001,
+  "admission_quality": 0.1,
+  "optimization_clearance_above_admission": 1.000000000001e-06,
+  "tolerance_revision": {
+    "original_target": 0.100000001,
+    "revised_target": 0.100001,
+    "original_ftol": 1e-12,
+    "revised_ftol": 1e-08,
+    "admission_quality": 0.1,
+    "observed_original_constraint_residual": -1.0314898796215388e-09,
+    "observed_original_minimum_quality": 0.09999999997080757,
+    "reason": "The repairable synthetic star stopped at SLSQP status 8 with a 1.03e-9 constraint residual. A 1e-6 proposal clearance exceeds that residual by about 1000; independent q>=.1 and optimizer success remain required."
+  },
+  "optimizer_ftol": 1e-08,
+  "optimizer_status_policy": "Acceptance requires optimizer success, actual q>=.1, positive volumes and every invariant guard",
+  "method": "One deterministic pass, nearest feasible point per complete incident star, analytic SLSQP constraints",
+  "fixed_boundary": true,
+  "fixed_connectivity": true,
+  "fixed_counts": true,
+  "saved_tet4_only": true,
+  "native_options": {
+    "adapt": false,
+    "cells": 16,
+    "curved_fit": true,
+    "geometry_tolerance": 1.0,
+    "levels": [
+      -0.36027239477618084,
+      0.36027239477618084
+    ],
+    "max_tetrahedra": 250000,
+    "minimum_quality": 0.1,
+    "optimize_passes": 4,
+    "order": 2,
+    "periodic": [
+      true,
+      true,
+      true
+    ],
+    "snap": 0.2,
+    "threads": 1
+  },
+  "admitted": false,
+  "timing_scope": "Python diagnostic repair only; no fresh native meshing or competitor timing"
+}

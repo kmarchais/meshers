@@ -1,0 +1,273 @@
+{
+  "inputs": {
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-cad-bcc-coverage-v1/result.json": "c173fb8f577eff54ac4af8083915d526a304ea83cc37c3618a41ad04e31748ea",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-cad-bcc-coverage-v1/primitive-receipt.json": "cb9802854c0f0f72d532f7049bb3a1e1de623e71b3c0a65fb603b7e25db191dd",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-cad-bcc-coverage-v1/raw-primitive-receipt.json": "49dde699903594883ace1fda589804dae8c2665507fe1539f676b74efa202808",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-cad-bcc-coverage-v1/membership-probes.npz": "ee54f083300241cd46fd8943e98950e9d31d2e5484d29040060b82d0933c7ab2",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-cad-bcc-coverage-v1/membership-probes-input.npz": "c00dc2db521ad5f4ec844d9a3906ea8073fc3e3aa13423ed82cda2f4dd2640da",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-cad-bcc-coverage-v1/actual-bcc.step": "099e0528347325f7bc888c1f9d751482e4487102f025ab307cef3b483c46118d",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-cad-bcc-classifier-v1/result.json": "0e93e1c150b0efb33131e48ebfa626529e2254f7f47553b78a65e42876bf3279",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-cad-bcc-classifier-v1/manifest.json": "52ff72b1835d6fd40fbe3eede23c689e0851ff3e893233815f7df35a5340c4e1",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-cad-bcc-classifier-v1/fresh-inventory.json": "cb57697a68975cbcc904647b52ce19defcc5c96d337bce9e1e2365df63016c77",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-cad-bcc-classifier-v1/fresh-distances.json": "e0e9df35ba806ea21769c35b880636078a9a7652354e45b990071493405e6d91",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-cad-bcc-classifier-v1/fresh-classifications.json": "f0bffa39784c559c236abbd2c08fb9d76e9db83cf7875ebb890edc033446e47a",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-cad-bcc-classifier-v1/step-classifications.json": "40bd664579e8969b45f52abacc0fb0f99f8d2c1c721c83ba770ac338364b13e3",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-cad-bcc-classifier-v1/step-inventory.json": "c70666e03c5a7626b02b925f235a26417d82cfa10c122b650ccd9b5b2bef0503",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/cad_bcc_membership_resolution.py": "ac18d35936ae9aabc892fae79a45337926d82c32a70b5bf1d925e23f7bf42244",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/microgen_workflow.py": "9f513dfd3e6e5a72a71a54f70c0c2cf7c7a1ebe7256886ee3feaf7d7ad7de161",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/cad_lattice_fixture.py": "ab858e297815d7fad598203a779fdc2fdfa5b6e5b1b07890e29b657e236b0b03"
+  },
+  "complete": true,
+  "original_queries": 1233,
+  "original_mismatch_count": 176,
+  "resolved_ambiguities": 176,
+  "unresolved_ambiguity_ids": [],
+  "resolution_conditions_met": true,
+  "proposed_state_counts": {
+    "inside": 112,
+    "outside": 1061,
+    "boundary": 60
+  },
+  "original_classifier_pass": false,
+  "fixture_verified": false,
+  "exact_cad_surface_sampling_pending": true,
+  "native_attempted": false,
+  "center": {
+    "index": 612,
+    "saved_state": "inside",
+    "normalized_field": -0.1,
+    "raw_field": -5.551115123125783e-17,
+    "point": [
+      0.0,
+      0.0,
+      0.0
+    ],
+    "analytic_box_signed_max": -0.5,
+    "analytic_outside_box_distance": 0.0,
+    "boundary_brep": {
+      "done": true,
+      "value": 0.1224744871391586,
+      "inner_solution": false,
+      "solutions": [
+        {
+          "point": [
+            -0.1224744871391586,
+            -5.4096997600157434e-17,
+            0.0
+          ],
+          "euclidean_distance": 0.1224744871391586,
+          "support_type": "BRepExtrema_SupportType.BRepExtrema_IsVertex"
+        },
+        {
+          "point": [
+            2.34466481193284e-16,
+            0.12247448713915905,
+            0.0
+          ],
+          "euclidean_distance": 0.12247448713915905,
+          "support_type": "BRepExtrema_SupportType.BRepExtrema_IsVertex"
+        },
+        {
+          "point": [
+            1.7628540796429966e-16,
+            1.3680546572864104e-33,
+            0.12247448713915893
+          ],
+          "euclidean_distance": 0.12247448713915893,
+          "support_type": "BRepExtrema_SupportType.BRepExtrema_IsVertex"
+        },
+        {
+          "point": [
+            2.0790143155582956e-16,
+            -0.12247448713915907,
+            0.0
+          ],
+          "euclidean_distance": 0.12247448713915907,
+          "support_type": "BRepExtrema_SupportType.BRepExtrema_IsVertex"
+        },
+        {
+          "point": [
+            1.399072804600716e-16,
+            1.3680546572864104e-33,
+            -0.12247448713915894
+          ],
+          "euclidean_distance": 0.12247448713915894,
+          "support_type": "BRepExtrema_SupportType.BRepExtrema_IsVertex"
+        },
+        {
+          "point": [
+            0.12247448713915902,
+            -2.0567023744130037e-18,
+            -3.4201366432160533e-34
+          ],
+          "euclidean_distance": 0.12247448713915902,
+          "support_type": "BRepExtrema_SupportType.BRepExtrema_IsVertex"
+        }
+      ]
+    },
+    "nearest_support_surface": [],
+    "nearest_trim_in_surface": [],
+    "nearest_trim_on_surface": [],
+    "nearest_edge": [
+      {
+        "edge": 9,
+        "distance": 0.12247448713915854,
+        "foot": [
+          -0.12247448713915854,
+          -6.197627881643375e-17,
+          0.0
+        ],
+        "parameter": 5.235987755982988,
+        "edge_tolerance": 1.947309916565464e-07
+      }
+    ],
+    "nearest_vertex": [
+      {
+        "vertex": 6,
+        "distance": 0.1224744871391586,
+        "vertex_tolerance": 1.947319916565464e-07
+      }
+    ],
+    "face_projection_failures": [],
+    "edge_extrema_failures": [
+      {
+        "edge": 1,
+        "error": "Extrema not done"
+      },
+      {
+        "edge": 2,
+        "error": "Extrema not done"
+      },
+      {
+        "edge": 3,
+        "error": "Extrema not done"
+      },
+      {
+        "edge": 7,
+        "error": "Extrema not done"
+      },
+      {
+        "edge": 17,
+        "error": "Extrema not done"
+      },
+      {
+        "edge": 30,
+        "error": "Extrema not done"
+      },
+      {
+        "edge": 41,
+        "error": "Extrema not done"
+      },
+      {
+        "edge": 48,
+        "error": "Extrema not done"
+      },
+      {
+        "edge": 49,
+        "error": "Extrema not done"
+      },
+      {
+        "edge": 54,
+        "error": "Extrema not done"
+      },
+      {
+        "edge": 60,
+        "error": "Extrema not done"
+      },
+      {
+        "edge": 68,
+        "error": "Extrema not done"
+      },
+      {
+        "edge": 73,
+        "error": "Extrema not done"
+      },
+      {
+        "edge": 77,
+        "error": "Extrema not done"
+      },
+      {
+        "edge": 78,
+        "error": "Extrema not done"
+      },
+      {
+        "edge": 79,
+        "error": "Extrema not done"
+      },
+      {
+        "edge": 80,
+        "error": "Extrema not done"
+      },
+      {
+        "edge": 81,
+        "error": "Extrema not done"
+      },
+      {
+        "edge": 82,
+        "error": "Extrema not done"
+      },
+      {
+        "edge": 83,
+        "error": "Extrema not done"
+      },
+      {
+        "edge": 84,
+        "error": "Extrema not done"
+      },
+      {
+        "edge": 85,
+        "error": "Extrema not done"
+      },
+      {
+        "edge": 89,
+        "error": "Extrema not done"
+      },
+      {
+        "edge": 92,
+        "error": "Extrema not done"
+      },
+      {
+        "edge": 93,
+        "error": "Extrema not done"
+      },
+      {
+        "edge": 94,
+        "error": "Extrema not done"
+      },
+      {
+        "edge": 95,
+        "error": "Extrema not done"
+      },
+      {
+        "edge": 96,
+        "error": "Extrema not done"
+      },
+      {
+        "edge": 97,
+        "error": "Extrema not done"
+      },
+      {
+        "edge": 98,
+        "error": "Extrema not done"
+      },
+      {
+        "edge": 99,
+        "error": "Extrema not done"
+      },
+      {
+        "edge": 100,
+        "error": "Extrema not done"
+      }
+    ],
+    "support_surface_scope": "Underlying bounded surface projections; trim ON can inherit topology tolerance, so it is not an independent membership certificate"
+  },
+  "policy": "Retain original ON as tolerance ambiguity; resolve only cap probes with strict original-cylinder and box predicates, an explicit physical cap foot, local stored tolerance witnesses, and STEP corroboration. No CAD mutation or gate change.",
+  "limitations": [
+    "Finite query resolution does not prove global CAD/field equivalence.",
+    "Rational proofs apply to recorded matrix and endpoint-anchored cylinders, not every OCCT Boolean operation.",
+    "STEP alters topology tolerances and slightly changes numerical volume; it is corroboration, never replacement geometry.",
+    "Failed edge extrema remain failures; recorded edge feet are witnesses, not exhaustive closest-edge bounds.",
+    "Fresh original-CAD face/edge sampling and field consistency must pass before native meshing."
+  ],
+  "input_hashes_verified": true
+}

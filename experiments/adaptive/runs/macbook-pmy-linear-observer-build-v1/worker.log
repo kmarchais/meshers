@@ -1,0 +1,7 @@
+Traceback (most recent call last):
+  File "/Users/kmarchais/dev/meshers/experiments/adaptive/pmy_native_archive_build.py", line 52, in <module>
+    main()
+  File "/Users/kmarchais/dev/meshers/experiments/adaptive/pmy_native_archive_build.py", line 36, in main
+    assert finished.returncode == 0, f"Read {archive/'build.log'}; no binary receipt created"
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Read /Users/kmarchais/dev/meshers/.local-work/macbook-pmy-background-native-v4/build.log; no binary receipt created

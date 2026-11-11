@@ -1,0 +1,1668 @@
+{
+  "inputs": {
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/pmy_severity_edge_preflight.py": "ac24068f8771bcb186b9fb9d235f9c44fb19a4d072d4d99e98b8882b05c7bfa0",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/pmy_edge_sampling_control.py": "3ab89eeae78ccb61feccaad0e60e852769b753f3eba27cb1f78a1272ca791739",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/pmy_edge_causal_audit.py": "f33bb023f348d8a4fc9faa2c3553198210058088c57ae3462b354b11011533a1",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/pmy_second_edge_preflight.py": "8bfb5e0aaa155290ad30c7e7908fd6eac2dad9a6cc7840e23d5e541eabee4cf6",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/pmy_global_preclip_preflight.py": "d47294dd5c897e1f6cb70587bbee462e53e5de34c65fb0ce702a0741c64c82f1",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/pmy_neck_control.py": "aacab3dd12c99ad5586e8c4efb59b74556e736041fbe20653381c53d577b8668",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/pmy_residual_probe.py": "9d12dd89542399dcc5dfeacb4e25d6cda250b22e6978faf978465ca9c729c09e",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/tpms_family_fixtures.py": "794418f5d2e3d2158542af51a5cf322c41befff8f8d7c98f769d379baedd3bc6",
+    "/Users/kmarchais/dev/meshers/.local-work/macbook-runtime/venv/lib/python3.12/site-packages/microgen/shape/surface_functions.py": "578c20eb2ef424b95f50618d9cfffdce3676d6b5bdcd90a3278e0ca5ef1af4b4",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-pmy-edge-causal-audit-v1/result.json": "8c9185a4d279681d1c37a18b30e77584034cd84a5bd226a580ed43e8a34ebc4c",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-pmy-edge-causal-audit-v1/severity-schedule-dry-run.json": "c7202671acef4d361b067430b97b1e78c507fe32834efb25dcb099f4ca7f0bff",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-pmy-second-edge-preflight-v1/result.json": "37e379c508894d4cc8208a3fc8297ca57997c9e5df96c88993a18754926a350a",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-pmy-second-edge-preflight-v1/selection.npz": "0e27a6b85a5111b8e8912ff20f1bfc42097d1daffa7c4d3c34a6eec2675284f2",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-pmy-second-edge-preflight-v1/edge-plan.npz": "fa9548c348d1b7a04351ac99c04b2c50d92385df04072bb1d7e60657765a1cca",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-pmy-second-edge-preflight-v1/edge-decisions.json": "a40da607464462a3ba5db4bfef4b68720459eb1d128f0b5e338fdf4239b1b32c",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-pmy-edge-sampling-v1/result.json": "2cd620c238201b61da4bb67e82a392057a0fd52b0917399ab8454526a34c56d2",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-pmy-edge-sampling-v1/background-edge-round.npz": "27b546453af7899a6dcdc5b3e8059da90cac85741c4d4a9e41c91c399f4c7290",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-pmy-residual-probe-v1/result.json": "f6b75044445035d0ddcc8b75e0cd60b41178ded3da2070113e27a7540ed0361e",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-tpms-family-fixtures-v1/tpms-pmy-sheet/tpms-pmy-sheet-specimen.json": "65f653b5b5df833c4f7b9ebeef839555c76690e1a4e95c6011719d042a77c67a",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-tpms-family-fixtures-v1/tpms-pmy-sheet/tpms-pmy-sheet-samples.npz": "66cd3e81d5bad83b63c3bbc96696d732170ed37049dd4ff1dad868b39dbaf2f1",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-tpms-family-fixtures-v1/tpms-pmy-sheet/tpms-pmy-sheet-definition.json": "a0b3623510422678fd46dbfec702d7ebfb03e14272f7016b002e5b2594a662b6",
+    "/Users/kmarchais/dev/meshers/.local-work/macbook-pmy-background-native-v3/receipt.json": "5e730ad799433de4a466a7ed812a4005a6744f72d3a5ac4aeff56b59c8ad3907",
+    "/Users/kmarchais/dev/meshers/.local-work/macbook-pmy-background-native-v3/pmy_background": "24010c7223ae2958653254d2cbccd4a7304642a79ac60556677f8de07f25f728",
+    "/Users/kmarchais/dev/meshers/.local-work/macbook-pmy-background-native-v3/sources/Cargo.lock": "c5de0b0561f9ab415ff941a24cae24bd7de5069eca73e3dd9b6da63db4273278",
+    "/Users/kmarchais/dev/meshers/.local-work/macbook-pmy-background-native-v3/sources/Cargo.toml": "83ec559b8d2fdfc92e33da348144fc206708813340407de0a92c8b627e631a4e",
+    "/Users/kmarchais/dev/meshers/.local-work/macbook-pmy-background-native-v3/sources/crates/meshers-core/Cargo.toml": "12dd2fd9e73646d4c4853ecd94ad209d8a36f333b095262013d52dfc8be55068",
+    "/Users/kmarchais/dev/meshers/.local-work/macbook-pmy-background-native-v3/sources/crates/meshers-core/examples/adapt_gyroid.rs": "b727ae8cd473e291cdca72f4f9f1e77ac8e16c05cb0339e75b40a73a89cd8a41",
+    "/Users/kmarchais/dev/meshers/.local-work/macbook-pmy-background-native-v3/sources/crates/meshers-core/examples/adapt_surface.rs": "e74f68ba64459ee34fe289ab93002dc17fb228c0b956365d028d45162fa85e87",
+    "/Users/kmarchais/dev/meshers/.local-work/macbook-pmy-background-native-v3/sources/crates/meshers-core/examples/curved_intersection.rs": "7d03160557e21a767fb63ca27d51a8a6bbb88f3703540f9a0e3462b862412fcc",
+    "/Users/kmarchais/dev/meshers/.local-work/macbook-pmy-background-native-v3/sources/crates/meshers-core/examples/gyroid.rs": "a1ab2f8907e30e88833e6bf08b70c32f7304a05341808716a3d7d7a7b0e6bfc2",
+    "/Users/kmarchais/dev/meshers/.local-work/macbook-pmy-background-native-v3/sources/crates/meshers-core/examples/implicit.rs": "0a957f8e8bc7473dbb5d25c59808552ccd3e2cd3f90f09cb179b6cf75168ae17",
+    "/Users/kmarchais/dev/meshers/.local-work/macbook-pmy-background-native-v3/sources/crates/meshers-core/examples/implicit_sphere.rs": "5cbd9aceab3b7075d87065647b98427279829d4959178339946c1bcf44792e22",
+    "/Users/kmarchais/dev/meshers/.local-work/macbook-pmy-background-native-v3/sources/crates/meshers-core/examples/pmy_background.rs": "682d353659c083cad83c29a7bb7210cd215e02fa4399d8413dca60b3a219a10e",
+    "/Users/kmarchais/dev/meshers/.local-work/macbook-pmy-background-native-v3/sources/crates/meshers-core/src/accelerator.rs": "496365ec7c5fa7cbccb521937c91d7daa19a9bd8d01aa5398639345d4290b20c",
+    "/Users/kmarchais/dev/meshers/.local-work/macbook-pmy-background-native-v3/sources/crates/meshers-core/src/adaptive.rs": "a3de8e081d5100c92508ad2d0b481136a78412580455a3ff4e8b841dd4a90a77",
+    "/Users/kmarchais/dev/meshers/.local-work/macbook-pmy-background-native-v3/sources/crates/meshers-core/src/error.rs": "b8c8c922e662107c4304f823cff8f46d18b898d5c0bd5af1b8b28317d2566d81",
+    "/Users/kmarchais/dev/meshers/.local-work/macbook-pmy-background-native-v3/sources/crates/meshers-core/src/geometry.rs": "b00a2c883484ab6f09300f2b7ad13efa51b3685f8ac259d86e9bb0d199b5bc08",
+    "/Users/kmarchais/dev/meshers/.local-work/macbook-pmy-background-native-v3/sources/crates/meshers-core/src/implicit/intersection/repair.rs": "dcbde4728b7efcf104db508c7d656d08959a0888de1aacadb433149bbfa67373",
+    "/Users/kmarchais/dev/meshers/.local-work/macbook-pmy-background-native-v3/sources/crates/meshers-core/src/implicit/intersection.rs": "c01e84b8c19f853990c6a057dc52ce7341505cdf71aea04f31351cef16847a13",
+    "/Users/kmarchais/dev/meshers/.local-work/macbook-pmy-background-native-v3/sources/crates/meshers-core/src/implicit/periodic_feature_research.rs": "739781fa1b0c76ac24615345fa02f30d2fff02761d57feea46288abc14e21329",
+    "/Users/kmarchais/dev/meshers/.local-work/macbook-pmy-background-native-v3/sources/crates/meshers-core/src/implicit.rs": "7f318529d7096fe873c5a9068665b84ed624253668b14c71f570262778fb4ba5",
+    "/Users/kmarchais/dev/meshers/.local-work/macbook-pmy-background-native-v3/sources/crates/meshers-core/src/lib.rs": "e72b01ac4ed690e58cd12dcf204fe7167e69ff5c80d41156f6a8206ba252e0d3",
+    "/Users/kmarchais/dev/meshers/.local-work/macbook-pmy-background-native-v3/sources/crates/meshers-core/src/optimize.rs": "55c62786bd57500b841c86bcd4e7520ae31b5c761fa8a39a3ad6fec0564e68ee",
+    "/Users/kmarchais/dev/meshers/.local-work/macbook-pmy-background-native-v3/sources/crates/meshers-core/src/optimize_batch.rs": "6571614ef842ec9ca291976e51f7efe04662b7b643160114fa4fb825a3aaf112",
+    "/Users/kmarchais/dev/meshers/.local-work/macbook-pmy-background-native-v3/sources/crates/meshers-core/src/polyhedral.rs": "45e737dce0921435b135a5baaa2763e0e30002d92fe0a633d81f4dabe70bb473",
+    "/Users/kmarchais/dev/meshers/.local-work/macbook-pmy-background-native-v3/sources/crates/meshers-core/src/profile.rs": "70f91e99631bcde8ca521c82f06f7f645cf9ee340d685a4e4928cb2ebc348c58",
+    "/Users/kmarchais/dev/meshers/.local-work/macbook-pmy-background-native-v3/sources/crates/meshers-core/src/projection.rs": "926d1ab1c848cf80cc392295764d7bf8f2254dfb62f219639db7e5a4194acf84",
+    "/Users/kmarchais/dev/meshers/.local-work/macbook-pmy-background-native-v3/sources/crates/meshers-core/src/quadratic/fit.rs": "bc310e4624599686286909ed40db4e9f8b10cce06a713b4fba2a9b598ef4eae3",
+    "/Users/kmarchais/dev/meshers/.local-work/macbook-pmy-background-native-v3/sources/crates/meshers-core/src/quadratic.rs": "fff22efd06011a427b139e2612bce70dc46e85e6b4a07047c2bcc6a8a3b2428c",
+    "/Users/kmarchais/dev/meshers/.local-work/macbook-pmy-background-native-v3/sources/crates/meshers-core/src/quads.rs": "9579d9478c57b8b4ad8cead2a717d01cfc626140ce40cd5f11014db717acc2ef",
+    "/Users/kmarchais/dev/meshers/.local-work/macbook-pmy-background-native-v3/sources/crates/meshers-core/src/remesh.rs": "499b779e55252258cdad7b81a0b2917f3ea0dc4f3b4d446fb60c3e9a3fdec085",
+    "/Users/kmarchais/dev/meshers/.local-work/macbook-pmy-background-native-v3/sources/crates/meshers-core/src/tet_adapt.rs": "24599c83b24fc4a08de8b2521791d9bb57194cf0222aa4b02ca845f441fa565e",
+    "/Users/kmarchais/dev/meshers/.local-work/macbook-pmy-background-native-v3/sources/crates/meshers-core/src/triangles.rs": "897d3aee83d8c6c5de0d3e0df332ee3e56ef8390e74b3af1e052e7859f7dc8fc",
+    "/Users/kmarchais/dev/meshers/.local-work/macbook-pmy-background-native-v3/sources/crates/meshers-core/tests/batching.rs": "57957d60f80b4c4d0105e9d5b335701b448f2c9d18dbfc98687a3d1e56d44153",
+    "/Users/kmarchais/dev/meshers/.local-work/macbook-pmy-background-native-v3/sources/crates/meshers-core/tests/implicit.rs": "aeb213b8eb90ec52260ddf10ca78c3d2719994dac6d023a3858632c0239808f5",
+    "/Users/kmarchais/dev/meshers/.local-work/macbook-pmy-background-native-v3/sources/crates/meshers-core/tests/intersection.rs": "b598b04a6d84673772097d09137ff4e670bedcef89622c077ad849e1acc20e1d",
+    "/Users/kmarchais/dev/meshers/.local-work/macbook-pmy-background-native-v3/sources/crates/meshers-core/tests/public_api.rs": "16d282472b908dd4fa1a3dce963e04a701252b5437bfb8ca63bba9a96e02d279",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-pmy-rollback-native-v1/baseline/result.json": "ba7b6b1e796aebc998f0be8f675db7eca0c33060a51e84c6548c60f42afc2e4b",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-pmy-rollback-native-v1/baseline/input.json": "1ce238228c359ac20b85734b97694f2e2772ac50ed6e9812cd2a224ca9482998",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-pmy-rollback-native-v1/edge/result.json": "580f6c980bd1f8a11ca546a7a1b71e81815e5d617ffe8fa69887992b3671c5b1",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-pmy-rollback-native-v1/edge/input.json": "5b192ece13fe1405ecd4d722f8de2743f4c8c5c6e2ff33e2202700c28c242f56",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/microgen_workflow.py": "9f513dfd3e6e5a72a71a54f70c0c2cf7c7a1ebe7256886ee3feaf7d7ad7de161",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/scorecard.py": "8f26256c7df0e84c9f35cdd71bf4f95a74e072d45469002b213c5dcd4f1bab2a",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/periodic_trace.py": "16d51906318ba9110f8979b48a540500d1cce5835685d72e780ca1893f3b8654",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/mmg_quality_localization.py": "03ef27a978fcd5101f36745ccaf67309f49ce6ece172fad28b84246d6d457ebc",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/pmy_barycenter_control.py": "c08a3b73ce0834ba9306794c862f528e66b473e0966a01d11288e6be3e681bf5",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/pmy_interpolation_control.py": "6ee2fcd764587b9d17e68bbee1a7c4d12ff6a58d34358515c0b11809be709249",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/pmy_failure_probe.py": "6a3b57434d5c8586dea67aa67bd8e2ca69ca4e16f0098a0cd4834463109883f7"
+  },
+  "admitted": false,
+  "candidate_generated": false,
+  "native_generation_performed": false,
+  "native_clipping_performed": false,
+  "admission_gates_unchanged": true,
+  "native_measurement_provenance": {
+    "binary_sha256": "24010c7223ae2958653254d2cbccd4a7304642a79ac60556677f8de07f25f728",
+    "receipt_sha256": "5e730ad799433de4a466a7ed812a4005a6744f72d3a5ac4aeff56b59c8ad3907",
+    "source_resolution": "Frozen archive for every native-v3 source, never current modified source",
+    "sources": [
+      {
+        "original_path": "Cargo.lock",
+        "resolved_source": "/Users/kmarchais/dev/meshers/.local-work/macbook-pmy-background-native-v3/sources/Cargo.lock",
+        "sha256": "c5de0b0561f9ab415ff941a24cae24bd7de5069eca73e3dd9b6da63db4273278",
+        "working_copy_sha256_at_manifest": "c5de0b0561f9ab415ff941a24cae24bd7de5069eca73e3dd9b6da63db4273278",
+        "working_copy_differs": false
+      },
+      {
+        "original_path": "Cargo.toml",
+        "resolved_source": "/Users/kmarchais/dev/meshers/.local-work/macbook-pmy-background-native-v3/sources/Cargo.toml",
+        "sha256": "83ec559b8d2fdfc92e33da348144fc206708813340407de0a92c8b627e631a4e",
+        "working_copy_sha256_at_manifest": "83ec559b8d2fdfc92e33da348144fc206708813340407de0a92c8b627e631a4e",
+        "working_copy_differs": false
+      },
+      {
+        "original_path": "crates/meshers-core/Cargo.toml",
+        "resolved_source": "/Users/kmarchais/dev/meshers/.local-work/macbook-pmy-background-native-v3/sources/crates/meshers-core/Cargo.toml",
+        "sha256": "12dd2fd9e73646d4c4853ecd94ad209d8a36f333b095262013d52dfc8be55068",
+        "working_copy_sha256_at_manifest": "12dd2fd9e73646d4c4853ecd94ad209d8a36f333b095262013d52dfc8be55068",
+        "working_copy_differs": false
+      },
+      {
+        "original_path": "crates/meshers-core/examples/adapt_gyroid.rs",
+        "resolved_source": "/Users/kmarchais/dev/meshers/.local-work/macbook-pmy-background-native-v3/sources/crates/meshers-core/examples/adapt_gyroid.rs",
+        "sha256": "b727ae8cd473e291cdca72f4f9f1e77ac8e16c05cb0339e75b40a73a89cd8a41",
+        "working_copy_sha256_at_manifest": "b727ae8cd473e291cdca72f4f9f1e77ac8e16c05cb0339e75b40a73a89cd8a41",
+        "working_copy_differs": false
+      },
+      {
+        "original_path": "crates/meshers-core/examples/adapt_surface.rs",
+        "resolved_source": "/Users/kmarchais/dev/meshers/.local-work/macbook-pmy-background-native-v3/sources/crates/meshers-core/examples/adapt_surface.rs",
+        "sha256": "e74f68ba64459ee34fe289ab93002dc17fb228c0b956365d028d45162fa85e87",
+        "working_copy_sha256_at_manifest": "e74f68ba64459ee34fe289ab93002dc17fb228c0b956365d028d45162fa85e87",
+        "working_copy_differs": false
+      },
+      {
+        "original_path": "crates/meshers-core/examples/curved_intersection.rs",
+        "resolved_source": "/Users/kmarchais/dev/meshers/.local-work/macbook-pmy-background-native-v3/sources/crates/meshers-core/examples/curved_intersection.rs",
+        "sha256": "7d03160557e21a767fb63ca27d51a8a6bbb88f3703540f9a0e3462b862412fcc",
+        "working_copy_sha256_at_manifest": "7d03160557e21a767fb63ca27d51a8a6bbb88f3703540f9a0e3462b862412fcc",
+        "working_copy_differs": false
+      },
+      {
+        "original_path": "crates/meshers-core/examples/gyroid.rs",
+        "resolved_source": "/Users/kmarchais/dev/meshers/.local-work/macbook-pmy-background-native-v3/sources/crates/meshers-core/examples/gyroid.rs",
+        "sha256": "a1ab2f8907e30e88833e6bf08b70c32f7304a05341808716a3d7d7a7b0e6bfc2",
+        "working_copy_sha256_at_manifest": "a1ab2f8907e30e88833e6bf08b70c32f7304a05341808716a3d7d7a7b0e6bfc2",
+        "working_copy_differs": false
+      },
+      {
+        "original_path": "crates/meshers-core/examples/implicit.rs",
+        "resolved_source": "/Users/kmarchais/dev/meshers/.local-work/macbook-pmy-background-native-v3/sources/crates/meshers-core/examples/implicit.rs",
+        "sha256": "0a957f8e8bc7473dbb5d25c59808552ccd3e2cd3f90f09cb179b6cf75168ae17",
+        "working_copy_sha256_at_manifest": "0a957f8e8bc7473dbb5d25c59808552ccd3e2cd3f90f09cb179b6cf75168ae17",
+        "working_copy_differs": false
+      },
+      {
+        "original_path": "crates/meshers-core/examples/implicit_sphere.rs",
+        "resolved_source": "/Users/kmarchais/dev/meshers/.local-work/macbook-pmy-background-native-v3/sources/crates/meshers-core/examples/implicit_sphere.rs",
+        "sha256": "5cbd9aceab3b7075d87065647b98427279829d4959178339946c1bcf44792e22",
+        "working_copy_sha256_at_manifest": "5cbd9aceab3b7075d87065647b98427279829d4959178339946c1bcf44792e22",
+        "working_copy_differs": false
+      },
+      {
+        "original_path": "crates/meshers-core/examples/pmy_background.rs",
+        "resolved_source": "/Users/kmarchais/dev/meshers/.local-work/macbook-pmy-background-native-v3/sources/crates/meshers-core/examples/pmy_background.rs",
+        "sha256": "682d353659c083cad83c29a7bb7210cd215e02fa4399d8413dca60b3a219a10e",
+        "working_copy_sha256_at_manifest": "682d353659c083cad83c29a7bb7210cd215e02fa4399d8413dca60b3a219a10e",
+        "working_copy_differs": false
+      },
+      {
+        "original_path": "crates/meshers-core/src/accelerator.rs",
+        "resolved_source": "/Users/kmarchais/dev/meshers/.local-work/macbook-pmy-background-native-v3/sources/crates/meshers-core/src/accelerator.rs",
+        "sha256": "496365ec7c5fa7cbccb521937c91d7daa19a9bd8d01aa5398639345d4290b20c",
+        "working_copy_sha256_at_manifest": "496365ec7c5fa7cbccb521937c91d7daa19a9bd8d01aa5398639345d4290b20c",
+        "working_copy_differs": false
+      },
+      {
+        "original_path": "crates/meshers-core/src/adaptive.rs",
+        "resolved_source": "/Users/kmarchais/dev/meshers/.local-work/macbook-pmy-background-native-v3/sources/crates/meshers-core/src/adaptive.rs",
+        "sha256": "a3de8e081d5100c92508ad2d0b481136a78412580455a3ff4e8b841dd4a90a77",
+        "working_copy_sha256_at_manifest": "a3de8e081d5100c92508ad2d0b481136a78412580455a3ff4e8b841dd4a90a77",
+        "working_copy_differs": false
+      },
+      {
+        "original_path": "crates/meshers-core/src/error.rs",
+        "resolved_source": "/Users/kmarchais/dev/meshers/.local-work/macbook-pmy-background-native-v3/sources/crates/meshers-core/src/error.rs",
+        "sha256": "b8c8c922e662107c4304f823cff8f46d18b898d5c0bd5af1b8b28317d2566d81",
+        "working_copy_sha256_at_manifest": "b8c8c922e662107c4304f823cff8f46d18b898d5c0bd5af1b8b28317d2566d81",
+        "working_copy_differs": false
+      },
+      {
+        "original_path": "crates/meshers-core/src/geometry.rs",
+        "resolved_source": "/Users/kmarchais/dev/meshers/.local-work/macbook-pmy-background-native-v3/sources/crates/meshers-core/src/geometry.rs",
+        "sha256": "b00a2c883484ab6f09300f2b7ad13efa51b3685f8ac259d86e9bb0d199b5bc08",
+        "working_copy_sha256_at_manifest": "b00a2c883484ab6f09300f2b7ad13efa51b3685f8ac259d86e9bb0d199b5bc08",
+        "working_copy_differs": false
+      },
+      {
+        "original_path": "crates/meshers-core/src/implicit/intersection/repair.rs",
+        "resolved_source": "/Users/kmarchais/dev/meshers/.local-work/macbook-pmy-background-native-v3/sources/crates/meshers-core/src/implicit/intersection/repair.rs",
+        "sha256": "dcbde4728b7efcf104db508c7d656d08959a0888de1aacadb433149bbfa67373",
+        "working_copy_sha256_at_manifest": "dcbde4728b7efcf104db508c7d656d08959a0888de1aacadb433149bbfa67373",
+        "working_copy_differs": false
+      },
+      {
+        "original_path": "crates/meshers-core/src/implicit/intersection.rs",
+        "resolved_source": "/Users/kmarchais/dev/meshers/.local-work/macbook-pmy-background-native-v3/sources/crates/meshers-core/src/implicit/intersection.rs",
+        "sha256": "c01e84b8c19f853990c6a057dc52ce7341505cdf71aea04f31351cef16847a13",
+        "working_copy_sha256_at_manifest": "c01e84b8c19f853990c6a057dc52ce7341505cdf71aea04f31351cef16847a13",
+        "working_copy_differs": false
+      },
+      {
+        "original_path": "crates/meshers-core/src/implicit/periodic_feature_research.rs",
+        "resolved_source": "/Users/kmarchais/dev/meshers/.local-work/macbook-pmy-background-native-v3/sources/crates/meshers-core/src/implicit/periodic_feature_research.rs",
+        "sha256": "739781fa1b0c76ac24615345fa02f30d2fff02761d57feea46288abc14e21329",
+        "working_copy_sha256_at_manifest": "739781fa1b0c76ac24615345fa02f30d2fff02761d57feea46288abc14e21329",
+        "working_copy_differs": false
+      },
+      {
+        "original_path": "crates/meshers-core/src/implicit.rs",
+        "resolved_source": "/Users/kmarchais/dev/meshers/.local-work/macbook-pmy-background-native-v3/sources/crates/meshers-core/src/implicit.rs",
+        "sha256": "7f318529d7096fe873c5a9068665b84ed624253668b14c71f570262778fb4ba5",
+        "working_copy_sha256_at_manifest": "7f318529d7096fe873c5a9068665b84ed624253668b14c71f570262778fb4ba5",
+        "working_copy_differs": false
+      },
+      {
+        "original_path": "crates/meshers-core/src/lib.rs",
+        "resolved_source": "/Users/kmarchais/dev/meshers/.local-work/macbook-pmy-background-native-v3/sources/crates/meshers-core/src/lib.rs",
+        "sha256": "e72b01ac4ed690e58cd12dcf204fe7167e69ff5c80d41156f6a8206ba252e0d3",
+        "working_copy_sha256_at_manifest": "e72b01ac4ed690e58cd12dcf204fe7167e69ff5c80d41156f6a8206ba252e0d3",
+        "working_copy_differs": false
+      },
+      {
+        "original_path": "crates/meshers-core/src/optimize.rs",
+        "resolved_source": "/Users/kmarchais/dev/meshers/.local-work/macbook-pmy-background-native-v3/sources/crates/meshers-core/src/optimize.rs",
+        "sha256": "55c62786bd57500b841c86bcd4e7520ae31b5c761fa8a39a3ad6fec0564e68ee",
+        "working_copy_sha256_at_manifest": "55c62786bd57500b841c86bcd4e7520ae31b5c761fa8a39a3ad6fec0564e68ee",
+        "working_copy_differs": false
+      },
+      {
+        "original_path": "crates/meshers-core/src/optimize_batch.rs",
+        "resolved_source": "/Users/kmarchais/dev/meshers/.local-work/macbook-pmy-background-native-v3/sources/crates/meshers-core/src/optimize_batch.rs",
+        "sha256": "6571614ef842ec9ca291976e51f7efe04662b7b643160114fa4fb825a3aaf112",
+        "working_copy_sha256_at_manifest": "6571614ef842ec9ca291976e51f7efe04662b7b643160114fa4fb825a3aaf112",
+        "working_copy_differs": false
+      },
+      {
+        "original_path": "crates/meshers-core/src/polyhedral.rs",
+        "resolved_source": "/Users/kmarchais/dev/meshers/.local-work/macbook-pmy-background-native-v3/sources/crates/meshers-core/src/polyhedral.rs",
+        "sha256": "45e737dce0921435b135a5baaa2763e0e30002d92fe0a633d81f4dabe70bb473",
+        "working_copy_sha256_at_manifest": "45e737dce0921435b135a5baaa2763e0e30002d92fe0a633d81f4dabe70bb473",
+        "working_copy_differs": false
+      },
+      {
+        "original_path": "crates/meshers-core/src/profile.rs",
+        "resolved_source": "/Users/kmarchais/dev/meshers/.local-work/macbook-pmy-background-native-v3/sources/crates/meshers-core/src/profile.rs",
+        "sha256": "70f91e99631bcde8ca521c82f06f7f645cf9ee340d685a4e4928cb2ebc348c58",
+        "working_copy_sha256_at_manifest": "70f91e99631bcde8ca521c82f06f7f645cf9ee340d685a4e4928cb2ebc348c58",
+        "working_copy_differs": false
+      },
+      {
+        "original_path": "crates/meshers-core/src/projection.rs",
+        "resolved_source": "/Users/kmarchais/dev/meshers/.local-work/macbook-pmy-background-native-v3/sources/crates/meshers-core/src/projection.rs",
+        "sha256": "926d1ab1c848cf80cc392295764d7bf8f2254dfb62f219639db7e5a4194acf84",
+        "working_copy_sha256_at_manifest": "926d1ab1c848cf80cc392295764d7bf8f2254dfb62f219639db7e5a4194acf84",
+        "working_copy_differs": false
+      },
+      {
+        "original_path": "crates/meshers-core/src/quadratic/fit.rs",
+        "resolved_source": "/Users/kmarchais/dev/meshers/.local-work/macbook-pmy-background-native-v3/sources/crates/meshers-core/src/quadratic/fit.rs",
+        "sha256": "bc310e4624599686286909ed40db4e9f8b10cce06a713b4fba2a9b598ef4eae3",
+        "working_copy_sha256_at_manifest": "0507a87fc576299ef00d1c1cc72e3b178a6980cf09f35beb1c427fc134868fe5",
+        "working_copy_differs": true
+      },
+      {
+        "original_path": "crates/meshers-core/src/quadratic.rs",
+        "resolved_source": "/Users/kmarchais/dev/meshers/.local-work/macbook-pmy-background-native-v3/sources/crates/meshers-core/src/quadratic.rs",
+        "sha256": "fff22efd06011a427b139e2612bce70dc46e85e6b4a07047c2bcc6a8a3b2428c",
+        "working_copy_sha256_at_manifest": "fff22efd06011a427b139e2612bce70dc46e85e6b4a07047c2bcc6a8a3b2428c",
+        "working_copy_differs": false
+      },
+      {
+        "original_path": "crates/meshers-core/src/quads.rs",
+        "resolved_source": "/Users/kmarchais/dev/meshers/.local-work/macbook-pmy-background-native-v3/sources/crates/meshers-core/src/quads.rs",
+        "sha256": "9579d9478c57b8b4ad8cead2a717d01cfc626140ce40cd5f11014db717acc2ef",
+        "working_copy_sha256_at_manifest": "9579d9478c57b8b4ad8cead2a717d01cfc626140ce40cd5f11014db717acc2ef",
+        "working_copy_differs": false
+      },
+      {
+        "original_path": "crates/meshers-core/src/remesh.rs",
+        "resolved_source": "/Users/kmarchais/dev/meshers/.local-work/macbook-pmy-background-native-v3/sources/crates/meshers-core/src/remesh.rs",
+        "sha256": "499b779e55252258cdad7b81a0b2917f3ea0dc4f3b4d446fb60c3e9a3fdec085",
+        "working_copy_sha256_at_manifest": "499b779e55252258cdad7b81a0b2917f3ea0dc4f3b4d446fb60c3e9a3fdec085",
+        "working_copy_differs": false
+      },
+      {
+        "original_path": "crates/meshers-core/src/tet_adapt.rs",
+        "resolved_source": "/Users/kmarchais/dev/meshers/.local-work/macbook-pmy-background-native-v3/sources/crates/meshers-core/src/tet_adapt.rs",
+        "sha256": "24599c83b24fc4a08de8b2521791d9bb57194cf0222aa4b02ca845f441fa565e",
+        "working_copy_sha256_at_manifest": "24599c83b24fc4a08de8b2521791d9bb57194cf0222aa4b02ca845f441fa565e",
+        "working_copy_differs": false
+      },
+      {
+        "original_path": "crates/meshers-core/src/triangles.rs",
+        "resolved_source": "/Users/kmarchais/dev/meshers/.local-work/macbook-pmy-background-native-v3/sources/crates/meshers-core/src/triangles.rs",
+        "sha256": "897d3aee83d8c6c5de0d3e0df332ee3e56ef8390e74b3af1e052e7859f7dc8fc",
+        "working_copy_sha256_at_manifest": "897d3aee83d8c6c5de0d3e0df332ee3e56ef8390e74b3af1e052e7859f7dc8fc",
+        "working_copy_differs": false
+      },
+      {
+        "original_path": "crates/meshers-core/tests/batching.rs",
+        "resolved_source": "/Users/kmarchais/dev/meshers/.local-work/macbook-pmy-background-native-v3/sources/crates/meshers-core/tests/batching.rs",
+        "sha256": "57957d60f80b4c4d0105e9d5b335701b448f2c9d18dbfc98687a3d1e56d44153",
+        "working_copy_sha256_at_manifest": "57957d60f80b4c4d0105e9d5b335701b448f2c9d18dbfc98687a3d1e56d44153",
+        "working_copy_differs": false
+      },
+      {
+        "original_path": "crates/meshers-core/tests/implicit.rs",
+        "resolved_source": "/Users/kmarchais/dev/meshers/.local-work/macbook-pmy-background-native-v3/sources/crates/meshers-core/tests/implicit.rs",
+        "sha256": "aeb213b8eb90ec52260ddf10ca78c3d2719994dac6d023a3858632c0239808f5",
+        "working_copy_sha256_at_manifest": "aeb213b8eb90ec52260ddf10ca78c3d2719994dac6d023a3858632c0239808f5",
+        "working_copy_differs": false
+      },
+      {
+        "original_path": "crates/meshers-core/tests/intersection.rs",
+        "resolved_source": "/Users/kmarchais/dev/meshers/.local-work/macbook-pmy-background-native-v3/sources/crates/meshers-core/tests/intersection.rs",
+        "sha256": "b598b04a6d84673772097d09137ff4e670bedcef89622c077ad849e1acc20e1d",
+        "working_copy_sha256_at_manifest": "b598b04a6d84673772097d09137ff4e670bedcef89622c077ad849e1acc20e1d",
+        "working_copy_differs": false
+      },
+      {
+        "original_path": "crates/meshers-core/tests/public_api.rs",
+        "resolved_source": "/Users/kmarchais/dev/meshers/.local-work/macbook-pmy-background-native-v3/sources/crates/meshers-core/tests/public_api.rs",
+        "sha256": "16d282472b908dd4fa1a3dce963e04a701252b5437bfb8ca63bba9a96e02d279",
+        "working_copy_sha256_at_manifest": "16d282472b908dd4fa1a3dce963e04a701252b5437bfb8ca63bba9a96e02d279",
+        "working_copy_differs": false
+      }
+    ]
+  },
+  "decisions": {
+    "accepted": 2366,
+    "overlap": 3079,
+    "quality": 56,
+    "budget": 0
+  },
+  "coverage": {
+    "marked_faces_split": 6298,
+    "remaining_unsplit_faces": 4770,
+    "marked_tets_split": 4505,
+    "remaining_unsplit_tets": 1036
+  },
+  "frozen_decision_hashes": {
+    "selection.npz": "0e27a6b85a5111b8e8912ff20f1bfc42097d1daffa7c4d3c34a6eec2675284f2",
+    "frozen-schedule.json": "c7202671acef4d361b067430b97b1e78c507fe32834efb25dcb099f4ca7f0bff",
+    "background-edge-round.npz": "43b4dfbe26a4ee8a1825f5e56d63a5aa7923aec967af6154422d58fc753206e3",
+    "edge-plan.npz": "44c5e09301ccf1a350e6c6b971334c9c94e55216b146b331f05257143720d752"
+  },
+  "background": {
+    "before": {
+      "nodes": 14341,
+      "tets": 70575,
+      "boundary_faces": 4152,
+      "unique_faces": 143226,
+      "minimum_quality": 0.11948274074319011,
+      "below_quality_gate": 0,
+      "quality_floor_met": true,
+      "minimum_determinant": 1.695421006944438e-06,
+      "volume": 1.0000000000000007,
+      "coherent_oriented_faces": true,
+      "nonmanifold_faces": 0,
+      "exact_periodic_nodes_and_facets": true,
+      "periodic": {
+        "periodic_pair_counts": [
+          379,
+          379,
+          379
+        ],
+        "periodic_coordinate_errors": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "periodic_pair_tolerance": 1e-10,
+        "periodic_equivalence_classes": 13254,
+        "periodic_triangles_match": true,
+        "full_facet_check_required": true,
+        "complete_existing_node_classes": true,
+        "unmatched_noncap_contact_nodes": [
+          [
+            [],
+            []
+          ],
+          [
+            [],
+            []
+          ],
+          [
+            [],
+            []
+          ]
+        ],
+        "declared_bounds": [
+          [
+            -0.5,
+            -0.5,
+            -0.5
+          ],
+          [
+            0.5,
+            0.5,
+            0.5
+          ]
+        ],
+        "periodic_gate": "declared-cell-material-cap-and-complete-node-classes-v1"
+      },
+      "caps": [
+        {
+          "axis": 0,
+          "side": -0.5,
+          "faces": 692,
+          "area": 1.0
+        },
+        {
+          "axis": 0,
+          "side": 0.5,
+          "faces": 692,
+          "area": 1.0
+        },
+        {
+          "axis": 1,
+          "side": -0.5,
+          "faces": 692,
+          "area": 1.0
+        },
+        {
+          "axis": 1,
+          "side": 0.5,
+          "faces": 692,
+          "area": 1.0
+        },
+        {
+          "axis": 2,
+          "side": -0.5,
+          "faces": 692,
+          "area": 1.0
+        },
+        {
+          "axis": 2,
+          "side": 0.5,
+          "faces": 692,
+          "area": 1.0
+        }
+      ],
+      "within_caps": true
+    },
+    "after": {
+      "nodes": 16905,
+      "tets": 85127,
+      "boundary_faces": 4896,
+      "unique_faces": 172702,
+      "minimum_quality": 0.11948274074319011,
+      "below_quality_gate": 0,
+      "quality_floor_met": true,
+      "minimum_determinant": 1.695421006944438e-06,
+      "volume": 1.0000000000000007,
+      "coherent_oriented_faces": true,
+      "nonmanifold_faces": 0,
+      "exact_periodic_nodes_and_facets": true,
+      "periodic": {
+        "periodic_pair_counts": [
+          449,
+          449,
+          449
+        ],
+        "periodic_coordinate_errors": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "periodic_pair_tolerance": 1e-10,
+        "periodic_equivalence_classes": 15620,
+        "periodic_triangles_match": true,
+        "full_facet_check_required": true,
+        "complete_existing_node_classes": true,
+        "unmatched_noncap_contact_nodes": [
+          [
+            [],
+            []
+          ],
+          [
+            [],
+            []
+          ],
+          [
+            [],
+            []
+          ]
+        ],
+        "declared_bounds": [
+          [
+            -0.5,
+            -0.5,
+            -0.5
+          ],
+          [
+            0.5,
+            0.5,
+            0.5
+          ]
+        ],
+        "periodic_gate": "declared-cell-material-cap-and-complete-node-classes-v1"
+      },
+      "caps": [
+        {
+          "axis": 0,
+          "side": -0.5,
+          "faces": 816,
+          "area": 1.0
+        },
+        {
+          "axis": 0,
+          "side": 0.5,
+          "faces": 816,
+          "area": 1.0
+        },
+        {
+          "axis": 1,
+          "side": -0.5,
+          "faces": 816,
+          "area": 1.0
+        },
+        {
+          "axis": 1,
+          "side": 0.5,
+          "faces": 816,
+          "area": 1.0
+        },
+        {
+          "axis": 2,
+          "side": -0.5,
+          "faces": 816,
+          "area": 1.0
+        },
+        {
+          "axis": 2,
+          "side": 0.5,
+          "faces": 816,
+          "area": 1.0
+        }
+      ],
+      "within_caps": true
+    },
+    "maximum_parent_volume_error": 5.1209037010835345e-15,
+    "original_points_bitwise_preserved": true,
+    "passed": true
+  },
+  "top_field_entity_coverage": [
+    {
+      "kind": "face",
+      "index": 18135,
+      "severity_rank": 1,
+      "residual": 0.028817395714863525,
+      "original_preferred_status": "overlap",
+      "new_preferred_status": "accepted",
+      "preferred_quality_feasible": true,
+      "entity_split": true
+    },
+    {
+      "kind": "face",
+      "index": 110834,
+      "severity_rank": 2,
+      "residual": 0.028817395714863525,
+      "original_preferred_status": "overlap",
+      "new_preferred_status": "accepted",
+      "preferred_quality_feasible": true,
+      "entity_split": true
+    },
+    {
+      "kind": "face",
+      "index": 29709,
+      "severity_rank": 3,
+      "residual": 0.028817395714863334,
+      "original_preferred_status": "overlap",
+      "new_preferred_status": "accepted",
+      "preferred_quality_feasible": true,
+      "entity_split": true
+    },
+    {
+      "kind": "face",
+      "index": 99297,
+      "severity_rank": 4,
+      "residual": 0.028817395714863334,
+      "original_preferred_status": "overlap",
+      "new_preferred_status": "accepted",
+      "preferred_quality_feasible": true,
+      "entity_split": true
+    },
+    {
+      "kind": "face",
+      "index": 13489,
+      "severity_rank": 5,
+      "residual": 0.028817395714863327,
+      "original_preferred_status": "overlap",
+      "new_preferred_status": "accepted",
+      "preferred_quality_feasible": true,
+      "entity_split": true
+    },
+    {
+      "kind": "face",
+      "index": 115477,
+      "severity_rank": 6,
+      "residual": 0.028817395714863327,
+      "original_preferred_status": "overlap",
+      "new_preferred_status": "accepted",
+      "preferred_quality_feasible": true,
+      "entity_split": true
+    },
+    {
+      "kind": "face",
+      "index": 18487,
+      "severity_rank": 7,
+      "residual": 0.02881739571486332,
+      "original_preferred_status": "overlap",
+      "new_preferred_status": "accepted",
+      "preferred_quality_feasible": true,
+      "entity_split": true
+    },
+    {
+      "kind": "face",
+      "index": 110483,
+      "severity_rank": 8,
+      "residual": 0.02881739571486332,
+      "original_preferred_status": "overlap",
+      "new_preferred_status": "accepted",
+      "preferred_quality_feasible": true,
+      "entity_split": true
+    },
+    {
+      "kind": "face",
+      "index": 17361,
+      "severity_rank": 9,
+      "residual": 0.02881739571486327,
+      "original_preferred_status": "overlap",
+      "new_preferred_status": "accepted",
+      "preferred_quality_feasible": true,
+      "entity_split": true
+    },
+    {
+      "kind": "face",
+      "index": 19251,
+      "severity_rank": 10,
+      "residual": 0.02881739571486327,
+      "original_preferred_status": "overlap",
+      "new_preferred_status": "accepted",
+      "preferred_quality_feasible": true,
+      "entity_split": true
+    },
+    {
+      "kind": "face",
+      "index": 109708,
+      "severity_rank": 11,
+      "residual": 0.02881739571486327,
+      "original_preferred_status": "overlap",
+      "new_preferred_status": "accepted",
+      "preferred_quality_feasible": true,
+      "entity_split": true
+    },
+    {
+      "kind": "face",
+      "index": 111601,
+      "severity_rank": 12,
+      "residual": 0.02881739571486327,
+      "original_preferred_status": "overlap",
+      "new_preferred_status": "accepted",
+      "preferred_quality_feasible": true,
+      "entity_split": true
+    },
+    {
+      "kind": "face",
+      "index": 47390,
+      "severity_rank": 13,
+      "residual": 0.02881739571486325,
+      "original_preferred_status": "overlap",
+      "new_preferred_status": "accepted",
+      "preferred_quality_feasible": true,
+      "entity_split": true
+    },
+    {
+      "kind": "face",
+      "index": 81569,
+      "severity_rank": 14,
+      "residual": 0.02881739571486325,
+      "original_preferred_status": "overlap",
+      "new_preferred_status": "accepted",
+      "preferred_quality_feasible": true,
+      "entity_split": true
+    },
+    {
+      "kind": "face",
+      "index": 15324,
+      "severity_rank": 15,
+      "residual": 0.028817395714863237,
+      "original_preferred_status": "overlap",
+      "new_preferred_status": "accepted",
+      "preferred_quality_feasible": true,
+      "entity_split": true
+    },
+    {
+      "kind": "face",
+      "index": 113642,
+      "severity_rank": 16,
+      "residual": 0.028817395714863237,
+      "original_preferred_status": "overlap",
+      "new_preferred_status": "accepted",
+      "preferred_quality_feasible": true,
+      "entity_split": true
+    },
+    {
+      "kind": "face",
+      "index": 14299,
+      "severity_rank": 17,
+      "residual": 0.028817395714863137,
+      "original_preferred_status": "overlap",
+      "new_preferred_status": "accepted",
+      "preferred_quality_feasible": true,
+      "entity_split": true
+    },
+    {
+      "kind": "face",
+      "index": 114650,
+      "severity_rank": 18,
+      "residual": 0.028817395714863137,
+      "original_preferred_status": "overlap",
+      "new_preferred_status": "accepted",
+      "preferred_quality_feasible": true,
+      "entity_split": true
+    },
+    {
+      "kind": "face",
+      "index": 51213,
+      "severity_rank": 19,
+      "residual": 0.02881739571486305,
+      "original_preferred_status": "overlap",
+      "new_preferred_status": "accepted",
+      "preferred_quality_feasible": true,
+      "entity_split": true
+    },
+    {
+      "kind": "face",
+      "index": 77741,
+      "severity_rank": 20,
+      "residual": 0.02881739571486305,
+      "original_preferred_status": "overlap",
+      "new_preferred_status": "accepted",
+      "preferred_quality_feasible": true,
+      "entity_split": true
+    },
+    {
+      "kind": "face",
+      "index": 35929,
+      "severity_rank": 21,
+      "residual": 0.028817395714863036,
+      "original_preferred_status": "overlap",
+      "new_preferred_status": "accepted",
+      "preferred_quality_feasible": true,
+      "entity_split": true
+    },
+    {
+      "kind": "face",
+      "index": 93091,
+      "severity_rank": 22,
+      "residual": 0.028817395714863036,
+      "original_preferred_status": "overlap",
+      "new_preferred_status": "accepted",
+      "preferred_quality_feasible": true,
+      "entity_split": true
+    },
+    {
+      "kind": "face",
+      "index": 51009,
+      "severity_rank": 23,
+      "residual": 0.028817395714863022,
+      "original_preferred_status": "overlap",
+      "new_preferred_status": "accepted",
+      "preferred_quality_feasible": true,
+      "entity_split": true
+    },
+    {
+      "kind": "face",
+      "index": 77952,
+      "severity_rank": 24,
+      "residual": 0.028817395714863022,
+      "original_preferred_status": "overlap",
+      "new_preferred_status": "accepted",
+      "preferred_quality_feasible": true,
+      "entity_split": true
+    },
+    {
+      "kind": "face",
+      "index": 29410,
+      "severity_rank": 25,
+      "residual": 0.028817395714862977,
+      "original_preferred_status": "overlap",
+      "new_preferred_status": "accepted",
+      "preferred_quality_feasible": true,
+      "entity_split": true
+    },
+    {
+      "kind": "face",
+      "index": 99584,
+      "severity_rank": 26,
+      "residual": 0.028817395714862977,
+      "original_preferred_status": "overlap",
+      "new_preferred_status": "accepted",
+      "preferred_quality_feasible": true,
+      "entity_split": true
+    },
+    {
+      "kind": "face",
+      "index": 33993,
+      "severity_rank": 27,
+      "residual": 0.028817395714862925,
+      "original_preferred_status": "overlap",
+      "new_preferred_status": "accepted",
+      "preferred_quality_feasible": true,
+      "entity_split": true
+    },
+    {
+      "kind": "face",
+      "index": 48341,
+      "severity_rank": 28,
+      "residual": 0.028817395714862925,
+      "original_preferred_status": "overlap",
+      "new_preferred_status": "accepted",
+      "preferred_quality_feasible": true,
+      "entity_split": true
+    },
+    {
+      "kind": "face",
+      "index": 80618,
+      "severity_rank": 29,
+      "residual": 0.028817395714862925,
+      "original_preferred_status": "overlap",
+      "new_preferred_status": "accepted",
+      "preferred_quality_feasible": true,
+      "entity_split": true
+    },
+    {
+      "kind": "face",
+      "index": 95012,
+      "severity_rank": 30,
+      "residual": 0.028817395714862925,
+      "original_preferred_status": "overlap",
+      "new_preferred_status": "accepted",
+      "preferred_quality_feasible": true,
+      "entity_split": true
+    },
+    {
+      "kind": "face",
+      "index": 36173,
+      "severity_rank": 31,
+      "residual": 0.028817395714862904,
+      "original_preferred_status": "overlap",
+      "new_preferred_status": "accepted",
+      "preferred_quality_feasible": true,
+      "entity_split": true
+    },
+    {
+      "kind": "face",
+      "index": 47019,
+      "severity_rank": 32,
+      "residual": 0.028817395714862904,
+      "original_preferred_status": "overlap",
+      "new_preferred_status": "accepted",
+      "preferred_quality_feasible": true,
+      "entity_split": true
+    },
+    {
+      "kind": "tet",
+      "index": 65948,
+      "severity_rank": 1,
+      "residual": 0.021408310545208444,
+      "original_preferred_status": "overlap",
+      "new_preferred_status": "accepted",
+      "preferred_quality_feasible": true,
+      "entity_split": true
+    },
+    {
+      "kind": "tet",
+      "index": 51027,
+      "severity_rank": 2,
+      "residual": 0.021408310545208416,
+      "original_preferred_status": "overlap",
+      "new_preferred_status": "accepted",
+      "preferred_quality_feasible": true,
+      "entity_split": true
+    },
+    {
+      "kind": "tet",
+      "index": 30822,
+      "severity_rank": 3,
+      "residual": 0.02140831054520838,
+      "original_preferred_status": "overlap",
+      "new_preferred_status": "accepted",
+      "preferred_quality_feasible": true,
+      "entity_split": true
+    },
+    {
+      "kind": "tet",
+      "index": 41945,
+      "severity_rank": 4,
+      "residual": 0.021408310545208368,
+      "original_preferred_status": "overlap",
+      "new_preferred_status": "accepted",
+      "preferred_quality_feasible": true,
+      "entity_split": true
+    },
+    {
+      "kind": "tet",
+      "index": 51839,
+      "severity_rank": 5,
+      "residual": 0.021408310545208368,
+      "original_preferred_status": "overlap",
+      "new_preferred_status": "accepted",
+      "preferred_quality_feasible": true,
+      "entity_split": true
+    },
+    {
+      "kind": "tet",
+      "index": 18099,
+      "severity_rank": 6,
+      "residual": 0.02140831054520834,
+      "original_preferred_status": "overlap",
+      "new_preferred_status": "accepted",
+      "preferred_quality_feasible": true,
+      "entity_split": true
+    },
+    {
+      "kind": "tet",
+      "index": 28694,
+      "severity_rank": 7,
+      "residual": 0.02140831054520834,
+      "original_preferred_status": "overlap",
+      "new_preferred_status": "accepted",
+      "preferred_quality_feasible": true,
+      "entity_split": true
+    },
+    {
+      "kind": "tet",
+      "index": 42559,
+      "severity_rank": 8,
+      "residual": 0.021408310545208285,
+      "original_preferred_status": "overlap",
+      "new_preferred_status": "accepted",
+      "preferred_quality_feasible": true,
+      "entity_split": true
+    },
+    {
+      "kind": "tet",
+      "index": 5286,
+      "severity_rank": 9,
+      "residual": 0.021408310545208194,
+      "original_preferred_status": "overlap",
+      "new_preferred_status": "accepted",
+      "preferred_quality_feasible": true,
+      "entity_split": true
+    },
+    {
+      "kind": "tet",
+      "index": 49258,
+      "severity_rank": 10,
+      "residual": 0.021408310545208194,
+      "original_preferred_status": "overlap",
+      "new_preferred_status": "accepted",
+      "preferred_quality_feasible": true,
+      "entity_split": true
+    },
+    {
+      "kind": "tet",
+      "index": 8794,
+      "severity_rank": 11,
+      "residual": 0.021408310545208167,
+      "original_preferred_status": "overlap",
+      "new_preferred_status": "accepted",
+      "preferred_quality_feasible": true,
+      "entity_split": true
+    },
+    {
+      "kind": "tet",
+      "index": 14273,
+      "severity_rank": 12,
+      "residual": 0.021408310545208167,
+      "original_preferred_status": "overlap",
+      "new_preferred_status": "accepted",
+      "preferred_quality_feasible": true,
+      "entity_split": true
+    },
+    {
+      "kind": "tet",
+      "index": 63652,
+      "severity_rank": 13,
+      "residual": 0.021408310545208167,
+      "original_preferred_status": "overlap",
+      "new_preferred_status": "accepted",
+      "preferred_quality_feasible": true,
+      "entity_split": true
+    },
+    {
+      "kind": "tet",
+      "index": 16649,
+      "severity_rank": 14,
+      "residual": 0.021408310545208104,
+      "original_preferred_status": "overlap",
+      "new_preferred_status": "accepted",
+      "preferred_quality_feasible": true,
+      "entity_split": true
+    },
+    {
+      "kind": "tet",
+      "index": 18098,
+      "severity_rank": 15,
+      "residual": 0.018054059766779307,
+      "original_preferred_status": "quality",
+      "new_preferred_status": "overlap",
+      "preferred_quality_feasible": false,
+      "entity_split": true
+    },
+    {
+      "kind": "tet",
+      "index": 51026,
+      "severity_rank": 16,
+      "residual": 0.018054059766779307,
+      "original_preferred_status": "quality",
+      "new_preferred_status": "overlap",
+      "preferred_quality_feasible": false,
+      "entity_split": true
+    },
+    {
+      "kind": "tet",
+      "index": 28693,
+      "severity_rank": 17,
+      "residual": 0.018054059766779304,
+      "original_preferred_status": "quality",
+      "new_preferred_status": "overlap",
+      "preferred_quality_feasible": false,
+      "entity_split": true
+    },
+    {
+      "kind": "tet",
+      "index": 16648,
+      "severity_rank": 18,
+      "residual": 0.018054059766779294,
+      "original_preferred_status": "quality",
+      "new_preferred_status": "overlap",
+      "preferred_quality_feasible": false,
+      "entity_split": true
+    },
+    {
+      "kind": "tet",
+      "index": 49257,
+      "severity_rank": 19,
+      "residual": 0.018054059766779294,
+      "original_preferred_status": "quality",
+      "new_preferred_status": "overlap",
+      "preferred_quality_feasible": false,
+      "entity_split": true
+    },
+    {
+      "kind": "tet",
+      "index": 42558,
+      "severity_rank": 20,
+      "residual": 0.01805405976677928,
+      "original_preferred_status": "quality",
+      "new_preferred_status": "overlap",
+      "preferred_quality_feasible": false,
+      "entity_split": true
+    },
+    {
+      "kind": "tet",
+      "index": 14272,
+      "severity_rank": 21,
+      "residual": 0.01805405976677927,
+      "original_preferred_status": "quality",
+      "new_preferred_status": "overlap",
+      "preferred_quality_feasible": false,
+      "entity_split": true
+    },
+    {
+      "kind": "tet",
+      "index": 65947,
+      "severity_rank": 22,
+      "residual": 0.01805405976677927,
+      "original_preferred_status": "quality",
+      "new_preferred_status": "overlap",
+      "preferred_quality_feasible": false,
+      "entity_split": true
+    },
+    {
+      "kind": "tet",
+      "index": 8793,
+      "severity_rank": 23,
+      "residual": 0.01805405976677926,
+      "original_preferred_status": "quality",
+      "new_preferred_status": "overlap",
+      "preferred_quality_feasible": false,
+      "entity_split": true
+    },
+    {
+      "kind": "tet",
+      "index": 51838,
+      "severity_rank": 24,
+      "residual": 0.018054059766779235,
+      "original_preferred_status": "quality",
+      "new_preferred_status": "overlap",
+      "preferred_quality_feasible": false,
+      "entity_split": true
+    },
+    {
+      "kind": "tet",
+      "index": 5285,
+      "severity_rank": 25,
+      "residual": 0.018054059766779228,
+      "original_preferred_status": "quality",
+      "new_preferred_status": "overlap",
+      "preferred_quality_feasible": false,
+      "entity_split": true
+    },
+    {
+      "kind": "tet",
+      "index": 41944,
+      "severity_rank": 26,
+      "residual": 0.018054059766779228,
+      "original_preferred_status": "quality",
+      "new_preferred_status": "overlap",
+      "preferred_quality_feasible": false,
+      "entity_split": true
+    },
+    {
+      "kind": "tet",
+      "index": 30821,
+      "severity_rank": 27,
+      "residual": 0.018054059766779207,
+      "original_preferred_status": "quality",
+      "new_preferred_status": "overlap",
+      "preferred_quality_feasible": false,
+      "entity_split": true
+    },
+    {
+      "kind": "tet",
+      "index": 63651,
+      "severity_rank": 28,
+      "residual": 0.018054059766779183,
+      "original_preferred_status": "quality",
+      "new_preferred_status": "overlap",
+      "preferred_quality_feasible": false,
+      "entity_split": true
+    },
+    {
+      "kind": "tet",
+      "index": 50823,
+      "severity_rank": 29,
+      "residual": 0.013028623215592717,
+      "original_preferred_status": "overlap",
+      "new_preferred_status": "accepted",
+      "preferred_quality_feasible": true,
+      "entity_split": true
+    },
+    {
+      "kind": "tet",
+      "index": 5766,
+      "severity_rank": 30,
+      "residual": 0.013028623215592674,
+      "original_preferred_status": "overlap",
+      "new_preferred_status": "accepted",
+      "preferred_quality_feasible": true,
+      "entity_split": true
+    },
+    {
+      "kind": "tet",
+      "index": 41074,
+      "severity_rank": 31,
+      "residual": 0.013028623215592674,
+      "original_preferred_status": "overlap",
+      "new_preferred_status": "accepted",
+      "preferred_quality_feasible": true,
+      "entity_split": true
+    },
+    {
+      "kind": "tet",
+      "index": 66046,
+      "severity_rank": 32,
+      "residual": 0.013028623215592674,
+      "original_preferred_status": "overlap",
+      "new_preferred_status": "accepted",
+      "preferred_quality_feasible": true,
+      "entity_split": true
+    }
+  ],
+  "remaining_quality_blocks": {
+    "formerly_quality_rejected_top_entities": 14,
+    "still_infeasible_preferred_top_entities": 14,
+    "quality_infeasible_top_entities_still_unsplit": 0,
+    "alternative_edges_not_enabled": true
+  },
+  "criterion": {
+    "before": {
+      "faces": {
+        "class_selected": 2875,
+        "geometry_selected": 9360,
+        "combined": 11068,
+        "wall_active": 62398,
+        "unresolved_gradient": 0,
+        "maximum_normalized_residual": 0.028817395714863525,
+        "active_residual_quantiles": [
+          0.0007368446573422103,
+          0.0026970882285134025,
+          0.007802301241099308,
+          0.028817395714863525
+        ]
+      },
+      "tets": {
+        "class_selected": 1094,
+        "geometry_selected": 5073,
+        "combined": 5541,
+        "wall_active": 37049,
+        "unresolved_gradient": 0,
+        "maximum_normalized_residual": 0.021408310545208444,
+        "active_residual_quantiles": [
+          0.0006542920481233604,
+          0.0025774935753553148,
+          0.007206945318848927,
+          0.021408310545208444
+        ]
+      }
+    },
+    "after": {
+      "faces": {
+        "class_selected": 3302,
+        "geometry_selected": 7067,
+        "combined": 9118,
+        "wall_active": 77245,
+        "unresolved_gradient": 0,
+        "maximum_normalized_residual": 0.023529002239286043,
+        "active_residual_quantiles": [
+          0.0005834263913932597,
+          0.0019015935835829854,
+          0.006005201493859096,
+          0.023529002239286043
+        ]
+      },
+      "tets": {
+        "class_selected": 1457,
+        "geometry_selected": 3248,
+        "combined": 4097,
+        "wall_active": 45559,
+        "unresolved_gradient": 0,
+        "maximum_normalized_residual": 0.01689491109135573,
+        "active_residual_quantiles": [
+          0.0005336726383043685,
+          0.0016476785700307048,
+          0.0051994263757174424,
+          0.01689491109135573
+        ]
+      }
+    },
+    "longest_first_control": {
+      "faces": {
+        "class_selected": 3906,
+        "geometry_selected": 7085,
+        "combined": 9288,
+        "wall_active": 76505,
+        "unresolved_gradient": 0,
+        "maximum_normalized_residual": 0.028817395714863525,
+        "active_residual_quantiles": [
+          0.0005966352913364078,
+          0.001903613807012711,
+          0.006363308431705789,
+          0.028817395714863525
+        ]
+      },
+      "tets": {
+        "class_selected": 1612,
+        "geometry_selected": 3637,
+        "combined": 4495,
+        "wall_active": 45085,
+        "unresolved_gradient": 0,
+        "maximum_normalized_residual": 0.021408310545208444,
+        "active_residual_quantiles": [
+          0.000533408049223644,
+          0.0017103384848388005,
+          0.006433308612939903,
+          0.021408310545208444
+        ]
+      }
+    }
+  },
+  "tet10_count_risk": {
+    "observed_prior_background": {
+      "nodes": 10881,
+      "tets": 56292,
+      "unique_edges": 68804,
+      "full_background_tet10_nodes": 79685,
+      "active_tets": 31874,
+      "wholly_in_band_tets": 3636,
+      "crossing_tets": 28238
+    },
+    "observed_current_background": {
+      "nodes": 14341,
+      "tets": 70575,
+      "unique_edges": 86991,
+      "full_background_tet10_nodes": 101332,
+      "active_tets": 43589,
+      "wholly_in_band_tets": 6540,
+      "crossing_tets": 37049
+    },
+    "proposed_background": {
+      "nodes": 16905,
+      "tets": 85127,
+      "unique_edges": 104479,
+      "full_background_tet10_nodes": 121384,
+      "active_tets": 55003,
+      "wholly_in_band_tets": 9444,
+      "crossing_tets": 45559
+    },
+    "observed_prior_native": {
+      "nodes": 86520,
+      "tets": 45038
+    },
+    "observed_current_native": {
+      "nodes": 108375,
+      "tets": 56548,
+      "status": "admission-rejected",
+      "forward": 0.014490028619154646,
+      "reverse": 0.009521603921334417
+    },
+    "models": [
+      {
+        "model": "scale_observed_native_by_active_tets",
+        "predicted_nodes": 136754,
+        "predicted_tets": 71356,
+        "factor": 1.2618550551744707,
+        "node_headroom_to_cap": 113246,
+        "tet_headroom_to_cap": 178644
+      },
+      {
+        "model": "scale_observed_native_by_tets",
+        "predicted_nodes": 130722,
+        "predicted_tets": 68208,
+        "factor": 1.2061919943322705,
+        "node_headroom_to_cap": 119278,
+        "tet_headroom_to_cap": 181792
+      },
+      {
+        "model": "scale_observed_native_by_full_background_tet10_nodes",
+        "predicted_nodes": 129821,
+        "predicted_tets": 67738,
+        "factor": 1.1978841826866142,
+        "node_headroom_to_cap": 120179,
+        "tet_headroom_to_cap": 182262
+      },
+      {
+        "model": "extrapolate_previous_increment_per_background_tet",
+        "predicted_nodes": 130642,
+        "predicted_tets": 68275,
+        "observed_node_increment_per_background_tet": 1.5301407267380802,
+        "observed_tet_increment_per_background_tet": 0.8058531120912974,
+        "node_headroom_to_cap": 119358,
+        "tet_headroom_to_cap": 181725
+      }
+    ],
+    "minimum_model_node_prediction": 129821,
+    "maximum_model_node_prediction": 136754,
+    "any_prediction_over_cap": false,
+    "is_bound": false,
+    "clipped_tet10_admission_unassessed": true,
+    "limitations": "Only two previous backgrounds; clipping, snap restoration and quality repair may change count growth. The model spread is not an uncertainty interval. Every future native result still requires actual 250000 node/tet caps."
+  },
+  "witnesses": [
+    {
+      "query_index": 28431,
+      "probe": [
+        -0.41462814871816733,
+        0.2544808199651331,
+        0.12981514993994103
+      ],
+      "before": {
+        "search_radius": 0.04,
+        "candidate_tets": 196,
+        "surface_triangles": 184,
+        "lower_dimensional_contacts": 0,
+        "constant_level_tets": [],
+        "nearest_distance": 0.0043088153375192145,
+        "distance_lower_bound": 0.0043088153375192145,
+        "nearest_is_global_for_affine_representation": true,
+        "excludes_gate_ball": true,
+        "scope": "Piecewise-affine band and physical cap polygons; floating-point local enumeration, not the physical implicit boundary"
+      },
+      "after": {
+        "search_radius": 0.04,
+        "candidate_tets": 251,
+        "surface_triangles": 223,
+        "lower_dimensional_contacts": 0,
+        "constant_level_tets": [],
+        "nearest_distance": 0.0043088153375192145,
+        "distance_lower_bound": 0.0043088153375192145,
+        "nearest_is_global_for_affine_representation": true,
+        "excludes_gate_ball": true,
+        "scope": "Piecewise-affine band and physical cap polygons; floating-point local enumeration, not the physical implicit boundary"
+      },
+      "containing_tet_split": false,
+      "containing_tet_marked": true,
+      "containing_tet_field_estimate": [
+        0.0032514053757622787
+      ]
+    },
+    {
+      "query_index": 22953,
+      "probe": [
+        -0.41331198311750394,
+        0.24522859980125575,
+        -0.3704342401056367
+      ],
+      "before": {
+        "search_radius": 0.04,
+        "candidate_tets": 198,
+        "surface_triangles": 185,
+        "lower_dimensional_contacts": 0,
+        "constant_level_tets": [],
+        "nearest_distance": 0.004216177092892309,
+        "distance_lower_bound": 0.004216177092892309,
+        "nearest_is_global_for_affine_representation": true,
+        "excludes_gate_ball": true,
+        "scope": "Piecewise-affine band and physical cap polygons; floating-point local enumeration, not the physical implicit boundary"
+      },
+      "after": {
+        "search_radius": 0.04,
+        "candidate_tets": 256,
+        "surface_triangles": 226,
+        "lower_dimensional_contacts": 0,
+        "constant_level_tets": [],
+        "nearest_distance": 0.004216177092892309,
+        "distance_lower_bound": 0.004216177092892309,
+        "nearest_is_global_for_affine_representation": true,
+        "excludes_gate_ball": true,
+        "scope": "Piecewise-affine band and physical cap polygons; floating-point local enumeration, not the physical implicit boundary"
+      },
+      "containing_tet_split": false,
+      "containing_tet_marked": false,
+      "containing_tet_field_estimate": [
+        0.0018320614466140952
+      ]
+    },
+    {
+      "query_index": 8839,
+      "probe": [
+        -0.08677710345786946,
+        -0.25488356456993455,
+        -0.3715065326406107
+      ],
+      "before": {
+        "search_radius": 0.04,
+        "candidate_tets": 198,
+        "surface_triangles": 185,
+        "lower_dimensional_contacts": 0,
+        "constant_level_tets": [],
+        "nearest_distance": 0.004454091842639875,
+        "distance_lower_bound": 0.004454091842639875,
+        "nearest_is_global_for_affine_representation": true,
+        "excludes_gate_ball": true,
+        "scope": "Piecewise-affine band and physical cap polygons; floating-point local enumeration, not the physical implicit boundary"
+      },
+      "after": {
+        "search_radius": 0.04,
+        "candidate_tets": 256,
+        "surface_triangles": 226,
+        "lower_dimensional_contacts": 0,
+        "constant_level_tets": [],
+        "nearest_distance": 0.004454091842639875,
+        "distance_lower_bound": 0.004454091842639875,
+        "nearest_is_global_for_affine_representation": true,
+        "excludes_gate_ball": true,
+        "scope": "Piecewise-affine band and physical cap polygons; floating-point local enumeration, not the physical implicit boundary"
+      },
+      "containing_tet_split": false,
+      "containing_tet_marked": false,
+      "containing_tet_field_estimate": [
+        0.0018320614466141333
+      ]
+    },
+    {
+      "query_index": 18929,
+      "probe": [
+        -0.25443145468400474,
+        -0.12727844954582881,
+        0.40580882456366785
+      ],
+      "before": {
+        "search_radius": 0.04,
+        "candidate_tets": 184,
+        "surface_triangles": 172,
+        "lower_dimensional_contacts": 0,
+        "constant_level_tets": [],
+        "nearest_distance": 0.0017297088336769623,
+        "distance_lower_bound": 0.0017297088336769623,
+        "nearest_is_global_for_affine_representation": true,
+        "excludes_gate_ball": false,
+        "scope": "Piecewise-affine band and physical cap polygons; floating-point local enumeration, not the physical implicit boundary"
+      },
+      "after": {
+        "search_radius": 0.04,
+        "candidate_tets": 246,
+        "surface_triangles": 222,
+        "lower_dimensional_contacts": 0,
+        "constant_level_tets": [],
+        "nearest_distance": 0.0017297088336769623,
+        "distance_lower_bound": 0.0017297088336769623,
+        "nearest_is_global_for_affine_representation": true,
+        "excludes_gate_ball": false,
+        "scope": "Piecewise-affine band and physical cap polygons; floating-point local enumeration, not the physical implicit boundary"
+      },
+      "containing_tet_split": false,
+      "containing_tet_marked": false,
+      "containing_tet_field_estimate": [
+        0.0003160562712999115
+      ]
+    },
+    {
+      "query_index": 913,
+      "probe": [
+        0.4146628365378058,
+        0.25445951355884505,
+        -0.36878037593347973
+      ],
+      "before": {
+        "search_radius": 0.04,
+        "candidate_tets": 193,
+        "surface_triangles": 183,
+        "lower_dimensional_contacts": 0,
+        "constant_level_tets": [],
+        "nearest_distance": 0.004090189928436434,
+        "distance_lower_bound": 0.004090189928436434,
+        "nearest_is_global_for_affine_representation": true,
+        "excludes_gate_ball": true,
+        "scope": "Piecewise-affine band and physical cap polygons; floating-point local enumeration, not the physical implicit boundary"
+      },
+      "after": {
+        "search_radius": 0.04,
+        "candidate_tets": 245,
+        "surface_triangles": 220,
+        "lower_dimensional_contacts": 0,
+        "constant_level_tets": [],
+        "nearest_distance": 0.004090189928436434,
+        "distance_lower_bound": 0.004090189928436434,
+        "nearest_is_global_for_affine_representation": true,
+        "excludes_gate_ball": true,
+        "scope": "Piecewise-affine band and physical cap polygons; floating-point local enumeration, not the physical implicit boundary"
+      },
+      "containing_tet_split": false,
+      "containing_tet_marked": true,
+      "containing_tet_field_estimate": [
+        0.003251405375762276
+      ]
+    },
+    {
+      "query_index": 27848,
+      "probe": [
+        0.41071501133649807,
+        0.24497814669799736,
+        0.13326407027659812
+      ],
+      "before": {
+        "search_radius": 0.04,
+        "candidate_tets": 191,
+        "surface_triangles": 178,
+        "lower_dimensional_contacts": 0,
+        "constant_level_tets": [],
+        "nearest_distance": 0.0031055749806857356,
+        "distance_lower_bound": 0.0031055749806857356,
+        "nearest_is_global_for_affine_representation": true,
+        "excludes_gate_ball": true,
+        "scope": "Piecewise-affine band and physical cap polygons; floating-point local enumeration, not the physical implicit boundary"
+      },
+      "after": {
+        "search_radius": 0.04,
+        "candidate_tets": 247,
+        "surface_triangles": 216,
+        "lower_dimensional_contacts": 0,
+        "constant_level_tets": [],
+        "nearest_distance": 0.0031055749806857356,
+        "distance_lower_bound": 0.0031055749806857356,
+        "nearest_is_global_for_affine_representation": true,
+        "excludes_gate_ball": true,
+        "scope": "Piecewise-affine band and physical cap polygons; floating-point local enumeration, not the physical implicit boundary"
+      },
+      "containing_tet_split": false,
+      "containing_tet_marked": true,
+      "containing_tet_field_estimate": [
+        0.003251405375762304
+      ]
+    },
+    {
+      "query_index": 4492,
+      "probe": [
+        -0.39856231100629036,
+        -0.11006943839737621,
+        -0.23232713573425395
+      ],
+      "before": {
+        "search_radius": 0.04,
+        "candidate_tets": 156,
+        "surface_triangles": 146,
+        "lower_dimensional_contacts": 0,
+        "constant_level_tets": [],
+        "nearest_distance": 0.008958181063491782,
+        "distance_lower_bound": 0.008958181063491782,
+        "nearest_is_global_for_affine_representation": true,
+        "excludes_gate_ball": true,
+        "scope": "Piecewise-affine band and physical cap polygons; floating-point local enumeration, not the physical implicit boundary"
+      },
+      "after": {
+        "search_radius": 0.04,
+        "candidate_tets": 215,
+        "surface_triangles": 202,
+        "lower_dimensional_contacts": 0,
+        "constant_level_tets": [],
+        "nearest_distance": 0.006508560743185563,
+        "distance_lower_bound": 0.006508560743185563,
+        "nearest_is_global_for_affine_representation": true,
+        "excludes_gate_ball": true,
+        "scope": "Piecewise-affine band and physical cap polygons; floating-point local enumeration, not the physical implicit boundary"
+      },
+      "containing_tet_split": true,
+      "containing_tet_marked": false,
+      "containing_tet_field_estimate": [
+        0.0
+      ]
+    },
+    {
+      "query_index": 2263,
+      "probe": [
+        0.3720341467381696,
+        0.4158738365399874,
+        -0.24576610419102443
+      ],
+      "before": {
+        "search_radius": 0.04,
+        "candidate_tets": 189,
+        "surface_triangles": 191,
+        "lower_dimensional_contacts": 0,
+        "constant_level_tets": [],
+        "nearest_distance": 0.004723790175200471,
+        "distance_lower_bound": 0.004723790175200471,
+        "nearest_is_global_for_affine_representation": true,
+        "excludes_gate_ball": true,
+        "scope": "Piecewise-affine band and physical cap polygons; floating-point local enumeration, not the physical implicit boundary"
+      },
+      "after": {
+        "search_radius": 0.04,
+        "candidate_tets": 237,
+        "surface_triangles": 226,
+        "lower_dimensional_contacts": 0,
+        "constant_level_tets": [],
+        "nearest_distance": 0.004723790175200471,
+        "distance_lower_bound": 0.004723790175200471,
+        "nearest_is_global_for_affine_representation": true,
+        "excludes_gate_ball": true,
+        "scope": "Piecewise-affine band and physical cap polygons; floating-point local enumeration, not the physical implicit boundary"
+      },
+      "containing_tet_split": false,
+      "containing_tet_marked": false,
+      "containing_tet_field_estimate": [
+        0.0018320614466140563
+      ]
+    }
+  ],
+  "witness_summary": {
+    "count": 8,
+    "within_distance_gate": 1,
+    "improved": 1,
+    "worsened": 0,
+    "worst_after": 0.006508560743185563
+  },
+  "complete": true,
+  "input_hashes_verified": true,
+  "interpretation": "Severity-only background control, not a native candidate. Quality-blocked preferred edges and omitted geometric marks remain visible. No claim that ordering resolves geometry globally."
+}

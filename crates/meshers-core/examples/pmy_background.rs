@@ -79,8 +79,9 @@ mod experiment {
             ..Default::default()
         };
         let trace = Mutex::new(Vec::new());
-        let observer = |state: implicit::BackgroundSnapObservation<'_>| {
-            trace.lock().unwrap().push(json!({
+        let linear_trace = Mutex::new(Vec::new());
+        let observer = |event: implicit::BackgroundObservation<'_>| match event {
+            implicit::BackgroundObservation::Snap(state) => trace.lock().unwrap().push(json!({
                 "topology_attempt": state.topology_attempt,
                 "validity_round": state.validity_round,
                 "points": state.points,
@@ -89,7 +90,17 @@ mod experiment {
                 "bad_tetrahedra": state.bad_tetrahedra,
                 "restored_vertices": state.restored_vertices,
                 "threshold": state.threshold,
-            }));
+            })),
+            implicit::BackgroundObservation::Linear { stage, mesh } => {
+                linear_trace.lock().unwrap().push(json!({
+                    "stage": stage,
+                    "points": mesh.points,
+                    "tetrahedra": mesh.tets,
+                    "surface": mesh.surface,
+                    "admitted": false,
+                    "scope": "Diagnostic linear state before final admission",
+                }));
+            }
         };
         let start = Instant::now();
         let output = if input.builtin_background {
@@ -146,6 +157,7 @@ mod experiment {
         }
         if input.trace_snapping {
             record["background_snap_trace"] = json!(trace.into_inner().unwrap());
+            record["background_linear_trace"] = json!(linear_trace.into_inner().unwrap());
         }
         serde_json::to_writer(BufWriter::new(File::create(&args[2])?), &record)?;
         println!("{}: {:.3} s", record["status"], seconds);

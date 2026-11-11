@@ -1,0 +1,21 @@
+{
+  "command": [
+    "cargo",
+    "+1.95.0",
+    "test",
+    "--locked",
+    "--release",
+    "-p",
+    "meshers-core",
+    "--lib",
+    "--features",
+    "experimental-quads",
+    "--no-run",
+    "--message-format=json"
+  ],
+  "returncode": 0,
+  "failure": null,
+  "elapsed_s": 65.3993340000161,
+  "timeout_s": 300,
+  "memory_enforcement": "ancestor process-tree RSS watchdog, 8GiB"
+}

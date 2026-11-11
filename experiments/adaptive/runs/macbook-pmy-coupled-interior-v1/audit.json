@@ -1,0 +1,77 @@
+{
+  "invariant_guards": {
+    "boundary_coordinates_bitwise_unchanged": true,
+    "only_accepted_component_nodes_moved": true,
+    "positive_volume": true,
+    "coherent_facets": true,
+    "fixed_polyhedral_volume": true,
+    "periodic_pairs_exactly_unchanged": true,
+    "periodic_classes_exactly_unchanged": true,
+    "no_new_quality_failures": true
+  },
+  "topology": {
+    "nodes": 21387,
+    "elements": 66637,
+    "unique_faces": 151781,
+    "interior_faces": 114767,
+    "extracted_boundary_faces": 37014,
+    "same_orientation_shared_faces": 0,
+    "nonmanifold_faces": 0,
+    "duplicate_cells": 0,
+    "duplicate_surface_faces": 0,
+    "provided_boundary_matches_extraction": true,
+    "missing_provided_faces": 0,
+    "extra_provided_faces": 0,
+    "nonpositive_corner_determinants": 0,
+    "minimum_corner_determinant": 6.565877760766557e-08,
+    "oriented_facet_consistency_passed": true,
+    "conflict_examples": [],
+    "scope": "Oriented corner-face incidence and same-side neighbor diagnostics; necessary consistency, not a certificate of curved geometry or absence of nonlocal intersections"
+  },
+  "periodic": {
+    "periodic_pair_counts": [
+      358,
+      358,
+      358
+    ],
+    "periodic_coordinate_errors": [
+      5.551115123125783e-17,
+      5.551115123125783e-17,
+      5.551115123125783e-17
+    ],
+    "periodic_pair_tolerance": 1e-10,
+    "periodic_equivalence_classes": 20331,
+    "periodic_triangles_match": true,
+    "full_facet_check_required": true,
+    "complete_existing_node_classes": true,
+    "unmatched_noncap_contact_nodes": [
+      [
+        [],
+        []
+      ],
+      [
+        [],
+        []
+      ],
+      [
+        [],
+        []
+      ]
+    ],
+    "declared_bounds": [
+      [
+        -0.5,
+        -0.5,
+        -0.5
+      ],
+      [
+        0.5,
+        0.5,
+        0.5
+      ]
+    ],
+    "periodic_gate": "declared-cell-material-cap-and-complete-node-classes-v1"
+  },
+  "initial_volume": 0.30450353890780607,
+  "final_volume": 0.30450353890780607
+}

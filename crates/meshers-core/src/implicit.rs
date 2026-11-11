@@ -134,12 +134,24 @@ pub struct BackgroundSnapObservation<'a> {
     pub threshold: f64,
 }
 
+/// Unstable borrowed diagnostics for the experimental supplied-background path.
+/// Linear snapshots precede admission and may belong to a rejected result.
+#[cfg(feature = "experimental-quads")]
+pub enum BackgroundObservation<'a> {
+    Snap(BackgroundSnapObservation<'a>),
+    Linear { stage: &'static str, mesh: &'a Mesh },
+}
+
+/// Borrowed scalar-stage callback; snapshots do not imply mesh admission.
+#[cfg(feature = "experimental-quads")]
+pub type LinearObserver<'a> = dyn Fn(&'static str, &Mesh) + Sync + 'a;
+
 #[derive(Clone, Copy)]
 struct Background<'a> {
     points: &'a [Point],
     tetrahedra: &'a [crate::Tet],
     #[cfg(feature = "experimental-quads")]
-    observer: Option<&'a (dyn Fn(BackgroundSnapObservation<'_>) + Sync)>,
+    observer: Option<&'a (dyn Fn(BackgroundObservation<'_>) + Sync)>,
 }
 
 struct Context<'a, F: ScalarField> {
@@ -149,6 +161,8 @@ struct Context<'a, F: ScalarField> {
     halfspace_regions: Option<&'a [intersection::ConstraintMask]>,
     size_field: Option<&'a dyn ScalarField>,
     background: Option<Background<'a>>,
+    #[cfg(feature = "experimental-quads")]
+    linear_observer: Option<&'a LinearObserver<'a>>,
     options: Options,
     center: f64,
     scale: f64,
@@ -394,7 +408,39 @@ pub fn generate_with_regions<F: ScalarField>(
     halfspaces: Option<&[[f64; 4]]>,
     regions: Option<&[intersection::ConstraintMask]>,
 ) -> Result<Output, MeshingError> {
-    generate_internal(field, size_field, options, halfspaces, regions, None, None)
+    generate_internal(
+        field,
+        size_field,
+        options,
+        halfspaces,
+        regions,
+        None,
+        None,
+        #[cfg(feature = "experimental-quads")]
+        None,
+    )
+}
+
+/// Unstable borrowed linear diagnostics for the ordinary scalar path.
+/// Snapshots precede admission and may belong to a rejected result. The observer
+/// must not change field state; meshing options and final checks are unchanged.
+#[cfg(feature = "experimental-quads")]
+pub fn generate_with_observer<F: ScalarField>(
+    field: &F,
+    size_field: Option<&dyn ScalarField>,
+    options: Options,
+    observer: &LinearObserver<'_>,
+) -> Result<Output, MeshingError> {
+    generate_internal(
+        field,
+        size_field,
+        options,
+        None,
+        None,
+        None,
+        None,
+        Some(observer),
+    )
 }
 
 /// Adapt an equivalent retained intersection. Periodic and quadratic feature
@@ -412,6 +458,8 @@ pub fn generate_with_constraints<F: ScalarField>(
         None,
         None,
         Some(constraints),
+        None,
+        #[cfg(feature = "experimental-quads")]
         None,
     )
 }
@@ -437,14 +485,15 @@ pub fn generate_with_background<F: ScalarField>(
 
 /// Unstable experimental diagnostic entry point. The observer receives each
 /// pre-clipping validity scan, including scans after periodic/topology rollback.
-/// Observation does not change meshing options or admit the resulting mesh.
+/// The nonadaptive path also reports its linear clipping/repair stages, including
+/// the state before final admission. Observation does not change meshing options.
 #[cfg(feature = "experimental-quads")]
 pub fn generate_with_background_observer<F: ScalarField>(
     field: &F,
     options: Options,
     points: &[Point],
     tetrahedra: &[crate::Tet],
-    observer: &(dyn Fn(BackgroundSnapObservation<'_>) + Sync),
+    observer: &(dyn Fn(BackgroundObservation<'_>) + Sync),
 ) -> Result<Output, MeshingError> {
     generate_background_internal(field, options, points, tetrahedra, Some(observer))
 }
@@ -455,7 +504,7 @@ fn generate_background_internal<F: ScalarField>(
     options: Options,
     points: &[Point],
     tetrahedra: &[crate::Tet],
-    observer: Option<&(dyn Fn(BackgroundSnapObservation<'_>) + Sync)>,
+    observer: Option<&(dyn Fn(BackgroundObservation<'_>) + Sync)>,
 ) -> Result<Output, MeshingError> {
     generate_internal(
         field,
@@ -469,9 +518,11 @@ fn generate_background_internal<F: ScalarField>(
             tetrahedra,
             observer,
         }),
+        None,
     )
 }
 
+#[allow(clippy::too_many_arguments)]
 fn generate_internal<F: ScalarField>(
     field: &F,
     size_field: Option<&dyn ScalarField>,
@@ -480,6 +531,7 @@ fn generate_internal<F: ScalarField>(
     regions: Option<&[intersection::ConstraintMask]>,
     constraints: Option<&[&dyn ScalarField]>,
     background: Option<Background<'_>>,
+    #[cfg(feature = "experimental-quads")] linear_observer: Option<&LinearObserver<'_>>,
 ) -> Result<Output, MeshingError> {
     if options.curved_fit && options.order != 2 {
         return Err(MeshingError::InvalidOptions(
@@ -610,6 +662,8 @@ fn generate_internal<F: ScalarField>(
         halfspace_regions: halfspaces.as_ref().and(regions),
         size_field,
         background,
+        #[cfg(feature = "experimental-quads")]
+        linear_observer,
         options,
         center,
         scale,
@@ -864,6 +918,7 @@ pub(crate) fn periodic_pairs<const N: usize>(
 }
 
 fn finish<F: ScalarField>(mesh: Mesh, g: &Context<F>) -> Result<Output, String> {
+    observe_linear(g, "final-linear", &mesh);
     let mut volume = 0.;
     let mut minimum: f64 = 1.;
     let mut elements_below_quality_01 = 0;
@@ -1313,6 +1368,7 @@ fn build<F: ScalarField>(g: &Context<F>) -> Result<Output, String> {
     }
     let mut mesh =
         mesh.ok_or("safe snapping could not resolve boundary topology in eight rounds")?;
+    observe_linear(g, "clipped", &mesh);
     drop(b);
     drop(original_points);
     drop(original_values);
@@ -1328,6 +1384,7 @@ fn build<F: ScalarField>(g: &Context<F>) -> Result<Output, String> {
             &adapt,
             o.max_tetrahedra,
         )?;
+        observe_linear(g, "adapted", &mesh);
         crate::optimize::optimize_for(
             &mut mesh,
             threshold,
@@ -1338,6 +1395,7 @@ fn build<F: ScalarField>(g: &Context<F>) -> Result<Output, String> {
             None,
             g,
         )?;
+        observe_linear(g, "optimized", &mesh);
         if o.optimize_passes > 0 {
             // Quality improvement can make a blocked wall insertion feasible.
             // Close geometry after that pass without repeating size adaptation.
@@ -1352,6 +1410,7 @@ fn build<F: ScalarField>(g: &Context<F>) -> Result<Output, String> {
                 },
                 o.max_tetrahedra,
             )?;
+            observe_linear(g, "geometry-closed", &mesh);
             stats.splits += closing.splits;
             stats.collapses += closing.collapses;
             stats.swaps += closing.swaps;
@@ -1385,6 +1444,7 @@ fn build<F: ScalarField>(g: &Context<F>) -> Result<Output, String> {
         None,
         g,
     )?;
+    observe_linear(g, "optimized", &mesh);
     crate::adaptive::refine_for(
         &mut mesh,
         threshold,
@@ -1392,6 +1452,7 @@ fn build<F: ScalarField>(g: &Context<F>) -> Result<Output, String> {
         o.max_tetrahedra,
         g,
     )?;
+    observe_linear(g, "geometry-refined", &mesh);
     crate::optimize::optimize_for(
         &mut mesh,
         threshold,
@@ -1487,6 +1548,22 @@ fn clip_lattice<F: ScalarField>(
     clipped_mesh(b, tets)
 }
 
+fn observe_linear<F: ScalarField>(_g: &Context<F>, _stage: &'static str, _mesh: &Mesh) {
+    #[cfg(feature = "experimental-quads")]
+    if let Some(observer) = _g.linear_observer {
+        observer(_stage, _mesh);
+    }
+    #[cfg(feature = "experimental-quads")]
+    if let Some(background) = _g.background
+        && let Some(observer) = background.observer
+    {
+        observer(BackgroundObservation::Linear {
+            stage: _stage,
+            mesh: _mesh,
+        });
+    }
+}
+
 // A supplied partition can contain shorter edges than the original BCC grid.
 // Keep the same snapping distance and clipping guards, but give invalid moves
 // the same periodic restoration opportunity as later topology failures.
@@ -1519,7 +1596,7 @@ fn restore_background_snaps<F: ScalarField>(
         }
         #[cfg(feature = "experimental-quads")]
         if let Some(observer) = background.observer {
-            observer(BackgroundSnapObservation {
+            observer(BackgroundObservation::Snap(BackgroundSnapObservation {
                 topology_attempt: _topology_attempt,
                 validity_round,
                 points: &b.points[..background.points.len()],
@@ -1528,7 +1605,7 @@ fn restore_background_snaps<F: ScalarField>(
                 bad_tetrahedra: &bad,
                 restored_vertices: &restored_vertices,
                 threshold,
-            });
+            }));
         }
         if bad.is_empty() {
             return Ok(reverted);
@@ -1793,9 +1870,11 @@ mod topology_tests {
     ) -> RollbackTest {
         let field = |_: crate::Point| 0.5;
         let observed = std::sync::Mutex::new(Vec::new());
-        let observer = |state: super::BackgroundSnapObservation<'_>| {
-            assert_eq!(state.topology_attempt, 3);
-            observed.lock().unwrap().push(state.bad_tetrahedra.len());
+        let observer = |event: super::BackgroundObservation<'_>| {
+            if let super::BackgroundObservation::Snap(state) = event {
+                assert_eq!(state.topology_attempt, 3);
+                observed.lock().unwrap().push(state.bad_tetrahedra.len());
+            }
         };
         let background = super::Background {
             points,
@@ -1809,6 +1888,7 @@ mod topology_tests {
             halfspace_regions: None,
             size_field: None,
             background: Some(background),
+            linear_observer: None,
             options: super::Options {
                 bounds: [[-0.5; 3], [0.5; 3]],
                 region: super::Region::Band {
@@ -1923,6 +2003,101 @@ mod topology_tests {
 
     #[cfg(feature = "experimental-quads")]
     #[test]
+    fn scalar_observer_preserves_periodic_output() {
+        for adaptive in [false, true] {
+            let options = super::Options {
+                cells: [4; 3],
+                periodic: [true; 3],
+                optimize_passes: 1,
+                max_tetrahedra: 10_000,
+                order: 2,
+                adapt: adaptive.then_some(crate::tet_adapt::Options {
+                    iterations: 0,
+                    ..Default::default()
+                }),
+                ..Default::default()
+            };
+            let field = |_: crate::Point| -1.;
+            let ordinary = super::generate(&field, options).unwrap();
+            let stages = std::sync::Mutex::new(Vec::new());
+            let observer = |stage, mesh: &crate::Mesh| {
+                stages.lock().unwrap().push(stage);
+                if stage == "final-linear" {
+                    assert_eq!(mesh.points, ordinary.mesh.points);
+                    assert_eq!(mesh.tets, ordinary.mesh.tets);
+                    assert_eq!(mesh.surface, ordinary.mesh.surface);
+                }
+            };
+            let traced = super::generate_with_observer(&field, None, options, &observer).unwrap();
+            assert_eq!(ordinary.mesh.points, traced.mesh.points);
+            assert_eq!(ordinary.mesh.tets, traced.mesh.tets);
+            assert_eq!(ordinary.mesh.surface, traced.mesh.surface);
+            assert_eq!(ordinary.boundary_tags, traced.boundary_tags);
+            assert_eq!(ordinary.periodic_pairs, traced.periodic_pairs);
+            assert_eq!(ordinary.diagnostics.volume, traced.diagnostics.volume);
+            assert_eq!(
+                ordinary.diagnostics.minimum_mmg_quality,
+                traced.diagnostics.minimum_mmg_quality
+            );
+            let a = ordinary.quadratic.unwrap();
+            let b = traced.quadratic.unwrap();
+            assert_eq!(a.elements.points, b.elements.points);
+            assert_eq!(a.elements.tets, b.elements.tets);
+            assert_eq!(a.elements.surface, b.elements.surface);
+            assert_eq!(a.periodic_pairs, b.periodic_pairs);
+            let expected = if adaptive {
+                vec![
+                    "clipped",
+                    "adapted",
+                    "optimized",
+                    "geometry-closed",
+                    "final-linear",
+                ]
+            } else {
+                vec!["clipped", "optimized", "geometry-refined", "final-linear"]
+            };
+            assert_eq!(*stages.lock().unwrap(), expected);
+        }
+    }
+
+    #[cfg(feature = "experimental-quads")]
+    #[test]
+    fn scalar_observer_preserves_exact_rejection() {
+        let field = |_: crate::Point| -1.;
+        let options = super::Options {
+            bounds: [[0.; 3], [1., 1., 0.001]],
+            cells: [4; 3],
+            optimize_passes: 0,
+            minimum_quality: 0.05,
+            max_tetrahedra: 10_000,
+            ..Default::default()
+        };
+        let ordinary = super::generate(&field, options).err().unwrap().to_string();
+        assert!(ordinary.contains("minimum MMG quality"));
+        let final_quality = std::sync::Mutex::new(None);
+        let observer = |stage, mesh: &crate::Mesh| {
+            if stage == "final-linear" {
+                *final_quality.lock().unwrap() = Some(
+                    mesh.tets
+                        .iter()
+                        .map(|tet| crate::quality(tet.map(|i| mesh.points[i])).powf(1.5))
+                        .fold(1., f64::min),
+                );
+            }
+        };
+        let traced = super::generate_with_observer(&field, None, options, &observer)
+            .err()
+            .unwrap()
+            .to_string();
+        assert_eq!(ordinary, traced);
+        assert!(traced.contains(&format!(
+            "minimum MMG quality {:e}",
+            final_quality.into_inner().unwrap().unwrap()
+        )));
+    }
+
+    #[cfg(feature = "experimental-quads")]
+    #[test]
     fn supplied_background_snap_observer_preserves_native_output() {
         let options = super::Options {
             bounds: [[-0.5; 3], [0.5; 3]],
@@ -1941,10 +2116,17 @@ mod topology_tests {
             super::generate_with_background(&field, options, &background.points, &background.tets)
                 .unwrap();
         let calls = std::sync::Mutex::new(0);
-        let observer = |state: super::BackgroundSnapObservation<'_>| {
-            assert_eq!(state.points.len(), background.points.len());
-            assert_eq!(state.values.len(), background.points.len());
-            *calls.lock().unwrap() += 1;
+        let stages = std::sync::Mutex::new(Vec::new());
+        let observer = |event: super::BackgroundObservation<'_>| match event {
+            super::BackgroundObservation::Snap(state) => {
+                assert_eq!(state.points.len(), background.points.len());
+                assert_eq!(state.values.len(), background.points.len());
+                *calls.lock().unwrap() += 1;
+            }
+            super::BackgroundObservation::Linear { stage, mesh } => {
+                assert!(!mesh.tets.is_empty());
+                stages.lock().unwrap().push(stage);
+            }
         };
         let traced = super::generate_with_background_observer(
             &field,
@@ -1955,6 +2137,10 @@ mod topology_tests {
         )
         .unwrap();
         assert!(*calls.lock().unwrap() > 0);
+        assert_eq!(
+            *stages.lock().unwrap(),
+            ["clipped", "optimized", "geometry-refined", "final-linear"]
+        );
         assert_eq!(ordinary.mesh.points, traced.mesh.points);
         assert_eq!(ordinary.mesh.tets, traced.mesh.tets);
         assert_eq!(ordinary.mesh.surface, traced.mesh.surface);
@@ -1968,6 +2154,79 @@ mod topology_tests {
         assert_eq!(a.elements.tets, b.elements.tets);
         assert_eq!(a.elements.surface, b.elements.surface);
         assert_eq!(a.periodic_pairs, b.periodic_pairs);
+    }
+
+    #[cfg(feature = "experimental-quads")]
+    #[test]
+    fn supplied_background_linear_observer_preserves_quality_rejection() {
+        let field = |_: crate::Point| -1.;
+        let options = super::Options {
+            bounds: [[-0.5; 3], [0.5; 3]],
+            cells: [4; 3],
+            snap: 0.,
+            optimize_passes: 0,
+            geometry_tolerance: 1.,
+            max_tetrahedra: 10_000,
+            ..Default::default()
+        };
+        let background = super::generate(&field, options).unwrap().mesh;
+        let first = background.tets[0];
+        let center: crate::Point = std::array::from_fn(|axis| {
+            0.995 * background.points[first[0]][axis]
+                + 0.005 / 3.
+                    * first[1..]
+                        .iter()
+                        .map(|&i| background.points[i][axis])
+                        .sum::<f64>()
+        });
+        let mut points = background.points;
+        let inserted = points.len();
+        points.push(center);
+        let mut tets = background.tets[1..].to_vec();
+        for vertex in first {
+            tets.push(first.map(|i| if i == vertex { inserted } else { i }));
+        }
+        let options = super::Options {
+            minimum_quality: 0.1,
+            ..options
+        };
+        let ordinary = super::generate_with_background(&field, options, &points, &tets)
+            .err()
+            .unwrap()
+            .to_string();
+        assert!(ordinary.contains("minimum MMG quality") && ordinary.contains("mesh rejected"));
+        let observed = std::sync::Mutex::new(Vec::new());
+        let observer = |event: super::BackgroundObservation<'_>| {
+            if let super::BackgroundObservation::Linear { stage, mesh } = event {
+                let q: Vec<_> = mesh
+                    .tets
+                    .iter()
+                    .map(|tet| crate::quality(tet.map(|i| mesh.points[i])).powf(1.5))
+                    .collect();
+                observed.lock().unwrap().push((
+                    stage,
+                    mesh.tets.len(),
+                    q.iter().copied().fold(1., f64::min),
+                    q.iter().filter(|&&v| v < 0.1).count(),
+                ));
+            }
+        };
+        let traced =
+            super::generate_with_background_observer(&field, options, &points, &tets, &observer)
+                .err()
+                .unwrap()
+                .to_string();
+        assert_eq!(ordinary, traced);
+        let observed = observed.into_inner().unwrap();
+        assert_eq!(
+            observed.iter().map(|row| row.0).collect::<Vec<_>>(),
+            ["clipped", "optimized", "geometry-refined", "final-linear"]
+        );
+        let last = observed.last().unwrap();
+        assert_eq!(last.1, tets.len());
+        assert!(last.2 < 0.1 && last.3 > 0);
+        assert!(traced.contains(&format!("minimum MMG quality {:e}", last.2)));
+        assert!(traced.contains(&format!("{} elements below 0.1", last.3)));
     }
 
     #[cfg(feature = "experimental-quads")]
@@ -1993,6 +2252,7 @@ mod topology_tests {
             halfspace_regions: None,
             size_field: None,
             background: Some(background),
+            linear_observer: None,
             options: super::Options {
                 cells: [4; 3],
                 minimum_quality: 0.1,
@@ -2191,6 +2451,8 @@ mod topology_tests {
                 halfspace_regions: None,
                 size_field: None,
                 background: None,
+                #[cfg(feature = "experimental-quads")]
+                linear_observer: None,
                 options: Options {
                     bounds: [[-0.5; 3], [0.5; 3]],
                     periodic: [false, false, true],

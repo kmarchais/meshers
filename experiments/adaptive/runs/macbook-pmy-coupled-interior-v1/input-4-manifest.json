@@ -1,0 +1,45 @@
+{
+  "inputs": {
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/pmy_star_obstruction_audit.py": "15896501908574bc876f18d18737d77f17ec38ca22ce3c57f24ff6f609c387ba",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-pmy-linear-failure-v1/candidate/linear-final-linear.npz": "06e370191be2c0dcdc43684407f65b70c63548300068c0047b71a13be6b08fae",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-pmy-interior-quality-repair-v3/result.json": "e52f3c81b215a5a641eaf0787f6344a37269201bc8a8c1a0f1e6adb384847dd4",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-pmy-interior-quality-repair-v3/repaired-linear.npz": "07b1462ee325067e90906e980c36de7676e04754f6ed90f34a2d6eb2797c0ceb",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/pmy_interior_quality_repair.py": "afe196a1bd10c4c0ca461fbc7f29699487f7993af9e6f1e946ead42dd97dee83",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/star_feasibility.py": "8b6a788d505d8df1cf4b94b5faea615d28bff14ec03f71ac577b5f49339b83d3",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/facet_incidence_audit.py": "4f51afc196c85e1d0bc64d7a96507517ddc6e32ccd8380a2ac77cae0ace89610",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/mmg_quality_localization.py": "03ef27a978fcd5101f36745ccaf67309f49ce6ece172fad28b84246d6d457ebc",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/microgen_workflow.py": "9f513dfd3e6e5a72a71a54f70c0c2cf7c7a1ebe7256886ee3feaf7d7ad7de161",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/job_parts.py": "cc220d52685be4035a3cf38b85e8e2d8354e55f36c42245cd6e1faad9a44bcab"
+  },
+  "numerical_threads": {
+    "environment": {
+      "OPENBLAS_NUM_THREADS": "1",
+      "OMP_NUM_THREADS": "1",
+      "MKL_NUM_THREADS": "1",
+      "VECLIB_MAXIMUM_THREADS": "1",
+      "RAYON_NUM_THREADS": "1"
+    },
+    "accelerate_blas_threading": 1,
+    "accelerate_scope": "calling thread"
+  },
+  "highs_threads": 1,
+  "memory_bytes": 8589934592,
+  "worker_timeout_s": 60,
+  "per_lp_time_limit_s": 2,
+  "exact_admission_target": 0.1,
+  "required_negative_margin": 1e-10,
+  "maximum_actual_stars": 7,
+  "expansion_points": [
+    "original",
+    "archived-returned"
+  ],
+  "maximum_actual_lps": 14,
+  "nonlinear_solves": 0,
+  "no_mesh_output": true,
+  "formal_interval_certificate": false,
+  "radius_derivation": "For the fixed opposite-face centroid c, r=norm(u-c), S>=3r^2 and D<=norm(grad D)*r. Hence q>=t implies r<=sqrt(4*norm(grad D)/t). Weighted tangent residual is maximized on this containing ball.",
+  "packages": {
+    "numpy": "2.5.4",
+    "scipy": "1.18.1"
+  }
+}

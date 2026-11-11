@@ -117,6 +117,8 @@ fn adapt_saved_wedge_seed() {
         halfspace_regions: regions.as_deref(),
         size_field: None,
         background: None,
+        #[cfg(feature = "experimental-quads")]
+        linear_observer: None,
         options,
         center: 0.,
         scale,

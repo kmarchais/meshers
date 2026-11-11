@@ -2,8 +2,19 @@
 
 ## Overnight continuation, 11 November 2026, in progress
 
-Checkpoint `4e05cd1` preserves jobs 759 through 767. Work continues under
-Kevin's authorization until 08:00 Madrid time. No admission threshold changes.
+[Measured progress and tradeoffs](handoff/macbook/overnight-findings-20261111.html)
+and [numeric results with source hashes](handoff/macbook/overnight-findings-20261111.json)
+include the overnight experiments and the morning continuation through job 815.
+The PMY boundary improvement uses more elements and lower minimum quality;
+it is not a matched-count win. No new end-to-end Microgen comparison or FEA
+convergence result is claimed in this checkpoint.
+
+Work was interrupted after job 800. Kevin resumed the session after the original
+08:00 Madrid cutoff; job 801 starts at 08:44. No work is claimed for the gap.
+
+Checkpoint `4e05cd1` preserves jobs 759 through 767. The original overnight
+authorization ended at 08:00 Madrid; Kevin subsequently requested continuation.
+No admission threshold changes.
 
 Job 769 replaces the rejected center subdivisions with disjoint complete
 periodic edge stars, using the exact frozen selections from job 764. The
@@ -161,6 +172,271 @@ records hashes for the completed runs through 782 and the two read-only
 audits. Work remains active until the authorized morning deadline. The four
 original cases and all 24 lattice tensors remain in scope; no new FEA result
 or overall comparison win is claimed.
+
+Checkpoint `89025fd` commits and pushes this evidence and the supplied-background
+snap restoration. Its 370 text artifacts and 88 local mesh/array artifacts
+were verified against the checkpoint index. All 34 native-v3 build inputs now
+also have hash-identical local source copies, recorded in the
+[source archive index](handoff/macbook/pmy-native-v3-source-archive-20261111.json).
+New experiments can resolve those copies when the working source changes;
+the original binary receipt and historical results remain unchanged.
+
+The next bounded PMY preflight recomputes the same field-only criterion on
+job 769's exact background and applies a second periodic edge-star pass.
+Actual background quality, conformity, parent volumes and counts precede
+any decision to run native clipping. Four empirical Tet10 count projections
+are resource-risk observations, not upper bounds. Held-out samples remain
+observers. Forward-distance diagnosis must also retain the earlier evidence
+that Newton projection can choose a farther implicit branch.
+
+Job 783 completes this preflight in 4.86 seconds and 478 MiB. It accepts
+2,278 edge orbits and rejects 3,153 for overlap and 70 for quality. The
+background passes at 16,856 nodes, 84,784 tets and minimum q 0.121058.
+Empirical native node projections range from 129,433 to 136,299, below the
+cap but without a guaranteed bound. All eight held-out affine distances
+remain unchanged, as do the maximum face and tet residuals. The background
+has 20.1% more tets. Native clipping is deferred while a causal audit checks
+why the worst field-selected regions remain unresolved.
+
+Job 784 isolates two causes. None of the 32 highest-residual faces or 32
+highest-residual tets gets its preferred split: 50 are blocked by earlier
+accepted stars and 14 fail the child-quality guard. Every inspected entity
+has a quality-feasible alternative edge that improves its local residual.
+A dry run that changes only ordering to field severity accepts 50 of those
+preferred edges. This is a scheduling observation, not a measured new mesh.
+The next preflight materializes that exact schedule before considering
+alternative-edge selection. Several held-out affine gaps also expose omitted
+marks: containing-tet estimates near 0.001832 coexist with distances above
+0.004. Reordering alone cannot repair that estimator limitation.
+
+Job 786 materializes the severity schedule and passes all background gates
+at 16,905 nodes and 85,127 tets. Maximum face residual falls from 0.0288174
+to 0.0235290; maximum tet residual falls from 0.0214083 to 0.0168949.
+One held-out affine distance improves, reducing their maximum from 0.00895818
+to 0.00650856; seven remain unchanged. All 14 entities whose preferred edge
+fails quality nevertheless split through another entity's accepted request.
+These measured gains and estimated native node counts below 137,000 justify
+one unchanged native attempt. They do not establish final geometry accuracy.
+
+The next CAD control moves to uncovered BCC lattice geometry. The adapter
+must preserve Microgen's actual flat-ended cylinders, rotations, heights and
+periodic split/fuse/cell clipping. Collinear equal-radius cylinders may be
+coalesced only where their interval union is unchanged. This removes hidden
+zero-valued cap seams inside the fused material. Recorded endpoint residuals,
+actual CAD membership and boundary controls precede native meshing; ambiguous
+gaps must not be bridged by a loose tolerance.
+
+Job 785 stops before native meshing. The public BCC CAD is valid, and its
+adaptive volume estimate is 0.178464071122085. All representation controls
+pass, but CAD membership disagrees with the field at 176 of 1,233 frozen
+probes. Several probes 1e-5 outside the cell are reported as boundary by
+OCCT despite a requested classifier tolerance of 1e-9. A separate diagnosis
+will measure stored CAD tolerances, exposed-boundary distances and the
+central junction. No mesh or new coverage success is claimed.
+
+The volume investigation now justifies measuring native cost once. A private
+test-only Rust prototype will use the signed-envelope rule on all nine fixed
+cases, retaining the existing movement, periodic and Jacobian safeguards.
+The Python prototype's runtime is insufficient evidence for rejecting a
+native implementation. This preparation does not add a production option or
+change the default fitter.
+
+Job 790 runs the severity-ordered PMY background through the unchanged native
+algorithm. It fails final quality: 22 elements are below 0.1, with minimum
+q 0.0713310. No mesh passes to geometry admission. All three snap-restoration
+scans reproduce the independent validity predicates, and restored coordinates
+and values match the original native bits. Better background residuals did not
+produce a better final mesh. The next investigation localizes the rejected
+elements before selecting another refinement rule.
+
+The first private volume build, job 787, fails on a missing Rust type
+annotation. Job 788 fixes that annotation and passes both the new transport
+and geometry controls and the existing exact-sphere/plane/face-order control.
+Job 789 then stops on the first Gyroid case before correction: existing
+periodic aliases differ in a free coordinate by about 7e-18. The experiment
+incorrectly required their original bits to be identical. Its failed output
+and source snapshot are preserved while the update representation is reviewed.
+No native volume payoff has been measured yet.
+
+Job 791 explains the BCC classification discrepancy. Both fresh and reused
+classifiers reproduce all 176 ambiguous labels. The freshly constructed CAD
+stores edge and vertex tolerances up to 5.01e-5. The saved STEP import stores
+at most 5.33e-7 and changes exactly those 176 classifications. Physical-boundary
+distances agree between the two representations; the center is inside and
+0.122474487 away from the boundary. Box and cylinder controls pass.
+
+The next check retains all original queries and resolves only the near-cap
+ambiguities using exact cell inequalities, strict membership in an original
+cylinder, and saved physical CAD feet. STEP is corroborating evidence, not a
+replacement specimen: its volume differs by about 1.14e-9. The 3,984 unfinished
+edge-extrema queries are recorded and cannot support an exhaustive distance
+bound. Surface coverage and native meshing remain pending.
+
+Job 792 replays job 776's complete forward observer on the saved mesh. Corner
+nodes are within 1.43e-13 of the wall. The failures lie between corners:
+1,570 midpoint samples, 1,185 other edge samples and 1,964 face-interior
+samples exceed 0.002. Ten of eleven inspected witnesses exclude the physical
+boundary throughout a radius-0.002 ball using the analytic global PMY Hessian
+bound and floating-point padding. This is not an interval certificate.
+Newton overstates some distances, but cannot explain these failures away.
+Spatial proximity does not implicate snap restoration; source lineage is not
+retained. The next saved-mesh control checks whether individual midpoint
+projections are blocked by neighboring curved-element Jacobians.
+
+Job 796 tests eight complete midpoint classes independently. Every full wall
+projection inverts both incident curved tets, including the independently found
+feasible feet. Only small partial motions remain valid. Job 801 tests the
+alternative boundary diagonal on those same two-tet stars. One of eight has a
+valid local alternative with a lower field residual, still far above 0.002;
+the other seven invert. This does not justify a global diagonal-swap repair.
+
+Job 795 resolves all 176 original BCC cap ambiguities by the recorded geometric
+predicates. Job 798 reproduces the actual CAD inventory and numerical volume
+exactly, retains all original membership queries, and samples the physical
+faces, edges and vertices. Field residual is at most 3.47e-16. The fixture is
+verified, but the single native attempt fails its linear geometry check at
+0.00575931 against 0.002, before any Tet10 construction. BCC is still unsupported
+by this tested recipe. The next diagnostic must capture that exact failure
+without changing the adaptation or optimization tolerances.
+
+Job 797 passes the 16 observer/topology controls and example compilation, then
+fails strict Clippy on one loop in the private volume probe. The failed archive
+remains intact. Job 799 passes after the iterator correction. Job 800 uses its
+borrowed snapshots to reproduce the original PMY rejection and every previous
+native value and snap array, excluding diagnostic elapsed time. Clipping creates
+4,141 sub-0.1 tets. The first optimization leaves 79; geometry refinement changes
+nothing; final optimization leaves 22. Optimization introduces five and then
+two newly sub-threshold elements while repairing many others. Final bad elements
+all have an interior vertex, no cap vertex and no fixed-wall-face quality
+obstruction. One bounded interior-only repair is being prepared.
+
+Job 793 validates the volume probe's alias-preserving update. Job 794 admits
+Gyroid, Schwarz P and spinodoid under both standard and dense checks, then stops
+on a lattice cap-gradient mismatch. The private adapter wrongly canonicalized
+gradients as well as values. Production preserves the physical cap side for
+gradients. Job 802 passes the corrected adapter's six cap controls. All nine
+cases are rerun on the same corrected archive; prior partial results stay frozen.
+
+Job 803 passes standard and dense admission for the first four cases, then
+stops on a Schwarz D bookkeeping assertion. All 662 directed periodic pairs
+on each axis are unchanged, including multiplicity. Their spatial list order
+changes after tangential motion. The private probe now compares sorted directed
+pairs; separate controls reject changed pairings and duplicates. The coordinate
+gate and production periodic matcher are unchanged. All nine cases must finish
+on one corrected archive before the payoff comparison is accepted.
+
+The first interior-repair worker, job 804, fails on a progress API mismatch
+before numerical work. Job 805 fixes that call but fails its synthetic repair
+control before reading PMY. Both failed outputs remain archived. No actual PMY
+repair result is claimed while this control is investigated.
+
+The separate synthetic diagnosis measures a solver residual of 1.03e-9 and
+quality 2.92e-11 below 0.1. Analytic derivatives pass and the centroid is
+feasible. The proposal target becomes 0.100001 with solver tolerance 1e-8;
+acceptance still requires successful optimization and independently measured
+q at least 0.1. Job 807 then passes the controls and repairs four of 22 bad
+elements through two accepted interior moves. Eighteen failures remain and
+the worst q stays 0.0713310. Boundary coordinates, counts, connectivity,
+positive volume, facets and periodic pairs remain unchanged. Seven rejected
+node solves require a shared-star obstruction audit before further relocation.
+
+Job 806 preserves a failed build caused by a missing observer field in one
+research-only context initializer. Job 808 fixes that initializer and passes
+the private volume controls and existing exact-sphere/plane/face-order control.
+The next volume run uses the new sealed archive for all nine cases. Scalar
+failure snapshots are also being built in an isolated Python package; the
+installed package remains unchanged for an exact BCC baseline control.
+
+Job 809 completes all nine volume controls on the same native archive. Standard
+and dense geometry admission pass, sampled boundary maxima do not worsen,
+counts and corner quality remain unchanged, and periodic pairing and sampled
+positive-Jacobian gates pass. All four repetitions produce identical coordinates.
+Correction-stage medians range from 0.041 to 0.876 seconds using direct Rust
+fixture evaluators. These are not production JIT or end-to-end generation times.
+
+| Case | Added correction seconds | Reduction in absolute volume error |
+|---|---:|---:|
+| Gyroid sheet | 0.0411 | 11.41%, empirical reference |
+| Schwarz P solid | 0.0589 | 43.40%, exact half-cell reference |
+| Spinodoid | 0.8761 | Reference uncertainty unresolved |
+| Smooth-union lattice | 0.2962 | Reference uncertainty unresolved |
+| Schwarz D solid | 0.0837 | 40.88%, exact half-cell reference |
+| Linear-thickness Gyroid | 0.1371 | 13.42%, empirical reference |
+| Periodic-thickness Gyroid | 0.1252 | 13.69%, empirical reference |
+| Anisotropic spinodoid | 0.4202 | Reference uncertainty unresolved |
+| Linear-density Gyroid | 0.1620 | 23.11%, empirical reference |
+
+The four Gyroid ranking directions hold throughout the separately recorded
+empirical reference intervals, whose coverage is not certified. Absolute gains
+are small, from 1.09e-8 to 9.25e-7 of cell volume. The measured native cost makes
+a production-path evaluation reasonable, but does not justify enabling this
+correction by default. No stiffness result transfers to these changed domains.
+
+Job 811 checks all seven rejected single-node PMY stars at the exact quality
+target 0.1. Each has a negative concave-tangent bound, with the gradient-balance
+residual bounded over a geometry-derived finite ball. A second evaluator
+reproduces the bounds. This is floating-point separation evidence, not interval
+certification or an obstruction to coupled motion. The support identifies
+11 interior vertices in four groups with 144, 96, 90 and 124 incident tets.
+One fixed-boundary coupled solve per group is the next control; repeated
+single-node optimization is not justified by these results.
+
+Job 814 performs those four coupled solves from the partially repaired mesh.
+All four stop below q 0.1 and introduce additional bad neighbors in their
+proposals. Every component is rejected whole. The saved output is bitwise
+unchanged, with 18 failures and minimum q 0.0713310. This nonconvex failure
+does not prove coupled repair impossible. Further relocation growth is deferred;
+the next design question is whether existing interior connectivity swaps can
+repair these cells without changing the fixed physical boundary.
+
+Job 810 passes all 122 Rust regression tests with two explicit research tests
+ignored, then fails strict Clippy on two observer type-complexity warnings.
+A shared feature-gated callback type fixes both. The failed source archive and
+logs remain intact; full isolated-wheel validation continues in a fresh archive.
+
+Job 812 passes the full Rust suite, strict core and binding Clippy, default
+feature checks and all six Python observer off/on tests. The isolated package
+does not replace the installed binary. Job 813 reproduces the exact BCC error
+with the old installed package, the new ordinary path and the observed path.
+Five linear snapshots are saved. Adaptation increases 8,016 tets to 142,434;
+closing refinement reaches 143,026 tets and 30,604 nodes, with q 0.10000290 and
+positive signed volumes. The geometry error remains 0.005759307619141104.
+Periodic and facet checks are audited separately during localization because
+the native geometry rejection occurs before every final gate has run.
+
+Job 815 reconstructs the BCC native error exactly. Initial clipping has no
+corner violations; adaptation introduces corner errors up to 0.00461898.
+Final violations include 609 corner occurrences, 376 centroids and 990 edge
+midpoints. All have zero locked axes, excluding cap-gradient amplification as
+their cause. Closing refinement increases the maximum from 0.00516519 to
+0.00575931 and the violating-sample count from 1,323 to 1,975. The inspected
+worst patches span different cylinder branches at their corners. All five
+captured stages pass independent periodic and oriented-facet audits.
+
+Prospective Tet10 connectivity has 215,409 nodes and 143,026 tets, within the
+unchanged caps. Elevation is nevertheless deferred: fixed corners cannot remove
+the recorded corner residuals. The next CAD control must trace adaptive wall
+drift and junction handling. For PMY, the next hypothesis is a bounded interior
+connectivity pass using the existing intersection repair kernel; the nonadaptive
+supplied-background path currently performs relocation and refinement without
+that pass. Neither next-step hypothesis is a measured fix yet.
+
+Code inspection narrows the CAD follow-up. Adaptive splitting can insert a
+partially projected wall vertex to retain quality. Settling can leave that
+vertex pending, and scalar mesh export/re-entry does not restore the pending
+set. The final settling pass also follows face-error enforcement, while its
+local acceptance does not check all incident face errors. The next bounded
+control should trace those events and explicit node lineage during unchanged
+closing. Output reconstruction renumbers nodes, so output indices alone do not
+prove when a vertex was created. These are candidate mechanisms, not verified
+causal fixes.
+
+[Checkpoint evidence](handoff/macbook/diagnostic-checkpoint-evidence-20261111.json)
+indexes 840 small run artifacts and 621 local source, mesh and binary artifacts
+through job 815. Small native build logs and receipts have hash-identical
+portable copies for review. Historical inputs and failed results remain intact.
+All four original study cases, the expanded geometry inventory and all 24
+lattice tensors remain in scope. The overall objective is unfinished.
 
 ## Resumed failure diagnosis and bounded controls, 11 November 2026
 

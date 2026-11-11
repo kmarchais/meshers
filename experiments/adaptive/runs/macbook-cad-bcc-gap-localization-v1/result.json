@@ -1,0 +1,1087 @@
+{
+  "complete": true,
+  "native_admitted": false,
+  "controls": {
+    "regular_cylinder_chord": 0.00199334221587584,
+    "expected_chord": 0.0019933422158758375,
+    "cap_locked_distance": 0.021421356237309508,
+    "unconstrained_distance": 0.0151471862576143,
+    "two_branch_exact_tie_distance": 0.028284271247461905,
+    "sample_order_and_cap_exclusion": true,
+    "finite_cylinder_cap_and_rim": true,
+    "periodic_gradient_keeps_physical_side": true
+  },
+  "stages": [
+    {
+      "stage": "clipped",
+      "maximum": 0.024693784502944457,
+      "samples": 16464,
+      "nonfinite": 0,
+      "above_tolerance": 6864,
+      "categories": [
+        {
+          "kind": "corner-0",
+          "locked_axes": 0,
+          "samples": 2200,
+          "maximum": 4.163336342344337e-17,
+          "nonfinite": 0,
+          "above_tolerance": 0
+        },
+        {
+          "kind": "corner-0",
+          "locked_axes": 1,
+          "samples": 116,
+          "maximum": 1.1928901333748673e-14,
+          "nonfinite": 0,
+          "above_tolerance": 0
+        },
+        {
+          "kind": "corner-0",
+          "locked_axes": 2,
+          "samples": 36,
+          "maximum": 3.399349888776296e-17,
+          "nonfinite": 0,
+          "above_tolerance": 0
+        },
+        {
+          "kind": "corner-1",
+          "locked_axes": 0,
+          "samples": 2236,
+          "maximum": 4.163336342344337e-17,
+          "nonfinite": 0,
+          "above_tolerance": 0
+        },
+        {
+          "kind": "corner-1",
+          "locked_axes": 1,
+          "samples": 110,
+          "maximum": 1.1964456926397702e-14,
+          "nonfinite": 0,
+          "above_tolerance": 0
+        },
+        {
+          "kind": "corner-1",
+          "locked_axes": 2,
+          "samples": 6,
+          "maximum": 3.3993498887762956e-17,
+          "nonfinite": 0,
+          "above_tolerance": 0
+        },
+        {
+          "kind": "corner-2",
+          "locked_axes": 0,
+          "samples": 2236,
+          "maximum": 4.163336342344337e-17,
+          "nonfinite": 0,
+          "above_tolerance": 0
+        },
+        {
+          "kind": "corner-2",
+          "locked_axes": 1,
+          "samples": 110,
+          "maximum": 1.1964456926397702e-14,
+          "nonfinite": 0,
+          "above_tolerance": 0
+        },
+        {
+          "kind": "corner-2",
+          "locked_axes": 2,
+          "samples": 6,
+          "maximum": 3.3993498887762956e-17,
+          "nonfinite": 0,
+          "above_tolerance": 0
+        },
+        {
+          "kind": "centroid",
+          "locked_axes": 0,
+          "samples": 2352,
+          "maximum": 0.01569289270463462,
+          "nonfinite": 0,
+          "above_tolerance": 2280
+        },
+        {
+          "kind": "edge-01",
+          "locked_axes": 0,
+          "samples": 2300,
+          "maximum": 0.024693784502944457,
+          "nonfinite": 0,
+          "above_tolerance": 1495
+        },
+        {
+          "kind": "edge-01",
+          "locked_axes": 1,
+          "samples": 52,
+          "maximum": 0.006907762158143483,
+          "nonfinite": 0,
+          "above_tolerance": 32
+        },
+        {
+          "kind": "edge-12",
+          "locked_axes": 0,
+          "samples": 2312,
+          "maximum": 0.024693784502944457,
+          "nonfinite": 0,
+          "above_tolerance": 1522
+        },
+        {
+          "kind": "edge-12",
+          "locked_axes": 1,
+          "samples": 40,
+          "maximum": 0.006907762158143483,
+          "nonfinite": 0,
+          "above_tolerance": 8
+        },
+        {
+          "kind": "edge-20",
+          "locked_axes": 0,
+          "samples": 2300,
+          "maximum": 0.024693784502944457,
+          "nonfinite": 0,
+          "above_tolerance": 1495
+        },
+        {
+          "kind": "edge-20",
+          "locked_axes": 1,
+          "samples": 52,
+          "maximum": 0.006907762158143483,
+          "nonfinite": 0,
+          "above_tolerance": 32
+        }
+      ],
+      "branch_attribution_samples": 128,
+      "branch_attribution_complete": false,
+      "branch_attribution_covers_all_violations": false,
+      "nodes": 2133,
+      "elements": 8016,
+      "q_min": 0.19297968123086678,
+      "q_passed": true,
+      "minimum_signed_volume": 9.97189409013582e-07,
+      "volume": 0.1721107328816922,
+      "independent_facets": {
+        "nodes": 2133,
+        "elements": 8016,
+        "unique_faces": 17376,
+        "interior_faces": 14688,
+        "extracted_boundary_faces": 2688,
+        "same_orientation_shared_faces": 0,
+        "nonmanifold_faces": 0,
+        "duplicate_cells": 0,
+        "duplicate_surface_faces": 0,
+        "provided_boundary_matches_extraction": true,
+        "missing_provided_faces": 0,
+        "extra_provided_faces": 0,
+        "nonpositive_corner_determinants": 0,
+        "minimum_corner_determinant": 5.983136454081497e-06,
+        "oriented_facet_consistency_passed": true,
+        "conflict_examples": [],
+        "scope": "Oriented corner-face incidence and same-side neighbor diagnostics; necessary consistency, not a certificate of curved geometry or absence of nonlocal intersections"
+      },
+      "independent_periodicity": {
+        "periodic_pair_counts": [
+          52,
+          52,
+          52
+        ],
+        "periodic_coordinate_errors": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "periodic_pair_tolerance": 1e-10,
+        "periodic_equivalence_classes": 1994,
+        "periodic_triangles_match": true,
+        "full_facet_check_required": true,
+        "complete_existing_node_classes": true,
+        "unmatched_noncap_contact_nodes": [
+          [
+            [],
+            []
+          ],
+          [
+            [],
+            []
+          ],
+          [
+            [],
+            []
+          ]
+        ],
+        "declared_bounds": [
+          [
+            -0.5,
+            -0.5,
+            -0.5
+          ],
+          [
+            0.5,
+            0.5,
+            0.5
+          ]
+        ],
+        "periodic_gate": "declared-cell-material-cap-and-complete-node-classes-v1",
+        "passed": true
+      },
+      "native_admitted": false
+    },
+    {
+      "stage": "adapted",
+      "maximum": 0.005165185173557476,
+      "samples": 129234,
+      "nonfinite": 0,
+      "above_tolerance": 1330,
+      "categories": [
+        {
+          "kind": "corner-0",
+          "locked_axes": 0,
+          "samples": 17685,
+          "maximum": 0.0046189800007379175,
+          "nonfinite": 0,
+          "above_tolerance": 148
+        },
+        {
+          "kind": "corner-0",
+          "locked_axes": 1,
+          "samples": 742,
+          "maximum": 9.892687053555022e-14,
+          "nonfinite": 0,
+          "above_tolerance": 0
+        },
+        {
+          "kind": "corner-0",
+          "locked_axes": 2,
+          "samples": 35,
+          "maximum": 3.399349888776296e-17,
+          "nonfinite": 0,
+          "above_tolerance": 0
+        },
+        {
+          "kind": "corner-1",
+          "locked_axes": 0,
+          "samples": 17891,
+          "maximum": 0.0046189800007379175,
+          "nonfinite": 0,
+          "above_tolerance": 87
+        },
+        {
+          "kind": "corner-1",
+          "locked_axes": 1,
+          "samples": 564,
+          "maximum": 9.892687053555022e-14,
+          "nonfinite": 0,
+          "above_tolerance": 0
+        },
+        {
+          "kind": "corner-1",
+          "locked_axes": 2,
+          "samples": 7,
+          "maximum": 3.3993498887762956e-17,
+          "nonfinite": 0,
+          "above_tolerance": 0
+        },
+        {
+          "kind": "corner-2",
+          "locked_axes": 0,
+          "samples": 17902,
+          "maximum": 0.0046189800007379175,
+          "nonfinite": 0,
+          "above_tolerance": 85
+        },
+        {
+          "kind": "corner-2",
+          "locked_axes": 1,
+          "samples": 555,
+          "maximum": 9.892687053555022e-14,
+          "nonfinite": 0,
+          "above_tolerance": 0
+        },
+        {
+          "kind": "corner-2",
+          "locked_axes": 2,
+          "samples": 5,
+          "maximum": 3.3993498887762956e-17,
+          "nonfinite": 0,
+          "above_tolerance": 0
+        },
+        {
+          "kind": "centroid",
+          "locked_axes": 0,
+          "samples": 18462,
+          "maximum": 0.005165185173557476,
+          "nonfinite": 0,
+          "above_tolerance": 294
+        },
+        {
+          "kind": "edge-01",
+          "locked_axes": 0,
+          "samples": 18221,
+          "maximum": 0.005137749516191947,
+          "nonfinite": 0,
+          "above_tolerance": 257
+        },
+        {
+          "kind": "edge-01",
+          "locked_axes": 1,
+          "samples": 241,
+          "maximum": 0.0011632256935850632,
+          "nonfinite": 0,
+          "above_tolerance": 0
+        },
+        {
+          "kind": "edge-12",
+          "locked_axes": 0,
+          "samples": 18340,
+          "maximum": 0.00514079560472884,
+          "nonfinite": 0,
+          "above_tolerance": 195
+        },
+        {
+          "kind": "edge-12",
+          "locked_axes": 1,
+          "samples": 122,
+          "maximum": 0.0007425708755017282,
+          "nonfinite": 0,
+          "above_tolerance": 0
+        },
+        {
+          "kind": "edge-20",
+          "locked_axes": 0,
+          "samples": 18235,
+          "maximum": 0.00514079560472884,
+          "nonfinite": 0,
+          "above_tolerance": 264
+        },
+        {
+          "kind": "edge-20",
+          "locked_axes": 1,
+          "samples": 227,
+          "maximum": 0.0011632256935850632,
+          "nonfinite": 0,
+          "above_tolerance": 0
+        }
+      ],
+      "branch_attribution_samples": 128,
+      "branch_attribution_complete": false,
+      "branch_attribution_covers_all_violations": false,
+      "nodes": 30421,
+      "elements": 142434,
+      "q_min": 0.10000140792144539,
+      "q_passed": true,
+      "minimum_signed_volume": 6.2455086375526e-11,
+      "volume": 0.17693035940775653,
+      "independent_facets": {
+        "nodes": 30421,
+        "elements": 142434,
+        "unique_faces": 295908,
+        "interior_faces": 273828,
+        "extracted_boundary_faces": 22080,
+        "same_orientation_shared_faces": 0,
+        "nonmanifold_faces": 0,
+        "duplicate_cells": 0,
+        "duplicate_surface_faces": 0,
+        "provided_boundary_matches_extraction": true,
+        "missing_provided_faces": 0,
+        "extra_provided_faces": 0,
+        "nonpositive_corner_determinants": 0,
+        "minimum_corner_determinant": 3.747305182531555e-10,
+        "oriented_facet_consistency_passed": true,
+        "conflict_examples": [],
+        "scope": "Oriented corner-face incidence and same-side neighbor diagnostics; necessary consistency, not a certificate of curved geometry or absence of nonlocal intersections"
+      },
+      "independent_periodicity": {
+        "periodic_pair_counts": [
+          390,
+          376,
+          362
+        ],
+        "periodic_coordinate_errors": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "periodic_pair_tolerance": 1e-10,
+        "periodic_equivalence_classes": 29330,
+        "periodic_triangles_match": true,
+        "full_facet_check_required": true,
+        "complete_existing_node_classes": true,
+        "unmatched_noncap_contact_nodes": [
+          [
+            [],
+            []
+          ],
+          [
+            [],
+            []
+          ],
+          [
+            [],
+            []
+          ]
+        ],
+        "declared_bounds": [
+          [
+            -0.5,
+            -0.5,
+            -0.5
+          ],
+          [
+            0.5,
+            0.5,
+            0.5
+          ]
+        ],
+        "periodic_gate": "declared-cell-material-cap-and-complete-node-classes-v1",
+        "passed": true
+      },
+      "native_admitted": false
+    },
+    {
+      "stage": "optimized",
+      "maximum": 0.005165185173557476,
+      "samples": 129234,
+      "nonfinite": 0,
+      "above_tolerance": 1323,
+      "categories": [
+        {
+          "kind": "corner-0",
+          "locked_axes": 0,
+          "samples": 17685,
+          "maximum": 0.0046189800007379175,
+          "nonfinite": 0,
+          "above_tolerance": 148
+        },
+        {
+          "kind": "corner-0",
+          "locked_axes": 1,
+          "samples": 742,
+          "maximum": 9.468003287997227e-14,
+          "nonfinite": 0,
+          "above_tolerance": 0
+        },
+        {
+          "kind": "corner-0",
+          "locked_axes": 2,
+          "samples": 35,
+          "maximum": 3.399349888776296e-17,
+          "nonfinite": 0,
+          "above_tolerance": 0
+        },
+        {
+          "kind": "corner-1",
+          "locked_axes": 0,
+          "samples": 17891,
+          "maximum": 0.0046189800007379175,
+          "nonfinite": 0,
+          "above_tolerance": 87
+        },
+        {
+          "kind": "corner-1",
+          "locked_axes": 1,
+          "samples": 564,
+          "maximum": 9.468003287997227e-14,
+          "nonfinite": 0,
+          "above_tolerance": 0
+        },
+        {
+          "kind": "corner-1",
+          "locked_axes": 2,
+          "samples": 7,
+          "maximum": 3.3993498887762956e-17,
+          "nonfinite": 0,
+          "above_tolerance": 0
+        },
+        {
+          "kind": "corner-2",
+          "locked_axes": 0,
+          "samples": 17902,
+          "maximum": 0.0046189800007379175,
+          "nonfinite": 0,
+          "above_tolerance": 85
+        },
+        {
+          "kind": "corner-2",
+          "locked_axes": 1,
+          "samples": 555,
+          "maximum": 9.468003287997227e-14,
+          "nonfinite": 0,
+          "above_tolerance": 0
+        },
+        {
+          "kind": "corner-2",
+          "locked_axes": 2,
+          "samples": 5,
+          "maximum": 3.3993498887762956e-17,
+          "nonfinite": 0,
+          "above_tolerance": 0
+        },
+        {
+          "kind": "centroid",
+          "locked_axes": 0,
+          "samples": 18462,
+          "maximum": 0.005165185173557476,
+          "nonfinite": 0,
+          "above_tolerance": 287
+        },
+        {
+          "kind": "edge-01",
+          "locked_axes": 0,
+          "samples": 18221,
+          "maximum": 0.005137749516191947,
+          "nonfinite": 0,
+          "above_tolerance": 257
+        },
+        {
+          "kind": "edge-01",
+          "locked_axes": 1,
+          "samples": 241,
+          "maximum": 0.0010649434941088906,
+          "nonfinite": 0,
+          "above_tolerance": 0
+        },
+        {
+          "kind": "edge-12",
+          "locked_axes": 0,
+          "samples": 18340,
+          "maximum": 0.00514079560472884,
+          "nonfinite": 0,
+          "above_tolerance": 195
+        },
+        {
+          "kind": "edge-12",
+          "locked_axes": 1,
+          "samples": 122,
+          "maximum": 0.0007754244101941917,
+          "nonfinite": 0,
+          "above_tolerance": 0
+        },
+        {
+          "kind": "edge-20",
+          "locked_axes": 0,
+          "samples": 18235,
+          "maximum": 0.00514079560472884,
+          "nonfinite": 0,
+          "above_tolerance": 264
+        },
+        {
+          "kind": "edge-20",
+          "locked_axes": 1,
+          "samples": 227,
+          "maximum": 0.0010649434941088906,
+          "nonfinite": 0,
+          "above_tolerance": 0
+        }
+      ],
+      "branch_attribution_samples": 128,
+      "branch_attribution_complete": false,
+      "branch_attribution_covers_all_violations": false,
+      "nodes": 30421,
+      "elements": 142434,
+      "q_min": 0.10000208625371143,
+      "q_passed": true,
+      "minimum_signed_volume": 4.595650433756759e-11,
+      "volume": 0.17693657408805216,
+      "independent_facets": {
+        "nodes": 30421,
+        "elements": 142434,
+        "unique_faces": 295908,
+        "interior_faces": 273828,
+        "extracted_boundary_faces": 22080,
+        "same_orientation_shared_faces": 0,
+        "nonmanifold_faces": 0,
+        "duplicate_cells": 0,
+        "duplicate_surface_faces": 0,
+        "provided_boundary_matches_extraction": true,
+        "missing_provided_faces": 0,
+        "extra_provided_faces": 0,
+        "nonpositive_corner_determinants": 0,
+        "minimum_corner_determinant": 2.7573902602540563e-10,
+        "oriented_facet_consistency_passed": true,
+        "conflict_examples": [],
+        "scope": "Oriented corner-face incidence and same-side neighbor diagnostics; necessary consistency, not a certificate of curved geometry or absence of nonlocal intersections"
+      },
+      "independent_periodicity": {
+        "periodic_pair_counts": [
+          390,
+          376,
+          362
+        ],
+        "periodic_coordinate_errors": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "periodic_pair_tolerance": 1e-10,
+        "periodic_equivalence_classes": 29330,
+        "periodic_triangles_match": true,
+        "full_facet_check_required": true,
+        "complete_existing_node_classes": true,
+        "unmatched_noncap_contact_nodes": [
+          [
+            [],
+            []
+          ],
+          [
+            [],
+            []
+          ],
+          [
+            [],
+            []
+          ]
+        ],
+        "declared_bounds": [
+          [
+            -0.5,
+            -0.5,
+            -0.5
+          ],
+          [
+            0.5,
+            0.5,
+            0.5
+          ]
+        ],
+        "periodic_gate": "declared-cell-material-cap-and-complete-node-classes-v1",
+        "passed": true
+      },
+      "native_admitted": false
+    },
+    {
+      "stage": "geometry-closed",
+      "maximum": 0.005759307619141104,
+      "samples": 131138,
+      "nonfinite": 0,
+      "above_tolerance": 1975,
+      "categories": [
+        {
+          "kind": "corner-0",
+          "locked_axes": 0,
+          "samples": 17957,
+          "maximum": 0.0046189800007379175,
+          "nonfinite": 0,
+          "above_tolerance": 246
+        },
+        {
+          "kind": "corner-0",
+          "locked_axes": 1,
+          "samples": 742,
+          "maximum": 9.468003287997227e-14,
+          "nonfinite": 0,
+          "above_tolerance": 0
+        },
+        {
+          "kind": "corner-0",
+          "locked_axes": 2,
+          "samples": 35,
+          "maximum": 3.399349888776296e-17,
+          "nonfinite": 0,
+          "above_tolerance": 0
+        },
+        {
+          "kind": "corner-1",
+          "locked_axes": 0,
+          "samples": 18163,
+          "maximum": 0.0046189800007379175,
+          "nonfinite": 0,
+          "above_tolerance": 184
+        },
+        {
+          "kind": "corner-1",
+          "locked_axes": 1,
+          "samples": 564,
+          "maximum": 9.468003287997227e-14,
+          "nonfinite": 0,
+          "above_tolerance": 0
+        },
+        {
+          "kind": "corner-1",
+          "locked_axes": 2,
+          "samples": 7,
+          "maximum": 3.3993498887762956e-17,
+          "nonfinite": 0,
+          "above_tolerance": 0
+        },
+        {
+          "kind": "corner-2",
+          "locked_axes": 0,
+          "samples": 18174,
+          "maximum": 0.0046189800007379175,
+          "nonfinite": 0,
+          "above_tolerance": 179
+        },
+        {
+          "kind": "corner-2",
+          "locked_axes": 1,
+          "samples": 555,
+          "maximum": 9.468003287997227e-14,
+          "nonfinite": 0,
+          "above_tolerance": 0
+        },
+        {
+          "kind": "corner-2",
+          "locked_axes": 2,
+          "samples": 5,
+          "maximum": 3.3993498887762956e-17,
+          "nonfinite": 0,
+          "above_tolerance": 0
+        },
+        {
+          "kind": "centroid",
+          "locked_axes": 0,
+          "samples": 18734,
+          "maximum": 0.005437482878620725,
+          "nonfinite": 0,
+          "above_tolerance": 376
+        },
+        {
+          "kind": "edge-01",
+          "locked_axes": 0,
+          "samples": 18493,
+          "maximum": 0.005759307619141104,
+          "nonfinite": 0,
+          "above_tolerance": 345
+        },
+        {
+          "kind": "edge-01",
+          "locked_axes": 1,
+          "samples": 241,
+          "maximum": 0.0010649434941088906,
+          "nonfinite": 0,
+          "above_tolerance": 0
+        },
+        {
+          "kind": "edge-12",
+          "locked_axes": 0,
+          "samples": 18612,
+          "maximum": 0.005305474335706398,
+          "nonfinite": 0,
+          "above_tolerance": 292
+        },
+        {
+          "kind": "edge-12",
+          "locked_axes": 1,
+          "samples": 122,
+          "maximum": 0.0007754244101941917,
+          "nonfinite": 0,
+          "above_tolerance": 0
+        },
+        {
+          "kind": "edge-20",
+          "locked_axes": 0,
+          "samples": 18507,
+          "maximum": 0.005759307619141104,
+          "nonfinite": 0,
+          "above_tolerance": 353
+        },
+        {
+          "kind": "edge-20",
+          "locked_axes": 1,
+          "samples": 227,
+          "maximum": 0.0010649434941088906,
+          "nonfinite": 0,
+          "above_tolerance": 0
+        }
+      ],
+      "branch_attribution_samples": 128,
+      "branch_attribution_complete": false,
+      "branch_attribution_covers_all_violations": false,
+      "nodes": 30604,
+      "elements": 143026,
+      "q_min": 0.10000290150464394,
+      "q_passed": true,
+      "minimum_signed_volume": 3.595851709403019e-11,
+      "volume": 0.17693527175432966,
+      "independent_facets": {
+        "nodes": 30604,
+        "elements": 143026,
+        "unique_faces": 297228,
+        "interior_faces": 274876,
+        "extracted_boundary_faces": 22352,
+        "same_orientation_shared_faces": 0,
+        "nonmanifold_faces": 0,
+        "duplicate_cells": 0,
+        "duplicate_surface_faces": 0,
+        "provided_boundary_matches_extraction": true,
+        "missing_provided_faces": 0,
+        "extra_provided_faces": 0,
+        "nonpositive_corner_determinants": 0,
+        "minimum_corner_determinant": 2.157511025641812e-10,
+        "oriented_facet_consistency_passed": true,
+        "conflict_examples": [],
+        "scope": "Oriented corner-face incidence and same-side neighbor diagnostics; necessary consistency, not a certificate of curved geometry or absence of nonlocal intersections"
+      },
+      "independent_periodicity": {
+        "periodic_pair_counts": [
+          390,
+          376,
+          362
+        ],
+        "periodic_coordinate_errors": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "periodic_pair_tolerance": 1e-10,
+        "periodic_equivalence_classes": 29513,
+        "periodic_triangles_match": true,
+        "full_facet_check_required": true,
+        "complete_existing_node_classes": true,
+        "unmatched_noncap_contact_nodes": [
+          [
+            [],
+            []
+          ],
+          [
+            [],
+            []
+          ],
+          [
+            [],
+            []
+          ]
+        ],
+        "declared_bounds": [
+          [
+            -0.5,
+            -0.5,
+            -0.5
+          ],
+          [
+            0.5,
+            0.5,
+            0.5
+          ]
+        ],
+        "periodic_gate": "declared-cell-material-cap-and-complete-node-classes-v1",
+        "passed": true
+      },
+      "native_admitted": false
+    },
+    {
+      "stage": "final-linear",
+      "maximum": 0.005759307619141104,
+      "samples": 131138,
+      "nonfinite": 0,
+      "above_tolerance": 1975,
+      "categories": [
+        {
+          "kind": "corner-0",
+          "locked_axes": 0,
+          "samples": 17957,
+          "maximum": 0.0046189800007379175,
+          "nonfinite": 0,
+          "above_tolerance": 246
+        },
+        {
+          "kind": "corner-0",
+          "locked_axes": 1,
+          "samples": 742,
+          "maximum": 9.468003287997227e-14,
+          "nonfinite": 0,
+          "above_tolerance": 0
+        },
+        {
+          "kind": "corner-0",
+          "locked_axes": 2,
+          "samples": 35,
+          "maximum": 3.399349888776296e-17,
+          "nonfinite": 0,
+          "above_tolerance": 0
+        },
+        {
+          "kind": "corner-1",
+          "locked_axes": 0,
+          "samples": 18163,
+          "maximum": 0.0046189800007379175,
+          "nonfinite": 0,
+          "above_tolerance": 184
+        },
+        {
+          "kind": "corner-1",
+          "locked_axes": 1,
+          "samples": 564,
+          "maximum": 9.468003287997227e-14,
+          "nonfinite": 0,
+          "above_tolerance": 0
+        },
+        {
+          "kind": "corner-1",
+          "locked_axes": 2,
+          "samples": 7,
+          "maximum": 3.3993498887762956e-17,
+          "nonfinite": 0,
+          "above_tolerance": 0
+        },
+        {
+          "kind": "corner-2",
+          "locked_axes": 0,
+          "samples": 18174,
+          "maximum": 0.0046189800007379175,
+          "nonfinite": 0,
+          "above_tolerance": 179
+        },
+        {
+          "kind": "corner-2",
+          "locked_axes": 1,
+          "samples": 555,
+          "maximum": 9.468003287997227e-14,
+          "nonfinite": 0,
+          "above_tolerance": 0
+        },
+        {
+          "kind": "corner-2",
+          "locked_axes": 2,
+          "samples": 5,
+          "maximum": 3.3993498887762956e-17,
+          "nonfinite": 0,
+          "above_tolerance": 0
+        },
+        {
+          "kind": "centroid",
+          "locked_axes": 0,
+          "samples": 18734,
+          "maximum": 0.005437482878620725,
+          "nonfinite": 0,
+          "above_tolerance": 376
+        },
+        {
+          "kind": "edge-01",
+          "locked_axes": 0,
+          "samples": 18493,
+          "maximum": 0.005759307619141104,
+          "nonfinite": 0,
+          "above_tolerance": 345
+        },
+        {
+          "kind": "edge-01",
+          "locked_axes": 1,
+          "samples": 241,
+          "maximum": 0.0010649434941088906,
+          "nonfinite": 0,
+          "above_tolerance": 0
+        },
+        {
+          "kind": "edge-12",
+          "locked_axes": 0,
+          "samples": 18612,
+          "maximum": 0.005305474335706398,
+          "nonfinite": 0,
+          "above_tolerance": 292
+        },
+        {
+          "kind": "edge-12",
+          "locked_axes": 1,
+          "samples": 122,
+          "maximum": 0.0007754244101941917,
+          "nonfinite": 0,
+          "above_tolerance": 0
+        },
+        {
+          "kind": "edge-20",
+          "locked_axes": 0,
+          "samples": 18507,
+          "maximum": 0.005759307619141104,
+          "nonfinite": 0,
+          "above_tolerance": 353
+        },
+        {
+          "kind": "edge-20",
+          "locked_axes": 1,
+          "samples": 227,
+          "maximum": 0.0010649434941088906,
+          "nonfinite": 0,
+          "above_tolerance": 0
+        }
+      ],
+      "branch_attribution_samples": 128,
+      "branch_attribution_complete": false,
+      "branch_attribution_covers_all_violations": false,
+      "nodes": 30604,
+      "elements": 143026,
+      "q_min": 0.10000290150464394,
+      "q_passed": true,
+      "minimum_signed_volume": 3.595851709403019e-11,
+      "volume": 0.17693527175432966,
+      "independent_facets": {
+        "nodes": 30604,
+        "elements": 143026,
+        "unique_faces": 297228,
+        "interior_faces": 274876,
+        "extracted_boundary_faces": 22352,
+        "same_orientation_shared_faces": 0,
+        "nonmanifold_faces": 0,
+        "duplicate_cells": 0,
+        "duplicate_surface_faces": 0,
+        "provided_boundary_matches_extraction": true,
+        "missing_provided_faces": 0,
+        "extra_provided_faces": 0,
+        "nonpositive_corner_determinants": 0,
+        "minimum_corner_determinant": 2.157511025641812e-10,
+        "oriented_facet_consistency_passed": true,
+        "conflict_examples": [],
+        "scope": "Oriented corner-face incidence and same-side neighbor diagnostics; necessary consistency, not a certificate of curved geometry or absence of nonlocal intersections"
+      },
+      "independent_periodicity": {
+        "periodic_pair_counts": [
+          390,
+          376,
+          362
+        ],
+        "periodic_coordinate_errors": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "periodic_pair_tolerance": 1e-10,
+        "periodic_equivalence_classes": 29513,
+        "periodic_triangles_match": true,
+        "full_facet_check_required": true,
+        "complete_existing_node_classes": true,
+        "unmatched_noncap_contact_nodes": [
+          [
+            [],
+            []
+          ],
+          [
+            [],
+            []
+          ],
+          [
+            [],
+            []
+          ]
+        ],
+        "declared_bounds": [
+          [
+            -0.5,
+            -0.5,
+            -0.5
+          ],
+          [
+            0.5,
+            0.5,
+            0.5
+          ]
+        ],
+        "periodic_gate": "declared-cell-material-cap-and-complete-node-classes-v1",
+        "passed": true
+      },
+      "native_admitted": false,
+      "quadratic_count_preflight": {
+        "unique_edges": 184805,
+        "prospective_nodes": 215409,
+        "elements": 143026,
+        "count_cap_satisfied": true,
+        "scope": "Connectivity count only; no elevation, curved Jacobian, geometry or FE claim"
+      }
+    }
+  ],
+  "sampled_error_kind": "First-order field residual divided by unlocked gradient norm; not exact CAD distance",
+  "direct_CAD_distance_performed": false,
+  "finite_element_solve_performed": false,
+  "comparative_timing_claim": false,
+  "input_hashes_verified": true,
+  "final_native_error": 0.005759307619141104,
+  "error_reproduction_absolute_difference": 0.0,
+  "error_reproduction_tolerance": 2.7755575615628914e-17,
+  "status": "linear-error-localized"
+}

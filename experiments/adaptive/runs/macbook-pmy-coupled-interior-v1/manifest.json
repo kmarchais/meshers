@@ -1,0 +1,55 @@
+{
+  "inputs": {
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/pmy_coupled_interior_control.py": "8468537ed434da164a3da89690eb8bddde9e2dfcfb48ec7d00bc1be2f70e35c2",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-pmy-interior-quality-repair-v3/result.json": "e52f3c81b215a5a641eaf0787f6344a37269201bc8a8c1a0f1e6adb384847dd4",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-pmy-interior-quality-repair-v3/repaired-linear.npz": "07b1462ee325067e90906e980c36de7676e04754f6ed90f34a2d6eb2797c0ceb",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-pmy-star-obstruction-v1/result.json": "d5db88a9179072f66135276863a87e778b621b040992a234e910304ca774a2b1",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-pmy-star-obstruction-v1/manifest.json": "f4648400dbb07a368ecc9880a59f2a2c5a3a195f833b25d90e0546dace3357a7",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/cad_ridge_quality_restore.py": "a077615cc6f94069b8b31a89d6ab3b6c3c0c1f96715bd65c0e60ec20f3cde2af",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/pmy_interior_quality_repair.py": "afe196a1bd10c4c0ca461fbc7f29699487f7993af9e6f1e946ead42dd97dee83",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/nested_refinement.py": "7f78251d150ebcee928db1b49e22b64ee89efde5cdc238c1f5b9994aad36a6b8",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/mmg_quality_localization.py": "03ef27a978fcd5101f36745ccaf67309f49ce6ece172fad28b84246d6d457ebc",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/facet_incidence_audit.py": "4f51afc196c85e1d0bc64d7a96507517ddc6e32ccd8380a2ac77cae0ace89610",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/periodic_trace.py": "16d51906318ba9110f8979b48a540500d1cce5835685d72e780ca1893f3b8654",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/microgen_workflow.py": "9f513dfd3e6e5a72a71a54f70c0c2cf7c7a1ebe7256886ee3feaf7d7ad7de161",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/job_parts.py": "cc220d52685be4035a3cf38b85e8e2d8354e55f36c42245cd6e1faad9a44bcab"
+  },
+  "numerical_threads": {
+    "environment": {
+      "OPENBLAS_NUM_THREADS": "1",
+      "OMP_NUM_THREADS": "1",
+      "MKL_NUM_THREADS": "1",
+      "VECLIB_MAXIMUM_THREADS": "1",
+      "RAYON_NUM_THREADS": "1"
+    },
+    "accelerate_blas_threading": 1,
+    "accelerate_scope": "calling thread"
+  },
+  "memory_bytes": 8589934592,
+  "worker_timeout_s": 180,
+  "shared_solve_budget_s": 150,
+  "starts_per_component": 1,
+  "max_iterations_per_component": 100,
+  "target_quality": 0.100001,
+  "optimizer_ftol": 1e-08,
+  "admission_quality": 0.1,
+  "fixed_boundary": true,
+  "fixed_connectivity": true,
+  "expected_movable_nodes": 11,
+  "expected_component_tets": [
+    144,
+    96,
+    90,
+    124
+  ],
+  "no_radius_sweep": true,
+  "no_cavity_growth": true,
+  "no_restarts": true,
+  "nonconvex_problem": true,
+  "whole_component_rejection": true,
+  "admitted": false,
+  "packages": {
+    "numpy": "2.5.4",
+    "scipy": "1.18.1"
+  }
+}

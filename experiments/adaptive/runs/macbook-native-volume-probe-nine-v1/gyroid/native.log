@@ -1,0 +1,17 @@
+
+running 1 test
+test quadratic::fit::volume_probe::volume_bias_payoff ... 
+thread 'quadratic::fit::volume_probe::volume_bias_payoff' (11140654) panicked at crates/meshers-core/src/quadratic/fit/volume_probe.rs:457:17:
+assertion `left == right` failed
+  left: -0.00355791108272799
+ right: -0.003557911082727983
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+FAILED
+
+failures:
+
+failures:
+    quadratic::fit::volume_probe::volume_bias_payoff
+
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 77 filtered out; finished in 0.44s
+

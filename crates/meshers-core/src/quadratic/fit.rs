@@ -2,6 +2,9 @@
 use super::{Quadratic, jacobian, node_pairs, samples};
 use crate::{Point, dot, geometry::Geometry, norm, sub};
 
+#[cfg(test)]
+mod volume_probe;
+
 #[derive(Clone, Debug, Default)]
 pub struct FitStats {
     pub selected_groups: usize,

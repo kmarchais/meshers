@@ -1,0 +1,15 @@
+
+running 1 test
+test quadratic::fit::volume_probe::volume_bias_payoff ... 
+thread 'quadratic::fit::volume_probe::volume_bias_payoff' (11187362) panicked at crates/meshers-core/src/quadratic/fit/volume_probe.rs:864:9:
+gradient mismatch at [0.5, 0.3524392517283559, -0.43984321504831314]: [-0.6598451527247524, -0.7463998036140426, -0.0865546508892902] vs [0.6598451527247524, -0.7463998036140427, -0.08655465088929015]
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+FAILED
+
+failures:
+
+failures:
+    quadratic::fit::volume_probe::volume_bias_payoff
+
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 78 filtered out; finished in 0.05s
+

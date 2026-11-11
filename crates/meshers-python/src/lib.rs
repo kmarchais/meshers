@@ -10,7 +10,7 @@ use numpy::{IntoPyArray, PyReadonlyArray1, PyReadonlyArray2, ndarray::Array2};
 use pyo3::{
     exceptions::{PyRuntimeError, PyTypeError, PyValueError},
     prelude::*,
-    types::PyDict,
+    types::{PyDict, PyList},
 };
 use std::cell::Cell;
 use std::f64::consts::TAU;
@@ -362,7 +362,7 @@ fn make_field(
 }
 
 #[allow(clippy::too_many_arguments)]
-#[pyfunction(signature = (field, gradient, bounds, cells, periodic, band, tolerance, minimum_quality, budget, passes, interior_refine_nodes, snap, threads, batch_size, cancel, adapt=None, order=1, size_field=None, halfspaces=None, regions=None, constraints=None, curved_fit=false))]
+#[pyfunction(signature = (field, gradient, bounds, cells, periodic, band, tolerance, minimum_quality, budget, passes, interior_refine_nodes, snap, threads, batch_size, cancel, adapt=None, order=1, size_field=None, halfspaces=None, regions=None, constraints=None, curved_fit=false, *, _observations=None))]
 fn generate<'py>(
     py: Python<'py>,
     field: Py<PyAny>,
@@ -387,7 +387,21 @@ fn generate<'py>(
     regions: Option<Vec<u64>>,
     constraints: Option<Vec<Py<PyAny>>>,
     curved_fit: bool,
+    _observations: Option<Bound<'py, PyList>>,
 ) -> PyResult<Bound<'py, PyDict>> {
+    let capture_requested = _observations.is_some();
+    if capture_requested {
+        if !cfg!(feature = "experimental-surfaces") {
+            return Err(PyValueError::new_err(
+                "linear observations require experimental-surfaces",
+            ));
+        }
+        if constraints.is_some() || halfspaces.is_some() || regions.is_some() {
+            return Err(PyValueError::new_err(
+                "linear observations require the scalar path",
+            ));
+        }
+    }
     let regions = regions
         .map(|groups| {
             groups
@@ -459,7 +473,27 @@ fn generate<'py>(
         curved_fit,
     };
     let start = std::time::Instant::now();
+    #[cfg(feature = "experimental-surfaces")]
+    let observations = Mutex::new(Vec::new());
     let result = py.detach(|| {
+        #[cfg(feature = "experimental-surfaces")]
+        if capture_requested {
+            return implicit::generate_with_observer(
+                &f,
+                size.as_ref().map(|field| field as &dyn ScalarField),
+                options,
+                &|stage, mesh| {
+                    observations.lock().unwrap().push((
+                        stage,
+                        meshers_core::Mesh {
+                            points: mesh.points.clone(),
+                            tets: mesh.tets.clone(),
+                            surface: mesh.surface.clone(),
+                        },
+                    ));
+                },
+            );
+        }
         if let Some(fields) = &constraints {
             let fields: Vec<&dyn ScalarField> = fields
                 .iter()
@@ -480,6 +514,48 @@ fn generate<'py>(
             regions.as_deref(),
         )
     });
+    #[cfg(feature = "experimental-surfaces")]
+    if let Some(sink) = _observations {
+        // Copy to Python only after the native worker has returned. Preserve
+        // snapshots on failure, then propagate the original exception below.
+        for (stage, mesh) in observations.into_inner().unwrap() {
+            let row = PyDict::new(py);
+            row.set_item("stage", stage)?;
+            row.set_item("admission", "unchecked-linear-snapshot")?;
+            row.set_item(
+                "points",
+                Array2::from_shape_vec(
+                    (mesh.points.len(), 3),
+                    mesh.points.into_iter().flatten().collect(),
+                )
+                .unwrap()
+                .into_pyarray(py),
+            )?;
+            row.set_item(
+                "tetrahedra",
+                Array2::from_shape_vec(
+                    (mesh.tets.len(), 4),
+                    mesh.tets.into_iter().flatten().map(|i| i as i64).collect(),
+                )
+                .unwrap()
+                .into_pyarray(py),
+            )?;
+            row.set_item(
+                "surface",
+                Array2::from_shape_vec(
+                    (mesh.surface.len(), 3),
+                    mesh.surface
+                        .into_iter()
+                        .flatten()
+                        .map(|i| i as i64)
+                        .collect(),
+                )
+                .unwrap()
+                .into_pyarray(py),
+            )?;
+            sink.append(row)?;
+        }
+    }
     if let Some(error) = f.error.lock().unwrap().take() {
         return Err(error);
     }
@@ -708,7 +784,10 @@ fn _meshers(m: &Bound<'_, PyModule>) -> PyResult<()> {
     m.add_function(wrap_pyfunction!(generate, m)?)?;
     m.add_function(wrap_pyfunction!(intersection::generate_intersection, m)?)?;
     #[cfg(feature = "experimental-surfaces")]
-    m.add_function(wrap_pyfunction!(surface::generate_surface, m)?)?;
+    {
+        m.add_function(wrap_pyfunction!(surface::generate_surface, m)?)?;
+        m.add("_LINEAR_OBSERVATIONS", true)?;
+    }
     m.add_class::<CancellationToken>()?;
     m.add("MeshingError", m.py().get_type::<MeshingFailure>())?;
     m.add("CancelledError", m.py().get_type::<CancelledError>())?;

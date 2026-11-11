@@ -1,0 +1,83 @@
+{
+  "complete": true,
+  "stage": "passed",
+  "tolerance_revision": {
+    "original_target": 0.100000001,
+    "revised_target": 0.100001,
+    "original_ftol": 1e-12,
+    "revised_ftol": 1e-08,
+    "admission_quality": 0.1,
+    "observed_original_constraint_residual": -1.0314898796215388e-09,
+    "observed_original_minimum_quality": 0.09999999997080757,
+    "reason": "The repairable synthetic star stopped at SLSQP status 8 with a 1.03e-9 constraint residual. A 1e-6 proposal clearance exceeds that residual by about 1000; independent q>=.1 and optimizer success remain required."
+  },
+  "signed_quality_matches_existing_positive_metric": true,
+  "analytic_gradient_maximum_absolute_difference": 1.93643136248145e-10,
+  "finite_difference_step": 1e-06,
+  "translation_gradient_sum_zero": true,
+  "scale_direction_gradient_zero": true,
+  "fixed_synthetic_tetrahedra": 2,
+  "convex_constraint_jacobian_maximum_absolute_difference": 8.541300999809209e-11,
+  "direct_constraint_maximum_absolute_difference": 1.1102230246251565e-16,
+  "fixed_star_initial_quality": [
+    0.0018371159292501253,
+    0.5427978720290072,
+    0.5427978720290072,
+    0.5427978720290072
+  ],
+  "target": 0.100001,
+  "fixed_star_optimizer_success": true,
+  "fixed_star_optimizer_status": 0,
+  "fixed_star_optimizer_message": "Optimization terminated successfully",
+  "fixed_star_repair_iterations": 3,
+  "fixed_star_solution": [
+    -0.06184015791861771,
+    -0.03570343182104291,
+    -0.025246138752291
+  ],
+  "fixed_star_final_quality": [
+    0.10000099897073338,
+    0.5255659365548078,
+    0.5255659365548078,
+    0.5255659365548077
+  ],
+  "fixed_star_final_constraints": [
+    -1.0315641812974619e-09,
+    0.4159560578461567,
+    0.4159560578461567,
+    0.4159560578461566
+  ],
+  "fixed_star_initial_determinants": [
+    0.0007071067811864936,
+    0.23546655813512035,
+    0.23546655813512035,
+    0.2354665581351203
+  ],
+  "fixed_star_final_determinants": [
+    0.03857635277881219,
+    0.22284347613591177,
+    0.22284347613591177,
+    0.2228434761359117
+  ],
+  "fixed_star_volume_relative_change": 0.0,
+  "impossible_optimizer_success": false,
+  "impossible_optimizer_status": 8,
+  "impossible_optimizer_message": "Positive directional derivative for linesearch",
+  "impossible_final_constraints": [
+    -1.0081628840707497,
+    -0.4672021279709927,
+    -0.4672021279709927,
+    -0.4672021279709928
+  ],
+  "impossible_final_quality": [
+    0.0018371159292501253,
+    0.5427978720290072,
+    0.5427978720290072,
+    0.5427978720290072
+  ],
+  "affine_determinant_and_quadratic_edge_formula_match_direct_evaluation": true,
+  "fixed_star_repair_minimum_before": 0.0018371159292501253,
+  "fixed_star_repair_minimum_after": 0.10000099897073338,
+  "fixed_star_signed_volume_preserved": true,
+  "impossible_quality_above_one_rejected": true
+}

@@ -1,0 +1,12 @@
+Traceback (most recent call last):
+  File "/Users/kmarchais/dev/meshers/experiments/adaptive/native_volume_probe.py", line 369, in <module>
+    main()
+  File "/Users/kmarchais/dev/meshers/experiments/adaptive/native_volume_probe.py", line 345, in main
+    return build(args.build)
+           ^^^^^^^^^^^^^^^^^
+  File "/Users/kmarchais/dev/meshers/experiments/adaptive/native_volume_probe.py", line 104, in build
+    run_child(command, directory/"cargo.log")
+  File "/Users/kmarchais/dev/meshers/experiments/adaptive/native_volume_probe.py", line 86, in run_child
+    assert code == 0, f"Read {log}"
+           ^^^^^^^^^
+AssertionError: Read /Users/kmarchais/dev/meshers/.local-work/macbook-native-volume-probe-v1/cargo.log

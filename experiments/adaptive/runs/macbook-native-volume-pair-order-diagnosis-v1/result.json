@@ -1,0 +1,30 @@
+{
+  "source": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-native-volume-probe-nine-v3/schwarz-d-solid/native.log",
+  "source_sha256": "9365286f7c04090d0a2916d055da3894023d1e8fc588cef12b604939da5f4aff",
+  "axes": [
+    {
+      "axis": 0,
+      "before_pairs": 662,
+      "after_pairs": 662,
+      "raw_list_equal": false,
+      "sorted_directed_pairs_with_multiplicity_equal": true
+    },
+    {
+      "axis": 1,
+      "before_pairs": 662,
+      "after_pairs": 662,
+      "raw_list_equal": false,
+      "sorted_directed_pairs_with_multiplicity_equal": true
+    },
+    {
+      "axis": 2,
+      "before_pairs": 662,
+      "after_pairs": 662,
+      "raw_list_equal": false,
+      "sorted_directed_pairs_with_multiplicity_equal": true
+    }
+  ],
+  "cause": "Native periodic_pairs emits BTreeMap traversal order by transverse coordinates. Tangential motion may reorder identical directed node pairings.",
+  "correction": "Sort directed pair lists before equality, retaining axis, direction and multiplicity; no coordinate or admission tolerance changes.",
+  "scope": "Diagnostic harness assertion only; no production pairing implementation change"
+}

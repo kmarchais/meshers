@@ -1,0 +1,31 @@
+{
+  "inputs": {
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/pmy_boundary_diagonal_probe.py": "a23141a40c67d48a3b71a0ccc9b446a3375bd0520a31759d0719f2353e16e4f4",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/microgen_workflow.py": "9f513dfd3e6e5a72a71a54f70c0c2cf7c7a1ebe7256886ee3feaf7d7ad7de161",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-pmy-rollback-native-v1/edge/result.json": "580f6c980bd1f8a11ca546a7a1b71e81815e5d617ffe8fa69887992b3671c5b1",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-pmy-rollback-native-v1/edge/mesh.npz": "1011c00ca459abdeb67e8f17553ccf1400ed6c50a9bd9e287482eb3b6b705ad8",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-pmy-curvature-feasibility-v1/result.json": "a888a2d39504357db14774ced82090ea8cea47ee3eb6c71d988904e7950bdb89",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-tpms-family-fixtures-v1/tpms-pmy-sheet/tpms-pmy-sheet-specimen.json": "65f653b5b5df833c4f7b9ebeef839555c76690e1a4e95c6011719d042a77c67a",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-tpms-family-fixtures-v1/tpms-pmy-sheet/tpms-pmy-sheet-samples.npz": "66cd3e81d5bad83b63c3bbc96696d732170ed37049dd4ff1dad868b39dbaf2f1",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-tpms-family-fixtures-v1/tpms-pmy-sheet/tpms-pmy-sheet-definition.json": "a0b3623510422678fd46dbfec702d7ebfb03e14272f7016b002e5b2594a662b6",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/pmy_neck_control.py": "aacab3dd12c99ad5586e8c4efb59b74556e736041fbe20653381c53d577b8668",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/quadratic_edge_removal_probe.py": "f26a4be16f7aeb4fce6d89732754fab0e5d39e86b4d4c62466a3afd547cec6ed",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/nested_refinement.py": "7f78251d150ebcee928db1b49e22b64ee89efde5cdc238c1f5b9994aad36a6b8",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/quadrature_audit.py": "020677df452ec86864e687c9b35e2c69e70f8587ec54240ce0c4eaa4b717319e",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/tpms_family_fixtures.py": "794418f5d2e3d2158542af51a5cf322c41befff8f8d7c98f769d379baedd3bc6",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/job_parts.py": "cc220d52685be4035a3cf38b85e8e2d8354e55f36c42245cd6e1faad9a44bcab"
+  },
+  "timeout_s": 180,
+  "memory_bytes": 8589934592,
+  "numerical_thread_policy": {
+    "environment": {
+      "OPENBLAS_NUM_THREADS": "1",
+      "OMP_NUM_THREADS": "1",
+      "MKL_NUM_THREADS": "1",
+      "VECLIB_MAXIMUM_THREADS": "1",
+      "RAYON_NUM_THREADS": "1"
+    },
+    "accelerate_blas_threading": 1,
+    "accelerate_scope": "calling thread"
+  }
+}

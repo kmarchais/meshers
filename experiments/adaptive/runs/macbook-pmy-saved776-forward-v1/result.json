@@ -1,0 +1,1675 @@
+{
+  "status": "observed",
+  "complete": true,
+  "controls": {
+    "plane_far_excluded": true,
+    "plane_near_retained": true,
+    "curved_patch_retained": true,
+    "analytic_plane_distance": true,
+    "analytic_newton_branch_jump_detected": true
+  },
+  "mesh_sha256": "1011c00ca459abdeb67e8f17553ccf1400ed6c50a9bd9e287482eb3b6b705ad8",
+  "raw_standard_forward_max": 0.014490028619154646,
+  "recorded_forward_max": 0.014490028619154646,
+  "standard_observer_reproduced": true,
+  "category_summary": {
+    "corner": {
+      "samples": 86178,
+      "maximum": 1.42618633122496e-13,
+      "above_gate": 0
+    },
+    "edge-interior": {
+      "samples": 86178,
+      "maximum": 0.009810262020615617,
+      "above_gate": 1185
+    },
+    "edge-midpoint": {
+      "samples": 86178,
+      "maximum": 0.014490028619154646,
+      "above_gate": 1570
+    },
+    "face-interior": {
+      "samples": 114904,
+      "maximum": 0.011937466242874983,
+      "above_gate": 1964
+    }
+  },
+  "sample_archive_sha256": "d218003ad67bc65977a2bc51d7f84caa3d54d12d85e4ca1364ee5d69225ec5aa",
+  "samples": 373438,
+  "fallback": [],
+  "witness_budget": "8 distinct global worst coordinates plus worst sample per category, maximum12",
+  "witnesses": [
+    {
+      "sample_index": 274720,
+      "face": 22709,
+      "probe_index": 4,
+      "kind": "edge-midpoint",
+      "barycentric": [
+        0.5,
+        0.5,
+        0.0
+      ],
+      "probe": [
+        0.3945068276358065,
+        -0.09917736271030747,
+        0.26124240990294967
+      ],
+      "mesh_node": 83394,
+      "node_ids": [
+        13213,
+        13209,
+        13208,
+        83394,
+        83373,
+        83393
+      ],
+      "coordinates": [
+        [
+          0.3865643384501091,
+          -0.10528438596656782,
+          0.2481974275551171
+        ],
+        [
+          0.4033847796038498,
+          -0.09056303668279725,
+          0.2716051877090887
+        ],
+        [
+          0.39885568752794737,
+          -0.1150624089955171,
+          0.2451765467218511
+        ],
+        [
+          0.3945068276358065,
+          -0.09917736271030747,
+          0.26124240990294967
+        ],
+        [
+          0.40009945822762466,
+          -0.10369254782460345,
+          0.2592032650730685
+        ],
+        [
+          0.3927403293765467,
+          -0.11013701585741671,
+          0.24669289875394249
+        ]
+      ],
+      "standard_foot": [
+        0.3894581183023808,
+        -0.10844732910365126,
+        0.27116910051547394
+      ],
+      "standard_distance": 0.014490028619154646,
+      "standard_failed": false,
+      "locked": [
+        false,
+        false,
+        false
+      ],
+      "closest_found_feasible": {
+        "foot": [
+          0.39185578891384365,
+          -0.11005381264766022,
+          0.2622641197318268
+        ],
+        "distance": 0.011241399402187933,
+        "level": -0.36027239477618084,
+        "residual_distance": 2.7588008243590667e-10,
+        "optimizer_success": false
+      },
+      "forward_overstatement_at_least": 0.003248629216966713,
+      "taylor_ball": {
+        "radius": 0.002,
+        "field_value": -0.37558862794384507,
+        "gradient_norm": 1.1519663669348794,
+        "hessian_operator_bound": 829.046769691506,
+        "maximum_field_excursion": 0.003962026274252772,
+        "wall_levels_excluded": true,
+        "material_boundary_ball_excluded": true,
+        "distance_to_nearest_box_plane": 0.10549317236419348,
+        "scope": "Analytic global PMY Hessian bound with floating-point padding; not interval arithmetic. Cap material is conservatively included."
+      },
+      "midpoint_displacements": [
+        0.0018944576405499926,
+        0.001573551580112491,
+        4.772476387727653e-05
+      ],
+      "background_coordinate_associations": [
+        {
+          "mesh_node": 13213,
+          "exact_coordinate_coincidences": [],
+          "coincides_with_restored_background_vertex": false
+        },
+        {
+          "mesh_node": 13209,
+          "exact_coordinate_coincidences": [],
+          "coincides_with_restored_background_vertex": false
+        },
+        {
+          "mesh_node": 13208,
+          "exact_coordinate_coincidences": [],
+          "coincides_with_restored_background_vertex": false
+        },
+        {
+          "mesh_node": 83394,
+          "exact_coordinate_coincidences": [],
+          "coincides_with_restored_background_vertex": false
+        },
+        {
+          "mesh_node": 83373,
+          "exact_coordinate_coincidences": [],
+          "coincides_with_restored_background_vertex": false
+        },
+        {
+          "mesh_node": 83393,
+          "exact_coordinate_coincidences": [],
+          "coincides_with_restored_background_vertex": false
+        }
+      ],
+      "nearest_restored_spatial_association": {
+        "probe_distance": 0.0461090980316044,
+        "nearest_restored_background_vertex": 13317,
+        "face_node_distances": [
+          0.05528752256657148,
+          0.04106400059840814,
+          0.0680675744995653,
+          0.0461090980316044,
+          0.05303647160719592,
+          0.06146704655926138
+        ]
+      },
+      "association_scope": "Coordinate coincidence and spatial proximity only; original source IDs are not retained through clipping/optimization, so lineage and causal association remain unknown"
+    },
+    {
+      "sample_index": 95088,
+      "face": 8089,
+      "probe_index": 6,
+      "kind": "edge-midpoint",
+      "barycentric": [
+        0.5,
+        0.0,
+        0.5
+      ],
+      "probe": [
+        0.10524204887017063,
+        0.09907130708590377,
+        -0.237891141547307
+      ],
+      "mesh_node": 40293,
+      "node_ids": [
+        4647,
+        4650,
+        4651,
+        40291,
+        40285,
+        40293
+      ],
+      "coordinates": [
+        [
+          0.09575261874200221,
+          0.09036057268553284,
+          -0.22841097346763217
+        ],
+        [
+          0.1004565675096842,
+          0.11569179001472703,
+          -0.25281695429148837
+        ],
+        [
+          0.11385684938216571,
+          0.10562325486038271,
+          -0.25033686299125035
+        ],
+        [
+          0.09906826386531323,
+          0.10384397038461493,
+          -0.2397297518591291
+        ],
+        [
+          0.10711976223278874,
+          0.1106098278508242,
+          -0.25157022920253413
+        ],
+        [
+          0.10524204887017063,
+          0.09907130708590377,
+          -0.237891141547307
+        ]
+      ],
+      "standard_foot": [
+        0.10953614214540539,
+        0.10696681910324786,
+        -0.2269244906173663
+      ],
+      "standard_distance": 0.014179061312076005,
+      "standard_failed": false,
+      "locked": [
+        false,
+        false,
+        false
+      ],
+      "closest_found_feasible": {
+        "foot": [
+          0.10728476161013119,
+          0.10992228650589708,
+          -0.23561583653233964
+        ],
+        "distance": 0.01127357275322474,
+        "level": -0.36027239477618084,
+        "residual_distance": 4.381867169335646e-10,
+        "optimizer_success": false
+      },
+      "forward_overstatement_at_least": 0.002905488558851265,
+      "taylor_ball": {
+        "radius": 0.002,
+        "field_value": -0.375082632298415,
+        "gradient_norm": 1.1457009822816593,
+        "hessian_operator_bound": 829.046769691506,
+        "maximum_field_excursion": 0.003949495504946331,
+        "wall_levels_excluded": true,
+        "material_boundary_ball_excluded": true,
+        "distance_to_nearest_box_plane": 0.262108858452693,
+        "scope": "Analytic global PMY Hessian bound with floating-point padding; not interval arithmetic. Cap material is conservatively included."
+      },
+      "midpoint_displacements": [
+        0.0015424886048556734,
+        6.0699350669256094e-05,
+        0.0018854603826348362
+      ],
+      "background_coordinate_associations": [
+        {
+          "mesh_node": 4647,
+          "exact_coordinate_coincidences": [],
+          "coincides_with_restored_background_vertex": false
+        },
+        {
+          "mesh_node": 4650,
+          "exact_coordinate_coincidences": [],
+          "coincides_with_restored_background_vertex": false
+        },
+        {
+          "mesh_node": 4651,
+          "exact_coordinate_coincidences": [],
+          "coincides_with_restored_background_vertex": false
+        },
+        {
+          "mesh_node": 40291,
+          "exact_coordinate_coincidences": [],
+          "coincides_with_restored_background_vertex": false
+        },
+        {
+          "mesh_node": 40285,
+          "exact_coordinate_coincidences": [],
+          "coincides_with_restored_background_vertex": false
+        },
+        {
+          "mesh_node": 40293,
+          "exact_coordinate_coincidences": [],
+          "coincides_with_restored_background_vertex": false
+        }
+      ],
+      "nearest_restored_spatial_association": {
+        "probe_distance": 0.045762653272665946,
+        "nearest_restored_background_vertex": 12034,
+        "face_node_distances": [
+          0.04153258033350242,
+          0.06776654025458184,
+          0.054603249253806156,
+          0.053121829921356875,
+          0.06092147308917294,
+          0.045762653272665946
+        ]
+      },
+      "association_scope": "Coordinate coincidence and spatial proximity only; original source IDs are not retained through clipping/optimization, so lineage and causal association remain unknown"
+    },
+    {
+      "sample_index": 265960,
+      "face": 22021,
+      "probe_index": 6,
+      "kind": "edge-midpoint",
+      "barycentric": [
+        0.5,
+        0.0,
+        0.5
+      ],
+      "probe": [
+        -0.3940233681448153,
+        -0.4002563959564279,
+        0.2613655610962491
+      ],
+      "mesh_node": 81550,
+      "node_ids": [
+        12834,
+        12837,
+        12838,
+        81548,
+        81542,
+        81550
+      ],
+      "coordinates": [
+        [
+          -0.4020921486582679,
+          -0.40890617288528713,
+          0.2717596330435361
+        ],
+        [
+          -0.3993584864608953,
+          -0.3844775701390136,
+          0.2443579222598385
+        ],
+        [
+          -0.38717763944510986,
+          -0.39416963165823204,
+          0.24851511821369537
+        ],
+        [
+          -0.3997453621111093,
+          -0.395842854819993,
+          0.25876048249392614
+        ],
+        [
+          -0.39330217331030026,
+          -0.38936399413154027,
+          0.246442493628365
+        ],
+        [
+          -0.3940233681448153,
+          -0.4002563959564279,
+          0.2613655610962491
+        ]
+      ],
+      "standard_foot": [
+        -0.38850219189473867,
+        -0.39085807139093093,
+        0.27015899026259865
+      ],
+      "standard_distance": 0.014004866594382178,
+      "standard_failed": false,
+      "locked": [
+        false,
+        false,
+        false
+      ],
+      "closest_found_feasible": {
+        "foot": [
+          -0.3916158798816058,
+          -0.3899974162596643,
+          0.2621935909660549
+        ],
+        "distance": 0.010570160718806076,
+        "level": 0.36027239477618084,
+        "residual_distance": 5.362360556003165e-10,
+        "optimizer_success": false
+      },
+      "forward_overstatement_at_least": 0.0034347058755761026,
+      "taylor_ball": {
+        "radius": 0.002,
+        "field_value": 0.37486784246057925,
+        "gradient_norm": 1.1233739932587776,
+        "hessian_operator_bound": 829.046769691506,
+        "maximum_field_excursion": 0.0039048415269005675,
+        "wall_levels_excluded": true,
+        "material_boundary_ball_excluded": true,
+        "distance_to_nearest_box_plane": 0.09974360404357208,
+        "scope": "Analytic global PMY Hessian bound with floating-point padding; not interval arithmetic. Cap material is conservatively included."
+      },
+      "midpoint_displacements": [
+        0.0014742902394623452,
+        5.320536765857834e-05,
+        0.0018774082970729143
+      ],
+      "background_coordinate_associations": [
+        {
+          "mesh_node": 12834,
+          "exact_coordinate_coincidences": [],
+          "coincides_with_restored_background_vertex": false
+        },
+        {
+          "mesh_node": 12837,
+          "exact_coordinate_coincidences": [],
+          "coincides_with_restored_background_vertex": false
+        },
+        {
+          "mesh_node": 12838,
+          "exact_coordinate_coincidences": [],
+          "coincides_with_restored_background_vertex": false
+        },
+        {
+          "mesh_node": 81548,
+          "exact_coordinate_coincidences": [],
+          "coincides_with_restored_background_vertex": false
+        },
+        {
+          "mesh_node": 81542,
+          "exact_coordinate_coincidences": [],
+          "coincides_with_restored_background_vertex": false
+        },
+        {
+          "mesh_node": 81550,
+          "exact_coordinate_coincidences": [],
+          "coincides_with_restored_background_vertex": false
+        }
+      ],
+      "nearest_restored_spatial_association": {
+        "probe_distance": 0.04630729411490759,
+        "nearest_restored_background_vertex": 13237,
+        "face_node_distances": [
+          0.04051738556417626,
+          0.06903433443595267,
+          0.05565418410732225,
+          0.05341749795913421,
+          0.062157920723428864,
+          0.04630729411490759
+        ]
+      },
+      "association_scope": "Coordinate coincidence and spatial proximity only; original source IDs are not retained through clipping/optimization, so lineage and causal association remain unknown"
+    },
+    {
+      "sample_index": 137649,
+      "face": 11630,
+      "probe_index": 5,
+      "kind": "edge-midpoint",
+      "barycentric": [
+        0.0,
+        0.5,
+        0.5
+      ],
+      "probe": [
+        0.4000967939818565,
+        -0.23950984869208375,
+        -0.10603528831820258
+      ],
+      "mesh_node": 55880,
+      "node_ids": [
+        6733,
+        6731,
+        7722,
+        50741,
+        55880,
+        55883
+      ],
+      "coordinates": [
+        [
+          0.39077060177120043,
+          -0.2421734829449536,
+          -0.12367502918472839
+        ],
+        [
+          0.40852933951672615,
+          -0.2281010911481987,
+          -0.09834282215888934
+        ],
+        [
+          0.39436663492341606,
+          -0.2530406015745191,
+          -0.11230108280590961
+        ],
+        [
+          0.39773098497552445,
+          -0.23384365182237699,
+          -0.11025545230532834
+        ],
+        [
+          0.4000967939818565,
+          -0.23950984869208375,
+          -0.10603528831820258
+        ],
+        [
+          0.39335494590130304,
+          -0.2471635041978435,
+          -0.1178147256057155
+        ]
+      ],
+      "standard_foot": [
+        0.39027488102835134,
+        -0.23199141184705713,
+        -0.11241185144579377
+      ],
+      "standard_distance": 0.013916085080906974,
+      "standard_failed": false,
+      "locked": [
+        false,
+        false,
+        false
+      ],
+      "closest_found_feasible": {
+        "foot": [
+          0.3900451959669323,
+          -0.23933879581697265,
+          -0.10885617958370132
+        ],
+        "distance": 0.010441326988054648,
+        "level": 0.36027239477618084,
+        "residual_distance": 8.597017208656285e-10,
+        "optimizer_success": false
+      },
+      "forward_overstatement_at_least": 0.003474758092852326,
+      "taylor_ball": {
+        "radius": 0.002,
+        "field_value": 0.37533977628442083,
+        "gradient_norm": 1.167472562084089,
+        "hessian_operator_bound": 829.046769691506,
+        "maximum_field_excursion": 0.00399303866455119,
+        "wall_levels_excluded": true,
+        "material_boundary_ball_excluded": true,
+        "distance_to_nearest_box_plane": 0.09990320601814351,
+        "scope": "Analytic global PMY Hessian bound with floating-point padding; not interval arithmetic. Cap material is conservatively included."
+      },
+      "midpoint_displacements": [
+        0.0024338693890507005,
+        0.0018601847316449974,
+        0.0009192825781440445
+      ],
+      "background_coordinate_associations": [
+        {
+          "mesh_node": 6733,
+          "exact_coordinate_coincidences": [],
+          "coincides_with_restored_background_vertex": false
+        },
+        {
+          "mesh_node": 6731,
+          "exact_coordinate_coincidences": [],
+          "coincides_with_restored_background_vertex": false
+        },
+        {
+          "mesh_node": 7722,
+          "exact_coordinate_coincidences": [],
+          "coincides_with_restored_background_vertex": false
+        },
+        {
+          "mesh_node": 50741,
+          "exact_coordinate_coincidences": [],
+          "coincides_with_restored_background_vertex": false
+        },
+        {
+          "mesh_node": 55880,
+          "exact_coordinate_coincidences": [],
+          "coincides_with_restored_background_vertex": false
+        },
+        {
+          "mesh_node": 55883,
+          "exact_coordinate_coincidences": [],
+          "coincides_with_restored_background_vertex": false
+        }
+      ],
+      "nearest_restored_spatial_association": {
+        "probe_distance": 0.04679349770350152,
+        "nearest_restored_background_vertex": 12341,
+        "face_node_distances": [
+          0.05228816079916744,
+          0.040464147154631175,
+          0.056547281429566935,
+          0.04501993522954641,
+          0.04679349770350152,
+          0.0529881231060217
+        ]
+      },
+      "association_scope": "Coordinate coincidence and spatial proximity only; original source IDs are not retained through clipping/optimization, so lineage and causal association remain unknown"
+    },
+    {
+      "sample_index": 102730,
+      "face": 8694,
+      "probe_index": 4,
+      "kind": "edge-midpoint",
+      "barycentric": [
+        0.5,
+        0.5,
+        0.0
+      ],
+      "probe": [
+        -0.10687368660909499,
+        0.39992475969026176,
+        -0.23869616657716808
+      ],
+      "mesh_node": 41902,
+      "node_ids": [
+        4979,
+        4975,
+        4974,
+        41902,
+        41881,
+        41901
+      ],
+      "coordinates": [
+        [
+          -0.11316417017580624,
+          0.39449944548895977,
+          -0.2517305032074558
+        ],
+        [
+          -0.09911903646699977,
+          0.40804060163699263,
+          -0.22791260771115923
+        ],
+        [
+          -0.10036791428316706,
+          0.3842329029623152,
+          -0.25660742959773314
+        ],
+        [
+          -0.10687368660909499,
+          0.39992475969026176,
+          -0.23869616657716808
+        ],
+        [
+          -0.10066258342173902,
+          0.39533150032680886,
+          -0.2416669157714441
+        ],
+        [
+          -0.10672732282809358,
+          0.38941120176146476,
+          -0.25416195962241234
+        ]
+      ],
+      "standard_foot": [
+        -0.11277370482477758,
+        0.39020617801428803,
+        -0.230901669013692
+      ],
+      "standard_distance": 0.01378460144527194,
+      "standard_failed": false,
+      "locked": [
+        false,
+        false,
+        false
+      ],
+      "closest_found_feasible": {
+        "foot": [
+          -0.10908557464066833,
+          0.39012635050392713,
+          -0.23838695921975536
+        ],
+        "distance": 0.010049720415859451,
+        "level": 0.36027239477618084,
+        "residual_distance": 3.170284158288472e-13,
+        "optimizer_success": false
+      },
+      "forward_overstatement_at_least": 0.0037348810294124887,
+      "taylor_ball": {
+        "radius": 0.002,
+        "field_value": 0.37419328287842324,
+        "gradient_norm": 1.0577883412166624,
+        "hessian_operator_bound": 829.046769691506,
+        "maximum_field_excursion": 0.003773670222816337,
+        "wall_levels_excluded": true,
+        "material_boundary_ball_excluded": true,
+        "distance_to_nearest_box_plane": 0.10007524030973824,
+        "scope": "Analytic global PMY Hessian bound with floating-point padding; not interval arithmetic. Cap material is conservatively included."
+      },
+      "midpoint_displacements": [
+        0.0019005738510754194,
+        0.0013582935511233837,
+        5.97977089480675e-05
+      ],
+      "background_coordinate_associations": [
+        {
+          "mesh_node": 4979,
+          "exact_coordinate_coincidences": [],
+          "coincides_with_restored_background_vertex": false
+        },
+        {
+          "mesh_node": 4975,
+          "exact_coordinate_coincidences": [],
+          "coincides_with_restored_background_vertex": false
+        },
+        {
+          "mesh_node": 4974,
+          "exact_coordinate_coincidences": [],
+          "coincides_with_restored_background_vertex": false
+        },
+        {
+          "mesh_node": 41902,
+          "exact_coordinate_coincidences": [],
+          "coincides_with_restored_background_vertex": false
+        },
+        {
+          "mesh_node": 41881,
+          "exact_coordinate_coincidences": [],
+          "coincides_with_restored_background_vertex": false
+        },
+        {
+          "mesh_node": 41901,
+          "exact_coordinate_coincidences": [],
+          "coincides_with_restored_background_vertex": false
+        }
+      ],
+      "nearest_restored_spatial_association": {
+        "probe_distance": 0.04624188018024372,
+        "nearest_restored_background_vertex": 12094,
+        "face_node_distances": [
+          0.05546934421553243,
+          0.04026951459076014,
+          0.06983772797944428,
+          0.04624188018024372,
+          0.05381149727397666,
+          0.062453423696020235
+        ]
+      },
+      "association_scope": "Coordinate coincidence and spatial proximity only; original source IDs are not retained through clipping/optimization, so lineage and causal association remain unknown"
+    },
+    {
+      "sample_index": 229195,
+      "face": 18939,
+      "probe_index": 5,
+      "kind": "edge-midpoint",
+      "barycentric": [
+        0.0,
+        0.5,
+        0.5
+      ],
+      "probe": [
+        -0.2383871246522706,
+        0.10862806135872585,
+        0.10051315044532656
+      ],
+      "mesh_node": 72504,
+      "node_ids": [
+        11031,
+        11032,
+        9986,
+        72501,
+        72504,
+        72503
+      ],
+      "coordinates": [
+        [
+          -0.25688163685188253,
+          0.09988811048038196,
+          0.11622867780821891
+        ],
+        [
+          -0.2516180755105217,
+          0.11447187952038929,
+          0.10467361397268508
+        ],
+        [
+          -0.2272822744666815,
+          0.101020951460328,
+          0.09345201270601468
+        ],
+        [
+          -0.25423980410442504,
+          0.10712982823633643,
+          0.11039223938868127
+        ],
+        [
+          -0.2383871246522706,
+          0.10862806135872585,
+          0.10051315044532656
+        ],
+        [
+          -0.24161829562551046,
+          0.10122664700698264,
+          0.1055573496390993
+        ]
+      ],
+      "standard_foot": [
+        -0.2318846210786622,
+        0.11393869805272859,
+        0.11024709502805374
+      ],
+      "standard_distance": 0.012854380263555384,
+      "standard_failed": false,
+      "locked": [
+        false,
+        false,
+        false
+      ],
+      "closest_found_feasible": {
+        "foot": [
+          -0.238675770475036,
+          0.11026175447104179,
+          0.10963557109403942
+        ],
+        "distance": 0.009272045518023037,
+        "level": -0.36027239477618084,
+        "residual_distance": 5.273244229233804e-10,
+        "optimizer_success": false
+      },
+      "forward_overstatement_at_least": 0.003582334745532347,
+      "taylor_ball": {
+        "radius": 0.002,
+        "field_value": -0.37295810651821104,
+        "gradient_norm": 0.9345270709316175,
+        "hessian_operator_bound": 829.046769691506,
+        "maximum_field_excursion": 0.003527147682246247,
+        "wall_levels_excluded": true,
+        "material_boundary_ball_excluded": true,
+        "distance_to_nearest_box_plane": 0.26161287534772937,
+        "scope": "Analytic global PMY Hessian bound with floating-point padding; not interval arithmetic. Cap material is conservatively included."
+      },
+      "midpoint_displacements": [
+        7.802387079325714e-05,
+        0.002002711455940482,
+        0.0011511902904024016
+      ],
+      "background_coordinate_associations": [
+        {
+          "mesh_node": 11031,
+          "exact_coordinate_coincidences": [],
+          "coincides_with_restored_background_vertex": false
+        },
+        {
+          "mesh_node": 11032,
+          "exact_coordinate_coincidences": [],
+          "coincides_with_restored_background_vertex": false
+        },
+        {
+          "mesh_node": 9986,
+          "exact_coordinate_coincidences": [],
+          "coincides_with_restored_background_vertex": false
+        },
+        {
+          "mesh_node": 72501,
+          "exact_coordinate_coincidences": [],
+          "coincides_with_restored_background_vertex": false
+        },
+        {
+          "mesh_node": 72504,
+          "exact_coordinate_coincidences": [],
+          "coincides_with_restored_background_vertex": false
+        },
+        {
+          "mesh_node": 72503,
+          "exact_coordinate_coincidences": [],
+          "coincides_with_restored_background_vertex": false
+        }
+      ],
+      "nearest_restored_spatial_association": {
+        "probe_distance": 0.04581109741385258,
+        "nearest_restored_background_vertex": 12774,
+        "face_node_distances": [
+          0.07050815231779048,
+          0.0544955541683504,
+          0.04007270351493677,
+          0.06222970213568483,
+          0.04581109741385258,
+          0.0542408205624693
+        ]
+      },
+      "association_scope": "Coordinate coincidence and spatial proximity only; original source IDs are not retained through clipping/optimization, so lineage and causal association remain unknown"
+    },
+    {
+      "sample_index": 334261,
+      "face": 27600,
+      "probe_index": 5,
+      "kind": "edge-midpoint",
+      "barycentric": [
+        0.0,
+        0.5,
+        0.5
+      ],
+      "probe": [
+        -0.10059275903521786,
+        0.2611922056078604,
+        0.39376385667546165
+      ],
+      "mesh_node": 102938,
+      "node_ids": [
+        16111,
+        16109,
+        17060,
+        98049,
+        102938,
+        102941
+      ],
+      "coordinates": [
+        [
+          -0.10923951687493351,
+          0.25788342119620156,
+          0.376428302192674
+        ],
+        [
+          -0.09196143353819293,
+          0.2720997963299947,
+          0.4005171407202522
+        ],
+        [
+          -0.10669439809820061,
+          0.24821127230712356,
+          0.38854381507705804
+        ],
+        [
+          -0.10254740499378773,
+          0.26601157062255526,
+          0.3895184307330784
+        ],
+        [
+          -0.10059275903521786,
+          0.2611922056078604,
+          0.39376385667546165
+        ],
+        [
+          -0.10630699316381703,
+          0.2539206971713336,
+          0.38283231133369994
+        ]
+      ],
+      "standard_foot": [
+        -0.1095955515132844,
+        0.26820996930211505,
+        0.3879756338676001
+      ],
+      "standard_distance": 0.012798546907558654,
+      "standard_failed": false,
+      "locked": [
+        false,
+        false,
+        false
+      ],
+      "closest_found_feasible": {
+        "foot": [
+          -0.10999318045535218,
+          0.2617600227052573,
+          0.39144964286695855
+        ],
+        "distance": 0.009697727810352426,
+        "level": -0.36027239477618084,
+        "residual_distance": 2.791322141577982e-10,
+        "optimizer_success": false
+      },
+      "forward_overstatement_at_least": 0.0031008190972062286,
+      "taylor_ball": {
+        "radius": 0.002,
+        "field_value": -0.3742582565192758,
+        "gradient_norm": 1.1575192930065297,
+        "hessian_operator_bound": 829.046769691506,
+        "maximum_field_excursion": 0.0039731321263960714,
+        "wall_levels_excluded": true,
+        "material_boundary_ball_excluded": true,
+        "distance_to_nearest_box_plane": 0.10623614332453835,
+        "scope": "Analytic global PMY Hessian bound with floating-point padding; not interval arithmetic. Cap material is conservatively included."
+      },
+      "midpoint_displacements": [
+        0.00243400198897386,
+        0.0018061627350702408,
+        0.00190738392564064
+      ],
+      "background_coordinate_associations": [
+        {
+          "mesh_node": 16111,
+          "exact_coordinate_coincidences": [],
+          "coincides_with_restored_background_vertex": false
+        },
+        {
+          "mesh_node": 16109,
+          "exact_coordinate_coincidences": [],
+          "coincides_with_restored_background_vertex": false
+        },
+        {
+          "mesh_node": 17060,
+          "exact_coordinate_coincidences": [],
+          "coincides_with_restored_background_vertex": false
+        },
+        {
+          "mesh_node": 98049,
+          "exact_coordinate_coincidences": [],
+          "coincides_with_restored_background_vertex": false
+        },
+        {
+          "mesh_node": 102938,
+          "exact_coordinate_coincidences": [],
+          "coincides_with_restored_background_vertex": false
+        },
+        {
+          "mesh_node": 102941,
+          "exact_coordinate_coincidences": [],
+          "coincides_with_restored_background_vertex": false
+        }
+      ],
+      "nearest_restored_spatial_association": {
+        "probe_distance": 0.04696227980123821,
+        "nearest_restored_background_vertex": 13749,
+        "face_node_distances": [
+          0.05227446307567314,
+          0.040035318955455944,
+          0.05681669893321701,
+          0.045241454525457296,
+          0.04696227980123821,
+          0.052223448219967925
+        ]
+      },
+      "association_scope": "Coordinate coincidence and spatial proximity only; original source IDs are not retained through clipping/optimization, so lineage and causal association remain unknown"
+    },
+    {
+      "sample_index": 80801,
+      "face": 6952,
+      "probe_index": 6,
+      "kind": "edge-midpoint",
+      "barycentric": [
+        0.5,
+        0.0,
+        0.5
+      ],
+      "probe": [
+        0.3947193666203519,
+        -0.3991867470649947,
+        -0.23916969212656752
+      ],
+      "mesh_node": 37051,
+      "node_ids": [
+        3994,
+        3991,
+        3989,
+        37050,
+        37039,
+        37051
+      ],
+      "coordinates": [
+        [
+          0.3898273800603544,
+          -0.39248982952483685,
+          -0.2523338970360223
+        ],
+        [
+          0.40138606027483226,
+          -0.382526806333284,
+          -0.25697896997812597
+        ],
+        [
+          0.4011965082393162,
+          -0.4083147248117302,
+          -0.2280192488912749
+        ],
+        [
+          0.39563264784498486,
+          -0.38753719371406614,
+          -0.25465376363434655
+        ],
+        [
+          0.4003778637646107,
+          -0.39465387897406023,
+          -0.24192245902045995
+        ],
+        [
+          0.3947193666203519,
+          -0.3991867470649947,
+          -0.23916969212656752
+        ]
+      ],
+      "standard_foot": [
+        0.388750054523897,
+        -0.3905524776759618,
+        -0.23237988067717208
+      ],
+      "standard_distance": 0.012501393294573797,
+      "standard_failed": false,
+      "locked": [
+        false,
+        false,
+        false
+      ],
+      "closest_found_feasible": {
+        "foot": [
+          0.39206647341899065,
+          -0.38983302793124003,
+          -0.2383830039168571
+        ],
+        "distance": 0.009754423730302785,
+        "level": -0.36027239477618084,
+        "residual_distance": 4.0660364349564035e-10,
+        "optimizer_success": false
+      },
+      "forward_overstatement_at_least": 0.002746969564271012,
+      "taylor_ball": {
+        "radius": 0.002,
+        "field_value": -0.37498161284070186,
+        "gradient_norm": 1.281983966322251,
+        "hessian_operator_bound": 829.046769691506,
+        "maximum_field_excursion": 0.004222061473027514,
+        "wall_levels_excluded": true,
+        "material_boundary_ball_excluded": true,
+        "distance_to_nearest_box_plane": 0.10081325293500532,
+        "scope": "Analytic global PMY Hessian bound with floating-point padding; not interval arithmetic. Cap material is conservatively included."
+      },
+      "midpoint_displacements": [
+        3.8899661116722024e-05,
+        0.001324755732644106,
+        0.0017662110837395521
+      ],
+      "background_coordinate_associations": [
+        {
+          "mesh_node": 3994,
+          "exact_coordinate_coincidences": [],
+          "coincides_with_restored_background_vertex": false
+        },
+        {
+          "mesh_node": 3991,
+          "exact_coordinate_coincidences": [],
+          "coincides_with_restored_background_vertex": false
+        },
+        {
+          "mesh_node": 3989,
+          "exact_coordinate_coincidences": [],
+          "coincides_with_restored_background_vertex": false
+        },
+        {
+          "mesh_node": 37050,
+          "exact_coordinate_coincidences": [],
+          "coincides_with_restored_background_vertex": false
+        },
+        {
+          "mesh_node": 37039,
+          "exact_coordinate_coincidences": [],
+          "coincides_with_restored_background_vertex": false
+        },
+        {
+          "mesh_node": 37051,
+          "exact_coordinate_coincidences": [],
+          "coincides_with_restored_background_vertex": false
+        }
+      ],
+      "nearest_restored_spatial_association": {
+        "probe_distance": 0.04768356736773525,
+        "nearest_restored_background_vertex": 11935,
+        "face_node_distances": [
+          0.058083085195120204,
+          0.07197034350573714,
+          0.040298341240750817,
+          0.06489274545102816,
+          0.054925303033115026,
+          0.04768356736773525
+        ]
+      },
+      "association_scope": "Coordinate coincidence and spatial proximity only; original source IDs are not retained through clipping/optimization, so lineage and causal association remain unknown"
+    },
+    {
+      "sample_index": 231908,
+      "face": 19168,
+      "probe_index": 1,
+      "kind": "corner",
+      "barycentric": [
+        0.0,
+        1.0,
+        0.0
+      ],
+      "probe": [
+        -0.422943327888349,
+        0.2507278734993121,
+        0.11763938369653243
+      ],
+      "mesh_node": 11180,
+      "node_ids": [
+        11173,
+        11180,
+        11170,
+        73244,
+        73245,
+        73199
+      ],
+      "coordinates": [
+        [
+          -0.42375052141888037,
+          0.24719269770558763,
+          0.1262351431205969
+        ],
+        [
+          -0.422943327888349,
+          0.2507278734993121,
+          0.11763938369653243
+        ],
+        [
+          -0.4127166452821377,
+          0.2548354390372764,
+          0.1299785233502625
+        ],
+        [
+          -0.42297215618072226,
+          0.2488103950484733,
+          0.12191116299439717
+        ],
+        [
+          -0.41800241111750536,
+          0.25299719598565606,
+          0.1238821942395888
+        ],
+        [
+          -0.41870987786048386,
+          0.2517306764996622,
+          0.12804173227659782
+        ]
+      ],
+      "standard_foot": [
+        -0.422943327888218,
+        0.25072787349928954,
+        0.11763938369648076
+      ],
+      "standard_distance": 1.42618633122496e-13,
+      "standard_failed": false,
+      "locked": [
+        false,
+        false,
+        false
+      ],
+      "closest_found_feasible": {
+        "foot": [
+          -0.422943327888218,
+          0.25072787349928954,
+          0.11763938369648076
+        ],
+        "distance": 1.42618633122496e-13,
+        "level": 0.36027239477618084,
+        "residual_distance": 0.0,
+        "optimizer_success": true
+      },
+      "forward_overstatement_at_least": 0.0,
+      "taylor_ball": {
+        "radius": 0.002,
+        "field_value": 0.3602723947759381,
+        "gradient_norm": 1.7027528810220764,
+        "hessian_operator_bound": 829.046769691506,
+        "maximum_field_excursion": 0.005063599302427165,
+        "wall_levels_excluded": false,
+        "material_boundary_ball_excluded": false,
+        "distance_to_nearest_box_plane": 0.07705667211165101,
+        "scope": "Analytic global PMY Hessian bound with floating-point padding; not interval arithmetic. Cap material is conservatively included."
+      },
+      "midpoint_displacements": [
+        0.00040447474342069,
+        0.00028557274308730685,
+        0.0008629147145103744
+      ],
+      "background_coordinate_associations": [
+        {
+          "mesh_node": 11173,
+          "exact_coordinate_coincidences": [],
+          "coincides_with_restored_background_vertex": false
+        },
+        {
+          "mesh_node": 11180,
+          "exact_coordinate_coincidences": [],
+          "coincides_with_restored_background_vertex": false
+        },
+        {
+          "mesh_node": 11170,
+          "exact_coordinate_coincidences": [],
+          "coincides_with_restored_background_vertex": false
+        },
+        {
+          "mesh_node": 73244,
+          "exact_coordinate_coincidences": [],
+          "coincides_with_restored_background_vertex": false
+        },
+        {
+          "mesh_node": 73245,
+          "exact_coordinate_coincidences": [],
+          "coincides_with_restored_background_vertex": false
+        },
+        {
+          "mesh_node": 73199,
+          "exact_coordinate_coincidences": [],
+          "coincides_with_restored_background_vertex": false
+        }
+      ],
+      "nearest_restored_spatial_association": {
+        "probe_distance": 0.028364588082048073,
+        "nearest_restored_background_vertex": 14333,
+        "face_node_distances": [
+          0.031615831359501925,
+          0.028364588082048073,
+          0.031219859680952235,
+          0.03003463372837271,
+          0.029818672355686044,
+          0.033111180717813445
+        ]
+      },
+      "association_scope": "Coordinate coincidence and spatial proximity only; original source IDs are not retained through clipping/optimization, so lineage and causal association remain unknown"
+    },
+    {
+      "sample_index": 158182,
+      "face": 13266,
+      "probe_index": 11,
+      "kind": "edge-interior",
+      "barycentric": [
+        0.0,
+        0.25,
+        0.75
+      ],
+      "probe": [
+        0.4015478301282496,
+        -0.23518209644349233,
+        -0.09926182407694827
+      ],
+      "mesh_node": null,
+      "node_ids": [
+        7715,
+        7718,
+        6731,
+        55860,
+        55863,
+        55862
+      ],
+      "coordinates": [
+        [
+          0.3726804301112395,
+          -0.25015054644416623,
+          -0.08756967199220961
+        ],
+        [
+          0.3829984743686844,
+          -0.2581771797723858,
+          -0.0990857980736342
+        ],
+        [
+          0.40852933951672615,
+          -0.2281010911481987,
+          -0.09834282215888934
+        ],
+        [
+          0.3778045979402779,
+          -0.2541601092719377,
+          -0.09336148918089102
+        ],
+        [
+          0.3949655161407505,
+          -0.24255511297928806,
+          -0.09969198736875871
+        ],
+        [
+          0.3895734080639109,
+          -0.23810273023251186,
+          -0.09421955185820138
+        ]
+      ],
+      "standard_foot": [
+        0.4004363147239518,
+        -0.22615488322281327,
+        -0.10293812600790266
+      ],
+      "standard_distance": 0.009810262020615617,
+      "standard_failed": false,
+      "locked": [
+        false,
+        false,
+        false
+      ],
+      "closest_found_feasible": {
+        "foot": [
+          0.4022356159135561,
+          -0.22660323459039264,
+          -0.09909774013871302
+        ],
+        "distance": 0.008607952341865375,
+        "level": 0.36027239477618084,
+        "residual_distance": 2.4646559276556586e-10,
+        "optimizer_success": false
+      },
+      "forward_overstatement_at_least": 0.0012023096787502421,
+      "taylor_ball": {
+        "radius": 0.002,
+        "field_value": 0.3761109478634227,
+        "gradient_norm": 1.8203110518636187,
+        "hessian_operator_bound": 829.046769691506,
+        "maximum_field_excursion": 0.00529871564411025,
+        "wall_levels_excluded": true,
+        "material_boundary_ball_excluded": true,
+        "distance_to_nearest_box_plane": 0.09845216987175037,
+        "scope": "Analytic global PMY Hessian bound with floating-point padding; not interval arithmetic. Cap material is conservatively included."
+      },
+      "midpoint_displacements": [
+        4.8664730543205255e-05,
+        0.0013908137693502414,
+        0.0019252515339362097
+      ],
+      "background_coordinate_associations": [
+        {
+          "mesh_node": 7715,
+          "exact_coordinate_coincidences": [],
+          "coincides_with_restored_background_vertex": false
+        },
+        {
+          "mesh_node": 7718,
+          "exact_coordinate_coincidences": [],
+          "coincides_with_restored_background_vertex": false
+        },
+        {
+          "mesh_node": 6731,
+          "exact_coordinate_coincidences": [],
+          "coincides_with_restored_background_vertex": false
+        },
+        {
+          "mesh_node": 55860,
+          "exact_coordinate_coincidences": [],
+          "coincides_with_restored_background_vertex": false
+        },
+        {
+          "mesh_node": 55863,
+          "exact_coordinate_coincidences": [],
+          "coincides_with_restored_background_vertex": false
+        },
+        {
+          "mesh_node": 55862,
+          "exact_coordinate_coincidences": [],
+          "coincides_with_restored_background_vertex": false
+        }
+      ],
+      "nearest_restored_spatial_association": {
+        "probe_distance": 0.04717018138465643,
+        "nearest_restored_background_vertex": 12341,
+        "face_node_distances": [
+          0.07067439109552791,
+          0.07208650818582796,
+          0.040464147154631175,
+          0.07627851750377246,
+          0.0549214095273646,
+          0.060157479749992304
+        ]
+      },
+      "association_scope": "Coordinate coincidence and spatial proximity only; original source IDs are not retained through clipping/optimization, so lineage and causal association remain unknown"
+    },
+    {
+      "sample_index": 158271,
+      "face": 13273,
+      "probe_index": 9,
+      "kind": "face-interior",
+      "barycentric": [
+        0.16666666666666666,
+        0.16666666666666666,
+        0.6666666666666666
+      ],
+      "probe": [
+        0.40096248737849777,
+        -0.23653867315400764,
+        -0.10154083890937791
+      ],
+      "mesh_node": null,
+      "node_ids": [
+        7718,
+        7722,
+        6731,
+        55878,
+        55880,
+        55863
+      ],
+      "coordinates": [
+        [
+          0.3829984743686844,
+          -0.2581771797723858,
+          -0.0990857980736342
+        ],
+        [
+          0.39436663492341606,
+          -0.2530406015745191,
+          -0.11230108280590961
+        ],
+        [
+          0.40852933951672615,
+          -0.2281010911481987,
+          -0.09834282215888934
+        ],
+        [
+          0.3887195761747003,
+          -0.2556038107510894,
+          -0.10565968399832132
+        ],
+        [
+          0.4000967939818565,
+          -0.23950984869208375,
+          -0.10603528831820258
+        ],
+        [
+          0.3949655161407505,
+          -0.24255511297928806,
+          -0.09969198736875871
+        ]
+      ],
+      "standard_foot": [
+        0.39759737020516367,
+        -0.22585373618788115,
+        -0.10566530357032669
+      ],
+      "standard_distance": 0.011937466242874983,
+      "standard_failed": false,
+      "locked": [
+        false,
+        false,
+        false
+      ],
+      "closest_found_feasible": {
+        "foot": [
+          0.4007376010924296,
+          -0.22647687274286069,
+          -0.10070444804953807
+        ],
+        "distance": 0.010099007427754585,
+        "level": 0.36027239477618084,
+        "residual_distance": 0.0,
+        "optimizer_success": true
+      },
+      "forward_overstatement_at_least": 0.0018384588151203977,
+      "taylor_ball": {
+        "radius": 0.002,
+        "field_value": 0.3761141502460054,
+        "gradient_norm": 1.5526432089989122,
+        "hessian_operator_bound": 829.046769691506,
+        "maximum_field_excursion": 0.004763379958380836,
+        "wall_levels_excluded": true,
+        "material_boundary_ball_excluded": true,
+        "distance_to_nearest_box_plane": 0.09903751262150223,
+        "scope": "Analytic global PMY Hessian bound with floating-point padding; not interval arithmetic. Cap material is conservatively included."
+      },
+      "midpoint_displacements": [
+        5.035768594972995e-05,
+        0.0018601847316449974,
+        0.0013908137693502414
+      ],
+      "background_coordinate_associations": [
+        {
+          "mesh_node": 7718,
+          "exact_coordinate_coincidences": [],
+          "coincides_with_restored_background_vertex": false
+        },
+        {
+          "mesh_node": 7722,
+          "exact_coordinate_coincidences": [],
+          "coincides_with_restored_background_vertex": false
+        },
+        {
+          "mesh_node": 6731,
+          "exact_coordinate_coincidences": [],
+          "coincides_with_restored_background_vertex": false
+        },
+        {
+          "mesh_node": 55878,
+          "exact_coordinate_coincidences": [],
+          "coincides_with_restored_background_vertex": false
+        },
+        {
+          "mesh_node": 55880,
+          "exact_coordinate_coincidences": [],
+          "coincides_with_restored_background_vertex": false
+        },
+        {
+          "mesh_node": 55863,
+          "exact_coordinate_coincidences": [],
+          "coincides_with_restored_background_vertex": false
+        }
+      ],
+      "nearest_restored_spatial_association": {
+        "probe_distance": 0.04692290443080335,
+        "nearest_restored_background_vertex": 12341,
+        "face_node_distances": [
+          0.07208650818582796,
+          0.056547281429566935,
+          0.040464147154631175,
+          0.06412317005964198,
+          0.04679349770350152,
+          0.0549214095273646
+        ]
+      },
+      "association_scope": "Coordinate coincidence and spatial proximity only; original source IDs are not retained through clipping/optimization, so lineage and causal association remain unknown"
+    }
+  ],
+  "summary": {
+    "witnesses": 11,
+    "material_boundary_balls_excluded": 10,
+    "feasible_within_gate": 1,
+    "maximum_proven_overstatement": 0.0037348810294124887
+  },
+  "no_admission_change": true,
+  "no_meshing": true,
+  "limits": "Multistart feet are feasible upper bounds, not globally closest certificates. Raw geometry audits stay unchanged. Taylor exclusions use a global analytic Hessian bound and floating-point padding. Spatial associations do not prove rollback caused an error.",
+  "inputs": {
+    "/Users/kmarchais/dev/meshers/.local-work/macbook-pmy-background-native-v3/receipt.json": "5e730ad799433de4a466a7ed812a4005a6744f72d3a5ac4aeff56b59c8ad3907",
+    "/Users/kmarchais/dev/meshers/.local-work/macbook-pmy-background-native-v3/pmy_background": "24010c7223ae2958653254d2cbccd4a7304642a79ac60556677f8de07f25f728",
+    "/Users/kmarchais/dev/meshers/.local-work/macbook-pmy-background-native-v3/sources/Cargo.lock": "c5de0b0561f9ab415ff941a24cae24bd7de5069eca73e3dd9b6da63db4273278",
+    "/Users/kmarchais/dev/meshers/.local-work/macbook-pmy-background-native-v3/sources/Cargo.toml": "83ec559b8d2fdfc92e33da348144fc206708813340407de0a92c8b627e631a4e",
+    "/Users/kmarchais/dev/meshers/.local-work/macbook-pmy-background-native-v3/sources/crates/meshers-core/Cargo.toml": "12dd2fd9e73646d4c4853ecd94ad209d8a36f333b095262013d52dfc8be55068",
+    "/Users/kmarchais/dev/meshers/.local-work/macbook-pmy-background-native-v3/sources/crates/meshers-core/examples/adapt_gyroid.rs": "b727ae8cd473e291cdca72f4f9f1e77ac8e16c05cb0339e75b40a73a89cd8a41",
+    "/Users/kmarchais/dev/meshers/.local-work/macbook-pmy-background-native-v3/sources/crates/meshers-core/examples/adapt_surface.rs": "e74f68ba64459ee34fe289ab93002dc17fb228c0b956365d028d45162fa85e87",
+    "/Users/kmarchais/dev/meshers/.local-work/macbook-pmy-background-native-v3/sources/crates/meshers-core/examples/curved_intersection.rs": "7d03160557e21a767fb63ca27d51a8a6bbb88f3703540f9a0e3462b862412fcc",
+    "/Users/kmarchais/dev/meshers/.local-work/macbook-pmy-background-native-v3/sources/crates/meshers-core/examples/gyroid.rs": "a1ab2f8907e30e88833e6bf08b70c32f7304a05341808716a3d7d7a7b0e6bfc2",
+    "/Users/kmarchais/dev/meshers/.local-work/macbook-pmy-background-native-v3/sources/crates/meshers-core/examples/implicit.rs": "0a957f8e8bc7473dbb5d25c59808552ccd3e2cd3f90f09cb179b6cf75168ae17",
+    "/Users/kmarchais/dev/meshers/.local-work/macbook-pmy-background-native-v3/sources/crates/meshers-core/examples/implicit_sphere.rs": "5cbd9aceab3b7075d87065647b98427279829d4959178339946c1bcf44792e22",
+    "/Users/kmarchais/dev/meshers/.local-work/macbook-pmy-background-native-v3/sources/crates/meshers-core/examples/pmy_background.rs": "682d353659c083cad83c29a7bb7210cd215e02fa4399d8413dca60b3a219a10e",
+    "/Users/kmarchais/dev/meshers/.local-work/macbook-pmy-background-native-v3/sources/crates/meshers-core/src/accelerator.rs": "496365ec7c5fa7cbccb521937c91d7daa19a9bd8d01aa5398639345d4290b20c",
+    "/Users/kmarchais/dev/meshers/.local-work/macbook-pmy-background-native-v3/sources/crates/meshers-core/src/adaptive.rs": "a3de8e081d5100c92508ad2d0b481136a78412580455a3ff4e8b841dd4a90a77",
+    "/Users/kmarchais/dev/meshers/.local-work/macbook-pmy-background-native-v3/sources/crates/meshers-core/src/error.rs": "b8c8c922e662107c4304f823cff8f46d18b898d5c0bd5af1b8b28317d2566d81",
+    "/Users/kmarchais/dev/meshers/.local-work/macbook-pmy-background-native-v3/sources/crates/meshers-core/src/geometry.rs": "b00a2c883484ab6f09300f2b7ad13efa51b3685f8ac259d86e9bb0d199b5bc08",
+    "/Users/kmarchais/dev/meshers/.local-work/macbook-pmy-background-native-v3/sources/crates/meshers-core/src/implicit/intersection/repair.rs": "dcbde4728b7efcf104db508c7d656d08959a0888de1aacadb433149bbfa67373",
+    "/Users/kmarchais/dev/meshers/.local-work/macbook-pmy-background-native-v3/sources/crates/meshers-core/src/implicit/intersection.rs": "c01e84b8c19f853990c6a057dc52ce7341505cdf71aea04f31351cef16847a13",
+    "/Users/kmarchais/dev/meshers/.local-work/macbook-pmy-background-native-v3/sources/crates/meshers-core/src/implicit/periodic_feature_research.rs": "739781fa1b0c76ac24615345fa02f30d2fff02761d57feea46288abc14e21329",
+    "/Users/kmarchais/dev/meshers/.local-work/macbook-pmy-background-native-v3/sources/crates/meshers-core/src/implicit.rs": "7f318529d7096fe873c5a9068665b84ed624253668b14c71f570262778fb4ba5",
+    "/Users/kmarchais/dev/meshers/.local-work/macbook-pmy-background-native-v3/sources/crates/meshers-core/src/lib.rs": "e72b01ac4ed690e58cd12dcf204fe7167e69ff5c80d41156f6a8206ba252e0d3",
+    "/Users/kmarchais/dev/meshers/.local-work/macbook-pmy-background-native-v3/sources/crates/meshers-core/src/optimize.rs": "55c62786bd57500b841c86bcd4e7520ae31b5c761fa8a39a3ad6fec0564e68ee",
+    "/Users/kmarchais/dev/meshers/.local-work/macbook-pmy-background-native-v3/sources/crates/meshers-core/src/optimize_batch.rs": "6571614ef842ec9ca291976e51f7efe04662b7b643160114fa4fb825a3aaf112",
+    "/Users/kmarchais/dev/meshers/.local-work/macbook-pmy-background-native-v3/sources/crates/meshers-core/src/polyhedral.rs": "45e737dce0921435b135a5baaa2763e0e30002d92fe0a633d81f4dabe70bb473",
+    "/Users/kmarchais/dev/meshers/.local-work/macbook-pmy-background-native-v3/sources/crates/meshers-core/src/profile.rs": "70f91e99631bcde8ca521c82f06f7f645cf9ee340d685a4e4928cb2ebc348c58",
+    "/Users/kmarchais/dev/meshers/.local-work/macbook-pmy-background-native-v3/sources/crates/meshers-core/src/projection.rs": "926d1ab1c848cf80cc392295764d7bf8f2254dfb62f219639db7e5a4194acf84",
+    "/Users/kmarchais/dev/meshers/.local-work/macbook-pmy-background-native-v3/sources/crates/meshers-core/src/quadratic/fit.rs": "bc310e4624599686286909ed40db4e9f8b10cce06a713b4fba2a9b598ef4eae3",
+    "/Users/kmarchais/dev/meshers/.local-work/macbook-pmy-background-native-v3/sources/crates/meshers-core/src/quadratic.rs": "fff22efd06011a427b139e2612bce70dc46e85e6b4a07047c2bcc6a8a3b2428c",
+    "/Users/kmarchais/dev/meshers/.local-work/macbook-pmy-background-native-v3/sources/crates/meshers-core/src/quads.rs": "9579d9478c57b8b4ad8cead2a717d01cfc626140ce40cd5f11014db717acc2ef",
+    "/Users/kmarchais/dev/meshers/.local-work/macbook-pmy-background-native-v3/sources/crates/meshers-core/src/remesh.rs": "499b779e55252258cdad7b81a0b2917f3ea0dc4f3b4d446fb60c3e9a3fdec085",
+    "/Users/kmarchais/dev/meshers/.local-work/macbook-pmy-background-native-v3/sources/crates/meshers-core/src/tet_adapt.rs": "24599c83b24fc4a08de8b2521791d9bb57194cf0222aa4b02ca845f441fa565e",
+    "/Users/kmarchais/dev/meshers/.local-work/macbook-pmy-background-native-v3/sources/crates/meshers-core/src/triangles.rs": "897d3aee83d8c6c5de0d3e0df332ee3e56ef8390e74b3af1e052e7859f7dc8fc",
+    "/Users/kmarchais/dev/meshers/.local-work/macbook-pmy-background-native-v3/sources/crates/meshers-core/tests/batching.rs": "57957d60f80b4c4d0105e9d5b335701b448f2c9d18dbfc98687a3d1e56d44153",
+    "/Users/kmarchais/dev/meshers/.local-work/macbook-pmy-background-native-v3/sources/crates/meshers-core/tests/implicit.rs": "aeb213b8eb90ec52260ddf10ca78c3d2719994dac6d023a3858632c0239808f5",
+    "/Users/kmarchais/dev/meshers/.local-work/macbook-pmy-background-native-v3/sources/crates/meshers-core/tests/intersection.rs": "b598b04a6d84673772097d09137ff4e670bedcef89622c077ad849e1acc20e1d",
+    "/Users/kmarchais/dev/meshers/.local-work/macbook-pmy-background-native-v3/sources/crates/meshers-core/tests/public_api.rs": "16d282472b908dd4fa1a3dce963e04a701252b5437bfb8ca63bba9a96e02d279",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/pmy_saved_forward_control.py": "2aa4531e7815ddc3d389784ca5322a4c415b9c090b00487c7b56ccbeb3748d34",
+    "/Users/kmarchais/dev/meshers/.local-work/macbook-runtime/venv/lib/python3.12/site-packages/microgen/shape/surface_functions.py": "578c20eb2ef424b95f50618d9cfffdce3676d6b5bdcd90a3278e0ca5ef1af4b4",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-pmy-rollback-native-v1/manifest.json": "7e92dd37723f9d9f8ec5fc133d1ca1107a56773227639c42f2f793420226999e",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-pmy-saved-trace-replay-v1/result.json": "d42d4d5223cb59ad2c40c2a668cc7c8569f609c6c0ad097038ef10c1e530bbf3",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-pmy-saved-trace-replay-v1/native-input-bits.json": "a082ec509e17362d1a87ef3a0a16e9884382ac07ca592605fd9773f060a93352",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-tpms-family-fixtures-v1/tpms-pmy-sheet/tpms-pmy-sheet-specimen.json": "65f653b5b5df833c4f7b9ebeef839555c76690e1a4e95c6011719d042a77c67a",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-tpms-family-fixtures-v1/tpms-pmy-sheet/tpms-pmy-sheet-samples.npz": "66cd3e81d5bad83b63c3bbc96696d732170ed37049dd4ff1dad868b39dbaf2f1",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-tpms-family-fixtures-v1/tpms-pmy-sheet/tpms-pmy-sheet-definition.json": "a0b3623510422678fd46dbfec702d7ebfb03e14272f7016b002e5b2594a662b6",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-pmy-rollback-native-v1/edge/input.json": "5b192ece13fe1405ecd4d722f8de2743f4c8c5c6e2ff33e2202700c28c242f56",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-pmy-rollback-native-v1/edge/result.json": "580f6c980bd1f8a11ca546a7a1b71e81815e5d617ffe8fa69887992b3671c5b1",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-pmy-rollback-native-v1/edge/mesh.npz": "1011c00ca459abdeb67e8f17553ccf1400ed6c50a9bd9e287482eb3b6b705ad8",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-pmy-rollback-native-v1/edge/native-snap-trace.json": "036c0892df49d098e61a80d7e07363a89487b5738a1141c39b0d3f6e1cf067f4",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/pmy_forward_localization.py": "f1ad812b8ea738c0580a41f72842029a31d929c316809e6897dcd3e1e648a323",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/pmy_failure_probe.py": "6a3b57434d5c8586dea67aa67bd8e2ca69ca4e16f0098a0cd4834463109883f7",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/pmy_neck_control.py": "aacab3dd12c99ad5586e8c4efb59b74556e736041fbe20653381c53d577b8668",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/pmy_second_edge_preflight.py": "8bfb5e0aaa155290ad30c7e7908fd6eac2dad9a6cc7840e23d5e541eabee4cf6",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/tpms_family_fixtures.py": "794418f5d2e3d2158542af51a5cf322c41befff8f8d7c98f769d379baedd3bc6",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/scorecard.py": "8f26256c7df0e84c9f35cdd71bf4f95a74e072d45469002b213c5dcd4f1bab2a",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/microgen_workflow.py": "9f513dfd3e6e5a72a71a54f70c0c2cf7c7a1ebe7256886ee3feaf7d7ad7de161",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/job_parts.py": "cc220d52685be4035a3cf38b85e8e2d8354e55f36c42245cd6e1faad9a44bcab",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/box_projection.py": "59589b1996b3a3782f1b7f5e5ff3c7ab303d4158ef50a233515dc5369bddaf05"
+  },
+  "input_hashes_verified": true,
+  "prior_native_result_unchanged": true
+}
