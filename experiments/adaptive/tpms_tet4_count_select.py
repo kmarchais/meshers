@@ -40,10 +40,10 @@ def main():
         row = dict(case=entry["case"], chosen_native_directory=native["directory"],
                    actual_directory=actual["directory"], repeat=False)
         if not a.correction:
-            if returned(native) and returned(actual) and deviation(native, actual) > math.log(1.2):
+            if entry.get("count_correction_eligible", True) and returned(native) and returned(actual) and deviation(native, actual) > math.log(1.2):
                 old = native["config"]["cells"]
                 factor = min((actual[k]/native[k])**(1/3) for k in ("elements", "nodes"))
-                cells = max(6, min(24, round(old*factor)))
+                cells = max(6, min(source.get("maximum_budget_cells", 24), round(old*factor)))
                 if cells != old:
                     entry["native"] = dict(native["config"], cells=cells)
                     entry["count_correction"] = dict(source=native["directory"], actual=actual["directory"],

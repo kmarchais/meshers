@@ -1,0 +1,232 @@
+{
+  "date": "2026-11-11",
+  "title": "Tet4 spinodoids, composed fields and basic solids",
+  "scope": "Two frozen spinodoids, ordered smooth-union lattice, three graded Gyroids and five basic solids. Actual public defaults; no universal custom-field or CAD support claim.",
+  "cases": [
+    {
+      "case": "spinodoid-anisotropic",
+      "fixture_kind": "study",
+      "fixtures": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-comparison-fixtures-v1",
+      "native": {
+        "name": "native-tet4-coarse-quality-control",
+        "arm": "meshers",
+        "cells": 20,
+        "order": 1,
+        "adapt": false,
+        "tolerance": 1.0,
+        "periodic_trace": true,
+        "declared_unit_cell": true,
+        "optimization_passes": 2
+      },
+      "actual": {
+        "name": "actual-default-tet4",
+        "arm": "microgen",
+        "resolution": null,
+        "order": 1,
+        "periodic_trace": true,
+        "declared_unit_cell": true
+      },
+      "maximum_budget_cells": 24,
+      "selection": "Uniform16 initial count control; one measured correction by element/node budgets, no outcome selection",
+      "chosen_native_directory": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-implicit-tet4-count-correction-v1/study/repeat-0-spinodoid-anisotropic-native",
+      "actual_directory": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-implicit-tet4-count-pilot-v1/study/repeat-0-spinodoid-anisotropic-actual",
+      "repeat": true,
+      "elements_ratio": 4.243034384969869,
+      "nodes_ratio": 3.8198097369893675,
+      "count_deviation": 1.4452786701161442,
+      "action": "repeat-frozen-count-nearest-produced"
+    },
+    {
+      "case": "smooth-lattice",
+      "fixture_kind": "study",
+      "fixtures": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-comparison-fixtures-v1",
+      "native": {
+        "name": "native-tet4-budget",
+        "arm": "meshers",
+        "cells": 16,
+        "order": 1,
+        "adapt": false,
+        "tolerance": 1.0,
+        "periodic_trace": true,
+        "declared_unit_cell": true,
+        "lattice_field": "original"
+      },
+      "actual": {
+        "name": "actual-default-tet4",
+        "arm": "microgen",
+        "resolution": null,
+        "order": 1,
+        "periodic_trace": true,
+        "declared_unit_cell": true
+      },
+      "maximum_budget_cells": 24,
+      "selection": "Uniform16 initial count control; one measured correction by element/node budgets, no outcome selection",
+      "chosen_native_directory": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-implicit-tet4-count-pilot-v1/study/repeat-0-smooth-lattice-native",
+      "actual_directory": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-implicit-tet4-count-pilot-v1/study/repeat-0-smooth-lattice-actual",
+      "repeat": true,
+      "elements_ratio": 0.9038546743464776,
+      "nodes_ratio": 1.0647362037598544,
+      "count_deviation": 0.10108668997927366,
+      "action": "repeat-frozen-count-nearest-produced"
+    },
+    {
+      "case": "graded-gyroid-periodic",
+      "fixture_kind": "study",
+      "fixtures": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-comparison-fixtures-v1",
+      "native": {
+        "name": "native-tet4-budget",
+        "arm": "meshers",
+        "cells": 13,
+        "order": 1,
+        "adapt": false,
+        "tolerance": 1.0,
+        "periodic_trace": true,
+        "declared_unit_cell": true
+      },
+      "actual": {
+        "name": "actual-default-tet4",
+        "arm": "microgen",
+        "resolution": null,
+        "order": 1,
+        "periodic_trace": true,
+        "declared_unit_cell": true
+      },
+      "maximum_budget_cells": 24,
+      "selection": "Uniform16 initial count control; one measured correction by element/node budgets, no outcome selection",
+      "chosen_native_directory": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-implicit-tet4-count-correction-v1/study/repeat-0-graded-gyroid-periodic-native",
+      "actual_directory": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-implicit-tet4-count-pilot-v1/study/repeat-0-graded-gyroid-periodic-actual",
+      "repeat": true,
+      "elements_ratio": 1.2334243056670413,
+      "nodes_ratio": 1.303073420603301,
+      "count_deviation": 0.2647256439100529,
+      "action": "repeat-frozen-count-nearest-produced"
+    },
+    {
+      "case": "graded-gyroid-linear",
+      "fixture_kind": "study",
+      "fixtures": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-comparison-fixtures-v1",
+      "native": {
+        "name": "native-tet4-budget",
+        "arm": "meshers",
+        "cells": 12,
+        "order": 1,
+        "adapt": false,
+        "tolerance": 1.0,
+        "periodic_trace": true,
+        "declared_unit_cell": true
+      },
+      "actual": {
+        "name": "actual-default-tet4",
+        "arm": "microgen",
+        "resolution": null,
+        "order": 1,
+        "periodic_trace": true,
+        "declared_unit_cell": true
+      },
+      "maximum_budget_cells": 24,
+      "selection": "Uniform16 initial count control; one measured correction by element/node budgets, no outcome selection",
+      "chosen_native_directory": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-implicit-tet4-count-correction-v1/study/repeat-0-graded-gyroid-linear-native",
+      "actual_directory": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-implicit-tet4-count-pilot-v1/study/repeat-0-graded-gyroid-linear-actual",
+      "repeat": true,
+      "elements_ratio": 0.9621513944223108,
+      "nodes_ratio": 1.0262853841709993,
+      "count_deviation": 0.038583466039156473,
+      "action": "repeat-frozen-count-nearest-produced"
+    }
+  ],
+  "decisions": [
+    {
+      "case": "spinodoid",
+      "chosen_native_directory": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-implicit-tet4-count-pilot-v1/study/repeat-0-spinodoid-native",
+      "actual_directory": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-implicit-tet4-count-pilot-v1/study/repeat-0-spinodoid-actual",
+      "repeat": false,
+      "action": "no-returned-pair-no-repeated-timing"
+    },
+    {
+      "case": "spinodoid-anisotropic",
+      "chosen_native_directory": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-implicit-tet4-count-correction-v1/study/repeat-0-spinodoid-anisotropic-native",
+      "actual_directory": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-implicit-tet4-count-pilot-v1/study/repeat-0-spinodoid-anisotropic-actual",
+      "repeat": true,
+      "elements_ratio": 4.243034384969869,
+      "nodes_ratio": 3.8198097369893675,
+      "count_deviation": 1.4452786701161442,
+      "action": "repeat-frozen-count-nearest-produced"
+    },
+    {
+      "case": "smooth-lattice",
+      "chosen_native_directory": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-implicit-tet4-count-pilot-v1/study/repeat-0-smooth-lattice-native",
+      "actual_directory": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-implicit-tet4-count-pilot-v1/study/repeat-0-smooth-lattice-actual",
+      "repeat": true,
+      "elements_ratio": 0.9038546743464776,
+      "nodes_ratio": 1.0647362037598544,
+      "count_deviation": 0.10108668997927366,
+      "action": "repeat-frozen-count-nearest-produced"
+    },
+    {
+      "case": "graded-gyroid-periodic",
+      "chosen_native_directory": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-implicit-tet4-count-correction-v1/study/repeat-0-graded-gyroid-periodic-native",
+      "actual_directory": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-implicit-tet4-count-pilot-v1/study/repeat-0-graded-gyroid-periodic-actual",
+      "repeat": true,
+      "elements_ratio": 1.2334243056670413,
+      "nodes_ratio": 1.303073420603301,
+      "count_deviation": 0.2647256439100529,
+      "action": "repeat-frozen-count-nearest-produced"
+    },
+    {
+      "case": "graded-gyroid-linear",
+      "chosen_native_directory": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-implicit-tet4-count-correction-v1/study/repeat-0-graded-gyroid-linear-native",
+      "actual_directory": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-implicit-tet4-count-pilot-v1/study/repeat-0-graded-gyroid-linear-actual",
+      "repeat": true,
+      "elements_ratio": 0.9621513944223108,
+      "nodes_ratio": 1.0262853841709993,
+      "count_deviation": 0.038583466039156473,
+      "action": "repeat-frozen-count-nearest-produced"
+    },
+    {
+      "case": "graded-gyroid-density-linear",
+      "chosen_native_directory": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-implicit-tet4-count-pilot-v1/study/repeat-0-graded-gyroid-density-linear-native",
+      "actual_directory": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-implicit-tet4-count-pilot-v1/study/repeat-0-graded-gyroid-density-linear-actual",
+      "repeat": false,
+      "action": "no-returned-pair-no-repeated-timing"
+    },
+    {
+      "case": "primitive-box",
+      "chosen_native_directory": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-implicit-tet4-count-pilot-v1/study/repeat-0-primitive-box-native",
+      "actual_directory": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-implicit-tet4-count-pilot-v1/study/repeat-0-primitive-box-actual",
+      "repeat": false,
+      "action": "no-returned-pair-no-repeated-timing"
+    },
+    {
+      "case": "primitive-cylinder",
+      "chosen_native_directory": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-implicit-tet4-count-pilot-v1/study/repeat-0-primitive-cylinder-native",
+      "actual_directory": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-implicit-tet4-count-pilot-v1/study/repeat-0-primitive-cylinder-actual",
+      "repeat": false,
+      "action": "no-returned-pair-no-repeated-timing"
+    },
+    {
+      "case": "primitive-capsule",
+      "chosen_native_directory": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-implicit-tet4-count-pilot-v1/study/repeat-0-primitive-capsule-native",
+      "actual_directory": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-implicit-tet4-count-pilot-v1/study/repeat-0-primitive-capsule-actual",
+      "repeat": false,
+      "action": "no-returned-pair-no-repeated-timing"
+    },
+    {
+      "case": "primitive-ellipsoid",
+      "chosen_native_directory": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-implicit-tet4-count-pilot-v1/study/repeat-0-primitive-ellipsoid-native",
+      "actual_directory": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-implicit-tet4-count-pilot-v1/study/repeat-0-primitive-ellipsoid-actual",
+      "repeat": false,
+      "action": "no-returned-pair-no-repeated-timing"
+    },
+    {
+      "case": "primitive-sphere",
+      "chosen_native_directory": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-implicit-tet4-count-pilot-v1/study/repeat-0-primitive-sphere-native",
+      "actual_directory": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-implicit-tet4-count-pilot-v1/study/repeat-0-primitive-sphere-actual",
+      "repeat": false,
+      "action": "no-returned-pair-no-repeated-timing"
+    }
+  ],
+  "selection_policy": "Count proximity only, independent of timing, distance, quality or admission. One correction when joint log count deviation exceeds log1.2; this20percent trigger is a research scheduling rule, not an admission gate.",
+  "source_selection_sha256": "b662ff4e4898657a61447181ac7f6efbcb86fa626d2c7dfe93a993665f4bbf81",
+  "pilot_sha256": "6c39c5a6c185b0e2055c81fc5cd8a0805e6431d8ada899b73eff538536866e02",
+  "correction_sha256": "8b1576281132dfbc5631d00f80e224dd2fdd7a4e5b7ba7d56cd706a0f0d8ca0b"
+}

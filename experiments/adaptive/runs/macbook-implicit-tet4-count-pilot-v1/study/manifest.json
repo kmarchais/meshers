@@ -1,0 +1,407 @@
+{
+  "inputs": {
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/tpms_tet4_count_benchmark.py": "902496131fd822237c8730546dd08eac34f33c11ab788aa00352f6a413798eae",
+    "/Users/kmarchais/dev/meshers/handoff/macbook/implicit-tet4-default-selection-20261111.json": "b662ff4e4898657a61447181ac7f6efbcb86fa626d2c7dfe93a993665f4bbf81",
+    "/Users/kmarchais/dev/meshers/crates/meshers-python/python/meshers/_meshers.abi3.so": "30561969ebc0b5138393df09caff90241c80c8c30be21ce5ef615017fc0070cd",
+    "/Users/kmarchais/dev/meshers/crates/meshers-python/python/meshers/__init__.py": "c02de55208342f18ce7f89e2c19dfcfe18220eaf64e8c2eb9cc734632bad04fa",
+    "/Users/kmarchais/dev/meshers/.local-work/macbook-runtime/venv/lib/python3.12/site-packages/microgen/__init__.py": "dcbd7c078a34d3a900c9f1eb81045ff436ddc25a60de10063f98e7589a14edc6",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/tpms_family_screen.py": "03621c79045679e46f1ea55658105e43a6aa679dcd14bcc752fd28704cb2cf70",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/tpms_family_fixtures.py": "794418f5d2e3d2158542af51a5cf322c41befff8f8d7c98f769d379baedd3bc6",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/comparison_benchmark.py": "8035a5fafce38fd25939a95d01bd94aa9483705480998ad60f82bfd5081e80ed",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/comparison_fixtures.py": "4fa77af6b3b4858eb7611045f46f6e4ca672c6c46ab28d7ee969e14b31e11b9b",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/comparison_mesh_audit.py": "6797327ecf6b6c62a973f52812d0bad95b2ef861541247425609109c24d8af94",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/microgen_workflow.py": "9f513dfd3e6e5a72a71a54f70c0c2cf7c7a1ebe7256886ee3feaf7d7ad7de161",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/scorecard.py": "8f26256c7df0e84c9f35cdd71bf4f95a74e072d45469002b213c5dcd4f1bab2a",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/periodic_trace.py": "16d51906318ba9110f8979b48a540500d1cce5835685d72e780ca1893f3b8654",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/box_projection.py": "59589b1996b3a3782f1b7f5e5ff3c7ab303d4158ef50a233515dc5369bddaf05",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/facet_incidence_audit.py": "4f51afc196c85e1d0bc64d7a96507517ddc6e32ccd8380a2ac77cae0ace89610",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/quadratic_edge_removal_probe.py": "f26a4be16f7aeb4fce6d89732754fab0e5d39e86b4d4c62466a3afd547cec6ed",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/job_parts.py": "cc220d52685be4035a3cf38b85e8e2d8354e55f36c42245cd6e1faad9a44bcab",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/primitive_family_fixtures.py": "bb7cc596d40e7d831216eeae2c18d07d1768e8278af35e1c6e783ac71bbde042",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/gradient_tie_probe.py": "f2fddde187144f52527bd8563b34128831cc4f8733ef720ad86cf7c5db8d2762",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/linear_density_fixture.py": "99b619d8f4885673bd1a7f7b7ced3af01211bff4b52f1b206cbecaf654fca3f8",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/graded_lookup_preflight.py": "caf5176ca48bbd735dc121e4e7fdfa4e24c088fee4339100791c92c09924ba46",
+    "/Users/kmarchais/dev/meshers/.local-work/macbook-runtime/venv/lib/python3.12/site-packages/microgen/remesh.py": "b93c8b8150c1c40ccf5312d57785331d52f114d2217a8b59296b7484cf6f2612",
+    "/Users/kmarchais/dev/meshers/.local-work/macbook-runtime/venv/lib/python3.12/site-packages/microgen/shape/tpms.py": "1c2876a8f65441e6d7a0f21397a3b781b6f03a338f244c7db5c462c13348f955",
+    "/Users/kmarchais/dev/meshers/.local-work/macbook-runtime/venv/lib/python3.12/site-packages/mmgpy/bin/mmg3d_O3": "efe07a6207a9ff86f4af26513e6aa368647b32cae112859fca52e74c3e7f7cf1",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-comparison-fixtures-v1/controls.json": "a245d74c773f46cf3d24b22147d2956e5da1afb993b3e5b7400033c88459dc08",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-comparison-fixtures-v1/result.json": "6903fc3239ce1bbfeb423bb76e749f5b107b7f6e63eaa90459fff0163fd7e18d",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-comparison-fixtures-v1/spinodoid-anisotropic-coefficients.json": "6472b7e24af7aec153ec8797ff9025ea82c5690705da3d5ebc836dc94fa00b7e",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-comparison-fixtures-v1/worker.json": "99d13c13d7d3165a554eb1369e3dda7581d0f882e5bf0da6b59a705711af25e2",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-comparison-fixtures-v1/manifest.json": "f929e386a7edd1aa1ed00c6e98566220343e126103970777ab4c02f68d8f203f",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/g3-spinodoid-compiled32-v1/fourier-coefficients.json": "e9ee2b6c70dcf771ab9fdb011051eb57973d2e15cf479e904bf5d8b40e3d779a",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-comparison-fixtures-v1/spinodoid/spinodoid-samples.npz": "1f5f91f1ebc3e4e76dc7ddfc1e7ea7093595735684fbe41f1f7d85356138442c",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-comparison-fixtures-v1/spinodoid/spinodoid-specimen.json": "6140bf66acc68303bc18767a3632e24a068181201eba350ce32217dc50a67eee",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-comparison-fixtures-v1/spinodoid-anisotropic/spinodoid-anisotropic-specimen.json": "4c3cb9c37a0f4a2e42f8d448511e78a2e1e0d57f846e28140deab57b3d1712f0",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-comparison-fixtures-v1/spinodoid-anisotropic/spinodoid-anisotropic-samples.npz": "68402aca3566073307f3a2cd26d76473a7d946f1ded4a4a1098aedf0dda23cb8",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-comparison-fixtures-v1/smooth-lattice/smooth-lattice-samples.npz": "a2b4375d2c99901f03b34e913563c887a4cdcff00bca35983adb7ef9d5311abe",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-comparison-fixtures-v1/smooth-lattice/smooth-lattice-specimen.json": "0e5b34b76183341a6e0d454f13cd404668ab82675f9a51cd9d2ecf3c91be3316",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-comparison-fixtures-v1/graded-gyroid-periodic/graded-gyroid-periodic-specimen.json": "d29cb9023b8efe2f1959b062d4222050f64b37f987b855c475a6848847438a89",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-comparison-fixtures-v1/graded-gyroid-periodic/graded-gyroid-periodic-samples.npz": "75be3ee3ec7722aed6b214d1408b4174c148405bd6aa6feb7bd66b0b457af613",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-comparison-fixtures-v1/graded-gyroid-linear/graded-gyroid-linear-samples.npz": "583146b0bb252ebb81f0f56919721e91743f42c796492802c78df5bf37f60273",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-comparison-fixtures-v1/graded-gyroid-linear/graded-gyroid-linear-specimen.json": "4b3d9d250960d00d2b28dd8c58c2acf4b51e6bc04d264dcb1d001980ab907c7a",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-linear-density-fixtures-v1/result.json": "befde3eb3a7c63e32393f58ca3079e9b9d90e2a6812234bbc378f6298037fb30",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-linear-density-fixtures-v1/spinodoid-anisotropic-coefficients.json": "6472b7e24af7aec153ec8797ff9025ea82c5690705da3d5ebc836dc94fa00b7e",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-linear-density-fixtures-v1/worker.json": "a31ae679354c6b44140484557eee0223f1651f28a12bac7a36d2c25bccb1d2dd",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-linear-density-fixtures-v1/density-controls.json": "4c63bbe9a11b6a5b7310f63163dec02b9b926c42d1e29aa6aa3855699074f5ac",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-linear-density-fixtures-v1/linear-density-calibration.json": "b4db7ab7afe47f7832106e2eaf1523c7b0d854f291ef6030bdbe65df9e06e7e1",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-linear-density-fixtures-v1/manifest.json": "b0504db3560455ce0665f724017e7ec2a8dceb55f981ee2ad42f68a2c80324d9",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-linear-density-fixtures-v1/graded-gyroid-density-linear/graded-gyroid-density-linear-samples.npz": "7118dc4e84d4c1617e8034553e3a052b170e49d6f3412e4dd2886c2616e8c56c",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-linear-density-fixtures-v1/graded-gyroid-density-linear/graded-gyroid-density-linear-specimen.json": "345f1f0e92b651ba2dabc4caa9ed436babd9349fcb48a6aecb8fea85845b72ae",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-primitive-family-fixtures-v1/result.json": "a8cdf14cbb62aaaa3c2533942fc3a1511ab3b2e16dd70779dbafc9ee67412083",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-primitive-family-fixtures-v1/protocol.json": "55b1c8f1f8a2216152a577feddf9e5bd316be0649c1e7caec28965b3bc63170f",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-primitive-family-fixtures-v1/primitive-box/primitive-box-specimen.json": "b78d796aeb428fca072c2ab5cec253ac233fd9551bf1c1c95688a555a36eb42d",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-primitive-family-fixtures-v1/primitive-box/primitive-box-samples.npz": "5055b4645a9106af69cef0c96309f4603e8950d626fdbdb76613a841896cb3f4",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-primitive-family-fixtures-v1/primitive-box/primitive-box-definition.json": "db7d716e5c63612a0753dcfb9a6f346050c361b771a8c79e8f06eada9dca6cf3",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-primitive-family-fixtures-v1/primitive-cylinder/primitive-cylinder-samples.npz": "1cb37cb5a92ecac11c9f3fd5eda97d49fbcb95defe6f069df85ff74ff8686354",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-primitive-family-fixtures-v1/primitive-cylinder/primitive-cylinder-definition.json": "3e199ff786bffcbad33cd018e048353ea1a5bd46ee2e1c73b2f617bebef8bc32",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-primitive-family-fixtures-v1/primitive-cylinder/primitive-cylinder-specimen.json": "22e77a274f35f4f4af0eb35ebd64471a6a77a972d93eb697bb993961782ef86b",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-primitive-family-fixtures-v1/primitive-capsule/primitive-capsule-samples.npz": "a2257d6b862bb0012a6610b8f554db9b3de1dfdd6d099255ee2df3834cfbd8e8",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-primitive-family-fixtures-v1/primitive-capsule/primitive-capsule-definition.json": "4b1d82e37102f7693cad02b782ec1a3db3d8ebe70daac32761cbf619060f12de",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-primitive-family-fixtures-v1/primitive-capsule/primitive-capsule-specimen.json": "9aa7e1e7459b9f76add57ef89591e56786bebe94ec98ba612a5d17021e2e1417",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-primitive-family-fixtures-v1/primitive-ellipsoid/primitive-ellipsoid-definition.json": "217504ac460b56256cabe3e5ff11a9b9143ecb5c602dbe174a07175b813e40b1",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-primitive-family-fixtures-v1/primitive-ellipsoid/primitive-ellipsoid-samples.npz": "f19f3d99f7a45b970ab4c0945691f89765ab7de495a451de178d71a2f6c1577b",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-primitive-family-fixtures-v1/primitive-ellipsoid/primitive-ellipsoid-specimen.json": "e6ca1f305b8176b8fe1a71ece9dc3b085c377491faef74c1b34223b9dcc5d01c",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-primitive-family-fixtures-v1/primitive-sphere/primitive-sphere-samples.npz": "8dba45c505dcbc51f20b5a7770283cb238920f6ad03281fb8da10fcaeeb41700",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-primitive-family-fixtures-v1/primitive-sphere/primitive-sphere-specimen.json": "1bf6d3841edf416e865a00b458243487ddc4161ecedd7cb7d00328fb16ff38d9",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-primitive-family-fixtures-v1/primitive-sphere/primitive-sphere-definition.json": "6224510d67773c7b3777e4ada293b0696dfe4eeeaf047d593af5ea12b13e6bf0"
+  },
+  "selection": {
+    "date": "2026-11-11",
+    "title": "Tet4 spinodoids, composed fields and basic solids",
+    "scope": "Two frozen spinodoids, ordered smooth-union lattice, three graded Gyroids and five basic solids. Actual public defaults; no universal custom-field or CAD support claim.",
+    "cases": [
+      {
+        "case": "spinodoid",
+        "fixture_kind": "study",
+        "fixtures": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-comparison-fixtures-v1",
+        "native": {
+          "name": "native-tet4-budget",
+          "arm": "meshers",
+          "cells": 16,
+          "order": 1,
+          "adapt": false,
+          "tolerance": 1.0,
+          "periodic_trace": true,
+          "declared_unit_cell": true
+        },
+        "actual": {
+          "name": "actual-default-tet4",
+          "arm": "microgen",
+          "resolution": null,
+          "order": 1,
+          "periodic_trace": true,
+          "declared_unit_cell": true
+        },
+        "maximum_budget_cells": 24,
+        "selection": "Uniform16 initial count control; one measured correction by element/node budgets, no outcome selection"
+      },
+      {
+        "case": "spinodoid-anisotropic",
+        "fixture_kind": "study",
+        "fixtures": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-comparison-fixtures-v1",
+        "native": {
+          "name": "native-tet4-budget",
+          "arm": "meshers",
+          "cells": 16,
+          "order": 1,
+          "adapt": false,
+          "tolerance": 1.0,
+          "periodic_trace": true,
+          "declared_unit_cell": true
+        },
+        "actual": {
+          "name": "actual-default-tet4",
+          "arm": "microgen",
+          "resolution": null,
+          "order": 1,
+          "periodic_trace": true,
+          "declared_unit_cell": true
+        },
+        "maximum_budget_cells": 24,
+        "selection": "Uniform16 initial count control; one measured correction by element/node budgets, no outcome selection"
+      },
+      {
+        "case": "smooth-lattice",
+        "fixture_kind": "study",
+        "fixtures": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-comparison-fixtures-v1",
+        "native": {
+          "name": "native-tet4-budget",
+          "arm": "meshers",
+          "cells": 16,
+          "order": 1,
+          "adapt": false,
+          "tolerance": 1.0,
+          "periodic_trace": true,
+          "declared_unit_cell": true,
+          "lattice_field": "original"
+        },
+        "actual": {
+          "name": "actual-default-tet4",
+          "arm": "microgen",
+          "resolution": null,
+          "order": 1,
+          "periodic_trace": true,
+          "declared_unit_cell": true
+        },
+        "maximum_budget_cells": 24,
+        "selection": "Uniform16 initial count control; one measured correction by element/node budgets, no outcome selection"
+      },
+      {
+        "case": "graded-gyroid-periodic",
+        "fixture_kind": "study",
+        "fixtures": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-comparison-fixtures-v1",
+        "native": {
+          "name": "native-tet4-budget",
+          "arm": "meshers",
+          "cells": 16,
+          "order": 1,
+          "adapt": false,
+          "tolerance": 1.0,
+          "periodic_trace": true,
+          "declared_unit_cell": true
+        },
+        "actual": {
+          "name": "actual-default-tet4",
+          "arm": "microgen",
+          "resolution": null,
+          "order": 1,
+          "periodic_trace": true,
+          "declared_unit_cell": true
+        },
+        "maximum_budget_cells": 24,
+        "selection": "Uniform16 initial count control; one measured correction by element/node budgets, no outcome selection"
+      },
+      {
+        "case": "graded-gyroid-linear",
+        "fixture_kind": "study",
+        "fixtures": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-comparison-fixtures-v1",
+        "native": {
+          "name": "native-tet4-budget",
+          "arm": "meshers",
+          "cells": 16,
+          "order": 1,
+          "adapt": false,
+          "tolerance": 1.0,
+          "periodic_trace": true,
+          "declared_unit_cell": true
+        },
+        "actual": {
+          "name": "actual-default-tet4",
+          "arm": "microgen",
+          "resolution": null,
+          "order": 1,
+          "periodic_trace": true,
+          "declared_unit_cell": true
+        },
+        "maximum_budget_cells": 24,
+        "selection": "Uniform16 initial count control; one measured correction by element/node budgets, no outcome selection"
+      },
+      {
+        "case": "graded-gyroid-density-linear",
+        "fixture_kind": "study",
+        "fixtures": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-linear-density-fixtures-v1",
+        "native": {
+          "name": "native-tet4-budget",
+          "arm": "meshers",
+          "cells": 16,
+          "order": 1,
+          "adapt": false,
+          "tolerance": 1.0,
+          "periodic_trace": true,
+          "declared_unit_cell": true
+        },
+        "actual": {
+          "name": "actual-default-tet4",
+          "arm": "microgen",
+          "resolution": null,
+          "order": 1,
+          "periodic_trace": true,
+          "declared_unit_cell": true
+        },
+        "maximum_budget_cells": 24,
+        "selection": "Uniform16 initial count control; one measured correction by element/node budgets, no outcome selection"
+      },
+      {
+        "case": "primitive-box",
+        "fixture_kind": "primitive",
+        "fixtures": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-primitive-family-fixtures-v1",
+        "native": {
+          "name": "native-tet4-budget",
+          "arm": "meshers",
+          "cells": 16,
+          "order": 1,
+          "adapt": false,
+          "tolerance": 1.0,
+          "periodic_trace": true,
+          "declared_unit_cell": true,
+          "primitive_retained": true,
+          "nonperiodic_reason": "Complete bounded solid; periodic identification not required"
+        },
+        "actual": {
+          "name": "actual-default-tet4",
+          "arm": "microgen",
+          "resolution": null,
+          "order": 1,
+          "periodic_trace": true,
+          "declared_unit_cell": true,
+          "nonperiodic_reason": "Complete bounded solid; periodic identification not required",
+          "actual_generate_options": {}
+        },
+        "maximum_budget_cells": 48,
+        "selection": "Uniform16 initial count control; one measured correction by element/node budgets, no outcome selection"
+      },
+      {
+        "case": "primitive-cylinder",
+        "fixture_kind": "primitive",
+        "fixtures": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-primitive-family-fixtures-v1",
+        "native": {
+          "name": "native-tet4-budget",
+          "arm": "meshers",
+          "cells": 16,
+          "order": 1,
+          "adapt": false,
+          "tolerance": 1.0,
+          "periodic_trace": true,
+          "declared_unit_cell": true,
+          "primitive_retained": true,
+          "nonperiodic_reason": "Complete bounded solid; periodic identification not required"
+        },
+        "actual": {
+          "name": "actual-default-tet4",
+          "arm": "microgen",
+          "resolution": null,
+          "order": 1,
+          "periodic_trace": true,
+          "declared_unit_cell": true,
+          "nonperiodic_reason": "Complete bounded solid; periodic identification not required",
+          "actual_generate_options": {}
+        },
+        "maximum_budget_cells": 48,
+        "selection": "Uniform16 initial count control; one measured correction by element/node budgets, no outcome selection"
+      },
+      {
+        "case": "primitive-capsule",
+        "fixture_kind": "primitive",
+        "fixtures": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-primitive-family-fixtures-v1",
+        "native": {
+          "name": "native-tet4-budget",
+          "arm": "meshers",
+          "cells": 16,
+          "order": 1,
+          "adapt": false,
+          "tolerance": 1.0,
+          "periodic_trace": true,
+          "declared_unit_cell": true,
+          "nonperiodic_reason": "Complete bounded solid; periodic identification not required"
+        },
+        "actual": {
+          "name": "actual-default-tet4",
+          "arm": "microgen",
+          "resolution": null,
+          "order": 1,
+          "periodic_trace": true,
+          "declared_unit_cell": true,
+          "nonperiodic_reason": "Complete bounded solid; periodic identification not required",
+          "actual_generate_options": {}
+        },
+        "maximum_budget_cells": 48,
+        "selection": "Uniform16 initial count control; one measured correction by element/node budgets, no outcome selection"
+      },
+      {
+        "case": "primitive-ellipsoid",
+        "fixture_kind": "primitive",
+        "fixtures": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-primitive-family-fixtures-v1",
+        "native": {
+          "name": "native-tet4-budget",
+          "arm": "meshers",
+          "cells": 16,
+          "order": 1,
+          "adapt": false,
+          "tolerance": 1.0,
+          "periodic_trace": true,
+          "declared_unit_cell": true,
+          "nonperiodic_reason": "Complete bounded solid; periodic identification not required"
+        },
+        "actual": {
+          "name": "actual-default-tet4",
+          "arm": "microgen",
+          "resolution": null,
+          "order": 1,
+          "periodic_trace": true,
+          "declared_unit_cell": true,
+          "nonperiodic_reason": "Complete bounded solid; periodic identification not required",
+          "actual_generate_options": {}
+        },
+        "maximum_budget_cells": 48,
+        "selection": "Uniform16 initial count control; one measured correction by element/node budgets, no outcome selection"
+      },
+      {
+        "case": "primitive-sphere",
+        "fixture_kind": "primitive",
+        "fixtures": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-primitive-family-fixtures-v1",
+        "native": {
+          "name": "native-tet4-budget",
+          "arm": "meshers",
+          "cells": 16,
+          "order": 1,
+          "adapt": false,
+          "tolerance": 1.0,
+          "periodic_trace": true,
+          "declared_unit_cell": true,
+          "nonperiodic_reason": "Complete bounded solid; periodic identification not required"
+        },
+        "actual": {
+          "name": "actual-default-tet4",
+          "arm": "microgen",
+          "resolution": null,
+          "order": 1,
+          "periodic_trace": true,
+          "declared_unit_cell": true,
+          "nonperiodic_reason": "Complete bounded solid; periodic identification not required",
+          "actual_generate_options": {}
+        },
+        "maximum_budget_cells": 48,
+        "selection": "Uniform16 initial count control; one measured correction by element/node budgets, no outcome selection"
+      }
+    ]
+  },
+  "arms": [
+    "actual",
+    "native"
+  ],
+  "repetitions": 1,
+  "warmups": 0,
+  "numerical_threads": {
+    "environment": {
+      "OPENBLAS_NUM_THREADS": "1",
+      "OMP_NUM_THREADS": "1",
+      "MKL_NUM_THREADS": "1",
+      "VECLIB_MAXIMUM_THREADS": "1",
+      "RAYON_NUM_THREADS": "1"
+    },
+    "accelerate_blas_threading": 1,
+    "accelerate_scope": "calling thread"
+  },
+  "memory_bytes": 8589934592,
+  "worker_timeout_s": 180,
+  "maximum_tets": 250000,
+  "maximum_nodes": 250000,
+  "command": [
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/tpms_tet4_count_benchmark.py",
+    "--run",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-implicit-tet4-count-pilot-v1/study",
+    "--selection",
+    "/Users/kmarchais/dev/meshers/handoff/macbook/implicit-tet4-default-selection-20261111.json",
+    "--arms",
+    "actual,native",
+    "--repetitions",
+    "1",
+    "--warmups",
+    "0",
+    "--worker"
+  ],
+  "production_changed": false,
+  "gates_changed": false,
+  "scope": "Tet4 raw comparison if either route rejects; no FEA or successful admitted-speed claim from rejected meshes"
+}

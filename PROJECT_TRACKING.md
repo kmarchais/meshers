@@ -1,5 +1,104 @@
 # Meshers project tracking
 
+## Tet4 study extends beyond TPMS, 11 November 2026
+
+The extension benchmarks eleven immutable specimens: isotropic and anisotropic
+spinodoids, the original ordered smooth-union lattice, periodic thickness
+grading, linear thickness grading, linear density grading, and box, cylinder,
+capsule, ellipsoid and sphere. Both arms use Tet4. The spinodoids retain their
+original Fourier realizations. The lattice retains its original fold order
+and smoothness. Box and cylinder use the verified equivalent fields retaining
+sharp intersections. Complete bounded solids and the two linear grades require
+no periodic identification in either arm; the other four cases keep all
+periodic node, material-cap and facet gates.
+
+Jobs 824–829 complete 190 attempts and return 179 meshes. Four default-route
+pairs and eight supplemental-route pairs each receive five interleaved measured
+pairs after one excluded warmup pair. This gives 60 measured pairs. Defaults
+remain visible for all eleven specimens, including five basic-solid seed-cap
+failures, a linear-density intermediate-cap failure, and an isotropic spinodoid
+periodic-output rejection. Failed durations are never mesh-generation times.
+
+The eight supplemental comparisons use actual Microgen seeds. The five solids
+use resolution 24, a modified first MMG pass, an omitted second pass and charged
+relocation repair. The two spinodoids use sampling 32 and default public MMG,
+while their fixed FFT realization stays 16. The lattice uses its previously
+declared modified actual route. These are explicitly modified competitors,
+not substituted defaults or MMG applied to Meshers seeds.
+
+Settings are frozen by count proximity before repeated timing. Uniform 16 is
+the initial native control; historical counts estimate supplemental solid
+budgets. One measured cubic correction is permitted for uniform meshes.
+Primitive grid counts may reach 48 because these solids occupy part of the
+unit box; the unchanged 250,000-node/tet caps still apply. The known adaptive
+32 isotropic control cannot use a uniform cubic correction. Count mismatches,
+failed corrections and superseded attempts remain visible.
+
+Three pairs pass every applicable admission gate. Each has fewer native tets
+and nodes, lower generation time, higher minimum and median quality, lower full
+sampled two-sided boundary distance, and lower volume discrepancy against the analytic
+reference. This covers seven primary metrics, not every quality statistic.
+The ellipsoid's common reverse-only score is slightly worse even though its
+full two-sided score improves. Values below show actual modified / Meshers.
+
+| Specimen | Tets | Generation s, five-pair median | Minimum q | Sampled two-sided distance | Absolute volume error % |
+|---|---:|---:|---:|---:|---:|
+| Capsule | 42,590 / 38,392 | 1.7680 / 0.10235 | 0.2973 / 0.5049 | 0.001428 / 0.000671 | 0.4779 / 0.2994 |
+| Ellipsoid | 37,217 / 32,640 | 1.5772 / 0.09669 | 0.3136 / 0.4845 | 0.001108 / 0.001082 | 0.4285 / 0.3228 |
+| Sphere | 46,874 / 43,848 | 1.7000 / 0.09805 | 0.3145 / 0.4386 | 0.000992 / 0.000804 | 0.3087 / 0.2370 |
+
+This is a 16.3–17.3-fold generation-time improvement for those three admitted
+fixed-specimen comparisons. It does not establish universal implicit support.
+
+The weak cases remain explicit:
+
+- Isotropic native 16 and 20 reject 14 and 7 low-quality tets. The accurate
+  adaptive 32 recipe passes at 72,378 tets and 3.290 s, compared with 41,295 tets
+  and 4.528 s for the rejected sampling-32 actual route. Native still uses
+  75% more tets. There is no admitted actual pair here.
+- Anisotropic native 16 rejects one low-quality tet, and its attempted 17-cell
+  count correction rejects four. Native 20 returns 59,848 tets but fails full
+  boundary distance at 0.009191. Against the default actual mesh it is both
+  larger and slower: 59,848 versus 14,105 tets, and 1.668 versus 1.330 s.
+  Against sampling 32 it is faster, 1.681 versus 3.938 s, but still larger than
+  34,721 tets and unadmitted. The previously admitted higher-resolution native
+  recipe remains separate; this coarse selection does not replace it.
+- The ordered lattice's count-selected native 32 mesh has 121,420 tets and
+  takes 2.330 s, versus 158,430 tets and 8.883 s for admitted modified actual.
+  Native minimum/median quality improve, but boundary distance worsens to
+  0.004629 versus 0.001701. Fewer elements and faster generation do not offset
+  the failed geometry gate. The more count-near 32-cell mesh also fits worse
+  than the superseded 29-cell pilot; count selection did not hide this.
+- The two returned graded default comparisons have faster native generation
+  and better common reverse distance, but neither selected pair is admitted.
+  The density-graded actual default exceeds an intermediate cap.
+- Native box and the corrected cylinder pass their gates, while the modified
+  actual meshes fail sharp-boundary accuracy. Native box minimum quality is
+  lower, 0.1713 versus 0.1954. This remains a quality tradeoff.
+
+Jobs 830–831 replay the actual arrays, counts, volumes and quality, verify
+frozen sample/specimen receipts, and check eleven public Microgen field
+identities at 4,096 probes each. Maximum field disagreement is 1.67e-16.
+Every measured route reproduces one array set across its five repetitions.
+The first verification stops on the historical primitive-helper hash after
+passing both mesh replays. The successful successor resolves its archived
+preparation copy with the original hash and proves identical full-module AST
+apart from the later retained-field addition. Frozen receipts stay unchanged.
+The isotropic coefficient hash also matches the original transfer manifest;
+the anisotropic hash matches its original preparation receipt.
+
+No meshing implementation, default or admission gate changes in this batch.
+No FEA score or stiffness reference is promoted. All four original study cases
+and all 24 lattice tensors remain in scope. Next work should prioritize coarse
+spinodoid quality recovery and efficient boundary allocation for spinodoids,
+the ordered lattice and grading. CAD-only and mapped TPMS families still need
+their own equivalent fixtures; arbitrary fields and parameter ranges are not
+certified by these representatives.
+
+[Color comparison](handoff/macbook/implicit-tet4-comparison-20261111.html),
+[numeric metrics and findings](handoff/macbook/implicit-tet4-comparison-20261111.json),
+and [verification](handoff/macbook/implicit-tet4-verification-20261111.json).
+
 ## Direct Tet4 comparison across TPMS families, 11 November 2026
 
 The extension covers all 16 pinned TPMS families in sheet form at approximately

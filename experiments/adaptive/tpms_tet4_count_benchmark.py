@@ -1,4 +1,4 @@
-"""Bounded same-order TPMS comparison on separately frozen count selections."""
+"""Bounded same-order field comparison on separately frozen count selections."""
 import argparse
 import json
 from pathlib import Path
@@ -55,13 +55,19 @@ def main():
     files += [w.HERE/name for name in ("tpms_family_screen.py", "tpms_family_fixtures.py",
         "comparison_benchmark.py", "comparison_fixtures.py", "comparison_mesh_audit.py",
         "microgen_workflow.py", "scorecard.py", "periodic_trace.py", "box_projection.py",
-        "facet_incidence_audit.py", "quadratic_edge_removal_probe.py", "job_parts.py")]
+        "facet_incidence_audit.py", "quadratic_edge_removal_probe.py", "job_parts.py",
+        "primitive_family_fixtures.py", "gradient_tie_probe.py", "linear_density_fixture.py",
+        "graded_lookup_preflight.py")]
     import microgen.remesh
     import importlib.metadata
     files += [Path(microgen.remesh.__file__), Path(microgen.shape.tpms.__file__),
         Path(importlib.metadata.distribution("mmgpy").locate_file("mmgpy/bin/mmg3d_O3"))]
     fixture_files = {}
     for entry in selection["cases"]:
+        files += [f for f in Path(entry["fixtures"]).glob("*.json") if f.is_file()]
+        if entry["case"].startswith("spinodoid"):
+            from comparison_fixtures import coefficients_path
+            files.append(coefficients_path(entry["case"], Path(entry["fixtures"])))
         directory = Path(entry["fixtures"])/entry["case"]
         fixture_files[entry["case"]] = [f for f in directory.iterdir() if f.is_file()]
         files += fixture_files[entry["case"]]
@@ -88,11 +94,12 @@ def main():
             for source in fixture_files[entry["case"]]:
                 shutil.copyfile(source, directory/source.name)
             config = entry[arm]
-            family = entry["fixture_kind"] == "tpms"
+            family = entry["fixture_kind"] in ("tpms", "primitive")
             script = w.HERE/("tpms_family_screen.py" if family else "comparison_benchmark.py")
             command = [sys.executable, str(script), "--run", str(directory), "--fixtures", entry["fixtures"]]
             if family:
-                command += ["--worker", json.dumps(dict(case=entry["case"], config=config))]
+                command += ["--fixture-kind", entry["fixture_kind"],
+                    "--worker", json.dumps(dict(case=entry["case"], config=config))]
             else:
                 command += ["--case", entry["case"], "--worker", json.dumps(config)]
             with worker_part(job, name) as part:

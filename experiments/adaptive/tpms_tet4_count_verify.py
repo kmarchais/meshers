@@ -18,7 +18,7 @@ def main():
     import scorecard
     selection = json.loads(a.selection.read_text())
     entries = {e["case"]: e for e in selection["cases"]}
-    assert len(entries) == 18
+    assert entries and len(entries) == len(selection["cases"])
     report = json.loads(a.report.read_text())
     assert {e["case"] for e in report["cases"]} == set(entries)
     assert report["all_orders"] == 1 and report["admission"] == dict(
@@ -87,12 +87,16 @@ def main():
                     nonpositive_tets=nonpositive)
             artifacts[str(path)] = dict(sha256=row["mesh_sha256"], array_sha256=array_digest)
     repeated_cases = [e for e in entries.values() if e["repeat"]]
+    repeated_array_sets = {}
     for entry in repeated_cases:
         for arm in ("actual", "native"):
             pool = measured[(entry["case"], arm)]
             assert len(pool) == 5 and all(r["returned_mesh_verified"] for r in pool)
+            repeated_array_sets[entry["case"]+"/"+arm] = len({
+                artifacts[str(Path(r["directory"])/"mesh.npz")]["array_sha256"] for r in pool})
     w.save(a.output, dict(passed=True, attempts=attempts, returned_artifacts=len(artifacts),
         distinct_array_sets=len(uniques), repeated_cases=len(repeated_cases), measured_pairs=5*len(repeated_cases),
+        repeated_array_set_counts=repeated_array_sets,
         source_snapshots_resolved=fallback_sources, artifacts=artifacts, distinct_meshes=uniques,
         report_sha256=w.digest(a.report), selection_sha256=w.digest(a.selection),
         scope="Actual Tet4 arrays, hashes, frozen input copies, positive determinants, counts, volume and quality replay. Existing complete periodic/geometry audits remain in the per-worker evidence. No new FEA or admitted-speed claim."))

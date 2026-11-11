@@ -1,0 +1,101 @@
+{
+  "case": "graded-gyroid-linear",
+  "config": {
+    "name": "actual-default-tet4",
+    "arm": "microgen",
+    "resolution": null,
+    "order": 1,
+    "periodic_trace": true,
+    "declared_unit_cell": true
+  },
+  "status": "admission-rejected",
+  "qualified": false,
+  "mmg_calls": [
+    {
+      "nofem": true,
+      "output_tetrahedra": 11414,
+      "output_nodes": 3386
+    },
+    {
+      "hausd": null,
+      "hgrad": null,
+      "hmax": null,
+      "hmin": null,
+      "hsiz": null,
+      "ls": true,
+      "nr": true,
+      "output_tetrahedra": 12048,
+      "output_nodes": 3462
+    }
+  ],
+  "instrumentation_s": 0.0854904150182847,
+  "vtk_backend": "Sequential",
+  "vtk_threads": 1,
+  "periodic_required": false,
+  "solve_performed": false,
+  "actual_resolution": 20,
+  "seed_nodes": 7763,
+  "seed_elements": 30479,
+  "reoriented_tets": 0,
+  "generation_wall_s": 1.867498625011649,
+  "nodes": 3462,
+  "elements": 12048,
+  "generation_s": 1.7820082099933643,
+  "mesh_sha256": "77517aad1d97431d023d428a2d1d85be489e82a9d1585c991107df5353452281",
+  "geometry": {
+    "volume": 0.3648529075783249,
+    "relative_volume_error": 0.02311856101047871,
+    "q_min_corner": 3.207526310837803e-06,
+    "q_p01_corner": 0.0821330788391217,
+    "minimum_sampled_jacobian": 1.1464057594027743e-11,
+    "facet_consistency": {
+      "nodes": 3462,
+      "elements": 12048,
+      "unique_faces": 26600,
+      "interior_faces": 21592,
+      "extracted_boundary_faces": 5008,
+      "same_orientation_shared_faces": 0,
+      "nonmanifold_faces": 0,
+      "duplicate_cells": 0,
+      "duplicate_surface_faces": 0,
+      "provided_boundary_matches_extraction": true,
+      "missing_provided_faces": 0,
+      "extra_provided_faces": 0,
+      "nonpositive_corner_determinants": 0,
+      "minimum_corner_determinant": 1.1464057594027706e-11,
+      "oriented_facet_consistency_passed": true,
+      "conflict_examples": [],
+      "scope": "Oriented corner-face incidence and same-side neighbor diagnostics; necessary consistency, not a certificate of curved geometry or absence of nonlocal intersections"
+    },
+    "oriented_facet_consistency_passed": true,
+    "quadratic_conformity": {
+      "passed": true,
+      "order": 1
+    },
+    "exact_straight_reduction_verified": false,
+    "geometry_admitted": false,
+    "sampled_reverse_max": 0.009040382638124289,
+    "distance_audit_complete": false,
+    "projection_failed": null,
+    "audit_scope": "Fail-fast after required quality/volume/topology/periodicity rejection; no forward-distance or successful speed claim",
+    "failed_gates": [
+      "quality",
+      "volume"
+    ]
+  },
+  "periodic": {
+    "required": false,
+    "reason": "Linear thickness grading has unequal opposite-z material traces; bounded nonperiodic case for both arms"
+  },
+  "quality_quantiles": {
+    "min": 3.207526310837803e-06,
+    "p01": 0.0821330788391217,
+    "p10": 0.37154906477401434,
+    "median": 0.7153681070411047,
+    "p90": 0.8934699469822289,
+    "p99": 0.9637599214098084,
+    "max": 0.9924597811355167
+  },
+  "audit_s": 0.942884124990087,
+  "wall_s": 2.8253591250104364
+}

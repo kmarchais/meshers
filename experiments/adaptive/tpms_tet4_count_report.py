@@ -80,8 +80,9 @@ def collect(args):
         returned = [r for r in rows if r.get("returned_mesh_verified", False)]
         geometry = [r.get("geometry", {}) for r in returned]
         facets_ok = bool(returned) and all(g.get("oriented_facet_consistency_passed", False) for g in geometry)
-        periodic_ok = bool(returned) and all(r.get("periodic", {}).get("complete_existing_node_classes", False)
-            and r.get("periodic", {}).get("periodic_triangles_match", False) and not r.get("periodic", {}).get("error")
+        periodic_ok = bool(returned) and all(not r.get("periodic_required", True) or (
+            r.get("periodic", {}).get("complete_existing_node_classes", False)
+            and r.get("periodic", {}).get("periodic_triangles_match", False) and not r.get("periodic", {}).get("error"))
             for r in returned)
         failures = sorted({str(gate) for r in rows for gate in r.get("geometry", {}).get("failed_gates", [])})
         errors = []
@@ -102,6 +103,7 @@ def collect(args):
             complete_distance_audits=sum(bool(g.get("distance_audit_complete")) for g in geometry),
             volume=stats(volumes), volume_error_percent=stats(volume_errors),
             volume_diagnostic_only=bool(returned) and not facets_ok, facets_pass=facets_ok, periodic_pass=periodic_ok,
+            periodic_required=rows[0].get("periodic_required", True),
             failed_gates=failures, execution_failures=errors,
             source_directories=[r["directory"] for r in rows], config=rows[0]["config"])
 
@@ -111,7 +113,10 @@ def collect(args):
         name = entry["case"]
         specimen_path = Path(entry["fixtures"])/name/(name+"-specimen.json")
         specimen = read(specimen_path)
-        if name in ("schwarz-solid", "schwarz-d-solid"):
+        if specimen.get("volume_reference") == "analytic":
+            reference = dict(value=specimen["volume"], interval=[specimen["volume"]]*2,
+                spread=0., kind="analytic solid volume")
+        elif name in ("schwarz-solid", "schwarz-d-solid"):
             assert specimen["volume"] == .5
             reference = dict(value=.5, interval=[.5, .5], spread=0., kind="exact half-cell",
                 reason="The frozen zero-level Schwarz P/D solid has a measure-preserving sign-reversal symmetry.")
@@ -146,10 +151,11 @@ def collect(args):
         cases.append(result)
     source = Path(__file__).resolve()
     inputs[str(source.relative_to(ROOT))] = hashlib.sha256(source.read_bytes()).hexdigest()
-    runtime_path = ROOT/"handoff/macbook/tpms-tet4-runtime-20261111.json"
+    runtime_path = ROOT/selected.get("runtime_file", "handoff/macbook/tpms-tet4-runtime-20261111.json")
     runtime = read(runtime_path) if runtime_path.exists() else None
     return dict(cases=cases, inputs=inputs, runtime=runtime, case_count=len(cases), all_orders=1,
-        scope="16 frozen approximately30%-volume sheet specimens and the original Schwarz P/D half solids. The sheet Gyroid differs from the original35.6%-volume Gyroid.",
+        title=selected.get("title", "Tet4 comparison across 18 fixed TPMS specimens"),
+        scope=selected.get("scope", "16 frozen approximately30%-volume sheet specimens and the original Schwarz P/D half solids. The sheet Gyroid differs from the original35.6%-volume Gyroid."),
         admission=dict(distance=.002, absolute_relative_volume=.01, minimum_quality=.1, max_nodes=250000, max_tets=250000),
         all_four_original_cases_retained=True, all_24_lattice_models_retained=True, new_fea=False,
         production_defaults_changed=False, successful_speed_ratios_from_rejected_meshes=False,
@@ -190,9 +196,11 @@ def page(data):
             label = "Schwarz P original solid"
         elif case["case"] == "schwarz-d-solid":
             label = "Schwarz D original solid"
+        if case.get("comparison_group"):
+            label += " · "+case["comparison_group"]
         cells = []
         specs = [("tets", False), ("nodes", False), ("seconds", False), ("quality.min", True),
-                 ("quality.median", True), ("reverse", False), ("volume_error_percent", False)]
+                 ("quality.median", True), ("reverse", False), ("two_sided", False), ("volume_error_percent", False)]
         for key, higher in specs:
             def value(arm):
                 result = arm
@@ -214,6 +222,7 @@ def page(data):
         ratios = case["count_ratios_native_over_actual"]
         ratio = f'Tet ratio {number(ratios["tets"],3)}; node ratio {number(ratios["nodes"],3)}'
         source_kind = f'ACT {actual["source_kind"]}; MESH {native["source_kind"]}'
+        source_kind += '; '+actual['config']['name']
         overview.append(f'<tr><th>{html.escape(label)}<small>{html.escape(ratio)}</small><small>{html.escape(source_kind)}</small></th>'+"".join(cells)+f'<td>{"".join(statuses)}</td></tr>')
         av, nv = median(actual["seconds"]), median(native["seconds"])
         if av is not None and nv is not None:
@@ -229,12 +238,13 @@ def page(data):
         for title, key in (("Common reverse distance", "reverse"), ("Two-sided sampled maximum", "two_sided"), ("Volume discrepancy %", "volume_error_percent")):
             rows.append(f'<tr><th>{title}</th><td>{number(median(actual[key]))}</td><td>{number(median(native[key]))}</td></tr>')
         prose = []
-        for arm_name, arm in (("Actual defaults", actual), ("Meshers", native)):
+        for arm_name, arm in (("Actual "+actual["config"]["name"], actual), ("Meshers", native)):
             timing = arm["seconds"]
             time = (f'{number(timing["median"])}s median [{number(timing["minimum"])}, {number(timing["maximum"])}], n={timing["n"]}' if timing else "no returned-mesh generation time")
             errors = "; ".join(str(x.get("limit_failure") or x.get("error") or x.get("status")) for x in arm["execution_failures"])
             diagnostic = "; volume diagnostic because oriented facets fail" if arm["volume_diagnostic_only"] else ""
-            prose.append(f'<p><strong>{arm_name}</strong>: {html.escape(time)}. Returned {arm["returned"]}/{arm["attempts"]}; admitted {arm["admitted"]}/{arm["attempts"]}. Periodic {"passes" if arm["periodic_pass"] else "fails or unobserved"}. '
+            periodic = "not required" if not arm["periodic_required"] else "passes" if arm["periodic_pass"] else "fails or unobserved"
+            prose.append(f'<p><strong>{arm_name}</strong>: {html.escape(time)}. Returned {arm["returned"]}/{arm["attempts"]}; admitted {arm["admitted"]}/{arm["attempts"]}. Periodic {periodic}. '
                 f'Failed gates: {html.escape(", ".join(arm["failed_gates"]) or "none recorded")}{html.escape(diagnostic)}. '
                 f'{html.escape(errors[:400])}</p>')
         ref = case["reference"]
@@ -249,13 +259,13 @@ def page(data):
     return f'''<!doctype html><html><head><meta charset="utf-8"><style>
 body{{margin:0;font-family:var(--font-sans,system-ui);color:var(--foreground)}}section{{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:16px;margin-bottom:12px}}
 h3{{font-size:16px;margin:0 0 10px}}p,small{{font-size:12px;line-height:1.5;color:var(--muted-foreground)}}table{{width:100%;border-collapse:collapse;font-size:11px;font-variant-numeric:tabular-nums}}td,th{{text-align:right;padding:7px 3px;border-bottom:1px solid var(--border)}}th:first-child{{text-align:left}}td span{{display:block;padding:2px}}th small,.overview td small{{display:block;font-size:9px;font-weight:normal}}.scroll{{overflow-x:auto}}.overview{{min-width:660px}}.timing{{display:grid;grid-template-columns:180px 1fr;gap:10px;align-items:center;margin:12px 0;font-size:12px}}.tracks{{display:grid;grid-template-columns:1fr 65px;gap:4px 8px}}.track,i{{height:9px;display:block}}.track{{background:var(--secondary)}}b{{font-size:11px;text-align:right;font-variant-numeric:tabular-nums}}details{{border-top:1px solid var(--border);padding:9px 0}}summary{{cursor:pointer;font-size:12px}}@media(max-width:450px){{.timing{{grid-template-columns:118px 1fr}}}}
-</style></head><body><section><h3>Tet4 comparison across 18 fixed TPMS specimens</h3>
-<p>Every numeric pair shows ACT, actual Microgen+MMG defaults, above MESH, Meshers. Generation n counts returned-mesh timings over measured attempts, after excluding warmups. A partial return pool is not a complete five-pair result. Green means a better raw native value; red means worse. Amber volume values depend on the empirical reference interval. Counts were selected before repeated timings; the ratios remain visible. Strictly admitted pairs: {admitted}/{len(data['cases'])}.</p>
+</style></head><body><section><h3>{html.escape(data['title'])}</h3>
+<p>Every numeric pair shows ACT, actual Microgen+MMG, above MESH, Meshers. The actual route is named per row; modified routes remain separate from defaults. Generation n counts returned-mesh timings over measured attempts, after excluding warmups. A partial return pool is not a complete five-pair result. Green means a better raw native value; red means worse. Amber volume values depend on the empirical reference interval. Counts were selected before repeated timings; the ratios remain visible. Strictly admitted pairs: {admitted}/{len(data['cases'])}.</p>
 <p>Fresh 11 November measurements on the MacBook M4 with one numerical thread. Returned pairs use five interleaved measured pairs after one excluded warmup pair. Cases without two returned meshes retain their bounded pilot failures.</p>
-<p>The 16 sheet specimens have approximately 30% material volume. Their Gyroid is a different specimen from the original 35.6% Gyroid comparison. The two original Schwarz solids use half-cell material. All meshes here are Tet4, with four nodes per tetrahedron.</p>
-<div class="scroll"><table class="overview"><tr><th>Case / native-to-actual count ratios</th><th>Tets</th><th>Nodes</th><th>Generation s</th><th>q min</th><th>q median</th><th>Reverse distance</th><th>Volume %</th><th>Strict checks</th></tr>{''.join(overview)}</table></div>
+<p>{html.escape(data['scope'])} All meshes here are Tet4, with four nodes per tetrahedron.</p>
+<div class="scroll"><table class="overview"><tr><th>Case / native-to-actual count ratios</th><th>Tets</th><th>Nodes</th><th>Generation s</th><th>q min</th><th>q median</th><th>Reverse distance</th><th>Full distance</th><th>Volume %</th><th>Strict checks</th></tr>{''.join(overview)}</table></div>
 <p>Reverse distance uses the same frozen wall and cap queries in both arms; smaller is better. It is one side of the geometry audit. The strict 0.002 gate uses the full two-sided audit when earlier checks permit it. Rejected or missing meshes stay rejected. Invalid-facet volume scores are diagnostic, not qualified physical-volume accuracy.</p></section>
-<section><h3>Recorded generation times</h3><p><span style="color:var(--chart-2)">Actual defaults</span> appear above <span style="color:var(--chart-1)">Meshers</span>. Each pair has its own bar scale. Values are medians after excluding warmups; detailed ranges and sample counts are below. Timeout worker durations are never shown as mesh generation times.</p>{''.join(chart)}</section>
+<section><h3>Recorded generation times</h3><p><span style="color:var(--chart-2)">Actual route</span> appears above <span style="color:var(--chart-1)">Meshers</span>. Each pair has its own bar scale. Values are medians after excluding warmups; detailed ranges and sample counts are below. Timeout worker durations are never shown as mesh generation times.</p>{''.join(chart)}</section>
 <section><h3>Quality, periodicity and failure details</h3>{''.join(details)}</section>
 <p>Colors compare observed raw metrics. If either route rejects, the pair does not establish an admitted matched-accuracy speedup. These attempts do not prove universal geometry support or failure. No FEA score transfers, no default is promoted, and all four original study cases and all 24 lattice models remain in scope.</p></body></html>'''
 

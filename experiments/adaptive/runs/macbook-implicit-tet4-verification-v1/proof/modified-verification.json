@@ -1,0 +1,627 @@
+{
+  "passed": true,
+  "attempts": 116,
+  "returned_artifacts": 115,
+  "distinct_array_sets": 19,
+  "repeated_cases": 8,
+  "measured_pairs": 40,
+  "repeated_array_set_counts": {
+    "spinodoid/actual": 1,
+    "spinodoid/native": 1,
+    "spinodoid-anisotropic/actual": 1,
+    "spinodoid-anisotropic/native": 1,
+    "smooth-lattice/actual": 1,
+    "smooth-lattice/native": 1,
+    "primitive-box/actual": 1,
+    "primitive-box/native": 1,
+    "primitive-cylinder/actual": 1,
+    "primitive-cylinder/native": 1,
+    "primitive-capsule/actual": 1,
+    "primitive-capsule/native": 1,
+    "primitive-ellipsoid/actual": 1,
+    "primitive-ellipsoid/native": 1,
+    "primitive-sphere/actual": 1,
+    "primitive-sphere/native": 1
+  },
+  "source_snapshots_resolved": [],
+  "artifacts": {
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-implicit-tet4-modified-pilot-v1/study/repeat-0-spinodoid-actual/mesh.npz": {
+      "sha256": "c1a82be853b8baf1190d81ed66dd295217464380144c98f2da514f04d0ac8f89",
+      "array_sha256": "c0724718535ee743372ef7889c75948e19d86fe589e56af9577c54c588e58782"
+    },
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-implicit-tet4-modified-pilot-v1/study/repeat-0-spinodoid-native/mesh.npz": {
+      "sha256": "9a8981586d1aa51cb24a6d6f5ce8e2ee6015f9d3da9a38d495c37401fcf7ab73",
+      "array_sha256": "1d62f6463e73412cbb21cc8eaf12165be50972d9955905415234fbda4ea05cf7"
+    },
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-implicit-tet4-modified-pilot-v1/study/repeat-0-spinodoid-anisotropic-actual/mesh.npz": {
+      "sha256": "fe1e1e3933fd1edf14af1b677360bce4186ddef015d8055256fe2529bc3cf2b4",
+      "array_sha256": "293d4d32cbb500c44678b0463c95b5ce00eaca34ef824106937cea47b7fabd09"
+    },
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-implicit-tet4-modified-pilot-v1/study/repeat-0-spinodoid-anisotropic-native/mesh.npz": {
+      "sha256": "9bfcf9ff770d29472fecb2213722479a46cbb3e9c2ed86a3ab6d3413555f3a4a",
+      "array_sha256": "23abf349f6847b92289eb6d87c985f950ae2a33c99243d17ac754e1e406e97d3"
+    },
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-implicit-tet4-modified-pilot-v1/study/repeat-0-smooth-lattice-actual/mesh.npz": {
+      "sha256": "dfeca5ba6f6eb4e6109ecffe46f79818ab29001a3bf807010ec00008b8b591a2",
+      "array_sha256": "c20029410a51b5188630ea94059303243dfdb1837f09bb0cddc981f26c5ca93a"
+    },
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-implicit-tet4-modified-pilot-v1/study/repeat-0-smooth-lattice-native/mesh.npz": {
+      "sha256": "b03a3cc62db588a8375a0a25395db8c12144c8ee67e3eb67acba8196d08345ca",
+      "array_sha256": "7fdb444290a45e1f08fd8ae5595428c8bf2a9cefb12969432ccb9598f2ec032e"
+    },
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-implicit-tet4-modified-pilot-v1/study/repeat-0-primitive-box-actual/mesh.npz": {
+      "sha256": "20927e76e29d3be6608290225db03a9202b65602a7c5a57da9f53913f7e5e5d7",
+      "array_sha256": "7c237cc8e45f9f9f045865bd19a07c01e44999f26f4d5a64dbd58f09cb498712"
+    },
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-implicit-tet4-modified-pilot-v1/study/repeat-0-primitive-box-native/mesh.npz": {
+      "sha256": "932289b70c467a3f8a445fbc0f3a876207ad2e63d080a67cd3bae2b55c4e59c8",
+      "array_sha256": "ddcaea15e75b6e6beec81aeced9b9118b69f36f983ec71ba82e205a2665693f4"
+    },
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-implicit-tet4-modified-pilot-v1/study/repeat-0-primitive-cylinder-actual/mesh.npz": {
+      "sha256": "95bcc495e3a0a42bf8ae7de38e88fb51498b40db3154c882674ab0c806c5319b",
+      "array_sha256": "65d609b30d9c13d02f874b9ef82b02e25bd514ef15d083c09f502dcff9e40d46"
+    },
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-implicit-tet4-modified-pilot-v1/study/repeat-0-primitive-cylinder-native/mesh.npz": {
+      "sha256": "b2c44646d0389515f62f804175c6f529e4d827809dfd6fae3428b2efad912df0",
+      "array_sha256": "41d243e1fb3da6e7f203e5c3b16a073cf828f044d3d6ebe39742d0ee3be914f3"
+    },
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-implicit-tet4-modified-pilot-v1/study/repeat-0-primitive-capsule-actual/mesh.npz": {
+      "sha256": "eff7b291d5c0eab1d97c6e104d43c46321b422eeaf882e730dd019531a590e8b",
+      "array_sha256": "166a7d4911706f5d631ba48d73bac984daf563ba8510d6b3753a7c121cb5e322"
+    },
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-implicit-tet4-modified-pilot-v1/study/repeat-0-primitive-capsule-native/mesh.npz": {
+      "sha256": "95730761cdeb4afe4d9a2a15bcb2de25e564235908eeee578050ca44f8b00ebd",
+      "array_sha256": "5c4ca9f0c089c46d2c71bac2fd830a3f1f01ad411c29c3bbd7e787a010dcd006"
+    },
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-implicit-tet4-modified-pilot-v1/study/repeat-0-primitive-ellipsoid-actual/mesh.npz": {
+      "sha256": "a5ae83bc491483d461ffde60c082e491b6fd64c70245eb0fee92d9c974db4f7f",
+      "array_sha256": "2c2af5fc57387be82c2c88a7416f537eb1602300e35000b424104f0f4064376b"
+    },
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-implicit-tet4-modified-pilot-v1/study/repeat-0-primitive-ellipsoid-native/mesh.npz": {
+      "sha256": "98eabe97bcda9ce8f52e80f41d54639cec206492fb7a986c8beed3f4ef77433b",
+      "array_sha256": "8472b8502f1fe90a9000b40f73fbed8d5e1cfe73f7a5368ef051028a1483fa99"
+    },
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-implicit-tet4-modified-pilot-v1/study/repeat-0-primitive-sphere-actual/mesh.npz": {
+      "sha256": "8516ec6cb28e224770705b016cef891076b3175584d979cd51a4a550ff2acc28",
+      "array_sha256": "77db40a3a3dfcf24daf8d82405d77c67ee0105f24abf741066292db8ec4a155d"
+    },
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-implicit-tet4-modified-pilot-v1/study/repeat-0-primitive-sphere-native/mesh.npz": {
+      "sha256": "39ef4888008a24ce7cc15d6a7fb34f9376ca4caaa28fd0c9b8ad8d18bb9cae04",
+      "array_sha256": "3ad2954edb11fd04530cdb2f524bb69672a868766977f36b5a1693e3a2752e92"
+    },
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-implicit-tet4-modified-correction-v1/study/repeat-0-smooth-lattice-native/mesh.npz": {
+      "sha256": "6010a3f9cf1c069dd4a9091ca8e1140ce04d866ae61caa8c424a2bc75235653a",
+      "array_sha256": "9cb50d1a41eb6a11acdc179113df6248cfe362db52dd5856b7a44b011dd97483"
+    },
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-implicit-tet4-modified-correction-v1/study/repeat-0-primitive-box-native/mesh.npz": {
+      "sha256": "fa29d8e34cb3f85bc711605f92dab3663987981d81eb3112d8b582bd00873937",
+      "array_sha256": "4c69faec3fb32bd28629aedabd4038b60fc94e44325ea27034b2f7f7484cdf26"
+    },
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-implicit-tet4-modified-correction-v1/study/repeat-0-primitive-cylinder-native/mesh.npz": {
+      "sha256": "ce8bfcec1161c6dd91f356a2a91789b7b66b39204db34606dfdce0ca55a8d596",
+      "array_sha256": "ed43daa9344349fb048217e0b737419aa481c716582f42471b7f6f9cb54212ea"
+    },
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-implicit-tet4-modified-repeated-v1/study/repeat--1-spinodoid-native/mesh.npz": {
+      "sha256": "9a8981586d1aa51cb24a6d6f5ce8e2ee6015f9d3da9a38d495c37401fcf7ab73",
+      "array_sha256": "1d62f6463e73412cbb21cc8eaf12165be50972d9955905415234fbda4ea05cf7"
+    },
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-implicit-tet4-modified-repeated-v1/study/repeat--1-spinodoid-actual/mesh.npz": {
+      "sha256": "c1a82be853b8baf1190d81ed66dd295217464380144c98f2da514f04d0ac8f89",
+      "array_sha256": "c0724718535ee743372ef7889c75948e19d86fe589e56af9577c54c588e58782"
+    },
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-implicit-tet4-modified-repeated-v1/study/repeat--1-spinodoid-anisotropic-native/mesh.npz": {
+      "sha256": "9bfcf9ff770d29472fecb2213722479a46cbb3e9c2ed86a3ab6d3413555f3a4a",
+      "array_sha256": "23abf349f6847b92289eb6d87c985f950ae2a33c99243d17ac754e1e406e97d3"
+    },
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-implicit-tet4-modified-repeated-v1/study/repeat--1-spinodoid-anisotropic-actual/mesh.npz": {
+      "sha256": "fe1e1e3933fd1edf14af1b677360bce4186ddef015d8055256fe2529bc3cf2b4",
+      "array_sha256": "293d4d32cbb500c44678b0463c95b5ce00eaca34ef824106937cea47b7fabd09"
+    },
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-implicit-tet4-modified-repeated-v1/study/repeat--1-smooth-lattice-native/mesh.npz": {
+      "sha256": "6010a3f9cf1c069dd4a9091ca8e1140ce04d866ae61caa8c424a2bc75235653a",
+      "array_sha256": "9cb50d1a41eb6a11acdc179113df6248cfe362db52dd5856b7a44b011dd97483"
+    },
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-implicit-tet4-modified-repeated-v1/study/repeat--1-smooth-lattice-actual/mesh.npz": {
+      "sha256": "dfeca5ba6f6eb4e6109ecffe46f79818ab29001a3bf807010ec00008b8b591a2",
+      "array_sha256": "c20029410a51b5188630ea94059303243dfdb1837f09bb0cddc981f26c5ca93a"
+    },
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-implicit-tet4-modified-repeated-v1/study/repeat--1-primitive-box-native/mesh.npz": {
+      "sha256": "932289b70c467a3f8a445fbc0f3a876207ad2e63d080a67cd3bae2b55c4e59c8",
+      "array_sha256": "ddcaea15e75b6e6beec81aeced9b9118b69f36f983ec71ba82e205a2665693f4"
+    },
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-implicit-tet4-modified-repeated-v1/study/repeat--1-primitive-box-actual/mesh.npz": {
+      "sha256": "20927e76e29d3be6608290225db03a9202b65602a7c5a57da9f53913f7e5e5d7",
+      "array_sha256": "7c237cc8e45f9f9f045865bd19a07c01e44999f26f4d5a64dbd58f09cb498712"
+    },
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-implicit-tet4-modified-repeated-v1/study/repeat--1-primitive-cylinder-native/mesh.npz": {
+      "sha256": "ce8bfcec1161c6dd91f356a2a91789b7b66b39204db34606dfdce0ca55a8d596",
+      "array_sha256": "ed43daa9344349fb048217e0b737419aa481c716582f42471b7f6f9cb54212ea"
+    },
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-implicit-tet4-modified-repeated-v1/study/repeat--1-primitive-cylinder-actual/mesh.npz": {
+      "sha256": "95bcc495e3a0a42bf8ae7de38e88fb51498b40db3154c882674ab0c806c5319b",
+      "array_sha256": "65d609b30d9c13d02f874b9ef82b02e25bd514ef15d083c09f502dcff9e40d46"
+    },
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-implicit-tet4-modified-repeated-v1/study/repeat--1-primitive-capsule-native/mesh.npz": {
+      "sha256": "95730761cdeb4afe4d9a2a15bcb2de25e564235908eeee578050ca44f8b00ebd",
+      "array_sha256": "5c4ca9f0c089c46d2c71bac2fd830a3f1f01ad411c29c3bbd7e787a010dcd006"
+    },
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-implicit-tet4-modified-repeated-v1/study/repeat--1-primitive-capsule-actual/mesh.npz": {
+      "sha256": "eff7b291d5c0eab1d97c6e104d43c46321b422eeaf882e730dd019531a590e8b",
+      "array_sha256": "166a7d4911706f5d631ba48d73bac984daf563ba8510d6b3753a7c121cb5e322"
+    },
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-implicit-tet4-modified-repeated-v1/study/repeat--1-primitive-ellipsoid-native/mesh.npz": {
+      "sha256": "98eabe97bcda9ce8f52e80f41d54639cec206492fb7a986c8beed3f4ef77433b",
+      "array_sha256": "8472b8502f1fe90a9000b40f73fbed8d5e1cfe73f7a5368ef051028a1483fa99"
+    },
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-implicit-tet4-modified-repeated-v1/study/repeat--1-primitive-ellipsoid-actual/mesh.npz": {
+      "sha256": "a5ae83bc491483d461ffde60c082e491b6fd64c70245eb0fee92d9c974db4f7f",
+      "array_sha256": "2c2af5fc57387be82c2c88a7416f537eb1602300e35000b424104f0f4064376b"
+    },
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-implicit-tet4-modified-repeated-v1/study/repeat--1-primitive-sphere-native/mesh.npz": {
+      "sha256": "39ef4888008a24ce7cc15d6a7fb34f9376ca4caaa28fd0c9b8ad8d18bb9cae04",
+      "array_sha256": "3ad2954edb11fd04530cdb2f524bb69672a868766977f36b5a1693e3a2752e92"
+    },
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-implicit-tet4-modified-repeated-v1/study/repeat--1-primitive-sphere-actual/mesh.npz": {
+      "sha256": "8516ec6cb28e224770705b016cef891076b3175584d979cd51a4a550ff2acc28",
+      "array_sha256": "77db40a3a3dfcf24daf8d82405d77c67ee0105f24abf741066292db8ec4a155d"
+    },
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-implicit-tet4-modified-repeated-v1/study/repeat-0-spinodoid-actual/mesh.npz": {
+      "sha256": "c1a82be853b8baf1190d81ed66dd295217464380144c98f2da514f04d0ac8f89",
+      "array_sha256": "c0724718535ee743372ef7889c75948e19d86fe589e56af9577c54c588e58782"
+    },
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-implicit-tet4-modified-repeated-v1/study/repeat-0-spinodoid-native/mesh.npz": {
+      "sha256": "9a8981586d1aa51cb24a6d6f5ce8e2ee6015f9d3da9a38d495c37401fcf7ab73",
+      "array_sha256": "1d62f6463e73412cbb21cc8eaf12165be50972d9955905415234fbda4ea05cf7"
+    },
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-implicit-tet4-modified-repeated-v1/study/repeat-0-spinodoid-anisotropic-actual/mesh.npz": {
+      "sha256": "fe1e1e3933fd1edf14af1b677360bce4186ddef015d8055256fe2529bc3cf2b4",
+      "array_sha256": "293d4d32cbb500c44678b0463c95b5ce00eaca34ef824106937cea47b7fabd09"
+    },
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-implicit-tet4-modified-repeated-v1/study/repeat-0-spinodoid-anisotropic-native/mesh.npz": {
+      "sha256": "9bfcf9ff770d29472fecb2213722479a46cbb3e9c2ed86a3ab6d3413555f3a4a",
+      "array_sha256": "23abf349f6847b92289eb6d87c985f950ae2a33c99243d17ac754e1e406e97d3"
+    },
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-implicit-tet4-modified-repeated-v1/study/repeat-0-smooth-lattice-actual/mesh.npz": {
+      "sha256": "dfeca5ba6f6eb4e6109ecffe46f79818ab29001a3bf807010ec00008b8b591a2",
+      "array_sha256": "c20029410a51b5188630ea94059303243dfdb1837f09bb0cddc981f26c5ca93a"
+    },
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-implicit-tet4-modified-repeated-v1/study/repeat-0-smooth-lattice-native/mesh.npz": {
+      "sha256": "6010a3f9cf1c069dd4a9091ca8e1140ce04d866ae61caa8c424a2bc75235653a",
+      "array_sha256": "9cb50d1a41eb6a11acdc179113df6248cfe362db52dd5856b7a44b011dd97483"
+    },
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-implicit-tet4-modified-repeated-v1/study/repeat-0-primitive-box-actual/mesh.npz": {
+      "sha256": "20927e76e29d3be6608290225db03a9202b65602a7c5a57da9f53913f7e5e5d7",
+      "array_sha256": "7c237cc8e45f9f9f045865bd19a07c01e44999f26f4d5a64dbd58f09cb498712"
+    },
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-implicit-tet4-modified-repeated-v1/study/repeat-0-primitive-box-native/mesh.npz": {
+      "sha256": "932289b70c467a3f8a445fbc0f3a876207ad2e63d080a67cd3bae2b55c4e59c8",
+      "array_sha256": "ddcaea15e75b6e6beec81aeced9b9118b69f36f983ec71ba82e205a2665693f4"
+    },
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-implicit-tet4-modified-repeated-v1/study/repeat-0-primitive-cylinder-actual/mesh.npz": {
+      "sha256": "95bcc495e3a0a42bf8ae7de38e88fb51498b40db3154c882674ab0c806c5319b",
+      "array_sha256": "65d609b30d9c13d02f874b9ef82b02e25bd514ef15d083c09f502dcff9e40d46"
+    },
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-implicit-tet4-modified-repeated-v1/study/repeat-0-primitive-cylinder-native/mesh.npz": {
+      "sha256": "ce8bfcec1161c6dd91f356a2a91789b7b66b39204db34606dfdce0ca55a8d596",
+      "array_sha256": "ed43daa9344349fb048217e0b737419aa481c716582f42471b7f6f9cb54212ea"
+    },
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-implicit-tet4-modified-repeated-v1/study/repeat-0-primitive-capsule-actual/mesh.npz": {
+      "sha256": "eff7b291d5c0eab1d97c6e104d43c46321b422eeaf882e730dd019531a590e8b",
+      "array_sha256": "166a7d4911706f5d631ba48d73bac984daf563ba8510d6b3753a7c121cb5e322"
+    },
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-implicit-tet4-modified-repeated-v1/study/repeat-0-primitive-capsule-native/mesh.npz": {
+      "sha256": "95730761cdeb4afe4d9a2a15bcb2de25e564235908eeee578050ca44f8b00ebd",
+      "array_sha256": "5c4ca9f0c089c46d2c71bac2fd830a3f1f01ad411c29c3bbd7e787a010dcd006"
+    },
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-implicit-tet4-modified-repeated-v1/study/repeat-0-primitive-ellipsoid-actual/mesh.npz": {
+      "sha256": "a5ae83bc491483d461ffde60c082e491b6fd64c70245eb0fee92d9c974db4f7f",
+      "array_sha256": "2c2af5fc57387be82c2c88a7416f537eb1602300e35000b424104f0f4064376b"
+    },
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-implicit-tet4-modified-repeated-v1/study/repeat-0-primitive-ellipsoid-native/mesh.npz": {
+      "sha256": "98eabe97bcda9ce8f52e80f41d54639cec206492fb7a986c8beed3f4ef77433b",
+      "array_sha256": "8472b8502f1fe90a9000b40f73fbed8d5e1cfe73f7a5368ef051028a1483fa99"
+    },
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-implicit-tet4-modified-repeated-v1/study/repeat-0-primitive-sphere-actual/mesh.npz": {
+      "sha256": "8516ec6cb28e224770705b016cef891076b3175584d979cd51a4a550ff2acc28",
+      "array_sha256": "77db40a3a3dfcf24daf8d82405d77c67ee0105f24abf741066292db8ec4a155d"
+    },
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-implicit-tet4-modified-repeated-v1/study/repeat-0-primitive-sphere-native/mesh.npz": {
+      "sha256": "39ef4888008a24ce7cc15d6a7fb34f9376ca4caaa28fd0c9b8ad8d18bb9cae04",
+      "array_sha256": "3ad2954edb11fd04530cdb2f524bb69672a868766977f36b5a1693e3a2752e92"
+    },
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-implicit-tet4-modified-repeated-v1/study/repeat-1-spinodoid-native/mesh.npz": {
+      "sha256": "9a8981586d1aa51cb24a6d6f5ce8e2ee6015f9d3da9a38d495c37401fcf7ab73",
+      "array_sha256": "1d62f6463e73412cbb21cc8eaf12165be50972d9955905415234fbda4ea05cf7"
+    },
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-implicit-tet4-modified-repeated-v1/study/repeat-1-spinodoid-actual/mesh.npz": {
+      "sha256": "c1a82be853b8baf1190d81ed66dd295217464380144c98f2da514f04d0ac8f89",
+      "array_sha256": "c0724718535ee743372ef7889c75948e19d86fe589e56af9577c54c588e58782"
+    },
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-implicit-tet4-modified-repeated-v1/study/repeat-1-spinodoid-anisotropic-native/mesh.npz": {
+      "sha256": "9bfcf9ff770d29472fecb2213722479a46cbb3e9c2ed86a3ab6d3413555f3a4a",
+      "array_sha256": "23abf349f6847b92289eb6d87c985f950ae2a33c99243d17ac754e1e406e97d3"
+    },
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-implicit-tet4-modified-repeated-v1/study/repeat-1-spinodoid-anisotropic-actual/mesh.npz": {
+      "sha256": "fe1e1e3933fd1edf14af1b677360bce4186ddef015d8055256fe2529bc3cf2b4",
+      "array_sha256": "293d4d32cbb500c44678b0463c95b5ce00eaca34ef824106937cea47b7fabd09"
+    },
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-implicit-tet4-modified-repeated-v1/study/repeat-1-smooth-lattice-native/mesh.npz": {
+      "sha256": "6010a3f9cf1c069dd4a9091ca8e1140ce04d866ae61caa8c424a2bc75235653a",
+      "array_sha256": "9cb50d1a41eb6a11acdc179113df6248cfe362db52dd5856b7a44b011dd97483"
+    },
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-implicit-tet4-modified-repeated-v1/study/repeat-1-smooth-lattice-actual/mesh.npz": {
+      "sha256": "dfeca5ba6f6eb4e6109ecffe46f79818ab29001a3bf807010ec00008b8b591a2",
+      "array_sha256": "c20029410a51b5188630ea94059303243dfdb1837f09bb0cddc981f26c5ca93a"
+    },
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-implicit-tet4-modified-repeated-v1/study/repeat-1-primitive-box-native/mesh.npz": {
+      "sha256": "932289b70c467a3f8a445fbc0f3a876207ad2e63d080a67cd3bae2b55c4e59c8",
+      "array_sha256": "ddcaea15e75b6e6beec81aeced9b9118b69f36f983ec71ba82e205a2665693f4"
+    },
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-implicit-tet4-modified-repeated-v1/study/repeat-1-primitive-box-actual/mesh.npz": {
+      "sha256": "20927e76e29d3be6608290225db03a9202b65602a7c5a57da9f53913f7e5e5d7",
+      "array_sha256": "7c237cc8e45f9f9f045865bd19a07c01e44999f26f4d5a64dbd58f09cb498712"
+    },
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-implicit-tet4-modified-repeated-v1/study/repeat-1-primitive-cylinder-native/mesh.npz": {
+      "sha256": "ce8bfcec1161c6dd91f356a2a91789b7b66b39204db34606dfdce0ca55a8d596",
+      "array_sha256": "ed43daa9344349fb048217e0b737419aa481c716582f42471b7f6f9cb54212ea"
+    },
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-implicit-tet4-modified-repeated-v1/study/repeat-1-primitive-cylinder-actual/mesh.npz": {
+      "sha256": "95bcc495e3a0a42bf8ae7de38e88fb51498b40db3154c882674ab0c806c5319b",
+      "array_sha256": "65d609b30d9c13d02f874b9ef82b02e25bd514ef15d083c09f502dcff9e40d46"
+    },
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-implicit-tet4-modified-repeated-v1/study/repeat-1-primitive-capsule-native/mesh.npz": {
+      "sha256": "95730761cdeb4afe4d9a2a15bcb2de25e564235908eeee578050ca44f8b00ebd",
+      "array_sha256": "5c4ca9f0c089c46d2c71bac2fd830a3f1f01ad411c29c3bbd7e787a010dcd006"
+    },
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-implicit-tet4-modified-repeated-v1/study/repeat-1-primitive-capsule-actual/mesh.npz": {
+      "sha256": "eff7b291d5c0eab1d97c6e104d43c46321b422eeaf882e730dd019531a590e8b",
+      "array_sha256": "166a7d4911706f5d631ba48d73bac984daf563ba8510d6b3753a7c121cb5e322"
+    },
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-implicit-tet4-modified-repeated-v1/study/repeat-1-primitive-ellipsoid-native/mesh.npz": {
+      "sha256": "98eabe97bcda9ce8f52e80f41d54639cec206492fb7a986c8beed3f4ef77433b",
+      "array_sha256": "8472b8502f1fe90a9000b40f73fbed8d5e1cfe73f7a5368ef051028a1483fa99"
+    },
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-implicit-tet4-modified-repeated-v1/study/repeat-1-primitive-ellipsoid-actual/mesh.npz": {
+      "sha256": "a5ae83bc491483d461ffde60c082e491b6fd64c70245eb0fee92d9c974db4f7f",
+      "array_sha256": "2c2af5fc57387be82c2c88a7416f537eb1602300e35000b424104f0f4064376b"
+    },
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-implicit-tet4-modified-repeated-v1/study/repeat-1-primitive-sphere-native/mesh.npz": {
+      "sha256": "39ef4888008a24ce7cc15d6a7fb34f9376ca4caaa28fd0c9b8ad8d18bb9cae04",
+      "array_sha256": "3ad2954edb11fd04530cdb2f524bb69672a868766977f36b5a1693e3a2752e92"
+    },
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-implicit-tet4-modified-repeated-v1/study/repeat-1-primitive-sphere-actual/mesh.npz": {
+      "sha256": "8516ec6cb28e224770705b016cef891076b3175584d979cd51a4a550ff2acc28",
+      "array_sha256": "77db40a3a3dfcf24daf8d82405d77c67ee0105f24abf741066292db8ec4a155d"
+    },
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-implicit-tet4-modified-repeated-v1/study/repeat-2-spinodoid-actual/mesh.npz": {
+      "sha256": "c1a82be853b8baf1190d81ed66dd295217464380144c98f2da514f04d0ac8f89",
+      "array_sha256": "c0724718535ee743372ef7889c75948e19d86fe589e56af9577c54c588e58782"
+    },
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-implicit-tet4-modified-repeated-v1/study/repeat-2-spinodoid-native/mesh.npz": {
+      "sha256": "9a8981586d1aa51cb24a6d6f5ce8e2ee6015f9d3da9a38d495c37401fcf7ab73",
+      "array_sha256": "1d62f6463e73412cbb21cc8eaf12165be50972d9955905415234fbda4ea05cf7"
+    },
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-implicit-tet4-modified-repeated-v1/study/repeat-2-spinodoid-anisotropic-actual/mesh.npz": {
+      "sha256": "fe1e1e3933fd1edf14af1b677360bce4186ddef015d8055256fe2529bc3cf2b4",
+      "array_sha256": "293d4d32cbb500c44678b0463c95b5ce00eaca34ef824106937cea47b7fabd09"
+    },
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-implicit-tet4-modified-repeated-v1/study/repeat-2-spinodoid-anisotropic-native/mesh.npz": {
+      "sha256": "9bfcf9ff770d29472fecb2213722479a46cbb3e9c2ed86a3ab6d3413555f3a4a",
+      "array_sha256": "23abf349f6847b92289eb6d87c985f950ae2a33c99243d17ac754e1e406e97d3"
+    },
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-implicit-tet4-modified-repeated-v1/study/repeat-2-smooth-lattice-actual/mesh.npz": {
+      "sha256": "dfeca5ba6f6eb4e6109ecffe46f79818ab29001a3bf807010ec00008b8b591a2",
+      "array_sha256": "c20029410a51b5188630ea94059303243dfdb1837f09bb0cddc981f26c5ca93a"
+    },
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-implicit-tet4-modified-repeated-v1/study/repeat-2-smooth-lattice-native/mesh.npz": {
+      "sha256": "6010a3f9cf1c069dd4a9091ca8e1140ce04d866ae61caa8c424a2bc75235653a",
+      "array_sha256": "9cb50d1a41eb6a11acdc179113df6248cfe362db52dd5856b7a44b011dd97483"
+    },
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-implicit-tet4-modified-repeated-v1/study/repeat-2-primitive-box-actual/mesh.npz": {
+      "sha256": "20927e76e29d3be6608290225db03a9202b65602a7c5a57da9f53913f7e5e5d7",
+      "array_sha256": "7c237cc8e45f9f9f045865bd19a07c01e44999f26f4d5a64dbd58f09cb498712"
+    },
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-implicit-tet4-modified-repeated-v1/study/repeat-2-primitive-box-native/mesh.npz": {
+      "sha256": "932289b70c467a3f8a445fbc0f3a876207ad2e63d080a67cd3bae2b55c4e59c8",
+      "array_sha256": "ddcaea15e75b6e6beec81aeced9b9118b69f36f983ec71ba82e205a2665693f4"
+    },
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-implicit-tet4-modified-repeated-v1/study/repeat-2-primitive-cylinder-actual/mesh.npz": {
+      "sha256": "95bcc495e3a0a42bf8ae7de38e88fb51498b40db3154c882674ab0c806c5319b",
+      "array_sha256": "65d609b30d9c13d02f874b9ef82b02e25bd514ef15d083c09f502dcff9e40d46"
+    },
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-implicit-tet4-modified-repeated-v1/study/repeat-2-primitive-cylinder-native/mesh.npz": {
+      "sha256": "ce8bfcec1161c6dd91f356a2a91789b7b66b39204db34606dfdce0ca55a8d596",
+      "array_sha256": "ed43daa9344349fb048217e0b737419aa481c716582f42471b7f6f9cb54212ea"
+    },
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-implicit-tet4-modified-repeated-v1/study/repeat-2-primitive-capsule-actual/mesh.npz": {
+      "sha256": "eff7b291d5c0eab1d97c6e104d43c46321b422eeaf882e730dd019531a590e8b",
+      "array_sha256": "166a7d4911706f5d631ba48d73bac984daf563ba8510d6b3753a7c121cb5e322"
+    },
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-implicit-tet4-modified-repeated-v1/study/repeat-2-primitive-capsule-native/mesh.npz": {
+      "sha256": "95730761cdeb4afe4d9a2a15bcb2de25e564235908eeee578050ca44f8b00ebd",
+      "array_sha256": "5c4ca9f0c089c46d2c71bac2fd830a3f1f01ad411c29c3bbd7e787a010dcd006"
+    },
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-implicit-tet4-modified-repeated-v1/study/repeat-2-primitive-ellipsoid-actual/mesh.npz": {
+      "sha256": "a5ae83bc491483d461ffde60c082e491b6fd64c70245eb0fee92d9c974db4f7f",
+      "array_sha256": "2c2af5fc57387be82c2c88a7416f537eb1602300e35000b424104f0f4064376b"
+    },
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-implicit-tet4-modified-repeated-v1/study/repeat-2-primitive-ellipsoid-native/mesh.npz": {
+      "sha256": "98eabe97bcda9ce8f52e80f41d54639cec206492fb7a986c8beed3f4ef77433b",
+      "array_sha256": "8472b8502f1fe90a9000b40f73fbed8d5e1cfe73f7a5368ef051028a1483fa99"
+    },
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-implicit-tet4-modified-repeated-v1/study/repeat-2-primitive-sphere-actual/mesh.npz": {
+      "sha256": "8516ec6cb28e224770705b016cef891076b3175584d979cd51a4a550ff2acc28",
+      "array_sha256": "77db40a3a3dfcf24daf8d82405d77c67ee0105f24abf741066292db8ec4a155d"
+    },
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-implicit-tet4-modified-repeated-v1/study/repeat-2-primitive-sphere-native/mesh.npz": {
+      "sha256": "39ef4888008a24ce7cc15d6a7fb34f9376ca4caaa28fd0c9b8ad8d18bb9cae04",
+      "array_sha256": "3ad2954edb11fd04530cdb2f524bb69672a868766977f36b5a1693e3a2752e92"
+    },
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-implicit-tet4-modified-repeated-v1/study/repeat-3-spinodoid-native/mesh.npz": {
+      "sha256": "9a8981586d1aa51cb24a6d6f5ce8e2ee6015f9d3da9a38d495c37401fcf7ab73",
+      "array_sha256": "1d62f6463e73412cbb21cc8eaf12165be50972d9955905415234fbda4ea05cf7"
+    },
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-implicit-tet4-modified-repeated-v1/study/repeat-3-spinodoid-actual/mesh.npz": {
+      "sha256": "c1a82be853b8baf1190d81ed66dd295217464380144c98f2da514f04d0ac8f89",
+      "array_sha256": "c0724718535ee743372ef7889c75948e19d86fe589e56af9577c54c588e58782"
+    },
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-implicit-tet4-modified-repeated-v1/study/repeat-3-spinodoid-anisotropic-native/mesh.npz": {
+      "sha256": "9bfcf9ff770d29472fecb2213722479a46cbb3e9c2ed86a3ab6d3413555f3a4a",
+      "array_sha256": "23abf349f6847b92289eb6d87c985f950ae2a33c99243d17ac754e1e406e97d3"
+    },
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-implicit-tet4-modified-repeated-v1/study/repeat-3-spinodoid-anisotropic-actual/mesh.npz": {
+      "sha256": "fe1e1e3933fd1edf14af1b677360bce4186ddef015d8055256fe2529bc3cf2b4",
+      "array_sha256": "293d4d32cbb500c44678b0463c95b5ce00eaca34ef824106937cea47b7fabd09"
+    },
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-implicit-tet4-modified-repeated-v1/study/repeat-3-smooth-lattice-native/mesh.npz": {
+      "sha256": "6010a3f9cf1c069dd4a9091ca8e1140ce04d866ae61caa8c424a2bc75235653a",
+      "array_sha256": "9cb50d1a41eb6a11acdc179113df6248cfe362db52dd5856b7a44b011dd97483"
+    },
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-implicit-tet4-modified-repeated-v1/study/repeat-3-smooth-lattice-actual/mesh.npz": {
+      "sha256": "dfeca5ba6f6eb4e6109ecffe46f79818ab29001a3bf807010ec00008b8b591a2",
+      "array_sha256": "c20029410a51b5188630ea94059303243dfdb1837f09bb0cddc981f26c5ca93a"
+    },
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-implicit-tet4-modified-repeated-v1/study/repeat-3-primitive-box-native/mesh.npz": {
+      "sha256": "932289b70c467a3f8a445fbc0f3a876207ad2e63d080a67cd3bae2b55c4e59c8",
+      "array_sha256": "ddcaea15e75b6e6beec81aeced9b9118b69f36f983ec71ba82e205a2665693f4"
+    },
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-implicit-tet4-modified-repeated-v1/study/repeat-3-primitive-box-actual/mesh.npz": {
+      "sha256": "20927e76e29d3be6608290225db03a9202b65602a7c5a57da9f53913f7e5e5d7",
+      "array_sha256": "7c237cc8e45f9f9f045865bd19a07c01e44999f26f4d5a64dbd58f09cb498712"
+    },
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-implicit-tet4-modified-repeated-v1/study/repeat-3-primitive-cylinder-native/mesh.npz": {
+      "sha256": "ce8bfcec1161c6dd91f356a2a91789b7b66b39204db34606dfdce0ca55a8d596",
+      "array_sha256": "ed43daa9344349fb048217e0b737419aa481c716582f42471b7f6f9cb54212ea"
+    },
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-implicit-tet4-modified-repeated-v1/study/repeat-3-primitive-cylinder-actual/mesh.npz": {
+      "sha256": "95bcc495e3a0a42bf8ae7de38e88fb51498b40db3154c882674ab0c806c5319b",
+      "array_sha256": "65d609b30d9c13d02f874b9ef82b02e25bd514ef15d083c09f502dcff9e40d46"
+    },
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-implicit-tet4-modified-repeated-v1/study/repeat-3-primitive-capsule-native/mesh.npz": {
+      "sha256": "95730761cdeb4afe4d9a2a15bcb2de25e564235908eeee578050ca44f8b00ebd",
+      "array_sha256": "5c4ca9f0c089c46d2c71bac2fd830a3f1f01ad411c29c3bbd7e787a010dcd006"
+    },
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-implicit-tet4-modified-repeated-v1/study/repeat-3-primitive-capsule-actual/mesh.npz": {
+      "sha256": "eff7b291d5c0eab1d97c6e104d43c46321b422eeaf882e730dd019531a590e8b",
+      "array_sha256": "166a7d4911706f5d631ba48d73bac984daf563ba8510d6b3753a7c121cb5e322"
+    },
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-implicit-tet4-modified-repeated-v1/study/repeat-3-primitive-ellipsoid-native/mesh.npz": {
+      "sha256": "98eabe97bcda9ce8f52e80f41d54639cec206492fb7a986c8beed3f4ef77433b",
+      "array_sha256": "8472b8502f1fe90a9000b40f73fbed8d5e1cfe73f7a5368ef051028a1483fa99"
+    },
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-implicit-tet4-modified-repeated-v1/study/repeat-3-primitive-ellipsoid-actual/mesh.npz": {
+      "sha256": "a5ae83bc491483d461ffde60c082e491b6fd64c70245eb0fee92d9c974db4f7f",
+      "array_sha256": "2c2af5fc57387be82c2c88a7416f537eb1602300e35000b424104f0f4064376b"
+    },
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-implicit-tet4-modified-repeated-v1/study/repeat-3-primitive-sphere-native/mesh.npz": {
+      "sha256": "39ef4888008a24ce7cc15d6a7fb34f9376ca4caaa28fd0c9b8ad8d18bb9cae04",
+      "array_sha256": "3ad2954edb11fd04530cdb2f524bb69672a868766977f36b5a1693e3a2752e92"
+    },
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-implicit-tet4-modified-repeated-v1/study/repeat-3-primitive-sphere-actual/mesh.npz": {
+      "sha256": "8516ec6cb28e224770705b016cef891076b3175584d979cd51a4a550ff2acc28",
+      "array_sha256": "77db40a3a3dfcf24daf8d82405d77c67ee0105f24abf741066292db8ec4a155d"
+    },
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-implicit-tet4-modified-repeated-v1/study/repeat-4-spinodoid-actual/mesh.npz": {
+      "sha256": "c1a82be853b8baf1190d81ed66dd295217464380144c98f2da514f04d0ac8f89",
+      "array_sha256": "c0724718535ee743372ef7889c75948e19d86fe589e56af9577c54c588e58782"
+    },
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-implicit-tet4-modified-repeated-v1/study/repeat-4-spinodoid-native/mesh.npz": {
+      "sha256": "9a8981586d1aa51cb24a6d6f5ce8e2ee6015f9d3da9a38d495c37401fcf7ab73",
+      "array_sha256": "1d62f6463e73412cbb21cc8eaf12165be50972d9955905415234fbda4ea05cf7"
+    },
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-implicit-tet4-modified-repeated-v1/study/repeat-4-spinodoid-anisotropic-actual/mesh.npz": {
+      "sha256": "fe1e1e3933fd1edf14af1b677360bce4186ddef015d8055256fe2529bc3cf2b4",
+      "array_sha256": "293d4d32cbb500c44678b0463c95b5ce00eaca34ef824106937cea47b7fabd09"
+    },
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-implicit-tet4-modified-repeated-v1/study/repeat-4-spinodoid-anisotropic-native/mesh.npz": {
+      "sha256": "9bfcf9ff770d29472fecb2213722479a46cbb3e9c2ed86a3ab6d3413555f3a4a",
+      "array_sha256": "23abf349f6847b92289eb6d87c985f950ae2a33c99243d17ac754e1e406e97d3"
+    },
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-implicit-tet4-modified-repeated-v1/study/repeat-4-smooth-lattice-actual/mesh.npz": {
+      "sha256": "dfeca5ba6f6eb4e6109ecffe46f79818ab29001a3bf807010ec00008b8b591a2",
+      "array_sha256": "c20029410a51b5188630ea94059303243dfdb1837f09bb0cddc981f26c5ca93a"
+    },
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-implicit-tet4-modified-repeated-v1/study/repeat-4-smooth-lattice-native/mesh.npz": {
+      "sha256": "6010a3f9cf1c069dd4a9091ca8e1140ce04d866ae61caa8c424a2bc75235653a",
+      "array_sha256": "9cb50d1a41eb6a11acdc179113df6248cfe362db52dd5856b7a44b011dd97483"
+    },
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-implicit-tet4-modified-repeated-v1/study/repeat-4-primitive-box-actual/mesh.npz": {
+      "sha256": "20927e76e29d3be6608290225db03a9202b65602a7c5a57da9f53913f7e5e5d7",
+      "array_sha256": "7c237cc8e45f9f9f045865bd19a07c01e44999f26f4d5a64dbd58f09cb498712"
+    },
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-implicit-tet4-modified-repeated-v1/study/repeat-4-primitive-box-native/mesh.npz": {
+      "sha256": "932289b70c467a3f8a445fbc0f3a876207ad2e63d080a67cd3bae2b55c4e59c8",
+      "array_sha256": "ddcaea15e75b6e6beec81aeced9b9118b69f36f983ec71ba82e205a2665693f4"
+    },
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-implicit-tet4-modified-repeated-v1/study/repeat-4-primitive-cylinder-actual/mesh.npz": {
+      "sha256": "95bcc495e3a0a42bf8ae7de38e88fb51498b40db3154c882674ab0c806c5319b",
+      "array_sha256": "65d609b30d9c13d02f874b9ef82b02e25bd514ef15d083c09f502dcff9e40d46"
+    },
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-implicit-tet4-modified-repeated-v1/study/repeat-4-primitive-cylinder-native/mesh.npz": {
+      "sha256": "ce8bfcec1161c6dd91f356a2a91789b7b66b39204db34606dfdce0ca55a8d596",
+      "array_sha256": "ed43daa9344349fb048217e0b737419aa481c716582f42471b7f6f9cb54212ea"
+    },
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-implicit-tet4-modified-repeated-v1/study/repeat-4-primitive-capsule-actual/mesh.npz": {
+      "sha256": "eff7b291d5c0eab1d97c6e104d43c46321b422eeaf882e730dd019531a590e8b",
+      "array_sha256": "166a7d4911706f5d631ba48d73bac984daf563ba8510d6b3753a7c121cb5e322"
+    },
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-implicit-tet4-modified-repeated-v1/study/repeat-4-primitive-capsule-native/mesh.npz": {
+      "sha256": "95730761cdeb4afe4d9a2a15bcb2de25e564235908eeee578050ca44f8b00ebd",
+      "array_sha256": "5c4ca9f0c089c46d2c71bac2fd830a3f1f01ad411c29c3bbd7e787a010dcd006"
+    },
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-implicit-tet4-modified-repeated-v1/study/repeat-4-primitive-ellipsoid-actual/mesh.npz": {
+      "sha256": "a5ae83bc491483d461ffde60c082e491b6fd64c70245eb0fee92d9c974db4f7f",
+      "array_sha256": "2c2af5fc57387be82c2c88a7416f537eb1602300e35000b424104f0f4064376b"
+    },
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-implicit-tet4-modified-repeated-v1/study/repeat-4-primitive-ellipsoid-native/mesh.npz": {
+      "sha256": "98eabe97bcda9ce8f52e80f41d54639cec206492fb7a986c8beed3f4ef77433b",
+      "array_sha256": "8472b8502f1fe90a9000b40f73fbed8d5e1cfe73f7a5368ef051028a1483fa99"
+    },
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-implicit-tet4-modified-repeated-v1/study/repeat-4-primitive-sphere-actual/mesh.npz": {
+      "sha256": "8516ec6cb28e224770705b016cef891076b3175584d979cd51a4a550ff2acc28",
+      "array_sha256": "77db40a3a3dfcf24daf8d82405d77c67ee0105f24abf741066292db8ec4a155d"
+    },
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-implicit-tet4-modified-repeated-v1/study/repeat-4-primitive-sphere-native/mesh.npz": {
+      "sha256": "39ef4888008a24ce7cc15d6a7fb34f9376ca4caaa28fd0c9b8ad8d18bb9cae04",
+      "array_sha256": "3ad2954edb11fd04530cdb2f524bb69672a868766977f36b5a1693e3a2752e92"
+    }
+  },
+  "distinct_meshes": {
+    "c0724718535ee743372ef7889c75948e19d86fe589e56af9577c54c588e58782": {
+      "case": "spinodoid",
+      "arm": "actual",
+      "nodes": 10404,
+      "tets": 41295,
+      "nonpositive_tets": 0
+    },
+    "1d62f6463e73412cbb21cc8eaf12165be50972d9955905415234fbda4ea05cf7": {
+      "case": "spinodoid",
+      "arm": "native",
+      "nodes": 16702,
+      "tets": 72378,
+      "nonpositive_tets": 0
+    },
+    "293d4d32cbb500c44678b0463c95b5ce00eaca34ef824106937cea47b7fabd09": {
+      "case": "spinodoid-anisotropic",
+      "arm": "actual",
+      "nodes": 8863,
+      "tets": 34721,
+      "nonpositive_tets": 0
+    },
+    "23abf349f6847b92289eb6d87c985f950ae2a33c99243d17ac754e1e406e97d3": {
+      "case": "spinodoid-anisotropic",
+      "arm": "native",
+      "nodes": 13652,
+      "tets": 59848,
+      "nonpositive_tets": 0
+    },
+    "c20029410a51b5188630ea94059303243dfdb1837f09bb0cddc981f26c5ca93a": {
+      "case": "smooth-lattice",
+      "arm": "actual",
+      "nodes": 33953,
+      "tets": 158430,
+      "nonpositive_tets": 0
+    },
+    "7fdb444290a45e1f08fd8ae5595428c8bf2a9cefb12969432ccb9598f2ec032e": {
+      "case": "smooth-lattice",
+      "arm": "native",
+      "nodes": 22737,
+      "tets": 97538,
+      "nonpositive_tets": 0
+    },
+    "7c237cc8e45f9f9f045865bd19a07c01e44999f26f4d5a64dbd58f09cb498712": {
+      "case": "primitive-box",
+      "arm": "actual",
+      "nodes": 3904,
+      "tets": 15268,
+      "nonpositive_tets": 0
+    },
+    "ddcaea15e75b6e6beec81aeced9b9118b69f36f983ec71ba82e205a2665693f4": {
+      "case": "primitive-box",
+      "arm": "native",
+      "nodes": 2863,
+      "tets": 10592,
+      "nonpositive_tets": 0
+    },
+    "65d609b30d9c13d02f874b9ef82b02e25bd514ef15d083c09f502dcff9e40d46": {
+      "case": "primitive-cylinder",
+      "arm": "actual",
+      "nodes": 13807,
+      "tets": 64207,
+      "nonpositive_tets": 0
+    },
+    "41d243e1fb3da6e7f203e5c3b16a073cf828f044d3d6ebe39742d0ee3be914f3": {
+      "case": "primitive-cylinder",
+      "arm": "native",
+      "nodes": 1619,
+      "tets": 6344,
+      "nonpositive_tets": 0
+    },
+    "166a7d4911706f5d631ba48d73bac984daf563ba8510d6b3753a7c121cb5e322": {
+      "case": "primitive-capsule",
+      "arm": "actual",
+      "nodes": 9162,
+      "tets": 42590,
+      "nonpositive_tets": 0
+    },
+    "5c4ca9f0c089c46d2c71bac2fd830a3f1f01ad411c29c3bbd7e787a010dcd006": {
+      "case": "primitive-capsule",
+      "arm": "native",
+      "nodes": 8237,
+      "tets": 38392,
+      "nonpositive_tets": 0
+    },
+    "2c2af5fc57387be82c2c88a7416f537eb1602300e35000b424104f0f4064376b": {
+      "case": "primitive-ellipsoid",
+      "arm": "actual",
+      "nodes": 8104,
+      "tets": 37217,
+      "nonpositive_tets": 0
+    },
+    "8472b8502f1fe90a9000b40f73fbed8d5e1cfe73f7a5368ef051028a1483fa99": {
+      "case": "primitive-ellipsoid",
+      "arm": "native",
+      "nodes": 6883,
+      "tets": 32640,
+      "nonpositive_tets": 0
+    },
+    "77db40a3a3dfcf24daf8d82405d77c67ee0105f24abf741066292db8ec4a155d": {
+      "case": "primitive-sphere",
+      "arm": "actual",
+      "nodes": 10386,
+      "tets": 46874,
+      "nonpositive_tets": 0
+    },
+    "3ad2954edb11fd04530cdb2f524bb69672a868766977f36b5a1693e3a2752e92": {
+      "case": "primitive-sphere",
+      "arm": "native",
+      "nodes": 9095,
+      "tets": 43848,
+      "nonpositive_tets": 0
+    },
+    "9cb50d1a41eb6a11acdc179113df6248cfe362db52dd5856b7a44b011dd97483": {
+      "case": "smooth-lattice",
+      "arm": "native",
+      "nodes": 27503,
+      "tets": 121420,
+      "nonpositive_tets": 0
+    },
+    "4c69faec3fb32bd28629aedabd4038b60fc94e44325ea27034b2f7f7484cdf26": {
+      "case": "primitive-box",
+      "arm": "native",
+      "nodes": 2131,
+      "tets": 9272,
+      "nonpositive_tets": 0
+    },
+    "ed43daa9344349fb048217e0b737419aa481c716582f42471b7f6f9cb54212ea": {
+      "case": "primitive-cylinder",
+      "arm": "native",
+      "nodes": 11007,
+      "tets": 51454,
+      "nonpositive_tets": 0
+    }
+  },
+  "report_sha256": "3d399b1b8cce75ecc5e85844550965fa3557e0d7538b74716d262e94c162ea0a",
+  "selection_sha256": "e5118a868391d6578e322e8ce9318e24cd3e337e1b46ec2433716faf29d9c28b",
+  "scope": "Actual Tet4 arrays, hashes, frozen input copies, positive determinants, counts, volume and quality replay. Existing complete periodic/geometry audits remain in the per-worker evidence. No new FEA or admitted-speed claim."
+}

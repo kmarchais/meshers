@@ -1,0 +1,190 @@
+{
+  "case": "spinodoid-anisotropic",
+  "config": {
+    "name": "actual-default-tet4",
+    "arm": "microgen",
+    "resolution": null,
+    "order": 1,
+    "periodic_trace": true,
+    "declared_unit_cell": true
+  },
+  "status": "admission-rejected",
+  "qualified": false,
+  "mmg_calls": [
+    {
+      "nofem": true,
+      "output_tetrahedra": 15342,
+      "output_nodes": 3819
+    },
+    {
+      "hausd": null,
+      "hgrad": null,
+      "hmax": null,
+      "hmin": null,
+      "hsiz": null,
+      "ls": true,
+      "nr": true,
+      "output_tetrahedra": 14105,
+      "output_nodes": 3574
+    }
+  ],
+  "instrumentation_s": 0.0868135409837123,
+  "vtk_backend": "Sequential",
+  "vtk_threads": 1,
+  "periodic_required": true,
+  "solve_performed": false,
+  "actual_resolution": 16,
+  "seed_nodes": 4849,
+  "seed_elements": 19853,
+  "reoriented_tets": 0,
+  "generation_wall_s": 1.4017752090003341,
+  "nodes": 3574,
+  "elements": 14105,
+  "generation_s": 1.3149616680166218,
+  "mesh_sha256": "a28f0801687e637947433290a172a10803412168f9e2e535baa191d43b7057fa",
+  "historical_all_plane_periodic_gate": {
+    "passed": false,
+    "error": "Opposite-face triangulations differ on axis 0"
+  },
+  "geometry": {
+    "volume": 0.5230194252696219,
+    "relative_volume_error": 0.0023190189493578206,
+    "q_min_corner": 0.0006498531193928795,
+    "q_p01_corner": 0.13317231450704145,
+    "minimum_sampled_jacobian": 7.309845203463843e-09,
+    "facet_consistency": {
+      "nodes": 3574,
+      "elements": 14105,
+      "unique_faces": 30352,
+      "interior_faces": 26068,
+      "extracted_boundary_faces": 4284,
+      "same_orientation_shared_faces": 4,
+      "nonmanifold_faces": 0,
+      "duplicate_cells": 0,
+      "duplicate_surface_faces": 0,
+      "provided_boundary_matches_extraction": true,
+      "missing_provided_faces": 0,
+      "extra_provided_faces": 0,
+      "nonpositive_corner_determinants": 0,
+      "minimum_corner_determinant": 7.309845203463836e-09,
+      "oriented_facet_consistency_passed": false,
+      "conflict_examples": [
+        {
+          "face": [
+            988,
+            2732,
+            2819
+          ],
+          "incident_elements": [
+            12123,
+            13597
+          ],
+          "orientation_sum": 2,
+          "opposite_vertices": [
+            1427,
+            2810
+          ],
+          "signed_plane_products": [
+            -0.00011443040152659964,
+            -1.578077653691529e-05
+          ],
+          "same_physical_side": true
+        },
+        {
+          "face": [
+            988,
+            2732,
+            3486
+          ],
+          "incident_elements": [
+            3566,
+            13658
+          ],
+          "orientation_sum": -2,
+          "opposite_vertices": [
+            2810,
+            1908
+          ],
+          "signed_plane_products": [
+            3.351733544710622e-05,
+            0.00014738371644853823
+          ],
+          "same_physical_side": true
+        },
+        {
+          "face": [
+            988,
+            2810,
+            2819
+          ],
+          "incident_elements": [
+            11081,
+            13597
+          ],
+          "orientation_sum": -2,
+          "opposite_vertices": [
+            1427,
+            2732
+          ],
+          "signed_plane_products": [
+            3.853038420321002e-05,
+            1.5780776536915287e-05
+          ],
+          "same_physical_side": true
+        },
+        {
+          "face": [
+            988,
+            2810,
+            3486
+          ],
+          "incident_elements": [
+            3566,
+            13670
+          ],
+          "orientation_sum": 2,
+          "opposite_vertices": [
+            2732,
+            1908
+          ],
+          "signed_plane_products": [
+            -3.351733544710621e-05,
+            -8.17101150518297e-05
+          ],
+          "same_physical_side": true
+        }
+      ],
+      "scope": "Oriented corner-face incidence and same-side neighbor diagnostics; necessary consistency, not a certificate of curved geometry or absence of nonlocal intersections"
+    },
+    "oriented_facet_consistency_passed": false,
+    "quadratic_conformity": {
+      "passed": true,
+      "order": 1
+    },
+    "exact_straight_reduction_verified": false,
+    "geometry_admitted": false,
+    "sampled_reverse_max": 0.02118914587261413,
+    "distance_audit_complete": false,
+    "projection_failed": null,
+    "audit_scope": "Fail-fast after required quality/volume/topology/periodicity rejection; no forward-distance or successful speed claim",
+    "failed_gates": [
+      "quality",
+      "facets",
+      "periodicity"
+    ]
+  },
+  "periodic": {
+    "error": "Opposite-face triangulations differ on axis 0"
+  },
+  "quality_quantiles": {
+    "min": 0.0006498531193928795,
+    "p01": 0.13317231450704145,
+    "p10": 0.5055804537274312,
+    "median": 0.7646886105807879,
+    "p90": 0.9119596370178245,
+    "p99": 0.9693740421449696,
+    "max": 0.9943069493857655
+  },
+  "audit_s": 0.9591448749997653,
+  "wall_s": 2.3779299590096343
+}

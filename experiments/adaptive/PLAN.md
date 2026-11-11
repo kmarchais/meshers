@@ -1,5 +1,30 @@
 # Adaptive implicit meshing: plan and status
 
+## Implicit Tet4 comparison complete, 11 November 2026
+
+Jobs 824–831 add eleven frozen specimens and nineteen separately labeled
+route comparisons beyond the TPMS sheet study. The 190 generation attempts
+include 60 measured pairs; 179 meshes are verified. Capsule, ellipsoid and
+sphere have admitted pairs against explicitly modified actual Microgen routes.
+Meshers uses fewer tets/nodes and improves generation time, minimum/median
+quality, full boundary distance and analytic volume error for all three.
+
+Spinodoids remain the main Tet4 efficiency and coarse-quality weakness. The
+selected anisotropic mesh is larger and slower than rejected actual defaults,
+and neither coarse native spinodoid recipe meets the accuracy/count objective.
+The accurate isotropic control remains oversized. The ordered lattice has
+better count/time/quality but worse boundary accuracy than admitted modified
+actual. Selected coarse grading still fails admission. Box retains a worse
+minimum-quality value despite exact boundary fit. No universal win is claimed.
+
+Next prioritize coarse spinodoid quality recovery, then boundary allocation
+for spinodoids, the original ordered lattice and grading. Retain failed coarse
+controls, complete periodic gates, fixed fields and the 250,000 caps. No FEA
+result transfers from these Tet4 timing studies; all four original cases and
+24 lattice models remain in scope. See PROJECT_TRACKING.md and
+handoff/macbook/implicit-tet4-comparison-20261111.json.
+
+
 ## TPMS Tet4 count comparisons complete, 11 November 2026
 
 Jobs 820 through 823 extend the count-selected comparison to 16 frozen sheet families

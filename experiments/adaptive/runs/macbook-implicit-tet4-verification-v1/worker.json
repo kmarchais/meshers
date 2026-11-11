@@ -1,0 +1,28 @@
+{
+  "returncode": 1,
+  "limit_failure": null,
+  "peak_rss_bytes": 334069760,
+  "wall_s": 3.773916750011267,
+  "wall_s_clock": "monotonic",
+  "elapsed_realtime_s": 3.7739179134368896,
+  "suspension_or_clock_adjustment_s": 1.1634256225079298e-06,
+  "idle_sleep_prevention": [
+    "/usr/bin/caffeinate",
+    "-i"
+  ],
+  "memory_bytes": 8589934592,
+  "memory_enforcement": "process-tree-rss-watchdog",
+  "rss_poll_interval_s": 0.25,
+  "platform": "darwin",
+  "numerical_thread_policy": {
+    "environment": {
+      "OPENBLAS_NUM_THREADS": "1",
+      "OMP_NUM_THREADS": "1",
+      "MKL_NUM_THREADS": "1",
+      "VECLIB_MAXIMUM_THREADS": "1",
+      "RAYON_NUM_THREADS": "1"
+    },
+    "accelerate_blas_threading": 1,
+    "accelerate_scope": "calling thread"
+  }
+}

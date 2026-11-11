@@ -1,0 +1,132 @@
+{
+  "case": "primitive-ellipsoid",
+  "config": {
+    "name": "actual-modified24-first-pass-repair-tet4",
+    "arm": "microgen",
+    "resolution": 24,
+    "order": 1,
+    "periodic_trace": true,
+    "declared_unit_cell": true,
+    "nonperiodic_reason": "Complete bounded solid; periodic identification not required",
+    "actual_generate_options": {
+      "resolution": 24
+    },
+    "first_only": true,
+    "first_hausd": 0.0005,
+    "first_hmax": 0.1,
+    "mmg": {
+      "hausd": 0.0005,
+      "hmax": 0.1,
+      "hgrad": 1.3
+    },
+    "repair": true
+  },
+  "status": "admitted",
+  "qualified": true,
+  "mmg_calls": [
+    {
+      "nofem": true,
+      "hausd": 0.0005,
+      "hmax": 0.1,
+      "hgrad": 1.3,
+      "output_tetrahedra": 37217,
+      "output_nodes": 8104
+    }
+  ],
+  "instrumentation_s": 0.05942433400196023,
+  "vtk_backend": "Sequential",
+  "vtk_threads": 1,
+  "periodic_required": false,
+  "solve_performed": false,
+  "actual_resolution": null,
+  "seed_nodes": 6752,
+  "seed_elements": 33370,
+  "omitted_second_pass": true,
+  "reoriented_tets": 0,
+  "repair": {
+    "initial_bad_elements": 0,
+    "remaining_bad_elements": 0,
+    "initial_minimum_quality": 0.3135831167416479,
+    "final_minimum_quality": 0.3135831167416479,
+    "accepted_moves": 0,
+    "moved_vertices": 0,
+    "attempts": [],
+    "maximum_attempts": 400,
+    "maximum_sweeps": 2,
+    "boundary_coordinates_unchanged": true,
+    "signed_volume_difference": 0.0,
+    "minimum_signed_determinant": 3.347365152803032e-07
+  },
+  "repair_s": 0.07952091700281017,
+  "generation_wall_s": 1.6366379579994828,
+  "nodes": 8104,
+  "elements": 37217,
+  "generation_s": 1.5772136239975225,
+  "mesh_sha256": "a5ae83bc491483d461ffde60c082e491b6fd64c70245eb0fee92d9c974db4f7f",
+  "geometry": {
+    "volume": 0.06569071824916389,
+    "relative_volume_error": -0.004285473846532217,
+    "q_min_corner": 0.31358311674164835,
+    "q_p01_corner": 0.49851647663041787,
+    "minimum_sampled_jacobian": 3.3473651528030316e-07,
+    "facet_consistency": {
+      "nodes": 8104,
+      "elements": 37217,
+      "unique_faces": 78064,
+      "interior_faces": 70804,
+      "extracted_boundary_faces": 7260,
+      "same_orientation_shared_faces": 0,
+      "nonmanifold_faces": 0,
+      "duplicate_cells": 0,
+      "duplicate_surface_faces": 0,
+      "provided_boundary_matches_extraction": true,
+      "missing_provided_faces": 0,
+      "extra_provided_faces": 0,
+      "nonpositive_corner_determinants": 0,
+      "minimum_corner_determinant": 3.347365152803032e-07,
+      "oriented_facet_consistency_passed": true,
+      "conflict_examples": [],
+      "scope": "Oriented corner-face incidence and same-side neighbor diagnostics; necessary consistency, not a certificate of curved geometry or absence of nonlocal intersections"
+    },
+    "oriented_facet_consistency_passed": true,
+    "quadratic_conformity": {
+      "passed": true,
+      "order": 1
+    },
+    "exact_straight_reduction_verified": false,
+    "geometry_admitted": true,
+    "sampled_forward_max": 0.0011079408387139954,
+    "sampled_reverse_max": 0.001073184119948655,
+    "sampled_two_sided_max": 0.0011079408387139954,
+    "outward_forward_max": 0.00011784203926801384,
+    "inward_forward_max": 0.0011079408387139954,
+    "projection_failed": 0,
+    "forward_samples": 94380,
+    "reverse_samples": 32768,
+    "minimum_dihedral_deg_corner": 18.849137002470343,
+    "reverse_tessellation_delta_max": 0.0,
+    "quadratic_reverse_subdivisions": null,
+    "projection_method": "newton-box-slsqp-v1",
+    "unbounded_projection_failed": 0,
+    "box_projection_attempts": 0,
+    "box_projection_recovered": 0,
+    "box_projection_witnesses": [],
+    "distance_audit_complete": true,
+    "failed_gates": []
+  },
+  "periodic": {
+    "required": false,
+    "reason": "Complete bounded solid; periodic identification not required"
+  },
+  "quality_quantiles": {
+    "min": 0.31358311674164835,
+    "p01": 0.49851647663041787,
+    "p10": 0.5999364531925704,
+    "median": 0.7599016017490836,
+    "p90": 0.8991290972873398,
+    "p99": 0.9634561082033316,
+    "max": 0.9974971856530104
+  },
+  "audit_s": 1.0828012080164626,
+  "wall_s": 2.760139624995645
+}

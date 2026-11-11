@@ -1,0 +1,294 @@
+{
+  "date": "2026-11-11",
+  "title": "Tet4 supplemental explicit Microgen routes",
+  "scope": "Five basic solids with resolution24, modified first MMG pass, skipped second pass and charged relocation repair; two spinodoids with sampling32 and default public MMG; lattice with its previously defined explicit modified route. These are not Microgen defaults.",
+  "cases": [
+    {
+      "case": "spinodoid",
+      "fixture_kind": "study",
+      "fixtures": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-comparison-fixtures-v1",
+      "native": {
+        "name": "meshers-tet4",
+        "arm": "meshers",
+        "cells": 32,
+        "order": 1,
+        "adapt": true,
+        "tolerance": 0.002,
+        "periodic_trace": true,
+        "declared_unit_cell": true,
+        "min_length": 0.002,
+        "adapt_tolerance": 0.002,
+        "lattice_field": "original"
+      },
+      "actual": {
+        "name": "actual-public-sampling32-default-mmg-tet4",
+        "arm": "microgen",
+        "resolution": 32,
+        "order": 1,
+        "periodic_trace": true,
+        "declared_unit_cell": true
+      },
+      "maximum_budget_cells": 24,
+      "selection": "Coarse16 and20 both fail native quality. Use known admitted Tet4 adaptive32 control; cubic correction of an adaptive mesh is unjustified; count mismatch remains explicit",
+      "count_correction_eligible": false
+    },
+    {
+      "case": "spinodoid-anisotropic",
+      "fixture_kind": "study",
+      "fixtures": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-comparison-fixtures-v1",
+      "native": {
+        "name": "native-tet4-coarse-quality-control",
+        "arm": "meshers",
+        "cells": 20,
+        "order": 1,
+        "adapt": false,
+        "tolerance": 1.0,
+        "periodic_trace": true,
+        "declared_unit_cell": true,
+        "optimization_passes": 2
+      },
+      "actual": {
+        "name": "actual-public-sampling32-default-mmg-tet4",
+        "arm": "microgen",
+        "resolution": 32,
+        "order": 1,
+        "periodic_trace": true,
+        "declared_unit_cell": true
+      },
+      "maximum_budget_cells": 24,
+      "selection": "Coarse16 quality rejects; use completed20 two-pass control; one count correction allowed"
+    },
+    {
+      "case": "smooth-lattice",
+      "fixture_kind": "study",
+      "fixtures": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-comparison-fixtures-v1",
+      "native": {
+        "name": "native-tet4-budget",
+        "arm": "meshers",
+        "cells": 29,
+        "order": 1,
+        "adapt": false,
+        "tolerance": 1.0,
+        "periodic_trace": true,
+        "declared_unit_cell": true,
+        "lattice_field": "original"
+      },
+      "actual": {
+        "name": "actual-modified-tet4",
+        "arm": "microgen",
+        "resolution": 51,
+        "order": 1,
+        "periodic_trace": true,
+        "declared_unit_cell": true,
+        "mmg": {
+          "hausd": 0.001,
+          "hmax": 0.06,
+          "hgrad": 1.3
+        },
+        "first_hausd": 0.0015,
+        "first_hmax": 0.06,
+        "first_only": false,
+        "repair": true
+      },
+      "maximum_budget_cells": 32,
+      "selection": "Estimate from prior actual modified158430 tets and completed uniform16 native24480 tets; preserve ordered field"
+    },
+    {
+      "case": "primitive-box",
+      "fixture_kind": "primitive",
+      "fixtures": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-primitive-family-fixtures-v1",
+      "native": {
+        "name": "native-tet4-budget",
+        "arm": "meshers",
+        "cells": 16,
+        "order": 1,
+        "adapt": false,
+        "tolerance": 1.0,
+        "periodic_trace": true,
+        "declared_unit_cell": true,
+        "primitive_retained": true,
+        "nonperiodic_reason": "Complete bounded solid; periodic identification not required"
+      },
+      "actual": {
+        "name": "actual-modified24-first-pass-repair-tet4",
+        "arm": "microgen",
+        "resolution": 24,
+        "order": 1,
+        "periodic_trace": true,
+        "declared_unit_cell": true,
+        "nonperiodic_reason": "Complete bounded solid; periodic identification not required",
+        "actual_generate_options": {
+          "resolution": 24
+        },
+        "first_only": true,
+        "first_hausd": 0.0005,
+        "first_hmax": 0.1,
+        "mmg": {
+          "hausd": 0.0005,
+          "hmax": 0.1,
+          "hgrad": 1.3
+        },
+        "repair": true
+      },
+      "maximum_budget_cells": 48,
+      "selection": "Count estimate from prior actual modified Tet4 topology and current uniform16 native count; box/cylinder have no actual count and start16"
+    },
+    {
+      "case": "primitive-cylinder",
+      "fixture_kind": "primitive",
+      "fixtures": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-primitive-family-fixtures-v1",
+      "native": {
+        "name": "native-tet4-budget",
+        "arm": "meshers",
+        "cells": 16,
+        "order": 1,
+        "adapt": false,
+        "tolerance": 1.0,
+        "periodic_trace": true,
+        "declared_unit_cell": true,
+        "primitive_retained": true,
+        "nonperiodic_reason": "Complete bounded solid; periodic identification not required"
+      },
+      "actual": {
+        "name": "actual-modified24-first-pass-repair-tet4",
+        "arm": "microgen",
+        "resolution": 24,
+        "order": 1,
+        "periodic_trace": true,
+        "declared_unit_cell": true,
+        "nonperiodic_reason": "Complete bounded solid; periodic identification not required",
+        "actual_generate_options": {
+          "resolution": 24
+        },
+        "first_only": true,
+        "first_hausd": 0.0005,
+        "first_hmax": 0.1,
+        "mmg": {
+          "hausd": 0.0005,
+          "hmax": 0.1,
+          "hgrad": 1.3
+        },
+        "repair": true
+      },
+      "maximum_budget_cells": 48,
+      "selection": "Count estimate from prior actual modified Tet4 topology and current uniform16 native count; box/cylinder have no actual count and start16"
+    },
+    {
+      "case": "primitive-capsule",
+      "fixture_kind": "primitive",
+      "fixtures": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-primitive-family-fixtures-v1",
+      "native": {
+        "name": "native-tet4-budget",
+        "arm": "meshers",
+        "cells": 40,
+        "order": 1,
+        "adapt": false,
+        "tolerance": 1.0,
+        "periodic_trace": true,
+        "declared_unit_cell": true,
+        "nonperiodic_reason": "Complete bounded solid; periodic identification not required"
+      },
+      "actual": {
+        "name": "actual-modified24-first-pass-repair-tet4",
+        "arm": "microgen",
+        "resolution": 24,
+        "order": 1,
+        "periodic_trace": true,
+        "declared_unit_cell": true,
+        "nonperiodic_reason": "Complete bounded solid; periodic identification not required",
+        "actual_generate_options": {
+          "resolution": 24
+        },
+        "first_only": true,
+        "first_hausd": 0.0005,
+        "first_hmax": 0.1,
+        "mmg": {
+          "hausd": 0.0005,
+          "hmax": 0.1,
+          "hgrad": 1.3
+        },
+        "repair": true
+      },
+      "maximum_budget_cells": 48,
+      "selection": "Count estimate from prior actual modified Tet4 topology and current uniform16 native count; box/cylinder have no actual count and start16"
+    },
+    {
+      "case": "primitive-ellipsoid",
+      "fixture_kind": "primitive",
+      "fixtures": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-primitive-family-fixtures-v1",
+      "native": {
+        "name": "native-tet4-budget",
+        "arm": "meshers",
+        "cells": 33,
+        "order": 1,
+        "adapt": false,
+        "tolerance": 1.0,
+        "periodic_trace": true,
+        "declared_unit_cell": true,
+        "nonperiodic_reason": "Complete bounded solid; periodic identification not required"
+      },
+      "actual": {
+        "name": "actual-modified24-first-pass-repair-tet4",
+        "arm": "microgen",
+        "resolution": 24,
+        "order": 1,
+        "periodic_trace": true,
+        "declared_unit_cell": true,
+        "nonperiodic_reason": "Complete bounded solid; periodic identification not required",
+        "actual_generate_options": {
+          "resolution": 24
+        },
+        "first_only": true,
+        "first_hausd": 0.0005,
+        "first_hmax": 0.1,
+        "mmg": {
+          "hausd": 0.0005,
+          "hmax": 0.1,
+          "hgrad": 1.3
+        },
+        "repair": true
+      },
+      "maximum_budget_cells": 48,
+      "selection": "Count estimate from prior actual modified Tet4 topology and current uniform16 native count; box/cylinder have no actual count and start16"
+    },
+    {
+      "case": "primitive-sphere",
+      "fixture_kind": "primitive",
+      "fixtures": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-primitive-family-fixtures-v1",
+      "native": {
+        "name": "native-tet4-budget",
+        "arm": "meshers",
+        "cells": 26,
+        "order": 1,
+        "adapt": false,
+        "tolerance": 1.0,
+        "periodic_trace": true,
+        "declared_unit_cell": true,
+        "nonperiodic_reason": "Complete bounded solid; periodic identification not required"
+      },
+      "actual": {
+        "name": "actual-modified24-first-pass-repair-tet4",
+        "arm": "microgen",
+        "resolution": 24,
+        "order": 1,
+        "periodic_trace": true,
+        "declared_unit_cell": true,
+        "nonperiodic_reason": "Complete bounded solid; periodic identification not required",
+        "actual_generate_options": {
+          "resolution": 24
+        },
+        "first_only": true,
+        "first_hausd": 0.0005,
+        "first_hmax": 0.1,
+        "mmg": {
+          "hausd": 0.0005,
+          "hmax": 0.1,
+          "hgrad": 1.3
+        },
+        "repair": true
+      },
+      "maximum_budget_cells": 48,
+      "selection": "Count estimate from prior actual modified Tet4 topology and current uniform16 native count; box/cylinder have no actual count and start16"
+    }
+  ]
+}

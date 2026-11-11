@@ -1,0 +1,32 @@
+{
+  "case": "graded-gyroid-density-linear",
+  "config": {
+    "name": "actual-default-tet4",
+    "arm": "microgen",
+    "resolution": null,
+    "order": 1,
+    "periodic_trace": true,
+    "declared_unit_cell": true
+  },
+  "status": "failed",
+  "qualified": false,
+  "mmg_calls": [
+    {
+      "nofem": true,
+      "output_tetrahedra": 460659,
+      "output_nodes": 78743
+    }
+  ],
+  "instrumentation_s": 0.27684045798378065,
+  "vtk_backend": "Sequential",
+  "vtk_threads": 1,
+  "periodic_required": false,
+  "solve_performed": false,
+  "actual_resolution": 20,
+  "seed_nodes": 7946,
+  "seed_elements": 31053,
+  "error": "Intermediate MMG cap exceeded",
+  "traceback": "Traceback (most recent call last):\n  File \"/Users/kmarchais/dev/meshers/experiments/adaptive/comparison_benchmark.py\", line 99, in worker\n    grid=remesh_keeping_boundaries_for_fem(grid,periodic=fixtures.periodic(name) and not config.get('material_trace_remesh',False),**config.get('mmg',{}))\n         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/Users/kmarchais/dev/meshers/.local-work/macbook-runtime/venv/lib/python3.12/site-packages/microgen/remesh.py\", line 136, in remesh_keeping_boundaries_for_fem\n    output_mesh = _run_mmg_pipeline(\n                  ^^^^^^^^^^^^^^^^^^\n  File \"/Users/kmarchais/dev/meshers/.local-work/macbook-runtime/venv/lib/python3.12/site-packages/microgen/remesh.py\", line 194, in _run_mmg_pipeline\n    Mmg.mmg3d(\n  File \"/Users/kmarchais/dev/meshers/experiments/adaptive/comparison_benchmark.py\", line 96, in record\n    if max(call['output_tetrahedra'],call['output_nodes'])>w.CAP:raise ValueError('Intermediate MMG cap exceeded')\n                                                                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nValueError: Intermediate MMG cap exceeded\n",
+  "failed_attempt_s": 4.697171000007074,
+  "wall_s": 4.6972413749899715
+}
