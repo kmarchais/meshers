@@ -1,0 +1,336 @@
+{
+  "inputs": {
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/gyroid_analytic_volume.py": "b6ab0968cbcfad884d427c55c92704bdd1b382f692099dd04a22ed2688fe597e",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/microgen_workflow.py": "9f513dfd3e6e5a72a71a54f70c0c2cf7c7a1ebe7256886ee3feaf7d7ad7de161",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/comparison_fixtures.py": "4fa77af6b3b4858eb7611045f46f6e4ca672c6c46ab28d7ee969e14b31e11b9b",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/linear_density_fixture.py": "99b619d8f4885673bd1a7f7b7ced3af01211bff4b52f1b206cbecaf654fca3f8",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/scorecard.py": "8f26256c7df0e84c9f35cdd71bf4f95a74e072d45469002b213c5dcd4f1bab2a",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-linear-density-fixtures-v1/linear-density-calibration.json": "b4db7ab7afe47f7832106e2eaf1523c7b0d854f291ef6030bdbe65df9e06e7e1",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-linear-density-fixtures-v1/result.json": "befde3eb3a7c63e32393f58ca3079e9b9d90e2a6812234bbc378f6298037fb30",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-native-face-fit-nine-v1/gyroid-repeat-0-fit/gyroid-samples.npz": "d49ce7a80d95af127951750fa7dd02f52d4dd67bc87246dee02be932b51539d6",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-native-face-fit-nine-v1/gyroid-repeat-0-fit/gyroid-specimen.json": "2f9171aa778f1899aed5b1057bc6255da515e8a9d96bf76c305b62e3c7bd0ed8",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-native-face-fit-nine-v1/graded-gyroid-linear-repeat-0-fit/graded-gyroid-linear-samples.npz": "583146b0bb252ebb81f0f56919721e91743f42c796492802c78df5bf37f60273",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-native-face-fit-nine-v1/graded-gyroid-linear-repeat-0-fit/graded-gyroid-linear-specimen.json": "4b3d9d250960d00d2b28dd8c58c2acf4b51e6bc04d264dcb1d001980ab907c7a",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-native-face-fit-nine-v1/graded-gyroid-periodic-repeat-0-fit/graded-gyroid-periodic-samples.npz": "75be3ee3ec7722aed6b214d1408b4174c148405bd6aa6feb7bd66b0b457af613",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-native-face-fit-nine-v1/graded-gyroid-periodic-repeat-0-fit/graded-gyroid-periodic-specimen.json": "d29cb9023b8efe2f1959b062d4222050f64b37f987b855c475a6848847438a89",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-native-face-fit-nine-v1/graded-gyroid-density-linear-repeat-0-fit/graded-gyroid-density-linear-samples.npz": "7118dc4e84d4c1617e8034553e3a052b170e49d6f3412e4dd2886c2616e8c56c",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-native-face-fit-nine-v1/graded-gyroid-density-linear-repeat-0-fit/graded-gyroid-density-linear-specimen.json": "345f1f0e92b651ba2dabc4caa9ed436babd9349fcb48a6aecb8fea85845b72ae"
+  },
+  "controls": {
+    "exact_sine_band": true,
+    "zero_amplitude_plane": true,
+    "half_solid_symmetry": true,
+    "zero_width_and_full_band": true,
+    "full_band_bound": "Cauchy-Schwarz gives |Gyroid|<=sqrt(S*(3-S))<=1.5."
+  },
+  "identities": {
+    "gyroid": {
+      "saved_probes": 259,
+      "x_reduction_field_identity_error": 2.220446049250313e-16,
+      "y_reduction_field_identity_error": 0.0,
+      "specimen_unchanged": true
+    },
+    "graded-gyroid-linear": {
+      "saved_probes": 259,
+      "x_reduction_field_identity_error": 2.220446049250313e-16,
+      "y_reduction_field_identity_error": 0.0,
+      "specimen_unchanged": true
+    },
+    "graded-gyroid-periodic": {
+      "saved_probes": 259,
+      "x_reduction_field_identity_error": 4.440892098500626e-16,
+      "y_reduction_field_identity_error": 0.0,
+      "specimen_unchanged": true
+    },
+    "graded-gyroid-density-linear": {
+      "saved_probes": 258,
+      "x_reduction_field_identity_error": 2.220446049250313e-16,
+      "y_reduction_field_identity_error": 0.0,
+      "specimen_unchanged": true
+    }
+  },
+  "root_partitions": {
+    "gyroid": {
+      "frozen_knot_count": 2,
+      "outer_panels": 12,
+      "monotone_brackets": 12,
+      "roots": [
+        {
+          "z": -0.1885739288951562,
+          "cosine": -1.0,
+          "sine": -1.0,
+          "residual": 1.1102230246251565e-16,
+          "kind": "sign crossing"
+        },
+        {
+          "z": 0.43857392889515623,
+          "cosine": -1.0,
+          "sine": -1.0,
+          "residual": 2.220446049250313e-16,
+          "kind": "sign crossing"
+        },
+        {
+          "z": -0.43857392889515623,
+          "cosine": -1.0,
+          "sine": 1.0,
+          "residual": 2.220446049250313e-16,
+          "kind": "sign crossing"
+        },
+        {
+          "z": 0.1885739288951562,
+          "cosine": -1.0,
+          "sine": 1.0,
+          "residual": 1.1102230246251565e-16,
+          "kind": "sign crossing"
+        },
+        {
+          "z": -0.3114260711048438,
+          "cosine": 1.0,
+          "sine": -1.0,
+          "residual": 1.1102230246251565e-16,
+          "kind": "sign crossing"
+        },
+        {
+          "z": 0.061426071104843806,
+          "cosine": 1.0,
+          "sine": -1.0,
+          "residual": 0.0,
+          "kind": "sign crossing"
+        },
+        {
+          "z": -0.061426071104843806,
+          "cosine": 1.0,
+          "sine": 1.0,
+          "residual": 0.0,
+          "kind": "sign crossing"
+        },
+        {
+          "z": 0.3114260711048438,
+          "cosine": 1.0,
+          "sine": 1.0,
+          "residual": 1.1102230246251565e-16,
+          "kind": "sign crossing"
+        }
+      ],
+      "near_tangent_candidates": [],
+      "coverage": "Analytic derivative zeros split each affine-width or harmonic-width interval. Near-zero stationary points are retained, including possible repeated roots. Floating-point root isolation is not interval-certified."
+    },
+    "graded-gyroid-linear": {
+      "frozen_knot_count": 2,
+      "outer_panels": 12,
+      "monotone_brackets": 12,
+      "roots": [
+        {
+          "z": -0.18249110096274515,
+          "cosine": -1.0,
+          "sine": -1.0,
+          "residual": 5.551115123125783e-17,
+          "kind": "sign crossing"
+        },
+        {
+          "z": 0.45417880438624164,
+          "cosine": -1.0,
+          "sine": -1.0,
+          "residual": 2.6645352591003757e-15,
+          "kind": "sign crossing"
+        },
+        {
+          "z": -0.42455427738703766,
+          "cosine": -1.0,
+          "sine": 1.0,
+          "residual": 2.220446049250313e-16,
+          "kind": "sign crossing"
+        },
+        {
+          "z": 0.19519092973798682,
+          "cosine": -1.0,
+          "sine": 1.0,
+          "residual": 1.1102230246251565e-16,
+          "kind": "sign crossing"
+        },
+        {
+          "z": -0.32210333964175397,
+          "cosine": 1.0,
+          "sine": -1.0,
+          "residual": 6.661338147750939e-16,
+          "kind": "sign crossing"
+        },
+        {
+          "z": 0.059424463040473746,
+          "cosine": 1.0,
+          "sine": -1.0,
+          "residual": 0.0,
+          "kind": "sign crossing"
+        },
+        {
+          "z": -0.06355512636350573,
+          "cosine": 1.0,
+          "sine": 1.0,
+          "residual": 1.1102230246251565e-16,
+          "kind": "sign crossing"
+        },
+        {
+          "z": 0.30116237312246025,
+          "cosine": 1.0,
+          "sine": 1.0,
+          "residual": 3.3306690738754696e-16,
+          "kind": "sign crossing"
+        }
+      ],
+      "near_tangent_candidates": [],
+      "coverage": "Analytic derivative zeros split each affine-width or harmonic-width interval. Near-zero stationary points are retained, including possible repeated roots. Floating-point root isolation is not interval-certified."
+    },
+    "graded-gyroid-periodic": {
+      "frozen_knot_count": 2,
+      "outer_panels": 12,
+      "monotone_brackets": 12,
+      "roots": [
+        {
+          "z": -0.19437172646934273,
+          "cosine": -1.0,
+          "sine": -1.0,
+          "residual": 1.1102230246251565e-16,
+          "kind": "sign crossing"
+        },
+        {
+          "z": 0.4239238255080624,
+          "cosine": -1.0,
+          "sine": -1.0,
+          "residual": 1.6653345369377348e-16,
+          "kind": "sign crossing"
+        },
+        {
+          "z": -0.4239238255080624,
+          "cosine": -1.0,
+          "sine": 1.0,
+          "residual": 1.6653345369377348e-16,
+          "kind": "sign crossing"
+        },
+        {
+          "z": 0.19437172646934273,
+          "cosine": -1.0,
+          "sine": 1.0,
+          "residual": 1.1102230246251565e-16,
+          "kind": "sign crossing"
+        },
+        {
+          "z": -0.3183590419329253,
+          "cosine": 1.0,
+          "sine": -1.0,
+          "residual": 2.7755575615628914e-16,
+          "kind": "sign crossing"
+        },
+        {
+          "z": 0.04490220745435479,
+          "cosine": 1.0,
+          "sine": -1.0,
+          "residual": 0.0,
+          "kind": "sign crossing"
+        },
+        {
+          "z": -0.04490220745435479,
+          "cosine": 1.0,
+          "sine": 1.0,
+          "residual": 0.0,
+          "kind": "sign crossing"
+        },
+        {
+          "z": 0.3183590419329253,
+          "cosine": 1.0,
+          "sine": 1.0,
+          "residual": 2.7755575615628914e-16,
+          "kind": "sign crossing"
+        }
+      ],
+      "near_tangent_candidates": [],
+      "coverage": "Analytic derivative zeros split each affine-width or harmonic-width interval. Near-zero stationary points are retained, including possible repeated roots. Floating-point root isolation is not interval-certified."
+    },
+    "graded-gyroid-density-linear": {
+      "frozen_knot_count": 257,
+      "outer_panels": 264,
+      "monotone_brackets": 1041,
+      "roots": [
+        {
+          "z": -0.4226485747703328,
+          "cosine": -1.0,
+          "sine": 1.0,
+          "residual": 1.7763568394002505e-15,
+          "kind": "sign crossing"
+        },
+        {
+          "z": -0.3234529801201812,
+          "cosine": 1.0,
+          "sine": -1.0,
+          "residual": 2.3314683517128287e-15,
+          "kind": "sign crossing"
+        },
+        {
+          "z": -0.18231169566544553,
+          "cosine": -1.0,
+          "sine": -1.0,
+          "residual": 5.551115123125783e-17,
+          "kind": "sign crossing"
+        },
+        {
+          "z": -0.0628357228103248,
+          "cosine": 1.0,
+          "sine": 1.0,
+          "residual": 2.3314683517128287e-15,
+          "kind": "sign crossing"
+        },
+        {
+          "z": 0.05800481218486291,
+          "cosine": 1.0,
+          "sine": -1.0,
+          "residual": 1.9984014443252818e-15,
+          "kind": "sign crossing"
+        },
+        {
+          "z": 0.1978601240246415,
+          "cosine": -1.0,
+          "sine": 1.0,
+          "residual": 1.1102230246251565e-16,
+          "kind": "sign crossing"
+        },
+        {
+          "z": 0.29794621295042095,
+          "cosine": 1.0,
+          "sine": 1.0,
+          "residual": 3.3306690738754696e-16,
+          "kind": "sign crossing"
+        },
+        {
+          "z": 0.45857655252824703,
+          "cosine": -1.0,
+          "sine": -1.0,
+          "residual": 2.220446049250313e-16,
+          "kind": "sign crossing"
+        }
+      ],
+      "near_tangent_candidates": [],
+      "coverage": "Analytic derivative zeros split each affine-width or harmonic-width interval. Near-zero stationary points are retained, including possible repeated roots. Floating-point root isolation is not interval-certified."
+    }
+  },
+  "quadrature_orders": [
+    16,
+    32,
+    64
+  ],
+  "independent_y_order": 64,
+  "midpoint_order": 1024,
+  "timeout_s": 180,
+  "memory_bytes": 8589934592,
+  "numerical_threads": {
+    "environment": {
+      "OPENBLAS_NUM_THREADS": "1",
+      "OMP_NUM_THREADS": "1",
+      "MKL_NUM_THREADS": "1",
+      "VECLIB_MAXIMUM_THREADS": "1",
+      "RAYON_NUM_THREADS": "1"
+    },
+    "accelerate_blas_threading": 1,
+    "accelerate_scope": "calling thread"
+  },
+  "reference_promotion": false,
+  "density_target_not_used_as_truth": true
+}

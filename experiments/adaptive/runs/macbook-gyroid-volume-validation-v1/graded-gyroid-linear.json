@@ -1,0 +1,296 @@
+{
+  "case": "graded-gyroid-linear",
+  "adaptive": {
+    "volume": 0.3565688697282851,
+    "seconds": 2.846422792004887,
+    "sections": 4242,
+    "scalar_fraction_evaluations": 6891780,
+    "outer_panels": [
+      {
+        "left": -0.5,
+        "right": -0.4375,
+        "volume": 0.014869382429884821,
+        "quadpack_error": 4.37718583943477e-15,
+        "evaluations": 21,
+        "subintervals": 1,
+        "message": null
+      },
+      {
+        "left": -0.4375,
+        "right": -0.375,
+        "volume": 0.019878669178437006,
+        "quadpack_error": 2.133609261489866e-12,
+        "evaluations": 525,
+        "subintervals": 13,
+        "message": null
+      },
+      {
+        "left": -0.375,
+        "right": -0.3125,
+        "volume": 0.020667774925490028,
+        "quadpack_error": 1.7064023805080097e-12,
+        "evaluations": 525,
+        "subintervals": 13,
+        "message": null
+      },
+      {
+        "left": -0.3125,
+        "right": -0.25,
+        "volume": 0.016812409823245823,
+        "quadpack_error": 1.1943038224438297e-13,
+        "evaluations": 21,
+        "subintervals": 1,
+        "message": null
+      },
+      {
+        "left": -0.25,
+        "right": -0.1875,
+        "volume": 0.01750450322489675,
+        "quadpack_error": 1.2428234013832739e-14,
+        "evaluations": 63,
+        "subintervals": 2,
+        "message": null
+      },
+      {
+        "left": -0.1875,
+        "right": -0.125,
+        "volume": 0.02282737576708453,
+        "quadpack_error": 1.752704485785109e-13,
+        "evaluations": 399,
+        "subintervals": 10,
+        "message": null
+      },
+      {
+        "left": -0.125,
+        "right": -0.0625,
+        "volume": 0.023595359454069795,
+        "quadpack_error": 1.125420096287642e-12,
+        "evaluations": 483,
+        "subintervals": 12,
+        "message": null
+      },
+      {
+        "left": -0.0625,
+        "right": 0.0,
+        "volume": 0.019537709750186254,
+        "quadpack_error": 2.9536230903795157e-12,
+        "evaluations": 105,
+        "subintervals": 3,
+        "message": null
+      },
+      {
+        "left": 0.0,
+        "right": 0.0625,
+        "volume": 0.02029617516800984,
+        "quadpack_error": 2.7953091230603633e-12,
+        "evaluations": 525,
+        "subintervals": 13,
+        "message": null
+      },
+      {
+        "left": 0.0625,
+        "right": 0.125,
+        "volume": 0.025645077433417447,
+        "quadpack_error": 9.351854832576334e-13,
+        "evaluations": 63,
+        "subintervals": 2,
+        "message": null
+      },
+      {
+        "left": 0.125,
+        "right": 0.1875,
+        "volume": 0.02634776771009206,
+        "quadpack_error": 8.895480261629556e-13,
+        "evaluations": 21,
+        "subintervals": 1,
+        "message": null
+      },
+      {
+        "left": 0.1875,
+        "right": 0.25,
+        "volume": 0.02246911420932938,
+        "quadpack_error": 1.6029183126902213e-12,
+        "evaluations": 525,
+        "subintervals": 13,
+        "message": null
+      },
+      {
+        "left": 0.25,
+        "right": 0.3125,
+        "volume": 0.023271841043758814,
+        "quadpack_error": 1.7922364980993422e-12,
+        "evaluations": 399,
+        "subintervals": 10,
+        "message": null
+      },
+      {
+        "left": 0.3125,
+        "right": 0.375,
+        "volume": 0.02830948026954388,
+        "quadpack_error": 1.790379404496067e-14,
+        "evaluations": 21,
+        "subintervals": 1,
+        "message": null
+      },
+      {
+        "left": 0.375,
+        "right": 0.4375,
+        "volume": 0.028980279528551783,
+        "quadpack_error": 3.2174573592671265e-16,
+        "evaluations": 21,
+        "subintervals": 1,
+        "message": null
+      },
+      {
+        "left": 0.4375,
+        "right": 0.5,
+        "volume": 0.025555949812286913,
+        "quadpack_error": 4.1775038207286474e-12,
+        "evaluations": 525,
+        "subintervals": 13,
+        "message": null
+      }
+    ],
+    "frozen_knots_retained": 2,
+    "inner_max_reported_error": 7.470644177003813e-09,
+    "outer_reported_error_sum": 2.0441487883121246e-11,
+    "combined_reported_error_heuristic": 7.491085664886934e-09,
+    "inner_warning_counts": {
+      "The occurrence of roundoff error is detected, which prevents \n  the requested tolerance from being achieved.  The error may be \n  underestimated.": 1
+    },
+    "inner_warning_examples": [
+      {
+        "z": -0.06355512808744784,
+        "quadpack_error": 7.470644177003813e-09,
+        "evaluations": 1806,
+        "subintervals": 49,
+        "message": "The occurrence of roundoff error is detected, which prevents \n  the requested tolerance from being achieved.  The error may be \n  underestimated.",
+        "maximum_root_residual": 1.1102230246251565e-16,
+        "stationary_near_zeros": 0,
+        "clipping_roots": 4
+      }
+    ],
+    "outer_warning_count": 0,
+    "maximum_clipping_root_residual": 3.552713678800501e-15,
+    "stationary_near_zero_count": 0,
+    "root_coverage": "Direct branch roots bracketed between all analytic stationary candidates. Near-zero critical values retained. Floating-point root isolation is not interval certified.",
+    "uncertainty_scope": "QUADPACK reports estimates, not bounds. The sum of outer estimates plus maximum observed inner estimate is a heuristic, not a confidence interval."
+  },
+  "primary_gauss64_estimate": 0.3565688696896827,
+  "adaptive_gauss_discrepancy": 3.860239905506546e-11,
+  "empirical_observed_scale": 3.860239905506546e-11,
+  "score_comparison": {
+    "frozen_reference_volume": 0.35660862922668457,
+    "frozen_scramble_spread": 0.000293731689453125,
+    "adaptive_reference_estimate": 0.3565688697282851,
+    "primary_gauss64_estimate": 0.3565688696896827,
+    "rows": [
+      {
+        "stage": "baseline",
+        "source": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-native-face-fit-nine-v1/graded-gyroid-linear-repeat-0-baseline/result.json",
+        "source_sha256": "b2e2d8690c8a3a15307affefbd47e8854bf63e0d86808858dee6cd981944d589",
+        "mesh_sha256": "598fd9c1c9c3be69d136cb27e96b1502234432de5d63ed92018f2cedb6e0ed0c",
+        "volume": 0.3565699930441374,
+        "old_relative_volume_error": -0.00010834337528786708,
+        "old_absolute_relative_volume_error": 0.00010834337528786708,
+        "old_absolute_volume_error": 3.8636182547180375e-05,
+        "adaptive_relative_volume_error": 3.150347513969365e-06,
+        "adaptive_absolute_volume_error": 1.1233158522805375e-06,
+        "gauss64_absolute_volume_error": 1.1233544546795926e-06,
+        "volume_float_ulp": 5.551115123125783e-17
+      },
+      {
+        "stage": "native_fit",
+        "source": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-native-face-fit-nine-v1/graded-gyroid-linear-repeat-0-fit/result.json",
+        "source_sha256": "754a9c28380e20a31c1af3f789fe4d142396ccddf547673bd8e7c075d74b5c23",
+        "mesh_sha256": "1f2988372797268c2950ef00190704ed74d6423367e906399744d7fc2174e897",
+        "volume": 0.3565701666453907,
+        "old_relative_volume_error": -0.00010785656358702767,
+        "old_absolute_relative_volume_error": 0.00010785656358702767,
+        "old_absolute_volume_error": 3.846258129386326e-05,
+        "adaptive_relative_volume_error": 3.637213497054148e-06,
+        "adaptive_absolute_volume_error": 1.2969171055976503e-06,
+        "gauss64_absolute_volume_error": 1.2969557079967053e-06,
+        "volume_float_ulp": 5.551115123125783e-17
+      },
+      {
+        "stage": "global_correction",
+        "source": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-volume-bias-seven-v1/graded-gyroid-linear/result.json",
+        "source_sha256": "e3967fbef6bed274db42b1829bde5f375cfc8aee21829b366be31748337225c0",
+        "mesh_sha256": "0cbe989b79ab8cb64739f809f97d85540eb0f144f3f86b0f93ca706e313f5d79",
+        "volume": 0.35656886953869843,
+        "old_relative_volume_error": -0.00011149390319675767,
+        "old_absolute_relative_volume_error": 0.00011149390319675767,
+        "old_absolute_volume_error": 3.97596879861406e-05,
+        "adaptive_relative_volume_error": -5.316972417901411e-10,
+        "adaptive_absolute_volume_error": 1.8958667968860254e-10,
+        "gauss64_absolute_volume_error": 1.5098428063353708e-10,
+        "volume_float_ulp": 5.551115123125783e-17
+      },
+      {
+        "stage": "signed_envelope",
+        "source": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-volume-signed-envelope-six-v1/graded-gyroid-linear/result.json",
+        "source_sha256": "ca9b8cea1db15d269028cd45b799b7350bcafa3a0f4015108ab9c3ece4483abf",
+        "mesh_sha256": "e1364c8c267c8c2304e7fb8207b3cbe02651e19c1867d55138d4afd6c39fdbe4",
+        "volume": 0.35656999257011274,
+        "old_relative_volume_error": -0.00010834470454523792,
+        "old_absolute_relative_volume_error": 0.00010834470454523792,
+        "old_absolute_volume_error": 3.863665657183324e-05,
+        "adaptive_relative_volume_error": 3.1490181082727275e-06,
+        "adaptive_absolute_volume_error": 1.1228418276276741e-06,
+        "gauss64_absolute_volume_error": 1.1228804300267292e-06,
+        "volume_float_ulp": 5.551115123125783e-17
+      }
+    ],
+    "comparisons": [
+      {
+        "before": "baseline",
+        "after": "native_fit",
+        "old_absolute_error_improvement": 1.7360125331711274e-07,
+        "adaptive_absolute_error_improvement": -1.7360125331711274e-07,
+        "gauss64_absolute_error_improvement": -1.7360125331711274e-07,
+        "observed_integration_discrepancy": 3.860239905506546e-11,
+        "twice_discrepancy_sensitivity": 7.720479811013092e-11,
+        "absolute_improvement_over_twice_discrepancy": 2248.581144781629,
+        "sign_agrees_between_quadratures": true,
+        "exceeds_observed_sensitivity_by_10x": true,
+        "exceeds_reported_heuristic_sensitivity_by_10x": true
+      },
+      {
+        "before": "native_fit",
+        "after": "global_correction",
+        "old_absolute_error_improvement": -1.2971066922773389e-06,
+        "adaptive_absolute_error_improvement": 1.2967275189179617e-06,
+        "gauss64_absolute_error_improvement": 1.2968047237160718e-06,
+        "observed_integration_discrepancy": 3.860239905506546e-11,
+        "twice_discrepancy_sensitivity": 7.720479811013092e-11,
+        "absolute_improvement_over_twice_discrepancy": 16795.944690745888,
+        "sign_agrees_between_quadratures": true,
+        "exceeds_observed_sensitivity_by_10x": true,
+        "exceeds_reported_heuristic_sensitivity_by_10x": true
+      },
+      {
+        "before": "native_fit",
+        "after": "signed_envelope",
+        "old_absolute_error_improvement": -1.7407527796997613e-07,
+        "adaptive_absolute_error_improvement": 1.7407527796997613e-07,
+        "gauss64_absolute_error_improvement": 1.7407527796997613e-07,
+        "observed_integration_discrepancy": 3.860239905506546e-11,
+        "twice_discrepancy_sensitivity": 7.720479811013092e-11,
+        "absolute_improvement_over_twice_discrepancy": 2254.720978891255,
+        "sign_agrees_between_quadratures": true,
+        "exceeds_observed_sensitivity_by_10x": true,
+        "exceeds_reported_heuristic_sensitivity_by_10x": true
+      }
+    ],
+    "facewise": {
+      "available": false,
+      "reason": "This mode was run only for spinodoid and Schwarz P/D, not these four Gyroid cases."
+    },
+    "saved_mesh_volume_repeat_discrepancy": 0.0,
+    "mesh_volume_numerics": "Saved Tet10 quadrature volumes are reused. Repetition discrepancy and float ulp are recorded separately; neither certifies quadrature roundoff. No new mesh-volume numerical audit is performed.",
+    "ranking_scope": "Absolute volume-error improvements are compared with empirical integration discrepancy and reported heuristics. Neither is a rigorous error bound. Frozen scores and admission remain unchanged."
+  },
+  "reference_promoted": false,
+  "gauss128_performed": false
+}

@@ -1,0 +1,147 @@
+{
+  "case": "graded-gyroid-linear",
+  "width_kind": "linear",
+  "frozen_knot_count": 2,
+  "frozen_reference": {
+    "volume": 0.35660862922668457,
+    "volume_sobol_estimates": [
+      0.3565683364868164,
+      0.35646629333496094,
+      0.3566398620605469,
+      0.35676002502441406
+    ],
+    "volume_scramble_spread": 0.000293731689453125,
+    "volume_samples_per_scramble": 1048576,
+    "wall_samples": 28952,
+    "definition": "graded-gyroid-linear",
+    "periodic_axes": [
+      false,
+      false,
+      false
+    ]
+  },
+  "reductions": [
+    {
+      "volume": 0.3565688700196113,
+      "order": 16,
+      "line_axis": "x",
+      "reversed_outer_coordinate": false,
+      "line_fraction_evaluations": 24576,
+      "outer_nodes": 192,
+      "outer_panels": 12,
+      "seconds": 0.00441037502605468
+    },
+    {
+      "volume": 0.3565688696909491,
+      "order": 32,
+      "line_axis": "x",
+      "reversed_outer_coordinate": false,
+      "line_fraction_evaluations": 98304,
+      "outer_nodes": 384,
+      "outer_panels": 12,
+      "seconds": 0.009498416009591892
+    },
+    {
+      "volume": 0.3565688696896827,
+      "order": 64,
+      "line_axis": "x",
+      "reversed_outer_coordinate": false,
+      "line_fraction_evaluations": 393216,
+      "outer_nodes": 768,
+      "outer_panels": 12,
+      "seconds": 0.022140166984172538
+    }
+  ],
+  "root_partition": {
+    "frozen_knot_count": 2,
+    "outer_panels": 12,
+    "monotone_brackets": 12,
+    "roots": [
+      {
+        "z": -0.18249110096274515,
+        "cosine": -1.0,
+        "sine": -1.0,
+        "residual": 5.551115123125783e-17,
+        "kind": "sign crossing"
+      },
+      {
+        "z": 0.45417880438624164,
+        "cosine": -1.0,
+        "sine": -1.0,
+        "residual": 2.6645352591003757e-15,
+        "kind": "sign crossing"
+      },
+      {
+        "z": -0.42455427738703766,
+        "cosine": -1.0,
+        "sine": 1.0,
+        "residual": 2.220446049250313e-16,
+        "kind": "sign crossing"
+      },
+      {
+        "z": 0.19519092973798682,
+        "cosine": -1.0,
+        "sine": 1.0,
+        "residual": 1.1102230246251565e-16,
+        "kind": "sign crossing"
+      },
+      {
+        "z": -0.32210333964175397,
+        "cosine": 1.0,
+        "sine": -1.0,
+        "residual": 6.661338147750939e-16,
+        "kind": "sign crossing"
+      },
+      {
+        "z": 0.059424463040473746,
+        "cosine": 1.0,
+        "sine": -1.0,
+        "residual": 0.0,
+        "kind": "sign crossing"
+      },
+      {
+        "z": -0.06355512636350573,
+        "cosine": 1.0,
+        "sine": 1.0,
+        "residual": 1.1102230246251565e-16,
+        "kind": "sign crossing"
+      },
+      {
+        "z": 0.30116237312246025,
+        "cosine": 1.0,
+        "sine": 1.0,
+        "residual": 3.3306690738754696e-16,
+        "kind": "sign crossing"
+      }
+    ],
+    "near_tangent_candidates": [],
+    "coverage": "Analytic derivative zeros split each affine-width or harmonic-width interval. Near-zero stationary points are retained, including possible repeated roots. Floating-point root isolation is not interval-certified."
+  },
+  "independent_y": {
+    "volume": 0.3565688696896827,
+    "order": 64,
+    "line_axis": "y",
+    "reversed_outer_coordinate": true,
+    "line_fraction_evaluations": 393216,
+    "outer_nodes": 768,
+    "outer_panels": 12,
+    "seconds": 0.02195970801403746
+  },
+  "midpoint": {
+    "volume": 0.356568937433137,
+    "points_per_axis": 1024,
+    "rule": "uniform midpoint, unsplit"
+  },
+  "estimate": 0.3565688696896827,
+  "empirical_stability": {
+    "first_refinement_difference": 3.286622085596491e-10,
+    "last_refinement_difference": 1.2663758930386848e-12,
+    "x_y_difference": 0.0,
+    "conservative_observed_scale": 1.2663758930386848e-12,
+    "midpoint_difference": 6.774345429061412e-08,
+    "scope": "Observed differences only; not a rigorous error bound or confidence interval"
+  },
+  "difference_from_frozen_reference": -3.975953700185997e-05,
+  "source_reference_unchanged": true,
+  "reference_promoted": false
+}

@@ -1,0 +1,2885 @@
+{
+  "complete": true,
+  "rows": [
+    {
+      "case": "gyroid",
+      "z": -0.4385735832038655,
+      "half_width": 0.55,
+      "saved_warning": {
+        "z": -0.4385735832038655,
+        "quadpack_error": 2.7863290470649447e-09,
+        "evaluations": 2646,
+        "subintervals": 69,
+        "message": "The occurrence of roundoff error is detected, which prevents \n  the requested tolerance from being achieved.  The error may be \n  underestimated.",
+        "maximum_root_residual": 2.220446049250313e-16,
+        "stationary_near_zeros": 0,
+        "clipping_roots": 4
+      },
+      "quadpack_replay": {
+        "volume": 0.3551655006828837,
+        "reported_error": 2.7863290470649447e-09,
+        "evaluations": 2646,
+        "subintervals": 69,
+        "message": "The occurrence of roundoff error is detected, which prevents \n  the requested tolerance from being achieved.  The error may be \n  underestimated.",
+        "maximum_root_residual": 2.220446049250313e-16,
+        "stationary_near_zeros": 0,
+        "clipping_roots": 4
+      },
+      "tanh_sinh": {
+        "volume": 0.35516550067977226,
+        "reported_error_sum": 4.6927473640219444e-14,
+        "all_intervals_converged": true,
+        "failed_intervals": 0,
+        "intervals": [
+          {
+            "left": -3.141592653589793,
+            "right": -2.6730322536844846,
+            "integral": 0.028485354418421822,
+            "reported_error": 4.8274016013130535e-15,
+            "status": 0,
+            "success": true,
+            "maxlevel": 2,
+            "evaluations": 67
+          },
+          {
+            "left": -2.6730322536844846,
+            "right": -2.3288584097761738,
+            "integral": 0.027278945224536534,
+            "reported_error": 3.5458938380207585e-15,
+            "status": 0,
+            "success": true,
+            "maxlevel": 2,
+            "evaluations": 67
+          },
+          {
+            "left": -2.3288584097761738,
+            "right": -1.5707963267948966,
+            "integral": 0.03302707552698469,
+            "reported_error": 6.466869596381262e-15,
+            "status": 0,
+            "success": true,
+            "maxlevel": 3,
+            "evaluations": 131
+          },
+          {
+            "left": -1.5707963267948966,
+            "right": -0.8127342438136194,
+            "integral": 0.03302707552698472,
+            "reported_error": 2.5027633607482275e-16,
+            "status": 0,
+            "success": true,
+            "maxlevel": 3,
+            "evaluations": 131
+          },
+          {
+            "left": -0.8127342438136194,
+            "right": -0.4685603999053088,
+            "integral": 0.027278945224536513,
+            "reported_error": 3.5458938380207553e-15,
+            "status": 0,
+            "success": true,
+            "maxlevel": 2,
+            "evaluations": 67
+          },
+          {
+            "left": -0.4685603999053088,
+            "right": 0.0,
+            "integral": 0.028485354418421843,
+            "reported_error": 4.8274016102990706e-15,
+            "status": 0,
+            "success": true,
+            "maxlevel": 2,
+            "evaluations": 67
+          },
+          {
+            "left": 0.0,
+            "right": 0.4685603999053088,
+            "integral": 0.02848535441842184,
+            "reported_error": 4.8274016102990706e-15,
+            "status": 0,
+            "success": true,
+            "maxlevel": 2,
+            "evaluations": 67
+          },
+          {
+            "left": 0.4685603999053088,
+            "right": 0.8127342438136194,
+            "integral": 0.027278945224536513,
+            "reported_error": 3.5458938380207553e-15,
+            "status": 0,
+            "success": true,
+            "maxlevel": 2,
+            "evaluations": 67
+          },
+          {
+            "left": 0.8127342438136194,
+            "right": 1.5707963267948966,
+            "integral": 0.03302707552698472,
+            "reported_error": 2.5027633607482275e-16,
+            "status": 0,
+            "success": true,
+            "maxlevel": 3,
+            "evaluations": 131
+          },
+          {
+            "left": 1.5707963267948966,
+            "right": 2.3288584097761738,
+            "integral": 0.03302707552698469,
+            "reported_error": 6.466869596381262e-15,
+            "status": 0,
+            "success": true,
+            "maxlevel": 3,
+            "evaluations": 131
+          },
+          {
+            "left": 2.3288584097761738,
+            "right": 2.6730322536844846,
+            "integral": 0.027278945224536538,
+            "reported_error": 3.5458938380207585e-15,
+            "status": 0,
+            "success": true,
+            "maxlevel": 2,
+            "evaluations": 67
+          },
+          {
+            "left": 2.6730322536844846,
+            "right": 3.141592653589793,
+            "integral": 0.028485354418421822,
+            "reported_error": 4.8274016013130535e-15,
+            "status": 0,
+            "success": true,
+            "maxlevel": 2,
+            "evaluations": 67
+          }
+        ],
+        "root_info": {
+          "maximum_root_residual": 2.220446049250313e-16,
+          "stationary_near_zeros": 0,
+          "clipping_roots": 4
+        }
+      },
+      "gauss128_section": 0.3551655006798279,
+      "gauss128_evaluations": 1024,
+      "quadpack_tanh_difference": 3.1114555376632325e-12,
+      "gauss_tanh_difference": 5.562217353372034e-14,
+      "observed_three_method_spread": 3.1114555376632325e-12,
+      "reported_error_over_observed_spread": 895.5066249018412,
+      "transition": {
+        "nearest_saved_transition": {
+          "z": -0.43857392889515623,
+          "cosine": -1.0,
+          "sine": 1.0,
+          "residual": 2.220446049250313e-16,
+          "kind": "sign crossing"
+        },
+        "z_distance": 3.4569129070405324e-07,
+        "nearest_stationary_level_contact": {
+          "angle": -1.5707963267948966,
+          "branch": -1.0,
+          "level": 0.55,
+          "signed_gap": -2.8299150386379424e-06,
+          "second_derivative": -3.5828865135156502,
+          "local_angular_scale": 0.0012568549798777893
+        },
+        "interpretation": "A small stationary branch-to-level gap produces nearby clipping-root coalescence or a narrow rounded near-contact. Its angular scale is a local quadratic estimate, not a root-separation certificate."
+      },
+      "seconds": 0.0018209160189144313
+    },
+    {
+      "case": "gyroid",
+      "z": -0.061426416796134455,
+      "half_width": 0.55,
+      "saved_warning": {
+        "z": -0.061426416796134455,
+        "quadpack_error": 2.7863290721359818e-09,
+        "evaluations": 2646,
+        "subintervals": 69,
+        "message": "The occurrence of roundoff error is detected, which prevents \n  the requested tolerance from being achieved.  The error may be \n  underestimated.",
+        "maximum_root_residual": 2.220446049250313e-16,
+        "stationary_near_zeros": 0,
+        "clipping_roots": 4
+      },
+      "quadpack_replay": {
+        "volume": 0.3551655006828828,
+        "reported_error": 2.7863290721359818e-09,
+        "evaluations": 2646,
+        "subintervals": 69,
+        "message": "The occurrence of roundoff error is detected, which prevents \n  the requested tolerance from being achieved.  The error may be \n  underestimated.",
+        "maximum_root_residual": 2.220446049250313e-16,
+        "stationary_near_zeros": 0,
+        "clipping_roots": 4
+      },
+      "tanh_sinh": {
+        "volume": 0.35516550067977165,
+        "reported_error_sum": 4.6927473706220325e-14,
+        "all_intervals_converged": true,
+        "failed_intervals": 0,
+        "intervals": [
+          {
+            "left": -3.141592653589793,
+            "right": -2.6730322536844846,
+            "integral": 0.028485354418421826,
+            "reported_error": 4.827401614952694e-15,
+            "status": 0,
+            "success": true,
+            "maxlevel": 2,
+            "evaluations": 67
+          },
+          {
+            "left": -2.6730322536844846,
+            "right": -2.3288584097761738,
+            "integral": 0.027278945224536534,
+            "reported_error": 3.5458938380207585e-15,
+            "status": 0,
+            "success": true,
+            "maxlevel": 2,
+            "evaluations": 67
+          },
+          {
+            "left": -2.3288584097761738,
+            "right": -1.5707963267948966,
+            "integral": 0.033027075526984535,
+            "reported_error": 6.466869596381259e-15,
+            "status": 0,
+            "success": true,
+            "maxlevel": 3,
+            "evaluations": 131
+          },
+          {
+            "left": -1.5707963267948966,
+            "right": -0.8127342438136193,
+            "integral": 0.03302707552698458,
+            "reported_error": 2.502763360748227e-16,
+            "status": 0,
+            "success": true,
+            "maxlevel": 3,
+            "evaluations": 131
+          },
+          {
+            "left": -0.8127342438136193,
+            "right": -0.4685603999053088,
+            "integral": 0.0272789452245365,
+            "reported_error": 3.5458938380207545e-15,
+            "status": 0,
+            "success": true,
+            "maxlevel": 2,
+            "evaluations": 67
+          },
+          {
+            "left": -0.4685603999053088,
+            "right": 0.0,
+            "integral": 0.02848535441842185,
+            "reported_error": 4.827401629659873e-15,
+            "status": 0,
+            "success": true,
+            "maxlevel": 2,
+            "evaluations": 67
+          },
+          {
+            "left": 0.0,
+            "right": 0.4685603999053088,
+            "integral": 0.02848535441842185,
+            "reported_error": 4.827401629659873e-15,
+            "status": 0,
+            "success": true,
+            "maxlevel": 2,
+            "evaluations": 67
+          },
+          {
+            "left": 0.4685603999053088,
+            "right": 0.8127342438136193,
+            "integral": 0.027278945224536503,
+            "reported_error": 3.5458938380207545e-15,
+            "status": 0,
+            "success": true,
+            "maxlevel": 2,
+            "evaluations": 67
+          },
+          {
+            "left": 0.8127342438136193,
+            "right": 1.5707963267948966,
+            "integral": 0.03302707552698458,
+            "reported_error": 2.502763360748227e-16,
+            "status": 0,
+            "success": true,
+            "maxlevel": 3,
+            "evaluations": 131
+          },
+          {
+            "left": 1.5707963267948966,
+            "right": 2.3288584097761738,
+            "integral": 0.033027075526984535,
+            "reported_error": 6.466869596381259e-15,
+            "status": 0,
+            "success": true,
+            "maxlevel": 3,
+            "evaluations": 131
+          },
+          {
+            "left": 2.3288584097761738,
+            "right": 2.6730322536844846,
+            "integral": 0.027278945224536538,
+            "reported_error": 3.5458938380207585e-15,
+            "status": 0,
+            "success": true,
+            "maxlevel": 2,
+            "evaluations": 67
+          },
+          {
+            "left": 2.6730322536844846,
+            "right": 3.141592653589793,
+            "integral": 0.02848535441842183,
+            "reported_error": 4.827401614952694e-15,
+            "status": 0,
+            "success": true,
+            "maxlevel": 2,
+            "evaluations": 67
+          }
+        ],
+        "root_info": {
+          "maximum_root_residual": 2.220446049250313e-16,
+          "stationary_near_zeros": 0,
+          "clipping_roots": 4
+        }
+      },
+      "gauss128_section": 0.35516550067982716,
+      "gauss128_evaluations": 1024,
+      "quadpack_tanh_difference": 3.111122470755845e-12,
+      "gauss_tanh_difference": 5.551115123125783e-14,
+      "observed_three_method_spread": 3.111122470755845e-12,
+      "reported_error_over_observed_spread": 895.6025030602685,
+      "transition": {
+        "nearest_saved_transition": {
+          "z": -0.061426071104843806,
+          "cosine": 1.0,
+          "sine": 1.0,
+          "residual": 0.0,
+          "kind": "sign crossing"
+        },
+        "z_distance": 3.456912906485421e-07,
+        "nearest_stationary_level_contact": {
+          "angle": -1.5707963267948966,
+          "branch": 1.0,
+          "level": -0.55,
+          "signed_gap": 2.829915038082831e-06,
+          "second_derivative": 3.5828865135156525,
+          "local_angular_scale": 0.0012568549797545177
+        },
+        "interpretation": "A small stationary branch-to-level gap produces nearby clipping-root coalescence or a narrow rounded near-contact. Its angular scale is a local quadratic estimate, not a root-separation certificate."
+      },
+      "seconds": 0.0016293750086333603
+    },
+    {
+      "case": "gyroid",
+      "z": 0.061426416796134455,
+      "half_width": 0.55,
+      "saved_warning": {
+        "z": 0.061426416796134455,
+        "quadpack_error": 2.7863290721359818e-09,
+        "evaluations": 2646,
+        "subintervals": 69,
+        "message": "The occurrence of roundoff error is detected, which prevents \n  the requested tolerance from being achieved.  The error may be \n  underestimated.",
+        "maximum_root_residual": 2.220446049250313e-16,
+        "stationary_near_zeros": 0,
+        "clipping_roots": 4
+      },
+      "quadpack_replay": {
+        "volume": 0.3551655006828828,
+        "reported_error": 2.7863290721359818e-09,
+        "evaluations": 2646,
+        "subintervals": 69,
+        "message": "The occurrence of roundoff error is detected, which prevents \n  the requested tolerance from being achieved.  The error may be \n  underestimated.",
+        "maximum_root_residual": 2.220446049250313e-16,
+        "stationary_near_zeros": 0,
+        "clipping_roots": 4
+      },
+      "tanh_sinh": {
+        "volume": 0.35516550067977165,
+        "reported_error_sum": 4.6927473706220325e-14,
+        "all_intervals_converged": true,
+        "failed_intervals": 0,
+        "intervals": [
+          {
+            "left": -3.141592653589793,
+            "right": -2.6730322536844846,
+            "integral": 0.028485354418421826,
+            "reported_error": 4.827401614952694e-15,
+            "status": 0,
+            "success": true,
+            "maxlevel": 2,
+            "evaluations": 67
+          },
+          {
+            "left": -2.6730322536844846,
+            "right": -2.3288584097761738,
+            "integral": 0.027278945224536534,
+            "reported_error": 3.5458938380207585e-15,
+            "status": 0,
+            "success": true,
+            "maxlevel": 2,
+            "evaluations": 67
+          },
+          {
+            "left": -2.3288584097761738,
+            "right": -1.5707963267948966,
+            "integral": 0.033027075526984535,
+            "reported_error": 6.466869596381259e-15,
+            "status": 0,
+            "success": true,
+            "maxlevel": 3,
+            "evaluations": 131
+          },
+          {
+            "left": -1.5707963267948966,
+            "right": -0.8127342438136193,
+            "integral": 0.03302707552698458,
+            "reported_error": 2.502763360748227e-16,
+            "status": 0,
+            "success": true,
+            "maxlevel": 3,
+            "evaluations": 131
+          },
+          {
+            "left": -0.8127342438136193,
+            "right": -0.4685603999053088,
+            "integral": 0.0272789452245365,
+            "reported_error": 3.5458938380207545e-15,
+            "status": 0,
+            "success": true,
+            "maxlevel": 2,
+            "evaluations": 67
+          },
+          {
+            "left": -0.4685603999053088,
+            "right": 0.0,
+            "integral": 0.02848535441842185,
+            "reported_error": 4.827401629659873e-15,
+            "status": 0,
+            "success": true,
+            "maxlevel": 2,
+            "evaluations": 67
+          },
+          {
+            "left": 0.0,
+            "right": 0.4685603999053088,
+            "integral": 0.02848535441842185,
+            "reported_error": 4.827401629659873e-15,
+            "status": 0,
+            "success": true,
+            "maxlevel": 2,
+            "evaluations": 67
+          },
+          {
+            "left": 0.4685603999053088,
+            "right": 0.8127342438136193,
+            "integral": 0.027278945224536503,
+            "reported_error": 3.5458938380207545e-15,
+            "status": 0,
+            "success": true,
+            "maxlevel": 2,
+            "evaluations": 67
+          },
+          {
+            "left": 0.8127342438136193,
+            "right": 1.5707963267948966,
+            "integral": 0.03302707552698458,
+            "reported_error": 2.502763360748227e-16,
+            "status": 0,
+            "success": true,
+            "maxlevel": 3,
+            "evaluations": 131
+          },
+          {
+            "left": 1.5707963267948966,
+            "right": 2.3288584097761738,
+            "integral": 0.033027075526984535,
+            "reported_error": 6.466869596381259e-15,
+            "status": 0,
+            "success": true,
+            "maxlevel": 3,
+            "evaluations": 131
+          },
+          {
+            "left": 2.3288584097761738,
+            "right": 2.6730322536844846,
+            "integral": 0.027278945224536538,
+            "reported_error": 3.5458938380207585e-15,
+            "status": 0,
+            "success": true,
+            "maxlevel": 2,
+            "evaluations": 67
+          },
+          {
+            "left": 2.6730322536844846,
+            "right": 3.141592653589793,
+            "integral": 0.02848535441842183,
+            "reported_error": 4.827401614952694e-15,
+            "status": 0,
+            "success": true,
+            "maxlevel": 2,
+            "evaluations": 67
+          }
+        ],
+        "root_info": {
+          "maximum_root_residual": 2.220446049250313e-16,
+          "stationary_near_zeros": 0,
+          "clipping_roots": 4
+        }
+      },
+      "gauss128_section": 0.35516550067982716,
+      "gauss128_evaluations": 1024,
+      "quadpack_tanh_difference": 3.111122470755845e-12,
+      "gauss_tanh_difference": 5.551115123125783e-14,
+      "observed_three_method_spread": 3.111122470755845e-12,
+      "reported_error_over_observed_spread": 895.6025030602685,
+      "transition": {
+        "nearest_saved_transition": {
+          "z": 0.061426071104843806,
+          "cosine": 1.0,
+          "sine": -1.0,
+          "residual": 0.0,
+          "kind": "sign crossing"
+        },
+        "z_distance": 3.456912906485421e-07,
+        "nearest_stationary_level_contact": {
+          "angle": -1.5707963267948966,
+          "branch": 1.0,
+          "level": -0.55,
+          "signed_gap": 2.829915038082831e-06,
+          "second_derivative": 3.5828865135156525,
+          "local_angular_scale": 0.0012568549797545177
+        },
+        "interpretation": "A small stationary branch-to-level gap produces nearby clipping-root coalescence or a narrow rounded near-contact. Its angular scale is a local quadratic estimate, not a root-separation certificate."
+      },
+      "seconds": 0.0016047089884523302
+    },
+    {
+      "case": "gyroid",
+      "z": 0.4385735832038655,
+      "half_width": 0.55,
+      "saved_warning": {
+        "z": 0.4385735832038655,
+        "quadpack_error": 2.7863290470649447e-09,
+        "evaluations": 2646,
+        "subintervals": 69,
+        "message": "The occurrence of roundoff error is detected, which prevents \n  the requested tolerance from being achieved.  The error may be \n  underestimated.",
+        "maximum_root_residual": 2.220446049250313e-16,
+        "stationary_near_zeros": 0,
+        "clipping_roots": 4
+      },
+      "quadpack_replay": {
+        "volume": 0.3551655006828837,
+        "reported_error": 2.7863290470649447e-09,
+        "evaluations": 2646,
+        "subintervals": 69,
+        "message": "The occurrence of roundoff error is detected, which prevents \n  the requested tolerance from being achieved.  The error may be \n  underestimated.",
+        "maximum_root_residual": 2.220446049250313e-16,
+        "stationary_near_zeros": 0,
+        "clipping_roots": 4
+      },
+      "tanh_sinh": {
+        "volume": 0.35516550067977226,
+        "reported_error_sum": 4.6927473640219444e-14,
+        "all_intervals_converged": true,
+        "failed_intervals": 0,
+        "intervals": [
+          {
+            "left": -3.141592653589793,
+            "right": -2.6730322536844846,
+            "integral": 0.028485354418421822,
+            "reported_error": 4.8274016013130535e-15,
+            "status": 0,
+            "success": true,
+            "maxlevel": 2,
+            "evaluations": 67
+          },
+          {
+            "left": -2.6730322536844846,
+            "right": -2.3288584097761738,
+            "integral": 0.027278945224536534,
+            "reported_error": 3.5458938380207585e-15,
+            "status": 0,
+            "success": true,
+            "maxlevel": 2,
+            "evaluations": 67
+          },
+          {
+            "left": -2.3288584097761738,
+            "right": -1.5707963267948966,
+            "integral": 0.03302707552698469,
+            "reported_error": 6.466869596381262e-15,
+            "status": 0,
+            "success": true,
+            "maxlevel": 3,
+            "evaluations": 131
+          },
+          {
+            "left": -1.5707963267948966,
+            "right": -0.8127342438136194,
+            "integral": 0.03302707552698472,
+            "reported_error": 2.5027633607482275e-16,
+            "status": 0,
+            "success": true,
+            "maxlevel": 3,
+            "evaluations": 131
+          },
+          {
+            "left": -0.8127342438136194,
+            "right": -0.4685603999053088,
+            "integral": 0.027278945224536513,
+            "reported_error": 3.5458938380207553e-15,
+            "status": 0,
+            "success": true,
+            "maxlevel": 2,
+            "evaluations": 67
+          },
+          {
+            "left": -0.4685603999053088,
+            "right": 0.0,
+            "integral": 0.028485354418421843,
+            "reported_error": 4.8274016102990706e-15,
+            "status": 0,
+            "success": true,
+            "maxlevel": 2,
+            "evaluations": 67
+          },
+          {
+            "left": 0.0,
+            "right": 0.4685603999053088,
+            "integral": 0.02848535441842184,
+            "reported_error": 4.8274016102990706e-15,
+            "status": 0,
+            "success": true,
+            "maxlevel": 2,
+            "evaluations": 67
+          },
+          {
+            "left": 0.4685603999053088,
+            "right": 0.8127342438136194,
+            "integral": 0.027278945224536513,
+            "reported_error": 3.5458938380207553e-15,
+            "status": 0,
+            "success": true,
+            "maxlevel": 2,
+            "evaluations": 67
+          },
+          {
+            "left": 0.8127342438136194,
+            "right": 1.5707963267948966,
+            "integral": 0.03302707552698472,
+            "reported_error": 2.5027633607482275e-16,
+            "status": 0,
+            "success": true,
+            "maxlevel": 3,
+            "evaluations": 131
+          },
+          {
+            "left": 1.5707963267948966,
+            "right": 2.3288584097761738,
+            "integral": 0.03302707552698469,
+            "reported_error": 6.466869596381262e-15,
+            "status": 0,
+            "success": true,
+            "maxlevel": 3,
+            "evaluations": 131
+          },
+          {
+            "left": 2.3288584097761738,
+            "right": 2.6730322536844846,
+            "integral": 0.027278945224536538,
+            "reported_error": 3.5458938380207585e-15,
+            "status": 0,
+            "success": true,
+            "maxlevel": 2,
+            "evaluations": 67
+          },
+          {
+            "left": 2.6730322536844846,
+            "right": 3.141592653589793,
+            "integral": 0.028485354418421822,
+            "reported_error": 4.8274016013130535e-15,
+            "status": 0,
+            "success": true,
+            "maxlevel": 2,
+            "evaluations": 67
+          }
+        ],
+        "root_info": {
+          "maximum_root_residual": 2.220446049250313e-16,
+          "stationary_near_zeros": 0,
+          "clipping_roots": 4
+        }
+      },
+      "gauss128_section": 0.3551655006798279,
+      "gauss128_evaluations": 1024,
+      "quadpack_tanh_difference": 3.1114555376632325e-12,
+      "gauss_tanh_difference": 5.562217353372034e-14,
+      "observed_three_method_spread": 3.1114555376632325e-12,
+      "reported_error_over_observed_spread": 895.5066249018412,
+      "transition": {
+        "nearest_saved_transition": {
+          "z": 0.43857392889515623,
+          "cosine": -1.0,
+          "sine": -1.0,
+          "residual": 2.220446049250313e-16,
+          "kind": "sign crossing"
+        },
+        "z_distance": 3.4569129070405324e-07,
+        "nearest_stationary_level_contact": {
+          "angle": -1.5707963267948966,
+          "branch": -1.0,
+          "level": 0.55,
+          "signed_gap": -2.8299150386379424e-06,
+          "second_derivative": -3.5828865135156502,
+          "local_angular_scale": 0.0012568549798777893
+        },
+        "interpretation": "A small stationary branch-to-level gap produces nearby clipping-root coalescence or a narrow rounded near-contact. Its angular scale is a local quadratic estimate, not a root-separation certificate."
+      },
+      "seconds": 0.0015928329958114773
+    },
+    {
+      "case": "graded-gyroid-linear",
+      "z": -0.06355512808744784,
+      "half_width": 0.5325223397759519,
+      "saved_warning": {
+        "z": -0.06355512808744784,
+        "quadpack_error": 7.470644177003813e-09,
+        "evaluations": 1806,
+        "subintervals": 49,
+        "message": "The occurrence of roundoff error is detected, which prevents \n  the requested tolerance from being achieved.  The error may be \n  underestimated.",
+        "maximum_root_residual": 1.1102230246251565e-16,
+        "stationary_near_zeros": 0,
+        "clipping_roots": 4
+      },
+      "quadpack_replay": {
+        "volume": 0.3457791772059055,
+        "reported_error": 7.470644177003813e-09,
+        "evaluations": 1806,
+        "subintervals": 49,
+        "message": "The occurrence of roundoff error is detected, which prevents \n  the requested tolerance from being achieved.  The error may be \n  underestimated.",
+        "maximum_root_residual": 1.1102230246251565e-16,
+        "stationary_near_zeros": 0,
+        "clipping_roots": 4
+      },
+      "tanh_sinh": {
+        "volume": 0.34577918121375517,
+        "reported_error_sum": 4.615362161296308e-14,
+        "all_intervals_converged": true,
+        "failed_intervals": 0,
+        "intervals": [
+          {
+            "left": -3.141592653589793,
+            "right": -2.653139339871853,
+            "integral": 0.02867251233627276,
+            "reported_error": 4.937079728420583e-15,
+            "status": 0,
+            "success": true,
+            "maxlevel": 2,
+            "evaluations": 67
+          },
+          {
+            "left": -2.653139339871853,
+            "right": -2.327657404000002,
+            "integral": 0.025384726459837532,
+            "reported_error": 3.2898340225160416e-15,
+            "status": 0,
+            "success": true,
+            "maxlevel": 2,
+            "evaluations": 67
+          },
+          {
+            "left": -2.327657404000002,
+            "right": -1.5707963267948966,
+            "integral": 0.0323875565073285,
+            "reported_error": 6.376215414124592e-15,
+            "status": 0,
+            "success": true,
+            "maxlevel": 3,
+            "evaluations": 131
+          },
+          {
+            "left": -1.5707963267948966,
+            "right": -0.8139352495897908,
+            "integral": 0.032387556507328524,
+            "reported_error": 2.467679003089687e-16,
+            "status": 0,
+            "success": true,
+            "maxlevel": 3,
+            "evaluations": 131
+          },
+          {
+            "left": -0.8139352495897908,
+            "right": -0.48845331371794026,
+            "integral": 0.025384726459837532,
+            "reported_error": 3.2898340225160416e-15,
+            "status": 0,
+            "success": true,
+            "maxlevel": 2,
+            "evaluations": 67
+          },
+          {
+            "left": -0.48845331371794026,
+            "right": 0.0,
+            "integral": 0.02867251233627275,
+            "reported_error": 4.937079718595315e-15,
+            "status": 0,
+            "success": true,
+            "maxlevel": 2,
+            "evaluations": 67
+          },
+          {
+            "left": 0.0,
+            "right": 0.48845331371794026,
+            "integral": 0.02867251233627275,
+            "reported_error": 4.937079718595315e-15,
+            "status": 0,
+            "success": true,
+            "maxlevel": 2,
+            "evaluations": 67
+          },
+          {
+            "left": 0.48845331371794026,
+            "right": 0.8139352495897908,
+            "integral": 0.02538472645983753,
+            "reported_error": 3.2898340225160416e-15,
+            "status": 0,
+            "success": true,
+            "maxlevel": 2,
+            "evaluations": 67
+          },
+          {
+            "left": 0.8139352495897908,
+            "right": 1.5707963267948966,
+            "integral": 0.032387556507328524,
+            "reported_error": 2.467679003089687e-16,
+            "status": 0,
+            "success": true,
+            "maxlevel": 3,
+            "evaluations": 131
+          },
+          {
+            "left": 1.5707963267948966,
+            "right": 2.327657404000002,
+            "integral": 0.03238755650732849,
+            "reported_error": 6.376215414124592e-15,
+            "status": 0,
+            "success": true,
+            "maxlevel": 3,
+            "evaluations": 131
+          },
+          {
+            "left": 2.327657404000002,
+            "right": 2.653139339871853,
+            "integral": 0.025384726459837532,
+            "reported_error": 3.2898340225160416e-15,
+            "status": 0,
+            "success": true,
+            "maxlevel": 2,
+            "evaluations": 67
+          },
+          {
+            "left": 2.653139339871853,
+            "right": 3.141592653589793,
+            "integral": 0.028672512336272757,
+            "reported_error": 4.937079728420583e-15,
+            "status": 0,
+            "success": true,
+            "maxlevel": 2,
+            "evaluations": 67
+          }
+        ],
+        "root_info": {
+          "maximum_root_residual": 1.1102230246251565e-16,
+          "stationary_near_zeros": 0,
+          "clipping_roots": 4
+        }
+      },
+      "gauss128_section": 0.34577918121372775,
+      "gauss128_evaluations": 1024,
+      "quadpack_tanh_difference": 4.007849663256735e-09,
+      "gauss_tanh_difference": 2.7422508708241367e-14,
+      "observed_three_method_spread": 4.007849663256735e-09,
+      "reported_error_over_observed_spread": 1.8640030950994426,
+      "transition": {
+        "nearest_saved_transition": {
+          "z": -0.06355512636350573,
+          "cosine": 1.0,
+          "sine": 1.0,
+          "residual": 1.1102230246251565e-16,
+          "kind": "sign crossing"
+        },
+        "z_distance": 1.72394211406246e-09,
+        "nearest_stationary_level_contact": {
+          "angle": -1.5707963267948966,
+          "branch": 1.0,
+          "level": -0.5325223397759519,
+          "signed_gap": 1.371695923513272e-08,
+          "second_derivative": 3.493339362357468,
+          "local_angular_scale": 8.861832419180319e-05
+        },
+        "interpretation": "A small stationary branch-to-level gap produces nearby clipping-root coalescence or a narrow rounded near-contact. Its angular scale is a local quadratic estimate, not a root-separation certificate."
+      },
+      "seconds": 0.0012879999994765967
+    },
+    {
+      "case": "graded-gyroid-density-linear",
+      "z": -0.4226485495703405,
+      "half_width": 0.41709738396131274,
+      "saved_warning": {
+        "z": -0.4226485495703405,
+        "quadpack_error": 1.3929389718032233e-07,
+        "evaluations": 1932,
+        "subintervals": 52,
+        "message": "The occurrence of roundoff error is detected, which prevents \n  the requested tolerance from being achieved.  The error may be \n  underestimated.",
+        "maximum_root_residual": 1.6653345369377348e-16,
+        "stationary_near_zeros": 0,
+        "clipping_roots": 4
+      },
+      "quadpack_replay": {
+        "volume": 0.2835405162271174,
+        "reported_error": 1.3929389718032233e-07,
+        "evaluations": 1932,
+        "subintervals": 52,
+        "message": "The occurrence of roundoff error is detected, which prevents \n  the requested tolerance from being achieved.  The error may be \n  underestimated.",
+        "maximum_root_residual": 1.6653345369377348e-16,
+        "stationary_near_zeros": 0,
+        "clipping_roots": 4
+      },
+      "tanh_sinh": {
+        "volume": 0.28354052924207607,
+        "reported_error_sum": 4.1089193717378065e-14,
+        "all_intervals_converged": true,
+        "failed_intervals": 0,
+        "intervals": [
+          {
+            "left": -3.141592653589793,
+            "right": -2.5154277652655974,
+            "integral": 0.028530011405991592,
+            "reported_error": 5.526719063184965e-15,
+            "status": 0,
+            "success": true,
+            "maxlevel": 2,
+            "evaluations": 67
+          },
+          {
+            "left": -2.5154277652655974,
+            "right": -2.321658409979692,
+            "integral": 0.013530830259687791,
+            "reported_error": 1.7102665178811237e-15,
+            "status": 0,
+            "success": true,
+            "maxlevel": 2,
+            "evaluations": 67
+          },
+          {
+            "left": -2.321658409979692,
+            "right": -1.5707963267948966,
+            "integral": 0.028824290644839618,
+            "reported_error": 5.844438285403783e-15,
+            "status": 0,
+            "success": true,
+            "maxlevel": 3,
+            "evaluations": 131
+          },
+          {
+            "left": -1.5707963267948966,
+            "right": -0.8199342436101008,
+            "integral": 0.02882429064483966,
+            "reported_error": 2.261874278870246e-16,
+            "status": 0,
+            "success": true,
+            "maxlevel": 3,
+            "evaluations": 131
+          },
+          {
+            "left": -0.8199342436101008,
+            "right": -0.6261648883241957,
+            "integral": 0.013530830259687786,
+            "reported_error": 1.7102665178811229e-15,
+            "status": 0,
+            "success": true,
+            "maxlevel": 2,
+            "evaluations": 67
+          },
+          {
+            "left": -0.6261648883241957,
+            "right": 0.0,
+            "integral": 0.02853001140599159,
+            "reported_error": 5.5267190464510136e-15,
+            "status": 0,
+            "success": true,
+            "maxlevel": 2,
+            "evaluations": 67
+          },
+          {
+            "left": 0.0,
+            "right": 0.6261648883241957,
+            "integral": 0.02853001140599159,
+            "reported_error": 5.5267190464510136e-15,
+            "status": 0,
+            "success": true,
+            "maxlevel": 2,
+            "evaluations": 67
+          },
+          {
+            "left": 0.6261648883241957,
+            "right": 0.8199342436101008,
+            "integral": 0.013530830259687786,
+            "reported_error": 1.7102665178811229e-15,
+            "status": 0,
+            "success": true,
+            "maxlevel": 2,
+            "evaluations": 67
+          },
+          {
+            "left": 0.8199342436101008,
+            "right": 1.5707963267948966,
+            "integral": 0.028824290644839663,
+            "reported_error": 2.261874278870246e-16,
+            "status": 0,
+            "success": true,
+            "maxlevel": 3,
+            "evaluations": 131
+          },
+          {
+            "left": 1.5707963267948966,
+            "right": 2.321658409979692,
+            "integral": 0.028824290644839618,
+            "reported_error": 5.844438285403783e-15,
+            "status": 0,
+            "success": true,
+            "maxlevel": 3,
+            "evaluations": 131
+          },
+          {
+            "left": 2.321658409979692,
+            "right": 2.5154277652655974,
+            "integral": 0.013530830259687791,
+            "reported_error": 1.7102665178811237e-15,
+            "status": 0,
+            "success": true,
+            "maxlevel": 2,
+            "evaluations": 67
+          },
+          {
+            "left": 2.5154277652655974,
+            "right": 3.141592653589793,
+            "integral": 0.028530011405991592,
+            "reported_error": 5.526719063184965e-15,
+            "status": 0,
+            "success": true,
+            "maxlevel": 2,
+            "evaluations": 67
+          }
+        ],
+        "root_info": {
+          "maximum_root_residual": 1.6653345369377348e-16,
+          "stationary_near_zeros": 0,
+          "clipping_roots": 4
+        }
+      },
+      "gauss128_section": 0.28354052924212686,
+      "gauss128_evaluations": 1024,
+      "quadpack_tanh_difference": 1.3014958666346388e-08,
+      "gauss_tanh_difference": 5.079270337660091e-14,
+      "observed_three_method_spread": 1.3015009459049764e-08,
+      "reported_error_over_observed_spread": 10.702558274628583,
+      "transition": {
+        "nearest_saved_transition": {
+          "z": -0.4226485747703328,
+          "cosine": -1.0,
+          "sine": 1.0,
+          "residual": 1.7763568394002505e-15,
+          "kind": "sign crossing"
+        },
+        "z_distance": 2.5199992315094732e-08,
+        "nearest_stationary_level_contact": {
+          "angle": -1.5707963267948966,
+          "branch": -1.0,
+          "level": 0.41709738396131274,
+          "signed_gap": -1.2493555517911759e-07,
+          "second_derivative": -3.025049484713918,
+          "local_angular_scale": 0.00028740332065449605
+        },
+        "interpretation": "A small stationary branch-to-level gap produces nearby clipping-root coalescence or a narrow rounded near-contact. Its angular scale is a local quadratic estimate, not a root-separation certificate."
+      },
+      "seconds": 0.0013039170007687062
+    },
+    {
+      "case": "graded-gyroid-density-linear",
+      "z": -0.062835693359375,
+      "half_width": 0.5384389359851742,
+      "saved_warning": {
+        "z": -0.062835693359375,
+        "quadpack_error": 1.0757980388316629e-07,
+        "evaluations": 1890,
+        "subintervals": 53,
+        "message": "The occurrence of roundoff error is detected, which prevents \n  the requested tolerance from being achieved.  The error may be \n  underestimated.",
+        "maximum_root_residual": 1.1102230246251565e-16,
+        "stationary_near_zeros": 0,
+        "clipping_roots": 8
+      },
+      "quadpack_replay": {
+        "volume": 0.3489543607932048,
+        "reported_error": 1.0757980388316629e-07,
+        "evaluations": 1890,
+        "subintervals": 53,
+        "message": "The occurrence of roundoff error is detected, which prevents \n  the requested tolerance from being achieved.  The error may be \n  underestimated.",
+        "maximum_root_residual": 1.1102230246251565e-16,
+        "stationary_near_zeros": 0,
+        "clipping_roots": 8
+      },
+      "tanh_sinh": {
+        "volume": 0.34895435200600483,
+        "reported_error_sum": 4.641035258766528e-14,
+        "all_intervals_converged": true,
+        "failed_intervals": 0,
+        "intervals": [
+          {
+            "left": -3.141592653589793,
+            "right": -2.6598980838122914,
+            "integral": 0.028615320732905007,
+            "reported_error": 4.900517819014592e-15,
+            "status": 0,
+            "success": true,
+            "maxlevel": 2,
+            "evaluations": 67
+          },
+          {
+            "left": -2.6598980838122914,
+            "right": -2.3280574242601513,
+            "integral": 0.026022711288672735,
+            "reported_error": 3.375979790230499e-15,
+            "status": 0,
+            "success": true,
+            "maxlevel": 2,
+            "evaluations": 67
+          },
+          {
+            "left": -2.3280574242601513,
+            "right": -1.571066884540586,
+            "integral": 0.03260055597992345,
+            "reported_error": 6.404325286115285e-15,
+            "status": 0,
+            "success": true,
+            "maxlevel": 3,
+            "evaluations": 131
+          },
+          {
+            "left": -1.571066884540586,
+            "right": -1.5707963267948966,
+            "integral": 0.0,
+            "reported_error": 0.0,
+            "status": 0,
+            "success": true,
+            "maxlevel": 2,
+            "evaluations": 67
+          },
+          {
+            "left": -1.5707963267948966,
+            "right": -1.5705257690492072,
+            "integral": 0.0,
+            "reported_error": 0.0,
+            "status": 0,
+            "success": true,
+            "maxlevel": 2,
+            "evaluations": 67
+          },
+          {
+            "left": -1.5705257690492072,
+            "right": -0.8135352293296418,
+            "integral": 0.03260055597992348,
+            "reported_error": 2.4785578922717103e-16,
+            "status": 0,
+            "success": true,
+            "maxlevel": 3,
+            "evaluations": 131
+          },
+          {
+            "left": -0.8135352293296418,
+            "right": -0.48169456977750175,
+            "integral": 0.026022711288672725,
+            "reported_error": 3.3759797902304986e-15,
+            "status": 0,
+            "success": true,
+            "maxlevel": 2,
+            "evaluations": 67
+          },
+          {
+            "left": -0.48169456977750175,
+            "right": 0.0,
+            "integral": 0.028615320732905007,
+            "reported_error": 4.900517819014594e-15,
+            "status": 0,
+            "success": true,
+            "maxlevel": 2,
+            "evaluations": 67
+          },
+          {
+            "left": 0.0,
+            "right": 0.48169456977750175,
+            "integral": 0.028615320732905007,
+            "reported_error": 4.900517819014594e-15,
+            "status": 0,
+            "success": true,
+            "maxlevel": 2,
+            "evaluations": 67
+          },
+          {
+            "left": 0.48169456977750175,
+            "right": 0.8135352293296418,
+            "integral": 0.02602271128867273,
+            "reported_error": 3.3759797902304986e-15,
+            "status": 0,
+            "success": true,
+            "maxlevel": 2,
+            "evaluations": 67
+          },
+          {
+            "left": 0.8135352293296418,
+            "right": 1.5705257690492072,
+            "integral": 0.03260055597992348,
+            "reported_error": 2.4785578922717103e-16,
+            "status": 0,
+            "success": true,
+            "maxlevel": 3,
+            "evaluations": 131
+          },
+          {
+            "left": 1.5705257690492072,
+            "right": 1.5707963267948966,
+            "integral": 0.0,
+            "reported_error": 0.0,
+            "status": 0,
+            "success": true,
+            "maxlevel": 2,
+            "evaluations": 67
+          },
+          {
+            "left": 1.5707963267948966,
+            "right": 1.571066884540586,
+            "integral": 0.0,
+            "reported_error": 0.0,
+            "status": 0,
+            "success": true,
+            "maxlevel": 2,
+            "evaluations": 67
+          },
+          {
+            "left": 1.571066884540586,
+            "right": 2.3280574242601513,
+            "integral": 0.03260055597992345,
+            "reported_error": 6.404325286115285e-15,
+            "status": 0,
+            "success": true,
+            "maxlevel": 3,
+            "evaluations": 131
+          },
+          {
+            "left": 2.3280574242601513,
+            "right": 2.6598980838122914,
+            "integral": 0.026022711288672735,
+            "reported_error": 3.375979790230499e-15,
+            "status": 0,
+            "success": true,
+            "maxlevel": 2,
+            "evaluations": 67
+          },
+          {
+            "left": 2.6598980838122914,
+            "right": 3.141592653589793,
+            "integral": 0.028615320732905,
+            "reported_error": 4.900517819014592e-15,
+            "status": 0,
+            "success": true,
+            "maxlevel": 2,
+            "evaluations": 67
+          }
+        ],
+        "root_info": {
+          "maximum_root_residual": 1.1102230246251565e-16,
+          "stationary_near_zeros": 0,
+          "clipping_roots": 8
+        }
+      },
+      "gauss128_section": 0.34895435200600106,
+      "gauss128_evaluations": 1536,
+      "quadpack_tanh_difference": 8.78719996766364e-09,
+      "gauss_tanh_difference": 3.774758283725532e-15,
+      "observed_three_method_spread": 8.787203742421923e-09,
+      "reported_error_over_observed_spread": 12.242780187718195,
+      "transition": {
+        "nearest_saved_transition": {
+          "z": -0.0628357228103248,
+          "cosine": 1.0,
+          "sine": 1.0,
+          "residual": 2.3314683517128287e-15,
+          "kind": "sign crossing"
+        },
+        "z_distance": 2.9450949803888626e-08,
+        "nearest_stationary_level_contact": {
+          "angle": -1.5707963267948966,
+          "branch": 1.0,
+          "level": -0.5384389359851742,
+          "signed_gap": -1.28943065558218e-07,
+          "second_derivative": 3.522963079874491,
+          "local_angular_scale": 0.0002705577305999911
+        },
+        "interpretation": "A small stationary branch-to-level gap produces nearby clipping-root coalescence or a narrow rounded near-contact. Its angular scale is a local quadratic estimate, not a root-separation certificate."
+      },
+      "seconds": 0.0014594999956898391
+    },
+    {
+      "case": "graded-gyroid-density-linear",
+      "z": -0.06283575962580833,
+      "half_width": 0.5384386816346909,
+      "saved_warning": {
+        "z": -0.06283575962580833,
+        "quadpack_error": 2.663468710152291e-07,
+        "evaluations": 2184,
+        "subintervals": 58,
+        "message": "The occurrence of roundoff error is detected, which prevents \n  the requested tolerance from being achieved.  The error may be \n  underestimated.",
+        "maximum_root_residual": 1.1102230246251565e-16,
+        "stationary_near_zeros": 0,
+        "clipping_roots": 4
+      },
+      "quadpack_replay": {
+        "volume": 0.34895461090911717,
+        "reported_error": 2.663468710152291e-07,
+        "evaluations": 2184,
+        "subintervals": 58,
+        "message": "The occurrence of roundoff error is detected, which prevents \n  the requested tolerance from being achieved.  The error may be \n  underestimated.",
+        "maximum_root_residual": 1.1102230246251565e-16,
+        "stationary_near_zeros": 0,
+        "clipping_roots": 4
+      },
+      "tanh_sinh": {
+        "volume": 0.34895462713784736,
+        "reported_error_sum": 4.641509684426493e-14,
+        "all_intervals_converged": true,
+        "failed_intervals": 0,
+        "intervals": [
+          {
+            "left": -3.141592653589793,
+            "right": -2.65989769639915,
+            "integral": 0.028615327321616483,
+            "reported_error": 4.900520268162692e-15,
+            "status": 0,
+            "success": true,
+            "maxlevel": 2,
+            "evaluations": 67
+          },
+          {
+            "left": -2.65989769639915,
+            "right": -2.3280573871278003,
+            "integral": 0.026022677925386855,
+            "reported_error": 3.375975192158956e-15,
+            "status": 0,
+            "success": true,
+            "maxlevel": 2,
+            "evaluations": 67
+          },
+          {
+            "left": -2.3280573871278003,
+            "right": -1.5707963267948966,
+            "integral": 0.03260065153745848,
+            "reported_error": 6.406613168223363e-15,
+            "status": 0,
+            "success": true,
+            "maxlevel": 3,
+            "evaluations": 131
+          },
+          {
+            "left": -1.5707963267948966,
+            "right": -0.8135352664619927,
+            "integral": 0.032600651537458517,
+            "reported_error": 2.4794433326580477e-16,
+            "status": 0,
+            "success": true,
+            "maxlevel": 3,
+            "evaluations": 131
+          },
+          {
+            "left": -0.8135352664619927,
+            "right": -0.48169495719064337,
+            "integral": 0.02602267792538684,
+            "reported_error": 3.375975192158954e-15,
+            "status": 0,
+            "success": true,
+            "maxlevel": 2,
+            "evaluations": 67
+          },
+          {
+            "left": -0.48169495719064337,
+            "right": 0.0,
+            "integral": 0.02861532732161649,
+            "reported_error": 4.9005202681626934e-15,
+            "status": 0,
+            "success": true,
+            "maxlevel": 2,
+            "evaluations": 67
+          },
+          {
+            "left": 0.0,
+            "right": 0.48169495719064337,
+            "integral": 0.028615327321616497,
+            "reported_error": 4.9005202681626934e-15,
+            "status": 0,
+            "success": true,
+            "maxlevel": 2,
+            "evaluations": 67
+          },
+          {
+            "left": 0.48169495719064337,
+            "right": 0.8135352664619927,
+            "integral": 0.02602267792538684,
+            "reported_error": 3.375975192158954e-15,
+            "status": 0,
+            "success": true,
+            "maxlevel": 2,
+            "evaluations": 67
+          },
+          {
+            "left": 0.8135352664619927,
+            "right": 1.5707963267948966,
+            "integral": 0.03260065153745853,
+            "reported_error": 2.4794433326580477e-16,
+            "status": 0,
+            "success": true,
+            "maxlevel": 3,
+            "evaluations": 131
+          },
+          {
+            "left": 1.5707963267948966,
+            "right": 2.3280573871278003,
+            "integral": 0.03260065153745848,
+            "reported_error": 6.406613168223363e-15,
+            "status": 0,
+            "success": true,
+            "maxlevel": 3,
+            "evaluations": 131
+          },
+          {
+            "left": 2.3280573871278003,
+            "right": 2.65989769639915,
+            "integral": 0.026022677925386855,
+            "reported_error": 3.375975192158956e-15,
+            "status": 0,
+            "success": true,
+            "maxlevel": 2,
+            "evaluations": 67
+          },
+          {
+            "left": 2.65989769639915,
+            "right": 3.141592653589793,
+            "integral": 0.028615327321616483,
+            "reported_error": 4.900520268162692e-15,
+            "status": 0,
+            "success": true,
+            "maxlevel": 2,
+            "evaluations": 67
+          }
+        ],
+        "root_info": {
+          "maximum_root_residual": 1.1102230246251565e-16,
+          "stationary_near_zeros": 0,
+          "clipping_roots": 4
+        }
+      },
+      "gauss128_section": 0.348954627137915,
+      "gauss128_evaluations": 1024,
+      "quadpack_tanh_difference": 1.6228730193024177e-08,
+      "gauss_tanh_difference": 6.761258219967203e-14,
+      "observed_three_method_spread": 1.6228797805606376e-08,
+      "reported_error_over_observed_spread": 16.41199022907398,
+      "transition": {
+        "nearest_saved_transition": {
+          "z": -0.0628357228103248,
+          "cosine": 1.0,
+          "sine": 1.0,
+          "residual": 2.3314683517128287e-15,
+          "kind": "sign crossing"
+        },
+        "z_distance": 3.681548352285624e-08,
+        "nearest_stationary_level_contact": {
+          "angle": -1.5707963267948966,
+          "branch": 1.0,
+          "level": -0.5384386816346909,
+          "signed_gap": 1.611867170847603e-07,
+          "second_derivative": 3.52296032185032,
+          "local_angular_scale": 0.0003025002562730042
+        },
+        "interpretation": "A small stationary branch-to-level gap produces nearby clipping-root coalescence or a narrow rounded near-contact. Its angular scale is a local quadratic estimate, not a root-separation certificate."
+      },
+      "seconds": 0.0014207499916665256
+    },
+    {
+      "case": "graded-gyroid-density-linear",
+      "z": -0.06283562709294167,
+      "half_width": 0.5384391903356575,
+      "saved_warning": {
+        "z": -0.06283562709294167,
+        "quadpack_error": 6.081423334043878e-10,
+        "evaluations": 4368,
+        "subintervals": 112,
+        "message": "The occurrence of roundoff error is detected, which prevents \n  the requested tolerance from being achieved.  The error may be \n  underestimated.",
+        "maximum_root_residual": 1.1102230246251565e-16,
+        "stationary_near_zeros": 0,
+        "clipping_roots": 8
+      },
+      "quadpack_replay": {
+        "volume": 0.3489541167367126,
+        "reported_error": 6.081423334043878e-10,
+        "evaluations": 4368,
+        "subintervals": 112,
+        "message": "The occurrence of roundoff error is detected, which prevents \n  the requested tolerance from being achieved.  The error may be \n  underestimated.",
+        "maximum_root_residual": 1.1102230246251565e-16,
+        "stationary_near_zeros": 0,
+        "clipping_roots": 8
+      },
+      "tanh_sinh": {
+        "volume": 0.3489541167367114,
+        "reported_error_sum": 4.6406546148718145e-14,
+        "all_intervals_converged": true,
+        "failed_intervals": 0,
+        "intervals": [
+          {
+            "left": -3.141592653589793,
+            "right": -2.659898471225203,
+            "integral": 0.02861531414418521,
+            "reported_error": 4.900515383993667e-15,
+            "status": 0,
+            "success": true,
+            "maxlevel": 2,
+            "evaluations": 67
+          },
+          {
+            "left": -2.659898471225203,
+            "right": -2.328057461392554,
+            "integral": 0.026022744651951882,
+            "reported_error": 3.3759843883015336e-15,
+            "status": 0,
+            "success": true,
+            "maxlevel": 2,
+            "evaluations": 67
+          },
+          {
+            "left": -2.328057461392554,
+            "right": -1.5712840861117674,
+            "integral": 0.03260047038804073,
+            "reported_error": 6.402488809799776e-15,
+            "status": 0,
+            "success": true,
+            "maxlevel": 3,
+            "evaluations": 131
+          },
+          {
+            "left": -1.5712840861117674,
+            "right": -1.5707963267948966,
+            "integral": 0.0,
+            "reported_error": 0.0,
+            "status": 0,
+            "success": true,
+            "maxlevel": 2,
+            "evaluations": 67
+          },
+          {
+            "left": -1.5707963267948966,
+            "right": -1.5703085674780257,
+            "integral": 0.0,
+            "reported_error": 0.0,
+            "status": 0,
+            "success": true,
+            "maxlevel": 2,
+            "evaluations": 67
+          },
+          {
+            "left": -1.5703085674780257,
+            "right": -0.813535192197239,
+            "integral": 0.03260047038804076,
+            "reported_error": 2.4778471518482577e-16,
+            "status": 0,
+            "success": true,
+            "maxlevel": 3,
+            "evaluations": 131
+          },
+          {
+            "left": -0.813535192197239,
+            "right": -0.4816941823645904,
+            "integral": 0.02602274465195188,
+            "reported_error": 3.3759843883015325e-15,
+            "status": 0,
+            "success": true,
+            "maxlevel": 2,
+            "evaluations": 67
+          },
+          {
+            "left": -0.4816941823645904,
+            "right": 0.0,
+            "integral": 0.028615314144185222,
+            "reported_error": 4.900515388777737e-15,
+            "status": 0,
+            "success": true,
+            "maxlevel": 2,
+            "evaluations": 67
+          },
+          {
+            "left": 0.0,
+            "right": 0.4816941823645904,
+            "integral": 0.028615314144185222,
+            "reported_error": 4.900515388777737e-15,
+            "status": 0,
+            "success": true,
+            "maxlevel": 2,
+            "evaluations": 67
+          },
+          {
+            "left": 0.4816941823645904,
+            "right": 0.813535192197239,
+            "integral": 0.02602274465195188,
+            "reported_error": 3.3759843883015325e-15,
+            "status": 0,
+            "success": true,
+            "maxlevel": 2,
+            "evaluations": 67
+          },
+          {
+            "left": 0.813535192197239,
+            "right": 1.5703085674780257,
+            "integral": 0.03260047038804076,
+            "reported_error": 2.4778471518482577e-16,
+            "status": 0,
+            "success": true,
+            "maxlevel": 3,
+            "evaluations": 131
+          },
+          {
+            "left": 1.5703085674780257,
+            "right": 1.5707963267948966,
+            "integral": 0.0,
+            "reported_error": 0.0,
+            "status": 0,
+            "success": true,
+            "maxlevel": 2,
+            "evaluations": 67
+          },
+          {
+            "left": 1.5707963267948966,
+            "right": 1.5712840861117674,
+            "integral": 0.0,
+            "reported_error": 0.0,
+            "status": 0,
+            "success": true,
+            "maxlevel": 2,
+            "evaluations": 67
+          },
+          {
+            "left": 1.5712840861117674,
+            "right": 2.328057461392554,
+            "integral": 0.03260047038804073,
+            "reported_error": 6.402488809799776e-15,
+            "status": 0,
+            "success": true,
+            "maxlevel": 3,
+            "evaluations": 131
+          },
+          {
+            "left": 2.328057461392554,
+            "right": 2.659898471225203,
+            "integral": 0.026022744651951885,
+            "reported_error": 3.3759843883015336e-15,
+            "status": 0,
+            "success": true,
+            "maxlevel": 2,
+            "evaluations": 67
+          },
+          {
+            "left": 2.659898471225203,
+            "right": 3.141592653589793,
+            "integral": 0.02861531414418521,
+            "reported_error": 4.900515383993667e-15,
+            "status": 0,
+            "success": true,
+            "maxlevel": 2,
+            "evaluations": 67
+          }
+        ],
+        "root_info": {
+          "maximum_root_residual": 1.1102230246251565e-16,
+          "stationary_near_zeros": 0,
+          "clipping_roots": 8
+        }
+      },
+      "gauss128_section": 0.34895411673670773,
+      "gauss128_evaluations": 1536,
+      "quadpack_tanh_difference": 1.2212453270876722e-15,
+      "gauss_tanh_difference": 3.6637359812630166e-15,
+      "observed_three_method_spread": 4.884981308350689e-15,
+      "reported_error_over_observed_spread": 124492.25391401023,
+      "transition": {
+        "nearest_saved_transition": {
+          "z": -0.0628357228103248,
+          "cosine": 1.0,
+          "sine": 1.0,
+          "residual": 2.3314683517128287e-15,
+          "kind": "sign crossing"
+        },
+        "z_distance": 9.571738313063349e-08,
+        "nearest_stationary_level_contact": {
+          "angle": -1.5707963267948966,
+          "branch": 1.0,
+          "level": -0.5384391903356575,
+          "signed_gap": -4.190727550534845e-07,
+          "second_derivative": 3.522965837904144,
+          "local_angular_scale": 0.00048775922897439147
+        },
+        "interpretation": "A small stationary branch-to-level gap produces nearby clipping-root coalescence or a narrow rounded near-contact. Its angular scale is a local quadratic estimate, not a root-separation certificate."
+      },
+      "seconds": 0.00231762501061894
+    },
+    {
+      "case": "graded-gyroid-density-linear",
+      "z": 0.058004931858438066,
+      "half_width": 0.5778776309047179,
+      "saved_warning": {
+        "z": 0.058004931858438066,
+        "quadpack_error": 1.3631539374249392e-11,
+        "evaluations": 3948,
+        "subintervals": 100,
+        "message": "The occurrence of roundoff error is detected, which prevents \n  the requested tolerance from being achieved.  The error may be \n  underestimated.",
+        "maximum_root_residual": 3.3306690738754696e-16,
+        "stationary_near_zeros": 0,
+        "clipping_roots": 4
+      },
+      "quadpack_replay": {
+        "volume": 0.37016176444587356,
+        "reported_error": 1.3631539374249392e-11,
+        "evaluations": 3948,
+        "subintervals": 100,
+        "message": "The occurrence of roundoff error is detected, which prevents \n  the requested tolerance from being achieved.  The error may be \n  underestimated.",
+        "maximum_root_residual": 3.3306690738754696e-16,
+        "stationary_near_zeros": 0,
+        "clipping_roots": 4
+      },
+      "tanh_sinh": {
+        "volume": 0.37016176444588683,
+        "reported_error_sum": 4.8172353469494345e-14,
+        "all_intervals_converged": true,
+        "failed_intervals": 0,
+        "intervals": [
+          {
+            "left": -3.141592653589793,
+            "right": -2.7043384496251437,
+            "integral": 0.028071849371733754,
+            "reported_error": 4.642003070244515e-15,
+            "status": 0,
+            "success": true,
+            "maxlevel": 2,
+            "evaluations": 67
+          },
+          {
+            "left": -2.7043384496251437,
+            "right": -2.33088492157883,
+            "integral": 0.030363314833867998,
+            "reported_error": 3.964678852729413e-15,
+            "status": 0,
+            "success": true,
+            "maxlevel": 2,
+            "evaluations": 67
+          },
+          {
+            "left": -2.33088492157883,
+            "right": -1.5707963267948966,
+            "integral": 0.034105276905869945,
+            "reported_error": 6.616736490552979e-15,
+            "status": 0,
+            "success": true,
+            "maxlevel": 3,
+            "evaluations": 131
+          },
+          {
+            "left": -1.5707963267948966,
+            "right": -0.8107077320109634,
+            "integral": 0.03410527690586997,
+            "reported_error": 2.5607638146203745e-16,
+            "status": 0,
+            "success": true,
+            "maxlevel": 3,
+            "evaluations": 131
+          },
+          {
+            "left": -0.8107077320109634,
+            "right": -0.43725420396464953,
+            "integral": 0.030363314833867998,
+            "reported_error": 3.964678852729413e-15,
+            "status": 0,
+            "success": true,
+            "maxlevel": 2,
+            "evaluations": 67
+          },
+          {
+            "left": -0.43725420396464953,
+            "right": 0.0,
+            "integral": 0.028071849371733754,
+            "reported_error": 4.6420030870288165e-15,
+            "status": 0,
+            "success": true,
+            "maxlevel": 2,
+            "evaluations": 67
+          },
+          {
+            "left": 0.0,
+            "right": 0.43725420396464953,
+            "integral": 0.028071849371733754,
+            "reported_error": 4.6420030870288165e-15,
+            "status": 0,
+            "success": true,
+            "maxlevel": 2,
+            "evaluations": 67
+          },
+          {
+            "left": 0.43725420396464953,
+            "right": 0.8107077320109634,
+            "integral": 0.030363314833867998,
+            "reported_error": 3.964678852729413e-15,
+            "status": 0,
+            "success": true,
+            "maxlevel": 2,
+            "evaluations": 67
+          },
+          {
+            "left": 0.8107077320109634,
+            "right": 1.5707963267948966,
+            "integral": 0.034105276905869966,
+            "reported_error": 2.5607638146203745e-16,
+            "status": 0,
+            "success": true,
+            "maxlevel": 3,
+            "evaluations": 131
+          },
+          {
+            "left": 1.5707963267948966,
+            "right": 2.33088492157883,
+            "integral": 0.034105276905869945,
+            "reported_error": 6.616736490552979e-15,
+            "status": 0,
+            "success": true,
+            "maxlevel": 3,
+            "evaluations": 131
+          },
+          {
+            "left": 2.33088492157883,
+            "right": 2.7043384496251437,
+            "integral": 0.030363314833867998,
+            "reported_error": 3.964678852729413e-15,
+            "status": 0,
+            "success": true,
+            "maxlevel": 2,
+            "evaluations": 67
+          },
+          {
+            "left": 2.7043384496251437,
+            "right": 3.141592653589793,
+            "integral": 0.02807184937173375,
+            "reported_error": 4.642003070244515e-15,
+            "status": 0,
+            "success": true,
+            "maxlevel": 2,
+            "evaluations": 67
+          }
+        ],
+        "root_info": {
+          "maximum_root_residual": 3.3306690738754696e-16,
+          "stationary_near_zeros": 0,
+          "clipping_roots": 4
+        }
+      },
+      "gauss128_section": 0.37016176444586857,
+      "gauss128_evaluations": 1024,
+      "quadpack_tanh_difference": 1.326716514427062e-14,
+      "gauss_tanh_difference": 1.8263168755083825e-14,
+      "observed_three_method_spread": 1.8263168755083825e-14,
+      "reported_error_over_observed_spread": 746.3950838462712,
+      "transition": {
+        "nearest_saved_transition": {
+          "z": 0.05800481218486291,
+          "cosine": 1.0,
+          "sine": -1.0,
+          "residual": 1.9984014443252818e-15,
+          "kind": "sign crossing"
+        },
+        "z_distance": 1.1967357515380028e-07,
+        "nearest_stationary_level_contact": {
+          "angle": -1.5707963267948966,
+          "branch": 1.0,
+          "level": -0.5778776309047179,
+          "signed_gap": 5.646320371255342e-07,
+          "second_derivative": 3.739832620165634,
+          "local_angular_scale": 0.0005495050314249606
+        },
+        "interpretation": "A small stationary branch-to-level gap produces nearby clipping-root coalescence or a narrow rounded near-contact. Its angular scale is a local quadratic estimate, not a root-separation certificate."
+      },
+      "seconds": 0.0020815840107388794
+    },
+    {
+      "case": "graded-gyroid-density-linear",
+      "z": 0.05800494078228512,
+      "half_width": 0.577877600635263,
+      "saved_warning": {
+        "z": 0.05800494078228512,
+        "quadpack_error": 1.3610743407318146e-11,
+        "evaluations": 3948,
+        "subintervals": 100,
+        "message": "The occurrence of roundoff error is detected, which prevents \n  the requested tolerance from being achieved.  The error may be \n  underestimated.",
+        "maximum_root_residual": 5.551115123125783e-16,
+        "stationary_near_zeros": 0,
+        "clipping_roots": 4
+      },
+      "quadpack_replay": {
+        "volume": 0.3701617994723715,
+        "reported_error": 1.3610743407318146e-11,
+        "evaluations": 3948,
+        "subintervals": 100,
+        "message": "The occurrence of roundoff error is detected, which prevents \n  the requested tolerance from being achieved.  The error may be \n  underestimated.",
+        "maximum_root_residual": 5.551115123125783e-16,
+        "stationary_near_zeros": 0,
+        "clipping_roots": 4
+      },
+      "tanh_sinh": {
+        "volume": 0.37016179947235817,
+        "reported_error_sum": 4.817235211308072e-14,
+        "all_intervals_converged": true,
+        "failed_intervals": 0,
+        "intervals": [
+          {
+            "left": -3.141592653589793,
+            "right": -2.70433840293826,
+            "integral": 0.0280718504743698,
+            "reported_error": 4.642003388398425e-15,
+            "status": 0,
+            "success": true,
+            "maxlevel": 2,
+            "evaluations": 67
+          },
+          {
+            "left": -2.70433840293826,
+            "right": -2.330884916164284,
+            "integral": 0.030363310657407997,
+            "reported_error": 3.964678269701198e-15,
+            "status": 0,
+            "success": true,
+            "maxlevel": 2,
+            "evaluations": 67
+          },
+          {
+            "left": -2.330884916164284,
+            "right": -1.5707963267948966,
+            "integral": 0.03410528873631174,
+            "reported_error": 6.616736344234244e-15,
+            "status": 0,
+            "success": true,
+            "maxlevel": 3,
+            "evaluations": 131
+          },
+          {
+            "left": -1.5707963267948966,
+            "right": -0.8107077374255092,
+            "integral": 0.03410528873631175,
+            "reported_error": 2.560763757993104e-16,
+            "status": 0,
+            "success": true,
+            "maxlevel": 3,
+            "evaluations": 131
+          },
+          {
+            "left": -0.8107077374255092,
+            "right": -0.43725425065153345,
+            "integral": 0.030363310657407987,
+            "reported_error": 3.9646782697011975e-15,
+            "status": 0,
+            "success": true,
+            "maxlevel": 2,
+            "evaluations": 67
+          },
+          {
+            "left": -0.43725425065153345,
+            "right": 0.0,
+            "integral": 0.028071850474369824,
+            "reported_error": 4.642003408705984e-15,
+            "status": 0,
+            "success": true,
+            "maxlevel": 2,
+            "evaluations": 67
+          },
+          {
+            "left": 0.0,
+            "right": 0.43725425065153345,
+            "integral": 0.028071850474369827,
+            "reported_error": 4.642003408705984e-15,
+            "status": 0,
+            "success": true,
+            "maxlevel": 2,
+            "evaluations": 67
+          },
+          {
+            "left": 0.43725425065153345,
+            "right": 0.8107077374255092,
+            "integral": 0.03036331065740798,
+            "reported_error": 3.9646782697011975e-15,
+            "status": 0,
+            "success": true,
+            "maxlevel": 2,
+            "evaluations": 67
+          },
+          {
+            "left": 0.8107077374255092,
+            "right": 1.5707963267948966,
+            "integral": 0.03410528873631175,
+            "reported_error": 2.560763757993104e-16,
+            "status": 0,
+            "success": true,
+            "maxlevel": 3,
+            "evaluations": 131
+          },
+          {
+            "left": 1.5707963267948966,
+            "right": 2.330884916164284,
+            "integral": 0.03410528873631174,
+            "reported_error": 6.616736344234244e-15,
+            "status": 0,
+            "success": true,
+            "maxlevel": 3,
+            "evaluations": 131
+          },
+          {
+            "left": 2.330884916164284,
+            "right": 2.70433840293826,
+            "integral": 0.030363310657407994,
+            "reported_error": 3.964678269701198e-15,
+            "status": 0,
+            "success": true,
+            "maxlevel": 2,
+            "evaluations": 67
+          },
+          {
+            "left": 2.70433840293826,
+            "right": 3.141592653589793,
+            "integral": 0.0280718504743698,
+            "reported_error": 4.642003388398425e-15,
+            "status": 0,
+            "success": true,
+            "maxlevel": 2,
+            "evaluations": 67
+          }
+        ],
+        "root_info": {
+          "maximum_root_residual": 5.551115123125783e-16,
+          "stationary_near_zeros": 0,
+          "clipping_roots": 4
+        }
+      },
+      "gauss128_section": 0.3701617994723689,
+      "gauss128_evaluations": 1024,
+      "quadpack_tanh_difference": 1.3322676295501878e-14,
+      "gauss_tanh_difference": 1.071365218763276e-14,
+      "observed_three_method_spread": 1.3322676295501878e-14,
+      "reported_error_over_observed_spread": 1021.6223156238906,
+      "transition": {
+        "nearest_saved_transition": {
+          "z": 0.05800481218486291,
+          "cosine": 1.0,
+          "sine": -1.0,
+          "residual": 1.9984014443252818e-15,
+          "kind": "sign crossing"
+        },
+        "z_distance": 1.2859742221094095e-07,
+        "nearest_stationary_level_contact": {
+          "angle": -1.5707963267948966,
+          "branch": 1.0,
+          "level": -0.577877600635263,
+          "signed_gap": 6.067356634886778e-07,
+          "second_derivative": 3.739832187843514,
+          "local_angular_scale": 0.0005696245544041589
+        },
+        "interpretation": "A small stationary branch-to-level gap produces nearby clipping-root coalescence or a narrow rounded near-contact. Its angular scale is a local quadratic estimate, not a root-separation certificate."
+      },
+      "seconds": 0.002051416988251731
+    },
+    {
+      "case": "graded-gyroid-density-linear",
+      "z": 0.1978601062957159,
+      "half_width": 0.6250399456622923,
+      "saved_warning": {
+        "z": 0.1978601062957159,
+        "quadpack_error": 6.331533592794073e-08,
+        "evaluations": 756,
+        "subintervals": 24,
+        "message": "The occurrence of roundoff error is detected, which prevents \n  the requested tolerance from being achieved.  The error may be \n  underestimated.",
+        "maximum_root_residual": 0.0,
+        "stationary_near_zeros": 0,
+        "clipping_roots": 4
+      },
+      "quadpack_replay": {
+        "volume": 0.3957216801674649,
+        "reported_error": 6.331533592794073e-08,
+        "evaluations": 756,
+        "subintervals": 24,
+        "message": "The occurrence of roundoff error is detected, which prevents \n  the requested tolerance from being achieved.  The error may be \n  underestimated.",
+        "maximum_root_residual": 0.0,
+        "stationary_near_zeros": 0,
+        "clipping_roots": 4
+      },
+      "tanh_sinh": {
+        "volume": 0.3957216826206278,
+        "reported_error_sum": 2.938194313816549e-14,
+        "all_intervals_converged": true,
+        "failed_intervals": 0,
+        "intervals": [
+          {
+            "left": -3.141592653589793,
+            "right": -2.7061363292201808,
+            "integral": 0.02121733116647142,
+            "reported_error": 2.632335782870178e-15,
+            "status": 0,
+            "success": true,
+            "maxlevel": 2,
+            "evaluations": 67
+          },
+          {
+            "left": -2.7061363292201808,
+            "right": -1.571122384066804,
+            "integral": 0.0776817569829325,
+            "reported_error": 6.861165298745132e-15,
+            "status": 0,
+            "success": true,
+            "maxlevel": 3,
+            "evaluations": 131
+          },
+          {
+            "left": -1.571122384066804,
+            "right": -1.5707963267948966,
+            "integral": 3.133250575301199e-05,
+            "reported_error": 1.0311424311428074e-15,
+            "status": 0,
+            "success": true,
+            "maxlevel": 2,
+            "evaluations": 67
+          },
+          {
+            "left": -1.5707963267948966,
+            "right": -1.570470269522989,
+            "integral": 3.133250575301199e-05,
+            "reported_error": 1.0311424311428074e-15,
+            "status": 0,
+            "success": true,
+            "maxlevel": 2,
+            "evaluations": 67
+          },
+          {
+            "left": -1.570470269522989,
+            "right": -0.43545632436961235,
+            "integral": 0.07768175698293253,
+            "reported_error": 5.028498423116424e-16,
+            "status": 0,
+            "success": true,
+            "maxlevel": 3,
+            "evaluations": 131
+          },
+          {
+            "left": -0.43545632436961235,
+            "right": 0.0,
+            "integral": 0.02121733116647142,
+            "reported_error": 2.632335782870178e-15,
+            "status": 0,
+            "success": true,
+            "maxlevel": 2,
+            "evaluations": 67
+          },
+          {
+            "left": 0.0,
+            "right": 0.43545632436961235,
+            "integral": 0.02121733116647142,
+            "reported_error": 2.632335782870178e-15,
+            "status": 0,
+            "success": true,
+            "maxlevel": 2,
+            "evaluations": 67
+          },
+          {
+            "left": 0.43545632436961235,
+            "right": 1.570470269522989,
+            "integral": 0.07768175698293253,
+            "reported_error": 5.028498423116424e-16,
+            "status": 0,
+            "success": true,
+            "maxlevel": 3,
+            "evaluations": 131
+          },
+          {
+            "left": 1.570470269522989,
+            "right": 1.5707963267948966,
+            "integral": 3.133250575301199e-05,
+            "reported_error": 1.0311424311428074e-15,
+            "status": 0,
+            "success": true,
+            "maxlevel": 2,
+            "evaluations": 67
+          },
+          {
+            "left": 1.5707963267948966,
+            "right": 1.571122384066804,
+            "integral": 3.133250575301199e-05,
+            "reported_error": 1.0311424311428074e-15,
+            "status": 0,
+            "success": true,
+            "maxlevel": 2,
+            "evaluations": 67
+          },
+          {
+            "left": 1.571122384066804,
+            "right": 2.7061363292201808,
+            "integral": 0.07768175698293252,
+            "reported_error": 6.861165298745132e-15,
+            "status": 0,
+            "success": true,
+            "maxlevel": 3,
+            "evaluations": 131
+          },
+          {
+            "left": 2.7061363292201808,
+            "right": 3.141592653589793,
+            "integral": 0.021217331166471422,
+            "reported_error": 2.632335782870178e-15,
+            "status": 0,
+            "success": true,
+            "maxlevel": 2,
+            "evaluations": 67
+          }
+        ],
+        "root_info": {
+          "maximum_root_residual": 0.0,
+          "stationary_near_zeros": 0,
+          "clipping_roots": 4
+        }
+      },
+      "gauss128_section": 0.3957216826206237,
+      "gauss128_evaluations": 1024,
+      "quadpack_tanh_difference": 2.4531628950441586e-09,
+      "gauss_tanh_difference": 4.107825191113079e-15,
+      "observed_three_method_spread": 2.4531628950441586e-09,
+      "reported_error_over_observed_spread": 25.809674545399893,
+      "transition": {
+        "nearest_saved_transition": {
+          "z": 0.1978601240246415,
+          "cosine": -1.0,
+          "sine": 1.0,
+          "residual": 1.1102230246251565e-16,
+          "kind": "sign crossing"
+        },
+        "z_distance": 1.7728925605364765e-08,
+        "nearest_stationary_level_contact": {
+          "angle": -1.5707963267948966,
+          "branch": 1.0,
+          "level": 0.6250399456622923,
+          "signed_gap": -7.32471034936566e-08,
+          "second_derivative": 1.3779475672836514,
+          "local_angular_scale": 0.0003260572635341627
+        },
+        "interpretation": "A small stationary branch-to-level gap produces nearby clipping-root coalescence or a narrow rounded near-contact. Its angular scale is a local quadratic estimate, not a root-separation certificate."
+      },
+      "seconds": 0.0009251250012312084
+    },
+    {
+      "case": "graded-gyroid-density-linear",
+      "z": 0.4585764597637812,
+      "half_width": 0.708977262997518,
+      "saved_warning": {
+        "z": 0.4585764597637812,
+        "quadpack_error": 2.5513069366420326e-12,
+        "evaluations": 4116,
+        "subintervals": 104,
+        "message": "The occurrence of roundoff error is detected, which prevents \n  the requested tolerance from being achieved.  The error may be \n  underestimated.",
+        "maximum_root_residual": 1.1102230246251565e-16,
+        "stationary_near_zeros": 0,
+        "clipping_roots": 4
+      },
+      "quadpack_replay": {
+        "volume": 0.4423727634785831,
+        "reported_error": 2.5513069366420326e-12,
+        "evaluations": 4116,
+        "subintervals": 104,
+        "message": "The occurrence of roundoff error is detected, which prevents \n  the requested tolerance from being achieved.  The error may be \n  underestimated.",
+        "maximum_root_residual": 1.1102230246251565e-16,
+        "stationary_near_zeros": 0,
+        "clipping_roots": 4
+      },
+      "tanh_sinh": {
+        "volume": 0.44237276347860477,
+        "reported_error_sum": 5.4339824795002237e-14,
+        "all_intervals_converged": true,
+        "failed_intervals": 0,
+        "intervals": [
+          {
+            "left": -3.141592653589793,
+            "right": -2.845862175603111,
+            "integral": 0.024151764518537826,
+            "reported_error": 3.5995671300565084e-15,
+            "status": 0,
+            "success": true,
+            "maxlevel": 2,
+            "evaluations": 67
+          },
+          {
+            "left": -2.845862175603111,
+            "right": -2.341336931926144,
+            "integral": 0.04610354228741014,
+            "reported_error": 6.140971807467109e-15,
+            "status": 0,
+            "success": true,
+            "maxlevel": 2,
+            "evaluations": 67
+          },
+          {
+            "left": -2.341336931926144,
+            "right": -1.5707963267948966,
+            "integral": 0.04033788406370322,
+            "reported_error": 7.402353723567659e-15,
+            "status": 0,
+            "success": true,
+            "maxlevel": 3,
+            "evaluations": 131
+          },
+          {
+            "left": -1.5707963267948966,
+            "right": -0.8002557216636493,
+            "integral": 0.04033788406370324,
+            "reported_error": 2.864807988862236e-16,
+            "status": 0,
+            "success": true,
+            "maxlevel": 3,
+            "evaluations": 131
+          },
+          {
+            "left": -0.8002557216636493,
+            "right": -0.29573047798668234,
+            "integral": 0.04610354228741011,
+            "reported_error": 6.140971807467105e-15,
+            "status": 0,
+            "success": true,
+            "maxlevel": 2,
+            "evaluations": 67
+          },
+          {
+            "left": -0.29573047798668234,
+            "right": 0.0,
+            "integral": 0.02415176451853785,
+            "reported_error": 3.5995671300565116e-15,
+            "status": 0,
+            "success": true,
+            "maxlevel": 2,
+            "evaluations": 67
+          },
+          {
+            "left": 0.0,
+            "right": 0.29573047798668234,
+            "integral": 0.02415176451853785,
+            "reported_error": 3.5995671300565116e-15,
+            "status": 0,
+            "success": true,
+            "maxlevel": 2,
+            "evaluations": 67
+          },
+          {
+            "left": 0.29573047798668234,
+            "right": 0.8002557216636493,
+            "integral": 0.046103542287410114,
+            "reported_error": 6.140971807467105e-15,
+            "status": 0,
+            "success": true,
+            "maxlevel": 2,
+            "evaluations": 67
+          },
+          {
+            "left": 0.8002557216636493,
+            "right": 1.5707963267948966,
+            "integral": 0.04033788406370324,
+            "reported_error": 2.864807988862236e-16,
+            "status": 0,
+            "success": true,
+            "maxlevel": 3,
+            "evaluations": 131
+          },
+          {
+            "left": 1.5707963267948966,
+            "right": 2.341336931926144,
+            "integral": 0.04033788406370323,
+            "reported_error": 7.402353723567659e-15,
+            "status": 0,
+            "success": true,
+            "maxlevel": 3,
+            "evaluations": 131
+          },
+          {
+            "left": 2.341336931926144,
+            "right": 2.845862175603111,
+            "integral": 0.04610354228741014,
+            "reported_error": 6.140971807467109e-15,
+            "status": 0,
+            "success": true,
+            "maxlevel": 2,
+            "evaluations": 67
+          },
+          {
+            "left": 2.845862175603111,
+            "right": 3.141592653589793,
+            "integral": 0.024151764518537823,
+            "reported_error": 3.5995671300565084e-15,
+            "status": 0,
+            "success": true,
+            "maxlevel": 2,
+            "evaluations": 67
+          }
+        ],
+        "root_info": {
+          "maximum_root_residual": 1.1102230246251565e-16,
+          "stationary_near_zeros": 0,
+          "clipping_roots": 4
+        }
+      },
+      "gauss128_section": 0.44237276347856835,
+      "gauss128_evaluations": 1024,
+      "quadpack_tanh_difference": 2.1649348980190553e-14,
+      "gauss_tanh_difference": 3.6415315207705135e-14,
+      "observed_three_method_spread": 3.6415315207705135e-14,
+      "reported_error_over_observed_spread": 70.06137176322451,
+      "transition": {
+        "nearest_saved_transition": {
+          "z": 0.45857655252824703,
+          "cosine": -1.0,
+          "sine": -1.0,
+          "residual": 2.220446049250313e-16,
+          "kind": "sign crossing"
+        },
+        "z_distance": 9.276446583106335e-08,
+        "nearest_stationary_level_contact": {
+          "angle": -1.5707963267948966,
+          "branch": -1.0,
+          "level": 0.708977262997518,
+          "signed_gap": -3.7701376331966685e-07,
+          "second_derivative": -4.852181636636912,
+          "local_angular_scale": 0.0003942076748666403
+        },
+        "interpretation": "A small stationary branch-to-level gap produces nearby clipping-root coalescence or a narrow rounded near-contact. Its angular scale is a local quadratic estimate, not a root-separation certificate."
+      },
+      "seconds": 0.002112290996592492
+    },
+    {
+      "case": "graded-gyroid-density-linear",
+      "z": 0.4585763356065915,
+      "half_width": 0.7089768130149655,
+      "saved_warning": {
+        "z": 0.4585763356065915,
+        "quadpack_error": 1.814590988763844e-11,
+        "evaluations": 3612,
+        "subintervals": 92,
+        "message": "The occurrence of roundoff error is detected, which prevents \n  the requested tolerance from being achieved.  The error may be \n  underestimated.",
+        "maximum_root_residual": 2.220446049250313e-16,
+        "stationary_near_zeros": 0,
+        "clipping_roots": 4
+      },
+      "quadpack_replay": {
+        "volume": 0.4423731333299478,
+        "reported_error": 1.814590988763844e-11,
+        "evaluations": 3612,
+        "subintervals": 92,
+        "message": "The occurrence of roundoff error is detected, which prevents \n  the requested tolerance from being achieved.  The error may be \n  underestimated.",
+        "maximum_root_residual": 2.220446049250313e-16,
+        "stationary_near_zeros": 0,
+        "clipping_roots": 4
+      },
+      "tanh_sinh": {
+        "volume": 0.44237313332989786,
+        "reported_error_sum": 5.433980189017802e-14,
+        "all_intervals_converged": true,
+        "failed_intervals": 0,
+        "intervals": [
+          {
+            "left": -3.141592653589793,
+            "right": -2.845861591491769,
+            "integral": 0.024151790451879176,
+            "reported_error": 3.599572370373803e-15,
+            "status": 0,
+            "success": true,
+            "maxlevel": 2,
+            "evaluations": 67
+          },
+          {
+            "left": -2.845861591491769,
+            "right": -2.3413368551680103,
+            "integral": 0.04610347697119856,
+            "reported_error": 6.140962412461153e-15,
+            "status": 0,
+            "success": true,
+            "maxlevel": 2,
+            "evaluations": 67
+          },
+          {
+            "left": -2.3413368551680103,
+            "right": -1.5707963267948966,
+            "integral": 0.040338015909396716,
+            "reported_error": 7.402350718593224e-15,
+            "status": 0,
+            "success": true,
+            "maxlevel": 3,
+            "evaluations": 131
+          },
+          {
+            "left": -1.5707963267948966,
+            "right": -0.800255798421783,
+            "integral": 0.04033801590939674,
+            "reported_error": 2.864806825897712e-16,
+            "status": 0,
+            "success": true,
+            "maxlevel": 3,
+            "evaluations": 131
+          },
+          {
+            "left": -0.800255798421783,
+            "right": -0.2957310620980239,
+            "integral": 0.046103476971198584,
+            "reported_error": 6.140962412461157e-15,
+            "status": 0,
+            "success": true,
+            "maxlevel": 2,
+            "evaluations": 67
+          },
+          {
+            "left": -0.2957310620980239,
+            "right": 0.0,
+            "integral": 0.024151790451879162,
+            "reported_error": 3.5995723486099e-15,
+            "status": 0,
+            "success": true,
+            "maxlevel": 2,
+            "evaluations": 67
+          },
+          {
+            "left": 0.0,
+            "right": 0.2957310620980239,
+            "integral": 0.02415179045187916,
+            "reported_error": 3.5995723486099e-15,
+            "status": 0,
+            "success": true,
+            "maxlevel": 2,
+            "evaluations": 67
+          },
+          {
+            "left": 0.2957310620980239,
+            "right": 0.800255798421783,
+            "integral": 0.046103476971198584,
+            "reported_error": 6.140962412461157e-15,
+            "status": 0,
+            "success": true,
+            "maxlevel": 2,
+            "evaluations": 67
+          },
+          {
+            "left": 0.800255798421783,
+            "right": 1.5707963267948966,
+            "integral": 0.04033801590939674,
+            "reported_error": 2.864806825897712e-16,
+            "status": 0,
+            "success": true,
+            "maxlevel": 3,
+            "evaluations": 131
+          },
+          {
+            "left": 1.5707963267948966,
+            "right": 2.3413368551680103,
+            "integral": 0.04033801590939672,
+            "reported_error": 7.402350718593224e-15,
+            "status": 0,
+            "success": true,
+            "maxlevel": 3,
+            "evaluations": 131
+          },
+          {
+            "left": 2.3413368551680103,
+            "right": 2.845861591491769,
+            "integral": 0.046103476971198556,
+            "reported_error": 6.140962412461153e-15,
+            "status": 0,
+            "success": true,
+            "maxlevel": 2,
+            "evaluations": 67
+          },
+          {
+            "left": 2.845861591491769,
+            "right": 3.141592653589793,
+            "integral": 0.024151790451879176,
+            "reported_error": 3.599572370373803e-15,
+            "status": 0,
+            "success": true,
+            "maxlevel": 2,
+            "evaluations": 67
+          }
+        ],
+        "root_info": {
+          "maximum_root_residual": 2.220446049250313e-16,
+          "stationary_near_zeros": 0,
+          "clipping_roots": 4
+        }
+      },
+      "gauss128_section": 0.44237313332995964,
+      "gauss128_evaluations": 1024,
+      "quadpack_tanh_difference": 4.9960036108132044e-14,
+      "gauss_tanh_difference": 6.178391132038996e-14,
+      "observed_three_method_spread": 6.178391132038996e-14,
+      "reported_error_over_observed_spread": 293.69959751398767,
+      "transition": {
+        "nearest_saved_transition": {
+          "z": 0.45857655252824703,
+          "cosine": -1.0,
+          "sine": -1.0,
+          "residual": 2.220446049250313e-16,
+          "kind": "sign crossing"
+        },
+        "z_distance": 2.169216555270026e-07,
+        "nearest_stationary_level_contact": {
+          "angle": -1.5707963267948966,
+          "branch": -1.0,
+          "level": 0.7089768130149655,
+          "signed_gap": -8.816143545198329e-07,
+          "second_derivative": -4.852170053161943,
+          "local_angular_scale": 0.0006028181470038712
+        },
+        "interpretation": "A small stationary branch-to-level gap produces nearby clipping-root coalescence or a narrow rounded near-contact. Its angular scale is a local quadratic estimate, not a root-separation certificate."
+      },
+      "seconds": 0.001970790995983407
+    },
+    {
+      "case": "graded-gyroid-density-linear",
+      "z": 0.45857662044958764,
+      "half_width": 0.708977845370633,
+      "saved_warning": {
+        "z": 0.45857662044958764,
+        "quadpack_error": 2.704238598717956e-10,
+        "evaluations": 4536,
+        "subintervals": 116,
+        "message": "The occurrence of roundoff error is detected, which prevents \n  the requested tolerance from being achieved.  The error may be \n  underestimated.",
+        "maximum_root_residual": 2.220446049250313e-16,
+        "stationary_near_zeros": 0,
+        "clipping_roots": 8
+      },
+      "quadpack_replay": {
+        "volume": 0.44237218912695153,
+        "reported_error": 2.704238598717956e-10,
+        "evaluations": 4536,
+        "subintervals": 116,
+        "message": "The occurrence of roundoff error is detected, which prevents \n  the requested tolerance from being achieved.  The error may be \n  underestimated.",
+        "maximum_root_residual": 2.220446049250313e-16,
+        "stationary_near_zeros": 0,
+        "clipping_roots": 8
+      },
+      "tanh_sinh": {
+        "volume": 0.4423721891269508,
+        "reported_error_sum": 5.43331226903029e-14,
+        "all_intervals_converged": true,
+        "failed_intervals": 0,
+        "intervals": [
+          {
+            "left": -3.141592653589793,
+            "right": -2.845862931566494,
+            "integral": 0.02415173095524178,
+            "reported_error": 3.59956037948442e-15,
+            "status": 0,
+            "success": true,
+            "maxlevel": 2,
+            "evaluations": 67
+          },
+          {
+            "left": -2.845862931566494,
+            "right": -2.3413370312673667,
+            "integral": 0.046103626820479124,
+            "reported_error": 6.1409839666049895e-15,
+            "status": 0,
+            "success": true,
+            "maxlevel": 2,
+            "evaluations": 67
+          },
+          {
+            "left": -2.3413370312673667,
+            "right": -1.5711336425810452,
+            "integral": 0.040337689506016766,
+            "reported_error": 7.399117119235307e-15,
+            "status": 0,
+            "success": true,
+            "maxlevel": 3,
+            "evaluations": 131
+          },
+          {
+            "left": -1.5711336425810452,
+            "right": -1.5707963267948966,
+            "integral": 0.0,
+            "reported_error": 0.0,
+            "status": 0,
+            "success": true,
+            "maxlevel": 2,
+            "evaluations": 67
+          },
+          {
+            "left": -1.5707963267948966,
+            "right": -1.570459011008748,
+            "integral": 0.0,
+            "reported_error": 0.0,
+            "status": 0,
+            "success": true,
+            "maxlevel": 2,
+            "evaluations": 67
+          },
+          {
+            "left": -1.570459011008748,
+            "right": -0.8002556223224263,
+            "integral": 0.04033768950601682,
+            "reported_error": 2.863555380530566e-16,
+            "status": 0,
+            "success": true,
+            "maxlevel": 3,
+            "evaluations": 131
+          },
+          {
+            "left": -0.8002556223224263,
+            "right": -0.29572972202329917,
+            "integral": 0.04610362682047911,
+            "reported_error": 6.140983966604987e-15,
+            "status": 0,
+            "success": true,
+            "maxlevel": 2,
+            "evaluations": 67
+          },
+          {
+            "left": -0.29572972202329917,
+            "right": 0.0,
+            "integral": 0.02415173095524179,
+            "reported_error": 3.599560375168691e-15,
+            "status": 0,
+            "success": true,
+            "maxlevel": 2,
+            "evaluations": 67
+          },
+          {
+            "left": 0.0,
+            "right": 0.29572972202329917,
+            "integral": 0.02415173095524179,
+            "reported_error": 3.599560375168691e-15,
+            "status": 0,
+            "success": true,
+            "maxlevel": 2,
+            "evaluations": 67
+          },
+          {
+            "left": 0.29572972202329917,
+            "right": 0.8002556223224263,
+            "integral": 0.0461036268204791,
+            "reported_error": 6.140983966604987e-15,
+            "status": 0,
+            "success": true,
+            "maxlevel": 2,
+            "evaluations": 67
+          },
+          {
+            "left": 0.8002556223224263,
+            "right": 1.570459011008748,
+            "integral": 0.04033768950601682,
+            "reported_error": 2.863555380530566e-16,
+            "status": 0,
+            "success": true,
+            "maxlevel": 3,
+            "evaluations": 131
+          },
+          {
+            "left": 1.570459011008748,
+            "right": 1.5707963267948966,
+            "integral": 0.0,
+            "reported_error": 0.0,
+            "status": 0,
+            "success": true,
+            "maxlevel": 2,
+            "evaluations": 67
+          },
+          {
+            "left": 1.5707963267948966,
+            "right": 1.5711336425810452,
+            "integral": 0.0,
+            "reported_error": 0.0,
+            "status": 0,
+            "success": true,
+            "maxlevel": 2,
+            "evaluations": 67
+          },
+          {
+            "left": 1.5711336425810452,
+            "right": 2.3413370312673667,
+            "integral": 0.04033768950601677,
+            "reported_error": 7.399117119235307e-15,
+            "status": 0,
+            "success": true,
+            "maxlevel": 3,
+            "evaluations": 131
+          },
+          {
+            "left": 2.3413370312673667,
+            "right": 2.845862931566494,
+            "integral": 0.046103626820479124,
+            "reported_error": 6.1409839666049895e-15,
+            "status": 0,
+            "success": true,
+            "maxlevel": 2,
+            "evaluations": 67
+          },
+          {
+            "left": 2.845862931566494,
+            "right": 3.141592653589793,
+            "integral": 0.02415173095524178,
+            "reported_error": 3.59956037948442e-15,
+            "status": 0,
+            "success": true,
+            "maxlevel": 2,
+            "evaluations": 67
+          }
+        ],
+        "root_info": {
+          "maximum_root_residual": 2.220446049250313e-16,
+          "stationary_near_zeros": 0,
+          "clipping_roots": 8
+        }
+      },
+      "gauss128_section": 0.4423721891269461,
+      "gauss128_evaluations": 1536,
+      "quadpack_tanh_difference": 7.216449660063518e-16,
+      "gauss_tanh_difference": 4.718447854656915e-15,
+      "observed_three_method_spread": 5.440092820663267e-15,
+      "reported_error_over_observed_spread": 49709.42018574326,
+      "transition": {
+        "nearest_saved_transition": {
+          "z": 0.45857655252824703,
+          "cosine": -1.0,
+          "sine": -1.0,
+          "residual": 2.220446049250313e-16,
+          "kind": "sign crossing"
+        },
+        "z_distance": 6.792134060740196e-08,
+        "nearest_stationary_level_contact": {
+          "angle": -1.5707963267948966,
+          "branch": -1.0,
+          "level": 0.708977845370633,
+          "signed_gap": 2.760460680040211e-07,
+          "second_derivative": -4.8521966282184765,
+          "local_angular_scale": 0.000337315722729571
+        },
+        "interpretation": "A small stationary branch-to-level gap produces nearby clipping-root coalescence or a narrow rounded near-contact. Its angular scale is a local quadratic estimate, not a root-separation certificate."
+      },
+      "seconds": 0.0023690419911872596
+    }
+  ]
+}

@@ -1,0 +1,3434 @@
+{
+  "complete": true,
+  "volumes": [
+    {
+      "case": "gyroid",
+      "gauss128": {
+        "volume": 0.35634599751739515,
+        "order": 128,
+        "line_axis": "x",
+        "reversed_outer_coordinate": false,
+        "line_fraction_evaluations": 1572864,
+        "outer_nodes": 1536,
+        "outer_panels": 12
+      },
+      "seconds": 0.058888708997983485,
+      "gauss64_volume": 0.35634599751740786,
+      "adaptive_volume": 0.35634599751749463,
+      "difference_128_64": 1.2712053631958042e-14,
+      "difference_128_adaptive": 9.947598300641403e-14,
+      "empirical_observed_scale": 9.947598300641403e-14,
+      "score_comparison": {
+        "frozen_reference_volume": 0.3564434051513672,
+        "frozen_scramble_spread": 0.00019073486328125,
+        "primary_gauss64_estimate": 0.35634599751740786,
+        "rows": [
+          {
+            "stage": "baseline",
+            "source": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-native-face-fit-nine-v1/gyroid-repeat-0-baseline/result.json",
+            "source_sha256": "bd79f535fc1b4bf499b04cd3f49063e277f5fccb68f15e6a2cb4cd4dfa327220",
+            "mesh_sha256": "79a51c01129afeb63213431a780f755d5a0db3cf849db2f7d4eb0378cd57e9d0",
+            "volume": 0.35634956213272473,
+            "old_relative_volume_error": -0.0002632760693176417,
+            "old_absolute_relative_volume_error": 0.0002632760693176417,
+            "old_absolute_volume_error": 9.384301864245881e-05,
+            "gauss64_absolute_volume_error": 3.5646153168644723e-06,
+            "volume_float_ulp": 5.551115123125783e-17,
+            "gauss128_relative_volume_error": 1.0003242226330755e-05,
+            "gauss128_absolute_volume_error": 3.564615329576526e-06
+          },
+          {
+            "stage": "native_fit",
+            "source": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-native-face-fit-nine-v1/gyroid-repeat-0-fit/result.json",
+            "source_sha256": "bbd778c7891f4c0a1a36faef861807c73f3f41c466ed603885314b2c4d04e405",
+            "mesh_sha256": "bf9582aa5e81d6009744275286f5fbfa1fc4ead7da31363bdc14a8f6a2a9494d",
+            "volume": 0.3563459021394071,
+            "old_relative_volume_error": -0.0002735441603097799,
+            "old_absolute_relative_volume_error": 0.0002735441603097799,
+            "old_absolute_volume_error": 9.750301196009836e-05,
+            "gauss64_absolute_volume_error": 9.537800077508152e-08,
+            "volume_float_ulp": 5.551115123125783e-17,
+            "gauss128_relative_volume_error": -2.6765556149221936e-07,
+            "gauss128_absolute_volume_error": 9.537798806302789e-08
+          },
+          {
+            "stage": "global_correction",
+            "source": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-volume-bias-pilot-v1/gyroid/result.json",
+            "source_sha256": "2402365e64c8a18a111be4e8536f582d1ba69004c350b58151ac413c06eca316",
+            "mesh_sha256": "a2237e1e926eea0f494c8d5f2c786458d8cb2369142718750820776b544416bb",
+            "volume": 0.3563459722893475,
+            "old_relative_volume_error": -0.0002733473550402543,
+            "old_absolute_relative_volume_error": 0.0002733473550402543,
+            "old_absolute_volume_error": 9.743286201968626e-05,
+            "gauss64_absolute_volume_error": 2.5228060362980642e-08,
+            "volume_float_ulp": 5.551115123125783e-17,
+            "gauss128_relative_volume_error": -7.07964949997475e-08,
+            "gauss128_absolute_volume_error": 2.522804765092701e-08
+          },
+          {
+            "stage": "signed_envelope",
+            "source": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-volume-signed-envelope-six-v1/gyroid/result.json",
+            "source_sha256": "e8fe8ed57ba002d63fecdfeb4161ac4659181776c7acd4a2093f266efddabf28",
+            "mesh_sha256": "d1d13066e70c048172862ce8ad11055c887ab736f0ee245918005cd0b50c92fb",
+            "volume": 0.35634591302076013,
+            "old_relative_volume_error": -0.00027351363273409035,
+            "old_absolute_relative_volume_error": 0.00027351363273409035,
+            "old_absolute_volume_error": 9.749213060705753e-05,
+            "gauss64_absolute_volume_error": 8.449664773424459e-08,
+            "volume_float_ulp": 5.551115123125783e-17,
+            "gauss128_relative_volume_error": -2.3711964103334537e-07,
+            "gauss128_absolute_volume_error": 8.449663502219096e-08
+          }
+        ],
+        "comparisons": [
+          {
+            "before": "baseline",
+            "after": "native_fit",
+            "old_absolute_error_improvement": -3.659993317639554e-06,
+            "gauss64_absolute_error_improvement": 3.4692373160893908e-06,
+            "observed_integration_discrepancy": 9.947598300641403e-14,
+            "twice_discrepancy_sensitivity": 1.9895196601282805e-13,
+            "absolute_improvement_over_twice_discrepancy": 17437562.49832589,
+            "sign_agrees_between_quadratures": true,
+            "exceeds_observed_sensitivity_by_10x": true,
+            "exceeds_reported_heuristic_sensitivity_by_10x": true,
+            "gauss128_absolute_error_improvement": 3.469237341513498e-06
+          },
+          {
+            "before": "native_fit",
+            "after": "global_correction",
+            "old_absolute_error_improvement": 7.014994041210088e-08,
+            "gauss64_absolute_error_improvement": 7.014994041210088e-08,
+            "observed_integration_discrepancy": 9.947598300641403e-14,
+            "twice_discrepancy_sensitivity": 1.9895196601282805e-13,
+            "absolute_improvement_over_twice_discrepancy": 352597.3722098214,
+            "sign_agrees_between_quadratures": true,
+            "exceeds_observed_sensitivity_by_10x": true,
+            "exceeds_reported_heuristic_sensitivity_by_10x": true,
+            "gauss128_absolute_error_improvement": 7.014994041210088e-08
+          },
+          {
+            "before": "native_fit",
+            "after": "signed_envelope",
+            "old_absolute_error_improvement": 1.0881353040836927e-08,
+            "gauss64_absolute_error_improvement": 1.0881353040836927e-08,
+            "observed_integration_discrepancy": 9.947598300641403e-14,
+            "twice_discrepancy_sensitivity": 1.9895196601282805e-13,
+            "absolute_improvement_over_twice_discrepancy": 54693.36774553572,
+            "sign_agrees_between_quadratures": true,
+            "exceeds_observed_sensitivity_by_10x": true,
+            "exceeds_reported_heuristic_sensitivity_by_10x": false,
+            "gauss128_absolute_error_improvement": 1.0881353040836927e-08
+          }
+        ],
+        "facewise": {
+          "available": false,
+          "reason": "This mode was run only for spinodoid and Schwarz P/D, not these four Gyroid cases."
+        },
+        "saved_mesh_volume_repeat_discrepancy": 0.0,
+        "mesh_volume_numerics": "Saved Tet10 quadrature volumes are reused. Repetition discrepancy and float ulp are recorded separately; neither certifies quadrature roundoff. No new mesh-volume numerical audit is performed.",
+        "ranking_scope": "Absolute volume-error improvements are compared with empirical integration discrepancy and reported heuristics. Neither is a rigorous error bound. Frozen scores and admission remain unchanged.",
+        "reference_kind": "Gauss128 closure estimate; no reference promotion",
+        "gauss128_reference_estimate": 0.35634599751739515
+      }
+    },
+    {
+      "case": "graded-gyroid-linear",
+      "gauss128": {
+        "volume": 0.3565688696896699,
+        "order": 128,
+        "line_axis": "x",
+        "reversed_outer_coordinate": false,
+        "line_fraction_evaluations": 1572864,
+        "outer_nodes": 1536,
+        "outer_panels": 12
+      },
+      "seconds": 0.058218374993884936,
+      "gauss64_volume": 0.3565688696896827,
+      "adaptive_volume": 0.3565688697282851,
+      "difference_128_64": 1.2823075934420558e-14,
+      "difference_128_adaptive": 3.861522213099988e-11,
+      "empirical_observed_scale": 3.861522213099988e-11,
+      "score_comparison": {
+        "frozen_reference_volume": 0.35660862922668457,
+        "frozen_scramble_spread": 0.000293731689453125,
+        "primary_gauss64_estimate": 0.3565688696896827,
+        "rows": [
+          {
+            "stage": "baseline",
+            "source": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-native-face-fit-nine-v1/graded-gyroid-linear-repeat-0-baseline/result.json",
+            "source_sha256": "b2e2d8690c8a3a15307affefbd47e8854bf63e0d86808858dee6cd981944d589",
+            "mesh_sha256": "598fd9c1c9c3be69d136cb27e96b1502234432de5d63ed92018f2cedb6e0ed0c",
+            "volume": 0.3565699930441374,
+            "old_relative_volume_error": -0.00010834337528786708,
+            "old_absolute_relative_volume_error": 0.00010834337528786708,
+            "old_absolute_volume_error": 3.8636182547180375e-05,
+            "gauss64_absolute_volume_error": 1.1233544546795926e-06,
+            "volume_float_ulp": 5.551115123125783e-17,
+            "gauss128_relative_volume_error": 3.1504558108963465e-06,
+            "gauss128_absolute_volume_error": 1.1233544675026685e-06
+          },
+          {
+            "stage": "native_fit",
+            "source": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-native-face-fit-nine-v1/graded-gyroid-linear-repeat-0-fit/result.json",
+            "source_sha256": "754a9c28380e20a31c1af3f789fe4d142396ccddf547673bd8e7c075d74b5c23",
+            "mesh_sha256": "1f2988372797268c2950ef00190704ed74d6423367e906399744d7fc2174e897",
+            "volume": 0.3565701666453907,
+            "old_relative_volume_error": -0.00010785656358702767,
+            "old_absolute_relative_volume_error": 0.00010785656358702767,
+            "old_absolute_volume_error": 3.846258129386326e-05,
+            "gauss64_absolute_volume_error": 1.2969557079967053e-06,
+            "volume_float_ulp": 5.551115123125783e-17,
+            "gauss128_relative_volume_error": 3.6373217942031744e-06,
+            "gauss128_absolute_volume_error": 1.2969557208197813e-06
+          },
+          {
+            "stage": "global_correction",
+            "source": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-volume-bias-seven-v1/graded-gyroid-linear/result.json",
+            "source_sha256": "e3967fbef6bed274db42b1829bde5f375cfc8aee21829b366be31748337225c0",
+            "mesh_sha256": "0cbe989b79ab8cb64739f809f97d85540eb0f144f3f86b0f93ca706e313f5d79",
+            "volume": 0.35656886953869843,
+            "old_relative_volume_error": -0.00011149390319675767,
+            "old_absolute_relative_volume_error": 0.00011149390319675767,
+            "old_absolute_volume_error": 3.97596879861406e-05,
+            "gauss64_absolute_volume_error": 1.5098428063353708e-10,
+            "volume_float_ulp": 5.551115123125783e-17,
+            "gauss128_relative_volume_error": -4.234005368530802e-10,
+            "gauss128_absolute_volume_error": 1.5097145755760266e-10
+          },
+          {
+            "stage": "signed_envelope",
+            "source": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-volume-signed-envelope-six-v1/graded-gyroid-linear/result.json",
+            "source_sha256": "ca9b8cea1db15d269028cd45b799b7350bcafa3a0f4015108ab9c3ece4483abf",
+            "mesh_sha256": "e1364c8c267c8c2304e7fb8207b3cbe02651e19c1867d55138d4afd6c39fdbe4",
+            "volume": 0.35656999257011274,
+            "old_relative_volume_error": -0.00010834470454523792,
+            "old_absolute_relative_volume_error": 0.00010834470454523792,
+            "old_absolute_volume_error": 3.863665657183324e-05,
+            "gauss64_absolute_volume_error": 1.1228804300267292e-06,
+            "volume_float_ulp": 5.551115123125783e-17,
+            "gauss128_relative_volume_error": 3.149126405199709e-06,
+            "gauss128_absolute_volume_error": 1.1228804428498051e-06
+          }
+        ],
+        "comparisons": [
+          {
+            "before": "baseline",
+            "after": "native_fit",
+            "old_absolute_error_improvement": 1.7360125331711274e-07,
+            "gauss64_absolute_error_improvement": -1.7360125331711274e-07,
+            "observed_integration_discrepancy": 3.861522213099988e-11,
+            "twice_discrepancy_sensitivity": 7.723044426199976e-11,
+            "absolute_improvement_over_twice_discrepancy": 2247.834451504392,
+            "sign_agrees_between_quadratures": true,
+            "exceeds_observed_sensitivity_by_10x": true,
+            "exceeds_reported_heuristic_sensitivity_by_10x": true,
+            "gauss128_absolute_error_improvement": -1.7360125331711274e-07
+          },
+          {
+            "before": "native_fit",
+            "after": "global_correction",
+            "old_absolute_error_improvement": -1.2971066922773389e-06,
+            "gauss64_absolute_error_improvement": 1.2968047237160718e-06,
+            "observed_integration_discrepancy": 3.861522213099988e-11,
+            "twice_discrepancy_sensitivity": 7.723044426199976e-11,
+            "absolute_improvement_over_twice_discrepancy": 16791.367209579807,
+            "sign_agrees_between_quadratures": true,
+            "exceeds_observed_sensitivity_by_10x": true,
+            "exceeds_reported_heuristic_sensitivity_by_10x": true,
+            "gauss128_absolute_error_improvement": 1.2968047493622237e-06
+          },
+          {
+            "before": "native_fit",
+            "after": "signed_envelope",
+            "old_absolute_error_improvement": -1.7407527796997613e-07,
+            "gauss64_absolute_error_improvement": 1.7407527796997613e-07,
+            "observed_integration_discrepancy": 3.861522213099988e-11,
+            "twice_discrepancy_sensitivity": 7.723044426199976e-11,
+            "absolute_improvement_over_twice_discrepancy": 2253.972246740365,
+            "sign_agrees_between_quadratures": true,
+            "exceeds_observed_sensitivity_by_10x": true,
+            "exceeds_reported_heuristic_sensitivity_by_10x": true,
+            "gauss128_absolute_error_improvement": 1.7407527796997613e-07
+          }
+        ],
+        "facewise": {
+          "available": false,
+          "reason": "This mode was run only for spinodoid and Schwarz P/D, not these four Gyroid cases."
+        },
+        "saved_mesh_volume_repeat_discrepancy": 0.0,
+        "mesh_volume_numerics": "Saved Tet10 quadrature volumes are reused. Repetition discrepancy and float ulp are recorded separately; neither certifies quadrature roundoff. No new mesh-volume numerical audit is performed.",
+        "ranking_scope": "Absolute volume-error improvements are compared with empirical integration discrepancy and reported heuristics. Neither is a rigorous error bound. Frozen scores and admission remain unchanged.",
+        "reference_kind": "Gauss128 closure estimate; no reference promotion",
+        "gauss128_reference_estimate": 0.3565688696896699
+      }
+    },
+    {
+      "case": "graded-gyroid-periodic",
+      "gauss128": {
+        "volume": 0.3565882117210882,
+        "order": 128,
+        "line_axis": "x",
+        "reversed_outer_coordinate": false,
+        "line_fraction_evaluations": 1572864,
+        "outer_nodes": 1536,
+        "outer_panels": 12
+      },
+      "seconds": 0.058178541978122666,
+      "gauss64_volume": 0.3565882117211011,
+      "adaptive_volume": 0.35658821157657217,
+      "difference_128_64": 1.2934098236883074e-14,
+      "difference_128_adaptive": 1.4451601026976846e-10,
+      "empirical_observed_scale": 1.4451601026976846e-10,
+      "score_comparison": {
+        "frozen_reference_volume": 0.3565828800201416,
+        "frozen_scramble_spread": 7.724761962890625e-05,
+        "primary_gauss64_estimate": 0.3565882117211011,
+        "rows": [
+          {
+            "stage": "baseline",
+            "source": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-native-face-fit-nine-v1/graded-gyroid-periodic-repeat-0-baseline/result.json",
+            "source_sha256": "3ce132bcc09edb8ae265c89305981af408b664f66b072b136b9cf6260efd16ac",
+            "mesh_sha256": "d9d5cdb7aa1bec97c0acca5892c46218e477b2c93fbbed27cc32cad9abb85434",
+            "volume": 0.3565889071395032,
+            "old_relative_volume_error": 1.690243614960174e-05,
+            "old_absolute_relative_volume_error": 1.690243614960174e-05,
+            "old_absolute_volume_error": 6.027119361595723e-06,
+            "gauss64_absolute_volume_error": 6.954184020857568e-07,
+            "volume_float_ulp": 5.551115123125783e-17,
+            "gauss128_relative_volume_error": 1.950200237077482e-06,
+            "gauss128_absolute_volume_error": 6.95418415019855e-07
+          },
+          {
+            "stage": "native_fit",
+            "source": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-native-face-fit-nine-v1/graded-gyroid-periodic-repeat-0-fit/result.json",
+            "source_sha256": "5ed0d30043c77449dbdd0ba5d0369b4bc3729f832db8c76a203515a159486fe7",
+            "mesh_sha256": "6c8640b78f08210b4d0b411faf36ffdadc18af31f66f2afa0203949b97a94d50",
+            "volume": 0.35658892184102925,
+            "old_relative_volume_error": 1.6943665066992963e-05,
+            "old_absolute_relative_volume_error": 1.6943665066992963e-05,
+            "old_absolute_volume_error": 6.04182088764782e-06,
+            "gauss64_absolute_volume_error": 7.101199281378534e-07,
+            "volume_float_ulp": 5.551115123125783e-17,
+            "gauss128_relative_volume_error": 1.9914285378508367e-06,
+            "gauss128_absolute_volume_error": 7.101199410719516e-07
+          },
+          {
+            "stage": "global_correction",
+            "source": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-volume-bias-seven-v1/graded-gyroid-periodic/result.json",
+            "source_sha256": "806d51242caee1436c229850b57794cba1483eb842ed15f794c524793720dfb8",
+            "mesh_sha256": "2b0c5bf55e0fd89c7e7d58cd37092b349b11cd22707c0c1a520a95ad4801cf6a",
+            "volume": 0.35658821060337,
+            "old_relative_volume_error": 1.4949072227210536e-05,
+            "old_absolute_relative_volume_error": 1.4949072227210536e-05,
+            "old_absolute_volume_error": 5.3305832283800925e-06,
+            "gauss64_absolute_volume_error": 1.117731129873789e-09,
+            "volume_float_ulp": 5.551115123125783e-17,
+            "gauss128_relative_volume_error": -3.1344787876363966e-09,
+            "gauss128_absolute_volume_error": 1.1177181957755522e-09
+          },
+          {
+            "stage": "signed_envelope",
+            "source": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-volume-signed-envelope-six-v1/graded-gyroid-periodic/result.json",
+            "source_sha256": "70d347dadb53596211eeccd9c75a3e662b8beecb81965b4e452944cb0d7678b6",
+            "mesh_sha256": "37d8d29fea0b96e24eb781addc000ddf13a00c5928022c22c8c58359eff7acfe",
+            "volume": 0.35658882465742736,
+            "old_relative_volume_error": 1.667112365422163e-05,
+            "old_absolute_relative_volume_error": 1.667112365422163e-05,
+            "old_absolute_volume_error": 5.9446372857596685e-06,
+            "gauss64_absolute_volume_error": 6.129363262497023e-07,
+            "volume_float_ulp": 5.551115123125783e-17,
+            "gauss128_relative_volume_error": 1.7188912000420942e-06,
+            "gauss128_absolute_volume_error": 6.129363391838005e-07
+          }
+        ],
+        "comparisons": [
+          {
+            "before": "baseline",
+            "after": "native_fit",
+            "old_absolute_error_improvement": -1.4701526052096625e-08,
+            "gauss64_absolute_error_improvement": -1.4701526052096625e-08,
+            "observed_integration_discrepancy": 1.4451601026976846e-10,
+            "twice_discrepancy_sensitivity": 2.890320205395369e-10,
+            "absolute_improvement_over_twice_discrepancy": 50.86469666804821,
+            "sign_agrees_between_quadratures": true,
+            "exceeds_observed_sensitivity_by_10x": true,
+            "exceeds_reported_heuristic_sensitivity_by_10x": true,
+            "gauss128_absolute_error_improvement": -1.4701526052096625e-08
+          },
+          {
+            "before": "native_fit",
+            "after": "global_correction",
+            "old_absolute_error_improvement": 7.112376592677272e-07,
+            "gauss64_absolute_error_improvement": 7.090021970079796e-07,
+            "observed_integration_discrepancy": 1.4451601026976846e-10,
+            "twice_discrepancy_sensitivity": 2.890320205395369e-10,
+            "absolute_improvement_over_twice_discrepancy": 2453.023099491467,
+            "sign_agrees_between_quadratures": true,
+            "exceeds_observed_sensitivity_by_10x": true,
+            "exceeds_reported_heuristic_sensitivity_by_10x": true,
+            "gauss128_absolute_error_improvement": 7.090022228761761e-07
+          },
+          {
+            "before": "native_fit",
+            "after": "signed_envelope",
+            "old_absolute_error_improvement": 9.718360188815112e-08,
+            "gauss64_absolute_error_improvement": 9.718360188815112e-08,
+            "observed_integration_discrepancy": 1.4451601026976846e-10,
+            "twice_discrepancy_sensitivity": 2.890320205395369e-10,
+            "absolute_improvement_over_twice_discrepancy": 336.238184636907,
+            "sign_agrees_between_quadratures": true,
+            "exceeds_observed_sensitivity_by_10x": true,
+            "exceeds_reported_heuristic_sensitivity_by_10x": true,
+            "gauss128_absolute_error_improvement": 9.718360188815112e-08
+          }
+        ],
+        "facewise": {
+          "available": false,
+          "reason": "This mode was run only for spinodoid and Schwarz P/D, not these four Gyroid cases."
+        },
+        "saved_mesh_volume_repeat_discrepancy": 0.0,
+        "mesh_volume_numerics": "Saved Tet10 quadrature volumes are reused. Repetition discrepancy and float ulp are recorded separately; neither certifies quadrature roundoff. No new mesh-volume numerical audit is performed.",
+        "ranking_scope": "Absolute volume-error improvements are compared with empirical integration discrepancy and reported heuristics. Neither is a rigorous error bound. Frozen scores and admission remain unchanged.",
+        "reference_kind": "Gauss128 closure estimate; no reference promotion",
+        "gauss128_reference_estimate": 0.3565882117210882
+      }
+    },
+    {
+      "case": "graded-gyroid-density-linear",
+      "gauss128": {
+        "volume": 0.359995605227598,
+        "order": 128,
+        "line_axis": "x",
+        "reversed_outer_coordinate": false,
+        "line_fraction_evaluations": 34537472,
+        "outer_nodes": 33792,
+        "outer_panels": 264
+      },
+      "seconds": 1.2805186669866089,
+      "gauss64_volume": 0.35999560522760565,
+      "adaptive_volume": 0.35999560522760987,
+      "difference_128_64": 7.66053886991358e-15,
+      "difference_128_adaptive": 1.1879386363489175e-14,
+      "empirical_observed_scale": 1.1879386363489175e-14,
+      "score_comparison": {
+        "frozen_reference_volume": 0.3599233627319336,
+        "frozen_scramble_spread": 0.0002536773681640625,
+        "primary_gauss64_estimate": 0.35999560522760565,
+        "rows": [
+          {
+            "stage": "baseline",
+            "source": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-native-face-fit-nine-v1/graded-gyroid-density-linear-repeat-0-baseline/result.json",
+            "source_sha256": "dfdd01cb0cb68c73918a42401a0a6c2b471825ce8c48218853009b380b71a8cd",
+            "mesh_sha256": "4f255bf917947cf49071fed1acc6a27376c742e203b157e05b9505c921652bf6",
+            "volume": 0.360007065463719,
+            "old_relative_volume_error": 0.0002325570953496392,
+            "old_absolute_relative_volume_error": 0.0002325570953496392,
+            "old_absolute_volume_error": 8.370273178542886e-05,
+            "gauss64_absolute_volume_error": 1.146023611336977e-05,
+            "volume_float_ulp": 5.551115123125783e-17,
+            "gauss128_relative_volume_error": 3.183437784959331e-05,
+            "gauss128_absolute_volume_error": 1.146023612103031e-05
+          },
+          {
+            "stage": "native_fit",
+            "source": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-native-face-fit-nine-v1/graded-gyroid-density-linear-repeat-0-fit/result.json",
+            "source_sha256": "323cacc7bdd1efa4d986455eec26523f640eaa44c7412d9b1ce4d0a29bbf21a7",
+            "mesh_sha256": "4d0274c4b4d376e46727639e03439b04172c0e6b1015e733df5e3934f94fc791",
+            "volume": 0.3599996074019763,
+            "old_relative_volume_error": 0.0002118358460088121,
+            "old_absolute_relative_volume_error": 0.0002118358460088121,
+            "old_absolute_volume_error": 7.624467004269109e-05,
+            "gauss64_absolute_volume_error": 4.0021743706319945e-06,
+            "volume_float_ulp": 5.551115123125783e-17,
+            "gauss128_relative_volume_error": 1.1117286767392542e-05,
+            "gauss128_absolute_volume_error": 4.002174378292533e-06
+          },
+          {
+            "stage": "global_correction",
+            "source": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-volume-bias-seven-v1/graded-gyroid-density-linear/result.json",
+            "source_sha256": "03a039bc71680407e06420d087886d01ff32e0c70da7f9c41e917ca66fbd326e",
+            "mesh_sha256": "6e23f95523498765ace7f84178857e1b745e012ad8bd91032e85add8540367ad",
+            "volume": 0.3599957036002822,
+            "old_relative_volume_error": 0.00020098964346049186,
+            "old_absolute_relative_volume_error": 0.00020098964346049186,
+            "old_absolute_volume_error": 7.23408683486193e-05,
+            "gauss64_absolute_volume_error": 9.837267656020998e-08,
+            "volume_float_ulp": 5.551115123125783e-17,
+            "gauss128_relative_volume_error": 2.7326079199418984e-07,
+            "gauss128_absolute_volume_error": 9.837268422074885e-08
+          },
+          {
+            "stage": "signed_envelope",
+            "source": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-volume-signed-envelope-six-v1/graded-gyroid-density-linear/result.json",
+            "source_sha256": "71101e6f92674e4fbafe804b11dd2d2a8486a06e8a839f574ac6823e67c2309e",
+            "mesh_sha256": "ee4625523d99845bb070bbf85d0c3734b160468ac4ce488eab9c71df520d9262",
+            "volume": 0.3599986825221984,
+            "old_relative_volume_error": 0.00020926618848271517,
+            "old_absolute_relative_volume_error": 0.00020926618848271517,
+            "old_absolute_volume_error": 7.531979026481617e-05,
+            "gauss64_absolute_volume_error": 3.077294592757074e-06,
+            "volume_float_ulp": 5.551115123125783e-17,
+            "gauss128_relative_volume_error": 8.548144909914512e-06,
+            "gauss128_absolute_volume_error": 3.0772946004176127e-06
+          }
+        ],
+        "comparisons": [
+          {
+            "before": "baseline",
+            "after": "native_fit",
+            "old_absolute_error_improvement": 7.458061742737776e-06,
+            "gauss64_absolute_error_improvement": 7.458061742737776e-06,
+            "observed_integration_discrepancy": 1.1879386363489175e-14,
+            "twice_discrepancy_sensitivity": 2.375877272697835e-14,
+            "absolute_improvement_over_twice_discrepancy": 313907701.73364484,
+            "sign_agrees_between_quadratures": true,
+            "exceeds_observed_sensitivity_by_10x": true,
+            "exceeds_reported_heuristic_sensitivity_by_10x": true,
+            "gauss128_absolute_error_improvement": 7.458061742737776e-06
+          },
+          {
+            "before": "native_fit",
+            "after": "global_correction",
+            "old_absolute_error_improvement": 3.9038016940717846e-06,
+            "gauss64_absolute_error_improvement": 3.9038016940717846e-06,
+            "observed_integration_discrepancy": 1.1879386363489175e-14,
+            "twice_discrepancy_sensitivity": 2.375877272697835e-14,
+            "absolute_improvement_over_twice_discrepancy": 164309905.18457943,
+            "sign_agrees_between_quadratures": true,
+            "exceeds_observed_sensitivity_by_10x": true,
+            "exceeds_reported_heuristic_sensitivity_by_10x": false,
+            "gauss128_absolute_error_improvement": 3.9038016940717846e-06
+          },
+          {
+            "before": "native_fit",
+            "after": "signed_envelope",
+            "old_absolute_error_improvement": 9.248797778749207e-07,
+            "gauss64_absolute_error_improvement": 9.248797778749207e-07,
+            "observed_integration_discrepancy": 1.1879386363489175e-14,
+            "twice_discrepancy_sensitivity": 2.375877272697835e-14,
+            "absolute_improvement_over_twice_discrepancy": 38927927.31775701,
+            "sign_agrees_between_quadratures": true,
+            "exceeds_observed_sensitivity_by_10x": true,
+            "exceeds_reported_heuristic_sensitivity_by_10x": false,
+            "gauss128_absolute_error_improvement": 9.248797778749207e-07
+          }
+        ],
+        "facewise": {
+          "available": false,
+          "reason": "This mode was run only for spinodoid and Schwarz P/D, not these four Gyroid cases."
+        },
+        "saved_mesh_volume_repeat_discrepancy": 0.0,
+        "mesh_volume_numerics": "Saved Tet10 quadrature volumes are reused. Repetition discrepancy and float ulp are recorded separately; neither certifies quadrature roundoff. No new mesh-volume numerical audit is performed.",
+        "ranking_scope": "Absolute volume-error improvements are compared with empirical integration discrepancy and reported heuristics. Neither is a rigorous error bound. Frozen scores and admission remain unchanged.",
+        "reference_kind": "Gauss128 closure estimate; no reference promotion",
+        "gauss128_reference_estimate": 0.359995605227598
+      }
+    }
+  ],
+  "warnings": [
+    {
+      "case": "gyroid",
+      "z": -0.4385735832038655,
+      "half_width": 0.55,
+      "saved_warning": {
+        "z": -0.4385735832038655,
+        "quadpack_error": 2.7863290470649447e-09,
+        "evaluations": 2646,
+        "subintervals": 69,
+        "message": "The occurrence of roundoff error is detected, which prevents \n  the requested tolerance from being achieved.  The error may be \n  underestimated.",
+        "maximum_root_residual": 2.220446049250313e-16,
+        "stationary_near_zeros": 0,
+        "clipping_roots": 4
+      },
+      "quadpack_replay": {
+        "volume": 0.3551655006828837,
+        "reported_error": 2.7863290470649447e-09,
+        "evaluations": 2646,
+        "subintervals": 69,
+        "message": "The occurrence of roundoff error is detected, which prevents \n  the requested tolerance from being achieved.  The error may be \n  underestimated.",
+        "maximum_root_residual": 2.220446049250313e-16,
+        "stationary_near_zeros": 0,
+        "clipping_roots": 4
+      },
+      "tanh_sinh": {
+        "volume": 0.35516550067977226,
+        "reported_error_sum": 4.6927473640219444e-14,
+        "all_intervals_converged": true,
+        "failed_intervals": 0,
+        "intervals": [
+          {
+            "left": -3.141592653589793,
+            "right": -2.6730322536844846,
+            "integral": 0.028485354418421822,
+            "reported_error": 4.8274016013130535e-15,
+            "status": 0,
+            "success": true,
+            "maxlevel": 2,
+            "evaluations": 67
+          },
+          {
+            "left": -2.6730322536844846,
+            "right": -2.3288584097761738,
+            "integral": 0.027278945224536534,
+            "reported_error": 3.5458938380207585e-15,
+            "status": 0,
+            "success": true,
+            "maxlevel": 2,
+            "evaluations": 67
+          },
+          {
+            "left": -2.3288584097761738,
+            "right": -1.5707963267948966,
+            "integral": 0.03302707552698469,
+            "reported_error": 6.466869596381262e-15,
+            "status": 0,
+            "success": true,
+            "maxlevel": 3,
+            "evaluations": 131
+          },
+          {
+            "left": -1.5707963267948966,
+            "right": -0.8127342438136194,
+            "integral": 0.03302707552698472,
+            "reported_error": 2.5027633607482275e-16,
+            "status": 0,
+            "success": true,
+            "maxlevel": 3,
+            "evaluations": 131
+          },
+          {
+            "left": -0.8127342438136194,
+            "right": -0.4685603999053088,
+            "integral": 0.027278945224536513,
+            "reported_error": 3.5458938380207553e-15,
+            "status": 0,
+            "success": true,
+            "maxlevel": 2,
+            "evaluations": 67
+          },
+          {
+            "left": -0.4685603999053088,
+            "right": 0.0,
+            "integral": 0.028485354418421843,
+            "reported_error": 4.8274016102990706e-15,
+            "status": 0,
+            "success": true,
+            "maxlevel": 2,
+            "evaluations": 67
+          },
+          {
+            "left": 0.0,
+            "right": 0.4685603999053088,
+            "integral": 0.02848535441842184,
+            "reported_error": 4.8274016102990706e-15,
+            "status": 0,
+            "success": true,
+            "maxlevel": 2,
+            "evaluations": 67
+          },
+          {
+            "left": 0.4685603999053088,
+            "right": 0.8127342438136194,
+            "integral": 0.027278945224536513,
+            "reported_error": 3.5458938380207553e-15,
+            "status": 0,
+            "success": true,
+            "maxlevel": 2,
+            "evaluations": 67
+          },
+          {
+            "left": 0.8127342438136194,
+            "right": 1.5707963267948966,
+            "integral": 0.03302707552698472,
+            "reported_error": 2.5027633607482275e-16,
+            "status": 0,
+            "success": true,
+            "maxlevel": 3,
+            "evaluations": 131
+          },
+          {
+            "left": 1.5707963267948966,
+            "right": 2.3288584097761738,
+            "integral": 0.03302707552698469,
+            "reported_error": 6.466869596381262e-15,
+            "status": 0,
+            "success": true,
+            "maxlevel": 3,
+            "evaluations": 131
+          },
+          {
+            "left": 2.3288584097761738,
+            "right": 2.6730322536844846,
+            "integral": 0.027278945224536538,
+            "reported_error": 3.5458938380207585e-15,
+            "status": 0,
+            "success": true,
+            "maxlevel": 2,
+            "evaluations": 67
+          },
+          {
+            "left": 2.6730322536844846,
+            "right": 3.141592653589793,
+            "integral": 0.028485354418421822,
+            "reported_error": 4.8274016013130535e-15,
+            "status": 0,
+            "success": true,
+            "maxlevel": 2,
+            "evaluations": 67
+          }
+        ],
+        "root_info": {
+          "maximum_root_residual": 2.220446049250313e-16,
+          "stationary_near_zeros": 0,
+          "clipping_roots": 4
+        }
+      },
+      "gauss128_section": 0.3551655006798279,
+      "gauss128_evaluations": 1024,
+      "quadpack_tanh_difference": 3.1114555376632325e-12,
+      "gauss_tanh_difference": 5.562217353372034e-14,
+      "observed_three_method_spread": 3.1114555376632325e-12,
+      "reported_error_over_observed_spread": 895.5066249018412,
+      "transition": {
+        "nearest_saved_transition": {
+          "z": -0.43857392889515623,
+          "cosine": -1.0,
+          "sine": 1.0,
+          "residual": 2.220446049250313e-16,
+          "kind": "sign crossing"
+        },
+        "z_distance": 3.4569129070405324e-07,
+        "nearest_stationary_level_contact": {
+          "angle": -1.5707963267948966,
+          "branch": -1.0,
+          "level": 0.55,
+          "signed_gap": -2.8299150386379424e-06,
+          "second_derivative": -3.5828865135156502,
+          "local_angular_scale": 0.0012568549798777893
+        },
+        "interpretation": "A small stationary branch-to-level gap produces nearby clipping-root coalescence or a narrow rounded near-contact. Its angular scale is a local quadratic estimate, not a root-separation certificate."
+      },
+      "seconds": 0.0018209160189144313
+    },
+    {
+      "case": "gyroid",
+      "z": -0.061426416796134455,
+      "half_width": 0.55,
+      "saved_warning": {
+        "z": -0.061426416796134455,
+        "quadpack_error": 2.7863290721359818e-09,
+        "evaluations": 2646,
+        "subintervals": 69,
+        "message": "The occurrence of roundoff error is detected, which prevents \n  the requested tolerance from being achieved.  The error may be \n  underestimated.",
+        "maximum_root_residual": 2.220446049250313e-16,
+        "stationary_near_zeros": 0,
+        "clipping_roots": 4
+      },
+      "quadpack_replay": {
+        "volume": 0.3551655006828828,
+        "reported_error": 2.7863290721359818e-09,
+        "evaluations": 2646,
+        "subintervals": 69,
+        "message": "The occurrence of roundoff error is detected, which prevents \n  the requested tolerance from being achieved.  The error may be \n  underestimated.",
+        "maximum_root_residual": 2.220446049250313e-16,
+        "stationary_near_zeros": 0,
+        "clipping_roots": 4
+      },
+      "tanh_sinh": {
+        "volume": 0.35516550067977165,
+        "reported_error_sum": 4.6927473706220325e-14,
+        "all_intervals_converged": true,
+        "failed_intervals": 0,
+        "intervals": [
+          {
+            "left": -3.141592653589793,
+            "right": -2.6730322536844846,
+            "integral": 0.028485354418421826,
+            "reported_error": 4.827401614952694e-15,
+            "status": 0,
+            "success": true,
+            "maxlevel": 2,
+            "evaluations": 67
+          },
+          {
+            "left": -2.6730322536844846,
+            "right": -2.3288584097761738,
+            "integral": 0.027278945224536534,
+            "reported_error": 3.5458938380207585e-15,
+            "status": 0,
+            "success": true,
+            "maxlevel": 2,
+            "evaluations": 67
+          },
+          {
+            "left": -2.3288584097761738,
+            "right": -1.5707963267948966,
+            "integral": 0.033027075526984535,
+            "reported_error": 6.466869596381259e-15,
+            "status": 0,
+            "success": true,
+            "maxlevel": 3,
+            "evaluations": 131
+          },
+          {
+            "left": -1.5707963267948966,
+            "right": -0.8127342438136193,
+            "integral": 0.03302707552698458,
+            "reported_error": 2.502763360748227e-16,
+            "status": 0,
+            "success": true,
+            "maxlevel": 3,
+            "evaluations": 131
+          },
+          {
+            "left": -0.8127342438136193,
+            "right": -0.4685603999053088,
+            "integral": 0.0272789452245365,
+            "reported_error": 3.5458938380207545e-15,
+            "status": 0,
+            "success": true,
+            "maxlevel": 2,
+            "evaluations": 67
+          },
+          {
+            "left": -0.4685603999053088,
+            "right": 0.0,
+            "integral": 0.02848535441842185,
+            "reported_error": 4.827401629659873e-15,
+            "status": 0,
+            "success": true,
+            "maxlevel": 2,
+            "evaluations": 67
+          },
+          {
+            "left": 0.0,
+            "right": 0.4685603999053088,
+            "integral": 0.02848535441842185,
+            "reported_error": 4.827401629659873e-15,
+            "status": 0,
+            "success": true,
+            "maxlevel": 2,
+            "evaluations": 67
+          },
+          {
+            "left": 0.4685603999053088,
+            "right": 0.8127342438136193,
+            "integral": 0.027278945224536503,
+            "reported_error": 3.5458938380207545e-15,
+            "status": 0,
+            "success": true,
+            "maxlevel": 2,
+            "evaluations": 67
+          },
+          {
+            "left": 0.8127342438136193,
+            "right": 1.5707963267948966,
+            "integral": 0.03302707552698458,
+            "reported_error": 2.502763360748227e-16,
+            "status": 0,
+            "success": true,
+            "maxlevel": 3,
+            "evaluations": 131
+          },
+          {
+            "left": 1.5707963267948966,
+            "right": 2.3288584097761738,
+            "integral": 0.033027075526984535,
+            "reported_error": 6.466869596381259e-15,
+            "status": 0,
+            "success": true,
+            "maxlevel": 3,
+            "evaluations": 131
+          },
+          {
+            "left": 2.3288584097761738,
+            "right": 2.6730322536844846,
+            "integral": 0.027278945224536538,
+            "reported_error": 3.5458938380207585e-15,
+            "status": 0,
+            "success": true,
+            "maxlevel": 2,
+            "evaluations": 67
+          },
+          {
+            "left": 2.6730322536844846,
+            "right": 3.141592653589793,
+            "integral": 0.02848535441842183,
+            "reported_error": 4.827401614952694e-15,
+            "status": 0,
+            "success": true,
+            "maxlevel": 2,
+            "evaluations": 67
+          }
+        ],
+        "root_info": {
+          "maximum_root_residual": 2.220446049250313e-16,
+          "stationary_near_zeros": 0,
+          "clipping_roots": 4
+        }
+      },
+      "gauss128_section": 0.35516550067982716,
+      "gauss128_evaluations": 1024,
+      "quadpack_tanh_difference": 3.111122470755845e-12,
+      "gauss_tanh_difference": 5.551115123125783e-14,
+      "observed_three_method_spread": 3.111122470755845e-12,
+      "reported_error_over_observed_spread": 895.6025030602685,
+      "transition": {
+        "nearest_saved_transition": {
+          "z": -0.061426071104843806,
+          "cosine": 1.0,
+          "sine": 1.0,
+          "residual": 0.0,
+          "kind": "sign crossing"
+        },
+        "z_distance": 3.456912906485421e-07,
+        "nearest_stationary_level_contact": {
+          "angle": -1.5707963267948966,
+          "branch": 1.0,
+          "level": -0.55,
+          "signed_gap": 2.829915038082831e-06,
+          "second_derivative": 3.5828865135156525,
+          "local_angular_scale": 0.0012568549797545177
+        },
+        "interpretation": "A small stationary branch-to-level gap produces nearby clipping-root coalescence or a narrow rounded near-contact. Its angular scale is a local quadratic estimate, not a root-separation certificate."
+      },
+      "seconds": 0.0016293750086333603
+    },
+    {
+      "case": "gyroid",
+      "z": 0.061426416796134455,
+      "half_width": 0.55,
+      "saved_warning": {
+        "z": 0.061426416796134455,
+        "quadpack_error": 2.7863290721359818e-09,
+        "evaluations": 2646,
+        "subintervals": 69,
+        "message": "The occurrence of roundoff error is detected, which prevents \n  the requested tolerance from being achieved.  The error may be \n  underestimated.",
+        "maximum_root_residual": 2.220446049250313e-16,
+        "stationary_near_zeros": 0,
+        "clipping_roots": 4
+      },
+      "quadpack_replay": {
+        "volume": 0.3551655006828828,
+        "reported_error": 2.7863290721359818e-09,
+        "evaluations": 2646,
+        "subintervals": 69,
+        "message": "The occurrence of roundoff error is detected, which prevents \n  the requested tolerance from being achieved.  The error may be \n  underestimated.",
+        "maximum_root_residual": 2.220446049250313e-16,
+        "stationary_near_zeros": 0,
+        "clipping_roots": 4
+      },
+      "tanh_sinh": {
+        "volume": 0.35516550067977165,
+        "reported_error_sum": 4.6927473706220325e-14,
+        "all_intervals_converged": true,
+        "failed_intervals": 0,
+        "intervals": [
+          {
+            "left": -3.141592653589793,
+            "right": -2.6730322536844846,
+            "integral": 0.028485354418421826,
+            "reported_error": 4.827401614952694e-15,
+            "status": 0,
+            "success": true,
+            "maxlevel": 2,
+            "evaluations": 67
+          },
+          {
+            "left": -2.6730322536844846,
+            "right": -2.3288584097761738,
+            "integral": 0.027278945224536534,
+            "reported_error": 3.5458938380207585e-15,
+            "status": 0,
+            "success": true,
+            "maxlevel": 2,
+            "evaluations": 67
+          },
+          {
+            "left": -2.3288584097761738,
+            "right": -1.5707963267948966,
+            "integral": 0.033027075526984535,
+            "reported_error": 6.466869596381259e-15,
+            "status": 0,
+            "success": true,
+            "maxlevel": 3,
+            "evaluations": 131
+          },
+          {
+            "left": -1.5707963267948966,
+            "right": -0.8127342438136193,
+            "integral": 0.03302707552698458,
+            "reported_error": 2.502763360748227e-16,
+            "status": 0,
+            "success": true,
+            "maxlevel": 3,
+            "evaluations": 131
+          },
+          {
+            "left": -0.8127342438136193,
+            "right": -0.4685603999053088,
+            "integral": 0.0272789452245365,
+            "reported_error": 3.5458938380207545e-15,
+            "status": 0,
+            "success": true,
+            "maxlevel": 2,
+            "evaluations": 67
+          },
+          {
+            "left": -0.4685603999053088,
+            "right": 0.0,
+            "integral": 0.02848535441842185,
+            "reported_error": 4.827401629659873e-15,
+            "status": 0,
+            "success": true,
+            "maxlevel": 2,
+            "evaluations": 67
+          },
+          {
+            "left": 0.0,
+            "right": 0.4685603999053088,
+            "integral": 0.02848535441842185,
+            "reported_error": 4.827401629659873e-15,
+            "status": 0,
+            "success": true,
+            "maxlevel": 2,
+            "evaluations": 67
+          },
+          {
+            "left": 0.4685603999053088,
+            "right": 0.8127342438136193,
+            "integral": 0.027278945224536503,
+            "reported_error": 3.5458938380207545e-15,
+            "status": 0,
+            "success": true,
+            "maxlevel": 2,
+            "evaluations": 67
+          },
+          {
+            "left": 0.8127342438136193,
+            "right": 1.5707963267948966,
+            "integral": 0.03302707552698458,
+            "reported_error": 2.502763360748227e-16,
+            "status": 0,
+            "success": true,
+            "maxlevel": 3,
+            "evaluations": 131
+          },
+          {
+            "left": 1.5707963267948966,
+            "right": 2.3288584097761738,
+            "integral": 0.033027075526984535,
+            "reported_error": 6.466869596381259e-15,
+            "status": 0,
+            "success": true,
+            "maxlevel": 3,
+            "evaluations": 131
+          },
+          {
+            "left": 2.3288584097761738,
+            "right": 2.6730322536844846,
+            "integral": 0.027278945224536538,
+            "reported_error": 3.5458938380207585e-15,
+            "status": 0,
+            "success": true,
+            "maxlevel": 2,
+            "evaluations": 67
+          },
+          {
+            "left": 2.6730322536844846,
+            "right": 3.141592653589793,
+            "integral": 0.02848535441842183,
+            "reported_error": 4.827401614952694e-15,
+            "status": 0,
+            "success": true,
+            "maxlevel": 2,
+            "evaluations": 67
+          }
+        ],
+        "root_info": {
+          "maximum_root_residual": 2.220446049250313e-16,
+          "stationary_near_zeros": 0,
+          "clipping_roots": 4
+        }
+      },
+      "gauss128_section": 0.35516550067982716,
+      "gauss128_evaluations": 1024,
+      "quadpack_tanh_difference": 3.111122470755845e-12,
+      "gauss_tanh_difference": 5.551115123125783e-14,
+      "observed_three_method_spread": 3.111122470755845e-12,
+      "reported_error_over_observed_spread": 895.6025030602685,
+      "transition": {
+        "nearest_saved_transition": {
+          "z": 0.061426071104843806,
+          "cosine": 1.0,
+          "sine": -1.0,
+          "residual": 0.0,
+          "kind": "sign crossing"
+        },
+        "z_distance": 3.456912906485421e-07,
+        "nearest_stationary_level_contact": {
+          "angle": -1.5707963267948966,
+          "branch": 1.0,
+          "level": -0.55,
+          "signed_gap": 2.829915038082831e-06,
+          "second_derivative": 3.5828865135156525,
+          "local_angular_scale": 0.0012568549797545177
+        },
+        "interpretation": "A small stationary branch-to-level gap produces nearby clipping-root coalescence or a narrow rounded near-contact. Its angular scale is a local quadratic estimate, not a root-separation certificate."
+      },
+      "seconds": 0.0016047089884523302
+    },
+    {
+      "case": "gyroid",
+      "z": 0.4385735832038655,
+      "half_width": 0.55,
+      "saved_warning": {
+        "z": 0.4385735832038655,
+        "quadpack_error": 2.7863290470649447e-09,
+        "evaluations": 2646,
+        "subintervals": 69,
+        "message": "The occurrence of roundoff error is detected, which prevents \n  the requested tolerance from being achieved.  The error may be \n  underestimated.",
+        "maximum_root_residual": 2.220446049250313e-16,
+        "stationary_near_zeros": 0,
+        "clipping_roots": 4
+      },
+      "quadpack_replay": {
+        "volume": 0.3551655006828837,
+        "reported_error": 2.7863290470649447e-09,
+        "evaluations": 2646,
+        "subintervals": 69,
+        "message": "The occurrence of roundoff error is detected, which prevents \n  the requested tolerance from being achieved.  The error may be \n  underestimated.",
+        "maximum_root_residual": 2.220446049250313e-16,
+        "stationary_near_zeros": 0,
+        "clipping_roots": 4
+      },
+      "tanh_sinh": {
+        "volume": 0.35516550067977226,
+        "reported_error_sum": 4.6927473640219444e-14,
+        "all_intervals_converged": true,
+        "failed_intervals": 0,
+        "intervals": [
+          {
+            "left": -3.141592653589793,
+            "right": -2.6730322536844846,
+            "integral": 0.028485354418421822,
+            "reported_error": 4.8274016013130535e-15,
+            "status": 0,
+            "success": true,
+            "maxlevel": 2,
+            "evaluations": 67
+          },
+          {
+            "left": -2.6730322536844846,
+            "right": -2.3288584097761738,
+            "integral": 0.027278945224536534,
+            "reported_error": 3.5458938380207585e-15,
+            "status": 0,
+            "success": true,
+            "maxlevel": 2,
+            "evaluations": 67
+          },
+          {
+            "left": -2.3288584097761738,
+            "right": -1.5707963267948966,
+            "integral": 0.03302707552698469,
+            "reported_error": 6.466869596381262e-15,
+            "status": 0,
+            "success": true,
+            "maxlevel": 3,
+            "evaluations": 131
+          },
+          {
+            "left": -1.5707963267948966,
+            "right": -0.8127342438136194,
+            "integral": 0.03302707552698472,
+            "reported_error": 2.5027633607482275e-16,
+            "status": 0,
+            "success": true,
+            "maxlevel": 3,
+            "evaluations": 131
+          },
+          {
+            "left": -0.8127342438136194,
+            "right": -0.4685603999053088,
+            "integral": 0.027278945224536513,
+            "reported_error": 3.5458938380207553e-15,
+            "status": 0,
+            "success": true,
+            "maxlevel": 2,
+            "evaluations": 67
+          },
+          {
+            "left": -0.4685603999053088,
+            "right": 0.0,
+            "integral": 0.028485354418421843,
+            "reported_error": 4.8274016102990706e-15,
+            "status": 0,
+            "success": true,
+            "maxlevel": 2,
+            "evaluations": 67
+          },
+          {
+            "left": 0.0,
+            "right": 0.4685603999053088,
+            "integral": 0.02848535441842184,
+            "reported_error": 4.8274016102990706e-15,
+            "status": 0,
+            "success": true,
+            "maxlevel": 2,
+            "evaluations": 67
+          },
+          {
+            "left": 0.4685603999053088,
+            "right": 0.8127342438136194,
+            "integral": 0.027278945224536513,
+            "reported_error": 3.5458938380207553e-15,
+            "status": 0,
+            "success": true,
+            "maxlevel": 2,
+            "evaluations": 67
+          },
+          {
+            "left": 0.8127342438136194,
+            "right": 1.5707963267948966,
+            "integral": 0.03302707552698472,
+            "reported_error": 2.5027633607482275e-16,
+            "status": 0,
+            "success": true,
+            "maxlevel": 3,
+            "evaluations": 131
+          },
+          {
+            "left": 1.5707963267948966,
+            "right": 2.3288584097761738,
+            "integral": 0.03302707552698469,
+            "reported_error": 6.466869596381262e-15,
+            "status": 0,
+            "success": true,
+            "maxlevel": 3,
+            "evaluations": 131
+          },
+          {
+            "left": 2.3288584097761738,
+            "right": 2.6730322536844846,
+            "integral": 0.027278945224536538,
+            "reported_error": 3.5458938380207585e-15,
+            "status": 0,
+            "success": true,
+            "maxlevel": 2,
+            "evaluations": 67
+          },
+          {
+            "left": 2.6730322536844846,
+            "right": 3.141592653589793,
+            "integral": 0.028485354418421822,
+            "reported_error": 4.8274016013130535e-15,
+            "status": 0,
+            "success": true,
+            "maxlevel": 2,
+            "evaluations": 67
+          }
+        ],
+        "root_info": {
+          "maximum_root_residual": 2.220446049250313e-16,
+          "stationary_near_zeros": 0,
+          "clipping_roots": 4
+        }
+      },
+      "gauss128_section": 0.3551655006798279,
+      "gauss128_evaluations": 1024,
+      "quadpack_tanh_difference": 3.1114555376632325e-12,
+      "gauss_tanh_difference": 5.562217353372034e-14,
+      "observed_three_method_spread": 3.1114555376632325e-12,
+      "reported_error_over_observed_spread": 895.5066249018412,
+      "transition": {
+        "nearest_saved_transition": {
+          "z": 0.43857392889515623,
+          "cosine": -1.0,
+          "sine": -1.0,
+          "residual": 2.220446049250313e-16,
+          "kind": "sign crossing"
+        },
+        "z_distance": 3.4569129070405324e-07,
+        "nearest_stationary_level_contact": {
+          "angle": -1.5707963267948966,
+          "branch": -1.0,
+          "level": 0.55,
+          "signed_gap": -2.8299150386379424e-06,
+          "second_derivative": -3.5828865135156502,
+          "local_angular_scale": 0.0012568549798777893
+        },
+        "interpretation": "A small stationary branch-to-level gap produces nearby clipping-root coalescence or a narrow rounded near-contact. Its angular scale is a local quadratic estimate, not a root-separation certificate."
+      },
+      "seconds": 0.0015928329958114773
+    },
+    {
+      "case": "graded-gyroid-linear",
+      "z": -0.06355512808744784,
+      "half_width": 0.5325223397759519,
+      "saved_warning": {
+        "z": -0.06355512808744784,
+        "quadpack_error": 7.470644177003813e-09,
+        "evaluations": 1806,
+        "subintervals": 49,
+        "message": "The occurrence of roundoff error is detected, which prevents \n  the requested tolerance from being achieved.  The error may be \n  underestimated.",
+        "maximum_root_residual": 1.1102230246251565e-16,
+        "stationary_near_zeros": 0,
+        "clipping_roots": 4
+      },
+      "quadpack_replay": {
+        "volume": 0.3457791772059055,
+        "reported_error": 7.470644177003813e-09,
+        "evaluations": 1806,
+        "subintervals": 49,
+        "message": "The occurrence of roundoff error is detected, which prevents \n  the requested tolerance from being achieved.  The error may be \n  underestimated.",
+        "maximum_root_residual": 1.1102230246251565e-16,
+        "stationary_near_zeros": 0,
+        "clipping_roots": 4
+      },
+      "tanh_sinh": {
+        "volume": 0.34577918121375517,
+        "reported_error_sum": 4.615362161296308e-14,
+        "all_intervals_converged": true,
+        "failed_intervals": 0,
+        "intervals": [
+          {
+            "left": -3.141592653589793,
+            "right": -2.653139339871853,
+            "integral": 0.02867251233627276,
+            "reported_error": 4.937079728420583e-15,
+            "status": 0,
+            "success": true,
+            "maxlevel": 2,
+            "evaluations": 67
+          },
+          {
+            "left": -2.653139339871853,
+            "right": -2.327657404000002,
+            "integral": 0.025384726459837532,
+            "reported_error": 3.2898340225160416e-15,
+            "status": 0,
+            "success": true,
+            "maxlevel": 2,
+            "evaluations": 67
+          },
+          {
+            "left": -2.327657404000002,
+            "right": -1.5707963267948966,
+            "integral": 0.0323875565073285,
+            "reported_error": 6.376215414124592e-15,
+            "status": 0,
+            "success": true,
+            "maxlevel": 3,
+            "evaluations": 131
+          },
+          {
+            "left": -1.5707963267948966,
+            "right": -0.8139352495897908,
+            "integral": 0.032387556507328524,
+            "reported_error": 2.467679003089687e-16,
+            "status": 0,
+            "success": true,
+            "maxlevel": 3,
+            "evaluations": 131
+          },
+          {
+            "left": -0.8139352495897908,
+            "right": -0.48845331371794026,
+            "integral": 0.025384726459837532,
+            "reported_error": 3.2898340225160416e-15,
+            "status": 0,
+            "success": true,
+            "maxlevel": 2,
+            "evaluations": 67
+          },
+          {
+            "left": -0.48845331371794026,
+            "right": 0.0,
+            "integral": 0.02867251233627275,
+            "reported_error": 4.937079718595315e-15,
+            "status": 0,
+            "success": true,
+            "maxlevel": 2,
+            "evaluations": 67
+          },
+          {
+            "left": 0.0,
+            "right": 0.48845331371794026,
+            "integral": 0.02867251233627275,
+            "reported_error": 4.937079718595315e-15,
+            "status": 0,
+            "success": true,
+            "maxlevel": 2,
+            "evaluations": 67
+          },
+          {
+            "left": 0.48845331371794026,
+            "right": 0.8139352495897908,
+            "integral": 0.02538472645983753,
+            "reported_error": 3.2898340225160416e-15,
+            "status": 0,
+            "success": true,
+            "maxlevel": 2,
+            "evaluations": 67
+          },
+          {
+            "left": 0.8139352495897908,
+            "right": 1.5707963267948966,
+            "integral": 0.032387556507328524,
+            "reported_error": 2.467679003089687e-16,
+            "status": 0,
+            "success": true,
+            "maxlevel": 3,
+            "evaluations": 131
+          },
+          {
+            "left": 1.5707963267948966,
+            "right": 2.327657404000002,
+            "integral": 0.03238755650732849,
+            "reported_error": 6.376215414124592e-15,
+            "status": 0,
+            "success": true,
+            "maxlevel": 3,
+            "evaluations": 131
+          },
+          {
+            "left": 2.327657404000002,
+            "right": 2.653139339871853,
+            "integral": 0.025384726459837532,
+            "reported_error": 3.2898340225160416e-15,
+            "status": 0,
+            "success": true,
+            "maxlevel": 2,
+            "evaluations": 67
+          },
+          {
+            "left": 2.653139339871853,
+            "right": 3.141592653589793,
+            "integral": 0.028672512336272757,
+            "reported_error": 4.937079728420583e-15,
+            "status": 0,
+            "success": true,
+            "maxlevel": 2,
+            "evaluations": 67
+          }
+        ],
+        "root_info": {
+          "maximum_root_residual": 1.1102230246251565e-16,
+          "stationary_near_zeros": 0,
+          "clipping_roots": 4
+        }
+      },
+      "gauss128_section": 0.34577918121372775,
+      "gauss128_evaluations": 1024,
+      "quadpack_tanh_difference": 4.007849663256735e-09,
+      "gauss_tanh_difference": 2.7422508708241367e-14,
+      "observed_three_method_spread": 4.007849663256735e-09,
+      "reported_error_over_observed_spread": 1.8640030950994426,
+      "transition": {
+        "nearest_saved_transition": {
+          "z": -0.06355512636350573,
+          "cosine": 1.0,
+          "sine": 1.0,
+          "residual": 1.1102230246251565e-16,
+          "kind": "sign crossing"
+        },
+        "z_distance": 1.72394211406246e-09,
+        "nearest_stationary_level_contact": {
+          "angle": -1.5707963267948966,
+          "branch": 1.0,
+          "level": -0.5325223397759519,
+          "signed_gap": 1.371695923513272e-08,
+          "second_derivative": 3.493339362357468,
+          "local_angular_scale": 8.861832419180319e-05
+        },
+        "interpretation": "A small stationary branch-to-level gap produces nearby clipping-root coalescence or a narrow rounded near-contact. Its angular scale is a local quadratic estimate, not a root-separation certificate."
+      },
+      "seconds": 0.0012879999994765967
+    },
+    {
+      "case": "graded-gyroid-density-linear",
+      "z": -0.4226485495703405,
+      "half_width": 0.41709738396131274,
+      "saved_warning": {
+        "z": -0.4226485495703405,
+        "quadpack_error": 1.3929389718032233e-07,
+        "evaluations": 1932,
+        "subintervals": 52,
+        "message": "The occurrence of roundoff error is detected, which prevents \n  the requested tolerance from being achieved.  The error may be \n  underestimated.",
+        "maximum_root_residual": 1.6653345369377348e-16,
+        "stationary_near_zeros": 0,
+        "clipping_roots": 4
+      },
+      "quadpack_replay": {
+        "volume": 0.2835405162271174,
+        "reported_error": 1.3929389718032233e-07,
+        "evaluations": 1932,
+        "subintervals": 52,
+        "message": "The occurrence of roundoff error is detected, which prevents \n  the requested tolerance from being achieved.  The error may be \n  underestimated.",
+        "maximum_root_residual": 1.6653345369377348e-16,
+        "stationary_near_zeros": 0,
+        "clipping_roots": 4
+      },
+      "tanh_sinh": {
+        "volume": 0.28354052924207607,
+        "reported_error_sum": 4.1089193717378065e-14,
+        "all_intervals_converged": true,
+        "failed_intervals": 0,
+        "intervals": [
+          {
+            "left": -3.141592653589793,
+            "right": -2.5154277652655974,
+            "integral": 0.028530011405991592,
+            "reported_error": 5.526719063184965e-15,
+            "status": 0,
+            "success": true,
+            "maxlevel": 2,
+            "evaluations": 67
+          },
+          {
+            "left": -2.5154277652655974,
+            "right": -2.321658409979692,
+            "integral": 0.013530830259687791,
+            "reported_error": 1.7102665178811237e-15,
+            "status": 0,
+            "success": true,
+            "maxlevel": 2,
+            "evaluations": 67
+          },
+          {
+            "left": -2.321658409979692,
+            "right": -1.5707963267948966,
+            "integral": 0.028824290644839618,
+            "reported_error": 5.844438285403783e-15,
+            "status": 0,
+            "success": true,
+            "maxlevel": 3,
+            "evaluations": 131
+          },
+          {
+            "left": -1.5707963267948966,
+            "right": -0.8199342436101008,
+            "integral": 0.02882429064483966,
+            "reported_error": 2.261874278870246e-16,
+            "status": 0,
+            "success": true,
+            "maxlevel": 3,
+            "evaluations": 131
+          },
+          {
+            "left": -0.8199342436101008,
+            "right": -0.6261648883241957,
+            "integral": 0.013530830259687786,
+            "reported_error": 1.7102665178811229e-15,
+            "status": 0,
+            "success": true,
+            "maxlevel": 2,
+            "evaluations": 67
+          },
+          {
+            "left": -0.6261648883241957,
+            "right": 0.0,
+            "integral": 0.02853001140599159,
+            "reported_error": 5.5267190464510136e-15,
+            "status": 0,
+            "success": true,
+            "maxlevel": 2,
+            "evaluations": 67
+          },
+          {
+            "left": 0.0,
+            "right": 0.6261648883241957,
+            "integral": 0.02853001140599159,
+            "reported_error": 5.5267190464510136e-15,
+            "status": 0,
+            "success": true,
+            "maxlevel": 2,
+            "evaluations": 67
+          },
+          {
+            "left": 0.6261648883241957,
+            "right": 0.8199342436101008,
+            "integral": 0.013530830259687786,
+            "reported_error": 1.7102665178811229e-15,
+            "status": 0,
+            "success": true,
+            "maxlevel": 2,
+            "evaluations": 67
+          },
+          {
+            "left": 0.8199342436101008,
+            "right": 1.5707963267948966,
+            "integral": 0.028824290644839663,
+            "reported_error": 2.261874278870246e-16,
+            "status": 0,
+            "success": true,
+            "maxlevel": 3,
+            "evaluations": 131
+          },
+          {
+            "left": 1.5707963267948966,
+            "right": 2.321658409979692,
+            "integral": 0.028824290644839618,
+            "reported_error": 5.844438285403783e-15,
+            "status": 0,
+            "success": true,
+            "maxlevel": 3,
+            "evaluations": 131
+          },
+          {
+            "left": 2.321658409979692,
+            "right": 2.5154277652655974,
+            "integral": 0.013530830259687791,
+            "reported_error": 1.7102665178811237e-15,
+            "status": 0,
+            "success": true,
+            "maxlevel": 2,
+            "evaluations": 67
+          },
+          {
+            "left": 2.5154277652655974,
+            "right": 3.141592653589793,
+            "integral": 0.028530011405991592,
+            "reported_error": 5.526719063184965e-15,
+            "status": 0,
+            "success": true,
+            "maxlevel": 2,
+            "evaluations": 67
+          }
+        ],
+        "root_info": {
+          "maximum_root_residual": 1.6653345369377348e-16,
+          "stationary_near_zeros": 0,
+          "clipping_roots": 4
+        }
+      },
+      "gauss128_section": 0.28354052924212686,
+      "gauss128_evaluations": 1024,
+      "quadpack_tanh_difference": 1.3014958666346388e-08,
+      "gauss_tanh_difference": 5.079270337660091e-14,
+      "observed_three_method_spread": 1.3015009459049764e-08,
+      "reported_error_over_observed_spread": 10.702558274628583,
+      "transition": {
+        "nearest_saved_transition": {
+          "z": -0.4226485747703328,
+          "cosine": -1.0,
+          "sine": 1.0,
+          "residual": 1.7763568394002505e-15,
+          "kind": "sign crossing"
+        },
+        "z_distance": 2.5199992315094732e-08,
+        "nearest_stationary_level_contact": {
+          "angle": -1.5707963267948966,
+          "branch": -1.0,
+          "level": 0.41709738396131274,
+          "signed_gap": -1.2493555517911759e-07,
+          "second_derivative": -3.025049484713918,
+          "local_angular_scale": 0.00028740332065449605
+        },
+        "interpretation": "A small stationary branch-to-level gap produces nearby clipping-root coalescence or a narrow rounded near-contact. Its angular scale is a local quadratic estimate, not a root-separation certificate."
+      },
+      "seconds": 0.0013039170007687062
+    },
+    {
+      "case": "graded-gyroid-density-linear",
+      "z": -0.062835693359375,
+      "half_width": 0.5384389359851742,
+      "saved_warning": {
+        "z": -0.062835693359375,
+        "quadpack_error": 1.0757980388316629e-07,
+        "evaluations": 1890,
+        "subintervals": 53,
+        "message": "The occurrence of roundoff error is detected, which prevents \n  the requested tolerance from being achieved.  The error may be \n  underestimated.",
+        "maximum_root_residual": 1.1102230246251565e-16,
+        "stationary_near_zeros": 0,
+        "clipping_roots": 8
+      },
+      "quadpack_replay": {
+        "volume": 0.3489543607932048,
+        "reported_error": 1.0757980388316629e-07,
+        "evaluations": 1890,
+        "subintervals": 53,
+        "message": "The occurrence of roundoff error is detected, which prevents \n  the requested tolerance from being achieved.  The error may be \n  underestimated.",
+        "maximum_root_residual": 1.1102230246251565e-16,
+        "stationary_near_zeros": 0,
+        "clipping_roots": 8
+      },
+      "tanh_sinh": {
+        "volume": 0.34895435200600483,
+        "reported_error_sum": 4.641035258766528e-14,
+        "all_intervals_converged": true,
+        "failed_intervals": 0,
+        "intervals": [
+          {
+            "left": -3.141592653589793,
+            "right": -2.6598980838122914,
+            "integral": 0.028615320732905007,
+            "reported_error": 4.900517819014592e-15,
+            "status": 0,
+            "success": true,
+            "maxlevel": 2,
+            "evaluations": 67
+          },
+          {
+            "left": -2.6598980838122914,
+            "right": -2.3280574242601513,
+            "integral": 0.026022711288672735,
+            "reported_error": 3.375979790230499e-15,
+            "status": 0,
+            "success": true,
+            "maxlevel": 2,
+            "evaluations": 67
+          },
+          {
+            "left": -2.3280574242601513,
+            "right": -1.571066884540586,
+            "integral": 0.03260055597992345,
+            "reported_error": 6.404325286115285e-15,
+            "status": 0,
+            "success": true,
+            "maxlevel": 3,
+            "evaluations": 131
+          },
+          {
+            "left": -1.571066884540586,
+            "right": -1.5707963267948966,
+            "integral": 0.0,
+            "reported_error": 0.0,
+            "status": 0,
+            "success": true,
+            "maxlevel": 2,
+            "evaluations": 67
+          },
+          {
+            "left": -1.5707963267948966,
+            "right": -1.5705257690492072,
+            "integral": 0.0,
+            "reported_error": 0.0,
+            "status": 0,
+            "success": true,
+            "maxlevel": 2,
+            "evaluations": 67
+          },
+          {
+            "left": -1.5705257690492072,
+            "right": -0.8135352293296418,
+            "integral": 0.03260055597992348,
+            "reported_error": 2.4785578922717103e-16,
+            "status": 0,
+            "success": true,
+            "maxlevel": 3,
+            "evaluations": 131
+          },
+          {
+            "left": -0.8135352293296418,
+            "right": -0.48169456977750175,
+            "integral": 0.026022711288672725,
+            "reported_error": 3.3759797902304986e-15,
+            "status": 0,
+            "success": true,
+            "maxlevel": 2,
+            "evaluations": 67
+          },
+          {
+            "left": -0.48169456977750175,
+            "right": 0.0,
+            "integral": 0.028615320732905007,
+            "reported_error": 4.900517819014594e-15,
+            "status": 0,
+            "success": true,
+            "maxlevel": 2,
+            "evaluations": 67
+          },
+          {
+            "left": 0.0,
+            "right": 0.48169456977750175,
+            "integral": 0.028615320732905007,
+            "reported_error": 4.900517819014594e-15,
+            "status": 0,
+            "success": true,
+            "maxlevel": 2,
+            "evaluations": 67
+          },
+          {
+            "left": 0.48169456977750175,
+            "right": 0.8135352293296418,
+            "integral": 0.02602271128867273,
+            "reported_error": 3.3759797902304986e-15,
+            "status": 0,
+            "success": true,
+            "maxlevel": 2,
+            "evaluations": 67
+          },
+          {
+            "left": 0.8135352293296418,
+            "right": 1.5705257690492072,
+            "integral": 0.03260055597992348,
+            "reported_error": 2.4785578922717103e-16,
+            "status": 0,
+            "success": true,
+            "maxlevel": 3,
+            "evaluations": 131
+          },
+          {
+            "left": 1.5705257690492072,
+            "right": 1.5707963267948966,
+            "integral": 0.0,
+            "reported_error": 0.0,
+            "status": 0,
+            "success": true,
+            "maxlevel": 2,
+            "evaluations": 67
+          },
+          {
+            "left": 1.5707963267948966,
+            "right": 1.571066884540586,
+            "integral": 0.0,
+            "reported_error": 0.0,
+            "status": 0,
+            "success": true,
+            "maxlevel": 2,
+            "evaluations": 67
+          },
+          {
+            "left": 1.571066884540586,
+            "right": 2.3280574242601513,
+            "integral": 0.03260055597992345,
+            "reported_error": 6.404325286115285e-15,
+            "status": 0,
+            "success": true,
+            "maxlevel": 3,
+            "evaluations": 131
+          },
+          {
+            "left": 2.3280574242601513,
+            "right": 2.6598980838122914,
+            "integral": 0.026022711288672735,
+            "reported_error": 3.375979790230499e-15,
+            "status": 0,
+            "success": true,
+            "maxlevel": 2,
+            "evaluations": 67
+          },
+          {
+            "left": 2.6598980838122914,
+            "right": 3.141592653589793,
+            "integral": 0.028615320732905,
+            "reported_error": 4.900517819014592e-15,
+            "status": 0,
+            "success": true,
+            "maxlevel": 2,
+            "evaluations": 67
+          }
+        ],
+        "root_info": {
+          "maximum_root_residual": 1.1102230246251565e-16,
+          "stationary_near_zeros": 0,
+          "clipping_roots": 8
+        }
+      },
+      "gauss128_section": 0.34895435200600106,
+      "gauss128_evaluations": 1536,
+      "quadpack_tanh_difference": 8.78719996766364e-09,
+      "gauss_tanh_difference": 3.774758283725532e-15,
+      "observed_three_method_spread": 8.787203742421923e-09,
+      "reported_error_over_observed_spread": 12.242780187718195,
+      "transition": {
+        "nearest_saved_transition": {
+          "z": -0.0628357228103248,
+          "cosine": 1.0,
+          "sine": 1.0,
+          "residual": 2.3314683517128287e-15,
+          "kind": "sign crossing"
+        },
+        "z_distance": 2.9450949803888626e-08,
+        "nearest_stationary_level_contact": {
+          "angle": -1.5707963267948966,
+          "branch": 1.0,
+          "level": -0.5384389359851742,
+          "signed_gap": -1.28943065558218e-07,
+          "second_derivative": 3.522963079874491,
+          "local_angular_scale": 0.0002705577305999911
+        },
+        "interpretation": "A small stationary branch-to-level gap produces nearby clipping-root coalescence or a narrow rounded near-contact. Its angular scale is a local quadratic estimate, not a root-separation certificate."
+      },
+      "seconds": 0.0014594999956898391
+    },
+    {
+      "case": "graded-gyroid-density-linear",
+      "z": -0.06283575962580833,
+      "half_width": 0.5384386816346909,
+      "saved_warning": {
+        "z": -0.06283575962580833,
+        "quadpack_error": 2.663468710152291e-07,
+        "evaluations": 2184,
+        "subintervals": 58,
+        "message": "The occurrence of roundoff error is detected, which prevents \n  the requested tolerance from being achieved.  The error may be \n  underestimated.",
+        "maximum_root_residual": 1.1102230246251565e-16,
+        "stationary_near_zeros": 0,
+        "clipping_roots": 4
+      },
+      "quadpack_replay": {
+        "volume": 0.34895461090911717,
+        "reported_error": 2.663468710152291e-07,
+        "evaluations": 2184,
+        "subintervals": 58,
+        "message": "The occurrence of roundoff error is detected, which prevents \n  the requested tolerance from being achieved.  The error may be \n  underestimated.",
+        "maximum_root_residual": 1.1102230246251565e-16,
+        "stationary_near_zeros": 0,
+        "clipping_roots": 4
+      },
+      "tanh_sinh": {
+        "volume": 0.34895462713784736,
+        "reported_error_sum": 4.641509684426493e-14,
+        "all_intervals_converged": true,
+        "failed_intervals": 0,
+        "intervals": [
+          {
+            "left": -3.141592653589793,
+            "right": -2.65989769639915,
+            "integral": 0.028615327321616483,
+            "reported_error": 4.900520268162692e-15,
+            "status": 0,
+            "success": true,
+            "maxlevel": 2,
+            "evaluations": 67
+          },
+          {
+            "left": -2.65989769639915,
+            "right": -2.3280573871278003,
+            "integral": 0.026022677925386855,
+            "reported_error": 3.375975192158956e-15,
+            "status": 0,
+            "success": true,
+            "maxlevel": 2,
+            "evaluations": 67
+          },
+          {
+            "left": -2.3280573871278003,
+            "right": -1.5707963267948966,
+            "integral": 0.03260065153745848,
+            "reported_error": 6.406613168223363e-15,
+            "status": 0,
+            "success": true,
+            "maxlevel": 3,
+            "evaluations": 131
+          },
+          {
+            "left": -1.5707963267948966,
+            "right": -0.8135352664619927,
+            "integral": 0.032600651537458517,
+            "reported_error": 2.4794433326580477e-16,
+            "status": 0,
+            "success": true,
+            "maxlevel": 3,
+            "evaluations": 131
+          },
+          {
+            "left": -0.8135352664619927,
+            "right": -0.48169495719064337,
+            "integral": 0.02602267792538684,
+            "reported_error": 3.375975192158954e-15,
+            "status": 0,
+            "success": true,
+            "maxlevel": 2,
+            "evaluations": 67
+          },
+          {
+            "left": -0.48169495719064337,
+            "right": 0.0,
+            "integral": 0.02861532732161649,
+            "reported_error": 4.9005202681626934e-15,
+            "status": 0,
+            "success": true,
+            "maxlevel": 2,
+            "evaluations": 67
+          },
+          {
+            "left": 0.0,
+            "right": 0.48169495719064337,
+            "integral": 0.028615327321616497,
+            "reported_error": 4.9005202681626934e-15,
+            "status": 0,
+            "success": true,
+            "maxlevel": 2,
+            "evaluations": 67
+          },
+          {
+            "left": 0.48169495719064337,
+            "right": 0.8135352664619927,
+            "integral": 0.02602267792538684,
+            "reported_error": 3.375975192158954e-15,
+            "status": 0,
+            "success": true,
+            "maxlevel": 2,
+            "evaluations": 67
+          },
+          {
+            "left": 0.8135352664619927,
+            "right": 1.5707963267948966,
+            "integral": 0.03260065153745853,
+            "reported_error": 2.4794433326580477e-16,
+            "status": 0,
+            "success": true,
+            "maxlevel": 3,
+            "evaluations": 131
+          },
+          {
+            "left": 1.5707963267948966,
+            "right": 2.3280573871278003,
+            "integral": 0.03260065153745848,
+            "reported_error": 6.406613168223363e-15,
+            "status": 0,
+            "success": true,
+            "maxlevel": 3,
+            "evaluations": 131
+          },
+          {
+            "left": 2.3280573871278003,
+            "right": 2.65989769639915,
+            "integral": 0.026022677925386855,
+            "reported_error": 3.375975192158956e-15,
+            "status": 0,
+            "success": true,
+            "maxlevel": 2,
+            "evaluations": 67
+          },
+          {
+            "left": 2.65989769639915,
+            "right": 3.141592653589793,
+            "integral": 0.028615327321616483,
+            "reported_error": 4.900520268162692e-15,
+            "status": 0,
+            "success": true,
+            "maxlevel": 2,
+            "evaluations": 67
+          }
+        ],
+        "root_info": {
+          "maximum_root_residual": 1.1102230246251565e-16,
+          "stationary_near_zeros": 0,
+          "clipping_roots": 4
+        }
+      },
+      "gauss128_section": 0.348954627137915,
+      "gauss128_evaluations": 1024,
+      "quadpack_tanh_difference": 1.6228730193024177e-08,
+      "gauss_tanh_difference": 6.761258219967203e-14,
+      "observed_three_method_spread": 1.6228797805606376e-08,
+      "reported_error_over_observed_spread": 16.41199022907398,
+      "transition": {
+        "nearest_saved_transition": {
+          "z": -0.0628357228103248,
+          "cosine": 1.0,
+          "sine": 1.0,
+          "residual": 2.3314683517128287e-15,
+          "kind": "sign crossing"
+        },
+        "z_distance": 3.681548352285624e-08,
+        "nearest_stationary_level_contact": {
+          "angle": -1.5707963267948966,
+          "branch": 1.0,
+          "level": -0.5384386816346909,
+          "signed_gap": 1.611867170847603e-07,
+          "second_derivative": 3.52296032185032,
+          "local_angular_scale": 0.0003025002562730042
+        },
+        "interpretation": "A small stationary branch-to-level gap produces nearby clipping-root coalescence or a narrow rounded near-contact. Its angular scale is a local quadratic estimate, not a root-separation certificate."
+      },
+      "seconds": 0.0014207499916665256
+    },
+    {
+      "case": "graded-gyroid-density-linear",
+      "z": -0.06283562709294167,
+      "half_width": 0.5384391903356575,
+      "saved_warning": {
+        "z": -0.06283562709294167,
+        "quadpack_error": 6.081423334043878e-10,
+        "evaluations": 4368,
+        "subintervals": 112,
+        "message": "The occurrence of roundoff error is detected, which prevents \n  the requested tolerance from being achieved.  The error may be \n  underestimated.",
+        "maximum_root_residual": 1.1102230246251565e-16,
+        "stationary_near_zeros": 0,
+        "clipping_roots": 8
+      },
+      "quadpack_replay": {
+        "volume": 0.3489541167367126,
+        "reported_error": 6.081423334043878e-10,
+        "evaluations": 4368,
+        "subintervals": 112,
+        "message": "The occurrence of roundoff error is detected, which prevents \n  the requested tolerance from being achieved.  The error may be \n  underestimated.",
+        "maximum_root_residual": 1.1102230246251565e-16,
+        "stationary_near_zeros": 0,
+        "clipping_roots": 8
+      },
+      "tanh_sinh": {
+        "volume": 0.3489541167367114,
+        "reported_error_sum": 4.6406546148718145e-14,
+        "all_intervals_converged": true,
+        "failed_intervals": 0,
+        "intervals": [
+          {
+            "left": -3.141592653589793,
+            "right": -2.659898471225203,
+            "integral": 0.02861531414418521,
+            "reported_error": 4.900515383993667e-15,
+            "status": 0,
+            "success": true,
+            "maxlevel": 2,
+            "evaluations": 67
+          },
+          {
+            "left": -2.659898471225203,
+            "right": -2.328057461392554,
+            "integral": 0.026022744651951882,
+            "reported_error": 3.3759843883015336e-15,
+            "status": 0,
+            "success": true,
+            "maxlevel": 2,
+            "evaluations": 67
+          },
+          {
+            "left": -2.328057461392554,
+            "right": -1.5712840861117674,
+            "integral": 0.03260047038804073,
+            "reported_error": 6.402488809799776e-15,
+            "status": 0,
+            "success": true,
+            "maxlevel": 3,
+            "evaluations": 131
+          },
+          {
+            "left": -1.5712840861117674,
+            "right": -1.5707963267948966,
+            "integral": 0.0,
+            "reported_error": 0.0,
+            "status": 0,
+            "success": true,
+            "maxlevel": 2,
+            "evaluations": 67
+          },
+          {
+            "left": -1.5707963267948966,
+            "right": -1.5703085674780257,
+            "integral": 0.0,
+            "reported_error": 0.0,
+            "status": 0,
+            "success": true,
+            "maxlevel": 2,
+            "evaluations": 67
+          },
+          {
+            "left": -1.5703085674780257,
+            "right": -0.813535192197239,
+            "integral": 0.03260047038804076,
+            "reported_error": 2.4778471518482577e-16,
+            "status": 0,
+            "success": true,
+            "maxlevel": 3,
+            "evaluations": 131
+          },
+          {
+            "left": -0.813535192197239,
+            "right": -0.4816941823645904,
+            "integral": 0.02602274465195188,
+            "reported_error": 3.3759843883015325e-15,
+            "status": 0,
+            "success": true,
+            "maxlevel": 2,
+            "evaluations": 67
+          },
+          {
+            "left": -0.4816941823645904,
+            "right": 0.0,
+            "integral": 0.028615314144185222,
+            "reported_error": 4.900515388777737e-15,
+            "status": 0,
+            "success": true,
+            "maxlevel": 2,
+            "evaluations": 67
+          },
+          {
+            "left": 0.0,
+            "right": 0.4816941823645904,
+            "integral": 0.028615314144185222,
+            "reported_error": 4.900515388777737e-15,
+            "status": 0,
+            "success": true,
+            "maxlevel": 2,
+            "evaluations": 67
+          },
+          {
+            "left": 0.4816941823645904,
+            "right": 0.813535192197239,
+            "integral": 0.02602274465195188,
+            "reported_error": 3.3759843883015325e-15,
+            "status": 0,
+            "success": true,
+            "maxlevel": 2,
+            "evaluations": 67
+          },
+          {
+            "left": 0.813535192197239,
+            "right": 1.5703085674780257,
+            "integral": 0.03260047038804076,
+            "reported_error": 2.4778471518482577e-16,
+            "status": 0,
+            "success": true,
+            "maxlevel": 3,
+            "evaluations": 131
+          },
+          {
+            "left": 1.5703085674780257,
+            "right": 1.5707963267948966,
+            "integral": 0.0,
+            "reported_error": 0.0,
+            "status": 0,
+            "success": true,
+            "maxlevel": 2,
+            "evaluations": 67
+          },
+          {
+            "left": 1.5707963267948966,
+            "right": 1.5712840861117674,
+            "integral": 0.0,
+            "reported_error": 0.0,
+            "status": 0,
+            "success": true,
+            "maxlevel": 2,
+            "evaluations": 67
+          },
+          {
+            "left": 1.5712840861117674,
+            "right": 2.328057461392554,
+            "integral": 0.03260047038804073,
+            "reported_error": 6.402488809799776e-15,
+            "status": 0,
+            "success": true,
+            "maxlevel": 3,
+            "evaluations": 131
+          },
+          {
+            "left": 2.328057461392554,
+            "right": 2.659898471225203,
+            "integral": 0.026022744651951885,
+            "reported_error": 3.3759843883015336e-15,
+            "status": 0,
+            "success": true,
+            "maxlevel": 2,
+            "evaluations": 67
+          },
+          {
+            "left": 2.659898471225203,
+            "right": 3.141592653589793,
+            "integral": 0.02861531414418521,
+            "reported_error": 4.900515383993667e-15,
+            "status": 0,
+            "success": true,
+            "maxlevel": 2,
+            "evaluations": 67
+          }
+        ],
+        "root_info": {
+          "maximum_root_residual": 1.1102230246251565e-16,
+          "stationary_near_zeros": 0,
+          "clipping_roots": 8
+        }
+      },
+      "gauss128_section": 0.34895411673670773,
+      "gauss128_evaluations": 1536,
+      "quadpack_tanh_difference": 1.2212453270876722e-15,
+      "gauss_tanh_difference": 3.6637359812630166e-15,
+      "observed_three_method_spread": 4.884981308350689e-15,
+      "reported_error_over_observed_spread": 124492.25391401023,
+      "transition": {
+        "nearest_saved_transition": {
+          "z": -0.0628357228103248,
+          "cosine": 1.0,
+          "sine": 1.0,
+          "residual": 2.3314683517128287e-15,
+          "kind": "sign crossing"
+        },
+        "z_distance": 9.571738313063349e-08,
+        "nearest_stationary_level_contact": {
+          "angle": -1.5707963267948966,
+          "branch": 1.0,
+          "level": -0.5384391903356575,
+          "signed_gap": -4.190727550534845e-07,
+          "second_derivative": 3.522965837904144,
+          "local_angular_scale": 0.00048775922897439147
+        },
+        "interpretation": "A small stationary branch-to-level gap produces nearby clipping-root coalescence or a narrow rounded near-contact. Its angular scale is a local quadratic estimate, not a root-separation certificate."
+      },
+      "seconds": 0.00231762501061894
+    },
+    {
+      "case": "graded-gyroid-density-linear",
+      "z": 0.058004931858438066,
+      "half_width": 0.5778776309047179,
+      "saved_warning": {
+        "z": 0.058004931858438066,
+        "quadpack_error": 1.3631539374249392e-11,
+        "evaluations": 3948,
+        "subintervals": 100,
+        "message": "The occurrence of roundoff error is detected, which prevents \n  the requested tolerance from being achieved.  The error may be \n  underestimated.",
+        "maximum_root_residual": 3.3306690738754696e-16,
+        "stationary_near_zeros": 0,
+        "clipping_roots": 4
+      },
+      "quadpack_replay": {
+        "volume": 0.37016176444587356,
+        "reported_error": 1.3631539374249392e-11,
+        "evaluations": 3948,
+        "subintervals": 100,
+        "message": "The occurrence of roundoff error is detected, which prevents \n  the requested tolerance from being achieved.  The error may be \n  underestimated.",
+        "maximum_root_residual": 3.3306690738754696e-16,
+        "stationary_near_zeros": 0,
+        "clipping_roots": 4
+      },
+      "tanh_sinh": {
+        "volume": 0.37016176444588683,
+        "reported_error_sum": 4.8172353469494345e-14,
+        "all_intervals_converged": true,
+        "failed_intervals": 0,
+        "intervals": [
+          {
+            "left": -3.141592653589793,
+            "right": -2.7043384496251437,
+            "integral": 0.028071849371733754,
+            "reported_error": 4.642003070244515e-15,
+            "status": 0,
+            "success": true,
+            "maxlevel": 2,
+            "evaluations": 67
+          },
+          {
+            "left": -2.7043384496251437,
+            "right": -2.33088492157883,
+            "integral": 0.030363314833867998,
+            "reported_error": 3.964678852729413e-15,
+            "status": 0,
+            "success": true,
+            "maxlevel": 2,
+            "evaluations": 67
+          },
+          {
+            "left": -2.33088492157883,
+            "right": -1.5707963267948966,
+            "integral": 0.034105276905869945,
+            "reported_error": 6.616736490552979e-15,
+            "status": 0,
+            "success": true,
+            "maxlevel": 3,
+            "evaluations": 131
+          },
+          {
+            "left": -1.5707963267948966,
+            "right": -0.8107077320109634,
+            "integral": 0.03410527690586997,
+            "reported_error": 2.5607638146203745e-16,
+            "status": 0,
+            "success": true,
+            "maxlevel": 3,
+            "evaluations": 131
+          },
+          {
+            "left": -0.8107077320109634,
+            "right": -0.43725420396464953,
+            "integral": 0.030363314833867998,
+            "reported_error": 3.964678852729413e-15,
+            "status": 0,
+            "success": true,
+            "maxlevel": 2,
+            "evaluations": 67
+          },
+          {
+            "left": -0.43725420396464953,
+            "right": 0.0,
+            "integral": 0.028071849371733754,
+            "reported_error": 4.6420030870288165e-15,
+            "status": 0,
+            "success": true,
+            "maxlevel": 2,
+            "evaluations": 67
+          },
+          {
+            "left": 0.0,
+            "right": 0.43725420396464953,
+            "integral": 0.028071849371733754,
+            "reported_error": 4.6420030870288165e-15,
+            "status": 0,
+            "success": true,
+            "maxlevel": 2,
+            "evaluations": 67
+          },
+          {
+            "left": 0.43725420396464953,
+            "right": 0.8107077320109634,
+            "integral": 0.030363314833867998,
+            "reported_error": 3.964678852729413e-15,
+            "status": 0,
+            "success": true,
+            "maxlevel": 2,
+            "evaluations": 67
+          },
+          {
+            "left": 0.8107077320109634,
+            "right": 1.5707963267948966,
+            "integral": 0.034105276905869966,
+            "reported_error": 2.5607638146203745e-16,
+            "status": 0,
+            "success": true,
+            "maxlevel": 3,
+            "evaluations": 131
+          },
+          {
+            "left": 1.5707963267948966,
+            "right": 2.33088492157883,
+            "integral": 0.034105276905869945,
+            "reported_error": 6.616736490552979e-15,
+            "status": 0,
+            "success": true,
+            "maxlevel": 3,
+            "evaluations": 131
+          },
+          {
+            "left": 2.33088492157883,
+            "right": 2.7043384496251437,
+            "integral": 0.030363314833867998,
+            "reported_error": 3.964678852729413e-15,
+            "status": 0,
+            "success": true,
+            "maxlevel": 2,
+            "evaluations": 67
+          },
+          {
+            "left": 2.7043384496251437,
+            "right": 3.141592653589793,
+            "integral": 0.02807184937173375,
+            "reported_error": 4.642003070244515e-15,
+            "status": 0,
+            "success": true,
+            "maxlevel": 2,
+            "evaluations": 67
+          }
+        ],
+        "root_info": {
+          "maximum_root_residual": 3.3306690738754696e-16,
+          "stationary_near_zeros": 0,
+          "clipping_roots": 4
+        }
+      },
+      "gauss128_section": 0.37016176444586857,
+      "gauss128_evaluations": 1024,
+      "quadpack_tanh_difference": 1.326716514427062e-14,
+      "gauss_tanh_difference": 1.8263168755083825e-14,
+      "observed_three_method_spread": 1.8263168755083825e-14,
+      "reported_error_over_observed_spread": 746.3950838462712,
+      "transition": {
+        "nearest_saved_transition": {
+          "z": 0.05800481218486291,
+          "cosine": 1.0,
+          "sine": -1.0,
+          "residual": 1.9984014443252818e-15,
+          "kind": "sign crossing"
+        },
+        "z_distance": 1.1967357515380028e-07,
+        "nearest_stationary_level_contact": {
+          "angle": -1.5707963267948966,
+          "branch": 1.0,
+          "level": -0.5778776309047179,
+          "signed_gap": 5.646320371255342e-07,
+          "second_derivative": 3.739832620165634,
+          "local_angular_scale": 0.0005495050314249606
+        },
+        "interpretation": "A small stationary branch-to-level gap produces nearby clipping-root coalescence or a narrow rounded near-contact. Its angular scale is a local quadratic estimate, not a root-separation certificate."
+      },
+      "seconds": 0.0020815840107388794
+    },
+    {
+      "case": "graded-gyroid-density-linear",
+      "z": 0.05800494078228512,
+      "half_width": 0.577877600635263,
+      "saved_warning": {
+        "z": 0.05800494078228512,
+        "quadpack_error": 1.3610743407318146e-11,
+        "evaluations": 3948,
+        "subintervals": 100,
+        "message": "The occurrence of roundoff error is detected, which prevents \n  the requested tolerance from being achieved.  The error may be \n  underestimated.",
+        "maximum_root_residual": 5.551115123125783e-16,
+        "stationary_near_zeros": 0,
+        "clipping_roots": 4
+      },
+      "quadpack_replay": {
+        "volume": 0.3701617994723715,
+        "reported_error": 1.3610743407318146e-11,
+        "evaluations": 3948,
+        "subintervals": 100,
+        "message": "The occurrence of roundoff error is detected, which prevents \n  the requested tolerance from being achieved.  The error may be \n  underestimated.",
+        "maximum_root_residual": 5.551115123125783e-16,
+        "stationary_near_zeros": 0,
+        "clipping_roots": 4
+      },
+      "tanh_sinh": {
+        "volume": 0.37016179947235817,
+        "reported_error_sum": 4.817235211308072e-14,
+        "all_intervals_converged": true,
+        "failed_intervals": 0,
+        "intervals": [
+          {
+            "left": -3.141592653589793,
+            "right": -2.70433840293826,
+            "integral": 0.0280718504743698,
+            "reported_error": 4.642003388398425e-15,
+            "status": 0,
+            "success": true,
+            "maxlevel": 2,
+            "evaluations": 67
+          },
+          {
+            "left": -2.70433840293826,
+            "right": -2.330884916164284,
+            "integral": 0.030363310657407997,
+            "reported_error": 3.964678269701198e-15,
+            "status": 0,
+            "success": true,
+            "maxlevel": 2,
+            "evaluations": 67
+          },
+          {
+            "left": -2.330884916164284,
+            "right": -1.5707963267948966,
+            "integral": 0.03410528873631174,
+            "reported_error": 6.616736344234244e-15,
+            "status": 0,
+            "success": true,
+            "maxlevel": 3,
+            "evaluations": 131
+          },
+          {
+            "left": -1.5707963267948966,
+            "right": -0.8107077374255092,
+            "integral": 0.03410528873631175,
+            "reported_error": 2.560763757993104e-16,
+            "status": 0,
+            "success": true,
+            "maxlevel": 3,
+            "evaluations": 131
+          },
+          {
+            "left": -0.8107077374255092,
+            "right": -0.43725425065153345,
+            "integral": 0.030363310657407987,
+            "reported_error": 3.9646782697011975e-15,
+            "status": 0,
+            "success": true,
+            "maxlevel": 2,
+            "evaluations": 67
+          },
+          {
+            "left": -0.43725425065153345,
+            "right": 0.0,
+            "integral": 0.028071850474369824,
+            "reported_error": 4.642003408705984e-15,
+            "status": 0,
+            "success": true,
+            "maxlevel": 2,
+            "evaluations": 67
+          },
+          {
+            "left": 0.0,
+            "right": 0.43725425065153345,
+            "integral": 0.028071850474369827,
+            "reported_error": 4.642003408705984e-15,
+            "status": 0,
+            "success": true,
+            "maxlevel": 2,
+            "evaluations": 67
+          },
+          {
+            "left": 0.43725425065153345,
+            "right": 0.8107077374255092,
+            "integral": 0.03036331065740798,
+            "reported_error": 3.9646782697011975e-15,
+            "status": 0,
+            "success": true,
+            "maxlevel": 2,
+            "evaluations": 67
+          },
+          {
+            "left": 0.8107077374255092,
+            "right": 1.5707963267948966,
+            "integral": 0.03410528873631175,
+            "reported_error": 2.560763757993104e-16,
+            "status": 0,
+            "success": true,
+            "maxlevel": 3,
+            "evaluations": 131
+          },
+          {
+            "left": 1.5707963267948966,
+            "right": 2.330884916164284,
+            "integral": 0.03410528873631174,
+            "reported_error": 6.616736344234244e-15,
+            "status": 0,
+            "success": true,
+            "maxlevel": 3,
+            "evaluations": 131
+          },
+          {
+            "left": 2.330884916164284,
+            "right": 2.70433840293826,
+            "integral": 0.030363310657407994,
+            "reported_error": 3.964678269701198e-15,
+            "status": 0,
+            "success": true,
+            "maxlevel": 2,
+            "evaluations": 67
+          },
+          {
+            "left": 2.70433840293826,
+            "right": 3.141592653589793,
+            "integral": 0.0280718504743698,
+            "reported_error": 4.642003388398425e-15,
+            "status": 0,
+            "success": true,
+            "maxlevel": 2,
+            "evaluations": 67
+          }
+        ],
+        "root_info": {
+          "maximum_root_residual": 5.551115123125783e-16,
+          "stationary_near_zeros": 0,
+          "clipping_roots": 4
+        }
+      },
+      "gauss128_section": 0.3701617994723689,
+      "gauss128_evaluations": 1024,
+      "quadpack_tanh_difference": 1.3322676295501878e-14,
+      "gauss_tanh_difference": 1.071365218763276e-14,
+      "observed_three_method_spread": 1.3322676295501878e-14,
+      "reported_error_over_observed_spread": 1021.6223156238906,
+      "transition": {
+        "nearest_saved_transition": {
+          "z": 0.05800481218486291,
+          "cosine": 1.0,
+          "sine": -1.0,
+          "residual": 1.9984014443252818e-15,
+          "kind": "sign crossing"
+        },
+        "z_distance": 1.2859742221094095e-07,
+        "nearest_stationary_level_contact": {
+          "angle": -1.5707963267948966,
+          "branch": 1.0,
+          "level": -0.577877600635263,
+          "signed_gap": 6.067356634886778e-07,
+          "second_derivative": 3.739832187843514,
+          "local_angular_scale": 0.0005696245544041589
+        },
+        "interpretation": "A small stationary branch-to-level gap produces nearby clipping-root coalescence or a narrow rounded near-contact. Its angular scale is a local quadratic estimate, not a root-separation certificate."
+      },
+      "seconds": 0.002051416988251731
+    },
+    {
+      "case": "graded-gyroid-density-linear",
+      "z": 0.1978601062957159,
+      "half_width": 0.6250399456622923,
+      "saved_warning": {
+        "z": 0.1978601062957159,
+        "quadpack_error": 6.331533592794073e-08,
+        "evaluations": 756,
+        "subintervals": 24,
+        "message": "The occurrence of roundoff error is detected, which prevents \n  the requested tolerance from being achieved.  The error may be \n  underestimated.",
+        "maximum_root_residual": 0.0,
+        "stationary_near_zeros": 0,
+        "clipping_roots": 4
+      },
+      "quadpack_replay": {
+        "volume": 0.3957216801674649,
+        "reported_error": 6.331533592794073e-08,
+        "evaluations": 756,
+        "subintervals": 24,
+        "message": "The occurrence of roundoff error is detected, which prevents \n  the requested tolerance from being achieved.  The error may be \n  underestimated.",
+        "maximum_root_residual": 0.0,
+        "stationary_near_zeros": 0,
+        "clipping_roots": 4
+      },
+      "tanh_sinh": {
+        "volume": 0.3957216826206278,
+        "reported_error_sum": 2.938194313816549e-14,
+        "all_intervals_converged": true,
+        "failed_intervals": 0,
+        "intervals": [
+          {
+            "left": -3.141592653589793,
+            "right": -2.7061363292201808,
+            "integral": 0.02121733116647142,
+            "reported_error": 2.632335782870178e-15,
+            "status": 0,
+            "success": true,
+            "maxlevel": 2,
+            "evaluations": 67
+          },
+          {
+            "left": -2.7061363292201808,
+            "right": -1.571122384066804,
+            "integral": 0.0776817569829325,
+            "reported_error": 6.861165298745132e-15,
+            "status": 0,
+            "success": true,
+            "maxlevel": 3,
+            "evaluations": 131
+          },
+          {
+            "left": -1.571122384066804,
+            "right": -1.5707963267948966,
+            "integral": 3.133250575301199e-05,
+            "reported_error": 1.0311424311428074e-15,
+            "status": 0,
+            "success": true,
+            "maxlevel": 2,
+            "evaluations": 67
+          },
+          {
+            "left": -1.5707963267948966,
+            "right": -1.570470269522989,
+            "integral": 3.133250575301199e-05,
+            "reported_error": 1.0311424311428074e-15,
+            "status": 0,
+            "success": true,
+            "maxlevel": 2,
+            "evaluations": 67
+          },
+          {
+            "left": -1.570470269522989,
+            "right": -0.43545632436961235,
+            "integral": 0.07768175698293253,
+            "reported_error": 5.028498423116424e-16,
+            "status": 0,
+            "success": true,
+            "maxlevel": 3,
+            "evaluations": 131
+          },
+          {
+            "left": -0.43545632436961235,
+            "right": 0.0,
+            "integral": 0.02121733116647142,
+            "reported_error": 2.632335782870178e-15,
+            "status": 0,
+            "success": true,
+            "maxlevel": 2,
+            "evaluations": 67
+          },
+          {
+            "left": 0.0,
+            "right": 0.43545632436961235,
+            "integral": 0.02121733116647142,
+            "reported_error": 2.632335782870178e-15,
+            "status": 0,
+            "success": true,
+            "maxlevel": 2,
+            "evaluations": 67
+          },
+          {
+            "left": 0.43545632436961235,
+            "right": 1.570470269522989,
+            "integral": 0.07768175698293253,
+            "reported_error": 5.028498423116424e-16,
+            "status": 0,
+            "success": true,
+            "maxlevel": 3,
+            "evaluations": 131
+          },
+          {
+            "left": 1.570470269522989,
+            "right": 1.5707963267948966,
+            "integral": 3.133250575301199e-05,
+            "reported_error": 1.0311424311428074e-15,
+            "status": 0,
+            "success": true,
+            "maxlevel": 2,
+            "evaluations": 67
+          },
+          {
+            "left": 1.5707963267948966,
+            "right": 1.571122384066804,
+            "integral": 3.133250575301199e-05,
+            "reported_error": 1.0311424311428074e-15,
+            "status": 0,
+            "success": true,
+            "maxlevel": 2,
+            "evaluations": 67
+          },
+          {
+            "left": 1.571122384066804,
+            "right": 2.7061363292201808,
+            "integral": 0.07768175698293252,
+            "reported_error": 6.861165298745132e-15,
+            "status": 0,
+            "success": true,
+            "maxlevel": 3,
+            "evaluations": 131
+          },
+          {
+            "left": 2.7061363292201808,
+            "right": 3.141592653589793,
+            "integral": 0.021217331166471422,
+            "reported_error": 2.632335782870178e-15,
+            "status": 0,
+            "success": true,
+            "maxlevel": 2,
+            "evaluations": 67
+          }
+        ],
+        "root_info": {
+          "maximum_root_residual": 0.0,
+          "stationary_near_zeros": 0,
+          "clipping_roots": 4
+        }
+      },
+      "gauss128_section": 0.3957216826206237,
+      "gauss128_evaluations": 1024,
+      "quadpack_tanh_difference": 2.4531628950441586e-09,
+      "gauss_tanh_difference": 4.107825191113079e-15,
+      "observed_three_method_spread": 2.4531628950441586e-09,
+      "reported_error_over_observed_spread": 25.809674545399893,
+      "transition": {
+        "nearest_saved_transition": {
+          "z": 0.1978601240246415,
+          "cosine": -1.0,
+          "sine": 1.0,
+          "residual": 1.1102230246251565e-16,
+          "kind": "sign crossing"
+        },
+        "z_distance": 1.7728925605364765e-08,
+        "nearest_stationary_level_contact": {
+          "angle": -1.5707963267948966,
+          "branch": 1.0,
+          "level": 0.6250399456622923,
+          "signed_gap": -7.32471034936566e-08,
+          "second_derivative": 1.3779475672836514,
+          "local_angular_scale": 0.0003260572635341627
+        },
+        "interpretation": "A small stationary branch-to-level gap produces nearby clipping-root coalescence or a narrow rounded near-contact. Its angular scale is a local quadratic estimate, not a root-separation certificate."
+      },
+      "seconds": 0.0009251250012312084
+    },
+    {
+      "case": "graded-gyroid-density-linear",
+      "z": 0.4585764597637812,
+      "half_width": 0.708977262997518,
+      "saved_warning": {
+        "z": 0.4585764597637812,
+        "quadpack_error": 2.5513069366420326e-12,
+        "evaluations": 4116,
+        "subintervals": 104,
+        "message": "The occurrence of roundoff error is detected, which prevents \n  the requested tolerance from being achieved.  The error may be \n  underestimated.",
+        "maximum_root_residual": 1.1102230246251565e-16,
+        "stationary_near_zeros": 0,
+        "clipping_roots": 4
+      },
+      "quadpack_replay": {
+        "volume": 0.4423727634785831,
+        "reported_error": 2.5513069366420326e-12,
+        "evaluations": 4116,
+        "subintervals": 104,
+        "message": "The occurrence of roundoff error is detected, which prevents \n  the requested tolerance from being achieved.  The error may be \n  underestimated.",
+        "maximum_root_residual": 1.1102230246251565e-16,
+        "stationary_near_zeros": 0,
+        "clipping_roots": 4
+      },
+      "tanh_sinh": {
+        "volume": 0.44237276347860477,
+        "reported_error_sum": 5.4339824795002237e-14,
+        "all_intervals_converged": true,
+        "failed_intervals": 0,
+        "intervals": [
+          {
+            "left": -3.141592653589793,
+            "right": -2.845862175603111,
+            "integral": 0.024151764518537826,
+            "reported_error": 3.5995671300565084e-15,
+            "status": 0,
+            "success": true,
+            "maxlevel": 2,
+            "evaluations": 67
+          },
+          {
+            "left": -2.845862175603111,
+            "right": -2.341336931926144,
+            "integral": 0.04610354228741014,
+            "reported_error": 6.140971807467109e-15,
+            "status": 0,
+            "success": true,
+            "maxlevel": 2,
+            "evaluations": 67
+          },
+          {
+            "left": -2.341336931926144,
+            "right": -1.5707963267948966,
+            "integral": 0.04033788406370322,
+            "reported_error": 7.402353723567659e-15,
+            "status": 0,
+            "success": true,
+            "maxlevel": 3,
+            "evaluations": 131
+          },
+          {
+            "left": -1.5707963267948966,
+            "right": -0.8002557216636493,
+            "integral": 0.04033788406370324,
+            "reported_error": 2.864807988862236e-16,
+            "status": 0,
+            "success": true,
+            "maxlevel": 3,
+            "evaluations": 131
+          },
+          {
+            "left": -0.8002557216636493,
+            "right": -0.29573047798668234,
+            "integral": 0.04610354228741011,
+            "reported_error": 6.140971807467105e-15,
+            "status": 0,
+            "success": true,
+            "maxlevel": 2,
+            "evaluations": 67
+          },
+          {
+            "left": -0.29573047798668234,
+            "right": 0.0,
+            "integral": 0.02415176451853785,
+            "reported_error": 3.5995671300565116e-15,
+            "status": 0,
+            "success": true,
+            "maxlevel": 2,
+            "evaluations": 67
+          },
+          {
+            "left": 0.0,
+            "right": 0.29573047798668234,
+            "integral": 0.02415176451853785,
+            "reported_error": 3.5995671300565116e-15,
+            "status": 0,
+            "success": true,
+            "maxlevel": 2,
+            "evaluations": 67
+          },
+          {
+            "left": 0.29573047798668234,
+            "right": 0.8002557216636493,
+            "integral": 0.046103542287410114,
+            "reported_error": 6.140971807467105e-15,
+            "status": 0,
+            "success": true,
+            "maxlevel": 2,
+            "evaluations": 67
+          },
+          {
+            "left": 0.8002557216636493,
+            "right": 1.5707963267948966,
+            "integral": 0.04033788406370324,
+            "reported_error": 2.864807988862236e-16,
+            "status": 0,
+            "success": true,
+            "maxlevel": 3,
+            "evaluations": 131
+          },
+          {
+            "left": 1.5707963267948966,
+            "right": 2.341336931926144,
+            "integral": 0.04033788406370323,
+            "reported_error": 7.402353723567659e-15,
+            "status": 0,
+            "success": true,
+            "maxlevel": 3,
+            "evaluations": 131
+          },
+          {
+            "left": 2.341336931926144,
+            "right": 2.845862175603111,
+            "integral": 0.04610354228741014,
+            "reported_error": 6.140971807467109e-15,
+            "status": 0,
+            "success": true,
+            "maxlevel": 2,
+            "evaluations": 67
+          },
+          {
+            "left": 2.845862175603111,
+            "right": 3.141592653589793,
+            "integral": 0.024151764518537823,
+            "reported_error": 3.5995671300565084e-15,
+            "status": 0,
+            "success": true,
+            "maxlevel": 2,
+            "evaluations": 67
+          }
+        ],
+        "root_info": {
+          "maximum_root_residual": 1.1102230246251565e-16,
+          "stationary_near_zeros": 0,
+          "clipping_roots": 4
+        }
+      },
+      "gauss128_section": 0.44237276347856835,
+      "gauss128_evaluations": 1024,
+      "quadpack_tanh_difference": 2.1649348980190553e-14,
+      "gauss_tanh_difference": 3.6415315207705135e-14,
+      "observed_three_method_spread": 3.6415315207705135e-14,
+      "reported_error_over_observed_spread": 70.06137176322451,
+      "transition": {
+        "nearest_saved_transition": {
+          "z": 0.45857655252824703,
+          "cosine": -1.0,
+          "sine": -1.0,
+          "residual": 2.220446049250313e-16,
+          "kind": "sign crossing"
+        },
+        "z_distance": 9.276446583106335e-08,
+        "nearest_stationary_level_contact": {
+          "angle": -1.5707963267948966,
+          "branch": -1.0,
+          "level": 0.708977262997518,
+          "signed_gap": -3.7701376331966685e-07,
+          "second_derivative": -4.852181636636912,
+          "local_angular_scale": 0.0003942076748666403
+        },
+        "interpretation": "A small stationary branch-to-level gap produces nearby clipping-root coalescence or a narrow rounded near-contact. Its angular scale is a local quadratic estimate, not a root-separation certificate."
+      },
+      "seconds": 0.002112290996592492
+    },
+    {
+      "case": "graded-gyroid-density-linear",
+      "z": 0.4585763356065915,
+      "half_width": 0.7089768130149655,
+      "saved_warning": {
+        "z": 0.4585763356065915,
+        "quadpack_error": 1.814590988763844e-11,
+        "evaluations": 3612,
+        "subintervals": 92,
+        "message": "The occurrence of roundoff error is detected, which prevents \n  the requested tolerance from being achieved.  The error may be \n  underestimated.",
+        "maximum_root_residual": 2.220446049250313e-16,
+        "stationary_near_zeros": 0,
+        "clipping_roots": 4
+      },
+      "quadpack_replay": {
+        "volume": 0.4423731333299478,
+        "reported_error": 1.814590988763844e-11,
+        "evaluations": 3612,
+        "subintervals": 92,
+        "message": "The occurrence of roundoff error is detected, which prevents \n  the requested tolerance from being achieved.  The error may be \n  underestimated.",
+        "maximum_root_residual": 2.220446049250313e-16,
+        "stationary_near_zeros": 0,
+        "clipping_roots": 4
+      },
+      "tanh_sinh": {
+        "volume": 0.44237313332989786,
+        "reported_error_sum": 5.433980189017802e-14,
+        "all_intervals_converged": true,
+        "failed_intervals": 0,
+        "intervals": [
+          {
+            "left": -3.141592653589793,
+            "right": -2.845861591491769,
+            "integral": 0.024151790451879176,
+            "reported_error": 3.599572370373803e-15,
+            "status": 0,
+            "success": true,
+            "maxlevel": 2,
+            "evaluations": 67
+          },
+          {
+            "left": -2.845861591491769,
+            "right": -2.3413368551680103,
+            "integral": 0.04610347697119856,
+            "reported_error": 6.140962412461153e-15,
+            "status": 0,
+            "success": true,
+            "maxlevel": 2,
+            "evaluations": 67
+          },
+          {
+            "left": -2.3413368551680103,
+            "right": -1.5707963267948966,
+            "integral": 0.040338015909396716,
+            "reported_error": 7.402350718593224e-15,
+            "status": 0,
+            "success": true,
+            "maxlevel": 3,
+            "evaluations": 131
+          },
+          {
+            "left": -1.5707963267948966,
+            "right": -0.800255798421783,
+            "integral": 0.04033801590939674,
+            "reported_error": 2.864806825897712e-16,
+            "status": 0,
+            "success": true,
+            "maxlevel": 3,
+            "evaluations": 131
+          },
+          {
+            "left": -0.800255798421783,
+            "right": -0.2957310620980239,
+            "integral": 0.046103476971198584,
+            "reported_error": 6.140962412461157e-15,
+            "status": 0,
+            "success": true,
+            "maxlevel": 2,
+            "evaluations": 67
+          },
+          {
+            "left": -0.2957310620980239,
+            "right": 0.0,
+            "integral": 0.024151790451879162,
+            "reported_error": 3.5995723486099e-15,
+            "status": 0,
+            "success": true,
+            "maxlevel": 2,
+            "evaluations": 67
+          },
+          {
+            "left": 0.0,
+            "right": 0.2957310620980239,
+            "integral": 0.02415179045187916,
+            "reported_error": 3.5995723486099e-15,
+            "status": 0,
+            "success": true,
+            "maxlevel": 2,
+            "evaluations": 67
+          },
+          {
+            "left": 0.2957310620980239,
+            "right": 0.800255798421783,
+            "integral": 0.046103476971198584,
+            "reported_error": 6.140962412461157e-15,
+            "status": 0,
+            "success": true,
+            "maxlevel": 2,
+            "evaluations": 67
+          },
+          {
+            "left": 0.800255798421783,
+            "right": 1.5707963267948966,
+            "integral": 0.04033801590939674,
+            "reported_error": 2.864806825897712e-16,
+            "status": 0,
+            "success": true,
+            "maxlevel": 3,
+            "evaluations": 131
+          },
+          {
+            "left": 1.5707963267948966,
+            "right": 2.3413368551680103,
+            "integral": 0.04033801590939672,
+            "reported_error": 7.402350718593224e-15,
+            "status": 0,
+            "success": true,
+            "maxlevel": 3,
+            "evaluations": 131
+          },
+          {
+            "left": 2.3413368551680103,
+            "right": 2.845861591491769,
+            "integral": 0.046103476971198556,
+            "reported_error": 6.140962412461153e-15,
+            "status": 0,
+            "success": true,
+            "maxlevel": 2,
+            "evaluations": 67
+          },
+          {
+            "left": 2.845861591491769,
+            "right": 3.141592653589793,
+            "integral": 0.024151790451879176,
+            "reported_error": 3.599572370373803e-15,
+            "status": 0,
+            "success": true,
+            "maxlevel": 2,
+            "evaluations": 67
+          }
+        ],
+        "root_info": {
+          "maximum_root_residual": 2.220446049250313e-16,
+          "stationary_near_zeros": 0,
+          "clipping_roots": 4
+        }
+      },
+      "gauss128_section": 0.44237313332995964,
+      "gauss128_evaluations": 1024,
+      "quadpack_tanh_difference": 4.9960036108132044e-14,
+      "gauss_tanh_difference": 6.178391132038996e-14,
+      "observed_three_method_spread": 6.178391132038996e-14,
+      "reported_error_over_observed_spread": 293.69959751398767,
+      "transition": {
+        "nearest_saved_transition": {
+          "z": 0.45857655252824703,
+          "cosine": -1.0,
+          "sine": -1.0,
+          "residual": 2.220446049250313e-16,
+          "kind": "sign crossing"
+        },
+        "z_distance": 2.169216555270026e-07,
+        "nearest_stationary_level_contact": {
+          "angle": -1.5707963267948966,
+          "branch": -1.0,
+          "level": 0.7089768130149655,
+          "signed_gap": -8.816143545198329e-07,
+          "second_derivative": -4.852170053161943,
+          "local_angular_scale": 0.0006028181470038712
+        },
+        "interpretation": "A small stationary branch-to-level gap produces nearby clipping-root coalescence or a narrow rounded near-contact. Its angular scale is a local quadratic estimate, not a root-separation certificate."
+      },
+      "seconds": 0.001970790995983407
+    },
+    {
+      "case": "graded-gyroid-density-linear",
+      "z": 0.45857662044958764,
+      "half_width": 0.708977845370633,
+      "saved_warning": {
+        "z": 0.45857662044958764,
+        "quadpack_error": 2.704238598717956e-10,
+        "evaluations": 4536,
+        "subintervals": 116,
+        "message": "The occurrence of roundoff error is detected, which prevents \n  the requested tolerance from being achieved.  The error may be \n  underestimated.",
+        "maximum_root_residual": 2.220446049250313e-16,
+        "stationary_near_zeros": 0,
+        "clipping_roots": 8
+      },
+      "quadpack_replay": {
+        "volume": 0.44237218912695153,
+        "reported_error": 2.704238598717956e-10,
+        "evaluations": 4536,
+        "subintervals": 116,
+        "message": "The occurrence of roundoff error is detected, which prevents \n  the requested tolerance from being achieved.  The error may be \n  underestimated.",
+        "maximum_root_residual": 2.220446049250313e-16,
+        "stationary_near_zeros": 0,
+        "clipping_roots": 8
+      },
+      "tanh_sinh": {
+        "volume": 0.4423721891269508,
+        "reported_error_sum": 5.43331226903029e-14,
+        "all_intervals_converged": true,
+        "failed_intervals": 0,
+        "intervals": [
+          {
+            "left": -3.141592653589793,
+            "right": -2.845862931566494,
+            "integral": 0.02415173095524178,
+            "reported_error": 3.59956037948442e-15,
+            "status": 0,
+            "success": true,
+            "maxlevel": 2,
+            "evaluations": 67
+          },
+          {
+            "left": -2.845862931566494,
+            "right": -2.3413370312673667,
+            "integral": 0.046103626820479124,
+            "reported_error": 6.1409839666049895e-15,
+            "status": 0,
+            "success": true,
+            "maxlevel": 2,
+            "evaluations": 67
+          },
+          {
+            "left": -2.3413370312673667,
+            "right": -1.5711336425810452,
+            "integral": 0.040337689506016766,
+            "reported_error": 7.399117119235307e-15,
+            "status": 0,
+            "success": true,
+            "maxlevel": 3,
+            "evaluations": 131
+          },
+          {
+            "left": -1.5711336425810452,
+            "right": -1.5707963267948966,
+            "integral": 0.0,
+            "reported_error": 0.0,
+            "status": 0,
+            "success": true,
+            "maxlevel": 2,
+            "evaluations": 67
+          },
+          {
+            "left": -1.5707963267948966,
+            "right": -1.570459011008748,
+            "integral": 0.0,
+            "reported_error": 0.0,
+            "status": 0,
+            "success": true,
+            "maxlevel": 2,
+            "evaluations": 67
+          },
+          {
+            "left": -1.570459011008748,
+            "right": -0.8002556223224263,
+            "integral": 0.04033768950601682,
+            "reported_error": 2.863555380530566e-16,
+            "status": 0,
+            "success": true,
+            "maxlevel": 3,
+            "evaluations": 131
+          },
+          {
+            "left": -0.8002556223224263,
+            "right": -0.29572972202329917,
+            "integral": 0.04610362682047911,
+            "reported_error": 6.140983966604987e-15,
+            "status": 0,
+            "success": true,
+            "maxlevel": 2,
+            "evaluations": 67
+          },
+          {
+            "left": -0.29572972202329917,
+            "right": 0.0,
+            "integral": 0.02415173095524179,
+            "reported_error": 3.599560375168691e-15,
+            "status": 0,
+            "success": true,
+            "maxlevel": 2,
+            "evaluations": 67
+          },
+          {
+            "left": 0.0,
+            "right": 0.29572972202329917,
+            "integral": 0.02415173095524179,
+            "reported_error": 3.599560375168691e-15,
+            "status": 0,
+            "success": true,
+            "maxlevel": 2,
+            "evaluations": 67
+          },
+          {
+            "left": 0.29572972202329917,
+            "right": 0.8002556223224263,
+            "integral": 0.0461036268204791,
+            "reported_error": 6.140983966604987e-15,
+            "status": 0,
+            "success": true,
+            "maxlevel": 2,
+            "evaluations": 67
+          },
+          {
+            "left": 0.8002556223224263,
+            "right": 1.570459011008748,
+            "integral": 0.04033768950601682,
+            "reported_error": 2.863555380530566e-16,
+            "status": 0,
+            "success": true,
+            "maxlevel": 3,
+            "evaluations": 131
+          },
+          {
+            "left": 1.570459011008748,
+            "right": 1.5707963267948966,
+            "integral": 0.0,
+            "reported_error": 0.0,
+            "status": 0,
+            "success": true,
+            "maxlevel": 2,
+            "evaluations": 67
+          },
+          {
+            "left": 1.5707963267948966,
+            "right": 1.5711336425810452,
+            "integral": 0.0,
+            "reported_error": 0.0,
+            "status": 0,
+            "success": true,
+            "maxlevel": 2,
+            "evaluations": 67
+          },
+          {
+            "left": 1.5711336425810452,
+            "right": 2.3413370312673667,
+            "integral": 0.04033768950601677,
+            "reported_error": 7.399117119235307e-15,
+            "status": 0,
+            "success": true,
+            "maxlevel": 3,
+            "evaluations": 131
+          },
+          {
+            "left": 2.3413370312673667,
+            "right": 2.845862931566494,
+            "integral": 0.046103626820479124,
+            "reported_error": 6.1409839666049895e-15,
+            "status": 0,
+            "success": true,
+            "maxlevel": 2,
+            "evaluations": 67
+          },
+          {
+            "left": 2.845862931566494,
+            "right": 3.141592653589793,
+            "integral": 0.02415173095524178,
+            "reported_error": 3.59956037948442e-15,
+            "status": 0,
+            "success": true,
+            "maxlevel": 2,
+            "evaluations": 67
+          }
+        ],
+        "root_info": {
+          "maximum_root_residual": 2.220446049250313e-16,
+          "stationary_near_zeros": 0,
+          "clipping_roots": 8
+        }
+      },
+      "gauss128_section": 0.4423721891269461,
+      "gauss128_evaluations": 1536,
+      "quadpack_tanh_difference": 7.216449660063518e-16,
+      "gauss_tanh_difference": 4.718447854656915e-15,
+      "observed_three_method_spread": 5.440092820663267e-15,
+      "reported_error_over_observed_spread": 49709.42018574326,
+      "transition": {
+        "nearest_saved_transition": {
+          "z": 0.45857655252824703,
+          "cosine": -1.0,
+          "sine": -1.0,
+          "residual": 2.220446049250313e-16,
+          "kind": "sign crossing"
+        },
+        "z_distance": 6.792134060740196e-08,
+        "nearest_stationary_level_contact": {
+          "angle": -1.5707963267948966,
+          "branch": -1.0,
+          "level": 0.708977845370633,
+          "signed_gap": 2.760460680040211e-07,
+          "second_derivative": -4.8521966282184765,
+          "local_angular_scale": 0.000337315722729571
+        },
+        "interpretation": "A small stationary branch-to-level gap produces nearby clipping-root coalescence or a narrow rounded near-contact. Its angular scale is a local quadratic estimate, not a root-separation certificate."
+      },
+      "seconds": 0.0023690419911872596
+    }
+  ],
+  "controls": {
+    "vectorized_interval_polynomial": true,
+    "half_full_empty_bands": [
+      {
+        "z": -0.41,
+        "half": 0.5,
+        "full": 1.0,
+        "empty": 0.0
+      },
+      {
+        "z": 0.07,
+        "half": 0.5,
+        "full": 1.0,
+        "empty": 0.0
+      }
+    ]
+  },
+  "largest_warning_section_spread": 1.6228797805606376e-08,
+  "tanh_failed_intervals": 0,
+  "reference_promoted": false,
+  "admission_recomputed": false,
+  "inputs_unchanged": true,
+  "scope": "Observed agreement tests finite numerical methods. Error estimates and cross-method differences are empirical, not certified bounds. Warning-section agreement does not bound every unsaved section or all outer quadrature errors."
+}

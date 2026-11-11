@@ -1,0 +1,616 @@
+{
+  "inputs": {
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/cad_ridge_cavity_control.py": "e7606008e1308fd46acf044bfd49f3fbbb368ac3df5ab9409a29ec9b1147d659",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/cad_ridge_quality_restore.py": "a077615cc6f94069b8b31a89d6ab3b6c3c0c1f96715bd65c0e60ec20f3cde2af",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/cad_ridge_stationarity_audit.py": "5016aaa9d94fd39b8b6c0ddd78229950ee7c8f47b3e5cbdbf1ef0764d15a72d0",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/microgen_workflow.py": "9f513dfd3e6e5a72a71a54f70c0c2cf7c7a1ebe7256886ee3feaf7d7ad7de161",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-cad-intersection-curved-v1/native-curved-tet10/mesh.npz": "0e1f026fe770c93a7c54c41ab86265958058d35fe5454ba65f0de7f85719a1f3",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-cad-ridge-general-v1/frozen-proposals.json": "276a1d484fb7ab5c1d99d13139043b5674e59b1c34dc48436afba683d4d56769",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-cad-ridge-quality-restore-v1/candidate.npz": "203970653877c808a7033476ff8017ba05decc594de86a57f260aa7f3dbeb86e",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-cad-ridge-quality-restore-v1/quality-vectors.npz": "d891a8784e927d19701ecffff564fb95a4a2dc36254ae0b5d42f45c606de444f",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-cad-ridge-quality-restore-v1/repaired-before-restoration.npz": "5afd60ca14c2490037b2ba1e0b80472f8095ea6e5e31defd7545bcd9866b2092",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-cad-ridge-quality-restore-v1/result.json": "8ee1acebbb7297f547639b8bd01d8793b7f85bbb90d1edb861cb3b6f4becb426"
+  },
+  "complete": true,
+  "active_constraints": [
+    {
+      "rank": 0,
+      "tetrahedron": 17684,
+      "target_tetrahedron": 17684,
+      "quality": 0.5262192902998939,
+      "target": 0.530210330516174,
+      "residual": 1.4432899320127035e-15,
+      "dual_weight": 0.08007972602118191,
+      "gradient_norm": 0.07311887613042392,
+      "corners": [
+        3419,
+        5233,
+        1854,
+        5366
+      ],
+      "free_corners": [
+        5233,
+        5366
+      ],
+      "quality_gap_below": null,
+      "quality_gap_above": 0.040125534659630424
+    },
+    {
+      "rank": 2,
+      "tetrahedron": 37372,
+      "target_tetrahedron": 37372,
+      "quality": 0.57987952261406,
+      "target": 0.5838705628303412,
+      "residual": 3.3306690738754696e-16,
+      "dual_weight": 0.42688937513640624,
+      "gradient_norm": 0.02002562869791441,
+      "corners": [
+        5366,
+        5367,
+        9372,
+        5368
+      ],
+      "free_corners": [
+        5366
+      ],
+      "quality_gap_below": 0.013534697654535632,
+      "quality_gap_above": 0.0038477413435406005
+    },
+    {
+      "rank": 3,
+      "tetrahedron": 37373,
+      "target_tetrahedron": 37373,
+      "quality": 0.5837272639576006,
+      "target": 0.5877183041738812,
+      "residual": 9.992007221626409e-16,
+      "dual_weight": 0.06395132806546745,
+      "gradient_norm": 0.03885373460239542,
+      "corners": [
+        5366,
+        5367,
+        5857,
+        9372
+      ],
+      "free_corners": [
+        5366
+      ],
+      "quality_gap_below": 0.0038477413435406005,
+      "quality_gap_above": 0.0026411320040056196
+    },
+    {
+      "rank": 5,
+      "tetrahedron": 16805,
+      "target_tetrahedron": 37375,
+      "quality": 0.6008567278792772,
+      "target": 0.6048477680779399,
+      "residual": 1.7618906333893847e-11,
+      "dual_weight": 1.2703766666169649e-17,
+      "gradient_norm": 0.11623581804222508,
+      "corners": [
+        3198,
+        5233,
+        3888,
+        3199
+      ],
+      "free_corners": [
+        3198,
+        5233,
+        3888,
+        3199
+      ],
+      "quality_gap_below": 0.014488331917671071,
+      "quality_gap_above": 0.002173592412918146
+    },
+    {
+      "rank": 17,
+      "tetrahedron": 17680,
+      "target_tetrahedron": 37376,
+      "quality": 0.6342441272841317,
+      "target": 0.6382351675004128,
+      "residual": 5.551115123125783e-16,
+      "dual_weight": 0.06149852784559786,
+      "gradient_norm": 0.03565910570282185,
+      "corners": [
+        3419,
+        1854,
+        5233,
+        4621
+      ],
+      "free_corners": [
+        5233
+      ],
+      "quality_gap_below": 0.0005942085259110774,
+      "quality_gap_above": 0.003243477764136582
+    },
+    {
+      "rank": 60,
+      "tetrahedron": 15278,
+      "target_tetrahedron": 17702,
+      "quality": 0.7189210024475712,
+      "target": 0.7229120426638518,
+      "residual": 9.992007221626409e-16,
+      "dual_weight": 0.10868072162457103,
+      "gradient_norm": 0.046503022653160565,
+      "corners": [
+        1853,
+        5367,
+        5857,
+        5366
+      ],
+      "free_corners": [
+        5366
+      ],
+      "quality_gap_below": 0.0019201254522294153,
+      "quality_gap_above": 0.0006113574419975842
+    },
+    {
+      "rank": 61,
+      "tetrahedron": 10848,
+      "target_tetrahedron": 26987,
+      "quality": 0.7195323598895688,
+      "target": 0.7235234000822783,
+      "residual": 2.35720332142364e-11,
+      "dual_weight": -4.7906010045033224e-17,
+      "gradient_norm": 0.04386415413608315,
+      "corners": [
+        3421,
+        4020,
+        3545,
+        3888
+      ],
+      "free_corners": [
+        3888
+      ],
+      "quality_gap_below": 0.0006113574419975842,
+      "quality_gap_above": 0.003051739213897675
+    },
+    {
+      "rank": 74,
+      "tetrahedron": 17681,
+      "target_tetrahedron": 45439,
+      "quality": 0.7418613030022171,
+      "target": 0.745852343218499,
+      "residual": -3.3306690738754696e-16,
+      "dual_weight": 0.17579896554433572,
+      "gradient_norm": 0.028362236213019733,
+      "corners": [
+        5233,
+        5368,
+        3420,
+        4621
+      ],
+      "free_corners": [
+        5233
+      ],
+      "quality_gap_below": 0.0012532512803902218,
+      "quality_gap_above": 0.0006291640775879515
+    },
+    {
+      "rank": 75,
+      "tetrahedron": 45439,
+      "target_tetrahedron": 7954,
+      "quality": 0.742490467079805,
+      "target": 0.7464815072845221,
+      "residual": 1.156452711370548e-11,
+      "dual_weight": 7.605141186224603e-18,
+      "gradient_norm": 0.09917345421738694,
+      "corners": [
+        3198,
+        5284,
+        3289,
+        10040
+      ],
+      "free_corners": [
+        3198,
+        5284,
+        10040
+      ],
+      "quality_gap_below": 0.0006291640775879515,
+      "quality_gap_above": 0.002700433308487793
+    },
+    {
+      "rank": 116,
+      "tetrahedron": 15883,
+      "target_tetrahedron": 10847,
+      "quality": 0.8003595057681431,
+      "target": 0.8043505459844232,
+      "residual": 1.4432899320127035e-15,
+      "dual_weight": 0.08310135576244036,
+      "gradient_norm": 0.05527879437225868,
+      "corners": [
+        5233,
+        5366,
+        3419,
+        5232
+      ],
+      "free_corners": [
+        5233,
+        5366
+      ],
+      "quality_gap_below": 0.001324335255505238,
+      "quality_gap_above": 0.0012649174110308525
+    },
+    {
+      "rank": 117,
+      "tetrahedron": 15867,
+      "target_tetrahedron": 15867,
+      "quality": 0.8016244231791739,
+      "target": 0.8056154633892905,
+      "residual": 6.165068455743494e-12,
+      "dual_weight": -1.0669443263153213e-16,
+      "gradient_norm": 0.0682054622120489,
+      "corners": [
+        3198,
+        1924,
+        5233,
+        3199
+      ],
+      "free_corners": [
+        3198,
+        5233,
+        3199
+      ],
+      "quality_gap_below": 0.0012649174110308525,
+      "quality_gap_above": 0.0027123719007359215
+    },
+    {
+      "rank": 130,
+      "tetrahedron": 37584,
+      "target_tetrahedron": 26986,
+      "quality": 0.8210482998760428,
+      "target": 0.8250393400806724,
+      "residual": 1.1652012688045943e-11,
+      "dual_weight": -2.015043442940431e-17,
+      "gradient_norm": 0.040735490813058724,
+      "corners": [
+        6934,
+        9392,
+        5915,
+        4004
+      ],
+      "free_corners": [
+        5915,
+        4004
+      ],
+      "quality_gap_below": 0.0007113796895285018,
+      "quality_gap_above": 0.0024243665660750313
+    },
+    {
+      "rank": 182,
+      "tetrahedron": 16806,
+      "target_tetrahedron": 15865,
+      "quality": 0.883299493555981,
+      "target": 0.8872905337722617,
+      "residual": 8.881784197001252e-16,
+      "dual_weight": -1.7065374422749207e-16,
+      "gradient_norm": 0.05059159481541597,
+      "corners": [
+        3198,
+        3888,
+        5233,
+        3289
+      ],
+      "free_corners": [
+        3198,
+        3888,
+        5233
+      ],
+      "quality_gap_below": 0.0010479209860914107,
+      "quality_gap_above": 0.0013025031950962829
+    }
+  ],
+  "positive_dual_ranks": [
+    0,
+    2,
+    3,
+    17,
+    60,
+    74,
+    116
+  ],
+  "positive_dual_tetrahedra": [
+    17684,
+    37372,
+    37373,
+    17680,
+    15278,
+    17681,
+    15883
+  ],
+  "positive_dual_weights": [
+    0.08007972602118191,
+    0.42688937513640624,
+    0.06395132806546745,
+    0.06149852784559786,
+    0.10868072162457103,
+    0.17579896554433572,
+    0.08310135576244036
+  ],
+  "positive_dual_sum": 1.0000000000000004,
+  "stationarity_residual": 2.5172736204516305e-16,
+  "smallest_sorted_quality_gap": 3.785146972745679e-06,
+  "maximum_radius_fraction": 0.4845547234609164,
+  "support_gradient_rank": 6,
+  "fixed_corner_reactions": [
+    {
+      "node": 9372,
+      "role": "fixed-wall",
+      "reaction": [
+        2.156799699015982,
+        -52.135778028465495,
+        -6.653773259849975
+      ],
+      "reaction_norm": 52.60288807820912,
+      "scaled_norm": 0.027003748810816103,
+      "original_shortest_edge": 0.005133510686840495,
+      "star_tetrahedra": 6,
+      "expanded_tetrahedra": 213,
+      "additional_tetrahedra": 0
+    },
+    {
+      "node": 5367,
+      "role": "fixed-wall",
+      "reaction": [
+        15.474029209544268,
+        44.69520154273256,
+        0.2775495409116404
+      ],
+      "reaction_norm": 47.298875828828876,
+      "scaled_norm": 0.024280928454283462,
+      "original_shortest_edge": 0.005133510686840495,
+      "star_tetrahedra": 5,
+      "expanded_tetrahedra": 213,
+      "additional_tetrahedra": 0
+    },
+    {
+      "node": 5368,
+      "role": "fixed-wall",
+      "reaction": [
+        -6.869588222445642,
+        16.25537546327771,
+        7.968892548090748
+      ],
+      "reaction_norm": 19.363153726630152,
+      "scaled_norm": 0.01772986395141808,
+      "original_shortest_edge": 0.009156495993229756,
+      "star_tetrahedra": 20,
+      "expanded_tetrahedra": 213,
+      "additional_tetrahedra": 0
+    },
+    {
+      "node": 3420,
+      "role": "fixed-wall",
+      "reaction": [
+        6.343570267403237,
+        -7.710152652311539,
+        -4.363338425145239
+      ],
+      "reaction_norm": 10.896148855067002,
+      "scaled_norm": 0.009673984969214377,
+      "original_shortest_edge": 0.008878352432488763,
+      "star_tetrahedra": 10,
+      "expanded_tetrahedra": 215,
+      "additional_tetrahedra": 2
+    },
+    {
+      "node": 3419,
+      "role": "fixed-interior",
+      "reaction": [
+        -7.585742665497877,
+        -0.35792243101561694,
+        4.163186328576821
+      ],
+      "reaction_norm": 8.66046884759872,
+      "scaled_norm": 0.008061194781389235,
+      "original_shortest_edge": 0.009308035076674116,
+      "star_tetrahedra": 24,
+      "expanded_tetrahedra": 224,
+      "additional_tetrahedra": 11
+    },
+    {
+      "node": 4621,
+      "role": "fixed-wall",
+      "reaction": [
+        -2.941938795578584,
+        0.8388242950948055,
+        4.804577522272526
+      ],
+      "reaction_norm": 5.695840170027427,
+      "scaled_norm": 0.00485306522162911,
+      "original_shortest_edge": 0.008520367631042114,
+      "star_tetrahedra": 6,
+      "expanded_tetrahedra": 215,
+      "additional_tetrahedra": 2
+    },
+    {
+      "node": 1853,
+      "role": "fixed-wall",
+      "reaction": [
+        -2.915330858874041,
+        -2.089450099120521,
+        -2.8495830329508998
+      ],
+      "reaction_norm": 4.580947412391858,
+      "scaled_norm": 0.00407629864407444,
+      "original_shortest_edge": 0.008898374674740209,
+      "star_tetrahedra": 17,
+      "expanded_tetrahedra": 224,
+      "additional_tetrahedra": 11
+    },
+    {
+      "node": 5857,
+      "role": "fixed-wall",
+      "reaction": [
+        -4.086309415152648,
+        2.535128301193638,
+        -0.5629588730294092
+      ],
+      "reaction_norm": 4.841665295391727,
+      "scaled_norm": 0.003627680345038779,
+      "original_shortest_edge": 0.007492629340759237,
+      "star_tetrahedra": 25,
+      "expanded_tetrahedra": 226,
+      "additional_tetrahedra": 13
+    },
+    {
+      "node": 1854,
+      "role": "fixed-wall",
+      "reaction": [
+        0.8005217965834075,
+        -2.4428865952360983,
+        -1.584855034353386
+      ],
+      "reaction_norm": 3.019982705894955,
+      "scaled_norm": 0.002573136289361435,
+      "original_shortest_edge": 0.008520367631042114,
+      "star_tetrahedra": 14,
+      "expanded_tetrahedra": 219,
+      "additional_tetrahedra": 6
+    },
+    {
+      "node": 5232,
+      "role": "fixed-interior",
+      "reaction": [
+        -0.376011014998129,
+        0.4116602038503064,
+        -1.1996973145228595
+      ],
+      "reaction_norm": 1.3229217865419558,
+      "scaled_norm": 0.0017745602609984482,
+      "original_shortest_edge": 0.013413946909416694,
+      "star_tetrahedra": 26,
+      "expanded_tetrahedra": 228,
+      "additional_tetrahedra": 15
+    },
+    {
+      "node": 5366,
+      "role": "free-interior",
+      "reaction": [
+        -7.416289804496046e-14,
+        5.773159728050814e-14,
+        -3.3306690738754696e-15
+      ],
+      "reaction_norm": 9.40434268169001e-14,
+      "scaled_norm": 8.7257740308133e-17,
+      "original_shortest_edge": 0.009278451802699763,
+      "star_tetrahedra": 30,
+      "expanded_tetrahedra": 213,
+      "additional_tetrahedra": 0
+    },
+    {
+      "node": 5233,
+      "role": "free-interior",
+      "reaction": [
+        7.799316747991725e-14,
+        -2.90878432451791e-14,
+        1.1546319456101628e-14
+      ],
+      "reaction_norm": 8.40378146502447e-14,
+      "scaled_norm": 7.907213059427417e-17,
+      "original_shortest_edge": 0.009409113138336936,
+      "star_tetrahedra": 26,
+      "expanded_tetrahedra": 213,
+      "additional_tetrahedra": 0
+    }
+  ],
+  "quality": {
+    "original_quality": {
+      "min": 0.3093361406522589,
+      "p01": 0.5187439842379813,
+      "p10": 0.6045485328953153,
+      "median": 0.7310007431289307,
+      "p90": 0.891811773289015,
+      "p99": 0.9636217557629784,
+      "max": 0.9981342867264323
+    },
+    "repaired_quality": {
+      "min": 0.3093361406522589,
+      "p01": 0.5187439842379813,
+      "p10": 0.6045485328953153,
+      "median": 0.7310007431289307,
+      "p90": 0.891811773289015,
+      "p99": 0.9636373682137466,
+      "max": 0.9981342867264323
+    },
+    "restored_quality": {
+      "min": 0.3093361406522589,
+      "p01": 0.5187439842379813,
+      "p10": 0.6045380618826212,
+      "median": 0.7310121459560672,
+      "p90": 0.891811773289015,
+      "p99": 0.9636373682137466,
+      "max": 0.9981342867264323
+    }
+  },
+  "proposal0_all_reported_quantiles_nonworse": true,
+  "ordinary_admitted": true,
+  "research_sorted_quality_feasible": false,
+  "interpretation": "Local first-order minimax obstruction in the current cavity, not a sorting tie or active radius limit; no global impossibility claim",
+  "next_control": {
+    "selected_corner": 3419,
+    "selection": "Largest original-edge-scaled dual reaction among fixed interior corners",
+    "free_corners": [
+      3195,
+      3196,
+      3198,
+      3199,
+      3442,
+      3887,
+      3888,
+      4004,
+      4216,
+      5233,
+      5284,
+      5366,
+      5915,
+      10040,
+      3419
+    ],
+    "tetrahedra": 224,
+    "additional_tetrahedra": 11,
+    "maximum_displacement_radius": 0.0009308035076674116,
+    "cap_clearance": 0.3344822466379173,
+    "interface_contains_no_free_corners": true,
+    "at_archived_point_slack": 0.003991040216281938,
+    "active_ranks": [
+      0,
+      2,
+      3,
+      6,
+      18,
+      65,
+      66,
+      80,
+      81,
+      124,
+      125,
+      139,
+      192
+    ],
+    "active_tetrahedra": [
+      17684,
+      37372,
+      37373,
+      16805,
+      17680,
+      15278,
+      10848,
+      17681,
+      45439,
+      15883,
+      15867,
+      37584,
+      16806
+    ],
+    "active_gradient_rank": 13,
+    "active_count": 13,
+    "directional_quality_derivative_minimum": 0.005260112633135854,
+    "directional_quality_derivative_maximum": 0.0052601126331358865,
+    "least_squares_equation_error": 3.9968028886505635e-15,
+    "smallest_inactive_margin": 2.4944660692582943e-07,
+    "direction_applied": false,
+    "geometry_or_quality_feasibility_proven": false,
+    "scope": "One 224-tet cavity with corner 3419 newly free; physical repaired boundary stays fixed; no solve has been run"
+  },
+  "input_hashes_verified": true
+}

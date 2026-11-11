@@ -120,10 +120,26 @@ pub struct Output {
     pub diagnostics: Diagnostics,
 }
 
+/// Unstable diagnostic view of supplied-background snapping, before clipping.
+/// Arrays are borrowed for this callback only; no mesh admission is implied.
+#[cfg(feature = "experimental-quads")]
+pub struct BackgroundSnapObservation<'a> {
+    pub topology_attempt: usize,
+    pub validity_round: usize,
+    pub points: &'a [Point],
+    pub values: &'a [f64],
+    pub original_values: &'a [f64],
+    pub bad_tetrahedra: &'a [usize],
+    pub restored_vertices: &'a [usize],
+    pub threshold: f64,
+}
+
 #[derive(Clone, Copy)]
 struct Background<'a> {
     points: &'a [Point],
     tetrahedra: &'a [crate::Tet],
+    #[cfg(feature = "experimental-quads")]
+    observer: Option<&'a (dyn Fn(BackgroundSnapObservation<'_>) + Sync)>,
 }
 
 struct Context<'a, F: ScalarField> {
@@ -416,6 +432,31 @@ pub fn generate_with_background<F: ScalarField>(
     points: &[Point],
     tetrahedra: &[crate::Tet],
 ) -> Result<Output, MeshingError> {
+    generate_background_internal(field, options, points, tetrahedra, None)
+}
+
+/// Unstable experimental diagnostic entry point. The observer receives each
+/// pre-clipping validity scan, including scans after periodic/topology rollback.
+/// Observation does not change meshing options or admit the resulting mesh.
+#[cfg(feature = "experimental-quads")]
+pub fn generate_with_background_observer<F: ScalarField>(
+    field: &F,
+    options: Options,
+    points: &[Point],
+    tetrahedra: &[crate::Tet],
+    observer: &(dyn Fn(BackgroundSnapObservation<'_>) + Sync),
+) -> Result<Output, MeshingError> {
+    generate_background_internal(field, options, points, tetrahedra, Some(observer))
+}
+
+#[cfg(feature = "experimental-quads")]
+fn generate_background_internal<F: ScalarField>(
+    field: &F,
+    options: Options,
+    points: &[Point],
+    tetrahedra: &[crate::Tet],
+    observer: Option<&(dyn Fn(BackgroundSnapObservation<'_>) + Sync)>,
+) -> Result<Output, MeshingError> {
     generate_internal(
         field,
         None,
@@ -423,7 +464,11 @@ pub fn generate_with_background<F: ScalarField>(
         None,
         None,
         None,
-        Some(Background { points, tetrahedra }),
+        Some(Background {
+            points,
+            tetrahedra,
+            observer,
+        }),
     )
 }
 
@@ -1197,11 +1242,18 @@ fn build<F: ScalarField>(g: &Context<F>) -> Result<Output, String> {
     }
     let mut mesh = None;
     let mut reverted_snap_vertices = 0;
-    for _ in 0..8 {
+    for topology_attempt in 0..8 {
         b.points.truncate(original_points.len());
         b.values.truncate(original_values.len());
         b.edges.clear();
         let (candidate, sources) = if let Some(background) = g.background {
+            reverted_snap_vertices += restore_background_snaps(
+                &mut b,
+                g,
+                background,
+                &original_values,
+                topology_attempt,
+            )?;
             clip_background(&mut b, g, background)?
         } else {
             clip_lattice(&mut b, g)?
@@ -1435,6 +1487,89 @@ fn clip_lattice<F: ScalarField>(
     clipped_mesh(b, tets)
 }
 
+// A supplied partition can contain shorter edges than the original BCC grid.
+// Keep the same snapping distance and clipping guards, but give invalid moves
+// the same periodic restoration opportunity as later topology failures.
+fn restore_background_snaps<F: ScalarField>(
+    b: &mut crate::Builder<'_, Context<'_, F>>,
+    g: &Context<F>,
+    background: Background<'_>,
+    original_values: &[f64],
+    _topology_attempt: usize,
+) -> Result<usize, String> {
+    let threshold = g.threshold();
+    let mut restored_vertices: Vec<usize> = Vec::new();
+    let mut reverted = 0;
+    for validity_round in 0..=8 {
+        let mut bad = Vec::new();
+        for (index, &tet) in background.tetrahedra.iter().enumerate() {
+            if index % 256 == 0 {
+                g.check()?;
+            }
+            let original = determinant(tet.map(|i| background.points[i]));
+            let snapped = determinant(tet.map(|i| b.points[i]));
+            let outside = tet.iter().all(|&i| b.values[i] > threshold + 1e-12)
+                || (g.band() && tet.iter().all(|&i| b.values[i] < -threshold - 1e-12));
+            let local_h = (2. * original).cbrt();
+            // These are exactly clip_background's signed check and the active
+            // clip_background_tet volume guard. Inactive positive tets are skipped.
+            if snapped <= 0. || (!outside && snapped.abs() < local_h * local_h * local_h * 0.01) {
+                bad.push(index);
+            }
+        }
+        #[cfg(feature = "experimental-quads")]
+        if let Some(observer) = background.observer {
+            observer(BackgroundSnapObservation {
+                topology_attempt: _topology_attempt,
+                validity_round,
+                points: &b.points[..background.points.len()],
+                values: &b.values[..background.points.len()],
+                original_values,
+                bad_tetrahedra: &bad,
+                restored_vertices: &restored_vertices,
+                threshold,
+            });
+        }
+        if bad.is_empty() {
+            return Ok(reverted);
+        }
+        if validity_round == 8 {
+            break;
+        }
+        let mut undo = std::collections::BTreeSet::new();
+        for index in bad {
+            for i in background.tetrahedra[index] {
+                if b.points[i] != background.points[i] || b.values[i] != original_values[i] {
+                    undo.insert(g.rank(background.points[i]));
+                }
+            }
+        }
+        if undo.is_empty() {
+            return Err(
+                "invalid supplied-background volume has no snapped vertex to restore".into(),
+            );
+        }
+        restored_vertices.clear();
+        for (i, &original_value) in original_values.iter().enumerate() {
+            if i % 256 == 0 {
+                g.check()?;
+            }
+            if undo.contains(&g.rank(background.points[i]))
+                && (b.points[i] != background.points[i] || b.values[i] != original_value)
+            {
+                b.points[i] = background.points[i];
+                b.values[i] = original_value;
+                reverted += 1;
+                #[cfg(feature = "experimental-quads")]
+                if background.observer.is_some() {
+                    restored_vertices.push(i);
+                }
+            }
+        }
+    }
+    Err("safe supplied-background snapping did not restore local volumes in eight rounds".into())
+}
+
 fn clip_background<F: ScalarField>(
     b: &mut crate::Builder<'_, Context<'_, F>>,
     g: &Context<F>,
@@ -1640,6 +1775,202 @@ mod topology_tests {
     use super::nonmanifold_vertices;
 
     #[cfg(feature = "experimental-quads")]
+    struct RollbackTest {
+        points: Vec<crate::Point>,
+        values: Vec<f64>,
+        reverted: usize,
+        bad_counts: Vec<usize>,
+    }
+
+    #[cfg(feature = "experimental-quads")]
+    fn rollback_fixture(
+        points: &[crate::Point],
+        tetrahedra: &[crate::Tet],
+        moved: Vec<crate::Point>,
+        original_values: &[f64],
+        values: Vec<f64>,
+        periodic: bool,
+    ) -> RollbackTest {
+        let field = |_: crate::Point| 0.5;
+        let observed = std::sync::Mutex::new(Vec::new());
+        let observer = |state: super::BackgroundSnapObservation<'_>| {
+            assert_eq!(state.topology_attempt, 3);
+            observed.lock().unwrap().push(state.bad_tetrahedra.len());
+        };
+        let background = super::Background {
+            points,
+            tetrahedra,
+            observer: Some(&observer),
+        };
+        let context = super::Context {
+            field: &field,
+            constraints: None,
+            halfspaces: None,
+            halfspace_regions: None,
+            size_field: None,
+            background: Some(background),
+            options: super::Options {
+                bounds: [[-0.5; 3], [0.5; 3]],
+                region: super::Region::Band {
+                    lower: -1.,
+                    upper: 1.,
+                },
+                periodic: [periodic, false, false],
+                ..Default::default()
+            },
+            center: 0.,
+            scale: 1.,
+            optimizer_length: 1.,
+            invalid: std::sync::atomic::AtomicBool::new(false),
+        };
+        let mut builder = crate::Builder {
+            geometry: &context,
+            points: moved,
+            values,
+            edges: std::collections::HashMap::new(),
+            threshold: 1.,
+        };
+        let reverted =
+            super::restore_background_snaps(&mut builder, &context, background, original_values, 3)
+                .unwrap();
+        // Exercise the real clipping guards as well as the restoration helper.
+        assert!(super::clip_background(&mut builder, &context, background).is_ok());
+        RollbackTest {
+            points: builder.points[..points.len()].to_vec(),
+            values: builder.values[..points.len()].to_vec(),
+            reverted,
+            bad_counts: observed.into_inner().unwrap(),
+        }
+    }
+
+    #[cfg(feature = "experimental-quads")]
+    #[test]
+    fn supplied_background_snap_rollback_preserves_guard_semantics() {
+        let points = [[0.; 3], [0.1, 0., 0.], [0., 0.1, 0.], [0., 0., 0.1]];
+        let tetrahedra = [[0, 1, 2, 3]];
+        for (height, value, expected) in [(0.001, 0.5, 1), (0.001, 2., 0), (-0.1, 2., 1)] {
+            let mut moved = points.to_vec();
+            moved[3][2] = height;
+            let result = rollback_fixture(
+                &points,
+                &tetrahedra,
+                moved.clone(),
+                &[value; 4],
+                vec![value; 4],
+                false,
+            );
+            assert_eq!(result.reverted, expected);
+            assert_eq!(
+                result.points,
+                if expected == 0 {
+                    moved
+                } else {
+                    points.to_vec()
+                }
+            );
+            assert_eq!(result.values, vec![value; 4]);
+            assert_eq!(*result.bad_counts.last().unwrap(), 0);
+        }
+    }
+
+    #[cfg(feature = "experimental-quads")]
+    #[test]
+    fn supplied_background_snap_rollback_restores_periodic_value_only_changes() {
+        let points = [
+            [-0.5, 0., 0.],
+            [-0.4, 0., 0.],
+            [-0.5, 0.1, 0.],
+            [-0.5, 0., 0.1],
+            [0.5, 0., 0.],
+            [0.4, 0., 0.],
+            [0.5, 0.1, 0.],
+            [0.5, 0., 0.1],
+        ];
+        let tetrahedra = [[0, 1, 2, 3], [4, 6, 5, 7]];
+        let mut moved = points.to_vec();
+        moved[3][2] = -0.01;
+        let mut values = vec![0.5; 8];
+        values[3] = 1.;
+        values[7] = 1.; // Opposite point did not move, but its sampled value changed.
+        let result = rollback_fixture(&points, &tetrahedra, moved, &[0.5; 8], values, true);
+        assert_eq!(result.reverted, 2);
+        assert_eq!(result.points, points);
+        assert_eq!(result.values, vec![0.5; 8]);
+        assert_eq!(result.bad_counts, [1, 0]);
+    }
+
+    #[cfg(feature = "experimental-quads")]
+    #[test]
+    fn supplied_background_snap_rollback_rescans_new_neighbor_failure() {
+        // Tet A's determinant follows P.x; B follows Q.x-P.x. Restoring P
+        // fixes A but inverts B, which requires another scan and Q restoration.
+        let points = [
+            [0.; 3],
+            [0., 0.01, 0.],
+            [0., 0., 0.01],
+            [0.01, 0., 0.],
+            [0.02, 0., 0.],
+        ];
+        let tetrahedra = [[0, 1, 2, 3], [3, 4, 1, 2]];
+        let mut moved = points.to_vec();
+        moved[3][0] = -0.01;
+        moved[4][0] = -0.005;
+        let result = rollback_fixture(&points, &tetrahedra, moved, &[0.5; 5], vec![0.5; 5], false);
+        assert_eq!(result.reverted, 2);
+        assert_eq!(result.points, points);
+        assert_eq!(result.bad_counts, [1, 1, 0]);
+    }
+
+    #[cfg(feature = "experimental-quads")]
+    #[test]
+    fn supplied_background_snap_observer_preserves_native_output() {
+        let options = super::Options {
+            bounds: [[-0.5; 3], [0.5; 3]],
+            cells: [4; 3],
+            optimize_passes: 0,
+            geometry_tolerance: 1.,
+            order: 2,
+            max_tetrahedra: 10_000,
+            ..Default::default()
+        };
+        let background = super::generate(&|_: crate::Point| -1., options)
+            .unwrap()
+            .mesh;
+        let field = |p: crate::Point| p[0] + 0.12;
+        let ordinary =
+            super::generate_with_background(&field, options, &background.points, &background.tets)
+                .unwrap();
+        let calls = std::sync::Mutex::new(0);
+        let observer = |state: super::BackgroundSnapObservation<'_>| {
+            assert_eq!(state.points.len(), background.points.len());
+            assert_eq!(state.values.len(), background.points.len());
+            *calls.lock().unwrap() += 1;
+        };
+        let traced = super::generate_with_background_observer(
+            &field,
+            options,
+            &background.points,
+            &background.tets,
+            &observer,
+        )
+        .unwrap();
+        assert!(*calls.lock().unwrap() > 0);
+        assert_eq!(ordinary.mesh.points, traced.mesh.points);
+        assert_eq!(ordinary.mesh.tets, traced.mesh.tets);
+        assert_eq!(ordinary.mesh.surface, traced.mesh.surface);
+        assert_eq!(
+            ordinary.diagnostics.reverted_snap_vertices,
+            traced.diagnostics.reverted_snap_vertices
+        );
+        let a = ordinary.quadratic.unwrap();
+        let b = traced.quadratic.unwrap();
+        assert_eq!(a.elements.points, b.elements.points);
+        assert_eq!(a.elements.tets, b.elements.tets);
+        assert_eq!(a.elements.surface, b.elements.surface);
+        assert_eq!(a.periodic_pairs, b.periodic_pairs);
+    }
+
+    #[cfg(feature = "experimental-quads")]
     #[test]
     fn supplied_background_guard_uses_original_local_volume() {
         let field = |_: crate::Point| -1.;
@@ -1653,6 +1984,7 @@ mod topology_tests {
         let background = super::Background {
             points: &points,
             tetrahedra: &tetrahedra,
+            observer: None,
         };
         let context = super::Context {
             field: &field,

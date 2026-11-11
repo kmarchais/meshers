@@ -1,0 +1,65 @@
+{
+  "inputs": {
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/pmy_snap_rollback_probe.py": "4151fd97eb7b3e4be3397f987a1544ee39905d2ae0cb4336502d9e4e64c3ecba",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/pmy_neck_control.py": "aacab3dd12c99ad5586e8c4efb59b74556e736041fbe20653381c53d577b8668",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/pmy_snap_topology_probe.py": "e94ec25d75a9cbc13c98e7d2100167cf6c4fc267950d2c6b217855f261f70ea0",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/pmy_global_preclip_preflight.py": "d47294dd5c897e1f6cb70587bbee462e53e5de34c65fb0ce702a0741c64c82f1",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/tpms_family_fixtures.py": "794418f5d2e3d2158542af51a5cf322c41befff8f8d7c98f769d379baedd3bc6",
+    "/Users/kmarchais/dev/meshers/.local-work/macbook-runtime/venv/lib/python3.12/site-packages/microgen/shape/surface_functions.py": "578c20eb2ef424b95f50618d9cfffdce3676d6b5bdcd90a3278e0ca5ef1af4b4",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-pmy-edge-native-v1/edge/input.json": "f7ca9a631bd51a755bea19101495935a6954578d3b6fa07d9acfa63122c08670",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-pmy-edge-native-v1/result.json": "f6914f40b0f45004e3562f320c369dd0dee701093181d78291c22dfeeafee37f",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-pmy-edge-native-v1/manifest.json": "7e81c0f4d7c7bf7463fa68d75fe4bc694ea293bda20c849416005155111ecdb7",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-pmy-edge-native-v1/prepare-result.json": "a55f402cc6bccb1904cd30fa3b4edae8ed81d02808ee018ea47ade6740ae2624",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-pmy-edge-native-v1/edge/result.json": "d284ed833e5a704ff2807f4b1c2e100c098cf5e27b5c6070b0902af642fa61d9",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-pmy-edge-native-v1/edge/native-output.json": "d3d2817c69e799b3aeb29a079178966898d4a469cb8001b1bcaf8a41b74c6924",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-tpms-family-fixtures-v1/tpms-pmy-sheet/tpms-pmy-sheet-specimen.json": "65f653b5b5df833c4f7b9ebeef839555c76690e1a4e95c6011719d042a77c67a",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-tpms-family-fixtures-v1/tpms-pmy-sheet/tpms-pmy-sheet-samples.npz": "66cd3e81d5bad83b63c3bbc96696d732170ed37049dd4ff1dad868b39dbaf2f1",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-tpms-family-fixtures-v1/tpms-pmy-sheet/tpms-pmy-sheet-definition.json": "a0b3623510422678fd46dbfec702d7ebfb03e14272f7016b002e5b2594a662b6",
+    "/Users/kmarchais/dev/meshers/crates/meshers-core/src/implicit.rs": "153f3d59b751e9f3b90aa4808bbd7fda37d5741522387c742bbe7099fff6b007",
+    "/Users/kmarchais/dev/meshers/crates/meshers-core/src/geometry.rs": "b00a2c883484ab6f09300f2b7ad13efa51b3685f8ac259d86e9bb0d199b5bc08",
+    "/Users/kmarchais/dev/meshers/crates/meshers-core/examples/pmy_background.rs": "98862c07ce8b1f27ac0ee606ab95ef14f14329f2c60f6a96badf8d00ad3c858a",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/microgen_workflow.py": "9f513dfd3e6e5a72a71a54f70c0c2cf7c7a1ebe7256886ee3feaf7d7ad7de161",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/periodic_trace.py": "16d51906318ba9110f8979b48a540500d1cce5835685d72e780ca1893f3b8654",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/mmg_quality_localization.py": "03ef27a978fcd5101f36745ccaf67309f49ce6ece172fad28b84246d6d457ebc"
+  },
+  "timeout_s": 180,
+  "memory_bytes": 8589934592,
+  "numerical_threads": {
+    "environment": {
+      "OPENBLAS_NUM_THREADS": "1",
+      "OMP_NUM_THREADS": "1",
+      "MKL_NUM_THREADS": "1",
+      "VECLIB_MAXIMUM_THREADS": "1",
+      "RAYON_NUM_THREADS": "1"
+    },
+    "accelerate_blas_threading": 1,
+    "accelerate_scope": "calling thread"
+  },
+  "native_error": "snapping inverted a supplied background tetrahedron",
+  "native_options": {
+    "adapt": false,
+    "cells": 16,
+    "curved_fit": true,
+    "geometry_tolerance": 1.0,
+    "levels": [
+      -0.36027239477618084,
+      0.36027239477618084
+    ],
+    "max_tetrahedra": 250000,
+    "minimum_quality": 0.1,
+    "optimize_passes": 4,
+    "order": 2,
+    "periodic": [
+      true,
+      true,
+      true
+    ],
+    "snap": 0.2,
+    "threads": 1
+  },
+  "guard": "Nonpositive signed determinant on every supplied tet; abs(det)<local_h^3*.01 only on clipping-active tets; local_h=(2*original_det)^(1/3)",
+  "rollback": "Restore original point and normalized field value for all changed periodic vertex orbits touching bad tets; rescan every tet until stable",
+  "scope": "Analytic NumPy first-snap and proposed validity rollback, not actual native trace or candidate admission",
+  "production_changed": false,
+  "native_clipping_performed": false
+}

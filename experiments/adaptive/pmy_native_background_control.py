@@ -163,6 +163,12 @@ def worker(a):
     output = directory / "native-output.json"
     subprocess.run([str(a.binary), str(directory / "input.json"), str(output)], check=True)
     record = json.loads(output.read_text())
+    trace = record.pop("background_snap_trace", None)
+    if trace is not None:
+        trace_path = directory / "native-snap-trace.json"
+        w.save(trace_path, trace)
+        record["native_snap_trace"] = dict(path=str(trace_path), sha256=w.digest(trace_path), scans=len(trace))
+        record["native_timing_scope"] = "Diagnostic trace enabled: native call includes callback allocation and trace serialization into JSON values; no speed claim"
     points = record.pop("points", None)
     cells = record.pop("tetrahedra", None)
     surface = record.pop("surface", None)

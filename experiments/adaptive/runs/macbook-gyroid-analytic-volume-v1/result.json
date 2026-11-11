@@ -1,0 +1,648 @@
+{
+  "complete": true,
+  "rows": [
+    {
+      "case": "gyroid",
+      "width_kind": "constant",
+      "frozen_knot_count": 2,
+      "frozen_reference": {
+        "volume": 0.3564434051513672,
+        "volume_sobol_estimates": [
+          0.3564567565917969,
+          0.3565254211425781,
+          0.3563346862792969,
+          0.3564567565917969
+        ],
+        "volume_scramble_spread": 0.00019073486328125,
+        "volume_samples_per_scramble": 262144,
+        "wall_samples": 28850,
+        "periodic_field_errors": [
+          8.881784197001252e-16,
+          8.881784197001252e-16,
+          8.881784197001252e-16
+        ],
+        "definition": "abs(sin X cos Y + sin Y cos Z + sin Z cos X) <= 0.55"
+      },
+      "reductions": [
+        {
+          "volume": 0.35634599780034826,
+          "order": 16,
+          "line_axis": "x",
+          "reversed_outer_coordinate": false,
+          "line_fraction_evaluations": 24576,
+          "outer_nodes": 192,
+          "outer_panels": 12,
+          "seconds": 0.004555749997962266
+        },
+        {
+          "volume": 0.35634599751864915,
+          "order": 32,
+          "line_axis": "x",
+          "reversed_outer_coordinate": false,
+          "line_fraction_evaluations": 98304,
+          "outer_nodes": 384,
+          "outer_panels": 12,
+          "seconds": 0.009542207990307361
+        },
+        {
+          "volume": 0.35634599751740786,
+          "order": 64,
+          "line_axis": "x",
+          "reversed_outer_coordinate": false,
+          "line_fraction_evaluations": 393216,
+          "outer_nodes": 768,
+          "outer_panels": 12,
+          "seconds": 0.0248347089800518
+        }
+      ],
+      "root_partition": {
+        "frozen_knot_count": 2,
+        "outer_panels": 12,
+        "monotone_brackets": 12,
+        "roots": [
+          {
+            "z": -0.1885739288951562,
+            "cosine": -1.0,
+            "sine": -1.0,
+            "residual": 1.1102230246251565e-16,
+            "kind": "sign crossing"
+          },
+          {
+            "z": 0.43857392889515623,
+            "cosine": -1.0,
+            "sine": -1.0,
+            "residual": 2.220446049250313e-16,
+            "kind": "sign crossing"
+          },
+          {
+            "z": -0.43857392889515623,
+            "cosine": -1.0,
+            "sine": 1.0,
+            "residual": 2.220446049250313e-16,
+            "kind": "sign crossing"
+          },
+          {
+            "z": 0.1885739288951562,
+            "cosine": -1.0,
+            "sine": 1.0,
+            "residual": 1.1102230246251565e-16,
+            "kind": "sign crossing"
+          },
+          {
+            "z": -0.3114260711048438,
+            "cosine": 1.0,
+            "sine": -1.0,
+            "residual": 1.1102230246251565e-16,
+            "kind": "sign crossing"
+          },
+          {
+            "z": 0.061426071104843806,
+            "cosine": 1.0,
+            "sine": -1.0,
+            "residual": 0.0,
+            "kind": "sign crossing"
+          },
+          {
+            "z": -0.061426071104843806,
+            "cosine": 1.0,
+            "sine": 1.0,
+            "residual": 0.0,
+            "kind": "sign crossing"
+          },
+          {
+            "z": 0.3114260711048438,
+            "cosine": 1.0,
+            "sine": 1.0,
+            "residual": 1.1102230246251565e-16,
+            "kind": "sign crossing"
+          }
+        ],
+        "near_tangent_candidates": [],
+        "coverage": "Analytic derivative zeros split each affine-width or harmonic-width interval. Near-zero stationary points are retained, including possible repeated roots. Floating-point root isolation is not interval-certified."
+      },
+      "independent_y": {
+        "volume": 0.35634599751740786,
+        "order": 64,
+        "line_axis": "y",
+        "reversed_outer_coordinate": true,
+        "line_fraction_evaluations": 393216,
+        "outer_nodes": 768,
+        "outer_panels": 12,
+        "seconds": 0.021896041987929493
+      },
+      "midpoint": {
+        "volume": 0.35634550872596765,
+        "points_per_axis": 1024,
+        "rule": "uniform midpoint, unsplit"
+      },
+      "estimate": 0.35634599751740786,
+      "empirical_stability": {
+        "first_refinement_difference": 2.816991084841902e-10,
+        "last_refinement_difference": 1.2412848526821563e-12,
+        "x_y_difference": 0.0,
+        "conservative_observed_scale": 1.2412848526821563e-12,
+        "midpoint_difference": 4.887914402118554e-07,
+        "scope": "Observed differences only; not a rigorous error bound or confidence interval"
+      },
+      "difference_from_frozen_reference": -9.740763395932328e-05,
+      "source_reference_unchanged": true,
+      "reference_promoted": false
+    },
+    {
+      "case": "graded-gyroid-linear",
+      "width_kind": "linear",
+      "frozen_knot_count": 2,
+      "frozen_reference": {
+        "volume": 0.35660862922668457,
+        "volume_sobol_estimates": [
+          0.3565683364868164,
+          0.35646629333496094,
+          0.3566398620605469,
+          0.35676002502441406
+        ],
+        "volume_scramble_spread": 0.000293731689453125,
+        "volume_samples_per_scramble": 1048576,
+        "wall_samples": 28952,
+        "definition": "graded-gyroid-linear",
+        "periodic_axes": [
+          false,
+          false,
+          false
+        ]
+      },
+      "reductions": [
+        {
+          "volume": 0.3565688700196113,
+          "order": 16,
+          "line_axis": "x",
+          "reversed_outer_coordinate": false,
+          "line_fraction_evaluations": 24576,
+          "outer_nodes": 192,
+          "outer_panels": 12,
+          "seconds": 0.00441037502605468
+        },
+        {
+          "volume": 0.3565688696909491,
+          "order": 32,
+          "line_axis": "x",
+          "reversed_outer_coordinate": false,
+          "line_fraction_evaluations": 98304,
+          "outer_nodes": 384,
+          "outer_panels": 12,
+          "seconds": 0.009498416009591892
+        },
+        {
+          "volume": 0.3565688696896827,
+          "order": 64,
+          "line_axis": "x",
+          "reversed_outer_coordinate": false,
+          "line_fraction_evaluations": 393216,
+          "outer_nodes": 768,
+          "outer_panels": 12,
+          "seconds": 0.022140166984172538
+        }
+      ],
+      "root_partition": {
+        "frozen_knot_count": 2,
+        "outer_panels": 12,
+        "monotone_brackets": 12,
+        "roots": [
+          {
+            "z": -0.18249110096274515,
+            "cosine": -1.0,
+            "sine": -1.0,
+            "residual": 5.551115123125783e-17,
+            "kind": "sign crossing"
+          },
+          {
+            "z": 0.45417880438624164,
+            "cosine": -1.0,
+            "sine": -1.0,
+            "residual": 2.6645352591003757e-15,
+            "kind": "sign crossing"
+          },
+          {
+            "z": -0.42455427738703766,
+            "cosine": -1.0,
+            "sine": 1.0,
+            "residual": 2.220446049250313e-16,
+            "kind": "sign crossing"
+          },
+          {
+            "z": 0.19519092973798682,
+            "cosine": -1.0,
+            "sine": 1.0,
+            "residual": 1.1102230246251565e-16,
+            "kind": "sign crossing"
+          },
+          {
+            "z": -0.32210333964175397,
+            "cosine": 1.0,
+            "sine": -1.0,
+            "residual": 6.661338147750939e-16,
+            "kind": "sign crossing"
+          },
+          {
+            "z": 0.059424463040473746,
+            "cosine": 1.0,
+            "sine": -1.0,
+            "residual": 0.0,
+            "kind": "sign crossing"
+          },
+          {
+            "z": -0.06355512636350573,
+            "cosine": 1.0,
+            "sine": 1.0,
+            "residual": 1.1102230246251565e-16,
+            "kind": "sign crossing"
+          },
+          {
+            "z": 0.30116237312246025,
+            "cosine": 1.0,
+            "sine": 1.0,
+            "residual": 3.3306690738754696e-16,
+            "kind": "sign crossing"
+          }
+        ],
+        "near_tangent_candidates": [],
+        "coverage": "Analytic derivative zeros split each affine-width or harmonic-width interval. Near-zero stationary points are retained, including possible repeated roots. Floating-point root isolation is not interval-certified."
+      },
+      "independent_y": {
+        "volume": 0.3565688696896827,
+        "order": 64,
+        "line_axis": "y",
+        "reversed_outer_coordinate": true,
+        "line_fraction_evaluations": 393216,
+        "outer_nodes": 768,
+        "outer_panels": 12,
+        "seconds": 0.02195970801403746
+      },
+      "midpoint": {
+        "volume": 0.356568937433137,
+        "points_per_axis": 1024,
+        "rule": "uniform midpoint, unsplit"
+      },
+      "estimate": 0.3565688696896827,
+      "empirical_stability": {
+        "first_refinement_difference": 3.286622085596491e-10,
+        "last_refinement_difference": 1.2663758930386848e-12,
+        "x_y_difference": 0.0,
+        "conservative_observed_scale": 1.2663758930386848e-12,
+        "midpoint_difference": 6.774345429061412e-08,
+        "scope": "Observed differences only; not a rigorous error bound or confidence interval"
+      },
+      "difference_from_frozen_reference": -3.975953700185997e-05,
+      "source_reference_unchanged": true,
+      "reference_promoted": false
+    },
+    {
+      "case": "graded-gyroid-periodic",
+      "width_kind": "periodic",
+      "frozen_knot_count": 2,
+      "frozen_reference": {
+        "volume": 0.3565828800201416,
+        "volume_sobol_estimates": [
+          0.3565378189086914,
+          0.3565692901611328,
+          0.3566150665283203,
+          0.3566093444824219
+        ],
+        "volume_scramble_spread": 7.724761962890625e-05,
+        "volume_samples_per_scramble": 1048576,
+        "wall_samples": 29283,
+        "definition": "graded-gyroid-periodic",
+        "periodic_axes": [
+          true,
+          true,
+          true
+        ]
+      },
+      "reductions": [
+        {
+          "volume": 0.3565882121007866,
+          "order": 16,
+          "line_axis": "x",
+          "reversed_outer_coordinate": false,
+          "line_fraction_evaluations": 24576,
+          "outer_nodes": 192,
+          "outer_panels": 12,
+          "seconds": 0.0044404589862097055
+        },
+        {
+          "volume": 0.35658821172239324,
+          "order": 32,
+          "line_axis": "x",
+          "reversed_outer_coordinate": false,
+          "line_fraction_evaluations": 98304,
+          "outer_nodes": 384,
+          "outer_panels": 12,
+          "seconds": 0.009538750018691644
+        },
+        {
+          "volume": 0.3565882117211011,
+          "order": 64,
+          "line_axis": "x",
+          "reversed_outer_coordinate": false,
+          "line_fraction_evaluations": 393216,
+          "outer_nodes": 768,
+          "outer_panels": 12,
+          "seconds": 0.022284917009528726
+        }
+      ],
+      "root_partition": {
+        "frozen_knot_count": 2,
+        "outer_panels": 12,
+        "monotone_brackets": 12,
+        "roots": [
+          {
+            "z": -0.19437172646934273,
+            "cosine": -1.0,
+            "sine": -1.0,
+            "residual": 1.1102230246251565e-16,
+            "kind": "sign crossing"
+          },
+          {
+            "z": 0.4239238255080624,
+            "cosine": -1.0,
+            "sine": -1.0,
+            "residual": 1.6653345369377348e-16,
+            "kind": "sign crossing"
+          },
+          {
+            "z": -0.4239238255080624,
+            "cosine": -1.0,
+            "sine": 1.0,
+            "residual": 1.6653345369377348e-16,
+            "kind": "sign crossing"
+          },
+          {
+            "z": 0.19437172646934273,
+            "cosine": -1.0,
+            "sine": 1.0,
+            "residual": 1.1102230246251565e-16,
+            "kind": "sign crossing"
+          },
+          {
+            "z": -0.3183590419329253,
+            "cosine": 1.0,
+            "sine": -1.0,
+            "residual": 2.7755575615628914e-16,
+            "kind": "sign crossing"
+          },
+          {
+            "z": 0.04490220745435479,
+            "cosine": 1.0,
+            "sine": -1.0,
+            "residual": 0.0,
+            "kind": "sign crossing"
+          },
+          {
+            "z": -0.04490220745435479,
+            "cosine": 1.0,
+            "sine": 1.0,
+            "residual": 0.0,
+            "kind": "sign crossing"
+          },
+          {
+            "z": 0.3183590419329253,
+            "cosine": 1.0,
+            "sine": 1.0,
+            "residual": 2.7755575615628914e-16,
+            "kind": "sign crossing"
+          }
+        ],
+        "near_tangent_candidates": [],
+        "coverage": "Analytic derivative zeros split each affine-width or harmonic-width interval. Near-zero stationary points are retained, including possible repeated roots. Floating-point root isolation is not interval-certified."
+      },
+      "independent_y": {
+        "volume": 0.3565882117211011,
+        "order": 64,
+        "line_axis": "y",
+        "reversed_outer_coordinate": true,
+        "line_fraction_evaluations": 393216,
+        "outer_nodes": 768,
+        "outer_panels": 12,
+        "seconds": 0.022121334011899307
+      },
+      "midpoint": {
+        "volume": 0.3565879950928318,
+        "points_per_axis": 1024,
+        "rule": "uniform midpoint, unsplit"
+      },
+      "estimate": 0.3565882117211011,
+      "empirical_stability": {
+        "first_refinement_difference": 3.783933721912547e-10,
+        "last_refinement_difference": 1.2921330672099884e-12,
+        "x_y_difference": 0.0,
+        "conservative_observed_scale": 1.2921330672099884e-12,
+        "midpoint_difference": 2.1662826932278278e-07,
+        "scope": "Observed differences only; not a rigorous error bound or confidence interval"
+      },
+      "difference_from_frozen_reference": 5.331700959509966e-06,
+      "source_reference_unchanged": true,
+      "reference_promoted": false
+    },
+    {
+      "case": "graded-gyroid-density-linear",
+      "width_kind": "frozen piecewise linear",
+      "frozen_knot_count": 257,
+      "frozen_reference": {
+        "volume": 0.3599233627319336,
+        "volume_sobol_estimates": [
+          0.360076904296875,
+          0.3599081039428711,
+          0.35988521575927734,
+          0.35982322692871094
+        ],
+        "volume_scramble_spread": 0.0002536773681640625,
+        "volume_samples_per_scramble": 1048576,
+        "target_density": [
+          0.27,
+          0.45
+        ],
+        "target_integrated_volume": 0.36,
+        "definition": "Calibrated linear cross-sectional material fraction; immutable interpolated width",
+        "periodic_axes": [
+          false,
+          false,
+          false
+        ]
+      },
+      "reductions": [
+        {
+          "volume": 0.35999560524739654,
+          "order": 16,
+          "line_axis": "x",
+          "reversed_outer_coordinate": false,
+          "line_fraction_evaluations": 539648,
+          "outer_nodes": 4224,
+          "outer_panels": 264,
+          "seconds": 0.09459791699191555
+        },
+        {
+          "volume": 0.3599956052276042,
+          "order": 32,
+          "line_axis": "x",
+          "reversed_outer_coordinate": false,
+          "line_fraction_evaluations": 2158592,
+          "outer_nodes": 8448,
+          "outer_panels": 264,
+          "seconds": 0.2059211250161752
+        },
+        {
+          "volume": 0.35999560522760565,
+          "order": 64,
+          "line_axis": "x",
+          "reversed_outer_coordinate": false,
+          "line_fraction_evaluations": 8634368,
+          "outer_nodes": 16896,
+          "outer_panels": 264,
+          "seconds": 0.49965475001954474
+        }
+      ],
+      "root_partition": {
+        "frozen_knot_count": 257,
+        "outer_panels": 264,
+        "monotone_brackets": 1041,
+        "roots": [
+          {
+            "z": -0.4226485747703328,
+            "cosine": -1.0,
+            "sine": 1.0,
+            "residual": 1.7763568394002505e-15,
+            "kind": "sign crossing"
+          },
+          {
+            "z": -0.3234529801201812,
+            "cosine": 1.0,
+            "sine": -1.0,
+            "residual": 2.3314683517128287e-15,
+            "kind": "sign crossing"
+          },
+          {
+            "z": -0.18231169566544553,
+            "cosine": -1.0,
+            "sine": -1.0,
+            "residual": 5.551115123125783e-17,
+            "kind": "sign crossing"
+          },
+          {
+            "z": -0.0628357228103248,
+            "cosine": 1.0,
+            "sine": 1.0,
+            "residual": 2.3314683517128287e-15,
+            "kind": "sign crossing"
+          },
+          {
+            "z": 0.05800481218486291,
+            "cosine": 1.0,
+            "sine": -1.0,
+            "residual": 1.9984014443252818e-15,
+            "kind": "sign crossing"
+          },
+          {
+            "z": 0.1978601240246415,
+            "cosine": -1.0,
+            "sine": 1.0,
+            "residual": 1.1102230246251565e-16,
+            "kind": "sign crossing"
+          },
+          {
+            "z": 0.29794621295042095,
+            "cosine": 1.0,
+            "sine": 1.0,
+            "residual": 3.3306690738754696e-16,
+            "kind": "sign crossing"
+          },
+          {
+            "z": 0.45857655252824703,
+            "cosine": -1.0,
+            "sine": -1.0,
+            "residual": 2.220446049250313e-16,
+            "kind": "sign crossing"
+          }
+        ],
+        "near_tangent_candidates": [],
+        "coverage": "Analytic derivative zeros split each affine-width or harmonic-width interval. Near-zero stationary points are retained, including possible repeated roots. Floating-point root isolation is not interval-certified."
+      },
+      "independent_y": {
+        "volume": 0.35999560522760565,
+        "order": 64,
+        "line_axis": "y",
+        "reversed_outer_coordinate": true,
+        "line_fraction_evaluations": 8667136,
+        "outer_nodes": 16896,
+        "outer_panels": 264,
+        "seconds": 0.4927634159976151
+      },
+      "midpoint": {
+        "volume": 0.3599958173618906,
+        "points_per_axis": 1024,
+        "rule": "uniform midpoint, unsplit"
+      },
+      "estimate": 0.35999560522760565,
+      "empirical_stability": {
+        "first_refinement_difference": 1.9792334438051284e-11,
+        "last_refinement_difference": 1.4432899320127035e-15,
+        "x_y_difference": 0.0,
+        "conservative_observed_scale": 1.4432899320127035e-15,
+        "midpoint_difference": 2.121342849714658e-07,
+        "scope": "Observed differences only; not a rigorous error bound or confidence interval"
+      },
+      "difference_from_frozen_reference": 7.224249567205909e-05,
+      "source_reference_unchanged": true,
+      "reference_promoted": false
+    }
+  ],
+  "inputs": {
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/gyroid_analytic_volume.py": "b6ab0968cbcfad884d427c55c92704bdd1b382f692099dd04a22ed2688fe597e",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/microgen_workflow.py": "9f513dfd3e6e5a72a71a54f70c0c2cf7c7a1ebe7256886ee3feaf7d7ad7de161",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/comparison_fixtures.py": "4fa77af6b3b4858eb7611045f46f6e4ca672c6c46ab28d7ee969e14b31e11b9b",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/linear_density_fixture.py": "99b619d8f4885673bd1a7f7b7ced3af01211bff4b52f1b206cbecaf654fca3f8",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/scorecard.py": "8f26256c7df0e84c9f35cdd71bf4f95a74e072d45469002b213c5dcd4f1bab2a",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-linear-density-fixtures-v1/linear-density-calibration.json": "b4db7ab7afe47f7832106e2eaf1523c7b0d854f291ef6030bdbe65df9e06e7e1",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-linear-density-fixtures-v1/result.json": "befde3eb3a7c63e32393f58ca3079e9b9d90e2a6812234bbc378f6298037fb30",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-native-face-fit-nine-v1/gyroid-repeat-0-fit/gyroid-samples.npz": "d49ce7a80d95af127951750fa7dd02f52d4dd67bc87246dee02be932b51539d6",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-native-face-fit-nine-v1/gyroid-repeat-0-fit/gyroid-specimen.json": "2f9171aa778f1899aed5b1057bc6255da515e8a9d96bf76c305b62e3c7bd0ed8",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-native-face-fit-nine-v1/graded-gyroid-linear-repeat-0-fit/graded-gyroid-linear-samples.npz": "583146b0bb252ebb81f0f56919721e91743f42c796492802c78df5bf37f60273",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-native-face-fit-nine-v1/graded-gyroid-linear-repeat-0-fit/graded-gyroid-linear-specimen.json": "4b3d9d250960d00d2b28dd8c58c2acf4b51e6bc04d264dcb1d001980ab907c7a",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-native-face-fit-nine-v1/graded-gyroid-periodic-repeat-0-fit/graded-gyroid-periodic-samples.npz": "75be3ee3ec7722aed6b214d1408b4174c148405bd6aa6feb7bd66b0b457af613",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-native-face-fit-nine-v1/graded-gyroid-periodic-repeat-0-fit/graded-gyroid-periodic-specimen.json": "d29cb9023b8efe2f1959b062d4222050f64b37f987b855c475a6848847438a89",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-native-face-fit-nine-v1/graded-gyroid-density-linear-repeat-0-fit/graded-gyroid-density-linear-samples.npz": "7118dc4e84d4c1617e8034553e3a052b170e49d6f3412e4dd2886c2616e8c56c",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-native-face-fit-nine-v1/graded-gyroid-density-linear-repeat-0-fit/graded-gyroid-density-linear-specimen.json": "345f1f0e92b651ba2dabc4caa9ed436babd9349fcb48a6aecb8fea85845b72ae"
+  },
+  "controls": {
+    "exact_sine_band": true,
+    "zero_amplitude_plane": true,
+    "half_solid_symmetry": true,
+    "zero_width_and_full_band": true,
+    "full_band_bound": "Cauchy-Schwarz gives |Gyroid|<=sqrt(S*(3-S))<=1.5."
+  },
+  "identities": {
+    "gyroid": {
+      "saved_probes": 259,
+      "x_reduction_field_identity_error": 2.220446049250313e-16,
+      "y_reduction_field_identity_error": 0.0,
+      "specimen_unchanged": true
+    },
+    "graded-gyroid-linear": {
+      "saved_probes": 259,
+      "x_reduction_field_identity_error": 2.220446049250313e-16,
+      "y_reduction_field_identity_error": 0.0,
+      "specimen_unchanged": true
+    },
+    "graded-gyroid-periodic": {
+      "saved_probes": 259,
+      "x_reduction_field_identity_error": 4.440892098500626e-16,
+      "y_reduction_field_identity_error": 0.0,
+      "specimen_unchanged": true
+    },
+    "graded-gyroid-density-linear": {
+      "saved_probes": 258,
+      "x_reduction_field_identity_error": 2.220446049250313e-16,
+      "y_reduction_field_identity_error": 0.0,
+      "specimen_unchanged": true
+    }
+  },
+  "reference_promoted": false
+}

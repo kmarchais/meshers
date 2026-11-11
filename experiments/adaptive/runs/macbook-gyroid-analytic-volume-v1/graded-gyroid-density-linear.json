@@ -1,0 +1,151 @@
+{
+  "case": "graded-gyroid-density-linear",
+  "width_kind": "frozen piecewise linear",
+  "frozen_knot_count": 257,
+  "frozen_reference": {
+    "volume": 0.3599233627319336,
+    "volume_sobol_estimates": [
+      0.360076904296875,
+      0.3599081039428711,
+      0.35988521575927734,
+      0.35982322692871094
+    ],
+    "volume_scramble_spread": 0.0002536773681640625,
+    "volume_samples_per_scramble": 1048576,
+    "target_density": [
+      0.27,
+      0.45
+    ],
+    "target_integrated_volume": 0.36,
+    "definition": "Calibrated linear cross-sectional material fraction; immutable interpolated width",
+    "periodic_axes": [
+      false,
+      false,
+      false
+    ]
+  },
+  "reductions": [
+    {
+      "volume": 0.35999560524739654,
+      "order": 16,
+      "line_axis": "x",
+      "reversed_outer_coordinate": false,
+      "line_fraction_evaluations": 539648,
+      "outer_nodes": 4224,
+      "outer_panels": 264,
+      "seconds": 0.09459791699191555
+    },
+    {
+      "volume": 0.3599956052276042,
+      "order": 32,
+      "line_axis": "x",
+      "reversed_outer_coordinate": false,
+      "line_fraction_evaluations": 2158592,
+      "outer_nodes": 8448,
+      "outer_panels": 264,
+      "seconds": 0.2059211250161752
+    },
+    {
+      "volume": 0.35999560522760565,
+      "order": 64,
+      "line_axis": "x",
+      "reversed_outer_coordinate": false,
+      "line_fraction_evaluations": 8634368,
+      "outer_nodes": 16896,
+      "outer_panels": 264,
+      "seconds": 0.49965475001954474
+    }
+  ],
+  "root_partition": {
+    "frozen_knot_count": 257,
+    "outer_panels": 264,
+    "monotone_brackets": 1041,
+    "roots": [
+      {
+        "z": -0.4226485747703328,
+        "cosine": -1.0,
+        "sine": 1.0,
+        "residual": 1.7763568394002505e-15,
+        "kind": "sign crossing"
+      },
+      {
+        "z": -0.3234529801201812,
+        "cosine": 1.0,
+        "sine": -1.0,
+        "residual": 2.3314683517128287e-15,
+        "kind": "sign crossing"
+      },
+      {
+        "z": -0.18231169566544553,
+        "cosine": -1.0,
+        "sine": -1.0,
+        "residual": 5.551115123125783e-17,
+        "kind": "sign crossing"
+      },
+      {
+        "z": -0.0628357228103248,
+        "cosine": 1.0,
+        "sine": 1.0,
+        "residual": 2.3314683517128287e-15,
+        "kind": "sign crossing"
+      },
+      {
+        "z": 0.05800481218486291,
+        "cosine": 1.0,
+        "sine": -1.0,
+        "residual": 1.9984014443252818e-15,
+        "kind": "sign crossing"
+      },
+      {
+        "z": 0.1978601240246415,
+        "cosine": -1.0,
+        "sine": 1.0,
+        "residual": 1.1102230246251565e-16,
+        "kind": "sign crossing"
+      },
+      {
+        "z": 0.29794621295042095,
+        "cosine": 1.0,
+        "sine": 1.0,
+        "residual": 3.3306690738754696e-16,
+        "kind": "sign crossing"
+      },
+      {
+        "z": 0.45857655252824703,
+        "cosine": -1.0,
+        "sine": -1.0,
+        "residual": 2.220446049250313e-16,
+        "kind": "sign crossing"
+      }
+    ],
+    "near_tangent_candidates": [],
+    "coverage": "Analytic derivative zeros split each affine-width or harmonic-width interval. Near-zero stationary points are retained, including possible repeated roots. Floating-point root isolation is not interval-certified."
+  },
+  "independent_y": {
+    "volume": 0.35999560522760565,
+    "order": 64,
+    "line_axis": "y",
+    "reversed_outer_coordinate": true,
+    "line_fraction_evaluations": 8667136,
+    "outer_nodes": 16896,
+    "outer_panels": 264,
+    "seconds": 0.4927634159976151
+  },
+  "midpoint": {
+    "volume": 0.3599958173618906,
+    "points_per_axis": 1024,
+    "rule": "uniform midpoint, unsplit"
+  },
+  "estimate": 0.35999560522760565,
+  "empirical_stability": {
+    "first_refinement_difference": 1.9792334438051284e-11,
+    "last_refinement_difference": 1.4432899320127035e-15,
+    "x_y_difference": 0.0,
+    "conservative_observed_scale": 1.4432899320127035e-15,
+    "midpoint_difference": 2.121342849714658e-07,
+    "scope": "Observed differences only; not a rigorous error bound or confidence interval"
+  },
+  "difference_from_frozen_reference": 7.224249567205909e-05,
+  "source_reference_unchanged": true,
+  "reference_promoted": false
+}

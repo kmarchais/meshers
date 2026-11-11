@@ -11,6 +11,7 @@ mod experiment {
     use std::{
         fs::File,
         io::{BufReader, BufWriter},
+        sync::Mutex,
         time::Instant,
     };
 
@@ -21,6 +22,8 @@ mod experiment {
         levels: [f64; 2],
         probes: Vec<Point>,
         builtin_background: bool,
+        #[serde(default)]
+        trace_snapping: bool,
     }
 
     struct Pmy;
@@ -75,9 +78,30 @@ mod experiment {
             curved_fit: true,
             ..Default::default()
         };
+        let trace = Mutex::new(Vec::new());
+        let observer = |state: implicit::BackgroundSnapObservation<'_>| {
+            trace.lock().unwrap().push(json!({
+                "topology_attempt": state.topology_attempt,
+                "validity_round": state.validity_round,
+                "points": state.points,
+                "values": state.values,
+                "original_values": state.original_values,
+                "bad_tetrahedra": state.bad_tetrahedra,
+                "restored_vertices": state.restored_vertices,
+                "threshold": state.threshold,
+            }));
+        };
         let start = Instant::now();
         let output = if input.builtin_background {
             implicit::generate(&Pmy, options)
+        } else if input.trace_snapping {
+            implicit::generate_with_background_observer(
+                &Pmy,
+                options,
+                &input.points,
+                &input.tetrahedra,
+                &observer,
+            )
         } else {
             implicit::generate_with_background(&Pmy, options, &input.points, &input.tetrahedra)
         };
@@ -119,6 +143,9 @@ mod experiment {
                 record["status"] = json!("native-rejected");
                 record["error"] = json!(error.to_string());
             }
+        }
+        if input.trace_snapping {
+            record["background_snap_trace"] = json!(trace.into_inner().unwrap());
         }
         serde_json::to_writer(BufWriter::new(File::create(&args[2])?), &record)?;
         println!("{}: {:.3} s", record["status"], seconds);

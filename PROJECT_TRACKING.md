@@ -1,5 +1,167 @@
 # Meshers project tracking
 
+## Overnight continuation, 11 November 2026, in progress
+
+Checkpoint `4e05cd1` preserves jobs 759 through 767. Work continues under
+Kevin's authorization until 08:00 Madrid time. No admission threshold changes.
+
+Job 769 replaces the rejected center subdivisions with disjoint complete
+periodic edge stars, using the exact frozen selections from job 764. The
+background passes at 14,341 nodes and 70,575 tets, with minimum q 0.119483.
+Original vertices, parent volume, conformity and periodic caps are preserved.
+Seven of eight held-out affine boundary distances improve, but only one reaches
+0.002 and one worsens from 0.00592141 to 0.00895818. This is partial background
+improvement, not an admitted PMY mesh.
+
+Job 770 reproduces the old native mesh arrays, native metadata and independent
+observers exactly, excluding elapsed time. The same binary then rejects the
+new background because snapping inverts a tetrahedron. This happens before the
+existing boundary-topology rollback. The recovery implemented after this
+diagnosis retains the positive signed-volume and 2% original-volume guards.
+
+Job 768 selects 16 disjoint CAD ridge chains from branch identity and the
+original curved field residual. It reads no frozen query or target volume
+while selecting motions. All 16 pass the minimum-quality policy. Their combined
+mesh is admitted at unchanged counts, with boundary maximum 0.001067262,
+absolute relative volume error 6.221443e-7 and minimum q 0.309457. Several
+quality quantiles decrease. A separate full-sorted-quality research guard
+accepts none and returns the original mesh unchanged. That guard is an
+ablation, not a new admission requirement.
+
+The current CAD cavities have no movable interior corners when their outer
+quadratic interfaces are fixed. The first field-ranked repair can gain 42
+interior corner degrees of freedom by expanding once to 213 tets. Job 773
+tests this expansion with one optimizer start. In 31 iterations, the maximum
+local sorted-quality deficit falls from 0.0142260 to 0.00399104. The strict
+research guard still fails. The displacement limit is not active: the largest
+move uses 48.5% of its allowed radius. Ordinary admission passes, the physical
+boundary and cavity interface remain bitwise fixed, and relative cavity-volume
+balance is 2.32e-16. Median quality improves slightly while p10 worsens. This
+single failed feasibility attempt does not prove that restoration is impossible.
+
+A saved derivative audit identifies a local stationary tradeoff, with positive
+dual weights balancing the free-coordinate gradients to 2.52e-16. Sorting ties
+and movement limits do not explain the stop. Freeing interior corner 3419 adds
+11 tets. Job 778 continues from the archived solution on this 224-tet cavity
+and reduces slack to 0.00298150, but still fails sorted dominance. The next
+control applies this same evidence-driven growth as one bounded algorithm,
+limited to 512 tets and four growth steps. It does not search over radii or
+starting points. Ordinary admission remains separate from the research guard.
+
+Job 782 performs two justified expansions, to 272 and then 366 tets. The last
+solve reaches its 120-iteration limit and fails the required nonnegative
+stationarity certificate, so the algorithm stops. Its final global sorted
+quality deficit worsens to 0.000372016 even though local slack decreases.
+Ordinary admission still passes. This is an unsuccessful bounded restoration
+attempt, not an impossibility result. Further cavity growth is deferred while
+the broader CAD coverage and quality gaps are reassessed.
+
+Job 772 analytically replays PMY snapping and local periodic rollback. Six
+controls include a newly inverted neighbor after restoration and a vertex
+whose field value changes without a coordinate change. The PMY replay has
+136 inversions and 48 additional active tets below the original-volume guard.
+Restoring 468 affected vertices in one pass removes every determinant failure
+and retains 4,456 snap moves. Post-snap background quality still has 87 tets
+below 0.1. Native clipping, optimization and full final admission remain
+necessary.
+
+The experimental native supplied-background path now restores invalid snap
+moves before every clipping attempt, including attempts after topology
+rollback. It restores original coordinates and values for complete periodic
+orbits and rescans for neighbor failures. It fails explicitly if eight
+restoration rounds cannot recover validity. The ordinary BCC path is unchanged.
+An optional borrowed observer records native states without changing meshing
+options. Job 775 passes 15 focused tests and strict core Clippy; job 779 passes
+all 118 Rust tests, with one ignored, and Python-binding Clippy with
+`experimental-surfaces`. The installed Python package remains unchanged.
+
+Job 776 reproduces the old baseline exactly. Its edge-background candidate
+now returns 108,375 nodes and 56,548 tets. Minimum q is 0.134724; volume,
+positive125, coherent facets and complete periodic matching pass. Boundary
+maximum improves from 0.03367930 to 0.01449003, still above 0.002. The mesh
+remains rejected. This diagnostic timing includes trace allocation and is not
+a generation-speed comparison.
+
+The trace worker initially fails exact equality against Python-decoded input
+coordinates. Job 780 resolves this without changing the mesh or tolerance.
+The same typed Rust JSON reader produces 912 coordinate scalars different from
+Python's reader, by at most 2.78e-17. Its integer bit encodings reproduce all
+44 failed restoration comparisons. Every restored native coordinate and field
+value matches its actual original bits exactly, and both native failure scans
+match the independent predicates. The original failed audit stays archived.
+
+Job 774 was a setup failure: an existing historical build-directory name was
+rejected before compilation. Three newly added untracked source snapshots were
+moved out; all tracked historical artifacts remained unchanged. Job 775 used
+a fresh directory.
+
+Native whole-boundary volume balancing remains deferred. The signed-envelope
+prototype preserves the nine tested boundary maxima, but its exact-volume
+gains concern already tiny errors. A direct native port would add roughly
+1.44 million value-gradient sample pairs on the spinodoid. A separate fixed
+Gyroid volume investigation will use analytic integration along one coordinate
+to reduce uncertainty in volume comparisons. It will preserve the frozen
+graded-width lookup and will not automatically promote a new reference.
+
+Job 771 completes the first volume investigation in 2.55 seconds and 234 MB.
+Exact line fractions reduce integration to two dimensions. Fixed Gauss orders
+16, 32 and 64 use analytically split clipping transitions, with every frozen
+density-lookup knot retained. Field identity, sine-band, constant-line,
+half-solid and full-band controls pass. The estimates are:
+
+| Unchanged Gyroid specimen | Separate volume estimate | Difference from frozen sampled reference |
+|---|---:|---:|
+| Fixed sheet | 0.3563459975174 | -9.74076e-5 |
+| Linear thickness | 0.3565688696897 | -3.97595e-5 |
+| Periodic thickness | 0.3565882117211 | +5.33170e-6 |
+| Linear density lookup | 0.3599956052276 | +7.22425e-5 |
+
+Last refinement differences are 1.4e-15 to 1.3e-12. The x and y reductions
+agree exactly, but share their outer quadrature and therefore do not provide
+independent error bounds. An unsplit midpoint check differs by 6.8e-8 to
+4.9e-7. A separate adaptive quadrature implementation is the next validation.
+All frozen reference values and historical scores remain unchanged. The
+linear-density specimen's nominal target 0.36 is not treated as its exact
+physical volume.
+
+Job 777 uses independent adaptive physical-coordinate quadrature and direct
+clipping-root isolation. It agrees with the four Gauss estimates within
+8.7e-14, 3.9e-11, 1.5e-10 and 4.3e-15 respectively. It also reports 15 inner
+roundoff warnings; the periodic case's disagreement exceeds its own reported
+error estimate. A fixed order128 closure and an independent audit of every
+saved warning section are therefore required before using the smallest gains.
+
+The tighter estimates reverse two old volume rankings. Native fitting reduces
+the fixed Gyroid's absolute volume error from about 3.56e-6 to 9.54e-8, while
+slightly worsening linear-thickness error from 1.12e-6 to 1.30e-6. The frozen
+sampled reference suggested the opposite in both cases. Global and signed
+volume corrections improve all four against the new estimates, with different
+uncertainty margins. These are separate scores; no frozen result or admission
+decision has been rewritten.
+
+Job 781 closes the fixed Gauss ladder at order128. Volume changes from order64
+are at most 1.30e-14. Every one of the 15 saved warning sections is replayed
+and checked by independent tanh-sinh quadrature; all its intervals converge.
+Local Gauss128 and tanh-sinh agree within 6.77e-14, while QUADPACK differs by
+as much as 1.62e-8 near clipping transitions. The warnings therefore identify
+measured local integration error. The complete-volume cross-method differences
+remain visible, and no 14-digit accuracy claim is made.
+
+The separate `macbook-gyroid-volume-rankings-v1` arithmetic audit constructs
+explicit empirical reference intervals and checks every comparison against
+the exact midpoint of the two saved mesh volumes. All 12 ranking directions
+are unchanged throughout those intervals. Their coverage is not certified.
+Native fitting improves fixed Gyroid and linear-density volume fidelity and
+worsens linear- and periodic-thickness fidelity. Both global and signed
+corrections improve all four volume errors. Boundary and runtime tradeoffs
+still require their own decisions.
+
+[Checkpoint evidence index](handoff/macbook/overnight-checkpoint-evidence-20261111.json)
+records hashes for the completed runs through 782 and the two read-only
+audits. Work remains active until the authorized morning deadline. The four
+original cases and all 24 lattice tensors remain in scope; no new FEA result
+or overall comparison win is claimed.
+
 ## Resumed failure diagnosis and bounded controls, 11 November 2026
 
 Continuation from `c0017ed` after the MacBook lid was reopened. Job 758 had

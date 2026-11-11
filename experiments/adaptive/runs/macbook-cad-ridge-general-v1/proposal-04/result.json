@@ -1,0 +1,762 @@
+{
+  "proposal_index": 4,
+  "chain": [
+    3826,
+    6527,
+    6440
+  ],
+  "accepted_minimum": true,
+  "accepted_sorted": false,
+  "common_rejections": [],
+  "minimum_rejections": [],
+  "sorted_rejections": [
+    "sorted-local-quality-distribution-regression"
+  ],
+  "candidate_sha256": "90fb990486d391c8e9f1836d01b829fcdf5a20375ab5fa42fb857fb71c758e55",
+  "motion": {
+    "corner_displacements": {
+      "3826": [
+        1.3877787807814457e-16,
+        1.3877787807814457e-16,
+        -4.163336342344337e-17
+      ],
+      "6527": [
+        6.916970405732026e-05,
+        -0.0010790292982589267,
+        0.0001866941713636605
+      ],
+      "6440": [
+        -1.3787090383104994e-05,
+        1.114670472229795e-06,
+        2.6575545018434066e-06
+      ]
+    },
+    "affected_midpoints": [
+      26321,
+      26322,
+      26325,
+      28193,
+      28195,
+      28196,
+      29286,
+      29287,
+      29290,
+      29293,
+      38820,
+      39292,
+      42397,
+      42401,
+      42402,
+      42403,
+      42839,
+      42840,
+      42842,
+      42843,
+      42844,
+      42845,
+      42846,
+      42847,
+      45424,
+      45428,
+      45787,
+      45790,
+      50013,
+      50015,
+      50017,
+      53421,
+      53422,
+      53425,
+      54305,
+      54635,
+      64333,
+      64778
+    ],
+    "projected_wall_midpoints": [
+      {
+        "edge": [
+          3826,
+          3827
+        ],
+        "midpoint": 26325,
+        "requested_constraint_mask": 1,
+        "constraint_mask": 1,
+        "initial_projection": {
+          "point": [
+            0.1483364026617356,
+            0.1423142527332313,
+            -0.04739887624176294
+          ],
+          "branch_values": [
+            0.0,
+            0.005725212549562819
+          ],
+          "constraint_mask": 1,
+          "exposed": true
+        },
+        "ridge_fallback_applied": false,
+        "additional_projection_displacement": 8.777083671441753e-17,
+        "branch_values": [
+          0.0,
+          0.005725212549562819
+        ],
+        "exposed": true
+      },
+      {
+        "edge": [
+          3826,
+          4287
+        ],
+        "midpoint": 28195,
+        "requested_constraint_mask": 1,
+        "constraint_mask": 1,
+        "initial_projection": {
+          "point": [
+            0.14756316894363974,
+            0.14338216601978665,
+            -0.04406307374065427
+          ],
+          "branch_values": [
+            0.0,
+            0.004001439266532514
+          ],
+          "constraint_mask": 1,
+          "exposed": true
+        },
+        "ridge_fallback_applied": false,
+        "additional_projection_displacement": 5.721958498152797e-17,
+        "branch_values": [
+          0.0,
+          0.004001439266532514
+        ],
+        "exposed": true
+      },
+      {
+        "edge": [
+          3826,
+          4288
+        ],
+        "midpoint": 28196,
+        "requested_constraint_mask": 1,
+        "constraint_mask": 1,
+        "initial_projection": {
+          "point": [
+            0.14687297044762598,
+            0.14438056599114293,
+            -0.04067249886689062
+          ],
+          "branch_values": [
+            0.0,
+            0.0024005302227864123
+          ],
+          "constraint_mask": 1,
+          "exposed": true
+        },
+        "ridge_fallback_applied": false,
+        "additional_projection_displacement": 8.582937747229195e-17,
+        "branch_values": [
+          0.0,
+          0.0024005302227864123
+        ],
+        "exposed": true
+      },
+      {
+        "edge": [
+          3826,
+          4493
+        ],
+        "midpoint": 29286,
+        "requested_constraint_mask": 1,
+        "constraint_mask": 3,
+        "initial_projection": {
+          "point": [
+            0.14481973291597444,
+            0.14482005873735748,
+            -0.03907877412750204
+          ],
+          "branch_values": [
+            -2.7755575615628914e-17,
+            -3.1456978819011105e-07
+          ],
+          "constraint_mask": 1,
+          "exposed": false
+        },
+        "ridge_fallback_applied": true,
+        "additional_projection_displacement": 4.6454516643351115e-06,
+        "branch_values": [
+          2.7755575615628914e-17,
+          2.7755575615628914e-17
+        ],
+        "exposed": true
+      },
+      {
+        "edge": [
+          3826,
+          4494
+        ],
+        "midpoint": 29290,
+        "requested_constraint_mask": 2,
+        "constraint_mask": 2,
+        "initial_projection": {
+          "point": [
+            0.14430549466479167,
+            0.14679747788604947,
+            -0.040938053319006
+          ],
+          "branch_values": [
+            0.002398896725845645,
+            0.0
+          ],
+          "constraint_mask": 2,
+          "exposed": true
+        },
+        "ridge_fallback_applied": false,
+        "additional_projection_displacement": 8.582937747229195e-17,
+        "branch_values": [
+          0.002398896725845645,
+          0.0
+        ],
+        "exposed": true
+      },
+      {
+        "edge": [
+          3826,
+          4495
+        ],
+        "midpoint": 29293,
+        "requested_constraint_mask": 2,
+        "constraint_mask": 2,
+        "initial_projection": {
+          "point": [
+            0.14361287945009618,
+            0.14924642805749577,
+            -0.04330520587703217
+          ],
+          "branch_values": [
+            0.005402178697640536,
+            0.0
+          ],
+          "constraint_mask": 2,
+          "exposed": true
+        },
+        "ridge_fallback_applied": false,
+        "additional_projection_displacement": 8.582937747229195e-17,
+        "branch_values": [
+          0.005402178697640536,
+          0.0
+        ],
+        "exposed": true
+      },
+      {
+        "edge": [
+          3826,
+          5984
+        ],
+        "midpoint": 45790,
+        "requested_constraint_mask": 2,
+        "constraint_mask": 2,
+        "initial_projection": {
+          "point": [
+            0.14221264895035027,
+            0.14717152075740303,
+            -0.04770285608351382
+          ],
+          "branch_values": [
+            0.004709466421971564,
+            -2.7755575615628914e-17
+          ],
+          "constraint_mask": 2,
+          "exposed": true
+        },
+        "ridge_fallback_applied": false,
+        "additional_projection_displacement": 8.777083671441753e-17,
+        "branch_values": [
+          0.004709466421971564,
+          -2.7755575615628914e-17
+        ],
+        "exposed": true
+      },
+      {
+        "edge": [
+          3826,
+          6438
+        ],
+        "midpoint": 42397,
+        "requested_constraint_mask": 1,
+        "constraint_mask": 1,
+        "initial_projection": {
+          "point": [
+            0.1444676876641886,
+            0.1413385797667192,
+            -0.05023351341014032
+          ],
+          "branch_values": [
+            0.0,
+            0.002952014202377534
+          ],
+          "constraint_mask": 1,
+          "exposed": true
+        },
+        "ridge_fallback_applied": false,
+        "additional_projection_displacement": 1.1857187100668868e-16,
+        "branch_values": [
+          0.0,
+          0.002952014202377534
+        ],
+        "exposed": true
+      },
+      {
+        "edge": [
+          3826,
+          6527
+        ],
+        "midpoint": 42846,
+        "requested_constraint_mask": 3,
+        "constraint_mask": 3,
+        "initial_projection": {
+          "point": [
+            0.14207609012259853,
+            0.14207609012259853,
+            -0.04810805146205011
+          ],
+          "branch_values": [
+            0.0,
+            0.0
+          ],
+          "constraint_mask": 3,
+          "exposed": true
+        },
+        "ridge_fallback_applied": false,
+        "additional_projection_displacement": 5.253105798810104e-05,
+        "branch_values": [
+          0.0,
+          0.0
+        ],
+        "exposed": true
+      },
+      {
+        "edge": [
+          5984,
+          6527
+        ],
+        "midpoint": 50017,
+        "requested_constraint_mask": 2,
+        "constraint_mask": 2,
+        "initial_projection": {
+          "point": [
+            0.14083558970494064,
+            0.1458381262241952,
+            -0.05162689872984443
+          ],
+          "branch_values": [
+            0.004706482517850247,
+            0.0
+          ],
+          "constraint_mask": 2,
+          "exposed": true
+        },
+        "ridge_fallback_applied": false,
+        "additional_projection_displacement": 3.106843628149654e-07,
+        "branch_values": [
+          0.004706482517850247,
+          0.0
+        ],
+        "exposed": true
+      },
+      {
+        "edge": [
+          6438,
+          6440
+        ],
+        "midpoint": 42403,
+        "requested_constraint_mask": 1,
+        "constraint_mask": 1,
+        "initial_projection": {
+          "point": [
+            0.1419516573654402,
+            0.13869607168178022,
+            -0.05712617351129412
+          ],
+          "branch_values": [
+            0.0,
+            0.0030152695937167295
+          ],
+          "constraint_mask": 1,
+          "exposed": true
+        },
+        "ridge_fallback_applied": false,
+        "additional_projection_displacement": 9.274733144916122e-09,
+        "branch_values": [
+          0.0,
+          0.0030152695937167295
+        ],
+        "exposed": true
+      },
+      {
+        "edge": [
+          6438,
+          6527
+        ],
+        "midpoint": 42847,
+        "requested_constraint_mask": 1,
+        "constraint_mask": 1,
+        "initial_projection": {
+          "point": [
+            0.1431342931309808,
+            0.1398915678904533,
+            -0.054132700220390795
+          ],
+          "branch_values": [
+            0.0,
+            0.0030286741210817647
+          ],
+          "constraint_mask": 1,
+          "exposed": true
+        },
+        "ridge_fallback_applied": false,
+        "additional_projection_displacement": 0.000536883158760825,
+        "branch_values": [
+          0.0,
+          0.0030286741210817647
+        ],
+        "exposed": true
+      },
+      {
+        "edge": [
+          6439,
+          6440
+        ],
+        "midpoint": 42401,
+        "requested_constraint_mask": 1,
+        "constraint_mask": 1,
+        "initial_projection": {
+          "point": [
+            0.14113879319551348,
+            0.13772432115076905,
+            -0.05943072743589658
+          ],
+          "branch_values": [
+            0.0,
+            0.0031410144548016106
+          ],
+          "constraint_mask": 1,
+          "exposed": true
+        },
+        "ridge_fallback_applied": false,
+        "additional_projection_displacement": 1.4750797400356507e-08,
+        "branch_values": [
+          0.0,
+          0.0031410144548016106
+        ],
+        "exposed": true
+      },
+      {
+        "edge": [
+          6440,
+          6527
+        ],
+        "midpoint": 42843,
+        "requested_constraint_mask": 3,
+        "constraint_mask": 3,
+        "initial_projection": {
+          "point": [
+            0.13953902741795896,
+            0.13953902741795896,
+            -0.05503507815248469
+          ],
+          "branch_values": [
+            0.0,
+            0.0
+          ],
+          "constraint_mask": 3,
+          "exposed": true
+        },
+        "ridge_fallback_applied": false,
+        "additional_projection_displacement": 3.2210629766074364e-05,
+        "branch_values": [
+          0.0,
+          0.0
+        ],
+        "exposed": true
+      },
+      {
+        "edge": [
+          6440,
+          7538
+        ],
+        "midpoint": 50013,
+        "requested_constraint_mask": 2,
+        "constraint_mask": 2,
+        "initial_projection": {
+          "point": [
+            0.13873323618354472,
+            0.14263174023004138,
+            -0.057035858703457724
+          ],
+          "branch_values": [
+            0.0036128331197976538,
+            0.0
+          ],
+          "constraint_mask": 2,
+          "exposed": true
+        },
+        "ridge_fallback_applied": false,
+        "additional_projection_displacement": 6.881018359197288e-06,
+        "branch_values": [
+          0.0036128331197976538,
+          0.0
+        ],
+        "exposed": true
+      },
+      {
+        "edge": [
+          6440,
+          7903
+        ],
+        "midpoint": 53422,
+        "requested_constraint_mask": 1,
+        "constraint_mask": 1,
+        "initial_projection": {
+          "point": [
+            0.13835876549073717,
+            0.1368798090552885,
+            -0.06135077728103984
+          ],
+          "branch_values": [
+            -2.7755575615628914e-17,
+            0.0013508039658480242
+          ],
+          "constraint_mask": 1,
+          "exposed": true
+        },
+        "ridge_fallback_applied": false,
+        "additional_projection_displacement": 3.4897426655842015e-08,
+        "branch_values": [
+          -2.7755575615628914e-17,
+          0.0013508039658480242
+        ],
+        "exposed": true
+      },
+      {
+        "edge": [
+          6440,
+          7904
+        ],
+        "midpoint": 53425,
+        "requested_constraint_mask": 2,
+        "constraint_mask": 2,
+        "initial_projection": {
+          "point": [
+            0.13696345095967524,
+            0.1377412292132698,
+            -0.06116382183298095
+          ],
+          "branch_values": [
+            0.0007105149828610102,
+            2.7755575615628914e-17
+          ],
+          "constraint_mask": 2,
+          "exposed": true
+        },
+        "ridge_fallback_applied": false,
+        "additional_projection_displacement": 6.83625406663488e-06,
+        "branch_values": [
+          0.0007105149828610102,
+          2.7755575615628914e-17
+        ],
+        "exposed": true
+      },
+      {
+        "edge": [
+          6440,
+          9114
+        ],
+        "midpoint": 64778,
+        "requested_constraint_mask": 2,
+        "constraint_mask": 2,
+        "initial_projection": {
+          "point": [
+            0.13721079271048894,
+            0.13986637746090824,
+            -0.06060691679799621
+          ],
+          "branch_values": [
+            0.002432942331362542,
+            0.0
+          ],
+          "constraint_mask": 2,
+          "exposed": true
+        },
+        "ridge_fallback_applied": false,
+        "additional_projection_displacement": 6.842687498563168e-06,
+        "branch_values": [
+          0.002432942331362542,
+          0.0
+        ],
+        "exposed": true
+      },
+      {
+        "edge": [
+          6440,
+          9269
+        ],
+        "midpoint": 64333,
+        "requested_constraint_mask": 2,
+        "constraint_mask": 2,
+        "initial_projection": {
+          "point": [
+            0.1377714911638819,
+            0.14062266838498638,
+            -0.05932129653404762
+          ],
+          "branch_values": [
+            0.0026229048543968125,
+            0.0
+          ],
+          "constraint_mask": 2,
+          "exposed": true
+        },
+        "ridge_fallback_applied": false,
+        "additional_projection_displacement": 6.857066156379713e-06,
+        "branch_values": [
+          0.0026229048543968125,
+          0.0
+        ],
+        "exposed": true
+      },
+      {
+        "edge": [
+          6527,
+          7538
+        ],
+        "midpoint": 50015,
+        "requested_constraint_mask": 2,
+        "constraint_mask": 2,
+        "initial_projection": {
+          "point": [
+            0.13992691417773223,
+            0.14381437599558197,
+            -0.05404126838535112
+          ],
+          "branch_values": [
+            0.003632787619362615,
+            -2.7755575615628914e-17
+          ],
+          "constraint_mask": 2,
+          "exposed": true
+        },
+        "ridge_fallback_applied": false,
+        "additional_projection_displacement": 1.4013149886269253e-06,
+        "branch_values": [
+          0.003632787619362615,
+          -2.7755575615628914e-17
+        ],
+        "exposed": true
+      }
+    ],
+    "ridge_fallback_enabled": true,
+    "ridge_fallback_count": 1,
+    "all_projected_midpoints_exposed": true,
+    "maximum_corner_displacement": 0.001097243540915914,
+    "maximum_midpoint_displacement": 0.0005486217704579579
+  },
+  "ridge_edges": [
+    {
+      "edge": [
+        3826,
+        6527
+      ],
+      "faces": [
+        4788,
+        4789
+      ],
+      "labels": [
+        1,
+        2
+      ],
+      "opposite_branches": true
+    },
+    {
+      "edge": [
+        6527,
+        6440
+      ],
+      "faces": [
+        4724,
+        4725
+      ],
+      "labels": [
+        1,
+        2
+      ],
+      "opposite_branches": true
+    }
+  ],
+  "changed_nodes": [
+    3826,
+    6440,
+    6527,
+    26321,
+    26322,
+    26325,
+    28193,
+    28195,
+    28196,
+    29286,
+    29287,
+    29290,
+    29293,
+    38820,
+    39292,
+    42397,
+    42401,
+    42402,
+    42403,
+    42839,
+    42840,
+    42842,
+    42843,
+    42844,
+    42845,
+    42846,
+    42847,
+    45424,
+    45428,
+    45787,
+    45790,
+    50013,
+    50015,
+    50017,
+    53421,
+    53422,
+    53425,
+    54305,
+    54635,
+    64333,
+    64778
+  ],
+  "cavity_tetrahedra": 45,
+  "interface_nodes_bitwise_unchanged": true,
+  "original_local_quality": {
+    "min": 0.5207597049245201,
+    "p01": 0.5280734144439714,
+    "p10": 0.629371647150931,
+    "median": 0.7834671677424649,
+    "p90": 0.9357720714095435,
+    "p99": 0.9842736196204867,
+    "max": 0.9855554618751966
+  },
+  "candidate_local_quality": {
+    "min": 0.4706304129667363,
+    "p01": 0.49268730142816247,
+    "p10": 0.6041730210658112,
+    "median": 0.7949056681735653,
+    "p90": 0.9360805164718866,
+    "p99": 0.9731607316233087,
+    "max": 0.9830270094213733
+  },
+  "minimum_sorted_quality_change": -0.05012929195778376,
+  "regressed_sorted_quality_entries": 24,
+  "original_local_minimum_jacobian": 1.4130576385000292e-08,
+  "candidate_local_minimum_jacobian": 1.4105705175227287e-08,
+  "local_volume_change": -7.6634359608229e-09
+}

@@ -1,0 +1,283 @@
+{
+  "case": "graded-gyroid-periodic",
+  "adaptive": {
+    "volume": 0.35658821157657217,
+    "seconds": 2.5890773340070155,
+    "sections": 4200,
+    "scalar_fraction_evaluations": 6238512,
+    "outer_panels": [
+      {
+        "left": -0.5,
+        "right": -0.4375,
+        "volume": 0.014675473552542426,
+        "quadpack_error": 2.7385327218020753e-15,
+        "evaluations": 21,
+        "subintervals": 1,
+        "message": null
+      },
+      {
+        "left": -0.4375,
+        "right": -0.375,
+        "volume": 0.01978254649252054,
+        "quadpack_error": 8.650753724470661e-13,
+        "evaluations": 567,
+        "subintervals": 14,
+        "message": null
+      },
+      {
+        "left": -0.375,
+        "right": -0.3125,
+        "volume": 0.02151204796586917,
+        "quadpack_error": 3.879469662182444e-12,
+        "evaluations": 525,
+        "subintervals": 13,
+        "message": null
+      },
+      {
+        "left": -0.3125,
+        "right": -0.25,
+        "volume": 0.018779311732486734,
+        "quadpack_error": 3.1124194166400792e-15,
+        "evaluations": 63,
+        "subintervals": 2,
+        "message": null
+      },
+      {
+        "left": -0.25,
+        "right": -0.1875,
+        "volume": 0.021114046165084933,
+        "quadpack_error": 3.319303595602388e-12,
+        "evaluations": 609,
+        "subintervals": 15,
+        "message": null
+      },
+      {
+        "left": -0.1875,
+        "right": -0.125,
+        "volume": 0.027577496486433463,
+        "quadpack_error": 1.8931628285068847e-12,
+        "evaluations": 21,
+        "subintervals": 1,
+        "message": null
+      },
+      {
+        "left": -0.125,
+        "right": -0.0625,
+        "volume": 0.02905721749412477,
+        "quadpack_error": 3.225999189351821e-16,
+        "evaluations": 21,
+        "subintervals": 1,
+        "message": null
+      },
+      {
+        "left": -0.0625,
+        "right": 0.0,
+        "volume": 0.025795965899224053,
+        "quadpack_error": 5.155805586247554e-12,
+        "evaluations": 273,
+        "subintervals": 7,
+        "message": null
+      },
+      {
+        "left": 0.0,
+        "right": 0.0625,
+        "volume": 0.025795965899224053,
+        "quadpack_error": 5.155805586247554e-12,
+        "evaluations": 273,
+        "subintervals": 7,
+        "message": null
+      },
+      {
+        "left": 0.0625,
+        "right": 0.125,
+        "volume": 0.02905721749412477,
+        "quadpack_error": 3.225999189351821e-16,
+        "evaluations": 21,
+        "subintervals": 1,
+        "message": null
+      },
+      {
+        "left": 0.125,
+        "right": 0.1875,
+        "volume": 0.027577496486433463,
+        "quadpack_error": 1.8931628285068847e-12,
+        "evaluations": 21,
+        "subintervals": 1,
+        "message": null
+      },
+      {
+        "left": 0.1875,
+        "right": 0.25,
+        "volume": 0.021114046165084933,
+        "quadpack_error": 3.319303595602388e-12,
+        "evaluations": 609,
+        "subintervals": 15,
+        "message": null
+      },
+      {
+        "left": 0.25,
+        "right": 0.3125,
+        "volume": 0.018779311732486734,
+        "quadpack_error": 3.1124194166400792e-15,
+        "evaluations": 63,
+        "subintervals": 2,
+        "message": null
+      },
+      {
+        "left": 0.3125,
+        "right": 0.375,
+        "volume": 0.02151204796586917,
+        "quadpack_error": 3.879469662182444e-12,
+        "evaluations": 525,
+        "subintervals": 13,
+        "message": null
+      },
+      {
+        "left": 0.375,
+        "right": 0.4375,
+        "volume": 0.01978254649252054,
+        "quadpack_error": 8.650753724470661e-13,
+        "evaluations": 567,
+        "subintervals": 14,
+        "message": null
+      },
+      {
+        "left": 0.4375,
+        "right": 0.5,
+        "volume": 0.014675473552542426,
+        "quadpack_error": 2.7385327218020753e-15,
+        "evaluations": 21,
+        "subintervals": 1,
+        "message": null
+      }
+    ],
+    "frozen_knots_retained": 2,
+    "inner_max_reported_error": 1.9978477534130776e-12,
+    "outer_reported_error_sum": 3.023798119408743e-11,
+    "combined_reported_error_heuristic": 3.2235828947500507e-11,
+    "inner_warning_counts": {},
+    "inner_warning_examples": [],
+    "outer_warning_count": 0,
+    "maximum_clipping_root_residual": 3.83026943495679e-15,
+    "stationary_near_zero_count": 0,
+    "root_coverage": "Direct branch roots bracketed between all analytic stationary candidates. Near-zero critical values retained. Floating-point root isolation is not interval certified.",
+    "uncertainty_scope": "QUADPACK reports estimates, not bounds. The sum of outer estimates plus maximum observed inner estimate is a heuristic, not a confidence interval."
+  },
+  "primary_gauss64_estimate": 0.3565882117211011,
+  "adaptive_gauss_discrepancy": 1.4452894436800534e-10,
+  "empirical_observed_scale": 1.4452894436800534e-10,
+  "score_comparison": {
+    "frozen_reference_volume": 0.3565828800201416,
+    "frozen_scramble_spread": 7.724761962890625e-05,
+    "adaptive_reference_estimate": 0.35658821157657217,
+    "primary_gauss64_estimate": 0.3565882117211011,
+    "rows": [
+      {
+        "stage": "baseline",
+        "source": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-native-face-fit-nine-v1/graded-gyroid-periodic-repeat-0-baseline/result.json",
+        "source_sha256": "3ce132bcc09edb8ae265c89305981af408b664f66b072b136b9cf6260efd16ac",
+        "mesh_sha256": "d9d5cdb7aa1bec97c0acca5892c46218e477b2c93fbbed27cc32cad9abb85434",
+        "volume": 0.3565889071395032,
+        "old_relative_volume_error": 1.690243614960174e-05,
+        "old_absolute_relative_volume_error": 1.690243614960174e-05,
+        "old_absolute_volume_error": 6.027119361595723e-06,
+        "adaptive_relative_volume_error": 1.9506055120022125e-06,
+        "adaptive_absolute_volume_error": 6.955629310301248e-07,
+        "gauss64_absolute_volume_error": 6.954184020857568e-07,
+        "volume_float_ulp": 5.551115123125783e-17
+      },
+      {
+        "stage": "native_fit",
+        "source": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-native-face-fit-nine-v1/graded-gyroid-periodic-repeat-0-fit/result.json",
+        "source_sha256": "5ed0d30043c77449dbdd0ba5d0369b4bc3729f832db8c76a203515a159486fe7",
+        "mesh_sha256": "6c8640b78f08210b4d0b411faf36ffdadc18af31f66f2afa0203949b97a94d50",
+        "volume": 0.35658892184102925,
+        "old_relative_volume_error": 1.6943665066992963e-05,
+        "old_absolute_relative_volume_error": 1.6943665066992963e-05,
+        "old_absolute_volume_error": 6.04182088764782e-06,
+        "adaptive_relative_volume_error": 1.9918338127755675e-06,
+        "adaptive_absolute_volume_error": 7.102644570822214e-07,
+        "gauss64_absolute_volume_error": 7.101199281378534e-07,
+        "volume_float_ulp": 5.551115123125783e-17
+      },
+      {
+        "stage": "global_correction",
+        "source": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-volume-bias-seven-v1/graded-gyroid-periodic/result.json",
+        "source_sha256": "806d51242caee1436c229850b57794cba1483eb842ed15f794c524793720dfb8",
+        "mesh_sha256": "2b0c5bf55e0fd89c7e7d58cd37092b349b11cd22707c0c1a520a95ad4801cf6a",
+        "volume": 0.35658821060337,
+        "old_relative_volume_error": 1.4949072227210536e-05,
+        "old_absolute_relative_volume_error": 1.4949072227210536e-05,
+        "old_absolute_volume_error": 5.3305832283800925e-06,
+        "adaptive_relative_volume_error": -2.7292046400617664e-09,
+        "adaptive_absolute_volume_error": 9.732021855057837e-10,
+        "gauss64_absolute_volume_error": 1.117731129873789e-09,
+        "volume_float_ulp": 5.551115123125783e-17
+      },
+      {
+        "stage": "signed_envelope",
+        "source": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-volume-signed-envelope-six-v1/graded-gyroid-periodic/result.json",
+        "source_sha256": "70d347dadb53596211eeccd9c75a3e662b8beecb81965b4e452944cb0d7678b6",
+        "mesh_sha256": "37d8d29fea0b96e24eb781addc000ddf13a00c5928022c22c8c58359eff7acfe",
+        "volume": 0.35658882465742736,
+        "old_relative_volume_error": 1.667112365422163e-05,
+        "old_absolute_relative_volume_error": 1.667112365422163e-05,
+        "old_absolute_volume_error": 5.9446372857596685e-06,
+        "adaptive_relative_volume_error": 1.719296474966825e-06,
+        "adaptive_absolute_volume_error": 6.130808551940703e-07,
+        "gauss64_absolute_volume_error": 6.129363262497023e-07,
+        "volume_float_ulp": 5.551115123125783e-17
+      }
+    ],
+    "comparisons": [
+      {
+        "before": "baseline",
+        "after": "native_fit",
+        "old_absolute_error_improvement": -1.4701526052096625e-08,
+        "adaptive_absolute_error_improvement": -1.4701526052096625e-08,
+        "gauss64_absolute_error_improvement": -1.4701526052096625e-08,
+        "observed_integration_discrepancy": 1.4452894436800534e-10,
+        "twice_discrepancy_sensitivity": 2.890578887360107e-10,
+        "absolute_improvement_over_twice_discrepancy": 50.86014471489882,
+        "sign_agrees_between_quadratures": true,
+        "exceeds_observed_sensitivity_by_10x": true,
+        "exceeds_reported_heuristic_sensitivity_by_10x": true
+      },
+      {
+        "before": "native_fit",
+        "after": "global_correction",
+        "old_absolute_error_improvement": 7.112376592677272e-07,
+        "adaptive_absolute_error_improvement": 7.092912548967156e-07,
+        "gauss64_absolute_error_improvement": 7.090021970079796e-07,
+        "observed_integration_discrepancy": 1.4452894436800534e-10,
+        "twice_discrepancy_sensitivity": 2.890578887360107e-10,
+        "absolute_improvement_over_twice_discrepancy": 2453.803485517372,
+        "sign_agrees_between_quadratures": true,
+        "exceeds_observed_sensitivity_by_10x": true,
+        "exceeds_reported_heuristic_sensitivity_by_10x": true
+      },
+      {
+        "before": "native_fit",
+        "after": "signed_envelope",
+        "old_absolute_error_improvement": 9.718360188815112e-08,
+        "adaptive_absolute_error_improvement": 9.718360188815112e-08,
+        "gauss64_absolute_error_improvement": 9.718360188815112e-08,
+        "observed_integration_discrepancy": 1.4452894436800534e-10,
+        "twice_discrepancy_sensitivity": 2.890578887360107e-10,
+        "absolute_improvement_over_twice_discrepancy": 336.20809420948365,
+        "sign_agrees_between_quadratures": true,
+        "exceeds_observed_sensitivity_by_10x": true,
+        "exceeds_reported_heuristic_sensitivity_by_10x": true
+      }
+    ],
+    "facewise": {
+      "available": false,
+      "reason": "This mode was run only for spinodoid and Schwarz P/D, not these four Gyroid cases."
+    },
+    "saved_mesh_volume_repeat_discrepancy": 0.0,
+    "mesh_volume_numerics": "Saved Tet10 quadrature volumes are reused. Repetition discrepancy and float ulp are recorded separately; neither certifies quadrature roundoff. No new mesh-volume numerical audit is performed.",
+    "ranking_scope": "Absolute volume-error improvements are compared with empirical integration discrepancy and reported heuristics. Neither is a rigorous error bound. Frozen scores and admission remain unchanged."
+  },
+  "reference_promoted": false,
+  "gauss128_performed": false
+}

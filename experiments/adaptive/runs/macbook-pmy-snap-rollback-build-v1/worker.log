@@ -1,0 +1,30 @@
+RUN cargo +1.95.0 test --locked --release --lib -p meshers-core --features experimental-quads implicit::topology_tests:: -- --nocapture
+   Compiling meshers-core v0.1.0 (/Users/kmarchais/dev/meshers/crates/meshers-core)
+    Finished `release` profile [optimized] target(s) in 55.32s
+     Running unittests src/lib.rs (target/release/deps/meshers_core-8e47bbf80036f8e5)
+
+running 15 tests
+test implicit::topology_tests::periodic_cap_gradients_keep_the_physical_side ... ok
+test implicit::topology_tests::periodic_regions_cannot_skip_coupled_adaptation ... ok
+test implicit::topology_tests::periodic_contact_nodes_still_require_complete_existing_image_classes ... ok
+test implicit::topology_tests::complete_region_traces_preserve_conjunctions_and_branch_multiplicities ... ok
+test implicit::topology_tests::periodic_quadratic_caps_require_every_midpoint_on_the_matching_trace ... ok
+test implicit::topology_tests::complete_affine_trace_certificate_keeps_plane_multiplicities ... ok
+test implicit::topology_tests::periodic_seed_requires_both_bijective_nodes_and_matching_caps ... ok
+test implicit::topology_tests::catches_vertex_pinches_even_when_all_edges_have_two_faces ... ok
+test implicit::topology_tests::supplied_background_guard_uses_original_local_volume ... ok
+test implicit::topology_tests::supplied_background_snap_rollback_restores_periodic_value_only_changes ... ok
+test implicit::topology_tests::supplied_background_snap_rollback_rescans_new_neighbor_failure ... ok
+test implicit::topology_tests::supplied_background_snap_rollback_preserves_guard_semantics ... ok
+test implicit::topology_tests::schwarz_d_zero_level_periodic_regression ... ok
+test implicit::topology_tests::preflighted_background_recovers_a_sampled_void_and_rejects_invalid_input ... ok
+test implicit::topology_tests::supplied_background_snap_observer_preserves_native_output ... ok
+
+test result: ok. 15 passed; 0 failed; 0 ignored; 0 measured; 61 filtered out; finished in 0.01s
+
+RUN cargo +1.95.0 build --locked --release -p meshers-core --features experimental-quads --example pmy_background
+   Compiling meshers-core v0.1.0 (/Users/kmarchais/dev/meshers/crates/meshers-core)
+    Finished `release` profile [optimized] target(s) in 12.56s
+RUN cargo +1.95.0 clippy --locked --release -p meshers-core --all-targets --features experimental-quads -- -D warnings
+    Checking meshers-core v0.1.0 (/Users/kmarchais/dev/meshers/crates/meshers-core)
+    Finished `release` profile [optimized] target(s) in 1.23s

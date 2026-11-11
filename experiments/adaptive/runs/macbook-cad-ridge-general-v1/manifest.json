@@ -1,0 +1,48 @@
+{
+  "inputs": {
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/box_projection.py": "59589b1996b3a3782f1b7f5e5ff3c7ab303d4158ef50a233515dc5369bddaf05",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/cad_coverage_preflight.py": "6a4f22d13e1859480f6c2785f116ab464cd559dfa0cb3b4e9281ccc5bc670b1b",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/cad_intersection_curved_control.py": "ea78e66f5e18f6dca2ad44e0e99408feaddde9ede8fab100f0739c72dff46ef5",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/cad_intersection_probe.py": "27e7016b5c1ee2944f3de1ee22c2d904faf3ea4052841ed7a310aff611fd77fb",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/cad_ridge_cavity_control.py": "e7606008e1308fd46acf044bfd49f3fbbb368ac3df5ab9409a29ec9b1147d659",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/cad_ridge_chain_control.py": "23211a3ea54b118085d0489c61472a8236b7bc26aeb1579d5a5822783537de4f",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/cad_ridge_general_control.py": "86831fbf3032bd67898d9b3d8e447e994c715968990ee05310078fc2b746be1c",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/cad_union_comparison.py": "af342f64a9d7718ea7b7f2c88698ab08d67cddc406365187438e2b8f4e4d5e9e",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/comparison_mesh_audit.py": "6797327ecf6b6c62a973f52812d0bad95b2ef861541247425609109c24d8af94",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/facet_incidence_audit.py": "4f51afc196c85e1d0bc64d7a96507517ddc6e32ccd8380a2ac77cae0ace89610",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/microgen_workflow.py": "9f513dfd3e6e5a72a71a54f70c0c2cf7c7a1ebe7256886ee3feaf7d7ad7de161",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/nested_refinement.py": "7f78251d150ebcee928db1b49e22b64ee89efde5cdc238c1f5b9994aad36a6b8",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/periodic_trace.py": "16d51906318ba9110f8979b48a540500d1cce5835685d72e780ca1893f3b8654",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/quadratic_edge_removal_probe.py": "f26a4be16f7aeb4fce6d89732754fab0e5d39e86b4d4c62466a3afd547cec6ed",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/quadrature_audit.py": "020677df452ec86864e687c9b35e2c69e70f8587ec54240ce0c4eaa4b717319e",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-cad-intersection-curved-v1/native-curved-tet10/mesh.npz": "0e1f026fe770c93a7c54c41ab86265958058d35fe5454ba65f0de7f85719a1f3",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-cad-intersection-curved-v1/native-curved-tet10/result.json": "61b1574cf0185fc2cb7e66eea687187ef1e5cf05b91be40c96551ffd8321ef1f",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/scorecard.py": "8f26256c7df0e84c9f35cdd71bf4f95a74e072d45469002b213c5dcd4f1bab2a",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-cad-intersection-curved-v1/native-curved-tet10/cad-crossed-flat-cylinders-samples.npz": "3c5dd96a8b2bc18f572a084d90b4805f535b3812dcaa45d511c022de7b4274d8",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-cad-intersection-curved-v1/native-curved-tet10/cad-crossed-flat-cylinders-specimen.json": "ea3664a483b55a3d42ef347ae4bffe3284caa625058cf002651b93bb7e486aa0"
+  },
+  "worker_timeout_s": 300,
+  "memory_bytes": 8589934592,
+  "numerical_thread_policy": {
+    "environment": {
+      "OPENBLAS_NUM_THREADS": "1",
+      "OMP_NUM_THREADS": "1",
+      "MKL_NUM_THREADS": "1",
+      "VECLIB_MAXIMUM_THREADS": "1",
+      "RAYON_NUM_THREADS": "1"
+    },
+    "accelerate_blas_threading": 1,
+    "accelerate_scope": "calling thread"
+  },
+  "node_cap": 250000,
+  "tetrahedron_cap": 250000,
+  "proposal_sha256": "276a1d484fb7ab5c1d99d13139043b5674e59b1c34dc48436afba683d4d56769",
+  "maximum_proposals": 16,
+  "sorted_comparison_roundoff": 1e-13,
+  "policies": {
+    "minimum": "Original global corner q minimum, exposure, positive125 and complete-star interface guards",
+    "sorted": "All minimum-policy guards plus every sorted local corner q no worse within roundoff"
+  },
+  "cap_policy": "Skip cap-touching stars as unimplemented paired-operation coverage; no periodicity relaxation",
+  "observer_inputs_accessed_only_after_proposal_freeze": true
+}

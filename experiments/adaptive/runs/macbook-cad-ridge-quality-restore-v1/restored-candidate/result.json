@@ -1,0 +1,118 @@
+{
+  "nodes": 72793,
+  "elements": 49422,
+  "order": 2,
+  "qualified": true,
+  "mesh_file": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-cad-ridge-quality-restore-v1/restored-candidate/mesh.npz",
+  "mesh_sha256": "203970653877c808a7033476ff8017ba05decc594de86a57f260aa7f3dbeb86e",
+  "status": "admitted",
+  "geometry": {
+    "volume": 0.1233717985453109,
+    "relative_volume_error": 1.0467052187213e-06,
+    "q_min_corner": 0.309336140652259,
+    "q_p01_corner": 0.5187439842379808,
+    "minimum_sampled_jacobian": 2.143163906618269e-10,
+    "facet_consistency": {
+      "nodes": 72793,
+      "elements": 49422,
+      "unique_faces": 101922,
+      "interior_faces": 95766,
+      "extracted_boundary_faces": 6156,
+      "same_orientation_shared_faces": 0,
+      "nonmanifold_faces": 0,
+      "duplicate_cells": 0,
+      "duplicate_surface_faces": 0,
+      "provided_boundary_matches_extraction": true,
+      "missing_provided_faces": 0,
+      "extra_provided_faces": 0,
+      "nonpositive_corner_determinants": 0,
+      "minimum_corner_determinant": 3.3460298593320017e-09,
+      "oriented_facet_consistency_passed": true,
+      "conflict_examples": [],
+      "scope": "Oriented corner-face incidence and same-side neighbor diagnostics; necessary consistency, not a certificate of curved geometry or absence of nonlocal intersections"
+    },
+    "oriented_facet_consistency_passed": true,
+    "quadratic_conformity": {
+      "passed": true,
+      "order": 2,
+      "unique_edges": 62646
+    },
+    "exact_straight_reduction_verified": false,
+    "geometry_admitted": true,
+    "sampled_forward_max": 0.0007483444137497537,
+    "sampled_reverse_max": 0.0011962760805716921,
+    "sampled_two_sided_max": 0.0011962760805716921,
+    "outward_forward_max": 0.0007483444137497537,
+    "inward_forward_max": 0.00021511315909289558,
+    "projection_failed": 0,
+    "forward_samples": 75660,
+    "reverse_samples": 53248,
+    "minimum_dihedral_deg_corner": 17.913116956019024,
+    "reverse_tessellation_delta_max": 3.043490874250877e-05,
+    "quadratic_reverse_subdivisions": [
+      8,
+      16
+    ],
+    "projection_method": "newton-box-slsqp-v1",
+    "unbounded_projection_failed": 0,
+    "box_projection_attempts": 0,
+    "box_projection_recovered": 0,
+    "box_projection_witnesses": [],
+    "distance_audit_complete": true,
+    "failed_gates": []
+  },
+  "periodic": {
+    "periodic_pair_counts": [
+      193,
+      193,
+      0
+    ],
+    "periodic_coordinate_errors": [
+      0.0,
+      0.0,
+      0.0
+    ],
+    "periodic_pair_tolerance": 1e-10,
+    "periodic_equivalence_classes": 72407,
+    "periodic_triangles_match": true,
+    "full_facet_check_required": true,
+    "complete_existing_node_classes": true,
+    "unmatched_noncap_contact_nodes": [
+      [
+        [],
+        []
+      ],
+      [
+        [],
+        []
+      ],
+      [
+        [],
+        []
+      ]
+    ],
+    "declared_bounds": [
+      [
+        -0.5,
+        -0.5,
+        -0.5
+      ],
+      [
+        0.5,
+        0.5,
+        0.5
+      ]
+    ],
+    "periodic_gate": "declared-cell-material-cap-and-complete-node-classes-v1"
+  },
+  "quality_quantiles": {
+    "min": 0.309336140652259,
+    "p01": 0.5187439842379808,
+    "p10": 0.604538061882621,
+    "median": 0.731012145956067,
+    "p90": 0.891811773289016,
+    "p99": 0.9636373682137477,
+    "max": 0.9981342867264327
+  },
+  "jacobian_scope": "Positive125 Duffy probes plus element nodes, barycenter and 15-point integration rule"
+}

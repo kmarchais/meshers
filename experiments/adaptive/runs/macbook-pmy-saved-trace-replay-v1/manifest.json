@@ -1,0 +1,61 @@
+{
+  "inputs": {
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/pmy_saved_trace_replay.py": "0400abbeff3c372fd4904fee5ed92fb4badef76a0a459a927f2a8a9e610786a8",
+    "/Users/kmarchais/dev/meshers/.local-work/macbook-pmy-input-roundtrip-v1/pmy_input_roundtrip": "a8158cc18e37bcc3871b560d77db939d71df8b9146540bdf5d2de5a50be53f24",
+    "/Users/kmarchais/dev/meshers/.local-work/macbook-pmy-input-roundtrip-v1/receipt.json": "393ea2b34cb57ce70b1b26e447318a0f5062d4dbc257b8220c6a017f570e6137",
+    "/Users/kmarchais/dev/meshers/.local-work/macbook-pmy-background-native-v3/receipt.json": "5e730ad799433de4a466a7ed812a4005a6744f72d3a5ac4aeff56b59c8ad3907",
+    "/Users/kmarchais/dev/meshers/crates/meshers-core/examples/pmy_input_roundtrip.rs": "312b81b839a3cae73d2472f95c4a98af5bb89a99281ac555a2e9f93eb5d442b1",
+    "/Users/kmarchais/dev/meshers/crates/meshers-core/examples/pmy_background.rs": "682d353659c083cad83c29a7bb7210cd215e02fa4399d8413dca60b3a219a10e",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-pmy-rollback-native-v1/edge/input.json": "5b192ece13fe1405ecd4d722f8de2743f4c8c5c6e2ff33e2202700c28c242f56",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-pmy-rollback-native-v1/edge/native-snap-trace.json": "036c0892df49d098e61a80d7e07363a89487b5738a1141c39b0d3f6e1cf067f4",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-pmy-rollback-native-v1/edge/result.json": "580f6c980bd1f8a11ca546a7a1b71e81815e5d617ffe8fa69887992b3671c5b1",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-pmy-rollback-native-v1/edge/native-output.json": "de0b4a04169b72c90aaa2af17e9a916a0e2d7eaa747f51e7bf24ccf6d259f065",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-pmy-rollback-native-v1/prepare-result.json": "53236a62fd22b817153be7652e7be8d8ab49aa55722ceb2f664096e348650e91",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-pmy-rollback-native-v1/trace-worker.json": "e5bf132942860c81d182c593d3a1d7b0eff8fea60eea694ca5263afb60ba3945",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-pmy-rollback-native-v1/trace-worker.log": "46a7045fbddbc141e9fa4333e6077210971219734fceb798c3c897404979a428",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-pmy-snap-rollback-probe-v1/result.json": "0957b322e94d5c1ce2c0dc84c1eb1e6c70dda4a3cea9b8f9589f91b046a867de",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-pmy-snap-rollback-probe-v1/first-snap.npz": "1e8e40e5c06d9d6f0307e0ae812912c91d626a0ca024a5a745c8f27619db13cf",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-pmy-snap-rollback-probe-v1/rollback-state.npz": "b2308e20e67a5870601fd994d45214c25c7d1cd4f54f89998f53c2f8fc92f468",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/pmy_snap_rollback_probe.py": "4151fd97eb7b3e4be3397f987a1544ee39905d2ae0cb4336502d9e4e64c3ecba",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/microgen_workflow.py": "9f513dfd3e6e5a72a71a54f70c0c2cf7c7a1ebe7256886ee3feaf7d7ad7de161",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/mmg_quality_localization.py": "03ef27a978fcd5101f36745ccaf67309f49ce6ece172fad28b84246d6d457ebc",
+    "/Users/kmarchais/dev/meshers/crates/meshers-core/src/implicit.rs": "7f318529d7096fe873c5a9068665b84ed624253668b14c71f570262778fb4ba5",
+    "/Users/kmarchais/dev/meshers/Cargo.lock": "c5de0b0561f9ab415ff941a24cae24bd7de5069eca73e3dd9b6da63db4273278",
+    "/Users/kmarchais/dev/meshers/Cargo.toml": "83ec559b8d2fdfc92e33da348144fc206708813340407de0a92c8b627e631a4e",
+    "/Users/kmarchais/dev/meshers/crates/meshers-core/Cargo.toml": "12dd2fd9e73646d4c4853ecd94ad209d8a36f333b095262013d52dfc8be55068"
+  },
+  "timeout_s": 180,
+  "memory_bytes": 8589934592,
+  "numerical_threads": {
+    "environment": {
+      "OPENBLAS_NUM_THREADS": "1",
+      "OMP_NUM_THREADS": "1",
+      "MKL_NUM_THREADS": "1",
+      "VECLIB_MAXIMUM_THREADS": "1",
+      "RAYON_NUM_THREADS": "1"
+    },
+    "accelerate_blas_threading": 1,
+    "accelerate_scope": "calling thread"
+  },
+  "parser_binary_receipt": {
+    "inputs": {
+      "crates/meshers-core/examples/pmy_input_roundtrip.rs": "312b81b839a3cae73d2472f95c4a98af5bb89a99281ac555a2e9f93eb5d442b1",
+      "crates/meshers-core/examples/pmy_background.rs": "682d353659c083cad83c29a7bb7210cd215e02fa4399d8413dca60b3a219a10e",
+      "crates/meshers-core/src/implicit.rs": "7f318529d7096fe873c5a9068665b84ed624253668b14c71f570262778fb4ba5",
+      "Cargo.lock": "c5de0b0561f9ab415ff941a24cae24bd7de5069eca73e3dd9b6da63db4273278",
+      "Cargo.toml": "83ec559b8d2fdfc92e33da348144fc206708813340407de0a92c8b627e631a4e",
+      "crates/meshers-core/Cargo.toml": "12dd2fd9e73646d4c4853ecd94ad209d8a36f333b095262013d52dfc8be55068"
+    },
+    "binary_sha256": "a8158cc18e37bcc3871b560d77db939d71df8b9146540bdf5d2de5a50be53f24",
+    "build_job": 779,
+    "build_run": "experiments/adaptive/runs/macbook-pmy-parser-build-v1",
+    "scope": "Exact standalone serde reader; no meshing or runtime package replacement"
+  },
+  "native_binary_receipt_sha256": "5e730ad799433de4a466a7ed812a4005a6744f72d3a5ac4aeff56b59c8ad3907",
+  "identical_typed_input_declaration": true,
+  "reader": "Same serde_json::from_reader(BufReader::new(File::open(input))) typed path",
+  "comparison": "u64 to_bits() integers from native parser versus saved trace coordinates parsed by Python",
+  "no_remeshing": true,
+  "no_old_result_changes": true,
+  "floating_tolerance_not_used_for_restoration": true
+}

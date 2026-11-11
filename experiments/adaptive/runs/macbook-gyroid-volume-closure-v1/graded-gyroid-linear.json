@@ -1,0 +1,131 @@
+{
+  "case": "graded-gyroid-linear",
+  "gauss128": {
+    "volume": 0.3565688696896699,
+    "order": 128,
+    "line_axis": "x",
+    "reversed_outer_coordinate": false,
+    "line_fraction_evaluations": 1572864,
+    "outer_nodes": 1536,
+    "outer_panels": 12
+  },
+  "seconds": 0.058218374993884936,
+  "gauss64_volume": 0.3565688696896827,
+  "adaptive_volume": 0.3565688697282851,
+  "difference_128_64": 1.2823075934420558e-14,
+  "difference_128_adaptive": 3.861522213099988e-11,
+  "empirical_observed_scale": 3.861522213099988e-11,
+  "score_comparison": {
+    "frozen_reference_volume": 0.35660862922668457,
+    "frozen_scramble_spread": 0.000293731689453125,
+    "primary_gauss64_estimate": 0.3565688696896827,
+    "rows": [
+      {
+        "stage": "baseline",
+        "source": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-native-face-fit-nine-v1/graded-gyroid-linear-repeat-0-baseline/result.json",
+        "source_sha256": "b2e2d8690c8a3a15307affefbd47e8854bf63e0d86808858dee6cd981944d589",
+        "mesh_sha256": "598fd9c1c9c3be69d136cb27e96b1502234432de5d63ed92018f2cedb6e0ed0c",
+        "volume": 0.3565699930441374,
+        "old_relative_volume_error": -0.00010834337528786708,
+        "old_absolute_relative_volume_error": 0.00010834337528786708,
+        "old_absolute_volume_error": 3.8636182547180375e-05,
+        "gauss64_absolute_volume_error": 1.1233544546795926e-06,
+        "volume_float_ulp": 5.551115123125783e-17,
+        "gauss128_relative_volume_error": 3.1504558108963465e-06,
+        "gauss128_absolute_volume_error": 1.1233544675026685e-06
+      },
+      {
+        "stage": "native_fit",
+        "source": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-native-face-fit-nine-v1/graded-gyroid-linear-repeat-0-fit/result.json",
+        "source_sha256": "754a9c28380e20a31c1af3f789fe4d142396ccddf547673bd8e7c075d74b5c23",
+        "mesh_sha256": "1f2988372797268c2950ef00190704ed74d6423367e906399744d7fc2174e897",
+        "volume": 0.3565701666453907,
+        "old_relative_volume_error": -0.00010785656358702767,
+        "old_absolute_relative_volume_error": 0.00010785656358702767,
+        "old_absolute_volume_error": 3.846258129386326e-05,
+        "gauss64_absolute_volume_error": 1.2969557079967053e-06,
+        "volume_float_ulp": 5.551115123125783e-17,
+        "gauss128_relative_volume_error": 3.6373217942031744e-06,
+        "gauss128_absolute_volume_error": 1.2969557208197813e-06
+      },
+      {
+        "stage": "global_correction",
+        "source": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-volume-bias-seven-v1/graded-gyroid-linear/result.json",
+        "source_sha256": "e3967fbef6bed274db42b1829bde5f375cfc8aee21829b366be31748337225c0",
+        "mesh_sha256": "0cbe989b79ab8cb64739f809f97d85540eb0f144f3f86b0f93ca706e313f5d79",
+        "volume": 0.35656886953869843,
+        "old_relative_volume_error": -0.00011149390319675767,
+        "old_absolute_relative_volume_error": 0.00011149390319675767,
+        "old_absolute_volume_error": 3.97596879861406e-05,
+        "gauss64_absolute_volume_error": 1.5098428063353708e-10,
+        "volume_float_ulp": 5.551115123125783e-17,
+        "gauss128_relative_volume_error": -4.234005368530802e-10,
+        "gauss128_absolute_volume_error": 1.5097145755760266e-10
+      },
+      {
+        "stage": "signed_envelope",
+        "source": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-volume-signed-envelope-six-v1/graded-gyroid-linear/result.json",
+        "source_sha256": "ca9b8cea1db15d269028cd45b799b7350bcafa3a0f4015108ab9c3ece4483abf",
+        "mesh_sha256": "e1364c8c267c8c2304e7fb8207b3cbe02651e19c1867d55138d4afd6c39fdbe4",
+        "volume": 0.35656999257011274,
+        "old_relative_volume_error": -0.00010834470454523792,
+        "old_absolute_relative_volume_error": 0.00010834470454523792,
+        "old_absolute_volume_error": 3.863665657183324e-05,
+        "gauss64_absolute_volume_error": 1.1228804300267292e-06,
+        "volume_float_ulp": 5.551115123125783e-17,
+        "gauss128_relative_volume_error": 3.149126405199709e-06,
+        "gauss128_absolute_volume_error": 1.1228804428498051e-06
+      }
+    ],
+    "comparisons": [
+      {
+        "before": "baseline",
+        "after": "native_fit",
+        "old_absolute_error_improvement": 1.7360125331711274e-07,
+        "gauss64_absolute_error_improvement": -1.7360125331711274e-07,
+        "observed_integration_discrepancy": 3.861522213099988e-11,
+        "twice_discrepancy_sensitivity": 7.723044426199976e-11,
+        "absolute_improvement_over_twice_discrepancy": 2247.834451504392,
+        "sign_agrees_between_quadratures": true,
+        "exceeds_observed_sensitivity_by_10x": true,
+        "exceeds_reported_heuristic_sensitivity_by_10x": true,
+        "gauss128_absolute_error_improvement": -1.7360125331711274e-07
+      },
+      {
+        "before": "native_fit",
+        "after": "global_correction",
+        "old_absolute_error_improvement": -1.2971066922773389e-06,
+        "gauss64_absolute_error_improvement": 1.2968047237160718e-06,
+        "observed_integration_discrepancy": 3.861522213099988e-11,
+        "twice_discrepancy_sensitivity": 7.723044426199976e-11,
+        "absolute_improvement_over_twice_discrepancy": 16791.367209579807,
+        "sign_agrees_between_quadratures": true,
+        "exceeds_observed_sensitivity_by_10x": true,
+        "exceeds_reported_heuristic_sensitivity_by_10x": true,
+        "gauss128_absolute_error_improvement": 1.2968047493622237e-06
+      },
+      {
+        "before": "native_fit",
+        "after": "signed_envelope",
+        "old_absolute_error_improvement": -1.7407527796997613e-07,
+        "gauss64_absolute_error_improvement": 1.7407527796997613e-07,
+        "observed_integration_discrepancy": 3.861522213099988e-11,
+        "twice_discrepancy_sensitivity": 7.723044426199976e-11,
+        "absolute_improvement_over_twice_discrepancy": 2253.972246740365,
+        "sign_agrees_between_quadratures": true,
+        "exceeds_observed_sensitivity_by_10x": true,
+        "exceeds_reported_heuristic_sensitivity_by_10x": true,
+        "gauss128_absolute_error_improvement": 1.7407527796997613e-07
+      }
+    ],
+    "facewise": {
+      "available": false,
+      "reason": "This mode was run only for spinodoid and Schwarz P/D, not these four Gyroid cases."
+    },
+    "saved_mesh_volume_repeat_discrepancy": 0.0,
+    "mesh_volume_numerics": "Saved Tet10 quadrature volumes are reused. Repetition discrepancy and float ulp are recorded separately; neither certifies quadrature roundoff. No new mesh-volume numerical audit is performed.",
+    "ranking_scope": "Absolute volume-error improvements are compared with empirical integration discrepancy and reported heuristics. Neither is a rigorous error bound. Frozen scores and admission remain unchanged.",
+    "reference_kind": "Gauss128 closure estimate; no reference promotion",
+    "gauss128_reference_estimate": 0.3565688696896699
+  }
+}

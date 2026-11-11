@@ -1,0 +1,33 @@
+Traceback (most recent call last):
+  File "/Users/kmarchais/dev/meshers/experiments/adaptive/pmy_rollback_native_control.py", line 207, in <module>
+    main()
+  File "/Users/kmarchais/dev/meshers/experiments/adaptive/pmy_rollback_native_control.py", line 156, in main
+    return worker(args)
+           ^^^^^^^^^^^^
+  File "/Users/kmarchais/dev/meshers/experiments/adaptive/pmy_rollback_native_control.py", line 87, in worker
+    return trace_comparison(a)
+           ^^^^^^^^^^^^^^^^^^^
+  File "/Users/kmarchais/dev/meshers/experiments/adaptive/pmy_rollback_native_control.py", line 62, in trace_comparison
+    np.testing.assert_array_equal(np.asarray(state["points"])[restored], points[restored])
+  File "/Users/kmarchais/dev/meshers/.local-work/macbook-runtime/venv/lib/python3.12/site-packages/numpy/testing/_private/utils.py", line 1128, in assert_array_equal
+    assert_array_compare(operator.__eq__, actual, desired, err_msg=err_msg,
+  File "/Users/kmarchais/dev/meshers/.local-work/macbook-runtime/venv/lib/python3.12/site-packages/numpy/testing/_private/utils.py", line 988, in assert_array_compare
+    raise AssertionError(msg)
+AssertionError: 
+Arrays are not equal
+
+Mismatched elements: 44 / 1404 (3.13%)
+First 5 mismatches are at indices:
+ [236, 0]: 0.19791666666666663 (ACTUAL), 0.19791666666666666 (DESIRED)
+ [237, 0]: -0.19791666666666663 (ACTUAL), -0.19791666666666666 (DESIRED)
+ [238, 0]: -0.10416666666666669 (ACTUAL), -0.10416666666666667 (DESIRED)
+ [239, 0]: 0.10416666666666669 (ACTUAL), 0.10416666666666667 (DESIRED)
+ [246, 1]: -0.19791666666666663 (ACTUAL), -0.19791666666666666 (DESIRED)
+Max absolute difference among violations: 2.77555756e-17
+Max relative difference among violations: 1.40238698e-16
+ ACTUAL: array([[ 0.1875  , -0.3125  , -0.5     ],
+       [ 0.3125  , -0.3125  , -0.5     ],
+       [-0.3125  , -0.1875  , -0.5     ],...
+ DESIRED: array([[ 0.1875  , -0.3125  , -0.5     ],
+       [ 0.3125  , -0.3125  , -0.5     ],
+       [-0.3125  , -0.1875  , -0.5     ],...
