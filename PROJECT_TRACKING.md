@@ -1,5 +1,31 @@
 # Meshers project tracking
 
+## Gyroid flagship and PR scope correction, 11 November 2026
+
+Kevin selected the Gyroid unit cell as the editorial flagship. The article,
+LinkedIn image and interactive Three.js viewer now use the actual frozen
+count-comparable Gyroid Tet4 meshes, not the three basic-solid comparisons.
+Five measured pairs reproduce 10,832 native tets and 12,250 actual-default
+Microgen+MMG tets; median generation is 0.093008 and 1.780421 seconds.
+All six quality statistics are calculated from the original Float64 arrays,
+with NPZ hashes and existing quantiles checked. Mean q is 0.7494647454 native
+versus 0.6659299176 actual. Native improves min/median/mean/p10/p90; actual
+retains a slightly higher maximum. Both match periodic nodes and cap triangles;
+actual has four oriented-facet conflicts. Both fail the 0.002 boundary target,
+so neither is promoted to an admitted comparison or qualified speedup.
+
+The viewer preserves original connectivity and supports two actual models,
+element cutaway, edges, quality coloring and periodic-cap coloring. Desktop,
+mobile and controls were checked in the browser. Jobs 871–873 pass the updated
+API example and production builds. The API example also returns the recorded
+12,250 and 10,832 counts. Publication and LinkedIn posting remain unperformed.
+
+Meshers PR #6 is open from `codex/microgen-release-scope`. At Kevin's request,
+commit `009f666` removes all audit, Markdown and changelog differences from the
+PR; editorial assets remain confined to the website branch. Audit records are
+preserved outside the PR in `.local-work/release-scope-audit-preserved` and its
+prior commit history. No meshing source, gates or historical evidence changed.
+
 ## MMG backend and launch drafts, 11 November 2026
 
 Microgen integration commit `2a534cd` adds `backend="mmg"` to Shape, Cartesian
