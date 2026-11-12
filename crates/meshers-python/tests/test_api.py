@@ -10,6 +10,38 @@ import pytest
 generate_callback = partial(meshers.generate, compile=False)
 
 
+@pytest.mark.parametrize("compiled", [True, False])
+def test_adaptive_schwarz_d_corner_distance_is_finite(compiled):
+    def field(x, y, z):
+        x, y, z = [2 * np.pi * v for v in (x, y, z)]
+        return (
+            np.sin(x) * np.sin(y) * np.sin(z)
+            + np.sin(x) * np.cos(y) * np.cos(z)
+            + np.cos(x) * np.sin(y) * np.cos(z)
+            + np.cos(x) * np.cos(y) * np.sin(z)
+        )
+
+    result = meshers.generate(
+        field,
+        bounds=(-0.5, 0.5) * 3,
+        cells=12,
+        periodic=(True,) * 3,
+        adapt=True,
+        adapt_iterations=1,
+        adapt_tolerance=0.1,
+        min_length=0.01,
+        max_length=0.1,
+        geometry_tolerance=0.02,
+        minimum_quality=0.1,
+        optimize_passes=1,
+        compile=compiled,
+    )
+    assert np.isfinite(result.diagnostics["sampled_surface_error"])
+    assert result.diagnostics["sampled_surface_error"] < 0.02
+    assert result.diagnostics["volume"] == pytest.approx(0.5, abs=0.001)
+    assert all(len(pairs) for pairs in result.periodic_pairs)
+
+
 def sphere(x, y, z):
     return np.sqrt((x - 0.47) ** 2 + (y - 0.51) ** 2 + (z - 0.49) ** 2) - 0.29
 

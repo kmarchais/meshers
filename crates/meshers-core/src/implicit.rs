@@ -194,24 +194,37 @@ impl<F: ScalarField> Context<'_, F> {
             Region::Band { lower, upper } => (upper - lower) / 2. / self.scale,
         }
     }
-    /// First-order distance to the wall, moving only along unlocked axes.
+    /// First-order wall distance, with roundoff handling at fully locked box corners.
     fn distance_in(&self, p: Point, locked: [bool; 3]) -> f64 {
         let residual = self.residual(p, self.threshold()).abs();
         if residual == 0. {
             return 0.;
         }
-        let mut gradient = self.gradient(p);
+        wall_distance(residual, self.gradient(p), locked)
+    }
+}
+
+fn wall_distance(residual: f64, mut gradient: Point, locked: [bool; 3]) -> f64 {
+    let residual = residual.abs();
+    if residual == 0. {
+        return 0.;
+    }
+    // Values are normalized by the preflight field amplitude. At a fixed box
+    // corner, roundoff at a true wall must not become an infinite 1/0 distance.
+    // Retain the full-gradient estimate only for roundoff-sized corner residuals;
+    // ordinary misses and genuine zero gradients still reject.
+    if locked != [true; 3] || residual > 64. * f64::EPSILON {
         for a in 0..3 {
             if locked[a] {
                 gradient[a] = 0.;
             }
         }
-        let gradient = norm(gradient);
-        if gradient > 0. {
-            residual / gradient
-        } else {
-            f64::INFINITY
-        }
+    }
+    let n = norm(gradient);
+    if n > 0. && n.is_finite() {
+        residual / n
+    } else {
+        f64::INFINITY
     }
 }
 impl<F: ScalarField> Geometry for Context<'_, F> {
@@ -1836,22 +1849,9 @@ fn distance_batch<F: ScalarField>(
     let values = g.values(&points);
     let gradients = g.gradients(&points);
     let mut error = 0_f64;
-    for ((v, mut grad), (_, locked)) in values.into_iter().zip(gradients).zip(samples) {
+    for ((v, grad), (_, locked)) in values.into_iter().zip(gradients).zip(samples) {
         let residual = if g.band() { v.abs() - g.threshold() } else { v };
-        for a in 0..3 {
-            if locked[a] {
-                grad[a] = 0.;
-            }
-        }
-        let n = norm(grad);
-        let distance = if residual == 0. {
-            0.
-        } else if n > 0. {
-            residual.abs() / n
-        } else {
-            f64::INFINITY
-        };
-        error = error.max(distance);
+        error = error.max(wall_distance(residual, grad, *locked));
     }
     g.check()?;
     Ok(error)
@@ -1860,6 +1860,22 @@ fn distance_batch<F: ScalarField>(
 #[cfg(test)]
 mod topology_tests {
     use super::nonmanifold_vertices;
+
+    #[test]
+    fn wall_distance_retains_real_misses_and_zero_gradients() {
+        use super::wall_distance;
+
+        let eps = f64::EPSILON;
+        assert_eq!(wall_distance(0., [0.; 3], [true; 3]), 0.);
+        assert_eq!(wall_distance(-eps, [1., 0., 0.], [true; 3]), eps);
+        assert!(wall_distance(1e-12, [1.; 3], [true; 3]).is_infinite());
+        assert!(wall_distance(eps, [0.; 3], [true; 3]).is_infinite());
+        assert!(wall_distance(eps, [1., 0., 0.], [true, false, false]).is_infinite());
+        assert!(wall_distance(eps, [1e-20, 0., 0.], [true; 3]) > 0.002);
+        assert!(wall_distance(eps, [f64::MAX; 3], [true; 3]).is_infinite());
+        assert!(wall_distance(0.02, [f64::MAX; 3], [false; 3]).is_infinite());
+        assert_eq!(wall_distance(0.02, [1., 2., 3.], [true, false, true]), 0.01);
+    }
 
     #[cfg(feature = "experimental-quads")]
     struct RollbackTest {
