@@ -818,6 +818,7 @@ fn _meshers(m: &Bound<'_, PyModule>) -> PyResult<()> {
     m.add("PERIODIC_AFFINE_REGIONS", true)?;
     m.add("POLYHEDRAL_REGIONS", true)?;
     m.add("RETAINED_INTERSECTIONS", true)?;
+    m.add("SDF_INTERSECTIONS", true)?;
     m.add("ADAPTIVE_RETAINED_INTERSECTIONS", true)?;
     m.add(
         "MAX_CONSTRAINTS",

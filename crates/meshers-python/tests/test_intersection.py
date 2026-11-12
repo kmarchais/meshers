@@ -373,3 +373,188 @@ def test_mapped_surface_tolerance_tracks_physical_scale(scale):
     assert mesh.diagnostics["sampled_surface_error"] >= radial_error * 0.99
     with pytest.raises(meshers.MeshingError, match="sampled surface error"):
         meshers.generate_intersection(constraints(), geometry_tolerance=1e-6 * scale, **args)
+
+
+def _cylinder_sdf(x, y, z):
+    radial = np.sqrt(y * y + z * z) - 0.23
+    axial = np.abs(x) - 0.3
+    return np.sqrt(np.maximum(radial, 0) ** 2 + np.maximum(axial, 0) ** 2) + np.minimum(
+        np.maximum(radial, axial), 0
+    )
+
+
+def _box_sdf(x, y, z, scale=1.0):
+    a, b, c = (scale * (np.abs(v) - 0.25) for v in (x, y, z))
+    return np.sqrt(
+        np.maximum(a, 0) ** 2 + np.maximum(b, 0) ** 2 + np.maximum(c, 0) ** 2
+    ) + np.minimum(np.maximum(a, np.maximum(b, c)), 0)
+
+
+def test_sdf_values_and_zero_sublevel_metadata_are_preserved():
+    field = meshers.compile_field(_cylinder_sdf)
+    points = np.random.default_rng(20261112).uniform(-0.5, 0.5, (4096, 3))
+    before = field.values(points)
+    branches = field._intersection_fields()
+    assert branches is not None
+    assert len(branches) == 2
+    np.testing.assert_array_equal(before, field.values(points))
+    np.testing.assert_allclose(before, _cylinder_sdf(*points.T), rtol=1e-14, atol=1e-14)
+    np.testing.assert_array_equal(
+        before <= 0, np.maximum.reduce([f.values(points) for f in branches]) <= 0
+    )
+    assert field._halfspaces is None
+    assert field._polyhedral_regions is None
+
+
+@pytest.mark.parametrize(
+    "mode",
+    [
+        "extra-positive",
+        "extra-negative",
+        "missing",
+        "unclamped",
+        "other-root",
+        "inside-minimum",
+        "whole-offset",
+    ],
+)
+def test_altered_sdf_graphs_keep_the_scalar_path(mode):
+    def field(x, y, z):
+        a, b = np.sqrt(y * y + z * z) - 0.23, np.abs(x) - 0.3
+        square = np.maximum(a, 0) ** 2
+        if mode != "missing":
+            square += b * b if mode == "unclamped" else np.maximum(b, 0) ** 2
+        if mode in {"extra-positive", "extra-negative"}:
+            square += 0.0001 if mode == "extra-positive" else -0.0001
+        if mode == "other-root":
+            square += np.maximum(z, 0) ** 2
+        inside = np.minimum(a, b) if mode == "inside-minimum" else np.maximum(a, b)
+        value = np.sqrt(square) + np.minimum(inside, 0)
+        return value + 0.01 if mode == "whole-offset" else value
+
+    assert meshers.compile_field(field)._intersection_fields() is None
+
+
+@pytest.mark.parametrize("gradient", [False, lambda x, y, z: (0 * x, 0 * y, 0 * z)])
+def test_sdf_explicit_gradient_policy_does_not_retain_branches(gradient):
+    assert meshers.compile_field(_cylinder_sdf, gradient=gradient)._intersection_fields() is None
+
+
+@pytest.mark.parametrize("angle", [0.0, 0.37])
+def test_adaptive_sdf_cylinder_preserves_the_rim_and_pose(angle):
+    cosine, sine = np.cos(angle), np.sin(angle)
+    center = np.array([0.03, -0.02, 0.01]) if angle else np.zeros(3)
+
+    def field(x, y, z):
+        x, y, z = x - center[0], y - center[1], z - center[2]
+        return _cylinder_sdf(cosine * x + sine * y, -sine * x + cosine * y, z)
+
+    mesh = meshers.generate(
+        field,
+        bounds=(-0.5, 0.5) * 3,
+        cells=24,
+        adapt=True,
+        min_length=0.002,
+        max_length=0.1,
+        gradation=0.6,
+        adapt_tolerance=0.0018,
+        adapt_iterations=4,
+        geometry_tolerance=0.002,
+        minimum_quality=0.1,
+        optimize_passes=1,
+        max_tetrahedra=250000,
+    )
+    assert mesh.diagnostics["retained_constraints"] == 3
+    assert mesh.diagnostics["minimum_mmg_quality"] >= 0.1
+    corners = mesh.points[mesh.tetrahedra]
+    determinants = np.linalg.det(corners[:, 1:] - corners[:, :1])
+    assert determinants.min() > 0
+    volume = determinants.sum() / 6
+    assert abs(volume / (np.pi * 0.23**2 * 0.6) - 1) < 0.01
+    theta = np.arange(512) * 2 * np.pi / 512
+    local = np.concatenate([
+        np.column_stack([np.full(512, end), 0.23 * np.cos(theta), 0.23 * np.sin(theta)])
+        for end in (-0.3, 0.3)
+    ])
+    rim = (
+        np.column_stack([
+            cosine * local[:, 0] - sine * local[:, 1],
+            sine * local[:, 0] + cosine * local[:, 1],
+            local[:, 2],
+        ])
+        + center
+    )
+    surface = pv.PolyData(
+        mesh.points, np.column_stack([np.full(len(mesh.surface), 3), mesh.surface])
+    )
+    _, closest = surface.find_closest_cell(rim, return_closest_point=True)
+    assert np.linalg.norm(rim - closest, axis=1).max() <= 0.002
+
+
+@pytest.mark.parametrize("adaptive", [False, True])
+def test_sdf_original_parent_overflow_is_not_bypassed(adaptive):
+    with pytest.raises((meshers.MeshingError, ValueError), match="nonfinite"):
+        meshers.generate(
+            lambda x, y, z: _box_sdf(x, y, z, 1e200),
+            bounds=(-0.5, 0.5) * 3,
+            cells=8,
+            adapt=adaptive,
+            geometry_tolerance=0.1,
+            minimum_quality=0.1,
+            optimize_passes=1,
+        )
+
+
+def test_sdf_underflow_does_not_enable_a_different_zero_set():
+    from meshers.intersection import _retained_constraints
+
+    field = meshers.compile_field(lambda x, y, z: _box_sdf(x, y, z, 1e-200))
+    assert _retained_constraints(field, np.array((-0.5, 0.5) * 3)) is None
+
+
+@pytest.mark.parametrize("band", [None, (-0.05, 0.05)])
+def test_nonadaptive_sdf_and_bands_keep_the_original_scalar_path(band):
+    mesh = meshers.generate(
+        _box_sdf,
+        bounds=(-0.5, 0.5) * 3,
+        cells=8,
+        band=band,
+        geometry_tolerance=0.1,
+        minimum_quality=0.1,
+        optimize_passes=1,
+    )
+    assert mesh.diagnostics.get("retained_constraints", 0) == 0
+    assert len(mesh.tetrahedra) > 0
+
+
+@pytest.mark.parametrize(
+    ("nodes", "output"),
+    [([("input", [3], 0.0)], [0]), ([("constant", [], 1.0), ("add", [0, 2], 0.0)], [1])],
+)
+def test_sdf_recognition_still_validates_raw_graph_indices(nodes, output):
+    with pytest.raises(ValueError, match="expression"):
+        meshers._meshers._compile_expression(nodes, output, retain_sdf=True)
+
+
+def test_localized_underflow_cannot_enable_a_different_zero_set():
+    def field(x, y, z):
+        scale = np.where(np.abs(x - 0.4) < 0.03, 1e-200, 1.0)
+        return _box_sdf(x, y, z, scale)
+
+    compiled = meshers.compile_field(field)
+    assert compiled.values(np.array([[0.4, 0.0, 0.0]]))[0] == 0
+    assert compiled._intersection_fields() is None
+
+
+@pytest.mark.parametrize("kind", ["uniform-scale", "sheared-radius", "repeated-radius-basis"])
+def test_nonunit_sdf_branches_keep_the_scalar_path(kind):
+    def field(x, y, z):
+        if kind == "uniform-scale":
+            return _box_sdf(x, y, z, 2.0)
+        square = y * y + ((y + z) ** 2 if kind == "sheared-radius" else y * y + z * z)
+        radial, axial = np.sqrt(square) - 0.23, np.abs(x) - 0.3
+        return np.sqrt(np.maximum(radial, 0) ** 2 + np.maximum(axial, 0) ** 2) + np.minimum(
+            np.maximum(radial, axial), 0
+        )
+
+    assert meshers.compile_field(field)._intersection_fields() is None

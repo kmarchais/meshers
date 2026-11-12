@@ -362,18 +362,22 @@ class _Graph:
 
 
 @lru_cache(maxsize=32)
-def _compile_cached(nodes, outputs, constraints=()):
+def _compile_cached(nodes, outputs, constraints=(), *, retain_sdf=False):
     if constraints:
         return _meshers._compile_expression(nodes, outputs, constraints)
+    if retain_sdf:
+        return _meshers._compile_expression(nodes, outputs, retain_sdf=True)
     return _meshers._compile_expression(nodes, outputs)
 
 
 def _compile_with_intersection(graph, value, outputs):
     original = graph.encoded()
-    if graph.nodes[value.index][0] != "maximum" or not getattr(
-        _meshers, "RETAINED_INTERSECTIONS", False
-    ):
+    if not getattr(_meshers, "RETAINED_INTERSECTIONS", False):
         return _compile_cached(original, outputs)
+    if graph.nodes[value.index][0] != "maximum":
+        return _compile_cached(
+            original, outputs, retain_sdf=getattr(_meshers, "SDF_INTERSECTIONS", False)
+        )
     roots, pending, seen = [], [value.index], set()
     while pending:
         index = pending.pop()
@@ -424,7 +428,10 @@ def compile_field(
         Gradients at abs(0) are zero. Exact min/max ties average the operand
         derivatives. This is a subgradient choice at a true crease, not a
         branch constraint. Eligible meshing modes can additionally retain
-        outer-maximum branches. Supply a gradient callable for another policy.
+        outer-maximum branches. Adaptive Tet4 meshing can also retain the
+        zero-sublevel intersection of a standard clamped-norm signed-distance
+        graph with unit-distance affine/radial branches, after numerical checks.
+        Supply a gradient callable for another policy.
     """
     if backend not in {"rust", "jit"}:
         raise ValueError("only the embedded Rust compiler is supported")

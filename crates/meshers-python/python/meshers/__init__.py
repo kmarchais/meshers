@@ -340,6 +340,8 @@ def generate(  # ruff: ignore[complex-structure, too-many-branches]
         threads != 1,
         interior_refine_nodes != 0,
         gradient_override,
+        # Nonadaptive SDF retention would bypass the original parent's range checks.
+        not adapt and getattr(field, "_sdf_intersection", False),
         not 0 <= optimize_passes <= 20,
         max_tetrahedra <= 0,
         not all(
@@ -353,7 +355,7 @@ def generate(  # ruff: ignore[complex-structure, too-many-branches]
         and (not adapt or getattr(_meshers, "ADAPTIVE_RETAINED_INTERSECTIONS", False))
         and not any(scalar_mode)
     ):
-        planes = _retained_constraints(field)
+        planes = _retained_constraints(field, b)
     preparation_seconds = time.perf_counter() - preparation_start
     if planes is not None and not adapt:
         mesh = generate_intersection(

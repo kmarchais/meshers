@@ -44,6 +44,8 @@ pub(crate) struct CompiledField {
     _halfspaces: Option<Vec<[f64; 4]>>,
     #[pyo3(get)]
     _polyhedral_regions: Option<polyhedral::Regions>,
+    #[pyo3(get)]
+    _sdf_intersection: bool,
     constraint_data: Option<(Vec<Node>, Vec<Vec<usize>>)>,
     constraint_cache: Mutex<Option<Vec<Py<CompiledField>>>>,
     _memory: CodeMemory,
@@ -58,7 +60,7 @@ pub(crate) fn evaluate(kernel: Kernel, p: [f64; 3]) -> Result<[f64; 4], ()> {
 }
 #[pymethods]
 impl CompiledField {
-    /// Return cached evaluators for the validated outer maximum's branches.
+    /// Return cached evaluators for validated zero-sublevel intersection branches.
     fn _intersection_fields(&self, py: Python<'_>) -> PyResult<Option<Vec<Py<CompiledField>>>> {
         let Some((nodes, outputs)) = &self.constraint_data else {
             return Ok(None);
@@ -73,7 +75,7 @@ impl CompiledField {
                 .map(|outputs| {
                     Py::new(
                         py,
-                        _compile_expression(nodes.clone(), outputs.clone(), None)?,
+                        _compile_expression(nodes.clone(), outputs.clone(), None, false)?,
                     )
                 })
                 .collect::<PyResult<Vec<_>>>()?;
@@ -290,11 +292,143 @@ fn emit_kernel(
     Ok(id)
 }
 
-#[pyfunction(signature = (nodes, outputs, constraint_outputs=None))]
+/// Recognize exactly sqrt(sum(max(f_i, 0)^2)) + min(max(f_i), 0).
+/// Restrict branches to unit-distance convex affine or rigid radial forms;
+/// arbitrary scaling/nonlinear branches keep scalar behavior. In real arithmetic
+/// the zero sublevel set is f_i <= 0. Scalar/gradient kernels remain unchanged.
+fn sdf_intersection_roots(nodes: &[Node], output: usize) -> Option<Vec<usize>> {
+    fn leaves(nodes: &[Node], root: usize, operation: &str) -> Vec<usize> {
+        let mut pending = vec![root];
+        let mut roots = Vec::new();
+        let mut seen = vec![false; nodes.len()];
+        while let Some(index) = pending.pop() {
+            if seen[index] {
+                continue;
+            }
+            seen[index] = true;
+            if nodes[index].0 == operation {
+                pending.extend(nodes[index].1.iter().rev());
+            } else {
+                roots.push(index);
+            }
+        }
+        roots
+    }
+    fn squared_base(nodes: &[Node], index: usize) -> Option<usize> {
+        let (op, args, _) = &nodes[index];
+        match op.as_str() {
+            "pow" if nodes[args[1]].0 == "constant" && nodes[args[1]].2 == 2. => Some(args[0]),
+            "mul" if args[0] == args[1] => Some(args[0]),
+            _ => None,
+        }
+    }
+    fn unit_branch(nodes: &[Node], root: usize) -> bool {
+        let unit = |plane: &[f64; 4]| {
+            let squared: f64 = plane[..3].iter().map(|v| v * v).sum();
+            (squared - 1.).abs() <= 1e-12
+        };
+        if let Some(forms) = polyhedral::convex_forms(nodes, root) {
+            return !forms.is_empty() && forms.iter().all(unit);
+        }
+        let (op, args, _) = &nodes[root];
+        if op != "sub"
+            || nodes[args[1]].0 != "constant"
+            || nodes[args[1]].2 <= 0.
+            || nodes[args[0]].0 != "sqrt"
+        {
+            return false;
+        }
+        // A radial distance in a rigid affine frame. Count every squared
+        // term: deduplicating a repeated basis vector would hide a scale.
+        let mut pending = vec![nodes[args[0]].1[0]];
+        let mut forms = Vec::<[f64; 4]>::new();
+        while let Some(index) = pending.pop() {
+            if nodes[index].0 == "add" {
+                pending.extend(&nodes[index].1);
+            } else {
+                let Some(base) = squared_base(nodes, index) else {
+                    return false;
+                };
+                let Some(affine) = polyhedral::convex_forms(nodes, base) else {
+                    return false;
+                };
+                if affine.len() != 1 || !unit(&affine[0]) {
+                    return false;
+                }
+                if forms.iter().any(|p| {
+                    (0..3).map(|a| p[a] * affine[0][a]).sum::<f64>().abs() > 1e-12
+                }) {
+                    return false;
+                }
+                forms.push(affine[0]);
+            }
+            if pending.len() + forms.len() > 3 {
+                return false;
+            }
+        }
+        (2..=3).contains(&forms.len())
+    }
+    let zero = |index: usize| nodes[index].0 == "constant" && nodes[index].2 == 0.;
+    let unclamp = |index: usize, operation: &str| {
+        let (op, args, _) = &nodes[index];
+        if op != operation {
+            return None;
+        }
+        if zero(args[0]) {
+            Some(args[1])
+        } else if zero(args[1]) {
+            Some(args[0])
+        } else {
+            None
+        }
+    };
+    let (op, args, _) = &nodes[output];
+    if op != "add" {
+        return None;
+    }
+    for (outside, inside) in [(args[0], args[1]), (args[1], args[0])] {
+        if nodes[outside].0 != "sqrt" {
+            continue;
+        }
+        let Some(inner) = unclamp(inside, "minimum") else {
+            continue;
+        };
+        let roots = leaves(nodes, inner, "maximum");
+        if !(2..=meshers_core::implicit::intersection::MAX_CONSTRAINTS).contains(&roots.len())
+            || roots.iter().any(|&i| !unit_branch(nodes, i))
+        {
+            continue;
+        }
+        let mut squared = Vec::new();
+        let mut complete = true;
+        for term in leaves(nodes, nodes[outside].1[0], "add") {
+            let Some(base) = squared_base(nodes, term) else {
+                complete = false;
+                break;
+            };
+            let Some(root) = unclamp(base, "maximum") else {
+                complete = false;
+                break;
+            };
+            squared.push(root);
+        }
+        squared.sort_unstable();
+        squared.dedup();
+        let mut expected = roots.clone();
+        expected.sort_unstable();
+        if complete && squared == expected {
+            return Some(roots);
+        }
+    }
+    None
+}
+
+#[pyfunction(signature = (nodes, outputs, constraint_outputs=None, *, retain_sdf=false))]
 pub(crate) fn _compile_expression(
     nodes: Vec<Node>,
     outputs: Vec<usize>,
     constraint_outputs: Option<Vec<Vec<usize>>>,
+    retain_sdf: bool,
 ) -> PyResult<CompiledField> {
     if nodes.is_empty()
         || nodes.len() > 20000
@@ -353,6 +487,14 @@ pub(crate) fn _compile_expression(
             ));
         }
     }
+    let sdf_constraints = if retain_sdf && constraint_outputs.is_none() {
+        sdf_intersection_roots(&nodes, outputs[0])
+            .map(|roots| roots.into_iter().map(|root| vec![root]).collect())
+    } else {
+        None
+    };
+    let sdf_intersection = sdf_constraints.is_some();
+    let constraint_outputs = constraint_outputs.or(sdf_constraints);
     let err =
         |e: &dyn std::fmt::Display| PyRuntimeError::new_err(format!("embedded compiler: {e}"));
     let mut builder = JITBuilder::with_flags(&[("opt_level", "speed")], default_libcall_names())
@@ -420,6 +562,7 @@ pub(crate) fn _compile_expression(
         node_count: nodes.len(),
         _halfspaces: halfspaces,
         _polyhedral_regions: regions,
+        _sdf_intersection: sdf_intersection && constraint_outputs.is_some(),
         constraint_data: constraint_outputs.map(|outputs| (nodes, outputs)),
         constraint_cache: Mutex::new(None),
         _memory: memory,

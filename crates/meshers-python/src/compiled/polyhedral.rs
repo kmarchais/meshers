@@ -91,8 +91,12 @@ fn affine_forms(nodes: &[Node]) -> Vec<Option<Vec<Plane>>> {
     forms
 }
 
+pub(super) fn convex_forms(nodes: &[Node], output: usize) -> Option<Vec<Plane>> {
+    affine_forms(nodes)[output].take()
+}
+
 pub(super) fn halfspaces(nodes: &[Node], output: usize) -> Option<Vec<Plane>> {
-    let result = affine_forms(nodes)[output].take()?;
+    let result = convex_forms(nodes, output)?;
     // Zero-gradient branches need separate full/empty-domain semantics.
     // Leave those and single-plane fields on the existing scalar path.
     (result.len() >= 2 && result.iter().all(|p| p[..3] != [0.; 3])).then_some(result)

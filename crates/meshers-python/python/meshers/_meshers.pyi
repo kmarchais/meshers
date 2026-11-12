@@ -58,12 +58,16 @@ class CompiledField:
         """Return the three first derivatives, or raise ValueError if unavailable."""
     def values(self, points: Any) -> Any:
         """Evaluate an (n, 3) float64 point array without a Python call per point."""
+    @property
+    def _sdf_intersection(self) -> bool: ...
     def _intersection_fields(self) -> list[CompiledField] | None: ...
 
 def _compile_expression(
     nodes: list[tuple[str, list[int], float]],
     outputs: list[int],
     constraint_outputs: list[list[int]] | None = None,
+    *,
+    retain_sdf: bool = False,
 ) -> CompiledField: ...
 
 MAX_CONSTRAINTS: int
@@ -71,6 +75,7 @@ ADAPTIVE_POLYHEDRAL: bool
 PERIODIC_POLYHEDRAL: bool
 POLYHEDRAL_REGIONS: bool
 RETAINED_INTERSECTIONS: bool
+SDF_INTERSECTIONS: bool
 ADAPTIVE_RETAINED_INTERSECTIONS: bool
 
 def available_threads() -> int: ...

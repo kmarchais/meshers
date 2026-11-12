@@ -76,7 +76,9 @@ def _affine_planes(
     return planes
 
 
-def _retained_constraints(field: Scalar) -> dict[str, Scalar] | None:
+def _retained_constraints(
+    field: Scalar, bounds: np.ndarray | None = None
+) -> dict[str, Scalar] | None:
     if not isinstance(field, _meshers.CompiledField) or not getattr(
         _meshers, "RETAINED_INTERSECTIONS", False
     ):
@@ -85,6 +87,19 @@ def _retained_constraints(field: Scalar) -> dict[str, Scalar] | None:
     fields = field._intersection_fields()  # ruff: ignore[private-member-access]
     if fields is None:
         return None
+    if getattr(field, "_sdf_intersection", False):
+        if bounds is None:
+            return None
+        # Check floating-point eligibility at the same 64 preflight sites as
+        # the scalar generator. Refuse this optimization on an observed
+        # zero-sublevel mismatch from squared-norm underflow.
+        u = np.array([0.0, 0.23, 0.61, 1.0])
+        grid = np.array(np.meshgrid(u, u, u, indexing="ij")).reshape(3, -1).T
+        points = bounds[::2] + grid * (bounds[1::2] - bounds[::2])
+        parent = field.values(points)
+        branches = np.max(np.stack([branch.values(points) for branch in fields]), axis=0)
+        if not np.array_equal(parent <= 0, branches <= 0):
+            return None
     constraints = {}
     for index, branch in enumerate(fields):
         planes = _affine_planes(branch, (), canonical=True)
