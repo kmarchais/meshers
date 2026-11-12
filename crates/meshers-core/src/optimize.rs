@@ -504,8 +504,8 @@ pub(super) fn improve_worst(
         let mut hi = original;
         lo[a] -= h * 0.002;
         hi[a] += h * 0.002;
-        project(hi, original, level, geometry).map_or(old, &quality)
-            - project(lo, original, level, geometry).map_or(old, &quality)
+        project(hi, original, level, geometry).map_or(old, quality)
+            - project(lo, original, level, geometry).map_or(old, quality)
     });
     let length = norm(direction);
     let mut best = original;
