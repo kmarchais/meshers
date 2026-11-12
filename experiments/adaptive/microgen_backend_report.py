@@ -449,7 +449,7 @@ def main():
             )
             + "<body><h1>Meshers through Microgen</h1><p>Fresh public API measurements. Raw metric colors do not imply a qualified winner. Expand a case for all six quality statistics, periodicity, failures and reference limits. Meshing sections assess mesh admission only. The separate Gyroid stiffness check compares two saved native meshes; no stiffness reference is promoted.</p>"
             + '<nav><a href="#section-0">Coarse comparison</a> · <a href="#section-1">Repeated comparisons</a> · <a href="#section-2">Final 30-case native results</a> · <a href="#stiffness">Gyroid stiffness tradeoff</a> · <a href="#reference">Stiffness reference gaps</a></nav>'
-            + '<p style="padding:16px;background:#142438;border:1px solid #30445b;border-radius:10px"><strong style="color:#62e3a6">Final native wheel: 30/30 specimens admitted, 150/150 measured generations pass.</strong> <span style="color:#ffd16b">Coarse paired screen: 0 admitted matched-accuracy pairs. Broad comparative speedup remains unproven.</span></p>'
+            + '<p style="padding:16px;background:#142438;border:1px solid #30445b;border-radius:10px"><strong style="color:#62e3a6">Final native wheel: 30/30 specimens admitted, 150/150 measured generations pass.</strong> <span style="color:#ffd16b">Coarse paired screen: 0 admitted matched-accuracy pairs. Broad comparative speedup remains unproven.</span> Earlier admitted modified-route Schwarz wins remain separate in project tracking; this screen does not supersede them.</p>'
             + reference_html
             + stiffness_html
             + "".join(sections)

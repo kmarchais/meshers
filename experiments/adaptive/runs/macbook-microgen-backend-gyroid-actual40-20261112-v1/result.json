@@ -1,0 +1,362 @@
+{
+  "complete": true,
+  "rows": [
+    {
+      "case": "gyroid",
+      "arm": "actual",
+      "config": {
+        "resolution": 40,
+        "order": 1
+      },
+      "status": "admission-rejected",
+      "qualified": false,
+      "periodic_required": true,
+      "audit_protocol_sha256": "058aec6326698771f9ae4c67a3c6fbd931db01ca648929dbee4a70d56ac1b77f",
+      "backend_selector": "mmg",
+      "mmg_calls": [
+        {
+          "nofem": true,
+          "nodes": 7741,
+          "tetrahedra": 25268
+        },
+        {
+          "hausd": null,
+          "hgrad": null,
+          "hmax": null,
+          "hmin": null,
+          "hsiz": null,
+          "ls": true,
+          "nr": true,
+          "nodes": 11237,
+          "tetrahedra": 44636
+        }
+      ],
+      "constructor_s": 0.002700749959331006,
+      "generation_s": 6.496886043052655,
+      "workflow_s": 6.499586793011986,
+      "instrumentation_s": 0.1709890819620341,
+      "imports_charged": false,
+      "audits_charged": false,
+      "fea_run": false,
+      "versions": {
+        "meshers": "0.2.0",
+        "microgen": "2.0.0b1",
+        "numpy": "2.5.4",
+        "scipy": "1.18.1",
+        "pyvista": "0.49.1",
+        "vtk": "9.7.1",
+        "mmgpy": "0.17.1"
+      },
+      "native_binary_sha256": "d6e37257524526e4ce354ff19ac8939ea52551f8719d0cdb079af10fb404a473",
+      "microgen_module": "/Users/kmarchais/dev/microgen/microgen/__init__.py",
+      "vtk_backend": "Sequential",
+      "numerical_thread_policy": {
+        "environment": {
+          "OPENBLAS_NUM_THREADS": "1",
+          "OMP_NUM_THREADS": "1",
+          "MKL_NUM_THREADS": "1",
+          "VECLIB_MAXIMUM_THREADS": "1",
+          "RAYON_NUM_THREADS": "1"
+        },
+        "accelerate_blas_threading": 1,
+        "accelerate_scope": "calling thread"
+      },
+      "fixture_hashes": {
+        "gyroid-samples.npz": "d49ce7a80d95af127951750fa7dd02f52d4dd67bc87246dee02be932b51539d6",
+        "gyroid-specimen.json": "2f9171aa778f1899aed5b1057bc6255da515e8a9d96bf76c305b62e3c7bd0ed8"
+      },
+      "field_identity_points": 4096,
+      "mmg_binary_sha256": "efe07a6207a9ff86f4af26513e6aa368647b32cae112859fca52e74c3e7f7cf1",
+      "seed_nodes": 42224,
+      "seed_cells": 68419,
+      "mmg_options": {},
+      "nodes": 11237,
+      "elements": 44636,
+      "audit_reoriented_tets": 0,
+      "arrays_sha256": "25f694f0baa852b41668c4267379874e4188fd7f00687ee3acbbc02a68c4a405",
+      "mesh_sha256": "1459e96c9cea7b56fa13d57794e2075f00d12d29ea8661e9bc1c1ad87963bd6e",
+      "geometry": {
+        "volume": 0.36162699560723066,
+        "relative_volume_error": 0.014542534329291978,
+        "q_min_corner": 0.0004197879407001451,
+        "q_p01_corner": 0.04353799381914729,
+        "minimum_sampled_jacobian": 1.353977139933788e-09,
+        "facet_consistency": {
+          "nodes": 11237,
+          "elements": 44636,
+          "unique_faces": 95339,
+          "interior_faces": 83205,
+          "extracted_boundary_faces": 12134,
+          "same_orientation_shared_faces": 7,
+          "nonmanifold_faces": 0,
+          "duplicate_cells": 0,
+          "duplicate_surface_faces": 0,
+          "provided_boundary_matches_extraction": true,
+          "missing_provided_faces": 0,
+          "extra_provided_faces": 0,
+          "nonpositive_corner_determinants": 0,
+          "minimum_corner_determinant": 1.3539771399337862e-09,
+          "oriented_facet_consistency_passed": false,
+          "conflict_examples": [
+            {
+              "face": [
+                3596,
+                3597,
+                8730
+              ],
+              "incident_elements": [
+                13031,
+                15948
+              ],
+              "orientation_sum": 2,
+              "opposite_vertices": [
+                3641,
+                8886
+              ],
+              "signed_plane_products": [
+                -1.4923922162047474e-06,
+                -1.1665522755107998e-05
+              ],
+              "same_physical_side": true
+            },
+            {
+              "face": [
+                3596,
+                3641,
+                8730
+              ],
+              "incident_elements": [
+                13031,
+                36679
+              ],
+              "orientation_sum": -2,
+              "opposite_vertices": [
+                3597,
+                8886
+              ],
+              "signed_plane_products": [
+                1.4923922162047442e-06,
+                8.144034089957868e-07
+              ],
+              "same_physical_side": true
+            },
+            {
+              "face": [
+                3597,
+                3641,
+                8730
+              ],
+              "incident_elements": [
+                13031,
+                28417
+              ],
+              "orientation_sum": 2,
+              "opposite_vertices": [
+                3596,
+                8886
+              ],
+              "signed_plane_products": [
+                -1.492392216204746e-06,
+                -7.633200881959067e-06
+              ],
+              "same_physical_side": true
+            },
+            {
+              "face": [
+                4470,
+                4544,
+                8062
+              ],
+              "incident_elements": [
+                25610,
+                26268
+              ],
+              "orientation_sum": 2,
+              "opposite_vertices": [
+                7375,
+                4546
+              ],
+              "signed_plane_products": [
+                -3.242343596956017e-05,
+                -9.906524804404835e-07
+              ],
+              "same_physical_side": true
+            },
+            {
+              "face": [
+                4470,
+                4548,
+                8062
+              ],
+              "incident_elements": [
+                3574,
+                9600
+              ],
+              "orientation_sum": -2,
+              "opposite_vertices": [
+                4546,
+                3743
+              ],
+              "signed_plane_products": [
+                4.187435934081462e-07,
+                8.694612623243974e-06
+              ],
+              "same_physical_side": true
+            },
+            {
+              "face": [
+                4544,
+                4546,
+                8062
+              ],
+              "incident_elements": [
+                26241,
+                26268
+              ],
+              "orientation_sum": 2,
+              "opposite_vertices": [
+                7995,
+                4470
+              ],
+              "signed_plane_products": [
+                -2.0263070394605732e-05,
+                -9.906524804404848e-07
+              ],
+              "same_physical_side": true
+            },
+            {
+              "face": [
+                4546,
+                4548,
+                8062
+              ],
+              "incident_elements": [
+                1884,
+                3574
+              ],
+              "orientation_sum": 2,
+              "opposite_vertices": [
+                3743,
+                4470
+              ],
+              "signed_plane_products": [
+                -6.932219864742232e-06,
+                -4.187435934081462e-07
+              ],
+              "same_physical_side": true
+            }
+          ],
+          "scope": "Oriented corner-face incidence and same-side neighbor diagnostics; necessary consistency, not a certificate of curved geometry or absence of nonlocal intersections"
+        },
+        "oriented_facet_consistency_passed": false,
+        "quadratic_conformity": {
+          "passed": true,
+          "order": 1
+        },
+        "exact_straight_reduction_verified": false,
+        "geometry_admitted": false,
+        "sampled_reverse_max": 0.00865094935884263,
+        "distance_audit_complete": false,
+        "projection_failed": null,
+        "audit_scope": "Fail-fast after required quality/volume/topology/periodicity rejection; no forward-distance or successful speed claim",
+        "failed_gates": [
+          "quality",
+          "volume",
+          "facets"
+        ]
+      },
+      "periodic": {
+        "periodic_pair_counts": [
+          738,
+          738,
+          738
+        ],
+        "periodic_coordinate_errors": [
+          9.992007221626409e-16,
+          9.992007221626409e-16,
+          9.992007221626409e-16
+        ],
+        "periodic_pair_tolerance": 1e-10,
+        "periodic_equivalence_classes": 9082,
+        "periodic_triangles_match": true,
+        "full_facet_check_required": true,
+        "complete_existing_node_classes": true,
+        "unmatched_noncap_contact_nodes": [
+          [
+            [],
+            []
+          ],
+          [
+            [],
+            []
+          ],
+          [
+            [],
+            []
+          ]
+        ],
+        "declared_bounds": [
+          [
+            -0.5,
+            -0.5,
+            -0.5
+          ],
+          [
+            0.5,
+            0.5,
+            0.5
+          ]
+        ],
+        "periodic_gate": "declared-cell-material-cap-and-complete-node-classes-v1"
+      },
+      "quality_stats": {
+        "min": 0.0004197879407001451,
+        "p01": 0.04353799381914729,
+        "p10": 0.41098522442840935,
+        "median": 0.6936567869534711,
+        "p90": 0.8675184465823977,
+        "p99": 0.9540215972132182,
+        "max": 0.9974622147522356,
+        "mean": 0.6602977363545453
+      },
+      "audit_s": 2.561054709018208,
+      "elapsed_s": 9.297338375006802,
+      "repetition": 0,
+      "warmup": false,
+      "resource": {
+        "returncode": 0,
+        "limit_failure": null,
+        "peak_rss_bytes": 1288110080,
+        "wall_s": 10.141145834000781,
+        "wall_s_clock": "monotonic",
+        "elapsed_realtime_s": 10.141294002532959,
+        "suspension_or_clock_adjustment_s": 0.0001481685321778059,
+        "idle_sleep_prevention": [
+          "/usr/bin/caffeinate",
+          "-i"
+        ],
+        "memory_bytes": 12884901888,
+        "memory_enforcement": "process-tree-rss-watchdog",
+        "rss_poll_interval_s": 0.25,
+        "platform": "darwin",
+        "numerical_thread_policy": {
+          "environment": {
+            "OPENBLAS_NUM_THREADS": "1",
+            "OMP_NUM_THREADS": "1",
+            "MKL_NUM_THREADS": "1",
+            "VECLIB_MAXIMUM_THREADS": "1",
+            "RAYON_NUM_THREADS": "1"
+          },
+          "accelerate_blas_threading": 1,
+          "accelerate_scope": "calling thread"
+        }
+      },
+      "directory": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-microgen-backend-gyroid-actual40-20261112-v1/repeat-0-gyroid-actual",
+      "timing_valid": true
+    }
+  ],
+  "returned": 1,
+  "admitted": 0,
+  "new_fea": false,
+  "reference_promoted": false
+}

@@ -1,0 +1,49 @@
+{
+  "cases": [
+    {
+      "case": "gyroid",
+      "fixture_kind": "study",
+      "fixtures": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-comparison-fixtures-v1",
+      "native": {
+        "name": "native-gyroid-shared-adaptive24-control",
+        "arm": "meshers",
+        "cells": 24,
+        "order": 1,
+        "adapt": true,
+        "tolerance": 0.002,
+        "periodic_trace": true,
+        "declared_unit_cell": true,
+        "max_length": 0.1,
+        "min_length": 0.002,
+        "gradation": 0.6,
+        "adapt_iterations": 4,
+        "adapt_tolerance": 0.0018,
+        "optimization_passes": 1
+      },
+      "actual": {
+        "resolution": 40,
+        "order": 1
+      },
+      "periodic": true,
+      "source_selection": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-gyroid-tet4-paired-counts-v1/result.json",
+      "native_recipe_evidence": {
+        "directory": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-microgen-backend-coverage-20261112-v1/repeat-0-gyroid-native",
+        "result_sha256": "5e7ee3c39554a20b59b3fe6e6f52be831b5f578d855ac74e8abc87f46dbd9538",
+        "prior_status": "admitted"
+      }
+    }
+  ],
+  "purpose": "One predeclared actual Microgen sampling40 Gyroid control: original coarse VTK20 boundary error roughly0.008 versus study0.002 motivates halving the seed spacing. Existing two-pass MMG defaults stay unchanged. Keep250k intermediate/output caps and all mesh gates; not a default-route result.",
+  "imports_and_audits_excluded": true,
+  "constructors_charged": true,
+  "gates": {
+    "distance": 0.002,
+    "relative_volume": 0.01,
+    "quality": 0.1,
+    "nodes": 250000,
+    "tetrahedra": 250000
+  },
+  "new_fea": false,
+  "lattice_models_retained": 24,
+  "title": "Actual Microgen sampling40 Gyroid admission control"
+}

@@ -77,6 +77,23 @@ are not pooled. The dashboard uses only the final `afc49e5` run for final native
 measurements. The installed binary SHA256 is
 `d6e37257524526e4ce354ff19ac8939ea52551f8719d0cdb079af10fb404a473`.
 
+One further actual Gyroid control, job 1046, doubles VTK sampling from 20 to
+40 with the unchanged public two-pass MMG defaults. This is an explicitly
+modified actual route, not the default. It returns 44,636 tets and 11,237 nodes
+within the resource caps. It still rejects: minimum quality 0.000419788,
+nominal volume error 1.45425%, and seven same-orientation shared faces with
+same-side neighbors. Sampled reverse distance alone is at least 0.00865095;
+the forward audit correctly stops after the mandatory failures. One charged
+constructor/backend observation is 6.49959 s, not a successful speed sample.
+The control rejects the hypothesis that finer VTK sampling alone repairs this
+actual workflow. No source geometry, MMG default or admission gate is changed.
+Evidence is in
+`experiments/adaptive/runs/macbook-microgen-backend-gyroid-actual40-20261112-v1`.
+
+Earlier admitted modified-route Schwarz wins remain valid and separate. This
+new coarse public-selector screen does not supersede them or establish that
+all possible actual Microgen routes fail.
+
 ### Failures, fixes and costs
 
 | Weak point | What the controlled work found | Evidence and remaining limit |
