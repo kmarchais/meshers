@@ -100,6 +100,21 @@ fn jacobian(x: &[Point; 10], l: [f64; 4]) -> f64 {
         + jac[0][2] * (jac[1][0] * jac[2][1] - jac[1][1] * jac[2][0])
 }
 
+/// Signed physical volume of a quadratic tetrahedron in VTK node order.
+/// The five-point degree-three rule integrates its cubic Jacobian exactly.
+/// This integral does not certify positivity of the Jacobian everywhere.
+#[must_use]
+pub fn signed_volume(x: &[Point; 10]) -> f64 {
+    let relative = x.map(|p| crate::sub(p, x[0]));
+    let mut integral = -0.8 * jacobian(&relative, [0.25; 4]);
+    for i in 0..4 {
+        let mut l = [1. / 6.; 4];
+        l[i] = 0.5;
+        integral += 0.45 * jacobian(&relative, l);
+    }
+    integral / 6.
+}
+
 fn project(
     g: &impl Geometry,
     p: Point,
@@ -491,5 +506,34 @@ mod tests {
         for l in samples() {
             assert!((jacobian(&x, l) - 1.).abs() < 1e-12);
         }
+        assert!((signed_volume(&x) - 1. / 6.).abs() < 1e-14);
+    }
+
+    #[test]
+    fn curved_volume_integrates_a_cubic_jacobian_with_its_sign() {
+        let corners = [[0., 0., 0.], [1., 0., 0.], [0., 1., 0.], [0., 0., 1.]];
+        let reference: [Point; 10] = std::array::from_fn(|n| {
+            if n < 4 {
+                corners[n]
+            } else {
+                let [i, j] = EDGES[n - 4];
+                std::array::from_fn(|axis| (corners[i][axis] + corners[j][axis]) / 2.)
+            }
+        });
+        // x=r+a*r², y=s+b*s², z=t+c*t² has a cubic, positive determinant.
+        let [a, b, c] = [0.2, 0.3, 0.4];
+        let curved = reference.map(|p| {
+            [
+                p[0] + a * p[0].powi(2),
+                p[1] + b * p[1].powi(2),
+                p[2] + c * p[2].powi(2),
+            ]
+        });
+        let exact = 1. / 6. + (a + b + c) / 12. + (a * b + a * c + b * c) / 30. + a * b * c / 90.;
+        assert!((signed_volume(&curved) - exact).abs() < 1e-14);
+        let reflected = curved.map(|p| [-p[0], p[1], p[2]]);
+        assert!((signed_volume(&reflected) + exact).abs() < 1e-14);
+        let translated = curved.map(|p| crate::sub(p, [1e6, -2e6, 3e6]));
+        assert!((signed_volume(&translated) - exact).abs() < 1e-9);
     }
 }

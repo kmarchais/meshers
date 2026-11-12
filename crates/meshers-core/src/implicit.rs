@@ -97,7 +97,9 @@ pub struct Diagnostics {
     pub polyhedral_constraints: usize,
     pub polyhedral_regions: usize,
     pub empty: bool,
+    /// Signed volume of the returned geometry, integrating curved Tet10 mappings.
     pub volume: f64,
+    /// MMG quality of the four corner nodes, including for quadratic output.
     pub minimum_mmg_quality: f64,
     pub elements_below_quality_01: usize,
     pub reverted_snap_vertices: usize,
@@ -706,7 +708,9 @@ fn generate_internal<F: ScalarField>(
                 ));
             }
             if values
-                .chunks_exact(2)
+                .as_chunks::<2>()
+                .0
+                .iter()
                 .any(|pair| (pair[0] - pair[1]).abs() > 1e-8 * pair[0].max(pair[1]))
             {
                 return Err(MeshingError::InvalidOptions(format!(
@@ -745,6 +749,11 @@ fn generate_internal<F: ScalarField>(
                 options.bounds,
                 options.periodic,
             )?;
+            output.diagnostics.volume = elements
+                .tets
+                .iter()
+                .map(|tet| crate::quadratic::signed_volume(&tet.map(|i| elements.points[i])))
+                .sum();
             output.quadratic = Some(QuadraticOutput {
                 elements,
                 periodic_pairs,

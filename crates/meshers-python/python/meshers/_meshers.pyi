@@ -74,6 +74,7 @@ RETAINED_INTERSECTIONS: bool
 ADAPTIVE_RETAINED_INTERSECTIONS: bool
 
 def available_threads() -> int: ...
+def quadratic_volumes(points: Any, tetrahedra: Any) -> Any: ...
 def generate_intersection(
     fields: Any,
     mapping: Any,

@@ -40,7 +40,9 @@ class Mesh:
             edge/corner images form complete constraint classes. A wall-only
             contact can lack an opposite image when that image has no
             tetrahedral material support.
-        diagnostics: Quality, timing, sampled error, evaluator and worker count.
+        diagnostics: Integrated volume, corner-based MMG quality, timing,
+            sampled error, evaluator and worker count. For Tet10, quadratic
+            diagnostics also retain the linear parent's volume.
         parameters: Parameter coordinates for mapped intersections, otherwise None.
         constraint_masks: Bit j marks membership in constraint j, otherwise None.
         constraint_names: Names corresponding to the constraint-mask bits.
@@ -99,7 +101,12 @@ class Mesh:
         return edges[(common & (common - np.uint8(1))) != 0]
 
     def write_vtkhdf(self, path: str | Path, *, surface: bool = False) -> None:  # ruff: ignore[complex-structure] - optional mesh metadata share one file lifecycle.
-        """Write VTKHDF 2.0, with physical periodic shifts. Requires meshers[io]."""
+        """Write VTKHDF 2.0, with physical periodic shifts. Requires meshers[io].
+
+        Quadratic cell Volume integrates the current curved mapping.
+        CornerVolume and CornerMMGQuality identify the linear parent measures.
+        Linear cells retain the Volume and MMGQuality arrays.
+        """
         import h5py
 
         cells = self.surface if surface else self.tetrahedra
@@ -146,8 +153,15 @@ class Mesh:
                     for i in range(4)
                     for j in range(i + 1, 4)
                 )
-                data["Volume"] = determinant / 6
-                data["MMGQuality"] = np.sqrt(np.maximum(432 * determinant**2 / edge_sum**3, 0))
+                quality = np.sqrt(np.maximum(432 * determinant**2 / edge_sum**3, 0))
+                if cells.shape[1] == 10:
+                    data.update(
+                        Volume=_meshers.quadratic_volumes(points, cells),
+                        CornerVolume=determinant / 6,
+                        CornerMMGQuality=quality,
+                    )
+                else:
+                    data.update(Volume=determinant / 6, MMGQuality=quality)
             data = g.create_group("PointData")
             data["PeriodicMasterId"] = masters
             data["PeriodicShift"] = points - points[masters]

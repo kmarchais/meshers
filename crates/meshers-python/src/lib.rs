@@ -581,6 +581,17 @@ fn generate<'py>(
     if let Some(q) = result.quadratic.take() {
         let quadratic = PyDict::new(py);
         quadratic.set_item(
+            "linear_volume",
+            q.elements
+                .tets
+                .iter()
+                .map(|tet| {
+                    meshers_core::determinant(std::array::from_fn(|i| q.elements.points[tet[i]]))
+                        / 6.
+                })
+                .sum::<f64>(),
+        )?;
+        quadratic.set_item(
             "points",
             Array2::from_shape_vec(
                 (q.elements.points.len(), 3),
@@ -706,6 +717,7 @@ fn generate<'py>(
     }
     diagnostics.set_item("empty", result.diagnostics.empty)?;
     diagnostics.set_item("volume", result.diagnostics.volume)?;
+    diagnostics.set_item("minimum_mmg_quality_basis", "linear_corners")?;
     diagnostics.set_item(
         "minimum_mmg_quality",
         result.diagnostics.minimum_mmg_quality,
@@ -758,6 +770,40 @@ fn _periodic_affine_traces(
     }
 }
 
+/// Integrate current quadratic coordinates, including edits after generation.
+#[pyfunction]
+fn quadratic_volumes<'py>(
+    py: Python<'py>,
+    points: PyReadonlyArray2<'py, f64>,
+    tetrahedra: PyReadonlyArray2<'py, i64>,
+) -> PyResult<Bound<'py, numpy::PyArray1<f64>>> {
+    let points = points.as_array();
+    let tetrahedra = tetrahedra.as_array();
+    if points.ncols() != 3 || tetrahedra.ncols() != 10 {
+        return Err(PyValueError::new_err(
+            "expected (N,3) points and (M,10) tetrahedra",
+        ));
+    }
+    let mut volumes = Vec::with_capacity(tetrahedra.nrows());
+    for tet in tetrahedra.rows() {
+        let mut vertices = [[0.; 3]; 10];
+        for (i, &node) in tet.iter().enumerate() {
+            let index = usize::try_from(node)
+                .ok()
+                .filter(|&index| index < points.nrows())
+                .ok_or_else(|| PyValueError::new_err("tetrahedron node index out of bounds"))?;
+            vertices[i] = std::array::from_fn(|axis| points[[index, axis]]);
+            if vertices[i].iter().any(|value| !value.is_finite()) {
+                return Err(PyValueError::new_err(
+                    "tetrahedron coordinates must be finite",
+                ));
+            }
+        }
+        volumes.push(meshers_core::quadratic::signed_volume(&vertices));
+    }
+    Ok(volumes.into_pyarray(py))
+}
+
 /// Return the available native CPU worker count.
 #[pyfunction]
 fn available_threads() -> usize {
@@ -778,6 +824,7 @@ fn _meshers(m: &Bound<'_, PyModule>) -> PyResult<()> {
         meshers_core::implicit::intersection::MAX_CONSTRAINTS,
     )?;
     m.add_function(wrap_pyfunction!(available_threads, m)?)?;
+    m.add_function(wrap_pyfunction!(quadratic_volumes, m)?)?;
     m.add_function(wrap_pyfunction!(_periodic_affine_traces, m)?)?;
     m.add_class::<compiled::CompiledField>()?;
     m.add_function(wrap_pyfunction!(compiled::_compile_expression, m)?)?;
