@@ -18,8 +18,9 @@ at that final head pass: CI, Coverage, Performance and Release artifacts. All fo
 metadata and source-content checks. No package is published or tagged. The final
 arm64 CI wheel also passes the fresh installation and benchmark checks below.
 
-The Microgen branch `codex/meshers-backend-integration`, commit `7fb26cd`, is pushed
-to `3MAH/microgen`. Meshers stays optional, requiring `>=0.2.0,<0.3`. The original
+The Microgen branch `codex/meshers-backend-integration` has production changes
+at `7fb26cd` and a later test-only correction at `cb93b08`, pushed to
+`3MAH/microgen`. Meshers stays optional, requiring `>=0.2.0,<0.3`. The original
 VTK default stays intact; `backend="mmg"` calls the genuine existing VTK/two-pass
 MMG pipeline. The Meshers backend uses the existing pointwise fields and a shared
 converter. There is no second spinodoid implementation and no added integration
@@ -35,6 +36,29 @@ and curved-volume controls. Rust surface unit controls pass 81 tests with one
 existing ignored test. Native Clippy, Python lint/types and both Rust workspace
 formatters pass locally. CI caught the initially missed binding formatter;
 its correction is exactly verified Rust 1.95 formatter output, not a gate change.
+
+The broader installed Microgen suite now passes **400 tests with 66 explicit
+CAD-dependent skips** and no failures, job 1051. It runs from a copied test tree
+outside the checkout against the final CI wheel and installed Microgen. All 51
+installed production source files match the current integration branch. A
+path-only pytest hook makes the existing optional-CAD architecture test inspect
+those installed files, rather than vacuously scanning a missing copied source
+directory. The OBJ fixture is copied with its original hash. CAD itself is not
+installed or validated by this pass.
+
+The first broad harness, job 1048, stops at collection because its copied tree
+lacks the repository's tetrahedron OBJ. Job 1049 restores the fixture and finds
+16 failures caused by the existing TPMS test catalog including imported
+Autograd `sin` and `cos`. Job 1050 reproduces the exact same failure names and
+messages on pre-integration commit `38e1912`, with identical installed numerical
+dependencies. Autograd 1.9.1 wraps both ufuncs in a three-parameter signature,
+defeating the old parameter-count heuristic. Test-only commit `cb93b08` selects
+functions by their defining module, preserving the actual TPMS functions and
+all numerical assertions. Production code, defaults, fields and dependencies
+are unchanged. The corrected full suite is green in
+`experiments/adaptive/runs/macbook-microgen-full-core-20261112-v3`; the baseline
+failure comparison remains in
+`experiments/adaptive/runs/macbook-microgen-baseline-tpms-20261112-v1`.
 
 The [public-backend dashboard](handoff/macbook/microgen-public-backends-20261112.html)
 and its [machine-readable data](handoff/macbook/microgen-public-backends-20261112.json)

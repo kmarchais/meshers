@@ -1,0 +1,98 @@
+........................................................................ [ 15%]
+...................sssssssssssss........................................ [ 31%]
+........................................................................ [ 46%]
+.......................ss.................s............................. [ 62%]
+....................................................s................... [ 77%]
+.............ssssssssssssssssssssssssssssssssssssssssss.....s........... [ 93%]
+...........s..............ss...                                          [100%]
+=============================== warnings summary ===============================
+../../../../.local-work/overnight-release-20261112/clean-install-afc-v1/venv/lib/python3.12/site-packages/_pytest/assertion/rewrite.py:188
+  /Users/kmarchais/dev/meshers/.local-work/overnight-release-20261112/clean-install-afc-v1/venv/lib/python3.12/site-packages/_pytest/assertion/rewrite.py:188: UserWarning: Neper is not installed. Please install Neper before running this command
+    exec(co, module.__dict__)
+
+tests/shapes/test_shapes.py: 7 warnings
+tests/shapes/test_tpms.py: 1 warning
+tests/test_implicit_voronoi_lattice.py: 1 warning
+tests/test_periodic.py: 34 warnings
+tests/test_phase.py: 8 warnings
+tests/test_phase_pieces.py: 1 warning
+tests/test_sample.py: 1 warning
+  /Users/kmarchais/dev/meshers/.local-work/overnight-release-20261112/clean-install-afc-v1/venv/lib/python3.12/site-packages/_pytest/runner.py:250: PluggyTeardownRaisedWarning: A plugin raised an exception during an old-style hookwrapper teardown.
+  Plugin: /Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-microgen-full-core-20261112-v3/tests/conftest.py, Hook: pytest_runtest_call
+  Skipped: OCP (CAD backend) not installed: microgen's CAD backend requires the OCP (OCCT) Python bindings. Install with:  pip install 'microgen[cad]'  (this pulls cadquery-ocp-novtk; on conda-forge use `ocp` instead).
+  For more information see https://pluggy.readthedocs.io/en/stable/api_reference.html#pluggy.PluggyTeardownRaisedWarning
+    lambda: runtest_hook(item=item, **kwds),
+
+tests/shapes/test_tpms.py::test_tpms_given_cadquery_vtk_shapes_volume_must_be_equivalent[lower skeletal]
+tests/shapes/test_tpms.py::test_tpms_given_cadquery_vtk_shapes_volume_must_be_equivalent[upper skeletal]
+tests/shapes/test_tpms.py::test_tpms_given_cadquery_vtk_shapes_volume_must_be_equivalent[sheet]
+tests/shapes/test_tpms.py::test_tpms_given_cadquery_vtk_zero_offset_skeletals_volume_must_be_equivalent[lower skeletal]
+tests/shapes/test_tpms.py::test_tpms_given_cadquery_vtk_zero_offset_skeletals_volume_must_be_equivalent[upper skeletal]
+tests/shapes/test_tpms.py::test_tpms_given_non_default_cell_size_and_repeat_cell_must_have_same_volume_with_cad_and_vtk
+tests/shapes/test_tpms.py::test_tpms_given_variable_offset_cadquery_and_vtk_volumes_must_correspond
+tests/shapes/test_tpms.py::test_tpms_center_and_orientation_must_correspond
+  /Users/kmarchais/dev/meshers/.local-work/overnight-release-20261112/clean-install-afc-v1/venv/lib/python3.12/site-packages/_pytest/runner.py:250: PluggyTeardownRaisedWarning: A plugin raised an exception during an old-style hookwrapper teardown.
+  Plugin: /Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-microgen-full-core-20261112-v3/tests/conftest.py, Hook: pytest_runtest_call
+  Skipped: OCP (CAD backend) not installed: No module named 'OCP'
+  For more information see https://pluggy.readthedocs.io/en/stable/api_reference.html#pluggy.PluggyTeardownRaisedWarning
+    lambda: runtest_hook(item=item, **kwds),
+
+tests/shapes/test_tpms.py: 40 warnings
+tests/shapes/test_tpms_frep.py: 1 warning
+  /Users/kmarchais/dev/meshers/.local-work/overnight-release-20261112/clean-install-afc-v1/venv/lib/python3.12/site-packages/autograd/tracer.py:20: UserWarning: Output seems independent of input.
+    warnings.warn("Output seems independent of input.")
+
+tests/shapes/test_tpms.py::test_tpms_given_coord_system_tpms_coordinates_field_must_be_in_cartesian_frame[CylindricalTpms]
+tests/shapes/test_tpms.py::test_tpms_given_coord_system_tpms_volumes_must_be_greater_than_zero_and_lower_than_grid_volume[CylindricalTpms]
+tests/shapes/test_tpms.py::test_tpms_given_zero_and_max_repeat_cell_values_volumes_must_correspond[CylindricalTpms-repeat_cell_zero0-repeat_cell_max0]
+tests/shapes/test_tpms.py::test_cylindrical_tpms_full_wrap_volume_matches_shell
+tests/shapes/test_tpms.py::test_cylindrical_tpms_partial_wrap_smaller_than_full
+tests/shapes/test_tpms_frep.py::TestCurvilinearTpms::test_cylindrical_has_func
+tests/shapes/test_tpms_frep.py::TestCurvilinearTpms::test_cylindrical_evaluate
+tests/test_meshers_backend.py::test_mapped_tpms_are_explicitly_unsupported
+  /Users/kmarchais/dev/meshers/.local-work/overnight-release-20261112/clean-install-afc-v1/venv/lib/python3.12/site-packages/autograd/numpy/numpy_vjps.py:147: RuntimeWarning: invalid value encountered in divide
+    lambda ans, x, y: unbroadcast_f(y, lambda g: g * -x / (x**2 + y**2)),
+
+tests/shapes/test_tpms.py::test_tpms_given_coord_system_tpms_coordinates_field_must_be_in_cartesian_frame[CylindricalTpms]
+tests/shapes/test_tpms.py::test_tpms_given_coord_system_tpms_volumes_must_be_greater_than_zero_and_lower_than_grid_volume[CylindricalTpms]
+tests/shapes/test_tpms.py::test_tpms_given_zero_and_max_repeat_cell_values_volumes_must_correspond[CylindricalTpms-repeat_cell_zero0-repeat_cell_max0]
+tests/shapes/test_tpms.py::test_cylindrical_tpms_full_wrap_volume_matches_shell
+tests/shapes/test_tpms.py::test_cylindrical_tpms_partial_wrap_smaller_than_full
+tests/shapes/test_tpms_frep.py::TestCurvilinearTpms::test_cylindrical_has_func
+tests/shapes/test_tpms_frep.py::TestCurvilinearTpms::test_cylindrical_evaluate
+tests/test_meshers_backend.py::test_mapped_tpms_are_explicitly_unsupported
+  /Users/kmarchais/dev/meshers/.local-work/overnight-release-20261112/clean-install-afc-v1/venv/lib/python3.12/site-packages/autograd/numpy/numpy_vjps.py:187: RuntimeWarning: divide by zero encountered in power
+    defvjp(anp.sqrt, lambda ans, x: lambda g: g * 0.5 * x**-0.5)
+
+tests/shapes/test_tpms.py::test_tpms_given_coord_system_tpms_coordinates_field_must_be_in_cartesian_frame[CylindricalTpms]
+tests/shapes/test_tpms.py::test_tpms_given_coord_system_tpms_volumes_must_be_greater_than_zero_and_lower_than_grid_volume[CylindricalTpms]
+tests/shapes/test_tpms.py::test_tpms_given_zero_and_max_repeat_cell_values_volumes_must_correspond[CylindricalTpms-repeat_cell_zero0-repeat_cell_max0]
+tests/shapes/test_tpms.py::test_cylindrical_tpms_full_wrap_volume_matches_shell
+tests/shapes/test_tpms.py::test_cylindrical_tpms_partial_wrap_smaller_than_full
+tests/shapes/test_tpms_frep.py::TestCurvilinearTpms::test_cylindrical_has_func
+tests/shapes/test_tpms_frep.py::TestCurvilinearTpms::test_cylindrical_evaluate
+tests/test_meshers_backend.py::test_mapped_tpms_are_explicitly_unsupported
+  /Users/kmarchais/dev/meshers/.local-work/overnight-release-20261112/clean-install-afc-v1/venv/lib/python3.12/site-packages/autograd/numpy/numpy_vjps.py:141: RuntimeWarning: invalid value encountered in multiply
+    lambda ans, x, y: unbroadcast_f(x, lambda g: g * y * x ** anp.where(y, y - 1, 1.0)),
+
+tests/shapes/test_tpms.py::test_tpms_given_coord_system_tpms_coordinates_field_must_be_in_cartesian_frame[CylindricalTpms]
+tests/shapes/test_tpms.py::test_tpms_given_coord_system_tpms_volumes_must_be_greater_than_zero_and_lower_than_grid_volume[CylindricalTpms]
+tests/shapes/test_tpms.py::test_tpms_given_zero_and_max_repeat_cell_values_volumes_must_correspond[CylindricalTpms-repeat_cell_zero0-repeat_cell_max0]
+tests/shapes/test_tpms.py::test_cylindrical_tpms_full_wrap_volume_matches_shell
+tests/shapes/test_tpms.py::test_cylindrical_tpms_partial_wrap_smaller_than_full
+tests/shapes/test_tpms_frep.py::TestCurvilinearTpms::test_cylindrical_has_func
+tests/shapes/test_tpms_frep.py::TestCurvilinearTpms::test_cylindrical_evaluate
+tests/test_meshers_backend.py::test_mapped_tpms_are_explicitly_unsupported
+  /Users/kmarchais/dev/meshers/.local-work/overnight-release-20261112/clean-install-afc-v1/venv/lib/python3.12/site-packages/autograd/numpy/numpy_vjps.py:146: RuntimeWarning: invalid value encountered in divide
+    lambda ans, x, y: unbroadcast_f(x, lambda g: g * y / (x**2 + y**2)),
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+SKIPPED [1] tests/shapes/test_lattice.py:8: could not import 'OCP': No module named 'OCP'
+SKIPPED [1] tests/test_mesh.py:9: could not import 'OCP': No module named 'OCP'
+SKIPPED [1] tests/test_mesh_periodic.py:14: could not import 'OCP': No module named 'OCP'
+SKIPPED [53] tests/conftest.py:41: OCP (CAD backend) not installed: microgen's CAD backend requires the OCP (OCCT) Python bindings. Install with:  pip install 'microgen[cad]'  (this pulls cadquery-ocp-novtk; on conda-forge use `ocp` instead).
+SKIPPED [8] tests/conftest.py:41: OCP (CAD backend) not installed: No module named 'OCP'
+SKIPPED [1] tests/test_spinodoid.py:107: could not import 'OCP': No module named 'OCP'
+SKIPPED [1] tests/test_spinodoid.py:122: could not import 'OCP': No module named 'OCP'
+400 passed, 66 skipped, 135 warnings in 27.87s

@@ -1,0 +1,104 @@
+[build-system]
+requires = ["setuptools>=64", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "microgen"
+version = "2.0.0b1"
+authors = [{ name = "3MAH", email = 'set3mah@gmail.com' }]
+description = "Microstructure generation and meshing"
+readme = "README.md"
+requires-python = ">=3.10"
+keywords = ["microstructure", "lattice", "periodic", "TPMS", "mesh"]
+license = { text = "GPLv3" }
+classifiers = [
+    'Intended Audience :: Science/Research',
+    'Topic :: Scientific/Engineering :: Information Analysis',
+    'Operating System :: Microsoft :: Windows',
+    'Operating System :: POSIX',
+    'Operating System :: MacOS',
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: 3.14",
+]
+# Core dependencies: mesh / implicit-field workflows only.  The CAD path
+# (``.generate()`` → OCCT ``TopoDS_Shape``) requires the ``[cad]`` extra.
+dependencies = [
+    "numpy",
+    "pyvista>=0.46",
+    "gmsh",
+    "meshio",
+    "scipy",
+    "autograd",
+]
+
+[project.optional-dependencies]
+meshers = ["meshers>=0.2.0,<0.3"]
+# CAD backend: OCCT via cadquery-ocp-novtk (no cadquery, no bundled VTK; we
+# use VTK via PyVista already).  Installing this extra unlocks
+# Shape.generate(), Phase, fuse_shapes, lattice CAD, etc., and ships cp314
+# wheels on Linux/macOS arm64/Windows.
+cad = ["cadquery-ocp-novtk"]
+dev = [
+    'pre-commit>=3.5.0',
+    "ruff>=0.9",
+    "pytest>=8.3.3",
+    "pytest-cov>=5.0.0",
+    "pytest-xdist>=3.6.1",
+]
+docs = [
+    "ipykernel>=6.29.5",
+    "sphinx>=7.1.2",
+    "sphinx-rtd-theme>=3.0.2",
+    "sphinxcontrib-napoleon>=0.7",
+    "jupyter-sphinx>=0.5.3",
+    "mock>=5.1.0",
+    "myst-parser>=3.0.1",
+]
+ray = [
+    "trimesh",
+    "embreex",
+]
+jupyter = [
+    "jupyterlab>=3.6.8,<4.6",
+    "sidecar>=0.5.2",
+    "jupyterview>=0.7.0",
+]
+all = ["microgen[cad, dev, docs, jupyter, ray]"]
+
+[project.urls]
+Documentation = 'https://3mah.github.io/microgen-docs/'
+"Bug Tracker" = 'https://github.com/3MAH/microgen/issues'
+"Source Code" = 'https://github.com/3MAH/microgen'
+
+[tool.setuptools]
+packages = ["microgen", "microgen.cad", "microgen.shape", "microgen.shape.strut_lattice"]
+
+[tool.pytest.ini_options]
+filterwarnings = [
+    # Ignore deprecation warnings from numpy
+    "ignore:.* is a deprecated alias for .*:DeprecationWarning",
+]
+
+[[tool.mypy.overrides]]
+module = ["gmsh", "scipy.spatial"]
+ignore_missing_imports = true
+
+[tool.ruff]
+target-version = "py310"
+
+[tool.ruff.lint]
+exclude = [
+    "docs/*",
+    "tests/*",
+    "examples/*",
+    # The Mmg wrapper mirrors mmg's CLI flags verbatim (input/ls/nr/A/...);
+    # a redesign of this interface is planned, so the file is excluded
+    # rather than littered with per-flag noqa pragmas.
+    "microgen/external.py",
+]
+
+[tool.ruff.format]
+docstring-code-format = true
