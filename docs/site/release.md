@@ -1,6 +1,6 @@
-# Releasing version 0.1
+# Releasing version 0.2
 
-Python `meshers` and Rust `meshers-core` use version 0.1.0. Python wheels support
+Python `meshers` and Rust `meshers-core` use version 0.2.0. Python wheels support
 CPython 3.10+; source builds require Rust 1.95 or newer. The first publication
 target is PyPI. The Rust core can be published independently to crates.io.
 
@@ -36,4 +36,4 @@ is `pypi`. Publishing is explicitly triggered and never runs on pull requests.
 It reuses tested files rather than rebuilding them during upload.
 
 The source archive includes the Rust core and does not require a prior crates.io
-release. A conda-forge package is not part of v0.1.
+release. A conda-forge package is not part of v0.2.
