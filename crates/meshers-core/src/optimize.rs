@@ -449,6 +449,9 @@ fn proposal(
             }));
         }
     }
+    if best == original && faces.is_empty() && old_min < 0.65_f64.powi(3) {
+        best = improve_worst(mesh, group, threshold, h, geometry);
+    }
     if batch::surface_moves(mesh, &[(group, best)], threshold, geometry)
         .is_ok_and(|accepted| accepted[0])
     {
@@ -456,6 +459,77 @@ fn proposal(
     } else {
         [0.; 3]
     }
+}
+
+/// The smooth cavity penalty can stall at a poor element's quality guard.
+/// Search the minimum quality itself at stalled interior vertices. Keeping
+/// implicit wall vertices fixed avoids trading boundary accuracy for shape.
+pub(super) fn improve_worst(
+    mesh: &Mesh,
+    group: &Group,
+    threshold: f64,
+    h: f64,
+    geometry: &impl crate::geometry::Geometry,
+) -> Point {
+    let original = mesh.points[group.0[0]];
+    let level = projection_level(
+        geometry.value(original),
+        !group.2.is_empty(),
+        threshold,
+        geometry,
+    );
+    let quality = |candidate| {
+        let delta = sub(candidate, original);
+        group.1.iter().fold(1_f64, |worst, &ci| {
+            let p = mesh.tets[ci].map(|i| {
+                if group.0.contains(&i) {
+                    std::array::from_fn(|a| mesh.points[i][a] + delta[a])
+                } else {
+                    mesh.points[i]
+                }
+            });
+            let det = determinant(p);
+            if det <= h * h * h * 1e-8 {
+                return 0.;
+            }
+            let l2: f64 = (0..4)
+                .flat_map(|i| (i + 1..4).map(move |j| dot(sub(p[i], p[j]), sub(p[i], p[j]))))
+                .sum();
+            worst.min(432. * det.powi(2) / l2.powi(3))
+        })
+    };
+    let old = quality(original);
+    let direction: Point = std::array::from_fn(|a| {
+        let mut lo = original;
+        let mut hi = original;
+        lo[a] -= h * 0.002;
+        hi[a] += h * 0.002;
+        project(hi, original, level, geometry).map_or(old, &quality)
+            - project(lo, original, level, geometry).map_or(old, &quality)
+    });
+    let length = norm(direction);
+    let mut best = original;
+    let mut best_quality = old;
+    if length > 1e-15 {
+        for step in [0.2, 0.1, 0.05, 0.025, 0.0125] {
+            if let Some(p) = project(
+                std::array::from_fn(|a| original[a] + h * step * direction[a] / length),
+                original,
+                level,
+                geometry,
+            ) {
+                let q = quality(p);
+                if q > best_quality + 1e-12
+                    && batch::surface_moves(mesh, &[(group, p)], threshold, geometry)
+                        .is_ok_and(|accepted| accepted[0])
+                {
+                    best = p;
+                    best_quality = q;
+                }
+            }
+        }
+    }
+    best
 }
 
 fn evaluate(

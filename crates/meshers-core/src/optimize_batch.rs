@@ -309,6 +309,11 @@ pub(super) fn proposals(
             best_cost[i] = cost;
         }
     }
+    for (i, point) in best.iter_mut().enumerate() {
+        if *point == origins[i] && groups[i].2.is_empty() && old[i].0 < 0.65_f64.powi(3) {
+            *point = super::improve_worst(mesh, groups[i], threshold, h, g);
+        }
+    }
     let accepted = surface_moves(
         mesh,
         &groups

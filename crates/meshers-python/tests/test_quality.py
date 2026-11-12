@@ -3,6 +3,29 @@ import numpy as np
 import pytest
 
 
+@pytest.mark.parametrize("compiled", [True, False])
+def test_smooth_periodic_union_quality_with_symmetric_tie_gradients(compiled):
+    def field(x, y, z):
+        a, b, c = (np.sin(np.pi * coordinate) ** 2 for coordinate in (x, y, z))
+
+        def union(left, right):
+            return np.minimum(left, right) - np.maximum(0.08 - np.abs(left - right), 0) ** 2 / 0.32
+
+        return union(union(a + b - 0.24, b + c - 0.24), a + c - 0.24)
+
+    mesh = meshers.generate(
+        field,
+        cells=24,
+        periodic=(True,) * 3,
+        optimize_passes=2,
+        geometry_tolerance=0.1,
+        compile=compiled,
+    )
+    # The symmetric gradient must preserve the previous compiled route's quality.
+    assert mesh.diagnostics["minimum_mmg_quality"] >= 0.4369917124990134 * 0.99
+    assert mesh.diagnostics["sampled_surface_error"] <= 0.0034695250787026557 * 1.05
+
+
 def test_optional_interior_refinement_preserves_periodic_boundary():
     options = {"cells": 4, "optimize_passes": 0, "minimum_quality": 0.1, "periodic": (True,) * 3}
 
