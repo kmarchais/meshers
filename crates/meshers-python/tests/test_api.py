@@ -178,7 +178,8 @@ finally:
 
 
 @pytest.mark.parametrize("delay", [0.15, 2.0])
-def test_native_interruption_on_windows_and_parallel_workers(delay):
+@pytest.mark.parametrize("threads", [1, 4])
+def test_native_interruption_on_windows_and_parallel_workers(delay, threads):
     import os
     import subprocess
     import sys
@@ -186,8 +187,9 @@ def test_native_interruption_on_windows_and_parallel_workers(delay):
 
     import meshers
 
-    # interrupt_main sets Python's pending SIGINT on Windows too. Delay the
-    # second request until the optimizer, after lattice sampling has completed.
+    # interrupt_main sets Python's pending SIGINT on Windows too. Exercise early
+    # and later work; a wall-clock delay does not identify the native phase.
+    # Explicit worker counts cover both the default and actual parallel paths.
     code = f"""
 import sys, _thread, threading, time
 sys.path.insert(0, {str(Path(meshers.__file__).parent.parent)!r})
@@ -199,9 +201,10 @@ def interrupt():
 timer = threading.Timer({delay}, interrupt)
 timer.start()
 try:
-    meshers.generate('gyroid', cells=96, band=(-.5,.5), max_tetrahedra=4_000_000)
+    meshers.generate('gyroid', cells=96, band=(-.5,.5), max_tetrahedra=4_000_000, threads={threads})
 except KeyboardInterrupt:
-    assert time.perf_counter() - sent[0] < 2
+    elapsed = time.perf_counter() - sent[0]
+    assert elapsed < 2, dict(interrupt_latency_s=elapsed, threads={threads}, delay={delay})
 else:
     raise AssertionError('interrupt was ignored')
 finally:
