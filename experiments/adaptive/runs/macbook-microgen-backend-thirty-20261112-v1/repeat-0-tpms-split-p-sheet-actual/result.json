@@ -1,0 +1,51 @@
+{
+  "case": "tpms-split-p-sheet",
+  "arm": "actual",
+  "config": {
+    "name": "actual-default-tet4",
+    "arm": "microgen",
+    "resolution": null,
+    "order": 1,
+    "periodic_trace": true,
+    "declared_unit_cell": true
+  },
+  "status": "started",
+  "qualified": false,
+  "backend_selector": "mmg",
+  "mmg_calls": [],
+  "constructor_s": null,
+  "generation_s": null,
+  "workflow_s": null,
+  "instrumentation_s": 0.0,
+  "imports_charged": false,
+  "audits_charged": false,
+  "fea_run": false,
+  "versions": {
+    "meshers": "0.2.0",
+    "microgen": "2.0.0b1",
+    "numpy": "2.5.4",
+    "scipy": "1.18.1",
+    "pyvista": "0.49.1",
+    "vtk": "9.7.1",
+    "mmgpy": "0.17.1"
+  },
+  "native_binary_sha256": "7d498d032c4d8d53485c4a04e076457bb5d2429f85c8fcc80ba06a09d800a69f",
+  "microgen_module": "/Users/kmarchais/dev/microgen/microgen/__init__.py",
+  "vtk_backend": "Sequential",
+  "numerical_thread_policy": {
+    "environment": {
+      "OPENBLAS_NUM_THREADS": "1",
+      "OMP_NUM_THREADS": "1",
+      "MKL_NUM_THREADS": "1",
+      "VECLIB_MAXIMUM_THREADS": "1",
+      "RAYON_NUM_THREADS": "1"
+    },
+    "accelerate_blas_threading": 1,
+    "accelerate_scope": "calling thread"
+  },
+  "fixture_hashes": {
+    "tpms-split-p-sheet-specimen.json": "19bc32a96751f7d7ff4d9731aa44c207ed073eff6ff835d298ed6c650ae028dd",
+    "tpms-split-p-sheet-samples.npz": "75e9d07fb2a907f652124e734477ebdf29563bab392b73a2cdf14dc1ed2ac6cf",
+    "tpms-split-p-sheet-definition.json": "893ff64ce6d52146b194cfcdaa1cabe9e6c96a39d27b5b6203842dd6e6307612"
+  }
+}

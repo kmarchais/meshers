@@ -1,5 +1,368 @@
 # Meshers project tracking
 
+## Release and public-backend checkpoint, 12 November 2026
+
+The professional FR3 film is complete and pushed to website draft commit
+`20817da`. It uses the pinned NVIDIA asset and all 10,832 original tetrahedra,
+initially staged on stable faces with no replenishment. The 39-second encoded
+film, cover, saved-scene checks and licensing receipt are preserved. The website
+and LinkedIn drafts remain unpublished. The user-owned website `AGENTS.md` is
+untouched.
+
+Meshers PR [#6](https://github.com/kmarchais/meshers/pull/6) now contains two
+additional fixes found through the actual Microgen integration. `ade8e35`
+handles roundoff-sized residuals at fully locked box corners; `98c01bd` retains
+eligible unit-distance SDF intersections during adaptive Tet4 meshing.
+`afc49e5` is the binding-workspace formatter correction. All four workflows
+at that final head pass: CI, Coverage, Performance and Release artifacts. All four platform wheels and the source archive pass digest,
+metadata and source-content checks. No package is published or tagged. The final
+arm64 CI wheel also passes the fresh installation and benchmark checks below.
+
+The Microgen branch `codex/meshers-backend-integration`, commit `7fb26cd`, is pushed
+to `3MAH/microgen`. Meshers stays optional, requiring `>=0.2.0,<0.3`. The original
+VTK default stays intact; `backend="mmg"` calls the genuine existing VTK/two-pass
+MMG pipeline. The Meshers backend uses the existing pointwise fields and a shared
+converter. There is no second spinodoid implementation and no added integration
+Markdown file. Production field definitions are unchanged by the SDF work.
+
+A clean, noneditable Microgen installation of the final `afc49e5` CI wheel,
+outside both checkouts, passes all 34 backend/no-CAD controls, including the
+real MMG CLI. Sphere, Gyroid and
+spinodoid VTK point/cell hashes are identical before and after installing the
+optional Meshers wheel. The final native candidate passes 249 SDK/Microgen tests,
+with 14 optional-feature skips. Python 3.10/NumPy 1.23.5 passes 27 new geometry
+and curved-volume controls. Rust surface unit controls pass 81 tests with one
+existing ignored test. Native Clippy, Python lint/types and both Rust workspace
+formatters pass locally. CI caught the initially missed binding formatter;
+its correction is exactly verified Rust 1.95 formatter output, not a gate change.
+
+The [public-backend dashboard](handoff/macbook/microgen-public-backends-20261112.html)
+and its [machine-readable data](handoff/macbook/microgen-public-backends-20261112.json)
+separate coarse comparative screening, measured repetitions and final native
+feasibility. Counts, all six requested quality statistics and signed Tet4 volumes
+are independently replayed from saved arrays. Warmups, failed workers, timeout
+durations and clock-discontinuous timings cannot become successful speed samples.
+
+### What the fresh comparisons establish
+
+The coarse screen uses 30 fixed specimens and the actual public selectors.
+It charges construction plus backend generation on this M4, one numerical
+thread. Fifty of 60 attempts return meshes; 22 pairs return both routes. Native
+is faster and has a higher minimum quality in all 22 raw pairs, uses fewer tets
+in 16 and fewer nodes in 14. Mean, p10 and p90 quality are higher in 20/22;
+median quality is higher in 15/22. Common reverse boundary distance is smaller
+in 17/22. These are raw observations from historical count recipes. Only one
+native coarse mesh and no actual coarse mesh pass all strict gates. Therefore
+there are **zero admitted matched-accuracy pairs** in this screen.
+
+The latest accurate native spinodoid recipes pass five measured repetitions
+after an excluded warmup through Microgen, while the actual isotropic MMG
+selector fails periodic validation and the anisotropic result fails quality.
+This confirms useful native paths; rejected competitors do not establish a
+qualified speedup. Sampling32 is explicitly modified actual Microgen, not defaults.
+The frozen film's five-pair Gyroid data is unchanged.
+
+The complete final native candidate then passes all 30 fixed specimens. The CI
+arm64 wheel at `afc49e5` passes 150/150 measured generations after 30 excluded
+warmups. Every case reproduces exactly one array hash across its repetitions;
+all 150 timings pass the clock check. Geometry audits are reused only after
+array, fixture, case, protocol and periodic-mode identity checks, while native
+periodic-pair metadata is checked again for every generation. The largest mesh
+has 104,961 tets and 28,851 nodes, the smallest minimum quality is 0.1000122,
+maximum sampled boundary error is 0.00188511 and maximum nominal absolute volume
+discrepancy is 0.971595%. These use frozen empirical/analytic references, not
+certified Hausdorff or true-volume bounds. The earlier `98c01bd` wheel also passes
+its separate 180-attempt run. The two native payloads have different hashes and
+are not pooled. The dashboard uses only the final `afc49e5` run for final native
+measurements. The installed binary SHA256 is
+`d6e37257524526e4ce354ff19ac8939ea52551f8719d0cdb079af10fb404a473`.
+
+### Failures, fixes and costs
+
+| Weak point | What the controlled work found | Evidence and remaining limit |
+|---|---|---|
+| Adaptive Schwarz D solid returns infinite distance | Both compiled and callback modes fail at 12 cells. Instrumentation finds a fully locked corner, residual 2.63e-16 and nonzero gradient; masking all axes creates division by zero. A shared scalar/batch helper retains a nonzero full-gradient estimate only for normalized residuals ≤64ε at fully locked corners. Real misses, partial locks, zero and overflowed norms keep rejection controls. | Public regressions are red before the fix. The final 29,766-tet mesh passes independent distance 0.00143357, volume, quality 0.392707 and exact measured periodic coordinates. This is a bounded numerical exception, not a proof that every small residual is roundoff. |
+| Capped-cylinder SDF loses its rim | Raising the starting grid from 24 to 40 and halving maximum adaptive length leave reverse error 0.002754/0.002661. A saved-mesh witness shows a bevel across cap and radial branches. Retaining the unchanged SDF's unit-distance branches gives 5,081 tets, minimum quality 0.221941 and distance 0.00143867. | Volume discrepancy is 0.33694%, slightly larger than the rejected control's 0.2562%; it remains inside 1%. Native-to-native counts use explicitly different starting-grid controls; no inadmissible competitor is promoted. |
+| Box SDF needs many cells without retained features | A 40-cell fallback passes at 27,040 tets. The same existing field with adaptive branch retention needs 2,477 tets and reproduces planes/volume to numerical precision. | Minimum quality is 0.172768, lower than the dense fallback but above 0.1. Fewer cells are not presented as dominance on every quality statistic. |
+| Overbroad SDF recognition | Prototype v1 drops a trailing invalid norm term and overrides explicit gradient policy. V2 fixes both but admits a nonfinite original parent under nonadaptive dispatch. V3's 64 samples miss a localized-underflow slab. None is promoted. | V4 requires unit-normal convex-affine or rigid radial branches, complete term matching, original parent evaluation, adaptive-only dispatch and numerical eligibility. Conditional scaling, altered roots, nonunit/sheared/repeated bases, bands and explicit gradients retain scalar behavior. All 23 positive/adversarial controls pass. No Microgen field is replaced. |
+| PMY volume margin | Shared adaptive 24 yields 1.007691% nominal error and remains rejected. One finer 32 control reduces this to 0.919714% at 102,420 tets; full boundary error 0.00180057 passes. | No volume offset, specimen recalibration or tolerance relaxation. The frozen Sobol range is empirical. |
+| Ordered lattice raw traces differ in void | The direct unclamped field fails periodic preflight. The explicitly declared historical min(f,0.02) representation passes without changing the zero sublevel set or union order. | 58,847 tets pass mesh admission. This representation change is recorded, not a silent weakening of the periodic gate. All 24 stiffness models remain in scope; mesh admission does not establish reference accuracy. |
+| Strict original Gyroid costs 72,757 tets | The catalog adaptive 24 settings return 34,854 tets and 9,434 nodes, 52.1% fewer tets, boundary 0.00152832 and minimum quality 0.237236. All six attempts pass, including one excluded warmup. | Final-wheel measured median generation is 0.803595 s versus uniform 0.433631 s. Mean/median/p10/p90 quality are lower; volume discrepancy is 0.1931% versus 0.1891%. Fresh full six-load stiffness differs by up to 2.92917%, so this does not establish equivalent FEA accuracy. |
+
+The newly admitted native recipes address software feasibility on the tested
+set. They are not defaults, a count-matched optimum or proof of support for every
+Microgen geometry. Mapped/clipped TPMS and sampled `OffsetGrading` remain explicitly
+unsupported by the native adapter; their existing VTK behavior is preserved.
+Prior density calibration and fixture preparation, imports, independent audits
+and recorded inspection I/O are outside the charged constructor/backend interval.
+
+Fresh saved-mesh Tet4 solves now test the Gyroid count tradeoff with all six
+loads and the original E=2.5, nu=0.25 material. The uniform and adaptive meshes
+pass independent stress/reaction and Hill-Mandel energy audits. Maximum solver
+residuals are 9.79e-13, reaction error is at most 2.24e-12, and periodic field
+jumps are exactly zero at saved precision. An independent positive 8-point
+quadrature reproduces both full tensors and volumes. The adaptive tensor is
+0.629% to 2.929% stiffer across generalized mixed-load directions. The worst
+2.92917% disagreement exceeds the 1% study target. Neither mesh is promoted as
+a reference. These are different admitted polyhedral domains and non-nested
+spaces, so this is a pairwise consistency experiment, not a convergence bound.
+Saved six-load solve times are 3.493 s uniform and 1.761 s adaptive, one run each,
+excluding generation and audits. They are not comparative workflow timings.
+The original frozen source arrays are unchanged. Full fields are retained
+locally, with hashes and text audits versioned.
+
+The first attempted solve supervisor, job 1037, fails before any solve because
+it looks for sibling-repository FEA helpers in the study directory. Job 1038
+corrects the source paths, snapshots all used helpers and verifies unchanged
+inputs before and after both solves. The failed v1 record is preserved. The
+successful evidence is
+`experiments/adaptive/runs/macbook-gyroid-tet4-stiffness-tradeoff-20261112-v2`.
+
+Job 1042 then completes the same fresh six-load Tet4 field checks on the
+remaining three original specimens, using the final CI wheel's saved public
+Microgen meshes. All four original specimens now have fresh full tensors and
+retained six-load fields. No comparator or reference is inferred from these
+checks. The table reports one saved-mesh solve per case, excluding generation
+and audits; these times are not repeated workflow measurements.
+
+| Original specimen | Tets / nodes | Six-load solve s | Maximum solver residual | Relative energy audit error | Maximum periodic field jump |
+|---|---:|---:|---:|---:|---:|
+| Gyroid, uniform | 72,757 / 17,647 | 3.493 | 9.24e-13 | 7.75e-13 | 0 |
+| Schwarz P solid | 35,994 / 8,701 | 1.374 | 9.15e-13 | 2.84e-12 | 5.55e-17 |
+| Spinodoid | 46,750 / 12,330 | 2.445 | 9.91e-13 | 1.29e-12 | 0 |
+| Ordered smooth-union lattice | 58,847 / 13,698 | 2.917 | 7.85e-13 | 1.38e-12 | 0 |
+
+The last three field audits are in
+`experiments/adaptive/runs/macbook-original-four-tet4-fields-20261112-v1`.
+Their maximum reaction error is 3.12e-12; all independent positive 8-point
+quadrature checks pass. The fixture hashes, original mesh hashes and ordered
+lattice field are unchanged. This confirms FE consistency, not convergence,
+continuum accuracy or local-stress accuracy.
+
+Job 1043 compares these full tensors with the retained reference evidence.
+Gyroid and Schwarz P use the previously qualified curved Tet10 16/20 tensors
+and the documented independent Gyroid linear64/80 cross-check. Orders 2 through
+6 and both uniform-seed and element-density length proxies are declared before
+the assessment. Lattice keeps every one of the 24 historical model tensors.
+None of these native Tet4 recipes passes the 1% target under all retained
+models. These are empirical reference assumptions, not certified bounds.
+
+| Native Tet4 recipe | Mixed-load disagreement across retained reference models | 1% target |
+|---|---:|---|
+| Gyroid uniform | 3.694–3.798% | Fail |
+| Gyroid adaptive count control | 6.713–6.820% | Fail |
+| Schwarz P solid | 2.438–2.465% | Fail |
+| Ordered smooth-union lattice, all 24 models | 7.307–9.213% | Fail |
+| Spinodoid | No justified reference selected in this assessment | Unassessed |
+
+This confirms the smaller Gyroid recipe is farther from the retained models,
+although its minimum mesh quality and boundary error improve. It is not an FE
+accuracy replacement. Passing the new mesh feasibility suite does not establish
+FEA convergence. Results and input hashes are in
+`experiments/adaptive/runs/macbook-native-tet4-reference-diagnostics-20261112-v1`.
+No new reference or actual Microgen+MMG FEA comparator is promoted. Original
+reference-convergence caveats, particularly lattice, remain in force.
+
+**The original objective remains open.** No continuum certification,
+full-reference promotion or all-geometry performance victory follows. The four
+original specimens and all 24 retained lattice tensors remain in scope. Lattice
+reference convergence is still unresolved. Both Gyroid recipes, Schwarz P and lattice miss the 1% stiffness target under
+the retained models. Spinodoid still needs a justified reference. Their saved
+field consistency checks pass, but those checks do not establish accuracy.
+The next scientific work needs justified full six-load references and admitted
+actual routes before claiming matched-accuracy workflow wins.
+
+The dashboard is regenerated from the final wheel's saved arrays and visually
+checked in Chrome. Release readiness is recorded in
+`handoff/macbook/release-readiness-20261112.json` and
+`experiments/adaptive/runs/macbook-release-readiness-20261112-final-v1/receipt.json`.
+The older readiness receipt remains preserved.
+
+Selected run directories:
+
+- `experiments/adaptive/runs/macbook-microgen-backend-thirty-20261112-v1`
+- `experiments/adaptive/runs/macbook-microgen-backend-repeated-20261112-v1`
+- `experiments/adaptive/runs/macbook-microgen-backend-coverage-20261112-v1`
+- `experiments/adaptive/runs/macbook-microgen-backend-wide-coverage-20261112-v1`
+- `experiments/adaptive/runs/macbook-microgen-backend-failure-followup-20261112-v1`
+- `experiments/adaptive/runs/macbook-microgen-backend-cylinder-followup-20261112-v1`
+- `experiments/adaptive/runs/macbook-microgen-backend-final-native-20261112-v1`
+- `experiments/adaptive/runs/macbook-microgen-backend-release-repeated-20261112-v1`
+- `experiments/adaptive/runs/macbook-microgen-backend-release-final-20261112-v1`
+- `experiments/adaptive/runs/macbook-microgen-backend-gyroid-adaptive-20261112-v1`
+- `experiments/adaptive/runs/macbook-microgen-backend-gyroid-adaptive-repeated-20261112-v1`
+
+Each run retains its own result, selection, driver and protocol hashes. Large
+arrays stay local/ignored; selected text evidence is versioned. Earlier failures
+keep their original status and hashes.
+
+## NVIDIA FR3 assembly film, 12 November 2026, verified
+
+Kevin rejected the procedural arm and asked for a professional NVIDIA asset,
+all source tetrahedra present initially, and stable face-down staging. Job 938
+was canceled; its incomplete procedural-arm cut is not promoted. The earlier
+20-position replenished stock does not satisfy the revised request.
+
+The replacement uses NVIDIA's Franka FR3 asset from `nvidia/isaacsim-assets`,
+pinned to dataset revision `a0d9dfbac5163a7005442ae4fe8f954ff6780093`.
+All 28 downloaded files pass LFS SHA256 checks. The robot asset is Apache 2.0;
+material notices are retained separately. Native arm64 usd-core 25.11 converts
+11 visual meshes, 721,872 vertices and 37 material assignments. No IsaacSim or
+CUDA runtime is installed. Joint frames come from the authored USD; the fixed
+hand attachment retains the composed visual-body offset. All link transforms
+at zero pose reproduce the USD within 2.03e-7.
+
+Every one of the 10,832 original Tet4 cells has a stable triangular support
+face. The projected centre of mass lies within that face; packed footprints
+have no overlap. The annular indexed tray contains all pieces initially, with
+no replenishment. Three visible transfers precede an explicitly labelled
+assembly time-lapse. At every baked frame, stock plus carried plus assembled
+cells equals 10,832. A 0.965 centroid contraction exaggerates display seams;
+it changes neither the frozen source arrays nor scientific measurements.
+
+Initial reach tests reject two poses and then 22 early trajectory frames.
+Moving the robot base and selecting reachable demonstration cells removes
+those failures. A small previous-pose penalty removes redundant-joint flips.
+Job 945 passes 432 bounded poses: worst tip-position error 0.02994 mm, orientation
+error 0.0001559 rad; all authored joint limits pass. Job 949 checks the actual
+saved scene: stable staging, the complete initial inventory within the camera,
+evaluated geometry-node counts, and all 432 poses above the table and clear of
+the build pedestal. This is a vertex-clearance check, not an industrial robot
+collision certification. Closeups show a real source tetrahedron at the tip.
+
+Job 948 exposed a validation problem: Blender exits zero after an uncaught
+Python error unless `--python-exit-code 1` is set, and an old receipt satisfied
+the supervisor. That run is invalid. All subsequent Blender commands set the
+error exit code; exact JSON completion receipts must be freshly written.
+The strict audit uses finite Float64 component transforms and passes without
+arithmetic warnings in job 949. Full film phase controls are in job 950.
+
+The 39-second professional cut is verified and promoted in website draft commit
+`20817da`, pushed to `codex/meshers-article-draft`. The H.264 film has 936 frames
+at 1080×1350 and 24 fps; full decoding and 20 encoded phase controls pass. Its
+SHA256 is `ae77d912c53ee0767e1d3b51edc128525aaf93a7458ec3eb89826578c535790e`.
+The actual Tet4 cover is taken before the title fade. Evidence, converted assets,
+trajectory and editable scene are under `.local-work/blender-fr3-assembly-v9`.
+The previous successful smooth-print film and its receipt remain intact.
+
+The portable JSON/binary preparation control reproduces every staging array and
+robot coordinate exactly. It exposes two authored zero-length robot normals
+that the converter divided by zero. Preserving those zero vectors removes six
+NaN components. Job 976 proves the actual saved Blender normals are all finite
+and bit-identical with the corrected conversion; no film rerender is required.
+The permanent scene audit now requires finite corner normals. Job 977 passes
+all 432 poses and every source/clearance/morph check again. No source mesh,
+benchmark statistic or geometry gate changes. User-owned website `AGENTS.md`
+remains unstaged; no deployment or social post is sent. The media revision itself changes no Meshers algorithm, Microgen integration,
+release PR, admission gate or benchmark measurement. Subsequent release and
+scientific work is recorded in the checkpoint above. The four-case/24-model objective remains
+incomplete; both coarse Gyroid routes still miss the strict boundary target.
+
+
+## Earlier overnight release sequence, 12 November 2026
+
+The professional film's first full render, job 955, was canceled after finding
+that the wide pedestal could overlap stock near the tray's inner edge. The
+replacement has a 0.095-radius support column and a raised top flange. Job 960
+verifies 31.55 mm radial clearance for every tray angle and 88.81 mm vertical
+clearance above the tallest piece. It also repeats inventory, joint-limit,
+closed-morph and table checks on the saved scene. Job 958 failed because an
+unused future morph material was dropped when saving a scene containing only
+an opening frame. Retaining that material fixes deferred playback.
+
+Cancellation of job 955 exposed an orphaned Blender child in a separate process
+session. It was identified and stopped. The render supervisor now keeps children
+in the queue process group. Intentional cancellation control 956 verifies no
+surviving child. The analogous Mac research-worker change is prepared with a
+real nested-child timeout regression; Linux behavior stays unchanged. Its tests
+have not run yet. Render 961 completed but final audit 962 found the robot's
+base foot intruding into the stock annulus. That cut is rejected. A quarter-turn
+mount with an opposing first-joint offset preserves every downstream link pose
+within 5.56e-16 while bringing the complete base foot inside the central island.
+Jobs 963–965 verify all joint limits, 432 poses, complete stable stock, and a
+40.47 mm base-to-stock radial gap. Render 969 now uses that corrected layout at
+32 Metal Cycles samples. It completes all 936 frames in 3,112.64 seconds,
+with peak process-tree RSS 2.418 GiB. Final saved-scene audit 970 repeats all
+432 poses with zero detected collisions and preserves all 10,832 source cells.
+Composition and full MP4 decoding pass in job 971. Encoded artifact/cover
+controls 972–973 and final scene audit 977 pass; the cut is promoted. The previous successful film remains preserved.
+
+A fresh two-axis PR review reconfirms the old release blockers. Commit
+`c2b37fc` fixes the constant-chunk Clippy error, integrates signed curved Tet10
+volumes with an exact degree-three rule, recomputes exported volumes after
+coordinate edits, and labels corner metrics explicitly. Analytic cubic,
+transformation, mutable-node and generated-sphere regressions are added.
+Tet4 geometry and field definitions are unchanged. The quadrature is for volume
+reporting; it is not the study's positive-weight FE integration rule or a global
+Jacobian certificate. The 1,195-line private volume experiment and two PMY
+runners are deferred to the retained study branch. Production fitting and small
+regressions remain in release.
+
+Manifests and locks now specify 0.2.0. Commit `9ba1fe4` aligns the bundled license
+notice and existing package/readiness wording. These are maintenance edits to
+two existing Markdown files; no new report, audit, changelog or editorial file
+is added to the release PR. The Microgen optional extra is aligned to
+`meshers>=0.2.0,<0.3` in local commit `a0f09a3`; it is not pushed yet.
+
+Static formatting, Python lint and types pass. All three CPU jobs and the
+performance workflow pass on `9ba1fe4`, resolving the previous Clippy blocker.
+However, Linux Python 3.14 catches KeyboardInterrupt later than the existing
+two-second bound. This is an unresolved cancellation-latency finding, not a
+curved-volume failure. Commit `a3f4db9` explicitly tests one and four workers
+and records latency without weakening the bound. The previous test's Rayon
+environment variable did not override the public one-worker default. Native
+reproduction at 96 cells passes on the Mac with worst observed latency
+1.0033 s, but exact-head CI still fails the quality job at 2.1402 and 2.0017 s.
+All nine release-wheel test jobs and three CPU jobs pass, as do artifact,
+coverage and performance workflows. No package is published, merged or tagged.
+The 128-cell interruption control exhausts its four-million-tet stress budget
+before the delayed requests, and the 144-cell probe violates the 128-cell API
+limit. Those are invalid latency controls, not cancellation successes. The
+scientific 250,000-node/tet admission caps remain unchanged.
+
+The exact `a3f4db9` macOS arm64 CI wheel is downloaded and its GitHub artifact
+SHA256 verified. Isolated native test job 981 passes 197 SDK tests, with 14
+optional-feature skips, in 33.83 seconds and 1.269 GiB peak RSS. Job 982 passes
+the three curved-volume tests on Python 3.10.16 with NumPy 1.23.5. The 0.1
+baseline package is preserved. No native cancellation fix is claimed yet.
+
+Mac worker controls first reveal missing local psutil, installed at the recorded
+7.2.2 version. Job 979 then reproduces a captured-default memory-control failure.
+Resolving the default at call time fixes it; job 980 passes seven real worker
+controls, including a nested child's timeout cleanup. Default 8 GiB and explicit
+Mac 10/12 GiB choices are unchanged. The Mac child now shares the queue process
+group so external cancellation can reach it; Linux group behavior is retained.
+
+Native stack sampling 984 locates continued work after the request in boundary
+sorting, topology validation and optimizer setup. Two checks, after clipping and
+before optimizer setup, break that chain without changing the meshing algorithm.
+The optimized Rust 1.95 candidate builds in job 985. Four unsampled interruption
+controls in job 986 pass, with maximum observed latency 0.5020 seconds. Both
+read-only follow-up reviewers find no blocker. Commit `2be31de` is pushed to
+PR #6; its exact-head CI is running and its performance workflow already passes.
+These observations do not prove a universal latency bound inside every phase.
+
+Job 987 passes the SDK plus Microgen integration/implicit selections: 349 passed,
+15 skipped and the same two known CAD tests deselected. The MMG CLI test was
+initially skipped because the lean Microgen test environment has no mmgpy binary.
+Pointing PATH at the scientific runtime's verified binary enables it; job 988
+passes all five MMG selector tests, including the genuine VTK-to-MMG pipeline.
+No product dependency is added for this local test-path correction.
+
+The new harness control 989 uses the current Microgen checkout and the isolated
+0.2 candidate, and reproduces the frozen Gyroid counts exactly: native 10,832
+cells / 3,283 nodes; actual 12,250 / 3,533. One observed constructor-plus-backend
+cost is 0.09464 s versus 1.85268 s. This is a single functional/timing control,
+not a repeated comparison. Both still reject strict admission, and the film's
+frozen five-pair measurements are unchanged. The full 30-case run is now active.
+
+A 30-case Microgen-backend experiment is prepared from frozen count recipes:
+all original four cases, the TPMS catalog, both spinodoids, three grading cases
+and five primitive controls. It charges construction plus the actual backend
+call and preserves every admission gate. It has not run. Source fixtures are
+not recalibrated; the 24 lattice models remain in scope, with no new FE solve
+or reference promotion. Video measurements and the wider study are unchanged.
+
 
 ## Correcting the printing film, 11 November 2026
 

@@ -1,0 +1,174 @@
+{
+  "case": "smooth-lattice",
+  "arm": "actual",
+  "config": {
+    "name": "actual-default-tet4",
+    "arm": "microgen",
+    "resolution": null,
+    "order": 1,
+    "periodic_trace": true,
+    "declared_unit_cell": true
+  },
+  "status": "admission-rejected",
+  "qualified": false,
+  "backend_selector": "mmg",
+  "mmg_calls": [
+    {
+      "nofem": true,
+      "nodes": 5142,
+      "tetrahedra": 19053
+    },
+    {
+      "hausd": null,
+      "hgrad": null,
+      "hmax": null,
+      "hmin": null,
+      "hsiz": null,
+      "ls": true,
+      "nr": true,
+      "nodes": 6596,
+      "tetrahedra": 27084
+    }
+  ],
+  "constructor_s": 0.00015045801410451531,
+  "generation_s": 4.964355459029321,
+  "workflow_s": 4.964505917043425,
+  "instrumentation_s": 0.09752795798704028,
+  "imports_charged": false,
+  "audits_charged": false,
+  "fea_run": false,
+  "versions": {
+    "meshers": "0.2.0",
+    "microgen": "2.0.0b1",
+    "numpy": "2.5.4",
+    "scipy": "1.18.1",
+    "pyvista": "0.49.1",
+    "vtk": "9.7.1",
+    "mmgpy": "0.17.1"
+  },
+  "native_binary_sha256": "7d498d032c4d8d53485c4a04e076457bb5d2429f85c8fcc80ba06a09d800a69f",
+  "microgen_module": "/Users/kmarchais/dev/microgen/microgen/__init__.py",
+  "vtk_backend": "Sequential",
+  "numerical_thread_policy": {
+    "environment": {
+      "OPENBLAS_NUM_THREADS": "1",
+      "OMP_NUM_THREADS": "1",
+      "MKL_NUM_THREADS": "1",
+      "VECLIB_MAXIMUM_THREADS": "1",
+      "RAYON_NUM_THREADS": "1"
+    },
+    "accelerate_blas_threading": 1,
+    "accelerate_scope": "calling thread"
+  },
+  "fixture_hashes": {
+    "smooth-lattice-samples.npz": "a2b4375d2c99901f03b34e913563c887a4cdcff00bca35983adb7ef9d5311abe",
+    "smooth-lattice-specimen.json": "0e5b34b76183341a6e0d454f13cd404668ab82675f9a51cd9d2ecf3c91be3316"
+  },
+  "field_identity_points": 4096,
+  "mmg_binary_sha256": "efe07a6207a9ff86f4af26513e6aa368647b32cae112859fca52e74c3e7f7cf1",
+  "seed_nodes": 48353,
+  "seed_cells": 72004,
+  "mmg_options": {},
+  "nodes": 6596,
+  "elements": 27084,
+  "audit_reoriented_tets": 0,
+  "arrays_sha256": "9b562cd5810ae3985b78e33aacd44bc2d3716536e120a1f68606d8cc2a95b37f",
+  "mesh_sha256": "32922e3c54e727913573a9dc88827ceeb8199be6dab50dea369769a829db4191",
+  "geometry": {
+    "volume": 0.24123533552214643,
+    "relative_volume_error": -0.02849533868538512,
+    "q_min_corner": 0.010288182196537089,
+    "q_p01_corner": 0.26118587812462973,
+    "minimum_sampled_jacobian": 3.503542125756137e-08,
+    "facet_consistency": {
+      "nodes": 6596,
+      "elements": 27084,
+      "unique_faces": 57556,
+      "interior_faces": 50780,
+      "extracted_boundary_faces": 6776,
+      "same_orientation_shared_faces": 0,
+      "nonmanifold_faces": 0,
+      "duplicate_cells": 0,
+      "duplicate_surface_faces": 0,
+      "provided_boundary_matches_extraction": true,
+      "missing_provided_faces": 0,
+      "extra_provided_faces": 0,
+      "nonpositive_corner_determinants": 0,
+      "minimum_corner_determinant": 3.503542125756141e-08,
+      "oriented_facet_consistency_passed": true,
+      "conflict_examples": [],
+      "scope": "Oriented corner-face incidence and same-side neighbor diagnostics; necessary consistency, not a certificate of curved geometry or absence of nonlocal intersections"
+    },
+    "oriented_facet_consistency_passed": true,
+    "quadratic_conformity": {
+      "passed": true,
+      "order": 1
+    },
+    "exact_straight_reduction_verified": false,
+    "geometry_admitted": false,
+    "sampled_reverse_max": 0.008779023106281314,
+    "distance_audit_complete": false,
+    "projection_failed": null,
+    "audit_scope": "Fail-fast after required quality/volume/topology/periodicity rejection; no forward-distance or successful speed claim",
+    "failed_gates": [
+      "quality",
+      "volume"
+    ]
+  },
+  "periodic": {
+    "periodic_pair_counts": [
+      360,
+      360,
+      360
+    ],
+    "periodic_coordinate_errors": [
+      0.0,
+      0.0,
+      0.0
+    ],
+    "periodic_pair_tolerance": 1e-10,
+    "periodic_equivalence_classes": 5569,
+    "periodic_triangles_match": true,
+    "full_facet_check_required": true,
+    "complete_existing_node_classes": true,
+    "unmatched_noncap_contact_nodes": [
+      [
+        [],
+        []
+      ],
+      [
+        [],
+        []
+      ],
+      [
+        [],
+        []
+      ]
+    ],
+    "declared_bounds": [
+      [
+        -0.5,
+        -0.5,
+        -0.5
+      ],
+      [
+        0.5,
+        0.5,
+        0.5
+      ]
+    ],
+    "periodic_gate": "declared-cell-material-cap-and-complete-node-classes-v1"
+  },
+  "quality_stats": {
+    "min": 0.010288182196537089,
+    "p01": 0.26118587812462973,
+    "p10": 0.5457365584861792,
+    "median": 0.7517124089487847,
+    "p90": 0.9023490126918249,
+    "p99": 0.9669878293427034,
+    "max": 0.9969897309399817,
+    "mean": 0.7315219928341312
+  },
+  "audit_s": 0.9826239580288529,
+  "elapsed_s": 6.094840875011869
+}

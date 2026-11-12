@@ -1,0 +1,220 @@
+{
+  "case": "spinodoid-anisotropic",
+  "arm": "actual",
+  "config": {
+    "name": "actual-default-tet4",
+    "arm": "microgen",
+    "resolution": null,
+    "order": 1,
+    "periodic_trace": true,
+    "declared_unit_cell": true
+  },
+  "status": "admission-rejected",
+  "qualified": false,
+  "backend_selector": "mmg",
+  "mmg_calls": [
+    {
+      "nofem": true,
+      "nodes": 3823,
+      "tetrahedra": 15360
+    },
+    {
+      "hausd": null,
+      "hgrad": null,
+      "hmax": null,
+      "hmin": null,
+      "hsiz": null,
+      "ls": true,
+      "nr": true,
+      "nodes": 3573,
+      "tetrahedra": 14129
+    }
+  ],
+  "constructor_s": 0.0004964579711668193,
+  "generation_s": 1.299131167063024,
+  "workflow_s": 1.2996276250341907,
+  "instrumentation_s": 0.08356999995885417,
+  "imports_charged": false,
+  "audits_charged": false,
+  "fea_run": false,
+  "versions": {
+    "meshers": "0.2.0",
+    "microgen": "2.0.0b1",
+    "numpy": "2.5.4",
+    "scipy": "1.18.1",
+    "pyvista": "0.49.1",
+    "vtk": "9.7.1",
+    "mmgpy": "0.17.1"
+  },
+  "native_binary_sha256": "7d498d032c4d8d53485c4a04e076457bb5d2429f85c8fcc80ba06a09d800a69f",
+  "microgen_module": "/Users/kmarchais/dev/microgen/microgen/__init__.py",
+  "vtk_backend": "Sequential",
+  "numerical_thread_policy": {
+    "environment": {
+      "OPENBLAS_NUM_THREADS": "1",
+      "OMP_NUM_THREADS": "1",
+      "MKL_NUM_THREADS": "1",
+      "VECLIB_MAXIMUM_THREADS": "1",
+      "RAYON_NUM_THREADS": "1"
+    },
+    "accelerate_blas_threading": 1,
+    "accelerate_scope": "calling thread"
+  },
+  "fixture_hashes": {
+    "spinodoid-anisotropic-specimen.json": "4c3cb9c37a0f4a2e42f8d448511e78a2e1e0d57f846e28140deab57b3d1712f0",
+    "spinodoid-anisotropic-coefficients.json": "6472b7e24af7aec153ec8797ff9025ea82c5690705da3d5ebc836dc94fa00b7e",
+    "spinodoid-anisotropic-samples.npz": "68402aca3566073307f3a2cd26d76473a7d946f1ded4a4a1098aedf0dda23cb8"
+  },
+  "field_identity_points": 4096,
+  "mmg_binary_sha256": "efe07a6207a9ff86f4af26513e6aa368647b32cae112859fca52e74c3e7f7cf1",
+  "seed_nodes": 4849,
+  "seed_cells": 6827,
+  "mmg_options": {},
+  "nodes": 3573,
+  "elements": 14129,
+  "audit_reoriented_tets": 0,
+  "arrays_sha256": "f7bff8470c534b1659cffe0e4cfa79d1c5dcf7efb7a30eed169c5ebbc962d897",
+  "mesh_sha256": "280b5cd07eb76b166b96fb06acef4ed78d76d83fcbda42b73dc28e6e3a66854e",
+  "geometry": {
+    "volume": 0.5229385911766193,
+    "relative_volume_error": 0.002164107783765523,
+    "q_min_corner": 0.0008884126453585811,
+    "q_p01_corner": 0.13439267641854408,
+    "minimum_sampled_jacobian": 1.1330006301943811e-08,
+    "facet_consistency": {
+      "nodes": 3573,
+      "elements": 14129,
+      "unique_faces": 30400,
+      "interior_faces": 26116,
+      "extracted_boundary_faces": 4284,
+      "same_orientation_shared_faces": 4,
+      "nonmanifold_faces": 0,
+      "duplicate_cells": 0,
+      "duplicate_surface_faces": 0,
+      "provided_boundary_matches_extraction": true,
+      "missing_provided_faces": 0,
+      "extra_provided_faces": 0,
+      "nonpositive_corner_determinants": 0,
+      "minimum_corner_determinant": 1.1330006301943785e-08,
+      "oriented_facet_consistency_passed": false,
+      "conflict_examples": [
+        {
+          "face": [
+            196,
+            2738,
+            2826
+          ],
+          "incident_elements": [
+            5513,
+            13696
+          ],
+          "orientation_sum": 2,
+          "opposite_vertices": [
+            1908,
+            2813
+          ],
+          "signed_plane_products": [
+            -0.00011935962585596243,
+            -4.645866412902096e-05
+          ],
+          "same_physical_side": true
+        },
+        {
+          "face": [
+            196,
+            2738,
+            3494
+          ],
+          "incident_elements": [
+            3476,
+            13731
+          ],
+          "orientation_sum": -2,
+          "opposite_vertices": [
+            2813,
+            1908
+          ],
+          "signed_plane_products": [
+            6.697123498841098e-05,
+            0.00016892321730946951
+          ],
+          "same_physical_side": true
+        },
+        {
+          "face": [
+            196,
+            2813,
+            2826
+          ],
+          "incident_elements": [
+            5533,
+            13696
+          ],
+          "orientation_sum": -2,
+          "opposite_vertices": [
+            1908,
+            2738
+          ],
+          "signed_plane_products": [
+            3.120567338212306e-05,
+            4.6458664129020964e-05
+          ],
+          "same_physical_side": true
+        },
+        {
+          "face": [
+            196,
+            2813,
+            3494
+          ],
+          "incident_elements": [
+            3476,
+            13768
+          ],
+          "orientation_sum": 2,
+          "opposite_vertices": [
+            2738,
+            1908
+          ],
+          "signed_plane_products": [
+            -6.697123498841095e-05,
+            -5.752696107651225e-05
+          ],
+          "same_physical_side": true
+        }
+      ],
+      "scope": "Oriented corner-face incidence and same-side neighbor diagnostics; necessary consistency, not a certificate of curved geometry or absence of nonlocal intersections"
+    },
+    "oriented_facet_consistency_passed": false,
+    "quadratic_conformity": {
+      "passed": true,
+      "order": 1
+    },
+    "exact_straight_reduction_verified": false,
+    "geometry_admitted": false,
+    "sampled_reverse_max": 0.021189145872614112,
+    "distance_audit_complete": false,
+    "projection_failed": null,
+    "audit_scope": "Fail-fast after required quality/volume/topology/periodicity rejection; no forward-distance or successful speed claim",
+    "failed_gates": [
+      "quality",
+      "facets",
+      "periodicity"
+    ]
+  },
+  "periodic": {
+    "error": "Opposite-face triangulations differ on axis 0"
+  },
+  "quality_stats": {
+    "min": 0.0008884126453585811,
+    "p01": 0.13439267641854408,
+    "p10": 0.4882727571701303,
+    "median": 0.7611619145164115,
+    "p90": 0.9068427169752392,
+    "p99": 0.9680759228803129,
+    "max": 0.9968677306650126,
+    "mean": 0.7240938150424477
+  },
+  "audit_s": 0.9236137500265613,
+  "elapsed_s": 2.330665457993746
+}

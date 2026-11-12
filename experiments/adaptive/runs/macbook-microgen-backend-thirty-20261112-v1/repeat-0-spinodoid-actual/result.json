@@ -1,0 +1,141 @@
+{
+  "case": "spinodoid",
+  "arm": "actual",
+  "config": {
+    "name": "actual-default-tet4",
+    "arm": "microgen",
+    "resolution": null,
+    "order": 1,
+    "periodic_trace": true,
+    "declared_unit_cell": true
+  },
+  "status": "failed",
+  "qualified": false,
+  "backend_selector": "mmg",
+  "mmg_calls": [
+    {
+      "nofem": true,
+      "nodes": 5115,
+      "tetrahedra": 20630
+    },
+    {
+      "hausd": null,
+      "hgrad": null,
+      "hmax": null,
+      "hmin": null,
+      "hsiz": null,
+      "ls": true,
+      "nr": true,
+      "nodes": 4991,
+      "tetrahedra": 20288
+    },
+    {
+      "nofem": true,
+      "nodes": 5115,
+      "tetrahedra": 20630
+    },
+    {
+      "hausd": null,
+      "hgrad": null,
+      "hmax": null,
+      "hmin": null,
+      "hsiz": null,
+      "ls": true,
+      "nr": true,
+      "nodes": 4991,
+      "tetrahedra": 20288
+    },
+    {
+      "nofem": true,
+      "nodes": 5115,
+      "tetrahedra": 20630
+    },
+    {
+      "hausd": null,
+      "hgrad": null,
+      "hmax": null,
+      "hmin": null,
+      "hsiz": null,
+      "ls": true,
+      "nr": true,
+      "nodes": 4991,
+      "tetrahedra": 20288
+    },
+    {
+      "nofem": true,
+      "nodes": 5115,
+      "tetrahedra": 20630
+    },
+    {
+      "hausd": null,
+      "hgrad": null,
+      "hmax": null,
+      "hmin": null,
+      "hsiz": null,
+      "ls": true,
+      "nr": true,
+      "nodes": 4991,
+      "tetrahedra": 20288
+    },
+    {
+      "nofem": true,
+      "nodes": 5115,
+      "tetrahedra": 20630
+    },
+    {
+      "hausd": null,
+      "hgrad": null,
+      "hmax": null,
+      "hmin": null,
+      "hsiz": null,
+      "ls": true,
+      "nr": true,
+      "nodes": 4991,
+      "tetrahedra": 20288
+    }
+  ],
+  "constructor_s": 0.0005626669735647738,
+  "generation_s": null,
+  "workflow_s": null,
+  "instrumentation_s": 0.4298607499804348,
+  "imports_charged": false,
+  "audits_charged": false,
+  "fea_run": false,
+  "versions": {
+    "meshers": "0.2.0",
+    "microgen": "2.0.0b1",
+    "numpy": "2.5.4",
+    "scipy": "1.18.1",
+    "pyvista": "0.49.1",
+    "vtk": "9.7.1",
+    "mmgpy": "0.17.1"
+  },
+  "native_binary_sha256": "7d498d032c4d8d53485c4a04e076457bb5d2429f85c8fcc80ba06a09d800a69f",
+  "microgen_module": "/Users/kmarchais/dev/microgen/microgen/__init__.py",
+  "vtk_backend": "Sequential",
+  "numerical_thread_policy": {
+    "environment": {
+      "OPENBLAS_NUM_THREADS": "1",
+      "OMP_NUM_THREADS": "1",
+      "MKL_NUM_THREADS": "1",
+      "VECLIB_MAXIMUM_THREADS": "1",
+      "RAYON_NUM_THREADS": "1"
+    },
+    "accelerate_blas_threading": 1,
+    "accelerate_scope": "calling thread"
+  },
+  "fixture_hashes": {
+    "fourier-coefficients.json": "e9ee2b6c70dcf771ab9fdb011051eb57973d2e15cf479e904bf5d8b40e3d779a",
+    "spinodoid-samples.npz": "1f5f91f1ebc3e4e76dc7ddfc1e7ea7093595735684fbe41f1f7d85356138442c",
+    "spinodoid-specimen.json": "6140bf66acc68303bc18767a3632e24a068181201eba350ce32217dc50a67eee"
+  },
+  "field_identity_points": 4096,
+  "mmg_binary_sha256": "efe07a6207a9ff86f4af26513e6aa368647b32cae112859fca52e74c3e7f7cf1",
+  "seed_nodes": 5268,
+  "seed_cells": 7983,
+  "mmg_options": {},
+  "error_type": "OutputMeshNotPeriodicError",
+  "error": "Something went wrong: output mesh is not periodic",
+  "traceback": "Traceback (most recent call last):\n  File \"/Users/kmarchais/dev/meshers/experiments/adaptive/microgen_backend_benchmark.py\", line 181, in worker\n    grid = shape.generate_volume_mesh(backend=row[\"backend_selector\"], **options)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/Users/kmarchais/dev/microgen/microgen/shape/spinodoid.py\", line 229, in generate_volume_mesh\n    return remesh_keeping_boundaries_for_fem(\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/Users/kmarchais/dev/meshers/experiments/adaptive/microgen_backend_benchmark.py\", line 148, in remesh\n    return original_remesh(seed, **options)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/Users/kmarchais/dev/microgen/microgen/remesh.py\", line 164, in remesh_keeping_boundaries_for_fem\n    raise last_error\nmicrogen.remesh.OutputMeshNotPeriodicError: Something went wrong: output mesh is not periodic\n",
+  "elapsed_s": 7.770803416962735
+}

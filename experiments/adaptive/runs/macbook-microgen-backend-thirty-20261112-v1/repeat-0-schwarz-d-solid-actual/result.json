@@ -1,0 +1,59 @@
+{
+  "case": "schwarz-d-solid",
+  "arm": "actual",
+  "config": {
+    "name": "actual-default-tet4",
+    "arm": "microgen",
+    "resolution": null,
+    "order": 1,
+    "periodic_trace": true,
+    "declared_unit_cell": true
+  },
+  "status": "failed",
+  "qualified": false,
+  "backend_selector": "mmg",
+  "mmg_calls": [],
+  "constructor_s": 0.0014343750081025064,
+  "generation_s": null,
+  "workflow_s": null,
+  "instrumentation_s": 0.0,
+  "imports_charged": false,
+  "audits_charged": false,
+  "fea_run": false,
+  "versions": {
+    "meshers": "0.2.0",
+    "microgen": "2.0.0b1",
+    "numpy": "2.5.4",
+    "scipy": "1.18.1",
+    "pyvista": "0.49.1",
+    "vtk": "9.7.1",
+    "mmgpy": "0.17.1"
+  },
+  "native_binary_sha256": "7d498d032c4d8d53485c4a04e076457bb5d2429f85c8fcc80ba06a09d800a69f",
+  "microgen_module": "/Users/kmarchais/dev/microgen/microgen/__init__.py",
+  "vtk_backend": "Sequential",
+  "numerical_thread_policy": {
+    "environment": {
+      "OPENBLAS_NUM_THREADS": "1",
+      "OMP_NUM_THREADS": "1",
+      "MKL_NUM_THREADS": "1",
+      "VECLIB_MAXIMUM_THREADS": "1",
+      "RAYON_NUM_THREADS": "1"
+    },
+    "accelerate_blas_threading": 1,
+    "accelerate_scope": "calling thread"
+  },
+  "fixture_hashes": {
+    "schwarz-d-solid-samples.npz": "fe35202efd172138f0e4214ab8de10350af7f7eb9844a97a6fa32ba55b3dd796",
+    "schwarz-d-solid-specimen.json": "a534744167c7d691ca076d1bdff53fef87a83c5377dbfb3124bb0a508193d684"
+  },
+  "field_identity_points": 4096,
+  "mmg_binary_sha256": "efe07a6207a9ff86f4af26513e6aa368647b32cae112859fca52e74c3e7f7cf1",
+  "seed_nodes": 7189,
+  "seed_cells": 10886,
+  "mmg_options": {},
+  "error_type": "InputMeshNotPeriodicError",
+  "error": "Input mesh is not periodic",
+  "traceback": "Traceback (most recent call last):\n  File \"/Users/kmarchais/dev/meshers/experiments/adaptive/microgen_backend_benchmark.py\", line 181, in worker\n    grid = shape.generate_volume_mesh(backend=row[\"backend_selector\"], **options)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/Users/kmarchais/dev/microgen/microgen/shape/tpms.py\", line 1088, in generate_volume_mesh\n    return remesh_keeping_boundaries_for_fem(\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/Users/kmarchais/dev/meshers/experiments/adaptive/microgen_backend_benchmark.py\", line 148, in remesh\n    return original_remesh(seed, **options)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/Users/kmarchais/dev/microgen/microgen/remesh.py\", line 122, in remesh_keeping_boundaries_for_fem\n    raise InputMeshNotPeriodicError(err_msg)\nmicrogen.remesh.InputMeshNotPeriodicError: Input mesh is not periodic\n",
+  "elapsed_s": 0.038590375042986125
+}

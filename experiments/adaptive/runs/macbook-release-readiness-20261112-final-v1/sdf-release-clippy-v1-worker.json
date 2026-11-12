@@ -1,0 +1,47 @@
+{
+  "command": [
+    "/usr/bin/env",
+    "RUSTUP_TOOLCHAIN=1.98.1",
+    "CARGO_BUILD_JOBS=2",
+    "PYO3_PYTHON=/Users/kmarchais/dev/meshers/.local-work/macbook-runtime/venv/bin/python",
+    "CARGO_TARGET_DIR=/Users/kmarchais/dev/meshers-release/target",
+    "/Users/kmarchais/.cargo/bin/cargo",
+    "clippy",
+    "--manifest-path",
+    "/Users/kmarchais/dev/meshers-release/crates/meshers-python/Cargo.toml",
+    "--locked",
+    "--all-targets",
+    "--",
+    "-D",
+    "warnings"
+  ],
+  "resource": {
+    "returncode": 0,
+    "limit_failure": null,
+    "peak_rss_bytes": 1217429504,
+    "wall_s": 20.25770591699984,
+    "wall_s_clock": "monotonic",
+    "elapsed_realtime_s": 20.257848978042603,
+    "suspension_or_clock_adjustment_s": 0.0001430610427632928,
+    "idle_sleep_prevention": [
+      "/usr/bin/caffeinate",
+      "-i"
+    ],
+    "memory_bytes": 12884901888,
+    "memory_enforcement": "process-tree-rss-watchdog",
+    "rss_poll_interval_s": 0.25,
+    "platform": "darwin",
+    "numerical_thread_policy": {
+      "environment": {
+        "OPENBLAS_NUM_THREADS": "1",
+        "OMP_NUM_THREADS": "1",
+        "MKL_NUM_THREADS": "1",
+        "VECLIB_MAXIMUM_THREADS": "1",
+        "RAYON_NUM_THREADS": "1"
+      },
+      "accelerate_blas_threading": 1,
+      "accelerate_scope": "calling thread"
+    }
+  },
+  "complete": true
+}

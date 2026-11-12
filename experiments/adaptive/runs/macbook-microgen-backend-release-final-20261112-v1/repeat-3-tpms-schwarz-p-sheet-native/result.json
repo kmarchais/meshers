@@ -1,0 +1,210 @@
+{
+  "case": "tpms-schwarz-p-sheet",
+  "arm": "native",
+  "config": {
+    "name": "native-shared-adaptive24-coverage-control",
+    "arm": "meshers",
+    "cells": 24,
+    "order": 1,
+    "adapt": true,
+    "tolerance": 0.002,
+    "periodic_trace": true,
+    "declared_unit_cell": true,
+    "adapt_tolerance": 0.0018,
+    "min_length": 0.002,
+    "max_length": 0.1,
+    "gradation": 0.6,
+    "adapt_iterations": 4,
+    "optimization_passes": 1
+  },
+  "status": "admitted",
+  "qualified": true,
+  "periodic_required": true,
+  "audit_protocol_sha256": "058aec6326698771f9ae4c67a3c6fbd931db01ca648929dbee4a70d56ac1b77f",
+  "backend_selector": "meshers",
+  "mmg_calls": [],
+  "constructor_s": 0.00100620900047943,
+  "generation_s": 0.6195296250516549,
+  "workflow_s": 0.6205358340521343,
+  "instrumentation_s": 1.3339449651539326e-06,
+  "imports_charged": false,
+  "audits_charged": false,
+  "fea_run": false,
+  "versions": {
+    "meshers": "0.2.0",
+    "microgen": "2.0.0b1",
+    "numpy": "2.5.4",
+    "scipy": "1.18.1",
+    "pyvista": "0.49.1",
+    "vtk": "9.7.1",
+    "mmgpy": "0.17.1"
+  },
+  "native_binary_sha256": "d6e37257524526e4ce354ff19ac8939ea52551f8719d0cdb079af10fb404a473",
+  "microgen_module": "/Users/kmarchais/dev/microgen/microgen/__init__.py",
+  "vtk_backend": "Sequential",
+  "numerical_thread_policy": {
+    "environment": {
+      "OPENBLAS_NUM_THREADS": "1",
+      "OMP_NUM_THREADS": "1",
+      "MKL_NUM_THREADS": "1",
+      "VECLIB_MAXIMUM_THREADS": "1",
+      "RAYON_NUM_THREADS": "1"
+    },
+    "accelerate_blas_threading": 1,
+    "accelerate_scope": "calling thread"
+  },
+  "fixture_hashes": {
+    "tpms-schwarz-p-sheet-definition.json": "9fdea6b54f0d87a9703abf86fcd83bf5ee50d43e9388f2acc72360cd1fea9200",
+    "tpms-schwarz-p-sheet-samples.npz": "7c9e1cf8f81a4576aaaa7b9c6f11f42baa3c2c0c91d6e5a41dae8f5d8ad99816",
+    "tpms-schwarz-p-sheet-specimen.json": "6e17d7d398e25dcd6063b6db264f04fe1d3b945b6e3d615a5309ae46a530b525"
+  },
+  "field_identity_points": 4096,
+  "mmg_binary_sha256": "efe07a6207a9ff86f4af26513e6aa368647b32cae112859fca52e74c3e7f7cf1",
+  "native_diagnostics": {
+    "empty": false,
+    "volume": 0.30097558610970154,
+    "minimum_mmg_quality_basis": "linear_corners",
+    "minimum_mmg_quality": 0.3408693130619761,
+    "sampled_surface_error": 0.0016907960263255301,
+    "elements_below_quality_01": 0,
+    "reverted_snap_vertices": 0,
+    "callback_calls": 0,
+    "inserted_interior_nodes": 0,
+    "adapt": {
+      "splits": 156,
+      "collapses": 9164,
+      "swaps": 2799,
+      "moves": 22025,
+      "error_splits": 0,
+      "maximum_error": 0.0016907960263255301,
+      "seconds": [
+        0.079582625,
+        0.0012307919999999999,
+        0.23434741700000003,
+        0.040879584000000004,
+        0.052127415999999996,
+        0.059804124,
+        0.016296291
+      ]
+    },
+    "seconds": 0.618197917,
+    "threads": 1,
+    "evaluator": "compiled",
+    "preparation_seconds": 0.0005338750197552145
+  },
+  "nodes": 6156,
+  "elements": 22442,
+  "audit_reoriented_tets": 0,
+  "arrays_sha256": "796975300e01ef6bcb309eb3970f31b130d52e97b2411d8cb1e5548f7dcdac6c",
+  "mesh_sha256": "6f4d00fec5d8d1a8139a8fd0a77657494c68137d9c965b63e96f68d34ce94222",
+  "geometry": {
+    "volume": 0.3009755861097036,
+    "relative_volume_error": 0.002436328259628695,
+    "q_min_corner": 0.3408693130619761,
+    "q_p01_corner": 0.49918471035643774,
+    "minimum_sampled_jacobian": 2.8140760051145294e-06,
+    "facet_consistency": {
+      "nodes": 6156,
+      "elements": 22442,
+      "unique_faces": 49357,
+      "interior_faces": 40411,
+      "extracted_boundary_faces": 8946,
+      "same_orientation_shared_faces": 0,
+      "nonmanifold_faces": 0,
+      "duplicate_cells": 0,
+      "duplicate_surface_faces": 0,
+      "provided_boundary_matches_extraction": true,
+      "missing_provided_faces": 0,
+      "extra_provided_faces": 0,
+      "nonpositive_corner_determinants": 0,
+      "minimum_corner_determinant": 2.8140760051145315e-06,
+      "oriented_facet_consistency_passed": true,
+      "conflict_examples": [],
+      "scope": "Oriented corner-face incidence and same-side neighbor diagnostics; necessary consistency, not a certificate of curved geometry or absence of nonlocal intersections"
+    },
+    "oriented_facet_consistency_passed": true,
+    "quadratic_conformity": {
+      "passed": true,
+      "order": 1
+    },
+    "exact_straight_reduction_verified": false,
+    "geometry_admitted": true,
+    "sampled_forward_max": 0.0016850241950935266,
+    "sampled_reverse_max": 0.00152860685028,
+    "sampled_two_sided_max": 0.0016850241950935266,
+    "outward_forward_max": 0.0016850241950935266,
+    "inward_forward_max": 0.0016663740847759007,
+    "projection_failed": 0,
+    "forward_samples": 95576,
+    "reverse_samples": 37570,
+    "minimum_dihedral_deg_corner": 18.072866450691066,
+    "reverse_tessellation_delta_max": 0.0,
+    "quadratic_reverse_subdivisions": null,
+    "projection_method": "newton-box-slsqp-v1",
+    "unbounded_projection_failed": 0,
+    "box_projection_attempts": 0,
+    "box_projection_recovered": 0,
+    "box_projection_witnesses": [],
+    "distance_audit_complete": true,
+    "failed_gates": []
+  },
+  "periodic": {
+    "periodic_pair_counts": [
+      175,
+      178,
+      182
+    ],
+    "periodic_coordinate_errors": [
+      0.0,
+      0.0,
+      0.0
+    ],
+    "periodic_pair_tolerance": 1e-10,
+    "periodic_equivalence_classes": 5621,
+    "periodic_triangles_match": true,
+    "full_facet_check_required": true,
+    "complete_existing_node_classes": true,
+    "unmatched_noncap_contact_nodes": [
+      [
+        [],
+        []
+      ],
+      [
+        [],
+        []
+      ],
+      [
+        [],
+        []
+      ]
+    ],
+    "declared_bounds": [
+      [
+        -0.5,
+        -0.5,
+        -0.5
+      ],
+      [
+        0.5,
+        0.5,
+        0.5
+      ]
+    ],
+    "periodic_gate": "declared-cell-material-cap-and-complete-node-classes-v1"
+  },
+  "quality_stats": {
+    "min": 0.3408693130619761,
+    "p01": 0.49918471035643774,
+    "p10": 0.585976634001708,
+    "median": 0.729019204943173,
+    "p90": 0.876926330447104,
+    "p99": 0.9550221808846092,
+    "max": 0.9961906341423046,
+    "mean": 0.730133483203562
+  },
+  "audit_reused_from": "experiments/adaptive/runs/macbook-microgen-backend-release-final-20261112-v1/repeat-2-tpms-schwarz-p-sheet-native/result.json",
+  "audit_reused_sha256": "aa428bdf8e50a2316b5f5c4f4a7c7ce80e442f3f2786b0a3a65bdd7f53eaad41",
+  "native_pairs_match_independent_audit": true,
+  "audit_s": 0.004206416953820735,
+  "elapsed_s": 0.6508418330340646
+}

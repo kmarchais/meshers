@@ -1,0 +1,157 @@
+{
+  "case": "tpms-gyroid-sheet",
+  "arm": "native",
+  "config": {
+    "name": "native-tet4-budget",
+    "arm": "meshers",
+    "cells": 11,
+    "order": 1,
+    "adapt": false,
+    "tolerance": 1.0,
+    "periodic_trace": true,
+    "declared_unit_cell": true
+  },
+  "status": "admission-rejected",
+  "qualified": false,
+  "backend_selector": "meshers",
+  "mmg_calls": [],
+  "constructor_s": 0.001170167000964284,
+  "generation_s": 0.09770400001434609,
+  "workflow_s": 0.09887416701531038,
+  "instrumentation_s": 0.0,
+  "imports_charged": false,
+  "audits_charged": false,
+  "fea_run": false,
+  "versions": {
+    "meshers": "0.2.0",
+    "microgen": "2.0.0b1",
+    "numpy": "2.5.4",
+    "scipy": "1.18.1",
+    "pyvista": "0.49.1",
+    "vtk": "9.7.1",
+    "mmgpy": "0.17.1"
+  },
+  "native_binary_sha256": "7d498d032c4d8d53485c4a04e076457bb5d2429f85c8fcc80ba06a09d800a69f",
+  "microgen_module": "/Users/kmarchais/dev/microgen/microgen/__init__.py",
+  "vtk_backend": "Sequential",
+  "numerical_thread_policy": {
+    "environment": {
+      "OPENBLAS_NUM_THREADS": "1",
+      "OMP_NUM_THREADS": "1",
+      "MKL_NUM_THREADS": "1",
+      "VECLIB_MAXIMUM_THREADS": "1",
+      "RAYON_NUM_THREADS": "1"
+    },
+    "accelerate_blas_threading": 1,
+    "accelerate_scope": "calling thread"
+  },
+  "fixture_hashes": {
+    "tpms-gyroid-sheet-samples.npz": "b7cb2a6ce027ece67960aee923c22968d002ea23e266aad7fb20a3ae8acaabbf",
+    "tpms-gyroid-sheet-definition.json": "0fdabfb500f9386d628480dd45991aab00acf22c1e90f79612d7663c83347451",
+    "tpms-gyroid-sheet-specimen.json": "fc51698355b126a02d7d524d96864f075980740df746dd320a8b39399906106f"
+  },
+  "field_identity_points": 4096,
+  "mmg_binary_sha256": "efe07a6207a9ff86f4af26513e6aa368647b32cae112859fca52e74c3e7f7cf1",
+  "nodes": 3045,
+  "elements": 9162,
+  "audit_reoriented_tets": 0,
+  "arrays_sha256": "10b74803243f0fd0275cf0f4ffb1e1d0ef86a7c2d5ddf45146b214756e3f10f9",
+  "mesh_sha256": "c7f09ee64d6316dede5d9ea5612ad3b897902cd27d088ae0166bf29cce4be64b",
+  "geometry": {
+    "volume": 0.3033685909440725,
+    "relative_volume_error": 0.010251697068289323,
+    "q_min_corner": 0.1516088049450811,
+    "q_p01_corner": 0.35967357673227573,
+    "minimum_sampled_jacobian": 9.631620790446665e-06,
+    "facet_consistency": {
+      "nodes": 3045,
+      "elements": 9162,
+      "unique_faces": 20908,
+      "interior_faces": 15740,
+      "extracted_boundary_faces": 5168,
+      "same_orientation_shared_faces": 0,
+      "nonmanifold_faces": 0,
+      "duplicate_cells": 0,
+      "duplicate_surface_faces": 0,
+      "provided_boundary_matches_extraction": true,
+      "missing_provided_faces": 0,
+      "extra_provided_faces": 0,
+      "nonpositive_corner_determinants": 0,
+      "minimum_corner_determinant": 9.631620790446668e-06,
+      "oriented_facet_consistency_passed": true,
+      "conflict_examples": [],
+      "scope": "Oriented corner-face incidence and same-side neighbor diagnostics; necessary consistency, not a certificate of curved geometry or absence of nonlocal intersections"
+    },
+    "oriented_facet_consistency_passed": true,
+    "quadratic_conformity": {
+      "passed": true,
+      "order": 1
+    },
+    "exact_straight_reduction_verified": false,
+    "geometry_admitted": false,
+    "sampled_reverse_max": 0.006506336255890959,
+    "distance_audit_complete": false,
+    "projection_failed": null,
+    "audit_scope": "Fail-fast after required quality/volume/topology/periodicity rejection; no forward-distance or successful speed claim",
+    "failed_gates": [
+      "volume"
+    ]
+  },
+  "periodic": {
+    "periodic_pair_counts": [
+      118,
+      120,
+      118
+    ],
+    "periodic_coordinate_errors": [
+      0.0,
+      0.0,
+      0.0
+    ],
+    "periodic_pair_tolerance": 1e-10,
+    "periodic_equivalence_classes": 2712,
+    "periodic_triangles_match": true,
+    "full_facet_check_required": true,
+    "complete_existing_node_classes": true,
+    "unmatched_noncap_contact_nodes": [
+      [
+        [],
+        []
+      ],
+      [
+        [],
+        []
+      ],
+      [
+        [],
+        []
+      ]
+    ],
+    "declared_bounds": [
+      [
+        -0.5,
+        -0.5,
+        -0.5
+      ],
+      [
+        0.5,
+        0.5,
+        0.5
+      ]
+    ],
+    "periodic_gate": "declared-cell-material-cap-and-complete-node-classes-v1"
+  },
+  "quality_stats": {
+    "min": 0.1516088049450811,
+    "p01": 0.35967357673227573,
+    "p10": 0.5224069504611997,
+    "median": 0.6770388457869037,
+    "p90": 0.8935750216293318,
+    "p99": 0.9649523293766792,
+    "max": 0.9908234259687149,
+    "mean": 0.6912677612335768
+  },
+  "native_pairs_match_independent_audit": true,
+  "audit_s": 0.9300110419862904,
+  "elapsed_s": 1.040295458980836
+}

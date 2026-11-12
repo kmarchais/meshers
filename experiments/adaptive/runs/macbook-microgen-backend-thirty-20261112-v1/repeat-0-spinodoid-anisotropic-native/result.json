@@ -1,0 +1,59 @@
+{
+  "case": "spinodoid-anisotropic",
+  "arm": "native",
+  "config": {
+    "name": "native-tet4-budget",
+    "arm": "meshers",
+    "cells": 16,
+    "order": 1,
+    "adapt": false,
+    "tolerance": 1.0,
+    "periodic_trace": true,
+    "declared_unit_cell": true
+  },
+  "status": "failed",
+  "qualified": false,
+  "backend_selector": "meshers",
+  "mmg_calls": [],
+  "constructor_s": 0.0005153330275788903,
+  "generation_s": null,
+  "workflow_s": null,
+  "instrumentation_s": 0.0,
+  "imports_charged": false,
+  "audits_charged": false,
+  "fea_run": false,
+  "versions": {
+    "meshers": "0.2.0",
+    "microgen": "2.0.0b1",
+    "numpy": "2.5.4",
+    "scipy": "1.18.1",
+    "pyvista": "0.49.1",
+    "vtk": "9.7.1",
+    "mmgpy": "0.17.1"
+  },
+  "native_binary_sha256": "7d498d032c4d8d53485c4a04e076457bb5d2429f85c8fcc80ba06a09d800a69f",
+  "microgen_module": "/Users/kmarchais/dev/microgen/microgen/__init__.py",
+  "vtk_backend": "Sequential",
+  "numerical_thread_policy": {
+    "environment": {
+      "OPENBLAS_NUM_THREADS": "1",
+      "OMP_NUM_THREADS": "1",
+      "MKL_NUM_THREADS": "1",
+      "VECLIB_MAXIMUM_THREADS": "1",
+      "RAYON_NUM_THREADS": "1"
+    },
+    "accelerate_blas_threading": 1,
+    "accelerate_scope": "calling thread"
+  },
+  "fixture_hashes": {
+    "spinodoid-anisotropic-specimen.json": "4c3cb9c37a0f4a2e42f8d448511e78a2e1e0d57f846e28140deab57b3d1712f0",
+    "spinodoid-anisotropic-coefficients.json": "6472b7e24af7aec153ec8797ff9025ea82c5690705da3d5ebc836dc94fa00b7e",
+    "spinodoid-anisotropic-samples.npz": "68402aca3566073307f3a2cd26d76473a7d946f1ded4a4a1098aedf0dda23cb8"
+  },
+  "field_identity_points": 4096,
+  "mmg_binary_sha256": "efe07a6207a9ff86f4af26513e6aa368647b32cae112859fca52e74c3e7f7cf1",
+  "error_type": "MeshingFailure",
+  "error": "minimum MMG quality 9.794051032561779e-2 is below required 1e-1; mesh rejected (1 elements below 0.1). Improve resolution/optimization or use a quality remesher",
+  "traceback": "Traceback (most recent call last):\n  File \"/Users/kmarchais/dev/meshers/experiments/adaptive/microgen_backend_benchmark.py\", line 181, in worker\n    grid = shape.generate_volume_mesh(backend=row[\"backend_selector\"], **options)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/Users/kmarchais/dev/microgen/microgen/shape/spinodoid.py\", line 235, in generate_volume_mesh\n    return generate_volume(\n           ^^^^^^^^^^^^^^^^\n  File \"/Users/kmarchais/dev/microgen/microgen/_meshers.py\", line 48, in generate_volume\n    native = meshers.generate(field, bounds=bounds, band=band, **options)\n             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/Users/kmarchais/dev/meshers/.local-work/overnight-release-20261112/candidate-package-v1/meshers/__init__.py\", line 404, in generate\n    result = _meshers.generate(\n             ^^^^^^^^^^^^^^^^^^\n_meshers.MeshingFailure: minimum MMG quality 9.794051032561779e-2 is below required 1e-1; mesh rejected (1 elements below 0.1). Improve resolution/optimization or use a quality remesher\n",
+  "elapsed_s": 0.610850874974858
+}

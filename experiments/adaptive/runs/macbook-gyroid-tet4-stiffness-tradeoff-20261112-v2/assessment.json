@@ -1,0 +1,29 @@
+{
+  "complete": true,
+  "cases": [
+    "uniform",
+    "adaptive"
+  ],
+  "pairwise_mixed_load_difference": {
+    "worst_relative_strain_energy_difference": 0.029291702470451066,
+    "relative_tensor_frobenius_difference": 0.014632852658670283,
+    "relative_energy_difference_eigenvalues": [
+      0.0062945293236163135,
+      0.02532059959273137,
+      0.02541255501199737,
+      0.028471333330809683,
+      0.02878651703128929,
+      0.029291702470451066
+    ]
+  },
+  "source_inputs": {
+    "experiments/adaptive/runs/macbook-microgen-backend-release-final-20261112-v1/repeat-0-gyroid-native/result.json": "dc98e5a3b298d546a3f2f9c4b61e0b5f5721b9a895915b418d061f8d8aeeff86",
+    "experiments/adaptive/runs/macbook-microgen-backend-release-final-20261112-v1/repeat-0-gyroid-native/mesh.npz": "de08f384a989237aeed3c8ba7ba3170cccaee61c2d76ca4319901f70f9b09e6a",
+    "experiments/adaptive/runs/macbook-microgen-backend-gyroid-adaptive-repeated-20261112-v1/repeat-0-gyroid-native/result.json": "572f3423ecb5005a01b8c838454241f78d2864be1cb76e207a26fcc6123a64b5",
+    "experiments/adaptive/runs/macbook-microgen-backend-gyroid-adaptive-repeated-20261112-v1/repeat-0-gyroid-native/mesh.npz": "b8e95d76a5a18d38c7fdb6986a059cf56f8f58d0dced1e36ad2f76beaa52a8f8"
+  },
+  "new_fea": true,
+  "reference_promoted": false,
+  "reference_accuracy_assessed": false,
+  "scope": "Different admitted polyhedral domains and non-nested spaces; pairwise agreement is not convergence, accuracy equivalence or a continuum bound"
+}

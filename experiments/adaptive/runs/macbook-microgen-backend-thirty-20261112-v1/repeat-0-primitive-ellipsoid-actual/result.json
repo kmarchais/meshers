@@ -1,0 +1,139 @@
+{
+  "case": "primitive-ellipsoid",
+  "arm": "actual",
+  "config": {
+    "name": "actual-default-tet4",
+    "arm": "microgen",
+    "resolution": null,
+    "order": 1,
+    "periodic_trace": true,
+    "declared_unit_cell": true,
+    "nonperiodic_reason": "Complete bounded solid; periodic identification not required",
+    "actual_generate_options": {}
+  },
+  "status": "admission-rejected",
+  "qualified": false,
+  "backend_selector": "mmg",
+  "mmg_calls": [
+    {
+      "nofem": true,
+      "nodes": 716,
+      "tetrahedra": 3005
+    },
+    {
+      "hausd": null,
+      "hgrad": null,
+      "hmax": null,
+      "hmin": null,
+      "hsiz": null,
+      "ls": true,
+      "nr": true,
+      "nodes": 1426,
+      "tetrahedra": 6880
+    }
+  ],
+  "constructor_s": 0.0002115829847753048,
+  "generation_s": 4.489632291952148,
+  "workflow_s": 4.489843874936923,
+  "instrumentation_s": 0.07044204202247784,
+  "imports_charged": false,
+  "audits_charged": false,
+  "fea_run": false,
+  "versions": {
+    "meshers": "0.2.0",
+    "microgen": "2.0.0b1",
+    "numpy": "2.5.4",
+    "scipy": "1.18.1",
+    "pyvista": "0.49.1",
+    "vtk": "9.7.1",
+    "mmgpy": "0.17.1"
+  },
+  "native_binary_sha256": "7d498d032c4d8d53485c4a04e076457bb5d2429f85c8fcc80ba06a09d800a69f",
+  "microgen_module": "/Users/kmarchais/dev/microgen/microgen/__init__.py",
+  "vtk_backend": "Sequential",
+  "numerical_thread_policy": {
+    "environment": {
+      "OPENBLAS_NUM_THREADS": "1",
+      "OMP_NUM_THREADS": "1",
+      "MKL_NUM_THREADS": "1",
+      "VECLIB_MAXIMUM_THREADS": "1",
+      "RAYON_NUM_THREADS": "1"
+    },
+    "accelerate_blas_threading": 1,
+    "accelerate_scope": "calling thread"
+  },
+  "fixture_hashes": {
+    "primitive-ellipsoid-definition.json": "217504ac460b56256cabe3e5ff11a9b9143ecb5c602dbe174a07175b813e40b1",
+    "primitive-ellipsoid-samples.npz": "f19f3d99f7a45b970ab4c0945691f89765ab7de495a451de178d71a2f6c1577b",
+    "primitive-ellipsoid-specimen.json": "e6ca1f305b8176b8fe1a71ece9dc3b085c377491faef74c1b34223b9dcc5d01c"
+  },
+  "field_identity_points": 4096,
+  "mmg_binary_sha256": "efe07a6207a9ff86f4af26513e6aa368647b32cae112859fca52e74c3e7f7cf1",
+  "seed_nodes": 52352,
+  "seed_cells": 65413,
+  "mmg_options": {
+    "periodic": false
+  },
+  "nodes": 1426,
+  "elements": 6880,
+  "audit_reoriented_tets": 0,
+  "arrays_sha256": "911d206bb80bc73ab630f315e81575e09886fc87a4c8f0a7a07e90a1dd415e2d",
+  "mesh_sha256": "bef1ef132383601ca85946491f80cdacfe4c9890ae0b7c1a110327ec75efb27f",
+  "geometry": {
+    "volume": 0.06381661698625257,
+    "relative_volume_error": -0.03269237668911318,
+    "q_min_corner": 0.0058247265036707775,
+    "q_p01_corner": 0.22129206657136047,
+    "minimum_sampled_jacobian": 2.39869557608632e-10,
+    "facet_consistency": {
+      "nodes": 1426,
+      "elements": 6880,
+      "unique_faces": 14095,
+      "interior_faces": 13425,
+      "extracted_boundary_faces": 670,
+      "same_orientation_shared_faces": 0,
+      "nonmanifold_faces": 0,
+      "duplicate_cells": 0,
+      "duplicate_surface_faces": 0,
+      "provided_boundary_matches_extraction": true,
+      "missing_provided_faces": 0,
+      "extra_provided_faces": 0,
+      "nonpositive_corner_determinants": 0,
+      "minimum_corner_determinant": 2.398695576086325e-10,
+      "oriented_facet_consistency_passed": true,
+      "conflict_examples": [],
+      "scope": "Oriented corner-face incidence and same-side neighbor diagnostics; necessary consistency, not a certificate of curved geometry or absence of nonlocal intersections"
+    },
+    "oriented_facet_consistency_passed": true,
+    "quadratic_conformity": {
+      "passed": true,
+      "order": 1
+    },
+    "exact_straight_reduction_verified": false,
+    "geometry_admitted": false,
+    "sampled_reverse_max": 0.007458302636785103,
+    "distance_audit_complete": false,
+    "projection_failed": null,
+    "audit_scope": "Fail-fast after required quality/volume/topology/periodicity rejection; no forward-distance or successful speed claim",
+    "failed_gates": [
+      "quality",
+      "volume"
+    ]
+  },
+  "periodic": {
+    "required": false,
+    "reason": "Linear thickness grading has unequal opposite-z material traces; bounded nonperiodic case for both arms"
+  },
+  "quality_stats": {
+    "min": 0.0058247265036707775,
+    "p01": 0.22129206657136047,
+    "p10": 0.5276903168320967,
+    "median": 0.7160697440363563,
+    "p90": 0.8830820470323766,
+    "p99": 0.9601523246112302,
+    "max": 0.9912882404662033,
+    "mean": 0.7038729653440867
+  },
+  "audit_s": 0.9347469590138644,
+  "elapsed_s": 5.507287499960512
+}

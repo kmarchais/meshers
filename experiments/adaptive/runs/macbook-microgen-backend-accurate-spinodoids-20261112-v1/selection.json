@@ -1,0 +1,75 @@
+{
+  "cases": [
+    {
+      "case": "spinodoid",
+      "fixture_kind": "study",
+      "fixtures": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-comparison-fixtures-v1",
+      "native": {
+        "name": "native-spinodoid-adaptive24-margin-tet4-gradation06",
+        "arm": "meshers",
+        "cells": 24,
+        "order": 1,
+        "adapt": true,
+        "tolerance": 0.002,
+        "periodic_trace": true,
+        "declared_unit_cell": true,
+        "min_length": 0.002,
+        "adapt_tolerance": 0.0018,
+        "adapt_iterations": 4,
+        "gradation": 0.6,
+        "max_length": 0.1
+      },
+      "actual": {
+        "name": "actual-public-sampling32-default-mmg-tet4",
+        "arm": "microgen",
+        "resolution": 32,
+        "order": 1,
+        "periodic_trace": true,
+        "declared_unit_cell": true
+      },
+      "periodic": true,
+      "source_selection": "/Users/kmarchais/dev/meshers/handoff/macbook/spinodoid-release-final-selection-20261111.json",
+      "source_selection_sha256": "19372ca14325c57ea75df33526d5c837b8828cbeb240ab6f8e8ea14d28446c6d"
+    },
+    {
+      "case": "spinodoid-anisotropic",
+      "fixture_kind": "study",
+      "fixtures": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-comparison-fixtures-v1",
+      "native": {
+        "name": "native-spinodoid-adaptive16-margin-gradation06-tet4",
+        "arm": "meshers",
+        "cells": 16,
+        "order": 1,
+        "adapt": true,
+        "tolerance": 0.002,
+        "periodic_trace": true,
+        "declared_unit_cell": true,
+        "min_length": 0.002,
+        "adapt_tolerance": 0.0018,
+        "adapt_iterations": 4,
+        "gradation": 0.6,
+        "max_length": 0.1
+      },
+      "actual": {
+        "name": "actual-public-sampling32-default-mmg-tet4",
+        "arm": "microgen",
+        "resolution": 32,
+        "order": 1,
+        "periodic_trace": true,
+        "declared_unit_cell": true
+      },
+      "periodic": true,
+      "source_selection": "/Users/kmarchais/dev/meshers/handoff/macbook/spinodoid-release-final-selection-20261111.json",
+      "source_selection_sha256": "19372ca14325c57ea75df33526d5c837b8828cbeb240ab6f8e8ea14d28446c6d"
+    }
+  ],
+  "purpose": "Verify the latest admitted native spinodoid recipes through the actual Microgen backend; actual competitor sampling32 is explicitly modified",
+  "gates": {
+    "distance": 0.002,
+    "relative_volume": 0.01,
+    "quality": 0.1,
+    "nodes": 250000,
+    "tetrahedra": 250000
+  },
+  "new_fea": false
+}

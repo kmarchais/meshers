@@ -1,0 +1,181 @@
+{
+  "complete": true,
+  "rows": [
+    {
+      "case": "primitive-cylinder",
+      "arm": "native",
+      "config": {
+        "name": "native-cylinder-adaptive40-maximum-length005",
+        "arm": "meshers",
+        "cells": 40,
+        "order": 1,
+        "adapt": true,
+        "tolerance": 0.002,
+        "periodic_trace": true,
+        "declared_unit_cell": true,
+        "primitive_retained": true,
+        "nonperiodic_reason": "Complete bounded solid; periodic identification not required",
+        "adapt_tolerance": 0.0018,
+        "min_length": 0.002,
+        "max_length": 0.05,
+        "gradation": 0.6,
+        "adapt_iterations": 4,
+        "optimization_passes": 1,
+        "historical_primitive_retained_not_applied": true
+      },
+      "status": "admission-rejected",
+      "qualified": false,
+      "periodic_required": false,
+      "audit_protocol_sha256": "537460f70954b293af4c52794f1fa8d4f03f54106cc89cceee28ee2371cc93ab",
+      "backend_selector": "meshers",
+      "mmg_calls": [],
+      "constructor_s": 0.00018012500368058681,
+      "generation_s": 0.8518993750330992,
+      "workflow_s": 0.8520795000367798,
+      "instrumentation_s": 0.0,
+      "imports_charged": false,
+      "audits_charged": false,
+      "fea_run": false,
+      "versions": {
+        "meshers": "0.2.0",
+        "microgen": "2.0.0b1",
+        "numpy": "2.5.4",
+        "scipy": "1.18.1",
+        "pyvista": "0.49.1",
+        "vtk": "9.7.1",
+        "mmgpy": "0.17.1"
+      },
+      "native_binary_sha256": "52b115941e2c7217d60953ee9a697b2926ca84c3614428b4387a3e5dd9cb3954",
+      "microgen_module": "/Users/kmarchais/dev/microgen/microgen/__init__.py",
+      "vtk_backend": "Sequential",
+      "numerical_thread_policy": {
+        "environment": {
+          "OPENBLAS_NUM_THREADS": "1",
+          "OMP_NUM_THREADS": "1",
+          "MKL_NUM_THREADS": "1",
+          "VECLIB_MAXIMUM_THREADS": "1",
+          "RAYON_NUM_THREADS": "1"
+        },
+        "accelerate_blas_threading": 1,
+        "accelerate_scope": "calling thread"
+      },
+      "fixture_hashes": {
+        "primitive-cylinder-samples.npz": "1cb37cb5a92ecac11c9f3fd5eda97d49fbcb95defe6f069df85ff74ff8686354",
+        "primitive-cylinder-definition.json": "3e199ff786bffcbad33cd018e048353ea1a5bd46ee2e1c73b2f617bebef8bc32",
+        "primitive-cylinder-specimen.json": "22e77a274f35f4f4af0eb35ebd64471a6a77a972d93eb697bb993961782ef86b"
+      },
+      "field_identity_points": 4096,
+      "mmg_binary_sha256": "efe07a6207a9ff86f4af26513e6aa368647b32cae112859fca52e74c3e7f7cf1",
+      "nodes": 6825,
+      "elements": 27211,
+      "audit_reoriented_tets": 0,
+      "arrays_sha256": "2d1dd38826a32f67d5ae224ee070a6878fb7cb9f0b50e724216b4f80e80f3d9d",
+      "mesh_sha256": "890fb7f40cdc1ada80861fc32edec304e0c4c28566dab46a6a64311e86324aee",
+      "geometry": {
+        "volume": 0.0994551749629154,
+        "relative_volume_error": -0.0025971826454130875,
+        "q_min_corner": 0.10004957658388187,
+        "q_p01_corner": 0.38336398436342384,
+        "minimum_sampled_jacobian": 1.7612305540351658e-09,
+        "facet_consistency": {
+          "nodes": 6825,
+          "elements": 27211,
+          "unique_faces": 58403,
+          "interior_faces": 50441,
+          "extracted_boundary_faces": 7962,
+          "same_orientation_shared_faces": 0,
+          "nonmanifold_faces": 0,
+          "duplicate_cells": 0,
+          "duplicate_surface_faces": 0,
+          "provided_boundary_matches_extraction": true,
+          "missing_provided_faces": 0,
+          "extra_provided_faces": 0,
+          "nonpositive_corner_determinants": 0,
+          "minimum_corner_determinant": 1.761230554035165e-09,
+          "oriented_facet_consistency_passed": true,
+          "conflict_examples": [],
+          "scope": "Oriented corner-face incidence and same-side neighbor diagnostics; necessary consistency, not a certificate of curved geometry or absence of nonlocal intersections"
+        },
+        "oriented_facet_consistency_passed": true,
+        "quadratic_conformity": {
+          "passed": true,
+          "order": 1
+        },
+        "exact_straight_reduction_verified": false,
+        "geometry_admitted": false,
+        "sampled_forward_max": 0.001907344614183875,
+        "sampled_reverse_max": 0.002661214587365745,
+        "sampled_two_sided_max": 0.002661214587365745,
+        "outward_forward_max": 3.925231146709438e-17,
+        "inward_forward_max": 0.001907344614183875,
+        "projection_failed": 0,
+        "forward_samples": 103506,
+        "reverse_samples": 40960,
+        "minimum_dihedral_deg_corner": 4.909672388027701,
+        "reverse_tessellation_delta_max": 0.0,
+        "quadratic_reverse_subdivisions": null,
+        "projection_method": "newton-box-slsqp-v1",
+        "unbounded_projection_failed": 0,
+        "box_projection_attempts": 0,
+        "box_projection_recovered": 0,
+        "box_projection_witnesses": [],
+        "distance_audit_complete": true,
+        "failed_gates": [
+          "geometry"
+        ]
+      },
+      "periodic": {
+        "required": false,
+        "reason": "Declared bounded nonperiodic specimen; no periodic matching required"
+      },
+      "quality_stats": {
+        "min": 0.10004957658388187,
+        "p01": 0.38336398436342384,
+        "p10": 0.5512095332524974,
+        "median": 0.7431506529751546,
+        "p90": 0.890248706250463,
+        "p99": 0.9598316316309841,
+        "max": 0.9966534261745197,
+        "mean": 0.7297423273527905
+      },
+      "audit_s": 1.0643980840104632,
+      "elapsed_s": 1.9460445420118049,
+      "repetition": 0,
+      "warmup": false,
+      "resource": {
+        "returncode": 0,
+        "limit_failure": null,
+        "peak_rss_bytes": 450478080,
+        "wall_s": 3.1219688749988563,
+        "wall_s_clock": "monotonic",
+        "elapsed_realtime_s": 3.1219987869262695,
+        "suspension_or_clock_adjustment_s": 2.991192741319537e-05,
+        "idle_sleep_prevention": [
+          "/usr/bin/caffeinate",
+          "-i"
+        ],
+        "memory_bytes": 12884901888,
+        "memory_enforcement": "process-tree-rss-watchdog",
+        "rss_poll_interval_s": 0.25,
+        "platform": "darwin",
+        "numerical_thread_policy": {
+          "environment": {
+            "OPENBLAS_NUM_THREADS": "1",
+            "OMP_NUM_THREADS": "1",
+            "MKL_NUM_THREADS": "1",
+            "VECLIB_MAXIMUM_THREADS": "1",
+            "RAYON_NUM_THREADS": "1"
+          },
+          "accelerate_blas_threading": 1,
+          "accelerate_scope": "calling thread"
+        }
+      },
+      "directory": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-microgen-backend-cylinder-followup-20261112-v1/repeat-0-primitive-cylinder-native",
+      "timing_valid": true
+    }
+  ],
+  "returned": 1,
+  "admitted": 0,
+  "new_fea": false,
+  "reference_promoted": false
+}

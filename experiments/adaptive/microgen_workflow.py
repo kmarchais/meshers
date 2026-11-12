@@ -635,8 +635,10 @@ def self_check():
     print("Interpolation, curved tessellation, volume weights, mixed-load score and native Tet10 fedoo affine patch checks pass")
 
 
-def bounded(command, logfile, part, timeout=TIMEOUT, *, memory_bytes=MEMORY):
+def bounded(command, logfile, part, timeout=TIMEOUT, *, memory_bytes=None):
     import psutil
+    if memory_bytes is None:
+        memory_bytes = MEMORY
     assert memory_bytes == MEMORY or (sys.platform == 'darwin' and memory_bytes in (10*1024**3, 12*1024**3))
     start = time.monotonic()
     realtime_start = time.time()
@@ -647,9 +649,28 @@ def bounded(command, logfile, part, timeout=TIMEOUT, *, memory_bytes=MEMORY):
     peak = 0
     def limit_address_space():
         resource.setrlimit(resource.RLIMIT_AS, (memory_bytes, memory_bytes))
+    def stop_worker():
+        if sys.platform != "darwin":
+            os.killpg(process.pid, signal.SIGKILL)
+            return
+        # Mac workers share pueue's group so queue cancellation reaches them.
+        # Resource stops kill only this worker's captured family.
+        try:
+            family = psutil.Process(process.pid).children(recursive=True)
+        except psutil.NoSuchProcess:
+            family = []
+        for member in reversed(family):
+            try:
+                member.kill()
+            except psutil.NoSuchProcess:
+                pass
+        try:
+            process.kill()
+        except ProcessLookupError:
+            pass
     with logfile.open("w") as stream:
         process = subprocess.Popen(command, stdout=stream, stderr=subprocess.STDOUT,
-                                   start_new_session=True,
+                                   start_new_session=sys.platform != "darwin",
                                    preexec_fn=limit_address_space if sys.platform == "linux" else None)
         reason = None
         while process.poll() is None:
@@ -666,12 +687,12 @@ def bounded(command, logfile, part, timeout=TIMEOUT, *, memory_bytes=MEMORY):
                             elapsed_s=elapsed, timeout_remaining_s=max(timeout - elapsed, 0),
                             memory_ceiling_gib=memory_bytes / 1024**3)
             except Exception:
-                os.killpg(process.pid, signal.SIGKILL)
+                stop_worker()
                 process.wait()
                 raise
             if peak > memory_bytes or elapsed > timeout:
                 reason = "memory-cap" if peak > memory_bytes else "timeout"
-                os.killpg(process.pid, signal.SIGKILL)
+                stop_worker()
                 break
             time.sleep(0.25)
         code = process.wait()

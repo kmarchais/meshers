@@ -1,0 +1,175 @@
+{
+  "case": "schwarz-d-solid",
+  "arm": "native",
+  "config": {
+    "name": "native-tet4-budget",
+    "arm": "meshers",
+    "cells": 16,
+    "order": 1,
+    "adapt": false,
+    "tolerance": 1.0,
+    "periodic_trace": true,
+    "declared_unit_cell": true
+  },
+  "status": "admission-rejected",
+  "qualified": false,
+  "backend_selector": "meshers",
+  "mmg_calls": [],
+  "constructor_s": 0.0018545000348240137,
+  "generation_s": 0.1220174579648301,
+  "workflow_s": 0.12387195799965411,
+  "instrumentation_s": 0.0,
+  "imports_charged": false,
+  "audits_charged": false,
+  "fea_run": false,
+  "versions": {
+    "meshers": "0.2.0",
+    "microgen": "2.0.0b1",
+    "numpy": "2.5.4",
+    "scipy": "1.18.1",
+    "pyvista": "0.49.1",
+    "vtk": "9.7.1",
+    "mmgpy": "0.17.1"
+  },
+  "native_binary_sha256": "7d498d032c4d8d53485c4a04e076457bb5d2429f85c8fcc80ba06a09d800a69f",
+  "microgen_module": "/Users/kmarchais/dev/microgen/microgen/__init__.py",
+  "vtk_backend": "Sequential",
+  "numerical_thread_policy": {
+    "environment": {
+      "OPENBLAS_NUM_THREADS": "1",
+      "OMP_NUM_THREADS": "1",
+      "MKL_NUM_THREADS": "1",
+      "VECLIB_MAXIMUM_THREADS": "1",
+      "RAYON_NUM_THREADS": "1"
+    },
+    "accelerate_blas_threading": 1,
+    "accelerate_scope": "calling thread"
+  },
+  "fixture_hashes": {
+    "schwarz-d-solid-samples.npz": "fe35202efd172138f0e4214ab8de10350af7f7eb9844a97a6fa32ba55b3dd796",
+    "schwarz-d-solid-specimen.json": "a534744167c7d691ca076d1bdff53fef87a83c5377dbfb3124bb0a508193d684"
+  },
+  "field_identity_points": 4096,
+  "mmg_binary_sha256": "efe07a6207a9ff86f4af26513e6aa368647b32cae112859fca52e74c3e7f7cf1",
+  "nodes": 6491,
+  "elements": 27900,
+  "audit_reoriented_tets": 0,
+  "arrays_sha256": "07bfeffb77bebd3ee37ac8814cced9bc0f24093747edcabcb49846857f68e488",
+  "mesh_sha256": "e84902b43e0e0605435b77bd8594aa4512d023f2339475aa0433455547999588",
+  "geometry": {
+    "volume": 0.5000095303496775,
+    "relative_volume_error": 1.9060699355089028e-05,
+    "q_min_corner": 0.45726610491858916,
+    "q_p01_corner": 0.5613828023152353,
+    "minimum_sampled_jacobian": 2.474523903276596e-05,
+    "facet_consistency": {
+      "nodes": 6491,
+      "elements": 27900,
+      "unique_faces": 58992,
+      "interior_faces": 52608,
+      "extracted_boundary_faces": 6384,
+      "same_orientation_shared_faces": 0,
+      "nonmanifold_faces": 0,
+      "duplicate_cells": 0,
+      "duplicate_surface_faces": 0,
+      "provided_boundary_matches_extraction": true,
+      "missing_provided_faces": 0,
+      "extra_provided_faces": 0,
+      "nonpositive_corner_determinants": 0,
+      "minimum_corner_determinant": 2.4745239032765974e-05,
+      "oriented_facet_consistency_passed": true,
+      "conflict_examples": [],
+      "scope": "Oriented corner-face incidence and same-side neighbor diagnostics; necessary consistency, not a certificate of curved geometry or absence of nonlocal intersections"
+    },
+    "oriented_facet_consistency_passed": true,
+    "quadratic_conformity": {
+      "passed": true,
+      "order": 1
+    },
+    "exact_straight_reduction_verified": false,
+    "geometry_admitted": false,
+    "sampled_forward_max": 0.0025255404340706095,
+    "sampled_reverse_max": 0.0023581653720218688,
+    "sampled_two_sided_max": 0.0025255404340706095,
+    "outward_forward_max": 0.0025255404340706095,
+    "inward_forward_max": 0.002387314021559092,
+    "projection_failed": 0,
+    "forward_samples": 60840,
+    "reverse_samples": 40666,
+    "minimum_dihedral_deg_corner": 25.379086336044367,
+    "reverse_tessellation_delta_max": 0.0,
+    "quadratic_reverse_subdivisions": null,
+    "projection_method": "newton-box-slsqp-v1",
+    "unbounded_projection_failed": 0,
+    "box_projection_attempts": 0,
+    "box_projection_recovered": 0,
+    "box_projection_witnesses": [],
+    "distance_audit_complete": true,
+    "failed_gates": [
+      "geometry"
+    ]
+  },
+  "periodic": {
+    "periodic_pair_counts": [
+      190,
+      190,
+      190
+    ],
+    "periodic_coordinate_errors": [
+      0.0,
+      0.0,
+      0.0
+    ],
+    "periodic_pair_tolerance": 1e-10,
+    "periodic_equivalence_classes": 5948,
+    "periodic_triangles_match": true,
+    "full_facet_check_required": true,
+    "complete_existing_node_classes": true,
+    "unmatched_noncap_contact_nodes": [
+      [
+        [
+          6478
+        ],
+        []
+      ],
+      [
+        [
+          6278
+        ],
+        []
+      ],
+      [
+        [
+          741
+        ],
+        []
+      ]
+    ],
+    "declared_bounds": [
+      [
+        -0.5,
+        -0.5,
+        -0.5
+      ],
+      [
+        0.5,
+        0.5,
+        0.5
+      ]
+    ],
+    "periodic_gate": "declared-cell-material-cap-and-complete-node-classes-v1"
+  },
+  "quality_stats": {
+    "min": 0.45726610491858916,
+    "p01": 0.5613828023152353,
+    "p10": 0.6818172354717216,
+    "median": 0.9184893289286227,
+    "p90": 0.9391590230343153,
+    "p99": 0.9829313500812933,
+    "max": 0.98987383880028,
+    "mean": 0.8623381823338641
+  },
+  "native_pairs_match_independent_audit": true,
+  "audit_s": 1.0851697090547532,
+  "elapsed_s": 1.2335499579785392
+}

@@ -1,0 +1,136 @@
+{
+  "case": "graded-gyroid-linear",
+  "arm": "actual",
+  "config": {
+    "name": "actual-default-tet4",
+    "arm": "microgen",
+    "resolution": null,
+    "order": 1,
+    "periodic_trace": true,
+    "declared_unit_cell": true
+  },
+  "status": "admission-rejected",
+  "qualified": false,
+  "backend_selector": "mmg",
+  "mmg_calls": [
+    {
+      "nofem": true,
+      "nodes": 3386,
+      "tetrahedra": 11414
+    },
+    {
+      "hausd": null,
+      "hgrad": null,
+      "hmax": null,
+      "hmin": null,
+      "hsiz": null,
+      "ls": true,
+      "nr": true,
+      "nodes": 3462,
+      "tetrahedra": 12048
+    }
+  ],
+  "constructor_s": 0.0011681249598041177,
+  "generation_s": 1.790736666007433,
+  "workflow_s": 1.7919047909672372,
+  "instrumentation_s": 0.08416966698132455,
+  "imports_charged": false,
+  "audits_charged": false,
+  "fea_run": false,
+  "versions": {
+    "meshers": "0.2.0",
+    "microgen": "2.0.0b1",
+    "numpy": "2.5.4",
+    "scipy": "1.18.1",
+    "pyvista": "0.49.1",
+    "vtk": "9.7.1",
+    "mmgpy": "0.17.1"
+  },
+  "native_binary_sha256": "7d498d032c4d8d53485c4a04e076457bb5d2429f85c8fcc80ba06a09d800a69f",
+  "microgen_module": "/Users/kmarchais/dev/microgen/microgen/__init__.py",
+  "vtk_backend": "Sequential",
+  "numerical_thread_policy": {
+    "environment": {
+      "OPENBLAS_NUM_THREADS": "1",
+      "OMP_NUM_THREADS": "1",
+      "MKL_NUM_THREADS": "1",
+      "VECLIB_MAXIMUM_THREADS": "1",
+      "RAYON_NUM_THREADS": "1"
+    },
+    "accelerate_blas_threading": 1,
+    "accelerate_scope": "calling thread"
+  },
+  "fixture_hashes": {
+    "graded-gyroid-linear-samples.npz": "583146b0bb252ebb81f0f56919721e91743f42c796492802c78df5bf37f60273",
+    "graded-gyroid-linear-specimen.json": "4b3d9d250960d00d2b28dd8c58c2acf4b51e6bc04d264dcb1d001980ab907c7a"
+  },
+  "field_identity_points": 4096,
+  "mmg_binary_sha256": "efe07a6207a9ff86f4af26513e6aa368647b32cae112859fca52e74c3e7f7cf1",
+  "seed_nodes": 7763,
+  "seed_cells": 14438,
+  "mmg_options": {
+    "periodic": false
+  },
+  "nodes": 3462,
+  "elements": 12048,
+  "audit_reoriented_tets": 0,
+  "arrays_sha256": "5c9add2c1ea482d4acf9e12e7ea19205b9f22e3a95089ea751c2a0e86bba551a",
+  "mesh_sha256": "77517aad1d97431d023d428a2d1d85be489e82a9d1585c991107df5353452281",
+  "geometry": {
+    "volume": 0.3648529075783249,
+    "relative_volume_error": 0.02311856101047871,
+    "q_min_corner": 3.207526310837803e-06,
+    "q_p01_corner": 0.0821330788391217,
+    "minimum_sampled_jacobian": 1.1464057594027743e-11,
+    "facet_consistency": {
+      "nodes": 3462,
+      "elements": 12048,
+      "unique_faces": 26600,
+      "interior_faces": 21592,
+      "extracted_boundary_faces": 5008,
+      "same_orientation_shared_faces": 0,
+      "nonmanifold_faces": 0,
+      "duplicate_cells": 0,
+      "duplicate_surface_faces": 0,
+      "provided_boundary_matches_extraction": true,
+      "missing_provided_faces": 0,
+      "extra_provided_faces": 0,
+      "nonpositive_corner_determinants": 0,
+      "minimum_corner_determinant": 1.1464057594027706e-11,
+      "oriented_facet_consistency_passed": true,
+      "conflict_examples": [],
+      "scope": "Oriented corner-face incidence and same-side neighbor diagnostics; necessary consistency, not a certificate of curved geometry or absence of nonlocal intersections"
+    },
+    "oriented_facet_consistency_passed": true,
+    "quadratic_conformity": {
+      "passed": true,
+      "order": 1
+    },
+    "exact_straight_reduction_verified": false,
+    "geometry_admitted": false,
+    "sampled_reverse_max": 0.009040382638124289,
+    "distance_audit_complete": false,
+    "projection_failed": null,
+    "audit_scope": "Fail-fast after required quality/volume/topology/periodicity rejection; no forward-distance or successful speed claim",
+    "failed_gates": [
+      "quality",
+      "volume"
+    ]
+  },
+  "periodic": {
+    "required": false,
+    "reason": "Linear thickness grading has unequal opposite-z material traces; bounded nonperiodic case for both arms"
+  },
+  "quality_stats": {
+    "min": 3.207526310837803e-06,
+    "p01": 0.0821330788391217,
+    "p10": 0.37154906477401434,
+    "median": 0.7153681070411047,
+    "p90": 0.8934699469822289,
+    "p99": 0.9637599214098084,
+    "max": 0.9924597811355167,
+    "mean": 0.6705594484070877
+  },
+  "audit_s": 0.9141873329645023,
+  "elapsed_s": 2.810924540972337
+}

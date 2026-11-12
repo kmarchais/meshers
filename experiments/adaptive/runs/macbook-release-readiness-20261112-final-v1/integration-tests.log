@@ -1,0 +1,20 @@
+..................................                                       [100%]
+=============================== warnings summary ===============================
+.local-work/overnight-release-20261112/clean-install-afc-v1/test_meshers_backend.py::test_mapped_tpms_are_explicitly_unsupported
+  /Users/kmarchais/dev/meshers/.local-work/overnight-release-20261112/clean-install-afc-v1/venv/lib/python3.12/site-packages/autograd/numpy/numpy_vjps.py:147: RuntimeWarning: invalid value encountered in divide
+    lambda ans, x, y: unbroadcast_f(y, lambda g: g * -x / (x**2 + y**2)),
+
+.local-work/overnight-release-20261112/clean-install-afc-v1/test_meshers_backend.py::test_mapped_tpms_are_explicitly_unsupported
+  /Users/kmarchais/dev/meshers/.local-work/overnight-release-20261112/clean-install-afc-v1/venv/lib/python3.12/site-packages/autograd/numpy/numpy_vjps.py:187: RuntimeWarning: divide by zero encountered in power
+    defvjp(anp.sqrt, lambda ans, x: lambda g: g * 0.5 * x**-0.5)
+
+.local-work/overnight-release-20261112/clean-install-afc-v1/test_meshers_backend.py::test_mapped_tpms_are_explicitly_unsupported
+  /Users/kmarchais/dev/meshers/.local-work/overnight-release-20261112/clean-install-afc-v1/venv/lib/python3.12/site-packages/autograd/numpy/numpy_vjps.py:141: RuntimeWarning: invalid value encountered in multiply
+    lambda ans, x, y: unbroadcast_f(x, lambda g: g * y * x ** anp.where(y, y - 1, 1.0)),
+
+.local-work/overnight-release-20261112/clean-install-afc-v1/test_meshers_backend.py::test_mapped_tpms_are_explicitly_unsupported
+  /Users/kmarchais/dev/meshers/.local-work/overnight-release-20261112/clean-install-afc-v1/venv/lib/python3.12/site-packages/autograd/numpy/numpy_vjps.py:146: RuntimeWarning: invalid value encountered in divide
+    lambda ans, x, y: unbroadcast_f(x, lambda g: g * y / (x**2 + y**2)),
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+34 passed, 4 warnings in 19.59s

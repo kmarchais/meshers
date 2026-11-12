@@ -1,0 +1,118 @@
+{
+  "case": "primitive-cylinder",
+  "arm": "native",
+  "config": {
+    "name": "native-tet4-budget",
+    "arm": "meshers",
+    "cells": 16,
+    "order": 1,
+    "adapt": false,
+    "tolerance": 1.0,
+    "periodic_trace": true,
+    "declared_unit_cell": true,
+    "primitive_retained": true,
+    "nonperiodic_reason": "Complete bounded solid; periodic identification not required"
+  },
+  "status": "admission-rejected",
+  "qualified": false,
+  "backend_selector": "meshers",
+  "mmg_calls": [],
+  "constructor_s": 0.000181332987267524,
+  "generation_s": 0.02588100003777072,
+  "workflow_s": 0.026062333025038242,
+  "instrumentation_s": 0.0,
+  "imports_charged": false,
+  "audits_charged": false,
+  "fea_run": false,
+  "versions": {
+    "meshers": "0.2.0",
+    "microgen": "2.0.0b1",
+    "numpy": "2.5.4",
+    "scipy": "1.18.1",
+    "pyvista": "0.49.1",
+    "vtk": "9.7.1",
+    "mmgpy": "0.17.1"
+  },
+  "native_binary_sha256": "7d498d032c4d8d53485c4a04e076457bb5d2429f85c8fcc80ba06a09d800a69f",
+  "microgen_module": "/Users/kmarchais/dev/microgen/microgen/__init__.py",
+  "vtk_backend": "Sequential",
+  "numerical_thread_policy": {
+    "environment": {
+      "OPENBLAS_NUM_THREADS": "1",
+      "OMP_NUM_THREADS": "1",
+      "MKL_NUM_THREADS": "1",
+      "VECLIB_MAXIMUM_THREADS": "1",
+      "RAYON_NUM_THREADS": "1"
+    },
+    "accelerate_blas_threading": 1,
+    "accelerate_scope": "calling thread"
+  },
+  "fixture_hashes": {
+    "primitive-cylinder-samples.npz": "1cb37cb5a92ecac11c9f3fd5eda97d49fbcb95defe6f069df85ff74ff8686354",
+    "primitive-cylinder-definition.json": "3e199ff786bffcbad33cd018e048353ea1a5bd46ee2e1c73b2f617bebef8bc32",
+    "primitive-cylinder-specimen.json": "22e77a274f35f4f4af0eb35ebd64471a6a77a972d93eb697bb993961782ef86b"
+  },
+  "field_identity_points": 4096,
+  "mmg_binary_sha256": "efe07a6207a9ff86f4af26513e6aa368647b32cae112859fca52e74c3e7f7cf1",
+  "nodes": 1427,
+  "elements": 5904,
+  "audit_reoriented_tets": 0,
+  "arrays_sha256": "1bf3fe8715f4f9f89258ef3a7d4ee60724a8e88ea54bc0140cffdb63a95ede8a",
+  "mesh_sha256": "7840655996f835f0a00f663002bbb20f50f7908b107a657e9590f64257aed8cd",
+  "geometry": {
+    "volume": 0.09869633102259806,
+    "relative_volume_error": -0.010207375722718348,
+    "q_min_corner": 0.43418742345191697,
+    "q_p01_corner": 0.48871412826203775,
+    "minimum_sampled_jacobian": 6.610921031014054e-06,
+    "facet_consistency": {
+      "nodes": 1427,
+      "elements": 5904,
+      "unique_faces": 12580,
+      "interior_faces": 11036,
+      "extracted_boundary_faces": 1544,
+      "same_orientation_shared_faces": 0,
+      "nonmanifold_faces": 0,
+      "duplicate_cells": 0,
+      "duplicate_surface_faces": 0,
+      "provided_boundary_matches_extraction": true,
+      "missing_provided_faces": 0,
+      "extra_provided_faces": 0,
+      "nonpositive_corner_determinants": 0,
+      "minimum_corner_determinant": 6.6109210310140635e-06,
+      "oriented_facet_consistency_passed": true,
+      "conflict_examples": [],
+      "scope": "Oriented corner-face incidence and same-side neighbor diagnostics; necessary consistency, not a certificate of curved geometry or absence of nonlocal intersections"
+    },
+    "oriented_facet_consistency_passed": true,
+    "quadratic_conformity": {
+      "passed": true,
+      "order": 1
+    },
+    "exact_straight_reduction_verified": false,
+    "geometry_admitted": false,
+    "sampled_reverse_max": 0.016845139165415135,
+    "distance_audit_complete": false,
+    "projection_failed": null,
+    "audit_scope": "Fail-fast after required quality/volume/topology/periodicity rejection; no forward-distance or successful speed claim",
+    "failed_gates": [
+      "volume"
+    ]
+  },
+  "periodic": {
+    "required": false,
+    "reason": "Linear thickness grading has unequal opposite-z material traces; bounded nonperiodic case for both arms"
+  },
+  "quality_stats": {
+    "min": 0.43418742345191697,
+    "p01": 0.48871412826203775,
+    "p10": 0.5993778439584992,
+    "median": 0.9084769886750477,
+    "p90": 0.9346615465026779,
+    "p99": 0.9960601441946375,
+    "max": 0.9989730913259783,
+    "mean": 0.8374897593009757
+  },
+  "audit_s": 0.9448476249817759,
+  "elapsed_s": 0.9767676250194199
+}

@@ -1,0 +1,330 @@
+{
+  "case": "spinodoid-anisotropic",
+  "arm": "native",
+  "config": {
+    "name": "native-spinodoid-adaptive16-margin-gradation06-tet4",
+    "arm": "meshers",
+    "cells": 16,
+    "order": 1,
+    "adapt": true,
+    "tolerance": 0.002,
+    "periodic_trace": true,
+    "declared_unit_cell": true,
+    "min_length": 0.002,
+    "adapt_tolerance": 0.0018,
+    "adapt_iterations": 4,
+    "gradation": 0.6,
+    "max_length": 0.1
+  },
+  "status": "admitted",
+  "qualified": true,
+  "periodic_required": true,
+  "audit_protocol_sha256": "058aec6326698771f9ae4c67a3c6fbd931db01ca648929dbee4a70d56ac1b77f",
+  "backend_selector": "meshers",
+  "mmg_calls": [],
+  "constructor_s": 0.0005542499711737037,
+  "generation_s": 1.4886997500434518,
+  "workflow_s": 1.4892540000146255,
+  "instrumentation_s": 1.4999532140791416e-06,
+  "imports_charged": false,
+  "audits_charged": false,
+  "fea_run": false,
+  "versions": {
+    "meshers": "0.2.0",
+    "microgen": "2.0.0b1",
+    "numpy": "2.5.4",
+    "scipy": "1.18.1",
+    "pyvista": "0.49.1",
+    "vtk": "9.7.1",
+    "mmgpy": "0.17.1"
+  },
+  "native_binary_sha256": "d6e37257524526e4ce354ff19ac8939ea52551f8719d0cdb079af10fb404a473",
+  "microgen_module": "/Users/kmarchais/dev/microgen/microgen/__init__.py",
+  "vtk_backend": "Sequential",
+  "numerical_thread_policy": {
+    "environment": {
+      "OPENBLAS_NUM_THREADS": "1",
+      "OMP_NUM_THREADS": "1",
+      "MKL_NUM_THREADS": "1",
+      "VECLIB_MAXIMUM_THREADS": "1",
+      "RAYON_NUM_THREADS": "1"
+    },
+    "accelerate_blas_threading": 1,
+    "accelerate_scope": "calling thread"
+  },
+  "fixture_hashes": {
+    "spinodoid-anisotropic-specimen.json": "4c3cb9c37a0f4a2e42f8d448511e78a2e1e0d57f846e28140deab57b3d1712f0",
+    "spinodoid-anisotropic-coefficients.json": "6472b7e24af7aec153ec8797ff9025ea82c5690705da3d5ebc836dc94fa00b7e",
+    "spinodoid-anisotropic-samples.npz": "68402aca3566073307f3a2cd26d76473a7d946f1ded4a4a1098aedf0dda23cb8"
+  },
+  "field_identity_points": 4096,
+  "mmg_binary_sha256": "efe07a6207a9ff86f4af26513e6aa368647b32cae112859fca52e74c3e7f7cf1",
+  "native_diagnostics": {
+    "empty": false,
+    "volume": 0.5221268194841792,
+    "minimum_mmg_quality_basis": "linear_corners",
+    "minimum_mmg_quality": 0.10001223699000035,
+    "sampled_surface_error": 0.0017987273335348221,
+    "elements_below_quality_01": 0,
+    "reverted_snap_vertices": 0,
+    "callback_calls": 0,
+    "inserted_interior_nodes": 0,
+    "adapt": {
+      "splits": 6398,
+      "collapses": 4894,
+      "swaps": 3803,
+      "moves": 30781,
+      "error_splits": 24,
+      "maximum_error": 0.0017987273335348221,
+      "seconds": [
+        0.09097183299999999,
+        0.024714751,
+        0.244736167,
+        0.052452417,
+        0.082147708,
+        0.126951999,
+        0.367514083
+      ]
+    },
+    "seconds": 1.48411025,
+    "threads": 1,
+    "evaluator": "compiled",
+    "preparation_seconds": 0.003488000016659498
+  },
+  "nodes": 9478,
+  "elements": 36056,
+  "audit_reoriented_tets": 0,
+  "arrays_sha256": "e0449837f9a438e6ab2453074dc3b62190aa8dda6a9ee89542143f58e5f35ba0",
+  "mesh_sha256": "dd384eca54e64d0adf27e66bd6b77c9e5eaf1d84db86c7be9e3a994e599dceea",
+  "geometry": {
+    "volume": 0.5221268194841772,
+    "relative_volume_error": 0.0006084213846224706,
+    "q_min_corner": 0.10001223699000004,
+    "q_p01_corner": 0.4756444691816524,
+    "minimum_sampled_jacobian": 2.031836991291626e-08,
+    "facet_consistency": {
+      "nodes": 9478,
+      "elements": 36056,
+      "unique_faces": 78372,
+      "interior_faces": 65852,
+      "extracted_boundary_faces": 12520,
+      "same_orientation_shared_faces": 0,
+      "nonmanifold_faces": 0,
+      "duplicate_cells": 0,
+      "duplicate_surface_faces": 0,
+      "provided_boundary_matches_extraction": true,
+      "missing_provided_faces": 0,
+      "extra_provided_faces": 0,
+      "nonpositive_corner_determinants": 0,
+      "minimum_corner_determinant": 2.0318369912916234e-08,
+      "oriented_facet_consistency_passed": true,
+      "conflict_examples": [],
+      "scope": "Oriented corner-face incidence and same-side neighbor diagnostics; necessary consistency, not a certificate of curved geometry or absence of nonlocal intersections"
+    },
+    "oriented_facet_consistency_passed": true,
+    "quadratic_conformity": {
+      "passed": true,
+      "order": 1
+    },
+    "exact_straight_reduction_verified": false,
+    "geometry_admitted": true,
+    "sampled_forward_max": 0.0017879723089965396,
+    "sampled_reverse_max": 0.001644532852234139,
+    "sampled_two_sided_max": 0.0017879723089965396,
+    "outward_forward_max": 0.0017879723089965396,
+    "inward_forward_max": 0.0017833674304183684,
+    "projection_failed": 0,
+    "forward_samples": 131742,
+    "reverse_samples": 41144,
+    "minimum_dihedral_deg_corner": 5.1966857646947915,
+    "reverse_tessellation_delta_max": 0.0,
+    "quadratic_reverse_subdivisions": null,
+    "projection_method": "newton-box-slsqp-v1",
+    "unbounded_projection_failed": 6,
+    "box_projection_attempts": 6,
+    "box_projection_recovered": 6,
+    "box_projection_witnesses": [
+      {
+        "sample_index": 54854,
+        "original_foot": [
+          0.5000222582653399,
+          -0.16130991642237735,
+          0.49501131448234265
+        ],
+        "candidate": [
+          0.5,
+          -0.16131343395939923,
+          0.4950536402201202
+        ],
+        "solver_success": true,
+        "message": "Optimization terminated successfully",
+        "iterations": 7,
+        "absolute_field_residual": 3.7730235602495554e-17,
+        "normalized_field_residual": 3.2434391821540525e-17,
+        "feasible_target": true,
+        "distance": 0.00019448612673242158
+      },
+      {
+        "sample_index": 54855,
+        "original_foot": [
+          0.5000045754138353,
+          -0.15376606386104724,
+          0.49538321083577896
+        ],
+        "candidate": [
+          0.5,
+          -0.1537660257910904,
+          0.49539224835397405
+        ],
+        "solver_success": true,
+        "message": "Optimization terminated successfully",
+        "iterations": 8,
+        "absolute_field_residual": 2.1250362580715887e-17,
+        "normalized_field_residual": 1.791357163277378e-17,
+        "feasible_target": true,
+        "distance": 0.00016759326829461876
+      },
+      {
+        "sample_index": 118507,
+        "original_foot": [
+          0.5000497331649689,
+          -0.1292889038968285,
+          0.49171312398122446
+        ],
+        "candidate": [
+          0.5,
+          -0.12925838664966638,
+          0.49181145329773035
+        ],
+        "solver_success": true,
+        "message": "Optimization terminated successfully",
+        "iterations": 17,
+        "absolute_field_residual": 9.150666335777657e-17,
+        "normalized_field_residual": 7.191530528483874e-17,
+        "feasible_target": true,
+        "distance": 0.00031753552383098643
+      },
+      {
+        "sample_index": 122151,
+        "original_foot": [
+          0.5001378865408082,
+          -0.1407671665176705,
+          0.49415992626486577
+        ],
+        "candidate": [
+          0.5,
+          -0.14072371486663732,
+          0.49443990200650084
+        ],
+        "solver_success": true,
+        "message": "Optimization terminated successfully",
+        "iterations": 41,
+        "absolute_field_residual": 8.630249292984615e-17,
+        "normalized_field_residual": 7.016233033870702e-17,
+        "feasible_target": true,
+        "distance": 0.0005702976509044555
+      },
+      {
+        "sample_index": 122155,
+        "original_foot": [
+          0.5001951515292832,
+          -0.1464687314023404,
+          0.4947157510548564
+        ],
+        "candidate": [
+          0.5,
+          -0.14643624532797092,
+          0.49510979565139995
+        ],
+        "solver_success": true,
+        "message": "Optimization terminated successfully",
+        "iterations": 37,
+        "absolute_field_residual": 6.938893903907228e-18,
+        "normalized_field_residual": 5.7334534555946205e-18,
+        "feasible_target": true,
+        "distance": 0.0005816043795207924
+      },
+      {
+        "sample_index": 122156,
+        "original_foot": [
+          0.5002602008519623,
+          -0.13211813622451724,
+          0.4920762518555534
+        ],
+        "candidate": [
+          0.5,
+          -0.13197729800304378,
+          0.49259611118328006
+        ],
+        "solver_success": true,
+        "message": "Optimization terminated successfully",
+        "iterations": 21,
+        "absolute_field_residual": 2.7321894746634712e-17,
+        "normalized_field_residual": 2.1648260932117374e-17,
+        "feasible_target": true,
+        "distance": 0.0007485764523194154
+      }
+    ],
+    "distance_audit_complete": true,
+    "failed_gates": []
+  },
+  "periodic": {
+    "periodic_pair_counts": [
+      315,
+      235,
+      236
+    ],
+    "periodic_coordinate_errors": [
+      0.0,
+      0.0,
+      0.0
+    ],
+    "periodic_pair_tolerance": 1e-10,
+    "periodic_equivalence_classes": 8726,
+    "periodic_triangles_match": true,
+    "full_facet_check_required": true,
+    "complete_existing_node_classes": true,
+    "unmatched_noncap_contact_nodes": [
+      [
+        [],
+        []
+      ],
+      [
+        [],
+        []
+      ],
+      [
+        [],
+        []
+      ]
+    ],
+    "declared_bounds": [
+      [
+        -0.5,
+        -0.5,
+        -0.5
+      ],
+      [
+        0.5,
+        0.5,
+        0.5
+      ]
+    ],
+    "periodic_gate": "declared-cell-material-cap-and-complete-node-classes-v1"
+  },
+  "quality_stats": {
+    "min": 0.10001223699000004,
+    "p01": 0.4756444691816524,
+    "p10": 0.5798346606547362,
+    "median": 0.7249769454224924,
+    "p90": 0.8845873683907066,
+    "p99": 0.9599497599886035,
+    "max": 0.9982954344811227,
+    "mean": 0.7273835864128844
+  },
+  "audit_reused_from": "experiments/adaptive/runs/macbook-microgen-backend-release-final-20261112-v1/repeat-2-spinodoid-anisotropic-native/result.json",
+  "audit_reused_sha256": "6763521cc4f1ad4b4578e43744ac8cbd91990703efb284090ca998286a683db7",
+  "native_pairs_match_independent_audit": true,
+  "audit_s": 0.006639458995778114,
+  "elapsed_s": 1.5535882909898646
+}

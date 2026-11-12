@@ -1,0 +1,22 @@
+{
+  "inputs": {
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/g3-microgen-defaults-v4/summary.json": "614c5c123eaae0ce0455b07b1f5c8bcf451b687cabca45f93521aaa469b05f35",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-gyroid-tet4-stiffness-tradeoff-20261112-v2/uniform/result.json": "bdec3c6f5767e9c7b67c85eeb2cfae145a51f070914466e03670673103eedac7",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-gyroid-tet4-stiffness-tradeoff-20261112-v2/adaptive/result.json": "1ce08e3c9b105e181dd557498db82b4c892fb261c5f31a3aae56f9dc4bcf19b2",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-original-four-tet4-fields-20261112-v1/schwarz-solid/result.json": "a687168bcdc69807402188d8ec93e733a4fae99fb3a5a7601b82e346c4fb8794",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-original-four-tet4-fields-20261112-v1/smooth-lattice/result.json": "2912345736043d2faa28877018443887b576c888adcf0be5bd5e4f5770848ea2",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/stiffness_pair.py": "07d2522ed9196022e6fafb2a388b99e7c57c0586a627c64d47cf261d48eb5aec",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/cubic_refinement.py": "a6f79b051b80ed3dcd774ba42a7ccf969cf10dca489e5da1fe3a44737eeb6006"
+  },
+  "declared_orders": [
+    2,
+    3,
+    4,
+    5,
+    6
+  ],
+  "reference_justification": "Existing qualified curved Tet10 16/20 extrapolations and documented Gyroid linear64/80 cross-check in RESULTS.md. Orders 2 through 6 are declared before this assessment. Lattice retains all 24 historical model tensors; no lattice reference is promoted.",
+  "new_reference": false,
+  "target": 0.01,
+  "spinodoid": "No justified reference selected here; FE consistency only"
+}

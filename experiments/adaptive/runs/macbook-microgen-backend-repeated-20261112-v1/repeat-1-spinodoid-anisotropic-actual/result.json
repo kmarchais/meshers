@@ -1,0 +1,178 @@
+{
+  "case": "spinodoid-anisotropic",
+  "arm": "actual",
+  "config": {
+    "name": "actual-public-sampling32-default-mmg-tet4",
+    "arm": "microgen",
+    "resolution": 32,
+    "order": 1,
+    "periodic_trace": true,
+    "declared_unit_cell": true
+  },
+  "status": "admission-rejected",
+  "qualified": false,
+  "periodic_required": true,
+  "audit_protocol_sha256": "f1fb0522b2da8922a4981087433cd8898a76b39edf60d0d6e763f1d2060e1867",
+  "backend_selector": "mmg",
+  "mmg_calls": [
+    {
+      "nofem": true,
+      "nodes": 8016,
+      "tetrahedra": 29502
+    },
+    {
+      "hausd": null,
+      "hgrad": null,
+      "hmax": null,
+      "hmin": null,
+      "hsiz": null,
+      "ls": true,
+      "nr": true,
+      "nodes": 8363,
+      "tetrahedra": 32090
+    }
+  ],
+  "constructor_s": 0.0005117920227348804,
+  "generation_s": 3.9361613750224933,
+  "workflow_s": 3.936673167045228,
+  "instrumentation_s": 0.11343391699483618,
+  "imports_charged": false,
+  "audits_charged": false,
+  "fea_run": false,
+  "versions": {
+    "meshers": "0.2.0",
+    "microgen": "2.0.0b1",
+    "numpy": "2.5.4",
+    "scipy": "1.18.1",
+    "pyvista": "0.49.1",
+    "vtk": "9.7.1",
+    "mmgpy": "0.17.1"
+  },
+  "native_binary_sha256": "7d498d032c4d8d53485c4a04e076457bb5d2429f85c8fcc80ba06a09d800a69f",
+  "microgen_module": "/Users/kmarchais/dev/microgen/microgen/__init__.py",
+  "vtk_backend": "Sequential",
+  "numerical_thread_policy": {
+    "environment": {
+      "OPENBLAS_NUM_THREADS": "1",
+      "OMP_NUM_THREADS": "1",
+      "MKL_NUM_THREADS": "1",
+      "VECLIB_MAXIMUM_THREADS": "1",
+      "RAYON_NUM_THREADS": "1"
+    },
+    "accelerate_blas_threading": 1,
+    "accelerate_scope": "calling thread"
+  },
+  "fixture_hashes": {
+    "spinodoid-anisotropic-specimen.json": "4c3cb9c37a0f4a2e42f8d448511e78a2e1e0d57f846e28140deab57b3d1712f0",
+    "spinodoid-anisotropic-coefficients.json": "6472b7e24af7aec153ec8797ff9025ea82c5690705da3d5ebc836dc94fa00b7e",
+    "spinodoid-anisotropic-samples.npz": "68402aca3566073307f3a2cd26d76473a7d946f1ded4a4a1098aedf0dda23cb8"
+  },
+  "field_identity_points": 4096,
+  "mmg_binary_sha256": "efe07a6207a9ff86f4af26513e6aa368647b32cae112859fca52e74c3e7f7cf1",
+  "seed_nodes": 27574,
+  "seed_cells": 35749,
+  "mmg_options": {},
+  "nodes": 8363,
+  "elements": 32090,
+  "audit_reoriented_tets": 0,
+  "arrays_sha256": "2125d4096a7291b43af401a8502fa90cb20e3b3efc2a820f77aafe1b4abbba16",
+  "mesh_sha256": "38f31ca1eddf14f9266fbbf2a1eb34bffbf821311d14bb6336df533bcd336ad0",
+  "geometry": {
+    "volume": 0.5229849102886666,
+    "relative_volume_error": 0.0022528741367968674,
+    "q_min_corner": 0.0013084991348172987,
+    "q_p01_corner": 0.12905015263433953,
+    "minimum_sampled_jacobian": 1.32874952561184e-09,
+    "facet_consistency": {
+      "nodes": 8363,
+      "elements": 32090,
+      "unique_faces": 69412,
+      "interior_faces": 58948,
+      "extracted_boundary_faces": 10464,
+      "same_orientation_shared_faces": 0,
+      "nonmanifold_faces": 0,
+      "duplicate_cells": 0,
+      "duplicate_surface_faces": 0,
+      "provided_boundary_matches_extraction": true,
+      "missing_provided_faces": 0,
+      "extra_provided_faces": 0,
+      "nonpositive_corner_determinants": 0,
+      "minimum_corner_determinant": 1.3287495256118374e-09,
+      "oriented_facet_consistency_passed": true,
+      "conflict_examples": [],
+      "scope": "Oriented corner-face incidence and same-side neighbor diagnostics; necessary consistency, not a certificate of curved geometry or absence of nonlocal intersections"
+    },
+    "oriented_facet_consistency_passed": true,
+    "quadratic_conformity": {
+      "passed": true,
+      "order": 1
+    },
+    "exact_straight_reduction_verified": false,
+    "geometry_admitted": false,
+    "sampled_reverse_max": 0.011133246126011753,
+    "distance_audit_complete": false,
+    "projection_failed": null,
+    "audit_scope": "Fail-fast after required quality/volume/topology/periodicity rejection; no forward-distance or successful speed claim",
+    "failed_gates": [
+      "quality"
+    ]
+  },
+  "periodic": {
+    "periodic_pair_counts": [
+      781,
+      655,
+      655
+    ],
+    "periodic_coordinate_errors": [
+      9.992007221626409e-16,
+      2.9976021664879227e-15,
+      9.992007221626409e-16
+    ],
+    "periodic_pair_tolerance": 1e-10,
+    "periodic_equivalence_classes": 6339,
+    "periodic_triangles_match": true,
+    "full_facet_check_required": true,
+    "complete_existing_node_classes": true,
+    "unmatched_noncap_contact_nodes": [
+      [
+        [],
+        []
+      ],
+      [
+        [],
+        []
+      ],
+      [
+        [],
+        []
+      ]
+    ],
+    "declared_bounds": [
+      [
+        -0.5,
+        -0.5,
+        -0.5
+      ],
+      [
+        0.5,
+        0.5,
+        0.5
+      ]
+    ],
+    "periodic_gate": "declared-cell-material-cap-and-complete-node-classes-v1"
+  },
+  "quality_stats": {
+    "min": 0.0013084991348172987,
+    "p01": 0.12905015263433953,
+    "p10": 0.44916682392466606,
+    "median": 0.7032129695265643,
+    "p90": 0.8833644081994511,
+    "p99": 0.9611821684228429,
+    "max": 0.9961907145406457,
+    "mean": 0.6784452956118654
+  },
+  "audit_reused_from": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-microgen-backend-repeated-20261112-v1/repeat-0-spinodoid-anisotropic-actual/result.json",
+  "audit_reused_sha256": "148979a511eae323fa1706faf8c41564fbd7513b839490693bac5472a18593c4",
+  "audit_s": 9.791599586606026e-05,
+  "elapsed_s": 4.103159540973138
+}

@@ -1,0 +1,167 @@
+{
+  "cases": [
+    {
+      "case": "gyroid",
+      "fixture_kind": "study",
+      "fixtures": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-comparison-fixtures-v1",
+      "native": {
+        "name": "meshers-tet4",
+        "arm": "meshers",
+        "cells": 24,
+        "order": 1,
+        "adapt": false,
+        "tolerance": 1.0,
+        "periodic_trace": true,
+        "declared_unit_cell": true,
+        "max_length": 0.1,
+        "min_length": 0.01,
+        "gradation": 0.3,
+        "adapt_iterations": 4
+      },
+      "actual": {
+        "resolution": null,
+        "order": 1
+      },
+      "periodic": true,
+      "source_selection": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-gyroid-tet4-paired-counts-v1/result.json"
+    },
+    {
+      "case": "schwarz-solid",
+      "fixture_kind": "study",
+      "fixtures": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-comparison-fixtures-v1",
+      "native": {
+        "name": "meshers-tet4",
+        "arm": "meshers",
+        "cells": 16,
+        "order": 1,
+        "adapt": true,
+        "tolerance": 1.0,
+        "min_length": 0.002,
+        "adapt_tolerance": 0.001,
+        "periodic_trace": true,
+        "declared_unit_cell": true,
+        "max_length": 0.1,
+        "gradation": 0.3,
+        "adapt_iterations": 4
+      },
+      "actual": {
+        "name": "actual-default-tet4",
+        "arm": "microgen",
+        "resolution": null,
+        "order": 1,
+        "periodic_trace": true,
+        "declared_unit_cell": true
+      },
+      "source_selection": "/Users/kmarchais/dev/meshers/handoff/macbook/tpms-tet4-count-final-selection-20261111.json",
+      "source_selection_sha256": "d11bc393668f7cfd66d78fd44910dc56a308d59aaabfd279982771e33d601843",
+      "periodic": true
+    },
+    {
+      "case": "smooth-lattice",
+      "fixture_kind": "study",
+      "fixtures": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-comparison-fixtures-v1",
+      "native": {
+        "name": "meshers-tet4-historical32",
+        "arm": "meshers",
+        "cells": 32,
+        "order": 1,
+        "adapt": true,
+        "tolerance": 0.002,
+        "min_length": 0.002,
+        "adapt_tolerance": 0.002,
+        "lattice_field": "original",
+        "periodic_trace": true,
+        "declared_unit_cell": true,
+        "max_length": 0.1,
+        "gradation": 0.3,
+        "adapt_iterations": 4,
+        "positive_void_clamp": 0.02
+      },
+      "actual": {
+        "name": "actual-default-tet4",
+        "arm": "microgen",
+        "resolution": null,
+        "order": 1,
+        "periodic_trace": true,
+        "declared_unit_cell": true
+      },
+      "source_selection": "/Users/kmarchais/dev/meshers/handoff/macbook/implicit-tet4-default-selection-20261111.json",
+      "source_selection_sha256": "b662ff4e4898657a61447181ac7f6efbcb86fa626d2c7dfe93a993665f4bbf81",
+      "periodic": true
+    },
+    {
+      "case": "tpms-fischer-koch-s-sheet",
+      "fixture_kind": "tpms",
+      "fixtures": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-tpms-family-fixtures-v1",
+      "native": {
+        "name": "native-adaptive24-quality-failure-control",
+        "arm": "meshers",
+        "cells": 24,
+        "order": 1,
+        "adapt": true,
+        "tolerance": 0.002,
+        "periodic_trace": true,
+        "declared_unit_cell": true,
+        "adapt_tolerance": 0.0018,
+        "min_length": 0.002,
+        "max_length": 0.1,
+        "gradation": 0.6,
+        "adapt_iterations": 4
+      },
+      "actual": {
+        "name": "actual-default-tet4",
+        "arm": "microgen",
+        "resolution": null,
+        "order": 1,
+        "periodic_trace": true,
+        "declared_unit_cell": true
+      },
+      "source_selection": "/Users/kmarchais/dev/meshers/handoff/macbook/tpms-tet4-count-final-selection-20261111.json",
+      "source_selection_sha256": "d11bc393668f7cfd66d78fd44910dc56a308d59aaabfd279982771e33d601843",
+      "periodic": true
+    },
+    {
+      "case": "tpms-honeycomb-sheet",
+      "fixture_kind": "tpms",
+      "fixtures": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-tpms-family-fixtures-v1",
+      "native": {
+        "name": "native-adaptive24-quality-failure-control",
+        "arm": "meshers",
+        "cells": 24,
+        "order": 1,
+        "adapt": true,
+        "tolerance": 0.002,
+        "periodic_trace": true,
+        "declared_unit_cell": true,
+        "adapt_tolerance": 0.0018,
+        "min_length": 0.002,
+        "max_length": 0.1,
+        "gradation": 0.6,
+        "adapt_iterations": 4
+      },
+      "actual": {
+        "name": "actual-default-tet4",
+        "arm": "microgen",
+        "resolution": null,
+        "order": 1,
+        "periodic_trace": true,
+        "declared_unit_cell": true
+      },
+      "source_selection": "/Users/kmarchais/dev/meshers/handoff/macbook/tpms-tet4-count-final-selection-20261111.json",
+      "source_selection_sha256": "d11bc393668f7cfd66d78fd44910dc56a308d59aaabfd279982771e33d601843",
+      "periodic": true
+    }
+  ],
+  "purpose": "Public native backend reproduction of previously admitted original controls plus one bounded adaptive control for each remaining coarse TPMS quality failure. Explicit historical positive-void lattice clamp; no zero-set or union-order change. No FEA.",
+  "imports_and_audits_excluded": true,
+  "constructors_charged": true,
+  "gates": {
+    "distance": 0.002,
+    "relative_volume": 0.01,
+    "quality": 0.1,
+    "nodes": 250000,
+    "tetrahedra": 250000
+  },
+  "new_fea": false,
+  "lattice_models_retained": 24
+}

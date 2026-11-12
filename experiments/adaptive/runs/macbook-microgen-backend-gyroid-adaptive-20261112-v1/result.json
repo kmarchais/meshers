@@ -1,0 +1,248 @@
+{
+  "complete": true,
+  "rows": [
+    {
+      "case": "gyroid",
+      "arm": "native",
+      "config": {
+        "name": "native-gyroid-shared-adaptive24-control",
+        "arm": "meshers",
+        "cells": 24,
+        "order": 1,
+        "adapt": true,
+        "tolerance": 0.002,
+        "periodic_trace": true,
+        "declared_unit_cell": true,
+        "max_length": 0.1,
+        "min_length": 0.002,
+        "gradation": 0.6,
+        "adapt_iterations": 4,
+        "adapt_tolerance": 0.0018,
+        "optimization_passes": 1
+      },
+      "status": "admitted",
+      "qualified": true,
+      "periodic_required": true,
+      "audit_protocol_sha256": "058aec6326698771f9ae4c67a3c6fbd931db01ca648929dbee4a70d56ac1b77f",
+      "backend_selector": "meshers",
+      "mmg_calls": [],
+      "constructor_s": 0.0007711669895797968,
+      "generation_s": 0.7791798340040259,
+      "workflow_s": 0.7799510009936057,
+      "instrumentation_s": 1.3329554349184036e-06,
+      "imports_charged": false,
+      "audits_charged": false,
+      "fea_run": false,
+      "versions": {
+        "meshers": "0.2.0",
+        "microgen": "2.0.0b1",
+        "numpy": "2.5.4",
+        "scipy": "1.18.1",
+        "pyvista": "0.49.1",
+        "vtk": "9.7.1",
+        "mmgpy": "0.17.1"
+      },
+      "native_binary_sha256": "d6e37257524526e4ce354ff19ac8939ea52551f8719d0cdb079af10fb404a473",
+      "microgen_module": "/Users/kmarchais/dev/microgen/microgen/__init__.py",
+      "vtk_backend": "Sequential",
+      "numerical_thread_policy": {
+        "environment": {
+          "OPENBLAS_NUM_THREADS": "1",
+          "OMP_NUM_THREADS": "1",
+          "MKL_NUM_THREADS": "1",
+          "VECLIB_MAXIMUM_THREADS": "1",
+          "RAYON_NUM_THREADS": "1"
+        },
+        "accelerate_blas_threading": 1,
+        "accelerate_scope": "calling thread"
+      },
+      "fixture_hashes": {
+        "gyroid-samples.npz": "d49ce7a80d95af127951750fa7dd02f52d4dd67bc87246dee02be932b51539d6",
+        "gyroid-specimen.json": "2f9171aa778f1899aed5b1057bc6255da515e8a9d96bf76c305b62e3c7bd0ed8"
+      },
+      "field_identity_points": 4096,
+      "mmg_binary_sha256": "efe07a6207a9ff86f4af26513e6aa368647b32cae112859fca52e74c3e7f7cf1",
+      "native_diagnostics": {
+        "empty": false,
+        "volume": 0.3571315787089417,
+        "minimum_mmg_quality_basis": "linear_corners",
+        "minimum_mmg_quality": 0.23723647994247005,
+        "sampled_surface_error": 0.0015320255132598064,
+        "elements_below_quality_01": 0,
+        "reverted_snap_vertices": 0,
+        "callback_calls": 0,
+        "inserted_interior_nodes": 0,
+        "adapt": {
+          "splits": 254,
+          "collapses": 8243,
+          "swaps": 3025,
+          "moves": 31008,
+          "error_splits": 0,
+          "maximum_error": 0.0015320255132598064,
+          "seconds": [
+            0.097861291,
+            0.001323959,
+            0.269122833,
+            0.039701375,
+            0.06574108299999999,
+            0.08342983300000001,
+            0.024556375
+          ]
+        },
+        "seconds": 0.776931125,
+        "threads": 1,
+        "evaluator": "compiled",
+        "preparation_seconds": 0.0012664999812841415
+      },
+      "nodes": 9434,
+      "elements": 34854,
+      "audit_reoriented_tets": 0,
+      "arrays_sha256": "85c34cb0b4f48ea3704b08edefc5ce99781937d37d664645128840cb914666a9",
+      "mesh_sha256": "b8e95d76a5a18d38c7fdb6986a059cf56f8f58d0dced1e36ad2f76beaa52a8f8",
+      "geometry": {
+        "volume": 0.3571315787089432,
+        "relative_volume_error": 0.0019306671062795377,
+        "q_min_corner": 0.23723647994247005,
+        "q_p01_corner": 0.5049115350404093,
+        "minimum_sampled_jacobian": 3.480840901622093e-06,
+        "facet_consistency": {
+          "nodes": 9434,
+          "elements": 34854,
+          "unique_faces": 76382,
+          "interior_faces": 63034,
+          "extracted_boundary_faces": 13348,
+          "same_orientation_shared_faces": 0,
+          "nonmanifold_faces": 0,
+          "duplicate_cells": 0,
+          "duplicate_surface_faces": 0,
+          "provided_boundary_matches_extraction": true,
+          "missing_provided_faces": 0,
+          "extra_provided_faces": 0,
+          "nonpositive_corner_determinants": 0,
+          "minimum_corner_determinant": 3.480840901622091e-06,
+          "oriented_facet_consistency_passed": true,
+          "conflict_examples": [],
+          "scope": "Oriented corner-face incidence and same-side neighbor diagnostics; necessary consistency, not a certificate of curved geometry or absence of nonlocal intersections"
+        },
+        "oriented_facet_consistency_passed": true,
+        "quadratic_conformity": {
+          "passed": true,
+          "order": 1
+        },
+        "exact_straight_reduction_verified": false,
+        "geometry_admitted": true,
+        "sampled_forward_max": 0.0015283187967222464,
+        "sampled_reverse_max": 0.0012375197885842368,
+        "sampled_two_sided_max": 0.0015283187967222464,
+        "outward_forward_max": 0.0015283187967222464,
+        "inward_forward_max": 0.001469823123179984,
+        "projection_failed": 0,
+        "forward_samples": 144794,
+        "reverse_samples": 36260,
+        "minimum_dihedral_deg_corner": 13.166978417837385,
+        "reverse_tessellation_delta_max": 0.0,
+        "quadratic_reverse_subdivisions": null,
+        "projection_method": "newton-box-slsqp-v1",
+        "unbounded_projection_failed": 0,
+        "box_projection_attempts": 0,
+        "box_projection_recovered": 0,
+        "box_projection_witnesses": [],
+        "distance_audit_complete": true,
+        "failed_gates": []
+      },
+      "periodic": {
+        "periodic_pair_counts": [
+          270,
+          270,
+          265
+        ],
+        "periodic_coordinate_errors": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "periodic_pair_tolerance": 1e-10,
+        "periodic_equivalence_classes": 8659,
+        "periodic_triangles_match": true,
+        "full_facet_check_required": true,
+        "complete_existing_node_classes": true,
+        "unmatched_noncap_contact_nodes": [
+          [
+            [],
+            []
+          ],
+          [
+            [],
+            []
+          ],
+          [
+            [],
+            []
+          ]
+        ],
+        "declared_bounds": [
+          [
+            -0.5,
+            -0.5,
+            -0.5
+          ],
+          [
+            0.5,
+            0.5,
+            0.5
+          ]
+        ],
+        "periodic_gate": "declared-cell-material-cap-and-complete-node-classes-v1"
+      },
+      "quality_stats": {
+        "min": 0.23723647994247005,
+        "p01": 0.5049115350404093,
+        "p10": 0.5892132124078411,
+        "median": 0.7306278442898739,
+        "p90": 0.8789540793821494,
+        "p99": 0.9570752722621894,
+        "max": 0.9971364861473778,
+        "mean": 0.7319307309385489
+      },
+      "native_pairs_match_independent_audit": true,
+      "audit_s": 1.1464230839628726,
+      "elapsed_s": 1.963567457976751,
+      "repetition": 0,
+      "warmup": false,
+      "resource": {
+        "returncode": 0,
+        "limit_failure": null,
+        "peak_rss_bytes": 447774720,
+        "wall_s": 3.551090667024255,
+        "wall_s_clock": "monotonic",
+        "elapsed_realtime_s": 3.5511398315429688,
+        "suspension_or_clock_adjustment_s": 4.916451871395111e-05,
+        "idle_sleep_prevention": [
+          "/usr/bin/caffeinate",
+          "-i"
+        ],
+        "memory_bytes": 12884901888,
+        "memory_enforcement": "process-tree-rss-watchdog",
+        "rss_poll_interval_s": 0.25,
+        "platform": "darwin",
+        "numerical_thread_policy": {
+          "environment": {
+            "OPENBLAS_NUM_THREADS": "1",
+            "OMP_NUM_THREADS": "1",
+            "MKL_NUM_THREADS": "1",
+            "VECLIB_MAXIMUM_THREADS": "1",
+            "RAYON_NUM_THREADS": "1"
+          },
+          "accelerate_blas_threading": 1,
+          "accelerate_scope": "calling thread"
+        }
+      },
+      "directory": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-microgen-backend-gyroid-adaptive-20261112-v1/repeat-0-gyroid-native",
+      "timing_valid": true
+    }
+  ],
+  "returned": 1,
+  "admitted": 1,
+  "new_fea": false,
+  "reference_promoted": false
+}

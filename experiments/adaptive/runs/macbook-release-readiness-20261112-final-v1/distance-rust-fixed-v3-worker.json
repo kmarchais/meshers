@@ -1,0 +1,50 @@
+{
+  "command": [
+    "/usr/bin/env",
+    "RUSTUP_TOOLCHAIN=1.95.0",
+    "CARGO_BUILD_JOBS=2",
+    "CARGO_TARGET_DIR=/Users/kmarchais/dev/meshers-release/target",
+    "/Users/kmarchais/.cargo/bin/cargo",
+    "test",
+    "--manifest-path",
+    "/Users/kmarchais/dev/meshers-release/Cargo.toml",
+    "--locked",
+    "--release",
+    "-p",
+    "meshers-core",
+    "--features",
+    "experimental-quads",
+    "--lib",
+    "--",
+    "--test-threads=1"
+  ],
+  "resource": {
+    "returncode": 0,
+    "limit_failure": null,
+    "peak_rss_bytes": 1136197632,
+    "wall_s": 77.59538933396107,
+    "wall_s_clock": "monotonic",
+    "elapsed_realtime_s": 77.59606671333313,
+    "suspension_or_clock_adjustment_s": 0.0006773793720640242,
+    "idle_sleep_prevention": [
+      "/usr/bin/caffeinate",
+      "-i"
+    ],
+    "memory_bytes": 12884901888,
+    "memory_enforcement": "process-tree-rss-watchdog",
+    "rss_poll_interval_s": 0.25,
+    "platform": "darwin",
+    "numerical_thread_policy": {
+      "environment": {
+        "OPENBLAS_NUM_THREADS": "1",
+        "OMP_NUM_THREADS": "1",
+        "MKL_NUM_THREADS": "1",
+        "VECLIB_MAXIMUM_THREADS": "1",
+        "RAYON_NUM_THREADS": "1"
+      },
+      "accelerate_blas_threading": 1,
+      "accelerate_scope": "calling thread"
+    }
+  },
+  "complete": true
+}

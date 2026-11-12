@@ -1,0 +1,43 @@
+{
+  "command": [
+    "/usr/bin/env",
+    "PYTHONPATH=/Users/kmarchais/dev/meshers/.local-work/overnight-release-20261112/sdf-release-package-v1",
+    "/Users/kmarchais/dev/meshers/.local-work/release-minimum-env/bin/python",
+    "-m",
+    "pytest",
+    "-q",
+    "/Users/kmarchais/dev/meshers-release/crates/meshers-python/tests",
+    "-k",
+    "sdf or adaptive_schwarz_d or curved_volume or quadratic_volume",
+    "--junitxml=/Users/kmarchais/dev/meshers/.local-work/overnight-release-20261112/sdf-release-minimum-v1.xml"
+  ],
+  "resource": {
+    "returncode": 0,
+    "limit_failure": null,
+    "peak_rss_bytes": 272072704,
+    "wall_s": 19.51029158302117,
+    "wall_s_clock": "monotonic",
+    "elapsed_realtime_s": 19.51043200492859,
+    "suspension_or_clock_adjustment_s": 0.00014042190741747618,
+    "idle_sleep_prevention": [
+      "/usr/bin/caffeinate",
+      "-i"
+    ],
+    "memory_bytes": 12884901888,
+    "memory_enforcement": "process-tree-rss-watchdog",
+    "rss_poll_interval_s": 0.25,
+    "platform": "darwin",
+    "numerical_thread_policy": {
+      "environment": {
+        "OPENBLAS_NUM_THREADS": "1",
+        "OMP_NUM_THREADS": "1",
+        "MKL_NUM_THREADS": "1",
+        "VECLIB_MAXIMUM_THREADS": "1",
+        "RAYON_NUM_THREADS": "1"
+      },
+      "accelerate_blas_threading": 1,
+      "accelerate_scope": "calling thread"
+    }
+  },
+  "complete": true
+}

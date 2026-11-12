@@ -1,0 +1,1131 @@
+{
+  "cases": [
+    {
+      "case": "gyroid",
+      "fixture_kind": "study",
+      "fixtures": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-comparison-fixtures-v1",
+      "native": {
+        "name": "meshers-tet4",
+        "arm": "meshers",
+        "cells": 24,
+        "order": 1,
+        "adapt": false,
+        "tolerance": 1.0,
+        "periodic_trace": true,
+        "declared_unit_cell": true,
+        "max_length": 0.1,
+        "min_length": 0.01,
+        "gradation": 0.3,
+        "adapt_iterations": 4
+      },
+      "actual": {
+        "resolution": null,
+        "order": 1
+      },
+      "periodic": true,
+      "source_selection": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-gyroid-tet4-paired-counts-v1/result.json",
+      "native_recipe_evidence": {
+        "directory": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-microgen-backend-coverage-20261112-v1/repeat-0-gyroid-native",
+        "result_sha256": "5e7ee3c39554a20b59b3fe6e6f52be831b5f578d855ac74e8abc87f46dbd9538",
+        "prior_status": "admitted"
+      }
+    },
+    {
+      "case": "schwarz-solid",
+      "fixture_kind": "study",
+      "fixtures": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-comparison-fixtures-v1",
+      "native": {
+        "name": "meshers-tet4",
+        "arm": "meshers",
+        "cells": 16,
+        "order": 1,
+        "adapt": true,
+        "tolerance": 1.0,
+        "min_length": 0.002,
+        "adapt_tolerance": 0.001,
+        "periodic_trace": true,
+        "declared_unit_cell": true,
+        "max_length": 0.1,
+        "gradation": 0.3,
+        "adapt_iterations": 4
+      },
+      "actual": {
+        "name": "actual-default-tet4",
+        "arm": "microgen",
+        "resolution": null,
+        "order": 1,
+        "periodic_trace": true,
+        "declared_unit_cell": true
+      },
+      "source_selection": "/Users/kmarchais/dev/meshers/handoff/macbook/tpms-tet4-count-final-selection-20261111.json",
+      "source_selection_sha256": "d11bc393668f7cfd66d78fd44910dc56a308d59aaabfd279982771e33d601843",
+      "periodic": true,
+      "native_recipe_evidence": {
+        "directory": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-microgen-backend-coverage-20261112-v1/repeat-0-schwarz-solid-native",
+        "result_sha256": "fb419138ed01c62b10d06a4a1f2bb11fd44f92270635a803e06bb37e98b143a2",
+        "prior_status": "admitted"
+      }
+    },
+    {
+      "case": "spinodoid",
+      "fixture_kind": "study",
+      "fixtures": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-comparison-fixtures-v1",
+      "native": {
+        "name": "native-spinodoid-adaptive24-margin-tet4-gradation06",
+        "arm": "meshers",
+        "cells": 24,
+        "order": 1,
+        "adapt": true,
+        "tolerance": 0.002,
+        "periodic_trace": true,
+        "declared_unit_cell": true,
+        "min_length": 0.002,
+        "adapt_tolerance": 0.0018,
+        "adapt_iterations": 4,
+        "gradation": 0.6,
+        "max_length": 0.1
+      },
+      "actual": {
+        "name": "actual-default-tet4",
+        "arm": "microgen",
+        "resolution": null,
+        "order": 1,
+        "periodic_trace": true,
+        "declared_unit_cell": true
+      },
+      "source_selection": "/Users/kmarchais/dev/meshers/handoff/macbook/implicit-tet4-default-selection-20261111.json",
+      "source_selection_sha256": "b662ff4e4898657a61447181ac7f6efbcb86fa626d2c7dfe93a993665f4bbf81",
+      "periodic": true,
+      "native_recipe_evidence": {
+        "directory": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-microgen-backend-repeated-20261112-v1/repeat-4-spinodoid-native",
+        "result_sha256": "ac10b574b6c68a8d96b1abe752c54319ef19a32aaabc325228249ad49f0cb58c",
+        "prior_status": "admitted"
+      }
+    },
+    {
+      "case": "smooth-lattice",
+      "fixture_kind": "study",
+      "fixtures": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-comparison-fixtures-v1",
+      "native": {
+        "name": "meshers-tet4-historical32",
+        "arm": "meshers",
+        "cells": 32,
+        "order": 1,
+        "adapt": true,
+        "tolerance": 0.002,
+        "min_length": 0.002,
+        "adapt_tolerance": 0.002,
+        "lattice_field": "original",
+        "periodic_trace": true,
+        "declared_unit_cell": true,
+        "max_length": 0.1,
+        "gradation": 0.3,
+        "adapt_iterations": 4,
+        "positive_void_clamp": 0.02
+      },
+      "actual": {
+        "name": "actual-default-tet4",
+        "arm": "microgen",
+        "resolution": null,
+        "order": 1,
+        "periodic_trace": true,
+        "declared_unit_cell": true
+      },
+      "source_selection": "/Users/kmarchais/dev/meshers/handoff/macbook/implicit-tet4-default-selection-20261111.json",
+      "source_selection_sha256": "b662ff4e4898657a61447181ac7f6efbcb86fa626d2c7dfe93a993665f4bbf81",
+      "periodic": true,
+      "native_recipe_evidence": {
+        "directory": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-microgen-backend-coverage-20261112-v1/repeat-0-smooth-lattice-native",
+        "result_sha256": "35c2d6a9f87f2de97302987acdad97379353465b217c63798925e86244c61a87",
+        "prior_status": "admitted"
+      }
+    },
+    {
+      "case": "spinodoid-anisotropic",
+      "fixture_kind": "study",
+      "fixtures": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-comparison-fixtures-v1",
+      "native": {
+        "name": "native-spinodoid-adaptive16-margin-gradation06-tet4",
+        "arm": "meshers",
+        "cells": 16,
+        "order": 1,
+        "adapt": true,
+        "tolerance": 0.002,
+        "periodic_trace": true,
+        "declared_unit_cell": true,
+        "min_length": 0.002,
+        "adapt_tolerance": 0.0018,
+        "adapt_iterations": 4,
+        "gradation": 0.6,
+        "max_length": 0.1
+      },
+      "actual": {
+        "name": "actual-default-tet4",
+        "arm": "microgen",
+        "resolution": null,
+        "order": 1,
+        "periodic_trace": true,
+        "declared_unit_cell": true
+      },
+      "source_selection": "/Users/kmarchais/dev/meshers/handoff/macbook/implicit-tet4-default-selection-20261111.json",
+      "source_selection_sha256": "b662ff4e4898657a61447181ac7f6efbcb86fa626d2c7dfe93a993665f4bbf81",
+      "periodic": true,
+      "native_recipe_evidence": {
+        "directory": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-microgen-backend-repeated-20261112-v1/repeat-4-spinodoid-anisotropic-native",
+        "result_sha256": "bac6bc1566e95f497cab4fdd105cd3b0e42bc12524d265edb6ba1a4c4afda356",
+        "prior_status": "admitted"
+      }
+    },
+    {
+      "case": "graded-gyroid-linear",
+      "fixture_kind": "study",
+      "fixtures": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-comparison-fixtures-v1",
+      "native": {
+        "name": "native-shared-adaptive24-coverage-control",
+        "arm": "meshers",
+        "cells": 24,
+        "order": 1,
+        "adapt": true,
+        "tolerance": 0.002,
+        "periodic_trace": true,
+        "declared_unit_cell": true,
+        "adapt_tolerance": 0.0018,
+        "min_length": 0.002,
+        "max_length": 0.1,
+        "gradation": 0.6,
+        "adapt_iterations": 4,
+        "optimization_passes": 1
+      },
+      "actual": {
+        "name": "actual-default-tet4",
+        "arm": "microgen",
+        "resolution": null,
+        "order": 1,
+        "periodic_trace": true,
+        "declared_unit_cell": true
+      },
+      "source_selection": "/Users/kmarchais/dev/meshers/handoff/macbook/implicit-tet4-default-selection-20261111.json",
+      "source_selection_sha256": "b662ff4e4898657a61447181ac7f6efbcb86fa626d2c7dfe93a993665f4bbf81",
+      "periodic": false,
+      "native_recipe_evidence": {
+        "directory": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-microgen-backend-wide-coverage-20261112-v1/repeat-0-graded-gyroid-linear-native",
+        "result_sha256": "1de45ed5d9ba529b0c4da5f065ef5457f28ebad135d4a5af7361f944f12afb95",
+        "prior_status": "admitted"
+      }
+    },
+    {
+      "case": "graded-gyroid-density-linear",
+      "fixture_kind": "study",
+      "fixtures": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-linear-density-fixtures-v1",
+      "native": {
+        "name": "native-shared-adaptive24-coverage-control",
+        "arm": "meshers",
+        "cells": 24,
+        "order": 1,
+        "adapt": true,
+        "tolerance": 0.002,
+        "periodic_trace": true,
+        "declared_unit_cell": true,
+        "adapt_tolerance": 0.0018,
+        "min_length": 0.002,
+        "max_length": 0.1,
+        "gradation": 0.6,
+        "adapt_iterations": 4,
+        "optimization_passes": 1
+      },
+      "actual": {
+        "name": "actual-default-tet4",
+        "arm": "microgen",
+        "resolution": null,
+        "order": 1,
+        "periodic_trace": true,
+        "declared_unit_cell": true
+      },
+      "source_selection": "/Users/kmarchais/dev/meshers/handoff/macbook/implicit-tet4-default-selection-20261111.json",
+      "source_selection_sha256": "b662ff4e4898657a61447181ac7f6efbcb86fa626d2c7dfe93a993665f4bbf81",
+      "periodic": false,
+      "native_recipe_evidence": {
+        "directory": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-microgen-backend-wide-coverage-20261112-v1/repeat-0-graded-gyroid-density-linear-native",
+        "result_sha256": "a4b75140b340879d5da20e0f5be2f52647e50130e6df2c038fc8641e16ad4ecb",
+        "prior_status": "admitted"
+      }
+    },
+    {
+      "case": "schwarz-d-solid",
+      "fixture_kind": "study",
+      "fixtures": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-comparison-fixtures-v1",
+      "native": {
+        "name": "native-adaptive24-bounded-failure-followup",
+        "arm": "meshers",
+        "cells": 24,
+        "order": 1,
+        "adapt": true,
+        "tolerance": 0.002,
+        "periodic_trace": true,
+        "declared_unit_cell": true,
+        "adapt_tolerance": 0.0018,
+        "min_length": 0.002,
+        "max_length": 0.1,
+        "gradation": 0.6,
+        "adapt_iterations": 4,
+        "optimization_passes": 1
+      },
+      "actual": {
+        "name": "actual-default-tet4",
+        "arm": "microgen",
+        "resolution": null,
+        "order": 1,
+        "periodic_trace": true,
+        "declared_unit_cell": true
+      },
+      "source_selection": "/Users/kmarchais/dev/meshers/handoff/macbook/tpms-tet4-count-final-selection-20261111.json",
+      "source_selection_sha256": "d11bc393668f7cfd66d78fd44910dc56a308d59aaabfd279982771e33d601843",
+      "periodic": true,
+      "native_recipe_evidence": {
+        "directory": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-microgen-backend-failure-followup-20261112-v1/repeat-0-schwarz-d-solid-native",
+        "result_sha256": "1f4cfcc8d37c9f30ad0b145c7cb62df42d5f5237db7a215bf76862c03263b4e0",
+        "prior_status": "admitted"
+      }
+    },
+    {
+      "case": "tpms-gyroid-sheet",
+      "fixture_kind": "tpms",
+      "fixtures": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-tpms-family-fixtures-v1",
+      "native": {
+        "name": "native-shared-adaptive24-coverage-control",
+        "arm": "meshers",
+        "cells": 24,
+        "order": 1,
+        "adapt": true,
+        "tolerance": 0.002,
+        "periodic_trace": true,
+        "declared_unit_cell": true,
+        "adapt_tolerance": 0.0018,
+        "min_length": 0.002,
+        "max_length": 0.1,
+        "gradation": 0.6,
+        "adapt_iterations": 4,
+        "optimization_passes": 1
+      },
+      "actual": {
+        "name": "actual-default-tet4",
+        "arm": "microgen",
+        "resolution": null,
+        "order": 1,
+        "periodic_trace": true,
+        "declared_unit_cell": true
+      },
+      "source_selection": "/Users/kmarchais/dev/meshers/handoff/macbook/tpms-tet4-count-final-selection-20261111.json",
+      "source_selection_sha256": "d11bc393668f7cfd66d78fd44910dc56a308d59aaabfd279982771e33d601843",
+      "periodic": true,
+      "native_recipe_evidence": {
+        "directory": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-microgen-backend-wide-coverage-20261112-v1/repeat-0-tpms-gyroid-sheet-native",
+        "result_sha256": "774ff6adf734a3ad6c80dcfbcc0bcdeafba3b93b9409e263df0baf56dd6f927f",
+        "prior_status": "admitted"
+      }
+    },
+    {
+      "case": "tpms-schwarz-p-sheet",
+      "fixture_kind": "tpms",
+      "fixtures": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-tpms-family-fixtures-v1",
+      "native": {
+        "name": "native-shared-adaptive24-coverage-control",
+        "arm": "meshers",
+        "cells": 24,
+        "order": 1,
+        "adapt": true,
+        "tolerance": 0.002,
+        "periodic_trace": true,
+        "declared_unit_cell": true,
+        "adapt_tolerance": 0.0018,
+        "min_length": 0.002,
+        "max_length": 0.1,
+        "gradation": 0.6,
+        "adapt_iterations": 4,
+        "optimization_passes": 1
+      },
+      "actual": {
+        "name": "actual-default-tet4",
+        "arm": "microgen",
+        "resolution": null,
+        "order": 1,
+        "periodic_trace": true,
+        "declared_unit_cell": true
+      },
+      "source_selection": "/Users/kmarchais/dev/meshers/handoff/macbook/tpms-tet4-count-final-selection-20261111.json",
+      "source_selection_sha256": "d11bc393668f7cfd66d78fd44910dc56a308d59aaabfd279982771e33d601843",
+      "periodic": true,
+      "native_recipe_evidence": {
+        "directory": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-microgen-backend-wide-coverage-20261112-v1/repeat-0-tpms-schwarz-p-sheet-native",
+        "result_sha256": "c8356762a385278de91f2a4f93ceb6bbde58a4ba0db38b9f74c6863a416edef4",
+        "prior_status": "admitted"
+      }
+    },
+    {
+      "case": "tpms-schwarz-d-sheet",
+      "fixture_kind": "tpms",
+      "fixtures": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-tpms-family-fixtures-v1",
+      "native": {
+        "name": "native-shared-adaptive24-coverage-control",
+        "arm": "meshers",
+        "cells": 24,
+        "order": 1,
+        "adapt": true,
+        "tolerance": 0.002,
+        "periodic_trace": true,
+        "declared_unit_cell": true,
+        "adapt_tolerance": 0.0018,
+        "min_length": 0.002,
+        "max_length": 0.1,
+        "gradation": 0.6,
+        "adapt_iterations": 4,
+        "optimization_passes": 1
+      },
+      "actual": {
+        "name": "actual-default-tet4",
+        "arm": "microgen",
+        "resolution": null,
+        "order": 1,
+        "periodic_trace": true,
+        "declared_unit_cell": true
+      },
+      "source_selection": "/Users/kmarchais/dev/meshers/handoff/macbook/tpms-tet4-count-final-selection-20261111.json",
+      "source_selection_sha256": "d11bc393668f7cfd66d78fd44910dc56a308d59aaabfd279982771e33d601843",
+      "periodic": true,
+      "native_recipe_evidence": {
+        "directory": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-microgen-backend-wide-coverage-20261112-v1/repeat-0-tpms-schwarz-d-sheet-native",
+        "result_sha256": "12c9ea1b33f45ec3335846e285d080def286524e984b3feb91aac25e47245dcf",
+        "prior_status": "admitted"
+      }
+    },
+    {
+      "case": "tpms-neovius-sheet",
+      "fixture_kind": "tpms",
+      "fixtures": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-tpms-family-fixtures-v1",
+      "native": {
+        "name": "native-shared-adaptive24-coverage-control",
+        "arm": "meshers",
+        "cells": 24,
+        "order": 1,
+        "adapt": true,
+        "tolerance": 0.002,
+        "periodic_trace": true,
+        "declared_unit_cell": true,
+        "adapt_tolerance": 0.0018,
+        "min_length": 0.002,
+        "max_length": 0.1,
+        "gradation": 0.6,
+        "adapt_iterations": 4,
+        "optimization_passes": 1
+      },
+      "actual": {
+        "name": "actual-default-tet4",
+        "arm": "microgen",
+        "resolution": null,
+        "order": 1,
+        "periodic_trace": true,
+        "declared_unit_cell": true
+      },
+      "source_selection": "/Users/kmarchais/dev/meshers/handoff/macbook/tpms-tet4-count-final-selection-20261111.json",
+      "source_selection_sha256": "d11bc393668f7cfd66d78fd44910dc56a308d59aaabfd279982771e33d601843",
+      "periodic": true,
+      "native_recipe_evidence": {
+        "directory": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-microgen-backend-wide-coverage-20261112-v1/repeat-0-tpms-neovius-sheet-native",
+        "result_sha256": "bb716d6e1c9d33876caf3d330a61b421eedd3efdfd125a53b3525ebc5026d928",
+        "prior_status": "admitted"
+      }
+    },
+    {
+      "case": "tpms-schoen-iwp-sheet",
+      "fixture_kind": "tpms",
+      "fixtures": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-tpms-family-fixtures-v1",
+      "native": {
+        "name": "native-shared-adaptive24-coverage-control",
+        "arm": "meshers",
+        "cells": 24,
+        "order": 1,
+        "adapt": true,
+        "tolerance": 0.002,
+        "periodic_trace": true,
+        "declared_unit_cell": true,
+        "adapt_tolerance": 0.0018,
+        "min_length": 0.002,
+        "max_length": 0.1,
+        "gradation": 0.6,
+        "adapt_iterations": 4,
+        "optimization_passes": 1
+      },
+      "actual": {
+        "name": "actual-default-tet4",
+        "arm": "microgen",
+        "resolution": null,
+        "order": 1,
+        "periodic_trace": true,
+        "declared_unit_cell": true
+      },
+      "source_selection": "/Users/kmarchais/dev/meshers/handoff/macbook/tpms-tet4-count-final-selection-20261111.json",
+      "source_selection_sha256": "d11bc393668f7cfd66d78fd44910dc56a308d59aaabfd279982771e33d601843",
+      "periodic": true,
+      "native_recipe_evidence": {
+        "directory": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-microgen-backend-wide-coverage-20261112-v1/repeat-0-tpms-schoen-iwp-sheet-native",
+        "result_sha256": "7afb9ad9288d198d0920ec27013e71423b0e2d777593e80254325ba7916f8ef3",
+        "prior_status": "admitted"
+      }
+    },
+    {
+      "case": "tpms-schoen-frd-sheet",
+      "fixture_kind": "tpms",
+      "fixtures": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-tpms-family-fixtures-v1",
+      "native": {
+        "name": "native-shared-adaptive24-coverage-control",
+        "arm": "meshers",
+        "cells": 24,
+        "order": 1,
+        "adapt": true,
+        "tolerance": 0.002,
+        "periodic_trace": true,
+        "declared_unit_cell": true,
+        "adapt_tolerance": 0.0018,
+        "min_length": 0.002,
+        "max_length": 0.1,
+        "gradation": 0.6,
+        "adapt_iterations": 4,
+        "optimization_passes": 1
+      },
+      "actual": {
+        "name": "actual-default-tet4",
+        "arm": "microgen",
+        "resolution": null,
+        "order": 1,
+        "periodic_trace": true,
+        "declared_unit_cell": true
+      },
+      "source_selection": "/Users/kmarchais/dev/meshers/handoff/macbook/tpms-tet4-count-final-selection-20261111.json",
+      "source_selection_sha256": "d11bc393668f7cfd66d78fd44910dc56a308d59aaabfd279982771e33d601843",
+      "periodic": true,
+      "native_recipe_evidence": {
+        "directory": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-microgen-backend-wide-coverage-20261112-v1/repeat-0-tpms-schoen-frd-sheet-native",
+        "result_sha256": "68f860d771ef5915992fc58c54589668068d379602ac8143b89d6f95e249968c",
+        "prior_status": "admitted"
+      }
+    },
+    {
+      "case": "tpms-fischer-koch-s-sheet",
+      "fixture_kind": "tpms",
+      "fixtures": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-tpms-family-fixtures-v1",
+      "native": {
+        "name": "native-adaptive24-quality-failure-control",
+        "arm": "meshers",
+        "cells": 24,
+        "order": 1,
+        "adapt": true,
+        "tolerance": 0.002,
+        "periodic_trace": true,
+        "declared_unit_cell": true,
+        "adapt_tolerance": 0.0018,
+        "min_length": 0.002,
+        "max_length": 0.1,
+        "gradation": 0.6,
+        "adapt_iterations": 4
+      },
+      "actual": {
+        "name": "actual-default-tet4",
+        "arm": "microgen",
+        "resolution": null,
+        "order": 1,
+        "periodic_trace": true,
+        "declared_unit_cell": true
+      },
+      "source_selection": "/Users/kmarchais/dev/meshers/handoff/macbook/tpms-tet4-count-final-selection-20261111.json",
+      "source_selection_sha256": "d11bc393668f7cfd66d78fd44910dc56a308d59aaabfd279982771e33d601843",
+      "periodic": true,
+      "native_recipe_evidence": {
+        "directory": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-microgen-backend-coverage-20261112-v1/repeat-0-tpms-fischer-koch-s-sheet-native",
+        "result_sha256": "b765634334fdf834f4661154d083acb4f6562794e09c2e4852154fa3a9fc46c9",
+        "prior_status": "admitted"
+      }
+    },
+    {
+      "case": "tpms-pmy-sheet",
+      "fixture_kind": "tpms",
+      "fixtures": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-tpms-family-fixtures-v1",
+      "native": {
+        "name": "native-adaptive32-bounded-failure-followup",
+        "arm": "meshers",
+        "cells": 32,
+        "order": 1,
+        "adapt": true,
+        "tolerance": 0.002,
+        "periodic_trace": true,
+        "declared_unit_cell": true,
+        "adapt_tolerance": 0.0018,
+        "min_length": 0.002,
+        "max_length": 0.1,
+        "gradation": 0.6,
+        "adapt_iterations": 4,
+        "optimization_passes": 1
+      },
+      "actual": {
+        "name": "actual-default-tet4",
+        "arm": "microgen",
+        "resolution": null,
+        "order": 1,
+        "periodic_trace": true,
+        "declared_unit_cell": true
+      },
+      "source_selection": "/Users/kmarchais/dev/meshers/handoff/macbook/tpms-tet4-count-final-selection-20261111.json",
+      "source_selection_sha256": "d11bc393668f7cfd66d78fd44910dc56a308d59aaabfd279982771e33d601843",
+      "periodic": true,
+      "native_recipe_evidence": {
+        "directory": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-microgen-backend-failure-followup-20261112-v1/repeat-0-tpms-pmy-sheet-native",
+        "result_sha256": "4ce180d59037332551ff5f46f2c113896209076c55ed0eb58835fb94a7ac8242",
+        "prior_status": "admitted"
+      }
+    },
+    {
+      "case": "tpms-honeycomb-sheet",
+      "fixture_kind": "tpms",
+      "fixtures": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-tpms-family-fixtures-v1",
+      "native": {
+        "name": "native-adaptive24-quality-failure-control",
+        "arm": "meshers",
+        "cells": 24,
+        "order": 1,
+        "adapt": true,
+        "tolerance": 0.002,
+        "periodic_trace": true,
+        "declared_unit_cell": true,
+        "adapt_tolerance": 0.0018,
+        "min_length": 0.002,
+        "max_length": 0.1,
+        "gradation": 0.6,
+        "adapt_iterations": 4
+      },
+      "actual": {
+        "name": "actual-default-tet4",
+        "arm": "microgen",
+        "resolution": null,
+        "order": 1,
+        "periodic_trace": true,
+        "declared_unit_cell": true
+      },
+      "source_selection": "/Users/kmarchais/dev/meshers/handoff/macbook/tpms-tet4-count-final-selection-20261111.json",
+      "source_selection_sha256": "d11bc393668f7cfd66d78fd44910dc56a308d59aaabfd279982771e33d601843",
+      "periodic": true,
+      "native_recipe_evidence": {
+        "directory": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-microgen-backend-coverage-20261112-v1/repeat-0-tpms-honeycomb-sheet-native",
+        "result_sha256": "680ecd4558abd47943c43198d47e8c7d7bd8d6888277d9c489482673bf42e9c7",
+        "prior_status": "admitted"
+      }
+    },
+    {
+      "case": "tpms-lidinoid-sheet",
+      "fixture_kind": "tpms",
+      "fixtures": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-tpms-family-fixtures-v1",
+      "native": {
+        "name": "native-shared-adaptive24-coverage-control",
+        "arm": "meshers",
+        "cells": 24,
+        "order": 1,
+        "adapt": true,
+        "tolerance": 0.002,
+        "periodic_trace": true,
+        "declared_unit_cell": true,
+        "adapt_tolerance": 0.0018,
+        "min_length": 0.002,
+        "max_length": 0.1,
+        "gradation": 0.6,
+        "adapt_iterations": 4,
+        "optimization_passes": 1
+      },
+      "actual": {
+        "name": "actual-default-tet4",
+        "arm": "microgen",
+        "resolution": null,
+        "order": 1,
+        "periodic_trace": true,
+        "declared_unit_cell": true
+      },
+      "source_selection": "/Users/kmarchais/dev/meshers/handoff/macbook/tpms-tet4-count-final-selection-20261111.json",
+      "source_selection_sha256": "d11bc393668f7cfd66d78fd44910dc56a308d59aaabfd279982771e33d601843",
+      "periodic": true,
+      "native_recipe_evidence": {
+        "directory": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-microgen-backend-wide-coverage-20261112-v1/repeat-0-tpms-lidinoid-sheet-native",
+        "result_sha256": "62437dda86fbc312b1fbeb416add552fcecd03792efc84e71b79b707191f2449",
+        "prior_status": "admitted"
+      }
+    },
+    {
+      "case": "tpms-split-p-sheet",
+      "fixture_kind": "tpms",
+      "fixtures": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-tpms-family-fixtures-v1",
+      "native": {
+        "name": "native-shared-adaptive24-coverage-control",
+        "arm": "meshers",
+        "cells": 24,
+        "order": 1,
+        "adapt": true,
+        "tolerance": 0.002,
+        "periodic_trace": true,
+        "declared_unit_cell": true,
+        "adapt_tolerance": 0.0018,
+        "min_length": 0.002,
+        "max_length": 0.1,
+        "gradation": 0.6,
+        "adapt_iterations": 4,
+        "optimization_passes": 1
+      },
+      "actual": {
+        "name": "actual-default-tet4",
+        "arm": "microgen",
+        "resolution": null,
+        "order": 1,
+        "periodic_trace": true,
+        "declared_unit_cell": true
+      },
+      "source_selection": "/Users/kmarchais/dev/meshers/handoff/macbook/tpms-tet4-count-final-selection-20261111.json",
+      "source_selection_sha256": "d11bc393668f7cfd66d78fd44910dc56a308d59aaabfd279982771e33d601843",
+      "periodic": true,
+      "native_recipe_evidence": {
+        "directory": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-microgen-backend-wide-coverage-20261112-v1/repeat-0-tpms-split-p-sheet-native",
+        "result_sha256": "ce75a3534e875cd320a12651bc1a3bbf556a364000a5d8355528af05fc65d4f4",
+        "prior_status": "admitted"
+      }
+    },
+    {
+      "case": "tpms-honeycomb-gyroid-sheet",
+      "fixture_kind": "tpms",
+      "fixtures": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-tpms-family-fixtures-v1",
+      "native": {
+        "name": "native-shared-adaptive24-coverage-control",
+        "arm": "meshers",
+        "cells": 24,
+        "order": 1,
+        "adapt": true,
+        "tolerance": 0.002,
+        "periodic_trace": true,
+        "declared_unit_cell": true,
+        "adapt_tolerance": 0.0018,
+        "min_length": 0.002,
+        "max_length": 0.1,
+        "gradation": 0.6,
+        "adapt_iterations": 4,
+        "optimization_passes": 1
+      },
+      "actual": {
+        "name": "actual-default-tet4",
+        "arm": "microgen",
+        "resolution": null,
+        "order": 1,
+        "periodic_trace": true,
+        "declared_unit_cell": true
+      },
+      "source_selection": "/Users/kmarchais/dev/meshers/handoff/macbook/tpms-tet4-count-final-selection-20261111.json",
+      "source_selection_sha256": "d11bc393668f7cfd66d78fd44910dc56a308d59aaabfd279982771e33d601843",
+      "periodic": true,
+      "native_recipe_evidence": {
+        "directory": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-microgen-backend-wide-coverage-20261112-v1/repeat-0-tpms-honeycomb-gyroid-sheet-native",
+        "result_sha256": "80b2b3c23e4b625f7baf50cce00c1085450c111b2836b417de44a39ba8b478c5",
+        "prior_status": "admitted"
+      }
+    },
+    {
+      "case": "tpms-honeycomb-schwarz-p-sheet",
+      "fixture_kind": "tpms",
+      "fixtures": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-tpms-family-fixtures-v1",
+      "native": {
+        "name": "native-shared-adaptive24-coverage-control",
+        "arm": "meshers",
+        "cells": 24,
+        "order": 1,
+        "adapt": true,
+        "tolerance": 0.002,
+        "periodic_trace": true,
+        "declared_unit_cell": true,
+        "adapt_tolerance": 0.0018,
+        "min_length": 0.002,
+        "max_length": 0.1,
+        "gradation": 0.6,
+        "adapt_iterations": 4,
+        "optimization_passes": 1
+      },
+      "actual": {
+        "name": "actual-default-tet4",
+        "arm": "microgen",
+        "resolution": null,
+        "order": 1,
+        "periodic_trace": true,
+        "declared_unit_cell": true
+      },
+      "source_selection": "/Users/kmarchais/dev/meshers/handoff/macbook/tpms-tet4-count-final-selection-20261111.json",
+      "source_selection_sha256": "d11bc393668f7cfd66d78fd44910dc56a308d59aaabfd279982771e33d601843",
+      "periodic": true,
+      "native_recipe_evidence": {
+        "directory": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-microgen-backend-wide-coverage-20261112-v1/repeat-0-tpms-honeycomb-schwarz-p-sheet-native",
+        "result_sha256": "624f22b7558847465935b5761341b8bf1abb76bc28dd2c66936d4e1235d06860",
+        "prior_status": "admitted"
+      }
+    },
+    {
+      "case": "tpms-honeycomb-schwarz-d-sheet",
+      "fixture_kind": "tpms",
+      "fixtures": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-tpms-family-fixtures-v1",
+      "native": {
+        "name": "native-shared-adaptive24-coverage-control",
+        "arm": "meshers",
+        "cells": 24,
+        "order": 1,
+        "adapt": true,
+        "tolerance": 0.002,
+        "periodic_trace": true,
+        "declared_unit_cell": true,
+        "adapt_tolerance": 0.0018,
+        "min_length": 0.002,
+        "max_length": 0.1,
+        "gradation": 0.6,
+        "adapt_iterations": 4,
+        "optimization_passes": 1
+      },
+      "actual": {
+        "name": "actual-default-tet4",
+        "arm": "microgen",
+        "resolution": null,
+        "order": 1,
+        "periodic_trace": true,
+        "declared_unit_cell": true
+      },
+      "source_selection": "/Users/kmarchais/dev/meshers/handoff/macbook/tpms-tet4-count-final-selection-20261111.json",
+      "source_selection_sha256": "d11bc393668f7cfd66d78fd44910dc56a308d59aaabfd279982771e33d601843",
+      "periodic": true,
+      "native_recipe_evidence": {
+        "directory": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-microgen-backend-wide-coverage-20261112-v1/repeat-0-tpms-honeycomb-schwarz-d-sheet-native",
+        "result_sha256": "93aa13ad059d9965947d4be1153b64e99a982e15b4d8ab4529d3c42e16777a27",
+        "prior_status": "admitted"
+      }
+    },
+    {
+      "case": "tpms-honeycomb-schoen-iwp-sheet",
+      "fixture_kind": "tpms",
+      "fixtures": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-tpms-family-fixtures-v1",
+      "native": {
+        "name": "native-shared-adaptive24-coverage-control",
+        "arm": "meshers",
+        "cells": 24,
+        "order": 1,
+        "adapt": true,
+        "tolerance": 0.002,
+        "periodic_trace": true,
+        "declared_unit_cell": true,
+        "adapt_tolerance": 0.0018,
+        "min_length": 0.002,
+        "max_length": 0.1,
+        "gradation": 0.6,
+        "adapt_iterations": 4,
+        "optimization_passes": 1
+      },
+      "actual": {
+        "name": "actual-default-tet4",
+        "arm": "microgen",
+        "resolution": null,
+        "order": 1,
+        "periodic_trace": true,
+        "declared_unit_cell": true
+      },
+      "source_selection": "/Users/kmarchais/dev/meshers/handoff/macbook/tpms-tet4-count-final-selection-20261111.json",
+      "source_selection_sha256": "d11bc393668f7cfd66d78fd44910dc56a308d59aaabfd279982771e33d601843",
+      "periodic": true,
+      "native_recipe_evidence": {
+        "directory": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-microgen-backend-wide-coverage-20261112-v1/repeat-0-tpms-honeycomb-schoen-iwp-sheet-native",
+        "result_sha256": "49eca8cef2a2e98206fcbf111c5c82afbd949afe88e9e9557d862432de4b38a1",
+        "prior_status": "admitted"
+      }
+    },
+    {
+      "case": "tpms-honeycomb-lidinoid-sheet",
+      "fixture_kind": "tpms",
+      "fixtures": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-tpms-family-fixtures-v1",
+      "native": {
+        "name": "native-shared-adaptive24-coverage-control",
+        "arm": "meshers",
+        "cells": 24,
+        "order": 1,
+        "adapt": true,
+        "tolerance": 0.002,
+        "periodic_trace": true,
+        "declared_unit_cell": true,
+        "adapt_tolerance": 0.0018,
+        "min_length": 0.002,
+        "max_length": 0.1,
+        "gradation": 0.6,
+        "adapt_iterations": 4,
+        "optimization_passes": 1
+      },
+      "actual": {
+        "name": "actual-default-tet4",
+        "arm": "microgen",
+        "resolution": null,
+        "order": 1,
+        "periodic_trace": true,
+        "declared_unit_cell": true
+      },
+      "source_selection": "/Users/kmarchais/dev/meshers/handoff/macbook/tpms-tet4-count-final-selection-20261111.json",
+      "source_selection_sha256": "d11bc393668f7cfd66d78fd44910dc56a308d59aaabfd279982771e33d601843",
+      "periodic": true,
+      "native_recipe_evidence": {
+        "directory": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-microgen-backend-wide-coverage-20261112-v1/repeat-0-tpms-honeycomb-lidinoid-sheet-native",
+        "result_sha256": "51fc524cef1414f5312443ba707c799b83721c960592a518756158f3b7ad0deb",
+        "prior_status": "admitted"
+      }
+    },
+    {
+      "case": "graded-gyroid-periodic",
+      "fixture_kind": "study",
+      "fixtures": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-comparison-fixtures-v1",
+      "native": {
+        "name": "native-shared-adaptive24-coverage-control",
+        "arm": "meshers",
+        "cells": 24,
+        "order": 1,
+        "adapt": true,
+        "tolerance": 0.002,
+        "periodic_trace": true,
+        "declared_unit_cell": true,
+        "adapt_tolerance": 0.0018,
+        "min_length": 0.002,
+        "max_length": 0.1,
+        "gradation": 0.6,
+        "adapt_iterations": 4,
+        "optimization_passes": 1
+      },
+      "actual": {
+        "name": "actual-default-tet4",
+        "arm": "microgen",
+        "resolution": null,
+        "order": 1,
+        "periodic_trace": true,
+        "declared_unit_cell": true
+      },
+      "source_selection": "/Users/kmarchais/dev/meshers/handoff/macbook/implicit-tet4-default-selection-20261111.json",
+      "source_selection_sha256": "b662ff4e4898657a61447181ac7f6efbcb86fa626d2c7dfe93a993665f4bbf81",
+      "periodic": true,
+      "native_recipe_evidence": {
+        "directory": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-microgen-backend-wide-coverage-20261112-v1/repeat-0-graded-gyroid-periodic-native",
+        "result_sha256": "4a983893ae31669e19ea47c68c9af259ce04c0c4a9f7c0847ce99e59c41a835a",
+        "prior_status": "admitted"
+      }
+    },
+    {
+      "case": "primitive-box",
+      "fixture_kind": "primitive",
+      "fixtures": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-primitive-family-fixtures-v1",
+      "native": {
+        "name": "native-shared-adaptive24-coverage-control",
+        "arm": "meshers",
+        "cells": 24,
+        "order": 1,
+        "adapt": true,
+        "tolerance": 0.002,
+        "periodic_trace": true,
+        "declared_unit_cell": true,
+        "nonperiodic_reason": "Complete bounded solid; periodic identification not required",
+        "adapt_tolerance": 0.0018,
+        "min_length": 0.002,
+        "max_length": 0.1,
+        "gradation": 0.6,
+        "adapt_iterations": 4,
+        "optimization_passes": 1
+      },
+      "actual": {
+        "name": "actual-default-tet4",
+        "arm": "microgen",
+        "resolution": null,
+        "order": 1,
+        "periodic_trace": true,
+        "declared_unit_cell": true,
+        "nonperiodic_reason": "Complete bounded solid; periodic identification not required",
+        "actual_generate_options": {}
+      },
+      "source_selection": "/Users/kmarchais/dev/meshers/handoff/macbook/implicit-tet4-default-selection-20261111.json",
+      "source_selection_sha256": "b662ff4e4898657a61447181ac7f6efbcb86fa626d2c7dfe93a993665f4bbf81",
+      "periodic": false,
+      "native_recipe_evidence": {
+        "directory": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-microgen-backend-sdf-prototype-20261112-v2/repeat-0-primitive-box-native",
+        "result_sha256": "974c4cb55cf500fb23e97fdadb3875df49ddde5eb0844b7d8451dfd7c72f93d0",
+        "prior_status": "admitted"
+      }
+    },
+    {
+      "case": "primitive-cylinder",
+      "fixture_kind": "primitive",
+      "fixtures": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-primitive-family-fixtures-v1",
+      "native": {
+        "name": "native-shared-adaptive24-coverage-control",
+        "arm": "meshers",
+        "cells": 24,
+        "order": 1,
+        "adapt": true,
+        "tolerance": 0.002,
+        "periodic_trace": true,
+        "declared_unit_cell": true,
+        "nonperiodic_reason": "Complete bounded solid; periodic identification not required",
+        "adapt_tolerance": 0.0018,
+        "min_length": 0.002,
+        "max_length": 0.1,
+        "gradation": 0.6,
+        "adapt_iterations": 4,
+        "optimization_passes": 1
+      },
+      "actual": {
+        "name": "actual-default-tet4",
+        "arm": "microgen",
+        "resolution": null,
+        "order": 1,
+        "periodic_trace": true,
+        "declared_unit_cell": true,
+        "nonperiodic_reason": "Complete bounded solid; periodic identification not required",
+        "actual_generate_options": {}
+      },
+      "source_selection": "/Users/kmarchais/dev/meshers/handoff/macbook/implicit-tet4-default-selection-20261111.json",
+      "source_selection_sha256": "b662ff4e4898657a61447181ac7f6efbcb86fa626d2c7dfe93a993665f4bbf81",
+      "periodic": false,
+      "native_recipe_evidence": {
+        "directory": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-microgen-backend-sdf-prototype-20261112-v2/repeat-0-primitive-cylinder-native",
+        "result_sha256": "0b88f2b0a6ef84ca872fcaa36ca74227488322cf3481c598f5be0b98955aa0cc",
+        "prior_status": "admitted"
+      }
+    },
+    {
+      "case": "primitive-capsule",
+      "fixture_kind": "primitive",
+      "fixtures": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-primitive-family-fixtures-v1",
+      "native": {
+        "name": "native-shared-adaptive24-coverage-control",
+        "arm": "meshers",
+        "cells": 24,
+        "order": 1,
+        "adapt": true,
+        "tolerance": 0.002,
+        "periodic_trace": true,
+        "declared_unit_cell": true,
+        "nonperiodic_reason": "Complete bounded solid; periodic identification not required",
+        "adapt_tolerance": 0.0018,
+        "min_length": 0.002,
+        "max_length": 0.1,
+        "gradation": 0.6,
+        "adapt_iterations": 4,
+        "optimization_passes": 1
+      },
+      "actual": {
+        "name": "actual-default-tet4",
+        "arm": "microgen",
+        "resolution": null,
+        "order": 1,
+        "periodic_trace": true,
+        "declared_unit_cell": true,
+        "nonperiodic_reason": "Complete bounded solid; periodic identification not required",
+        "actual_generate_options": {}
+      },
+      "source_selection": "/Users/kmarchais/dev/meshers/handoff/macbook/implicit-tet4-default-selection-20261111.json",
+      "source_selection_sha256": "b662ff4e4898657a61447181ac7f6efbcb86fa626d2c7dfe93a993665f4bbf81",
+      "periodic": false,
+      "native_recipe_evidence": {
+        "directory": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-microgen-backend-wide-coverage-20261112-v1/repeat-0-primitive-capsule-native",
+        "result_sha256": "f43251ac0b77aaf22295096c12007403e4225209bb79aac9166c02352c63671c",
+        "prior_status": "admitted"
+      }
+    },
+    {
+      "case": "primitive-ellipsoid",
+      "fixture_kind": "primitive",
+      "fixtures": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-primitive-family-fixtures-v1",
+      "native": {
+        "name": "native-shared-adaptive24-coverage-control",
+        "arm": "meshers",
+        "cells": 24,
+        "order": 1,
+        "adapt": true,
+        "tolerance": 0.002,
+        "periodic_trace": true,
+        "declared_unit_cell": true,
+        "nonperiodic_reason": "Complete bounded solid; periodic identification not required",
+        "adapt_tolerance": 0.0018,
+        "min_length": 0.002,
+        "max_length": 0.1,
+        "gradation": 0.6,
+        "adapt_iterations": 4,
+        "optimization_passes": 1
+      },
+      "actual": {
+        "name": "actual-default-tet4",
+        "arm": "microgen",
+        "resolution": null,
+        "order": 1,
+        "periodic_trace": true,
+        "declared_unit_cell": true,
+        "nonperiodic_reason": "Complete bounded solid; periodic identification not required",
+        "actual_generate_options": {}
+      },
+      "source_selection": "/Users/kmarchais/dev/meshers/handoff/macbook/implicit-tet4-default-selection-20261111.json",
+      "source_selection_sha256": "b662ff4e4898657a61447181ac7f6efbcb86fa626d2c7dfe93a993665f4bbf81",
+      "periodic": false,
+      "native_recipe_evidence": {
+        "directory": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-microgen-backend-wide-coverage-20261112-v1/repeat-0-primitive-ellipsoid-native",
+        "result_sha256": "f354b179fa4b0e20263d08bb4ec7cd91858bea1fce5f44b999b9dc3185c42198",
+        "prior_status": "admitted"
+      }
+    },
+    {
+      "case": "primitive-sphere",
+      "fixture_kind": "primitive",
+      "fixtures": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-primitive-family-fixtures-v1",
+      "native": {
+        "name": "native-shared-adaptive24-coverage-control",
+        "arm": "meshers",
+        "cells": 24,
+        "order": 1,
+        "adapt": true,
+        "tolerance": 0.002,
+        "periodic_trace": true,
+        "declared_unit_cell": true,
+        "nonperiodic_reason": "Complete bounded solid; periodic identification not required",
+        "adapt_tolerance": 0.0018,
+        "min_length": 0.002,
+        "max_length": 0.1,
+        "gradation": 0.6,
+        "adapt_iterations": 4,
+        "optimization_passes": 1
+      },
+      "actual": {
+        "name": "actual-default-tet4",
+        "arm": "microgen",
+        "resolution": null,
+        "order": 1,
+        "periodic_trace": true,
+        "declared_unit_cell": true,
+        "nonperiodic_reason": "Complete bounded solid; periodic identification not required",
+        "actual_generate_options": {}
+      },
+      "source_selection": "/Users/kmarchais/dev/meshers/handoff/macbook/implicit-tet4-default-selection-20261111.json",
+      "source_selection_sha256": "b662ff4e4898657a61447181ac7f6efbcb86fa626d2c7dfe93a993665f4bbf81",
+      "periodic": false,
+      "native_recipe_evidence": {
+        "directory": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-microgen-backend-wide-coverage-20261112-v1/repeat-0-primitive-sphere-native",
+        "result_sha256": "1766bece1c39241701f1e020bd3ffd9a908ded589cba2fb96d98cc80a96f294a",
+        "prior_status": "admitted"
+      }
+    }
+  ],
+  "purpose": "Freeze previously successful recipes before measuring the complete final candidate. Geometry/quality/periodic admission only; count optimization and matched-accuracy dominance remain separate. The SDF prototype evidence supplies box/cylinder recipes; the final conservative recognizer must reproduce them. Original lattice uses explicit positive-void clamp0.02. No FEA or new reference.",
+  "imports_and_audits_excluded": true,
+  "constructors_charged": true,
+  "gates": {
+    "distance": 0.002,
+    "relative_volume": 0.01,
+    "quality": 0.1,
+    "nodes": 250000,
+    "tetrahedra": 250000
+  },
+  "new_fea": false,
+  "lattice_models_retained": 24,
+  "title": "Final public native-backend feasibility recipes for thirty fixed specimens"
+}

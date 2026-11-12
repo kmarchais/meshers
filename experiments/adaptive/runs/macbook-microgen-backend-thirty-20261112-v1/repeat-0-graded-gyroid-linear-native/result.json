@@ -1,0 +1,128 @@
+{
+  "case": "graded-gyroid-linear",
+  "arm": "native",
+  "config": {
+    "name": "native-tet4-budget",
+    "arm": "meshers",
+    "cells": 16,
+    "order": 1,
+    "adapt": false,
+    "tolerance": 1.0,
+    "periodic_trace": true,
+    "declared_unit_cell": true
+  },
+  "status": "admission-rejected",
+  "qualified": false,
+  "backend_selector": "meshers",
+  "mmg_calls": [],
+  "constructor_s": 0.0011669579544104636,
+  "generation_s": 0.19202966697048396,
+  "workflow_s": 0.19319662492489442,
+  "instrumentation_s": 0.0,
+  "imports_charged": false,
+  "audits_charged": false,
+  "fea_run": false,
+  "versions": {
+    "meshers": "0.2.0",
+    "microgen": "2.0.0b1",
+    "numpy": "2.5.4",
+    "scipy": "1.18.1",
+    "pyvista": "0.49.1",
+    "vtk": "9.7.1",
+    "mmgpy": "0.17.1"
+  },
+  "native_binary_sha256": "7d498d032c4d8d53485c4a04e076457bb5d2429f85c8fcc80ba06a09d800a69f",
+  "microgen_module": "/Users/kmarchais/dev/microgen/microgen/__init__.py",
+  "vtk_backend": "Sequential",
+  "numerical_thread_policy": {
+    "environment": {
+      "OPENBLAS_NUM_THREADS": "1",
+      "OMP_NUM_THREADS": "1",
+      "MKL_NUM_THREADS": "1",
+      "VECLIB_MAXIMUM_THREADS": "1",
+      "RAYON_NUM_THREADS": "1"
+    },
+    "accelerate_blas_threading": 1,
+    "accelerate_scope": "calling thread"
+  },
+  "fixture_hashes": {
+    "graded-gyroid-linear-samples.npz": "583146b0bb252ebb81f0f56919721e91743f42c796492802c78df5bf37f60273",
+    "graded-gyroid-linear-specimen.json": "4b3d9d250960d00d2b28dd8c58c2acf4b51e6bc04d264dcb1d001980ab907c7a"
+  },
+  "field_identity_points": 4096,
+  "mmg_binary_sha256": "efe07a6207a9ff86f4af26513e6aa368647b32cae112859fca52e74c3e7f7cf1",
+  "nodes": 7119,
+  "elements": 25624,
+  "audit_reoriented_tets": 0,
+  "arrays_sha256": "6a4c1e22f79dec15d08f5817b437cce66bcdbe9ba9e9ebc56e4bde4c5c5ee3ba",
+  "mesh_sha256": "38ad952d31f498927d0310bf6ec0eab19b3686fbe83e057d09cf3f23f73f2ad7",
+  "geometry": {
+    "volume": 0.35822597288209324,
+    "relative_volume_error": 0.004535346379351379,
+    "q_min_corner": 0.15909246673928668,
+    "q_p01_corner": 0.455533456712278,
+    "minimum_sampled_jacobian": 5.291236138654608e-06,
+    "facet_consistency": {
+      "nodes": 7119,
+      "elements": 25624,
+      "unique_faces": 56226,
+      "interior_faces": 46270,
+      "extracted_boundary_faces": 9956,
+      "same_orientation_shared_faces": 0,
+      "nonmanifold_faces": 0,
+      "duplicate_cells": 0,
+      "duplicate_surface_faces": 0,
+      "provided_boundary_matches_extraction": true,
+      "missing_provided_faces": 0,
+      "extra_provided_faces": 0,
+      "nonpositive_corner_determinants": 0,
+      "minimum_corner_determinant": 5.291236138654602e-06,
+      "oriented_facet_consistency_passed": true,
+      "conflict_examples": [],
+      "scope": "Oriented corner-face incidence and same-side neighbor diagnostics; necessary consistency, not a certificate of curved geometry or absence of nonlocal intersections"
+    },
+    "oriented_facet_consistency_passed": true,
+    "quadratic_conformity": {
+      "passed": true,
+      "order": 1
+    },
+    "exact_straight_reduction_verified": false,
+    "geometry_admitted": false,
+    "sampled_forward_max": 0.004529894057486317,
+    "sampled_reverse_max": 0.003101393343415641,
+    "sampled_two_sided_max": 0.004529894057486317,
+    "outward_forward_max": 0.004529894057486317,
+    "inward_forward_max": 0.003424936749866867,
+    "projection_failed": 0,
+    "forward_samples": 111592,
+    "reverse_samples": 36464,
+    "minimum_dihedral_deg_corner": 9.737659351076331,
+    "reverse_tessellation_delta_max": 0.0,
+    "quadratic_reverse_subdivisions": null,
+    "projection_method": "newton-box-slsqp-v1",
+    "unbounded_projection_failed": 0,
+    "box_projection_attempts": 0,
+    "box_projection_recovered": 0,
+    "box_projection_witnesses": [],
+    "distance_audit_complete": true,
+    "failed_gates": [
+      "geometry"
+    ]
+  },
+  "periodic": {
+    "required": false,
+    "reason": "Linear thickness grading has unequal opposite-z material traces; bounded nonperiodic case for both arms"
+  },
+  "quality_stats": {
+    "min": 0.15909246673928668,
+    "p01": 0.455533456712278,
+    "p10": 0.579050950355082,
+    "median": 0.7929923725361674,
+    "p90": 0.9310542806095811,
+    "p99": 0.9724012055820659,
+    "max": 0.9985066741107717,
+    "mean": 0.7708367188740581
+  },
+  "audit_s": 1.1375604170025326,
+  "elapsed_s": 1.3559630829840899
+}

@@ -1,0 +1,154 @@
+{
+  "cases": [
+    {
+      "case": "schwarz-d-solid",
+      "fixture_kind": "study",
+      "fixtures": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-comparison-fixtures-v1",
+      "native": {
+        "name": "native-adaptive24-bounded-failure-followup",
+        "arm": "meshers",
+        "cells": 24,
+        "order": 1,
+        "adapt": true,
+        "tolerance": 0.002,
+        "periodic_trace": true,
+        "declared_unit_cell": true,
+        "adapt_tolerance": 0.0018,
+        "min_length": 0.002,
+        "max_length": 0.1,
+        "gradation": 0.6,
+        "adapt_iterations": 4,
+        "optimization_passes": 1
+      },
+      "actual": {
+        "name": "actual-default-tet4",
+        "arm": "microgen",
+        "resolution": null,
+        "order": 1,
+        "periodic_trace": true,
+        "declared_unit_cell": true
+      },
+      "source_selection": "/Users/kmarchais/dev/meshers/handoff/macbook/tpms-tet4-count-final-selection-20261111.json",
+      "source_selection_sha256": "d11bc393668f7cfd66d78fd44910dc56a308d59aaabfd279982771e33d601843",
+      "periodic": true
+    },
+    {
+      "case": "tpms-pmy-sheet",
+      "fixture_kind": "tpms",
+      "fixtures": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-tpms-family-fixtures-v1",
+      "native": {
+        "name": "native-adaptive32-bounded-failure-followup",
+        "arm": "meshers",
+        "cells": 32,
+        "order": 1,
+        "adapt": true,
+        "tolerance": 0.002,
+        "periodic_trace": true,
+        "declared_unit_cell": true,
+        "adapt_tolerance": 0.0018,
+        "min_length": 0.002,
+        "max_length": 0.1,
+        "gradation": 0.6,
+        "adapt_iterations": 4,
+        "optimization_passes": 1
+      },
+      "actual": {
+        "name": "actual-default-tet4",
+        "arm": "microgen",
+        "resolution": null,
+        "order": 1,
+        "periodic_trace": true,
+        "declared_unit_cell": true
+      },
+      "source_selection": "/Users/kmarchais/dev/meshers/handoff/macbook/tpms-tet4-count-final-selection-20261111.json",
+      "source_selection_sha256": "d11bc393668f7cfd66d78fd44910dc56a308d59aaabfd279982771e33d601843",
+      "periodic": true
+    },
+    {
+      "case": "primitive-box",
+      "fixture_kind": "primitive",
+      "fixtures": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-primitive-family-fixtures-v1",
+      "native": {
+        "name": "native-adaptive40-bounded-failure-followup",
+        "arm": "meshers",
+        "cells": 40,
+        "order": 1,
+        "adapt": true,
+        "tolerance": 0.002,
+        "periodic_trace": true,
+        "declared_unit_cell": true,
+        "primitive_retained": true,
+        "nonperiodic_reason": "Complete bounded solid; periodic identification not required",
+        "adapt_tolerance": 0.0018,
+        "min_length": 0.002,
+        "max_length": 0.1,
+        "gradation": 0.6,
+        "adapt_iterations": 4,
+        "optimization_passes": 1,
+        "historical_primitive_retained_not_applied": true
+      },
+      "actual": {
+        "name": "actual-default-tet4",
+        "arm": "microgen",
+        "resolution": null,
+        "order": 1,
+        "periodic_trace": true,
+        "declared_unit_cell": true,
+        "nonperiodic_reason": "Complete bounded solid; periodic identification not required",
+        "actual_generate_options": {}
+      },
+      "source_selection": "/Users/kmarchais/dev/meshers/handoff/macbook/implicit-tet4-default-selection-20261111.json",
+      "source_selection_sha256": "b662ff4e4898657a61447181ac7f6efbcb86fa626d2c7dfe93a993665f4bbf81",
+      "periodic": false
+    },
+    {
+      "case": "primitive-cylinder",
+      "fixture_kind": "primitive",
+      "fixtures": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-primitive-family-fixtures-v1",
+      "native": {
+        "name": "native-adaptive40-bounded-failure-followup",
+        "arm": "meshers",
+        "cells": 40,
+        "order": 1,
+        "adapt": true,
+        "tolerance": 0.002,
+        "periodic_trace": true,
+        "declared_unit_cell": true,
+        "primitive_retained": true,
+        "nonperiodic_reason": "Complete bounded solid; periodic identification not required",
+        "adapt_tolerance": 0.0018,
+        "min_length": 0.002,
+        "max_length": 0.1,
+        "gradation": 0.6,
+        "adapt_iterations": 4,
+        "optimization_passes": 1,
+        "historical_primitive_retained_not_applied": true
+      },
+      "actual": {
+        "name": "actual-default-tet4",
+        "arm": "microgen",
+        "resolution": null,
+        "order": 1,
+        "periodic_trace": true,
+        "declared_unit_cell": true,
+        "nonperiodic_reason": "Complete bounded solid; periodic identification not required",
+        "actual_generate_options": {}
+      },
+      "source_selection": "/Users/kmarchais/dev/meshers/handoff/macbook/implicit-tet4-default-selection-20261111.json",
+      "source_selection_sha256": "b662ff4e4898657a61447181ac7f6efbcb86fa626d2c7dfe93a993665f4bbf81",
+      "periodic": false
+    }
+  ],
+  "purpose": "Bounded follow-up to measured failures: Schwarz D keeps identical adaptive24 settings with the reviewed audit fix; PMY starts from a finer32 grid to reduce volume bias; primitives use40 to reduce measured cell-size boundary error. No offset/field replacement, no unchanged competitor rerun, no matched-count claim, no FEA.",
+  "imports_and_audits_excluded": true,
+  "constructors_charged": true,
+  "gates": {
+    "distance": 0.002,
+    "relative_volume": 0.01,
+    "quality": 0.1,
+    "nodes": 250000,
+    "tetrahedra": 250000
+  },
+  "new_fea": false,
+  "lattice_models_retained": 24
+}

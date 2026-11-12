@@ -192,7 +192,9 @@ def page(data):
     for case in data["cases"]:
         actual, native = [case["arms"][arm] for arm in ARMS]
         label = case["case"].removeprefix("tpms-").replace("-", " ")
-        if case["case"] == "schwarz-solid":
+        if case["case"] == "gyroid":
+            label = "Gyroid original sheet, 35.6% volume"
+        elif case["case"] == "schwarz-solid":
             label = "Schwarz P original solid"
         elif case["case"] == "schwarz-d-solid":
             label = "Schwarz D original solid"
@@ -216,8 +218,8 @@ def page(data):
             cells.append(f'<td><span>{labels[0]}{number(av)}{samples[0]}</span><span style="{style}">{labels[1]}{number(nv)}{samples[1]}</span></td>')
         statuses = []
         for arm_name, arm in (("ACT", actual), ("MESH", native)):
-            status = "PASS" if arm["all_admitted"] else "REJECT" if arm["returned"] else "NO MESH"
-            color = "success" if arm["all_admitted"] else "destructive"
+            status = "NOT RUN" if not arm["attempts"] else "PASS" if arm["all_admitted"] else "REJECT" if arm["returned"] else "NO MESH"
+            color = "warning" if not arm["attempts"] else "success" if arm["all_admitted"] else "destructive"
             statuses.append(f'<span style="color:var(--{color})">{arm_name} {status}<small>{arm["returned"]}/{arm["attempts"]} returned</small></span>')
         ratios = case["count_ratios_native_over_actual"]
         ratio = f'Tet ratio {number(ratios["tets"],3)}; node ratio {number(ratios["nodes"],3)}'
@@ -233,12 +235,15 @@ def page(data):
         else:
             chart.append(f'<div class="timing"><span>{html.escape(label)}</span><small>No two returned-mesh timings</small></div>')
         rows = []
-        for title, key in (("Quality minimum", "min"), ("Quality p01", "p01"), ("Quality median", "median"), ("Quality maximum", "max")):
+        for title, key in data.get("quality_rows", (("Quality minimum", "min"), ("Quality p01", "p01"), ("Quality median", "median"), ("Quality maximum", "max"))):
             rows.append(f'<tr><th>{title}</th><td>{number(median(actual["quality"][key]))}</td><td>{number(median(native["quality"][key]))}</td></tr>')
         for title, key in (("Common reverse distance", "reverse"), ("Two-sided sampled maximum", "two_sided"), ("Volume discrepancy %", "volume_error_percent")):
             rows.append(f'<tr><th>{title}</th><td>{number(median(actual[key]))}</td><td>{number(median(native[key]))}</td></tr>')
         prose = []
         for arm_name, arm in (("Actual "+actual["config"]["name"], actual), ("Meshers", native)):
+            if not arm["attempts"]:
+                prose.append(f'<p><strong>{html.escape(arm_name)}</strong>: not run in this section.</p>')
+                continue
             timing = arm["seconds"]
             time = (f'{number(timing["median"])}s median [{number(timing["minimum"])}, {number(timing["maximum"])}], n={timing["n"]}' if timing else "no returned-mesh generation time")
             errors = "; ".join(str(x.get("limit_failure") or x.get("error") or x.get("status")) for x in arm["execution_failures"])
@@ -260,12 +265,12 @@ def page(data):
 body{{margin:0;font-family:var(--font-sans,system-ui);color:var(--foreground)}}section{{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:16px;margin-bottom:12px}}
 h3{{font-size:16px;margin:0 0 10px}}p,small{{font-size:12px;line-height:1.5;color:var(--muted-foreground)}}table{{width:100%;border-collapse:collapse;font-size:11px;font-variant-numeric:tabular-nums}}td,th{{text-align:right;padding:7px 3px;border-bottom:1px solid var(--border)}}th:first-child{{text-align:left}}td span{{display:block;padding:2px}}th small,.overview td small{{display:block;font-size:9px;font-weight:normal}}.scroll{{overflow-x:auto}}.overview{{min-width:660px}}.timing{{display:grid;grid-template-columns:180px 1fr;gap:10px;align-items:center;margin:12px 0;font-size:12px}}.tracks{{display:grid;grid-template-columns:1fr 65px;gap:4px 8px}}.track,i{{height:9px;display:block}}.track{{background:var(--secondary)}}b{{font-size:11px;text-align:right;font-variant-numeric:tabular-nums}}details{{border-top:1px solid var(--border);padding:9px 0}}summary{{cursor:pointer;font-size:12px}}@media(max-width:450px){{.timing{{grid-template-columns:118px 1fr}}}}
 </style></head><body><section><h3>{html.escape(data['title'])}</h3>
-<p>Every numeric pair shows ACT, actual Microgen+MMG, above MESH, Meshers. The actual route is named per row; modified routes remain separate from defaults. Generation n counts returned-mesh timings over measured attempts, after excluding warmups. A partial return pool is not a complete five-pair result. Green means a better raw native value; red means worse. Amber volume values depend on the empirical reference interval. Counts were selected before repeated timings; the ratios remain visible. Strictly admitted pairs: {admitted}/{len(data['cases'])}.</p>
-<p>Fresh 11 November measurements on the MacBook M4 with one numerical thread. Returned pairs use five interleaved measured pairs after one excluded warmup pair. Cases without two returned meshes retain their bounded pilot failures.</p>
+<p>Every numeric pair shows ACT, actual Microgen+MMG, above MESH, Meshers. The actual route is named per row; modified routes remain separate from defaults. Timing n counts valid returned-mesh timings over measured attempts, after excluding warmups. A partial return pool is not a complete five-pair result. Green means a better raw native value; red means worse. Amber volume values depend on the empirical reference interval. Counts were selected before repeated timings; the ratios remain visible. Strictly admitted pairs: {admitted}/{len(data['cases'])}.</p>
+<p>{html.escape(data.get('measurement_note', 'Fresh 11 November measurements on the MacBook M4 with one numerical thread. Returned pairs use five interleaved measured pairs after one excluded warmup pair. Cases without two returned meshes retain their bounded pilot failures.'))}</p>
 <p>{html.escape(data['scope'])} All meshes here are Tet4, with four nodes per tetrahedron.</p>
-<div class="scroll"><table class="overview"><tr><th>Case / native-to-actual count ratios</th><th>Tets</th><th>Nodes</th><th>Generation s</th><th>q min</th><th>q median</th><th>Reverse distance</th><th>Full distance</th><th>Volume %</th><th>Strict checks</th></tr>{''.join(overview)}</table></div>
+<div class="scroll"><table class="overview"><tr><th>Case / native-to-actual count ratios</th><th>Tets</th><th>Nodes</th><th>{html.escape(data.get('time_label', 'Generation s'))}</th><th>q min</th><th>q median</th><th>Reverse distance</th><th>Full distance</th><th>Volume %</th><th>Strict checks</th></tr>{''.join(overview)}</table></div>
 <p>Reverse distance uses the same frozen wall and cap queries in both arms; smaller is better. It is one side of the geometry audit. The strict 0.002 gate uses the full two-sided audit when earlier checks permit it. Rejected or missing meshes stay rejected. Invalid-facet volume scores are diagnostic, not qualified physical-volume accuracy.</p></section>
-<section><h3>Recorded generation times</h3><p><span style="color:var(--chart-2)">Actual route</span> appears above <span style="color:var(--chart-1)">Meshers</span>. Each pair has its own bar scale. Values are medians after excluding warmups; detailed ranges and sample counts are below. Timeout worker durations are never shown as mesh generation times.</p>{''.join(chart)}</section>
+<section><h3>Recorded {html.escape(data.get('time_label', 'generation times'))}</h3><p><span style="color:var(--chart-2)">Actual route</span> appears above <span style="color:var(--chart-1)">Meshers</span>. Each pair has its own bar scale. Values are medians after excluding warmups; detailed ranges and sample counts are below. Timeout worker durations are never shown as mesh generation times. {html.escape(data.get('timing_note', ''))}</p>{''.join(chart)}</section>
 <section><h3>Quality, periodicity and failure details</h3>{''.join(details)}</section>
 <p>Colors compare observed raw metrics. If either route rejects, the pair does not establish an admitted matched-accuracy speedup. These attempts do not prove universal geometry support or failure. No FEA score transfers, no default is promoted, and all four original study cases and all 24 lattice models remain in scope.</p></body></html>'''
 

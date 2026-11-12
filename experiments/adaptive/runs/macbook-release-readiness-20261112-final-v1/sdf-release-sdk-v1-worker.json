@@ -1,0 +1,44 @@
+{
+  "command": [
+    "/usr/bin/env",
+    "PYTHONPATH=/Users/kmarchais/dev/meshers/.local-work/overnight-release-20261112/sdf-release-package-v1:/Users/kmarchais/dev/microgen",
+    "PATH=/Users/kmarchais/dev/meshers/.local-work/macbook-runtime/venv/lib/python3.12/site-packages/mmgpy/bin:/Users/kmarchais/dev/microgen/.venv/bin:/opt/homebrew/bin:/usr/bin:/bin",
+    "EXPECTED_MICROGEN_ROOT=/Users/kmarchais/dev/microgen",
+    "/Users/kmarchais/dev/microgen/.venv/bin/python",
+    "/Users/kmarchais/dev/microgen/.local-work/test_worker.py",
+    "-q",
+    "/Users/kmarchais/dev/meshers-release/crates/meshers-python/tests",
+    "/Users/kmarchais/dev/microgen/tests/test_meshers_backend.py",
+    "/Users/kmarchais/dev/microgen/tests/test_mmg_backend.py",
+    "--junitxml=/Users/kmarchais/dev/meshers/.local-work/overnight-release-20261112/sdf-release-sdk-v1.xml"
+  ],
+  "resource": {
+    "returncode": 0,
+    "limit_failure": null,
+    "peak_rss_bytes": 1444921344,
+    "wall_s": 39.763957375020254,
+    "wall_s_clock": "monotonic",
+    "elapsed_realtime_s": 39.764240026474,
+    "suspension_or_clock_adjustment_s": 0.0002826514537446201,
+    "idle_sleep_prevention": [
+      "/usr/bin/caffeinate",
+      "-i"
+    ],
+    "memory_bytes": 12884901888,
+    "memory_enforcement": "process-tree-rss-watchdog",
+    "rss_poll_interval_s": 0.25,
+    "platform": "darwin",
+    "numerical_thread_policy": {
+      "environment": {
+        "OPENBLAS_NUM_THREADS": "1",
+        "OMP_NUM_THREADS": "1",
+        "MKL_NUM_THREADS": "1",
+        "VECLIB_MAXIMUM_THREADS": "1",
+        "RAYON_NUM_THREADS": "1"
+      },
+      "accelerate_blas_threading": 1,
+      "accelerate_scope": "calling thread"
+    }
+  },
+  "complete": true
+}

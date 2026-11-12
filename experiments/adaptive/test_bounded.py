@@ -63,3 +63,35 @@ def test_real_bounded_worker(tmp_path, monkeypatch, mode):
         assert (tmp_path / "worker.log").read_text().strip() == "worker complete"
     if mode == "memory":
         assert record["peak_rss_bytes"] > record["memory_bytes"]
+
+
+@pytest.mark.skipif(sys.platform != "darwin", reason="Mac worker-family resource stops")
+def test_timeout_stops_a_nested_child(tmp_path):
+    import json
+    import psutil
+    import time
+
+    pidfile = tmp_path / "child.json"
+    source = (
+        "import subprocess,sys,json,time; from pathlib import Path; "
+        "child=subprocess.Popen([sys.executable,'-c','import time; time.sleep(30)'],"
+        "start_new_session=True); "
+        f"Path({str(pidfile)!r}).write_text(json.dumps(child.pid)); time.sleep(30)"
+    )
+    record = workflow.bounded(
+        [sys.executable, "-c", source], tmp_path / "nested.log", Part(), timeout=1
+    )
+    assert record["limit_failure"] == "timeout"
+    pid = json.loads(pidfile.read_text())
+    for _ in range(20):
+        if not psutil.pid_exists(pid):
+            break
+        try:
+            if psutil.Process(pid).status() == psutil.STATUS_ZOMBIE:
+                break
+        except psutil.NoSuchProcess:
+            break
+        time.sleep(0.05)
+    else:
+        psutil.Process(pid).kill()
+        pytest.fail("Nested worker survived its parent's timeout")

@@ -1,0 +1,204 @@
+{
+  "complete": true,
+  "steps": {
+    "create": {
+      "returncode": 0,
+      "limit_failure": null,
+      "peak_rss_bytes": 19054592,
+      "wall_s": 0.4107028750004247,
+      "wall_s_clock": "monotonic",
+      "elapsed_realtime_s": 0.41071105003356934,
+      "suspension_or_clock_adjustment_s": 8.175033144652843e-06,
+      "idle_sleep_prevention": [
+        "/usr/bin/caffeinate",
+        "-i"
+      ],
+      "memory_bytes": 12884901888,
+      "memory_enforcement": "process-tree-rss-watchdog",
+      "rss_poll_interval_s": 0.25,
+      "platform": "darwin",
+      "numerical_thread_policy": {
+        "environment": {
+          "OPENBLAS_NUM_THREADS": "1",
+          "OMP_NUM_THREADS": "1",
+          "MKL_NUM_THREADS": "1",
+          "VECLIB_MAXIMUM_THREADS": "1",
+          "RAYON_NUM_THREADS": "1"
+        },
+        "accelerate_blas_threading": 1,
+        "accelerate_scope": "calling thread"
+      }
+    },
+    "core-install": {
+      "returncode": 0,
+      "limit_failure": null,
+      "peak_rss_bytes": 129597440,
+      "wall_s": 1.2109232500079088,
+      "wall_s_clock": "monotonic",
+      "elapsed_realtime_s": 1.2109370231628418,
+      "suspension_or_clock_adjustment_s": 1.3773154933005571e-05,
+      "idle_sleep_prevention": [
+        "/usr/bin/caffeinate",
+        "-i"
+      ],
+      "memory_bytes": 12884901888,
+      "memory_enforcement": "process-tree-rss-watchdog",
+      "rss_poll_interval_s": 0.25,
+      "platform": "darwin",
+      "numerical_thread_policy": {
+        "environment": {
+          "OPENBLAS_NUM_THREADS": "1",
+          "OMP_NUM_THREADS": "1",
+          "MKL_NUM_THREADS": "1",
+          "VECLIB_MAXIMUM_THREADS": "1",
+          "RAYON_NUM_THREADS": "1"
+        },
+        "accelerate_blas_threading": 1,
+        "accelerate_scope": "calling thread"
+      }
+    },
+    "core-control": {
+      "returncode": 0,
+      "limit_failure": null,
+      "peak_rss_bytes": 178503680,
+      "wall_s": 18.012560625036713,
+      "wall_s_clock": "monotonic",
+      "elapsed_realtime_s": 18.012747049331665,
+      "suspension_or_clock_adjustment_s": 0.00018642429495230317,
+      "idle_sleep_prevention": [
+        "/usr/bin/caffeinate",
+        "-i"
+      ],
+      "memory_bytes": 12884901888,
+      "memory_enforcement": "process-tree-rss-watchdog",
+      "rss_poll_interval_s": 0.25,
+      "platform": "darwin",
+      "numerical_thread_policy": {
+        "environment": {
+          "OPENBLAS_NUM_THREADS": "1",
+          "OMP_NUM_THREADS": "1",
+          "MKL_NUM_THREADS": "1",
+          "VECLIB_MAXIMUM_THREADS": "1",
+          "RAYON_NUM_THREADS": "1"
+        },
+        "accelerate_blas_threading": 1,
+        "accelerate_scope": "calling thread"
+      }
+    },
+    "optional-install": {
+      "returncode": 0,
+      "limit_failure": null,
+      "peak_rss_bytes": 85671936,
+      "wall_s": 0.6834842920070514,
+      "wall_s_clock": "monotonic",
+      "elapsed_realtime_s": 0.6834938526153564,
+      "suspension_or_clock_adjustment_s": 9.560608305037022e-06,
+      "idle_sleep_prevention": [
+        "/usr/bin/caffeinate",
+        "-i"
+      ],
+      "memory_bytes": 12884901888,
+      "memory_enforcement": "process-tree-rss-watchdog",
+      "rss_poll_interval_s": 0.25,
+      "platform": "darwin",
+      "numerical_thread_policy": {
+        "environment": {
+          "OPENBLAS_NUM_THREADS": "1",
+          "OMP_NUM_THREADS": "1",
+          "MKL_NUM_THREADS": "1",
+          "VECLIB_MAXIMUM_THREADS": "1",
+          "RAYON_NUM_THREADS": "1"
+        },
+        "accelerate_blas_threading": 1,
+        "accelerate_scope": "calling thread"
+      }
+    },
+    "optional-control": {
+      "returncode": 0,
+      "limit_failure": null,
+      "peak_rss_bytes": 139476992,
+      "wall_s": 0.6911286250106059,
+      "wall_s_clock": "monotonic",
+      "elapsed_realtime_s": 0.6911370754241943,
+      "suspension_or_clock_adjustment_s": 8.450413588434458e-06,
+      "idle_sleep_prevention": [
+        "/usr/bin/caffeinate",
+        "-i"
+      ],
+      "memory_bytes": 12884901888,
+      "memory_enforcement": "process-tree-rss-watchdog",
+      "rss_poll_interval_s": 0.25,
+      "platform": "darwin",
+      "numerical_thread_policy": {
+        "environment": {
+          "OPENBLAS_NUM_THREADS": "1",
+          "OMP_NUM_THREADS": "1",
+          "MKL_NUM_THREADS": "1",
+          "VECLIB_MAXIMUM_THREADS": "1",
+          "RAYON_NUM_THREADS": "1"
+        },
+        "accelerate_blas_threading": 1,
+        "accelerate_scope": "calling thread"
+      }
+    },
+    "integration-tests": {
+      "returncode": 0,
+      "limit_failure": null,
+      "peak_rss_bytes": 924368896,
+      "wall_s": 16.949110249988735,
+      "wall_s_clock": "monotonic",
+      "elapsed_realtime_s": 16.94928503036499,
+      "suspension_or_clock_adjustment_s": 0.00017478037625551224,
+      "idle_sleep_prevention": [
+        "/usr/bin/caffeinate",
+        "-i"
+      ],
+      "memory_bytes": 12884901888,
+      "memory_enforcement": "process-tree-rss-watchdog",
+      "rss_poll_interval_s": 0.25,
+      "platform": "darwin",
+      "numerical_thread_policy": {
+        "environment": {
+          "OPENBLAS_NUM_THREADS": "1",
+          "OMP_NUM_THREADS": "1",
+          "MKL_NUM_THREADS": "1",
+          "VECLIB_MAXIMUM_THREADS": "1",
+          "RAYON_NUM_THREADS": "1"
+        },
+        "accelerate_blas_threading": 1,
+        "accelerate_scope": "calling thread"
+      }
+    },
+    "dependencies": {
+      "returncode": 0,
+      "limit_failure": null,
+      "peak_rss_bytes": 0,
+      "wall_s": 0.2953522920142859,
+      "wall_s_clock": "monotonic",
+      "elapsed_realtime_s": 0.29535603523254395,
+      "suspension_or_clock_adjustment_s": 3.743218258023262e-06,
+      "idle_sleep_prevention": [
+        "/usr/bin/caffeinate",
+        "-i"
+      ],
+      "memory_bytes": 12884901888,
+      "memory_enforcement": "process-tree-rss-watchdog",
+      "rss_poll_interval_s": 0.25,
+      "platform": "darwin",
+      "numerical_thread_policy": {
+        "environment": {
+          "OPENBLAS_NUM_THREADS": "1",
+          "OMP_NUM_THREADS": "1",
+          "MKL_NUM_THREADS": "1",
+          "VECLIB_MAXIMUM_THREADS": "1",
+          "RAYON_NUM_THREADS": "1"
+        },
+        "accelerate_blas_threading": 1,
+        "accelerate_scope": "calling thread"
+      }
+    }
+  },
+  "wheel_sha256": "46e0cf3fba7f87b9e8573b59594f0869752dc17c76a511ef02cd41d1a31c213e",
+  "microgen_commit": "7fb26cd4c9665ec477d2ee05df1b6f19b80deca8",
+  "cad_installed": false
+}

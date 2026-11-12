@@ -1,0 +1,107 @@
+{
+  "complete": true,
+  "records": [
+    {
+      "case": "schwarz-solid",
+      "directory": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-original-four-tet4-fields-20261112-v1/schwarz-solid",
+      "result_sha256": "a687168bcdc69807402188d8ec93e733a4fae99fb3a5a7601b82e346c4fb8794",
+      "resource": {
+        "returncode": 0,
+        "limit_failure": null,
+        "peak_rss_bytes": 592183296,
+        "wall_s": 2.786250875040423,
+        "wall_s_clock": "monotonic",
+        "elapsed_realtime_s": 2.786292791366577,
+        "suspension_or_clock_adjustment_s": 4.191632615402341e-05,
+        "idle_sleep_prevention": [
+          "/usr/bin/caffeinate",
+          "-i"
+        ],
+        "memory_bytes": 12884901888,
+        "memory_enforcement": "process-tree-rss-watchdog",
+        "rss_poll_interval_s": 0.25,
+        "platform": "darwin",
+        "numerical_thread_policy": {
+          "environment": {
+            "OPENBLAS_NUM_THREADS": "1",
+            "OMP_NUM_THREADS": "1",
+            "MKL_NUM_THREADS": "1",
+            "VECLIB_MAXIMUM_THREADS": "1",
+            "RAYON_NUM_THREADS": "1"
+          },
+          "accelerate_blas_threading": 1,
+          "accelerate_scope": "calling thread"
+        }
+      }
+    },
+    {
+      "case": "spinodoid",
+      "directory": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-original-four-tet4-fields-20261112-v1/spinodoid",
+      "result_sha256": "0b3f030602ba17d9b8f4741dc5df37e6e4fc9fa06735e0e0725ec158070905e9",
+      "resource": {
+        "returncode": 0,
+        "limit_failure": null,
+        "peak_rss_bytes": 718880768,
+        "wall_s": 4.117532250005752,
+        "wall_s_clock": "monotonic",
+        "elapsed_realtime_s": 4.117593288421631,
+        "suspension_or_clock_adjustment_s": 6.103841587901115e-05,
+        "idle_sleep_prevention": [
+          "/usr/bin/caffeinate",
+          "-i"
+        ],
+        "memory_bytes": 12884901888,
+        "memory_enforcement": "process-tree-rss-watchdog",
+        "rss_poll_interval_s": 0.25,
+        "platform": "darwin",
+        "numerical_thread_policy": {
+          "environment": {
+            "OPENBLAS_NUM_THREADS": "1",
+            "OMP_NUM_THREADS": "1",
+            "MKL_NUM_THREADS": "1",
+            "VECLIB_MAXIMUM_THREADS": "1",
+            "RAYON_NUM_THREADS": "1"
+          },
+          "accelerate_blas_threading": 1,
+          "accelerate_scope": "calling thread"
+        }
+      }
+    },
+    {
+      "case": "smooth-lattice",
+      "directory": "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-original-four-tet4-fields-20261112-v1/smooth-lattice",
+      "result_sha256": "2912345736043d2faa28877018443887b576c888adcf0be5bd5e4f5770848ea2",
+      "resource": {
+        "returncode": 0,
+        "limit_failure": null,
+        "peak_rss_bytes": 822788096,
+        "wall_s": 4.753516917000525,
+        "wall_s_clock": "monotonic",
+        "elapsed_realtime_s": 4.753586053848267,
+        "suspension_or_clock_adjustment_s": 6.913684774190187e-05,
+        "idle_sleep_prevention": [
+          "/usr/bin/caffeinate",
+          "-i"
+        ],
+        "memory_bytes": 12884901888,
+        "memory_enforcement": "process-tree-rss-watchdog",
+        "rss_poll_interval_s": 0.25,
+        "platform": "darwin",
+        "numerical_thread_policy": {
+          "environment": {
+            "OPENBLAS_NUM_THREADS": "1",
+            "OMP_NUM_THREADS": "1",
+            "MKL_NUM_THREADS": "1",
+            "VECLIB_MAXIMUM_THREADS": "1",
+            "RAYON_NUM_THREADS": "1"
+          },
+          "accelerate_blas_threading": 1,
+          "accelerate_scope": "calling thread"
+        }
+      }
+    }
+  ],
+  "new_fea": true,
+  "reference_promoted": false,
+  "scope": "Original fixed specimens saved-mesh FE consistency only; no continuum/stress certification, no live workflow timing or matched accuracy comparator claim"
+}

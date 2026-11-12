@@ -1,0 +1,29 @@
+{
+  "inputs": {
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-microgen-backend-release-final-20261112-v1/repeat-0-schwarz-solid-native/result.json": "03277f1d9f39f1eb2a33b9bfb24c58bd64dd2eef0779d02ac30d5eddef6f0833",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-microgen-backend-release-final-20261112-v1/repeat-0-schwarz-solid-native/mesh.npz": "6efdb19de5c983a5c7c3280921c43d087b86511d5e36ded93840bfedcc0c81c9",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-microgen-backend-release-final-20261112-v1/repeat-0-spinodoid-native/result.json": "ad73453a630ef3ae135ab072dd5e6d8ac3805856b20d97f5993eeaa8ec06f3c1",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-microgen-backend-release-final-20261112-v1/repeat-0-spinodoid-native/mesh.npz": "a098083b05e1eaaf3d5b5ddba6f9c505dc74fdd229bd768e67f8088206adf2d0",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-microgen-backend-release-final-20261112-v1/repeat-0-smooth-lattice-native/result.json": "7766dad16a6904e1dbac808868ce1082fe2f8bf9bd97c48c6622da07d04e6756",
+    "/Users/kmarchais/dev/meshers/experiments/adaptive/runs/macbook-microgen-backend-release-final-20261112-v1/repeat-0-smooth-lattice-native/mesh.npz": "aa6660741d5d29c186c622ff0e04e6c0e0ec8d065f674a50c185da9d9c54a4ad"
+  },
+  "source_sha256": {
+    "tet10_integration.py": "b5adbf4a96ee90953d546c654992d4380843e3b1a865e64e043cd14529e3865d",
+    "periodic.py": "f065de0570eed98149c45aff3babcbadc3f73aed89eb1639eca0448de4353629",
+    "quadrature_audit.py": "020677df452ec86864e687c9b35e2c69e70f8587ec54240ce0c4eaa4b717319e",
+    "job_parts.py": "cc220d52685be4035a3cf38b85e8e2d8354e55f36c42245cd6e1faad9a44bcab",
+    "scorecard.py": "8f26256c7df0e84c9f35cdd71bf4f95a74e072d45469002b213c5dcd4f1bab2a",
+    "amg_reference.py": "41f8bbdfc6fc175beec8eda9ba28b5db195e2615a656cd6d0d1ff33654d2354b",
+    "stress_recovery.py": "c9d74455c014c3b56ab656ca3f6a9cbf259dc11904318fecc354dcc6368651ac",
+    "microgen_workflow.py": "8f8ff4b99de49e5fddeec26a95f30f84a7c510eeca09050545c7390548a52f65",
+    "homogenization.py": "ce1fdf666c2efcc9e762dadd583be66a688819d8adad08628cc0be663c671d14"
+  },
+  "worker_sha256": "813ab94b3cfae4290eae0061f6efd3abb33691a21e8992e6a3c4b532ebf17204",
+  "numerical_threads": 1,
+  "memory_bytes": 12884901888,
+  "timeout_s": 600,
+  "protocol": "Six independent engineering strain loads; exact fixed meshes; reaction/energy/periodic and positive quadrature checks. No reference or workflow timing promotion.",
+  "existing_gyroid": "experiments/adaptive/runs/macbook-gyroid-tet4-stiffness-tradeoff-20261112-v2/uniform",
+  "new_fea": true,
+  "reference_promoted": false
+}

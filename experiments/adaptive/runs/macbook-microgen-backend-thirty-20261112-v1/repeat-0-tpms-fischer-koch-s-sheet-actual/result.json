@@ -1,0 +1,51 @@
+{
+  "case": "tpms-fischer-koch-s-sheet",
+  "arm": "actual",
+  "config": {
+    "name": "actual-default-tet4",
+    "arm": "microgen",
+    "resolution": null,
+    "order": 1,
+    "periodic_trace": true,
+    "declared_unit_cell": true
+  },
+  "status": "started",
+  "qualified": false,
+  "backend_selector": "mmg",
+  "mmg_calls": [],
+  "constructor_s": null,
+  "generation_s": null,
+  "workflow_s": null,
+  "instrumentation_s": 0.0,
+  "imports_charged": false,
+  "audits_charged": false,
+  "fea_run": false,
+  "versions": {
+    "meshers": "0.2.0",
+    "microgen": "2.0.0b1",
+    "numpy": "2.5.4",
+    "scipy": "1.18.1",
+    "pyvista": "0.49.1",
+    "vtk": "9.7.1",
+    "mmgpy": "0.17.1"
+  },
+  "native_binary_sha256": "7d498d032c4d8d53485c4a04e076457bb5d2429f85c8fcc80ba06a09d800a69f",
+  "microgen_module": "/Users/kmarchais/dev/microgen/microgen/__init__.py",
+  "vtk_backend": "Sequential",
+  "numerical_thread_policy": {
+    "environment": {
+      "OPENBLAS_NUM_THREADS": "1",
+      "OMP_NUM_THREADS": "1",
+      "MKL_NUM_THREADS": "1",
+      "VECLIB_MAXIMUM_THREADS": "1",
+      "RAYON_NUM_THREADS": "1"
+    },
+    "accelerate_blas_threading": 1,
+    "accelerate_scope": "calling thread"
+  },
+  "fixture_hashes": {
+    "tpms-fischer-koch-s-sheet-samples.npz": "ca87adbb6522c139cf3d88d941b063727c240557ddf5159c63b2768f111c7c8b",
+    "tpms-fischer-koch-s-sheet-definition.json": "e99b92955f9b9f48fd553ae66a4e4d935f0ccdb5eb2ade6f7493a1d6d4ecee50",
+    "tpms-fischer-koch-s-sheet-specimen.json": "b817804075c4e99f5bba64cf26e16b080e88672c116e8c2a00bfb5a9ccf1b365"
+  }
+}
