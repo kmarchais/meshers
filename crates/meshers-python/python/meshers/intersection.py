@@ -5,7 +5,6 @@ from __future__ import annotations
 import time
 import warnings
 from collections.abc import Callable, Mapping, Sequence
-from itertools import starmap
 from typing import TYPE_CHECKING
 
 import numpy as np
@@ -20,6 +19,95 @@ if TYPE_CHECKING:
 Scalar = Callable | _meshers.CompiledField | str
 Points = npt.NDArray[np.float64]
 Indices = npt.NDArray[np.int64]
+
+
+def _periodic_affine(
+    field: Scalar, periodic: Sequence[bool], bounds: np.ndarray | None = None
+) -> bool:
+    if not isinstance(field, _meshers.CompiledField) or not getattr(
+        _meshers, "PERIODIC_POLYHEDRAL", False
+    ):
+        return False
+    planes = getattr(field, "_halfspaces", None)
+    certificate = getattr(_meshers, "_periodic_affine_traces", None)
+    groups = getattr(field, "_polyhedral_regions", None)
+    if (
+        planes is None
+        and groups is not None
+        and bounds is not None
+        and certificate is not None
+        and getattr(_meshers, "PERIODIC_AFFINE_REGIONS", False)
+    ):
+        return certificate(
+            groups[0],
+            [bounds[::2].tolist(), bounds[1::2].tolist()],
+            tuple(bool(v) for v in periodic),
+            groups[1],
+        )
+    if planes is not None and bounds is not None and certificate is not None:
+        return certificate(
+            planes, [bounds[::2].tolist(), bounds[1::2].tolist()], tuple(bool(v) for v in periodic)
+        )
+    return planes is not None and all(
+        not enabled or all(plane[axis] == 0 for plane in planes)
+        for axis, enabled in enumerate(periodic)
+    )
+
+
+def _affine_planes(
+    field: Scalar, scalar_mode: Sequence[bool], *, canonical: bool = False
+) -> dict[str, Scalar] | None:
+    if not isinstance(field, _meshers.CompiledField) or any(scalar_mode):
+        return None
+    halfspaces = getattr(field, "_halfspaces", None)
+    if halfspaces is None:
+        return None
+    if canonical:
+        halfspaces = sorted(halfspaces)
+    planes: dict[str, Scalar] = {}
+    for index, coefficients in enumerate(halfspaces):
+
+        def plane(
+            x: Points, y: Points, z: Points, coefficients: Sequence[float] = coefficients
+        ) -> Points:
+            return coefficients[0] * x + coefficients[1] * y + coefficients[2] * z + coefficients[3]
+
+        planes[f"plane{index}"] = plane
+    return planes
+
+
+def _retained_constraints(
+    field: Scalar, bounds: np.ndarray | None = None
+) -> dict[str, Scalar] | None:
+    if not isinstance(field, _meshers.CompiledField) or not getattr(
+        _meshers, "RETAINED_INTERSECTIONS", False
+    ):
+        return None
+    # This is the internal Python/native interface, gated by its capability above.
+    fields = field._intersection_fields()  # ruff: ignore[private-member-access]
+    if fields is None:
+        return None
+    if getattr(field, "_sdf_intersection", False):
+        if bounds is None:
+            return None
+        # Check floating-point eligibility at the same 64 preflight sites as
+        # the scalar generator. Refuse this optimization on an observed
+        # zero-sublevel mismatch from squared-norm underflow.
+        u = np.array([0.0, 0.23, 0.61, 1.0])
+        grid = np.array(np.meshgrid(u, u, u, indexing="ij")).reshape(3, -1).T
+        points = bounds[::2] + grid * (bounds[1::2] - bounds[::2])
+        parent = field.values(points)
+        branches = np.max(np.stack([branch.values(points) for branch in fields]), axis=0)
+        if not np.array_equal(parent <= 0, branches <= 0):
+            return None
+    constraints = {}
+    for index, branch in enumerate(fields):
+        planes = _affine_planes(branch, (), canonical=True)
+        if planes is None:
+            constraints[f"branch{index}"] = branch
+        else:
+            constraints.update((f"branch{index}_{name}", plane) for name, plane in planes.items())
+    return constraints if len(constraints) <= _meshers.MAX_CONSTRAINTS else None
 
 
 def _check_cancel(cancel: _meshers.CancellationToken | None) -> None:
@@ -38,7 +126,7 @@ def _prepare(field: Scalar, *, compile: bool) -> Scalar:
 
 def _values(field: Scalar, points: Points) -> Points:
     if isinstance(field, _meshers.CompiledField):
-        return np.fromiter(starmap(field, points), dtype=np.float64, count=len(points))
+        return field.values(points)
     if isinstance(field, str):
         x, y, z = (2 * np.pi * points).T
         if field == "gyroid":
@@ -245,7 +333,8 @@ def generate_intersection(
     tetrahedra approximate the mapped geometry. This path currently uses one worker.
 
     Args:
-        constraints: Ordered mapping of 2-8 unique nonempty names to fields. Keep
+        constraints: Ordered mapping of 2-32 unique nonempty names to fields
+            (8 without wide-constraints). Keep
             every field <= 0. Use two constraints for the sides of a TPMS sheet.
         bounds: Parameter box ``(xmin,xmax,ymin,ymax,zmin,zmax)``.
         cells: Background intervals, 4-128 per parameter axis.
@@ -376,8 +465,9 @@ def _validate_options(  # ruff: ignore[complex-structure, too-many-branches] - e
     minimum_quality: float,
     geometry_tolerance: float | None,
 ) -> tuple[Points, Sequence[int], Points]:
-    if not isinstance(constraints, Mapping) or not 2 <= len(constraints) <= 8:
-        raise ValueError("constraints must be a mapping of 2-8 named fields")
+    maximum = _meshers.MAX_CONSTRAINTS
+    if not isinstance(constraints, Mapping) or not 2 <= len(constraints) <= maximum:
+        raise ValueError(f"constraints must be a mapping of 2-{maximum} named fields")
     if any(not isinstance(name, str) or not name.strip() for name in constraints):
         raise ValueError("constraint names must be nonempty strings")
     b = np.asarray(bounds, dtype=np.float64)

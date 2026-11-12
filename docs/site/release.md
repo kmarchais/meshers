@@ -1,6 +1,6 @@
-# Releasing version 0.1
+# Releasing version 0.2
 
-Python `meshers` and Rust `meshers-core` use version 0.1.0. Python wheels support
+Python `meshers` and Rust `meshers-core` use version 0.2.0. Python wheels support
 CPython 3.10+; source builds require Rust 1.95 or newer. The first publication
 target is PyPI. The Rust core can be published independently to crates.io.
 
@@ -15,6 +15,11 @@ these workflows without requiring a pull request:
 - Coverage reports and repeated runtime, memory and quality measurements.
 - Installed wheels for Linux x86-64, Windows x86-64, macOS ARM64 and macOS x86-64.
 - An isolated source-distribution build and installation.
+
+Run and archive the full [release benchmark suite](performance.md#release-suite-and-public-history)
+for every release. Keep the candidate and final-tag measurements in the
+[public history](benchmark-history.md). Version 0.1 lacks the adaptive/Tet10
+API, so the first full-suite comparison uses the documented compatible reference.
 
 Inspect the workflow results and artifacts. A configured workflow is not evidence
 that its checks passed. Local Linux wheels may require a newer glibc than the
@@ -36,4 +41,4 @@ is `pypi`. Publishing is explicitly triggered and never runs on pull requests.
 It reuses tested files rather than rebuilding them during upload.
 
 The source archive includes the Rust core and does not require a prior crates.io
-release. A conda-forge package is not part of v0.1.
+release. A conda-forge package is not part of v0.2.

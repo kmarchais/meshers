@@ -1,5 +1,7 @@
 mod compiled;
 mod intersection;
+#[cfg(feature = "experimental-surfaces")]
+mod surface;
 use meshers_core::{
     MeshingError, Point,
     implicit::{self, ScalarField},
@@ -8,8 +10,9 @@ use numpy::{IntoPyArray, PyReadonlyArray1, PyReadonlyArray2, ndarray::Array2};
 use pyo3::{
     exceptions::{PyRuntimeError, PyTypeError, PyValueError},
     prelude::*,
-    types::PyDict,
+    types::{PyDict, PyList},
 };
+use std::cell::Cell;
 use std::f64::consts::TAU;
 use std::sync::{
     Arc, Mutex,
@@ -40,16 +43,21 @@ impl CancellationToken {
 }
 
 struct Field {
-    compiled: Option<(compiled::Kernel, bool)>,
+    compiled: Option<(compiled::Kernel, compiled::Kernel, bool)>,
     native: Option<String>,
     callback: Option<Py<PyAny>>,
     derivative: Option<Py<PyAny>>,
     error: Mutex<Option<PyErr>>,
+    failed: AtomicBool,
     cancellation: Arc<AtomicBool>,
     step: Point,
     calls: AtomicUsize,
-    checks: AtomicUsize,
+    owner: std::thread::ThreadId,
     batch_size: usize,
+}
+thread_local! {
+    static THREAD_ID: std::thread::ThreadId = std::thread::current().id();
+    static SIGNAL_CHECKS: Cell<usize> = const { Cell::new(0) };
 }
 fn native_value(name: &str, p: Point) -> f64 {
     let [x, y, z] = p.map(|v| TAU * v);
@@ -80,14 +88,45 @@ fn native_gradient(name: &str, p: Point) -> Point {
     .map(|v| TAU * v)
 }
 impl Field {
+    fn check_fast(&self) -> Result<(), String> {
+        if self.cancellation.load(Ordering::Relaxed) {
+            self.save(CancelledError::new_err("generation cancelled"));
+            return Err("generation cancelled".into());
+        }
+        if self.failed.load(Ordering::Acquire) {
+            return Err("Python field failed".into());
+        }
+        // CPython handles signals on its main thread. Worker calls need only the
+        // cancellation/error flags; a shared RMW counter and worker GIL checks
+        // add contention without helping interruption. Coarse check() polls on
+        // the caller between parallel colors, including long optimization stages.
+        if THREAD_ID.with(|id| *id == self.owner)
+            && SIGNAL_CHECKS.with(|checks| {
+                let value = checks.get();
+                checks.set(value.wrapping_add(1));
+                value.is_multiple_of(256)
+            })
+        {
+            self.check_signals()?;
+        }
+        Ok(())
+    }
+    fn check_signals(&self) -> Result<(), String> {
+        if let Err(error) = Python::attach(|py| py.check_signals()) {
+            self.save(error);
+            return Err("Python interrupted".into());
+        }
+        Ok(())
+    }
     fn save(&self, error: PyErr) {
         let mut slot = self.error.lock().unwrap();
         if slot.is_none() {
             *slot = Some(error);
         }
+        self.failed.store(true, Ordering::Release);
     }
     fn evaluate(&self, points: &[Point]) -> Vec<f64> {
-        if self.check().is_err() {
+        if self.check_fast().is_err() {
             return vec![f64::NAN; points.len()];
         }
         if let Some(name) = &self.native {
@@ -142,8 +181,8 @@ impl Field {
 }
 impl ScalarField for Field {
     fn value(&self, p: Point) -> f64 {
-        if let Some((kernel, _)) = self.compiled {
-            if self.check().is_err() {
+        if let Some((_, kernel, _)) = self.compiled {
+            if self.check_fast().is_err() {
                 return f64::NAN;
             }
             return match compiled::evaluate(kernel, p) {
@@ -155,7 +194,7 @@ impl ScalarField for Field {
             };
         }
         if let Some(name) = &self.native {
-            if self.check().is_err() {
+            if self.check_fast().is_err() {
                 return f64::NAN;
             }
             return native_value(name, p);
@@ -172,11 +211,11 @@ impl ScalarField for Field {
         self.compiled.is_none() && (self.native.is_none() || self.derivative.is_some())
     }
     fn gradient(&self, p: Point) -> Option<Point> {
-        if let Some((kernel, has_gradient)) = self.compiled {
+        if let Some((kernel, _, has_gradient)) = self.compiled {
             if !has_gradient {
                 return None;
             }
-            if self.check().is_err() {
+            if self.check_fast().is_err() {
                 return Some([f64::NAN; 3]);
             }
             return Some(match compiled::evaluate(kernel, p) {
@@ -193,6 +232,11 @@ impl ScalarField for Field {
         self.gradients(&[p])[0]
     }
     fn gradients(&self, points: &[Point]) -> Vec<Option<Point>> {
+        if self.compiled.is_some() {
+            // Compiled callbacks accept scalars, not NumPy batches. Preserve
+            // None for value-only kernels so the core uses native differences.
+            return points.iter().map(|&p| self.gradient(p)).collect();
+        }
         if let Some(name) = self.native.as_ref().filter(|_| self.derivative.is_none()) {
             return points
                 .iter()
@@ -261,23 +305,10 @@ impl ScalarField for Field {
         output
     }
     fn check(&self) -> Result<(), String> {
-        if self.cancellation.load(Ordering::Relaxed) {
-            self.save(CancelledError::new_err("generation cancelled"));
-            return Err("generation cancelled".into());
+        self.check_fast()?;
+        if THREAD_ID.with(|id| *id == self.owner) {
+            self.check_signals()?;
         }
-        if self.error.lock().unwrap().is_some() {
-            return Err("Python field failed".into());
-        }
-        if self
-            .checks
-            .fetch_add(1, Ordering::Relaxed)
-            .is_multiple_of(256)
-            && let Err(error) = Python::attach(|py| py.check_signals())
-        {
-            self.save(error);
-            return Err("Python interrupted".into());
-        }
-        // Native field calls avoid taking the GIL per point.
         Ok(())
     }
 }
@@ -296,7 +327,7 @@ fn make_field(
     let compiled = field
         .extract::<PyRef<'_, compiled::CompiledField>>(py)
         .ok()
-        .map(|c| (c.kernel, c.has_gradient));
+        .map(|c| (c.kernel, c.value_kernel, c.has_gradient));
     if compiled.is_some() && gradient.is_some() {
         return Err(PyValueError::new_err(
             "supply the gradient to compile_field, not generate",
@@ -321,16 +352,17 @@ fn make_field(
         callback: Some(field),
         derivative: gradient,
         error: Mutex::new(None),
+        failed: AtomicBool::new(false),
         cancellation,
         step: std::array::from_fn(|a| (bounds[1][a] - bounds[0][a]) * 1e-5),
         calls: AtomicUsize::new(0),
-        checks: AtomicUsize::new(0),
+        owner: std::thread::current().id(),
         batch_size,
     })
 }
 
 #[allow(clippy::too_many_arguments)]
-#[pyfunction]
+#[pyfunction(signature = (field, gradient, bounds, cells, periodic, band, tolerance, minimum_quality, budget, passes, interior_refine_nodes, snap, threads, batch_size, cancel, adapt=None, order=1, size_field=None, halfspaces=None, regions=None, constraints=None, curved_fit=false, *, _observations=None))]
 fn generate<'py>(
     py: Python<'py>,
     field: Py<PyAny>,
@@ -343,11 +375,47 @@ fn generate<'py>(
     minimum_quality: f64,
     budget: usize,
     passes: usize,
+    interior_refine_nodes: usize,
     snap: f64,
     threads: usize,
     batch_size: usize,
     cancel: Option<PyRef<'py, CancellationToken>>,
+    adapt: Option<(f64, f64, f64, f64, usize, f64, f64)>,
+    order: u8,
+    size_field: Option<Py<PyAny>>,
+    halfspaces: Option<Vec<[f64; 4]>>,
+    regions: Option<Vec<u64>>,
+    constraints: Option<Vec<Py<PyAny>>>,
+    curved_fit: bool,
+    _observations: Option<Bound<'py, PyList>>,
 ) -> PyResult<Bound<'py, PyDict>> {
+    let capture_requested = _observations.is_some();
+    if capture_requested {
+        if !cfg!(feature = "experimental-surfaces") {
+            return Err(PyValueError::new_err(
+                "linear observations require experimental-surfaces",
+            ));
+        }
+        if constraints.is_some() || halfspaces.is_some() || regions.is_some() {
+            return Err(PyValueError::new_err(
+                "linear observations require the scalar path",
+            ));
+        }
+    }
+    let regions = regions
+        .map(|groups| {
+            groups
+                .into_iter()
+                .map(|mask| {
+                    implicit::intersection::ConstraintMask::try_from(mask).map_err(|_| {
+                        pyo3::exceptions::PyValueError::new_err(
+                            "region mask exceeds constrained capacity",
+                        )
+                    })
+                })
+                .collect::<PyResult<Vec<_>>>()
+        })
+        .transpose()?;
     let f = make_field(
         py,
         field,
@@ -356,6 +424,24 @@ fn generate<'py>(
         cancel.as_ref().map(|v| v.flag.clone()).unwrap_or_default(),
         batch_size,
     )?;
+    let size = size_field
+        .map(|field| make_field(py, field, None, bounds, f.cancellation.clone(), batch_size))
+        .transpose()?;
+    let constraints = constraints
+        .map(|fields| {
+            fields
+                .into_iter()
+                .map(|field| {
+                    make_field(py, field, None, bounds, f.cancellation.clone(), batch_size)
+                })
+                .collect::<PyResult<Vec<_>>>()
+        })
+        .transpose()?;
+    if constraints.is_some() && (halfspaces.is_some() || regions.is_some()) {
+        return Err(PyValueError::new_err(
+            "retained constraints cannot be combined with halfspaces or regions",
+        ));
+    }
     let options = implicit::Options {
         bounds,
         cells,
@@ -367,13 +453,123 @@ fn generate<'py>(
         minimum_quality,
         max_tetrahedra: budget,
         optimize_passes: passes,
+        interior_refine_nodes,
         snap,
         threads,
+        adapt: adapt.map(
+            |(min_length, max_length, gradation, layers, iterations, quality_guard, target)| {
+                meshers_core::tet_adapt::Options {
+                    tolerance: target,
+                    min_length,
+                    max_length,
+                    gradation,
+                    layers,
+                    iterations,
+                    quality_guard,
+                }
+            },
+        ),
+        order,
+        curved_fit,
     };
     let start = std::time::Instant::now();
-    let result = py.detach(|| implicit::generate(&f, options));
+    #[cfg(feature = "experimental-surfaces")]
+    let observations = Mutex::new(Vec::new());
+    let result = py.detach(|| {
+        #[cfg(feature = "experimental-surfaces")]
+        if capture_requested {
+            return implicit::generate_with_observer(
+                &f,
+                size.as_ref().map(|field| field as &dyn ScalarField),
+                options,
+                &|stage, mesh| {
+                    observations.lock().unwrap().push((
+                        stage,
+                        meshers_core::Mesh {
+                            points: mesh.points.clone(),
+                            tets: mesh.tets.clone(),
+                            surface: mesh.surface.clone(),
+                        },
+                    ));
+                },
+            );
+        }
+        if let Some(fields) = &constraints {
+            let fields: Vec<&dyn ScalarField> = fields
+                .iter()
+                .map(|field| field as &dyn ScalarField)
+                .collect();
+            return implicit::generate_with_constraints(
+                &f,
+                size.as_ref().map(|field| field as &dyn ScalarField),
+                options,
+                &fields,
+            );
+        }
+        implicit::generate_with_regions(
+            &f,
+            size.as_ref().map(|field| field as &dyn ScalarField),
+            options,
+            halfspaces.as_deref(),
+            regions.as_deref(),
+        )
+    });
+    #[cfg(feature = "experimental-surfaces")]
+    if let Some(sink) = _observations {
+        // Copy to Python only after the native worker has returned. Preserve
+        // snapshots on failure, then propagate the original exception below.
+        for (stage, mesh) in observations.into_inner().unwrap() {
+            let row = PyDict::new(py);
+            row.set_item("stage", stage)?;
+            row.set_item("admission", "unchecked-linear-snapshot")?;
+            row.set_item(
+                "points",
+                Array2::from_shape_vec(
+                    (mesh.points.len(), 3),
+                    mesh.points.into_iter().flatten().collect(),
+                )
+                .unwrap()
+                .into_pyarray(py),
+            )?;
+            row.set_item(
+                "tetrahedra",
+                Array2::from_shape_vec(
+                    (mesh.tets.len(), 4),
+                    mesh.tets.into_iter().flatten().map(|i| i as i64).collect(),
+                )
+                .unwrap()
+                .into_pyarray(py),
+            )?;
+            row.set_item(
+                "surface",
+                Array2::from_shape_vec(
+                    (mesh.surface.len(), 3),
+                    mesh.surface
+                        .into_iter()
+                        .flatten()
+                        .map(|i| i as i64)
+                        .collect(),
+                )
+                .unwrap()
+                .into_pyarray(py),
+            )?;
+            sink.append(row)?;
+        }
+    }
     if let Some(error) = f.error.lock().unwrap().take() {
         return Err(error);
+    }
+    if let Some(field) = &size
+        && let Some(error) = field.error.lock().unwrap().take()
+    {
+        return Err(error);
+    }
+    if let Some(fields) = &constraints {
+        for field in fields {
+            if let Some(error) = field.error.lock().unwrap().take() {
+                return Err(error);
+            }
+        }
     }
     py.check_signals()?;
     let result = result.map_err(|e| match e {
@@ -381,6 +577,85 @@ fn generate<'py>(
         MeshingError::GenerationFailed(message) => MeshingFailure::new_err(message),
     })?;
     let output = PyDict::new(py);
+    let mut result = result;
+    if let Some(q) = result.quadratic.take() {
+        let quadratic = PyDict::new(py);
+        quadratic.set_item(
+            "linear_volume",
+            q.elements
+                .tets
+                .iter()
+                .map(|tet| {
+                    meshers_core::determinant(std::array::from_fn(|i| q.elements.points[tet[i]]))
+                        / 6.
+                })
+                .sum::<f64>(),
+        )?;
+        quadratic.set_item(
+            "points",
+            Array2::from_shape_vec(
+                (q.elements.points.len(), 3),
+                q.elements.points.into_iter().flatten().collect(),
+            )
+            .unwrap()
+            .into_pyarray(py),
+        )?;
+        quadratic.set_item(
+            "tetrahedra",
+            Array2::from_shape_vec(
+                (q.elements.tets.len(), 10),
+                q.elements
+                    .tets
+                    .into_iter()
+                    .flatten()
+                    .map(|i| i as i64)
+                    .collect(),
+            )
+            .unwrap()
+            .into_pyarray(py),
+        )?;
+        quadratic.set_item(
+            "surface",
+            Array2::from_shape_vec(
+                (q.elements.surface.len(), 6),
+                q.elements
+                    .surface
+                    .into_iter()
+                    .flatten()
+                    .map(|i| i as i64)
+                    .collect(),
+            )
+            .unwrap()
+            .into_pyarray(py),
+        )?;
+        let pairs = pyo3::types::PyList::empty(py);
+        for axis in q.periodic_pairs {
+            pairs.append(
+                Array2::from_shape_vec(
+                    (axis.len(), 2),
+                    axis.into_iter().flatten().map(|i| i as i64).collect(),
+                )
+                .unwrap()
+                .into_pyarray(py),
+            )?;
+        }
+        quadratic.set_item("periodic_pairs", pairs)?;
+        quadratic.set_item("curved_edges", q.elements.curved_edges)?;
+        quadratic.set_item("straightened_edges", q.elements.straightened_edges)?;
+        quadratic.set_item("partially_curved_edges", q.elements.partially_curved_edges)?;
+        quadratic.set_item("minimum_jacobian_ratio", q.elements.minimum_jacobian_ratio)?;
+        if let Some(fit) = q.elements.fit {
+            let stats = PyDict::new(py);
+            stats.set_item("selected_groups", fit.selected_groups)?;
+            stats.set_item("affected_faces", fit.affected_faces)?;
+            stats.set_item("accepted_steps", fit.accepted_steps)?;
+            stats.set_item("moved_nodes", fit.moved_nodes)?;
+            stats.set_item("initial_distance_estimate", fit.initial_distance_estimate)?;
+            stats.set_item("final_distance_estimate", fit.final_distance_estimate)?;
+            quadratic.set_item("fit", stats)?;
+        }
+        output.set_item("quadratic", quadratic)?;
+    }
     let points = Array2::from_shape_vec(
         (result.mesh.points.len(), 3),
         result.mesh.points.into_iter().flatten().collect(),
@@ -425,8 +700,24 @@ fn generate<'py>(
     }
     output.set_item("periodic_pairs", pairs)?;
     let diagnostics = PyDict::new(py);
+    if result.diagnostics.retained_constraints > 0 {
+        diagnostics.set_item(
+            "retained_constraints",
+            result.diagnostics.retained_constraints,
+        )?;
+    }
+    if result.diagnostics.polyhedral_constraints > 0 {
+        diagnostics.set_item(
+            "polyhedral_constraints",
+            result.diagnostics.polyhedral_constraints,
+        )?;
+    }
+    if result.diagnostics.polyhedral_regions > 0 {
+        diagnostics.set_item("polyhedral_regions", result.diagnostics.polyhedral_regions)?;
+    }
     diagnostics.set_item("empty", result.diagnostics.empty)?;
     diagnostics.set_item("volume", result.diagnostics.volume)?;
+    diagnostics.set_item("minimum_mmg_quality_basis", "linear_corners")?;
     diagnostics.set_item(
         "minimum_mmg_quality",
         result.diagnostics.minimum_mmg_quality,
@@ -444,9 +735,73 @@ fn generate<'py>(
         result.diagnostics.reverted_snap_vertices,
     )?;
     diagnostics.set_item("callback_calls", f.calls.load(Ordering::Relaxed))?;
+    diagnostics.set_item(
+        "inserted_interior_nodes",
+        result.diagnostics.inserted_interior_nodes,
+    )?;
+    if let Some(stats) = &result.diagnostics.adapt {
+        let adapt = PyDict::new(py);
+        adapt.set_item("splits", stats.splits)?;
+        adapt.set_item("collapses", stats.collapses)?;
+        adapt.set_item("swaps", stats.swaps)?;
+        adapt.set_item("moves", stats.moves)?;
+        adapt.set_item("error_splits", stats.error_splits)?;
+        adapt.set_item("maximum_error", stats.maximum_error)?;
+        adapt.set_item("seconds", stats.seconds.to_vec())?;
+        diagnostics.set_item("adapt", adapt)?;
+    }
     diagnostics.set_item("seconds", start.elapsed().as_secs_f64())?;
     output.set_item("diagnostics", diagnostics)?;
     Ok(output)
+}
+
+/// Shared native certificate for complete affine end traces.
+#[pyfunction(signature = (planes, bounds, periodic, regions=None))]
+fn _periodic_affine_traces(
+    planes: Vec<[f64; 4]>,
+    bounds: [[f64; 3]; 2],
+    periodic: [bool; 3],
+    regions: Option<Vec<meshers_core::implicit::intersection::ConstraintMask>>,
+) -> bool {
+    if let Some(regions) = regions {
+        meshers_core::implicit::periodic_affine_region_traces(&planes, bounds, periodic, &regions)
+    } else {
+        meshers_core::implicit::periodic_affine_traces(&planes, bounds, periodic)
+    }
+}
+
+/// Integrate current quadratic coordinates, including edits after generation.
+#[pyfunction]
+fn quadratic_volumes<'py>(
+    py: Python<'py>,
+    points: PyReadonlyArray2<'py, f64>,
+    tetrahedra: PyReadonlyArray2<'py, i64>,
+) -> PyResult<Bound<'py, numpy::PyArray1<f64>>> {
+    let points = points.as_array();
+    let tetrahedra = tetrahedra.as_array();
+    if points.ncols() != 3 || tetrahedra.ncols() != 10 {
+        return Err(PyValueError::new_err(
+            "expected (N,3) points and (M,10) tetrahedra",
+        ));
+    }
+    let mut volumes = Vec::with_capacity(tetrahedra.nrows());
+    for tet in tetrahedra.rows() {
+        let mut vertices = [[0.; 3]; 10];
+        for (i, &node) in tet.iter().enumerate() {
+            let index = usize::try_from(node)
+                .ok()
+                .filter(|&index| index < points.nrows())
+                .ok_or_else(|| PyValueError::new_err("tetrahedron node index out of bounds"))?;
+            vertices[i] = std::array::from_fn(|axis| points[[index, axis]]);
+            if vertices[i].iter().any(|value| !value.is_finite()) {
+                return Err(PyValueError::new_err(
+                    "tetrahedron coordinates must be finite",
+                ));
+            }
+        }
+        volumes.push(meshers_core::quadratic::signed_volume(&vertices));
+    }
+    Ok(volumes.into_pyarray(py))
 }
 
 /// Return the available native CPU worker count.
@@ -457,11 +812,30 @@ fn available_threads() -> usize {
 
 #[pymodule(gil_used = true)]
 fn _meshers(m: &Bound<'_, PyModule>) -> PyResult<()> {
+    m.add("IMPLICIT_API_VERSION", 1)?;
+    m.add("ADAPTIVE_POLYHEDRAL", true)?;
+    m.add("PERIODIC_POLYHEDRAL", true)?;
+    m.add("PERIODIC_AFFINE_REGIONS", true)?;
+    m.add("POLYHEDRAL_REGIONS", true)?;
+    m.add("RETAINED_INTERSECTIONS", true)?;
+    m.add("SDF_INTERSECTIONS", true)?;
+    m.add("ADAPTIVE_RETAINED_INTERSECTIONS", true)?;
+    m.add(
+        "MAX_CONSTRAINTS",
+        meshers_core::implicit::intersection::MAX_CONSTRAINTS,
+    )?;
     m.add_function(wrap_pyfunction!(available_threads, m)?)?;
+    m.add_function(wrap_pyfunction!(quadratic_volumes, m)?)?;
+    m.add_function(wrap_pyfunction!(_periodic_affine_traces, m)?)?;
     m.add_class::<compiled::CompiledField>()?;
     m.add_function(wrap_pyfunction!(compiled::_compile_expression, m)?)?;
     m.add_function(wrap_pyfunction!(generate, m)?)?;
     m.add_function(wrap_pyfunction!(intersection::generate_intersection, m)?)?;
+    #[cfg(feature = "experimental-surfaces")]
+    {
+        m.add_function(wrap_pyfunction!(surface::generate_surface, m)?)?;
+        m.add("_LINEAR_OBSERVATIONS", true)?;
+    }
     m.add_class::<CancellationToken>()?;
     m.add("MeshingError", m.py().get_type::<MeshingFailure>())?;
     m.add("CancelledError", m.py().get_type::<CancelledError>())?;

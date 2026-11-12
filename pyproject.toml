@@ -1,6 +1,6 @@
 [project]
 name = "meshers-development"
-version = "0.1.0"
+version = "0.2.0"
 requires-python = ">=3.12"
 dependencies = []
 
@@ -37,6 +37,7 @@ ignore = ["incorrect-blank-line-before-class", "multi-line-summary-second-line",
 
 [tool.ruff.lint.per-file-ignores]
 # Benchmark orchestration uses fixed subprocess argument lists and explicit metric loops.
+"tools/benchmark_history.py" = ["ANN", "magic-value-comparison", "complex-structure"]
 "tools/performance_gate.py" = ["ANN", "import-outside-top-level", "magic-value-comparison", "print", "suspicious-subprocess-import", "subprocess-without-shell-equals-true", "complex-structure", "unused-lambda-argument", "manual-list-comprehension"]
 # Tests/examples intentionally use assertions, simple callback names and direct output.
 "**/tests/**" = ["D", "ANN", "assert", "magic-value-comparison", "unused-function-argument", "private-member-access", "import-outside-top-level", "subprocess-without-shell-equals-true", "suspicious-subprocess-import", "implicit-namespace-package", "unused-lambda-argument", "pytest-raises-too-broad", "import-private-name"]

@@ -1,3 +1,4 @@
+from collections.abc import Sequence
 from typing import Any
 
 class CancellationToken:
@@ -26,10 +27,18 @@ def generate(
     minimum_quality: float,
     budget: int,
     passes: int,
+    interior_refine_nodes: int,
     snap: float,
     threads: int,
     batch_size: int,
     cancel: CancellationToken | None,
+    adapt: tuple[float, float, float, float, int, float, float] | None = None,
+    order: int = 1,
+    size_field: Any = None,
+    halfspaces: Any = None,
+    regions: Any = None,
+    constraints: Any = None,
+    curved_fit: bool = False,
 ) -> dict[str, Any]: ...
 
 class CompiledField:
@@ -47,11 +56,30 @@ class CompiledField:
         """Number of interned nodes in the compiled expression graph."""
     def gradient(self, x: float, y: float, z: float) -> list[float]:
         """Return the three first derivatives, or raise ValueError if unavailable."""
+    def values(self, points: Any) -> Any:
+        """Evaluate an (n, 3) float64 point array without a Python call per point."""
+    @property
+    def _sdf_intersection(self) -> bool: ...
+    def _intersection_fields(self) -> list[CompiledField] | None: ...
 
 def _compile_expression(
-    nodes: list[tuple[str, list[int], float]], outputs: list[int]
+    nodes: list[tuple[str, list[int], float]],
+    outputs: list[int],
+    constraint_outputs: list[list[int]] | None = None,
+    *,
+    retain_sdf: bool = False,
 ) -> CompiledField: ...
+
+MAX_CONSTRAINTS: int
+ADAPTIVE_POLYHEDRAL: bool
+PERIODIC_POLYHEDRAL: bool
+POLYHEDRAL_REGIONS: bool
+RETAINED_INTERSECTIONS: bool
+SDF_INTERSECTIONS: bool
+ADAPTIVE_RETAINED_INTERSECTIONS: bool
+
 def available_threads() -> int: ...
+def quadratic_volumes(points: Any, tetrahedra: Any) -> Any: ...
 def generate_intersection(
     fields: Any,
     mapping: Any,
@@ -65,3 +93,9 @@ def generate_intersection(
     batch_size: int,
     cancel: CancellationToken | None,
 ) -> dict[str, Any]: ...
+def _periodic_affine_traces(
+    planes: Sequence[Sequence[float]],
+    bounds: Sequence[Sequence[float]],
+    periodic: Sequence[bool],
+    regions: Sequence[int] | None = None,
+) -> bool: ...

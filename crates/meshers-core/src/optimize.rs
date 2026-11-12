@@ -6,6 +6,20 @@ use crate::{Mesh, Point, determinant, dot, norm, sub};
 use rayon::prelude::*;
 use std::collections::BTreeMap;
 
+fn projection_level(
+    value: f64,
+    on_wall: bool,
+    threshold: f64,
+    geometry: &impl crate::geometry::Geometry,
+) -> Option<f64> {
+    let residual = if geometry.band() {
+        (value.abs() - threshold).abs()
+    } else {
+        value.abs()
+    };
+    (on_wall || residual < 1e-8).then_some(geometry.level(value, threshold))
+}
+
 fn project(
     mut p: Point,
     original: Point,
@@ -81,6 +95,7 @@ pub(crate) fn optimize_for(
     if passes == 0 {
         return Ok(());
     }
+    geometry.check()?;
     let mut cpu_profile = crate::profile::Profile::new("optimizer");
     cpu_profile.count("passes", passes);
     cpu_profile.count("threads", threads);
@@ -323,12 +338,7 @@ fn accept_gpu(
     }
     let origin = mesh.points[group.0[0]];
     let value = geometry.value(origin);
-    let level = (if geometry.band() {
-        (value.abs() - threshold).abs()
-    } else {
-        value.abs()
-    } < 1e-8)
-        .then_some(geometry.level(value, threshold));
+    let level = projection_level(value, !group.2.is_empty(), threshold, geometry);
     let Some(candidate) = project(
         std::array::from_fn(|a| origin[a] + delta[a]),
         origin,
@@ -339,7 +349,11 @@ fn accept_gpu(
     };
     let (old_min, old_cost) = evaluate(mesh, group, threshold, h, weight, origin, geometry);
     let (new_min, new_cost) = evaluate(mesh, group, threshold, h, weight, candidate, geometry);
-    if new_min >= old_min.min(0.65_f64.powi(3)) - 1e-12 && new_cost < old_cost {
+    if new_min >= old_min.min(0.65_f64.powi(3)) - 1e-12
+        && new_cost < old_cost
+        && batch::surface_moves(mesh, &[(group, candidate)], threshold, geometry)
+            .is_ok_and(|accepted| accepted[0])
+    {
         sub(candidate, origin)
     } else {
         [0.; 3]
@@ -360,12 +374,7 @@ fn proposal(
     let (members, _, faces) = group;
     let original = mesh.points[members[0]];
     let value = geometry.value(original);
-    let level = (if geometry.band() {
-        (value.abs() - threshold).abs()
-    } else {
-        value.abs()
-    } < 1e-8)
-        .then_some(geometry.level(value, threshold));
+    let level = projection_level(value, !faces.is_empty(), threshold, geometry);
     let evaluate = |candidate| {
         evaluate(
             mesh,
@@ -440,7 +449,87 @@ fn proposal(
             }));
         }
     }
-    sub(best, original)
+    if best == original && faces.is_empty() && old_min < 0.65_f64.powi(3) {
+        best = improve_worst(mesh, group, threshold, h, geometry);
+    }
+    if batch::surface_moves(mesh, &[(group, best)], threshold, geometry)
+        .is_ok_and(|accepted| accepted[0])
+    {
+        sub(best, original)
+    } else {
+        [0.; 3]
+    }
+}
+
+/// The smooth cavity penalty can stall at a poor element's quality guard.
+/// Search the minimum quality itself at stalled interior vertices. Keeping
+/// implicit wall vertices fixed avoids trading boundary accuracy for shape.
+pub(super) fn improve_worst(
+    mesh: &Mesh,
+    group: &Group,
+    threshold: f64,
+    h: f64,
+    geometry: &impl crate::geometry::Geometry,
+) -> Point {
+    let original = mesh.points[group.0[0]];
+    let level = projection_level(
+        geometry.value(original),
+        !group.2.is_empty(),
+        threshold,
+        geometry,
+    );
+    let quality = |candidate| {
+        let delta = sub(candidate, original);
+        group.1.iter().fold(1_f64, |worst, &ci| {
+            let p = mesh.tets[ci].map(|i| {
+                if group.0.contains(&i) {
+                    std::array::from_fn(|a| mesh.points[i][a] + delta[a])
+                } else {
+                    mesh.points[i]
+                }
+            });
+            let det = determinant(p);
+            if det <= h * h * h * 1e-8 {
+                return 0.;
+            }
+            let l2: f64 = (0..4)
+                .flat_map(|i| (i + 1..4).map(move |j| dot(sub(p[i], p[j]), sub(p[i], p[j]))))
+                .sum();
+            worst.min(432. * det.powi(2) / l2.powi(3))
+        })
+    };
+    let old = quality(original);
+    let direction: Point = std::array::from_fn(|a| {
+        let mut lo = original;
+        let mut hi = original;
+        lo[a] -= h * 0.002;
+        hi[a] += h * 0.002;
+        project(hi, original, level, geometry).map_or(old, quality)
+            - project(lo, original, level, geometry).map_or(old, quality)
+    });
+    let length = norm(direction);
+    let mut best = original;
+    let mut best_quality = old;
+    if length > 1e-15 {
+        for step in [0.2, 0.1, 0.05, 0.025, 0.0125] {
+            if let Some(p) = project(
+                std::array::from_fn(|a| original[a] + h * step * direction[a] / length),
+                original,
+                level,
+                geometry,
+            ) {
+                let q = quality(p);
+                if q > best_quality + 1e-12
+                    && batch::surface_moves(mesh, &[(group, p)], threshold, geometry)
+                        .is_ok_and(|accepted| accepted[0])
+                {
+                    best = p;
+                    best_quality = q;
+                }
+            }
+        }
+    }
+    best
 }
 
 fn evaluate(
@@ -485,7 +574,7 @@ fn evaluate(
             }
         });
         let center: Point = std::array::from_fn(|a| (p[0][a] + p[1][a] + p[2][a]) / 3.);
-        let denom = norm(geometry.gradient(center)) * h * h * 0.3;
+        let denom = norm(geometry.gradient(center)) * h * h * 0.3 / geometry.optimizer_length();
         for sample in [
             center,
             std::array::from_fn(|a| (p[0][a] + p[1][a]) * 0.5),
@@ -502,6 +591,57 @@ fn evaluate(
 #[cfg(test)]
 mod gpu_acceptance_tests {
     use super::*;
+
+    struct SlantedPlane {
+        batched: bool,
+    }
+
+    impl crate::geometry::Geometry for SlantedPlane {
+        fn value(&self, point: Point) -> f64 {
+            point.iter().sum::<f64>() - 1.
+        }
+        fn gradient(&self, _point: Point) -> Point {
+            [1.; 3]
+        }
+        fn bounds(&self) -> [Point; 2] {
+            [[0.; 3], [2.; 3]]
+        }
+        fn rank(&self, point: Point) -> [i64; 3] {
+            point.map(|coordinate| (coordinate * 1e11).round() as i64)
+        }
+        fn band(&self) -> bool {
+            false
+        }
+        fn batched(&self) -> bool {
+            self.batched
+        }
+    }
+
+    #[test]
+    fn off_field_wall_vertex_keeps_its_boundary_constraint() {
+        use crate::geometry::Geometry;
+
+        for batched in [false, true] {
+            let tetrahedra = vec![[3, 0, 1, 2]];
+            let surface = crate::boundary(&tetrahedra).unwrap();
+            let mut mesh = Mesh {
+                points: vec![[1.02, 0., 0.], [0., 1., 0.], [0., 0., 1.], [0.; 3]],
+                tets: tetrahedra,
+                surface,
+            };
+            let geometry = SlantedPlane { batched };
+            let group = (vec![0], vec![0], vec![[0, 1, 2]]);
+            let delta = accept_gpu(&mesh, &group, 0., 1., 3., [-0.025, 0., 0.], &geometry);
+            assert!((mesh.points[0][0] + delta[0] - 1.).abs() < 1e-12);
+            optimize_for(&mut mesh, 0., 1., 1, 3., 1, None, &geometry).unwrap();
+            assert!(
+                geometry.value(mesh.points[0]).abs() < 1e-12,
+                "batched={batched}: wall vertex moved to {:?}",
+                mesh.points[0]
+            );
+        }
+    }
+
     #[test]
     fn rejects_nonfinite_outside_and_inverting_gpu_moves() {
         let mesh = Mesh {

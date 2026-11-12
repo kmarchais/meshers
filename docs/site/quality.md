@@ -23,7 +23,11 @@ transform a mesh must transform its periodic shift vectors consistently.
 | Sampled boundary error | Estimated geometric deviation in physical units |
 | Volume distribution | Very small elements can increase FEM conditioning and timestep costs |
 
-VTKHDF includes `Volume` and `MMGQuality`. Quality uses the MMG formula in NumPy;
+VTKHDF includes integrated `Volume`. Tet4 exports `MMGQuality`; Tet10 exports
+`CornerVolume` and `CornerMMGQuality` for its linear parent. The diagnostic
+`sampled_surface_error` also describes the linear parent, not a distance audit
+of the final curved faces. Check curved geometry separately when needed.
+Quality uses the MMG formula in NumPy;
 it does not call mmgpy. Boundary tags are 0 for implicit faces, then 1 and 2 for x-/x+,
 3 and 4 for y-/y+, and 5 and 6 for z-/z+.
 

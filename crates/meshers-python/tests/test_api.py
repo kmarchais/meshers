@@ -10,6 +10,38 @@ import pytest
 generate_callback = partial(meshers.generate, compile=False)
 
 
+@pytest.mark.parametrize("compiled", [True, False])
+def test_adaptive_schwarz_d_corner_distance_is_finite(compiled):
+    def field(x, y, z):
+        x, y, z = [2 * np.pi * v for v in (x, y, z)]
+        return (
+            np.sin(x) * np.sin(y) * np.sin(z)
+            + np.sin(x) * np.cos(y) * np.cos(z)
+            + np.cos(x) * np.sin(y) * np.cos(z)
+            + np.cos(x) * np.cos(y) * np.sin(z)
+        )
+
+    result = meshers.generate(
+        field,
+        bounds=(-0.5, 0.5) * 3,
+        cells=12,
+        periodic=(True,) * 3,
+        adapt=True,
+        adapt_iterations=1,
+        adapt_tolerance=0.1,
+        min_length=0.01,
+        max_length=0.1,
+        geometry_tolerance=0.02,
+        minimum_quality=0.1,
+        optimize_passes=1,
+        compile=compiled,
+    )
+    assert np.isfinite(result.diagnostics["sampled_surface_error"])
+    assert result.diagnostics["sampled_surface_error"] < 0.02
+    assert result.diagnostics["volume"] == pytest.approx(0.5, abs=0.001)
+    assert all(len(pairs) for pairs in result.periodic_pairs)
+
+
 def sphere(x, y, z):
     return np.sqrt((x - 0.47) ** 2 + (y - 0.51) ** 2 + (z - 0.49) ** 2) - 0.29
 
@@ -175,6 +207,50 @@ finally:
     )
     assert run.returncode == 0, run.stderr
     assert "interrupted" in run.stdout
+
+
+@pytest.mark.parametrize("delay", [0.15, 2.0])
+@pytest.mark.parametrize("threads", [1, 4])
+def test_native_interruption_on_windows_and_parallel_workers(delay, threads):
+    import os
+    import subprocess
+    import sys
+    from pathlib import Path
+
+    import meshers
+
+    # interrupt_main sets Python's pending SIGINT on Windows too. Exercise early
+    # and later work; a wall-clock delay does not identify the native phase.
+    # Explicit worker counts cover both the default and actual parallel paths.
+    code = f"""
+import sys, _thread, threading, time
+sys.path.insert(0, {str(Path(meshers.__file__).parent.parent)!r})
+import meshers
+sent = []
+def interrupt():
+    sent.append(time.perf_counter())
+    _thread.interrupt_main()
+timer = threading.Timer({delay}, interrupt)
+timer.start()
+try:
+    meshers.generate('gyroid', cells=96, band=(-.5,.5), max_tetrahedra=4_000_000, threads={threads})
+except KeyboardInterrupt:
+    elapsed = time.perf_counter() - sent[0]
+    assert elapsed < 2, dict(interrupt_latency_s=elapsed, threads={threads}, delay={delay})
+else:
+    raise AssertionError('interrupt was ignored')
+finally:
+    timer.join()
+"""
+    run = subprocess.run(
+        [sys.executable, "-c", code],
+        env=dict(os.environ, RAYON_NUM_THREADS="4"),
+        capture_output=True,
+        check=False,
+        text=True,
+        timeout=30,
+    )
+    assert run.returncode == 0, run.stderr
 
 
 def test_optimizer_batch_size_and_gradient_batches():

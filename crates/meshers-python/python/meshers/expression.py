@@ -103,6 +103,8 @@ class _Expression:
         raise TraceError(f"array attribute {name} requires the NumPy callback path")
 
     def __array_function__(self, func, types, args, kwargs):
+        if func is np.interp:
+            return self._interp(*args, **kwargs)
         if func is np.where and len(args) == 3 and not kwargs:
             return self.graph.node("select", *(self.graph.convert(a) for a in args))
         if func is np.clip and len(args) == 3 and not kwargs:
@@ -114,6 +116,66 @@ class _Expression:
                 result = self.graph.node("minimum", result, self.graph.convert(upper))
             return result
         raise TraceError(f"unsupported traced NumPy function: {func.__name__}")
+
+    def _interp(self, x, xp, fp, left=None, right=None, period=None):  # ruff: ignore[too-many-arguments, too-many-positional-arguments]
+        # Match NumPy's signature; only finite, static, increasing real tables trace.
+        if period is not None:
+            raise TraceError("np.interp with period requires the NumPy callback path")
+        try:
+            knots, values = np.asarray(xp), np.asarray(fp)
+        except (TypeError, ValueError) as error:
+            raise TraceError("np.interp requires constant real tables") from error
+        if (
+            any(table.ndim != 1 or table.dtype.kind not in "biuf" for table in (knots, values))
+            or not len(knots)
+            or len(knots) != len(values)
+        ):
+            raise TraceError("np.interp requires equal nonempty one-dimensional real tables")
+        knots, values = knots.astype(np.float64), values.astype(np.float64)
+        with np.errstate(over="ignore", invalid="ignore", divide="ignore"):
+            spans = np.diff(knots)
+            slopes = np.diff(values) / spans
+        if (
+            not np.isfinite(knots).all()
+            or not np.isfinite(values).all()
+            or not (spans > 0).all()
+            or not np.isfinite(slopes).all()
+            or any(
+                v is not None
+                and (
+                    not isinstance(v, (int, float, np.integer, np.floating))
+                    or not math.isfinite(float(v))
+                )
+                for v in (left, right)
+            )
+        ):
+            raise TraceError("np.interp requires finite constants and strictly increasing knots")
+        if len(self.graph.nodes) + 8 * len(knots) > 20000:
+            raise TraceError("np.interp table exceeds the native expression graph limit")
+        x = self.graph.convert(x)
+
+        def branch(lo, hi):
+            if lo == hi:
+                return float(values[lo])
+            if hi - lo == 1:
+                return float(values[lo]) + float(slopes[lo]) * (x - float(knots[lo]))
+            middle = (lo + hi) // 2
+            return np.where(x < float(knots[middle]), branch(lo, middle), branch(middle, hi))
+
+        # ponytail: eager selection costs O(table size); add a lookup kernel only
+        # if profiles justify it. Existing native operations preserve the table.
+        value = branch(0, len(knots) - 1)
+        lower = (
+            float(values[0])
+            if left is None
+            else np.where(x == float(knots[0]), float(values[0]), float(left))
+        )
+        upper = (
+            float(values[-1])
+            if right is None
+            else np.where(x == float(knots[-1]), float(values[-1]), float(right))
+        )
+        return np.where(x <= float(knots[0]), lower, np.where(x >= float(knots[-1]), upper, value))
 
     def __array__(self, *args, **kwargs):
         raise TraceError("array construction is unsupported by the Rust scalar tracer")
@@ -229,7 +291,8 @@ class _Graph:
             if op in {"minimum", "maximum"}:
                 b = args[1]
                 db = d(ids[1], axis)
-                return choose(a <= b if op == "minimum" else a >= b, da, db)
+                tied = add(mul(self.convert(0.5), da), mul(self.convert(0.5), db))
+                return choose(a == b, tied, choose(a <= b if op == "minimum" else a >= b, da, db))
             if op in {"add", "sub", "mul", "div", "pow"}:
                 b = args[1]
                 db = d(ids[1], axis)
@@ -299,8 +362,43 @@ class _Graph:
 
 
 @lru_cache(maxsize=32)
-def _compile_cached(nodes, outputs):
+def _compile_cached(nodes, outputs, constraints=(), *, retain_sdf=False):
+    if constraints:
+        return _meshers._compile_expression(nodes, outputs, constraints)
+    if retain_sdf:
+        return _meshers._compile_expression(nodes, outputs, retain_sdf=True)
     return _meshers._compile_expression(nodes, outputs)
+
+
+def _compile_with_intersection(graph, value, outputs):
+    original = graph.encoded()
+    if not getattr(_meshers, "RETAINED_INTERSECTIONS", False):
+        return _compile_cached(original, outputs)
+    if graph.nodes[value.index][0] != "maximum":
+        return _compile_cached(
+            original, outputs, retain_sdf=getattr(_meshers, "SDF_INTERSECTIONS", False)
+        )
+    roots, pending, seen = [], [value.index], set()
+    while pending:
+        index = pending.pop()
+        if index in seen:
+            continue
+        seen.add(index)
+        op, *args = graph.nodes[index]
+        if op == "maximum":
+            pending.extend(reversed(args))
+        else:
+            roots.append(index)
+    if not 2 <= len(roots) <= _meshers.MAX_CONSTRAINTS or any(
+        graph.nodes[index][0] == "constant" for index in roots
+    ):
+        return _compile_cached(original, outputs)
+    constraints = tuple(
+        (index, *(e.index for e in graph.derivatives(_Expression(graph, index)))) for index in roots
+    )
+    if len(graph.nodes) > 20000:
+        return _compile_cached(original, outputs)
+    return _compile_cached(graph.encoded(), outputs, constraints)
 
 
 def compile_field(
@@ -327,7 +425,13 @@ def compile_field(
 
     Note:
         No Rust installation, Numba, SymPy or subprocess is used at runtime.
-        Gradients at abs(0) are zero; min/max ties use the first branch.
+        Gradients at abs(0) are zero. Exact min/max ties average the operand
+        derivatives. This is a subgradient choice at a true crease, not a
+        branch constraint. Eligible meshing modes can additionally retain
+        outer-maximum branches. Adaptive Tet4 meshing can also retain the
+        zero-sublevel intersection of a standard clamped-norm signed-distance
+        graph with unit-distance affine/radial branches, after numerical checks.
+        Supply a gradient callable for another policy.
     """
     if backend not in {"rust", "jit"}:
         raise ValueError("only the embedded Rust compiler is supported")
@@ -344,4 +448,9 @@ def compile_field(
         outputs.extend(graph.convert(v) for v in g)
     if len(graph.nodes) > 20000:
         raise TraceError("expression is too large to compile")
-    return _compile_cached(graph.encoded(), tuple(e.index for e in outputs))
+    outputs = tuple(e.index for e in outputs)
+    return (
+        _compile_with_intersection(graph, value, outputs)
+        if gradient is None
+        else _compile_cached(graph.encoded(), outputs)
+    )

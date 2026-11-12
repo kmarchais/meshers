@@ -1,4 +1,4 @@
-# Meshers Python 0.1.0
+# Meshers Python 0.2.0
 
 In-process CPU float64 meshing of bounded implicit solids. No subprocess or intermediate mesh file is needed.
 
@@ -50,8 +50,9 @@ See the [graded example](https://github.com/kmarchais/meshers/blob/main/crates/m
 - Boundary tags: 0 implicit, 1/2 x-/x+, 3/4 y-/y+, 5/6 z-/z+.
 - Per-axis periodic node pairs plus geometry and quality diagnostics.
 - VTKHDF volume or `surface=True`, periodic master IDs and physical shift vectors.
-  Volume files include `Volume` and `MMGQuality`, computed using the MMG formula
-  in NumPy, not by calling mmgpy.
+  Linear volume files include `Volume` and `MMGQuality`. For Tet10, `Volume`
+  integrates the curved mapping, while `CornerVolume` and `CornerMMGQuality`
+  describe the linear parent. Quality is computed without calling mmgpy.
 - Invalid options raise `ValueError`; failed meshing raises `MeshingError`.
   Callback exceptions are preserved. `KeyboardInterrupt` is propagated.
 - Pass `cancel=CancellationToken()` and call `token.cancel()` from another thread

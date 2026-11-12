@@ -8,6 +8,258 @@ fn gyroid(p: Point) -> f64 {
     let [x, y, z] = p.map(|v| v * TAU);
     x.sin() * y.cos() + y.sin() * z.cos() + z.sin() * x.cos()
 }
+
+#[test]
+fn curved_fit_preserves_corners_connectivity_and_periodic_traces() {
+    let options = Options {
+        bounds: [[-0.5; 3], [0.5; 3]],
+        cells: [9; 3],
+        region: Region::Band {
+            lower: -0.55,
+            upper: 0.55,
+        },
+        periodic: [true; 3],
+        geometry_tolerance: 1.,
+        optimize_passes: 1,
+        order: 2,
+        ..Options::default()
+    };
+    let before = generate(&gyroid, options).unwrap();
+    let after = generate(
+        &gyroid,
+        Options {
+            curved_fit: true,
+            ..options
+        },
+    )
+    .unwrap();
+    assert_eq!(before.mesh.points, after.mesh.points);
+    let a = before.quadratic.unwrap();
+    let b = after.quadratic.unwrap();
+    assert_eq!(a.elements.tets, b.elements.tets);
+    assert_eq!(a.elements.surface, b.elements.surface);
+    assert_eq!(a.elements.points.len(), b.elements.points.len());
+    assert_eq!(a.periodic_pairs, b.periodic_pairs);
+    let stats = b.elements.fit.unwrap();
+    assert!(stats.selected_groups > 0 && stats.moved_nodes > 0);
+    assert!(stats.final_distance_estimate <= stats.initial_distance_estimate);
+    assert!(b.elements.minimum_jacobian_ratio > 1e-3);
+    for (axis, pairs) in b.periodic_pairs.iter().enumerate() {
+        for &[lo, hi] in pairs {
+            for component in 0..3 {
+                let shift = if component == axis { 1. } else { 0. };
+                let before_error =
+                    (a.elements.points[hi][component] - a.elements.points[lo][component] - shift)
+                        .abs();
+                let after_error =
+                    (b.elements.points[hi][component] - b.elements.points[lo][component] - shift)
+                        .abs();
+                // Baseline projection has a 5.72e-15 residual in this FD control.
+                // The fit must not increase it; moved transverse copies agree exactly.
+                assert!(
+                    before_error < 1e-12 && after_error <= before_error + f64::EPSILON,
+                    "axis={axis} component={component} pair={lo},{hi} before={before_error:e} after={after_error:e} old={:?},{:?} new={:?},{:?}",
+                    a.elements.points[lo],
+                    a.elements.points[hi],
+                    b.elements.points[lo],
+                    b.elements.points[hi]
+                );
+                if component != axis
+                    && (b.elements.points[hi] != a.elements.points[hi]
+                        || b.elements.points[lo] != a.elements.points[lo])
+                {
+                    assert_eq!(
+                        b.elements.points[hi][component],
+                        b.elements.points[lo][component]
+                    );
+                }
+            }
+        }
+    }
+    assert!(
+        generate(
+            &gyroid,
+            Options {
+                order: 1,
+                curved_fit: true,
+                ..options
+            }
+        )
+        .is_err()
+    );
+}
+
+#[test]
+fn interior_refinement_is_nested_and_preserves_periodic_boundaries() {
+    let options = Options {
+        cells: [4; 3],
+        optimize_passes: 0,
+        minimum_quality: 0.1,
+        periodic: [true; 3],
+        ..Options::default()
+    };
+    let seed = generate(&|_| -1., options).unwrap();
+    let explicit_zero = generate(
+        &|_| -1.,
+        Options {
+            interior_refine_nodes: 0,
+            ..options
+        },
+    )
+    .unwrap();
+    assert_eq!(seed.mesh.points, explicit_zero.mesh.points);
+    assert_eq!(seed.mesh.tets, explicit_zero.mesh.tets);
+    let refined = generate(
+        &|_| -1.,
+        Options {
+            interior_refine_nodes: 20,
+            ..options
+        },
+    )
+    .unwrap();
+    let inserted = refined.diagnostics.inserted_interior_nodes;
+    assert!(inserted > 0 && inserted <= 20);
+    assert_eq!(
+        &refined.mesh.points[..seed.mesh.points.len()],
+        &seed.mesh.points
+    );
+    assert_eq!(refined.mesh.surface, seed.mesh.surface);
+    assert_eq!(refined.boundary_tags, seed.boundary_tags);
+    assert_eq!(refined.periodic_pairs, seed.periodic_pairs);
+    assert!((refined.diagnostics.volume - seed.diagnostics.volume).abs() < 1e-12);
+    assert!(refined.diagnostics.minimum_mmg_quality >= 0.1);
+    assert!(refined.mesh.tets.len() > seed.mesh.tets.len());
+    let repeat = generate(
+        &|_| -1.,
+        Options {
+            interior_refine_nodes: 20,
+            ..options
+        },
+    )
+    .unwrap();
+    assert_eq!(refined.mesh.points, repeat.mesh.points);
+    assert_eq!(refined.mesh.tets, repeat.mesh.tets);
+    let bounded = generate(
+        &|_| -1.,
+        Options {
+            interior_refine_nodes: 20,
+            max_tetrahedra: seed.mesh.tets.len(),
+            ..options
+        },
+    )
+    .unwrap();
+    assert_eq!(bounded.diagnostics.inserted_interior_nodes, 0);
+    assert_eq!(bounded.mesh.points, seed.mesh.points);
+    assert_eq!(bounded.mesh.tets, seed.mesh.tets);
+}
+
+#[test]
+fn adaptive_interior_refinement_preserves_the_boundary() {
+    let field = |p: Point| -1. + 0.05 * (TAU * p[0]).cos();
+    let options = Options {
+        cells: [4; 3],
+        optimize_passes: 0,
+        minimum_quality: 0.1,
+        periodic: [true; 3],
+        adapt: Some(meshers_core::tet_adapt::Options {
+            iterations: 1,
+            ..Default::default()
+        }),
+        ..Options::default()
+    };
+    let seed = generate(&field, options).unwrap();
+    let refined = generate(
+        &field,
+        Options {
+            interior_refine_nodes: 20,
+            ..options
+        },
+    )
+    .unwrap();
+    assert!(refined.diagnostics.inserted_interior_nodes > 0);
+    assert!(refined.diagnostics.inserted_interior_nodes <= 20);
+    assert_eq!(
+        &refined.mesh.points[..seed.mesh.points.len()],
+        &seed.mesh.points
+    );
+    assert_eq!(refined.mesh.surface, seed.mesh.surface);
+    assert_eq!(refined.boundary_tags, seed.boundary_tags);
+    assert_eq!(refined.periodic_pairs, seed.periodic_pairs);
+    assert!((refined.diagnostics.volume - seed.diagnostics.volume).abs() < 1e-12);
+    assert!(refined.diagnostics.minimum_mmg_quality >= 0.1);
+}
+
+#[test]
+fn requested_quality_allows_tighter_curvature_refinement() {
+    let mesh = generate(
+        &gyroid,
+        Options {
+            bounds: [[-0.5; 3], [0.5; 3]],
+            region: Region::Band {
+                lower: -0.55,
+                upper: 0.55,
+            },
+            cells: [48; 3],
+            minimum_quality: 0.1,
+            geometry_tolerance: 0.0002,
+            optimize_passes: 1,
+            periodic: [true; 3],
+            ..Options::default()
+        },
+    )
+    .unwrap();
+    assert!(mesh.diagnostics.maximum_sampled_surface_error <= 0.0002);
+    assert!(mesh.diagnostics.minimum_mmg_quality >= 0.1);
+    assert!(mesh.periodic_pairs.iter().all(|pairs| !pairs.is_empty()));
+}
+
+struct BenchmarkGyroid {
+    variant: usize,
+    batched: bool,
+}
+impl ScalarField for BenchmarkGyroid {
+    fn value(&self, p: Point) -> f64 {
+        let width = match self.variant {
+            0 => 0.25,
+            1 => 0.25 * (1. + 0.4 * p[0]),
+            _ => 0.125,
+        };
+        gyroid(p) / width
+    }
+    fn prefers_batches(&self) -> bool {
+        self.batched
+    }
+}
+
+#[test]
+fn quality_optimization_preserves_the_coarse_benchmark_geometry_limit() {
+    for variant in 0..3 {
+        for batched in [false, true] {
+            for optimize_passes in [4, 12] {
+                let result = generate(
+                    &BenchmarkGyroid { variant, batched },
+                    Options {
+                        bounds: [[-0.5; 3], [0.5; 3]],
+                        cells: [8; 3],
+                        region: Region::Band {
+                            lower: -1.,
+                            upper: 1.,
+                        },
+                        geometry_tolerance: 0.01,
+                        minimum_quality: 0.1,
+                        max_tetrahedra: 250_000,
+                        optimize_passes,
+                        threads: 1,
+                        ..Options::default()
+                    },
+                )
+                .unwrap();
+                assert!(result.diagnostics.maximum_sampled_surface_error <= 0.01);
+                assert!(result.diagnostics.minimum_mmg_quality >= 0.1);
+            }
+        }
+    }
+}
 fn schwarz_p(p: Point) -> f64 {
     p.map(|v| (TAU * v).cos()).iter().sum()
 }
@@ -496,4 +748,97 @@ fn minimum_quality_gate_rejects_flat_cells_without_changing_geometry() {
             Err(meshers_core::MeshingError::InvalidOptions(_))
         ));
     }
+}
+#[test]
+fn optimized_mesh_is_independent_of_physical_unit_scale() {
+    let mut reference: Option<(Vec<[usize; 4]>, Vec<Point>, f64)> = None;
+    for scale in [1., 1e-3, 1e3] {
+        let field = |p: Point| {
+            let p = p.map(|x| x / scale);
+            ((p[0] - 0.47).powi(2) + (p[1] - 0.51).powi(2) + (p[2] - 0.49).powi(2)).sqrt() - 0.29
+        };
+        let output = generate(
+            &field,
+            Options {
+                bounds: [[0.; 3], [scale; 3]],
+                cells: [10; 3],
+                optimize_passes: 2,
+                geometry_tolerance: 0.05 * scale,
+                ..Default::default()
+            },
+        )
+        .unwrap();
+        let points = output
+            .mesh
+            .points
+            .iter()
+            .map(|p| p.map(|x| x / scale))
+            .collect::<Vec<_>>();
+        if let Some((tets, old_points, quality)) = &reference {
+            assert!(
+                output.mesh.tets == *tets,
+                "Unit change altered connectivity"
+            );
+            for (a, b) in points.iter().zip(old_points) {
+                assert!(meshers_core::norm(meshers_core::sub(*a, *b)) < 1e-6);
+            }
+            assert!((output.diagnostics.minimum_mmg_quality - quality).abs() < 1e-6);
+        } else {
+            reference = Some((
+                output.mesh.tets,
+                points,
+                output.diagnostics.minimum_mmg_quality,
+            ));
+        }
+    }
+}
+
+#[test]
+fn snapping_does_not_erase_a_sampled_small_component() {
+    let field = |p: Point| {
+        let large = ((p[0] + 0.35).powi(2) + p[1].powi(2) + p[2].powi(2)).sqrt() - 0.4;
+        let small =
+            ((p[0] - 0.65).powi(2) + (p[1] - 0.2).powi(2) + (p[2] - 0.13).powi(2)).sqrt() - 0.075;
+        large.min(small)
+    };
+    // Isolate clipping and snapping. An FEA quality floor may subsequently
+    // reject a coarse component, but it must not disappear silently.
+    let output = generate(
+        &field,
+        Options {
+            bounds: [[-1.; 3], [1.; 3]],
+            cells: [12; 3],
+            optimize_passes: 0,
+            minimum_quality: 0.,
+            geometry_tolerance: 0.2,
+            ..Default::default()
+        },
+    )
+    .unwrap();
+    let mesh = &output.mesh;
+    let mut parent: Vec<usize> = (0..mesh.points.len()).collect();
+    fn find(parent: &mut [usize], mut i: usize) -> usize {
+        while parent[i] != i {
+            parent[i] = parent[parent[i]];
+            i = parent[i];
+        }
+        i
+    }
+    for tet in &mesh.tets {
+        for &v in &tet[1..] {
+            let a = find(&mut parent, tet[0]);
+            let b = find(&mut parent, v);
+            parent[a] = b;
+        }
+    }
+    let mut groups = std::collections::BTreeSet::new();
+    for tet in &mesh.tets {
+        groups.insert(find(&mut parent, tet[0]));
+    }
+    assert_eq!(groups.len(), 2, "Snapping erased an interior component");
+    assert!(
+        mesh.tets
+            .iter()
+            .any(|tet| tet.iter().all(|&i| mesh.points[i][0] > 0.5))
+    );
 }

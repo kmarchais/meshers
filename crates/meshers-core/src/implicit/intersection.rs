@@ -11,11 +11,17 @@ use super::{Options, ScalarField};
 use crate::{Mesh, Point, Tet, determinant, dot, norm, quality, sub};
 use std::collections::{HashMap, HashSet};
 
+#[cfg(feature = "wide-constraints")]
+pub type ConstraintMask = u32;
+#[cfg(not(feature = "wide-constraints"))]
+pub type ConstraintMask = u8;
+pub const MAX_CONSTRAINTS: usize = ConstraintMask::BITS as usize;
+
 /// Experimental mesh plus active surface constraints at its vertices.
 pub struct Output {
     pub mesh: Mesh,
     /// Bit j denotes membership in the piecewise-linear boundary of field j.
-    pub constraints: Vec<u8>,
+    pub constraints: Vec<ConstraintMask>,
     /// Parameter coordinates, useful for identifying periodic end surfaces.
     pub parameters: Vec<Point>,
     /// Quality before and after the integrated improvement stage.
@@ -41,7 +47,7 @@ struct Cutter<'a> {
     points: Vec<Point>,
     parameters: Vec<Point>,
     values: Vec<Vec<f64>>,
-    masks: Vec<u8>,
+    masks: Vec<ConstraintMask>,
     edges: HashMap<(usize, usize, usize), usize>,
 }
 impl Cutter<'_> {
@@ -103,6 +109,14 @@ impl Cutter<'_> {
         i
     }
     fn clip(&mut self, faces: Vec<Vec<usize>>, field: usize) -> Result<Vec<Vec<usize>>, String> {
+        self.clip_side(faces, field, true)
+    }
+    fn clip_side(
+        &mut self,
+        faces: Vec<Vec<usize>>,
+        field: usize,
+        negative: bool,
+    ) -> Result<Vec<Vec<usize>>, String> {
         let mut out = Vec::new();
         let mut cap_edges = Vec::new();
         for face in faces {
@@ -111,8 +125,15 @@ impl Cutter<'_> {
             for k in 0..face.len() {
                 let a = face[k];
                 let b = face[(k + 1) % face.len()];
-                let ia = self.values[a][field] <= 0.;
-                let ib = self.values[b][field] <= 0.;
+                let inside = |i: usize| {
+                    if negative {
+                        self.values[i][field] <= 0.
+                    } else {
+                        self.values[i][field] >= 0.
+                    }
+                };
+                let ia = inside(a);
+                let ib = inside(b);
                 if ia {
                     poly.push(a);
                 }
@@ -290,15 +311,43 @@ pub fn generate(
     map: impl Fn(Point) -> Point,
     options: Options,
 ) -> Result<Output, String> {
-    generate_with_map(fields, &map, options)
+    generate_with_map(fields, &map, options, None)
+}
+
+/// Experimental union of intersections on one shared, unmapped background grid.
+/// Each nonzero region mask selects the fields required to be nonpositive.
+/// All fields cut the retained cells in the same order, so overlapping regions
+/// do not duplicate volume or introduce incompatible interface triangulations.
+/// The same sampled-field approximation limits as `generate` apply. Periodic
+/// maps are not supported. Background snapping retains every plane identity.
+pub fn generate_union(
+    fields: &[&dyn ScalarField],
+    regions: &[ConstraintMask],
+    options: Options,
+) -> Result<Output, String> {
+    if !(2..=MAX_CONSTRAINTS).contains(&fields.len()) {
+        return Err("union field count exceeds constrained capacity".into());
+    }
+    let allowed = ConstraintMask::MAX >> (MAX_CONSTRAINTS - fields.len());
+    if regions.is_empty()
+        || regions.len() > 32
+        || regions
+            .iter()
+            .any(|&mask| mask == 0 || mask & !allowed != 0)
+        || options.periodic.iter().any(|&axis| axis)
+    {
+        return Err("union requires 1..32 nonempty field masks and no periodic axes".into());
+    }
+    generate_with_map(fields, &|p| p, options, Some(regions))
 }
 
 fn generate_with_map(
     fields: &[&dyn ScalarField],
     map: &dyn Fn(Point) -> Point,
     options: Options,
+    regions: Option<&[ConstraintMask]>,
 ) -> Result<Output, String> {
-    if !(2..=8).contains(&fields.len())
+    if !(2..=MAX_CONSTRAINTS).contains(&fields.len())
         || (!options.snap.is_finite() || !(0.0..=0.2).contains(&options.snap))
         || options.optimize_passes > 20
         || options.geometry_tolerance != 0.
@@ -306,7 +355,9 @@ fn generate_with_map(
         || !(0.0..=1.).contains(&options.minimum_quality)
         || !matches!(options.region, super::Region::Negative)
     {
-        return Err("intersection requires 2..8 fields, Negative region and snap 0..0.2 and passes 0..20, quality 0..1 and zero tolerance; geometric acceptance is caller-owned".into());
+        return Err(format!(
+            "intersection requires 2..{MAX_CONSTRAINTS} fields, Negative region and snap 0..0.2 and passes 0..20, quality 0..1 and zero tolerance; geometric acceptance is caller-owned"
+        ));
     }
     let [lo, hi] = options.bounds;
     if (0..3).any(|a| {
@@ -398,7 +449,7 @@ fn generate_with_map(
     // Values at an analytically coincident background vertex can straddle zero
     // by roundoff (e.g. a Pythagorean point on a cylinder). Classify them once,
     // using each incident cell's field scale, before sharing any edge cuts.
-    let mut coincident = vec![0_u8; c.values.len()];
+    let mut coincident = vec![ConstraintMask::default(); c.values.len()];
     for t in &background.tets {
         for j in 0..fields.len() {
             let scale = t.iter().map(|&i| c.values[i][j].abs()).fold(0., f64::max);
@@ -442,7 +493,14 @@ fn generate_with_map(
         if !background_det.is_finite() || background_det <= 0. {
             return Err("coordinate map inverted a background tetrahedron".into());
         }
-        if (0..fields.len()).any(|j| t.iter().all(|&i| c.values[i][j] > 0.)) {
+        let outside = |mask: ConstraintMask| {
+            (0..fields.len())
+                .any(|j| mask & (1 << j) != 0 && t.iter().all(|&i| c.values[i][j] > 0.))
+        };
+        if regions.map_or_else(
+            || outside(ConstraintMask::MAX),
+            |groups| groups.iter().all(|&mask| outside(mask)),
+        ) {
             continue;
         }
         let mut faces = vec![
@@ -451,13 +509,46 @@ fn generate_with_map(
             vec![t[0], t[2], t[3]],
             vec![t[1], t[3], t[2]],
         ];
-        for j in 0..fields.len() {
-            faces = c.clip(faces, j)?;
-        }
-        for tet in c.tetrahedralize(&faces)? {
-            tets.push(tet);
-            if tets.len() > options.max_tetrahedra {
-                return Err("intersection tetrahedron budget exhausted".into());
+        let pieces = if let Some(groups) = regions {
+            let mut pieces = vec![(faces, 0)];
+            for j in 0..fields.len() {
+                let mut next = Vec::new();
+                for (piece, positive) in pieces {
+                    let (mut lo, mut hi) = (f64::INFINITY, f64::NEG_INFINITY);
+                    for &v in piece.iter().flatten() {
+                        lo = lo.min(c.values[v][j]);
+                        hi = hi.max(c.values[v][j]);
+                    }
+                    if hi <= 0. {
+                        next.push((piece, positive));
+                    } else if lo >= 0. {
+                        let positive = positive | (1 << j);
+                        if groups.iter().any(|mask| mask & positive == 0) {
+                            next.push((piece, positive));
+                        }
+                    } else {
+                        next.push((c.clip_side(piece.clone(), j, true)?, positive));
+                        let positive = positive | (1 << j);
+                        if groups.iter().any(|mask| mask & positive == 0) {
+                            next.push((c.clip_side(piece, j, false)?, positive));
+                        }
+                    }
+                }
+                pieces = next;
+            }
+            pieces.into_iter().map(|(piece, _)| piece).collect()
+        } else {
+            for j in 0..fields.len() {
+                faces = c.clip(faces, j)?;
+            }
+            vec![faces]
+        };
+        for piece in pieces {
+            for tet in c.tetrahedralize(&piece)? {
+                tets.push(tet);
+                if tets.len() > options.max_tetrahedra {
+                    return Err("intersection tetrahedron budget exhausted".into());
+                }
             }
         }
     }
@@ -495,6 +586,7 @@ fn generate_with_map(
                     snap: 0.,
                     ..options
                 },
+                regions,
             )?;
             result.quality.reverted_snap_vertices = snapped;
             return Ok(result);
@@ -511,6 +603,21 @@ fn generate_with_map(
         constraints,
         quality: QualityDiagnostics::default(),
     };
+    if regions.is_some() {
+        // A union's inactive branch planes may cross its interior or a boundary
+        // patch. Only planes supporting an actual boundary facet constrain
+        // repair; arrangement cuts are not physical curves.
+        let mut physical = vec![0; output.mesh.points.len()];
+        for face in &output.mesh.surface {
+            let mask = face
+                .iter()
+                .fold(ConstraintMask::MAX, |mask, &v| mask & output.constraints[v]);
+            for &v in face {
+                physical[v] |= mask;
+            }
+        }
+        output.constraints = physical;
+    }
     output.quality.initial_minimum_quality = 1.;
     for t in &output.mesh.tets {
         let q = quality(t.map(|i| output.mesh.points[i])).powf(1.5);
@@ -528,7 +635,7 @@ fn generate_with_map(
                 ..options
             },
         )?;
-        let moved = repair::smooth(&mut output, &options, fields, &map)?;
+        let moved = repair::smooth(&mut output, &options, fields, &map, regions)?;
         let flipped = repair::flip(&mut output)?;
         output.quality.collapsed_vertices += collapsed;
         output.quality.accepted_vertex_moves += moved;
