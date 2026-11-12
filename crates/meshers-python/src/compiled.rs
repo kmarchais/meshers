@@ -355,9 +355,10 @@ fn sdf_intersection_roots(nodes: &[Node], output: usize) -> Option<Vec<usize>> {
                 if affine.len() != 1 || !unit(&affine[0]) {
                     return false;
                 }
-                if forms.iter().any(|p| {
-                    (0..3).map(|a| p[a] * affine[0][a]).sum::<f64>().abs() > 1e-12
-                }) {
+                if forms
+                    .iter()
+                    .any(|p| (0..3).map(|a| p[a] * affine[0][a]).sum::<f64>().abs() > 1e-12)
+                {
                     return false;
                 }
                 forms.push(affine[0]);
