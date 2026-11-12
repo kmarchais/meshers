@@ -95,6 +95,7 @@ pub(crate) fn optimize_for(
     if passes == 0 {
         return Ok(());
     }
+    geometry.check()?;
     let mut cpu_profile = crate::profile::Profile::new("optimizer");
     cpu_profile.count("passes", passes);
     cpu_profile.count("threads", threads);

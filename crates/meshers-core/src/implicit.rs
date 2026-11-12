@@ -1322,6 +1322,7 @@ fn build<F: ScalarField>(g: &Context<F>) -> Result<Output, String> {
         } else {
             clip_lattice(&mut b, g)?
         };
+        g.check()?;
         let bad = nonmanifold_vertices(&candidate.surface, candidate.points.len());
         // A tiny sampled component can disappear entirely if every interior
         // sample snaps onto its wall. Surface manifold tests cannot see an
