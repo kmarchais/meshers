@@ -12,6 +12,17 @@ on:
         required: false
         type: string
 
+      suite:
+        description: PR smoke suite or full release regression suite
+        required: true
+        default: pr
+        type: choice
+        options: [pr, release]
+      history_label:
+        description: Optional immutable history label, for example v0.2.0-rc.1
+        required: false
+        type: string
+
 permissions:
   contents: read
 
@@ -31,13 +42,18 @@ jobs:
         with:
           path: candidate
           persist-credentials: false
-          fetch-depth: 2
+          fetch-depth: 0
       - name: Resolve baseline
         id: baseline
         env:
           REQUESTED: ${{ inputs.baseline }}
           PR_BASE: ${{ github.event.pull_request.base.sha }}
+          SUITE: ${{ inputs.suite || 'pr' }}
         run: |
+          if [ "$SUITE" = release ] && [ -z "$REQUESTED" ]; then
+            echo "Release suite requires an explicit compatible baseline tag or commit."
+            exit 1
+          fi
           baseline="$REQUESTED"
           if [ -z "$baseline" ]; then baseline="$PR_BASE"; fi
           if [ -z "$baseline" ]; then
@@ -61,13 +77,27 @@ jobs:
             uv pip install --python "$source/env" numpy==2.2.6 "$source"/dist/*.whl
           done
       - name: Compare time, memory and mesh quality
+        env:
+          SUITE: ${{ inputs.suite || 'pr' }}
         run: |
           python3 candidate/tools/performance_gate.py \
             --base-python "$GITHUB_WORKSPACE/baseline/env/bin/python" \
             --head-python "$GITHUB_WORKSPACE/candidate/env/bin/python" \
             --base-ref "$(git -C baseline rev-parse HEAD)" \
             --head-ref "$(git -C candidate rev-parse HEAD)" \
-            --output results/performance.json
+            --suite "$SUITE" --output results/performance.json
+      - name: Prepare versioned documentation history
+        if: always() && inputs.history_label != ''
+        env:
+          HISTORY_LABEL: ${{ inputs.history_label }}
+        run: |
+          mkdir -p results/history
+          if [ -d candidate/docs/site/benchmarks ]; then
+            cp -R candidate/docs/site/benchmarks results/history/benchmarks
+          fi
+          cd candidate
+          python3 -m tools.benchmark_history --input ../results/performance.json \
+            --label "$HISTORY_LABEL" --directory ../results/history/benchmarks
       - name: Summarize measurements
         if: always()
         run: |

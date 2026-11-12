@@ -16,6 +16,11 @@ these workflows without requiring a pull request:
 - Installed wheels for Linux x86-64, Windows x86-64, macOS ARM64 and macOS x86-64.
 - An isolated source-distribution build and installation.
 
+Run and archive the full [release benchmark suite](performance.md#release-suite-and-public-history)
+for every release. Keep the candidate and final-tag measurements in the
+[public history](benchmark-history.md). Version 0.1 lacks the adaptive/Tet10
+API, so the first full-suite comparison uses the documented compatible reference.
+
 Inspect the workflow results and artifacts. A configured workflow is not evidence
 that its checks passed. Local Linux wheels may require a newer glibc than the
 portable Linux wheel built by the release workflow.
