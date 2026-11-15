@@ -17,8 +17,12 @@ from .intersection import (
     _affine_planes,
     _periodic_affine,
     _retained_constraints,
+    adapt_intersection,
     generate_intersection,
 )
+
+CLOSED_MAPPED_SEAMS = True
+ADAPTIVE_MAPPED_INTERSECTIONS = True
 
 Field = Callable[
     [npt.NDArray[np.float64], npt.NDArray[np.float64], npt.NDArray[np.float64]],
@@ -454,6 +458,7 @@ __all__ = [
     "Field",
     "Mesh",
     "MeshingError",
+    "adapt_intersection",
     "compile_field",
     "generate",
     "generate_intersection",

@@ -562,7 +562,245 @@ fn orient_candidates(mut candidates: Vec<Tet>, old: &[Tet], points: &[Point]) ->
         .then_some(candidates)
 }
 
-pub(super) fn flip(output: &mut Output) -> Result<usize, String> {
+// Enumerate only the small (degree <= 7) edge rings, as in adaptive edge removal.
+fn ring_candidates(a: usize, b: usize, old: &[Tet]) -> Vec<Vec<Tet>> {
+    let mut link = BTreeMap::<usize, Vec<usize>>::new();
+    for t in old {
+        let rest: Vec<_> = t.iter().copied().filter(|&v| v != a && v != b).collect();
+        if rest.len() != 2 {
+            return Vec::new();
+        }
+        link.entry(rest[0]).or_default().push(rest[1]);
+        link.entry(rest[1]).or_default().push(rest[0]);
+    }
+    if link.len() != old.len() || link.values().any(|v| v.len() != 2) {
+        return Vec::new();
+    }
+    let mut ring = vec![*link.keys().next().unwrap()];
+    while ring.len() < link.len() {
+        let next = link[ring.last().unwrap()]
+            .iter()
+            .filter(|v| !ring.contains(v))
+            .min();
+        let Some(&next) = next else {
+            return Vec::new();
+        };
+        ring.push(next);
+    }
+    if !link[ring.last().unwrap()].contains(&ring[0]) {
+        return Vec::new();
+    }
+    fn triangles(r: &[usize]) -> Vec<Vec<[usize; 3]>> {
+        if r.len() < 3 {
+            return vec![Vec::new()];
+        }
+        let mut out = Vec::new();
+        for k in 1..r.len() - 1 {
+            for left in triangles(&r[..=k]) {
+                for right in triangles(&r[k..]) {
+                    let mut t = vec![[r[0], r[k], r[r.len() - 1]]];
+                    t.extend_from_slice(&left);
+                    t.extend_from_slice(&right);
+                    out.push(t);
+                }
+            }
+        }
+        out
+    }
+    triangles(&ring)
+        .into_iter()
+        .map(|triangles| {
+            triangles
+                .into_iter()
+                .flat_map(|[u, v, w]| [[u, v, w, a], [u, v, w, b]])
+                .collect()
+        })
+        .collect()
+}
+
+#[derive(Clone)]
+struct BoundaryPlan {
+    faces: [[usize; 3]; 2],
+    ids: [usize; 2],
+    old: [Tet; 2],
+    new: [Tet; 2],
+    diagonal: [usize; 2],
+    label: StratumMask,
+}
+fn flip_boundary(output: &mut Output, o: &Options) -> Result<usize, String> {
+    let masks: Vec<_> = output
+        .constraints
+        .iter()
+        .zip(&output.parameters)
+        .map(|(&m, &p)| StratumMask::from(m) | cap(p, o))
+        .collect();
+    let mesh = &mut output.mesh;
+    let n = mesh.points.len();
+    let mut incident = vec![Vec::new(); n];
+    for (i, t) in mesh.tets.iter().enumerate() {
+        for &v in t {
+            incident[v].push(i);
+        }
+    }
+    let mut edges = BTreeMap::<[usize; 2], Vec<([usize; 3], usize)>>::new();
+    for &f in &mesh.surface {
+        let Some(&i) = incident[f[0]]
+            .iter()
+            .find(|&&i| f.iter().all(|v| mesh.tets[i].contains(v)))
+        else {
+            return Err("boundary face has no owner".into());
+        };
+        for [a, b] in [[f[0], f[1]], [f[0], f[2]], [f[1], f[2]]] {
+            edges.entry([a.min(b), a.max(b)]).or_default().push((f, i));
+        }
+    }
+    let normface = |mut f: [usize; 3]| {
+        f.sort_unstable();
+        f
+    };
+    let mut plans = BTreeMap::new();
+    for ([a, b], adjacent) in edges {
+        if adjacent.len() != 2 || (masks[a] & masks[b]).count_ones() != 1 {
+            continue;
+        }
+        let [(f, i), (g, j)] = [adjacent[0], adjacent[1]];
+        if i == j {
+            continue;
+        }
+        let old = [mesh.tets[i], mesh.tets[j]];
+        let oldmin = old.iter().map(|&t| q(&mesh.points, t)).fold(1., f64::min);
+        let bit = (masks[a] & masks[b]).trailing_zeros() as usize;
+        let periodic = bit >= MAX_CONSTRAINTS && o.periodic[(bit - MAX_CONSTRAINTS) / 2];
+        if oldmin >= 0.1 || periodic {
+            continue;
+        }
+        let star: BTreeSet<_> = incident[a]
+            .iter()
+            .copied()
+            .filter(|&k| mesh.tets[k].contains(&b))
+            .collect();
+        if star != BTreeSet::from([i, j]) {
+            continue;
+        }
+        let c = *f.iter().find(|&&v| v != a && v != b).unwrap();
+        let d = *g.iter().find(|&&v| v != a && v != b).unwrap();
+        let label = masks[a] & masks[b] & masks[c] & masks[d];
+        if label.count_ones() != 1 || (masks[c] & masks[d]).count_ones() != 1 {
+            continue;
+        }
+        if incident[c].iter().any(|&k| mesh.tets[k].contains(&d)) {
+            continue;
+        }
+        let v = *old[0].iter().find(|v| !f.contains(v)).unwrap();
+        if !old[1].contains(&v) || g.contains(&v) {
+            continue;
+        }
+        let mut new = [[v, c, d, a], [v, c, d, b]];
+        let det = new.map(|t| determinant(t.map(|v| mesh.points[v])));
+        if det[0] * det[1] >= 0. || det.iter().any(|x| !x.is_finite()) {
+            continue;
+        }
+        for (t, det) in new.iter_mut().zip(det) {
+            if det < 0. {
+                t.swap(0, 1);
+            }
+        }
+        plans.insert(
+            [a, b],
+            BoundaryPlan {
+                faces: [f, g],
+                ids: [i, j],
+                old,
+                new,
+                diagonal: [c, d],
+                label,
+            },
+        );
+    }
+    let mut expected: BTreeSet<_> = mesh.surface.iter().copied().map(normface).collect();
+    let mut used = BTreeSet::new();
+    let mut accepted = 0;
+    for plan in plans.values() {
+        let bit = plan.label.trailing_zeros() as usize;
+        let periodic = bit >= MAX_CONSTRAINTS && o.periodic[(bit - MAX_CONSTRAINTS) / 2];
+        if periodic {
+            continue;
+        }
+        let selected = vec![plan];
+        let ids: BTreeSet<_> = selected.iter().flat_map(|p| p.ids).collect();
+        if ids.len() != 2 * selected.len() || ids.iter().any(|i| used.contains(i)) {
+            continue;
+        }
+        if selected.iter().any(|plan| {
+            let [c, d] = plan.diagonal;
+            incident[c].iter().any(|&k| mesh.tets[k].contains(&d))
+        }) {
+            continue;
+        }
+        let oldmin = selected
+            .iter()
+            .flat_map(|p| p.old)
+            .map(|t| q(&mesh.points, t))
+            .fold(1., f64::min);
+        let minimum = selected
+            .iter()
+            .flat_map(|p| p.new)
+            .map(|t| q(&mesh.points, t))
+            .fold(1., f64::min);
+        let oldbad = selected
+            .iter()
+            .flat_map(|p| p.old)
+            .filter(|&t| q(&mesh.points, t) < 0.1)
+            .count();
+        let newbad = selected
+            .iter()
+            .flat_map(|p| p.new)
+            .filter(|&t| q(&mesh.points, t) < 0.1)
+            .count();
+        if oldmin >= 0.1 || minimum <= oldmin + 1e-10 || newbad > oldbad {
+            continue;
+        }
+        for plan in selected {
+            for (&k, t) in plan.ids.iter().zip(plan.new) {
+                mesh.tets[k] = t;
+                for v in t {
+                    incident[v].push(k);
+                    incident[v].sort_unstable();
+                    incident[v].dedup();
+                }
+            }
+            for f in plan.faces {
+                expected.remove(&normface(f));
+            }
+            let [c, d] = plan.diagonal;
+            let edge = plan.faces[0]
+                .iter()
+                .copied()
+                .filter(|v| plan.faces[1].contains(v))
+                .collect::<Vec<_>>();
+            expected.insert(normface([edge[0], c, d]));
+            expected.insert(normface([edge[1], c, d]));
+            used.extend(plan.ids);
+            accepted += 1;
+        }
+    }
+    let surface = crate::boundary(&mesh.tets)?;
+    if surface
+        .iter()
+        .copied()
+        .map(normface)
+        .collect::<BTreeSet<_>>()
+        != expected
+        || !super::super::nonmanifold_vertices(&surface, n).is_empty()
+    {
+        return Err("boundary reconnection changed cavity interfaces or manifold".into());
+    }
+    mesh.surface = surface;
+    Ok(accepted)
+}
+
+pub(super) fn flip(output: &mut Output, o: &Options) -> Result<usize, String> {
+    let boundary = flip_boundary(output, o)?;
     let mesh = &mut output.mesh;
     let mut incident = vec![Vec::new(); mesh.points.len()];
     let faces = |t: Tet| -> [[usize; 3]; 4] {
@@ -603,6 +841,7 @@ pub(super) fn flip(output: &mut Output) -> Result<usize, String> {
     }
     let mut alive = vec![true; mesh.tets.len()];
     let mut accepted = 0;
+    let mut live_count = mesh.tets.len();
     for (f, ids) in face_ids {
         if ids.len() != 2 || ids.iter().any(|&i| !alive[i]) {
             continue;
@@ -624,6 +863,14 @@ pub(super) fn flip(output: &mut Output) -> Result<usize, String> {
         ) else {
             continue;
         };
+        if live_count
+            .saturating_add(new.len())
+            .saturating_sub(ids.len())
+            > o.max_tetrahedra
+        {
+            continue;
+        }
+        live_count = live_count + new.len() - ids.len();
         for i in ids {
             alive[i] = false;
         }
@@ -643,30 +890,72 @@ pub(super) fn flip(output: &mut Output) -> Result<usize, String> {
             .copied()
             .filter(|&i| alive[i] && mesh.tets[i].contains(&b))
             .collect();
-        if ids.len() != 3 {
-            continue;
-        }
-        let vertices: BTreeSet<_> = ids
-            .iter()
-            .flat_map(|&i| mesh.tets[i])
-            .filter(|&v| v != a && v != b)
-            .collect();
-        if vertices.len() != 3 {
-            continue;
-        }
-        let f: Vec<_> = vertices.into_iter().collect();
-        let (u, v, w) = (f[0], f[1], f[2]);
-        if incident[u]
-            .iter()
-            .any(|&i| alive[i] && mesh.tets[i].contains(&v) && mesh.tets[i].contains(&w))
-        {
+        if !(3..=7).contains(&ids.len()) {
             continue;
         }
         let old: Vec<_> = ids.iter().map(|&i| mesh.tets[i]).collect();
-        let Some(new) = orient_candidates(vec![[u, v, w, a], [u, v, w, b]], &old, &mesh.points)
-        else {
+        let boundary = |ts: &[Tet]| {
+            let mut counts = BTreeMap::<[usize; 3], usize>::new();
+            for &t in ts {
+                for f in faces(t) {
+                    *counts.entry(f).or_default() += 1;
+                }
+            }
+            counts
+                .into_iter()
+                .filter_map(|(f, n)| (n == 1).then_some(f))
+                .collect::<BTreeSet<_>>()
+        };
+        let old_boundary = boundary(&old);
+        let mut best = None;
+        let mut best_min = old.iter().map(|&t| q(&mesh.points, t)).fold(1., f64::min);
+        for candidate in ring_candidates(a, b, &old) {
+            let conflict = candidate.iter().any(|t| {
+                (0..4).any(|j| {
+                    (j + 1..4).any(|k| {
+                        let (u, v) = (t[j], t[k]);
+                        !old.iter().any(|t| t.contains(&u) && t.contains(&v))
+                            && incident[u]
+                                .iter()
+                                .any(|&i| alive[i] && mesh.tets[i].contains(&v))
+                    })
+                })
+            });
+            if conflict {
+                continue;
+            }
+            let Some(new) = orient_candidates(candidate, &old, &mesh.points) else {
+                continue;
+            };
+            let minimum = new.iter().map(|&t| q(&mesh.points, t)).fold(1., f64::min);
+            if minimum <= best_min || boundary(&new) != old_boundary {
+                continue;
+            }
+            let conflict = new.iter().flat_map(|&t| faces(t)).any(|face| {
+                !old_boundary.contains(&face)
+                    && incident[face[0]].iter().any(|&i| {
+                        alive[i]
+                            && !ids.contains(&i)
+                            && face.iter().all(|v| mesh.tets[i].contains(v))
+                    })
+            });
+            if conflict || crate::boundary(&new).is_err() {
+                continue;
+            }
+            best_min = minimum;
+            best = Some(new);
+        }
+        let Some(new) = best else {
             continue;
         };
+        if live_count
+            .saturating_add(new.len())
+            .saturating_sub(old.len())
+            > o.max_tetrahedra
+        {
+            continue;
+        }
+        live_count = live_count + new.len() - old.len();
         for i in ids {
             alive[i] = false;
         }
@@ -698,7 +987,7 @@ pub(super) fn flip(output: &mut Output) -> Result<usize, String> {
         return Err("local reconnection changed boundary triangulation".into());
     }
     mesh.surface = surface;
-    Ok(accepted)
+    Ok(accepted + boundary)
 }
 
 #[cfg(test)]

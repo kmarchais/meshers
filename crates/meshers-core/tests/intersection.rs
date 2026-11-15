@@ -441,3 +441,93 @@ fn rescaled_constraints_preserve_snapped_planes_and_volume() {
         }
     }
 }
+
+#[test]
+fn closed_annular_caps_become_an_interior_interface() {
+    let negative = |_: Point| -1.;
+    let map = |p: Point| {
+        let theta = std::f64::consts::TAU * p[2];
+        [(1. + p[1]) * theta.cos(), (1. + p[1]) * theta.sin(), p[0]]
+    };
+    let o = implicit::Options {
+        cells: [4, 4, 16],
+        ..options()
+    };
+    let open = intersection::generate(&[&negative, &negative], map, o).unwrap();
+    let closed =
+        intersection::generate_closed(&[&negative, &negative], map, o, [false, false, true])
+            .unwrap();
+    assert_eq!(open.mesh.tets.len(), closed.mesh.tets.len());
+    assert!(closed.mesh.points.len() < open.mesh.points.len());
+    let volume = |out: &intersection::Output| {
+        out.mesh
+            .tets
+            .iter()
+            .map(|t| meshers_core::determinant(t.map(|v| out.mesh.points[v])))
+            .sum::<f64>()
+    };
+    assert!((volume(&open) - volume(&closed)).abs() < 1e-10);
+    assert!(
+        !closed
+            .mesh
+            .surface
+            .iter()
+            .any(|face| face.iter().all(|&v| closed.parameters[v][2] == 0.))
+    );
+    assert!(closed.quality.elements_below_01 <= closed.mesh.tets.len());
+}
+
+#[test]
+fn translated_periodic_caps_cannot_be_welded() {
+    let negative = |_: Point| -1.;
+    let result = intersection::generate_closed(
+        &[&negative, &negative],
+        |p| p,
+        options(),
+        [false, false, true],
+    );
+    assert!(result.err().unwrap().contains("do not coincide"));
+}
+
+#[test]
+fn closed_seam_coincidence_uses_physical_extent_at_every_scale() {
+    let negative = |_: Point| -1.;
+    for scale in [1e-12, 1., 1e12] {
+        let map = |p: Point| {
+            let angle = std::f64::consts::TAU * p[2];
+            let radius = 1. + p[1];
+            [
+                scale * radius * angle.cos(),
+                scale * radius * angle.sin(),
+                scale * (p[0] + 0.01 * p[2]),
+            ]
+        };
+        let error = intersection::generate_closed(
+            &[&negative, &negative],
+            map,
+            implicit::Options {
+                cells: [4, 4, 16],
+                ..options()
+            },
+            [false, false, true],
+        )
+        .err()
+        .unwrap();
+        assert!(error.contains("do not coincide"), "{scale}: {error}");
+        let closed = intersection::generate_closed(
+            &[&negative, &negative],
+            |p| {
+                let mut q = map(p);
+                q[2] -= scale * 0.01 * p[2];
+                q
+            },
+            implicit::Options {
+                cells: [4, 4, 16],
+                ..options()
+            },
+            [false, false, true],
+        )
+        .unwrap();
+        assert!(!closed.mesh.tets.is_empty());
+    }
+}

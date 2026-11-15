@@ -74,6 +74,33 @@ block; coordinate shifts alone do not express rotational periodicity.
 A complete cylinder/60-degree torus TPMS example is in
 [`curved_tpms.py`](https://github.com/kmarchais/meshers/blob/main/crates/meshers-python/examples/curved_tpms.py).
 
+For coincident full-turn ends, set `closed_axes` on the corresponding periodic
+axis and supply its identity transform. Meshers verifies matching end nodes and
+triangles, welds the seam, then repairs the resulting interior mesh. The welded
+axis has no external periodic pairs. Other periodic cap triangulations remain
+unchanged.
+
+## Physical adaptation of mapped meshes
+
+For a nonperiodic physical solid, `generate_intersection(..., adapt=True)` accepts
+an `inverse_map`, `physical_bounds` and the usual physical adaptation controls.
+The original named fields define the geometry throughout. The mapped starting
+mesh must be positive and pass `seed_tolerance`, which defaults to 0.01.
+Its initial quality may be below the requested final quality. An inverted mapped
+background receives one bounded refinement of closed parameter axes, with the
+requested and resolved seed grids recorded in diagnostics. The final mesh must pass
+`geometry_tolerance` and `minimum_quality`. These are separate gates.
+The parameter grid still needs to resolve every component and narrow feature.
+
+To adapt an existing conforming Tet4 mesh, use `adapt_intersection(seed,
+constraints, bounds=physical_bounds)`. Supply fields in physical coordinates
+and matching per-vertex `constraint_masks` when the field names differ from
+the seed. Meshers validates the seed without modifying it, retains surface
+identities through adaptation, and rejects outputs that miss the final gates.
+This path supports one worker and requires nonperiodic physical geometry.
+Closed parameter seams can be welded before physical adaptation. Returned
+`parameters` then contain physical coordinates rather than the seed chart.
+
 ## Inspection and export
 
 - `constraint_names`: names in insertion order.
@@ -100,7 +127,8 @@ value samples facet vertices, edge midpoints and centroids against the assigned
 analytic constraints. Mapped checks invert the coordinate map locally and
 transform gradients to physical coordinates. Singular/inconsistent inversion
 is rejected. This is a first-order distance estimate and an acceptance gate,
-not adaptive refinement or a Hausdorff bound.
+not a Hausdorff bound. Physical adaptation checks joint projection onto assigned
+surfaces and positive clipping violations, with a separate sampled sizing tolerance.
 
 The constrained path supports 2–8 fields, 4–128 intervals per axis, 0–20 quality
 passes and one native worker. Straight-sided elements approximate curved walls;

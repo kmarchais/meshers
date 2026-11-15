@@ -4,6 +4,115 @@ use meshers_core::implicit::intersection;
 
 #[allow(clippy::too_many_arguments)]
 #[pyfunction]
+pub(super) fn adapt_intersection<'py>(
+    py: Python<'py>,
+    fields: Vec<Py<PyAny>>,
+    points: PyReadonlyArray2<'py, f64>,
+    tetrahedra: PyReadonlyArray2<'py, i64>,
+    masks: PyReadonlyArray1<'py, u32>,
+    bounds: [Point; 2],
+    tolerance: f64,
+    minimum_quality: f64,
+    budget: usize,
+    passes: usize,
+    adapt: (f64, f64, f64, f64, usize, f64, f64),
+    seed_tolerance: f64,
+    batch_size: usize,
+    cancel: Option<PyRef<'py, CancellationToken>>,
+) -> PyResult<Bound<'py, PyDict>> {
+    let points = points.as_array();
+    let tetrahedra = tetrahedra.as_array();
+    let masks = masks.as_array();
+    if points.ncols() != 3
+        || tetrahedra.ncols() != 4
+        || masks.len() != points.nrows()
+        || points.nrows() > budget
+        || tetrahedra.nrows() > budget
+        || !(1..=65536).contains(&batch_size)
+        || masks
+            .iter()
+            .any(|&m| u64::from(m) > intersection::ConstraintMask::MAX as u64)
+    {
+        return Err(PyValueError::new_err(
+            "invalid bounded Tet4 seed arrays, masks or batch size",
+        ));
+    }
+    let tets = tetrahedra
+        .rows()
+        .into_iter()
+        .map(|row| {
+            let mut tet = [0; 4];
+            for (k, &v) in row.iter().enumerate() {
+                tet[k] = usize::try_from(v)
+                    .ok()
+                    .filter(|&v| v < points.nrows())
+                    .ok_or_else(|| PyValueError::new_err("seed connectivity is out of bounds"))?;
+            }
+            Ok(tet)
+        })
+        .collect::<PyResult<Vec<_>>>()?;
+    let seed = meshers_core::Mesh {
+        points: points
+            .rows()
+            .into_iter()
+            .map(|p| [p[0], p[1], p[2]])
+            .collect(),
+        tets,
+        surface: Vec::new(),
+    };
+    let masks: Vec<_> = masks
+        .iter()
+        .map(|&m| m as intersection::ConstraintMask)
+        .collect();
+    let flag = cancel.as_ref().map(|v| v.flag.clone()).unwrap_or_default();
+    let fields = fields
+        .into_iter()
+        .map(|f| make_field(py, f, None, bounds, flag.clone(), batch_size))
+        .collect::<PyResult<Vec<_>>>()?;
+    let refs: Vec<&dyn ScalarField> = fields.iter().map(|f| f as &dyn ScalarField).collect();
+    let (min_length, max_length, gradation, layers, iterations, quality_guard, target) = adapt;
+    let options = implicit::Options {
+        bounds,
+        geometry_tolerance: tolerance,
+        minimum_quality,
+        max_tetrahedra: budget,
+        optimize_passes: passes,
+        adapt: Some(meshers_core::tet_adapt::Options {
+            tolerance: target,
+            min_length,
+            max_length,
+            gradation,
+            layers,
+            iterations,
+            quality_guard,
+        }),
+        ..Default::default()
+    };
+    let start = std::time::Instant::now();
+    let result =
+        py.detach(|| implicit::adapt_intersection(&refs, &seed, &masks, options, seed_tolerance));
+    for field in &fields {
+        if let Some(error) = field.error.lock().unwrap().take() {
+            return Err(error);
+        }
+    }
+    py.check_signals()?;
+    let (result, masks) = result.map_err(|e| match e {
+        MeshingError::InvalidOptions(s) => PyValueError::new_err(s),
+        MeshingError::GenerationFailed(s) => MeshingFailure::new_err(s),
+    })?;
+    let output = super::mesh_dict(
+        py,
+        result,
+        start.elapsed().as_secs_f64(),
+        fields.iter().map(|f| f.calls.load(Ordering::Relaxed)).sum(),
+    )?;
+    output.set_item("constraint_masks", masks.into_pyarray(py))?;
+    Ok(output)
+}
+
+#[allow(clippy::too_many_arguments)]
+#[pyfunction]
 pub(super) fn generate_intersection<'py>(
     py: Python<'py>,
     fields: Vec<Py<PyAny>>,
@@ -11,6 +120,7 @@ pub(super) fn generate_intersection<'py>(
     bounds: [Point; 2],
     cells: [usize; 3],
     periodic: [bool; 3],
+    closed: [bool; 3],
     minimum_quality: f64,
     budget: usize,
     passes: usize,
@@ -43,7 +153,7 @@ pub(super) fn generate_intersection<'py>(
     };
     let start = std::time::Instant::now();
     let result = py.detach(|| {
-        intersection::generate(
+        intersection::generate_closed(
             &refs,
             map,
             implicit::Options {
@@ -57,6 +167,7 @@ pub(super) fn generate_intersection<'py>(
                 geometry_tolerance: 0.,
                 ..Default::default()
             },
+            closed,
         )
     });
     for f in fields.iter().chain(mapping.iter().flatten()) {

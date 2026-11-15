@@ -334,6 +334,28 @@ impl<'g, G: Geometry> Tets<'g, G> {
         {
             let locked = std::array::from_fn(|a| (mask >> (2 + 2 * a)) & 3 != 0);
             crate::polyhedral::constraint_rank(planes, self.feature_mask(v), locked) == 3
+        } else if let Some(fields) = self.g.constraints() {
+            let features = self.feature_mask(v);
+            let locked = std::array::from_fn(|a| (mask >> (2 + 2 * a)) & 3 != 0);
+            if features.count_ones() >= 3 {
+                // Keep nonlinear corners fixed, including singular junctions.
+                true
+            } else if features.count_ones() as usize + locked.iter().filter(|&&x| x).count() < 3 {
+                false
+            } else {
+                let planes: Vec<[f64; 4]> = fields
+                    .iter()
+                    .enumerate()
+                    .map(|(j, field)| {
+                        if features & (1u64 << j) == 0 {
+                            return [0.; 4];
+                        }
+                        let n = unit(self.constraint_gradient(*field, self.points[v]));
+                        [n[0], n[1], n[2], 0.]
+                    })
+                    .collect();
+                crate::polyhedral::constraint_rank(&planes, features, locked) == 3
+            }
         } else {
             mask.count_ones() >= 3 || self.feature_mask(v).count_ones() >= 2
         };
@@ -737,6 +759,148 @@ impl<'g, G: Geometry> Tets<'g, G> {
         Some(m)
     }
 
+    /// Plan a projected edge insertion and repair its entire incident cavity
+    /// before changing the live mesh. Solver failure leaves the mesh untouched.
+    fn split_coupled(
+        &mut self,
+        u: usize,
+        v: usize,
+        o: &Options,
+        maximum: usize,
+        stats: &mut Stats,
+    ) -> Result<bool, String> {
+        let Some(fields) = self.g.constraints() else {
+            return Ok(false);
+        };
+        let features = self.feature_mask(u) & self.feature_mask(v);
+        let shell = self.shell(u, v);
+        if features == 0
+            || shell.is_empty()
+            || self.period.iter().any(Option::is_some)
+            || self.live_tetrahedra + shell.len() > maximum
+            || self.points.len() >= maximum
+        {
+            return Ok(false);
+        }
+        let bounds = self.g.bounds();
+        let midpoint = std::array::from_fn(|a| (self.points[u][a] + self.points[v][a]) / 2.);
+        let Some(target) = crate::projection::onto_constraints(
+            fields,
+            features,
+            midpoint,
+            self.locked(u, v),
+            bounds,
+        ) else {
+            return Ok(false);
+        };
+        let m = self.points.len();
+        let mut points = self.points.clone();
+        points.push(target);
+        let mut masks: Vec<_> = self
+            .features
+            .iter()
+            .map(|&m| m as crate::implicit::intersection::ConstraintMask)
+            .collect();
+        masks.push(features as crate::implicit::intersection::ConstraintMask);
+        let mut planned = Vec::new();
+        let mut tets = Vec::new();
+        for (i, &tet) in self.tets.iter().enumerate().filter(|(i, _)| self.alive[*i]) {
+            if shell.contains(&i) {
+                let a = tet.map(|n| if n == u { m } else { n });
+                let b = tet.map(|n| if n == v { m } else { n });
+                planned.push((i, a, b));
+                tets.extend([a, b]);
+            } else {
+                tets.push(tet);
+            }
+        }
+        let mut output = crate::implicit::intersection::Output {
+            mesh: Mesh {
+                points: points.clone(),
+                tets,
+                surface: Vec::new(),
+            },
+            parameters: points,
+            constraints: masks,
+            quality: Default::default(),
+        };
+        let cell = 0.25 * o.max_length;
+        let options = crate::implicit::Options {
+            bounds,
+            cells: std::array::from_fn(|a| {
+                ((bounds[1][a] - bounds[0][a]) / cell).round().max(1.) as usize
+            }),
+            minimum_quality: (0.5 * self.worst(&shell).min(o.quality_guard))
+                .max(self.g.minimum_quality())
+                .max(1e-9),
+            max_tetrahedra: maximum,
+            ..Default::default()
+        };
+        let mut moved = crate::implicit::intersection::project_neighborhoods(
+            &mut output,
+            &options,
+            fields,
+            &|p| p,
+            &[vec![m]],
+            None,
+        )?;
+        if moved == 0 {
+            let seeds: Vec<_> = output
+                .mesh
+                .tets
+                .iter()
+                .filter(|t| t.contains(&m))
+                .flat_map(|t| t.iter().copied())
+                .collect();
+            moved = crate::implicit::intersection::project_neighborhoods(
+                &mut output,
+                &options,
+                fields,
+                &|p| p,
+                &[seeds],
+                None,
+            )?;
+        }
+        if moved == 0
+            || planned.iter().flat_map(|(_, a, b)| [a, b]).any(|t| {
+                let q = mmg(t.map(|n| output.mesh.points[n]));
+                !q.is_finite() || q < options.minimum_quality
+            })
+        {
+            return Ok(false);
+        }
+        let affected: Vec<_> = self
+            .points
+            .iter()
+            .zip(&output.mesh.points)
+            .enumerate()
+            .filter_map(|(i, (a, b))| (a != b).then_some(i))
+            .collect();
+        stats.moves += affected.len();
+        let bfaces = self.edge_faces(u, v);
+        let new = self.add_vertex(output.mesh.points[m]);
+        assert_eq!(new, m);
+        self.features[m] = features;
+        self.points = output.mesh.points;
+        for (i, a, b) in planned {
+            self.kill_tet(i);
+            self.add_tet(a);
+            self.add_tet(b);
+        }
+        for f in bfaces {
+            let features = self.constraint_faces.as_ref().map_or(0, |faces| faces[&f]);
+            let label = self.remove_face(f).unwrap();
+            let c = f.into_iter().find(|&w| w != u && w != v).unwrap();
+            self.add_feature_face([u, m, c], label, features);
+            self.add_feature_face([m, v, c], label, features);
+        }
+        for w in affected.into_iter().chain([u, v, m]) {
+            self.refresh(w);
+        }
+        self.check_budget(maximum)?;
+        Ok(true)
+    }
+
     /// Apply the existing guarded short-edge collapses, shortest first.
     fn coarsen(&mut self, edges: &[[usize; 2]], size: &[f64], o: &Options) -> usize {
         let mut count = 0;
@@ -766,6 +930,17 @@ impl<'g, G: Geometry> Tets<'g, G> {
 
     /// Merge `u` into `v`.
     fn collapse(&mut self, u: usize, v: usize, size: &[f64], o: &Options) -> bool {
+        self.collapse_with_tolerance(u, v, size, o, None)
+    }
+
+    fn collapse_with_tolerance(
+        &mut self,
+        u: usize,
+        v: usize,
+        size: &[f64],
+        o: &Options,
+        tolerance: Option<f64>,
+    ) -> bool {
         let (mu, mv) = (self.masks[u], self.masks[v]);
         if self.feature_mask(u) & !self.feature_mask(v) != 0 {
             return false;
@@ -888,6 +1063,18 @@ impl<'g, G: Geometry> Tets<'g, G> {
                     {
                         return false;
                     }
+                }
+            }
+        }
+        if let Some(tolerance) = tolerance {
+            for &f in &self.vb[u] {
+                if f.contains(&v) {
+                    continue;
+                }
+                let features = self.constraint_faces.as_ref().map_or(0, |faces| faces[&f]);
+                let p = f.map(|n| self.points[if n == u { v } else { n }]);
+                if self.facet_error(p, features) > tolerance {
+                    return false;
                 }
             }
         }
@@ -1171,11 +1358,12 @@ impl<'g, G: Geometry> Tets<'g, G> {
     }
 
     fn constraint_distance(&self, p: Point, locked: [bool; 3], features: u64) -> f64 {
-        let distance = self.distance(p, locked);
-        self.g.constraints().map_or(distance, |fields| {
-            crate::projection::onto_constraints(fields, features, p, locked, self.g.bounds())
-                .map_or(f64::INFINITY, |q| distance.max(norm(sub(q, p))))
-        })
+        match self.g.constraints() {
+            Some(fields) if features != 0 => {
+                crate::projection::constraint_distance(fields, features, p, locked, self.g.bounds())
+            }
+            _ => self.distance(p, locked),
+        }
     }
 
     /// First-order wall distance moving only along unlocked axes: a chord in a box
@@ -1317,6 +1505,119 @@ impl<'g, G: Geometry> Tets<'g, G> {
     }
 
     /// Move partially inserted wall vertices onto the surface where now valid.
+    fn recover_pending(
+        &mut self,
+        o: &Options,
+        maximum: usize,
+        stats: &mut Stats,
+    ) -> Result<bool, String> {
+        let geometry = self.g;
+        let Some(fields) = geometry.constraints() else {
+            return Ok(false);
+        };
+        if self.pending.is_empty() || self.period.iter().any(Option::is_some) {
+            return Ok(false);
+        }
+        let mut pending = self.pending.clone();
+        let distance = |v: usize| {
+            self.constraint_distance(
+                self.points[v],
+                std::array::from_fn(|a| (self.masks[v] >> (2 + 2 * a)) & 3 != 0),
+                self.feature_mask(v),
+            )
+        };
+        pending.sort_by(|&a, &b| distance(b).total_cmp(&distance(a)).then(a.cmp(&b)));
+        let mut changed = false;
+        let edges = self.edges();
+        let size = self.sizes(o, &edges)?;
+        for &v in pending.iter().take(32) {
+            if self.vt[v].is_empty() || self.vt[v].len() > 4 {
+                continue;
+            }
+            for w in self.adjacent(v) {
+                if self.collapse(v, w, &size, o) {
+                    stats.collapses += 1;
+                    changed = true;
+                    break;
+                }
+            }
+        }
+        let seeds: Vec<Vec<usize>> = pending
+            .iter()
+            .filter(|&&v| !self.vt[v].is_empty())
+            .take(32)
+            .map(|&v| vec![v])
+            .collect();
+        if !seeds.is_empty() {
+            let mut output = crate::implicit::intersection::Output {
+                mesh: Mesh {
+                    points: self.points.clone(),
+                    tets: self
+                        .tets
+                        .iter()
+                        .enumerate()
+                        .filter_map(|(i, &t)| self.alive[i].then_some(t))
+                        .collect(),
+                    surface: Vec::new(),
+                },
+                parameters: self.points.clone(),
+                constraints: self
+                    .features
+                    .iter()
+                    .map(|&m| m as crate::implicit::intersection::ConstraintMask)
+                    .collect(),
+                quality: Default::default(),
+            };
+            let bounds = self.g.bounds();
+            let cell = 0.25 * o.max_length;
+            let options = crate::implicit::Options {
+                bounds,
+                cells: std::array::from_fn(|a| {
+                    ((bounds[1][a] - bounds[0][a]) / cell).round().max(1.) as usize
+                }),
+                minimum_quality: self.g.minimum_quality().max(1e-6),
+                max_tetrahedra: maximum,
+                ..Default::default()
+            };
+            let moved = crate::implicit::intersection::project_neighborhoods(
+                &mut output,
+                &options,
+                fields,
+                &|p| p,
+                &seeds,
+                None,
+            )?;
+            if moved > 0 {
+                let affected: Vec<_> = self
+                    .points
+                    .iter()
+                    .zip(&output.mesh.points)
+                    .enumerate()
+                    .filter_map(|(v, (old, new))| (old != new).then_some(v))
+                    .collect();
+                self.points = output.mesh.points;
+                for v in affected {
+                    self.refresh(v);
+                }
+                stats.moves += moved;
+                changed = true;
+            }
+        }
+        self.pending = pending
+            .into_iter()
+            .filter(|&v| {
+                !self.vt[v].is_empty()
+                    && self.constraint_distance(
+                        self.points[v],
+                        std::array::from_fn(|a| (self.masks[v] >> (2 + 2 * a)) & 3 != 0),
+                        self.feature_mask(v),
+                    ) > 1e-10
+            })
+            .collect();
+        self.check_budget(maximum)?;
+        Ok(changed)
+    }
+
     fn settle(&mut self, guard: f64, maximum: usize) -> Result<bool, String> {
         let mut changed = false;
         let pending = std::mem::take(&mut self.pending);
@@ -1399,6 +1700,7 @@ impl<'g, G: Geometry> Tets<'g, G> {
     }
 
     fn enforce(&mut self, o: &Options, stats: &mut Stats, maximum: usize) -> Result<(), String> {
+        let mut coupled_attempts = 0;
         for _ in 0..16 {
             self.g.check()?;
             let settled = self.settle(o.quality_guard, maximum)?;
@@ -1466,6 +1768,12 @@ impl<'g, G: Geometry> Tets<'g, G> {
                     self.check_budget(maximum)?;
                     stats.error_splits += 1;
                     progress = true;
+                } else if coupled_attempts < 8 && self.length(a, b) >= o.min_length && {
+                    coupled_attempts += 1;
+                    self.split_coupled(a, b, o, maximum, stats)?
+                } {
+                    stats.error_splits += 1;
+                    progress = true;
                 } else {
                     for t in shell {
                         blocked_vertices.extend(self.tets[t]);
@@ -1491,12 +1799,201 @@ impl<'g, G: Geometry> Tets<'g, G> {
         Ok(())
     }
 
+    fn facet_error(&self, points: [Point; 3], features: u64) -> f64 {
+        self.g.constraints().map_or(f64::INFINITY, |fields| {
+            crate::projection::facet_distance(fields, features, points, self.g.bounds())
+        })
+    }
+
+    fn retained_output(&self) -> crate::implicit::intersection::Output {
+        let mut surface: Vec<_> = self.faces.keys().copied().collect();
+        surface.sort_unstable();
+        crate::implicit::intersection::Output {
+            mesh: Mesh {
+                points: self.points.clone(),
+                tets: self
+                    .tets
+                    .iter()
+                    .enumerate()
+                    .filter_map(|(i, &t)| self.alive[i].then_some(t))
+                    .collect(),
+                surface,
+            },
+            parameters: self.points.clone(),
+            constraints: self
+                .features
+                .iter()
+                .map(|&m| m as crate::implicit::intersection::ConstraintMask)
+                .collect(),
+            quality: Default::default(),
+        }
+    }
+
+    fn fit_geometry(
+        &mut self,
+        o: &Options,
+        maximum: usize,
+        bad: &[(f64, Face)],
+        tolerance: f64,
+        stats: &mut Stats,
+    ) -> Result<bool, String> {
+        let fields = self.g.constraints().expect("retained geometry");
+        let bounds = self.g.bounds();
+        let cell = 0.25 * o.max_length;
+        let options = crate::implicit::Options {
+            bounds,
+            cells: std::array::from_fn(|a| {
+                ((bounds[1][a] - bounds[0][a]) / cell).round().max(1.) as usize
+            }),
+            minimum_quality: self.g.minimum_quality().max(1e-6),
+            max_tetrahedra: maximum,
+            ..Default::default()
+        };
+        let mut seen = std::collections::BTreeSet::new();
+        let mut attempts = 0;
+        for &(_, face) in bad.iter().take(8) {
+            let mut seeds = face;
+            seeds.sort_by_key(|&v| (self.vt[v].len(), v));
+            for seed in seeds {
+                if !seen.insert(seed) {
+                    continue;
+                }
+                if attempts == 8 {
+                    return Ok(false);
+                }
+                attempts += 1;
+                let mut output = self.retained_output();
+                crate::implicit::intersection::project_neighborhoods(
+                    &mut output,
+                    &options,
+                    fields,
+                    &|p| p,
+                    &[vec![seed]],
+                    None,
+                )?;
+                crate::implicit::intersection::project_neighborhoods(
+                    &mut output,
+                    &options,
+                    fields,
+                    &|p| p,
+                    &[vec![seed]],
+                    Some(tolerance),
+                )?;
+                let affected: Vec<_> = self
+                    .points
+                    .iter()
+                    .zip(&output.mesh.points)
+                    .enumerate()
+                    .filter_map(|(v, (old, new))| (old != new).then_some(v))
+                    .collect();
+                if affected.is_empty() {
+                    continue;
+                }
+                let mut changed = vec![false; self.points.len()];
+                for &v in &affected {
+                    changed[v] = true;
+                }
+                let valid = output.mesh.surface.iter().all(|f| {
+                    if *f != face && !f.iter().any(|&v| changed[v]) {
+                        return true;
+                    }
+                    let active = f
+                        .iter()
+                        .fold(u64::MAX, |mask, &v| mask & u64::from(output.constraints[v]));
+                    crate::projection::facet_distance(
+                        fields,
+                        active,
+                        f.map(|v| output.mesh.points[v]),
+                        bounds,
+                    ) <= tolerance
+                });
+                if !valid {
+                    continue;
+                }
+                self.points = output.mesh.points;
+                stats.moves += affected.len();
+                for v in affected {
+                    self.refresh(v);
+                }
+                return Ok(true);
+            }
+        }
+        Ok(false)
+    }
+
+    /// Recover failed surface chords with guarded contraction or coupled motion.
+    /// Every changed boundary facet must pass the strict sampled geometry gate.
+    fn recover_geometry(
+        &mut self,
+        o: &Options,
+        maximum: usize,
+        stats: &mut Stats,
+    ) -> Result<(), String> {
+        let tolerance = self.g.geometry_tolerance().unwrap_or(o.tolerance);
+        if self.g.constraints().is_none()
+            || self.period.iter().any(Option::is_some)
+            || stats.maximum_error <= tolerance
+        {
+            return Ok(());
+        }
+        // Recovery may replace an overrefined local target, while retaining
+        // the user's maximum length and every geometry and quality gate.
+        let sizes = vec![o.max_length; self.points.len()];
+        for _ in 0..8 {
+            self.g.check()?;
+            let mut bad: Vec<_> = self
+                .faces
+                .keys()
+                .filter_map(|&f| {
+                    let mask = self.constraint_faces.as_ref().map_or(0, |faces| faces[&f]);
+                    let error = self.facet_error(f.map(|v| self.points[v]), mask);
+                    (error > tolerance).then_some((error, f))
+                })
+                .collect();
+            bad.sort_by(|a, b| b.0.total_cmp(&a.0).then(a.1.cmp(&b.1)));
+            let mut changed = false;
+            'faces: for &(_, f) in bad.iter().take(8) {
+                for [a, b] in [[f[0], f[1]], [f[0], f[2]], [f[1], f[2]]] {
+                    for (u, v) in [(a, b), (b, a)] {
+                        if self.collapse_with_tolerance(u, v, &sizes, o, Some(o.tolerance)) {
+                            stats.collapses += 1;
+                            changed = true;
+                            break 'faces;
+                        }
+                    }
+                }
+            }
+            if !changed && !self.fit_geometry(o, maximum, &bad, tolerance, stats)? {
+                break;
+            }
+            self.check_budget(maximum)?;
+        }
+        stats.maximum_error = self
+            .faces
+            .keys()
+            .map(|&f| {
+                let mask = self.constraint_faces.as_ref().map_or(0, |faces| faces[&f]);
+                self.facet_error(f.map(|v| self.points[v]), mask)
+            })
+            .fold(0_f64, f64::max);
+        Ok(())
+    }
+
     /// Unfold the torus into the box: each tetrahedron moves to the cell holding its
     /// centroid, and plane vertices get one copy per side they are used on.
-    fn into_mesh(self) -> Result<Mesh, String> {
+    fn into_mesh_with_constraints(
+        self,
+    ) -> Result<
+        (
+            Mesh,
+            Option<Vec<crate::implicit::intersection::ConstraintMask>>,
+        ),
+        String,
+    > {
         let [lo, hi] = self.g.bounds();
         let mut map = HashMap::<(usize, [u8; 3]), usize>::new();
         let mut points = Vec::new();
+        let mut constraints = Vec::new();
         let mut tets = Vec::new();
         for (t, tet) in self.tets.iter().enumerate() {
             if !self.alive[t] {
@@ -1534,17 +2031,23 @@ impl<'g, G: Geometry> Tets<'g, G> {
                 }
                 out[k] = *map.entry((v, image)).or_insert_with(|| {
                     points.push(q);
+                    constraints
+                            .push(self.feature_mask(v)
+                                as crate::implicit::intersection::ConstraintMask);
                     points.len() - 1
                 });
             }
             tets.push(out);
         }
         let surface = crate::boundary(&tets)?;
-        Ok(Mesh {
-            points,
-            tets,
-            surface,
-        })
+        Ok((
+            Mesh {
+                points,
+                tets,
+                surface,
+            },
+            self.g.constraints().is_some().then_some(constraints),
+        ))
     }
 }
 
@@ -1571,6 +2074,36 @@ pub(crate) fn adapt_with_polish(
     polish: usize,
     constraints: Option<&[crate::implicit::intersection::ConstraintMask]>,
 ) -> Result<Stats, String> {
+    adapt_with_constraints(
+        mesh,
+        g,
+        threshold,
+        periodic,
+        o,
+        maximum,
+        polish,
+        constraints,
+    )
+    .map(|(stats, _)| stats)
+}
+
+#[allow(clippy::too_many_arguments)]
+pub(crate) fn adapt_with_constraints(
+    mesh: &mut Mesh,
+    g: &impl Geometry,
+    threshold: f64,
+    periodic: [bool; 3],
+    o: &Options,
+    maximum: usize,
+    polish: usize,
+    constraints: Option<&[crate::implicit::intersection::ConstraintMask]>,
+) -> Result<
+    (
+        Stats,
+        Option<Vec<crate::implicit::intersection::ConstraintMask>>,
+    ),
+    String,
+> {
     if !(o.tolerance > 0. && o.min_length > 0. && o.max_length >= o.min_length)
         || o.gradation.is_nan()
         || o.gradation <= 0.
@@ -1685,6 +2218,10 @@ pub(crate) fn adapt_with_polish(
     }
     s.enforce(o, &mut stats, maximum)?;
     s.settle(o.quality_guard, maximum)?;
+    if s.recover_pending(o, maximum, &mut stats)? {
+        s.enforce(o, &mut stats, maximum)?;
+        s.settle(o.quality_guard, maximum)?;
+    }
     lap(&mut stats, 6);
     for _ in 0..polish {
         g.check()?;
@@ -1695,15 +2232,93 @@ pub(crate) fn adapt_with_polish(
         }
     }
     lap(&mut stats, 5);
-    *mesh = s.into_mesh()?;
+    s.recover_geometry(o, maximum, &mut stats)?;
+    let (result, constraints) = s.into_mesh_with_constraints()?;
+    *mesh = result;
     lap(&mut stats, 6);
-    Ok(stats)
+    Ok((stats, constraints))
 }
 
 #[cfg(test)]
 mod tests {
     use crate::implicit::{Options, Region, generate};
     use crate::{Point, dot};
+
+    #[test]
+    fn retained_distance_uses_assigned_surface_and_rejects_clip_violations() {
+        use crate::geometry::Geometry;
+        use crate::implicit::ScalarField;
+        struct Circle(f64);
+        impl ScalarField for Circle {
+            fn value(&self, p: Point) -> f64 {
+                self.0 * (p[0].hypot(p[1]) - 1.)
+            }
+            fn gradient(&self, p: Point) -> Option<Point> {
+                let r = p[0].hypot(p[1]);
+                Some([self.0 * p[0] / r, self.0 * p[1] / r, 0.])
+            }
+        }
+        struct Cap;
+        impl ScalarField for Cap {
+            fn value(&self, p: Point) -> f64 {
+                -p[2]
+            }
+            fn gradient(&self, _: Point) -> Option<Point> {
+                Some([0., 0., -1.])
+            }
+        }
+        struct Intersection<'a> {
+            fields: [&'a dyn ScalarField; 2],
+        }
+        impl Geometry for Intersection<'_> {
+            fn value(&self, p: Point) -> f64 {
+                self.fields
+                    .iter()
+                    .map(|f| f.value(p))
+                    .fold(f64::NEG_INFINITY, f64::max)
+            }
+            fn gradient(&self, p: Point) -> Point {
+                let f = if self.fields[0].value(p) >= self.fields[1].value(p) {
+                    self.fields[0]
+                } else {
+                    self.fields[1]
+                };
+                f.gradient(p).unwrap()
+            }
+            fn constraints(&self) -> Option<&[&dyn ScalarField]> {
+                Some(&self.fields)
+            }
+            fn bounds(&self) -> [Point; 2] {
+                [[-2., -2., -1.], [2., 2., 1.]]
+            }
+            fn rank(&self, _: Point) -> [i64; 3] {
+                [0; 3]
+            }
+            fn band(&self) -> bool {
+                false
+            }
+        }
+        for scale in [1e-12, 1., 1e12] {
+            let circle = Circle(scale);
+            let cap = Cap;
+            let g = Intersection {
+                fields: [&circle, &cap],
+            };
+            let mesh = crate::Mesh {
+                points: Vec::new(),
+                tets: Vec::new(),
+                surface: Vec::new(),
+            };
+            let state = super::Tets::new(&mesh, &g, 0., [false; 3]);
+            let d = state.constraint_distance([0.999, 0., 0.005], [false; 3], 1);
+            assert!(
+                (d - 0.001).abs() < 1e-11,
+                "assigned circle error {d} at scale {scale}"
+            );
+            assert!(state.constraint_distance([1.003, 0., 0.005], [false; 3], 1) > 0.002);
+            assert!(state.constraint_distance([0.999, 0., -0.004], [false; 3], 1) > 0.002);
+        }
+    }
 
     #[test]
     fn pending_wall_projection_repairs_periodic_cap_star_without_splitting() {
@@ -2078,6 +2693,79 @@ mod tests {
         }
         fn band(&self) -> bool {
             false
+        }
+    }
+
+    #[test]
+    fn nonlinear_curve_mobility_counts_box_constraints() {
+        struct Column<'a> {
+            fields: [&'a dyn crate::implicit::ScalarField; 2],
+        }
+        impl crate::geometry::Geometry for Column<'_> {
+            fn value(&self, p: Point) -> f64 {
+                self.fields[0].value(p).max(self.fields[1].value(p))
+            }
+            fn gradient(&self, p: Point) -> Point {
+                std::array::from_fn(|a| {
+                    let mut lo = p;
+                    let mut hi = p;
+                    lo[a] -= 1e-6;
+                    hi[a] += 1e-6;
+                    (self.value(hi) - self.value(lo)) / 2e-6
+                })
+            }
+            fn bounds(&self) -> [Point; 2] {
+                [[-0.5; 3], [0.5; 3]]
+            }
+            fn rank(&self, _: Point) -> [i64; 3] {
+                [0; 3]
+            }
+            fn band(&self) -> bool {
+                false
+            }
+            fn constraints(&self) -> Option<&[&dyn crate::implicit::ScalarField]> {
+                Some(&self.fields)
+            }
+        }
+        for scale in [1., 1e-12, 1e12] {
+            let cylinder = |p: Point| scale * (p[0] * p[0] + p[1] * p[1] - 0.08);
+            let plane = |p: Point| (p[1] - 0.2) / scale;
+            let column = Column {
+                fields: [&cylinder, &plane],
+            };
+            let mesh = crate::Mesh {
+                points: vec![
+                    [0.2, 0.2, 0.],
+                    [0.2, 0.2, 0.5],
+                    [0.08f64.sqrt(), 0., 0.5],
+                    [0., 0.2, 0.5],
+                ],
+                tets: Vec::new(),
+                surface: vec![[0, 1, 2], [0, 1, 3], [1, 2, 3]],
+            };
+            let state =
+                super::Tets::with_constraints(&mesh, &column, 0., [false; 3], Some(&[3, 3, 1, 2]));
+            assert!(
+                !state.frozen[0],
+                "two nonlinear surfaces leave a movable curve"
+            );
+            assert!(
+                state.frozen[1],
+                "an independent cap fixes the curve endpoint"
+            );
+            assert!(!state.frozen[2] && !state.frozen[3]);
+            let moved = state
+                .project([0.21, 0.21, 0.1], state.masks[0], 0., state.features[0])
+                .unwrap();
+            for (a, b) in moved.into_iter().zip([0.2, 0.2, 0.1]) {
+                assert!((a - b).abs() < 1e-10);
+            }
+            let held = state
+                .project([0.21, 0.21, 0.1], state.masks[1], 0., state.features[1])
+                .unwrap();
+            for (a, b) in held.into_iter().zip([0.2, 0.2, 0.5]) {
+                assert!((a - b).abs() < 1e-10);
+            }
         }
     }
 

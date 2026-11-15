@@ -86,6 +86,7 @@ def generate_intersection(
     bounds: Any,
     cells: Any,
     periodic: Any,
+    closed: Any,
     minimum_quality: float,
     budget: int,
     passes: int,
@@ -99,3 +100,18 @@ def _periodic_affine_traces(
     periodic: Sequence[bool],
     regions: Sequence[int] | None = None,
 ) -> bool: ...
+def adapt_intersection(
+    fields: Any,
+    points: Any,
+    tetrahedra: Any,
+    masks: Any,
+    bounds: Any,
+    tolerance: float,
+    minimum_quality: float,
+    budget: int,
+    passes: int,
+    adapt: tuple[float, float, float, float, int, float, float],
+    seed_tolerance: float,
+    batch_size: int,
+    cancel: CancellationToken | None,
+) -> dict[str, Any]: ...

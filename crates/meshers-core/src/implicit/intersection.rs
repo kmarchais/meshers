@@ -6,9 +6,13 @@
 //! A supplied coordinate map is applied to the background before cutting, not
 //! to the final thin elements. Optional joint background snapping enforces all
 //! nearby constraints together; it is not a guarantee of element quality.
+mod closed;
+mod coupled;
+pub(crate) use coupled::project_neighborhoods;
 mod repair;
 use super::{Options, ScalarField};
 use crate::{Mesh, Point, Tet, determinant, dot, norm, quality, sub};
+pub use closed::generate_closed;
 use std::collections::{HashMap, HashSet};
 
 #[cfg(feature = "wide-constraints")]
@@ -618,7 +622,19 @@ fn generate_with_map(
         }
         output.constraints = physical;
     }
+    polish_output(output, fields, map, options, regions)
+}
+
+fn polish_output(
+    mut output: Output,
+    fields: &[&dyn ScalarField],
+    map: &dyn Fn(Point) -> Point,
+    options: Options,
+    regions: Option<&[ConstraintMask]>,
+) -> Result<Output, String> {
     output.quality.initial_minimum_quality = 1.;
+    output.quality.initial_elements_below_01 = 0;
+    output.quality.elements_below_01 = 0;
     for t in &output.mesh.tets {
         let q = quality(t.map(|i| output.mesh.points[i])).powf(1.5);
         output.quality.initial_minimum_quality = output.quality.initial_minimum_quality.min(q);
@@ -636,7 +652,7 @@ fn generate_with_map(
             },
         )?;
         let moved = repair::smooth(&mut output, &options, fields, &map, regions)?;
-        let flipped = repair::flip(&mut output)?;
+        let flipped = repair::flip(&mut output, &options)?;
         output.quality.collapsed_vertices += collapsed;
         output.quality.accepted_vertex_moves += moved;
         output.quality.accepted_reconnections += flipped;
@@ -644,6 +660,7 @@ fn generate_with_map(
             break;
         }
     }
+    output.quality.accepted_vertex_moves += coupled::improve(&mut output, &options, fields, map)?;
     if output.mesh.tets.len() > options.max_tetrahedra {
         return Err("quality improvement exhausted tetrahedron budget".into());
     }

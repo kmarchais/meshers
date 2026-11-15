@@ -1,6 +1,8 @@
 //! CPU meshing of bounded scalar fields. Geometry is evaluated in physical coordinates.
 //! Sampling is not a proof that arbitrarily small components have been found.
 pub mod intersection;
+mod seeded;
+pub use seeded::adapt_intersection;
 
 use crate::{Mesh, MeshingError, Point, determinant, dot, geometry::Geometry, norm, quality, sub};
 use std::collections::{BTreeMap, HashMap};
@@ -940,6 +942,13 @@ pub(crate) fn periodic_pairs<const N: usize>(
 }
 
 fn finish<F: ScalarField>(mesh: Mesh, g: &Context<F>) -> Result<Output, String> {
+    finish_with_constraints(mesh, g, None)
+}
+fn finish_with_constraints<F: ScalarField>(
+    mesh: Mesh,
+    g: &Context<F>,
+    constraints: Option<&[intersection::ConstraintMask]>,
+) -> Result<Output, String> {
     observe_linear(g, "final-linear", &mesh);
     let mut volume = 0.;
     let mut minimum: f64 = 1.;
@@ -974,7 +983,14 @@ fn finish<F: ScalarField>(mesh: Mesh, g: &Context<F>) -> Result<Output, String> 
             }
         }
         tags.push(tag);
-        if tag == 0 {
+        let features = constraints.map_or(0u64, |masks| {
+            f.iter()
+                .fold(u64::MAX, |common, &v| common & u64::from(masks[v]))
+        });
+        if tag == 0 && constraints.is_some() && features == 0 {
+            return Err("retained boundary facet has no supporting constraint".into());
+        }
+        if tag == 0 || constraints.is_some() {
             // A chord lying in a box plane must follow the wall/plane curve inside
             // that plane. The full gradient measures the distance to the unclipped
             // wall, which can pass much closer outside the box, so it under-reports
@@ -1007,7 +1023,24 @@ fn finish<F: ScalarField>(mesh: Mesh, g: &Context<F>) -> Result<Output, String> 
                     lock(&[p[2], p[0]]),
                 ),
             ] {
-                if g.batched() {
+                if let Some(fields) = g.constraints.filter(|_| constraints.is_some()) {
+                    let distance = if features == 0 {
+                        crate::projection::positive_constraint_distance(
+                            fields,
+                            sample.0,
+                            g.bounds(),
+                        )
+                    } else {
+                        crate::projection::constraint_distance(
+                            fields,
+                            features,
+                            sample.0,
+                            sample.1,
+                            g.bounds(),
+                        )
+                    };
+                    error = error.max(distance);
+                } else if g.batched() {
                     samples.push(sample);
                     if samples.len() == 4096 {
                         error = error.max(distance_batch(g, &samples)?);
@@ -1138,7 +1171,7 @@ fn build<F: ScalarField>(g: &Context<F>) -> Result<Output, String> {
         if mesh.tets.is_empty() {
             return finish(mesh, g);
         }
-        let stats = crate::tet_adapt::adapt_with_polish(
+        let (stats, constraints) = crate::tet_adapt::adapt_with_constraints(
             &mut mesh,
             g,
             0.,
@@ -1148,7 +1181,7 @@ fn build<F: ScalarField>(g: &Context<F>) -> Result<Output, String> {
             o.optimize_passes,
             Some(&seed.constraints),
         )?;
-        let mut output = finish(mesh, g)?;
+        let mut output = finish_with_constraints(mesh, g, constraints.as_deref())?;
         output.diagnostics.adapt = Some(stats);
         output.diagnostics.reverted_snap_vertices = seed.quality.reverted_snap_vertices;
         return Ok(output);
