@@ -1,0 +1,1490 @@
+{
+  "label": "mapped-sweep-de57fa3",
+  "input_sha256": "6ea6732a3a9a28e6b4bda76dcae813d9857c408da90a7afec7420221c1b983e3",
+  "data": {
+    "schema_version": 2,
+    "fixture_version": 2,
+    "suite": "release",
+    "recorded_at": "2026-11-15T19:01:25.628971+00:00",
+    "runner": "MacBook-Pro.local",
+    "machine": "arm64",
+    "cpu_model": "Apple M4",
+    "cpu_count": 10,
+    "platform": "macOS-26.5.1-arm64-arm-64bit",
+    "script_sha256": "fb237ce2072739a223a9a04b07dc80ad4ef332997bbc1fde9ee9b78f8b0a5ec8",
+    "threads": 1,
+    "warmup_pairs": 1,
+    "measured_pairs": 3,
+    "quality_basis": "linear corners, including Tet10; volume integrates Tet10 mapping; surface_error is the linear parent diagnostic",
+    "scope": "Regression fixtures, not the matched-accuracy Microgen study or FEA certification",
+    "python": "3.12.9",
+    "base_ref": "a0da5d257a39298e505ffca1b90c37b3ff83de77",
+    "head_ref": "de57fa3ff6dd4b93994a8c9f96dd8352b055aebb",
+    "cases": {
+      "compiled_gyroid": {
+        "runs": {
+          "base": [
+            {
+              "seconds": 0.8215100829838775,
+              "peak_rss_bytes": 84836352,
+              "tetrahedra": 70403,
+              "nodes": 17849,
+              "volume": 0.324291643476333,
+              "quality_min": 0.3139606789526075,
+              "quality_p05": 0.5724845768823266,
+              "quality_p10": 0.61150991290785,
+              "quality_median": 0.8552760066679805,
+              "quality_mean": 0.8087618039726566,
+              "quality_p90": 0.9377243175822209,
+              "quality_max": 0.9965772630297074,
+              "surface_error": 0.0013790862274873832
+            },
+            {
+              "seconds": 0.8378142080036923,
+              "peak_rss_bytes": 84967424,
+              "tetrahedra": 70403,
+              "nodes": 17849,
+              "volume": 0.324291643476333,
+              "quality_min": 0.3139606789526075,
+              "quality_p05": 0.5724845768823266,
+              "quality_p10": 0.61150991290785,
+              "quality_median": 0.8552760066679805,
+              "quality_mean": 0.8087618039726566,
+              "quality_p90": 0.9377243175822209,
+              "quality_max": 0.9965772630297074,
+              "surface_error": 0.0013790862274873832
+            },
+            {
+              "seconds": 0.8335309169488028,
+              "peak_rss_bytes": 84918272,
+              "tetrahedra": 70403,
+              "nodes": 17849,
+              "volume": 0.324291643476333,
+              "quality_min": 0.3139606789526075,
+              "quality_p05": 0.5724845768823266,
+              "quality_p10": 0.61150991290785,
+              "quality_median": 0.8552760066679805,
+              "quality_mean": 0.8087618039726566,
+              "quality_p90": 0.9377243175822209,
+              "quality_max": 0.9965772630297074,
+              "surface_error": 0.0013790862274873832
+            }
+          ],
+          "head": [
+            {
+              "seconds": 0.7499922919669189,
+              "peak_rss_bytes": 85966848,
+              "tetrahedra": 70403,
+              "nodes": 17849,
+              "volume": 0.324291643476333,
+              "quality_min": 0.3139606789526075,
+              "quality_p05": 0.5724845768823266,
+              "quality_p10": 0.61150991290785,
+              "quality_median": 0.8552760066679805,
+              "quality_mean": 0.8087618039726566,
+              "quality_p90": 0.9377243175822209,
+              "quality_max": 0.9965772630297074,
+              "surface_error": 0.0013790862274873832
+            },
+            {
+              "seconds": 0.7688205000013113,
+              "peak_rss_bytes": 85753856,
+              "tetrahedra": 70403,
+              "nodes": 17849,
+              "volume": 0.324291643476333,
+              "quality_min": 0.3139606789526075,
+              "quality_p05": 0.5724845768823266,
+              "quality_p10": 0.61150991290785,
+              "quality_median": 0.8552760066679805,
+              "quality_mean": 0.8087618039726566,
+              "quality_p90": 0.9377243175822209,
+              "quality_max": 0.9965772630297074,
+              "surface_error": 0.0013790862274873832
+            },
+            {
+              "seconds": 0.7553729169885628,
+              "peak_rss_bytes": 85753856,
+              "tetrahedra": 70403,
+              "nodes": 17849,
+              "volume": 0.324291643476333,
+              "quality_min": 0.3139606789526075,
+              "quality_p05": 0.5724845768823266,
+              "quality_p10": 0.61150991290785,
+              "quality_median": 0.8552760066679805,
+              "quality_mean": 0.8087618039726566,
+              "quality_p90": 0.9377243175822209,
+              "quality_max": 0.9965772630297074,
+              "surface_error": 0.0013790862274873832
+            }
+          ]
+        },
+        "medians": {
+          "base": {
+            "seconds": 0.8335309169488028,
+            "peak_rss_bytes": 84918272,
+            "tetrahedra": 70403,
+            "nodes": 17849,
+            "volume": 0.324291643476333,
+            "quality_min": 0.3139606789526075,
+            "quality_p05": 0.5724845768823266,
+            "quality_p10": 0.61150991290785,
+            "quality_median": 0.8552760066679805,
+            "quality_mean": 0.8087618039726566,
+            "quality_p90": 0.9377243175822209,
+            "quality_max": 0.9965772630297074,
+            "surface_error": 0.0013790862274873832
+          },
+          "head": {
+            "seconds": 0.7553729169885628,
+            "peak_rss_bytes": 85753856,
+            "tetrahedra": 70403,
+            "nodes": 17849,
+            "volume": 0.324291643476333,
+            "quality_min": 0.3139606789526075,
+            "quality_p05": 0.5724845768823266,
+            "quality_p10": 0.61150991290785,
+            "quality_median": 0.8552760066679805,
+            "quality_mean": 0.8087618039726566,
+            "quality_p90": 0.9377243175822209,
+            "quality_max": 0.9965772630297074,
+            "surface_error": 0.0013790862274873832
+          }
+        },
+        "failures": []
+      },
+      "callback_gyroid": {
+        "runs": {
+          "base": [
+            {
+              "seconds": 1.9388467079843394,
+              "peak_rss_bytes": 86867968,
+              "tetrahedra": 70403,
+              "nodes": 17849,
+              "volume": 0.3242916434763129,
+              "quality_min": 0.31396067895326063,
+              "quality_p05": 0.5724845768815275,
+              "quality_p10": 0.611509912894115,
+              "quality_median": 0.855276006661094,
+              "quality_mean": 0.8087618039715079,
+              "quality_p90": 0.9377243175866388,
+              "quality_max": 0.9965772630296389,
+              "surface_error": 0.0013790862283828474
+            },
+            {
+              "seconds": 1.9360264160204679,
+              "peak_rss_bytes": 86786048,
+              "tetrahedra": 70403,
+              "nodes": 17849,
+              "volume": 0.3242916434763129,
+              "quality_min": 0.31396067895326063,
+              "quality_p05": 0.5724845768815275,
+              "quality_p10": 0.611509912894115,
+              "quality_median": 0.855276006661094,
+              "quality_mean": 0.8087618039715079,
+              "quality_p90": 0.9377243175866388,
+              "quality_max": 0.9965772630296389,
+              "surface_error": 0.0013790862283828474
+            },
+            {
+              "seconds": 1.9595149160013534,
+              "peak_rss_bytes": 86982656,
+              "tetrahedra": 70403,
+              "nodes": 17849,
+              "volume": 0.3242916434763129,
+              "quality_min": 0.31396067895326063,
+              "quality_p05": 0.5724845768815275,
+              "quality_p10": 0.611509912894115,
+              "quality_median": 0.855276006661094,
+              "quality_mean": 0.8087618039715079,
+              "quality_p90": 0.9377243175866388,
+              "quality_max": 0.9965772630296389,
+              "surface_error": 0.0013790862283828474
+            }
+          ],
+          "head": [
+            {
+              "seconds": 1.9147108329925686,
+              "peak_rss_bytes": 87982080,
+              "tetrahedra": 70403,
+              "nodes": 17849,
+              "volume": 0.3242916434763129,
+              "quality_min": 0.31396067895326063,
+              "quality_p05": 0.5724845768815275,
+              "quality_p10": 0.611509912894115,
+              "quality_median": 0.855276006661094,
+              "quality_mean": 0.8087618039715079,
+              "quality_p90": 0.9377243175866388,
+              "quality_max": 0.9965772630296389,
+              "surface_error": 0.0013790862283828474
+            },
+            {
+              "seconds": 1.936487082974054,
+              "peak_rss_bytes": 88178688,
+              "tetrahedra": 70403,
+              "nodes": 17849,
+              "volume": 0.3242916434763129,
+              "quality_min": 0.31396067895326063,
+              "quality_p05": 0.5724845768815275,
+              "quality_p10": 0.611509912894115,
+              "quality_median": 0.855276006661094,
+              "quality_mean": 0.8087618039715079,
+              "quality_p90": 0.9377243175866388,
+              "quality_max": 0.9965772630296389,
+              "surface_error": 0.0013790862283828474
+            },
+            {
+              "seconds": 1.9257269160007127,
+              "peak_rss_bytes": 87752704,
+              "tetrahedra": 70403,
+              "nodes": 17849,
+              "volume": 0.3242916434763129,
+              "quality_min": 0.31396067895326063,
+              "quality_p05": 0.5724845768815275,
+              "quality_p10": 0.611509912894115,
+              "quality_median": 0.855276006661094,
+              "quality_mean": 0.8087618039715079,
+              "quality_p90": 0.9377243175866388,
+              "quality_max": 0.9965772630296389,
+              "surface_error": 0.0013790862283828474
+            }
+          ]
+        },
+        "medians": {
+          "base": {
+            "seconds": 1.9388467079843394,
+            "peak_rss_bytes": 86867968,
+            "tetrahedra": 70403,
+            "nodes": 17849,
+            "volume": 0.3242916434763129,
+            "quality_min": 0.31396067895326063,
+            "quality_p05": 0.5724845768815275,
+            "quality_p10": 0.611509912894115,
+            "quality_median": 0.855276006661094,
+            "quality_mean": 0.8087618039715079,
+            "quality_p90": 0.9377243175866388,
+            "quality_max": 0.9965772630296389,
+            "surface_error": 0.0013790862283828474
+          },
+          "head": {
+            "seconds": 1.9257269160007127,
+            "peak_rss_bytes": 87982080,
+            "tetrahedra": 70403,
+            "nodes": 17849,
+            "volume": 0.3242916434763129,
+            "quality_min": 0.31396067895326063,
+            "quality_p05": 0.5724845768815275,
+            "quality_p10": 0.611509912894115,
+            "quality_median": 0.855276006661094,
+            "quality_mean": 0.8087618039715079,
+            "quality_p90": 0.9377243175866388,
+            "quality_max": 0.9965772630296389,
+            "surface_error": 0.0013790862283828474
+          }
+        },
+        "failures": []
+      },
+      "graded": {
+        "runs": {
+          "base": [
+            {
+              "seconds": 0.9271075839642435,
+              "peak_rss_bytes": 83722240,
+              "tetrahedra": 65506,
+              "nodes": 17493,
+              "volume": 0.275171863304838,
+              "quality_min": 0.17327894264221355,
+              "quality_p05": 0.5543696567203202,
+              "quality_p10": 0.5955051679144352,
+              "quality_median": 0.8136225479749933,
+              "quality_mean": 0.7841132833084725,
+              "quality_p90": 0.9330888715874202,
+              "quality_max": 0.9988950588676374,
+              "surface_error": 0.0016508683167093005
+            },
+            {
+              "seconds": 0.9182316249934956,
+              "peak_rss_bytes": 83558400,
+              "tetrahedra": 65506,
+              "nodes": 17493,
+              "volume": 0.275171863304838,
+              "quality_min": 0.17327894264221355,
+              "quality_p05": 0.5543696567203202,
+              "quality_p10": 0.5955051679144352,
+              "quality_median": 0.8136225479749933,
+              "quality_mean": 0.7841132833084725,
+              "quality_p90": 0.9330888715874202,
+              "quality_max": 0.9988950588676374,
+              "surface_error": 0.0016508683167093005
+            },
+            {
+              "seconds": 0.9183777080033906,
+              "peak_rss_bytes": 83722240,
+              "tetrahedra": 65506,
+              "nodes": 17493,
+              "volume": 0.275171863304838,
+              "quality_min": 0.17327894264221355,
+              "quality_p05": 0.5543696567203202,
+              "quality_p10": 0.5955051679144352,
+              "quality_median": 0.8136225479749933,
+              "quality_mean": 0.7841132833084725,
+              "quality_p90": 0.9330888715874202,
+              "quality_max": 0.9988950588676374,
+              "surface_error": 0.0016508683167093005
+            }
+          ],
+          "head": [
+            {
+              "seconds": 0.8620772919966839,
+              "peak_rss_bytes": 84377600,
+              "tetrahedra": 65506,
+              "nodes": 17493,
+              "volume": 0.275171863304838,
+              "quality_min": 0.17327894264221355,
+              "quality_p05": 0.5543696567203202,
+              "quality_p10": 0.5955051679144352,
+              "quality_median": 0.8136225479749933,
+              "quality_mean": 0.7841132833084725,
+              "quality_p90": 0.9330888715874202,
+              "quality_max": 0.9988950588676374,
+              "surface_error": 0.0016508683167093005
+            },
+            {
+              "seconds": 0.8604861249914393,
+              "peak_rss_bytes": 84590592,
+              "tetrahedra": 65506,
+              "nodes": 17493,
+              "volume": 0.275171863304838,
+              "quality_min": 0.17327894264221355,
+              "quality_p05": 0.5543696567203202,
+              "quality_p10": 0.5955051679144352,
+              "quality_median": 0.8136225479749933,
+              "quality_mean": 0.7841132833084725,
+              "quality_p90": 0.9330888715874202,
+              "quality_max": 0.9988950588676374,
+              "surface_error": 0.0016508683167093005
+            },
+            {
+              "seconds": 0.8387169999768957,
+              "peak_rss_bytes": 84393984,
+              "tetrahedra": 65506,
+              "nodes": 17493,
+              "volume": 0.275171863304838,
+              "quality_min": 0.17327894264221355,
+              "quality_p05": 0.5543696567203202,
+              "quality_p10": 0.5955051679144352,
+              "quality_median": 0.8136225479749933,
+              "quality_mean": 0.7841132833084725,
+              "quality_p90": 0.9330888715874202,
+              "quality_max": 0.9988950588676374,
+              "surface_error": 0.0016508683167093005
+            }
+          ]
+        },
+        "medians": {
+          "base": {
+            "seconds": 0.9183777080033906,
+            "peak_rss_bytes": 83722240,
+            "tetrahedra": 65506,
+            "nodes": 17493,
+            "volume": 0.275171863304838,
+            "quality_min": 0.17327894264221355,
+            "quality_p05": 0.5543696567203202,
+            "quality_p10": 0.5955051679144352,
+            "quality_median": 0.8136225479749933,
+            "quality_mean": 0.7841132833084725,
+            "quality_p90": 0.9330888715874202,
+            "quality_max": 0.9988950588676374,
+            "surface_error": 0.0016508683167093005
+          },
+          "head": {
+            "seconds": 0.8604861249914393,
+            "peak_rss_bytes": 84393984,
+            "tetrahedra": 65506,
+            "nodes": 17493,
+            "volume": 0.275171863304838,
+            "quality_min": 0.17327894264221355,
+            "quality_p05": 0.5543696567203202,
+            "quality_p10": 0.5955051679144352,
+            "quality_median": 0.8136225479749933,
+            "quality_mean": 0.7841132833084725,
+            "quality_p90": 0.9330888715874202,
+            "quality_max": 0.9988950588676374,
+            "surface_error": 0.0016508683167093005
+          }
+        },
+        "failures": []
+      },
+      "mapped_intersection": {
+        "runs": {
+          "base": [
+            {
+              "seconds": 0.2942232909845188,
+              "peak_rss_bytes": 115359744,
+              "tetrahedra": 63648,
+              "nodes": 12079,
+              "volume": 0.40767951362810373,
+              "quality_min": 0.6213927292926739,
+              "quality_p05": 0.7040204739041579,
+              "quality_p10": 0.8863217922049196,
+              "quality_median": 0.9178113513464151,
+              "quality_mean": 0.905993817892299,
+              "quality_p90": 0.9641514051222863,
+              "quality_max": 0.973864859289665,
+              "surface_error": 8.441806352234543e-05
+            },
+            {
+              "seconds": 0.2954618340008892,
+              "peak_rss_bytes": 115359744,
+              "tetrahedra": 63648,
+              "nodes": 12079,
+              "volume": 0.40767951362810373,
+              "quality_min": 0.6213927292926739,
+              "quality_p05": 0.7040204739041579,
+              "quality_p10": 0.8863217922049196,
+              "quality_median": 0.9178113513464151,
+              "quality_mean": 0.905993817892299,
+              "quality_p90": 0.9641514051222863,
+              "quality_max": 0.973864859289665,
+              "surface_error": 8.441806352234543e-05
+            },
+            {
+              "seconds": 0.29387933399993926,
+              "peak_rss_bytes": 115556352,
+              "tetrahedra": 63648,
+              "nodes": 12079,
+              "volume": 0.40767951362810373,
+              "quality_min": 0.6213927292926739,
+              "quality_p05": 0.7040204739041579,
+              "quality_p10": 0.8863217922049196,
+              "quality_median": 0.9178113513464151,
+              "quality_mean": 0.905993817892299,
+              "quality_p90": 0.9641514051222863,
+              "quality_max": 0.973864859289665,
+              "surface_error": 8.441806352234543e-05
+            }
+          ],
+          "head": [
+            {
+              "seconds": 0.3093890830059536,
+              "peak_rss_bytes": 117080064,
+              "tetrahedra": 63648,
+              "nodes": 12079,
+              "volume": 0.40767951362810373,
+              "quality_min": 0.6213927292926739,
+              "quality_p05": 0.7040204739041579,
+              "quality_p10": 0.8863217922049196,
+              "quality_median": 0.9178113513464151,
+              "quality_mean": 0.905993817892299,
+              "quality_p90": 0.9641514051222863,
+              "quality_max": 0.973864859289665,
+              "surface_error": 8.441806352234543e-05
+            },
+            {
+              "seconds": 0.30126754101365805,
+              "peak_rss_bytes": 117211136,
+              "tetrahedra": 63648,
+              "nodes": 12079,
+              "volume": 0.40767951362810373,
+              "quality_min": 0.6213927292926739,
+              "quality_p05": 0.7040204739041579,
+              "quality_p10": 0.8863217922049196,
+              "quality_median": 0.9178113513464151,
+              "quality_mean": 0.905993817892299,
+              "quality_p90": 0.9641514051222863,
+              "quality_max": 0.973864859289665,
+              "surface_error": 8.441806352234543e-05
+            },
+            {
+              "seconds": 0.30341833300190046,
+              "peak_rss_bytes": 117522432,
+              "tetrahedra": 63648,
+              "nodes": 12079,
+              "volume": 0.40767951362810373,
+              "quality_min": 0.6213927292926739,
+              "quality_p05": 0.7040204739041579,
+              "quality_p10": 0.8863217922049196,
+              "quality_median": 0.9178113513464151,
+              "quality_mean": 0.905993817892299,
+              "quality_p90": 0.9641514051222863,
+              "quality_max": 0.973864859289665,
+              "surface_error": 8.441806352234543e-05
+            }
+          ]
+        },
+        "medians": {
+          "base": {
+            "seconds": 0.2942232909845188,
+            "peak_rss_bytes": 115359744,
+            "tetrahedra": 63648,
+            "nodes": 12079,
+            "volume": 0.40767951362810373,
+            "quality_min": 0.6213927292926739,
+            "quality_p05": 0.7040204739041579,
+            "quality_p10": 0.8863217922049196,
+            "quality_median": 0.9178113513464151,
+            "quality_mean": 0.905993817892299,
+            "quality_p90": 0.9641514051222863,
+            "quality_max": 0.973864859289665,
+            "surface_error": 8.441806352234543e-05
+          },
+          "head": {
+            "seconds": 0.30341833300190046,
+            "peak_rss_bytes": 117211136,
+            "tetrahedra": 63648,
+            "nodes": 12079,
+            "volume": 0.40767951362810373,
+            "quality_min": 0.6213927292926739,
+            "quality_p05": 0.7040204739041579,
+            "quality_p10": 0.8863217922049196,
+            "quality_median": 0.9178113513464151,
+            "quality_mean": 0.905993817892299,
+            "quality_p90": 0.9641514051222863,
+            "quality_max": 0.973864859289665,
+            "surface_error": 8.441806352234543e-05
+          }
+        },
+        "failures": []
+      },
+      "schwarz_p": {
+        "runs": {
+          "base": [
+            {
+              "seconds": 0.35877437505405396,
+              "peak_rss_bytes": 83886080,
+              "tetrahedra": 90792,
+              "nodes": 17857,
+              "volume": 0.49997785364056346,
+              "quality_min": 0.45981613047474534,
+              "quality_p05": 0.6282602278278058,
+              "quality_p10": 0.7343379252904926,
+              "quality_median": 0.9295160030897791,
+              "quality_mean": 0.8870576843611934,
+              "quality_p90": 0.929516003089781,
+              "quality_max": 0.9987265560742221,
+              "surface_error": 0.0019191648305090336
+            },
+            {
+              "seconds": 0.3581394169596024,
+              "peak_rss_bytes": 84082688,
+              "tetrahedra": 90792,
+              "nodes": 17857,
+              "volume": 0.49997785364056346,
+              "quality_min": 0.45981613047474534,
+              "quality_p05": 0.6282602278278058,
+              "quality_p10": 0.7343379252904926,
+              "quality_median": 0.9295160030897791,
+              "quality_mean": 0.8870576843611934,
+              "quality_p90": 0.929516003089781,
+              "quality_max": 0.9987265560742221,
+              "surface_error": 0.0019191648305090336
+            },
+            {
+              "seconds": 0.35865512501914054,
+              "peak_rss_bytes": 83853312,
+              "tetrahedra": 90792,
+              "nodes": 17857,
+              "volume": 0.49997785364056346,
+              "quality_min": 0.45981613047474534,
+              "quality_p05": 0.6282602278278058,
+              "quality_p10": 0.7343379252904926,
+              "quality_median": 0.9295160030897791,
+              "quality_mean": 0.8870576843611934,
+              "quality_p90": 0.929516003089781,
+              "quality_max": 0.9987265560742221,
+              "surface_error": 0.0019191648305090336
+            }
+          ],
+          "head": [
+            {
+              "seconds": 0.3354904589941725,
+              "peak_rss_bytes": 84426752,
+              "tetrahedra": 90792,
+              "nodes": 17857,
+              "volume": 0.49997785364056346,
+              "quality_min": 0.45981613047474534,
+              "quality_p05": 0.6282602278278058,
+              "quality_p10": 0.7343379252904926,
+              "quality_median": 0.9295160030897791,
+              "quality_mean": 0.8870576843611934,
+              "quality_p90": 0.929516003089781,
+              "quality_max": 0.9987265560742221,
+              "surface_error": 0.0019191648305090336
+            },
+            {
+              "seconds": 0.32571033301064745,
+              "peak_rss_bytes": 84361216,
+              "tetrahedra": 90792,
+              "nodes": 17857,
+              "volume": 0.49997785364056346,
+              "quality_min": 0.45981613047474534,
+              "quality_p05": 0.6282602278278058,
+              "quality_p10": 0.7343379252904926,
+              "quality_median": 0.9295160030897791,
+              "quality_mean": 0.8870576843611934,
+              "quality_p90": 0.929516003089781,
+              "quality_max": 0.9987265560742221,
+              "surface_error": 0.0019191648305090336
+            },
+            {
+              "seconds": 0.32868204201804474,
+              "peak_rss_bytes": 84393984,
+              "tetrahedra": 90792,
+              "nodes": 17857,
+              "volume": 0.49997785364056346,
+              "quality_min": 0.45981613047474534,
+              "quality_p05": 0.6282602278278058,
+              "quality_p10": 0.7343379252904926,
+              "quality_median": 0.9295160030897791,
+              "quality_mean": 0.8870576843611934,
+              "quality_p90": 0.929516003089781,
+              "quality_max": 0.9987265560742221,
+              "surface_error": 0.0019191648305090336
+            }
+          ]
+        },
+        "medians": {
+          "base": {
+            "seconds": 0.35865512501914054,
+            "peak_rss_bytes": 83886080,
+            "tetrahedra": 90792,
+            "nodes": 17857,
+            "volume": 0.49997785364056346,
+            "quality_min": 0.45981613047474534,
+            "quality_p05": 0.6282602278278058,
+            "quality_p10": 0.7343379252904926,
+            "quality_median": 0.9295160030897791,
+            "quality_mean": 0.8870576843611934,
+            "quality_p90": 0.929516003089781,
+            "quality_max": 0.9987265560742221,
+            "surface_error": 0.0019191648305090336
+          },
+          "head": {
+            "seconds": 0.32868204201804474,
+            "peak_rss_bytes": 84393984,
+            "tetrahedra": 90792,
+            "nodes": 17857,
+            "volume": 0.49997785364056346,
+            "quality_min": 0.45981613047474534,
+            "quality_p05": 0.6282602278278058,
+            "quality_p10": 0.7343379252904926,
+            "quality_median": 0.9295160030897791,
+            "quality_mean": 0.8870576843611934,
+            "quality_p90": 0.929516003089781,
+            "quality_max": 0.9987265560742221,
+            "surface_error": 0.0019191648305090336
+          }
+        },
+        "failures": []
+      },
+      "spinodoid": {
+        "runs": {
+          "base": [
+            {
+              "seconds": 0.6872440410079435,
+              "peak_rss_bytes": 92880896,
+              "tetrahedra": 107079,
+              "nodes": 22163,
+              "volume": 0.5830640250452712,
+              "quality_min": 0.2251152663394125,
+              "quality_p05": 0.617791711196556,
+              "quality_p10": 0.6979672659799063,
+              "quality_median": 0.9295160030897787,
+              "quality_mean": 0.8725993488992275,
+              "quality_p90": 0.938454765916963,
+              "quality_max": 0.9984647136375645,
+              "surface_error": 0.0032829016161136522
+            },
+            {
+              "seconds": 0.697789833007846,
+              "peak_rss_bytes": 92880896,
+              "tetrahedra": 107079,
+              "nodes": 22163,
+              "volume": 0.5830640250452712,
+              "quality_min": 0.2251152663394125,
+              "quality_p05": 0.617791711196556,
+              "quality_p10": 0.6979672659799063,
+              "quality_median": 0.9295160030897787,
+              "quality_mean": 0.8725993488992275,
+              "quality_p90": 0.938454765916963,
+              "quality_max": 0.9984647136375645,
+              "surface_error": 0.0032829016161136522
+            },
+            {
+              "seconds": 0.6821513330214657,
+              "peak_rss_bytes": 92880896,
+              "tetrahedra": 107079,
+              "nodes": 22163,
+              "volume": 0.5830640250452712,
+              "quality_min": 0.2251152663394125,
+              "quality_p05": 0.617791711196556,
+              "quality_p10": 0.6979672659799063,
+              "quality_median": 0.9295160030897787,
+              "quality_mean": 0.8725993488992275,
+              "quality_p90": 0.938454765916963,
+              "quality_max": 0.9984647136375645,
+              "surface_error": 0.0032829016161136522
+            }
+          ],
+          "head": [
+            {
+              "seconds": 0.6603665000293404,
+              "peak_rss_bytes": 93782016,
+              "tetrahedra": 107079,
+              "nodes": 22163,
+              "volume": 0.5830640250452712,
+              "quality_min": 0.2251152663394125,
+              "quality_p05": 0.617791711196556,
+              "quality_p10": 0.6979672659799063,
+              "quality_median": 0.9295160030897787,
+              "quality_mean": 0.8725993488992275,
+              "quality_p90": 0.938454765916963,
+              "quality_max": 0.9984647136375645,
+              "surface_error": 0.0032829016161136522
+            },
+            {
+              "seconds": 0.6530510410084389,
+              "peak_rss_bytes": 93519872,
+              "tetrahedra": 107079,
+              "nodes": 22163,
+              "volume": 0.5830640250452712,
+              "quality_min": 0.2251152663394125,
+              "quality_p05": 0.617791711196556,
+              "quality_p10": 0.6979672659799063,
+              "quality_median": 0.9295160030897787,
+              "quality_mean": 0.8725993488992275,
+              "quality_p90": 0.938454765916963,
+              "quality_max": 0.9984647136375645,
+              "surface_error": 0.0032829016161136522
+            },
+            {
+              "seconds": 0.6426779170287773,
+              "peak_rss_bytes": 93569024,
+              "tetrahedra": 107079,
+              "nodes": 22163,
+              "volume": 0.5830640250452712,
+              "quality_min": 0.2251152663394125,
+              "quality_p05": 0.617791711196556,
+              "quality_p10": 0.6979672659799063,
+              "quality_median": 0.9295160030897787,
+              "quality_mean": 0.8725993488992275,
+              "quality_p90": 0.938454765916963,
+              "quality_max": 0.9984647136375645,
+              "surface_error": 0.0032829016161136522
+            }
+          ]
+        },
+        "medians": {
+          "base": {
+            "seconds": 0.6872440410079435,
+            "peak_rss_bytes": 92880896,
+            "tetrahedra": 107079,
+            "nodes": 22163,
+            "volume": 0.5830640250452712,
+            "quality_min": 0.2251152663394125,
+            "quality_p05": 0.617791711196556,
+            "quality_p10": 0.6979672659799063,
+            "quality_median": 0.9295160030897787,
+            "quality_mean": 0.8725993488992275,
+            "quality_p90": 0.938454765916963,
+            "quality_max": 0.9984647136375645,
+            "surface_error": 0.0032829016161136522
+          },
+          "head": {
+            "seconds": 0.6530510410084389,
+            "peak_rss_bytes": 93569024,
+            "tetrahedra": 107079,
+            "nodes": 22163,
+            "volume": 0.5830640250452712,
+            "quality_min": 0.2251152663394125,
+            "quality_p05": 0.617791711196556,
+            "quality_p10": 0.6979672659799063,
+            "quality_median": 0.9295160030897787,
+            "quality_mean": 0.8725993488992275,
+            "quality_p90": 0.938454765916963,
+            "quality_max": 0.9984647136375645,
+            "surface_error": 0.0032829016161136522
+          }
+        },
+        "failures": []
+      },
+      "smooth_lattice": {
+        "runs": {
+          "base": [
+            {
+              "seconds": 0.47641937498701736,
+              "peak_rss_bytes": 68255744,
+              "tetrahedra": 43392,
+              "nodes": 11012,
+              "volume": 0.19709789179532639,
+              "quality_min": 0.43380572344415885,
+              "quality_p05": 0.566203280831368,
+              "quality_p10": 0.6150075861479294,
+              "quality_median": 0.849268396164461,
+              "quality_mean": 0.8142839035213348,
+              "quality_p90": 0.9417403020557374,
+              "quality_max": 0.9946298984356974,
+              "surface_error": 0.00340924421079533
+            },
+            {
+              "seconds": 0.4672908329521306,
+              "peak_rss_bytes": 68485120,
+              "tetrahedra": 43392,
+              "nodes": 11012,
+              "volume": 0.19709789179532639,
+              "quality_min": 0.43380572344415885,
+              "quality_p05": 0.566203280831368,
+              "quality_p10": 0.6150075861479294,
+              "quality_median": 0.849268396164461,
+              "quality_mean": 0.8142839035213348,
+              "quality_p90": 0.9417403020557374,
+              "quality_max": 0.9946298984356974,
+              "surface_error": 0.00340924421079533
+            },
+            {
+              "seconds": 0.47694516595220193,
+              "peak_rss_bytes": 68354048,
+              "tetrahedra": 43392,
+              "nodes": 11012,
+              "volume": 0.19709789179532639,
+              "quality_min": 0.43380572344415885,
+              "quality_p05": 0.566203280831368,
+              "quality_p10": 0.6150075861479294,
+              "quality_median": 0.849268396164461,
+              "quality_mean": 0.8142839035213348,
+              "quality_p90": 0.9417403020557374,
+              "quality_max": 0.9946298984356974,
+              "surface_error": 0.00340924421079533
+            }
+          ],
+          "head": [
+            {
+              "seconds": 0.4423649579985067,
+              "peak_rss_bytes": 69042176,
+              "tetrahedra": 43392,
+              "nodes": 11012,
+              "volume": 0.19709789179532639,
+              "quality_min": 0.43380572344415885,
+              "quality_p05": 0.566203280831368,
+              "quality_p10": 0.6150075861479294,
+              "quality_median": 0.849268396164461,
+              "quality_mean": 0.8142839035213348,
+              "quality_p90": 0.9417403020557374,
+              "quality_max": 0.9946298984356974,
+              "surface_error": 0.00340924421079533
+            },
+            {
+              "seconds": 0.4285416670027189,
+              "peak_rss_bytes": 69107712,
+              "tetrahedra": 43392,
+              "nodes": 11012,
+              "volume": 0.19709789179532639,
+              "quality_min": 0.43380572344415885,
+              "quality_p05": 0.566203280831368,
+              "quality_p10": 0.6150075861479294,
+              "quality_median": 0.849268396164461,
+              "quality_mean": 0.8142839035213348,
+              "quality_p90": 0.9417403020557374,
+              "quality_max": 0.9946298984356974,
+              "surface_error": 0.00340924421079533
+            },
+            {
+              "seconds": 0.42766791698522866,
+              "peak_rss_bytes": 69156864,
+              "tetrahedra": 43392,
+              "nodes": 11012,
+              "volume": 0.19709789179532639,
+              "quality_min": 0.43380572344415885,
+              "quality_p05": 0.566203280831368,
+              "quality_p10": 0.6150075861479294,
+              "quality_median": 0.849268396164461,
+              "quality_mean": 0.8142839035213348,
+              "quality_p90": 0.9417403020557374,
+              "quality_max": 0.9946298984356974,
+              "surface_error": 0.00340924421079533
+            }
+          ]
+        },
+        "medians": {
+          "base": {
+            "seconds": 0.47641937498701736,
+            "peak_rss_bytes": 68354048,
+            "tetrahedra": 43392,
+            "nodes": 11012,
+            "volume": 0.19709789179532639,
+            "quality_min": 0.43380572344415885,
+            "quality_p05": 0.566203280831368,
+            "quality_p10": 0.6150075861479294,
+            "quality_median": 0.849268396164461,
+            "quality_mean": 0.8142839035213348,
+            "quality_p90": 0.9417403020557374,
+            "quality_max": 0.9946298984356974,
+            "surface_error": 0.00340924421079533
+          },
+          "head": {
+            "seconds": 0.4285416670027189,
+            "peak_rss_bytes": 69107712,
+            "tetrahedra": 43392,
+            "nodes": 11012,
+            "volume": 0.19709789179532639,
+            "quality_min": 0.43380572344415885,
+            "quality_p05": 0.566203280831368,
+            "quality_p10": 0.6150075861479294,
+            "quality_median": 0.849268396164461,
+            "quality_mean": 0.8142839035213348,
+            "quality_p90": 0.9417403020557374,
+            "quality_max": 0.9946298984356974,
+            "surface_error": 0.00340924421079533
+          }
+        },
+        "failures": []
+      },
+      "adaptive_gyroid": {
+        "runs": {
+          "base": [
+            {
+              "seconds": 0.9419384160428308,
+              "peak_rss_bytes": 101449728,
+              "tetrahedra": 30733,
+              "nodes": 8531,
+              "volume": 0.324353956947949,
+              "quality_min": 0.40216706023124843,
+              "quality_p05": 0.5490030027222883,
+              "quality_p10": 0.5814398600596263,
+              "quality_median": 0.7203046479182114,
+              "quality_mean": 0.7237395084793977,
+              "quality_p90": 0.8708118894159578,
+              "quality_max": 0.9956697397227622,
+              "surface_error": 0.0013327098681327795
+            },
+            {
+              "seconds": 0.9633742089499719,
+              "peak_rss_bytes": 101122048,
+              "tetrahedra": 30733,
+              "nodes": 8531,
+              "volume": 0.324353956947949,
+              "quality_min": 0.40216706023124843,
+              "quality_p05": 0.5490030027222883,
+              "quality_p10": 0.5814398600596263,
+              "quality_median": 0.7203046479182114,
+              "quality_mean": 0.7237395084793977,
+              "quality_p90": 0.8708118894159578,
+              "quality_max": 0.9956697397227622,
+              "surface_error": 0.0013327098681327795
+            },
+            {
+              "seconds": 0.9490684169577435,
+              "peak_rss_bytes": 101335040,
+              "tetrahedra": 30733,
+              "nodes": 8531,
+              "volume": 0.324353956947949,
+              "quality_min": 0.40216706023124843,
+              "quality_p05": 0.5490030027222883,
+              "quality_p10": 0.5814398600596263,
+              "quality_median": 0.7203046479182114,
+              "quality_mean": 0.7237395084793977,
+              "quality_p90": 0.8708118894159578,
+              "quality_max": 0.9956697397227622,
+              "surface_error": 0.0013327098681327795
+            }
+          ],
+          "head": [
+            {
+              "seconds": 1.0308067500009201,
+              "peak_rss_bytes": 102449152,
+              "tetrahedra": 30733,
+              "nodes": 8531,
+              "volume": 0.324353956947949,
+              "quality_min": 0.40216706023124843,
+              "quality_p05": 0.5490030027222883,
+              "quality_p10": 0.5814398600596263,
+              "quality_median": 0.7203046479182114,
+              "quality_mean": 0.7237395084793977,
+              "quality_p90": 0.8708118894159578,
+              "quality_max": 0.9956697397227622,
+              "surface_error": 0.0013327098681327795
+            },
+            {
+              "seconds": 0.9934400420170277,
+              "peak_rss_bytes": 101974016,
+              "tetrahedra": 30733,
+              "nodes": 8531,
+              "volume": 0.324353956947949,
+              "quality_min": 0.40216706023124843,
+              "quality_p05": 0.5490030027222883,
+              "quality_p10": 0.5814398600596263,
+              "quality_median": 0.7203046479182114,
+              "quality_mean": 0.7237395084793977,
+              "quality_p90": 0.8708118894159578,
+              "quality_max": 0.9956697397227622,
+              "surface_error": 0.0013327098681327795
+            },
+            {
+              "seconds": 1.0030157919973135,
+              "peak_rss_bytes": 101990400,
+              "tetrahedra": 30733,
+              "nodes": 8531,
+              "volume": 0.324353956947949,
+              "quality_min": 0.40216706023124843,
+              "quality_p05": 0.5490030027222883,
+              "quality_p10": 0.5814398600596263,
+              "quality_median": 0.7203046479182114,
+              "quality_mean": 0.7237395084793977,
+              "quality_p90": 0.8708118894159578,
+              "quality_max": 0.9956697397227622,
+              "surface_error": 0.0013327098681327795
+            }
+          ]
+        },
+        "medians": {
+          "base": {
+            "seconds": 0.9490684169577435,
+            "peak_rss_bytes": 101335040,
+            "tetrahedra": 30733,
+            "nodes": 8531,
+            "volume": 0.324353956947949,
+            "quality_min": 0.40216706023124843,
+            "quality_p05": 0.5490030027222883,
+            "quality_p10": 0.5814398600596263,
+            "quality_median": 0.7203046479182114,
+            "quality_mean": 0.7237395084793977,
+            "quality_p90": 0.8708118894159578,
+            "quality_max": 0.9956697397227622,
+            "surface_error": 0.0013327098681327795
+          },
+          "head": {
+            "seconds": 1.0030157919973135,
+            "peak_rss_bytes": 101990400,
+            "tetrahedra": 30733,
+            "nodes": 8531,
+            "volume": 0.324353956947949,
+            "quality_min": 0.40216706023124843,
+            "quality_p05": 0.5490030027222883,
+            "quality_p10": 0.5814398600596263,
+            "quality_median": 0.7203046479182114,
+            "quality_mean": 0.7237395084793977,
+            "quality_p90": 0.8708118894159578,
+            "quality_max": 0.9956697397227622,
+            "surface_error": 0.0013327098681327795
+          }
+        },
+        "failures": []
+      },
+      "adaptive_spinodoid": {
+        "runs": {
+          "base": [
+            {
+              "seconds": 1.0885016670217738,
+              "peak_rss_bytes": 136740864,
+              "tetrahedra": 28902,
+              "nodes": 7084,
+              "volume": 0.5831673995741236,
+              "quality_min": 0.38680720539461677,
+              "quality_p05": 0.5629263605629967,
+              "quality_p10": 0.5973228019048679,
+              "quality_median": 0.7406493088292685,
+              "quality_mean": 0.7413600184919594,
+              "quality_p90": 0.8869534121379095,
+              "quality_max": 0.9984004885453763,
+              "surface_error": 0.0017448627327169772
+            },
+            {
+              "seconds": 1.1026057080016471,
+              "peak_rss_bytes": 136658944,
+              "tetrahedra": 28902,
+              "nodes": 7084,
+              "volume": 0.5831673995741236,
+              "quality_min": 0.38680720539461677,
+              "quality_p05": 0.5629263605629967,
+              "quality_p10": 0.5973228019048679,
+              "quality_median": 0.7406493088292685,
+              "quality_mean": 0.7413600184919594,
+              "quality_p90": 0.8869534121379095,
+              "quality_max": 0.9984004885453763,
+              "surface_error": 0.0017448627327169772
+            },
+            {
+              "seconds": 1.1042292079655454,
+              "peak_rss_bytes": 136691712,
+              "tetrahedra": 28902,
+              "nodes": 7084,
+              "volume": 0.5831673995741236,
+              "quality_min": 0.38680720539461677,
+              "quality_p05": 0.5629263605629967,
+              "quality_p10": 0.5973228019048679,
+              "quality_median": 0.7406493088292685,
+              "quality_mean": 0.7413600184919594,
+              "quality_p90": 0.8869534121379095,
+              "quality_max": 0.9984004885453763,
+              "surface_error": 0.0017448627327169772
+            }
+          ],
+          "head": [
+            {
+              "seconds": 1.1927040829905309,
+              "peak_rss_bytes": 137461760,
+              "tetrahedra": 28902,
+              "nodes": 7084,
+              "volume": 0.5831673995741236,
+              "quality_min": 0.38680720539461677,
+              "quality_p05": 0.5629263605629967,
+              "quality_p10": 0.5973228019048679,
+              "quality_median": 0.7406493088292685,
+              "quality_mean": 0.7413600184919594,
+              "quality_p90": 0.8869534121379095,
+              "quality_max": 0.9984004885453763,
+              "surface_error": 0.0017448627327169772
+            },
+            {
+              "seconds": 1.2022401670110412,
+              "peak_rss_bytes": 137166848,
+              "tetrahedra": 28902,
+              "nodes": 7084,
+              "volume": 0.5831673995741236,
+              "quality_min": 0.38680720539461677,
+              "quality_p05": 0.5629263605629967,
+              "quality_p10": 0.5973228019048679,
+              "quality_median": 0.7406493088292685,
+              "quality_mean": 0.7413600184919594,
+              "quality_p90": 0.8869534121379095,
+              "quality_max": 0.9984004885453763,
+              "surface_error": 0.0017448627327169772
+            },
+            {
+              "seconds": 1.1998364999890327,
+              "peak_rss_bytes": 137461760,
+              "tetrahedra": 28902,
+              "nodes": 7084,
+              "volume": 0.5831673995741236,
+              "quality_min": 0.38680720539461677,
+              "quality_p05": 0.5629263605629967,
+              "quality_p10": 0.5973228019048679,
+              "quality_median": 0.7406493088292685,
+              "quality_mean": 0.7413600184919594,
+              "quality_p90": 0.8869534121379095,
+              "quality_max": 0.9984004885453763,
+              "surface_error": 0.0017448627327169772
+            }
+          ]
+        },
+        "medians": {
+          "base": {
+            "seconds": 1.1026057080016471,
+            "peak_rss_bytes": 136691712,
+            "tetrahedra": 28902,
+            "nodes": 7084,
+            "volume": 0.5831673995741236,
+            "quality_min": 0.38680720539461677,
+            "quality_p05": 0.5629263605629967,
+            "quality_p10": 0.5973228019048679,
+            "quality_median": 0.7406493088292685,
+            "quality_mean": 0.7413600184919594,
+            "quality_p90": 0.8869534121379095,
+            "quality_max": 0.9984004885453763,
+            "surface_error": 0.0017448627327169772
+          },
+          "head": {
+            "seconds": 1.1998364999890327,
+            "peak_rss_bytes": 137461760,
+            "tetrahedra": 28902,
+            "nodes": 7084,
+            "volume": 0.5831673995741236,
+            "quality_min": 0.38680720539461677,
+            "quality_p05": 0.5629263605629967,
+            "quality_p10": 0.5973228019048679,
+            "quality_median": 0.7406493088292685,
+            "quality_mean": 0.7413600184919594,
+            "quality_p90": 0.8869534121379095,
+            "quality_max": 0.9984004885453763,
+            "surface_error": 0.0017448627327169772
+          }
+        },
+        "failures": []
+      },
+      "adaptive_lattice": {
+        "runs": {
+          "base": [
+            {
+              "seconds": 0.6096562910242938,
+              "peak_rss_bytes": 80330752,
+              "tetrahedra": 20942,
+              "nodes": 5813,
+              "volume": 0.19687835462192807,
+              "quality_min": 0.4518527998972555,
+              "quality_p05": 0.5613844644925668,
+              "quality_p10": 0.5928820317930116,
+              "quality_median": 0.7319587247721486,
+              "quality_mean": 0.7334417088262892,
+              "quality_p90": 0.8797450892259445,
+              "quality_max": 0.9976167261648545,
+              "surface_error": 0.001688043571127856
+            },
+            {
+              "seconds": 0.6103024579933845,
+              "peak_rss_bytes": 80412672,
+              "tetrahedra": 20942,
+              "nodes": 5813,
+              "volume": 0.19687835462192807,
+              "quality_min": 0.4518527998972555,
+              "quality_p05": 0.5613844644925668,
+              "quality_p10": 0.5928820317930116,
+              "quality_median": 0.7319587247721486,
+              "quality_mean": 0.7334417088262892,
+              "quality_p90": 0.8797450892259445,
+              "quality_max": 0.9976167261648545,
+              "surface_error": 0.001688043571127856
+            },
+            {
+              "seconds": 0.6237844169954769,
+              "peak_rss_bytes": 80330752,
+              "tetrahedra": 20942,
+              "nodes": 5813,
+              "volume": 0.19687835462192807,
+              "quality_min": 0.4518527998972555,
+              "quality_p05": 0.5613844644925668,
+              "quality_p10": 0.5928820317930116,
+              "quality_median": 0.7319587247721486,
+              "quality_mean": 0.7334417088262892,
+              "quality_p90": 0.8797450892259445,
+              "quality_max": 0.9976167261648545,
+              "surface_error": 0.001688043571127856
+            }
+          ],
+          "head": [
+            {
+              "seconds": 0.6388149170088582,
+              "peak_rss_bytes": 83132416,
+              "tetrahedra": 20942,
+              "nodes": 5813,
+              "volume": 0.19687835462192807,
+              "quality_min": 0.4518527998972555,
+              "quality_p05": 0.5613844644925668,
+              "quality_p10": 0.5928820317930116,
+              "quality_median": 0.7319587247721486,
+              "quality_mean": 0.7334417088262892,
+              "quality_p90": 0.8797450892259445,
+              "quality_max": 0.9976167261648545,
+              "surface_error": 0.001688043571127856
+            },
+            {
+              "seconds": 0.6322763329953887,
+              "peak_rss_bytes": 81166336,
+              "tetrahedra": 20942,
+              "nodes": 5813,
+              "volume": 0.19687835462192807,
+              "quality_min": 0.4518527998972555,
+              "quality_p05": 0.5613844644925668,
+              "quality_p10": 0.5928820317930116,
+              "quality_median": 0.7319587247721486,
+              "quality_mean": 0.7334417088262892,
+              "quality_p90": 0.8797450892259445,
+              "quality_max": 0.9976167261648545,
+              "surface_error": 0.001688043571127856
+            },
+            {
+              "seconds": 0.636716625012923,
+              "peak_rss_bytes": 80576512,
+              "tetrahedra": 20942,
+              "nodes": 5813,
+              "volume": 0.19687835462192807,
+              "quality_min": 0.4518527998972555,
+              "quality_p05": 0.5613844644925668,
+              "quality_p10": 0.5928820317930116,
+              "quality_median": 0.7319587247721486,
+              "quality_mean": 0.7334417088262892,
+              "quality_p90": 0.8797450892259445,
+              "quality_max": 0.9976167261648545,
+              "surface_error": 0.001688043571127856
+            }
+          ]
+        },
+        "medians": {
+          "base": {
+            "seconds": 0.6103024579933845,
+            "peak_rss_bytes": 80330752,
+            "tetrahedra": 20942,
+            "nodes": 5813,
+            "volume": 0.19687835462192807,
+            "quality_min": 0.4518527998972555,
+            "quality_p05": 0.5613844644925668,
+            "quality_p10": 0.5928820317930116,
+            "quality_median": 0.7319587247721486,
+            "quality_mean": 0.7334417088262892,
+            "quality_p90": 0.8797450892259445,
+            "quality_max": 0.9976167261648545,
+            "surface_error": 0.001688043571127856
+          },
+          "head": {
+            "seconds": 0.636716625012923,
+            "peak_rss_bytes": 81166336,
+            "tetrahedra": 20942,
+            "nodes": 5813,
+            "volume": 0.19687835462192807,
+            "quality_min": 0.4518527998972555,
+            "quality_p05": 0.5613844644925668,
+            "quality_p10": 0.5928820317930116,
+            "quality_median": 0.7319587247721486,
+            "quality_mean": 0.7334417088262892,
+            "quality_p90": 0.8797450892259445,
+            "quality_max": 0.9976167261648545,
+            "surface_error": 0.001688043571127856
+          }
+        },
+        "failures": []
+      },
+      "gyroid_tet10": {
+        "runs": {
+          "base": [
+            {
+              "seconds": 0.869781540997792,
+              "peak_rss_bytes": 105873408,
+              "tetrahedra": 70403,
+              "nodes": 116856,
+              "volume": 0.3235632551282215,
+              "quality_min": 0.3139606789526075,
+              "quality_p05": 0.5724845768823266,
+              "quality_p10": 0.61150991290785,
+              "quality_median": 0.8552760066679805,
+              "quality_mean": 0.8087618039726566,
+              "quality_p90": 0.9377243175822209,
+              "quality_max": 0.9965772630297074,
+              "surface_error": 0.0013790862274873832
+            },
+            {
+              "seconds": 0.867195459024515,
+              "peak_rss_bytes": 105791488,
+              "tetrahedra": 70403,
+              "nodes": 116856,
+              "volume": 0.3235632551282215,
+              "quality_min": 0.3139606789526075,
+              "quality_p05": 0.5724845768823266,
+              "quality_p10": 0.61150991290785,
+              "quality_median": 0.8552760066679805,
+              "quality_mean": 0.8087618039726566,
+              "quality_p90": 0.9377243175822209,
+              "quality_max": 0.9965772630297074,
+              "surface_error": 0.0013790862274873832
+            },
+            {
+              "seconds": 0.8607924590469338,
+              "peak_rss_bytes": 105447424,
+              "tetrahedra": 70403,
+              "nodes": 116856,
+              "volume": 0.3235632551282215,
+              "quality_min": 0.3139606789526075,
+              "quality_p05": 0.5724845768823266,
+              "quality_p10": 0.61150991290785,
+              "quality_median": 0.8552760066679805,
+              "quality_mean": 0.8087618039726566,
+              "quality_p90": 0.9377243175822209,
+              "quality_max": 0.9965772630297074,
+              "surface_error": 0.0013790862274873832
+            }
+          ],
+          "head": [
+            {
+              "seconds": 0.8189557089935988,
+              "peak_rss_bytes": 107053056,
+              "tetrahedra": 70403,
+              "nodes": 116856,
+              "volume": 0.3235632551282215,
+              "quality_min": 0.3139606789526075,
+              "quality_p05": 0.5724845768823266,
+              "quality_p10": 0.61150991290785,
+              "quality_median": 0.8552760066679805,
+              "quality_mean": 0.8087618039726566,
+              "quality_p90": 0.9377243175822209,
+              "quality_max": 0.9965772630297074,
+              "surface_error": 0.0013790862274873832
+            },
+            {
+              "seconds": 0.8031155409989879,
+              "peak_rss_bytes": 106692608,
+              "tetrahedra": 70403,
+              "nodes": 116856,
+              "volume": 0.3235632551282215,
+              "quality_min": 0.3139606789526075,
+              "quality_p05": 0.5724845768823266,
+              "quality_p10": 0.61150991290785,
+              "quality_median": 0.8552760066679805,
+              "quality_mean": 0.8087618039726566,
+              "quality_p90": 0.9377243175822209,
+              "quality_max": 0.9965772630297074,
+              "surface_error": 0.0013790862274873832
+            },
+            {
+              "seconds": 0.793560583028011,
+              "peak_rss_bytes": 106496000,
+              "tetrahedra": 70403,
+              "nodes": 116856,
+              "volume": 0.3235632551282215,
+              "quality_min": 0.3139606789526075,
+              "quality_p05": 0.5724845768823266,
+              "quality_p10": 0.61150991290785,
+              "quality_median": 0.8552760066679805,
+              "quality_mean": 0.8087618039726566,
+              "quality_p90": 0.9377243175822209,
+              "quality_max": 0.9965772630297074,
+              "surface_error": 0.0013790862274873832
+            }
+          ]
+        },
+        "medians": {
+          "base": {
+            "seconds": 0.867195459024515,
+            "peak_rss_bytes": 105791488,
+            "tetrahedra": 70403,
+            "nodes": 116856,
+            "volume": 0.3235632551282215,
+            "quality_min": 0.3139606789526075,
+            "quality_p05": 0.5724845768823266,
+            "quality_p10": 0.61150991290785,
+            "quality_median": 0.8552760066679805,
+            "quality_mean": 0.8087618039726566,
+            "quality_p90": 0.9377243175822209,
+            "quality_max": 0.9965772630297074,
+            "surface_error": 0.0013790862274873832
+          },
+          "head": {
+            "seconds": 0.8031155409989879,
+            "peak_rss_bytes": 106692608,
+            "tetrahedra": 70403,
+            "nodes": 116856,
+            "volume": 0.3235632551282215,
+            "quality_min": 0.3139606789526075,
+            "quality_p05": 0.5724845768823266,
+            "quality_p10": 0.61150991290785,
+            "quality_median": 0.8552760066679805,
+            "quality_mean": 0.8087618039726566,
+            "quality_p90": 0.9377243175822209,
+            "quality_max": 0.9965772630297074,
+            "surface_error": 0.0013790862274873832
+          }
+        },
+        "failures": []
+      }
+    },
+    "runtime": {
+      "base": {
+        "python": "3.12.9",
+        "numpy": "2.5.4",
+        "meshers": "0.2.0",
+        "native_sha256": "9d4bab8169ce9d23cccd942bf71feeaa33c61a6da8e8999299bf3c2f18ba0c33"
+      },
+      "head": {
+        "python": "3.12.9",
+        "numpy": "2.5.4",
+        "meshers": "0.2.0",
+        "native_sha256": "2039feaa7bc683d6d63f958e28a555084110e8ba9b566df8943fc04c1e9c5e7c"
+      }
+    },
+    "same_native_binary": false,
+    "complete": true,
+    "baseline_provenance": {
+      "requested_ref": "cde091726b813585c4d2a8c46b55f47467b65131",
+      "product_sources_identical_to_release": true,
+      "release_wheel_sha256": "482644a91933459828ad7af92903dedafa443920d70d0c646f3685944d94066f",
+      "raw_measurement_sha256": "a6714e1b195e6f55048cf34fb7e5d6a3027f744d9f9192dc0721cef2638a8f29",
+      "metadata_correction": "Name the actual released-wheel source commit instead of its product-identical documentation successor. No measurements changed."
+    }
+  }
+}
