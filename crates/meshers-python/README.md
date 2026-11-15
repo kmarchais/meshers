@@ -1,4 +1,4 @@
-# Meshers Python 0.2.0
+# Meshers Python 0.2.1
 
 In-process CPU float64 meshing of bounded implicit solids. No subprocess or intermediate mesh file is needed.
 
