@@ -66,6 +66,61 @@ pub(crate) fn onto_constraints(
     None
 }
 
+/// Physical distance to an assigned retained surface, including positive violations
+/// of other clipping constraints. Unrelated inactive branches do not set the distance.
+pub(crate) fn constraint_distance(
+    fields: &[&dyn crate::implicit::ScalarField],
+    active: u64,
+    p: Point,
+    locked: [bool; 3],
+    bounds: [Point; 2],
+) -> f64 {
+    if active == 0 {
+        return f64::INFINITY;
+    }
+    let Some(q) = onto_constraints(fields, active, p, locked, bounds) else {
+        return f64::INFINITY;
+    };
+    crate::norm(crate::sub(q, p)).max(positive_constraint_distance(fields, p, bounds))
+}
+
+/// Positive clipping violations must be checked even on exact box caps.
+pub(crate) fn positive_constraint_distance(
+    fields: &[&dyn crate::implicit::ScalarField],
+    p: Point,
+    bounds: [Point; 2],
+) -> f64 {
+    let mut distance: f64 = 0.;
+    let step = (0..3)
+        .map(|a| bounds[1][a] - bounds[0][a])
+        .fold(0., f64::max)
+        * 1e-5;
+    for field in fields {
+        let value = field.value(p);
+        if !value.is_finite() {
+            return f64::INFINITY;
+        }
+        if value <= 0. {
+            continue;
+        }
+        let gradient = field.gradient(p).unwrap_or_else(|| {
+            std::array::from_fn(|a| {
+                let mut lo = p;
+                let mut hi = p;
+                lo[a] -= step;
+                hi[a] += step;
+                (field.value(hi) - field.value(lo)) / (2. * step)
+            })
+        });
+        let norm = crate::norm(gradient);
+        if !norm.is_finite() || norm == 0. {
+            return f64::INFINITY;
+        }
+        distance = distance.max(value / norm);
+    }
+    distance
+}
+
 fn free_gradient(g: &impl Geometry, p: Point, locked: [bool; 3]) -> Point {
     let mut d = g.gradient(p);
     for a in 0..3 {
@@ -142,6 +197,37 @@ pub(crate) fn onto_level(
         }
     }
     Some(at(0.5 * (inside + outside)))
+}
+
+/// Sample a physical facet against its supporting surfaces and every clip.
+pub(crate) fn facet_distance(
+    fields: &[&dyn crate::implicit::ScalarField],
+    active: u64,
+    points: [Point; 3],
+    bounds: [Point; 2],
+) -> f64 {
+    let mut error = 0_f64;
+    for w in [
+        [1., 0., 0.],
+        [0., 1., 0.],
+        [0., 0., 1.],
+        [0.5, 0.5, 0.],
+        [0.5, 0., 0.5],
+        [0., 0.5, 0.5],
+        [1. / 3.; 3],
+    ] {
+        let p = std::array::from_fn(|a| (0..3).map(|i| w[i] * points[i][a]).sum());
+        let distance = if active == 0 {
+            positive_constraint_distance(fields, p, bounds)
+        } else {
+            constraint_distance(fields, active, p, [false; 3], bounds)
+        };
+        if !distance.is_finite() {
+            return f64::INFINITY;
+        }
+        error = error.max(distance);
+    }
+    error
 }
 
 #[cfg(test)]

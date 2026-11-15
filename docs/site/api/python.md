@@ -6,6 +6,8 @@ Generated from the Python facade and extension stubs during every documentation 
 
 ::: meshers.generate_intersection
 
+::: meshers.adapt_intersection
+
 ::: meshers.Mesh
 
 ::: meshers.compile_field

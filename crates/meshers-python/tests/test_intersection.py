@@ -558,3 +558,208 @@ def test_nonunit_sdf_branches_keep_the_scalar_path(kind):
         )
 
     assert meshers.compile_field(field)._intersection_fields() is None
+
+
+@pytest.mark.parametrize("scale", [1e-12, 1.0, 1e12])
+def test_boundary_fitting_projection_is_invariant_to_field_scale(scale):
+    from meshers.intersection import _project_parameters
+
+    point = np.array([0.5, 0.2, 0.4])
+    projected = _project_parameters(
+        point,
+        point,
+        [lambda x, y, z: scale * (y * y + z * z - 0.16)],
+        locked=np.array([True, False, False]),
+        step=np.full(3, 1e-5),
+    )
+    assert projected is not None
+    assert projected[0] == point[0]
+    assert abs(np.linalg.norm(projected[1:]) - 0.4) < 1e-11
+
+
+@pytest.mark.parametrize("closed", [(True,), (False, False, 1)])
+def test_closed_axis_options_require_three_booleans(closed):
+    with pytest.raises(ValueError, match="three booleans"):
+        meshers.generate_intersection(
+            {"a": lambda x, y, z: x - 0.5, "b": lambda x, y, z: y - 0.5}, closed_axes=closed
+        )
+
+
+def test_closed_axis_rejects_translated_physical_caps():
+    with pytest.raises(ValueError, match="identity"):
+        meshers.generate_intersection(
+            {"a": lambda x, y, z: x - 0.5, "b": lambda x, y, z: y - 0.5},
+            periodic=(False, False, True),
+            closed_axes=(False, False, True),
+        )
+
+
+def test_named_seed_adaptation_preserves_geometry_labels_and_input():
+    fields = {"x": lambda x, y, z: x - 0.5, "y": lambda x, y, z: y - 0.75}
+    seed = meshers.generate_intersection(fields, cells=4, snap=0, optimize_passes=0)
+    points, cells = seed.points.copy(), seed.tetrahedra.copy()
+    mesh = meshers.adapt_intersection(
+        seed,
+        fields,
+        bounds=(0, 1, 0, 1, 0, 1),
+        seed_tolerance=1e-8,
+        geometry_tolerance=1e-8,
+        min_length=0.1,
+        max_length=0.4,
+        gradation=0.6,
+        adapt_iterations=2,
+        quality_guard=0.1,
+        optimize_passes=1,
+        max_tetrahedra=10000,
+    )
+    assert mesh.diagnostics["minimum_mmg_quality"] >= 0.1
+    assert mesh.diagnostics["volume"] == pytest.approx(0.375, abs=1e-9)
+    assert len(mesh.constraint_masks) == len(mesh.points)
+    assert mesh.constraint_names == tuple(fields)
+    assert np.max(abs(mesh.points[mesh.surface_for("x"), 0] - 0.5)) < 1e-10
+    np.testing.assert_array_equal(seed.points, points)
+    np.testing.assert_array_equal(seed.tetrahedra, cells)
+
+
+def test_named_seed_rejects_a_box_outside_the_clipping_fields():
+    seed = meshers.generate_intersection(
+        {"a": lambda x, y, z: -1 + 0 * x, "b": lambda x, y, z: -1 + 0 * y},
+        cells=4,
+        snap=0,
+        optimize_passes=0,
+    )
+    with pytest.raises(ValueError, match="seed fails"):
+        meshers.adapt_intersection(
+            seed,
+            {"x": lambda x, y, z: x - 0.5, "y": lambda x, y, z: y - 0.75},
+            bounds=(0, 1, 0, 1, 0, 1),
+            constraint_masks=seed.constraint_masks,
+            seed_tolerance=1e-8,
+            geometry_tolerance=1e-8,
+        )
+
+
+def test_mapped_adaptation_preserves_user_names_matching_domain_caps():
+    fields = {"domain_0_0": lambda x, y, z: x - 0.5, "wall": lambda x, y, z: y - 0.75}
+    mesh = meshers.generate_intersection(
+        fields,
+        coordinate_map=lambda x, y, z: (x, y, z),
+        inverse_map=lambda x, y, z: (x, y, z),
+        physical_bounds=(0, 1, 0, 1, 0, 1),
+        adapt=True,
+        cells=4,
+        snap=0,
+        optimize_passes=1,
+        seed_tolerance=1e-8,
+        geometry_tolerance=1e-8,
+        min_length=0.1,
+        max_length=0.4,
+        gradation=0.6,
+        adapt_iterations=2,
+        quality_guard=0.1,
+        max_tetrahedra=10000,
+    )
+    assert mesh.constraint_names[:2] == tuple(fields)
+    assert len(set(mesh.constraint_names)) == 8
+    assert mesh.diagnostics["volume"] == pytest.approx(0.375, abs=1e-9)
+    assert mesh.diagnostics["minimum_mmg_quality"] >= 0.1
+    assert len(mesh.surface_for("domain_0_0")) > 0
+    assert mesh.diagnostics["seed_tetrahedra"] > 0
+
+
+def test_mapped_adaptation_counts_domain_caps_before_starting():
+    with pytest.raises(ValueError, match="named-constraint limit"):
+        meshers.generate_intersection(
+            {f"f{i}": lambda x, y, z: x - 0.5 for i in range(meshers._meshers.MAX_CONSTRAINTS)},
+            coordinate_map=lambda x, y, z: (x, y, z),
+            inverse_map=lambda x, y, z: (x, y, z),
+            physical_bounds=(0, 1, 0, 1, 0, 1),
+            adapt=True,
+            geometry_tolerance=0.01,
+        )
+
+
+@pytest.mark.parametrize(
+    ("cells", "adaptive", "passes"),
+    [((16, 8, 48), False, 4), ((16, 8, 48), True, 4), ((24, 12, 64), True, 4), (16, True, 1)],
+)
+def test_closed_annular_gyroid_with_compiled_maps(cells, adaptive, passes):
+    def gyroid(x, y, z):
+        a, b, c = 2 * np.pi * x, 2 * np.pi * y, 2 * np.pi * z
+        return np.sin(a) * np.cos(b) + np.sin(b) * np.cos(c) + np.sin(c) * np.cos(a)
+
+    def mapping(x, y, z):
+        r, theta = 0.3 + 0.2 * y, 2 * np.pi * (z + 0.5)
+        return r * np.cos(theta), r * np.sin(theta), x + 0.5
+
+    def inverse(x, y, z):
+        r = np.sqrt(x * x + y * y)
+        theta = np.arctan2(y, np.where(r < 0.1, 0.1, x))
+        angle = np.where(theta < 0, theta + 2 * np.pi, theta)
+        return z - 0.5, (r - 0.2) / 0.2 - 0.5, angle / (2 * np.pi) - 0.5
+
+    mesh = meshers.generate_intersection(
+        {
+            "upper": lambda x, y, z: gyroid(x, y, z) - 0.55,
+            "lower": lambda x, y, z: -gyroid(x, y, z) - 0.55,
+        },
+        bounds=(-0.5, 0.5) * 3,
+        cells=cells,
+        coordinate_map=mapping,
+        inverse_map=inverse,
+        physical_bounds=(-0.4, 0.4, -0.4, 0.4, -0.4, 1.4),
+        periodic=(False, False, True),
+        periodic_transforms={2: np.eye(4)},
+        closed_axes=(False, False, True),
+        adapt=adaptive,
+        adapt_tolerance=0.0018,
+        geometry_tolerance=0.002 if adaptive else 0.01,
+        minimum_quality=0.1,
+        min_length=0.002,
+        max_length=0.08,
+        gradation=0.6,
+        max_tetrahedra=250_000,
+        optimize_passes=passes,
+    )
+    assert len(mesh.points) <= 250_000
+    assert len(mesh.tetrahedra) <= 250_000
+    assert mesh.diagnostics["minimum_mmg_quality"] >= 0.1
+    assert mesh.diagnostics["sampled_surface_error"] <= (0.002 if adaptive else 0.01)
+    assert mesh.diagnostics["volume"] == pytest.approx(0.13433935, rel=0.01)
+    assert len(mesh.constraint_names) == (6 if adaptive else 2)
+    if not adaptive:
+        assert mesh.diagnostics["geometry_vertex_moves"] > 0
+    assert all(len(pairs) == 0 for pairs in mesh.periodic_pairs)
+    if cells == 16:
+        assert mesh.diagnostics["requested_seed_cells"] == (16, 16, 16)
+        assert mesh.diagnostics["seed_cells"] == (16, 16, 32)
+        assert mesh.diagnostics["seed_minimum_mmg_quality"] > 0
+    assert volume(mesh) > 0
+
+
+def test_adaptive_closed_map_keeps_rejecting_negative_orientation():
+    def mapping(x, y, z):
+        radius, angle = 0.3 + 0.2 * y, 2 * np.pi * (z + 0.5)
+        return radius * np.cos(angle), -radius * np.sin(angle), x + 0.5
+
+    def inverse(x, y, z):
+        radius = np.sqrt(x * x + y * y)
+        angle = np.arctan2(-y, x)
+        angle = np.where(angle < 0, angle + 2 * np.pi, angle)
+        return z - 0.5, (radius - 0.3) / 0.2, angle / (2 * np.pi) - 0.5
+
+    with pytest.raises(meshers.MeshingError, match="inverted a background"):
+        meshers.generate_intersection(
+            {"first": lambda x, y, z: -1 + 0 * x, "second": lambda x, y, z: -1 + 0 * y},
+            bounds=(-0.5, 0.5) * 3,
+            cells=4,
+            coordinate_map=mapping,
+            inverse_map=inverse,
+            physical_bounds=(-0.4, 0.4, -0.4, 0.4, 0, 1),
+            periodic=(False, False, True),
+            periodic_transforms={2: np.eye(4)},
+            closed_axes=(False, False, True),
+            adapt=True,
+            geometry_tolerance=0.01,
+            max_tetrahedra=100_000,
+        )

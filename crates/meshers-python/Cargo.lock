@@ -367,6 +367,7 @@ dependencies = [
  "rayon",
  "serde",
  "serde_json",
+ "slsqp-rssl",
 ]
 
 [[package]]
@@ -637,6 +638,12 @@ dependencies = [
  "serde_core",
  "zmij",
 ]
+
+[[package]]
+name = "slsqp-rssl"
+version = "0.1.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "5b8a38159199f34081d77a3d255e8868aae7e121c43b36b0ba77f60495d2405e"
 
 [[package]]
 name = "smallvec"

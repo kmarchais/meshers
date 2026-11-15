@@ -576,6 +576,20 @@ fn generate<'py>(
         MeshingError::InvalidOptions(message) => PyValueError::new_err(message),
         MeshingError::GenerationFailed(message) => MeshingFailure::new_err(message),
     })?;
+    mesh_dict(
+        py,
+        result,
+        start.elapsed().as_secs_f64(),
+        f.calls.load(Ordering::Relaxed),
+    )
+}
+
+fn mesh_dict<'py>(
+    py: Python<'py>,
+    result: implicit::Output,
+    seconds: f64,
+    callback_calls: usize,
+) -> PyResult<Bound<'py, PyDict>> {
     let output = PyDict::new(py);
     let mut result = result;
     if let Some(q) = result.quadratic.take() {
@@ -734,7 +748,7 @@ fn generate<'py>(
         "reverted_snap_vertices",
         result.diagnostics.reverted_snap_vertices,
     )?;
-    diagnostics.set_item("callback_calls", f.calls.load(Ordering::Relaxed))?;
+    diagnostics.set_item("callback_calls", callback_calls)?;
     diagnostics.set_item(
         "inserted_interior_nodes",
         result.diagnostics.inserted_interior_nodes,
@@ -750,7 +764,7 @@ fn generate<'py>(
         adapt.set_item("seconds", stats.seconds.to_vec())?;
         diagnostics.set_item("adapt", adapt)?;
     }
-    diagnostics.set_item("seconds", start.elapsed().as_secs_f64())?;
+    diagnostics.set_item("seconds", seconds)?;
     output.set_item("diagnostics", diagnostics)?;
     Ok(output)
 }
@@ -831,6 +845,7 @@ fn _meshers(m: &Bound<'_, PyModule>) -> PyResult<()> {
     m.add_function(wrap_pyfunction!(compiled::_compile_expression, m)?)?;
     m.add_function(wrap_pyfunction!(generate, m)?)?;
     m.add_function(wrap_pyfunction!(intersection::generate_intersection, m)?)?;
+    m.add_function(wrap_pyfunction!(intersection::adapt_intersection, m)?)?;
     #[cfg(feature = "experimental-surfaces")]
     {
         m.add_function(wrap_pyfunction!(surface::generate_surface, m)?)?;
