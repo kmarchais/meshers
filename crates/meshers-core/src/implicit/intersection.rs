@@ -466,9 +466,9 @@ fn generate_with_map(
     }
     for (i, mask) in coincident.into_iter().enumerate() {
         c.masks[i] |= mask;
-        for j in 0..fields.len() {
+        for (j, value) in c.values[i].iter_mut().enumerate() {
             if mask & (1 << j) != 0 {
-                c.values[i][j] = 0.;
+                *value = 0.;
             }
         }
     }
