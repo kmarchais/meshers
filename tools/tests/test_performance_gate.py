@@ -73,3 +73,44 @@ def test_a_single_bad_quality_sample_cannot_hide_in_passing_medians():
     rows[2]["quality_p10"] = 0.1
     assert not gate.regressions(BASE, BASE)
     assert "sample 3: quality_p10" in gate.case_regressions(BASE, BASE, rows)[0]
+
+
+def test_fold_between_quadrature_points():
+    import numpy as np
+
+    corners = np.vstack([np.zeros(3), np.eye(3)])
+    edges = np.array([(0, 1), (1, 2), (2, 0), (0, 3), (1, 3), (2, 3)])
+    r, s, t = np.vstack([corners, corners[edges].mean(axis=1)]).T
+    folded = np.column_stack([r, (r - 0.38) * s, (r - 0.42) * t])
+    with pytest.raises(RuntimeError, match="curved Jacobian"):
+        gate.cell_geometry(folded[None])
+    # This has nearly the same corner maps but a positive interior minimum.
+    valid = np.column_stack([r, (r - 0.4) * s - 0.025 * t, (r - 0.4) * t + 0.025 * s])
+    assert gate.cell_geometry(valid[None])[0] == pytest.approx(
+        (0.1 - 0.8 / 4 + 0.16 + 0.025**2) / 6
+    )
+
+
+@pytest.mark.parametrize("height", [0.125, 0.25])
+def test_translated_component_witness(height):
+    import meshers
+    import numpy as np
+
+    center = np.array([0.125, 0.125, height])
+
+    def sphere(x, y, z):
+        return (x - center[0]) ** 2 + (y - center[1]) ** 2 + (z - center[2]) ** 2 - 0.06**2
+
+    # Require the interior witness at resolved spacing. Check the oracle itself
+    # with a deleted component, independent of the producer's own diagnostics.
+    mesh = meshers.generate(sphere, cells=16, optimize_passes=0, snap=0, geometry_tolerance=0.02)
+    vertices = mesh.points[mesh.tetrahedra]
+
+    def covers_center(cells):
+        coords = np.linalg.solve(
+            (cells[:, 1:] - cells[:, :1]).transpose(0, 2, 1), (center - cells[:, 0])[..., None]
+        )[..., 0]
+        return np.any(np.all(coords >= -1e-10, axis=1) & (coords.sum(axis=1) <= 1 + 1e-10))
+
+    assert covers_center(vertices)
+    assert not covers_center(vertices[:0])

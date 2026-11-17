@@ -79,8 +79,10 @@ All cases retain minimum, maximum, mean, median, p05, p10 and p90 quality. All
 seven statistics have the same 1% regression allowance. Node counts have the
 same 1% change guard as tetrahedron counts. Tet10 quality and sampled surface
 error describe the linear parent; its curved volume is independently integrated
-and Jacobians are checked at the reference nodes and quadrature samples. These
-are sampled validity checks, not a proof of global invertibility.
+and Jacobians are checked at reference nodes and quadrature samples. The release
+validator also bounds the cubic determinant in the Bernstein basis and subdivides
+ambiguous cells. A nonpositive sample or an unresolved bound fails validation.
+This floating-point element check does not establish global non-overlap.
 
 For every release:
 

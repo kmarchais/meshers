@@ -33,6 +33,51 @@ QUALITY = ("min", "p05", "p10", "median", "mean", "p90", "max")
 CAP = 250_000
 
 
+def _check_curved_jacobians(corners):
+    """Bound the cubic Jacobian determinant over each reference tetrahedron.
+
+    The four physical Jacobian matrices interpolate affinely. Cubic Bernstein
+    coefficients bound their determinant over the whole tetrahedron. Subdivide
+    inconclusive cells along the edge with the largest Jacobian variation.
+
+    A fold or an unresolved bound raises RuntimeError.
+    """
+    from itertools import combinations_with_replacement
+    from math import factorial
+
+    import numpy as np
+
+    triples = list(combinations_with_replacement(range(4), 3))
+    powers = np.array([[triple.count(i) for i in range(4)] for triple in triples])
+    bary = powers / 3
+    factors = np.array([6 / math.prod(factorial(int(n)) for n in row) for row in powers])
+    basis = factors * np.prod(bary[:, None, :] ** powers, axis=2)
+    to_coefficients = np.linalg.inv(basis).T
+
+    def check(batch, depth):
+        matrices = np.einsum("pi,tijk->tpjk", bary, batch)
+        values = np.linalg.det(matrices)
+        if not np.isfinite(values).all() or np.any(values <= 0):
+            raise RuntimeError("Nonpositive sampled curved Jacobian")
+        coefficients = values @ to_coefficients
+        scale = np.linalg.norm(batch, axis=2).max(axis=1).prod(axis=1)
+        ambiguous = np.any(coefficients <= 128 * np.finfo(float).eps * scale[:, None], axis=1)
+        for cell in batch[ambiguous]:
+            if depth >= 12:
+                raise RuntimeError("Unresolved curved Jacobian positivity")
+            i, j = np.unravel_index(
+                np.argmax(np.linalg.norm(cell[:, None] - cell[None, :], axis=(2, 3))), (4, 4)
+            )
+            children = np.stack([cell, cell])
+            midpoint = (cell[i] + cell[j]) / 2
+            children[0, i] = midpoint
+            children[1, j] = midpoint
+            check(children, depth + 1)
+
+    for start in range(0, len(corners), 1024):
+        check(corners[start : start + 1024], 0)
+
+
 def cell_geometry(vertices):
     """Integrate Tet4/Tet10 volume and sample Jacobians independently of Meshers.
 
@@ -40,7 +85,7 @@ def cell_geometry(vertices):
         Integrated physical volumes per element.
 
     Raises:
-        RuntimeError: A sampled Jacobian is nonpositive.
+        RuntimeError: A sampled Jacobian is nonpositive or its lower bound is unresolved.
     """
     import numpy as np
 
@@ -56,7 +101,9 @@ def cell_geometry(vertices):
     ])
     dl = np.array([[-1.0, -1.0, -1.0], [1.0, 0.0, 0.0], [0.0, 1.0, 0.0], [0.0, 0.0, 1.0]])
     determinants = []
-    for location in bary:
+    corner_maps = []
+    vertices = np.subtract(vertices, vertices[:, :1])
+    for index, location in enumerate(bary):
         derivative = np.vstack([
             (4 * location - 1)[:, None] * dl,
             4
@@ -65,10 +112,14 @@ def cell_geometry(vertices):
                 + location[edges[:, 1], None] * dl[edges[:, 0]]
             ),
         ])
-        determinant = np.linalg.det(np.einsum("tni,nj->tij", vertices, derivative))
+        jacobians = np.einsum("tni,nj->tij", vertices, derivative)
+        if 5 <= index < 9:  # The four reference vertices follow the five quadrature points.
+            corner_maps.append(jacobians)
+        determinant = np.linalg.det(jacobians)
         if not np.isfinite(determinant).all() or np.any(determinant <= 0):
             raise RuntimeError("Nonpositive sampled curved Jacobian")
         determinants.append(determinant)
+    _check_curved_jacobians(np.stack(corner_maps, axis=1))
     return np.array([-2 / 15, *([3 / 40] * 4)]) @ np.array(determinants[:5])
 
 
@@ -389,7 +440,7 @@ def main():
         parser.error("Two installed environments and at least three repetitions are required")
     result = {
         "schema_version": 2,
-        "fixture_version": 2,
+        "fixture_version": 3,
         "suite": args.suite,
         "recorded_at": datetime.datetime.now(datetime.timezone.utc).isoformat(),
         "runner": os.environ.get("RUNNER_NAME", platform.node()),
