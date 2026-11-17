@@ -49,6 +49,7 @@ class AuditedCG:
             nonlocal iterations
             iterations += 1
 
+        solve_start = time.perf_counter()
         solution, info = cg(
             matrix,
             rhs,
@@ -58,11 +59,13 @@ class AuditedCG:
             maxiter=20000,
             callback=count,
         )
+        solve_seconds = time.perf_counter() - solve_start
         residual = float(np.linalg.norm(matrix @ solution - rhs) / max(np.linalg.norm(rhs), 1e-30))
         assert info == 0, (info, residual)
         assert residual < 2e-9, residual
         self.records.append({
             "iterations": iterations,
+            "cg_seconds": solve_seconds,
             "relative_residual": residual,
             "free_dofs": len(rhs),
         })
@@ -128,7 +131,7 @@ def element_geometry(mesh):
     return volumes, gradients
 
 
-def homogenize(mesh):  # ruff: ignore[too-many-locals, too-many-statements] - keep all six-load-case audits together.
+def homogenize(mesh, *, stress_probe_cell=None):  # ruff: ignore[too-many-locals, too-many-statements] - keep all six-load-case audits together.
     """Run strain- and stress-controlled fedoo homogenization and cross-check.
 
     Returns:
@@ -196,6 +199,8 @@ def homogenize(mesh):  # ruff: ignore[too-many-locals, too-many-statements] - ke
             "periodic_force_balance_relative_error": force_error,
             **solver.records[-1],
         })
+        if stress_probe_cell is not None:
+            checks[-1]["probe_sigma_xx"] = float(stress[stress_probe_cell, 0, 0])
     energy_matrix = np.einsum("t,itkl,jtkl->ij", volumes, all_strains, all_stresses)
     hill_mandel = float(np.linalg.norm(energy_matrix - stiffness) / np.linalg.norm(stiffness))
     reaction_error = float(np.linalg.norm(reactions - stiffness) / np.linalg.norm(stiffness))

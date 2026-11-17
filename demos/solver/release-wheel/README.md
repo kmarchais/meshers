@@ -44,3 +44,5 @@ Adaptive Gyroid used 52.1% fewer tetrahedra. The worst relative strain-energy ch
 Times are single observations in one process, in table order. The solver column includes the verification solves and audits inside homogenization. Independent two-sided distance admission and repeated equal-error workflow timings remain open. No live Microgen/MMG arm ran in this job.
 
 Run the [independent geometry audit](geometry-admission.md) on regenerated exports before using solver results in a comparison.
+
+The [live Schwarz P refinement series](schwarz-series.md) measures all three workflows against the same stiffness reference.
