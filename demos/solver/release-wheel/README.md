@@ -42,3 +42,5 @@ On OMEN, job 5202 ran three cases sequentially with one numerical thread. Each p
 Adaptive Gyroid used 52.1% fewer tetrahedra. The worst relative strain-energy change was +2.93861% across mixed loads against the fresh uniform tensor, compared with 2.92917% in the archived study. This is the largest absolute generalized eigenvalue of the symmetric tensor difference with uniform stiffness as the metric. It measures disagreement between two discrete solutions. Establishing which is closer to the physical solution requires an independently converged reference.
 
 Times are single observations in one process, in table order. The solver column includes the verification solves and audits inside homogenization. Independent two-sided distance admission and repeated equal-error workflow timings remain open. No live Microgen/MMG arm ran in this job.
+
+Run the [independent geometry audit](geometry-admission.md) on regenerated exports before using solver results in a comparison.
