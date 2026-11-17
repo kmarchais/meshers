@@ -42,9 +42,12 @@ On the published Windows 0.2.1 wheel, this call returned 189 nodes, 768 tets, vo
 
 ```python
 mesh = meshers.generate_intersection(
-    {"a": lambda x, y, z: 0*x - 1, "b": lambda x, y, z: 0*y - 2},
-    coordinate_map=lambda u, v, w: (u, v, w + u*u),
-    cells=4, optimize_passes=0, snap=0, geometry_tolerance=1e-4,
+    {"a": lambda x, y, z: 0 * x - 1, "b": lambda x, y, z: 0 * y - 2},
+    coordinate_map=lambda u, v, w: (u, v, w + u * u),
+    cells=4,
+    optimize_passes=0,
+    snap=0,
+    geometry_tolerance=1e-4,
 )
 ```
 
