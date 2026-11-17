@@ -28,3 +28,17 @@ The original Microgen comparison driver, dependency manifests and settings are o
 ```sh
 python experiments/adaptive/mesh_only_comparison.py --run schwarz-replay --case schwarz-solid --strengthened --warmups 1 --repetitions 5 --select actual-default,actual-explicit-tuned
 ```
+
+## Windows release-wheel run, 17 November 2026
+
+On OMEN, job 5202 ran three cases sequentially with one numerical thread. Each passed six prescribed-strain loads and six stress-controlled verification solves. The largest recomputed relative linear residual across all 36 systems was 1.07e-12. The export test also passed on retry with a writable temporary directory.
+
+| Tet4 mesh | Nodes | Tetrahedra | Free displacement DOFs (xx load) | Generation (s) | Homogenization and checks (s) |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| [Uniform Gyroid](windows-0.2.1-20261117/gyroid_uniform.json) | 17,647 | 72,757 | 49,941 | 0.83 | 27.97 |
+| [Adaptive Gyroid](windows-0.2.1-20261117/gyroid_adaptive.json) | 9,435 | 34,863 | 25,977 | 1.74 | 7.49 |
+| [Adaptive Schwarz P](windows-0.2.1-20261117/schwarz_native.json) | 8,700 | 35,989 | 23,145 | 0.97 | 5.13 |
+
+Adaptive Gyroid used 52.1% fewer tetrahedra. The worst relative strain-energy change was +2.93861% across mixed loads against the fresh uniform tensor, compared with 2.92917% in the archived study. This is the largest absolute generalized eigenvalue of the symmetric tensor difference with uniform stiffness as the metric. It measures disagreement between two discrete solutions. Establishing which is closer to the physical solution requires an independently converged reference.
+
+Times are single observations in one process, in table order. The solver column includes the verification solves and audits inside homogenization. Independent two-sided distance admission and repeated equal-error workflow timings remain open. No live Microgen/MMG arm ran in this job.
