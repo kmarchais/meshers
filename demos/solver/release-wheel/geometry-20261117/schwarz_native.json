@@ -1,0 +1,173 @@
+{
+  "case": "schwarz_native",
+  "versions": {
+    "meshers": "0.2.1",
+    "vtk": "9.7.1",
+    "pyvista": "0.49.0",
+    "numpy": "2.5.3",
+    "scipy": "1.18.1"
+  },
+  "mesh_sha256": "03ee6208c96eb8c0206a343bad87238e74fc025b0fa57f5359cd9e9835a08f21",
+  "specimen": "schwarz",
+  "nodes": 8700,
+  "tetrahedra": 35989,
+  "volume": 0.5000071070209379,
+  "face_connected_components": 1,
+  "component_signed_volumes": [
+    0.5000071070209379
+  ],
+  "minimum_quality": 0.42607340533336996,
+  "boundary": {
+    "wall 0": {
+      "mesh_to_reference_upper": {
+        "samples": 43778,
+        "maximum": 0.0012160984967822253,
+        "location": [
+          -0.20230372046451722,
+          0.2011191517615898,
+          -0.3533799313185563
+        ]
+      },
+      "reference_to_mesh": {
+        "samples": 7710,
+        "maximum": 0.0007944804942455162,
+        "location": [
+          -0.46797426603734493,
+          -0.25201189527500606,
+          0.01955205760896206
+        ]
+      }
+    },
+    "x-0.5": {
+      "mesh_to_reference_upper": {
+        "samples": 4102,
+        "maximum": 0.0009996673368139475,
+        "location": [
+          -0.5,
+          0.247994507707404,
+          0.017902505101731796
+        ]
+      },
+      "reference_to_mesh": {
+        "samples": 1666,
+        "maximum": 0.0,
+        "location": [
+          -0.5,
+          0.3993650656193495,
+          0.4675633907318115
+        ]
+      }
+    },
+    "x+0.5": {
+      "mesh_to_reference_upper": {
+        "samples": 4102,
+        "maximum": 0.0009996673368139475,
+        "location": [
+          0.5,
+          0.247994507707404,
+          0.017902505101731796
+        ]
+      },
+      "reference_to_mesh": {
+        "samples": 1666,
+        "maximum": 0.0,
+        "location": [
+          0.5,
+          0.3993650656193495,
+          0.4675633907318115
+        ]
+      }
+    },
+    "y-0.5": {
+      "mesh_to_reference_upper": {
+        "samples": 3962,
+        "maximum": 0.0009996673134167744,
+        "location": [
+          -0.24799450775448367,
+          -0.5,
+          0.01790250489075161
+        ]
+      },
+      "reference_to_mesh": {
+        "samples": 1666,
+        "maximum": 0.0,
+        "location": [
+          0.3993650656193495,
+          -0.5,
+          0.4675633907318115
+        ]
+      }
+    },
+    "y+0.5": {
+      "mesh_to_reference_upper": {
+        "samples": 3962,
+        "maximum": 0.0009996673134167744,
+        "location": [
+          -0.24799450775448367,
+          0.5,
+          0.01790250489075161
+        ]
+      },
+      "reference_to_mesh": {
+        "samples": 1666,
+        "maximum": 0.0,
+        "location": [
+          0.3993650656193495,
+          0.5,
+          0.4675633907318115
+        ]
+      }
+    },
+    "z-0.5": {
+      "mesh_to_reference_upper": {
+        "samples": 3962,
+        "maximum": 0.0009870791330385265,
+        "location": [
+          -0.24799442826335777,
+          0.01801500525300741,
+          -0.5
+        ]
+      },
+      "reference_to_mesh": {
+        "samples": 1666,
+        "maximum": 0.0,
+        "location": [
+          0.3993650656193495,
+          0.4675633907318115,
+          -0.5
+        ]
+      }
+    },
+    "z+0.5": {
+      "mesh_to_reference_upper": {
+        "samples": 3962,
+        "maximum": 0.0009870791330385265,
+        "location": [
+          -0.24799442826335777,
+          0.01801500525300741,
+          0.5
+        ]
+      },
+      "reference_to_mesh": {
+        "samples": 1666,
+        "maximum": 0.0,
+        "location": [
+          0.3993650656193495,
+          0.4675633907318115,
+          0.5
+        ]
+      }
+    }
+  },
+  "periodic_face_match": {
+    "x": true,
+    "y": true,
+    "z": true
+  },
+  "sobol_power": 11,
+  "material_witnesses": 1999,
+  "misclassified_witnesses": 0,
+  "first_misclassified_witness": null,
+  "failed_checks": [],
+  "sampled_admission": true
+}
