@@ -89,6 +89,12 @@ jobs:
       - run: cargo run --locked --release --example implicit_sphere
       - run: uv run --with scipy python demos/solver/convergence.py
       - run: uv run --with fedoo==0.8.4 python demos/solver/fedoo_convergence.py
+      - name: Exercise geometry and solver admission under optimized Python
+        run: >-
+          uv run --with fedoo==1.0.0b2 python -O -m pytest -q
+          tools/tests/test_fedoo_cg.py tools/tests/test_periodic_geometry.py
+          tools/tests/test_schwarz_series.py tools/tests/test_schwarz_repair.py
+          tools/tests/test_schwarz_trials.py
       - run: uv run --with fedoo==1.0.0b2 python demos/solver/fedoo_homogenization.py
       - uses: actions/upload-artifact@v4
         with:
