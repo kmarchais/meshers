@@ -37,10 +37,14 @@ def bounds(triangles):
 
 
 def relocate_star(points, cells, node, target=0.1):  # ruff: ignore[too-many-locals] - preserve the archived numerical control.
-    """Return the candidate vertex and diagnostics for its incident tetrahedra."""
+    """Return the candidate vertex and diagnostics for its incident tetrahedra.
+
+    Raises:
+        ValueError: The vertex star is empty or degenerate, or the target is invalid.
+    """
     selected = np.flatnonzero((cells == node).any(axis=1))
-    assert len(selected)
-    assert target > 0
+    if not len(selected) or not target > 0:
+        raise ValueError("Relocation needs an incident tetrahedron and a positive quality target")
     star = cells[selected]
     positions = np.argmax(star == node, axis=1)
     fixed = np.array([
@@ -63,7 +67,8 @@ def relocate_star(points, cells, node, target=0.1):  # ruff: ignore[too-many-loc
         return points[node].copy(), row
     origin = points[node].copy()
     scale = float(np.linalg.norm(points[np.unique(star)] - origin, axis=1).max())
-    assert scale > 0
+    if not scale > 0:
+        raise ValueError("Degenerate vertex star")
     coordinates = (points[star] - origin) / scale
     initial_squared = sum(
         np.sum((coordinates[:, first] - coordinates[:, second]) ** 2, axis=1)
@@ -116,12 +121,17 @@ def relocate_star(points, cells, node, target=0.1):  # ruff: ignore[too-many-loc
 
 
 def audit(points, cells, surface):  # ruff: ignore[too-many-locals] - preserve the archived numerical control.
-    """Return the facet incidence and orientation checks for the input mesh."""
+    """Return the facet incidence and orientation checks for the input mesh.
+
+    Raises:
+        ValueError: A tetrahedron has repeated or out-of-range point indices.
+    """
     cells = cells[:, :4]
     surface = surface[:, :3]
-    assert cells.min() >= 0
-    assert cells.max() < len(points)
-    assert not (np.diff(np.sort(cells, axis=1), axis=1) == 0).any()
+    if cells.min() < 0 or cells.max() >= len(points):
+        raise ValueError("Tetrahedron point index out of range")
+    if (np.diff(np.sort(cells, axis=1), axis=1) == 0).any():
+        raise ValueError("Tetrahedron contains repeated vertices")
     oriented = cells[:, FACES].reshape(-1, 3)
     inversions = (oriented[:, 0] > oriented[:, 1]).astype(int)
     inversions += oriented[:, 0] > oriented[:, 2]
@@ -186,11 +196,31 @@ def audit(points, cells, surface):  # ruff: ignore[too-many-locals] - preserve t
     }
 
 
+def check_repair(points, moved, cells, boundary):
+    """Check that relocation preserves the boundary and material volume.
+
+    Returns:
+        Signed volume change and smallest final signed determinant.
+
+    Raises:
+        ValueError: A repair reversed an element or changed the volume.
+    """
+    np.testing.assert_array_equal(moved[boundary], points[boundary])
+    old_determinants = np.linalg.det(points[cells[:, 1:]] - points[cells[:, :1]])
+    new_determinants = np.linalg.det(moved[cells[:, 1:]] - moved[cells[:, :1]])
+    if not np.all(new_determinants > 0):
+        raise ValueError("Repair produced a nonpositive or nonfinite determinant")
+    volume_difference = float((new_determinants.sum() - old_determinants.sum()) / 6)
+    if not abs(volume_difference) < 1e-12:
+        raise ValueError(f"Repair changed signed volume by {volume_difference}")
+    return volume_difference, float(new_determinants.min())
+
+
 def repair(points, cells, surface, *, maximum_attempts=400):
     """Return the repaired points and the diagnostics from the two-sweep repair.
 
     Raises:
-        ValueError: The input fails the oriented facet consistency check.
+        ValueError: The mesh fails a topology, repair progress, orientation or volume check.
     """
     if not audit(points, cells, surface)["oriented_facet_consistency_passed"]:
         raise ValueError("Source fails oriented facet consistency; relocation is unsupported")
@@ -213,9 +243,7 @@ def repair(points, cells, surface, *, maximum_attempts=400):
                     "status": "all-boundary",
                     "target_attained": False,
                 })
-            for node in free:
-                if len(attempts) >= maximum_attempts:
-                    break
+            for node in free[: maximum_attempts - len(attempts)]:
                 candidate, record = relocate_star(moved, cells, int(node), target=0.100001)
                 record.update(element=int(element), sweep=sweep)
                 attempts.append(record)
@@ -223,7 +251,10 @@ def repair(points, cells, surface, *, maximum_attempts=400):
                     bad_before = int((measured < 0.1).sum())
                     moved[node] = candidate
                     measured = quality(moved, cells)
-                    assert int((measured < 0.1).sum()) < bad_before
+                    if int((measured < 0.1).sum()) >= bad_before:
+                        raise ValueError(
+                            "Accepted relocation did not reduce the number of poor elements"
+                        )
                     accepted.append(int(node))
                     break
         if (
@@ -232,12 +263,7 @@ def repair(points, cells, surface, *, maximum_attempts=400):
             or len(attempts) >= maximum_attempts
         ):
             break
-    np.testing.assert_array_equal(moved[boundary], points[boundary])
-    old_determinants = np.linalg.det(points[cells[:, 1:]] - points[cells[:, :1]])
-    new_determinants = np.linalg.det(moved[cells[:, 1:]] - moved[cells[:, :1]])
-    assert new_determinants.min() > 0
-    volume_difference = float((new_determinants.sum() - old_determinants.sum()) / 6)
-    assert abs(volume_difference) < 1e-12
+    volume_difference, minimum_determinant = check_repair(points, moved, cells, boundary)
     return moved, {
         "initial_bad_elements": int((initial < 0.1).sum()),
         "remaining_bad_elements": int((measured < 0.1).sum()),
@@ -250,7 +276,7 @@ def repair(points, cells, surface, *, maximum_attempts=400):
         "maximum_sweeps": 2,
         "boundary_coordinates_unchanged": True,
         "signed_volume_difference": volume_difference,
-        "minimum_signed_determinant": float(new_determinants.min()),
+        "minimum_signed_determinant": minimum_determinant,
     }
 
 
