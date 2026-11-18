@@ -114,3 +114,9 @@ def test_translated_component_witness(height):
 
     assert covers_center(vertices)
     assert not covers_center(vertices[:0])
+
+
+def test_mapped_cap_error_is_gated_independently_of_larger_wall_error():
+    base = {**BASE, "mapped_cap_error": 0.0001}
+    head = {**base, "mapped_cap_error": 0.0002}
+    assert gate.regressions(base, head) == ["mapped cap error increased by more than 5%"]
