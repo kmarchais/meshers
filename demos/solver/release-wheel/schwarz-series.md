@@ -56,3 +56,5 @@ Across 5 configurations, 45 native workers completed the geometry checks and sol
 On the two Linux configurations, 54 initial workers exited during the Gmsh import because the OpenGL utility library was missing. Their records are in `first_attempt`. The measured retries used the distribution's libGLU and libOpenGL in the benchmark environment. Linux wheel installations also need execute permission on the MMG command-line programs.
 
 The [stage audits and native sizing study](schwarz-diagnostics-20261118/README.md) locate the first wall failure and bracket the native stiffness target.
+
+Tightening the first MMG pass on the resolution-30 seed produced a qualifying repaired Tet4 mesh. The follow-up compares both routes at 1% and tests CG ordering on a held-out phase. [Matched costs and phase trial](schwarz-matched-cost-20261118/README.md)

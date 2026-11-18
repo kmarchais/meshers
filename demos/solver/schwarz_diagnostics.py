@@ -11,7 +11,7 @@ from pathlib import Path
 import fedoo as fd
 import numpy as np
 import pyvista as pv
-from fedoo_homogenization import AuditedCG
+from fedoo_homogenization import AuditedCG, ReorderedCG
 from historical_schwarz_repair import repaired_grid
 from microgen.external import MmgError
 from periodic_geometry import BASELINE, audit
@@ -23,8 +23,22 @@ from vtkmodules.vtkCommonCore import vtkSMPTools
 sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 from tools.performance_gate import cell_geometry
 
-SIZES = {"medium": (0.06, 0.0007), "fine": (0.04, 0.00045), "finest": (0.032, 0.0003)}
-CASES = ("default", "tuned", "single-pass-repair", "repaired-solve", *SIZES, "curved-tet10")
+SIZES = {
+    "medium": (0.06, 0.0007),
+    "fine": (0.04, 0.00045),
+    "near-target": (0.038, 0.00041),
+    "finest": (0.032, 0.0003),
+}
+CASES = (
+    "default",
+    "tuned",
+    "single-pass-repair",
+    "repaired-solve",
+    *SIZES,
+    "curved-tet10",
+    "shifted-baseline",
+    "shifted-rcm",
+)
 
 
 def stage_study(case, folder, row, baseline):
@@ -109,7 +123,7 @@ def quadratic_control(row, baseline):
     )
 
 
-def measure(case, parent, row, baseline, repair_resolution):
+def measure(case, parent, row, baseline, *, repair_resolution, repair_hmax):  # ruff: ignore[too-many-arguments] - MMG controls are keyword-only.
     """Run one diagnostic under the pinned geometry and solver settings.
 
     Raises:
@@ -119,17 +133,19 @@ def measure(case, parent, row, baseline, repair_resolution):
     if row["versions"] != PACKAGES or vtkSMPTools.GetBackend() != "Sequential":
         raise RuntimeError("Install the pinned packages with sequential VTK support")
     with tempfile.TemporaryDirectory(dir=parent) as temp:
-        if case in SIZES:
-            size, tolerance = SIZES[case]
+        if case in SIZES or case.startswith("shifted-"):
+            size, tolerance = SIZES.get(case, SIZES["finest"])
             run(
                 "native",
                 24,
                 Path(temp),
                 row,
                 native_settings={"max_length": size, "adapt_tolerance": tolerance},
+                shifted=case.startswith("shifted-"),
+                solver_factory=ReorderedCG if case == "shifted-rcm" else AuditedCG,
             )
         elif case == "repaired-solve":
-            run("microgen-repaired", repair_resolution, Path(temp), row)
+            run("microgen-repaired", repair_resolution, Path(temp), row, repair_hmax=repair_hmax)
         elif case == "curved-tet10":
             quadratic_control(row, baseline)
         else:
@@ -146,7 +162,14 @@ def main():
     parser.add_argument("case", choices=CASES)
     parser.add_argument("output", type=Path)
     parser.add_argument("--repair-resolution", type=int, choices=(30, 34, 36))
+    parser.add_argument(
+        "--repair-hmax", type=float, help="Maximum edge length in the first MMG pass"
+    )
     args = parser.parse_args()
+    if args.repair_hmax is not None and (
+        args.case != "repaired-solve" or not 0 < args.repair_hmax <= 1
+    ):
+        parser.error("--repair-hmax requires repaired-solve and a length in (0, 1]")
     if args.repair_resolution is not None and args.case != "repaired-solve":
         parser.error("--repair-resolution applies to repaired-solve")
     baseline = json.loads(BASELINE.read_text())
@@ -160,7 +183,14 @@ def main():
     }
     with args.output.open("x", encoding="utf8") as out:
         try:
-            measure(args.case, args.output.parent, row, baseline, args.repair_resolution or 30)
+            measure(
+                args.case,
+                args.output.parent,
+                row,
+                baseline,
+                repair_resolution=args.repair_resolution or 30,
+                repair_hmax=args.repair_hmax or 0.1,
+            )
         except MmgError:
             row.update(status="failed", error="MmgError: MMG failed with the recorded arguments")
             raise
