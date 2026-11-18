@@ -969,6 +969,13 @@ fn finish_with_constraints<F: ScalarField>(
     }
     let mut tags = Vec::new();
     let mut error: f64 = 0.;
+    let mut worst_point = [0.; 3];
+    let mut observe_distance = |point: Point, distance: f64| {
+        if distance > error {
+            error = distance;
+            worst_point = point;
+        }
+    };
     let mut samples = Vec::new();
     let [lo, hi] = g.bounds();
     for f in &mesh.surface {
@@ -1039,28 +1046,28 @@ fn finish_with_constraints<F: ScalarField>(
                             g.bounds(),
                         )
                     };
-                    error = error.max(distance);
+                    observe_distance(sample.0, distance);
                 } else if g.batched() {
                     samples.push(sample);
                     if samples.len() == 4096 {
-                        error = error.max(distance_batch(g, &samples)?);
+                        distance_batch(g, &samples, &mut observe_distance)?;
                         samples.clear();
                     }
                 } else {
-                    error = error.max(g.distance_in(sample.0, sample.1));
+                    observe_distance(sample.0, g.distance_in(sample.0, sample.1));
                 }
             }
         }
     }
     if !samples.is_empty() {
-        error = error.max(distance_batch(g, &samples)?);
+        distance_batch(g, &samples, &mut observe_distance)?;
     }
     if !nonmanifold_vertices(&mesh.surface, mesh.points.len()).is_empty() {
         return Err("solid boundary is not a closed two-manifold at its edges or vertices".into());
     }
     if !error.is_finite() || error > g.options.geometry_tolerance {
         return Err(format!(
-            "sampled geometry error {error:e} exceeds tolerance {:e}; increase resolution or budget",
+            "sampled geometry error {error:e} exceeds tolerance {:e}; increase resolution or budget (worst sample at {worst_point:?})",
             g.options.geometry_tolerance
         ));
     }
@@ -1876,18 +1883,17 @@ fn snap_batch<F: ScalarField>(
 fn distance_batch<F: ScalarField>(
     g: &Context<F>,
     samples: &[(Point, [bool; 3])],
-) -> Result<f64, String> {
+    observe: &mut impl FnMut(Point, f64),
+) -> Result<(), String> {
     g.check()?;
     let points: Vec<Point> = samples.iter().map(|s| s.0).collect();
     let values = g.values(&points);
     let gradients = g.gradients(&points);
-    let mut error = 0_f64;
-    for ((v, grad), (_, locked)) in values.into_iter().zip(gradients).zip(samples) {
+    for ((v, grad), (point, locked)) in values.into_iter().zip(gradients).zip(samples) {
         let residual = if g.band() { v.abs() - g.threshold() } else { v };
-        error = error.max(wall_distance(residual, grad, *locked));
+        observe(*point, wall_distance(residual, grad, *locked));
     }
-    g.check()?;
-    Ok(error)
+    g.check()
 }
 
 #[cfg(test)]

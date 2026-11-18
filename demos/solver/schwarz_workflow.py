@@ -16,13 +16,10 @@ from types import SimpleNamespace
 from unittest.mock import patch
 
 import fedoo as fd
-import microgen
-import microgen.remesh
 import numpy as np
 import pyvista as pv
 from fedoo_homogenization import AuditedCG, homogenize
 from historical_schwarz_repair import repaired_grid
-from microgen.shape import surface_functions
 from periodic_geometry import BASELINE, audit
 from release_wheel_comparison import generate, hardware_snapshot
 from scipy.linalg import eigvalsh
@@ -68,6 +65,10 @@ def live_microgen(  # ruff: ignore[too-many-arguments] - optional controls repro
     Raises:
         RuntimeError: A source, MMG executable or mesh size fails its precondition.
     """
+    # Only the historical comparison needs the VTK and MMG backend from Microgen.
+    import microgen.remesh  # ruff: ignore[import-outside-top-level]
+    from microgen.shape import surface_functions  # ruff: ignore[import-outside-top-level]
+
     sources = {
         "microgen/shape/tpms.py": digest(inspect.getfile(microgen.Tpms)),
         "microgen/remesh.py": digest(microgen.remesh.__file__),
@@ -168,14 +169,14 @@ def run(  # ruff: ignore[too-many-arguments] - keyword controls identify the exp
     Raises:
         RuntimeError: A package version or VTK backend differs from the study.
     """
-    if row["versions"] != PACKAGES:
+    if route != "native-candidate" and row["versions"] != PACKAGES:
         raise RuntimeError("Install the pinned comparison packages")
     vtkSMPTools.SetBackend("Sequential")
     if vtkSMPTools.GetBackend() != "Sequential":
         raise RuntimeError("A single-threaded VTK backend is required")
     baseline = json.loads(BASELINE.read_text())
     start = time.perf_counter()
-    if route == "native":
+    if route in {"native", "native-candidate"}:
         cfg = dict(baseline["routes"]["schwarz_native"]["config"], cells=cells)
         cfg.update(native_settings or {})
         if shifted:
@@ -255,12 +256,23 @@ def solve_admitted(grid, geometry, row, *, solver_factory=AuditedCG):
 
 
 def main():
-    """Save a timed workflow record including rejected meshes and solver failures."""
+    """Save a workflow record.
+
+    Returns:
+        A failing exit code if the candidate misses geometry or stiffness admission.
+    """
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("route", choices=("native", "microgen-default", "microgen-tuned"))
+    parser.add_argument(
+        "route", choices=("native", "native-candidate", "microgen-default", "microgen-tuned")
+    )
     parser.add_argument("output", type=Path)
     parser.add_argument("--cells", type=int, help="VTK resolution or native background cells")
     args = parser.parse_args()
+    candidate = args.route == "native-candidate"
+    if candidate:
+        if args.cells is not None:
+            parser.error("native-candidate uses the fixed 24-cell refinement control")
+        args.cells = 24
     if args.cells is not None and args.cells < 2:
         parser.error("--cells must be at least 2")
     if args.route != "microgen-default" and args.cells is None:
@@ -274,11 +286,16 @@ def main():
         "platform": hardware["platform"],
         "hardware": hardware,
         "reference_sha256": digest(REFERENCE),
-        "versions": {pkg: version(pkg) for pkg in PACKAGES},
+        "versions": {
+            pkg: version(pkg)
+            for pkg in PACKAGES
+            if not candidate or pkg not in {"mmgpy", "microgen"}
+        },
     }
     start = time.perf_counter()
     try:
-        run(args.route, args.cells, args.output, row)
+        settings = {"max_length": 0.032, "adapt_tolerance": 0.0003} if candidate else None
+        run(args.route, args.cells, args.output, row, native_settings=settings)
     except Exception as exc:
         row.update(status="failed", error=f"{type(exc).__name__}: {exc}")
         raise
@@ -288,6 +305,8 @@ def main():
             json.dumps(row, indent=2, allow_nan=False) + "\n", encoding="utf8"
         )
 
+    return int(candidate and row["status"] != "within-reference-target")
+
 
 if __name__ == "__main__":
-    main()
+    raise SystemExit(main())

@@ -70,7 +70,7 @@ jobs:
           path: .local-work/coverage-reference
           sparse-checkout: benchmarks/microgen/microgen_benchmark
           persist-credentials: false
-      - name: Check the six admitted eight-cell specimens against the historical limits
+      - name: Check eight-cell sheet and lattice recipes against the historical limits
         if: matrix.python == '3.12'
         working-directory: .
         run: |
@@ -79,12 +79,15 @@ jobs:
           mkdir coverage-results
           status=0
           for specimen in gyroid schwarz-p neovius graded-gyroid thin-gyroid implicit-lattice; do
-            options=()
-            case "$specimen" in
-              gyroid|schwarz-p) ;;
-              *) options+=(--adapt) ;;
-            esac
-            python demos/solver/implicit_coverage.py --reference "$reference" --case "$specimen" "${options[@]}" --require-admitted --output "coverage-results/$specimen.json" || status=1
+            for passes in 0 4 12; do
+              options=(--adapt)
+              case "$specimen:$passes" in
+                gyroid:*|schwarz-p:4) options=() ;;
+                thin-gyroid:0) options+=(--adapt-tolerance 0.008) ;;
+                implicit-lattice:0) options+=(--adapt-tolerance 0.006) ;;
+              esac
+              python demos/solver/implicit_coverage.py --reference "$reference" --case "$specimen" --passes "$passes" "${options[@]}" --require-admitted --output "coverage-results/$specimen-$passes.json" || status=1
+            done
           done
           exit "$status"
       - uses: actions/upload-artifact@v4
@@ -92,6 +95,23 @@ jobs:
         with:
           name: implicit-coverage-${{ matrix.os }}
           path: coverage-results/*.json
+          if-no-files-found: ignore
+      - name: Check candidate Schwarz geometry and effective stiffness
+        if: matrix.python == '3.12'
+        working-directory: .
+        env:
+          OPENBLAS_NUM_THREADS: '1'
+          OMP_NUM_THREADS: '1'
+          MKL_NUM_THREADS: '1'
+          RAYON_NUM_THREADS: '1'
+        run: |
+          uv pip install --system fedoo==1.0.0b2
+          python demos/solver/schwarz_workflow.py native-candidate candidate-acceptance
+      - uses: actions/upload-artifact@v4
+        if: always() && matrix.python == '3.12'
+        with:
+          name: schwarz-candidate-acceptance-${{ matrix.os }}
+          path: candidate-acceptance/result.json
           if-no-files-found: ignore
       - uses: actions/upload-artifact@v4
         with:
@@ -125,7 +145,7 @@ jobs:
           uv run --with fedoo==1.0.0b2 python -O -m pytest -q
           tools/tests/test_fedoo_cg.py tools/tests/test_periodic_geometry.py
           tools/tests/test_schwarz_series.py tools/tests/test_schwarz_repair.py
-          tools/tests/test_schwarz_trials.py
+          tools/tests/test_schwarz_trials.py tools/tests/test_schwarz_candidate.py
       - run: uv run --with fedoo==1.0.0b2 python demos/solver/fedoo_homogenization.py
       - uses: actions/upload-artifact@v4
         with:
