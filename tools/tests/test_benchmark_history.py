@@ -110,3 +110,15 @@ def test_preserves_real_regression_and_failed_worker(tmp_path):
     page = (tmp_path / "benchmarks/v0.2.0-failed-control.md").read_text()
     assert "quality_min decreased" in page
     assert "sample failed" in page
+
+
+def test_mapped_cap_measurements_are_required_in_new_fixture_records():
+    data = measurement()
+    data["fixture_version"] = gate.FIXTURE_VERSION
+    with pytest.raises(ValueError, match="Invalid numeric measurement"):
+        history.validate(data)
+    case = data["cases"]["mapped_intersection"]
+    for label, rows in case["runs"].items():
+        for row in [*rows, case["medians"][label]]:
+            row["mapped_cap_error"] = 0.001
+    history.validate(data)

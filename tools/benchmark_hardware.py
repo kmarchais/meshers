@@ -20,7 +20,8 @@ def hardware_snapshot() -> dict[str, str | int | None]:
             "| ConvertTo-Json -Compress"
         )
         powershell = (
-            Path(os.environ["SYSTEMROOT"]) / "System32/WindowsPowerShell/v1.0/powershell.exe"
+            Path(os.environ.get("SYSTEMROOT") or os.environ.get("WINDIR") or r"C:\Windows")
+            / "System32/WindowsPowerShell/v1.0/powershell.exe"
         )
         specs = json.loads(
             subprocess.check_output(  # ruff: ignore[subprocess-without-shell-equals-true] - fixed CIM fields.

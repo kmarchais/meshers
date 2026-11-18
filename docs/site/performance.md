@@ -29,13 +29,13 @@ process high-water mark through mesh generation, including imports and JIT.
 | Median elapsed time | More than 25% plus 20 ms above base |
 | Median peak RSS | More than 15% plus 8 MiB above base |
 | Minimum, maximum, mean, median, p05, p10 or p90 MMG quality | More than 1% below base |
-| Sampled surface error | More than 5% plus 1e-10 above base |
+| Sampled wall error and, for the mapped intersection, sampled cap error (each) | More than 5% plus 1e-10 above base |
 | Mesh volume | Changes by more than 0.5% |
 | Tetrahedron count | Changes by more than 1% |
 
 Every sample must also have finite coordinates, positive cell volumes, closed
 boundary edge incidence and the requested periodic correspondence. Its minimum
-quality must be at least 0.01 and sampled surface error at most 0.1.
+quality must be at least 0.01 and each sampled surface error at most 0.1. Fixture version 4 compares the named walls and mapped caps separately. The gate measures the cylindrical and planar caps on the returned triangles for both wheels.
 
 A changed mesh count or volume may be intentional, but it needs review rather
 than being counted silently as a performance improvement. Do not weaken a gate
