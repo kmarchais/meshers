@@ -87,7 +87,9 @@ class ReorderedCG(AuditedCG):
         x = np.empty_like(permuted_solution)
         x[order] = permuted_solution
         residual = float(np.linalg.norm(matrix @ x - rhs) / max(np.linalg.norm(rhs), 1e-30))
-        assert residual < 2e-9, residual
+        require(
+            residual < 2e-9, f"Original-system CG relative residual {residual} exceeds the limit"
+        )
         self.records[-1].update(
             ordering_seconds=ordering_seconds, original_relative_residual=residual
         )

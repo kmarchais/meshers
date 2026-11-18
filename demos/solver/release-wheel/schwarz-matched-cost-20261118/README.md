@@ -16,6 +16,8 @@ Native Tet4 had the lower median wall time on all five configurations. It saved 
 
 The first timing round compared the native finest setting (maximum edge 0.032, adaptation tolerance 0.00030) with every repaired setting that passed its screen. The fastest repaired setting beat that native mesh, which reached 0.706% stiffness discrepancy. We then tested one intermediate native setting (0.038, 0.00041) between finest and the earlier failing fine setting (0.040, 0.00045 at 1.032%). This second round used the same geometry, loads, reference, mesh budget and 1% limit. The intermediate native setting cleared the threshold by about 0.008 percentage points on this specimen.
 
+The timing comparison depends on the frozen reference. Recomputing the extrapolation from the same 16- and 20-cell Tet10 tensors with order two in place of the published order four gives 1.0122% native discrepancy and 0.9471–0.9484% repaired discrepancy. Only the repaired setting meets 1% under that assumption. The two orders test sensitivity. Establishing continuum accuracy needs a more finely resolved reference. On a new configuration, rerun the sizing screen before interpreting the fixed hmax=0.05 bracket as the fastest repair.
+
 The paired round alternates native and repaired `hmax=0.05` in AB, BA, AB order. Values above are medians of three fresh processes per setting. The three changes compare individual pairs with the repaired time as the denominator. Screening costs and the initial finest comparison remain in the raw records. [All settings and medians](summary.json)
 
 ### Initial finest comparison

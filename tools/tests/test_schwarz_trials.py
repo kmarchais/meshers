@@ -110,3 +110,13 @@ def test_reordered_cg_returns_original_degrees_of_freedom():
     solver = ReorderedCG()
     np.testing.assert_allclose(matrix @ solver(matrix, rhs), rhs, atol=1e-12)
     assert solver.records[-1]["original_relative_residual"] < 1e-12
+
+
+def test_reordered_solver_rejects_bad_original_residual(monkeypatch):
+    pytest.importorskip("fedoo")
+    from fedoo_homogenization import AuditedCG, ReorderedCG
+    from scipy.sparse import eye
+
+    monkeypatch.setattr(AuditedCG, "__call__", lambda self, matrix, rhs: np.zeros_like(rhs))
+    with pytest.raises(ValueError, match="Original-system CG relative residual"):
+        ReorderedCG()(eye(3, format="csr"), np.ones(3))
