@@ -71,22 +71,26 @@
         "h050": {
           "status": "within-reference-target",
           "discrepancy": 0.009266950037082364,
-          "minimum_quality": 0.10322716092079502
+          "minimum_quality": 0.10322716092079502,
+          "accepted_interior_moves": 0
         },
         "h040": {
           "status": "within-reference-target",
           "discrepancy": 0.007988447957916655,
-          "minimum_quality": 0.10000100099999816
+          "minimum_quality": 0.10000100099999816,
+          "accepted_interior_moves": 3
         },
         "h035": {
           "status": "geometry-rejected",
           "discrepancy": null,
-          "minimum_quality": 0.09627777731312143
+          "minimum_quality": 0.09627777731312143,
+          "accepted_interior_moves": 3
         },
         "h030": {
           "status": "within-reference-target",
           "discrepancy": 0.007499502261867517,
-          "minimum_quality": 0.10000100099976723
+          "minimum_quality": 0.10000100099976723,
+          "accepted_interior_moves": 1
         }
       }
     },
@@ -304,22 +308,26 @@
         "h050": {
           "status": "within-reference-target",
           "discrepancy": 0.009280590309827249,
-          "minimum_quality": 0.10701011270793911
+          "minimum_quality": 0.10701011270793911,
+          "accepted_interior_moves": 0
         },
         "h040": {
           "status": "within-reference-target",
           "discrepancy": 0.007981313393932314,
-          "minimum_quality": 0.10416034535027872
+          "minimum_quality": 0.10416034535027872,
+          "accepted_interior_moves": 0
         },
         "h035": {
           "status": "within-reference-target",
           "discrepancy": 0.007868274218222532,
-          "minimum_quality": 0.10000100099984123
+          "minimum_quality": 0.10000100099984123,
+          "accepted_interior_moves": 1
         },
         "h030": {
           "status": "within-reference-target",
           "discrepancy": 0.00748848834947932,
-          "minimum_quality": 0.10407376548805522
+          "minimum_quality": 0.10407376548805522,
+          "accepted_interior_moves": 0
         }
       }
     },
@@ -371,6 +379,84 @@
         -6.605281596884128
       ],
       "wall_change_percent": -6.034967462500207
+    },
+    "repair": {
+      "repair_seconds": 0.7912975129984261,
+      "accepted_moves": 0,
+      "hmax": 0.05
+    },
+    "bracket": {
+      "screen_status": "within-reference-target",
+      "screen_discrepancy": 0.009917799377700256,
+      "medians": {
+        "near-target": {
+          "wall": 52.97877803099982,
+          "generation_export_repair": 4.134689858998172,
+          "audit": 0.943478781999147,
+          "assembly": 0.7024028439991525,
+          "cg": 41.91911737099872,
+          "fea": 46.34418606300096,
+          "peak_mib": 943.25,
+          "dofs": 80412,
+          "nodes": 30070,
+          "tet4": 133730,
+          "discrepancy": 0.009917799377700256,
+          "ordering": 0
+        },
+        "h050": {
+          "wall": 81.67593563300034,
+          "generation_export_repair": 9.951927141999477,
+          "audit": 1.0172461550027947,
+          "assembly": 0.913419361004344,
+          "cg": 64.02747028000158,
+          "fea": 69.15963823000129,
+          "peak_mib": 979.421875,
+          "dofs": 89274,
+          "nodes": 32070,
+          "tet4": 154012,
+          "discrepancy": 0.009280590309827249,
+          "ordering": 0
+        }
+      },
+      "paired_native_change_percent": [
+        -35.37013154505484,
+        -34.43683803030196,
+        -34.71491853782004
+      ]
+    },
+    "selected": {
+      "native": "near-target",
+      "microgen": "h050",
+      "near-target_block": "bracket",
+      "near-target_metrics": {
+        "wall": 52.97877803099982,
+        "generation_export_repair": 4.134689858998172,
+        "audit": 0.943478781999147,
+        "assembly": 0.7024028439991525,
+        "cg": 41.91911737099872,
+        "fea": 46.34418606300096,
+        "peak_mib": 943.25,
+        "dofs": 80412,
+        "nodes": 30070,
+        "tet4": 133730,
+        "discrepancy": 0.009917799377700256,
+        "ordering": 0
+      },
+      "h050_block": "bracket",
+      "h050_metrics": {
+        "wall": 81.67593563300034,
+        "generation_export_repair": 9.951927141999477,
+        "audit": 1.0172461550027947,
+        "assembly": 0.913419361004344,
+        "cg": 64.02747028000158,
+        "fea": 69.15963823000129,
+        "peak_mib": 979.421875,
+        "dofs": 89274,
+        "nodes": 32070,
+        "tet4": 154012,
+        "discrepancy": 0.009280590309827249,
+        "ordering": 0
+      }
     }
   },
   "core-i7-12700h": {
@@ -380,6 +466,234 @@
       "ram_bytes": 34070847488,
       "machine": "AMD64",
       "platform": "Windows-11-10.0.26300-SP0"
+    },
+    "sizing": {
+      "medians": {
+        "native": {
+          "wall": 130.125,
+          "generation_export_repair": 10.86422559991479,
+          "audit": 2.3910846000071615,
+          "assembly": 2.1413674998329952,
+          "cg": 99.69987950020004,
+          "fea": 113.11259129992686,
+          "peak_mib": 1110.953125,
+          "dofs": 115782,
+          "nodes": 42320,
+          "tet4": 189873,
+          "discrepancy": 0.007056747657559711,
+          "ordering": 0
+        },
+        "h050": {
+          "wall": 117.64000000001397,
+          "generation_export_repair": 15.550159699982032,
+          "audit": 1.9105157000012696,
+          "assembly": 1.9392590001225471,
+          "cg": 86.19554519979283,
+          "fea": 96.68491750000976,
+          "peak_mib": 866.23828125,
+          "dofs": 89274,
+          "nodes": 32070,
+          "tet4": 154012,
+          "discrepancy": 0.0092805903098237,
+          "ordering": 0
+        },
+        "h040": {
+          "wall": 147.5779999999795,
+          "generation_export_repair": 17.189575999975204,
+          "audit": 2.394230299978517,
+          "assembly": 2.490883400081657,
+          "cg": 110.26736639987212,
+          "fea": 124.17253790004179,
+          "peak_mib": 1076.45703125,
+          "dofs": 114174,
+          "nodes": 40370,
+          "tet4": 203607,
+          "discrepancy": 0.007981313393935048,
+          "ordering": 0
+        },
+        "h035": {
+          "wall": 150.51600000006147,
+          "generation_export_repair": 17.414056699955836,
+          "audit": 2.4070968000451103,
+          "assembly": 2.5435400997521356,
+          "cg": 112.46861300012097,
+          "fea": 126.42264879995491,
+          "peak_mib": 1085.74609375,
+          "dofs": 115359,
+          "nodes": 40765,
+          "tet4": 205845,
+          "discrepancy": 0.00786827421822918,
+          "ordering": 0
+        },
+        "h030": {
+          "wall": 176.9220000000205,
+          "generation_export_repair": 19.164942300063558,
+          "audit": 2.596703799907118,
+          "assembly": 2.7891187000786886,
+          "cg": 135.57898409978952,
+          "fea": 151.44726479996461,
+          "peak_mib": 1155.95703125,
+          "dofs": 124362,
+          "nodes": 43766,
+          "tet4": 223353,
+          "discrepancy": 0.007540878472103815,
+          "ordering": 0
+        }
+      },
+      "cheapest_microgen": "h050",
+      "screen": {
+        "h050": {
+          "status": "within-reference-target",
+          "discrepancy": 0.0092805903098237,
+          "minimum_quality": 0.10701011270793911,
+          "accepted_interior_moves": 0
+        },
+        "h040": {
+          "status": "within-reference-target",
+          "discrepancy": 0.007981313393935048,
+          "minimum_quality": 0.10416034535027872,
+          "accepted_interior_moves": 0
+        },
+        "h035": {
+          "status": "within-reference-target",
+          "discrepancy": 0.00786827421822918,
+          "minimum_quality": 0.10000100099984123,
+          "accepted_interior_moves": 1
+        },
+        "h030": {
+          "status": "within-reference-target",
+          "discrepancy": 0.007540878472103815,
+          "minimum_quality": 0.10000100099999999,
+          "accepted_interior_moves": 1
+        }
+      }
+    },
+    "phase": {
+      "medians": {
+        "shifted-baseline": {
+          "wall": 132.0,
+          "generation_export_repair": 10.649388199904934,
+          "audit": 2.381952500087209,
+          "assembly": 2.154649400152266,
+          "cg": 102.05869040021207,
+          "fea": 115.3667663000524,
+          "peak_mib": 1109.94140625,
+          "dofs": 115170,
+          "nodes": 41963,
+          "tet4": 188993,
+          "discrepancy": 0.007116917112981405,
+          "ordering": 0
+        },
+        "shifted-rcm": {
+          "wall": 122.51500000001397,
+          "generation_export_repair": 10.583718899986707,
+          "audit": 2.3625356000848114,
+          "assembly": 2.179553900146857,
+          "cg": 90.52512270014267,
+          "fea": 105.53209310001694,
+          "peak_mib": 1107.44140625,
+          "dofs": 115170,
+          "nodes": 41963,
+          "tet4": 188993,
+          "discrepancy": 0.0071169171129899554,
+          "ordering": 2.4390902997693047
+        }
+      },
+      "statuses": {
+        "r0-shifted-baseline": "within-reference-target",
+        "r0-shifted-rcm": "within-reference-target",
+        "r1-shifted-baseline": "within-reference-target",
+        "r1-shifted-rcm": "within-reference-target",
+        "r2-shifted-baseline": "within-reference-target",
+        "r2-shifted-rcm": "within-reference-target"
+      },
+      "identical_solver_mesh": true,
+      "largest_tensor_entry_difference": 2.0752514339049698e-13,
+      "tensors_match": true,
+      "paired_wall_change_percent": [
+        -6.794696969728009,
+        -8.088704171890482,
+        -7.391769878615506
+      ],
+      "wall_change_percent": -7.1856060605954735
+    },
+    "repair": {
+      "repair_seconds": 1.456225399975665,
+      "accepted_moves": 0,
+      "hmax": 0.05
+    },
+    "bracket": {
+      "screen_status": "within-reference-target",
+      "screen_discrepancy": 0.009917799377729748,
+      "medians": {
+        "near-target": {
+          "wall": 79.34400000004098,
+          "generation_export_repair": 7.146703399950638,
+          "audit": 1.7282380999531597,
+          "assembly": 1.4781617000699043,
+          "cg": 57.77249249990564,
+          "fea": 66.94879349996336,
+          "peak_mib": 847.765625,
+          "dofs": 80412,
+          "nodes": 30070,
+          "tet4": 133730,
+          "discrepancy": 0.009917799377729748,
+          "ordering": 0
+        },
+        "h050": {
+          "wall": 117.75,
+          "generation_export_repair": 15.448095400002785,
+          "audit": 1.9600448999553919,
+          "assembly": 1.8835772001184523,
+          "cg": 86.2239474998787,
+          "fea": 96.8678633000236,
+          "peak_mib": 865.86328125,
+          "dofs": 89274,
+          "nodes": 32070,
+          "tet4": 154012,
+          "discrepancy": 0.0092805903098237,
+          "ordering": 0
+        }
+      },
+      "paired_native_change_percent": [
+        -33.25350318467858,
+        -32.616560509519346,
+        -32.63154326018653
+      ]
+    },
+    "selected": {
+      "native": "near-target",
+      "microgen": "h050",
+      "near-target_block": "bracket",
+      "near-target_metrics": {
+        "wall": 79.34400000004098,
+        "generation_export_repair": 7.146703399950638,
+        "audit": 1.7282380999531597,
+        "assembly": 1.4781617000699043,
+        "cg": 57.77249249990564,
+        "fea": 66.94879349996336,
+        "peak_mib": 847.765625,
+        "dofs": 80412,
+        "nodes": 30070,
+        "tet4": 133730,
+        "discrepancy": 0.009917799377729748,
+        "ordering": 0
+      },
+      "h050_block": "bracket",
+      "h050_metrics": {
+        "wall": 117.75,
+        "generation_export_repair": 15.448095400002785,
+        "audit": 1.9600448999553919,
+        "assembly": 1.8835772001184523,
+        "cg": 86.2239474998787,
+        "fea": 96.8678633000236,
+        "peak_mib": 865.86328125,
+        "dofs": 89274,
+        "nodes": 32070,
+        "tet4": 154012,
+        "discrepancy": 0.0092805903098237,
+        "ordering": 0
+      }
     }
   },
   "core-ultra-9-285k": {
@@ -389,6 +703,234 @@
       "ram_bytes": 68062457856,
       "machine": "AMD64",
       "platform": "Windows-11-10.0.26200-SP0"
+    },
+    "sizing": {
+      "medians": {
+        "native": {
+          "wall": 81.40600000000268,
+          "generation_export_repair": 5.052525799997966,
+          "audit": 1.091771500010509,
+          "assembly": 1.0862327999784611,
+          "cg": 65.61655029997928,
+          "fea": 72.03511849998904,
+          "peak_mib": 1114.625,
+          "dofs": 115782,
+          "nodes": 42320,
+          "tet4": 189873,
+          "discrepancy": 0.007056747657559711,
+          "ordering": 0
+        },
+        "h050": {
+          "wall": 70.625,
+          "generation_export_repair": 6.59621080000943,
+          "audit": 0.8109574999980396,
+          "assembly": 0.9314553000294836,
+          "cg": 55.427970699980506,
+          "fea": 60.33643049999955,
+          "peak_mib": 854.59375,
+          "dofs": 89274,
+          "nodes": 32070,
+          "tet4": 154012,
+          "discrepancy": 0.0092805903098237,
+          "ordering": 0
+        },
+        "h040": {
+          "wall": 89.92199999999139,
+          "generation_export_repair": 7.7182971000002,
+          "audit": 1.057929000002332,
+          "assembly": 1.2567743999679806,
+          "cg": 71.0924723999924,
+          "fea": 77.59591380000347,
+          "peak_mib": 1053.484375,
+          "dofs": 114174,
+          "nodes": 40370,
+          "tet4": 203607,
+          "discrepancy": 0.007981313393935048,
+          "ordering": 0
+        },
+        "h035": {
+          "wall": 91.96900000001187,
+          "generation_export_repair": 7.455416199998581,
+          "audit": 1.0107649999990826,
+          "assembly": 1.265515500010224,
+          "cg": 73.60499629996775,
+          "fea": 80.38391099999717,
+          "peak_mib": 1086.37109375,
+          "dofs": 115359,
+          "nodes": 40765,
+          "tet4": 205845,
+          "discrepancy": 0.00786827421822918,
+          "ordering": 0
+        },
+        "h030": {
+          "wall": 106.4380000000092,
+          "generation_export_repair": 8.465568399988115,
+          "audit": 1.1510835000080988,
+          "assembly": 1.3781837000133237,
+          "cg": 86.07424640000681,
+          "fea": 93.7435536999983,
+          "peak_mib": 1156.23828125,
+          "dofs": 124362,
+          "nodes": 43766,
+          "tet4": 223353,
+          "discrepancy": 0.007540878472103815,
+          "ordering": 0
+        }
+      },
+      "cheapest_microgen": "h050",
+      "screen": {
+        "h050": {
+          "status": "within-reference-target",
+          "discrepancy": 0.0092805903098237,
+          "minimum_quality": 0.10701011270793911,
+          "accepted_interior_moves": 0
+        },
+        "h040": {
+          "status": "within-reference-target",
+          "discrepancy": 0.007981313393935048,
+          "minimum_quality": 0.10416034535027872,
+          "accepted_interior_moves": 0
+        },
+        "h035": {
+          "status": "within-reference-target",
+          "discrepancy": 0.00786827421822918,
+          "minimum_quality": 0.10000100099984123,
+          "accepted_interior_moves": 1
+        },
+        "h030": {
+          "status": "within-reference-target",
+          "discrepancy": 0.007540878472103815,
+          "minimum_quality": 0.10000100099999999,
+          "accepted_interior_moves": 1
+        }
+      }
+    },
+    "phase": {
+      "medians": {
+        "shifted-baseline": {
+          "wall": 83.32799999999406,
+          "generation_export_repair": 4.817534700006945,
+          "audit": 1.0516027999983635,
+          "assembly": 1.0891938000131631,
+          "cg": 67.97409820002213,
+          "fea": 74.34450659999857,
+          "peak_mib": 1110.23046875,
+          "dofs": 115170,
+          "nodes": 41963,
+          "tet4": 188993,
+          "discrepancy": 0.007116917112981405,
+          "ordering": 0
+        },
+        "shifted-rcm": {
+          "wall": 79.31299999999464,
+          "generation_export_repair": 4.733625100008794,
+          "audit": 1.0363289999950211,
+          "assembly": 1.038886200010893,
+          "cg": 62.94672369999171,
+          "fea": 70.44626060000155,
+          "peak_mib": 1107.0859375,
+          "dofs": 115170,
+          "nodes": 41963,
+          "tet4": 188993,
+          "discrepancy": 0.0071169171129899554,
+          "ordering": 1.2188678000093205
+        }
+      },
+      "statuses": {
+        "r0-shifted-baseline": "within-reference-target",
+        "r0-shifted-rcm": "within-reference-target",
+        "r1-shifted-baseline": "within-reference-target",
+        "r1-shifted-rcm": "within-reference-target",
+        "r2-shifted-baseline": "within-reference-target",
+        "r2-shifted-rcm": "within-reference-target"
+      },
+      "identical_solver_mesh": true,
+      "largest_tensor_entry_difference": 2.0752514339049698e-13,
+      "tensors_match": true,
+      "paired_wall_change_percent": [
+        -5.050758990580306,
+        -6.694028417812092,
+        -3.338655653868061
+      ],
+      "wall_change_percent": -4.818308371735435
+    },
+    "repair": {
+      "repair_seconds": 0.6275678000092739,
+      "accepted_moves": 0,
+      "hmax": 0.05
+    },
+    "bracket": {
+      "screen_status": "within-reference-target",
+      "screen_discrepancy": 0.009917799377729748,
+      "medians": {
+        "near-target": {
+          "wall": 48.687000000005355,
+          "generation_export_repair": 3.173283399999491,
+          "audit": 0.7369784000038635,
+          "assembly": 0.6890510999801336,
+          "cg": 37.56250649999129,
+          "fea": 41.77393999999913,
+          "peak_mib": 793.35546875,
+          "dofs": 80412,
+          "nodes": 30070,
+          "tet4": 133730,
+          "discrepancy": 0.009917799377729748,
+          "ordering": 0
+        },
+        "h050": {
+          "wall": 72.31299999999464,
+          "generation_export_repair": 6.953537800000049,
+          "audit": 0.8207738000055542,
+          "assembly": 0.8736809999827528,
+          "cg": 55.540252900042105,
+          "fea": 60.56993249998777,
+          "peak_mib": 839.38671875,
+          "dofs": 89274,
+          "nodes": 32070,
+          "tet4": 154012,
+          "discrepancy": 0.0092805903098237,
+          "ordering": 0
+        }
+      },
+      "paired_native_change_percent": [
+        -32.16936663596092,
+        -32.67185706579874,
+        -31.117730496446306
+      ]
+    },
+    "selected": {
+      "native": "near-target",
+      "microgen": "h050",
+      "near-target_block": "bracket",
+      "near-target_metrics": {
+        "wall": 48.687000000005355,
+        "generation_export_repair": 3.173283399999491,
+        "audit": 0.7369784000038635,
+        "assembly": 0.6890510999801336,
+        "cg": 37.56250649999129,
+        "fea": 41.77393999999913,
+        "peak_mib": 793.35546875,
+        "dofs": 80412,
+        "nodes": 30070,
+        "tet4": 133730,
+        "discrepancy": 0.009917799377729748,
+        "ordering": 0
+      },
+      "h050_block": "bracket",
+      "h050_metrics": {
+        "wall": 72.31299999999464,
+        "generation_export_repair": 6.953537800000049,
+        "audit": 0.8207738000055542,
+        "assembly": 0.8736809999827528,
+        "cg": 55.540252900042105,
+        "fea": 60.56993249998777,
+        "peak_mib": 839.38671875,
+        "dofs": 89274,
+        "nodes": 32070,
+        "tet4": 154012,
+        "discrepancy": 0.0092805903098237,
+        "ordering": 0
+      }
     }
   },
   "ryzen-7-7730u": {
@@ -477,22 +1019,26 @@
         "h050": {
           "status": "within-reference-target",
           "discrepancy": 0.009280590309827249,
-          "minimum_quality": 0.10701011270793911
+          "minimum_quality": 0.10701011270793911,
+          "accepted_interior_moves": 0
         },
         "h040": {
           "status": "within-reference-target",
           "discrepancy": 0.007981313393932314,
-          "minimum_quality": 0.10416034535027872
+          "minimum_quality": 0.10416034535027872,
+          "accepted_interior_moves": 0
         },
         "h035": {
           "status": "within-reference-target",
           "discrepancy": 0.007868274218222532,
-          "minimum_quality": 0.10000100099984123
+          "minimum_quality": 0.10000100099984123,
+          "accepted_interior_moves": 1
         },
         "h030": {
           "status": "within-reference-target",
           "discrepancy": 0.00748848834947932,
-          "minimum_quality": 0.10407376548805522
+          "minimum_quality": 0.10407376548805522,
+          "accepted_interior_moves": 0
         }
       }
     },
