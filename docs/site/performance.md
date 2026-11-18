@@ -12,6 +12,11 @@ For local Windows measurements install `psutil` in each benchmark environment. W
 
 ## Every pull request
 
+The Python 3.12 binding jobs also mesh five implicit sheets and a BCC lattice from eight-cell seeds.
+They check the returned tetrahedra against the independent geometry and quality limits
+from the historical Microgen benchmark. The seven-specimen study includes rejected
+settings and optional elasticity comparisons. [Study and replay instructions](https://github.com/kmarchais/meshers/blob/main/demos/solver/implicit-coverage/README.md)
+
 The Performance workflow builds the base and proposed source into separate
 wheels and installs them in separate environments with the same Python and
 NumPy versions. It runs both on the same Linux runner, alternates their order,

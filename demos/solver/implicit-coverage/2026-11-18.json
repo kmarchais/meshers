@@ -1,0 +1,1508 @@
+{
+  "source_commit": "8762dbe4fe71f8557f82eaa5516192f59821114c",
+  "source_tree": "b0e49b1c931a326093565f7ad27338bd006eac08",
+  "wheel_workflow": "https://github.com/kmarchais/meshers/actions/runs/44390601389",
+  "numerical_threads": {
+    "OPENBLAS_NUM_THREADS": 1,
+    "OMP_NUM_THREADS": 1,
+    "RAYON_NUM_THREADS": 1,
+    "VTK_SMP_MAX_THREADS": 1
+  },
+  "reference_commit": "602dc900cd028d205b36e29dcdb5b4a9cf4f581a",
+  "hardware": {
+    "cpu_model": "AMD Ryzen 7 7730U with Radeon Graphics",
+    "cpu_count": 16,
+    "ram_bytes": 32476979200,
+    "machine": "x86_64",
+    "platform": "Linux-7.0.0-42-generic-x86_64-with-glibc2.43"
+  },
+  "native_sha256": "838615a9dfe3f90cdbc3660e77bdaa84e13e3a9bb557c52820edb9942a23bcca",
+  "limits": {
+    "geometry_tolerance": 0.01,
+    "minimum_quality": 0.1,
+    "volume_tolerance": 0.1
+  },
+  "bounds": [
+    -0.5,
+    0.5,
+    -0.5,
+    0.5,
+    -0.5,
+    0.5
+  ],
+  "threads": 1,
+  "tet_budget": 250000,
+  "overlap_pair_budget": 2000000,
+  "packages": {
+    "meshers": "0.2.1",
+    "numpy": "2.5.3",
+    "scipy": "1.18.1",
+    "pyvista": "0.49.0",
+    "microgen": "2.0.0b1"
+  },
+  "attempts": [
+    {
+      "case": "graded-gyroid",
+      "request": {
+        "cells": 16,
+        "optimize_passes": 4,
+        "adapt": false
+      },
+      "band": [
+        -1,
+        1
+      ],
+      "utc": "2026-11-18T21:16:13.315495+00:00",
+      "status": "admitted",
+      "generation_seconds": 2.044016410014592,
+      "tetrahedra": 16912,
+      "nodes": 5830,
+      "volume": 0.1617400343981838,
+      "solid_fraction": 0.1617400343981838,
+      "q_min": 0.13442461784411314,
+      "q_p05": 0.47745971699653283,
+      "q_median": 0.6499153662243615,
+      "q_below_01": 0,
+      "minimum_cell_relative_determinant": 0.025551500208929833,
+      "cell_relative_determinant_tolerance": 1e-12,
+      "overlap_pairs_checked": 269728,
+      "geometry_status": "checked-at-declared-tolerances",
+      "sampled_cap_overshoot": 0.0037159480820846396,
+      "sampled_geometry_distance": 0.0037159480820846396,
+      "sampled_outward_orientation": true,
+      "sampled_reverse_distance": 0.0034140120809549165,
+      "reverse_distance_samples": 11306,
+      "relative_volume_error": 0.003934827676875807,
+      "admission_reasons": [],
+      "quality_eligible": true,
+      "relative_volume_error_with_uncertainty": 0.004810919832299291
+    },
+    {
+      "case": "graded-gyroid",
+      "request": {
+        "cells": 16,
+        "optimize_passes": 4,
+        "adapt": true
+      },
+      "band": [
+        -1,
+        1
+      ],
+      "utc": "2026-11-18T21:16:10.708273+00:00",
+      "status": "admitted",
+      "generation_seconds": 0.9364554680651054,
+      "tetrahedra": 6966,
+      "nodes": 2389,
+      "volume": 0.161889296113893,
+      "solid_fraction": 0.161889296113893,
+      "q_min": 0.35187890450864623,
+      "q_p05": 0.5287093559523026,
+      "q_median": 0.7233334536288236,
+      "q_below_01": 0,
+      "minimum_cell_relative_determinant": 0.08036821843057536,
+      "cell_relative_determinant_tolerance": 1e-12,
+      "overlap_pairs_checked": 91115,
+      "geometry_status": "checked-at-declared-tolerances",
+      "sampled_cap_overshoot": 0.005297710978708937,
+      "sampled_geometry_distance": 0.005297710978708937,
+      "sampled_outward_orientation": true,
+      "sampled_reverse_distance": 0.00600708515841382,
+      "reverse_distance_samples": 11306,
+      "relative_volume_error": 0.004861308466847403,
+      "admission_reasons": [],
+      "quality_eligible": true,
+      "relative_volume_error_with_uncertainty": 0.005737400622270887
+    },
+    {
+      "case": "graded-gyroid",
+      "request": {
+        "cells": 8,
+        "optimize_passes": 0,
+        "adapt": false
+      },
+      "band": [
+        -1,
+        1
+      ],
+      "utc": "2026-11-18T21:16:03.172639+00:00",
+      "status": "native-rejected",
+      "reason": "minimum MMG quality 9.047231622515485e-2 is below required 1e-1; mesh rejected (2 elements below 0.1). Improve resolution/optimization or use a quality remesher",
+      "generation_seconds": 0.018344657961279154
+    },
+    {
+      "case": "graded-gyroid",
+      "request": {
+        "cells": 8,
+        "optimize_passes": 12,
+        "adapt": false
+      },
+      "band": [
+        -1,
+        1
+      ],
+      "utc": "2026-11-18T21:16:05.712743+00:00",
+      "status": "geometry-rejected",
+      "generation_seconds": 1.3277866420103237,
+      "tetrahedra": 3367,
+      "nodes": 1399,
+      "volume": 0.16474480730533633,
+      "solid_fraction": 0.16474480730533633,
+      "q_min": 0.16393781665465726,
+      "q_p05": 0.3291690353561778,
+      "q_median": 0.5608233100417039,
+      "q_below_01": 0,
+      "minimum_cell_relative_determinant": 0.0319472703852328,
+      "cell_relative_determinant_tolerance": 1e-12,
+      "overlap_pairs_checked": 39535,
+      "geometry_status": "checked-at-declared-tolerances",
+      "sampled_cap_overshoot": 0.00971726069289787,
+      "sampled_geometry_distance": 0.009997464375521946,
+      "sampled_outward_orientation": true,
+      "sampled_reverse_distance": 0.010274336539333965,
+      "reverse_distance_samples": 11306,
+      "relative_volume_error": 0.022585721266547232,
+      "admission_reasons": [
+        "Sampled target-to-mesh distance 0.0102743L exceeds tolerance"
+      ],
+      "quality_eligible": true,
+      "relative_volume_error_with_uncertainty": 0.023461813421970717
+    },
+    {
+      "case": "graded-gyroid",
+      "request": {
+        "cells": 8,
+        "optimize_passes": 4,
+        "adapt": false
+      },
+      "band": [
+        -1,
+        1
+      ],
+      "utc": "2026-11-18T21:16:03.929591+00:00",
+      "status": "geometry-rejected",
+      "generation_seconds": 0.4768317979760468,
+      "tetrahedra": 3367,
+      "nodes": 1399,
+      "volume": 0.16476867201000098,
+      "solid_fraction": 0.16476867201000098,
+      "q_min": 0.1639377451923797,
+      "q_p05": 0.3289853684913406,
+      "q_median": 0.5599285593340706,
+      "q_below_01": 0,
+      "minimum_cell_relative_determinant": 0.0319472703852328,
+      "cell_relative_determinant_tolerance": 1e-12,
+      "overlap_pairs_checked": 39579,
+      "geometry_status": "checked-at-declared-tolerances",
+      "sampled_cap_overshoot": 0.00971726069289787,
+      "sampled_geometry_distance": 0.009969868743646205,
+      "sampled_outward_orientation": true,
+      "sampled_reverse_distance": 0.010274336539333965,
+      "reverse_distance_samples": 11306,
+      "relative_volume_error": 0.022733851618158774,
+      "admission_reasons": [
+        "Sampled target-to-mesh distance 0.0102743L exceeds tolerance"
+      ],
+      "quality_eligible": true,
+      "relative_volume_error_with_uncertainty": 0.02360994377358226
+    },
+    {
+      "case": "graded-gyroid",
+      "request": {
+        "cells": 8,
+        "optimize_passes": 4,
+        "adapt": true
+      },
+      "band": [
+        -1,
+        1
+      ],
+      "utc": "2026-11-18T21:16:08.402171+00:00",
+      "status": "admitted",
+      "generation_seconds": 0.7535911990562454,
+      "tetrahedra": 6056,
+      "nodes": 2118,
+      "volume": 0.16335319019098554,
+      "solid_fraction": 0.16335319019098554,
+      "q_min": 0.3934080471435764,
+      "q_p05": 0.5195243599138105,
+      "q_median": 0.6990539565782015,
+      "q_below_01": 0,
+      "minimum_cell_relative_determinant": 0.08154073026217039,
+      "cell_relative_determinant_tolerance": 1e-12,
+      "overlap_pairs_checked": 77360,
+      "geometry_status": "checked-at-declared-tolerances",
+      "sampled_cap_overshoot": 0.004768790382075612,
+      "sampled_geometry_distance": 0.009694730157032844,
+      "sampled_outward_orientation": true,
+      "sampled_reverse_distance": 0.008695787622649146,
+      "reverse_distance_samples": 11306,
+      "relative_volume_error": 0.013947829645673204,
+      "admission_reasons": [],
+      "quality_eligible": true,
+      "relative_volume_error_with_uncertainty": 0.014823921801096688
+    },
+    {
+      "case": "gyroid",
+      "request": {
+        "cells": 16,
+        "optimize_passes": 4,
+        "adapt": false
+      },
+      "band": [
+        -1,
+        1
+      ],
+      "utc": "2026-11-18T21:15:03.973331+00:00",
+      "status": "admitted",
+      "generation_seconds": 1.8859872630564496,
+      "tetrahedra": 16218,
+      "nodes": 5603,
+      "volume": 0.16166844016802476,
+      "solid_fraction": 0.16166844016802476,
+      "q_min": 0.14000224522472213,
+      "q_p05": 0.5003651651898697,
+      "q_median": 0.6565198484018537,
+      "q_below_01": 0,
+      "minimum_cell_relative_determinant": 0.02712637285356535,
+      "cell_relative_determinant_tolerance": 1e-12,
+      "overlap_pairs_checked": 255471,
+      "geometry_status": "checked-at-declared-tolerances",
+      "sampled_cap_overshoot": 0.0033331243998695075,
+      "sampled_geometry_distance": 0.0033331243998695075,
+      "sampled_outward_orientation": true,
+      "sampled_reverse_distance": 0.0028583106873622402,
+      "reverse_distance_samples": 11342,
+      "relative_volume_error": 0.003662731376155026,
+      "admission_reasons": [],
+      "quality_eligible": true,
+      "relative_volume_error_with_uncertainty": 0.005361931508775525
+    },
+    {
+      "case": "gyroid",
+      "request": {
+        "cells": 16,
+        "optimize_passes": 4,
+        "adapt": true
+      },
+      "band": [
+        -1,
+        1
+      ],
+      "utc": "2026-11-18T21:15:01.428204+00:00",
+      "status": "admitted",
+      "generation_seconds": 0.9478535749949515,
+      "tetrahedra": 6616,
+      "nodes": 2291,
+      "volume": 0.16181895560398993,
+      "solid_fraction": 0.16181895560398993,
+      "q_min": 0.38085276958437264,
+      "q_p05": 0.5340854330171403,
+      "q_median": 0.726062652554237,
+      "q_below_01": 0,
+      "minimum_cell_relative_determinant": 0.0917368530622691,
+      "cell_relative_determinant_tolerance": 1e-12,
+      "overlap_pairs_checked": 85072,
+      "geometry_status": "checked-at-declared-tolerances",
+      "sampled_cap_overshoot": 0.00391274781748098,
+      "sampled_geometry_distance": 0.00496902732902504,
+      "sampled_outward_orientation": true,
+      "sampled_reverse_distance": 0.004071967156899863,
+      "reverse_distance_samples": 11342,
+      "relative_volume_error": 0.004597154528986014,
+      "admission_reasons": [],
+      "quality_eligible": true,
+      "relative_volume_error_with_uncertainty": 0.006296354661606512
+    },
+    {
+      "case": "gyroid",
+      "request": {
+        "cells": 8,
+        "optimize_passes": 0,
+        "adapt": false
+      },
+      "band": [
+        -1,
+        1
+      ],
+      "utc": "2026-11-18T21:14:53.145588+00:00",
+      "status": "admitted",
+      "generation_seconds": 0.018904280965216458,
+      "tetrahedra": 3493,
+      "nodes": 1451,
+      "volume": 0.16447467900957732,
+      "solid_fraction": 0.16447467900957732,
+      "q_min": 0.10626493688838856,
+      "q_p05": 0.22752128318524906,
+      "q_median": 0.5375510429275874,
+      "q_below_01": 0,
+      "minimum_cell_relative_determinant": 0.018536145038769995,
+      "cell_relative_determinant_tolerance": 1e-12,
+      "overlap_pairs_checked": 42093,
+      "geometry_status": "checked-at-declared-tolerances",
+      "sampled_cap_overshoot": 0.0046874580302044095,
+      "sampled_geometry_distance": 0.008019984345433304,
+      "sampled_outward_orientation": true,
+      "sampled_reverse_distance": 0.008006471087998426,
+      "reverse_distance_samples": 11342,
+      "relative_volume_error": 0.021084297005657504,
+      "admission_reasons": [],
+      "quality_eligible": true,
+      "relative_volume_error_with_uncertainty": 0.022783497138278003
+    },
+    {
+      "case": "gyroid",
+      "request": {
+        "cells": 8,
+        "optimize_passes": 12,
+        "adapt": false
+      },
+      "band": [
+        -1,
+        1
+      ],
+      "utc": "2026-11-18T21:14:56.313604+00:00",
+      "status": "admitted",
+      "generation_seconds": 1.371408459963277,
+      "tetrahedra": 3493,
+      "nodes": 1451,
+      "volume": 0.1645012933206377,
+      "solid_fraction": 0.1645012933206377,
+      "q_min": 0.14974565181344648,
+      "q_p05": 0.3246305952218617,
+      "q_median": 0.5707692540585391,
+      "q_below_01": 0,
+      "minimum_cell_relative_determinant": 0.03185154782838445,
+      "cell_relative_determinant_tolerance": 1e-12,
+      "overlap_pairs_checked": 41555,
+      "geometry_status": "checked-at-declared-tolerances",
+      "sampled_cap_overshoot": 0.008294271753515174,
+      "sampled_geometry_distance": 0.009999617695171764,
+      "sampled_outward_orientation": true,
+      "sampled_reverse_distance": 0.009414531814568484,
+      "reverse_distance_samples": 11342,
+      "relative_volume_error": 0.0212495227733136,
+      "admission_reasons": [],
+      "quality_eligible": true,
+      "relative_volume_error_with_uncertainty": 0.0229487229059341
+    },
+    {
+      "case": "gyroid",
+      "request": {
+        "cells": 8,
+        "optimize_passes": 4,
+        "adapt": false
+      },
+      "band": [
+        -1,
+        1
+      ],
+      "utc": "2026-11-18T21:14:54.492934+00:00",
+      "status": "admitted",
+      "generation_seconds": 0.49715021497104317,
+      "tetrahedra": 3493,
+      "nodes": 1451,
+      "volume": 0.16449229461004622,
+      "solid_fraction": 0.16449229461004622,
+      "q_min": 0.14974565181344648,
+      "q_p05": 0.3224722056211165,
+      "q_median": 0.5708057772670285,
+      "q_below_01": 0,
+      "minimum_cell_relative_determinant": 0.03185154782838445,
+      "cell_relative_determinant_tolerance": 1e-12,
+      "overlap_pairs_checked": 41513,
+      "geometry_status": "checked-at-declared-tolerances",
+      "sampled_cap_overshoot": 0.008472522434299022,
+      "sampled_geometry_distance": 0.009978600180914022,
+      "sampled_outward_orientation": true,
+      "sampled_reverse_distance": 0.009414531814568484,
+      "reverse_distance_samples": 11342,
+      "relative_volume_error": 0.021193657383372866,
+      "admission_reasons": [],
+      "quality_eligible": true,
+      "relative_volume_error_with_uncertainty": 0.022892857515993365
+    },
+    {
+      "case": "gyroid",
+      "request": {
+        "cells": 8,
+        "optimize_passes": 4,
+        "adapt": true
+      },
+      "band": [
+        -1,
+        1
+      ],
+      "utc": "2026-11-18T21:14:59.055629+00:00",
+      "status": "admitted",
+      "generation_seconds": 0.7236876590177417,
+      "tetrahedra": 6584,
+      "nodes": 2257,
+      "volume": 0.16356909049306612,
+      "solid_fraction": 0.16356909049306612,
+      "q_min": 0.3165735246584822,
+      "q_p05": 0.5238153614295222,
+      "q_median": 0.7023496895811983,
+      "q_below_01": 0,
+      "minimum_cell_relative_determinant": 0.07379047914148366,
+      "cell_relative_determinant_tolerance": 1e-12,
+      "overlap_pairs_checked": 86254,
+      "geometry_status": "checked-at-declared-tolerances",
+      "sampled_cap_overshoot": 0.003683486168323916,
+      "sampled_geometry_distance": 0.009874763772795881,
+      "sampled_outward_orientation": true,
+      "sampled_reverse_distance": 0.009195054915207793,
+      "reverse_distance_samples": 11342,
+      "relative_volume_error": 0.015462263150194389,
+      "admission_reasons": [],
+      "quality_eligible": true,
+      "relative_volume_error_with_uncertainty": 0.017161463282814888
+    },
+    {
+      "case": "implicit-lattice",
+      "request": {
+        "cells": 16,
+        "optimize_passes": 4,
+        "adapt": false
+      },
+      "band": [
+        -1,
+        0
+      ],
+      "utc": "2026-11-18T21:15:29.287451+00:00",
+      "status": "native-rejected",
+      "reason": "sampled geometry error 1.6433939435372972e-2 exceeds tolerance 1e-2; increase resolution or budget",
+      "generation_seconds": 5.4438083849381655
+    },
+    {
+      "case": "implicit-lattice",
+      "request": {
+        "cells": 16,
+        "optimize_passes": 4,
+        "adapt": true
+      },
+      "band": [
+        -1,
+        0
+      ],
+      "utc": "2026-11-18T21:15:21.317605+00:00",
+      "status": "geometry-rejected",
+      "generation_seconds": 1.7985642169369385,
+      "tetrahedra": 17002,
+      "nodes": 3955,
+      "volume": 0.24096862003243888,
+      "solid_fraction": 0.24096862003243888,
+      "q_min": 0.12290839784046252,
+      "q_p05": 0.5747507511699773,
+      "q_median": 0.7513890318124935,
+      "q_below_01": 0,
+      "minimum_cell_relative_determinant": 0.028380683646971817,
+      "cell_relative_determinant_tolerance": 1e-12,
+      "overlap_pairs_checked": 377755,
+      "geometry_status": "checked-at-declared-tolerances",
+      "sampled_cap_overshoot": 1.0818013152353369e-14,
+      "sampled_geometry_distance": 0.009668653574798274,
+      "sampled_outward_orientation": false,
+      "sampled_reverse_distance": 0.011458024121121567,
+      "reverse_distance_samples": 6470,
+      "relative_volume_error": 0.01975849616461911,
+      "admission_reasons": [
+        "Sampled target-to-mesh distance 0.011458L exceeds tolerance",
+        "Boundary normals disagree with the intended outward direction"
+      ],
+      "quality_eligible": true,
+      "relative_volume_error_with_uncertainty": 0.02103484263255333
+    },
+    {
+      "case": "implicit-lattice",
+      "request": {
+        "cells": 8,
+        "optimize_passes": 0,
+        "adapt": false
+      },
+      "band": [
+        -1,
+        0
+      ],
+      "utc": "2026-11-18T21:15:08.564048+00:00",
+      "status": "native-rejected",
+      "reason": "sampled geometry error 1.627002220132564e-2 exceeds tolerance 1e-2; increase resolution or budget",
+      "generation_seconds": 0.0452559229452163
+    },
+    {
+      "case": "implicit-lattice",
+      "request": {
+        "cells": 8,
+        "optimize_passes": 12,
+        "adapt": false
+      },
+      "band": [
+        -1,
+        0
+      ],
+      "utc": "2026-11-18T21:15:11.331970+00:00",
+      "status": "geometry-rejected",
+      "generation_seconds": 1.6316375610185787,
+      "tetrahedra": 2466,
+      "nodes": 953,
+      "volume": 0.23700237275304212,
+      "solid_fraction": 0.23700237275304212,
+      "q_min": 0.3263431888282997,
+      "q_p05": 0.3861003009349785,
+      "q_median": 0.5720425401616467,
+      "q_below_01": 0,
+      "minimum_cell_relative_determinant": 0.07399799229668547,
+      "cell_relative_determinant_tolerance": 1e-12,
+      "overlap_pairs_checked": 49918,
+      "geometry_status": "checked-at-declared-tolerances",
+      "sampled_cap_overshoot": 1.0818013152353369e-14,
+      "sampled_geometry_distance": 0.008544232945891942,
+      "sampled_outward_orientation": true,
+      "sampled_reverse_distance": 0.011016059030414731,
+      "reverse_distance_samples": 6470,
+      "relative_volume_error": 0.03589287995789259,
+      "admission_reasons": [
+        "Sampled target-to-mesh distance 0.0110161L exceeds tolerance"
+      ],
+      "quality_eligible": true,
+      "relative_volume_error_with_uncertainty": 0.037169226425826804
+    },
+    {
+      "case": "implicit-lattice",
+      "request": {
+        "cells": 8,
+        "optimize_passes": 4,
+        "adapt": false
+      },
+      "band": [
+        -1,
+        0
+      ],
+      "utc": "2026-11-18T21:15:09.373174+00:00",
+      "status": "geometry-rejected",
+      "generation_seconds": 0.6204900790471584,
+      "tetrahedra": 2466,
+      "nodes": 953,
+      "volume": 0.2369948465701651,
+      "solid_fraction": 0.2369948465701651,
+      "q_min": 0.3263431888282997,
+      "q_p05": 0.38947642021714873,
+      "q_median": 0.5739757752156447,
+      "q_below_01": 0,
+      "minimum_cell_relative_determinant": 0.0731181153200273,
+      "cell_relative_determinant_tolerance": 1e-12,
+      "overlap_pairs_checked": 50062,
+      "geometry_status": "checked-at-declared-tolerances",
+      "sampled_cap_overshoot": 1.0818013152353369e-14,
+      "sampled_geometry_distance": 0.008544232945891942,
+      "sampled_outward_orientation": true,
+      "sampled_reverse_distance": 0.010456063922747658,
+      "reverse_distance_samples": 6470,
+      "relative_volume_error": 0.03592349588132915,
+      "admission_reasons": [
+        "Sampled target-to-mesh distance 0.0104561L exceeds tolerance"
+      ],
+      "quality_eligible": true,
+      "relative_volume_error_with_uncertainty": 0.037199842349263365
+    },
+    {
+      "case": "implicit-lattice",
+      "request": {
+        "cells": 8,
+        "optimize_passes": 4,
+        "adapt": true
+      },
+      "band": [
+        -1,
+        0
+      ],
+      "utc": "2026-11-18T21:15:14.284681+00:00",
+      "status": "admitted",
+      "generation_seconds": 1.1910262780729681,
+      "tetrahedra": 15303,
+      "nodes": 3562,
+      "volume": 0.23865241556694486,
+      "solid_fraction": 0.23865241556694486,
+      "q_min": 0.5056593265031573,
+      "q_p05": 0.5814897051734944,
+      "q_median": 0.7096546971984682,
+      "q_below_01": 0,
+      "minimum_cell_relative_determinant": 0.10728268976878504,
+      "cell_relative_determinant_tolerance": 1e-12,
+      "overlap_pairs_checked": 361913,
+      "geometry_status": "checked-at-declared-tolerances",
+      "sampled_cap_overshoot": 1.0818013152353369e-14,
+      "sampled_geometry_distance": 0.005945767213845601,
+      "sampled_outward_orientation": true,
+      "sampled_reverse_distance": 0.00861003877834869,
+      "reverse_distance_samples": 6470,
+      "relative_volume_error": 0.02918063481545441,
+      "admission_reasons": [],
+      "quality_eligible": true,
+      "relative_volume_error_with_uncertainty": 0.03045698128338863
+    },
+    {
+      "case": "neovius",
+      "request": {
+        "cells": 16,
+        "optimize_passes": 4,
+        "adapt": false
+      },
+      "band": [
+        -1,
+        1
+      ],
+      "utc": "2026-11-18T21:15:58.684405+00:00",
+      "status": "admitted",
+      "generation_seconds": 1.3918421870330349,
+      "tetrahedra": 17332,
+      "nodes": 5446,
+      "volume": 0.22897622594077924,
+      "solid_fraction": 0.22897622594077924,
+      "q_min": 0.41991201408264045,
+      "q_p05": 0.5281734184023877,
+      "q_median": 0.729851602032907,
+      "q_below_01": 0,
+      "minimum_cell_relative_determinant": 0.09120607633340279,
+      "cell_relative_determinant_tolerance": 1e-12,
+      "overlap_pairs_checked": 301009,
+      "geometry_status": "checked-at-declared-tolerances",
+      "sampled_cap_overshoot": 0.00783952497455254,
+      "sampled_geometry_distance": 0.00783952497455254,
+      "sampled_outward_orientation": true,
+      "sampled_reverse_distance": 0.007169704486560917,
+      "reverse_distance_samples": 9596,
+      "relative_volume_error": 0.010632416529144928,
+      "admission_reasons": [],
+      "quality_eligible": true,
+      "relative_volume_error_with_uncertainty": 0.01149530919792463
+    },
+    {
+      "case": "neovius",
+      "request": {
+        "cells": 16,
+        "optimize_passes": 4,
+        "adapt": true
+      },
+      "band": [
+        -1,
+        1
+      ],
+      "utc": "2026-11-18T21:15:55.074946+00:00",
+      "status": "admitted",
+      "generation_seconds": 0.9536817899206653,
+      "tetrahedra": 12600,
+      "nodes": 3714,
+      "volume": 0.22999367044006344,
+      "solid_fraction": 0.22999367044006344,
+      "q_min": 0.3926252263021399,
+      "q_p05": 0.5472680209419948,
+      "q_median": 0.7457665257446064,
+      "q_below_01": 0,
+      "minimum_cell_relative_determinant": 0.08362188947244473,
+      "cell_relative_determinant_tolerance": 1e-12,
+      "overlap_pairs_checked": 208533,
+      "geometry_status": "checked-at-declared-tolerances",
+      "sampled_cap_overshoot": 0.004969267831364935,
+      "sampled_geometry_distance": 0.005944725099119181,
+      "sampled_outward_orientation": true,
+      "sampled_reverse_distance": 0.005859388752202083,
+      "reverse_distance_samples": 9596,
+      "relative_volume_error": 0.015123111529340205,
+      "admission_reasons": [],
+      "quality_eligible": true,
+      "relative_volume_error_with_uncertainty": 0.015986004198119907
+    },
+    {
+      "case": "neovius",
+      "request": {
+        "cells": 8,
+        "optimize_passes": 0,
+        "adapt": false
+      },
+      "band": [
+        -1,
+        1
+      ],
+      "utc": "2026-11-18T21:15:47.298479+00:00",
+      "status": "native-rejected",
+      "reason": "sampled geometry error 2.9122411940647065e-2 exceeds tolerance 1e-2; increase resolution or budget",
+      "generation_seconds": 0.02673517109360546
+    },
+    {
+      "case": "neovius",
+      "request": {
+        "cells": 8,
+        "optimize_passes": 12,
+        "adapt": false
+      },
+      "band": [
+        -1,
+        1
+      ],
+      "utc": "2026-11-18T21:15:49.284377+00:00",
+      "status": "native-rejected",
+      "reason": "sampled geometry error 2.9122411940643588e-2 exceeds tolerance 1e-2; increase resolution or budget",
+      "generation_seconds": 1.3236616940703243
+    },
+    {
+      "case": "neovius",
+      "request": {
+        "cells": 8,
+        "optimize_passes": 4,
+        "adapt": false
+      },
+      "band": [
+        -1,
+        1
+      ],
+      "utc": "2026-11-18T21:15:48.061692+00:00",
+      "status": "native-rejected",
+      "reason": "sampled geometry error 2.9122411940643588e-2 exceeds tolerance 1e-2; increase resolution or budget",
+      "generation_seconds": 0.4811975439079106
+    },
+    {
+      "case": "neovius",
+      "request": {
+        "cells": 8,
+        "optimize_passes": 4,
+        "adapt": true
+      },
+      "band": [
+        -1,
+        1
+      ],
+      "utc": "2026-11-18T21:15:51.350660+00:00",
+      "status": "admitted",
+      "generation_seconds": 0.9146919039776549,
+      "tetrahedra": 12522,
+      "nodes": 3616,
+      "volume": 0.23046295361060296,
+      "solid_fraction": 0.23046295361060296,
+      "q_min": 0.3673989220130346,
+      "q_p05": 0.5331471902043594,
+      "q_median": 0.7184021452468565,
+      "q_below_01": 0,
+      "minimum_cell_relative_determinant": 0.08017133495764463,
+      "cell_relative_determinant_tolerance": 1e-12,
+      "overlap_pairs_checked": 218255,
+      "geometry_status": "checked-at-declared-tolerances",
+      "sampled_cap_overshoot": 0.008605931863662888,
+      "sampled_geometry_distance": 0.009823908239892949,
+      "sampled_outward_orientation": true,
+      "sampled_reverse_distance": 0.00865523589156987,
+      "reverse_distance_samples": 9596,
+      "relative_volume_error": 0.017194386757719116,
+      "admission_reasons": [],
+      "quality_eligible": true,
+      "relative_volume_error_with_uncertainty": 0.018057279426498818
+    },
+    {
+      "case": "schwarz-p",
+      "request": {
+        "cells": 16,
+        "optimize_passes": 4,
+        "adapt": false
+      },
+      "band": [
+        -1,
+        1
+      ],
+      "utc": "2026-11-18T21:15:43.387175+00:00",
+      "status": "admitted",
+      "generation_seconds": 1.2596667049219832,
+      "tetrahedra": 14916,
+      "nodes": 4614,
+      "volume": 0.17211107408937423,
+      "solid_fraction": 0.17211107408937423,
+      "q_min": 0.41266697279772463,
+      "q_p05": 0.5364189339958945,
+      "q_median": 0.7015089786333701,
+      "q_below_01": 0,
+      "minimum_cell_relative_determinant": 0.09385463936200777,
+      "cell_relative_determinant_tolerance": 1e-12,
+      "overlap_pairs_checked": 252061,
+      "geometry_status": "checked-at-declared-tolerances",
+      "sampled_cap_overshoot": 0.0042953741629148225,
+      "sampled_geometry_distance": 0.0042953741629148225,
+      "sampled_outward_orientation": true,
+      "sampled_reverse_distance": 0.0026038043936231835,
+      "reverse_distance_samples": 8736,
+      "relative_volume_error": 0.004656896620033324,
+      "admission_reasons": [],
+      "quality_eligible": true,
+      "relative_volume_error_with_uncertainty": 0.005597693235392246
+    },
+    {
+      "case": "schwarz-p",
+      "request": {
+        "cells": 16,
+        "optimize_passes": 4,
+        "adapt": true
+      },
+      "band": [
+        -1,
+        1
+      ],
+      "utc": "2026-11-18T21:15:41.498323+00:00",
+      "status": "admitted",
+      "generation_seconds": 0.49650094099342823,
+      "tetrahedra": 3652,
+      "nodes": 1208,
+      "volume": 0.17341760597177858,
+      "solid_fraction": 0.17341760597177858,
+      "q_min": 0.45317990566364746,
+      "q_p05": 0.5324289470485737,
+      "q_median": 0.7201406288951456,
+      "q_below_01": 0,
+      "minimum_cell_relative_determinant": 0.10794432915106279,
+      "cell_relative_determinant_tolerance": 1e-12,
+      "overlap_pairs_checked": 51729,
+      "geometry_status": "checked-at-declared-tolerances",
+      "sampled_cap_overshoot": 0.00552242172975832,
+      "sampled_geometry_distance": 0.00552242172975832,
+      "sampled_outward_orientation": true,
+      "sampled_reverse_distance": 0.004350622357569182,
+      "reverse_distance_samples": 8736,
+      "relative_volume_error": 0.012283461460537826,
+      "admission_reasons": [],
+      "quality_eligible": true,
+      "relative_volume_error_with_uncertainty": 0.013224258075896748
+    },
+    {
+      "case": "schwarz-p",
+      "request": {
+        "cells": 8,
+        "optimize_passes": 0,
+        "adapt": false
+      },
+      "band": [
+        -1,
+        1
+      ],
+      "utc": "2026-11-18T21:15:35.477044+00:00",
+      "status": "native-rejected",
+      "reason": "sampled geometry error 1.528296416301964e-2 exceeds tolerance 1e-2; increase resolution or budget",
+      "generation_seconds": 0.01637284003663808
+    },
+    {
+      "case": "schwarz-p",
+      "request": {
+        "cells": 8,
+        "optimize_passes": 12,
+        "adapt": false
+      },
+      "band": [
+        -1,
+        1
+      ],
+      "utc": "2026-11-18T21:15:37.716010+00:00",
+      "status": "admitted",
+      "generation_seconds": 0.7534748780308291,
+      "tetrahedra": 2567,
+      "nodes": 973,
+      "volume": 0.17425655691052677,
+      "solid_fraction": 0.17425655691052677,
+      "q_min": 0.33338638041164614,
+      "q_p05": 0.3816349925566028,
+      "q_median": 0.558784122212218,
+      "q_below_01": 0,
+      "minimum_cell_relative_determinant": 0.08040342379469187,
+      "cell_relative_determinant_tolerance": 1e-12,
+      "overlap_pairs_checked": 35120,
+      "geometry_status": "checked-at-declared-tolerances",
+      "sampled_cap_overshoot": 0.00996943205333651,
+      "sampled_geometry_distance": 0.009988696544446111,
+      "sampled_outward_orientation": true,
+      "sampled_reverse_distance": 0.009335208861172182,
+      "reverse_distance_samples": 8736,
+      "relative_volume_error": 0.017180635282726175,
+      "admission_reasons": [],
+      "quality_eligible": true,
+      "relative_volume_error_with_uncertainty": 0.018121431898085096
+    },
+    {
+      "case": "schwarz-p",
+      "request": {
+        "cells": 8,
+        "optimize_passes": 4,
+        "adapt": false
+      },
+      "band": [
+        -1,
+        1
+      ],
+      "utc": "2026-11-18T21:15:36.226295+00:00",
+      "status": "admitted",
+      "generation_seconds": 0.26822106807958335,
+      "tetrahedra": 2568,
+      "nodes": 974,
+      "volume": 0.17427205628569017,
+      "solid_fraction": 0.17427205628569017,
+      "q_min": 0.3320698167632252,
+      "q_p05": 0.3822806612757652,
+      "q_median": 0.5586171097028896,
+      "q_below_01": 0,
+      "minimum_cell_relative_determinant": 0.07914694368629464,
+      "cell_relative_determinant_tolerance": 1e-12,
+      "overlap_pairs_checked": 35143,
+      "geometry_status": "checked-at-declared-tolerances",
+      "sampled_cap_overshoot": 0.009997402351137332,
+      "sampled_geometry_distance": 0.009997402351137332,
+      "sampled_outward_orientation": true,
+      "sampled_reverse_distance": 0.009343366592847877,
+      "reverse_distance_samples": 8736,
+      "relative_volume_error": 0.01727110914812746,
+      "admission_reasons": [],
+      "quality_eligible": true,
+      "relative_volume_error_with_uncertainty": 0.018211905763486382
+    },
+    {
+      "case": "schwarz-p",
+      "request": {
+        "cells": 8,
+        "optimize_passes": 4,
+        "adapt": true
+      },
+      "band": [
+        -1,
+        1
+      ],
+      "utc": "2026-11-18T21:15:39.674625+00:00",
+      "status": "admitted",
+      "generation_seconds": 0.41102948400657624,
+      "tetrahedra": 4114,
+      "nodes": 1293,
+      "volume": 0.1737119564675265,
+      "solid_fraction": 0.1737119564675265,
+      "q_min": 0.4196876609870485,
+      "q_p05": 0.5350928628497128,
+      "q_median": 0.7045683002758969,
+      "q_below_01": 0,
+      "minimum_cell_relative_determinant": 0.1033769794849229,
+      "cell_relative_determinant_tolerance": 1e-12,
+      "overlap_pairs_checked": 60362,
+      "geometry_status": "checked-at-declared-tolerances",
+      "sampled_cap_overshoot": 0.00629944592553411,
+      "sampled_geometry_distance": 0.008057203869884871,
+      "sampled_outward_orientation": true,
+      "sampled_reverse_distance": 0.007009340931835285,
+      "reverse_distance_samples": 8736,
+      "relative_volume_error": 0.014001661507462737,
+      "admission_reasons": [],
+      "quality_eligible": true,
+      "relative_volume_error_with_uncertainty": 0.01494245812282166
+    },
+    {
+      "case": "spinodoid",
+      "request": {
+        "cells": 16,
+        "optimize_passes": 4,
+        "adapt": false
+      },
+      "band": [
+        -1,
+        0
+      ],
+      "utc": "2026-11-18T21:18:48.702069+00:00",
+      "status": "native-rejected",
+      "reason": "minimum MMG quality 7.229877513178203e-2 is below required 1e-1; mesh rejected (2 elements below 0.1). Improve resolution/optimization or use a quality remesher",
+      "generation_seconds": 35.70265740004834
+    },
+    {
+      "case": "spinodoid",
+      "request": {
+        "cells": 16,
+        "optimize_passes": 4,
+        "adapt": true
+      },
+      "band": [
+        -1,
+        0
+      ],
+      "utc": "2026-11-18T21:17:57.386485+00:00",
+      "status": "native-rejected",
+      "reason": "sampled geometry error 3.753542192416778e-2 exceeds tolerance 1e-2; increase resolution or budget",
+      "generation_seconds": 50.49412369495258
+    },
+    {
+      "case": "spinodoid",
+      "request": {
+        "cells": 8,
+        "optimize_passes": 0,
+        "adapt": false
+      },
+      "band": [
+        -1,
+        0
+      ],
+      "utc": "2026-11-18T21:16:33.912547+00:00",
+      "status": "native-rejected",
+      "reason": "sampled geometry error 6.971543619183376e-2 exceeds tolerance 1e-2; increase resolution or budget",
+      "generation_seconds": 2.8907217090018094
+    },
+    {
+      "case": "spinodoid",
+      "request": {
+        "cells": 8,
+        "optimize_passes": 12,
+        "adapt": false
+      },
+      "band": [
+        -1,
+        0
+      ],
+      "utc": "2026-11-18T21:16:48.494623+00:00",
+      "status": "native-rejected",
+      "reason": "sampled geometry error 6.971543619183376e-2 exceeds tolerance 1e-2; increase resolution or budget",
+      "generation_seconds": 24.11679651797749
+    },
+    {
+      "case": "spinodoid",
+      "request": {
+        "cells": 8,
+        "optimize_passes": 4,
+        "adapt": false
+      },
+      "band": [
+        -1,
+        0
+      ],
+      "utc": "2026-11-18T21:16:37.601424+00:00",
+      "status": "native-rejected",
+      "reason": "sampled geometry error 6.971543619183376e-2 exceeds tolerance 1e-2; increase resolution or budget",
+      "generation_seconds": 10.074792918981984
+    },
+    {
+      "case": "spinodoid",
+      "request": {
+        "cells": 8,
+        "optimize_passes": 4,
+        "adapt": true
+      },
+      "band": [
+        -1,
+        0
+      ],
+      "utc": "2026-11-18T21:17:13.410019+00:00",
+      "status": "native-rejected",
+      "reason": "sampled geometry error 1.2703186661522112e-1 exceeds tolerance 1e-2; increase resolution or budget",
+      "generation_seconds": 43.16242400999181
+    },
+    {
+      "case": "thin-gyroid",
+      "request": {
+        "cells": 16,
+        "optimize_passes": 4,
+        "adapt": false
+      },
+      "band": [
+        -1,
+        1
+      ],
+      "utc": "2026-11-18T21:16:30.132519+00:00",
+      "status": "admitted",
+      "generation_seconds": 1.8919512139400467,
+      "tetrahedra": 12649,
+      "nodes": 5047,
+      "volume": 0.08103713406947859,
+      "solid_fraction": 0.08103713406947859,
+      "q_min": 0.1789557981950983,
+      "q_p05": 0.4415989738746934,
+      "q_median": 0.6030877950671432,
+      "q_below_01": 0,
+      "minimum_cell_relative_determinant": 0.041762935253148545,
+      "cell_relative_determinant_tolerance": 1e-12,
+      "overlap_pairs_checked": 150369,
+      "geometry_status": "checked-at-declared-tolerances",
+      "sampled_cap_overshoot": 0.001884546944119505,
+      "sampled_geometry_distance": 0.0032136997268722624,
+      "sampled_outward_orientation": true,
+      "sampled_reverse_distance": 0.0038310746000458904,
+      "reverse_distance_samples": 10910,
+      "relative_volume_error": 0.0076199012704412095,
+      "admission_reasons": [],
+      "quality_eligible": true,
+      "relative_volume_error_with_uncertainty": 0.01312202978783102
+    },
+    {
+      "case": "thin-gyroid",
+      "request": {
+        "cells": 16,
+        "optimize_passes": 4,
+        "adapt": true
+      },
+      "band": [
+        -1,
+        1
+      ],
+      "utc": "2026-11-18T21:16:27.015767+00:00",
+      "status": "admitted",
+      "generation_seconds": 1.3106715809553862,
+      "tetrahedra": 10021,
+      "nodes": 3653,
+      "volume": 0.08158630395994745,
+      "solid_fraction": 0.08158630395994745,
+      "q_min": 0.3414754086780362,
+      "q_p05": 0.5008546356060055,
+      "q_median": 0.6781628376348278,
+      "q_below_01": 0,
+      "minimum_cell_relative_determinant": 0.08471106381219533,
+      "cell_relative_determinant_tolerance": 1e-12,
+      "overlap_pairs_checked": 110257,
+      "geometry_status": "checked-at-declared-tolerances",
+      "sampled_cap_overshoot": 0.001905462392039224,
+      "sampled_geometry_distance": 0.005282437226663811,
+      "sampled_outward_orientation": true,
+      "sampled_reverse_distance": 0.0041246438382408455,
+      "reverse_distance_samples": 10910,
+      "relative_volume_error": 0.014448307990013953,
+      "admission_reasons": [],
+      "quality_eligible": true,
+      "relative_volume_error_with_uncertainty": 0.019950436507403763
+    },
+    {
+      "case": "thin-gyroid",
+      "request": {
+        "cells": 8,
+        "optimize_passes": 0,
+        "adapt": false
+      },
+      "band": [
+        -1,
+        1
+      ],
+      "utc": "2026-11-18T21:16:18.184380+00:00",
+      "status": "native-rejected",
+      "reason": "minimum MMG quality 5.536557287215033e-2 is below required 1e-1; mesh rejected (27 elements below 0.1). Improve resolution/optimization or use a quality remesher",
+      "generation_seconds": 0.021024499903433025
+    },
+    {
+      "case": "thin-gyroid",
+      "request": {
+        "cells": 8,
+        "optimize_passes": 12,
+        "adapt": false
+      },
+      "band": [
+        -1,
+        1
+      ],
+      "utc": "2026-11-18T21:16:20.924046+00:00",
+      "status": "geometry-rejected",
+      "generation_seconds": 1.6352481819922104,
+      "tetrahedra": 4019,
+      "nodes": 1609,
+      "volume": 0.08423466672850062,
+      "solid_fraction": 0.08423466672850062,
+      "q_min": 0.1222056445801893,
+      "q_p05": 0.2555513825850164,
+      "q_median": 0.38143612026294654,
+      "q_below_01": 0,
+      "minimum_cell_relative_determinant": 0.028056843653904602,
+      "cell_relative_determinant_tolerance": 1e-12,
+      "overlap_pairs_checked": 45079,
+      "geometry_status": "checked-at-declared-tolerances",
+      "sampled_cap_overshoot": 0.009936759375379954,
+      "sampled_geometry_distance": 0.009999058533673902,
+      "sampled_outward_orientation": true,
+      "sampled_reverse_distance": 0.011646871692041602,
+      "reverse_distance_samples": 10910,
+      "relative_volume_error": 0.047378187137639305,
+      "admission_reasons": [
+        "Sampled target-to-mesh distance 0.0116469L exceeds tolerance"
+      ],
+      "quality_eligible": true,
+      "relative_volume_error_with_uncertainty": 0.05288031565502911
+    },
+    {
+      "case": "thin-gyroid",
+      "request": {
+        "cells": 8,
+        "optimize_passes": 4,
+        "adapt": false
+      },
+      "band": [
+        -1,
+        1
+      ],
+      "utc": "2026-11-18T21:16:18.956716+00:00",
+      "status": "geometry-rejected",
+      "generation_seconds": 0.5735367710003629,
+      "tetrahedra": 4019,
+      "nodes": 1609,
+      "volume": 0.0842063084029361,
+      "solid_fraction": 0.0842063084029361,
+      "q_min": 0.1284475390220115,
+      "q_p05": 0.2542010989045766,
+      "q_median": 0.3819466754984265,
+      "q_below_01": 0,
+      "minimum_cell_relative_determinant": 0.02788422530089163,
+      "cell_relative_determinant_tolerance": 1e-12,
+      "overlap_pairs_checked": 45083,
+      "geometry_status": "checked-at-declared-tolerances",
+      "sampled_cap_overshoot": 0.009936759375379954,
+      "sampled_geometry_distance": 0.009998249687808871,
+      "sampled_outward_orientation": true,
+      "sampled_reverse_distance": 0.011646871692041602,
+      "reverse_distance_samples": 10910,
+      "relative_volume_error": 0.04702557825612308,
+      "admission_reasons": [
+        "Sampled target-to-mesh distance 0.0116469L exceeds tolerance"
+      ],
+      "quality_eligible": true,
+      "relative_volume_error_with_uncertainty": 0.052527706773512886
+    },
+    {
+      "case": "thin-gyroid",
+      "request": {
+        "cells": 8,
+        "optimize_passes": 4,
+        "adapt": true
+      },
+      "band": [
+        -1,
+        1
+      ],
+      "utc": "2026-11-18T21:16:23.893644+00:00",
+      "status": "admitted",
+      "generation_seconds": 1.1996952500194311,
+      "tetrahedra": 9529,
+      "nodes": 3459,
+      "volume": 0.08195592296309837,
+      "solid_fraction": 0.08195592296309837,
+      "q_min": 0.10985072829624648,
+      "q_p05": 0.44526646725505387,
+      "q_median": 0.665894177129019,
+      "q_below_01": 0,
+      "minimum_cell_relative_determinant": 0.021678442475708277,
+      "cell_relative_determinant_tolerance": 1e-12,
+      "overlap_pairs_checked": 105848,
+      "geometry_status": "checked-at-declared-tolerances",
+      "sampled_cap_overshoot": 0.0021716818359154596,
+      "sampled_geometry_distance": 0.008045002939644786,
+      "sampled_outward_orientation": true,
+      "sampled_reverse_distance": 0.007034745532101669,
+      "reverse_distance_samples": 10910,
+      "relative_volume_error": 0.01904416972351597,
+      "admission_reasons": [],
+      "quality_eligible": true,
+      "relative_volume_error_with_uncertainty": 0.02454629824090578
+    },
+    {
+      "case": "gyroid",
+      "request": {
+        "cells": 8,
+        "optimize_passes": 4,
+        "adapt": false
+      },
+      "band": [
+        -1,
+        1
+      ],
+      "energy_target": 0.02,
+      "utc": "2026-11-18T21:19:31.640657+00:00",
+      "status": "admitted",
+      "generation_seconds": 0.5199353700736538,
+      "tetrahedra": 3493,
+      "nodes": 1451,
+      "fea": {
+        "status": "outside-target",
+        "worst_energy_error": 0.14083868132549096,
+        "patch_max_error": 2.474278645074265e-14,
+        "free_residual": 4.047174580182392e-15,
+        "free_dofs": 4335,
+        "assembly_s": 0.09931118506938219,
+        "solve_s": 0.05507775500882417
+      },
+      "volume": 0.16449229461004622,
+      "solid_fraction": 0.16449229461004622,
+      "q_min": 0.14974565181344648,
+      "q_p05": 0.3224722056211165,
+      "q_median": 0.5708057772670285,
+      "q_below_01": 0,
+      "minimum_cell_relative_determinant": 0.03185154782838445,
+      "cell_relative_determinant_tolerance": 1e-12,
+      "overlap_pairs_checked": 41513,
+      "geometry_status": "checked-at-declared-tolerances",
+      "sampled_cap_overshoot": 0.008472522434299022,
+      "sampled_geometry_distance": 0.009978600180914022,
+      "sampled_outward_orientation": true,
+      "sampled_reverse_distance": 0.009414531814568484,
+      "reverse_distance_samples": 11342,
+      "relative_volume_error": 0.021193657383372866,
+      "admission_reasons": [],
+      "quality_eligible": true,
+      "relative_volume_error_with_uncertainty": 0.022892857515993365
+    },
+    {
+      "case": "implicit-lattice",
+      "request": {
+        "cells": 8,
+        "optimize_passes": 4,
+        "adapt": true
+      },
+      "band": [
+        -1,
+        0
+      ],
+      "energy_target": 0.02,
+      "utc": "2026-11-18T21:19:33.731744+00:00",
+      "status": "admitted",
+      "generation_seconds": 1.1618712689960375,
+      "tetrahedra": 15303,
+      "nodes": 3562,
+      "fea": {
+        "status": "outside-target",
+        "worst_energy_error": 0.10943429473771359,
+        "patch_max_error": 3.35659004003235e-14,
+        "free_residual": 9.004380809992048e-15,
+        "free_dofs": 10680,
+        "assembly_s": 0.22536420403048396,
+        "solve_s": 0.5406949770404026
+      },
+      "volume": 0.23865241556694486,
+      "solid_fraction": 0.23865241556694486,
+      "q_min": 0.5056593265031573,
+      "q_p05": 0.5814897051734944,
+      "q_median": 0.7096546971984682,
+      "q_below_01": 0,
+      "minimum_cell_relative_determinant": 0.10728268976878504,
+      "cell_relative_determinant_tolerance": 1e-12,
+      "overlap_pairs_checked": 361913,
+      "geometry_status": "checked-at-declared-tolerances",
+      "sampled_cap_overshoot": 1.0818013152353369e-14,
+      "sampled_geometry_distance": 0.005945767213845601,
+      "sampled_outward_orientation": true,
+      "sampled_reverse_distance": 0.00861003877834869,
+      "reverse_distance_samples": 6470,
+      "relative_volume_error": 0.02918063481545441,
+      "admission_reasons": [],
+      "quality_eligible": true,
+      "relative_volume_error_with_uncertainty": 0.03045698128338863
+    },
+    {
+      "case": "spinodoid",
+      "request": {
+        "cells": 12,
+        "optimize_passes": 4,
+        "adapt": false
+      },
+      "band": [
+        -1,
+        0
+      ],
+      "energy_target": null,
+      "utc": "2026-11-18T21:21:52.270317+00:00",
+      "status": "native-rejected",
+      "reason": "sampled geometry error 6.420489832582399e-2 exceeds tolerance 1e-2; increase resolution or budget",
+      "generation_seconds": 20.457282390911132
+    },
+    {
+      "case": "spinodoid",
+      "request": {
+        "cells": 20,
+        "optimize_passes": 4,
+        "adapt": false
+      },
+      "band": [
+        -1,
+        0
+      ],
+      "energy_target": null,
+      "utc": "2026-11-18T21:20:50.910909+00:00",
+      "status": "admitted",
+      "generation_seconds": 51.21520955406595,
+      "tetrahedra": 59363,
+      "nodes": 14100,
+      "volume": 0.5023391589505367,
+      "solid_fraction": 0.5023391589505367,
+      "q_min": 0.11328838707506016,
+      "q_p05": 0.5664829721527624,
+      "q_median": 0.885897460717948,
+      "q_below_01": 0,
+      "minimum_cell_relative_determinant": 0.02186540607950892,
+      "cell_relative_determinant_tolerance": 1e-12,
+      "overlap_pairs_checked": 956001,
+      "geometry_status": "checked-at-declared-tolerances",
+      "sampled_cap_overshoot": 0.0036699156912710328,
+      "sampled_geometry_distance": 0.005979298548514757,
+      "sampled_outward_orientation": true,
+      "sampled_reverse_distance": 0.004725264975450724,
+      "reverse_distance_samples": 11136,
+      "relative_volume_error": 0.0002312600489500216,
+      "admission_reasons": [],
+      "quality_eligible": true,
+      "relative_volume_error_with_uncertainty": 0.0010971612032950034
+    },
+    {
+      "case": "spinodoid",
+      "request": {
+        "cells": 24,
+        "optimize_passes": 12,
+        "adapt": false
+      },
+      "band": [
+        -1,
+        0
+      ],
+      "energy_target": null,
+      "utc": "2026-11-18T21:22:13.500455+00:00",
+      "status": "native-rejected",
+      "reason": "minimum MMG quality 5.254426353171287e-2 is below required 1e-1; mesh rejected (10 elements below 0.1). Improve resolution/optimization or use a quality remesher",
+      "generation_seconds": 173.52804344100878
+    },
+    {
+      "case": "spinodoid",
+      "request": {
+        "cells": 24,
+        "optimize_passes": 4,
+        "adapt": false
+      },
+      "band": [
+        -1,
+        0
+      ],
+      "energy_target": null,
+      "utc": "2026-11-18T21:19:41.624673+00:00",
+      "status": "native-rejected",
+      "reason": "minimum MMG quality 5.1032515672111194e-2 is below required 1e-1; mesh rejected (10 elements below 0.1). Improve resolution/optimization or use a quality remesher",
+      "generation_seconds": 68.46318247297313
+    },
+    {
+      "case": "spinodoid",
+      "request": {
+        "cells": 8,
+        "optimize_passes": 4,
+        "adapt": true,
+        "adapt_tolerance": 0.002
+      },
+      "band": [
+        -1,
+        0
+      ],
+      "energy_target": null,
+      "utc": "2026-11-18T21:26:24.434392+00:00",
+      "status": "native-rejected",
+      "reason": "sampled geometry error 2.300493050833298e0 exceeds tolerance 1e-2; increase resolution or budget",
+      "generation_seconds": 173.49414557009004
+    },
+    {
+      "case": "spinodoid",
+      "request": {
+        "cells": 8,
+        "optimize_passes": 4,
+        "adapt": true,
+        "adapt_tolerance": 0.005
+      },
+      "band": [
+        -1,
+        0
+      ],
+      "energy_target": null,
+      "utc": "2026-11-18T21:25:08.281415+00:00",
+      "status": "native-rejected",
+      "reason": "sampled geometry error 1.99868030720279e-1 exceeds tolerance 1e-2; increase resolution or budget",
+      "generation_seconds": 75.37611125106923
+    }
+  ]
+}
