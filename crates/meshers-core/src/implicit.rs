@@ -742,7 +742,7 @@ fn generate_internal<F: ScalarField>(
         return Err(MeshingError::InvalidOptions("order must be 1 or 2".into()));
     }
     let result = build(&context).and_then(|mut output| {
-        if options.order == 2 && !output.mesh.tets.is_empty() {
+        if options.order == 2 {
             let mut elements = crate::quadratic::elevate(
                 &output.mesh,
                 &output.boundary_tags,

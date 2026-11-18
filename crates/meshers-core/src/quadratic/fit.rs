@@ -290,7 +290,7 @@ pub(crate) fn improve(
                 continue;
             }
             let valid = affected.iter().all(|q| {
-                let coordinates = q.map(|m| trial[m]);
+                let coordinates = q.map(|m| crate::sub(trial[m], trial[q[0]]));
                 let (mut low, mut high) = (f64::INFINITY, f64::NEG_INFINITY);
                 for &p in &probes {
                     let d = jacobian(&coordinates, p);
@@ -300,7 +300,11 @@ pub(crate) fn improve(
                     low = low.min(d);
                     high = high.max(d);
                 }
-                low.is_finite() && high.is_finite() && low > 1e-3 * high && high > 0.
+                low.is_finite()
+                    && high.is_finite()
+                    && low > 1e-3 * high
+                    && high > 0.
+                    && super::positivity::positive(&coordinates)
             });
             if !valid {
                 continue;

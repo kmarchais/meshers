@@ -784,6 +784,43 @@ fn _periodic_affine_traces(
     }
 }
 
+/// Count connected solid components through shared corner triangles of conforming tets.
+#[pyfunction]
+fn face_components(tetrahedra: PyReadonlyArray2<'_, i64>) -> PyResult<usize> {
+    use std::collections::HashMap;
+    fn root(parent: &mut [usize], mut i: usize) -> usize {
+        while parent[i] != i {
+            parent[i] = parent[parent[i]];
+            i = parent[i];
+        }
+        i
+    }
+    let cells = tetrahedra.as_array();
+    if !matches!(cells.ncols(), 4 | 10) {
+        return Err(PyValueError::new_err("expected Tet4 or Tet10 connectivity"));
+    }
+    let mut components = cells.nrows();
+    let mut parent: Vec<_> = (0..components).collect();
+    let mut faces = HashMap::new();
+    for (i, cell) in cells.rows().into_iter().enumerate() {
+        for [a, b, c] in [[1, 2, 3], [0, 2, 3], [0, 1, 3], [0, 1, 2]] {
+            let mut face = [cell[a], cell[b], cell[c]];
+            face.sort_unstable();
+            if let Some(j) = faces.remove(&face) {
+                let left = root(&mut parent, i);
+                let right = root(&mut parent, j);
+                if left != right {
+                    parent[left] = right;
+                    components -= 1;
+                }
+            } else {
+                faces.insert(face, i);
+            }
+        }
+    }
+    Ok(components)
+}
+
 /// Integrate current quadratic coordinates, including edits after generation.
 #[pyfunction]
 fn quadratic_volumes<'py>(
@@ -839,6 +876,7 @@ fn _meshers(m: &Bound<'_, PyModule>) -> PyResult<()> {
         meshers_core::implicit::intersection::MAX_CONSTRAINTS,
     )?;
     m.add_function(wrap_pyfunction!(available_threads, m)?)?;
+    m.add_function(wrap_pyfunction!(face_components, m)?)?;
     m.add_function(wrap_pyfunction!(quadratic_volumes, m)?)?;
     m.add_function(wrap_pyfunction!(_periodic_affine_traces, m)?)?;
     m.add_class::<compiled::CompiledField>()?;

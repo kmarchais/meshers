@@ -173,12 +173,33 @@ def test_vtkhdf_round_trip_and_physical_shifts(tmp_path):
     assert pv.read(surface).n_cells == len(result.surface)
 
 
-def test_empty_mesh_shapes():
-    result = generate_callback(lambda x, y, z: np.ones_like(x), cells=4)
+@pytest.mark.parametrize(("order", "width", "face_width"), [(1, 4, 3), (2, 10, 6)])
+def test_empty_mesh_shapes(order, width, face_width, tmp_path):
+    import h5py
+
+    result = generate_callback(
+        lambda x, y, z: np.ones_like(x),
+        cells=4,
+        order=order,
+        expected_components=0,
+        periodic=(True,) * 3,
+        curved_fit=order == 2,
+    )
     assert result.points.shape == (0, 3)
-    assert result.tetrahedra.shape == (0, 4)
-    assert result.surface.shape == (0, 3)
+    assert result.tetrahedra.shape == (0, width)
+    assert result.surface.shape == (0, face_width)
     assert result.diagnostics["empty"]
+    assert result.diagnostics["face_connected_components"] == 0
+    assert all(p.shape == (0, 2) for p in result.periodic_pairs)
+    for surface in (False, True):
+        path = tmp_path / "empty.vtkhdf"
+        result.write_vtkhdf(path, surface=surface)
+        with h5py.File(path) as f:
+            group = f["VTKHDF"]
+            np.testing.assert_array_equal(group["Offsets"][:], [0])
+            assert group["Connectivity"].shape == group["Types"].shape == (0,)
+            if order == 2 and not surface:
+                assert group["CellData/CornerVolume"].shape == (0,)
 
 
 def test_keyboard_interrupt_in_native_work():
@@ -327,3 +348,51 @@ def test_native_field_with_python_gradient_uses_calling_thread():
     )
     assert len(m.tetrahedra) > 0
     assert max(sizes) > 6
+
+
+@pytest.mark.parametrize("order", [1, 2])
+def test_expected_components_exposes_missing_island_in_nonempty_mesh(order):
+    def solid(x, y, z):
+        sphere = (x - 0.125) ** 2 + (y - 0.125) ** 2 + (z - 0.25) ** 2 - 0.06**2
+        return np.minimum(0.75 - x, sphere)
+
+    opts = {"order": order, "optimize_passes": 0, "snap": 0, "geometry_tolerance": 0.02}
+    with pytest.raises(meshers.MeshingError, match="Expected 2 face-connected components, found 1"):
+        meshers.generate(solid, cells=4, expected_components=2, **opts)
+    fine = meshers.generate(solid, cells=16, expected_components=2, **opts)
+    assert fine.diagnostics["face_connected_components"] == 2
+
+
+def test_expected_components_exposes_lost_thin_slab():
+    def slab(x, y, z):
+        return (x - 0.06) ** 2 - 0.025**2
+
+    opts = {"expected_components": 1, "optimize_passes": 0, "snap": 0, "geometry_tolerance": 0.02}
+    with pytest.raises(meshers.MeshingError, match="Expected 1 face-connected components, found 0"):
+        meshers.generate(slab, cells=4, **opts)
+    fine = meshers.generate(slab, cells=24, **opts)
+    assert fine.diagnostics["volume"] == pytest.approx(0.05)
+
+
+def test_expected_components_on_retained_planes():
+    with pytest.raises(meshers.MeshingError, match="found 1"):
+        meshers.generate(
+            lambda x, y, z: np.maximum(x - 0.4, y - 0.6), cells=4, expected_components=2
+        )
+
+
+@pytest.mark.parametrize("invalid", [-1, True, 1.5])
+def test_invalid_expected_components(invalid):
+    with pytest.raises(ValueError, match="expected_components"):
+        meshers.generate("gyroid", cells=4, expected_components=invalid)
+
+
+def test_expected_components_count_before_periodic_identification():
+    mesh = meshers.generate(
+        lambda x, y, z: -np.cos(2 * np.pi * x),
+        cells=8,
+        periodic=(True, False, False),
+        expected_components=2,
+    )
+    assert len(mesh.periodic_pairs[0]) > 0
+    assert mesh.diagnostics["face_connected_components"] == 2

@@ -39,6 +39,31 @@ Invalid options raise `ValueError`; unsuccessful geometry/topology checks raise
 `MeshingError`. A `CancellationToken` allows cooperative cancellation, including
 from another Python thread. Callback exceptions are preserved.
 
+## Reject missing or disconnected material
+
+When the intended topology is known, pass `expected_components` to
+`meshers.generate`. For example, `expected_components=2` requires two groups
+of tetrahedra connected across full triangular faces. If a coarse lattice
+misses a small island beside a larger solid, the call raises `MeshingError`
+even though the larger solid produced valid elements. An unexpected split
+in a thin ligament also changes the count. Counting uses the cut box before
+identifying periodic images. Vertex and edge contacts do not join components.
+
+The count is opt-in. It cannot identify which island survived or detect a
+missing feature if another defect preserves the count. A sampled-empty
+mesh has zero components. For `order=2` its connectivity has shapes
+`(0, 10)` for tetrahedra and `(0, 6)` for surface triangles.
+
+## Curved element orientation
+
+Tet10 elevation and optional curved fitting check the Jacobian determinant
+throughout each proposed curved element. Its matrix varies affinely over the
+reference tetrahedron. Products of its corner rows bound the determinant
+between the sample points. The mesher bisects inconclusive regions. A fold
+or an unresolved bound causes elevation to reduce the edge correction, or
+fitting to reject the proposed step. The reported `minimum_jacobian_ratio`
+is still the ratio measured at the sampling points.
+
 ## Require a minimum element quality
 
 ```python
