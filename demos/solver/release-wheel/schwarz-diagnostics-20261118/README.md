@@ -32,7 +32,7 @@ A separate curved Tet10 control at 12 background cells had 11,976 elements, 19,6
 
 ## Can both Tet4 routes be timed at 1%?
 
-Four configurations completed the additional repaired Microgen screen. At resolution 30 the meshes passed geometry and missed the stiffness target, with discrepancies of 1.168% to 1.177%. At resolution 34 the first MMG pass failed on all five attempts per configuration. At resolution 36 the exported wall passed, but 30–32 tetrahedra still fell below the 0.1 quality floor after repair. The study preserved each rejection and skipped the paired timings. The Core Ultra 9 285K follow-up is queued.
+All five configurations completed the additional repaired Microgen screen. At resolution 30 the meshes passed geometry and missed the stiffness target, with discrepancies of 1.168% to 1.177%. At resolution 34 the first MMG pass failed on all five attempts per configuration. At resolution 36 the exported wall passed, but 30–32 tetrahedra still fell below the 0.1 quality floor after repair. The study preserved each rejection and skipped the paired timings.
 
 For a qualifying pair, the protocol uses three fresh processes per route in alternating order. It measures the entire workflow, including generation, repair, export, geometry admission, assembly and solve. Until both routes qualify on the same configuration, timing them would answer a different question.
 
