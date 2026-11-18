@@ -2,6 +2,7 @@
 
 import argparse
 import json
+import math
 import os
 import statistics
 import subprocess  # ruff: ignore[suspicious-subprocess-import] - isolated benchmark workers.
@@ -69,12 +70,40 @@ def observe_worker(cmd, env, log, timeout):
         return worker.returncode, peak
 
 
+def worker_record(path, route, cells, exit_status, elapsed):
+    """Read the worker output.
+
+    Returns:
+        A failed observation for incomplete or contradictory output, or the worker result.
+    """
+    try:
+        record = json.loads(path.read_bytes())
+    except (FileNotFoundError, ValueError):
+        record = None
+    if not isinstance(record, dict):
+        record = {}
+    duration = record.get("workflow_seconds")
+    valid_time = isinstance(duration, (int, float)) and math.isfinite(duration) and duration >= 0
+    valid_case = record.get("route") == route and "cells" in record and record["cells"] == cells
+    outcomes = (TARGET, "outside-reference-target", "geometry-rejected", "failed")
+    if not valid_case or not valid_time or record.get("status") not in outcomes:
+        return {
+            "route": route,
+            "cells": cells,
+            "status": "failed",
+            "error": f"Worker exit {exit_status} without a complete result",
+            "workflow_seconds": elapsed,
+        }
+    if exit_status and record["status"] != "failed":
+        record.update(status="failed", error=f"Worker exited with {exit_status}")
+    return record
+
+
 def run_series(output, repeats, timeout, on_step=None):
     """Run a fixed refinement series in new directories and retain each worker outcome.
 
     Raises:
         ValueError: Repetitions and timeout must be positive.
-        RuntimeError: The worker exit code contradicts its recorded result.
     """
     if repeats < 1 or timeout <= 0:
         raise ValueError("Expected positive repetitions and timeout")
@@ -111,21 +140,10 @@ def run_series(output, repeats, timeout, on_step=None):
                 with (output / (name + ".log")).open("wb") as log:
                     status, peak = observe_worker(cmd, env, log, timeout)
                 path = folder / "result.json"
-                if path.exists():
-                    record = json.loads(path.read_text(encoding="utf8"))
-                else:
-                    folder.mkdir(exist_ok=True)
-                    record = {
-                        "route": route,
-                        "cells": cells,
-                        "status": "failed",
-                        "error": f"Worker exit {status}",
-                        "workflow_seconds": time.perf_counter() - start,
-                    }
+                record = worker_record(path, route, cells, status, time.perf_counter() - start)
+                folder.mkdir(exist_ok=True)
                 record["sampled_peak_tree_rss_bytes"] = peak
                 path.write_text(json.dumps(record, indent=2) + "\n", encoding="utf8")
-                if status and record["status"] != "failed":
-                    raise RuntimeError(f"Worker {name} failed after writing an inconsistent result")
                 rows.append({**record, "repeat": repeat})
                 summary = {
                     "repetitions": repeats,

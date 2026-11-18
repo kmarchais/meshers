@@ -26,6 +26,16 @@ MATERIAL[:3, :3] = 1
 np.fill_diagonal(MATERIAL[:3, :3], 3)
 
 
+def require(condition, message):
+    """Enforce a numerical acceptance check in every Python execution mode.
+
+    Raises:
+        ValueError: The numerical check failed.
+    """
+    if not condition:
+        raise ValueError(message)
+
+
 class AuditedCG:
     """Fedoo solver callback that checks every reduced linear system."""
 
@@ -40,9 +50,12 @@ class AuditedCG:
             Solution after checking CG status and the recomputed residual.
         """
         diagonal = matrix.diagonal()
-        assert np.all(diagonal > 0)
+        require(np.all(diagonal > 0), "CG requires a positive diagonal")
         skew = matrix - matrix.T
-        assert np.linalg.norm(skew.data) / np.linalg.norm(matrix.data) < 1e-12
+        require(
+            np.linalg.norm(skew.data) / np.linalg.norm(matrix.data) < 1e-12,
+            "Reduced stiffness matrix is asymmetric",
+        )
         iterations = 0
 
         def count(_):
@@ -61,8 +74,8 @@ class AuditedCG:
         )
         solve_seconds = time.perf_counter() - solve_start
         residual = float(np.linalg.norm(matrix @ solution - rhs) / max(np.linalg.norm(rhs), 1e-30))
-        assert info == 0, (info, residual)
-        assert residual < 2e-9, residual
+        require(info == 0, f"CG returned status {info} with relative residual {residual}")
+        require(residual < 2e-9, f"CG relative residual {residual} exceeds the limit")
         self.records.append({
             "iterations": iterations,
             "cg_seconds": solve_seconds,
@@ -99,10 +112,13 @@ def pair_classes(mesh):
     for axis, pairs in enumerate(mesh.periodic_pairs):
         low = np.flatnonzero(np.isclose(mesh.points[:, axis], 0, atol=1e-12, rtol=0))
         high = np.flatnonzero(np.isclose(mesh.points[:, axis], 1, atol=1e-12, rtol=0))
-        assert np.array_equal(np.sort(pairs[:, 0]), low)
-        assert np.array_equal(np.sort(pairs[:, 1]), high)
+        require(np.array_equal(np.sort(pairs[:, 0]), low), "Incomplete low-side periodic pairs")
+        require(np.array_equal(np.sort(pairs[:, 1]), high), "Incomplete high-side periodic pairs")
         shift = np.eye(3)[axis]
-        assert np.max(np.abs(mesh.points[pairs[:, 1]] - mesh.points[pairs[:, 0]] - shift)) < 1e-12
+        require(
+            np.max(np.abs(mesh.points[pairs[:, 1]] - mesh.points[pairs[:, 0]] - shift)) < 1e-12,
+            "Periodic pair has incorrect translation",
+        )
         mapping = np.arange(len(mesh.points))
         mapping[pairs[:, 1]] = pairs[:, 0]
         sides = []
@@ -113,7 +129,7 @@ def pair_classes(mesh):
                 )
             ]
             sides.append({tuple(sorted(row)) for row in mapping[triangles]})
-        assert sides[0] == sides[1], axis
+        require(sides[0] == sides[1], f"Opposite face triangles differ on axis {axis}")
         for low_node, high_node in pairs:
             parent[root(high_node)] = root(low_node)
     return np.array([root(i) for i in range(len(parent))])
@@ -124,7 +140,7 @@ def element_geometry(mesh):
     points = mesh.points[mesh.tetrahedra]
     jac = points[:, 1:] - points[:, :1]
     volumes = np.linalg.det(jac) / 6
-    assert np.all(volumes > 0)
+    require(np.all(volumes > 0), "Nonpositive tetrahedron volume")
     gradients = np.empty((len(points), 4, 3))
     gradients[:, 1:] = np.swapaxes(np.linalg.inv(jac), 1, 2)
     gradients[:, 0] = -gradients[:, 1:].sum(axis=1)
@@ -161,8 +177,11 @@ def homogenize(mesh, *, stress_probe_cell=None):  # ruff: ignore[too-many-locals
         problem.set_solver(solver)
         problem.solve()
         displacement = problem.get_disp().T
-        assert np.all(np.isfinite(displacement))
-        assert np.max(np.abs(problem.get_dof_solution("MeanStrain").ravel() - engineering)) < 1e-12
+        require(np.all(np.isfinite(displacement)), "Nonfinite displacement")
+        require(
+            np.max(np.abs(problem.get_dof_solution("MeanStrain").ravel() - engineering)) < 1e-12,
+            "Prescribed mean strain was lost",
+        )
         macro = strain_tensor(engineering)
         jump_error = max(
             float(
@@ -176,7 +195,7 @@ def homogenize(mesh, *, stress_probe_cell=None):  # ruff: ignore[too-many-locals
             )
             for pairs in mesh.periodic_pairs
         )
-        assert jump_error < 1e-10, jump_error
+        require(jump_error < 1e-10, f"Periodic displacement jump error {jump_error}")
         gradient = np.einsum("tia,tib->tab", displacement[mesh.tetrahedra], gradients)
         strain = (gradient + np.swapaxes(gradient, -1, -2)) / 2
         stress = 2 * strain + np.trace(strain, axis1=1, axis2=2)[:, None, None] * np.eye(3)
@@ -192,7 +211,7 @@ def homogenize(mesh, *, stress_probe_cell=None):  # ruff: ignore[too-many-locals
         balanced = np.zeros_like(forces)
         np.add.at(balanced, classes, forces)
         force_error = float(np.linalg.norm(balanced) / np.linalg.norm(forces))
-        assert force_error < 1e-7, force_error
+        require(force_error < 1e-7, f"Periodic force error {force_error}")
         checks.append({
             "load": COMPONENTS[case],
             "periodic_jump_error": jump_error,
@@ -205,12 +224,15 @@ def homogenize(mesh, *, stress_probe_cell=None):  # ruff: ignore[too-many-locals
     hill_mandel = float(np.linalg.norm(energy_matrix - stiffness) / np.linalg.norm(stiffness))
     reaction_error = float(np.linalg.norm(reactions - stiffness) / np.linalg.norm(stiffness))
     symmetry = float(np.linalg.norm(stiffness - stiffness.T) / np.linalg.norm(stiffness))
-    assert max(hill_mandel, reaction_error, symmetry) < 1e-7
+    require(
+        max(hill_mandel, reaction_error, symmetry) < 1e-7,
+        "Energy, reaction or symmetry check failed",
+    )
     eigenvalues = np.linalg.eigvalsh((stiffness + stiffness.T) / 2)
-    assert np.all(eigenvalues > 0)
+    require(np.all(eigenvalues > 0), "Effective stiffness must be positive definite")
     # Uniform-strain (Voigt) upper bound using the measured solid volume.
     voigt_gap = np.linalg.eigvalsh(volumes.sum() * MATERIAL - (stiffness + stiffness.T) / 2)
-    assert voigt_gap.min() > -1e-7
+    require(voigt_gap.min() > -1e-7, "Effective stiffness exceeds the Voigt bound")
     automatic_solver = AuditedCG()
     automatic = fd.homogen.get_homogenized_stiffness(
         assembly,
@@ -219,7 +241,7 @@ def homogenize(mesh, *, stress_probe_cell=None):  # ruff: ignore[too-many-locals
         rigid_body_constraint="pin",
     )
     automatic_error = float(np.linalg.norm(automatic - stiffness) / np.linalg.norm(stiffness))
-    assert automatic_error < 1e-7, automatic_error
+    require(automatic_error < 1e-7, f"Stress-control discrepancy {automatic_error}")
     compliance = np.linalg.inv(stiffness)
     return {
         "tetrahedra": len(mesh.tetrahedra),
@@ -307,7 +329,7 @@ def main():
             tensor = np.array(result["stiffness_engineering_voigt"])
             if name == "solid":
                 error = float(np.linalg.norm(tensor - MATERIAL) / np.linalg.norm(MATERIAL))
-                assert error < 1e-8, error
+                require(error < 1e-8, f"Solid reference discrepancy {error}")
                 result["analytic_stiffness_relative_error"] = error
             if previous is not None:
                 result["stiffness_relative_change"] = float(

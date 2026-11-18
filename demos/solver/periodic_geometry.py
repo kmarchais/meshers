@@ -77,7 +77,11 @@ def worst(distances, samples):
 
 
 def boundary_metrics(points, faces, specimen, net):  # ruff: ignore[complex-structure] - separate wall and cap samples.
-    """Return two-sided measurements per wall and cap, plus the cap face masks."""
+    """Return two-sided measurements per wall and cap, plus the cap face masks.
+
+    Raises:
+        ValueError: A reference point fails the analytic wall equation.
+    """
     levels = (-0.55, 0.55) if specimen == "gyroid" else (0.0,)
     triangles = points[faces]
     caps = {}
@@ -128,7 +132,8 @@ def boundary_metrics(points, faces, specimen, net):  # ruff: ignore[complex-stru
                 lines[:, axis] = column
                 refs.append(lines[valid].copy())
         reference = np.concatenate(refs)
-        assert np.max(abs(field(reference, specimen) - level)) < 1e-12
+        if not np.all(abs(field(reference, specimen) - level) < 1e-12):
+            raise ValueError("Reference samples are off the analytic wall")
         mask = wall if len(levels) == 1 else wall & ((wall_values < 0) == (level < 0))
         measure(f"wall {level:g}", mask, reference, level)
     for (axis, side), mask in caps.items():
@@ -193,7 +198,9 @@ def audit(grid, specimen, baseline, power=11):  # ruff: ignore[too-many-locals] 
         if row.get("missing_faces")
         or any(result["maximum"] is None or result["maximum"] > tol for result in row.values())
     ]
+    expected_components = 3 if specimen == "gyroid" else 1
     checks = {
+        "face_connected_components": components == expected_components,
         "periodic_faces": all(periodic.values()),
         "material_witnesses": not misses.any(),
         "signed_orientation": det.min() > 0,
@@ -212,6 +219,7 @@ def audit(grid, specimen, baseline, power=11):  # ruff: ignore[too-many-locals] 
         "tetrahedra": len(cells),
         "volume": volume,
         "face_connected_components": int(components),
+        "expected_face_connected_components": expected_components,
         "component_signed_volumes": volumes.tolist(),
         "minimum_quality": float(qualities.min()),
         "boundary": metrics,
