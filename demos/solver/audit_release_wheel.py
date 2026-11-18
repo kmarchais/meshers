@@ -8,7 +8,7 @@ from pathlib import Path
 
 import pyvista as pv
 from periodic_geometry import BASELINE, audit
-from release_wheel_comparison import generate
+from release_wheel_comparison import generate, hardware_snapshot
 
 
 def main():
@@ -27,6 +27,7 @@ def main():
     args.output.mkdir()
     row = {
         "case": args.case,
+        "hardware": hardware_snapshot(),
         "versions": {pkg: version(pkg) for pkg in ("meshers", "vtk", "pyvista", "numpy", "scipy")},
     }
     volume = args.output / "volume.vtkhdf"

@@ -14,7 +14,7 @@ The observer recovers exterior faces from tetrahedral incidence. It checks face 
 
 For reverse distance the observer intersects 2,048 lines per axis with each analytic wall and measures distance to the closest triangle on that wall. It samples each cap separately using 2,048 planar points before material filtering. For forward distance it checks vertices, edge midpoints and triangle centers against the matching analytic wall or cap. Its shortest axis-parallel displacement to a valid root is an upper bound and can reject a mesh near the cutoff. Each direction records its worst location. The measurements do not bound the unsampled surface.
 
-The study uses 0.002 sampled distance, 1% relative volume error, 0.1 minimum quality and 250,000 nodes and tetrahedra each. Schwarz P has exact volume 0.5. The Gyroid volume estimate is 0.3564434, with a range of 0.0001907 across four scrambled Sobol estimates of 262,144 points each. [Frozen volume estimates](https://github.com/kmarchais/meshers/blob/9d156a2982277aed3a28fbcaeb676cc8b7236ca9/experiments/adaptive/runs/g3-microgen-defaults-v4/gyroid-specimen.json)
+The study uses 0.002 sampled distance, 1% relative volume error, 0.1 minimum quality and 250,000 nodes and tetrahedra each. Schwarz P has exact volume 0.5. The Gyroid volume estimate is 0.3564434, with a range of 0.0001907 across four scrambled Sobol estimates of 262,144 points each. [Frozen volume estimates](https://api.github.com/repos/kmarchais/meshers/git/blobs/e846e43479c155bc776dd2ff65ef61ceb5e171bb)
 
 ## Windows release-wheel observations
 
