@@ -48,3 +48,7 @@ Times are single observations in one process, in table order. The solver column 
 Run the [independent geometry audit](geometry-admission.md) on regenerated exports before using solver results in a comparison.
 
 The [live Schwarz P refinement series](schwarz-series.md) measures all three workflows against the same stiffness reference.
+
+## Dated configuration measurements
+
+The [release-wheel matrix](configurations-20261118/README.md) contains the repeated Tet4 solves and the 11 release meshing fixtures. Each run records the CPU, RAM and platform observed at collection.
