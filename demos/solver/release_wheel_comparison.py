@@ -110,13 +110,15 @@ def main():
         raise RuntimeError("Install the specified release wheel in an isolated environment")
     route = baseline["routes"][args.case]
     extension = Path(import_module("meshers._meshers").__file__)
+    hardware = hardware_snapshot()
     row = {
         "case": args.case,
         "config": route["config"],
         "versions": {name: version(name) for name in ("meshers", "fedoo", "numpy", "scipy")},
         "baseline_sha256": hashlib.sha256(BASELINE.read_bytes()).hexdigest(),
         "extension_sha256": hashlib.sha256(extension.read_bytes()).hexdigest(),
-        "hardware": hardware_snapshot(),
+        "platform": hardware["platform"],
+        "hardware": hardware,
         "release_wheel_comparative_admission": "pending independent two-sided distance audit",
     }
     with args.output.open("x", encoding="utf-8") as output:

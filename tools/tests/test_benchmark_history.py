@@ -43,6 +43,18 @@ def measurement():
     }
 
 
+def test_published_configuration_excludes_computer_name(monkeypatch):
+    from tools.benchmark_hardware import hardware_snapshot
+
+    monkeypatch.setenv("RUNNER_NAME", "private-identifier")
+    monkeypatch.setenv("COMPUTERNAME", "private-identifier")
+    specs = hardware_snapshot()
+    assert set(specs) == {"cpu_model", "cpu_count", "ram_bytes", "machine", "platform"}
+    assert "private-identifier" not in json.dumps(specs)
+    assert specs["cpu_count"] > 0
+    assert specs["ram_bytes"] > 0
+
+
 def test_archive_plots_and_immutable_history(tmp_path):
     source = tmp_path / "input.json"
     source.write_text(json.dumps({**measurement(), "runner": "private-identifier"}))
