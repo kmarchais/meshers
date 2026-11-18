@@ -8,6 +8,8 @@ including optional intersection surface verification.
 Measure representative geometries before changing thread count, resolution,
 optimization passes or evaluator. Keep those settings identical when comparing.
 
+For local Windows measurements install `psutil` in each benchmark environment. Windows reports the process peak working set, Linux reports peak RSS in KiB and macOS reports peak RSS in bytes. The JSON records bytes on all three platforms. Compare timings and memory within a dated configuration.
+
 ## Every pull request
 
 The Performance workflow builds the base and proposed source into separate

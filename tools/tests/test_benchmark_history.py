@@ -45,7 +45,7 @@ def measurement():
 
 def test_archive_plots_and_immutable_history(tmp_path):
     source = tmp_path / "input.json"
-    source.write_text(json.dumps(measurement()))
+    source.write_text(json.dumps({**measurement(), "runner": "private-identifier"}))
     directory = tmp_path / "benchmarks"
     history.archive(source, "v0.2.0-rc-reference", directory)
     page = (directory / "v0.2.0-rc-reference.md").read_text()
@@ -55,6 +55,7 @@ def test_archive_plots_and_immutable_history(tmp_path):
     assert "REFERENCE" in (tmp_path / "benchmark-history.md").read_text()
     ET.parse(directory / "v0.2.0-rc-reference.svg")  # ruff: ignore[suspicious-xml-element-tree-usage] - own generated SVG.
     frozen = (directory / "v0.2.0-rc-reference.json").read_bytes()
+    assert b"private-identifier" not in frozen
     with pytest.raises(FileExistsError):
         history.archive(source, "v0.2.0-rc-reference", directory)
     assert (directory / "v0.2.0-rc-reference.json").read_bytes() == frozen
