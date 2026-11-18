@@ -5,7 +5,6 @@ import hashlib
 import inspect
 import json
 import os
-import platform
 import shutil
 import time
 from contextlib import ExitStack
@@ -23,7 +22,7 @@ import pyvista as pv
 from fedoo_homogenization import homogenize
 from microgen.shape import surface_functions
 from periodic_geometry import BASELINE, audit
-from release_wheel_comparison import generate
+from release_wheel_comparison import generate, hardware_snapshot
 from scipy.linalg import eigvalsh
 from scipy.spatial import cKDTree
 from vtkmodules.vtkCommonCore import vtkSMPTools
@@ -213,7 +212,7 @@ def main():
     row = {
         "route": args.route,
         "cells": args.cells,
-        "platform": platform.platform(),
+        "hardware": hardware_snapshot(),
         "reference_sha256": digest(REFERENCE),
         "versions": {pkg: version(pkg) for pkg in PACKAGES},
     }
