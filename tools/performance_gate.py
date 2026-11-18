@@ -36,6 +36,7 @@ RELEASE_CASES = (
 )
 QUALITY = ("min", "p05", "p10", "median", "mean", "p90", "max")
 CAP = 250_000
+FIXTURE_VERSION = 4
 
 
 def _check_curved_jacobians(corners):
@@ -139,6 +140,49 @@ def peak_rss_bytes():
     return resource.getrusage(resource.RUSAGE_SELF).ru_maxrss * (
         1 if sys.platform == "darwin" else 1024
     )
+
+
+def mapped_cap_error(mesh):
+    """Measure chord and plane errors on the four caps of the cylindrical fixture.
+
+    Returns:
+        Largest sampled distance to the corresponding cap surface.
+
+    Raises:
+        RuntimeError: The fixture is missing a cap or has unexpected cap labels.
+    """
+    import numpy as np
+
+    if set(np.unique(mesh.boundary_tags)) != {0, 1, 3, 5, 6}:
+        raise RuntimeError("Unexpected mapped-intersection cap labels")
+    errors = []
+    for tag in (1, 3, 5, 6):
+        tri = mesh.points[mesh.surface[mesh.boundary_tags == tag, :3]]
+        samples = np.concatenate([
+            tri.reshape(-1, 3),
+            ((tri + np.roll(tri, 1, axis=1)) / 2).reshape(-1, 3),
+            tri.mean(axis=1),
+        ])
+        x, y, z = samples.T
+        if tag == 1:
+            distance = np.hypot(x, y) - 3
+        elif tag == 3:
+            distance = z
+        else:
+            angle = 0 if tag == 5 else 1 / 3
+            distance = y * np.cos(angle) - x * np.sin(angle)
+        errors.append(float(np.max(abs(distance))))
+    return max(errors)
+
+
+def surface_measurements(case, mesh):
+    """Return comparable wall and cap measurements for the installed wheel."""
+    if case == "mapped_intersection":
+        return {
+            "surface_error": max(mesh.diagnostics["surface_errors"].values()),
+            "mapped_cap_error": mapped_cap_error(mesh),
+        }
+    return {"surface_error": mesh.diagnostics["sampled_surface_error"]}
 
 
 def sample(case):  # ruff: ignore[too-many-locals] - keep the timing boundary and independent checks together.
@@ -297,9 +341,12 @@ def sample(case):  # ruff: ignore[too-many-locals] - keep the timing boundary an
                 strict=True,
             )
         },
-        "surface_error": mesh.diagnostics["sampled_surface_error"],
+        **surface_measurements(case, mesh),
     }
-    if record["quality_min"] < 0.01 or record["surface_error"] > 0.1:
+    if (
+        record["quality_min"] < 0.01
+        or max(record["surface_error"], record.get("mapped_cap_error", 0)) > 0.1
+    ):
         raise RuntimeError("Benchmark geometry or quality floor failed")
     return record
 
@@ -328,6 +375,11 @@ def regressions(base, head):
             failures.append(f"{key} changed beyond {tolerance:.1%}")
     if head["surface_error"] > base["surface_error"] * 1.05 + 1e-10:
         failures.append("surface error increased by more than 5%")
+    if (
+        "mapped_cap_error" in base
+        and head["mapped_cap_error"] > base["mapped_cap_error"] * 1.05 + 1e-10
+    ):
+        failures.append("mapped cap error increased by more than 5%")
     return failures
 
 
@@ -454,7 +506,7 @@ def main():
         parser.error("Two installed environments and at least three repetitions are required")
     result = {
         "schema_version": 2,
-        "fixture_version": 3,
+        "fixture_version": FIXTURE_VERSION,
         "suite": args.suite,
         "recorded_at": dt.datetime.now(dt.timezone.utc).isoformat(),
         **hardware_snapshot(),
