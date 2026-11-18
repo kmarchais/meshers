@@ -1,6 +1,7 @@
 """Replay native Tet4 cases against frozen Microgen-study records on a release wheel."""
 
 import argparse
+import datetime as dt
 import hashlib
 import json
 import sys
@@ -112,6 +113,7 @@ def main():
     extension = Path(import_module("meshers._meshers").__file__)
     hardware = hardware_snapshot()
     row = {
+        "recorded_at": dt.datetime.now(dt.timezone.utc).isoformat(),
         "case": args.case,
         "config": route["config"],
         "versions": {name: version(name) for name in ("meshers", "fedoo", "numpy", "scipy")},
