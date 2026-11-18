@@ -1,7 +1,7 @@
-"""Compare installed base/head wheels on one Linux runner in alternating fresh processes."""
+"""Compare installed base/head wheels on one configuration in alternating fresh processes."""
 
 import argparse
-import datetime
+import datetime as dt
 import hashlib
 import json
 import math
@@ -12,6 +12,11 @@ import subprocess
 import sys
 import time
 from pathlib import Path
+
+if __name__ == "__main__":
+    from benchmark_hardware import hardware_snapshot
+else:
+    from tools.benchmark_hardware import hardware_snapshot
 
 CASES = (
     "compiled_gyroid",
@@ -123,6 +128,19 @@ def cell_geometry(vertices):
     return np.array([-2 / 15, *([3 / 40] * 4)]) @ np.array(determinants[:5])
 
 
+def peak_rss_bytes():
+    """Return this process's peak resident memory, in bytes."""
+    if sys.platform == "win32":
+        import psutil
+
+        return psutil.Process().memory_info().peak_wset
+    import resource
+
+    return resource.getrusage(resource.RUSAGE_SELF).ru_maxrss * (
+        1 if sys.platform == "darwin" else 1024
+    )
+
+
 def sample(case):  # ruff: ignore[too-many-locals] - keep the timing boundary and independent checks together.
     """Measure a fresh process, then independently validate its mesh.
 
@@ -132,8 +150,6 @@ def sample(case):  # ruff: ignore[too-many-locals] - keep the timing boundary an
     Raises:
         RuntimeError: The mesh fails the benchmark's validity or quality checks.
     """
-    import resource
-
     import meshers
     import numpy as np
 
@@ -229,9 +245,7 @@ def sample(case):  # ruff: ignore[too-many-locals] - keep the timing boundary an
         )
     elapsed = time.perf_counter() - start
     # Capture OS high-water RSS before allocating arrays for independent checks.
-    peak = resource.getrusage(resource.RUSAGE_SELF).ru_maxrss * (
-        1 if sys.platform == "darwin" else 1024
-    )
+    peak = peak_rss_bytes()
     if max(len(mesh.points), len(mesh.tetrahedra)) > CAP:
         raise RuntimeError("Benchmark node/tetrahedron cap exceeded")
     points = mesh.points[mesh.tetrahedra]
@@ -427,8 +441,8 @@ def main():
         SystemExit: At least one comparison exceeds its regression allowance.
     """
     parser, args = arguments()
-    if sys.platform not in {"linux", "darwin"}:
-        parser.error("OS peak-RSS reporting supports Linux and macOS")
+    if sys.platform not in {"linux", "darwin", "win32"}:
+        parser.error("OS peak-RSS reporting supports Linux, macOS and Windows")
     configure_worker()
     if args.identity:
         print(json.dumps(runtime_identity()))
@@ -442,18 +456,8 @@ def main():
         "schema_version": 2,
         "fixture_version": 3,
         "suite": args.suite,
-        "recorded_at": datetime.datetime.now(datetime.timezone.utc).isoformat(),
-        "runner": os.environ.get("RUNNER_NAME", platform.node()),
-        "machine": platform.machine(),
-        "cpu_model": (
-            subprocess.check_output(
-                ["/usr/sbin/sysctl", "-n", "machdep.cpu.brand_string"], text=True
-            ).strip()
-            if sys.platform == "darwin"
-            else platform.processor()
-        ),
-        "cpu_count": os.cpu_count(),
-        "platform": platform.platform(),
+        "recorded_at": dt.datetime.now(dt.timezone.utc).isoformat(),
+        **hardware_snapshot(),
         "script_sha256": hashlib.sha256(Path(__file__).read_bytes()).hexdigest(),
         "threads": 1,
         "warmup_pairs": 1,
@@ -500,7 +504,12 @@ def main():
                     if repetition:  # Discard the first pair to warm the OS page cache.
                         runs[label].append(json.loads(raw))
         except (subprocess.CalledProcessError, subprocess.TimeoutExpired) as error:
-            message = f"{case}: sample failed: {error}"
+            reason = (
+                "timeout"
+                if isinstance(error, subprocess.TimeoutExpired)
+                else f"exit {error.returncode}"
+            )
+            message = f"{case}: sample failed ({reason})"
             failures.append(message)
             result["cases"][case] = {"runs": runs, "failures": [message], "medians": None}
             print(message, flush=True)
