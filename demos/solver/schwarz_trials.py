@@ -57,6 +57,32 @@ def summarize(repeats):
     }
 
 
+def phase_comparison(repeats, times):
+    """Return the change in wall time for admitted solves on the same mesh and hardware."""
+    rows = [row for arm in repeats.values() for row in arm]
+    hashes = [row.get("solver_mesh_sha256") for row in rows]
+    identical = None not in hashes and len(set(hashes)) == 1
+    configs = [row.get("hardware") for row in rows]
+    same_config = configs[0] is not None and all(h == configs[0] for h in configs)
+    baseline = times["shifted-baseline"]
+    reordered = times["shifted-rcm"]
+    result = {
+        "identical_solver_mesh": identical,
+        "identical_hardware": same_config,
+        "largest_tensor_entry_difference": None,
+        "wall_change_percent": None,
+    }
+    if identical and same_config and baseline and reordered:
+        tensors = [
+            [x for line in row["fea"]["stiffness_engineering_voigt"] for x in line] for row in rows
+        ]
+        difference = max(max(col) - min(col) for col in zip(*tensors, strict=True))
+        result["largest_tensor_entry_difference"] = difference
+        if difference <= 1e-9 * max(abs(x) for x in tensors[0]):
+            result["wall_change_percent"] = 100 * (reordered / baseline - 1)
+    return result
+
+
 def replay(study, output):
     """Run the four-setting screen and qualified repeats, or six frozen phase trials."""
     output.mkdir()
@@ -80,8 +106,7 @@ def replay(study, output):
         eligible = {arm: t for arm, t in times.items() if arm in REPAIR_SIZES and t is not None}
         result["fastest_measured_microgen"] = min(eligible, key=eligible.get) if eligible else None
     else:
-        hashes = [r.get("solver_mesh_sha256") for rows in repeats.values() for r in rows]
-        result["identical_solver_mesh"] = None not in hashes and len(set(hashes)) == 1
+        result.update(phase_comparison(repeats, times))
     (output / "done.json").write_text(json.dumps(result, indent=2) + "\n", encoding="utf8")
 
 

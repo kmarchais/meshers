@@ -34,14 +34,16 @@ def generate(case, cfg, limits):
         return np.sin(a) * np.cos(b) + np.sin(b) * np.cos(c) + np.sin(c) * np.cos(a)
 
     def schwarz(x, y, z):
-        return (
-            np.cos(2 * np.pi * (x + cfg.get("phase_x", 0)))
-            + np.cos(2 * np.pi * y)
-            + np.cos(2 * np.pi * z)
-        )
+        return np.cos(2 * np.pi * x) + np.cos(2 * np.pi * y) + np.cos(2 * np.pi * z)
 
+    phase_x = cfg.get("phase_x", 0)
+
+    def shifted_schwarz(x, y, z):
+        return schwarz(x + phase_x, y, z)
+
+    schwarz_field = shifted_schwarz if phase_x else schwarz
     return meshers.generate(
-        gyroid if case.startswith("gyroid") else schwarz,
+        gyroid if case.startswith("gyroid") else schwarz_field,
         band=(-0.55, 0.55) if case.startswith("gyroid") else None,
         bounds=(-0.5, 0.5) * 3,
         cells=cfg["cells"],

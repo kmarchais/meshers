@@ -39,6 +39,31 @@ def test_only_admitted_settings_enter_rotating_repeats(tmp_path, monkeypatch):
     ]
 
 
+@pytest.mark.parametrize("change", ["none", "mesh", "hardware", "tensor"])
+def test_phase_speedup_requires_matching_inputs_and_stiffness(tmp_path, monkeypatch, change):
+    def record(_out, label, _arm):
+        altered = label == "r2-shifted-rcm"
+        return {
+            "status": schwarz_trials.TARGET,
+            "wall_seconds": 2 if label.endswith("rcm") else 3,
+            "solver_mesh_sha256": "other" if altered and change == "mesh" else "original",
+            "hardware": {"cpu_count": 4 if altered and change == "hardware" else 8},
+            "fea": {
+                "stiffness_engineering_voigt": [[1.01 if altered and change == "tensor" else 1.0]]
+            },
+        }
+
+    monkeypatch.setattr(schwarz_trials, "measure", record)
+    schwarz_trials.replay("phase", tmp_path / "trial")
+    result = json.loads((tmp_path / "trial" / "done.json").read_bytes())
+    assert result["identical_solver_mesh"] is (change != "mesh")
+    assert result["identical_hardware"] is (change != "hardware")
+    if change == "none":
+        assert result["wall_change_percent"] == pytest.approx(-100 / 3)
+    else:
+        assert result["wall_change_percent"] is None
+
+
 def test_shifted_wall_uses_the_translated_level_set():
     pytest.importorskip("pyvista")
     pytest.importorskip("scipy")
