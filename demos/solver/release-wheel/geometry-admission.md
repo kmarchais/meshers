@@ -28,11 +28,12 @@ All three exported volumes met the frozen sampled gates in the 17 November run. 
 
 ## Configuration replays
 
-All 12 of 12 regenerated exports passed the sampled independent geometry checks. The records include the signed volume of each face-connected component, the worst locations on each wall and cap, and the periodic face comparison. The audit uses the same numerical limits on every configuration. [Configuration and runtime details](configurations-20261118/README.md)
+All 15 of 15 regenerated exports passed the sampled independent geometry checks. The records include the signed volume of each face-connected component, the worst locations on each wall and cap, and the periodic face comparison. The audit uses the same numerical limits on every configuration. [Configuration and runtime details](configurations-20261118/README.md)
 
 | CPU and raw audits | Admitted | Uniform Gyroid tets | Adaptive Gyroid tets | Schwarz P tets |
 | --- | ---: | ---: | ---: | ---: |
 | [Apple M4](configurations-20261118/apple-m4-091916z-a3fb9327/geometry.json) | 3/3 | 72,757 | 34,854 | 35,994 |
+| [Core Ultra 9 285K](configurations-20261118/core-ultra-9-285k-095358z-610e8c8f/geometry.json) | 3/3 | 72,757 | 34,863 | 35,989 |
 | [Core i7-10750H](configurations-20261118/core-i7-10750h-091913z-4f4ba086/geometry.json) | 3/3 | 72,757 | 34,863 | 35,989 |
 | [Core i7-12700H](configurations-20261118/core-i7-12700h-091916z-2ebf2eee/geometry.json) | 3/3 | 72,757 | 34,863 | 35,989 |
 | [Ryzen 7 7730U](configurations-20261118/ryzen-7-7730u-091912z-fb87984d/geometry.json) | 3/3 | 72,757 | 34,863 | 35,989 |
