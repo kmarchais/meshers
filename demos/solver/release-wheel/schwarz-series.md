@@ -54,3 +54,5 @@ Across 5 configurations, 45 native workers completed the geometry checks and sol
 | [Ryzen 7 7730U](configurations-20261118/ryzen-7-7730u-091912z-fb87984d/schwarz.json) | 18 | 9 | 0/9 | 2.336% |
 
 On the two Linux configurations, 54 initial workers exited during the Gmsh import because the OpenGL utility library was missing. Their records are in `first_attempt`. The measured retries used the distribution's libGLU and libOpenGL in the benchmark environment. Linux wheel installations also need execute permission on the MMG command-line programs.
+
+The [stage audits and native sizing study](schwarz-diagnostics-20261118/README.md) locate the first wall failure and bracket the native stiffness target.

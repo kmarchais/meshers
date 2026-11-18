@@ -1,0 +1,444 @@
+{
+  "hardware": {
+    "cpu_model": "AMD Ryzen 7 7730U with Radeon Graphics",
+    "cpu_count": 16,
+    "ram_bytes": 32476979200,
+    "machine": "x86_64",
+    "platform": "Linux-7.0.0-42-generic-x86_64-with-glibc2.43"
+  },
+  "numerical_threads_requested": 1,
+  "driver_sha256": {
+    "tools/__init__.py": "7d6ffee756fa46a0b896d37efc256a643e6c6ec49b86ee4eb92123ad0bc875ec",
+    "tools/performance_gate.py": "a547abac5972007b6470ff436cbfa054d5a10e952875358ca457fb5a9868d812",
+    "tools/benchmark_hardware.py": "e1ce68164d199043783e28bb3216e052877b18f736b14c3d9812fc1187da24fc",
+    "demos/solver/schwarz_workflow.py": "9175bc03617a6c7d378658ad9e87989d474b38d3ff5a5900b11cb593f56a01fd",
+    "demos/solver/schwarz_series.py": "53db5a31e49fce7e0d6ee9fc0ac67fd3bd9a2fc0169a9dec3d9cd0dac6a06f54",
+    "demos/solver/periodic_geometry.py": "ba4a5b121a132e696d8532a5f928c643735394ce4fb5899bff7d5ddbcb6a002e",
+    "demos/solver/release_wheel_comparison.py": "36c8ac4c76c121c6720715eaac286ddaa198f13070bb1e6fe838ae593bb65f02",
+    "demos/solver/fedoo_homogenization.py": "dbe016e21cc71679b4110e56ef4fb4a54049b384577ede759f6f675fe7344549",
+    "demos/solver/historical_schwarz_repair.py": "ffdedd81eb3f26de4015563a9d4b6c18113ebe5cb2e2b39264d2fdd8bc54ed67",
+    "demos/solver/schwarz_diagnostics.py": "b530d2bd31349c1d771ad3171d0c908e718dc94a7153ed8be9e7f3a4b5382143",
+    "diag_worker.py": "d0dd847d527c3f680e269714feceea287df0d33ec4e3d4fb901081fc678125c7"
+  },
+  "completion": [
+    "repaired-solve"
+  ],
+  "runs": {
+    "repaired-solve": {
+      "case": "repaired-solve",
+      "recorded_at": "2026-11-18T13:49:49.876223+00:00",
+      "hardware": {
+        "cpu_model": "AMD Ryzen 7 7730U with Radeon Graphics",
+        "cpu_count": 16,
+        "ram_bytes": 32476979200,
+        "machine": "x86_64",
+        "platform": "Linux-7.0.0-42-generic-x86_64-with-glibc2.43"
+      },
+      "versions": {
+        "meshers": "0.2.1",
+        "microgen": "2.0.0b1",
+        "mmgpy": "0.17.1",
+        "fedoo": "1.0.0b2",
+        "numpy": "2.5.3",
+        "scipy": "1.18.1",
+        "pyvista": "0.49.0",
+        "vtk": "9.7.1"
+      },
+      "baseline_sha256": "9dbe1c7e45cea5ccc8f9bbf79ec651f78088335f25bcad68e0b453e427c045ca",
+      "reference_sha256": "077b05afb900595e6e7891e5a092538cec6eb2f805156d2119ac9eb771477908",
+      "source_sha256": {
+        "microgen/shape/tpms.py": "1c2876a8f65441e6d7a0f21397a3b781b6f03a338f244c7db5c462c13348f955",
+        "microgen/remesh.py": "b93c8b8150c1c40ccf5312d57785331d52f114d2217a8b59296b7484cf6f2612"
+      },
+      "mmg_sha256": "03812ba5ab2d4265555ab606eb7c9dcf942069e7ed5ccd3466b2e316aa537286",
+      "resolution": 30,
+      "seed_seconds": 0.0795380639610812,
+      "seed_nodes": 18640,
+      "seed_cells": 86876,
+      "mmg_calls": [
+        {
+          "nofem": true,
+          "hausd": 0.0005,
+          "hmax": 0.1,
+          "hgrad": 1.3,
+          "seconds": 4.999048497993499
+        }
+      ],
+      "repair": {
+        "initial_bad_elements": 0,
+        "remaining_bad_elements": 0,
+        "initial_minimum_quality": 0.10387138156538736,
+        "final_minimum_quality": 0.10387138156538736,
+        "accepted_moves": 0,
+        "moved_vertices": 0,
+        "attempts": [],
+        "maximum_attempts": 400,
+        "maximum_sweeps": 2,
+        "boundary_coordinates_unchanged": true,
+        "signed_volume_difference": 0.0,
+        "minimum_signed_determinant": 2.9997498654729145e-08
+      },
+      "generation_and_io_seconds": 8.396913253935054,
+      "mesh_sha256": "454e718145675c9fbfbdd5123930d108e8f15fdd0bb96a5bf69163c16b9b6fb6",
+      "geometry": {
+        "specimen": "schwarz",
+        "nodes": 29204,
+        "tetrahedra": 136587,
+        "volume": 0.4999490989068744,
+        "face_connected_components": 1,
+        "component_signed_volumes": [
+          0.4999490989068744
+        ],
+        "minimum_quality": 0.10387138156538728,
+        "boundary": {
+          "wall 0": {
+            "mesh_to_reference_upper": {
+              "samples": 110838,
+              "maximum": 0.0009615151058020022,
+              "location": [
+                -0.249038484894198,
+                0.0,
+                0.5
+              ]
+            },
+            "reference_to_mesh": {
+              "samples": 7710,
+              "maximum": 0.0007395841855967091,
+              "location": [
+                0.25941641069948673,
+                -0.44323609173074896,
+                -0.013880331069231033
+              ]
+            }
+          },
+          "x-0.5": {
+            "mesh_to_reference_upper": {
+              "samples": 9996,
+              "maximum": 0.0009615151058020022,
+              "location": [
+                -0.5,
+                0.0,
+                -0.249038484894198
+              ]
+            },
+            "reference_to_mesh": {
+              "samples": 1666,
+              "maximum": 0.0,
+              "location": [
+                -0.5,
+                0.3993650656193495,
+                0.4675633907318115
+              ]
+            }
+          },
+          "x+0.5": {
+            "mesh_to_reference_upper": {
+              "samples": 9996,
+              "maximum": 0.0009615151058020022,
+              "location": [
+                0.5,
+                0.0,
+                -0.249038484894198
+              ]
+            },
+            "reference_to_mesh": {
+              "samples": 1666,
+              "maximum": 0.0,
+              "location": [
+                0.5,
+                0.3993650656193495,
+                0.4675633907318115
+              ]
+            }
+          },
+          "y-0.5": {
+            "mesh_to_reference_upper": {
+              "samples": 9996,
+              "maximum": 0.0009615151058020022,
+              "location": [
+                0.0,
+                -0.5,
+                -0.249038484894198
+              ]
+            },
+            "reference_to_mesh": {
+              "samples": 1666,
+              "maximum": 0.0,
+              "location": [
+                0.3993650656193495,
+                -0.5,
+                0.4675633907318115
+              ]
+            }
+          },
+          "y+0.5": {
+            "mesh_to_reference_upper": {
+              "samples": 9996,
+              "maximum": 0.0009615151058020022,
+              "location": [
+                0.0,
+                0.5,
+                -0.249038484894198
+              ]
+            },
+            "reference_to_mesh": {
+              "samples": 1666,
+              "maximum": 0.0,
+              "location": [
+                0.3993650656193495,
+                0.5,
+                0.4675633907318115
+              ]
+            }
+          },
+          "z-0.5": {
+            "mesh_to_reference_upper": {
+              "samples": 9996,
+              "maximum": 0.0009615151058020022,
+              "location": [
+                -0.249038484894198,
+                0.0,
+                -0.5
+              ]
+            },
+            "reference_to_mesh": {
+              "samples": 1666,
+              "maximum": 0.0,
+              "location": [
+                0.3993650656193495,
+                0.4675633907318115,
+                -0.5
+              ]
+            }
+          },
+          "z+0.5": {
+            "mesh_to_reference_upper": {
+              "samples": 9996,
+              "maximum": 0.0009615151058020022,
+              "location": [
+                -0.249038484894198,
+                0.0,
+                0.5
+              ]
+            },
+            "reference_to_mesh": {
+              "samples": 1666,
+              "maximum": 0.0,
+              "location": [
+                0.3993650656193495,
+                0.4675633907318115,
+                0.5
+              ]
+            }
+          }
+        },
+        "periodic_face_match": {
+          "x": true,
+          "y": true,
+          "z": true
+        },
+        "sobol_power": 11,
+        "material_witnesses": 1999,
+        "misclassified_witnesses": 0,
+        "first_misclassified_witness": null,
+        "failed_checks": [],
+        "sampled_admission": true
+      },
+      "audit_seconds": 0.7837106270017102,
+      "stress_probe_xyz": [
+        -0.364,
+        -0.347,
+        -0.313
+      ],
+      "assembly_seconds": 0.678658607066609,
+      "fea": {
+        "tetrahedra": 136587,
+        "points": 29204,
+        "solid_volume_fraction": 0.4999490989068639,
+        "minimum_quality": 0.10387138156538728,
+        "periodic_pair_counts": [
+          800,
+          800,
+          800
+        ],
+        "stiffness_engineering_voigt": [
+          [
+            0.8013295927888144,
+            0.14382531442799412,
+            0.14381732654994575,
+            -6.266030032668865e-05,
+            0.00012650252961130413,
+            8.655626448907419e-05
+          ],
+          [
+            0.14382531442892554,
+            0.80129099681978,
+            0.1438083765133298,
+            -6.89525113930924e-05,
+            7.33212186560892e-05,
+            0.00015097495065215295
+          ],
+          [
+            0.14381732655051813,
+            0.14380837651438555,
+            0.8012399005465964,
+            -7.01549000101428e-05,
+            0.00011482829239952905,
+            0.00016496897826515382
+          ],
+          [
+            -6.266030372486037e-05,
+            -6.895251596373532e-05,
+            -7.015490460929225e-05,
+            0.193370387583425,
+            3.858506271966039e-05,
+            2.886489764386666e-05
+          ],
+          [
+            0.0001265025270994391,
+            7.332121179463958e-05,
+            0.00011482829326198407,
+            3.8585062526044344e-05,
+            0.19342537621118105,
+            -2.524977522784844e-05
+          ],
+          [
+            8.655626103649972e-05,
+            0.00015097494691685011,
+            0.0001649689776078438,
+            2.8864897813117234e-05,
+            -2.524977563961303e-05,
+            0.19339828777642457
+          ]
+        ],
+        "stiffness_eigenvalues": [
+          0.19332990302366582,
+          0.19341635329052617,
+          0.19344767197786097,
+          0.6574535328003777,
+          0.6574861222120546,
+          1.0889209584217363
+        ],
+        "young_modulus_xyz": [
+          0.7575560739217015,
+          0.757521491382474,
+          0.7574743283058742
+        ],
+        "poisson_xy_xz_yz": [
+          0.15218006505091197,
+          0.15217970593714242,
+          0.152168045861301
+        ],
+        "hill_mandel_relative_error": 7.709560474543155e-12,
+        "reaction_stress_relative_difference": 1.0800041836937386e-11,
+        "stiffness_symmetry_relative_error": 1.1238832788421444e-11,
+        "automatic_homogenization_relative_difference": 7.690598836113712e-12,
+        "strain_controlled_loads": [
+          {
+            "load": "E_xx",
+            "periodic_jump_error": 0.0,
+            "periodic_force_balance_relative_error": 8.360907292153688e-11,
+            "iterations": 787,
+            "cg_seconds": 2.40197940194048,
+            "relative_residual": 9.518628538251059e-13,
+            "free_dofs": 80676,
+            "probe_sigma_xx": 1.417888670279266
+          },
+          {
+            "load": "E_yy",
+            "periodic_jump_error": 0.0,
+            "periodic_force_balance_relative_error": 8.404902265146161e-11,
+            "iterations": 783,
+            "cg_seconds": 2.339831870980561,
+            "relative_residual": 9.45795571682325e-13,
+            "free_dofs": 80676,
+            "probe_sigma_xx": -0.009824359115309711
+          },
+          {
+            "load": "E_zz",
+            "periodic_jump_error": 0.0,
+            "periodic_force_balance_relative_error": 8.595091087356517e-11,
+            "iterations": 788,
+            "cg_seconds": 2.3188212199602276,
+            "relative_residual": 9.833487889527912e-13,
+            "free_dofs": 80676,
+            "probe_sigma_xx": 0.004552429004976599
+          },
+          {
+            "load": "E_xy",
+            "periodic_jump_error": 5.551115123125783e-17,
+            "periodic_force_balance_relative_error": 5.261155338012168e-11,
+            "iterations": 800,
+            "cg_seconds": 2.428608878981322,
+            "relative_residual": 9.824527663363775e-13,
+            "free_dofs": 80676,
+            "probe_sigma_xx": -0.1844944543930693
+          },
+          {
+            "load": "E_xz",
+            "periodic_jump_error": 0.0,
+            "periodic_force_balance_relative_error": 4.956844998802681e-11,
+            "iterations": 802,
+            "cg_seconds": 2.575698041007854,
+            "relative_residual": 9.445634226646368e-13,
+            "free_dofs": 80676,
+            "probe_sigma_xx": -0.2691948343704369
+          },
+          {
+            "load": "E_yz",
+            "periodic_jump_error": 5.551115123125783e-17,
+            "periodic_force_balance_relative_error": 5.047560977954328e-11,
+            "iterations": 785,
+            "cg_seconds": 2.3442132950294763,
+            "relative_residual": 9.464420277089102e-13,
+            "free_dofs": 80676,
+            "probe_sigma_xx": 0.037032522762373926
+          }
+        ],
+        "automatic_stress_controlled_solves": [
+          {
+            "iterations": 1012,
+            "cg_seconds": 3.084064197028056,
+            "relative_residual": 1.0610135601483711e-12,
+            "free_dofs": 80682
+          },
+          {
+            "iterations": 1006,
+            "cg_seconds": 3.086559178074822,
+            "relative_residual": 1.014930827434679e-12,
+            "free_dofs": 80682
+          },
+          {
+            "iterations": 1015,
+            "cg_seconds": 3.2289456949802116,
+            "relative_residual": 9.522533327111134e-13,
+            "free_dofs": 80682
+          },
+          {
+            "iterations": 1022,
+            "cg_seconds": 3.1030593479517847,
+            "relative_residual": 9.644415164474896e-13,
+            "free_dofs": 80682
+          },
+          {
+            "iterations": 1024,
+            "cg_seconds": 3.209369370015338,
+            "relative_residual": 9.839903023714556e-13,
+            "free_dofs": 80682
+          },
+          {
+            "iterations": 1018,
+            "cg_seconds": 3.06970737001393,
+            "relative_residual": 9.621747702771794e-13,
+            "free_dofs": 80682
+          }
+        ],
+        "seconds": 37.03314465295989
+      },
+      "relative_energy_discrepancy": 0.0117721300884737,
+      "status": "outside-reference-target",
+      "sampled_peak_tree_rss_bytes": 999514112,
+      "wall_seconds": 47.68748486600816
+    }
+  }
+}
