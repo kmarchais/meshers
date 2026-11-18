@@ -209,10 +209,12 @@ def main():
     if args.route != "microgen-default" and args.cells is None:
         parser.error("Specify --cells for this route")
     args.output.mkdir()
+    hardware = hardware_snapshot()
     row = {
         "route": args.route,
         "cells": args.cells,
-        "hardware": hardware_snapshot(),
+        "platform": hardware["platform"],
+        "hardware": hardware,
         "reference_sha256": digest(REFERENCE),
         "versions": {pkg: version(pkg) for pkg in PACKAGES},
     }

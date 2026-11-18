@@ -14,7 +14,7 @@
 
 The adaptive Gyroid used 34,863 tetrahedra against 72,757 for uniform. Generation took 1.74 s against 0.83 s, while homogenization and its cross-checks took 7.49 s against 27.97 s. The worst mixed-load strain-energy difference was 2.94%. Each timing comes from one run. The gap between two discrete stiffness tensors leaves the continuum error of each mesh unknown. [Replay commands, cutoffs and raw solver results](../demos/solver/release-wheel/README.md)
 
-The Lenovo, Mini, MacBook Pro and G3 each repeated all three release-wheel cases three times. Adaptive Gyroid differed from the uniform solution by 2.930% to 2.939% in worst mixed-load strain energy across the four hosts. Small platform differences in adaptive connectivity persisted across repeats. [Cross-platform measurements](../demos/solver/release-wheel/fleet-20261118/README.md)
+Four configurations across Windows, Linux and macOS each repeated all three release-wheel cases three times. Adaptive Gyroid differed from the uniform solution by 2.930% to 2.939% in worst mixed-load strain energy across the four hosts. Small platform differences in adaptive connectivity persisted across repeats. [Cross-platform measurements](../demos/solver/release-wheel/fleet-20261118/README.md)
 
 ## What to tackle next
 

@@ -6,7 +6,7 @@ Start with the first open task under **Next**. Check a task when its evidence is
 
 - [x] Check mapped-cap tolerance and final element quality after fitting. Add regression cases for a translated component and a folded Tet10. [PR #9](https://github.com/kmarchais/meshers/pull/9)
 - [x] Freeze and replay uniform Gyroid, adaptive Gyroid and Schwarz P Tet4 on the released wheel. Test directional sizing on an analytic cap. [PR #9](https://github.com/kmarchais/meshers/pull/9)
-- [x] Repeat the three PR #9 cases on Lenovo, Mini, MacBook Pro and G3. All 36 case runs passed their solver checks. [Cross-platform results](https://github.com/kmarchais/meshers/tree/3ca1f726/demos/solver/release-wheel/fleet-20261118)
+- [x] Repeat the three PR #9 cases on four CPU configurations. All 36 case runs passed their solver checks. [Cross-platform results](demos/solver/release-wheel/fleet-20261118/README.md)
 - [x] Audit exported walls and caps in both directions, material samples and periodic faces. All three frozen meshes passed. [PR #10](https://github.com/kmarchais/meshers/pull/10)
 - [x] Run the three-way Schwarz P study at a 1% stiffness target. All 27 workers returned results. The best native discrepancy was 2.304%. All 18 Microgen meshes failed the wall-distance check before FEA. [PR #11](https://github.com/kmarchais/meshers/pull/11)
 
