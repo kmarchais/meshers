@@ -186,6 +186,17 @@ class Mesh:
                 metadata["FeatureEdges"] = self.feature_edges
 
 
+def _check_components(mesh: Mesh, expected_components: int | None) -> Mesh:
+    if expected_components is not None:
+        count = _meshers.face_components(mesh.tetrahedra)
+        if count != expected_components:
+            raise MeshingError(
+                f"Expected {expected_components} face-connected components, found {count}"
+            )
+        mesh.diagnostics["face_connected_components"] = count
+    return mesh
+
+
 # Keep public option validation and pipeline dispatch together.
 def generate(  # ruff: ignore[complex-structure, too-many-branches]
     field: str | Field | CompiledField,
@@ -216,10 +227,13 @@ def generate(  # ruff: ignore[complex-structure, too-many-branches]
     order: int = 1,
     size_field: Field | None = None,
     curved_fit: bool = False,
+    expected_components: int | None = None,
 ) -> Mesh:
     """Generate a tetrahedral mesh directly from a bounded implicit field.
 
     Args:
+        expected_components: Require this many face-connected solid components in the cut box,
+            before pairing periodic faces. Zero requires sampled-empty output.
         field: Pointwise function of physical x, y, z coordinates, or a built-in
             name: ``gyroid``, ``schwarz_p``, ``schwarz_d``. Built-ins have period 1.
         gradient: Optional gradient of the complete field, including grading.
@@ -308,6 +322,13 @@ def generate(  # ruff: ignore[complex-structure, too-many-branches]
         certify arbitrarily small features. Native threads release the Python GIL;
         Python fallback callbacks execute on the calling thread.
     """
+    if expected_components is not None and (
+        isinstance(expected_components, (bool, np.bool_))
+        or not isinstance(expected_components, (int, np.integer))
+        or expected_components < 0
+    ):
+        raise ValueError("expected_components must be a nonnegative integer")
+
     b = np.asarray(bounds, dtype=np.float64)
     if curved_fit and order != 2:
         raise ValueError("curved_fit requires order 2")
@@ -387,7 +408,7 @@ def generate(  # ruff: ignore[complex-structure, too-many-branches]
             if getattr(field, "_halfspaces", None) is not None
             else "retained_constraints"
         ] = len(planes)
-        return mesh
+        return _check_components(mesh, expected_components)
     feature_options = (
         {"halfspaces": getattr(field, "_halfspaces", None)}
         if planes is not None and adapt and getattr(_meshers, "ADAPTIVE_POLYHEDRAL", False)
@@ -448,7 +469,7 @@ def generate(  # ruff: ignore[complex-structure, too-many-branches]
     result["diagnostics"]["evaluator"] = evaluator
     result["diagnostics"]["preparation_seconds"] = preparation_seconds
     result["periodic_pairs"] = tuple(result["periodic_pairs"])
-    return Mesh(**result)
+    return _check_components(Mesh(**result), expected_components)
 
 
 __all__ = [
