@@ -62,6 +62,37 @@ jobs:
       - run: maturin build --locked --release --interpreter python --out dist
       - run: uv pip install --system dist/*.whl
       - run: python -m pytest tests -q
+      - name: Fetch the independent geometry validator
+        if: matrix.python == '3.12'
+        uses: actions/checkout@v4
+        with:
+          ref: 602dc900cd028d205b36e29dcdb5b4a9cf4f581a
+          path: .local-work/coverage-reference
+          sparse-checkout: benchmarks/microgen/microgen_benchmark
+          persist-credentials: false
+      - name: Check the six admitted eight-cell specimens against the historical limits
+        if: matrix.python == '3.12'
+        working-directory: .
+        run: |
+          uv pip install --system scipy
+          reference=.local-work/coverage-reference/benchmarks/microgen
+          mkdir coverage-results
+          status=0
+          for specimen in gyroid schwarz-p neovius graded-gyroid thin-gyroid implicit-lattice; do
+            options=()
+            case "$specimen" in
+              gyroid|schwarz-p) ;;
+              *) options+=(--adapt) ;;
+            esac
+            python demos/solver/implicit_coverage.py --reference "$reference" --case "$specimen" "${options[@]}" --require-admitted --output "coverage-results/$specimen.json" || status=1
+          done
+          exit "$status"
+      - uses: actions/upload-artifact@v4
+        if: always() && matrix.python == '3.12'
+        with:
+          name: implicit-coverage-${{ matrix.os }}
+          path: coverage-results/*.json
+          if-no-files-found: ignore
       - uses: actions/upload-artifact@v4
         with:
           name: wheel-${{ matrix.os }}-${{ matrix.python }}
