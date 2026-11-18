@@ -1,0 +1,703 @@
+{
+  "hardware": {
+    "cpu_model": "Apple M4",
+    "cpu_count": 10,
+    "ram_bytes": 25769803776,
+    "machine": "arm64",
+    "platform": "macOS-26.5.1-arm64-arm-64bit"
+  },
+  "numerical_threads_requested": 1,
+  "driver_sha256": {
+    "tools/__init__.py": "7d6ffee756fa46a0b896d37efc256a643e6c6ec49b86ee4eb92123ad0bc875ec",
+    "tools/performance_gate.py": "a547abac5972007b6470ff436cbfa054d5a10e952875358ca457fb5a9868d812",
+    "tools/benchmark_hardware.py": "e1ce68164d199043783e28bb3216e052877b18f736b14c3d9812fc1187da24fc",
+    "demos/solver/schwarz_workflow.py": "ecaf0be7dd7b1b0034127830aeb6c056ceb9c6b9fc4ac41952b5a2223e4ec95c",
+    "demos/solver/schwarz_series.py": "53db5a31e49fce7e0d6ee9fc0ac67fd3bd9a2fc0169a9dec3d9cd0dac6a06f54",
+    "demos/solver/periodic_geometry.py": "ba4a5b121a132e696d8532a5f928c643735394ce4fb5899bff7d5ddbcb6a002e",
+    "demos/solver/release_wheel_comparison.py": "36c8ac4c76c121c6720715eaac286ddaa198f13070bb1e6fe838ae593bb65f02",
+    "demos/solver/fedoo_homogenization.py": "dbe016e21cc71679b4110e56ef4fb4a54049b384577ede759f6f675fe7344549",
+    "demos/solver/historical_schwarz_repair.py": "ffdedd81eb3f26de4015563a9d4b6c18113ebe5cb2e2b39264d2fdd8bc54ed67",
+    "demos/solver/schwarz_diagnostics.py": "2744947585df14b21cd9ce0ffe01ba2c01d92c7e5fbe1f35b555dcb9c93333d0",
+    "diag_worker.py": "cd77f31e29b9ac1548645b4a1684e2f1a102ebff7925335306fc03b5ba7758de"
+  },
+  "completion": {
+    "resolution": null,
+    "pair_order": [
+      [
+        1,
+        "native"
+      ],
+      [
+        1,
+        "microgen"
+      ],
+      [
+        2,
+        "microgen"
+      ],
+      [
+        2,
+        "native"
+      ],
+      [
+        3,
+        "native"
+      ],
+      [
+        3,
+        "microgen"
+      ]
+    ]
+  },
+  "runs": {
+    "screen34": {
+      "case": "repaired-solve",
+      "recorded_at": "2026-11-18T13:53:39.402578+00:00",
+      "hardware": {
+        "cpu_model": "Apple M4",
+        "cpu_count": 10,
+        "ram_bytes": 25769803776,
+        "machine": "arm64",
+        "platform": "macOS-26.5.1-arm64-arm-64bit"
+      },
+      "versions": {
+        "meshers": "0.2.1",
+        "microgen": "2.0.0b1",
+        "mmgpy": "0.17.1",
+        "fedoo": "1.0.0b2",
+        "numpy": "2.5.3",
+        "scipy": "1.18.1",
+        "pyvista": "0.49.0",
+        "vtk": "9.7.1"
+      },
+      "baseline_sha256": "9dbe1c7e45cea5ccc8f9bbf79ec651f78088335f25bcad68e0b453e427c045ca",
+      "reference_sha256": "077b05afb900595e6e7891e5a092538cec6eb2f805156d2119ac9eb771477908",
+      "source_sha256": {
+        "microgen/shape/tpms.py": "1c2876a8f65441e6d7a0f21397a3b781b6f03a338f244c7db5c462c13348f955",
+        "microgen/remesh.py": "b93c8b8150c1c40ccf5312d57785331d52f114d2217a8b59296b7484cf6f2612"
+      },
+      "mmg_sha256": "efe07a6207a9ff86f4af26513e6aa368647b32cae112859fca52e74c3e7f7cf1",
+      "resolution": 34,
+      "seed_seconds": 0.05431787495035678,
+      "seed_nodes": 26394,
+      "seed_cells": 125994,
+      "mmg_calls": [
+        {
+          "nofem": true,
+          "hausd": 0.0005,
+          "hmax": 0.1,
+          "hgrad": 1.3,
+          "seconds": 0.10792916704667732
+        },
+        {
+          "nofem": true,
+          "hausd": 0.0005,
+          "hmax": 0.1,
+          "hgrad": 1.3,
+          "seconds": 0.10585841699503362
+        },
+        {
+          "nofem": true,
+          "hausd": 0.0005,
+          "hmax": 0.1,
+          "hgrad": 1.3,
+          "seconds": 0.10907075001159683
+        },
+        {
+          "nofem": true,
+          "hausd": 0.0005,
+          "hmax": 0.1,
+          "hgrad": 1.3,
+          "seconds": 0.1056103750015609
+        },
+        {
+          "nofem": true,
+          "hausd": 0.0005,
+          "hmax": 0.1,
+          "hgrad": 1.3,
+          "seconds": 0.10453162499470636
+        }
+      ],
+      "status": "failed",
+      "error": "MmgError: MMG failed with the recorded arguments",
+      "sampled_peak_tree_rss_bytes": 637435904,
+      "wall_seconds": 2.5784320830134675
+    },
+    "screen36": {
+      "case": "repaired-solve",
+      "recorded_at": "2026-11-18T13:53:41.857740+00:00",
+      "hardware": {
+        "cpu_model": "Apple M4",
+        "cpu_count": 10,
+        "ram_bytes": 25769803776,
+        "machine": "arm64",
+        "platform": "macOS-26.5.1-arm64-arm-64bit"
+      },
+      "versions": {
+        "meshers": "0.2.1",
+        "microgen": "2.0.0b1",
+        "mmgpy": "0.17.1",
+        "fedoo": "1.0.0b2",
+        "numpy": "2.5.3",
+        "scipy": "1.18.1",
+        "pyvista": "0.49.0",
+        "vtk": "9.7.1"
+      },
+      "baseline_sha256": "9dbe1c7e45cea5ccc8f9bbf79ec651f78088335f25bcad68e0b453e427c045ca",
+      "reference_sha256": "077b05afb900595e6e7891e5a092538cec6eb2f805156d2119ac9eb771477908",
+      "source_sha256": {
+        "microgen/shape/tpms.py": "1c2876a8f65441e6d7a0f21397a3b781b6f03a338f244c7db5c462c13348f955",
+        "microgen/remesh.py": "b93c8b8150c1c40ccf5312d57785331d52f114d2217a8b59296b7484cf6f2612"
+      },
+      "mmg_sha256": "efe07a6207a9ff86f4af26513e6aa368647b32cae112859fca52e74c3e7f7cf1",
+      "resolution": 36,
+      "seed_seconds": 0.05847233301028609,
+      "seed_nodes": 30896,
+      "seed_cells": 149300,
+      "mmg_calls": [
+        {
+          "nofem": true,
+          "hausd": 0.0005,
+          "hmax": 0.1,
+          "hgrad": 1.3,
+          "seconds": 2.4369498749729246
+        }
+      ],
+      "repair": {
+        "initial_bad_elements": 30,
+        "remaining_bad_elements": 30,
+        "initial_minimum_quality": 0.003301928829611769,
+        "final_minimum_quality": 0.003301928829611769,
+        "accepted_moves": 0,
+        "moved_vertices": 0,
+        "attempts": [
+          {
+            "element": 76083,
+            "sweep": 0,
+            "status": "all-boundary",
+            "target_attained": false
+          },
+          {
+            "node": 12756,
+            "incident_tets": 38,
+            "quality_target": 0.100001,
+            "initial_minimum_quality": 0.04708461027230249,
+            "fixed_opposite_face_upper_bound": 0.08323610387987053,
+            "target_attained": false,
+            "status": "fixed-face-obstructed",
+            "numerical_quality_guard": 1e-09,
+            "element": 65849,
+            "sweep": 0
+          },
+          {
+            "node": 9701,
+            "incident_tets": 20,
+            "quality_target": 0.100001,
+            "initial_minimum_quality": 0.04826201494641341,
+            "fixed_opposite_face_upper_bound": 0.08323610387987065,
+            "target_attained": false,
+            "status": "fixed-face-obstructed",
+            "numerical_quality_guard": 1e-09,
+            "element": 107302,
+            "sweep": 0
+          },
+          {
+            "node": 7968,
+            "incident_tets": 28,
+            "quality_target": 0.100001,
+            "initial_minimum_quality": 0.05801929186366681,
+            "fixed_opposite_face_upper_bound": 0.08323610387987053,
+            "target_attained": false,
+            "status": "fixed-face-obstructed",
+            "numerical_quality_guard": 1e-09,
+            "element": 84546,
+            "sweep": 0
+          },
+          {
+            "node": 8579,
+            "incident_tets": 20,
+            "quality_target": 0.100001,
+            "initial_minimum_quality": 0.058824887038674535,
+            "fixed_opposite_face_upper_bound": 0.08323610387987065,
+            "target_attained": false,
+            "status": "fixed-face-obstructed",
+            "numerical_quality_guard": 1e-09,
+            "element": 95657,
+            "sweep": 0
+          },
+          {
+            "node": 6391,
+            "incident_tets": 20,
+            "quality_target": 0.100001,
+            "initial_minimum_quality": 0.06142961371649067,
+            "fixed_opposite_face_upper_bound": 0.08323610387987065,
+            "target_attained": false,
+            "status": "fixed-face-obstructed",
+            "numerical_quality_guard": 1e-09,
+            "element": 32093,
+            "sweep": 0
+          },
+          {
+            "node": 7656,
+            "incident_tets": 42,
+            "quality_target": 0.100001,
+            "initial_minimum_quality": 0.06145924892854587,
+            "fixed_opposite_face_upper_bound": 0.08323610387987053,
+            "target_attained": false,
+            "status": "fixed-face-obstructed",
+            "numerical_quality_guard": 1e-09,
+            "element": 86527,
+            "sweep": 0
+          },
+          {
+            "element": 41516,
+            "sweep": 0,
+            "status": "all-boundary",
+            "target_attained": false
+          },
+          {
+            "node": 26656,
+            "incident_tets": 32,
+            "quality_target": 0.100001,
+            "initial_minimum_quality": 0.06201903547022761,
+            "fixed_opposite_face_upper_bound": 0.08323610387987064,
+            "target_attained": false,
+            "status": "fixed-face-obstructed",
+            "numerical_quality_guard": 1e-09,
+            "element": 22811,
+            "sweep": 0
+          },
+          {
+            "node": 2650,
+            "incident_tets": 34,
+            "quality_target": 0.100001,
+            "initial_minimum_quality": 0.06242917517059937,
+            "fixed_opposite_face_upper_bound": 0.08323610387987065,
+            "target_attained": false,
+            "status": "fixed-face-obstructed",
+            "numerical_quality_guard": 1e-09,
+            "element": 67627,
+            "sweep": 0
+          },
+          {
+            "node": 19534,
+            "incident_tets": 26,
+            "quality_target": 0.100001,
+            "initial_minimum_quality": 0.0635083748047309,
+            "fixed_opposite_face_upper_bound": 0.08323610387987065,
+            "target_attained": false,
+            "status": "fixed-face-obstructed",
+            "numerical_quality_guard": 1e-09,
+            "element": 29108,
+            "sweep": 0
+          },
+          {
+            "node": 28441,
+            "incident_tets": 40,
+            "quality_target": 0.100001,
+            "initial_minimum_quality": 0.06432927244898733,
+            "fixed_opposite_face_upper_bound": 0.08323610387987065,
+            "target_attained": false,
+            "status": "fixed-face-obstructed",
+            "numerical_quality_guard": 1e-09,
+            "element": 108636,
+            "sweep": 0
+          },
+          {
+            "node": 2478,
+            "incident_tets": 22,
+            "quality_target": 0.100001,
+            "initial_minimum_quality": 0.06485815868038353,
+            "fixed_opposite_face_upper_bound": 0.08323610387987065,
+            "target_attained": false,
+            "status": "fixed-face-obstructed",
+            "numerical_quality_guard": 1e-09,
+            "element": 123208,
+            "sweep": 0
+          },
+          {
+            "node": 15604,
+            "incident_tets": 24,
+            "quality_target": 0.100001,
+            "initial_minimum_quality": 0.06605630775800098,
+            "fixed_opposite_face_upper_bound": 0.08323610387987064,
+            "target_attained": false,
+            "status": "fixed-face-obstructed",
+            "numerical_quality_guard": 1e-09,
+            "element": 99164,
+            "sweep": 0
+          },
+          {
+            "node": 29582,
+            "incident_tets": 30,
+            "quality_target": 0.100001,
+            "initial_minimum_quality": 0.06626040357991957,
+            "fixed_opposite_face_upper_bound": 0.08323610387987063,
+            "target_attained": false,
+            "status": "fixed-face-obstructed",
+            "numerical_quality_guard": 1e-09,
+            "element": 58771,
+            "sweep": 0
+          },
+          {
+            "node": 3523,
+            "incident_tets": 32,
+            "quality_target": 0.100001,
+            "initial_minimum_quality": 0.06691554848636742,
+            "fixed_opposite_face_upper_bound": 0.08323610387987053,
+            "target_attained": false,
+            "status": "fixed-face-obstructed",
+            "numerical_quality_guard": 1e-09,
+            "element": 16626,
+            "sweep": 0
+          },
+          {
+            "node": 15604,
+            "incident_tets": 24,
+            "quality_target": 0.100001,
+            "initial_minimum_quality": 0.06605630775800098,
+            "fixed_opposite_face_upper_bound": 0.08323610387987064,
+            "target_attained": false,
+            "status": "fixed-face-obstructed",
+            "numerical_quality_guard": 1e-09,
+            "element": 104410,
+            "sweep": 0
+          },
+          {
+            "node": 25192,
+            "incident_tets": 30,
+            "quality_target": 0.100001,
+            "initial_minimum_quality": 0.06993082634772353,
+            "fixed_opposite_face_upper_bound": 0.08323610387987053,
+            "target_attained": false,
+            "status": "fixed-face-obstructed",
+            "numerical_quality_guard": 1e-09,
+            "element": 32657,
+            "sweep": 0
+          },
+          {
+            "node": 11088,
+            "incident_tets": 22,
+            "quality_target": 0.100001,
+            "initial_minimum_quality": 0.07063984017917312,
+            "fixed_opposite_face_upper_bound": 0.08323610387987065,
+            "target_attained": false,
+            "status": "fixed-face-obstructed",
+            "numerical_quality_guard": 1e-09,
+            "element": 61895,
+            "sweep": 0
+          },
+          {
+            "node": 2280,
+            "incident_tets": 22,
+            "quality_target": 0.100001,
+            "initial_minimum_quality": 0.0711761590605937,
+            "fixed_opposite_face_upper_bound": 0.08323610387987053,
+            "target_attained": false,
+            "status": "fixed-face-obstructed",
+            "numerical_quality_guard": 1e-09,
+            "element": 56618,
+            "sweep": 0
+          },
+          {
+            "node": 7997,
+            "incident_tets": 36,
+            "quality_target": 0.100001,
+            "initial_minimum_quality": 0.07169547576646156,
+            "fixed_opposite_face_upper_bound": 0.08323610387987064,
+            "target_attained": false,
+            "status": "fixed-face-obstructed",
+            "numerical_quality_guard": 1e-09,
+            "element": 47999,
+            "sweep": 0
+          },
+          {
+            "node": 27179,
+            "incident_tets": 20,
+            "quality_target": 0.100001,
+            "initial_minimum_quality": 0.07219680549106097,
+            "fixed_opposite_face_upper_bound": 0.08323610387987053,
+            "target_attained": false,
+            "status": "fixed-face-obstructed",
+            "numerical_quality_guard": 1e-09,
+            "element": 19214,
+            "sweep": 0
+          },
+          {
+            "node": 26208,
+            "incident_tets": 26,
+            "quality_target": 0.100001,
+            "initial_minimum_quality": 0.07413389802002289,
+            "fixed_opposite_face_upper_bound": 0.08323610387987063,
+            "target_attained": false,
+            "status": "fixed-face-obstructed",
+            "numerical_quality_guard": 1e-09,
+            "element": 106137,
+            "sweep": 0
+          },
+          {
+            "node": 2009,
+            "incident_tets": 24,
+            "quality_target": 0.100001,
+            "initial_minimum_quality": 0.074744258239172,
+            "fixed_opposite_face_upper_bound": 0.08323610387987065,
+            "target_attained": false,
+            "status": "fixed-face-obstructed",
+            "numerical_quality_guard": 1e-09,
+            "element": 7428,
+            "sweep": 0
+          },
+          {
+            "node": 23005,
+            "incident_tets": 24,
+            "quality_target": 0.100001,
+            "initial_minimum_quality": 0.07801221380511052,
+            "fixed_opposite_face_upper_bound": 0.08323610387987065,
+            "target_attained": false,
+            "status": "fixed-face-obstructed",
+            "numerical_quality_guard": 1e-09,
+            "element": 99593,
+            "sweep": 0
+          },
+          {
+            "node": 13941,
+            "incident_tets": 24,
+            "quality_target": 0.100001,
+            "initial_minimum_quality": 0.08024942668218232,
+            "fixed_opposite_face_upper_bound": 0.08323610387987064,
+            "target_attained": false,
+            "status": "fixed-face-obstructed",
+            "numerical_quality_guard": 1e-09,
+            "element": 57829,
+            "sweep": 0
+          },
+          {
+            "node": 7656,
+            "incident_tets": 42,
+            "quality_target": 0.100001,
+            "initial_minimum_quality": 0.06145924892854587,
+            "fixed_opposite_face_upper_bound": 0.08323610387987053,
+            "target_attained": false,
+            "status": "fixed-face-obstructed",
+            "numerical_quality_guard": 1e-09,
+            "element": 102504,
+            "sweep": 0
+          },
+          {
+            "node": 23005,
+            "incident_tets": 24,
+            "quality_target": 0.100001,
+            "initial_minimum_quality": 0.07801221380511052,
+            "fixed_opposite_face_upper_bound": 0.08323610387987065,
+            "target_attained": false,
+            "status": "fixed-face-obstructed",
+            "numerical_quality_guard": 1e-09,
+            "element": 103183,
+            "sweep": 0
+          },
+          {
+            "node": 7997,
+            "incident_tets": 36,
+            "quality_target": 0.100001,
+            "initial_minimum_quality": 0.07169547576646156,
+            "fixed_opposite_face_upper_bound": 0.08323610387987064,
+            "target_attained": false,
+            "status": "fixed-face-obstructed",
+            "numerical_quality_guard": 1e-09,
+            "element": 42828,
+            "sweep": 0
+          },
+          {
+            "node": 3523,
+            "incident_tets": 32,
+            "quality_target": 0.100001,
+            "initial_minimum_quality": 0.06691554848636742,
+            "fixed_opposite_face_upper_bound": 0.08323610387987053,
+            "target_attained": false,
+            "status": "fixed-face-obstructed",
+            "numerical_quality_guard": 1e-09,
+            "element": 78365,
+            "sweep": 0
+          }
+        ],
+        "maximum_attempts": 400,
+        "maximum_sweeps": 2,
+        "boundary_coordinates_unchanged": true,
+        "signed_volume_difference": 0.0,
+        "minimum_signed_determinant": 2.1632522752541117e-08
+      },
+      "generation_and_io_seconds": 4.546689083974343,
+      "mesh_sha256": "7eb7c533628af5b3745c0ab04c0adde1b9c1c72d16ba65c0734fcd6071563329",
+      "geometry": {
+        "specimen": "schwarz",
+        "nodes": 31947,
+        "tetrahedra": 146374,
+        "volume": 0.5000100968295823,
+        "face_connected_components": 1,
+        "component_signed_volumes": [
+          0.5000100968295823
+        ],
+        "minimum_quality": 0.0033019288296117647,
+        "boundary": {
+          "wall 0": {
+            "mesh_to_reference_upper": {
+              "samples": 113302,
+              "maximum": 0.0007003608880535861,
+              "location": [
+                -0.28503643769576803,
+                -0.327606964975965,
+                0.1285450342311455
+              ]
+            },
+            "reference_to_mesh": {
+              "samples": 7710,
+              "maximum": 0.0005131574511106719,
+              "location": [
+                0.2283102223898794,
+                0.4992949962615967,
+                0.08393445517867804
+              ]
+            }
+          },
+          "x-0.5": {
+            "mesh_to_reference_upper": {
+              "samples": 14420,
+              "maximum": 0.00064367427062198,
+              "location": [
+                -0.5,
+                -0.08571428571428574,
+                -0.2267518317728525
+              ]
+            },
+            "reference_to_mesh": {
+              "samples": 1666,
+              "maximum": 0.0,
+              "location": [
+                -0.5,
+                0.3993650656193495,
+                0.4675633907318115
+              ]
+            }
+          },
+          "x+0.5": {
+            "mesh_to_reference_upper": {
+              "samples": 14420,
+              "maximum": 0.00064367427062198,
+              "location": [
+                0.5,
+                -0.08571428571428574,
+                -0.2267518317728525
+              ]
+            },
+            "reference_to_mesh": {
+              "samples": 1666,
+              "maximum": 0.0,
+              "location": [
+                0.5,
+                0.3993650656193495,
+                0.4675633907318115
+              ]
+            }
+          },
+          "y-0.5": {
+            "mesh_to_reference_upper": {
+              "samples": 14420,
+              "maximum": 0.00064367427062198,
+              "location": [
+                -0.08571428571428574,
+                -0.5,
+                -0.2267518317728525
+              ]
+            },
+            "reference_to_mesh": {
+              "samples": 1666,
+              "maximum": 0.0,
+              "location": [
+                0.3993650656193495,
+                -0.5,
+                0.4675633907318115
+              ]
+            }
+          },
+          "y+0.5": {
+            "mesh_to_reference_upper": {
+              "samples": 14420,
+              "maximum": 0.00064367427062198,
+              "location": [
+                -0.08571428571428574,
+                0.5,
+                -0.2267518317728525
+              ]
+            },
+            "reference_to_mesh": {
+              "samples": 1666,
+              "maximum": 0.0,
+              "location": [
+                0.3993650656193495,
+                0.5,
+                0.4675633907318115
+              ]
+            }
+          },
+          "z-0.5": {
+            "mesh_to_reference_upper": {
+              "samples": 14420,
+              "maximum": 0.00064367427062198,
+              "location": [
+                -0.2267518317728525,
+                -0.08571428571428574,
+                -0.5
+              ]
+            },
+            "reference_to_mesh": {
+              "samples": 1666,
+              "maximum": 0.0,
+              "location": [
+                0.3993650656193495,
+                0.4675633907318115,
+                -0.5
+              ]
+            }
+          },
+          "z+0.5": {
+            "mesh_to_reference_upper": {
+              "samples": 14420,
+              "maximum": 0.00064367427062198,
+              "location": [
+                -0.2267518317728525,
+                -0.08571428571428574,
+                0.5
+              ]
+            },
+            "reference_to_mesh": {
+              "samples": 1666,
+              "maximum": 0.0,
+              "location": [
+                0.3993650656193495,
+                0.4675633907318115,
+                0.5
+              ]
+            }
+          }
+        },
+        "periodic_face_match": {
+          "x": true,
+          "y": true,
+          "z": true
+        },
+        "sobol_power": 11,
+        "material_witnesses": 1999,
+        "misclassified_witnesses": 0,
+        "first_misclassified_witness": null,
+        "failed_checks": [
+          "quality"
+        ],
+        "sampled_admission": false
+      },
+      "audit_seconds": 0.4107456659548916,
+      "status": "geometry-rejected",
+      "sampled_peak_tree_rss_bytes": 794902528,
+      "wall_seconds": 5.716874333040323
+    }
+  }
+}

@@ -21,6 +21,7 @@ import microgen.remesh
 import numpy as np
 import pyvista as pv
 from fedoo_homogenization import homogenize
+from historical_schwarz_repair import repaired_grid
 from microgen.shape import surface_functions
 from periodic_geometry import BASELINE, audit
 from release_wheel_comparison import generate, hardware_snapshot
@@ -56,7 +57,7 @@ def reopenable(*args, **kwargs):
     return NamedTemporaryFile(*args, **kwargs, delete_on_close=False)
 
 
-def live_microgen(route, cells, folder, row, budget):
+def live_microgen(route, cells, folder, row, budget, *, observe=None, single_pass=False):  # ruff: ignore[too-many-arguments] - observer and historical control are optional.
     """Write the volume produced by the pinned Microgen VTK and MMG implementations.
 
     Returns:
@@ -90,18 +91,28 @@ def live_microgen(route, cells, folder, row, budget):
     )
     if max(seed.n_points, seed.n_cells) > budget:
         raise RuntimeError("VTK seed exceeds the mesh budget")
+    if observe is not None:
+        observe("seed", seed)
     options = {"hausd": 0.001, "hmax": 0.06, "hgrad": 1.3} if route == "microgen-tuned" else {}
     original = microgen.Mmg.mmg3d
     row["mmg_calls"] = []
 
     def measured(**params):
+        if single_pass and params.get("ls"):
+            shutil.copyfile(params["input"], params["output"])
+            return None
+        if single_pass:
+            params.update(hausd=0.0005, hmax=0.1, hgrad=1.3)
         options_used = {k: v for k, v in params.items() if k not in {"input", "output"}}
         row["mmg_calls"].append(options_used)
         begin = time.perf_counter()
         try:
-            return original(**params)
+            result = original(**params)
         finally:
             options_used["seconds"] = time.perf_counter() - begin
+        if observe is not None:
+            observe(f"pass-{len(row['mmg_calls'])}", pv.UnstructuredGrid(params["output"]))
+        return result
 
     with ExitStack() as stack:
         if os.name == "nt":
@@ -139,11 +150,10 @@ def solver_input(grid, quality):
     )
 
 
-def run(route, cells, folder, row):
+def run(route, cells, folder, row, *, native_settings=None):
     """Generate, audit and solve one mesh, preserving the first failed stage.
 
     Raises:
-        ValueError: The fixed interior stress probe is missing.
         RuntimeError: A package version or VTK backend differs from the study.
     """
     if row["versions"] != PACKAGES:
@@ -155,12 +165,28 @@ def run(route, cells, folder, row):
     start = time.perf_counter()
     if route == "native":
         cfg = dict(baseline["routes"]["schwarz_native"]["config"], cells=cells)
+        cfg.update(native_settings or {})
         row["config"] = cfg
         mesh = generate("schwarz_native", cfg, baseline["limits"])
         path = folder / "volume.vtkhdf"
         mesh.write_vtkhdf(path)
     else:
-        path = live_microgen(route, cells, folder, row, baseline["limits"]["max_nodes_or_elements"])
+        historical = route == "microgen-repaired"
+        path = live_microgen(
+            route,
+            cells,
+            folder,
+            row,
+            baseline["limits"]["max_nodes_or_elements"],
+            single_pass=historical,
+        )
+        if historical:
+            source = pv.read(path)
+            if max(source.n_points, source.n_cells) > baseline["limits"]["max_nodes_or_elements"]:
+                raise RuntimeError("Single-pass MMG output exceeds the mesh budget before repair")
+            repaired = repaired_grid(source, row)
+            path = folder / "repaired.vtu"
+            repaired.save(path)
     grid = pv.read(path)
     row["generation_and_io_seconds"] = time.perf_counter() - start
     row["mesh_sha256"] = digest(path)
@@ -170,6 +196,15 @@ def run(route, cells, folder, row):
     if not geometry["sampled_admission"]:
         row["status"] = "geometry-rejected"
         return
+    solve_admitted(grid, geometry, row)
+
+
+def solve_admitted(grid, geometry, row):
+    """Solve six strain loads and their stress-controlled checks on an admitted grid.
+
+    Raises:
+        ValueError: The fixed stress probe lies outside the returned mesh.
+    """
     probe = int(grid.find_containing_cell(PROBE))
     if probe < 0:
         raise ValueError("The fixed interior stress probe is missing")
