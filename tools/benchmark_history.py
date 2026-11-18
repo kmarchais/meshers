@@ -214,6 +214,7 @@ def archive(source, label, directory):
         raise ValueError("Use a plain version or release-candidate label")
     payload = source.read_bytes()
     data = json.loads(payload)
+    data.pop("runner", None)  # Early records included the CI or local hostname.
     validate(data)
     directory.mkdir(parents=True, exist_ok=True)
     path = directory / f"{label}.json"

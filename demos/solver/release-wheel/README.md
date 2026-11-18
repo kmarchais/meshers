@@ -4,7 +4,7 @@ This experiment starts with the shipped Meshers 0.2.1 CPU wheel. It replays thre
 
 ## Frozen evidence
 
-[baseline.json](baseline.json) identifies its research commit and the source record for each route. The Gyroid is the raw trigonometric band ±0.55. The historical uniform/adaptive Tet4 meshes used 72,757/34,854 cells and differed by 2.92917% in worst mixed-load energy. The archived tensors are discrete reference results. Their difference measures agreement, not continuum error.
+[baseline.json](baseline.json) identifies its research commit and the Git blob ID of the source record for each route. Read a record with `git cat-file blob <source_blob>` in a checkout containing the research commit. The Gyroid is the raw trigonometric band ±0.55. The historical uniform/adaptive Tet4 meshes used 72,757/34,854 cells and differed by 2.92917% in worst mixed-load energy. The archived tensors are discrete reference results. Their difference measures agreement, not continuum error.
 
 Schwarz P uses the nonpositive cosine sum. Its analytic solid fraction is 0.5. The admitted Microgen control used a resolution-30 VTK seed, one MMG pass with `nofem`, `hausd=0.0005`, `hmax=0.1` and `hgrad=1.3`, followed by interior repair. It yielded 136,511 tetrahedra and 29,192 nodes. The unmodified Schwarz control failed its quality floor. The actual resolution-40 Gyroid control retained both public MMG passes and failed the quality, volume and facet checks. Preserve these as measured failures.
 
@@ -23,17 +23,17 @@ python demos/solver/release_wheel_comparison.py schwarz_native schwarz-native.js
 
 For each fresh tensor report the worst absolute generalized eigenvalue of the symmetric tensor difference relative to the reference stiffness. To compare adaptive and uniform, use uniform as reference. Preserve worker failures and raw JSON. Before changing defaults, repeat at matched physical error on an unseen specimen and charge all required preprocessing, retries and solves.
 
-The original Microgen comparison driver, dependency manifests and settings are on research commit `9d156a2982277aed3a28fbcaeb676cc8b7236ca9`. In that research environment the following command replays the Schwarz default and repaired arms. Use the archived manifests there to provision Microgen, VTK, mmgpy, its MMG executable and the frozen fixtures. A plain release-wheel environment only supports the native commands above. [Schwarz manifest](https://github.com/kmarchais/meshers/blob/9d156a2982277aed3a28fbcaeb676cc8b7236ca9/experiments/adaptive/runs/macbook-mesh-only-schwarz-repeated-v1/manifest.json) · [Gyroid stiffness assessment](https://github.com/kmarchais/meshers/blob/9d156a2982277aed3a28fbcaeb676cc8b7236ca9/experiments/adaptive/runs/macbook-gyroid-tet4-stiffness-tradeoff-20261112-v2/assessment.json)
+The original Microgen comparison driver, dependency manifests and settings are on research commit `9d156a2982277aed3a28fbcaeb676cc8b7236ca9`. In that research environment the following command replays the Schwarz default and repaired arms. Use the archived manifests there to provision Microgen, VTK, mmgpy, its MMG executable and the frozen fixtures. A plain release-wheel environment only supports the native commands above. [Schwarz manifest](https://api.github.com/repos/kmarchais/meshers/git/blobs/dbadf98e26353c9bb7bc5a2b799713422a0fb6f5) · [Gyroid stiffness assessment](https://api.github.com/repos/kmarchais/meshers/git/blobs/0fdf98be1e1fd5f5db25e719c5442dd1e233e5cb)
 
 ```sh
 python experiments/adaptive/mesh_only_comparison.py --run schwarz-replay --case schwarz-solid --strengthened --warmups 1 --repetitions 5 --select actual-default,actual-explicit-tuned
 ```
 
-The [cross-platform replay](fleet-20261118/README.md) gives three repeats per case on Lenovo, Mini, MacBook Pro and G3, with raw timings and stiffness tensors.
+The [cross-platform replay](fleet-20261118/README.md) gives three repeats per case on the configurations listed in that study, with raw timings and stiffness tensors.
 
 ## Windows release-wheel run, 17 November 2026
 
-On OMEN, job 5202 ran three cases sequentially with one numerical thread. Each passed six prescribed-strain loads and six stress-controlled verification solves. The largest recomputed relative linear residual across all 36 systems was 1.07e-12. The export test also passed on retry with a writable temporary directory.
+The original Windows run measured three cases sequentially with one numerical thread. Each passed six prescribed-strain loads and six stress-controlled verification solves. The largest recomputed relative linear residual across all 36 systems was 1.07e-12. The export test also passed on retry with a writable temporary directory.
 
 | Tet4 mesh | Nodes | Tetrahedra | Free displacement DOFs (xx load) | Generation (s) | Homogenization and checks (s) |
 | --- | ---: | ---: | ---: | ---: | ---: |

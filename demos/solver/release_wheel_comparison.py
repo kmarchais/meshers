@@ -3,7 +3,7 @@
 import argparse
 import hashlib
 import json
-import platform
+import sys
 import time
 from dataclasses import replace
 from importlib import import_module
@@ -14,6 +14,9 @@ import meshers
 import numpy as np
 from fedoo_homogenization import element_geometry, homogenize
 from scipy.linalg import eigvalsh
+
+sys.path.insert(0, str(Path(__file__).resolve().parents[2] / "tools"))
+from benchmark_hardware import hardware_snapshot
 
 BASELINE = Path(__file__).with_name("release-wheel") / "baseline.json"
 
@@ -107,13 +110,15 @@ def main():
         raise RuntimeError("Install the specified release wheel in an isolated environment")
     route = baseline["routes"][args.case]
     extension = Path(import_module("meshers._meshers").__file__)
+    hardware = hardware_snapshot()
     row = {
         "case": args.case,
         "config": route["config"],
         "versions": {name: version(name) for name in ("meshers", "fedoo", "numpy", "scipy")},
         "baseline_sha256": hashlib.sha256(BASELINE.read_bytes()).hexdigest(),
         "extension_sha256": hashlib.sha256(extension.read_bytes()).hexdigest(),
-        "platform": platform.platform(),
+        "platform": hardware["platform"],
+        "hardware": hardware,
         "release_wheel_comparative_admission": "pending independent two-sided distance audit",
     }
     with args.output.open("x", encoding="utf-8") as output:
