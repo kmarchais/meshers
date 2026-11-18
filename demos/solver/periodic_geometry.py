@@ -19,6 +19,8 @@ AXES = "xyz"
 def field(points, specimen):
     """Return the reference field values in the centered unit cell."""
     c = np.cos(2 * np.pi * points)
+    if specimen == "schwarz-shifted":
+        return (c[:, 0] - np.sin(2 * np.pi * points[:, 0])) / np.sqrt(2) + c[:, 1] + c[:, 2]
     if specimen == "schwarz":
         return c.sum(axis=1)
     return (np.sin(2 * np.pi * points) * np.roll(c, -1, axis=1)).sum(axis=1)
@@ -200,7 +202,13 @@ def audit(grid, specimen, baseline, power=11):  # ruff: ignore[too-many-locals] 
         "quality": qualities.min() >= limits["minimum_quality"],
         "conformity": counts.max() <= 2
         and np.all((inversions[first] - inversions[second]) % 2 == 1),
-        "volume": abs(volume / baseline["reference_volumes"][specimen] - 1)
+        "volume": abs(
+            volume
+            / baseline["reference_volumes"][
+                "schwarz" if specimen == "schwarz-shifted" else specimen
+            ]
+            - 1
+        )
         <= limits["relative_volume_error"],
         "budget": max(len(cells), len(points)) <= limits["max_nodes_or_elements"],
         "unit_cell": np.max(abs(points)) <= 0.5 + 1e-10,
@@ -228,7 +236,7 @@ def audit(grid, specimen, baseline, power=11):  # ruff: ignore[too-many-locals] 
 def main():
     """Return the admission exit code after recording the exported volume audit."""
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("specimen", choices=("gyroid", "schwarz"))
+    parser.add_argument("specimen", choices=("gyroid", "schwarz", "schwarz-shifted"))
     parser.add_argument("mesh", type=Path)
     parser.add_argument("output", type=Path)
     args = parser.parse_args()

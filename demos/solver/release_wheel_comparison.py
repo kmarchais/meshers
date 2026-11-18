@@ -34,7 +34,11 @@ def generate(case, cfg, limits):
         return np.sin(a) * np.cos(b) + np.sin(b) * np.cos(c) + np.sin(c) * np.cos(a)
 
     def schwarz(x, y, z):
-        return np.cos(2 * np.pi * x) + np.cos(2 * np.pi * y) + np.cos(2 * np.pi * z)
+        return (
+            np.cos(2 * np.pi * (x + cfg.get("phase_x", 0)))
+            + np.cos(2 * np.pi * y)
+            + np.cos(2 * np.pi * z)
+        )
 
     return meshers.generate(
         gyroid if case.startswith("gyroid") else schwarz,

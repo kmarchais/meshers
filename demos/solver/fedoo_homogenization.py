@@ -17,6 +17,7 @@ import fedoo as fd
 import meshers
 import numpy as np
 from scipy.sparse import diags
+from scipy.sparse.csgraph import reverse_cuthill_mckee
 from scipy.sparse.linalg import cg
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -70,6 +71,27 @@ class AuditedCG:
             "free_dofs": len(rhs),
         })
         return solution
+
+
+class ReorderedCG(AuditedCG):
+    """Run the same Jacobi CG after symmetric reverse Cuthill-McKee ordering."""
+
+    def __call__(self, matrix, rhs, **kwargs):
+        """Return the solution in the original degree-of-freedom order."""
+        start = time.perf_counter()
+        csr = matrix.tocsr()
+        order = reverse_cuthill_mckee(csr, symmetric_mode=True)
+        permuted = csr[order][:, order]
+        ordering_seconds = time.perf_counter() - start
+        permuted_solution = super().__call__(permuted, rhs[order], **kwargs)
+        x = np.empty_like(permuted_solution)
+        x[order] = permuted_solution
+        residual = float(np.linalg.norm(matrix @ x - rhs) / max(np.linalg.norm(rhs), 1e-30))
+        assert residual < 2e-9, residual
+        self.records[-1].update(
+            ordering_seconds=ordering_seconds, original_relative_residual=residual
+        )
+        return x
 
 
 def strain_tensor(engineering):
@@ -131,7 +153,7 @@ def element_geometry(mesh):
     return volumes, gradients
 
 
-def homogenize(mesh, *, stress_probe_cell=None):  # ruff: ignore[too-many-locals, too-many-statements] - keep all six-load-case audits together.
+def homogenize(mesh, *, stress_probe_cell=None, solver_factory=AuditedCG):  # ruff: ignore[too-many-locals, too-many-statements] - keep all six-load-case audits together.
     """Run strain- and stress-controlled fedoo homogenization and cross-check.
 
     Returns:
@@ -148,7 +170,7 @@ def homogenize(mesh, *, stress_probe_cell=None):  # ruff: ignore[too-many-locals
         n_elm_gp=1,
     )
     center = int(np.linalg.norm(mesh.points - 0.5, axis=1).argmin())
-    solver = AuditedCG()
+    solver = solver_factory()
     stiffness = np.zeros((6, 6))
     reactions = np.zeros((6, 6))
     all_strains, all_stresses, checks = [], [], []
@@ -211,7 +233,7 @@ def homogenize(mesh, *, stress_probe_cell=None):  # ruff: ignore[too-many-locals
     # Uniform-strain (Voigt) upper bound using the measured solid volume.
     voigt_gap = np.linalg.eigvalsh(volumes.sum() * MATERIAL - (stiffness + stiffness.T) / 2)
     assert voigt_gap.min() > -1e-7
-    automatic_solver = AuditedCG()
+    automatic_solver = solver_factory()
     automatic = fd.homogen.get_homogenized_stiffness(
         assembly,
         meshperio=True,

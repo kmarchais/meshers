@@ -1,0 +1,178 @@
+{
+  "apple-m4": {
+    "hardware": {
+      "cpu_model": "Apple M4",
+      "cpu_count": 10,
+      "ram_bytes": 25769803776,
+      "machine": "arm64",
+      "platform": "macOS-26.5.1-arm64-arm-64bit"
+    },
+    "sizing": {
+      "medians": {
+        "native": {
+          "wall": 32.047001375001855,
+          "generation_export_repair": 2.5001105410046875,
+          "audit": 0.5617879999917932,
+          "assembly": 0.5691496660583653,
+          "cg": 25.30775841488503,
+          "fea": 28.048002999974415,
+          "peak_mib": 1658.8125,
+          "dofs": 115779,
+          "nodes": 42319,
+          "tet4": 189871,
+          "discrepancy": 0.007056353629305127,
+          "ordering": 0
+        },
+        "h050": {
+          "wall": 29.206397874979302,
+          "generation_export_repair": 3.756635792029556,
+          "audit": 0.4345262080314569,
+          "assembly": 0.49733699997887015,
+          "cg": 21.775229247054085,
+          "fea": 23.955579833011143,
+          "peak_mib": 1517.8125,
+          "dofs": 89361,
+          "nodes": 32099,
+          "tet4": 154002,
+          "discrepancy": 0.009266950037082364,
+          "ordering": 0
+        },
+        "h040": {
+          "wall": 36.61804575001588,
+          "generation_export_repair": 4.239987166947685,
+          "audit": 0.5671942919725552,
+          "assembly": 0.7016928751254454,
+          "cg": 27.984459792962298,
+          "fea": 30.881014792015776,
+          "peak_mib": 1842.859375,
+          "dofs": 114486,
+          "nodes": 40474,
+          "tet4": 204262,
+          "discrepancy": 0.007988447957916655,
+          "ordering": 0
+        },
+        "h030": {
+          "wall": 43.33526149997488,
+          "generation_export_repair": 4.428644707950298,
+          "audit": 0.6373367080232129,
+          "assembly": 0.7851408349815756,
+          "cg": 33.94248483289266,
+          "fea": 37.28335599997081,
+          "peak_mib": 1774.484375,
+          "dofs": 124971,
+          "nodes": 43969,
+          "tet4": 224322,
+          "discrepancy": 0.007499502261867517,
+          "ordering": 0
+        }
+      },
+      "cheapest_microgen": "h050",
+      "screen": {
+        "h050": {
+          "status": "within-reference-target",
+          "discrepancy": 0.009266950037082364,
+          "minimum_quality": 0.10322716092079502
+        },
+        "h040": {
+          "status": "within-reference-target",
+          "discrepancy": 0.007988447957916655,
+          "minimum_quality": 0.10000100099999816
+        },
+        "h035": {
+          "status": "geometry-rejected",
+          "discrepancy": null,
+          "minimum_quality": 0.09627777731312143
+        },
+        "h030": {
+          "status": "within-reference-target",
+          "discrepancy": 0.007499502261867517,
+          "minimum_quality": 0.10000100099976723
+        }
+      }
+    },
+    "phase": {
+      "medians": {
+        "shifted-baseline": {
+          "wall": 32.48411416698946,
+          "generation_export_repair": 2.448725624999497,
+          "audit": 0.5548144159838557,
+          "assembly": 0.5779917929903604,
+          "cg": 25.79634229297517,
+          "fea": 28.554511166992597,
+          "peak_mib": 1651.28125,
+          "dofs": 115170,
+          "nodes": 41963,
+          "tet4": 188993,
+          "discrepancy": 0.007116162587835763,
+          "ordering": 0
+        },
+        "shifted-rcm": {
+          "wall": 31.168928917031735,
+          "generation_export_repair": 2.4184576669940725,
+          "audit": 0.5545517079881392,
+          "assembly": 0.5688628320931457,
+          "cg": 23.964692081091926,
+          "fea": 27.22996649995912,
+          "peak_mib": 1705.796875,
+          "dofs": 115170,
+          "nodes": 41963,
+          "tet4": 188993,
+          "discrepancy": 0.007116162587775935,
+          "ordering": 0.5918490430922247
+        }
+      },
+      "statuses": {
+        "r0-shifted-baseline": "within-reference-target",
+        "r0-shifted-rcm": "within-reference-target",
+        "r1-shifted-baseline": "within-reference-target",
+        "r1-shifted-rcm": "within-reference-target",
+        "r2-shifted-baseline": "within-reference-target",
+        "r2-shifted-rcm": "within-reference-target"
+      },
+      "identical_solver_mesh": true,
+      "largest_tensor_entry_difference": 3.8720703401737114e-13,
+      "wall_change_percent": -4.0487028311648405
+    },
+    "repair": {
+      "repair_seconds": 0.4189237910322845,
+      "accepted_moves": 0,
+      "hmax": 0.05
+    }
+  },
+  "core-i7-10750h": {
+    "hardware": {
+      "cpu_model": "Intel(R) Core(TM) i7-10750H CPU @ 2.60GHz",
+      "cpu_count": 12,
+      "ram_bytes": 15975002112,
+      "machine": "x86_64",
+      "platform": "Linux-7.0.0-43-generic-x86_64-with-glibc2.43"
+    }
+  },
+  "core-i7-12700h": {
+    "hardware": {
+      "cpu_model": "12th Gen Intel(R) Core(TM) i7-12700H",
+      "cpu_count": 20,
+      "ram_bytes": 34070847488,
+      "machine": "AMD64",
+      "platform": "Windows-11-10.0.26300-SP0"
+    }
+  },
+  "core-ultra-9-285k": {
+    "hardware": {
+      "cpu_model": "Intel(R) Core(TM) Ultra 9 285K",
+      "cpu_count": 24,
+      "ram_bytes": 68062457856,
+      "machine": "AMD64",
+      "platform": "Windows-11-10.0.26200-SP0"
+    }
+  },
+  "ryzen-7-7730u": {
+    "hardware": {
+      "cpu_model": "AMD Ryzen 7 7730U with Radeon Graphics",
+      "cpu_count": 16,
+      "ram_bytes": 32476979200,
+      "machine": "x86_64",
+      "platform": "Linux-7.0.0-42-generic-x86_64-with-glibc2.43"
+    }
+  }
+}

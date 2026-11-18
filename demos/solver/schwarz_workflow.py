@@ -20,7 +20,7 @@ import microgen
 import microgen.remesh
 import numpy as np
 import pyvista as pv
-from fedoo_homogenization import homogenize
+from fedoo_homogenization import AuditedCG, homogenize
 from historical_schwarz_repair import repaired_grid
 from microgen.shape import surface_functions
 from periodic_geometry import BASELINE, audit
@@ -57,7 +57,9 @@ def reopenable(*args, **kwargs):
     return NamedTemporaryFile(*args, **kwargs, delete_on_close=False)
 
 
-def live_microgen(route, cells, folder, row, budget, *, observe=None, single_pass=False):  # ruff: ignore[too-many-arguments] - observer and historical control are optional.
+def live_microgen(  # ruff: ignore[too-many-arguments] - optional controls reproduce the frozen repair.
+    route, cells, folder, row, budget, *, observe=None, single_pass=False, repair_hmax=0.1
+):
     """Write the volume produced by the pinned Microgen VTK and MMG implementations.
 
     Returns:
@@ -102,7 +104,7 @@ def live_microgen(route, cells, folder, row, budget, *, observe=None, single_pas
             shutil.copyfile(params["input"], params["output"])
             return None
         if single_pass:
-            params.update(hausd=0.0005, hmax=0.1, hgrad=1.3)
+            params.update(hausd=0.0005, hmax=repair_hmax, hgrad=1.3)
         options_used = {k: v for k, v in params.items() if k not in {"input", "output"}}
         row["mmg_calls"].append(options_used)
         begin = time.perf_counter()
@@ -150,7 +152,17 @@ def solver_input(grid, quality):
     )
 
 
-def run(route, cells, folder, row, *, native_settings=None):
+def run(  # ruff: ignore[too-many-arguments] - keyword controls identify the experimental arm.
+    route,
+    cells,
+    folder,
+    row,
+    *,
+    native_settings=None,
+    repair_hmax=0.1,
+    shifted=False,
+    solver_factory=AuditedCG,
+):
     """Generate, audit and solve one mesh, preserving the first failed stage.
 
     Raises:
@@ -166,6 +178,8 @@ def run(route, cells, folder, row, *, native_settings=None):
     if route == "native":
         cfg = dict(baseline["routes"]["schwarz_native"]["config"], cells=cells)
         cfg.update(native_settings or {})
+        if shifted:
+            cfg["phase_x"] = 0.125
         row["config"] = cfg
         mesh = generate("schwarz_native", cfg, baseline["limits"])
         path = folder / "volume.vtkhdf"
@@ -179,27 +193,30 @@ def run(route, cells, folder, row, *, native_settings=None):
             row,
             baseline["limits"]["max_nodes_or_elements"],
             single_pass=historical,
+            repair_hmax=repair_hmax,
         )
         if historical:
             source = pv.read(path)
             if max(source.n_points, source.n_cells) > baseline["limits"]["max_nodes_or_elements"]:
                 raise RuntimeError("Single-pass MMG output exceeds the mesh budget before repair")
+            repair_start = time.perf_counter()
             repaired = repaired_grid(source, row)
+            row["repair_seconds"] = time.perf_counter() - repair_start
             path = folder / "repaired.vtu"
             repaired.save(path)
     grid = pv.read(path)
     row["generation_and_io_seconds"] = time.perf_counter() - start
     row["mesh_sha256"] = digest(path)
     start = time.perf_counter()
-    geometry = audit(grid, "schwarz", baseline)
+    geometry = audit(grid, "schwarz-shifted" if shifted else "schwarz", baseline)
     row.update(geometry=geometry, audit_seconds=time.perf_counter() - start)
     if not geometry["sampled_admission"]:
         row["status"] = "geometry-rejected"
         return
-    solve_admitted(grid, geometry, row)
+    solve_admitted(grid, geometry, row, solver_factory=solver_factory)
 
 
-def solve_admitted(grid, geometry, row):
+def solve_admitted(grid, geometry, row, *, solver_factory=AuditedCG):
     """Solve six strain loads and their stress-controlled checks on an admitted grid.
 
     Raises:
@@ -210,6 +227,10 @@ def solve_admitted(grid, geometry, row):
         raise ValueError("The fixed interior stress probe is missing")
     row["stress_probe_xyz"] = PROBE.tolist()
     mesh = solver_input(grid, geometry["minimum_quality"])
+    mesh_hash = hashlib.sha256()
+    mesh_hash.update(np.ascontiguousarray(mesh.points, dtype="<f8").tobytes())
+    mesh_hash.update(np.ascontiguousarray(mesh.tetrahedra, dtype="<i8").tobytes())
+    row["solver_mesh_sha256"] = mesh_hash.hexdigest()
     assembly_seconds = 0.0
     original_assembly = fd.Assembly.assemble_global_mat
 
@@ -222,7 +243,7 @@ def solve_admitted(grid, geometry, row):
             assembly_seconds += time.perf_counter() - begin
 
     with patch.object(fd.Assembly, "assemble_global_mat", timed_assembly):
-        fea = homogenize(mesh, stress_probe_cell=probe)
+        fea = homogenize(mesh, stress_probe_cell=probe, solver_factory=solver_factory)
     row["assembly_seconds"] = assembly_seconds
     row["fea"] = fea
     ref = np.array(json.loads(REFERENCE.read_text())["stiffness"])
