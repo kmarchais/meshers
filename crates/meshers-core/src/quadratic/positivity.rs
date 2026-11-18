@@ -34,27 +34,36 @@ fn bound(corners: &[Matrix; 4], guard: f64, depth: usize, budget: &mut usize) ->
     // Each row is a convex combination of its four corner rows. By
     // multilinearity the determinant is a convex combination of these 64
     // triple products (even when the barycentric weights are shared).
-    if corners.iter().all(|b| {
-        corners.iter().all(|c| {
-            let normal = cross(b[1], c[2]);
-            corners.iter().all(|a| dot(a[0], normal) > guard)
-        })
-    }) {
+    let mut mixed = [[[0.; 4]; 4]; 4];
+    for (b, jb) in corners.iter().enumerate() {
+        for (c, jc) in corners.iter().enumerate() {
+            let normal = cross(jb[1], jc[2]);
+            for (a, ja) in corners.iter().enumerate() {
+                mixed[a][b][c] = dot(ja[0], normal);
+            }
+        }
+    }
+    if mixed.iter().flatten().flatten().all(|&d| d > guard) {
         return true;
     }
     if depth >= 20 {
         return false;
     }
+    // Split where the determinant bound varies. Shear can change the matrix
+    // substantially along an edge while leaving every triple product unchanged.
     let mut edge = (0, 1);
     let mut largest = 0.;
     for i in 0..4 {
         for j in 0..i {
-            let difference = corners[i]
-                .iter()
-                .flatten()
-                .zip(corners[j].iter().flatten())
-                .map(|(a, b)| (a - b).abs())
-                .fold(0., f64::max);
+            let mut difference: f64 = 0.;
+            for a in 0..4 {
+                for b in 0..4 {
+                    difference = difference
+                        .max((mixed[i][a][b] - mixed[j][a][b]).abs())
+                        .max((mixed[a][i][b] - mixed[a][j][b]).abs())
+                        .max((mixed[a][b][i] - mixed[a][b][j]).abs());
+                }
+            }
             if difference > largest {
                 largest = difference;
                 edge = (i, j);
