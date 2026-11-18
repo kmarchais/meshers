@@ -9,7 +9,7 @@ Meshers generates and adapts meshes for finite element analysis. The primary wor
 - For an FEA claim, state the load, material, boundary conditions, element formulation, reference solution and error tolerance. Compare assembly and solve costs as well as generation time and peak memory. Keep failed and over-budget cases in the results.
 - Compare the same physical geometry on both routes. Identify the exact Microgen backend, seed, repair steps and solver settings. A fixed-count comparison answers a different question from a fixed-error comparison. Label each result accordingly.
 
-Capture CPU model, logical CPU count, physical RAM, OS and architecture when a benchmark runs. Publish dated configuration snapshots and numerical settings. Keep hostnames, local account paths and queue identifiers private. Record a new snapshot after a configuration change.
+Run the release fixtures and comparative FEA studies on every available, compatible configuration. Record any pending or unsupported runs alongside the completed ones. Capture CPU model, logical CPU count, physical RAM, OS and architecture when a benchmark runs. Publish dated configuration snapshots and numerical settings. Keep hostnames, local account paths and queue identifiers private. Record a new snapshot after a configuration change.
 
 ## How to make changes
 
