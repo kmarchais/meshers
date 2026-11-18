@@ -40,3 +40,16 @@ The table gives the largest sampled reference-to-mesh wall distance and the lowe
 | Meshers | 24 | 0.000721 | 0.4607 | 2.304% |
 
 Doubling native background resolution from 12 to 24 increased the final Tet4 count from 35,192 to 36,433. With the adaptive sizing parameters fixed, that sweep gave little evidence about how stiffness converges with increasing degrees of freedom. The Microgen reverse-distance failures independently confirm a wall mismatch even with the conservative forward bound removed from consideration. The next comparison should measure the VTK seed and each MMG pass separately, then vary the native size controls until the tested meshes span the stiffness target. [Series summary](schwarz-20261118/summary.json) · [All 27 worker records](schwarz-20261118/)
+
+## Configuration replays
+
+Across 4 configurations, 36 native workers completed the geometry checks and solves but missed the stiffness target. Geometry rejected 72 Microgen volumes before FEA. No tested level qualified for a timing at 1%. Each raw archive contains 27 worker records, including failed geometry checks. [Hardware, OS and run dates](configurations-20261118/README.md)
+
+| CPU and raw workers | Microgen rejected by geometry | Native above target | Qualifying levels | Smallest native discrepancy |
+| --- | ---: | ---: | ---: | ---: |
+| [Apple M4](configurations-20261118/apple-m4-091916z-a3fb9327/schwarz.json) | 18 | 9 | 0/9 | 2.283% |
+| [Core i7-10750H](configurations-20261118/core-i7-10750h-091913z-4f4ba086/schwarz.json) | 18 | 9 | 0/9 | 2.336% |
+| [Core i7-12700H](configurations-20261118/core-i7-12700h-091916z-2ebf2eee/schwarz.json) | 18 | 9 | 0/9 | 2.304% |
+| [Ryzen 7 7730U](configurations-20261118/ryzen-7-7730u-091912z-fb87984d/schwarz.json) | 18 | 9 | 0/9 | 2.336% |
+
+On the two Linux configurations, 54 initial workers exited during the Gmsh import because the OpenGL utility library was missing. Their records are in `first_attempt`. The measured retries used the distribution's libGLU and libOpenGL in the benchmark environment. Linux wheel installations also need execute permission on the MMG command-line programs.

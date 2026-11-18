@@ -1,6 +1,7 @@
 """Measure one live Schwarz P workflow at a declared effective-stiffness target."""
 
 import argparse
+import datetime as dt
 import hashlib
 import inspect
 import json
@@ -211,6 +212,7 @@ def main():
     args.output.mkdir()
     hardware = hardware_snapshot()
     row = {
+        "recorded_at": dt.datetime.now(dt.timezone.utc).isoformat(),
         "route": args.route,
         "cells": args.cells,
         "platform": hardware["platform"],

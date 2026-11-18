@@ -6,11 +6,13 @@ Start with the first open task under **Next**. Check a task when its evidence is
 
 - [x] Check mapped-cap tolerance and final element quality after fitting. Add regression cases for a translated component and a folded Tet10. [PR #9](https://github.com/kmarchais/meshers/pull/9)
 - [x] Freeze and replay uniform Gyroid, adaptive Gyroid and Schwarz P Tet4 on the released wheel. Test directional sizing on an analytic cap. [PR #9](https://github.com/kmarchais/meshers/pull/9)
-- [x] Repeat the three PR #9 cases on four CPU configurations. All 36 case runs passed their solver checks. [Cross-platform results](demos/solver/release-wheel/fleet-20261118/README.md)
-- [x] Audit exported walls and caps in both directions, material samples and periodic faces. All three frozen meshes passed. [PR #10](https://github.com/kmarchais/meshers/pull/10)
-- [x] Run the three-way Schwarz P study at a 1% stiffness target. All 27 workers returned results. The best native discrepancy was 2.304%. All 18 Microgen meshes failed the wall-distance check before FEA. [PR #11](https://github.com/kmarchais/meshers/pull/11)
+- [x] Run the Tet4 solver replay and all 11 release fixtures on four CPU configurations. All 36 full solver replays and 132 meshing samples passed. [Dated measurements](demos/solver/release-wheel/configurations-20261118/README.md)
+- [x] Audit exported walls and caps in both directions, material samples and periodic faces. All 12 exported meshes passed on the four configurations. [PR #10](https://github.com/kmarchais/meshers/pull/10)
+- [x] Run the three-way Schwarz P study at a 1% stiffness target. Across four configurations, 36 native workers solved above the target and 72 Microgen workers failed geometry before FEA. [PR #11](https://github.com/kmarchais/meshers/pull/11)
 
 ## Next
+
+- [ ] Complete the same four studies on the fifth configuration and add its raw records to the dated matrix.
 
 - [ ] **Locate the Microgen wall error.** At resolution 24, audit the VTK seed and each MMG pass. Record the first failing stage and worst location. Replay the historical single-pass repair as a control.
 - [ ] **Bracket the native 1% stiffness target.** Vary adaptive size or tolerance, measure free DOFs and local stress, and compare with curved Tet10. Record any target that remains out of reach within the 250,000-node and element limits.
