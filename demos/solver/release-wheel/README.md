@@ -29,6 +29,8 @@ The original Microgen comparison driver, dependency manifests and settings are o
 python experiments/adaptive/mesh_only_comparison.py --run schwarz-replay --case schwarz-solid --strengthened --warmups 1 --repetitions 5 --select actual-default,actual-explicit-tuned
 ```
 
+The [cross-platform replay](fleet-20261118/README.md) gives three repeats per case on Lenovo, Mini, MacBook Pro and G3, with raw timings and stiffness tensors.
+
 ## Windows release-wheel run, 17 November 2026
 
 On OMEN, job 5202 ran three cases sequentially with one numerical thread. Each passed six prescribed-strain loads and six stress-controlled verification solves. The largest recomputed relative linear residual across all 36 systems was 1.07e-12. The export test also passed on retry with a writable temporary directory.
