@@ -1,6 +1,7 @@
 """Generate, export and audit a frozen Meshers Tet4 case without running the solver."""
 
 import argparse
+import datetime as dt
 import hashlib
 import json
 from importlib.metadata import version
@@ -26,6 +27,7 @@ def main():
         raise RuntimeError("Expected the pinned release wheel")
     args.output.mkdir()
     row = {
+        "recorded_at": dt.datetime.now(dt.timezone.utc).isoformat(),
         "case": args.case,
         "hardware": hardware_snapshot(),
         "versions": {pkg: version(pkg) for pkg in ("meshers", "vtk", "pyvista", "numpy", "scipy")},
