@@ -9,7 +9,7 @@ import re
 import statistics
 from pathlib import Path
 
-from tools.performance_gate import CASES, QUALITY, RELEASE_CASES, case_regressions
+from tools.performance_gate import CASES, FIXTURE_VERSION, QUALITY, RELEASE_CASES, case_regressions
 
 
 def validate(data):
@@ -20,17 +20,20 @@ def validate(data):
     """
     if data.get("schema_version") != 2 or not data.get("complete"):
         raise ValueError("Expected a complete schema-2 benchmark")
+    if data.get("fixture_version") not in {2, 3, FIXTURE_VERSION}:
+        raise ValueError("Unsupported benchmark fixture version")
     expected = {"pr": CASES, "release": RELEASE_CASES}.get(data.get("suite"), ())
     if set(data.get("cases", {})) != set(expected) or data.get("measured_pairs", 0) < 3:
         raise ValueError("Incomplete fixture suite or insufficient repetitions")
     for ref in ("base_ref", "head_ref", "script_sha256"):
         if not re.fullmatch(r"[a-f0-9]{40,64}", data.get(ref, "")):
             raise ValueError(f"Missing immutable source identity: {ref}")
-    for case in data["cases"].values():
-        validate_case(case, data["measured_pairs"])
+    for name, case in data["cases"].items():
+        needs_cap = name == "mapped_intersection" and data["fixture_version"] == FIXTURE_VERSION
+        validate_case(case, data["measured_pairs"], needs_cap=needs_cap)
 
 
-def validate_case(case, measured_pairs):
+def validate_case(case, measured_pairs, *, needs_cap):
     """Check raw samples, summary medians and the recorded regression verdict.
 
     Raises:
@@ -52,9 +55,10 @@ def validate_case(case, measured_pairs):
                 "nodes",
                 "volume",
                 "surface_error",
+                *(("mapped_cap_error",) if needs_cap else ()),
                 *(f"quality_{q}" for q in QUALITY),
             )
-            if any(not math.isfinite(row[k]) or row[k] < 0 for k in required):
+            if any(k not in row or not math.isfinite(row[k]) or row[k] < 0 for k in required):
                 raise ValueError("Invalid numeric measurement")
         if any(
             case["medians"][label][key] != statistics.median(r[key] for r in rows)
@@ -214,6 +218,7 @@ def archive(source, label, directory):
         raise ValueError("Use a plain version or release-candidate label")
     payload = source.read_bytes()
     data = json.loads(payload)
+    data.pop("runner", None)  # Early records included the CI or local hostname.
     validate(data)
     directory.mkdir(parents=True, exist_ok=True)
     path = directory / f"{label}.json"

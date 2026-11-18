@@ -1,0 +1,1822 @@
+{
+  "cpu": "Apple M4",
+  "platform": "macOS-26.5.1-arm64-arm-64bit",
+  "architecture": "arm64",
+  "python": "3.12.9",
+  "solver_packages": {
+    "meshers": "0.2.1",
+    "fedoo": "1.0.0b2",
+    "numpy": "2.5.3",
+    "scipy": "1.18.1"
+  },
+  "inputs": {
+    "release_wheel_comparison.py": "001eb9a2f4be9e3196248d8b342021672438e89079220413e2886da3c9e87776",
+    "fedoo_homogenization.py": "4bd9fe93eb5a99a7e0df2e44caf77e2c14dc96eb1f3e6b2e0e9f77946c321b53",
+    "release-wheel/baseline.json": "356d6e1e4436da7747cca8675fb93c5f444cb01f994efb296e7fe1a418300f65"
+  },
+  "threadpools": [],
+  "case_order": [
+    "r1-gyroid_uniform",
+    "r1-gyroid_adaptive",
+    "r1-schwarz_native",
+    "r2-gyroid_adaptive",
+    "r2-schwarz_native",
+    "r2-gyroid_uniform",
+    "r3-schwarz_native",
+    "r3-gyroid_uniform",
+    "r3-gyroid_adaptive"
+  ],
+  "runs": {
+    "r1-gyroid_uniform": {
+      "case": "gyroid_uniform",
+      "config": {
+        "name": "meshers-tet4",
+        "arm": "meshers",
+        "cells": 24,
+        "order": 1,
+        "adapt": false,
+        "tolerance": 1,
+        "periodic_trace": true,
+        "declared_unit_cell": true,
+        "max_length": 0.1,
+        "min_length": 0.01,
+        "gradation": 0.3,
+        "adapt_iterations": 4
+      },
+      "versions": {
+        "meshers": "0.2.1",
+        "fedoo": "1.0.0b2",
+        "numpy": "2.5.3",
+        "scipy": "1.18.1"
+      },
+      "baseline_sha256": "356d6e1e4436da7747cca8675fb93c5f444cb01f994efb296e7fe1a418300f65",
+      "extension_sha256": "db7be311b020ed3453d041c08d390bb360834e285daa9a37746da325331c0115",
+      "platform": "macOS-26.5.1-arm64-arm-64bit",
+      "release_wheel_comparative_admission": "pending independent two-sided distance audit",
+      "generation_seconds": 0.4083782499656081,
+      "nodes": 17647,
+      "elements": 72757,
+      "volume": 0.35711746974345615,
+      "relative_volume_error": 0.0018910844817081607,
+      "fea": {
+        "tetrahedra": 72757,
+        "points": 17647,
+        "solid_volume_fraction": 0.35711746974345615,
+        "minimum_quality": 0.15025427652458323,
+        "periodic_pair_counts": [
+          347,
+          349,
+          347
+        ],
+        "stiffness_engineering_voigt": [
+          [
+            0.4953211036648669,
+            0.19147539016377496,
+            0.19147343035718717,
+            2.9065823121006593e-05,
+            8.288008194306266e-06,
+            -2.1147887565989705e-05
+          ],
+          [
+            0.19147539016332676,
+            0.4953687650171821,
+            0.19142428550594673,
+            -4.802895448575188e-06,
+            -5.3324767311814325e-06,
+            1.0183278510073806e-05
+          ],
+          [
+            0.1914734303566771,
+            0.1914242855064815,
+            0.4953664535605772,
+            -6.165630037379817e-06,
+            1.848302681845498e-05,
+            -9.679419518860877e-06
+          ],
+          [
+            2.9065823666019498e-05,
+            -4.802895603957317e-06,
+            -6.1656294859635745e-06,
+            0.17225363712307784,
+            7.001194678034398e-06,
+            9.596127645476567e-06
+          ],
+          [
+            8.28800802835524e-06,
+            -5.332476532779593e-06,
+            1.8483028123700077e-05,
+            7.0011948112514e-06,
+            0.17225861924935645,
+            7.34360289026938e-06
+          ],
+          [
+            -2.114788732137459e-05,
+            1.0183279019327937e-05,
+            -9.679419787757574e-06,
+            9.59612765794217e-06,
+            7.3436029012403665e-06,
+            0.1722106653577628
+          ]
+        ],
+        "stiffness_eigenvalues": [
+          0.17220794812706314,
+          0.17224896723953667,
+          0.1722659937517521,
+          0.30384549321862075,
+          0.3039433296206569,
+          0.8782675120151935
+        ],
+        "young_modulus_xyz": [
+          0.3885567313215906,
+          0.3886357259972269,
+          0.3886349922441549
+        ],
+        "poisson_xy_xz_yz": [
+          0.27879755413356666,
+          0.27879321706260807,
+          0.27864444534045774
+        ],
+        "hill_mandel_relative_error": 1.8327028077915285e-12,
+        "reaction_stress_relative_difference": 6.174087135331404e-12,
+        "stiffness_symmetry_relative_error": 2.6073645766135698e-12,
+        "automatic_homogenization_relative_difference": 1.84511072108256e-12,
+        "strain_controlled_loads": [
+          {
+            "load": "E_xx",
+            "periodic_jump_error": 0.0,
+            "periodic_force_balance_relative_error": 5.390759892522724e-11,
+            "iterations": 747,
+            "relative_residual": 9.574375369706727e-13,
+            "free_dofs": 49941
+          },
+          {
+            "load": "E_yy",
+            "periodic_jump_error": 0.0,
+            "periodic_force_balance_relative_error": 6.041352631628102e-11,
+            "iterations": 743,
+            "relative_residual": 9.900044206881071e-13,
+            "free_dofs": 49941
+          },
+          {
+            "load": "E_zz",
+            "periodic_jump_error": 0.0,
+            "periodic_force_balance_relative_error": 5.091399791917235e-11,
+            "iterations": 750,
+            "relative_residual": 9.701688298490483e-13,
+            "free_dofs": 49941
+          },
+          {
+            "load": "E_xy",
+            "periodic_jump_error": 0.0,
+            "periodic_force_balance_relative_error": 3.790173159023134e-11,
+            "iterations": 768,
+            "relative_residual": 9.713344927045619e-13,
+            "free_dofs": 49941
+          },
+          {
+            "load": "E_xz",
+            "periodic_jump_error": 0.0,
+            "periodic_force_balance_relative_error": 3.698478975084033e-11,
+            "iterations": 769,
+            "relative_residual": 9.86749026127041e-13,
+            "free_dofs": 49941
+          },
+          {
+            "load": "E_yz",
+            "periodic_jump_error": 0.0,
+            "periodic_force_balance_relative_error": 3.857248441396473e-11,
+            "iterations": 765,
+            "relative_residual": 9.639358999849535e-13,
+            "free_dofs": 49941
+          }
+        ],
+        "automatic_stress_controlled_solves": [
+          {
+            "iterations": 948,
+            "relative_residual": 9.353279453194737e-13,
+            "free_dofs": 49947
+          },
+          {
+            "iterations": 952,
+            "relative_residual": 1.0208038904666739e-12,
+            "free_dofs": 49947
+          },
+          {
+            "iterations": 949,
+            "relative_residual": 8.76441559118458e-13,
+            "free_dofs": 49947
+          },
+          {
+            "iterations": 953,
+            "relative_residual": 9.871445877523664e-13,
+            "free_dofs": 49947
+          },
+          {
+            "iterations": 958,
+            "relative_residual": 9.583985865340187e-13,
+            "free_dofs": 49947
+          },
+          {
+            "iterations": 947,
+            "relative_residual": 9.490818543400116e-13,
+            "free_dofs": 49947
+          }
+        ],
+        "seconds": 10.03192958299769
+      },
+      "worst_relative_energy_change_from_archive": 4.769721781432818e-05,
+      "status": "solved"
+    },
+    "r1-gyroid_adaptive": {
+      "case": "gyroid_adaptive",
+      "config": {
+        "name": "native-gyroid-shared-adaptive24-control",
+        "arm": "meshers",
+        "cells": 24,
+        "order": 1,
+        "adapt": true,
+        "tolerance": 0.002,
+        "periodic_trace": true,
+        "declared_unit_cell": true,
+        "max_length": 0.1,
+        "min_length": 0.002,
+        "gradation": 0.6,
+        "adapt_iterations": 4,
+        "adapt_tolerance": 0.0018,
+        "optimization_passes": 1
+      },
+      "versions": {
+        "meshers": "0.2.1",
+        "fedoo": "1.0.0b2",
+        "numpy": "2.5.3",
+        "scipy": "1.18.1"
+      },
+      "baseline_sha256": "356d6e1e4436da7747cca8675fb93c5f444cb01f994efb296e7fe1a418300f65",
+      "extension_sha256": "db7be311b020ed3453d041c08d390bb360834e285daa9a37746da325331c0115",
+      "platform": "macOS-26.5.1-arm64-arm-64bit",
+      "release_wheel_comparative_admission": "pending independent two-sided distance audit",
+      "generation_seconds": 0.782675750029739,
+      "nodes": 9434,
+      "elements": 34854,
+      "volume": 0.35713167494304215,
+      "relative_volume_error": 0.0019309370905113976,
+      "fea": {
+        "tetrahedra": 34854,
+        "points": 9434,
+        "solid_volume_fraction": 0.35713167494304215,
+        "minimum_quality": 0.23723647994247005,
+        "periodic_pair_counts": [
+          270,
+          270,
+          265
+        ],
+        "stiffness_engineering_voigt": [
+          [
+            0.5023198394031809,
+            0.1907460016749238,
+            0.19074177243482573,
+            4.8393822226385036e-05,
+            -7.198389382016849e-05,
+            4.384214765348084e-06
+          ],
+          [
+            0.1907460016748676,
+            0.502384717012202,
+            0.19069709447991515,
+            -3.312966250453311e-05,
+            -2.507777235463456e-05,
+            -1.1392146036281321e-05
+          ],
+          [
+            0.19074177243466284,
+            0.1906970944800466,
+            0.5023272428401788,
+            8.359565866404091e-05,
+            7.10025114574847e-06,
+            -3.904278589512097e-05
+          ],
+          [
+            4.83938220961087e-05,
+            -3.3129662508333235e-05,
+            8.359565851898344e-05,
+            0.1771961211678713,
+            2.0126280307781547e-05,
+            -1.823582340587528e-05
+          ],
+          [
+            -7.198389338398968e-05,
+            -2.5077771891001025e-05,
+            7.100251116481732e-06,
+            2.012628028998602e-05,
+            0.17721443382991783,
+            6.841915542494754e-05
+          ],
+          [
+            4.384214786471099e-06,
+            -1.1392145335668534e-05,
+            -3.904278573481907e-05,
+            -1.8235823349346317e-05,
+            6.841915551528444e-05,
+            0.17721244277686224
+          ]
+        ],
+        "stiffness_eigenvalues": [
+          0.1771332780535583,
+          0.17720773945455173,
+          0.17728188678634266,
+          0.31157017300396,
+          0.31166119700513,
+          0.8838005227266699
+        ],
+        "young_modulus_xyz": [
+          0.39732573826437856,
+          0.39741706339164745,
+          0.39736688502840933
+        ],
+        "poisson_xy_xz_yz": [
+          0.27520403846603325,
+          0.27524119847393536,
+          0.27510384424585405
+        ],
+        "hill_mandel_relative_error": 1.1650156665142455e-12,
+        "reaction_stress_relative_difference": 3.911505574331171e-12,
+        "stiffness_symmetry_relative_error": 1.3809102183225576e-12,
+        "automatic_homogenization_relative_difference": 1.1843925774110578e-12,
+        "strain_controlled_loads": [
+          {
+            "load": "E_xx",
+            "periodic_jump_error": 0.0,
+            "periodic_force_balance_relative_error": 3.980382638418457e-11,
+            "iterations": 573,
+            "relative_residual": 9.379835055330487e-13,
+            "free_dofs": 25974
+          },
+          {
+            "load": "E_yy",
+            "periodic_jump_error": 0.0,
+            "periodic_force_balance_relative_error": 3.915564517751961e-11,
+            "iterations": 572,
+            "relative_residual": 9.614401252413221e-13,
+            "free_dofs": 25974
+          },
+          {
+            "load": "E_zz",
+            "periodic_jump_error": 0.0,
+            "periodic_force_balance_relative_error": 4.155446604037332e-11,
+            "iterations": 575,
+            "relative_residual": 9.62318559844938e-13,
+            "free_dofs": 25974
+          },
+          {
+            "load": "E_xy",
+            "periodic_jump_error": 0.0,
+            "periodic_force_balance_relative_error": 2.6713638197537335e-11,
+            "iterations": 594,
+            "relative_residual": 9.22290244537744e-13,
+            "free_dofs": 25974
+          },
+          {
+            "load": "E_xz",
+            "periodic_jump_error": 0.0,
+            "periodic_force_balance_relative_error": 2.7085651828973934e-11,
+            "iterations": 595,
+            "relative_residual": 9.471830113418663e-13,
+            "free_dofs": 25974
+          },
+          {
+            "load": "E_yz",
+            "periodic_jump_error": 0.0,
+            "periodic_force_balance_relative_error": 2.7359311230571293e-11,
+            "iterations": 596,
+            "relative_residual": 9.821727323862475e-13,
+            "free_dofs": 25974
+          }
+        ],
+        "automatic_stress_controlled_solves": [
+          {
+            "iterations": 731,
+            "relative_residual": 9.929218575235005e-13,
+            "free_dofs": 25980
+          },
+          {
+            "iterations": 725,
+            "relative_residual": 9.976118902994434e-13,
+            "free_dofs": 25980
+          },
+          {
+            "iterations": 728,
+            "relative_residual": 9.69532429395487e-13,
+            "free_dofs": 25980
+          },
+          {
+            "iterations": 730,
+            "relative_residual": 9.99412304544074e-13,
+            "free_dofs": 25980
+          },
+          {
+            "iterations": 741,
+            "relative_residual": 9.794270349064767e-13,
+            "free_dofs": 25980
+          },
+          {
+            "iterations": 737,
+            "relative_residual": 9.863615270150917e-13,
+            "free_dofs": 25980
+          }
+        ],
+        "seconds": 4.316877958015539
+      },
+      "worst_relative_energy_change_from_archive": 7.26310848068335e-05,
+      "status": "solved"
+    },
+    "r1-schwarz_native": {
+      "case": "schwarz_native",
+      "config": {
+        "name": "meshers-tet4-adaptive",
+        "arm": "meshers",
+        "cells": 16,
+        "order": 1,
+        "adapt": true,
+        "tolerance": 1,
+        "min_length": 0.002,
+        "adapt_tolerance": 0.001
+      },
+      "versions": {
+        "meshers": "0.2.1",
+        "fedoo": "1.0.0b2",
+        "numpy": "2.5.3",
+        "scipy": "1.18.1"
+      },
+      "baseline_sha256": "356d6e1e4436da7747cca8675fb93c5f444cb01f994efb296e7fe1a418300f65",
+      "extension_sha256": "db7be311b020ed3453d041c08d390bb360834e285daa9a37746da325331c0115",
+      "platform": "macOS-26.5.1-arm64-arm-64bit",
+      "release_wheel_comparative_admission": "pending independent two-sided distance audit",
+      "generation_seconds": 0.5860483329743147,
+      "nodes": 8701,
+      "elements": 35994,
+      "volume": 0.5000072546587672,
+      "relative_volume_error": 1.4509317534328048e-05,
+      "fea": {
+        "tetrahedra": 35994,
+        "points": 8701,
+        "solid_volume_fraction": 0.5000072546587672,
+        "minimum_quality": 0.4260734053344928,
+        "periodic_pair_counts": [
+          346,
+          336,
+          336
+        ],
+        "stiffness_engineering_voigt": [
+          [
+            0.8049634502988491,
+            0.1442166973151275,
+            0.14420237879998854,
+            -3.383322394156789e-05,
+            -4.329701278547268e-05,
+            -1.5546504758496485e-05
+          ],
+          [
+            0.14421669731504255,
+            0.804921907952015,
+            0.1441865928813088,
+            -4.1791233134291955e-05,
+            -1.2492697912874123e-06,
+            -4.0885089576784486e-05
+          ],
+          [
+            0.14420237880089554,
+            0.1441865928813165,
+            0.804959512946419,
+            -1.5255505886166603e-05,
+            -5.389233930194616e-05,
+            -3.623535371849757e-05
+          ],
+          [
+            -3.383322736903498e-05,
+            -4.179123241713687e-05,
+            -1.525550159230686e-05,
+            0.19587564045547842,
+            -1.3400132582509884e-05,
+            -3.7646758737053897e-06
+          ],
+          [
+            -4.329700867485532e-05,
+            -1.2492673079203779e-06,
+            -5.389233793432393e-05,
+            -1.3400132405478583e-05,
+            0.19582995346666404,
+            -1.3989877998219902e-05
+          ],
+          [
+            -1.5546503919268147e-05,
+            -4.088508802697624e-05,
+            -3.623535113207498e-05,
+            -3.764678172033178e-06,
+            -1.398987646939516e-05,
+            0.19583198557071615
+          ]
+        ],
+        "stiffness_eigenvalues": [
+          0.19581437740318253,
+          0.1958439096821562,
+          0.19587927763643279,
+          0.6607257815944618,
+          0.6607670235071751,
+          1.0933520808667327
+        ],
+        "young_modulus_xyz": [
+          0.7611413087101828,
+          0.7611062475180438,
+          0.7611479938983948
+        ],
+        "poisson_xy_xz_yz": [
+          0.15195424275239153,
+          0.15192391669160432,
+          0.1519025888098038
+        ],
+        "hill_mandel_relative_error": 5.938772337843701e-12,
+        "reaction_stress_relative_difference": 7.53185582280969e-12,
+        "stiffness_symmetry_relative_error": 8.227646034106796e-12,
+        "automatic_homogenization_relative_difference": 5.973332442265564e-12,
+        "strain_controlled_loads": [
+          {
+            "load": "E_xx",
+            "periodic_jump_error": 0.0,
+            "periodic_force_balance_relative_error": 4.172834358875999e-11,
+            "iterations": 447,
+            "relative_residual": 9.179568769833179e-13,
+            "free_dofs": 23148
+          },
+          {
+            "load": "E_yy",
+            "periodic_jump_error": 0.0,
+            "periodic_force_balance_relative_error": 4.305602717014559e-11,
+            "iterations": 444,
+            "relative_residual": 9.594109786634006e-13,
+            "free_dofs": 23148
+          },
+          {
+            "load": "E_zz",
+            "periodic_jump_error": 0.0,
+            "periodic_force_balance_relative_error": 3.7919762030366707e-11,
+            "iterations": 442,
+            "relative_residual": 8.715087238190667e-13,
+            "free_dofs": 23148
+          },
+          {
+            "load": "E_xy",
+            "periodic_jump_error": 5.551115123125783e-17,
+            "periodic_force_balance_relative_error": 3.5652134950781997e-11,
+            "iterations": 451,
+            "relative_residual": 9.590155964332242e-13,
+            "free_dofs": 23148
+          },
+          {
+            "load": "E_xz",
+            "periodic_jump_error": 5.551115123125783e-17,
+            "periodic_force_balance_relative_error": 3.5576037128881074e-11,
+            "iterations": 459,
+            "relative_residual": 9.80718946346897e-13,
+            "free_dofs": 23148
+          },
+          {
+            "load": "E_yz",
+            "periodic_jump_error": 0.0,
+            "periodic_force_balance_relative_error": 3.518913173581958e-11,
+            "iterations": 453,
+            "relative_residual": 9.900432541829085e-13,
+            "free_dofs": 23148
+          }
+        ],
+        "automatic_stress_controlled_solves": [
+          {
+            "iterations": 577,
+            "relative_residual": 8.789640200847212e-13,
+            "free_dofs": 23154
+          },
+          {
+            "iterations": 583,
+            "relative_residual": 1.0274105210304023e-12,
+            "free_dofs": 23154
+          },
+          {
+            "iterations": 579,
+            "relative_residual": 9.945266923801502e-13,
+            "free_dofs": 23154
+          },
+          {
+            "iterations": 588,
+            "relative_residual": 9.078164798008256e-13,
+            "free_dofs": 23154
+          },
+          {
+            "iterations": 594,
+            "relative_residual": 8.549309475988923e-13,
+            "free_dofs": 23154
+          },
+          {
+            "iterations": 585,
+            "relative_residual": 9.470700544189963e-13,
+            "free_dofs": 23154
+          }
+        ],
+        "seconds": 3.5011195830302313
+      },
+      "status": "solved"
+    },
+    "r2-gyroid_adaptive": {
+      "case": "gyroid_adaptive",
+      "config": {
+        "name": "native-gyroid-shared-adaptive24-control",
+        "arm": "meshers",
+        "cells": 24,
+        "order": 1,
+        "adapt": true,
+        "tolerance": 0.002,
+        "periodic_trace": true,
+        "declared_unit_cell": true,
+        "max_length": 0.1,
+        "min_length": 0.002,
+        "gradation": 0.6,
+        "adapt_iterations": 4,
+        "adapt_tolerance": 0.0018,
+        "optimization_passes": 1
+      },
+      "versions": {
+        "meshers": "0.2.1",
+        "fedoo": "1.0.0b2",
+        "numpy": "2.5.3",
+        "scipy": "1.18.1"
+      },
+      "baseline_sha256": "356d6e1e4436da7747cca8675fb93c5f444cb01f994efb296e7fe1a418300f65",
+      "extension_sha256": "db7be311b020ed3453d041c08d390bb360834e285daa9a37746da325331c0115",
+      "platform": "macOS-26.5.1-arm64-arm-64bit",
+      "release_wheel_comparative_admission": "pending independent two-sided distance audit",
+      "generation_seconds": 0.8087184579926543,
+      "nodes": 9434,
+      "elements": 34854,
+      "volume": 0.35713167494304215,
+      "relative_volume_error": 0.0019309370905113976,
+      "fea": {
+        "tetrahedra": 34854,
+        "points": 9434,
+        "solid_volume_fraction": 0.35713167494304215,
+        "minimum_quality": 0.23723647994247005,
+        "periodic_pair_counts": [
+          270,
+          270,
+          265
+        ],
+        "stiffness_engineering_voigt": [
+          [
+            0.5023198394031809,
+            0.1907460016749238,
+            0.19074177243482573,
+            4.8393822226385036e-05,
+            -7.198389382016849e-05,
+            4.384214765348084e-06
+          ],
+          [
+            0.1907460016748676,
+            0.502384717012202,
+            0.19069709447991515,
+            -3.312966250453311e-05,
+            -2.507777235463456e-05,
+            -1.1392146036281321e-05
+          ],
+          [
+            0.19074177243466284,
+            0.1906970944800466,
+            0.5023272428401788,
+            8.359565866404091e-05,
+            7.10025114574847e-06,
+            -3.904278589512097e-05
+          ],
+          [
+            4.83938220961087e-05,
+            -3.3129662508333235e-05,
+            8.359565851898344e-05,
+            0.1771961211678713,
+            2.0126280307781547e-05,
+            -1.823582340587528e-05
+          ],
+          [
+            -7.198389338398968e-05,
+            -2.5077771891001025e-05,
+            7.100251116481732e-06,
+            2.012628028998602e-05,
+            0.17721443382991783,
+            6.841915542494754e-05
+          ],
+          [
+            4.384214786471099e-06,
+            -1.1392145335668534e-05,
+            -3.904278573481907e-05,
+            -1.8235823349346317e-05,
+            6.841915551528444e-05,
+            0.17721244277686224
+          ]
+        ],
+        "stiffness_eigenvalues": [
+          0.1771332780535583,
+          0.17720773945455173,
+          0.17728188678634266,
+          0.31157017300396,
+          0.31166119700513,
+          0.8838005227266699
+        ],
+        "young_modulus_xyz": [
+          0.39732573826437856,
+          0.39741706339164745,
+          0.39736688502840933
+        ],
+        "poisson_xy_xz_yz": [
+          0.27520403846603325,
+          0.27524119847393536,
+          0.27510384424585405
+        ],
+        "hill_mandel_relative_error": 1.1650156665142455e-12,
+        "reaction_stress_relative_difference": 3.911505574331171e-12,
+        "stiffness_symmetry_relative_error": 1.3809102183225576e-12,
+        "automatic_homogenization_relative_difference": 1.1843925774110578e-12,
+        "strain_controlled_loads": [
+          {
+            "load": "E_xx",
+            "periodic_jump_error": 0.0,
+            "periodic_force_balance_relative_error": 3.980382638418457e-11,
+            "iterations": 573,
+            "relative_residual": 9.379835055330487e-13,
+            "free_dofs": 25974
+          },
+          {
+            "load": "E_yy",
+            "periodic_jump_error": 0.0,
+            "periodic_force_balance_relative_error": 3.915564517751961e-11,
+            "iterations": 572,
+            "relative_residual": 9.614401252413221e-13,
+            "free_dofs": 25974
+          },
+          {
+            "load": "E_zz",
+            "periodic_jump_error": 0.0,
+            "periodic_force_balance_relative_error": 4.155446604037332e-11,
+            "iterations": 575,
+            "relative_residual": 9.62318559844938e-13,
+            "free_dofs": 25974
+          },
+          {
+            "load": "E_xy",
+            "periodic_jump_error": 0.0,
+            "periodic_force_balance_relative_error": 2.6713638197537335e-11,
+            "iterations": 594,
+            "relative_residual": 9.22290244537744e-13,
+            "free_dofs": 25974
+          },
+          {
+            "load": "E_xz",
+            "periodic_jump_error": 0.0,
+            "periodic_force_balance_relative_error": 2.7085651828973934e-11,
+            "iterations": 595,
+            "relative_residual": 9.471830113418663e-13,
+            "free_dofs": 25974
+          },
+          {
+            "load": "E_yz",
+            "periodic_jump_error": 0.0,
+            "periodic_force_balance_relative_error": 2.7359311230571293e-11,
+            "iterations": 596,
+            "relative_residual": 9.821727323862475e-13,
+            "free_dofs": 25974
+          }
+        ],
+        "automatic_stress_controlled_solves": [
+          {
+            "iterations": 731,
+            "relative_residual": 9.929218575235005e-13,
+            "free_dofs": 25980
+          },
+          {
+            "iterations": 725,
+            "relative_residual": 9.976118902994434e-13,
+            "free_dofs": 25980
+          },
+          {
+            "iterations": 728,
+            "relative_residual": 9.69532429395487e-13,
+            "free_dofs": 25980
+          },
+          {
+            "iterations": 730,
+            "relative_residual": 9.99412304544074e-13,
+            "free_dofs": 25980
+          },
+          {
+            "iterations": 741,
+            "relative_residual": 9.794270349064767e-13,
+            "free_dofs": 25980
+          },
+          {
+            "iterations": 737,
+            "relative_residual": 9.863615270150917e-13,
+            "free_dofs": 25980
+          }
+        ],
+        "seconds": 4.348723666975275
+      },
+      "worst_relative_energy_change_from_archive": 7.26310848068335e-05,
+      "status": "solved"
+    },
+    "r2-schwarz_native": {
+      "case": "schwarz_native",
+      "config": {
+        "name": "meshers-tet4-adaptive",
+        "arm": "meshers",
+        "cells": 16,
+        "order": 1,
+        "adapt": true,
+        "tolerance": 1,
+        "min_length": 0.002,
+        "adapt_tolerance": 0.001
+      },
+      "versions": {
+        "meshers": "0.2.1",
+        "fedoo": "1.0.0b2",
+        "numpy": "2.5.3",
+        "scipy": "1.18.1"
+      },
+      "baseline_sha256": "356d6e1e4436da7747cca8675fb93c5f444cb01f994efb296e7fe1a418300f65",
+      "extension_sha256": "db7be311b020ed3453d041c08d390bb360834e285daa9a37746da325331c0115",
+      "platform": "macOS-26.5.1-arm64-arm-64bit",
+      "release_wheel_comparative_admission": "pending independent two-sided distance audit",
+      "generation_seconds": 0.5507371670100838,
+      "nodes": 8701,
+      "elements": 35994,
+      "volume": 0.5000072546587672,
+      "relative_volume_error": 1.4509317534328048e-05,
+      "fea": {
+        "tetrahedra": 35994,
+        "points": 8701,
+        "solid_volume_fraction": 0.5000072546587672,
+        "minimum_quality": 0.4260734053344928,
+        "periodic_pair_counts": [
+          346,
+          336,
+          336
+        ],
+        "stiffness_engineering_voigt": [
+          [
+            0.8049634502988491,
+            0.1442166973151275,
+            0.14420237879998854,
+            -3.383322394156789e-05,
+            -4.329701278547268e-05,
+            -1.5546504758496485e-05
+          ],
+          [
+            0.14421669731504255,
+            0.804921907952015,
+            0.1441865928813088,
+            -4.1791233134291955e-05,
+            -1.2492697912874123e-06,
+            -4.0885089576784486e-05
+          ],
+          [
+            0.14420237880089554,
+            0.1441865928813165,
+            0.804959512946419,
+            -1.5255505886166603e-05,
+            -5.389233930194616e-05,
+            -3.623535371849757e-05
+          ],
+          [
+            -3.383322736903498e-05,
+            -4.179123241713687e-05,
+            -1.525550159230686e-05,
+            0.19587564045547842,
+            -1.3400132582509884e-05,
+            -3.7646758737053897e-06
+          ],
+          [
+            -4.329700867485532e-05,
+            -1.2492673079203779e-06,
+            -5.389233793432393e-05,
+            -1.3400132405478583e-05,
+            0.19582995346666404,
+            -1.3989877998219902e-05
+          ],
+          [
+            -1.5546503919268147e-05,
+            -4.088508802697624e-05,
+            -3.623535113207498e-05,
+            -3.764678172033178e-06,
+            -1.398987646939516e-05,
+            0.19583198557071615
+          ]
+        ],
+        "stiffness_eigenvalues": [
+          0.19581437740318253,
+          0.1958439096821562,
+          0.19587927763643279,
+          0.6607257815944618,
+          0.6607670235071751,
+          1.0933520808667327
+        ],
+        "young_modulus_xyz": [
+          0.7611413087101828,
+          0.7611062475180438,
+          0.7611479938983948
+        ],
+        "poisson_xy_xz_yz": [
+          0.15195424275239153,
+          0.15192391669160432,
+          0.1519025888098038
+        ],
+        "hill_mandel_relative_error": 5.938772337843701e-12,
+        "reaction_stress_relative_difference": 7.53185582280969e-12,
+        "stiffness_symmetry_relative_error": 8.227646034106796e-12,
+        "automatic_homogenization_relative_difference": 5.973332442265564e-12,
+        "strain_controlled_loads": [
+          {
+            "load": "E_xx",
+            "periodic_jump_error": 0.0,
+            "periodic_force_balance_relative_error": 4.172834358875999e-11,
+            "iterations": 447,
+            "relative_residual": 9.179568769833179e-13,
+            "free_dofs": 23148
+          },
+          {
+            "load": "E_yy",
+            "periodic_jump_error": 0.0,
+            "periodic_force_balance_relative_error": 4.305602717014559e-11,
+            "iterations": 444,
+            "relative_residual": 9.594109786634006e-13,
+            "free_dofs": 23148
+          },
+          {
+            "load": "E_zz",
+            "periodic_jump_error": 0.0,
+            "periodic_force_balance_relative_error": 3.7919762030366707e-11,
+            "iterations": 442,
+            "relative_residual": 8.715087238190667e-13,
+            "free_dofs": 23148
+          },
+          {
+            "load": "E_xy",
+            "periodic_jump_error": 5.551115123125783e-17,
+            "periodic_force_balance_relative_error": 3.5652134950781997e-11,
+            "iterations": 451,
+            "relative_residual": 9.590155964332242e-13,
+            "free_dofs": 23148
+          },
+          {
+            "load": "E_xz",
+            "periodic_jump_error": 5.551115123125783e-17,
+            "periodic_force_balance_relative_error": 3.5576037128881074e-11,
+            "iterations": 459,
+            "relative_residual": 9.80718946346897e-13,
+            "free_dofs": 23148
+          },
+          {
+            "load": "E_yz",
+            "periodic_jump_error": 0.0,
+            "periodic_force_balance_relative_error": 3.518913173581958e-11,
+            "iterations": 453,
+            "relative_residual": 9.900432541829085e-13,
+            "free_dofs": 23148
+          }
+        ],
+        "automatic_stress_controlled_solves": [
+          {
+            "iterations": 577,
+            "relative_residual": 8.789640200847212e-13,
+            "free_dofs": 23154
+          },
+          {
+            "iterations": 583,
+            "relative_residual": 1.0274105210304023e-12,
+            "free_dofs": 23154
+          },
+          {
+            "iterations": 579,
+            "relative_residual": 9.945266923801502e-13,
+            "free_dofs": 23154
+          },
+          {
+            "iterations": 588,
+            "relative_residual": 9.078164798008256e-13,
+            "free_dofs": 23154
+          },
+          {
+            "iterations": 594,
+            "relative_residual": 8.549309475988923e-13,
+            "free_dofs": 23154
+          },
+          {
+            "iterations": 585,
+            "relative_residual": 9.470700544189963e-13,
+            "free_dofs": 23154
+          }
+        ],
+        "seconds": 3.4080556660192087
+      },
+      "status": "solved"
+    },
+    "r2-gyroid_uniform": {
+      "case": "gyroid_uniform",
+      "config": {
+        "name": "meshers-tet4",
+        "arm": "meshers",
+        "cells": 24,
+        "order": 1,
+        "adapt": false,
+        "tolerance": 1,
+        "periodic_trace": true,
+        "declared_unit_cell": true,
+        "max_length": 0.1,
+        "min_length": 0.01,
+        "gradation": 0.3,
+        "adapt_iterations": 4
+      },
+      "versions": {
+        "meshers": "0.2.1",
+        "fedoo": "1.0.0b2",
+        "numpy": "2.5.3",
+        "scipy": "1.18.1"
+      },
+      "baseline_sha256": "356d6e1e4436da7747cca8675fb93c5f444cb01f994efb296e7fe1a418300f65",
+      "extension_sha256": "db7be311b020ed3453d041c08d390bb360834e285daa9a37746da325331c0115",
+      "platform": "macOS-26.5.1-arm64-arm-64bit",
+      "release_wheel_comparative_admission": "pending independent two-sided distance audit",
+      "generation_seconds": 0.42133087501861155,
+      "nodes": 17647,
+      "elements": 72757,
+      "volume": 0.35711746974345615,
+      "relative_volume_error": 0.0018910844817081607,
+      "fea": {
+        "tetrahedra": 72757,
+        "points": 17647,
+        "solid_volume_fraction": 0.35711746974345615,
+        "minimum_quality": 0.15025427652458323,
+        "periodic_pair_counts": [
+          347,
+          349,
+          347
+        ],
+        "stiffness_engineering_voigt": [
+          [
+            0.4953211036648669,
+            0.19147539016377496,
+            0.19147343035718717,
+            2.9065823121006593e-05,
+            8.288008194306266e-06,
+            -2.1147887565989705e-05
+          ],
+          [
+            0.19147539016332676,
+            0.4953687650171821,
+            0.19142428550594673,
+            -4.802895448575188e-06,
+            -5.3324767311814325e-06,
+            1.0183278510073806e-05
+          ],
+          [
+            0.1914734303566771,
+            0.1914242855064815,
+            0.4953664535605772,
+            -6.165630037379817e-06,
+            1.848302681845498e-05,
+            -9.679419518860877e-06
+          ],
+          [
+            2.9065823666019498e-05,
+            -4.802895603957317e-06,
+            -6.1656294859635745e-06,
+            0.17225363712307784,
+            7.001194678034398e-06,
+            9.596127645476567e-06
+          ],
+          [
+            8.28800802835524e-06,
+            -5.332476532779593e-06,
+            1.8483028123700077e-05,
+            7.0011948112514e-06,
+            0.17225861924935645,
+            7.34360289026938e-06
+          ],
+          [
+            -2.114788732137459e-05,
+            1.0183279019327937e-05,
+            -9.679419787757574e-06,
+            9.59612765794217e-06,
+            7.3436029012403665e-06,
+            0.1722106653577628
+          ]
+        ],
+        "stiffness_eigenvalues": [
+          0.17220794812706314,
+          0.17224896723953667,
+          0.1722659937517521,
+          0.30384549321862075,
+          0.3039433296206569,
+          0.8782675120151935
+        ],
+        "young_modulus_xyz": [
+          0.3885567313215906,
+          0.3886357259972269,
+          0.3886349922441549
+        ],
+        "poisson_xy_xz_yz": [
+          0.27879755413356666,
+          0.27879321706260807,
+          0.27864444534045774
+        ],
+        "hill_mandel_relative_error": 1.8327028077915285e-12,
+        "reaction_stress_relative_difference": 6.174087135331404e-12,
+        "stiffness_symmetry_relative_error": 2.6073645766135698e-12,
+        "automatic_homogenization_relative_difference": 1.84511072108256e-12,
+        "strain_controlled_loads": [
+          {
+            "load": "E_xx",
+            "periodic_jump_error": 0.0,
+            "periodic_force_balance_relative_error": 5.390759892522724e-11,
+            "iterations": 747,
+            "relative_residual": 9.574375369706727e-13,
+            "free_dofs": 49941
+          },
+          {
+            "load": "E_yy",
+            "periodic_jump_error": 0.0,
+            "periodic_force_balance_relative_error": 6.041352631628102e-11,
+            "iterations": 743,
+            "relative_residual": 9.900044206881071e-13,
+            "free_dofs": 49941
+          },
+          {
+            "load": "E_zz",
+            "periodic_jump_error": 0.0,
+            "periodic_force_balance_relative_error": 5.091399791917235e-11,
+            "iterations": 750,
+            "relative_residual": 9.701688298490483e-13,
+            "free_dofs": 49941
+          },
+          {
+            "load": "E_xy",
+            "periodic_jump_error": 0.0,
+            "periodic_force_balance_relative_error": 3.790173159023134e-11,
+            "iterations": 768,
+            "relative_residual": 9.713344927045619e-13,
+            "free_dofs": 49941
+          },
+          {
+            "load": "E_xz",
+            "periodic_jump_error": 0.0,
+            "periodic_force_balance_relative_error": 3.698478975084033e-11,
+            "iterations": 769,
+            "relative_residual": 9.86749026127041e-13,
+            "free_dofs": 49941
+          },
+          {
+            "load": "E_yz",
+            "periodic_jump_error": 0.0,
+            "periodic_force_balance_relative_error": 3.857248441396473e-11,
+            "iterations": 765,
+            "relative_residual": 9.639358999849535e-13,
+            "free_dofs": 49941
+          }
+        ],
+        "automatic_stress_controlled_solves": [
+          {
+            "iterations": 948,
+            "relative_residual": 9.353279453194737e-13,
+            "free_dofs": 49947
+          },
+          {
+            "iterations": 952,
+            "relative_residual": 1.0208038904666739e-12,
+            "free_dofs": 49947
+          },
+          {
+            "iterations": 949,
+            "relative_residual": 8.76441559118458e-13,
+            "free_dofs": 49947
+          },
+          {
+            "iterations": 953,
+            "relative_residual": 9.871445877523664e-13,
+            "free_dofs": 49947
+          },
+          {
+            "iterations": 958,
+            "relative_residual": 9.583985865340187e-13,
+            "free_dofs": 49947
+          },
+          {
+            "iterations": 947,
+            "relative_residual": 9.490818543400116e-13,
+            "free_dofs": 49947
+          }
+        ],
+        "seconds": 10.433454457961489
+      },
+      "worst_relative_energy_change_from_archive": 4.769721781432818e-05,
+      "status": "solved"
+    },
+    "r3-schwarz_native": {
+      "case": "schwarz_native",
+      "config": {
+        "name": "meshers-tet4-adaptive",
+        "arm": "meshers",
+        "cells": 16,
+        "order": 1,
+        "adapt": true,
+        "tolerance": 1,
+        "min_length": 0.002,
+        "adapt_tolerance": 0.001
+      },
+      "versions": {
+        "meshers": "0.2.1",
+        "fedoo": "1.0.0b2",
+        "numpy": "2.5.3",
+        "scipy": "1.18.1"
+      },
+      "baseline_sha256": "356d6e1e4436da7747cca8675fb93c5f444cb01f994efb296e7fe1a418300f65",
+      "extension_sha256": "db7be311b020ed3453d041c08d390bb360834e285daa9a37746da325331c0115",
+      "platform": "macOS-26.5.1-arm64-arm-64bit",
+      "release_wheel_comparative_admission": "pending independent two-sided distance audit",
+      "generation_seconds": 0.5493835000088438,
+      "nodes": 8701,
+      "elements": 35994,
+      "volume": 0.5000072546587672,
+      "relative_volume_error": 1.4509317534328048e-05,
+      "fea": {
+        "tetrahedra": 35994,
+        "points": 8701,
+        "solid_volume_fraction": 0.5000072546587672,
+        "minimum_quality": 0.4260734053344928,
+        "periodic_pair_counts": [
+          346,
+          336,
+          336
+        ],
+        "stiffness_engineering_voigt": [
+          [
+            0.8049634502988491,
+            0.1442166973151275,
+            0.14420237879998854,
+            -3.383322394156789e-05,
+            -4.329701278547268e-05,
+            -1.5546504758496485e-05
+          ],
+          [
+            0.14421669731504255,
+            0.804921907952015,
+            0.1441865928813088,
+            -4.1791233134291955e-05,
+            -1.2492697912874123e-06,
+            -4.0885089576784486e-05
+          ],
+          [
+            0.14420237880089554,
+            0.1441865928813165,
+            0.804959512946419,
+            -1.5255505886166603e-05,
+            -5.389233930194616e-05,
+            -3.623535371849757e-05
+          ],
+          [
+            -3.383322736903498e-05,
+            -4.179123241713687e-05,
+            -1.525550159230686e-05,
+            0.19587564045547842,
+            -1.3400132582509884e-05,
+            -3.7646758737053897e-06
+          ],
+          [
+            -4.329700867485532e-05,
+            -1.2492673079203779e-06,
+            -5.389233793432393e-05,
+            -1.3400132405478583e-05,
+            0.19582995346666404,
+            -1.3989877998219902e-05
+          ],
+          [
+            -1.5546503919268147e-05,
+            -4.088508802697624e-05,
+            -3.623535113207498e-05,
+            -3.764678172033178e-06,
+            -1.398987646939516e-05,
+            0.19583198557071615
+          ]
+        ],
+        "stiffness_eigenvalues": [
+          0.19581437740318253,
+          0.1958439096821562,
+          0.19587927763643279,
+          0.6607257815944618,
+          0.6607670235071751,
+          1.0933520808667327
+        ],
+        "young_modulus_xyz": [
+          0.7611413087101828,
+          0.7611062475180438,
+          0.7611479938983948
+        ],
+        "poisson_xy_xz_yz": [
+          0.15195424275239153,
+          0.15192391669160432,
+          0.1519025888098038
+        ],
+        "hill_mandel_relative_error": 5.938772337843701e-12,
+        "reaction_stress_relative_difference": 7.53185582280969e-12,
+        "stiffness_symmetry_relative_error": 8.227646034106796e-12,
+        "automatic_homogenization_relative_difference": 5.973332442265564e-12,
+        "strain_controlled_loads": [
+          {
+            "load": "E_xx",
+            "periodic_jump_error": 0.0,
+            "periodic_force_balance_relative_error": 4.172834358875999e-11,
+            "iterations": 447,
+            "relative_residual": 9.179568769833179e-13,
+            "free_dofs": 23148
+          },
+          {
+            "load": "E_yy",
+            "periodic_jump_error": 0.0,
+            "periodic_force_balance_relative_error": 4.305602717014559e-11,
+            "iterations": 444,
+            "relative_residual": 9.594109786634006e-13,
+            "free_dofs": 23148
+          },
+          {
+            "load": "E_zz",
+            "periodic_jump_error": 0.0,
+            "periodic_force_balance_relative_error": 3.7919762030366707e-11,
+            "iterations": 442,
+            "relative_residual": 8.715087238190667e-13,
+            "free_dofs": 23148
+          },
+          {
+            "load": "E_xy",
+            "periodic_jump_error": 5.551115123125783e-17,
+            "periodic_force_balance_relative_error": 3.5652134950781997e-11,
+            "iterations": 451,
+            "relative_residual": 9.590155964332242e-13,
+            "free_dofs": 23148
+          },
+          {
+            "load": "E_xz",
+            "periodic_jump_error": 5.551115123125783e-17,
+            "periodic_force_balance_relative_error": 3.5576037128881074e-11,
+            "iterations": 459,
+            "relative_residual": 9.80718946346897e-13,
+            "free_dofs": 23148
+          },
+          {
+            "load": "E_yz",
+            "periodic_jump_error": 0.0,
+            "periodic_force_balance_relative_error": 3.518913173581958e-11,
+            "iterations": 453,
+            "relative_residual": 9.900432541829085e-13,
+            "free_dofs": 23148
+          }
+        ],
+        "automatic_stress_controlled_solves": [
+          {
+            "iterations": 577,
+            "relative_residual": 8.789640200847212e-13,
+            "free_dofs": 23154
+          },
+          {
+            "iterations": 583,
+            "relative_residual": 1.0274105210304023e-12,
+            "free_dofs": 23154
+          },
+          {
+            "iterations": 579,
+            "relative_residual": 9.945266923801502e-13,
+            "free_dofs": 23154
+          },
+          {
+            "iterations": 588,
+            "relative_residual": 9.078164798008256e-13,
+            "free_dofs": 23154
+          },
+          {
+            "iterations": 594,
+            "relative_residual": 8.549309475988923e-13,
+            "free_dofs": 23154
+          },
+          {
+            "iterations": 585,
+            "relative_residual": 9.470700544189963e-13,
+            "free_dofs": 23154
+          }
+        ],
+        "seconds": 3.451733957976103
+      },
+      "status": "solved"
+    },
+    "r3-gyroid_uniform": {
+      "case": "gyroid_uniform",
+      "config": {
+        "name": "meshers-tet4",
+        "arm": "meshers",
+        "cells": 24,
+        "order": 1,
+        "adapt": false,
+        "tolerance": 1,
+        "periodic_trace": true,
+        "declared_unit_cell": true,
+        "max_length": 0.1,
+        "min_length": 0.01,
+        "gradation": 0.3,
+        "adapt_iterations": 4
+      },
+      "versions": {
+        "meshers": "0.2.1",
+        "fedoo": "1.0.0b2",
+        "numpy": "2.5.3",
+        "scipy": "1.18.1"
+      },
+      "baseline_sha256": "356d6e1e4436da7747cca8675fb93c5f444cb01f994efb296e7fe1a418300f65",
+      "extension_sha256": "db7be311b020ed3453d041c08d390bb360834e285daa9a37746da325331c0115",
+      "platform": "macOS-26.5.1-arm64-arm-64bit",
+      "release_wheel_comparative_admission": "pending independent two-sided distance audit",
+      "generation_seconds": 0.42984454199904576,
+      "nodes": 17647,
+      "elements": 72757,
+      "volume": 0.35711746974345615,
+      "relative_volume_error": 0.0018910844817081607,
+      "fea": {
+        "tetrahedra": 72757,
+        "points": 17647,
+        "solid_volume_fraction": 0.35711746974345615,
+        "minimum_quality": 0.15025427652458323,
+        "periodic_pair_counts": [
+          347,
+          349,
+          347
+        ],
+        "stiffness_engineering_voigt": [
+          [
+            0.4953211036648669,
+            0.19147539016377496,
+            0.19147343035718717,
+            2.9065823121006593e-05,
+            8.288008194306266e-06,
+            -2.1147887565989705e-05
+          ],
+          [
+            0.19147539016332676,
+            0.4953687650171821,
+            0.19142428550594673,
+            -4.802895448575188e-06,
+            -5.3324767311814325e-06,
+            1.0183278510073806e-05
+          ],
+          [
+            0.1914734303566771,
+            0.1914242855064815,
+            0.4953664535605772,
+            -6.165630037379817e-06,
+            1.848302681845498e-05,
+            -9.679419518860877e-06
+          ],
+          [
+            2.9065823666019498e-05,
+            -4.802895603957317e-06,
+            -6.1656294859635745e-06,
+            0.17225363712307784,
+            7.001194678034398e-06,
+            9.596127645476567e-06
+          ],
+          [
+            8.28800802835524e-06,
+            -5.332476532779593e-06,
+            1.8483028123700077e-05,
+            7.0011948112514e-06,
+            0.17225861924935645,
+            7.34360289026938e-06
+          ],
+          [
+            -2.114788732137459e-05,
+            1.0183279019327937e-05,
+            -9.679419787757574e-06,
+            9.59612765794217e-06,
+            7.3436029012403665e-06,
+            0.1722106653577628
+          ]
+        ],
+        "stiffness_eigenvalues": [
+          0.17220794812706314,
+          0.17224896723953667,
+          0.1722659937517521,
+          0.30384549321862075,
+          0.3039433296206569,
+          0.8782675120151935
+        ],
+        "young_modulus_xyz": [
+          0.3885567313215906,
+          0.3886357259972269,
+          0.3886349922441549
+        ],
+        "poisson_xy_xz_yz": [
+          0.27879755413356666,
+          0.27879321706260807,
+          0.27864444534045774
+        ],
+        "hill_mandel_relative_error": 1.8327028077915285e-12,
+        "reaction_stress_relative_difference": 6.174087135331404e-12,
+        "stiffness_symmetry_relative_error": 2.6073645766135698e-12,
+        "automatic_homogenization_relative_difference": 1.84511072108256e-12,
+        "strain_controlled_loads": [
+          {
+            "load": "E_xx",
+            "periodic_jump_error": 0.0,
+            "periodic_force_balance_relative_error": 5.390759892522724e-11,
+            "iterations": 747,
+            "relative_residual": 9.574375369706727e-13,
+            "free_dofs": 49941
+          },
+          {
+            "load": "E_yy",
+            "periodic_jump_error": 0.0,
+            "periodic_force_balance_relative_error": 6.041352631628102e-11,
+            "iterations": 743,
+            "relative_residual": 9.900044206881071e-13,
+            "free_dofs": 49941
+          },
+          {
+            "load": "E_zz",
+            "periodic_jump_error": 0.0,
+            "periodic_force_balance_relative_error": 5.091399791917235e-11,
+            "iterations": 750,
+            "relative_residual": 9.701688298490483e-13,
+            "free_dofs": 49941
+          },
+          {
+            "load": "E_xy",
+            "periodic_jump_error": 0.0,
+            "periodic_force_balance_relative_error": 3.790173159023134e-11,
+            "iterations": 768,
+            "relative_residual": 9.713344927045619e-13,
+            "free_dofs": 49941
+          },
+          {
+            "load": "E_xz",
+            "periodic_jump_error": 0.0,
+            "periodic_force_balance_relative_error": 3.698478975084033e-11,
+            "iterations": 769,
+            "relative_residual": 9.86749026127041e-13,
+            "free_dofs": 49941
+          },
+          {
+            "load": "E_yz",
+            "periodic_jump_error": 0.0,
+            "periodic_force_balance_relative_error": 3.857248441396473e-11,
+            "iterations": 765,
+            "relative_residual": 9.639358999849535e-13,
+            "free_dofs": 49941
+          }
+        ],
+        "automatic_stress_controlled_solves": [
+          {
+            "iterations": 948,
+            "relative_residual": 9.353279453194737e-13,
+            "free_dofs": 49947
+          },
+          {
+            "iterations": 952,
+            "relative_residual": 1.0208038904666739e-12,
+            "free_dofs": 49947
+          },
+          {
+            "iterations": 949,
+            "relative_residual": 8.76441559118458e-13,
+            "free_dofs": 49947
+          },
+          {
+            "iterations": 953,
+            "relative_residual": 9.871445877523664e-13,
+            "free_dofs": 49947
+          },
+          {
+            "iterations": 958,
+            "relative_residual": 9.583985865340187e-13,
+            "free_dofs": 49947
+          },
+          {
+            "iterations": 947,
+            "relative_residual": 9.490818543400116e-13,
+            "free_dofs": 49947
+          }
+        ],
+        "seconds": 10.37210579199018
+      },
+      "worst_relative_energy_change_from_archive": 4.769721781432818e-05,
+      "status": "solved"
+    },
+    "r3-gyroid_adaptive": {
+      "case": "gyroid_adaptive",
+      "config": {
+        "name": "native-gyroid-shared-adaptive24-control",
+        "arm": "meshers",
+        "cells": 24,
+        "order": 1,
+        "adapt": true,
+        "tolerance": 0.002,
+        "periodic_trace": true,
+        "declared_unit_cell": true,
+        "max_length": 0.1,
+        "min_length": 0.002,
+        "gradation": 0.6,
+        "adapt_iterations": 4,
+        "adapt_tolerance": 0.0018,
+        "optimization_passes": 1
+      },
+      "versions": {
+        "meshers": "0.2.1",
+        "fedoo": "1.0.0b2",
+        "numpy": "2.5.3",
+        "scipy": "1.18.1"
+      },
+      "baseline_sha256": "356d6e1e4436da7747cca8675fb93c5f444cb01f994efb296e7fe1a418300f65",
+      "extension_sha256": "db7be311b020ed3453d041c08d390bb360834e285daa9a37746da325331c0115",
+      "platform": "macOS-26.5.1-arm64-arm-64bit",
+      "release_wheel_comparative_admission": "pending independent two-sided distance audit",
+      "generation_seconds": 0.8243421250372194,
+      "nodes": 9434,
+      "elements": 34854,
+      "volume": 0.35713167494304215,
+      "relative_volume_error": 0.0019309370905113976,
+      "fea": {
+        "tetrahedra": 34854,
+        "points": 9434,
+        "solid_volume_fraction": 0.35713167494304215,
+        "minimum_quality": 0.23723647994247005,
+        "periodic_pair_counts": [
+          270,
+          270,
+          265
+        ],
+        "stiffness_engineering_voigt": [
+          [
+            0.5023198394031809,
+            0.1907460016749238,
+            0.19074177243482573,
+            4.8393822226385036e-05,
+            -7.198389382016849e-05,
+            4.384214765348084e-06
+          ],
+          [
+            0.1907460016748676,
+            0.502384717012202,
+            0.19069709447991515,
+            -3.312966250453311e-05,
+            -2.507777235463456e-05,
+            -1.1392146036281321e-05
+          ],
+          [
+            0.19074177243466284,
+            0.1906970944800466,
+            0.5023272428401788,
+            8.359565866404091e-05,
+            7.10025114574847e-06,
+            -3.904278589512097e-05
+          ],
+          [
+            4.83938220961087e-05,
+            -3.3129662508333235e-05,
+            8.359565851898344e-05,
+            0.1771961211678713,
+            2.0126280307781547e-05,
+            -1.823582340587528e-05
+          ],
+          [
+            -7.198389338398968e-05,
+            -2.5077771891001025e-05,
+            7.100251116481732e-06,
+            2.012628028998602e-05,
+            0.17721443382991783,
+            6.841915542494754e-05
+          ],
+          [
+            4.384214786471099e-06,
+            -1.1392145335668534e-05,
+            -3.904278573481907e-05,
+            -1.8235823349346317e-05,
+            6.841915551528444e-05,
+            0.17721244277686224
+          ]
+        ],
+        "stiffness_eigenvalues": [
+          0.1771332780535583,
+          0.17720773945455173,
+          0.17728188678634266,
+          0.31157017300396,
+          0.31166119700513,
+          0.8838005227266699
+        ],
+        "young_modulus_xyz": [
+          0.39732573826437856,
+          0.39741706339164745,
+          0.39736688502840933
+        ],
+        "poisson_xy_xz_yz": [
+          0.27520403846603325,
+          0.27524119847393536,
+          0.27510384424585405
+        ],
+        "hill_mandel_relative_error": 1.1650156665142455e-12,
+        "reaction_stress_relative_difference": 3.911505574331171e-12,
+        "stiffness_symmetry_relative_error": 1.3809102183225576e-12,
+        "automatic_homogenization_relative_difference": 1.1843925774110578e-12,
+        "strain_controlled_loads": [
+          {
+            "load": "E_xx",
+            "periodic_jump_error": 0.0,
+            "periodic_force_balance_relative_error": 3.980382638418457e-11,
+            "iterations": 573,
+            "relative_residual": 9.379835055330487e-13,
+            "free_dofs": 25974
+          },
+          {
+            "load": "E_yy",
+            "periodic_jump_error": 0.0,
+            "periodic_force_balance_relative_error": 3.915564517751961e-11,
+            "iterations": 572,
+            "relative_residual": 9.614401252413221e-13,
+            "free_dofs": 25974
+          },
+          {
+            "load": "E_zz",
+            "periodic_jump_error": 0.0,
+            "periodic_force_balance_relative_error": 4.155446604037332e-11,
+            "iterations": 575,
+            "relative_residual": 9.62318559844938e-13,
+            "free_dofs": 25974
+          },
+          {
+            "load": "E_xy",
+            "periodic_jump_error": 0.0,
+            "periodic_force_balance_relative_error": 2.6713638197537335e-11,
+            "iterations": 594,
+            "relative_residual": 9.22290244537744e-13,
+            "free_dofs": 25974
+          },
+          {
+            "load": "E_xz",
+            "periodic_jump_error": 0.0,
+            "periodic_force_balance_relative_error": 2.7085651828973934e-11,
+            "iterations": 595,
+            "relative_residual": 9.471830113418663e-13,
+            "free_dofs": 25974
+          },
+          {
+            "load": "E_yz",
+            "periodic_jump_error": 0.0,
+            "periodic_force_balance_relative_error": 2.7359311230571293e-11,
+            "iterations": 596,
+            "relative_residual": 9.821727323862475e-13,
+            "free_dofs": 25974
+          }
+        ],
+        "automatic_stress_controlled_solves": [
+          {
+            "iterations": 731,
+            "relative_residual": 9.929218575235005e-13,
+            "free_dofs": 25980
+          },
+          {
+            "iterations": 725,
+            "relative_residual": 9.976118902994434e-13,
+            "free_dofs": 25980
+          },
+          {
+            "iterations": 728,
+            "relative_residual": 9.69532429395487e-13,
+            "free_dofs": 25980
+          },
+          {
+            "iterations": 730,
+            "relative_residual": 9.99412304544074e-13,
+            "free_dofs": 25980
+          },
+          {
+            "iterations": 741,
+            "relative_residual": 9.794270349064767e-13,
+            "free_dofs": 25980
+          },
+          {
+            "iterations": 737,
+            "relative_residual": 9.863615270150917e-13,
+            "free_dofs": 25980
+          }
+        ],
+        "seconds": 4.412061542039737
+      },
+      "worst_relative_energy_change_from_archive": 7.26310848068335e-05,
+      "status": "solved"
+    }
+  }
+}

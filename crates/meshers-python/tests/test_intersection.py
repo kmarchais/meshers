@@ -763,3 +763,68 @@ def test_adaptive_closed_map_keeps_rejecting_negative_orientation():
             geometry_tolerance=0.01,
             max_tetrahedra=100_000,
         )
+
+
+@pytest.mark.parametrize(("curvature", "axis"), [(1.0, 0), (-0.6, 1)])
+def test_mapped_caps_include_chord_error(curvature, axis):
+    def mapping(u, v, w):
+        return u, v, w + curvature * (u, v)[axis] ** 2
+
+    args = {
+        "constraints": {"a": lambda x, y, z: 0 * x - 1, "b": lambda x, y, z: 0 * y - 2},
+        "coordinate_map": mapping,
+        "cells": 4,
+        "optimize_passes": 0,
+        "snap": 0,
+    }
+    mesh = meshers.generate_intersection(**args, geometry_tolerance=0.02)
+    faces = mesh.surface[mesh.boundary_tags == 5]
+    edges = np.concatenate([faces[:, [0, 1]], faces[:, [1, 2]], faces[:, [2, 0]]])
+    middle = mesh.points[edges].mean(axis=1)
+    residual = abs(middle[:, 2] - curvature * middle[:, axis] ** 2).max()
+    assert residual == pytest.approx(abs(curvature) / 64)
+    lower_bound = residual / np.sqrt(1 + 4 * curvature**2)
+    measured = mesh.diagnostics["mapped_cap_errors"]["z-"]
+    assert lower_bound <= measured <= residual + 1e-12
+    assert mesh.diagnostics["sampled_surface_error"] >= measured
+    with pytest.raises(meshers.MeshingError, match="mapped cap"):
+        meshers.generate_intersection(**args, geometry_tolerance=1e-4)
+
+    # Refine along the curved chart coordinate only. A uniform grid that
+    # reaches the same physical tolerance is the cost control.
+    directed_cells = [4, 4, 4]
+    directed_cells[axis] = 8
+    target = 0.004
+    directed = meshers.generate_intersection(
+        **(args | {"cells": directed_cells}), geometry_tolerance=target, minimum_quality=0.1
+    )
+    uniform = meshers.generate_intersection(
+        **(args | {"cells": 8}), geometry_tolerance=target, minimum_quality=0.1
+    )
+    for fine in (directed, uniform):
+        cap = fine.points[fine.surface[fine.boundary_tags == 5]]
+        midpoints = (cap + np.roll(cap, 1, axis=1)) / 2
+        assert abs(midpoints[:, :, 2] - curvature * midpoints[:, :, axis] ** 2).max() <= target
+        assert volume(fine) == pytest.approx(1)
+    assert len(directed.points) < len(uniform.points)
+    assert len(directed.tetrahedra) < len(uniform.tetrahedra)
+
+
+def test_final_quality_after_sphere_fitting():
+    mesh = meshers.generate_intersection(
+        {
+            "sphere": lambda x, y, z: (x - 0.5) ** 2 + (y - 0.51) ** 2 + (z - 0.52) ** 2 - 0.35**2,
+            "inactive": lambda x, y, z: 0 * x - 1,
+        },
+        cells=4,
+        optimize_passes=0,
+        snap=0.2,
+        geometry_tolerance=0.029945356001979177,
+    )
+    assert mesh.diagnostics["geometry_vertex_moves"] > 0
+    pts = mesh.points[mesh.tetrahedra]
+    det = np.linalg.det(pts[:, 1:] - pts[:, :1])
+    edge_sum = sum(((pts[:, i] - pts[:, j]) ** 2).sum(axis=1) for i in range(4) for j in range(i))
+    qualities = np.sqrt(432 * det**2 / edge_sum**3)
+    assert mesh.diagnostics["minimum_mmg_quality"] == pytest.approx(qualities.min())
+    assert mesh.diagnostics["elements_below_quality_01"] == np.count_nonzero(qualities < 0.1)

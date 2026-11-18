@@ -8,6 +8,8 @@ including optional intersection surface verification.
 Measure representative geometries before changing thread count, resolution,
 optimization passes or evaluator. Keep those settings identical when comparing.
 
+For local Windows measurements install `psutil` in each benchmark environment. Windows reports the process peak working set, Linux reports peak RSS in KiB and macOS reports peak RSS in bytes. The JSON records bytes on all three platforms. Compare timings and memory within a dated configuration.
+
 ## Every pull request
 
 The Performance workflow builds the base and proposed source into separate
@@ -27,13 +29,13 @@ process high-water mark through mesh generation, including imports and JIT.
 | Median elapsed time | More than 25% plus 20 ms above base |
 | Median peak RSS | More than 15% plus 8 MiB above base |
 | Minimum, maximum, mean, median, p05, p10 or p90 MMG quality | More than 1% below base |
-| Sampled surface error | More than 5% plus 1e-10 above base |
+| Sampled wall error and, for the mapped intersection, sampled cap error (each) | More than 5% plus 1e-10 above base |
 | Mesh volume | Changes by more than 0.5% |
 | Tetrahedron count | Changes by more than 1% |
 
 Every sample must also have finite coordinates, positive cell volumes, closed
 boundary edge incidence and the requested periodic correspondence. Its minimum
-quality must be at least 0.01 and sampled surface error at most 0.1.
+quality must be at least 0.01 and each sampled surface error at most 0.1. Fixture version 4 compares the named walls and mapped caps separately. The gate measures the cylindrical and planar caps on the returned triangles for both wheels.
 
 A changed mesh count or volume may be intentional, but it needs review rather
 than being counted silently as a performance improvement. Do not weaken a gate
@@ -79,8 +81,10 @@ All cases retain minimum, maximum, mean, median, p05, p10 and p90 quality. All
 seven statistics have the same 1% regression allowance. Node counts have the
 same 1% change guard as tetrahedron counts. Tet10 quality and sampled surface
 error describe the linear parent; its curved volume is independently integrated
-and Jacobians are checked at the reference nodes and quadrature samples. These
-are sampled validity checks, not a proof of global invertibility.
+and Jacobians are checked at reference nodes and quadrature samples. The release
+validator also bounds the cubic determinant in the Bernstein basis and subdivides
+ambiguous cells. A nonpositive sample or an unresolved bound fails validation.
+This floating-point element check does not establish global non-overlap.
 
 For every release:
 

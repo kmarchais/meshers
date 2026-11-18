@@ -1,7 +1,7 @@
-"""Compare installed base/head wheels on one Linux runner in alternating fresh processes."""
+"""Compare installed base/head wheels on one configuration in alternating fresh processes."""
 
 import argparse
-import datetime
+import datetime as dt
 import hashlib
 import json
 import math
@@ -12,6 +12,11 @@ import subprocess
 import sys
 import time
 from pathlib import Path
+
+if __name__ == "__main__":
+    from benchmark_hardware import hardware_snapshot
+else:
+    from tools.benchmark_hardware import hardware_snapshot
 
 CASES = (
     "compiled_gyroid",
@@ -31,6 +36,52 @@ RELEASE_CASES = (
 )
 QUALITY = ("min", "p05", "p10", "median", "mean", "p90", "max")
 CAP = 250_000
+FIXTURE_VERSION = 4
+
+
+def _check_curved_jacobians(corners):
+    """Bound the cubic Jacobian determinant over each reference tetrahedron.
+
+    The four physical Jacobian matrices interpolate affinely. Cubic Bernstein
+    coefficients bound their determinant over the whole tetrahedron. Subdivide
+    inconclusive cells along the edge with the largest Jacobian variation.
+
+    A fold or an unresolved bound raises RuntimeError.
+    """
+    from itertools import combinations_with_replacement
+    from math import factorial
+
+    import numpy as np
+
+    triples = list(combinations_with_replacement(range(4), 3))
+    powers = np.array([[triple.count(i) for i in range(4)] for triple in triples])
+    bary = powers / 3
+    factors = np.array([6 / math.prod(factorial(int(n)) for n in row) for row in powers])
+    basis = factors * np.prod(bary[:, None, :] ** powers, axis=2)
+    to_coefficients = np.linalg.inv(basis).T
+
+    def check(batch, depth):
+        matrices = np.einsum("pi,tijk->tpjk", bary, batch)
+        values = np.linalg.det(matrices)
+        if not np.isfinite(values).all() or np.any(values <= 0):
+            raise RuntimeError("Nonpositive sampled curved Jacobian")
+        coefficients = values @ to_coefficients
+        scale = np.linalg.norm(batch, axis=2).max(axis=1).prod(axis=1)
+        ambiguous = np.any(coefficients <= 128 * np.finfo(float).eps * scale[:, None], axis=1)
+        for cell in batch[ambiguous]:
+            if depth >= 12:
+                raise RuntimeError("Unresolved curved Jacobian positivity")
+            i, j = np.unravel_index(
+                np.argmax(np.linalg.norm(cell[:, None] - cell[None, :], axis=(2, 3))), (4, 4)
+            )
+            children = np.stack([cell, cell])
+            midpoint = (cell[i] + cell[j]) / 2
+            children[0, i] = midpoint
+            children[1, j] = midpoint
+            check(children, depth + 1)
+
+    for start in range(0, len(corners), 1024):
+        check(corners[start : start + 1024], 0)
 
 
 def cell_geometry(vertices):
@@ -40,7 +91,7 @@ def cell_geometry(vertices):
         Integrated physical volumes per element.
 
     Raises:
-        RuntimeError: A sampled Jacobian is nonpositive.
+        RuntimeError: A sampled Jacobian is nonpositive or its lower bound is unresolved.
     """
     import numpy as np
 
@@ -56,7 +107,9 @@ def cell_geometry(vertices):
     ])
     dl = np.array([[-1.0, -1.0, -1.0], [1.0, 0.0, 0.0], [0.0, 1.0, 0.0], [0.0, 0.0, 1.0]])
     determinants = []
-    for location in bary:
+    corner_maps = []
+    vertices = np.subtract(vertices, vertices[:, :1])
+    for index, location in enumerate(bary):
         derivative = np.vstack([
             (4 * location - 1)[:, None] * dl,
             4
@@ -65,11 +118,71 @@ def cell_geometry(vertices):
                 + location[edges[:, 1], None] * dl[edges[:, 0]]
             ),
         ])
-        determinant = np.linalg.det(np.einsum("tni,nj->tij", vertices, derivative))
+        jacobians = np.einsum("tni,nj->tij", vertices, derivative)
+        if 5 <= index < 9:  # The four reference vertices follow the five quadrature points.
+            corner_maps.append(jacobians)
+        determinant = np.linalg.det(jacobians)
         if not np.isfinite(determinant).all() or np.any(determinant <= 0):
             raise RuntimeError("Nonpositive sampled curved Jacobian")
         determinants.append(determinant)
+    _check_curved_jacobians(np.stack(corner_maps, axis=1))
     return np.array([-2 / 15, *([3 / 40] * 4)]) @ np.array(determinants[:5])
+
+
+def peak_rss_bytes():
+    """Return this process's peak resident memory, in bytes."""
+    if sys.platform == "win32":
+        import psutil
+
+        return psutil.Process().memory_info().peak_wset
+    import resource
+
+    return resource.getrusage(resource.RUSAGE_SELF).ru_maxrss * (
+        1 if sys.platform == "darwin" else 1024
+    )
+
+
+def mapped_cap_error(mesh):
+    """Measure chord and plane errors on the four caps of the cylindrical fixture.
+
+    Returns:
+        Largest sampled distance to the corresponding cap surface.
+
+    Raises:
+        RuntimeError: The fixture is missing a cap or has unexpected cap labels.
+    """
+    import numpy as np
+
+    if set(np.unique(mesh.boundary_tags)) != {0, 1, 3, 5, 6}:
+        raise RuntimeError("Unexpected mapped-intersection cap labels")
+    errors = []
+    for tag in (1, 3, 5, 6):
+        tri = mesh.points[mesh.surface[mesh.boundary_tags == tag, :3]]
+        samples = np.concatenate([
+            tri.reshape(-1, 3),
+            ((tri + np.roll(tri, 1, axis=1)) / 2).reshape(-1, 3),
+            tri.mean(axis=1),
+        ])
+        x, y, z = samples.T
+        if tag == 1:
+            distance = np.hypot(x, y) - 3
+        elif tag == 3:
+            distance = z
+        else:
+            angle = 0 if tag == 5 else 1 / 3
+            distance = y * np.cos(angle) - x * np.sin(angle)
+        errors.append(float(np.max(abs(distance))))
+    return max(errors)
+
+
+def surface_measurements(case, mesh):
+    """Return comparable wall and cap measurements for the installed wheel."""
+    if case == "mapped_intersection":
+        return {
+            "surface_error": max(mesh.diagnostics["surface_errors"].values()),
+            "mapped_cap_error": mapped_cap_error(mesh),
+        }
+    return {"surface_error": mesh.diagnostics["sampled_surface_error"]}
 
 
 def sample(case):  # ruff: ignore[too-many-locals] - keep the timing boundary and independent checks together.
@@ -81,8 +194,6 @@ def sample(case):  # ruff: ignore[too-many-locals] - keep the timing boundary an
     Raises:
         RuntimeError: The mesh fails the benchmark's validity or quality checks.
     """
-    import resource
-
     import meshers
     import numpy as np
 
@@ -178,9 +289,7 @@ def sample(case):  # ruff: ignore[too-many-locals] - keep the timing boundary an
         )
     elapsed = time.perf_counter() - start
     # Capture OS high-water RSS before allocating arrays for independent checks.
-    peak = resource.getrusage(resource.RUSAGE_SELF).ru_maxrss * (
-        1 if sys.platform == "darwin" else 1024
-    )
+    peak = peak_rss_bytes()
     if max(len(mesh.points), len(mesh.tetrahedra)) > CAP:
         raise RuntimeError("Benchmark node/tetrahedron cap exceeded")
     points = mesh.points[mesh.tetrahedra]
@@ -232,9 +341,12 @@ def sample(case):  # ruff: ignore[too-many-locals] - keep the timing boundary an
                 strict=True,
             )
         },
-        "surface_error": mesh.diagnostics["sampled_surface_error"],
+        **surface_measurements(case, mesh),
     }
-    if record["quality_min"] < 0.01 or record["surface_error"] > 0.1:
+    if (
+        record["quality_min"] < 0.01
+        or max(record["surface_error"], record.get("mapped_cap_error", 0)) > 0.1
+    ):
         raise RuntimeError("Benchmark geometry or quality floor failed")
     return record
 
@@ -263,6 +375,11 @@ def regressions(base, head):
             failures.append(f"{key} changed beyond {tolerance:.1%}")
     if head["surface_error"] > base["surface_error"] * 1.05 + 1e-10:
         failures.append("surface error increased by more than 5%")
+    if (
+        "mapped_cap_error" in base
+        and head["mapped_cap_error"] > base["mapped_cap_error"] * 1.05 + 1e-10
+    ):
+        failures.append("mapped cap error increased by more than 5%")
     return failures
 
 
@@ -376,8 +493,8 @@ def main():
         SystemExit: At least one comparison exceeds its regression allowance.
     """
     parser, args = arguments()
-    if sys.platform not in {"linux", "darwin"}:
-        parser.error("OS peak-RSS reporting supports Linux and macOS")
+    if sys.platform not in {"linux", "darwin", "win32"}:
+        parser.error("OS peak-RSS reporting supports Linux, macOS and Windows")
     configure_worker()
     if args.identity:
         print(json.dumps(runtime_identity()))
@@ -389,20 +506,10 @@ def main():
         parser.error("Two installed environments and at least three repetitions are required")
     result = {
         "schema_version": 2,
-        "fixture_version": 2,
+        "fixture_version": FIXTURE_VERSION,
         "suite": args.suite,
-        "recorded_at": datetime.datetime.now(datetime.timezone.utc).isoformat(),
-        "runner": os.environ.get("RUNNER_NAME", platform.node()),
-        "machine": platform.machine(),
-        "cpu_model": (
-            subprocess.check_output(
-                ["/usr/sbin/sysctl", "-n", "machdep.cpu.brand_string"], text=True
-            ).strip()
-            if sys.platform == "darwin"
-            else platform.processor()
-        ),
-        "cpu_count": os.cpu_count(),
-        "platform": platform.platform(),
+        "recorded_at": dt.datetime.now(dt.timezone.utc).isoformat(),
+        **hardware_snapshot(),
         "script_sha256": hashlib.sha256(Path(__file__).read_bytes()).hexdigest(),
         "threads": 1,
         "warmup_pairs": 1,
@@ -449,7 +556,12 @@ def main():
                     if repetition:  # Discard the first pair to warm the OS page cache.
                         runs[label].append(json.loads(raw))
         except (subprocess.CalledProcessError, subprocess.TimeoutExpired) as error:
-            message = f"{case}: sample failed: {error}"
+            reason = (
+                "timeout"
+                if isinstance(error, subprocess.TimeoutExpired)
+                else f"exit {error.returncode}"
+            )
+            message = f"{case}: sample failed ({reason})"
             failures.append(message)
             result["cases"][case] = {"runs": runs, "failures": [message], "medians": None}
             print(message, flush=True)

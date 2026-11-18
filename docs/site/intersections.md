@@ -124,7 +124,16 @@ Very acute input angles can make a requested minimum impossible.
 
 `geometry_tolerance=None` skips the optional physical surface check. A positive
 value samples facet vertices, edge midpoints and centroids against the assigned
-analytic constraints. Mapped checks invert the coordinate map locally and
+analytic constraints. For a mapped intersection the check also includes physical
+chart caps. `mapped_cap_errors` gives the maximum for each cap present in
+the returned surface, keyed by chart side (for example `z-`). A welded seam
+has no cap. The overall sampled maximum covers named surfaces and measured caps.
+For a map with curvature concentrated along one chart axis, compare an
+anisotropic `cells` tuple with uniform refinement at the same physical tolerance.
+The regression fixture uses `(8, 4, 4)` and `(8, 8, 8)` for
+`(u, v, w + u²)` and repeats the comparison with curvature along the second axis.
+
+Mapped checks invert the coordinate map locally and
 transform gradients to physical coordinates. Singular/inconsistent inversion
 is rejected. This is a first-order distance estimate and an acceptance gate,
 not a Hausdorff bound. Physical adaptation checks joint projection onto assigned

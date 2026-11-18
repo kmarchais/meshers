@@ -232,6 +232,7 @@ def _surface_errors(  # ruff: ignore[too-many-locals] - explicit physical invers
     geometry_tolerance: float,
     closed_axes: Sequence[bool] = (False, False, False),
     errors_by_face: np.ndarray | None = None,
+    face_selections: list[Indices] | None = None,
 ) -> list[float]:
     """Sample physical facets against analytic constraints, including map inversion.
 
@@ -258,7 +259,11 @@ def _surface_errors(  # ruff: ignore[too-many-locals] - explicit physical invers
     ])
     errors = []
     for j, field in enumerate(fields):
-        selection = np.flatnonzero((labels & (1 << j)) != 0)
+        selection = (
+            np.flatnonzero((labels & (1 << j)) != 0)
+            if face_selections is None
+            else face_selections[j]
+        )
         selected = faces[selection]
         maximum = 0.0
         # Bound sample arrays, not just triangle counts: each face has seven samples.
@@ -316,6 +321,28 @@ def _surface_errors(  # ruff: ignore[too-many-locals] - explicit physical invers
     return errors
 
 
+def _signed_quality(vertices: Points) -> Points:
+    """Return signed MMG quality for each linear tetrahedron."""
+    determinant = np.linalg.det(vertices[:, 1:] - vertices[:, :1])
+    edges = sum(
+        np.sum((vertices[:, a] - vertices[:, b]) ** 2, axis=1)
+        for a in range(4)
+        for b in range(a + 1, 4)
+    )
+    return np.sign(determinant) * np.sqrt(432 * determinant**2 / edges**3)
+
+
+def _refresh_linear_metrics(result: dict, *, fitted: bool) -> None:
+    """Update volume and any native shape statistics invalidated by fitting."""
+    diagnostics = result["diagnostics"]
+    vertices = result["points"][result["tetrahedra"]]
+    if fitted:
+        final_quality = _signed_quality(vertices)
+        diagnostics["minimum_mmg_quality"] = float(np.min(final_quality))
+        diagnostics["elements_below_quality_01"] = int(np.count_nonzero(final_quality < 0.1))
+    diagnostics["volume"] = float(np.linalg.det(vertices[:, 1:] - vertices[:, :1]).sum() / 6)
+
+
 def _fit_surface(  # ruff: ignore[complex-structure, too-many-locals, too-many-branches, too-many-statements] - explicit bounded fitting and admission guards.
     result: dict,
     fields: list[Scalar],
@@ -351,16 +378,6 @@ def _fit_surface(  # ruff: ignore[complex-structure, too-many-locals, too-many-b
             errors_by_face=per_face,
         )
         return per_face
-
-    def qualities(indices: Sequence[int] | Indices) -> Points:
-        vertices = points[tetrahedra[indices]]
-        determinant = np.linalg.det(vertices[:, 1:] - vertices[:, :1])
-        edges = sum(
-            np.sum((vertices[:, a] - vertices[:, b]) ** 2, axis=1)
-            for a in range(4)
-            for b in range(a + 1, 4)
-        )
-        return np.sign(determinant) * np.sqrt(432 * determinant**2 / edges**3)
 
     incident = [[] for _ in points]
     boundary = [[] for _ in points]
@@ -416,7 +433,7 @@ def _fit_surface(  # ruff: ignore[complex-structure, too-many-locals, too-many-b
                 ):
                     continue
                 points[node] = _mapped(candidate[None], mapping)[0]
-                q = qualities(incident[node])
+                q = _signed_quality(points[tetrahedra[incident[node]]])
                 if not np.all(np.isfinite(q)) or np.min(q) < max(minimum_quality, 1e-14):
                     continue
                 new = float(np.max(measure(boundary[node])))
@@ -436,6 +453,61 @@ def _fit_surface(  # ruff: ignore[complex-structure, too-many-locals, too-many-b
         if not accepted:
             break
     return moved
+
+
+def _mapped_cap_errors(
+    result: dict,
+    tags: np.ndarray,
+    mapping: list[Scalar] | None,
+    bounds: Points,
+    *,
+    closed_axes: Sequence[bool],
+    geometry_tolerance: float,
+    batch_size: int,
+    cancel: _meshers.CancellationToken | None,
+) -> dict[str, float]:
+    """Return physical distance estimates for the chart caps present in the mesh.
+
+    Raises:
+        MeshingError: A measured cap exceeds tolerance or its map is singular.
+    """
+    if mapping is None:
+        return {}
+    cap_fields: list[Scalar] = []
+    selections = []
+    cap_names = []
+    for side, bound in enumerate(bounds):
+        axis = side // 2
+        indices = np.flatnonzero(tags == side + 1)
+        if closed_axes[axis] or not len(indices):
+            continue
+
+        def cap(x: Points, y: Points, z: Points, axis: int = axis, bound: float = bound) -> Points:
+            return (x, y, z)[axis] - bound
+
+        cap_fields.append(cap)
+        selections.append(indices)
+        cap_names.append(("x-", "x+", "y-", "y+", "z-", "z+")[side])
+    try:
+        cap_values = _surface_errors(
+            result,
+            cap_fields,
+            mapping,
+            bounds,
+            cancel,
+            batch_size=batch_size,
+            geometry_tolerance=geometry_tolerance,
+            closed_axes=closed_axes,
+            face_selections=selections,
+        )
+    except np.linalg.LinAlgError as error:
+        raise _meshers.MeshingError("singular coordinate map during cap checks") from error
+    for name, value in zip(cap_names, cap_values, strict=True):
+        if value > geometry_tolerance:
+            raise _meshers.MeshingError(
+                f"sampled mapped cap {name} error {value:g} exceeds {geometry_tolerance:g}"
+            )
+    return dict(zip(cap_names, cap_values, strict=True))
 
 
 def _periodic_metadata(
@@ -667,8 +739,7 @@ def generate_intersection(
         "compiled" if all(isinstance(f, _meshers.CompiledField) for f in fields) else "mixed"
     )
     diagnostics["empty"] = len(result["tetrahedra"]) == 0
-    vertices = result["points"][result["tetrahedra"]]
-    diagnostics["volume"] = float(np.linalg.det(vertices[:, 1:] - vertices[:, :1]).sum() / 6)
+    _refresh_linear_metrics(result, fitted=False)
     diagnostics["sampled_surface_error"] = None
     if geometry_tolerance is not None:
         fields = [_periodic_extension(f, b, closed_axes) for f in fields]
@@ -719,14 +790,23 @@ def generate_intersection(
             )
             diagnostics["surface_errors"] = dict(zip(constraints, errors, strict=True))
             diagnostics["sampled_surface_error"] = max(errors)
-            vertices = result["points"][result["tetrahedra"]]
-            diagnostics["volume"] = float(
-                np.linalg.det(vertices[:, 1:] - vertices[:, :1]).sum() / 6
-            )
+            _refresh_linear_metrics(result, fitted=bool(moved))
         if max(errors) > geometry_tolerance:
             raise _meshers.MeshingError(
                 f"sampled surface error {max(errors):g} exceeds {geometry_tolerance:g}"
             )
+        caps = _mapped_cap_errors(
+            result,
+            tags,
+            mapping,
+            b,
+            closed_axes=closed_axes,
+            geometry_tolerance=geometry_tolerance,
+            batch_size=batch_size,
+            cancel=cancel,
+        )
+        diagnostics["mapped_cap_errors"] = caps
+        diagnostics["sampled_surface_error"] = max([*errors, *caps.values()])
     diagnostics["workflow_seconds"] = time.perf_counter() - start
     _check_cancel(cancel)
     return Mesh(

@@ -43,9 +43,21 @@ def measurement():
     }
 
 
+def test_published_configuration_excludes_computer_name(monkeypatch):
+    from tools.benchmark_hardware import hardware_snapshot
+
+    monkeypatch.setenv("RUNNER_NAME", "private-identifier")
+    monkeypatch.setenv("COMPUTERNAME", "private-identifier")
+    specs = hardware_snapshot()
+    assert set(specs) == {"cpu_model", "cpu_count", "ram_bytes", "machine", "platform"}
+    assert "private-identifier" not in json.dumps(specs)
+    assert specs["cpu_count"] > 0
+    assert specs["ram_bytes"] > 0
+
+
 def test_archive_plots_and_immutable_history(tmp_path):
     source = tmp_path / "input.json"
-    source.write_text(json.dumps(measurement()))
+    source.write_text(json.dumps({**measurement(), "runner": "private-identifier"}))
     directory = tmp_path / "benchmarks"
     history.archive(source, "v0.2.0-rc-reference", directory)
     page = (directory / "v0.2.0-rc-reference.md").read_text()
@@ -55,6 +67,7 @@ def test_archive_plots_and_immutable_history(tmp_path):
     assert "REFERENCE" in (tmp_path / "benchmark-history.md").read_text()
     ET.parse(directory / "v0.2.0-rc-reference.svg")  # ruff: ignore[suspicious-xml-element-tree-usage] - own generated SVG.
     frozen = (directory / "v0.2.0-rc-reference.json").read_bytes()
+    assert b"private-identifier" not in frozen
     with pytest.raises(FileExistsError):
         history.archive(source, "v0.2.0-rc-reference", directory)
     assert (directory / "v0.2.0-rc-reference.json").read_bytes() == frozen
@@ -97,3 +110,15 @@ def test_preserves_real_regression_and_failed_worker(tmp_path):
     page = (tmp_path / "benchmarks/v0.2.0-failed-control.md").read_text()
     assert "quality_min decreased" in page
     assert "sample failed" in page
+
+
+def test_mapped_cap_measurements_are_required_in_new_fixture_records():
+    data = measurement()
+    data["fixture_version"] = gate.FIXTURE_VERSION
+    with pytest.raises(ValueError, match="Invalid numeric measurement"):
+        history.validate(data)
+    case = data["cases"]["mapped_intersection"]
+    for label, rows in case["runs"].items():
+        for row in [*rows, case["medians"][label]]:
+            row["mapped_cap_error"] = 0.001
+    history.validate(data)
