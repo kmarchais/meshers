@@ -1,4 +1,5 @@
 import gc
+import re
 import threading
 import time
 from functools import partial
@@ -8,6 +9,34 @@ import numpy as np
 import pytest
 
 generate_callback = partial(meshers.generate, compile=False)
+
+
+@pytest.mark.parametrize("compiled", [True, False])
+def test_geometry_rejection_locates_a_sample_with_the_reported_error(compiled):
+    def schwarz(x, y, z):
+        return (np.cos(2 * np.pi * x) + np.cos(2 * np.pi * y) + np.cos(2 * np.pi * z)) / 0.3
+
+    with pytest.raises(meshers.MeshingError, match="sampled geometry error") as failure:
+        meshers.generate(
+            schwarz,
+            cells=8,
+            bounds=(-0.5, 0.5) * 3,
+            band=(-1, 1),
+            geometry_tolerance=0.01,
+            optimize_passes=0,
+            compile=compiled,
+        )
+    match = re.search(
+        r"geometry error (\S+) exceeds.*worst sample at \[([^\]]+)\]", str(failure.value)
+    )
+    assert match
+    point = np.fromstring(match[2], sep=",")
+    assert point.shape == (3,)
+    assert np.all(abs(point) <= 0.5)
+    gradient = -2 * np.pi / 0.3 * np.sin(2 * np.pi * point)
+    distance = abs(abs(schwarz(*point)) - 1) / np.linalg.norm(gradient)
+    assert distance == pytest.approx(float(match[1]), rel=1e-8)
+    assert distance > 0.01
 
 
 @pytest.mark.parametrize("compiled", [True, False])

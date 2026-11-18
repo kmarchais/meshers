@@ -133,3 +133,22 @@ fixture version and a reviewed comparison protocol, not a silent history reset.
 
 To archive a local run, pass full commit SHAs with `--base-ref` and `--head-ref`;
 the default `local` labels deliberately cannot enter the public history.
+
+## Testing a changed mesh against an FEA reference
+
+The Python 3.12 CI jobs generate a periodic Schwarz P Tet4 mesh with the candidate
+wheel. They reopen the VTKHDF export and check the walls and caps in both directions
+(sampled distance ≤ 0.002), volume (within 1%), minimum MMG quality (≥ 0.1),
+orientation, conformity, periodic faces, component count and material probes.
+The budget is 250,000 nodes or elements. Six prescribed strains and six
+stress-controlled solves must pass. The worst relative strain-energy discrepancy
+against the reference stiffness tensor must be at most 1%.
+
+Connectivity and node counts can change within these limits. The CI artifact
+records the solver mesh hash for diagnosis. The separate frozen release replay
+still checks reproducibility. To run the candidate check locally with the workspace
+wheel and a fresh output directory:
+
+```sh
+uv run --with fedoo==1.0.0b2 python demos/solver/schwarz_workflow.py native-candidate candidate-acceptance
+```

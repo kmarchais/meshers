@@ -180,6 +180,7 @@ def main():
         "--require-admitted", action="store_true", help="Exit with failure on rejection"
     )
     parser.add_argument("--output", type=Path, required=True)
+    parser.add_argument("--snap", type=float, help="Maximum lattice snap as a fraction of spacing")
     args = parser.parse_args()
     if args.adapt_tolerance is not None and (
         not args.adapt or not np.isfinite(args.adapt_tolerance) or args.adapt_tolerance <= 0
@@ -190,6 +191,10 @@ def main():
     if args.case == "spinodoid" and version("microgen") != "2.0.0b1":
         parser.error("The archived spinodoid requires microgen==2.0.0b1")
     request = {"cells": args.cells, "optimize_passes": args.passes, "adapt": args.adapt}
+    if args.snap is not None:
+        if not 0 <= args.snap <= 0.2:
+            parser.error("--snap must be between 0 and 0.2")
+        request["snap"] = args.snap
     if args.adapt_tolerance is not None:
         request["adapt_tolerance"] = args.adapt_tolerance
     row = {
