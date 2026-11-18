@@ -1,4 +1,4 @@
-"""Replay the resolution-30 sizing screen or the held-out phase experiment on one configuration."""
+"""Compare Schwarz P mesh costs at a fixed accuracy and solver ordering on a held-out phase."""
 
 import argparse
 import json
@@ -84,7 +84,7 @@ def phase_comparison(repeats, times):
 
 
 def replay(study, output):
-    """Run the four-setting screen and qualified repeats, or six frozen phase trials."""
+    """Run fresh workers for the selected study and retain every admission decision."""
     output.mkdir()
     if study == "sizing":
         qualified = [
@@ -92,6 +92,10 @@ def replay(study, output):
         ]
         arms = ["native", *qualified] if qualified else []
         result = {"screened": REPAIR_SIZES, "qualified": qualified}
+    elif study == "bracket":
+        candidate = measure(output, "screen-near-target", "near-target")
+        arms = ["near-target", "h050"] if candidate["status"] == TARGET else []
+        result = {"settings": ["near-target", "h050"], "screen_status": candidate["status"]}
     else:
         arms = ["shifted-baseline", "shifted-rcm"]
         result = {"phase_x": 0.125, "order": "AB BA AB"}
@@ -105,14 +109,14 @@ def replay(study, output):
     if study == "sizing":
         eligible = {arm: t for arm, t in times.items() if arm in REPAIR_SIZES and t is not None}
         result["fastest_measured_microgen"] = min(eligible, key=eligible.get) if eligible else None
-    else:
+    elif study == "phase":
         result.update(phase_comparison(repeats, times))
     (output / "done.json").write_text(json.dumps(result, indent=2) + "\n", encoding="utf8")
 
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("study", choices=("sizing", "phase"))
+    parser.add_argument("study", choices=("sizing", "phase", "bracket"))
     parser.add_argument("output", type=Path)
     opts = parser.parse_args()
     replay(opts.study, opts.output)

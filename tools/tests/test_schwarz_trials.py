@@ -39,6 +39,23 @@ def test_only_admitted_settings_enter_rotating_repeats(tmp_path, monkeypatch):
     ]
 
 
+@pytest.mark.parametrize("admitted", [False, True])
+def test_native_bracket_requires_an_admitted_candidate(tmp_path, monkeypatch, admitted):
+    calls = []
+
+    def record(_out, _label, arm):
+        calls.append(arm)
+        return {
+            "status": schwarz_trials.TARGET if admitted else "geometry-rejected",
+            "wall_seconds": 1,
+        }
+
+    monkeypatch.setattr(schwarz_trials, "measure", record)
+    schwarz_trials.replay("bracket", tmp_path / "trial")
+    expected = ["near-target", "h050", "h050", "near-target", "near-target", "h050"]
+    assert calls == ["near-target", *(expected if admitted else [])]
+
+
 @pytest.mark.parametrize("change", ["none", "mesh", "hardware", "tensor"])
 def test_phase_speedup_requires_matching_inputs_and_stiffness(tmp_path, monkeypatch, change):
     def record(_out, label, _arm):

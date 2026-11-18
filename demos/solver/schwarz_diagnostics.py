@@ -23,7 +23,12 @@ from vtkmodules.vtkCommonCore import vtkSMPTools
 sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 from tools.performance_gate import cell_geometry
 
-SIZES = {"medium": (0.06, 0.0007), "fine": (0.04, 0.00045), "finest": (0.032, 0.0003)}
+SIZES = {
+    "medium": (0.06, 0.0007),
+    "fine": (0.04, 0.00045),
+    "near-target": (0.038, 0.00041),
+    "finest": (0.032, 0.0003),
+}
 CASES = (
     "default",
     "tuned",
