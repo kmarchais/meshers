@@ -43,11 +43,12 @@ Doubling native background resolution from 12 to 24 increased the final Tet4 cou
 
 ## Configuration replays
 
-Across 4 configurations, 36 native workers completed the geometry checks and solves but missed the stiffness target. Geometry rejected 72 Microgen volumes before FEA. No tested level qualified for a timing at 1%. Each raw archive contains 27 worker records, including failed geometry checks. [Hardware, OS and run dates](configurations-20261118/README.md)
+Across 5 configurations, 45 native workers completed the geometry checks and solves but missed the stiffness target. Geometry rejected 90 Microgen volumes before FEA. No tested level qualified for a timing at 1%. Each raw archive contains 27 worker records, including failed geometry checks. [Hardware, OS and run dates](configurations-20261118/README.md)
 
 | CPU and raw workers | Microgen rejected by geometry | Native above target | Qualifying levels | Smallest native discrepancy |
 | --- | ---: | ---: | ---: | ---: |
 | [Apple M4](configurations-20261118/apple-m4-091916z-a3fb9327/schwarz.json) | 18 | 9 | 0/9 | 2.283% |
+| [Core Ultra 9 285K](configurations-20261118/core-ultra-9-285k-095358z-610e8c8f/schwarz.json) | 18 | 9 | 0/9 | 2.304% |
 | [Core i7-10750H](configurations-20261118/core-i7-10750h-091913z-4f4ba086/schwarz.json) | 18 | 9 | 0/9 | 2.336% |
 | [Core i7-12700H](configurations-20261118/core-i7-12700h-091916z-2ebf2eee/schwarz.json) | 18 | 9 | 0/9 | 2.304% |
 | [Ryzen 7 7730U](configurations-20261118/ryzen-7-7730u-091912z-fb87984d/schwarz.json) | 18 | 9 | 0/9 | 2.336% |
