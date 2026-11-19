@@ -137,7 +137,7 @@ def test_gradient_and_original_exception():
     )
     marker = LookupError("original callback failure")
 
-    def bad(x, y, z):
+    def bad(_x, _y, _z):
         raise marker
 
     with pytest.raises(LookupError) as caught:
@@ -148,10 +148,10 @@ def test_gradient_and_original_exception():
 @pytest.mark.parametrize(
     "field",
     [
-        lambda x, y, z: 0.0,
-        lambda x, y, z: np.zeros((len(x), 1)),
-        lambda x, y, z: np.zeros(len(x), dtype=np.float32),
-        lambda x, y, z: np.full(len(x), np.nan),
+        lambda _x, _y, _z: 0.0,
+        lambda x, _y, _z: np.zeros((len(x), 1)),
+        lambda x, _y, _z: np.zeros(len(x), dtype=np.float32),
+        lambda x, _y, _z: np.full(len(x), np.nan),
     ],
 )
 def test_invalid_callback_results(field):
@@ -190,7 +190,7 @@ def test_vtkhdf_round_trip_and_physical_shifts(tmp_path):
     import pyvista as pv
 
     result = generate_callback(
-        lambda x, y, z: np.full_like(x, -1.0),
+        lambda x, _y, _z: np.full_like(x, -1.0),
         cells=4,
         bounds=(2, 4, -1, 2, 3, 7),
         periodic=(True, True, True),
@@ -213,7 +213,7 @@ def test_empty_mesh_shapes(order, width, face_width, tmp_path):
     import pyfive
 
     result = generate_callback(
-        lambda x, y, z: np.ones_like(x),
+        lambda x, _y, _z: np.ones_like(x),
         cells=4,
         order=order,
         expected_components=0,
@@ -336,7 +336,7 @@ def test_optimizer_batch_size_and_gradient_batches():
 def test_error_and_cancellation_during_batched_gradient():
     problem = RuntimeError("batch gradient failed")
 
-    def grad(x, y, z):
+    def grad(x, _y, _z):
         if len(x) > 6:
             raise problem
         return np.ones((len(x), 3), dtype=np.float64)
@@ -346,7 +346,7 @@ def test_error_and_cancellation_during_batched_gradient():
     assert caught.value is problem
     token = meshers.CancellationToken()
 
-    def cancel_gradient(x, y, z):
+    def cancel_gradient(x, _y, _z):
         token.cancel()
         return np.ones((len(x), 3), dtype=np.float64)
 
@@ -399,7 +399,7 @@ def test_expected_components_exposes_missing_island_in_nonempty_mesh(order):
 
 
 def test_expected_components_exposes_lost_thin_slab():
-    def slab(x, y, z):
+    def slab(x, _y, _z):
         return (x - 0.06) ** 2 - 0.025**2
 
     opts = {"expected_components": 1, "optimize_passes": 0, "snap": 0, "geometry_tolerance": 0.02}
@@ -412,7 +412,7 @@ def test_expected_components_exposes_lost_thin_slab():
 def test_expected_components_on_retained_planes():
     with pytest.raises(meshers.MeshingError, match="found 1"):
         meshers.generate(
-            lambda x, y, z: np.maximum(x - 0.4, y - 0.6), cells=4, expected_components=2
+            lambda x, y, _z: np.maximum(x - 0.4, y - 0.6), cells=4, expected_components=2
         )
 
 
@@ -424,7 +424,7 @@ def test_invalid_expected_components(invalid):
 
 def test_expected_components_count_before_periodic_identification():
     mesh = meshers.generate(
-        lambda x, y, z: -np.cos(2 * np.pi * x),
+        lambda x, _y, _z: -np.cos(2 * np.pi * x),
         cells=8,
         periodic=(True, False, False),
         expected_components=2,

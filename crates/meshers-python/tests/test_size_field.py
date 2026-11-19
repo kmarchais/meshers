@@ -3,7 +3,7 @@ import numpy as np
 import pytest
 
 
-def solid(coordinates_x, coordinates_y, coordinates_z):
+def solid(coordinates_x, _coordinates_y, _coordinates_z):
     return coordinates_x * 0 - 1
 
 
@@ -64,7 +64,7 @@ def test_size_requires_adaptation():
 
 
 def test_size_callback_exception_is_preserved():
-    def fail(*coordinates):
+    def fail(*_coordinates):
         raise RuntimeError("size callback failed")
 
     with pytest.raises(RuntimeError, match="size callback failed"):

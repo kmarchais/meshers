@@ -52,7 +52,7 @@ def test_rust_grading_and_unsupported_branch():
     f = meshers.compile_field(graded, backend="rust")
     assert abs(f(0.2, 0.3, 0.4) - graded(0.2, 0.3, 0.4)) < 1e-14
 
-    def unsupported(x, y, z):
+    def unsupported(x, y, _z):
         return x if x == 0 else y
 
     with pytest.raises(TypeError):

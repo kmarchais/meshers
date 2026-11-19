@@ -127,7 +127,7 @@ def _check_components(mesh: Mesh, expected_components: int | None) -> Mesh:
 
 
 # Keep public option validation and pipeline dispatch together.
-def generate(  # ruff: ignore[complex-structure, too-many-branches]
+def generate(  # ruff: ignore[complex-structure]
     field: str | Field | CompiledField,
     *,
     gradient: Field | None = None,
@@ -389,16 +389,31 @@ def generate(  # ruff: ignore[complex-structure, too-many-branches]
         curved_fit=curved_fit,
         **feature_options,
     )
-    quadratic = result.pop("quadratic", None)
-    if quadratic is not None:
-        for name in ("points", "tetrahedra", "surface", "periodic_pairs"):
-            result[name] = quadratic.pop(name)
-        result["diagnostics"]["quadratic"] = quadratic
     result["diagnostics"]["threads"] = threads
     result["diagnostics"]["evaluator"] = evaluator
     result["diagnostics"]["preparation_seconds"] = preparation_seconds
-    result["periodic_pairs"] = tuple(result["periodic_pairs"])
-    return _check_components(Mesh(**result), expected_components)
+    return _check_components(_volume_mesh(result), expected_components)
+
+
+def _volume_mesh(result: "_meshers._GeneratedVolume") -> Mesh:
+    """Return a mesh with the connectivity and periodic pairs of the requested order."""
+    quadratic = result.get("quadratic")
+    geometry = quadratic if quadratic is not None else result
+    diagnostics = result["diagnostics"]
+    if quadratic is not None:
+        diagnostics["quadratic"] = {
+            key: value
+            for key, value in quadratic.items()
+            if key not in {"points", "tetrahedra", "surface", "periodic_pairs"}
+        }
+    return Mesh(
+        points=geometry["points"],
+        tetrahedra=geometry["tetrahedra"],
+        surface=geometry["surface"],
+        periodic_pairs=tuple(geometry["periodic_pairs"]),
+        boundary_tags=result["boundary_tags"],
+        diagnostics=diagnostics,
+    )
 
 
 __all__ = [

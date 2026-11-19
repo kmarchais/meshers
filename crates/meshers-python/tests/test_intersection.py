@@ -10,7 +10,7 @@ import pyvista as pv
 
 
 def constraints():
-    return {"right": lambda x, y, z: x - 0.501, "back": lambda x, y, z: y - 0.751}
+    return {"right": lambda x, _y, _z: x - 0.501, "back": lambda _x, y, _z: y - 0.751}
 
 
 def volume(mesh):
@@ -57,11 +57,11 @@ def test_octahedron_preserves_four_plane_corners_and_exact_volume():
     getattr(meshers._meshers, "MAX_CONSTRAINTS", 8) < 32, reason="optional wide-constraints feature"
 )
 def test_high_constraint_bits_and_planar_intersections():
-    fields = {f"inactive{i}": lambda x, y, z: -1 + 0 * x for i in range(29)}
+    fields = {f"inactive{i}": lambda x, _y, _z: -1 + 0 * x for i in range(29)}
     fields.update({
-        "x": lambda x, y, z: x - 0.63,
-        "y": lambda x, y, z: y - 0.72,
-        "z": lambda x, y, z: z - 0.81,
+        "x": lambda x, _y, _z: x - 0.63,
+        "y": lambda _x, y, _z: y - 0.72,
+        "z": lambda _x, _y, z: z - 0.81,
     })
     mesh = meshers.generate_intersection(fields, cells=8, geometry_tolerance=1e-10)
     assert mesh.constraint_masks.dtype == np.uint32
@@ -174,12 +174,12 @@ def test_failures_are_explicit():
     with pytest.raises(meshers.CancelledError):
         meshers.generate_intersection(constraints(), cells=4, cancel=token)
 
-    def fails(x, y, z):
+    def fails(_x, _y, _z):
         raise RuntimeError("user callback failed")
 
     with pytest.raises(RuntimeError, match="user callback failed"):
         meshers.generate_intersection(
-            {"bad": fails, "back": lambda x, y, z: y - 0.5}, cells=4, compile=False
+            {"bad": fails, "back": lambda _x, y, _z: y - 0.5}, cells=4, compile=False
         )
 
 
@@ -204,7 +204,7 @@ def test_invalid_options(kwargs):
 
 def test_empty_and_geometry_rejection():
     mesh = meshers.generate_intersection(
-        {"outside": lambda x, y, z: x + 2, "back": lambda x, y, z: y - 0.5}, cells=4
+        {"outside": lambda x, _y, _z: x + 2, "back": lambda _x, y, _z: y - 0.5}, cells=4
     )
     assert mesh.points.shape == (0, 3)
     assert mesh.tetrahedra.shape == (0, 4)
@@ -213,7 +213,7 @@ def test_empty_and_geometry_rejection():
         meshers.generate_intersection(
             {
                 "sphere": lambda x, y, z: (x - 0.5) ** 2 + (y - 0.5) ** 2 + (z - 0.5) ** 2 - 0.3**2,
-                "cut": lambda x, y, z: z - 0.55,
+                "cut": lambda _x, _y, z: z - 0.55,
             },
             cells=8,
             geometry_tolerance=1e-8,
@@ -234,7 +234,7 @@ def test_snapping_rollback_keeps_periodic_tpms_geometry():
         {
             "upper": lambda x, y, z: gyroid(x, y, z) - 0.55,
             "lower": lambda x, y, z: -gyroid(x, y, z) - 0.55,
-            "wall": lambda x, y, z: np.sqrt(x * x + y * y) - 0.75,
+            "wall": lambda x, y, _z: np.sqrt(x * x + y * y) - 0.75,
         },
         bounds=(-0.8, 0.8, -0.8, 0.8, 0, 3),
         cells=(24, 24, 40),
@@ -254,7 +254,7 @@ def test_snapping_rollback_keeps_periodic_tpms_geometry():
 def test_cancellation_during_python_surface_verification():
     token = meshers.CancellationToken()
 
-    def field(x, y, z):
+    def field(x, _y, _z):
         # Native construction uses scalar callbacks; verification samples batches.
         if x.size > 1:
             token.cancel()
@@ -262,7 +262,7 @@ def test_cancellation_during_python_surface_verification():
 
     with pytest.raises(meshers.CancelledError):
         meshers.generate_intersection(
-            {"x": field, "y": lambda x, y, z: y - 0.7},
+            {"x": field, "y": lambda _x, y, _z: y - 0.7},
             cells=4,
             compile=False,
             optimize_passes=0,
@@ -276,7 +276,7 @@ def test_cancellation_during_python_surface_verification():
 @pytest.mark.parametrize("passes", [0, 2])
 def test_constraint_projection_preserves_geometry_under_rescaling(scale, passes):
     mesh = meshers.generate_intersection(
-        {"x": lambda x, y, z: scale * (x - 0.51), "y": lambda x, y, z: (y - 0.74) / scale},
+        {"x": lambda x, _y, _z: scale * (x - 0.51), "y": lambda _x, y, _z: (y - 0.74) / scale},
         cells=4,
         snap=0.2,
         optimize_passes=passes,
@@ -299,7 +299,7 @@ def test_surface_verification_respects_callback_batch_size(batch_size, mapped):
         sizes.append(x.size)
         assert x.size <= batch_size
 
-    def field(x, y, z):
+    def field(x, _y, _z):
         record(x)
         return x - 0.6
 
@@ -308,7 +308,7 @@ def test_surface_verification_respects_callback_batch_size(batch_size, mapped):
         return x + 0.1 * y * y, y, z
 
     mesh = meshers.generate_intersection(
-        {"x": field, "y": lambda x, y, z: y - 0.7},
+        {"x": field, "y": lambda _x, y, _z: y - 0.7},
         cells=4,
         compile=False,
         optimize_passes=0,
@@ -571,7 +571,7 @@ def test_boundary_fitting_projection_is_invariant_to_field_scale(scale):
     projected = _project_parameters(
         point,
         point,
-        [lambda x, y, z: scale * (y * y + z * z - 0.16)],
+        [lambda _x, y, z: scale * (y * y + z * z - 0.16)],
         locked=np.array([True, False, False]),
         step=np.full(3, 1e-5),
     )
@@ -584,21 +584,21 @@ def test_boundary_fitting_projection_is_invariant_to_field_scale(scale):
 def test_closed_axis_options_require_three_booleans(closed):
     with pytest.raises(ValueError, match="three booleans"):
         meshers.generate_intersection(
-            {"a": lambda x, y, z: x - 0.5, "b": lambda x, y, z: y - 0.5}, closed_axes=closed
+            {"a": lambda x, _y, _z: x - 0.5, "b": lambda _x, y, _z: y - 0.5}, closed_axes=closed
         )
 
 
 def test_closed_axis_rejects_translated_physical_caps():
     with pytest.raises(ValueError, match="identity"):
         meshers.generate_intersection(
-            {"a": lambda x, y, z: x - 0.5, "b": lambda x, y, z: y - 0.5},
+            {"a": lambda x, _y, _z: x - 0.5, "b": lambda _x, y, _z: y - 0.5},
             periodic=(False, False, True),
             closed_axes=(False, False, True),
         )
 
 
 def test_named_seed_adaptation_preserves_geometry_labels_and_input():
-    fields = {"x": lambda x, y, z: x - 0.5, "y": lambda x, y, z: y - 0.75}
+    fields = {"x": lambda x, _y, _z: x - 0.5, "y": lambda _x, y, _z: y - 0.75}
     seed = meshers.generate_intersection(fields, cells=4, snap=0, optimize_passes=0)
     points, cells = seed.points.copy(), seed.tetrahedra.copy()
     mesh = meshers.adapt_intersection(
@@ -626,7 +626,7 @@ def test_named_seed_adaptation_preserves_geometry_labels_and_input():
 
 def test_named_seed_rejects_a_box_outside_the_clipping_fields():
     seed = meshers.generate_intersection(
-        {"a": lambda x, y, z: -1 + 0 * x, "b": lambda x, y, z: -1 + 0 * y},
+        {"a": lambda x, _y, _z: -1 + 0 * x, "b": lambda _x, y, _z: -1 + 0 * y},
         cells=4,
         snap=0,
         optimize_passes=0,
@@ -634,7 +634,7 @@ def test_named_seed_rejects_a_box_outside_the_clipping_fields():
     with pytest.raises(ValueError, match="seed fails"):
         meshers.adapt_intersection(
             seed,
-            {"x": lambda x, y, z: x - 0.5, "y": lambda x, y, z: y - 0.75},
+            {"x": lambda x, _y, _z: x - 0.5, "y": lambda _x, y, _z: y - 0.75},
             bounds=(0, 1, 0, 1, 0, 1),
             constraint_masks=seed.constraint_masks,
             seed_tolerance=1e-8,
@@ -643,7 +643,7 @@ def test_named_seed_rejects_a_box_outside_the_clipping_fields():
 
 
 def test_mapped_adaptation_preserves_user_names_matching_domain_caps():
-    fields = {"domain_0_0": lambda x, y, z: x - 0.5, "wall": lambda x, y, z: y - 0.75}
+    fields = {"domain_0_0": lambda x, _y, _z: x - 0.5, "wall": lambda _x, y, _z: y - 0.75}
     mesh = meshers.generate_intersection(
         fields,
         coordinate_map=lambda x, y, z: (x, y, z),
@@ -673,7 +673,7 @@ def test_mapped_adaptation_preserves_user_names_matching_domain_caps():
 def test_mapped_adaptation_counts_domain_caps_before_starting():
     with pytest.raises(ValueError, match="named-constraint limit"):
         meshers.generate_intersection(
-            {f"f{i}": lambda x, y, z: x - 0.5 for i in range(meshers._meshers.MAX_CONSTRAINTS)},
+            {f"f{i}": lambda x, _y, _z: x - 0.5 for i in range(meshers._meshers.MAX_CONSTRAINTS)},
             coordinate_map=lambda x, y, z: (x, y, z),
             inverse_map=lambda x, y, z: (x, y, z),
             physical_bounds=(0, 1, 0, 1, 0, 1),
@@ -753,7 +753,7 @@ def test_adaptive_closed_map_keeps_rejecting_negative_orientation():
 
     with pytest.raises(meshers.MeshingError, match="inverted a background"):
         meshers.generate_intersection(
-            {"first": lambda x, y, z: -1 + 0 * x, "second": lambda x, y, z: -1 + 0 * y},
+            {"first": lambda x, _y, _z: -1 + 0 * x, "second": lambda _x, y, _z: -1 + 0 * y},
             bounds=(-0.5, 0.5) * 3,
             cells=4,
             coordinate_map=mapping,
@@ -774,7 +774,7 @@ def test_mapped_caps_include_chord_error(curvature, axis):
         return u, v, w + curvature * (u, v)[axis] ** 2
 
     args = {
-        "constraints": {"a": lambda x, y, z: 0 * x - 1, "b": lambda x, y, z: 0 * y - 2},
+        "constraints": {"a": lambda x, _y, _z: 0 * x - 1, "b": lambda _x, y, _z: 0 * y - 2},
         "coordinate_map": mapping,
         "cells": 4,
         "optimize_passes": 0,
@@ -817,7 +817,7 @@ def test_final_quality_after_sphere_fitting():
     mesh = meshers.generate_intersection(
         {
             "sphere": lambda x, y, z: (x - 0.5) ** 2 + (y - 0.51) ** 2 + (z - 0.52) ** 2 - 0.35**2,
-            "inactive": lambda x, y, z: 0 * x - 1,
+            "inactive": lambda x, _y, _z: 0 * x - 1,
         },
         cells=4,
         optimize_passes=0,

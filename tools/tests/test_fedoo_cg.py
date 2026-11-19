@@ -14,7 +14,7 @@ from scipy.sparse import eye
 
 @pytest.mark.parametrize(("info", "message"), [(7, "status 7"), (0, "relative residual")])
 def test_failed_solve_is_rejected(monkeypatch, info, message):
-    monkeypatch.setattr(fea, "cg", lambda *args, **kwargs: (np.zeros(2), info))
+    monkeypatch.setattr(fea, "cg", lambda *_args, **_kwargs: (np.zeros(2), info))
     solver = fea.AuditedCG()
     with pytest.raises(ValueError, match=message):
         solver(eye(2, format="csr"), np.ones(2))

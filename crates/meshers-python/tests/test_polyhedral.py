@@ -46,12 +46,12 @@ def test_halfspaces_match_the_compiled_field_and_reject_nonconvex_graphs():
         (points @ planes[:, :3].T + planes[:, 3]).max(axis=1), field.values(points), atol=3e-16
     )
     for function in (
-        lambda x, y, z: np.minimum(x, y),
-        lambda x, y, z: -abs(x),
+        lambda x, y, _z: np.minimum(x, y),
+        lambda x, _y, _z: -abs(x),
         lambda x, y, z: x * x + y * y + z * z - 0.1,
-        lambda x, y, z: abs(x) * (y + 2),
+        lambda x, y, _z: abs(x) * (y + 2),
         lambda x, y, z: sum(abs(x + i * y + i * i * z) for i in range(7)) - 0.1,
-        lambda x, y, z: np.maximum(0, x),
+        lambda x, _y, _z: np.maximum(0, x),
     ):
         assert meshers.compile_field(function)._halfspaces is None
 
@@ -197,7 +197,7 @@ def test_adaptation_preserves_exact_polyhedral_faces_and_performs_work():
 def test_polyhedral_adaptation_honors_the_spatial_size_callback():
     calls = []
 
-    def size(x, y, z):
+    def size(x, _y, _z):
         calls.append(len(x))
         return np.full_like(x, 0.035)
 
@@ -227,7 +227,7 @@ def test_polyhedral_adaptation_honors_the_spatial_size_callback():
 def test_polyhedral_adaptation_preserves_callback_exceptions():
     marker = LookupError("spatial size callback marker")
 
-    def size(x, y, z):
+    def size(_x, _y, _z):
         raise marker
 
     with pytest.raises(LookupError) as caught:
@@ -255,7 +255,7 @@ def test_polyhedral_refinement_keeps_the_hard_budget():
             max_length=0.1,
             minimum_quality=0.1,
             max_tetrahedra=20000,
-            size_field=lambda x, y, z: np.full_like(x, 0.02),
+            size_field=lambda x, _y, _z: np.full_like(x, 0.02),
         )
 
 
@@ -266,7 +266,7 @@ def test_polyhedral_adaptation_keeps_invalid_sizing_rejection():
         )
 
 
-def periodic_column(x, y, z):
+def periodic_column(x, y, _z):
     c, s = float(np.cos(0.31)), float(np.sin(0.31))
     return np.maximum(abs(c * x + s * y) - 0.2, abs(-s * x + c * y) - 0.2)
 
@@ -328,7 +328,7 @@ def test_periodic_feature_path_keeps_nonperiodic_sizing_rejection():
             adapt=True,
             min_length=0.002,
             max_length=0.1,
-            size_field=lambda x, y, z: 0.06 + 0.01 * z,
+            size_field=lambda _x, _y, z: 0.06 + 0.01 * z,
         )
 
 
@@ -385,7 +385,7 @@ def test_complete_affine_trace_dispatch_keeps_named_plane_rejection():
     assert not _periodic_affine(field, (False, False, True), bounds)
     with pytest.raises(meshers.MeshingError, match="periodic"):
         meshers.generate_intersection(
-            {"slope": lambda x, y, z: x + 0.3 * z - 0.35, "side": lambda x, y, z: abs(y) - 0.2},
+            {"slope": lambda x, _y, z: x + 0.3 * z - 0.35, "side": lambda _x, y, _z: abs(y) - 0.2},
             bounds=(-0.5, 0.5) * 3,
             cells=4,
             periodic=(False, False, True),

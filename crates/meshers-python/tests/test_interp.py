@@ -14,7 +14,7 @@ import pytest
     ],
 )
 def test_native_interp_values_at_knots_adjacent_and_exterior(knots, values, left, right):
-    def field(x, y, z):
+    def field(_x, _y, z):
         return np.interp(z, knots, values, left=left, right=right)
 
     compiled = meshers.compile_field(field)
@@ -32,7 +32,7 @@ def test_native_interp_values_at_knots_adjacent_and_exterior(knots, values, left
 
 def test_interp_chain_rule_and_knot_policy():
     field = meshers.compile_field(
-        lambda x, y, z: np.interp(2 * x - y, [0.0, 0.4, 1.0], [0.0, 1.0, 0.0])
+        lambda x, y, _z: np.interp(2 * x - y, [0.0, 0.4, 1.0], [0.0, 1.0, 0.0])
     )
     np.testing.assert_allclose(field.gradient(0.1, 0.05, 0), [5.0, -2.5, 0.0])
     np.testing.assert_allclose(field.gradient(0.5, 0.2, 0), [-10 / 3, 5 / 3, 0.0])
@@ -45,7 +45,7 @@ def test_interp_frozen_capture_and_explicit_finite_difference_mode():
     knots = np.array([0.0, 0.5, 1.0])
     values = np.array([0.0, 0.4, 0.8])
 
-    def field(x, y, z):
+    def field(_x, _y, z):
         return np.interp(z, knots, values)
 
     first = meshers.compile_field(field, gradient=False)
@@ -71,7 +71,7 @@ def test_interp_frozen_capture_and_explicit_finite_difference_mode():
 )
 def test_unsupported_interpolation_stays_on_callback_contract(knots, values, options):
     with pytest.raises(meshers.TraceError, match="interp"):
-        meshers.compile_field(lambda x, y, z: np.interp(z, knots, values, **options))
+        meshers.compile_field(lambda _x, _y, z: np.interp(z, knots, values, **options))
 
 
 def test_interp_automatic_generation_uses_native_evaluator():

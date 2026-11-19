@@ -117,6 +117,6 @@ def test_reordered_solver_rejects_bad_original_residual(monkeypatch):
     from fedoo_homogenization import AuditedCG, ReorderedCG
     from scipy.sparse import eye
 
-    monkeypatch.setattr(AuditedCG, "__call__", lambda self, matrix, rhs: np.zeros_like(rhs))
+    monkeypatch.setattr(AuditedCG, "__call__", lambda _self, _matrix, rhs: np.zeros_like(rhs))
     with pytest.raises(ValueError, match="Original-system CG relative residual"):
         ReorderedCG()(eye(3, format="csr"), np.ones(3))

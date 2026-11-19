@@ -3,7 +3,7 @@
 import math
 from collections.abc import Callable
 from functools import lru_cache
-from typing import Literal
+from typing import Literal, Never
 
 import numpy as np
 
@@ -16,6 +16,7 @@ class TraceError(TypeError):
 
 class _Expression:
     __array_priority__ = 1000
+    __hash__ = None
 
     def __init__(self, graph, index):
         self.graph, self.index = graph, index
@@ -177,10 +178,10 @@ class _Expression:
         )
         return np.where(x <= float(knots[0]), lower, np.where(x >= float(knots[-1]), upper, value))
 
-    def __array__(self, *args, **kwargs):
+    def __array__(self, *args: object, **kwargs: object) -> Never:
         raise TraceError("array construction is unsupported by the Rust scalar tracer")
 
-    def __array_ufunc__(self, ufunc, method, *args, **kwargs):
+    def __array_ufunc__(self, ufunc: np.ufunc, method: str, *args: object, **kwargs: object):
         ops = {
             np.arctan2: "atan2",
             np.arccos: "acos",
@@ -221,7 +222,7 @@ class _Graph:
         self.nodes = []
         self.intern = {}
 
-    def node(self, op, *args):
+    def node(self, op: str, *args: _Expression) -> _Expression:
         key = (op, *(a.index for a in args))
         return self._intern(key)
 

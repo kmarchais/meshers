@@ -19,6 +19,8 @@ def test_candidate_exit_code_and_record(tmp_path, monkeypatch, status, expected)
     monkeypatch.setattr(workflow, "hardware_snapshot", lambda: {"platform": "test"})
 
     def run(route, cells, folder, row, *, native_settings):
+        assert folder == output
+        assert native_settings is not None
         assert route == "native-candidate"
         assert cells == 24
         assert "microgen" not in row["versions"]

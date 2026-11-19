@@ -222,7 +222,7 @@ def _project_parameters(
 
 
 def _surface_errors(  # ruff: ignore[too-many-locals] - explicit physical inversion and gradient calculation.
-    result: dict,
+    result: _meshers._IntersectionResult,
     fields: list[Scalar],
     mapping: list[Scalar] | None,
     bounds: Points,
@@ -332,7 +332,7 @@ def _signed_quality(vertices: Points) -> Points:
     return np.sign(determinant) * np.sqrt(432 * determinant**2 / edges**3)
 
 
-def _refresh_linear_metrics(result: dict, *, fitted: bool) -> None:
+def _refresh_linear_metrics(result: _meshers._IntersectionResult, *, fitted: bool) -> None:
     """Update volume and any native shape statistics invalidated by fitting."""
     diagnostics = result["diagnostics"]
     vertices = result["points"][result["tetrahedra"]]
@@ -344,7 +344,7 @@ def _refresh_linear_metrics(result: dict, *, fitted: bool) -> None:
 
 
 def _fit_surface(  # ruff: ignore[complex-structure, too-many-locals, too-many-branches, too-many-statements] - explicit bounded fitting and admission guards.
-    result: dict,
+    result: _meshers._IntersectionResult,
     fields: list[Scalar],
     mapping: list[Scalar] | None,
     bounds: Points,
@@ -364,7 +364,8 @@ def _fit_surface(  # ruff: ignore[complex-structure, too-many-locals, too-many-b
     cell = (bounds[1::2] - bounds[::2]) / np.asarray(cells)
 
     def measure(indices: Sequence[int] | Indices) -> Points:
-        local = dict(result, surface=faces[indices])
+        local = result.copy()
+        local["surface"] = faces[indices]
         per_face = np.zeros(len(indices))
         _surface_errors(
             local,
@@ -456,7 +457,7 @@ def _fit_surface(  # ruff: ignore[complex-structure, too-many-locals, too-many-b
 
 
 def _mapped_cap_errors(
-    result: dict,
+    result: _meshers._IntersectionResult,
     tags: np.ndarray,
     mapping: list[Scalar] | None,
     bounds: Points,
@@ -984,7 +985,6 @@ def adapt_intersection(
         batch_size,
         cancel,
     )
-    result["periodic_pairs"] = tuple(result["periodic_pairs"])
     result["diagnostics"].update(
         preparation_seconds=preparation,
         workflow_seconds=time.perf_counter() - start,
@@ -993,7 +993,16 @@ def adapt_intersection(
         else "mixed",
         threads=1,
     )
-    return Mesh(**result, constraint_names=tuple(constraints))
+    return Mesh(
+        points=result["points"],
+        tetrahedra=result["tetrahedra"],
+        surface=result["surface"],
+        boundary_tags=result["boundary_tags"],
+        diagnostics=result["diagnostics"],
+        periodic_pairs=tuple(result["periodic_pairs"]),
+        constraint_masks=result["constraint_masks"],
+        constraint_names=tuple(constraints),
+    )
 
 
 def _mapped_starting_mesh(

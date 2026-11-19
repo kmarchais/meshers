@@ -74,8 +74,8 @@ def test_nonconvex_sharp_prism_preserves_geometry_and_quality(adapt, snap, angle
 
 def test_unsupported_nonconvex_arithmetic_keeps_scalar_behavior():
     for field in (
-        lambda x, y, z: np.minimum(x, y) + 0.1,
-        lambda x, y, z: abs(np.minimum(x, y)),
+        lambda x, y, _z: np.minimum(x, y) + 0.1,
+        lambda x, y, _z: abs(np.minimum(x, y)),
         lambda x, y, z: np.minimum(x * x + y * y + z * z - 0.1, x),
     ):
         assert meshers.compile_field(field)._polyhedral_regions is None

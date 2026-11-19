@@ -1,10 +1,41 @@
 from collections.abc import Sequence
-from typing import Any
+from typing import NotRequired, TypedDict
 
 import numpy as np
 from numpy.typing import NDArray
 
 from . import Field
+
+class _GeometryArrays(TypedDict):
+    points: NDArray[np.float64]
+    tetrahedra: NDArray[np.int64]
+    surface: NDArray[np.int64]
+
+class _PeriodicArrays(_GeometryArrays):
+    periodic_pairs: list[NDArray[np.int64]]
+
+class _QuadraticResult(_PeriodicArrays):
+    linear_volume: float
+    curved_edges: int
+    straightened_edges: int
+    partially_curved_edges: int
+    minimum_jacobian_ratio: float
+    fit: NotRequired[dict[str, int | float]]
+
+class _VolumeResult(_PeriodicArrays):
+    boundary_tags: NDArray[np.uint8]
+    diagnostics: dict[str, object]
+
+class _GeneratedVolume(_VolumeResult):
+    quadratic: NotRequired[_QuadraticResult]
+
+class _AdaptedIntersection(_VolumeResult):
+    constraint_masks: NDArray[np.uint8] | NDArray[np.uint32]
+
+class _IntersectionResult(_GeometryArrays):
+    parameters: NDArray[np.float64]
+    constraint_masks: NDArray[np.uint8] | NDArray[np.uint32]
+    diagnostics: dict[str, object]
 
 class CancellationToken:
     """Thread-safe cooperative cancellation. Tokens remain cancelled after use."""
@@ -44,7 +75,7 @@ def generate(
     regions: Sequence[int] | None = None,
     constraints: Sequence[str | Field | CompiledField] | None = None,
     curved_fit: bool = False,
-) -> dict[str, Any]: ...
+) -> _GeneratedVolume: ...
 
 class CompiledField:
     """Immutable float64 evaluator and optional gradient, owning compiled code.
@@ -101,7 +132,7 @@ def generate_intersection(
     snap: float,
     batch_size: int,
     cancel: CancellationToken | None,
-) -> dict[str, Any]: ...
+) -> _IntersectionResult: ...
 def _periodic_affine_traces(
     planes: Sequence[Sequence[float]],
     bounds: Sequence[Sequence[float]],
@@ -122,4 +153,4 @@ def adapt_intersection(
     seed_tolerance: float,
     batch_size: int,
     cancel: CancellationToken | None,
-) -> dict[str, Any]: ...
+) -> _AdaptedIntersection: ...

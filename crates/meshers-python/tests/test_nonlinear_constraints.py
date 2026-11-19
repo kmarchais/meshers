@@ -50,7 +50,7 @@ def test_scalar_nonlinear_intersection_keeps_curves_geometry_and_quality():
 
 
 def test_custom_gradient_policies_do_not_get_replaced_by_branch_gradients():
-    for gradient in (False, lambda x, y, z: (0, 0, 0)):
+    for gradient in (False, lambda _x, _y, _z: (0, 0, 0)):
         assert meshers.compile_field(bored_prism, gradient=gradient)._intersection_fields() is None
 
 
@@ -127,7 +127,7 @@ def test_retained_adaptation_preserves_sizing_errors_and_budget():
         "max_tetrahedra": 250000,
     }
 
-    def fail(x, y, z):
+    def fail(_x, _y, _z):
         raise LookupError("retained sizing control")
 
     with pytest.raises(LookupError, match="retained sizing control"):

@@ -46,12 +46,12 @@ def test_piecewise_derivatives_and_integer_power():
     )
     np.testing.assert_allclose(f.gradient(-2, 0, -1), [-1, 0, 0])
     np.testing.assert_allclose(f.gradient(2, 1, 1), [4, 1, 1])
-    f = meshers.compile_field(lambda x, y, z: x**3)
+    f = meshers.compile_field(lambda x, _y, _z: x**3)
     np.testing.assert_allclose(f.gradient(-2, 0, 0), [12, 0, 0])
 
 
 def test_unsupported_numpy_falls_back_visibly():
-    def field(x, y, z):
+    def field(x, _y, _z):
         return np.full_like(x, -1.0)
 
     with pytest.warns(RuntimeWarning, match="NumPy callbacks"):
@@ -90,9 +90,9 @@ def test_explicit_auto_threads_and_conservative_default(monkeypatch):
 
     assert 1 <= _meshers.available_threads() <= 256
     monkeypatch.setattr(_meshers, "available_threads", lambda: 2)
-    mesh = meshers.generate(lambda x, y, z: -1.0, cells=4, optimize_passes=0, threads=None)
+    mesh = meshers.generate(lambda _x, _y, _z: -1.0, cells=4, optimize_passes=0, threads=None)
     assert mesh.diagnostics["threads"] == 2
-    explicit = meshers.generate(lambda x, y, z: -1.0, cells=4, optimize_passes=0)
+    explicit = meshers.generate(lambda _x, _y, _z: -1.0, cells=4, optimize_passes=0)
     assert explicit.diagnostics["threads"] == 1
 
 

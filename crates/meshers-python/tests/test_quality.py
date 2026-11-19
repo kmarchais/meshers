@@ -29,7 +29,7 @@ def test_smooth_periodic_union_quality_with_symmetric_tie_gradients(compiled):
 def test_optional_interior_refinement_preserves_periodic_boundary():
     options = {"cells": 4, "optimize_passes": 0, "minimum_quality": 0.1, "periodic": (True,) * 3}
 
-    def field(x, y, z):
+    def field(x, _y, _z):
         return x * 0 - 1
 
     seed = meshers.generate(field, **options)
@@ -51,7 +51,7 @@ def test_optional_interior_refinement_preserves_periodic_boundary():
 
 
 def test_adaptive_interior_refinement_preserves_periodic_boundary():
-    def field(x, y, z):
+    def field(x, _y, _z):
         return -1 + 0.05 * np.cos(2 * np.pi * x)
 
     options = {
@@ -80,17 +80,17 @@ def test_minimum_quality_gate_and_diagnostics():
         "cells": 4,
         "optimize_passes": 0,
     }
-    mesh = meshers.generate(lambda x, y, z: x * 0 - 1, **args)
+    mesh = meshers.generate(lambda x, _y, _z: x * 0 - 1, **args)
     assert mesh.diagnostics["minimum_mmg_quality"] < 0.01
     assert mesh.diagnostics["elements_below_quality_01"] > 0
     assert mesh.diagnostics["reverted_snap_vertices"] == 0
     with pytest.raises(meshers.MeshingError, match="minimum MMG quality"):
-        meshers.generate(lambda x, y, z: x * 0 - 1, minimum_quality=0.05, **args)
+        meshers.generate(lambda x, _y, _z: x * 0 - 1, minimum_quality=0.05, **args)
     accepted = meshers.generate(
-        lambda x, y, z: x * 0 - 1, cells=4, optimize_passes=0, minimum_quality=0.05
+        lambda x, _y, _z: x * 0 - 1, cells=4, optimize_passes=0, minimum_quality=0.05
     )
     assert accepted.diagnostics["minimum_mmg_quality"] >= 0.05
-    assert meshers.generate(lambda x, y, z: x * 0 + 1, cells=4, minimum_quality=1.0).diagnostics[
+    assert meshers.generate(lambda x, _y, _z: x * 0 + 1, cells=4, minimum_quality=1.0).diagnostics[
         "empty"
     ]
 

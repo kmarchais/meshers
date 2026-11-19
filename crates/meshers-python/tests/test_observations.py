@@ -29,7 +29,7 @@ def observe(sink):
 @pytest.mark.parametrize("adaptive", [False, True])
 @pytest.mark.parametrize("compiled", [False, True])
 def test_scalar_observations_preserve_output(adaptive, compiled):
-    def field(x, y, z):
+    def field(x, _y, _z):
         return -1 + 0.05 * np.cos(2 * np.pi * x)
 
     options = {
@@ -80,7 +80,7 @@ def test_scalar_observations_preserve_exact_failure():
         "max_tetrahedra": 10000,
     }
 
-    def field(x, y, z):
+    def field(x, _y, _z):
         return x * 0 - 1
 
     with pytest.raises(meshers.MeshingError, match="minimum MMG quality") as ordinary:

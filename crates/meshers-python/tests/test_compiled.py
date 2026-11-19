@@ -126,9 +126,9 @@ def test_builtin_and_analytic_compiled_paths(name):
 @pytest.mark.parametrize(
     ("field", "expected", "gradient"),
     [
-        (lambda x, y, z: z * z, 9.0, [0.0, 0.0, 6.0]),
-        (lambda x, y, z: np.sin(y), float(np.sin(2.0)), [0.0, float(np.cos(2.0)), 0.0]),
-        (lambda x, y, z: x * 0 + 4.0, 4.0, [0.0, 0.0, 0.0]),
+        (lambda _x, _y, z: z * z, 9.0, [0.0, 0.0, 6.0]),
+        (lambda _x, y, _z: np.sin(y), float(np.sin(2.0)), [0.0, float(np.cos(2.0)), 0.0]),
+        (lambda x, _y, _z: x * 0 + 4.0, 4.0, [0.0, 0.0, 0.0]),
     ],
 )
 def test_pruned_kernels_keep_input_coordinate_indices(field, expected, gradient):
@@ -138,7 +138,7 @@ def test_pruned_kernels_keep_input_coordinate_indices(field, expected, gradient)
 
 
 def test_value_kernel_does_not_require_finite_derivative():
-    compiled = meshers.compile_field(lambda x, y, z: np.sqrt(x))
+    compiled = meshers.compile_field(lambda x, _y, _z: np.sqrt(x))
     np.testing.assert_equal(compiled(0.0, 1.0, 2.0), 0.0)
     with pytest.raises(ValueError, match="gradient"):
         compiled.gradient(0.0, 1.0, 2.0)
@@ -161,7 +161,7 @@ def test_compiled_batch_matches_scalar_for_strided_points():
 
 
 def test_compiled_batch_rejects_nonfinite_values():
-    f = meshers.compile_field(lambda x, y, z: np.sqrt(x))
+    f = meshers.compile_field(lambda x, _y, _z: np.sqrt(x))
     with pytest.raises(ValueError, match="nonfinite"):
         f.values(np.array([[1.0, 0.0, 0.0], [-1.0, 0.0, 0.0]]))
 
@@ -210,15 +210,15 @@ def test_compiled_tied_smooth_composition_gradient(operation, correction_sign):
 @pytest.mark.parametrize("operation", [np.minimum, np.maximum])
 def test_compiled_minmax_tie_subgradient_is_operand_symmetric(operation):
     direct = meshers.compile_field(
-        lambda coordinates_x, coordinates_y, coordinates_z: operation(coordinates_x, coordinates_y)
+        lambda coordinates_x, coordinates_y, _coordinates_z: operation(coordinates_x, coordinates_y)
     )
     reverse = meshers.compile_field(
-        lambda coordinates_x, coordinates_y, coordinates_z: operation(coordinates_y, coordinates_x)
+        lambda coordinates_x, coordinates_y, _coordinates_z: operation(coordinates_y, coordinates_x)
     )
     np.testing.assert_array_equal(direct.gradient(0.17, 0.17, 0.13), [0.5, 0.5, 0])
     np.testing.assert_array_equal(reverse.gradient(0.17, 0.17, 0.13), [0.5, 0.5, 0])
     extreme = meshers.compile_field(
-        lambda coordinates_x, coordinates_y, coordinates_z: operation(
+        lambda coordinates_x, coordinates_y, _coordinates_z: operation(
             1e308 * coordinates_x + coordinates_y, 1e308 * coordinates_x - coordinates_y
         )
     )
@@ -226,16 +226,16 @@ def test_compiled_minmax_tie_subgradient_is_operand_symmetric(operation):
 
 
 def test_compiled_minmax_propagates_nonfinite_branches():
-    field = meshers.compile_field(lambda x, y, z: np.minimum(np.sqrt(x), 0))
+    field = meshers.compile_field(lambda x, _y, _z: np.minimum(np.sqrt(x), 0))
     with pytest.raises(ValueError, match="nonfinite"):
         field(-1, 0, 0)
-    masked = meshers.compile_field(lambda x, y, z: np.where(x >= 0, np.minimum(np.sqrt(x), 0), 1))
+    masked = meshers.compile_field(lambda x, _y, _z: np.where(x >= 0, np.minimum(np.sqrt(x), 0), 1))
     assert masked(-1, 0, 0) == 1
     np.testing.assert_array_equal(masked.gradient(-1, 0, 0), [0, 0, 0])
 
 
 def test_compiled_square_values_and_gradients_at_extreme_scales():
-    field = meshers.compile_field(lambda x, y, z: x**2)
+    field = meshers.compile_field(lambda x, _y, _z: x**2)
     for x in (-0.0, 0.0, -1e-150, 1e-150, -1e150, 1e150):
         assert field(x, 0, 0) == x * x
         np.testing.assert_array_equal(field.gradient(x, 0, 0), [2 * x, 0, 0])
