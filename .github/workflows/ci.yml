@@ -61,7 +61,8 @@ jobs:
       - uses: astral-sh/setup-uv@v6
       - run: uv pip install --system maturin
       - run: maturin build --locked --release --interpreter python --out dist
-      - run: uv pip install --system --only-binary :all: dist/*.whl "meshers[test]"
+      - run: |
+          uv pip install --system --only-binary :all: dist/*.whl "meshers[test]"
       - run: python -m pytest tests -q
       - name: Fetch the independent geometry validator
         if: matrix.python == '3.12'
