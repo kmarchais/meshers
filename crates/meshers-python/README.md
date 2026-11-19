@@ -68,8 +68,8 @@ insufficient resolution; successful sampling is not geometry certification.
 
 The test suite covers automatic derivatives, cache invalidation, cancellation,
 periodicity, bounded callbacks, named intersections, physical coordinate scales
-and VTKHDF round trips. CI tests Python 3.11, 3.12 and 3.15 on Linux, Windows
-and macOS. The 3.12 jobs also run the geometry and FEA comparisons.
+and VTKHDF round trips. CI tests Python 3.11 and 3.15 on Linux, Windows
+and macOS. The 3.11 jobs also run the geometry and FEA comparisons.
 Release jobs install the same platform wheel on CPython 3.11 and 3.15
 and run the binding tests on both, including VTKHDF export.
 See the [release checks](https://github.com/kmarchais/meshers/blob/main/docs/site/release.md)

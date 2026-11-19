@@ -45,8 +45,7 @@ jobs:
       fail-fast: false
       matrix:
         os: [ubuntu-latest, windows-latest, macos-latest]
-        # 3.12 also runs the cross-platform geometry and stiffness comparisons.
-        python: ['3.11', '3.12', '3.15']
+        python: ['3.11', '3.15']
     runs-on: ${{ matrix.os }}
     defaults:
       run:
@@ -61,11 +60,10 @@ jobs:
       - uses: astral-sh/setup-uv@v6
       - run: uv pip install --system maturin
       - run: maturin build --locked --release --interpreter python --out dist
-      - run: |
-          uv pip install --system --only-binary :all: dist/*.whl "meshers[test]"
+      - run: 'uv pip install --system --only-binary :all: dist/*.whl "meshers[test]"'
       - run: python -m pytest tests -q
       - name: Fetch the independent geometry validator
-        if: matrix.python == '3.12'
+        if: matrix.python == '3.11'
         uses: actions/checkout@v4
         with:
           ref: 602dc900cd028d205b36e29dcdb5b4a9cf4f581a
@@ -73,7 +71,7 @@ jobs:
           sparse-checkout: benchmarks/microgen/microgen_benchmark
           persist-credentials: false
       - name: Check eight-cell sheet and lattice recipes against the historical limits
-        if: matrix.python == '3.12'
+        if: matrix.python == '3.11'
         working-directory: .
         run: |
           uv pip install --system scipy
@@ -93,13 +91,13 @@ jobs:
           done
           exit "$status"
       - uses: actions/upload-artifact@v4
-        if: always() && matrix.python == '3.12'
+        if: always() && matrix.python == '3.11'
         with:
           name: implicit-coverage-${{ matrix.os }}
           path: coverage-results/*.json
           if-no-files-found: ignore
       - name: Check candidate Schwarz geometry and effective stiffness
-        if: matrix.python == '3.12'
+        if: matrix.python == '3.11'
         working-directory: .
         env:
           OPENBLAS_NUM_THREADS: '1'
@@ -110,7 +108,7 @@ jobs:
           uv pip install --system fedoo==1.0.0b2
           python demos/solver/schwarz_workflow.py native-candidate candidate-acceptance
       - uses: actions/upload-artifact@v4
-        if: always() && matrix.python == '3.12'
+        if: always() && matrix.python == '3.11'
         with:
           name: schwarz-candidate-acceptance-${{ matrix.os }}
           path: candidate-acceptance/result.json
@@ -130,7 +128,7 @@ jobs:
           components: rustfmt, clippy
       - uses: astral-sh/setup-uv@v6
         with:
-          python-version: '3.12'
+          python-version: '3.11'
           enable-cache: true
       - run: uv sync --locked --all-packages --group docs
       - run: uv run ruff check
