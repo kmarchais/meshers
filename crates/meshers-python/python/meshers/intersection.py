@@ -1007,7 +1007,7 @@ def _mapped_starting_mesh(
     for attempt in range(3):
         try:
             seed = build(resolved_cells, seed_quality)
-        except _meshers.MeshingError as error:  # ruff: ignore[try-except-in-loop] - at most three expensive native seed attempts.
+        except _meshers.MeshingError as error:
             if attempt == 2:
                 raise
             refined = tuple(

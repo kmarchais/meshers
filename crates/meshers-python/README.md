@@ -4,7 +4,7 @@ In-process CPU float64 meshing of bounded implicit solids. No subprocess or inte
 
 ## Install and use
 
-Use Python 3.10+. Wheels are available for Linux x86-64, Windows x86-64,
+Use Python 3.11+. Wheels are available for Linux x86-64, Windows x86-64,
 macOS Apple Silicon and macOS Intel. Users installing a wheel do not need Rust,
 Numba or SymPy.
 
@@ -13,14 +13,14 @@ python -m pip install "meshers[io]"
 ```
 
 The base installation, `pip install meshers`, requires NumPy. The optional
-`io` extra adds h5py for VTKHDF export; it does not install a viewer.
+`io` extra adds VTK for VTKHDF export.
 
 ```python
 import meshers
 
 mesh = meshers.generate("gyroid", cells=24, band=(-0.5, 0.5), periodic=(True, True, True))
 points, tetrahedra = mesh.points, mesh.tetrahedra
-mesh.write_vtkhdf("gyroid.vtkhdf")  # requires h5py
+mesh.write_vtkhdf("gyroid.vtkhdf")  # requires meshers[io]
 ```
 
 Native fields: `gyroid`, `schwarz_p`, `schwarz_d`; their period is one physical
@@ -68,8 +68,10 @@ insufficient resolution; successful sampling is not geometry certification.
 
 The test suite covers automatic derivatives, cache invalidation, cancellation,
 periodicity, bounded callbacks, named intersections, physical coordinate scales
-and VTKHDF round trips. CI tests Python 3.10, 3.12 and 3.14 on Linux, Windows
-and macOS, plus installed platform wheels and an isolated source build.
+and VTKHDF round trips. CI tests Python 3.11 and 3.15 on Linux, Windows
+and macOS. The 3.11 jobs also run the geometry and FEA comparisons.
+Release jobs install the same platform wheel on CPython 3.11 and 3.15
+and run the binding tests on both, including VTKHDF export.
 See the [release checks](https://github.com/kmarchais/meshers/blob/main/docs/site/release.md)
 and [CI results](https://github.com/kmarchais/meshers/actions). Thin, nonsmooth or
 poorly resolved geometry still needs application-specific convergence checks.

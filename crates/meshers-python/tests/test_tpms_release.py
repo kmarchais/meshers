@@ -1,6 +1,6 @@
-import h5py
 import meshers
 import numpy as np
+import pyfive
 import pytest
 
 
@@ -28,7 +28,7 @@ def test_tpms_wheel_round_trip(field, tmp_path):
         )
     path = tmp_path / f"{field}.vtkhdf"
     mesh.write_vtkhdf(path)
-    with h5py.File(path) as exported:
+    with pyfive.File(path) as exported:
         grid = exported["VTKHDF"]
         np.testing.assert_array_equal(grid["Points"][:], mesh.points)
         np.testing.assert_array_equal(grid["Connectivity"][:], mesh.tetrahedra.ravel())

@@ -180,6 +180,12 @@ def test_cancellation_from_another_python_thread():
     assert not worker.is_alive()
 
 
+def test_vtkhdf_unwritable_path_raises(tmp_path):
+    mesh = meshers.generate("gyroid", cells=4, geometry_tolerance=1)
+    with pytest.raises(OSError, match="could not write"):
+        mesh.write_vtkhdf(tmp_path / "missing-directory" / "mesh.vtkhdf")
+
+
 def test_vtkhdf_round_trip_and_physical_shifts(tmp_path):
     import pyvista as pv
 
@@ -204,7 +210,7 @@ def test_vtkhdf_round_trip_and_physical_shifts(tmp_path):
 
 @pytest.mark.parametrize(("order", "width", "face_width"), [(1, 4, 3), (2, 10, 6)])
 def test_empty_mesh_shapes(order, width, face_width, tmp_path):
-    import h5py
+    import pyfive
 
     result = generate_callback(
         lambda x, y, z: np.ones_like(x),
@@ -223,7 +229,7 @@ def test_empty_mesh_shapes(order, width, face_width, tmp_path):
     for surface in (False, True):
         path = tmp_path / "empty.vtkhdf"
         result.write_vtkhdf(path, surface=surface)
-        with h5py.File(path) as f:
+        with pyfive.File(path) as f:
             group = f["VTKHDF"]
             np.testing.assert_array_equal(group["Offsets"][:], [0])
             assert group["Connectivity"].shape == group["Types"].shape == (0,)

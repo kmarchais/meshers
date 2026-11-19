@@ -8,7 +8,7 @@ description = "Direct CPU tetrahedral meshing of implicit geometries and constra
 readme = "README.md"
 license = "MIT"
 license-files = ["LICENSE", "THIRDPARTY.json"]
-requires-python = ">=3.10"
+requires-python = ">=3.11"
 dependencies = ["numpy>=1.23"]
 [project.urls]
 Repository = "https://github.com/kmarchais/meshers"
@@ -16,8 +16,8 @@ Issues = "https://github.com/kmarchais/meshers/issues"
 Documentation = "https://github.com/kmarchais/meshers/tree/main/docs/site"
 
 [project.optional-dependencies]
-io = ["h5py>=3.8"]
-test = ["pytest>=8", "h5py>=3.8", "pyvista>=0.46"]
+io = ["vtk>=9.7"]
+test = ["pytest>=8", "pyfive>=1.2.1", "vtk>=9.7", "pyvista>=0.46"]
 [tool.maturin]
 python-source = "python"
 module-name = "meshers._meshers"

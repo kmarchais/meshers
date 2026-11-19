@@ -175,7 +175,7 @@ def main():
     baseline = json.loads(BASELINE.read_text())
     row = {
         "case": args.case,
-        "recorded_at": dt.datetime.now(dt.timezone.utc).isoformat(),
+        "recorded_at": dt.datetime.now(dt.UTC).isoformat(),
         "hardware": hardware_snapshot(),
         "versions": {n: version(n) for n in PACKAGES},
         "baseline_sha256": digest(BASELINE),

@@ -1,7 +1,8 @@
 # Releasing version 0.2.1
 
-Python `meshers` and Rust `meshers-core` use version 0.2.1. Python wheels support
-CPython 3.10+; source builds require Rust 1.95 or newer. The first publication
+Python `meshers` and Rust `meshers-core` use version 0.2.1. Published 0.2.1 wheels support
+CPython 3.10+. New wheels built from main require CPython 3.11+. Source builds
+require Rust 1.95 or newer. The first publication
 target is PyPI. The Rust core can be published independently to crates.io.
 
 ## Required checks

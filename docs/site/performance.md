@@ -12,7 +12,7 @@ For local Windows measurements install `psutil` in each benchmark environment. W
 
 ## Every pull request
 
-The Python 3.12 binding jobs also mesh five implicit sheets and a BCC lattice from eight-cell seeds.
+The Python 3.11 binding jobs also mesh five implicit sheets and a BCC lattice from eight-cell seeds.
 They check the returned tetrahedra against the independent geometry and quality limits
 from the historical Microgen benchmark. The seven-specimen study includes rejected
 settings and optional elasticity comparisons. [Study and replay instructions](https://github.com/kmarchais/meshers/blob/main/demos/solver/implicit-coverage/README.md)
@@ -136,7 +136,7 @@ the default `local` labels deliberately cannot enter the public history.
 
 ## Testing a changed mesh against an FEA reference
 
-The Python 3.12 CI jobs generate a periodic Schwarz P Tet4 mesh with the candidate
+The Python 3.11 CI jobs generate a periodic Schwarz P Tet4 mesh with the candidate
 wheel. They reopen the VTKHDF export and check the walls and caps in both directions
 (sampled distance ≤ 0.002), volume (within 1%), minimum MMG quality (≥ 0.1),
 orientation, conformity, periodic faces, component count and material probes.

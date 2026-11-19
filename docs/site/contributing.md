@@ -2,8 +2,8 @@
 
 ## Development setup
 
-Use uv, Python 3.12+ for development tooling, and a current Rust stable toolchain.
-The wheel continues to target Python 3.10+. Maturin builds the extension because
+Use uv, Python 3.11+ and a current Rust stable toolchain.
+The wheel uses the CPython 3.11 stable ABI. Maturin builds the extension because
 `uv_build` currently supports pure Python packages only.
 
 ```sh

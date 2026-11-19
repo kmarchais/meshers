@@ -2,7 +2,7 @@
 
 ## Install a wheel
 
-Use Python 3.10+. Wheels target Linux x86-64, Windows x86-64, macOS ARM64
+Use Python 3.11+. Wheels target Linux x86-64, Windows x86-64, macOS ARM64
 and macOS x86-64.
 
 ```sh
@@ -12,8 +12,10 @@ python -m pip install "meshers[io]"
 
 For meshing without export, install `meshers` without the extra.
 
-`h5py` is needed only for VTKHDF export. NumPy is the only required Python runtime
-dependency. Installing from source requires Rust; installing a wheel does not.
+The `io` extra installs VTK for VTKHDF export. NumPy is the only dependency
+for meshing. The writer uses the VTKHDF version supplied by the installed VTK
+release. VTK 9.7.2 writes version 2.8. Meshers 0.2.1 wheels published before
+this change wrote version 2.0.
 
 ## Mesh a sphere
 

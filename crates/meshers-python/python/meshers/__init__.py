@@ -1,6 +1,5 @@
-"""Direct meshing of bounded implicit solids. CPU float64; Python 3.10+."""
+"""Direct meshing of bounded implicit solids. CPU float64; Python 3.11+."""
 
-import json
 import time
 import warnings
 from collections.abc import Callable, Sequence
@@ -104,86 +103,16 @@ class Mesh:
         common = self.constraint_masks[edges[:, 0]] & self.constraint_masks[edges[:, 1]]
         return edges[(common & (common - np.uint8(1))) != 0]
 
-    def write_vtkhdf(self, path: str | Path, *, surface: bool = False) -> None:  # ruff: ignore[complex-structure] - optional mesh metadata share one file lifecycle.
-        """Write VTKHDF 2.0, with physical periodic shifts. Requires meshers[io].
+    def write_vtkhdf(self, path: str | Path, *, surface: bool = False) -> None:
+        """Write a VTKHDF unstructured grid, with physical periodic shifts. Requires meshers[io].
 
         Quadratic cell Volume integrates the current curved mapping.
         CornerVolume and CornerMMGQuality identify the linear parent measures.
         Linear cells retain the Volume and MMGQuality arrays.
         """
-        import h5py
+        from ._vtkhdf import write_grid
 
-        cells = self.surface if surface else self.tetrahedra
-        points = self.points
-        parent = np.arange(len(points), dtype=np.int64)
-
-        def root(i: int) -> int:
-            while parent[i] != i:
-                parent[i] = parent[parent[i]]
-                i = parent[i]
-            return i
-
-        for pairs in self.periodic_pairs:
-            for a, b in pairs:
-                ra, rb = root(a), root(b)
-                parent[max(ra, rb)] = min(ra, rb)
-        masters = np.array([root(i) for i in range(len(points))], dtype=np.int64)
-        # Retain full points for both outputs so master IDs retain the same meaning.
-        with h5py.File(path, "w") as file:
-            g = file.create_group("VTKHDF")
-            g.attrs["Version"] = np.array([2, 0], dtype=np.int64)
-            g.attrs["Type"] = np.bytes_("UnstructuredGrid")
-            g["NumberOfPoints"] = np.array([len(points)], dtype=np.int64)
-            g["NumberOfCells"] = np.array([len(cells)], dtype=np.int64)
-            g["NumberOfConnectivityIds"] = np.array([cells.size], dtype=np.int64)
-            g["Points"] = points
-            g["Connectivity"] = cells.ravel()
-            g["Offsets"] = np.arange(len(cells) + 1, dtype=np.int64) * cells.shape[1]
-            # Linear or quadratic triangle/tetrahedron; corners come first in both.
-            vtk_type = {3: 5, 4: 10, 6: 22, 10: 24}[cells.shape[1]]
-            g["Types"] = np.full(len(cells), vtk_type, dtype=np.uint8)
-            data = g.create_group("CellData")
-            if surface:
-                data["BoundaryTag"] = self.boundary_tags
-            else:
-                p = points[cells]
-                determinant = np.einsum(
-                    "ij,ij->i",
-                    p[:, 1] - p[:, 0],
-                    np.cross(p[:, 2] - p[:, 0], p[:, 3] - p[:, 0]),
-                )
-                edge_sum = sum(
-                    np.sum((p[:, i] - p[:, j]) ** 2, axis=1)
-                    for i in range(4)
-                    for j in range(i + 1, 4)
-                )
-                quality = np.sqrt(np.maximum(432 * determinant**2 / edge_sum**3, 0))
-                if cells.shape[1] == 10:
-                    data.update(
-                        Volume=_meshers.quadratic_volumes(points, cells),
-                        CornerVolume=determinant / 6,
-                        CornerMMGQuality=quality,
-                    )
-                else:
-                    data.update(Volume=determinant / 6, MMGQuality=quality)
-            data = g.create_group("PointData")
-            data["PeriodicMasterId"] = masters
-            data["PeriodicShift"] = points - points[masters]
-            if self.parameters is not None:
-                data["ParameterCoordinates"] = self.parameters
-            if self.constraint_masks is not None:
-                data["SurfaceConstraints"] = self.constraint_masks
-            metadata = g.create_group("FieldData")
-            if self.periodic_transforms is not None:
-                metadata["PeriodicTransforms"] = self.periodic_transforms.reshape(3, 16)
-            for axis, pairs in enumerate(self.periodic_pairs):
-                metadata[f"PeriodicPairs{axis}"] = pairs
-            if self.constraint_names:
-                metadata["ConstraintNamesUTF8"] = np.frombuffer(
-                    json.dumps(self.constraint_names, ensure_ascii=False).encode("utf-8"),
-                    dtype=np.uint8,
-                )
-                metadata["FeatureEdges"] = self.feature_edges
+        write_grid(self, path, surface=surface)
 
 
 def _check_components(mesh: Mesh, expected_components: int | None) -> Mesh:

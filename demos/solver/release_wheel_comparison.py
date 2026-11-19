@@ -119,7 +119,7 @@ def main():
     extension = Path(import_module("meshers._meshers").__file__)
     hardware = hardware_snapshot()
     row = {
-        "recorded_at": dt.datetime.now(dt.timezone.utc).isoformat(),
+        "recorded_at": dt.datetime.now(dt.UTC).isoformat(),
         "case": args.case,
         "config": route["config"],
         "versions": {name: version(name) for name in ("meshers", "fedoo", "numpy", "scipy")},

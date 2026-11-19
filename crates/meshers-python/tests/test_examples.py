@@ -5,8 +5,8 @@ import subprocess
 import sys
 from pathlib import Path
 
-import h5py
 import numpy as np
+import pyfive
 import pytest
 
 EXAMPLES = Path(__file__).resolve().parents[1] / "examples"
@@ -27,7 +27,7 @@ def test_user_example(name, tmp_path):
     )
     assert result.returncode == 0, result.stdout + result.stderr
     for path in tmp_path.glob("*.vtkhdf"):
-        with h5py.File(path) as file:
+        with pyfive.File(path) as file:
             group = file["VTKHDF"]
             points = group["Points"][:]
             cells = group["Connectivity"][:]
