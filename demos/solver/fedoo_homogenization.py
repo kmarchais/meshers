@@ -5,6 +5,8 @@ stress/energy integration and Meshers pair metadata audit those solutions. The
 result is compared with fedoo's automatic stress-controlled homogenization API.
 """
 
+from __future__ import annotations
+
 import hashlib
 import importlib
 import json
@@ -12,6 +14,7 @@ import platform
 import time
 from importlib.metadata import version
 from pathlib import Path
+from typing import TYPE_CHECKING
 
 import fedoo as fd
 import meshers
@@ -20,6 +23,11 @@ from scipy.sparse import diags
 from scipy.sparse.csgraph import reverse_cuthill_mckee
 from scipy.sparse.linalg import cg
 from solver_checks import require
+
+if TYPE_CHECKING:
+    from numpy.typing import NDArray
+    from scipy.sparse import sparray, spmatrix
+
 
 ROOT = Path(__file__).resolve().parents[2]
 COMPONENTS = ["E_xx", "E_yy", "E_zz", "E_xy", "E_xz", "E_yz"]
@@ -31,11 +39,13 @@ np.fill_diagonal(MATERIAL[:3, :3], 3)
 class AuditedCG:
     """Fedoo solver callback that checks every reduced linear system."""
 
-    def __init__(self):
+    def __init__(self) -> None:
         """Create a record of the six load-case solves."""
         self.records = []
 
-    def __call__(self, matrix, rhs, **_kwargs):
+    def __call__(
+        self, matrix: spmatrix | sparray, rhs: NDArray[np.float64], **_kwargs: object
+    ) -> NDArray[np.float64]:
         """Solve the fedoo-reduced system.
 
         Returns:
@@ -80,7 +90,9 @@ class AuditedCG:
 class ReorderedCG(AuditedCG):
     """Run the same Jacobi CG after symmetric reverse Cuthill-McKee ordering."""
 
-    def __call__(self, matrix, rhs, **kwargs):
+    def __call__(
+        self, matrix: spmatrix | sparray, rhs: NDArray[np.float64], **kwargs: object
+    ) -> NDArray[np.float64]:
         """Return the solution in the original degree-of-freedom order."""
         start = time.perf_counter()
         csr = matrix.tocsr()

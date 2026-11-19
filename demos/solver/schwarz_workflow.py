@@ -9,10 +9,12 @@ import os
 import shutil
 import time
 from contextlib import ExitStack
+from functools import partial
 from importlib.metadata import distribution, version
 from pathlib import Path
 from tempfile import NamedTemporaryFile
 from types import SimpleNamespace
+from typing import NotRequired, TypedDict, Unpack
 from unittest.mock import patch
 
 import fedoo as fd
@@ -49,9 +51,19 @@ def digest(path):
     return hashlib.sha256(Path(path).read_bytes()).hexdigest()
 
 
-def reopenable(*args, **kwargs):
-    """Return a Windows-reopenable file with context cleanup."""
-    return NamedTemporaryFile(*args, **kwargs, delete_on_close=False)
+class _MmgPass(TypedDict):
+    """Keywords supplied by Microgen's pinned two-pass remesher."""
+
+    input: str
+    output: str
+    nofem: NotRequired[bool]
+    ls: NotRequired[bool]
+    nr: NotRequired[bool]
+    hausd: NotRequired[float | None]
+    hgrad: NotRequired[float | None]
+    hmax: NotRequired[float | None]
+    hmin: NotRequired[float | None]
+    hsiz: NotRequired[float | None]
 
 
 def live_microgen(  # ruff: ignore[too-many-arguments] - optional controls reproduce the frozen repair.
@@ -100,7 +112,7 @@ def live_microgen(  # ruff: ignore[too-many-arguments] - optional controls repro
     original = microgen.Mmg.mmg3d
     row["mmg_calls"] = []
 
-    def measured(**params):
+    def measured(**params: Unpack[_MmgPass]):
         if single_pass and params.get("ls"):
             shutil.copyfile(params["input"], params["output"])
             return None
@@ -119,6 +131,7 @@ def live_microgen(  # ruff: ignore[too-many-arguments] - optional controls repro
 
     with ExitStack() as stack:
         if os.name == "nt":
+            reopenable = partial(NamedTemporaryFile, delete_on_close=False)
             stack.enter_context(patch.object(microgen.remesh, "NamedTemporaryFile", reopenable))
         stack.enter_context(patch.object(microgen.Mmg, "mmg3d", measured))
         grid = microgen.remesh.remesh_keeping_boundaries_for_fem(seed, periodic=True, **options)
@@ -235,11 +248,11 @@ def solve_admitted(grid, geometry, row, *, solver_factory=AuditedCG):
     assembly_seconds = 0.0
     original_assembly = fd.Assembly.assemble_global_mat
 
-    def timed_assembly(assembly, *args, **kwargs):
+    def timed_assembly(assembly: fd.Assembly, compute: str = "all") -> None:
         nonlocal assembly_seconds
         begin = time.perf_counter()
         try:
-            return original_assembly(assembly, *args, **kwargs)
+            return original_assembly(assembly, compute)
         finally:
             assembly_seconds += time.perf_counter() - begin
 

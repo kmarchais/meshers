@@ -1,3 +1,6 @@
+from functools import partial
+from typing import Never
+
 import meshers
 import numpy as np
 import pytest
@@ -7,20 +10,19 @@ def solid(coordinates_x, _coordinates_y, _coordinates_z):
     return coordinates_x * 0 - 1
 
 
-def generate(**options):
-    return meshers.generate(
-        solid,
-        bounds=(-0.5, 0.5) * 3,
-        cells=4,
-        periodic=(True, True, True),
-        adapt=True,
-        min_length=0.03,
-        max_length=0.2,
-        adapt_iterations=3,
-        minimum_quality=0.1,
-        threads=1,
-        **options,
-    )
+generate = partial(
+    meshers.generate,
+    solid,
+    bounds=(-0.5, 0.5) * 3,
+    cells=4,
+    periodic=(True, True, True),
+    adapt=True,
+    min_length=0.03,
+    max_length=0.2,
+    adapt_iterations=3,
+    minimum_quality=0.1,
+    threads=1,
+)
 
 
 def test_constant_size_preserves_default_adaptation():
@@ -64,7 +66,7 @@ def test_size_requires_adaptation():
 
 
 def test_size_callback_exception_is_preserved():
-    def fail(*_coordinates):
+    def fail(*_coordinates: np.ndarray) -> Never:
         raise RuntimeError("size callback failed")
 
     with pytest.raises(RuntimeError, match="size callback failed"):

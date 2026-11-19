@@ -1,6 +1,7 @@
 """Experimental diagnostics must preserve the public generation result."""
 
 from contextlib import contextmanager
+from functools import partial
 from unittest.mock import patch
 
 import meshers
@@ -16,10 +17,7 @@ pytestmark = pytest.mark.skipif(
 
 @contextmanager
 def observe(sink):
-    original = _meshers.generate
-
-    def generate(*args, **kwargs):
-        return original(*args, **kwargs, _observations=sink)
+    generate = partial(_meshers.generate, _observations=sink)
 
     # Test-local, single-thread dispatch. The public parser and compiler run normally.
     with patch.object(_meshers, "generate", generate):
