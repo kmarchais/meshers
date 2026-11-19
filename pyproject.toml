@@ -37,7 +37,7 @@ ignore = ["missing-trailing-comma", "missing-copyright-notice", "raise-vanilla-a
 
 [tool.ruff.lint.per-file-ignores]
 # Benchmark orchestration uses fixed subprocess argument lists and explicit metric loops.
-"tools/performance_gate.py" = ["ANN", "import-outside-top-level", "magic-value-comparison", "print", "suspicious-subprocess-import", "subprocess-without-shell-equals-true", "complex-structure"]
+"tools/performance_gate.py" = ["import-outside-top-level", "magic-value-comparison", "print", "suspicious-subprocess-import", "subprocess-without-shell-equals-true", "complex-structure"]
 # Tests/examples intentionally use assertions, simple callback names and direct output.
 "**/tests/**" = ["undocumented-public-module", "undocumented-public-function", "ANN", "assert", "magic-value-comparison", "unused-function-argument", "private-member-access", "import-outside-top-level", "subprocess-without-shell-equals-true", "suspicious-subprocess-import", "implicit-namespace-package", "unused-lambda-argument", "import-private-name"]
 "crates/meshers-python/examples/*.py" = ["ANN", "print", "implicit-namespace-package"]
@@ -57,7 +57,7 @@ convention = "google"
 
 [tool.ty.environment]
 python-version = "3.11"
-root = ["crates/meshers-python/python"]
+root = ["crates/meshers-python/python", ".", "tools"]
 
 [tool.ty.src]
-include = ["crates/meshers-python/python"]
+include = ["crates/meshers-python/python", "tools/performance_gate.py"]

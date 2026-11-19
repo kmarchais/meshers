@@ -1,6 +1,11 @@
 from collections.abc import Sequence
 from typing import Any
 
+import numpy as np
+from numpy.typing import NDArray
+
+from . import Field
+
 class CancellationToken:
     """Thread-safe cooperative cancellation. Tokens remain cancelled after use."""
     def __init__(self) -> None: ...
@@ -17,12 +22,12 @@ class CancelledError(RuntimeError):
     """The operation was interrupted by its cancellation token."""
 
 def generate(
-    field: Any,
-    gradient: Any,
-    bounds: Any,
-    cells: Any,
-    periodic: Any,
-    band: Any,
+    field: str | Field | CompiledField,
+    gradient: Field | None,
+    bounds: Sequence[Sequence[float]],
+    cells: Sequence[int],
+    periodic: Sequence[bool],
+    band: Sequence[float] | None,
     tolerance: float,
     minimum_quality: float,
     budget: int,
@@ -34,10 +39,10 @@ def generate(
     cancel: CancellationToken | None,
     adapt: tuple[float, float, float, float, int, float, float] | None = None,
     order: int = 1,
-    size_field: Any = None,
-    halfspaces: Any = None,
-    regions: Any = None,
-    constraints: Any = None,
+    size_field: str | Field | CompiledField | None = None,
+    halfspaces: Sequence[Sequence[float]] | None = None,
+    regions: Sequence[int] | None = None,
+    constraints: Sequence[str | Field | CompiledField] | None = None,
     curved_fit: bool = False,
 ) -> dict[str, Any]: ...
 
@@ -56,7 +61,7 @@ class CompiledField:
         """Number of interned nodes in the compiled expression graph."""
     def gradient(self, x: float, y: float, z: float) -> list[float]:
         """Return the three first derivatives, or raise ValueError if unavailable."""
-    def values(self, points: Any) -> Any:
+    def values(self, points: NDArray[np.float64]) -> NDArray[np.float64]:
         """Evaluate an (n, 3) float64 point array without a Python call per point."""
     @property
     def _sdf_intersection(self) -> bool: ...
@@ -79,15 +84,17 @@ SDF_INTERSECTIONS: bool
 ADAPTIVE_RETAINED_INTERSECTIONS: bool
 
 def available_threads() -> int: ...
-def face_components(tetrahedra: Any) -> int: ...
-def quadratic_volumes(points: Any, tetrahedra: Any) -> Any: ...
+def face_components(tetrahedra: NDArray[np.int64]) -> int: ...
+def quadratic_volumes(
+    points: NDArray[np.float64], tetrahedra: NDArray[np.int64]
+) -> NDArray[np.float64]: ...
 def generate_intersection(
-    fields: Any,
-    mapping: Any,
-    bounds: Any,
-    cells: Any,
-    periodic: Any,
-    closed: Any,
+    fields: Sequence[str | Field | CompiledField],
+    mapping: Sequence[str | Field | CompiledField] | None,
+    bounds: Sequence[Sequence[float]],
+    cells: Sequence[int],
+    periodic: Sequence[bool],
+    closed: Sequence[bool],
     minimum_quality: float,
     budget: int,
     passes: int,
@@ -102,11 +109,11 @@ def _periodic_affine_traces(
     regions: Sequence[int] | None = None,
 ) -> bool: ...
 def adapt_intersection(
-    fields: Any,
-    points: Any,
-    tetrahedra: Any,
-    masks: Any,
-    bounds: Any,
+    fields: Sequence[str | Field | CompiledField],
+    points: NDArray[np.float64],
+    tetrahedra: NDArray[np.int64],
+    masks: NDArray[np.uint32],
+    bounds: Sequence[Sequence[float]],
     tolerance: float,
     minimum_quality: float,
     budget: int,

@@ -1,5 +1,7 @@
 """Compare installed base/head wheels on one configuration in alternating fresh processes."""
 
+from __future__ import annotations
+
 import argparse
 import datetime as dt
 import hashlib
@@ -12,6 +14,16 @@ import subprocess
 import sys
 import time
 from pathlib import Path
+from typing import TYPE_CHECKING, TypedDict
+
+if TYPE_CHECKING:
+    from collections.abc import Mapping, Sequence
+
+    import numpy as np
+    from meshers import Mesh
+    from numpy.typing import NDArray
+
+    FloatArray = NDArray[np.float64]
 
 if __name__ == "__main__":
     from benchmark_hardware import hardware_snapshot
@@ -40,7 +52,33 @@ SCHEMA_VERSION = 2
 FIXTURE_VERSION = 4
 
 
-def _check_curved_jacobians(corners):
+class _CaseResult(TypedDict):
+    runs: dict[str, list[dict[str, float]]]
+    medians: dict[str, dict[str, float]] | None
+    failures: list[str]
+
+
+class _Summary(TypedDict):
+    cases: dict[str, _CaseResult]
+
+
+class _FixtureOptions(TypedDict):
+    cells: int
+    optimize_passes: int
+    geometry_tolerance: float
+    max_tetrahedra: int
+
+
+class _VolumeOptions(_FixtureOptions, total=False):
+    order: int
+    adapt: bool
+    min_length: float
+    max_length: float
+    adapt_tolerance: float
+    gradation: float
+
+
+def _check_curved_jacobians(corners: FloatArray) -> None:
     """Bound the cubic Jacobian determinant over each reference tetrahedron.
 
     The four physical Jacobian matrices interpolate affinely. Cubic Bernstein
@@ -61,7 +99,7 @@ def _check_curved_jacobians(corners):
     basis = factors * np.prod(bary[:, None, :] ** powers, axis=2)
     to_coefficients = np.linalg.inv(basis).T
 
-    def check(batch, depth):
+    def check(batch: FloatArray, depth: int) -> None:
         matrices = np.einsum("pi,tijk->tpjk", bary, batch)
         values = np.linalg.det(matrices)
         if not np.isfinite(values).all() or np.any(values <= 0):
@@ -85,7 +123,7 @@ def _check_curved_jacobians(corners):
         check(corners[start : start + 1024], 0)
 
 
-def cell_geometry(vertices):
+def cell_geometry(vertices: FloatArray) -> FloatArray:
     """Integrate Tet4/Tet10 volume and sample Jacobians independently of Meshers.
 
     Returns:
@@ -130,7 +168,7 @@ def cell_geometry(vertices):
     return np.array([-2 / 15, *([3 / 40] * 4)]) @ np.array(determinants[:5])
 
 
-def peak_rss_bytes():
+def peak_rss_bytes() -> int:
     """Return this process's peak resident memory, in bytes."""
     if sys.platform == "win32":
         import psutil
@@ -143,7 +181,7 @@ def peak_rss_bytes():
     )
 
 
-def mapped_cap_error(mesh):
+def mapped_cap_error(mesh: Mesh) -> float:
     """Measure chord and plane errors on the four caps of the cylindrical fixture.
 
     Returns:
@@ -176,7 +214,7 @@ def mapped_cap_error(mesh):
     return max(errors)
 
 
-def surface_measurements(case, mesh):
+def surface_measurements(case: str, mesh: Mesh) -> dict[str, float]:
     """Return comparable wall and cap measurements for the installed wheel."""
     if case == "mapped_intersection":
         return {
@@ -186,7 +224,7 @@ def surface_measurements(case, mesh):
     return {"surface_error": mesh.diagnostics["sampled_surface_error"]}
 
 
-def sample(case):  # ruff: ignore[too-many-locals] - keep the timing boundary and independent checks together.
+def sample(case: str) -> dict[str, float]:  # ruff: ignore[too-many-locals] - keep the timing boundary and independent checks together.
     """Measure a fresh process, then independently validate its mesh.
 
     Returns:
@@ -198,11 +236,11 @@ def sample(case):  # ruff: ignore[too-many-locals] - keep the timing boundary an
     import meshers
     import numpy as np
 
-    def gyroid(x, y, z):
+    def gyroid(x: FloatArray, y: FloatArray, z: FloatArray) -> FloatArray:
         a, b, c = 2 * np.pi * x, 2 * np.pi * y, 2 * np.pi * z
         return np.sin(a) * np.cos(b) + np.sin(b) * np.cos(c) + np.sin(c) * np.cos(a)
 
-    def spinodoid(x, y, z):
+    def spinodoid(x: FloatArray, y: FloatArray, z: FloatArray) -> FloatArray:
         # Fixed periodic Fourier fixture; not a stochastic field generator.
         return sum(
             a * np.sin(2 * np.pi * (i * x + j * y + k * z) + phase)
@@ -216,17 +254,25 @@ def sample(case):  # ruff: ignore[too-many-locals] - keep the timing boundary an
             ]
         )
 
-    def lattice(x, y, z):
+    def lattice(x: FloatArray, y: FloatArray, z: FloatArray) -> FloatArray:
         a, b, c = (np.sin(np.pi * v) ** 2 for v in (x, y, z))
 
-        def union(f, g):
+        def union(f: FloatArray, g: FloatArray) -> FloatArray:
             return np.minimum(f, g) - np.maximum(0.08 - np.abs(f - g), 0) ** 2 / 0.32
 
         return union(union(a + b - 0.24, b + c - 0.24), a + c - 0.24)
 
-    options = {"cells": 24, "optimize_passes": 2, "geometry_tolerance": 0.1, "max_tetrahedra": CAP}
+    options: _FixtureOptions = {
+        "cells": 24,
+        "optimize_passes": 2,
+        "geometry_tolerance": 0.1,
+        "max_tetrahedra": CAP,
+    }
+    volume_options: _VolumeOptions = {**options}
+    if case == "gyroid_tet10":
+        volume_options["order"] = 2
     if case.startswith("adaptive_"):
-        options.update(
+        volume_options.update(
             adapt=True,
             min_length=0.005,
             max_length=0.1,
@@ -234,12 +280,12 @@ def sample(case):  # ruff: ignore[too-many-locals] - keep the timing boundary an
             geometry_tolerance=0.003,
             gradation=0.6,
         )
-    if case == "gyroid_tet10":
-        options["order"] = 2
     start = time.perf_counter()
     if case == "mapped_intersection":
 
-        def mapping(x, y, z):
+        def mapping(
+            x: FloatArray, y: FloatArray, z: FloatArray
+        ) -> tuple[FloatArray, FloatArray, FloatArray]:
             return (3 + x) * np.cos(z / 3), (3 + x) * np.sin(z / 3), -y
 
         mesh = meshers.generate_intersection(
@@ -263,7 +309,7 @@ def sample(case):  # ruff: ignore[too-many-locals] - keep the timing boundary an
         )
         if case == "graded":
 
-            def field(x, y, z):
+            def field(x: FloatArray, y: FloatArray, z: FloatArray) -> FloatArray:
                 return gyroid(x, y, z) / (0.35 + 0.15 * x)
 
         mesh = meshers.generate(
@@ -286,7 +332,7 @@ def sample(case):  # ruff: ignore[too-many-locals] - keep the timing boundary an
             compile=case != "callback_gyroid",
             threads=1,
             batch_size=4096,
-            **options,
+            **volume_options,
         )
     elapsed = time.perf_counter() - start
     # Capture OS high-water RSS before allocating arrays for independent checks.
@@ -352,7 +398,7 @@ def sample(case):  # ruff: ignore[too-many-locals] - keep the timing boundary an
     return record
 
 
-def regressions(base, head):
+def regressions(base: Mapping[str, float], head: Mapping[str, float]) -> list[str]:
     """Return failures; resource noise allowances never relax geometry validity."""
     failures = [
         f"invalid {key}"
@@ -385,7 +431,7 @@ def regressions(base, head):
     return failures
 
 
-def runtime_identity():
+def runtime_identity() -> dict[str, str]:
     """Return versions and the actual loaded native binary fingerprint."""
     import importlib
     import importlib.metadata
@@ -401,7 +447,9 @@ def runtime_identity():
     }
 
 
-def case_regressions(base, head, head_runs):
+def case_regressions(
+    base: Mapping[str, float], head: Mapping[str, float], head_runs: Sequence[Mapping[str, float]]
+) -> list[str]:
     """Return resource-median and every-repetition quality regression failures."""
     failures = regressions(base, head)
     for index, row in enumerate(head_runs):
@@ -412,7 +460,7 @@ def case_regressions(base, head, head_runs):
     return failures
 
 
-def write_summary(result, output, failures):
+def write_summary(result: _Summary, output: Path, failures: Sequence[str]) -> None:
     """Write the concise CI comparison beside the complete JSON artifact."""
     lines = [
         "| Case | Time ratio | RSS ratio | Minimum quality, base → head | Result |",
@@ -446,7 +494,7 @@ def write_summary(result, output, failures):
     )
 
 
-def configure_worker():
+def configure_worker() -> None:
     """Select one numerical thread before importing NumPy in each fresh worker.
 
     Raises:
@@ -473,7 +521,7 @@ def configure_worker():
             raise RuntimeError("Cannot select single-thread Accelerate")
 
 
-def arguments():
+def arguments() -> tuple[argparse.ArgumentParser, argparse.Namespace]:
     """Return the benchmark parser and its parsed command-line options."""
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--sample", choices=RELEASE_CASES)
@@ -488,7 +536,7 @@ def arguments():
     return parser, parser.parse_args()
 
 
-def main():
+def main() -> None:
     """Collect repeated measurements and fail when a regression exceeds its allowance.
 
     Raises:
@@ -506,6 +554,7 @@ def main():
         return
     if not args.base_python or not args.head_python or args.repeats < 3:
         parser.error("Two installed environments and at least three repetitions are required")
+    summary: _Summary = {"cases": {}}
     result = {
         "schema_version": SCHEMA_VERSION,
         "fixture_version": FIXTURE_VERSION,
@@ -526,7 +575,7 @@ def main():
         "python": platform.python_version(),
         "base_ref": args.base_ref,
         "head_ref": args.head_ref,
-        "cases": {},
+        **summary,
     }
     failures = []
     script = str(Path(__file__).resolve())
@@ -546,7 +595,7 @@ def main():
     )
 
     for case in RELEASE_CASES if args.suite == "release" else CASES:
-        runs = {"base": [], "head": []}
+        runs: dict[str, list[dict[str, float]]] = {"base": [], "head": []}
         try:
             for repetition in range(args.repeats + 1):
                 order = ("base", "head") if repetition % 2 == 0 else ("head", "base")
@@ -565,7 +614,7 @@ def main():
             )
             message = f"{case}: sample failed ({reason})"
             failures.append(message)
-            result["cases"][case] = {"runs": runs, "failures": [message], "medians": None}
+            summary["cases"][case] = {"runs": runs, "failures": [message], "medians": None}
             print(message, flush=True)
             continue
         medians = {
@@ -574,12 +623,12 @@ def main():
         }
         errors = case_regressions(medians["base"], medians["head"], runs["head"])
         failures.extend(f"{case}: {error}" for error in errors)
-        result["cases"][case] = {"runs": runs, "medians": medians, "failures": errors}
+        summary["cases"][case] = {"runs": runs, "medians": medians, "failures": errors}
         print(case, "FAIL" if errors else "PASS", flush=True)
     result["complete"] = True
     args.output.parent.mkdir(parents=True, exist_ok=True)
     args.output.write_text(json.dumps(result, indent=2, allow_nan=False) + "\n", encoding="utf-8")
-    write_summary(result, args.output, failures)
+    write_summary(summary, args.output, failures)
     if failures:
         raise SystemExit("\n".join(failures))
 
