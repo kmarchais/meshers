@@ -1,0 +1,23 @@
+name: Test wheel on CPython 3.15
+description: Install the wheel and run the bindings and VTKHDF export tests.
+inputs:
+  wheel-directory:
+    description: Wheel directory relative to the repository root
+    required: true
+runs:
+  using: composite
+  steps:
+    # conda-forge supplies h5py binaries for the export tests.
+    - uses: mamba-org/setup-micromamba@f457c30a868e4760d3a6fcea5f25dc655b8edf39 # v3
+      with:
+        environment-name: wheel315
+        create-args: python=3.15 h5py=*=nompi* pip
+        init-shell: none
+    - shell: bash
+      env:
+        WHEEL_DIRECTORY: ${{ inputs.wheel-directory }}
+      run: |
+        cd "$GITHUB_WORKSPACE"
+        micromamba run -n wheel315 python -m pip install "$WHEEL_DIRECTORY"/*.whl pytest pyvista
+        cd "$RUNNER_TEMP"
+        micromamba run -n wheel315 python -m pytest "$GITHUB_WORKSPACE/crates/meshers-python/tests" -q

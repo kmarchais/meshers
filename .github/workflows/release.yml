@@ -53,18 +53,9 @@ jobs:
           uv pip install --python .artifact-test dist/*.whl pytest h5py pyvista
           cd "$RUNNER_TEMP"
           "$GITHUB_WORKSPACE/.artifact-test/${{ runner.os == 'Windows' && 'Scripts/python.exe' || 'bin/python' }}" -m pytest "$GITHUB_WORKSPACE/crates/meshers-python/tests" -q
-      # conda-forge supplies h5py binaries for the CPython 3.15 export tests.
-      - uses: mamba-org/setup-micromamba@f457c30a868e4760d3a6fcea5f25dc655b8edf39 # v3
+      - uses: ./.github/actions/test-wheel-py315
         with:
-          environment-name: wheel315
-          create-args: python=3.15 h5py=*=nompi* pip
-          init-shell: none
-      - name: Test the same wheel on CPython 3.15
-        shell: bash
-        run: |
-          micromamba run -n wheel315 python -m pip install dist/*.whl pytest pyvista
-          cd "$RUNNER_TEMP"
-          micromamba run -n wheel315 python -m pytest "$GITHUB_WORKSPACE/crates/meshers-python/tests" -q
+          wheel-directory: dist
       - uses: actions/upload-artifact@v4
         with:
           name: meshers-${{ matrix.os }}-${{ matrix.target }}

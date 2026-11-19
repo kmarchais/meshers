@@ -45,7 +45,8 @@ jobs:
       fail-fast: false
       matrix:
         os: [ubuntu-latest, windows-latest, macos-latest]
-        python: ['3.11', '3.12', '3.14']
+        # 3.12 also runs the cross-platform geometry and stiffness comparisons.
+        python: ['3.11', '3.12', '3.15']
     runs-on: ${{ matrix.os }}
     defaults:
       run:
@@ -58,10 +59,16 @@ jobs:
         with:
           python-version: ${{ matrix.python }}
       - uses: astral-sh/setup-uv@v6
-      - run: uv pip install --system maturin pytest h5py pyvista
+      - run: uv pip install --system maturin
       - run: maturin build --locked --release --interpreter python --out dist
-      - run: uv pip install --system dist/*.whl
-      - run: python -m pytest tests -q
+      - if: matrix.python != '3.15'
+        run: |
+          uv pip install --system dist/*.whl pytest h5py pyvista
+          python -m pytest tests -q
+      - if: matrix.python == '3.15'
+        uses: ./.github/actions/test-wheel-py315
+        with:
+          wheel-directory: crates/meshers-python/dist
       - name: Fetch the independent geometry validator
         if: matrix.python == '3.12'
         uses: actions/checkout@v4
