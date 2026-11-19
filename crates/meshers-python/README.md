@@ -4,7 +4,7 @@ In-process CPU float64 meshing of bounded implicit solids. No subprocess or inte
 
 ## Install and use
 
-Use Python 3.10+. Wheels are available for Linux x86-64, Windows x86-64,
+Use Python 3.11+. Wheels are available for Linux x86-64, Windows x86-64,
 macOS Apple Silicon and macOS Intel. Users installing a wheel do not need Rust,
 Numba or SymPy.
 
@@ -68,7 +68,7 @@ insufficient resolution; successful sampling is not geometry certification.
 
 The test suite covers automatic derivatives, cache invalidation, cancellation,
 periodicity, bounded callbacks, named intersections, physical coordinate scales
-and VTKHDF round trips. CI tests Python 3.10, 3.12 and 3.14 on Linux, Windows
+and VTKHDF round trips. CI tests Python 3.11, 3.12 and 3.14 on Linux, Windows
 and macOS, plus installed platform wheels and an isolated source build.
 See the [release checks](https://github.com/kmarchais/meshers/blob/main/docs/site/release.md)
 and [CI results](https://github.com/kmarchais/meshers/actions). Thin, nonsmooth or

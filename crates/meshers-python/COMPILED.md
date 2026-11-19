@@ -44,7 +44,7 @@ optional API retains finite differences for comparison.
 
 ## Distribution
 
-Install the wheel matching the operating system and architecture. Python 3.10+
+Install the wheel matching the operating system and architecture. Python 3.11+
 uses the stable Python ABI. Wheels must be built by maintainers, with Rust, before
 distribution; installing from a source archive still requires a build toolchain.
 Use `pip install --only-binary=meshers <wheel-or-release>` to avoid a source build.

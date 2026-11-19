@@ -508,7 +508,7 @@ def main():
         "schema_version": 2,
         "fixture_version": FIXTURE_VERSION,
         "suite": args.suite,
-        "recorded_at": dt.datetime.now(dt.timezone.utc).isoformat(),
+        "recorded_at": dt.datetime.now(dt.UTC).isoformat(),
         **hardware_snapshot(),
         "script_sha256": hashlib.sha256(Path(__file__).read_bytes()).hexdigest(),
         "threads": 1,

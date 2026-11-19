@@ -280,7 +280,7 @@ def main():
     args.output.mkdir()
     hardware = hardware_snapshot()
     row = {
-        "recorded_at": dt.datetime.now(dt.timezone.utc).isoformat(),
+        "recorded_at": dt.datetime.now(dt.UTC).isoformat(),
         "route": args.route,
         "cells": args.cells,
         "platform": hardware["platform"],

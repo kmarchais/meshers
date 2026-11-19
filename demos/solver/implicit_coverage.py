@@ -208,7 +208,7 @@ def main():
         "limits": LIMITS,
         "energy_target": ENERGY_TARGET if args.fea else None,
         "reference_commit": ARCHIVE,
-        "utc": dt.datetime.now(dt.timezone.utc).isoformat(),
+        "utc": dt.datetime.now(dt.UTC).isoformat(),
         "hardware": hardware_snapshot(),
         "packages": {n: version(n) for n in ("meshers", "numpy", "scipy", "pyvista")},
         "native_sha256": hashlib.sha256(

@@ -12,7 +12,7 @@ name = "_meshers"
 crate-type = ["cdylib"]
 [dependencies]
 meshers-core = { version = "0.2.1", path = "../meshers-core" }
-pyo3 = { version = "0.28", features = ["extension-module", "abi3-py310"] }
+pyo3 = { version = "0.28", features = ["extension-module", "abi3-py311"] }
 numpy = "0.28"
 cranelift-codegen = "0.135.1"
 cranelift-frontend = "0.135.1"

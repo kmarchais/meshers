@@ -27,7 +27,7 @@ def main():
         raise RuntimeError("Expected the pinned release wheel")
     args.output.mkdir()
     row = {
-        "recorded_at": dt.datetime.now(dt.timezone.utc).isoformat(),
+        "recorded_at": dt.datetime.now(dt.UTC).isoformat(),
         "case": args.case,
         "hardware": hardware_snapshot(),
         "versions": {pkg: version(pkg) for pkg in ("meshers", "vtk", "pyvista", "numpy", "scipy")},

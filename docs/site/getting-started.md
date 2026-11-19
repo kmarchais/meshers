@@ -2,7 +2,7 @@
 
 ## Install a wheel
 
-Use Python 3.10+. Wheels target Linux x86-64, Windows x86-64, macOS ARM64
+Use Python 3.11+. Wheels target Linux x86-64, Windows x86-64, macOS ARM64
 and macOS x86-64.
 
 ```sh

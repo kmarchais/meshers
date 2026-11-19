@@ -49,7 +49,7 @@ jobs:
       - name: Test the wheel outside the source tree
         shell: bash
         run: |
-          uv venv .artifact-test
+          uv venv --python 3.11 .artifact-test
           uv pip install --python .artifact-test dist/*.whl pytest h5py pyvista
           cd "$RUNNER_TEMP"
           "$GITHUB_WORKSPACE/.artifact-test/${{ runner.os == 'Windows' && 'Scripts/python.exe' || 'bin/python' }}" -m pytest "$GITHUB_WORKSPACE/crates/meshers-python/tests" -q
