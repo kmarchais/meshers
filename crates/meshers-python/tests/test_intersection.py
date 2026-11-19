@@ -2,9 +2,9 @@
 
 import json
 
-import h5py
 import meshers
 import numpy as np
+import pyfive
 import pytest
 import pyvista as pv
 
@@ -88,14 +88,16 @@ def test_named_intersection_quality_and_export(tmp_path):
     assert len(mesh.periodic_pairs[2]) > 0
     path = tmp_path / "intersection.vtkhdf"
     mesh.write_vtkhdf(path)
-    with h5py.File(path) as f:
+    with pyfive.File(path) as f:
         root = f["VTKHDF"]
-        np.testing.assert_array_equal(root["PointData/ParameterCoordinates"], mesh.parameters)
-        np.testing.assert_array_equal(root["PointData/SurfaceConstraints"], mesh.constraint_masks)
-        np.testing.assert_array_equal(root["FieldData/FeatureEdges"], mesh.feature_edges)
-        np.testing.assert_array_equal(root["FieldData/PeriodicPairs2"], mesh.periodic_pairs[2])
+        np.testing.assert_array_equal(root["PointData/ParameterCoordinates"][:], mesh.parameters)
         np.testing.assert_array_equal(
-            root["FieldData/PeriodicTransforms"], mesh.periodic_transforms.reshape(3, 16)
+            root["PointData/SurfaceConstraints"][:], mesh.constraint_masks
+        )
+        np.testing.assert_array_equal(root["FieldData/FeatureEdges"][:], mesh.feature_edges)
+        np.testing.assert_array_equal(root["FieldData/PeriodicPairs2"][:], mesh.periodic_pairs[2])
+        np.testing.assert_array_equal(
+            root["FieldData/PeriodicTransforms"][:], mesh.periodic_transforms.reshape(3, 16)
         )
         assert json.loads(bytes(root["FieldData/ConstraintNamesUTF8"][:])) == list(
             mesh.constraint_names

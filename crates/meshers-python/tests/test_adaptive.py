@@ -77,10 +77,10 @@ def test_quadratic_wall_nodes_lie_on_the_surface(tmp_path):
     assert mesh.diagnostics["quadratic"]["minimum_jacobian_ratio"] > 0
     mid = mesh.points[mesh.surface[:, 3:]].reshape(-1, 3)
     assert np.max(np.abs(sphere(*mid.T))) < 1e-12
-    h5py = pytest.importorskip("h5py")
+    pyfive = pytest.importorskip("pyfive")
     path = tmp_path / "quadratic.vtkhdf"
     mesh.write_vtkhdf(path)
-    with h5py.File(path) as file:
+    with pyfive.File(path) as file:
         assert set(file["VTKHDF/Types"][()]) == {24}
 
 

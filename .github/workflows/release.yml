@@ -46,16 +46,15 @@ jobs:
       - name: Check package metadata
         shell: bash
         run: uv tool run --from twine twine check --strict dist/*.whl
-      - name: Test the wheel outside the source tree
+      - name: Test the installed release wheel on CPython 3.11 and 3.15
         shell: bash
         run: |
-          uv venv --python 3.11 .artifact-test
-          uv pip install --python .artifact-test dist/*.whl pytest h5py pyvista
-          cd "$RUNNER_TEMP"
-          "$GITHUB_WORKSPACE/.artifact-test/${{ runner.os == 'Windows' && 'Scripts/python.exe' || 'bin/python' }}" -m pytest "$GITHUB_WORKSPACE/crates/meshers-python/tests" -q
-      - uses: ./.github/actions/test-wheel-py315
-        with:
-          wheel-directory: dist
+          for version in 3.11 3.15; do
+            envdir="$RUNNER_TEMP/wheel-test-$version"
+            uv venv --python "$version" "$envdir"
+            uv pip install --python "$envdir" --only-binary :all: dist/*.whl "meshers[test]"
+            (cd "$RUNNER_TEMP" && "$envdir/${{ runner.os == 'Windows' && 'Scripts/python.exe' || 'bin/python' }}" -m pytest "$GITHUB_WORKSPACE/crates/meshers-python/tests" -q)
+          done
       - uses: actions/upload-artifact@v4
         with:
           name: meshers-${{ matrix.os }}-${{ matrix.target }}
@@ -76,7 +75,7 @@ jobs:
       - name: Build and test the source distribution in isolation
         run: |
           uv venv .sdist-test
-          uv pip install --python .sdist-test dist/*.tar.gz pytest h5py pyvista
+          uv pip install --python .sdist-test dist/*.tar.gz "meshers[test]"
           cd "$RUNNER_TEMP"
           "$GITHUB_WORKSPACE/.sdist-test/bin/python" -m pytest "$GITHUB_WORKSPACE/crates/meshers-python/tests" -q
       - uses: actions/upload-artifact@v4

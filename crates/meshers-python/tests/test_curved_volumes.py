@@ -1,8 +1,8 @@
 """Curved-cell volumes use the final mapping rather than its four corners."""
 
-import h5py
 import meshers
 import numpy as np
+import pyfive
 import pytest
 
 EDGES = np.array([(0, 1), (1, 2), (2, 0), (0, 3), (1, 3), (2, 3)])
@@ -31,7 +31,7 @@ def test_export_integrates_current_curved_nodes(tmp_path):
     path = tmp_path / "curved.vtkhdf"
     mesh.write_vtkhdf(path)
     # z=t+0.4*L0*L1 gives detJ=1-0.4*r, which stays positive.
-    with h5py.File(path) as file:
+    with pyfive.File(path) as file:
         data = file["VTKHDF/CellData"]
         assert data["Volume"][0] == pytest.approx(0.15, abs=1e-14)
         assert data["CornerVolume"][0] == pytest.approx(1 / 6, abs=1e-14)
@@ -40,7 +40,7 @@ def test_export_integrates_current_curved_nodes(tmp_path):
         assert file["VTKHDF/Types"][0] == 24
     points[4, 2] = 0.05
     mesh.write_vtkhdf(path)
-    with h5py.File(path) as file:
+    with pyfive.File(path) as file:
         assert file["VTKHDF/CellData/Volume"][0] == pytest.approx(19 / 120, abs=1e-14)
 
 
@@ -53,7 +53,7 @@ def test_export_integrates_cubic_jacobian(tmp_path):
     exact = 8 * (1 / 6 + (a + b + c) / 12 + (a * b + a * c + b * c) / 30 + a * b * c / 90)
     path = tmp_path / "cubic.vtkhdf"
     one_cell(points).write_vtkhdf(path)
-    with h5py.File(path) as file:
+    with pyfive.File(path) as file:
         assert file["VTKHDF/CellData/Volume"][0] == pytest.approx(exact, abs=1e-11)
 
 
@@ -68,7 +68,7 @@ def test_generated_tet10_diagnostics_match_integrated_export(tmp_path):
     )
     path = tmp_path / "sphere.vtkhdf"
     mesh.write_vtkhdf(path)
-    with h5py.File(path) as file:
+    with pyfive.File(path) as file:
         curved = file["VTKHDF/CellData/Volume"][:].sum()
         linear = file["VTKHDF/CellData/CornerVolume"][:].sum()
     assert mesh.diagnostics["volume"] == pytest.approx(curved, abs=1e-12)

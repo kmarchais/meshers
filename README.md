@@ -16,7 +16,7 @@ mesh.write_vtkhdf("gyroid.vtkhdf")
 Install with `python -m pip install "meshers[io]"` for meshing and VTKHDF export,
 or `python -m pip install meshers` for meshing only. Wheels require Python 3.11+
 and include the native implementation. NumPy is required; the `io` extra adds
-h5py. Rust is only needed to build from source.
+VTK. Rust is only needed to build from source.
 
 - [Installation and first mesh](docs/site/getting-started.md)
 - [Runnable Python examples](docs/site/examples.md)

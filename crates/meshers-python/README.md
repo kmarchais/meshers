@@ -13,14 +13,14 @@ python -m pip install "meshers[io]"
 ```
 
 The base installation, `pip install meshers`, requires NumPy. The optional
-`io` extra adds h5py for VTKHDF export; it does not install a viewer.
+`io` extra adds VTK for VTKHDF export.
 
 ```python
 import meshers
 
 mesh = meshers.generate("gyroid", cells=24, band=(-0.5, 0.5), periodic=(True, True, True))
 points, tetrahedra = mesh.points, mesh.tetrahedra
-mesh.write_vtkhdf("gyroid.vtkhdf")  # requires h5py
+mesh.write_vtkhdf("gyroid.vtkhdf")  # requires meshers[io]
 ```
 
 Native fields: `gyroid`, `schwarz_p`, `schwarz_d`; their period is one physical

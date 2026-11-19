@@ -61,14 +61,8 @@ jobs:
       - uses: astral-sh/setup-uv@v6
       - run: uv pip install --system maturin
       - run: maturin build --locked --release --interpreter python --out dist
-      - if: matrix.python != '3.15'
-        run: |
-          uv pip install --system dist/*.whl pytest h5py pyvista
-          python -m pytest tests -q
-      - if: matrix.python == '3.15'
-        uses: ./.github/actions/test-wheel-py315
-        with:
-          wheel-directory: crates/meshers-python/dist
+      - run: uv pip install --system --only-binary :all: dist/*.whl "meshers[test]"
+      - run: python -m pytest tests -q
       - name: Fetch the independent geometry validator
         if: matrix.python == '3.12'
         uses: actions/checkout@v4

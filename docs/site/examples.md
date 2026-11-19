@@ -1,7 +1,7 @@
 # Python examples
 
 These scripts use the installed public API. Run them from any writable directory;
-exports are written there. Install h5py for the examples that write VTKHDF.
+exports are written there. Install `meshers[io]` for the examples that write VTKHDF.
 From a development checkout, use `uv run python` in place of `python`.
 
 ```sh

@@ -12,16 +12,10 @@ python -m pip install "meshers[io]"
 
 For meshing without export, install `meshers` without the extra.
 
-`h5py` is needed only for VTKHDF export. NumPy is the only required Python runtime
-dependency. Installing from source requires Rust; installing a wheel does not.
-
-For VTKHDF export on CPython 3.15, conda-forge provides a prebuilt h5py.
-Install it in the same environment as Meshers:
-
-```sh
-conda create -n meshers315 -c conda-forge python=3.15 h5py pip
-conda run -n meshers315 python -m pip install "meshers[io]"
-```
+The `io` extra installs VTK for VTKHDF export. NumPy is the only dependency
+for meshing. The writer uses the VTKHDF version supplied by the installed VTK
+release. VTK 9.7.2 writes version 2.8. Meshers 0.2.1 wheels published before
+this change wrote version 2.0.
 
 ## Mesh a sphere
 
