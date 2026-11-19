@@ -818,7 +818,7 @@ def generate_intersection(
     )
 
 
-def _validate_options(  # ruff: ignore[complex-structure, too-many-branches] - explicit independent public option checks.
+def _validate_options(
     constraints: Mapping[str, Scalar],
     *,
     bounds: Sequence[float],
@@ -839,8 +839,7 @@ def _validate_options(  # ruff: ignore[complex-structure, too-many-branches] - e
     b = np.asarray(bounds, dtype=np.float64)
     if b.shape != (6,) or not np.all(np.isfinite(b)) or np.any(b[1::2] <= b[::2]):
         raise ValueError("bounds must contain three finite increasing intervals")
-    if isinstance(cells, (int, np.integer)):
-        cells = (int(cells),) * 3
+    cells = (int(cells),) * 3 if isinstance(cells, (int, np.integer)) else cells
     if len(cells) != 3 or any(
         not isinstance(v, (int, np.integer)) or not 4 <= v <= 128 for v in cells
     ):
@@ -857,6 +856,15 @@ def _validate_options(  # ruff: ignore[complex-structure, too-many-branches] - e
         not np.isfinite(geometry_tolerance) or geometry_tolerance <= 0
     ):
         raise ValueError("geometry_tolerance must be positive and finite, or None")
+    return b, cells, _periodic_transforms(b, periodic, coordinate_map, periodic_transforms)
+
+
+def _periodic_transforms(
+    bounds: Points,
+    periodic: Sequence[bool],
+    coordinate_map: Callable | None,
+    periodic_transforms: Mapping[int, Sequence[Sequence[float]]] | None,
+) -> Points:
     transforms = np.tile(np.eye(4), (3, 1, 1))
     given = {} if periodic_transforms is None else dict(periodic_transforms)
     if any(a not in {0, 1, 2} or not periodic[a] for a in given):
@@ -865,7 +873,7 @@ def _validate_options(  # ruff: ignore[complex-structure, too-many-branches] - e
         if periodic[axis]:
             if coordinate_map is not None and axis not in given:
                 raise ValueError("mapped periodic axes require explicit periodic_transforms")
-            transforms[axis, axis, 3] = b[2 * axis + 1] - b[2 * axis]
+            transforms[axis, axis, 3] = bounds[2 * axis + 1] - bounds[2 * axis]
         if axis in given:
             t = np.asarray(given[axis], dtype=np.float64)
             if (
@@ -877,7 +885,7 @@ def _validate_options(  # ruff: ignore[complex-structure, too-many-branches] - e
             ):
                 raise ValueError("periodic transforms must be proper rigid homogeneous matrices")
             transforms[axis] = t
-    return b, cells, transforms
+    return transforms
 
 
 def adapt_intersection(

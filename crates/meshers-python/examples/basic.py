@@ -10,6 +10,7 @@ for field in ("gyroid", "schwarz_p", "schwarz_d"):
 
 
 def sphere(x, y, z):
+    """Return the implicit field of a sphere of radius 0.7."""
     return x * x + y * y + z * z - 0.7**2
 
 

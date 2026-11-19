@@ -7,6 +7,7 @@ import numpy as np
 
 
 def gyroid(x, y, z):
+    """Return the phase-shifted gyroid field."""
     a, b, c = (
         2 * np.pi * (x / 0.75 + 0.125),
         2 * np.pi * (y / 0.75 + 0.125),
@@ -16,6 +17,7 @@ def gyroid(x, y, z):
 
 
 def main():
+    """Generate and export the requested curved TPMS mesh."""
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("kind", choices=["cylinder", "torus"])
     parser.add_argument("output", help="Output .vtkhdf filename")

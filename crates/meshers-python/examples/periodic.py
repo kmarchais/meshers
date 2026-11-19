@@ -18,8 +18,9 @@ mesh = meshers.generate(
 for axis, pairs in enumerate(mesh.periodic_pairs):
     shift = np.zeros(3)
     shift[axis] = 1
-    assert np.allclose(
+    if not np.allclose(
         mesh.points[pairs[:, 1]] - mesh.points[pairs[:, 0]], shift, rtol=0, atol=1e-10
-    )
+    ):
+        raise ValueError(f"Periodic node pairs have the wrong displacement on axis {axis}")
     print(axis, len(pairs), "node pairs")
 mesh.write_vtkhdf("periodic.vtkhdf")

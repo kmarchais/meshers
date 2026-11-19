@@ -197,7 +197,8 @@ def test_failures_are_explicit():
     ],
 )
 def test_invalid_options(kwargs):
-    with pytest.raises(ValueError):
+    option = next(iter(kwargs))
+    with pytest.raises(ValueError, match=rf"^{option} "):
         meshers.generate_intersection(constraints(), **kwargs)
 
 

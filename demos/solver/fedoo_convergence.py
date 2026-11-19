@@ -16,6 +16,7 @@ import fedoo as fd
 import numpy as np
 from convergence import QUADRATURE, ROOT, exact, specimen
 from convergence import solve as reference_solve
+from solver_checks import require
 
 
 def errors(mesh, displacement, *, affine=False):  # ruff: ignore[too-many-locals] - explicit error integration.
@@ -27,7 +28,7 @@ def errors(mesh, displacement, *, affine=False):  # ruff: ignore[too-many-locals
     points = mesh.points[mesh.tetrahedra]
     jac = points[:, 1:] - points[:, :1]
     volumes = np.linalg.det(jac) / 6
-    assert np.all(volumes > 0)
+    require(np.all(volumes > 0), "Mesh contains a nonpositive tetrahedron volume")
     gradients = np.empty((len(points), 4, 3))
     gradients[:, 1:] = np.swapaxes(np.linalg.inv(jac), 1, 2)
     gradients[:, 0] = -gradients[:, 1:].sum(axis=1)
@@ -83,31 +84,41 @@ def solve(mesh, *, affine=False):  # ruff: ignore[too-many-locals] - retain the 
     problem.set_solver("cg", precond=True, rtol=1e-10, atol=1e-12, maxiter=10000, callback=count)
     problem.solve()
     displacement = problem.get_disp().T
-    assert displacement.shape == mesh.points.shape
-    assert np.all(np.isfinite(displacement))
+    require(
+        displacement.shape == mesh.points.shape,
+        "Displacement shape differs from the mesh coordinates",
+    )
+    require(np.all(np.isfinite(displacement)), "Displacement contains nonfinite values")
     boundary_error = float(np.max(np.abs(displacement[boundary] - boundary_values)))
-    assert boundary_error < 1e-12, boundary_error
+    require(
+        boundary_error < 1e-12, f"Boundary displacement error {boundary_error} exceeds the limit"
+    )
     # fedoo stores component-major DOFs; audit only unconstrained equations.
     locked = (boundary[None, :] + len(mesh.points) * np.arange(3)[:, None]).ravel()
     free = np.ones(3 * len(mesh.points), dtype=bool)
     free[locked] = False
-    assert np.any(free)
+    require(np.any(free), "Elasticity system has no free degrees of freedom")
     matrix = problem.get_A()
     vector = problem.get_B() + problem.get_D()
     reduced = matrix[free][:, free]
     rhs = vector[free] - matrix[free][:, locked] @ displacement.T.ravel()[locked]
     symmetry = reduced - reduced.T
-    assert np.max(np.abs(symmetry.data), initial=0) < 1e-10
-    assert np.all(reduced.diagonal() > 0)
+    require(
+        np.max(np.abs(symmetry.data), initial=0) < 1e-10, "Reduced stiffness matrix is asymmetric"
+    )
+    require(np.all(reduced.diagonal() > 0), "Reduced stiffness matrix has a nonpositive diagonal")
     residual = float(
         np.linalg.norm(reduced @ displacement.T.ravel()[free] - rhs)
         / max(np.linalg.norm(rhs), 1e-30)
     )
-    assert residual < 2e-9, residual
+    require(residual < 2e-9, f"Relative residual {residual} exceeds the limit")
     result = errors(mesh, displacement, affine=affine)
     if affine:
-        assert result["l2_displacement_error"] < 1e-8, result
-        assert result["energy_error"] < 1e-7, result
+        require(
+            result["l2_displacement_error"] < 1e-8,
+            f"Affine displacement error exceeds the limit: {result}",
+        )
+        require(result["energy_error"] < 1e-7, f"Affine energy error exceeds the limit: {result}")
     return {
         "tetrahedra": len(mesh.tetrahedra),
         "points": len(mesh.points),
@@ -133,6 +144,9 @@ def main():
         "source_sha256": hashlib.sha256(Path(__file__).read_bytes()).hexdigest(),
         "shared_source_sha256": hashlib.sha256(
             Path(__file__).with_name("convergence.py").read_bytes()
+        ).hexdigest(),
+        "checks_sha256": hashlib.sha256(
+            Path(__file__).with_name("solver_checks.py").read_bytes()
         ).hexdigest(),
         "extension_sha256": hashlib.sha256(extension.read_bytes()).hexdigest(),
         "method": (
@@ -162,7 +176,10 @@ def main():
             reference = reference_solve(mesh)
             for metric in ["l2_displacement_error", "energy_error"]:
                 delta = abs(result[metric] / reference[metric] - 1)
-                assert delta < 1e-6, (name, n, metric, delta)
+                require(
+                    delta < 1e-6,
+                    f"{name} at {n} cells: {metric} differs from the reference by {delta:.6g}",
+                )
                 result[metric + "_reference_relative_difference"] = delta
                 if results:
                     ratio = result["maximum_edge_length"] / results[-1]["maximum_edge_length"]
@@ -171,8 +188,14 @@ def main():
                     )
             results.append(result)
             print(json.dumps({"geometry": name, **result}), flush=True)
-        assert results[-1]["l2_displacement_error_rate"] > 1.7
-        assert results[-1]["energy_error_rate"] > 0.85
+        require(
+            results[-1]["l2_displacement_error_rate"] > 1.7,
+            f"{name}: l2_displacement_error convergence rate must exceed 1.7",
+        )
+        require(
+            results[-1]["energy_error_rate"] > 0.85,
+            f"{name}: energy_error convergence rate must exceed 0.85",
+        )
         report["cases"].append({"geometry": name, "affine_patch": patch, "refinement": results})
         (ROOT / "docs/fedoo-convergence-results.json").write_text(
             json.dumps(report, indent=2) + "\n"
