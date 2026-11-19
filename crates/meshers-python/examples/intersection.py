@@ -14,6 +14,7 @@ angle = 1 / radius
 
 
 def bend(x, y, z):
+    """Return the coordinates of the segment bent into a circular arc."""
     return (radius + x) * np.cos(z / radius), (radius + x) * np.sin(z / radius), -y
 
 

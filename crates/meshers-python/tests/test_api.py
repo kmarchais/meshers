@@ -160,9 +160,9 @@ def test_invalid_callback_results(field):
 
 
 def test_options_and_mesh_failure():
-    with pytest.raises(ValueError):
+    with pytest.raises(ValueError, match=r"cells 4\.\.128"):
         generate_callback(sphere, cells=0)
-    with pytest.raises(ValueError):
+    with pytest.raises(ValueError, match="periodic must contain three booleans"):
         generate_callback(sphere, periodic=(1, 0, 0))
     with pytest.raises(meshers.MeshingError):
         generate_callback(sphere, cells=8, geometry_tolerance=1e-12)

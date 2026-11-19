@@ -73,8 +73,16 @@ def test_archive_plots_and_immutable_history(tmp_path):
     assert (directory / "v0.2.0-rc-reference.json").read_bytes() == frozen
 
 
-@pytest.mark.parametrize("corruption", ["missing", "nonfinite", "verdict", "median"])
-def test_refuses_incomplete_or_false_success(corruption):
+@pytest.mark.parametrize(
+    ("corruption", "error"),
+    [
+        ("missing", "Missing measured samples"),
+        ("nonfinite", "Invalid numeric measurement"),
+        ("verdict", "Regression verdict does not match"),
+        ("median", "Summary does not match"),
+    ],
+)
+def test_refuses_incomplete_or_false_success(corruption, error):
     data = measurement()
     case = data["cases"]["compiled_gyroid"]
     if corruption == "missing":
@@ -85,7 +93,7 @@ def test_refuses_incomplete_or_false_success(corruption):
         case["failures"] = ["pretend failure"]
     else:
         case["medians"]["head"]["seconds"] = 99.0
-    with pytest.raises(ValueError):
+    with pytest.raises(ValueError, match=error):
         history.validate(data)
 
 

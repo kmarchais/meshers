@@ -156,7 +156,7 @@ def test_polyhedral_dispatch_keeps_integer_option_validation(options):
 
 
 def test_polyhedral_dispatch_keeps_zero_budget_validation():
-    with pytest.raises(ValueError):
+    with pytest.raises(ValueError, match="positive tolerance/budget"):
         meshers.generate(octahedron, bounds=(-0.5, 0.5) * 3, cells=12, max_tetrahedra=0)
 
 

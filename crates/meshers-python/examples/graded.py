@@ -5,6 +5,7 @@ import numpy as np
 
 
 def graded_gyroid(x, y, z):
+    """Return the gyroid sheet with spatially varying thickness."""
     x_phase, y_phase, z_phase = (2 * np.pi * v for v in (x, y, z))
     g = (
         np.sin(x_phase) * np.cos(y_phase)

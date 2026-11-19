@@ -17,6 +17,7 @@ import meshers
 import numpy as np
 from scipy.sparse import coo_matrix, diags
 from scipy.sparse.linalg import cg
+from solver_checks import require
 
 ROOT = Path(__file__).resolve().parents[2]
 QUADRATURE = np.full((4, 4), (5 - np.sqrt(5)) / 20)
@@ -58,7 +59,7 @@ def solve(mesh, *, affine=False):  # ruff: ignore[too-many-locals, too-many-stat
     p = mesh.points[cells]
     jac = p[:, 1:] - p[:, :1]
     volumes = np.linalg.det(jac) / 6
-    assert np.all(volumes > 0)
+    require(np.all(volumes > 0), "Mesh contains a nonpositive tetrahedron volume")
     gradients = np.empty((len(cells), 4, 3))
     gradients[:, 1:] = np.swapaxes(np.linalg.inv(jac), 1, 2)
     gradients[:, 0] = -gradients[:, 1:].sum(axis=1)
@@ -83,13 +84,15 @@ def solve(mesh, *, affine=False):  # ruff: ignore[too-many-locals, too-many-stat
     locked = (boundary[:, None] * 3 + np.arange(3)).ravel()
     free = np.ones(size, dtype=bool)
     free[locked] = False
-    assert np.any(free)
+    require(np.any(free), "Elasticity system has no free degrees of freedom")
     displacement = exact(mesh.points, affine=affine)[0].ravel().copy()
     reduced = matrix[free][:, free]
     load = rhs[free] - matrix[free][:, locked] @ displacement[locked]
     symmetry = reduced - reduced.T
-    assert np.max(np.abs(symmetry.data), initial=0) < 1e-10
-    assert np.all(reduced.diagonal() > 0)
+    require(
+        np.max(np.abs(symmetry.data), initial=0) < 1e-10, "Reduced stiffness matrix is asymmetric"
+    )
+    require(np.all(reduced.diagonal() > 0), "Reduced stiffness matrix has a nonpositive diagonal")
     iterations = 0
 
     def count(_):
@@ -106,8 +109,8 @@ def solve(mesh, *, affine=False):  # ruff: ignore[too-many-locals, too-many-stat
         callback=count,
     )
     residual = float(np.linalg.norm(reduced @ solution - load) / max(np.linalg.norm(load), 1e-30))
-    assert info == 0, info
-    assert residual < 2e-9, residual
+    require(info == 0, f"CG returned status {info}")
+    require(residual < 2e-9, f"Relative residual {residual} exceeds the limit")
     displacement[free] = solution
     local = displacement.reshape(-1, 3)[cells]
     discrete_values = np.einsum("qi,tia->tqa", QUADRATURE, local)
@@ -118,8 +121,8 @@ def solve(mesh, *, affine=False):  # ruff: ignore[too-many-locals, too-many-stat
     l2 = np.sqrt(np.sum(volumes[:, None] * np.sum((discrete_values - values) ** 2, axis=-1)) / 4)
     energy_error = np.sqrt(np.sum(volumes[:, None] * energy) / 4)
     if affine:
-        assert l2 < 1e-8, l2
-        assert energy_error < 1e-7, energy_error
+        require(l2 < 1e-8, f"Affine displacement error {l2} exceeds the limit")
+        require(energy_error < 1e-7, f"Affine energy error {energy_error} exceeds the limit")
     edges = np.concatenate([
         np.linalg.norm(p[:, i] - p[:, j], axis=1) for i in range(4) for j in range(i + 1, 4)
     ])
@@ -187,6 +190,9 @@ def main():
             "scipy": version("scipy"),
         },
         "source_sha256": hashlib.sha256(Path(__file__).read_bytes()).hexdigest(),
+        "checks_sha256": hashlib.sha256(
+            Path(__file__).with_name("solver_checks.py").read_bytes()
+        ).hexdigest(),
         "extension_sha256": hashlib.sha256(extension.read_bytes()).hexdigest(),
         "method": "P1 linear elasticity, lambda=mu=1, 4-point tetrahedron quadrature",
         "boundary_conditions": "Manufactured displacement on every boundary node",
@@ -214,8 +220,14 @@ def main():
                     )
             results.append(result)
             print(json.dumps({"geometry": name, **result}), flush=True)
-        assert results[-1]["l2_displacement_error"] < results[0]["l2_displacement_error"]
-        assert results[-1]["energy_error"] < results[0]["energy_error"]
+        require(
+            results[-1]["l2_displacement_error"] < results[0]["l2_displacement_error"],
+            f"{name}: l2_displacement_error did not decrease under refinement",
+        )
+        require(
+            results[-1]["energy_error"] < results[0]["energy_error"],
+            f"{name}: energy_error did not decrease under refinement",
+        )
         report["cases"].append({"geometry": name, "affine_patch": patch, "refinement": results})
         (ROOT / "docs/solver-convergence-results.json").write_text(
             json.dumps(report, indent=2) + "\n"

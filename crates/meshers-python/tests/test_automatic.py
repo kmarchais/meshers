@@ -63,13 +63,13 @@ def test_unsupported_numpy_falls_back_visibly():
 def test_invalid_graph_rejected():
     from meshers import _meshers
 
-    for nodes, outputs in [
-        ([("add", [0, 0], 0.0)], [0]),
-        ([("input", [3], 0.0)], [0]),
-        ([("constant", [], 1.0)], [4]),
-        ([("invalid", [], 0.0)], [0]),
+    for nodes, outputs, error in [
+        ([("add", [0, 0], 0.0)], [0], "invalid expression operands"),
+        ([("input", [3], 0.0)], [0], "invalid expression operands"),
+        ([("constant", [], 1.0)], [4], "invalid expression dimensions"),
+        ([("invalid", [], 0.0)], [0], "unknown expression operation"),
     ]:
-        with pytest.raises(ValueError):
+        with pytest.raises(ValueError, match=error):
             _meshers._compile_expression(nodes, outputs)
 
 

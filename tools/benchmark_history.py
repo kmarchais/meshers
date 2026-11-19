@@ -9,21 +9,34 @@ import re
 import statistics
 from pathlib import Path
 
-from tools.performance_gate import CASES, FIXTURE_VERSION, QUALITY, RELEASE_CASES, case_regressions
+from tools.performance_gate import (
+    CASES,
+    FIXTURE_VERSION,
+    QUALITY,
+    RELEASE_CASES,
+    SCHEMA_VERSION,
+    case_regressions,
+)
+
+SUPPORTED_FIXTURE_VERSIONS = {2, 3, FIXTURE_VERSION}
+MIN_MEASURED_PAIRS = 3
 
 
-def validate(data):
+def validate(data: dict) -> None:
     """Reject incomplete measurements rather than publishing an apparent success.
 
     Raises:
         ValueError: The record is incomplete or contains invalid measurements.
     """
-    if data.get("schema_version") != 2 or not data.get("complete"):
-        raise ValueError("Expected a complete schema-2 benchmark")
-    if data.get("fixture_version") not in {2, 3, FIXTURE_VERSION}:
+    if data.get("schema_version") != SCHEMA_VERSION or not data.get("complete"):
+        raise ValueError(f"Expected a complete schema-{SCHEMA_VERSION} benchmark")
+    if data.get("fixture_version") not in SUPPORTED_FIXTURE_VERSIONS:
         raise ValueError("Unsupported benchmark fixture version")
     expected = {"pr": CASES, "release": RELEASE_CASES}.get(data.get("suite"), ())
-    if set(data.get("cases", {})) != set(expected) or data.get("measured_pairs", 0) < 3:
+    if (
+        set(data.get("cases", {})) != set(expected)
+        or data.get("measured_pairs", 0) < MIN_MEASURED_PAIRS
+    ):
         raise ValueError("Incomplete fixture suite or insufficient repetitions")
     for ref in ("base_ref", "head_ref", "script_sha256"):
         if not re.fullmatch(r"[a-f0-9]{40,64}", data.get(ref, "")):
@@ -33,7 +46,7 @@ def validate(data):
         validate_case(case, data["measured_pairs"], needs_cap=needs_cap)
 
 
-def validate_case(case, measured_pairs, *, needs_cap):
+def validate_case(case: dict, measured_pairs: int, *, needs_cap: bool) -> None:
     """Check raw samples, summary medians and the recorded regression verdict.
 
     Raises:
@@ -71,7 +84,7 @@ def validate_case(case, measured_pairs, *, needs_cap):
         raise ValueError("Regression verdict does not match the measurements")
 
 
-def timing_plot(data):
+def timing_plot(data: dict) -> str:
     """Return an accessible SVG of within-run base and candidate generation times."""
     cases = [(name, c["medians"]) for name, c in data["cases"].items() if c["medians"]]
     svg = [
@@ -98,7 +111,7 @@ def timing_plot(data):
     return "".join([*svg, "</g></svg>"])
 
 
-def render(directory):
+def render(directory: Path) -> None:
     """Regenerate navigable Markdown and SVGs from the immutable JSON records."""
     records = []
     for path in sorted(directory.glob("*.json")):
@@ -208,7 +221,7 @@ def render(directory):
     )
 
 
-def archive(source, label, directory):
+def archive(source: Path, label: str, directory: Path) -> None:
     """Archive a measured run without overwriting any previous release evidence.
 
     Raises:
@@ -233,7 +246,7 @@ def archive(source, label, directory):
     render(directory)
 
 
-def main():
+def main() -> None:
     """Archive a release measurement and rebuild its documentation history."""
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--input", type=Path, required=True)

@@ -19,22 +19,13 @@ import numpy as np
 from scipy.sparse import diags
 from scipy.sparse.csgraph import reverse_cuthill_mckee
 from scipy.sparse.linalg import cg
+from solver_checks import require
 
 ROOT = Path(__file__).resolve().parents[2]
 COMPONENTS = ["E_xx", "E_yy", "E_zz", "E_xy", "E_xz", "E_yz"]
 MATERIAL = np.eye(6)
 MATERIAL[:3, :3] = 1
 np.fill_diagonal(MATERIAL[:3, :3], 3)
-
-
-def require(condition, message):
-    """Enforce a numerical acceptance check in every Python execution mode.
-
-    Raises:
-        ValueError: The numerical check failed.
-    """
-    if not condition:
-        raise ValueError(message)
 
 
 class AuditedCG:
@@ -319,6 +310,9 @@ def main():
             **{n: version(n) for n in ["fedoo", "meshers", "numpy", "scipy"]},
         },
         "source_sha256": hashlib.sha256(Path(__file__).read_bytes()).hexdigest(),
+        "checks_sha256": hashlib.sha256(
+            Path(__file__).with_name("solver_checks.py").read_bytes()
+        ).hexdigest(),
         "extension_sha256": hashlib.sha256(extension.read_bytes()).hexdigest(),
         "material": {"young_modulus": 2.5, "poisson_ratio": 0.25},
         "geometry": {

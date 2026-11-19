@@ -36,6 +36,7 @@ RELEASE_CASES = (
 )
 QUALITY = ("min", "p05", "p10", "median", "mean", "p90", "max")
 CAP = 250_000
+SCHEMA_VERSION = 2
 FIXTURE_VERSION = 4
 
 
@@ -242,7 +243,7 @@ def sample(case):  # ruff: ignore[too-many-locals] - keep the timing boundary an
             return (3 + x) * np.cos(z / 3), (3 + x) * np.sin(z / 3), -y
 
         mesh = meshers.generate_intersection(
-            {"right": lambda x, y, z: x - 0.501, "back": lambda x, y, z: y - 0.751},
+            {"right": lambda x, _y, _z: x - 0.501, "back": lambda _x, y, _z: y - 0.751},
             coordinate_map=mapping,
             **options,
         )
@@ -353,23 +354,24 @@ def sample(case):  # ruff: ignore[too-many-locals] - keep the timing boundary an
 
 def regressions(base, head):
     """Return failures; resource noise allowances never relax geometry validity."""
-    failures = []
-    for key in base:
-        if (
-            not math.isfinite(base[key])
-            or not math.isfinite(head[key])
-            or base[key] < 0
-            or head[key] < 0
-        ):
-            failures.append(f"invalid {key}")
+    failures = [
+        f"invalid {key}"
+        for key in base
+        if not math.isfinite(base[key])
+        or not math.isfinite(head[key])
+        or base[key] < 0
+        or head[key] < 0
+    ]
     if failures:
         return failures
     for key, ratio, allowance in (("seconds", 1.25, 0.02), ("peak_rss_bytes", 1.15, 8 * 1024**2)):
         if head[key] > base[key] * ratio + allowance:
             failures.append(f"{key} increased: {base[key]:.6g} -> {head[key]:.6g}")
-    for key in (f"quality_{name}" for name in QUALITY):
-        if head[key] < base[key] * 0.99 - 1e-12:
-            failures.append(f"{key} decreased: {base[key]:.6g} -> {head[key]:.6g}")
+    failures.extend(
+        f"{key} decreased: {base[key]:.6g} -> {head[key]:.6g}"
+        for key in (f"quality_{name}" for name in QUALITY)
+        if head[key] < base[key] * 0.99 - 1e-12
+    )
     for key, tolerance in (("volume", 0.005), ("tetrahedra", 0.01), ("nodes", 0.01)):
         if abs(head[key] - base[key]) > abs(base[key]) * tolerance + 1e-12:
             failures.append(f"{key} changed beyond {tolerance:.1%}")
@@ -505,7 +507,7 @@ def main():
     if not args.base_python or not args.head_python or args.repeats < 3:
         parser.error("Two installed environments and at least three repetitions are required")
     result = {
-        "schema_version": 2,
+        "schema_version": SCHEMA_VERSION,
         "fixture_version": FIXTURE_VERSION,
         "suite": args.suite,
         "recorded_at": dt.datetime.now(dt.UTC).isoformat(),
