@@ -49,3 +49,9 @@ def test_clipped_norm_inside_box():
     )
     np.testing.assert_allclose(field.gradient(0, 0, 0), [0, 0, 0])
     np.testing.assert_allclose(field.gradient(2, 0, 0), [1, 0, 0])
+
+
+def test_traced_constants_preserve_signed_zero_on_atan2_branch_cut():
+    field = meshers.compile_field(lambda x, _y, _z: np.arctan2(-0.0, x) - np.arctan2(0.0, x))
+    assert field(-1, 0, 0) == pytest.approx(-2 * np.pi)
+    assert field(1, 0, 0) == 0

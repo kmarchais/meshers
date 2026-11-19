@@ -4,17 +4,28 @@ from __future__ import annotations
 
 import time
 import warnings
-from collections.abc import Callable, Mapping, Sequence
-from typing import TYPE_CHECKING, cast
+from collections.abc import Callable, Iterator, Mapping, Sequence
+from dataclasses import dataclass
+from typing import cast
 
 import numpy as np
 import numpy.typing as npt
 
 from . import _meshers
 from .expression import TraceError, compile_field
+from .mesh import Mesh
 
-if TYPE_CHECKING:
-    from . import Mesh
+CLOSED_MAPPED_SEAMS = True
+ADAPTIVE_MAPPED_INTERSECTIONS = True
+SPATIAL_DIMENSIONS = 3
+MAX_INTERSECTION_PASSES = 20
+_MIN_CONSTRAINTS = 2
+_MIN_GRID_CELLS = 4
+_MAX_GRID_CELLS = 128
+_MAX_SNAP = 0.2
+_TET4_NODES = 4
+_LOW_QUALITY = 0.1
+_MAX_SEED_ATTEMPTS = 3
 
 Scalar = Callable | _meshers.CompiledField | str
 Points = npt.NDArray[np.float64]
@@ -221,7 +232,89 @@ def _project_parameters(
     return None
 
 
-def _surface_errors(  # ruff: ignore[too-many-locals] - explicit physical inversion and gradient calculation.
+_FACE_SAMPLES = np.array([
+    [1, 0, 0],
+    [0, 1, 0],
+    [0, 0, 1],
+    [0.5, 0.5, 0],
+    [0.5, 0, 0.5],
+    [0, 0.5, 0.5],
+    [1 / 3, 1 / 3, 1 / 3],
+])
+
+
+def _surface_distances(
+    field: Scalar,
+    mapping: list[Scalar] | None,
+    p: Points,
+    physical: Points,
+    *,
+    step: Points,
+    extent: float,
+    inverse_tolerance: float,
+) -> Points:
+    # Resolve the map in physical units, accounting for representable
+    # coordinate precision when the mesh is far from the origin.
+    roundoff = 8 * np.finfo(np.float64).eps * np.maximum(np.max(np.abs(physical), axis=1), extent)
+    inverse_limit = np.maximum(inverse_tolerance, roundoff)
+    for _ in range(8):
+        residual = _mapped(p, mapping) - physical
+        if np.all(np.linalg.norm(residual, axis=1) <= inverse_limit):
+            break
+        p -= np.linalg.solve(_jacobian(p, mapping, step), residual[..., None])[..., 0]
+    inverse_error = np.linalg.norm(_mapped(p, mapping) - physical, axis=1)
+    if not np.all(np.isfinite(inverse_error)) or np.any(inverse_error > inverse_limit):
+        raise _meshers.MeshingError("coordinate map could not be inverted for surface checks")
+    gradient = _gradient(field, p, step)
+    physical_gradient = (
+        gradient
+        if mapping is None
+        else np.linalg.solve(np.swapaxes(_jacobian(p, mapping, step), 1, 2), gradient[..., None])[
+            ..., 0
+        ]
+    )
+    magnitude = np.linalg.norm(physical_gradient, axis=1)
+    value = np.abs(_values(field, p))
+    distance = np.divide(value, magnitude, out=np.full_like(value, np.inf), where=magnitude > 0)
+    # Do not hide unresolved physical displacement in the distance gate.
+    distance += inverse_error
+    if not np.all(np.isfinite(distance)):
+        raise _meshers.MeshingError("nonfinite or singular sampled surface distance")
+    return distance
+
+
+def _sample_chart(
+    parameters: Points,
+    chunk: Indices,
+    sample_weights: Points,
+    bounds: Points,
+    closed_axes: Sequence[bool],
+) -> Points:
+    chart = parameters[chunk]
+    for axis, closed in enumerate(closed_axes):
+        if closed:
+            period = bounds[2 * axis + 1] - bounds[2 * axis]
+            delta = chart[:, :, axis] - chart[:, :1, axis]
+            chart[:, :, axis] = chart[:, :1, axis] + delta - np.rint(delta / period) * period
+    return np.einsum("sj,sjk->sk", sample_weights, chart)
+
+
+def _wall_faces(result: _meshers._IntersectionResult, field_count: int) -> Iterator[Indices]:
+    masks = result["constraint_masks"][result["surface"]]
+    labels = masks[:, 0] & masks[:, 1] & masks[:, 2]
+    for index in range(field_count):
+        yield np.flatnonzero(labels & (1 << index))
+
+
+def _sample_batches(selection: Indices, batch_size: int) -> Iterator[tuple[Indices, Points]]:
+    count = len(selection) * len(_FACE_SAMPLES)
+    limit = min(batch_size, 512 * len(_FACE_SAMPLES))
+    for start in range(0, count, limit):
+        samples = np.arange(start, min(start + limit, count))
+        yield selection[samples // len(_FACE_SAMPLES)], _FACE_SAMPLES[samples % len(_FACE_SAMPLES)]
+
+
+def _surface_errors(
     result: _meshers._IntersectionResult,
     fields: list[Scalar],
     mapping: list[Scalar] | None,
@@ -246,75 +339,26 @@ def _surface_errors(  # ruff: ignore[too-many-locals] - explicit physical invers
     points, parameters, faces = result["points"], result["parameters"], result["surface"]
     extent = float(np.max(np.ptp(points, axis=0))) if len(points) else 0.0
     inverse_tolerance = min(geometry_tolerance * 0.01, extent * 1e-12)
-    masks = result["constraint_masks"][faces]
-    labels = masks[:, 0] & masks[:, 1] & masks[:, 2]
-    weights = np.array([
-        [1, 0, 0],
-        [0, 1, 0],
-        [0, 0, 1],
-        [0.5, 0.5, 0],
-        [0.5, 0, 0.5],
-        [0, 0.5, 0.5],
-        [1 / 3, 1 / 3, 1 / 3],
-    ])
+    groups = _wall_faces(result, len(fields)) if face_selections is None else face_selections
     errors = []
-    for j, field in enumerate(fields):
-        selection = (
-            np.flatnonzero((labels & (1 << j)) != 0)
-            if face_selections is None
-            else face_selections[j]
-        )
-        selected = faces[selection]
+    for field, selection in zip(fields, groups, strict=True):
         maximum = 0.0
-        # Bound sample arrays, not just triangle counts: each face has seven samples.
-        count = len(selected) * len(weights)
-        limit = min(batch_size, 512 * len(weights))
-        for start in range(0, count, limit):
+        for indices, sample_weights in _sample_batches(selection, batch_size):
             _check_cancel(cancel)
-            samples = np.arange(start, min(start + limit, count))
-            chunk = selected[samples // len(weights)]
-            sample_weights = weights[samples % len(weights)]
+            chunk = faces[indices]
             physical = np.einsum("sj,sjk->sk", sample_weights, points[chunk])
-            chart = parameters[chunk].copy()
-            for axis, closed in enumerate(closed_axes):
-                if closed:
-                    period = bounds[2 * axis + 1] - bounds[2 * axis]
-                    delta = chart[:, :, axis] - chart[:, :1, axis]
-                    chart[:, :, axis] = (
-                        chart[:, :1, axis] + delta - np.rint(delta / period) * period
-                    )
-            p = np.einsum("sj,sjk->sk", sample_weights, chart)
-            # Resolve the map in physical units, accounting for representable
-            # coordinate precision when the mesh is far from the origin.
-            roundoff = (
-                8 * np.finfo(np.float64).eps * np.maximum(np.max(np.abs(physical), axis=1), extent)
+            p = _sample_chart(parameters, chunk, sample_weights, bounds, closed_axes)
+            distance = _surface_distances(
+                field,
+                mapping,
+                p,
+                physical,
+                step=step,
+                extent=extent,
+                inverse_tolerance=inverse_tolerance,
             )
-            inverse_limit = np.maximum(inverse_tolerance, roundoff)
-            for _ in range(8):
-                residual = _mapped(p, mapping) - physical
-                if np.all(np.linalg.norm(residual, axis=1) <= inverse_limit):
-                    break
-                p -= np.linalg.solve(_jacobian(p, mapping, step), residual[..., None])[..., 0]
-            inverse_error = np.linalg.norm(_mapped(p, mapping) - physical, axis=1)
-            if not np.all(np.isfinite(inverse_error)) or np.any(inverse_error > inverse_limit):
-                raise _meshers.MeshingError(
-                    "coordinate map could not be inverted for surface checks"
-                )
-            gradient = _gradient(field, p, step)
-            physical_gradient = np.linalg.solve(
-                np.swapaxes(_jacobian(p, mapping, step), 1, 2), gradient[..., None]
-            )[..., 0]
-            magnitude = np.linalg.norm(physical_gradient, axis=1)
-            value = np.abs(_values(field, p))
-            distance = np.divide(
-                value, magnitude, out=np.full_like(value, np.inf), where=magnitude > 0
-            )
-            # Do not hide unresolved physical displacement in the distance gate.
-            distance += inverse_error
-            if not np.all(np.isfinite(distance)):
-                raise _meshers.MeshingError("nonfinite or singular sampled surface distance")
             if errors_by_face is not None:
-                np.maximum.at(errors_by_face, selection[samples // len(weights)], distance)
+                np.maximum.at(errors_by_face, indices, distance)
             maximum = max(maximum, float(np.max(distance, initial=0)))
         errors.append(maximum)
     _check_cancel(cancel)
@@ -339,121 +383,137 @@ def _refresh_linear_metrics(result: _meshers._IntersectionResult, *, fitted: boo
     if fitted:
         final_quality = _signed_quality(vertices)
         diagnostics["minimum_mmg_quality"] = float(np.min(final_quality))
-        diagnostics["elements_below_quality_01"] = int(np.count_nonzero(final_quality < 0.1))
+        diagnostics["elements_below_quality_01"] = int(
+            np.count_nonzero(final_quality < _LOW_QUALITY)
+        )
     diagnostics["volume"] = float(np.linalg.det(vertices[:, 1:] - vertices[:, :1]).sum() / 6)
 
 
-def _fit_surface(  # ruff: ignore[complex-structure, too-many-locals, too-many-branches, too-many-statements] - explicit bounded fitting and admission guards.
-    result: _meshers._IntersectionResult,
-    fields: list[Scalar],
-    mapping: list[Scalar] | None,
-    bounds: Points,
-    *,
-    cells: Sequence[int],
-    closed_axes: Sequence[bool],
-    tolerance: float,
-    minimum_quality: float,
-    cancel: _meshers.CancellationToken | None,
-    batch_size: int,
-) -> int:
-    """Return accepted boundary moves, preserving incident quality and active surfaces."""
-    faces = result["surface"]
-    points, parameters = result["points"], result["parameters"]
-    tetrahedra, masks = result["tetrahedra"], result["constraint_masks"]
-    step = (bounds[1::2] - bounds[::2]) * 1e-5
-    cell = (bounds[1::2] - bounds[::2]) / np.asarray(cells)
+def _incident_cells(connectivity: Indices, node_count: int) -> list[list[int]]:
+    incident: list[list[int]] = [[] for _ in range(node_count)]
+    for index, cell in enumerate(connectivity):
+        for node in cell:
+            incident[node].append(index)
+    return incident
 
-    def measure(indices: Sequence[int] | Indices) -> Points:
-        local = result.copy()
-        local["surface"] = faces[indices]
-        per_face = np.zeros(len(indices))
+
+def _trial_positions(origin: Points, cell: Points) -> Iterator[Points]:
+    yield origin.copy()
+    for axis in range(SPATIAL_DIMENSIONS):
+        for factor in (-0.5, -0.2, -0.05, 0.05, 0.2, 0.5):
+            candidate = origin.copy()
+            candidate[axis] += factor * cell[axis]
+            yield candidate
+
+
+@dataclass
+class _BoundaryFit:
+    result: _meshers._IntersectionResult
+    fields: list[Scalar]
+    mapping: list[Scalar] | None
+    bounds: Points
+    closed_axes: Sequence[bool]
+    tolerance: float
+    minimum_quality: float
+    cancel: _meshers.CancellationToken | None
+    batch_size: int
+
+    def measure(self, faces: Indices) -> Points:
+        local = self.result.copy()
+        local["surface"] = faces
+        errors = np.zeros(len(faces))
         _surface_errors(
             local,
-            fields,
-            mapping,
-            bounds,
-            cancel,
-            batch_size=batch_size,
-            geometry_tolerance=tolerance,
-            closed_axes=closed_axes,
-            errors_by_face=per_face,
+            self.fields,
+            self.mapping,
+            self.bounds,
+            self.cancel,
+            batch_size=self.batch_size,
+            geometry_tolerance=self.tolerance,
+            closed_axes=self.closed_axes,
+            errors_by_face=errors,
         )
-        return per_face
+        return errors
 
-    incident = [[] for _ in points]
-    boundary = [[] for _ in points]
-    for i, tet in enumerate(tetrahedra):
-        for v in tet:
-            incident[v].append(i)
-    for i, face in enumerate(faces):
-        for v in face:
-            boundary[v].append(i)
-    moved = 0
-    for _ in range(8):
-        _check_cancel(cancel)
-        errors = measure(np.arange(len(faces)))
-        bad = faces[errors > tolerance]
-        if not len(bad):
-            break
-        # Bound the work rather than abandoning all fitting on larger surfaces.
-        ranked = faces[np.argsort(errors)[::-1]]
-        ranked_errors = np.sort(errors)[::-1]
-        vertices = list(dict.fromkeys(ranked[ranked_errors > tolerance].ravel()))[:128]
-        accepted = 0
-        for node in vertices:
-            _check_cancel(cancel)
-            origin = parameters[node].copy()
-            locked = np.any(origin[:, None] == bounds.reshape(3, 2), axis=1) & ~np.asarray(
-                closed_axes
-            )
-            active = [f for j, f in enumerate(fields) if masks[node] & (1 << j)]
-            if not active:
-                continue
-            score = float(np.max(measure(boundary[node])))
-            old = points[node].copy()
-            best = None
-            candidates = [origin.copy()]
-            for axis in range(3):
-                for factor in (-0.5, -0.2, -0.05, 0.05, 0.2, 0.5):
-                    candidate = origin.copy()
-                    candidate[axis] += factor * cell[axis]
-                    candidates.append(candidate)
-            for proposed in candidates:
-                candidate = _project_parameters(proposed, origin, active, locked=locked, step=step)
-                if candidate is None:
+    def feasible(self, candidate: Points, step: Points) -> bool:
+        if any(
+            not closed and not self.bounds[2 * axis] <= candidate[axis] <= self.bounds[2 * axis + 1]
+            for axis, closed in enumerate(self.closed_axes)
+        ):
+            return False
+        return not any(
+            _values(f, candidate[None])[0]
+            > 1e-10 * np.linalg.norm(_gradient(f, candidate[None], step)[0])
+            for f in self.fields
+        )
+
+    def best_position(
+        self, node: int, tets: Indices, faces: Indices, cell: Points, step: Points
+    ) -> Points | None:
+        points = self.result["points"]
+        origin = self.result["parameters"][node].copy()
+        locked = np.any(origin[:, None] == self.bounds.reshape(3, 2), axis=1) & ~np.asarray(
+            self.closed_axes
+        )
+        active = [
+            f for j, f in enumerate(self.fields) if self.result["constraint_masks"][node] & (1 << j)
+        ]
+        if not active:
+            return None
+        score = float(np.max(self.measure(faces)))
+        old = points[node].copy()
+        best = None
+        try:
+            for trial in _trial_positions(origin, cell):
+                candidate = _project_parameters(trial, origin, active, locked=locked, step=step)
+                if candidate is None or not self.feasible(candidate, step):
                     continue
-                if any(
-                    not closed_axes[a] and not bounds[2 * a] <= candidate[a] <= bounds[2 * a + 1]
-                    for a in range(3)
+                points[node] = _mapped(candidate[None], self.mapping)[0]
+                quality = _signed_quality(points[tets])
+                if not np.all(np.isfinite(quality)) or np.min(quality) < max(
+                    self.minimum_quality, 1e-14
                 ):
                     continue
-                if any(
-                    _values(f, candidate[None])[0]
-                    > 1e-10 * np.linalg.norm(_gradient(f, candidate[None], step)[0])
-                    for f in fields
-                ):
-                    continue
-                points[node] = _mapped(candidate[None], mapping)[0]
-                q = _signed_quality(points[tetrahedra[incident[node]]])
-                if not np.all(np.isfinite(q)) or np.min(q) < max(minimum_quality, 1e-14):
-                    continue
-                new = float(np.max(measure(boundary[node])))
+                new = float(np.max(self.measure(faces)))
                 if new < score - 1e-10:
-                    score = new
-                    best = candidate.copy()
+                    score, best = new, candidate
+        finally:
             points[node] = old
-            if best is not None:
-                for axis, closed in enumerate(closed_axes):
-                    if closed:
-                        period = bounds[2 * axis + 1] - bounds[2 * axis]
-                        best[axis] = bounds[2 * axis] + (best[axis] - bounds[2 * axis]) % period
-                parameters[node] = best
-                points[node] = _mapped(best[None], mapping)[0]
-                accepted += 1
-        moved += accepted
-        if not accepted:
-            break
-    return moved
+        return best
+
+    def fit(self, cells: Sequence[int]) -> int:
+        faces, tets = self.result["surface"], self.result["tetrahedra"]
+        node_count = len(self.result["points"])
+        incident = _incident_cells(tets, node_count)
+        boundary = _incident_cells(faces, node_count)
+        span = self.bounds[1::2] - self.bounds[::2]
+        step, cell = span * 1e-5, span / np.asarray(cells)
+        moved = 0
+        for _ in range(8):
+            _check_cancel(self.cancel)
+            errors = self.measure(faces)
+            if not np.any(errors > self.tolerance):
+                break
+            ranked = np.argsort(errors)[::-1]
+            vertices = dict.fromkeys(faces[ranked[errors[ranked] > self.tolerance]].ravel())
+            accepted = 0
+            for node in list(vertices)[:128]:
+                _check_cancel(self.cancel)
+                best = self.best_position(
+                    node, tets[incident[node]], faces[boundary[node]], cell, step
+                )
+                if best is not None:
+                    for axis, closed in enumerate(self.closed_axes):
+                        if closed:
+                            low = self.bounds[2 * axis]
+                            best[axis] = low + (best[axis] - low) % span[axis]
+                    self.result["parameters"][node] = best
+                    self.result["points"][node] = _mapped(best[None], self.mapping)[0]
+                    accepted += 1
+            moved += accepted
+            if not accepted:
+                break
+        return moved
 
 
 def _mapped_cap_errors(
@@ -653,8 +713,6 @@ def generate_intersection(
         vertices on their assigned analytic surfaces and change the facet approximation.
         Acute input angles can make a requested minimum quality unattainable.
     """
-    from . import Mesh
-
     if adapt:
         return _adapt_mapped_intersection(
             constraints,
@@ -694,7 +752,9 @@ def generate_intersection(
         minimum_quality=minimum_quality,
         geometry_tolerance=geometry_tolerance,
     )
-    if len(closed_axes) != 3 or any(not isinstance(v, (bool, np.bool_)) for v in closed_axes):
+    if len(closed_axes) != SPATIAL_DIMENSIONS or any(
+        not isinstance(v, (bool, np.bool_)) for v in closed_axes
+    ):
         raise ValueError("closed_axes must contain three booleans")
     if any(
         closed_axes[a]
@@ -765,18 +825,17 @@ def generate_intersection(
             p and not c for p, c in zip(periodic, closed_axes, strict=True)
         ):
             fitting_start = time.perf_counter()
-            moved = _fit_surface(
+            moved = _BoundaryFit(
                 result,
                 fields,
                 mapping,
                 b,
-                cells=cells,
                 closed_axes=closed_axes,
                 tolerance=geometry_tolerance,
                 minimum_quality=minimum_quality,
                 cancel=cancel,
                 batch_size=batch_size,
-            )
+            ).fit(cells)
             diagnostics["geometry_vertex_moves"] = moved
             diagnostics["surface_fitting_seconds"] = time.perf_counter() - fitting_start
             errors = _surface_errors(
@@ -833,7 +892,7 @@ def _validate_options(
     geometry_tolerance: float | None,
 ) -> tuple[Points, Sequence[int], Points]:
     maximum = _meshers.MAX_CONSTRAINTS
-    if not isinstance(constraints, Mapping) or not 2 <= len(constraints) <= maximum:
+    if not isinstance(constraints, Mapping) or not _MIN_CONSTRAINTS <= len(constraints) <= maximum:
         raise ValueError(f"constraints must be a mapping of 2-{maximum} named fields")
     if any(not isinstance(name, str) or not name.strip() for name in constraints):
         raise ValueError("constraint names must be nonempty strings")
@@ -841,15 +900,18 @@ def _validate_options(
     if b.shape != (6,) or not np.all(np.isfinite(b)) or np.any(b[1::2] <= b[::2]):
         raise ValueError("bounds must contain three finite increasing intervals")
     cells = (int(cells),) * 3 if isinstance(cells, (int, np.integer)) else cells
-    if len(cells) != 3 or any(
-        not isinstance(v, (int, np.integer)) or not 4 <= v <= 128 for v in cells
+    if len(cells) != SPATIAL_DIMENSIONS or any(
+        not isinstance(v, (int, np.integer)) or not _MIN_GRID_CELLS <= v <= _MAX_GRID_CELLS
+        for v in cells
     ):
         raise ValueError("cells must contain three integers in 4..128")
-    if len(periodic) != 3 or any(not isinstance(v, (bool, np.bool_)) for v in periodic):
+    if len(periodic) != SPATIAL_DIMENSIONS or any(
+        not isinstance(v, (bool, np.bool_)) for v in periodic
+    ):
         raise ValueError("periodic must contain three booleans")
-    if not isinstance(optimize_passes, int) or not 0 <= optimize_passes <= 20:
+    if not isinstance(optimize_passes, int) or not 0 <= optimize_passes <= MAX_INTERSECTION_PASSES:
         raise ValueError("optimize_passes must be an integer in 0..20")
-    if not np.isfinite(snap) or not 0 <= snap <= 0.2:
+    if not np.isfinite(snap) or not 0 <= snap <= _MAX_SNAP:
         raise ValueError("snap must be finite and in 0..0.2")
     if not np.isfinite(minimum_quality) or not 0 <= minimum_quality <= 1:
         raise ValueError("minimum_quality must be finite and in 0..1")
@@ -925,8 +987,6 @@ def adapt_intersection(
         MeshingError: A seed or final geometry, topology or quality gate fails.
         CancelledError: The cancellation token is set.
     """
-    from . import Mesh
-
     b, _, _ = _validate_options(
         constraints,
         bounds=bounds,
@@ -939,7 +999,7 @@ def adapt_intersection(
         minimum_quality=minimum_quality,
         geometry_tolerance=geometry_tolerance,
     )
-    if seed.tetrahedra.ndim != 2 or seed.tetrahedra.shape[1] != 4:
+    if seed.tetrahedra.shape[1:] != (_TET4_NODES,):
         raise ValueError("seed must contain Tet4 cells")
     if any(len(pairs) for pairs in seed.periodic_pairs):
         raise ValueError("seed adaptation requires nonperiodic physical geometry")
@@ -1021,14 +1081,14 @@ def _mapped_starting_mesh(
     """
     resolved_cells = requested_cells
     seed_quality = minimum_quality
-    for attempt in range(3):
+    for attempt in range(_MAX_SEED_ATTEMPTS):
         try:
             seed = build(resolved_cells, seed_quality)
         except _meshers.MeshingError as error:
-            if attempt == 2:
+            if attempt + 1 == _MAX_SEED_ATTEMPTS:
                 raise
             refined = tuple(
-                min(128, 2 * n) if closed else n
+                min(_MAX_GRID_CELLS, 2 * n) if closed else n
                 for n, closed in zip(requested_cells, closed_axes, strict=True)
             )
             if (

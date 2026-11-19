@@ -2,14 +2,17 @@
 
 import meshers
 import numpy as np
+from numpy.typing import NDArray
+
+Points = NDArray[np.float64]
 
 
-def sphere(x, y, z):
+def sphere(x: Points, y: Points, z: Points) -> Points:
     """Return the sphere field at the supplied coordinates."""
     return (x - 0.47) ** 2 + (y - 0.51) ** 2 + (z - 0.49) ** 2 - 0.29**2
 
 
-def gradient(x, y, z):
+def gradient(x: Points, y: Points, z: Points) -> tuple[Points, Points, Points]:
     """Return the three analytic gradient components."""
     return 2 * (x - 0.47), 2 * (y - 0.51), 2 * (z - 0.49)
 
@@ -21,7 +24,7 @@ print(compiled(0.5, 0.5, 0.5), compiled.gradient(0.5, 0.5, 0.5))
 reused = meshers.generate(compiled, **options)
 
 
-def callback_gradient(x, y, z):
+def callback_gradient(x: Points, y: Points, z: Points) -> Points:
     """Return the gradient components as one row per point."""
     return np.column_stack(gradient(x, y, z))
 

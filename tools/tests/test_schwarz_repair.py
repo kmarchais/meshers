@@ -7,13 +7,13 @@ import numpy as np
 import pytest
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[2] / "demos" / "solver"))
-pv = pytest.importorskip("pyvista")
+pytest.importorskip("pyvista")
 pytest.importorskip("scipy")
+import pyvista as pv
+from historical_schwarz_repair import audit, check_repair, repaired_grid
 
 
 def test_negative_tet_is_reoriented_without_moving_its_boundary():
-    from historical_schwarz_repair import repaired_grid
-
     points = np.array([[0.0, 0, 0], [1, 0, 0], [0, 1, 0], [0, 0, 1]])
     grid = pv.UnstructuredGrid({pv.CellType.TETRA: np.array([[1, 0, 2, 3]])}, points)
     record = {}
@@ -25,8 +25,6 @@ def test_negative_tet_is_reoriented_without_moving_its_boundary():
 
 
 def test_repeated_tet_vertices_are_rejected():
-    from historical_schwarz_repair import audit
-
     cells = np.array([[0, 1, 2, 2]])
     with pytest.raises(ValueError, match="repeated vertices"):
         audit(np.eye(3), cells, np.array([[0, 1, 2]]))
@@ -34,8 +32,6 @@ def test_repeated_tet_vertices_are_rejected():
 
 @pytest.mark.parametrize(("scale", "message"), [(-1, "determinant"), (1.1, "volume")])
 def test_invalid_repair_fails_even_with_optimized_python(scale, message):
-    from historical_schwarz_repair import check_repair
-
     points = np.vstack([np.zeros(3), np.eye(3)])
     moved = points.copy()
     moved[1, 0] *= scale

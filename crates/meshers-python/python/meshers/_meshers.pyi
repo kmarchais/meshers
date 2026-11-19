@@ -4,7 +4,7 @@ from typing import NotRequired, TypedDict
 import numpy as np
 from numpy.typing import NDArray
 
-from . import Field
+from .volume import Field
 
 class _GeometryArrays(TypedDict):
     points: NDArray[np.float64]
@@ -99,9 +99,9 @@ class CompiledField:
     def _intersection_fields(self) -> list[CompiledField] | None: ...
 
 def _compile_expression(
-    nodes: list[tuple[str, list[int], float]],
-    outputs: list[int],
-    constraint_outputs: list[list[int]] | None = None,
+    nodes: Sequence[tuple[str, Sequence[int], float]],
+    outputs: Sequence[int],
+    constraint_outputs: Sequence[Sequence[int]] | None = None,
     *,
     retain_sdf: bool = False,
 ) -> CompiledField: ...

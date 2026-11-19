@@ -10,6 +10,7 @@ import pytest
 sys.path.insert(0, str(Path(__file__).resolve().parents[2] / "demos" / "solver"))
 pytest.importorskip("scipy")
 pytest.importorskip("pyvista")
+import pyvista as pv
 from periodic_geometry import BASELINE, audit, boundary_metrics, field, forward, roots
 
 
@@ -41,8 +42,6 @@ def test_missing_patch_on_cap():
 
 def test_detached_tetrahedron_fails_component_check():
     # A second positive tet with no shared face must fail even if all probes miss it.
-    import pyvista as pv
-
     first = np.array([[-0.4, -0.4, -0.4]]) + 0.1 * np.vstack([np.zeros(3), np.eye(3)])
     extra = 0.2495 + 0.00004 * np.vstack([np.zeros(3), np.eye(3)])
     baseline = json.loads(BASELINE.read_bytes())
@@ -54,3 +53,12 @@ def test_detached_tetrahedron_fails_component_check():
         assert ("face_connected_components" in result["failed_checks"]) == (expected == 2)
         if expected == 2:
             assert not result["sampled_admission"]
+
+
+def test_shifted_wall_uses_the_translated_level_set():
+    points = np.array([[0.125, 0.25, -0.25], [-0.47, 0.093, 0.29]])
+    np.testing.assert_allclose(
+        field(points, "schwarz-shifted"),
+        field(points + np.array([0.125, 0, 0]), "schwarz"),
+        atol=1e-14,
+    )

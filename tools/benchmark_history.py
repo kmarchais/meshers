@@ -12,6 +12,7 @@ from pathlib import Path
 from tools.performance_gate import (
     CASES,
     FIXTURE_VERSION,
+    MIN_MEASURED_PAIRS,
     QUALITY,
     RELEASE_CASES,
     SCHEMA_VERSION,
@@ -19,7 +20,6 @@ from tools.performance_gate import (
 )
 
 SUPPORTED_FIXTURE_VERSIONS = {2, 3, FIXTURE_VERSION}
-MIN_MEASURED_PAIRS = 3
 
 
 def validate(data: dict) -> None:

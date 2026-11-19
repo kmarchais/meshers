@@ -5,6 +5,7 @@ from itertools import product
 import meshers
 import numpy as np
 import pytest
+from meshers.intersection import _periodic_affine
 
 
 def octahedron(x, y, z):
@@ -309,8 +310,6 @@ def test_periodic_extrusion_keeps_exact_creases_and_paired_caps(adapt):
 
 
 def test_periodic_feature_dispatch_rejects_noninvariant_planes():
-    from meshers.intersection import _periodic_affine
-
     field = meshers.compile_field(periodic_column)
     assert _periodic_affine(field, (False, False, True))
     assert not _periodic_affine(field, (True, False, True))
@@ -374,8 +373,6 @@ def test_periodic_affine_normal_jump_uses_a_verified_physical_seed():
 
 
 def test_complete_affine_trace_dispatch_keeps_named_plane_rejection():
-    from meshers.intersection import _periodic_affine
-
     field = meshers.compile_field(
         lambda x, y, z: np.maximum(abs(x) + 0.3 * abs(z) - 0.35, abs(y) - 0.2)
     )

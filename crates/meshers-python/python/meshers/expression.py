@@ -1,13 +1,57 @@
 """Scalar expression tracing and first derivatives for the embedded native compiler."""
 
+from __future__ import annotations
+
 import math
-from collections.abc import Callable
 from functools import lru_cache
-from typing import Literal, Never
+from typing import TYPE_CHECKING, Literal, Never
 
 import numpy as np
 
 from . import _meshers
+from ._meshers import _compile_expression
+
+if TYPE_CHECKING:
+    from collections.abc import Callable
+
+_Node = tuple[str, tuple[int, ...], float]
+_MIN_CONSTRAINTS = 2
+_MAX_NODES = 20_000
+_AXES = "xyz"
+_INTERP_NODES_PER_KNOT = 8
+_TERNARY_ARITY = 3
+
+
+_UFUNCS = {
+    np.arctan2: "atan2",
+    np.arccos: "acos",
+    np.arcsin: "asin",
+    np.arctan: "atan",
+    np.sin: "sin",
+    np.cos: "cos",
+    np.tan: "tan",
+    np.exp: "exp",
+    np.log: "ln",
+    np.sqrt: "sqrt",
+    np.tanh: "tanh",
+    np.sinh: "sinh",
+    np.cosh: "cosh",
+    np.absolute: "abs",
+    np.negative: "neg",
+    np.add: "add",
+    np.subtract: "sub",
+    np.multiply: "mul",
+    np.divide: "div",
+    np.power: "pow",
+    np.minimum: "minimum",
+    np.maximum: "maximum",
+    np.less: "lt",
+    np.less_equal: "le",
+    np.greater: "gt",
+    np.greater_equal: "ge",
+    np.equal: "eq",
+    np.not_equal: "ne",
+}
 
 
 class TraceError(TypeError):
@@ -18,97 +62,99 @@ class _Expression:
     __array_priority__ = 1000
     __hash__ = None
 
-    def __init__(self, graph, index):
+    def __init__(self, graph: _Graph, index: int) -> None:
         self.graph, self.index = graph, index
 
-    def _binary(self, op, other):
+    def _binary(self, op: str, other: object) -> _Expression:
         return self.graph.node(op, self, self.graph.convert(other))
 
-    def __add__(self, o):
+    def __add__(self, o: object) -> _Expression:
         return self._binary("add", o)
 
-    def __radd__(self, o):
+    def __radd__(self, o: object) -> _Expression:
         return self.graph.convert(o)._binary("add", self)
 
-    def __sub__(self, o):
+    def __sub__(self, o: object) -> _Expression:
         return self._binary("sub", o)
 
-    def __rsub__(self, o):
+    def __rsub__(self, o: object) -> _Expression:
         return self.graph.convert(o)._binary("sub", self)
 
-    def __mul__(self, o):
+    def __mul__(self, o: object) -> _Expression:
         return self._binary("mul", o)
 
-    def __rmul__(self, o):
+    def __rmul__(self, o: object) -> _Expression:
         return self.graph.convert(o)._binary("mul", self)
 
-    def __truediv__(self, o):
+    def __truediv__(self, o: object) -> _Expression:
         return self._binary("div", o)
 
-    def __rtruediv__(self, o):
+    def __rtruediv__(self, o: object) -> _Expression:
         return self.graph.convert(o)._binary("div", self)
 
-    def __pow__(self, o):
+    def __pow__(self, o: object) -> _Expression:
         return self._binary("pow", o)
 
-    def __rpow__(self, o):
+    def __rpow__(self, o: object) -> _Expression:
         return self.graph.convert(o)._binary("pow", self)
 
-    def __neg__(self):
+    def __neg__(self) -> _Expression:
         return self.graph.node("neg", self)
 
-    def __pos__(self):
+    def __pos__(self) -> _Expression:
         return self
 
-    def __abs__(self):
+    def __abs__(self) -> _Expression:
         return self.graph.node("abs", self)
 
-    def __bool__(self):
+    def __bool__(self) -> Never:
         raise TraceError(
             "data-dependent Python branches cannot be traced; use the NumPy callback path"
         )
 
-    def __lt__(self, o):
+    def __lt__(self, o: object) -> _Expression:
         return self._binary("lt", o)
 
-    def __le__(self, o):
+    def __le__(self, o: object) -> _Expression:
         return self._binary("le", o)
 
-    def __gt__(self, o):
+    def __gt__(self, o: object) -> _Expression:
         return self._binary("gt", o)
 
-    def __ge__(self, o):
+    def __ge__(self, o: object) -> _Expression:
         return self._binary("ge", o)
 
-    def __eq__(self, o):
+    def __eq__(self, o: object) -> _Expression:  # ty: ignore[invalid-method-override] - symbolic comparison
         return self._binary("eq", o)
 
-    def __ne__(self, o):
+    def __ne__(self, o: object) -> _Expression:  # ty: ignore[invalid-method-override] - symbolic comparison
         return self._binary("ne", o)
 
-    def __float__(self):
+    def __float__(self) -> Never:
         raise TraceError("scalar conversion cannot be traced")
 
-    def __int__(self):
+    def __int__(self) -> Never:
         raise TraceError("integer conversion cannot be traced")
 
-    def __len__(self):
+    def __len__(self) -> Never:
         raise TraceError("array lengths require the NumPy callback path")
 
-    def __getitem__(self, key):
+    def __getitem__(self, key: object) -> Never:
         raise TraceError("array indexing requires the NumPy callback path")
 
-    def __getattr__(self, name):
+    def __getattr__(self, name: str) -> Never:
         if name.startswith("__"):
             raise AttributeError(name)
         raise TraceError(f"array attribute {name} requires the NumPy callback path")
 
-    def __array_function__(self, func, types, args, kwargs):
+    def __array_function__(
+        self, func: Callable, types: tuple[type, ...], args: tuple, kwargs: dict
+    ) -> _Expression:
         if func is np.interp:
             return self._interp(*args, **kwargs)
-        if func is np.where and len(args) == 3 and not kwargs:
+        if func is np.where and len(args) == _TERNARY_ARITY and not kwargs:
             return self.graph.node("select", *(self.graph.convert(a) for a in args))
-        if func is np.clip and len(args) == 3 and not kwargs:
+        if func is np.clip and len(args) == _TERNARY_ARITY and not kwargs:
             value, lower, upper = args
             result = self.graph.convert(value)
             if lower is not None:
@@ -116,9 +162,18 @@ class _Expression:
             if upper is not None:
                 result = self.graph.node("minimum", result, self.graph.convert(upper))
             return result
-        raise TraceError(f"unsupported traced NumPy function: {func.__name__}")
+        name = getattr(func, "__name__", type(func).__name__)
+        raise TraceError(f"unsupported traced NumPy function: {name}")
 
-    def _interp(self, x, xp, fp, left=None, right=None, period=None):  # ruff: ignore[too-many-arguments, too-many-positional-arguments]
+    def _interp(  # ruff: ignore[too-many-arguments, too-many-positional-arguments] - numpy.interp signature
+        self,
+        x: object,
+        xp: object,
+        fp: object,
+        left: float | None = None,
+        right: float | None = None,
+        period: float | None = None,
+    ) -> _Expression:
         # Match NumPy's signature; only finite, static, increasing real tables trace.
         if period is not None:
             raise TraceError("np.interp with period requires the NumPy callback path")
@@ -151,17 +206,19 @@ class _Expression:
             )
         ):
             raise TraceError("np.interp requires finite constants and strictly increasing knots")
-        if len(self.graph.nodes) + 8 * len(knots) > 20000:
+        if len(self.graph.nodes) + _INTERP_NODES_PER_KNOT * len(knots) > _MAX_NODES:
             raise TraceError("np.interp table exceeds the native expression graph limit")
-        x = self.graph.convert(x)
+        coordinate = self.graph.convert(x)
 
-        def branch(lo, hi):
+        def branch(lo: int, hi: int) -> float | _Expression:
             if lo == hi:
                 return float(values[lo])
             if hi - lo == 1:
-                return float(values[lo]) + float(slopes[lo]) * (x - float(knots[lo]))
+                return float(values[lo]) + float(slopes[lo]) * (coordinate - float(knots[lo]))
             middle = (lo + hi) // 2
-            return np.where(x < float(knots[middle]), branch(lo, middle), branch(middle, hi))
+            return self.graph.select(
+                coordinate < float(knots[middle]), branch(lo, middle), branch(middle, hi)
+            )
 
         # ponytail: eager selection costs O(table size); add a lookup kernel only
         # if profiles justify it. Existing native operations preserve the table.
@@ -169,210 +226,221 @@ class _Expression:
         lower = (
             float(values[0])
             if left is None
-            else np.where(x == float(knots[0]), float(values[0]), float(left))
+            else self.graph.select(coordinate == float(knots[0]), float(values[0]), float(left))
         )
         upper = (
             float(values[-1])
             if right is None
-            else np.where(x == float(knots[-1]), float(values[-1]), float(right))
+            else self.graph.select(coordinate == float(knots[-1]), float(values[-1]), float(right))
         )
-        return np.where(x <= float(knots[0]), lower, np.where(x >= float(knots[-1]), upper, value))
+        return self.graph.select(
+            coordinate <= float(knots[0]),
+            lower,
+            self.graph.select(coordinate >= float(knots[-1]), upper, value),
+        )
 
     def __array__(self, *args: object, **kwargs: object) -> Never:
         raise TraceError("array construction is unsupported by the Rust scalar tracer")
 
-    def __array_ufunc__(self, ufunc: np.ufunc, method: str, *args: object, **kwargs: object):
-        ops = {
-            np.arctan2: "atan2",
-            np.arccos: "acos",
-            np.arcsin: "asin",
-            np.arctan: "atan",
-            np.sin: "sin",
-            np.cos: "cos",
-            np.tan: "tan",
-            np.exp: "exp",
-            np.log: "ln",
-            np.sqrt: "sqrt",
-            np.tanh: "tanh",
-            np.sinh: "sinh",
-            np.cosh: "cosh",
-            np.absolute: "abs",
-            np.negative: "neg",
-            np.add: "add",
-            np.subtract: "sub",
-            np.multiply: "mul",
-            np.divide: "div",
-            np.power: "pow",
-            np.minimum: "minimum",
-            np.maximum: "maximum",
-            np.less: "lt",
-            np.less_equal: "le",
-            np.greater: "gt",
-            np.greater_equal: "ge",
-            np.equal: "eq",
-            np.not_equal: "ne",
-        }
-        if method != "__call__" or kwargs or ufunc not in ops:
+    def __array_ufunc__(
+        self, ufunc: np.ufunc, method: str, *args: object, **kwargs: object
+    ) -> _Expression:
+        if method != "__call__" or kwargs or ufunc not in _UFUNCS:
             raise TraceError(f"unsupported traced operation: {ufunc.__name__}.{method}")
-        return self.graph.node(ops[ufunc], *(self.graph.convert(a) for a in args))
+        return self.graph.node(_UFUNCS[ufunc], *(self.graph.convert(a) for a in args))
 
 
 class _Graph:
-    def __init__(self):
-        self.nodes = []
-        self.intern = {}
+    def __init__(self) -> None:
+        self.nodes: list[_Node] = []
+        self._indices: dict[tuple[str, tuple[int, ...]], int] = {}
+
+    def _record(self, op: str, operands: tuple[int, ...], value: float = 0.0) -> _Expression:
+        # Hex keys keep +0.0 and -0.0 distinct in the interning table.
+        key = (float(value).hex() if op == "constant" else op, operands)
+        index = self._indices.get(key)
+        if index is None:
+            index = len(self.nodes)
+            self._indices[key] = index
+            self.nodes.append((op, operands, value))
+        return _Expression(self, index)
+
+    def input(self, axis: int) -> _Expression:
+        return self._record("input", (axis,))
 
     def node(self, op: str, *args: _Expression) -> _Expression:
-        key = (op, *(a.index for a in args))
-        return self._intern(key)
+        return self._record(op, tuple(a.index for a in args))
 
-    def _intern(self, key):
-        if key not in self.intern:
-            self.intern[key] = len(self.nodes)
-            self.nodes.append(key)
-        return _Expression(self, self.intern[key])
+    def select(self, condition: _Expression, yes: object, no: object) -> _Expression:
+        return self.node("select", condition, self.convert(yes), self.convert(no))
 
-    def convert(self, value):
+    def convert(self, value: object) -> _Expression:
         if isinstance(value, _Expression):
             if value.graph is not self:
                 raise TraceError("cannot mix expression traces")
             return value
         if not isinstance(value, (int, float, np.integer, np.floating)):
             raise TraceError("Rust fields must return a scalar expression")
-        v = float(value)
-        if not math.isfinite(v):
+        scalar = float(value)
+        if not math.isfinite(scalar):
             raise ValueError("nonfinite constants are unsupported")
-        # Hex identity preserves signed zero and avoids float-key equality surprises.
-        return self._intern(("constant", v.hex()))
+        return self._record("constant", (), scalar)
 
-    def derivatives(self, output):
-        zero = self.convert(0.0)
-        one = self.convert(1.0)
+    def derivatives(self, output: _Expression) -> list[_Expression]:
+        derivative = _Derivatives(self)
+        return [derivative.at(output.index, axis) for axis in range(len(_AXES))]
 
-        def constant(e):
-            n = self.nodes[e.index]
-            return float.fromhex(n[1]) if n[0] == "constant" else None
 
-        def mul(a, b):
-            if constant(a) == 0.0 or constant(b) == 0.0:
-                return zero
-            if constant(a) == 1.0:
-                return b
-            if constant(b) == 1.0:
-                return a
-            return a * b
+class _Derivatives:
+    def __init__(self, graph: _Graph) -> None:
+        self.graph = graph
+        self.zero = graph.convert(0.0)
+        self.one = graph.convert(1.0)
+        self.cache: dict[tuple[int, int], _Expression] = {}
 
-        def add(a, b):
-            if constant(a) == 0.0:
-                return b
-            if constant(b) == 0.0:
-                return a
-            return a + b
+    def constant(self, expression: _Expression) -> float | None:
+        op, _, value = self.graph.nodes[expression.index]
+        return value if op == "constant" else None
 
-        def choose(c, a, b):
-            return self.node("select", c, a, b)
+    def mul(self, a: _Expression, b: _Expression) -> _Expression:
+        if self.constant(a) == 0.0 or self.constant(b) == 0.0:
+            return self.zero
+        if self.constant(a) == 1.0:
+            return b
+        if self.constant(b) == 1.0:
+            return a
+        return a * b
 
-        @lru_cache(None)
-        def d(index, axis):
-            op, *ids = self.nodes[index]
-            if op == "input":
-                return one if ids[0] == axis else zero
-            if op == "constant" or op in {"lt", "le", "gt", "ge", "eq", "ne"}:
-                return zero
-            args = [_Expression(self, i) for i in ids]
-            if op == "select":
-                return choose(args[0], d(ids[1], axis), d(ids[2], axis))
-            a = args[0]
-            da = d(ids[0], axis)
-            if op == "atan2":
-                b = args[1]
-                db = d(ids[1], axis)
-                denominator = a * a + b * b
-                return choose(denominator > zero, (mul(b, da) - mul(a, db)) / denominator, zero)
-            if op in {"minimum", "maximum"}:
-                b = args[1]
-                db = d(ids[1], axis)
-                tied = add(mul(self.convert(0.5), da), mul(self.convert(0.5), db))
-                return choose(a == b, tied, choose(a <= b if op == "minimum" else a >= b, da, db))
-            if op in {"add", "sub", "mul", "div", "pow"}:
-                b = args[1]
-                db = d(ids[1], axis)
-                if op == "add":
-                    return add(da, db)
-                if op == "sub":
-                    return add(da, -db) if constant(db) != 0.0 else da
-                if op == "mul":
-                    return add(mul(da, b), mul(a, db))
-                if op == "div":
-                    if constant(da) == 0.0 and constant(db) == 0.0:
-                        return zero
-                    if constant(db) == 0.0:
-                        return da / b
-                    return (mul(da, b) - mul(a, db)) / (b * b)
-                exponent = constant(b)
-                if exponent == 0.0:
-                    return zero
-                if exponent == 1.0:
-                    return da
-                if constant(db) == 0.0:
-                    return mul(mul(b, a ** (b - one)), da)
-                # Real-valued variable powers require a positive base.
-                return mul(a**b, add(mul(db, self.node("ln", a)), mul(b, da / a)))
-            if constant(da) == 0.0:
-                return zero
-            if op == "neg":
-                return -da
-            if op == "abs":
-                return choose(a > zero, da, choose(a < zero, -da, zero))
-            if op == "sqrt":
-                # A norm at its origin has no unique gradient. Choose its zero
-                # subgradient when both the radicand and its derivative vanish.
-                # Preserve infinities for sqrt(x) at zero and invalid domains.
-                quotient = da / (self.convert(2.0) * self.node("sqrt", a))
-                return choose(a == zero, choose(da == zero, zero, quotient), quotient)
-            local = {
-                "asin": lambda: one / self.node("sqrt", one - a * a),
-                "acos": lambda: -one / self.node("sqrt", one - a * a),
-                "atan": lambda: one / (one + a * a),
-                "sin": lambda: self.node("cos", a),
-                "cos": lambda: -self.node("sin", a),
-                "tan": lambda: one / (self.node("cos", a) ** self.convert(2.0)),
-                "exp": lambda: self.node("exp", a),
-                "ln": lambda: one / a,
-                "sqrt": lambda: one / (self.convert(2.0) * self.node("sqrt", a)),
-                "sinh": lambda: self.node("cosh", a),
-                "cosh": lambda: self.node("sinh", a),
-                "tanh": lambda: one - self.node("tanh", a) ** self.convert(2.0),
-            }
-            if op not in local:
-                raise TraceError(f"no derivative rule for {op}")
-            return mul(local[op](), da)
+    def add(self, a: _Expression, b: _Expression) -> _Expression:
+        if self.constant(a) == 0.0:
+            return b
+        if self.constant(b) == 0.0:
+            return a
+        return a + b
 
-        return [d(output.index, axis) for axis in ("x", "y", "z")]
+    def at(self, index: int, axis: int) -> _Expression:
+        key = (index, axis)
+        if key not in self.cache:
+            self.cache[key] = self._differentiate(index, axis)
+        return self.cache[key]
 
-    def encoded(self):
-        encoded = []
-        for op, *args in self.nodes:
-            if op == "input":
-                encoded.append((op, ("xyz".index(args[0]),), 0.0))
-            elif op == "constant":
-                encoded.append((op, (), float.fromhex(args[0])))
-            else:
-                encoded.append((op, tuple(args), 0.0))
-        return tuple(encoded)
+    def _differentiate(self, index: int, axis: int) -> _Expression:
+        op, ids, _ = self.graph.nodes[index]
+        if op == "input":
+            return self.one if ids[0] == axis else self.zero
+        if op in {"constant", "lt", "le", "gt", "ge", "eq", "ne"}:
+            return self.zero
+        a = _Expression(self.graph, ids[0])
+        if op == "select":
+            return self.graph.node("select", a, self.at(ids[1], axis), self.at(ids[2], axis))
+        da = self.at(ids[0], axis)
+        if len(ids) == 1:
+            return self._unary(op, a, da)
+        b = _Expression(self.graph, ids[1])
+        return self._binary(op, a, b, da, self.at(ids[1], axis))
+
+    def _binary(
+        self, op: str, a: _Expression, b: _Expression, da: _Expression, db: _Expression
+    ) -> _Expression:
+        if op == "atan2":
+            denominator = a * a + b * b
+            return self.graph.select(
+                denominator > self.zero,
+                (self.mul(b, da) - self.mul(a, db)) / denominator,
+                self.zero,
+            )
+        if op in {"minimum", "maximum"}:
+            half = self.graph.convert(0.5)
+            tied = self.add(self.mul(half, da), self.mul(half, db))
+            return self.graph.select(
+                a == b, tied, self.graph.select(a <= b if op == "minimum" else a >= b, da, db)
+            )
+        return self._arithmetic(op, a, b, da, db)
+
+    def _arithmetic(
+        self, op: str, a: _Expression, b: _Expression, da: _Expression, db: _Expression
+    ) -> _Expression:
+        if op == "add":
+            return self.add(da, db)
+        if op == "sub":
+            return self.add(da, -db) if self.constant(db) != 0.0 else da
+        if op == "mul":
+            return self.add(self.mul(da, b), self.mul(a, db))
+        if op == "pow":
+            return self._power(a, b, da, db)
+        if op != "div":
+            raise TraceError(f"no derivative rule for {op}")
+        if self.constant(db) == 0.0:
+            return self.zero if self.constant(da) == 0.0 else da / b
+        return (self.mul(da, b) - self.mul(a, db)) / (b * b)
+
+    def _power(
+        self, a: _Expression, b: _Expression, da: _Expression, db: _Expression
+    ) -> _Expression:
+        exponent = self.constant(b)
+        if exponent == 0.0:
+            return self.zero
+        if exponent == 1.0:
+            return da
+        if self.constant(db) == 0.0:
+            return self.mul(self.mul(b, a ** (b - self.one)), da)
+        return self.mul(a**b, self.add(self.mul(db, self.graph.node("ln", a)), self.mul(b, da / a)))
+
+    def _unary(self, op: str, a: _Expression, da: _Expression) -> _Expression:
+        if self.constant(da) == 0.0:
+            return self.zero
+        if op == "neg":
+            return -da
+        if op == "abs":
+            return self.graph.select(
+                a > self.zero, da, self.graph.select(a < self.zero, -da, self.zero)
+            )
+        if op == "sqrt":
+            # Keep the zero subgradient at a norm's origin and the singular slope of sqrt(x).
+            quotient = da / (self.graph.convert(2.0) * self.graph.node("sqrt", a))
+            return self.graph.select(
+                a == self.zero, self.graph.select(da == self.zero, self.zero, quotient), quotient
+            )
+        slope = _UNARY_SLOPES.get(op)
+        if slope is None:
+            raise TraceError(f"no derivative rule for {op}")
+        return self.mul(slope(self.graph, self.one, a), da)
+
+
+_UNARY_SLOPES: dict[str, Callable[[_Graph, _Expression, _Expression], _Expression]] = {
+    "asin": lambda graph, one, a: one / graph.node("sqrt", one - a * a),
+    "acos": lambda graph, one, a: -one / graph.node("sqrt", one - a * a),
+    "atan": lambda _graph, one, a: one / (one + a * a),
+    "sin": lambda graph, _one, a: graph.node("cos", a),
+    "cos": lambda graph, _one, a: -graph.node("sin", a),
+    "tan": lambda graph, one, a: one / (graph.node("cos", a) ** graph.convert(2.0)),
+    "exp": lambda graph, _one, a: graph.node("exp", a),
+    "ln": lambda _graph, one, a: one / a,
+    "sinh": lambda graph, _one, a: graph.node("cosh", a),
+    "cosh": lambda graph, _one, a: graph.node("sinh", a),
+    "tanh": lambda graph, one, a: one - graph.node("tanh", a) ** graph.convert(2.0),
+}
 
 
 @lru_cache(maxsize=32)
-def _compile_cached(nodes, outputs, constraints=(), *, retain_sdf=False):
+def _compile_cached(
+    nodes: tuple[_Node, ...],
+    outputs: tuple[int, ...],
+    constraints: tuple[tuple[int, ...], ...] = (),
+    *,
+    retain_sdf: bool = False,
+) -> _meshers.CompiledField:
     if constraints:
-        return _meshers._compile_expression(nodes, outputs, constraints)
+        return _compile_expression(nodes, outputs, constraints)
     if retain_sdf:
-        return _meshers._compile_expression(nodes, outputs, retain_sdf=True)
-    return _meshers._compile_expression(nodes, outputs)
+        return _compile_expression(nodes, outputs, retain_sdf=True)
+    return _compile_expression(nodes, outputs)
 
 
-def _compile_with_intersection(graph, value, outputs):
-    original = graph.encoded()
+def _compile_with_intersection(
+    graph: _Graph, value: _Expression, outputs: tuple[int, ...]
+) -> _meshers.CompiledField:
+    original = tuple(graph.nodes)
     if not getattr(_meshers, "RETAINED_INTERSECTIONS", False):
         return _compile_cached(original, outputs)
     if graph.nodes[value.index][0] != "maximum":
@@ -385,21 +453,21 @@ def _compile_with_intersection(graph, value, outputs):
         if index in seen:
             continue
         seen.add(index)
-        op, *args = graph.nodes[index]
+        op, args, _ = graph.nodes[index]
         if op == "maximum":
             pending.extend(reversed(args))
         else:
             roots.append(index)
-    if not 2 <= len(roots) <= _meshers.MAX_CONSTRAINTS or any(
+    if not _MIN_CONSTRAINTS <= len(roots) <= _meshers.MAX_CONSTRAINTS or any(
         graph.nodes[index][0] == "constant" for index in roots
     ):
         return _compile_cached(original, outputs)
     constraints = tuple(
         (index, *(e.index for e in graph.derivatives(_Expression(graph, index)))) for index in roots
     )
-    if len(graph.nodes) > 20000:
+    if len(graph.nodes) > _MAX_NODES:
         return _compile_cached(original, outputs)
-    return _compile_cached(graph.encoded(), outputs, constraints)
+    return _compile_cached(tuple(graph.nodes), outputs, constraints)
 
 
 def compile_field(
@@ -437,21 +505,21 @@ def compile_field(
     if backend not in {"rust", "jit"}:
         raise ValueError("only the embedded Rust compiler is supported")
     graph = _Graph()
-    xyz = [graph._intern(("input", a)) for a in ("x", "y", "z")]
+    xyz = [graph.input(axis) for axis in range(len(_AXES))]
     value = graph.convert(function(*xyz))
     outputs = [value]
     if gradient is None:
         outputs += graph.derivatives(value)
     elif gradient is not False:
         g = gradient(*xyz)
-        if not isinstance(g, (tuple, list)) or len(g) != 3:
+        if not isinstance(g, (tuple, list)) or len(g) != len(_AXES):
             raise TraceError("gradient must return three scalar expressions")
         outputs.extend(graph.convert(v) for v in g)
-    if len(graph.nodes) > 20000:
+    if len(graph.nodes) > _MAX_NODES:
         raise TraceError("expression is too large to compile")
-    outputs = tuple(e.index for e in outputs)
+    indices = tuple(e.index for e in outputs)
     return (
-        _compile_with_intersection(graph, value, outputs)
+        _compile_with_intersection(graph, value, indices)
         if gradient is None
-        else _compile_cached(graph.encoded(), outputs)
+        else _compile_cached(tuple(graph.nodes), indices)
     )

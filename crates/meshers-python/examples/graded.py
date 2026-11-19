@@ -2,9 +2,12 @@
 
 import meshers
 import numpy as np
+from numpy.typing import NDArray
+
+Points = NDArray[np.float64]
 
 
-def graded_gyroid(x, y, z):
+def graded_gyroid(x: Points, y: Points, z: Points) -> Points:
     """Return the gyroid sheet with spatially varying thickness."""
     x_phase, y_phase, z_phase = (2 * np.pi * v for v in (x, y, z))
     g = (

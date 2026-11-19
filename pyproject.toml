@@ -36,17 +36,17 @@ select = ["ALL"]
 ignore = ["missing-trailing-comma", "missing-copyright-notice", "raise-vanilla-args", "raw-string-in-exception", "f-string-in-exception"]
 
 [tool.ruff.lint.per-file-ignores]
-# Benchmark orchestration uses fixed subprocess argument lists and explicit metric loops.
-"tools/performance_gate.py" = ["import-outside-top-level", "magic-value-comparison", "print", "suspicious-subprocess-import", "subprocess-without-shell-equals-true", "complex-structure"]
-# Tests/examples intentionally use assertions, simple callback names and direct output.
-"**/tests/**" = ["undocumented-public-module", "undocumented-public-function", "ANN", "assert", "magic-value-comparison", "private-member-access", "import-outside-top-level", "subprocess-without-shell-equals-true", "suspicious-subprocess-import", "implicit-namespace-package", "import-private-name"]
-"crates/meshers-python/examples/*.py" = ["ANN", "print", "implicit-namespace-package"]
+# The gate launches wheel-specific Python workers and imports their dependencies on demand.
+"tools/performance_gate.py" = ["import-outside-top-level", "print", "suspicious-subprocess-import", "subprocess-without-shell-equals-true"]
+# Tests exercise private diagnostics and use small callbacks and literal expectations.
+"**/tests/**" = ["undocumented-public-module", "undocumented-public-function", "ANN", "assert", "magic-value-comparison", "private-member-access", "implicit-namespace-package", "import-private-name"]
+"crates/meshers-python/examples/*.py" = ["print", "implicit-namespace-package"]
 # Scalar expression protocols intentionally have dynamic operands and many operators.
-"crates/meshers-python/python/meshers/expression.py" = ["missing-type-function-argument", "missing-return-type-private-function", "missing-return-type-special-method", "too-many-public-methods", "private-member-access", "complex-structure", "too-many-return-statements", "too-many-branches", "float-equality-comparison", "magic-value-comparison"]
-# Python facade re-exports the public API and mirrors meshing options.
-"crates/meshers-python/python/meshers/__init__.py" = ["non-empty-init-module", "too-many-arguments", "builtin-argument-shadowing", "import-outside-top-level", "magic-value-comparison", "docstring-extraneous-exception"]
-# The intersection facade follows the existing public mesher options and validates exact cap coordinates.
-"crates/meshers-python/python/meshers/intersection.py" = ["too-many-arguments", "builtin-argument-shadowing", "import-outside-top-level", "magic-value-comparison", "docstring-extraneous-exception"]
+"crates/meshers-python/python/meshers/expression.py" = ["too-many-public-methods", "float-equality-comparison"]
+# Public Python signatures retain the compile keyword and document native exceptions.
+"crates/meshers-python/python/meshers/volume.py" = ["too-many-arguments", "builtin-argument-shadowing", "docstring-extraneous-exception"]
+"crates/meshers-python/python/meshers/mesh.py" = ["import-outside-top-level"]  # Optional VTK exporter.
+"crates/meshers-python/python/meshers/intersection.py" = ["too-many-arguments", "builtin-argument-shadowing", "docstring-extraneous-exception"]
 # Stub docstrings feed the generated API reference.
 "crates/meshers-python/python/meshers/_meshers.pyi" = ["docstring-in-stub"]
 # Solver demos use array callbacks, numerical tolerances and console reports.

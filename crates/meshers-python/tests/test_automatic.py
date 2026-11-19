@@ -1,6 +1,8 @@
 import meshers
 import numpy as np
 import pytest
+from meshers import _meshers
+from meshers.compiler import compile_field
 from test_rust_compile import grad, gyroid
 
 
@@ -61,8 +63,6 @@ def test_unsupported_numpy_falls_back_visibly():
 
 
 def test_invalid_graph_rejected():
-    from meshers import _meshers
-
     for nodes, outputs, error in [
         ([("add", [0, 0], 0.0)], [0], "invalid expression operands"),
         ([("input", [3], 0.0)], [0], "invalid expression operands"),
@@ -86,8 +86,6 @@ def test_array_gradient_automatically_falls_back():
 
 
 def test_explicit_auto_threads_and_conservative_default(monkeypatch):
-    from meshers import _meshers
-
     assert 1 <= _meshers.available_threads() <= 256
     monkeypatch.setattr(_meshers, "available_threads", lambda: 2)
     mesh = meshers.generate(lambda _x, _y, _z: -1.0, cells=4, optimize_passes=0, threads=None)
@@ -97,6 +95,4 @@ def test_explicit_auto_threads_and_conservative_default(monkeypatch):
 
 
 def test_compatibility_compile_import():
-    from meshers.compiler import compile_field
-
     assert compile_field is meshers.compile_field

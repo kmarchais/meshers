@@ -1,8 +1,11 @@
 """Retained nonlinear intersections through the scalar generation interface."""
 
+import gc
+
 import meshers
 import numpy as np
 import pytest
+from meshers import _meshers
 
 
 def bored_prism(x, y, z):
@@ -55,18 +58,12 @@ def test_custom_gradient_policies_do_not_get_replaced_by_branch_gradients():
 
 
 def test_native_retained_roots_cannot_describe_a_different_field():
-    from meshers import _meshers
-
     nodes = [("input", [0], 0.0), ("input", [1], 0.0), ("maximum", [0, 1], 0.0)]
     with pytest.raises(ValueError, match="outer maximum"):
         _meshers._compile_expression(nodes, [2], [[1], [0]])
 
 
 def test_retained_evaluators_outlive_their_parent():
-    import gc
-
-    from meshers import _meshers
-
     nodes = [
         ("input", [0], 0.0),
         ("input", [1], 0.0),

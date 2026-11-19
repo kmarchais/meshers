@@ -1,12 +1,15 @@
 import gc
+import os
 import re
 import threading
 import time
 from functools import partial
+from pathlib import Path
 
 import meshers
 import numpy as np
 import pytest
+from python_process import run_python
 
 generate_callback = partial(meshers.generate, compile=False)
 
@@ -180,68 +183,7 @@ def test_cancellation_from_another_python_thread():
     assert not worker.is_alive()
 
 
-def test_vtkhdf_unwritable_path_raises(tmp_path):
-    mesh = meshers.generate("gyroid", cells=4, geometry_tolerance=1)
-    with pytest.raises(OSError, match="could not write"):
-        mesh.write_vtkhdf(tmp_path / "missing-directory" / "mesh.vtkhdf")
-
-
-def test_vtkhdf_round_trip_and_physical_shifts(tmp_path):
-    import pyvista as pv
-
-    result = generate_callback(
-        lambda x, _y, _z: np.full_like(x, -1.0),
-        cells=4,
-        bounds=(2, 4, -1, 2, 3, 7),
-        periodic=(True, True, True),
-        optimize_passes=0,
-    )
-    path = tmp_path / "mesh.vtkhdf"
-    result.write_vtkhdf(path)
-    restored = pv.read(path)
-    np.testing.assert_array_equal(restored.points, result.points)
-    np.testing.assert_array_equal(restored.cells.reshape(-1, 5)[:, 1:], result.tetrahedra)
-    np.testing.assert_allclose(restored.point_data["PeriodicShift"].max(axis=0), [2, 3, 4])
-    assert restored.cell_data["MMGQuality"].min() > 0
-    surface = tmp_path / "surface.vtkhdf"
-    result.write_vtkhdf(surface, surface=True)
-    assert pv.read(surface).n_cells == len(result.surface)
-
-
-@pytest.mark.parametrize(("order", "width", "face_width"), [(1, 4, 3), (2, 10, 6)])
-def test_empty_mesh_shapes(order, width, face_width, tmp_path):
-    import pyfive
-
-    result = generate_callback(
-        lambda x, _y, _z: np.ones_like(x),
-        cells=4,
-        order=order,
-        expected_components=0,
-        periodic=(True,) * 3,
-        curved_fit=order == 2,
-    )
-    assert result.points.shape == (0, 3)
-    assert result.tetrahedra.shape == (0, width)
-    assert result.surface.shape == (0, face_width)
-    assert result.diagnostics["empty"]
-    assert result.diagnostics["face_connected_components"] == 0
-    assert all(p.shape == (0, 2) for p in result.periodic_pairs)
-    for surface in (False, True):
-        path = tmp_path / "empty.vtkhdf"
-        result.write_vtkhdf(path, surface=surface)
-        with pyfive.File(path) as f:
-            group = f["VTKHDF"]
-            np.testing.assert_array_equal(group["Offsets"][:], [0])
-            assert group["Connectivity"].shape == group["Types"].shape == (0,)
-            if order == 2 and not surface:
-                assert group["CellData/CornerVolume"].shape == (0,)
-
-
 def test_keyboard_interrupt_in_native_work():
-    import os
-    import subprocess
-    import sys
-
     if os.name != "posix":
         pytest.skip("POSIX signal test")
     code = """
@@ -258,23 +200,12 @@ else:
 finally:
     timer.join()
 """
-    run = subprocess.run(
-        [sys.executable, "-c", code], capture_output=True, check=False, text=True, timeout=15
-    )
-    assert run.returncode == 0, run.stderr
-    assert "interrupted" in run.stdout
+    assert "interrupted" in run_python("-c", code, timeout=15)
 
 
 @pytest.mark.parametrize("delay", [0.15, 2.0])
 @pytest.mark.parametrize("threads", [1, 4])
 def test_native_interruption_on_windows_and_parallel_workers(delay, threads):
-    import os
-    import subprocess
-    import sys
-    from pathlib import Path
-
-    import meshers
-
     # interrupt_main sets Python's pending SIGINT on Windows too. Exercise early
     # and later work; a wall-clock delay does not identify the native phase.
     # Explicit worker counts cover both the default and actual parallel paths.
@@ -298,15 +229,7 @@ else:
 finally:
     timer.join()
 """
-    run = subprocess.run(
-        [sys.executable, "-c", code],
-        env=dict(os.environ, RAYON_NUM_THREADS="4"),
-        capture_output=True,
-        check=False,
-        text=True,
-        timeout=30,
-    )
-    assert run.returncode == 0, run.stderr
+    run_python("-c", code, env={**os.environ, "RAYON_NUM_THREADS": "4"}, timeout=30)
 
 
 def test_optimizer_batch_size_and_gradient_batches():
@@ -431,3 +354,25 @@ def test_expected_components_count_before_periodic_identification():
     )
     assert len(mesh.periodic_pairs[0]) > 0
     assert mesh.diagnostics["face_connected_components"] == 2
+
+
+@pytest.mark.parametrize("height", [0.125, 0.25])
+def test_translated_component_witness(height):
+    center = np.array([0.125, 0.125, height])
+
+    def sphere(x, y, z):
+        return (x - center[0]) ** 2 + (y - center[1]) ** 2 + (z - center[2]) ** 2 - 0.06**2
+
+    # Require the interior witness at resolved spacing. Check the oracle itself
+    # with a deleted component, independent of the producer's own diagnostics.
+    mesh = meshers.generate(sphere, cells=16, optimize_passes=0, snap=0, geometry_tolerance=0.02)
+    vertices = mesh.points[mesh.tetrahedra]
+
+    def covers_center(cells):
+        coords = np.linalg.solve(
+            (cells[:, 1:] - cells[:, :1]).transpose(0, 2, 1), (center - cells[:, 0])[..., None]
+        )[..., 0]
+        return np.any(np.all(coords >= -1e-10, axis=1) & (coords.sum(axis=1) <= 1 + 1e-10))
+
+    assert covers_center(vertices)
+    assert not covers_center(vertices[:0])

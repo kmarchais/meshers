@@ -1,6 +1,10 @@
 """Built-in TPMS, negative-side solids, arrays and volume/surface export."""
 
 import meshers
+import numpy as np
+from numpy.typing import NDArray
+
+Points = NDArray[np.float64]
 
 for field in ("gyroid", "schwarz_p", "schwarz_d"):
     mesh = meshers.generate(
@@ -9,7 +13,7 @@ for field in ("gyroid", "schwarz_p", "schwarz_d"):
     print(field, mesh.points.shape, mesh.tetrahedra.shape, mesh.diagnostics)
 
 
-def sphere(x, y, z):
+def sphere(x: Points, y: Points, z: Points) -> Points:
     """Return the implicit field of a sphere of radius 0.7."""
     return x * x + y * y + z * z - 0.7**2
 

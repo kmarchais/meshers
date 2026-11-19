@@ -1,12 +1,14 @@
 """Public constrained meshing: geometry, quality, mapping, exports and failures."""
 
 import json
+from itertools import product
 
 import meshers
 import numpy as np
 import pyfive
 import pytest
 import pyvista as pv
+from meshers.intersection import _project_parameters, _retained_constraints
 
 
 def constraints():
@@ -21,8 +23,6 @@ def volume(mesh):
 
 
 def test_octahedron_preserves_four_plane_corners_and_exact_volume():
-    from itertools import product
-
     planes = {}
     signs = tuple(product((1, -1), repeat=3))
     for index, normal in enumerate(signs):
@@ -509,8 +509,6 @@ def test_sdf_original_parent_overflow_is_not_bypassed(adaptive):
 
 
 def test_sdf_underflow_does_not_enable_a_different_zero_set():
-    from meshers.intersection import _retained_constraints
-
     field = meshers.compile_field(lambda x, y, z: _box_sdf(x, y, z, 1e-200))
     assert _retained_constraints(field, np.array((-0.5, 0.5) * 3)) is None
 
@@ -565,8 +563,6 @@ def test_nonunit_sdf_branches_keep_the_scalar_path(kind):
 
 @pytest.mark.parametrize("scale", [1e-12, 1.0, 1e12])
 def test_boundary_fitting_projection_is_invariant_to_field_scale(scale):
-    from meshers.intersection import _project_parameters
-
     point = np.array([0.5, 0.2, 0.4])
     projected = _project_parameters(
         point,

@@ -8,6 +8,7 @@ import pytest
 
 from tools import benchmark_history as history
 from tools import performance_gate as gate
+from tools.benchmark_hardware import hardware_snapshot
 
 
 def measurement():
@@ -44,8 +45,6 @@ def measurement():
 
 
 def test_published_configuration_excludes_computer_name(monkeypatch):
-    from tools.benchmark_hardware import hardware_snapshot
-
     monkeypatch.setenv("RUNNER_NAME", "private-identifier")
     monkeypatch.setenv("COMPUTERNAME", "private-identifier")
     specs = hardware_snapshot()

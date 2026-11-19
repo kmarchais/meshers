@@ -13,7 +13,7 @@ from vtkmodules.vtkIOHDF import vtkHDFWriter
 from . import _meshers
 
 if TYPE_CHECKING:
-    from . import Mesh
+    from .mesh import Mesh
 
 
 _TET4_NODES = 4

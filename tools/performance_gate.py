@@ -50,6 +50,13 @@ QUALITY = ("min", "p05", "p10", "median", "mean", "p90", "max")
 CAP = 250_000
 SCHEMA_VERSION = 2
 FIXTURE_VERSION = 4
+MIN_MEASURED_PAIRS = 3
+_MAX_JACOBIAN_DEPTH = 12
+_TET4_NODES = 4
+_TRIANGLES_PER_BOUNDARY_EDGE = 2
+_MIN_CELL_QUALITY = 0.01
+_MAX_SURFACE_ERROR = 0.1
+_INNER_CYLINDER, _BOTTOM_PLANE, _START_PLANE, _END_PLANE = 1, 3, 5, 6
 
 
 class _CaseResult(TypedDict):
@@ -108,7 +115,7 @@ def _check_curved_jacobians(corners: FloatArray) -> None:
         scale = np.linalg.norm(batch, axis=2).max(axis=1).prod(axis=1)
         ambiguous = np.any(coefficients <= 128 * np.finfo(float).eps * scale[:, None], axis=1)
         for cell in batch[ambiguous]:
-            if depth >= 12:
+            if depth >= _MAX_JACOBIAN_DEPTH:
                 raise RuntimeError("Unresolved curved Jacobian positivity")
             i, j = np.unravel_index(
                 np.argmax(np.linalg.norm(cell[:, None] - cell[None, :], axis=(2, 3))), (4, 4)
@@ -135,7 +142,7 @@ def cell_geometry(vertices: FloatArray) -> FloatArray:
     import numpy as np
 
     corner = np.linalg.det(vertices[:, 1:4] - vertices[:, :1])
-    if vertices.shape[1] == 4:
+    if vertices.shape[1] == _TET4_NODES:
         return corner / 6
     edges = np.array([(0, 1), (1, 2), (2, 0), (0, 3), (1, 3), (2, 3)])
     bary = np.vstack([
@@ -145,6 +152,7 @@ def cell_geometry(vertices: FloatArray) -> FloatArray:
         (np.eye(4)[edges[:, 0]] + np.eye(4)[edges[:, 1]]) / 2,
     ])
     dl = np.array([[-1.0, -1.0, -1.0], [1.0, 0.0, 0.0], [0.0, 1.0, 0.0], [0.0, 0.0, 1.0]])
+    corner_range = range(5, 5 + _TET4_NODES)
     determinants = []
     corner_maps = []
     vertices = np.subtract(vertices, vertices[:, :1])
@@ -158,7 +166,7 @@ def cell_geometry(vertices: FloatArray) -> FloatArray:
             ),
         ])
         jacobians = np.einsum("tni,nj->tij", vertices, derivative)
-        if 5 <= index < 9:  # The four reference vertices follow the five quadrature points.
+        if index in corner_range:  # The four reference vertices follow the five quadrature points.
             corner_maps.append(jacobians)
         determinant = np.linalg.det(jacobians)
         if not np.isfinite(determinant).all() or np.any(determinant <= 0):
@@ -192,10 +200,11 @@ def mapped_cap_error(mesh: Mesh) -> float:
     """
     import numpy as np
 
-    if set(np.unique(mesh.boundary_tags)) != {0, 1, 3, 5, 6}:
+    caps = (_INNER_CYLINDER, _BOTTOM_PLANE, _START_PLANE, _END_PLANE)
+    if set(np.unique(mesh.boundary_tags)) != {0, *caps}:
         raise RuntimeError("Unexpected mapped-intersection cap labels")
     errors = []
-    for tag in (1, 3, 5, 6):
+    for tag in caps:
         tri = mesh.points[mesh.surface[mesh.boundary_tags == tag, :3]]
         samples = np.concatenate([
             tri.reshape(-1, 3),
@@ -203,12 +212,12 @@ def mapped_cap_error(mesh: Mesh) -> float:
             tri.mean(axis=1),
         ])
         x, y, z = samples.T
-        if tag == 1:
+        if tag == _INNER_CYLINDER:
             distance = np.hypot(x, y) - 3
-        elif tag == 3:
+        elif tag == _BOTTOM_PLANE:
             distance = z
         else:
-            angle = 0 if tag == 5 else 1 / 3
+            angle = 0 if tag == _START_PLANE else 1 / 3
             distance = y * np.cos(angle) - x * np.sin(angle)
         errors.append(float(np.max(abs(distance))))
     return max(errors)
@@ -224,15 +233,23 @@ def surface_measurements(case: str, mesh: Mesh) -> dict[str, float]:
     return {"surface_error": mesh.diagnostics["sampled_surface_error"]}
 
 
-def sample(case: str) -> dict[str, float]:  # ruff: ignore[too-many-locals] - keep the timing boundary and independent checks together.
-    """Measure a fresh process, then independently validate its mesh.
+def _volume_options(case: str, options: _FixtureOptions) -> _VolumeOptions:
+    volume_options: _VolumeOptions = {**options}
+    if case == "gyroid_tet10":
+        volume_options["order"] = 2
+    if case.startswith("adaptive_"):
+        volume_options.update(
+            adapt=True,
+            min_length=0.005,
+            max_length=0.1,
+            adapt_tolerance=0.002,
+            geometry_tolerance=0.003,
+            gradation=0.6,
+        )
+    return volume_options
 
-    Returns:
-        Timing, peak resident memory and independently computed mesh metrics.
 
-    Raises:
-        RuntimeError: The mesh fails the benchmark's validity or quality checks.
-    """
+def _measure_generation(case: str) -> tuple[Mesh, float, int]:
     import meshers
     import numpy as np
 
@@ -268,18 +285,7 @@ def sample(case: str) -> dict[str, float]:  # ruff: ignore[too-many-locals] - ke
         "geometry_tolerance": 0.1,
         "max_tetrahedra": CAP,
     }
-    volume_options: _VolumeOptions = {**options}
-    if case == "gyroid_tet10":
-        volume_options["order"] = 2
-    if case.startswith("adaptive_"):
-        volume_options.update(
-            adapt=True,
-            min_length=0.005,
-            max_length=0.1,
-            adapt_tolerance=0.002,
-            geometry_tolerance=0.003,
-            gradation=0.6,
-        )
+    volume_options = _volume_options(case, options)
     start = time.perf_counter()
     if case == "mapped_intersection":
 
@@ -336,7 +342,21 @@ def sample(case: str) -> dict[str, float]:  # ruff: ignore[too-many-locals] - ke
         )
     elapsed = time.perf_counter() - start
     # Capture OS high-water RSS before allocating arrays for independent checks.
-    peak = peak_rss_bytes()
+    return mesh, elapsed, peak_rss_bytes()
+
+
+def sample(case: str) -> dict[str, float]:
+    """Measure a fresh process, then independently validate its mesh.
+
+    Returns:
+        Timing, peak resident memory and independently computed mesh metrics.
+
+    Raises:
+        RuntimeError: The mesh fails the benchmark's validity or quality checks.
+    """
+    import numpy as np
+
+    mesh, elapsed, peak = _measure_generation(case)
     if max(len(mesh.points), len(mesh.tetrahedra)) > CAP:
         raise RuntimeError("Benchmark node/tetrahedron cap exceeded")
     points = mesh.points[mesh.tetrahedra]
@@ -356,7 +376,7 @@ def sample(case: str) -> dict[str, float]:  # ruff: ignore[too-many-locals] - ke
         axis=1,
     )
     _, incidence = np.unique(boundary_edges, axis=0, return_counts=True)
-    if not np.all(incidence == 2):
+    if not np.all(incidence == _TRIANGLES_PER_BOUNDARY_EDGE):
         raise RuntimeError("Closed manifold boundary required")
     if case not in {"graded", "mapped_intersection"}:
         for axis, pairs in enumerate(mesh.periodic_pairs):
@@ -391,8 +411,8 @@ def sample(case: str) -> dict[str, float]:  # ruff: ignore[too-many-locals] - ke
         **surface_measurements(case, mesh),
     }
     if (
-        record["quality_min"] < 0.01
-        or max(record["surface_error"], record.get("mapped_cap_error", 0)) > 0.1
+        record["quality_min"] < _MIN_CELL_QUALITY
+        or max(record["surface_error"], record.get("mapped_cap_error", 0)) > _MAX_SURFACE_ERROR
     ):
         raise RuntimeError("Benchmark geometry or quality floor failed")
     return record
@@ -536,6 +556,36 @@ def arguments() -> tuple[argparse.ArgumentParser, argparse.Namespace]:
     return parser, parser.parse_args()
 
 
+def _collect_case(
+    case: str, script: str, interpreters: Mapping[str, str], repeats: int
+) -> _CaseResult:
+    runs: dict[str, list[dict[str, float]]] = {"base": [], "head": []}
+    try:
+        for repetition in range(repeats + 1):
+            order = ("base", "head") if repetition % 2 == 0 else ("head", "base")
+            for label in order:
+                python = interpreters[label]
+                raw = subprocess.check_output(
+                    [python, script, "--sample", case], text=True, timeout=120
+                )
+                if repetition:  # Discard the first pair to warm the OS page cache.
+                    runs[label].append(json.loads(raw))
+    except (subprocess.CalledProcessError, subprocess.TimeoutExpired) as error:
+        reason = (
+            "timeout"
+            if isinstance(error, subprocess.TimeoutExpired)
+            else f"exit {error.returncode}"
+        )
+        message = f"{case}: sample failed ({reason})"
+        return {"runs": runs, "failures": [message], "medians": None}
+    medians = {
+        label: {key: statistics.median(r[key] for r in rows) for key in rows[0]}
+        for label, rows in runs.items()
+    }
+    errors = case_regressions(medians["base"], medians["head"], runs["head"])
+    return {"runs": runs, "medians": medians, "failures": errors}
+
+
 def main() -> None:
     """Collect repeated measurements and fail when a regression exceeds its allowance.
 
@@ -552,7 +602,7 @@ def main() -> None:
     if args.sample:
         print(json.dumps(sample(args.sample), allow_nan=False))
         return
-    if not args.base_python or not args.head_python or args.repeats < 3:
+    if not args.base_python or not args.head_python or args.repeats < MIN_MEASURED_PAIRS:
         parser.error("Two installed environments and at least three repetitions are required")
     summary: _Summary = {"cases": {}}
     result = {
@@ -595,36 +645,16 @@ def main() -> None:
     )
 
     for case in RELEASE_CASES if args.suite == "release" else CASES:
-        runs: dict[str, list[dict[str, float]]] = {"base": [], "head": []}
-        try:
-            for repetition in range(args.repeats + 1):
-                order = ("base", "head") if repetition % 2 == 0 else ("head", "base")
-                for label in order:
-                    python = args.base_python if label == "base" else args.head_python
-                    raw = subprocess.check_output(
-                        [python, script, "--sample", case], text=True, timeout=120
-                    )
-                    if repetition:  # Discard the first pair to warm the OS page cache.
-                        runs[label].append(json.loads(raw))
-        except (subprocess.CalledProcessError, subprocess.TimeoutExpired) as error:
-            reason = (
-                "timeout"
-                if isinstance(error, subprocess.TimeoutExpired)
-                else f"exit {error.returncode}"
-            )
-            message = f"{case}: sample failed ({reason})"
-            failures.append(message)
-            summary["cases"][case] = {"runs": runs, "failures": [message], "medians": None}
-            print(message, flush=True)
-            continue
-        medians = {
-            label: {key: statistics.median(r[key] for r in rows) for key in rows[0]}
-            for label, rows in runs.items()
-        }
-        errors = case_regressions(medians["base"], medians["head"], runs["head"])
-        failures.extend(f"{case}: {error}" for error in errors)
-        summary["cases"][case] = {"runs": runs, "medians": medians, "failures": errors}
-        print(case, "FAIL" if errors else "PASS", flush=True)
+        row = _collect_case(
+            case, script, {"base": args.base_python, "head": args.head_python}, args.repeats
+        )
+        summary["cases"][case] = row
+        if row["medians"] is None:
+            failures.extend(row["failures"])
+            print(row["failures"][0], flush=True)
+        else:
+            failures.extend(f"{case}: {error}" for error in row["failures"])
+            print(case, "FAIL" if row["failures"] else "PASS", flush=True)
     result["complete"] = True
     args.output.parent.mkdir(parents=True, exist_ok=True)
     args.output.write_text(json.dumps(result, indent=2, allow_nan=False) + "\n", encoding="utf-8")

@@ -1,12 +1,12 @@
 import gc
-import subprocess
-import sys
+import os
 import threading
 from itertools import starmap
 
 import meshers
 import numpy as np
 import pytest
+from python_process import run_python
 
 
 def gyroid(x, y, z):
@@ -76,8 +76,6 @@ def test_compiled_cancellation():
 
 
 def test_no_external_compiler_or_optional_dependencies():
-    import os
-
     code = """
 import importlib.abc, subprocess, sys
 class Block(importlib.abc.MetaPathFinder):
@@ -92,7 +90,7 @@ m=meshers.generate(lambda x,y,z:x*x+y*y+z*z-.5,cells=8,geometry_tolerance=.1)
 assert m.diagnostics['evaluator']=='compiled'
 assert m.diagnostics['callback_calls']==0
 """
-    subprocess.run([sys.executable, "-c", code], env={**os.environ, "PATH": ""}, check=True)
+    run_python("-c", code, env={**os.environ, "PATH": ""})
 
 
 @pytest.mark.parametrize("name", ["gyroid", "schwarz_p", "schwarz_d"])

@@ -4,7 +4,6 @@ import json
 import sys
 from pathlib import Path
 
-import numpy as np
 import pytest
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[2] / "demos" / "solver"))
@@ -79,44 +78,3 @@ def test_phase_speedup_requires_matching_inputs_and_stiffness(tmp_path, monkeypa
         assert result["wall_change_percent"] == pytest.approx(-100 / 3)
     else:
         assert result["wall_change_percent"] is None
-
-
-def test_shifted_wall_uses_the_translated_level_set():
-    pytest.importorskip("pyvista")
-    pytest.importorskip("scipy")
-    from periodic_geometry import field
-
-    points = np.array([[0.125, 0.25, -0.25], [-0.47, 0.093, 0.29]])
-    np.testing.assert_allclose(
-        field(points, "schwarz-shifted"),
-        field(points + np.array([0.125, 0, 0]), "schwarz"),
-        atol=1e-14,
-    )
-
-
-def test_reordered_cg_returns_original_degrees_of_freedom():
-    pytest.importorskip("fedoo")
-    pytest.importorskip("meshers")
-    from fedoo_homogenization import ReorderedCG
-    from scipy.sparse import csr_matrix
-
-    matrix = csr_matrix([
-        [4.0, 0.0, -1.0, 0.0],
-        [0.0, 2.0, 0.0, -1.0],
-        [-1.0, 0.0, 5.0, -1.0],
-        [0.0, -1.0, -1.0, 3.0],
-    ])
-    rhs = np.array([2.0, -3.0, 4.0, 1.0])
-    solver = ReorderedCG()
-    np.testing.assert_allclose(matrix @ solver(matrix, rhs), rhs, atol=1e-12)
-    assert solver.records[-1]["original_relative_residual"] < 1e-12
-
-
-def test_reordered_solver_rejects_bad_original_residual(monkeypatch):
-    pytest.importorskip("fedoo")
-    from fedoo_homogenization import AuditedCG, ReorderedCG
-    from scipy.sparse import eye
-
-    monkeypatch.setattr(AuditedCG, "__call__", lambda _self, _matrix, rhs: np.zeros_like(rhs))
-    with pytest.raises(ValueError, match="Original-system CG relative residual"):
-        ReorderedCG()(eye(3, format="csr"), np.ones(3))
