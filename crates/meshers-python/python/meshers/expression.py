@@ -101,6 +101,7 @@ class TraceError(TypeError):
 
 
 class _Expression(NDArrayOperatorsMixin):
+    __slots__ = ("graph", "index")
     __array_priority__ = 1000
     __hash__ = None
 
@@ -108,7 +109,7 @@ class _Expression(NDArrayOperatorsMixin):
         self.graph, self.index = graph, index
 
     def _binary(self, op: str, other: object) -> _Expression:
-        return self.graph.node(op, self, self.graph.convert(other))
+        return self.graph.binary(op, self, self.graph.convert(other))
 
     def __add__(self, other: object) -> _Expression:
         return self._binary("add", other)
@@ -180,14 +181,15 @@ class _Expression(NDArrayOperatorsMixin):
         if func is np.interp:
             return _Interpolation(*args, **kwargs).trace(self.graph)
         if func is np.where and len(args) == _TERNARY_ARITY and not kwargs:
-            return self.graph.node("select", *(self.graph.convert(a) for a in args))
+            condition, yes, no = args
+            return self.graph.select(self.graph.convert(condition), yes, no)
         if func is np.clip and len(args) == _TERNARY_ARITY and not kwargs:
             value, lower, upper = args
             result = self.graph.convert(value)
             if lower is not None:
-                result = self.graph.node("maximum", result, self.graph.convert(lower))
+                result = self.graph.binary("maximum", result, self.graph.convert(lower))
             if upper is not None:
-                result = self.graph.node("minimum", result, self.graph.convert(upper))
+                result = self.graph.binary("minimum", result, self.graph.convert(upper))
             return result
         name = getattr(func, "__name__", type(func).__name__)
         msg = f"unsupported traced NumPy function: {name}"
@@ -207,7 +209,11 @@ class _Expression(NDArrayOperatorsMixin):
         if method != "__call__" or kwargs or ufunc not in _UFUNCS:
             msg = f"unsupported traced operation: {ufunc.__name__}.{method}"
             raise TraceError(msg)
-        return self.graph.node(_UFUNCS[ufunc], *(self.graph.convert(a) for a in args))
+        op = _UFUNCS[ufunc]
+        first = self.graph.convert(args[0])
+        if ufunc.nin == 1:
+            return self.graph.unary(op, first)
+        return self.graph.binary(op, first, self.graph.convert(args[1]))
 
 
 @dataclass(frozen=True, slots=True)
@@ -315,11 +321,17 @@ class _Graph:
     def input(self, axis: int) -> _Expression:
         return self._record("input", (axis,))
 
-    def node(self, op: str, *args: _Expression) -> _Expression:
-        return self._record(op, tuple(a.index for a in args))
+    def binary(self, op: str, left: _Expression, right: _Expression) -> _Expression:
+        return self._record(op, (left.index, right.index))
+
+    def unary(self, op: str, arg: _Expression) -> _Expression:
+        return self._record(op, (arg.index,))
 
     def select(self, condition: _Expression, yes: object, no: object) -> _Expression:
-        return self.node("select", condition, self.convert(yes), self.convert(no))
+        return self._record(
+            "select",
+            (condition.index, self.convert(yes).index, self.convert(no).index),
+        )
 
     def convert(self, value: object) -> _Expression:
         if isinstance(value, _Expression):
@@ -383,7 +395,7 @@ class _Derivatives:
             return self.zero
         a = _Expression(self.graph, ids[0])
         if op == "select":
-            return self.graph.node("select", a, self.at(ids[1], axis), self.at(ids[2], axis))
+            return self.graph.select(a, self.at(ids[1], axis), self.at(ids[2], axis))
         da = self.at(ids[0], axis)
         if len(ids) == 1:
             return self._unary(op, a, da)
@@ -451,7 +463,10 @@ class _Derivatives:
             return da
         if self.is_constant(db, 0.0):
             return self.mul(self.mul(b, a ** (b - self.one)), da)
-        return self.mul(a**b, self.add(self.mul(db, self.graph.node("ln", a)), self.mul(b, da / a)))
+        return self.mul(
+            a**b,
+            self.add(self.mul(db, self.graph.unary("ln", a)), self.mul(b, da / a)),
+        )
 
     def _unary(self, op: str, a: _Expression, da: _Expression) -> _Expression:
         if self.is_constant(da, 0.0):
@@ -466,7 +481,7 @@ class _Derivatives:
             )
         if op == "sqrt":
             # Keep the zero subgradient at a norm's origin and the singular slope of sqrt(x).
-            quotient = da / (self.graph.convert(2.0) * self.graph.node("sqrt", a))
+            quotient = da / (self.graph.convert(2.0) * self.graph.unary("sqrt", a))
             return self.graph.select(
                 a == self.zero,
                 self.graph.select(da == self.zero, self.zero, quotient),
@@ -480,17 +495,17 @@ class _Derivatives:
 
 
 _UNARY_SLOPES: dict[str, Callable[[_Graph, _Expression, _Expression], _Expression]] = {
-    "asin": lambda graph, one, a: one / graph.node("sqrt", one - a * a),
-    "acos": lambda graph, one, a: -one / graph.node("sqrt", one - a * a),
+    "asin": lambda graph, one, a: one / graph.unary("sqrt", one - a * a),
+    "acos": lambda graph, one, a: -one / graph.unary("sqrt", one - a * a),
     "atan": lambda _graph, one, a: one / (one + a * a),
-    "sin": lambda graph, _one, a: graph.node("cos", a),
-    "cos": lambda graph, _one, a: -graph.node("sin", a),
-    "tan": lambda graph, one, a: one / (graph.node("cos", a) ** graph.convert(2.0)),
-    "exp": lambda graph, _one, a: graph.node("exp", a),
+    "sin": lambda graph, _one, a: graph.unary("cos", a),
+    "cos": lambda graph, _one, a: -graph.unary("sin", a),
+    "tan": lambda graph, one, a: one / (graph.unary("cos", a) ** graph.convert(2.0)),
+    "exp": lambda graph, _one, a: graph.unary("exp", a),
     "ln": lambda _graph, one, a: one / a,
-    "sinh": lambda graph, _one, a: graph.node("cosh", a),
-    "cosh": lambda graph, _one, a: graph.node("sinh", a),
-    "tanh": lambda graph, one, a: one - graph.node("tanh", a) ** graph.convert(2.0),
+    "sinh": lambda graph, _one, a: graph.unary("cosh", a),
+    "cosh": lambda graph, _one, a: graph.unary("sinh", a),
+    "tanh": lambda graph, one, a: one - graph.unary("tanh", a) ** graph.convert(2.0),
 }
 
 
