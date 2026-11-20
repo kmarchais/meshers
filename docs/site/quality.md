@@ -69,11 +69,12 @@ checked regardless of the requested floor.
 A lattice mesh that misses the requested floor is remeshed locally around its
 poor elements: short edges are collapsed, overlong ones split, interior edges
 and faces swapped. A mesh that already passes is returned unchanged. If that
-is not enough and the wall grazes a box edge or corner, the crossings of the
-wall with that edge are moved as a last resort: two crossings a short way
-apart are merged, which removes the tongue between them, and a crossing next
-to a box corner slides along its edge. Both apply to every periodic image and
-stay subject to `geometry_tolerance`. `defeatured_box_edge_crossings` counts
+is not enough, a last resort trades geometry for shape around the poor
+elements, as envelope meshers do: two crossings of the wall with one box edge
+merge, which removes the tongue between them; a crossing next to a box corner
+slides along its edge; and other wall vertices may leave the wall. Vertices
+stay in the box planes they lie in, every periodic image moves alike, and the
+result remains subject to `geometry_tolerance`. `defeaturing_moves` counts
 these moves and
 `generate` emits a `UserWarning` when it is nonzero.
 

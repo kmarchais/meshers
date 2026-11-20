@@ -448,12 +448,12 @@ def generate(  # ruff: ignore[complex-structure, too-many-branches]
     result["diagnostics"]["evaluator"] = evaluator
     result["diagnostics"]["preparation_seconds"] = preparation_seconds
     result["periodic_pairs"] = tuple(result["periodic_pairs"])
-    merged = result["diagnostics"].get("defeatured_box_edge_crossings", 0)
+    merged = result["diagnostics"].get("defeaturing_moves", 0)
     if merged:
         warnings.warn(
-            f"Moved {merged} crossing(s) of the surface with a box edge to reach "
+            f"Moved {merged} surface vertices off the implicit surface to reach "
             f"minimum_quality={minimum_quality}; the geometry changed there, within "
-            "geometry_tolerance. Shift the periodic cell to avoid it.",
+            "geometry_tolerance. Refining or shifting the periodic cell may avoid it.",
             UserWarning,
             stacklevel=2,
         )

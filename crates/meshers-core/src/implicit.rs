@@ -105,10 +105,10 @@ pub struct Diagnostics {
     pub minimum_mmg_quality: f64,
     pub elements_below_quality_01: usize,
     pub reverted_snap_vertices: usize,
-    /// Last-resort defeaturing: pairs of wall crossings of one box edge merged
-    /// because the wall grazed that edge. Nonzero means the geometry changed
-    /// there, within `geometry_tolerance`.
-    pub defeatured_box_edge_crossings: usize,
+    /// Last-resort defeaturing: wall vertices merged or moved off the wall to
+    /// reach `minimum_quality`. Nonzero means the geometry changed there,
+    /// within `geometry_tolerance`.
+    pub defeaturing_moves: usize,
     pub inserted_interior_nodes: usize,
     pub maximum_sampled_surface_error: f64,
     pub adapt: Option<crate::tet_adapt::Stats>,
@@ -1096,7 +1096,7 @@ fn finish_with_constraints<F: ScalarField>(
             maximum_sampled_surface_error: error,
             elements_below_quality_01,
             reverted_snap_vertices: 0,
-            defeatured_box_edge_crossings: 0,
+            defeaturing_moves: 0,
             inserted_interior_nodes: 0,
             adapt: None,
         },
@@ -1537,7 +1537,7 @@ fn build<F: ScalarField>(g: &Context<F>) -> Result<Output, String> {
         None,
         g,
     )?;
-    let mut defeatured_box_edge_crossings = 0;
+    let mut defeaturing_moves = 0;
     let rejected = |mesh: &Mesh| {
         mesh.tets
             .iter()
@@ -1588,7 +1588,7 @@ fn build<F: ScalarField>(g: &Context<F>) -> Result<Output, String> {
             // A defeatured mesh that still fails is not worth its changed geometry.
             if !defeature || (merged > 0 && !rejected(&trial)) {
                 mesh = trial;
-                defeatured_box_edge_crossings = merged;
+                defeaturing_moves = merged;
             }
             if !rejected(&mesh) {
                 break;
@@ -1604,7 +1604,7 @@ fn build<F: ScalarField>(g: &Context<F>) -> Result<Output, String> {
     )?;
     let mut output = finish(mesh, g)?;
     output.diagnostics.reverted_snap_vertices = reverted_snap_vertices;
-    output.diagnostics.defeatured_box_edge_crossings = defeatured_box_edge_crossings;
+    output.diagnostics.defeaturing_moves = defeaturing_moves;
     output.diagnostics.inserted_interior_nodes = inserted_interior_nodes;
     Ok(output)
 }

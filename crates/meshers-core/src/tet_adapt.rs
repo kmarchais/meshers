@@ -1134,6 +1134,17 @@ impl<'g, G: Geometry> Tets<'g, G> {
         true
     }
 
+    /// Whether `v` and the centroids of its wall facets lie within
+    /// `tolerance` of the wall, to first order.
+    fn near_wall(&self, v: usize, tolerance: f64) -> bool {
+        self.distance(self.points[v], [false; 3]) <= tolerance
+            && self.vb[v].iter().all(|f| {
+                let p = self.local(f.map(|n| self.points[n]));
+                let centre = std::array::from_fn(|a| (p[0][a] + p[1][a] + p[2][a]) / 3.);
+                self.faces[f] != 0 || self.distance(centre, [false; 3]) <= tolerance
+            })
+    }
+
     /// Whether collapsing `u` onto `v` lays a boundary facet of `u` entirely
     /// in a box plane other than its own, where it would read as a cap.
     fn folds_into_plane(&self, u: usize, v: usize) -> bool {
@@ -2266,6 +2277,7 @@ pub(crate) fn remove_slivers(
                 }
             }
             s.merge_corners = false;
+            let [lo, hi] = s.g.bounds();
             // A crossing next to a box corner cannot be merged away: slide
             // it along its box edge, staying within the tolerance of the wall.
             let mut crossings: Vec<usize> = (0..s.tets.len())
@@ -2286,17 +2298,57 @@ pub(crate) fn remove_slivers(
                 for step in -8..=8 {
                     let mut p = start;
                     p[axis] += tolerance * f64::from(step) / 8.;
-                    s.points[v] = s.wrap(p);
-                    let fits = s.distance(s.points[v], [false; 3]) <= tolerance
-                        && s.vb[v].iter().all(|f| {
-                            let p = s.local(f.map(|n| s.points[n]));
-                            let centre =
-                                std::array::from_fn(|a| (p[0][a] + p[1][a] + p[2][a]) / 3.);
-                            s.faces[f] != 0 || s.distance(centre, [false; 3]) <= tolerance
-                        });
+                    // Stay between the two corners of the box edge.
+                    if p[axis] <= lo[axis] || p[axis] >= hi[axis] {
+                        continue;
+                    }
+                    s.points[v] = p;
+                    let fits = s.near_wall(v, tolerance);
                     let q = s.worst(&star);
                     if fits && q > 1.05 * best.0 {
                         best = (q, s.points[v]);
+                    }
+                }
+                s.points[v] = best.1;
+                if best.1 != start {
+                    s.refresh(v);
+                    changed += 1;
+                    merged += 1;
+                }
+            }
+            // Envelope: any other wall vertex of a poor element may
+            // leave the wall by up to the tolerance, inside its box planes.
+            let mut loose: Vec<usize> = (0..s.tets.len())
+                .filter(|&t| s.alive[t] && mmg(s.tet_points(s.tets[t], None)) < SLIVER_EDGES)
+                .flat_map(|t| s.tets[t])
+                .filter(|&v| s.masks[v] & WALL != 0 && s.masks[v].count_ones() < 3)
+                .collect();
+            loose.sort_unstable();
+            loose.dedup();
+            for v in loose {
+                let start = s.points[v];
+                let star = s.vt[v].clone();
+                let mut best = (s.worst(&star), start);
+                let mut step = 0.5 * tolerance;
+                for _ in 0..4 {
+                    let centre = best.1;
+                    for axis in (0..3).filter(|a| (s.masks[v] >> (2 + 2 * a)) & 3 == 0) {
+                        for sign in [-1., 1.] {
+                            let mut p = centre;
+                            p[axis] += sign * step;
+                            // Crossing a box plane would change the caps.
+                            if p[axis] <= lo[axis] || p[axis] >= hi[axis] {
+                                continue;
+                            }
+                            s.points[v] = p;
+                            let q = s.worst(&star);
+                            if q > 1.05 * best.0 && s.near_wall(v, tolerance) {
+                                best = (q, s.points[v]);
+                            }
+                        }
+                    }
+                    if best.1 == centre {
+                        step *= 0.5;
                     }
                 }
                 s.points[v] = best.1;
