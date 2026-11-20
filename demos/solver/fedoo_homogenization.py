@@ -19,6 +19,7 @@ from typing import TYPE_CHECKING
 import fedoo as fd
 import meshers
 import numpy as np
+from reporting import write_json_line
 from scipy.sparse import diags
 from scipy.sparse.csgraph import reverse_cuthill_mckee
 from scipy.sparse.linalg import cg
@@ -44,7 +45,10 @@ class AuditedCG:
         self.records = []
 
     def __call__(
-        self, matrix: spmatrix | sparray, rhs: NDArray[np.float64], **_kwargs: object
+        self,
+        matrix: spmatrix | sparray,
+        rhs: NDArray[np.float64],
+        **_kwargs: object,
     ) -> NDArray[np.float64]:
         """Solve the fedoo-reduced system.
 
@@ -91,7 +95,10 @@ class ReorderedCG(AuditedCG):
     """Run the same Jacobi CG after symmetric reverse Cuthill-McKee ordering."""
 
     def __call__(
-        self, matrix: spmatrix | sparray, rhs: NDArray[np.float64], **kwargs: object
+        self,
+        matrix: spmatrix | sparray,
+        rhs: NDArray[np.float64],
+        **kwargs: object,
     ) -> NDArray[np.float64]:
         """Return the solution in the original degree-of-freedom order."""
         start = time.perf_counter()
@@ -104,10 +111,12 @@ class ReorderedCG(AuditedCG):
         x[order] = permuted_solution
         residual = float(np.linalg.norm(matrix @ x - rhs) / max(np.linalg.norm(rhs), 1e-30))
         require(
-            residual < 2e-9, f"Original-system CG relative residual {residual} exceeds the limit"
+            residual < 2e-9,
+            f"Original-system CG relative residual {residual} exceeds the limit",
         )
         self.records[-1].update(
-            ordering_seconds=ordering_seconds, original_relative_residual=residual
+            ordering_seconds=ordering_seconds,
+            original_relative_residual=residual,
         )
         return x
 
@@ -152,7 +161,8 @@ def pair_classes(mesh):
         for value in [0, 1]:
             triangles = mesh.surface[
                 np.all(
-                    np.isclose(mesh.points[mesh.surface, axis], value, atol=1e-12, rtol=0), axis=1
+                    np.isclose(mesh.points[mesh.surface, axis], value, atol=1e-12, rtol=0),
+                    axis=1,
                 )
             ]
             sides.append({tuple(sorted(row)) for row in mapping[triangles]})
@@ -216,9 +226,9 @@ def homogenize(mesh, *, stress_probe_cell=None, solver_factory=AuditedCG):  # ru
                     np.abs(
                         displacement[pairs[:, 1]]
                         - displacement[pairs[:, 0]]
-                        - (mesh.points[pairs[:, 1]] - mesh.points[pairs[:, 0]]) @ macro.T
-                    )
-                )
+                        - (mesh.points[pairs[:, 1]] - mesh.points[pairs[:, 0]]) @ macro.T,
+                    ),
+                ),
             )
             for pairs in mesh.periodic_pairs
         )
@@ -300,7 +310,10 @@ def specimen(name, cells):
     """
     if name == "solid":
         return meshers.generate(
-            lambda x, _y, _z: x * 0 - 1, cells=cells, periodic=(True, True, True), optimize_passes=0
+            lambda x, _y, _z: x * 0 - 1,
+            cells=cells,
+            periodic=(True, True, True),
+            optimize_passes=0,
         )
     return meshers.generate(
         "gyroid",
@@ -323,7 +336,7 @@ def main():
         },
         "source_sha256": hashlib.sha256(Path(__file__).read_bytes()).hexdigest(),
         "checks_sha256": hashlib.sha256(
-            Path(__file__).with_name("solver_checks.py").read_bytes()
+            Path(__file__).with_name("solver_checks.py").read_bytes(),
         ).hexdigest(),
         "extension_sha256": hashlib.sha256(extension.read_bytes()).hexdigest(),
         "material": {"young_modulus": 2.5, "poisson_ratio": 0.25},
@@ -363,20 +376,19 @@ def main():
                 result["analytic_stiffness_relative_error"] = error
             if previous is not None:
                 result["stiffness_relative_change"] = float(
-                    np.linalg.norm(tensor - previous) / np.linalg.norm(tensor)
+                    np.linalg.norm(tensor - previous) / np.linalg.norm(tensor),
                 )
             previous = tensor
             report["cases"].append(result)
-            print(
-                json.dumps({
+            write_json_line(
+                {
                     k: v
                     for k, v in result.items()
                     if k not in {"strain_controlled_loads", "automatic_stress_controlled_solves"}
-                }),
-                flush=True,
+                },
             )
             (ROOT / "docs/fedoo-homogenization-results.json").write_text(
-                json.dumps(report, indent=2) + "\n"
+                json.dumps(report, indent=2) + "\n",
             )
 
 

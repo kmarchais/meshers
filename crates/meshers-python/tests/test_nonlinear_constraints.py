@@ -20,7 +20,9 @@ def test_retained_branches_preserve_values_gradients_and_cached_owners():
     assert all(a is b for a, b in zip(branches, field._intersection_fields(), strict=True))
     points = np.random.default_rng(42).uniform(-0.5, 0.5, (1024, 3))
     np.testing.assert_allclose(
-        np.max([f.values(points) for f in branches], axis=0), field.values(points), atol=2e-16
+        np.max([f.values(points) for f in branches], axis=0),
+        field.values(points),
+        atol=2e-16,
     )
     np.testing.assert_allclose(branches[-1].gradient(0.15, -0.02, 0), (-1, 0, 0), atol=1e-14)
     assert all(f.has_gradient for f in branches)
@@ -110,7 +112,7 @@ def test_adaptive_nonlinear_intersection_preserves_bore_and_caps():
             points[:, 1] - points[:, 0],
             np.cross(points[:, 2] - points[:, 0], points[:, 3] - points[:, 0]),
         )
-        > 0
+        > 0,
     )
 
 
@@ -125,7 +127,8 @@ def test_retained_adaptation_preserves_sizing_errors_and_budget():
     }
 
     def fail(_x, _y, _z):
-        raise LookupError("retained sizing control")
+        msg = "retained sizing control"
+        raise LookupError(msg)
 
     with pytest.raises(LookupError, match="retained sizing control"):
         meshers.generate(bored_prism, size_field=fail, **options)

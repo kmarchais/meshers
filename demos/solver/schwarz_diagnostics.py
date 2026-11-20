@@ -16,7 +16,7 @@ from historical_schwarz_repair import repaired_grid
 from microgen.external import MmgError
 from periodic_geometry import BASELINE, audit
 from release_wheel_comparison import generate, hardware_snapshot
-from schwarz_workflow import PACKAGES, REFERENCE, digest, live_microgen, run
+from schwarz_workflow import PACKAGES, REFERENCE, SchwarzSettings, digest, live_microgen, run
 from scipy.linalg import eigvalsh
 from vtkmodules.vtkCommonCore import vtkSMPTools
 
@@ -60,13 +60,14 @@ def stage_study(case, folder, row, baseline):
         walls[name] = pv.PolyData.from_regular_faces(skin.points, tri[~caps])
 
     path = live_microgen(
-        "microgen-default" if case == "default" else "microgen-tuned",
-        30 if control else 24,
+        SchwarzSettings(
+            "single-pass-repair" if control else f"microgen-{case}",
+            30 if control else 24,
+        ),
         folder,
         row,
         baseline["limits"]["max_nodes_or_elements"],
         observe=observe,
-        single_pass=control,
     )
     grid = pv.read(path)
     observe("export", grid)
@@ -94,11 +95,13 @@ def quadratic_control(row, baseline):
     pts, cells = mesh.points, mesh.tetrahedra
     row.update(nodes=len(pts), elements=len(cells))
     if max(len(pts), len(cells)) > baseline["limits"]["max_nodes_or_elements"]:
-        raise ValueError("Quadratic mesh exceeds the node or element cap")
+        msg = "Quadratic mesh exceeds the node or element cap"
+        raise ValueError(msg)
     volumes = [cell_geometry(pts[batch]).sum() for batch in np.array_split(cells, 32) if len(batch)]
     row["integrated_volume"] = float(sum(volumes))
     if abs(row["integrated_volume"] / 0.5 - 1) > baseline["limits"]["relative_volume_error"]:
-        raise ValueError("Curved volume outside the Schwarz limit")
+        msg = "Curved volume outside the Schwarz limit"
+        raise ValueError(msg)
     fd.ModelingSpace("3D")
     fem = fd.Mesh(pts + 0.5, cells.copy(), "tet10")
     material = fd.constitutivelaw.ElasticIsotrop(2.5, 0.25)
@@ -106,24 +109,28 @@ def quadratic_control(row, baseline):
     solver = AuditedCG()
     tensor = np.asarray(
         fd.homogen.get_homogenized_stiffness(
-            assembly, meshperio=True, solver=solver, rigid_body_constraint="pin"
-        )
+            assembly,
+            meshperio=True,
+            solver=solver,
+            rigid_body_constraint="pin",
+        ),
     )
     if len(solver.records) != 6 or not np.allclose(tensor, tensor.T, rtol=1e-8, atol=1e-9):
-        raise ValueError("Quadratic six-load stiffness verification failed")
+        msg = "Quadratic six-load stiffness verification failed"
+        raise ValueError(msg)
     reference = np.asarray(json.loads(REFERENCE.read_text())["stiffness"])
     reference = (reference + reference.T) / 2
     row.update(
         stiffness=tensor.tolist(),
         loads=solver.records,
         relative_energy_discrepancy=float(
-            abs(eigvalsh((tensor + tensor.T) / 2 - reference, reference)).max()
+            abs(eigvalsh((tensor + tensor.T) / 2 - reference, reference)).max(),
         ),
         status="quadratic-control",
     )
 
 
-def measure(case, parent, row, baseline, *, repair_resolution, repair_hmax):  # ruff: ignore[too-many-arguments] - MMG controls are keyword-only.
+def measure(case, parent, row, *, repair_resolution, repair_hmax):
     """Run one diagnostic under the pinned geometry and solver settings.
 
     Raises:
@@ -131,21 +138,29 @@ def measure(case, parent, row, baseline, *, repair_resolution, repair_hmax):  # 
     """
     vtkSMPTools.SetBackend("Sequential")
     if row["versions"] != PACKAGES or vtkSMPTools.GetBackend() != "Sequential":
-        raise RuntimeError("Install the pinned packages with sequential VTK support")
+        msg = "Install the pinned packages with sequential VTK support"
+        raise RuntimeError(msg)
+    baseline = json.loads(BASELINE.read_text())
     with tempfile.TemporaryDirectory(dir=parent) as temp:
         if case in SIZES or case.startswith("shifted-"):
             size, tolerance = SIZES.get(case, SIZES["finest"])
             run(
-                "native",
-                24,
+                SchwarzSettings(
+                    "native",
+                    24,
+                    native_sizing={"max_length": size, "adapt_tolerance": tolerance},
+                    shifted=case.startswith("shifted-"),
+                ),
                 Path(temp),
                 row,
-                native_settings={"max_length": size, "adapt_tolerance": tolerance},
-                shifted=case.startswith("shifted-"),
                 solver_factory=ReorderedCG if case == "shifted-rcm" else AuditedCG,
             )
         elif case == "repaired-solve":
-            run("microgen-repaired", repair_resolution, Path(temp), row, repair_hmax=repair_hmax)
+            run(
+                SchwarzSettings("microgen-repaired", repair_resolution, repair_hmax=repair_hmax),
+                Path(temp),
+                row,
+            )
         elif case == "curved-tet10":
             quadratic_control(row, baseline)
         else:
@@ -163,7 +178,9 @@ def main():
     parser.add_argument("output", type=Path)
     parser.add_argument("--repair-resolution", type=int, choices=(30, 34, 36))
     parser.add_argument(
-        "--repair-hmax", type=float, help="Maximum edge length in the first MMG pass"
+        "--repair-hmax",
+        type=float,
+        help="Maximum edge length in the first MMG pass",
     )
     args = parser.parse_args()
     if args.repair_hmax is not None and (
@@ -172,7 +189,6 @@ def main():
         parser.error("--repair-hmax requires repaired-solve and a length in (0, 1]")
     if args.repair_resolution is not None and args.case != "repaired-solve":
         parser.error("--repair-resolution applies to repaired-solve")
-    baseline = json.loads(BASELINE.read_text())
     row = {
         "case": args.case,
         "recorded_at": dt.datetime.now(dt.UTC).isoformat(),
@@ -187,7 +203,6 @@ def main():
                 args.case,
                 args.output.parent,
                 row,
-                baseline,
                 repair_resolution=args.repair_resolution or 30,
                 repair_hmax=args.repair_hmax or 0.1,
             )

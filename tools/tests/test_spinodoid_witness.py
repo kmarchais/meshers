@@ -1,3 +1,5 @@
+"""Check distance bounds for the frozen spinodoid witness."""
+
 import sys
 from pathlib import Path
 from types import SimpleNamespace
@@ -11,7 +13,8 @@ from spinodoid_witness import distance_bounds
 
 
 @pytest.mark.parametrize(
-    ("free", "distance"), [([True] * 3, 0.08 / np.sqrt(2)), ([False, True, True], 0.08)]
+    ("free", "distance"),
+    [([True] * 3, 0.08 / np.sqrt(2)), ([False, True, True], 0.08)],
 )
 def test_oblique_zero_plane_at_box_cap(free, distance):
     spectrum = SimpleNamespace(

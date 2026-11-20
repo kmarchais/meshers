@@ -6,15 +6,16 @@ import argparse
 import datetime as dt
 import hashlib
 import json
+import logging
 import math
 import os
 import platform
 import statistics
-import subprocess
+import subprocess  # ruff: ignore[suspicious-subprocess-import] - compare separately installed wheels.
 import sys
 import time
 from pathlib import Path
-from typing import TYPE_CHECKING, TypedDict
+from typing import TYPE_CHECKING, TypedDict, cast
 
 if TYPE_CHECKING:
     from collections.abc import Mapping, Sequence
@@ -29,6 +30,9 @@ if __name__ == "__main__":
     from benchmark_hardware import hardware_snapshot
 else:
     from tools.benchmark_hardware import hardware_snapshot
+
+_LOG = logging.getLogger(__name__)
+
 
 CASES = (
     "compiled_gyroid",
@@ -110,15 +114,18 @@ def _check_curved_jacobians(corners: FloatArray) -> None:
         matrices = np.einsum("pi,tijk->tpjk", bary, batch)
         values = np.linalg.det(matrices)
         if not np.isfinite(values).all() or np.any(values <= 0):
-            raise RuntimeError("Nonpositive sampled curved Jacobian")
+            msg = "Nonpositive sampled curved Jacobian"
+            raise RuntimeError(msg)
         coefficients = values @ to_coefficients
         scale = np.linalg.norm(batch, axis=2).max(axis=1).prod(axis=1)
         ambiguous = np.any(coefficients <= 128 * np.finfo(float).eps * scale[:, None], axis=1)
         for cell in batch[ambiguous]:
             if depth >= _MAX_JACOBIAN_DEPTH:
-                raise RuntimeError("Unresolved curved Jacobian positivity")
+                msg = "Unresolved curved Jacobian positivity"
+                raise RuntimeError(msg)
             i, j = np.unravel_index(
-                np.argmax(np.linalg.norm(cell[:, None] - cell[None, :], axis=(2, 3))), (4, 4)
+                np.argmax(np.linalg.norm(cell[:, None] - cell[None, :], axis=(2, 3))),
+                (4, 4),
             )
             children = np.stack([cell, cell])
             midpoint = (cell[i] + cell[j]) / 2
@@ -170,7 +177,8 @@ def cell_geometry(vertices: FloatArray) -> FloatArray:
             corner_maps.append(jacobians)
         determinant = np.linalg.det(jacobians)
         if not np.isfinite(determinant).all() or np.any(determinant <= 0):
-            raise RuntimeError("Nonpositive sampled curved Jacobian")
+            msg = "Nonpositive sampled curved Jacobian"
+            raise RuntimeError(msg)
         determinants.append(determinant)
     _check_curved_jacobians(np.stack(corner_maps, axis=1))
     return np.array([-2 / 15, *([3 / 40] * 4)]) @ np.array(determinants[:5])
@@ -202,7 +210,8 @@ def mapped_cap_error(mesh: Mesh) -> float:
 
     caps = (_INNER_CYLINDER, _BOTTOM_PLANE, _START_PLANE, _END_PLANE)
     if set(np.unique(mesh.boundary_tags)) != {0, *caps}:
-        raise RuntimeError("Unexpected mapped-intersection cap labels")
+        msg = "Unexpected mapped-intersection cap labels"
+        raise RuntimeError(msg)
     errors = []
     for tag in caps:
         tri = mesh.points[mesh.surface[mesh.boundary_tags == tag, :3]]
@@ -259,16 +268,19 @@ def _measure_generation(case: str) -> tuple[Mesh, float, int]:
 
     def spinodoid(x: FloatArray, y: FloatArray, z: FloatArray) -> FloatArray:
         # Fixed periodic Fourier fixture; not a stochastic field generator.
-        return sum(
-            a * np.sin(2 * np.pi * (i * x + j * y + k * z) + phase)
-            for i, j, k, a, phase in [
-                (1, 1, 0, 0.6, 0.2),
-                (0, 1, 1, 0.5, 0.7),
-                (1, 0, -1, 0.45, 1.1),
-                (2, 1, 0, 0.25, 0.4),
-                (0, 2, -1, 0.2, 0.9),
-                (1, -1, 2, 0.15, 1.4),
-            ]
+        return cast(
+            "FloatArray",
+            sum(
+                a * np.sin(2 * np.pi * (i * x + j * y + k * z) + phase)
+                for i, j, k, a, phase in [
+                    (1, 1, 0, 0.6, 0.2),
+                    (0, 1, 1, 0.5, 0.7),
+                    (1, 0, -1, 0.45, 1.1),
+                    (2, 1, 0, 0.25, 0.4),
+                    (0, 2, -1, 0.2, 0.9),
+                    (1, -1, 2, 0.15, 1.4),
+                ]
+            ),
         )
 
     def lattice(x: FloatArray, y: FloatArray, z: FloatArray) -> FloatArray:
@@ -290,7 +302,9 @@ def _measure_generation(case: str) -> tuple[Mesh, float, int]:
     if case == "mapped_intersection":
 
         def mapping(
-            x: FloatArray, y: FloatArray, z: FloatArray
+            x: FloatArray,
+            y: FloatArray,
+            z: FloatArray,
         ) -> tuple[FloatArray, FloatArray, FloatArray]:
             return (3 + x) * np.cos(z / 3), (3 + x) * np.sin(z / 3), -y
 
@@ -358,12 +372,14 @@ def sample(case: str) -> dict[str, float]:
 
     mesh, elapsed, peak = _measure_generation(case)
     if max(len(mesh.points), len(mesh.tetrahedra)) > CAP:
-        raise RuntimeError("Benchmark node/tetrahedron cap exceeded")
+        msg = "Benchmark node/tetrahedron cap exceeded"
+        raise RuntimeError(msg)
     points = mesh.points[mesh.tetrahedra]
     determinants = np.linalg.det(points[:, 1:4] - points[:, :1])
     volumes = cell_geometry(points)
     if not len(points) or not np.all(np.isfinite(mesh.points)) or not np.all(determinants > 0):
-        raise RuntimeError("Nonempty, finite, positively oriented mesh required")
+        msg = "Nonempty, finite, positively oriented mesh required"
+        raise RuntimeError(msg)
     edges = sum(
         np.sum((points[:, i] - points[:, j]) ** 2, axis=1)
         for i in range(4)
@@ -377,15 +393,20 @@ def sample(case: str) -> dict[str, float]:
     )
     _, incidence = np.unique(boundary_edges, axis=0, return_counts=True)
     if not np.all(incidence == _TRIANGLES_PER_BOUNDARY_EDGE):
-        raise RuntimeError("Closed manifold boundary required")
+        msg = "Closed manifold boundary required"
+        raise RuntimeError(msg)
     if case not in {"graded", "mapped_intersection"}:
         for axis, pairs in enumerate(mesh.periodic_pairs):
             expected = np.zeros(3)
             expected[axis] = 1
             if not len(pairs) or not np.allclose(
-                mesh.points[pairs[:, 1]] - mesh.points[pairs[:, 0]], expected, atol=1e-10, rtol=0
+                mesh.points[pairs[:, 1]] - mesh.points[pairs[:, 0]],
+                expected,
+                atol=1e-10,
+                rtol=0,
             ):
-                raise RuntimeError("Periodic correspondence lost")
+                msg = "Periodic correspondence lost"
+                raise RuntimeError(msg)
     record = {
         "seconds": elapsed,
         "peak_rss_bytes": peak,
@@ -414,7 +435,8 @@ def sample(case: str) -> dict[str, float]:
         record["quality_min"] < _MIN_CELL_QUALITY
         or max(record["surface_error"], record.get("mapped_cap_error", 0)) > _MAX_SURFACE_ERROR
     ):
-        raise RuntimeError("Benchmark geometry or quality floor failed")
+        msg = "Benchmark geometry or quality floor failed"
+        raise RuntimeError(msg)
     return record
 
 
@@ -468,7 +490,9 @@ def runtime_identity() -> dict[str, str]:
 
 
 def case_regressions(
-    base: Mapping[str, float], head: Mapping[str, float], head_runs: Sequence[Mapping[str, float]]
+    base: Mapping[str, float],
+    head: Mapping[str, float],
+    head_runs: Sequence[Mapping[str, float]],
 ) -> list[str]:
     """Return resource-median and every-repetition quality regression failures."""
     failures = regressions(base, head)
@@ -495,7 +519,7 @@ def write_summary(result: _Summary, output: Path, failures: Sequence[str]) -> No
             f"| {name} | {h['seconds'] / b['seconds']:.3f} | "
             f"{h['peak_rss_bytes'] / b['peak_rss_bytes']:.3f} | "
             f"{b['quality_min']:.5f} → {h['quality_min']:.5f} | "
-            f"{'FAIL' if data['failures'] else 'PASS'} |"
+            f"{'FAIL' if data['failures'] else 'PASS'} |",
         )
     lines += [
         "",
@@ -510,7 +534,8 @@ def write_summary(result: _Summary, output: Path, failures: Sequence[str]) -> No
             values = [f"{b[f'quality_{q}']:.4f} → {h[f'quality_{q}']:.4f}" for q in QUALITY]
             lines.append(f"| {name} | " + " | ".join(values) + " |")
     output.with_suffix(".md").write_text(
-        "\n".join([*lines, "", *failures]) + "\n", encoding="utf-8"
+        "\n".join([*lines, "", *failures]) + "\n",
+        encoding="utf-8",
     )
 
 
@@ -530,7 +555,7 @@ def configure_worker() -> None:
                 "RAYON_NUM_THREADS",
             ),
             "1",
-        )
+        ),
     )
     if sys.platform == "darwin":
         import ctypes
@@ -538,7 +563,8 @@ def configure_worker() -> None:
         blas = ctypes.CDLL("/System/Library/Frameworks/Accelerate.framework/Accelerate")
         blas.BLASSetThreading.argtypes = [ctypes.c_uint]
         if blas.BLASSetThreading(1) != 0:
-            raise RuntimeError("Cannot select single-thread Accelerate")
+            msg = "Cannot select single-thread Accelerate"
+            raise RuntimeError(msg)
 
 
 def arguments() -> tuple[argparse.ArgumentParser, argparse.Namespace]:
@@ -556,8 +582,20 @@ def arguments() -> tuple[argparse.ArgumentParser, argparse.Namespace]:
     return parser, parser.parse_args()
 
 
+def _worker_output(python: str, script: str, *options: str, timeout: int) -> str:
+    """Return the JSON emitted by the selected wheel interpreter."""
+    return subprocess.check_output(  # ruff: ignore[subprocess-without-shell-equals-true] - explicit argv, no shell.
+        [python, script, *options],
+        text=True,
+        timeout=timeout,
+    )
+
+
 def _collect_case(
-    case: str, script: str, interpreters: Mapping[str, str], repeats: int
+    case: str,
+    script: str,
+    interpreters: Mapping[str, str],
+    repeats: int,
 ) -> _CaseResult:
     runs: dict[str, list[dict[str, float]]] = {"base": [], "head": []}
     try:
@@ -565,9 +603,7 @@ def _collect_case(
             order = ("base", "head") if repetition % 2 == 0 else ("head", "base")
             for label in order:
                 python = interpreters[label]
-                raw = subprocess.check_output(
-                    [python, script, "--sample", case], text=True, timeout=120
-                )
+                raw = _worker_output(python, script, "--sample", case, timeout=120)
                 if repetition:  # Discard the first pair to warm the OS page cache.
                     runs[label].append(json.loads(raw))
     except (subprocess.CalledProcessError, subprocess.TimeoutExpired) as error:
@@ -597,10 +633,12 @@ def main() -> None:
         parser.error("OS peak-RSS reporting supports Linux, macOS and Windows")
     configure_worker()
     if args.identity:
-        print(json.dumps(runtime_identity()))
+        json.dump(runtime_identity(), sys.stdout)
+        sys.stdout.write("\n")
         return
     if args.sample:
-        print(json.dumps(sample(args.sample), allow_nan=False))
+        json.dump(sample(args.sample), sys.stdout, allow_nan=False)
+        sys.stdout.write("\n")
         return
     if not args.base_python or not args.head_python or args.repeats < MIN_MEASURED_PAIRS:
         parser.error("Two installed environments and at least three repetitions are required")
@@ -631,7 +669,7 @@ def main() -> None:
     script = str(Path(__file__).resolve())
     result["runtime"] = {
         label: json.loads(
-            subprocess.check_output([python, script, "--identity"], text=True, timeout=30)
+            _worker_output(python, script, "--identity", timeout=30),
         )
         for label, python in (("base", args.base_python), ("head", args.head_python))
     }
@@ -646,15 +684,18 @@ def main() -> None:
 
     for case in RELEASE_CASES if args.suite == "release" else CASES:
         row = _collect_case(
-            case, script, {"base": args.base_python, "head": args.head_python}, args.repeats
+            case,
+            script,
+            {"base": args.base_python, "head": args.head_python},
+            args.repeats,
         )
         summary["cases"][case] = row
         if row["medians"] is None:
             failures.extend(row["failures"])
-            print(row["failures"][0], flush=True)
+            _LOG.error("%s", row["failures"][0])
         else:
             failures.extend(f"{case}: {error}" for error in row["failures"])
-            print(case, "FAIL" if row["failures"] else "PASS", flush=True)
+            _LOG.info("%s %s", case, "FAIL" if row["failures"] else "PASS")
     result["complete"] = True
     args.output.parent.mkdir(parents=True, exist_ok=True)
     args.output.write_text(json.dumps(result, indent=2, allow_nan=False) + "\n", encoding="utf-8")
@@ -664,4 +705,5 @@ def main() -> None:
 
 
 if __name__ == "__main__":
+    logging.basicConfig(level=logging.INFO, format="%(message)s")
     main()

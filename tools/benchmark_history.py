@@ -29,18 +29,22 @@ def validate(data: dict) -> None:
         ValueError: The record is incomplete or contains invalid measurements.
     """
     if data.get("schema_version") != SCHEMA_VERSION or not data.get("complete"):
-        raise ValueError(f"Expected a complete schema-{SCHEMA_VERSION} benchmark")
+        msg = f"Expected a complete schema-{SCHEMA_VERSION} benchmark"
+        raise ValueError(msg)
     if data.get("fixture_version") not in SUPPORTED_FIXTURE_VERSIONS:
-        raise ValueError("Unsupported benchmark fixture version")
+        msg = "Unsupported benchmark fixture version"
+        raise ValueError(msg)
     expected = {"pr": CASES, "release": RELEASE_CASES}.get(data.get("suite"), ())
     if (
         set(data.get("cases", {})) != set(expected)
         or data.get("measured_pairs", 0) < MIN_MEASURED_PAIRS
     ):
-        raise ValueError("Incomplete fixture suite or insufficient repetitions")
+        msg = "Incomplete fixture suite or insufficient repetitions"
+        raise ValueError(msg)
     for ref in ("base_ref", "head_ref", "script_sha256"):
         if not re.fullmatch(r"[a-f0-9]{40,64}", data.get(ref, "")):
-            raise ValueError(f"Missing immutable source identity: {ref}")
+            msg = f"Missing immutable source identity: {ref}"
+            raise ValueError(msg)
     for name, case in data["cases"].items():
         needs_cap = name == "mapped_intersection" and data["fixture_version"] == FIXTURE_VERSION
         validate_case(case, data["measured_pairs"], needs_cap=needs_cap)
@@ -54,12 +58,14 @@ def validate_case(case: dict, measured_pairs: int, *, needs_cap: bool) -> None:
     """
     if case["medians"] is None:
         if not case["failures"]:
-            raise ValueError("Missing samples cannot pass")
+            msg = "Missing samples cannot pass"
+            raise ValueError(msg)
         return
     for label in ("base", "head"):
         rows = case["runs"][label]
         if len(rows) != measured_pairs:
-            raise ValueError("Missing measured samples")
+            msg = "Missing measured samples"
+            raise ValueError(msg)
         for row in [*rows, case["medians"][label]]:
             required = (
                 "seconds",
@@ -72,16 +78,21 @@ def validate_case(case: dict, measured_pairs: int, *, needs_cap: bool) -> None:
                 *(f"quality_{q}" for q in QUALITY),
             )
             if any(k not in row or not math.isfinite(row[k]) or row[k] < 0 for k in required):
-                raise ValueError("Invalid numeric measurement")
+                msg = "Invalid numeric measurement"
+                raise ValueError(msg)
         if any(
             case["medians"][label][key] != statistics.median(r[key] for r in rows)
             for key in required
         ):
-            raise ValueError("Summary does not match the raw measurements")
+            msg = "Summary does not match the raw measurements"
+            raise ValueError(msg)
     if case["failures"] != case_regressions(
-        case["medians"]["base"], case["medians"]["head"], case["runs"]["head"]
+        case["medians"]["base"],
+        case["medians"]["head"],
+        case["runs"]["head"],
     ):
-        raise ValueError("Regression verdict does not match the measurements")
+        msg = "Regression verdict does not match the measurements"
+        raise ValueError(msg)
 
 
 def timing_plot(data: dict) -> str:
@@ -106,7 +117,7 @@ def timing_plot(data: dict) -> str:
             svg.append(
                 f'<rect x="220" y="{y + offset}" width="{width:.2f}" height="15" '
                 f'fill="{color}"/><text x="{230 + width:.2f}" '
-                f'y="{y + offset + 12}">{seconds:.4f} s</text>'
+                f'y="{y + offset + 12}">{seconds:.4f} s</text>',
             )
     return "".join([*svg, "</g></svg>"])
 
@@ -213,7 +224,8 @@ def render(directory: Path) -> None:
         ),
     ]
     (directory.parent / "benchmark-history.md").write_text(
-        "\n".join(index) + "\n", encoding="utf-8"
+        "\n".join(index) + "\n",
+        encoding="utf-8",
     )
 
 
@@ -224,7 +236,8 @@ def archive(source: Path, label: str, directory: Path) -> None:
         ValueError: The label or input is invalid.
     """
     if not re.fullmatch(r"[A-Za-z0-9][A-Za-z0-9._-]{0,63}", label):
-        raise ValueError("Use a plain version or release-candidate label")
+        msg = "Use a plain version or release-candidate label"
+        raise ValueError(msg)
     payload = source.read_bytes()
     data = json.loads(payload)
     data.pop("runner", None)  # Early records included the CI or local hostname.

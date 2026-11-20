@@ -15,7 +15,8 @@ from periodic_geometry import BASELINE, audit, boundary_metrics, field, forward,
 
 
 @pytest.mark.parametrize(
-    ("specimen", "level"), [("gyroid", -0.55), ("gyroid", 0.55), ("schwarz", 0.0)]
+    ("specimen", "level"),
+    [("gyroid", -0.55), ("gyroid", 0.55), ("schwarz", 0.0)],
 )
 def test_analytic_wall_samples(specimen, level):
     lines = np.random.default_rng(24).uniform(-0.5, 0.5, (200, 3))

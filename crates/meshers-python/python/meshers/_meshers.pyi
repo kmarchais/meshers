@@ -117,7 +117,8 @@ ADAPTIVE_RETAINED_INTERSECTIONS: bool
 def available_threads() -> int: ...
 def face_components(tetrahedra: NDArray[np.int64]) -> int: ...
 def quadratic_volumes(
-    points: NDArray[np.float64], tetrahedra: NDArray[np.int64]
+    points: NDArray[np.float64],
+    tetrahedra: NDArray[np.int64],
 ) -> NDArray[np.float64]: ...
 def generate_intersection(
     fields: Sequence[str | Field | CompiledField],

@@ -13,6 +13,7 @@ from pathlib import Path
 
 import psutil
 
+WORKFLOW = Path(__file__).with_name("schwarz_workflow.py")
 LEVELS = {
     "native": (12, 16, 24),
     "microgen-default": (None, 24, 30),
@@ -106,7 +107,8 @@ def run_series(output, repeats, timeout, on_step=None):
         ValueError: Repetitions and timeout must be positive.
     """
     if repeats < 1 or timeout <= 0:
-        raise ValueError("Expected positive repetitions and timeout")
+        msg = "Expected positive repetitions and timeout"
+        raise ValueError(msg)
     output.mkdir()
     env = {
         **os.environ,
@@ -121,7 +123,6 @@ def run_series(output, repeats, timeout, on_step=None):
             "1",
         ),
     }
-    script = Path(__file__).with_name("schwarz_workflow.py")
     rows = []
     for repeat in range(repeats):
         for level in range(3):
@@ -131,7 +132,7 @@ def run_series(output, repeats, timeout, on_step=None):
                 cells = LEVELS[route][level]
                 name = f"r{repeat}-{route}-{cells or 'default'}"
                 folder = output / name
-                cmd = [sys.executable, str(script), route, str(folder)]
+                cmd = [sys.executable, str(WORKFLOW), route, str(folder)]
                 if cells is not None:
                     cmd.extend(("--cells", str(cells)))
                 if on_step:
@@ -152,7 +153,8 @@ def run_series(output, repeats, timeout, on_step=None):
                     "levels": summarize(rows, repeats),
                 }
                 (output / "summary.json").write_text(
-                    json.dumps(summary, indent=2) + "\n", encoding="utf8"
+                    json.dumps(summary, indent=2) + "\n",
+                    encoding="utf8",
                 )
 
 

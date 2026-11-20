@@ -7,7 +7,8 @@ import numpy as np
 import pytest
 
 spec = importlib.util.spec_from_file_location(
-    "performance_gate", Path(__file__).parents[1] / "performance_gate.py"
+    "performance_gate",
+    Path(__file__).parents[1] / "performance_gate.py",
 )
 gate = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(gate)
@@ -84,7 +85,7 @@ def test_fold_between_quadrature_points():
     # This has nearly the same corner maps but a positive interior minimum.
     valid = np.column_stack([r, (r - 0.4) * s - 0.025 * t, (r - 0.4) * t + 0.025 * s])
     assert gate.cell_geometry(valid[None])[0] == pytest.approx(
-        (0.1 - 0.8 / 4 + 0.16 + 0.025**2) / 6
+        (0.1 - 0.8 / 4 + 0.16 + 0.025**2) / 6,
     )
 
 

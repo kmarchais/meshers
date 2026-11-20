@@ -15,6 +15,7 @@ from pathlib import Path
 
 import meshers
 import numpy as np
+from reporting import write_json_line
 from scipy.sparse import coo_matrix, diags
 from scipy.sparse.linalg import cg
 from solver_checks import require
@@ -90,7 +91,8 @@ def solve(mesh, *, affine=False):  # ruff: ignore[too-many-locals, too-many-stat
     load = rhs[free] - matrix[free][:, locked] @ displacement[locked]
     symmetry = reduced - reduced.T
     require(
-        np.max(np.abs(symmetry.data), initial=0) < 1e-10, "Reduced stiffness matrix is asymmetric"
+        np.max(np.abs(symmetry.data), initial=0) < 1e-10,
+        "Reduced stiffness matrix is asymmetric",
     )
     require(np.all(reduced.diagonal() > 0), "Reduced stiffness matrix has a nonpositive diagonal")
     iterations = 0
@@ -191,7 +193,7 @@ def main():
         },
         "source_sha256": hashlib.sha256(Path(__file__).read_bytes()).hexdigest(),
         "checks_sha256": hashlib.sha256(
-            Path(__file__).with_name("solver_checks.py").read_bytes()
+            Path(__file__).with_name("solver_checks.py").read_bytes(),
         ).hexdigest(),
         "extension_sha256": hashlib.sha256(extension.read_bytes()).hexdigest(),
         "method": "P1 linear elasticity, lambda=mu=1, 4-point tetrahedron quadrature",
@@ -216,10 +218,10 @@ def main():
                 ratio = result["maximum_edge_length"] / results[-1]["maximum_edge_length"]
                 for metric in ["l2_displacement_error", "energy_error"]:
                     result[metric + "_rate"] = float(
-                        np.log(result[metric] / results[-1][metric]) / np.log(ratio)
+                        np.log(result[metric] / results[-1][metric]) / np.log(ratio),
                     )
             results.append(result)
-            print(json.dumps({"geometry": name, **result}), flush=True)
+            write_json_line({"geometry": name, **result})
         require(
             results[-1]["l2_displacement_error"] < results[0]["l2_displacement_error"],
             f"{name}: l2_displacement_error did not decrease under refinement",
@@ -230,7 +232,7 @@ def main():
         )
         report["cases"].append({"geometry": name, "affine_patch": patch, "refinement": results})
         (ROOT / "docs/solver-convergence-results.json").write_text(
-            json.dumps(report, indent=2) + "\n"
+            json.dumps(report, indent=2) + "\n",
         )
 
 

@@ -114,7 +114,8 @@ def test_callback_metadata_cannot_override_the_requested_geometry():
 def test_periodic_reentrant_normal_jump_uses_verified_region_traces():
     def field(x, y, z):
         return np.maximum(
-            np.maximum(abs(x) + 0.3 * abs(z) - 0.35, abs(y) - 0.2), np.minimum(x - 0.05, y - 0.05)
+            np.maximum(abs(x) + 0.3 * abs(z) - 0.35, abs(y) - 0.2),
+            np.minimum(x - 0.05, y - 0.05),
         )
 
     mesh = meshers.generate(

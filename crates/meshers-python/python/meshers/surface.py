@@ -69,10 +69,12 @@ def generate_surface(  # ruff: ignore[too-many-arguments] - match the volume API
         MeshingError: Generation fails or sampled error exceeds tolerance.
     """
     if not hasattr(_meshers, "generate_surface"):
-        raise RuntimeError("Surface-only meshing is unavailable in this meshers build")
+        msg = "Surface-only meshing is unavailable in this meshers build"
+        raise RuntimeError(msg)
     domain = np.asarray(bounds, dtype=float)
     if domain.shape != (6,):
-        raise ValueError("bounds must contain six coordinates")
+        msg = "bounds must contain six coordinates"
+        raise ValueError(msg)
     started = time.perf_counter()
     if callable(field) and not isinstance(field, _meshers.CompiledField):
         try:
@@ -87,13 +89,15 @@ def generate_surface(  # ruff: ignore[too-many-arguments] - match the volume API
         else float(geometry_tolerance)
     )
     if not np.isfinite(tolerance) or tolerance < 0:
-        raise ValueError("geometry_tolerance must be finite and nonnegative")
+        msg = "geometry_tolerance must be finite and nonnegative"
+        raise ValueError(msg)
     options = (4, 4, 8) if quality else (0, 0, 0)
     extent = float(np.min(domain[1::2] - domain[::2]))
     remeshing = None
     if adaptive:
         if tolerance <= 0:
-            raise ValueError("adaptive remeshing needs a positive geometry_tolerance")
+            msg = "adaptive remeshing needs a positive geometry_tolerance"
+            raise ValueError(msg)
         remeshing = (
             tolerance,
             tolerance / 2 if min_length is None else float(min_length),
@@ -117,10 +121,11 @@ def generate_surface(  # ruff: ignore[too-many-arguments] - match the volume API
     )
     labels = np.asarray(result["labels"])
     if tolerance > 0 and result["maximum_sampled_surface_error"] > tolerance:
-        raise _meshers.MeshingError(
+        msg = (
             f"Sampled surface error {result['maximum_sampled_surface_error']} "
             f"exceeds tolerance {tolerance}; increase resolution"
         )
+        raise _meshers.MeshingError(msg)
     field_labels = 2
     tags = np.where(labels < field_labels, 0, labels - 1).astype(np.uint8)
     return SurfaceMesh(

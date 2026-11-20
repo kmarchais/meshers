@@ -4,6 +4,7 @@ import argparse
 import datetime as dt
 import hashlib
 import json
+import logging
 import sys
 import time
 from importlib import import_module
@@ -35,6 +36,9 @@ PAIR_BUDGET = 2_000_000
 ENERGY_TARGET = 0.02
 
 
+_LOG = logging.getLogger(__name__)
+
+
 def load_reference(folder):
     """Load the archived case definitions and checks after verifying their source files.
 
@@ -59,12 +63,14 @@ def load_reference(folder):
     for name in names:
         digest.update((package / f"{name}.py").read_bytes().replace(b"\r\n", b"\n") + b"\0")
     if digest.hexdigest() != ORACLE_DIGEST:
-        raise ValueError(f"Benchmark source mismatch. Use the Microgen benchmark at {ARCHIVE}")
+        msg = f"Benchmark source mismatch. Use the Microgen benchmark at {ARCHIVE}"
+        raise ValueError(msg)
     sys.path.insert(0, str(package.parent))
     for name in names[1:]:
         module = import_module(f"microgen_benchmark.{name}")
         if Path(module.__file__).resolve().parent != package:
-            raise ValueError("A different benchmark package is already loaded")
+            msg = "A different benchmark package is already loaded"
+            raise ValueError(msg)
     return import_module("microgen_benchmark")
 
 
@@ -126,7 +132,11 @@ def measure(case, request, oracle, *, fea):
     probes = oracle.reference.boundary_samples(case)
     try:
         metrics, surface = oracle.geometry.validate(
-            mesh.points, mesh.tetrahedra, case, PAIR_BUDGET, probes
+            mesh.points,
+            mesh.tetrahedra,
+            case,
+            PAIR_BUDGET,
+            probes,
         )
     except ValueError as exc:
         return {**row, "status": "geometry-rejected", "reason": str(exc)}
@@ -160,16 +170,24 @@ def main():
     """
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument(
-        "--reference", type=Path, required=True, help="Archived benchmarks/microgen directory"
+        "--reference",
+        type=Path,
+        required=True,
+        help="Archived benchmarks/microgen directory",
     )
     parser.add_argument("--case", choices=VOLUMES, required=True)
     parser.add_argument("--cells", type=int, default=8)
     parser.add_argument(
-        "--passes", type=int, default=4, help="Number of native quality optimization passes"
+        "--passes",
+        type=int,
+        default=4,
+        help="Number of native quality optimization passes",
     )
     parser.add_argument("--adapt", action="store_true")
     parser.add_argument(
-        "--adapt-tolerance", type=float, help="Internal adaptation target in physical units"
+        "--adapt-tolerance",
+        type=float,
+        help="Internal adaptation target in physical units",
     )
     parser.add_argument(
         "--fea",
@@ -177,7 +195,9 @@ def main():
         help="Solve the archived 2% energy target after geometry admission",
     )
     parser.add_argument(
-        "--require-admitted", action="store_true", help="Exit with failure on rejection"
+        "--require-admitted",
+        action="store_true",
+        help="Exit with failure on rejection",
     )
     parser.add_argument("--output", type=Path, required=True)
     parser.add_argument("--snap", type=float, help="Maximum lattice snap as a fraction of spacing")
@@ -212,7 +232,7 @@ def main():
         "hardware": hardware_snapshot(),
         "packages": {n: version(n) for n in ("meshers", "numpy", "scipy", "pyvista")},
         "native_sha256": hashlib.sha256(
-            Path(import_module("meshers._meshers").__file__).read_bytes()
+            Path(import_module("meshers._meshers").__file__).read_bytes(),
         ).hexdigest(),
         "status": "incomplete",
     }
@@ -231,17 +251,23 @@ def main():
             json.dump(row, stream, indent=2, allow_nan=False)
             stream.write("\n")
         temporary.replace(args.output)
-    print(
-        f"{case.id}, {args.cells} cells, {args.passes} passes, adapt={args.adapt}: {row['status']}"
+    _LOG.info(
+        "%s, %s cells, %s passes, adapt=%s: %s",
+        case.id,
+        args.cells,
+        args.passes,
+        args.adapt,
+        row["status"],
     )
     fea_status = row.get("fea", {}).get("status")
     qualified = row["status"] == "admitted" and (not args.fea or fea_status == "qualified")
     return int(
         row["status"] == "validation-incomplete"
         or fea_status == "solver-failed"
-        or (args.require_admitted and not qualified)
+        or (args.require_admitted and not qualified),
     )
 
 
 if __name__ == "__main__":
+    logging.basicConfig(level=logging.INFO, format="%(message)s")
     sys.exit(main())

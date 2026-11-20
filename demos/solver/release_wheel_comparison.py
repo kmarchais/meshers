@@ -87,7 +87,8 @@ def solve_case(case, baseline, row):
         max(row["nodes"], row["elements"]) > limits["max_nodes_or_elements"]
         or abs(relative) > limits["relative_volume_error"]
     ):
-        raise RuntimeError("Count or volume outside the frozen study limits")
+        msg = "Count or volume outside the frozen study limits"
+        raise RuntimeError(msg)
     # The existing solver verifies all three translated caps in [0,1]^3.
     shifted = replace(mesh, points=mesh.points + 0.5)
     result = homogenize(shifted)
@@ -97,7 +98,7 @@ def solve_case(case, baseline, row):
         tensor = np.asarray(result["stiffness_engineering_voigt"])
         diff = tensor - ref
         row["worst_relative_energy_change_from_archive"] = float(
-            np.abs(eigvalsh((diff + diff.T) / 2, (ref + ref.T) / 2)).max()
+            np.abs(eigvalsh((diff + diff.T) / 2, (ref + ref.T) / 2)).max(),
         )
     row["status"] = "solved"
 
@@ -114,7 +115,8 @@ def main():
     args = parser.parse_args()
     baseline = json.loads(BASELINE.read_text(encoding="utf-8"))
     if version("meshers") != baseline["release"]:
-        raise RuntimeError("Install the specified release wheel in an isolated environment")
+        msg = "Install the specified release wheel in an isolated environment"
+        raise RuntimeError(msg)
     route = baseline["routes"][args.case]
     extension = Path(import_module("meshers._meshers").__file__)
     hardware = hardware_snapshot()

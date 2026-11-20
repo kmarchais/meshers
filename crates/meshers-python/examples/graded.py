@@ -20,7 +20,11 @@ def graded_gyroid(x: Points, y: Points, z: Points) -> Points:
 
 
 mesh = meshers.generate(
-    graded_gyroid, cells=16, band=(-1.0, 1.0), geometry_tolerance=0.1, optimize_passes=1
+    graded_gyroid,
+    cells=16,
+    band=(-1.0, 1.0),
+    geometry_tolerance=0.1,
+    optimize_passes=1,
 )
 mesh.write_vtkhdf("graded.vtkhdf")
 print(mesh.diagnostics)

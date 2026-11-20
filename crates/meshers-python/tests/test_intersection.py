@@ -54,7 +54,8 @@ def test_octahedron_preserves_four_plane_corners_and_exact_volume():
 
 
 @pytest.mark.skipif(
-    getattr(meshers._meshers, "MAX_CONSTRAINTS", 8) < 32, reason="optional wide-constraints feature"
+    getattr(meshers._meshers, "MAX_CONSTRAINTS", 8) < 32,
+    reason="optional wide-constraints feature",
 )
 def test_high_constraint_bits_and_planar_intersections():
     fields = {f"inactive{i}": lambda x, _y, _z: -1 + 0 * x for i in range(29)}
@@ -76,7 +77,10 @@ def test_named_intersection_quality_and_export(tmp_path):
     args = {"cells": 8, "snap": 0, "periodic": (False, False, True)}
     original = meshers.generate_intersection(constraints(), optimize_passes=0, **args)
     mesh = meshers.generate_intersection(
-        constraints(), optimize_passes=4, geometry_tolerance=1e-8, **args
+        constraints(),
+        optimize_passes=4,
+        geometry_tolerance=1e-8,
+        **args,
     )
     assert (
         mesh.diagnostics["minimum_mmg_quality"] > original.diagnostics["minimum_mmg_quality"] * 10
@@ -92,21 +96,23 @@ def test_named_intersection_quality_and_export(tmp_path):
         root = f["VTKHDF"]
         np.testing.assert_array_equal(root["PointData/ParameterCoordinates"][:], mesh.parameters)
         np.testing.assert_array_equal(
-            root["PointData/SurfaceConstraints"][:], mesh.constraint_masks
+            root["PointData/SurfaceConstraints"][:],
+            mesh.constraint_masks,
         )
         np.testing.assert_array_equal(root["FieldData/FeatureEdges"][:], mesh.feature_edges)
         np.testing.assert_array_equal(root["FieldData/PeriodicPairs2"][:], mesh.periodic_pairs[2])
         np.testing.assert_array_equal(
-            root["FieldData/PeriodicTransforms"][:], mesh.periodic_transforms.reshape(3, 16)
+            root["FieldData/PeriodicTransforms"][:],
+            mesh.periodic_transforms.reshape(3, 16),
         )
         assert json.loads(bytes(root["FieldData/ConstraintNamesUTF8"][:])) == list(
-            mesh.constraint_names
+            mesh.constraint_names,
         )
 
     restored = pv.read(path)
     np.testing.assert_array_equal(restored.field_data["FeatureEdges"], mesh.feature_edges)
     assert json.loads(restored.field_data["ConstraintNamesUTF8"].tobytes()) == list(
-        mesh.constraint_names
+        mesh.constraint_names,
     )
 
 
@@ -144,7 +150,9 @@ def test_rotational_periodicity():
         )
     with pytest.raises(ValueError, match="explicit"):
         meshers.generate_intersection(
-            constraints(), coordinate_map=mapping, periodic=(False, False, True)
+            constraints(),
+            coordinate_map=mapping,
+            periodic=(False, False, True),
         )
 
 
@@ -163,7 +171,9 @@ def test_failures_are_explicit():
         meshers.generate_intersection(constraints(), cells=4, minimum_quality=1)
     with pytest.raises(meshers.MeshingError, match="inverted"):
         meshers.generate_intersection(
-            constraints(), cells=4, coordinate_map=lambda x, y, z: (-x, y, z)
+            constraints(),
+            cells=4,
+            coordinate_map=lambda x, y, z: (-x, y, z),
         )
     with pytest.raises(meshers.MeshingError, match="periodic"):
         meshers.generate_intersection(constraints(), cells=4, periodic=(True, False, False))
@@ -175,11 +185,14 @@ def test_failures_are_explicit():
         meshers.generate_intersection(constraints(), cells=4, cancel=token)
 
     def fails(_x, _y, _z):
-        raise RuntimeError("user callback failed")
+        msg = "user callback failed"
+        raise RuntimeError(msg)
 
     with pytest.raises(RuntimeError, match="user callback failed"):
         meshers.generate_intersection(
-            {"bad": fails, "back": lambda _x, y, _z: y - 0.5}, cells=4, compile=False
+            {"bad": fails, "back": lambda _x, y, _z: y - 0.5},
+            cells=4,
+            compile=False,
         )
 
 
@@ -204,7 +217,8 @@ def test_invalid_options(kwargs):
 
 def test_empty_and_geometry_rejection():
     mesh = meshers.generate_intersection(
-        {"outside": lambda x, _y, _z: x + 2, "back": lambda _x, y, _z: y - 0.5}, cells=4
+        {"outside": lambda x, _y, _z: x + 2, "back": lambda _x, y, _z: y - 0.5},
+        cells=4,
     )
     assert mesh.points.shape == (0, 3)
     assert mesh.tetrahedra.shape == (0, 4)
@@ -382,14 +396,15 @@ def _cylinder_sdf(x, y, z):
     radial = np.sqrt(y * y + z * z) - 0.23
     axial = np.abs(x) - 0.3
     return np.sqrt(np.maximum(radial, 0) ** 2 + np.maximum(axial, 0) ** 2) + np.minimum(
-        np.maximum(radial, axial), 0
+        np.maximum(radial, axial),
+        0,
     )
 
 
 def _box_sdf(x, y, z, scale=1.0):
     a, b, c = (scale * (np.abs(v) - 0.25) for v in (x, y, z))
     return np.sqrt(
-        np.maximum(a, 0) ** 2 + np.maximum(b, 0) ** 2 + np.maximum(c, 0) ** 2
+        np.maximum(a, 0) ** 2 + np.maximum(b, 0) ** 2 + np.maximum(c, 0) ** 2,
     ) + np.minimum(np.maximum(a, np.maximum(b, c)), 0)
 
 
@@ -403,7 +418,8 @@ def test_sdf_values_and_zero_sublevel_metadata_are_preserved():
     np.testing.assert_array_equal(before, field.values(points))
     np.testing.assert_allclose(before, _cylinder_sdf(*points.T), rtol=1e-14, atol=1e-14)
     np.testing.assert_array_equal(
-        before <= 0, np.maximum.reduce([f.values(points) for f in branches]) <= 0
+        before <= 0,
+        np.maximum.reduce([f.values(points) for f in branches]) <= 0,
     )
     assert field._halfspaces is None
     assert field._polyhedral_regions is None
@@ -488,7 +504,8 @@ def test_adaptive_sdf_cylinder_preserves_the_rim_and_pose(angle):
         + center
     )
     surface = pv.PolyData(
-        mesh.points, np.column_stack([np.full(len(mesh.surface), 3), mesh.surface])
+        mesh.points,
+        np.column_stack([np.full(len(mesh.surface), 3), mesh.surface]),
     )
     _, closest = surface.find_closest_cell(rim, return_closest_point=True)
     assert np.linalg.norm(rim - closest, axis=1).max() <= 0.002
@@ -555,7 +572,8 @@ def test_nonunit_sdf_branches_keep_the_scalar_path(kind):
         square = y * y + ((y + z) ** 2 if kind == "sheared-radius" else y * y + z * z)
         radial, axial = np.sqrt(square) - 0.23, np.abs(x) - 0.3
         return np.sqrt(np.maximum(radial, 0) ** 2 + np.maximum(axial, 0) ** 2) + np.minimum(
-            np.maximum(radial, axial), 0
+            np.maximum(radial, axial),
+            0,
         )
 
     assert meshers.compile_field(field)._intersection_fields() is None
@@ -580,7 +598,8 @@ def test_boundary_fitting_projection_is_invariant_to_field_scale(scale):
 def test_closed_axis_options_require_three_booleans(closed):
     with pytest.raises(ValueError, match="three booleans"):
         meshers.generate_intersection(
-            {"a": lambda x, _y, _z: x - 0.5, "b": lambda _x, y, _z: y - 0.5}, closed_axes=closed
+            {"a": lambda x, _y, _z: x - 0.5, "b": lambda _x, y, _z: y - 0.5},
+            closed_axes=closed,
         )
 
 
@@ -795,10 +814,14 @@ def test_mapped_caps_include_chord_error(curvature, axis):
     directed_cells[axis] = 8
     target = 0.004
     directed = meshers.generate_intersection(
-        **(args | {"cells": directed_cells}), geometry_tolerance=target, minimum_quality=0.1
+        **(args | {"cells": directed_cells}),
+        geometry_tolerance=target,
+        minimum_quality=0.1,
     )
     uniform = meshers.generate_intersection(
-        **(args | {"cells": 8}), geometry_tolerance=target, minimum_quality=0.1
+        **(args | {"cells": 8}),
+        geometry_tolerance=target,
+        minimum_quality=0.1,
     )
     for fine in (directed, uniform):
         cap = fine.points[fine.surface[fine.boundary_tags == 5]]

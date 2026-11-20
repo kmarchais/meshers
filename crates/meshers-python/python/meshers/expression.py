@@ -58,7 +58,7 @@ class TraceError(TypeError):
     """A callable uses operations outside the supported expression subset."""
 
 
-class _Expression:
+class _Expression:  # ruff: ignore[too-many-public-methods] - Python and NumPy operator protocol.
     __array_priority__ = 1000
     __hash__ = None
 
@@ -108,9 +108,8 @@ class _Expression:
         return self.graph.node("abs", self)
 
     def __bool__(self) -> Never:
-        raise TraceError(
-            "data-dependent Python branches cannot be traced; use the NumPy callback path"
-        )
+        msg = "data-dependent Python branches cannot be traced; use the NumPy callback path"
+        raise TraceError(msg)
 
     def __lt__(self, o: object) -> _Expression:
         return self._binary("lt", o)
@@ -131,24 +130,33 @@ class _Expression:
         return self._binary("ne", o)
 
     def __float__(self) -> Never:
-        raise TraceError("scalar conversion cannot be traced")
+        msg = "scalar conversion cannot be traced"
+        raise TraceError(msg)
 
     def __int__(self) -> Never:
-        raise TraceError("integer conversion cannot be traced")
+        msg = "integer conversion cannot be traced"
+        raise TraceError(msg)
 
     def __len__(self) -> Never:
-        raise TraceError("array lengths require the NumPy callback path")
+        msg = "array lengths require the NumPy callback path"
+        raise TraceError(msg)
 
     def __getitem__(self, key: object) -> Never:
-        raise TraceError("array indexing requires the NumPy callback path")
+        msg = "array indexing requires the NumPy callback path"
+        raise TraceError(msg)
 
     def __getattr__(self, name: str) -> Never:
         if name.startswith("__"):
             raise AttributeError(name)
-        raise TraceError(f"array attribute {name} requires the NumPy callback path")
+        msg = f"array attribute {name} requires the NumPy callback path"
+        raise TraceError(msg)
 
     def __array_function__(
-        self, func: Callable, types: tuple[type, ...], args: tuple, kwargs: dict
+        self,
+        func: Callable,
+        types: tuple[type, ...],
+        args: tuple,
+        kwargs: dict,
     ) -> _Expression:
         if func is np.interp:
             return self._interp(*args, **kwargs)
@@ -163,7 +171,8 @@ class _Expression:
                 result = self.graph.node("minimum", result, self.graph.convert(upper))
             return result
         name = getattr(func, "__name__", type(func).__name__)
-        raise TraceError(f"unsupported traced NumPy function: {name}")
+        msg = f"unsupported traced NumPy function: {name}"
+        raise TraceError(msg)
 
     def _interp(  # ruff: ignore[too-many-arguments, too-many-positional-arguments] - numpy.interp signature
         self,
@@ -176,17 +185,20 @@ class _Expression:
     ) -> _Expression:
         # Match NumPy's signature; only finite, static, increasing real tables trace.
         if period is not None:
-            raise TraceError("np.interp with period requires the NumPy callback path")
+            msg = "np.interp with period requires the NumPy callback path"
+            raise TraceError(msg)
         try:
             knots, values = np.asarray(xp), np.asarray(fp)
         except (TypeError, ValueError) as error:
-            raise TraceError("np.interp requires constant real tables") from error
+            msg = "np.interp requires constant real tables"
+            raise TraceError(msg) from error
         if (
             any(table.ndim != 1 or table.dtype.kind not in "biuf" for table in (knots, values))
             or not len(knots)
             or len(knots) != len(values)
         ):
-            raise TraceError("np.interp requires equal nonempty one-dimensional real tables")
+            msg = "np.interp requires equal nonempty one-dimensional real tables"
+            raise TraceError(msg)
         knots, values = knots.astype(np.float64), values.astype(np.float64)
         with np.errstate(over="ignore", invalid="ignore", divide="ignore"):
             spans = np.diff(knots)
@@ -205,9 +217,11 @@ class _Expression:
                 for v in (left, right)
             )
         ):
-            raise TraceError("np.interp requires finite constants and strictly increasing knots")
+            msg = "np.interp requires finite constants and strictly increasing knots"
+            raise TraceError(msg)
         if len(self.graph.nodes) + _INTERP_NODES_PER_KNOT * len(knots) > _MAX_NODES:
-            raise TraceError("np.interp table exceeds the native expression graph limit")
+            msg = "np.interp table exceeds the native expression graph limit"
+            raise TraceError(msg)
         coordinate = self.graph.convert(x)
 
         def branch(lo: int, hi: int) -> float | _Expression:
@@ -217,7 +231,9 @@ class _Expression:
                 return float(values[lo]) + float(slopes[lo]) * (coordinate - float(knots[lo]))
             middle = (lo + hi) // 2
             return self.graph.select(
-                coordinate < float(knots[middle]), branch(lo, middle), branch(middle, hi)
+                coordinate < float(knots[middle]),
+                branch(lo, middle),
+                branch(middle, hi),
             )
 
         # ponytail: eager selection costs O(table size); add a lookup kernel only
@@ -240,13 +256,19 @@ class _Expression:
         )
 
     def __array__(self, *args: object, **kwargs: object) -> Never:
-        raise TraceError("array construction is unsupported by the Rust scalar tracer")
+        msg = "array construction is unsupported by the Rust scalar tracer"
+        raise TraceError(msg)
 
     def __array_ufunc__(
-        self, ufunc: np.ufunc, method: str, *args: object, **kwargs: object
+        self,
+        ufunc: np.ufunc,
+        method: str,
+        *args: object,
+        **kwargs: object,
     ) -> _Expression:
         if method != "__call__" or kwargs or ufunc not in _UFUNCS:
-            raise TraceError(f"unsupported traced operation: {ufunc.__name__}.{method}")
+            msg = f"unsupported traced operation: {ufunc.__name__}.{method}"
+            raise TraceError(msg)
         return self.graph.node(_UFUNCS[ufunc], *(self.graph.convert(a) for a in args))
 
 
@@ -277,13 +299,16 @@ class _Graph:
     def convert(self, value: object) -> _Expression:
         if isinstance(value, _Expression):
             if value.graph is not self:
-                raise TraceError("cannot mix expression traces")
+                msg = "cannot mix expression traces"
+                raise TraceError(msg)
             return value
         if not isinstance(value, (int, float, np.integer, np.floating)):
-            raise TraceError("Rust fields must return a scalar expression")
+            msg = "Rust fields must return a scalar expression"
+            raise TraceError(msg)
         scalar = float(value)
         if not math.isfinite(scalar):
-            raise ValueError("nonfinite constants are unsupported")
+            msg = "nonfinite constants are unsupported"
+            raise ValueError(msg)
         return self._record("constant", (), scalar)
 
     def derivatives(self, output: _Expression) -> list[_Expression]:
@@ -340,7 +365,12 @@ class _Derivatives:
         return self._binary(op, a, b, da, self.at(ids[1], axis))
 
     def _binary(
-        self, op: str, a: _Expression, b: _Expression, da: _Expression, db: _Expression
+        self,
+        op: str,
+        a: _Expression,
+        b: _Expression,
+        da: _Expression,
+        db: _Expression,
     ) -> _Expression:
         if op == "atan2":
             denominator = a * a + b * b
@@ -353,12 +383,19 @@ class _Derivatives:
             half = self.graph.convert(0.5)
             tied = self.add(self.mul(half, da), self.mul(half, db))
             return self.graph.select(
-                a == b, tied, self.graph.select(a <= b if op == "minimum" else a >= b, da, db)
+                a == b,
+                tied,
+                self.graph.select(a <= b if op == "minimum" else a >= b, da, db),
             )
         return self._arithmetic(op, a, b, da, db)
 
     def _arithmetic(
-        self, op: str, a: _Expression, b: _Expression, da: _Expression, db: _Expression
+        self,
+        op: str,
+        a: _Expression,
+        b: _Expression,
+        da: _Expression,
+        db: _Expression,
     ) -> _Expression:
         if op == "add":
             return self.add(da, db)
@@ -369,13 +406,18 @@ class _Derivatives:
         if op == "pow":
             return self._power(a, b, da, db)
         if op != "div":
-            raise TraceError(f"no derivative rule for {op}")
+            msg = f"no derivative rule for {op}"
+            raise TraceError(msg)
         if self.constant(db) == 0.0:
             return self.zero if self.constant(da) == 0.0 else da / b
         return (self.mul(da, b) - self.mul(a, db)) / (b * b)
 
     def _power(
-        self, a: _Expression, b: _Expression, da: _Expression, db: _Expression
+        self,
+        a: _Expression,
+        b: _Expression,
+        da: _Expression,
+        db: _Expression,
     ) -> _Expression:
         exponent = self.constant(b)
         if exponent == 0.0:
@@ -393,17 +435,22 @@ class _Derivatives:
             return -da
         if op == "abs":
             return self.graph.select(
-                a > self.zero, da, self.graph.select(a < self.zero, -da, self.zero)
+                a > self.zero,
+                da,
+                self.graph.select(a < self.zero, -da, self.zero),
             )
         if op == "sqrt":
             # Keep the zero subgradient at a norm's origin and the singular slope of sqrt(x).
             quotient = da / (self.graph.convert(2.0) * self.graph.node("sqrt", a))
             return self.graph.select(
-                a == self.zero, self.graph.select(da == self.zero, self.zero, quotient), quotient
+                a == self.zero,
+                self.graph.select(da == self.zero, self.zero, quotient),
+                quotient,
             )
         slope = _UNARY_SLOPES.get(op)
         if slope is None:
-            raise TraceError(f"no derivative rule for {op}")
+            msg = f"no derivative rule for {op}"
+            raise TraceError(msg)
         return self.mul(slope(self.graph, self.one, a), da)
 
 
@@ -438,14 +485,18 @@ def _compile_cached(
 
 
 def _compile_with_intersection(
-    graph: _Graph, value: _Expression, outputs: tuple[int, ...]
+    graph: _Graph,
+    value: _Expression,
+    outputs: tuple[int, ...],
 ) -> _meshers.CompiledField:
     original = tuple(graph.nodes)
     if not getattr(_meshers, "RETAINED_INTERSECTIONS", False):
         return _compile_cached(original, outputs)
     if graph.nodes[value.index][0] != "maximum":
         return _compile_cached(
-            original, outputs, retain_sdf=getattr(_meshers, "SDF_INTERSECTIONS", False)
+            original,
+            outputs,
+            retain_sdf=getattr(_meshers, "SDF_INTERSECTIONS", False),
         )
     roots, pending, seen = [], [value.index], set()
     while pending:
@@ -503,7 +554,8 @@ def compile_field(
         Supply a gradient callable for another policy.
     """
     if backend not in {"rust", "jit"}:
-        raise ValueError("only the embedded Rust compiler is supported")
+        msg = "only the embedded Rust compiler is supported"
+        raise ValueError(msg)
     graph = _Graph()
     xyz = [graph.input(axis) for axis in range(len(_AXES))]
     value = graph.convert(function(*xyz))
@@ -513,10 +565,12 @@ def compile_field(
     elif gradient is not False:
         g = gradient(*xyz)
         if not isinstance(g, (tuple, list)) or len(g) != len(_AXES):
-            raise TraceError("gradient must return three scalar expressions")
+            msg = "gradient must return three scalar expressions"
+            raise TraceError(msg)
         outputs.extend(graph.convert(v) for v in g)
     if len(graph.nodes) > _MAX_NODES:
-        raise TraceError("expression is too large to compile")
+        msg = "expression is too large to compile"
+        raise TraceError(msg)
     indices = tuple(e.index for e in outputs)
     return (
         _compile_with_intersection(graph, value, indices)

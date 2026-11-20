@@ -65,7 +65,7 @@ def test_phase_speedup_requires_matching_inputs_and_stiffness(tmp_path, monkeypa
             "solver_mesh_sha256": "other" if altered and change == "mesh" else "original",
             "hardware": {"cpu_count": 4 if altered and change == "hardware" else 8},
             "fea": {
-                "stiffness_engineering_voigt": [[1.01 if altered and change == "tensor" else 1.0]]
+                "stiffness_engineering_voigt": [[1.01 if altered and change == "tensor" else 1.0]],
             },
         }
 

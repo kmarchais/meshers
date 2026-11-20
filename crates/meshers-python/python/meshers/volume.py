@@ -12,8 +12,8 @@ from ._meshers import CancellationToken, CompiledField, MeshingError
 from .expression import TraceError, compile_field
 from .intersection import (
     MAX_INTERSECTION_PASSES,
-    SPATIAL_DIMENSIONS,
     _affine_planes,
+    _check_periodic_axes,
     _periodic_affine,
     _retained_constraints,
     generate_intersection,
@@ -32,15 +32,37 @@ def _check_components(mesh: Mesh, expected_components: int | None) -> Mesh:
     if expected_components is not None:
         count = _meshers.face_components(mesh.tetrahedra)
         if count != expected_components:
-            raise MeshingError(
-                f"Expected {expected_components} face-connected components, found {count}"
-            )
+            msg = f"Expected {expected_components} face-connected components, found {count}"
+            raise MeshingError(msg)
         mesh.diagnostics["face_connected_components"] = count
     return mesh
 
 
-# Keep public option validation and pipeline dispatch together.
-def generate(  # ruff: ignore[complex-structure]
+def _prepare_volume_field(
+    field: str | Field | CompiledField,
+    gradient: Field | None,
+    *,
+    compile_expression: bool,
+) -> tuple[str | Field | CompiledField, Field | None, str]:
+    evaluator = (
+        "native"
+        if isinstance(field, str)
+        else "compiled"
+        if isinstance(field, CompiledField)
+        else "python"
+    )
+    if callable(field) and not isinstance(field, CompiledField) and compile_expression:
+        try:
+            field = compile_field(field, gradient=gradient)
+            gradient = None
+            evaluator = "compiled"
+        except TraceError as error:
+            warnings.warn(f"Using NumPy callbacks: {error}", RuntimeWarning, stacklevel=3)
+    return field, gradient, evaluator
+
+
+# Existing keyword arguments are part of the published Python API.
+def generate(  # ruff: ignore[too-many-arguments]
     field: str | Field | CompiledField,
     *,
     gradient: Field | None = None,
@@ -57,7 +79,7 @@ def generate(  # ruff: ignore[complex-structure]
     threads: int | None = 1,
     batch_size: int = 4096,
     cancel: CancellationToken | None = None,
-    compile: bool = True,
+    compile: bool = True,  # ruff: ignore[builtin-argument-shadowing] - public keyword.
     adapt: bool = False,
     min_length: float | None = None,
     max_length: float | None = None,
@@ -163,45 +185,33 @@ def generate(  # ruff: ignore[complex-structure]
         differences need the field slightly beyond the box. Sampling cannot
         certify arbitrarily small features. Native threads release the Python GIL;
         Python fallback callbacks execute on the calling thread.
-    """
+    """  # ruff: ignore[docstring-extraneous-exception] - includes native errors.
     if expected_components is not None and (
         isinstance(expected_components, (bool, np.bool_))
         or not isinstance(expected_components, (int, np.integer))
         or expected_components < 0
     ):
-        raise ValueError("expected_components must be a nonnegative integer")
+        msg = "expected_components must be a nonnegative integer"
+        raise ValueError(msg)
 
     b = np.asarray(bounds, dtype=np.float64)
     if curved_fit and order != _QUADRATIC_ORDER:
-        raise ValueError("curved_fit requires order 2")
+        msg = "curved_fit requires order 2"
+        raise ValueError(msg)
     if size_field is not None and not adapt:
-        raise ValueError("size_field requires adapt=True")
+        msg = "size_field requires adapt=True"
+        raise ValueError(msg)
     if b.shape != (6,):
-        raise ValueError("bounds must contain xmin,xmax,ymin,ymax,zmin,zmax")
+        msg = "bounds must contain xmin,xmax,ymin,ymax,zmin,zmax"
+        raise ValueError(msg)
     if isinstance(cells, (int, np.integer)):
         cells = (int(cells),) * 3
-    if len(periodic) != SPATIAL_DIMENSIONS or any(
-        not isinstance(v, (bool, np.bool_)) for v in periodic
-    ):
-        raise ValueError("periodic must contain three booleans")
+    _check_periodic_axes(periodic)
     if threads is None:
         threads = _meshers.available_threads()
     preparation_start = time.perf_counter()
     gradient_override = gradient is not None
-    evaluator = (
-        "native"
-        if isinstance(field, str)
-        else "compiled"
-        if isinstance(field, CompiledField)
-        else "python"
-    )
-    if callable(field) and not isinstance(field, CompiledField) and compile:
-        try:
-            field = compile_field(field, gradient=gradient)
-            gradient = None
-            evaluator = "compiled"
-        except TraceError as error:
-            warnings.warn(f"Using NumPy callbacks: {error}", RuntimeWarning, stacklevel=2)
+    field, gradient, evaluator = _prepare_volume_field(field, gradient, compile_expression=compile)
     scalar_mode = (
         order != 1,
         band is not None,
@@ -261,7 +271,7 @@ def generate(  # ruff: ignore[complex-structure]
     feature_options.update(
         {"constraints": list(planes.values())}
         if planes is not None and adapt and getattr(field, "_halfspaces", None) is None
-        else {}
+        else {},
     )
     planes = (
         getattr(field, "_polyhedral_regions", None)

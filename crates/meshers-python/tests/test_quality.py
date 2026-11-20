@@ -1,3 +1,5 @@
+"""Check mesh quality and the acceptance thresholds on returned elements."""
+
 import meshers
 import numpy as np
 import pytest
@@ -43,7 +45,10 @@ def test_optional_interior_refinement_preserves_periodic_boundary():
     assert abs(refined.diagnostics["volume"] - seed.diagnostics["volume"]) < 1e-12
     assert refined.diagnostics["minimum_mmg_quality"] >= 0.1
     bounded = meshers.generate(
-        field, interior_refine_nodes=20, max_tetrahedra=len(seed.tetrahedra), **options
+        field,
+        interior_refine_nodes=20,
+        max_tetrahedra=len(seed.tetrahedra),
+        **options,
     )
     assert bounded.diagnostics["inserted_interior_nodes"] == 0
     np.testing.assert_array_equal(bounded.points, seed.points)
@@ -87,7 +92,10 @@ def test_minimum_quality_gate_and_diagnostics():
     with pytest.raises(meshers.MeshingError, match="minimum MMG quality"):
         meshers.generate(lambda x, _y, _z: x * 0 - 1, minimum_quality=0.05, **args)
     accepted = meshers.generate(
-        lambda x, _y, _z: x * 0 - 1, cells=4, optimize_passes=0, minimum_quality=0.05
+        lambda x, _y, _z: x * 0 - 1,
+        cells=4,
+        optimize_passes=0,
+        minimum_quality=0.05,
     )
     assert accepted.diagnostics["minimum_mmg_quality"] >= 0.05
     assert meshers.generate(lambda x, _y, _z: x * 0 + 1, cells=4, minimum_quality=1.0).diagnostics[

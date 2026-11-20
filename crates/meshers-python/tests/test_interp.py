@@ -32,7 +32,7 @@ def test_native_interp_values_at_knots_adjacent_and_exterior(knots, values, left
 
 def test_interp_chain_rule_and_knot_policy():
     field = meshers.compile_field(
-        lambda x, y, _z: np.interp(2 * x - y, [0.0, 0.4, 1.0], [0.0, 1.0, 0.0])
+        lambda x, y, _z: np.interp(2 * x - y, [0.0, 0.4, 1.0], [0.0, 1.0, 0.0]),
     )
     np.testing.assert_allclose(field.gradient(0.1, 0.05, 0), [5.0, -2.5, 0.0])
     np.testing.assert_allclose(field.gradient(0.5, 0.2, 0), [-10 / 3, 5 / 3, 0.0])
@@ -79,7 +79,12 @@ def test_interp_automatic_generation_uses_native_evaluator():
         return x * x + y * y + z * z - np.interp(z, [-0.5, 0.0, 0.5], [0.08, 0.1, 0.13])
 
     mesh = meshers.generate(
-        field, bounds=(-0.5, 0.5) * 3, cells=8, order=2, optimize_passes=1, geometry_tolerance=0.05
+        field,
+        bounds=(-0.5, 0.5) * 3,
+        cells=8,
+        order=2,
+        optimize_passes=1,
+        geometry_tolerance=0.05,
     )
     assert len(mesh.tetrahedra) > 0
     assert mesh.diagnostics["evaluator"] == "compiled"

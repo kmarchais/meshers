@@ -1,3 +1,5 @@
+"""Check compiled field values, derivatives and expression reuse."""
+
 import gc
 import os
 import threading
@@ -170,7 +172,9 @@ def test_compiled_minmax_values_and_piecewise_gradients():
     expected = np.maximum(np.minimum(points[:, 0], points[:, 1]), points[:, 2])
     np.testing.assert_array_equal(field.values(points), expected)
     branch = np.where(
-        np.minimum(points[:, 0], points[:, 1]) > points[:, 2], np.argmin(points[:, :2], axis=1), 2
+        np.minimum(points[:, 0], points[:, 1]) > points[:, 2],
+        np.argmin(points[:, :2], axis=1),
+        2,
     )
     gradients = np.array(list(starmap(field.gradient, points)))
     np.testing.assert_array_equal(gradients, np.eye(3)[branch])
@@ -207,18 +211,15 @@ def test_compiled_tied_smooth_composition_gradient(operation, correction_sign):
 
 @pytest.mark.parametrize("operation", [np.minimum, np.maximum])
 def test_compiled_minmax_tie_subgradient_is_operand_symmetric(operation):
-    direct = meshers.compile_field(
-        lambda coordinates_x, coordinates_y, _coordinates_z: operation(coordinates_x, coordinates_y)
-    )
-    reverse = meshers.compile_field(
-        lambda coordinates_x, coordinates_y, _coordinates_z: operation(coordinates_y, coordinates_x)
-    )
+    direct = meshers.compile_field(lambda x, y, _z: operation(x, y))
+    reverse = meshers.compile_field(lambda x, y, _z: operation(y, x))
     np.testing.assert_array_equal(direct.gradient(0.17, 0.17, 0.13), [0.5, 0.5, 0])
     np.testing.assert_array_equal(reverse.gradient(0.17, 0.17, 0.13), [0.5, 0.5, 0])
     extreme = meshers.compile_field(
         lambda coordinates_x, coordinates_y, _coordinates_z: operation(
-            1e308 * coordinates_x + coordinates_y, 1e308 * coordinates_x - coordinates_y
-        )
+            1e308 * coordinates_x + coordinates_y,
+            1e308 * coordinates_x - coordinates_y,
+        ),
     )
     np.testing.assert_array_equal(extreme.gradient(0, 0, 0), [1e308, 0, 0])
 

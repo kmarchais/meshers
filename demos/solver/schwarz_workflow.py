@@ -9,6 +9,7 @@ import os
 import shutil
 import time
 from contextlib import ExitStack
+from dataclasses import dataclass
 from functools import partial
 from importlib.metadata import distribution, version
 from pathlib import Path
@@ -66,9 +67,28 @@ class _MmgPass(TypedDict):
     hsiz: NotRequired[float | None]
 
 
-def live_microgen(  # ruff: ignore[too-many-arguments] - optional controls reproduce the frozen repair.
-    route, cells, folder, row, budget, *, observe=None, single_pass=False, repair_hmax=0.1
-):
+def _mmg_executable():
+    folder_bin = Path(distribution("mmgpy").locate_file("mmgpy/bin")).resolve()
+    os.environ["PATH"] = str(folder_bin) + os.pathsep + os.environ["PATH"]
+    executable = shutil.which("mmg3d_O3")
+    if executable is None or Path(executable).resolve().parent != folder_bin:
+        msg = "The mmgpy wheel's MMG executable is unavailable"
+        raise RuntimeError(msg)
+    return executable
+
+
+@dataclass(frozen=True)
+class SchwarzSettings:
+    """Identify the mesh route, resolution and physical settings for one trial."""
+
+    route: str
+    cells: int | None
+    native_sizing: dict[str, float] | None = None
+    shifted: bool = False
+    repair_hmax: float = 0.1
+
+
+def live_microgen(trial: SchwarzSettings, folder, row, budget, *, observe=None):
     """Write the volume produced by the pinned Microgen VTK and MMG implementations.
 
     Returns:
@@ -87,15 +107,11 @@ def live_microgen(  # ruff: ignore[too-many-arguments] - optional controls repro
     }
     row["source_sha256"] = sources
     if sources != SOURCE_HASHES:
-        raise RuntimeError("Microgen source differs from the frozen VTK route")
-    folder_bin = Path(distribution("mmgpy").locate_file("mmgpy/bin")).resolve()
-    os.environ["PATH"] = str(folder_bin) + os.pathsep + os.environ["PATH"]
-    executable = shutil.which("mmg3d_O3")
-    if executable is None or Path(executable).resolve().parent != folder_bin:
-        raise RuntimeError("The mmgpy wheel's MMG executable is unavailable")
-    row["mmg_sha256"] = digest(executable)
+        msg = "Microgen source differs from the frozen VTK route"
+        raise RuntimeError(msg)
+    row["mmg_sha256"] = digest(_mmg_executable())
     start = time.perf_counter()
-    settings = {"resolution": cells} if cells else {}
+    settings = {"resolution": trial.cells} if trial.cells else {}
     shape = microgen.Tpms(surface_functions.schwarz_p, offset=0.0, **settings)
     seed = shape.generate_volume_mesh(type_part="lower skeletal").triangulate()
     row.update(
@@ -105,10 +121,16 @@ def live_microgen(  # ruff: ignore[too-many-arguments] - optional controls repro
         seed_cells=seed.n_cells,
     )
     if max(seed.n_points, seed.n_cells) > budget:
-        raise RuntimeError("VTK seed exceeds the mesh budget")
+        msg = "VTK seed exceeds the mesh budget"
+        raise RuntimeError(msg)
     if observe is not None:
         observe("seed", seed)
-    options = {"hausd": 0.001, "hmax": 0.06, "hgrad": 1.3} if route == "microgen-tuned" else {}
+    options = (
+        {"hausd": 0.001, "hmax": 0.06, "hgrad": 1.3}
+        if trial.route in {"microgen-tuned", "single-pass-repair"}
+        else {}
+    )
+    single_pass = trial.route in {"single-pass-repair", "microgen-repaired"}
     original = microgen.Mmg.mmg3d
     row["mmg_calls"] = []
 
@@ -117,7 +139,7 @@ def live_microgen(  # ruff: ignore[too-many-arguments] - optional controls repro
             shutil.copyfile(params["input"], params["output"])
             return None
         if single_pass:
-            params.update(hausd=0.0005, hmax=repair_hmax, hgrad=1.3)
+            params.update(hausd=0.0005, hmax=trial.repair_hmax, hgrad=1.3)
         options_used = {k: v for k, v in params.items() if k not in {"input", "output"}}
         row["mmg_calls"].append(options_used)
         begin = time.perf_counter()
@@ -155,7 +177,8 @@ def solver_input(grid, quality):
         other = [a for a in range(3) if a != axis]
         distance, index = cKDTree(points[high][:, other]).query(points[low][:, other])
         if len(low) != len(high) or np.max(distance) >= 1e-12 or len(np.unique(index)) != len(high):
-            raise ValueError("Could not reconstruct a bijective periodic node map")
+            msg = "Could not reconstruct a bijective periodic node map"
+            raise ValueError(msg)
         pairs.append(np.column_stack([low, high[index]]))
     return SimpleNamespace(
         points=points + 0.5,
@@ -166,53 +189,43 @@ def solver_input(grid, quality):
     )
 
 
-def run(  # ruff: ignore[too-many-arguments] - keyword controls identify the experimental arm.
-    route,
-    cells,
-    folder,
-    row,
-    *,
-    native_settings=None,
-    repair_hmax=0.1,
-    shifted=False,
-    solver_factory=AuditedCG,
-):
+def run(trial: SchwarzSettings, folder, row, *, solver_factory=AuditedCG):
     """Generate, audit and solve one mesh, preserving the first failed stage.
 
     Raises:
         RuntimeError: A package version or VTK backend differs from the study.
     """
-    if route != "native-candidate" and row["versions"] != PACKAGES:
-        raise RuntimeError("Install the pinned comparison packages")
+    if trial.route != "native-candidate" and row["versions"] != PACKAGES:
+        msg = "Install the pinned comparison packages"
+        raise RuntimeError(msg)
     vtkSMPTools.SetBackend("Sequential")
     if vtkSMPTools.GetBackend() != "Sequential":
-        raise RuntimeError("A single-threaded VTK backend is required")
+        msg = "A single-threaded VTK backend is required"
+        raise RuntimeError(msg)
     baseline = json.loads(BASELINE.read_text())
     start = time.perf_counter()
-    if route in {"native", "native-candidate"}:
-        cfg = dict(baseline["routes"]["schwarz_native"]["config"], cells=cells)
-        cfg.update(native_settings or {})
-        if shifted:
+    if trial.route in {"native", "native-candidate"}:
+        cfg = dict(baseline["routes"]["schwarz_native"]["config"], cells=trial.cells)
+        cfg.update(trial.native_sizing or {})
+        if trial.shifted:
             cfg["phase_x"] = 0.125
         row["config"] = cfg
         mesh = generate("schwarz_native", cfg, baseline["limits"])
         path = folder / "volume.vtkhdf"
         mesh.write_vtkhdf(path)
     else:
-        historical = route == "microgen-repaired"
+        historical = trial.route == "microgen-repaired"
         path = live_microgen(
-            route,
-            cells,
+            trial,
             folder,
             row,
             baseline["limits"]["max_nodes_or_elements"],
-            single_pass=historical,
-            repair_hmax=repair_hmax,
         )
         if historical:
             source = pv.read(path)
             if max(source.n_points, source.n_cells) > baseline["limits"]["max_nodes_or_elements"]:
-                raise RuntimeError("Single-pass MMG output exceeds the mesh budget before repair")
+                msg = "Single-pass MMG output exceeds the mesh budget before repair"
+                raise RuntimeError(msg)
             repair_start = time.perf_counter()
             repaired = repaired_grid(source, row)
             row["repair_seconds"] = time.perf_counter() - repair_start
@@ -222,7 +235,7 @@ def run(  # ruff: ignore[too-many-arguments] - keyword controls identify the exp
     row["generation_and_io_seconds"] = time.perf_counter() - start
     row["mesh_sha256"] = digest(path)
     start = time.perf_counter()
-    geometry = audit(grid, "schwarz-shifted" if shifted else "schwarz", baseline)
+    geometry = audit(grid, "schwarz-shifted" if trial.shifted else "schwarz", baseline)
     row.update(geometry=geometry, audit_seconds=time.perf_counter() - start)
     if not geometry["sampled_admission"]:
         row["status"] = "geometry-rejected"
@@ -238,7 +251,8 @@ def solve_admitted(grid, geometry, row, *, solver_factory=AuditedCG):
     """
     probe = int(grid.find_containing_cell(PROBE))
     if probe < 0:
-        raise ValueError("The fixed interior stress probe is missing")
+        msg = "The fixed interior stress probe is missing"
+        raise ValueError(msg)
     row["stress_probe_xyz"] = PROBE.tolist()
     mesh = solver_input(grid, geometry["minimum_quality"])
     mesh_hash = hashlib.sha256()
@@ -276,7 +290,8 @@ def main():
     """
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument(
-        "route", choices=("native", "native-candidate", "microgen-default", "microgen-tuned")
+        "route",
+        choices=("native", "native-candidate", "microgen-default", "microgen-tuned"),
     )
     parser.add_argument("output", type=Path)
     parser.add_argument("--cells", type=int, help="VTK resolution or native background cells")
@@ -308,14 +323,15 @@ def main():
     start = time.perf_counter()
     try:
         settings = {"max_length": 0.032, "adapt_tolerance": 0.0003} if candidate else None
-        run(args.route, args.cells, args.output, row, native_settings=settings)
+        run(SchwarzSettings(args.route, args.cells, native_sizing=settings), args.output, row)
     except Exception as exc:
         row.update(status="failed", error=f"{type(exc).__name__}: {exc}")
         raise
     finally:
         row["workflow_seconds"] = time.perf_counter() - start
         (args.output / "result.json").write_text(
-            json.dumps(row, indent=2, allow_nan=False) + "\n", encoding="utf8"
+            json.dumps(row, indent=2, allow_nan=False) + "\n",
+            encoding="utf8",
         )
 
     return int(candidate and row["status"] != "within-reference-target")

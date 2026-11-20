@@ -44,7 +44,9 @@ def test_halfspaces_match_the_compiled_field_and_reject_nonconvex_graphs():
     assert planes.shape == (8, 4)
     points = np.random.default_rng(42).uniform(-0.5, 0.5, (256, 3))
     np.testing.assert_allclose(
-        (points @ planes[:, :3].T + planes[:, 3]).max(axis=1), field.values(points), atol=3e-16
+        (points @ planes[:, :3].T + planes[:, 3]).max(axis=1),
+        field.values(points),
+        atol=3e-16,
     )
     for function in (
         lambda x, y, _z: np.minimum(x, y),
@@ -67,7 +69,9 @@ def test_affine_scaling_translation_and_maximum_remain_exact(scale):
     assert planes.shape == (6, 4)
     points = np.random.default_rng(12).uniform(-0.5, 0.5, (256, 3))
     np.testing.assert_allclose(
-        (points @ planes[:, :3].T + planes[:, 3]).max(axis=1), compiled.values(points), atol=4e-16
+        (points @ planes[:, :3].T + planes[:, 3]).max(axis=1),
+        compiled.values(points),
+        atol=4e-16,
     )
 
 
@@ -80,7 +84,7 @@ def test_affine_scaling_translation_and_maximum_remain_exact(scale):
         {
             "gradient": lambda x, y, z: tuple(
                 np.where(v >= 0, 1.0, -1.0) / np.sqrt(3) for v in (x, y, z)
-            )
+            ),
         },
     ],
 )
@@ -263,7 +267,12 @@ def test_polyhedral_refinement_keeps_the_hard_budget():
 def test_polyhedral_adaptation_keeps_invalid_sizing_rejection():
     with pytest.raises(meshers.MeshingError, match="invalid adaptation options"):
         meshers.generate(
-            octahedron, bounds=(-0.5, 0.5) * 3, cells=24, adapt=True, min_length=0.2, max_length=0.1
+            octahedron,
+            bounds=(-0.5, 0.5) * 3,
+            cells=24,
+            adapt=True,
+            min_length=0.2,
+            max_length=0.1,
         )
 
 
@@ -374,7 +383,7 @@ def test_periodic_affine_normal_jump_uses_a_verified_physical_seed():
 
 def test_complete_affine_trace_dispatch_keeps_named_plane_rejection():
     field = meshers.compile_field(
-        lambda x, y, z: np.maximum(abs(x) + 0.3 * abs(z) - 0.35, abs(y) - 0.2)
+        lambda x, y, z: np.maximum(abs(x) + 0.3 * abs(z) - 0.35, abs(y) - 0.2),
     )
     bounds = np.array((-0.5, 0.5) * 3)
     assert _periodic_affine(field, (False, False, True), bounds)

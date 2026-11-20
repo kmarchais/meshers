@@ -1,3 +1,5 @@
+"""Check candidate-wheel admission records and CLI exit codes."""
+
 import json
 import sys
 from pathlib import Path
@@ -18,11 +20,11 @@ def test_candidate_exit_code_and_record(tmp_path, monkeypatch, status, expected)
     monkeypatch.setattr(sys, "argv", ["study", "native-candidate", str(output)])
     monkeypatch.setattr(workflow, "hardware_snapshot", lambda: {"platform": "test"})
 
-    def run(route, cells, folder, row, *, native_settings):
+    def run(trial, folder, row):
         assert folder == output
-        assert native_settings is not None
-        assert route == "native-candidate"
-        assert cells == 24
+        assert trial.native_sizing is not None
+        assert trial.route == "native-candidate"
+        assert trial.cells == 24
         assert "microgen" not in row["versions"]
         row["status"] = status
 

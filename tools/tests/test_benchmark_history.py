@@ -112,7 +112,9 @@ def test_preserves_real_regression_and_failed_worker(tmp_path):
     for row in [*case["runs"]["head"], case["medians"]["head"]]:
         row["quality_min"] = 0.4
     case["failures"] = gate.case_regressions(
-        case["medians"]["base"], case["medians"]["head"], case["runs"]["head"]
+        case["medians"]["base"],
+        case["medians"]["head"],
+        case["runs"]["head"],
     )
     data["cases"]["adaptive_gyroid"] = {
         "runs": {"base": [], "head": []},

@@ -1,3 +1,5 @@
+"""Exercise the installed Python meshing interface and its failure modes."""
+
 import gc
 import os
 import re
@@ -30,7 +32,8 @@ def test_geometry_rejection_locates_a_sample_with_the_reported_error(compiled):
             compile=compiled,
         )
     match = re.search(
-        r"geometry error (\S+) exceeds.*worst sample at \[([^\]]+)\]", str(failure.value)
+        r"geometry error (\S+) exceeds.*worst sample at \[([^\]]+)\]",
+        str(failure.value),
     )
     assert match
     point = np.fromstring(match[2], sep=",")
@@ -136,7 +139,7 @@ def test_gradient_and_original_exception():
             cells=8,
             geometry_tolerance=0.1,
             optimize_passes=0,
-        ).points
+        ).points,
     )
     marker = LookupError("original callback failure")
 
@@ -335,7 +338,9 @@ def test_expected_components_exposes_lost_thin_slab():
 def test_expected_components_on_retained_planes():
     with pytest.raises(meshers.MeshingError, match="found 1"):
         meshers.generate(
-            lambda x, y, _z: np.maximum(x - 0.4, y - 0.6), cells=4, expected_components=2
+            lambda x, y, _z: np.maximum(x - 0.4, y - 0.6),
+            cells=4,
+            expected_components=2,
         )
 
 
@@ -370,7 +375,8 @@ def test_translated_component_witness(height):
 
     def covers_center(cells):
         coords = np.linalg.solve(
-            (cells[:, 1:] - cells[:, :1]).transpose(0, 2, 1), (center - cells[:, 0])[..., None]
+            (cells[:, 1:] - cells[:, :1]).transpose(0, 2, 1),
+            (center - cells[:, 0])[..., None],
         )[..., 0]
         return np.any(np.all(coords >= -1e-10, axis=1) & (coords.sum(axis=1) <= 1 + 1e-10))
 

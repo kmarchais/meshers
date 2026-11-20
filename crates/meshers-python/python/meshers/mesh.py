@@ -56,7 +56,8 @@ class Mesh:
             ValueError: The mesh has no constraint with this name.
         """
         if name not in self.constraint_names or self.constraint_masks is None:
-            raise ValueError(f"Unknown constraint: {name}")
+            msg = f"Unknown constraint: {name}"
+            raise ValueError(msg)
         bit = 1 << self.constraint_names.index(name)
         masks = self.constraint_masks[self.surface]
         labels = masks[:, 0] & masks[:, 1] & masks[:, 2]
@@ -88,6 +89,6 @@ class Mesh:
         CornerVolume and CornerMMGQuality identify the linear parent measures.
         Linear cells retain the Volume and MMGQuality arrays.
         """
-        from ._vtkhdf import write_grid
+        from ._vtkhdf import write_grid  # ruff: ignore[import-outside-top-level] - load optional VTK on export.
 
         write_grid(self, path, surface=surface)

@@ -25,7 +25,8 @@ def bounds(triangles):
     """Return the quality ceiling imposed by each fixed opposite face."""
     area = (
         np.linalg.norm(
-            np.cross(triangles[:, 1] - triangles[:, 0], triangles[:, 2] - triangles[:, 0]), axis=1
+            np.cross(triangles[:, 1] - triangles[:, 0], triangles[:, 2] - triangles[:, 0]),
+            axis=1,
         )
         / 2
     )
@@ -44,7 +45,8 @@ def relocate_star(points, cells, node, target=0.1):  # ruff: ignore[too-many-loc
     """
     selected = np.flatnonzero((cells == node).any(axis=1))
     if not len(selected) or not target > 0:
-        raise ValueError("Relocation needs an incident tetrahedron and a positive quality target")
+        msg = "Relocation needs an incident tetrahedron and a positive quality target"
+        raise ValueError(msg)
     star = cells[selected]
     positions = np.argmax(star == node, axis=1)
     fixed = np.array([
@@ -68,7 +70,8 @@ def relocate_star(points, cells, node, target=0.1):  # ruff: ignore[too-many-loc
     origin = points[node].copy()
     scale = float(np.linalg.norm(points[np.unique(star)] - origin, axis=1).max())
     if not scale > 0:
-        raise ValueError("Degenerate vertex star")
+        msg = "Degenerate vertex star"
+        raise ValueError(msg)
     coordinates = (points[star] - origin) / scale
     initial_squared = sum(
         np.sum((coordinates[:, first] - coordinates[:, second]) ** 2, axis=1)
@@ -129,9 +132,11 @@ def audit(points, cells, surface):  # ruff: ignore[too-many-locals] - preserve t
     cells = cells[:, :4]
     surface = surface[:, :3]
     if cells.min() < 0 or cells.max() >= len(points):
-        raise ValueError("Tetrahedron point index out of range")
+        msg = "Tetrahedron point index out of range"
+        raise ValueError(msg)
     if (np.diff(np.sort(cells, axis=1), axis=1) == 0).any():
-        raise ValueError("Tetrahedron contains repeated vertices")
+        msg = "Tetrahedron contains repeated vertices"
+        raise ValueError(msg)
     oriented = cells[:, FACES].reshape(-1, 3)
     inversions = (oriented[:, 0] > oriented[:, 1]).astype(int)
     inversions += oriented[:, 0] > oriented[:, 2]
@@ -209,10 +214,12 @@ def check_repair(points, moved, cells, boundary):
     old_determinants = np.linalg.det(points[cells[:, 1:]] - points[cells[:, :1]])
     new_determinants = np.linalg.det(moved[cells[:, 1:]] - moved[cells[:, :1]])
     if not np.all(new_determinants > 0):
-        raise ValueError("Repair produced a nonpositive or nonfinite determinant")
+        msg = "Repair produced a nonpositive or nonfinite determinant"
+        raise ValueError(msg)
     volume_difference = float((new_determinants.sum() - old_determinants.sum()) / 6)
     if not abs(volume_difference) < 1e-12:
-        raise ValueError(f"Repair changed signed volume by {volume_difference}")
+        msg = f"Repair changed signed volume by {volume_difference}"
+        raise ValueError(msg)
     return volume_difference, float(new_determinants.min())
 
 
@@ -223,7 +230,8 @@ def repair(points, cells, surface, *, maximum_attempts=400):
         ValueError: The mesh fails a topology, repair progress, orientation or volume check.
     """
     if not audit(points, cells, surface)["oriented_facet_consistency_passed"]:
-        raise ValueError("Source fails oriented facet consistency; relocation is unsupported")
+        msg = "Source fails oriented facet consistency; relocation is unsupported"
+        raise ValueError(msg)
     moved = points.copy()
     boundary = np.zeros(len(points), dtype=bool)
     boundary[np.unique(surface)] = True
@@ -252,9 +260,8 @@ def repair(points, cells, surface, *, maximum_attempts=400):
                     moved[node] = candidate
                     measured = quality(moved, cells)
                     if int((measured < 0.1).sum()) >= bad_before:
-                        raise ValueError(
-                            "Accepted relocation did not reduce the number of poor elements"
-                        )
+                        msg = "Accepted relocation did not reduce the number of poor elements"
+                        raise ValueError(msg)
                     accepted.append(int(node))
                     break
         if (

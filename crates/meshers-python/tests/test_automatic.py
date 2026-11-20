@@ -1,3 +1,5 @@
+"""Check automatic tracing, compiler fallback and callback evaluation."""
+
 import meshers
 import numpy as np
 import pytest
@@ -44,7 +46,7 @@ def test_cache_captured_parameters_and_automatic_generate():
 
 def test_piecewise_derivatives_and_integer_power():
     f = meshers.compile_field(
-        lambda x, y, z: np.where(x > 0, x * x, -x) + np.abs(y) + np.maximum(z, 0)
+        lambda x, y, z: np.where(x > 0, x * x, -x) + np.abs(y) + np.maximum(z, 0),
     )
     np.testing.assert_allclose(f.gradient(-2, 0, -1), [-1, 0, 0])
     np.testing.assert_allclose(f.gradient(2, 1, 1), [4, 1, 1])

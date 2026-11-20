@@ -24,7 +24,8 @@ def main():
     args = parser.parse_args()
     baseline = json.loads(BASELINE.read_text(encoding="utf8"))
     if version("meshers") != baseline["release"]:
-        raise RuntimeError("Expected the pinned release wheel")
+        msg = "Expected the pinned release wheel"
+        raise RuntimeError(msg)
     args.output.mkdir()
     row = {
         "recorded_at": dt.datetime.now(dt.UTC).isoformat(),
@@ -44,7 +45,8 @@ def main():
         raise
     finally:
         (args.output / "audit.json").write_text(
-            json.dumps(row, indent=2, allow_nan=False) + "\n", encoding="utf8"
+            json.dumps(row, indent=2, allow_nan=False) + "\n",
+            encoding="utf8",
         )
     return 0 if row["sampled_admission"] else 1
 

@@ -31,28 +31,15 @@ line-length = 100
 
 [tool.ruff.lint]
 select = ["ALL"]
-# The formatter controls trailing commas. The repository has a shared license.
-# Keep exception messages inline; requiring a temporary variable adds no value here.
-ignore = [
-    "missing-trailing-comma",
-    "missing-copyright-notice",
-    "raise-vanilla-args",
-    "raw-string-in-exception",
-    "f-string-in-exception",
-]
+# One repository license covers the Python sources.
+ignore = ["missing-copyright-notice"]
 
 [tool.ruff.lint.per-file-ignores]
-# The gate launches wheel-specific Python workers and imports their dependencies on demand.
-"tools/performance_gate.py" = [
-    "import-outside-top-level",
-    "print",
-    "suspicious-subprocess-import",
-    "subprocess-without-shell-equals-true",
-]
+# Each benchmark worker imports the dependencies of the wheel being measured.
+"tools/performance_gate.py" = ["import-outside-top-level"]
 # Test functions and numerical callbacks may omit parameter and return annotations.
 # Variadic arguments, special methods and explicit Any remain checked.
 "**/tests/**" = [
-    "undocumented-public-module",
     "undocumented-public-function",
     "missing-type-function-argument",
     "missing-return-type-undocumented-public-function",
@@ -64,18 +51,8 @@ ignore = [
     "import-private-name",
 ]
 "crates/meshers-python/examples/*.py" = ["print", "implicit-namespace-package"]
-# Scalar expression protocols intentionally have dynamic operands and many operators.
-"crates/meshers-python/python/meshers/expression.py" = [
-    "too-many-public-methods",
-    "float-equality-comparison",
-]
-# Public Python signatures retain the compile keyword and document native exceptions.
-"crates/meshers-python/python/meshers/{volume,intersection}.py" = [
-    "too-many-arguments",
-    "builtin-argument-shadowing",
-    "docstring-extraneous-exception",
-]
-"crates/meshers-python/python/meshers/mesh.py" = ["import-outside-top-level"]  # Optional VTK exporter.
+# Symbolic simplification and interpolation knot ties require exact equality.
+"crates/meshers-python/python/meshers/expression.py" = ["float-equality-comparison"]
 # Stub docstrings feed the generated API reference.
 "crates/meshers-python/python/meshers/_meshers.pyi" = ["docstring-in-stub"]
 # Scientific scripts may omit types on ordinary functions and use literal numerical thresholds.
@@ -84,7 +61,6 @@ ignore = [
     "missing-return-type-undocumented-public-function",
     "missing-return-type-private-function",
     "magic-value-comparison",
-    "print",
     "implicit-namespace-package",
 ]
 

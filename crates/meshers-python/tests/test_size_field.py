@@ -1,3 +1,5 @@
+"""Verify spatial sizing callbacks during mesh adaptation."""
+
 from functools import partial
 from typing import Never
 
@@ -34,14 +36,14 @@ def test_constant_size_preserves_default_adaptation():
 
 def test_spatial_size_refines_target_region_and_preserves_periodicity():
     mesh = generate(
-        size_field=lambda coordinates_x, *_: 0.06 + 0.14 * np.sin(np.pi * coordinates_x) ** 2
+        size_field=lambda coordinates_x, *_: 0.06 + 0.14 * np.sin(np.pi * coordinates_x) ** 2,
     )
     local_edges = np.array([[0, 1], [0, 2], [0, 3], [1, 2], [1, 3], [2, 3]])
     edges = np.unique(np.sort(mesh.tetrahedra[:, local_edges].reshape(-1, 2), axis=1), axis=0)
     centers = mesh.points[edges].mean(axis=1)
     lengths = np.linalg.norm(mesh.points[edges[:, 0]] - mesh.points[edges[:, 1]], axis=1)
     assert np.median(lengths[abs(centers[:, 0]) < 0.15]) < 0.85 * np.median(
-        lengths[abs(centers[:, 0]) > 0.35]
+        lengths[abs(centers[:, 0]) > 0.35],
     )
     for axis, pairs in enumerate(mesh.periodic_pairs):
         expected = np.broadcast_to(np.eye(3)[axis], (len(pairs), 3))
@@ -67,7 +69,8 @@ def test_size_requires_adaptation():
 
 def test_size_callback_exception_is_preserved():
     def fail(*_coordinates: np.ndarray) -> Never:
-        raise RuntimeError("size callback failed")
+        msg = "size callback failed"
+        raise RuntimeError(msg)
 
     with pytest.raises(RuntimeError, match="size callback failed"):
         generate(size_field=fail)

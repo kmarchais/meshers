@@ -34,7 +34,10 @@ def measure(output, label, arm):
     start = time.perf_counter()
     with (output / f"{label}.log").open("xb") as log:
         code, peak = observe_worker(
-            command, {**os.environ, **dict.fromkeys(THREAD_VARIABLES, "1")}, log, 750
+            command,
+            {**os.environ, **dict.fromkeys(THREAD_VARIABLES, "1")},
+            log,
+            750,
         )
     try:
         row = json.loads(path.read_bytes())

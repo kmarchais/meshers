@@ -6,7 +6,8 @@ import pytest
 import pyvista as pv
 
 pytestmark = pytest.mark.skipif(
-    not hasattr(meshers, "generate_surface"), reason="optional surface feature"
+    not hasattr(meshers, "generate_surface"),
+    reason="optional surface feature",
 )
 
 

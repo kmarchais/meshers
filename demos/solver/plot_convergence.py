@@ -20,7 +20,11 @@ def main():
         for axis, metric in zip(axes, ["l2_displacement_error", "energy_error"], strict=True):
             axis.loglog(h, [r[metric] for r in rows], "o-", label=case["geometry"].title())
     for axis, title, order, anchor in zip(
-        axes, ["Displacement L2 error", "Elastic energy error"], [2, 1], [0.003, 0.3], strict=True
+        axes,
+        ["Displacement L2 error", "Elastic energy error"],
+        [2, 1],
+        [0.003, 0.3],
+        strict=True,
     ):
         h = np.array([0.12, 0.23])
         axis.loglog(h, anchor * (h / 0.12) ** order, "--", color="0.55", label=f"Slope {order}")

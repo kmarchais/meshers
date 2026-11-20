@@ -8,7 +8,10 @@ Points = NDArray[np.float64]
 
 constraints = {"right": lambda x, _y, _z: x - 0.501, "back": lambda _x, y, _z: y - 0.751}
 straight = meshers.generate_intersection(
-    constraints, cells=8, geometry_tolerance=1e-8, periodic=(False, False, True)
+    constraints,
+    cells=8,
+    geometry_tolerance=1e-8,
+    periodic=(False, False, True),
 )
 print(straight.surface_for("right").shape, straight.feature_edges.shape)
 

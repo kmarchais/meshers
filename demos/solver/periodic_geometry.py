@@ -135,7 +135,8 @@ def boundary_metrics(points, faces, specimen, net):  # ruff: ignore[complex-stru
                 refs.append(lines[valid].copy())
         reference = np.concatenate(refs)
         if not np.all(abs(field(reference, specimen) - level) < 1e-12):
-            raise ValueError("Reference samples are off the analytic wall")
+            msg = "Reference samples are off the analytic wall"
+            raise ValueError(msg)
         mask = wall if len(levels) == 1 else wall & ((wall_values < 0) == (level < 0))
         measure(f"wall {level:g}", mask, reference, level)
     for (axis, side), mask in caps.items():
@@ -153,7 +154,8 @@ def audit(grid, specimen, baseline, power=11):  # ruff: ignore[too-many-locals] 
         ValueError: The volume is empty or contains cells other than Tet4.
     """
     if set(grid.celltypes) != {pv.CellType.TETRA}:
-        raise ValueError("Expected a nonempty linear tetrahedral volume")
+        msg = "Expected a nonempty linear tetrahedral volume"
+        raise ValueError(msg)
     points = np.asarray(grid.points, dtype=float)
     cells = grid.cells_dict[pv.CellType.TETRA]
     verts = points[cells]
@@ -172,7 +174,8 @@ def audit(grid, specimen, baseline, power=11):  # ruff: ignore[too-many-locals] 
         (oriented[:, i] > oriented[:, j]).astype(int) for i in range(3) for j in range(i + 1, 3)
     )
     graph = coo_matrix(
-        (np.ones(len(shared)), (first // 4, second // 4)), shape=(len(cells), len(cells))
+        (np.ones(len(shared)), (first // 4, second // 4)),
+        shape=(len(cells), len(cells)),
     )
     components, labels = connected_components(graph, directed=False)
     volumes = np.bincount(labels, weights=det / 6)
@@ -214,7 +217,7 @@ def audit(grid, specimen, baseline, power=11):  # ruff: ignore[too-many-locals] 
             / baseline["reference_volumes"][
                 "schwarz" if specimen == "schwarz-shifted" else specimen
             ]
-            - 1
+            - 1,
         )
         <= limits["relative_volume_error"],
         "budget": max(len(cells), len(points)) <= limits["max_nodes_or_elements"],
@@ -252,7 +255,7 @@ def main():
         record = {"mesh_sha256": hashlib.sha256(args.mesh.read_bytes()).hexdigest()}
         try:
             record.update(
-                audit(pv.read(args.mesh), args.specimen, json.loads(BASELINE.read_text()))
+                audit(pv.read(args.mesh), args.specimen, json.loads(BASELINE.read_text())),
             )
         except Exception as exc:
             record.update(sampled_admission=False, error=str(exc))

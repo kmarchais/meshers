@@ -30,7 +30,11 @@ def callback_gradient(x: Points, y: Points, z: Points) -> Points:
 
 
 callback = meshers.generate(
-    sphere, gradient=callback_gradient, compile=False, batch_size=128, **options
+    sphere,
+    gradient=callback_gradient,
+    compile=False,
+    batch_size=128,
+    **options,
 )
 finite_difference = meshers.generate(sphere, compile=False, batch_size=128, **options)
 for result in (automatic, reused, callback, finite_difference):

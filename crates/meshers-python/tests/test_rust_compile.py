@@ -1,3 +1,5 @@
+"""Exercise native expression compilation and evaluator lifetimes."""
+
 import gc
 
 import meshers

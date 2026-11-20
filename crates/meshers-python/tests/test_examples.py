@@ -13,7 +13,8 @@ EXAMPLES = Path(__file__).resolve().parents[1] / "examples"
 
 
 @pytest.mark.parametrize(
-    "name", ["basic", "evaluators", "graded", "periodic", "intersection", "cancellation"]
+    "name",
+    ["basic", "evaluators", "graded", "periodic", "intersection", "cancellation"],
 )
 def test_user_example(name, tmp_path):
     run_python(

@@ -1,12 +1,12 @@
 """Bound the distance from one sample to the seeded spinodoid wall inside its unit cell."""
 
 import argparse
-import json
 from importlib.metadata import version
 from pathlib import Path
 
 import numpy as np
 from implicit_coverage import load_reference
+from reporting import write_json_line
 from scipy.optimize import brentq
 from scipy.stats import qmc
 
@@ -65,7 +65,9 @@ def ray_distance(source, point, wave, angles, directions):
                 break
             if residual * (source.threshold - np.cos(angles + d * slope) @ amplitudes) <= 0:
                 root = brentq(
-                    lambda t, s=slope: source.threshold - np.cos(angles + t * s) @ amplitudes, 0, d
+                    lambda t, s=slope: source.threshold - np.cos(angles + t * s) @ amplitudes,
+                    0,
+                    d,
                 )
                 upper = root if upper is None else min(upper, root)
                 break
@@ -88,14 +90,12 @@ def main():
     source = cases.spinodoid_source(1)._frep  # ruff: ignore[private-member-access] - pinned Microgen spectrum.
     free = abs(point) < 0.5 if args.lock_caps else np.ones(3, dtype=bool)
     lower, upper = distance_bounds(source, point, free)
-    print(
-        json.dumps({
-            "point": args.point,
-            "free_axes": free.tolist(),
-            "lower": lower,
-            "upper": upper,
-        })
-    )
+    write_json_line({
+        "point": args.point,
+        "free_axes": free.tolist(),
+        "lower": lower,
+        "upper": upper,
+    })
 
 
 if __name__ == "__main__":

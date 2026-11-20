@@ -8,7 +8,10 @@ import pytest
 
 
 def run_python(
-    *args: str, cwd: Path | None = None, env: dict[str, str] | None = None, timeout: int = 90
+    *args: str,
+    cwd: Path | None = None,
+    env: dict[str, str] | None = None,
+    timeout: int = 90,
 ) -> str:
     """Run a test script in the active Python environment.
 
