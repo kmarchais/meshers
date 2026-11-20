@@ -13,7 +13,6 @@ import math
 import os
 import platform
 import statistics
-import subprocess  # ruff: ignore[suspicious-subprocess-import] - compare separately installed wheels.
 import sys
 from pathlib import Path
 from typing import TYPE_CHECKING, TypedDict
@@ -26,8 +25,10 @@ if sys.platform == "darwin":
 
 if not __package__ and __name__ == "__main__":
     from benchmark_hardware import hardware_snapshot
+    from commands import CalledProcessError, TimeoutExpired, run_command
 else:
     from tools.benchmark_hardware import hardware_snapshot
+    from tools.commands import CalledProcessError, TimeoutExpired, run_command
 
 _LOG = logging.getLogger(__name__)
 
@@ -190,11 +191,7 @@ def arguments() -> tuple[argparse.ArgumentParser, argparse.Namespace]:
 
 def _worker_output(python: str, script: str, *options: str, timeout: int) -> str:
     """Return the JSON emitted by the selected wheel interpreter."""
-    return subprocess.check_output(  # ruff: ignore[subprocess-without-shell-equals-true] - explicit argv, no shell.
-        [python, script, *options],
-        text=True,
-        timeout=timeout,
-    )
+    return run_command(python, script, *options, stdout_encoding="utf-8", timeout=timeout).stdout
 
 
 def _collect_case(
@@ -212,12 +209,8 @@ def _collect_case(
                 raw = _worker_output(python, script, "--sample", case, timeout=120)
                 if repetition:  # Discard the first pair to warm the OS page cache.
                     runs[label].append(json.loads(raw))
-    except (subprocess.CalledProcessError, subprocess.TimeoutExpired) as error:
-        reason = (
-            "timeout"
-            if isinstance(error, subprocess.TimeoutExpired)
-            else f"exit {error.returncode}"
-        )
+    except (CalledProcessError, TimeoutExpired) as error:
+        reason = "timeout" if isinstance(error, TimeoutExpired) else f"exit {error.returncode}"
         message = f"{case}: sample failed ({reason})"
         return {"runs": runs, "failures": [message], "medians": None}
     medians = {

@@ -2,8 +2,11 @@
 
 """Prove the gate rejects each measured regression and accepts bounded noise."""
 
+import os
 import runpy
 import sys
+import venv
+from pathlib import Path
 
 import numpy as np
 import pytest
@@ -38,6 +41,15 @@ def test_driver_loads_without_worker_dependencies(monkeypatch):
     ):
         monkeypatch.setitem(sys.modules, dependency, None)
     runpy.run_path(gate.__file__)
+
+
+def test_worker_uses_selected_virtual_environment(tmp_path):
+    environment = tmp_path / "wheel environment"
+    venv.EnvBuilder(with_pip=False, symlinks=os.name != "nt").create(environment)
+    python = environment / ("Scripts/python.exe" if os.name == "nt" else "bin/python")
+    script = tmp_path / "identity.py"
+    script.write_text("import sys\nprint(sys.prefix)\n", encoding="utf-8")
+    assert Path(gate._worker_output(str(python), str(script), timeout=30).strip()) == environment
 
 
 @pytest.mark.parametrize(

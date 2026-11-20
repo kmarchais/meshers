@@ -4,21 +4,26 @@
 
 import os
 import shutil
-import subprocess  # ruff: ignore[suspicious-subprocess-import] - fixed maintainer build commands.
 from pathlib import Path
+
+if __package__:
+    from .commands import run_command
+else:
+    from commands import run_command
 
 ROOT = Path(__file__).resolve().parents[1]
 
 
 def main() -> None:
     """Build both references and copy the generated Rust HTML into the site."""
-    subprocess.run(
-        ["cargo", "doc", "--no-deps"],  # ruff: ignore[start-process-with-partial-path] - fixed build command.
+    run_command(
+        "cargo",
+        "doc",
+        "--no-deps",
         cwd=ROOT,
         env={**os.environ, "RUSTDOCFLAGS": "-D warnings"},
-        check=True,
     )
-    subprocess.run(["zensical", "build", "--clean"], cwd=ROOT, check=True)  # ruff: ignore[start-process-with-partial-path]
+    run_command("zensical", "build", "--clean", cwd=ROOT)
     shutil.copytree(ROOT / "target/doc", ROOT / "site/rust", dirs_exist_ok=True)
 
 

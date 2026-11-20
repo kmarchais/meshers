@@ -104,7 +104,6 @@ def live_microgen(trial: SchwarzSettings, folder, row, budget, *, observe=None):
     """
     # Only the historical comparison needs the VTK and MMG backend from Microgen.
     import microgen.remesh  # ruff: ignore[import-outside-top-level]
-    from microgen.shape import surface_functions  # ruff: ignore[import-outside-top-level]
 
     sources = {
         "microgen/shape/tpms.py": digest(inspect.getfile(microgen.Tpms)),
@@ -117,7 +116,7 @@ def live_microgen(trial: SchwarzSettings, folder, row, budget, *, observe=None):
     row["mmg_sha256"] = digest(_mmg_executable())
     start = time.perf_counter()
     settings = {"resolution": trial.cells} if trial.cells else {}
-    shape = microgen.Tpms(surface_functions.schwarz_p, offset=0.0, **settings)
+    shape = microgen.Tpms(microgen.surface_functions.schwarz_p, offset=0.0, **settings)
     seed = shape.generate_volume_mesh(type_part="lower skeletal").triangulate()
     row.update(
         resolution=int(shape.resolution),

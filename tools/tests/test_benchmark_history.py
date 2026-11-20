@@ -4,9 +4,9 @@
 
 import copy
 import json
-import xml.etree.ElementTree as ET  # ruff: ignore[suspicious-xml-etree-import] - own generated SVG.
 
 import pytest
+from defusedxml import ElementTree
 
 from tools import benchmark_history as history
 from tools import performance_gate as gate
@@ -71,7 +71,7 @@ def test_archive_plots_and_immutable_history(tmp_path):
     assert "quality_mean" in page
     assert "quality_p90" in page
     assert "REFERENCE" in (tmp_path / "benchmark-history.md").read_text()
-    chart = ET.parse(directory / "v0.2.0-rc-reference.svg")  # ruff: ignore[suspicious-xml-element-tree-usage] - own generated SVG.
+    chart = ElementTree.parse(directory / "v0.2.0-rc-reference.svg")
     bars = chart.findall(".//{*}rect[@height='15']")
     widths = {float(bar.attrib["width"]) for bar in bars}
     assert len(widths) == 2

@@ -21,6 +21,7 @@ dev = [
     "maturin>=1.9,<2",
     "psutil>=7.2.2",
     "pytest-cov>=7.1.0",
+    "defusedxml>=0.7.1",
 ]
 docs = ["zensical", "mkdocstrings-python"]
 
@@ -70,4 +71,4 @@ python-version = "3.11"
 root = ["crates/meshers-python/python", ".", "tools"]
 
 [tool.ty.src]
-include = ["crates/meshers-python/python", "tools/performance_gate.py", "tools/performance_worker.py"]
+include = ["crates/meshers-python/python", "tools/performance_gate.py", "tools/performance_worker.py", "tools/commands.py"]
