@@ -89,14 +89,12 @@ def test_compiled_cancellation():
 
 
 @pytest.mark.parametrize("missing_vtk", ["vtkmodules", "vtkmodules.util", "vtkmodules.vtkIOHDF"])
-def test_no_external_compiler_or_optional_dependencies(missing_vtk):
+def test_no_external_compiler_or_optional_dependencies(missing_vtk, tmp_path):
     code = """
-import importlib.abc, subprocess, sys
-class Block(importlib.abc.MetaPathFinder):
-    def find_spec(self, fullname, path=None, target=None):
-        if fullname.split('.')[0] in ('numba','sympy') or fullname == sys.argv[1]:
-            raise ModuleNotFoundError('deliberately unavailable', name=fullname)
-sys.meta_path.insert(0,Block())
+import subprocess, sys
+# A None entry blocks the import even when VTK registers its own extension finder.
+for module in ("numba", "sympy", sys.argv[1]):
+    sys.modules[module] = None
 def forbidden(*a, **kw): raise AssertionError('external process requested')
 subprocess.Popen=forbidden
 import meshers
@@ -106,11 +104,12 @@ assert m.diagnostics['callback_calls']==0
 try:
     m.write_vtkhdf('unused.vtkhdf')
 except ModuleNotFoundError as error:
+    assert error.name == sys.argv[1], error
     assert 'meshers[io]' in str(error)
 else:
     raise AssertionError('missing VTK should be reported on export')
 """
-    run_python("-c", code, missing_vtk, env={**os.environ, "PATH": ""})
+    run_python("-c", code, missing_vtk, cwd=tmp_path, env={**os.environ, "PATH": ""})
 
 
 @pytest.mark.parametrize("name", ["gyroid", "schwarz_p", "schwarz_d"])
