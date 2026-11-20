@@ -1067,6 +1067,15 @@ fn finish_with_constraints<F: ScalarField>(
     if !nonmanifold_vertices(&mesh.surface, mesh.points.len()).is_empty() {
         return Err("solid boundary is not a closed two-manifold at its edges or vertices".into());
     }
+    if constraints.is_none()
+        && let Some((count, distance, at)) = elements_outside(&mesh, g)?
+    {
+        return Err(format!(
+            "{count} element(s) lie outside the solid, by up to {distance:e} near {at:?}: \
+             two surfaces are closer than a cell there and the mesh bridges them; \
+             increase resolution"
+        ));
+    }
     if !error.is_finite() || error > g.options.geometry_tolerance {
         return Err(format!(
             "sampled geometry error {error:e} exceeds tolerance {:e}; increase resolution or budget",
@@ -2016,6 +2025,51 @@ fn distance_batch<F: ScalarField>(
         .fold(0_f64, f64::max);
     g.check()?;
     Ok(error)
+}
+
+/// Elements whose centroid lies outside the solid by more than the geometry
+/// tolerance: their number, the largest distance and where it occurs.
+///
+/// Lattice nodes on either side of a gap narrower than a cell are both inside,
+/// so the elements between them are kept and bridge the gap. The centroid of
+/// an element is never farther from the solid than its nearest vertex, which
+/// bounds the first-order estimate where the gradients of the two walls cancel.
+fn elements_outside<F: ScalarField>(
+    mesh: &Mesh,
+    g: &Context<F>,
+) -> Result<Option<(usize, f64, Point)>, String> {
+    g.check()?;
+    let centroid = |t: &[usize; 4]| -> Point {
+        std::array::from_fn(|a| t.iter().map(|&i| mesh.points[i][a]).sum::<f64>() / 4.)
+    };
+    let centroids: Vec<Point> = mesh.tets.iter().map(centroid).collect();
+    let residual = |v: f64| if g.band() { v.abs() - g.threshold() } else { v };
+    let outside: Vec<usize> = g
+        .values(&centroids)
+        .into_iter()
+        .enumerate()
+        .filter_map(|(t, v)| (residual(v) > 0.).then_some(t))
+        .collect();
+    let points: Vec<Point> = outside.iter().map(|&t| centroids[t]).collect();
+    let values = g.values(&points);
+    let gradients = g.gradients(&points);
+    g.check()?;
+    let mut found = None;
+    let mut count = 0;
+    for (((&t, p), v), gradient) in outside.iter().zip(&points).zip(values).zip(gradients) {
+        let nearest = mesh.tets[t]
+            .iter()
+            .map(|&i| norm(sub(mesh.points[i], *p)))
+            .fold(f64::INFINITY, f64::min);
+        let distance = wall_distance(residual(v), gradient, [false; 3]).min(nearest);
+        if distance > g.options.geometry_tolerance {
+            count += 1;
+            if found.is_none_or(|(_, worst, _)| distance > worst) {
+                found = Some((0, distance, *p));
+            }
+        }
+    }
+    Ok(found.map(|(_, distance, at)| (count, distance, at)))
 }
 
 /// Samples per boundary facet: three vertices, the centroid and three edge midpoints.

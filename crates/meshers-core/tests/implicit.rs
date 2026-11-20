@@ -987,3 +987,30 @@ fn fibre_grazing_a_box_edge_is_defeatured_within_tolerance() {
     // caps that no longer match.
     assert!(gated.periodic_pairs.iter().all(|pairs| !pairs.is_empty()));
 }
+
+#[test]
+fn elements_bridging_a_gap_narrower_than_a_cell_are_reported() {
+    // Two spheres 0.03 apart: at 12 cells lattice nodes on both sides of the
+    // gap are inside, and the elements between them would weld the spheres.
+    let spheres = |p: Point| {
+        let distance = |c: f64| (p[0] - c).hypot(p[1]).hypot(p[2]) - 0.2;
+        distance(-0.215).min(distance(0.215))
+    };
+    let options = Options {
+        bounds: [[-0.5; 3], [0.5; 3]],
+        cells: [12; 3],
+        geometry_tolerance: 0.01,
+        ..Options::default()
+    };
+    let error = generate(&spheres, options).err().unwrap().to_string();
+    assert!(error.contains("bridges"), "{error}");
+    let resolved = generate(
+        &spheres,
+        Options {
+            cells: [48; 3],
+            ..options
+        },
+    )
+    .unwrap();
+    assert!(resolved.diagnostics.maximum_sampled_surface_error <= 0.01);
+}
