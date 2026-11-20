@@ -104,7 +104,7 @@ assert m.diagnostics['callback_calls']==0
 try:
     m.write_vtkhdf('unused.vtkhdf')
 except ModuleNotFoundError as error:
-    assert error.name == sys.argv[1], error
+    assert error.name == sys.argv[1] or error.name.startswith(sys.argv[1] + "."), error
     assert 'meshers[io]' in str(error)
 else:
     raise AssertionError('missing VTK should be reported on export')
