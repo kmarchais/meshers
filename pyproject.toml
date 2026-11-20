@@ -12,7 +12,7 @@ members = ["crates/meshers-python"]
 
 [dependency-groups]
 dev = [
-    "ruff>=0.16.7",
+    "ruff>=0.17.5,<0.18",
     "ty",
     "pytest>=8",
     "pyfive>=1.2.1",
@@ -39,7 +39,7 @@ select = ["ALL"]
 "**/tests/**" = [
     "undocumented-public-function",
     "missing-type-function-argument",
-    "missing-return-type-undocumented-public-function",
+    "missing-return-type-public-function",
     "missing-return-type-private-function",
     "assert",
     "magic-value-comparison",
