@@ -947,3 +947,43 @@ fn rejected_slivers_are_remeshed_without_breaking_periodic_caps() {
         gated.periodic_pairs.map(|pairs| pairs.len())
     );
 }
+
+#[test]
+fn fibre_grazing_a_box_edge_is_defeatured_within_tolerance() {
+    // A periodic fibre along x whose wall passes 0.004 from four box edges
+    // leaves there a sliver of void that no conforming element can fill.
+    let centre = 0.5 - 0.2 / 2_f64.sqrt() + 0.004;
+    let fibre = move |p: Point| {
+        let mut distance = f64::INFINITY;
+        for dy in [-1., 0., 1.] {
+            for dz in [-1., 0., 1.] {
+                distance = distance.min((p[1] - centre - dy).hypot(p[2] - centre - dz));
+            }
+        }
+        distance - 0.2
+    };
+    let options = Options {
+        bounds: [[-0.5; 3], [0.5; 3]],
+        cells: [16; 3],
+        periodic: [true; 3],
+        geometry_tolerance: 0.02,
+        ..Options::default()
+    };
+    let plain = generate(&fibre, options).unwrap();
+    let gated = generate(
+        &fibre,
+        Options {
+            minimum_quality: 0.1,
+            ..options
+        },
+    )
+    .unwrap();
+    assert!(plain.diagnostics.minimum_mmg_quality < 0.1);
+    assert_eq!(plain.diagnostics.defeaturing_moves, 0);
+    assert!(gated.diagnostics.minimum_mmg_quality >= 0.1);
+    assert!(gated.diagnostics.defeaturing_moves > 0);
+    assert!(gated.diagnostics.maximum_sampled_surface_error <= 0.02);
+    // Merged crossings leave fewer paired nodes; generation itself rejects
+    // caps that no longer match.
+    assert!(gated.periodic_pairs.iter().all(|pairs| !pairs.is_empty()));
+}
