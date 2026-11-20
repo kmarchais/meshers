@@ -1,3 +1,7 @@
+# Copyright (c) 2026 Kevin Marchais
+
+"""Check mesh quality and the acceptance thresholds on returned elements."""
+
 import meshers
 import numpy as np
 import pytest
@@ -19,7 +23,7 @@ def test_smooth_periodic_union_quality_with_symmetric_tie_gradients(compiled):
         periodic=(True,) * 3,
         optimize_passes=2,
         geometry_tolerance=0.1,
-        compile=compiled,
+        compile_expression=compiled,
     )
     # The symmetric gradient must preserve the previous compiled route's quality.
     assert mesh.diagnostics["minimum_mmg_quality"] >= 0.4369917124990134 * 0.99
@@ -29,7 +33,7 @@ def test_smooth_periodic_union_quality_with_symmetric_tie_gradients(compiled):
 def test_optional_interior_refinement_preserves_periodic_boundary():
     options = {"cells": 4, "optimize_passes": 0, "minimum_quality": 0.1, "periodic": (True,) * 3}
 
-    def field(x, y, z):
+    def field(x, _y, _z):
         return x * 0 - 1
 
     seed = meshers.generate(field, **options)
@@ -43,7 +47,10 @@ def test_optional_interior_refinement_preserves_periodic_boundary():
     assert abs(refined.diagnostics["volume"] - seed.diagnostics["volume"]) < 1e-12
     assert refined.diagnostics["minimum_mmg_quality"] >= 0.1
     bounded = meshers.generate(
-        field, interior_refine_nodes=20, max_tetrahedra=len(seed.tetrahedra), **options
+        field,
+        interior_refine_nodes=20,
+        max_tetrahedra=len(seed.tetrahedra),
+        **options,
     )
     assert bounded.diagnostics["inserted_interior_nodes"] == 0
     np.testing.assert_array_equal(bounded.points, seed.points)
@@ -51,7 +58,7 @@ def test_optional_interior_refinement_preserves_periodic_boundary():
 
 
 def test_adaptive_interior_refinement_preserves_periodic_boundary():
-    def field(x, y, z):
+    def field(x, _y, _z):
         return -1 + 0.05 * np.cos(2 * np.pi * x)
 
     options = {
@@ -80,17 +87,20 @@ def test_minimum_quality_gate_and_diagnostics():
         "cells": 4,
         "optimize_passes": 0,
     }
-    mesh = meshers.generate(lambda x, y, z: x * 0 - 1, **args)
+    mesh = meshers.generate(lambda x, _y, _z: x * 0 - 1, **args)
     assert mesh.diagnostics["minimum_mmg_quality"] < 0.01
     assert mesh.diagnostics["elements_below_quality_01"] > 0
     assert mesh.diagnostics["reverted_snap_vertices"] == 0
     with pytest.raises(meshers.MeshingError, match="minimum MMG quality"):
-        meshers.generate(lambda x, y, z: x * 0 - 1, minimum_quality=0.05, **args)
+        meshers.generate(lambda x, _y, _z: x * 0 - 1, minimum_quality=0.05, **args)
     accepted = meshers.generate(
-        lambda x, y, z: x * 0 - 1, cells=4, optimize_passes=0, minimum_quality=0.05
+        lambda x, _y, _z: x * 0 - 1,
+        cells=4,
+        optimize_passes=0,
+        minimum_quality=0.05,
     )
     assert accepted.diagnostics["minimum_mmg_quality"] >= 0.05
-    assert meshers.generate(lambda x, y, z: x * 0 + 1, cells=4, minimum_quality=1.0).diagnostics[
+    assert meshers.generate(lambda x, _y, _z: x * 0 + 1, cells=4, minimum_quality=1.0).diagnostics[
         "empty"
     ]
 
@@ -114,7 +124,7 @@ def test_safe_snapping_preserves_periodic_pairs(compiled):
         snap=0.2,
         optimize_passes=0,
         geometry_tolerance=0.04,
-        compile=compiled,
+        compile_expression=compiled,
     )
     assert mesh.diagnostics["reverted_snap_vertices"] > 0
     assert mesh.diagnostics["sampled_surface_error"] <= 0.04

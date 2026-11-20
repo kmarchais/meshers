@@ -1,8 +1,13 @@
+# Copyright (c) 2026 Kevin Marchais
+
 """Retained nonlinear intersections through the scalar generation interface."""
+
+import gc
 
 import meshers
 import numpy as np
 import pytest
+from meshers import _meshers
 
 
 def bored_prism(x, y, z):
@@ -12,12 +17,14 @@ def bored_prism(x, y, z):
 
 def test_retained_branches_preserve_values_gradients_and_cached_owners():
     field = meshers.compile_field(bored_prism)
-    branches = field._intersection_fields()
+    branches = field.intersection_fields()
     assert len(branches) == 4
-    assert all(a is b for a, b in zip(branches, field._intersection_fields(), strict=True))
+    assert all(a is b for a, b in zip(branches, field.intersection_fields(), strict=True))
     points = np.random.default_rng(42).uniform(-0.5, 0.5, (1024, 3))
     np.testing.assert_allclose(
-        np.max([f.values(points) for f in branches], axis=0), field.values(points), atol=2e-16
+        np.max([f.values(points) for f in branches], axis=0),
+        field.values(points),
+        atol=2e-16,
     )
     np.testing.assert_allclose(branches[-1].gradient(0.15, -0.02, 0), (-1, 0, 0), atol=1e-14)
     assert all(f.has_gradient for f in branches)
@@ -50,31 +57,25 @@ def test_scalar_nonlinear_intersection_keeps_curves_geometry_and_quality():
 
 
 def test_custom_gradient_policies_do_not_get_replaced_by_branch_gradients():
-    for gradient in (False, lambda x, y, z: (0, 0, 0)):
-        assert meshers.compile_field(bored_prism, gradient=gradient)._intersection_fields() is None
+    for gradient in (False, lambda _x, _y, _z: (0, 0, 0)):
+        assert meshers.compile_field(bored_prism, gradient=gradient).intersection_fields() is None
 
 
 def test_native_retained_roots_cannot_describe_a_different_field():
-    from meshers import _meshers
-
     nodes = [("input", [0], 0.0), ("input", [1], 0.0), ("maximum", [0, 1], 0.0)]
     with pytest.raises(ValueError, match="outer maximum"):
-        _meshers._compile_expression(nodes, [2], [[1], [0]])
+        _meshers.compile_graph(nodes, [2], [[1], [0]])
 
 
 def test_retained_evaluators_outlive_their_parent():
-    import gc
-
-    from meshers import _meshers
-
     nodes = [
         ("input", [0], 0.0),
         ("input", [1], 0.0),
         ("mul", [0, 0], 0.0),
         ("maximum", [2, 1], 0.0),
     ]
-    parent = _meshers._compile_expression(nodes, [3], [[2], [1]])
-    branches = parent._intersection_fields()
+    parent = _meshers.compile_graph(nodes, [3], [[2], [1]])
+    branches = parent.intersection_fields()
     del parent
     gc.collect()
     points = np.array(((0.2, 0.3, 0.4), (-0.7, -0.1, 0.2)))
@@ -113,7 +114,7 @@ def test_adaptive_nonlinear_intersection_preserves_bore_and_caps():
             points[:, 1] - points[:, 0],
             np.cross(points[:, 2] - points[:, 0], points[:, 3] - points[:, 0]),
         )
-        > 0
+        > 0,
     )
 
 
@@ -127,8 +128,9 @@ def test_retained_adaptation_preserves_sizing_errors_and_budget():
         "max_tetrahedra": 250000,
     }
 
-    def fail(x, y, z):
-        raise LookupError("retained sizing control")
+    def fail(_x, _y, _z):
+        msg = "retained sizing control"
+        raise LookupError(msg)
 
     with pytest.raises(LookupError, match="retained sizing control"):
         meshers.generate(bored_prism, size_field=fail, **options)

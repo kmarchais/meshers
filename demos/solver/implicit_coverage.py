@@ -1,14 +1,20 @@
+# Copyright (c) 2026 Kevin Marchais
+
 """Replay historical implicit solids with the installed Meshers build and frozen geometry audit."""
+
+from __future__ import annotations
 
 import argparse
 import datetime as dt
 import hashlib
 import json
+import logging
 import sys
 import time
 from importlib import import_module
 from importlib.metadata import version
 from pathlib import Path
+from typing import TYPE_CHECKING, Protocol, TypedDict
 
 import meshers
 import numpy as np
@@ -16,6 +22,49 @@ import numpy as np
 sys.path.insert(0, str(Path(__file__).resolve().parents[2] / "tools"))
 from benchmark_hardware import hardware_snapshot
 
+if TYPE_CHECKING:
+    from collections.abc import Callable
+    from types import ModuleType
+
+    from numpy.typing import NDArray
+
+    class _ArchivedCase(Protocol):
+        """Archived implicit solid consumed by the native coverage study."""
+
+        id: str
+        scale: float
+
+        @property
+        def band(self) -> tuple[float, float]: ...
+
+        def field(
+            self,
+            x: NDArray[np.float64],
+            y: NDArray[np.float64],
+            z: NDArray[np.float64],
+        ) -> NDArray[np.float64]: ...
+
+    class EnergyMetrics(TypedDict):
+        """The six numerical outputs used for admission and reporting."""
+
+        worst_energy_error: float
+        patch_max_error: float
+        free_residual: float
+        free_dofs: int
+        assembly_s: float
+        solve_s: float
+
+    class MeshRequest(TypedDict, total=False):
+        """Optional native settings varied by the coverage study."""
+
+        cells: int
+        optimize_passes: int
+        adapt: bool
+        snap: float
+        adapt_tolerance: float
+
+
+MAX_SNAP = 0.2
 ARCHIVE = "602dc900cd028d205b36e29dcdb5b4a9cf4f581a"
 ORACLE_DIGEST = "084219b2bb0b03f9c35a408aea3f233b38fbc48e01d771068c69ab15ae23f734"
 # Solid fraction and empirical Sobol uncertainty from the archive's
@@ -35,7 +84,10 @@ PAIR_BUDGET = 2_000_000
 ENERGY_TARGET = 0.02
 
 
-def load_reference(folder):
+_LOG = logging.getLogger(__name__)
+
+
+def load_reference(folder: Path) -> ModuleType:
     """Load the archived case definitions and checks after verifying their source files.
 
     Returns:
@@ -59,16 +111,26 @@ def load_reference(folder):
     for name in names:
         digest.update((package / f"{name}.py").read_bytes().replace(b"\r\n", b"\n") + b"\0")
     if digest.hexdigest() != ORACLE_DIGEST:
-        raise ValueError(f"Benchmark source mismatch. Use the Microgen benchmark at {ARCHIVE}")
+        msg = f"Benchmark source mismatch. Use the Microgen benchmark at {ARCHIVE}"
+        raise ValueError(msg)
     sys.path.insert(0, str(package.parent))
     for name in names[1:]:
         module = import_module(f"microgen_benchmark.{name}")
-        if Path(module.__file__).resolve().parent != package:
-            raise ValueError("A different benchmark package is already loaded")
+        if module.__file__ is None or Path(module.__file__).resolve().parent != package:
+            msg = "A different benchmark package is already loaded"
+            raise ValueError(msg)
     return import_module("microgen_benchmark")
 
 
-def mechanics(solve, mesh, surface, scale):
+def mechanics(
+    solve: Callable[
+        [NDArray[np.float64], NDArray[np.int64], NDArray[np.int64], float],
+        tuple[EnergyMetrics, object],
+    ],
+    mesh: meshers.Mesh,
+    surface: NDArray[np.int64],
+    scale: float,
+) -> dict[str, object]:
     """Return the archived quadratic-load energy score and the 2% decision."""
     try:
         metrics, _ = solve(mesh.points, mesh.tetrahedra, surface, scale)
@@ -92,7 +154,13 @@ def mechanics(solve, mesh, surface, scale):
     }
 
 
-def measure(case, request, oracle, *, fea):
+def measure(
+    case: _ArchivedCase,
+    request: MeshRequest,
+    oracle: ModuleType,
+    *,
+    fea: bool,
+) -> dict[str, object]:
     """Generate one mesh, then check its returned connectivity against the independent reference.
 
     Returns:
@@ -126,7 +194,11 @@ def measure(case, request, oracle, *, fea):
     probes = oracle.reference.boundary_samples(case)
     try:
         metrics, surface = oracle.geometry.validate(
-            mesh.points, mesh.tetrahedra, case, PAIR_BUDGET, probes
+            mesh.points,
+            mesh.tetrahedra,
+            case,
+            PAIR_BUDGET,
+            probes,
         )
     except ValueError as exc:
         return {**row, "status": "geometry-rejected", "reason": str(exc)}
@@ -152,7 +224,7 @@ def measure(case, request, oracle, *, fea):
     }
 
 
-def main():
+def main() -> int:
     """Record one attempt.
 
     Returns:
@@ -160,16 +232,24 @@ def main():
     """
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument(
-        "--reference", type=Path, required=True, help="Archived benchmarks/microgen directory"
+        "--reference",
+        type=Path,
+        required=True,
+        help="Archived benchmarks/microgen directory",
     )
     parser.add_argument("--case", choices=VOLUMES, required=True)
     parser.add_argument("--cells", type=int, default=8)
     parser.add_argument(
-        "--passes", type=int, default=4, help="Number of native quality optimization passes"
+        "--passes",
+        type=int,
+        default=4,
+        help="Number of native quality optimization passes",
     )
     parser.add_argument("--adapt", action="store_true")
     parser.add_argument(
-        "--adapt-tolerance", type=float, help="Internal adaptation target in physical units"
+        "--adapt-tolerance",
+        type=float,
+        help="Internal adaptation target in physical units",
     )
     parser.add_argument(
         "--fea",
@@ -177,7 +257,9 @@ def main():
         help="Solve the archived 2% energy target after geometry admission",
     )
     parser.add_argument(
-        "--require-admitted", action="store_true", help="Exit with failure on rejection"
+        "--require-admitted",
+        action="store_true",
+        help="Exit with failure on rejection",
     )
     parser.add_argument("--output", type=Path, required=True)
     parser.add_argument("--snap", type=float, help="Maximum lattice snap as a fraction of spacing")
@@ -190,10 +272,14 @@ def main():
     case = next(c for c in oracle.cases.CASES if c.id == args.case)
     if args.case == "spinodoid" and version("microgen") != "2.0.0b1":
         parser.error("The archived spinodoid requires microgen==2.0.0b1")
-    request = {"cells": args.cells, "optimize_passes": args.passes, "adapt": args.adapt}
+    request: MeshRequest = {
+        "cells": args.cells,
+        "optimize_passes": args.passes,
+        "adapt": args.adapt,
+    }
     if args.snap is not None:
-        if not 0 <= args.snap <= 0.2:
-            parser.error("--snap must be between 0 and 0.2")
+        if not 0 <= args.snap <= MAX_SNAP:
+            parser.error(f"--snap must be between 0 and {MAX_SNAP}")
         request["snap"] = args.snap
     if args.adapt_tolerance is not None:
         request["adapt_tolerance"] = args.adapt_tolerance
@@ -212,7 +298,7 @@ def main():
         "hardware": hardware_snapshot(),
         "packages": {n: version(n) for n in ("meshers", "numpy", "scipy", "pyvista")},
         "native_sha256": hashlib.sha256(
-            Path(import_module("meshers._meshers").__file__).read_bytes()
+            Path(import_module("meshers._meshers").__file__).read_bytes(),
         ).hexdigest(),
         "status": "incomplete",
     }
@@ -231,17 +317,24 @@ def main():
             json.dump(row, stream, indent=2, allow_nan=False)
             stream.write("\n")
         temporary.replace(args.output)
-    print(
-        f"{case.id}, {args.cells} cells, {args.passes} passes, adapt={args.adapt}: {row['status']}"
+    _LOG.info(
+        "%s, %s cells, %s passes, adapt=%s: %s",
+        case.id,
+        args.cells,
+        args.passes,
+        args.adapt,
+        row["status"],
     )
-    fea_status = row.get("fea", {}).get("status")
+    fea_result = row.get("fea")
+    fea_status = fea_result.get("status") if isinstance(fea_result, dict) else None
     qualified = row["status"] == "admitted" and (not args.fea or fea_status == "qualified")
     return int(
         row["status"] == "validation-incomplete"
         or fea_status == "solver-failed"
-        or (args.require_admitted and not qualified)
+        or (args.require_admitted and not qualified),
     )
 
 
 if __name__ == "__main__":
+    logging.basicConfig(level=logging.INFO, format="%(message)s")
     sys.exit(main())

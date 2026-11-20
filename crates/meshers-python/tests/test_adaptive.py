@@ -1,3 +1,7 @@
+# Copyright (c) 2026 Kevin Marchais
+
+"""Check volume adaptation, feature retention and element budgets."""
+
 import meshers
 import numpy as np
 import pytest
@@ -15,12 +19,16 @@ def gyroid(x, y, z):
 BOX = (-0.5, 0.5) * 3
 
 
-@pytest.mark.skipif(not hasattr(meshers, "generate_surface"), reason="surface build feature")
+@pytest.mark.skipif(not meshers.SURFACE_MESHING_AVAILABLE, reason="surface build feature")
 def test_adaptive_surface_meets_tolerance_with_fewer_triangles():
     tolerance = 1e-3
     fixed = meshers.generate_surface(sphere, bounds=BOX, cells=32, quality=True)
     adapted = meshers.generate_surface(
-        sphere, bounds=BOX, cells=32, geometry_tolerance=tolerance, adaptive=True
+        sphere,
+        bounds=BOX,
+        cells=32,
+        geometry_tolerance=tolerance,
+        adaptive=True,
     )
     assert adapted.diagnostics["maximum_sampled_surface_error"] <= tolerance
     assert len(adapted.triangles) < len(fixed.triangles)
@@ -29,7 +37,7 @@ def test_adaptive_surface_meets_tolerance_with_fewer_triangles():
     assert abs(adapted.diagnostics["volume"] / exact - 1) < 0.01
 
 
-@pytest.mark.skipif(not hasattr(meshers, "generate_surface"), reason="surface build feature")
+@pytest.mark.skipif(not meshers.SURFACE_MESHING_AVAILABLE, reason="surface build feature")
 @pytest.mark.parametrize("balanced", [False, True])
 def test_fast_surface_meets_tolerance_with_fewer_triangles(balanced):
     tolerance = 1e-3
@@ -108,7 +116,7 @@ def test_adapted_smooth_lattice_preserves_quality_and_periodic_pairs():
             radius = np.sqrt(
                 (coordinates_x - parameter * corner[0]) ** 2
                 + (coordinates_y - parameter * corner[1]) ** 2
-                + (coordinates_z - parameter * corner[2]) ** 2
+                + (coordinates_z - parameter * corner[2]) ** 2,
             )
             if distance is None:
                 distance = radius

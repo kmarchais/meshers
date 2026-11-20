@@ -1,4 +1,8 @@
+# Copyright (c) 2026 Kevin Marchais
+
 """Measure one live Schwarz P workflow at a declared effective-stiffness target."""
+
+from __future__ import annotations
 
 import argparse
 import datetime as dt
@@ -9,10 +13,13 @@ import os
 import shutil
 import time
 from contextlib import ExitStack
+from dataclasses import dataclass
+from functools import partial
+from importlib import import_module
 from importlib.metadata import distribution, version
 from pathlib import Path
 from tempfile import NamedTemporaryFile
-from types import SimpleNamespace
+from typing import TYPE_CHECKING, NotRequired, TypedDict, Unpack
 from unittest.mock import patch
 
 import fedoo as fd
@@ -20,12 +27,34 @@ import numpy as np
 import pyvista as pv
 from fedoo_homogenization import AuditedCG, homogenize
 from historical_schwarz_repair import repaired_grid
-from periodic_geometry import BASELINE, audit
+from periodic_geometry import BASELINE, audit, read_volume
 from release_wheel_comparison import generate, hardware_snapshot
 from scipy.linalg import eigvalsh
-from scipy.spatial import cKDTree
+from scipy.spatial import KDTree
 from vtkmodules.vtkCommonCore import vtkSMPTools
 
+if TYPE_CHECKING:
+    from collections.abc import Callable
+
+    from numpy.typing import NDArray
+    from periodic_geometry import GeometryAudit
+    from release_baseline import Baseline
+
+
+@dataclass
+class SolverInput:
+    """Tet4 coordinates, connectivity and constraints reconstructed from the export."""
+
+    points: NDArray[np.float64]
+    tetrahedra: NDArray[np.int64]
+    surface: NDArray[np.int64]
+    periodic_pairs: list[NDArray[np.int64]]
+    diagnostics: dict[str, float]
+
+
+PERIODIC_PAIR_ATOL = 1e-12
+MAX_ENERGY_DISCREPANCY = 0.01
+MIN_CELLS = 2
 REFERENCE = BASELINE.with_name("schwarz-reference.json")
 PROBE = np.array([-0.364, -0.347, -0.313])
 PACKAGES = {
@@ -44,19 +73,62 @@ SOURCE_HASHES = {
 }
 
 
-def digest(path):
+def digest(path: str | Path) -> str:
     """Return the SHA-256 of an input or exported mesh."""
     return hashlib.sha256(Path(path).read_bytes()).hexdigest()
 
 
-def reopenable(*args, **kwargs):
-    """Return a Windows-reopenable file with context cleanup."""
-    return NamedTemporaryFile(*args, **kwargs, delete_on_close=False)
+class _MmgPass(TypedDict):
+    """Keywords supplied by Microgen's pinned two-pass remesher."""
+
+    input: str
+    output: str
+    nofem: NotRequired[bool]
+    ls: NotRequired[bool]
+    nr: NotRequired[bool]
+    hausd: NotRequired[float | None]
+    hgrad: NotRequired[float | None]
+    hmax: NotRequired[float | None]
+    hmin: NotRequired[float | None]
+    hsiz: NotRequired[float | None]
 
 
-def live_microgen(  # ruff: ignore[too-many-arguments] - optional controls reproduce the frozen repair.
-    route, cells, folder, row, budget, *, observe=None, single_pass=False, repair_hmax=0.1
-):
+def _mmg_executable() -> str:
+    folder_bin = Path(str(distribution("mmgpy").locate_file("mmgpy/bin"))).resolve()
+    os.environ["PATH"] = str(folder_bin) + os.pathsep + os.environ["PATH"]
+    executable = shutil.which("mmg3d_O3")
+    if executable is None or Path(executable).resolve().parent != folder_bin:
+        msg = "The mmgpy wheel's MMG executable is unavailable"
+        raise RuntimeError(msg)
+    return executable
+
+
+class NativeSizing(TypedDict):
+    """Native refinement controls varied independently of background resolution."""
+
+    max_length: float
+    adapt_tolerance: float
+
+
+@dataclass(frozen=True)
+class SchwarzSettings:
+    """Identify the mesh route, resolution and physical settings for one trial."""
+
+    route: str
+    cells: int | None
+    native_sizing: NativeSizing | None = None
+    shifted: bool = False
+    repair_hmax: float = 0.1
+
+
+def live_microgen(
+    trial: SchwarzSettings,
+    folder: Path,
+    row: dict[str, object],
+    budget: int,
+    *,
+    observe: Callable[[str, pv.UnstructuredGrid], None] | None = None,
+) -> Path:
     """Write the volume produced by the pinned Microgen VTK and MMG implementations.
 
     Returns:
@@ -66,25 +138,21 @@ def live_microgen(  # ruff: ignore[too-many-arguments] - optional controls repro
         RuntimeError: A source, MMG executable or mesh size fails its precondition.
     """
     # Only the historical comparison needs the VTK and MMG backend from Microgen.
-    import microgen.remesh  # ruff: ignore[import-outside-top-level]
-    from microgen.shape import surface_functions  # ruff: ignore[import-outside-top-level]
+    microgen = import_module("microgen")
+    remesh = import_module("microgen.remesh")
 
     sources = {
         "microgen/shape/tpms.py": digest(inspect.getfile(microgen.Tpms)),
-        "microgen/remesh.py": digest(microgen.remesh.__file__),
+        "microgen/remesh.py": digest(inspect.getfile(remesh)),
     }
     row["source_sha256"] = sources
     if sources != SOURCE_HASHES:
-        raise RuntimeError("Microgen source differs from the frozen VTK route")
-    folder_bin = Path(distribution("mmgpy").locate_file("mmgpy/bin")).resolve()
-    os.environ["PATH"] = str(folder_bin) + os.pathsep + os.environ["PATH"]
-    executable = shutil.which("mmg3d_O3")
-    if executable is None or Path(executable).resolve().parent != folder_bin:
-        raise RuntimeError("The mmgpy wheel's MMG executable is unavailable")
-    row["mmg_sha256"] = digest(executable)
+        msg = "Microgen source differs from the frozen VTK route"
+        raise RuntimeError(msg)
+    row["mmg_sha256"] = digest(_mmg_executable())
     start = time.perf_counter()
-    settings = {"resolution": cells} if cells else {}
-    shape = microgen.Tpms(surface_functions.schwarz_p, offset=0.0, **settings)
+    settings = {"resolution": trial.cells} if trial.cells else {}
+    shape = microgen.Tpms(microgen.surface_functions.schwarz_p, offset=0.0, **settings)
     seed = shape.generate_volume_mesh(type_part="lower skeletal").triangulate()
     row.update(
         resolution=int(shape.resolution),
@@ -93,41 +161,48 @@ def live_microgen(  # ruff: ignore[too-many-arguments] - optional controls repro
         seed_cells=seed.n_cells,
     )
     if max(seed.n_points, seed.n_cells) > budget:
-        raise RuntimeError("VTK seed exceeds the mesh budget")
+        msg = "VTK seed exceeds the mesh budget"
+        raise RuntimeError(msg)
     if observe is not None:
         observe("seed", seed)
-    options = {"hausd": 0.001, "hmax": 0.06, "hgrad": 1.3} if route == "microgen-tuned" else {}
+    options = (
+        {"hausd": 0.001, "hmax": 0.06, "hgrad": 1.3}
+        if trial.route in {"microgen-tuned", "single-pass-repair"}
+        else {}
+    )
+    single_pass = trial.route in {"single-pass-repair", "microgen-repaired"}
     original = microgen.Mmg.mmg3d
-    row["mmg_calls"] = []
+    mmg_calls: list[dict[str, object]] = []
+    row["mmg_calls"] = mmg_calls
 
-    def measured(**params):
+    def measured(**params: Unpack[_MmgPass]) -> None:
         if single_pass and params.get("ls"):
             shutil.copyfile(params["input"], params["output"])
-            return None
+            return
         if single_pass:
-            params.update(hausd=0.0005, hmax=repair_hmax, hgrad=1.3)
+            params.update(hausd=0.0005, hmax=trial.repair_hmax, hgrad=1.3)
         options_used = {k: v for k, v in params.items() if k not in {"input", "output"}}
-        row["mmg_calls"].append(options_used)
+        mmg_calls.append(options_used)
         begin = time.perf_counter()
         try:
-            result = original(**params)
+            original(**params)
         finally:
             options_used["seconds"] = time.perf_counter() - begin
         if observe is not None:
-            observe(f"pass-{len(row['mmg_calls'])}", pv.UnstructuredGrid(params["output"]))
-        return result
+            observe(f"pass-{len(mmg_calls)}", pv.UnstructuredGrid(params["output"]))
 
     with ExitStack() as stack:
         if os.name == "nt":
-            stack.enter_context(patch.object(microgen.remesh, "NamedTemporaryFile", reopenable))
+            reopenable = partial(NamedTemporaryFile, delete_on_close=False)
+            stack.enter_context(patch.object(remesh, "NamedTemporaryFile", reopenable))
         stack.enter_context(patch.object(microgen.Mmg, "mmg3d", measured))
-        grid = microgen.remesh.remesh_keeping_boundaries_for_fem(seed, periodic=True, **options)
+        grid = remesh.remesh_keeping_boundaries_for_fem(seed, periodic=True, **options)
     path = folder / "volume.vtu"
     grid.save(path)
     return path
 
 
-def solver_input(grid, quality):
+def solver_input(grid: pv.UnstructuredGrid, quality: float) -> SolverInput:
     """Return Tet4 connectivity and low/high node correspondences for fedoo.
 
     Raises:
@@ -138,78 +213,87 @@ def solver_input(grid, quality):
     surface = boundary.point_data["vtkOriginalPointIds"][boundary.regular_faces]
     pairs = []
     for axis in range(3):
-        low, high = [np.flatnonzero(abs(points[:, axis] - side) < 1e-12) for side in (-0.5, 0.5)]
+        low, high = [
+            np.flatnonzero(abs(points[:, axis] - side) < PERIODIC_PAIR_ATOL) for side in (-0.5, 0.5)
+        ]
         other = [a for a in range(3) if a != axis]
-        distance, index = cKDTree(points[high][:, other]).query(points[low][:, other])
-        if len(low) != len(high) or np.max(distance) >= 1e-12 or len(np.unique(index)) != len(high):
-            raise ValueError("Could not reconstruct a bijective periodic node map")
+        distance, index = KDTree(points[high][:, other], leafsize=16).query(points[low][:, other])
+        if (
+            len(low) != len(high)
+            or np.max(distance) >= PERIODIC_PAIR_ATOL
+            or len(np.unique(index)) != len(high)
+        ):
+            msg = "Could not reconstruct a bijective periodic node map"
+            raise ValueError(msg)
         pairs.append(np.column_stack([low, high[index]]))
-    return SimpleNamespace(
+    return SolverInput(
         points=points + 0.5,
-        tetrahedra=grid.cells_dict[pv.CellType.TETRA],
+        tetrahedra=np.asarray(grid.cells_dict[np.uint8(pv.CellType.TETRA)], dtype=np.int64),
         surface=surface,
         periodic_pairs=pairs,
         diagnostics={"minimum_mmg_quality": quality},
     )
 
 
-def run(  # ruff: ignore[too-many-arguments] - keyword controls identify the experimental arm.
-    route,
-    cells,
-    folder,
-    row,
+def run(
+    trial: SchwarzSettings,
+    folder: Path,
+    row: dict[str, object],
     *,
-    native_settings=None,
-    repair_hmax=0.1,
-    shifted=False,
-    solver_factory=AuditedCG,
-):
+    solver_factory: Callable[[], AuditedCG] = AuditedCG,
+) -> None:
     """Generate, audit and solve one mesh, preserving the first failed stage.
 
     Raises:
         RuntimeError: A package version or VTK backend differs from the study.
+        ValueError: A native route has no cell count.
     """
-    if route != "native-candidate" and row["versions"] != PACKAGES:
-        raise RuntimeError("Install the pinned comparison packages")
+    if trial.route != "native-candidate" and row["versions"] != PACKAGES:
+        msg = "Install the pinned comparison packages"
+        raise RuntimeError(msg)
     vtkSMPTools.SetBackend("Sequential")
     if vtkSMPTools.GetBackend() != "Sequential":
-        raise RuntimeError("A single-threaded VTK backend is required")
-    baseline = json.loads(BASELINE.read_text())
+        msg = "A single-threaded VTK backend is required"
+        raise RuntimeError(msg)
+    baseline: Baseline = json.loads(BASELINE.read_text())
     start = time.perf_counter()
-    if route in {"native", "native-candidate"}:
-        cfg = dict(baseline["routes"]["schwarz_native"]["config"], cells=cells)
-        cfg.update(native_settings or {})
-        if shifted:
+    if trial.route in {"native", "native-candidate"}:
+        cfg = baseline["routes"]["schwarz_native"]["config"].copy()
+        if trial.cells is None:
+            msg = "A native Schwarz route requires a cell count"
+            raise ValueError(msg)
+        cfg["cells"] = trial.cells
+        if trial.native_sizing:
+            cfg.update(trial.native_sizing)
+        if trial.shifted:
             cfg["phase_x"] = 0.125
         row["config"] = cfg
         mesh = generate("schwarz_native", cfg, baseline["limits"])
         path = folder / "volume.vtkhdf"
         mesh.write_vtkhdf(path)
     else:
-        historical = route == "microgen-repaired"
+        historical = trial.route == "microgen-repaired"
         path = live_microgen(
-            route,
-            cells,
+            trial,
             folder,
             row,
             baseline["limits"]["max_nodes_or_elements"],
-            single_pass=historical,
-            repair_hmax=repair_hmax,
         )
         if historical:
-            source = pv.read(path)
+            source = read_volume(path)
             if max(source.n_points, source.n_cells) > baseline["limits"]["max_nodes_or_elements"]:
-                raise RuntimeError("Single-pass MMG output exceeds the mesh budget before repair")
+                msg = "Single-pass MMG output exceeds the mesh budget before repair"
+                raise RuntimeError(msg)
             repair_start = time.perf_counter()
             repaired = repaired_grid(source, row)
             row["repair_seconds"] = time.perf_counter() - repair_start
             path = folder / "repaired.vtu"
             repaired.save(path)
-    grid = pv.read(path)
+    grid = read_volume(path)
     row["generation_and_io_seconds"] = time.perf_counter() - start
     row["mesh_sha256"] = digest(path)
     start = time.perf_counter()
-    geometry = audit(grid, "schwarz-shifted" if shifted else "schwarz", baseline)
+    geometry = audit(grid, "schwarz-shifted" if trial.shifted else "schwarz", baseline)
     row.update(geometry=geometry, audit_seconds=time.perf_counter() - start)
     if not geometry["sampled_admission"]:
         row["status"] = "geometry-rejected"
@@ -217,7 +301,13 @@ def run(  # ruff: ignore[too-many-arguments] - keyword controls identify the exp
     solve_admitted(grid, geometry, row, solver_factory=solver_factory)
 
 
-def solve_admitted(grid, geometry, row, *, solver_factory=AuditedCG):
+def solve_admitted(
+    grid: pv.UnstructuredGrid,
+    geometry: GeometryAudit,
+    row: dict[str, object],
+    *,
+    solver_factory: Callable[[], AuditedCG] = AuditedCG,
+) -> None:
     """Solve six strain loads and their stress-controlled checks on an admitted grid.
 
     Raises:
@@ -225,7 +315,8 @@ def solve_admitted(grid, geometry, row, *, solver_factory=AuditedCG):
     """
     probe = int(grid.find_containing_cell(PROBE))
     if probe < 0:
-        raise ValueError("The fixed interior stress probe is missing")
+        msg = "The fixed interior stress probe is missing"
+        raise ValueError(msg)
     row["stress_probe_xyz"] = PROBE.tolist()
     mesh = solver_input(grid, geometry["minimum_quality"])
     mesh_hash = hashlib.sha256()
@@ -235,11 +326,11 @@ def solve_admitted(grid, geometry, row, *, solver_factory=AuditedCG):
     assembly_seconds = 0.0
     original_assembly = fd.Assembly.assemble_global_mat
 
-    def timed_assembly(assembly, *args, **kwargs):
+    def timed_assembly(assembly: fd.Assembly, compute: str = "all") -> None:
         nonlocal assembly_seconds
         begin = time.perf_counter()
         try:
-            return original_assembly(assembly, *args, **kwargs)
+            return original_assembly(assembly, compute)
         finally:
             assembly_seconds += time.perf_counter() - begin
 
@@ -252,10 +343,14 @@ def solve_admitted(grid, geometry, row, *, solver_factory=AuditedCG):
     delta = (tensor + tensor.T - ref - ref.T) / 2
     discrepancy = float(abs(eigvalsh(delta, (ref + ref.T) / 2)).max())
     row["relative_energy_discrepancy"] = discrepancy
-    row["status"] = "within-reference-target" if discrepancy <= 0.01 else "outside-reference-target"
+    row["status"] = (
+        "within-reference-target"
+        if discrepancy <= MAX_ENERGY_DISCREPANCY
+        else "outside-reference-target"
+    )
 
 
-def main():
+def main() -> int:
     """Save a workflow record.
 
     Returns:
@@ -263,7 +358,8 @@ def main():
     """
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument(
-        "route", choices=("native", "native-candidate", "microgen-default", "microgen-tuned")
+        "route",
+        choices=("native", "native-candidate", "microgen-default", "microgen-tuned"),
     )
     parser.add_argument("output", type=Path)
     parser.add_argument("--cells", type=int, help="VTK resolution or native background cells")
@@ -273,8 +369,8 @@ def main():
         if args.cells is not None:
             parser.error("native-candidate uses the fixed 24-cell refinement control")
         args.cells = 24
-    if args.cells is not None and args.cells < 2:
-        parser.error("--cells must be at least 2")
+    if args.cells is not None and args.cells < MIN_CELLS:
+        parser.error(f"--cells must be at least {MIN_CELLS}")
     if args.route != "microgen-default" and args.cells is None:
         parser.error("Specify --cells for this route")
     args.output.mkdir()
@@ -294,15 +390,18 @@ def main():
     }
     start = time.perf_counter()
     try:
-        settings = {"max_length": 0.032, "adapt_tolerance": 0.0003} if candidate else None
-        run(args.route, args.cells, args.output, row, native_settings=settings)
+        settings: NativeSizing | None = (
+            {"max_length": 0.032, "adapt_tolerance": 0.0003} if candidate else None
+        )
+        run(SchwarzSettings(args.route, args.cells, native_sizing=settings), args.output, row)
     except Exception as exc:
         row.update(status="failed", error=f"{type(exc).__name__}: {exc}")
         raise
     finally:
         row["workflow_seconds"] = time.perf_counter() - start
         (args.output / "result.json").write_text(
-            json.dumps(row, indent=2, allow_nan=False) + "\n", encoding="utf8"
+            json.dumps(row, indent=2, allow_nan=False) + "\n",
+            encoding="utf8",
         )
 
     return int(candidate and row["status"] != "within-reference-target")

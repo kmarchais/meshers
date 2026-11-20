@@ -1,8 +1,13 @@
+# Copyright (c) 2026 Kevin Marchais
+
+"""Exercise native expression compilation and evaluator lifetimes."""
+
 import gc
 
 import meshers
 import numpy as np
 import pytest
+from python_process import run_python
 
 
 def gyroid(x, y, z):
@@ -52,7 +57,7 @@ def test_rust_grading_and_unsupported_branch():
     f = meshers.compile_field(graded, backend="rust")
     assert abs(f(0.2, 0.3, 0.4) - graded(0.2, 0.3, 0.4)) < 1e-14
 
-    def unsupported(x, y, z):
+    def unsupported(x, y, _z):
         return x if x == 0 else y
 
     with pytest.raises(TypeError):
@@ -60,9 +65,6 @@ def test_rust_grading_and_unsupported_branch():
 
 
 def test_rust_compiler_does_not_require_numba():
-    import subprocess
-    import sys
-
     code = """
 import sys,importlib.abc
 class BlockNumba(importlib.abc.MetaPathFinder):
@@ -75,4 +77,4 @@ f=meshers.compile_field(lambda x,y,z:x*x+y*y+z*z-.5,backend='rust')
 assert abs(f(.1,.2,.3)+.36)<1e-14
 assert 'numba' not in sys.modules
 """
-    subprocess.run([sys.executable, "-c", code], check=True)
+    run_python("-c", code)

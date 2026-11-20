@@ -1,3 +1,5 @@
+# Copyright (c) 2026 Kevin Marchais
+
 """Exercise the optional surface API and a real STL export."""
 
 import meshers
@@ -6,7 +8,8 @@ import pytest
 import pyvista as pv
 
 pytestmark = pytest.mark.skipif(
-    not hasattr(meshers, "generate_surface"), reason="optional surface feature"
+    not meshers.SURFACE_MESHING_AVAILABLE,
+    reason="optional surface feature",
 )
 
 

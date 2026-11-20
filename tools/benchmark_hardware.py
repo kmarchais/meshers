@@ -1,10 +1,16 @@
+# Copyright (c) 2026 Kevin Marchais
+
 """Describe a benchmark configuration using public hardware and OS specifications."""
 
 import json
 import os
 import platform
-import subprocess  # ruff: ignore[suspicious-subprocess-import] - fixed OS inventory commands.
 from pathlib import Path
+
+if __package__:
+    from .commands import run_command
+else:
+    from commands import run_command
 
 
 def hardware_snapshot() -> dict[str, str | int | None]:
@@ -24,21 +30,31 @@ def hardware_snapshot() -> dict[str, str | int | None]:
             / "System32/WindowsPowerShell/v1.0/powershell.exe"
         )
         specs = json.loads(
-            subprocess.check_output(  # ruff: ignore[subprocess-without-shell-equals-true] - fixed CIM fields.
-                [powershell, "-NoProfile", "-NonInteractive", "-Command", query],
-                encoding="utf-8",
-            )
+            run_command(
+                powershell,
+                "-NoProfile",
+                "-NonInteractive",
+                "-Command",
+                query,
+                stdout_encoding="utf-8",
+            ).stdout,
         )
         cpu, ram_bytes = specs["cpu"], int(specs["ram"])
     elif system == "Darwin":
-        cpu = subprocess.check_output(
-            ["/usr/sbin/sysctl", "-n", "machdep.cpu.brand_string"], text=True
-        ).strip()
-        ram_bytes = int(subprocess.check_output(["/usr/sbin/sysctl", "-n", "hw.memsize"]))
+        cpu = run_command(
+            "/usr/sbin/sysctl",
+            "-n",
+            "machdep.cpu.brand_string",
+            stdout_encoding="utf-8",
+        ).stdout.strip()
+        ram_bytes = int(
+            run_command("/usr/sbin/sysctl", "-n", "hw.memsize", stdout_encoding="utf-8").stdout,
+        )
     elif system == "Linux":
         lines = Path("/proc/cpuinfo").read_text(encoding="utf-8").splitlines()
         cpu = next(
-            (line.partition(":")[2].strip() for line in lines if line.startswith("model name")), cpu
+            (line.partition(":")[2].strip() for line in lines if line.startswith("model name")),
+            cpu,
         )
         ram_bytes = os.sysconf("SC_PAGE_SIZE") * os.sysconf("SC_PHYS_PAGES")
     return {

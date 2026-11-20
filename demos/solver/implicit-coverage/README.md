@@ -56,6 +56,8 @@ Every adaptive eight-cell rejection below reached its largest first-order estima
 
 The adaptive intervals measure distance to the zero curve **within the cap**. The control measures distance to the wall in three dimensions. At internal targets 0.01 and 0.002, even the lower bound exceeds the 0.01 limit. At 0.005, the interval straddles the limit. Reducing the lattice snap fraction from 0.2 to 0.1 or zero also produced a native rejection. The next geometry experiment is to split and refit the offending cap edge, then repeat the independent audit on the whole mesh.
 
+The [archived spectrum](spinodoid-spectrum.csv) contains the 52 cosine modes of the frozen unit-cell specimen, with phases in radians and the original binary64 precision. Replay checks the signed field against Microgen’s public evaluator on a 17×17×17 periodic grid before using those coefficients.
+
 The lower bound uses the local gradient and Hessian of the pinned Fourier field and a global third-derivative bound from its mode amplitudes. The upper bound comes from a bracketed zero along an in-box ray. Both describe one sample. To reproduce the first row using the historical checkout above:
 
 ```sh

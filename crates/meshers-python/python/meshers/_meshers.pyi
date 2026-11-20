@@ -1,5 +1,43 @@
+# Copyright (c) 2026 Kevin Marchais
+
 from collections.abc import Sequence
-from typing import Any
+from typing import NotRequired, TypedDict
+
+import numpy as np
+from numpy.typing import NDArray
+
+from .volume import Field
+
+class _GeometryArrays(TypedDict):
+    points: NDArray[np.float64]
+    tetrahedra: NDArray[np.int64]
+    surface: NDArray[np.int64]
+
+class _PeriodicArrays(_GeometryArrays):
+    periodic_pairs: list[NDArray[np.int64]]
+
+class _QuadraticResult(_PeriodicArrays):
+    linear_volume: float
+    curved_edges: int
+    straightened_edges: int
+    partially_curved_edges: int
+    minimum_jacobian_ratio: float
+    fit: NotRequired[dict[str, int | float]]
+
+class _VolumeResult(_PeriodicArrays):
+    boundary_tags: NDArray[np.uint8]
+    diagnostics: dict[str, object]
+
+class _GeneratedVolume(_VolumeResult):
+    quadratic: NotRequired[_QuadraticResult]
+
+class _AdaptedIntersection(_VolumeResult):
+    constraint_masks: NDArray[np.uint8] | NDArray[np.uint32]
+
+class _IntersectionResult(_GeometryArrays):
+    parameters: NDArray[np.float64]
+    constraint_masks: NDArray[np.uint8] | NDArray[np.uint32]
+    diagnostics: dict[str, object]
 
 class CancellationToken:
     """Thread-safe cooperative cancellation. Tokens remain cancelled after use."""
@@ -17,12 +55,12 @@ class CancelledError(RuntimeError):
     """The operation was interrupted by its cancellation token."""
 
 def generate(
-    field: Any,
-    gradient: Any,
-    bounds: Any,
-    cells: Any,
-    periodic: Any,
-    band: Any,
+    field: str | Field | CompiledField,
+    gradient: Field | None,
+    bounds: Sequence[Sequence[float]],
+    cells: Sequence[int],
+    periodic: Sequence[bool],
+    band: Sequence[float] | None,
     tolerance: float,
     minimum_quality: float,
     budget: int,
@@ -34,12 +72,12 @@ def generate(
     cancel: CancellationToken | None,
     adapt: tuple[float, float, float, float, int, float, float] | None = None,
     order: int = 1,
-    size_field: Any = None,
-    halfspaces: Any = None,
-    regions: Any = None,
-    constraints: Any = None,
+    size_field: str | Field | CompiledField | None = None,
+    halfspaces: Sequence[Sequence[float]] | None = None,
+    regions: Sequence[int] | None = None,
+    constraints: Sequence[str | Field | CompiledField] | None = None,
     curved_fit: bool = False,
-) -> dict[str, Any]: ...
+) -> _GeneratedVolume: ...
 
 class CompiledField:
     """Immutable float64 evaluator and optional gradient, owning compiled code.
@@ -56,16 +94,24 @@ class CompiledField:
         """Number of interned nodes in the compiled expression graph."""
     def gradient(self, x: float, y: float, z: float) -> list[float]:
         """Return the three first derivatives, or raise ValueError if unavailable."""
-    def values(self, points: Any) -> Any:
+    def values(self, points: NDArray[np.float64]) -> NDArray[np.float64]:
         """Evaluate an (n, 3) float64 point array without a Python call per point."""
     @property
-    def _sdf_intersection(self) -> bool: ...
-    def _intersection_fields(self) -> list[CompiledField] | None: ...
+    def halfspaces(self) -> list[list[float]] | None:
+        """Affine planes whose nonpositive sides define this convex field, if recognized."""
+    @property
+    def polyhedral_regions(self) -> tuple[list[list[float]], list[int]] | None:
+        """Planes and region masks of a recognized Boolean polyhedral field."""
+    @property
+    def sdf_intersection(self) -> bool:
+        """Whether the retained branches require a signed-distance consistency check."""
+    def intersection_fields(self) -> list[CompiledField] | None:
+        """Return cached fields for an intersection, or None for an unsupported expression."""
 
-def _compile_expression(
-    nodes: list[tuple[str, list[int], float]],
-    outputs: list[int],
-    constraint_outputs: list[list[int]] | None = None,
+def compile_graph(
+    nodes: Sequence[tuple[str, Sequence[int], float]],
+    outputs: Sequence[int],
+    constraint_outputs: Sequence[Sequence[int]] | None = None,
     *,
     retain_sdf: bool = False,
 ) -> CompiledField: ...
@@ -79,22 +125,25 @@ SDF_INTERSECTIONS: bool
 ADAPTIVE_RETAINED_INTERSECTIONS: bool
 
 def available_threads() -> int: ...
-def face_components(tetrahedra: Any) -> int: ...
-def quadratic_volumes(points: Any, tetrahedra: Any) -> Any: ...
+def face_components(tetrahedra: NDArray[np.int64]) -> int: ...
+def quadratic_volumes(
+    points: NDArray[np.float64],
+    tetrahedra: NDArray[np.int64],
+) -> NDArray[np.float64]: ...
 def generate_intersection(
-    fields: Any,
-    mapping: Any,
-    bounds: Any,
-    cells: Any,
-    periodic: Any,
-    closed: Any,
+    fields: Sequence[str | Field | CompiledField],
+    mapping: Sequence[str | Field | CompiledField] | None,
+    bounds: Sequence[Sequence[float]],
+    cells: Sequence[int],
+    periodic: Sequence[bool],
+    closed: Sequence[bool],
     minimum_quality: float,
     budget: int,
     passes: int,
     snap: float,
     batch_size: int,
     cancel: CancellationToken | None,
-) -> dict[str, Any]: ...
+) -> _IntersectionResult: ...
 def _periodic_affine_traces(
     planes: Sequence[Sequence[float]],
     bounds: Sequence[Sequence[float]],
@@ -102,11 +151,11 @@ def _periodic_affine_traces(
     regions: Sequence[int] | None = None,
 ) -> bool: ...
 def adapt_intersection(
-    fields: Any,
-    points: Any,
-    tetrahedra: Any,
-    masks: Any,
-    bounds: Any,
+    fields: Sequence[str | Field | CompiledField],
+    points: NDArray[np.float64],
+    tetrahedra: NDArray[np.int64],
+    masks: NDArray[np.uint32],
+    bounds: Sequence[Sequence[float]],
     tolerance: float,
     minimum_quality: float,
     budget: int,
@@ -115,4 +164,4 @@ def adapt_intersection(
     seed_tolerance: float,
     batch_size: int,
     cancel: CancellationToken | None,
-) -> dict[str, Any]: ...
+) -> _AdaptedIntersection: ...

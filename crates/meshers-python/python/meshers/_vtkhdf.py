@@ -1,3 +1,5 @@
+# Copyright (c) 2026 Kevin Marchais
+
 """Write a Meshers mesh using the optional VTK HDF writer."""
 
 import json
@@ -13,7 +15,7 @@ from vtkmodules.vtkIOHDF import vtkHDFWriter
 from . import _meshers
 
 if TYPE_CHECKING:
-    from . import Mesh
+    from .mesh import Mesh
 
 
 _TET4_NODES = 4
@@ -89,7 +91,8 @@ def write_grid(mesh: "Mesh", path: str | Path, *, surface: bool) -> None:
     grid.SetCells(vtk_type, topology)
 
     add_arrays(
-        grid.GetCellData(), {"BoundaryTag": mesh.boundary_tags} if surface else volume_data(mesh)
+        grid.GetCellData(),
+        {"BoundaryTag": mesh.boundary_tags} if surface else volume_data(mesh),
     )
     masters = periodic_masters(mesh)
     point_data = {"PeriodicMasterId": masters, "PeriodicShift": points - points[masters]}
@@ -105,7 +108,8 @@ def write_grid(mesh: "Mesh", path: str | Path, *, surface: bool) -> None:
         field_data["PeriodicTransforms"] = mesh.periodic_transforms.reshape(3, 16)
     if mesh.constraint_names:
         field_data["ConstraintNamesUTF8"] = np.frombuffer(
-            json.dumps(mesh.constraint_names, ensure_ascii=False).encode("utf-8"), dtype=np.uint8
+            json.dumps(mesh.constraint_names, ensure_ascii=False).encode("utf-8"),
+            dtype=np.uint8,
         )
         field_data["FeatureEdges"] = mesh.feature_edges
     add_arrays(grid.GetFieldData(), field_data)
@@ -115,4 +119,5 @@ def write_grid(mesh: "Mesh", path: str | Path, *, surface: bool) -> None:
     writer.SetInputData(grid)
     writer.SetChunkSize(min(writer.GetChunkSize(), max(1, len(points))))
     if not writer.Write() or writer.GetErrorCode():
-        raise OSError(f"VTK could not write {path}")
+        msg = f"VTK could not write {path}"
+        raise OSError(msg)

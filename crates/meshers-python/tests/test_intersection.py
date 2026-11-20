@@ -1,16 +1,21 @@
+# Copyright (c) 2026 Kevin Marchais
+
 """Public constrained meshing: geometry, quality, mapping, exports and failures."""
 
 import json
+from itertools import product
 
 import meshers
 import numpy as np
 import pyfive
 import pytest
 import pyvista as pv
+from meshers._meshers import compile_graph
+from meshers.intersection import _project_parameters, _retained_constraints
 
 
 def constraints():
-    return {"right": lambda x, y, z: x - 0.501, "back": lambda x, y, z: y - 0.751}
+    return {"right": lambda x, _y, _z: x - 0.501, "back": lambda _x, y, _z: y - 0.751}
 
 
 def volume(mesh):
@@ -21,8 +26,6 @@ def volume(mesh):
 
 
 def test_octahedron_preserves_four_plane_corners_and_exact_volume():
-    from itertools import product
-
     planes = {}
     signs = tuple(product((1, -1), repeat=3))
     for index, normal in enumerate(signs):
@@ -54,14 +57,15 @@ def test_octahedron_preserves_four_plane_corners_and_exact_volume():
 
 
 @pytest.mark.skipif(
-    getattr(meshers._meshers, "MAX_CONSTRAINTS", 8) < 32, reason="optional wide-constraints feature"
+    meshers.MAX_CONSTRAINTS < 32,
+    reason="optional wide-constraints feature",
 )
 def test_high_constraint_bits_and_planar_intersections():
-    fields = {f"inactive{i}": lambda x, y, z: -1 + 0 * x for i in range(29)}
+    fields = {f"inactive{i}": lambda x, _y, _z: -1 + 0 * x for i in range(29)}
     fields.update({
-        "x": lambda x, y, z: x - 0.63,
-        "y": lambda x, y, z: y - 0.72,
-        "z": lambda x, y, z: z - 0.81,
+        "x": lambda x, _y, _z: x - 0.63,
+        "y": lambda _x, y, _z: y - 0.72,
+        "z": lambda _x, _y, z: z - 0.81,
     })
     mesh = meshers.generate_intersection(fields, cells=8, geometry_tolerance=1e-10)
     assert mesh.constraint_masks.dtype == np.uint32
@@ -76,7 +80,10 @@ def test_named_intersection_quality_and_export(tmp_path):
     args = {"cells": 8, "snap": 0, "periodic": (False, False, True)}
     original = meshers.generate_intersection(constraints(), optimize_passes=0, **args)
     mesh = meshers.generate_intersection(
-        constraints(), optimize_passes=4, geometry_tolerance=1e-8, **args
+        constraints(),
+        optimize_passes=4,
+        geometry_tolerance=1e-8,
+        **args,
     )
     assert (
         mesh.diagnostics["minimum_mmg_quality"] > original.diagnostics["minimum_mmg_quality"] * 10
@@ -92,21 +99,23 @@ def test_named_intersection_quality_and_export(tmp_path):
         root = f["VTKHDF"]
         np.testing.assert_array_equal(root["PointData/ParameterCoordinates"][:], mesh.parameters)
         np.testing.assert_array_equal(
-            root["PointData/SurfaceConstraints"][:], mesh.constraint_masks
+            root["PointData/SurfaceConstraints"][:],
+            mesh.constraint_masks,
         )
         np.testing.assert_array_equal(root["FieldData/FeatureEdges"][:], mesh.feature_edges)
         np.testing.assert_array_equal(root["FieldData/PeriodicPairs2"][:], mesh.periodic_pairs[2])
         np.testing.assert_array_equal(
-            root["FieldData/PeriodicTransforms"][:], mesh.periodic_transforms.reshape(3, 16)
+            root["FieldData/PeriodicTransforms"][:],
+            mesh.periodic_transforms.reshape(3, 16),
         )
         assert json.loads(bytes(root["FieldData/ConstraintNamesUTF8"][:])) == list(
-            mesh.constraint_names
+            mesh.constraint_names,
         )
 
     restored = pv.read(path)
     np.testing.assert_array_equal(restored.field_data["FeatureEdges"], mesh.feature_edges)
     assert json.loads(restored.field_data["ConstraintNamesUTF8"].tobytes()) == list(
-        mesh.constraint_names
+        mesh.constraint_names,
     )
 
 
@@ -144,14 +153,16 @@ def test_rotational_periodicity():
         )
     with pytest.raises(ValueError, match="explicit"):
         meshers.generate_intersection(
-            constraints(), coordinate_map=mapping, periodic=(False, False, True)
+            constraints(),
+            coordinate_map=mapping,
+            periodic=(False, False, True),
         )
 
 
 def test_callback_and_compiled_agree():
     args = {"cells": 4, "optimize_passes": 0, "snap": 0}
     a = meshers.generate_intersection(constraints(), **args)
-    b = meshers.generate_intersection(constraints(), compile=False, **args)
+    b = meshers.generate_intersection(constraints(), compile_expression=False, **args)
     np.testing.assert_allclose(a.points, b.points, atol=1e-12)
     np.testing.assert_array_equal(a.tetrahedra, b.tetrahedra)
     assert a.diagnostics["callback_calls"] == 0
@@ -163,7 +174,9 @@ def test_failures_are_explicit():
         meshers.generate_intersection(constraints(), cells=4, minimum_quality=1)
     with pytest.raises(meshers.MeshingError, match="inverted"):
         meshers.generate_intersection(
-            constraints(), cells=4, coordinate_map=lambda x, y, z: (-x, y, z)
+            constraints(),
+            cells=4,
+            coordinate_map=lambda x, y, z: (-x, y, z),
         )
     with pytest.raises(meshers.MeshingError, match="periodic"):
         meshers.generate_intersection(constraints(), cells=4, periodic=(True, False, False))
@@ -174,12 +187,15 @@ def test_failures_are_explicit():
     with pytest.raises(meshers.CancelledError):
         meshers.generate_intersection(constraints(), cells=4, cancel=token)
 
-    def fails(x, y, z):
-        raise RuntimeError("user callback failed")
+    def fails(_x, _y, _z):
+        msg = "user callback failed"
+        raise RuntimeError(msg)
 
     with pytest.raises(RuntimeError, match="user callback failed"):
         meshers.generate_intersection(
-            {"bad": fails, "back": lambda x, y, z: y - 0.5}, cells=4, compile=False
+            {"bad": fails, "back": lambda _x, y, _z: y - 0.5},
+            cells=4,
+            compile_expression=False,
         )
 
 
@@ -204,7 +220,8 @@ def test_invalid_options(kwargs):
 
 def test_empty_and_geometry_rejection():
     mesh = meshers.generate_intersection(
-        {"outside": lambda x, y, z: x + 2, "back": lambda x, y, z: y - 0.5}, cells=4
+        {"outside": lambda x, _y, _z: x + 2, "back": lambda _x, y, _z: y - 0.5},
+        cells=4,
     )
     assert mesh.points.shape == (0, 3)
     assert mesh.tetrahedra.shape == (0, 4)
@@ -213,7 +230,7 @@ def test_empty_and_geometry_rejection():
         meshers.generate_intersection(
             {
                 "sphere": lambda x, y, z: (x - 0.5) ** 2 + (y - 0.5) ** 2 + (z - 0.5) ** 2 - 0.3**2,
-                "cut": lambda x, y, z: z - 0.55,
+                "cut": lambda _x, _y, z: z - 0.55,
             },
             cells=8,
             geometry_tolerance=1e-8,
@@ -234,7 +251,7 @@ def test_snapping_rollback_keeps_periodic_tpms_geometry():
         {
             "upper": lambda x, y, z: gyroid(x, y, z) - 0.55,
             "lower": lambda x, y, z: -gyroid(x, y, z) - 0.55,
-            "wall": lambda x, y, z: np.sqrt(x * x + y * y) - 0.75,
+            "wall": lambda x, y, _z: np.sqrt(x * x + y * y) - 0.75,
         },
         bounds=(-0.8, 0.8, -0.8, 0.8, 0, 3),
         cells=(24, 24, 40),
@@ -254,7 +271,7 @@ def test_snapping_rollback_keeps_periodic_tpms_geometry():
 def test_cancellation_during_python_surface_verification():
     token = meshers.CancellationToken()
 
-    def field(x, y, z):
+    def field(x, _y, _z):
         # Native construction uses scalar callbacks; verification samples batches.
         if x.size > 1:
             token.cancel()
@@ -262,9 +279,9 @@ def test_cancellation_during_python_surface_verification():
 
     with pytest.raises(meshers.CancelledError):
         meshers.generate_intersection(
-            {"x": field, "y": lambda x, y, z: y - 0.7},
+            {"x": field, "y": lambda _x, y, _z: y - 0.7},
             cells=4,
-            compile=False,
+            compile_expression=False,
             optimize_passes=0,
             geometry_tolerance=0.1,
             cancel=token,
@@ -276,7 +293,7 @@ def test_cancellation_during_python_surface_verification():
 @pytest.mark.parametrize("passes", [0, 2])
 def test_constraint_projection_preserves_geometry_under_rescaling(scale, passes):
     mesh = meshers.generate_intersection(
-        {"x": lambda x, y, z: scale * (x - 0.51), "y": lambda x, y, z: (y - 0.74) / scale},
+        {"x": lambda x, _y, _z: scale * (x - 0.51), "y": lambda _x, y, _z: (y - 0.74) / scale},
         cells=4,
         snap=0.2,
         optimize_passes=passes,
@@ -299,7 +316,7 @@ def test_surface_verification_respects_callback_batch_size(batch_size, mapped):
         sizes.append(x.size)
         assert x.size <= batch_size
 
-    def field(x, y, z):
+    def field(x, _y, _z):
         record(x)
         return x - 0.6
 
@@ -308,9 +325,9 @@ def test_surface_verification_respects_callback_batch_size(batch_size, mapped):
         return x + 0.1 * y * y, y, z
 
     mesh = meshers.generate_intersection(
-        {"x": field, "y": lambda x, y, z: y - 0.7},
+        {"x": field, "y": lambda _x, y, _z: y - 0.7},
         cells=4,
-        compile=False,
+        compile_expression=False,
         optimize_passes=0,
         coordinate_map=mapping if mapped else None,
         batch_size=batch_size,
@@ -382,14 +399,15 @@ def _cylinder_sdf(x, y, z):
     radial = np.sqrt(y * y + z * z) - 0.23
     axial = np.abs(x) - 0.3
     return np.sqrt(np.maximum(radial, 0) ** 2 + np.maximum(axial, 0) ** 2) + np.minimum(
-        np.maximum(radial, axial), 0
+        np.maximum(radial, axial),
+        0,
     )
 
 
 def _box_sdf(x, y, z, scale=1.0):
     a, b, c = (scale * (np.abs(v) - 0.25) for v in (x, y, z))
     return np.sqrt(
-        np.maximum(a, 0) ** 2 + np.maximum(b, 0) ** 2 + np.maximum(c, 0) ** 2
+        np.maximum(a, 0) ** 2 + np.maximum(b, 0) ** 2 + np.maximum(c, 0) ** 2,
     ) + np.minimum(np.maximum(a, np.maximum(b, c)), 0)
 
 
@@ -397,16 +415,17 @@ def test_sdf_values_and_zero_sublevel_metadata_are_preserved():
     field = meshers.compile_field(_cylinder_sdf)
     points = np.random.default_rng(20261112).uniform(-0.5, 0.5, (4096, 3))
     before = field.values(points)
-    branches = field._intersection_fields()
+    branches = field.intersection_fields()
     assert branches is not None
     assert len(branches) == 2
     np.testing.assert_array_equal(before, field.values(points))
     np.testing.assert_allclose(before, _cylinder_sdf(*points.T), rtol=1e-14, atol=1e-14)
     np.testing.assert_array_equal(
-        before <= 0, np.maximum.reduce([f.values(points) for f in branches]) <= 0
+        before <= 0,
+        np.maximum.reduce([f.values(points) for f in branches]) <= 0,
     )
-    assert field._halfspaces is None
-    assert field._polyhedral_regions is None
+    assert field.halfspaces is None
+    assert field.polyhedral_regions is None
 
 
 @pytest.mark.parametrize(
@@ -435,12 +454,12 @@ def test_altered_sdf_graphs_keep_the_scalar_path(mode):
         value = np.sqrt(square) + np.minimum(inside, 0)
         return value + 0.01 if mode == "whole-offset" else value
 
-    assert meshers.compile_field(field)._intersection_fields() is None
+    assert meshers.compile_field(field).intersection_fields() is None
 
 
 @pytest.mark.parametrize("gradient", [False, lambda x, y, z: (0 * x, 0 * y, 0 * z)])
 def test_sdf_explicit_gradient_policy_does_not_retain_branches(gradient):
-    assert meshers.compile_field(_cylinder_sdf, gradient=gradient)._intersection_fields() is None
+    assert meshers.compile_field(_cylinder_sdf, gradient=gradient).intersection_fields() is None
 
 
 @pytest.mark.parametrize("angle", [0.0, 0.37])
@@ -488,7 +507,8 @@ def test_adaptive_sdf_cylinder_preserves_the_rim_and_pose(angle):
         + center
     )
     surface = pv.PolyData(
-        mesh.points, np.column_stack([np.full(len(mesh.surface), 3), mesh.surface])
+        mesh.points,
+        np.column_stack([np.full(len(mesh.surface), 3), mesh.surface]),
     )
     _, closest = surface.find_closest_cell(rim, return_closest_point=True)
     assert np.linalg.norm(rim - closest, axis=1).max() <= 0.002
@@ -509,8 +529,6 @@ def test_sdf_original_parent_overflow_is_not_bypassed(adaptive):
 
 
 def test_sdf_underflow_does_not_enable_a_different_zero_set():
-    from meshers.intersection import _retained_constraints
-
     field = meshers.compile_field(lambda x, y, z: _box_sdf(x, y, z, 1e-200))
     assert _retained_constraints(field, np.array((-0.5, 0.5) * 3)) is None
 
@@ -536,7 +554,7 @@ def test_nonadaptive_sdf_and_bands_keep_the_original_scalar_path(band):
 )
 def test_sdf_recognition_still_validates_raw_graph_indices(nodes, output):
     with pytest.raises(ValueError, match="expression"):
-        meshers._meshers._compile_expression(nodes, output, retain_sdf=True)
+        compile_graph(nodes, output, retain_sdf=True)
 
 
 def test_localized_underflow_cannot_enable_a_different_zero_set():
@@ -546,7 +564,7 @@ def test_localized_underflow_cannot_enable_a_different_zero_set():
 
     compiled = meshers.compile_field(field)
     assert compiled.values(np.array([[0.4, 0.0, 0.0]]))[0] == 0
-    assert compiled._intersection_fields() is None
+    assert compiled.intersection_fields() is None
 
 
 @pytest.mark.parametrize("kind", ["uniform-scale", "sheared-radius", "repeated-radius-basis"])
@@ -557,21 +575,20 @@ def test_nonunit_sdf_branches_keep_the_scalar_path(kind):
         square = y * y + ((y + z) ** 2 if kind == "sheared-radius" else y * y + z * z)
         radial, axial = np.sqrt(square) - 0.23, np.abs(x) - 0.3
         return np.sqrt(np.maximum(radial, 0) ** 2 + np.maximum(axial, 0) ** 2) + np.minimum(
-            np.maximum(radial, axial), 0
+            np.maximum(radial, axial),
+            0,
         )
 
-    assert meshers.compile_field(field)._intersection_fields() is None
+    assert meshers.compile_field(field).intersection_fields() is None
 
 
 @pytest.mark.parametrize("scale", [1e-12, 1.0, 1e12])
 def test_boundary_fitting_projection_is_invariant_to_field_scale(scale):
-    from meshers.intersection import _project_parameters
-
     point = np.array([0.5, 0.2, 0.4])
     projected = _project_parameters(
         point,
         point,
-        [lambda x, y, z: scale * (y * y + z * z - 0.16)],
+        [lambda _x, y, z: scale * (y * y + z * z - 0.16)],
         locked=np.array([True, False, False]),
         step=np.full(3, 1e-5),
     )
@@ -584,21 +601,22 @@ def test_boundary_fitting_projection_is_invariant_to_field_scale(scale):
 def test_closed_axis_options_require_three_booleans(closed):
     with pytest.raises(ValueError, match="three booleans"):
         meshers.generate_intersection(
-            {"a": lambda x, y, z: x - 0.5, "b": lambda x, y, z: y - 0.5}, closed_axes=closed
+            {"a": lambda x, _y, _z: x - 0.5, "b": lambda _x, y, _z: y - 0.5},
+            closed_axes=closed,
         )
 
 
 def test_closed_axis_rejects_translated_physical_caps():
     with pytest.raises(ValueError, match="identity"):
         meshers.generate_intersection(
-            {"a": lambda x, y, z: x - 0.5, "b": lambda x, y, z: y - 0.5},
+            {"a": lambda x, _y, _z: x - 0.5, "b": lambda _x, y, _z: y - 0.5},
             periodic=(False, False, True),
             closed_axes=(False, False, True),
         )
 
 
 def test_named_seed_adaptation_preserves_geometry_labels_and_input():
-    fields = {"x": lambda x, y, z: x - 0.5, "y": lambda x, y, z: y - 0.75}
+    fields = {"x": lambda x, _y, _z: x - 0.5, "y": lambda _x, y, _z: y - 0.75}
     seed = meshers.generate_intersection(fields, cells=4, snap=0, optimize_passes=0)
     points, cells = seed.points.copy(), seed.tetrahedra.copy()
     mesh = meshers.adapt_intersection(
@@ -626,7 +644,7 @@ def test_named_seed_adaptation_preserves_geometry_labels_and_input():
 
 def test_named_seed_rejects_a_box_outside_the_clipping_fields():
     seed = meshers.generate_intersection(
-        {"a": lambda x, y, z: -1 + 0 * x, "b": lambda x, y, z: -1 + 0 * y},
+        {"a": lambda x, _y, _z: -1 + 0 * x, "b": lambda _x, y, _z: -1 + 0 * y},
         cells=4,
         snap=0,
         optimize_passes=0,
@@ -634,7 +652,7 @@ def test_named_seed_rejects_a_box_outside_the_clipping_fields():
     with pytest.raises(ValueError, match="seed fails"):
         meshers.adapt_intersection(
             seed,
-            {"x": lambda x, y, z: x - 0.5, "y": lambda x, y, z: y - 0.75},
+            {"x": lambda x, _y, _z: x - 0.5, "y": lambda _x, y, _z: y - 0.75},
             bounds=(0, 1, 0, 1, 0, 1),
             constraint_masks=seed.constraint_masks,
             seed_tolerance=1e-8,
@@ -643,7 +661,7 @@ def test_named_seed_rejects_a_box_outside_the_clipping_fields():
 
 
 def test_mapped_adaptation_preserves_user_names_matching_domain_caps():
-    fields = {"domain_0_0": lambda x, y, z: x - 0.5, "wall": lambda x, y, z: y - 0.75}
+    fields = {"domain_0_0": lambda x, _y, _z: x - 0.5, "wall": lambda _x, y, _z: y - 0.75}
     mesh = meshers.generate_intersection(
         fields,
         coordinate_map=lambda x, y, z: (x, y, z),
@@ -673,7 +691,7 @@ def test_mapped_adaptation_preserves_user_names_matching_domain_caps():
 def test_mapped_adaptation_counts_domain_caps_before_starting():
     with pytest.raises(ValueError, match="named-constraint limit"):
         meshers.generate_intersection(
-            {f"f{i}": lambda x, y, z: x - 0.5 for i in range(meshers._meshers.MAX_CONSTRAINTS)},
+            {f"f{i}": lambda x, _y, _z: x - 0.5 for i in range(meshers.MAX_CONSTRAINTS)},
             coordinate_map=lambda x, y, z: (x, y, z),
             inverse_map=lambda x, y, z: (x, y, z),
             physical_bounds=(0, 1, 0, 1, 0, 1),
@@ -753,7 +771,7 @@ def test_adaptive_closed_map_keeps_rejecting_negative_orientation():
 
     with pytest.raises(meshers.MeshingError, match="inverted a background"):
         meshers.generate_intersection(
-            {"first": lambda x, y, z: -1 + 0 * x, "second": lambda x, y, z: -1 + 0 * y},
+            {"first": lambda x, _y, _z: -1 + 0 * x, "second": lambda _x, y, _z: -1 + 0 * y},
             bounds=(-0.5, 0.5) * 3,
             cells=4,
             coordinate_map=mapping,
@@ -774,7 +792,7 @@ def test_mapped_caps_include_chord_error(curvature, axis):
         return u, v, w + curvature * (u, v)[axis] ** 2
 
     args = {
-        "constraints": {"a": lambda x, y, z: 0 * x - 1, "b": lambda x, y, z: 0 * y - 2},
+        "constraints": {"a": lambda x, _y, _z: 0 * x - 1, "b": lambda _x, y, _z: 0 * y - 2},
         "coordinate_map": mapping,
         "cells": 4,
         "optimize_passes": 0,
@@ -799,10 +817,14 @@ def test_mapped_caps_include_chord_error(curvature, axis):
     directed_cells[axis] = 8
     target = 0.004
     directed = meshers.generate_intersection(
-        **(args | {"cells": directed_cells}), geometry_tolerance=target, minimum_quality=0.1
+        **(args | {"cells": directed_cells}),
+        geometry_tolerance=target,
+        minimum_quality=0.1,
     )
     uniform = meshers.generate_intersection(
-        **(args | {"cells": 8}), geometry_tolerance=target, minimum_quality=0.1
+        **(args | {"cells": 8}),
+        geometry_tolerance=target,
+        minimum_quality=0.1,
     )
     for fine in (directed, uniform):
         cap = fine.points[fine.surface[fine.boundary_tags == 5]]
@@ -817,7 +839,7 @@ def test_final_quality_after_sphere_fitting():
     mesh = meshers.generate_intersection(
         {
             "sphere": lambda x, y, z: (x - 0.5) ** 2 + (y - 0.51) ** 2 + (z - 0.52) ** 2 - 0.35**2,
-            "inactive": lambda x, y, z: 0 * x - 1,
+            "inactive": lambda x, _y, _z: 0 * x - 1,
         },
         cells=4,
         optimize_passes=0,
@@ -831,3 +853,21 @@ def test_final_quality_after_sphere_fitting():
     qualities = np.sqrt(432 * det**2 / edge_sum**3)
     assert mesh.diagnostics["minimum_mmg_quality"] == pytest.approx(qualities.min())
     assert mesh.diagnostics["elements_below_quality_01"] == np.count_nonzero(qualities < 0.1)
+
+
+def test_intersection_rejects_keywords_from_the_other_operation():
+    fields = constraints()
+    with pytest.raises(TypeError, match="constraint_masks"):
+        meshers.generate_intersection(fields, constraint_masks=[])
+    seed = meshers.generate_intersection(fields, cells=4)
+    with pytest.raises(TypeError, match="closed_axes"):
+        meshers.adapt_intersection(seed, fields, bounds=(0, 1) * 3, closed_axes=(False,) * 3)
+
+
+def test_callback_warning_points_to_public_caller():
+    def wall(x, _y, _z):
+        return x - np.full_like(x, 0.501)
+
+    with pytest.warns(RuntimeWarning, match="NumPy callbacks") as messages:
+        meshers.generate_intersection({**constraints(), "right": wall}, cells=4)
+    assert all(message.filename == __file__ for message in messages)

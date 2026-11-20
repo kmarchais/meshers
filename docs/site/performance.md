@@ -37,14 +37,14 @@ python -m tools.benchmark_history --input /path/performance.json --label v0.2.0-
 
 ## Run a local comparison
 
-Use separate environments, one numerical thread and an idle host. Windows requires `psutil`. Memory is peak working set on Windows and peak RSS on Linux/macOS, in bytes.
+Use separate environments, one numerical thread and an idle host. On Windows, both workers load the `psutil` memory probe before timing. Its memory is included in the process peak. Memory is peak working set on Windows and peak RSS on Linux/macOS, in bytes.
 
 ```sh
 python tools/performance_gate.py --base-python /path/base/bin/python \
   --head-python /path/head/bin/python --output performance.json
 ```
 
-Use `--suite release` for all fixtures. Archive with full `--base-ref` and `--head-ref` SHAs. Compare within one configuration and fixture version. Bump the fixture version when formulas or settings change. [Benchmark history](benchmark-history.md)
+Use `--suite release` for all fixtures. Archive with full `--base-ref` and `--head-ref` SHAs. Each new record fingerprints the driver (`script_sha256`) and the numerical worker (`worker_sha256`). Compare within one configuration and fixture version. Bump the fixture version when formulas or settings change. [Benchmark history](benchmark-history.md)
 
 ## Candidate wheel FEA gate
 

@@ -1,3 +1,5 @@
+# Copyright (c) 2026 Kevin Marchais
+
 """Matching box faces and explicit quality, resource and threading controls."""
 
 import meshers
@@ -19,8 +21,12 @@ for axis, pairs in enumerate(mesh.periodic_pairs):
     shift = np.zeros(3)
     shift[axis] = 1
     if not np.allclose(
-        mesh.points[pairs[:, 1]] - mesh.points[pairs[:, 0]], shift, rtol=0, atol=1e-10
+        mesh.points[pairs[:, 1]] - mesh.points[pairs[:, 0]],
+        shift,
+        rtol=0,
+        atol=1e-10,
     ):
-        raise ValueError(f"Periodic node pairs have the wrong displacement on axis {axis}")
+        msg = f"Periodic node pairs have the wrong displacement on axis {axis}"
+        raise ValueError(msg)
     print(axis, len(pairs), "node pairs")
 mesh.write_vtkhdf("periodic.vtkhdf")

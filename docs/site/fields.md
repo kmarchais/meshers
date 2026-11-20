@@ -11,9 +11,11 @@ To grade a sheet, divide the field by a positive half-width and use `band=(-1, 1
 | Field implementation | Evaluation and derivatives |
 | --- | --- |
 | Arithmetic, supported NumPy functions, comparisons, `np.where` | Meshers traces and compiles the expression and its gradient, including derivatives of grading terms. |
-| Unsupported operation or `compile=False` | Batched NumPy callback returning float64 `(N,)`. Supply gradients of shape `(N, 3)` or use finite differences. |
+| Unsupported operation or `compile_expression=False` | Batched NumPy callback returning float64 `(N,)`. Supply gradients of shape `(N, 3)` or use finite differences. |
 | `compile_field(f)` | Reusable, immutable snapshot. Automatic preparation retraces captured values and caches up to 32 compiled expressions. |
 
 **Nonsmooth fields.** `abs` has zero derivative at zero. Min/max ties average both gradients. `where` uses the selected branch.
 
 For angular fields, keep the inside/outside classification consistent at the axis and across the seam. [Evaluator examples](https://github.com/kmarchais/meshers/blob/main/crates/meshers-python/examples/evaluators.py)
+
+The original `compile=` keyword is accepted as a deprecated alias for `compile_expression=`.

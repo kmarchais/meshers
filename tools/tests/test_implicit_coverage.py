@@ -1,3 +1,5 @@
+# Copyright (c) 2026 Kevin Marchais
+
 """Geometry and solver admission controls for the historical implicit solids."""
 
 import sys
@@ -25,7 +27,7 @@ def test_rejected_geometry_never_runs_fea(monkeypatch, geometry_ok, quality_ok):
                 "quality_eligible": quality_ok,
                 "admission_reasons": [],
                 "relative_volume_error_with_uncertainty": 0.01,
-            }
+            },
         ),
     )
     record = coverage.measure(case, {}, oracle, fea=True)

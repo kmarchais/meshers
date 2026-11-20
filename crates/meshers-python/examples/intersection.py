@@ -1,11 +1,19 @@
+# Copyright (c) 2026 Kevin Marchais
+
 """Named boundaries and feature edges, with a rotation-periodic coordinate map."""
 
 import meshers
 import numpy as np
+from numpy.typing import NDArray
+
+Points = NDArray[np.float64]
 
 constraints = {"right": lambda x, _y, _z: x - 0.501, "back": lambda _x, y, _z: y - 0.751}
 straight = meshers.generate_intersection(
-    constraints, cells=8, geometry_tolerance=1e-8, periodic=(False, False, True)
+    constraints,
+    cells=8,
+    geometry_tolerance=1e-8,
+    periodic=(False, False, True),
 )
 print(straight.surface_for("right").shape, straight.feature_edges.shape)
 
@@ -13,7 +21,7 @@ radius = 3.0
 angle = 1 / radius
 
 
-def bend(x, y, z):
+def bend(x: Points, y: Points, z: Points) -> tuple[Points, Points, Points]:
     """Return the coordinates of the segment bent into a circular arc."""
     return (radius + x) * np.cos(z / radius), (radius + x) * np.sin(z / radius), -y
 

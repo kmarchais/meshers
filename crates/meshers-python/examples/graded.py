@@ -1,10 +1,15 @@
+# Copyright (c) 2026 Kevin Marchais
+
 """A varying-thickness gyroid, without periodic constraints."""
 
 import meshers
 import numpy as np
+from numpy.typing import NDArray
+
+Points = NDArray[np.float64]
 
 
-def graded_gyroid(x, y, z):
+def graded_gyroid(x: Points, y: Points, z: Points) -> Points:
     """Return the gyroid sheet with spatially varying thickness."""
     x_phase, y_phase, z_phase = (2 * np.pi * v for v in (x, y, z))
     g = (
@@ -17,7 +22,11 @@ def graded_gyroid(x, y, z):
 
 
 mesh = meshers.generate(
-    graded_gyroid, cells=16, band=(-1.0, 1.0), geometry_tolerance=0.1, optimize_passes=1
+    graded_gyroid,
+    cells=16,
+    band=(-1.0, 1.0),
+    geometry_tolerance=0.1,
+    optimize_passes=1,
 )
 mesh.write_vtkhdf("graded.vtkhdf")
 print(mesh.diagnostics)

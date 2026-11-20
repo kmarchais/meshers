@@ -1,3 +1,7 @@
+# Copyright (c) 2026 Kevin Marchais
+
+"""Check periodic TPMS meshes against the release fixtures."""
+
 import meshers
 import numpy as np
 import pyfive
@@ -24,7 +28,9 @@ def test_tpms_wheel_round_trip(field, tmp_path):
         assert len(pairs) > 0
         shifts = mesh.points[pairs[:, 1]] - mesh.points[pairs[:, 0]]
         np.testing.assert_allclose(
-            np.abs(shifts), np.broadcast_to(np.eye(3)[axis], shifts.shape), atol=1e-10
+            np.abs(shifts),
+            np.broadcast_to(np.eye(3)[axis], shifts.shape),
+            atol=1e-10,
         )
     path = tmp_path / f"{field}.vtkhdf"
     mesh.write_vtkhdf(path)

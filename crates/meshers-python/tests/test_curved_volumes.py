@@ -1,3 +1,5 @@
+# Copyright (c) 2026 Kevin Marchais
+
 """Curved-cell volumes use the final mapping rather than its four corners."""
 
 import meshers
