@@ -1,3 +1,5 @@
+# Copyright (c) 2026 Kevin Marchais
+
 """Check that the historical repair normalizes orientation and keeps boundary nodes fixed."""
 
 import sys

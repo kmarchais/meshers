@@ -1,3 +1,5 @@
+# Copyright (c) 2026 Kevin Marchais
+
 """A varying-thickness gyroid, without periodic constraints."""
 
 import meshers

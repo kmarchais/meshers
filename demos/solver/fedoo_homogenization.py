@@ -1,3 +1,5 @@
+# Copyright (c) 2026 Kevin Marchais
+
 """Periodic small-strain homogenization of Meshers cells with fedoo 1.0 beta.
 
 Six prescribed engineering strains are solved with fedoo PeriodicBC. Independent

@@ -1,3 +1,5 @@
+# Copyright (c) 2026 Kevin Marchais
+
 """Check candidate-wheel admission records and CLI exit codes."""
 
 import json

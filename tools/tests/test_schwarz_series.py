@@ -1,3 +1,5 @@
+# Copyright (c) 2026 Kevin Marchais
+
 """A failed repeat disqualifies the level from the matched-target timing table."""
 
 import json

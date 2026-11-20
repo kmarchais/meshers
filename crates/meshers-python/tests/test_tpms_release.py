@@ -1,3 +1,5 @@
+# Copyright (c) 2026 Kevin Marchais
+
 """Check periodic TPMS meshes against the release fixtures."""
 
 import meshers

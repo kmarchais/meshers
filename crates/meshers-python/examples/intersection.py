@@ -1,3 +1,5 @@
+# Copyright (c) 2026 Kevin Marchais
+
 """Named boundaries and feature edges, with a rotation-periodic coordinate map."""
 
 import meshers

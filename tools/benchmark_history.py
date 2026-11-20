@@ -1,3 +1,5 @@
+# Copyright (c) 2026 Kevin Marchais
+
 """Archive immutable benchmark JSON and generate documentation pages and plots."""
 
 import argparse

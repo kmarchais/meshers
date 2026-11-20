@@ -1,3 +1,5 @@
+# Copyright (c) 2026 Kevin Marchais
+
 """Describe a benchmark configuration using public hardware and OS specifications."""
 
 import json

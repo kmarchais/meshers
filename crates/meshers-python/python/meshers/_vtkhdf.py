@@ -1,3 +1,5 @@
+# Copyright (c) 2026 Kevin Marchais
+
 """Write a Meshers mesh using the optional VTK HDF writer."""
 
 import json

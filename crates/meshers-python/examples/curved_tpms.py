@@ -1,3 +1,5 @@
+# Copyright (c) 2026 Kevin Marchais
+
 """Generate a cylinder or torus TPMS with retained curves and matching ends."""
 
 import argparse

@@ -1,3 +1,5 @@
+# Copyright (c) 2026 Kevin Marchais
+
 """Measure one live Schwarz P workflow at a declared effective-stiffness target."""
 
 import argparse

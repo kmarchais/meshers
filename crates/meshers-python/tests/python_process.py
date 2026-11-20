@@ -1,3 +1,5 @@
+# Copyright (c) 2026 Kevin Marchais
+
 """Run a binding test in an isolated interpreter and show both streams on failure."""
 
 import subprocess  # ruff: ignore[suspicious-subprocess-import] - tests execute the current interpreter

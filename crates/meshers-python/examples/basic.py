@@ -1,3 +1,5 @@
+# Copyright (c) 2026 Kevin Marchais
+
 """Built-in TPMS, negative-side solids, arrays and volume/surface export."""
 
 import meshers

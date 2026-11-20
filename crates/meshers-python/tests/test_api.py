@@ -1,3 +1,5 @@
+# Copyright (c) 2026 Kevin Marchais
+
 """Exercise the installed Python meshing interface and its failure modes."""
 
 import gc

@@ -1,3 +1,5 @@
+# Copyright (c) 2026 Kevin Marchais
+
 """Exercise VTKHDF export with independent PyVista and HDF readers."""
 
 import meshers

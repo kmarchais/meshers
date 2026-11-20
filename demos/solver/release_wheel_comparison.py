@@ -1,3 +1,5 @@
+# Copyright (c) 2026 Kevin Marchais
+
 """Replay native Tet4 cases against frozen Microgen-study records on a release wheel."""
 
 import argparse

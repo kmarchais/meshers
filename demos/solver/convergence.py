@@ -1,3 +1,5 @@
+# Copyright (c) 2026 Kevin Marchais
+
 """P1 tetrahedral elasticity verification on actual Meshers meshes.
 
 Manufactured displacement (sin(pi*x)sin(pi*y)sin(pi*z), 0, 0), lambda=mu=1.

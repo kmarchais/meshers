@@ -1,3 +1,5 @@
+# Copyright (c) 2026 Kevin Marchais
+
 """Exercise native expression compilation and evaluator lifetimes."""
 
 import gc

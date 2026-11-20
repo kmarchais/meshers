@@ -1,3 +1,5 @@
+# Copyright (c) 2026 Kevin Marchais
+
 """Numerical acceptance checks shared by the elasticity studies."""
 
 

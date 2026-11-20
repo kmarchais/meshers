@@ -1,3 +1,5 @@
+# Copyright (c) 2026 Kevin Marchais
+
 """Generate tetrahedral meshes from scalar fields."""
 
 import time

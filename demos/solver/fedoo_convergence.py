@@ -1,3 +1,5 @@
+# Copyright (c) 2026 Kevin Marchais
+
 """Verify Meshers tetrahedra with fedoo's assembly, loads, BCs and linear solve.
 
 Uses the same manufactured solution and specimens as convergence.py. Only the

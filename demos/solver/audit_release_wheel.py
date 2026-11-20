@@ -1,3 +1,5 @@
+# Copyright (c) 2026 Kevin Marchais
+
 """Generate, export and audit a frozen Meshers Tet4 case without running the solver."""
 
 import argparse

@@ -1,3 +1,5 @@
+# Copyright (c) 2026 Kevin Marchais
+
 """Native constant interpolation tables retain NumPy values and frozen captures."""
 
 import meshers

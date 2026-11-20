@@ -1,3 +1,5 @@
+# Copyright (c) 2026 Kevin Marchais
+
 """Prove the gate rejects each measured regression and accepts bounded noise."""
 
 import importlib.util

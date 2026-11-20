@@ -1,3 +1,5 @@
+# Copyright (c) 2026 Kevin Marchais
+
 """Automatic compilation, reusable compiled fields and batched callbacks."""
 
 import meshers

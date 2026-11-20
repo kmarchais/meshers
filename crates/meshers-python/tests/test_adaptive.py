@@ -1,3 +1,5 @@
+# Copyright (c) 2026 Kevin Marchais
+
 """Check volume adaptation, feature retention and element budgets."""
 
 import meshers

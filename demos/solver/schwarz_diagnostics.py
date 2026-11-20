@@ -1,3 +1,5 @@
+# Copyright (c) 2026 Kevin Marchais
+
 """Locate Schwarz P wall errors and measure sensitivity to native sizing on the pinned wheel."""
 
 import argparse

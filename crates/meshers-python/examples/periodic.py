@@ -1,3 +1,5 @@
+# Copyright (c) 2026 Kevin Marchais
+
 """Matching box faces and explicit quality, resource and threading controls."""
 
 import meshers

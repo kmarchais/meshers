@@ -1,3 +1,5 @@
+# Copyright (c) 2026 Kevin Marchais
+
 """Compare installed base/head wheels on one configuration in alternating fresh processes."""
 
 from __future__ import annotations

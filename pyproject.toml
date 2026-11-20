@@ -31,8 +31,6 @@ line-length = 100
 
 [tool.ruff.lint]
 select = ["ALL"]
-# One repository license covers the Python sources.
-ignore = ["missing-copyright-notice"]
 
 [tool.ruff.lint.per-file-ignores]
 # Each benchmark worker imports the dependencies of the wheel being measured.

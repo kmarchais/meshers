@@ -1,3 +1,5 @@
+# Copyright (c) 2026 Kevin Marchais
+
 """Archive real-shaped records without hiding failures or replacing history."""
 
 import copy

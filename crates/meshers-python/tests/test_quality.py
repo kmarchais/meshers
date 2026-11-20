@@ -1,3 +1,5 @@
+# Copyright (c) 2026 Kevin Marchais
+
 """Check mesh quality and the acceptance thresholds on returned elements."""
 
 import meshers

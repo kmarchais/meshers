@@ -1,3 +1,5 @@
+# Copyright (c) 2026 Kevin Marchais
+
 """Check automatic tracing, compiler fallback and callback evaluation."""
 
 import meshers

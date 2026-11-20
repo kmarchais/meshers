@@ -1,3 +1,5 @@
+# Copyright (c) 2026 Kevin Marchais
+
 """Array-backed tetrahedral meshes and their boundary metadata."""
 
 from dataclasses import dataclass

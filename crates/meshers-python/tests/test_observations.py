@@ -1,3 +1,5 @@
+# Copyright (c) 2026 Kevin Marchais
+
 """Experimental diagnostics must preserve the public generation result."""
 
 from contextlib import contextmanager

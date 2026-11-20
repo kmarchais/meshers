@@ -1,3 +1,5 @@
+# Copyright (c) 2026 Kevin Marchais
+
 """Fixed-boundary Schwarz control from research commit 9d156a29."""
 
 import itertools

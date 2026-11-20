@@ -1,3 +1,5 @@
+# Copyright (c) 2026 Kevin Marchais
+
 """Compare Schwarz P mesh costs at a fixed accuracy and solver ordering on a held-out phase."""
 
 import argparse

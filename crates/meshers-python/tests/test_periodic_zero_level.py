@@ -1,3 +1,5 @@
+# Copyright (c) 2026 Kevin Marchais
+
 """A TPMS zero set may pass through background vertices on periodic faces."""
 
 import meshers

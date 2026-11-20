@@ -1,3 +1,5 @@
+# Copyright (c) 2026 Kevin Marchais
+
 """Exact feature recovery from bounded convex piecewise-affine expression graphs."""
 
 from itertools import product

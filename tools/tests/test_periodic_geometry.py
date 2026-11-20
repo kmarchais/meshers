@@ -1,3 +1,5 @@
+# Copyright (c) 2026 Kevin Marchais
+
 """Known-answer controls for the independent periodic-volume observer."""
 
 import json

@@ -1,3 +1,5 @@
+# Copyright (c) 2026 Kevin Marchais
+
 """Bound the distance from one sample to the seeded spinodoid wall inside its unit cell."""
 
 import argparse

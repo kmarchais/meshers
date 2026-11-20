@@ -1,3 +1,5 @@
+# Copyright (c) 2026 Kevin Marchais
+
 """Check compiled field values, derivatives and expression reuse."""
 
 import gc

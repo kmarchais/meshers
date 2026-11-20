@@ -1,3 +1,5 @@
+# Copyright (c) 2026 Kevin Marchais
+
 """Handle cancellation, invalid options and a resource-budget failure."""
 
 import meshers

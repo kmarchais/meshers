@@ -1,3 +1,5 @@
+# Copyright (c) 2026 Kevin Marchais
+
 """Controls for the matched-cost screen and the held-out solver trial."""
 
 import json

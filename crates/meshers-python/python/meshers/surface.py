@@ -1,3 +1,5 @@
+# Copyright (c) 2026 Kevin Marchais
+
 """Experimental surface-only meshing for printing and previewing implicit solids."""
 
 import time

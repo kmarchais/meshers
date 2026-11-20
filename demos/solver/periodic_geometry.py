@@ -1,3 +1,5 @@
+# Copyright (c) 2026 Kevin Marchais
+
 """Audit Tet4 meshes of the frozen Gyroid and Schwarz P unit cells in physical space."""
 
 import argparse

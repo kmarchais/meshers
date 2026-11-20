@@ -1,3 +1,5 @@
+# Copyright (c) 2026 Kevin Marchais
+
 """Verify spatial sizing callbacks during mesh adaptation."""
 
 from functools import partial

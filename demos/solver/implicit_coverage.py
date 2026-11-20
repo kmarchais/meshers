@@ -1,3 +1,5 @@
+# Copyright (c) 2026 Kevin Marchais
+
 """Replay historical implicit solids with the installed Meshers build and frozen geometry audit."""
 
 import argparse

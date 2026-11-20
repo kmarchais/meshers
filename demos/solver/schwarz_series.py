@@ -1,3 +1,5 @@
+# Copyright (c) 2026 Kevin Marchais
+
 """Replay alternating Schwarz P refinement levels in fresh, single-threaded workers."""
 
 import argparse

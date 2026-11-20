@@ -1,3 +1,5 @@
+# Copyright (c) 2026 Kevin Marchais
+
 from collections.abc import Sequence
 from typing import NotRequired, TypedDict
 

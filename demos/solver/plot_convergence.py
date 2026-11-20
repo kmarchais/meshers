@@ -1,3 +1,5 @@
+# Copyright (c) 2026 Kevin Marchais
+
 """Render the recorded displacement and energy convergence measurements."""
 
 import json

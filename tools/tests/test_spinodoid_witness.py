@@ -1,3 +1,5 @@
+# Copyright (c) 2026 Kevin Marchais
+
 """Check distance bounds for the frozen spinodoid witness."""
 
 import sys

@@ -1,3 +1,5 @@
+# Copyright (c) 2026 Kevin Marchais
+
 """Direct meshing of bounded implicit solids. CPU float64; Python 3.11+."""
 
 from . import _meshers

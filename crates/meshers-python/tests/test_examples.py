@@ -1,3 +1,5 @@
+# Copyright (c) 2026 Kevin Marchais
+
 """Run user examples unchanged and validate the meshes they export."""
 
 import os

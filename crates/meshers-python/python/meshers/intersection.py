@@ -1,3 +1,5 @@
+# Copyright (c) 2026 Kevin Marchais
+
 """Named implicit intersections with retained curves and mapped periodic ends."""
 
 from __future__ import annotations

@@ -1,3 +1,5 @@
+# Copyright (c) 2026 Kevin Marchais
+
 """Nonconvex sharp-feature regressions through the public scalar interface."""
 
 import meshers

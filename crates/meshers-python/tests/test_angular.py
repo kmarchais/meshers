@@ -1,3 +1,5 @@
+# Copyright (c) 2026 Kevin Marchais
+
 """Check inverse trigonometric fields, derivatives and clipping."""
 
 import meshers

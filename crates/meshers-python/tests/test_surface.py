@@ -1,3 +1,5 @@
+# Copyright (c) 2026 Kevin Marchais
+
 """Exercise the optional surface API and a real STL export."""
 
 import meshers

@@ -1,3 +1,5 @@
+# Copyright (c) 2026 Kevin Marchais
+
 """Check solver admission with a deliberately failed CG result."""
 
 import sys

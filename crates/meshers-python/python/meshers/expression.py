@@ -1,3 +1,5 @@
+# Copyright (c) 2026 Kevin Marchais
+
 """Scalar expression tracing and first derivatives for the embedded native compiler."""
 
 from __future__ import annotations

@@ -1,3 +1,5 @@
+# Copyright (c) 2026 Kevin Marchais
+
 """Retained nonlinear intersections through the scalar generation interface."""
 
 import gc

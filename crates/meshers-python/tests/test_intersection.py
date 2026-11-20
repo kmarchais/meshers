@@ -1,3 +1,5 @@
+# Copyright (c) 2026 Kevin Marchais
+
 """Public constrained meshing: geometry, quality, mapping, exports and failures."""
 
 import json

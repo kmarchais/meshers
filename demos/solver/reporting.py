@@ -1,3 +1,5 @@
+# Copyright (c) 2026 Kevin Marchais
+
 """Write solver measurements as newline-delimited JSON."""
 
 import json
