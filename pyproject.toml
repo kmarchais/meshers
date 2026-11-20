@@ -33,8 +33,6 @@ line-length = 100
 select = ["ALL"]
 
 [tool.ruff.lint.per-file-ignores]
-# Each benchmark worker imports the dependencies of the wheel being measured.
-"tools/performance_gate.py" = ["import-outside-top-level"]
 # Test functions and numerical callbacks may omit parameter and return annotations.
 # Variadic arguments, special methods and explicit Any remain checked.
 "**/tests/**" = [
@@ -49,17 +47,16 @@ select = ["ALL"]
     "import-private-name",
 ]
 "crates/meshers-python/examples/*.py" = ["print", "implicit-namespace-package"]
-# Symbolic simplification and interpolation knot ties require exact equality.
-"crates/meshers-python/python/meshers/expression.py" = ["float-equality-comparison"]
 # Stub docstrings feed the generated API reference.
 "crates/meshers-python/python/meshers/_meshers.pyi" = ["docstring-in-stub"]
-# Scientific scripts may omit types on ordinary functions and use literal numerical thresholds.
-"demos/solver/*.py" = [
+# Solver demos run by filename and import siblings from the script directory.
+"demos/solver/*.py" = ["implicit-namespace-package"]
+# Existing numerical studies still have untyped functions. New scripts and the
+# reporting, checking, plotting and audit entry points use normal annotation rules.
+"demos/solver/{convergence,fedoo_convergence,fedoo_homogenization,historical_schwarz_repair,implicit_coverage,periodic_geometry,release_wheel_comparison,schwarz_diagnostics,schwarz_series,schwarz_trials,schwarz_workflow,spinodoid_witness}.py" = [
     "missing-type-function-argument",
     "missing-return-type-undocumented-public-function",
     "missing-return-type-private-function",
-    "magic-value-comparison",
-    "implicit-namespace-package",
 ]
 
 [tool.ruff.lint.pylint]
@@ -73,4 +70,4 @@ python-version = "3.11"
 root = ["crates/meshers-python/python", ".", "tools"]
 
 [tool.ty.src]
-include = ["crates/meshers-python/python", "tools/performance_gate.py"]
+include = ["crates/meshers-python/python", "tools/performance_gate.py", "tools/performance_worker.py"]

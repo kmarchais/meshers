@@ -12,6 +12,8 @@ from reporting import write_json_line
 from scipy.optimize import brentq
 from scipy.stats import qmc
 
+CELL_HALF_WIDTH = 0.5
+
 
 def distance_bounds(source, point, free):
     """Return a Taylor lower bound and the shortest root found along sampled rays.
@@ -21,7 +23,7 @@ def distance_bounds(source, point, free):
     """
     wave = 2 * np.pi * source.modes / source.cell_size
     amplitudes = source.amplitudes
-    angles = wave @ (point + 0.5) + source.phases
+    angles = wave @ (point + CELL_HALF_WIDTH) + source.phases
     residual = source.threshold - np.cos(angles) @ amplitudes
     if residual == 0:
         return 0.0, 0.0
@@ -59,7 +61,7 @@ def ray_distance(source, point, wave, angles, directions):
     upper = None
     for direction in directions[lengths > 0] / lengths[lengths > 0, None]:
         moving = direction != 0
-        end = np.copysign(0.5, direction[moving])
+        end = np.copysign(CELL_HALF_WIDTH, direction[moving])
         limit = np.min((end - point[moving]) / direction[moving])
         slope = wave @ direction
         for d in np.geomspace(0.00001, 0.25, 30):
@@ -76,7 +78,7 @@ def ray_distance(source, point, wave, angles, directions):
     return upper
 
 
-def main():
+def main() -> None:
     """Report distance bounds for a point reported by the native mesher."""
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--reference", required=True, type=Path)
@@ -84,13 +86,13 @@ def main():
     parser.add_argument("--lock-caps", action="store_true", help="Restrict motion to incident caps")
     args = parser.parse_args()
     point = np.array(args.point)
-    if not np.all(np.isfinite(point) & (abs(point) <= 0.5)):
+    if not np.all(np.isfinite(point) & (abs(point) <= CELL_HALF_WIDTH)):
         parser.error("Supply finite coordinates in the centered unit cell")
     if version("microgen") != "2.0.0b1":
         parser.error("Use the frozen spinodoid from microgen==2.0.0b1")
     cases = load_reference(args.reference).cases
     source = cases.spinodoid_source(1)._frep  # ruff: ignore[private-member-access] - pinned Microgen spectrum.
-    free = abs(point) < 0.5 if args.lock_caps else np.ones(3, dtype=bool)
+    free = abs(point) < CELL_HALF_WIDTH if args.lock_caps else np.ones(3, dtype=bool)
     lower, upper = distance_bounds(source, point, free)
     write_json_line({
         "point": args.point,

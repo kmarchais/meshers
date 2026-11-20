@@ -44,7 +44,7 @@ python tools/performance_gate.py --base-python /path/base/bin/python \
   --head-python /path/head/bin/python --output performance.json
 ```
 
-Use `--suite release` for all fixtures. Archive with full `--base-ref` and `--head-ref` SHAs. Compare within one configuration and fixture version. Bump the fixture version when formulas or settings change. [Benchmark history](benchmark-history.md)
+Use `--suite release` for all fixtures. Archive with full `--base-ref` and `--head-ref` SHAs. Each new record fingerprints the driver (`script_sha256`) and the numerical worker (`worker_sha256`). Compare within one configuration and fixture version. Bump the fixture version when formulas or settings change. [Benchmark history](benchmark-history.md)
 
 ## Candidate wheel FEA gate
 

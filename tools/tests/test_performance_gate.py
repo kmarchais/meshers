@@ -2,18 +2,14 @@
 
 """Prove the gate rejects each measured regression and accepts bounded noise."""
 
-import importlib.util
-from pathlib import Path
+import runpy
+import sys
 
 import numpy as np
 import pytest
 
-spec = importlib.util.spec_from_file_location(
-    "performance_gate",
-    Path(__file__).parents[1] / "performance_gate.py",
-)
-gate = importlib.util.module_from_spec(spec)
-spec.loader.exec_module(gate)
+from tools import performance_gate as gate
+from tools.performance_worker import cell_geometry
 
 BASE = {
     "seconds": 1.0,
@@ -30,6 +26,18 @@ BASE = {
     "quality_median": 0.7,
     "surface_error": 0.01,
 }
+
+
+def test_driver_loads_without_worker_dependencies(monkeypatch):
+    for dependency in (
+        "meshers",
+        "numpy",
+        "psutil",
+        "tools.performance_worker",
+        "performance_worker",
+    ):
+        monkeypatch.setitem(sys.modules, dependency, None)
+    runpy.run_path(gate.__file__)
 
 
 @pytest.mark.parametrize(
@@ -64,10 +72,10 @@ def test_curved_geometry_integration_and_inversion():
     corners = np.array([[0.0, 0.0, 0.0], [1.0, 0.0, 0.0], [0.0, 1.0, 0.0], [0.0, 0.0, 1.0]])
     edges = np.array([(0, 1), (1, 2), (2, 0), (0, 3), (1, 3), (2, 3)])
     points = np.vstack([corners, corners[edges].mean(axis=1)])[None]
-    np.testing.assert_allclose(gate.cell_geometry(points), [1 / 6])
+    np.testing.assert_allclose(cell_geometry(points), [1 / 6])
     points[0, 4] = [2.0, 2.0, 2.0]
     with pytest.raises(RuntimeError, match="Jacobian"):
-        gate.cell_geometry(points)
+        cell_geometry(points)
 
 
 def test_a_single_bad_quality_sample_cannot_hide_in_passing_medians():
@@ -83,10 +91,10 @@ def test_fold_between_quadrature_points():
     r, s, t = np.vstack([corners, corners[edges].mean(axis=1)]).T
     folded = np.column_stack([r, (r - 0.38) * s, (r - 0.42) * t])
     with pytest.raises(RuntimeError, match="curved Jacobian"):
-        gate.cell_geometry(folded[None])
+        cell_geometry(folded[None])
     # This has nearly the same corner maps but a positive interior minimum.
     valid = np.column_stack([r, (r - 0.4) * s - 0.025 * t, (r - 0.4) * t + 0.025 * s])
-    assert gate.cell_geometry(valid[None])[0] == pytest.approx(
+    assert cell_geometry(valid[None])[0] == pytest.approx(
         (0.1 - 0.8 / 4 + 0.16 + 0.025**2) / 6,
     )
 

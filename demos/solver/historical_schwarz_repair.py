@@ -9,6 +9,9 @@ import numpy as np
 import pyvista as pv
 from scipy.optimize import minimize
 
+INTERIOR_FACE_INCIDENCE = 2
+MIN_QUALITY = 0.1
+VOLUME_ATOL = 1e-12
 FACES = np.array(((1, 2, 3), (0, 3, 2), (0, 1, 3), (0, 2, 1)))
 
 
@@ -39,7 +42,7 @@ def bounds(triangles):
     return 4 * np.sqrt(3) * area / squared_edges, squared_edges
 
 
-def relocate_star(points, cells, node, target=0.1):  # ruff: ignore[too-many-locals] - preserve the archived numerical control.
+def relocate_star(points, cells, node, target=MIN_QUALITY):  # ruff: ignore[too-many-locals] - preserve the archived numerical control.
     """Return the candidate vertex and diagnostics for its incident tetrahedra.
 
     Raises:
@@ -151,7 +154,7 @@ def audit(points, cells, surface):  # ruff: ignore[too-many-locals] - preserve t
     counts = np.diff(np.r_[starts, len(ordered)])
     sums = np.add.reduceat(signs[ordering], starts)
     unique = ordered[starts]
-    conflicts = np.flatnonzero((counts == 2) & (sums != 0))
+    conflicts = np.flatnonzero((counts == INTERIOR_FACE_INCIDENCE) & (sums != 0))
     extracted = {tuple(map(int, face)) for face in unique[counts == 1]}
     provided = {tuple(sorted(map(int, face))) for face in surface}
     examples = []
@@ -177,7 +180,7 @@ def audit(points, cells, surface):  # ruff: ignore[too-many-locals] - preserve t
     matched = extracted == provided
     coherent = (
         not len(conflicts)
-        and not (counts > 2).any()
+        and not (counts > INTERIOR_FACE_INCIDENCE).any()
         and not duplicate_cells
         and not duplicate_surface
         and matched
@@ -186,10 +189,10 @@ def audit(points, cells, surface):  # ruff: ignore[too-many-locals] - preserve t
         "nodes": len(points),
         "elements": len(cells),
         "unique_faces": len(unique),
-        "interior_faces": int((counts == 2).sum()),
+        "interior_faces": int((counts == INTERIOR_FACE_INCIDENCE).sum()),
         "extracted_boundary_faces": len(extracted),
         "same_orientation_shared_faces": len(conflicts),
-        "nonmanifold_faces": int((counts > 2).sum()),
+        "nonmanifold_faces": int((counts > INTERIOR_FACE_INCIDENCE).sum()),
         "duplicate_cells": duplicate_cells,
         "duplicate_surface_faces": duplicate_surface,
         "provided_boundary_matches_extraction": matched,
@@ -219,7 +222,7 @@ def check_repair(points, moved, cells, boundary):
         msg = "Repair produced a nonpositive or nonfinite determinant"
         raise ValueError(msg)
     volume_difference = float((new_determinants.sum() - old_determinants.sum()) / 6)
-    if not abs(volume_difference) < 1e-12:
+    if not abs(volume_difference) < VOLUME_ATOL:
         msg = f"Repair changed signed volume by {volume_difference}"
         raise ValueError(msg)
     return volume_difference, float(new_determinants.min())
@@ -243,7 +246,7 @@ def repair(points, cells, surface, *, maximum_attempts=400):
     for sweep in range(2):
         accepted_before = len(accepted)
         for element in np.argsort(measured):
-            if measured[element] >= 0.1 or len(attempts) >= maximum_attempts:
+            if measured[element] >= MIN_QUALITY or len(attempts) >= maximum_attempts:
                 continue
             free = cells[element][~boundary[cells[element]]]
             if not len(free):
@@ -258,24 +261,24 @@ def repair(points, cells, surface, *, maximum_attempts=400):
                 record.update(element=int(element), sweep=sweep)
                 attempts.append(record)
                 if record["target_attained"]:
-                    bad_before = int((measured < 0.1).sum())
+                    bad_before = int((measured < MIN_QUALITY).sum())
                     moved[node] = candidate
                     measured = quality(moved, cells)
-                    if int((measured < 0.1).sum()) >= bad_before:
+                    if int((measured < MIN_QUALITY).sum()) >= bad_before:
                         msg = "Accepted relocation did not reduce the number of poor elements"
                         raise ValueError(msg)
                     accepted.append(int(node))
                     break
         if (
-            not (measured < 0.1).any()
+            not (measured < MIN_QUALITY).any()
             or len(accepted) == accepted_before
             or len(attempts) >= maximum_attempts
         ):
             break
     volume_difference, minimum_determinant = check_repair(points, moved, cells, boundary)
     return moved, {
-        "initial_bad_elements": int((initial < 0.1).sum()),
-        "remaining_bad_elements": int((measured < 0.1).sum()),
+        "initial_bad_elements": int((initial < MIN_QUALITY).sum()),
+        "remaining_bad_elements": int((measured < MIN_QUALITY).sum()),
         "initial_minimum_quality": float(initial.min()),
         "final_minimum_quality": float(measured.min()),
         "accepted_moves": len(accepted),

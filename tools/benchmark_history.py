@@ -47,6 +47,12 @@ def validate(data: dict) -> None:
         if not re.fullmatch(r"[a-f0-9]{40,64}", data.get(ref, "")):
             msg = f"Missing immutable source identity: {ref}"
             raise ValueError(msg)
+    worker_digest = data.get("worker_sha256", "")
+    if "worker_sha256" in data and not (
+        isinstance(worker_digest, str) and re.fullmatch(r"[a-f0-9]{64}", worker_digest)
+    ):
+        msg = "Invalid benchmark worker SHA-256"
+        raise ValueError(msg)
     for name, case in data["cases"].items():
         needs_cap = name == "mapped_intersection" and data["fixture_version"] == FIXTURE_VERSION
         validate_case(case, data["measured_pairs"], needs_cap=needs_cap)

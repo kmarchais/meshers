@@ -51,6 +51,13 @@ def test_compiled_lifetime_and_native_match():
     assert all(len(p) for p in a.periodic_pairs)
 
 
+def test_symbolic_derivative_preserves_coefficients_close_to_zero_and_one():
+    small = 2.0**-50
+    near_one = 1.0 + small
+    field = meshers.compile_field(lambda x, y, _z: small * x + near_one * y)
+    np.testing.assert_array_equal(field.gradient(0, 0, 0), [small, near_one, 0])
+
+
 def test_compiled_gradient_and_captured_grading():
     width = 0.29
 

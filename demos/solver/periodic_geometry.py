@@ -13,6 +13,11 @@ from scipy.sparse import coo_matrix
 from scipy.sparse.csgraph import connected_components
 from scipy.stats import qmc
 
+MIN_ROOT_AMPLITUDE = 1e-12
+SEAM_ATOL = 1e-14
+CAP_ATOL = 1e-10
+ROOT_RESIDUAL_ATOL = 1e-12
+INTERIOR_FACE_INCIDENCE = 2
 BASELINE = Path(__file__).with_name("release-wheel") / "baseline.json"
 FACES = np.array([[1, 2, 3], [0, 3, 2], [0, 1, 3], [0, 2, 1]])
 AXES = "xyz"
@@ -44,7 +49,7 @@ def roots(points, specimen, level, axis):
     a, b = values[0] - offset, values[1] - offset
     amplitude = np.hypot(a, b)
     ratio = (level - offset) / np.maximum(amplitude, 1e-30)
-    valid = (amplitude > 1e-12) & (abs(ratio) <= 1 + 1e-13)
+    valid = (amplitude > MIN_ROOT_AMPLITUDE) & (abs(ratio) <= 1 + 1e-13)
     angle = np.arccos(np.clip(ratio, -1, 1))
     phase = np.arctan2(b, a)
     positions = (phase[:, None] + angle[:, None] * [-1, 1]) / (2 * np.pi)
@@ -60,7 +65,7 @@ def forward(samples, specimen, level, axes):
         delta = abs(samples[:, axis, None] - positions)
         # +0.5 and -0.5 are distinct physical points with the same field.
         delta = np.where(
-            abs(positions + 0.5) < 1e-14,
+            abs(positions + 0.5) < SEAM_ATOL,
             np.minimum(delta, abs(samples[:, axis, None] - 0.5)),
             delta,
         )
@@ -92,7 +97,7 @@ def boundary_metrics(points, faces, specimen, net):  # ruff: ignore[complex-stru
     wall = np.ones(len(faces), dtype=bool)
     for axis in range(3):
         for side in (-0.5, 0.5):
-            mask = np.all(abs(triangles[:, :, axis] - side) < 1e-10, axis=1)
+            mask = np.all(abs(triangles[:, :, axis] - side) < CAP_ATOL, axis=1)
             caps[axis, side] = mask
             wall &= ~mask
     wall_values = field(triangles.mean(axis=1), specimen)
@@ -136,7 +141,7 @@ def boundary_metrics(points, faces, specimen, net):  # ruff: ignore[complex-stru
                 lines[:, axis] = column
                 refs.append(lines[valid].copy())
         reference = np.concatenate(refs)
-        if not np.all(abs(field(reference, specimen) - level) < 1e-12):
+        if not np.all(abs(field(reference, specimen) - level) < ROOT_RESIDUAL_ATOL):
             msg = "Reference samples are off the analytic wall"
             raise ValueError(msg)
         mask = wall if len(levels) == 1 else wall & ((wall_values < 0) == (level < 0))
@@ -170,7 +175,7 @@ def audit(grid, specimen, baseline, power=11):  # ruff: ignore[too-many-locals] 
     order = np.argsort(ids)
     starts = np.cumsum(counts) - counts
     faces = oriented[order[starts[counts == 1]]]
-    shared = starts[counts == 2]
+    shared = starts[counts == INTERIOR_FACE_INCIDENCE]
     first, second = order[shared], order[shared + 1]
     inversions = sum(
         (oriented[:, i] > oriented[:, j]).astype(int) for i in range(3) for j in range(i + 1, 3)
@@ -212,7 +217,7 @@ def audit(grid, specimen, baseline, power=11):  # ruff: ignore[too-many-locals] 
         "material_witnesses": not misses.any(),
         "signed_orientation": det.min() > 0,
         "quality": qualities.min() >= limits["minimum_quality"],
-        "conformity": counts.max() <= 2
+        "conformity": counts.max() <= INTERIOR_FACE_INCIDENCE
         and np.all((inversions[first] - inversions[second]) % 2 == 1),
         "volume": abs(
             volume
@@ -246,7 +251,7 @@ def audit(grid, specimen, baseline, power=11):  # ruff: ignore[too-many-locals] 
     }
 
 
-def main():
+def main() -> int:
     """Return the admission exit code after recording the exported volume audit."""
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("specimen", choices=("gyroid", "schwarz", "schwarz-shifted"))

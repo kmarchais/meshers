@@ -142,3 +142,13 @@ def test_mapped_cap_measurements_are_required_in_new_fixture_records():
         for row in [*rows, case["medians"][label]]:
             row["mapped_cap_error"] = 0.001
     history.validate(data)
+
+
+def test_worker_fingerprint_on_split_benchmark_records():
+    data = measurement()
+    history.validate(data)
+    data["worker_sha256"] = "b" * 64
+    history.validate(data)
+    data["worker_sha256"] = "b" * 40
+    with pytest.raises(ValueError, match="Invalid benchmark worker SHA-256"):
+        history.validate(data)

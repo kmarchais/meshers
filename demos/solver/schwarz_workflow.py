@@ -31,6 +31,9 @@ from scipy.linalg import eigvalsh
 from scipy.spatial import cKDTree
 from vtkmodules.vtkCommonCore import vtkSMPTools
 
+PERIODIC_PAIR_ATOL = 1e-12
+MAX_ENERGY_DISCREPANCY = 0.01
+MIN_CELLS = 2
 REFERENCE = BASELINE.with_name("schwarz-reference.json")
 PROBE = np.array([-0.364, -0.347, -0.313])
 PACKAGES = {
@@ -175,10 +178,16 @@ def solver_input(grid, quality):
     surface = boundary.point_data["vtkOriginalPointIds"][boundary.regular_faces]
     pairs = []
     for axis in range(3):
-        low, high = [np.flatnonzero(abs(points[:, axis] - side) < 1e-12) for side in (-0.5, 0.5)]
+        low, high = [
+            np.flatnonzero(abs(points[:, axis] - side) < PERIODIC_PAIR_ATOL) for side in (-0.5, 0.5)
+        ]
         other = [a for a in range(3) if a != axis]
         distance, index = cKDTree(points[high][:, other]).query(points[low][:, other])
-        if len(low) != len(high) or np.max(distance) >= 1e-12 or len(np.unique(index)) != len(high):
+        if (
+            len(low) != len(high)
+            or np.max(distance) >= PERIODIC_PAIR_ATOL
+            or len(np.unique(index)) != len(high)
+        ):
             msg = "Could not reconstruct a bijective periodic node map"
             raise ValueError(msg)
         pairs.append(np.column_stack([low, high[index]]))
@@ -281,10 +290,14 @@ def solve_admitted(grid, geometry, row, *, solver_factory=AuditedCG):
     delta = (tensor + tensor.T - ref - ref.T) / 2
     discrepancy = float(abs(eigvalsh(delta, (ref + ref.T) / 2)).max())
     row["relative_energy_discrepancy"] = discrepancy
-    row["status"] = "within-reference-target" if discrepancy <= 0.01 else "outside-reference-target"
+    row["status"] = (
+        "within-reference-target"
+        if discrepancy <= MAX_ENERGY_DISCREPANCY
+        else "outside-reference-target"
+    )
 
 
-def main():
+def main() -> int:
     """Save a workflow record.
 
     Returns:
@@ -303,8 +316,8 @@ def main():
         if args.cells is not None:
             parser.error("native-candidate uses the fixed 24-cell refinement control")
         args.cells = 24
-    if args.cells is not None and args.cells < 2:
-        parser.error("--cells must be at least 2")
+    if args.cells is not None and args.cells < MIN_CELLS:
+        parser.error(f"--cells must be at least {MIN_CELLS}")
     if args.route != "microgen-default" and args.cells is None:
         parser.error("Specify --cells for this route")
     args.output.mkdir()

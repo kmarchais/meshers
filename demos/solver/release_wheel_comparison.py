@@ -105,7 +105,7 @@ def solve_case(case, baseline, row):
     row["status"] = "solved"
 
 
-def main():
+def main() -> None:
     """Record one fresh generation and six-load study, preserving rejected cases.
 
     Raises:

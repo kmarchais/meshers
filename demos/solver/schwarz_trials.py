@@ -12,6 +12,7 @@ from statistics import median
 
 from schwarz_series import TARGET, observe_worker
 
+REPEATS = 3
 REPAIR_SIZES = {"h050": 0.05, "h040": 0.04, "h035": 0.035, "h030": 0.03}
 THREAD_VARIABLES = (
     "OPENBLAS_NUM_THREADS",
@@ -56,7 +57,7 @@ def summarize(repeats):
     """Return median wall times for arms meeting the target in all three repeats."""
     return {
         arm: median(r["wall_seconds"] for r in rows)
-        if len(rows) == 3 and all(r["status"] == TARGET for r in rows)
+        if len(rows) == REPEATS and all(r["status"] == TARGET for r in rows)
         else None
         for arm, rows in repeats.items()
     }
@@ -105,7 +106,7 @@ def replay(study, output):
         arms = ["shifted-baseline", "shifted-rcm"]
         result = {"phase_x": 0.125, "order": "AB BA AB"}
     repeats = {arm: [] for arm in arms}
-    for repeat in range(3):
+    for repeat in range(REPEATS):
         offset = repeat % len(arms) if arms else 0
         for arm in arms[offset:] + arms[:offset]:
             repeats[arm].append(measure(output, f"r{repeat}-{arm}", arm))

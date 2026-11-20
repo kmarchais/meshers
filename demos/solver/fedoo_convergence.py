@@ -19,7 +19,18 @@ import numpy as np
 from convergence import QUADRATURE, ROOT, exact, specimen
 from convergence import solve as reference_solve
 from reporting import write_json_line
-from solver_checks import require
+from solver_checks import (
+    AFFINE_DISPLACEMENT_ATOL,
+    AFFINE_ENERGY_ATOL,
+    MATRIX_SYMMETRY_ATOL,
+    MAX_RELATIVE_RESIDUAL,
+    require,
+)
+
+PRESCRIBED_DISPLACEMENT_ATOL = 1e-12
+MAX_REFERENCE_DISAGREEMENT = 1e-6
+MIN_DISPLACEMENT_RATE = 1.7
+MIN_ENERGY_RATE = 0.85
 
 
 def errors(mesh, displacement, *, affine=False):  # ruff: ignore[too-many-locals] - explicit error integration.
@@ -94,7 +105,7 @@ def solve(mesh, *, affine=False):  # ruff: ignore[too-many-locals] - retain the 
     require(np.all(np.isfinite(displacement)), "Displacement contains nonfinite values")
     boundary_error = float(np.max(np.abs(displacement[boundary] - boundary_values)))
     require(
-        boundary_error < 1e-12,
+        boundary_error < PRESCRIBED_DISPLACEMENT_ATOL,
         f"Boundary displacement error {boundary_error} exceeds the limit",
     )
     # fedoo stores component-major DOFs; audit only unconstrained equations.
@@ -108,7 +119,7 @@ def solve(mesh, *, affine=False):  # ruff: ignore[too-many-locals] - retain the 
     rhs = vector[free] - matrix[free][:, locked] @ displacement.T.ravel()[locked]
     symmetry = reduced - reduced.T
     require(
-        np.max(np.abs(symmetry.data), initial=0) < 1e-10,
+        np.max(np.abs(symmetry.data), initial=0) < MATRIX_SYMMETRY_ATOL,
         "Reduced stiffness matrix is asymmetric",
     )
     require(np.all(reduced.diagonal() > 0), "Reduced stiffness matrix has a nonpositive diagonal")
@@ -116,14 +127,17 @@ def solve(mesh, *, affine=False):  # ruff: ignore[too-many-locals] - retain the 
         np.linalg.norm(reduced @ displacement.T.ravel()[free] - rhs)
         / max(np.linalg.norm(rhs), 1e-30),
     )
-    require(residual < 2e-9, f"Relative residual {residual} exceeds the limit")
+    require(residual < MAX_RELATIVE_RESIDUAL, f"Relative residual {residual} exceeds the limit")
     result = errors(mesh, displacement, affine=affine)
     if affine:
         require(
-            result["l2_displacement_error"] < 1e-8,
+            result["l2_displacement_error"] < AFFINE_DISPLACEMENT_ATOL,
             f"Affine displacement error exceeds the limit: {result}",
         )
-        require(result["energy_error"] < 1e-7, f"Affine energy error exceeds the limit: {result}")
+        require(
+            result["energy_error"] < AFFINE_ENERGY_ATOL,
+            f"Affine energy error exceeds the limit: {result}",
+        )
     return {
         "tetrahedra": len(mesh.tetrahedra),
         "points": len(mesh.points),
@@ -137,7 +151,7 @@ def solve(mesh, *, affine=False):  # ruff: ignore[too-many-locals] - retain the 
     }
 
 
-def main():
+def main() -> None:
     """Run fedoo patch tests and convergence, checking the independent assembly."""
     extension = Path(importlib.import_module("meshers._meshers").__file__)
     report = {
@@ -182,7 +196,7 @@ def main():
             for metric in ["l2_displacement_error", "energy_error"]:
                 delta = abs(result[metric] / reference[metric] - 1)
                 require(
-                    delta < 1e-6,
+                    delta < MAX_REFERENCE_DISAGREEMENT,
                     f"{name} at {n} cells: {metric} differs from the reference by {delta:.6g}",
                 )
                 result[metric + "_reference_relative_difference"] = delta
@@ -194,11 +208,11 @@ def main():
             results.append(result)
             write_json_line({"geometry": name, **result})
         require(
-            results[-1]["l2_displacement_error_rate"] > 1.7,
+            results[-1]["l2_displacement_error_rate"] > MIN_DISPLACEMENT_RATE,
             f"{name}: l2_displacement_error convergence rate must exceed 1.7",
         )
         require(
-            results[-1]["energy_error_rate"] > 0.85,
+            results[-1]["energy_error_rate"] > MIN_ENERGY_RATE,
             f"{name}: energy_error convergence rate must exceed 0.85",
         )
         report["cases"].append({"geometry": name, "affine_patch": patch, "refinement": results})

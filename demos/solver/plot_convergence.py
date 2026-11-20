@@ -12,7 +12,7 @@ from matplotlib.ticker import NullFormatter
 ROOT = Path(__file__).resolve().parents[2]
 
 
-def main():
+def main() -> None:
     """Write a standalone scientific figure from the solver's raw JSON results."""
     report = json.loads((ROOT / "docs/solver-convergence-results.json").read_text())
     fig, axes = plt.subplots(1, 2, figsize=(10, 4), constrained_layout=True)

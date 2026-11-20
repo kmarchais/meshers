@@ -13,7 +13,7 @@ from pathlib import Path
 import fedoo as fd
 import numpy as np
 import pyvista as pv
-from fedoo_homogenization import AuditedCG, ReorderedCG
+from fedoo_homogenization import COMPONENTS, AuditedCG, ReorderedCG
 from historical_schwarz_repair import repaired_grid
 from microgen.external import MmgError
 from periodic_geometry import BASELINE, audit
@@ -23,8 +23,9 @@ from scipy.linalg import eigvalsh
 from vtkmodules.vtkCommonCore import vtkSMPTools
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
-from tools.performance_gate import cell_geometry
+from tools.performance_worker import cell_geometry
 
+CAP_ATOL = 1e-10
 SIZES = {
     "medium": (0.06, 0.0007),
     "fine": (0.04, 0.00045),
@@ -58,7 +59,7 @@ def stage_study(case, folder, row, baseline):
         coords = skin.points[tri]
         caps = np.zeros(len(tri), dtype=bool)
         for side in (-0.5, 0.5):
-            caps |= (abs(coords - side) < 1e-10).all(axis=1).any(axis=1)
+            caps |= (abs(coords - side) < CAP_ATOL).all(axis=1).any(axis=1)
         walls[name] = pv.PolyData.from_regular_faces(skin.points, tri[~caps])
 
     path = live_microgen(
@@ -117,7 +118,12 @@ def quadratic_control(row, baseline):
             rigid_body_constraint="pin",
         ),
     )
-    if len(solver.records) != 6 or not np.allclose(tensor, tensor.T, rtol=1e-8, atol=1e-9):
+    if len(solver.records) != len(COMPONENTS) or not np.allclose(
+        tensor,
+        tensor.T,
+        rtol=1e-8,
+        atol=1e-9,
+    ):
         msg = "Quadratic six-load stiffness verification failed"
         raise ValueError(msg)
     reference = np.asarray(json.loads(REFERENCE.read_text())["stiffness"])
@@ -169,7 +175,7 @@ def measure(case, parent, row, *, repair_resolution, repair_hmax):
             stage_study(case, Path(temp), row, baseline)
 
 
-def main():
+def main() -> None:
     """Write one independent result, preserving failed and over-budget cases.
 
     Raises:

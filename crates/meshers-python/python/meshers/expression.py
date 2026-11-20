@@ -241,20 +241,20 @@ class _Expression:  # ruff: ignore[too-many-public-methods] - Python and NumPy o
         # ponytail: eager selection costs O(table size); add a lookup kernel only
         # if profiles justify it. Existing native operations preserve the table.
         value = branch(0, len(knots) - 1)
-        lower = (
-            float(values[0])
-            if left is None
-            else self.graph.select(coordinate == float(knots[0]), float(values[0]), float(left))
-        )
-        upper = (
-            float(values[-1])
-            if right is None
-            else self.graph.select(coordinate == float(knots[-1]), float(values[-1]), float(right))
-        )
+        first, last = float(knots[0]), float(knots[-1])
+        # At a knot NumPy returns the tabulated value, including when a fill is supplied.
+        lower = float(values[0])
+        upper = float(values[-1])
         return self.graph.select(
-            coordinate <= float(knots[0]),
-            lower,
-            self.graph.select(coordinate >= float(knots[-1]), upper, value),
+            coordinate <= first,
+            lower if left is None else self.graph.select(coordinate < first, float(left), lower),
+            self.graph.select(
+                coordinate >= last,
+                upper
+                if right is None
+                else self.graph.select(coordinate > last, float(right), upper),
+                value,
+            ),
         )
 
     def __array__(self, *args: object, **kwargs: object) -> Never:
@@ -325,23 +325,24 @@ class _Derivatives:
         self.one = graph.convert(1.0)
         self.cache: dict[tuple[int, int], _Expression] = {}
 
-    def constant(self, expression: _Expression) -> float | None:
+    def is_constant(self, expression: _Expression, literal: float) -> bool:
+        # A small nonzero coefficient still contributes to the derivative.
         op, _, value = self.graph.nodes[expression.index]
-        return value if op == "constant" else None
+        return op == "constant" and value == literal
 
     def mul(self, a: _Expression, b: _Expression) -> _Expression:
-        if self.constant(a) == 0.0 or self.constant(b) == 0.0:
+        if self.is_constant(a, 0.0) or self.is_constant(b, 0.0):
             return self.zero
-        if self.constant(a) == 1.0:
+        if self.is_constant(a, 1.0):
             return b
-        if self.constant(b) == 1.0:
+        if self.is_constant(b, 1.0):
             return a
         return a * b
 
     def add(self, a: _Expression, b: _Expression) -> _Expression:
-        if self.constant(a) == 0.0:
+        if self.is_constant(a, 0.0):
             return b
-        if self.constant(b) == 0.0:
+        if self.is_constant(b, 0.0):
             return a
         return a + b
 
@@ -402,7 +403,7 @@ class _Derivatives:
         if op == "add":
             return self.add(da, db)
         if op == "sub":
-            return self.add(da, -db) if self.constant(db) != 0.0 else da
+            return da if self.is_constant(db, 0.0) else self.add(da, -db)
         if op == "mul":
             return self.add(self.mul(da, b), self.mul(a, db))
         if op == "pow":
@@ -410,8 +411,8 @@ class _Derivatives:
         if op != "div":
             msg = f"no derivative rule for {op}"
             raise TraceError(msg)
-        if self.constant(db) == 0.0:
-            return self.zero if self.constant(da) == 0.0 else da / b
+        if self.is_constant(db, 0.0):
+            return self.zero if self.is_constant(da, 0.0) else da / b
         return (self.mul(da, b) - self.mul(a, db)) / (b * b)
 
     def _power(
@@ -421,17 +422,16 @@ class _Derivatives:
         da: _Expression,
         db: _Expression,
     ) -> _Expression:
-        exponent = self.constant(b)
-        if exponent == 0.0:
+        if self.is_constant(b, 0.0):
             return self.zero
-        if exponent == 1.0:
+        if self.is_constant(b, 1.0):
             return da
-        if self.constant(db) == 0.0:
+        if self.is_constant(db, 0.0):
             return self.mul(self.mul(b, a ** (b - self.one)), da)
         return self.mul(a**b, self.add(self.mul(db, self.graph.node("ln", a)), self.mul(b, da / a)))
 
     def _unary(self, op: str, a: _Expression, da: _Expression) -> _Expression:
-        if self.constant(da) == 0.0:
+        if self.is_constant(da, 0.0):
             return self.zero
         if op == "neg":
             return -da

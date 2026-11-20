@@ -14,7 +14,7 @@ from periodic_geometry import BASELINE, audit
 from release_wheel_comparison import generate, hardware_snapshot
 
 
-def main():
+def main() -> int:
     """Return the admission exit code after saving the exported volume and its audit.
 
     Raises:

@@ -19,6 +19,7 @@ import numpy as np
 sys.path.insert(0, str(Path(__file__).resolve().parents[2] / "tools"))
 from benchmark_hardware import hardware_snapshot
 
+MAX_SNAP = 0.2
 ARCHIVE = "602dc900cd028d205b36e29dcdb5b4a9cf4f581a"
 ORACLE_DIGEST = "084219b2bb0b03f9c35a408aea3f233b38fbc48e01d771068c69ab15ae23f734"
 # Solid fraction and empirical Sobol uncertainty from the archive's
@@ -164,7 +165,7 @@ def measure(case, request, oracle, *, fea):
     }
 
 
-def main():
+def main() -> int:
     """Record one attempt.
 
     Returns:
@@ -214,8 +215,8 @@ def main():
         parser.error("The archived spinodoid requires microgen==2.0.0b1")
     request = {"cells": args.cells, "optimize_passes": args.passes, "adapt": args.adapt}
     if args.snap is not None:
-        if not 0 <= args.snap <= 0.2:
-            parser.error("--snap must be between 0 and 0.2")
+        if not 0 <= args.snap <= MAX_SNAP:
+            parser.error(f"--snap must be between 0 and {MAX_SNAP}")
         request["snap"] = args.snap
     if args.adapt_tolerance is not None:
         request["adapt_tolerance"] = args.adapt_tolerance

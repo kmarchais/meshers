@@ -20,7 +20,13 @@ import numpy as np
 from reporting import write_json_line
 from scipy.sparse import coo_matrix, diags
 from scipy.sparse.linalg import cg
-from solver_checks import require
+from solver_checks import (
+    AFFINE_DISPLACEMENT_ATOL,
+    AFFINE_ENERGY_ATOL,
+    MATRIX_SYMMETRY_ATOL,
+    MAX_RELATIVE_RESIDUAL,
+    require,
+)
 
 ROOT = Path(__file__).resolve().parents[2]
 QUADRATURE = np.full((4, 4), (5 - np.sqrt(5)) / 20)
@@ -93,7 +99,7 @@ def solve(mesh, *, affine=False):  # ruff: ignore[too-many-locals, too-many-stat
     load = rhs[free] - matrix[free][:, locked] @ displacement[locked]
     symmetry = reduced - reduced.T
     require(
-        np.max(np.abs(symmetry.data), initial=0) < 1e-10,
+        np.max(np.abs(symmetry.data), initial=0) < MATRIX_SYMMETRY_ATOL,
         "Reduced stiffness matrix is asymmetric",
     )
     require(np.all(reduced.diagonal() > 0), "Reduced stiffness matrix has a nonpositive diagonal")
@@ -114,7 +120,7 @@ def solve(mesh, *, affine=False):  # ruff: ignore[too-many-locals, too-many-stat
     )
     residual = float(np.linalg.norm(reduced @ solution - load) / max(np.linalg.norm(load), 1e-30))
     require(info == 0, f"CG returned status {info}")
-    require(residual < 2e-9, f"Relative residual {residual} exceeds the limit")
+    require(residual < MAX_RELATIVE_RESIDUAL, f"Relative residual {residual} exceeds the limit")
     displacement[free] = solution
     local = displacement.reshape(-1, 3)[cells]
     discrete_values = np.einsum("qi,tia->tqa", QUADRATURE, local)
@@ -125,8 +131,11 @@ def solve(mesh, *, affine=False):  # ruff: ignore[too-many-locals, too-many-stat
     l2 = np.sqrt(np.sum(volumes[:, None] * np.sum((discrete_values - values) ** 2, axis=-1)) / 4)
     energy_error = np.sqrt(np.sum(volumes[:, None] * energy) / 4)
     if affine:
-        require(l2 < 1e-8, f"Affine displacement error {l2} exceeds the limit")
-        require(energy_error < 1e-7, f"Affine energy error {energy_error} exceeds the limit")
+        require(l2 < AFFINE_DISPLACEMENT_ATOL, f"Affine displacement error {l2} exceeds the limit")
+        require(
+            energy_error < AFFINE_ENERGY_ATOL,
+            f"Affine energy error {energy_error} exceeds the limit",
+        )
     edges = np.concatenate([
         np.linalg.norm(p[:, i] - p[:, j], axis=1) for i in range(4) for j in range(i + 1, 4)
     ])
@@ -182,7 +191,7 @@ def specimen(name, n):
     )
 
 
-def main():
+def main() -> None:
     """Run affine patch tests and three refinement levels for each geometry."""
     extension = Path(importlib.import_module("meshers._meshers").__file__)
     report = {

@@ -160,7 +160,7 @@ def run_series(output, repeats, timeout, on_step=None):
                 )
 
 
-def main():
+def main() -> None:
     """Run the same timed series from a clean output directory."""
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("output", type=Path)

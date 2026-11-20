@@ -25,13 +25,23 @@ from reporting import write_json_line
 from scipy.sparse import diags
 from scipy.sparse.csgraph import reverse_cuthill_mckee
 from scipy.sparse.linalg import cg
-from solver_checks import require
+from solver_checks import (
+    MAX_RELATIVE_RESIDUAL,
+    require,
+)
 
 if TYPE_CHECKING:
     from numpy.typing import NDArray
     from scipy.sparse import sparray, spmatrix
 
 
+MATRIX_SYMMETRY_RTOL = 1e-12
+PERIODIC_PAIR_ATOL = 1e-12
+MEAN_STRAIN_ATOL = 1e-12
+PERIODIC_JUMP_ATOL = 1e-10
+MAX_PERIODIC_FORCE_ERROR = 1e-7
+HOMOGENIZATION_TOLERANCE = 1e-7
+SOLID_REFERENCE_RTOL = 1e-8
 ROOT = Path(__file__).resolve().parents[2]
 COMPONENTS = ["E_xx", "E_yy", "E_zz", "E_xy", "E_xz", "E_yz"]
 MATERIAL = np.eye(6)
@@ -61,7 +71,7 @@ class AuditedCG:
         require(np.all(diagonal > 0), "CG requires a positive diagonal")
         skew = matrix - matrix.T
         require(
-            np.linalg.norm(skew.data) / np.linalg.norm(matrix.data) < 1e-12,
+            np.linalg.norm(skew.data) / np.linalg.norm(matrix.data) < MATRIX_SYMMETRY_RTOL,
             "Reduced stiffness matrix is asymmetric",
         )
         iterations = 0
@@ -83,7 +93,10 @@ class AuditedCG:
         solve_seconds = time.perf_counter() - solve_start
         residual = float(np.linalg.norm(matrix @ solution - rhs) / max(np.linalg.norm(rhs), 1e-30))
         require(info == 0, f"CG returned status {info} with relative residual {residual}")
-        require(residual < 2e-9, f"CG relative residual {residual} exceeds the limit")
+        require(
+            residual < MAX_RELATIVE_RESIDUAL,
+            f"CG relative residual {residual} exceeds the limit",
+        )
         self.records.append({
             "iterations": iterations,
             "cg_seconds": solve_seconds,
@@ -113,7 +126,7 @@ class ReorderedCG(AuditedCG):
         x[order] = permuted_solution
         residual = float(np.linalg.norm(matrix @ x - rhs) / max(np.linalg.norm(rhs), 1e-30))
         require(
-            residual < 2e-9,
+            residual < MAX_RELATIVE_RESIDUAL,
             f"Original-system CG relative residual {residual} exceeds the limit",
         )
         self.records[-1].update(
@@ -154,7 +167,8 @@ def pair_classes(mesh):
         require(np.array_equal(np.sort(pairs[:, 1]), high), "Incomplete high-side periodic pairs")
         shift = np.eye(3)[axis]
         require(
-            np.max(np.abs(mesh.points[pairs[:, 1]] - mesh.points[pairs[:, 0]] - shift)) < 1e-12,
+            np.max(np.abs(mesh.points[pairs[:, 1]] - mesh.points[pairs[:, 0]] - shift))
+            < PERIODIC_PAIR_ATOL,
             "Periodic pair has incorrect translation",
         )
         mapping = np.arange(len(mesh.points))
@@ -218,7 +232,8 @@ def homogenize(mesh, *, stress_probe_cell=None, solver_factory=AuditedCG):  # ru
         displacement = problem.get_disp().T
         require(np.all(np.isfinite(displacement)), "Nonfinite displacement")
         require(
-            np.max(np.abs(problem.get_dof_solution("MeanStrain").ravel() - engineering)) < 1e-12,
+            np.max(np.abs(problem.get_dof_solution("MeanStrain").ravel() - engineering))
+            < MEAN_STRAIN_ATOL,
             "Prescribed mean strain was lost",
         )
         macro = strain_tensor(engineering)
@@ -234,7 +249,7 @@ def homogenize(mesh, *, stress_probe_cell=None, solver_factory=AuditedCG):  # ru
             )
             for pairs in mesh.periodic_pairs
         )
-        require(jump_error < 1e-10, f"Periodic displacement jump error {jump_error}")
+        require(jump_error < PERIODIC_JUMP_ATOL, f"Periodic displacement jump error {jump_error}")
         gradient = np.einsum("tia,tib->tab", displacement[mesh.tetrahedra], gradients)
         strain = (gradient + np.swapaxes(gradient, -1, -2)) / 2
         stress = 2 * strain + np.trace(strain, axis1=1, axis2=2)[:, None, None] * np.eye(3)
@@ -250,7 +265,7 @@ def homogenize(mesh, *, stress_probe_cell=None, solver_factory=AuditedCG):  # ru
         balanced = np.zeros_like(forces)
         np.add.at(balanced, classes, forces)
         force_error = float(np.linalg.norm(balanced) / np.linalg.norm(forces))
-        require(force_error < 1e-7, f"Periodic force error {force_error}")
+        require(force_error < MAX_PERIODIC_FORCE_ERROR, f"Periodic force error {force_error}")
         checks.append({
             "load": COMPONENTS[case],
             "periodic_jump_error": jump_error,
@@ -264,14 +279,17 @@ def homogenize(mesh, *, stress_probe_cell=None, solver_factory=AuditedCG):  # ru
     reaction_error = float(np.linalg.norm(reactions - stiffness) / np.linalg.norm(stiffness))
     symmetry = float(np.linalg.norm(stiffness - stiffness.T) / np.linalg.norm(stiffness))
     require(
-        max(hill_mandel, reaction_error, symmetry) < 1e-7,
+        max(hill_mandel, reaction_error, symmetry) < HOMOGENIZATION_TOLERANCE,
         "Energy, reaction or symmetry check failed",
     )
     eigenvalues = np.linalg.eigvalsh((stiffness + stiffness.T) / 2)
     require(np.all(eigenvalues > 0), "Effective stiffness must be positive definite")
     # Uniform-strain (Voigt) upper bound using the measured solid volume.
     voigt_gap = np.linalg.eigvalsh(volumes.sum() * MATERIAL - (stiffness + stiffness.T) / 2)
-    require(voigt_gap.min() > -1e-7, "Effective stiffness exceeds the Voigt bound")
+    require(
+        voigt_gap.min() > -HOMOGENIZATION_TOLERANCE,
+        "Effective stiffness exceeds the Voigt bound",
+    )
     automatic_solver = solver_factory()
     automatic = fd.homogen.get_homogenized_stiffness(
         assembly,
@@ -280,7 +298,10 @@ def homogenize(mesh, *, stress_probe_cell=None, solver_factory=AuditedCG):  # ru
         rigid_body_constraint="pin",
     )
     automatic_error = float(np.linalg.norm(automatic - stiffness) / np.linalg.norm(stiffness))
-    require(automatic_error < 1e-7, f"Stress-control discrepancy {automatic_error}")
+    require(
+        automatic_error < HOMOGENIZATION_TOLERANCE,
+        f"Stress-control discrepancy {automatic_error}",
+    )
     compliance = np.linalg.inv(stiffness)
     return {
         "tetrahedra": len(mesh.tetrahedra),
@@ -327,7 +348,7 @@ def specimen(name, cells):
     )
 
 
-def main():
+def main() -> None:
     """Verify homogeneous recovery and measure TPMS refinement behavior."""
     extension = Path(importlib.import_module("meshers._meshers").__file__)
     report = {
@@ -374,7 +395,7 @@ def main():
             tensor = np.array(result["stiffness_engineering_voigt"])
             if name == "solid":
                 error = float(np.linalg.norm(tensor - MATERIAL) / np.linalg.norm(MATERIAL))
-                require(error < 1e-8, f"Solid reference discrepancy {error}")
+                require(error < SOLID_REFERENCE_RTOL, f"Solid reference discrepancy {error}")
                 result["analytic_stiffness_relative_error"] = error
             if previous is not None:
                 result["stiffness_relative_change"] = float(
