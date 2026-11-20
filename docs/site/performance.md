@@ -37,7 +37,7 @@ python -m tools.benchmark_history --input /path/performance.json --label v0.2.0-
 
 ## Run a local comparison
 
-Use separate environments, one numerical thread and an idle host. Windows requires `psutil`. Memory is peak working set on Windows and peak RSS on Linux/macOS, in bytes.
+Use separate environments, one numerical thread and an idle host. On Windows, both workers load the `psutil` memory probe before timing. Its memory is included in the process peak. Memory is peak working set on Windows and peak RSS on Linux/macOS, in bytes.
 
 ```sh
 python tools/performance_gate.py --base-python /path/base/bin/python \

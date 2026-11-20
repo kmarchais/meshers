@@ -92,8 +92,8 @@ def test_no_external_compiler_or_optional_dependencies():
 import importlib.abc, subprocess, sys
 class Block(importlib.abc.MetaPathFinder):
     def find_spec(self, fullname, path=None, target=None):
-        if fullname.split('.')[0] in ('numba','sympy'):
-            raise ImportError('deliberately unavailable')
+        if fullname.split('.')[0] in ('numba','sympy','vtkmodules'):
+            raise ModuleNotFoundError('deliberately unavailable', name=fullname)
 sys.meta_path.insert(0,Block())
 def forbidden(*a, **kw): raise AssertionError('external process requested')
 subprocess.Popen=forbidden
@@ -101,6 +101,12 @@ import meshers
 m=meshers.generate(lambda x,y,z:x*x+y*y+z*z-.5,cells=8,geometry_tolerance=.1)
 assert m.diagnostics['evaluator']=='compiled'
 assert m.diagnostics['callback_calls']==0
+try:
+    m.write_vtkhdf('unused.vtkhdf')
+except ModuleNotFoundError as error:
+    assert 'meshers[io]' in str(error)
+else:
+    raise AssertionError('missing VTK should be reported on export')
 """
     run_python("-c", code, env={**os.environ, "PATH": ""})
 

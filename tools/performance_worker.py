@@ -25,7 +25,9 @@ if TYPE_CHECKING:
 
     FloatArray = NDArray[np.float64]
 
-if sys.platform != "win32":
+if sys.platform == "win32":
+    import psutil
+else:
     import resource
 
 CAP = 250_000
@@ -146,9 +148,6 @@ def cell_geometry(vertices: FloatArray) -> FloatArray:
 def peak_rss_bytes() -> int:
     """Return this process's peak resident memory, in bytes."""
     if sys.platform == "win32":
-        # Load the Windows memory probe only after generation, outside the measured workload.
-        import psutil  # ruff: ignore[import-outside-top-level]
-
         return psutil.Process().memory_info().peak_wset
     return resource.getrusage(resource.RUSAGE_SELF).ru_maxrss * (
         1 if sys.platform == "darwin" else 1024

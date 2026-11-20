@@ -5,9 +5,10 @@
 from __future__ import annotations
 
 import argparse
+from dataclasses import dataclass
 from importlib.metadata import version
 from pathlib import Path
-from typing import Protocol
+from typing import TYPE_CHECKING
 
 import numpy as np
 from implicit_coverage import load_reference
@@ -16,13 +17,18 @@ from reporting import write_json_line
 from scipy.optimize import brentq
 from scipy.stats import qmc
 
+if TYPE_CHECKING:
+    from microgen import Spinodoid
+
 CELL_HALF_WIDTH = 0.5
+SPECTRUM = Path(__file__).with_name("implicit-coverage") / "spinodoid-spectrum.csv"
 
 
 Coordinates = NDArray[np.float64]
 
 
-class Spectrum(Protocol):
+@dataclass(frozen=True, slots=True)
+class Spectrum:
     """Fourier coefficients of the pinned periodic field."""
 
     modes: NDArray[np.int64]
@@ -30,6 +36,33 @@ class Spectrum(Protocol):
     amplitudes: Coordinates
     phases: Coordinates
     threshold: float
+
+
+def reference_spectrum(shape: Spinodoid) -> Spectrum:
+    """Read the frozen unit-cell spectrum and check it against the public signed field.
+
+    Returns:
+        The coefficients used to bound derivatives of the historical specimen.
+
+    Raises:
+        ValueError: The archived coefficients do not describe the reference field.
+    """
+    rows = np.loadtxt(SPECTRUM, delimiter=",", skiprows=1)
+    modes = rows[:, :3].astype(np.int64)
+    amplitudes, phases = rows[:, 3], rows[:, 4]
+    # The 16-cell FFT used by this specimen has no frequency above 8 per axis.
+    # Sampling on 17 points per axis distinguishes all signed frequencies.
+    n = shape.resolution + 1
+    if np.any(2 * np.abs(modes) >= n):
+        msg = "Spectrum exceeds the reference sampling bandwidth"
+        raise ValueError(msg)
+    axis = np.arange(n) / n
+    points = np.stack(np.meshgrid(axis, axis, axis, indexing="ij"), axis=-1).reshape(-1, 3)
+    values = -np.cos(2 * np.pi * (points @ modes.T) + phases) @ amplitudes
+    if not np.allclose(values, shape.evaluate(*points.T), rtol=0, atol=1e-13):
+        msg = "Archived spectrum differs from the public Microgen field"
+        raise ValueError(msg)
+    return Spectrum(modes=modes, amplitudes=amplitudes, phases=phases, cell_size=1.0, threshold=0.0)
 
 
 def distance_bounds(
@@ -124,7 +157,7 @@ def main() -> None:
     if version("microgen") != "2.0.0b1":
         parser.error("Use the frozen spinodoid from microgen==2.0.0b1")
     cases = load_reference(args.reference).cases
-    source = cases.spinodoid_source(1)._frep  # ruff: ignore[private-member-access] - pinned Microgen spectrum.
+    source = reference_spectrum(cases.spinodoid_source(1))
     free = abs(point) < CELL_HALF_WIDTH if args.lock_caps else np.ones(3, dtype=bool)
     lower, upper = distance_bounds(source, point, free)
     write_json_line({

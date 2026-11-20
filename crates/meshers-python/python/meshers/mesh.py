@@ -3,6 +3,7 @@
 """Array-backed tetrahedral meshes and their boundary metadata."""
 
 from dataclasses import dataclass
+from importlib import import_module
 from pathlib import Path
 
 import numpy as np
@@ -90,7 +91,15 @@ class Mesh:
         Quadratic cell Volume integrates the current curved mapping.
         CornerVolume and CornerMMGQuality identify the linear parent measures.
         Linear cells retain the Volume and MMGQuality arrays.
-        """
-        from ._vtkhdf import write_grid  # ruff: ignore[import-outside-top-level] - load optional VTK on export.
 
-        write_grid(self, path, surface=surface)
+        Raises:
+            ModuleNotFoundError: The optional VTK writer is unavailable.
+        """
+        try:
+            writer = import_module("._vtkhdf", __package__)
+        except ModuleNotFoundError as error:
+            if error.name != "vtkmodules":
+                raise
+            msg = "VTKHDF export requires the meshers[io] extra"
+            raise ModuleNotFoundError(msg, name=error.name) from error
+        writer.write_grid(self, path, surface=surface)

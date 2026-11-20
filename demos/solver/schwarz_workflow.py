@@ -15,6 +15,7 @@ import time
 from contextlib import ExitStack
 from dataclasses import dataclass
 from functools import partial
+from importlib import import_module
 from importlib.metadata import distribution, version
 from pathlib import Path
 from tempfile import NamedTemporaryFile
@@ -137,11 +138,12 @@ def live_microgen(
         RuntimeError: A source, MMG executable or mesh size fails its precondition.
     """
     # Only the historical comparison needs the VTK and MMG backend from Microgen.
-    import microgen.remesh  # ruff: ignore[import-outside-top-level]
+    microgen = import_module("microgen")
+    remesh = import_module("microgen.remesh")
 
     sources = {
         "microgen/shape/tpms.py": digest(inspect.getfile(microgen.Tpms)),
-        "microgen/remesh.py": digest(microgen.remesh.__file__),
+        "microgen/remesh.py": digest(inspect.getfile(remesh)),
     }
     row["source_sha256"] = sources
     if sources != SOURCE_HASHES:
@@ -192,9 +194,9 @@ def live_microgen(
     with ExitStack() as stack:
         if os.name == "nt":
             reopenable = partial(NamedTemporaryFile, delete_on_close=False)
-            stack.enter_context(patch.object(microgen.remesh, "NamedTemporaryFile", reopenable))
+            stack.enter_context(patch.object(remesh, "NamedTemporaryFile", reopenable))
         stack.enter_context(patch.object(microgen.Mmg, "mmg3d", measured))
-        grid = microgen.remesh.remesh_keeping_boundaries_for_fem(seed, periodic=True, **options)
+        grid = remesh.remesh_keeping_boundaries_for_fem(seed, periodic=True, **options)
     path = folder / "volume.vtu"
     grid.save(path)
     return path
