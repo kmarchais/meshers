@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"enum":["Region"],"fn":["adapt_intersection","generate","generate_with_constraints","generate_with_features","generate_with_regions","generate_with_size","periodic_affine_region_traces","periodic_affine_traces"],"mod":["intersection"],"struct":["Diagnostics","Options","Output","QuadraticOutput"],"trait":["ScalarField"]};

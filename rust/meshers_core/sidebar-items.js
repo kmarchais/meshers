@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"enum":["MeshingError"],"fn":["available_threads","cross","determinant","dot","field","generate_gyroid","generate_gyroid_with_accelerator","min_dihedral","norm","quality","sub"],"mod":["accelerator","implicit","quadratic","tet_adapt"],"struct":["GyroidOptions","Mesh","Metrics"],"type":["Point","Tet"]};

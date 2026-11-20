@@ -1,0 +1,1482 @@
+{
+  "label": "v0.2.1-rc.1",
+  "input_sha256": "f01f055376103904180b072f571f930f72b4b34373f94b5a8015fdaaa1792851",
+  "data": {
+    "schema_version": 2,
+    "fixture_version": 2,
+    "suite": "release",
+    "recorded_at": "2026-11-15T22:12:28.753600+00:00",
+    "machine": "arm64",
+    "cpu_model": "Apple M4",
+    "cpu_count": 10,
+    "platform": "macOS-26.5.1-arm64-arm-64bit",
+    "script_sha256": "fb237ce2072739a223a9a04b07dc80ad4ef332997bbc1fde9ee9b78f8b0a5ec8",
+    "threads": 1,
+    "warmup_pairs": 1,
+    "measured_pairs": 3,
+    "quality_basis": "linear corners, including Tet10; volume integrates Tet10 mapping; surface_error is the linear parent diagnostic",
+    "scope": "Regression fixtures, not the matched-accuracy Microgen study or FEA certification",
+    "python": "3.12.9",
+    "base_ref": "a0da5d257a39298e505ffca1b90c37b3ff83de77",
+    "head_ref": "7654ccb058b8744430097e6c8e40ed0198bcaa77",
+    "cases": {
+      "compiled_gyroid": {
+        "runs": {
+          "base": [
+            {
+              "seconds": 0.8518848750391044,
+              "peak_rss_bytes": 84869120,
+              "tetrahedra": 70403,
+              "nodes": 17849,
+              "volume": 0.324291643476333,
+              "quality_min": 0.3139606789526075,
+              "quality_p05": 0.5724845768823266,
+              "quality_p10": 0.61150991290785,
+              "quality_median": 0.8552760066679805,
+              "quality_mean": 0.8087618039726566,
+              "quality_p90": 0.9377243175822209,
+              "quality_max": 0.9965772630297074,
+              "surface_error": 0.0013790862274873832
+            },
+            {
+              "seconds": 0.8401304999715649,
+              "peak_rss_bytes": 84967424,
+              "tetrahedra": 70403,
+              "nodes": 17849,
+              "volume": 0.324291643476333,
+              "quality_min": 0.3139606789526075,
+              "quality_p05": 0.5724845768823266,
+              "quality_p10": 0.61150991290785,
+              "quality_median": 0.8552760066679805,
+              "quality_mean": 0.8087618039726566,
+              "quality_p90": 0.9377243175822209,
+              "quality_max": 0.9965772630297074,
+              "surface_error": 0.0013790862274873832
+            },
+            {
+              "seconds": 0.8591196250054054,
+              "peak_rss_bytes": 84869120,
+              "tetrahedra": 70403,
+              "nodes": 17849,
+              "volume": 0.324291643476333,
+              "quality_min": 0.3139606789526075,
+              "quality_p05": 0.5724845768823266,
+              "quality_p10": 0.61150991290785,
+              "quality_median": 0.8552760066679805,
+              "quality_mean": 0.8087618039726566,
+              "quality_p90": 0.9377243175822209,
+              "quality_max": 0.9965772630297074,
+              "surface_error": 0.0013790862274873832
+            }
+          ],
+          "head": [
+            {
+              "seconds": 0.753490041999612,
+              "peak_rss_bytes": 85377024,
+              "tetrahedra": 70403,
+              "nodes": 17849,
+              "volume": 0.324291643476333,
+              "quality_min": 0.3139606789526075,
+              "quality_p05": 0.5724845768823266,
+              "quality_p10": 0.61150991290785,
+              "quality_median": 0.8552760066679805,
+              "quality_mean": 0.8087618039726566,
+              "quality_p90": 0.9377243175822209,
+              "quality_max": 0.9965772630297074,
+              "surface_error": 0.0013790862274873832
+            },
+            {
+              "seconds": 0.8168859590077773,
+              "peak_rss_bytes": 85573632,
+              "tetrahedra": 70403,
+              "nodes": 17849,
+              "volume": 0.324291643476333,
+              "quality_min": 0.3139606789526075,
+              "quality_p05": 0.5724845768823266,
+              "quality_p10": 0.61150991290785,
+              "quality_median": 0.8552760066679805,
+              "quality_mean": 0.8087618039726566,
+              "quality_p90": 0.9377243175822209,
+              "quality_max": 0.9965772630297074,
+              "surface_error": 0.0013790862274873832
+            },
+            {
+              "seconds": 0.7924132499611005,
+              "peak_rss_bytes": 84983808,
+              "tetrahedra": 70403,
+              "nodes": 17849,
+              "volume": 0.324291643476333,
+              "quality_min": 0.3139606789526075,
+              "quality_p05": 0.5724845768823266,
+              "quality_p10": 0.61150991290785,
+              "quality_median": 0.8552760066679805,
+              "quality_mean": 0.8087618039726566,
+              "quality_p90": 0.9377243175822209,
+              "quality_max": 0.9965772630297074,
+              "surface_error": 0.0013790862274873832
+            }
+          ]
+        },
+        "medians": {
+          "base": {
+            "seconds": 0.8518848750391044,
+            "peak_rss_bytes": 84869120,
+            "tetrahedra": 70403,
+            "nodes": 17849,
+            "volume": 0.324291643476333,
+            "quality_min": 0.3139606789526075,
+            "quality_p05": 0.5724845768823266,
+            "quality_p10": 0.61150991290785,
+            "quality_median": 0.8552760066679805,
+            "quality_mean": 0.8087618039726566,
+            "quality_p90": 0.9377243175822209,
+            "quality_max": 0.9965772630297074,
+            "surface_error": 0.0013790862274873832
+          },
+          "head": {
+            "seconds": 0.7924132499611005,
+            "peak_rss_bytes": 85377024,
+            "tetrahedra": 70403,
+            "nodes": 17849,
+            "volume": 0.324291643476333,
+            "quality_min": 0.3139606789526075,
+            "quality_p05": 0.5724845768823266,
+            "quality_p10": 0.61150991290785,
+            "quality_median": 0.8552760066679805,
+            "quality_mean": 0.8087618039726566,
+            "quality_p90": 0.9377243175822209,
+            "quality_max": 0.9965772630297074,
+            "surface_error": 0.0013790862274873832
+          }
+        },
+        "failures": []
+      },
+      "callback_gyroid": {
+        "runs": {
+          "base": [
+            {
+              "seconds": 1.9922395840403624,
+              "peak_rss_bytes": 87244800,
+              "tetrahedra": 70403,
+              "nodes": 17849,
+              "volume": 0.3242916434763129,
+              "quality_min": 0.31396067895326063,
+              "quality_p05": 0.5724845768815275,
+              "quality_p10": 0.611509912894115,
+              "quality_median": 0.855276006661094,
+              "quality_mean": 0.8087618039715079,
+              "quality_p90": 0.9377243175866388,
+              "quality_max": 0.9965772630296389,
+              "surface_error": 0.0013790862283828474
+            },
+            {
+              "seconds": 1.9421960830222815,
+              "peak_rss_bytes": 86917120,
+              "tetrahedra": 70403,
+              "nodes": 17849,
+              "volume": 0.3242916434763129,
+              "quality_min": 0.31396067895326063,
+              "quality_p05": 0.5724845768815275,
+              "quality_p10": 0.611509912894115,
+              "quality_median": 0.855276006661094,
+              "quality_mean": 0.8087618039715079,
+              "quality_p90": 0.9377243175866388,
+              "quality_max": 0.9965772630296389,
+              "surface_error": 0.0013790862283828474
+            },
+            {
+              "seconds": 1.9942842079908587,
+              "peak_rss_bytes": 87572480,
+              "tetrahedra": 70403,
+              "nodes": 17849,
+              "volume": 0.3242916434763129,
+              "quality_min": 0.31396067895326063,
+              "quality_p05": 0.5724845768815275,
+              "quality_p10": 0.611509912894115,
+              "quality_median": 0.855276006661094,
+              "quality_mean": 0.8087618039715079,
+              "quality_p90": 0.9377243175866388,
+              "quality_max": 0.9965772630296389,
+              "surface_error": 0.0013790862283828474
+            }
+          ],
+          "head": [
+            {
+              "seconds": 1.8486275839968584,
+              "peak_rss_bytes": 87752704,
+              "tetrahedra": 70403,
+              "nodes": 17849,
+              "volume": 0.3242916434763129,
+              "quality_min": 0.31396067895326063,
+              "quality_p05": 0.5724845768815275,
+              "quality_p10": 0.611509912894115,
+              "quality_median": 0.855276006661094,
+              "quality_mean": 0.8087618039715079,
+              "quality_p90": 0.9377243175866388,
+              "quality_max": 0.9965772630296389,
+              "surface_error": 0.0013790862283828474
+            },
+            {
+              "seconds": 2.008179166004993,
+              "peak_rss_bytes": 88211456,
+              "tetrahedra": 70403,
+              "nodes": 17849,
+              "volume": 0.3242916434763129,
+              "quality_min": 0.31396067895326063,
+              "quality_p05": 0.5724845768815275,
+              "quality_p10": 0.611509912894115,
+              "quality_median": 0.855276006661094,
+              "quality_mean": 0.8087618039715079,
+              "quality_p90": 0.9377243175866388,
+              "quality_max": 0.9965772630296389,
+              "surface_error": 0.0013790862283828474
+            },
+            {
+              "seconds": 1.918903165962547,
+              "peak_rss_bytes": 87638016,
+              "tetrahedra": 70403,
+              "nodes": 17849,
+              "volume": 0.3242916434763129,
+              "quality_min": 0.31396067895326063,
+              "quality_p05": 0.5724845768815275,
+              "quality_p10": 0.611509912894115,
+              "quality_median": 0.855276006661094,
+              "quality_mean": 0.8087618039715079,
+              "quality_p90": 0.9377243175866388,
+              "quality_max": 0.9965772630296389,
+              "surface_error": 0.0013790862283828474
+            }
+          ]
+        },
+        "medians": {
+          "base": {
+            "seconds": 1.9922395840403624,
+            "peak_rss_bytes": 87244800,
+            "tetrahedra": 70403,
+            "nodes": 17849,
+            "volume": 0.3242916434763129,
+            "quality_min": 0.31396067895326063,
+            "quality_p05": 0.5724845768815275,
+            "quality_p10": 0.611509912894115,
+            "quality_median": 0.855276006661094,
+            "quality_mean": 0.8087618039715079,
+            "quality_p90": 0.9377243175866388,
+            "quality_max": 0.9965772630296389,
+            "surface_error": 0.0013790862283828474
+          },
+          "head": {
+            "seconds": 1.918903165962547,
+            "peak_rss_bytes": 87752704,
+            "tetrahedra": 70403,
+            "nodes": 17849,
+            "volume": 0.3242916434763129,
+            "quality_min": 0.31396067895326063,
+            "quality_p05": 0.5724845768815275,
+            "quality_p10": 0.611509912894115,
+            "quality_median": 0.855276006661094,
+            "quality_mean": 0.8087618039715079,
+            "quality_p90": 0.9377243175866388,
+            "quality_max": 0.9965772630296389,
+            "surface_error": 0.0013790862283828474
+          }
+        },
+        "failures": []
+      },
+      "graded": {
+        "runs": {
+          "base": [
+            {
+              "seconds": 0.905290791997686,
+              "peak_rss_bytes": 83787776,
+              "tetrahedra": 65506,
+              "nodes": 17493,
+              "volume": 0.275171863304838,
+              "quality_min": 0.17327894264221355,
+              "quality_p05": 0.5543696567203202,
+              "quality_p10": 0.5955051679144352,
+              "quality_median": 0.8136225479749933,
+              "quality_mean": 0.7841132833084725,
+              "quality_p90": 0.9330888715874202,
+              "quality_max": 0.9988950588676374,
+              "surface_error": 0.0016508683167093005
+            },
+            {
+              "seconds": 0.9097896249732003,
+              "peak_rss_bytes": 83722240,
+              "tetrahedra": 65506,
+              "nodes": 17493,
+              "volume": 0.275171863304838,
+              "quality_min": 0.17327894264221355,
+              "quality_p05": 0.5543696567203202,
+              "quality_p10": 0.5955051679144352,
+              "quality_median": 0.8136225479749933,
+              "quality_mean": 0.7841132833084725,
+              "quality_p90": 0.9330888715874202,
+              "quality_max": 0.9988950588676374,
+              "surface_error": 0.0016508683167093005
+            },
+            {
+              "seconds": 0.9452428330550902,
+              "peak_rss_bytes": 83722240,
+              "tetrahedra": 65506,
+              "nodes": 17493,
+              "volume": 0.275171863304838,
+              "quality_min": 0.17327894264221355,
+              "quality_p05": 0.5543696567203202,
+              "quality_p10": 0.5955051679144352,
+              "quality_median": 0.8136225479749933,
+              "quality_mean": 0.7841132833084725,
+              "quality_p90": 0.9330888715874202,
+              "quality_max": 0.9988950588676374,
+              "surface_error": 0.0016508683167093005
+            }
+          ],
+          "head": [
+            {
+              "seconds": 0.8360568750067614,
+              "peak_rss_bytes": 83755008,
+              "tetrahedra": 65506,
+              "nodes": 17493,
+              "volume": 0.275171863304838,
+              "quality_min": 0.17327894264221355,
+              "quality_p05": 0.5543696567203202,
+              "quality_p10": 0.5955051679144352,
+              "quality_median": 0.8136225479749933,
+              "quality_mean": 0.7841132833084725,
+              "quality_p90": 0.9330888715874202,
+              "quality_max": 0.9988950588676374,
+              "surface_error": 0.0016508683167093005
+            },
+            {
+              "seconds": 0.8215959160006605,
+              "peak_rss_bytes": 84312064,
+              "tetrahedra": 65506,
+              "nodes": 17493,
+              "volume": 0.275171863304838,
+              "quality_min": 0.17327894264221355,
+              "quality_p05": 0.5543696567203202,
+              "quality_p10": 0.5955051679144352,
+              "quality_median": 0.8136225479749933,
+              "quality_mean": 0.7841132833084725,
+              "quality_p90": 0.9330888715874202,
+              "quality_max": 0.9988950588676374,
+              "surface_error": 0.0016508683167093005
+            },
+            {
+              "seconds": 0.8379139580065385,
+              "peak_rss_bytes": 84541440,
+              "tetrahedra": 65506,
+              "nodes": 17493,
+              "volume": 0.275171863304838,
+              "quality_min": 0.17327894264221355,
+              "quality_p05": 0.5543696567203202,
+              "quality_p10": 0.5955051679144352,
+              "quality_median": 0.8136225479749933,
+              "quality_mean": 0.7841132833084725,
+              "quality_p90": 0.9330888715874202,
+              "quality_max": 0.9988950588676374,
+              "surface_error": 0.0016508683167093005
+            }
+          ]
+        },
+        "medians": {
+          "base": {
+            "seconds": 0.9097896249732003,
+            "peak_rss_bytes": 83722240,
+            "tetrahedra": 65506,
+            "nodes": 17493,
+            "volume": 0.275171863304838,
+            "quality_min": 0.17327894264221355,
+            "quality_p05": 0.5543696567203202,
+            "quality_p10": 0.5955051679144352,
+            "quality_median": 0.8136225479749933,
+            "quality_mean": 0.7841132833084725,
+            "quality_p90": 0.9330888715874202,
+            "quality_max": 0.9988950588676374,
+            "surface_error": 0.0016508683167093005
+          },
+          "head": {
+            "seconds": 0.8360568750067614,
+            "peak_rss_bytes": 84312064,
+            "tetrahedra": 65506,
+            "nodes": 17493,
+            "volume": 0.275171863304838,
+            "quality_min": 0.17327894264221355,
+            "quality_p05": 0.5543696567203202,
+            "quality_p10": 0.5955051679144352,
+            "quality_median": 0.8136225479749933,
+            "quality_mean": 0.7841132833084725,
+            "quality_p90": 0.9330888715874202,
+            "quality_max": 0.9988950588676374,
+            "surface_error": 0.0016508683167093005
+          }
+        },
+        "failures": []
+      },
+      "mapped_intersection": {
+        "runs": {
+          "base": [
+            {
+              "seconds": 0.28543591703055426,
+              "peak_rss_bytes": 115261440,
+              "tetrahedra": 63648,
+              "nodes": 12079,
+              "volume": 0.40767951362810373,
+              "quality_min": 0.6213927292926739,
+              "quality_p05": 0.7040204739041579,
+              "quality_p10": 0.8863217922049196,
+              "quality_median": 0.9178113513464151,
+              "quality_mean": 0.905993817892299,
+              "quality_p90": 0.9641514051222863,
+              "quality_max": 0.973864859289665,
+              "surface_error": 8.441806352234543e-05
+            },
+            {
+              "seconds": 0.28960520902182907,
+              "peak_rss_bytes": 115458048,
+              "tetrahedra": 63648,
+              "nodes": 12079,
+              "volume": 0.40767951362810373,
+              "quality_min": 0.6213927292926739,
+              "quality_p05": 0.7040204739041579,
+              "quality_p10": 0.8863217922049196,
+              "quality_median": 0.9178113513464151,
+              "quality_mean": 0.905993817892299,
+              "quality_p90": 0.9641514051222863,
+              "quality_max": 0.973864859289665,
+              "surface_error": 8.441806352234543e-05
+            },
+            {
+              "seconds": 0.29153779096668586,
+              "peak_rss_bytes": 115408896,
+              "tetrahedra": 63648,
+              "nodes": 12079,
+              "volume": 0.40767951362810373,
+              "quality_min": 0.6213927292926739,
+              "quality_p05": 0.7040204739041579,
+              "quality_p10": 0.8863217922049196,
+              "quality_median": 0.9178113513464151,
+              "quality_mean": 0.905993817892299,
+              "quality_p90": 0.9641514051222863,
+              "quality_max": 0.973864859289665,
+              "surface_error": 8.441806352234543e-05
+            }
+          ],
+          "head": [
+            {
+              "seconds": 0.2914441250031814,
+              "peak_rss_bytes": 116948992,
+              "tetrahedra": 63648,
+              "nodes": 12079,
+              "volume": 0.40767951362810373,
+              "quality_min": 0.6213927292926739,
+              "quality_p05": 0.7040204739041579,
+              "quality_p10": 0.8863217922049196,
+              "quality_median": 0.9178113513464151,
+              "quality_mean": 0.905993817892299,
+              "quality_p90": 0.9641514051222863,
+              "quality_max": 0.973864859289665,
+              "surface_error": 8.441806352234543e-05
+            },
+            {
+              "seconds": 0.28970729204593226,
+              "peak_rss_bytes": 117211136,
+              "tetrahedra": 63648,
+              "nodes": 12079,
+              "volume": 0.40767951362810373,
+              "quality_min": 0.6213927292926739,
+              "quality_p05": 0.7040204739041579,
+              "quality_p10": 0.8863217922049196,
+              "quality_median": 0.9178113513464151,
+              "quality_mean": 0.905993817892299,
+              "quality_p90": 0.9641514051222863,
+              "quality_max": 0.973864859289665,
+              "surface_error": 8.441806352234543e-05
+            },
+            {
+              "seconds": 0.28912470798240975,
+              "peak_rss_bytes": 116916224,
+              "tetrahedra": 63648,
+              "nodes": 12079,
+              "volume": 0.40767951362810373,
+              "quality_min": 0.6213927292926739,
+              "quality_p05": 0.7040204739041579,
+              "quality_p10": 0.8863217922049196,
+              "quality_median": 0.9178113513464151,
+              "quality_mean": 0.905993817892299,
+              "quality_p90": 0.9641514051222863,
+              "quality_max": 0.973864859289665,
+              "surface_error": 8.441806352234543e-05
+            }
+          ]
+        },
+        "medians": {
+          "base": {
+            "seconds": 0.28960520902182907,
+            "peak_rss_bytes": 115408896,
+            "tetrahedra": 63648,
+            "nodes": 12079,
+            "volume": 0.40767951362810373,
+            "quality_min": 0.6213927292926739,
+            "quality_p05": 0.7040204739041579,
+            "quality_p10": 0.8863217922049196,
+            "quality_median": 0.9178113513464151,
+            "quality_mean": 0.905993817892299,
+            "quality_p90": 0.9641514051222863,
+            "quality_max": 0.973864859289665,
+            "surface_error": 8.441806352234543e-05
+          },
+          "head": {
+            "seconds": 0.28970729204593226,
+            "peak_rss_bytes": 116948992,
+            "tetrahedra": 63648,
+            "nodes": 12079,
+            "volume": 0.40767951362810373,
+            "quality_min": 0.6213927292926739,
+            "quality_p05": 0.7040204739041579,
+            "quality_p10": 0.8863217922049196,
+            "quality_median": 0.9178113513464151,
+            "quality_mean": 0.905993817892299,
+            "quality_p90": 0.9641514051222863,
+            "quality_max": 0.973864859289665,
+            "surface_error": 8.441806352234543e-05
+          }
+        },
+        "failures": []
+      },
+      "schwarz_p": {
+        "runs": {
+          "base": [
+            {
+              "seconds": 0.36155237501952797,
+              "peak_rss_bytes": 83902464,
+              "tetrahedra": 90792,
+              "nodes": 17857,
+              "volume": 0.49997785364056346,
+              "quality_min": 0.45981613047474534,
+              "quality_p05": 0.6282602278278058,
+              "quality_p10": 0.7343379252904926,
+              "quality_median": 0.9295160030897791,
+              "quality_mean": 0.8870576843611934,
+              "quality_p90": 0.929516003089781,
+              "quality_max": 0.9987265560742221,
+              "surface_error": 0.0019191648305090336
+            },
+            {
+              "seconds": 0.4016534160473384,
+              "peak_rss_bytes": 84082688,
+              "tetrahedra": 90792,
+              "nodes": 17857,
+              "volume": 0.49997785364056346,
+              "quality_min": 0.45981613047474534,
+              "quality_p05": 0.6282602278278058,
+              "quality_p10": 0.7343379252904926,
+              "quality_median": 0.9295160030897791,
+              "quality_mean": 0.8870576843611934,
+              "quality_p90": 0.929516003089781,
+              "quality_max": 0.9987265560742221,
+              "surface_error": 0.0019191648305090336
+            },
+            {
+              "seconds": 0.35679950000485405,
+              "peak_rss_bytes": 83968000,
+              "tetrahedra": 90792,
+              "nodes": 17857,
+              "volume": 0.49997785364056346,
+              "quality_min": 0.45981613047474534,
+              "quality_p05": 0.6282602278278058,
+              "quality_p10": 0.7343379252904926,
+              "quality_median": 0.9295160030897791,
+              "quality_mean": 0.8870576843611934,
+              "quality_p90": 0.929516003089781,
+              "quality_max": 0.9987265560742221,
+              "surface_error": 0.0019191648305090336
+            }
+          ],
+          "head": [
+            {
+              "seconds": 0.33190975000616163,
+              "peak_rss_bytes": 84344832,
+              "tetrahedra": 90792,
+              "nodes": 17857,
+              "volume": 0.49997785364056346,
+              "quality_min": 0.45981613047474534,
+              "quality_p05": 0.6282602278278058,
+              "quality_p10": 0.7343379252904926,
+              "quality_median": 0.9295160030897791,
+              "quality_mean": 0.8870576843611934,
+              "quality_p90": 0.929516003089781,
+              "quality_max": 0.9987265560742221,
+              "surface_error": 0.0019191648305090336
+            },
+            {
+              "seconds": 0.34985125000821427,
+              "peak_rss_bytes": 84033536,
+              "tetrahedra": 90792,
+              "nodes": 17857,
+              "volume": 0.49997785364056346,
+              "quality_min": 0.45981613047474534,
+              "quality_p05": 0.6282602278278058,
+              "quality_p10": 0.7343379252904926,
+              "quality_median": 0.9295160030897791,
+              "quality_mean": 0.8870576843611934,
+              "quality_p90": 0.929516003089781,
+              "quality_max": 0.9987265560742221,
+              "surface_error": 0.0019191648305090336
+            },
+            {
+              "seconds": 0.34183849999681115,
+              "peak_rss_bytes": 84328448,
+              "tetrahedra": 90792,
+              "nodes": 17857,
+              "volume": 0.49997785364056346,
+              "quality_min": 0.45981613047474534,
+              "quality_p05": 0.6282602278278058,
+              "quality_p10": 0.7343379252904926,
+              "quality_median": 0.9295160030897791,
+              "quality_mean": 0.8870576843611934,
+              "quality_p90": 0.929516003089781,
+              "quality_max": 0.9987265560742221,
+              "surface_error": 0.0019191648305090336
+            }
+          ]
+        },
+        "medians": {
+          "base": {
+            "seconds": 0.36155237501952797,
+            "peak_rss_bytes": 83968000,
+            "tetrahedra": 90792,
+            "nodes": 17857,
+            "volume": 0.49997785364056346,
+            "quality_min": 0.45981613047474534,
+            "quality_p05": 0.6282602278278058,
+            "quality_p10": 0.7343379252904926,
+            "quality_median": 0.9295160030897791,
+            "quality_mean": 0.8870576843611934,
+            "quality_p90": 0.929516003089781,
+            "quality_max": 0.9987265560742221,
+            "surface_error": 0.0019191648305090336
+          },
+          "head": {
+            "seconds": 0.34183849999681115,
+            "peak_rss_bytes": 84328448,
+            "tetrahedra": 90792,
+            "nodes": 17857,
+            "volume": 0.49997785364056346,
+            "quality_min": 0.45981613047474534,
+            "quality_p05": 0.6282602278278058,
+            "quality_p10": 0.7343379252904926,
+            "quality_median": 0.9295160030897791,
+            "quality_mean": 0.8870576843611934,
+            "quality_p90": 0.929516003089781,
+            "quality_max": 0.9987265560742221,
+            "surface_error": 0.0019191648305090336
+          }
+        },
+        "failures": []
+      },
+      "spinodoid": {
+        "runs": {
+          "base": [
+            {
+              "seconds": 0.6775866670068353,
+              "peak_rss_bytes": 93044736,
+              "tetrahedra": 107079,
+              "nodes": 22163,
+              "volume": 0.5830640250452712,
+              "quality_min": 0.2251152663394125,
+              "quality_p05": 0.617791711196556,
+              "quality_p10": 0.6979672659799063,
+              "quality_median": 0.9295160030897787,
+              "quality_mean": 0.8725993488992275,
+              "quality_p90": 0.938454765916963,
+              "quality_max": 0.9984647136375645,
+              "surface_error": 0.0032829016161136522
+            },
+            {
+              "seconds": 0.6806987089803442,
+              "peak_rss_bytes": 93192192,
+              "tetrahedra": 107079,
+              "nodes": 22163,
+              "volume": 0.5830640250452712,
+              "quality_min": 0.2251152663394125,
+              "quality_p05": 0.617791711196556,
+              "quality_p10": 0.6979672659799063,
+              "quality_median": 0.9295160030897787,
+              "quality_mean": 0.8725993488992275,
+              "quality_p90": 0.938454765916963,
+              "quality_max": 0.9984647136375645,
+              "surface_error": 0.0032829016161136522
+            },
+            {
+              "seconds": 0.6762142090010457,
+              "peak_rss_bytes": 92962816,
+              "tetrahedra": 107079,
+              "nodes": 22163,
+              "volume": 0.5830640250452712,
+              "quality_min": 0.2251152663394125,
+              "quality_p05": 0.617791711196556,
+              "quality_p10": 0.6979672659799063,
+              "quality_median": 0.9295160030897787,
+              "quality_mean": 0.8725993488992275,
+              "quality_p90": 0.938454765916963,
+              "quality_max": 0.9984647136375645,
+              "surface_error": 0.0032829016161136522
+            }
+          ],
+          "head": [
+            {
+              "seconds": 0.6342646660050377,
+              "peak_rss_bytes": 93470720,
+              "tetrahedra": 107079,
+              "nodes": 22163,
+              "volume": 0.5830640250452712,
+              "quality_min": 0.2251152663394125,
+              "quality_p05": 0.617791711196556,
+              "quality_p10": 0.6979672659799063,
+              "quality_median": 0.9295160030897787,
+              "quality_mean": 0.8725993488992275,
+              "quality_p90": 0.938454765916963,
+              "quality_max": 0.9984647136375645,
+              "surface_error": 0.0032829016161136522
+            },
+            {
+              "seconds": 0.6474126250250265,
+              "peak_rss_bytes": 93241344,
+              "tetrahedra": 107079,
+              "nodes": 22163,
+              "volume": 0.5830640250452712,
+              "quality_min": 0.2251152663394125,
+              "quality_p05": 0.617791711196556,
+              "quality_p10": 0.6979672659799063,
+              "quality_median": 0.9295160030897787,
+              "quality_mean": 0.8725993488992275,
+              "quality_p90": 0.938454765916963,
+              "quality_max": 0.9984647136375645,
+              "surface_error": 0.0032829016161136522
+            },
+            {
+              "seconds": 0.6321645830175839,
+              "peak_rss_bytes": 92798976,
+              "tetrahedra": 107079,
+              "nodes": 22163,
+              "volume": 0.5830640250452712,
+              "quality_min": 0.2251152663394125,
+              "quality_p05": 0.617791711196556,
+              "quality_p10": 0.6979672659799063,
+              "quality_median": 0.9295160030897787,
+              "quality_mean": 0.8725993488992275,
+              "quality_p90": 0.938454765916963,
+              "quality_max": 0.9984647136375645,
+              "surface_error": 0.0032829016161136522
+            }
+          ]
+        },
+        "medians": {
+          "base": {
+            "seconds": 0.6775866670068353,
+            "peak_rss_bytes": 93044736,
+            "tetrahedra": 107079,
+            "nodes": 22163,
+            "volume": 0.5830640250452712,
+            "quality_min": 0.2251152663394125,
+            "quality_p05": 0.617791711196556,
+            "quality_p10": 0.6979672659799063,
+            "quality_median": 0.9295160030897787,
+            "quality_mean": 0.8725993488992275,
+            "quality_p90": 0.938454765916963,
+            "quality_max": 0.9984647136375645,
+            "surface_error": 0.0032829016161136522
+          },
+          "head": {
+            "seconds": 0.6342646660050377,
+            "peak_rss_bytes": 93241344,
+            "tetrahedra": 107079,
+            "nodes": 22163,
+            "volume": 0.5830640250452712,
+            "quality_min": 0.2251152663394125,
+            "quality_p05": 0.617791711196556,
+            "quality_p10": 0.6979672659799063,
+            "quality_median": 0.9295160030897787,
+            "quality_mean": 0.8725993488992275,
+            "quality_p90": 0.938454765916963,
+            "quality_max": 0.9984647136375645,
+            "surface_error": 0.0032829016161136522
+          }
+        },
+        "failures": []
+      },
+      "smooth_lattice": {
+        "runs": {
+          "base": [
+            {
+              "seconds": 0.4636590830050409,
+              "peak_rss_bytes": 68403200,
+              "tetrahedra": 43392,
+              "nodes": 11012,
+              "volume": 0.19709789179532639,
+              "quality_min": 0.43380572344415885,
+              "quality_p05": 0.566203280831368,
+              "quality_p10": 0.6150075861479294,
+              "quality_median": 0.849268396164461,
+              "quality_mean": 0.8142839035213348,
+              "quality_p90": 0.9417403020557374,
+              "quality_max": 0.9946298984356974,
+              "surface_error": 0.00340924421079533
+            },
+            {
+              "seconds": 0.4683775000157766,
+              "peak_rss_bytes": 68452352,
+              "tetrahedra": 43392,
+              "nodes": 11012,
+              "volume": 0.19709789179532639,
+              "quality_min": 0.43380572344415885,
+              "quality_p05": 0.566203280831368,
+              "quality_p10": 0.6150075861479294,
+              "quality_median": 0.849268396164461,
+              "quality_mean": 0.8142839035213348,
+              "quality_p90": 0.9417403020557374,
+              "quality_max": 0.9946298984356974,
+              "surface_error": 0.00340924421079533
+            },
+            {
+              "seconds": 0.46392758400179446,
+              "peak_rss_bytes": 68567040,
+              "tetrahedra": 43392,
+              "nodes": 11012,
+              "volume": 0.19709789179532639,
+              "quality_min": 0.43380572344415885,
+              "quality_p05": 0.566203280831368,
+              "quality_p10": 0.6150075861479294,
+              "quality_median": 0.849268396164461,
+              "quality_mean": 0.8142839035213348,
+              "quality_p90": 0.9417403020557374,
+              "quality_max": 0.9946298984356974,
+              "surface_error": 0.00340924421079533
+            }
+          ],
+          "head": [
+            {
+              "seconds": 0.44362129201181233,
+              "peak_rss_bytes": 68796416,
+              "tetrahedra": 43392,
+              "nodes": 11012,
+              "volume": 0.19709789179532639,
+              "quality_min": 0.43380572344415885,
+              "quality_p05": 0.566203280831368,
+              "quality_p10": 0.6150075861479294,
+              "quality_median": 0.849268396164461,
+              "quality_mean": 0.8142839035213348,
+              "quality_p90": 0.9417403020557374,
+              "quality_max": 0.9946298984356974,
+              "surface_error": 0.00340924421079533
+            },
+            {
+              "seconds": 0.4313606250216253,
+              "peak_rss_bytes": 69009408,
+              "tetrahedra": 43392,
+              "nodes": 11012,
+              "volume": 0.19709789179532639,
+              "quality_min": 0.43380572344415885,
+              "quality_p05": 0.566203280831368,
+              "quality_p10": 0.6150075861479294,
+              "quality_median": 0.849268396164461,
+              "quality_mean": 0.8142839035213348,
+              "quality_p90": 0.9417403020557374,
+              "quality_max": 0.9946298984356974,
+              "surface_error": 0.00340924421079533
+            },
+            {
+              "seconds": 0.42888904199935496,
+              "peak_rss_bytes": 68943872,
+              "tetrahedra": 43392,
+              "nodes": 11012,
+              "volume": 0.19709789179532639,
+              "quality_min": 0.43380572344415885,
+              "quality_p05": 0.566203280831368,
+              "quality_p10": 0.6150075861479294,
+              "quality_median": 0.849268396164461,
+              "quality_mean": 0.8142839035213348,
+              "quality_p90": 0.9417403020557374,
+              "quality_max": 0.9946298984356974,
+              "surface_error": 0.00340924421079533
+            }
+          ]
+        },
+        "medians": {
+          "base": {
+            "seconds": 0.46392758400179446,
+            "peak_rss_bytes": 68452352,
+            "tetrahedra": 43392,
+            "nodes": 11012,
+            "volume": 0.19709789179532639,
+            "quality_min": 0.43380572344415885,
+            "quality_p05": 0.566203280831368,
+            "quality_p10": 0.6150075861479294,
+            "quality_median": 0.849268396164461,
+            "quality_mean": 0.8142839035213348,
+            "quality_p90": 0.9417403020557374,
+            "quality_max": 0.9946298984356974,
+            "surface_error": 0.00340924421079533
+          },
+          "head": {
+            "seconds": 0.4313606250216253,
+            "peak_rss_bytes": 68943872,
+            "tetrahedra": 43392,
+            "nodes": 11012,
+            "volume": 0.19709789179532639,
+            "quality_min": 0.43380572344415885,
+            "quality_p05": 0.566203280831368,
+            "quality_p10": 0.6150075861479294,
+            "quality_median": 0.849268396164461,
+            "quality_mean": 0.8142839035213348,
+            "quality_p90": 0.9417403020557374,
+            "quality_max": 0.9946298984356974,
+            "surface_error": 0.00340924421079533
+          }
+        },
+        "failures": []
+      },
+      "adaptive_gyroid": {
+        "runs": {
+          "base": [
+            {
+              "seconds": 0.9634234579862095,
+              "peak_rss_bytes": 101433344,
+              "tetrahedra": 30733,
+              "nodes": 8531,
+              "volume": 0.324353956947949,
+              "quality_min": 0.40216706023124843,
+              "quality_p05": 0.5490030027222883,
+              "quality_p10": 0.5814398600596263,
+              "quality_median": 0.7203046479182114,
+              "quality_mean": 0.7237395084793977,
+              "quality_p90": 0.8708118894159578,
+              "quality_max": 0.9956697397227622,
+              "surface_error": 0.0013327098681327795
+            },
+            {
+              "seconds": 0.9627854999853298,
+              "peak_rss_bytes": 102367232,
+              "tetrahedra": 30733,
+              "nodes": 8531,
+              "volume": 0.324353956947949,
+              "quality_min": 0.40216706023124843,
+              "quality_p05": 0.5490030027222883,
+              "quality_p10": 0.5814398600596263,
+              "quality_median": 0.7203046479182114,
+              "quality_mean": 0.7237395084793977,
+              "quality_p90": 0.8708118894159578,
+              "quality_max": 0.9956697397227622,
+              "surface_error": 0.0013327098681327795
+            },
+            {
+              "seconds": 0.9855370000004768,
+              "peak_rss_bytes": 102318080,
+              "tetrahedra": 30733,
+              "nodes": 8531,
+              "volume": 0.324353956947949,
+              "quality_min": 0.40216706023124843,
+              "quality_p05": 0.5490030027222883,
+              "quality_p10": 0.5814398600596263,
+              "quality_median": 0.7203046479182114,
+              "quality_mean": 0.7237395084793977,
+              "quality_p90": 0.8708118894159578,
+              "quality_max": 0.9956697397227622,
+              "surface_error": 0.0013327098681327795
+            }
+          ],
+          "head": [
+            {
+              "seconds": 0.9948534580180421,
+              "peak_rss_bytes": 101761024,
+              "tetrahedra": 30733,
+              "nodes": 8531,
+              "volume": 0.324353956947949,
+              "quality_min": 0.40216706023124843,
+              "quality_p05": 0.5490030027222883,
+              "quality_p10": 0.5814398600596263,
+              "quality_median": 0.7203046479182114,
+              "quality_mean": 0.7237395084793977,
+              "quality_p90": 0.8708118894159578,
+              "quality_max": 0.9956697397227622,
+              "surface_error": 0.0013327098681327795
+            },
+            {
+              "seconds": 0.9850054169655778,
+              "peak_rss_bytes": 101515264,
+              "tetrahedra": 30733,
+              "nodes": 8531,
+              "volume": 0.324353956947949,
+              "quality_min": 0.40216706023124843,
+              "quality_p05": 0.5490030027222883,
+              "quality_p10": 0.5814398600596263,
+              "quality_median": 0.7203046479182114,
+              "quality_mean": 0.7237395084793977,
+              "quality_p90": 0.8708118894159578,
+              "quality_max": 0.9956697397227622,
+              "surface_error": 0.0013327098681327795
+            },
+            {
+              "seconds": 1.0146889589959756,
+              "peak_rss_bytes": 101597184,
+              "tetrahedra": 30733,
+              "nodes": 8531,
+              "volume": 0.324353956947949,
+              "quality_min": 0.40216706023124843,
+              "quality_p05": 0.5490030027222883,
+              "quality_p10": 0.5814398600596263,
+              "quality_median": 0.7203046479182114,
+              "quality_mean": 0.7237395084793977,
+              "quality_p90": 0.8708118894159578,
+              "quality_max": 0.9956697397227622,
+              "surface_error": 0.0013327098681327795
+            }
+          ]
+        },
+        "medians": {
+          "base": {
+            "seconds": 0.9634234579862095,
+            "peak_rss_bytes": 102318080,
+            "tetrahedra": 30733,
+            "nodes": 8531,
+            "volume": 0.324353956947949,
+            "quality_min": 0.40216706023124843,
+            "quality_p05": 0.5490030027222883,
+            "quality_p10": 0.5814398600596263,
+            "quality_median": 0.7203046479182114,
+            "quality_mean": 0.7237395084793977,
+            "quality_p90": 0.8708118894159578,
+            "quality_max": 0.9956697397227622,
+            "surface_error": 0.0013327098681327795
+          },
+          "head": {
+            "seconds": 0.9948534580180421,
+            "peak_rss_bytes": 101597184,
+            "tetrahedra": 30733,
+            "nodes": 8531,
+            "volume": 0.324353956947949,
+            "quality_min": 0.40216706023124843,
+            "quality_p05": 0.5490030027222883,
+            "quality_p10": 0.5814398600596263,
+            "quality_median": 0.7203046479182114,
+            "quality_mean": 0.7237395084793977,
+            "quality_p90": 0.8708118894159578,
+            "quality_max": 0.9956697397227622,
+            "surface_error": 0.0013327098681327795
+          }
+        },
+        "failures": []
+      },
+      "adaptive_spinodoid": {
+        "runs": {
+          "base": [
+            {
+              "seconds": 1.109692666970659,
+              "peak_rss_bytes": 136298496,
+              "tetrahedra": 28902,
+              "nodes": 7084,
+              "volume": 0.5831673995741236,
+              "quality_min": 0.38680720539461677,
+              "quality_p05": 0.5629263605629967,
+              "quality_p10": 0.5973228019048679,
+              "quality_median": 0.7406493088292685,
+              "quality_mean": 0.7413600184919594,
+              "quality_p90": 0.8869534121379095,
+              "quality_max": 0.9984004885453763,
+              "surface_error": 0.0017448627327169772
+            },
+            {
+              "seconds": 1.1095052500022575,
+              "peak_rss_bytes": 136364032,
+              "tetrahedra": 28902,
+              "nodes": 7084,
+              "volume": 0.5831673995741236,
+              "quality_min": 0.38680720539461677,
+              "quality_p05": 0.5629263605629967,
+              "quality_p10": 0.5973228019048679,
+              "quality_median": 0.7406493088292685,
+              "quality_mean": 0.7413600184919594,
+              "quality_p90": 0.8869534121379095,
+              "quality_max": 0.9984004885453763,
+              "surface_error": 0.0017448627327169772
+            },
+            {
+              "seconds": 1.0928694999893196,
+              "peak_rss_bytes": 136445952,
+              "tetrahedra": 28902,
+              "nodes": 7084,
+              "volume": 0.5831673995741236,
+              "quality_min": 0.38680720539461677,
+              "quality_p05": 0.5629263605629967,
+              "quality_p10": 0.5973228019048679,
+              "quality_median": 0.7406493088292685,
+              "quality_mean": 0.7413600184919594,
+              "quality_p90": 0.8869534121379095,
+              "quality_max": 0.9984004885453763,
+              "surface_error": 0.0017448627327169772
+            }
+          ],
+          "head": [
+            {
+              "seconds": 1.175905416952446,
+              "peak_rss_bytes": 136626176,
+              "tetrahedra": 28902,
+              "nodes": 7084,
+              "volume": 0.5831673995741236,
+              "quality_min": 0.38680720539461677,
+              "quality_p05": 0.5629263605629967,
+              "quality_p10": 0.5973228019048679,
+              "quality_median": 0.7406493088292685,
+              "quality_mean": 0.7413600184919594,
+              "quality_p90": 0.8869534121379095,
+              "quality_max": 0.9984004885453763,
+              "surface_error": 0.0017448627327169772
+            },
+            {
+              "seconds": 1.1791406670236029,
+              "peak_rss_bytes": 136970240,
+              "tetrahedra": 28902,
+              "nodes": 7084,
+              "volume": 0.5831673995741236,
+              "quality_min": 0.38680720539461677,
+              "quality_p05": 0.5629263605629967,
+              "quality_p10": 0.5973228019048679,
+              "quality_median": 0.7406493088292685,
+              "quality_mean": 0.7413600184919594,
+              "quality_p90": 0.8869534121379095,
+              "quality_max": 0.9984004885453763,
+              "surface_error": 0.0017448627327169772
+            },
+            {
+              "seconds": 1.2000060409773141,
+              "peak_rss_bytes": 137035776,
+              "tetrahedra": 28902,
+              "nodes": 7084,
+              "volume": 0.5831673995741236,
+              "quality_min": 0.38680720539461677,
+              "quality_p05": 0.5629263605629967,
+              "quality_p10": 0.5973228019048679,
+              "quality_median": 0.7406493088292685,
+              "quality_mean": 0.7413600184919594,
+              "quality_p90": 0.8869534121379095,
+              "quality_max": 0.9984004885453763,
+              "surface_error": 0.0017448627327169772
+            }
+          ]
+        },
+        "medians": {
+          "base": {
+            "seconds": 1.1095052500022575,
+            "peak_rss_bytes": 136364032,
+            "tetrahedra": 28902,
+            "nodes": 7084,
+            "volume": 0.5831673995741236,
+            "quality_min": 0.38680720539461677,
+            "quality_p05": 0.5629263605629967,
+            "quality_p10": 0.5973228019048679,
+            "quality_median": 0.7406493088292685,
+            "quality_mean": 0.7413600184919594,
+            "quality_p90": 0.8869534121379095,
+            "quality_max": 0.9984004885453763,
+            "surface_error": 0.0017448627327169772
+          },
+          "head": {
+            "seconds": 1.1791406670236029,
+            "peak_rss_bytes": 136970240,
+            "tetrahedra": 28902,
+            "nodes": 7084,
+            "volume": 0.5831673995741236,
+            "quality_min": 0.38680720539461677,
+            "quality_p05": 0.5629263605629967,
+            "quality_p10": 0.5973228019048679,
+            "quality_median": 0.7406493088292685,
+            "quality_mean": 0.7413600184919594,
+            "quality_p90": 0.8869534121379095,
+            "quality_max": 0.9984004885453763,
+            "surface_error": 0.0017448627327169772
+          }
+        },
+        "failures": []
+      },
+      "adaptive_lattice": {
+        "runs": {
+          "base": [
+            {
+              "seconds": 0.6044176670257002,
+              "peak_rss_bytes": 79839232,
+              "tetrahedra": 20942,
+              "nodes": 5813,
+              "volume": 0.19687835462192807,
+              "quality_min": 0.4518527998972555,
+              "quality_p05": 0.5613844644925668,
+              "quality_p10": 0.5928820317930116,
+              "quality_median": 0.7319587247721486,
+              "quality_mean": 0.7334417088262892,
+              "quality_p90": 0.8797450892259445,
+              "quality_max": 0.9976167261648545,
+              "surface_error": 0.001688043571127856
+            },
+            {
+              "seconds": 0.6094001670135185,
+              "peak_rss_bytes": 80216064,
+              "tetrahedra": 20942,
+              "nodes": 5813,
+              "volume": 0.19687835462192807,
+              "quality_min": 0.4518527998972555,
+              "quality_p05": 0.5613844644925668,
+              "quality_p10": 0.5928820317930116,
+              "quality_median": 0.7319587247721486,
+              "quality_mean": 0.7334417088262892,
+              "quality_p90": 0.8797450892259445,
+              "quality_max": 0.9976167261648545,
+              "surface_error": 0.001688043571127856
+            },
+            {
+              "seconds": 0.6344434999627993,
+              "peak_rss_bytes": 79708160,
+              "tetrahedra": 20942,
+              "nodes": 5813,
+              "volume": 0.19687835462192807,
+              "quality_min": 0.4518527998972555,
+              "quality_p05": 0.5613844644925668,
+              "quality_p10": 0.5928820317930116,
+              "quality_median": 0.7319587247721486,
+              "quality_mean": 0.7334417088262892,
+              "quality_p90": 0.8797450892259445,
+              "quality_max": 0.9976167261648545,
+              "surface_error": 0.001688043571127856
+            }
+          ],
+          "head": [
+            {
+              "seconds": 0.6372959999716841,
+              "peak_rss_bytes": 80019456,
+              "tetrahedra": 20942,
+              "nodes": 5813,
+              "volume": 0.19687835462192807,
+              "quality_min": 0.4518527998972555,
+              "quality_p05": 0.5613844644925668,
+              "quality_p10": 0.5928820317930116,
+              "quality_median": 0.7319587247721486,
+              "quality_mean": 0.7334417088262892,
+              "quality_p90": 0.8797450892259445,
+              "quality_max": 0.9976167261648545,
+              "surface_error": 0.001688043571127856
+            },
+            {
+              "seconds": 0.6483469589729793,
+              "peak_rss_bytes": 80347136,
+              "tetrahedra": 20942,
+              "nodes": 5813,
+              "volume": 0.19687835462192807,
+              "quality_min": 0.4518527998972555,
+              "quality_p05": 0.5613844644925668,
+              "quality_p10": 0.5928820317930116,
+              "quality_median": 0.7319587247721486,
+              "quality_mean": 0.7334417088262892,
+              "quality_p90": 0.8797450892259445,
+              "quality_max": 0.9976167261648545,
+              "surface_error": 0.001688043571127856
+            },
+            {
+              "seconds": 0.6416904169600457,
+              "peak_rss_bytes": 80723968,
+              "tetrahedra": 20942,
+              "nodes": 5813,
+              "volume": 0.19687835462192807,
+              "quality_min": 0.4518527998972555,
+              "quality_p05": 0.5613844644925668,
+              "quality_p10": 0.5928820317930116,
+              "quality_median": 0.7319587247721486,
+              "quality_mean": 0.7334417088262892,
+              "quality_p90": 0.8797450892259445,
+              "quality_max": 0.9976167261648545,
+              "surface_error": 0.001688043571127856
+            }
+          ]
+        },
+        "medians": {
+          "base": {
+            "seconds": 0.6094001670135185,
+            "peak_rss_bytes": 79839232,
+            "tetrahedra": 20942,
+            "nodes": 5813,
+            "volume": 0.19687835462192807,
+            "quality_min": 0.4518527998972555,
+            "quality_p05": 0.5613844644925668,
+            "quality_p10": 0.5928820317930116,
+            "quality_median": 0.7319587247721486,
+            "quality_mean": 0.7334417088262892,
+            "quality_p90": 0.8797450892259445,
+            "quality_max": 0.9976167261648545,
+            "surface_error": 0.001688043571127856
+          },
+          "head": {
+            "seconds": 0.6416904169600457,
+            "peak_rss_bytes": 80347136,
+            "tetrahedra": 20942,
+            "nodes": 5813,
+            "volume": 0.19687835462192807,
+            "quality_min": 0.4518527998972555,
+            "quality_p05": 0.5613844644925668,
+            "quality_p10": 0.5928820317930116,
+            "quality_median": 0.7319587247721486,
+            "quality_mean": 0.7334417088262892,
+            "quality_p90": 0.8797450892259445,
+            "quality_max": 0.9976167261648545,
+            "surface_error": 0.001688043571127856
+          }
+        },
+        "failures": []
+      },
+      "gyroid_tet10": {
+        "runs": {
+          "base": [
+            {
+              "seconds": 0.9194327499717474,
+              "peak_rss_bytes": 105676800,
+              "tetrahedra": 70403,
+              "nodes": 116856,
+              "volume": 0.3235632551282215,
+              "quality_min": 0.3139606789526075,
+              "quality_p05": 0.5724845768823266,
+              "quality_p10": 0.61150991290785,
+              "quality_median": 0.8552760066679805,
+              "quality_mean": 0.8087618039726566,
+              "quality_p90": 0.9377243175822209,
+              "quality_max": 0.9965772630297074,
+              "surface_error": 0.0013790862274873832
+            },
+            {
+              "seconds": 0.9020493749994785,
+              "peak_rss_bytes": 105889792,
+              "tetrahedra": 70403,
+              "nodes": 116856,
+              "volume": 0.3235632551282215,
+              "quality_min": 0.3139606789526075,
+              "quality_p05": 0.5724845768823266,
+              "quality_p10": 0.61150991290785,
+              "quality_median": 0.8552760066679805,
+              "quality_mean": 0.8087618039726566,
+              "quality_p90": 0.9377243175822209,
+              "quality_max": 0.9965772630297074,
+              "surface_error": 0.0013790862274873832
+            },
+            {
+              "seconds": 0.8717418750165962,
+              "peak_rss_bytes": 105725952,
+              "tetrahedra": 70403,
+              "nodes": 116856,
+              "volume": 0.3235632551282215,
+              "quality_min": 0.3139606789526075,
+              "quality_p05": 0.5724845768823266,
+              "quality_p10": 0.61150991290785,
+              "quality_median": 0.8552760066679805,
+              "quality_mean": 0.8087618039726566,
+              "quality_p90": 0.9377243175822209,
+              "quality_max": 0.9965772630297074,
+              "surface_error": 0.0013790862274873832
+            }
+          ],
+          "head": [
+            {
+              "seconds": 0.9243413750082254,
+              "peak_rss_bytes": 105742336,
+              "tetrahedra": 70403,
+              "nodes": 116856,
+              "volume": 0.3235632551282215,
+              "quality_min": 0.3139606789526075,
+              "quality_p05": 0.5724845768823266,
+              "quality_p10": 0.61150991290785,
+              "quality_median": 0.8552760066679805,
+              "quality_mean": 0.8087618039726566,
+              "quality_p90": 0.9377243175822209,
+              "quality_max": 0.9965772630297074,
+              "surface_error": 0.0013790862274873832
+            },
+            {
+              "seconds": 0.8070070000248961,
+              "peak_rss_bytes": 105791488,
+              "tetrahedra": 70403,
+              "nodes": 116856,
+              "volume": 0.3235632551282215,
+              "quality_min": 0.3139606789526075,
+              "quality_p05": 0.5724845768823266,
+              "quality_p10": 0.61150991290785,
+              "quality_median": 0.8552760066679805,
+              "quality_mean": 0.8087618039726566,
+              "quality_p90": 0.9377243175822209,
+              "quality_max": 0.9965772630297074,
+              "surface_error": 0.0013790862274873832
+            },
+            {
+              "seconds": 0.8065639159758575,
+              "peak_rss_bytes": 106364928,
+              "tetrahedra": 70403,
+              "nodes": 116856,
+              "volume": 0.3235632551282215,
+              "quality_min": 0.3139606789526075,
+              "quality_p05": 0.5724845768823266,
+              "quality_p10": 0.61150991290785,
+              "quality_median": 0.8552760066679805,
+              "quality_mean": 0.8087618039726566,
+              "quality_p90": 0.9377243175822209,
+              "quality_max": 0.9965772630297074,
+              "surface_error": 0.0013790862274873832
+            }
+          ]
+        },
+        "medians": {
+          "base": {
+            "seconds": 0.9020493749994785,
+            "peak_rss_bytes": 105725952,
+            "tetrahedra": 70403,
+            "nodes": 116856,
+            "volume": 0.3235632551282215,
+            "quality_min": 0.3139606789526075,
+            "quality_p05": 0.5724845768823266,
+            "quality_p10": 0.61150991290785,
+            "quality_median": 0.8552760066679805,
+            "quality_mean": 0.8087618039726566,
+            "quality_p90": 0.9377243175822209,
+            "quality_max": 0.9965772630297074,
+            "surface_error": 0.0013790862274873832
+          },
+          "head": {
+            "seconds": 0.8070070000248961,
+            "peak_rss_bytes": 105791488,
+            "tetrahedra": 70403,
+            "nodes": 116856,
+            "volume": 0.3235632551282215,
+            "quality_min": 0.3139606789526075,
+            "quality_p05": 0.5724845768823266,
+            "quality_p10": 0.61150991290785,
+            "quality_median": 0.8552760066679805,
+            "quality_mean": 0.8087618039726566,
+            "quality_p90": 0.9377243175822209,
+            "quality_max": 0.9965772630297074,
+            "surface_error": 0.0013790862274873832
+          }
+        },
+        "failures": []
+      }
+    },
+    "runtime": {
+      "base": {
+        "python": "3.12.9",
+        "numpy": "2.5.4",
+        "meshers": "0.2.0",
+        "native_sha256": "9d4bab8169ce9d23cccd942bf71feeaa33c61a6da8e8999299bf3c2f18ba0c33"
+      },
+      "head": {
+        "python": "3.12.9",
+        "numpy": "2.5.4",
+        "meshers": "0.2.1",
+        "native_sha256": "38a0449e886622c18781f5432279f40cee2c2de3b4bf37b3fe110669e5b279cc"
+      }
+    },
+    "same_native_binary": false,
+    "complete": true
+  }
+}

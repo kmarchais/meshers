@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"constant":["EDGES"],"fn":["signed_volume"],"struct":["FitStats","Quadratic"]};

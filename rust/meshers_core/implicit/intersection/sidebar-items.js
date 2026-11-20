@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"constant":["MAX_CONSTRAINTS"],"fn":["generate","generate_closed","generate_union"],"struct":["Output","QualityDiagnostics"],"type":["ConstraintMask"]};

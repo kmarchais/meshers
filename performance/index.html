@@ -1,0 +1,1308 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="CPU tetrahedral meshing of implicit solids and TPMS geometries">
+      
+      
+      
+      
+        <link rel="prev" href="../periodic-homogenization/">
+      
+      
+        <link rel="next" href="../benchmark-history/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../assets/mark.svg">
+      <meta name="generator" content="zensical-0.0.62">
+    
+    
+      
+        <title>Regression checks - Meshers</title>
+      
+    
+    
+      
+        
+      
+      <link rel="stylesheet" href="../assets/stylesheets/modern/main.ce62732f.min.css">
+      
+        
+          
+        
+        <link rel="stylesheet" href="../assets/stylesheets/modern/palette.812a03bb.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+    
+    
+      <link rel="stylesheet" href="../assets/brand.css">
+    
+    <script>__md_scope=new URL("..",location),__md_scope.pathname.endsWith("/")||(__md_scope=new URL(__md_scope.pathname+"/",location)),__md_hash=e=>[...e].reduce(((e,t)=>(e<<5)-e+t.charCodeAt(0)),0),__md_get=(e,t=localStorage,_=__md_scope)=>JSON.parse(t.getItem(_.pathname+"."+e)),__md_set=(e,t,_=localStorage,a=__md_scope)=>{try{_.setItem(a.pathname+"."+e,JSON.stringify(t))}catch(e){}},document.documentElement.setAttribute("data-platform",navigator.platform)</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="custom" data-md-color-accent="custom">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer" aria-label="Navigation"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#performance-and-regression-checks" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="./.." title="Meshers" class="md-header__button md-logo" aria-label="Meshers" data-md-component="logo">
+      
+  <img src="../assets/mark.svg" alt="Meshers">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer" aria-label="Navigation">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-menu" viewBox="0 0 24 24"><path d="M4 5h16M4 12h16M4 19h16"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Meshers
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Regression checks
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="none" data-md-color-scheme="default" data-md-color-primary="custom" data-md-color-accent="custom"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="none" data-md-color-scheme="slate" data-md-color-primary="custom" data-md-color-accent="custom"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-moon" viewBox="0 0 24 24"><path d="M20.985 12.486a9 9 0 1 1-9.473-9.472c.405-.022.617.46.402.803a6 6 0 0 0 8.268 8.268c.344-.215.825-.004.803.401"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search" aria-label="Search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-search" viewBox="0 0 24 24"><path d="m21 21-4.34-4.34"/><circle cx="11" cy="11" r="8"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog" aria-label="Search">
+  <button type="button" class="md-search__button">
+    Search
+  </button>
+</div>
+      
+    
+    <div class="md-header__source">
+      
+    </div>
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="./.." title="Meshers" class="md-nav__button md-logo" aria-label="Meshers" data-md-component="logo">
+      
+  <img src="../assets/mark.svg" alt="Meshers">
+
+    </a>
+    Meshers
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_1" >
+        
+          
+          <label class="md-nav__link" for="__nav_1" id="__nav_1_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Start here
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_1_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_1">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+  Start here
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="./.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Overview
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../getting-started/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Installation and first mesh
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../examples/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Python examples
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  User guide
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+  User guide
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../fields/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Fields and grading
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../quality/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Periodicity and quality
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../intersections/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Intersections and curved domains
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../solver-verification/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Solver verification
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../periodic-homogenization/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Periodic homogenization
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Performance
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+  Performance
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Regression checks
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="././" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Regression checks
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+
+<nav class="md-nav md-nav--secondary" aria-label="On this page">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      On this page
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#every-pull-request" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Every pull request
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#run-locally-on-linux-wsl-or-macos" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Run locally on Linux, WSL or macOS
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#release-suite-and-public-history" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Release suite and public history
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#testing-a-changed-mesh-against-an-fea-reference" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Testing a changed mesh against an FEA reference
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../benchmark-history/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Benchmark history
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  API reference
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+  API reference
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../api/python/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Python
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../api/rust/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Rust
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Development
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+  Development
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../contributing/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Contributing
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../testing/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Testing and coverage
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../release/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Release preparation
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  
+                    
+                    
+                    
+                      
+                    
+                    
+                      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+                      <div class="md-sidebar-button__wrapper">
+                        <label class="md-sidebar-button" for="__toc"></label>
+                      </div>
+                    
+                  
+                  <div class="md-sidebar__inner">
+                    
+
+
+<nav class="md-nav md-nav--secondary" aria-label="On this page">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      On this page
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#every-pull-request" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Every pull request
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#run-locally-on-linux-wsl-or-macos" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Run locally on Linux, WSL or macOS
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#release-suite-and-public-history" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Release suite and public history
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#testing-a-changed-mesh-against-an-fea-reference" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Testing a changed mesh against an FEA reference
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+<h1 id="performance-and-regression-checks">Performance and regression checks<a class="headerlink" href="#performance-and-regression-checks" title="Permanent link">&para;</a></h1>
+<p>Use <code>threads=1</code> as a starting point. Native workers share memory and release the
+Python GIL; extra workers do not parallelize Python callbacks. Compiled fields
+avoid callback overhead. <code>batch_size</code> limits callback evaluation batches,
+including optional intersection surface verification.</p>
+<p>Measure representative geometries before changing thread count, resolution,
+optimization passes or evaluator. Keep those settings identical when comparing.</p>
+<p>For local Windows measurements install <code>psutil</code> in each benchmark environment. Windows reports the process peak working set, Linux reports peak RSS in KiB and macOS reports peak RSS in bytes. The JSON records bytes on all three platforms. Compare timings and memory within a dated configuration.</p>
+<h2 id="every-pull-request">Every pull request<a class="headerlink" href="#every-pull-request" title="Permanent link">&para;</a></h2>
+<p>The Python 3.11 binding jobs also mesh five implicit sheets and a BCC lattice from eight-cell seeds.
+They check the returned tetrahedra against the independent geometry and quality limits
+from the historical Microgen benchmark. The seven-specimen study includes rejected
+settings and optional elasticity comparisons. <a href="https://github.com/kmarchais/meshers/blob/main/demos/solver/implicit-coverage/README.md">Study and replay instructions</a></p>
+<p>The Performance workflow builds the base and proposed source into separate
+wheels and installs them in separate environments with the same Python and
+NumPy versions. It runs both on the same Linux runner, alternates their order,
+and measures five fresh processes per case after one discarded warm-up pair.
+Medians are compared, and every raw sample is uploaded with the source hashes.</p>
+<p>Cases cover compiled and callback periodic Gyroids, a graded sheet, a mapped
+named intersection, Schwarz P, a fixed Fourier spinodoid and an ordered lattice. Each uses 24 lattice cells and two
+optimization passes. Timing includes field preparation and meshing, but excludes
+imports, independent validation and export. Peak resident memory is the Linux
+process high-water mark through mesh generation, including imports and JIT.</p>
+<table>
+<thead>
+<tr>
+<th>Metric</th>
+<th>Fails when</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Median elapsed time</td>
+<td>More than 25% plus 20 ms above base</td>
+</tr>
+<tr>
+<td>Median peak RSS</td>
+<td>More than 15% plus 8 MiB above base</td>
+</tr>
+<tr>
+<td>Minimum, maximum, mean, median, p05, p10 or p90 MMG quality</td>
+<td>More than 1% below base</td>
+</tr>
+<tr>
+<td>Sampled wall error and, for the mapped intersection, sampled cap error (each)</td>
+<td>More than 5% plus 1e-10 above base</td>
+</tr>
+<tr>
+<td>Mesh volume</td>
+<td>Changes by more than 0.5%</td>
+</tr>
+<tr>
+<td>Tetrahedron count</td>
+<td>Changes by more than 1%</td>
+</tr>
+</tbody>
+</table>
+<p>Every sample must also have finite coordinates, positive cell volumes, closed
+boundary edge incidence and the requested periodic correspondence. Its minimum
+quality must be at least 0.01 and each sampled surface error at most 0.1. Fixture version 4 compares the named walls and mapped caps separately. The gate measures the cylindrical and planar caps on the returned triangles for both wheels.</p>
+<p>A changed mesh count or volume may be intentional, but it needs review rather
+than being counted silently as a performance improvement. Do not weaken a gate
+just to make a change pass. Inspect raw measurements and reproduce an unexpected
+failure before changing thresholds.</p>
+<p>Shared runners are noisy. These allowances detect substantial regressions;
+they cannot promise zero slowdown, cover every geometry, or prevent cumulative
+small changes. Review the uploaded trends, and compare against the release tag
+periodically with the workflow's manual baseline input. The initial commit
+compares against itself to establish measurements and exercise the gate.</p>
+<h2 id="run-locally-on-linux-wsl-or-macos">Run locally on Linux, WSL or macOS<a class="headerlink" href="#run-locally-on-linux-wsl-or-macos" title="Permanent link">&para;</a></h2>
+<p>Build and install the two source versions into separate environments, then run:</p>
+<div class="language-sh highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>python<span class="w"> </span>tools/performance_gate.py<span class="w"> </span>--base-python<span class="w"> </span>/path/base/bin/python<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="w">  </span>--head-python<span class="w"> </span>/path/head/bin/python<span class="w"> </span>--output<span class="w"> </span>performance.json
+</span></code></pre></div>
+<p>The script writes JSON samples and a Markdown comparison. Its comparison logic
+has tests that deliberately inject time, memory, quality and geometry regressions.</p>
+<h2 id="release-suite-and-public-history">Release suite and public history<a class="headerlink" href="#release-suite-and-public-history" title="Permanent link">&para;</a></h2>
+<p>The <a href="../benchmark-history/">benchmark history</a> keeps immutable JSON measurements,
+within-run timing plots and full quality tables for each archived run. It records
+source commits, the benchmark-script hash, loaded native hashes, Python/NumPy
+versions, host and CPU information, every measured sample, counts and failures.
+Existing labels cannot be overwritten. A failed run remains marked <strong>FAIL</strong>;
+missing samples never become a successful timing. A comparison of one source
+commit against itself is marked <strong>REFERENCE</strong>, not a release-to-release speedup.</p>
+<p>The automatic PR suite now also covers Schwarz P solid, a fixed six-mode periodic
+Fourier spinodoid fixture and a fixed ordered smooth-union cylinder lattice.
+The manual <strong>release</strong> suite adds adaptive Gyroid, spinodoid and lattice fixtures,
+and a curved Tet10 Gyroid. These small deterministic regression fixtures are
+separate from the full Microgen accuracy study. They do not certify geometry,
+FEA convergence, or superiority over Microgen+MMG.</p>
+<p>All cases retain minimum, maximum, mean, median, p05, p10 and p90 quality. All
+seven statistics have the same 1% regression allowance. Node counts have the
+same 1% change guard as tetrahedron counts. Tet10 quality and sampled surface
+error describe the linear parent; its curved volume is independently integrated
+and Jacobians are checked at reference nodes and quadrature samples. The release
+validator also bounds the cubic determinant in the Bernstein basis and subdivides
+ambiguous cells. A nonpositive sample or an unresolved bound fails validation.
+This floating-point element check does not establish global non-overlap.</p>
+<p>For every release:</p>
+<ol>
+<li>Run <strong>Performance</strong> manually on the candidate commit. Choose <code>suite=release</code>,
+   provide the previous compatible release tag in <code>baseline</code>, and use a unique
+   <code>history_label</code>, such as <code>v0.2.0-rc.1</code>.</li>
+<li>Inspect the CI summary and download <code>performance-comparison</code>. The artifact
+   includes raw JSON and a generated documentation history. Failures must be
+   explained or fixed; do not weaken thresholds to publish a passing result.</li>
+<li>Archive the downloaded <code>performance.json</code> locally and commit the generated
+   documentation with its evidence:</li>
+</ol>
+<div class="language-sh highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>python<span class="w"> </span>-m<span class="w"> </span>tools.benchmark_history<span class="w"> </span>--input<span class="w"> </span>/path/performance.json<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="w">  </span>--label<span class="w"> </span>v0.2.0-rc.1
+</span></code></pre></div>
+<ol>
+<li>For the final release record, run against the immutable release tag and archive
+   under that version. Keep the candidate records as well. Documentation can be
+   updated after the release without changing the measured source identity.</li>
+</ol>
+<p>Version 0.1 cannot execute adaptive/Tet10 fixtures. For the first 0.2 release,
+use the reviewed compatible reference commit
+<code>afc49e583a0450454b02440557f39b89bbc39ca6</code> for the full suite. The automatic
+seven-case PR suite still compares against the actual PR base. Later releases
+can compare the complete suite against the previous 0.2-or-newer release.
+The initial history entry is an M4 reference run of that approved commit on
+both sides, not a published-release comparison.</p>
+<p>Local full-suite runs use the same command with <code>--suite release</code>. Linux and
+macOS normalize their different OS RSS units. Numerical workers and BLAS use
+one thread. Run on an idle host; absolute timings from different hosts or fixture
+versions must not be treated as a performance trend. The CI comparison remains
+within one runner and one run, with alternating base/candidate order.</p>
+<p>Timing and RSS gates use medians to tolerate host noise. Quality also checks
+<strong>every candidate repetition</strong> against the base median, so an occasional bad
+mesh cannot hide behind four good meshes. Each sample is capped at 250,000
+nodes and tetrahedra. Changing fixture formulas or settings requires a new
+fixture version and a reviewed comparison protocol, not a silent history reset.</p>
+<p>To archive a local run, pass full commit SHAs with <code>--base-ref</code> and <code>--head-ref</code>;
+the default <code>local</code> labels deliberately cannot enter the public history.</p>
+<h2 id="testing-a-changed-mesh-against-an-fea-reference">Testing a changed mesh against an FEA reference<a class="headerlink" href="#testing-a-changed-mesh-against-an-fea-reference" title="Permanent link">&para;</a></h2>
+<p>The Python 3.11 CI jobs generate a periodic Schwarz P Tet4 mesh with the candidate
+wheel. They reopen the VTKHDF export and check the walls and caps in both directions
+(sampled distance ≤ 0.002), volume (within 1%), minimum MMG quality (≥ 0.1),
+orientation, conformity, periodic faces, component count and material probes.
+The budget is 250,000 nodes or elements. Six prescribed strains and six
+stress-controlled solves must pass. The worst relative strain-energy discrepancy
+against the reference stiffness tensor must be at most 1%.</p>
+<p>Connectivity and node counts can change within these limits. The CI artifact
+records the solver mesh hash for diagnosis. The separate frozen release replay
+still checks reproducibility. To run the candidate check locally with the workspace
+wheel and a fresh output directory:</p>
+<div class="language-sh highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>uv<span class="w"> </span>run<span class="w"> </span>--with<span class="w"> </span><span class="nv">fedoo</span><span class="o">==</span><span class="m">1</span>.0.0b2<span class="w"> </span>python<span class="w"> </span>demos/solver/schwarz_workflow.py<span class="w"> </span>native-candidate<span class="w"> </span>candidate-acceptance
+</span></code></pre></div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-circle-arrow-up" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="m16 12-4-4-4 4M12 16V8"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      Meshers contributors · MIT license
+    </div>
+  
+  
+    Made with
+    <a href="https://zensical.org/" target="_blank" rel="noopener">
+      Zensical
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      
+      
+        
+        
+      <script id="__config" type="application/json">{"annotate":null,"base":"..","features":["navigation.sections","navigation.top","content.code.copy"],"redirect":null,"search":"../assets/javascripts/workers/search.7d14d953.min.js","tags":null,"translations":{"clipboard.copied":"Copied to clipboard","clipboard.copy":"Copy to clipboard","search.result.more.one":"1 more on this page","search.result.more.other":"# more on this page","search.result.none":"No matching documents","search.result.one":"1 matching document","search.result.other":"# matching documents","search.result.placeholder":"Type to start searching","search.result.term.missing":"Missing","select.version":"Select version"},"version":null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.8dcc8e9c.min.js"></script>
+      
+    
+  </body>
+</html>

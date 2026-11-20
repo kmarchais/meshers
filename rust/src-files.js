@@ -1,0 +1,2 @@
+createSrcSidebar('[["meshers_core",["",[["implicit",[["intersection",[],["closed.rs","coupled.rs","repair.rs"]]],["intersection.rs","seeded.rs"]],["quadratic",[],["fit.rs","positivity.rs"]]],["accelerator.rs","adaptive.rs","error.rs","geometry.rs","implicit.rs","lib.rs","optimize.rs","optimize_batch.rs","polyhedral.rs","profile.rs","projection.rs","quadratic.rs","tet_adapt.rs"]]]]');
+//{"start":19,"fragment_lengths":[363]}
