@@ -94,10 +94,10 @@ def timing_plot(data: dict) -> str:
         ),
         '<rect width="100%" height="100%" fill="#0b202b"/>',
         '<g font-family="sans-serif" font-size="13" fill="#eef5f7">',
-        '<text x="20" y="25">Base (blue) and candidate (teal), same host and settings</text>',
+        '<text x="20" y="25">Median seconds · upper bar: base · lower bar: candidate</text>',
     ]
+    scale = max((m[k]["seconds"] for _, m in cases for k in ("base", "head")), default=0)
     for index, (name, medians) in enumerate(cases):
-        scale = max(medians[k]["seconds"] for k in ("base", "head"))
         y = 55 + index * 58
         svg.append(f'<text x="20" y="{y + 13}">{html.escape(name)}</text>')
         for offset, label, color in [(0, "base", "#8eafff"), (21, "head", "#52d5b8")]:
@@ -147,15 +147,16 @@ def render(directory: Path) -> None:
                 "[All records](../benchmark-history.md)"
             ),
             "",
-            "Absolute times from different hosts are not a release-to-release speed ranking.",
+        ]
+        for name, case in data["cases"].items():
+            lines.extend(f"- **{name}** — {error}" for error in case["failures"])
+        lines += [
             "",
-            f"![Within-run generation times]({svg.name})",
+            f"![Median generation times in seconds on one common scale]({svg.name})",
             "",
             (
-                "Quality and sampled surface error describe linear corners/parent surfaces, "
-                "including Tet10. Tet10 volumes integrate the curved mapping and its Jacobians "
-                "are sampled for positivity. These are regression checks, not geometry or "
-                "FEA certification."
+                "For Tet10, quality and sampled surface error describe the linear parent. "
+                "Volume integrates the curved element."
             ),
             "",
         ]
@@ -168,9 +169,10 @@ def render(directory: Path) -> None:
                 ),
                 "",
             ]
+        lines += ['<details markdown="1"><summary>Median metrics by case</summary>', ""]
         for name, case in data["cases"].items():
-            lines += [f"## {name}", ""]
             if case["medians"]:
+                lines += [f"### {name}", ""]
                 b, h = (case["medians"][k] for k in ("base", "head"))
                 lines += ["| Metric | Base | Candidate |", "| --- | ---: | ---: |"]
                 for key in (
@@ -180,26 +182,20 @@ def render(directory: Path) -> None:
                     "nodes",
                     "volume",
                     "surface_error",
+                    *(("mapped_cap_error",) if "mapped_cap_error" in b else ()),
                     *(f"quality_{q}" for q in QUALITY),
                 ):
                     lines.append(f"| {key} | {b[key]:.6g} | {h[key]:.6g} |")
                 lines.append("")
-            lines += [f"- {error}" for error in case["failures"]]
+        lines.append("</details>")
         path.with_suffix(".md").write_text("\n".join(lines).rstrip() + "\n", encoding="utf-8")
     records.sort(key=lambda r: r[1]["recorded_at"])
     index = [
         "# Benchmark history",
         "",
-        (
-            "Versioned measurements from fixed regression fixtures. Failed records remain visible. "
-            "Release candidates and same-binary references are explicitly labelled."
-        ),
+        "Open a record for its timing plot, quality gates and raw samples.",
         "",
-        (
-            "Compare base/candidate measurements within each run. Different machines, suite "
-            "versions or settings cannot establish an absolute performance trend. Raw JSON "
-            "retains every measured sample and source/native identity."
-        ),
+        "Compare times within a run. A REFERENCE compares one source revision to itself.",
         "",
         "| Record | Suite | Result | Platform |",
         "| --- | --- | --- | --- |",

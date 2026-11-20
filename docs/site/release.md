@@ -1,45 +1,10 @@
-# Releasing version 0.2.1
+# Release a wheel
 
-Python `meshers` and Rust `meshers-core` use version 0.2.1. Published 0.2.1 wheels support
-CPython 3.10+. New wheels built from main require CPython 3.11+. Source builds
-require Rust 1.95 or newer. The first publication
-target is PyPI. The Rust core can be published independently to crates.io.
+Use the exact `main` commit you intend to publish. The source archive includes the Rust core. Source builds require Rust 1.95+.
 
-## Required checks
+1. **Check the commit.** Require successful CI, Coverage, Performance and Release artifacts runs. Inspect installed wheels for Linux x86-64, Windows x86-64 and macOS ARM64/x86-64, plus the isolated source-distribution build.
+2. **Archive the measurements.** Run the [release benchmark suite](performance.md#release-suite-and-public-history) against a compatible baseline. Keep candidate and final-tag results in the [benchmark history](benchmark-history.md).
+3. **Publish the tested files.** Dispatch **Publish to PyPI** from `main` with the **Release artifacts** run ID. The workflow verifies the SHA and downloads those files. Configure PyPI Trusted Publishing for `publish-pypi.yml` and the `pypi` GitHub environment.
+4. **Verify the public install** in a fresh environment, then tag the same commit and create its GitHub release.
 
-Run CI on the exact source commit intended for release. A push to main runs
-these workflows without requiring a pull request:
-
-- Rust tests, formatting, Clippy and crate package verification.
-- Python tests and executable examples on Linux, Windows and macOS.
-- Python lint and types, solver validation and documentation construction.
-- Coverage reports and repeated runtime, memory and quality measurements.
-- Installed wheels for Linux x86-64, Windows x86-64, macOS ARM64 and macOS x86-64.
-- An isolated source-distribution build and installation.
-
-Run and archive the full [release benchmark suite](performance.md#release-suite-and-public-history)
-for every release. Keep the candidate and final-tag measurements in the
-[public history](benchmark-history.md). Version 0.1 lacks the adaptive/Tet10
-API, so the first full-suite comparison uses the documented compatible reference.
-
-Inspect the workflow results and artifacts. A configured workflow is not evidence
-that its checks passed. Local Linux wheels may require a newer glibc than the
-portable Linux wheel built by the release workflow.
-
-## Publish tested artifacts
-
-1. Merge release preparation and require all four validation workflows to pass
-   on the exact main commit.
-2. Run **Publish to PyPI** from main, supplying the successful **Release artifacts**
-   run ID. The workflow verifies the source SHA and all check results, downloads
-   the tested artifacts, and publishes through the `pypi` environment.
-3. Verify installation from PyPI in a fresh environment, then tag the same source
-   commit and create its GitHub release.
-
-The publishing workflow is `.github/workflows/publish-pypi.yml`. Configure that
-filename and the repository in PyPI Trusted Publishing. The GitHub environment
-is `pypi`. Publishing is explicitly triggered and never runs on pull requests.
-It reuses tested files rather than rebuilding them during upload.
-
-The source archive includes the Rust core and does not require a prior crates.io
-release. A conda-forge package is not part of v0.2.
+[Publishing workflow](https://github.com/kmarchais/meshers/blob/main/.github/workflows/publish-pypi.yml) · [Wheel requirements](getting-started.md)

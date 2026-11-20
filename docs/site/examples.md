@@ -1,33 +1,17 @@
-# Python examples
+# Runnable Python examples
 
-These scripts use the installed public API. Run them from any writable directory;
-exports are written there. Install `meshers[io]` for the examples that write VTKHDF.
-From a development checkout, use `uv run python` in place of `python`.
+From the **repository root**, install the [development environment](contributing.md) and run:
 
 ```sh
-python crates/meshers-python/examples/basic.py
+uv run --extra io --package meshers python crates/meshers-python/examples/basic.py
 ```
 
-| Script | Features |
+| Goal | Script |
 | --- | --- |
-| [basic.py](https://github.com/kmarchais/meshers/blob/main/crates/meshers-python/examples/basic.py) | All three built-in TPMS fields, a custom negative-side solid, bands, bounds, per-axis resolution, arrays, volume and surface export |
-| [graded.py](https://github.com/kmarchais/meshers/blob/main/crates/meshers-python/examples/graded.py) | Spatially varying thickness and automatic derivatives |
-| [evaluators.py](https://github.com/kmarchais/meshers/blob/main/crates/meshers-python/examples/evaluators.py) | Automatic compilation, explicit reusable compilation, supplied gradients, batched callbacks, finite differences |
-| [periodic.py](https://github.com/kmarchais/meshers/blob/main/crates/meshers-python/examples/periodic.py) | Three-axis node correspondence, quality floor, element budget, optimization, snapping and worker count |
-| [intersection.py](https://github.com/kmarchais/meshers/blob/main/crates/meshers-python/examples/intersection.py) | Named surfaces, feature edges, parameter coordinates, straight periodicity, curved maps and rigid periodic transforms |
-| [cancellation.py](https://github.com/kmarchais/meshers/blob/main/crates/meshers-python/examples/cancellation.py) | Cancellation tokens, invalid input and meshing failure handling |
-
-CI runs all six scripts unchanged in temporary directories and checks exported
-coordinates, connectivity and positive volumes. API regression tests cover
-additional option combinations and failure cases. Every public option is
-listed in the [API reference](api/python.md).
-
-For a larger mapped TPMS example:
-
-```sh
-python crates/meshers-python/examples/curved_tpms.py torus torus.vtkhdf
-python crates/meshers-python/examples/curved_tpms.py cylinder cylinder.vtkhdf
-```
-
-The simple scripts are intended as starting points. Increase resolution and
-choose tolerances for your geometry; their settings are not universal defaults.
+| Mesh a TPMS, inspect arrays, export volume and surface | [basic.py](https://github.com/kmarchais/meshers/blob/main/crates/meshers-python/examples/basic.py) |
+| Vary sheet thickness in space | [graded.py](https://github.com/kmarchais/meshers/blob/main/crates/meshers-python/examples/graded.py) |
+| Compare compiled fields, gradients and callbacks | [evaluators.py](https://github.com/kmarchais/meshers/blob/main/crates/meshers-python/examples/evaluators.py) |
+| Pair opposite faces and set a quality floor | [periodic.py](https://github.com/kmarchais/meshers/blob/main/crates/meshers-python/examples/periodic.py) |
+| Label cut faces and find their common edges | [intersection.py](https://github.com/kmarchais/meshers/blob/main/crates/meshers-python/examples/intersection.py) |
+| Mesh a cylindrical or toroidal gyroid | [curved_tpms.py](https://github.com/kmarchais/meshers/blob/main/crates/meshers-python/examples/curved_tpms.py) |
+| Cancel a job or handle invalid input | [cancellation.py](https://github.com/kmarchais/meshers/blob/main/crates/meshers-python/examples/cancellation.py) |

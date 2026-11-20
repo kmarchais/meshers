@@ -1,8 +1,6 @@
 # Rust API
 
-The [complete Rust API reference](../rust/meshers_core/index.html) is generated
-by `cargo doc --no-deps` and included with this site. It documents the actual Rust
-signatures, traits and option structures.
+[Browse the Rust crate reference](../rust/meshers_core/index.html).
 
 Start with `implicit::generate`, `implicit::Options`, `implicit::Region` and
 `implicit::ScalarField`. A closure implements a field with numerical gradients;
