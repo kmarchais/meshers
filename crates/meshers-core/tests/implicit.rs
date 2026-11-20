@@ -703,7 +703,7 @@ fn minimum_quality_gate_rejects_flat_cells_without_changing_geometry() {
     let rejected = generate(
         &|_| -1.,
         Options {
-            minimum_quality: 0.05,
+            minimum_quality: 0.1,
             ..options
         },
     );
@@ -718,7 +718,7 @@ fn minimum_quality_gate_rejects_flat_cells_without_changing_geometry() {
         &|_| -1.,
         Options {
             bounds: [[0.; 3], [1.; 3]],
-            minimum_quality: 0.05,
+            minimum_quality: 0.1,
             ..options
         },
     )
@@ -840,5 +840,110 @@ fn snapping_does_not_erase_a_sampled_small_component() {
         mesh.tets
             .iter()
             .any(|tet| tet.iter().all(|&i| mesh.points[i][0] > 0.5))
+    );
+}
+
+/// Thirty dominant modes of a band-limited random field with features near
+/// one background cell: `threshold - sum a cos(tau k.x + phase)`.
+struct Spinodoid {
+    threshold: f64,
+    modes: Vec<[f64; 5]>,
+}
+
+impl Spinodoid {
+    fn load() -> Self {
+        let mut lines = include_str!("../src/testdata/spinodoid-30-modes.txt").lines();
+        let threshold = lines.next().unwrap().parse().unwrap();
+        let modes = lines
+            .map(|line| {
+                let v: Vec<f64> = line
+                    .split_whitespace()
+                    .map(|x| x.parse().unwrap())
+                    .collect();
+                [v[0], v[1], v[2], v[3], v[4]]
+            })
+            .collect();
+        Self { threshold, modes }
+    }
+}
+
+impl ScalarField for Spinodoid {
+    fn value(&self, p: Point) -> f64 {
+        self.threshold
+            - self
+                .modes
+                .iter()
+                .map(|m| m[3] * (TAU * (m[0] * p[0] + m[1] * p[1] + m[2] * p[2]) + m[4]).cos())
+                .sum::<f64>()
+    }
+    fn gradient(&self, p: Point) -> Option<Point> {
+        let mut gradient = [0.; 3];
+        for m in &self.modes {
+            let s = TAU * m[3] * (TAU * (m[0] * p[0] + m[1] * p[1] + m[2] * p[2]) + m[4]).sin();
+            for a in 0..3 {
+                gradient[a] += s * m[a];
+            }
+        }
+        Some(gradient)
+    }
+}
+
+#[test]
+fn fully_snapped_cap_triangles_stay_periodic() {
+    // Without the cap rollback: "periodic triangle mismatch on axis 1".
+    let output = generate(
+        &Spinodoid::load(),
+        Options {
+            periodic: [true; 3],
+            geometry_tolerance: 10.,
+            optimize_passes: 0,
+            ..Options::default()
+        },
+    )
+    .unwrap();
+    assert!(output.diagnostics.reverted_snap_vertices > 0);
+    assert!(output.periodic_pairs.iter().all(|pairs| !pairs.is_empty()));
+}
+
+#[test]
+fn geometry_gate_bounds_the_estimate_near_critical_points() {
+    // The first-order estimate alone reports 0.22 here, above half a cell
+    // diagonal, at a facet sample where the gradient nearly vanishes.
+    let output = generate(
+        &Spinodoid::load(),
+        Options {
+            cells: [16; 3],
+            periodic: [true; 3],
+            geometry_tolerance: 0.06,
+            optimize_passes: 1,
+            ..Options::default()
+        },
+    )
+    .unwrap();
+    assert!(output.diagnostics.maximum_sampled_surface_error <= 0.06);
+}
+
+#[test]
+fn rejected_slivers_are_remeshed_without_breaking_periodic_caps() {
+    let field = Spinodoid::load();
+    let options = Options {
+        periodic: [true; 3],
+        geometry_tolerance: 0.1,
+        ..Options::default()
+    };
+    let plain = generate(&field, options).unwrap();
+    let gated = generate(
+        &field,
+        Options {
+            minimum_quality: 0.1,
+            ..options
+        },
+    )
+    .unwrap();
+    assert!(plain.diagnostics.minimum_mmg_quality < 0.1);
+    assert!(gated.diagnostics.minimum_mmg_quality >= 0.1);
+    assert_eq!(
+        plain.periodic_pairs.map(|pairs| pairs.len()),
+        gated.periodic_pairs.map(|pairs| pairs.len())
     );
 }

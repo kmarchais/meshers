@@ -105,6 +105,10 @@ pub struct Diagnostics {
     pub minimum_mmg_quality: f64,
     pub elements_below_quality_01: usize,
     pub reverted_snap_vertices: usize,
+    /// Last-resort defeaturing: pairs of wall crossings of one box edge merged
+    /// because the wall grazed that edge. Nonzero means the geometry changed
+    /// there, within `geometry_tolerance`.
+    pub merged_box_edge_crossings: usize,
     pub inserted_interior_nodes: usize,
     pub maximum_sampled_surface_error: f64,
     pub adapt: Option<crate::tet_adapt::Stats>,
@@ -970,6 +974,7 @@ fn finish_with_constraints<F: ScalarField>(
     let mut tags = Vec::new();
     let mut error: f64 = 0.;
     let mut samples = Vec::new();
+    let mut estimates = Vec::with_capacity(FACET_SAMPLES);
     let [lo, hi] = g.bounds();
     for f in &mesh.surface {
         let p = f.map(|i| mesh.points[i]);
@@ -1042,13 +1047,17 @@ fn finish_with_constraints<F: ScalarField>(
                     error = error.max(distance);
                 } else if g.batched() {
                     samples.push(sample);
-                    if samples.len() == 4096 {
-                        error = error.max(distance_batch(g, &samples)?);
-                        samples.clear();
-                    }
                 } else {
-                    error = error.max(g.distance_in(sample.0, sample.1));
+                    estimates.push(g.distance_in(sample.0, sample.1));
                 }
+            }
+            if !estimates.is_empty() {
+                error = error.max(facet_distance(p, &estimates));
+                estimates.clear();
+            }
+            if samples.len() >= 4096 {
+                error = error.max(distance_batch(g, &samples)?);
+                samples.clear();
             }
         }
     }
@@ -1087,6 +1096,7 @@ fn finish_with_constraints<F: ScalarField>(
             maximum_sampled_surface_error: error,
             elements_below_quality_01,
             reverted_snap_vertices: 0,
+            merged_box_edge_crossings: 0,
             inserted_interior_nodes: 0,
             adapt: None,
         },
@@ -1369,7 +1379,15 @@ fn build<F: ScalarField>(g: &Context<F>) -> Result<Output, String> {
             clip_lattice(&mut b, g)?
         };
         g.check()?;
-        let bad = nonmanifold_vertices(&candidate.surface, candidate.points.len());
+        let mut bad = nonmanifold_vertices(&candidate.surface, candidate.points.len());
+        // A cap triangle whose three nodes all snapped onto the wall takes its
+        // side from the off-face apex, which differs between periodic images.
+        bad.extend(unmatched_cap_vertices(
+            &candidate.points,
+            &candidate.surface,
+            o.bounds,
+            o.periodic,
+        ));
         // A tiny sampled component can disappear entirely if every interior
         // sample snaps onto its wall. Surface manifold tests cannot see an
         // absent component. Restore discarded interior samples before accepting.
@@ -1519,6 +1537,64 @@ fn build<F: ScalarField>(g: &Context<F>) -> Result<Output, String> {
         None,
         g,
     )?;
+    let mut merged_box_edge_crossings = 0;
+    let rejected = |mesh: &Mesh| {
+        mesh.tets
+            .iter()
+            .any(|t| quality(t.map(|i| mesh.points[i])).powf(1.5) < o.minimum_quality)
+    };
+    if o.optimize_passes > 0 && o.minimum_quality > 0. && rejected(&mesh) {
+        // Relocation cannot repair a sliver that needs new connectivity.
+        // Only a mesh the quality gate would reject is modified. Defeaturing
+        // is the last resort: it restarts from the same mesh, because the
+        // geometry-preserving operations can close the room a merge needs.
+        let copy = |mesh: &Mesh| Mesh {
+            points: mesh.points.clone(),
+            tets: mesh.tets.clone(),
+            surface: mesh.surface.clone(),
+        };
+        let start = copy(&mesh);
+        for defeature in [false, true] {
+            let mut trial = copy(&start);
+            let mut merged = 0;
+            for _ in 0..3 {
+                let (operations, merges) = crate::tet_adapt::remove_slivers(
+                    &mut trial,
+                    g,
+                    threshold,
+                    o.periodic,
+                    h,
+                    o.geometry_tolerance.min(0.1 * h),
+                    defeature.then_some(o.geometry_tolerance.min(0.5 * h)),
+                )?;
+                merged += merges;
+                if operations == 0 {
+                    break;
+                }
+                crate::optimize::optimize_for(
+                    &mut trial,
+                    threshold,
+                    h,
+                    o.optimize_passes,
+                    3.,
+                    o.threads,
+                    None,
+                    g,
+                )?;
+                if !rejected(&trial) {
+                    break;
+                }
+            }
+            // A defeatured mesh that still fails is not worth its changed geometry.
+            if !defeature || (merged > 0 && !rejected(&trial)) {
+                mesh = trial;
+                merged_box_edge_crossings = merged;
+            }
+            if !rejected(&mesh) {
+                break;
+            }
+        }
+    }
     let inserted_interior_nodes = crate::adaptive::refine_interior(
         &mut mesh,
         o.interior_refine_nodes,
@@ -1528,8 +1604,49 @@ fn build<F: ScalarField>(g: &Context<F>) -> Result<Output, String> {
     )?;
     let mut output = finish(mesh, g)?;
     output.diagnostics.reverted_snap_vertices = reverted_snap_vertices;
+    output.diagnostics.merged_box_edge_crossings = merged_box_edge_crossings;
     output.diagnostics.inserted_interior_nodes = inserted_interior_nodes;
     Ok(output)
+}
+
+/// Vertices of cap triangles present on only one of two periodic faces.
+fn unmatched_cap_vertices(
+    points: &[Point],
+    surface: &[[usize; 3]],
+    bounds: [Point; 2],
+    periodic: [bool; 3],
+) -> Vec<usize> {
+    let [lo, hi] = bounds;
+    let mut out = Vec::new();
+    for a in (0..3).filter(|&a| periodic[a]) {
+        let key = |p: Point| {
+            std::array::from_fn::<_, 3, _>(|axis| {
+                if axis == a {
+                    0
+                } else {
+                    ((p[axis] - lo[axis]) / (hi[axis] - lo[axis]) * 1e11).round() as i64
+                }
+            })
+        };
+        let mut faces = [BTreeMap::new(), BTreeMap::new()];
+        for f in surface {
+            for (side, &value) in [lo[a], hi[a]].iter().enumerate() {
+                if f.iter().all(|&i| points[i][a] == value) {
+                    let mut keys = f.map(|i| key(points[i]));
+                    keys.sort_unstable();
+                    faces[side].insert(keys, *f);
+                }
+            }
+        }
+        for side in 0..2 {
+            for (k, f) in &faces[side] {
+                if !faces[1 - side].contains_key(k) {
+                    out.extend(f.iter().copied());
+                }
+            }
+        }
+    }
+    out
 }
 
 fn clip_lattice<F: ScalarField>(
@@ -1881,13 +1998,49 @@ fn distance_batch<F: ScalarField>(
     let points: Vec<Point> = samples.iter().map(|s| s.0).collect();
     let values = g.values(&points);
     let gradients = g.gradients(&points);
-    let mut error = 0_f64;
-    for ((v, grad), (_, locked)) in values.into_iter().zip(gradients).zip(samples) {
-        let residual = if g.band() { v.abs() - g.threshold() } else { v };
-        error = error.max(wall_distance(residual, grad, *locked));
-    }
+    let estimates: Vec<f64> = values
+        .into_iter()
+        .zip(gradients)
+        .zip(samples)
+        .map(|((v, grad), (_, locked))| {
+            let residual = if g.band() { v.abs() - g.threshold() } else { v };
+            wall_distance(residual, grad, *locked)
+        })
+        .collect();
+    let error = estimates
+        .as_chunks::<FACET_SAMPLES>()
+        .0
+        .iter()
+        .zip(points.as_chunks::<FACET_SAMPLES>().0)
+        .map(|(d, p)| facet_distance([p[0], p[1], p[2]], d))
+        .fold(0_f64, f64::max);
     g.check()?;
     Ok(error)
+}
+
+/// Samples per boundary facet: three vertices, the centroid and three edge midpoints.
+const FACET_SAMPLES: usize = 7;
+
+/// Largest wall distance over one facet's samples, vertices first.
+///
+/// `|f| / |grad f|` overestimates without bound near a critical point of the
+/// field. A sample of the facet is never farther from the wall than a vertex
+/// of that facet plus that vertex's own distance, which bounds the estimate.
+fn facet_distance(vertices: [Point; 3], estimates: &[f64]) -> f64 {
+    let centroid: Point =
+        std::array::from_fn(|a| (vertices[0][a] + vertices[1][a] + vertices[2][a]) / 3.);
+    let midpoint = |i: usize, j: usize| -> Point {
+        std::array::from_fn(|a| (vertices[i][a] + vertices[j][a]) / 2.)
+    };
+    let interior = [centroid, midpoint(0, 1), midpoint(1, 2), midpoint(2, 0)];
+    let mut error = estimates[..3].iter().copied().fold(0_f64, f64::max);
+    for (&estimate, sample) in estimates[3..].iter().zip(interior) {
+        let bound = (0..3)
+            .map(|i| norm(sub(vertices[i], sample)) + estimates[i])
+            .fold(f64::INFINITY, f64::min);
+        error = error.max(estimate.min(bound));
+    }
+    error
 }
 
 #[cfg(test)]

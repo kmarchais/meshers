@@ -748,6 +748,10 @@ fn mesh_dict<'py>(
         "reverted_snap_vertices",
         result.diagnostics.reverted_snap_vertices,
     )?;
+    diagnostics.set_item(
+        "merged_box_edge_crossings",
+        result.diagnostics.merged_box_edge_crossings,
+    )?;
     diagnostics.set_item("callback_calls", callback_calls)?;
     diagnostics.set_item(
         "inserted_interior_nodes",

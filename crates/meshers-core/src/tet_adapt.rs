@@ -127,6 +127,8 @@ struct Tets<'g, G: Geometry> {
     period: [Option<f64>; 3],
     /// Wall vertices inserted short of the surface, still to be projected.
     pending: Vec<usize>,
+    /// Let two crossings of the wall with one box edge merge along that edge.
+    merge_corners: bool,
 }
 
 impl<'g, G: Geometry> Tets<'g, G> {
@@ -197,6 +199,7 @@ impl<'g, G: Geometry> Tets<'g, G> {
             vb: vec![Vec::new(); n],
             period,
             pending: Vec::new(),
+            merge_corners: false,
         };
         for (t, tet) in s.tets.iter().enumerate() {
             for &v in tet {
@@ -954,11 +957,16 @@ impl<'g, G: Geometry> Tets<'g, G> {
             && self.feature_mask(u) == self.feature_mask(v)
             && self.feature_mask(u).count_ones() >= 2
             && self.length(u, v) <= roundoff;
-        if (self.frozen[u] && !same_corner) || mu & !mv != 0 || mu.count_ones() >= 3 {
+        // Defeaturing: both ends are crossings of the wall with the same box edge.
+        let merging = self.merge_corners && mu == mv && mu.count_ones() >= 3;
+        if !merging && ((self.frozen[u] && !same_corner) || mu.count_ones() >= 3) || mu & !mv != 0 {
             return false;
         }
         let bfaces = self.edge_faces(u, v);
-        if mu != 0 && self.edge_mask(&bfaces) != mu {
+        if merging && self.edge_mask(&bfaces) & !WALL != mu & !WALL {
+            return false;
+        }
+        if mu != 0 && self.edge_mask(&bfaces) != mu && !merging {
             // A boundary vertex may only slide along its own patch or curve.
             return false;
         }
@@ -1099,6 +1107,23 @@ impl<'g, G: Geometry> Tets<'g, G> {
         }
         self.refresh(v);
         true
+    }
+
+    /// Whether collapsing `u` onto `v` lays a boundary facet of `u` entirely
+    /// in a box plane other than its own, where it would read as a cap.
+    fn folds_into_plane(&self, u: usize, v: usize) -> bool {
+        self.vb[u].iter().any(|f| {
+            if f.contains(&v) {
+                return false;
+            }
+            let common = f
+                .iter()
+                .map(|&w| self.masks[if w == u { v } else { w }])
+                .fold(u8::MAX, |a, b| a & b);
+            let label = self.faces[f];
+            let own = if label == 0 { 0 } else { 1 << label };
+            common & !WALL & !own != 0
+        })
     }
 
     /// Ordered ring of an interior edge's shell; None for boundary edges or odd shells.
@@ -2061,6 +2086,168 @@ pub(crate) fn adapt(
     maximum: usize,
 ) -> Result<Stats, String> {
     adapt_with_polish(mesh, g, threshold, periodic, o, maximum, 0, None)
+}
+
+/// Elements below this MMG quality seed edge removals and face swaps.
+const SLIVER: f64 = 0.4;
+/// Elements below this MMG quality seed edge splits and collapses.
+const SLIVER_EDGES: f64 = 0.2;
+/// Edge lengths, in background cells, outside which a seeded edge is remeshed.
+const SLIVER_SHORT: f64 = 0.3;
+const SLIVER_LONG: f64 = 1.6;
+/// A collapse may lower the worst incident quality to this fraction; the
+/// swaps and the relocation that follow recover from the shorter edge.
+const SLIVER_KEEP: f64 = 0.3;
+
+/// Local remeshing around poor elements with MMG's operators: collapse short
+/// edges, halve overlong ones, then remove interior edges and swap interior
+/// faces.
+///
+/// Periodic images are one vertex here, so every operation keeps opposite
+/// caps identical. `h` is the background cell size and `tolerance` bounds
+/// the wall deviation a collapse may add.
+///
+/// `defeature`, a wall deviation bound of its own, also merges two crossings
+/// of the wall with one box edge. A
+/// wall grazing that edge leaves an angle no conforming element can fill;
+/// the merge removes the tongue between the crossings and so alters the
+/// geometry. Returns the operation count and the number of such merges.
+pub(crate) fn remove_slivers(
+    mesh: &mut Mesh,
+    g: &impl Geometry,
+    threshold: f64,
+    periodic: [bool; 3],
+    h: f64,
+    tolerance: f64,
+    defeature: Option<f64>,
+) -> Result<(usize, usize), String> {
+    let mut s = Tets::new(mesh, g, threshold, periodic);
+    let mut total = 0;
+    let mut merged = 0;
+    for _ in 0..4 {
+        g.check()?;
+        let mut changed = 0;
+        let seeded = |s: &Tets<_>, limit: f64| -> Vec<(f64, [usize; 2])> {
+            let mut edges = Vec::new();
+            for t in 0..s.tets.len() {
+                if s.alive[t] && mmg(s.tet_points(s.tets[t], None)) < limit {
+                    let tet = s.tets[t];
+                    for i in 0..4 {
+                        for j in i + 1..4 {
+                            let edge = [tet[i].min(tet[j]), tet[i].max(tet[j])];
+                            edges.push((s.length(edge[0], edge[1]), edge));
+                        }
+                    }
+                }
+            }
+            edges.sort_by(|a, b| a.0.total_cmp(&b.0).then(a.1.cmp(&b.1)));
+            edges.dedup();
+            edges
+        };
+        // No sizing limit on what a collapse may lengthen.
+        let unbounded = vec![f64::INFINITY; s.points.len()];
+        for (length, [u, v]) in seeded(&s, SLIVER_EDGES) {
+            if length >= SLIVER_SHORT * h {
+                break;
+            }
+            for (u, v) in [(u, v), (v, u)] {
+                if s.vt[u].is_empty() || s.vt[v].is_empty() {
+                    break;
+                }
+                if s.folds_into_plane(u, v) {
+                    continue;
+                }
+                let o = Options {
+                    tolerance,
+                    quality_guard: (SLIVER_KEEP * s.worst(&s.vt[u])).clamp(1e-3, 0.99),
+                    ..Options::default()
+                };
+                if s.collapse(u, v, &unbounded, &o) {
+                    changed += 1;
+                    break;
+                }
+            }
+        }
+        if let Some(tolerance) = defeature {
+            s.merge_corners = true;
+            let o = Options {
+                tolerance,
+                quality_guard: 1e-3,
+                ..Options::default()
+            };
+            for (_, [u, v]) in seeded(&s, SLIVER_EDGES) {
+                if s.vt[u].is_empty()
+                    || s.vt[v].is_empty()
+                    || s.masks[u] != s.masks[v]
+                    || s.masks[u] & WALL == 0
+                    || s.masks[u].count_ones() < 3
+                {
+                    continue;
+                }
+                // Meet part of the way: moving one crossing the whole length
+                // inverts its star.
+                let done = [(u, v), (v, u)].into_iter().any(|(u, v)| {
+                    let (pu, pv) = (s.points[u], s.points[v]);
+                    let d = s.delta(pv, pu);
+                    let shell = s.shell(u, v);
+                    let kept: Vec<usize> = s.vt[v]
+                        .iter()
+                        .copied()
+                        .filter(|t| !shell.contains(t))
+                        .collect();
+                    let done = [0.5, 0.25, 0.75, 0.].into_iter().any(|along| {
+                        s.points[v] = s.wrap(std::array::from_fn(|a| pv[a] + along * d[a]));
+                        s.worst(&kept) > o.quality_guard && s.collapse(u, v, &unbounded, &o)
+                    });
+                    if !done {
+                        s.points[v] = pv;
+                    }
+                    done
+                });
+                if done {
+                    changed += 1;
+                    merged += 1;
+                }
+            }
+            s.merge_corners = false;
+        }
+        // Off the wall the midpoint needs no projection.
+        for &(length, [u, v]) in seeded(&s, SLIVER_EDGES).iter().rev() {
+            if length <= SLIVER_LONG * h {
+                break;
+            }
+            if !s.shell(u, v).is_empty()
+                && s.edge_mask(&s.edge_faces(u, v)) & WALL == 0
+                && s.split(u, v, 0.3, false).is_some()
+            {
+                changed += 1;
+            }
+        }
+        for (_, [u, v]) in seeded(&s, SLIVER) {
+            if s.remove_edge(u, v) {
+                changed += 1;
+            }
+        }
+        for t in 0..s.tets.len() {
+            if !s.alive[t] || mmg(s.tet_points(s.tets[t], None)) >= SLIVER {
+                continue;
+            }
+            for i in 0..4 {
+                if s.alive[t] && s.swap_face(t, i) {
+                    changed += 1;
+                    break;
+                }
+            }
+        }
+        if changed == 0 {
+            break;
+        }
+        total += changed;
+    }
+    if total > 0 {
+        *mesh = s.into_mesh_with_constraints()?.0;
+    }
+    Ok((total, merged))
 }
 
 #[allow(clippy::too_many_arguments)]

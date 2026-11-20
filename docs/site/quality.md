@@ -66,6 +66,15 @@ Diagnostics include `minimum_mmg_quality`, `elements_below_quality_01` (a count)
 and `reverted_snap_vertices`. Positive volumes and finite positive quality are
 checked regardless of the requested floor.
 
+A lattice mesh that misses the requested floor is remeshed locally around its
+poor elements: short edges are collapsed, overlong ones split, interior edges
+and faces swapped. A mesh that already passes is returned unchanged. If that
+is not enough and the wall grazes a box edge, crossing it twice a short way
+apart, the two crossings are merged as a last resort. This removes the tongue
+between them, on every periodic image, and stays subject to
+`geometry_tolerance`. `merged_box_edge_crossings` counts these merges and
+`generate` emits a `UserWarning` when it is nonzero.
+
 ## Safe snapping and boundary checks
 
 Snapping is retained where it passes the boundary checks. If snapped lattice

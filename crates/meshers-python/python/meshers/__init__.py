@@ -448,6 +448,15 @@ def generate(  # ruff: ignore[complex-structure, too-many-branches]
     result["diagnostics"]["evaluator"] = evaluator
     result["diagnostics"]["preparation_seconds"] = preparation_seconds
     result["periodic_pairs"] = tuple(result["periodic_pairs"])
+    merged = result["diagnostics"].get("merged_box_edge_crossings", 0)
+    if merged:
+        warnings.warn(
+            f"Defeatured {merged} place(s) where the surface grazes a box edge to reach "
+            f"minimum_quality={minimum_quality}; the geometry changed there, within "
+            "geometry_tolerance. Shift the periodic cell to avoid it.",
+            UserWarning,
+            stacklevel=2,
+        )
     return Mesh(**result)
 
 
