@@ -98,7 +98,7 @@ class Mesh:
         try:
             writer = import_module("._vtkhdf", __package__)
         except ModuleNotFoundError as error:
-            if error.name != "vtkmodules":
+            if (error.name or "").partition(".")[0] != "vtkmodules":
                 raise
             msg = "VTKHDF export requires the meshers[io] extra"
             raise ModuleNotFoundError(msg, name=error.name) from error

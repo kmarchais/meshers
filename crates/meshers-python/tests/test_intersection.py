@@ -862,3 +862,12 @@ def test_intersection_rejects_keywords_from_the_other_operation():
     seed = meshers.generate_intersection(fields, cells=4)
     with pytest.raises(TypeError, match="closed_axes"):
         meshers.adapt_intersection(seed, fields, bounds=(0, 1) * 3, closed_axes=(False,) * 3)
+
+
+def test_callback_warning_points_to_public_caller():
+    def wall(x, _y, _z):
+        return x - np.full_like(x, 0.501)
+
+    with pytest.warns(RuntimeWarning, match="NumPy callbacks") as messages:
+        meshers.generate_intersection({**constraints(), "right": wall}, cells=4)
+    assert all(message.filename == __file__ for message in messages)

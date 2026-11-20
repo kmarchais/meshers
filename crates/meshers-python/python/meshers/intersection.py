@@ -4,6 +4,7 @@
 
 from __future__ import annotations
 
+import inspect
 import time
 import warnings
 from collections.abc import Callable, Iterator, Mapping, Sequence
@@ -144,12 +145,27 @@ def _check_cancel(cancel: _meshers.CancellationToken | None) -> None:
         raise _meshers.CancelledError(msg)
 
 
+def _caller_stacklevel() -> int:
+    # Includes nested adaptation calls and, on Python 3.11, comprehension frames.
+    frame = inspect.currentframe()
+    frame = frame.f_back if frame is not None else None
+    level = 1
+    while frame is not None and frame.f_globals.get("__package__") == __package__:
+        level += 1
+        frame = frame.f_back
+    return level
+
+
 def _prepare(field: Scalar, *, compile_expression: bool) -> Scalar:
     if callable(field) and not isinstance(field, _meshers.CompiledField) and compile_expression:
         try:
             return compile_field(field)
         except TraceError as error:
-            warnings.warn(f"Using NumPy callbacks: {error}", RuntimeWarning, stacklevel=3)
+            warnings.warn(
+                f"Using NumPy callbacks: {error}",
+                RuntimeWarning,
+                stacklevel=_caller_stacklevel(),
+            )
     return field
 
 
@@ -743,8 +759,31 @@ def generate_intersection(
         geometry_tolerance: Maximum sampled physical surface distance. The default
             skips this check.
         minimum_quality: Required final minimum MMG quality in [0, 1].
-        **options: Mapping, periodicity, adaptation and execution keywords listed
-            in the intersection options table below.
+        **options: Additional mapping, adaptation and execution keywords.
+
+    Other Parameters:
+        coordinate_map (Callable | None): Parameter-to-physical map (default identity).
+        periodic (Sequence[bool]): Three axis flags for pairing opposite caps (default all false).
+        periodic_transforms (Mapping | None): Low-to-high rigid 4x4 maps keyed by periodic axis.
+            Mapped periodic grids require explicit maps. Unmapped grids use translations.
+        closed_axes (Sequence[bool]): Join coincident seams on selected axes (default all false).
+        adapt (bool): Adapt a mapped seed in physical space (default False). Supply
+            inverse_map and physical_bounds. External periodic faces are unsupported.
+        inverse_map (Callable | None): Physical-to-parameter map for adaptation (default None).
+        physical_bounds (Sequence[float] | None): Physical box for adaptation (default None).
+        snap (float): Background snap fraction in [0, 0.2] (default 0.2).
+        max_tetrahedra (int): Output element budget (default 2,000,000).
+        seed_tolerance (float): Maximum sampled starting distance (default 0.01).
+        min_length (float | None): Smallest target edge (default final geometry tolerance).
+        max_length (float | None): Largest target edge (default shortest physical box side / 4).
+        gradation (float): Maximum target-length growth per unit distance (default 0.3).
+        adapt_iterations (int): Size-driven rounds (default 4).
+        quality_guard (float): Local quality floor during adaptation (default 0.3).
+        adapt_tolerance (float | None): Adaptive distance target (default final geometry tolerance).
+        optimize_passes (int): Constrained optimization rounds in [0, 20] (default 4).
+        compile_expression (bool | None): Automatically trace fields and maps (default True).
+        batch_size (int): Maximum callback batch size (default 4096).
+        cancel (CancellationToken | None): Optional cooperative cancellation token (default None).
 
     Returns:
         Mesh with physical points, parameter coordinates, constraint masks/names,
@@ -1005,10 +1044,23 @@ def adapt_intersection(
     to the jth supplied field. Explicit masks allow parameter-domain cap labels
     to be replaced by their physical counterparts. No input arrays are modified.
 
-    See the intersection options table for sizing and execution keywords.
-
     A failed seed or final mesh admission check raises `MeshingError`. Cancellation
     raises `CancelledError`.
+
+    Other Parameters:
+        constraint_masks (ArrayLike | None): Per-vertex constraint bits (default seed masks).
+        seed_tolerance (float): Maximum sampled starting distance (default 0.01).
+        min_length (float | None): Smallest target edge (default geometry_tolerance).
+        max_length (float | None): Largest target edge (default shortest box side / 4).
+        gradation (float): Maximum target-length growth per unit distance (default 0.3).
+        adapt_iterations (int): Size-driven rounds (default 4).
+        quality_guard (float): Local quality floor during adaptation (default 0.3).
+        adapt_tolerance (float | None): Adaptive distance target (default geometry_tolerance).
+        optimize_passes (int): Constrained optimization rounds in [0, 20] (default 4).
+        max_tetrahedra (int): Output element budget (default 250,000).
+        compile_expression (bool | None): Automatically trace fields (default True).
+        batch_size (int): Maximum callback batch size (default 4096).
+        cancel (CancellationToken | None): Optional cooperative cancellation token (default None).
 
     Returns:
         A physical Mesh with retained constraint names and new vertex masks.

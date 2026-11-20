@@ -62,6 +62,10 @@ jobs:
       - run: maturin build --locked --release --interpreter python --out dist
       - run: 'uv pip install --system --only-binary :all: dist/*.whl "meshers[test]"'
       - run: python -m pytest tests -q
+      - name: Check Windows benchmark process and memory handling
+        if: runner.os == 'Windows' && matrix.python == '3.11'
+        working-directory: .
+        run: python -m pytest tools/tests/test_performance_gate.py -q
       - name: Fetch the independent geometry validator
         if: matrix.python == '3.11'
         uses: actions/checkout@v4
@@ -117,6 +121,25 @@ jobs:
         with:
           name: wheel-${{ matrix.os }}-${{ matrix.python }}
           path: crates/meshers-python/dist/*.whl
+
+  optional-bindings:
+    name: Experimental surfaces and wide constraints
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: crates/meshers-python
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - uses: astral-sh/setup-uv@v6
+      - run: uv pip install --system maturin
+      - run: maturin build --locked --release --features experimental-surfaces,wide-constraints --out dist
+      - run: 'uv pip install --system --only-binary :all: dist/*.whl "meshers[test]"'
+      - run: python -c "import meshers; assert meshers.SURFACE_MESHING_AVAILABLE and meshers.MAX_CONSTRAINTS == 32"
+      - run: python -m pytest -q tests/test_surface.py tests/test_adaptive.py tests/test_intersection.py::test_high_constraint_bits_and_planar_intersections
 
   quality-and-docs:
     name: Python quality and documentation

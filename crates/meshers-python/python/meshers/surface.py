@@ -65,7 +65,7 @@ def generate_surface(
     field: Callable | _meshers.CompiledField,
     *,
     bounds: Sequence[float] = (0.0, 1.0, 0.0, 1.0, 0.0, 1.0),
-    cells: int | Sequence[int] = 24,
+    cells: int = 24,
     band: Sequence[float] | None = None,
     geometry_tolerance: float | None = None,
     **options: Unpack[_SurfaceOptions],

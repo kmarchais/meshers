@@ -51,7 +51,15 @@ def test_command_uses_selected_virtual_environment(tmp_path):
     script = tmp_path / "identity.py"
     script.write_text("import sys\nprint(sys.prefix)\n", encoding="utf-8")
     assert (
-        Path(run_command(python, str(script), timeout=30, stdout_encoding="utf-8").stdout.strip())
+        Path(
+            run_command(
+                python.name,
+                str(script),
+                env={**os.environ, "PATH": str(python.parent)},
+                timeout=30,
+                stdout_encoding="utf-8",
+            ).stdout.strip(),
+        )
         == environment
     )
 
@@ -119,3 +127,12 @@ def test_mapped_cap_error_is_gated_independently_of_larger_wall_error():
     base = {**BASE, "mapped_cap_error": 0.0001}
     head = {**base, "mapped_cap_error": 0.0002}
     assert gate.regressions(base, head) == ["mapped cap error increased by more than 5%"]
+
+
+@pytest.mark.skipif(sys.platform != "win32", reason="Windows working-set measurement")
+def test_identity_without_windows_memory_sampler(monkeypatch):
+    monkeypatch.setitem(sys.modules, "psutil", None)
+    worker = runpy.run_path(str(Path(gate.__file__).with_name("performance_worker.py")))
+    assert worker["runtime_identity"]()["native_sha256"]
+    with pytest.raises(ModuleNotFoundError, match="Windows benchmark memory sampling"):
+        worker["peak_rss_bytes"]()

@@ -26,7 +26,12 @@ if TYPE_CHECKING:
     FloatArray = NDArray[np.float64]
 
 if sys.platform == "win32":
-    import psutil
+    try:
+        import psutil
+    except ModuleNotFoundError as error:
+        if error.name != "psutil":
+            raise
+        psutil = None
 else:
     import resource
 
@@ -146,8 +151,18 @@ def cell_geometry(vertices: FloatArray) -> FloatArray:
 
 
 def peak_rss_bytes() -> int:
-    """Return this process's peak resident memory, in bytes."""
+    """Read peak resident memory.
+
+    Returns:
+        The peak working set or resident size, in bytes.
+
+    Raises:
+        ModuleNotFoundError: The Windows peak working set requires psutil.
+    """
     if sys.platform == "win32":
+        if psutil is None:
+            msg = "Windows benchmark memory sampling requires psutil"
+            raise ModuleNotFoundError(msg, name="psutil")
         return psutil.Process().memory_info().peak_wset
     return resource.getrusage(resource.RUSAGE_SELF).ru_maxrss * (
         1 if sys.platform == "darwin" else 1024

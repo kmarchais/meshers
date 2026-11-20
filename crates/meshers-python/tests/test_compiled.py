@@ -88,12 +88,13 @@ def test_compiled_cancellation():
         timer.join()
 
 
-def test_no_external_compiler_or_optional_dependencies():
+@pytest.mark.parametrize("missing_vtk", ["vtkmodules", "vtkmodules.util", "vtkmodules.vtkIOHDF"])
+def test_no_external_compiler_or_optional_dependencies(missing_vtk):
     code = """
 import importlib.abc, subprocess, sys
 class Block(importlib.abc.MetaPathFinder):
     def find_spec(self, fullname, path=None, target=None):
-        if fullname.split('.')[0] in ('numba','sympy','vtkmodules'):
+        if fullname.split('.')[0] in ('numba','sympy') or fullname == sys.argv[1]:
             raise ModuleNotFoundError('deliberately unavailable', name=fullname)
 sys.meta_path.insert(0,Block())
 def forbidden(*a, **kw): raise AssertionError('external process requested')
@@ -109,7 +110,7 @@ except ModuleNotFoundError as error:
 else:
     raise AssertionError('missing VTK should be reported on export')
 """
-    run_python("-c", code, env={**os.environ, "PATH": ""})
+    run_python("-c", code, missing_vtk, env={**os.environ, "PATH": ""})
 
 
 @pytest.mark.parametrize("name", ["gyroid", "schwarz_p", "schwarz_d"])
@@ -288,3 +289,20 @@ def test_deep_field_compiles_and_generates_a_half_cell():
 
 def test_compile_field_annotations_resolve_at_runtime():
     assert get_type_hints(meshers.compile_field)["return"] is meshers.CompiledField
+
+
+def test_cache_distinguishes_signed_zero_in_fields_and_solid_volume():
+    def upper(x, _y, _z):
+        return np.arctan2(0.0, x) - 0.5
+
+    def lower(x, _y, _z):
+        return np.arctan2(-0.0, x) - 0.5
+
+    def gradient(x, y, z):
+        return x, y, z
+
+    for field, angle, volume in [(upper, np.pi, 0), (lower, -np.pi, 4), (upper, np.pi, 0)]:
+        compiled = meshers.compile_field(field, gradient=False)
+        assert compiled(-1, 0, 0) == pytest.approx(angle - 0.5)
+        mesh = meshers.generate(field, gradient=gradient, bounds=(-2, -1, -1, 1, -1, 1), cells=4)
+        assert mesh.diagnostics["volume"] == pytest.approx(volume)

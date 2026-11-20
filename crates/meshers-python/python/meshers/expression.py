@@ -19,6 +19,8 @@ from ._meshers import compile_graph
 from ._options import check_keywords
 
 _Node = tuple[str, tuple[int, ...], float]
+_GraphKey = tuple[tuple[_Node, ...], int | None]
+_NEGATIVE_ZERO_KEY = ("-0x0.0p+0", ())
 _MIN_CONSTRAINTS = 2
 _MAX_NODES = 20_000
 _AXES = "xyz"
@@ -316,6 +318,11 @@ class _Graph:
             self.nodes.append((op, operands, value))
         return _Expression(self, index)
 
+    def cache_key(self) -> _GraphKey:
+        # Python tuple equality treats opposite zero signs as equal. Each constant
+        # is interned once, so its index distinguishes every signed-zero variant.
+        return tuple(self.nodes), self._indices.get(_NEGATIVE_ZERO_KEY)
+
     def input(self, axis: int) -> _Expression:
         return self._record("input", (axis,))
 
@@ -526,12 +533,13 @@ _UNARY_SLOPES: dict[str, _UnarySlope] = {
 
 @lru_cache(maxsize=32)
 def _compile_cached(
-    nodes: tuple[_Node, ...],
+    graph: _GraphKey,
     outputs: tuple[int, ...],
     constraints: tuple[tuple[int, ...], ...] = (),
     *,
     retain_sdf: bool = False,
 ) -> _meshers.CompiledField:
+    nodes, _negative_zero_index = graph
     if constraints:
         return compile_graph(nodes, outputs, constraints)
     if retain_sdf:
@@ -544,7 +552,7 @@ def _compile_with_intersection(
     value: _Expression,
     outputs: tuple[int, ...],
 ) -> _meshers.CompiledField:
-    original = tuple(graph.nodes)
+    original = graph.cache_key()
     if not getattr(_meshers, "RETAINED_INTERSECTIONS", False):
         return _compile_cached(original, outputs)
     if graph.nodes[value.index][0] != "maximum":
@@ -573,7 +581,7 @@ def _compile_with_intersection(
     )
     if len(graph.nodes) > _MAX_NODES:
         return _compile_cached(original, outputs)
-    return _compile_cached(tuple(graph.nodes), outputs, constraints)
+    return _compile_cached(graph.cache_key(), outputs, constraints)
 
 
 def compile_field(
@@ -630,5 +638,5 @@ def compile_field(
     return (
         _compile_with_intersection(graph, value, indices)
         if gradient is None
-        else _compile_cached(tuple(graph.nodes), indices)
+        else _compile_cached(graph.cache_key(), indices)
     )

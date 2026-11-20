@@ -4,6 +4,7 @@
 
 from __future__ import annotations
 
+import os
 import shutil
 import subprocess  # ruff: ignore[suspicious-subprocess-import] - maintainer tools launch child processes.
 from pathlib import Path
@@ -33,7 +34,7 @@ def run_command(
     Raises:
         FileNotFoundError: The requested executable could not be located.
     """
-    path = shutil.which(str(executable))
+    path = shutil.which(str(executable), path=os.pathsep.join(os.get_exec_path(env)))
     if path is None:
         msg = f"Executable not found: {executable}"
         raise FileNotFoundError(msg)
