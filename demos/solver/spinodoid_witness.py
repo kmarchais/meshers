@@ -2,12 +2,16 @@
 
 """Bound the distance from one sample to the seeded spinodoid wall inside its unit cell."""
 
+from __future__ import annotations
+
 import argparse
 from importlib.metadata import version
 from pathlib import Path
+from typing import Protocol
 
 import numpy as np
 from implicit_coverage import load_reference
+from numpy.typing import NDArray
 from reporting import write_json_line
 from scipy.optimize import brentq
 from scipy.stats import qmc
@@ -15,13 +19,30 @@ from scipy.stats import qmc
 CELL_HALF_WIDTH = 0.5
 
 
-def distance_bounds(source, point, free):
+Coordinates = NDArray[np.float64]
+
+
+class Spectrum(Protocol):
+    """Fourier coefficients of the pinned periodic field."""
+
+    modes: NDArray[np.int64]
+    cell_size: Coordinates | float
+    amplitudes: Coordinates
+    phases: Coordinates
+    threshold: float
+
+
+def distance_bounds(
+    source: Spectrum,
+    point: Coordinates,
+    free: NDArray[np.bool_],
+) -> tuple[float | None, float | None]:
     """Return a Taylor lower bound and the shortest root found along sampled rays.
 
     Fixed coordinates restrict both bounds to the specified cap or edge. A missing upper
     bound means the ray search found no crossing within its search radius.
     """
-    wave = 2 * np.pi * source.modes / source.cell_size
+    wave = np.asarray(2 * np.pi * source.modes / source.cell_size, dtype=np.float64)
     amplitudes = source.amplitudes
     angles = wave @ (point + CELL_HALF_WIDTH) + source.phases
     residual = source.threshold - np.cos(angles) @ amplitudes
@@ -39,21 +60,33 @@ def distance_bounds(source, point, free):
     return float(lower), upper
 
 
-def taylor_radius(k, amplitudes, angles, gradient, residual):
+def taylor_radius(
+    k: Coordinates,
+    amplitudes: Coordinates,
+    angles: Coordinates,
+    gradient: Coordinates,
+    residual: float,
+) -> float:
     """Return a radius within which the Fourier sum cannot reach zero."""
     hessian = (k.T * (amplitudes * np.cos(angles))) @ k
     linear = np.linalg.norm(gradient)
     quadratic = np.linalg.norm(hessian, ord=2) / 2
     cubic = abs(amplitudes) @ (np.linalg.norm(k, axis=1) ** 3) / 6
 
-    def bound(d):
+    def bound(d: float) -> float:
         return ((cubic * d + quadratic) * d + linear) * d - abs(residual)
 
     diameter = np.sqrt(len(gradient))
     return brentq(bound, 0, diameter) if bound(diameter) >= 0 else diameter
 
 
-def ray_distance(source, point, wave, angles, directions):
+def ray_distance(
+    source: Spectrum,
+    point: Coordinates,
+    wave: Coordinates,
+    angles: Coordinates,
+    directions: Coordinates,
+) -> float | None:
     """Return the shortest zero found on an in-box ray, or None if none crossed."""
     amplitudes = source.amplitudes
     residual = source.threshold - np.cos(angles) @ amplitudes

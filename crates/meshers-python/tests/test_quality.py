@@ -23,7 +23,7 @@ def test_smooth_periodic_union_quality_with_symmetric_tie_gradients(compiled):
         periodic=(True,) * 3,
         optimize_passes=2,
         geometry_tolerance=0.1,
-        compile=compiled,
+        compile_expression=compiled,
     )
     # The symmetric gradient must preserve the previous compiled route's quality.
     assert mesh.diagnostics["minimum_mmg_quality"] >= 0.4369917124990134 * 0.99
@@ -124,7 +124,7 @@ def test_safe_snapping_preserves_periodic_pairs(compiled):
         snap=0.2,
         optimize_passes=0,
         geometry_tolerance=0.04,
-        compile=compiled,
+        compile_expression=compiled,
     )
     assert mesh.diagnostics["reverted_snap_vertices"] > 0
     assert mesh.diagnostics["sampled_surface_error"] <= 0.04

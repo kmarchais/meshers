@@ -5,13 +5,14 @@
 import time
 import warnings
 from collections.abc import Callable, Sequence
+from typing import TypedDict, Unpack
 
 import numpy as np
 import numpy.typing as npt
 
 from . import _meshers
 from ._meshers import CancellationToken, CompiledField, MeshingError
-from .expression import TraceError, compile_field
+from .expression import LegacyCompileOption, TraceError, compile_field, resolve_compile_option
 from .intersection import (
     MAX_INTERSECTION_PASSES,
     _affine_planes,
@@ -63,6 +64,34 @@ def _prepare_volume_field(
     return field, gradient, evaluator
 
 
+class _NativeConstraints(TypedDict, total=False):
+    halfspaces: Sequence[Sequence[float]]
+    regions: Sequence[int]
+    constraints: list[Callable | CompiledField | str]
+
+
+def _native_constraints(
+    field: str | Field | CompiledField,
+    planes: dict[str, Callable | CompiledField | str] | None,
+    *,
+    adapt: bool,
+    scalar_mode: bool,
+) -> _NativeConstraints:
+    if not isinstance(field, CompiledField):
+        return {}
+    if not scalar_mode and getattr(_meshers, "POLYHEDRAL_REGIONS", False):
+        regions = field.polyhedral_regions
+        if regions is not None:
+            return {"halfspaces": regions[0], "regions": regions[1]}
+    if adapt and planes is not None:
+        halfspaces = field.halfspaces
+        if halfspaces is None:
+            return {"constraints": list(planes.values())}
+        if getattr(_meshers, "ADAPTIVE_POLYHEDRAL", False):
+            return {"halfspaces": halfspaces}
+    return {}
+
+
 # Existing keyword arguments are part of the published Python API.
 def generate(  # ruff: ignore[too-many-arguments]
     field: str | Field | CompiledField,
@@ -81,7 +110,7 @@ def generate(  # ruff: ignore[too-many-arguments]
     threads: int | None = 1,
     batch_size: int = 4096,
     cancel: CancellationToken | None = None,
-    compile: bool = True,  # ruff: ignore[builtin-argument-shadowing] - public keyword.
+    compile_expression: bool | None = None,
     adapt: bool = False,
     min_length: float | None = None,
     max_length: float | None = None,
@@ -94,6 +123,7 @@ def generate(  # ruff: ignore[too-many-arguments]
     size_field: Field | None = None,
     curved_fit: bool = False,
     expected_components: int | None = None,
+    **legacy_options: Unpack[LegacyCompileOption],
 ) -> Mesh:
     """Generate a tetrahedral mesh directly from a bounded implicit field.
 
@@ -128,7 +158,7 @@ def generate(  # ruff: ignore[too-many-arguments]
             at 256. One uses one worker; zero retains legacy serial update ordering.
         batch_size: Maximum NumPy callback batch size.
         cancel: Optional cooperative cancellation token.
-        compile: Compile supported expressions and their first derivatives
+        compile_expression: Compile supported expressions and their first derivatives
             automatically. False selects NumPy callbacks. Unsupported operations
             emit a warning and use callbacks, which must return float64 (N,) arrays.
             Eligible Tet4 convex polyhedra retain exact half-space constraints;
@@ -188,6 +218,7 @@ def generate(  # ruff: ignore[too-many-arguments]
         certify arbitrarily small features. Native threads release the Python GIL;
         Python fallback callbacks execute on the calling thread.
     """  # ruff: ignore[docstring-extraneous-exception] - includes native errors.
+    compile_expression = resolve_compile_option(legacy_options, setting=compile_expression)
     if expected_components is not None and (
         isinstance(expected_components, (bool, np.bool_))
         or not isinstance(expected_components, (int, np.integer))
@@ -213,7 +244,11 @@ def generate(  # ruff: ignore[too-many-arguments]
         threads = _meshers.available_threads()
     preparation_start = time.perf_counter()
     gradient_override = gradient is not None
-    field, gradient, evaluator = _prepare_volume_field(field, gradient, compile_expression=compile)
+    field, gradient, evaluator = _prepare_volume_field(
+        field,
+        gradient,
+        compile_expression=compile_expression,
+    )
     scalar_mode = (
         order != 1,
         band is not None,
@@ -222,7 +257,7 @@ def generate(  # ruff: ignore[too-many-arguments]
         interior_refine_nodes != 0,
         gradient_override,
         # Nonadaptive SDF retention would bypass the original parent's range checks.
-        not adapt and getattr(field, "_sdf_intersection", False),
+        not adapt and isinstance(field, CompiledField) and field.sdf_intersection,
         not 0 <= optimize_passes <= MAX_INTERSECTION_PASSES,
         max_tetrahedra <= 0,
         not all(
@@ -261,29 +296,10 @@ def generate(  # ruff: ignore[too-many-arguments]
         )
         mesh.diagnostics[
             "polyhedral_constraints"
-            if getattr(field, "_halfspaces", None) is not None
+            if isinstance(field, CompiledField) and field.halfspaces is not None
             else "retained_constraints"
         ] = len(planes)
         return _check_components(mesh, expected_components)
-    feature_options = (
-        {"halfspaces": getattr(field, "_halfspaces", None)}
-        if planes is not None and adapt and getattr(_meshers, "ADAPTIVE_POLYHEDRAL", False)
-        else {}
-    )
-    feature_options.update(
-        {"constraints": list(planes.values())}
-        if planes is not None and adapt and getattr(field, "_halfspaces", None) is None
-        else {},
-    )
-    planes = (
-        getattr(field, "_polyhedral_regions", None)
-        if isinstance(field, CompiledField)
-        and not any(scalar_mode)
-        and getattr(_meshers, "POLYHEDRAL_REGIONS", False)
-        else None
-    )
-    if planes is not None:
-        feature_options = {"halfspaces": planes[0], "regions": planes[1]}
     result = _meshers.generate(
         field,
         gradient,
@@ -314,7 +330,7 @@ def generate(  # ruff: ignore[too-many-arguments]
         int(order),
         size_field,
         curved_fit=curved_fit,
-        **feature_options,
+        **_native_constraints(field, planes, adapt=adapt, scalar_mode=any(scalar_mode)),
     )
     result["diagnostics"]["threads"] = threads
     result["diagnostics"]["evaluator"] = evaluator

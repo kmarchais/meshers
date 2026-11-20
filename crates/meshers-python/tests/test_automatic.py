@@ -74,7 +74,7 @@ def test_invalid_graph_rejected():
         ([("invalid", [], 0.0)], [0], "unknown expression operation"),
     ]:
         with pytest.raises(ValueError, match=error):
-            _meshers._compile_expression(nodes, outputs)
+            _meshers.compile_graph(nodes, outputs)
 
 
 def test_array_gradient_automatically_falls_back():

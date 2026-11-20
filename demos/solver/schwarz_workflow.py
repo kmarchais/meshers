@@ -2,6 +2,8 @@
 
 """Measure one live Schwarz P workflow at a declared effective-stiffness target."""
 
+from __future__ import annotations
+
 import argparse
 import datetime as dt
 import hashlib
@@ -16,8 +18,7 @@ from functools import partial
 from importlib.metadata import distribution, version
 from pathlib import Path
 from tempfile import NamedTemporaryFile
-from types import SimpleNamespace
-from typing import NotRequired, TypedDict, Unpack
+from typing import TYPE_CHECKING, NotRequired, TypedDict, Unpack
 from unittest.mock import patch
 
 import fedoo as fd
@@ -25,11 +26,30 @@ import numpy as np
 import pyvista as pv
 from fedoo_homogenization import AuditedCG, homogenize
 from historical_schwarz_repair import repaired_grid
-from periodic_geometry import BASELINE, audit
+from periodic_geometry import BASELINE, audit, read_volume
 from release_wheel_comparison import generate, hardware_snapshot
 from scipy.linalg import eigvalsh
-from scipy.spatial import cKDTree
+from scipy.spatial import KDTree
 from vtkmodules.vtkCommonCore import vtkSMPTools
+
+if TYPE_CHECKING:
+    from collections.abc import Callable
+
+    from numpy.typing import NDArray
+    from periodic_geometry import GeometryAudit
+    from release_baseline import Baseline
+
+
+@dataclass
+class SolverInput:
+    """Tet4 coordinates, connectivity and constraints reconstructed from the export."""
+
+    points: NDArray[np.float64]
+    tetrahedra: NDArray[np.int64]
+    surface: NDArray[np.int64]
+    periodic_pairs: list[NDArray[np.int64]]
+    diagnostics: dict[str, float]
+
 
 PERIODIC_PAIR_ATOL = 1e-12
 MAX_ENERGY_DISCREPANCY = 0.01
@@ -52,7 +72,7 @@ SOURCE_HASHES = {
 }
 
 
-def digest(path):
+def digest(path: str | Path) -> str:
     """Return the SHA-256 of an input or exported mesh."""
     return hashlib.sha256(Path(path).read_bytes()).hexdigest()
 
@@ -72,8 +92,8 @@ class _MmgPass(TypedDict):
     hsiz: NotRequired[float | None]
 
 
-def _mmg_executable():
-    folder_bin = Path(distribution("mmgpy").locate_file("mmgpy/bin")).resolve()
+def _mmg_executable() -> str:
+    folder_bin = Path(str(distribution("mmgpy").locate_file("mmgpy/bin"))).resolve()
     os.environ["PATH"] = str(folder_bin) + os.pathsep + os.environ["PATH"]
     executable = shutil.which("mmg3d_O3")
     if executable is None or Path(executable).resolve().parent != folder_bin:
@@ -82,18 +102,32 @@ def _mmg_executable():
     return executable
 
 
+class NativeSizing(TypedDict):
+    """Native refinement controls varied independently of background resolution."""
+
+    max_length: float
+    adapt_tolerance: float
+
+
 @dataclass(frozen=True)
 class SchwarzSettings:
     """Identify the mesh route, resolution and physical settings for one trial."""
 
     route: str
     cells: int | None
-    native_sizing: dict[str, float] | None = None
+    native_sizing: NativeSizing | None = None
     shifted: bool = False
     repair_hmax: float = 0.1
 
 
-def live_microgen(trial: SchwarzSettings, folder, row, budget, *, observe=None):
+def live_microgen(
+    trial: SchwarzSettings,
+    folder: Path,
+    row: dict[str, object],
+    budget: int,
+    *,
+    observe: Callable[[str, pv.UnstructuredGrid], None] | None = None,
+) -> Path:
     """Write the volume produced by the pinned Microgen VTK and MMG implementations.
 
     Returns:
@@ -136,24 +170,24 @@ def live_microgen(trial: SchwarzSettings, folder, row, budget, *, observe=None):
     )
     single_pass = trial.route in {"single-pass-repair", "microgen-repaired"}
     original = microgen.Mmg.mmg3d
-    row["mmg_calls"] = []
+    mmg_calls: list[dict[str, object]] = []
+    row["mmg_calls"] = mmg_calls
 
-    def measured(**params: Unpack[_MmgPass]):
+    def measured(**params: Unpack[_MmgPass]) -> None:
         if single_pass and params.get("ls"):
             shutil.copyfile(params["input"], params["output"])
-            return None
+            return
         if single_pass:
             params.update(hausd=0.0005, hmax=trial.repair_hmax, hgrad=1.3)
         options_used = {k: v for k, v in params.items() if k not in {"input", "output"}}
-        row["mmg_calls"].append(options_used)
+        mmg_calls.append(options_used)
         begin = time.perf_counter()
         try:
-            result = original(**params)
+            original(**params)
         finally:
             options_used["seconds"] = time.perf_counter() - begin
         if observe is not None:
-            observe(f"pass-{len(row['mmg_calls'])}", pv.UnstructuredGrid(params["output"]))
-        return result
+            observe(f"pass-{len(mmg_calls)}", pv.UnstructuredGrid(params["output"]))
 
     with ExitStack() as stack:
         if os.name == "nt":
@@ -166,7 +200,7 @@ def live_microgen(trial: SchwarzSettings, folder, row, budget, *, observe=None):
     return path
 
 
-def solver_input(grid, quality):
+def solver_input(grid: pv.UnstructuredGrid, quality: float) -> SolverInput:
     """Return Tet4 connectivity and low/high node correspondences for fedoo.
 
     Raises:
@@ -181,7 +215,7 @@ def solver_input(grid, quality):
             np.flatnonzero(abs(points[:, axis] - side) < PERIODIC_PAIR_ATOL) for side in (-0.5, 0.5)
         ]
         other = [a for a in range(3) if a != axis]
-        distance, index = cKDTree(points[high][:, other]).query(points[low][:, other])
+        distance, index = KDTree(points[high][:, other], leafsize=16).query(points[low][:, other])
         if (
             len(low) != len(high)
             or np.max(distance) >= PERIODIC_PAIR_ATOL
@@ -190,20 +224,27 @@ def solver_input(grid, quality):
             msg = "Could not reconstruct a bijective periodic node map"
             raise ValueError(msg)
         pairs.append(np.column_stack([low, high[index]]))
-    return SimpleNamespace(
+    return SolverInput(
         points=points + 0.5,
-        tetrahedra=grid.cells_dict[pv.CellType.TETRA],
+        tetrahedra=np.asarray(grid.cells_dict[np.uint8(pv.CellType.TETRA)], dtype=np.int64),
         surface=surface,
         periodic_pairs=pairs,
         diagnostics={"minimum_mmg_quality": quality},
     )
 
 
-def run(trial: SchwarzSettings, folder, row, *, solver_factory=AuditedCG):
+def run(
+    trial: SchwarzSettings,
+    folder: Path,
+    row: dict[str, object],
+    *,
+    solver_factory: Callable[[], AuditedCG] = AuditedCG,
+) -> None:
     """Generate, audit and solve one mesh, preserving the first failed stage.
 
     Raises:
         RuntimeError: A package version or VTK backend differs from the study.
+        ValueError: A native route has no cell count.
     """
     if trial.route != "native-candidate" and row["versions"] != PACKAGES:
         msg = "Install the pinned comparison packages"
@@ -212,11 +253,16 @@ def run(trial: SchwarzSettings, folder, row, *, solver_factory=AuditedCG):
     if vtkSMPTools.GetBackend() != "Sequential":
         msg = "A single-threaded VTK backend is required"
         raise RuntimeError(msg)
-    baseline = json.loads(BASELINE.read_text())
+    baseline: Baseline = json.loads(BASELINE.read_text())
     start = time.perf_counter()
     if trial.route in {"native", "native-candidate"}:
-        cfg = dict(baseline["routes"]["schwarz_native"]["config"], cells=trial.cells)
-        cfg.update(trial.native_sizing or {})
+        cfg = baseline["routes"]["schwarz_native"]["config"].copy()
+        if trial.cells is None:
+            msg = "A native Schwarz route requires a cell count"
+            raise ValueError(msg)
+        cfg["cells"] = trial.cells
+        if trial.native_sizing:
+            cfg.update(trial.native_sizing)
         if trial.shifted:
             cfg["phase_x"] = 0.125
         row["config"] = cfg
@@ -232,7 +278,7 @@ def run(trial: SchwarzSettings, folder, row, *, solver_factory=AuditedCG):
             baseline["limits"]["max_nodes_or_elements"],
         )
         if historical:
-            source = pv.read(path)
+            source = read_volume(path)
             if max(source.n_points, source.n_cells) > baseline["limits"]["max_nodes_or_elements"]:
                 msg = "Single-pass MMG output exceeds the mesh budget before repair"
                 raise RuntimeError(msg)
@@ -241,7 +287,7 @@ def run(trial: SchwarzSettings, folder, row, *, solver_factory=AuditedCG):
             row["repair_seconds"] = time.perf_counter() - repair_start
             path = folder / "repaired.vtu"
             repaired.save(path)
-    grid = pv.read(path)
+    grid = read_volume(path)
     row["generation_and_io_seconds"] = time.perf_counter() - start
     row["mesh_sha256"] = digest(path)
     start = time.perf_counter()
@@ -253,7 +299,13 @@ def run(trial: SchwarzSettings, folder, row, *, solver_factory=AuditedCG):
     solve_admitted(grid, geometry, row, solver_factory=solver_factory)
 
 
-def solve_admitted(grid, geometry, row, *, solver_factory=AuditedCG):
+def solve_admitted(
+    grid: pv.UnstructuredGrid,
+    geometry: GeometryAudit,
+    row: dict[str, object],
+    *,
+    solver_factory: Callable[[], AuditedCG] = AuditedCG,
+) -> None:
     """Solve six strain loads and their stress-controlled checks on an admitted grid.
 
     Raises:
@@ -336,7 +388,9 @@ def main() -> int:
     }
     start = time.perf_counter()
     try:
-        settings = {"max_length": 0.032, "adapt_tolerance": 0.0003} if candidate else None
+        settings: NativeSizing | None = (
+            {"max_length": 0.032, "adapt_tolerance": 0.0003} if candidate else None
+        )
         run(SchwarzSettings(args.route, args.cells, native_sizing=settings), args.output, row)
     except Exception as exc:
         row.update(status="failed", error=f"{type(exc).__name__}: {exc}")

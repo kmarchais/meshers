@@ -7,6 +7,7 @@ from __future__ import annotations
 import hashlib
 import importlib
 import importlib.metadata
+import inspect
 import math
 import platform
 import sys
@@ -50,6 +51,8 @@ class _VolumeOptions(_FixtureOptions, total=False):
     max_length: float
     adapt_tolerance: float
     gradation: float
+    compile_expression: bool
+    compile: bool
 
 
 def _check_curved_jacobians(corners: FloatArray) -> None:
@@ -197,6 +200,11 @@ def surface_measurements(case: str, mesh: Mesh) -> dict[str, float]:
 
 def _volume_options(case: str, options: _FixtureOptions) -> _VolumeOptions:
     volume_options: _VolumeOptions = {**options}
+    # Use the keyword supported by each wheel, outside the timed call.
+    if "compile_expression" in inspect.signature(meshers.generate).parameters:
+        volume_options["compile_expression"] = case != "callback_gyroid"
+    else:
+        volume_options["compile"] = case != "callback_gyroid"
     if case == "gyroid_tet10":
         volume_options["order"] = 2
     if case.startswith("adaptive_"):
@@ -299,7 +307,6 @@ def _measure_generation(case: str) -> tuple[Mesh, float, int]:
                 else (-0.5, 0.5)
             ),
             periodic=(False,) * 3 if case == "graded" else (True,) * 3,
-            compile=case != "callback_gyroid",
             threads=1,
             batch_size=4096,
             **volume_options,

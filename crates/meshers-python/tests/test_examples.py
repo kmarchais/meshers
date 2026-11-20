@@ -2,14 +2,12 @@
 
 """Run user examples unchanged and validate the meshes they export."""
 
-import os
-import sys
+import runpy
 from pathlib import Path
 
 import numpy as np
 import pyfive
 import pytest
-from python_process import run_python
 
 EXAMPLES = Path(__file__).resolve().parents[1] / "examples"
 
@@ -18,12 +16,9 @@ EXAMPLES = Path(__file__).resolve().parents[1] / "examples"
     "name",
     ["basic", "evaluators", "graded", "periodic", "intersection", "cancellation"],
 )
-def test_user_example(name, tmp_path):
-    run_python(
-        str(EXAMPLES / f"{name}.py"),
-        cwd=tmp_path,
-        env={**os.environ, "PYTHONPATH": os.pathsep.join(sys.path)},
-    )
+def test_user_example(name, tmp_path, monkeypatch):
+    monkeypatch.chdir(tmp_path)
+    runpy.run_path(str(EXAMPLES / f"{name}.py"), run_name="__main__")
     for path in tmp_path.glob("*.vtkhdf"):
         with pyfive.File(path) as file:
             group = file["VTKHDF"]

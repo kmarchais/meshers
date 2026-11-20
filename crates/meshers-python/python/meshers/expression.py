@@ -5,13 +5,14 @@
 from __future__ import annotations
 
 import math
+import warnings
 from functools import lru_cache
-from typing import TYPE_CHECKING, Literal, Never
+from typing import TYPE_CHECKING, Literal, Never, TypedDict
 
 import numpy as np
 
 from . import _meshers
-from ._meshers import _compile_expression
+from ._meshers import compile_graph
 
 if TYPE_CHECKING:
     from collections.abc import Callable
@@ -54,6 +55,34 @@ _UFUNCS = {
     np.equal: "eq",
     np.not_equal: "ne",
 }
+
+
+class LegacyCompileOption(TypedDict, total=False):
+    """Original keyword accepted by released versions of the mesh generators."""
+
+    compile: bool
+
+
+def resolve_compile_option(legacy: LegacyCompileOption, *, setting: bool | None) -> bool:
+    """Resolve the automatic-compilation setting for a mesh generator.
+
+    Returns:
+        Whether to trace callable fields.
+
+    Raises:
+        TypeError: An unknown option or both spellings were supplied.
+    """
+    unknown = legacy.keys() - {"compile"}
+    if unknown:
+        msg = f"Unexpected keyword argument: {min(unknown)!r}"
+        raise TypeError(msg)
+    if "compile" not in legacy:
+        return True if setting is None else setting
+    if setting is not None:
+        msg = "Specify only one of compile_expression and compile"
+        raise TypeError(msg)
+    warnings.warn("compile is deprecated; use compile_expression", DeprecationWarning, stacklevel=3)
+    return legacy["compile"]
 
 
 class TraceError(TypeError):
@@ -480,10 +509,10 @@ def _compile_cached(
     retain_sdf: bool = False,
 ) -> _meshers.CompiledField:
     if constraints:
-        return _compile_expression(nodes, outputs, constraints)
+        return compile_graph(nodes, outputs, constraints)
     if retain_sdf:
-        return _compile_expression(nodes, outputs, retain_sdf=True)
-    return _compile_expression(nodes, outputs)
+        return compile_graph(nodes, outputs, retain_sdf=True)
+    return compile_graph(nodes, outputs)
 
 
 def _compile_with_intersection(

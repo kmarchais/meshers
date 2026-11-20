@@ -10,6 +10,7 @@ import numpy as np
 import pyfive
 import pytest
 import pyvista as pv
+from meshers._meshers import compile_graph
 from meshers.intersection import _project_parameters, _retained_constraints
 
 
@@ -56,7 +57,7 @@ def test_octahedron_preserves_four_plane_corners_and_exact_volume():
 
 
 @pytest.mark.skipif(
-    getattr(meshers._meshers, "MAX_CONSTRAINTS", 8) < 32,
+    meshers.MAX_CONSTRAINTS < 32,
     reason="optional wide-constraints feature",
 )
 def test_high_constraint_bits_and_planar_intersections():
@@ -161,7 +162,7 @@ def test_rotational_periodicity():
 def test_callback_and_compiled_agree():
     args = {"cells": 4, "optimize_passes": 0, "snap": 0}
     a = meshers.generate_intersection(constraints(), **args)
-    b = meshers.generate_intersection(constraints(), compile=False, **args)
+    b = meshers.generate_intersection(constraints(), compile_expression=False, **args)
     np.testing.assert_allclose(a.points, b.points, atol=1e-12)
     np.testing.assert_array_equal(a.tetrahedra, b.tetrahedra)
     assert a.diagnostics["callback_calls"] == 0
@@ -194,7 +195,7 @@ def test_failures_are_explicit():
         meshers.generate_intersection(
             {"bad": fails, "back": lambda _x, y, _z: y - 0.5},
             cells=4,
-            compile=False,
+            compile_expression=False,
         )
 
 
@@ -280,7 +281,7 @@ def test_cancellation_during_python_surface_verification():
         meshers.generate_intersection(
             {"x": field, "y": lambda _x, y, _z: y - 0.7},
             cells=4,
-            compile=False,
+            compile_expression=False,
             optimize_passes=0,
             geometry_tolerance=0.1,
             cancel=token,
@@ -326,7 +327,7 @@ def test_surface_verification_respects_callback_batch_size(batch_size, mapped):
     mesh = meshers.generate_intersection(
         {"x": field, "y": lambda _x, y, _z: y - 0.7},
         cells=4,
-        compile=False,
+        compile_expression=False,
         optimize_passes=0,
         coordinate_map=mapping if mapped else None,
         batch_size=batch_size,
@@ -414,7 +415,7 @@ def test_sdf_values_and_zero_sublevel_metadata_are_preserved():
     field = meshers.compile_field(_cylinder_sdf)
     points = np.random.default_rng(20261112).uniform(-0.5, 0.5, (4096, 3))
     before = field.values(points)
-    branches = field._intersection_fields()
+    branches = field.intersection_fields()
     assert branches is not None
     assert len(branches) == 2
     np.testing.assert_array_equal(before, field.values(points))
@@ -423,8 +424,8 @@ def test_sdf_values_and_zero_sublevel_metadata_are_preserved():
         before <= 0,
         np.maximum.reduce([f.values(points) for f in branches]) <= 0,
     )
-    assert field._halfspaces is None
-    assert field._polyhedral_regions is None
+    assert field.halfspaces is None
+    assert field.polyhedral_regions is None
 
 
 @pytest.mark.parametrize(
@@ -453,12 +454,12 @@ def test_altered_sdf_graphs_keep_the_scalar_path(mode):
         value = np.sqrt(square) + np.minimum(inside, 0)
         return value + 0.01 if mode == "whole-offset" else value
 
-    assert meshers.compile_field(field)._intersection_fields() is None
+    assert meshers.compile_field(field).intersection_fields() is None
 
 
 @pytest.mark.parametrize("gradient", [False, lambda x, y, z: (0 * x, 0 * y, 0 * z)])
 def test_sdf_explicit_gradient_policy_does_not_retain_branches(gradient):
-    assert meshers.compile_field(_cylinder_sdf, gradient=gradient)._intersection_fields() is None
+    assert meshers.compile_field(_cylinder_sdf, gradient=gradient).intersection_fields() is None
 
 
 @pytest.mark.parametrize("angle", [0.0, 0.37])
@@ -553,7 +554,7 @@ def test_nonadaptive_sdf_and_bands_keep_the_original_scalar_path(band):
 )
 def test_sdf_recognition_still_validates_raw_graph_indices(nodes, output):
     with pytest.raises(ValueError, match="expression"):
-        meshers._meshers._compile_expression(nodes, output, retain_sdf=True)
+        compile_graph(nodes, output, retain_sdf=True)
 
 
 def test_localized_underflow_cannot_enable_a_different_zero_set():
@@ -563,7 +564,7 @@ def test_localized_underflow_cannot_enable_a_different_zero_set():
 
     compiled = meshers.compile_field(field)
     assert compiled.values(np.array([[0.4, 0.0, 0.0]]))[0] == 0
-    assert compiled._intersection_fields() is None
+    assert compiled.intersection_fields() is None
 
 
 @pytest.mark.parametrize("kind", ["uniform-scale", "sheared-radius", "repeated-radius-basis"])
@@ -578,7 +579,7 @@ def test_nonunit_sdf_branches_keep_the_scalar_path(kind):
             0,
         )
 
-    assert meshers.compile_field(field)._intersection_fields() is None
+    assert meshers.compile_field(field).intersection_fields() is None
 
 
 @pytest.mark.parametrize("scale", [1e-12, 1.0, 1e12])
@@ -690,7 +691,7 @@ def test_mapped_adaptation_preserves_user_names_matching_domain_caps():
 def test_mapped_adaptation_counts_domain_caps_before_starting():
     with pytest.raises(ValueError, match="named-constraint limit"):
         meshers.generate_intersection(
-            {f"f{i}": lambda x, _y, _z: x - 0.5 for i in range(meshers._meshers.MAX_CONSTRAINTS)},
+            {f"f{i}": lambda x, _y, _z: x - 0.5 for i in range(meshers.MAX_CONSTRAINTS)},
             coordinate_map=lambda x, y, z: (x, y, z),
             inverse_map=lambda x, y, z: (x, y, z),
             physical_bounds=(0, 1, 0, 1, 0, 1),

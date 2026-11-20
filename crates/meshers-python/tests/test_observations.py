@@ -40,7 +40,7 @@ def test_scalar_observations_preserve_output(adaptive, compiled):
         "max_tetrahedra": 10000,
         "adapt": adaptive,
         "adapt_iterations": 0,
-        "compile": compiled,
+        "compile_expression": compiled,
     }
     ordinary = meshers.generate(field, **options)
     sink = []

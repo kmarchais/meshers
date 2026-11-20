@@ -2,6 +2,8 @@
 
 """Replay historical implicit solids with the installed Meshers build and frozen geometry audit."""
 
+from __future__ import annotations
+
 import argparse
 import datetime as dt
 import hashlib
@@ -12,12 +14,55 @@ import time
 from importlib import import_module
 from importlib.metadata import version
 from pathlib import Path
+from typing import TYPE_CHECKING, Protocol, TypedDict
 
 import meshers
 import numpy as np
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[2] / "tools"))
 from benchmark_hardware import hardware_snapshot
+
+if TYPE_CHECKING:
+    from collections.abc import Callable
+    from types import ModuleType
+
+    from numpy.typing import NDArray
+
+    class _ArchivedCase(Protocol):
+        """Archived implicit solid consumed by the native coverage study."""
+
+        id: str
+        scale: float
+
+        @property
+        def band(self) -> tuple[float, float]: ...
+
+        def field(
+            self,
+            x: NDArray[np.float64],
+            y: NDArray[np.float64],
+            z: NDArray[np.float64],
+        ) -> NDArray[np.float64]: ...
+
+    class EnergyMetrics(TypedDict):
+        """The six numerical outputs used for admission and reporting."""
+
+        worst_energy_error: float
+        patch_max_error: float
+        free_residual: float
+        free_dofs: int
+        assembly_s: float
+        solve_s: float
+
+    class MeshRequest(TypedDict, total=False):
+        """Optional native settings varied by the coverage study."""
+
+        cells: int
+        optimize_passes: int
+        adapt: bool
+        snap: float
+        adapt_tolerance: float
+
 
 MAX_SNAP = 0.2
 ARCHIVE = "602dc900cd028d205b36e29dcdb5b4a9cf4f581a"
@@ -42,7 +87,7 @@ ENERGY_TARGET = 0.02
 _LOG = logging.getLogger(__name__)
 
 
-def load_reference(folder):
+def load_reference(folder: Path) -> ModuleType:
     """Load the archived case definitions and checks after verifying their source files.
 
     Returns:
@@ -71,13 +116,21 @@ def load_reference(folder):
     sys.path.insert(0, str(package.parent))
     for name in names[1:]:
         module = import_module(f"microgen_benchmark.{name}")
-        if Path(module.__file__).resolve().parent != package:
+        if module.__file__ is None or Path(module.__file__).resolve().parent != package:
             msg = "A different benchmark package is already loaded"
             raise ValueError(msg)
     return import_module("microgen_benchmark")
 
 
-def mechanics(solve, mesh, surface, scale):
+def mechanics(
+    solve: Callable[
+        [NDArray[np.float64], NDArray[np.int64], NDArray[np.int64], float],
+        tuple[EnergyMetrics, object],
+    ],
+    mesh: meshers.Mesh,
+    surface: NDArray[np.int64],
+    scale: float,
+) -> dict[str, object]:
     """Return the archived quadratic-load energy score and the 2% decision."""
     try:
         metrics, _ = solve(mesh.points, mesh.tetrahedra, surface, scale)
@@ -101,7 +154,13 @@ def mechanics(solve, mesh, surface, scale):
     }
 
 
-def measure(case, request, oracle, *, fea):
+def measure(
+    case: _ArchivedCase,
+    request: MeshRequest,
+    oracle: ModuleType,
+    *,
+    fea: bool,
+) -> dict[str, object]:
     """Generate one mesh, then check its returned connectivity against the independent reference.
 
     Returns:
@@ -213,7 +272,11 @@ def main() -> int:
     case = next(c for c in oracle.cases.CASES if c.id == args.case)
     if args.case == "spinodoid" and version("microgen") != "2.0.0b1":
         parser.error("The archived spinodoid requires microgen==2.0.0b1")
-    request = {"cells": args.cells, "optimize_passes": args.passes, "adapt": args.adapt}
+    request: MeshRequest = {
+        "cells": args.cells,
+        "optimize_passes": args.passes,
+        "adapt": args.adapt,
+    }
     if args.snap is not None:
         if not 0 <= args.snap <= MAX_SNAP:
             parser.error(f"--snap must be between 0 and {MAX_SNAP}")
@@ -262,7 +325,8 @@ def main() -> int:
         args.adapt,
         row["status"],
     )
-    fea_status = row.get("fea", {}).get("status")
+    fea_result = row.get("fea")
+    fea_status = fea_result.get("status") if isinstance(fea_result, dict) else None
     qualified = row["status"] == "admitted" and (not args.fea or fea_status == "qualified")
     return int(
         row["status"] == "validation-incomplete"

@@ -12,6 +12,9 @@ import numpy as np
 from . import _meshers
 from .expression import TraceError, compile_field
 
+_generate_surface = getattr(_meshers, "generate_surface", None)
+SURFACE_MESHING_AVAILABLE = _generate_surface is not None
+
 
 @dataclass(frozen=True)
 class SurfaceMesh:
@@ -70,7 +73,7 @@ def generate_surface(  # ruff: ignore[too-many-arguments] - match the volume API
         ValueError: Bounds or geometry tolerance are invalid.
         MeshingError: Generation fails or sampled error exceeds tolerance.
     """
-    if not hasattr(_meshers, "generate_surface"):
+    if _generate_surface is None:
         msg = "Surface-only meshing is unavailable in this meshers build"
         raise RuntimeError(msg)
     domain = np.asarray(bounds, dtype=float)
@@ -109,7 +112,7 @@ def generate_surface(  # ruff: ignore[too-many-arguments] - match the volume API
             bool(balanced),
             bool(fast),
         )
-    result = _meshers.generate_surface(
+    result = _generate_surface(
         field,
         gradient,
         [domain[::2].tolist(), domain[1::2].tolist()],

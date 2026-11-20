@@ -18,7 +18,7 @@ def test_vtkhdf_unwritable_path_raises(tmp_path):
 def test_vtkhdf_round_trip_and_physical_shifts(tmp_path):
     result = meshers.generate(
         lambda x, _y, _z: np.full_like(x, -1.0),
-        compile=False,
+        compile_expression=False,
         cells=4,
         bounds=(2, 4, -1, 2, 3, 7),
         periodic=(True, True, True),
@@ -40,7 +40,7 @@ def test_vtkhdf_round_trip_and_physical_shifts(tmp_path):
 def test_empty_mesh_shapes(order, width, face_width, tmp_path):
     result = meshers.generate(
         lambda x, _y, _z: np.ones_like(x),
-        compile=False,
+        compile_expression=False,
         cells=4,
         order=order,
         expected_components=0,

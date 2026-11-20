@@ -2,6 +2,8 @@
 
 """Replay alternating Schwarz P refinement levels in fresh, single-threaded workers."""
 
+from __future__ import annotations
+
 import argparse
 import json
 import math
@@ -12,8 +14,26 @@ import sys
 import time
 from contextlib import suppress
 from pathlib import Path
+from typing import TYPE_CHECKING, Literal, NotRequired, TypedDict, cast
 
 import psutil
+
+if TYPE_CHECKING:
+    from collections.abc import Callable, Mapping, Sequence
+    from typing import BinaryIO
+
+
+class WorkerRecord(TypedDict):
+    """Fields shared by successful, rejected and failed refinement attempts."""
+
+    route: str
+    cells: int | None
+    status: str
+    workflow_seconds: float
+    error: NotRequired[str]
+    sampled_peak_tree_rss_bytes: NotRequired[int]
+    repeat: NotRequired[int]
+
 
 WORKFLOW = Path(__file__).with_name("schwarz_workflow.py")
 LEVELS = {
@@ -24,9 +44,9 @@ LEVELS = {
 TARGET = "within-reference-target"
 
 
-def summarize(rows, repeats):
+def summarize(rows: Sequence[WorkerRecord], repeats: int) -> list[dict[str, object]]:
     """Return observed target costs only for levels passing every repetition."""
-    result = []
+    result: list[dict[str, object]] = []
     for route, levels in LEVELS.items():
         for cells in levels:
             group = [r for r in rows if (r["route"], r["cells"]) == (route, cells)]
@@ -47,7 +67,12 @@ def summarize(rows, repeats):
     return result
 
 
-def observe_worker(cmd, env, log, timeout):
+def observe_worker(
+    cmd: Sequence[str],
+    env: Mapping[str, str],
+    log: BinaryIO,
+    timeout: float,
+) -> tuple[int | Literal["timeout"], int]:
     """Return worker exit status and peak sampled RSS including MMG children."""
     deadline = time.monotonic() + timeout
     peak = 0
@@ -73,7 +98,13 @@ def observe_worker(cmd, env, log, timeout):
         return worker.returncode, peak
 
 
-def worker_record(path, route, cells, exit_status, elapsed):
+def worker_record(
+    path: Path,
+    route: str,
+    cells: int | None,
+    exit_status: int | Literal["timeout"],
+    elapsed: float,
+) -> WorkerRecord:
     """Read the worker output.
 
     Returns:
@@ -99,10 +130,15 @@ def worker_record(path, route, cells, exit_status, elapsed):
         }
     if exit_status and record["status"] != "failed":
         record.update(status="failed", error=f"Worker exited with {exit_status}")
-    return record
+    return cast("WorkerRecord", record)
 
 
-def run_series(output, repeats, timeout, on_step=None):
+def run_series(
+    output: Path,
+    repeats: int,
+    timeout: float,
+    on_step: Callable[[int, str], None] | None = None,
+) -> None:
     """Run a fixed refinement series in new directories and retain each worker outcome.
 
     Raises:
@@ -125,7 +161,7 @@ def run_series(output, repeats, timeout, on_step=None):
             "1",
         ),
     }
-    rows = []
+    rows: list[WorkerRecord] = []
     for repeat in range(repeats):
         for level in range(3):
             routes = list(LEVELS)

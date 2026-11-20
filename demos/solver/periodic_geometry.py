@@ -9,6 +9,7 @@ import hashlib
 import json
 from dataclasses import dataclass
 from pathlib import Path
+from typing import TYPE_CHECKING, TypedDict
 
 import numpy as np
 import pyvista as pv
@@ -16,6 +17,11 @@ from numpy.typing import NDArray
 from scipy.sparse import coo_matrix
 from scipy.sparse.csgraph import connected_components
 from scipy.stats import qmc
+
+if TYPE_CHECKING:
+    from collections.abc import Iterable
+
+    from release_baseline import Baseline
 
 Coordinates = NDArray[np.float64]
 Indices = NDArray[np.intp]
@@ -30,7 +36,65 @@ FACES = np.array([[1, 2, 3], [0, 3, 2], [0, 1, 3], [0, 2, 1]])
 AXES = "xyz"
 
 
-def field(points, specimen):
+class DistanceSample(TypedDict):
+    """Worst measured distance and its location, if a finite witness exists."""
+
+    samples: int
+    maximum: float | None
+    location: list[float] | None
+
+
+class PatchMetrics(TypedDict, total=False):
+    """A missing patch or its two directional measurements."""
+
+    missing_faces: bool
+    mesh_to_reference_upper: DistanceSample
+    reference_to_mesh: DistanceSample
+
+
+class MaterialWitnesses(TypedDict):
+    """Interior and exterior classifications away from the tolerance layer."""
+
+    material_witnesses: int
+    misclassified_witnesses: int
+    first_misclassified_witness: list[float] | None
+
+
+class GeometryAudit(MaterialWitnesses):
+    """Measurements consumed by the downstream solver and diagnostic studies."""
+
+    minimum_quality: float
+    sampled_admission: bool
+    boundary: dict[str, PatchMetrics]
+    specimen: str
+    nodes: int
+    tetrahedra: int
+    volume: float
+    face_connected_components: int
+    component_signed_volumes: list[float]
+    expected_face_connected_components: int
+    periodic_face_match: dict[str, bool]
+    sobol_power: int
+    failed_checks: list[str]
+
+
+def read_volume(path: Path) -> pv.UnstructuredGrid:
+    """Read a single exported volume for geometry or solver checks.
+
+    Returns:
+        The unstructured mesh at the supplied path.
+
+    Raises:
+        TypeError: The export contains another dataset type.
+    """
+    grid = pv.read(path)
+    if not isinstance(grid, pv.UnstructuredGrid):
+        msg = "Expected one unstructured volume"
+        raise TypeError(msg)
+    return grid
+
+
+def field(points: Coordinates, specimen: str) -> Coordinates:
     """Return the reference field values in the centered unit cell."""
     c = np.cos(2 * np.pi * points)
     if specimen == "schwarz-shifted":
@@ -40,12 +104,17 @@ def field(points, specimen):
     return (np.sin(2 * np.pi * points) * np.roll(c, -1, axis=1)).sum(axis=1)
 
 
-def inside(value, specimen):
+def inside(value: Coordinates, specimen: str) -> Coordinates:
     """Return the signed implicit residual, negative inside solid material."""
     return abs(value) - 0.55 if specimen == "gyroid" else value
 
 
-def roots(points, specimen, level, axis):
+def roots(
+    points: Coordinates,
+    specimen: str,
+    level: float,
+    axis: int,
+) -> tuple[Coordinates, NDArray[np.bool_]]:
     """Return the two analytic roots per line and a mask of lines with real roots."""
     probe = points.copy()
     values = []
@@ -64,7 +133,7 @@ def roots(points, specimen, level, axis):
     return positions, valid
 
 
-def forward(samples, specimen, level, axes):
+def forward(samples: Coordinates, specimen: str, level: float, axes: Iterable[int]) -> Coordinates:
     """Return a physical upper bound on distance to the bounded level set."""
     best = np.full(len(samples), np.inf)
     for axis in axes:
@@ -80,7 +149,7 @@ def forward(samples, specimen, level, axes):
     return best
 
 
-def worst(distances, samples):
+def worst(distances: Coordinates, samples: Coordinates) -> DistanceSample:
     """Return sample count and the distance and location of the worst sample."""
     if not len(samples):
         return {"samples": 0, "maximum": None, "location": None}
@@ -121,9 +190,9 @@ def _face_connectivity(cells: Indices, det: Coordinates) -> tuple[Indices, Coord
     faces = oriented[order[starts[counts == 1]]]
     shared = starts[counts == INTERIOR_FACE_INCIDENCE]
     first, second = order[shared], order[shared + 1]
-    inversions = sum(
-        (oriented[:, i] > oriented[:, j]).astype(int) for i in range(3) for j in range(i + 1, 3)
-    )
+    inversions = (oriented[:, 0] > oriented[:, 1]).astype(int)
+    inversions += oriented[:, 0] > oriented[:, 2]
+    inversions += oriented[:, 1] > oriented[:, 2]
     graph = coo_matrix(
         (np.ones(len(shared)), (first // 4, second // 4)),
         shape=(len(cells), len(cells)),
@@ -157,12 +226,15 @@ def _material_witnesses(
     specimen: str,
     power: int,
     tol: float,
-) -> dict[str, int | list[float] | None]:
+) -> MaterialWitnesses:
     probes = qmc.Sobol(3, scramble=True, seed=971).random_base2(power) - 0.5
     signed = inside(field(probes, specimen), specimen)
     # Exclude the tolerance layer using a global gradient bound of 4*pi*sqrt(3).
     mask = abs(signed) > 4 * np.pi * np.sqrt(3) * tol
-    misses = (grid.find_containing_cell(probes[mask]) >= 0) != (signed[mask] < 0)
+    misses = np.not_equal(
+        np.asarray(grid.find_containing_cell(probes[mask])) >= 0,
+        signed[mask] < 0,
+    )
     return {
         "material_witnesses": int(mask.sum()),
         "misclassified_witnesses": int(misses.sum()),
@@ -188,7 +260,12 @@ def _cell_geometry(points: Coordinates, cells: Indices) -> _CellGeometry:
     return _CellGeometry(faces, volumes, float(np.min(qualities)), conforms, bool(np.min(det) > 0))
 
 
-def boundary_metrics(points, faces, specimen, net):
+def boundary_metrics(
+    points: Coordinates,
+    faces: Indices,
+    specimen: str,
+    net: Coordinates,
+) -> tuple[dict[str, PatchMetrics], dict[tuple[int, float], NDArray[np.bool_]]]:
     """Sample each analytic wall and planar cap in both directions.
 
     Returns:
@@ -204,9 +281,15 @@ def boundary_metrics(points, faces, specimen, net):
             caps[axis, side] = mask
             wall &= ~mask
     wall_values = field(triangles.mean(axis=1), specimen)
-    metrics = {}
+    metrics: dict[str, PatchMetrics] = {}
 
-    def measure(name, selection, reference, level, fixed_axis=None):
+    def measure(
+        name: str,
+        selection: NDArray[np.bool_],
+        reference: Coordinates,
+        level: float | None,
+        fixed_axis: int | None = None,
+    ) -> None:
         faces_here = faces[selection]
         if not len(faces_here):
             metrics[name] = {"missing_faces": True}
@@ -220,7 +303,7 @@ def boundary_metrics(points, faces, specimen, net):
             ((tri + np.roll(tri, 1, axis=1)) / 2).reshape(-1, 3),
             tri.mean(axis=1),
         ])
-        if fixed_axis is None:
+        if level is not None:
             distance = forward(samples, specimen, level, range(3))
         else:
             values = field(samples, specimen)
@@ -246,7 +329,12 @@ def boundary_metrics(points, faces, specimen, net):
     return metrics, caps
 
 
-def audit(grid, specimen, baseline, power=11):
+def audit(
+    grid: pv.UnstructuredGrid,
+    specimen: str,
+    baseline: Baseline,
+    power: int = 11,
+) -> GeometryAudit:
     """Return physical-space measurements and failed checks for an exported volume.
 
     Raises:
@@ -256,7 +344,7 @@ def audit(grid, specimen, baseline, power=11):
         msg = "Expected a nonempty linear tetrahedral volume"
         raise ValueError(msg)
     points = np.asarray(grid.points, dtype=float)
-    cells = grid.cells_dict[pv.CellType.TETRA]
+    cells = np.asarray(grid.cells_dict[np.uint8(pv.CellType.TETRA)], dtype=np.intp)
     geometry = _cell_geometry(points, cells)
     metrics, caps = boundary_metrics(
         points,
@@ -272,7 +360,13 @@ def audit(grid, specimen, baseline, power=11):
         name
         for name, row in metrics.items()
         if row.get("missing_faces")
-        or any(result["maximum"] is None or result["maximum"] > tol for result in row.values())
+        or any(
+            distance is None or distance > tol
+            for distance in (
+                row["mesh_to_reference_upper"]["maximum"],
+                row["reference_to_mesh"]["maximum"],
+            )
+        )
     ]
     volume = float(geometry.component_volumes.sum())
     expected_components = 3 if specimen == "gyroid" else 1
@@ -324,7 +418,7 @@ def main() -> int:
         record = {"mesh_sha256": hashlib.sha256(args.mesh.read_bytes()).hexdigest()}
         try:
             record.update(
-                audit(pv.read(args.mesh), args.specimen, json.loads(BASELINE.read_text())),
+                audit(read_volume(args.mesh), args.specimen, json.loads(BASELINE.read_text())),
             )
         except Exception as exc:
             record.update(sampled_admission=False, error=str(exc))

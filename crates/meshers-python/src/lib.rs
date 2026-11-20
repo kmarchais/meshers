@@ -880,7 +880,7 @@ fn _meshers(m: &Bound<'_, PyModule>) -> PyResult<()> {
     m.add_function(wrap_pyfunction!(quadratic_volumes, m)?)?;
     m.add_function(wrap_pyfunction!(_periodic_affine_traces, m)?)?;
     m.add_class::<compiled::CompiledField>()?;
-    m.add_function(wrap_pyfunction!(compiled::_compile_expression, m)?)?;
+    m.add_function(wrap_pyfunction!(compiled::compile_graph, m)?)?;
     m.add_function(wrap_pyfunction!(generate, m)?)?;
     m.add_function(wrap_pyfunction!(intersection::generate_intersection, m)?)?;
     m.add_function(wrap_pyfunction!(intersection::adapt_intersection, m)?)?;

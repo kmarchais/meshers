@@ -8,13 +8,13 @@ import time
 import warnings
 from collections.abc import Callable, Iterator, Mapping, Sequence
 from dataclasses import dataclass
-from typing import TypedDict, cast
+from typing import TypedDict, Unpack, cast
 
 import numpy as np
 import numpy.typing as npt
 
 from . import _meshers
-from .expression import TraceError, compile_field
+from .expression import LegacyCompileOption, TraceError, compile_field, resolve_compile_option
 from .mesh import Mesh
 
 CLOSED_MAPPED_SEAMS = True
@@ -45,9 +45,9 @@ def _periodic_affine(
         False,
     ):
         return False
-    planes = getattr(field, "_halfspaces", None)
+    planes = field.halfspaces
     certificate = getattr(_meshers, "_periodic_affine_traces", None)
-    groups = getattr(field, "_polyhedral_regions", None)
+    groups = field.polyhedral_regions
     if (
         planes is None
         and groups is not None
@@ -81,7 +81,7 @@ def _affine_planes(
 ) -> dict[str, Scalar] | None:
     if not isinstance(field, _meshers.CompiledField) or any(scalar_mode):
         return None
-    halfspaces = getattr(field, "_halfspaces", None)
+    halfspaces = field.halfspaces
     if halfspaces is None:
         return None
     if canonical:
@@ -111,11 +111,10 @@ def _retained_constraints(
         False,
     ):
         return None
-    # This is the internal Python/native interface, gated by its capability above.
-    fields = field._intersection_fields()  # ruff: ignore[private-member-access]
+    fields = field.intersection_fields()
     if fields is None:
         return None
-    if getattr(field, "_sdf_intersection", False):
+    if field.sdf_intersection:
         if bounds is None:
             return None
         # Check floating-point eligibility at the same 64 preflight sites as
@@ -379,6 +378,19 @@ class _SurfaceAudit:
             errors.append(maximum)
         _check_cancel(self.cancel)
         return errors
+
+    def record_distances(
+        self,
+        result: _meshers._IntersectionResult,
+        tags: np.ndarray,
+        walls: dict[str, float],
+    ) -> None:
+        caps = self.caps(result, tags)
+        result["diagnostics"].update(
+            surface_errors=walls,
+            mapped_cap_errors=caps,
+            sampled_surface_error=max([*walls.values(), *caps.values()]),
+        )
 
     def check_walls(
         self,
@@ -695,9 +707,10 @@ def generate_intersection(  # ruff: ignore[too-many-arguments] - published keywo
     optimize_passes: int = 4,
     snap: float = 0.2,
     max_tetrahedra: int = 2_000_000,
-    compile: bool = True,  # ruff: ignore[builtin-argument-shadowing] - public keyword.
+    compile_expression: bool | None = None,
     batch_size: int = 4096,
     cancel: _meshers.CancellationToken | None = None,
+    **legacy_options: Unpack[LegacyCompileOption],
 ) -> Mesh:
     """Mesh the intersection of named negative sublevel sets, preserving their curves.
 
@@ -738,7 +751,7 @@ def generate_intersection(  # ruff: ignore[too-many-arguments] - published keywo
         optimize_passes: Integrated constrained optimization rounds, 0-20.
         snap: Joint background snap fraction, 0-0.2.
         max_tetrahedra: Output element budget.
-        compile: Automatically compile supported field and map expressions.
+        compile_expression: Automatically compile supported field and map expressions.
         batch_size: Maximum callback batch size, 1-65536.
         cancel: Cooperative cancellation token.
 
@@ -756,6 +769,7 @@ def generate_intersection(  # ruff: ignore[too-many-arguments] - published keywo
         vertices on their assigned analytic surfaces and change the facet approximation.
         Acute input angles can make a requested minimum quality unattainable.
     """  # ruff: ignore[docstring-extraneous-exception] - includes native errors.
+    compile_expression = resolve_compile_option(legacy_options, setting=compile_expression)
     if adapt:
         return _adapt_mapped_intersection(
             constraints,
@@ -778,7 +792,7 @@ def generate_intersection(  # ruff: ignore[too-many-arguments] - published keywo
             _IntersectionControls(
                 optimize_passes=optimize_passes,
                 max_tetrahedra=max_tetrahedra,
-                compile=compile,
+                compile_expression=compile_expression,
                 batch_size=batch_size,
                 cancel=cancel,
             ),
@@ -798,11 +812,14 @@ def generate_intersection(  # ruff: ignore[too-many-arguments] - published keywo
     transforms = _periodic_transforms(b, periodic, coordinate_map, periodic_transforms)
     _check_closed_axes(closed_axes, periodic, transforms)
     start = time.perf_counter()
-    fields = [_prepare(f, compile_expression=compile) for f in constraints.values()]
+    fields = [_prepare(f, compile_expression=compile_expression) for f in constraints.values()]
     mapping = None
     if coordinate_map is not None:
         mapping = [
-            _prepare(lambda x, y, z, a=a: coordinate_map(x, y, z)[a], compile_expression=compile)
+            _prepare(
+                lambda x, y, z, a=a: coordinate_map(x, y, z)[a],
+                compile_expression=compile_expression,
+            )
             for a in range(3)
         ]
     preparation = time.perf_counter() - start
@@ -857,10 +874,7 @@ def generate_intersection(  # ruff: ignore[too-many-arguments] - published keywo
             minimum_quality,
             can_fit=not any(p and not c for p, c in zip(periodic, closed_axes, strict=True)),
         )
-        caps = audit.caps(result, tags)
-        diagnostics["surface_errors"] = errors
-        diagnostics["mapped_cap_errors"] = caps
-        diagnostics["sampled_surface_error"] = max([*errors.values(), *caps.values()])
+        audit.record_distances(result, tags, errors)
     diagnostics["workflow_seconds"] = time.perf_counter() - start
     _check_cancel(cancel)
     return Mesh(
@@ -1000,9 +1014,10 @@ def adapt_intersection(  # ruff: ignore[too-many-arguments] - published keyword 
     adapt_tolerance: float | None = None,
     optimize_passes: int = 4,
     max_tetrahedra: int = 250_000,
-    compile: bool = True,  # ruff: ignore[builtin-argument-shadowing] - public keyword.
+    compile_expression: bool | None = None,
     batch_size: int = 4096,
     cancel: _meshers.CancellationToken | None = None,
+    **legacy_options: Unpack[LegacyCompileOption],
 ) -> Mesh:
     """Adapt a nonperiodic Tet4 seed against named physical constraints.
 
@@ -1019,6 +1034,7 @@ def adapt_intersection(  # ruff: ignore[too-many-arguments] - published keyword 
         MeshingError: A seed or final geometry, topology or quality gate fails.
         CancelledError: The cancellation token is set.
     """  # ruff: ignore[docstring-extraneous-exception] - includes native errors.
+    compile_expression = resolve_compile_option(legacy_options, setting=compile_expression)
     _check_constraint_names(constraints)
     b = _checked_bounds(bounds)
     _check_quality_options(optimize_passes, 0, minimum_quality, geometry_tolerance)
@@ -1047,7 +1063,7 @@ def adapt_intersection(  # ruff: ignore[too-many-arguments] - published keyword 
         msg = "seed connectivity must contain valid integer node indices"
         raise ValueError(msg)
     start = time.perf_counter()
-    fields = [_prepare(f, compile_expression=compile) for f in constraints.values()]
+    fields = [_prepare(f, compile_expression=compile_expression) for f in constraints.values()]
     preparation = time.perf_counter() - start
     _check_cancel(cancel)
     result = _meshers.adapt_intersection(
@@ -1150,7 +1166,7 @@ class _MappedDomain:
 class _IntersectionControls(TypedDict):
     optimize_passes: int
     max_tetrahedra: int
-    compile: bool
+    compile_expression: bool
     batch_size: int
     cancel: _meshers.CancellationToken | None
 

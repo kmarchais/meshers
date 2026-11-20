@@ -2,6 +2,8 @@
 
 """Replay native Tet4 cases against frozen Microgen-study records on a release wheel."""
 
+from __future__ import annotations
+
 import argparse
 import datetime as dt
 import hashlib
@@ -12,6 +14,7 @@ from dataclasses import replace
 from importlib import import_module
 from importlib.metadata import version
 from pathlib import Path
+from typing import TYPE_CHECKING
 
 import meshers
 import numpy as np
@@ -21,26 +24,42 @@ from scipy.linalg import eigvalsh
 sys.path.insert(0, str(Path(__file__).resolve().parents[2] / "tools"))
 from benchmark_hardware import hardware_snapshot
 
+if TYPE_CHECKING:
+    from numpy.typing import NDArray
+    from release_baseline import Baseline, Limits, NativeConfig
+
 BASELINE = Path(__file__).with_name("release-wheel") / "baseline.json"
 
 
-def generate(case, cfg, limits):
+def generate(case: str, cfg: NativeConfig, limits: Limits) -> meshers.Mesh:
     """Generate the frozen periodic specimen in its original coordinates.
 
     Returns:
         Native linear tetrahedral mesh.
     """
 
-    def gyroid(x, y, z):
+    def gyroid(
+        x: NDArray[np.float64],
+        y: NDArray[np.float64],
+        z: NDArray[np.float64],
+    ) -> NDArray[np.float64]:
         a, b, c = 2 * np.pi * x, 2 * np.pi * y, 2 * np.pi * z
         return np.sin(a) * np.cos(b) + np.sin(b) * np.cos(c) + np.sin(c) * np.cos(a)
 
-    def schwarz(x, y, z):
+    def schwarz(
+        x: NDArray[np.float64],
+        y: NDArray[np.float64],
+        z: NDArray[np.float64],
+    ) -> NDArray[np.float64]:
         return np.cos(2 * np.pi * x) + np.cos(2 * np.pi * y) + np.cos(2 * np.pi * z)
 
     phase_x = cfg.get("phase_x", 0)
 
-    def shifted_schwarz(x, y, z):
+    def shifted_schwarz(
+        x: NDArray[np.float64],
+        y: NDArray[np.float64],
+        z: NDArray[np.float64],
+    ) -> NDArray[np.float64]:
         return schwarz(x + phase_x, y, z)
 
     schwarz_field = shifted_schwarz if phase_x else schwarz
@@ -65,7 +84,7 @@ def generate(case, cfg, limits):
     )
 
 
-def solve_case(case, baseline, row):
+def solve_case(case: str, baseline: Baseline, row: dict[str, object]) -> None:
     """Generate and solve one case, updating the record after each stage.
 
     Raises:
@@ -77,7 +96,7 @@ def solve_case(case, baseline, row):
     mesh = generate(case, route["config"], limits)
     row["generation_seconds"] = time.perf_counter() - start
     volume = float(element_geometry(mesh)[0].sum())
-    key = case.split("_")[0]
+    key = case.split("_", maxsplit=1)[0]
     relative = volume / baseline["reference_volumes"][key] - 1
     row.update(
         nodes=len(mesh.points),
@@ -86,7 +105,7 @@ def solve_case(case, baseline, row):
         relative_volume_error=relative,
     )
     if (
-        max(row["nodes"], row["elements"]) > limits["max_nodes_or_elements"]
+        max(len(mesh.points), len(mesh.tetrahedra)) > limits["max_nodes_or_elements"]
         or abs(relative) > limits["relative_volume_error"]
     ):
         msg = "Count or volume outside the frozen study limits"

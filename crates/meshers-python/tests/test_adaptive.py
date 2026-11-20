@@ -19,7 +19,7 @@ def gyroid(x, y, z):
 BOX = (-0.5, 0.5) * 3
 
 
-@pytest.mark.skipif(not hasattr(meshers, "generate_surface"), reason="surface build feature")
+@pytest.mark.skipif(not meshers.SURFACE_MESHING_AVAILABLE, reason="surface build feature")
 def test_adaptive_surface_meets_tolerance_with_fewer_triangles():
     tolerance = 1e-3
     fixed = meshers.generate_surface(sphere, bounds=BOX, cells=32, quality=True)
@@ -37,7 +37,7 @@ def test_adaptive_surface_meets_tolerance_with_fewer_triangles():
     assert abs(adapted.diagnostics["volume"] / exact - 1) < 0.01
 
 
-@pytest.mark.skipif(not hasattr(meshers, "generate_surface"), reason="surface build feature")
+@pytest.mark.skipif(not meshers.SURFACE_MESHING_AVAILABLE, reason="surface build feature")
 @pytest.mark.parametrize("balanced", [False, True])
 def test_fast_surface_meets_tolerance_with_fewer_triangles(balanced):
     tolerance = 1e-3

@@ -97,10 +97,18 @@ class CompiledField:
     def values(self, points: NDArray[np.float64]) -> NDArray[np.float64]:
         """Evaluate an (n, 3) float64 point array without a Python call per point."""
     @property
-    def _sdf_intersection(self) -> bool: ...
-    def _intersection_fields(self) -> list[CompiledField] | None: ...
+    def halfspaces(self) -> list[list[float]] | None:
+        """Affine planes whose nonpositive sides define this convex field, if recognized."""
+    @property
+    def polyhedral_regions(self) -> tuple[list[list[float]], list[int]] | None:
+        """Planes and region masks of a recognized Boolean polyhedral field."""
+    @property
+    def sdf_intersection(self) -> bool:
+        """Whether the retained branches require a signed-distance consistency check."""
+    def intersection_fields(self) -> list[CompiledField] | None:
+        """Return cached fields for an intersection, or None for an unsupported expression."""
 
-def _compile_expression(
+def compile_graph(
     nodes: Sequence[tuple[str, Sequence[int], float]],
     outputs: Sequence[int],
     constraint_outputs: Sequence[Sequence[int]] | None = None,

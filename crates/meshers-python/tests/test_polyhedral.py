@@ -42,7 +42,7 @@ def test_default_scalar_route_preserves_polyhedral_creases():
 
 def test_halfspaces_match_the_compiled_field_and_reject_nonconvex_graphs():
     field = meshers.compile_field(octahedron)
-    planes = np.asarray(field._halfspaces)
+    planes = np.asarray(field.halfspaces)
     assert planes.shape == (8, 4)
     points = np.random.default_rng(42).uniform(-0.5, 0.5, (256, 3))
     np.testing.assert_allclose(
@@ -58,7 +58,7 @@ def test_halfspaces_match_the_compiled_field_and_reject_nonconvex_graphs():
         lambda x, y, z: sum(abs(x + i * y + i * i * z) for i in range(7)) - 0.1,
         lambda x, _y, _z: np.maximum(0, x),
     ):
-        assert meshers.compile_field(function)._halfspaces is None
+        assert meshers.compile_field(function).halfspaces is None
 
 
 @pytest.mark.parametrize("scale", [0.5, 2.0])
@@ -67,7 +67,7 @@ def test_affine_scaling_translation_and_maximum_remain_exact(scale):
         return scale * np.maximum(abs(x - 0.02) + abs(y + 0.03), 2 * abs(z)) - 0.3
 
     compiled = meshers.compile_field(field)
-    planes = np.asarray(compiled._halfspaces)
+    planes = np.asarray(compiled.halfspaces)
     assert planes.shape == (6, 4)
     points = np.random.default_rng(12).uniform(-0.5, 0.5, (256, 3))
     np.testing.assert_allclose(
@@ -149,7 +149,7 @@ def test_rotated_translated_polyhedron_preserves_its_exact_faces(adapt):
     if adapt:
         assert "adapt" in mesh.diagnostics
     else:
-        planes = np.asarray(meshers.compile_field(field)._halfspaces)
+        planes = np.asarray(meshers.compile_field(field).halfspaces)
         for index, plane in enumerate(planes):
             faces = mesh.surface_for(f"plane{index}")
             assert len(faces) > 0

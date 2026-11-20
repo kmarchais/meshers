@@ -2,6 +2,8 @@
 
 """Locate Schwarz P wall errors and measure sensitivity to native sizing on the pinned wheel."""
 
+from __future__ import annotations
+
 import argparse
 import datetime as dt
 import json
@@ -9,6 +11,7 @@ import sys
 import tempfile
 from importlib.metadata import version
 from pathlib import Path
+from typing import TYPE_CHECKING
 
 import fedoo as fd
 import numpy as np
@@ -16,7 +19,7 @@ import pyvista as pv
 from fedoo_homogenization import COMPONENTS, AuditedCG, ReorderedCG
 from historical_schwarz_repair import repaired_grid
 from microgen.external import MmgError
-from periodic_geometry import BASELINE, audit
+from periodic_geometry import BASELINE, audit, read_volume
 from release_wheel_comparison import generate, hardware_snapshot
 from schwarz_workflow import PACKAGES, REFERENCE, SchwarzSettings, digest, live_microgen, run
 from scipy.linalg import eigvalsh
@@ -24,6 +27,9 @@ from vtkmodules.vtkCommonCore import vtkSMPTools
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 from tools.performance_worker import cell_geometry
+
+if TYPE_CHECKING:
+    from release_baseline import Baseline
 
 CAP_ATOL = 1e-10
 SIZES = {
@@ -44,14 +50,14 @@ CASES = (
 )
 
 
-def stage_study(case, folder, row, baseline):
+def stage_study(case: str, folder: Path, row: dict[str, object], baseline: Baseline) -> None:
     """Audit the seed, intermediate volumes and the returned mesh on identical reference samples."""
     control = case == "single-pass-repair"
     walls = {}
     stages = {}
     row["stages"] = stages
 
-    def observe(name, mixed):
+    def observe(name: str, mixed: pv.UnstructuredGrid) -> None:
         grid = mixed.extract_cells(np.flatnonzero(mixed.celltypes == pv.CellType.TETRA))
         stages[name] = audit(grid, "schwarz", baseline)
         skin = grid.extract_surface(algorithm="dataset_surface")
@@ -72,27 +78,29 @@ def stage_study(case, folder, row, baseline):
         baseline["limits"]["max_nodes_or_elements"],
         observe=observe,
     )
-    grid = pv.read(path)
+    grid = read_volume(path)
     observe("export", grid)
     if control:
         observe("repaired", repaired_grid(grid, row))
     last = next(reversed(stages))
     loc = stages[last]["boundary"]["wall 0"]["reference_to_mesh"]["location"]
     row["tracked_reference_xyz"] = loc
-    row["distance_at_tracked_point"] = {}
+    distances: dict[str, float] = {}
+    row["distance_at_tracked_point"] = distances
     for stage, wall in walls.items():
         _, nearest = wall.find_closest_cell(loc, return_closest_point=True)
-        row["distance_at_tracked_point"][stage] = float(np.linalg.norm(nearest - loc))
+        distances[stage] = float(np.linalg.norm(nearest - loc))
     row["status"] = "audited"
 
 
-def quadratic_control(row, baseline):
+def quadratic_control(row: dict[str, object], baseline: Baseline) -> None:
     """Solve a coarse curved mesh as a stiffness control.
 
     Raises:
         ValueError: The volume, count, symmetry or load checks fail.
     """
-    cfg = dict(baseline["routes"]["schwarz_native"]["config"], cells=12, adapt=False, order=2)
+    cfg = baseline["routes"]["schwarz_native"]["config"].copy()
+    cfg.update(cells=12, adapt=False, order=2)
     row["config"] = cfg
     mesh = generate("schwarz_native", cfg, baseline["limits"])
     pts, cells = mesh.points, mesh.tetrahedra
@@ -101,8 +109,9 @@ def quadratic_control(row, baseline):
         msg = "Quadratic mesh exceeds the node or element cap"
         raise ValueError(msg)
     volumes = [cell_geometry(pts[batch]).sum() for batch in np.array_split(cells, 32) if len(batch)]
-    row["integrated_volume"] = float(sum(volumes))
-    if abs(row["integrated_volume"] / 0.5 - 1) > baseline["limits"]["relative_volume_error"]:
+    volume = float(sum(volumes))
+    row["integrated_volume"] = volume
+    if abs(volume / 0.5 - 1) > baseline["limits"]["relative_volume_error"]:
         msg = "Curved volume outside the Schwarz limit"
         raise ValueError(msg)
     fd.ModelingSpace("3D")
@@ -138,7 +147,14 @@ def quadratic_control(row, baseline):
     )
 
 
-def measure(case, parent, row, *, repair_resolution, repair_hmax):
+def measure(
+    case: str,
+    parent: Path,
+    row: dict[str, object],
+    *,
+    repair_resolution: int,
+    repair_hmax: float,
+) -> None:
     """Run one diagnostic under the pinned geometry and solver settings.
 
     Raises:

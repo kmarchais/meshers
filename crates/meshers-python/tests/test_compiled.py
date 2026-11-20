@@ -10,6 +10,7 @@ from itertools import starmap
 import meshers
 import numpy as np
 import pytest
+from meshers._meshers import compile_graph
 from python_process import run_python
 
 
@@ -155,7 +156,7 @@ def test_value_kernel_does_not_require_finite_derivative():
 
 def test_invalid_unused_nodes_are_still_rejected():
     with pytest.raises(ValueError, match="operation"):
-        meshers._meshers._compile_expression([("constant", [], 1.0), ("unknown", [], 0.0)], [0])
+        compile_graph([("constant", [], 1.0), ("unknown", [], 0.0)], [0])
 
 
 def test_compiled_batch_matches_scalar_for_strided_points():

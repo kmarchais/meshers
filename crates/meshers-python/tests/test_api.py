@@ -15,7 +15,7 @@ import numpy as np
 import pytest
 from python_process import run_python
 
-generate_callback = partial(meshers.generate, compile=False)
+generate_callback = partial(meshers.generate, compile_expression=False)
 
 
 @pytest.mark.parametrize("compiled", [True, False])
@@ -31,7 +31,7 @@ def test_geometry_rejection_locates_a_sample_with_the_reported_error(compiled):
             band=(-1, 1),
             geometry_tolerance=0.01,
             optimize_passes=0,
-            compile=compiled,
+            compile_expression=compiled,
         )
     match = re.search(
         r"geometry error (\S+) exceeds.*worst sample at \[([^\]]+)\]",
@@ -71,7 +71,7 @@ def test_adaptive_schwarz_d_corner_distance_is_finite(compiled):
         geometry_tolerance=0.02,
         minimum_quality=0.1,
         optimize_passes=1,
-        compile=compiled,
+        compile_expression=compiled,
     )
     assert np.isfinite(result.diagnostics["sampled_surface_error"])
     assert result.diagnostics["sampled_surface_error"] < 0.02
@@ -384,3 +384,41 @@ def test_translated_component_witness(height):
 
     assert covers_center(vertices)
     assert not covers_center(vertices[:0])
+
+
+@pytest.mark.parametrize(
+    ("generate", "args", "options", "message"),
+    [
+        (meshers.generate, ("gyroid",), {"bounds": (1, 0)}, "bounds"),
+        (meshers.generate_intersection, ({},), {}, "constraints"),
+        (meshers.adapt_intersection, (None, {}), {"bounds": (0, 1) * 3}, "constraints"),
+    ],
+)
+def test_legacy_compile_keyword(generate, args, options, message):
+    with pytest.raises(TypeError, match="Specify only one"):
+        generate(*args, **options, compile_expression=False, compile=False)
+    with pytest.raises(ValueError, match=message) as current:
+        generate(*args, **options, compile_expression=False)
+    with (
+        pytest.warns(DeprecationWarning, match="use compile_expression"),
+        pytest.raises(ValueError, match=message) as previous,
+    ):
+        generate(*args, **options, compile=False)
+    assert str(previous.value) == str(current.value)
+
+
+def test_legacy_compile_selects_the_callback():
+    def plane(x, _y, _z):
+        return x - 0.5
+
+    with pytest.warns(DeprecationWarning, match="use compile_expression"):
+        result = meshers.generate(plane, cells=8, compile=False)
+    assert result.diagnostics["evaluator"] == "python"
+
+
+def test_surface_api_availability():
+    assert "SurfaceMesh" in meshers.__all__
+    assert "generate_surface" in meshers.__all__
+    if not meshers.SURFACE_MESHING_AVAILABLE:
+        with pytest.raises(RuntimeError, match="unavailable"):
+            meshers.generate_surface("gyroid")

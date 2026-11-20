@@ -25,7 +25,7 @@ VOLUME_ATOL = 1e-12
 FACES = np.array(((1, 2, 3), (0, 3, 2), (0, 1, 3), (0, 2, 1)))
 
 
-def quality(points, cells):
+def quality(points: Coordinates, cells: Indices) -> Coordinates:
     """Return the normalized MMG quality on each linear tetrahedron."""
     coordinates = points[cells]
     volume = abs(np.linalg.det(coordinates[:, 1:] - coordinates[:, :1])) / 6
@@ -36,7 +36,7 @@ def quality(points, cells):
     return (12 * (3 * volume) ** (2 / 3) / squared) ** 1.5
 
 
-def bounds(triangles):
+def bounds(triangles: Coordinates) -> tuple[Coordinates, Coordinates]:
     """Return the quality ceiling imposed by each fixed opposite face."""
     area = (
         np.linalg.norm(
@@ -45,10 +45,9 @@ def bounds(triangles):
         )
         / 2
     )
-    squared_edges = sum(
-        np.sum((triangles[:, first] - triangles[:, second]) ** 2, axis=1)
-        for first, second in ((0, 1), (1, 2), (2, 0))
-    )
+    squared_edges = np.sum((triangles[:, 0] - triangles[:, 1]) ** 2, axis=1)
+    for first, second in ((1, 2), (2, 0)):
+        squared_edges += np.sum((triangles[:, first] - triangles[:, second]) ** 2, axis=1)
     return 4 * np.sqrt(3) * area / squared_edges, squared_edges
 
 
@@ -139,7 +138,12 @@ def _optimize_star(
     return candidate, record
 
 
-def relocate_star(points, cells, node, target=MIN_QUALITY):
+def relocate_star(
+    points: Coordinates,
+    cells: Indices,
+    node: int,
+    target: float = MIN_QUALITY,
+) -> tuple[Coordinates, dict[str, object]]:
     """Return the candidate vertex and diagnostics for its incident tetrahedra.
 
     Requires a nondegenerate incident tetrahedron star and a positive quality target.
@@ -208,7 +212,7 @@ def _face_incidence(
     return unique, counts, len(conflicts), examples
 
 
-def audit(points, cells, surface):
+def audit(points: Coordinates, cells: Indices, surface: Indices) -> dict[str, object]:
     """Return the facet incidence and orientation checks for the input mesh.
 
     Raises:
@@ -257,7 +261,12 @@ def audit(points, cells, surface):
     }
 
 
-def check_repair(points, moved, cells, boundary):
+def check_repair(
+    points: Coordinates,
+    moved: Coordinates,
+    cells: Indices,
+    boundary: NDArray[np.bool_],
+) -> tuple[float, float]:
     """Check that relocation preserves the boundary and material volume.
 
     Returns:
@@ -279,7 +288,13 @@ def check_repair(points, moved, cells, boundary):
     return volume_difference, float(new_determinants.min())
 
 
-def repair(points, cells, surface, *, maximum_attempts=400):
+def repair(
+    points: Coordinates,
+    cells: Indices,
+    surface: Indices,
+    *,
+    maximum_attempts: int = 400,
+) -> tuple[Coordinates, dict[str, object]]:
     """Return the repaired points and the diagnostics from the two-sweep repair.
 
     Raises:
@@ -343,11 +358,11 @@ def repair(points, cells, surface, *, maximum_attempts=400):
     }
 
 
-def repaired_grid(grid, row):
+def repaired_grid(grid: pv.UnstructuredGrid, row: dict[str, object]) -> pv.UnstructuredGrid:
     """Return the reoriented volume after the frozen interior relocation control."""
     skin = grid.extract_surface(pass_pointid=True, algorithm="dataset_surface")
     faces = skin.point_data["vtkOriginalPointIds"][skin.regular_faces]
-    cells = grid.cells_dict[pv.CellType.TETRA].copy()
+    cells = np.array(grid.cells_dict[np.uint8(pv.CellType.TETRA)], dtype=np.intp, copy=True)
     points = np.asarray(grid.points, dtype=float)
     det = np.linalg.det(points[cells[:, 1:]] - points[cells[:, :1]])
     reverse = det < 0
