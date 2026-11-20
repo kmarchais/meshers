@@ -1,6 +1,6 @@
 # Rust API
 
-The [complete Rust API reference](../../rust/meshers_core/index.html) is generated
+The [complete Rust API reference](../rust/meshers_core/index.html) is generated
 by `cargo doc --no-deps` and included with this site. It documents the actual Rust
 signatures, traits and option structures.
 

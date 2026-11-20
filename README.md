@@ -18,6 +18,7 @@ or `python -m pip install meshers` for meshing only. Wheels require Python 3.11+
 and include the native implementation. NumPy is required; the `io` extra adds
 VTK. Rust is only needed to build from source.
 
+- [Meshers documentation](https://kmarchais.github.io/meshers/)
 - [Installation and first mesh](docs/site/getting-started.md)
 - [Runnable Python examples](docs/site/examples.md)
 - [Python API](docs/site/api/python.md) and [Rust API](docs/site/api/rust.md)
