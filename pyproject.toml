@@ -53,7 +53,7 @@ select = ["ALL"]
 "demos/solver/*.py" = ["implicit-namespace-package"]
 # Existing numerical studies still have untyped functions. New scripts and the
 # reporting, checking, plotting and audit entry points use normal annotation rules.
-"demos/solver/{convergence,fedoo_convergence,fedoo_homogenization,historical_schwarz_repair,implicit_coverage,periodic_geometry,release_wheel_comparison,schwarz_diagnostics,schwarz_series,schwarz_trials,schwarz_workflow,spinodoid_witness}.py" = [
+"demos/solver/{historical_schwarz_repair,implicit_coverage,periodic_geometry,release_wheel_comparison,schwarz_diagnostics,schwarz_series,schwarz_trials,schwarz_workflow,spinodoid_witness}.py" = [
     "missing-type-function-argument",
     "missing-return-type-undocumented-public-function",
     "missing-return-type-private-function",

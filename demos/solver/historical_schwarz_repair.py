@@ -2,12 +2,22 @@
 
 """Fixed-boundary Schwarz control from research commit 9d156a29."""
 
+from __future__ import annotations
+
 import itertools
 import time
+from typing import TYPE_CHECKING
 
 import numpy as np
 import pyvista as pv
+from numpy.typing import NDArray
 from scipy.optimize import minimize
+
+if TYPE_CHECKING:
+    from collections.abc import Callable
+
+Coordinates = NDArray[np.float64]
+Indices = NDArray[np.intp]
 
 INTERIOR_FACE_INCIDENCE = 2
 MIN_QUALITY = 0.1
@@ -42,24 +52,101 @@ def bounds(triangles):
     return 4 * np.sqrt(3) * area / squared_edges, squared_edges
 
 
-def relocate_star(points, cells, node, target=MIN_QUALITY):  # ruff: ignore[too-many-locals] - preserve the archived numerical control.
-    """Return the candidate vertex and diagnostics for its incident tetrahedra.
-
-    Raises:
-        ValueError: The vertex star is empty or degenerate, or the target is invalid.
-    """
+def _opposite_faces(cells: Indices, node: int, target: float) -> tuple[Indices, Indices, Indices]:
     selected = np.flatnonzero((cells == node).any(axis=1))
     if not len(selected) or not target > 0:
         msg = "Relocation needs an incident tetrahedron and a positive quality target"
         raise ValueError(msg)
     star = cells[selected]
     positions = np.argmax(star == node, axis=1)
-    fixed = np.array([
-        cell[np.arange(4) != position] for cell, position in zip(star, positions, strict=True)
-    ])
+    return (
+        star,
+        positions,
+        np.array([
+            cell[np.arange(4) != position] for cell, position in zip(star, positions, strict=True)
+        ]),
+    )
+
+
+def _quality_constraint(
+    coordinates: Coordinates,
+    positions: Indices,
+    constraint_target: float,
+) -> Callable[[Coordinates], Coordinates]:
+    initial_squared = sum(
+        np.sum((coordinates[:, first] - coordinates[:, second]) ** 2, axis=1)
+        for first in range(4)
+        for second in range(first)
+    )
+
+    def constraints(displacement: Coordinates) -> Coordinates:
+        moved = coordinates.copy()
+        moved[np.arange(len(coordinates)), positions] = displacement
+        determinants = np.linalg.det(moved[:, 1:] - moved[:, :1])
+        squared = sum(
+            np.sum((moved[:, first] - moved[:, second]) ** 2, axis=1)
+            for first in range(4)
+            for second in range(first)
+        )
+        return (
+            determinants / initial_squared**1.5
+            - constraint_target / (12 * np.sqrt(3)) * (squared / initial_squared) ** 1.5
+        )
+
+    return constraints
+
+
+def _optimize_star(
+    points: Coordinates,
+    star: Indices,
+    positions: Indices,
+    node: int,
+    target: float,
+) -> tuple[Coordinates, dict[str, object]]:
+    origin = points[node].copy()
+    scale = float(np.linalg.norm(points[np.unique(star)] - origin, axis=1).max())
+    if not scale > 0:
+        msg = "Degenerate vertex star"
+        raise ValueError(msg)
+    constraints = _quality_constraint((points[star] - origin) / scale, positions, target + 1e-9)
+    started = time.monotonic()
+    result = minimize(
+        lambda displacement: np.dot(displacement, displacement),
+        np.zeros(3),
+        method="SLSQP",
+        constraints={"type": "ineq", "fun": constraints},
+        options={"maxiter": 300, "ftol": 1e-13},
+    )
+    candidate = origin + scale * result.x
+    moved = points.copy()
+    moved[node] = candidate
+    minimum_quality = quality(moved, star).min()
+    determinants = np.linalg.det(moved[star[:, 1:]] - moved[star[:, :1]])
+    attained = bool(determinants.min() > 0 and minimum_quality >= target)
+    record = {
+        "status": "feasible-numerically" if attained else "not-found-not-impossibility-proof",
+        "target_attained": attained,
+        "solver_success": bool(result.success),
+        "solver_message": str(result.message),
+        "iterations": int(result.nit),
+        "seconds": time.monotonic() - started,
+        "final_minimum_quality": float(minimum_quality),
+        "maximum_move": float(np.linalg.norm(candidate - origin)),
+        "minimum_normalized_constraint": float(constraints(result.x).min()),
+        "candidate_coordinates": candidate.tolist(),
+        "minimum_signed_determinant": float(determinants.min()),
+    }
+    return candidate, record
+
+
+def relocate_star(points, cells, node, target=MIN_QUALITY):
+    """Return the candidate vertex and diagnostics for its incident tetrahedra.
+
+    Requires a nondegenerate incident tetrahedron star and a positive quality target.
+    """
+    star, positions, fixed = _opposite_faces(cells, node, target)
     ceiling, _ = bounds(points[fixed])
     initial = quality(points, star)
-    constraint_target = target + 1e-9
     row = {
         "node": int(node),
         "incident_tets": len(star),
@@ -72,76 +159,35 @@ def relocate_star(points, cells, node, target=MIN_QUALITY):  # ruff: ignore[too-
     }
     if ceiling.min() < target:
         return points[node].copy(), row
-    origin = points[node].copy()
-    scale = float(np.linalg.norm(points[np.unique(star)] - origin, axis=1).max())
-    if not scale > 0:
-        msg = "Degenerate vertex star"
-        raise ValueError(msg)
-    coordinates = (points[star] - origin) / scale
-    initial_squared = sum(
-        np.sum((coordinates[:, first] - coordinates[:, second]) ** 2, axis=1)
-        for first in range(4)
-        for second in range(first)
-    )
-
-    def constraints(displacement):
-        moved = coordinates.copy()
-        moved[np.arange(len(star)), positions] = displacement
-        determinants = np.linalg.det(moved[:, 1:] - moved[:, :1])
-        squared = sum(
-            np.sum((moved[:, first] - moved[:, second]) ** 2, axis=1)
-            for first in range(4)
-            for second in range(first)
-        )
-        return (
-            determinants / initial_squared**1.5
-            - constraint_target / (12 * np.sqrt(3)) * (squared / initial_squared) ** 1.5
-        )
-
-    started = time.monotonic()
-    result = minimize(
-        lambda displacement: np.dot(displacement, displacement),
-        np.zeros(3),
-        method="SLSQP",
-        constraints={"type": "ineq", "fun": constraints},
-        options={"maxiter": 300, "ftol": 1e-13},
-    )
-    candidate = origin + scale * result.x
-    moved = points.copy()
-    moved[node] = candidate
-    final = quality(moved, star)
-    determinants = np.linalg.det(moved[star[:, 1:]] - moved[star[:, :1]])
-    attained = bool(determinants.min() > 0 and final.min() >= target)
-    row.update(
-        status="feasible-numerically" if attained else "not-found-not-impossibility-proof",
-        target_attained=attained,
-        solver_success=bool(result.success),
-        solver_message=str(result.message),
-        iterations=int(result.nit),
-        seconds=time.monotonic() - started,
-        final_minimum_quality=float(final.min()),
-        maximum_move=float(np.linalg.norm(candidate - origin)),
-        minimum_normalized_constraint=float(constraints(result.x).min()),
-        candidate_coordinates=candidate.tolist(),
-        minimum_signed_determinant=float(determinants.min()),
-    )
-    return candidate, row
+    candidate, outcome = _optimize_star(points, star, positions, node, target)
+    return candidate, {**row, **outcome}
 
 
-def audit(points, cells, surface):  # ruff: ignore[too-many-locals] - preserve the archived numerical control.
-    """Return the facet incidence and orientation checks for the input mesh.
+def _conflict_example(
+    points: Coordinates,
+    cells: Indices,
+    face: Indices,
+    indices: Indices,
+    orientation_sum: int,
+) -> dict[str, object]:
+    triangle = points[face]
+    normal = np.cross(triangle[1] - triangle[0], triangle[2] - triangle[0])
+    opposite = [int(next(iter(set(cells[index]) - set(face)))) for index in indices]
+    distances = [float(np.dot(points[node] - triangle[0], normal)) for node in opposite]
+    return {
+        "face": face.tolist(),
+        "incident_elements": indices.tolist(),
+        "orientation_sum": int(orientation_sum),
+        "opposite_vertices": opposite,
+        "signed_plane_products": distances,
+        "same_physical_side": bool(distances[0] * distances[1] > 0),
+    }
 
-    Raises:
-        ValueError: A tetrahedron has repeated or out-of-range point indices.
-    """
-    cells = cells[:, :4]
-    surface = surface[:, :3]
-    if cells.min() < 0 or cells.max() >= len(points):
-        msg = "Tetrahedron point index out of range"
-        raise ValueError(msg)
-    if (np.diff(np.sort(cells, axis=1), axis=1) == 0).any():
-        msg = "Tetrahedron contains repeated vertices"
-        raise ValueError(msg)
+
+def _face_incidence(
+    points: Coordinates,
+    cells: Indices,
+) -> tuple[Indices, Indices, int, list[dict[str, object]]]:
     oriented = cells[:, FACES].reshape(-1, 3)
     inversions = (oriented[:, 0] > oriented[:, 1]).astype(int)
     inversions += oriented[:, 0] > oriented[:, 2]
@@ -155,31 +201,36 @@ def audit(points, cells, surface):  # ruff: ignore[too-many-locals] - preserve t
     sums = np.add.reduceat(signs[ordering], starts)
     unique = ordered[starts]
     conflicts = np.flatnonzero((counts == INTERIOR_FACE_INCIDENCE) & (sums != 0))
-    extracted = {tuple(map(int, face)) for face in unique[counts == 1]}
-    provided = {tuple(sorted(map(int, face))) for face in surface}
     examples = []
     for group in conflicts[:10]:
-        rows = ordering[starts[group] : starts[group] + counts[group]]
-        indices = rows // 4
-        face = unique[group]
-        triangle = points[face]
-        normal = np.cross(triangle[1] - triangle[0], triangle[2] - triangle[0])
-        opposite = [int(next(iter(set(cells[index]) - set(face)))) for index in indices]
-        distances = [float(np.dot(points[node] - triangle[0], normal)) for node in opposite]
-        examples.append({
-            "face": face.tolist(),
-            "incident_elements": indices.tolist(),
-            "orientation_sum": int(sums[group]),
-            "opposite_vertices": opposite,
-            "signed_plane_products": distances,
-            "same_physical_side": bool(distances[0] * distances[1] > 0),
-        })
+        indices = ordering[starts[group] : starts[group] + counts[group]] // 4
+        examples.append(_conflict_example(points, cells, unique[group], indices, sums[group]))
+    return unique, counts, len(conflicts), examples
+
+
+def audit(points, cells, surface):
+    """Return the facet incidence and orientation checks for the input mesh.
+
+    Raises:
+        ValueError: A tetrahedron has repeated or out-of-range point indices.
+    """
+    cells = cells[:, :4]
+    surface = surface[:, :3]
+    if cells.min() < 0 or cells.max() >= len(points):
+        msg = "Tetrahedron point index out of range"
+        raise ValueError(msg)
+    if (np.diff(np.sort(cells, axis=1), axis=1) == 0).any():
+        msg = "Tetrahedron contains repeated vertices"
+        raise ValueError(msg)
+    unique, counts, n_conflicts, examples = _face_incidence(points, cells)
+    extracted = {tuple(map(int, face)) for face in unique[counts == 1]}
+    provided = {tuple(sorted(map(int, face))) for face in surface}
     determinants = np.linalg.det(points[cells[:, 1:]] - points[cells[:, :1]])
     duplicate_cells = len(cells) - len(np.unique(np.sort(cells, axis=1), axis=0))
     duplicate_surface = len(surface) - len(provided)
     matched = extracted == provided
     coherent = (
-        not len(conflicts)
+        not n_conflicts
         and not (counts > INTERIOR_FACE_INCIDENCE).any()
         and not duplicate_cells
         and not duplicate_surface
@@ -191,7 +242,7 @@ def audit(points, cells, surface):  # ruff: ignore[too-many-locals] - preserve t
         "unique_faces": len(unique),
         "interior_faces": int((counts == INTERIOR_FACE_INCIDENCE).sum()),
         "extracted_boundary_faces": len(extracted),
-        "same_orientation_shared_faces": len(conflicts),
+        "same_orientation_shared_faces": n_conflicts,
         "nonmanifold_faces": int((counts > INTERIOR_FACE_INCIDENCE).sum()),
         "duplicate_cells": duplicate_cells,
         "duplicate_surface_faces": duplicate_surface,

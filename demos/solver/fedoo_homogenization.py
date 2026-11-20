@@ -14,9 +14,10 @@ import importlib
 import json
 import platform
 import time
+from dataclasses import dataclass
 from importlib.metadata import version
 from pathlib import Path
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Protocol
 
 import fedoo as fd
 import meshers
@@ -31,6 +32,8 @@ from solver_checks import (
 )
 
 if TYPE_CHECKING:
+    from collections.abc import Callable, Mapping, Sequence
+
     from numpy.typing import NDArray
     from scipy.sparse import sparray, spmatrix
 
@@ -76,7 +79,7 @@ class AuditedCG:
         )
         iterations = 0
 
-        def count(_):
+        def count(_: NDArray[np.float64]) -> None:
             nonlocal iterations
             iterations += 1
 
@@ -136,7 +139,26 @@ class ReorderedCG(AuditedCG):
         return x
 
 
-def strain_tensor(engineering):
+class _PeriodicMesh(Protocol):
+    """Tet4 mesh data used by both the native and reconstructed solver inputs."""
+
+    @property
+    def points(self) -> NDArray[np.float64]: ...
+
+    @property
+    def tetrahedra(self) -> NDArray[np.int64]: ...
+
+    @property
+    def surface(self) -> NDArray[np.int64]: ...
+
+    @property
+    def periodic_pairs(self) -> Sequence[NDArray[np.int64]]: ...
+
+    @property
+    def diagnostics(self) -> Mapping[str, object]: ...
+
+
+def strain_tensor(engineering: NDArray[np.float64]) -> NDArray[np.float64]:
     """Convert engineering strain [xx, yy, zz, xy, xz, yz] to a tensor.
 
     Returns:
@@ -146,7 +168,7 @@ def strain_tensor(engineering):
     return np.array([[xx, xy / 2, xz / 2], [xy / 2, yy, yz / 2], [xz / 2, yz / 2, zz]])
 
 
-def pair_classes(mesh):
+def pair_classes(mesh: _PeriodicMesh) -> NDArray[np.intp]:
     """Audit face-node and triangle matching.
 
     Returns:
@@ -154,7 +176,7 @@ def pair_classes(mesh):
     """
     parent = np.arange(len(mesh.points))
 
-    def root(node):
+    def root(node: int) -> int:
         while parent[node] != node:
             parent[node] = parent[parent[node]]
             node = parent[node]
@@ -188,7 +210,7 @@ def pair_classes(mesh):
     return np.array([root(i) for i in range(len(parent))])
 
 
-def element_geometry(mesh):
+def element_geometry(mesh: _PeriodicMesh) -> tuple[NDArray[np.float64], NDArray[np.float64]]:
     """Return signed volumes and physical P1 shape-function gradients."""
     points = mesh.points[mesh.tetrahedra]
     jac = points[:, 1:] - points[:, :1]
@@ -200,81 +222,138 @@ def element_geometry(mesh):
     return volumes, gradients
 
 
-def homogenize(mesh, *, stress_probe_cell=None, solver_factory=AuditedCG):  # ruff: ignore[too-many-locals, too-many-statements] - keep all six-load-case audits together.
-    """Run strain- and stress-controlled fedoo homogenization and cross-check.
+@dataclass
+class _StrainResponse:
+    strain: NDArray[np.float64]
+    stress: NDArray[np.float64]
+    mean_stress: NDArray[np.float64]
+    reaction: NDArray[np.float64]
+    checks: dict[str, object]
 
-    Returns:
-        Effective stiffness, directional constants and verification diagnostics.
-    """
-    start = time.perf_counter()
-    classes = pair_classes(mesh)
-    volumes, gradients = element_geometry(mesh)
-    fd.ModelingSpace("3D")
-    fem_mesh = fd.Mesh(mesh.points.copy(), mesh.tetrahedra.copy(), "tet4")
-    assembly = fd.Assembly.create(
-        fd.weakform.StressEquilibrium(fd.constitutivelaw.ElasticIsotrop(2.5, 0.25)),
-        fem_mesh,
-        n_elm_gp=1,
+
+def _prescribed_strain(
+    assembly: fd.Assembly,
+    center: int,
+    engineering: NDArray[np.float64],
+    solver: AuditedCG,
+) -> tuple[fd.problem.Linear, NDArray[np.float64]]:
+    problem = fd.problem.Linear(assembly)
+    problem.bc.add(fd.constraint.PeriodicBC("small_strain", meshperio=True))
+    problem.bc.add("Dirichlet", [center], "Disp", 0)
+    for variable, value in zip(COMPONENTS, engineering, strict=True):
+        problem.bc.add("Dirichlet", variable, float(value))
+    problem.set_solver(solver)
+    problem.solve()
+    displacement = problem.get_disp().T
+    require(np.all(np.isfinite(displacement)), "Nonfinite displacement")
+    require(
+        np.max(np.abs(problem.get_dof_solution("MeanStrain").ravel() - engineering))
+        < MEAN_STRAIN_ATOL,
+        "Prescribed mean strain was lost",
     )
-    center = int(np.linalg.norm(mesh.points - 0.5, axis=1).argmin())
-    solver = solver_factory()
-    stiffness = np.zeros((6, 6))
-    reactions = np.zeros((6, 6))
-    all_strains, all_stresses, checks = [], [], []
-    for case, engineering in enumerate(np.eye(6)):
-        problem = fd.problem.Linear(assembly)
-        problem.bc.add(fd.constraint.PeriodicBC("small_strain", meshperio=True))
-        problem.bc.add("Dirichlet", [center], "Disp", 0)
-        for variable, value in zip(COMPONENTS, engineering, strict=True):
-            problem.bc.add("Dirichlet", variable, float(value))
-        problem.set_solver(solver)
-        problem.solve()
-        displacement = problem.get_disp().T
-        require(np.all(np.isfinite(displacement)), "Nonfinite displacement")
-        require(
-            np.max(np.abs(problem.get_dof_solution("MeanStrain").ravel() - engineering))
-            < MEAN_STRAIN_ATOL,
-            "Prescribed mean strain was lost",
-        )
-        macro = strain_tensor(engineering)
-        jump_error = max(
-            float(
-                np.max(
-                    np.abs(
-                        displacement[pairs[:, 1]]
-                        - displacement[pairs[:, 0]]
-                        - (mesh.points[pairs[:, 1]] - mesh.points[pairs[:, 0]]) @ macro.T,
-                    ),
+    return problem, displacement
+
+
+def _periodic_jump(
+    mesh: _PeriodicMesh,
+    displacement: NDArray[np.float64],
+    engineering: NDArray[np.float64],
+) -> float:
+    macro = strain_tensor(engineering)
+    jump_error = max(
+        float(
+            np.max(
+                np.abs(
+                    displacement[pairs[:, 1]]
+                    - displacement[pairs[:, 0]]
+                    - (mesh.points[pairs[:, 1]] - mesh.points[pairs[:, 0]]) @ macro.T,
                 ),
-            )
-            for pairs in mesh.periodic_pairs
+            ),
         )
-        require(jump_error < PERIODIC_JUMP_ATOL, f"Periodic displacement jump error {jump_error}")
-        gradient = np.einsum("tia,tib->tab", displacement[mesh.tetrahedra], gradients)
+        for pairs in mesh.periodic_pairs
+    )
+    require(jump_error < PERIODIC_JUMP_ATOL, f"Periodic displacement jump error {jump_error}")
+    return jump_error
+
+
+def _force_balance(problem: fd.problem.Linear, classes: NDArray[np.intp]) -> float:
+    # Internal forces must balance within every periodic equivalence class,
+    # including edge/corner classes; interior classes contain one node.
+    forces = problem.get_ext_forces("Disp", include_mpc=False).T
+    balanced = np.zeros_like(forces)
+    np.add.at(balanced, classes, forces)
+    force_error = float(np.linalg.norm(balanced) / np.linalg.norm(forces))
+    require(force_error < MAX_PERIODIC_FORCE_ERROR, f"Periodic force error {force_error}")
+    return force_error
+
+
+@dataclass
+class _PeriodicCell:
+    mesh: _PeriodicMesh
+    volumes: NDArray[np.float64]
+    gradients: NDArray[np.float64]
+    classes: NDArray[np.intp]
+    assembly: fd.Assembly
+    center: int
+
+    @classmethod
+    def from_mesh(cls, mesh: _PeriodicMesh) -> _PeriodicCell:
+        classes = pair_classes(mesh)
+        volumes, gradients = element_geometry(mesh)
+        fd.ModelingSpace("3D")
+        fem_mesh = fd.Mesh(mesh.points.copy(), mesh.tetrahedra.copy(), "tet4")
+        assembly = fd.Assembly.create(
+            fd.weakform.StressEquilibrium(fd.constitutivelaw.ElasticIsotrop(2.5, 0.25)),
+            fem_mesh,
+            n_elm_gp=1,
+        )
+        center = int(np.argmin(np.linalg.norm(mesh.points - 0.5, axis=1)))
+        return cls(mesh, volumes, gradients, classes, assembly, center)
+
+    def strain_response(
+        self,
+        case: int,
+        engineering: NDArray[np.float64],
+        solver: AuditedCG,
+        stress_probe_cell: int | None,
+    ) -> _StrainResponse:
+        problem, displacement = _prescribed_strain(self.assembly, self.center, engineering, solver)
+        jump_error = _periodic_jump(self.mesh, displacement, engineering)
+        gradient = np.einsum("tia,tib->tab", displacement[self.mesh.tetrahedra], self.gradients)
         strain = (gradient + np.swapaxes(gradient, -1, -2)) / 2
         stress = 2 * strain + np.trace(strain, axis1=1, axis2=2)[:, None, None] * np.eye(3)
-        # Integrate over the solid, normalize by the full unit-cell volume (1).
-        mean_stress = np.einsum("t,tij->ij", volumes, stress)
-        stiffness[:, case] = mean_stress[[0, 1, 2, 0, 0, 1], [0, 1, 2, 1, 2, 2]]
-        reactions[:, case] = problem.get_ext_forces("MeanStrain").ravel()
-        all_strains.append(strain)
-        all_stresses.append(stress)
-        # Internal forces must balance within every periodic equivalence class,
-        # including edge/corner classes; interior classes contain one node.
-        forces = problem.get_ext_forces("Disp", include_mpc=False).T
-        balanced = np.zeros_like(forces)
-        np.add.at(balanced, classes, forces)
-        force_error = float(np.linalg.norm(balanced) / np.linalg.norm(forces))
-        require(force_error < MAX_PERIODIC_FORCE_ERROR, f"Periodic force error {force_error}")
-        checks.append({
+        # The reference cell has unit volume. Integrate stress over its solid part.
+        mean_stress = np.einsum("t,tij->ij", self.volumes, stress)
+        reaction = problem.get_ext_forces("MeanStrain").ravel().copy()
+        checks = {
             "load": COMPONENTS[case],
             "periodic_jump_error": jump_error,
-            "periodic_force_balance_relative_error": force_error,
+            "periodic_force_balance_relative_error": _force_balance(problem, self.classes),
             **solver.records[-1],
-        })
+        }
         if stress_probe_cell is not None:
-            checks[-1]["probe_sigma_xx"] = float(stress[stress_probe_cell, 0, 0])
-    energy_matrix = np.einsum("t,itkl,jtkl->ij", volumes, all_strains, all_stresses)
+            checks["probe_sigma_xx"] = float(stress[stress_probe_cell, 0, 0])
+        return _StrainResponse(
+            strain,
+            stress,
+            mean_stress[[0, 1, 2, 0, 0, 1], [0, 1, 2, 1, 2, 2]],
+            reaction,
+            checks,
+        )
+
+
+def _stiffness_checks(
+    volumes: NDArray[np.float64],
+    responses: list[_StrainResponse],
+    stiffness: NDArray[np.float64],
+) -> dict[str, float | list[float]]:
+    reactions = np.column_stack([r.reaction for r in responses])
+    energy_matrix = np.einsum(
+        "t,itkl,jtkl->ij",
+        volumes,
+        [r.strain for r in responses],
+        [r.stress for r in responses],
+    )
     hill_mandel = float(np.linalg.norm(energy_matrix - stiffness) / np.linalg.norm(stiffness))
     reaction_error = float(np.linalg.norm(reactions - stiffness) / np.linalg.norm(stiffness))
     symmetry = float(np.linalg.norm(stiffness - stiffness.T) / np.linalg.norm(stiffness))
@@ -290,9 +369,37 @@ def homogenize(mesh, *, stress_probe_cell=None, solver_factory=AuditedCG):  # ru
         voigt_gap.min() > -HOMOGENIZATION_TOLERANCE,
         "Effective stiffness exceeds the Voigt bound",
     )
+    return {
+        "stiffness_eigenvalues": eigenvalues.tolist(),
+        "hill_mandel_relative_error": hill_mandel,
+        "reaction_stress_relative_difference": reaction_error,
+        "stiffness_symmetry_relative_error": symmetry,
+    }
+
+
+def homogenize(
+    mesh: _PeriodicMesh,
+    *,
+    stress_probe_cell: int | None = None,
+    solver_factory: Callable[[], AuditedCG] = AuditedCG,
+) -> dict[str, object]:
+    """Run strain- and stress-controlled fedoo homogenization and cross-check.
+
+    Returns:
+        Effective stiffness, directional constants and verification diagnostics.
+    """
+    start = time.perf_counter()
+    cell = _PeriodicCell.from_mesh(mesh)
+    solver = solver_factory()
+    responses = [
+        cell.strain_response(case, engineering, solver, stress_probe_cell)
+        for case, engineering in enumerate(np.eye(6))
+    ]
+    stiffness = np.column_stack([r.mean_stress for r in responses])
+    checks = _stiffness_checks(cell.volumes, responses, stiffness)
     automatic_solver = solver_factory()
     automatic = fd.homogen.get_homogenized_stiffness(
-        assembly,
+        cell.assembly,
         meshperio=True,
         solver=automatic_solver,
         rigid_body_constraint="pin",
@@ -306,26 +413,23 @@ def homogenize(mesh, *, stress_probe_cell=None, solver_factory=AuditedCG):  # ru
     return {
         "tetrahedra": len(mesh.tetrahedra),
         "points": len(mesh.points),
-        "solid_volume_fraction": float(volumes.sum()),
+        "solid_volume_fraction": float(cell.volumes.sum()),
         "minimum_quality": mesh.diagnostics["minimum_mmg_quality"],
         "periodic_pair_counts": [len(p) for p in mesh.periodic_pairs],
         "stiffness_engineering_voigt": stiffness.tolist(),
-        "stiffness_eigenvalues": eigenvalues.tolist(),
+        **checks,
         "young_modulus_xyz": (1 / np.diag(compliance)[:3]).tolist(),
         "poisson_xy_xz_yz": [
             -float(compliance[j, i] / compliance[i, i]) for i, j in [(0, 1), (0, 2), (1, 2)]
         ],
-        "hill_mandel_relative_error": hill_mandel,
-        "reaction_stress_relative_difference": reaction_error,
-        "stiffness_symmetry_relative_error": symmetry,
         "automatic_homogenization_relative_difference": automatic_error,
-        "strain_controlled_loads": checks,
+        "strain_controlled_loads": [r.checks for r in responses],
         "automatic_stress_controlled_solves": automatic_solver.records,
         "seconds": time.perf_counter() - start,
     }
 
 
-def specimen(name, cells):
+def specimen(name: str, cells: int) -> meshers.Mesh:
     """Generate a full solid or gyroid sheet in a periodic unit cube.
 
     Returns:

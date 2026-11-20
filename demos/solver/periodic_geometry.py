@@ -2,16 +2,23 @@
 
 """Audit Tet4 meshes of the frozen Gyroid and Schwarz P unit cells in physical space."""
 
+from __future__ import annotations
+
 import argparse
 import hashlib
 import json
+from dataclasses import dataclass
 from pathlib import Path
 
 import numpy as np
 import pyvista as pv
+from numpy.typing import NDArray
 from scipy.sparse import coo_matrix
 from scipy.sparse.csgraph import connected_components
 from scipy.stats import qmc
+
+Coordinates = NDArray[np.float64]
+Indices = NDArray[np.intp]
 
 MIN_ROOT_AMPLITUDE = 1e-12
 SEAM_ATOL = 1e-14
@@ -85,11 +92,107 @@ def worst(distances, samples):
     }
 
 
-def boundary_metrics(points, faces, specimen, net):  # ruff: ignore[complex-structure] - separate wall and cap samples.
-    """Return two-sided measurements per wall and cap, plus the cap face masks.
+def _wall_reference(net: Coordinates, specimen: str, level: float) -> Coordinates:
+    refs = []
+    for axis in range(3):
+        lines = np.zeros((len(net), 3))
+        lines[:, [i for i in range(3) if i != axis]] = net
+        coords, valid = roots(lines, specimen, level, axis)
+        for column in coords.T:
+            lines[:, axis] = column
+            refs.append(lines[valid].copy())
+    reference = np.concatenate(refs)
+    if not np.all(abs(field(reference, specimen) - level) < ROOT_RESIDUAL_ATOL):
+        msg = "Reference samples are off the analytic wall"
+        raise ValueError(msg)
+    return reference
 
-    Raises:
-        ValueError: A reference point fails the analytic wall equation.
+
+def _face_connectivity(cells: Indices, det: Coordinates) -> tuple[Indices, Coordinates, bool]:
+    oriented = cells[:, FACES].reshape(-1, 3)
+    _, ids, counts = np.unique(
+        np.sort(oriented, axis=1),
+        axis=0,
+        return_inverse=True,
+        return_counts=True,
+    )
+    order = np.argsort(ids)
+    starts = np.cumsum(counts) - counts
+    faces = oriented[order[starts[counts == 1]]]
+    shared = starts[counts == INTERIOR_FACE_INCIDENCE]
+    first, second = order[shared], order[shared + 1]
+    inversions = sum(
+        (oriented[:, i] > oriented[:, j]).astype(int) for i in range(3) for j in range(i + 1, 3)
+    )
+    graph = coo_matrix(
+        (np.ones(len(shared)), (first // 4, second // 4)),
+        shape=(len(cells), len(cells)),
+    )
+    _, labels = connected_components(graph, directed=False)
+    volumes = np.bincount(labels, weights=det / 6)
+    conforms = counts.max() <= INTERIOR_FACE_INCIDENCE and np.all(
+        (inversions[first] - inversions[second]) % 2 == 1,
+    )
+    return faces, volumes, bool(conforms)
+
+
+def _periodic_faces(
+    points: Coordinates,
+    faces: Indices,
+    caps: dict[tuple[int, float], NDArray[np.bool_]],
+) -> dict[str, bool]:
+    periodic = {}
+    for axis in range(3):
+
+        def trace(side: float, axis: int = axis) -> list[tuple]:
+            coords = points[faces[caps[axis, side]]][:, :, [i for i in range(3) if i != axis]]
+            return sorted(tuple(sorted(map(tuple, t))) for t in np.round(coords, 9))
+
+        periodic[AXES[axis]] = trace(-0.5) == trace(0.5)
+    return periodic
+
+
+def _material_witnesses(
+    grid: pv.UnstructuredGrid,
+    specimen: str,
+    power: int,
+    tol: float,
+) -> dict[str, int | list[float] | None]:
+    probes = qmc.Sobol(3, scramble=True, seed=971).random_base2(power) - 0.5
+    signed = inside(field(probes, specimen), specimen)
+    # Exclude the tolerance layer using a global gradient bound of 4*pi*sqrt(3).
+    mask = abs(signed) > 4 * np.pi * np.sqrt(3) * tol
+    misses = (grid.find_containing_cell(probes[mask]) >= 0) != (signed[mask] < 0)
+    return {
+        "material_witnesses": int(mask.sum()),
+        "misclassified_witnesses": int(misses.sum()),
+        "first_misclassified_witness": probes[mask][misses][0].tolist() if misses.any() else None,
+    }
+
+
+@dataclass
+class _CellGeometry:
+    boundary_faces: Indices
+    component_volumes: Coordinates
+    minimum_quality: float
+    conforms: bool
+    positive: bool
+
+
+def _cell_geometry(points: Coordinates, cells: Indices) -> _CellGeometry:
+    verts = points[cells]
+    det = np.linalg.det(verts[:, 1:] - verts[:, :1])
+    edges = sum(((verts[:, i] - verts[:, j]) ** 2).sum(axis=1) for i in range(4) for j in range(i))
+    qualities = np.sqrt(432) * det / np.maximum(edges, 1e-30) ** 1.5
+    faces, volumes, conforms = _face_connectivity(cells, det)
+    return _CellGeometry(faces, volumes, float(np.min(qualities)), conforms, bool(np.min(det) > 0))
+
+
+def boundary_metrics(points, faces, specimen, net):
+    """Sample each analytic wall and planar cap in both directions.
+
+    Returns:
+        Per-patch distance measurements and the face masks for each cap.
     """
     levels = (-0.55, 0.55) if specimen == "gyroid" else (0.0,)
     triangles = points[faces]
@@ -132,18 +235,7 @@ def boundary_metrics(points, faces, specimen, net):  # ruff: ignore[complex-stru
         }
 
     for level in levels:
-        refs = []
-        for axis in range(3):
-            lines = np.zeros((len(net), 3))
-            lines[:, [i for i in range(3) if i != axis]] = net
-            coords, valid = roots(lines, specimen, level, axis)
-            for column in coords.T:
-                lines[:, axis] = column
-                refs.append(lines[valid].copy())
-        reference = np.concatenate(refs)
-        if not np.all(abs(field(reference, specimen) - level) < ROOT_RESIDUAL_ATOL):
-            msg = "Reference samples are off the analytic wall"
-            raise ValueError(msg)
+        reference = _wall_reference(net, specimen, level)
         mask = wall if len(levels) == 1 else wall & ((wall_values < 0) == (level < 0))
         measure(f"wall {level:g}", mask, reference, level)
     for (axis, side), mask in caps.items():
@@ -154,7 +246,7 @@ def boundary_metrics(points, faces, specimen, net):  # ruff: ignore[complex-stru
     return metrics, caps
 
 
-def audit(grid, specimen, baseline, power=11):  # ruff: ignore[too-many-locals] - retain measured gate inputs.
+def audit(grid, specimen, baseline, power=11):
     """Return physical-space measurements and failed checks for an exported volume.
 
     Raises:
@@ -165,60 +257,32 @@ def audit(grid, specimen, baseline, power=11):  # ruff: ignore[too-many-locals] 
         raise ValueError(msg)
     points = np.asarray(grid.points, dtype=float)
     cells = grid.cells_dict[pv.CellType.TETRA]
-    verts = points[cells]
-    det = np.linalg.det(verts[:, 1:] - verts[:, :1])
-    edges = sum(((verts[:, i] - verts[:, j]) ** 2).sum(axis=1) for i in range(4) for j in range(i))
-    qualities = np.sqrt(432) * det / np.maximum(edges, 1e-30) ** 1.5
-    oriented = cells[:, FACES].reshape(-1, 3)
-    keys = np.sort(oriented, axis=1)
-    _, ids, counts = np.unique(keys, axis=0, return_inverse=True, return_counts=True)
-    order = np.argsort(ids)
-    starts = np.cumsum(counts) - counts
-    faces = oriented[order[starts[counts == 1]]]
-    shared = starts[counts == INTERIOR_FACE_INCIDENCE]
-    first, second = order[shared], order[shared + 1]
-    inversions = sum(
-        (oriented[:, i] > oriented[:, j]).astype(int) for i in range(3) for j in range(i + 1, 3)
+    geometry = _cell_geometry(points, cells)
+    metrics, caps = boundary_metrics(
+        points,
+        geometry.boundary_faces,
+        specimen,
+        qmc.Sobol(2, scramble=True, seed=119).random_base2(power) - 0.5,
     )
-    graph = coo_matrix(
-        (np.ones(len(shared)), (first // 4, second // 4)),
-        shape=(len(cells), len(cells)),
-    )
-    components, labels = connected_components(graph, directed=False)
-    volumes = np.bincount(labels, weights=det / 6)
-    net = qmc.Sobol(2, scramble=True, seed=119).random_base2(power) - 0.5
-    metrics, caps = boundary_metrics(points, faces, specimen, net)
-    periodic = {}
-    for axis in range(3):
-
-        def trace(side, axis=axis):
-            coords = points[faces[caps[axis, side]]][:, :, [i for i in range(3) if i != axis]]
-            return sorted(tuple(sorted(map(tuple, t))) for t in np.round(coords, 9))
-
-        periodic[AXES[axis]] = trace(-0.5) == trace(0.5)
-    probes = qmc.Sobol(3, scramble=True, seed=971).random_base2(power) - 0.5
-    signed = inside(field(probes, specimen), specimen)
-    # Exclude the tolerance layer using a global gradient bound of 4*pi*sqrt(3).
+    periodic = _periodic_faces(points, geometry.boundary_faces, caps)
     limits = baseline["limits"]
     tol = limits["two_sided_sampled_distance"]
-    mask = abs(signed) > 4 * np.pi * np.sqrt(3) * tol
-    misses = (grid.find_containing_cell(probes[mask]) >= 0) != (signed[mask] < 0)
-    volume = float(volumes.sum())
+    witnesses = _material_witnesses(grid, specimen, power, tol)
     failed = [
         name
         for name, row in metrics.items()
         if row.get("missing_faces")
         or any(result["maximum"] is None or result["maximum"] > tol for result in row.values())
     ]
+    volume = float(geometry.component_volumes.sum())
     expected_components = 3 if specimen == "gyroid" else 1
     checks = {
-        "face_connected_components": components == expected_components,
+        "face_connected_components": len(geometry.component_volumes) == expected_components,
         "periodic_faces": all(periodic.values()),
-        "material_witnesses": not misses.any(),
-        "signed_orientation": det.min() > 0,
-        "quality": qualities.min() >= limits["minimum_quality"],
-        "conformity": counts.max() <= INTERIOR_FACE_INCIDENCE
-        and np.all((inversions[first] - inversions[second]) % 2 == 1),
+        "material_witnesses": witnesses["misclassified_witnesses"] == 0,
+        "signed_orientation": geometry.positive,
+        "quality": geometry.minimum_quality >= limits["minimum_quality"],
+        "conformity": geometry.conforms,
         "volume": abs(
             volume
             / baseline["reference_volumes"][
@@ -236,16 +300,14 @@ def audit(grid, specimen, baseline, power=11):  # ruff: ignore[too-many-locals] 
         "nodes": len(points),
         "tetrahedra": len(cells),
         "volume": volume,
-        "face_connected_components": int(components),
+        "face_connected_components": len(geometry.component_volumes),
+        "component_signed_volumes": geometry.component_volumes.tolist(),
+        "minimum_quality": geometry.minimum_quality,
         "expected_face_connected_components": expected_components,
-        "component_signed_volumes": volumes.tolist(),
-        "minimum_quality": float(qualities.min()),
         "boundary": metrics,
         "periodic_face_match": periodic,
         "sobol_power": power,
-        "material_witnesses": int(mask.sum()),
-        "misclassified_witnesses": int(misses.sum()),
-        "first_misclassified_witness": probes[mask][misses][0].tolist() if misses.any() else None,
+        **witnesses,
         "failed_checks": failed,
         "sampled_admission": not failed,
     }

@@ -6,6 +6,8 @@ Uses the same manufactured solution and specimens as convergence.py. Only the
 geometry and analytic error integration are shared; fedoo assembles the system.
 """
 
+from __future__ import annotations
+
 import hashlib
 import importlib
 import json
@@ -13,10 +15,11 @@ import platform
 import time
 from importlib.metadata import version
 from pathlib import Path
+from typing import TYPE_CHECKING
 
 import fedoo as fd
 import numpy as np
-from convergence import QUADRATURE, ROOT, exact, specimen
+from convergence import ROOT, ElementQuadrature, exact, specimen
 from convergence import solve as reference_solve
 from reporting import write_json_line
 from solver_checks import (
@@ -27,55 +30,31 @@ from solver_checks import (
     require,
 )
 
+if TYPE_CHECKING:
+    import meshers
+    from numpy.typing import NDArray
+
 PRESCRIBED_DISPLACEMENT_ATOL = 1e-12
 MAX_REFERENCE_DISAGREEMENT = 1e-6
 MIN_DISPLACEMENT_RATE = 1.7
 MIN_ENERGY_RATE = 0.85
 
 
-def errors(mesh, displacement, *, affine=False):  # ruff: ignore[too-many-locals] - explicit error integration.
-    """Integrate displacement and energy errors independently of fedoo.
+def errors(
+    mesh: meshers.Mesh,
+    displacement: NDArray[np.float64],
+    *,
+    affine: bool = False,
+) -> dict[str, float]:
+    """Integrate solution errors independently of fedoo.
 
     Returns:
-        Positive volumes, maximum edge length and the two error norms.
+        Mesh size and displacement and energy error norms.
     """
-    points = mesh.points[mesh.tetrahedra]
-    jac = points[:, 1:] - points[:, :1]
-    volumes = np.linalg.det(jac) / 6
-    require(np.all(volumes > 0), "Mesh contains a nonpositive tetrahedron volume")
-    gradients = np.empty((len(points), 4, 3))
-    gradients[:, 1:] = np.swapaxes(np.linalg.inv(jac), 1, 2)
-    gradients[:, 0] = -gradients[:, 1:].sum(axis=1)
-    q = np.einsum("qi,tia->tqa", QUADRATURE, points)
-    values, analytic_gradient, _ = exact(q, affine=affine)
-    local = displacement[mesh.tetrahedra]
-    discrete_values = np.einsum("qi,tia->tqa", QUADRATURE, local)
-    discrete_gradient = np.einsum("tia,tib->tab", local, gradients)
-    delta = discrete_gradient[:, None] - analytic_gradient
-    strain = (delta + np.swapaxes(delta, -1, -2)) / 2
-    energy = np.trace(strain, axis1=-2, axis2=-1) ** 2 + 2 * np.sum(strain**2, axis=(-2, -1))
-    l2 = np.sqrt(np.sum(volumes[:, None] * np.sum((discrete_values - values) ** 2, axis=-1)) / 4)
-    energy_error = np.sqrt(np.sum(volumes[:, None] * energy) / 4)
-    h = max(
-        np.linalg.norm(points[:, i] - points[:, j], axis=1).max()
-        for i in range(4)
-        for j in range(i + 1, 4)
-    )
-    return {
-        "minimum_signed_volume": float(volumes.min()),
-        "maximum_edge_length": float(h),
-        "l2_displacement_error": float(l2),
-        "energy_error": float(energy_error),
-    }
+    return ElementQuadrature.from_mesh(mesh, affine=affine).errors(displacement)
 
 
-def solve(mesh, *, affine=False):  # ruff: ignore[too-many-locals] - retain the complete fedoo setup in one example.
-    """Assemble and solve exclusively through fedoo, then audit its result.
-
-    Returns:
-        Error norms, mesh statistics, boundary and algebraic residual checks.
-    """
-    start = time.perf_counter()
+def _elasticity_problem(mesh: meshers.Mesh, *, affine: bool) -> fd.problem.Linear:
     fd.ModelingSpace("3D")
     fem_mesh = fd.Mesh(mesh.points.copy(), mesh.tetrahedra.copy(), "tet4")
     # E=2.5, nu=0.25 corresponds to lambda=mu=1.
@@ -84,33 +63,17 @@ def solve(mesh, *, affine=False):  # ruff: ignore[too-many-locals] - retain the 
     force = exact(fem_mesh.gausspoint_coordinates(4), affine=affine)[2]
     load = fd.weakform.DistributedLoad(list(force.T))
     assembly = fd.Assembly.create(equilibrium + load, fem_mesh, n_elm_gp=4)
-    problem = fd.problem.Linear(assembly)
-    boundary = np.unique(mesh.surface)
-    boundary_values = exact(mesh.points[boundary], affine=affine)[0]
-    for component, variable in enumerate(["DispX", "DispY", "DispZ"]):
-        problem.bc.add("Dirichlet", boundary, variable, boundary_values[:, component])
-    iterations = 0
+    return fd.problem.Linear(assembly)
 
-    def count(_):
-        nonlocal iterations
-        iterations += 1
 
-    problem.set_solver("cg", precond=True, rtol=1e-10, atol=1e-12, maxiter=10000, callback=count)
-    problem.solve()
-    displacement = problem.get_disp().T
-    require(
-        displacement.shape == mesh.points.shape,
-        "Displacement shape differs from the mesh coordinates",
-    )
-    require(np.all(np.isfinite(displacement)), "Displacement contains nonfinite values")
-    boundary_error = float(np.max(np.abs(displacement[boundary] - boundary_values)))
-    require(
-        boundary_error < PRESCRIBED_DISPLACEMENT_ATOL,
-        f"Boundary displacement error {boundary_error} exceeds the limit",
-    )
+def _audit_free_equations(
+    problem: fd.problem.Linear,
+    displacement: NDArray[np.float64],
+    boundary: NDArray[np.intp],
+) -> tuple[int, float]:
     # fedoo stores component-major DOFs; audit only unconstrained equations.
-    locked = (boundary[None, :] + len(mesh.points) * np.arange(3)[:, None]).ravel()
-    free = np.ones(3 * len(mesh.points), dtype=bool)
+    locked = (boundary[None, :] + len(displacement) * np.arange(3)[:, None]).ravel()
+    free = np.ones(3 * len(displacement), dtype=bool)
     free[locked] = False
     require(np.any(free), "Elasticity system has no free degrees of freedom")
     matrix = problem.get_A()
@@ -128,6 +91,41 @@ def solve(mesh, *, affine=False):  # ruff: ignore[too-many-locals] - retain the 
         / max(np.linalg.norm(rhs), 1e-30),
     )
     require(residual < MAX_RELATIVE_RESIDUAL, f"Relative residual {residual} exceeds the limit")
+    return int(free.sum()), residual
+
+
+def solve(mesh: meshers.Mesh, *, affine: bool = False) -> dict[str, float]:
+    """Assemble and solve exclusively through fedoo, then audit its result.
+
+    Returns:
+        Error norms, mesh statistics, boundary and algebraic residual checks.
+    """
+    start = time.perf_counter()
+    problem = _elasticity_problem(mesh, affine=affine)
+    boundary = np.unique(mesh.surface)
+    boundary_values = exact(mesh.points[boundary], affine=affine)[0]
+    for component, variable in enumerate(["DispX", "DispY", "DispZ"]):
+        problem.bc.add("Dirichlet", boundary, variable, boundary_values[:, component])
+    iterations = 0
+
+    def count(_: NDArray[np.float64]) -> None:
+        nonlocal iterations
+        iterations += 1
+
+    problem.set_solver("cg", precond=True, rtol=1e-10, atol=1e-12, maxiter=10000, callback=count)
+    problem.solve()
+    displacement = problem.get_disp().T
+    require(
+        displacement.shape == mesh.points.shape,
+        "Displacement shape differs from the mesh coordinates",
+    )
+    require(np.all(np.isfinite(displacement)), "Displacement contains nonfinite values")
+    boundary_error = float(np.max(np.abs(displacement[boundary] - boundary_values)))
+    require(
+        boundary_error < PRESCRIBED_DISPLACEMENT_ATOL,
+        f"Boundary displacement error {boundary_error} exceeds the limit",
+    )
+    free_dofs, residual = _audit_free_equations(problem, displacement, boundary)
     result = errors(mesh, displacement, affine=affine)
     if affine:
         require(
@@ -141,7 +139,7 @@ def solve(mesh, *, affine=False):  # ruff: ignore[too-many-locals] - retain the 
     return {
         "tetrahedra": len(mesh.tetrahedra),
         "points": len(mesh.points),
-        "free_dofs": int(free.sum()),
+        "free_dofs": free_dofs,
         "minimum_quality": mesh.diagnostics["minimum_mmg_quality"],
         **result,
         "cg_iterations": iterations,
