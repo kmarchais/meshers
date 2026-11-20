@@ -6,9 +6,10 @@ from __future__ import annotations
 
 import math
 import warnings
+from collections.abc import Callable
 from dataclasses import dataclass
 from functools import lru_cache
-from typing import TYPE_CHECKING, Literal, Never, TypedDict
+from typing import Literal, Never, TypedDict
 
 import numpy as np
 from numpy.lib.mixins import NDArrayOperatorsMixin
@@ -17,15 +18,13 @@ from . import _meshers
 from ._meshers import compile_graph
 from ._options import check_keywords
 
-if TYPE_CHECKING:
-    from collections.abc import Callable
-
 _Node = tuple[str, tuple[int, ...], float]
 _MIN_CONSTRAINTS = 2
 _MAX_NODES = 20_000
 _AXES = "xyz"
 _INTERP_NODES_PER_KNOT = 8
 _TERNARY_ARITY = 3
+_ZERO_DERIVATIVE = frozenset({"constant", "lt", "le", "gt", "ge", "eq", "ne"})
 
 
 _UFUNCS = {
@@ -348,8 +347,20 @@ class _Graph:
         return self._record("constant", (), scalar)
 
     def derivatives(self, output: _Expression) -> list[_Expression]:
+        # Operands precede their users. Skip unused nodes and select conditions.
+        needed: set[int] = set()
+        pending = [output.index]
+        while pending:
+            index = pending.pop()
+            if index in needed:
+                continue
+            needed.add(index)
+            op, operands, _ = self.nodes[index]
+            if op != "input" and op not in _ZERO_DERIVATIVE:
+                pending.extend(operands[1:] if op == "select" else operands)
+        order = sorted(needed)
         derivative = _Derivatives(self)
-        return [derivative.at(output.index, axis) for axis in range(len(_AXES))]
+        return [derivative.for_axis(order, axis) for axis in range(len(_AXES))]
 
 
 class _Derivatives:
@@ -357,7 +368,6 @@ class _Derivatives:
         self.graph = graph
         self.zero = graph.convert(0.0)
         self.one = graph.convert(1.0)
-        self.cache: dict[tuple[int, int], _Expression] = {}
 
     def is_constant(self, expression: _Expression, literal: float) -> bool:
         # A small nonzero coefficient still contributes to the derivative.
@@ -380,26 +390,31 @@ class _Derivatives:
             return a
         return a + b
 
-    def at(self, index: int, axis: int) -> _Expression:
-        key = (index, axis)
-        if key not in self.cache:
-            self.cache[key] = self._differentiate(index, axis)
-        return self.cache[key]
+    def for_axis(self, order: list[int], axis: int) -> _Expression:
+        partials: dict[int, _Expression] = {}
+        for index in order:
+            partials[index] = self._differentiate(index, axis, partials)
+        return partials[order[-1]]
 
-    def _differentiate(self, index: int, axis: int) -> _Expression:
+    def _differentiate(
+        self,
+        index: int,
+        axis: int,
+        partials: dict[int, _Expression],
+    ) -> _Expression:
         op, ids, _ = self.graph.nodes[index]
         if op == "input":
             return self.one if ids[0] == axis else self.zero
-        if op in {"constant", "lt", "le", "gt", "ge", "eq", "ne"}:
+        if op in _ZERO_DERIVATIVE:
             return self.zero
         a = _Expression(self.graph, ids[0])
         if op == "select":
-            return self.graph.select(a, self.at(ids[1], axis), self.at(ids[2], axis))
-        da = self.at(ids[0], axis)
+            return self.graph.select(a, partials[ids[1]], partials[ids[2]])
+        da = partials[ids[0]]
         if len(ids) == 1:
             return self._unary(op, a, da)
         b = _Expression(self.graph, ids[1])
-        return self._binary(op, a, b, da, self.at(ids[1], axis))
+        return self._binary(op, a, b, da, partials[ids[1]])
 
     def _binary(
         self,
@@ -493,7 +508,8 @@ class _Derivatives:
         return self.mul(slope(self.graph, self.one, a), da)
 
 
-_UNARY_SLOPES: dict[str, Callable[[_Graph, _Expression, _Expression], _Expression]] = {
+_UnarySlope = Callable[[_Graph, _Expression, _Expression], _Expression]
+_UNARY_SLOPES: dict[str, _UnarySlope] = {
     "asin": lambda graph, one, a: one / graph.unary("sqrt", one - a * a),
     "acos": lambda graph, one, a: -one / graph.unary("sqrt", one - a * a),
     "atan": lambda _graph, one, a: one / (one + a * a),

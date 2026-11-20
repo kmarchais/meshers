@@ -6,6 +6,7 @@ import gc
 import os
 import threading
 from itertools import starmap
+from typing import get_type_hints
 
 import meshers
 import numpy as np
@@ -271,3 +272,19 @@ def test_symbolic_augmented_assignment_preserves_alias_and_comparisons():
     compiled = meshers.compile_field(field)
     for point in ((1.0, 1.0, 0.0), (2.0, 1.0, 0.0), (2.0, 1.0, 2.0)):
         assert compiled(*point) == pytest.approx(field(*point))
+
+
+def test_deep_field_compiles_and_generates_a_half_cell():
+    def slab(x, _y, _z):
+        for _ in range(600):
+            x += 1.0
+        return x - 600.5
+
+    compiled = meshers.compile_field(slab)
+    np.testing.assert_array_equal(compiled.gradient(0.5, 0.5, 0.5), [1, 0, 0])
+    mesh = meshers.generate(slab, cells=4, optimize_passes=0)
+    assert mesh.diagnostics["volume"] == pytest.approx(0.5)
+
+
+def test_compile_field_annotations_resolve_at_runtime():
+    assert get_type_hints(meshers.compile_field)["return"] is meshers.CompiledField
