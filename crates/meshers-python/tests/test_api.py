@@ -422,3 +422,15 @@ def test_surface_api_availability():
     if not meshers.SURFACE_MESHING_AVAILABLE:
         with pytest.raises(RuntimeError, match="unavailable"):
             meshers.generate_surface("gyroid")
+
+
+@pytest.mark.parametrize(
+    ("generate", "wrong_options", "keyword"),
+    [
+        (meshers.generate, {"adaptive": True}, "adaptive"),
+        (meshers.generate_surface, {"adapt": True}, "adapt"),
+    ],
+)
+def test_generators_reject_keywords_for_the_other_mesh_type(generate, wrong_options, keyword):
+    with pytest.raises(TypeError, match=keyword):
+        generate("gyroid", **wrong_options)

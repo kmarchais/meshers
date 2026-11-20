@@ -15,6 +15,7 @@ from numpy.lib.mixins import NDArrayOperatorsMixin
 
 from . import _meshers
 from ._meshers import compile_graph
+from ._options import check_keywords
 
 if TYPE_CHECKING:
     from collections.abc import Callable
@@ -70,6 +71,7 @@ def resolve_compile_option(
     *,
     setting: bool | None,
     stacklevel: int = 3,
+    schema: type = LegacyCompileOption,
 ) -> bool:
     """Resolve the automatic-compilation setting for a mesh generator.
 
@@ -79,10 +81,7 @@ def resolve_compile_option(
     Raises:
         TypeError: An unknown option or both spellings were supplied.
     """
-    unknown = legacy.keys() - {"compile"}
-    if unknown:
-        msg = f"Unexpected keyword argument: {min(unknown)!r}"
-        raise TypeError(msg)
+    check_keywords(legacy, schema)
     if "compile" not in legacy:
         return True if setting is None else setting
     if setting is not None:

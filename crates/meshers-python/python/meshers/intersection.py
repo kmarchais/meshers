@@ -14,6 +14,7 @@ import numpy as np
 import numpy.typing as npt
 
 from . import _meshers
+from ._options import MeshingOptions
 from .expression import LegacyCompileOption, TraceError, compile_field, resolve_compile_option
 from .mesh import Mesh
 
@@ -683,21 +684,16 @@ def _periodic_metadata(
     return tags, tuple(pairs)
 
 
-class _SolverOptions(LegacyCompileOption, total=False):
+class _SolverOptions(MeshingOptions, LegacyCompileOption, total=False):
     """Controls shared by intersection generation and seed adaptation."""
 
     seed_tolerance: float
-    min_length: float | None
-    max_length: float | None
-    gradation: float
     adapt_iterations: int
     quality_guard: float
     adapt_tolerance: float | None
     optimize_passes: int
     max_tetrahedra: int
     compile_expression: bool | None
-    batch_size: int
-    cancel: _meshers.CancellationToken | None
 
 
 class _SeedOptions(_SolverOptions, total=False):
@@ -1192,14 +1188,10 @@ def _controls(
     *,
     default_budget: int,
 ) -> _IntersectionControls:
-    unknown = options.keys() - schema.__annotations__.keys()
-    if unknown:
-        msg = f"Unexpected keyword argument: {min(unknown)!r}"
-        raise TypeError(msg)
-    legacy: LegacyCompileOption = {"compile": options["compile"]} if "compile" in options else {}
     return _IntersectionControls(
         compile_expression=resolve_compile_option(
-            legacy,
+            options,
+            schema=schema,
             setting=options.get("compile_expression"),
             stacklevel=4,
         ),
