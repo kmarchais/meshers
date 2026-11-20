@@ -10,13 +10,20 @@ Recorded: 2026-11-12T10:58:18.286759+00:00. 5 measured fresh-process pairs after
 
 [Raw samples, versions and native hashes](pr6-22cd611-quality-regression.json) · [All records](../benchmark-history.md)
 
-Absolute times from different hosts are not a release-to-release speed ranking.
+- **smooth_lattice** — quality_min decreased: 0.436992 -> 0.424501
+- **smooth_lattice** — sample 1: quality_min decreased by more than 1%
+- **smooth_lattice** — sample 2: quality_min decreased by more than 1%
+- **smooth_lattice** — sample 3: quality_min decreased by more than 1%
+- **smooth_lattice** — sample 4: quality_min decreased by more than 1%
+- **smooth_lattice** — sample 5: quality_min decreased by more than 1%
 
-![Within-run generation times](pr6-22cd611-quality-regression.svg)
+![Median generation times in seconds on one common scale](pr6-22cd611-quality-regression.svg)
 
-Quality and sampled surface error describe linear corners/parent surfaces, including Tet10. Tet10 volumes integrate the curved mapping and its Jacobians are sampled for positivity. These are regression checks, not geometry or FEA certification.
+For Tet10, quality and sampled surface error describe the linear parent. Volume integrates the curved element.
 
-## compiled_gyroid
+<details markdown="1"><summary>Median metrics by case</summary>
+
+### compiled_gyroid
 
 | Metric | Base | Candidate |
 | --- | ---: | ---: |
@@ -34,7 +41,7 @@ Quality and sampled surface error describe linear corners/parent surfaces, inclu
 | quality_p90 | 0.938212 | 0.938212 |
 | quality_max | 0.997426 | 0.997426 |
 
-## callback_gyroid
+### callback_gyroid
 
 | Metric | Base | Candidate |
 | --- | ---: | ---: |
@@ -52,7 +59,7 @@ Quality and sampled surface error describe linear corners/parent surfaces, inclu
 | quality_p90 | 0.938212 | 0.938212 |
 | quality_max | 0.997426 | 0.997426 |
 
-## graded
+### graded
 
 | Metric | Base | Candidate |
 | --- | ---: | ---: |
@@ -70,7 +77,7 @@ Quality and sampled surface error describe linear corners/parent surfaces, inclu
 | quality_p90 | 0.933425 | 0.933425 |
 | quality_max | 0.998895 | 0.998895 |
 
-## mapped_intersection
+### mapped_intersection
 
 | Metric | Base | Candidate |
 | --- | ---: | ---: |
@@ -88,7 +95,7 @@ Quality and sampled surface error describe linear corners/parent surfaces, inclu
 | quality_p90 | 0.964151 | 0.964151 |
 | quality_max | 0.973865 | 0.973865 |
 
-## schwarz_p
+### schwarz_p
 
 | Metric | Base | Candidate |
 | --- | ---: | ---: |
@@ -106,7 +113,7 @@ Quality and sampled surface error describe linear corners/parent surfaces, inclu
 | quality_p90 | 0.929516 | 0.929516 |
 | quality_max | 0.998577 | 0.998577 |
 
-## spinodoid
+### spinodoid
 
 | Metric | Base | Candidate |
 | --- | ---: | ---: |
@@ -124,7 +131,7 @@ Quality and sampled surface error describe linear corners/parent surfaces, inclu
 | quality_p90 | 0.938457 | 0.938457 |
 | quality_max | 0.998356 | 0.998356 |
 
-## smooth_lattice
+### smooth_lattice
 
 | Metric | Base | Candidate |
 | --- | ---: | ---: |
@@ -142,9 +149,4 @@ Quality and sampled surface error describe linear corners/parent surfaces, inclu
 | quality_p90 | 0.941482 | 0.941518 |
 | quality_max | 0.994638 | 0.99463 |
 
-- quality_min decreased: 0.436992 -> 0.424501
-- sample 1: quality_min decreased by more than 1%
-- sample 2: quality_min decreased by more than 1%
-- sample 3: quality_min decreased by more than 1%
-- sample 4: quality_min decreased by more than 1%
-- sample 5: quality_min decreased by more than 1%
+</details>

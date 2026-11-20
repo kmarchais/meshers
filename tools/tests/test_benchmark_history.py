@@ -56,7 +56,12 @@ def test_published_configuration_excludes_computer_name(monkeypatch):
 
 def test_archive_plots_and_immutable_history(tmp_path):
     source = tmp_path / "input.json"
-    source.write_text(json.dumps({**measurement(), "runner": "private-identifier"}))
+    data = measurement()
+    slow = data["cases"]["compiled_gyroid"]
+    for label, runs in slow["runs"].items():
+        for row in [*runs, slow["medians"][label]]:
+            row["seconds"] *= 2
+    source.write_text(json.dumps({**data, "runner": "private-identifier"}))
     directory = tmp_path / "benchmarks"
     history.archive(source, "v0.2.0-rc-reference", directory)
     page = (directory / "v0.2.0-rc-reference.md").read_text()
@@ -64,7 +69,11 @@ def test_archive_plots_and_immutable_history(tmp_path):
     assert "quality_mean" in page
     assert "quality_p90" in page
     assert "REFERENCE" in (tmp_path / "benchmark-history.md").read_text()
-    ET.parse(directory / "v0.2.0-rc-reference.svg")  # ruff: ignore[suspicious-xml-element-tree-usage] - own generated SVG.
+    chart = ET.parse(directory / "v0.2.0-rc-reference.svg")  # ruff: ignore[suspicious-xml-element-tree-usage] - own generated SVG.
+    bars = chart.findall(".//{*}rect[@height='15']")
+    widths = {float(bar.attrib["width"]) for bar in bars}
+    assert len(widths) == 2
+    assert max(widths) == 2 * min(widths)
     frozen = (directory / "v0.2.0-rc-reference.json").read_bytes()
     assert b"private-identifier" not in frozen
     with pytest.raises(FileExistsError):
