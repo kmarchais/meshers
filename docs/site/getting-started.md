@@ -1,23 +1,17 @@
-# Get started
-
-## Install a wheel
-
-Use Python 3.11+. Wheels target Linux x86-64, Windows x86-64, macOS ARM64
-and macOS x86-64.
+# Install and mesh a sphere
 
 ```sh
 python -m pip install "meshers[io]"
-# Or: uv pip install "meshers[io]"
 ```
 
-For meshing without export, install `meshers` without the extra.
+For meshing without file export, install `meshers`. It requires NumPy.
 
-The `io` extra installs VTK for VTKHDF export. NumPy is the only dependency
-for meshing. The writer uses the VTKHDF version supplied by the installed VTK
-release. VTK 9.7.2 writes version 2.8. Meshers 0.2.1 wheels published before
-this change wrote version 2.0.
+| Source | Python | VTKHDF writer installed by `[io]` |
+| --- | --- | --- |
+| [PyPI 0.2.1](https://pypi.org/project/meshers/0.2.1/) | 3.10+ | h5py |
+| [Development checkout](contributing.md) | 3.11+ | VTK |
 
-## Mesh a sphere
+These docs follow the development checkout.
 
 ```python
 import meshers
@@ -29,15 +23,11 @@ def sphere(x, y, z):
 
 mesh = meshers.generate(sphere, bounds=(-1, 1, -1, 1, -1, 1), cells=24, geometry_tolerance=0.03)
 mesh.write_vtkhdf("sphere.vtkhdf")
-print(mesh.diagnostics)
+mesh.write_vtkhdf("boundary.vtkhdf", surface=True)
 ```
 
-Bounds are `(xmin, xmax, ymin, ymax, zmin, zmax)`. Coordinates and tolerance use
-the same physical units. `cells` is the number of lattice intervals per axis,
-not a target tetrahedron count. Increase it to resolve smaller features.
+- **Domain** — three low/high coordinate pairs. The mesher keeps the negative side inside this box.
+- **Resolution** — `cells=24` gives 24 background intervals per axis. The final tetrahedron count depends on the cuts.
+- **Output** — `points` holds coordinates, `tetrahedra` indexes volume cells and `surface` indexes boundary triangles. Tolerance uses the same length units as the coordinates.
 
-The result has `points`, `tetrahedra`, boundary `surface` triangles and
-`periodic_pairs`. Surface output is the closed solid boundary, including cube
-faces: `mesh.write_vtkhdf("surface.vtkhdf", surface=True)`.
-
-Continue with the [runnable examples](examples.md).
+[Try the examples](examples.md) · [Inspect quality and boundary tags](quality.md)

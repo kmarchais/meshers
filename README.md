@@ -1,41 +1,29 @@
-<p align="center"><img src="docs/site/assets/banner.svg" alt="Meshers" width="900"></p>
-
 # Meshers
 
-CPU tetrahedral meshing of implicit solids and TPMS geometries, with Python and
-Rust APIs. Version 0.1 supports custom and graded fields, periodic boundaries,
-named intersections, and curved coordinate maps.
+[![Periodic gyroid sheet with triangulated walls and tagged box faces](docs/site/assets/gyroid.png)](https://kmarchais.github.io/meshers/)
+
+Meshers generates tetrahedral meshes from implicit solids for finite element analysis. Use built-in TPMS fields or supply a function. Named intersections retain boundary labels and feature edges.
+
+```sh
+python -m pip install "meshers[io]"
+```
 
 ```python
 import meshers
 
-mesh = meshers.generate("gyroid", band=(-0.5, 0.5), cells=24, periodic=(True, True, True))
+mesh = meshers.generate("gyroid", band=(-0.5, 0.5), cells=12, periodic=(True, True, True))
 mesh.write_vtkhdf("gyroid.vtkhdf")
 ```
 
-Install with `python -m pip install "meshers[io]"` for meshing and VTKHDF export,
-or `python -m pip install meshers` for meshing only. Wheels require Python 3.11+
-and include the native implementation. NumPy is required; the `io` extra adds
-VTK. Rust is only needed to build from source.
+Use `meshers` alone for NumPy arrays. Published 0.2.1 wheels support Python 3.10+. Development builds require Python 3.11+.
 
-- [Installation and first mesh](docs/site/getting-started.md)
-- [Runnable Python examples](docs/site/examples.md)
-- [Python API](docs/site/api/python.md) and [Rust API](docs/site/api/rust.md)
-- [Quality and limits](docs/site/quality.md)
-- [Performance checks](docs/site/performance.md)
-- [Contributing](docs/site/contributing.md) and [release checks](docs/site/release.md)
-
-Supported NumPy expressions compile automatically with derivatives. Other
-pointwise functions use bounded NumPy callbacks. Meshes contain owned arrays
-for points, tetrahedra, boundary triangles and periodic node pairs. Named
-intersections also retain constraint labels and feature edges.
-
-Resolution and geometry tolerances must suit your smallest features. Sampling
-cannot certify every geometry; inspect quality and check application convergence.
+- [Documentation and examples](https://kmarchais.github.io/meshers/)
+- [Python API](https://kmarchais.github.io/meshers/api/python/) · [Rust API](https://kmarchais.github.io/meshers/rust/meshers_core/)
+- [Quality and limits](docs/site/quality.md) · [FEA verification](docs/site/solver-verification.md) · [Performance checks](docs/site/performance.md)
 
 ## Develop
 
-Use Python 3.11+, uv and Rust 1.95 or newer.
+Use uv, Python 3.11+ and Rust 1.95+.
 
 ```sh
 uv sync --locked --all-packages --group docs
@@ -47,7 +35,8 @@ cargo test --locked --release
 uv run --group docs python tools/build_docs.py
 ```
 
+[Contributing](docs/site/contributing.md) · [Release checks](docs/site/release.md)
+
 ## License
 
-Meshers is [MIT licensed](LICENSE). Bundled dependencies retain their own
-licenses; Python distributions include their notices.
+Meshers is [MIT licensed](LICENSE). Python distributions include the bundled dependencies’ license notices.

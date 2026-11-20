@@ -1,5 +1,6 @@
 [project]
 site_name = "Meshers"
+site_url = "https://kmarchais.github.io/meshers/"
 site_description = "CPU tetrahedral meshing of implicit solids and TPMS geometries"
 extra_css = ["assets/brand.css"]
 copyright = "Meshers contributors · MIT license"
@@ -14,6 +15,7 @@ nav = [
 ]
 
 [project.theme]
+custom_dir = "docs/overrides"
 language = "en"
 logo = "assets/mark.svg"
 favicon = "assets/mark.svg"
@@ -21,6 +23,12 @@ font = false
 features = ["navigation.sections", "navigation.top", "content.code.copy"]
 
 [[project.theme.palette]]
+media = "(prefers-color-scheme)"
+toggle.icon = "lucide/sun-moon"
+toggle.name = "Switch to light mode"
+
+[[project.theme.palette]]
+media = "(prefers-color-scheme: light)"
 scheme = "default"
 primary = "custom"
 accent = "custom"
@@ -28,18 +36,19 @@ toggle.icon = "lucide/sun"
 toggle.name = "Switch to dark mode"
 
 [[project.theme.palette]]
+media = "(prefers-color-scheme: dark)"
 scheme = "slate"
 primary = "custom"
 accent = "custom"
 toggle.icon = "lucide/moon"
-toggle.name = "Switch to light mode"
+toggle.name = "Switch to system preference"
 
 [project.plugins.mkdocstrings.handlers.python]
 paths = ["crates/meshers-python/python"]
 
 [project.plugins.mkdocstrings.handlers.python.options]
 docstring_style = "google"
-show_source = true
+show_source = false
 show_signature_annotations = true
 show_root_heading = true
 members_order = "source"

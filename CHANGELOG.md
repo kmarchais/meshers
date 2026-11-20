@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.2 releases
+
+- [0.2.1 release notes and artifacts](https://github.com/kmarchais/meshers/releases/tag/v0.2.1)
+- [0.2.0 release notes and artifacts](https://github.com/kmarchais/meshers/releases/tag/v0.2.0)
+
 ## 0.1.0
 
 - Rust/Python direct tetrahedral meshing of bounded implicit functions, TPMS

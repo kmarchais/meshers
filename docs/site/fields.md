@@ -1,66 +1,19 @@
 # Fields, thickness and grading
 
-Define a deterministic pointwise function `f(x, y, z)`. Without `band`, meshers
-keeps the negative side. With `band=(lower, upper)`, it keeps the interval in raw
-field units. Levelset width is not automatically a constant physical thickness.
+For a solid, Meshers keeps `f ≤ 0`. For a band, it keeps `lower ≤ f ≤ upper`. A fixed band gets thinner where the field changes faster.
 
-```python
-import numpy as np
-import meshers
+![Section through the band −0.3 ≤ (1+x)y ≤ 0.3. Its vertical width shrinks from 0.6 at x=0 to 0.2 at x=2.](assets/field-band.svg)
 
+For `f = (1 + x)y`, the band ±0.3 narrows from 0.6 to 0.2 in the vertical direction.
 
-def graded_sheet(x, y, z):
-    a, b, c = 2 * np.pi * x, 2 * np.pi * y, 2 * np.pi * z
-    gyroid = np.sin(a) * np.cos(b) + np.sin(b) * np.cos(c) + np.sin(c) * np.cos(a)
-    schwarz = np.cos(a) + np.cos(b) + np.cos(c)
-    weight = 0.2 + 0.3 * x
-    half_width = 0.4 + 0.1 * z
-    return ((1 - weight) * gyroid + weight * schwarz) / half_width
+To grade a sheet, divide the field by a positive half-width and use `band=(-1, 1)`. Match widths across periodic ends. [Graded sheet example](https://github.com/kmarchais/meshers/blob/main/crates/meshers-python/examples/graded.py)
 
+| Field implementation | Evaluation and derivatives |
+| --- | --- |
+| Arithmetic, supported NumPy functions, comparisons, `np.where` | Meshers traces and compiles the expression and its gradient, including derivatives of grading terms. |
+| Unsupported operation or `compile=False` | Batched NumPy callback returning float64 `(N,)`. Supply gradients of shape `(N, 3)` or use finite differences. |
+| `compile_field(f)` | Reusable, immutable snapshot. Automatic preparation retraces captured values and caches up to 32 compiled expressions. |
 
-mesh = meshers.generate(graded_sheet, band=(-1, 1), cells=24, geometry_tolerance=0.05)
-```
+**Nonsmooth fields.** `abs` has zero derivative at zero. Min/max ties average both gradients. `where` uses the selected branch.
 
-## Automatic preparation
-
-The wheel traces arithmetic and supported NumPy operations into an expression
-graph, differentiates the full graph and compiles it in memory with Cranelift.
-Grading derivatives are included. No Hessian is needed by the current algorithm.
-
-Supported operations include powers, sin/cos/tan, exp/log, sqrt, sinh/cosh/tanh,
-abs, minimum/maximum, comparisons and `np.where`. Python branches on coordinates,
-arbitrary array operations and arbitrary Python programs are not traceable.
-
-Unsupported operations produce a warning and use batched NumPy callbacks.
-`compile=False` selects that path explicitly. Callbacks must return float64 `(N,)`
-arrays; supplied gradient callbacks return `(N,3)`. Avoid side effects and
-operations that depend on batch length or values elsewhere in a batch.
-
-The 32-entry cache includes captured constants, not mesh resolution. Each
-preparation retraces to observe changed parameters. An explicit `compile_field`
-call is optional and returns an immutable snapshot.
-
-At abs(0), the derivative is zero; min/max ties use the first branch; `where`
-uses the chosen branch. These conventions do not make nonsmooth or discontinuous
-geometries smooth. Keep thickness positive throughout the domain.
-
-
-## Coordinate maps and nonsmooth points
-
-The embedded compiler supports `arctan2`, `arccos`, `arcsin`, `arctan` and
-positional `clip` in addition to scalar arithmetic and trigonometric functions.
-Geometry providers own their coordinate maps, units, envelopes and grading.
-Meshers evaluates the resulting Cartesian field and meshes its negative region.
-
-Automatic derivatives choose a zero subgradient for a vector norm at its origin.
-This avoids `0/0` inside common distance fields; it does not make a singular
-coordinate map smooth. Invalid domains and nonfinite derivatives still fail.
-Full spherical maps need a unique inside/outside limit at their poles. A swept field must be
-continuous along its curve and match across its angular seam.
-
-
-An angular field can describe incompatible inside/outside regions arbitrarily
-close to the same axis point. Increasing resolution cannot repair that geometry.
-The geometry provider must define a regular field or let the caller explicitly
-exclude the singular region. An excluded region may use a regular positive field
-extension. The caller's negative region remains the meshing contract.
+For angular fields, keep the inside/outside classification consistent at the axis and across the seam. [Evaluator examples](https://github.com/kmarchais/meshers/blob/main/crates/meshers-python/examples/evaluators.py)

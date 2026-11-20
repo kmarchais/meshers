@@ -1,8 +1,8 @@
 # Benchmark history
 
-Versioned measurements from fixed regression fixtures. Failed records remain visible. Release candidates and same-binary references are explicitly labelled.
+Open a record for its timing plot, quality gates and raw samples.
 
-Compare base/candidate measurements within each run. Different machines, suite versions or settings cannot establish an absolute performance trend. Raw JSON retains every measured sample and source/native identity.
+Compare times within a run. A REFERENCE compares one source revision to itself.
 
 | Record | Suite | Result | Platform |
 | --- | --- | --- | --- |

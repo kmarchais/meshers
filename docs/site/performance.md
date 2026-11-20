@@ -1,153 +1,57 @@
 # Performance and regression checks
 
-Use `threads=1` as a starting point. Native workers share memory and release the
-Python GIL; extra workers do not parallelize Python callbacks. Compiled fields
-avoid callback overhead. `batch_size` limits callback evaluation batches,
-including optional intersection surface verification.
+Both Schwarz P meshes meet the 1% stiffness target. The native Tet4 route took less time on all five configurations. [Comparison protocol and raw runs](https://github.com/kmarchais/meshers/blob/main/demos/solver/release-wheel/schwarz-matched-cost-20261118/README.md)
 
-Measure representative geometries before changing thread count, resolution,
-optimization passes or evaluator. Keep those settings identical when comparing.
+![Median time for three qualifying runs per route on each CPU and OS. Native Tet4 was faster than the repaired route on all five configurations for this Schwarz P specimen.](assets/schwarz-cost.svg)
 
-For local Windows measurements install `psutil` in each benchmark environment. Windows reports the process peak working set, Linux reports peak RSS in KiB and macOS reports peak RSS in bytes. The JSON records bytes on all three platforms. Compare timings and memory within a dated configuration.
+Median of three runs per setting. Stiffness discrepancy was 0.992% for native Tet4 and 0.927–0.928% after Microgen repair.
 
-## Every pull request
+## Pull request gates
 
-The Python 3.11 binding jobs also mesh five implicit sheets and a BCC lattice from eight-cell seeds.
-They check the returned tetrahedra against the independent geometry and quality limits
-from the historical Microgen benchmark. The seven-specimen study includes rejected
-settings and optional elasticity comparisons. [Study and replay instructions](https://github.com/kmarchais/meshers/blob/main/demos/solver/implicit-coverage/README.md)
+On one Linux runner with matching Python and NumPy, discard one warm-up pair. Alternate base and candidate across five fresh-process pairs. Time preparation and meshing. Peak memory includes imports and JIT.
 
-The Performance workflow builds the base and proposed source into separate
-wheels and installs them in separate environments with the same Python and
-NumPy versions. It runs both on the same Linux runner, alternates their order,
-and measures five fresh processes per case after one discarded warm-up pair.
-Medians are compared, and every raw sample is uploaded with the source hashes.
-
-Cases cover compiled and callback periodic Gyroids, a graded sheet, a mapped
-named intersection, Schwarz P, a fixed Fourier spinodoid and an ordered lattice. Each uses 24 lattice cells and two
-optimization passes. Timing includes field preparation and meshing, but excludes
-imports, independent validation and export. Peak resident memory is the Linux
-process high-water mark through mesh generation, including imports and JIT.
-
-| Metric | Fails when |
+| Metric | Regression limit against base |
 | --- | --- |
-| Median elapsed time | More than 25% plus 20 ms above base |
-| Median peak RSS | More than 15% plus 8 MiB above base |
-| Minimum, maximum, mean, median, p05, p10 or p90 MMG quality | More than 1% below base |
-| Sampled wall error and, for the mapped intersection, sampled cap error (each) | More than 5% plus 1e-10 above base |
-| Mesh volume | Changes by more than 0.5% |
-| Tetrahedron count | Changes by more than 1% |
+| Median time | +25% plus 20 ms |
+| Median peak memory | +15% plus 8 MiB |
+| MMG quality (min, max, mean, median, p05, p10, p90) | 1% decrease for each statistic. Each candidate repeat is also checked against the base median. |
+| Sampled wall error and mapped cap error | +5% plus 10⁻¹⁰ for each |
+| Volume | ±0.5% |
+| Nodes and tetrahedra | ±1% each |
 
-Every sample must also have finite coordinates, positive cell volumes, closed
-boundary edge incidence and the requested periodic correspondence. Its minimum
-quality must be at least 0.01 and each sampled surface error at most 0.1. Fixture version 4 compares the named walls and mapped caps separately. The gate measures the cylindrical and planar caps on the returned triangles for both wheels.
+- **Seven cases** — compiled and callback gyroids, graded sheet, mapped intersection, Schwarz P, Fourier spinodoid and ordered lattice. The fixtures use 24 cells and two optimization passes.
+- **Absolute gates** — finite coordinates, positive volumes, closed boundary edge incidence, matching requested periodic faces, minimum quality ≥ 0.01 and sampled error ≤ 0.1. Cap each sample at 250,000 nodes and 250,000 tetrahedra.
+- **Geometry comparisons** — fixture version 4 measures walls and mapped caps separately on both wheels. The [implicit coverage study](https://github.com/kmarchais/meshers/blob/main/demos/solver/implicit-coverage/README.md) also records admitted and rejected geometries.
 
-A changed mesh count or volume may be intentional, but it needs review rather
-than being counted silently as a performance improvement. Do not weaken a gate
-just to make a change pass. Inspect raw measurements and reproduce an unexpected
-failure before changing thresholds.
+## Release suite and public history
 
-Shared runners are noisy. These allowances detect substantial regressions;
-they cannot promise zero slowdown, cover every geometry, or prevent cumulative
-small changes. Review the uploaded trends, and compare against the release tag
-periodically with the workflow's manual baseline input. The initial commit
-compares against itself to establish measurements and exercise the gate.
+The release suite adds adaptive gyroid, spinodoid, lattice and curved Tet10. For Tet10, quality and surface error describe the parent. Volume integration and Jacobian checks use the curved element. Subdivision must resolve inconclusive determinant bounds.
 
-## Run locally on Linux, WSL or macOS
+1. Run **Performance** on the candidate with `suite=release`, a compatible release `baseline` and a unique `history_label`. For the first 0.2 suite the compatible reference was `afc49e583a0450454b02440557f39b89bbc39ca6`.
+2. Inspect the `performance-comparison` artifact, including failed or missing samples. Keep the same fixtures and thresholds when investigating a regression.
+3. Archive the JSON under the candidate label. Repeat on the immutable final tag and retain both records.
 
-Build and install the two source versions into separate environments, then run:
+```sh
+python -m tools.benchmark_history --input /path/performance.json --label v0.2.0-rc.1
+```
+
+## Run a local comparison
+
+Use separate environments, one numerical thread and an idle host. Windows requires `psutil`. Memory is peak working set on Windows and peak RSS on Linux/macOS, in bytes.
 
 ```sh
 python tools/performance_gate.py --base-python /path/base/bin/python \
   --head-python /path/head/bin/python --output performance.json
 ```
 
-The script writes JSON samples and a Markdown comparison. Its comparison logic
-has tests that deliberately inject time, memory, quality and geometry regressions.
+Use `--suite release` for all fixtures. Archive with full `--base-ref` and `--head-ref` SHAs. Compare within one configuration and fixture version. Bump the fixture version when formulas or settings change. [Benchmark history](benchmark-history.md)
 
-## Release suite and public history
+## Candidate wheel FEA gate
 
-The [benchmark history](benchmark-history.md) keeps immutable JSON measurements,
-within-run timing plots and full quality tables for each archived run. It records
-source commits, the benchmark-script hash, loaded native hashes, Python/NumPy
-versions, host and CPU information, every measured sample, counts and failures.
-Existing labels cannot be overwritten. A failed run remains marked **FAIL**;
-missing samples never become a successful timing. A comparison of one source
-commit against itself is marked **REFERENCE**, not a release-to-release speedup.
+Python 3.11 CI reopens the Schwarz P VTKHDF export before solving.
 
-The automatic PR suite now also covers Schwarz P solid, a fixed six-mode periodic
-Fourier spinodoid fixture and a fixed ordered smooth-union cylinder lattice.
-The manual **release** suite adds adaptive Gyroid, spinodoid and lattice fixtures,
-and a curved Tet10 Gyroid. These small deterministic regression fixtures are
-separate from the full Microgen accuracy study. They do not certify geometry,
-FEA convergence, or superiority over Microgen+MMG.
-
-All cases retain minimum, maximum, mean, median, p05, p10 and p90 quality. All
-seven statistics have the same 1% regression allowance. Node counts have the
-same 1% change guard as tetrahedron counts. Tet10 quality and sampled surface
-error describe the linear parent; its curved volume is independently integrated
-and Jacobians are checked at reference nodes and quadrature samples. The release
-validator also bounds the cubic determinant in the Bernstein basis and subdivides
-ambiguous cells. A nonpositive sample or an unresolved bound fails validation.
-This floating-point element check does not establish global non-overlap.
-
-For every release:
-
-1. Run **Performance** manually on the candidate commit. Choose `suite=release`,
-   provide the previous compatible release tag in `baseline`, and use a unique
-   `history_label`, such as `v0.2.0-rc.1`.
-2. Inspect the CI summary and download `performance-comparison`. The artifact
-   includes raw JSON and a generated documentation history. Failures must be
-   explained or fixed; do not weaken thresholds to publish a passing result.
-3. Archive the downloaded `performance.json` locally and commit the generated
-   documentation with its evidence:
-
-   ```sh
-   python -m tools.benchmark_history --input /path/performance.json \
-     --label v0.2.0-rc.1
-   ```
-
-4. For the final release record, run against the immutable release tag and archive
-   under that version. Keep the candidate records as well. Documentation can be
-   updated after the release without changing the measured source identity.
-
-Version 0.1 cannot execute adaptive/Tet10 fixtures. For the first 0.2 release,
-use the reviewed compatible reference commit
-`afc49e583a0450454b02440557f39b89bbc39ca6` for the full suite. The automatic
-seven-case PR suite still compares against the actual PR base. Later releases
-can compare the complete suite against the previous 0.2-or-newer release.
-The initial history entry is an M4 reference run of that approved commit on
-both sides, not a published-release comparison.
-
-Local full-suite runs use the same command with `--suite release`. Linux and
-macOS normalize their different OS RSS units. Numerical workers and BLAS use
-one thread. Run on an idle host; absolute timings from different hosts or fixture
-versions must not be treated as a performance trend. The CI comparison remains
-within one runner and one run, with alternating base/candidate order.
-
-Timing and RSS gates use medians to tolerate host noise. Quality also checks
-**every candidate repetition** against the base median, so an occasional bad
-mesh cannot hide behind four good meshes. Each sample is capped at 250,000
-nodes and tetrahedra. Changing fixture formulas or settings requires a new
-fixture version and a reviewed comparison protocol, not a silent history reset.
-
-To archive a local run, pass full commit SHAs with `--base-ref` and `--head-ref`;
-the default `local` labels deliberately cannot enter the public history.
-
-## Testing a changed mesh against an FEA reference
-
-The Python 3.11 CI jobs generate a periodic Schwarz P Tet4 mesh with the candidate
-wheel. They reopen the VTKHDF export and check the walls and caps in both directions
-(sampled distance ≤ 0.002), volume (within 1%), minimum MMG quality (≥ 0.1),
-orientation, conformity, periodic faces, component count and material probes.
-The budget is 250,000 nodes or elements. Six prescribed strains and six
-stress-controlled solves must pass. The worst relative strain-energy discrepancy
-against the reference stiffness tensor must be at most 1%.
-
-Connectivity and node counts can change within these limits. The CI artifact
-records the solver mesh hash for diagnosis. The separate frozen release replay
-still checks reproducibility. To run the candidate check locally with the workspace
-wheel and a fresh output directory:
+- **Geometry** — two-sided sampled wall/cap distance ≤ 0.002, volume within 1%, MMG quality ≥ 0.1. Check topology, periodic faces and material probes.
+- **Stiffness** — all six strain and six stress solves must pass. Worst relative strain-energy discrepancy ≤ 1% against the reference tensor.
 
 ```sh
 uv run --with fedoo==1.0.0b2 python demos/solver/schwarz_workflow.py native-candidate candidate-acceptance
