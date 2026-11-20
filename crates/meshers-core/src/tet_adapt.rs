@@ -995,6 +995,24 @@ impl<'g, G: Geometry> Tets<'g, G> {
         if common != ring {
             return false;
         }
+        // Wall facets of `u` that land on a wall facet of `v`: the two sides
+        // of a tongue one element thick, which the merge removes together.
+        let mut pinched: Vec<Face> = Vec::new();
+        if merging {
+            for &f in &self.vb[u] {
+                let image = sorted(f.map(|i| if i == u { v } else { i }));
+                if f.contains(&v) || !self.faces.contains_key(&image) {
+                    continue;
+                }
+                let between = shell
+                    .iter()
+                    .any(|&t| f.iter().all(|w| self.tets[t].contains(w)));
+                if self.faces[&f] != 0 || self.faces[&image] != 0 || !between {
+                    return false;
+                }
+                pinched.push(f);
+            }
+        }
         if mu != 0 {
             // Surface link condition on the boundary triangulation.
             let bu: Vec<usize> = self.vb[u]
@@ -1018,7 +1036,9 @@ impl<'g, G: Geometry> Tets<'g, G> {
                 .copied()
                 .filter(|&w| w != u && w != v)
                 .collect();
+            opposite.extend(pinched.iter().flatten().copied().filter(|&w| w != u));
             opposite.sort_unstable();
+            opposite.dedup();
             if common != opposite {
                 return false;
             }
@@ -1042,7 +1062,7 @@ impl<'g, G: Geometry> Tets<'g, G> {
         }
         if mu & WALL != 0 && self.g.halfspaces().is_none() {
             for f in &self.vb[u] {
-                if f.contains(&v) || self.faces[f] != 0 {
+                if f.contains(&v) || self.faces[f] != 0 || pinched.contains(f) {
                     continue;
                 }
                 let [a, b] = [f[0], f[1], f[2]]
@@ -1076,7 +1096,7 @@ impl<'g, G: Geometry> Tets<'g, G> {
         }
         if let Some(tolerance) = tolerance {
             for &f in &self.vb[u] {
-                if f.contains(&v) {
+                if f.contains(&v) || pinched.contains(&f) {
                     continue;
                 }
                 let features = self.constraint_faces.as_ref().map_or(0, |faces| faces[&f]);
@@ -1097,6 +1117,11 @@ impl<'g, G: Geometry> Tets<'g, G> {
             self.remove_face(f);
         }
         for f in std::mem::take(&mut self.vb[u]) {
+            if pinched.contains(&f) {
+                self.remove_face(f);
+                self.remove_face(sorted(f.map(|i| if i == u { v } else { i })));
+                continue;
+            }
             let features = self.constraint_faces.as_ref().map_or(0, |faces| faces[&f]);
             let label = self.remove_face(f).unwrap_or(0);
             self.add_feature_face(f.map(|i| if i == u { v } else { i }), label, features);
@@ -2098,6 +2123,9 @@ const SLIVER_LONG: f64 = 1.6;
 /// A collapse may lower the worst incident quality to this fraction; the
 /// swaps and the relocation that follow recover from the shorter edge.
 const SLIVER_KEEP: f64 = 0.3;
+/// Defeaturing folds wall vertices within this many cells of a box-edge
+/// crossing onto it.
+const SLIVER_REACH: f64 = 0.5;
 
 /// Local remeshing around poor elements with MMG's operators: collapse short
 /// edges, halve overlong ones, then remove interior edges and swap interior
@@ -2107,11 +2135,12 @@ const SLIVER_KEEP: f64 = 0.3;
 /// caps identical. `h` is the background cell size and `tolerance` bounds
 /// the wall deviation a collapse may add.
 ///
-/// `defeature`, a wall deviation bound of its own, also merges two crossings
-/// of the wall with one box edge. A
-/// wall grazing that edge leaves an angle no conforming element can fill;
-/// the merge removes the tongue between the crossings and so alters the
-/// geometry. Returns the operation count and the number of such merges.
+/// `defeature`, a wall deviation bound of its own, also moves the crossings
+/// of the wall with a box edge: two crossings of one edge merge, removing the
+/// tongue between them, and a crossing next to a box corner slides along its
+/// edge. A wall grazing a box edge or corner leaves an angle no conforming
+/// element can fill, so both alter the geometry. Returns the operation count
+/// and the number of such moves.
 pub(crate) fn remove_slivers(
     mesh: &mut Mesh,
     g: &impl Geometry,
@@ -2175,6 +2204,31 @@ pub(crate) fn remove_slivers(
                 quality_guard: 1e-3,
                 ..Options::default()
             };
+            // Empty the tongue first: fold the wall vertices next to a
+            // crossing onto it.
+            for (length, [u, v]) in seeded(&s, SLIVER_EDGES) {
+                if length >= SLIVER_REACH * h {
+                    break;
+                }
+                for (u, v) in [(u, v), (v, u)] {
+                    let (mu, mv) = (s.masks[u], s.masks[v]);
+                    if s.vt[u].is_empty()
+                        || s.vt[v].is_empty()
+                        || mv & WALL == 0
+                        || mv.count_ones() < 3
+                        || mu & WALL == 0
+                        || mu == mv
+                        || mu & !mv != 0
+                        || s.folds_into_plane(u, v)
+                    {
+                        continue;
+                    }
+                    if s.collapse(u, v, &unbounded, &o) {
+                        changed += 1;
+                        break;
+                    }
+                }
+            }
             for (_, [u, v]) in seeded(&s, SLIVER_EDGES) {
                 if s.vt[u].is_empty()
                     || s.vt[v].is_empty()
@@ -2197,7 +2251,9 @@ pub(crate) fn remove_slivers(
                         .collect();
                     let done = [0.5, 0.25, 0.75, 0.].into_iter().any(|along| {
                         s.points[v] = s.wrap(std::array::from_fn(|a| pv[a] + along * d[a]));
-                        s.worst(&kept) > o.quality_guard && s.collapse(u, v, &unbounded, &o)
+                        s.worst(&kept) > o.quality_guard
+                            && !s.folds_into_plane(u, v)
+                            && s.collapse(u, v, &unbounded, &o)
                     });
                     if !done {
                         s.points[v] = pv;
@@ -2210,6 +2266,46 @@ pub(crate) fn remove_slivers(
                 }
             }
             s.merge_corners = false;
+            // A crossing next to a box corner cannot be merged away: slide
+            // it along its box edge, staying within the tolerance of the wall.
+            let mut crossings: Vec<usize> = (0..s.tets.len())
+                .filter(|&t| s.alive[t] && mmg(s.tet_points(s.tets[t], None)) < SLIVER_EDGES)
+                .flat_map(|t| s.tets[t])
+                .filter(|&v| s.masks[v] & WALL != 0 && s.masks[v].count_ones() == 3)
+                .collect();
+            crossings.sort_unstable();
+            crossings.dedup();
+            for v in crossings {
+                let free: Vec<usize> = (0..3)
+                    .filter(|a| (s.masks[v] >> (2 + 2 * a)) & 3 == 0)
+                    .collect();
+                let [axis] = free[..] else { continue };
+                let start = s.points[v];
+                let star = s.vt[v].clone();
+                let mut best = (s.worst(&star), start);
+                for step in -8..=8 {
+                    let mut p = start;
+                    p[axis] += tolerance * f64::from(step) / 8.;
+                    s.points[v] = s.wrap(p);
+                    let fits = s.distance(s.points[v], [false; 3]) <= tolerance
+                        && s.vb[v].iter().all(|f| {
+                            let p = s.local(f.map(|n| s.points[n]));
+                            let centre =
+                                std::array::from_fn(|a| (p[0][a] + p[1][a] + p[2][a]) / 3.);
+                            s.faces[f] != 0 || s.distance(centre, [false; 3]) <= tolerance
+                        });
+                    let q = s.worst(&star);
+                    if fits && q > 1.05 * best.0 {
+                        best = (q, s.points[v]);
+                    }
+                }
+                s.points[v] = best.1;
+                if best.1 != start {
+                    s.refresh(v);
+                    changed += 1;
+                    merged += 1;
+                }
+            }
         }
         // Off the wall the midpoint needs no projection.
         for &(length, [u, v]) in seeded(&s, SLIVER_EDGES).iter().rev() {

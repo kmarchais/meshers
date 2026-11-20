@@ -749,8 +749,8 @@ fn mesh_dict<'py>(
         result.diagnostics.reverted_snap_vertices,
     )?;
     diagnostics.set_item(
-        "merged_box_edge_crossings",
-        result.diagnostics.merged_box_edge_crossings,
+        "defeatured_box_edge_crossings",
+        result.diagnostics.defeatured_box_edge_crossings,
     )?;
     diagnostics.set_item("callback_calls", callback_calls)?;
     diagnostics.set_item(

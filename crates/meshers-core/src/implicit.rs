@@ -108,7 +108,7 @@ pub struct Diagnostics {
     /// Last-resort defeaturing: pairs of wall crossings of one box edge merged
     /// because the wall grazed that edge. Nonzero means the geometry changed
     /// there, within `geometry_tolerance`.
-    pub merged_box_edge_crossings: usize,
+    pub defeatured_box_edge_crossings: usize,
     pub inserted_interior_nodes: usize,
     pub maximum_sampled_surface_error: f64,
     pub adapt: Option<crate::tet_adapt::Stats>,
@@ -1096,7 +1096,7 @@ fn finish_with_constraints<F: ScalarField>(
             maximum_sampled_surface_error: error,
             elements_below_quality_01,
             reverted_snap_vertices: 0,
-            merged_box_edge_crossings: 0,
+            defeatured_box_edge_crossings: 0,
             inserted_interior_nodes: 0,
             adapt: None,
         },
@@ -1537,7 +1537,7 @@ fn build<F: ScalarField>(g: &Context<F>) -> Result<Output, String> {
         None,
         g,
     )?;
-    let mut merged_box_edge_crossings = 0;
+    let mut defeatured_box_edge_crossings = 0;
     let rejected = |mesh: &Mesh| {
         mesh.tets
             .iter()
@@ -1557,7 +1557,7 @@ fn build<F: ScalarField>(g: &Context<F>) -> Result<Output, String> {
         for defeature in [false, true] {
             let mut trial = copy(&start);
             let mut merged = 0;
-            for _ in 0..3 {
+            for _ in 0..6 {
                 let (operations, merges) = crate::tet_adapt::remove_slivers(
                     &mut trial,
                     g,
@@ -1588,7 +1588,7 @@ fn build<F: ScalarField>(g: &Context<F>) -> Result<Output, String> {
             // A defeatured mesh that still fails is not worth its changed geometry.
             if !defeature || (merged > 0 && !rejected(&trial)) {
                 mesh = trial;
-                merged_box_edge_crossings = merged;
+                defeatured_box_edge_crossings = merged;
             }
             if !rejected(&mesh) {
                 break;
@@ -1604,7 +1604,7 @@ fn build<F: ScalarField>(g: &Context<F>) -> Result<Output, String> {
     )?;
     let mut output = finish(mesh, g)?;
     output.diagnostics.reverted_snap_vertices = reverted_snap_vertices;
-    output.diagnostics.merged_box_edge_crossings = merged_box_edge_crossings;
+    output.diagnostics.defeatured_box_edge_crossings = defeatured_box_edge_crossings;
     output.diagnostics.inserted_interior_nodes = inserted_interior_nodes;
     Ok(output)
 }

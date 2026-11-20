@@ -69,10 +69,12 @@ checked regardless of the requested floor.
 A lattice mesh that misses the requested floor is remeshed locally around its
 poor elements: short edges are collapsed, overlong ones split, interior edges
 and faces swapped. A mesh that already passes is returned unchanged. If that
-is not enough and the wall grazes a box edge, crossing it twice a short way
-apart, the two crossings are merged as a last resort. This removes the tongue
-between them, on every periodic image, and stays subject to
-`geometry_tolerance`. `merged_box_edge_crossings` counts these merges and
+is not enough and the wall grazes a box edge or corner, the crossings of the
+wall with that edge are moved as a last resort: two crossings a short way
+apart are merged, which removes the tongue between them, and a crossing next
+to a box corner slides along its edge. Both apply to every periodic image and
+stay subject to `geometry_tolerance`. `defeatured_box_edge_crossings` counts
+these moves and
 `generate` emits a `UserWarning` when it is nonzero.
 
 ## Safe snapping and boundary checks
