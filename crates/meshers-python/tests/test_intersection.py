@@ -853,3 +853,12 @@ def test_final_quality_after_sphere_fitting():
     qualities = np.sqrt(432 * det**2 / edge_sum**3)
     assert mesh.diagnostics["minimum_mmg_quality"] == pytest.approx(qualities.min())
     assert mesh.diagnostics["elements_below_quality_01"] == np.count_nonzero(qualities < 0.1)
+
+
+def test_intersection_rejects_keywords_from_the_other_operation():
+    fields = constraints()
+    with pytest.raises(TypeError, match="constraint_masks"):
+        meshers.generate_intersection(fields, constraint_masks=[])
+    seed = meshers.generate_intersection(fields, cells=4)
+    with pytest.raises(TypeError, match="closed_axes"):
+        meshers.adapt_intersection(seed, fields, bounds=(0, 1) * 3, closed_axes=(False,) * 3)

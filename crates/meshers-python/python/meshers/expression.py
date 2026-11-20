@@ -6,10 +6,12 @@ from __future__ import annotations
 
 import math
 import warnings
+from dataclasses import dataclass
 from functools import lru_cache
 from typing import TYPE_CHECKING, Literal, Never, TypedDict
 
 import numpy as np
+from numpy.lib.mixins import NDArrayOperatorsMixin
 
 from . import _meshers
 from ._meshers import compile_graph
@@ -63,7 +65,12 @@ class LegacyCompileOption(TypedDict, total=False):
     compile: bool
 
 
-def resolve_compile_option(legacy: LegacyCompileOption, *, setting: bool | None) -> bool:
+def resolve_compile_option(
+    legacy: LegacyCompileOption,
+    *,
+    setting: bool | None,
+    stacklevel: int = 3,
+) -> bool:
     """Resolve the automatic-compilation setting for a mesh generator.
 
     Returns:
@@ -81,7 +88,11 @@ def resolve_compile_option(legacy: LegacyCompileOption, *, setting: bool | None)
     if setting is not None:
         msg = "Specify only one of compile_expression and compile"
         raise TypeError(msg)
-    warnings.warn("compile is deprecated; use compile_expression", DeprecationWarning, stacklevel=3)
+    warnings.warn(
+        "compile is deprecated; use compile_expression",
+        DeprecationWarning,
+        stacklevel=stacklevel,
+    )
     return legacy["compile"]
 
 
@@ -89,7 +100,7 @@ class TraceError(TypeError):
     """A callable uses operations outside the supported expression subset."""
 
 
-class _Expression:  # ruff: ignore[too-many-public-methods] - Python and NumPy operator protocol.
+class _Expression(NDArrayOperatorsMixin):
     __array_priority__ = 1000
     __hash__ = None
 
@@ -99,66 +110,43 @@ class _Expression:  # ruff: ignore[too-many-public-methods] - Python and NumPy o
     def _binary(self, op: str, other: object) -> _Expression:
         return self.graph.node(op, self, self.graph.convert(other))
 
-    def __add__(self, o: object) -> _Expression:
-        return self._binary("add", o)
+    def __add__(self, other: object) -> _Expression:
+        return self._binary("add", other)
 
-    def __radd__(self, o: object) -> _Expression:
-        return self.graph.convert(o)._binary("add", self)
+    def __radd__(self, other: object) -> _Expression:
+        return self.graph.convert(other)._binary("add", self)
 
-    def __sub__(self, o: object) -> _Expression:
-        return self._binary("sub", o)
+    def __sub__(self, other: object) -> _Expression:
+        return self._binary("sub", other)
 
-    def __rsub__(self, o: object) -> _Expression:
-        return self.graph.convert(o)._binary("sub", self)
+    def __rsub__(self, other: object) -> _Expression:
+        return self.graph.convert(other)._binary("sub", self)
 
-    def __mul__(self, o: object) -> _Expression:
-        return self._binary("mul", o)
+    def __mul__(self, other: object) -> _Expression:
+        return self._binary("mul", other)
 
-    def __rmul__(self, o: object) -> _Expression:
-        return self.graph.convert(o)._binary("mul", self)
+    def __rmul__(self, other: object) -> _Expression:
+        return self.graph.convert(other)._binary("mul", self)
 
-    def __truediv__(self, o: object) -> _Expression:
-        return self._binary("div", o)
+    def __truediv__(self, other: object) -> _Expression:
+        return self._binary("div", other)
 
-    def __rtruediv__(self, o: object) -> _Expression:
-        return self.graph.convert(o)._binary("div", self)
-
-    def __pow__(self, o: object) -> _Expression:
-        return self._binary("pow", o)
-
-    def __rpow__(self, o: object) -> _Expression:
-        return self.graph.convert(o)._binary("pow", self)
-
-    def __neg__(self) -> _Expression:
-        return self.graph.node("neg", self)
+    def __pow__(self, other: object) -> _Expression:
+        return self._binary("pow", other)
 
     def __pos__(self) -> _Expression:
         return self
-
-    def __abs__(self) -> _Expression:
-        return self.graph.node("abs", self)
 
     def __bool__(self) -> Never:
         msg = "data-dependent Python branches cannot be traced; use the NumPy callback path"
         raise TraceError(msg)
 
-    def __lt__(self, o: object) -> _Expression:
-        return self._binary("lt", o)
-
-    def __le__(self, o: object) -> _Expression:
-        return self._binary("le", o)
-
-    def __gt__(self, o: object) -> _Expression:
-        return self._binary("gt", o)
-
-    def __ge__(self, o: object) -> _Expression:
-        return self._binary("ge", o)
-
-    def __eq__(self, o: object) -> _Expression:  # ty: ignore[invalid-method-override] - symbolic comparison
-        return self._binary("eq", o)
-
-    def __ne__(self, o: object) -> _Expression:  # ty: ignore[invalid-method-override] - symbolic comparison
-        return self._binary("ne", o)
+    # Traced values are immutable. Augmented assignments rebind the caller's variable.
+    __iadd__ = __add__
+    __isub__ = __sub__
+    __imul__ = __mul__
+    __itruediv__ = __truediv__
+    __ipow__ = __pow__
 
     def __float__(self) -> Never:
         msg = "scalar conversion cannot be traced"
@@ -190,7 +178,7 @@ class _Expression:  # ruff: ignore[too-many-public-methods] - Python and NumPy o
         kwargs: dict,
     ) -> _Expression:
         if func is np.interp:
-            return self._interp(*args, **kwargs)
+            return _Interpolation(*args, **kwargs).trace(self.graph)
         if func is np.where and len(args) == _TERNARY_ARITY and not kwargs:
             return self.graph.node("select", *(self.graph.convert(a) for a in args))
         if func is np.clip and len(args) == _TERNARY_ARITY and not kwargs:
@@ -205,21 +193,41 @@ class _Expression:  # ruff: ignore[too-many-public-methods] - Python and NumPy o
         msg = f"unsupported traced NumPy function: {name}"
         raise TraceError(msg)
 
-    def _interp(  # ruff: ignore[too-many-arguments, too-many-positional-arguments] - numpy.interp signature
+    def __array__(self, *args: object, **kwargs: object) -> Never:
+        msg = "array construction is unsupported by the Rust scalar tracer"
+        raise TraceError(msg)
+
+    def __array_ufunc__(
         self,
-        x: object,
-        xp: object,
-        fp: object,
-        left: float | None = None,
-        right: float | None = None,
-        period: float | None = None,
+        ufunc: np.ufunc,
+        method: str,
+        *args: object,
+        **kwargs: object,
     ) -> _Expression:
+        if method != "__call__" or kwargs or ufunc not in _UFUNCS:
+            msg = f"unsupported traced operation: {ufunc.__name__}.{method}"
+            raise TraceError(msg)
+        return self.graph.node(_UFUNCS[ufunc], *(self.graph.convert(a) for a in args))
+
+
+@dataclass(frozen=True, slots=True)
+class _Interpolation:
+    """Arguments of a NumPy interpolation call, in NumPy's positional order."""
+
+    x: object
+    xp: object
+    fp: object
+    left: float | None = None
+    right: float | None = None
+    period: float | None = None
+
+    def trace(self, graph: _Graph) -> _Expression:
         # Match NumPy's signature; only finite, static, increasing real tables trace.
-        if period is not None:
+        if self.period is not None:
             msg = "np.interp with period requires the NumPy callback path"
             raise TraceError(msg)
         try:
-            knots, values = np.asarray(xp), np.asarray(fp)
+            knots, values = np.asarray(self.xp), np.asarray(self.fp)
         except (TypeError, ValueError) as error:
             msg = "np.interp requires constant real tables"
             raise TraceError(msg) from error
@@ -245,15 +253,15 @@ class _Expression:  # ruff: ignore[too-many-public-methods] - Python and NumPy o
                     not isinstance(v, (int, float, np.integer, np.floating))
                     or not math.isfinite(float(v))
                 )
-                for v in (left, right)
+                for v in (self.left, self.right)
             )
         ):
             msg = "np.interp requires finite constants and strictly increasing knots"
             raise TraceError(msg)
-        if len(self.graph.nodes) + _INTERP_NODES_PER_KNOT * len(knots) > _MAX_NODES:
+        if len(graph.nodes) + _INTERP_NODES_PER_KNOT * len(knots) > _MAX_NODES:
             msg = "np.interp table exceeds the native expression graph limit"
             raise TraceError(msg)
-        coordinate = self.graph.convert(x)
+        coordinate = graph.convert(self.x)
 
         def branch(lo: int, hi: int) -> float | _Expression:
             if lo == hi:
@@ -261,7 +269,7 @@ class _Expression:  # ruff: ignore[too-many-public-methods] - Python and NumPy o
             if hi - lo == 1:
                 return float(values[lo]) + float(slopes[lo]) * (coordinate - float(knots[lo]))
             middle = (lo + hi) // 2
-            return self.graph.select(
+            return graph.select(
                 coordinate < float(knots[middle]),
                 branch(lo, middle),
                 branch(middle, hi),
@@ -274,33 +282,19 @@ class _Expression:  # ruff: ignore[too-many-public-methods] - Python and NumPy o
         # At a knot NumPy returns the tabulated value, including when a fill is supplied.
         lower = float(values[0])
         upper = float(values[-1])
-        return self.graph.select(
+        return graph.select(
             coordinate <= first,
-            lower if left is None else self.graph.select(coordinate < first, float(left), lower),
-            self.graph.select(
+            lower
+            if self.left is None
+            else graph.select(coordinate < first, float(self.left), lower),
+            graph.select(
                 coordinate >= last,
                 upper
-                if right is None
-                else self.graph.select(coordinate > last, float(right), upper),
+                if self.right is None
+                else graph.select(coordinate > last, float(self.right), upper),
                 value,
             ),
         )
-
-    def __array__(self, *args: object, **kwargs: object) -> Never:
-        msg = "array construction is unsupported by the Rust scalar tracer"
-        raise TraceError(msg)
-
-    def __array_ufunc__(
-        self,
-        ufunc: np.ufunc,
-        method: str,
-        *args: object,
-        **kwargs: object,
-    ) -> _Expression:
-        if method != "__call__" or kwargs or ufunc not in _UFUNCS:
-            msg = f"unsupported traced operation: {ufunc.__name__}.{method}"
-            raise TraceError(msg)
-        return self.graph.node(_UFUNCS[ufunc], *(self.graph.convert(a) for a in args))
 
 
 class _Graph:

@@ -92,3 +92,12 @@ def test_interp_automatic_generation_uses_native_evaluator():
     assert mesh.diagnostics["evaluator"] == "compiled"
     assert mesh.diagnostics["callback_calls"] == 0
     assert mesh.diagnostics["quadratic"]["minimum_jacobian_ratio"] > 1e-3
+
+
+def test_interp_accepts_all_six_positional_arguments():
+    def field(x, _y, _z):
+        return np.interp(x, [0, 1], [2, 4], -1, 7, None)
+
+    compiled = meshers.compile_field(field)
+    for x in (-1.0, 0.0, 0.5, 1.0, 2.0):
+        assert compiled(x, 0, 0) == pytest.approx(field(x, 0, 0))

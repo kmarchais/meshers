@@ -683,34 +683,50 @@ def _periodic_metadata(
     return tags, tuple(pairs)
 
 
-def generate_intersection(  # ruff: ignore[too-many-arguments] - published keyword options.
+class _SolverOptions(LegacyCompileOption, total=False):
+    """Controls shared by intersection generation and seed adaptation."""
+
+    seed_tolerance: float
+    min_length: float | None
+    max_length: float | None
+    gradation: float
+    adapt_iterations: int
+    quality_guard: float
+    adapt_tolerance: float | None
+    optimize_passes: int
+    max_tetrahedra: int
+    compile_expression: bool | None
+    batch_size: int
+    cancel: _meshers.CancellationToken | None
+
+
+class _SeedOptions(_SolverOptions, total=False):
+    """Optional vertex labels for an existing physical seed."""
+
+    constraint_masks: npt.ArrayLike | None
+
+
+class _GenerationOptions(_SolverOptions, total=False):
+    """Additional keywords for cutting a mapped or periodic background grid."""
+
+    coordinate_map: Callable | None
+    periodic: Sequence[bool]
+    periodic_transforms: Mapping[int, Sequence[Sequence[float]]] | None
+    closed_axes: Sequence[bool]
+    adapt: bool
+    inverse_map: Callable | None
+    physical_bounds: Sequence[float] | None
+    snap: float
+
+
+def generate_intersection(
     constraints: Mapping[str, Callable | _meshers.CompiledField | str],
     *,
     bounds: Sequence[float] = (0.0, 1.0, 0.0, 1.0, 0.0, 1.0),
     cells: int | Sequence[int] = 24,
-    coordinate_map: Callable | None = None,
-    periodic: Sequence[bool] = (False, False, False),
-    periodic_transforms: Mapping[int, Sequence[Sequence[float]]] | None = None,
-    closed_axes: Sequence[bool] = (False, False, False),
-    adapt: bool = False,
-    inverse_map: Callable | None = None,
-    physical_bounds: Sequence[float] | None = None,
-    seed_tolerance: float = 0.01,
-    min_length: float | None = None,
-    max_length: float | None = None,
-    gradation: float = 0.3,
-    adapt_iterations: int = 4,
-    quality_guard: float = 0.3,
-    adapt_tolerance: float | None = None,
     geometry_tolerance: float | None = None,
     minimum_quality: float = 0.0,
-    optimize_passes: int = 4,
-    snap: float = 0.2,
-    max_tetrahedra: int = 2_000_000,
-    compile_expression: bool | None = None,
-    batch_size: int = 4096,
-    cancel: _meshers.CancellationToken | None = None,
-    **legacy_options: Unpack[LegacyCompileOption],
+    **options: Unpack[_GenerationOptions],
 ) -> Mesh:
     """Mesh the intersection of named negative sublevel sets, preserving their curves.
 
@@ -719,106 +735,86 @@ def generate_intersection(  # ruff: ignore[too-many-arguments] - published keywo
     cutting; it must preserve orientation and be locally invertible. Straight-sided
     tetrahedra approximate the mapped geometry. This path currently uses one worker.
 
+    Invalid input raises `ValueError`. A failed mesh admission check raises `MeshingError`.
+    Cancellation raises `CancelledError`.
+
     Args:
         constraints: Ordered mapping of 2-32 unique nonempty names to fields
             (8 without wide-constraints). Keep
             every field <= 0. Use two constraints for the sides of a TPMS sheet.
         bounds: Parameter box ``(xmin,xmax,ymin,ymax,zmin,zmax)``.
         cells: Background intervals, 4-128 per parameter axis.
-        coordinate_map: Optional parameter-to-physical map; default identity.
-        periodic: Matching low/high faces along the three parameter axes.
-        periodic_transforms: Rigid homogeneous 4x4 matrices keyed by periodic axis
-            (0, 1, 2), mapping low to high physical points. Required for each mapped
-            periodic axis. Identity maps default to box translations. Node and
-            triangle correspondence are checked after optimization.
-        closed_axes: Identify coincident periodic caps before final repair. Requires
-            identity periodic transforms; closed seams have no external node pairs.
-        adapt: Adapt a validated mapped seed in physical space. Requires both maps
-            and physical bounds; external periodic faces are not supported.
-        inverse_map: Physical-to-parameter coordinates for mapped adaptation.
-        physical_bounds: Physical bounding box used for adaptation.
-        seed_tolerance: Separate sampled distance limit for the starting mesh.
-        min_length: Smallest target length during adaptation.
-        max_length: Largest target length during adaptation.
-        gradation: Maximum target-length growth per unit distance.
-        adapt_iterations: Number of size-driven adaptation rounds.
-        quality_guard: Local quality floor for adaptive operations.
-        adapt_tolerance: Adaptive distance target; defaults to the final tolerance.
-        geometry_tolerance: Optional maximum sampled physical surface-distance
-            estimate. None skips this relatively expensive check. This is an
-            acceptance gate, not adaptive refinement or a Hausdorff bound.
-        minimum_quality: Required final minimum MMG quality, 0-1; zero disables gate.
-        optimize_passes: Integrated constrained optimization rounds, 0-20.
-        snap: Joint background snap fraction, 0-0.2.
-        max_tetrahedra: Output element budget.
-        compile_expression: Automatically compile supported field and map expressions.
-        batch_size: Maximum callback batch size, 1-65536.
-        cancel: Cooperative cancellation token.
+        geometry_tolerance: Maximum sampled physical surface distance. The default
+            skips this check.
+        minimum_quality: Required final minimum MMG quality in [0, 1].
+        **options: Mapping, periodicity, adaptation and execution keywords listed
+            in the intersection options table below.
 
     Returns:
         Mesh with physical points, parameter coordinates, constraint masks/names,
         feature edges, validated periodic pairs/transforms and quality diagnostics.
 
-    Raises:
-        ValueError: An option, name, transform or callback output is invalid.
-        MeshingError: Construction, geometry, topology, quality or periodic checks fail.
-        CancelledError: Generation is cancelled.
-
     Note:
         Constraints remain separate throughout construction. Optimization can move
         vertices on their assigned analytic surfaces and change the facet approximation.
         Acute input angles can make a requested minimum quality unattainable.
-    """  # ruff: ignore[docstring-extraneous-exception] - includes native errors.
-    compile_expression = resolve_compile_option(legacy_options, setting=compile_expression)
-    if adapt:
+    """
+    controls = _controls(options, _GenerationOptions, default_budget=2_000_000)
+    domain = _MappedDomain(
+        bounds=bounds,
+        cells=cells,
+        mapping=options.get("coordinate_map"),
+        inverse_map=options.get("inverse_map"),
+        physical_bounds=options.get("physical_bounds"),
+        periodic=options.get("periodic", (False, False, False)),
+        transforms=options.get("periodic_transforms"),
+        closed_axes=options.get("closed_axes", (False, False, False)),
+    )
+    requirements = _MeshRequirements(
+        seed_tolerance=options.get("seed_tolerance", 0.01),
+        final_tolerance=geometry_tolerance,
+        minimum_quality=minimum_quality,
+        snap=options.get("snap", 0.2),
+    )
+    if options.get("adapt"):
         return _adapt_mapped_intersection(
             constraints,
-            _MappedDomain(
-                bounds=bounds,
-                cells=cells,
-                mapping=coordinate_map,
-                inverse_map=inverse_map,
-                physical_bounds=physical_bounds,
-                periodic=periodic,
-                transforms=periodic_transforms,
-                closed_axes=closed_axes,
-            ),
-            _MeshRequirements(
-                seed_tolerance=seed_tolerance,
-                final_tolerance=geometry_tolerance,
-                minimum_quality=minimum_quality,
-                snap=snap,
-            ),
-            _IntersectionControls(
-                optimize_passes=optimize_passes,
-                max_tetrahedra=max_tetrahedra,
-                compile_expression=compile_expression,
-                batch_size=batch_size,
-                cancel=cancel,
-            ),
-            _AdaptationSizing(
-                min_length=min_length,
-                max_length=max_length,
-                gradation=gradation,
-                adapt_iterations=adapt_iterations,
-                quality_guard=quality_guard,
-                adapt_tolerance=adapt_tolerance,
-            ),
+            domain,
+            requirements,
+            controls,
+            _sizing(options),
         )
+    return _cut_intersection(constraints, domain, requirements, controls)
+
+
+def _cut_intersection(
+    constraints: Mapping[str, Scalar],
+    domain: _MappedDomain,
+    requirements: _MeshRequirements,
+    controls: _IntersectionControls,
+) -> Mesh:
+    coordinate_map = domain.mapping
     _check_constraint_names(constraints)
-    b = _checked_bounds(bounds)
-    cells = _checked_cells(cells)
-    _check_quality_options(optimize_passes, snap, minimum_quality, geometry_tolerance)
-    transforms = _periodic_transforms(b, periodic, coordinate_map, periodic_transforms)
-    _check_closed_axes(closed_axes, periodic, transforms)
+    b = _checked_bounds(domain.bounds)
+    cells = _checked_cells(domain.cells)
+    _check_quality_options(
+        controls["optimize_passes"],
+        requirements.snap,
+        requirements.minimum_quality,
+        requirements.final_tolerance,
+    )
+    transforms = _periodic_transforms(b, domain.periodic, coordinate_map, domain.transforms)
+    _check_closed_axes(domain.closed_axes, domain.periodic, transforms)
     start = time.perf_counter()
-    fields = [_prepare(f, compile_expression=compile_expression) for f in constraints.values()]
+    fields = [
+        _prepare(f, compile_expression=controls["compile_expression"]) for f in constraints.values()
+    ]
     mapping = None
     if coordinate_map is not None:
         mapping = [
             _prepare(
                 lambda x, y, z, a=a: coordinate_map(x, y, z)[a],
-                compile_expression=compile_expression,
+                compile_expression=controls["compile_expression"],
             )
             for a in range(3)
         ]
@@ -828,20 +824,20 @@ def generate_intersection(  # ruff: ignore[too-many-arguments] - published keywo
         mapping,
         [b[::2].tolist(), b[1::2].tolist()],
         cells,
-        tuple(periodic),
-        tuple(closed_axes),
-        minimum_quality,
-        max_tetrahedra,
-        optimize_passes,
-        snap,
-        batch_size,
-        cancel,
+        tuple(domain.periodic),
+        tuple(domain.closed_axes),
+        requirements.minimum_quality,
+        controls["max_tetrahedra"],
+        controls["optimize_passes"],
+        requirements.snap,
+        controls["batch_size"],
+        controls["cancel"],
     )
-    _check_cancel(cancel)
+    _check_cancel(controls["cancel"])
     tags, pairs = _periodic_metadata(
         result,
         b,
-        periodic=tuple(p and not c for p, c in zip(periodic, closed_axes, strict=True)),
+        periodic=domain.external_periodic,
         transforms=transforms,
     )
     diagnostics = result["diagnostics"]
@@ -852,31 +848,31 @@ def generate_intersection(  # ruff: ignore[too-many-arguments] - published keywo
     diagnostics["empty"] = len(result["tetrahedra"]) == 0
     _refresh_linear_metrics(result, fitted=False)
     diagnostics["sampled_surface_error"] = None
-    if geometry_tolerance is not None:
+    if requirements.final_tolerance is not None:
         wall_fields = {
-            name: _periodic_extension(f, b, closed_axes)
+            name: _periodic_extension(f, b, domain.closed_axes)
             for name, f in zip(constraints, fields, strict=True)
         }
         if mapping is not None:
-            mapping = [_periodic_extension(f, b, closed_axes) for f in mapping]
+            mapping = [_periodic_extension(f, b, domain.closed_axes) for f in mapping]
         audit = _SurfaceAudit(
             mapping=mapping,
             bounds=b,
-            closed_axes=closed_axes,
-            geometry_tolerance=geometry_tolerance,
-            batch_size=batch_size,
-            cancel=cancel,
+            closed_axes=domain.closed_axes,
+            geometry_tolerance=requirements.final_tolerance,
+            batch_size=controls["batch_size"],
+            cancel=controls["cancel"],
         )
         errors = audit.check_walls(
             result,
             wall_fields,
             cells,
-            minimum_quality,
-            can_fit=not any(p and not c for p, c in zip(periodic, closed_axes, strict=True)),
+            requirements.minimum_quality,
+            can_fit=not any(domain.external_periodic),
         )
         audit.record_distances(result, tags, errors)
     diagnostics["workflow_seconds"] = time.perf_counter() - start
-    _check_cancel(cancel)
+    _check_cancel(controls["cancel"])
     return Mesh(
         **result,
         boundary_tags=tags,
@@ -997,27 +993,14 @@ def _periodic_transforms(
     return transforms
 
 
-def adapt_intersection(  # ruff: ignore[too-many-arguments] - published keyword options.
+def adapt_intersection(
     seed: Mesh,
     constraints: Mapping[str, Scalar],
     *,
     bounds: Sequence[float],
-    constraint_masks: npt.ArrayLike | None = None,
-    seed_tolerance: float = 0.01,
     geometry_tolerance: float = 0.01,
     minimum_quality: float = 0.1,
-    min_length: float | None = None,
-    max_length: float | None = None,
-    gradation: float = 0.3,
-    adapt_iterations: int = 4,
-    quality_guard: float = 0.3,
-    adapt_tolerance: float | None = None,
-    optimize_passes: int = 4,
-    max_tetrahedra: int = 250_000,
-    compile_expression: bool | None = None,
-    batch_size: int = 4096,
-    cancel: _meshers.CancellationToken | None = None,
-    **legacy_options: Unpack[LegacyCompileOption],
+    **options: Unpack[_SeedOptions],
 ) -> Mesh:
     """Adapt a nonperiodic Tet4 seed against named physical constraints.
 
@@ -1026,18 +1009,23 @@ def adapt_intersection(  # ruff: ignore[too-many-arguments] - published keyword 
     to the jth supplied field. Explicit masks allow parameter-domain cap labels
     to be replaced by their physical counterparts. No input arrays are modified.
 
+    See the intersection options table for sizing and execution keywords.
+
+    A failed seed or final mesh admission check raises `MeshingError`. Cancellation
+    raises `CancelledError`.
+
     Returns:
         A physical Mesh with retained constraint names and new vertex masks.
 
     Raises:
         ValueError: Input arrays, labels, bounds or options are invalid.
-        MeshingError: A seed or final geometry, topology or quality gate fails.
-        CancelledError: The cancellation token is set.
-    """  # ruff: ignore[docstring-extraneous-exception] - includes native errors.
-    compile_expression = resolve_compile_option(legacy_options, setting=compile_expression)
+    """
+    controls = _controls(options, _SeedOptions, default_budget=250_000)
+    constraint_masks = options.get("constraint_masks")
+    sizing = _sizing(options)
     _check_constraint_names(constraints)
     b = _checked_bounds(bounds)
-    _check_quality_options(optimize_passes, 0, minimum_quality, geometry_tolerance)
+    _check_quality_options(controls["optimize_passes"], 0, minimum_quality, geometry_tolerance)
     if seed.tetrahedra.shape[1:] != (_TET4_NODES,):
         msg = "seed must contain Tet4 cells"
         raise ValueError(msg)
@@ -1063,9 +1051,11 @@ def adapt_intersection(  # ruff: ignore[too-many-arguments] - published keyword 
         msg = "seed connectivity must contain valid integer node indices"
         raise ValueError(msg)
     start = time.perf_counter()
-    fields = [_prepare(f, compile_expression=compile_expression) for f in constraints.values()]
+    fields = [
+        _prepare(f, compile_expression=controls["compile_expression"]) for f in constraints.values()
+    ]
     preparation = time.perf_counter() - start
-    _check_cancel(cancel)
+    _check_cancel(controls["cancel"])
     result = _meshers.adapt_intersection(
         fields,
         np.asarray(seed.points, dtype=np.float64),
@@ -1074,20 +1064,24 @@ def adapt_intersection(  # ruff: ignore[too-many-arguments] - published keyword 
         [b[::2].tolist(), b[1::2].tolist()],
         geometry_tolerance,
         minimum_quality,
-        max_tetrahedra,
-        optimize_passes,
+        controls["max_tetrahedra"],
+        controls["optimize_passes"],
         (
-            geometry_tolerance if min_length is None else float(min_length),
-            float(np.min(b[1::2] - b[::2])) / 4 if max_length is None else float(max_length),
-            float(gradation),
+            geometry_tolerance if sizing["min_length"] is None else float(sizing["min_length"]),
+            float(np.min(b[1::2] - b[::2])) / 4
+            if sizing["max_length"] is None
+            else float(sizing["max_length"]),
+            float(sizing["gradation"]),
             0.0,
-            int(adapt_iterations),
-            float(quality_guard),
-            geometry_tolerance if adapt_tolerance is None else float(adapt_tolerance),
+            int(sizing["adapt_iterations"]),
+            float(sizing["quality_guard"]),
+            geometry_tolerance
+            if sizing["adapt_tolerance"] is None
+            else float(sizing["adapt_tolerance"]),
         ),
-        seed_tolerance,
-        batch_size,
-        cancel,
+        options.get("seed_tolerance", 0.01),
+        controls["batch_size"],
+        controls["cancel"],
     )
     result["diagnostics"].update(
         preparation_seconds=preparation,
@@ -1162,6 +1156,10 @@ class _MappedDomain:
     transforms: Mapping[int, Sequence[Sequence[float]]] | None
     closed_axes: Sequence[bool]
 
+    @property
+    def external_periodic(self) -> tuple[bool, ...]:
+        return tuple(p and not c for p, c in zip(self.periodic, self.closed_axes, strict=True))
+
 
 class _IntersectionControls(TypedDict):
     optimize_passes: int
@@ -1186,6 +1184,41 @@ class _AdaptationSizing(TypedDict):
     adapt_iterations: int
     quality_guard: float
     adapt_tolerance: float | None
+
+
+def _controls(
+    options: _SolverOptions,
+    schema: type,
+    *,
+    default_budget: int,
+) -> _IntersectionControls:
+    unknown = options.keys() - schema.__annotations__.keys()
+    if unknown:
+        msg = f"Unexpected keyword argument: {min(unknown)!r}"
+        raise TypeError(msg)
+    legacy: LegacyCompileOption = {"compile": options["compile"]} if "compile" in options else {}
+    return _IntersectionControls(
+        compile_expression=resolve_compile_option(
+            legacy,
+            setting=options.get("compile_expression"),
+            stacklevel=4,
+        ),
+        max_tetrahedra=options.get("max_tetrahedra", default_budget),
+        optimize_passes=options.get("optimize_passes", 4),
+        batch_size=options.get("batch_size", 4096),
+        cancel=options.get("cancel"),
+    )
+
+
+def _sizing(options: _SolverOptions) -> _AdaptationSizing:
+    return _AdaptationSizing(
+        min_length=options.get("min_length"),
+        max_length=options.get("max_length"),
+        gradation=options.get("gradation", 0.3),
+        adapt_iterations=options.get("adapt_iterations", 4),
+        quality_guard=options.get("quality_guard", 0.3),
+        adapt_tolerance=options.get("adapt_tolerance"),
+    )
 
 
 def _physical_cap(inverse_map: Callable, axis: int, side: int, value: float) -> Callable:

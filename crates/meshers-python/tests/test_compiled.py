@@ -250,3 +250,18 @@ def test_compiled_square_values_and_gradients_at_extreme_scales():
         np.testing.assert_array_equal(field.gradient(x, 0, 0), [2 * x, 0, 0])
     with pytest.raises(ValueError, match="nonfinite"):
         field(1e200, 0, 0)
+
+
+def test_symbolic_augmented_assignment_preserves_alias_and_comparisons():
+    def field(x, y, z):
+        original = x
+        x += y
+        x -= z
+        x *= 2
+        x /= 2
+        x **= 2
+        return np.where(original == y, x, np.where(z != original, -abs(x), 2**y / (1 + x)))
+
+    compiled = meshers.compile_field(field)
+    for point in ((1.0, 1.0, 0.0), (2.0, 1.0, 0.0), (2.0, 1.0, 2.0)):
+        assert compiled(*point) == pytest.approx(field(*point))
