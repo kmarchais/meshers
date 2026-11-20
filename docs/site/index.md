@@ -2,7 +2,7 @@
 
 ![Triangulated gyroid sheet. Teal triangles follow the two implicit walls and copper triangles close the sheet at the box faces.](assets/gyroid.png)
 
-This gyroid is cut from a 12 × 12 × 12 background grid. Teal triangles follow the implicit walls. Copper triangles mark the box faces. Use the tetrahedra for analysis and the tagged surface triangles for boundary conditions.
+Teal faces follow the gyroid walls. Copper faces cap the box. Use either set to assign boundary conditions.
 
 ```python
 import meshers

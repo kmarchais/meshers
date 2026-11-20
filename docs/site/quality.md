@@ -10,7 +10,7 @@
 
 ## Missing material
 
-On the development branch, set `expected_components` when you know the number of disconnected solids. A lost island or severed ligament can otherwise leave valid, positive elements.
+Set `expected_components` on the development branch to catch a lost island or severed ligament, even when every surviving element has positive volume.
 
 - Meshers counts groups connected across triangular faces **before** joining periodic images. Vertex or edge contact does not join groups.
 - Two defects can preserve the count. Use per-component volume and probes in thin features to check identity.
@@ -20,6 +20,6 @@ On the development branch, set `expected_components` when you know the number of
 
 Meshers checks boundary edge incidence and vertex links, and retries cuts if snapping pinches the boundary. Periodic copies roll back together.
 
-During Tet10 elevation and fitting on the development branch, determinant bounds cover the space between Jacobian samples. Inconclusive regions are bisected. A fold or unresolved bound limits the edge correction or rejects the fit. `minimum_jacobian_ratio` is the **sampled** ratio.
+During Tet10 elevation and fitting, the development branch bisects regions where determinant bounds cannot rule out a fold. A fold or unresolved bound reduces the correction or rejects the fit. `minimum_jacobian_ratio` reports only sampled points.
 
 Invalid options raise `ValueError`. A failed meshing gate raises `MeshingError`. [Python API](api/python.md)

@@ -1,13 +1,23 @@
 # Build and contribute
 
-Use Python 3.11+, Rust stable and uv. Maturin builds the native extension.
+Install Python 3.11+, Rust stable and uv.
 
 ```sh
 uv sync --locked --all-packages --group docs
+```
+
+## Check the Python bindings
+
+```sh
 uv run ruff check
 uv run ruff format --check
 uv run ty check
 uv run pytest crates/meshers-python/tests tools/tests
+```
+
+## Check Rust and build the wheel
+
+```sh
 cargo fmt --all -- --check
 cargo check --all-targets
 cargo clippy --all-targets -- -D warnings

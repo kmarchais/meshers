@@ -1,14 +1,14 @@
 # Performance and regression checks
 
-**What costs less at the same FEA accuracy?** The [Schwarz P comparison](https://github.com/kmarchais/meshers/blob/main/demos/solver/release-wheel/schwarz-matched-cost-20261118/README.md) measures two Tet4 routes that each meet a 1% stiffness-discrepancy target. The [benchmark history](benchmark-history.md) answers a different question: how a code change affects fixed meshing fixtures.
+Both Schwarz P meshes meet the 1% stiffness target. The native Tet4 route took less time on all five configurations. [Comparison protocol and raw runs](https://github.com/kmarchais/meshers/blob/main/demos/solver/release-wheel/schwarz-matched-cost-20261118/README.md)
 
 ![Median time for three qualifying runs per route on each CPU and OS. Native Tet4 was faster than the repaired route on all five configurations for this Schwarz P specimen.](assets/schwarz-cost.svg)
 
-Each point is the median of three complete runs for that setting. The native mesh reached 0.992% discrepancy and the repaired mesh 0.927–0.928%. Each row compares routes on the same hardware.
+Median of three runs per setting. Stiffness discrepancy was 0.992% for native Tet4 and 0.927–0.928% after Microgen repair.
 
 ## Pull request gates
 
-Base and candidate wheels run on one Linux runner with matching Python and NumPy. After a discarded warm-up pair, five fresh-process pairs alternate order. Timing covers field preparation and meshing. Peak process memory includes imports and JIT.
+On one Linux runner with matching Python and NumPy, discard one warm-up pair. Alternate base and candidate across five fresh-process pairs. Time preparation and meshing. Peak memory includes imports and JIT.
 
 | Metric | Regression limit against base |
 | --- | --- |
@@ -25,7 +25,7 @@ Base and candidate wheels run on one Linux runner with matching Python and NumPy
 
 ## Release suite and public history
 
-The release suite adds adaptive gyroid, spinodoid, lattice and curved Tet10 fixtures. Tet10 quality and surface errors describe the parent. The current validator integrates curved volume, samples Jacobians and subdivides inconclusive Bernstein determinant bounds. Unresolved bounds fail.
+The release suite adds adaptive gyroid, spinodoid, lattice and curved Tet10. For Tet10, quality and surface error describe the parent. Volume integration and Jacobian checks use the curved element. Subdivision must resolve inconclusive determinant bounds.
 
 1. Run **Performance** on the candidate with `suite=release`, a compatible release `baseline` and a unique `history_label`. For the first 0.2 suite the compatible reference was `afc49e583a0450454b02440557f39b89bbc39ca6`.
 2. Inspect the `performance-comparison` artifact, including failed or missing samples. Keep the same fixtures and thresholds when investigating a regression.
@@ -37,18 +37,21 @@ python -m tools.benchmark_history --input /path/performance.json --label v0.2.0-
 
 ## Run a local comparison
 
-Install the two wheels in separate environments. Use one numerical thread and an idle host. For Windows, install `psutil` in each environment. All platforms record bytes: peak working set on Windows, peak RSS on Linux and macOS.
+Use separate environments, one numerical thread and an idle host. Windows requires `psutil`. Memory is peak working set on Windows and peak RSS on Linux/macOS, in bytes.
 
 ```sh
 python tools/performance_gate.py --base-python /path/base/bin/python \
   --head-python /path/head/bin/python --output performance.json
 ```
 
-Add `--suite release` for all fixtures and `--base-ref` / `--head-ref` with full commit IDs for archiving. Compare times within one configuration and fixture version. Change the fixture version when changing formulas or settings.
+Use `--suite release` for all fixtures. Archive with full `--base-ref` and `--head-ref` SHAs. Compare within one configuration and fixture version. Bump the fixture version when formulas or settings change. [Benchmark history](benchmark-history.md)
 
 ## Candidate wheel FEA gate
 
-The Python 3.11 CI jobs reopen a Schwarz P VTKHDF export. Admission requires two-sided sampled wall/cap distance ≤ 0.002, volume within 1%, MMG quality ≥ 0.1, correct topology, periodic faces and material probes. Six strain and six stress solves must pass. Worst relative strain-energy discrepancy must be ≤ 1% against the reference tensor.
+Python 3.11 CI reopens the Schwarz P VTKHDF export before solving.
+
+- **Geometry** — two-sided sampled wall/cap distance ≤ 0.002, volume within 1%, MMG quality ≥ 0.1. Check topology, periodic faces and material probes.
+- **Stiffness** — all six strain and six stress solves must pass. Worst relative strain-energy discrepancy ≤ 1% against the reference tensor.
 
 ```sh
 uv run --with fedoo==1.0.0b2 python demos/solver/schwarz_workflow.py native-candidate candidate-acceptance

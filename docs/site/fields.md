@@ -1,12 +1,12 @@
 # Fields, thickness and grading
 
-Meshers keeps `f ≤ 0` for a solid or `lower ≤ f ≤ upper` for a band. Band limits use **field units**. Where the field changes faster, the same interval can produce a thinner wall.
+For a solid, Meshers keeps `f ≤ 0`. For a band, it keeps `lower ≤ f ≤ upper`. A fixed band gets thinner where the field changes faster.
 
 ![Section through the band −0.3 ≤ (1+x)y ≤ 0.3. Its vertical width shrinks from 0.6 at x=0 to 0.2 at x=2.](assets/field-band.svg)
 
-In this section through the field <i>f</i> = (1 + <i>x</i>)<i>y</i>, a band of ±0.3 has vertical width 0.6 on the left and 0.2 on the right.
+For `f = (1 + x)y`, the band ±0.3 narrows from 0.6 to 0.2 in the vertical direction.
 
-For spatial grading, divide the field by a **positive** half-width and mesh the interval `(-1, 1)`. Grading along a periodic axis must match at its ends. [Runnable graded sheet](https://github.com/kmarchais/meshers/blob/main/crates/meshers-python/examples/graded.py)
+To grade a sheet, divide the field by a positive half-width and use `band=(-1, 1)`. Match widths across periodic ends. [Graded sheet example](https://github.com/kmarchais/meshers/blob/main/crates/meshers-python/examples/graded.py)
 
 | Field implementation | Evaluation and derivatives |
 | --- | --- |
@@ -14,4 +14,6 @@ For spatial grading, divide the field by a **positive** half-width and mesh the 
 | Unsupported operation or `compile=False` | Batched NumPy callback returning float64 `(N,)`. Supply gradients of shape `(N, 3)` or use finite differences. |
 | `compile_field(f)` | Reusable, immutable snapshot. Automatic preparation retraces captured values and caches up to 32 compiled expressions. |
 
-At `abs(0)` the derivative is zero. At a minimum or maximum tie, Meshers averages the two gradients. `where` takes the selected branch. For swept or angular coordinates, define a consistent inside/outside value at the axis and across the seam. [Evaluator examples](https://github.com/kmarchais/meshers/blob/main/crates/meshers-python/examples/evaluators.py)
+**Nonsmooth fields.** `abs` has zero derivative at zero. Min/max ties average both gradients. `where` uses the selected branch.
+
+For angular fields, keep the inside/outside classification consistent at the axis and across the seam. [Evaluator examples](https://github.com/kmarchais/meshers/blob/main/crates/meshers-python/examples/evaluators.py)

@@ -8,11 +8,11 @@
 | Cylindrical gyroid | 12, 18, 24 | 1.97 | 1.05 |
 | Toroidal gyroid | 12, 18, 24 | 1.92 | 1.03 |
 
-**Problem.** Linear elastic Tet4 elements, λ = μ = 1. The exact displacement is `(sin(πx) sin(πy) sin(πz), 0, 0)`. The Navier equation supplies the body force. Every boundary node takes the exact displacement. Four-point quadrature integrates the load and errors.
+Prescribe `u = (sin(πx) sin(πy) sin(πz), 0, 0)` on every boundary node. Use linear elastic Tet4 elements with λ = μ = 1. Integrate the Navier body force and errors with four-point quadrature.
 
-**Cross-check.** Fedoo 0.8.4 and a separate P1 assembly agreed within 5 × 10⁻¹³ relative on the nine meshes. Both used diagonally preconditioned SciPy CG. Affine patch tests passed on all three geometries.
+Fedoo 0.8.4 and an independent P1 assembly agreed within 5 × 10⁻¹³ relative on all nine meshes. Both used diagonally preconditioned SciPy CG and passed the affine patch tests.
 
-**Scope.** The rates use measured maximum edge length and errors on each discrete domain. For periodic constraints and effective stiffness, see the [unit-cell study](periodic-homogenization.md).
+Rates use maximum physical edge length on each discrete domain. For periodic loading, see the [unit-cell study](periodic-homogenization.md).
 
 ## Replay
 

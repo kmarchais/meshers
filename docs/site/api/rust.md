@@ -2,9 +2,7 @@
 
 [Browse the Rust crate reference](../rust/meshers_core/index.html).
 
-Start with `implicit::generate`, `implicit::Options`, `implicit::Region` and
-`implicit::ScalarField`. A closure implements a field with numerical gradients;
-implement `ScalarField` to supply gradients or batched evaluation.
+Pass a closure to `implicit::generate` for numerical gradients. Implement `implicit::ScalarField` to supply gradients or batched evaluation.
 
 ```rust
 use meshers_core::implicit::{generate, Options};
@@ -20,5 +18,4 @@ fn main() -> Result<(), meshers_core::MeshingError> {
 }
 ```
 
-The CPU core has no Python, VTK or CAD runtime dependency. The Python extension
-owns field compilation and language bindings; export belongs to adapters.
+The CPU core runs independently of Python, VTK and CAD runtimes.

@@ -2,7 +2,7 @@
 
 ![Cut sphere with a teal spherical wall and a copper planar face. The triangles on each side share the rim.](assets/cut-sphere.png)
 
-Intersect the negative sides of named fields to keep a boundary label on each face. For this sphere, the copper plane closes the top at `z = 0.25`.
+Each field names a boundary and keeps its negative side. Here `cut` labels the copper face at `z = 0.25`.
 
 ```python
 import meshers
@@ -18,7 +18,7 @@ cut_triangles = mesh.surface_for("cut")
 rim_edges = mesh.feature_edges
 ```
 
-`constraint_masks` records each vertex’s membership in the named fields. VTKHDF preserves these masks, names, feature edges, parameter coordinates and periodic metadata.
+VTKHDF preserves the named surfaces, per-vertex `constraint_masks`, feature edges, chart coordinates and periodic metadata.
 
 ## Map and pair the ends
 
@@ -32,8 +32,8 @@ The map acts on the background **before cutting**. Fields, bounds and cell count
 
 ## Adapt in physical coordinates
 
-- For a mapped seed, pass `adapt=True`, `inverse_map` and `physical_bounds`. The seed must resolve the features, have positive orientation and pass `seed_tolerance` (default 0.01).
-- For an existing conforming Tet4 seed, use `adapt_intersection` with physical fields and matching constraint masks. Physical adaptation supports one worker and nonperiodic solids. Returned `parameters` are physical coordinates.
-- Final acceptance uses `minimum_quality` and `geometry_tolerance`. On mapped intersections the surface check samples named walls and physical chart caps, including triangle interiors. `mapped_cap_errors` reports each surviving cap. Between-sample deviation and global self-intersection require separate checks.
+- **Mapped seed** — pass `adapt=True`, `inverse_map` and `physical_bounds`. Resolve each feature with positively oriented cells and meet `seed_tolerance` (default 0.01).
+- **Existing Tet4 seed** — pass physical fields and matching masks to `adapt_intersection`. Physical adaptation uses one worker on nonperiodic solids. Returned `parameters` are physical coordinates.
+- **Final mesh** — require `minimum_quality` and `geometry_tolerance`. Meshers samples walls and chart caps, including triangle interiors. Inspect `mapped_cap_errors` per cap. Check between-sample error and global self-intersections separately.
 
 [Python options and limits](api/python.md) · [Quality checks](quality.md)

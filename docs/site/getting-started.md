@@ -4,7 +4,7 @@
 python -m pip install "meshers[io]"
 ```
 
-Use `meshers` alone if you only need the arrays. NumPy is the runtime dependency for meshing.
+For meshing without file export, install `meshers`. It requires NumPy.
 
 | Source | Python | VTKHDF writer installed by `[io]` |
 | --- | --- | --- |
