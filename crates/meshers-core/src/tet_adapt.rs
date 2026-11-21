@@ -98,6 +98,15 @@ fn angle(a: Point, b: Point) -> f64 {
 }
 
 /// MMG-normalized quality: 1 for the regular tetrahedron, 0 when flat or inverted.
+/// Ordering key that reads values equal to nine decimals as equal.
+///
+/// A symmetric solid yields candidates of equal length or error. Compared
+/// exactly, rounding orders them, and the mesh then depends on the last bit of
+/// the field. Compared coarsely, their indices order them.
+fn coarse(x: f64) -> f64 {
+    (x * 1e9).round()
+}
+
 fn mmg(p: [Point; 4]) -> f64 {
     if determinant(p) <= 0. {
         return 0.;
@@ -961,7 +970,7 @@ impl<'g, G: Geometry> Tets<'g, G> {
                 (r < COLLAPSE).then_some((r, [u, v]))
             })
             .collect();
-        short.sort_by(|a, b| a.0.total_cmp(&b.0));
+        short.sort_by(|a, b| coarse(a.0).total_cmp(&coarse(b.0)).then(a.1.cmp(&b.1)));
         for (_, [u, v]) in short {
             if self.vt[u].is_empty() || self.vt[v].is_empty() || self.shell(u, v).is_empty() {
                 continue;
@@ -1569,8 +1578,8 @@ impl<'g, G: Geometry> Tets<'g, G> {
             .filter(|&w| self.masks[w] == plane && self.feature_mask(w) == 0)
             .collect();
         neighbors.sort_by(|&a, &b| {
-            self.length(v, a)
-                .total_cmp(&self.length(v, b))
+            coarse(self.length(v, a))
+                .total_cmp(&coarse(self.length(v, b)))
                 .then(a.cmp(&b))
         });
         let axes: Vec<usize> = (0..3).filter(|a| (plane >> (2 + 2 * a)) & 3 == 0).collect();
@@ -1664,7 +1673,11 @@ impl<'g, G: Geometry> Tets<'g, G> {
                 self.feature_mask(v),
             )
         };
-        pending.sort_by(|&a, &b| distance(b).total_cmp(&distance(a)).then(a.cmp(&b)));
+        pending.sort_by(|&a, &b| {
+            coarse(distance(b))
+                .total_cmp(&coarse(distance(a)))
+                .then(a.cmp(&b))
+        });
         let mut changed = false;
         let edges = self.edges();
         let size = self.sizes(o, &edges)?;
@@ -1895,8 +1908,9 @@ impl<'g, G: Geometry> Tets<'g, G> {
             flagged.sort_by(|a, b| a.2.cmp(&b.2).then_with(|| b.0.total_cmp(&a.0)));
             flagged.dedup_by_key(|e| e.2);
             flagged.sort_by(|a, b| {
-                b.0.total_cmp(&a.0)
-                    .then_with(|| b.1.total_cmp(&a.1))
+                coarse(b.0)
+                    .total_cmp(&coarse(a.0))
+                    .then_with(|| coarse(b.1).total_cmp(&coarse(a.1)))
                     .then_with(|| a.2.cmp(&b.2))
             });
             let mut progress = settled;
@@ -2094,7 +2108,7 @@ impl<'g, G: Geometry> Tets<'g, G> {
                     (error > tolerance).then_some((error, f))
                 })
                 .collect();
-            bad.sort_by(|a, b| b.0.total_cmp(&a.0).then(a.1.cmp(&b.1)));
+            bad.sort_by(|a, b| coarse(b.0).total_cmp(&coarse(a.0)).then(a.1.cmp(&b.1)));
             let mut changed = false;
             'faces: for &(_, f) in bad.iter().take(8) {
                 for [a, b] in [[f[0], f[1]], [f[0], f[2]], [f[1], f[2]]] {
@@ -2565,7 +2579,7 @@ pub(crate) fn adapt_with_constraints(
                 (r > SPLIT).then_some((r, [u, v]))
             })
             .collect();
-        long.sort_by(|a, b| b.0.total_cmp(&a.0));
+        long.sort_by(|a, b| coarse(b.0).total_cmp(&coarse(a.0)).then(a.1.cmp(&b.1)));
         let mut reclaimed_budget = false;
         for (_, [u, v]) in long {
             if !reclaimed_budget && s.live_tetrahedra.saturating_add(s.shell(u, v).len()) > maximum

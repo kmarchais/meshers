@@ -124,6 +124,7 @@ fn adapt_saved_wedge_seed() {
         scale,
         optimizer_length: 1.,
         invalid: AtomicBool::new(false),
+        gaps_resolved: false,
     };
     let stats = crate::tet_adapt::adapt_with_polish(
         &mut mesh,

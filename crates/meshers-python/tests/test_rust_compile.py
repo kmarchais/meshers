@@ -44,7 +44,7 @@ def test_rust_scalar_and_gradient_match():
         )
         assert a.diagnostics["callback_calls"] == 0
         assert len(a.tetrahedra) == 9422
-        assert abs(a.diagnostics["volume"] - 0.323624954480) < 1e-10
+        assert abs(a.diagnostics["volume"] - 0.323597610324) < 1e-10
         vertices = a.points[a.tetrahedra]
         independent_volume = np.linalg.det(vertices[:, 1:4] - vertices[:, :1]).sum() / 6
         assert abs(a.diagnostics["volume"] - independent_volume) < 1e-14

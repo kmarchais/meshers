@@ -199,6 +199,9 @@ struct Context<'a, F: ScalarField> {
     scale: f64,
     optimizer_length: f64,
     invalid: AtomicBool,
+    /// The lattice was refined where an edge hid a wall crossing, so no
+    /// element of its cut bridges a gap narrower than a cell.
+    gaps_resolved: bool,
 }
 impl<F: ScalarField> Context<'_, F> {
     /// The same field and box, meshed on the uniform lattice path.
@@ -220,6 +223,7 @@ impl<F: ScalarField> Context<'_, F> {
             scale: self.scale,
             optimizer_length: self.optimizer_length,
             invalid: AtomicBool::new(false),
+            gaps_resolved: self.gaps_resolved,
         }
     }
     fn canonical(&self, mut p: Point) -> Point {
@@ -703,6 +707,7 @@ fn generate_internal<F: ScalarField>(
         scale,
         optimizer_length: (0..3).map(|a| hi[a] - lo[a]).product::<f64>().cbrt(),
         invalid: AtomicBool::new(false),
+        gaps_resolved: false,
     };
     // Inspect raw field traces before canonicalizing opposite faces.
     for axis in 0..3 {
@@ -753,10 +758,10 @@ fn generate_internal<F: ScalarField>(
     }
     // Two walls closer than a cell hide between lattice nodes: resolve them
     // on a locally refined lattice.
-    let refined = if context.background.is_none()
+    let gaps_resolved = context.background.is_none()
         && context.constraints.is_none()
-        && context.halfspaces.is_none()
-    {
+        && context.halfspaces.is_none();
+    let refined = if gaps_resolved {
         resolve_gaps(&context).map_err(MeshingError::GenerationFailed)?
     } else {
         None
@@ -770,9 +775,13 @@ fn generate_internal<F: ScalarField>(
                 #[cfg(feature = "experimental-quads")]
                 observer: None,
             }),
+            gaps_resolved,
             ..context
         },
-        None => context,
+        None => Context {
+            gaps_resolved,
+            ..context
+        },
     };
     if let Some(background) = context.background {
         validate_background(background, &context).map_err(MeshingError::InvalidOptions)?;
@@ -1180,7 +1189,10 @@ fn finish_with_constraints<F: ScalarField>(
         ));
     }
     // After the surface check: a coarse concave wall also leaves samples outside.
+    // A cut of the gap-resolved lattice has no bridge to find; coarsening by
+    // adaptation can make one.
     if constraints.is_none()
+        && (!g.gaps_resolved || g.options.adapt.is_some())
         && let outside = elements_outside(&mesh, g)?
         && let Some(&(_, distance, at)) = outside.iter().max_by(|a, b| a.1.total_cmp(&b.1))
     {
@@ -1247,6 +1259,10 @@ fn finish_with_constraints<F: ScalarField>(
 /// failing the gate by rounding. Envelope meshers keep the same kind of slack.
 const WORKING_TOLERANCE: f64 = 0.9;
 const GAP_SAMPLES: usize = 7;
+/// Items between two calls of `check` in the loops that do no field work of
+/// their own. A caller may look at its interruption flag only once in many
+/// calls, so a long loop has to call often to stay interruptible.
+const POLL: usize = 16;
 /// A hidden excursion shallower than this fraction of the geometry tolerance
 /// is a wall grazing the edge, not a gap.
 const GAP_DEPTH: f64 = 0.25;
@@ -1367,48 +1383,85 @@ fn resolve_gaps<F: ScalarField>(
     let mut splits = 0;
     for _ in 0..2 {
         g.check()?;
-        let mut edges: Vec<[usize; 2]> = Vec::new();
-        for tet in &tets {
-            for i in 0..4 {
-                for j in i + 1..4 {
-                    let e = [tet[i].min(tet[j]), tet[i].max(tet[j])];
-                    if side(values[e[0]]) != 0 && side(values[e[0]]) == side(values[e[1]]) {
-                        edges.push(e);
-                    }
+        // Edges are listed from their lower vertex, a few thousand vertices at
+        // a time: a lattice of a hundred cells has tens of millions of them.
+        let neighbours = |a: usize, incident: &[Vec<usize>], tets: &[crate::Tet]| {
+            let mut near: Vec<usize> = incident[a]
+                .iter()
+                .flat_map(|&t| tets[t])
+                .filter(|&b| b > a)
+                .collect();
+            near.sort_unstable();
+            near.dedup();
+            near
+        };
+        // The steepest change of the field seen along an edge. An edge whose
+        // ends both lie farther from the level than twice that slope can
+        // cover in half its length hides no crossing, and is not sampled.
+        let mut steepest: f64 = 0.;
+        for a in 0..points.len() {
+            if a % POLL == 0 {
+                g.check()?;
+            }
+            for b in neighbours(a, &incident, &tets) {
+                let slope = (values[a] - values[b]).abs() / norm(sub(points[a], points[b]));
+                if slope.is_finite() {
+                    steepest = steepest.max(slope);
                 }
             }
         }
-        edges.sort_unstable();
-        edges.dedup();
-        let mut samples = Vec::with_capacity(edges.len() * GAP_SAMPLES);
-        for e in &edges {
-            let (p, q) = (points[e[0]], points[e[1]]);
-            for k in 1..=GAP_SAMPLES {
-                let w = k as f64 / (GAP_SAMPLES + 1) as f64;
-                samples.push(std::array::from_fn(|a| p[a] + w * (q[a] - p[a])));
-            }
-        }
-        let mut sampled = Vec::with_capacity(samples.len());
-        for chunk in samples.chunks(4096) {
-            g.check()?;
-            sampled.extend(g.values(chunk));
-        }
         // The deepest sample on the other side of each edge.
         let mut hidden: Vec<([usize; 2], Point, f64)> = Vec::new();
-        for (i, e) in edges.iter().enumerate() {
-            let ends = side(values[e[0]]);
-            let deepest = (0..GAP_SAMPLES)
-                .map(|k| i * GAP_SAMPLES + k)
-                .filter(|&k| side(sampled[k]) != 0 && side(sampled[k]) != ends)
-                .max_by(|&a, &b| {
-                    residual(sampled[a])
-                        .abs()
-                        .total_cmp(&residual(sampled[b]).abs())
-                });
-            if let Some(k) = deepest {
-                hidden.push((*e, samples[k], sampled[k]));
+        let mut edges: Vec<[usize; 2]> = Vec::new();
+        let mut samples: Vec<Point> = Vec::new();
+        let mut flush = |edges: &mut Vec<[usize; 2]>,
+                         samples: &mut Vec<Point>,
+                         values: &[f64]|
+         -> Result<(), String> {
+            g.check()?;
+            let sampled = g.values(samples);
+            for (i, e) in edges.iter().enumerate() {
+                let ends = side(values[e[0]]);
+                let deepest = (0..GAP_SAMPLES)
+                    .map(|k| i * GAP_SAMPLES + k)
+                    .filter(|&k| side(sampled[k]) != 0 && side(sampled[k]) != ends)
+                    .max_by(|&a, &b| {
+                        residual(sampled[a])
+                            .abs()
+                            .total_cmp(&residual(sampled[b]).abs())
+                    });
+                if let Some(k) = deepest {
+                    hidden.push((*e, samples[k], sampled[k]));
+                }
+            }
+            edges.clear();
+            samples.clear();
+            Ok(())
+        };
+        for a in 0..points.len() {
+            if a % POLL == 0 {
+                g.check()?;
+            }
+            for b in neighbours(a, &incident, &tets) {
+                if side(values[a]) == 0 || side(values[a]) != side(values[b]) {
+                    continue;
+                }
+                let (p, q) = (points[a], points[b]);
+                let nearest = residual(values[a]).abs().min(residual(values[b]).abs());
+                if nearest > steepest * norm(sub(p, q)) {
+                    continue;
+                }
+                edges.push([a, b]);
+                for k in 1..=GAP_SAMPLES {
+                    let w = k as f64 / (GAP_SAMPLES + 1) as f64;
+                    samples.push(std::array::from_fn(|c| p[c] + w * (q[c] - p[c])));
+                }
+            }
+            if samples.len() >= 4096 {
+                flush(&mut edges, &mut samples, &values)?;
             }
         }
+        flush(&mut edges, &mut samples, &values)?;
         let at: Vec<Point> = hidden.iter().map(|h| h.1).collect();
         let gradients = g.gradients(&at);
         let hidden: Vec<_> = hidden
@@ -1803,7 +1856,11 @@ fn build<F: ScalarField>(g: &Context<F>) -> Result<Output, String> {
     if mesh.tets.is_empty() {
         return finish(mesh, g);
     }
-    let removed_bridging_elements = remove_bridging_elements(&mut mesh, g, h)?;
+    let removed_bridging_elements = if g.gaps_resolved {
+        0
+    } else {
+        remove_bridging_elements(&mut mesh, g, h)?
+    };
     if let Some(adapt) = o.adapt {
         let mut stats = crate::tet_adapt::adapt(
             &mut mesh,
@@ -2497,7 +2554,9 @@ fn clipped_wall_distances<F: ScalarField>(
     g: &Context<F>,
     samples: &[(Point, [bool; 3])],
 ) -> Result<Vec<f64>, String> {
-    let mut distances = g.wall_distances(samples, g.threshold())?;
+    // Walks matter where an estimate could reach the tolerance.
+    let settled = 0.25 * g.options.geometry_tolerance;
+    let mut distances = g.wall_distances(samples, g.threshold(), settled)?;
     let held: Vec<usize> = (0..samples.len())
         .filter(|&i| samples[i].1 != [false; 3])
         .collect();
@@ -2507,7 +2566,7 @@ fn clipped_wall_distances<F: ScalarField>(
     let free: Vec<_> = held.iter().map(|&i| (samples[i].0, [false; 3])).collect();
     let points: Vec<Point> = free.iter().map(|s| s.0).collect();
     let values = g.values(&points);
-    let walks = g.wall_walks(&free, g.threshold())?;
+    let walks = g.wall_walks(&free, g.threshold(), settled)?;
     for ((&i, value), (distance, end)) in held.iter().zip(values).zip(walks) {
         let residual = if g.band() {
             value.abs() - g.threshold()
@@ -2619,10 +2678,13 @@ fn balance_volume<F: ScalarField>(mesh: &mut Mesh, g: &Context<F>) -> Result<usi
     let at: Vec<Point> = groups.iter().map(|m| mesh.points[m[0]]).collect();
     let values = g.values(&at);
     let gradients = g.gradients(&at);
-    let mut incident = vec![Vec::new(); mesh.points.len()];
+    // Only wall vertices move.
+    let mut incident = vec![Vec::<u32>::new(); mesh.points.len()];
     for (t, tet) in mesh.tets.iter().enumerate() {
         for &v in tet {
-            incident[v].push(t);
+            if area[v] > 0. {
+                incident[v].push(t as u32);
+            }
         }
     }
     let limit = 0.5 * o.geometry_tolerance;
@@ -2638,8 +2700,19 @@ fn balance_volume<F: ScalarField>(mesh: &mut Mesh, g: &Context<F>) -> Result<usi
     let initial: Vec<f64> = (0..mesh.tets.len())
         .map(|t| shape(&mesh.points, t))
         .collect();
-    let mut applied: Vec<(Vec<usize>, Vec<Point>)> = Vec::new();
-    for ((members, value), gradient) in groups.iter().zip(values).zip(gradients) {
+    // No move may leave an element worse than the worst the mesh had.
+    let floor = floor.max(initial.iter().copied().fold(f64::INFINITY, f64::min));
+    // Moves are recorded as the group they moved, by its place in `applied`.
+    const UNMOVED: u32 = u32::MAX;
+    let start = mesh.points.clone();
+    let mut applied: Vec<usize> = Vec::new();
+    let mut group_of = vec![UNMOVED; mesh.points.len()];
+    for (((index, members), value), gradient) in
+        groups.iter().enumerate().zip(values).zip(gradients)
+    {
+        if index % POLL == 0 {
+            g.check()?;
+        }
         // Outward normal, kept in every box plane an image lies in.
         let side = if g.band() { value.signum() } else { 1. };
         let mut normal: Point = std::array::from_fn(|a| {
@@ -2664,7 +2737,7 @@ fn balance_volume<F: ScalarField>(mesh: &mut Mesh, g: &Context<F>) -> Result<usi
             incident[v]
                 .iter()
                 .map(|&t| {
-                    let p = mesh.tets[t].map(|i| points[i]);
+                    let p = mesh.tets[t as usize].map(|i| points[i]);
                     if determinant(p) > 0. {
                         quality(p).powf(1.5)
                     } else {
@@ -2674,7 +2747,6 @@ fn balance_volume<F: ScalarField>(mesh: &mut Mesh, g: &Context<F>) -> Result<usi
                 .fold(f64::INFINITY, f64::min)
         };
         let before: Vec<f64> = members.iter().map(|&v| quality(&mesh.points, v)).collect();
-        let original: Vec<Point> = members.iter().map(|&v| mesh.points[v]).collect();
         for &v in members {
             for a in 0..3 {
                 mesh.points[v][a] += step * normal[a];
@@ -2685,46 +2757,35 @@ fn balance_volume<F: ScalarField>(mesh: &mut Mesh, g: &Context<F>) -> Result<usi
             .zip(&before)
             .all(|(&v, &b)| g.contains(mesh.points[v]) && quality(&mesh.points, v) >= b.min(floor));
         if kept {
-            applied.push((members.clone(), original));
+            for &v in members {
+                group_of[v] = applied.len() as u32;
+            }
+            applied.push(index);
         } else {
-            for (&v, p) in members.iter().zip(original) {
-                mesh.points[v] = p;
+            for &v in members {
+                mesh.points[v] = start[v];
             }
         }
     }
+    let moved_by = |v: &usize| (group_of[*v] != UNMOVED).then_some(group_of[*v] as usize);
     // A facet between facets of other sizes can end up farther from the wall
     // than it was: its vertices return, until no facet exceeds the working
     // tolerance because of a move.
-    let mut group_of = HashMap::<usize, usize>::new();
-    for (index, (members, _)) in applied.iter().enumerate() {
-        for &v in members {
-            group_of.insert(v, index);
-        }
-    }
     let mut reverted = vec![false; applied.len()];
     for _ in 0..4 {
-        let mut samples = Vec::with_capacity(wall.len() * FACET_SAMPLES);
-        for f in &wall {
-            samples.extend(facet_samples(
-                f.map(|i| mesh.points[i]),
-                [lo, hi],
-                o.adapt.is_some(),
-            ));
-        }
-        let mut estimates = Vec::with_capacity(samples.len());
-        for chunk in samples.chunks(4096 * FACET_SAMPLES) {
-            g.check()?;
-            estimates.extend(clipped_wall_distances(g, chunk)?);
-        }
         let mut undo: Vec<usize> = Vec::new();
-        for (f, d) in wall.iter().zip(estimates.as_chunks::<FACET_SAMPLES>().0) {
-            let (error, _) = facet_distance(f.map(|i| mesh.points[i]), d);
-            if error > WORKING_TOLERANCE * o.geometry_tolerance {
-                undo.extend(
-                    f.iter()
-                        .filter_map(|v| group_of.get(v).copied())
-                        .filter(|&i| !reverted[i]),
-                );
+        for facets in wall.chunks(1024) {
+            g.check()?;
+            let samples: Vec<_> = facets
+                .iter()
+                .flat_map(|f| facet_samples(f.map(|i| mesh.points[i]), [lo, hi], o.adapt.is_some()))
+                .collect();
+            let estimates = clipped_wall_distances(g, &samples)?;
+            for (f, d) in facets.iter().zip(estimates.as_chunks::<FACET_SAMPLES>().0) {
+                let (error, _) = facet_distance(f.map(|i| mesh.points[i]), d);
+                if error > WORKING_TOLERANCE * o.geometry_tolerance {
+                    undo.extend(f.iter().filter_map(moved_by).filter(|&i| !reverted[i]));
+                }
             }
         }
         if undo.is_empty() {
@@ -2732,8 +2793,8 @@ fn balance_volume<F: ScalarField>(mesh: &mut Mesh, g: &Context<F>) -> Result<usi
         }
         for index in undo {
             if !std::mem::replace(&mut reverted[index], true) {
-                for (&v, &p) in applied[index].0.iter().zip(&applied[index].1) {
-                    mesh.points[v] = p;
+                for &v in &groups[applied[index]] {
+                    mesh.points[v] = start[v];
                 }
             }
         }
@@ -2744,16 +2805,10 @@ fn balance_volume<F: ScalarField>(mesh: &mut Mesh, g: &Context<F>) -> Result<usi
     loop {
         let mut undo: Vec<usize> = Vec::new();
         for (t, tet) in mesh.tets.iter().enumerate() {
-            if tet
-                .iter()
-                .any(|v| group_of.get(v).is_some_and(|&i| !reverted[i]))
+            if tet.iter().filter_map(moved_by).any(|i| !reverted[i])
                 && shape(&mesh.points, t) < initial[t].min(floor)
             {
-                undo.extend(
-                    tet.iter()
-                        .filter_map(|v| group_of.get(v).copied())
-                        .filter(|&i| !reverted[i]),
-                );
+                undo.extend(tet.iter().filter_map(moved_by).filter(|&i| !reverted[i]));
             }
         }
         if undo.is_empty() {
@@ -2761,8 +2816,8 @@ fn balance_volume<F: ScalarField>(mesh: &mut Mesh, g: &Context<F>) -> Result<usi
         }
         for index in undo {
             if !std::mem::replace(&mut reverted[index], true) {
-                for (&v, &p) in applied[index].0.iter().zip(&applied[index].1) {
-                    mesh.points[v] = p;
+                for &v in &groups[applied[index]] {
+                    mesh.points[v] = start[v];
                 }
             }
         }
@@ -2771,14 +2826,16 @@ fn balance_volume<F: ScalarField>(mesh: &mut Mesh, g: &Context<F>) -> Result<usi
         .iter()
         .zip(&reverted)
         .filter(|(_, undone)| !**undone)
-        .map(|((members, _), _)| members.len())
+        .map(|(&index, _)| groups[index].len())
         .sum();
     weld_periodic_images(&mut mesh.points, g.bounds(), o.periodic);
     Ok(moved)
 }
 
-/// Reference lines per lattice cell and axis when sampling the wall.
-const COVERAGE_LINES: usize = 3;
+/// Reference lines per lattice cell and axis when sampling the wall of a
+/// lattice mesh, and of an adapted one. Adaptation coarsens, so it is where
+/// a feature gets lost and where the finer sampling pays for itself.
+const COVERAGE_LINES: [usize; 2] = [2, 3];
 /// Finest reference grid per axis, which bounds the cost on fine lattices.
 const COVERAGE_GRID: usize = 192;
 
@@ -2837,18 +2894,16 @@ fn wall_coverage<F: ScalarField>(wall: &[[Point; 3]], g: &Context<F>) -> Result<
     }
     let o = g.options;
     let [lo, hi] = o.bounds;
-    let n: [usize; 3] = o.cells.map(|c| (COVERAGE_LINES * c).min(COVERAGE_GRID));
+    let lines = COVERAGE_LINES[usize::from(o.adapt.is_some())];
+    let n: [usize; 3] = o.cells.map(|c| (lines * c).min(COVERAGE_GRID));
     let step: Point = std::array::from_fn(|a| (hi[a] - lo[a]) / n[a] as f64);
     let h = (0..3)
         .map(|a| (hi[a] - lo[a]) / o.cells[a] as f64)
         .fold(0., f64::max);
     let reach = (4. * o.geometry_tolerance).min(2. * h);
-    let inside = |v: f64| {
-        if g.band() {
-            v.abs() < g.threshold()
-        } else {
-            v < 0.
-        }
+    // Negative in the solid.
+    let residual = |v: f64| {
+        if g.band() { v.abs() - g.threshold() } else { v }
     };
     let node = |i: usize, j: usize, k: usize| -> Point {
         [
@@ -2857,24 +2912,26 @@ fn wall_coverage<F: ScalarField>(wall: &[[Point; 3]], g: &Context<F>) -> Result<
             lo[2] + (k as f64 + 0.5) * step[2],
         ]
     };
-    let mut solid = Vec::with_capacity(n[0] * n[1] * n[2]);
+    let mut grid: Vec<f32> = Vec::with_capacity(n[0] * n[1] * n[2]);
     let mut batch = Vec::with_capacity(4096);
     for k in 0..n[2] {
         for j in 0..n[1] {
             for i in 0..n[0] {
                 batch.push(node(i, j, k));
-                if batch.len() == 4096 {
+                if batch.len() % POLL == 0 {
                     g.check()?;
-                    solid.extend(g.values(&batch).into_iter().map(inside));
+                }
+                if batch.len() == 4096 {
+                    grid.extend(g.values(&batch).into_iter().map(|v| residual(v) as f32));
                     batch.clear();
                 }
             }
         }
     }
-    solid.extend(g.values(&batch).into_iter().map(inside));
-    let at = |i: usize, j: usize, k: usize| solid[i + n[0] * (j + n[1] * k)];
-    // Segments across the wall, as (solid end, void end).
-    let mut ends: Vec<[Point; 2]> = Vec::new();
+    grid.extend(g.values(&batch).into_iter().map(|v| residual(v) as f32));
+    let at = |i: usize, j: usize, k: usize| f64::from(grid[i + n[0] * (j + n[1] * k)]);
+    // Segments across the wall, solid end first, with the residuals there.
+    let mut ends: Vec<([Point; 2], [f64; 2])> = Vec::new();
     for k in 0..n[2] {
         for j in 0..n[1] {
             for i in 0..n[0] {
@@ -2886,58 +2943,89 @@ fn wall_coverage<F: ScalarField>(wall: &[[Point; 3]], g: &Context<F>) -> Result<
                         continue;
                     }
                     let (here, there) = (at(i, j, k), at(next.0, next.1, next.2));
-                    if here != there {
+                    if (i + j) % POLL == 0 && a == 0 {
+                        g.check()?;
+                    }
+                    if (here < 0.) != (there < 0.) {
                         let (p, q) = (node(i, j, k), node(next.0, next.1, next.2));
-                        ends.push(if here { [p, q] } else { [q, p] });
+                        ends.push(if here < 0. {
+                            ([p, q], [here, there])
+                        } else {
+                            ([q, p], [there, here])
+                        });
                     }
                 }
             }
         }
     }
-    let scale = (0..3).map(|a| hi[a] - lo[a]).fold(0., f64::max);
-    for _ in 0..((h / (1e-9 * scale)).log2().ceil().max(1.) as usize) {
+    // Two bisections, then the chord of the last bracket: the root is then
+    // known to a small fraction of the reference step at three evaluations.
+    for _ in 0..2 {
         g.check()?;
         let middle: Vec<Point> = ends
             .iter()
-            .map(|[p, q]| std::array::from_fn(|a| 0.5 * (p[a] + q[a])))
+            .map(|([p, q], _)| std::array::from_fn(|a| 0.5 * (p[a] + q[a])))
             .collect();
-        for chunk in (0..middle.len()).collect::<Vec<_>>().chunks(4096) {
-            let values = g.values(&middle[chunk[0]..=chunk[chunk.len() - 1]]);
-            for (&e, v) in chunk.iter().zip(values) {
-                ends[e][usize::from(!inside(v))] = middle[e];
+        for (chunk, start) in middle.chunks(4096).zip((0..).step_by(4096)) {
+            g.check()?;
+            for (offset, v) in g.values(chunk).into_iter().enumerate() {
+                let (r, e) = (residual(v), start + offset);
+                let end = usize::from(r >= 0.);
+                ends[e].0[end] = middle[e];
+                ends[e].1[end] = r;
             }
         }
     }
-    // Facets by the cells their reach-inflated boxes overlap: every facet
-    // within reach of a point is then listed in the cell of that point.
+    let roots: Vec<Point> = ends
+        .into_iter()
+        .map(|([p, q], [inner, outer])| {
+            let w = if outer > inner {
+                (-inner / (outer - inner)).clamp(0., 1.)
+            } else {
+                0.5
+            };
+            std::array::from_fn(|a| p[a] + w * (q[a] - p[a]))
+        })
+        .collect();
+    // Facets by the cells their boxes overlap. A cell is at least a reach
+    // wide, so every facet within reach of a point is listed in the cell of
+    // that point or in one of the twenty-six around it.
     let cell = reach.max(h);
     let key =
         |p: Point| -> [i64; 3] { std::array::from_fn(|a| ((p[a] - lo[a]) / cell).floor() as i64) };
-    let mut bins = HashMap::<[i64; 3], Vec<usize>>::new();
+    let mut bins = HashMap::<[i64; 3], Vec<u32>>::new();
     for (f, t) in wall.iter().enumerate() {
         let low = key(std::array::from_fn(|a| {
-            t.iter().map(|p| p[a]).fold(f64::INFINITY, f64::min) - reach
+            t.iter().map(|p| p[a]).fold(f64::INFINITY, f64::min)
         }));
         let high = key(std::array::from_fn(|a| {
-            t.iter().map(|p| p[a]).fold(f64::NEG_INFINITY, f64::max) + reach
+            t.iter().map(|p| p[a]).fold(f64::NEG_INFINITY, f64::max)
         }));
         for x in low[0]..=high[0] {
             for y in low[1]..=high[1] {
                 for z in low[2]..=high[2] {
-                    bins.entry([x, y, z]).or_default().push(f);
+                    bins.entry([x, y, z]).or_default().push(f as u32);
                 }
             }
         }
     }
     let mut worst: f64 = 0.;
-    for [p, q] in ends {
-        let root: Point = std::array::from_fn(|a| 0.5 * (p[a] + q[a]));
-        let nearest = bins
-            .get(&key(root))
-            .into_iter()
-            .flatten()
-            .map(|&f| norm(sub(closest_on_triangle(root, wall[f]), root)))
-            .fold(reach, f64::min);
+    for (index, root) in roots.into_iter().enumerate() {
+        if index % POLL == 0 {
+            g.check()?;
+        }
+        let [x, y, z] = key(root);
+        let mut nearest = reach;
+        for dx in -1..=1 {
+            for dy in -1..=1 {
+                for dz in -1..=1 {
+                    for &f in bins.get(&[x + dx, y + dy, z + dz]).into_iter().flatten() {
+                        let on = closest_on_triangle(root, wall[f as usize]);
+                        nearest = nearest.min(norm(sub(on, root)));
+                    }
+                }
+            }
+        }
         worst = worst.max(nearest);
     }
     Ok(worst)
@@ -2985,20 +3073,22 @@ fn elements_outside<F: ScalarField>(
         }
     }
     let residual = |v: f64| if g.band() { v.abs() - g.threshold() } else { v };
-    let points: Vec<Point> = samples.iter().map(|s| s.0).collect();
-    let outside: Vec<usize> = g
-        .values(&points)
-        .into_iter()
-        .enumerate()
-        .filter_map(|(i, v)| (residual(v) > 0.).then_some(i))
-        .collect();
-    let points: Vec<Point> = outside.iter().map(|&i| points[i]).collect();
-    let values = g.values(&points);
-    let gradients = g.gradients(&points);
-    g.check()?;
     let mut distance = vec![0.; samples.len()];
-    for ((&i, v), gradient) in outside.iter().zip(values).zip(gradients) {
-        distance[i] = wall_distance(residual(v), gradient, [false; 3]).min(samples[i].1);
+    for (chunk, start) in samples.chunks(4096).zip((0..).step_by(4096)) {
+        g.check()?;
+        let points: Vec<Point> = chunk.iter().map(|s| s.0).collect();
+        let outside: Vec<usize> = g
+            .values(&points)
+            .into_iter()
+            .enumerate()
+            .filter_map(|(i, v)| (residual(v) > 0.).then_some(i))
+            .collect();
+        let points: Vec<Point> = outside.iter().map(|&i| points[i]).collect();
+        let values = g.values(&points);
+        let gradients = g.gradients(&points);
+        for ((&i, v), gradient) in outside.iter().zip(values).zip(gradients) {
+            distance[start + i] = wall_distance(residual(v), gradient, [false; 3]).min(chunk[i].1);
+        }
     }
     let mut found = Vec::new();
     for (t, tet) in mesh.tets.iter().enumerate() {
@@ -3837,6 +3927,7 @@ mod topology_tests {
                 scale: 1.,
                 optimizer_length: 1.,
                 invalid: AtomicBool::new(false),
+                gaps_resolved: false,
             };
             let points = [[0.2, 0., -0.5], [0.2, 0., 0.5]];
             assert_eq!(context.value(points[0]), context.value(points[1]));

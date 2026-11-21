@@ -26,7 +26,7 @@ During Tet10 elevation and fitting, the development branch bisects regions where
 
 `sampled_surface_error` is the largest distance from a facet sample to the wall, measured by walking from the sample to the wall rather than by `|f| / |grad f|`. It bounds the distance from above whether or not the field is a distance function, and `geometry_tolerance` gates it. A sample in a box plane of an adaptive mesh is measured within that plane, unless the solid passes the plane by less than that.
 
-`sampled_coverage_error` measures the other direction: from the wall of the solid, sampled where lines three times finer than the lattice cross it, to the meshed wall. Only this measure sees a feature the mesh lost or a crease it cut across. It is reported, capped at four tolerances, and does not reject a mesh.
+`sampled_coverage_error` measures the other direction: from the wall of the solid, sampled where lines twice finer than the lattice cross it, three times with adaptation, to the meshed wall. Only this measure sees a feature the mesh lost or a crease it cut across. It is reported, capped at four tolerances, and does not reject a mesh.
 
 Periodic images have bitwise identical coordinates in the plane of their faces, in linear and quadratic output.
 

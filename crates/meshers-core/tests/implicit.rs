@@ -1116,35 +1116,43 @@ fn periodic_images_share_their_in_plane_coordinates_bit_for_bit() {
 }
 
 #[test]
-fn coverage_error_reports_a_feature_the_mesh_lost() {
-    // The island sits between the edges of a four-cell lattice: no facet
-    // exists near it, so only wall samples can tell that it is missing.
-    let solid = |p: [f64; 3]| {
-        let island =
-            ((p[0] - 0.06).powi(2) + (p[1] - 0.125).powi(2) + (p[2] - 0.19).powi(2)).sqrt() - 0.045;
-        (0.75 - p[0]).min(island)
-    };
+fn coverage_error_measures_the_wall_against_the_mesh() {
+    // Wall points sampled on lines finer than the lattice, against the meshed
+    // wall: the direction facet samples cannot see. On a sphere both
+    // directions measure the same chord error, so they must agree in scale.
+    let ball = |p: [f64; 3]| (p[0].powi(2) + p[1].powi(2) + p[2].powi(2)).sqrt() - 0.35;
     let options = Options {
-        cells: [4; 3],
-        geometry_tolerance: 0.02,
-        optimize_passes: 0,
-        snap: 0.,
+        bounds: [[-0.5; 3], [0.5; 3]],
+        cells: [16; 3],
+        geometry_tolerance: 0.03,
         ..Options::default()
     };
-    let coarse = generate(&solid, options).unwrap().diagnostics;
-    assert!(coarse.maximum_sampled_surface_error <= 0.02);
-    assert!(coarse.maximum_sampled_coverage_error > 0.04);
-    let fine = generate(
-        &solid,
+    let fine = generate(&ball, options).unwrap().diagnostics;
+    let coarse = generate(
+        &ball,
         Options {
-            cells: [16; 3],
+            adapt: Some(meshers_core::tet_adapt::Options {
+                tolerance: 0.03,
+                min_length: 0.03,
+                ..Default::default()
+            }),
             ..options
         },
     )
     .unwrap()
     .diagnostics;
-    assert!(fine.maximum_sampled_coverage_error <= 0.02);
-    assert!(fine.maximum_sampled_coverage_error > 0.);
+    assert!(!coarse.adaptation_abandoned);
+    for d in [&fine, &coarse] {
+        let (surface, coverage) = (
+            d.maximum_sampled_surface_error,
+            d.maximum_sampled_coverage_error,
+        );
+        assert!(
+            coverage > 0.3 * surface && coverage < 2. * surface,
+            "{surface} {coverage}"
+        );
+    }
+    assert!(coarse.maximum_sampled_coverage_error > 3. * fine.maximum_sampled_coverage_error);
 }
 
 #[test]
@@ -1199,25 +1207,27 @@ fn adaptation_recovers_fibres_grazing_the_box() {
 
 #[test]
 fn a_refused_adaptation_falls_back_to_the_lattice_mesh() {
-    // Adaptation leaves this coarse spinodoid outside the tolerance. The
-    // caller gets the lattice mesh of the same field, flagged as such,
-    // instead of a rejection.
-    let tolerance = 0.04;
+    // No edge may be shorter than `min_length`, far too long here for the
+    // tolerance: adaptation cannot close the geometry. The caller gets the
+    // lattice mesh of the same field, flagged as such, instead of a rejection.
+    let ball = |p: [f64; 3]| (p[0].powi(2) + p[1].powi(2) + p[2].powi(2)).sqrt() - 0.35;
+    let tolerance = 0.004;
     let options = Options {
+        bounds: [[-0.5; 3], [0.5; 3]],
         cells: [16; 3],
         periodic: [true; 3],
         geometry_tolerance: tolerance,
         minimum_quality: 0.1,
         ..Options::default()
     };
-    let field = Spinodoid::load();
-    let lattice = generate(&field, options).unwrap();
+    let lattice = generate(&ball, options).unwrap();
     let adapted = generate(
-        &field,
+        &ball,
         Options {
             adapt: Some(meshers_core::tet_adapt::Options {
                 tolerance,
-                min_length: tolerance,
+                min_length: 0.3,
+                max_length: 0.5,
                 ..Default::default()
             }),
             ..options

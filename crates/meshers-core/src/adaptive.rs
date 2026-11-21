@@ -213,7 +213,11 @@ pub(crate) fn refine_for(
             // The measure of the final geometry gate, so both agree on a facet.
             let samples: Vec<_> = samples.into_iter().map(|p| (p, [false; 3])).collect();
             for chunk in samples.chunks(4096) {
-                batched_errors.extend(geometry.wall_distances(chunk, threshold)?);
+                batched_errors.extend(geometry.wall_distances(
+                    chunk,
+                    threshold,
+                    0.25 * tolerance,
+                )?);
             }
         }
         let mut batched_errors = batched_errors.into_iter();

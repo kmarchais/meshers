@@ -69,13 +69,18 @@ pub(crate) trait Geometry: Sync {
     /// length of the path walked to the wall bounds the distance from above
     /// whatever the scaling of the field. Samples that do not converge keep the
     /// first-order estimate, infinite at a vanishing gradient.
+    ///
+    /// A first-order estimate at or below `settled` is kept as it is: that
+    /// close to the wall the two agree, and most samples of a resolved mesh
+    /// then cost one evaluation instead of a walk.
     fn wall_distances(
         &self,
         samples: &[(Point, [bool; 3])],
         threshold: f64,
+        settled: f64,
     ) -> Result<Vec<f64>, String> {
         Ok(self
-            .wall_walks(samples, threshold)?
+            .wall_walks(samples, threshold, settled)?
             .into_iter()
             .map(|walk| walk.0)
             .collect())
@@ -85,6 +90,7 @@ pub(crate) trait Geometry: Sync {
         &self,
         samples: &[(Point, [bool; 3])],
         threshold: f64,
+        settled: f64,
     ) -> Result<Vec<(f64, Point)>, String> {
         let g = self;
         const STEPS: usize = 8;
@@ -109,7 +115,9 @@ pub(crate) trait Geometry: Sync {
         // On the wall already, held at a box corner, or without a usable gradient.
         let mut active: Vec<usize> = (0..samples.len())
             .filter(|&i| {
-                distance[i] > resolved && distance[i].is_finite() && samples[i].1 != [true; 3]
+                distance[i] > resolved.max(settled)
+                    && distance[i].is_finite()
+                    && samples[i].1 != [true; 3]
             })
             .collect();
         let mut at = start.clone();
