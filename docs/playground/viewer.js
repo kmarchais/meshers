@@ -5,12 +5,11 @@ import { RoomEnvironment } from "three/addons/environments/RoomEnvironment.js";
 export function createViewer(stage) {
   const canvas = stage.querySelector("canvas");
   const renderer = new THREE.WebGLRenderer({
-    canvas, alpha: false, antialias: false, powerPreference: "default",
+    canvas, alpha: true, antialias: true, powerPreference: "low-power",
   });
   renderer.toneMapping = THREE.ACESFilmicToneMapping;
   renderer.toneMappingExposure = 1.22;
   const scene = new THREE.Scene();
-  scene.background = new THREE.Color(0x263b3b);
   const studio = new RoomEnvironment();
   const generator = new THREE.PMREMGenerator(renderer);
   const environment = generator.fromScene(studio, 0.04);
@@ -30,60 +29,19 @@ export function createViewer(stage) {
   orbit.saveState();
   // High-rate pointers can deliver several orbit updates between two paints.
   let frame;
-  let interacting = false;
-  let reduced = false;
-  let previous = 0;
-  let late = 0;
-  let settle;
-  let width = 0;
-  let height = 0;
-  function sizeBuffer() {
-    if (!width || !height) return;
-    const ratio = reduced
-      ? Math.min(devicePixelRatio, 0.72, Math.sqrt(200_000 / (width * height)))
-      : Math.min(devicePixelRatio, 1.5, Math.sqrt(1_200_000 / (width * height)));
-    if (canvas.width !== Math.floor(width * ratio) || canvas.height !== Math.floor(height * ratio)) {
-      renderer.setDrawingBufferSize(width, height, ratio);
-    }
-  }
   function render() {
     if (frame !== undefined) return;
-    frame = requestAnimationFrame(now => {
+    frame = requestAnimationFrame(() => {
       frame = undefined;
-      if (interacting && !reduced) {
-        const gap = now - previous;
-        // Consecutive late frames during motion justify a smaller drawing buffer.
-        late = previous && gap > 22 && gap < 100 ? late + 1 : 0;
-        previous = now;
-        if (late >= 3) {
-          reduced = true;
-          sizeBuffer();
-        }
-      }
       renderer.render(scene, camera);
     });
   }
   orbit.addEventListener("change", render);
-  orbit.addEventListener("start", () => {
-    clearTimeout(settle);
-    interacting = true;
-  });
-  orbit.addEventListener("end", () => {
-    // Wheel events come in bursts, each with its own start and end.
-    settle = setTimeout(() => {
-      interacting = false;
-      previous = late = 0;
-      if (reduced) {
-        reduced = false;
-        sizeBuffer();
-        render();
-      }
-    }, 180);
-  });
-  const resize = new ResizeObserver(([entry]) => {
-    ({ width, height } = entry.contentRect);
+  const resize = new ResizeObserver(() => {
+    const { width, height } = stage.getBoundingClientRect();
     if (!width || !height) return;
-    sizeBuffer();
+    const ratio = Math.min(devicePixelRatio, 1.5, Math.sqrt(1_200_000 / (width * height)));
+    renderer.setDrawingBufferSize(width, height, ratio);
     camera.aspect = width / height;
     camera.updateProjectionMatrix();
     render();
@@ -106,10 +64,10 @@ export function createViewer(stage) {
     orbit.update();
   });
   const materials = [
-    new THREE.MeshStandardMaterial({color: 0x389d90, roughness: 0.33, metalness: 0.48, polygonOffset: true, polygonOffsetFactor: 1, polygonOffsetUnits: 1}),
-    new THREE.MeshStandardMaterial({color: 0xd38b4c, roughness: 0.41, metalness: 0.55, polygonOffset: true, polygonOffsetFactor: 1, polygonOffsetUnits: 1}),
+    new THREE.MeshStandardMaterial({color: 0x389d90, roughness: 0.33, metalness: 0.48, side: THREE.DoubleSide}),
+    new THREE.MeshStandardMaterial({color: 0xd38b4c, roughness: 0.41, metalness: 0.55, side: THREE.DoubleSide}),
   ];
-  const ink = new THREE.LineBasicMaterial({color: 0x12292a, transparent: true, opacity: 0.23, depthWrite: false});
+  const ink = new THREE.LineBasicMaterial({color: 0x12292a, transparent: true, opacity: 0.23});
   const solid = new THREE.Mesh(new THREE.BufferGeometry(), materials);
   const edges = new THREE.LineSegments(new THREE.BufferGeometry(), ink);
   solid.position.setScalar(-0.5);
@@ -136,7 +94,6 @@ export function createViewer(stage) {
     reset() { orbit.reset(); },
     setEdges(visible) { edges.visible = visible; render(); },
     dispose() {
-      clearTimeout(settle);
       cancelAnimationFrame(frame);
       resize.disconnect();
       orbit.dispose();
