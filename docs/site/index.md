@@ -34,9 +34,8 @@ Generate a periodic solid and inspect its tetrahedral mesh. Drag to orbit, scrol
       <label class="mesh-switch"><input id="mesh-lines" type="checkbox" checked><span>Triangle edges</span></label>
       <button type="button" id="mesh-reset" disabled>Reset view</button>
     </div>
-    <button type="button" id="mesh-start" disabled>Start 3D explorer</button>
   </form>
-  <p class="mesh-status" role="status">Start the explorer to generate a mesh on this device.</p>
+  <p class="mesh-status" role="status">Preparing the 3D view…</p>
 </div>
 <noscript>Enable JavaScript to rotate and regenerate the mesh.</noscript>
 

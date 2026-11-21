@@ -39,6 +39,7 @@ def build_playground() -> None:
         ROOT / "target/wasm32-unknown-unknown/release/meshers_playground.wasm",
         assets / "meshers.wasm",
     )
+    run_command("node", "starter.mjs", cwd=playground)
     run_command("node", "--test", "smoke.test.js", cwd=playground)
     run_command("npm", "ci", "--no-audit", "--no-fund", cwd=playground)
     run_command("npm", "run", "build", cwd=playground)

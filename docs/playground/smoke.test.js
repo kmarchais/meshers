@@ -1,6 +1,7 @@
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import { test } from "node:test";
+import { boundaryMesh } from "../site/assets/boundary-mesh.mjs";
 
 const bytes = await readFile(new URL("../site/assets/playground/meshers.wasm", import.meta.url));
 const { instance: { exports: core } } = await WebAssembly.instantiate(bytes);
@@ -42,4 +43,15 @@ test("optimization improves the coarse gyroid shown in the explorer", () => {
     return Math.acos(dot / (Math.hypot(...a) * Math.hypot(...b))) * 180 / Math.PI;
   }));
   assert.ok(Math.abs(mesh.minAngle - Math.min(...angles)) < 1e-6);
+});
+
+test("the starter has the same boundary, labels and metrics as the live default mesh", async () => {
+  const url = new URL("../site/assets/playground/gyroid.json", import.meta.url);
+  const starter = JSON.parse(await readFile(url, "utf8"));
+  const { coords, indices, ...metrics } = boundaryMesh(generate(0, 10, 0.5));
+  const { coords: initial, indices: faces, ...reported } = starter;
+  assert.deepEqual(reported, metrics);
+  assert.deepEqual(faces, Array.from(indices));
+  assert.equal(initial.length, coords.length);
+  assert.ok(coords.every((x, i) => Math.abs(x - initial[i]) <= 5.1e-8));
 });

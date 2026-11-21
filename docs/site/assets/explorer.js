@@ -2,7 +2,6 @@ const lab = document.querySelector(".mesh-lab");
 const form = lab.querySelector(".mesh-controls");
 const stage = lab.querySelector(".mesh-stage");
 const status = lab.querySelector(".mesh-status");
-const start = form.querySelector("#mesh-start");
 const reset = form.querySelector("#mesh-reset");
 const lines = form.querySelector("#mesh-lines");
 const cells = form.querySelector("#mesh-cells");
@@ -23,7 +22,10 @@ function updateParameters() {
 }
 
 let viewer;
-let active = false;
+let loading = false;
+let starter;
+let inView = false;
+let dirty = true;
 let session = 0;
 let worker;
 let deadline;
@@ -37,78 +39,110 @@ function cancelJob() {
   worker = undefined;
 }
 
-function stop(message = "Explorer stopped. Start again to generate a mesh.") {
-  active = false;
-  session++;
+function show(data) {
+  viewer.showMesh(data, lines.checked);
+  reset.disabled = false;
+  status.textContent = [
+    data.tets.toLocaleString() + " tetrahedra", data.nodes.toLocaleString() + " nodes",
+    "Min. MMG quality " + data.minQuality.toFixed(3),
+    "Min. boundary angle " + data.minAngle.toFixed(1) + "\u00b0",
+  ].join(" \u00b7 ");
+}
+
+function fail(message) {
   cancelJob();
-  viewer?.dispose();
-  viewer = undefined;
-  reset.disabled = true;
-  start.textContent = "Start 3D explorer";
   status.textContent = message;
 }
 
 function generate() {
   cancelJob();
-  if (!active || !viewer || document.hidden) return;
+  if (!viewer || !inView || document.hidden) return;
+  dirty = false;
+  if (field.value === "0" && cells.valueAsNumber === 10 && width.valueAsNumber === 0.5) {
+    show(starter);
+    return;
+  }
   status.textContent = "Generating mesh…";
   try {
-    const job = new Worker(new URL("./mesh-worker.js", import.meta.url));
+    const job = new Worker(new URL("./mesh-worker.js", import.meta.url), { type: "module" });
     worker = job;
-    deadline = setTimeout(() => stop("The mesher took too long to load. Try again."), 45_000);
-    job.onerror = () => { if (worker === job) stop("The mesher could not run. Try again."); };
+    deadline = setTimeout(() => fail("The mesher took too long to load. Try again."), 45_000);
+    job.onerror = () => { if (worker === job) fail("The mesher could not run. Try again."); };
     job.onmessage = ({ data }) => {
       if (worker !== job) return;
       if (data.ready) {
         clearTimeout(deadline);
-        deadline = setTimeout(() => stop("Meshing timed out. Try fewer cells."), 5_000);
+        deadline = setTimeout(() => fail("Meshing timed out. Try fewer cells."), 5_000);
         return;
       }
       cancelJob(); // Drop the worker and its WebAssembly heap after every result.
       if (data.error) { status.textContent = "Mesh rejected. " + data.error; return; }
-      viewer.showMesh(data, lines.checked);
-      reset.disabled = false;
-      status.textContent = [
-        data.tets.toLocaleString() + " tetrahedra", data.nodes.toLocaleString() + " nodes",
-        "Min. MMG quality " + data.minQuality.toFixed(3),
-        "Min. boundary angle " + data.minAngle.toFixed(1) + "\u00b0",
-      ].join(" \u00b7 ");
+      show(data);
     };
     job.postMessage({ field: Number(field.value), cells: cells.valueAsNumber, width: width.valueAsNumber });
   } catch {
-    stop("The mesher could not start. Try the Python example below.");
+    fail("The mesher could not start. Try the Python example below.");
+  }
+}
+
+async function prepare() {
+  if (!inView || document.hidden || loading) return;
+  if (viewer) {
+    if (dirty) generate();
+    return;
+  }
+  const current = session;
+  loading = true;
+  try {
+    const [module, data] = await Promise.all([
+      import("./playground/viewer.js"),
+      fetch(new URL("./playground/gyroid.json", import.meta.url)).then(response => {
+        if (!response.ok) throw new Error("Initial mesh unavailable");
+        return response.json();
+      }),
+    ]);
+    if (current !== session || !inView || document.hidden) return;
+    starter = { ...data, coords: new Float32Array(data.coords), indices: new Uint32Array(data.indices) };
+    viewer = module.createViewer(stage);
+    generate();
+  } catch {
+    if (current === session) fail("The 3D view could not load. You can run the Python example below.");
+  } finally {
+    if (current === session) loading = false;
+  }
+}
+
+function updateVisibility() {
+  if (inView && !document.hidden) {
+    prepare();
+  } else if (worker || pending !== undefined) {
+    cancelJob();
+    dirty = true;
   }
 }
 
 form.addEventListener("input", updateParameters);
 form.addEventListener("change", ({ target }) => {
   if (target === lines) { viewer?.setEdges(lines.checked); return; }
-  if (!viewer) return;
+  dirty = true;
   cancelJob();
-  status.textContent = "Generating mesh…";
-  pending = setTimeout(generate, 200);
+  if (inView && !document.hidden) pending = setTimeout(prepare, 200);
 });
 reset.onclick = () => viewer?.reset();
-start.onclick = async () => {
-  if (active) { stop(); return; }
-  active = true;
-  const current = ++session;
-  start.textContent = "Stop explorer";
-  status.textContent = "Starting 3D view…";
-  try {
-    const { createViewer } = await import("./playground/viewer.js");
-    if (session !== current) return;
-    viewer = createViewer(stage);
-    generate();
-  } catch {
-    stop("The 3D view needs WebGL 2. You can run the Python example below.");
-  }
-};
-document.addEventListener("visibilitychange", () => {
-  if (document.hidden && active && (!viewer || worker || status.textContent === "Generating mesh…")) {
-    stop("Meshing paused while the page was hidden. Start again to resume.");
-  }
+new IntersectionObserver(([entry]) => {
+  inView = entry.isIntersecting;
+  updateVisibility();
+}).observe(stage);
+document.addEventListener("visibilitychange", updateVisibility);
+window.addEventListener("pagehide", () => {
+  session++;
+  cancelJob();
+  viewer?.dispose();
+  viewer = undefined;
+  starter = undefined;
+  loading = false;
+  dirty = true;
+  reset.disabled = true;
 });
-window.addEventListener("pagehide", () => { if (active) stop(); });
+window.addEventListener("pageshow", updateVisibility);
 updateParameters();
-start.disabled = false;
