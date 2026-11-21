@@ -7,8 +7,8 @@
 .mesh-theme option { color: CanvasText; background: Canvas; }
 .mesh-visually-hidden { position:absolute; width:1px; height:1px; overflow:hidden; clip-path:inset(50%); }
 
-.mesh-lab { display:grid; grid-template-columns: minmax(0,1fr) minmax(11rem, 19%); background:#142224; color:#edf4ef; border-radius:.65rem; overflow:hidden; }
-.mesh-stage { position:relative; min-width:0; height:clamp(16rem,50vh,32rem); background:radial-gradient(ellipse at 50% 38%,#354848 0%,#253637 48%,#162627 100%); }
+.mesh-lab { display:grid; grid-template-columns: minmax(0,1fr) minmax(12rem, 21%); background:#142224; color:#edf4ef; border-radius:.65rem; overflow:hidden; }
+.mesh-stage { position:relative; min-width:0; min-height:clamp(16rem,50vh,32rem); background:radial-gradient(ellipse at 50% 38%,#354848 0%,#253637 48%,#162627 100%); }
 .mesh-stage canvas,.mesh-stage img { position:absolute; inset:0; width:100%; height:100%; object-fit:contain; }
 .mesh-stage canvas { cursor:grab; touch-action:none; }
 .mesh-stage canvas:active { cursor:grabbing; }
@@ -17,15 +17,55 @@
 .mesh-key { position:absolute; bottom:.8rem; left:1rem; display:flex; gap:.9rem; font-size:.63rem; color:#e8f1ef; pointer-events:none; }
 .mesh-key span::before { display:inline-block; content:""; width:.5rem; height:.5rem; background:#51af9f; margin-right:.32rem; }
 .mesh-key span+span::before { background:#d99b55; }
-.md-typeset .mesh-controls { display:flex; flex-direction:column; min-width:0; justify-content:center; gap:1rem; border:0; margin:0; padding:1.15rem; position:relative; }
-.mesh-controls legend { float:left; font-weight:700; font-size:.88rem; line-height:1.2; }
-.mesh-controls label { display:block; font-size:.7rem; font-weight:500; }
-.mesh-controls output { float:right; font-variant-numeric:tabular-nums; color:#89d7c6; }
-.mesh-controls select,.mesh-controls button { display:block; width:100%; font:inherit; background:#233637; color:#f2f6f5; padding:.4rem .5rem; border:1px solid #526961; border-radius:.22rem; }
-.mesh-controls select,.mesh-controls input[type=range] { margin-top:.28rem; }
-.mesh-controls input { accent-color:#75cbb9; }
-.mesh-controls input[type=range] { display:block; width:100%; }
-.mesh-controls button { cursor:pointer; font-size:.68rem; }
+/* The control rail uses the same material colors as the scene in both themes. */
+.mesh-controls {
+  --paper:#ecf5f2; --muted:#acc1bb; --mint:#92dfc5; --track:#3c524e;
+  min-width:0; padding:clamp(.9rem,1.8vw,1.5rem); margin:0;
+  display:grid; align-content:center; gap:.9rem;
+  background:#172a29; color:var(--paper); color-scheme:dark;
+}
+.md-typeset .mesh-controls h2 { margin:0; font-size:1rem; line-height:1.25; letter-spacing:-.025em; }
+.mesh-controls label,.mesh-controls legend { font-size:.68rem; font-weight:600; }
+.mesh-controls .mesh-fields { min-width:0; padding:0; margin:0; border:0; }
+.mesh-fields legend { padding:0; margin-bottom:.28rem; }
+.mesh-segments { display:flex; padding:3px; border:1px solid #425c56; border-radius:.42rem; background:#10201f; }
+.mesh-segments label { flex:1; position:relative; text-align:center; min-width:0; }
+.mesh-segments span { display:block; padding:.33rem .12rem; cursor:pointer; border-radius:.25rem; color:var(--muted); }
+.mesh-segments input,.mesh-switch input { position:absolute; opacity:0; width:1px; height:1px; }
+.mesh-segments input:checked + span { background:#315549; color:#ddffef; }
+.mesh-segments input:focus-visible + span,.mesh-switch input:focus-visible + span,.mesh-controls button:focus-visible {
+  outline:2px solid var(--mint); outline-offset:2px;
+}
+.mesh-slider { display:grid; grid-template-columns:1fr auto; align-items:center; }
+.mesh-slider output { font:.68rem var(--md-code-font); font-variant-numeric:tabular-nums; color:var(--mint); }
+.mesh-slider input {
+  grid-column:1/-1; appearance:none; width:100%; margin:0; height:1.2rem; cursor:pointer;
+  background:linear-gradient(to right,var(--mint) var(--fill),var(--track) var(--fill)) center / 100% 4px no-repeat;
+}
+.mesh-slider input::-webkit-slider-thumb {
+  appearance:none; width:.72rem; height:.72rem; border-radius:50%; background:#dff9ed; border:2px solid #67b49a;
+}
+.mesh-slider input::-moz-range-thumb { width:.55rem; height:.55rem; border-radius:50%; background:#dff9ed; border:2px solid #67b49a; }
+.mesh-slider input:focus-visible { outline:2px solid var(--mint); outline-offset:2px; }
+.mesh-display { display:flex; align-items:center; justify-content:space-between; gap:.35rem; flex-wrap:wrap; padding-top:.55rem; border-top:1px solid var(--track); }
+.mesh-switch { cursor:pointer; position:relative; }
+.mesh-switch span { display:flex; gap:.32rem; align-items:center; min-height:1.4rem; }
+.mesh-switch span::before {
+  content:""; width:1.4rem; height:.78rem; border-radius:1rem; border:1px solid #839c95;
+  background:radial-gradient(circle at 26% 50%,#c8d6d1 0 25%,transparent 28%),#233634;
+}
+.mesh-switch input:checked + span::before {
+  background:radial-gradient(circle at 74% 50%,#18362c 0 25%,transparent 28%),var(--mint);
+}
+.mesh-controls button { cursor:pointer; font:inherit; }
+#mesh-reset { color:var(--muted); font-size:.62rem; padding:.25rem; text-decoration:underline; text-underline-offset:.15em; }
+#mesh-reset:disabled { opacity:.45; cursor:default; }
+#mesh-start { padding:.5rem; font-size:.72rem; font-weight:700; color:#122f25; background:var(--mint); border-radius:.3rem; }
+#mesh-start:hover { background:#b5f1dc; }
+@media (forced-colors:active) {
+  .mesh-segments input:checked + span,.mesh-switch input:checked + span { outline:2px solid Highlight; }
+  .mesh-slider input { appearance:auto; }
+}
 .mesh-status { grid-column:1/-1; border-top:1px solid #354949; margin:0!important; padding:.48rem 1rem; font: .66rem/1.6 var(--md-code-font); color:#c4d7d3; }
 .mesh-gallery { display:grid; grid-template-columns:repeat(auto-fit,minmax(min(100%,10rem),1fr)); gap:1rem; }
 .md-typeset .mesh-gallery p { margin:0; }
@@ -34,8 +74,12 @@
 .mesh-gallery a:hover img { outline:2px solid var(--md-primary-fg-color); }
 @media (max-width:700px) {
   .mesh-lab { grid-template-columns:1fr; }
-  .mesh-stage { height:clamp(14rem, 62vw, 20rem); }
+  .mesh-stage { min-height:clamp(14rem, 62vw, 20rem); }
   .md-typeset .mesh-controls { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); align-items:center; gap:.7rem; padding:.8rem; }
-  .mesh-controls legend { grid-column:1/-1; }
+  .md-typeset .mesh-controls h2,.mesh-controls .mesh-fields { grid-column:1/-1; }
+  .mesh-display { flex-wrap:wrap; border:0; padding:0; }
   .mesh-theme select { max-width:5rem; }
 }
+
+[data-md-color-scheme="default"] #mesh-code .mesh-module { color:#006b63; font-weight:600; }
+[data-md-color-scheme="slate"] #mesh-code .mesh-module { color:#7bdac6; font-weight:600; }

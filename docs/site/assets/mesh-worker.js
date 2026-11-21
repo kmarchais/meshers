@@ -6,9 +6,10 @@ const ready = fetch("playground/meshers.wasm")
   .then(bytes => WebAssembly.instantiate(bytes))
   .then(({ instance }) => instance.exports);
 
-self.onmessage = async ({ data: { field, cells, width, id } }) => {
+self.onmessage = async ({ data: { field, cells, width } }) => {
   try {
     const core = await ready;
+    self.postMessage({ ready: true });
     const address = core.generate(field, cells, width);
     const bytes = new Uint8Array(core.memory.buffer, address, core.response_length());
     const mesh = JSON.parse(new TextDecoder().decode(bytes));
@@ -32,10 +33,10 @@ self.onmessage = async ({ data: { field, cells, width, id } }) => {
     const coords = new Float32Array(positions);
     const indices = new Uint32Array([...wallIndices, ...capIndices]);
     self.postMessage({
-      id, coords, indices, wallCount: wallIndices.length,
-      tets: mesh.tets, nodes: mesh.points.length,
+      coords, indices, wallCount: wallIndices.length,
+      tets: mesh.tets, nodes: mesh.points.length, minQuality: mesh.minQuality, minAngle: mesh.minAngle,
     }, [coords.buffer, indices.buffer]);
   } catch (error) {
-    self.postMessage({ id, error: error.message });
+    self.postMessage({ error: error.message });
   }
 };

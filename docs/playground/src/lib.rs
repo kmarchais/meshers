@@ -1,10 +1,28 @@
 //! Small, single-threaded browser entry point for the documentation.
 use meshers_core::implicit::{self, Options, Region};
+use meshers_core::{Mesh, cross, norm, sub};
 use serde_json::json;
 use std::{cell::RefCell, f64::consts::TAU};
 
 thread_local! {
     static RESPONSE: RefCell<Vec<u8>> = const { RefCell::new(Vec::new()) };
+}
+
+fn minimum_face_angle(mesh: &Mesh) -> f64 {
+    // The smallest angle is opposite the shortest side and is always acute.
+    let min_sine = mesh
+        .surface
+        .iter()
+        .map(|face| {
+            let [a, b, c] = face.map(|i| mesh.points[i]);
+            let ab = sub(b, a);
+            let ac = sub(c, a);
+            let mut sides = [norm(ab), norm(ac), norm(sub(c, b))];
+            sides.sort_unstable_by(f64::total_cmp);
+            norm(cross(ab, ac)) / (sides[1] * sides[2])
+        })
+        .fold(1.0_f64, f64::min);
+    min_sine.asin().to_degrees()
 }
 
 // The worker copies the UTF-8 response before making another call.
@@ -27,13 +45,16 @@ pub extern "C" fn generate(field: u32, cells: u32, width: f64) -> *const u8 {
             },
             periodic: [true; 3],
             geometry_tolerance: 0.05,
-            optimize_passes: 0,
+            optimize_passes: 2,
+            threads: 0,
             ..Options::default()
         };
         match implicit::generate(&field, options) {
             Ok(output) => json!({
                 "points": output.mesh.points, "faces": output.mesh.surface,
-                "tags": output.boundary_tags, "tets": output.mesh.tets.len()
+                "tags": output.boundary_tags, "tets": output.mesh.tets.len(),
+                "minQuality": output.diagnostics.minimum_mmg_quality,
+                "minAngle": minimum_face_angle(&output.mesh)
             }),
             Err(error) => json!({"error": error.to_string()}),
         }

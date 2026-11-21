@@ -21,7 +21,7 @@ def build_playground() -> None:
     assets.mkdir(parents=True, exist_ok=True)
     run_command(
         "cargo",
-        "build",
+        "rustc",
         "--locked",
         "--release",
         "--target",
@@ -30,6 +30,9 @@ def build_playground() -> None:
         "target",
         "-p",
         "meshers-playground",
+        "--",
+        "-C",
+        "link-arg=--max-memory=33554432",
         cwd=ROOT,
     )
     shutil.copyfile(
