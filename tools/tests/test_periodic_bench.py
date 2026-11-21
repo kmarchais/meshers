@@ -97,3 +97,26 @@ def test_measure_records_a_good_mesh_and_a_rejection():
     assert good["field_points"] > 0
     rejected = bench.measure("sphere", 12, adapt=False, tolerance=1e-5, quality=0.1)
     assert "sampled geometry error" in rejected["rejected"]
+
+
+def test_suite_configurations_are_distinct_and_known():
+    suite = bench.suite()
+    assert len(set(suite)) == len(suite)
+    assert {name for name, _, _ in suite} == set(bench.CASES)
+    assert {cells for _, cells, _ in suite} == {12, 16, 24}
+
+
+def test_regressions_compare_a_record_with_its_baseline():
+    reference = bench.measure("sphere", 12, adapt=False, tolerance=0.02, quality=0.1)
+    assert bench.regressions(reference, reference) == []
+    worse = {**reference, "quality": {**reference["quality"], "minimum": 0.2}}
+    worse["wall_to_mesh"] = reference["wall_to_mesh"] + 0.01
+    worse["missed_limits"] = ["dihedral"]
+    assert bench.regressions(worse, reference) == [
+        "now misses dihedral",
+        "minimum quality",
+        "wall_to_mesh",
+    ]
+    rejected = {"case": "sphere", "rejected": "sampled geometry error"}
+    assert bench.regressions(rejected, reference) == ["now rejected: sampled geometry error"]
+    assert bench.regressions(reference, rejected) == []

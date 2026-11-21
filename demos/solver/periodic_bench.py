@@ -13,6 +13,7 @@ import argparse
 import csv
 import itertools
 import json
+import operator
 import sys
 import time
 from collections.abc import Callable
@@ -39,6 +40,11 @@ IMAGE_REACH = 1e-9
 GOOD_QUALITY = 0.1
 GOOD_DIHEDRALS = (10.0, 165.0)
 GOOD_VOLUME_ERROR = 0.005
+# Allowed drift from the baseline before a record counts as a regression.
+QUALITY_DRIFT = 0.03
+DISTANCE_DRIFT = 0.15
+VOLUME_DRIFT = 0.002
+SIZE_DRIFT = 0.15
 
 
 def _wrapped(points: Coordinates, centre: tuple[float, float, float]) -> Coordinates:
@@ -319,6 +325,65 @@ def verdict(record: dict, tolerance: float) -> list[str]:
     return [name for name, passed in checks.items() if not passed]
 
 
+def suite() -> list[tuple[str, int, float]]:
+    """Return the fixed (case, cells, tolerance) configurations of the regression suite.
+
+    Every case runs at sixteen cells. The cases that depend most on where the lattice falls
+    also run coarser and finer, and two smooth ones at the tolerance Microgen asks for.
+    """
+    sensitive = (
+        "sphere-corner",
+        "spheres-random",
+        "fibre-grazing-edge",
+        "fibre-across-face",
+        "gyroid-thin-sheet",
+        "spinodoid-50",
+        "spinodoid-30",
+    )
+    return [
+        *((name, 16, 0.02) for name in CASES),
+        *((name, cells, 0.02) for name in sensitive for cells in (12, 24)),
+        *((name, 24, 0.01) for name in ("sphere", "gyroid-sheet")),
+    ]
+
+
+def regressions(record: dict, reference: dict) -> list[str]:
+    """Return what a record does worse than the baseline record of the same configuration."""
+    if "rejected" in reference:
+        return []
+    if "rejected" in record:
+        return ["now rejected: " + record["rejected"][:80]]
+    found = [
+        f"now misses {name}"
+        for name in record["missed_limits"]
+        if name not in reference["missed_limits"]
+    ]
+    tolerance = record["tolerance"]
+    if record["quality"]["minimum"] < reference["quality"]["minimum"] - QUALITY_DRIFT:
+        found.append("minimum quality")
+    found.extend(
+        key
+        for key in ("mesh_to_wall", "wall_to_mesh")
+        if record[key] > reference[key] + DISTANCE_DRIFT * tolerance
+    )
+    if (
+        abs(record["relative_volume_error"])
+        > abs(reference["relative_volume_error"]) + VOLUME_DRIFT
+    ):
+        found.append("volume")
+    if record["tetrahedra"] > (1 + SIZE_DRIFT) * reference["tetrahedra"]:
+        found.append("tetrahedra")
+    found.extend(
+        key
+        for key in ("adaptation_abandoned", "defeaturing_moves")
+        if record["mesher"][key] and not reference["mesher"][key]
+    )
+    return found
+
+
+_key = operator.itemgetter("case", "cells", "adapt", "tolerance")
+
+
 def measure(name: str, cells: int, *, adapt: bool, tolerance: float, quality: float) -> dict:
     """Return the record of one meshed case, or of its rejection by the mesher."""
     field = CASES[name]
@@ -383,27 +448,44 @@ def _line(record: dict) -> str:
 
 
 def main() -> int:
-    """Return a failing code when a requested case is rejected or misses a limit."""
+    """Return a failing code when a mesh is rejected, misses a limit or regresses."""
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--case", action="append", choices=sorted(CASES), help="default: all")
     parser.add_argument("--cells", type=int, nargs="+", default=[16])
     parser.add_argument("--mode", choices=("grid", "adapt", "both"), default="grid")
     parser.add_argument("--tolerance", type=float, default=0.01)
     parser.add_argument("--quality", type=float, default=GOOD_QUALITY)
+    parser.add_argument("--suite", action="store_true", help="run the regression configurations")
+    parser.add_argument("--baseline", type=Path, help="fail on records worse than this file")
     parser.add_argument("--output", type=Path)
     args = parser.parse_args()
     modes = {"grid": [False], "adapt": [True], "both": [False, True]}[args.mode]
-    records = []
-    for name, cells, adapt in itertools.product(args.case or CASES, args.cells, modes):
-        records.append(
-            measure(name, cells, adapt=adapt, tolerance=args.tolerance, quality=args.quality),
+    configurations = (
+        [c for c in suite() if not args.case or c[0] in args.case]
+        if args.suite
+        else [(name, cells, args.tolerance) for name in args.case or CASES for cells in args.cells]
+    )
+    reference = (
+        {_key(r): r for r in json.loads(args.baseline.read_text(encoding="utf8"))}
+        if args.baseline
+        else {}
+    )
+    records, regressed = [], 0
+    for (name, cells, tolerance), adapt in itertools.product(configurations, modes):
+        record = measure(name, cells, adapt=adapt, tolerance=tolerance, quality=args.quality)
+        records.append(record)
+        worse = regressions(record, reference[_key(record)]) if _key(record) in reference else []
+        regressed += bool(worse)
+        sys.stdout.write(
+            _line(record) + (" REGRESSION " + "; ".join(worse) if worse else "") + "\n",
         )
-        sys.stdout.write(_line(records[-1]) + "\n")
         sys.stdout.flush()
     if args.output:
         with args.output.open("x", encoding="utf8") as stream:
             json.dump(records, stream, indent=2)
             stream.write("\n")
+    if args.baseline:
+        return int(regressed > 0)
     return int(any("rejected" in r or r["missed_limits"] for r in records))
 
 
