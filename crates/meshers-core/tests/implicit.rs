@@ -1071,3 +1071,44 @@ fn adaptation_keeps_a_periodic_spinodoid_unfoldable() {
     assert!(output.diagnostics.maximum_sampled_surface_error <= tolerance);
     assert!(output.periodic_pairs.iter().all(|pairs| !pairs.is_empty()));
 }
+
+#[test]
+fn periodic_images_share_their_in_plane_coordinates_bit_for_bit() {
+    // Images snapped onto the wall separately used to agree only to rounding.
+    let gyroid = |p: [f64; 3]| {
+        let [x, y, z] = p.map(|v| TAU * v);
+        x.sin() * y.cos() + y.sin() * z.cos() + z.sin() * x.cos() - 0.3
+    };
+    let output = generate(
+        &gyroid,
+        Options {
+            bounds: [[-0.5; 3], [0.5; 3]],
+            cells: [16; 3],
+            periodic: [true; 3],
+            geometry_tolerance: 0.02,
+            minimum_quality: 0.1,
+            order: 2,
+            ..Options::default()
+        },
+    )
+    .unwrap();
+    let quadratic = output.quadratic.as_ref().unwrap();
+    for (p, pairs) in [
+        (&output.mesh.points, &output.periodic_pairs),
+        (&quadratic.elements.points, &quadratic.periodic_pairs),
+    ] {
+        for (axis, pairs) in pairs.iter().enumerate() {
+            assert!(!pairs.is_empty());
+            for &[i, j] in pairs {
+                assert_eq!([p[i][axis], p[j][axis]], [-0.5, 0.5]);
+                for a in (0..3).filter(|&a| a != axis) {
+                    assert_eq!(
+                        p[i][a].to_bits(),
+                        p[j][a].to_bits(),
+                        "axis {axis}: {i}, {j}"
+                    );
+                }
+            }
+        }
+    }
+}

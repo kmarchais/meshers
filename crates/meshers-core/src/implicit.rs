@@ -801,6 +801,7 @@ fn generate_internal<F: ScalarField>(
                 options.bounds,
                 options.periodic,
             )?;
+            share_image_coordinates(&mut elements.points, &periodic_pairs);
             output.diagnostics.volume = elements
                 .tets
                 .iter()
@@ -978,11 +979,27 @@ pub(crate) fn periodic_pairs<const N: usize>(
     Ok(pairs)
 }
 
+/// Give paired periodic nodes bitwise identical coordinates in the plane of
+/// their faces. Images projected onto the wall separately agree only to
+/// rounding; the low-side node of each pair is the reference.
+fn share_image_coordinates(points: &mut [Point], pairs: &[Vec<[usize; 2]>; 3]) {
+    // Twice, so that the four or eight images of an edge or corner node agree.
+    for _ in 0..2 {
+        for (axis, pairs) in pairs.iter().enumerate() {
+            for &[low, high] in pairs {
+                for a in (0..3).filter(|&a| a != axis) {
+                    points[high][a] = points[low][a];
+                }
+            }
+        }
+    }
+}
+
 fn finish<F: ScalarField>(mesh: Mesh, g: &Context<F>) -> Result<Output, String> {
     finish_with_constraints(mesh, g, None)
 }
 fn finish_with_constraints<F: ScalarField>(
-    mesh: Mesh,
+    mut mesh: Mesh,
     g: &Context<F>,
     constraints: Option<&[intersection::ConstraintMask]>,
 ) -> Result<Output, String> {
@@ -1128,6 +1145,7 @@ fn finish_with_constraints<F: ScalarField>(
         ));
     }
     let pairs = periodic_pairs(&mesh.points, &mesh.surface, g.bounds(), g.options.periodic)?;
+    share_image_coordinates(&mut mesh.points, &pairs);
     let empty = mesh.tets.is_empty();
     if !empty && minimum < g.options.minimum_quality {
         return Err(format!(
