@@ -32,6 +32,10 @@ BASE = {
 }
 
 
+def single_pair_failures(base, head):
+    return gate.case_regressions({"base": base, "head": head}, {"base": [base], "head": [head]})
+
+
 def test_driver_loads_without_worker_dependencies(monkeypatch):
     for dependency in (
         "meshers",
@@ -84,12 +88,31 @@ def test_command_uses_selected_virtual_environment(tmp_path):
     ],
 )
 def test_rejects_regression(key, value):
-    assert gate.regressions(BASE, {**BASE, key: value})
+    assert single_pair_failures(BASE, {**BASE, key: value})
 
 
 def test_accepts_identical_and_bounded_resource_noise():
-    assert not gate.regressions(BASE, BASE)
-    assert not gate.regressions(BASE, {**BASE, "seconds": 1.1, "peak_rss_bytes": 105_000_000})
+    assert not single_pair_failures(BASE, BASE)
+    assert not single_pair_failures(BASE, {**BASE, "seconds": 1.1, "peak_rss_bytes": 105_000_000})
+
+
+@pytest.mark.parametrize(
+    ("key", "limit", "excess"),
+    [("seconds", 1.15 + 0.01, 1e-6), ("peak_rss_bytes", 105_000_000 + 4 * 1024**2, 1)],
+)
+def test_resource_gate_allows_the_limit_and_rejects_an_excess(key, limit, excess):
+    assert not single_pair_failures(BASE, {**BASE, key: limit})
+    failures = single_pair_failures(BASE, {**BASE, key: limit + excess})
+    assert len(failures) == 1
+    assert failures[0].startswith(key)
+
+
+def test_nonfinite_resource_sample_cannot_hide_in_a_passing_median():
+    rows = [BASE, {**BASE, "seconds": float("nan")}, BASE]
+    assert gate.case_regressions(
+        {"base": BASE, "head": BASE},
+        {"base": [BASE] * 3, "head": rows},
+    ) == ["invalid seconds sample"]
 
 
 def test_curved_geometry_integration_and_inversion():
@@ -105,8 +128,13 @@ def test_curved_geometry_integration_and_inversion():
 def test_a_single_bad_quality_sample_cannot_hide_in_passing_medians():
     rows = [dict(BASE) for _ in range(5)]
     rows[2]["quality_p10"] = 0.1
-    assert not gate.regressions(BASE, BASE)
-    assert "sample 3: quality_p10" in gate.case_regressions(BASE, BASE, rows)[0]
+    assert not single_pair_failures(BASE, BASE)
+    assert (
+        "sample 3: quality_p10"
+        in gate.case_regressions({"base": BASE, "head": BASE}, {"base": [BASE] * 5, "head": rows})[
+            0
+        ]
+    )
 
 
 def test_fold_between_quadrature_points():
@@ -126,7 +154,7 @@ def test_fold_between_quadrature_points():
 def test_mapped_cap_error_is_gated_independently_of_larger_wall_error():
     base = {**BASE, "mapped_cap_error": 0.0001}
     head = {**base, "mapped_cap_error": 0.0002}
-    assert gate.regressions(base, head) == ["mapped cap error increased by more than 5%"]
+    assert single_pair_failures(base, head) == ["mapped cap error increased by more than 5%"]
 
 
 @pytest.mark.skipif(sys.platform != "win32", reason="Windows working-set measurement")

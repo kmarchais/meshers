@@ -51,7 +51,21 @@ RELEASE_CASES = (
 )
 QUALITY = ("min", "p05", "p10", "median", "mean", "p90", "max")
 SCHEMA_VERSION = 2
-FIXTURE_VERSION = 4
+FIXTURE_VERSION = 5
+# Versions 4 and 5 sample identical meshes. Version 5 changes the resource verdict.
+MAPPED_CAP_VERSION = 4
+PAIRED_RESOURCE_VERSION = 5
+ResourceLimits = tuple[tuple[str, float, float], ...]
+PRE_CALIBRATION_LIMITS: ResourceLimits = (
+    ("seconds", 1.25, 0.02),
+    ("peak_rss_bytes", 1.15, 8 * 1024**2),
+)
+RESOURCE_LIMITS_BY_VERSION: dict[int, ResourceLimits] = {
+    2: PRE_CALIBRATION_LIMITS,
+    3: PRE_CALIBRATION_LIMITS,
+    4: PRE_CALIBRATION_LIMITS,
+    PAIRED_RESOURCE_VERSION: (("seconds", 1.15, 0.01), ("peak_rss_bytes", 1.05, 4 * 1024**2)),
+}
 MIN_MEASURED_PAIRS = 3
 
 
@@ -65,8 +79,32 @@ class _Summary(TypedDict):
     cases: dict[str, _CaseResult]
 
 
-def regressions(base: Mapping[str, float], head: Mapping[str, float]) -> list[str]:
-    """Return failures; resource noise allowances never relax geometry validity."""
+def _resource_failures(
+    medians: Mapping[str, Mapping[str, float]],
+    runs: Mapping[str, Sequence[Mapping[str, float]]],
+    version: int,
+) -> list[str]:
+    limits = RESOURCE_LIMITS_BY_VERSION[version]
+    base, head = medians["base"], medians["head"]
+    if version < PAIRED_RESOURCE_VERSION:
+        return [
+            f"{key} increased: {base[key]:.6g} -> {head[key]:.6g}"
+            for key, ratio, allowance in limits
+            if head[key] > base[key] * ratio + allowance
+        ]
+    pairs = list(zip(runs["base"], runs["head"], strict=True))
+    failures = []
+    for key, ratio, allowance in limits:
+        if any(not math.isfinite(row[key]) or row[key] < 0 for pair in pairs for row in pair):
+            failures.append(f"invalid {key} sample")
+            continue
+        excess = statistics.median(h[key] - (b[key] * ratio + allowance) for b, h in pairs)
+        if excess > 0:
+            failures.append(f"{key} increased: median paired excess over limit {excess:.6g}")
+    return failures
+
+
+def _mesh_failures(base: Mapping[str, float], head: Mapping[str, float]) -> list[str]:
     failures = [
         f"invalid {key}"
         for key in base
@@ -77,9 +115,6 @@ def regressions(base: Mapping[str, float], head: Mapping[str, float]) -> list[st
     ]
     if failures:
         return failures
-    for key, ratio, allowance in (("seconds", 1.25, 0.02), ("peak_rss_bytes", 1.15, 8 * 1024**2)):
-        if head[key] > base[key] * ratio + allowance:
-            failures.append(f"{key} increased: {base[key]:.6g} -> {head[key]:.6g}")
     failures.extend(
         f"{key} decreased: {base[key]:.6g} -> {head[key]:.6g}"
         for key in (f"quality_{name}" for name in QUALITY)
@@ -99,13 +134,16 @@ def regressions(base: Mapping[str, float], head: Mapping[str, float]) -> list[st
 
 
 def case_regressions(
-    base: Mapping[str, float],
-    head: Mapping[str, float],
-    head_runs: Sequence[Mapping[str, float]],
+    medians: Mapping[str, Mapping[str, float]],
+    runs: Mapping[str, Sequence[Mapping[str, float]]],
+    *,
+    fixture_version: int = FIXTURE_VERSION,
 ) -> list[str]:
-    """Return resource-median and every-repetition quality regression failures."""
-    failures = regressions(base, head)
-    for index, row in enumerate(head_runs):
+    """Return resource, geometry and per-sample quality failures for this fixture version."""
+    base = medians["base"]
+    failures = _resource_failures(medians, runs, fixture_version)
+    failures.extend(_mesh_failures(base, medians["head"]))
+    for index, row in enumerate(runs["head"]):
         for name in QUALITY:
             key = f"quality_{name}"
             if row[key] < base[key] * 0.99 - 1e-12:
@@ -116,6 +154,8 @@ def case_regressions(
 def write_summary(result: _Summary, output: Path, failures: Sequence[str]) -> None:
     """Write the concise CI comparison beside the complete JSON artifact."""
     lines = [
+        "Ratios summarize group medians. Resource limits use the median excess across paired runs.",
+        "",
         "| Case | Time ratio | RSS ratio | Minimum quality, base → head | Result |",
         "| --- | ---: | ---: | ---: | --- |",
     ]
@@ -217,7 +257,7 @@ def _collect_case(
         label: {key: statistics.median(r[key] for r in rows) for key in rows[0]}
         for label, rows in runs.items()
     }
-    errors = case_regressions(medians["base"], medians["head"], runs["head"])
+    errors = case_regressions(medians, runs)
     return {"runs": runs, "medians": medians, "failures": errors}
 
 

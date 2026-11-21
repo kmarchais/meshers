@@ -12,8 +12,8 @@ On one Linux runner with matching Python and NumPy, discard one warm-up pair. Al
 
 | Metric | Regression limit against base |
 | --- | --- |
-| Median time | +25% plus 20 ms |
-| Median peak memory | +15% plus 8 MiB |
+| Time per pair | +15% plus 10 ms |
+| Peak memory per pair | +5% plus 4 MiB |
 | MMG quality (min, max, mean, median, p05, p10, p90) | 1% decrease for each statistic. Each candidate repeat is also checked against the base median. |
 | Sampled wall error and mapped cap error | +5% plus 10⁻¹⁰ for each |
 | Volume | ±0.5% |
@@ -21,7 +21,9 @@ On one Linux runner with matching Python and NumPy, discard one warm-up pair. Al
 
 - **Seven cases** — compiled and callback gyroids, graded sheet, mapped intersection, Schwarz P, Fourier spinodoid and ordered lattice. The fixtures use 24 cells and two optimization passes.
 - **Absolute gates** — finite coordinates, positive volumes, closed boundary edge incidence, matching requested periodic faces, minimum quality ≥ 0.01 and sampled error ≤ 0.1. Cap each sample at 250,000 nodes and 250,000 tetrahedra.
-- **Geometry comparisons** — fixture version 4 measures walls and mapped caps separately on both wheels. The [implicit coverage study](https://github.com/kmarchais/meshers/blob/main/demos/solver/implicit-coverage/README.md) also records admitted and rejected geometries.
+- **Geometry comparisons** — fixture versions 4 and 5 measure walls and mapped caps separately on both wheels. The [implicit coverage study](https://github.com/kmarchais/meshers/blob/main/demos/solver/implicit-coverage/README.md) also records admitted and rejected geometries.
+
+For each resource, subtract the allowed value from the candidate measurement in each pair. A positive median excess fails. With five pairs, at least three must exceed the limit. Versions 2–4 retain their original group-median verdicts. [Calibration samples and controls](https://github.com/kmarchais/meshers/tree/main/benchmarks/gate-calibration-20261121)
 
 ## Release suite and public history
 
