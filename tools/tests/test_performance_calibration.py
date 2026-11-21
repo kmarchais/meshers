@@ -13,11 +13,12 @@ from tools import performance_gate as gate
 
 ROOT = Path(__file__).resolve().parents[2]
 STUDY = ROOT / "benchmarks/gate-calibration-20261121"
+CONFIGURATIONS = ("linux-epyc-7763", "linux-ryzen-7-7730u", "windows-core-ultra-9-285k")
 
 
 @pytest.mark.parametrize(
     "path",
-    [STUDY / config / "same-commit.json" for config in ("linux-epyc-7763", "linux-ryzen-7-7730u")],
+    [STUDY / config / "same-commit.json" for config in CONFIGURATIONS],
     ids=lambda p: p.parent.name,
 )
 def test_identical_source_passes_in_both_directions(path):
@@ -37,8 +38,12 @@ def test_identical_source_passes_in_both_directions(path):
 
 @pytest.mark.parametrize(
     "path",
-    [STUDY / "linux-ryzen-7-7730u" / name for name in ("injection.json", "schwarz-injection.json")],
-    ids=lambda p: p.stem,
+    [
+        STUDY / "linux-ryzen-7-7730u/injection.json",
+        STUDY / "linux-ryzen-7-7730u/schwarz-injection.json",
+        STUDY / "windows-core-ultra-9-285k/injection.json",
+    ],
+    ids=lambda p: f"{p.parent.name}-{p.stem}",
 )
 def test_measured_delay_and_allocation_trip_only_the_new_resource_limits(path):
     experiment = json.loads(path.read_bytes())
