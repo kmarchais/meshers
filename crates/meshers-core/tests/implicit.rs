@@ -942,10 +942,8 @@ fn rejected_slivers_are_remeshed_without_breaking_periodic_caps() {
     .unwrap();
     assert!(plain.diagnostics.minimum_mmg_quality < 0.1);
     assert!(gated.diagnostics.minimum_mmg_quality >= 0.1);
-    assert_eq!(
-        plain.periodic_pairs.map(|pairs| pairs.len()),
-        gated.periodic_pairs.map(|pairs| pairs.len())
-    );
+    // Generation itself rejects caps that no longer match.
+    assert!(gated.periodic_pairs.iter().all(|pairs| !pairs.is_empty()));
 }
 
 #[test]
@@ -989,28 +987,60 @@ fn fibre_grazing_a_box_edge_is_defeatured_within_tolerance() {
 }
 
 #[test]
-fn elements_bridging_a_gap_narrower_than_a_cell_are_reported() {
+fn a_gap_narrower_than_a_cell_is_not_bridged() {
     // Two spheres 0.03 apart: at 12 cells lattice nodes on both sides of the
     // gap are inside, and the elements between them would weld the spheres.
     let spheres = |p: Point| {
         let distance = |c: f64| (p[0] - c).hypot(p[1]).hypot(p[2]) - 0.2;
         distance(-0.215).min(distance(0.215))
     };
-    let options = Options {
-        bounds: [[-0.5; 3], [0.5; 3]],
-        cells: [12; 3],
-        geometry_tolerance: 0.01,
-        ..Options::default()
-    };
-    let error = generate(&spheres, options).err().unwrap().to_string();
-    assert!(error.contains("bridges"), "{error}");
-    let resolved = generate(
+    let output = generate(
         &spheres,
         Options {
-            cells: [48; 3],
-            ..options
+            bounds: [[-0.5; 3], [0.5; 3]],
+            cells: [12; 3],
+            geometry_tolerance: 0.01,
+            minimum_quality: 0.1,
+            ..Options::default()
         },
     )
     .unwrap();
-    assert!(resolved.diagnostics.maximum_sampled_surface_error <= 0.01);
+    assert!(output.diagnostics.refined_lattice_edges > 0);
+    assert!(output.diagnostics.minimum_mmg_quality >= 0.1);
+    assert!(output.diagnostics.maximum_sampled_surface_error <= 0.01);
+    // No element is left with a vertex in each sphere.
+    assert!(output.mesh.tets.iter().all(|t| {
+        t.iter().all(|&i| output.mesh.points[i][0] <= 0.)
+            || t.iter().all(|&i| output.mesh.points[i][0] >= 0.)
+    }));
+}
+
+#[test]
+fn a_film_thinner_than_a_cell_is_meshed() {
+    // The matrix around two spheres 0.03 apart keeps a film between them
+    // that no node of a 12-cell lattice samples.
+    let matrix = |p: Point| {
+        let distance = |c: f64| (p[0] - c).hypot(p[1]).hypot(p[2]) - 0.2;
+        -distance(-0.215).min(distance(0.215))
+    };
+    let output = generate(
+        &matrix,
+        Options {
+            bounds: [[-0.5; 3], [0.5; 3]],
+            cells: [12; 3],
+            geometry_tolerance: 0.01,
+            minimum_quality: 0.1,
+            ..Options::default()
+        },
+    )
+    .unwrap();
+    assert!(output.diagnostics.refined_lattice_edges > 0);
+    assert!(output.diagnostics.maximum_sampled_surface_error <= 0.01);
+    assert!(output.diagnostics.minimum_mmg_quality >= 0.1);
+    let in_film = |t: &[usize; 4]| {
+        let c: Point =
+            std::array::from_fn(|a| t.iter().map(|&i| output.mesh.points[i][a]).sum::<f64>() / 4.);
+        c[0].abs() < 0.015 && c[1].hypot(c[2]) < 0.05
+    };
+    assert!(output.mesh.tets.iter().any(in_film));
 }

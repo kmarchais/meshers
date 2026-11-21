@@ -109,6 +109,13 @@ pub struct Diagnostics {
     /// reach `minimum_quality`. Nonzero means the geometry changed there,
     /// within `geometry_tolerance`.
     pub defeaturing_moves: usize,
+    /// Elements removed after clipping because their centroid lay outside the
+    /// solid by more than `geometry_tolerance`: they bridged a gap narrower
+    /// than a cell.
+    pub removed_bridging_elements: usize,
+    /// Lattice edges split before clipping because they hid two walls closer
+    /// than a cell.
+    pub refined_lattice_edges: usize,
     pub inserted_interior_nodes: usize,
     pub maximum_sampled_surface_error: f64,
     pub adapt: Option<crate::tet_adapt::Stats>,
@@ -738,7 +745,32 @@ fn generate_internal<F: ScalarField>(
             }
         }
     }
-    if let Some(background) = background {
+    // Two walls closer than a cell hide between lattice nodes: resolve them
+    // on a locally refined lattice.
+    let refined = if context.background.is_none()
+        && context.constraints.is_none()
+        && context.halfspaces.is_none()
+        && context.size_field.is_none()
+        && options.adapt.is_none()
+    {
+        resolve_gaps(&context).map_err(MeshingError::GenerationFailed)?
+    } else {
+        None
+    };
+    let refined_lattice_edges = refined.as_ref().map_or(0, |r| r.2);
+    let context = match &refined {
+        Some((points, tetrahedra, _)) => Context {
+            background: Some(Background {
+                points,
+                tetrahedra,
+                #[cfg(feature = "experimental-quads")]
+                observer: None,
+            }),
+            ..context
+        },
+        None => context,
+    };
+    if let Some(background) = context.background {
         validate_background(background, &context).map_err(MeshingError::InvalidOptions)?;
     }
     context.check().map_err(MeshingError::GenerationFailed)?;
@@ -746,6 +778,7 @@ fn generate_internal<F: ScalarField>(
         return Err(MeshingError::InvalidOptions("order must be 1 or 2".into()));
     }
     let result = build(&context).and_then(|mut output| {
+        output.diagnostics.refined_lattice_edges = refined_lattice_edges;
         if options.order == 2 && !output.mesh.tets.is_empty() {
             let mut elements = crate::quadratic::elevate(
                 &output.mesh,
@@ -1068,8 +1101,10 @@ fn finish_with_constraints<F: ScalarField>(
         return Err("solid boundary is not a closed two-manifold at its edges or vertices".into());
     }
     if constraints.is_none()
-        && let Some((count, distance, at)) = elements_outside(&mesh, g)?
+        && let outside = elements_outside(&mesh, g)?
+        && let Some(&(_, distance, at)) = outside.iter().max_by(|a, b| a.1.total_cmp(&b.1))
     {
+        let count = outside.len();
         return Err(format!(
             "{count} element(s) lie outside the solid, by up to {distance:e} near {at:?}: \
              two surfaces are closer than a cell there and the mesh bridges them; \
@@ -1106,10 +1141,223 @@ fn finish_with_constraints<F: ScalarField>(
             elements_below_quality_01,
             reverted_snap_vertices: 0,
             defeaturing_moves: 0,
+            removed_bridging_elements: 0,
+            refined_lattice_edges: 0,
             inserted_interior_nodes: 0,
             adapt: None,
         },
     })
+}
+
+/// Interior samples per lattice edge when looking for hidden walls.
+const GAP_SAMPLES: usize = 7;
+/// A hidden excursion shallower than this fraction of the geometry tolerance
+/// is a wall grazing the edge, not a gap.
+const GAP_DEPTH: f64 = 0.25;
+
+/// The BCC lattice with every edge that hides two walls split inside the gap,
+/// and the number of splits; `None` when no edge does.
+///
+/// An edge whose ends lie on one side of the wall can still pass through the
+/// other side: two walls closer than a cell. Unsplit, the lattice either
+/// bridges the gap with elements or drops the film of solid inside it.
+/// Samples are taken at canonical points, so periodic images split alike.
+#[allow(clippy::type_complexity)]
+fn resolve_gaps<F: ScalarField>(
+    g: &Context<F>,
+) -> Result<Option<(Vec<Point>, Vec<crate::Tet>, usize)>, String> {
+    let o = g.options;
+    let [nx, ny, nz] = o.cells;
+    let [lo, hi] = o.bounds;
+    let step: Point = std::array::from_fn(|a| (hi[a] - lo[a]) / o.cells[a] as f64);
+    let mut points = Vec::with_capacity((nx + 1) * (ny + 1) * (nz + 1) + nx * ny * nz);
+    for z in 0..=nz {
+        for y in 0..=ny {
+            for x in 0..=nx {
+                let ijk = [x, y, z];
+                points.push(std::array::from_fn(|a| {
+                    if ijk[a] == o.cells[a] {
+                        hi[a]
+                    } else {
+                        lo[a] + ijk[a] as f64 * step[a]
+                    }
+                }));
+            }
+        }
+    }
+    let center_start = points.len();
+    for z in 0..nz {
+        for y in 0..ny {
+            for x in 0..nx {
+                points.push(std::array::from_fn(|a| {
+                    lo[a] + ([x, y, z][a] as f64 + 0.5) * step[a]
+                }));
+            }
+        }
+    }
+    let id = |x: usize, y: usize, z: usize| x + (nx + 1) * (y + (ny + 1) * z);
+    let cube_faces = [
+        [0, 3, 2, 1],
+        [4, 5, 6, 7],
+        [0, 1, 5, 4],
+        [3, 7, 6, 2],
+        [0, 4, 7, 3],
+        [1, 2, 6, 5],
+    ];
+    let mut tets: Vec<crate::Tet> = Vec::new();
+    for z in 0..nz {
+        for y in 0..ny {
+            for x in 0..nx {
+                let corners = [
+                    id(x, y, z),
+                    id(x + 1, y, z),
+                    id(x + 1, y + 1, z),
+                    id(x, y + 1, z),
+                    id(x, y, z + 1),
+                    id(x + 1, y, z + 1),
+                    id(x + 1, y + 1, z + 1),
+                    id(x, y + 1, z + 1),
+                ];
+                let c = center_start + x + nx * (y + ny * z);
+                for (fi, face) in cube_faces.iter().enumerate() {
+                    let face = face.map(|i| corners[i]);
+                    let coord = [z, z, y, y, x, x][fi];
+                    let positive = fi % 2 == 1;
+                    if (positive && coord == [nz, nz, ny, ny, nx, nx][fi] - 1)
+                        || (!positive && coord == 0)
+                    {
+                        // The same diagonal on both periodic faces.
+                        let pivot = (0..4).min_by_key(|&i| g.rank(points[face[i]])).unwrap();
+                        for k in 1..3 {
+                            tets.push([
+                                c,
+                                face[pivot],
+                                face[(pivot + k) % 4],
+                                face[(pivot + k + 1) % 4],
+                            ]);
+                        }
+                    } else if positive {
+                        let neighbor = c + [nx * ny, nx * ny, nx, nx, 1, 1][fi];
+                        for j in 0..4 {
+                            tets.push([c, neighbor, face[j], face[(j + 1) % 4]]);
+                        }
+                    }
+                }
+            }
+        }
+    }
+    let residual = |v: f64| if g.band() { v.abs() - g.threshold() } else { v };
+    // Which side of the wall, or of the two walls of a band, a value lies on;
+    // zero on a wall.
+    let side = |v: f64| -> i8 {
+        let r = residual(v);
+        if r == 0. {
+            0
+        } else if r < 0. {
+            1
+        } else if g.band() && v < 0. {
+            2
+        } else {
+            3
+        }
+    };
+    let mut values: Vec<f64> = g.values(&points);
+    let mut incident = vec![Vec::new(); points.len()];
+    for (t, tet) in tets.iter().enumerate() {
+        for &v in tet {
+            incident[v].push(t);
+        }
+    }
+    let mut splits = 0;
+    for _ in 0..2 {
+        g.check()?;
+        let mut edges: Vec<[usize; 2]> = Vec::new();
+        for tet in &tets {
+            for i in 0..4 {
+                for j in i + 1..4 {
+                    let e = [tet[i].min(tet[j]), tet[i].max(tet[j])];
+                    if side(values[e[0]]) != 0 && side(values[e[0]]) == side(values[e[1]]) {
+                        edges.push(e);
+                    }
+                }
+            }
+        }
+        edges.sort_unstable();
+        edges.dedup();
+        let mut samples = Vec::with_capacity(edges.len() * GAP_SAMPLES);
+        for e in &edges {
+            let (p, q) = (points[e[0]], points[e[1]]);
+            for k in 1..=GAP_SAMPLES {
+                let w = k as f64 / (GAP_SAMPLES + 1) as f64;
+                samples.push(std::array::from_fn(|a| p[a] + w * (q[a] - p[a])));
+            }
+        }
+        let mut sampled = Vec::with_capacity(samples.len());
+        for chunk in samples.chunks(4096) {
+            g.check()?;
+            sampled.extend(g.values(chunk));
+        }
+        // The deepest sample on the other side of each edge.
+        let mut hidden: Vec<([usize; 2], Point, f64)> = Vec::new();
+        for (i, e) in edges.iter().enumerate() {
+            let ends = side(values[e[0]]);
+            let deepest = (0..GAP_SAMPLES)
+                .map(|k| i * GAP_SAMPLES + k)
+                .filter(|&k| side(sampled[k]) != 0 && side(sampled[k]) != ends)
+                .max_by(|&a, &b| {
+                    residual(sampled[a])
+                        .abs()
+                        .total_cmp(&residual(sampled[b]).abs())
+                });
+            if let Some(k) = deepest {
+                hidden.push((*e, samples[k], sampled[k]));
+            }
+        }
+        let at: Vec<Point> = hidden.iter().map(|h| h.1).collect();
+        let gradients = g.gradients(&at);
+        let hidden: Vec<_> = hidden
+            .into_iter()
+            .zip(gradients)
+            .filter(|((_, _, v), gradient)| {
+                wall_distance(residual(*v), *gradient, [false; 3])
+                    > GAP_DEPTH * o.geometry_tolerance
+            })
+            .map(|(h, _)| h)
+            .collect();
+        if hidden.is_empty() {
+            break;
+        }
+        for (e, p, v) in hidden {
+            let m = points.len();
+            points.push(p);
+            values.push(v);
+            incident.push(Vec::new());
+            let shell: Vec<usize> = incident[e[0]]
+                .iter()
+                .copied()
+                .filter(|&t| tets[t].contains(&e[1]))
+                .collect();
+            for t in shell {
+                let old = tets[t];
+                let twin = tets.len();
+                tets[t] = old.map(|v| if v == e[0] { m } else { v });
+                tets.push(old.map(|v| if v == e[1] { m } else { v }));
+                incident[e[0]].retain(|&i| i != t);
+                incident[e[0]].push(twin);
+                incident[m].extend([t, twin]);
+                for v in old {
+                    if v != e[0] && v != e[1] {
+                        incident[v].push(twin);
+                    }
+                }
+            }
+            splits += 1;
+        }
+        if tets.len() > o.max_tetrahedra {
+            return Err("resolving narrow gaps exceeds max_tetrahedra".into());
+        }
+    }
+    Ok((splits > 0).then_some((points, tets, splits)))
 }
 
 fn validate_background<F: ScalarField>(
@@ -1458,6 +1706,11 @@ fn build<F: ScalarField>(g: &Context<F>) -> Result<Output, String> {
     if mesh.tets.is_empty() {
         return finish(mesh, g);
     }
+    let removed_bridging_elements = if o.adapt.is_none() {
+        remove_bridging_elements(&mut mesh, g, h)?
+    } else {
+        0
+    };
     if let Some(adapt) = o.adapt {
         let mut stats = crate::tet_adapt::adapt(
             &mut mesh,
@@ -1614,6 +1867,7 @@ fn build<F: ScalarField>(g: &Context<F>) -> Result<Output, String> {
     let mut output = finish(mesh, g)?;
     output.diagnostics.reverted_snap_vertices = reverted_snap_vertices;
     output.diagnostics.defeaturing_moves = defeaturing_moves;
+    output.diagnostics.removed_bridging_elements = removed_bridging_elements;
     output.diagnostics.inserted_interior_nodes = inserted_interior_nodes;
     Ok(output)
 }
@@ -2027,49 +2281,171 @@ fn distance_batch<F: ScalarField>(
     Ok(error)
 }
 
-/// Elements whose centroid lies outside the solid by more than the geometry
-/// tolerance: their number, the largest distance and where it occurs.
+/// Elements with the centroid or an edge midpoint outside the solid by more
+/// than the geometry tolerance, each with that distance and the sample.
 ///
 /// Lattice nodes on either side of a gap narrower than a cell are both inside,
-/// so the elements between them are kept and bridge the gap. The centroid of
-/// an element is never farther from the solid than its nearest vertex, which
+/// so the elements between them are kept and bridge the gap. A sample of an
+/// element is never farther from the solid than its nearest vertex, which
 /// bounds the first-order estimate where the gradients of the two walls cancel.
 fn elements_outside<F: ScalarField>(
     mesh: &Mesh,
     g: &Context<F>,
-) -> Result<Option<(usize, f64, Point)>, String> {
+) -> Result<Vec<(usize, f64, Point)>, String> {
     g.check()?;
-    let centroid = |t: &[usize; 4]| -> Point {
-        std::array::from_fn(|a| t.iter().map(|&i| mesh.points[i][a]).sum::<f64>() / 4.)
-    };
-    let centroids: Vec<Point> = mesh.tets.iter().map(centroid).collect();
+    const PAIRS: [[usize; 2]; 6] = [[0, 1], [0, 2], [0, 3], [1, 2], [1, 3], [2, 3]];
+    // Centroids first, then each edge once.
+    let mut samples: Vec<(Point, f64)> = mesh
+        .tets
+        .iter()
+        .map(|t| {
+            let c: Point =
+                std::array::from_fn(|a| t.iter().map(|&i| mesh.points[i][a]).sum::<f64>() / 4.);
+            let nearest = t
+                .iter()
+                .map(|&i| norm(sub(mesh.points[i], c)))
+                .fold(f64::INFINITY, f64::min);
+            (c, nearest)
+        })
+        .collect();
+    let mut edges = BTreeMap::new();
+    for t in &mesh.tets {
+        for [i, j] in PAIRS {
+            let key = [t[i].min(t[j]), t[i].max(t[j])];
+            edges.entry(key).or_insert_with(|| {
+                let (p, q) = (mesh.points[key[0]], mesh.points[key[1]]);
+                samples.push((
+                    std::array::from_fn(|a| (p[a] + q[a]) / 2.),
+                    norm(sub(p, q)) / 2.,
+                ));
+                samples.len() - 1
+            });
+        }
+    }
     let residual = |v: f64| if g.band() { v.abs() - g.threshold() } else { v };
+    let points: Vec<Point> = samples.iter().map(|s| s.0).collect();
     let outside: Vec<usize> = g
-        .values(&centroids)
+        .values(&points)
         .into_iter()
         .enumerate()
-        .filter_map(|(t, v)| (residual(v) > 0.).then_some(t))
+        .filter_map(|(i, v)| (residual(v) > 0.).then_some(i))
         .collect();
-    let points: Vec<Point> = outside.iter().map(|&t| centroids[t]).collect();
+    let points: Vec<Point> = outside.iter().map(|&i| points[i]).collect();
     let values = g.values(&points);
     let gradients = g.gradients(&points);
     g.check()?;
-    let mut found = None;
-    let mut count = 0;
-    for (((&t, p), v), gradient) in outside.iter().zip(&points).zip(values).zip(gradients) {
-        let nearest = mesh.tets[t]
-            .iter()
-            .map(|&i| norm(sub(mesh.points[i], *p)))
-            .fold(f64::INFINITY, f64::min);
-        let distance = wall_distance(residual(v), gradient, [false; 3]).min(nearest);
-        if distance > g.options.geometry_tolerance {
-            count += 1;
-            if found.is_none_or(|(_, worst, _)| distance > worst) {
-                found = Some((0, distance, *p));
+    let mut distance = vec![0.; samples.len()];
+    for ((&i, v), gradient) in outside.iter().zip(values).zip(gradients) {
+        distance[i] = wall_distance(residual(v), gradient, [false; 3]).min(samples[i].1);
+    }
+    let mut found = Vec::new();
+    for (t, tet) in mesh.tets.iter().enumerate() {
+        let mut worst = (distance[t], samples[t].0);
+        for [i, j] in PAIRS {
+            let e = edges[&[tet[i].min(tet[j]), tet[i].max(tet[j])]];
+            if distance[e] > worst.0 {
+                worst = (distance[e], samples[e].0);
             }
         }
+        if worst.0 > g.options.geometry_tolerance {
+            found.push((t, worst.0, worst.1));
+        }
     }
-    Ok(found.map(|(_, distance, at)| (count, distance, at)))
+    Ok(found)
+}
+
+/// Remove the elements that bridge a gap narrower than a cell and return
+/// their number. The mesh is left untouched when the removal would pinch
+/// the boundary.
+fn remove_bridging_elements<F: ScalarField>(
+    mesh: &mut Mesh,
+    g: &Context<F>,
+    h: f64,
+) -> Result<usize, String> {
+    let outside = elements_outside(mesh, g)?;
+    if outside.is_empty() {
+        return Ok(0);
+    }
+    let mut keep = vec![true; mesh.tets.len()];
+    for &(t, _, _) in &outside {
+        keep[t] = false;
+    }
+    let tets: Vec<_> = mesh
+        .tets
+        .iter()
+        .zip(&keep)
+        .filter_map(|(t, &kept)| kept.then_some(*t))
+        .collect();
+    let Ok(surface) = crate::boundary(&tets) else {
+        return Ok(0);
+    };
+    if !nonmanifold_vertices(&surface, mesh.points.len()).is_empty()
+        || !unmatched_cap_vertices(&mesh.points, &surface, g.options.bounds, g.options.periodic)
+            .is_empty()
+    {
+        return Ok(0);
+    }
+    // Vertices the removal exposed were interior: bring them onto the wall
+    // where that keeps their elements valid. The optimizer that follows
+    // recovers the shape this costs.
+    let mut exposed = vec![false; mesh.points.len()];
+    for f in &surface {
+        for &v in f {
+            exposed[v] = true;
+        }
+    }
+    for f in &mesh.surface {
+        for &v in f {
+            exposed[v] = false;
+        }
+    }
+    let mut incident = vec![Vec::new(); mesh.points.len()];
+    for (t, tet) in tets.iter().enumerate() {
+        for &v in tet {
+            incident[v].push(t);
+        }
+    }
+    for v in (0..mesh.points.len()).filter(|&v| exposed[v]) {
+        let original = mesh.points[v];
+        let level = g.level(g.value(original), g.threshold());
+        let locked = g.locked(original);
+        let mut p = original;
+        for _ in 0..8 {
+            let f = g.value(p) - level;
+            if f.abs() < 1e-13 {
+                break;
+            }
+            let mut gradient = g.gradient(p);
+            for a in 0..3 {
+                if locked[a] {
+                    gradient[a] = 0.;
+                }
+            }
+            let g2 = dot(gradient, gradient);
+            if g2 < 1e-20 {
+                break;
+            }
+            p = std::array::from_fn(|a| p[a] - f * gradient[a] / g2);
+        }
+        let worst = |points: &[Point]| {
+            incident[v]
+                .iter()
+                .map(|&t| quality(tets[t].map(|i| points[i])))
+                .fold(f64::INFINITY, f64::min)
+        };
+        let before = worst(&mesh.points);
+        mesh.points[v] = p;
+        if !(g.contains(p)
+            && norm(sub(p, original)) <= h
+            && (g.value(p) - level).abs() < 1e-11
+            && worst(&mesh.points) >= before.min(0.05))
+        {
+            mesh.points[v] = original;
+        }
+    }
+    mesh.tets = tets;
+    mesh.surface = surface;
+    Ok(outside.len())
 }
 
 /// Samples per boundary facet: three vertices, the centroid and three edge midpoints.
