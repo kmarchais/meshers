@@ -32,6 +32,8 @@ uv run ruff check
 uv run ruff format --check
 uv run ty check
 cargo test --locked --release
+# Documentation needs Node.js 22+ and the browser target.
+rustup target add wasm32-unknown-unknown
 uv run --group docs python tools/build_docs.py
 ```
 

@@ -29,13 +29,10 @@ uv build --package meshers --wheel
 
 ## Preview the docs
 
-```sh
-uv run --group docs zensical serve
-```
-
-For the complete site, including rustdoc:
+Install Node.js 22 or newer. Build the browser mesher, viewer and API references together.
 
 ```sh
+rustup target add wasm32-unknown-unknown
 uv run --group docs python tools/build_docs.py
 uv run python -m http.server --directory site 8766
 ```

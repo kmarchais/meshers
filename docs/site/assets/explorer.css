@@ -1,0 +1,41 @@
+/* Keep text pages readable and give figures and the explorer room on large displays. */
+.md-grid { max-width: min(96vw, 100rem); }
+.md-main__inner:has(.mesh-lab) { max-width: 96vw; }
+.md-content:has(.mesh-lab) { min-width: 0; }
+.md-content:not(:has(.mesh-lab)) .md-typeset > p { max-width: 78ch; }
+.mesh-theme select { font: inherit; font-size: .7rem; padding: .32rem; color: inherit; background: transparent; border: 1px solid currentColor; border-radius: .25rem; }
+.mesh-theme option { color: CanvasText; background: Canvas; }
+.mesh-visually-hidden { position:absolute; width:1px; height:1px; overflow:hidden; clip-path:inset(50%); }
+
+.mesh-lab { display:grid; grid-template-columns: minmax(0,1fr) minmax(11rem, 19%); background:#142224; color:#edf4ef; border-radius:.65rem; overflow:hidden; }
+.mesh-stage { position:relative; min-width:0; height:clamp(16rem,50vh,32rem); background:radial-gradient(ellipse at 50% 38%,#354848 0%,#253637 48%,#162627 100%); }
+.mesh-stage canvas,.mesh-stage img { position:absolute; inset:0; width:100%; height:100%; object-fit:contain; }
+.mesh-stage canvas { cursor:grab; touch-action:none; }
+.mesh-stage canvas:active { cursor:grabbing; }
+.mesh-stage [hidden] { display:none; }
+.mesh-stage canvas:focus-visible { outline:2px solid #66d9bf; outline-offset:-4px; }
+.mesh-key { position:absolute; bottom:.8rem; left:1rem; display:flex; gap:.9rem; font-size:.63rem; color:#e8f1ef; pointer-events:none; }
+.mesh-key span::before { display:inline-block; content:""; width:.5rem; height:.5rem; background:#51af9f; margin-right:.32rem; }
+.mesh-key span+span::before { background:#d99b55; }
+.md-typeset .mesh-controls { display:flex; flex-direction:column; min-width:0; justify-content:center; gap:1rem; border:0; margin:0; padding:1.15rem; position:relative; }
+.mesh-controls legend { float:left; font-weight:700; font-size:.88rem; line-height:1.2; }
+.mesh-controls label { display:block; font-size:.7rem; font-weight:500; }
+.mesh-controls output { float:right; font-variant-numeric:tabular-nums; color:#89d7c6; }
+.mesh-controls select,.mesh-controls button { display:block; width:100%; font:inherit; background:#233637; color:#f2f6f5; padding:.4rem .5rem; border:1px solid #526961; border-radius:.22rem; }
+.mesh-controls select,.mesh-controls input[type=range] { margin-top:.28rem; }
+.mesh-controls input { accent-color:#75cbb9; }
+.mesh-controls input[type=range] { display:block; width:100%; }
+.mesh-controls button { cursor:pointer; font-size:.68rem; }
+.mesh-status { grid-column:1/-1; border-top:1px solid #354949; margin:0!important; padding:.48rem 1rem; font: .66rem/1.6 var(--md-code-font); color:#c4d7d3; }
+.mesh-gallery { display:grid; grid-template-columns:repeat(auto-fit,minmax(min(100%,10rem),1fr)); gap:1rem; }
+.md-typeset .mesh-gallery p { margin:0; }
+.mesh-gallery a { display:block; }
+.mesh-gallery a img { display:block; width:100%; aspect-ratio:1.75; object-fit:contain; background:#e8efee; border-radius:.3rem; margin-bottom:.35rem; }
+.mesh-gallery a:hover img { outline:2px solid var(--md-primary-fg-color); }
+@media (max-width:700px) {
+  .mesh-lab { grid-template-columns:1fr; }
+  .mesh-stage { height:clamp(14rem, 62vw, 20rem); }
+  .md-typeset .mesh-controls { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); align-items:center; gap:.7rem; padding:.8rem; }
+  .mesh-controls legend { grid-column:1/-1; }
+  .mesh-theme select { max-width:5rem; }
+}

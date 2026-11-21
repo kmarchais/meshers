@@ -2,7 +2,7 @@
 site_name = "Meshers"
 site_url = "https://kmarchais.github.io/meshers/"
 site_description = "CPU tetrahedral meshing of implicit solids and TPMS geometries"
-extra_css = ["assets/brand.css"]
+extra_css = ["assets/brand.css", "assets/explorer.css"]
 copyright = "Kevin Marchais · MIT license"
 docs_dir = "docs/site"
 site_dir = "site"
@@ -13,6 +13,9 @@ nav = [
   { "API reference" = [{ "Python" = "api/python.md" }, { "Rust" = "api/rust.md" }] },
   { "Development" = [{ "Contributing" = "contributing.md" }, { "Testing and coverage" = "testing.md" }, { "Release preparation" = "release.md" }] },
 ]
+
+[project.extra]
+generator = false
 
 [project.theme]
 custom_dir = "docs/overrides"

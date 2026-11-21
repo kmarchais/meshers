@@ -1,0 +1,19 @@
+<script>
+  (() => {
+    const control = document.querySelector("#mesh-theme");
+    const system = matchMedia("(prefers-color-scheme: dark)");
+    const previous = __md_get("__palette");
+    control.value = __md_get("mesh-theme") ||
+      ({1: "light", 2: "dark"}[previous?.index] ?? "system");
+    function apply() {
+      const dark = control.value === "system" ? system.matches : control.value === "dark";
+      document.body.dataset.mdColorScheme = dark ? "slate" : "default";
+      document.body.dataset.mdColorPrimary = "custom";
+      document.body.dataset.mdColorAccent = "custom";
+      document.documentElement.style.colorScheme = dark ? "dark" : "light";
+    }
+    apply();
+    system.addEventListener("change", apply);
+    control.addEventListener("change", () => { apply(); __md_set("mesh-theme", control.value); });
+  })();
+</script>
