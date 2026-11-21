@@ -1,6 +1,16 @@
 # Named surfaces and curved domains
 
-![Cut sphere with a teal spherical wall and a copper planar face. The triangles on each side share the rim.](assets/cut-sphere.png)
+<figure class="guide-figure" id="cut-layers">
+  <img src="assets/cut-sphere.svg" alt="Cut sphere with a triangulated wall and planar cap">
+  <fieldset><legend>Visible boundary</legend>
+    <label><input type="radio" name="boundary" value="" checked> Both</label>
+    <label><input type="radio" name="boundary" value="wall"> Spherical wall</label>
+    <label><input type="radio" name="boundary" value="cap"> Planar cut</label>
+  </fieldset>
+  <figcaption>The triangles come from the two named surfaces of a 12-cell-per-axis mesh.</figcaption>
+</figure>
+
+<script type="module" src="assets/guide-controls.js"></script>
 
 Each field names a boundary and keeps its negative side. Here `cut` labels the copper face at `z = 0.25`.
 

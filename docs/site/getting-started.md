@@ -1,5 +1,7 @@
 # Install and mesh a sphere
 
+<figure class="guide-figure"><img src="assets/sphere.svg" alt="Triangulated sphere surface"><figcaption>The exported surface contains the outer triangles of the tetrahedral volume.</figcaption></figure>
+
 ```sh
 python -m pip install "meshers[io]"
 ```

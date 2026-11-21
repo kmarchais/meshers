@@ -1,5 +1,11 @@
 # Build and contribute
 
+<ol class="mesh-flow">
+  <li><strong>Rust core</strong>Generate and validate the tetrahedra.</li>
+  <li><strong>Python bindings</strong>Build the wheel and exercise the public API.</li>
+  <li><strong>Documentation</strong>Compile the browser demo and both API references.</li>
+</ol>
+
 Install Python 3.11+, Rust stable and uv.
 
 ```sh

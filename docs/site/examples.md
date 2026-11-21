@@ -1,5 +1,15 @@
 # Runnable Python examples
 
+<div class="mesh-gallery" markdown="1">
+
+[![Section through a graded sheet](assets/playground/band.svg) **Vary the band width**](fields.md)
+
+[![Named spherical and planar boundaries](assets/cut-sphere.svg) **Inspect a named face**](intersections.md)
+
+[![Translated nodes on opposite faces](assets/playground/pairs.svg) **Explore periodic pairs**](quality.md#pair-opposite-faces)
+
+</div>
+
 From the **repository root**, install the [development environment](contributing.md) and run:
 
 ```sh

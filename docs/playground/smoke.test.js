@@ -1,6 +1,7 @@
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import { test } from "node:test";
+import { qualityFigure } from "../site/assets/guide-figures.mjs";
 import { boundaryMesh } from "../site/assets/boundary-mesh.mjs";
 
 const bytes = await readFile(new URL("../site/assets/playground/meshers.wasm", import.meta.url));
@@ -54,4 +55,14 @@ test("the starter has the same boundary, labels and metrics as the live default 
   assert.deepEqual(faces, Array.from(indices));
   assert.equal(initial.length, coords.length);
   assert.ok(coords.every((x, i) => Math.abs(x - initial[i]) <= 5.1e-8));
+});
+
+test("the quality illustration agrees with the volume and six edges of a Tet4", () => {
+  for (const percent of [1, 5, 50, 100]) {
+    const height = Math.sqrt(2 / 3) * percent / 100;
+    const volume = Math.sqrt(3) / 4 * height / 3;
+    const sumEdgeSquared = 3 + 3 * (1 / 3 + height ** 2);
+    const mmg = 72 * Math.sqrt(3) * volume / sumEdgeSquared ** 1.5;
+    assert.ok(qualityFigure(percent).graphic.includes("Adjusted · " + mmg.toFixed(3)));
+  }
 });

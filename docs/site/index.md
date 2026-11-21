@@ -50,13 +50,13 @@ mesh = <span class="mesh-module">mrs</span>.<span class="nf">generate</span>(
 
 <div class="mesh-gallery" markdown="1">
 
-[![Tetrahedral sphere boundary](assets/first-sphere.webp) **Generate your first mesh**](getting-started.md)
+[![Tetrahedral sphere boundary](assets/sphere.svg) **Generate your first mesh**](getting-started.md)
 
-[![Named planar cut through a sphere](assets/cut-sphere.png) **Label an intersection**](intersections.md)
+[![Named planar cut through a sphere](assets/cut-sphere.svg) **Label an intersection**](intersections.md)
 
-[![Displacement and energy convergence](assets/solver-convergence.png) **Verify a finite element solution**](solver-verification.md)
+[![Displacement and energy convergence](assets/playground/displacement.svg) **Verify a finite element solution**](solver-verification.md)
 
-[![Walls and periodic caps on a gyroid](assets/gyroid.png) **Inspect boundary quality**](quality.md)
+[![Gyroid cutaway colored by tetrahedron quality](assets/gyroid-quality-section.webp) **Inspect boundary quality**](quality.md)
 
 </div>
 

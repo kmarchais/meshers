@@ -2,9 +2,13 @@
 
 For a solid, Meshers keeps `f ≤ 0`. For a band, it keeps `lower ≤ f ≤ upper`. A fixed band gets thinner where the field changes faster.
 
-![Section through the band −0.3 ≤ (1+x)y ≤ 0.3. Its vertical width shrinks from 0.6 at x=0 to 0.2 at x=2.](assets/field-band.svg)
+<figure class="guide-figure" data-guide="band">
+  <div class="guide-diagram"><img src="assets/playground/band.svg" alt="Analytic section of a graded sheet"></div>
+  <div class="guide-control"><label for="band-setting">Band half-width</label><input id="band-setting" type="range" min="5" max="50" value="30"><output for="band-setting"></output></div>
+  <figcaption>Vertical section through f = (1 + x)y, from x = 0 to x = 2.</figcaption>
+</figure>
 
-For `f = (1 + x)y`, the band ±0.3 narrows from 0.6 to 0.2 in the vertical direction.
+<script type="module" src="assets/guide-controls.js"></script>
 
 To grade a sheet, divide the field by a positive half-width and use `band=(-1, 1)`. Match widths across periodic ends. [Graded sheet example](https://github.com/kmarchais/meshers/blob/main/crates/meshers-python/examples/graded.py)
 

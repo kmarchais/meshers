@@ -1,38 +1,34 @@
 /* Keep text pages readable and give figures and the explorer room on large displays. */
 .md-grid { max-width: min(96vw, 100rem); }
-.md-main__inner:has(.mesh-lab) { max-width: 96vw; }
-.md-content:has(.mesh-lab) { min-width: 0; }
-.md-content:not(:has(.mesh-lab)) .md-typeset > p { max-width: 78ch; }
-.mesh-theme select { font: inherit; font-size: .7rem; padding: .32rem; color: inherit; background: transparent; border: 1px solid currentColor; border-radius: .25rem; }
-.mesh-theme option { color: CanvasText; background: Canvas; }
-.mesh-visually-hidden { position:absolute; width:1px; height:1px; overflow:hidden; clip-path:inset(50%); }
+.md-main__inner.md-grid { width: 96%; max-width: 104rem; }
+.md-content { min-width: 0; }
+.md-content:not(:has(.mesh-lab)) .md-typeset > p:not(:has(img, svg)) { max-width: 78ch; }
 
-.mesh-lab { display:grid; grid-template-columns: minmax(0,1fr) minmax(12rem, 21%); background:#142224; color:#edf4ef; border-radius:.65rem; overflow:hidden; }
-.mesh-stage { position:relative; min-width:0; min-height:clamp(16rem,50vh,32rem); background:radial-gradient(ellipse at 50% 38%,#354848 0%,#253637 48%,#162627 100%); }
+.mesh-lab { display:grid; grid-template-columns: minmax(0,1fr) minmax(12rem, 21%); background:var(--lab-panel); color:var(--paper); border-radius:.65rem; overflow:hidden; }
+.mesh-stage { position:relative; min-width:0; min-height:clamp(16rem,50vh,32rem); background:radial-gradient(ellipse at 50% 38%,var(--stage-light) 0%,var(--stage-mid) 48%,var(--stage-edge) 100%); }
 .mesh-stage canvas,.mesh-stage img { position:absolute; inset:0; width:100%; height:100%; object-fit:contain; }
 .mesh-stage canvas { cursor:grab; touch-action:none; }
 .mesh-stage canvas:active { cursor:grabbing; }
 .mesh-stage [hidden] { display:none; }
 .mesh-stage canvas:focus-visible { outline:2px solid #66d9bf; outline-offset:-4px; }
-.mesh-key { position:absolute; bottom:.8rem; left:1rem; display:flex; gap:.9rem; font-size:.63rem; color:#e8f1ef; pointer-events:none; }
+.mesh-key { position:absolute; bottom:.8rem; left:1rem; display:flex; gap:.9rem; font-size:.63rem; color:var(--paper); pointer-events:none; }
 .mesh-key span::before { display:inline-block; content:""; width:.5rem; height:.5rem; background:#51af9f; margin-right:.32rem; }
 .mesh-key span+span::before { background:#d99b55; }
-/* The control rail uses the same material colors as the scene in both themes. */
 .mesh-controls {
-  --paper:#ecf5f2; --muted:#acc1bb; --mint:#92dfc5; --track:#3c524e;
+
   min-width:0; padding:clamp(.9rem,1.8vw,1.5rem); margin:0;
   display:grid; align-content:center; gap:.9rem;
-  background:#172a29; color:var(--paper); color-scheme:dark;
+  background:var(--lab-panel); color:var(--paper);
 }
 .md-typeset .mesh-controls h2 { margin:0; font-size:1rem; line-height:1.25; letter-spacing:-.025em; }
 .mesh-controls label,.mesh-controls legend { font-size:.68rem; font-weight:600; }
 .mesh-controls .mesh-fields { min-width:0; padding:0; margin:0; border:0; }
 .mesh-fields legend { padding:0; margin-bottom:.28rem; }
-.mesh-segments { display:flex; padding:3px; border:1px solid #425c56; border-radius:.42rem; background:#10201f; }
+.mesh-segments { display:flex; padding:3px; border:1px solid var(--track); border-radius:.42rem; background:var(--well); }
 .mesh-segments label { flex:1; position:relative; text-align:center; min-width:0; }
 .mesh-segments span { display:block; padding:.33rem .12rem; cursor:pointer; border-radius:.25rem; color:var(--muted); }
 .mesh-segments input,.mesh-switch input { position:absolute; opacity:0; width:1px; height:1px; }
-.mesh-segments input:checked + span { background:#315549; color:#ddffef; }
+.mesh-segments input:checked + span { background:var(--selected); color:var(--paper); }
 .mesh-segments input:focus-visible + span,.mesh-switch input:focus-visible + span,.mesh-controls button:focus-visible {
   outline:2px solid var(--mint); outline-offset:2px;
 }
@@ -64,11 +60,11 @@
   .mesh-segments input:checked + span,.mesh-switch input:checked + span { outline:2px solid Highlight; }
   .mesh-slider input { appearance:auto; }
 }
-.mesh-status { grid-column:1/-1; border-top:1px solid #354949; margin:0!important; padding:.48rem 1rem; font: .66rem/1.6 var(--md-code-font); color:#c4d7d3; }
+.mesh-status { grid-column:1/-1; border-top:1px solid var(--track); margin:0!important; padding:.48rem 1rem; font: .66rem/1.6 var(--md-code-font); color:var(--muted); }
 .mesh-gallery { display:grid; grid-template-columns:repeat(auto-fit,minmax(min(100%,10rem),1fr)); gap:1rem; }
 .md-typeset .mesh-gallery p { margin:0; }
 .mesh-gallery a { display:block; }
-.mesh-gallery a img { display:block; width:100%; aspect-ratio:1.75; object-fit:contain; background:#e8efee; border-radius:.3rem; margin-bottom:.35rem; }
+.mesh-gallery a img { display:block; width:100%; aspect-ratio:1.75; object-fit:contain; background:var(--well); border-radius:.3rem; margin-bottom:.35rem; }
 .mesh-gallery a:hover img { outline:2px solid var(--md-primary-fg-color); }
 @media (max-width:700px) {
   .mesh-lab { grid-template-columns:1fr; }
@@ -76,7 +72,6 @@
   .md-typeset .mesh-controls { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); align-items:center; gap:.7rem; padding:.8rem; }
   .md-typeset .mesh-controls h2,.mesh-controls .mesh-fields { grid-column:1/-1; }
   .mesh-display { flex-wrap:wrap; border:0; padding:0; }
-  .mesh-theme select { max-width:5rem; }
 }
 
 [data-md-color-scheme="default"] #mesh-code .mesh-module { color:#006b63; font-weight:600; }

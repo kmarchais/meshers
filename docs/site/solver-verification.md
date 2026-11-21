@@ -1,6 +1,9 @@
 # Does the displacement converge?
 
-![Displacement and energy errors against maximum physical edge length for a cube, a cylindrical gyroid and a toroidal gyroid. Each series uses three refinements.](assets/solver-convergence.png)
+<div class="plot-pair">
+  <figure><img src="assets/playground/displacement.svg" alt="Log–log displacement error by specimen; cube order 2.01, cylinder 1.97 and torus 1.92."></figure>
+  <figure><img src="assets/playground/energy.svg" alt="Log–log elastic energy error; final orders range from 1.00 to 1.05."></figure>
+</div>
 
 | Specimen | Cells per axis | Final displacement order | Final energy order |
 | --- | --- | ---: | ---: |

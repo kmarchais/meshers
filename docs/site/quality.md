@@ -1,5 +1,43 @@
 # Check the mesh before a solve
 
+<figure class="guide-figure" id="quality-section">
+  <img src="assets/gyroid-quality-section.webp" alt="Cutaway through an unoptimized gyroid, colored by tetrahedron quality">
+  <fieldset><legend>Gyroid mesh</legend>
+    <label><input type="radio" name="quality-view" value="section" checked> Cutaway</label>
+    <label><input type="radio" name="quality-view" value="poor"> Isolate cells below 0.1</label>
+  </fieldset>
+  <figcaption>MMG quality · 0 <span class="quality-scale"></span> 1. Of 3,367 Tet4 cells, 46 score below 0.1. The lowest score is 0.041.</figcaption>
+</figure>
+
+Both views color each Tet4 by its own MMG score. To reproduce the specimen with Meshers 0.2.1:
+
+```python
+import meshers as mrs
+
+mesh = mrs.generate(
+    "gyroid", cells=8, band=(-0.5, 0.5), periodic=(True,) * 3,
+    geometry_tolerance=0.05, optimize_passes=0,
+)
+```
+
+## Flatten a tetrahedron
+
+<figure class="guide-figure" data-guide="quality">
+  <div class="guide-diagram"><img src="assets/playground/quality.svg" alt="Regular tetrahedron beside a flattened tetrahedron"></div>
+  <div class="guide-control"><label for="quality-setting">Apex height</label><input id="quality-setting" type="range" min="1" max="100" value="5"><output for="quality-setting"></output></div>
+  <figcaption>MMG quality · 0 <span class="quality-scale"></span> 1. Flattening the second cell preserves its base and reduces its volume.</figcaption>
+</figure>
+
+## Pair opposite faces
+
+<figure class="guide-figure" data-guide="pairs">
+  <div class="guide-diagram"><img src="assets/playground/pairs.svg" alt="Three corresponding nodes on translated x faces"></div>
+  <div class="guide-control"><label for="pairs-setting">Highlight a pair</label><input id="pairs-setting" type="range" min="1" max="3" value="1"><output for="pairs-setting"></output></div>
+  <figcaption>Opposite faces have matching in-plane coordinates. Each highlighted pair differs by one box length along x.</figcaption>
+</figure>
+
+<script type="module" src="assets/guide-controls.js"></script>
+
 | Inspect | What to check |
 | --- | --- |
 | Orientation | Positive signed Tet4 volumes. For Tet10, exported `Volume` integrates the curved mapping. |

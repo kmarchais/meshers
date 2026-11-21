@@ -1,0 +1,50 @@
+[data-md-color-scheme="default"] {
+  --paper:#19332f; --muted:#405f58; --mint:#087667; --track:#b1c8c2; --well:#e0ece8;
+  --selected:#b8dcd0; --lab-panel:#eef5f1; --stage-light:#ffffff; --stage-mid:#edf5f1; --stage-edge:#dfebe6;
+  --figure-edge:#314939; --chart-copper:#a34e2d; --cli-command:#006f65; --cli-option:#87431e;
+}
+[data-md-color-scheme="slate"] {
+  --paper:#ecf5f2; --muted:#b3c8c2; --mint:#92dfc5; --track:#405a54; --well:#142928;
+  --selected:#315549; --lab-panel:#192d2b; --stage-light:#354848; --stage-mid:#253637; --stage-edge:#162627;
+  --figure-edge:#162d31; --chart-copper:#f0ad7b; --cli-command:#89dfce; --cli-option:#f1ba91;
+}
+#mesh-theme { cursor:pointer; color:inherit; }
+#mesh-theme svg { width:1.12rem; height:1.12rem; fill:none; }
+[data-md-color-scheme="default"] .theme-sun,[data-md-color-scheme="slate"] .theme-moon { display:none; }
+#mesh-theme:focus-visible { outline:2px solid var(--mint); border-radius:.25rem; }
+.md-typeset .cli-command { color:var(--cli-command); font-weight:650; }
+.md-typeset .cli-option { color:var(--cli-option); }
+.md-typeset .guide-figure,.md-typeset .plot-pair,.md-typeset .mesh-flow { width:100%; max-width:64rem; margin:1.3rem 0; }
+.guide-figure,.plot-pair figure { background:var(--lab-panel); border:1px solid var(--track); border-radius:.55rem; padding:clamp(.6rem,1.3vw,1.2rem); }
+.md-typeset .guide-figure { box-sizing:border-box; }
+.guide-figure img,.guide-diagram svg { display:block; width:100%; max-height:15.2rem; object-fit:contain; }
+.guide-diagram svg text { font:14px system-ui,sans-serif; fill:var(--paper); }
+.guide-grid { stroke:var(--track); stroke-dasharray:3 5; }
+.pair-face { fill:var(--well); stroke:var(--mint); stroke-width:1.5; }
+.pair-link,.pair-point { fill:var(--chart-copper); stroke:var(--chart-copper); stroke-width:2; }
+.md-typeset .guide-figure figcaption,.md-typeset .plot-pair figcaption { text-align:left; font-style:normal; max-width:78ch; margin:.45rem 0 0; color:var(--muted); font-size:.72rem; }
+.guide-control { display:none; }
+.guide-figure[data-ready] .guide-control { display:flex; flex-wrap:wrap; align-items:center; gap:.55rem 1rem; padding:.6rem 0; border-top:1px solid var(--track); }
+.guide-control label,.guide-control output { font-size:.73rem; font-weight:600; }
+.guide-control input { accent-color:var(--mint); width:min(13rem,90%); }
+.guide-control output { font-variant-numeric:tabular-nums; color:var(--mint); }
+.quality-scale { display:inline-block; width:5rem; height:.45rem; border-radius:1rem; background:linear-gradient(90deg,#c7643c,#2d9f8f); vertical-align:middle; }
+.md-typeset .plot-pair { display:grid; grid-template-columns:repeat(auto-fit,minmax(min(100%,17rem),1fr)); gap:1rem; }
+.md-typeset .plot-pair figure { margin:0; min-width:0; }
+.plot-pair img { display:block; width:100%; }
+.md-typeset .mesh-flow { display:grid; grid-template-columns:repeat(auto-fit,minmax(min(100%,10rem),1fr)); gap:.8rem; list-style:none; padding:0; }
+.md-typeset .mesh-flow li { margin:0; padding:.7rem .9rem; border-top:2px solid var(--mint); background:var(--lab-panel); font-size:.72rem; }
+.mesh-flow strong { display:block; color:var(--paper); }
+@media(min-width:900px){
+ .md-content__inner:has(.guide-figure,.plot-pair,.mesh-flow) { max-width:72rem; margin-inline:auto; padding-inline:clamp(.75rem,2vw,2rem); }
+ .md-typeset .guide-figure { max-width:50rem; }
+}
+
+
+.md-typeset .plot-pair figure { width:100%; max-width:none; box-sizing:border-box; }
+.md-typeset .guide-figure.chart img { max-height:22rem; }
+.md-typeset .guide-figure fieldset { border:0; border-top:1px solid var(--track); padding:.55rem 0 0; margin:.65rem 0 0; text-align:left; }
+.guide-figure fieldset legend { padding-right:.55rem; font-size:.72rem; font-weight:650; color:var(--muted); }
+.guide-figure fieldset label { display:inline-flex; align-items:center; gap:.28rem; cursor:pointer; border:1px solid var(--track); border-radius:1rem; padding:.2rem .55rem; margin:.15rem .2rem .15rem 0; font-size:.7rem; }
+.guide-figure fieldset label:has(:checked) { color:var(--paper); background:var(--selected); }
+.guide-figure fieldset input { accent-color:var(--mint); }
