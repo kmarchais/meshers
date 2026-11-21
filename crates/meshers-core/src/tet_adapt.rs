@@ -248,6 +248,39 @@ impl<'g, G: Geometry> Tets<'g, G> {
         s
     }
 
+    /// Whether moving `v` to `q` keeps every incident tetrahedron inside one
+    /// periodic cell. The torus mesh stays valid when a tetrahedron straddles a
+    /// periodic plane, but unfolding needs that plane resolved by faces.
+    fn keeps_cells(&self, v: usize, q: Point) -> bool {
+        self.vt[v].iter().all(|&t| {
+            self.in_one_cell(
+                self.tets[t].map(|i| if i == v { Some(q) } else { None }),
+                self.tets[t],
+                v,
+            )
+        })
+    }
+
+    fn in_one_cell(&self, moved: [Option<Point>; 4], tet: [usize; 4], v: usize) -> bool {
+        let [lo, hi] = self.g.bounds();
+        let raw: [Point; 4] = std::array::from_fn(|k| moved[k].unwrap_or(self.points[tet[k]]));
+        let p = self.local(raw);
+        (0..3).all(|a| {
+            let Some(l) = self.period[a] else { return true };
+            let c = p.iter().map(|q| q[a]).sum::<f64>() / 4.;
+            let shift = ((c - lo[a]) / l).floor() * l;
+            let eps = 1e-9 * l;
+            (0..4).all(|k| {
+                let x = p[k][a] - shift;
+                if moved[k].is_some() && tet[k] == v && (self.masks[v] >> (2 + 2 * a)) & 3 == 0 {
+                    x > lo[a] && x < hi[a]
+                } else {
+                    x >= lo[a] - eps && x <= hi[a] + eps
+                }
+            })
+        })
+    }
+
     /// Minimal-image displacement from `a` to `b`.
     fn delta(&self, a: Point, b: Point) -> Point {
         std::array::from_fn(|k| {
@@ -728,6 +761,20 @@ impl<'g, G: Geometry> Tets<'g, G> {
                     [a, b].iter().all(|c| {
                         mmg(self.local(c.map(|i| if i == usize::MAX { p } else { self.points[i] })))
                             >= floor
+                            && (self.in_one_cell(
+                                    c.map(|i| (i == usize::MAX).then_some(p)),
+                                    c.map(|i| if i == usize::MAX { u } else { i }),
+                                    usize::MAX,
+                                )
+                                // A wall midpoint off the cap curve must stay strictly inside.
+                                && (0..3).all(|a| {
+                                    self.period[a].is_none()
+                                        || (mask >> (2 + 2 * a)) & 3 != 0
+                                        || {
+                                            let [lo, hi] = self.g.bounds();
+                                            p[a] > lo[a] && p[a] < hi[a]
+                                        }
+                                }))
                     })
                 });
                 if valid {
@@ -973,6 +1020,9 @@ impl<'g, G: Geometry> Tets<'g, G> {
         if mu == 0 && !bfaces.is_empty() {
             return false;
         }
+        if self.folds_into_plane(u, v) || self.flattens_onto_plane(u, v) {
+            return false;
+        }
         let shell = self.shell(u, v);
         if shell.is_empty() {
             return false;
@@ -1057,6 +1107,13 @@ impl<'g, G: Geometry> Tets<'g, G> {
         for &t in &others {
             let q = self.tet_points(self.tets[t], Some((u, self.points[v])));
             if mmg(q) < before {
+                return false;
+            }
+            if !self.in_one_cell(
+                self.tets[t].map(|i| (i == u).then_some(self.points[v])),
+                self.tets[t],
+                usize::MAX,
+            ) {
                 return false;
             }
         }
@@ -1159,6 +1216,23 @@ impl<'g, G: Geometry> Tets<'g, G> {
             let label = self.faces[f];
             let own = if label == 0 { 0 } else { 1 << label };
             common & !WALL & !own != 0
+        })
+    }
+
+    /// Geometric form of `folds_into_plane`: a wall facet of `u` whose three
+    /// corners would all lie on one periodic plane reads as an unmatched cap.
+    fn flattens_onto_plane(&self, u: usize, v: usize) -> bool {
+        let [lo, hi] = self.g.bounds();
+        self.vb[u].iter().any(|f| {
+            !f.contains(&v)
+                && self.faces[f] == 0
+                && (0..3).any(|a| {
+                    self.period[a].is_some()
+                        && f.iter().all(|&w| {
+                            let x = self.points[if w == u { v } else { w }][a];
+                            x == lo[a] || x == hi[a]
+                        })
+                })
         })
     }
 
@@ -1361,6 +1435,9 @@ impl<'g, G: Geometry> Tets<'g, G> {
             .map(|&t| mmg(self.tet_points(self.tets[t], Some((v, q)))))
             .fold(1., f64::min);
         if after <= before.min(o.quality_guard) || after <= 0. {
+            return false;
+        }
+        if !self.keeps_cells(v, q) {
             return false;
         }
         if mask & WALL != 0 && self.g.halfspaces().is_none() {
@@ -1701,13 +1778,18 @@ impl<'g, G: Geometry> Tets<'g, G> {
                 .copied()
                 .filter(|&t| mmg(self.tet_points(self.tets[t], Some((v, q)))) < floor)
                 .collect();
+            let crossing = !self.keeps_cells(v, q);
+            if blocking.is_empty() && crossing {
+                self.pending.push(v);
+                continue;
+            }
             if blocking.is_empty() {
                 changed |= self.points[v] != q;
                 self.points[v] = q;
                 self.refresh(v);
                 continue;
             }
-            if self.settle_with_cap_neighbor(v, q, guard) {
+            if !crossing && self.settle_with_cap_neighbor(v, q, guard) {
                 changed = true;
                 continue;
             }
@@ -1723,6 +1805,7 @@ impl<'g, G: Geometry> Tets<'g, G> {
                 let value = self.g.value(candidate);
                 (self.g.level(value, self.threshold) == level
                     && (value - level).abs() < 0.999 * residual
+                    && self.keeps_cells(v, candidate)
                     && self.vt[v].iter().all(|&tetrahedron| {
                         mmg(self.tet_points(self.tets[tetrahedron], Some((v, candidate)))) >= floor
                     }))

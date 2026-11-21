@@ -1044,3 +1044,30 @@ fn a_film_thinner_than_a_cell_is_meshed() {
     };
     assert!(output.mesh.tets.iter().any(in_film));
 }
+
+#[test]
+fn adaptation_keeps_a_periodic_spinodoid_unfoldable() {
+    // Without the periodic guards of the adaptive operators, a collapse lays a
+    // wall facet in a periodic plane or a wall vertex crosses one: "solid
+    // boundary is not a closed two-manifold" or "periodic triangle mismatch".
+    let tolerance = 0.05;
+    let output = generate(
+        &Spinodoid::load(),
+        Options {
+            cells: [24; 3],
+            periodic: [true; 3],
+            geometry_tolerance: tolerance,
+            minimum_quality: 0.1,
+            adapt: Some(meshers_core::tet_adapt::Options {
+                tolerance,
+                min_length: tolerance,
+                ..Default::default()
+            }),
+            ..Options::default()
+        },
+    )
+    .unwrap();
+    assert!(output.diagnostics.minimum_mmg_quality >= 0.1);
+    assert!(output.diagnostics.maximum_sampled_surface_error <= tolerance);
+    assert!(output.periodic_pairs.iter().all(|pairs| !pairs.is_empty()));
+}
