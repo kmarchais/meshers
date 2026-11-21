@@ -1068,6 +1068,7 @@ fn adaptation_keeps_a_periodic_spinodoid_unfoldable() {
         },
     )
     .unwrap();
+    assert!(!output.diagnostics.adaptation_abandoned);
     assert!(output.diagnostics.minimum_mmg_quality >= 0.1);
     assert!(output.diagnostics.maximum_sampled_surface_error <= 1.2 * tolerance);
     assert!(output.periodic_pairs.iter().all(|pairs| !pairs.is_empty()));
@@ -1144,4 +1145,90 @@ fn coverage_error_reports_a_feature_the_mesh_lost() {
     .diagnostics;
     assert!(fine.maximum_sampled_coverage_error <= 0.02);
     assert!(fine.maximum_sampled_coverage_error > 0.);
+}
+
+#[test]
+fn adaptation_recovers_fibres_grazing_the_box() {
+    // Adaptation alone leaves elements pinned between the wall and a box
+    // plane below any useful quality. Its result goes through the sliver
+    // recovery of the lattice path, kept when the geometry gate accepts it.
+    let graze = 0.5 - 0.2 / 2_f64.sqrt() + 0.004;
+    for (name, centre) in [
+        ("edge", [graze, graze]),
+        // The fibre passes the face z = 0.5 by 0.003.
+        ("face", [0., 0.5 - 0.2 + 0.003]),
+    ] {
+        let fibre = move |p: Point| {
+            let mut distance = f64::INFINITY;
+            for dy in [-1., 0., 1.] {
+                for dz in [-1., 0., 1.] {
+                    distance = distance.min((p[1] - centre[0] - dy).hypot(p[2] - centre[1] - dz));
+                }
+            }
+            distance - 0.2
+        };
+        let tolerance = 0.02;
+        let output = generate(
+            &fibre,
+            Options {
+                bounds: [[-0.5; 3], [0.5; 3]],
+                cells: [16; 3],
+                periodic: [true; 3],
+                geometry_tolerance: tolerance,
+                minimum_quality: 0.1,
+                adapt: Some(meshers_core::tet_adapt::Options {
+                    tolerance,
+                    min_length: tolerance,
+                    ..Default::default()
+                }),
+                ..Options::default()
+            },
+        )
+        .unwrap_or_else(|error| panic!("{name}: {error}"));
+        let d = output.diagnostics;
+        assert!(!d.adaptation_abandoned, "{name}");
+        assert!(d.minimum_mmg_quality >= 0.1, "{name}");
+        assert!(d.defeaturing_moves > 0, "{name}");
+        assert!(d.maximum_sampled_surface_error <= tolerance, "{name}");
+        assert!(d.maximum_sampled_coverage_error <= tolerance, "{name}");
+        // The fibre runs along x: its caps on the x faces always match. A
+        // thin strip across another face may be defeatured away.
+        assert!(!output.periodic_pairs[0].is_empty(), "{name}");
+    }
+}
+
+#[test]
+fn a_refused_adaptation_falls_back_to_the_lattice_mesh() {
+    // Adaptation leaves this coarse spinodoid outside the tolerance. The
+    // caller gets the lattice mesh of the same field, flagged as such,
+    // instead of a rejection.
+    let tolerance = 0.04;
+    let options = Options {
+        cells: [16; 3],
+        periodic: [true; 3],
+        geometry_tolerance: tolerance,
+        minimum_quality: 0.1,
+        ..Options::default()
+    };
+    let field = Spinodoid::load();
+    let lattice = generate(&field, options).unwrap();
+    let adapted = generate(
+        &field,
+        Options {
+            adapt: Some(meshers_core::tet_adapt::Options {
+                tolerance,
+                min_length: tolerance,
+                ..Default::default()
+            }),
+            ..options
+        },
+    )
+    .unwrap();
+    assert!(!lattice.diagnostics.adaptation_abandoned);
+    assert!(adapted.diagnostics.adaptation_abandoned);
+    assert!(adapted.diagnostics.adapt.is_none());
+    assert_eq!(adapted.mesh.points, lattice.mesh.points);
+    assert_eq!(adapted.mesh.tets, lattice.mesh.tets);
+    assert!(adapted.diagnostics.minimum_mmg_quality >= 0.1);
+    assert!(adapted.diagnostics.maximum_sampled_surface_error <= tolerance);
 }

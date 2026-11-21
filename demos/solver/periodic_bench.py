@@ -348,6 +348,9 @@ def measure(name: str, cells: int, *, adapt: bool, tolerance: float, quality: fl
                     "minimum_mmg_quality",
                     "sampled_surface_error",
                     "sampled_coverage_error",
+                    "adaptation_abandoned",
+                    "balanced_wall_vertices",
+                    "improved_elements",
                     "defeaturing_moves",
                     "refined_lattice_edges",
                     "removed_bridging_elements",
@@ -372,7 +375,9 @@ def _line(record: dict) -> str:
         f"{head} tets={record['tetrahedra']:<7d} q={q['minimum']:.3f}/{q['first_percentile']:.3f}"
         f"/{q['median']:.3f} dih={low:5.1f}-{high:5.1f} out={record['mesh_to_wall']:.4f}"
         f" in={record['wall_to_mesh']:.4f} vol={100 * record['relative_volume_error']:+.2f}%"
-        f" moved={record['mesher']['defeaturing_moves']} {record['seconds']:.0f}s"
+        f" moved={record['mesher']['defeaturing_moves']}"
+        f"{' FALLBACK' if record['mesher']['adaptation_abandoned'] else ''}"
+        f" {record['seconds']:.0f}s"
         f" {'ok' if not record['missed_limits'] else 'MISSES ' + ','.join(record['missed_limits'])}"
     )
 

@@ -765,6 +765,14 @@ fn mesh_dict<'py>(
         result.diagnostics.removed_bridging_elements,
     )?;
     diagnostics.set_item(
+        "improved_elements",
+        result.diagnostics.improved_elements,
+    )?;
+    diagnostics.set_item(
+        "adaptation_abandoned",
+        result.diagnostics.adaptation_abandoned,
+    )?;
+    diagnostics.set_item(
         "refined_lattice_edges",
         result.diagnostics.refined_lattice_edges,
     )?;

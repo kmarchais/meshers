@@ -74,6 +74,18 @@ pub(crate) trait Geometry: Sync {
         samples: &[(Point, [bool; 3])],
         threshold: f64,
     ) -> Result<Vec<f64>, String> {
+        Ok(self
+            .wall_walks(samples, threshold)?
+            .into_iter()
+            .map(|walk| walk.0)
+            .collect())
+    }
+    /// `wall_distances` with the point each walk ended at.
+    fn wall_walks(
+        &self,
+        samples: &[(Point, [bool; 3])],
+        threshold: f64,
+    ) -> Result<Vec<(f64, Point)>, String> {
         let g = self;
         const STEPS: usize = 8;
         let [lo, hi] = g.bounds();
@@ -129,7 +141,7 @@ pub(crate) trait Geometry: Sync {
             }
             active = next;
         }
-        Ok(distance)
+        Ok(distance.into_iter().zip(at).collect())
     }
     fn cap(&self, points: [Point; 3]) -> bool {
         let [lo, hi] = self.bounds();
