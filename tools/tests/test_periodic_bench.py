@@ -91,7 +91,7 @@ def test_every_case_is_periodic_and_has_solid_and_void():
 
 def test_measure_records_a_good_mesh_and_a_rejection():
     good = bench.measure("sphere", 12, adapt=False, tolerance=0.02, quality=0.1)
-    assert good["missed_limits"] == ["volume"]
+    assert good["missed_limits"] == []
     assert good["unmatched_cap_nodes"] == 0
     assert good["wall_to_mesh"] < 0.02
     assert good["field_points"] > 0

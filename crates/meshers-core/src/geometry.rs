@@ -61,9 +61,102 @@ pub(crate) trait Geometry: Sync {
     fn level(&self, value: f64, t: f64) -> f64 {
         if self.band() { value.signum() * t } else { 0. }
     }
+    /// Distance from each sample to the wall point that Newton steps along its
+    /// free gradient reach.
+    ///
+    /// The first-order estimate `|f| / |grad f|` is a distance only for a distance
+    /// function: it misjudges any other field by the curvature of its values. The
+    /// length of the path walked to the wall bounds the distance from above
+    /// whatever the scaling of the field. Samples that do not converge keep the
+    /// first-order estimate, infinite at a vanishing gradient.
+    fn wall_distances(
+        &self,
+        samples: &[(Point, [bool; 3])],
+        threshold: f64,
+    ) -> Result<Vec<f64>, String> {
+        let g = self;
+        const STEPS: usize = 8;
+        let [lo, hi] = g.bounds();
+        let scale = (0..3).map(|a| hi[a] - lo[a]).fold(0., f64::max);
+        let resolved = 1e-9 * scale;
+        let free = |mut gradient: Point, locked: [bool; 3]| {
+            for a in 0..3 {
+                if locked[a] {
+                    gradient[a] = 0.;
+                }
+            }
+            gradient
+        };
+        let start: Vec<Point> = samples.iter().map(|s| s.0).collect();
+        let values = g.values(&start);
+        let gradients = g.gradients(&start);
+        let levels: Vec<f64> = values.iter().map(|&v| g.level(v, threshold)).collect();
+        let mut distance: Vec<f64> = (0..samples.len())
+            .map(|i| wall_distance(values[i] - levels[i], gradients[i], samples[i].1))
+            .collect();
+        // On the wall already, held at a box corner, or without a usable gradient.
+        let mut active: Vec<usize> = (0..samples.len())
+            .filter(|&i| {
+                distance[i] > resolved && distance[i].is_finite() && samples[i].1 != [true; 3]
+            })
+            .collect();
+        let mut at = start.clone();
+        let mut state: Vec<(f64, Point)> = values.into_iter().zip(gradients).collect();
+        for _ in 0..STEPS {
+            if active.is_empty() {
+                break;
+            }
+            g.check()?;
+            for &i in &active {
+                let (value, gradient) = state[i];
+                let gradient = free(gradient, samples[i].1);
+                let slope = crate::norm(gradient);
+                let step = ((value - levels[i]) / slope).clamp(-0.05 * scale, 0.05 * scale) / slope;
+                at[i] = std::array::from_fn(|a| at[i][a] - step * gradient[a]);
+            }
+            let moved: Vec<Point> = active.iter().map(|&i| at[i]).collect();
+            let values = g.values(&moved);
+            let gradients = g.gradients(&moved);
+            let mut next = Vec::with_capacity(active.len());
+            for ((&i, value), gradient) in active.iter().zip(values).zip(gradients) {
+                state[i] = (value, gradient);
+                let residual = wall_distance(value - levels[i], gradient, samples[i].1);
+                if residual <= resolved {
+                    distance[i] = crate::norm(crate::sub(at[i], start[i])) + residual;
+                } else if residual.is_finite() {
+                    next.push(i);
+                }
+            }
+            active = next;
+        }
+        Ok(distance)
+    }
     fn cap(&self, points: [Point; 3]) -> bool {
         let [lo, hi] = self.bounds();
         (0..3).any(|a| points.iter().all(|p| p[a] == lo[a]) || points.iter().all(|p| p[a] == hi[a]))
+    }
+}
+pub(crate) fn wall_distance(residual: f64, mut gradient: Point, locked: [bool; 3]) -> f64 {
+    let residual = residual.abs();
+    if residual == 0. {
+        return 0.;
+    }
+    // Values are normalized by the preflight field amplitude. At a fixed box
+    // corner, roundoff at a true wall must not become an infinite 1/0 distance.
+    // Retain the full-gradient estimate only for roundoff-sized corner residuals;
+    // ordinary misses and genuine zero gradients still reject.
+    if locked != [true; 3] || residual > 64. * f64::EPSILON {
+        for a in 0..3 {
+            if locked[a] {
+                gradient[a] = 0.;
+            }
+        }
+    }
+    let n = crate::norm(gradient);
+    if n > 0. && n.is_finite() {
+        residual / n
+    } else {
+        f64::INFINITY
     }
 }
 pub(crate) struct Legacy;

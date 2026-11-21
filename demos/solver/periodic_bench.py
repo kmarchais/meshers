@@ -347,6 +347,7 @@ def measure(name: str, cells: int, *, adapt: bool, tolerance: float, quality: fl
                 for key in (
                     "minimum_mmg_quality",
                     "sampled_surface_error",
+                    "sampled_coverage_error",
                     "defeaturing_moves",
                     "refined_lattice_edges",
                     "removed_bridging_elements",

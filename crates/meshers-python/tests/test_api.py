@@ -41,9 +41,15 @@ def test_geometry_rejection_locates_a_sample_with_the_reported_error(compiled):
     point = np.fromstring(match[2], sep=",")
     assert point.shape == (3,)
     assert np.all(abs(point) <= 0.5)
-    gradient = -2 * np.pi / 0.3 * np.sin(2 * np.pi * point)
-    distance = abs(abs(schwarz(*point)) - 1) / np.linalg.norm(gradient)
-    assert distance == pytest.approx(float(match[1]), rel=1e-8)
+    # The reported error is the length of the Newton walk from the sample to the wall.
+    level = np.sign(schwarz(*point))
+    at = point.copy()
+    for _ in range(8):
+        gradient = -2 * np.pi / 0.3 * np.sin(2 * np.pi * at)
+        at -= (schwarz(*at) - level) * gradient / (gradient @ gradient)
+    assert schwarz(*at) == pytest.approx(level, abs=1e-9)
+    distance = np.linalg.norm(at - point)
+    assert distance == pytest.approx(float(match[1]), rel=1e-6)
     assert distance > 0.01
 
 

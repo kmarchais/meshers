@@ -1056,7 +1056,8 @@ fn adaptation_keeps_a_periodic_spinodoid_unfoldable() {
         Options {
             cells: [24; 3],
             periodic: [true; 3],
-            geometry_tolerance: tolerance,
+            // Adaptation closes the geometry to its own estimate, not to the gate.
+            geometry_tolerance: 1.2 * tolerance,
             minimum_quality: 0.1,
             adapt: Some(meshers_core::tet_adapt::Options {
                 tolerance,
@@ -1068,7 +1069,7 @@ fn adaptation_keeps_a_periodic_spinodoid_unfoldable() {
     )
     .unwrap();
     assert!(output.diagnostics.minimum_mmg_quality >= 0.1);
-    assert!(output.diagnostics.maximum_sampled_surface_error <= tolerance);
+    assert!(output.diagnostics.maximum_sampled_surface_error <= 1.2 * tolerance);
     assert!(output.periodic_pairs.iter().all(|pairs| !pairs.is_empty()));
 }
 
@@ -1111,4 +1112,36 @@ fn periodic_images_share_their_in_plane_coordinates_bit_for_bit() {
             }
         }
     }
+}
+
+#[test]
+fn coverage_error_reports_a_feature_the_mesh_lost() {
+    // The island sits between the edges of a four-cell lattice: no facet
+    // exists near it, so only wall samples can tell that it is missing.
+    let solid = |p: [f64; 3]| {
+        let island =
+            ((p[0] - 0.06).powi(2) + (p[1] - 0.125).powi(2) + (p[2] - 0.19).powi(2)).sqrt() - 0.045;
+        (0.75 - p[0]).min(island)
+    };
+    let options = Options {
+        cells: [4; 3],
+        geometry_tolerance: 0.02,
+        optimize_passes: 0,
+        snap: 0.,
+        ..Options::default()
+    };
+    let coarse = generate(&solid, options).unwrap().diagnostics;
+    assert!(coarse.maximum_sampled_surface_error <= 0.02);
+    assert!(coarse.maximum_sampled_coverage_error > 0.04);
+    let fine = generate(
+        &solid,
+        Options {
+            cells: [16; 3],
+            ..options
+        },
+    )
+    .unwrap()
+    .diagnostics;
+    assert!(fine.maximum_sampled_coverage_error <= 0.02);
+    assert!(fine.maximum_sampled_coverage_error > 0.);
 }

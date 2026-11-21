@@ -741,6 +741,14 @@ fn mesh_dict<'py>(
         result.diagnostics.maximum_sampled_surface_error,
     )?;
     diagnostics.set_item(
+        "balanced_wall_vertices",
+        result.diagnostics.balanced_wall_vertices,
+    )?;
+    diagnostics.set_item(
+        "sampled_coverage_error",
+        result.diagnostics.maximum_sampled_coverage_error,
+    )?;
+    diagnostics.set_item(
         "elements_below_quality_01",
         result.diagnostics.elements_below_quality_01,
     )?;
