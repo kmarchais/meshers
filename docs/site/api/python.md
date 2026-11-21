@@ -1,8 +1,10 @@
 # Python API
 
-Generated from the Python facade and extension stubs during every documentation build.
+The default wheel exposes volume meshing, field compilation and cancellation. `Field` is the callable type accepted by the mesher.
 
 ::: meshers.generate
+
+`meshers.MAX_CONSTRAINTS` gives the named-constraint limit of the installed wheel.
 
 ::: meshers.generate_intersection
 
@@ -14,10 +16,18 @@ Generated from the Python facade and extension stubs during every documentation 
 
 ::: meshers.CompiledField
     options:
-      members: ["__call__", "gradient", "has_gradient", "node_count"]
+      members: ["__call__", "gradient", "values", "has_gradient", "node_count", "halfspaces", "polyhedral_regions", "intersection_fields", "sdf_intersection"]
 
 ::: meshers.CancellationToken
 
 ::: meshers.MeshingError
 
 ::: meshers.CancelledError
+
+## Experimental surface build
+
+Check `meshers.SURFACE_MESHING_AVAILABLE` before calling the triangle-only mesher. It requires a wheel built with the `experimental-surfaces` Cargo feature.
+
+::: meshers.surface.generate_surface
+
+::: meshers.surface.SurfaceMesh

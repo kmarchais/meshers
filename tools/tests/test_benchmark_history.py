@@ -1,13 +1,16 @@
+# Copyright (c) 2026 Kevin Marchais
+
 """Archive real-shaped records without hiding failures or replacing history."""
 
 import copy
 import json
-import xml.etree.ElementTree as ET  # ruff: ignore[suspicious-xml-etree-import] - own generated SVG.
 
 import pytest
+from defusedxml import ElementTree
 
 from tools import benchmark_history as history
 from tools import performance_gate as gate
+from tools.benchmark_hardware import hardware_snapshot
 
 
 def measurement():
@@ -43,9 +46,24 @@ def measurement():
     }
 
 
+def test_published_configuration_excludes_computer_name(monkeypatch):
+    monkeypatch.setenv("RUNNER_NAME", "private-identifier")
+    monkeypatch.setenv("COMPUTERNAME", "private-identifier")
+    specs = hardware_snapshot()
+    assert set(specs) == {"cpu_model", "cpu_count", "ram_bytes", "machine", "platform"}
+    assert "private-identifier" not in json.dumps(specs)
+    assert specs["cpu_count"] > 0
+    assert specs["ram_bytes"] > 0
+
+
 def test_archive_plots_and_immutable_history(tmp_path):
     source = tmp_path / "input.json"
-    source.write_text(json.dumps(measurement()))
+    data = measurement()
+    slow = data["cases"]["compiled_gyroid"]
+    for label, runs in slow["runs"].items():
+        for row in [*runs, slow["medians"][label]]:
+            row["seconds"] *= 2
+    source.write_text(json.dumps({**data, "runner": "private-identifier"}))
     directory = tmp_path / "benchmarks"
     history.archive(source, "v0.2.0-rc-reference", directory)
     page = (directory / "v0.2.0-rc-reference.md").read_text()
@@ -53,15 +71,28 @@ def test_archive_plots_and_immutable_history(tmp_path):
     assert "quality_mean" in page
     assert "quality_p90" in page
     assert "REFERENCE" in (tmp_path / "benchmark-history.md").read_text()
-    ET.parse(directory / "v0.2.0-rc-reference.svg")  # ruff: ignore[suspicious-xml-element-tree-usage] - own generated SVG.
+    chart = ElementTree.parse(directory / "v0.2.0-rc-reference.svg")
+    bars = chart.findall(".//{*}rect[@height='15']")
+    widths = {float(bar.attrib["width"]) for bar in bars}
+    assert len(widths) == 2
+    assert max(widths) == 2 * min(widths)
     frozen = (directory / "v0.2.0-rc-reference.json").read_bytes()
+    assert b"private-identifier" not in frozen
     with pytest.raises(FileExistsError):
         history.archive(source, "v0.2.0-rc-reference", directory)
     assert (directory / "v0.2.0-rc-reference.json").read_bytes() == frozen
 
 
-@pytest.mark.parametrize("corruption", ["missing", "nonfinite", "verdict", "median"])
-def test_refuses_incomplete_or_false_success(corruption):
+@pytest.mark.parametrize(
+    ("corruption", "error"),
+    [
+        ("missing", "Missing measured samples"),
+        ("nonfinite", "Invalid numeric measurement"),
+        ("verdict", "Regression verdict does not match"),
+        ("median", "Summary does not match"),
+    ],
+)
+def test_refuses_incomplete_or_false_success(corruption, error):
     data = measurement()
     case = data["cases"]["compiled_gyroid"]
     if corruption == "missing":
@@ -72,7 +103,7 @@ def test_refuses_incomplete_or_false_success(corruption):
         case["failures"] = ["pretend failure"]
     else:
         case["medians"]["head"]["seconds"] = 99.0
-    with pytest.raises(ValueError):
+    with pytest.raises(ValueError, match=error):
         history.validate(data)
 
 
@@ -83,7 +114,9 @@ def test_preserves_real_regression_and_failed_worker(tmp_path):
     for row in [*case["runs"]["head"], case["medians"]["head"]]:
         row["quality_min"] = 0.4
     case["failures"] = gate.case_regressions(
-        case["medians"]["base"], case["medians"]["head"], case["runs"]["head"]
+        case["medians"]["base"],
+        case["medians"]["head"],
+        case["runs"]["head"],
     )
     data["cases"]["adaptive_gyroid"] = {
         "runs": {"base": [], "head": []},
@@ -97,3 +130,25 @@ def test_preserves_real_regression_and_failed_worker(tmp_path):
     page = (tmp_path / "benchmarks/v0.2.0-failed-control.md").read_text()
     assert "quality_min decreased" in page
     assert "sample failed" in page
+
+
+def test_mapped_cap_measurements_are_required_in_new_fixture_records():
+    data = measurement()
+    data["fixture_version"] = gate.FIXTURE_VERSION
+    with pytest.raises(ValueError, match="Invalid numeric measurement"):
+        history.validate(data)
+    case = data["cases"]["mapped_intersection"]
+    for label, rows in case["runs"].items():
+        for row in [*rows, case["medians"][label]]:
+            row["mapped_cap_error"] = 0.001
+    history.validate(data)
+
+
+def test_worker_fingerprint_on_split_benchmark_records():
+    data = measurement()
+    history.validate(data)
+    data["worker_sha256"] = "b" * 64
+    history.validate(data)
+    data["worker_sha256"] = "b" * 40
+    with pytest.raises(ValueError, match="Invalid benchmark worker SHA-256"):
+        history.validate(data)

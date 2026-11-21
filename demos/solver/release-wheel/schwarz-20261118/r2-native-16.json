@@ -1,0 +1,387 @@
+{
+  "route": "native",
+  "cells": 16,
+  "platform": "Windows-11-10.0.26200-SP0",
+  "reference_sha256": "077b05afb900595e6e7891e5a092538cec6eb2f805156d2119ac9eb771477908",
+  "versions": {
+    "meshers": "0.2.1",
+    "microgen": "2.0.0b1",
+    "mmgpy": "0.17.1",
+    "fedoo": "1.0.0b2",
+    "numpy": "2.5.3",
+    "scipy": "1.18.1",
+    "pyvista": "0.49.0",
+    "vtk": "9.7.1"
+  },
+  "config": {
+    "name": "meshers-tet4-adaptive",
+    "arm": "meshers",
+    "cells": 16,
+    "order": 1,
+    "adapt": true,
+    "tolerance": 1,
+    "min_length": 0.002,
+    "adapt_tolerance": 0.001
+  },
+  "generation_and_io_seconds": 0.8286325000008219,
+  "mesh_sha256": "03ee6208c96eb8c0206a343bad87238e74fc025b0fa57f5359cd9e9835a08f21",
+  "geometry": {
+    "specimen": "schwarz",
+    "nodes": 8700,
+    "tetrahedra": 35989,
+    "volume": 0.5000071070209379,
+    "face_connected_components": 1,
+    "component_signed_volumes": [
+      0.5000071070209379
+    ],
+    "minimum_quality": 0.42607340533336996,
+    "boundary": {
+      "wall 0": {
+        "mesh_to_reference_upper": {
+          "samples": 43778,
+          "maximum": 0.0012160984967822253,
+          "location": [
+            -0.20230372046451722,
+            0.2011191517615898,
+            -0.3533799313185563
+          ]
+        },
+        "reference_to_mesh": {
+          "samples": 7710,
+          "maximum": 0.0007944804942455162,
+          "location": [
+            -0.46797426603734493,
+            -0.25201189527500606,
+            0.01955205760896206
+          ]
+        }
+      },
+      "x-0.5": {
+        "mesh_to_reference_upper": {
+          "samples": 4102,
+          "maximum": 0.0009996673368139475,
+          "location": [
+            -0.5,
+            0.247994507707404,
+            0.017902505101731796
+          ]
+        },
+        "reference_to_mesh": {
+          "samples": 1666,
+          "maximum": 0.0,
+          "location": [
+            -0.5,
+            0.3993650656193495,
+            0.4675633907318115
+          ]
+        }
+      },
+      "x+0.5": {
+        "mesh_to_reference_upper": {
+          "samples": 4102,
+          "maximum": 0.0009996673368139475,
+          "location": [
+            0.5,
+            0.247994507707404,
+            0.017902505101731796
+          ]
+        },
+        "reference_to_mesh": {
+          "samples": 1666,
+          "maximum": 0.0,
+          "location": [
+            0.5,
+            0.3993650656193495,
+            0.4675633907318115
+          ]
+        }
+      },
+      "y-0.5": {
+        "mesh_to_reference_upper": {
+          "samples": 3962,
+          "maximum": 0.0009996673134167744,
+          "location": [
+            -0.24799450775448367,
+            -0.5,
+            0.01790250489075161
+          ]
+        },
+        "reference_to_mesh": {
+          "samples": 1666,
+          "maximum": 0.0,
+          "location": [
+            0.3993650656193495,
+            -0.5,
+            0.4675633907318115
+          ]
+        }
+      },
+      "y+0.5": {
+        "mesh_to_reference_upper": {
+          "samples": 3962,
+          "maximum": 0.0009996673134167744,
+          "location": [
+            -0.24799450775448367,
+            0.5,
+            0.01790250489075161
+          ]
+        },
+        "reference_to_mesh": {
+          "samples": 1666,
+          "maximum": 0.0,
+          "location": [
+            0.3993650656193495,
+            0.5,
+            0.4675633907318115
+          ]
+        }
+      },
+      "z-0.5": {
+        "mesh_to_reference_upper": {
+          "samples": 3962,
+          "maximum": 0.0009870791330385265,
+          "location": [
+            -0.24799442826335777,
+            0.01801500525300741,
+            -0.5
+          ]
+        },
+        "reference_to_mesh": {
+          "samples": 1666,
+          "maximum": 0.0,
+          "location": [
+            0.3993650656193495,
+            0.4675633907318115,
+            -0.5
+          ]
+        }
+      },
+      "z+0.5": {
+        "mesh_to_reference_upper": {
+          "samples": 3962,
+          "maximum": 0.0009870791330385265,
+          "location": [
+            -0.24799442826335777,
+            0.01801500525300741,
+            0.5
+          ]
+        },
+        "reference_to_mesh": {
+          "samples": 1666,
+          "maximum": 0.0,
+          "location": [
+            0.3993650656193495,
+            0.4675633907318115,
+            0.5
+          ]
+        }
+      }
+    },
+    "periodic_face_match": {
+      "x": true,
+      "y": true,
+      "z": true
+    },
+    "sobol_power": 11,
+    "material_witnesses": 1999,
+    "misclassified_witnesses": 0,
+    "first_misclassified_witness": null,
+    "failed_checks": [],
+    "sampled_admission": true
+  },
+  "audit_seconds": 0.2130747999981395,
+  "stress_probe_xyz": [
+    -0.364,
+    -0.347,
+    -0.313
+  ],
+  "assembly_seconds": 0.16063690000009956,
+  "fea": {
+    "tetrahedra": 35989,
+    "points": 8700,
+    "solid_volume_fraction": 0.5000071070209375,
+    "minimum_quality": 0.42607340533336996,
+    "periodic_pair_counts": [
+      346,
+      336,
+      336
+    ],
+    "stiffness_engineering_voigt": [
+      [
+        0.8049635103174533,
+        0.14421656886998896,
+        0.14420242938698472,
+        -3.313966301056814e-05,
+        -4.317760248960219e-05,
+        -1.4976921671708533e-05
+      ],
+      [
+        0.1442165688699158,
+        0.80492172911661,
+        0.14418675137551057,
+        -4.24089826519142e-05,
+        -1.409287650987654e-06,
+        -4.025758736627302e-05
+      ],
+      [
+        0.14420242938787936,
+        0.1441867513754558,
+        0.8049610415826768,
+        -1.5310399359748475e-05,
+        -5.5821731123534144e-05,
+        -3.5762968043589144e-05
+      ],
+      [
+        -3.313966687171288e-05,
+        -4.240898249634965e-05,
+        -1.5310395297993453e-05,
+        0.19587634735182616,
+        -1.2580151197245032e-05,
+        -3.586814352377211e-06
+      ],
+      [
+        -4.317759796597576e-05,
+        -1.4092861359980663e-06,
+        -5.5821729612690285e-05,
+        -1.2580151058593926e-05,
+        0.19583101869657066,
+        -1.3501277076593777e-05
+      ],
+      [
+        -1.4976920446885232e-05,
+        -4.025758744254027e-05,
+        -3.5762965443914186e-05,
+        -3.5868165245719847e-06,
+        -1.3501275529968348e-05,
+        0.1958326148148444
+      ]
+    ],
+    "stiffness_eigenvalues": [
+      0.19581599997181792,
+      0.19584436423110024,
+      0.19587960168779925,
+      0.6607258358370975,
+      0.6607678555606206,
+      1.0933526045915452
+    ],
+    "young_modulus_xyz": [
+      0.7611414312354058,
+      0.7611060984463168,
+      0.7611494494739204
+    ],
+    "poisson_xy_xz_yz": [
+      0.15195412938917865,
+      0.1519236813146205,
+      0.1519025180421237
+    ],
+    "hill_mandel_relative_error": 5.767453507294234e-12,
+    "reaction_stress_relative_difference": 7.538101523350225e-12,
+    "stiffness_symmetry_relative_error": 8.158547828712102e-12,
+    "automatic_homogenization_relative_difference": 5.798662876299486e-12,
+    "strain_controlled_loads": [
+      {
+        "load": "E_xx",
+        "periodic_jump_error": 0.0,
+        "periodic_force_balance_relative_error": 4.437528724479407e-11,
+        "iterations": 447,
+        "cg_seconds": 0.19438520000403514,
+        "relative_residual": 9.780397661801756e-13,
+        "free_dofs": 23145,
+        "probe_sigma_xx": 1.6243129808780479
+      },
+      {
+        "load": "E_yy",
+        "periodic_jump_error": 0.0,
+        "periodic_force_balance_relative_error": 4.219110498276756e-11,
+        "iterations": 441,
+        "cg_seconds": 0.18252580000262242,
+        "relative_residual": 9.418642630682893e-13,
+        "free_dofs": 23145,
+        "probe_sigma_xx": 0.04704758495202516
+      },
+      {
+        "load": "E_zz",
+        "periodic_jump_error": 0.0,
+        "periodic_force_balance_relative_error": 3.7254576999651085e-11,
+        "iterations": 442,
+        "cg_seconds": 0.2476909000033629,
+        "relative_residual": 8.556768912249009e-13,
+        "free_dofs": 23145,
+        "probe_sigma_xx": 0.1534520607038517
+      },
+      {
+        "load": "E_xy",
+        "periodic_jump_error": 5.551115123125783e-17,
+        "periodic_force_balance_relative_error": 3.6467652976405875e-11,
+        "iterations": 454,
+        "cg_seconds": 0.318098399999144,
+        "relative_residual": 9.840508286381268e-13,
+        "free_dofs": 23145,
+        "probe_sigma_xx": -0.29364222627540837
+      },
+      {
+        "load": "E_xz",
+        "periodic_jump_error": 5.551115123125783e-17,
+        "periodic_force_balance_relative_error": 3.5775098596747344e-11,
+        "iterations": 458,
+        "cg_seconds": 0.3154391999996733,
+        "relative_residual": 9.86438813193411e-13,
+        "free_dofs": 23145,
+        "probe_sigma_xx": -0.295320163112389
+      },
+      {
+        "load": "E_yz",
+        "periodic_jump_error": 0.0,
+        "periodic_force_balance_relative_error": 3.361756394177365e-11,
+        "iterations": 453,
+        "cg_seconds": 0.32285480000427924,
+        "relative_residual": 9.461427969469043e-13,
+        "free_dofs": 23145,
+        "probe_sigma_xx": -0.03563290891785448
+      }
+    ],
+    "automatic_stress_controlled_solves": [
+      {
+        "iterations": 576,
+        "cg_seconds": 0.45112669999798527,
+        "relative_residual": 9.605264390417141e-13,
+        "free_dofs": 23151
+      },
+      {
+        "iterations": 580,
+        "cg_seconds": 0.3758518999966327,
+        "relative_residual": 9.862587515572482e-13,
+        "free_dofs": 23151
+      },
+      {
+        "iterations": 580,
+        "cg_seconds": 0.4641660999986925,
+        "relative_residual": 9.112411129232288e-13,
+        "free_dofs": 23151
+      },
+      {
+        "iterations": 585,
+        "cg_seconds": 0.5056609000021126,
+        "relative_residual": 9.887317171317043e-13,
+        "free_dofs": 23151
+      },
+      {
+        "iterations": 591,
+        "cg_seconds": 0.45388800000364427,
+        "relative_residual": 8.650269893147422e-13,
+        "free_dofs": 23151
+      },
+      {
+        "iterations": 584,
+        "cg_seconds": 0.4146803000039654,
+        "relative_residual": 9.93204642586332e-13,
+        "free_dofs": 23151
+      }
+    ],
+    "seconds": 5.415154199996323
+  },
+  "relative_energy_discrepancy": 0.024486413757779244,
+  "status": "outside-reference-target",
+  "workflow_seconds": 6.476465499996266,
+  "sampled_peak_tree_rss_bytes": 396836864
+}

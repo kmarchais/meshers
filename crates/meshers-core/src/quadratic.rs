@@ -4,12 +4,13 @@
 //! any box coordinate the edge lies in, so the geometric error of the boundary drops
 //! from O(h^2) to O(h^3). Interior and box-plane mid-edge nodes stay at midpoints.
 //! Each element's Jacobian determinant is sampled at its nodes, face and cell centres
-//! and fifteen interior points; corrections of failing elements are repeatedly halved,
+//! and interior points; corrections of failing elements are repeatedly halved,
 //! together with their periodic copies. Unresolved edges are straightened after eight
-//! reductions. Sampling is a strong check but not a proof of positivity everywhere.
+//! reductions. A whole-cell determinant bound also checks every curved proposal.
 use crate::{Mesh, Point, geometry::Geometry, norm};
 use std::collections::{HashMap, HashSet};
 mod fit;
+mod positivity;
 pub use fit::FitStats;
 pub(crate) use fit::improve;
 
@@ -66,8 +67,8 @@ fn samples() -> Vec<[f64; 4]> {
     out
 }
 
-/// Jacobian determinant of a quadratic tetrahedron at barycentric point `l`.
-fn jacobian(x: &[Point; 10], l: [f64; 4]) -> f64 {
+/// Physical Jacobian matrix at a barycentric point.
+fn jacobian_matrix(x: &[Point; 10], l: [f64; 4]) -> [Point; 3] {
     // dN/dL for the ten shape functions; reference coordinates r,s,t = L1,L2,L3.
     let mut grad = [[0.; 3]; 10];
     let dl = |i: usize| -> [f64; 3] {
@@ -95,9 +96,12 @@ fn jacobian(x: &[Point; 10], l: [f64; 4]) -> f64 {
             }
         }
     }
-    jac[0][0] * (jac[1][1] * jac[2][2] - jac[1][2] * jac[2][1])
-        - jac[0][1] * (jac[1][0] * jac[2][2] - jac[1][2] * jac[2][0])
-        + jac[0][2] * (jac[1][0] * jac[2][1] - jac[1][1] * jac[2][0])
+    jac
+}
+
+fn jacobian(x: &[Point; 10], l: [f64; 4]) -> f64 {
+    let [a, b, c] = jacobian_matrix(x, l);
+    crate::dot(a, crate::cross(b, c))
 }
 
 /// Signed physical volume of a quadratic tetrahedron in VTK node order.
@@ -213,6 +217,7 @@ pub(crate) fn elevate(
                 continue;
             }
             let x = points_of(q, &mid);
+            let x = x.map(|p| crate::sub(p, x[0]));
             let (mut low, mut high) = (f64::INFINITY, f64::NEG_INFINITY);
             for &l in &sample {
                 let d = jacobian(&x, l);
@@ -225,7 +230,7 @@ pub(crate) fn elevate(
                 f64::NEG_INFINITY
             };
             minimum_ratio = minimum_ratio.min(ratio);
-            if ratio.is_nan() || ratio <= 1e-3 {
+            if !ratio.is_finite() || ratio <= 1e-3 || !positivity::positive(&x) {
                 for &node in &q[4..] {
                     let e = node - mesh.points.len();
                     if curved[e] {

@@ -1,33 +1,25 @@
+# Copyright (c) 2026 Kevin Marchais
+
 """Run user examples unchanged and validate the meshes they export."""
 
-import os
-import subprocess
-import sys
 from pathlib import Path
 
-import h5py
 import numpy as np
+import pyfive
 import pytest
+from python_process import run_python
 
 EXAMPLES = Path(__file__).resolve().parents[1] / "examples"
 
 
 @pytest.mark.parametrize(
-    "name", ["basic", "evaluators", "graded", "periodic", "intersection", "cancellation"]
+    "name",
+    ["basic", "evaluators", "graded", "periodic", "intersection", "cancellation"],
 )
 def test_user_example(name, tmp_path):
-    result = subprocess.run(
-        [sys.executable, str(EXAMPLES / f"{name}.py")],
-        cwd=tmp_path,
-        env={**os.environ, "PYTHONPATH": os.pathsep.join(sys.path)},
-        text=True,
-        capture_output=True,
-        timeout=90,
-        check=False,
-    )
-    assert result.returncode == 0, result.stdout + result.stderr
+    run_python(str(EXAMPLES / f"{name}.py"), cwd=tmp_path)
     for path in tmp_path.glob("*.vtkhdf"):
-        with h5py.File(path) as file:
+        with pyfive.File(path) as file:
             group = file["VTKHDF"]
             points = group["Points"][:]
             cells = group["Connectivity"][:]

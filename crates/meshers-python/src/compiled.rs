@@ -41,11 +41,11 @@ pub(crate) struct CompiledField {
     #[pyo3(get)]
     node_count: usize,
     #[pyo3(get)]
-    _halfspaces: Option<Vec<[f64; 4]>>,
+    halfspaces: Option<Vec<[f64; 4]>>,
     #[pyo3(get)]
-    _polyhedral_regions: Option<polyhedral::Regions>,
+    polyhedral_regions: Option<polyhedral::Regions>,
     #[pyo3(get)]
-    _sdf_intersection: bool,
+    sdf_intersection: bool,
     constraint_data: Option<(Vec<Node>, Vec<Vec<usize>>)>,
     constraint_cache: Mutex<Option<Vec<Py<CompiledField>>>>,
     _memory: CodeMemory,
@@ -61,7 +61,7 @@ pub(crate) fn evaluate(kernel: Kernel, p: [f64; 3]) -> Result<[f64; 4], ()> {
 #[pymethods]
 impl CompiledField {
     /// Return cached evaluators for validated zero-sublevel intersection branches.
-    fn _intersection_fields(&self, py: Python<'_>) -> PyResult<Option<Vec<Py<CompiledField>>>> {
+    fn intersection_fields(&self, py: Python<'_>) -> PyResult<Option<Vec<Py<CompiledField>>>> {
         let Some((nodes, outputs)) = &self.constraint_data else {
             return Ok(None);
         };
@@ -75,7 +75,7 @@ impl CompiledField {
                 .map(|outputs| {
                     Py::new(
                         py,
-                        _compile_expression(nodes.clone(), outputs.clone(), None, false)?,
+                        compile_graph(nodes.clone(), outputs.clone(), None, false)?,
                     )
                 })
                 .collect::<PyResult<Vec<_>>>()?;
@@ -425,7 +425,7 @@ fn sdf_intersection_roots(nodes: &[Node], output: usize) -> Option<Vec<usize>> {
 }
 
 #[pyfunction(signature = (nodes, outputs, constraint_outputs=None, *, retain_sdf=false))]
-pub(crate) fn _compile_expression(
+pub(crate) fn compile_graph(
     nodes: Vec<Node>,
     outputs: Vec<usize>,
     constraint_outputs: Option<Vec<Vec<usize>>>,
@@ -561,9 +561,9 @@ pub(crate) fn _compile_expression(
         value_kernel,
         has_gradient: outputs.len() == 4,
         node_count: nodes.len(),
-        _halfspaces: halfspaces,
-        _polyhedral_regions: regions,
-        _sdf_intersection: sdf_intersection && constraint_outputs.is_some(),
+        halfspaces,
+        polyhedral_regions: regions,
+        sdf_intersection: sdf_intersection && constraint_outputs.is_some(),
         constraint_data: constraint_outputs.map(|outputs| (nodes, outputs)),
         constraint_cache: Mutex::new(None),
         _memory: memory,

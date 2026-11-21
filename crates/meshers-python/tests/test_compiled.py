@@ -1,12 +1,18 @@
+# Copyright (c) 2026 Kevin Marchais
+
+"""Check compiled field values, derivatives and expression reuse."""
+
 import gc
-import subprocess
-import sys
+import os
 import threading
 from itertools import starmap
+from typing import get_type_hints
 
 import meshers
 import numpy as np
 import pytest
+from meshers._meshers import compile_graph
+from python_process import run_python
 
 
 def gyroid(x, y, z):
@@ -47,6 +53,13 @@ def test_compiled_lifetime_and_native_match():
     assert all(len(p) for p in a.periodic_pairs)
 
 
+def test_symbolic_derivative_preserves_coefficients_close_to_zero_and_one():
+    small = 2.0**-50
+    near_one = 1.0 + small
+    field = meshers.compile_field(lambda x, y, _z: small * x + near_one * y)
+    np.testing.assert_array_equal(field.gradient(0, 0, 0), [small, near_one, 0])
+
+
 def test_compiled_gradient_and_captured_grading():
     width = 0.29
 
@@ -75,24 +88,28 @@ def test_compiled_cancellation():
         timer.join()
 
 
-def test_no_external_compiler_or_optional_dependencies():
-    import os
-
+@pytest.mark.parametrize("missing_vtk", ["vtkmodules", "vtkmodules.util", "vtkmodules.vtkIOHDF"])
+def test_no_external_compiler_or_optional_dependencies(missing_vtk, tmp_path):
     code = """
-import importlib.abc, subprocess, sys
-class Block(importlib.abc.MetaPathFinder):
-    def find_spec(self, fullname, path=None, target=None):
-        if fullname.split('.')[0] in ('numba','sympy'):
-            raise ImportError('deliberately unavailable')
-sys.meta_path.insert(0,Block())
+import subprocess, sys
+# A None entry blocks the import even when VTK registers its own extension finder.
+for module in ("numba", "sympy", sys.argv[1]):
+    sys.modules[module] = None
 def forbidden(*a, **kw): raise AssertionError('external process requested')
 subprocess.Popen=forbidden
 import meshers
 m=meshers.generate(lambda x,y,z:x*x+y*y+z*z-.5,cells=8,geometry_tolerance=.1)
 assert m.diagnostics['evaluator']=='compiled'
 assert m.diagnostics['callback_calls']==0
+try:
+    m.write_vtkhdf('unused.vtkhdf')
+except ModuleNotFoundError as error:
+    assert error.name == sys.argv[1] or error.name.startswith(sys.argv[1] + "."), error
+    assert 'meshers[io]' in str(error)
+else:
+    raise AssertionError('missing VTK should be reported on export')
 """
-    subprocess.run([sys.executable, "-c", code], env={**os.environ, "PATH": ""}, check=True)
+    run_python("-c", code, missing_vtk, cwd=tmp_path, env={**os.environ, "PATH": ""})
 
 
 @pytest.mark.parametrize("name", ["gyroid", "schwarz_p", "schwarz_d"])
@@ -126,9 +143,9 @@ def test_builtin_and_analytic_compiled_paths(name):
 @pytest.mark.parametrize(
     ("field", "expected", "gradient"),
     [
-        (lambda x, y, z: z * z, 9.0, [0.0, 0.0, 6.0]),
-        (lambda x, y, z: np.sin(y), float(np.sin(2.0)), [0.0, float(np.cos(2.0)), 0.0]),
-        (lambda x, y, z: x * 0 + 4.0, 4.0, [0.0, 0.0, 0.0]),
+        (lambda _x, _y, z: z * z, 9.0, [0.0, 0.0, 6.0]),
+        (lambda _x, y, _z: np.sin(y), float(np.sin(2.0)), [0.0, float(np.cos(2.0)), 0.0]),
+        (lambda x, _y, _z: x * 0 + 4.0, 4.0, [0.0, 0.0, 0.0]),
     ],
 )
 def test_pruned_kernels_keep_input_coordinate_indices(field, expected, gradient):
@@ -138,7 +155,7 @@ def test_pruned_kernels_keep_input_coordinate_indices(field, expected, gradient)
 
 
 def test_value_kernel_does_not_require_finite_derivative():
-    compiled = meshers.compile_field(lambda x, y, z: np.sqrt(x))
+    compiled = meshers.compile_field(lambda x, _y, _z: np.sqrt(x))
     np.testing.assert_equal(compiled(0.0, 1.0, 2.0), 0.0)
     with pytest.raises(ValueError, match="gradient"):
         compiled.gradient(0.0, 1.0, 2.0)
@@ -146,7 +163,7 @@ def test_value_kernel_does_not_require_finite_derivative():
 
 def test_invalid_unused_nodes_are_still_rejected():
     with pytest.raises(ValueError, match="operation"):
-        meshers._meshers._compile_expression([("constant", [], 1.0), ("unknown", [], 0.0)], [0])
+        compile_graph([("constant", [], 1.0), ("unknown", [], 0.0)], [0])
 
 
 def test_compiled_batch_matches_scalar_for_strided_points():
@@ -161,7 +178,7 @@ def test_compiled_batch_matches_scalar_for_strided_points():
 
 
 def test_compiled_batch_rejects_nonfinite_values():
-    f = meshers.compile_field(lambda x, y, z: np.sqrt(x))
+    f = meshers.compile_field(lambda x, _y, _z: np.sqrt(x))
     with pytest.raises(ValueError, match="nonfinite"):
         f.values(np.array([[1.0, 0.0, 0.0], [-1.0, 0.0, 0.0]]))
 
@@ -172,7 +189,9 @@ def test_compiled_minmax_values_and_piecewise_gradients():
     expected = np.maximum(np.minimum(points[:, 0], points[:, 1]), points[:, 2])
     np.testing.assert_array_equal(field.values(points), expected)
     branch = np.where(
-        np.minimum(points[:, 0], points[:, 1]) > points[:, 2], np.argmin(points[:, :2], axis=1), 2
+        np.minimum(points[:, 0], points[:, 1]) > points[:, 2],
+        np.argmin(points[:, :2], axis=1),
+        2,
     )
     gradients = np.array(list(starmap(field.gradient, points)))
     np.testing.assert_array_equal(gradients, np.eye(3)[branch])
@@ -209,35 +228,80 @@ def test_compiled_tied_smooth_composition_gradient(operation, correction_sign):
 
 @pytest.mark.parametrize("operation", [np.minimum, np.maximum])
 def test_compiled_minmax_tie_subgradient_is_operand_symmetric(operation):
-    direct = meshers.compile_field(
-        lambda coordinates_x, coordinates_y, coordinates_z: operation(coordinates_x, coordinates_y)
-    )
-    reverse = meshers.compile_field(
-        lambda coordinates_x, coordinates_y, coordinates_z: operation(coordinates_y, coordinates_x)
-    )
+    direct = meshers.compile_field(lambda x, y, _z: operation(x, y))
+    reverse = meshers.compile_field(lambda x, y, _z: operation(y, x))
     np.testing.assert_array_equal(direct.gradient(0.17, 0.17, 0.13), [0.5, 0.5, 0])
     np.testing.assert_array_equal(reverse.gradient(0.17, 0.17, 0.13), [0.5, 0.5, 0])
     extreme = meshers.compile_field(
-        lambda coordinates_x, coordinates_y, coordinates_z: operation(
-            1e308 * coordinates_x + coordinates_y, 1e308 * coordinates_x - coordinates_y
-        )
+        lambda coordinates_x, coordinates_y, _coordinates_z: operation(
+            1e308 * coordinates_x + coordinates_y,
+            1e308 * coordinates_x - coordinates_y,
+        ),
     )
     np.testing.assert_array_equal(extreme.gradient(0, 0, 0), [1e308, 0, 0])
 
 
 def test_compiled_minmax_propagates_nonfinite_branches():
-    field = meshers.compile_field(lambda x, y, z: np.minimum(np.sqrt(x), 0))
+    field = meshers.compile_field(lambda x, _y, _z: np.minimum(np.sqrt(x), 0))
     with pytest.raises(ValueError, match="nonfinite"):
         field(-1, 0, 0)
-    masked = meshers.compile_field(lambda x, y, z: np.where(x >= 0, np.minimum(np.sqrt(x), 0), 1))
+    masked = meshers.compile_field(lambda x, _y, _z: np.where(x >= 0, np.minimum(np.sqrt(x), 0), 1))
     assert masked(-1, 0, 0) == 1
     np.testing.assert_array_equal(masked.gradient(-1, 0, 0), [0, 0, 0])
 
 
 def test_compiled_square_values_and_gradients_at_extreme_scales():
-    field = meshers.compile_field(lambda x, y, z: x**2)
+    field = meshers.compile_field(lambda x, _y, _z: x**2)
     for x in (-0.0, 0.0, -1e-150, 1e-150, -1e150, 1e150):
         assert field(x, 0, 0) == x * x
         np.testing.assert_array_equal(field.gradient(x, 0, 0), [2 * x, 0, 0])
     with pytest.raises(ValueError, match="nonfinite"):
         field(1e200, 0, 0)
+
+
+def test_symbolic_augmented_assignment_preserves_alias_and_comparisons():
+    def field(x, y, z):
+        original = x
+        x += y
+        x -= z
+        x *= 2
+        x /= 2
+        x **= 2
+        return np.where(original == y, x, np.where(z != original, -abs(x), 2**y / (1 + x)))
+
+    compiled = meshers.compile_field(field)
+    for point in ((1.0, 1.0, 0.0), (2.0, 1.0, 0.0), (2.0, 1.0, 2.0)):
+        assert compiled(*point) == pytest.approx(field(*point))
+
+
+def test_deep_field_compiles_and_generates_a_half_cell():
+    def slab(x, _y, _z):
+        for _ in range(600):
+            x += 1.0
+        return x - 600.5
+
+    compiled = meshers.compile_field(slab)
+    np.testing.assert_array_equal(compiled.gradient(0.5, 0.5, 0.5), [1, 0, 0])
+    mesh = meshers.generate(slab, cells=4, optimize_passes=0)
+    assert mesh.diagnostics["volume"] == pytest.approx(0.5)
+
+
+def test_compile_field_annotations_resolve_at_runtime():
+    assert get_type_hints(meshers.compile_field)["return"] is meshers.CompiledField
+
+
+def test_cache_distinguishes_signed_zero_in_fields_and_solid_volume():
+    def upper(x, _y, _z):
+        return np.arctan2(0.0, x) - 0.5
+
+    def lower(x, _y, _z):
+        return np.arctan2(-0.0, x) - 0.5
+
+    def gradient(x, y, z):
+        return x, y, z
+
+    for field, angle, volume in [(upper, np.pi, 0), (lower, -np.pi, 4), (upper, np.pi, 0)]:
+        compiled = meshers.compile_field(field, gradient=False)
+        assert compiled(-1, 0, 0) == pytest.approx(angle - 0.5)
+        mesh = meshers.generate(field, gradient=gradient, bounds=(-2, -1, -1, 1, -1, 1), cells=4)
+        assert mesh.diagnostics["volume"] == pytest.approx(volume)

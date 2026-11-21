@@ -1,6 +1,9 @@
+# Copyright (c) 2026 Kevin Marchais
+
 """Experimental diagnostics must preserve the public generation result."""
 
 from contextlib import contextmanager
+from functools import partial
 from unittest.mock import patch
 
 import meshers
@@ -16,10 +19,7 @@ pytestmark = pytest.mark.skipif(
 
 @contextmanager
 def observe(sink):
-    original = _meshers.generate
-
-    def generate(*args, **kwargs):
-        return original(*args, **kwargs, _observations=sink)
+    generate = partial(_meshers.generate, _observations=sink)
 
     # Test-local, single-thread dispatch. The public parser and compiler run normally.
     with patch.object(_meshers, "generate", generate):
@@ -29,7 +29,7 @@ def observe(sink):
 @pytest.mark.parametrize("adaptive", [False, True])
 @pytest.mark.parametrize("compiled", [False, True])
 def test_scalar_observations_preserve_output(adaptive, compiled):
-    def field(x, y, z):
+    def field(x, _y, _z):
         return -1 + 0.05 * np.cos(2 * np.pi * x)
 
     options = {
@@ -40,7 +40,7 @@ def test_scalar_observations_preserve_output(adaptive, compiled):
         "max_tetrahedra": 10000,
         "adapt": adaptive,
         "adapt_iterations": 0,
-        "compile": compiled,
+        "compile_expression": compiled,
     }
     ordinary = meshers.generate(field, **options)
     sink = []
@@ -80,7 +80,7 @@ def test_scalar_observations_preserve_exact_failure():
         "max_tetrahedra": 10000,
     }
 
-    def field(x, y, z):
+    def field(x, _y, _z):
         return x * 0 - 1
 
     with pytest.raises(meshers.MeshingError, match="minimum MMG quality") as ordinary:

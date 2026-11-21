@@ -1,14 +1,21 @@
+# Copyright (c) 2026 Kevin Marchais
+
 """Experimental surface-only meshing for printing and previewing implicit solids."""
 
 import time
 import warnings
 from collections.abc import Callable, Sequence
 from dataclasses import dataclass
+from typing import Unpack
 
 import numpy as np
 
 from . import _meshers
+from ._options import MeshingOptions, check_keywords
 from .expression import TraceError, compile_field
+
+_generate_surface = getattr(_meshers, "generate_surface", None)
+SURFACE_MESHING_AVAILABLE = _generate_surface is not None
 
 
 @dataclass(frozen=True)
@@ -21,24 +28,47 @@ class SurfaceMesh:
     diagnostics: dict
 
 
-def generate_surface(  # ruff: ignore[too-many-arguments] - match the volume API options.
+class _SurfaceOptions(MeshingOptions, total=False):
+    """Options for triangle extraction and adaptive remeshing."""
+
+    gradient: Callable | None
+    quality: bool
+    adaptive: bool
+    iterations: int
+    balanced: bool
+    fast: bool
+
+
+def _remeshing(
+    options: _SurfaceOptions,
+    tolerance: float,
+    extent: float,
+) -> tuple[float, float, float, float, int, bool, bool] | None:
+    if not options.get("adaptive"):
+        return None
+    if tolerance <= 0:
+        msg = "adaptive remeshing needs a positive geometry_tolerance"
+        raise ValueError(msg)
+    minimum, maximum = options.get("min_length"), options.get("max_length")
+    return (
+        tolerance,
+        tolerance / 2 if minimum is None else float(minimum),
+        extent / 4 if maximum is None else float(maximum),
+        float(options.get("gradation", 0.3)),
+        int(options.get("iterations", 8)),
+        bool(options.get("balanced", False)),
+        bool(options.get("fast", False)),
+    )
+
+
+def generate_surface(
     field: Callable | _meshers.CompiledField,
     *,
     bounds: Sequence[float] = (0.0, 1.0, 0.0, 1.0, 0.0, 1.0),
-    cells: int | Sequence[int] = 24,
+    cells: int = 24,
     band: Sequence[float] | None = None,
-    gradient: Callable | None = None,
-    quality: bool = False,
     geometry_tolerance: float | None = None,
-    batch_size: int = 4096,
-    cancel: _meshers.CancellationToken | None = None,
-    adaptive: bool = False,
-    min_length: float | None = None,
-    max_length: float | None = None,
-    gradation: float = 0.3,
-    iterations: int = 8,
-    balanced: bool = False,
-    fast: bool = False,
+    **options: Unpack[_SurfaceOptions],
 ) -> SurfaceMesh:
     """Generate a closed boundary without tetrahedra.
 
@@ -60,6 +90,21 @@ def generate_surface(  # ruff: ignore[too-many-arguments] - match the volume API
     Set ``geometry_tolerance=0`` for a quick preview without distance sampling;
     topology and finite triangle checks still run. Diagnostics mark that omission.
 
+    Other Parameters:
+        gradient (Callable | None): Optional analytic field gradient. Defaults to None.
+        quality (bool): Smooth and improve triangles. Defaults to False.
+        batch_size (int): Maximum callback batch size. Defaults to 4096.
+        cancel (CancellationToken | None): Cooperative cancellation token. Defaults to None.
+        adaptive (bool): Remesh toward the sampled distance tolerance. Defaults to False.
+        min_length (float | None): Minimum adaptive edge length. Defaults to half the tolerance.
+        max_length (float | None): Maximum adaptive edge length. Defaults to a quarter of the
+            shortest box side.
+        gradation (float): Maximum target-length growth per unit distance. Defaults to 0.3.
+        iterations (int): Adaptive remeshing rounds. Defaults to 8.
+        balanced (bool): Allow wall vertices to move outward to balance chord error.
+            Defaults to False.
+        fast (bool): Use the coarsen-and-split adaptive path. Defaults to False.
+
     Returns:
         Triangle mesh and measured generation diagnostics.
 
@@ -68,12 +113,16 @@ def generate_surface(  # ruff: ignore[too-many-arguments] - match the volume API
         ValueError: Bounds or geometry tolerance are invalid.
         MeshingError: Generation fails or sampled error exceeds tolerance.
     """
-    if not hasattr(_meshers, "generate_surface"):
-        raise RuntimeError("Surface-only meshing is unavailable in this meshers build")
+    check_keywords(options, _SurfaceOptions)
+    if _generate_surface is None:
+        msg = "Surface-only meshing is unavailable in this meshers build"
+        raise RuntimeError(msg)
     domain = np.asarray(bounds, dtype=float)
     if domain.shape != (6,):
-        raise ValueError("bounds must contain six coordinates")
+        msg = "bounds must contain six coordinates"
+        raise ValueError(msg)
     started = time.perf_counter()
+    gradient = options.get("gradient")
     if callable(field) and not isinstance(field, _meshers.CompiledField):
         try:
             field = compile_field(field, gradient=gradient)
@@ -81,46 +130,31 @@ def generate_surface(  # ruff: ignore[too-many-arguments] - match the volume API
         except TraceError as error:
             warnings.warn(f"Using NumPy callbacks: {error}", RuntimeWarning, stacklevel=2)
     preparation = time.perf_counter() - started
-    tolerance = (
-        0.01 * float(np.min(domain[1::2] - domain[::2]))
-        if geometry_tolerance is None
-        else float(geometry_tolerance)
-    )
-    if not np.isfinite(tolerance) or tolerance < 0:
-        raise ValueError("geometry_tolerance must be finite and nonnegative")
-    options = (4, 4, 8) if quality else (0, 0, 0)
     extent = float(np.min(domain[1::2] - domain[::2]))
-    remeshing = None
-    if adaptive:
-        if tolerance <= 0:
-            raise ValueError("adaptive remeshing needs a positive geometry_tolerance")
-        remeshing = (
-            tolerance,
-            tolerance / 2 if min_length is None else float(min_length),
-            extent / 4 if max_length is None else float(max_length),
-            float(gradation),
-            int(iterations),
-            bool(balanced),
-            bool(fast),
-        )
-    result = _meshers.generate_surface(
+    tolerance = 0.01 * extent if geometry_tolerance is None else float(geometry_tolerance)
+    if not np.isfinite(tolerance) or tolerance < 0:
+        msg = "geometry_tolerance must be finite and nonnegative"
+        raise ValueError(msg)
+    quality_passes = (4, 4, 8) if options.get("quality") else (0, 0, 0)
+    result = _generate_surface(
         field,
         gradient,
         [domain[::2].tolist(), domain[1::2].tolist()],
         cells,
         list(band) if band is not None else [-np.inf, 0.0],
-        *options,
-        batch_size,
-        cancel,
+        *quality_passes,
+        options.get("batch_size", 4096),
+        options.get("cancel"),
         tolerance > 0,
-        remeshing,
+        _remeshing(options, tolerance, extent),
     )
     labels = np.asarray(result["labels"])
     if tolerance > 0 and result["maximum_sampled_surface_error"] > tolerance:
-        raise _meshers.MeshingError(
+        msg = (
             f"Sampled surface error {result['maximum_sampled_surface_error']} "
             f"exceeds tolerance {tolerance}; increase resolution"
         )
+        raise _meshers.MeshingError(msg)
     field_labels = 2
     tags = np.where(labels < field_labels, 0, labels - 1).astype(np.uint8)
     return SurfaceMesh(

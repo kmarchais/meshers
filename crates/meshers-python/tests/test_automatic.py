@@ -1,6 +1,12 @@
+# Copyright (c) 2026 Kevin Marchais
+
+"""Check automatic tracing, compiler fallback and callback evaluation."""
+
 import meshers
 import numpy as np
 import pytest
+from meshers import _meshers
+from meshers.compiler import compile_field
 from test_rust_compile import grad, gyroid
 
 
@@ -42,16 +48,16 @@ def test_cache_captured_parameters_and_automatic_generate():
 
 def test_piecewise_derivatives_and_integer_power():
     f = meshers.compile_field(
-        lambda x, y, z: np.where(x > 0, x * x, -x) + np.abs(y) + np.maximum(z, 0)
+        lambda x, y, z: np.where(x > 0, x * x, -x) + np.abs(y) + np.maximum(z, 0),
     )
     np.testing.assert_allclose(f.gradient(-2, 0, -1), [-1, 0, 0])
     np.testing.assert_allclose(f.gradient(2, 1, 1), [4, 1, 1])
-    f = meshers.compile_field(lambda x, y, z: x**3)
+    f = meshers.compile_field(lambda x, _y, _z: x**3)
     np.testing.assert_allclose(f.gradient(-2, 0, 0), [12, 0, 0])
 
 
 def test_unsupported_numpy_falls_back_visibly():
-    def field(x, y, z):
+    def field(x, _y, _z):
         return np.full_like(x, -1.0)
 
     with pytest.warns(RuntimeWarning, match="NumPy callbacks"):
@@ -61,16 +67,14 @@ def test_unsupported_numpy_falls_back_visibly():
 
 
 def test_invalid_graph_rejected():
-    from meshers import _meshers
-
-    for nodes, outputs in [
-        ([("add", [0, 0], 0.0)], [0]),
-        ([("input", [3], 0.0)], [0]),
-        ([("constant", [], 1.0)], [4]),
-        ([("invalid", [], 0.0)], [0]),
+    for nodes, outputs, error in [
+        ([("add", [0, 0], 0.0)], [0], "invalid expression operands"),
+        ([("input", [3], 0.0)], [0], "invalid expression operands"),
+        ([("constant", [], 1.0)], [4], "invalid expression dimensions"),
+        ([("invalid", [], 0.0)], [0], "unknown expression operation"),
     ]:
-        with pytest.raises(ValueError):
-            _meshers._compile_expression(nodes, outputs)
+        with pytest.raises(ValueError, match=error):
+            _meshers.compile_graph(nodes, outputs)
 
 
 def test_array_gradient_automatically_falls_back():
@@ -86,17 +90,13 @@ def test_array_gradient_automatically_falls_back():
 
 
 def test_explicit_auto_threads_and_conservative_default(monkeypatch):
-    from meshers import _meshers
-
     assert 1 <= _meshers.available_threads() <= 256
     monkeypatch.setattr(_meshers, "available_threads", lambda: 2)
-    mesh = meshers.generate(lambda x, y, z: -1.0, cells=4, optimize_passes=0, threads=None)
+    mesh = meshers.generate(lambda _x, _y, _z: -1.0, cells=4, optimize_passes=0, threads=None)
     assert mesh.diagnostics["threads"] == 2
-    explicit = meshers.generate(lambda x, y, z: -1.0, cells=4, optimize_passes=0)
+    explicit = meshers.generate(lambda _x, _y, _z: -1.0, cells=4, optimize_passes=0)
     assert explicit.diagnostics["threads"] == 1
 
 
 def test_compatibility_compile_import():
-    from meshers.compiler import compile_field
-
     assert compile_field is meshers.compile_field

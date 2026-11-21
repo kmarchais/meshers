@@ -1,3 +1,5 @@
+# Copyright (c) 2026 Kevin Marchais
+
 """Public bounded fitting contract and exact coupled movement of periodic nodes."""
 
 import meshers

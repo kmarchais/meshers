@@ -1,13 +1,50 @@
+# Copyright (c) 2026 Kevin Marchais
+
+"""Exercise the installed Python meshing interface and its failure modes."""
+
 import gc
+import os
+import re
 import threading
 import time
 from functools import partial
+from pathlib import Path
 
 import meshers
 import numpy as np
 import pytest
+from python_process import run_python
 
-generate_callback = partial(meshers.generate, compile=False)
+generate_callback = partial(meshers.generate, compile_expression=False)
+
+
+@pytest.mark.parametrize("compiled", [True, False])
+def test_geometry_rejection_locates_a_sample_with_the_reported_error(compiled):
+    def schwarz(x, y, z):
+        return (np.cos(2 * np.pi * x) + np.cos(2 * np.pi * y) + np.cos(2 * np.pi * z)) / 0.3
+
+    with pytest.raises(meshers.MeshingError, match="sampled geometry error") as failure:
+        meshers.generate(
+            schwarz,
+            cells=8,
+            bounds=(-0.5, 0.5) * 3,
+            band=(-1, 1),
+            geometry_tolerance=0.01,
+            optimize_passes=0,
+            compile_expression=compiled,
+        )
+    match = re.search(
+        r"geometry error (\S+) exceeds.*worst sample at \[([^\]]+)\]",
+        str(failure.value),
+    )
+    assert match
+    point = np.fromstring(match[2], sep=",")
+    assert point.shape == (3,)
+    assert np.all(abs(point) <= 0.5)
+    gradient = -2 * np.pi / 0.3 * np.sin(2 * np.pi * point)
+    distance = abs(abs(schwarz(*point)) - 1) / np.linalg.norm(gradient)
+    assert distance == pytest.approx(float(match[1]), rel=1e-8)
+    assert distance > 0.01
 
 
 @pytest.mark.parametrize("compiled", [True, False])
@@ -34,7 +71,7 @@ def test_adaptive_schwarz_d_corner_distance_is_finite(compiled):
         geometry_tolerance=0.02,
         minimum_quality=0.1,
         optimize_passes=1,
-        compile=compiled,
+        compile_expression=compiled,
     )
     assert np.isfinite(result.diagnostics["sampled_surface_error"])
     assert result.diagnostics["sampled_surface_error"] < 0.02
@@ -104,11 +141,11 @@ def test_gradient_and_original_exception():
             cells=8,
             geometry_tolerance=0.1,
             optimize_passes=0,
-        ).points
+        ).points,
     )
     marker = LookupError("original callback failure")
 
-    def bad(x, y, z):
+    def bad(_x, _y, _z):
         raise marker
 
     with pytest.raises(LookupError) as caught:
@@ -119,10 +156,10 @@ def test_gradient_and_original_exception():
 @pytest.mark.parametrize(
     "field",
     [
-        lambda x, y, z: 0.0,
-        lambda x, y, z: np.zeros((len(x), 1)),
-        lambda x, y, z: np.zeros(len(x), dtype=np.float32),
-        lambda x, y, z: np.full(len(x), np.nan),
+        lambda _x, _y, _z: 0.0,
+        lambda x, _y, _z: np.zeros((len(x), 1)),
+        lambda x, _y, _z: np.zeros(len(x), dtype=np.float32),
+        lambda x, _y, _z: np.full(len(x), np.nan),
     ],
 )
 def test_invalid_callback_results(field):
@@ -131,9 +168,9 @@ def test_invalid_callback_results(field):
 
 
 def test_options_and_mesh_failure():
-    with pytest.raises(ValueError):
+    with pytest.raises(ValueError, match=r"cells 4\.\.128"):
         generate_callback(sphere, cells=0)
-    with pytest.raises(ValueError):
+    with pytest.raises(ValueError, match="periodic must contain three booleans"):
         generate_callback(sphere, periodic=(1, 0, 0))
     with pytest.raises(meshers.MeshingError):
         generate_callback(sphere, cells=8, geometry_tolerance=1e-12)
@@ -151,41 +188,7 @@ def test_cancellation_from_another_python_thread():
     assert not worker.is_alive()
 
 
-def test_vtkhdf_round_trip_and_physical_shifts(tmp_path):
-    import pyvista as pv
-
-    result = generate_callback(
-        lambda x, y, z: np.full_like(x, -1.0),
-        cells=4,
-        bounds=(2, 4, -1, 2, 3, 7),
-        periodic=(True, True, True),
-        optimize_passes=0,
-    )
-    path = tmp_path / "mesh.vtkhdf"
-    result.write_vtkhdf(path)
-    restored = pv.read(path)
-    np.testing.assert_array_equal(restored.points, result.points)
-    np.testing.assert_array_equal(restored.cells.reshape(-1, 5)[:, 1:], result.tetrahedra)
-    np.testing.assert_allclose(restored.point_data["PeriodicShift"].max(axis=0), [2, 3, 4])
-    assert restored.cell_data["MMGQuality"].min() > 0
-    surface = tmp_path / "surface.vtkhdf"
-    result.write_vtkhdf(surface, surface=True)
-    assert pv.read(surface).n_cells == len(result.surface)
-
-
-def test_empty_mesh_shapes():
-    result = generate_callback(lambda x, y, z: np.ones_like(x), cells=4)
-    assert result.points.shape == (0, 3)
-    assert result.tetrahedra.shape == (0, 4)
-    assert result.surface.shape == (0, 3)
-    assert result.diagnostics["empty"]
-
-
 def test_keyboard_interrupt_in_native_work():
-    import os
-    import subprocess
-    import sys
-
     if os.name != "posix":
         pytest.skip("POSIX signal test")
     code = """
@@ -202,23 +205,12 @@ else:
 finally:
     timer.join()
 """
-    run = subprocess.run(
-        [sys.executable, "-c", code], capture_output=True, check=False, text=True, timeout=15
-    )
-    assert run.returncode == 0, run.stderr
-    assert "interrupted" in run.stdout
+    assert "interrupted" in run_python("-c", code, timeout=15)
 
 
 @pytest.mark.parametrize("delay", [0.15, 2.0])
 @pytest.mark.parametrize("threads", [1, 4])
 def test_native_interruption_on_windows_and_parallel_workers(delay, threads):
-    import os
-    import subprocess
-    import sys
-    from pathlib import Path
-
-    import meshers
-
     # interrupt_main sets Python's pending SIGINT on Windows too. Exercise early
     # and later work; a wall-clock delay does not identify the native phase.
     # Explicit worker counts cover both the default and actual parallel paths.
@@ -242,15 +234,7 @@ else:
 finally:
     timer.join()
 """
-    run = subprocess.run(
-        [sys.executable, "-c", code],
-        env=dict(os.environ, RAYON_NUM_THREADS="4"),
-        capture_output=True,
-        check=False,
-        text=True,
-        timeout=30,
-    )
-    assert run.returncode == 0, run.stderr
+    run_python("-c", code, env={**os.environ, "RAYON_NUM_THREADS": "4"}, timeout=30)
 
 
 def test_optimizer_batch_size_and_gradient_batches():
@@ -280,7 +264,7 @@ def test_optimizer_batch_size_and_gradient_batches():
 def test_error_and_cancellation_during_batched_gradient():
     problem = RuntimeError("batch gradient failed")
 
-    def grad(x, y, z):
+    def grad(x, _y, _z):
         if len(x) > 6:
             raise problem
         return np.ones((len(x), 3), dtype=np.float64)
@@ -290,7 +274,7 @@ def test_error_and_cancellation_during_batched_gradient():
     assert caught.value is problem
     token = meshers.CancellationToken()
 
-    def cancel_gradient(x, y, z):
+    def cancel_gradient(x, _y, _z):
         token.cancel()
         return np.ones((len(x), 3), dtype=np.float64)
 
@@ -327,3 +311,128 @@ def test_native_field_with_python_gradient_uses_calling_thread():
     )
     assert len(m.tetrahedra) > 0
     assert max(sizes) > 6
+
+
+@pytest.mark.parametrize("order", [1, 2])
+def test_expected_components_exposes_missing_island_in_nonempty_mesh(order):
+    def solid(x, y, z):
+        # Clear of every lattice edge at four cells, so edge sampling cannot find it.
+        sphere = (x - 0.06) ** 2 + (y - 0.125) ** 2 + (z - 0.19) ** 2 - 0.045**2
+        return np.minimum(0.75 - x, sphere)
+
+    opts = {"order": order, "optimize_passes": 0, "snap": 0, "geometry_tolerance": 0.02}
+    with pytest.raises(meshers.MeshingError, match="Expected 2 face-connected components, found 1"):
+        meshers.generate(solid, cells=4, expected_components=2, **opts)
+    fine = meshers.generate(solid, cells=16, expected_components=2, **opts)
+    assert fine.diagnostics["face_connected_components"] == 2
+
+
+def test_expected_components_exposes_lost_thin_slab():
+    def slab(x, _y, _z):
+        return (x - 0.06) ** 2 - 0.025**2
+
+    opts = {"expected_components": 1, "optimize_passes": 0, "snap": 0, "geometry_tolerance": 0.02}
+    with pytest.raises(meshers.MeshingError, match="Expected 1 face-connected components, found 0"):
+        # A loose tolerance keeps narrow-feature refinement from finding the slab.
+        meshers.generate(slab, cells=4, **{**opts, "geometry_tolerance": 1.0})
+    fine = meshers.generate(slab, cells=24, **opts)
+    assert fine.diagnostics["volume"] == pytest.approx(0.05)
+
+
+def test_expected_components_on_retained_planes():
+    with pytest.raises(meshers.MeshingError, match="found 1"):
+        meshers.generate(
+            lambda x, y, _z: np.maximum(x - 0.4, y - 0.6),
+            cells=4,
+            expected_components=2,
+        )
+
+
+@pytest.mark.parametrize("invalid", [-1, True, 1.5])
+def test_invalid_expected_components(invalid):
+    with pytest.raises(ValueError, match="expected_components"):
+        meshers.generate("gyroid", cells=4, expected_components=invalid)
+
+
+def test_expected_components_count_before_periodic_identification():
+    mesh = meshers.generate(
+        lambda x, _y, _z: -np.cos(2 * np.pi * x),
+        cells=8,
+        periodic=(True, False, False),
+        expected_components=2,
+    )
+    assert len(mesh.periodic_pairs[0]) > 0
+    assert mesh.diagnostics["face_connected_components"] == 2
+
+
+@pytest.mark.parametrize("height", [0.125, 0.25])
+def test_translated_component_witness(height):
+    center = np.array([0.125, 0.125, height])
+
+    def sphere(x, y, z):
+        return (x - center[0]) ** 2 + (y - center[1]) ** 2 + (z - center[2]) ** 2 - 0.06**2
+
+    # Require the interior witness at resolved spacing. Check the oracle itself
+    # with a deleted component, independent of the producer's own diagnostics.
+    mesh = meshers.generate(sphere, cells=16, optimize_passes=0, snap=0, geometry_tolerance=0.02)
+    vertices = mesh.points[mesh.tetrahedra]
+
+    def covers_center(cells):
+        coords = np.linalg.solve(
+            (cells[:, 1:] - cells[:, :1]).transpose(0, 2, 1),
+            (center - cells[:, 0])[..., None],
+        )[..., 0]
+        return np.any(np.all(coords >= -1e-10, axis=1) & (coords.sum(axis=1) <= 1 + 1e-10))
+
+    assert covers_center(vertices)
+    assert not covers_center(vertices[:0])
+
+
+@pytest.mark.parametrize(
+    ("generate", "args", "options", "message"),
+    [
+        (meshers.generate, ("gyroid",), {"bounds": (1, 0)}, "bounds"),
+        (meshers.generate_intersection, ({},), {}, "constraints"),
+        (meshers.adapt_intersection, (None, {}), {"bounds": (0, 1) * 3}, "constraints"),
+    ],
+)
+def test_legacy_compile_keyword(generate, args, options, message):
+    with pytest.raises(TypeError, match="Specify only one"):
+        generate(*args, **options, compile_expression=False, compile=False)
+    with pytest.raises(ValueError, match=message) as current:
+        generate(*args, **options, compile_expression=False)
+    with (
+        pytest.warns(DeprecationWarning, match="use compile_expression"),
+        pytest.raises(ValueError, match=message) as previous,
+    ):
+        generate(*args, **options, compile=False)
+    assert str(previous.value) == str(current.value)
+
+
+def test_legacy_compile_selects_the_callback():
+    def plane(x, _y, _z):
+        return x - 0.5
+
+    with pytest.warns(DeprecationWarning, match="use compile_expression"):
+        result = meshers.generate(plane, cells=8, compile=False)
+    assert result.diagnostics["evaluator"] == "python"
+
+
+def test_surface_api_availability():
+    assert "SurfaceMesh" in meshers.__all__
+    assert "generate_surface" in meshers.__all__
+    if not meshers.SURFACE_MESHING_AVAILABLE:
+        with pytest.raises(RuntimeError, match="unavailable"):
+            meshers.generate_surface("gyroid")
+
+
+@pytest.mark.parametrize(
+    ("generate", "wrong_options", "keyword"),
+    [
+        (meshers.generate, {"adaptive": True}, "adaptive"),
+        (meshers.generate_surface, {"adapt": True}, "adapt"),
+    ],
+)
+def test_generators_reject_keywords_for_the_other_mesh_type(generate, wrong_options, keyword):
+    with pytest.raises(TypeError, match=keyword):
+        generate("gyroid", **wrong_options)

@@ -45,7 +45,7 @@ jobs:
       fail-fast: false
       matrix:
         os: [ubuntu-latest, windows-latest, macos-latest]
-        python: ['3.10', '3.12', '3.14']
+        python: ['3.11', '3.15']
     runs-on: ${{ matrix.os }}
     defaults:
       run:
@@ -58,14 +58,88 @@ jobs:
         with:
           python-version: ${{ matrix.python }}
       - uses: astral-sh/setup-uv@v6
-      - run: uv pip install --system maturin pytest h5py pyvista
+      - run: uv pip install --system maturin
       - run: maturin build --locked --release --interpreter python --out dist
-      - run: uv pip install --system dist/*.whl
+      - run: 'uv pip install --system --only-binary :all: dist/*.whl "meshers[test]"'
       - run: python -m pytest tests -q
+      - name: Check Windows benchmark process and memory handling
+        if: runner.os == 'Windows' && matrix.python == '3.11'
+        working-directory: .
+        run: python -m pytest tools/tests/test_performance_gate.py -q
+      - name: Fetch the independent geometry validator
+        if: matrix.python == '3.11'
+        uses: actions/checkout@v4
+        with:
+          ref: 602dc900cd028d205b36e29dcdb5b4a9cf4f581a
+          path: .local-work/coverage-reference
+          sparse-checkout: benchmarks/microgen/microgen_benchmark
+          persist-credentials: false
+      - name: Check eight-cell sheet and lattice recipes against the historical limits
+        if: matrix.python == '3.11'
+        working-directory: .
+        run: |
+          uv pip install --system scipy
+          reference=.local-work/coverage-reference/benchmarks/microgen
+          mkdir coverage-results
+          status=0
+          for specimen in gyroid schwarz-p neovius graded-gyroid thin-gyroid implicit-lattice; do
+            for passes in 0 4 12; do
+              options=(--adapt)
+              case "$specimen:$passes" in
+                gyroid:*|schwarz-p:4) options=() ;;
+                thin-gyroid:0) options+=(--adapt-tolerance 0.008) ;;
+                implicit-lattice:0) options+=(--adapt-tolerance 0.006) ;;
+              esac
+              python demos/solver/implicit_coverage.py --reference "$reference" --case "$specimen" --passes "$passes" "${options[@]}" --require-admitted --output "coverage-results/$specimen-$passes.json" || status=1
+            done
+          done
+          exit "$status"
+      - uses: actions/upload-artifact@v4
+        if: always() && matrix.python == '3.11'
+        with:
+          name: implicit-coverage-${{ matrix.os }}
+          path: coverage-results/*.json
+          if-no-files-found: ignore
+      - name: Check candidate Schwarz geometry and effective stiffness
+        if: matrix.python == '3.11'
+        working-directory: .
+        env:
+          OPENBLAS_NUM_THREADS: '1'
+          OMP_NUM_THREADS: '1'
+          MKL_NUM_THREADS: '1'
+          RAYON_NUM_THREADS: '1'
+        run: |
+          uv pip install --system fedoo==1.0.0b2
+          python demos/solver/schwarz_workflow.py native-candidate candidate-acceptance
+      - uses: actions/upload-artifact@v4
+        if: always() && matrix.python == '3.11'
+        with:
+          name: schwarz-candidate-acceptance-${{ matrix.os }}
+          path: candidate-acceptance/result.json
+          if-no-files-found: ignore
       - uses: actions/upload-artifact@v4
         with:
           name: wheel-${{ matrix.os }}-${{ matrix.python }}
           path: crates/meshers-python/dist/*.whl
+
+  optional-bindings:
+    name: Experimental surfaces and wide constraints
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: crates/meshers-python
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - uses: astral-sh/setup-uv@v6
+      - run: uv pip install --system maturin
+      - run: maturin build --locked --release --features experimental-surfaces,wide-constraints --out dist
+      - run: 'uv pip install --system --only-binary :all: dist/*.whl "meshers[test]"'
+      - run: python -c "import meshers; assert meshers.SURFACE_MESHING_AVAILABLE and meshers.MAX_CONSTRAINTS == 32"
+      - run: python -m pytest -q tests/test_surface.py tests/test_adaptive.py tests/test_intersection.py::test_high_constraint_bits_and_planar_intersections
 
   quality-and-docs:
     name: Python quality and documentation
@@ -77,7 +151,7 @@ jobs:
           components: rustfmt, clippy
       - uses: astral-sh/setup-uv@v6
         with:
-          python-version: '3.12'
+          python-version: '3.11'
           enable-cache: true
       - run: uv sync --locked --all-packages --group docs
       - run: uv run ruff check
@@ -89,6 +163,12 @@ jobs:
       - run: cargo run --locked --release --example implicit_sphere
       - run: uv run --with scipy python demos/solver/convergence.py
       - run: uv run --with fedoo==0.8.4 python demos/solver/fedoo_convergence.py
+      - name: Exercise geometry and solver admission under optimized Python
+        run: >-
+          uv run --with fedoo==1.0.0b2 python -O -m pytest -q
+          tools/tests/test_fedoo_cg.py tools/tests/test_periodic_geometry.py
+          tools/tests/test_schwarz_series.py tools/tests/test_schwarz_repair.py
+          tools/tests/test_schwarz_trials.py tools/tests/test_schwarz_candidate.py
       - run: uv run --with fedoo==1.0.0b2 python demos/solver/fedoo_homogenization.py
       - uses: actions/upload-artifact@v4
         with:
@@ -102,3 +182,24 @@ jobs:
         with:
           name: documentation
           path: site/
+      - name: Package the public site
+        if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: site/
+
+  deploy-docs:
+    name: Publish documentation
+    if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
+    needs: quality-and-docs
+    runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy the documentation
+        id: deployment
+        uses: actions/deploy-pages@v4

@@ -1,0 +1,458 @@
+{
+  "hardware": {
+    "cpu_model": "AMD Ryzen 7 7730U with Radeon Graphics",
+    "cpu_count": 16,
+    "ram_bytes": 32476979200,
+    "machine": "x86_64",
+    "platform": "Linux-7.0.0-42-generic-x86_64-with-glibc2.43"
+  },
+  "numerical_threads_requested": 1,
+  "worker_timeout_seconds": 750,
+  "peak_rss_poll_seconds": 0.25,
+  "driver_sha256": {
+    "tools/__init__.py": "7d6ffee756fa46a0b896d37efc256a643e6c6ec49b86ee4eb92123ad0bc875ec",
+    "tools/performance_gate.py": "a547abac5972007b6470ff436cbfa054d5a10e952875358ca457fb5a9868d812",
+    "tools/benchmark_hardware.py": "e1ce68164d199043783e28bb3216e052877b18f736b14c3d9812fc1187da24fc",
+    "demos/solver/schwarz_workflow.py": "aff1ec8336cc1e1ac44a2530eb5891ea3e5d0f0089e45b7c22ce9c6559640070",
+    "demos/solver/schwarz_series.py": "53db5a31e49fce7e0d6ee9fc0ac67fd3bd9a2fc0169a9dec3d9cd0dac6a06f54",
+    "demos/solver/periodic_geometry.py": "32405e7892e9a76904d34b4fa6d3cfd5c8f67b78cad263176d72692dfc00c8bd",
+    "demos/solver/release_wheel_comparison.py": "1548c29626dbb68b91a20065e3528a21dbed2eee8246b09774552638722f9a7e",
+    "demos/solver/fedoo_homogenization.py": "1416ce033db9d0d8d08587dc3535055d2ab759dc2e48047dd15bb9e75711e624",
+    "demos/solver/historical_schwarz_repair.py": "ffdedd81eb3f26de4015563a9d4b6c18113ebe5cb2e2b39264d2fdd8bc54ed67",
+    "demos/solver/schwarz_diagnostics.py": "55d0aca2cda6aed663a5a66053a087b6cf3cc73ab9c7127210a2253c49b8f475",
+    "demos/solver/schwarz_trials.py": "80c15ff7e478ed0e31410d98b8bd31e33a99e6a9134236a321631f01b220fdaf",
+    "tools/tests/test_schwarz_trials.py": "4859f838dffad7f94a529e51ce36a41ce4fe15dafc0d91ebe9135cc48066cf8c",
+    "tools/tests/test_schwarz_series.py": "17a980c2fe9cd868396602e0ea746690a04e93f4b3a17e33f57fb14df7bf4830",
+    "tools/tests/test_schwarz_repair.py": "3c2c6eb0e63ebf7f25c7e70955e34550642df1008d422708fe3fe0b049565c5e"
+  },
+  "completion": {
+    "controls_exit": 1,
+    "qualified": true,
+    "controls_retry": {
+      "passed": 5,
+      "command": "python -m pytest -q tools/tests",
+      "scope": "three packaged Schwarz test modules",
+      "test_dependency": "pytest in an isolated target directory"
+    }
+  },
+  "runs": {
+    "h050": {
+      "case": "repaired-solve",
+      "recorded_at": "2026-11-18T14:43:38.299399+00:00",
+      "hardware": {
+        "cpu_model": "AMD Ryzen 7 7730U with Radeon Graphics",
+        "cpu_count": 16,
+        "ram_bytes": 32476979200,
+        "machine": "x86_64",
+        "platform": "Linux-7.0.0-42-generic-x86_64-with-glibc2.43"
+      },
+      "versions": {
+        "meshers": "0.2.1",
+        "microgen": "2.0.0b1",
+        "mmgpy": "0.17.1",
+        "fedoo": "1.0.0b2",
+        "numpy": "2.5.3",
+        "scipy": "1.18.1",
+        "pyvista": "0.49.0",
+        "vtk": "9.7.1"
+      },
+      "baseline_sha256": "9dbe1c7e45cea5ccc8f9bbf79ec651f78088335f25bcad68e0b453e427c045ca",
+      "reference_sha256": "077b05afb900595e6e7891e5a092538cec6eb2f805156d2119ac9eb771477908",
+      "source_sha256": {
+        "microgen/shape/tpms.py": "1c2876a8f65441e6d7a0f21397a3b781b6f03a338f244c7db5c462c13348f955",
+        "microgen/remesh.py": "b93c8b8150c1c40ccf5312d57785331d52f114d2217a8b59296b7484cf6f2612"
+      },
+      "mmg_sha256": "03812ba5ab2d4265555ab606eb7c9dcf942069e7ed5ccd3466b2e316aa537286",
+      "resolution": 30,
+      "seed_seconds": 0.08228479698300362,
+      "seed_nodes": 18640,
+      "seed_cells": 86876,
+      "mmg_calls": [
+        {
+          "nofem": true,
+          "hausd": 0.0005,
+          "hmax": 0.05,
+          "hgrad": 1.3,
+          "seconds": 4.959542526048608
+        }
+      ],
+      "repair": {
+        "initial_bad_elements": 0,
+        "remaining_bad_elements": 0,
+        "initial_minimum_quality": 0.1070101127079392,
+        "final_minimum_quality": 0.1070101127079392,
+        "accepted_moves": 0,
+        "moved_vertices": 0,
+        "attempts": [],
+        "maximum_attempts": 400,
+        "maximum_sweeps": 2,
+        "boundary_coordinates_unchanged": true,
+        "signed_volume_difference": 0.0,
+        "minimum_signed_determinant": 2.8441644410425232e-08
+      },
+      "repair_seconds": 0.712790296995081,
+      "generation_and_io_seconds": 8.566988192033023,
+      "mesh_sha256": "3a17e3e63fda0b861fdf7d3fbad7cee987b450bec26bc68ba2cbea65cf15f722",
+      "geometry": {
+        "specimen": "schwarz",
+        "nodes": 32070,
+        "tetrahedra": 154012,
+        "volume": 0.4999491874419035,
+        "face_connected_components": 1,
+        "component_signed_volumes": [
+          0.4999491874419035
+        ],
+        "minimum_quality": 0.10701011270793911,
+        "boundary": {
+          "wall 0": {
+            "mesh_to_reference_upper": {
+              "samples": 110558,
+              "maximum": 0.0009615151058020022,
+              "location": [
+                -0.249038484894198,
+                0.0,
+                -0.5
+              ]
+            },
+            "reference_to_mesh": {
+              "samples": 7710,
+              "maximum": 0.0007474047249763855,
+              "location": [
+                -0.014089119620621204,
+                -0.2572371684682149,
+                0.44977949000895023
+              ]
+            }
+          },
+          "x-0.5": {
+            "mesh_to_reference_upper": {
+              "samples": 9996,
+              "maximum": 0.0009615151058020022,
+              "location": [
+                -0.5,
+                0.0,
+                -0.249038484894198
+              ]
+            },
+            "reference_to_mesh": {
+              "samples": 1666,
+              "maximum": 0.0,
+              "location": [
+                -0.5,
+                0.3993650656193495,
+                0.4675633907318115
+              ]
+            }
+          },
+          "x+0.5": {
+            "mesh_to_reference_upper": {
+              "samples": 9996,
+              "maximum": 0.0009615151058020022,
+              "location": [
+                0.5,
+                0.0,
+                -0.249038484894198
+              ]
+            },
+            "reference_to_mesh": {
+              "samples": 1666,
+              "maximum": 0.0,
+              "location": [
+                0.5,
+                0.3993650656193495,
+                0.4675633907318115
+              ]
+            }
+          },
+          "y-0.5": {
+            "mesh_to_reference_upper": {
+              "samples": 9996,
+              "maximum": 0.0009615151058020022,
+              "location": [
+                0.0,
+                -0.5,
+                -0.249038484894198
+              ]
+            },
+            "reference_to_mesh": {
+              "samples": 1666,
+              "maximum": 0.0,
+              "location": [
+                0.3993650656193495,
+                -0.5,
+                0.4675633907318115
+              ]
+            }
+          },
+          "y+0.5": {
+            "mesh_to_reference_upper": {
+              "samples": 9996,
+              "maximum": 0.0009615151058020022,
+              "location": [
+                0.0,
+                0.5,
+                -0.249038484894198
+              ]
+            },
+            "reference_to_mesh": {
+              "samples": 1666,
+              "maximum": 0.0,
+              "location": [
+                0.3993650656193495,
+                0.5,
+                0.4675633907318115
+              ]
+            }
+          },
+          "z-0.5": {
+            "mesh_to_reference_upper": {
+              "samples": 9996,
+              "maximum": 0.0009615151058020022,
+              "location": [
+                -0.249038484894198,
+                0.0,
+                -0.5
+              ]
+            },
+            "reference_to_mesh": {
+              "samples": 1666,
+              "maximum": 0.0,
+              "location": [
+                0.3993650656193495,
+                0.4675633907318115,
+                -0.5
+              ]
+            }
+          },
+          "z+0.5": {
+            "mesh_to_reference_upper": {
+              "samples": 9996,
+              "maximum": 0.0009615151058020022,
+              "location": [
+                -0.249038484894198,
+                0.0,
+                0.5
+              ]
+            },
+            "reference_to_mesh": {
+              "samples": 1666,
+              "maximum": 0.0,
+              "location": [
+                0.3993650656193495,
+                0.4675633907318115,
+                0.5
+              ]
+            }
+          }
+        },
+        "periodic_face_match": {
+          "x": true,
+          "y": true,
+          "z": true
+        },
+        "sobol_power": 11,
+        "material_witnesses": 1999,
+        "misclassified_witnesses": 0,
+        "first_misclassified_witness": null,
+        "failed_checks": [],
+        "sampled_admission": true
+      },
+      "audit_seconds": 0.8116928189992905,
+      "stress_probe_xyz": [
+        -0.364,
+        -0.347,
+        -0.313
+      ],
+      "solver_mesh_sha256": "0e6e92bdc43fb9cd06d6f51d952e3e81af7d9b318521da194ab3ee3cfe91009a",
+      "assembly_seconds": 0.7556509851710871,
+      "fea": {
+        "tetrahedra": 154012,
+        "points": 32070,
+        "solid_volume_fraction": 0.49994918744176625,
+        "minimum_quality": 0.10701011270793911,
+        "periodic_pair_counts": [
+          800,
+          800,
+          800
+        ],
+        "stiffness_engineering_voigt": [
+          [
+            0.8009570040213123,
+            0.1436326191871851,
+            0.1436375337372154,
+            -0.00013528771226770133,
+            0.00020498570744815513,
+            0.00018368940844012329
+          ],
+          [
+            0.14363261918835904,
+            0.8009254773323747,
+            0.1436340307484763,
+            -0.00013398963592896787,
+            0.00018642941641695943,
+            0.00020454563862255234
+          ],
+          [
+            0.14363753373745114,
+            0.14363403074967235,
+            0.8009170618860049,
+            -0.00017521022707448714,
+            0.00021005043087772392,
+            0.0002154164721714255
+          ],
+          [
+            -0.00013528770573236832,
+            -0.00013398963668692288,
+            -0.00017521022717592043,
+            0.19293103323014502,
+            4.207301263534351e-05,
+            3.9782111075691626e-05
+          ],
+          [
+            0.0002049857084980341,
+            0.00018642941641228467,
+            0.0002100504260371661,
+            4.2073012437200794e-05,
+            0.19292012740540598,
+            -2.8411080040930026e-05
+          ],
+          [
+            0.00018368941407270547,
+            0.0002045456387311762,
+            0.0002154164811890472,
+            3.9782111327378224e-05,
+            -2.841107961443919e-05,
+            0.19290708317262217
+          ]
+        ],
+        "stiffness_eigenvalues": [
+          0.19284531014415984,
+          0.1929413619410704,
+          0.19297122367659608,
+          0.6572860666235311,
+          0.6573108432032666,
+          1.0882029814592415
+        ],
+        "young_modulus_xyz": [
+          0.7572726570865881,
+          0.7572430849529747,
+          0.7572330296476463
+        ],
+        "poisson_xy_xz_yz": [
+          0.15206130003219284,
+          0.15207065804943729,
+          0.15206668145550187
+        ],
+        "hill_mandel_relative_error": 9.507710236147925e-12,
+        "reaction_stress_relative_difference": 1.3440409839915143e-11,
+        "stiffness_symmetry_relative_error": 1.3053994680416976e-11,
+        "automatic_homogenization_relative_difference": 9.555152535936927e-12,
+        "strain_controlled_loads": [
+          {
+            "load": "E_xx",
+            "periodic_jump_error": 0.0,
+            "periodic_force_balance_relative_error": 7.614644522163118e-11,
+            "iterations": 860,
+            "cg_seconds": 2.7270240670768544,
+            "relative_residual": 9.4732462415195e-13,
+            "free_dofs": 89274,
+            "probe_sigma_xx": 1.539786278528134
+          },
+          {
+            "load": "E_yy",
+            "periodic_jump_error": 0.0,
+            "periodic_force_balance_relative_error": 7.393119537048357e-11,
+            "iterations": 848,
+            "cg_seconds": 2.7792141429381445,
+            "relative_residual": 9.302722762775515e-13,
+            "free_dofs": 89274,
+            "probe_sigma_xx": 0.035033880318864785
+          },
+          {
+            "load": "E_zz",
+            "periodic_jump_error": 0.0,
+            "periodic_force_balance_relative_error": 7.961704689480247e-11,
+            "iterations": 852,
+            "cg_seconds": 2.8573088590055704,
+            "relative_residual": 9.801354742882183e-13,
+            "free_dofs": 89274,
+            "probe_sigma_xx": 0.08818611269419807
+          },
+          {
+            "load": "E_xy",
+            "periodic_jump_error": 0.0,
+            "periodic_force_balance_relative_error": 3.930798453855295e-11,
+            "iterations": 877,
+            "cg_seconds": 2.729633975890465,
+            "relative_residual": 9.124183438237787e-13,
+            "free_dofs": 89274,
+            "probe_sigma_xx": -0.16835973261756365
+          },
+          {
+            "load": "E_xz",
+            "periodic_jump_error": 0.0,
+            "periodic_force_balance_relative_error": 4.063318843288817e-11,
+            "iterations": 880,
+            "cg_seconds": 2.8201764239929616,
+            "relative_residual": 9.384463543472065e-13,
+            "free_dofs": 89274,
+            "probe_sigma_xx": -0.28257431089198004
+          },
+          {
+            "load": "E_yz",
+            "periodic_jump_error": 0.0,
+            "periodic_force_balance_relative_error": 4.305650776764613e-11,
+            "iterations": 875,
+            "cg_seconds": 2.7616927310591564,
+            "relative_residual": 9.9376724293698e-13,
+            "free_dofs": 89274,
+            "probe_sigma_xx": -0.011802892780001031
+          }
+        ],
+        "automatic_stress_controlled_solves": [
+          {
+            "iterations": 1102,
+            "cg_seconds": 3.6265885900938883,
+            "relative_residual": 9.587724966470563e-13,
+            "free_dofs": 89280
+          },
+          {
+            "iterations": 1089,
+            "cg_seconds": 3.587377635994926,
+            "relative_residual": 9.563068209169654e-13,
+            "free_dofs": 89280
+          },
+          {
+            "iterations": 1100,
+            "cg_seconds": 3.464186914032325,
+            "relative_residual": 9.532209233740038e-13,
+            "free_dofs": 89280
+          },
+          {
+            "iterations": 1106,
+            "cg_seconds": 3.5844574969960377,
+            "relative_residual": 1.0130663092066823e-12,
+            "free_dofs": 89280
+          },
+          {
+            "iterations": 1112,
+            "cg_seconds": 3.5210735630244017,
+            "relative_residual": 9.589205928720436e-13,
+            "free_dofs": 89280
+          },
+          {
+            "iterations": 1110,
+            "cg_seconds": 3.5327700070338324,
+            "relative_residual": 9.99801168034022e-13,
+            "free_dofs": 89280
+          }
+        ],
+        "seconds": 42.08901317999698
+      },
+      "relative_energy_discrepancy": 0.009280590309827249,
+      "status": "within-reference-target",
+      "wall_seconds": 53.007870705914684,
+      "sampled_peak_tree_rss_bytes": 1079496704
+    }
+  }
+}

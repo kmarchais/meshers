@@ -1,0 +1,715 @@
+{
+  "hardware": {
+    "cpu_model": "AMD Ryzen 7 7730U with Radeon Graphics",
+    "cpu_count": 16,
+    "ram_bytes": 32476979200,
+    "machine": "x86_64",
+    "platform": "Linux-7.0.0-42-generic-x86_64-with-glibc2.43"
+  },
+  "numerical_threads_requested": 1,
+  "driver_sha256": {
+    "tools/__init__.py": "7d6ffee756fa46a0b896d37efc256a643e6c6ec49b86ee4eb92123ad0bc875ec",
+    "tools/performance_gate.py": "a547abac5972007b6470ff436cbfa054d5a10e952875358ca457fb5a9868d812",
+    "tools/benchmark_hardware.py": "e1ce68164d199043783e28bb3216e052877b18f736b14c3d9812fc1187da24fc",
+    "demos/solver/schwarz_workflow.py": "ecaf0be7dd7b1b0034127830aeb6c056ceb9c6b9fc4ac41952b5a2223e4ec95c",
+    "demos/solver/schwarz_series.py": "53db5a31e49fce7e0d6ee9fc0ac67fd3bd9a2fc0169a9dec3d9cd0dac6a06f54",
+    "demos/solver/periodic_geometry.py": "ba4a5b121a132e696d8532a5f928c643735394ce4fb5899bff7d5ddbcb6a002e",
+    "demos/solver/release_wheel_comparison.py": "36c8ac4c76c121c6720715eaac286ddaa198f13070bb1e6fe838ae593bb65f02",
+    "demos/solver/fedoo_homogenization.py": "dbe016e21cc71679b4110e56ef4fb4a54049b384577ede759f6f675fe7344549",
+    "demos/solver/historical_schwarz_repair.py": "ffdedd81eb3f26de4015563a9d4b6c18113ebe5cb2e2b39264d2fdd8bc54ed67",
+    "demos/solver/schwarz_diagnostics.py": "2744947585df14b21cd9ce0ffe01ba2c01d92c7e5fbe1f35b555dcb9c93333d0",
+    "diag_worker.py": "cd77f31e29b9ac1548645b4a1684e2f1a102ebff7925335306fc03b5ba7758de"
+  },
+  "completion": {
+    "resolution": null,
+    "pair_order": [
+      [
+        1,
+        "native"
+      ],
+      [
+        1,
+        "microgen"
+      ],
+      [
+        2,
+        "microgen"
+      ],
+      [
+        2,
+        "native"
+      ],
+      [
+        3,
+        "native"
+      ],
+      [
+        3,
+        "microgen"
+      ]
+    ]
+  },
+  "runs": {
+    "screen34": {
+      "case": "repaired-solve",
+      "recorded_at": "2026-11-18T13:53:37.785252+00:00",
+      "hardware": {
+        "cpu_model": "AMD Ryzen 7 7730U with Radeon Graphics",
+        "cpu_count": 16,
+        "ram_bytes": 32476979200,
+        "machine": "x86_64",
+        "platform": "Linux-7.0.0-42-generic-x86_64-with-glibc2.43"
+      },
+      "versions": {
+        "meshers": "0.2.1",
+        "microgen": "2.0.0b1",
+        "mmgpy": "0.17.1",
+        "fedoo": "1.0.0b2",
+        "numpy": "2.5.3",
+        "scipy": "1.18.1",
+        "pyvista": "0.49.0",
+        "vtk": "9.7.1"
+      },
+      "baseline_sha256": "9dbe1c7e45cea5ccc8f9bbf79ec651f78088335f25bcad68e0b453e427c045ca",
+      "reference_sha256": "077b05afb900595e6e7891e5a092538cec6eb2f805156d2119ac9eb771477908",
+      "source_sha256": {
+        "microgen/shape/tpms.py": "1c2876a8f65441e6d7a0f21397a3b781b6f03a338f244c7db5c462c13348f955",
+        "microgen/remesh.py": "b93c8b8150c1c40ccf5312d57785331d52f114d2217a8b59296b7484cf6f2612"
+      },
+      "mmg_sha256": "03812ba5ab2d4265555ab606eb7c9dcf942069e7ed5ccd3466b2e316aa537286",
+      "resolution": 34,
+      "seed_seconds": 0.10382554004900157,
+      "seed_nodes": 26398,
+      "seed_cells": 126018,
+      "mmg_calls": [
+        {
+          "nofem": true,
+          "hausd": 0.0005,
+          "hmax": 0.1,
+          "hgrad": 1.3,
+          "seconds": 0.3549230210483074
+        },
+        {
+          "nofem": true,
+          "hausd": 0.0005,
+          "hmax": 0.1,
+          "hgrad": 1.3,
+          "seconds": 0.333538549952209
+        },
+        {
+          "nofem": true,
+          "hausd": 0.0005,
+          "hmax": 0.1,
+          "hgrad": 1.3,
+          "seconds": 0.3541311559965834
+        },
+        {
+          "nofem": true,
+          "hausd": 0.0005,
+          "hmax": 0.1,
+          "hgrad": 1.3,
+          "seconds": 0.34673145692795515
+        },
+        {
+          "nofem": true,
+          "hausd": 0.0005,
+          "hmax": 0.1,
+          "hgrad": 1.3,
+          "seconds": 0.33035375899635255
+        }
+      ],
+      "status": "failed",
+      "error": "MmgError: MMG failed with the recorded arguments",
+      "sampled_peak_tree_rss_bytes": 722313216,
+      "wall_seconds": 5.7485799139831215
+    },
+    "screen36": {
+      "case": "repaired-solve",
+      "recorded_at": "2026-11-18T13:53:43.544484+00:00",
+      "hardware": {
+        "cpu_model": "AMD Ryzen 7 7730U with Radeon Graphics",
+        "cpu_count": 16,
+        "ram_bytes": 32476979200,
+        "machine": "x86_64",
+        "platform": "Linux-7.0.0-42-generic-x86_64-with-glibc2.43"
+      },
+      "versions": {
+        "meshers": "0.2.1",
+        "microgen": "2.0.0b1",
+        "mmgpy": "0.17.1",
+        "fedoo": "1.0.0b2",
+        "numpy": "2.5.3",
+        "scipy": "1.18.1",
+        "pyvista": "0.49.0",
+        "vtk": "9.7.1"
+      },
+      "baseline_sha256": "9dbe1c7e45cea5ccc8f9bbf79ec651f78088335f25bcad68e0b453e427c045ca",
+      "reference_sha256": "077b05afb900595e6e7891e5a092538cec6eb2f805156d2119ac9eb771477908",
+      "source_sha256": {
+        "microgen/shape/tpms.py": "1c2876a8f65441e6d7a0f21397a3b781b6f03a338f244c7db5c462c13348f955",
+        "microgen/remesh.py": "b93c8b8150c1c40ccf5312d57785331d52f114d2217a8b59296b7484cf6f2612"
+      },
+      "mmg_sha256": "03812ba5ab2d4265555ab606eb7c9dcf942069e7ed5ccd3466b2e316aa537286",
+      "resolution": 36,
+      "seed_seconds": 0.12233632104471326,
+      "seed_nodes": 30896,
+      "seed_cells": 149300,
+      "mmg_calls": [
+        {
+          "nofem": true,
+          "hausd": 0.0005,
+          "hmax": 0.1,
+          "hgrad": 1.3,
+          "seconds": 6.006130105000921
+        }
+      ],
+      "repair": {
+        "initial_bad_elements": 32,
+        "remaining_bad_elements": 32,
+        "initial_minimum_quality": 0.05628115750487782,
+        "final_minimum_quality": 0.05628115750487782,
+        "accepted_moves": 0,
+        "moved_vertices": 0,
+        "attempts": [
+          {
+            "element": 14090,
+            "sweep": 0,
+            "status": "all-boundary",
+            "target_attained": false
+          },
+          {
+            "node": 3347,
+            "incident_tets": 16,
+            "quality_target": 0.100001,
+            "initial_minimum_quality": 0.059233207141523955,
+            "fixed_opposite_face_upper_bound": 0.08323610387987063,
+            "target_attained": false,
+            "status": "fixed-face-obstructed",
+            "numerical_quality_guard": 1e-09,
+            "element": 32322,
+            "sweep": 0
+          },
+          {
+            "node": 25768,
+            "incident_tets": 24,
+            "quality_target": 0.100001,
+            "initial_minimum_quality": 0.06096258659480286,
+            "fixed_opposite_face_upper_bound": 0.08323610387987065,
+            "target_attained": false,
+            "status": "fixed-face-obstructed",
+            "numerical_quality_guard": 1e-09,
+            "element": 57793,
+            "sweep": 0
+          },
+          {
+            "node": 11173,
+            "incident_tets": 24,
+            "quality_target": 0.100001,
+            "initial_minimum_quality": 0.0617730080633302,
+            "fixed_opposite_face_upper_bound": 0.08323610387987065,
+            "target_attained": false,
+            "status": "fixed-face-obstructed",
+            "numerical_quality_guard": 1e-09,
+            "element": 63588,
+            "sweep": 0
+          },
+          {
+            "node": 19663,
+            "incident_tets": 32,
+            "quality_target": 0.100001,
+            "initial_minimum_quality": 0.06294171528414196,
+            "fixed_opposite_face_upper_bound": 0.08323610387987063,
+            "target_attained": false,
+            "status": "fixed-face-obstructed",
+            "numerical_quality_guard": 1e-09,
+            "element": 14308,
+            "sweep": 0
+          },
+          {
+            "node": 26600,
+            "incident_tets": 22,
+            "quality_target": 0.100001,
+            "initial_minimum_quality": 0.06306608928966938,
+            "fixed_opposite_face_upper_bound": 0.08323610387987065,
+            "target_attained": false,
+            "status": "fixed-face-obstructed",
+            "numerical_quality_guard": 1e-09,
+            "element": 114329,
+            "sweep": 0
+          },
+          {
+            "element": 117658,
+            "sweep": 0,
+            "status": "all-boundary",
+            "target_attained": false
+          },
+          {
+            "element": 54587,
+            "sweep": 0,
+            "status": "all-boundary",
+            "target_attained": false
+          },
+          {
+            "element": 23152,
+            "sweep": 0,
+            "status": "all-boundary",
+            "target_attained": false
+          },
+          {
+            "node": 8647,
+            "incident_tets": 30,
+            "quality_target": 0.100001,
+            "initial_minimum_quality": 0.06621195969331907,
+            "fixed_opposite_face_upper_bound": 0.08323610387987065,
+            "target_attained": false,
+            "status": "fixed-face-obstructed",
+            "numerical_quality_guard": 1e-09,
+            "element": 49465,
+            "sweep": 0
+          },
+          {
+            "node": 24990,
+            "incident_tets": 26,
+            "quality_target": 0.100001,
+            "initial_minimum_quality": 0.0675968164624584,
+            "fixed_opposite_face_upper_bound": 0.08323610387987053,
+            "target_attained": false,
+            "status": "fixed-face-obstructed",
+            "numerical_quality_guard": 1e-09,
+            "element": 40381,
+            "sweep": 0
+          },
+          {
+            "node": 4774,
+            "incident_tets": 28,
+            "quality_target": 0.100001,
+            "initial_minimum_quality": 0.06783825002966647,
+            "fixed_opposite_face_upper_bound": 0.08323610387987065,
+            "target_attained": false,
+            "status": "fixed-face-obstructed",
+            "numerical_quality_guard": 1e-09,
+            "element": 111306,
+            "sweep": 0
+          },
+          {
+            "node": 24783,
+            "incident_tets": 32,
+            "quality_target": 0.100001,
+            "initial_minimum_quality": 0.06799272692443824,
+            "fixed_opposite_face_upper_bound": 0.08323610387987063,
+            "target_attained": false,
+            "status": "fixed-face-obstructed",
+            "numerical_quality_guard": 1e-09,
+            "element": 94548,
+            "sweep": 0
+          },
+          {
+            "node": 17771,
+            "incident_tets": 36,
+            "quality_target": 0.100001,
+            "initial_minimum_quality": 0.07076625530197285,
+            "fixed_opposite_face_upper_bound": 0.08323610387987053,
+            "target_attained": false,
+            "status": "fixed-face-obstructed",
+            "numerical_quality_guard": 1e-09,
+            "element": 140862,
+            "sweep": 0
+          },
+          {
+            "node": 1395,
+            "incident_tets": 24,
+            "quality_target": 0.100001,
+            "initial_minimum_quality": 0.07156184552025457,
+            "fixed_opposite_face_upper_bound": 0.08323610387987053,
+            "target_attained": false,
+            "status": "fixed-face-obstructed",
+            "numerical_quality_guard": 1e-09,
+            "element": 97501,
+            "sweep": 0
+          },
+          {
+            "node": 7312,
+            "incident_tets": 30,
+            "quality_target": 0.100001,
+            "initial_minimum_quality": 0.07163955667110396,
+            "fixed_opposite_face_upper_bound": 0.08323610387987064,
+            "target_attained": false,
+            "status": "fixed-face-obstructed",
+            "numerical_quality_guard": 1e-09,
+            "element": 70375,
+            "sweep": 0
+          },
+          {
+            "node": 9701,
+            "incident_tets": 28,
+            "quality_target": 0.100001,
+            "initial_minimum_quality": 0.07210964245703742,
+            "fixed_opposite_face_upper_bound": 0.08323610387987065,
+            "target_attained": false,
+            "status": "fixed-face-obstructed",
+            "numerical_quality_guard": 1e-09,
+            "element": 23550,
+            "sweep": 0
+          },
+          {
+            "node": 25277,
+            "incident_tets": 28,
+            "quality_target": 0.100001,
+            "initial_minimum_quality": 0.07234486284505787,
+            "fixed_opposite_face_upper_bound": 0.08323610387987053,
+            "target_attained": false,
+            "status": "fixed-face-obstructed",
+            "numerical_quality_guard": 1e-09,
+            "element": 73079,
+            "sweep": 0
+          },
+          {
+            "node": 4774,
+            "incident_tets": 28,
+            "quality_target": 0.100001,
+            "initial_minimum_quality": 0.06783825002966647,
+            "fixed_opposite_face_upper_bound": 0.08323610387987065,
+            "target_attained": false,
+            "status": "fixed-face-obstructed",
+            "numerical_quality_guard": 1e-09,
+            "element": 111307,
+            "sweep": 0
+          },
+          {
+            "node": 19967,
+            "incident_tets": 24,
+            "quality_target": 0.100001,
+            "initial_minimum_quality": 0.07347856126610766,
+            "fixed_opposite_face_upper_bound": 0.08323610387987053,
+            "target_attained": false,
+            "status": "fixed-face-obstructed",
+            "numerical_quality_guard": 1e-09,
+            "element": 111323,
+            "sweep": 0
+          },
+          {
+            "node": 2009,
+            "incident_tets": 26,
+            "quality_target": 0.100001,
+            "initial_minimum_quality": 0.074744258239172,
+            "fixed_opposite_face_upper_bound": 0.08323610387987065,
+            "target_attained": false,
+            "status": "fixed-face-obstructed",
+            "numerical_quality_guard": 1e-09,
+            "element": 7428,
+            "sweep": 0
+          },
+          {
+            "node": 22691,
+            "incident_tets": 20,
+            "quality_target": 0.100001,
+            "initial_minimum_quality": 0.07491966573458284,
+            "fixed_opposite_face_upper_bound": 0.08323610387987065,
+            "target_attained": false,
+            "status": "fixed-face-obstructed",
+            "numerical_quality_guard": 1e-09,
+            "element": 54327,
+            "sweep": 0
+          },
+          {
+            "node": 6061,
+            "incident_tets": 26,
+            "quality_target": 0.100001,
+            "initial_minimum_quality": 0.075362504666966,
+            "fixed_opposite_face_upper_bound": 0.08323610387987053,
+            "target_attained": false,
+            "status": "fixed-face-obstructed",
+            "numerical_quality_guard": 1e-09,
+            "element": 38345,
+            "sweep": 0
+          },
+          {
+            "node": 6061,
+            "incident_tets": 26,
+            "quality_target": 0.100001,
+            "initial_minimum_quality": 0.075362504666966,
+            "fixed_opposite_face_upper_bound": 0.08323610387987053,
+            "target_attained": false,
+            "status": "fixed-face-obstructed",
+            "numerical_quality_guard": 1e-09,
+            "element": 22726,
+            "sweep": 0
+          },
+          {
+            "node": 17771,
+            "incident_tets": 36,
+            "quality_target": 0.100001,
+            "initial_minimum_quality": 0.07076625530197285,
+            "fixed_opposite_face_upper_bound": 0.08323610387987053,
+            "target_attained": false,
+            "status": "fixed-face-obstructed",
+            "numerical_quality_guard": 1e-09,
+            "element": 82685,
+            "sweep": 0
+          },
+          {
+            "node": 1575,
+            "incident_tets": 30,
+            "quality_target": 0.100001,
+            "initial_minimum_quality": 0.07846624051634853,
+            "fixed_opposite_face_upper_bound": 0.08323610387987065,
+            "target_attained": false,
+            "status": "fixed-face-obstructed",
+            "numerical_quality_guard": 1e-09,
+            "element": 53987,
+            "sweep": 0
+          },
+          {
+            "node": 17155,
+            "incident_tets": 28,
+            "quality_target": 0.100001,
+            "initial_minimum_quality": 0.07887708407007976,
+            "fixed_opposite_face_upper_bound": 0.08323610387987064,
+            "target_attained": false,
+            "status": "fixed-face-obstructed",
+            "numerical_quality_guard": 1e-09,
+            "element": 96499,
+            "sweep": 0
+          },
+          {
+            "node": 7312,
+            "incident_tets": 30,
+            "quality_target": 0.100001,
+            "initial_minimum_quality": 0.07163955667110396,
+            "fixed_opposite_face_upper_bound": 0.08323610387987064,
+            "target_attained": false,
+            "status": "fixed-face-obstructed",
+            "numerical_quality_guard": 1e-09,
+            "element": 70362,
+            "sweep": 0
+          },
+          {
+            "node": 1575,
+            "incident_tets": 30,
+            "quality_target": 0.100001,
+            "initial_minimum_quality": 0.07846624051634853,
+            "fixed_opposite_face_upper_bound": 0.08323610387987065,
+            "target_attained": false,
+            "status": "fixed-face-obstructed",
+            "numerical_quality_guard": 1e-09,
+            "element": 20020,
+            "sweep": 0
+          },
+          {
+            "node": 25277,
+            "incident_tets": 28,
+            "quality_target": 0.100001,
+            "initial_minimum_quality": 0.07234486284505787,
+            "fixed_opposite_face_upper_bound": 0.08323610387987053,
+            "target_attained": false,
+            "status": "fixed-face-obstructed",
+            "numerical_quality_guard": 1e-09,
+            "element": 62071,
+            "sweep": 0
+          },
+          {
+            "node": 22691,
+            "incident_tets": 20,
+            "quality_target": 0.100001,
+            "initial_minimum_quality": 0.07491966573458284,
+            "fixed_opposite_face_upper_bound": 0.08323610387987065,
+            "target_attained": false,
+            "status": "fixed-face-obstructed",
+            "numerical_quality_guard": 1e-09,
+            "element": 37175,
+            "sweep": 0
+          },
+          {
+            "node": 19967,
+            "incident_tets": 24,
+            "quality_target": 0.100001,
+            "initial_minimum_quality": 0.07347856126610766,
+            "fixed_opposite_face_upper_bound": 0.08323610387987053,
+            "target_attained": false,
+            "status": "fixed-face-obstructed",
+            "numerical_quality_guard": 1e-09,
+            "element": 93447,
+            "sweep": 0
+          }
+        ],
+        "maximum_attempts": 400,
+        "maximum_sweeps": 2,
+        "boundary_coordinates_unchanged": true,
+        "signed_volume_difference": 0.0,
+        "minimum_signed_determinant": 1.255841968259299e-08
+      },
+      "generation_and_io_seconds": 10.79326156701427,
+      "mesh_sha256": "3f0e854dc64db7daf1b00c2ece3e64b243e821ceedd9c13bc05353c3d3ad71dd",
+      "geometry": {
+        "specimen": "schwarz",
+        "nodes": 31940,
+        "tetrahedra": 146359,
+        "volume": 0.500005600841407,
+        "face_connected_components": 1,
+        "component_signed_volumes": [
+          0.500005600841407
+        ],
+        "minimum_quality": 0.05628115750487777,
+        "boundary": {
+          "wall 0": {
+            "mesh_to_reference_upper": {
+              "samples": 113358,
+              "maximum": 0.0006717475777960891,
+              "location": [
+                0.302366134773289,
+                0.28051746725058846,
+                -0.163368634583055
+              ]
+            },
+            "reference_to_mesh": {
+              "samples": 7710,
+              "maximum": 0.000534375029920645,
+              "location": [
+                -0.47126375511288643,
+                -0.24292402040602984,
+                -0.055738383904099464
+              ]
+            }
+          },
+          "x-0.5": {
+            "mesh_to_reference_upper": {
+              "samples": 14420,
+              "maximum": 0.00064367427062198,
+              "location": [
+                -0.5,
+                -0.08571428571428574,
+                -0.2267518317728525
+              ]
+            },
+            "reference_to_mesh": {
+              "samples": 1666,
+              "maximum": 0.0,
+              "location": [
+                -0.5,
+                0.3993650656193495,
+                0.4675633907318115
+              ]
+            }
+          },
+          "x+0.5": {
+            "mesh_to_reference_upper": {
+              "samples": 14420,
+              "maximum": 0.00064367427062198,
+              "location": [
+                0.5,
+                -0.08571428571428574,
+                -0.2267518317728525
+              ]
+            },
+            "reference_to_mesh": {
+              "samples": 1666,
+              "maximum": 0.0,
+              "location": [
+                0.5,
+                0.3993650656193495,
+                0.4675633907318115
+              ]
+            }
+          },
+          "y-0.5": {
+            "mesh_to_reference_upper": {
+              "samples": 14420,
+              "maximum": 0.00064367427062198,
+              "location": [
+                -0.08571428571428574,
+                -0.5,
+                -0.2267518317728525
+              ]
+            },
+            "reference_to_mesh": {
+              "samples": 1666,
+              "maximum": 0.0,
+              "location": [
+                0.3993650656193495,
+                -0.5,
+                0.4675633907318115
+              ]
+            }
+          },
+          "y+0.5": {
+            "mesh_to_reference_upper": {
+              "samples": 14420,
+              "maximum": 0.00064367427062198,
+              "location": [
+                -0.08571428571428574,
+                0.5,
+                -0.2267518317728525
+              ]
+            },
+            "reference_to_mesh": {
+              "samples": 1666,
+              "maximum": 0.0,
+              "location": [
+                0.3993650656193495,
+                0.5,
+                0.4675633907318115
+              ]
+            }
+          },
+          "z-0.5": {
+            "mesh_to_reference_upper": {
+              "samples": 14420,
+              "maximum": 0.00064367427062198,
+              "location": [
+                -0.2267518317728525,
+                -0.08571428571428574,
+                -0.5
+              ]
+            },
+            "reference_to_mesh": {
+              "samples": 1666,
+              "maximum": 0.0,
+              "location": [
+                0.3993650656193495,
+                0.4675633907318115,
+                -0.5
+              ]
+            }
+          },
+          "z+0.5": {
+            "mesh_to_reference_upper": {
+              "samples": 14420,
+              "maximum": 0.00064367427062198,
+              "location": [
+                -0.2267518317728525,
+                -0.08571428571428574,
+                0.5
+              ]
+            },
+            "reference_to_mesh": {
+              "samples": 1666,
+              "maximum": 0.0,
+              "location": [
+                0.3993650656193495,
+                0.4675633907318115,
+                0.5
+              ]
+            }
+          }
+        },
+        "periodic_face_match": {
+          "x": true,
+          "y": true,
+          "z": true
+        },
+        "sobol_power": 11,
+        "material_witnesses": 1999,
+        "misclassified_witnesses": 0,
+        "first_misclassified_witness": null,
+        "failed_checks": [
+          "quality"
+        ],
+        "sampled_admission": false
+      },
+      "audit_seconds": 0.8249644200550392,
+      "status": "geometry-rejected",
+      "sampled_peak_tree_rss_bytes": 748888064,
+      "wall_seconds": 12.989228681079112
+    }
+  }
+}

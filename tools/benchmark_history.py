@@ -1,3 +1,5 @@
+# Copyright (c) 2026 Kevin Marchais
+
 """Archive immutable benchmark JSON and generate documentation pages and plots."""
 
 import argparse
@@ -9,28 +11,54 @@ import re
 import statistics
 from pathlib import Path
 
-from tools.performance_gate import CASES, QUALITY, RELEASE_CASES, case_regressions
+from tools.performance_gate import (
+    CASES,
+    FIXTURE_VERSION,
+    MIN_MEASURED_PAIRS,
+    QUALITY,
+    RELEASE_CASES,
+    SCHEMA_VERSION,
+    case_regressions,
+)
+
+SUPPORTED_FIXTURE_VERSIONS = {2, 3, FIXTURE_VERSION}
 
 
-def validate(data):
+def validate(data: dict) -> None:
     """Reject incomplete measurements rather than publishing an apparent success.
 
     Raises:
         ValueError: The record is incomplete or contains invalid measurements.
     """
-    if data.get("schema_version") != 2 or not data.get("complete"):
-        raise ValueError("Expected a complete schema-2 benchmark")
+    if data.get("schema_version") != SCHEMA_VERSION or not data.get("complete"):
+        msg = f"Expected a complete schema-{SCHEMA_VERSION} benchmark"
+        raise ValueError(msg)
+    if data.get("fixture_version") not in SUPPORTED_FIXTURE_VERSIONS:
+        msg = "Unsupported benchmark fixture version"
+        raise ValueError(msg)
     expected = {"pr": CASES, "release": RELEASE_CASES}.get(data.get("suite"), ())
-    if set(data.get("cases", {})) != set(expected) or data.get("measured_pairs", 0) < 3:
-        raise ValueError("Incomplete fixture suite or insufficient repetitions")
+    if (
+        set(data.get("cases", {})) != set(expected)
+        or data.get("measured_pairs", 0) < MIN_MEASURED_PAIRS
+    ):
+        msg = "Incomplete fixture suite or insufficient repetitions"
+        raise ValueError(msg)
     for ref in ("base_ref", "head_ref", "script_sha256"):
         if not re.fullmatch(r"[a-f0-9]{40,64}", data.get(ref, "")):
-            raise ValueError(f"Missing immutable source identity: {ref}")
-    for case in data["cases"].values():
-        validate_case(case, data["measured_pairs"])
+            msg = f"Missing immutable source identity: {ref}"
+            raise ValueError(msg)
+    worker_digest = data.get("worker_sha256", "")
+    if "worker_sha256" in data and not (
+        isinstance(worker_digest, str) and re.fullmatch(r"[a-f0-9]{64}", worker_digest)
+    ):
+        msg = "Invalid benchmark worker SHA-256"
+        raise ValueError(msg)
+    for name, case in data["cases"].items():
+        needs_cap = name == "mapped_intersection" and data["fixture_version"] == FIXTURE_VERSION
+        validate_case(case, data["measured_pairs"], needs_cap=needs_cap)
 
 
-def validate_case(case, measured_pairs):
+def validate_case(case: dict, measured_pairs: int, *, needs_cap: bool) -> None:
     """Check raw samples, summary medians and the recorded regression verdict.
 
     Raises:
@@ -38,12 +66,14 @@ def validate_case(case, measured_pairs):
     """
     if case["medians"] is None:
         if not case["failures"]:
-            raise ValueError("Missing samples cannot pass")
+            msg = "Missing samples cannot pass"
+            raise ValueError(msg)
         return
     for label in ("base", "head"):
         rows = case["runs"][label]
         if len(rows) != measured_pairs:
-            raise ValueError("Missing measured samples")
+            msg = "Missing measured samples"
+            raise ValueError(msg)
         for row in [*rows, case["medians"][label]]:
             required = (
                 "seconds",
@@ -52,22 +82,28 @@ def validate_case(case, measured_pairs):
                 "nodes",
                 "volume",
                 "surface_error",
+                *(("mapped_cap_error",) if needs_cap else ()),
                 *(f"quality_{q}" for q in QUALITY),
             )
-            if any(not math.isfinite(row[k]) or row[k] < 0 for k in required):
-                raise ValueError("Invalid numeric measurement")
+            if any(k not in row or not math.isfinite(row[k]) or row[k] < 0 for k in required):
+                msg = "Invalid numeric measurement"
+                raise ValueError(msg)
         if any(
             case["medians"][label][key] != statistics.median(r[key] for r in rows)
             for key in required
         ):
-            raise ValueError("Summary does not match the raw measurements")
+            msg = "Summary does not match the raw measurements"
+            raise ValueError(msg)
     if case["failures"] != case_regressions(
-        case["medians"]["base"], case["medians"]["head"], case["runs"]["head"]
+        case["medians"]["base"],
+        case["medians"]["head"],
+        case["runs"]["head"],
     ):
-        raise ValueError("Regression verdict does not match the measurements")
+        msg = "Regression verdict does not match the measurements"
+        raise ValueError(msg)
 
 
-def timing_plot(data):
+def timing_plot(data: dict) -> str:
     """Return an accessible SVG of within-run base and candidate generation times."""
     cases = [(name, c["medians"]) for name, c in data["cases"].items() if c["medians"]]
     svg = [
@@ -77,10 +113,10 @@ def timing_plot(data):
         ),
         '<rect width="100%" height="100%" fill="#0b202b"/>',
         '<g font-family="sans-serif" font-size="13" fill="#eef5f7">',
-        '<text x="20" y="25">Base (blue) and candidate (teal), same host and settings</text>',
+        '<text x="20" y="25">Median seconds · upper bar: base · lower bar: candidate</text>',
     ]
+    scale = max((m[k]["seconds"] for _, m in cases for k in ("base", "head")), default=0)
     for index, (name, medians) in enumerate(cases):
-        scale = max(medians[k]["seconds"] for k in ("base", "head"))
         y = 55 + index * 58
         svg.append(f'<text x="20" y="{y + 13}">{html.escape(name)}</text>')
         for offset, label, color in [(0, "base", "#8eafff"), (21, "head", "#52d5b8")]:
@@ -89,12 +125,12 @@ def timing_plot(data):
             svg.append(
                 f'<rect x="220" y="{y + offset}" width="{width:.2f}" height="15" '
                 f'fill="{color}"/><text x="{230 + width:.2f}" '
-                f'y="{y + offset + 12}">{seconds:.4f} s</text>'
+                f'y="{y + offset + 12}">{seconds:.4f} s</text>',
             )
     return "".join([*svg, "</g></svg>"])
 
 
-def render(directory):
+def render(directory: Path) -> None:
     """Regenerate navigable Markdown and SVGs from the immutable JSON records."""
     records = []
     for path in sorted(directory.glob("*.json")):
@@ -130,15 +166,16 @@ def render(directory):
                 "[All records](../benchmark-history.md)"
             ),
             "",
-            "Absolute times from different hosts are not a release-to-release speed ranking.",
+        ]
+        for name, case in data["cases"].items():
+            lines.extend(f"- **{name}** — {error}" for error in case["failures"])
+        lines += [
             "",
-            f"![Within-run generation times]({svg.name})",
+            f"![Median generation times in seconds on one common scale]({svg.name})",
             "",
             (
-                "Quality and sampled surface error describe linear corners/parent surfaces, "
-                "including Tet10. Tet10 volumes integrate the curved mapping and its Jacobians "
-                "are sampled for positivity. These are regression checks, not geometry or "
-                "FEA certification."
+                "For Tet10, quality and sampled surface error describe the linear parent. "
+                "Volume integrates the curved element."
             ),
             "",
         ]
@@ -151,9 +188,10 @@ def render(directory):
                 ),
                 "",
             ]
+        lines += ['<details markdown="1"><summary>Median metrics by case</summary>', ""]
         for name, case in data["cases"].items():
-            lines += [f"## {name}", ""]
             if case["medians"]:
+                lines += [f"### {name}", ""]
                 b, h = (case["medians"][k] for k in ("base", "head"))
                 lines += ["| Metric | Base | Candidate |", "| --- | ---: | ---: |"]
                 for key in (
@@ -163,26 +201,20 @@ def render(directory):
                     "nodes",
                     "volume",
                     "surface_error",
+                    *(("mapped_cap_error",) if "mapped_cap_error" in b else ()),
                     *(f"quality_{q}" for q in QUALITY),
                 ):
                     lines.append(f"| {key} | {b[key]:.6g} | {h[key]:.6g} |")
                 lines.append("")
-            lines += [f"- {error}" for error in case["failures"]]
+        lines.append("</details>")
         path.with_suffix(".md").write_text("\n".join(lines).rstrip() + "\n", encoding="utf-8")
     records.sort(key=lambda r: r[1]["recorded_at"])
     index = [
         "# Benchmark history",
         "",
-        (
-            "Versioned measurements from fixed regression fixtures. Failed records remain visible. "
-            "Release candidates and same-binary references are explicitly labelled."
-        ),
+        "Open a record for its timing plot, quality gates and raw samples.",
         "",
-        (
-            "Compare base/candidate measurements within each run. Different machines, suite "
-            "versions or settings cannot establish an absolute performance trend. Raw JSON "
-            "retains every measured sample and source/native identity."
-        ),
+        "Compare times within a run. A REFERENCE compares one source revision to itself.",
         "",
         "| Record | Suite | Result | Platform |",
         "| --- | --- | --- | --- |",
@@ -200,20 +232,23 @@ def render(directory):
         ),
     ]
     (directory.parent / "benchmark-history.md").write_text(
-        "\n".join(index) + "\n", encoding="utf-8"
+        "\n".join(index) + "\n",
+        encoding="utf-8",
     )
 
 
-def archive(source, label, directory):
+def archive(source: Path, label: str, directory: Path) -> None:
     """Archive a measured run without overwriting any previous release evidence.
 
     Raises:
         ValueError: The label or input is invalid.
     """
     if not re.fullmatch(r"[A-Za-z0-9][A-Za-z0-9._-]{0,63}", label):
-        raise ValueError("Use a plain version or release-candidate label")
+        msg = "Use a plain version or release-candidate label"
+        raise ValueError(msg)
     payload = source.read_bytes()
     data = json.loads(payload)
+    data.pop("runner", None)  # Early records included the CI or local hostname.
     validate(data)
     directory.mkdir(parents=True, exist_ok=True)
     path = directory / f"{label}.json"
@@ -228,7 +263,7 @@ def archive(source, label, directory):
     render(directory)
 
 
-def main():
+def main() -> None:
     """Archive a release measurement and rebuild its documentation history."""
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--input", type=Path, required=True)

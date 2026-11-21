@@ -1,3 +1,5 @@
+# Copyright (c) 2026 Kevin Marchais
+
 """Nonconvex sharp-feature regressions through the public scalar interface."""
 
 import meshers
@@ -14,8 +16,8 @@ def notched_prism(x, y, z):
 
 def test_region_metadata_reproduces_the_actual_field():
     compiled = meshers.compile_field(notched_prism)
-    planes, regions = compiled._polyhedral_regions
-    assert compiled._halfspaces is None
+    planes, regions = compiled.polyhedral_regions
+    assert compiled.halfspaces is None
     assert len(planes) == 8
     assert len(regions) == 2
     planes = np.asarray(planes)
@@ -74,11 +76,11 @@ def test_nonconvex_sharp_prism_preserves_geometry_and_quality(adapt, snap, angle
 
 def test_unsupported_nonconvex_arithmetic_keeps_scalar_behavior():
     for field in (
-        lambda x, y, z: np.minimum(x, y) + 0.1,
-        lambda x, y, z: abs(np.minimum(x, y)),
+        lambda x, y, _z: np.minimum(x, y) + 0.1,
+        lambda x, y, _z: abs(np.minimum(x, y)),
         lambda x, y, z: np.minimum(x * x + y * y + z * z - 0.1, x),
     ):
-        assert meshers.compile_field(field)._polyhedral_regions is None
+        assert meshers.compile_field(field).polyhedral_regions is None
 
 
 def test_nonconvex_route_keeps_budget_quality_and_cancellation_gates():
@@ -97,10 +99,10 @@ def test_callback_metadata_cannot_override_the_requested_geometry():
     def sphere(x, y, z):
         return x * x + y * y + z * z - 0.04
 
-    sphere._polyhedral_regions = meshers.compile_field(notched_prism)._polyhedral_regions
+    sphere.polyhedral_regions = meshers.compile_field(notched_prism).polyhedral_regions
     mesh = meshers.generate(
         sphere,
-        compile=False,
+        compile_expression=False,
         cells=16,
         bounds=(-0.5, 0.5) * 3,
         geometry_tolerance=0.005,
@@ -114,7 +116,8 @@ def test_callback_metadata_cannot_override_the_requested_geometry():
 def test_periodic_reentrant_normal_jump_uses_verified_region_traces():
     def field(x, y, z):
         return np.maximum(
-            np.maximum(abs(x) + 0.3 * abs(z) - 0.35, abs(y) - 0.2), np.minimum(x - 0.05, y - 0.05)
+            np.maximum(abs(x) + 0.3 * abs(z) - 0.35, abs(y) - 0.2),
+            np.minimum(x - 0.05, y - 0.05),
         )
 
     mesh = meshers.generate(

@@ -1,0 +1,371 @@
+# Copyright (c) 2026 Kevin Marchais
+
+"""Fixed-boundary Schwarz control from research commit 9d156a29."""
+
+from __future__ import annotations
+
+import itertools
+import time
+from typing import TYPE_CHECKING
+
+import numpy as np
+import pyvista as pv
+from numpy.typing import NDArray
+from scipy.optimize import minimize
+
+if TYPE_CHECKING:
+    from collections.abc import Callable
+
+Coordinates = NDArray[np.float64]
+Indices = NDArray[np.intp]
+
+INTERIOR_FACE_INCIDENCE = 2
+MIN_QUALITY = 0.1
+VOLUME_ATOL = 1e-12
+FACES = np.array(((1, 2, 3), (0, 3, 2), (0, 1, 3), (0, 2, 1)))
+
+
+def quality(points: Coordinates, cells: Indices) -> Coordinates:
+    """Return the normalized MMG quality on each linear tetrahedron."""
+    coordinates = points[cells]
+    volume = abs(np.linalg.det(coordinates[:, 1:] - coordinates[:, :1])) / 6
+    squared = sum(
+        ((coordinates[:, first] - coordinates[:, second]) ** 2).sum(axis=1)
+        for first, second in itertools.combinations(range(4), 2)
+    )
+    return (12 * (3 * volume) ** (2 / 3) / squared) ** 1.5
+
+
+def bounds(triangles: Coordinates) -> tuple[Coordinates, Coordinates]:
+    """Return the quality ceiling imposed by each fixed opposite face."""
+    area = (
+        np.linalg.norm(
+            np.cross(triangles[:, 1] - triangles[:, 0], triangles[:, 2] - triangles[:, 0]),
+            axis=1,
+        )
+        / 2
+    )
+    squared_edges = np.sum((triangles[:, 0] - triangles[:, 1]) ** 2, axis=1)
+    for first, second in ((1, 2), (2, 0)):
+        squared_edges += np.sum((triangles[:, first] - triangles[:, second]) ** 2, axis=1)
+    return 4 * np.sqrt(3) * area / squared_edges, squared_edges
+
+
+def _opposite_faces(cells: Indices, node: int, target: float) -> tuple[Indices, Indices, Indices]:
+    selected = np.flatnonzero((cells == node).any(axis=1))
+    if not len(selected) or not target > 0:
+        msg = "Relocation needs an incident tetrahedron and a positive quality target"
+        raise ValueError(msg)
+    star = cells[selected]
+    positions = np.argmax(star == node, axis=1)
+    return (
+        star,
+        positions,
+        np.array([
+            cell[np.arange(4) != position] for cell, position in zip(star, positions, strict=True)
+        ]),
+    )
+
+
+def _quality_constraint(
+    coordinates: Coordinates,
+    positions: Indices,
+    constraint_target: float,
+) -> Callable[[Coordinates], Coordinates]:
+    initial_squared = sum(
+        np.sum((coordinates[:, first] - coordinates[:, second]) ** 2, axis=1)
+        for first in range(4)
+        for second in range(first)
+    )
+
+    def constraints(displacement: Coordinates) -> Coordinates:
+        moved = coordinates.copy()
+        moved[np.arange(len(coordinates)), positions] = displacement
+        determinants = np.linalg.det(moved[:, 1:] - moved[:, :1])
+        squared = sum(
+            np.sum((moved[:, first] - moved[:, second]) ** 2, axis=1)
+            for first in range(4)
+            for second in range(first)
+        )
+        return (
+            determinants / initial_squared**1.5
+            - constraint_target / (12 * np.sqrt(3)) * (squared / initial_squared) ** 1.5
+        )
+
+    return constraints
+
+
+def _optimize_star(
+    points: Coordinates,
+    star: Indices,
+    positions: Indices,
+    node: int,
+    target: float,
+) -> tuple[Coordinates, dict[str, object]]:
+    origin = points[node].copy()
+    scale = float(np.linalg.norm(points[np.unique(star)] - origin, axis=1).max())
+    if not scale > 0:
+        msg = "Degenerate vertex star"
+        raise ValueError(msg)
+    constraints = _quality_constraint((points[star] - origin) / scale, positions, target + 1e-9)
+    started = time.monotonic()
+    result = minimize(
+        lambda displacement: np.dot(displacement, displacement),
+        np.zeros(3),
+        method="SLSQP",
+        constraints={"type": "ineq", "fun": constraints},
+        options={"maxiter": 300, "ftol": 1e-13},
+    )
+    candidate = origin + scale * result.x
+    moved = points.copy()
+    moved[node] = candidate
+    minimum_quality = quality(moved, star).min()
+    determinants = np.linalg.det(moved[star[:, 1:]] - moved[star[:, :1]])
+    attained = bool(determinants.min() > 0 and minimum_quality >= target)
+    record = {
+        "status": "feasible-numerically" if attained else "not-found-not-impossibility-proof",
+        "target_attained": attained,
+        "solver_success": bool(result.success),
+        "solver_message": str(result.message),
+        "iterations": int(result.nit),
+        "seconds": time.monotonic() - started,
+        "final_minimum_quality": float(minimum_quality),
+        "maximum_move": float(np.linalg.norm(candidate - origin)),
+        "minimum_normalized_constraint": float(constraints(result.x).min()),
+        "candidate_coordinates": candidate.tolist(),
+        "minimum_signed_determinant": float(determinants.min()),
+    }
+    return candidate, record
+
+
+def relocate_star(
+    points: Coordinates,
+    cells: Indices,
+    node: int,
+    target: float = MIN_QUALITY,
+) -> tuple[Coordinates, dict[str, object]]:
+    """Return the candidate vertex and diagnostics for its incident tetrahedra.
+
+    Requires a nondegenerate incident tetrahedron star and a positive quality target.
+    """
+    star, positions, fixed = _opposite_faces(cells, node, target)
+    ceiling, _ = bounds(points[fixed])
+    initial = quality(points, star)
+    row = {
+        "node": int(node),
+        "incident_tets": len(star),
+        "quality_target": target,
+        "initial_minimum_quality": float(initial.min()),
+        "fixed_opposite_face_upper_bound": float(ceiling.min()),
+        "target_attained": False,
+        "status": "fixed-face-obstructed",
+        "numerical_quality_guard": 1e-9,
+    }
+    if ceiling.min() < target:
+        return points[node].copy(), row
+    candidate, outcome = _optimize_star(points, star, positions, node, target)
+    return candidate, {**row, **outcome}
+
+
+def _conflict_example(
+    points: Coordinates,
+    cells: Indices,
+    face: Indices,
+    indices: Indices,
+    orientation_sum: int,
+) -> dict[str, object]:
+    triangle = points[face]
+    normal = np.cross(triangle[1] - triangle[0], triangle[2] - triangle[0])
+    opposite = [int(next(iter(set(cells[index]) - set(face)))) for index in indices]
+    distances = [float(np.dot(points[node] - triangle[0], normal)) for node in opposite]
+    return {
+        "face": face.tolist(),
+        "incident_elements": indices.tolist(),
+        "orientation_sum": int(orientation_sum),
+        "opposite_vertices": opposite,
+        "signed_plane_products": distances,
+        "same_physical_side": bool(distances[0] * distances[1] > 0),
+    }
+
+
+def _face_incidence(
+    points: Coordinates,
+    cells: Indices,
+) -> tuple[Indices, Indices, int, list[dict[str, object]]]:
+    oriented = cells[:, FACES].reshape(-1, 3)
+    inversions = (oriented[:, 0] > oriented[:, 1]).astype(int)
+    inversions += oriented[:, 0] > oriented[:, 2]
+    inversions += oriented[:, 1] > oriented[:, 2]
+    signs = np.where(inversions % 2, -1, 1)
+    sorted_faces = np.sort(oriented, axis=1)
+    ordering = np.lexsort(sorted_faces[:, ::-1].T)
+    ordered = sorted_faces[ordering]
+    starts = np.r_[0, np.flatnonzero((ordered[1:] != ordered[:-1]).any(axis=1)) + 1]
+    counts = np.diff(np.r_[starts, len(ordered)])
+    sums = np.add.reduceat(signs[ordering], starts)
+    unique = ordered[starts]
+    conflicts = np.flatnonzero((counts == INTERIOR_FACE_INCIDENCE) & (sums != 0))
+    examples = []
+    for group in conflicts[:10]:
+        indices = ordering[starts[group] : starts[group] + counts[group]] // 4
+        examples.append(_conflict_example(points, cells, unique[group], indices, sums[group]))
+    return unique, counts, len(conflicts), examples
+
+
+def audit(points: Coordinates, cells: Indices, surface: Indices) -> dict[str, object]:
+    """Return the facet incidence and orientation checks for the input mesh.
+
+    Raises:
+        ValueError: A tetrahedron has repeated or out-of-range point indices.
+    """
+    cells = cells[:, :4]
+    surface = surface[:, :3]
+    if cells.min() < 0 or cells.max() >= len(points):
+        msg = "Tetrahedron point index out of range"
+        raise ValueError(msg)
+    if (np.diff(np.sort(cells, axis=1), axis=1) == 0).any():
+        msg = "Tetrahedron contains repeated vertices"
+        raise ValueError(msg)
+    unique, counts, n_conflicts, examples = _face_incidence(points, cells)
+    extracted = {tuple(map(int, face)) for face in unique[counts == 1]}
+    provided = {tuple(sorted(map(int, face))) for face in surface}
+    determinants = np.linalg.det(points[cells[:, 1:]] - points[cells[:, :1]])
+    duplicate_cells = len(cells) - len(np.unique(np.sort(cells, axis=1), axis=0))
+    duplicate_surface = len(surface) - len(provided)
+    matched = extracted == provided
+    coherent = (
+        not n_conflicts
+        and not (counts > INTERIOR_FACE_INCIDENCE).any()
+        and not duplicate_cells
+        and not duplicate_surface
+        and matched
+    )
+    return {
+        "nodes": len(points),
+        "elements": len(cells),
+        "unique_faces": len(unique),
+        "interior_faces": int((counts == INTERIOR_FACE_INCIDENCE).sum()),
+        "extracted_boundary_faces": len(extracted),
+        "same_orientation_shared_faces": n_conflicts,
+        "nonmanifold_faces": int((counts > INTERIOR_FACE_INCIDENCE).sum()),
+        "duplicate_cells": duplicate_cells,
+        "duplicate_surface_faces": duplicate_surface,
+        "provided_boundary_matches_extraction": matched,
+        "missing_provided_faces": len(extracted - provided),
+        "extra_provided_faces": len(provided - extracted),
+        "nonpositive_corner_determinants": int((determinants <= 0).sum()),
+        "minimum_corner_determinant": float(determinants.min()),
+        "oriented_facet_consistency_passed": bool(coherent),
+        "conflict_examples": examples,
+        "scope": "Oriented corner-face incidence and same-side neighbor checks",
+    }
+
+
+def check_repair(
+    points: Coordinates,
+    moved: Coordinates,
+    cells: Indices,
+    boundary: NDArray[np.bool_],
+) -> tuple[float, float]:
+    """Check that relocation preserves the boundary and material volume.
+
+    Returns:
+        Signed volume change and smallest final signed determinant.
+
+    Raises:
+        ValueError: A repair reversed an element or changed the volume.
+    """
+    np.testing.assert_array_equal(moved[boundary], points[boundary])
+    old_determinants = np.linalg.det(points[cells[:, 1:]] - points[cells[:, :1]])
+    new_determinants = np.linalg.det(moved[cells[:, 1:]] - moved[cells[:, :1]])
+    if not np.all(new_determinants > 0):
+        msg = "Repair produced a nonpositive or nonfinite determinant"
+        raise ValueError(msg)
+    volume_difference = float((new_determinants.sum() - old_determinants.sum()) / 6)
+    if not abs(volume_difference) < VOLUME_ATOL:
+        msg = f"Repair changed signed volume by {volume_difference}"
+        raise ValueError(msg)
+    return volume_difference, float(new_determinants.min())
+
+
+def repair(
+    points: Coordinates,
+    cells: Indices,
+    surface: Indices,
+    *,
+    maximum_attempts: int = 400,
+) -> tuple[Coordinates, dict[str, object]]:
+    """Return the repaired points and the diagnostics from the two-sweep repair.
+
+    Raises:
+        ValueError: The mesh fails a topology, repair progress, orientation or volume check.
+    """
+    if not audit(points, cells, surface)["oriented_facet_consistency_passed"]:
+        msg = "Source fails oriented facet consistency; relocation is unsupported"
+        raise ValueError(msg)
+    moved = points.copy()
+    boundary = np.zeros(len(points), dtype=bool)
+    boundary[np.unique(surface)] = True
+    attempts, accepted = [], []
+    initial = quality(moved, cells)
+    measured = initial.copy()
+    for sweep in range(2):
+        accepted_before = len(accepted)
+        for element in np.argsort(measured):
+            if measured[element] >= MIN_QUALITY or len(attempts) >= maximum_attempts:
+                continue
+            free = cells[element][~boundary[cells[element]]]
+            if not len(free):
+                attempts.append({
+                    "element": int(element),
+                    "sweep": sweep,
+                    "status": "all-boundary",
+                    "target_attained": False,
+                })
+            for node in free[: maximum_attempts - len(attempts)]:
+                candidate, record = relocate_star(moved, cells, int(node), target=0.100001)
+                record.update(element=int(element), sweep=sweep)
+                attempts.append(record)
+                if record["target_attained"]:
+                    bad_before = int((measured < MIN_QUALITY).sum())
+                    moved[node] = candidate
+                    measured = quality(moved, cells)
+                    if int((measured < MIN_QUALITY).sum()) >= bad_before:
+                        msg = "Accepted relocation did not reduce the number of poor elements"
+                        raise ValueError(msg)
+                    accepted.append(int(node))
+                    break
+        if (
+            not (measured < MIN_QUALITY).any()
+            or len(accepted) == accepted_before
+            or len(attempts) >= maximum_attempts
+        ):
+            break
+    volume_difference, minimum_determinant = check_repair(points, moved, cells, boundary)
+    return moved, {
+        "initial_bad_elements": int((initial < MIN_QUALITY).sum()),
+        "remaining_bad_elements": int((measured < MIN_QUALITY).sum()),
+        "initial_minimum_quality": float(initial.min()),
+        "final_minimum_quality": float(measured.min()),
+        "accepted_moves": len(accepted),
+        "moved_vertices": len(set(accepted)),
+        "attempts": attempts,
+        "maximum_attempts": maximum_attempts,
+        "maximum_sweeps": 2,
+        "boundary_coordinates_unchanged": True,
+        "signed_volume_difference": volume_difference,
+        "minimum_signed_determinant": minimum_determinant,
+    }
+
+
+def repaired_grid(grid: pv.UnstructuredGrid, row: dict[str, object]) -> pv.UnstructuredGrid:
+    """Return the reoriented volume after the frozen interior relocation control."""
+    skin = grid.extract_surface(pass_pointid=True, algorithm="dataset_surface")
+    faces = skin.point_data["vtkOriginalPointIds"][skin.regular_faces]
+    cells = np.array(grid.cells_dict[np.uint8(pv.CellType.TETRA)], dtype=np.intp, copy=True)
+    points = np.asarray(grid.points, dtype=float)
+    det = np.linalg.det(points[cells[:, 1:]] - points[cells[:, :1]])
+    reverse = det < 0
+    cells[reverse, :2] = cells[reverse, :2][:, ::-1]
+    moved, row["repair"] = repair(points, cells, faces)
+    return pv.UnstructuredGrid({pv.CellType.TETRA: cells}, moved)

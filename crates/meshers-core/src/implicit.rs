@@ -779,7 +779,7 @@ fn generate_internal<F: ScalarField>(
     }
     let result = build(&context).and_then(|mut output| {
         output.diagnostics.refined_lattice_edges = refined_lattice_edges;
-        if options.order == 2 && !output.mesh.tets.is_empty() {
+        if options.order == 2 {
             let mut elements = crate::quadratic::elevate(
                 &output.mesh,
                 &output.boundary_tags,
@@ -1006,6 +1006,13 @@ fn finish_with_constraints<F: ScalarField>(
     }
     let mut tags = Vec::new();
     let mut error: f64 = 0.;
+    let mut worst_point = [0.; 3];
+    let mut observe_distance = |point: Point, distance: f64| {
+        if distance > error {
+            error = distance;
+            worst_point = point;
+        }
+    };
     let mut samples = Vec::new();
     let mut estimates = Vec::with_capacity(FACET_SAMPLES);
     let [lo, hi] = g.bounds();
@@ -1077,7 +1084,7 @@ fn finish_with_constraints<F: ScalarField>(
                             g.bounds(),
                         )
                     };
-                    error = error.max(distance);
+                    observe_distance(sample.0, distance);
                 } else if g.batched() {
                     samples.push(sample);
                 } else {
@@ -1085,21 +1092,30 @@ fn finish_with_constraints<F: ScalarField>(
                 }
             }
             if !estimates.is_empty() {
-                error = error.max(facet_distance(p, &estimates));
+                let (distance, at) = facet_distance(p, &estimates);
+                observe_distance(at, distance);
                 estimates.clear();
             }
+            // Whole facets only: the batch bounds each facet by its vertices.
             if samples.len() >= 4096 {
-                error = error.max(distance_batch(g, &samples)?);
+                distance_batch(g, &samples, &mut observe_distance)?;
                 samples.clear();
             }
         }
     }
     if !samples.is_empty() {
-        error = error.max(distance_batch(g, &samples)?);
+        distance_batch(g, &samples, &mut observe_distance)?;
     }
     if !nonmanifold_vertices(&mesh.surface, mesh.points.len()).is_empty() {
         return Err("solid boundary is not a closed two-manifold at its edges or vertices".into());
     }
+    if !error.is_finite() || error > g.options.geometry_tolerance {
+        return Err(format!(
+            "sampled geometry error {error:e} exceeds tolerance {:e}; increase resolution or budget (worst sample at {worst_point:?})",
+            g.options.geometry_tolerance
+        ));
+    }
+    // After the surface check: a coarse concave wall also leaves samples outside.
     if constraints.is_none()
         && let outside = elements_outside(&mesh, g)?
         && let Some(&(_, distance, at)) = outside.iter().max_by(|a, b| a.1.total_cmp(&b.1))
@@ -1109,12 +1125,6 @@ fn finish_with_constraints<F: ScalarField>(
             "{count} element(s) lie outside the solid, by up to {distance:e} near {at:?}: \
              two surfaces are closer than a cell there and the mesh bridges them; \
              increase resolution"
-        ));
-    }
-    if !error.is_finite() || error > g.options.geometry_tolerance {
-        return Err(format!(
-            "sampled geometry error {error:e} exceeds tolerance {:e}; increase resolution or budget",
-            g.options.geometry_tolerance
         ));
     }
     let pairs = periodic_pairs(&mesh.points, &mesh.surface, g.bounds(), g.options.periodic)?;
@@ -2256,7 +2266,8 @@ fn snap_batch<F: ScalarField>(
 fn distance_batch<F: ScalarField>(
     g: &Context<F>,
     samples: &[(Point, [bool; 3])],
-) -> Result<f64, String> {
+    observe: &mut impl FnMut(Point, f64),
+) -> Result<(), String> {
     g.check()?;
     let points: Vec<Point> = samples.iter().map(|s| s.0).collect();
     let values = g.values(&points);
@@ -2270,15 +2281,16 @@ fn distance_batch<F: ScalarField>(
             wall_distance(residual, grad, *locked)
         })
         .collect();
-    let error = estimates
+    for (d, p) in estimates
         .as_chunks::<FACET_SAMPLES>()
         .0
         .iter()
         .zip(points.as_chunks::<FACET_SAMPLES>().0)
-        .map(|(d, p)| facet_distance([p[0], p[1], p[2]], d))
-        .fold(0_f64, f64::max);
-    g.check()?;
-    Ok(error)
+    {
+        let (distance, at) = facet_distance([p[0], p[1], p[2]], d);
+        observe(at, distance);
+    }
+    g.check()
 }
 
 /// Elements with the centroid or an edge midpoint outside the solid by more
@@ -2451,26 +2463,34 @@ fn remove_bridging_elements<F: ScalarField>(
 /// Samples per boundary facet: three vertices, the centroid and three edge midpoints.
 const FACET_SAMPLES: usize = 7;
 
-/// Largest wall distance over one facet's samples, vertices first.
+/// Largest wall distance over one facet's samples, vertices first, and the
+/// sample that reaches it.
 ///
 /// `|f| / |grad f|` overestimates without bound near a critical point of the
 /// field. A sample of the facet is never farther from the wall than a vertex
 /// of that facet plus that vertex's own distance, which bounds the estimate.
-fn facet_distance(vertices: [Point; 3], estimates: &[f64]) -> f64 {
+fn facet_distance(vertices: [Point; 3], estimates: &[f64]) -> (f64, Point) {
     let centroid: Point =
         std::array::from_fn(|a| (vertices[0][a] + vertices[1][a] + vertices[2][a]) / 3.);
     let midpoint = |i: usize, j: usize| -> Point {
         std::array::from_fn(|a| (vertices[i][a] + vertices[j][a]) / 2.)
     };
     let interior = [centroid, midpoint(0, 1), midpoint(1, 2), midpoint(2, 0)];
-    let mut error = estimates[..3].iter().copied().fold(0_f64, f64::max);
+    let mut worst = (0_f64, vertices[0]);
+    for (&estimate, vertex) in estimates[..3].iter().zip(vertices) {
+        if estimate > worst.0 {
+            worst = (estimate, vertex);
+        }
+    }
     for (&estimate, sample) in estimates[3..].iter().zip(interior) {
         let bound = (0..3)
             .map(|i| norm(sub(vertices[i], sample)) + estimates[i])
             .fold(f64::INFINITY, f64::min);
-        error = error.max(estimate.min(bound));
+        if estimate.min(bound) > worst.0 {
+            worst = (estimate.min(bound), sample);
+        }
     }
-    error
+    worst
 }
 
 #[cfg(test)]

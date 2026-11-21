@@ -1,12 +1,18 @@
+# Copyright (c) 2026 Kevin Marchais
+
 """Generate a cylinder or torus TPMS with retained curves and matching ends."""
 
 import argparse
 
 import meshers
 import numpy as np
+from numpy.typing import NDArray
+
+Points = NDArray[np.float64]
 
 
-def gyroid(x, y, z):
+def gyroid(x: Points, y: Points, z: Points) -> Points:
+    """Return the phase-shifted gyroid field."""
     a, b, c = (
         2 * np.pi * (x / 0.75 + 0.125),
         2 * np.pi * (y / 0.75 + 0.125),
@@ -15,7 +21,8 @@ def gyroid(x, y, z):
     return np.sin(a) * np.cos(b) + np.sin(b) * np.cos(c) + np.sin(c) * np.cos(a)
 
 
-def main():
+def main() -> None:
+    """Generate and export the requested curved TPMS mesh."""
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("kind", choices=["cylinder", "torus"])
     parser.add_argument("output", help="Output .vtkhdf filename")
@@ -31,7 +38,7 @@ def main():
         radius = 9 / np.pi
         angle = np.pi / 3
 
-        def mapping(x, y, z):
+        def mapping(x: Points, y: Points, z: Points) -> tuple[Points, Points, Points]:
             return (radius + x) * np.cos(z / radius), (radius + x) * np.sin(z / radius), -y
 
         rotation = np.eye(4)
