@@ -316,7 +316,8 @@ def test_native_field_with_python_gradient_uses_calling_thread():
 @pytest.mark.parametrize("order", [1, 2])
 def test_expected_components_exposes_missing_island_in_nonempty_mesh(order):
     def solid(x, y, z):
-        sphere = (x - 0.125) ** 2 + (y - 0.125) ** 2 + (z - 0.25) ** 2 - 0.06**2
+        # Clear of every lattice edge at four cells, so edge sampling cannot find it.
+        sphere = (x - 0.06) ** 2 + (y - 0.125) ** 2 + (z - 0.19) ** 2 - 0.045**2
         return np.minimum(0.75 - x, sphere)
 
     opts = {"order": order, "optimize_passes": 0, "snap": 0, "geometry_tolerance": 0.02}
@@ -332,7 +333,8 @@ def test_expected_components_exposes_lost_thin_slab():
 
     opts = {"expected_components": 1, "optimize_passes": 0, "snap": 0, "geometry_tolerance": 0.02}
     with pytest.raises(meshers.MeshingError, match="Expected 1 face-connected components, found 0"):
-        meshers.generate(slab, cells=4, **opts)
+        # A loose tolerance keeps narrow-feature refinement from finding the slab.
+        meshers.generate(slab, cells=4, **{**opts, "geometry_tolerance": 1.0})
     fine = meshers.generate(slab, cells=24, **opts)
     assert fine.diagnostics["volume"] == pytest.approx(0.05)
 

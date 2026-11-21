@@ -127,6 +127,8 @@ struct Tets<'g, G: Geometry> {
     period: [Option<f64>; 3],
     /// Wall vertices inserted short of the surface, still to be projected.
     pending: Vec<usize>,
+    /// Let two crossings of the wall with one box edge merge along that edge.
+    merge_corners: bool,
 }
 
 impl<'g, G: Geometry> Tets<'g, G> {
@@ -197,6 +199,7 @@ impl<'g, G: Geometry> Tets<'g, G> {
             vb: vec![Vec::new(); n],
             period,
             pending: Vec::new(),
+            merge_corners: false,
         };
         for (t, tet) in s.tets.iter().enumerate() {
             for &v in tet {
@@ -243,6 +246,39 @@ impl<'g, G: Geometry> Tets<'g, G> {
             })
             .collect();
         s
+    }
+
+    /// Whether moving `v` to `q` keeps every incident tetrahedron inside one
+    /// periodic cell. The torus mesh stays valid when a tetrahedron straddles a
+    /// periodic plane, but unfolding needs that plane resolved by faces.
+    fn keeps_cells(&self, v: usize, q: Point) -> bool {
+        self.vt[v].iter().all(|&t| {
+            self.in_one_cell(
+                self.tets[t].map(|i| if i == v { Some(q) } else { None }),
+                self.tets[t],
+                v,
+            )
+        })
+    }
+
+    fn in_one_cell(&self, moved: [Option<Point>; 4], tet: [usize; 4], v: usize) -> bool {
+        let [lo, hi] = self.g.bounds();
+        let raw: [Point; 4] = std::array::from_fn(|k| moved[k].unwrap_or(self.points[tet[k]]));
+        let p = self.local(raw);
+        (0..3).all(|a| {
+            let Some(l) = self.period[a] else { return true };
+            let c = p.iter().map(|q| q[a]).sum::<f64>() / 4.;
+            let shift = ((c - lo[a]) / l).floor() * l;
+            let eps = 1e-9 * l;
+            (0..4).all(|k| {
+                let x = p[k][a] - shift;
+                if moved[k].is_some() && tet[k] == v && (self.masks[v] >> (2 + 2 * a)) & 3 == 0 {
+                    x > lo[a] && x < hi[a]
+                } else {
+                    x >= lo[a] - eps && x <= hi[a] + eps
+                }
+            })
+        })
     }
 
     /// Minimal-image displacement from `a` to `b`.
@@ -725,6 +761,20 @@ impl<'g, G: Geometry> Tets<'g, G> {
                     [a, b].iter().all(|c| {
                         mmg(self.local(c.map(|i| if i == usize::MAX { p } else { self.points[i] })))
                             >= floor
+                            && (self.in_one_cell(
+                                    c.map(|i| (i == usize::MAX).then_some(p)),
+                                    c.map(|i| if i == usize::MAX { u } else { i }),
+                                    usize::MAX,
+                                )
+                                // A wall midpoint off the cap curve must stay strictly inside.
+                                && (0..3).all(|a| {
+                                    self.period[a].is_none()
+                                        || (mask >> (2 + 2 * a)) & 3 != 0
+                                        || {
+                                            let [lo, hi] = self.g.bounds();
+                                            p[a] > lo[a] && p[a] < hi[a]
+                                        }
+                                }))
                     })
                 });
                 if valid {
@@ -954,15 +1004,23 @@ impl<'g, G: Geometry> Tets<'g, G> {
             && self.feature_mask(u) == self.feature_mask(v)
             && self.feature_mask(u).count_ones() >= 2
             && self.length(u, v) <= roundoff;
-        if (self.frozen[u] && !same_corner) || mu & !mv != 0 || mu.count_ones() >= 3 {
+        // Defeaturing: both ends are crossings of the wall with the same box edge.
+        let merging = self.merge_corners && mu == mv && mu.count_ones() >= 3;
+        if !merging && ((self.frozen[u] && !same_corner) || mu.count_ones() >= 3) || mu & !mv != 0 {
             return false;
         }
         let bfaces = self.edge_faces(u, v);
-        if mu != 0 && self.edge_mask(&bfaces) != mu {
+        if merging && self.edge_mask(&bfaces) & !WALL != mu & !WALL {
+            return false;
+        }
+        if mu != 0 && self.edge_mask(&bfaces) != mu && !merging {
             // A boundary vertex may only slide along its own patch or curve.
             return false;
         }
         if mu == 0 && !bfaces.is_empty() {
+            return false;
+        }
+        if self.folds_into_plane(u, v) || self.flattens_onto_plane(u, v) {
             return false;
         }
         let shell = self.shell(u, v);
@@ -987,6 +1045,24 @@ impl<'g, G: Geometry> Tets<'g, G> {
         if common != ring {
             return false;
         }
+        // Wall facets of `u` that land on a wall facet of `v`: the two sides
+        // of a tongue one element thick, which the merge removes together.
+        let mut pinched: Vec<Face> = Vec::new();
+        if merging {
+            for &f in &self.vb[u] {
+                let image = sorted(f.map(|i| if i == u { v } else { i }));
+                if f.contains(&v) || !self.faces.contains_key(&image) {
+                    continue;
+                }
+                let between = shell
+                    .iter()
+                    .any(|&t| f.iter().all(|w| self.tets[t].contains(w)));
+                if self.faces[&f] != 0 || self.faces[&image] != 0 || !between {
+                    return false;
+                }
+                pinched.push(f);
+            }
+        }
         if mu != 0 {
             // Surface link condition on the boundary triangulation.
             let bu: Vec<usize> = self.vb[u]
@@ -1010,7 +1086,9 @@ impl<'g, G: Geometry> Tets<'g, G> {
                 .copied()
                 .filter(|&w| w != u && w != v)
                 .collect();
+            opposite.extend(pinched.iter().flatten().copied().filter(|&w| w != u));
             opposite.sort_unstable();
+            opposite.dedup();
             if common != opposite {
                 return false;
             }
@@ -1031,10 +1109,17 @@ impl<'g, G: Geometry> Tets<'g, G> {
             if mmg(q) < before {
                 return false;
             }
+            if !self.in_one_cell(
+                self.tets[t].map(|i| (i == u).then_some(self.points[v])),
+                self.tets[t],
+                usize::MAX,
+            ) {
+                return false;
+            }
         }
         if mu & WALL != 0 && self.g.halfspaces().is_none() {
             for f in &self.vb[u] {
-                if f.contains(&v) || self.faces[f] != 0 {
+                if f.contains(&v) || self.faces[f] != 0 || pinched.contains(f) {
                     continue;
                 }
                 let [a, b] = [f[0], f[1], f[2]]
@@ -1068,7 +1153,7 @@ impl<'g, G: Geometry> Tets<'g, G> {
         }
         if let Some(tolerance) = tolerance {
             for &f in &self.vb[u] {
-                if f.contains(&v) {
+                if f.contains(&v) || pinched.contains(&f) {
                     continue;
                 }
                 let features = self.constraint_faces.as_ref().map_or(0, |faces| faces[&f]);
@@ -1089,6 +1174,11 @@ impl<'g, G: Geometry> Tets<'g, G> {
             self.remove_face(f);
         }
         for f in std::mem::take(&mut self.vb[u]) {
+            if pinched.contains(&f) {
+                self.remove_face(f);
+                self.remove_face(sorted(f.map(|i| if i == u { v } else { i })));
+                continue;
+            }
             let features = self.constraint_faces.as_ref().map_or(0, |faces| faces[&f]);
             let label = self.remove_face(f).unwrap_or(0);
             self.add_feature_face(f.map(|i| if i == u { v } else { i }), label, features);
@@ -1099,6 +1189,51 @@ impl<'g, G: Geometry> Tets<'g, G> {
         }
         self.refresh(v);
         true
+    }
+
+    /// Whether `v` and the centroids of its wall facets lie within
+    /// `tolerance` of the wall, to first order.
+    fn near_wall(&self, v: usize, tolerance: f64) -> bool {
+        self.distance(self.points[v], [false; 3]) <= tolerance
+            && self.vb[v].iter().all(|f| {
+                let p = self.local(f.map(|n| self.points[n]));
+                let centre = std::array::from_fn(|a| (p[0][a] + p[1][a] + p[2][a]) / 3.);
+                self.faces[f] != 0 || self.distance(centre, [false; 3]) <= tolerance
+            })
+    }
+
+    /// Whether collapsing `u` onto `v` lays a boundary facet of `u` entirely
+    /// in a box plane other than its own, where it would read as a cap.
+    fn folds_into_plane(&self, u: usize, v: usize) -> bool {
+        self.vb[u].iter().any(|f| {
+            if f.contains(&v) {
+                return false;
+            }
+            let common = f
+                .iter()
+                .map(|&w| self.masks[if w == u { v } else { w }])
+                .fold(u8::MAX, |a, b| a & b);
+            let label = self.faces[f];
+            let own = if label == 0 { 0 } else { 1 << label };
+            common & !WALL & !own != 0
+        })
+    }
+
+    /// Geometric form of `folds_into_plane`: a wall facet of `u` whose three
+    /// corners would all lie on one periodic plane reads as an unmatched cap.
+    fn flattens_onto_plane(&self, u: usize, v: usize) -> bool {
+        let [lo, hi] = self.g.bounds();
+        self.vb[u].iter().any(|f| {
+            !f.contains(&v)
+                && self.faces[f] == 0
+                && (0..3).any(|a| {
+                    self.period[a].is_some()
+                        && f.iter().all(|&w| {
+                            let x = self.points[if w == u { v } else { w }][a];
+                            x == lo[a] || x == hi[a]
+                        })
+                })
+        })
     }
 
     /// Ordered ring of an interior edge's shell; None for boundary edges or odd shells.
@@ -1300,6 +1435,9 @@ impl<'g, G: Geometry> Tets<'g, G> {
             .map(|&t| mmg(self.tet_points(self.tets[t], Some((v, q)))))
             .fold(1., f64::min);
         if after <= before.min(o.quality_guard) || after <= 0. {
+            return false;
+        }
+        if !self.keeps_cells(v, q) {
             return false;
         }
         if mask & WALL != 0 && self.g.halfspaces().is_none() {
@@ -1640,13 +1778,18 @@ impl<'g, G: Geometry> Tets<'g, G> {
                 .copied()
                 .filter(|&t| mmg(self.tet_points(self.tets[t], Some((v, q)))) < floor)
                 .collect();
+            let crossing = !self.keeps_cells(v, q);
+            if blocking.is_empty() && crossing {
+                self.pending.push(v);
+                continue;
+            }
             if blocking.is_empty() {
                 changed |= self.points[v] != q;
                 self.points[v] = q;
                 self.refresh(v);
                 continue;
             }
-            if self.settle_with_cap_neighbor(v, q, guard) {
+            if !crossing && self.settle_with_cap_neighbor(v, q, guard) {
                 changed = true;
                 continue;
             }
@@ -1662,6 +1805,7 @@ impl<'g, G: Geometry> Tets<'g, G> {
                 let value = self.g.value(candidate);
                 (self.g.level(value, self.threshold) == level
                     && (value - level).abs() < 0.999 * residual
+                    && self.keeps_cells(v, candidate)
                     && self.vt[v].iter().all(|&tetrahedron| {
                         mmg(self.tet_points(self.tets[tetrahedron], Some((v, candidate)))) >= floor
                     }))
@@ -2061,6 +2205,280 @@ pub(crate) fn adapt(
     maximum: usize,
 ) -> Result<Stats, String> {
     adapt_with_polish(mesh, g, threshold, periodic, o, maximum, 0, None)
+}
+
+/// Elements below this MMG quality seed edge removals and face swaps.
+const SLIVER: f64 = 0.4;
+/// Elements below this MMG quality seed edge splits and collapses.
+const SLIVER_EDGES: f64 = 0.2;
+/// Edge lengths, in background cells, outside which a seeded edge is remeshed.
+const SLIVER_SHORT: f64 = 0.3;
+const SLIVER_LONG: f64 = 1.6;
+/// A collapse may lower the worst incident quality to this fraction; the
+/// swaps and the relocation that follow recover from the shorter edge.
+const SLIVER_KEEP: f64 = 0.3;
+/// Defeaturing folds wall vertices within this many cells of a box-edge
+/// crossing onto it.
+const SLIVER_REACH: f64 = 0.5;
+
+/// Local remeshing around poor elements with MMG's operators: collapse short
+/// edges, halve overlong ones, then remove interior edges and swap interior
+/// faces.
+///
+/// Periodic images are one vertex here, so every operation keeps opposite
+/// caps identical. `h` is the background cell size and `tolerance` bounds
+/// the wall deviation a collapse may add.
+///
+/// `defeature`, a wall deviation bound of its own, also moves the crossings
+/// of the wall with a box edge: two crossings of one edge merge, removing the
+/// tongue between them, and a crossing next to a box corner slides along its
+/// edge. A wall grazing a box edge or corner leaves an angle no conforming
+/// element can fill, so both alter the geometry. Returns the operation count
+/// and the number of such moves.
+pub(crate) fn remove_slivers(
+    mesh: &mut Mesh,
+    g: &impl Geometry,
+    threshold: f64,
+    periodic: [bool; 3],
+    h: f64,
+    tolerance: f64,
+    defeature: Option<f64>,
+) -> Result<(usize, usize), String> {
+    let mut s = Tets::new(mesh, g, threshold, periodic);
+    let mut total = 0;
+    let mut merged = 0;
+    for _ in 0..4 {
+        g.check()?;
+        let mut changed = 0;
+        let seeded = |s: &Tets<_>, limit: f64| -> Vec<(f64, [usize; 2])> {
+            let mut edges = Vec::new();
+            for t in 0..s.tets.len() {
+                if s.alive[t] && mmg(s.tet_points(s.tets[t], None)) < limit {
+                    let tet = s.tets[t];
+                    for i in 0..4 {
+                        for j in i + 1..4 {
+                            let edge = [tet[i].min(tet[j]), tet[i].max(tet[j])];
+                            edges.push((s.length(edge[0], edge[1]), edge));
+                        }
+                    }
+                }
+            }
+            edges.sort_by(|a, b| a.0.total_cmp(&b.0).then(a.1.cmp(&b.1)));
+            edges.dedup();
+            edges
+        };
+        // No sizing limit on what a collapse may lengthen.
+        let unbounded = vec![f64::INFINITY; s.points.len()];
+        for (length, [u, v]) in seeded(&s, SLIVER_EDGES) {
+            if length >= SLIVER_SHORT * h {
+                break;
+            }
+            for (u, v) in [(u, v), (v, u)] {
+                if s.vt[u].is_empty() || s.vt[v].is_empty() {
+                    break;
+                }
+                if s.folds_into_plane(u, v) {
+                    continue;
+                }
+                let o = Options {
+                    tolerance,
+                    quality_guard: (SLIVER_KEEP * s.worst(&s.vt[u])).clamp(1e-3, 0.99),
+                    ..Options::default()
+                };
+                if s.collapse(u, v, &unbounded, &o) {
+                    changed += 1;
+                    break;
+                }
+            }
+        }
+        if let Some(tolerance) = defeature {
+            s.merge_corners = true;
+            let o = Options {
+                tolerance,
+                quality_guard: 1e-3,
+                ..Options::default()
+            };
+            // Empty the tongue first: fold the wall vertices next to a
+            // crossing onto it.
+            for (length, [u, v]) in seeded(&s, SLIVER_EDGES) {
+                if length >= SLIVER_REACH * h {
+                    break;
+                }
+                for (u, v) in [(u, v), (v, u)] {
+                    let (mu, mv) = (s.masks[u], s.masks[v]);
+                    if s.vt[u].is_empty()
+                        || s.vt[v].is_empty()
+                        || mv & WALL == 0
+                        || mv.count_ones() < 3
+                        || mu & WALL == 0
+                        || mu == mv
+                        || mu & !mv != 0
+                        || s.folds_into_plane(u, v)
+                    {
+                        continue;
+                    }
+                    if s.collapse(u, v, &unbounded, &o) {
+                        changed += 1;
+                        break;
+                    }
+                }
+            }
+            for (_, [u, v]) in seeded(&s, SLIVER_EDGES) {
+                if s.vt[u].is_empty()
+                    || s.vt[v].is_empty()
+                    || s.masks[u] != s.masks[v]
+                    || s.masks[u] & WALL == 0
+                    || s.masks[u].count_ones() < 3
+                {
+                    continue;
+                }
+                // Meet part of the way: moving one crossing the whole length
+                // inverts its star.
+                let done = [(u, v), (v, u)].into_iter().any(|(u, v)| {
+                    let (pu, pv) = (s.points[u], s.points[v]);
+                    let d = s.delta(pv, pu);
+                    let shell = s.shell(u, v);
+                    let kept: Vec<usize> = s.vt[v]
+                        .iter()
+                        .copied()
+                        .filter(|t| !shell.contains(t))
+                        .collect();
+                    let done = [0.5, 0.25, 0.75, 0.].into_iter().any(|along| {
+                        s.points[v] = s.wrap(std::array::from_fn(|a| pv[a] + along * d[a]));
+                        s.worst(&kept) > o.quality_guard
+                            && !s.folds_into_plane(u, v)
+                            && s.collapse(u, v, &unbounded, &o)
+                    });
+                    if !done {
+                        s.points[v] = pv;
+                    }
+                    done
+                });
+                if done {
+                    changed += 1;
+                    merged += 1;
+                }
+            }
+            s.merge_corners = false;
+            let [lo, hi] = s.g.bounds();
+            // A crossing next to a box corner cannot be merged away: slide
+            // it along its box edge, staying within the tolerance of the wall.
+            let mut crossings: Vec<usize> = (0..s.tets.len())
+                .filter(|&t| s.alive[t] && mmg(s.tet_points(s.tets[t], None)) < SLIVER_EDGES)
+                .flat_map(|t| s.tets[t])
+                .filter(|&v| s.masks[v] & WALL != 0 && s.masks[v].count_ones() == 3)
+                .collect();
+            crossings.sort_unstable();
+            crossings.dedup();
+            for v in crossings {
+                let free: Vec<usize> = (0..3)
+                    .filter(|a| (s.masks[v] >> (2 + 2 * a)) & 3 == 0)
+                    .collect();
+                let [axis] = free[..] else { continue };
+                let start = s.points[v];
+                let star = s.vt[v].clone();
+                let mut best = (s.worst(&star), start);
+                for step in -8..=8 {
+                    let mut p = start;
+                    p[axis] += tolerance * f64::from(step) / 8.;
+                    // Stay between the two corners of the box edge.
+                    if p[axis] <= lo[axis] || p[axis] >= hi[axis] {
+                        continue;
+                    }
+                    s.points[v] = p;
+                    let fits = s.near_wall(v, tolerance);
+                    let q = s.worst(&star);
+                    if fits && q > 1.05 * best.0 {
+                        best = (q, s.points[v]);
+                    }
+                }
+                s.points[v] = best.1;
+                if best.1 != start {
+                    s.refresh(v);
+                    changed += 1;
+                    merged += 1;
+                }
+            }
+            // Envelope: any other wall vertex of a poor element may
+            // leave the wall by up to the tolerance, inside its box planes.
+            let mut loose: Vec<usize> = (0..s.tets.len())
+                .filter(|&t| s.alive[t] && mmg(s.tet_points(s.tets[t], None)) < SLIVER_EDGES)
+                .flat_map(|t| s.tets[t])
+                .filter(|&v| s.masks[v] & WALL != 0 && s.masks[v].count_ones() < 3)
+                .collect();
+            loose.sort_unstable();
+            loose.dedup();
+            for v in loose {
+                let start = s.points[v];
+                let star = s.vt[v].clone();
+                let mut best = (s.worst(&star), start);
+                let mut step = 0.5 * tolerance;
+                for _ in 0..4 {
+                    let centre = best.1;
+                    for axis in (0..3).filter(|a| (s.masks[v] >> (2 + 2 * a)) & 3 == 0) {
+                        for sign in [-1., 1.] {
+                            let mut p = centre;
+                            p[axis] += sign * step;
+                            // Crossing a box plane would change the caps.
+                            if p[axis] <= lo[axis] || p[axis] >= hi[axis] {
+                                continue;
+                            }
+                            s.points[v] = p;
+                            let q = s.worst(&star);
+                            if q > 1.05 * best.0 && s.near_wall(v, tolerance) {
+                                best = (q, s.points[v]);
+                            }
+                        }
+                    }
+                    if best.1 == centre {
+                        step *= 0.5;
+                    }
+                }
+                s.points[v] = best.1;
+                if best.1 != start {
+                    s.refresh(v);
+                    changed += 1;
+                    merged += 1;
+                }
+            }
+        }
+        // Off the wall the midpoint needs no projection.
+        for &(length, [u, v]) in seeded(&s, SLIVER_EDGES).iter().rev() {
+            if length <= SLIVER_LONG * h {
+                break;
+            }
+            if !s.shell(u, v).is_empty()
+                && s.edge_mask(&s.edge_faces(u, v)) & WALL == 0
+                && s.split(u, v, 0.3, false).is_some()
+            {
+                changed += 1;
+            }
+        }
+        for (_, [u, v]) in seeded(&s, SLIVER) {
+            if s.remove_edge(u, v) {
+                changed += 1;
+            }
+        }
+        for t in 0..s.tets.len() {
+            if !s.alive[t] || mmg(s.tet_points(s.tets[t], None)) >= SLIVER {
+                continue;
+            }
+            for i in 0..4 {
+                if s.alive[t] && s.swap_face(t, i) {
+                    changed += 1;
+                    break;
+                }
+            }
+        }
+        if changed == 0 {
+            break;
+        }
+        total += changed;
+    }
+    if total > 0 {
+        *mesh = s.into_mesh_with_constraints()?.0;
+    }
+    Ok((total, merged))
 }
 
 #[allow(clippy::too_many_arguments)]

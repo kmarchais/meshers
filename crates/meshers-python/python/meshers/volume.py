@@ -397,7 +397,21 @@ def generate(
     result["diagnostics"]["threads"] = route.threads
     result["diagnostics"]["evaluator"] = evaluator
     result["diagnostics"]["preparation_seconds"] = preparation_seconds
+    _warn_defeaturing(result["diagnostics"], options.get("minimum_quality", 0.0))
     return _check_components(_volume_mesh(result), expected_components)
+
+
+def _warn_defeaturing(diagnostics: dict, minimum_quality: float) -> None:
+    """Warn when sliver recovery moved wall vertices off the implicit surface."""
+    moved = diagnostics.get("defeaturing_moves", 0)
+    if moved:
+        warnings.warn(
+            f"Moved {moved} surface vertices off the implicit surface to reach "
+            f"minimum_quality={minimum_quality}; the geometry changed there, within "
+            "geometry_tolerance. Refining or shifting the periodic cell may avoid it.",
+            UserWarning,
+            stacklevel=3,
+        )
 
 
 def _volume_mesh(result: "_meshers._GeneratedVolume") -> Mesh:

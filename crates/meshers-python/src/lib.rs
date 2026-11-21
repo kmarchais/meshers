@@ -748,6 +748,18 @@ fn mesh_dict<'py>(
         "reverted_snap_vertices",
         result.diagnostics.reverted_snap_vertices,
     )?;
+    diagnostics.set_item(
+        "defeaturing_moves",
+        result.diagnostics.defeaturing_moves,
+    )?;
+    diagnostics.set_item(
+        "removed_bridging_elements",
+        result.diagnostics.removed_bridging_elements,
+    )?;
+    diagnostics.set_item(
+        "refined_lattice_edges",
+        result.diagnostics.refined_lattice_edges,
+    )?;
     diagnostics.set_item("callback_calls", callback_calls)?;
     diagnostics.set_item(
         "inserted_interior_nodes",

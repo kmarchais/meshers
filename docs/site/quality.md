@@ -22,4 +22,12 @@ Meshers checks boundary edge incidence and vertex links, and retries cuts if sna
 
 During Tet10 elevation and fitting, the development branch bisects regions where determinant bounds cannot rule out a fold. A fold or unresolved bound reduces the correction or rejects the fit. `minimum_jacobian_ratio` reports only sampled points.
 
+## Quality recovery and narrow gaps
+
+A lattice mesh below `minimum_quality` is remeshed locally: short edges collapse, long ones split, interior edges and faces swap. A mesh that already passes is returned unchanged.
+
+If that fails, a last resort trades geometry for shape around the poor elements. Two crossings of the wall with one box edge merge, a crossing next to a box corner slides along its edge, and other wall vertices may leave the wall. Vertices stay in their box planes, periodic images move alike, and the result stays within `geometry_tolerance`. `defeaturing_moves` counts these moves and `generate` emits a `UserWarning` when it is nonzero.
+
+Before cutting, lattice edges that hide a wall crossing deeper than a quarter of `geometry_tolerance` are split, so a gap or film thinner than a cell gets its own nodes. `refined_lattice_edges` counts the splits. An element left outside the solid by more than `geometry_tolerance` is removed when the boundary stays valid (`removed_bridging_elements`), otherwise the mesh is rejected.
+
 Invalid options raise `ValueError`. A failed meshing gate raises `MeshingError`. [Python API](api/python.md)

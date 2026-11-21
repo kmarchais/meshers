@@ -703,7 +703,7 @@ fn minimum_quality_gate_rejects_flat_cells_without_changing_geometry() {
     let rejected = generate(
         &|_| -1.,
         Options {
-            minimum_quality: 0.05,
+            minimum_quality: 0.1,
             ..options
         },
     );
@@ -718,7 +718,7 @@ fn minimum_quality_gate_rejects_flat_cells_without_changing_geometry() {
         &|_| -1.,
         Options {
             bounds: [[0.; 3], [1.; 3]],
-            minimum_quality: 0.05,
+            minimum_quality: 0.1,
             ..options
         },
     )
@@ -841,4 +841,274 @@ fn snapping_does_not_erase_a_sampled_small_component() {
             .iter()
             .any(|tet| tet.iter().all(|&i| mesh.points[i][0] > 0.5))
     );
+}
+
+/// Thirty dominant modes of a band-limited random field with features near
+/// one background cell: `threshold - sum a cos(tau k.x + phase)`.
+struct Spinodoid {
+    threshold: f64,
+    modes: Vec<[f64; 5]>,
+}
+
+impl Spinodoid {
+    fn load() -> Self {
+        let mut lines = include_str!("../src/testdata/spinodoid-30-modes.txt").lines();
+        let threshold = lines.next().unwrap().parse().unwrap();
+        let modes = lines
+            .map(|line| {
+                let v: Vec<f64> = line
+                    .split_whitespace()
+                    .map(|x| x.parse().unwrap())
+                    .collect();
+                [v[0], v[1], v[2], v[3], v[4]]
+            })
+            .collect();
+        Self { threshold, modes }
+    }
+}
+
+impl ScalarField for Spinodoid {
+    fn value(&self, p: Point) -> f64 {
+        self.threshold
+            - self
+                .modes
+                .iter()
+                .map(|m| m[3] * (TAU * (m[0] * p[0] + m[1] * p[1] + m[2] * p[2]) + m[4]).cos())
+                .sum::<f64>()
+    }
+    fn gradient(&self, p: Point) -> Option<Point> {
+        let mut gradient = [0.; 3];
+        for m in &self.modes {
+            let s = TAU * m[3] * (TAU * (m[0] * p[0] + m[1] * p[1] + m[2] * p[2]) + m[4]).sin();
+            for a in 0..3 {
+                gradient[a] += s * m[a];
+            }
+        }
+        Some(gradient)
+    }
+}
+
+#[test]
+fn fully_snapped_cap_triangles_stay_periodic() {
+    // Without the cap rollback: "periodic triangle mismatch on axis 1".
+    let output = generate(
+        &Spinodoid::load(),
+        Options {
+            periodic: [true; 3],
+            geometry_tolerance: 10.,
+            optimize_passes: 0,
+            ..Options::default()
+        },
+    )
+    .unwrap();
+    assert!(output.diagnostics.reverted_snap_vertices > 0);
+    assert!(output.periodic_pairs.iter().all(|pairs| !pairs.is_empty()));
+}
+
+#[test]
+fn geometry_gate_bounds_the_estimate_near_critical_points() {
+    // The first-order estimate alone reports 0.22 here, above half a cell
+    // diagonal, at a facet sample where the gradient nearly vanishes.
+    let output = generate(
+        &Spinodoid::load(),
+        Options {
+            cells: [16; 3],
+            periodic: [true; 3],
+            geometry_tolerance: 0.06,
+            optimize_passes: 1,
+            ..Options::default()
+        },
+    )
+    .unwrap();
+    assert!(output.diagnostics.maximum_sampled_surface_error <= 0.06);
+}
+
+#[test]
+fn rejected_slivers_are_remeshed_without_breaking_periodic_caps() {
+    let field = Spinodoid::load();
+    let options = Options {
+        periodic: [true; 3],
+        geometry_tolerance: 0.1,
+        ..Options::default()
+    };
+    let plain = generate(&field, options).unwrap();
+    let gated = generate(
+        &field,
+        Options {
+            minimum_quality: 0.1,
+            ..options
+        },
+    )
+    .unwrap();
+    assert!(plain.diagnostics.minimum_mmg_quality < 0.1);
+    assert!(gated.diagnostics.minimum_mmg_quality >= 0.1);
+    // Generation itself rejects caps that no longer match.
+    assert!(gated.periodic_pairs.iter().all(|pairs| !pairs.is_empty()));
+}
+
+#[test]
+fn fibre_grazing_a_box_edge_is_defeatured_within_tolerance() {
+    // A periodic fibre along x whose wall passes 0.004 from four box edges
+    // leaves there a sliver of void that no conforming element can fill.
+    let centre = 0.5 - 0.2 / 2_f64.sqrt() + 0.004;
+    let fibre = move |p: Point| {
+        let mut distance = f64::INFINITY;
+        for dy in [-1., 0., 1.] {
+            for dz in [-1., 0., 1.] {
+                distance = distance.min((p[1] - centre - dy).hypot(p[2] - centre - dz));
+            }
+        }
+        distance - 0.2
+    };
+    let options = Options {
+        bounds: [[-0.5; 3], [0.5; 3]],
+        cells: [16; 3],
+        periodic: [true; 3],
+        geometry_tolerance: 0.02,
+        ..Options::default()
+    };
+    let plain = generate(&fibre, options).unwrap();
+    let gated = generate(
+        &fibre,
+        Options {
+            minimum_quality: 0.1,
+            ..options
+        },
+    )
+    .unwrap();
+    assert!(plain.diagnostics.minimum_mmg_quality < 0.1);
+    assert_eq!(plain.diagnostics.defeaturing_moves, 0);
+    assert!(gated.diagnostics.minimum_mmg_quality >= 0.1);
+    assert!(gated.diagnostics.defeaturing_moves > 0);
+    assert!(gated.diagnostics.maximum_sampled_surface_error <= 0.02);
+    // Merged crossings leave fewer paired nodes; generation itself rejects
+    // caps that no longer match.
+    assert!(gated.periodic_pairs.iter().all(|pairs| !pairs.is_empty()));
+}
+
+#[test]
+fn a_gap_narrower_than_a_cell_is_not_bridged() {
+    // Two spheres 0.03 apart: at 12 cells lattice nodes on both sides of the
+    // gap are inside, and the elements between them would weld the spheres.
+    let spheres = |p: Point| {
+        let distance = |c: f64| (p[0] - c).hypot(p[1]).hypot(p[2]) - 0.2;
+        distance(-0.215).min(distance(0.215))
+    };
+    let output = generate(
+        &spheres,
+        Options {
+            bounds: [[-0.5; 3], [0.5; 3]],
+            cells: [12; 3],
+            geometry_tolerance: 0.01,
+            minimum_quality: 0.1,
+            ..Options::default()
+        },
+    )
+    .unwrap();
+    assert!(output.diagnostics.refined_lattice_edges > 0);
+    assert!(output.diagnostics.minimum_mmg_quality >= 0.1);
+    assert!(output.diagnostics.maximum_sampled_surface_error <= 0.01);
+    // No element is left with a vertex in each sphere.
+    assert!(output.mesh.tets.iter().all(|t| {
+        t.iter().all(|&i| output.mesh.points[i][0] <= 0.)
+            || t.iter().all(|&i| output.mesh.points[i][0] >= 0.)
+    }));
+}
+
+#[test]
+fn a_film_thinner_than_a_cell_is_meshed() {
+    // The matrix around two spheres 0.03 apart keeps a film between them
+    // that no node of a 12-cell lattice samples.
+    let matrix = |p: Point| {
+        let distance = |c: f64| (p[0] - c).hypot(p[1]).hypot(p[2]) - 0.2;
+        -distance(-0.215).min(distance(0.215))
+    };
+    let output = generate(
+        &matrix,
+        Options {
+            bounds: [[-0.5; 3], [0.5; 3]],
+            cells: [12; 3],
+            geometry_tolerance: 0.01,
+            minimum_quality: 0.1,
+            ..Options::default()
+        },
+    )
+    .unwrap();
+    assert!(output.diagnostics.refined_lattice_edges > 0);
+    assert!(output.diagnostics.maximum_sampled_surface_error <= 0.01);
+    assert!(output.diagnostics.minimum_mmg_quality >= 0.1);
+    let in_film = |t: &[usize; 4]| {
+        let c: Point =
+            std::array::from_fn(|a| t.iter().map(|&i| output.mesh.points[i][a]).sum::<f64>() / 4.);
+        c[0].abs() < 0.015 && c[1].hypot(c[2]) < 0.05
+    };
+    assert!(output.mesh.tets.iter().any(in_film));
+}
+
+#[test]
+fn adaptation_keeps_a_periodic_spinodoid_unfoldable() {
+    // Without the periodic guards of the adaptive operators, a collapse lays a
+    // wall facet in a periodic plane or a wall vertex crosses one: "solid
+    // boundary is not a closed two-manifold" or "periodic triangle mismatch".
+    let tolerance = 0.05;
+    let output = generate(
+        &Spinodoid::load(),
+        Options {
+            cells: [24; 3],
+            periodic: [true; 3],
+            geometry_tolerance: tolerance,
+            minimum_quality: 0.1,
+            adapt: Some(meshers_core::tet_adapt::Options {
+                tolerance,
+                min_length: tolerance,
+                ..Default::default()
+            }),
+            ..Options::default()
+        },
+    )
+    .unwrap();
+    assert!(output.diagnostics.minimum_mmg_quality >= 0.1);
+    assert!(output.diagnostics.maximum_sampled_surface_error <= tolerance);
+    assert!(output.periodic_pairs.iter().all(|pairs| !pairs.is_empty()));
+}
+
+#[test]
+fn periodic_images_share_their_in_plane_coordinates_bit_for_bit() {
+    // Images snapped onto the wall separately used to agree only to rounding.
+    let gyroid = |p: [f64; 3]| {
+        let [x, y, z] = p.map(|v| TAU * v);
+        x.sin() * y.cos() + y.sin() * z.cos() + z.sin() * x.cos() - 0.3
+    };
+    let output = generate(
+        &gyroid,
+        Options {
+            bounds: [[-0.5; 3], [0.5; 3]],
+            cells: [16; 3],
+            periodic: [true; 3],
+            geometry_tolerance: 0.02,
+            minimum_quality: 0.1,
+            order: 2,
+            ..Options::default()
+        },
+    )
+    .unwrap();
+    let quadratic = output.quadratic.as_ref().unwrap();
+    for (p, pairs) in [
+        (&output.mesh.points, &output.periodic_pairs),
+        (&quadratic.elements.points, &quadratic.periodic_pairs),
+    ] {
+        for (axis, pairs) in pairs.iter().enumerate() {
+            assert!(!pairs.is_empty());
+            for &[i, j] in pairs {
+                assert_eq!([p[i][axis], p[j][axis]], [-0.5, 0.5]);
+                for a in (0..3).filter(|&a| a != axis) {
+                    assert_eq!(
+                        p[i][a].to_bits(),
+                        p[j][a].to_bits(),
+                        "axis {axis}: {i}, {j}"
+                    );
+                }
+            }
+        }
+    }
 }
