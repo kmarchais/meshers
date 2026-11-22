@@ -2904,7 +2904,7 @@ fn closest_on_triangle(p: Point, t: [Point; 3]) -> Point {
 /// nothing of the field but its sign. Distances beyond the reach of the
 /// search are reported as that reach.
 fn wall_coverage<F: ScalarField>(wall: &[[Point; 3]], g: &Context<F>) -> Result<f64, String> {
-    if wall.is_empty() {
+    if wall.is_empty() && !g.gaps_resolved {
         return Ok(0.);
     }
     let o = g.options;
@@ -2944,6 +2944,15 @@ fn wall_coverage<F: ScalarField>(wall: &[[Point; 3]], g: &Context<F>) -> Result<
         }
     }
     grid.extend(g.values(&batch).into_iter().map(|v| residual(v) as f32));
+    if wall.is_empty() {
+        // Opposite signs on the coverage grid witness an implicit wall that the mesh lost.
+        if grid.iter().any(|&v| v < 0.) && grid.iter().any(|&v| v > 0.) {
+            return Err(
+                "sampled solid and void but mesh has no implicit wall; increase resolution".into(),
+            );
+        }
+        return Ok(0.);
+    }
     let at = |i: usize, j: usize, k: usize| f64::from(grid[i + n[0] * (j + n[1] * k)]);
     // Segments across the wall, solid end first, with the residuals there.
     let mut ends: Vec<([Point; 2], [f64; 2])> = Vec::new();
@@ -3025,18 +3034,22 @@ fn wall_coverage<F: ScalarField>(wall: &[[Point; 3]], g: &Context<F>) -> Result<
         }
     }
     let mut worst: f64 = 0.;
-    for (index, root) in roots.into_iter().enumerate() {
+    'roots: for (index, root) in roots.into_iter().enumerate() {
         if index % POLL == 0 {
             g.check()?;
         }
         let [x, y, z] = key(root);
         let mut nearest = reach;
-        for dx in -1..=1 {
-            for dy in -1..=1 {
-                for dz in -1..=1 {
+        for dx in [0, -1, 1] {
+            for dy in [0, -1, 1] {
+                for dz in [0, -1, 1] {
                     for &f in bins.get(&[x + dx, y + dy, z + dz]).into_iter().flatten() {
                         let on = closest_on_triangle(root, wall[f as usize]);
                         nearest = nearest.min(norm(sub(on, root)));
+                        // One triangle this close proves this root cannot increase the maximum.
+                        if nearest <= worst {
+                            continue 'roots;
+                        }
                     }
                 }
             }
