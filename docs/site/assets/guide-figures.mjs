@@ -45,7 +45,7 @@ export function qualityFigure(percent) {
   }
   return {
     graphic: svg(
-      "Regular and adjustable tetrahedra colored by MMG quality",
+      "Regular and adjustable tetrahedra colored by tetrahedron shape quality",
       cell(145, 1, 1) +
         cell(435, h, score) +
         text(145, 176, "Regular · 1.000") +
@@ -55,7 +55,7 @@ export function qualityFigure(percent) {
   };
 }
 
-export function pairsFigure(which) {
+export function pairsFigure() {
   const base = [
     [0, 0],
     [1, 0],
@@ -72,22 +72,17 @@ export function pairsFigure(which) {
   for (const x of [0, 1]) {
     const outline = base.map((p) => at(x, p));
     body += `<polygon points="${points(outline)}" class="pair-face"/>`;
-    for (const node of nodes) {
-      const [cx, cy] = at(x, node);
-      body += `<circle cx="${cx}" cy="${cy}" r="3" fill="currentColor"/>`;
-    }
   }
-  const a = at(0, nodes[which - 1]),
-    b = at(1, nodes[which - 1]);
-  body +=
-    line(a, b, 'class="pair-link"') +
-    [a, b].map(([cx, cy]) => `<circle cx="${cx}" cy="${cy}" r="6" class="pair-point"/>`).join("");
+  for (const node of nodes) {
+    const a = at(0, node), b = at(1, node);
+    body += line(a, b, 'class="pair-link" stroke-dasharray="5 5"');
+    for (const [cx, cy] of [a, b]) body += `<circle cx="${cx}" cy="${cy}" r="4" class="pair-point"/>`;
+  }
   return {
     graphic: svg(
-      "One node and its translated image on the opposite x cap",
+      "Corresponding nodes on opposite x caps",
       body + text(127, 172, "x low · tag 1") + text(365, 172, "x high · tag 2"),
     ),
-    value: "Node pair " + which + " of 3",
   };
 }
 

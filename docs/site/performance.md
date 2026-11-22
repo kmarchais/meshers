@@ -14,7 +14,7 @@ On one Linux runner with matching Python and NumPy, discard one warm-up pair. Al
 | --- | --- |
 | Median time | +25% plus 20 ms |
 | Median peak memory | +15% plus 8 MiB |
-| MMG quality (min, max, mean, median, p05, p10, p90) | 1% decrease for each statistic. Each candidate repeat is also checked against the base median. |
+| Tetrahedron shape quality (min, max, mean, median, p05, p10, p90) | 1% decrease for each statistic. Each candidate repeat is also checked against the base median. |
 | Sampled wall error and mapped cap error | +5% plus 10⁻¹⁰ for each |
 | Volume | ±0.5% |
 | Nodes and tetrahedra | ±1% each |
@@ -50,9 +50,9 @@ Use `--suite release` for all fixtures. Archive with full `--base-ref` and `--he
 
 Python 3.11 CI reopens the Schwarz P VTKHDF export before solving.
 
-- **Geometry** — two-sided sampled wall/cap distance ≤ 0.002, volume within 1%, MMG quality ≥ 0.1. Check topology, periodic faces and material probes.
+- **Geometry** — two-sided sampled wall/cap distance ≤ 0.002, volume within 1%, tetrahedron shape quality ≥ 0.1. Check topology, periodic faces and material probes.
 - **Stiffness** — all six strain and six stress solves must pass. Worst relative strain-energy discrepancy ≤ 1% against the reference tensor.
 
 ```sh
-uv run --with fedoo==1.0.0b2 python demos/solver/schwarz_workflow.py native-candidate candidate-acceptance
+uv run --with fedoo==1.0.0b2 demos/solver/schwarz_workflow.py native-candidate candidate-acceptance
 ```

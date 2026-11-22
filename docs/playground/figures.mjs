@@ -132,6 +132,6 @@ await save("matched-cost", wrap("Time at the one percent stiffness threshold", 5
 for (const [name, figure] of [
   ["quality", qualityFigure(5)],
   ["band", bandFigure(30)],
-  ["pairs", pairsFigure(1)],
+  ["pairs", pairsFigure()],
 ])
   await save(name, figure.graphic);

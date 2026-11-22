@@ -4,7 +4,7 @@ For a solid, Meshers keeps `f ≤ 0`. For a band, it keeps `lower ≤ f ≤ uppe
 
 <figure class="guide-figure" data-guide="band">
   <div class="guide-diagram"><img src="assets/playground/band.svg" alt="Analytic section of a graded sheet"></div>
-  <div class="guide-control"><label for="band-setting">Band half-width</label><input id="band-setting" type="range" min="5" max="50" value="30"><output for="band-setting"></output></div>
+  <div class="guide-control mesh-slider"><label for="band-setting">Band half-width</label><output for="band-setting"></output><input id="band-setting" type="range" min="5" max="50" value="30"></div>
   <figcaption>Vertical section through f = (1 + x)y, from x = 0 to x = 2.</figcaption>
 </figure>
 

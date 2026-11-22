@@ -1,3 +1,5 @@
+import { fillSlider } from "./slider.js";
+
 const lab = document.querySelector(".mesh-lab");
 const form = lab.querySelector(".mesh-controls");
 const stage = lab.querySelector(".mesh-stage");
@@ -10,10 +12,7 @@ const field = form.elements.namedItem("field");
 const code = document.querySelector("#mesh-code");
 
 function updateParameters() {
-  for (const slider of [cells, width]) {
-    const fraction = (slider.valueAsNumber - Number(slider.min)) / (Number(slider.max) - Number(slider.min));
-    slider.style.setProperty("--fill", fraction * 100 + "%");
-  }
+  for (const slider of [cells, width]) fillSlider(slider);
   form.querySelector('output[for="mesh-cells"]').value = cells.value;
   form.querySelector('output[for="mesh-width"]').value = width.valueAsNumber.toFixed(2);
   code.querySelector('[data-param="field"]').textContent = field.value === "0" ? '"gyroid"' : '"schwarz_p"';
@@ -44,7 +43,7 @@ function show(data) {
   reset.disabled = false;
   status.textContent = [
     data.tets.toLocaleString() + " tetrahedra", data.nodes.toLocaleString() + " nodes",
-    "Min. MMG quality " + data.minQuality.toFixed(3),
+    "Min. tet shape quality " + data.minQuality.toFixed(3),
     "Min. boundary angle " + data.minAngle.toFixed(1) + "\u00b0",
   ].join(" \u00b7 ");
 }

@@ -17,7 +17,7 @@ All 60 solves converged. The solid cube recovered the input material constants. 
 Checks cover paired displacements, nodal force balance, Hill–Mandel energy consistency, symmetry and positive stiffness under translational periodicity.
 
 ```sh
-uv run --with fedoo==1.0.0b2 python demos/solver/fedoo_homogenization.py
+uv run --with fedoo==1.0.0b2 demos/solver/fedoo_homogenization.py
 ```
 
 [Full tensors, mesh sizes and solve records](https://github.com/kmarchais/meshers/blob/main/docs/fedoo-homogenization-results.json) · [Study implementation](https://github.com/kmarchais/meshers/blob/main/demos/solver/fedoo_homogenization.py)

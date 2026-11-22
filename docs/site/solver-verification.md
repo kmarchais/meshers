@@ -20,8 +20,8 @@ Rates use maximum physical edge length on each discrete domain. For periodic loa
 ## Replay
 
 ```sh
-uv run --with scipy python demos/solver/convergence.py
-uv run --with fedoo==0.8.4 python demos/solver/fedoo_convergence.py
+uv run --with scipy demos/solver/convergence.py
+uv run --with fedoo==0.8.4 demos/solver/fedoo_convergence.py
 ```
 
 [Independent assembly results](https://github.com/kmarchais/meshers/blob/main/docs/solver-convergence-results.json) · [Fedoo results and environment](https://github.com/kmarchais/meshers/blob/main/docs/fedoo-convergence-results.json)

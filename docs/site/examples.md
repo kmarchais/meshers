@@ -13,7 +13,7 @@
 From the **repository root**, install the [development environment](contributing.md) and run:
 
 ```sh
-uv run --extra io --package meshers python crates/meshers-python/examples/basic.py
+uv run --extra io --package meshers crates/meshers-python/examples/basic.py
 ```
 
 | Goal | Script |

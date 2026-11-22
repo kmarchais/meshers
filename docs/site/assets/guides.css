@@ -24,10 +24,21 @@
 .pair-link,.pair-point { fill:var(--chart-copper); stroke:var(--chart-copper); stroke-width:2; }
 .md-typeset .guide-figure figcaption,.md-typeset .plot-pair figcaption { text-align:left; font-style:normal; max-width:78ch; margin:.45rem 0 0; color:var(--muted); font-size:.72rem; }
 .guide-control { display:none; }
-.guide-figure[data-ready] .guide-control { display:flex; flex-wrap:wrap; align-items:center; gap:.55rem 1rem; padding:.6rem 0; border-top:1px solid var(--track); }
-.guide-control label,.guide-control output { font-size:.73rem; font-weight:600; }
-.guide-control input { accent-color:var(--mint); width:min(13rem,90%); }
-.guide-control output { font-variant-numeric:tabular-nums; color:var(--mint); }
+.guide-figure[data-ready] .guide-control { display:grid; gap:.25rem .8rem; padding:.6rem 0; border-top:1px solid var(--track); }
+.guide-control label,.range-values label { font-size:.73rem; font-weight:600; }
+.guide-figure [hidden] { display:none !important; }
+#quality-section canvas { display:block; width:100%; height:15.2rem; object-fit:contain; }
+.shape-range { display:block; min-width:0; }
+.range-values { display:flex; align-items:center; justify-content:space-between; }
+.range-track { position:relative; height:1.4rem; cursor:pointer; background:linear-gradient(to right,var(--track) var(--start),var(--mint) var(--start) var(--end),var(--track) var(--end)) center / 100% 4px no-repeat; }
+.range-track input { position:absolute; inset:0; height:100%; pointer-events:none; background:none; }
+.range-track input:focus-visible { z-index:1; }
+.range-track input::-webkit-slider-thumb { pointer-events:auto; }
+.range-track input::-moz-range-thumb { pointer-events:auto; }
+@media (forced-colors:active) {
+ .range-track { height:auto; background:none; }
+ .range-track input { position:static; pointer-events:auto; appearance:auto; height:1.4rem; }
+}
 .quality-scale { display:inline-block; width:5rem; height:.45rem; border-radius:1rem; background:linear-gradient(90deg,#c7643c,#2d9f8f); vertical-align:middle; }
 .md-typeset .plot-pair { display:grid; grid-template-columns:repeat(auto-fit,minmax(min(100%,17rem),1fr)); gap:1rem; }
 .md-typeset .plot-pair figure { margin:0; min-width:0; }
@@ -45,6 +56,6 @@
 .md-typeset .guide-figure.chart img { max-height:22rem; }
 .md-typeset .guide-figure fieldset { border:0; border-top:1px solid var(--track); padding:.55rem 0 0; margin:.65rem 0 0; text-align:left; }
 .guide-figure fieldset legend { padding-right:.55rem; font-size:.72rem; font-weight:650; color:var(--muted); }
-.guide-figure fieldset label { display:inline-flex; align-items:center; gap:.28rem; cursor:pointer; border:1px solid var(--track); border-radius:1rem; padding:.2rem .55rem; margin:.15rem .2rem .15rem 0; font-size:.7rem; }
+.guide-figure fieldset:not(.shape-range) label { display:inline-flex; align-items:center; gap:.28rem; cursor:pointer; border:1px solid var(--track); border-radius:1rem; padding:.2rem .55rem; margin:.15rem .2rem .15rem 0; font-size:.7rem; }
 .guide-figure fieldset label:has(:checked) { color:var(--paper); background:var(--selected); }
 .guide-figure fieldset input { accent-color:var(--mint); }

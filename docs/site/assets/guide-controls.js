@@ -1,6 +1,7 @@
-import { bandFigure, pairsFigure, qualityFigure } from "./guide-figures.mjs";
+import { fillSlider } from "./slider.js";
+import { bandFigure, qualityFigure } from "./guide-figures.mjs";
 
-const figures = { band: bandFigure, pairs: pairsFigure, quality: qualityFigure };
+const figures = { band: bandFigure, quality: qualityFigure };
 for (const figure of document.querySelectorAll("[data-guide]")) {
   const input = figure.querySelector("input");
   const output = figure.querySelector("output");
@@ -9,6 +10,7 @@ for (const figure of document.querySelectorAll("[data-guide]")) {
     const { graphic, value } = figures[figure.dataset.guide](input.valueAsNumber);
     diagram.innerHTML = graphic;
     output.value = value;
+    fillSlider(input);
   }
   input.addEventListener("input", draw);
   draw();
@@ -25,15 +27,11 @@ if (layers)
   });
 
 const section = document.querySelector("#quality-section");
-if (section)
-  section.addEventListener("change", (event) => {
-    const isolated = event.target.value === "poor";
-    const image = section.querySelector("img");
-    image.src = new URL(
-      isolated ? "gyroid-quality-poor.webp" : "gyroid-quality-section.webp",
-      import.meta.url,
-    );
-    image.alt = isolated
-      ? "The 46 cells below MMG quality 0.1, in their original positions"
-      : "Cutaway through the gyroid colored by tetrahedron quality";
-  });
+if (section) {
+  import("./shape-range.js")
+    .then(({ mountShapeRange }) => mountShapeRange(section))
+    .catch(() => {
+      section.querySelector('[role="status"]').textContent =
+        "The interactive filter is unavailable. Showing the 46 cells up to 0.10.";
+    });
+}
