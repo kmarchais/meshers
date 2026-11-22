@@ -16,5 +16,6 @@ Use the exact `main` commit you intend to publish. The source archive includes t
 2. **Archive the measurements.** Run the [release benchmark suite](performance.md#release-suite-and-public-history) against a compatible baseline. Keep candidate and final-tag results in the [benchmark history](benchmark-history.md).
 3. **Publish the tested files.** Dispatch **Publish to PyPI** from `main` with the **Release artifacts** run ID. The workflow verifies the SHA and downloads those files. Configure PyPI Trusted Publishing for `publish-pypi.yml` and the `pypi` GitHub environment.
 4. **Verify the public install** in a fresh environment, then tag the same commit and create its GitHub release.
+5. **Review the [roadmap](roadmap.md).** Check milestones against the released build and benchmark records. Move shipped capabilities into the [project scope](index.md#project-scope) and refresh the review date.
 
 [Publishing workflow](https://github.com/kmarchais/meshers/blob/main/.github/workflows/publish-pypi.yml) · [Wheel requirements](getting-started.md)

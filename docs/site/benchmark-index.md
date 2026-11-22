@@ -51,7 +51,7 @@ Meshers development is benchmark-based. AI coding agents use these suites to add
 
 ## Benchmarks to add
 
-These are proposed studies. [Open targets](benchmark-gaps.md) records failures already demonstrated on pinned inputs.
+These are proposed studies. The [roadmap](roadmap.md) sets development priorities. [Open targets](benchmark-gaps.md) records failures already demonstrated on pinned inputs.
 
 | Priority | Gap in current evidence | Experiment |
 | --- | --- | --- |

@@ -62,12 +62,7 @@ Meshers starts from a scalar field sampled in a bounding box. Choose a solid (`f
 | Adaptation today | Refine and coarsen tetrahedra to local size and boundary-curvature targets. Thin walls, gaps and enclosed cavities can fall between field samples. A returned mesh can miss a feature. [Adaptation](course-adaptation.md) · [Lost-cavity replay](benchmark-gaps.md#reproduce-the-lost-cavity) |
 | Experimental surfaces | Extract triangles directly in a surface-enabled build. Uniform quad extraction is a Rust research feature. [Surface methods](course-surfaces.md) |
 
-**Development goals**
-
-- Extend tested FRep coverage to harder spinodoids and thin features.
-- Add solver-driven adaptive mesh refinement: solve, estimate local error, mark cells, adapt and solve again.
-- Mesh CAD boundary representations (BRep), preserving curves, faces and labels.
-- Support production triangle and quad surface meshes and hexahedral volume meshes. [Benchmark priorities](benchmark-index.md#benchmarks-to-add)
+See the [roadmap](roadmap.md) for open FRep targets, planned FEA capabilities and longer-term CAD and element support.
 
 ## Explore the guides
 

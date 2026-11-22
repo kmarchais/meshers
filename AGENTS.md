@@ -21,6 +21,8 @@ Every PR that adds a feature or changes how an algorithm works must update the d
 
 Teach an algorithm with a worked input: let readers predict a step, see how the geometry changes, and follow a link to the implementation. Keep instructions short.
 
+When a PR changes a priority, milestone status or benchmark outcome on the [roadmap](docs/site/roadmap.md), update that entry and its review date in the same PR. Link the issue or PR for work in progress and the measured result when a milestone passes. At release, move delivered capabilities into the overview’s supported scope.
+
 Use the pinned formatter, linter, type checker and tests to guide edits. Run Ruff and ty for Python, rustfmt and Clippy for Rust, and the relevant regression tests. Follow the [development commands](README.md#develop) and [benchmark protocol](docs/site/performance.md). Queue heavy builds and studies on the shared compute queue.
 
 Keep PR descriptions to a purpose sentence and the evidence. An algorithm PR should add a capability or improve a measured result. Include a compact before/after table for the affected metrics, a replay command or results link, and regression results for existing features. Quantify any tradeoff so reviewers can decide whether it is worthwhile. For documentation-only changes, show the changed page or example.
