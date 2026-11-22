@@ -73,6 +73,28 @@
 .guide-pair > div > :first-child { margin-top: 0; }
 .guide-pair > div > :last-child { margin-bottom: 0; }
 
+#surface-extraction .extraction-steps, #surface-extraction .extraction-level { display:none; }
+#cut-layers:not([data-ready]) fieldset { display:none; }
+#surface-extraction[data-ready] .extraction-steps { display:flex; flex-wrap:wrap; gap:.4rem; }
+.extraction-steps { border:0; padding:0; margin:0 0 .7rem; }
+.extraction-steps legend { font-weight:650; margin-bottom:.45rem; }
+.extraction-steps label, .extraction-level select {
+  background:var(--lab-panel); color:var(--paper); border:1px solid var(--track);
+  border-radius:.35rem; padding:.3rem .65rem; cursor:pointer; font:inherit;
+}
+.extraction-steps label:has(:checked) { background:var(--selected); border-color:var(--mint); }
+.extraction-steps input { accent-color:var(--mint); }
+#surface-extraction[data-ready] .extraction-level { display:flex; align-items:center; gap:.5rem; margin-top:.55rem; font-size:.75rem; }
+#surface-extraction .guide-pair { margin:.6rem 0; align-items:stretch; }
+#surface-extraction h2 { margin:0; text-align:left; font-size:1rem; }
+#surface-extraction .guide-diagram { margin:.6rem 0; }
+#surface-extraction .guide-diagram svg { max-height:12rem; }
+.edge-split svg { display:block; max-width:28rem; width:100%; }
+@media (prefers-reduced-motion:no-preference) {
+  .edge-split[open] .new-chords { stroke-dasharray:1; animation:draw-chords .7s ease-out; }
+  @keyframes draw-chords { from {stroke-dashoffset:1} to {stroke-dashoffset:0} }
+}
+
 .md-content__inner:has(.explorer-example) { container: explorer / inline-size; }
 @container explorer (min-width: 64rem) {
   .explorer-example {

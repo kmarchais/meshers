@@ -19,13 +19,15 @@ for (const figure of document.querySelectorAll("[data-guide]")) {
 }
 
 const layers = document.querySelector("#cut-layers");
-if (layers)
+if (layers) {
   layers.addEventListener("change", (event) => {
     const image = layers.querySelector("img");
     const url = new URL(image.src);
     url.hash = event.target.value;
     image.src = url.href;
   });
+  layers.dataset.ready = "";
+}
 
 const section = document.querySelector("#quality-section");
 if (section) {

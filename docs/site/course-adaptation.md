@@ -14,9 +14,15 @@ icon: lucide/scaling
 
 <div markdown="block">
 
-A flat triangle spans a curved patch. For a unit circle, a chord of length h has sag `1 − √(1 − h²/4)`. **Try it.** Compare h = 1.20 and 0.60. Halving the edge reduces the gap from 0.200 to about 0.046.
+| Set chord length h | Read the sag on the unit circle |
+| --- | ---: |
+| 1.20 | 0.200 |
+| 0.60 | 0.046 |
 
-On a mesh, the local radius is unknown. Meshers estimates triangle sag from edge length ℓ and the change θ in vertex normals, approximately ℓθ/6. A tighter tolerance calls for shorter boundary edges. Target sizes grade into the interior.
+**Try it:** halve the chord. The gap shrinks by more than half.
+
+- **Exact circle:** sag = `1 − √(1 − h²/4)`.
+- **Mesh estimate:** edge length × angle between vertex normals / 6. Shorten boundary edges where sag exceeds tolerance.
 
 </div>
 </div>
@@ -41,13 +47,23 @@ On a mesh, the local radius is unknown. Meshers estimates triangle sag from edge
 | Swap connectivity | Change which tetrahedra fill a cavity to improve shape. |
 | Relocate a vertex | Improve neighbouring shapes. Project constrained motion back onto the wall or feature. |
 
-Size and shape are separate objectives. The vertex optimizer scores the tetrahedra incident on a proposed move. If the smooth objective stalls at a poor interior vertex, a recovery search targets the worst incident shape directly. Inverting a cell invalidates the move. Translated copies of a periodic vertex move as a group. [Vertex optimization](https://github.com/kmarchais/meshers/blob/main/crates/meshers-core/src/optimize.rs) · [Adaptation loop](https://github.com/kmarchais/meshers/blob/main/crates/meshers-core/src/tet_adapt.rs)
+1. Score the incident tetrahedra before and after a proposed move.
+2. Reject an inversion. Move periodic copies together.
+3. If interior optimization stalls, search for a move that improves the worst incident shape.
 
-**Inspect a sliver.** Filter the [gyroid cutaway](quality.md) to the low end of the shape scale. The score compares volume with that of a regular tetrahedron at the same root-mean-square edge length. Refining to smaller elements does not by itself raise this score.
+[2–3 swap](https://github.com/kmarchais/meshers/blob/fc54032b/crates/meshers-core/src/tet_adapt.rs#L1220) · [Recovery search](https://github.com/kmarchais/meshers/blob/fc54032b/crates/meshers-core/src/optimize.rs#L464)
+
+**Test shape independently:** filter the [gyroid cutaway](quality.md) to its lowest scores. A sliver encloses little volume for its edge lengths.
 
 ## Refine to a budget
 
-Surface-edge bisection splits the entire periodic orbit of a selected edge so that both sides remain conforming. Interior refinement can then insert nodes within a budget while keeping the boundary triangles fixed. This serves a different purpose from moving a wall closer to its level set. During vertex optimization, groups with disjoint incident cells can be evaluated in parallel without proposing two changes to the same tetrahedron. [Refinement methods](https://github.com/kmarchais/meshers/blob/main/crates/meshers-core/src/adaptive.rs)
+| Keep fixed | Where refinement acts |
+| --- | --- |
+| Periodic correspondence | Bisect all periodic copies of a selected surface edge together. |
+| Boundary triangles | Add interior nodes up to the node budget. |
+| Neighbour coordinates during scoring | Evaluate vertex moves with disjoint incident cells in parallel. |
+
+[Surface and interior refinement](https://github.com/kmarchais/meshers/blob/fc54032b/crates/meshers-core/src/adaptive.rs)
 
 **Next:** [Constrain and pair the boundaries](course-constraints.md).
 

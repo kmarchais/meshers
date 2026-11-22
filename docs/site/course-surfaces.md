@@ -2,45 +2,77 @@
 icon: lucide/grid-2x2
 ---
 
-# Extract triangles or quads directly
+# Where does a surface face come from?
 
-<div class="guide-pair" markdown="block">
-
-<figure class="guide-figure"><div class="guide-diagram">
-<svg viewBox="0 0 464 202" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Triangle through three edge roots, and a quad joining four dual vertices around one crossed grid edge">
-  <title>Primal crossings and dual connectivity</title>
-  <g stroke="currentColor" opacity=".55" fill="none">
-    <path d="M32 133 182 148 126 23 32 133 180 70 182 148 M126 23 180 70"/>
-    <path d="M275 28H443M275 88H443M275 148H443M280 23V153M359 23V153M438 23V153"/>
-  </g>
-  <g stroke="var(--mint)" fill="var(--selected)" stroke-width="2.5">
-    <path d="m79 78 27 62 1-39Z"/>
-    <path d="m315 57 77 6 9 56-91-2Z"/>
-  </g>
-  <g fill="var(--chart-copper)">
-    <circle cx="79" cy="78" r="4"/><circle cx="106" cy="140" r="4"/><circle cx="107" cy="101" r="4"/>
-    <circle cx="315" cy="57" r="4"/><circle cx="392" cy="63" r="4"/><circle cx="401" cy="119" r="4"/><circle cx="310" cy="117" r="4"/>
-  </g>
-  <circle cx="359" cy="88" r="5" fill="var(--paper)"/>
-  <text x="108" y="185" text-anchor="middle">Roots on edges</text><text x="359" y="185" text-anchor="middle">Vertices in cells</text>
-</svg></div>
-<figcaption>Left: one triangle cut from a tetrahedron. Right: end-on view of a crossed grid edge (dark dot). One local contour from each surrounding cell supplies a quad corner.</figcaption></figure>
-
-<div markdown="block">
-
-When only the skin is needed, experimental surface builds can skip the volume mesh. The triangle extractor divides grid cubes into tetrahedra with a consistent Freudenthal subdivision. It retains crossing edges and boundary polygons.
-
-The quad extractor uses uniform dual contouring. It groups crossings into connected contour loops inside each cell and places a vertex at the mean crossing position of each group. A sign-changing grid edge connects vertices from the surrounding cells.
-
-**Trace one face.** Count the four cells around the dot on the right. The quad crosses their boundaries. Its four vertices belong to local contour groups, so counting grid corners would give the wrong connectivity.
-
+<div id="surface-extraction">
+<fieldset class="extraction-steps"><legend>Step through both extractors</legend>
+  <label><input type="radio" name="stage" checked> Sample signs</label>
+  <label><input type="radio" name="stage"> Find crossings</label>
+  <label><input type="radio" name="stage"> Place vertices</label>
+  <label><input type="radio" name="stage"> Connect faces</label>
+</fieldset>
+<div class="guide-pair">
+<figure class="guide-figure" id="triangle">
+  <h2>Triangle · cut one tetrahedron</h2>
+  <div class="guide-diagram"><img src="assets/playground/extract-triangle.svg" alt="Three roots on edges from A form a triangle inside a tetrahedron."></div>
+  <figcaption aria-live="polite">One corner below the plane gives three crossing edges and one triangle.</figcaption>
+  <label class="extraction-level">Plane x + y + z = t
+    <select><option value="0.5">t = 0.5</option><option value="1.5">t = 1.5</option><option value="3.5">t = 3.5</option></select>
+  </label>
+</figure>
+<figure class="guide-figure" id="quad">
+  <h2>Quad · circle one grid edge</h2>
+  <div class="guide-diagram"><img src="assets/playground/extract-quad.svg" alt="Four dual vertices, one per cube, connect around the crossed central edge."></div>
+  <figcaption aria-live="polite">Each cube supplies a vertex at the mean of its loop’s roots. Joining the four vertices gives one quad.</figcaption>
+</figure>
 </div>
 </div>
 
-## Remesh the triangular surface
+## Predict the triangle count
 
-The surface remesher estimates a target edge length from curvature, then splits, collapses, flips and relaxes edges. Wall, cap and feature-curve vertices have different projection constraints. A final refinement pass checks sampled centroid and midpoint distances.
+1. Read the field at A, B, C, D: **0, 1, 2, 3**.
+2. Set **t = 1.5**. Which edges bracket 1.5? On AD, the crossing is halfway from 0 to 3.
+3. Count your crossings, then select **Connect faces**.
 
-Check the installed build with `meshers.SURFACE_MESHING_AVAILABLE`. These experimental surface routes produce faces. A quad surface still needs a separate volume discretization for a solid FEA problem. Feature-aligned quad layouts and guaranteed recovery of subcell topology remain open. [Triangle extraction](https://github.com/kmarchais/meshers/blob/main/crates/meshers-core/src/triangles.rs) · [Surface adaptation](https://github.com/kmarchais/meshers/blob/main/crates/meshers-core/src/remesh.rs) · [Quad extraction](https://github.com/kmarchais/meshers/blob/main/crates/meshers-core/src/quads.rs)
+<details markdown="block"><summary>Check the crossing edges and face counts</summary>
 
-**Next:** [Verify the finite element result](course-verification.md).
+| Plane | Edges with opposite signs | Emitted faces |
+| --- | --- | --- |
+| t = 0.5 | AB, AC, AD | One triangle |
+| t = 1.5 | AC, AD, BC, BD | Two triangles sharing a diagonal |
+| t = 3.5 | None | None |
+
+</details>
+
+## Follow the implementation
+
+| Triangle extraction | Uniform dual contouring |
+| --- | --- |
+| [Split a cube into six tetrahedra](https://github.com/kmarchais/meshers/blob/fc54032b/crates/meshers-core/src/triangles.rs#L381-L420) | [Group a cell’s crossings into connected loops](https://github.com/kmarchais/meshers/blob/fc54032b/crates/meshers-core/src/quads.rs#L423-L465) |
+| [Reuse each edge crossing](https://github.com/kmarchais/meshers/blob/fc54032b/crates/meshers-core/src/triangles.rs#L171-L239) | [Average the roots of each loop](https://github.com/kmarchais/meshers/blob/fc54032b/crates/meshers-core/src/quads.rs#L466-L481) |
+| [Choose the triangle fan with the best worst score](https://github.com/kmarchais/meshers/blob/fc54032b/crates/meshers-core/src/triangles.rs#L310-L339) | [Join the four vertices around a crossed edge](https://github.com/kmarchais/meshers/blob/fc54032b/crates/meshers-core/src/quads.rs#L488-L525) |
+
+## Remesh a curved patch
+
+<details class="edge-split"><summary>Split a chord and project its new midpoint onto the wall</summary>
+<svg viewBox="0 0 500 145" role="img" aria-label="A straight chord misses the arc. Its midpoint moves onto the arc, leaving two shorter chords.">
+<title>One constrained edge split on a curved wall</title>
+<g fill="none" stroke-width="2">
+  <path d="M30 96 Q115 -28 200 96 M285 96 Q370 -28 455 96" stroke="var(--mint)"/>
+  <path d="M30 96H200 M285 96H455" stroke="currentColor" stroke-dasharray="4 4"/>
+  <path class="new-chords" pathLength="1" d="M285 96 370 34 455 96" stroke="var(--chart-copper)"/>
+  <path d="M370 88V43m-5 7 5-7 5 7" stroke="currentColor"/>
+</g>
+<circle cx="115" cy="96" r="4" fill="var(--chart-copper)"/><circle cx="370" cy="34" r="4" fill="var(--chart-copper)"/>
+<g fill="currentColor" text-anchor="middle"><text x="115" y="126">Midpoint on chord</text><text x="370" y="126">New node on wall</text></g>
+</svg>
+<ul><li>Project onto the active wall, cap or feature curve.</li><li>Recheck distances at edge midpoints and triangle centroids.</li></ul>
+</details>
+
+[Split](https://github.com/kmarchais/meshers/blob/fc54032b/crates/meshers-core/src/remesh.rs#L351) · [Collapse](https://github.com/kmarchais/meshers/blob/fc54032b/crates/meshers-core/src/remesh.rs#L387) · [Flip](https://github.com/kmarchais/meshers/blob/fc54032b/crates/meshers-core/src/remesh.rs#L457) · [Relax](https://github.com/kmarchais/meshers/blob/fc54032b/crates/meshers-core/src/remesh.rs#L496)
+
+- **Python triangles:** check `meshers.SURFACE_MESHING_AVAILABLE`.
+- **Rust quads:** experimental uniform extraction. Feature-aligned layouts and subcell topology remain open.
+- **Solid FEA:** these methods emit surface faces. [Generate volume elements](course-cutting.md).
+
+<script type="module" src="assets/extraction.js"></script>

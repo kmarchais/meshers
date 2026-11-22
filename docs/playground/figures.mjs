@@ -2,6 +2,7 @@
 import { readFile, writeFile } from "node:fs/promises";
 import { qualityFigure, bandFigure, pairsFigure } from "../site/assets/guide-figures.mjs";
 import { cutFigure, foldFigure, sagFigure } from "../site/assets/course-figures.mjs";
+import { quadStage, triangleStage } from "../site/assets/extraction-figures.mjs";
 
 const root = new URL("../../", import.meta.url);
 const assets = new URL("docs/site/assets/playground/", root);
@@ -137,5 +138,7 @@ for (const [name, figure] of [
   ["cut", cutFigure(50)],
   ["sag", sagFigure(60)],
   ["fold", foldFigure(10)],
+  ["extract-triangle", triangleStage(0.5, 3)],
+  ["extract-quad", quadStage(3)],
 ])
   await save(name, figure.graphic);

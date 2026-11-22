@@ -14,9 +14,14 @@ icon: lucide/pyramid
 
 <div markdown="block">
 
-The volume mesher starts with a body-centred cubic lattice. Inside the box, two neighbouring cube centres and the endpoints of an edge on their shared face form a tetrahedron. At the box boundary a centre joins a face triangle.
+| In the body-centred cubic grid | Make a tetrahedron from |
+| --- | --- |
+| Interior | Two cube centres + one shared-face edge |
+| Box boundary | One centre + one triangle on the box |
 
-**Try it.** Keep `x + y + z ≤ t`. At `t = 0.5` the kept tetrahedron has half the edge length along each axis and one eighth of the original volume. A clipped cell with two inside vertices has a different shape and needs several tetrahedra.
+1. Move the level to **t = 0.5**.
+2. Trace the three edges from O to the copper dots.
+3. Halving each edge leaves **½ × ½ × ½ = ⅛** of the volume.
 
 </div>
 </div>
@@ -37,11 +42,11 @@ The volume mesher starts with a body-centred cubic lattice. Inside the box, two 
   <text x="250" y="175" text-anchor="middle">Two cell centres + one shared face edge</text>
 </svg></div><figcaption>Four choices of edge on the shared square face give four tetrahedra between these centres.</figcaption></figure>
 
-1. Sample the field at lattice vertices. A constrained snap can move a nearby vertex onto the wall while keeping its box coordinates on their planes.
-2. Locate crossings on bracketed edges. A secant step uses the endpoint values. Bisection keeps the search inside the bracket when that step comes too close to an end. Neighbours reuse the same edge root for the same level.
-3. Split each clipped region into tetrahedra with compatible face diagonals. Inspect boundary edges and vertex links. A pinched boundary can trigger a retry with affected snaps rolled back.
+1. Sample each lattice vertex. Snap nearby vertices to the wall with box-plane coordinates locked.
+2. Bracket the root on each crossing edge. Use a secant step or bisect. Share the root with neighbouring tetrahedra.
+3. Split each clipped cell using matching face diagonals. If snapping pinches the boundary, roll back the affected snaps and retry.
 
-A small inclusion can sit between lattice samples. A conforming mesh alone cannot establish that it contains that inclusion. [Thin-feature controls](benchmark-gaps.md) · [Volume construction](https://github.com/kmarchais/meshers/blob/main/crates/meshers-core/src/implicit.rs)
+**Failure to try:** place a small void between lattice samples. Check the void centre as well as the mesh connectivity. [Cavity replay](benchmark-gaps.md#reproduce-the-lost-cavity) · [Build the background](https://github.com/kmarchais/meshers/blob/fc54032b/crates/meshers-core/src/implicit.rs#L1579) · [Clip a tetrahedron](https://github.com/kmarchais/meshers/blob/fc54032b/crates/meshers-core/src/implicit.rs#L1737)
 
 **Next:** [Size and improve the elements](course-adaptation.md).
 

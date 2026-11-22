@@ -3,6 +3,7 @@ import { readFile } from "node:fs/promises";
 import { test } from "node:test";
 import { qualityFigure } from "../site/assets/guide-figures.mjs";
 import { cutFigure, foldFigure, sagFigure } from "../site/assets/course-figures.mjs";
+import { triangleSection } from "../site/assets/extraction-figures.mjs";
 import { boundaryMesh } from "../site/assets/boundary-mesh.mjs";
 
 const bytes = await readFile(new URL("../site/assets/playground/meshers.wasm", import.meta.url));
@@ -16,6 +17,17 @@ test("course controls reproduce the worked examples and the fold threshold", () 
   assert.equal(foldFigure(26).value, "min dx/dt = -0.04 · folded");
 });
 const { instance: { exports: core } } = await WebAssembly.instantiate(bytes);
+
+test("surface lesson roots lie on the cutting plane and form the expected contour", () => {
+  for (const [level, expected] of [[0.5, 3], [1.5, 4], [3.5, 0]]) {
+    const roots = triangleSection(level);
+    assert.equal(roots.length, expected);
+    for (const [x, y, z] of roots) assert.ok(Math.abs(x + y + z - level) < 1e-12);
+  }
+  assert.deepEqual(triangleSection(1.5), [
+    [0.75, 0.75, 0], [0.5, 0.5, 0.5], [1, 0.25, 0.25], [1, 0.5, 0],
+  ]);
+});
 
 function generate(field, cells, width) {
   const pointer = core.generate(field, cells, width);

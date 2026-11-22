@@ -4,8 +4,6 @@ icon: lucide/activity
 
 # From an implicit field to a solid
 
-Follow a gyroid from a field evaluation to a stiffness calculation. The same steps apply to fields you write yourself.
-
 <div class="guide-pair" markdown="block">
 
 <figure class="guide-figure" data-guide="band">
@@ -16,18 +14,30 @@ Follow a gyroid from a field evaluation to a stiffness calculation. The same ste
 
 <div markdown="block">
 
-A field assigns one number to each point. With a sublevel set, keep points where `f ≤ 0`. With a sheet, keep points between two levels. The zero contour can stay fixed while the sheet thickness changes.
+| Region | Keep the point when |
+| --- | --- |
+| Solid | `f ≤ 0` |
+| Sheet | `−b ≤ f ≤ b` |
 
-**Try it.** Set the half-width to 0.45. On the left the sheet is 0.90 units thick. On the right it is 0.30. A field-value tolerance only measures a distance directly for a signed distance field.
+1. Set the half-width **b = 0.45**.
+2. Compare the left and right ends. The zero line stays fixed.
+3. Read the physical thickness at **x = 0** (0.90) and **x = 2** (0.30).
 
 </div>
 </div>
 
 ## How Meshers evaluates a field
 
-For a traceable Python function, Meshers records arithmetic as a graph. In the example above it records an addition and a multiplication. Differentiating the same graph gives the gradient `(y, 1 + x, 0)`. The compiled evaluator can reuse these operations at many points.
+| Trace this operation | At x = 2, y = 0.1 |
+| --- | ---: |
+| Add: `u = 1 + x` | 3 |
+| Multiply: `f = u × y` | 0.3 |
+| Differentiate: `∂f/∂x = y`, `∂f/∂y = u` | 0.1, 3 |
 
-A NumPy callback handles fields the tracer cannot express. Supply its gradient, or Meshers estimates it with finite differences. A near-zero gradient makes projecting onto a wall unreliable. [Python field options](fields.md) · [Expression tracer](https://github.com/kmarchais/meshers/blob/main/crates/meshers-python/python/meshers/expression.py)
+- **Compiled field:** reuse the traced operations and derivatives at each query point.
+- **NumPy callback:** supply a gradient or use finite differences. A near-zero gradient makes wall projection unreliable.
+
+[Trace the field](https://github.com/kmarchais/meshers/blob/fc54032b/crates/meshers-python/python/meshers/expression.py#L587) · [Differentiate the graph](https://github.com/kmarchais/meshers/blob/fc54032b/crates/meshers-python/python/meshers/expression.py#L406) · [Field options](fields.md)
 
 ## Explore the algorithms
 

@@ -14,18 +14,28 @@ icon: lucide/spline
 
 <div markdown="block">
 
-Tet10 adds one shared midside node to each of the six edges of a Tet4. Moving wall nodes can fit curvature while keeping the corner nodes fixed. Straight corner tetrahedra can have positive volume even when the curved map turns back inside an element.
+- **4 corners** fix the parent tetrahedron.
+- **6 shared midside nodes** control edge curvature.
+- **One edge in the widget:** `x(t) = t + 4dt(1 − t)`. Its midpoint slope is always 1.
 
-**Try it.** The edge map is `x(t) = t + 4dt(1 − t)`. Its midpoint slope is always 1. At a displacement of 25% the slope at the right endpoint reaches zero. Beyond that point two different reference positions can map to the same physical position.
+| Set displacement d | Inspect the right end |
+| --- | --- |
+| 10% | The curve rises everywhere. |
+| 25% | The endpoint slope reaches zero. |
+| 35% | The curve turns back. Two reference points can map to the same position. |
 
 </div>
 </div>
 
 ## Check the whole reference cell
 
-The 3D test asks whether the Jacobian determinant stays positive. For a quadratic element each Jacobian row varies linearly in reference coordinates. Meshers bounds the determinant using triple products of the corner rows. A strictly positive lower bound admits that region. An inconclusive bound triggers subdivision. Exhausting the subdivision budget leaves the fit uncertified.
+| Whole-cell test | Action |
+| --- | --- |
+| Bound the determinant with triple products of the affine Jacobian rows | Accept the region if its lower bound clears the guard. |
+| Bounds inconclusive | Bisect and check both children. |
+| Fold detected or subdivision budget exhausted | Reduce the correction or reject the fit. |
 
-The fitting step can reduce a correction or reject it. The reported `minimum_jacobian_ratio` is a sampled diagnostic. Use the positivity check to establish orientation, and a separate boundary check to measure fit. [Wall fitting](https://github.com/kmarchais/meshers/blob/main/crates/meshers-core/src/quadratic/fit.rs) · [Determinant bound](https://github.com/kmarchais/meshers/blob/main/crates/meshers-core/src/quadratic/positivity.rs)
+**Read the diagnostic:** `minimum_jacobian_ratio` samples the mapping. The whole-cell bound checks orientation. Measure boundary fit separately. [Wall fitting](https://github.com/kmarchais/meshers/blob/fc54032b/crates/meshers-core/src/quadratic/fit.rs) · [Subdivision and bound](https://github.com/kmarchais/meshers/blob/fc54032b/crates/meshers-core/src/quadratic/positivity.rs#L23)
 
 **Next:** [Extract a surface mesh](course-surfaces.md).
 

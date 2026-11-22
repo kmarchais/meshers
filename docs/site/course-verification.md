@@ -4,14 +4,20 @@ icon: lucide/chart-no-axes-combined
 
 # Decide whether the mesh solves the physical problem
 
-A refinement study needs a quantity with a known answer. Here the displacement is prescribed analytically. The corresponding body force loads linear elastic Tet4 elements on three successively finer meshes.
+1. Prescribe the analytic displacement on the boundary.
+2. Apply the matching body force to linear elastic Tet4 elements.
+3. Refine the same specimen and compare both errors below.
 
 <div class="plot-pair">
   <figure><img src="assets/playground/displacement.svg" alt="Displacement error on the cube and mapped gyroids falls approximately as h squared."><figcaption>Displacement L2 error. The finest cube refinement has observed order 2.01.</figcaption></figure>
   <figure><img src="assets/playground/energy.svg" alt="Energy-norm errors decrease approximately in proportion to the maximum edge length."><figcaption>Energy error uses displacement gradients. The same cube refinement has order 1.00.</figcaption></figure>
 </div>
 
-**Read the slopes.** Follow the cube through a twofold reduction in maximum edge length h. At order two, displacement error falls by about a factor of four. At order one, the energy error halves. The horizontal axis is the measured physical edge length, including on the mapped cylinder and torus. [Specimens, loads and independent assemblies](solver-verification.md)
+<details><summary>If you halve the physical edge length, which error falls faster?</summary>
+<ul><li>Displacement error scales approximately as h². Expect about one quarter of the error.</li><li>Energy-norm error scales approximately as h. Expect about one half.</li></ul>
+</details>
+
+[Compute the observed order](https://github.com/kmarchais/meshers/blob/fc54032b/demos/solver/convergence.py#L318-L325) · [Specimens and independent assemblies](solver-verification.md)
 
 ## Check geometry before timing the solve
 
@@ -21,6 +27,8 @@ A refinement study needs a quantity with a known answer. Here the displacement i
 | Compare volume by component and probe solids and voids. | Two volume errors can cancel in a global sum. |
 | Check signed orientation, shape, boundary labels and periodic pairs. | A solver can converge on a wrongly connected domain. |
 
-For a periodic cell without an exact displacement solution, compare effective stiffness under independent loading controls and refinement. Hill–Mandel energy consistency compares macroscopic work with volume-averaged microscopic work. A small refinement change alone does not establish the continuum error. [Periodic stiffness study](periodic-homogenization.md)
+- **Periodic stiffness:** compare independent loading controls and successive refinements.
+- **Hill–Mandel check:** compare macroscopic work with volume-averaged microscopic work.
+- **Accuracy claim:** use a reference. Refinement stability alone leaves continuum error unknown. [Periodic stiffness study](periodic-homogenization.md)
 
-Compare generation, assembly and solve time only after the candidate meets the chosen geometry and physical error budgets. Keep rejected cases visible. [Benchmark index](benchmark-index.md) · [Open targets](benchmark-gaps.md)
+**Compare cost at the target error:** retain rejected cases and record generation, assembly and solve times separately. [Benchmark index](benchmark-index.md) · [Open targets](benchmark-gaps.md)
