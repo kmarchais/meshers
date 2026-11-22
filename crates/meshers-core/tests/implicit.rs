@@ -1046,6 +1046,53 @@ fn a_film_thinner_than_a_cell_is_meshed() {
 }
 
 #[test]
+fn refinement_follows_the_folds_between_barely_overlapping_spheres() {
+    // Spheres of a periodic packing that overlap by less than a cell: the void
+    // around their necks is a sharp wedge. Facets that span it have every sample close to a sphere
+    // while the fold at its bottom is far from them; only the measure from
+    // the wall to the mesh sees that, and nodes placed in the fold close it.
+    let radius = 0.17;
+    let union = |p: [f64; 3]| {
+        let to = |c: [f64; 3]| {
+            let d: [f64; 3] = std::array::from_fn(|a| {
+                let d = p[a] - c[a];
+                d - d.round()
+            });
+            (d[0] * d[0] + d[1] * d[1] + d[2] * d[2]).sqrt() - radius
+        };
+        [
+            [-0.4144, -0.2632, 0.3013],
+            [-0.3863, -0.1088, 0.0167],
+            [0.4563, -0.2158, 0.1485],
+            [0.4735, -0.2016, -0.186],
+        ]
+        .into_iter()
+        .map(to)
+        .fold(f64::INFINITY, f64::min)
+    };
+    let tolerance = 0.02;
+    let output = generate(
+        &union,
+        Options {
+            bounds: [[-0.5; 3], [0.5; 3]],
+            cells: [16; 3],
+            periodic: [true; 3],
+            geometry_tolerance: tolerance,
+            minimum_quality: 0.1,
+            ..Options::default()
+        },
+    )
+    .unwrap();
+    assert!(output.diagnostics.maximum_sampled_surface_error <= tolerance);
+    // 0.029 without the nodes in the folds, 0.020 with them.
+    assert!(
+        output.diagnostics.maximum_sampled_coverage_error <= 1.2 * tolerance,
+        "{}",
+        output.diagnostics.maximum_sampled_coverage_error
+    );
+}
+
+#[test]
 fn adaptation_keeps_a_periodic_spinodoid_unfoldable() {
     // Without the periodic guards of the adaptive operators, a collapse lays a
     // wall facet in a periodic plane or a wall vertex crosses one: "solid
