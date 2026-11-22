@@ -1,6 +1,6 @@
 # Fields, thickness and grading
 
-For a solid, Meshers keeps `f ≤ 0`. For a band, it keeps `lower ≤ f ≤ upper`. A fixed band gets thinner where the field changes faster.
+<div class="guide-pair" markdown="block">
 
 <figure class="guide-figure" data-guide="band">
   <div class="guide-diagram"><img src="assets/playground/band.svg" alt="Analytic section of a graded sheet"></div>
@@ -8,9 +8,16 @@ For a solid, Meshers keeps `f ≤ 0`. For a band, it keeps `lower ≤ f ≤ uppe
   <figcaption>Vertical section through f = (1 + x)y, from x = 0 to x = 2.</figcaption>
 </figure>
 
-<script type="module" src="assets/guide-controls.js"></script>
+<div markdown="block">
+
+For a solid, Meshers keeps `f ≤ 0`. For a band, it keeps `lower ≤ f ≤ upper`. A fixed band gets thinner where the field changes faster.
 
 To grade a sheet, divide the field by a positive half-width and use `band=(-1, 1)`. Match widths across periodic ends. [Graded sheet example](https://github.com/kmarchais/meshers/blob/main/crates/meshers-python/examples/graded.py)
+
+</div>
+</div>
+
+<script type="module" src="assets/guide-controls.js"></script>
 
 | Field implementation | Evaluation and derivatives |
 | --- | --- |

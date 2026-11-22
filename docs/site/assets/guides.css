@@ -59,3 +59,27 @@
 .guide-figure fieldset:not(.shape-range) label { display:inline-flex; align-items:center; gap:.28rem; cursor:pointer; border:1px solid var(--track); border-radius:1rem; padding:.2rem .55rem; margin:.15rem .2rem .15rem 0; font-size:.7rem; }
 .guide-figure fieldset label:has(:checked) { color:var(--paper); background:var(--selected); }
 .guide-figure fieldset input { accent-color:var(--mint); }
+
+/* Fit the pair to the article width after navigation takes its share. */
+.guide-pair {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 19rem), 1fr));
+  gap: 1rem clamp(1rem, 2vw, 2rem);
+  align-items: start;
+  margin-block: 1.3rem;
+}
+.guide-pair > *, .explorer-example > * { min-width: 0; }
+.md-typeset .guide-pair .guide-figure { margin: 0; }
+.guide-pair > div > :first-child { margin-top: 0; }
+.guide-pair > div > :last-child { margin-bottom: 0; }
+
+.md-content__inner:has(.explorer-example) { container: explorer / inline-size; }
+@container explorer (min-width: 64rem) {
+  .explorer-example {
+    display: grid;
+    grid-template-columns: minmax(0, 2fr) minmax(20rem, 1fr);
+    align-items: start;
+    gap: clamp(1rem, 2vw, 2rem);
+  }
+  .explorer-example > .highlight, .explorer-example > .highlight pre { margin: 0; }
+}

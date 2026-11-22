@@ -7,6 +7,8 @@ hide:
 
 Generate a periodic solid and inspect its tetrahedral mesh. Drag to orbit, scroll to zoom.
 
+<div class="explorer-example">
+<div>
 <div class="mesh-lab">
   <div class="mesh-stage">
     <img class="mesh-poster" src="assets/explorer-gyroid.webp" alt="Gyroid sheet with triangulated walls and box caps">
@@ -38,13 +40,16 @@ Generate a periodic solid and inspect its tetrahedral mesh. Drag to orbit, scrol
   <p class="mesh-status" role="status">Preparing the 3D view…</p>
 </div>
 <noscript>Enable JavaScript to rotate and regenerate the mesh.</noscript>
+</div>
 
 <div class="language-python highlight"><pre><code id="mesh-code"><span class="kn">import</span> <span class="mesh-module">meshers</span> <span class="k">as</span> <span class="mesh-module">mrs</span>
 
 mesh = <span class="mesh-module">mrs</span>.<span class="nf">generate</span>(
     <span class="s2" data-param="field">"gyroid"</span>, cells=<span class="mi" data-param="cells">10</span>, band=(-<span class="mf" data-param="width">0.5</span>, <span class="mf" data-param="width">0.5</span>),
-    periodic=(<span class="kc">True</span>,) * <span class="mi">3</span>, geometry_tolerance=<span class="mf">0.05</span>, optimize_passes=<span class="mi">2</span>, threads=<span class="mi">0</span>,
+    periodic=(<span class="kc">True</span>,) * <span class="mi">3</span>, geometry_tolerance=<span class="mf">0.05</span>,
+    optimize_passes=<span class="mi">2</span>, threads=<span class="mi">0</span>,
 )</code></pre></div>
+</div>
 
 ## Explore the guides
 

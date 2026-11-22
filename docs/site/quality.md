@@ -1,33 +1,41 @@
 # Check the mesh before a solve
 
-**Tetrahedron shape quality** measures the cell’s volume as a fraction of the volume of a regular tetrahedron with the same root-mean-square edge length. A regular cell scores 1. A sliver approaches 0 even if all six edges are long. Uniform scaling leaves the score unchanged.
-
-For volume *V* and root-mean-square edge length *L*, the normalized volume ratio is **6√2 |V| / L³**. Check signed volume separately for orientation. [MMG’s isotropic tetrahedron measure](https://github.com/MmgTools/mmg/blob/v5.8.0/src/mmg3d/inlined_functions_3d_private.h#L287-L354)
+<div class="guide-pair" markdown="block">
 
 <figure class="guide-figure" id="quality-section">
   <img src="assets/gyroid-quality-poor.webp" alt="The 46 gyroid tetrahedra with shape quality up to 0.10">
   <canvas width="1248" height="1248" hidden aria-label="Filtered gyroid tetrahedra" role="img"></canvas>
   <fieldset class="mesh-slider shape-range" hidden>
-    <legend>Shape quality range</legend>
-    <div class="range-values"><label for="shape-min">Minimum <output for="shape-min">0.00</output></label><label for="shape-max">Maximum <output for="shape-max">0.10</output></label></div>
-    <div class="range-track">
-      <input id="shape-min" type="range" min="0" max="1" step="0.01" value="0">
-      <input id="shape-max" type="range" min="0" max="1" step="0.01" value="0.10">
-    </div>
+  <legend>Shape quality range</legend>
+  <div class="range-values"><label for="shape-min">Minimum <output for="shape-min">0.00</output></label><label for="shape-max">Maximum <output for="shape-max">0.10</output></label></div>
+  <div class="range-track">
+  <input id="shape-min" type="range" min="0" max="1" step="0.01" value="0">
+  <input id="shape-max" type="range" min="0" max="1" step="0.01" value="0.10">
+  </div>
   </fieldset>
   <figcaption><span role="status">46 of 3,367 cells in range.</span> Shape quality · 0 <span class="quality-scale"></span> 1.</figcaption>
 </figure>
 
-To reproduce the specimen with Meshers 0.2.1:
+<div markdown="block">
+
+**Tetrahedron shape quality** measures the cell’s volume as a fraction of the volume of a regular tetrahedron with the same root-mean-square edge length. A regular cell scores 1. A sliver approaches 0 even if all six edges are long. Uniform scaling leaves the score unchanged.
+
+For volume *V* and root-mean-square edge length *L*, the normalized volume ratio is **6√2 |V| / L³**. Check signed volume separately for orientation. [MMG’s isotropic tetrahedron measure](https://github.com/MmgTools/mmg/blob/v5.8.0/src/mmg3d/inlined_functions_3d_private.h#L287-L354)
+
+Generate this specimen with Meshers 0.2.1.
 
 ```python
 import meshers as mrs
 
 mesh = mrs.generate(
-    "gyroid", cells=8, band=(-0.5, 0.5), periodic=(True,) * 3,
+    "gyroid", cells=8, band=(-0.5, 0.5),
+    periodic=(True,) * 3,
     geometry_tolerance=0.05, optimize_passes=0,
 )
 ```
+
+</div>
+</div>
 
 ## Flatten a tetrahedron
 
