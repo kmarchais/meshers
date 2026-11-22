@@ -28,8 +28,11 @@ def sphere(x, y, z):
 
 
 mesh = meshers.generate(
-    sphere, bounds=(-0.8, 0.8) * 3, cells=12,
-    geometry_tolerance=0.04, optimize_passes=2,
+    sphere,
+    bounds=(-0.8, 0.8) * 3,
+    cells=12,
+    geometry_tolerance=0.04,
+    optimize_passes=2,
 )
 mesh.write_vtkhdf("sphere.vtkhdf")
 mesh.write_vtkhdf("boundary.vtkhdf", surface=True)

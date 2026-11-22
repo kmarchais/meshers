@@ -28,9 +28,12 @@ Generate this specimen with Meshers 0.2.1.
 import meshers as mrs
 
 mesh = mrs.generate(
-    "gyroid", cells=8, band=(-0.5, 0.5),
+    "gyroid",
+    cells=8,
+    band=(-0.5, 0.5),
     periodic=(True,) * 3,
-    geometry_tolerance=0.05, optimize_passes=0,
+    geometry_tolerance=0.05,
+    optimize_passes=0,
 )
 ```
 
