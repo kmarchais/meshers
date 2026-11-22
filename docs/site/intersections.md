@@ -8,10 +8,12 @@ icon: lucide/layers
 
 <figure class="guide-figure" id="cut-layers">
   <img src="assets/cut-sphere.svg" alt="Cut sphere with a triangulated wall and planar cap">
-  <fieldset><legend>Visible boundary</legend>
-  <label><input type="radio" name="boundary" value="" checked> Both</label>
-  <label><input type="radio" name="boundary" value="wall"> Spherical wall</label>
-  <label><input type="radio" name="boundary" value="cap"> Planar cut</label>
+  <fieldset class="mesh-fields"><legend>Visible boundary</legend>
+  <div class="mesh-segments">
+    <label><input type="radio" name="boundary" value="" checked><span>Both</span></label>
+    <label><input type="radio" name="boundary" value="wall"><span>Spherical wall</span></label>
+    <label><input type="radio" name="boundary" value="cap"><span>Planar cut</span></label>
+  </div>
   </fieldset>
   <figcaption>The triangles come from the two named surfaces of a 12-cell-per-axis mesh.</figcaption>
 </figure>

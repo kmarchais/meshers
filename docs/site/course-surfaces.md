@@ -5,20 +5,26 @@ icon: lucide/grid-2x2
 # Where does a surface face come from?
 
 <div id="surface-extraction">
-<fieldset class="extraction-steps"><legend>Step through both extractors</legend>
-  <label><input type="radio" name="stage" checked> Sample signs</label>
-  <label><input type="radio" name="stage"> Find crossings</label>
-  <label><input type="radio" name="stage"> Place vertices</label>
-  <label><input type="radio" name="stage"> Connect faces</label>
+<fieldset class="mesh-fields"><legend>Step through both extractors</legend>
+  <div class="mesh-segments">
+    <label><input type="radio" name="stage" value="0" checked><span>Sample signs</span></label>
+    <label><input type="radio" name="stage" value="1"><span>Find crossings</span></label>
+    <label><input type="radio" name="stage" value="2"><span>Place vertices</span></label>
+    <label><input type="radio" name="stage" value="3"><span>Connect faces</span></label>
+  </div>
 </fieldset>
 <div class="guide-pair">
 <figure class="guide-figure" id="triangle">
   <h2>Triangle · cut one tetrahedron</h2>
   <div class="guide-diagram"><img src="assets/playground/extract-triangle.svg" alt="Three roots on edges from A form a triangle inside a tetrahedron."></div>
   <figcaption aria-live="polite">One corner below the plane gives three crossing edges and one triangle.</figcaption>
-  <label class="extraction-level">Plane x + y + z = t
-    <select><option value="0.5">t = 0.5</option><option value="1.5">t = 1.5</option><option value="3.5">t = 3.5</option></select>
-  </label>
+  <fieldset class="mesh-fields"><legend>Plane x + y + z = t</legend>
+  <div class="mesh-segments">
+    <label><input type="radio" name="level" value="0.5" checked><span>0.5</span></label>
+    <label><input type="radio" name="level" value="1.5"><span>1.5</span></label>
+    <label><input type="radio" name="level" value="3.5"><span>3.5</span></label>
+  </div>
+  </fieldset>
 </figure>
 <figure class="guide-figure" id="quad">
   <h2>Quad · circle one grid edge</h2>

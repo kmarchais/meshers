@@ -1,12 +1,11 @@
 import { quadStage, triangleStage } from "./extraction-figures.mjs";
 
 const lab = document.querySelector("#surface-extraction");
-const steps = [...lab.querySelectorAll('input[name="stage"]')];
-const level = lab.querySelector("select");
 function draw() {
-  const step = steps.findIndex((input) => input.checked);
+  const step = Number(lab.querySelector('input[name="stage"]:checked').value);
+  const level = Number(lab.querySelector('input[name="level"]:checked').value);
   for (const [id, result] of [
-    ["triangle", triangleStage(Number(level.value), step)],
+    ["triangle", triangleStage(level, step)],
     ["quad", quadStage(step)],
   ]) {
     const panel = lab.querySelector("#" + id);

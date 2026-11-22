@@ -54,11 +54,9 @@
 
 .md-typeset .plot-pair figure { width:100%; max-width:none; box-sizing:border-box; }
 .md-typeset .guide-figure.chart img { max-height:22rem; }
-.md-typeset .guide-figure fieldset { border:0; border-top:1px solid var(--track); padding:.55rem 0 0; margin:.65rem 0 0; text-align:left; }
-.guide-figure fieldset legend { padding-right:.55rem; font-size:.72rem; font-weight:650; color:var(--muted); }
-.guide-figure fieldset:not(.shape-range) label { display:inline-flex; align-items:center; gap:.28rem; cursor:pointer; border:1px solid var(--track); border-radius:1rem; padding:.2rem .55rem; margin:.15rem .2rem .15rem 0; font-size:.7rem; }
-.guide-figure fieldset label:has(:checked) { color:var(--paper); background:var(--selected); }
-.guide-figure fieldset input { accent-color:var(--mint); }
+.md-typeset .guide-figure .mesh-fields { margin-top:.65rem; }
+.md-typeset .guide-figure .shape-range { border:0; border-top:1px solid var(--track); padding:.55rem 0 0; margin:.65rem 0 0; text-align:left; }
+.shape-range legend { padding-right:.55rem; font-size:.72rem; font-weight:650; color:var(--muted); }
 
 /* Fit the pair to the article width after navigation takes its share. */
 .guide-pair {
@@ -73,23 +71,28 @@
 .guide-pair > div > :first-child { margin-top: 0; }
 .guide-pair > div > :last-child { margin-bottom: 0; }
 
-#surface-extraction .extraction-steps, #surface-extraction .extraction-level { display:none; }
-#cut-layers:not([data-ready]) fieldset { display:none; }
-#surface-extraction[data-ready] .extraction-steps { display:flex; flex-wrap:wrap; gap:.4rem; }
-.extraction-steps { border:0; padding:0; margin:0 0 .7rem; }
-.extraction-steps legend { font-weight:650; margin-bottom:.45rem; }
-.extraction-steps label, .extraction-level select {
-  background:var(--lab-panel); color:var(--paper); border:1px solid var(--track);
-  border-radius:.35rem; padding:.3rem .65rem; cursor:pointer; font:inherit;
+#surface-extraction:not([data-ready]) .mesh-fields, #cut-layers:not([data-ready]) .mesh-fields { display:none; }
+#surface-extraction > .mesh-fields { max-width:32rem; }
+@media (max-width:32rem) {
+  #surface-extraction > .mesh-fields .mesh-segments { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); }
 }
-.extraction-steps label:has(:checked) { background:var(--selected); border-color:var(--mint); }
-.extraction-steps input { accent-color:var(--mint); }
-#surface-extraction[data-ready] .extraction-level { display:flex; align-items:center; gap:.5rem; margin-top:.55rem; font-size:.75rem; }
 #surface-extraction .guide-pair { margin:.6rem 0; align-items:stretch; }
 #surface-extraction h2 { margin:0; text-align:left; font-size:1rem; }
 #surface-extraction .guide-diagram { margin:.6rem 0; }
 #surface-extraction .guide-diagram svg { max-height:12rem; }
 .edge-split svg { display:block; max-width:28rem; width:100%; }
+.md-typeset details:where(:not([class]), .edge-split) {
+  border:1px solid var(--track); border-radius:.42rem; background:var(--lab-panel);
+  color:var(--paper); box-shadow:none;
+}
+.md-typeset details:where(:not([class]), .edge-split) > summary {
+  padding-inline-start:.65rem; background:var(--well); color:var(--paper); cursor:pointer;
+}
+.md-typeset details:where(:not([class]), .edge-split) > summary::before { display:none; }
+.md-typeset details:where(:not([class]), .edge-split) > summary::after { background-color:var(--mint); }
+.md-typeset details:where(:not([class]), .edge-split) > summary:focus-visible {
+  outline:2px solid var(--mint); outline-offset:2px;
+}
 @media (prefers-reduced-motion:no-preference) {
   .edge-split[open] .new-chords { stroke-dasharray:1; animation:draw-chords .7s ease-out; }
   @keyframes draw-chords { from {stroke-dashoffset:1} to {stroke-dashoffset:0} }

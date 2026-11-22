@@ -21,13 +21,14 @@
   background:var(--lab-panel); color:var(--paper);
 }
 .md-typeset .mesh-controls h2 { margin:0; font-size:1rem; line-height:1.25; letter-spacing:-.025em; }
-.mesh-controls label,.mesh-controls legend { font-size:.68rem; font-weight:600; }
-.mesh-controls .mesh-fields { min-width:0; padding:0; margin:0; border:0; }
-.mesh-fields legend { padding:0; margin-bottom:.28rem; }
+.mesh-controls label,.mesh-fields label,.mesh-fields legend { font-size:.68rem; font-weight:600; }
+.md-typeset .mesh-fields { min-width:0; padding:0; margin:0; border:0; text-align:start; }
+.mesh-fields legend { padding:0; margin-bottom:.28rem; color:var(--paper); }
 .mesh-segments { display:flex; padding:3px; border:1px solid var(--track); border-radius:.42rem; background:var(--well); }
 .mesh-segments label { flex:1; position:relative; text-align:center; min-width:0; }
-.mesh-segments span { display:block; padding:.33rem .12rem; cursor:pointer; border-radius:.25rem; color:var(--muted); }
-.mesh-segments input,.mesh-switch input { position:absolute; opacity:0; width:1px; height:1px; }
+.mesh-segments span { display:grid; place-items:center; height:100%; padding:.33rem .12rem; cursor:pointer; border-radius:.25rem; color:var(--muted); }
+.mesh-segments input { position:absolute; inset:0; width:100%; height:100%; margin:0; opacity:0; cursor:pointer; }
+.mesh-switch input { position:absolute; opacity:0; width:1px; height:1px; }
 .mesh-segments input:checked + span { background:var(--selected); color:var(--paper); }
 .mesh-segments input:focus-visible + span,.mesh-switch input:focus-visible + span,.mesh-controls button:focus-visible {
   outline:2px solid var(--mint); outline-offset:2px;
