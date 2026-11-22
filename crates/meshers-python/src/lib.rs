@@ -756,18 +756,12 @@ fn mesh_dict<'py>(
         "reverted_snap_vertices",
         result.diagnostics.reverted_snap_vertices,
     )?;
-    diagnostics.set_item(
-        "defeaturing_moves",
-        result.diagnostics.defeaturing_moves,
-    )?;
+    diagnostics.set_item("defeaturing_moves", result.diagnostics.defeaturing_moves)?;
     diagnostics.set_item(
         "removed_bridging_elements",
         result.diagnostics.removed_bridging_elements,
     )?;
-    diagnostics.set_item(
-        "improved_elements",
-        result.diagnostics.improved_elements,
-    )?;
+    diagnostics.set_item("improved_elements", result.diagnostics.improved_elements)?;
     diagnostics.set_item(
         "adaptation_abandoned",
         result.diagnostics.adaptation_abandoned,

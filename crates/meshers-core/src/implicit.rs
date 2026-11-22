@@ -783,7 +783,10 @@ fn generate_internal<F: ScalarField>(
             ..context
         },
     };
-    if let Some(background) = context.background {
+    // The refined lattice is not an input: only a caller's background is checked.
+    if refined.is_none()
+        && let Some(background) = context.background
+    {
         validate_background(background, &context).map_err(MeshingError::InvalidOptions)?;
     }
     context.check().map_err(MeshingError::GenerationFailed)?;
@@ -796,7 +799,10 @@ fn generate_internal<F: ScalarField>(
     let lattice = context.without_adaptation();
     let mut adaptation_abandoned = false;
     let mut attempt = build(&context);
+    // Retained constraints and half-spaces have no lattice route to fall back on.
     if options.adapt.is_some()
+        && context.constraints.is_none()
+        && context.halfspaces.is_none()
         && attempt.as_ref().is_err_and(|error| {
             [
                 "sampled geometry error",
@@ -804,7 +810,11 @@ fn generate_internal<F: ScalarField>(
                 "lie outside the solid",
                 "inverted tetrahedron",
                 "two-manifold",
-                "periodic",
+                "periodic cap node",
+                "periodic triangle mismatch",
+                "periodic node match",
+                "periodic edge/corner",
+                "crosses a periodic plane",
             ]
             .iter()
             .any(|gate| error.contains(gate))
@@ -1087,10 +1097,23 @@ fn share_image_coordinates(points: &mut [Point], pairs: &[Vec<[usize; 2]>; 3]) {
 fn finish<F: ScalarField>(mesh: Mesh, g: &Context<F>) -> Result<Output, String> {
     finish_with_constraints(mesh, g, None)
 }
+/// Whether the final checks accept `mesh`, without the coverage report that
+/// only the returned mesh needs.
+fn accepted<F: ScalarField>(mesh: &Mesh, g: &Context<F>) -> bool {
+    check(copy_mesh(mesh), g, None, false).is_ok()
+}
 fn finish_with_constraints<F: ScalarField>(
+    mesh: Mesh,
+    g: &Context<F>,
+    constraints: Option<&[intersection::ConstraintMask]>,
+) -> Result<Output, String> {
+    check(mesh, g, constraints, true)
+}
+fn check<F: ScalarField>(
     mut mesh: Mesh,
     g: &Context<F>,
     constraints: Option<&[intersection::ConstraintMask]>,
+    report: bool,
 ) -> Result<Output, String> {
     weld_periodic_images(&mut mesh.points, g.bounds(), g.options.periodic);
     observe_linear(g, "final-linear", &mesh);
@@ -1146,7 +1169,7 @@ fn finish_with_constraints<F: ScalarField>(
             // that plane. The full gradient measures the distance to the unclipped
             // wall, which can pass much closer outside the box, so it under-reports
             // curve error. Only the adaptive path, which refines curve chords by this
-            // measure, applies it; the lattice pipeline keeps its released check.
+            // measure, holds its samples in the plane.
             for sample in facet_samples(p, [lo, hi], g.options.adapt.is_some()) {
                 if let Some(fields) = g.constraints.filter(|_| constraints.is_some()) {
                     let distance = if features == 0 {
@@ -1205,7 +1228,14 @@ fn finish_with_constraints<F: ScalarField>(
     }
     let pairs = periodic_pairs(&mesh.points, &mesh.surface, g.bounds(), g.options.periodic)?;
     share_image_coordinates(&mut mesh.points, &pairs);
-    let coverage = if constraints.is_none() && g.halfspaces.is_none() {
+    let empty = mesh.tets.is_empty();
+    if !empty && minimum < g.options.minimum_quality {
+        return Err(format!(
+            "minimum MMG quality {minimum:e} is below required {:e}; mesh rejected ({} elements below 0.1). Improve resolution/optimization or use a quality remesher",
+            g.options.minimum_quality, elements_below_quality_01
+        ));
+    }
+    let coverage = if report && constraints.is_none() && g.halfspaces.is_none() {
         let wall: Vec<[Point; 3]> = mesh
             .surface
             .iter()
@@ -1217,13 +1247,6 @@ fn finish_with_constraints<F: ScalarField>(
     } else {
         0.
     };
-    let empty = mesh.tets.is_empty();
-    if !empty && minimum < g.options.minimum_quality {
-        return Err(format!(
-            "minimum MMG quality {minimum:e} is below required {:e}; mesh rejected ({} elements below 0.1). Improve resolution/optimization or use a quality remesher",
-            g.options.minimum_quality, elements_below_quality_01
-        ));
-    }
     Ok(Output {
         quadratic: None,
         mesh,
@@ -1252,12 +1275,12 @@ fn finish_with_constraints<F: ScalarField>(
     })
 }
 
-/// Interior samples per lattice edge when looking for hidden walls.
 /// Share of the geometry tolerance that refinement and optimization work to.
 /// They steer by cheaper estimates than the final gate, which measures the
 /// distance walked to the wall; the margin keeps a facet they accept from
-/// failing the gate by rounding. Envelope meshers keep the same kind of slack.
+/// failing the gate on that difference. Envelope meshers keep the same kind of slack.
 const WORKING_TOLERANCE: f64 = 0.9;
+/// Interior samples per lattice edge when looking for hidden walls.
 const GAP_SAMPLES: usize = 7;
 /// Items between two calls of `check` in the loops that do no field work of
 /// their own. A caller may look at its interruption flag only once in many
@@ -1380,6 +1403,7 @@ fn resolve_gaps<F: ScalarField>(
             incident[v].push(t);
         }
     }
+    let lattice = tets.len();
     let mut splits = 0;
     for _ in 0..2 {
         g.check()?;
@@ -1502,7 +1526,9 @@ fn resolve_gaps<F: ScalarField>(
             }
             splits += 1;
         }
-        if tets.len() > o.max_tetrahedra {
+        // The budget bounds the mesh of the solid, not the lattice of the
+        // box it is cut from: only what the splits add counts against it.
+        if tets.len() - lattice > o.max_tetrahedra {
             return Err("resolving narrow gaps exceeds max_tetrahedra".into());
         }
     }
@@ -1911,23 +1937,9 @@ fn build<F: ScalarField>(g: &Context<F>) -> Result<Output, String> {
         // Adaptation has no operator for an element pinned between the wall
         // and a box plane: its result goes through the sliver recovery of
         // the lattice path, kept only if the geometry gate accepts it.
-        let (recovered, defeaturing_moves) = recover_within_gate(mesh, g, threshold, h, false)?;
-        let (mut mesh, improved_elements) = improve_shapes(recovered, g, threshold, h)?;
-        let inserted_interior_nodes = crate::adaptive::refine_interior(
-            &mut mesh,
-            o.interior_refine_nodes,
-            o.minimum_quality.max(0.1),
-            o.max_tetrahedra,
-            g,
-        )?;
-        let balanced_wall_vertices = balance_volume(&mut mesh, g)?;
-        let mut output = finish(mesh, g)?;
-        output.diagnostics.defeaturing_moves = defeaturing_moves;
+        let mut output = close(mesh, g, threshold, h, false)?;
         output.diagnostics.removed_bridging_elements = removed_bridging_elements;
-        output.diagnostics.balanced_wall_vertices = balanced_wall_vertices;
-        output.diagnostics.improved_elements = improved_elements;
         output.diagnostics.reverted_snap_vertices = reverted_snap_vertices;
-        output.diagnostics.inserted_interior_nodes = inserted_interior_nodes;
         output.diagnostics.adapt = Some(stats);
         return Ok(output);
     }
@@ -1963,7 +1975,23 @@ fn build<F: ScalarField>(g: &Context<F>) -> Result<Output, String> {
         None,
         g,
     )?;
-    let (mesh, defeaturing_moves) = recover_within_gate(mesh, g, threshold, h, true)?;
+    let mut output = close(mesh, g, threshold, h, true)?;
+    output.diagnostics.removed_bridging_elements = removed_bridging_elements;
+    output.diagnostics.reverted_snap_vertices = reverted_snap_vertices;
+    Ok(output)
+}
+
+/// The stages both routes end with: quality recovery, interior refinement,
+/// volume balancing and the final checks.
+fn close<F: ScalarField>(
+    mesh: Mesh,
+    g: &Context<F>,
+    threshold: f64,
+    h: f64,
+    keep_failed: bool,
+) -> Result<Output, String> {
+    let o = g.options;
+    let (mesh, defeaturing_moves) = recover_within_gate(mesh, g, threshold, h, keep_failed)?;
     let (mut mesh, improved_elements) = improve_shapes(mesh, g, threshold, h)?;
     let inserted_interior_nodes = crate::adaptive::refine_interior(
         &mut mesh,
@@ -1974,12 +2002,10 @@ fn build<F: ScalarField>(g: &Context<F>) -> Result<Output, String> {
     )?;
     let balanced_wall_vertices = balance_volume(&mut mesh, g)?;
     let mut output = finish(mesh, g)?;
-    output.diagnostics.balanced_wall_vertices = balanced_wall_vertices;
-    output.diagnostics.improved_elements = improved_elements;
-    output.diagnostics.reverted_snap_vertices = reverted_snap_vertices;
     output.diagnostics.defeaturing_moves = defeaturing_moves;
-    output.diagnostics.removed_bridging_elements = removed_bridging_elements;
+    output.diagnostics.improved_elements = improved_elements;
     output.diagnostics.inserted_interior_nodes = inserted_interior_nodes;
+    output.diagnostics.balanced_wall_vertices = balanced_wall_vertices;
     Ok(output)
 }
 
@@ -2022,23 +2048,47 @@ fn improve_shapes<F: ScalarField>(
         return Ok((mesh, 0));
     }
     let mut trial = copy_mesh(&mesh);
+    remesh_rounds(&mut trial, g, threshold, h, None, |mesh| {
+        shapes(mesh).0 == 0
+    })?;
+    let (left, lowest) = shapes(&trial);
+    if left < below && lowest >= worst && accepted(&trial, g) {
+        return Ok((trial, below - left));
+    }
+    Ok((mesh, 0))
+}
+
+/// Rounds of sliver removal and smoothing on `mesh` until `done` or until a
+/// round changes nothing, and the number of defeaturing merges they took.
+/// `defeature` is how far a merge may move the wall, when it may at all.
+fn remesh_rounds<F: ScalarField>(
+    mesh: &mut Mesh,
+    g: &Context<F>,
+    threshold: f64,
+    h: f64,
+    defeature: Option<f64>,
+    done: impl Fn(&Mesh) -> bool,
+) -> Result<usize, String> {
+    let o = g.options;
+    let mut merged = 0;
     for _ in 0..6 {
-        weld_periodic_images(&mut trial.points, g.bounds(), o.periodic);
-        let (operations, _) = crate::tet_adapt::remove_slivers(
-            &mut trial,
+        weld_periodic_images(&mut mesh.points, g.bounds(), o.periodic);
+        let (operations, merges) = crate::tet_adapt::remove_slivers(
+            mesh,
             g,
             threshold,
             o.periodic,
             h,
             o.geometry_tolerance.min(0.1 * h),
-            None,
+            defeature,
         )?;
+        merged += merges;
         if operations == 0 {
             break;
         }
-        weld_periodic_images(&mut trial.points, g.bounds(), o.periodic);
+        weld_periodic_images(&mut mesh.points, g.bounds(), o.periodic);
         crate::optimize::optimize_for(
-            &mut trial,
+            mesh,
             threshold,
             h,
             o.optimize_passes,
@@ -2047,24 +2097,28 @@ fn improve_shapes<F: ScalarField>(
             None,
             g,
         )?;
-        if shapes(&trial).0 == 0 {
+        if done(mesh) {
             break;
         }
     }
-    let (left, lowest) = shapes(&trial);
-    if left < below && lowest >= worst && finish(copy_mesh(&trial), g).is_ok() {
-        return Ok((trial, below - left));
-    }
-    Ok((mesh, 0))
+    Ok(merged)
 }
 
-/// Sliver recovery that the final gate accepts, with its defeaturing moves.
+/// Remesh around the elements below `minimum_quality`, and return a mesh the
+/// final gate accepts with the number of defeaturing moves it took. A mesh
+/// that passes the floor is returned unchanged.
 ///
-/// The reach of a defeaturing move bounds how far a vertex goes, not how far
-/// the facets around it end up from the wall: a shorter reach is tried when
-/// the gate refuses the result. When no reach passes, `keep_failed` returns
-/// the first attempt, whose rejection then names the cause, and otherwise
-/// the mesh as it came.
+/// Relocation cannot repair a sliver that needs new connectivity, so the
+/// geometry-preserving operations run first. Defeaturing is the last resort:
+/// it restarts from the mesh as it came, because those operations can close
+/// the room a merge needs, and a defeatured mesh that still fails is not
+/// worth its changed geometry.
+///
+/// The reach of a defeaturing move bounds how far a vertex goes within the
+/// working tolerance, not how far the facets around it end up from the wall:
+/// a shorter reach is tried when the gate refuses the result. When no reach
+/// passes, `keep_failed` returns the first attempt, whose rejection then
+/// names the cause, and otherwise the mesh as it came.
 fn recover_within_gate<F: ScalarField>(
     mesh: Mesh,
     g: &Context<F>,
@@ -2072,92 +2126,53 @@ fn recover_within_gate<F: ScalarField>(
     h: f64,
     keep_failed: bool,
 ) -> Result<(Mesh, usize), String> {
+    let o = g.options;
+    let passes = |mesh: &Mesh| {
+        mesh.tets
+            .iter()
+            .all(|t| quality(t.map(|i| mesh.points[i])).powf(1.5) >= o.minimum_quality)
+    };
+    if o.optimize_passes == 0 || o.minimum_quality <= 0. || passes(&mesh) {
+        return Ok((mesh, 0));
+    }
+    let mut preserved = copy_mesh(&mesh);
+    let moves = remesh_rounds(&mut preserved, g, threshold, h, None, passes)?;
+    let untouched = moves == 0 && preserved.tets == mesh.tets && preserved.points == mesh.points;
+    let repaired = passes(&preserved);
+    let mut preserved_accepted = None;
     let mut first = None;
     for reach in [1., 0.6, 0.3] {
-        let (recovered, moves) = recover_slivers(copy_mesh(&mesh), g, threshold, h, reach)?;
-        if moves == 0 && recovered.tets == mesh.tets && recovered.points == mesh.points {
-            return Ok((mesh, 0));
+        let mut defeatured = None;
+        if !repaired {
+            let mut trial = copy_mesh(&mesh);
+            let limit = (reach * WORKING_TOLERANCE * o.geometry_tolerance).min(0.5 * h);
+            let merged = remesh_rounds(&mut trial, g, threshold, h, Some(limit), passes)?;
+            if merged > 0 && passes(&trial) {
+                defeatured = Some((trial, merged));
+            }
         }
-        if finish(copy_mesh(&recovered), g).is_ok() {
-            return Ok((recovered, moves));
+        match defeatured {
+            Some((trial, merged)) => {
+                if accepted(&trial, g) {
+                    return Ok((trial, merged));
+                }
+                first.get_or_insert((trial, merged));
+            }
+            None if untouched => return Ok((mesh, 0)),
+            None => {
+                if *preserved_accepted.get_or_insert_with(|| accepted(&preserved, g)) {
+                    return Ok((preserved, moves));
+                }
+                if first.is_none() {
+                    first = Some((copy_mesh(&preserved), moves));
+                }
+            }
         }
-        first.get_or_insert((recovered, moves));
     }
     Ok(match first {
         Some(attempt) if keep_failed => attempt,
         _ => (mesh, 0),
     })
-}
-
-/// Remesh around the elements below `minimum_quality`, and return the mesh
-/// with the number of defeaturing moves it took. A mesh that passes is
-/// returned unchanged. `reach` scales how far a defeaturing move may go
-/// within the working tolerance.
-fn recover_slivers<F: ScalarField>(
-    mut mesh: Mesh,
-    g: &Context<F>,
-    threshold: f64,
-    h: f64,
-    reach: f64,
-) -> Result<(Mesh, usize), String> {
-    let o = g.options;
-    let mut defeaturing_moves = 0;
-    let rejected = |mesh: &Mesh| {
-        mesh.tets
-            .iter()
-            .any(|t| quality(t.map(|i| mesh.points[i])).powf(1.5) < o.minimum_quality)
-    };
-    if o.optimize_passes > 0 && o.minimum_quality > 0. && rejected(&mesh) {
-        // Relocation cannot repair a sliver that needs new connectivity.
-        // Only a mesh the quality gate would reject is modified. Defeaturing
-        // is the last resort: it restarts from the same mesh, because the
-        // geometry-preserving operations can close the room a merge needs.
-        let start = copy_mesh(&mesh);
-        for defeature in [false, true] {
-            let mut trial = copy_mesh(&start);
-            let mut merged = 0;
-            for _ in 0..6 {
-                weld_periodic_images(&mut trial.points, g.bounds(), o.periodic);
-                let (operations, merges) = crate::tet_adapt::remove_slivers(
-                    &mut trial,
-                    g,
-                    threshold,
-                    o.periodic,
-                    h,
-                    o.geometry_tolerance.min(0.1 * h),
-                    defeature
-                        .then_some((reach * WORKING_TOLERANCE * o.geometry_tolerance).min(0.5 * h)),
-                )?;
-                merged += merges;
-                if operations == 0 {
-                    break;
-                }
-                weld_periodic_images(&mut trial.points, g.bounds(), o.periodic);
-                crate::optimize::optimize_for(
-                    &mut trial,
-                    threshold,
-                    h,
-                    o.optimize_passes,
-                    3.,
-                    o.threads,
-                    None,
-                    g,
-                )?;
-                if !rejected(&trial) {
-                    break;
-                }
-            }
-            // A defeatured mesh that still fails is not worth its changed geometry.
-            if !defeature || (merged > 0 && !rejected(&trial)) {
-                mesh = trial;
-                defeaturing_moves = merged;
-            }
-            if !rejected(&mesh) {
-                break;
-            }
-        }
-    }
-    Ok((mesh, defeaturing_moves))
 }
 
 /// Vertices of cap triangles present on only one of two periodic faces.

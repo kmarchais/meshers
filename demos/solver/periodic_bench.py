@@ -11,6 +11,8 @@ from __future__ import annotations
 
 import argparse
 import csv
+import datetime as dt
+import importlib.metadata
 import itertools
 import json
 import operator
@@ -24,6 +26,9 @@ import meshers
 import numpy as np
 import pyvista as pv
 from numpy.typing import NDArray
+
+sys.path.insert(0, str(Path(__file__).resolve().parents[2] / "tools"))
+from benchmark_hardware import hardware_snapshot
 
 Coordinates = NDArray[np.float64]
 Indices = NDArray[np.intp]
@@ -484,6 +489,14 @@ def main() -> int:
         with args.output.open("x", encoding="utf8") as stream:
             json.dump(records, stream, indent=2)
             stream.write("\n")
+        # The machine and build the records were measured on, next to them.
+        snapshot = {
+            "date": dt.datetime.now(dt.UTC).date().isoformat(),
+            "meshers": importlib.metadata.version("meshers"),
+            "hardware": hardware_snapshot(),
+        }
+        machine = args.output.with_suffix(".machine.json")
+        machine.write_text(json.dumps(snapshot, indent=2) + "\n", encoding="utf8")
     if args.baseline:
         return int(regressed > 0)
     return int(any("rejected" in r or r["missed_limits"] for r in records))

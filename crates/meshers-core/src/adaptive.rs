@@ -193,39 +193,38 @@ pub(crate) fn refine_for(
         profile.count("input_tetrahedra", mesh.tets.len());
         let mut scores = BTreeMap::<_, f64>::new();
         let mut surface_edges = BTreeMap::<_, Vec<Edge>>::new();
-        let mut batched_errors = Vec::new();
-        {
-            let mut samples = Vec::new();
-            for f in &mesh.surface {
-                let p = f.map(|i| mesh.points[i]);
-                if geometry.cap(p) {
-                    continue;
-                }
-                samples.push(std::array::from_fn(|a| (p[0][a] + p[1][a] + p[2][a]) / 3.));
-                for [i, j] in [[0, 1], [1, 2], [2, 0]] {
-                    // Match the scalar path's index-sorted edge arithmetic.
-                    let e = edge(f[i], f[j]);
-                    samples.push(std::array::from_fn(|a| {
-                        (mesh.points[e[0]][a] + mesh.points[e[1]][a]) * 0.5
-                    }));
-                }
+        let mut samples = Vec::new();
+        for f in &mesh.surface {
+            let p = f.map(|i| mesh.points[i]);
+            if geometry.cap(p) {
+                continue;
             }
-            // The measure of the final geometry gate, so both agree on a facet.
-            let samples: Vec<_> = samples.into_iter().map(|p| (p, [false; 3])).collect();
-            for chunk in samples.chunks(4096) {
-                batched_errors.extend(geometry.wall_distances(
-                    chunk,
-                    threshold,
-                    0.25 * tolerance,
-                )?);
+            samples.push((
+                std::array::from_fn(|a| (p[0][a] + p[1][a] + p[2][a]) / 3.),
+                [false; 3],
+            ));
+            for [i, j] in [[0, 1], [1, 2], [2, 0]] {
+                // Index-sorted, so both facets of an edge sample the same point.
+                let e = edge(f[i], f[j]);
+                samples.push((
+                    std::array::from_fn(|a| (mesh.points[e[0]][a] + mesh.points[e[1]][a]) * 0.5),
+                    [false; 3],
+                ));
             }
         }
-        let mut batched_errors = batched_errors.into_iter();
+        // The measure of the final geometry gate, so both agree on a facet.
+        let mut errors = Vec::with_capacity(samples.len());
+        for chunk in samples.chunks(4096) {
+            geometry.check()?;
+            errors.extend(geometry.wall_distances(chunk, threshold, 0.25 * tolerance)?);
+        }
+        drop(samples);
+        let mut errors = errors.into_iter();
         for f in &mesh.surface {
             if geometry.cap(f.map(|i| mesh.points[i])) {
                 continue;
             }
-            let center_error = batched_errors.next().unwrap();
+            let center_error = errors.next().unwrap();
             let face_edges = [edge(f[0], f[1]), edge(f[1], f[2]), edge(f[2], f[0])];
             let longest = *face_edges
                 .iter()
@@ -237,11 +236,11 @@ pub(crate) fn refine_for(
             for e in face_edges {
                 let key = orbit(mesh, e, geometry);
                 surface_edges.entry(key).or_default().push(e);
-                let score = batched_errors.next().unwrap().max(if e == longest {
-                    center_error * 0.8
-                } else {
-                    0.
-                });
+                let score =
+                    errors
+                        .next()
+                        .unwrap()
+                        .max(if e == longest { center_error * 0.8 } else { 0. });
                 if score > tolerance {
                     scores
                         .entry(key)

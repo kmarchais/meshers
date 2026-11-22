@@ -1207,9 +1207,9 @@ fn adaptation_recovers_fibres_grazing_the_box() {
 
 #[test]
 fn a_refused_adaptation_falls_back_to_the_lattice_mesh() {
-    // No edge may be shorter than `min_length`, far too long here for the
-    // tolerance: adaptation cannot close the geometry. The caller gets the
-    // lattice mesh of the same field, flagged as such, instead of a rejection.
+    // Adaptation works to a looser tolerance than the final checks accept and
+    // coarsens the wall beyond it. The caller gets the lattice mesh of the same
+    // field, flagged as such, instead of a rejection.
     let ball = |p: [f64; 3]| (p[0].powi(2) + p[1].powi(2) + p[2].powi(2)).sqrt() - 0.35;
     let tolerance = 0.004;
     let options = Options {
@@ -1225,9 +1225,9 @@ fn a_refused_adaptation_falls_back_to_the_lattice_mesh() {
         &ball,
         Options {
             adapt: Some(meshers_core::tet_adapt::Options {
-                tolerance,
-                min_length: 0.3,
-                max_length: 0.5,
+                tolerance: 0.05,
+                min_length: 0.1,
+                max_length: 0.25,
                 ..Default::default()
             }),
             ..options
