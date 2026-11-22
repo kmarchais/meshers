@@ -28,7 +28,7 @@ During Tet10 elevation and fitting, the development branch bisects regions where
 
 `sampled_coverage_error` measures the other direction: from the wall of the solid, sampled where lines twice finer than the lattice cross it, three times with adaptation, to the meshed wall. Only this measure sees a feature the mesh lost or a crease it cut across. On the lattice path, an edge whose ends have sharply different wall normals is checked for a fold between them: where the normal jumps over a short step, the refinement places its node in the fold, or part of the way down when the elements around the edge would flatten. Adaptive meshing does not do this yet. It is reported, capped at four tolerances, and does not reject a mesh.
 
-Periodic images have bitwise identical coordinates in the plane of their faces, in linear and quadratic output.
+Periodic images have bitwise identical coordinates in the plane of their faces, in linear and quadratic output. A lattice node snapped onto the wall is projected once for all its images, and every later operation moves images by the same steps.
 
 ## Volume of linear meshes
 
