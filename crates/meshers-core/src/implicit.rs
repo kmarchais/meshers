@@ -1341,6 +1341,7 @@ fn resolve_gaps<F: ScalarField>(
     ];
     let mut tets: Vec<crate::Tet> = Vec::new();
     for z in 0..nz {
+        g.check()?;
         for y in 0..ny {
             for x in 0..nx {
                 let corners = [
@@ -1396,9 +1397,16 @@ fn resolve_gaps<F: ScalarField>(
             3
         }
     };
-    let mut values: Vec<f64> = g.values(&points);
+    let mut values: Vec<f64> = Vec::with_capacity(points.len());
+    for chunk in points.chunks(1 << 16) {
+        g.check()?;
+        values.extend(g.values(chunk));
+    }
     let mut incident = vec![Vec::new(); points.len()];
     for (t, tet) in tets.iter().enumerate() {
+        if t % (1 << 16) == 0 {
+            g.check()?;
+        }
         for &v in tet {
             incident[v].push(t);
         }
