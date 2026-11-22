@@ -1,3 +1,7 @@
+---
+icon: lucide/box
+---
+
 # Rust API
 
 <ol class="mesh-flow">

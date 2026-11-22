@@ -1,3 +1,7 @@
+---
+icon: lucide/git-pull-request
+---
+
 # Build and contribute
 
 <ol class="mesh-flow">

@@ -1,3 +1,7 @@
+---
+icon: lucide/chart-line
+---
+
 # Does the displacement converge?
 
 <div class="plot-pair">

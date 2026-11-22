@@ -1,3 +1,7 @@
+---
+icon: lucide/goal
+---
+
 # Open benchmark targets
 
 CI exercises selected passing recipes. The Linux coverage study of 18 November 2026 also records rejected meshes and missed solver targets. The cavity replay uses main at `fc54032b`. [Benchmark index](benchmark-index.md)

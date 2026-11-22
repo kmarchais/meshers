@@ -219,6 +219,10 @@ def render(directory: Path) -> None:
         else []
     )
     index = [
+        "---",
+        "icon: lucide/history",
+        "---",
+        "",
         "# Benchmark history",
         "",
         "Open a record for its timing plot, quality gates and raw samples.",

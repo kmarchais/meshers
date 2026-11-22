@@ -2,9 +2,19 @@ import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import { test } from "node:test";
 import { qualityFigure } from "../site/assets/guide-figures.mjs";
+import { cutFigure, foldFigure, sagFigure } from "../site/assets/course-figures.mjs";
 import { boundaryMesh } from "../site/assets/boundary-mesh.mjs";
 
 const bytes = await readFile(new URL("../site/assets/playground/meshers.wasm", import.meta.url));
+
+test("course controls reproduce the worked examples and the fold threshold", () => {
+  assert.equal(cutFigure(50).value, "0.50 · 12.5% volume");
+  assert.equal(sagFigure(60).value, "h = 1.20 · sag = 0.200");
+  assert.equal(sagFigure(30).value, "h = 0.60 · sag = 0.046");
+  assert.equal(foldFigure(24).value, "min dx/dt = 0.04 · increasing");
+  assert.equal(foldFigure(25).value, "min dx/dt = 0.00 · singular endpoint");
+  assert.equal(foldFigure(26).value, "min dx/dt = -0.04 · folded");
+});
 const { instance: { exports: core } } = await WebAssembly.instantiate(bytes);
 
 function generate(field, cells, width) {

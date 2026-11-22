@@ -1,3 +1,7 @@
+---
+icon: lucide/code-xml
+---
+
 # Runnable Python examples
 
 <div class="mesh-gallery" markdown="1">

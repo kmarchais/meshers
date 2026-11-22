@@ -1,3 +1,7 @@
+---
+icon: lucide/waves
+---
+
 # Fields, thickness and grading
 
 <div class="guide-pair" markdown="block">

@@ -1,7 +1,8 @@
 import { fillSlider } from "./slider.js";
 import { bandFigure, qualityFigure } from "./guide-figures.mjs";
+import { cutFigure, foldFigure, sagFigure } from "./course-figures.mjs";
 
-const figures = { band: bandFigure, quality: qualityFigure };
+const figures = { band: bandFigure, quality: qualityFigure, cut: cutFigure, sag: sagFigure, fold: foldFigure };
 for (const figure of document.querySelectorAll("[data-guide]")) {
   const input = figure.querySelector("input");
   const output = figure.querySelector("output");

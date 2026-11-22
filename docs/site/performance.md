@@ -1,3 +1,7 @@
+---
+icon: lucide/gauge
+---
+
 # Performance and regression checks
 
 [Benchmark index](benchmark-index.md) · [Open targets](benchmark-gaps.md)

@@ -17,6 +17,8 @@ Verify node ordering, labels, boundary conditions and periodic pairs in the expo
 
 ## Checks and pull requests
 
+Every PR that adds a feature or changes how an algorithm works must update the documentation in the same PR. Update the relevant user guide or [meshing course](docs/site/course-fields.md), including any examples, figures and limits affected by the change.
+
 Use the pinned formatter, linter, type checker and tests to guide edits. Run Ruff and ty for Python, rustfmt and Clippy for Rust, and the relevant regression tests. Follow the [development commands](README.md#develop) and [benchmark protocol](docs/site/performance.md). Queue heavy builds and studies on the shared compute queue.
 
 Keep PR descriptions to a purpose sentence and the evidence. An algorithm PR should add a capability or improve a measured result. Include a compact before/after table for the affected metrics, a replay command or results link, and regression results for existing features. Quantify any tradeoff so reviewers can decide whether it is worthwhile. For documentation-only changes, show the changed page or example.

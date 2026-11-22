@@ -1,3 +1,7 @@
+---
+icon: lucide/flask-conical
+---
+
 # Testing and coverage
 
 <ol class="mesh-flow">

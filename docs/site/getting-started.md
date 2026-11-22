@@ -1,3 +1,7 @@
+---
+icon: lucide/download
+---
+
 # Install and mesh a sphere
 
 ```sh

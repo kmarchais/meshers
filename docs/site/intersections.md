@@ -1,3 +1,7 @@
+---
+icon: lucide/layers
+---
+
 # Named surfaces and curved domains
 
 <div class="guide-pair" markdown="block">

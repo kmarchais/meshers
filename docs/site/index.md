@@ -1,4 +1,5 @@
 ---
+icon: lucide/house
 hide:
   - toc
 ---
@@ -64,5 +65,7 @@ mesh = <span class="mesh-module">mrs</span>.<span class="nf">generate</span>(
 [![Gyroid cutaway colored by tetrahedron quality](assets/gyroid-quality-section.webp) **Inspect boundary quality**](quality.md)
 
 </div>
+
+Follow the [illustrated meshing course](course-fields.md) from field samples to a verified finite element solution.
 
 <script type="module" src="assets/explorer.js"></script>

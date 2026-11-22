@@ -1,3 +1,7 @@
+---
+icon: lucide/braces
+---
+
 # Python API
 
 <ol class="mesh-flow">

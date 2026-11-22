@@ -1,3 +1,7 @@
+---
+icon: lucide/repeat-2
+---
+
 # Effective stiffness of a periodic gyroid
 
 <figure class="guide-figure chart"><img src="assets/playground/stiffness.svg" alt="Measured axial Young’s modulus decreases from 0.420 to 0.383 as the mesh is refined from 12 to 32 cells per axis."></figure>

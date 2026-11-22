@@ -1,6 +1,7 @@
 // Build transparent, self-contained plots from the archived FEA measurements.
 import { readFile, writeFile } from "node:fs/promises";
 import { qualityFigure, bandFigure, pairsFigure } from "../site/assets/guide-figures.mjs";
+import { cutFigure, foldFigure, sagFigure } from "../site/assets/course-figures.mjs";
 
 const root = new URL("../../", import.meta.url);
 const assets = new URL("docs/site/assets/playground/", root);
@@ -133,5 +134,8 @@ for (const [name, figure] of [
   ["quality", qualityFigure(5)],
   ["band", bandFigure(30)],
   ["pairs", pairsFigure()],
+  ["cut", cutFigure(50)],
+  ["sag", sagFigure(60)],
+  ["fold", foldFigure(10)],
 ])
   await save(name, figure.graphic);

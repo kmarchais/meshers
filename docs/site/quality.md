@@ -1,3 +1,7 @@
+---
+icon: lucide/scan-line
+---
+
 # Check the mesh before a solve
 
 <div class="guide-pair" markdown="block">

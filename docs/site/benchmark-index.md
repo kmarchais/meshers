@@ -1,3 +1,7 @@
+---
+icon: lucide/list-checks
+---
+
 # Development benchmarks
 
 | If you change… | Start with | What it measures |
