@@ -19,9 +19,12 @@ test("course controls reproduce the worked examples and the fold threshold", () 
 const { instance: { exports: core } } = await WebAssembly.instantiate(bytes);
 
 test("surface lesson roots lie on the cutting plane and form the expected contour", () => {
-  for (const [level, expected] of [[0.5, 3], [1.5, 4], [3.5, 0]]) {
+  for (let tick = 0; tick <= 350; tick++) {
+    const level = tick / 100;
+    const expected = level > 3 ? 0 : level === 0 || level === 3 ? 1 : level > 1 && level < 2 ? 4 : 3;
     const roots = triangleSection(level);
     assert.equal(roots.length, expected);
+    assert.equal(new Set(roots.map(point => point.join(","))).size, expected);
     for (const [x, y, z] of roots) assert.ok(Math.abs(x + y + z - level) < 1e-12);
   }
   assert.deepEqual(triangleSection(1.5), [

@@ -33,6 +33,8 @@ export function triangleSection(level) {
     .filter(([a, b]) => a < level && level < b)
     .map(([a, b]) => mix(tetra[a], tetra[b], (level - a) / (b - a)));
   if (crossings.length === 4) [crossings[2], crossings[3]] = [crossings[3], crossings[2]];
+  // An exact corner belongs to several edges but supplies just one section vertex.
+  if (Number.isInteger(level) && tetra[level]) crossings.push(tetra[level]);
   return crossings;
 }
 
@@ -42,30 +44,40 @@ export function triangleStage(level, step) {
   let g = edges
     .map(([a, b]) => stroke(corners[a], corners[b], "currentColor", 'opacity=".45"'))
     .join("");
-  if (step >= 2 && section.length) g += face(section, surface, step === 3 ? ".44" : ".08");
+  if (step >= 2 && section.length >= 3) g += face(section, surface, step === 3 ? ".44" : ".08");
+  // For this tetrahedron and plane family the AD-to-BC diagonal gives the
+  // better minimum triangle shape score throughout the four-root interval.
   if (step === 3 && section.length === 4)
-    g += stroke(section[0], section[2], surface, 'stroke-width="2"');
+    g += stroke(section[1], section[3], surface, 'stroke-width="2"');
   corners.forEach((p, i) => {
     g +=
       dot(p, "currentColor", 3) +
       text(
         [p[0], p[1] + (i === 3 ? -7 : 18)],
-        String.fromCharCode(65 + i) + " " + (i < level ? "−" : "+"),
+        String.fromCharCode(65 + i) +
+          " " +
+          (step === 0 ? (i - level).toFixed(2) : i === level ? "0" : i < level ? "−" : "+"),
       );
   });
   if (step >= 1) g += section.map((p) => dot(p, root)).join("");
   const n = section.length;
   const captions = [
-    `At t = ${level}, ${tetra.filter((_, i) => i < level).length} of 4 corners lie below the plane.`,
-    `${n} of 6 edges have opposite signs at their ends. Each carries one root.`,
-    n
-      ? `Join the ${n} roots in order around the cutting plane.`
-      : "No crossing edges. There is no contour to join.",
+    `${tetra.filter((_, i) => i < level).length} of 4 corners lie below the plane. Labels show f − t.`,
+    Number.isInteger(level) && n
+      ? `The plane passes through corner ${"ABCD"[level]}. Count shared endpoints only once.`
+      : `${n} of 6 edges have opposite signs at their ends. Each carries one root.`,
+    n === 1
+      ? "One corner touches the plane. There is no polygon to join."
+      : n
+        ? `Join the ${n} roots in order around the cutting plane.`
+        : "No crossing edges. There is no contour to join.",
     n === 4
       ? "Four roots form a quadrilateral. One diagonal gives two triangles."
       : n === 3
         ? "Three roots form one triangle. Its vertices lie on the original edges."
-        : "All four corners lie below the plane. This tetrahedron emits no face.",
+        : n === 1
+          ? "The plane touches one corner. This tetrahedron emits no face."
+          : "All four corners lie below the plane. This tetrahedron emits no face.",
   ];
   return {
     graphic: svg("One Freudenthal tetrahedron cut by x + y + z = " + level, g),
@@ -105,7 +117,10 @@ export function quadStage(step) {
     );
   });
   if (step === 0) {
-    for (const [z, sign] of [[0, "−"], [1, "+"]]) {
+    for (const [z, sign] of [
+      [0, "−"],
+      [1, "+"],
+    ]) {
       const [x, y] = projectGrid([1, 1, z]);
       g += text([x + 12, y], sign);
     }

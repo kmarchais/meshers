@@ -54,11 +54,20 @@ mesh = <span class="mesh-module">mrs</span>.<span class="nf">generate</span>(
 
 ## Project scope
 
-| Status | Geometry and elements |
+Meshers starts from a scalar field sampled in a bounding box. Choose a solid (`f ≤ 0`), a band between two levels, or the intersection of named fields. Custom fields are welcome; coverage is established for specific geometries, resolutions and tolerances. [Seven tested implicit solids](benchmark-index.md#geometry-and-solver-studies)
+
+| Status | What you can mesh |
 | --- | --- |
-| Available | Generate and adapt tetrahedral meshes from implicit fields (FRep), including Microgen-style periodic and graded solids. Use linear Tet4 or curved Tet10 elements. Named intersections retain wall and cap labels. [Fields](fields.md) · [Curved elements](course-quadratic.md) · [Intersections](intersections.md) |
-| Experimental | Mesh an implicit boundary directly with triangles in a surface-enabled build. Uniform quad extraction is a Rust research feature. [Surface methods and build requirements](course-surfaces.md) |
-| Development goals | Resolve more implicit geometries, especially thin features and spinodoids, and reach a stated FEA accuracy with fewer elements and less computation. Longer-term goals include CAD boundary representations (BRep), production triangle and quad surface meshing, and hexahedral volume meshes. [Open targets and measured limits](benchmark-gaps.md) |
+| Volume meshing today | Tet4 and curved Tet10 for implicit solids, including periodic and graded fields. Named intersections retain boundary labels. A supplied Tet4 seed can also be adapted with matching fields and constraint masks. [Fields](fields.md) · [Seed requirements](intersections.md#adapt-in-physical-coordinates) |
+| Adaptation today | Refine and coarsen tetrahedra to local size and boundary-curvature targets. Thin walls, gaps and enclosed cavities can fall between field samples. A returned mesh can miss a feature. [Adaptation](course-adaptation.md) · [Lost-cavity replay](benchmark-gaps.md#reproduce-the-lost-cavity) |
+| Experimental surfaces | Extract triangles directly in a surface-enabled build. Uniform quad extraction is a Rust research feature. [Surface methods](course-surfaces.md) |
+
+**Development goals**
+
+- Extend tested FRep coverage to harder spinodoids and thin features.
+- Add solver-driven adaptive mesh refinement: solve, estimate local error, mark cells, adapt and solve again.
+- Mesh CAD boundary representations (BRep), preserving curves, faces and labels.
+- Support production triangle and quad surface meshes and hexahedral volume meshes. [Benchmark priorities](benchmark-index.md#benchmarks-to-add)
 
 ## Explore the guides
 

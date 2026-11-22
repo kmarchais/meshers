@@ -7,10 +7,10 @@ icon: lucide/grid-2x2
 <div id="surface-extraction">
 <fieldset class="mesh-fields"><legend>Step through both extractors</legend>
   <div class="mesh-segments">
-    <label><input type="radio" name="stage" value="0" checked><span>Sample signs</span></label>
+    <label><input type="radio" name="stage" value="0"><span>Sample signs</span></label>
     <label><input type="radio" name="stage" value="1"><span>Find crossings</span></label>
     <label><input type="radio" name="stage" value="2"><span>Place vertices</span></label>
-    <label><input type="radio" name="stage" value="3"><span>Connect faces</span></label>
+    <label><input type="radio" name="stage" value="3" checked><span>Connect faces</span></label>
   </div>
 </fieldset>
 <div class="guide-pair">
@@ -18,13 +18,10 @@ icon: lucide/grid-2x2
   <h2>Triangle · cut one tetrahedron</h2>
   <div class="guide-diagram"><img src="assets/playground/extract-triangle.svg" alt="Three roots on edges from A form a triangle inside a tetrahedron."></div>
   <figcaption aria-live="polite">One corner below the plane gives three crossing edges and one triangle.</figcaption>
-  <fieldset class="mesh-fields"><legend>Plane x + y + z = t</legend>
-  <div class="mesh-segments">
-    <label><input type="radio" name="level" value="0.5" checked><span>0.5</span></label>
-    <label><input type="radio" name="level" value="1.5"><span>1.5</span></label>
-    <label><input type="radio" name="level" value="3.5"><span>3.5</span></label>
+  <div class="guide-control mesh-slider">
+    <label for="cut-plane">Plane x + y + z = t</label><output for="cut-plane">0.50</output>
+    <input id="cut-plane" type="range" min="0" max="3.5" step="0.01" value="0.5">
   </div>
-  </fieldset>
 </figure>
 <figure class="guide-figure" id="quad">
   <h2>Quad · circle one grid edge</h2>
@@ -38,7 +35,7 @@ icon: lucide/grid-2x2
 
 1. Read the field at A, B, C, D: **0, 1, 2, 3**.
 2. Set **t = 1.5**. Which edges bracket 1.5? On AD, the crossing is halfway from 0 to 3.
-3. Count your crossings, then select **Connect faces**.
+3. Drag slowly through **t = 2**. Two roots meet at C, and the quadrilateral becomes a triangle.
 
 <details markdown="block"><summary>Check the crossing edges and face counts</summary>
 

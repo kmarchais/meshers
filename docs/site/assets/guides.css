@@ -72,6 +72,7 @@
 .guide-pair > div > :last-child { margin-bottom: 0; }
 
 #surface-extraction:not([data-ready]) .mesh-fields, #cut-layers:not([data-ready]) .mesh-fields { display:none; }
+#surface-extraction[data-ready] .guide-control { display:grid; margin-top:.65rem; }
 #surface-extraction > .mesh-fields { max-width:32rem; }
 @media (max-width:32rem) {
   #surface-extraction > .mesh-fields .mesh-segments { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); }
