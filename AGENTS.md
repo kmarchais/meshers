@@ -17,7 +17,7 @@ Verify node ordering, labels, boundary conditions and periodic pairs in the expo
 
 ## Checks and pull requests
 
-Every PR that adds a feature or changes how an algorithm works must update the documentation in the same PR. Update the relevant user guide or [meshing course](docs/site/course-fields.md), including any examples, figures and limits affected by the change.
+Every PR that adds a feature or changes how an algorithm works must update the documentation in the same PR. Update the relevant user guide or [features and algorithms](docs/site/course-fields.md) pages, including any examples, figures and limits affected by the change.
 
 Use the pinned formatter, linter, type checker and tests to guide edits. Run Ruff and ty for Python, rustfmt and Clippy for Rust, and the relevant regression tests. Follow the [development commands](README.md#develop) and [benchmark protocol](docs/site/performance.md). Queue heavy builds and studies on the shared compute queue.
 

@@ -9,7 +9,7 @@ docs_dir = "docs/site"
 site_dir = "site"
 nav = [
   { "Start here" = [{ "Overview" = "index.md" }, { "Installation and first mesh" = "getting-started.md" }, { "Python examples" = "examples.md" }] },
-  { "Meshing course" = [
+  { "Features and algorithms" = [
     { "Fields and gradients" = "course-fields.md" },
     { "Cut a background tetrahedron" = "course-cutting.md" },
     { "Size and improve elements" = "course-adaptation.md" },
@@ -20,7 +20,7 @@ nav = [
   ] },
   { "User guide" = [{ "Fields and grading" = "fields.md" }, { "Periodicity and quality" = "quality.md" }, { "Intersections and curved domains" = "intersections.md" }, { "Solver verification" = "solver-verification.md" }, { "Periodic homogenization" = "periodic-homogenization.md" }] },
   { "Benchmarks" = [{ "Benchmark index" = "benchmark-index.md" }, { "Open targets" = "benchmark-gaps.md" }, { "Regression checks" = "performance.md" }, { "Benchmark history" = "benchmark-history.md" }] },
-  { "API reference" = [{ "Python" = "api/python.md" }, { "Rust" = "api/rust.md" }] },
+  { "API reference" = [{ "Python" = "api/python.md" }, { "Rust" = "api/rust.md" }, { "WebAssembly (explorer)" = "api/wasm.md" }] },
   { "Development" = [{ "Contributing" = "contributing.md" }, { "Testing and coverage" = "testing.md" }, { "Release preparation" = "release.md" }] },
 ]
 
@@ -33,7 +33,7 @@ language = "en"
 logo = "assets/mark.svg"
 favicon = "assets/mark.svg"
 font = false
-features = ["navigation.sections", "navigation.top", "content.code.copy"]
+features = ["navigation.top", "content.code.copy"]
 
 [[project.theme.palette]]
 media = "(prefers-color-scheme)"

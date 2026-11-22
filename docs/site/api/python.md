@@ -1,5 +1,5 @@
 ---
-icon: lucide/braces
+icon: simple/python
 ---
 
 # Python API

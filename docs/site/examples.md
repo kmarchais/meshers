@@ -1,5 +1,5 @@
 ---
-icon: lucide/code-xml
+icon: simple/python
 ---
 
 # Runnable Python examples

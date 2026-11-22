@@ -1,5 +1,5 @@
 ---
-icon: lucide/box
+icon: simple/rust
 ---
 
 # Rust API

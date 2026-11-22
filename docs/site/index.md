@@ -6,7 +6,7 @@ hide:
 
 # Tetrahedral mesh explorer
 
-Generate a periodic solid and inspect its tetrahedral mesh. Drag to orbit, scroll to zoom.
+Meshers turns implicit solids into tetrahedral meshes for finite element analysis. Try a periodic sheet below. Drag to orbit, scroll to zoom.
 
 <div class="explorer-example">
 <div>
@@ -52,6 +52,14 @@ mesh = <span class="mesh-module">mrs</span>.<span class="nf">generate</span>(
 )</code></pre></div>
 </div>
 
+## Project scope
+
+| Status | Geometry and elements |
+| --- | --- |
+| Available | Generate and adapt tetrahedral meshes from implicit fields (FRep), including Microgen-style periodic and graded solids. Use linear Tet4 or curved Tet10 elements. Named intersections retain wall and cap labels. [Fields](fields.md) · [Curved elements](course-quadratic.md) · [Intersections](intersections.md) |
+| Experimental | Mesh an implicit boundary directly with triangles in a surface-enabled build. Uniform quad extraction is a Rust research feature. [Surface methods and build requirements](course-surfaces.md) |
+| Development goals | Resolve more implicit geometries, especially thin features and spinodoids, and reach a stated FEA accuracy with fewer elements and less computation. Longer-term goals include CAD boundary representations (BRep), production triangle and quad surface meshing, and hexahedral volume meshes. [Open targets and measured limits](benchmark-gaps.md) |
+
 ## Explore the guides
 
 <div class="mesh-gallery" markdown="1">
@@ -66,6 +74,6 @@ mesh = <span class="mesh-module">mrs</span>.<span class="nf">generate</span>(
 
 </div>
 
-Follow the [illustrated meshing course](course-fields.md) from field samples to a verified finite element solution.
+Explore the [meshing algorithms](course-fields.md) from field samples to a verified finite element solution. For the code behind this explorer, see the [WebAssembly reference](api/wasm.md).
 
 <script type="module" src="assets/explorer.js"></script>

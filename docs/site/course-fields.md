@@ -29,7 +29,7 @@ For a traceable Python function, Meshers records arithmetic as a graph. In the e
 
 A NumPy callback handles fields the tracer cannot express. Supply its gradient, or Meshers estimates it with finite differences. A near-zero gradient makes projecting onto a wall unreliable. [Python field options](fields.md) · [Expression tracer](https://github.com/kmarchais/meshers/blob/main/crates/meshers-python/python/meshers/expression.py)
 
-## Course route
+## Explore the algorithms
 
 | Follow the volume mesh | What you can investigate |
 | --- | --- |
