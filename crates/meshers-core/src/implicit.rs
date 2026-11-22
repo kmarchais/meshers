@@ -1409,25 +1409,24 @@ fn resolve_gaps<F: ScalarField>(
         g.check()?;
         // Edges are listed from their lower vertex, a few thousand vertices at
         // a time: a lattice of a hundred cells has tens of millions of them.
-        let neighbours = |a: usize, incident: &[Vec<usize>], tets: &[crate::Tet]| {
-            let mut near: Vec<usize> = incident[a]
-                .iter()
-                .flat_map(|&t| tets[t])
-                .filter(|&b| b > a)
-                .collect();
-            near.sort_unstable();
-            near.dedup();
-            near
-        };
+        let neighbours =
+            |a: usize, incident: &[Vec<usize>], tets: &[crate::Tet], near: &mut Vec<usize>| {
+                near.clear();
+                near.extend(incident[a].iter().flat_map(|&t| tets[t]).filter(|&b| b > a));
+                near.sort_unstable();
+                near.dedup();
+            };
+        let mut near = Vec::new();
         // The steepest change of the field seen along an edge. An edge whose
         // ends both lie farther from the level than twice that slope can
         // cover in half its length hides no crossing, and is not sampled.
         let mut steepest: f64 = 0.;
-        for a in 0..points.len() {
-            if a % POLL == 0 {
+        for (t, tet) in tets.iter().enumerate() {
+            if t % 4096 == 0 {
                 g.check()?;
             }
-            for b in neighbours(a, &incident, &tets) {
+            for [i, j] in [[0, 1], [0, 2], [0, 3], [1, 2], [1, 3], [2, 3]] {
+                let (a, b) = (tet[i], tet[j]);
                 let slope = (values[a] - values[b]).abs() / norm(sub(points[a], points[b]));
                 if slope.is_finite() {
                     steepest = steepest.max(slope);
@@ -1466,7 +1465,8 @@ fn resolve_gaps<F: ScalarField>(
             if a % POLL == 0 {
                 g.check()?;
             }
-            for b in neighbours(a, &incident, &tets) {
+            neighbours(a, &incident, &tets, &mut near);
+            for &b in &near {
                 if side(values[a]) == 0 || side(values[a]) != side(values[b]) {
                     continue;
                 }
@@ -2904,7 +2904,7 @@ fn closest_on_triangle(p: Point, t: [Point; 3]) -> Point {
 /// nothing of the field but its sign. Distances beyond the reach of the
 /// search are reported as that reach.
 fn wall_coverage<F: ScalarField>(wall: &[[Point; 3]], g: &Context<F>) -> Result<f64, String> {
-    if wall.is_empty() {
+    if wall.is_empty() && !g.gaps_resolved {
         return Ok(0.);
     }
     let o = g.options;
@@ -2933,10 +2933,8 @@ fn wall_coverage<F: ScalarField>(wall: &[[Point; 3]], g: &Context<F>) -> Result<
         for j in 0..n[1] {
             for i in 0..n[0] {
                 batch.push(node(i, j, k));
-                if batch.len() % POLL == 0 {
-                    g.check()?;
-                }
                 if batch.len() == 4096 {
+                    g.check()?;
                     grid.extend(g.values(&batch).into_iter().map(|v| residual(v) as f32));
                     batch.clear();
                 }
@@ -2944,11 +2942,21 @@ fn wall_coverage<F: ScalarField>(wall: &[[Point; 3]], g: &Context<F>) -> Result<
         }
     }
     grid.extend(g.values(&batch).into_iter().map(|v| residual(v) as f32));
+    if wall.is_empty() {
+        // Opposite signs on the coverage grid witness an implicit wall that the mesh lost.
+        if grid.iter().any(|&v| v < 0.) && grid.iter().any(|&v| v > 0.) {
+            return Err(
+                "sampled solid and void but mesh has no implicit wall; increase resolution".into(),
+            );
+        }
+        return Ok(0.);
+    }
     let at = |i: usize, j: usize, k: usize| f64::from(grid[i + n[0] * (j + n[1] * k)]);
     // Segments across the wall, solid end first, with the residuals there.
     let mut ends: Vec<([Point; 2], [f64; 2])> = Vec::new();
     for k in 0..n[2] {
         for j in 0..n[1] {
+            g.check()?;
             for i in 0..n[0] {
                 for (a, next) in [(i + 1, j, k), (i, j + 1, k), (i, j, k + 1)]
                     .into_iter()
@@ -2958,9 +2966,6 @@ fn wall_coverage<F: ScalarField>(wall: &[[Point; 3]], g: &Context<F>) -> Result<
                         continue;
                     }
                     let (here, there) = (at(i, j, k), at(next.0, next.1, next.2));
-                    if (i + j) % POLL == 0 && a == 0 {
-                        g.check()?;
-                    }
                     if (here < 0.) != (there < 0.) {
                         let (p, q) = (node(i, j, k), node(next.0, next.1, next.2));
                         ends.push(if here < 0. {
@@ -3025,18 +3030,22 @@ fn wall_coverage<F: ScalarField>(wall: &[[Point; 3]], g: &Context<F>) -> Result<
         }
     }
     let mut worst: f64 = 0.;
-    for (index, root) in roots.into_iter().enumerate() {
+    'roots: for (index, root) in roots.into_iter().enumerate() {
         if index % POLL == 0 {
             g.check()?;
         }
         let [x, y, z] = key(root);
         let mut nearest = reach;
-        for dx in -1..=1 {
-            for dy in -1..=1 {
-                for dz in -1..=1 {
+        for dx in [0, -1, 1] {
+            for dy in [0, -1, 1] {
+                for dz in [0, -1, 1] {
                     for &f in bins.get(&[x + dx, y + dy, z + dz]).into_iter().flatten() {
                         let on = closest_on_triangle(root, wall[f as usize]);
                         nearest = nearest.min(norm(sub(on, root)));
+                        // One triangle this close proves this root cannot increase the maximum.
+                        if nearest <= worst {
+                            continue 'roots;
+                        }
                     }
                 }
             }

@@ -409,7 +409,9 @@ def measure(name: str, cells: int, *, adapt: bool, tolerance: float, quality: fl
         )
     except meshers.MeshingError as error:
         record.update(rejected=str(error))
-    else:
+    # Generation only: the independent measures below are not the mesher's cost.
+    record.update(seconds=time.perf_counter() - start, field_points=counter.points)
+    if "rejected" not in record:
         record.update(
             audit(field, mesh, wall_reference(field), reference_volume(field)),
             mesher={
@@ -429,7 +431,6 @@ def measure(name: str, cells: int, *, adapt: bool, tolerance: float, quality: fl
             },
         )
         record["missed_limits"] = verdict(record, tolerance)
-    record.update(seconds=time.perf_counter() - start, field_points=counter.points)
     return record
 
 
@@ -479,7 +480,13 @@ def main() -> int:
     for (name, cells, tolerance), adapt in itertools.product(configurations, modes):
         record = measure(name, cells, adapt=adapt, tolerance=tolerance, quality=args.quality)
         records.append(record)
-        worse = regressions(record, reference[_key(record)]) if _key(record) in reference else []
+        if not args.baseline:
+            worse = []
+        elif _key(record) in reference:
+            worse = regressions(record, reference[_key(record)])
+        else:
+            # A record with nothing to be compared against proves nothing.
+            worse = ["no baseline record"]
         regressed += bool(worse)
         sys.stdout.write(
             _line(record) + (" REGRESSION " + "; ".join(worse) if worse else "") + "\n",
