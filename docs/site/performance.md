@@ -1,5 +1,7 @@
 # Performance and regression checks
 
+[Benchmark index](benchmark-index.md) · [Open targets](benchmark-gaps.md)
+
 Both Schwarz P meshes meet the 1% stiffness target. The native Tet4 route took less time on all five configurations. [Comparison protocol and raw runs](https://github.com/kmarchais/meshers/blob/main/demos/solver/release-wheel/schwarz-matched-cost-20261118/README.md)
 
 <figure class="guide-figure chart"><img src="assets/playground/matched-cost.svg" alt="Median time for three qualifying runs per route on each CPU and OS. Native Tet4 was faster than the repaired route on all five configurations for this Schwarz P specimen."></figure>

@@ -4,7 +4,7 @@ Meshers is almost entirely vibe coded. Use reproducible benchmarks to guide agen
 
 ## Measure algorithm changes
 
-Compare pinned base and candidate builds on the same geometry, hardware and settings. Preserve the input, seed, backend, repair steps and replay command. Reuse the release fixtures, add a regression case for the feature or defect, and check a case outside the tuning set before changing defaults.
+Compare pinned base and candidate builds on the same geometry, hardware and settings. Preserve the input, seed, backend, repair steps and replay command. Choose a suite from the [benchmark index](docs/site/benchmark-index.md) and check its [open targets](docs/site/benchmark-gaps.md). Reuse the release fixtures, add a regression case for the feature or defect, and check a case outside the tuning set before changing defaults.
 
 | Metric | What to record |
 | --- | --- |
