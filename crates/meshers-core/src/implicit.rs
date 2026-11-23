@@ -1100,20 +1100,21 @@ fn finish<F: ScalarField>(mesh: Mesh, g: &Context<F>) -> Result<Output, String> 
 /// Whether the final checks accept `mesh`, without the coverage report that
 /// only the returned mesh needs.
 fn accepted<F: ScalarField>(mesh: &Mesh, g: &Context<F>) -> bool {
-    check(copy_mesh(mesh), g, None, false).is_ok()
+    check(copy_mesh(mesh), g, None, false, &Measured::default()).is_ok()
 }
 fn finish_with_constraints<F: ScalarField>(
     mesh: Mesh,
     g: &Context<F>,
     constraints: Option<&[intersection::ConstraintMask]>,
 ) -> Result<Output, String> {
-    check(mesh, g, constraints, true)
+    check(mesh, g, constraints, true, &Measured::default())
 }
 fn check<F: ScalarField>(
     mut mesh: Mesh,
     g: &Context<F>,
     constraints: Option<&[intersection::ConstraintMask]>,
     report: bool,
+    measured: &Measured,
 ) -> Result<Output, String> {
     weld_periodic_images(&mut mesh.points, g.bounds(), g.options.periodic);
     observe_linear(g, "final-linear", &mesh);
@@ -1145,7 +1146,7 @@ fn check<F: ScalarField>(
     };
     let mut samples = Vec::new();
     let [lo, hi] = g.bounds();
-    for f in &mesh.surface {
+    for (index, f) in mesh.surface.iter().enumerate() {
         let p = f.map(|i| mesh.points[i]);
         let mut tag = 0;
         for a in 0..3 {
@@ -1164,7 +1165,12 @@ fn check<F: ScalarField>(
         if tag == 0 && constraints.is_some() && features == 0 {
             return Err("retained boundary facet has no supporting constraint".into());
         }
-        if tag == 0 || constraints.is_some() {
+        if let Some((distance, at)) = measured
+            .of(&mesh, index)
+            .filter(|_| tag == 0 && constraints.is_none())
+        {
+            observe_distance(at, distance);
+        } else if tag == 0 || constraints.is_some() {
             // A chord lying in a box plane must follow the wall/plane curve inside
             // that plane. The full gradient measures the distance to the unclipped
             // wall, which can pass much closer outside the box, so it under-reports
@@ -1420,9 +1426,12 @@ fn resolve_gaps<F: ScalarField>(
         let neighbours =
             |a: usize, incident: &[Vec<usize>], tets: &[crate::Tet], near: &mut Vec<usize>| {
                 near.clear();
-                near.extend(incident[a].iter().flat_map(|&t| tets[t]).filter(|&b| b > a));
+                for b in incident[a].iter().flat_map(|&t| tets[t]) {
+                    if b > a && !near.contains(&b) {
+                        near.push(b);
+                    }
+                }
                 near.sort_unstable();
-                near.dedup();
             };
         let mut near = Vec::new();
         // The steepest change of the field seen along an edge. An edge whose
@@ -2008,8 +2017,8 @@ fn close<F: ScalarField>(
         o.max_tetrahedra,
         g,
     )?;
-    let balanced_wall_vertices = balance_volume(&mut mesh, g)?;
-    let mut output = finish(mesh, g)?;
+    let (balanced_wall_vertices, measured) = balance_volume(&mut mesh, g)?;
+    let mut output = check(mesh, g, None, true, &measured)?;
     output.diagnostics.defeaturing_moves = defeaturing_moves;
     output.diagnostics.improved_elements = improved_elements;
     output.diagnostics.inserted_interior_nodes = inserted_interior_nodes;
@@ -2623,6 +2632,28 @@ fn distance_batch<F: ScalarField>(
     g.check()
 }
 
+/// Wall distances of surface facets as the final checks measure them, with
+/// the coordinates they were measured at. A facet none of whose vertices has
+/// moved since needs no second measure.
+#[derive(Default)]
+struct Measured {
+    points: Vec<Point>,
+    /// By surface facet: the distance and where it is reached.
+    facets: Vec<Option<(f64, Point)>>,
+}
+impl Measured {
+    fn of(&self, mesh: &Mesh, facet: usize) -> Option<(f64, Point)> {
+        if self.points.len() != mesh.points.len() || self.facets.len() != mesh.surface.len() {
+            return None;
+        }
+        mesh.surface[facet]
+            .iter()
+            .all(|&v| self.points[v] == mesh.points[v])
+            .then_some(self.facets[facet])
+            .flatten()
+    }
+}
+
 /// Move wall vertices along the wall normal so that the flat facets enclose
 /// the volume of the curved solid, and return how many moved.
 ///
@@ -2633,19 +2664,23 @@ fn distance_batch<F: ScalarField>(
 /// quadratic wall. Each vertex moves by the area-weighted mean over its
 /// facets, which restores the volume to first order and spreads the error on
 /// both sides of the wall. Quadratic elements follow the wall themselves.
-fn balance_volume<F: ScalarField>(mesh: &mut Mesh, g: &Context<F>) -> Result<usize, String> {
+fn balance_volume<F: ScalarField>(
+    mesh: &mut Mesh,
+    g: &Context<F>,
+) -> Result<(usize, Measured), String> {
     let o = g.options;
     if o.order != 1 || g.constraints.is_some() || g.halfspaces.is_some() {
-        return Ok(0);
+        return Ok((0, Measured::default()));
     }
     let [lo, hi] = o.bounds;
     let on_plane = |p: Point, a: usize| p[a] == lo[a] || p[a] == hi[a];
-    let wall: Vec<[usize; 3]> = mesh
+    let (wall_index, wall): (Vec<usize>, Vec<[usize; 3]>) = mesh
         .surface
         .iter()
         .copied()
-        .filter(|f| !g.cap(f.map(|i| mesh.points[i])))
-        .collect();
+        .enumerate()
+        .filter(|(_, f)| !g.cap(f.map(|i| mesh.points[i])))
+        .unzip();
     let mut edges = HashMap::<[usize; 2], usize>::new();
     let mut samples = Vec::new();
     for f in &wall {
@@ -2795,23 +2830,32 @@ fn balance_volume<F: ScalarField>(mesh: &mut Mesh, g: &Context<F>) -> Result<usi
     // than it was: its vertices return, until no facet exceeds the working
     // tolerance because of a move.
     let mut reverted = vec![false; applied.len()];
+    let mut measured = Measured::default();
     for _ in 0..4 {
         let mut undo: Vec<usize> = Vec::new();
-        for facets in wall.chunks(1024) {
+        measured.facets.clear();
+        measured.facets.resize(mesh.surface.len(), None);
+        for (facets, indices) in wall.chunks(1024).zip(wall_index.chunks(1024)) {
             g.check()?;
             let samples: Vec<_> = facets
                 .iter()
                 .flat_map(|f| facet_samples(f.map(|i| mesh.points[i]), [lo, hi], o.adapt.is_some()))
                 .collect();
             let estimates = clipped_wall_distances(g, &samples)?;
-            for (f, d) in facets.iter().zip(estimates.as_chunks::<FACET_SAMPLES>().0) {
-                let (error, _) = facet_distance(f.map(|i| mesh.points[i]), d);
+            for ((f, d), &index) in facets
+                .iter()
+                .zip(estimates.as_chunks::<FACET_SAMPLES>().0)
+                .zip(indices)
+            {
+                let (error, at) = facet_distance(f.map(|i| mesh.points[i]), d);
+                measured.facets[index] = Some((error, at));
                 if error > WORKING_TOLERANCE * o.geometry_tolerance {
                     undo.extend(f.iter().filter_map(moved_by).filter(|&i| !reverted[i]));
                 }
             }
         }
         if undo.is_empty() {
+            measured.points.clone_from(&mesh.points);
             break;
         }
         for index in undo {
@@ -2852,7 +2896,7 @@ fn balance_volume<F: ScalarField>(mesh: &mut Mesh, g: &Context<F>) -> Result<usi
         .map(|(&index, _)| groups[index].len())
         .sum();
     weld_periodic_images(&mut mesh.points, g.bounds(), o.periodic);
-    Ok(moved)
+    Ok((moved, measured))
 }
 
 /// Reference lines per lattice cell and axis when sampling the wall of a
