@@ -1192,20 +1192,29 @@ impl<'g, G: Geometry> Tets<'g, G> {
     }
 
     /// Whether the wall facets around `v` lie within `tolerance` of the wall
-    /// as the final gate measures them: at their vertices, centroids and edge
-    /// midpoints, held in their box planes where the gate holds them.
-    fn near_wall(&self, v: usize, tolerance: f64) -> bool {
+    /// as the final gate measures them where `v` decides it: at `v`, at their
+    /// centroids and at the midpoints of the edges of `v`, held in their box
+    /// planes where the gate holds them. The edges opposite to `v` stay where
+    /// they are wherever `v` goes.
+    fn near_wall(&self, v: usize, tolerance: f64) -> Result<bool, String> {
         let wall: Vec<Face> = self.vb[v]
             .iter()
             .copied()
             .filter(|f| self.faces[f] == 0)
             .collect();
-        self.fits_wall(&[v], &wall, tolerance)
+        self.fits_wall(&[v], &wall, |a, b| a == v || b == v, tolerance)
     }
 
     /// Whether `vertices` and `facets` lie within `tolerance` of the wall at
-    /// the samples and by the measure of the final gate.
-    fn fits_wall(&self, vertices: &[usize], facets: &[Face], tolerance: f64) -> bool {
+    /// the samples and by the measure of the final gate. Of the edges of the
+    /// facets, those that `moved` names are sampled, once each.
+    fn fits_wall(
+        &self,
+        vertices: &[usize],
+        facets: &[Face],
+        moved: impl Fn(usize, usize) -> bool,
+        tolerance: f64,
+    ) -> Result<bool, String> {
         let lock = |u: usize, w: usize| {
             if self.g.holds_samples() {
                 self.held(u, w)
@@ -1217,6 +1226,7 @@ impl<'g, G: Geometry> Tets<'g, G> {
             .iter()
             .map(|&v| (self.points[v], lock(v, v)))
             .collect();
+        let mut sampled: Vec<[usize; 2]> = Vec::new();
         for f in facets {
             let p = self.local(f.map(|n| self.points[n]));
             samples.push((
@@ -1224,6 +1234,11 @@ impl<'g, G: Geometry> Tets<'g, G> {
                 [false; 3],
             ));
             for (i, j) in [(0, 1), (1, 2), (0, 2)] {
+                let edge = [f[i].min(f[j]), f[i].max(f[j])];
+                if !moved(f[i], f[j]) || sampled.contains(&edge) {
+                    continue;
+                }
+                sampled.push(edge);
                 samples.push((
                     std::array::from_fn(|a| 0.5 * (p[i][a] + p[j][a])),
                     lock(f[i], f[j]),
@@ -1241,9 +1256,9 @@ impl<'g, G: Geometry> Tets<'g, G> {
                 }
             }
         }
-        self.g
-            .gate_distances(&samples, self.threshold, tolerance)
-            .is_ok_and(|distances| distances.iter().all(|&d| d <= tolerance))
+        // A failed evaluation is not a facet off the wall: the caller stops.
+        let distances = self.g.gate_distances(&samples, self.threshold, tolerance)?;
+        Ok(distances.iter().all(|&d| d <= tolerance))
     }
 
     /// Whether collapsing `u` onto `v` lays a boundary facet of `u` entirely
@@ -1410,27 +1425,27 @@ impl<'g, G: Geometry> Tets<'g, G> {
     /// The elements around the edge are replaced by the best triangulation of
     /// the fan they form. A single flat element lying on the wall is removed.
     /// The solid changes by the volume between the two pairs of facets.
-    fn swap_wall_edge(&mut self, u: usize, v: usize, tolerance: f64) -> bool {
+    fn swap_wall_edge(&mut self, u: usize, v: usize, tolerance: f64) -> Result<bool, String> {
         let old = self.edge_faces(u, v);
         if old.len() != 2
             || old.iter().any(|f| self.faces[f] != 0)
             || self.constraint_faces.is_some()
             || self.g.halfspaces().is_some()
         {
-            return false;
+            return Ok(false);
         }
         let apex = |f: &Face| f.iter().copied().find(|&w| w != u && w != v);
         let (Some(c), Some(d)) = (apex(&old[0]), apex(&old[1])) else {
-            return false;
+            return Ok(false);
         };
         // An edge between two vertices of one box plane would lie in it.
         if self.masks[c] & self.masks[d] & !WALL != 0 {
-            return false;
+            return Ok(false);
         }
         let shell = self.shell(u, v);
         let n = shell.len();
         if !(1..=6).contains(&n) {
-            return false;
+            return Ok(false);
         }
         // The fan from one wall facet to the other.
         let mut fan = vec![c];
@@ -1447,13 +1462,13 @@ impl<'g, G: Geometry> Tets<'g, G> {
                     .or((rest[1] == last).then_some(rest[0]))
                     .map(|next| (i, next))
             }) else {
-                return false;
+                return Ok(false);
             };
             used[i] = true;
             fan.push(next);
         }
         if fan[n] != d {
-            return false;
+            return Ok(false);
         }
         let before = self.worst(&shell);
         let new = if n == 1 {
@@ -1463,22 +1478,22 @@ impl<'g, G: Geometry> Tets<'g, G> {
                 || self.vt[u].len() < 2
                 || self.vt[v].len() < 2
             {
-                return false;
+                return Ok(false);
             }
             Vec::new()
         } else {
             if self.adjacent(c).contains(&d) {
-                return false;
+                return Ok(false);
             }
             let Some((after, new)) = self.fill(&fan, u, v) else {
-                return false;
+                return Ok(false);
             };
             if after <= before + 1e-6
                 || new
                     .iter()
                     .any(|&t| !self.in_one_cell([None; 4], t, usize::MAX))
             {
-                return false;
+                return Ok(false);
             }
             new
         };
@@ -1492,11 +1507,17 @@ impl<'g, G: Geometry> Tets<'g, G> {
         let solid = volume(&mut shell.iter().map(|&t| self.tets[t]));
         let cut = volume(&mut std::iter::once([u, v, c, d]));
         if (volume(&mut new.iter().copied()) + cut - solid).abs() > 1e-9 * solid {
-            return false;
+            return Ok(false);
         }
+        // The four other edges of the new facets stay where they are.
         let facets = [sorted([u, c, d]), sorted([v, c, d])];
-        if !self.fits_wall(&[], &facets, tolerance) {
-            return false;
+        if !self.fits_wall(
+            &[],
+            &facets,
+            |a, b| [a, b] == [c, d] || [a, b] == [d, c],
+            tolerance,
+        )? {
+            return Ok(false);
         }
         for t in shell {
             self.kill_tet(t);
@@ -1513,7 +1534,7 @@ impl<'g, G: Geometry> Tets<'g, G> {
         for w in [u, v, c, d] {
             self.refresh(w);
         }
-        true
+        Ok(true)
     }
 
     /// Best triangulation of the polygon `ring` joined to `u` and `v`, which
@@ -2564,7 +2585,7 @@ pub(crate) fn remove_slivers(
                         continue;
                     }
                     s.points[v] = p;
-                    let fits = s.near_wall(v, tolerance);
+                    let fits = s.near_wall(v, tolerance)?;
                     let q = s.worst(&star);
                     if fits && q > 1.05 * best.0 {
                         best = (q, s.points[v]);
@@ -2603,7 +2624,7 @@ pub(crate) fn remove_slivers(
                             }
                             s.points[v] = p;
                             let q = s.worst(&star);
-                            if q > 1.05 * best.0 && s.near_wall(v, tolerance) {
+                            if q > 1.05 * best.0 && s.near_wall(v, tolerance)? {
                                 best = (q, s.points[v]);
                             }
                         }
@@ -2633,7 +2654,7 @@ pub(crate) fn remove_slivers(
             }
         }
         for (_, [u, v]) in seeded(&s, SLIVER) {
-            if s.remove_edge(u, v) || s.swap_wall_edge(u, v, tolerance) {
+            if s.remove_edge(u, v) || s.swap_wall_edge(u, v, tolerance)? {
                 changed += 1;
             }
         }
@@ -3597,7 +3618,7 @@ mod tests {
         let flat = fan(0.);
         let mut state = super::Tets::new(&flat, &Floor, 0., [false; 3]);
         let before = quality(&state);
-        assert!(state.swap_wall_edge(0, 1, 1e-6));
+        assert!(state.swap_wall_edge(0, 1, 1e-6).unwrap());
         assert!(quality(&state) > before);
         assert_eq!(state.live_tetrahedra, 2);
         assert!(state.faces.contains_key(&super::sorted([0, 2, 3])));
@@ -3605,11 +3626,117 @@ mod tests {
         assert!(!state.faces.contains_key(&super::sorted([0, 1, 2])));
         assert!(state.edge_faces(0, 1).is_empty());
 
+        // Along a convex edge the swap cuts the element between the two
+        // diagonals off the solid: the new diagonal lies 0.05 under the wall.
+        let convex = fan(-0.05);
+        let volume = |state: &super::Tets<Floor>| -> f64 {
+            (0..state.tets.len())
+                .filter(|&t| state.alive[t])
+                .map(|t| {
+                    let signed = crate::determinant(state.tet_points(state.tets[t], None));
+                    assert!(signed > 0.);
+                    signed
+                })
+                .sum()
+        };
+        let mut state = super::Tets::new(&convex, &Floor, 0., [false; 3]);
+        assert!(!state.swap_wall_edge(0, 1, 0.04).unwrap());
+        assert_eq!(state.edge_faces(0, 1).len(), 2);
+        let (before, solid) = (quality(&state), volume(&state));
+        assert!(state.swap_wall_edge(0, 1, 0.1).unwrap());
+        assert!(quality(&state) > before);
+        let cut = crate::determinant([0, 1, 2, 3].map(|node| convex.points[node])).abs();
+        assert!(cut > 1e-3);
+        assert!((solid - volume(&state) - cut).abs() < 1e-12);
+        assert_eq!(state.live_tetrahedra, 2);
+        assert!(state.edge_faces(0, 1).is_empty());
+        assert_eq!(state.edge_faces(2, 3).len(), 2);
+        for facet in [[0, 2, 3], [1, 2, 3]] {
+            assert_eq!(state.faces[&super::sorted(facet)], 0);
+        }
+
         // Along a reentrant edge the new facets would pass outside the solid.
         let reentrant = fan(0.3);
         let mut state = super::Tets::new(&reentrant, &Floor, 0., [false; 3]);
-        assert!(!state.swap_wall_edge(0, 1, 1.));
+        assert!(!state.swap_wall_edge(0, 1, 1.).unwrap());
         assert_eq!(state.edge_faces(0, 1).len(), 2);
+    }
+
+    #[test]
+    fn near_wall_measures_the_edges_a_vertex_moves() {
+        /// A flat wall with a narrow bump, 0.05 high, over `at`.
+        struct Bump {
+            at: [f64; 2],
+        }
+
+        impl Bump {
+            fn height(&self, point: Point) -> f64 {
+                let (dx, dy) = (point[0] - self.at[0], point[1] - self.at[1]);
+                0.05 * (-(dx * dx + dy * dy) / 0.01).exp()
+            }
+        }
+
+        impl crate::geometry::Geometry for Bump {
+            fn value(&self, point: Point) -> f64 {
+                point[2] - self.height(point)
+            }
+            fn gradient(&self, point: Point) -> Point {
+                let slope = 200. * self.height(point);
+                [
+                    slope * (point[0] - self.at[0]),
+                    slope * (point[1] - self.at[1]),
+                    1.,
+                ]
+            }
+            fn bounds(&self) -> [Point; 2] {
+                [[-3.; 3], [3.; 3]]
+            }
+            fn rank(&self, _point: Point) -> [i64; 3] {
+                [0; 3]
+            }
+            fn band(&self) -> bool {
+                false
+            }
+        }
+
+        // Four wall facets around node 0, over an apex inside the solid.
+        let points = vec![
+            [0., 0., 0.],
+            [1., 0., 0.],
+            [0., 1., 0.],
+            [-1., 0., 0.],
+            [0., -1., 0.],
+            [0., 0., -1.],
+        ];
+        let surface = vec![[0, 1, 2], [0, 2, 3], [0, 3, 4], [0, 4, 1]];
+        let tets = surface
+            .iter()
+            .map(|f| {
+                let mut t = [f[0], f[1], f[2], 5];
+                if crate::determinant(t.map(|node| points[node])) < 0. {
+                    t.swap(0, 1);
+                }
+                t
+            })
+            .collect();
+        let mesh = crate::Mesh {
+            points,
+            tets,
+            surface,
+        };
+        let fits = |at: [f64; 2]| {
+            let bump = Bump { at };
+            super::Tets::new(&mesh, &bump, 0., [false; 3])
+                .near_wall(0, 0.01)
+                .unwrap()
+        };
+
+        assert!(fits([2.5, 2.5]));
+        // The vertex and the facet centroids lie on the wall: only the
+        // midpoint of an edge of node 0 sees the bump.
+        assert!(!fits([0.5, 0.]));
+        // No position of node 0 moves the edge opposite to it.
+        assert!(fits([0.5, 0.5]));
     }
 
     #[test]

@@ -420,15 +420,28 @@ pub(crate) fn refine_for(
                 new_points.clear();
                 new_tets.clear();
                 valid = true;
-                for &e in &copies {
-                    let fold = folds.get(&e).filter(|_| reach > 0.).and_then(|at| {
-                        let [a, b] = e.map(|i| mesh.points[i]);
-                        let start = std::array::from_fn(|i| {
-                            let m = (a[i] + b[i]) * 0.5;
-                            m + reach * (at[i] - m)
-                        });
-                        project(mesh, e, start, threshold, geometry)
-                    });
+                // One decision for the periodic copies of an edge. Each copy
+                // tests its own fold, and images agree only to rounding: a
+                // fold found or reached on some of them alone would split
+                // the images at different places.
+                let folded: Option<Vec<Point>> = (reach > 0.)
+                    .then(|| {
+                        copies
+                            .iter()
+                            .map(|e| {
+                                let at = folds.get(e)?;
+                                let [a, b] = e.map(|i| mesh.points[i]);
+                                let start = std::array::from_fn(|i| {
+                                    let m = (a[i] + b[i]) * 0.5;
+                                    m + reach * (at[i] - m)
+                                });
+                                project(mesh, *e, start, threshold, geometry)
+                            })
+                            .collect()
+                    })
+                    .flatten();
+                for (copy, &e) in copies.iter().enumerate() {
+                    let fold = folded.as_ref().map(|points| points[copy]);
                     let Some(p) = fold.or_else(|| midpoint(mesh, e, threshold, geometry)) else {
                         valid = false;
                         break;

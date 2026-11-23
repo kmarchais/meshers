@@ -121,18 +121,49 @@ pub(crate) trait Geometry: Sync {
         let points: Vec<Point> = free.iter().map(|s| s.0).collect();
         let values = self.values(&points);
         let walks = self.wall_walks(&free, threshold, settled)?;
+        // Across a periodic plane the wall is that of the next cell, as
+        // real as the one inside: only a plane that ends the solid hides it.
+        let [lo, hi] = self.bounds();
+        let periodic = self.periodic();
+        let reachable =
+            |end: Point| (0..3).all(|a| periodic[a] || (lo[a]..=hi[a]).contains(&end[a]));
         for ((&i, value), (distance, end)) in held.iter().zip(values).zip(walks) {
             let residual = if self.band() {
                 value.abs() - threshold
             } else {
                 value
             };
-            // Across a periodic plane the wall is that of the next cell, as
-            // real as the one inside: only a plane that ends the solid hides it.
-            let [lo, hi] = self.bounds();
-            let periodic = self.periodic();
-            let reachable = (0..3).all(|a| periodic[a] || (lo[a]..=hi[a]).contains(&end[a]));
-            if residual < 0. || reachable {
+            if residual < 0. || reachable(end) {
+                distances[i] = distances[i].min(distance);
+            }
+        }
+        // A sample held in a cap and in a periodic plane: the outline of the
+        // cap continues across the periodic plane, where the free walk may
+        // not follow it because it leaves through the cap.
+        let capped: Vec<usize> = held
+            .into_iter()
+            .filter(|&i| {
+                let locked = samples[i].1;
+                (0..3).any(|a| locked[a] && periodic[a])
+                    && (0..3).any(|a| locked[a] && !periodic[a])
+            })
+            .collect();
+        if capped.is_empty() {
+            return Ok(distances);
+        }
+        let in_caps: Vec<_> = capped
+            .iter()
+            .map(|&i| {
+                let locked = samples[i].1;
+                (
+                    samples[i].0,
+                    std::array::from_fn(|a| locked[a] && !periodic[a]),
+                )
+            })
+            .collect();
+        let walks = self.wall_walks(&in_caps, threshold, settled)?;
+        for (i, (distance, end)) in capped.into_iter().zip(walks) {
+            if reachable(end) {
                 distances[i] = distances[i].min(distance);
             }
         }
@@ -245,5 +276,62 @@ impl Geometry for Legacy {
     }
     fn bounds(&self) -> [Point; 2] {
         [[0.; 3], [1.; 3]]
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::Geometry;
+    use crate::Point;
+
+    /// A wall that crosses the cap `z = 0` along `y = 0.5 - 0.5 sin(2 pi x)`
+    /// and leans out of the box below it. Periodic along x only.
+    struct Leaning;
+
+    impl Geometry for Leaning {
+        fn value(&self, p: Point) -> f64 {
+            p[1] - 0.5 + 0.5 * (std::f64::consts::TAU * p[0]).sin() + p[2]
+        }
+        fn gradient(&self, p: Point) -> Point {
+            [
+                std::f64::consts::PI * (std::f64::consts::TAU * p[0]).cos(),
+                1.,
+                1.,
+            ]
+        }
+        fn rank(&self, _p: Point) -> [i64; 3] {
+            [0; 3]
+        }
+        fn bounds(&self) -> [Point; 2] {
+            [[0.; 3], [1.; 3]]
+        }
+        fn periodic(&self) -> [bool; 3] {
+            [true, false, false]
+        }
+        fn band(&self) -> bool {
+            false
+        }
+    }
+
+    #[test]
+    fn gate_measures_a_cap_sample_on_a_periodic_face_within_the_cap() {
+        // On the box edge shared by the periodic face `x = 0` and the cap
+        // `z = 0`, outside the solid. Its free walk leaves through the cap,
+        // where the box hides the wall. The outline of the cap passes much
+        // closer across the periodic face than along the box edge.
+        let sample = ([0., 0.6, 0.], [true, false, true]);
+        let along_the_edge = Leaning.wall_distances(&[sample], 0., 0.).unwrap()[0];
+        assert!((along_the_edge - 0.1).abs() < 1e-12);
+        let within_the_cap = Leaning
+            .wall_distances(&[(sample.0, [false, false, true])], 0., 0.)
+            .unwrap()[0];
+        assert!(within_the_cap < 0.04);
+
+        let gate = Leaning.gate_distances(&[sample], 0., 0.01).unwrap()[0];
+        assert!((gate - within_the_cap).abs() < 1e-12, "{gate}");
+        // Both images of the sample measure alike.
+        let image = ([1., 0.6, 0.], [true, false, true]);
+        let other = Leaning.gate_distances(&[image], 0., 0.01).unwrap()[0];
+        assert!((gate - other).abs() < 1e-9, "{gate} {other}");
     }
 }
