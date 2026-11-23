@@ -333,14 +333,14 @@ def test_expected_components_exposes_missing_island_in_nonempty_mesh(order):
     assert fine.diagnostics["face_connected_components"] == 2
 
 
-def test_expected_components_exposes_lost_thin_slab():
+def test_lost_thin_slab_is_rejected_without_being_asked():
     def slab(x, _y, _z):
         return (x - 0.06) ** 2 - 0.025**2
 
     opts = {"expected_components": 1, "optimize_passes": 0, "snap": 0, "geometry_tolerance": 0.02}
-    with pytest.raises(meshers.MeshingError, match="Expected 1 face-connected components, found 0"):
+    with pytest.raises(meshers.MeshingError, match="mesh has no implicit wall"):
         # A loose tolerance keeps narrow-feature refinement from finding the slab.
-        meshers.generate(slab, cells=4, **{**opts, "geometry_tolerance": 1.0})
+        meshers.generate(slab, cells=4, optimize_passes=0, snap=0, geometry_tolerance=1.0)
     fine = meshers.generate(slab, cells=24, **opts)
     assert fine.diagnostics["volume"] == pytest.approx(0.05)
 

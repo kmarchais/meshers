@@ -120,3 +120,14 @@ def test_regressions_compare_a_record_with_its_baseline():
     rejected = {"case": "sphere", "rejected": "sampled geometry error"}
     assert bench.regressions(rejected, reference) == ["now rejected: sampled geometry error"]
     assert bench.regressions(reference, rejected) == []
+
+
+def test_a_configuration_missing_from_the_baseline_fails_the_run(tmp_path, monkeypatch):
+    baseline = tmp_path / "baseline.json"
+    arguments = ["periodic_bench", "--case", "sphere", "--cells", "12", "--tolerance", "0.02"]
+    monkeypatch.setattr(sys, "argv", [*arguments, "--output", str(baseline)])
+    assert bench.main() == 0
+    monkeypatch.setattr(sys, "argv", [*arguments, "--baseline", str(baseline)])
+    assert bench.main() == 0
+    baseline.write_text("[]\n", encoding="utf8")
+    assert bench.main() == 1
