@@ -1163,6 +1163,25 @@ fn periodic_images_share_their_in_plane_coordinates_bit_for_bit() {
 }
 
 #[test]
+fn wall_free_mesh_rejects_a_sampled_cavity() {
+    let options = Options {
+        cells: [4; 3],
+        periodic: [true; 3],
+        minimum_quality: 0.1,
+        ..Options::default()
+    };
+    let cavity = |p: Point| {
+        let dx = (p[0] - 0.125 + 0.5).rem_euclid(1.) - 0.5;
+        let radius_squared = dx * dx + (p[1] - 0.5).powi(2) + (p[2] - 0.5).powi(2);
+        (10_000. * (0.115_f64.powi(2) - radius_squared)).tanh()
+    };
+    let result = generate(&cavity, options);
+    assert!(matches!(result, Err(error) if error.to_string().contains("no implicit wall")));
+    let full = generate(&|_: Point| -1., options).unwrap();
+    assert!((full.diagnostics.volume - 1.).abs() < 1e-12);
+}
+
+#[test]
 fn coverage_error_measures_the_wall_against_the_mesh() {
     // Wall points sampled on lines finer than the lattice, against the meshed
     // wall: the direction facet samples cannot see. On a sphere both
