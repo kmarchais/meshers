@@ -167,6 +167,80 @@
           "energy_error_rate": 1.09506329063085
         }
       ]
+    },
+    {
+      "geometry": "torus",
+      "affine_patch": {
+        "tetrahedra": 15837,
+        "points": 5533,
+        "free_dofs": 1578,
+        "minimum_quality": 0.0874059436038089,
+        "minimum_signed_volume": 6.526124191254276e-09,
+        "maximum_edge_length": 0.2342550014985827,
+        "l2_displacement_error": 2.0009251091537178e-11,
+        "energy_error": 1.1370399863998893e-09,
+        "cg_iterations": 19,
+        "relative_residual": 6.509851332717465e-11,
+        "maximum_boundary_error": 0.0,
+        "seconds": 0.16862641599800554
+      },
+      "refinement": [
+        {
+          "cells": 12,
+          "tetrahedra": 15837,
+          "points": 5533,
+          "free_dofs": 1578,
+          "minimum_quality": 0.0874059436038089,
+          "minimum_signed_volume": 6.526124191254276e-09,
+          "maximum_edge_length": 0.2342550014985827,
+          "l2_displacement_error": 0.004180362355327313,
+          "energy_error": 0.26261796280308347,
+          "cg_iterations": 19,
+          "relative_residual": 5.971762206521945e-11,
+          "maximum_boundary_error": 0.0,
+          "seconds": 0.17401941699790768,
+          "l2_displacement_error_reference_relative_difference": 4.440892098500626e-16,
+          "energy_error_reference_relative_difference": 0.0
+        },
+        {
+          "cells": 18,
+          "tetrahedra": 41911,
+          "points": 13336,
+          "free_dofs": 6441,
+          "minimum_quality": 0.10100630039989474,
+          "minimum_signed_volume": 1.4435360269460502e-08,
+          "maximum_edge_length": 0.1561743644096735,
+          "l2_displacement_error": 0.0019104142559778472,
+          "energy_error": 0.1704578459119606,
+          "cg_iterations": 28,
+          "relative_residual": 4.653919949297692e-11,
+          "maximum_boundary_error": 0.0,
+          "seconds": 0.4525842500006547,
+          "l2_displacement_error_reference_relative_difference": 1.4432899320127035e-15,
+          "l2_displacement_error_rate": 1.9314406405455853,
+          "energy_error_reference_relative_difference": 0.0,
+          "energy_error_rate": 1.066040237103007
+        },
+        {
+          "cells": 24,
+          "tetrahedra": 84181,
+          "points": 25072,
+          "free_dofs": 16413,
+          "minimum_quality": 0.08120999042286897,
+          "minimum_signed_volume": 6.533460002322548e-09,
+          "maximum_edge_length": 0.11729981876925646,
+          "l2_displacement_error": 0.00110276773860841,
+          "energy_error": 0.12683474817799462,
+          "cg_iterations": 37,
+          "relative_residual": 7.434114032193288e-11,
+          "maximum_boundary_error": 0.0,
+          "seconds": 0.9646587500028545,
+          "l2_displacement_error_reference_relative_difference": 8.881784197001252e-16,
+          "l2_displacement_error_rate": 1.919707819413756,
+          "energy_error_reference_relative_difference": 0.0,
+          "energy_error_rate": 1.0327106444999457
+        }
+      ]
     }
   ]
 }
