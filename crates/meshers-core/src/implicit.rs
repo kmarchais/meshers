@@ -1106,20 +1106,21 @@ fn finish<F: ScalarField>(mesh: Mesh, g: &Context<F>) -> Result<Output, String> 
 /// Whether the final checks accept `mesh`, without the coverage report that
 /// only the returned mesh needs.
 fn accepted<F: ScalarField>(mesh: &Mesh, g: &Context<F>) -> bool {
-    check(copy_mesh(mesh), g, None, false).is_ok()
+    check(copy_mesh(mesh), g, None, false, &Measured::default()).is_ok()
 }
 fn finish_with_constraints<F: ScalarField>(
     mesh: Mesh,
     g: &Context<F>,
     constraints: Option<&[intersection::ConstraintMask]>,
 ) -> Result<Output, String> {
-    check(mesh, g, constraints, true)
+    check(mesh, g, constraints, true, &Measured::default())
 }
 fn check<F: ScalarField>(
     mut mesh: Mesh,
     g: &Context<F>,
     constraints: Option<&[intersection::ConstraintMask]>,
     report: bool,
+    measured: &Measured,
 ) -> Result<Output, String> {
     weld_periodic_images(&mut mesh.points, g.bounds(), g.options.periodic);
     observe_linear(g, "final-linear", &mesh);
@@ -1151,7 +1152,7 @@ fn check<F: ScalarField>(
     };
     let mut samples = Vec::new();
     let [lo, hi] = g.bounds();
-    for f in &mesh.surface {
+    for (index, f) in mesh.surface.iter().enumerate() {
         let p = f.map(|i| mesh.points[i]);
         let mut tag = 0;
         for a in 0..3 {
@@ -1170,7 +1171,12 @@ fn check<F: ScalarField>(
         if tag == 0 && constraints.is_some() && features == 0 {
             return Err("retained boundary facet has no supporting constraint".into());
         }
-        if tag == 0 || constraints.is_some() {
+        if let Some((distance, at)) = measured
+            .of(&mesh, index)
+            .filter(|_| tag == 0 && constraints.is_none())
+        {
+            observe_distance(at, distance);
+        } else if tag == 0 || constraints.is_some() {
             // A chord lying in a box plane must follow the wall/plane curve inside
             // that plane. The full gradient measures the distance to the unclipped
             // wall, which can pass much closer outside the box, so it under-reports
@@ -1347,6 +1353,7 @@ fn resolve_gaps<F: ScalarField>(
     ];
     let mut tets: Vec<crate::Tet> = Vec::new();
     for z in 0..nz {
+        g.check()?;
         for y in 0..ny {
             for x in 0..nx {
                 let corners = [
@@ -1402,9 +1409,16 @@ fn resolve_gaps<F: ScalarField>(
             3
         }
     };
-    let mut values: Vec<f64> = g.values(&points);
+    let mut values: Vec<f64> = Vec::with_capacity(points.len());
+    for chunk in points.chunks(1 << 16) {
+        g.check()?;
+        values.extend(g.values(chunk));
+    }
     let mut incident = vec![Vec::new(); points.len()];
     for (t, tet) in tets.iter().enumerate() {
+        if t % (1 << 16) == 0 {
+            g.check()?;
+        }
         for &v in tet {
             incident[v].push(t);
         }
@@ -1415,25 +1429,27 @@ fn resolve_gaps<F: ScalarField>(
         g.check()?;
         // Edges are listed from their lower vertex, a few thousand vertices at
         // a time: a lattice of a hundred cells has tens of millions of them.
-        let neighbours = |a: usize, incident: &[Vec<usize>], tets: &[crate::Tet]| {
-            let mut near: Vec<usize> = incident[a]
-                .iter()
-                .flat_map(|&t| tets[t])
-                .filter(|&b| b > a)
-                .collect();
-            near.sort_unstable();
-            near.dedup();
-            near
-        };
+        let neighbours =
+            |a: usize, incident: &[Vec<usize>], tets: &[crate::Tet], near: &mut Vec<usize>| {
+                near.clear();
+                for b in incident[a].iter().flat_map(|&t| tets[t]) {
+                    if b > a && !near.contains(&b) {
+                        near.push(b);
+                    }
+                }
+                near.sort_unstable();
+            };
+        let mut near = Vec::new();
         // The steepest change of the field seen along an edge. An edge whose
         // ends both lie farther from the level than twice that slope can
         // cover in half its length hides no crossing, and is not sampled.
         let mut steepest: f64 = 0.;
-        for a in 0..points.len() {
-            if a % POLL == 0 {
+        for (t, tet) in tets.iter().enumerate() {
+            if t % 4096 == 0 {
                 g.check()?;
             }
-            for b in neighbours(a, &incident, &tets) {
+            for [i, j] in [[0, 1], [0, 2], [0, 3], [1, 2], [1, 3], [2, 3]] {
+                let (a, b) = (tet[i], tet[j]);
                 let slope = (values[a] - values[b]).abs() / norm(sub(points[a], points[b]));
                 if slope.is_finite() {
                     steepest = steepest.max(slope);
@@ -1472,7 +1488,8 @@ fn resolve_gaps<F: ScalarField>(
             if a % POLL == 0 {
                 g.check()?;
             }
-            for b in neighbours(a, &incident, &tets) {
+            neighbours(a, &incident, &tets, &mut near);
+            for &b in &near {
                 if side(values[a]) == 0 || side(values[a]) != side(values[b]) {
                     continue;
                 }
@@ -2006,8 +2023,8 @@ fn close<F: ScalarField>(
         o.max_tetrahedra,
         g,
     )?;
-    let balanced_wall_vertices = balance_volume(&mut mesh, g)?;
-    let mut output = finish(mesh, g)?;
+    let (balanced_wall_vertices, measured) = balance_volume(&mut mesh, g)?;
+    let mut output = check(mesh, g, None, true, &measured)?;
     output.diagnostics.defeaturing_moves = defeaturing_moves;
     output.diagnostics.improved_elements = improved_elements;
     output.diagnostics.inserted_interior_nodes = inserted_interior_nodes;
@@ -2598,6 +2615,28 @@ fn distance_batch<F: ScalarField>(
     g.check()
 }
 
+/// Wall distances of surface facets as the final checks measure them, with
+/// the coordinates they were measured at. A facet none of whose vertices has
+/// moved since needs no second measure.
+#[derive(Default)]
+struct Measured {
+    points: Vec<Point>,
+    /// By surface facet: the distance and where it is reached.
+    facets: Vec<Option<(f64, Point)>>,
+}
+impl Measured {
+    fn of(&self, mesh: &Mesh, facet: usize) -> Option<(f64, Point)> {
+        if self.points.len() != mesh.points.len() || self.facets.len() != mesh.surface.len() {
+            return None;
+        }
+        mesh.surface[facet]
+            .iter()
+            .all(|&v| self.points[v] == mesh.points[v])
+            .then_some(self.facets[facet])
+            .flatten()
+    }
+}
+
 /// Move wall vertices along the wall normal so that the flat facets enclose
 /// the volume of the curved solid, and return how many moved.
 ///
@@ -2608,19 +2647,23 @@ fn distance_batch<F: ScalarField>(
 /// quadratic wall. Each vertex moves by the area-weighted mean over its
 /// facets, which restores the volume to first order and spreads the error on
 /// both sides of the wall. Quadratic elements follow the wall themselves.
-fn balance_volume<F: ScalarField>(mesh: &mut Mesh, g: &Context<F>) -> Result<usize, String> {
+fn balance_volume<F: ScalarField>(
+    mesh: &mut Mesh,
+    g: &Context<F>,
+) -> Result<(usize, Measured), String> {
     let o = g.options;
     if o.order != 1 || g.constraints.is_some() || g.halfspaces.is_some() {
-        return Ok(0);
+        return Ok((0, Measured::default()));
     }
     let [lo, hi] = o.bounds;
     let on_plane = |p: Point, a: usize| p[a] == lo[a] || p[a] == hi[a];
-    let wall: Vec<[usize; 3]> = mesh
+    let (wall_index, wall): (Vec<usize>, Vec<[usize; 3]>) = mesh
         .surface
         .iter()
         .copied()
-        .filter(|f| !g.cap(f.map(|i| mesh.points[i])))
-        .collect();
+        .enumerate()
+        .filter(|(_, f)| !g.cap(f.map(|i| mesh.points[i])))
+        .unzip();
     let mut edges = HashMap::<[usize; 2], usize>::new();
     let mut samples = Vec::new();
     for f in &wall {
@@ -2770,23 +2813,32 @@ fn balance_volume<F: ScalarField>(mesh: &mut Mesh, g: &Context<F>) -> Result<usi
     // than it was: its vertices return, until no facet exceeds the working
     // tolerance because of a move.
     let mut reverted = vec![false; applied.len()];
+    let mut measured = Measured::default();
     for _ in 0..4 {
         let mut undo: Vec<usize> = Vec::new();
-        for facets in wall.chunks(1024) {
+        measured.facets.clear();
+        measured.facets.resize(mesh.surface.len(), None);
+        for (facets, indices) in wall.chunks(1024).zip(wall_index.chunks(1024)) {
             g.check()?;
             let samples: Vec<_> = facets
                 .iter()
                 .flat_map(|f| facet_samples(f.map(|i| mesh.points[i]), [lo, hi], o.adapt.is_some()))
                 .collect();
             let estimates = clipped_wall_distances(g, &samples)?;
-            for (f, d) in facets.iter().zip(estimates.as_chunks::<FACET_SAMPLES>().0) {
-                let (error, _) = facet_distance(f.map(|i| mesh.points[i]), d);
+            for ((f, d), &index) in facets
+                .iter()
+                .zip(estimates.as_chunks::<FACET_SAMPLES>().0)
+                .zip(indices)
+            {
+                let (error, at) = facet_distance(f.map(|i| mesh.points[i]), d);
+                measured.facets[index] = Some((error, at));
                 if error > WORKING_TOLERANCE * o.geometry_tolerance {
                     undo.extend(f.iter().filter_map(moved_by).filter(|&i| !reverted[i]));
                 }
             }
         }
         if undo.is_empty() {
+            measured.points.clone_from(&mesh.points);
             break;
         }
         for index in undo {
@@ -2827,7 +2879,7 @@ fn balance_volume<F: ScalarField>(mesh: &mut Mesh, g: &Context<F>) -> Result<usi
         .map(|(&index, _)| groups[index].len())
         .sum();
     weld_periodic_images(&mut mesh.points, g.bounds(), o.periodic);
-    Ok(moved)
+    Ok((moved, measured))
 }
 
 /// Reference lines per lattice cell and axis when sampling the wall of a
@@ -2887,7 +2939,7 @@ fn closest_on_triangle(p: Point, t: [Point; 3]) -> Point {
 /// nothing of the field but its sign. Distances beyond the reach of the
 /// search are reported as that reach.
 fn wall_coverage<F: ScalarField>(wall: &[[Point; 3]], g: &Context<F>) -> Result<f64, String> {
-    if wall.is_empty() {
+    if wall.is_empty() && !g.gaps_resolved {
         return Ok(0.);
     }
     let o = g.options;
@@ -2916,10 +2968,8 @@ fn wall_coverage<F: ScalarField>(wall: &[[Point; 3]], g: &Context<F>) -> Result<
         for j in 0..n[1] {
             for i in 0..n[0] {
                 batch.push(node(i, j, k));
-                if batch.len() % POLL == 0 {
-                    g.check()?;
-                }
                 if batch.len() == 4096 {
+                    g.check()?;
                     grid.extend(g.values(&batch).into_iter().map(|v| residual(v) as f32));
                     batch.clear();
                 }
@@ -2927,11 +2977,21 @@ fn wall_coverage<F: ScalarField>(wall: &[[Point; 3]], g: &Context<F>) -> Result<
         }
     }
     grid.extend(g.values(&batch).into_iter().map(|v| residual(v) as f32));
+    if wall.is_empty() {
+        // Opposite signs on the coverage grid witness an implicit wall that the mesh lost.
+        if grid.iter().any(|&v| v < 0.) && grid.iter().any(|&v| v > 0.) {
+            return Err(
+                "sampled solid and void but mesh has no implicit wall; increase resolution".into(),
+            );
+        }
+        return Ok(0.);
+    }
     let at = |i: usize, j: usize, k: usize| f64::from(grid[i + n[0] * (j + n[1] * k)]);
     // Segments across the wall, solid end first, with the residuals there.
     let mut ends: Vec<([Point; 2], [f64; 2])> = Vec::new();
     for k in 0..n[2] {
         for j in 0..n[1] {
+            g.check()?;
             for i in 0..n[0] {
                 for (a, next) in [(i + 1, j, k), (i, j + 1, k), (i, j, k + 1)]
                     .into_iter()
@@ -2941,9 +3001,6 @@ fn wall_coverage<F: ScalarField>(wall: &[[Point; 3]], g: &Context<F>) -> Result<
                         continue;
                     }
                     let (here, there) = (at(i, j, k), at(next.0, next.1, next.2));
-                    if (i + j) % POLL == 0 && a == 0 {
-                        g.check()?;
-                    }
                     if (here < 0.) != (there < 0.) {
                         let (p, q) = (node(i, j, k), node(next.0, next.1, next.2));
                         ends.push(if here < 0. {
@@ -3008,18 +3065,22 @@ fn wall_coverage<F: ScalarField>(wall: &[[Point; 3]], g: &Context<F>) -> Result<
         }
     }
     let mut worst: f64 = 0.;
-    for (index, root) in roots.into_iter().enumerate() {
+    'roots: for (index, root) in roots.into_iter().enumerate() {
         if index % POLL == 0 {
             g.check()?;
         }
         let [x, y, z] = key(root);
         let mut nearest = reach;
-        for dx in -1..=1 {
-            for dy in -1..=1 {
-                for dz in -1..=1 {
+        for dx in [0, -1, 1] {
+            for dy in [0, -1, 1] {
+                for dz in [0, -1, 1] {
                     for &f in bins.get(&[x + dx, y + dy, z + dz]).into_iter().flatten() {
                         let on = closest_on_triangle(root, wall[f as usize]);
                         nearest = nearest.min(norm(sub(on, root)));
+                        // One triangle this close proves this root cannot increase the maximum.
+                        if nearest <= worst {
+                            continue 'roots;
+                        }
                     }
                 }
             }
