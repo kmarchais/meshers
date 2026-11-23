@@ -741,12 +741,34 @@ fn mesh_dict<'py>(
         result.diagnostics.maximum_sampled_surface_error,
     )?;
     diagnostics.set_item(
+        "balanced_wall_vertices",
+        result.diagnostics.balanced_wall_vertices,
+    )?;
+    diagnostics.set_item(
+        "sampled_coverage_error",
+        result.diagnostics.maximum_sampled_coverage_error,
+    )?;
+    diagnostics.set_item(
         "elements_below_quality_01",
         result.diagnostics.elements_below_quality_01,
     )?;
     diagnostics.set_item(
         "reverted_snap_vertices",
         result.diagnostics.reverted_snap_vertices,
+    )?;
+    diagnostics.set_item("defeaturing_moves", result.diagnostics.defeaturing_moves)?;
+    diagnostics.set_item(
+        "removed_bridging_elements",
+        result.diagnostics.removed_bridging_elements,
+    )?;
+    diagnostics.set_item("improved_elements", result.diagnostics.improved_elements)?;
+    diagnostics.set_item(
+        "adaptation_abandoned",
+        result.diagnostics.adaptation_abandoned,
+    )?;
+    diagnostics.set_item(
+        "refined_lattice_edges",
+        result.diagnostics.refined_lattice_edges,
     )?;
     diagnostics.set_item("callback_calls", callback_calls)?;
     diagnostics.set_item(

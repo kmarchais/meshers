@@ -4,6 +4,7 @@ pub mod intersection;
 mod seeded;
 pub use seeded::adapt_intersection;
 
+use crate::geometry::wall_distance;
 use crate::{Mesh, MeshingError, Point, determinant, dot, geometry::Geometry, norm, quality, sub};
 use std::collections::{BTreeMap, HashMap};
 use std::sync::atomic::{AtomicBool, Ordering};
@@ -105,8 +106,34 @@ pub struct Diagnostics {
     pub minimum_mmg_quality: f64,
     pub elements_below_quality_01: usize,
     pub reverted_snap_vertices: usize,
+    /// Last-resort defeaturing: wall vertices merged or moved off the wall to
+    /// reach `minimum_quality`. Nonzero means the geometry changed there,
+    /// within `geometry_tolerance`.
+    pub defeaturing_moves: usize,
+    /// Elements removed after clipping because their centroid lay outside the
+    /// solid by more than `geometry_tolerance`: they bridged a gap narrower
+    /// than a cell.
+    pub removed_bridging_elements: usize,
+    /// Lattice edges split before clipping because they hid two walls closer
+    /// than a cell.
+    pub refined_lattice_edges: usize,
+    /// Wall vertices moved off the wall, within half the geometry tolerance,
+    /// so that the flat facets enclose the volume of the curved solid.
+    pub balanced_wall_vertices: usize,
+    /// Elements below an MMG quality of 0.2 that local remeshing lifted
+    /// above it, without moving the wall.
+    pub improved_elements: usize,
+    /// The final checks refused the adapted mesh and the uniform lattice
+    /// mesh of the same field was returned instead.
+    pub adaptation_abandoned: bool,
     pub inserted_interior_nodes: usize,
     pub maximum_sampled_surface_error: f64,
+    /// Largest sampled distance from the wall of the solid to the meshed
+    /// wall, the direction `maximum_sampled_surface_error` cannot see: a
+    /// feature the mesh lost or smoothed has no facet to report it. Sampled
+    /// where lines finer than the lattice cross the wall, and capped at the
+    /// search reach. Zero when not measured.
+    pub maximum_sampled_coverage_error: f64,
     pub adapt: Option<crate::tet_adapt::Stats>,
 }
 pub struct QuadraticOutput {
@@ -172,8 +199,33 @@ struct Context<'a, F: ScalarField> {
     scale: f64,
     optimizer_length: f64,
     invalid: AtomicBool,
+    /// The lattice was refined where an edge hid a wall crossing, so no
+    /// element of its cut bridges a gap narrower than a cell.
+    gaps_resolved: bool,
 }
 impl<F: ScalarField> Context<'_, F> {
+    /// The same field and box, meshed on the uniform lattice path.
+    fn without_adaptation(&self) -> Self {
+        Self {
+            field: self.field,
+            constraints: self.constraints,
+            halfspaces: self.halfspaces,
+            halfspace_regions: self.halfspace_regions,
+            size_field: None,
+            background: self.background,
+            #[cfg(feature = "experimental-quads")]
+            linear_observer: self.linear_observer,
+            options: Options {
+                adapt: None,
+                ..self.options
+            },
+            center: self.center,
+            scale: self.scale,
+            optimizer_length: self.optimizer_length,
+            invalid: AtomicBool::new(false),
+            gaps_resolved: self.gaps_resolved,
+        }
+    }
     fn canonical(&self, mut p: Point) -> Point {
         for (a, x) in p.iter_mut().enumerate() {
             if self.options.periodic[a] && *x == self.options.bounds[1][a] {
@@ -196,39 +248,8 @@ impl<F: ScalarField> Context<'_, F> {
             Region::Band { lower, upper } => (upper - lower) / 2. / self.scale,
         }
     }
-    /// First-order wall distance, with roundoff handling at fully locked box corners.
-    fn distance_in(&self, p: Point, locked: [bool; 3]) -> f64 {
-        let residual = self.residual(p, self.threshold()).abs();
-        if residual == 0. {
-            return 0.;
-        }
-        wall_distance(residual, self.gradient(p), locked)
-    }
 }
 
-fn wall_distance(residual: f64, mut gradient: Point, locked: [bool; 3]) -> f64 {
-    let residual = residual.abs();
-    if residual == 0. {
-        return 0.;
-    }
-    // Values are normalized by the preflight field amplitude. At a fixed box
-    // corner, roundoff at a true wall must not become an infinite 1/0 distance.
-    // Retain the full-gradient estimate only for roundoff-sized corner residuals;
-    // ordinary misses and genuine zero gradients still reject.
-    if locked != [true; 3] || residual > 64. * f64::EPSILON {
-        for a in 0..3 {
-            if locked[a] {
-                gradient[a] = 0.;
-            }
-        }
-    }
-    let n = norm(gradient);
-    if n > 0. && n.is_finite() {
-        residual / n
-    } else {
-        f64::INFINITY
-    }
-}
 impl<F: ScalarField> Geometry for Context<'_, F> {
     fn constraints(&self) -> Option<&[&dyn ScalarField]> {
         self.constraints
@@ -255,7 +276,7 @@ impl<F: ScalarField> Geometry for Context<'_, F> {
         }
     }
     fn geometry_tolerance(&self) -> Option<f64> {
-        Some(self.options.geometry_tolerance)
+        Some(WORKING_TOLERANCE * self.options.geometry_tolerance)
     }
     fn batched(&self) -> bool {
         self.field.prefers_batches()
@@ -686,6 +707,7 @@ fn generate_internal<F: ScalarField>(
         scale,
         optimizer_length: (0..3).map(|a| hi[a] - lo[a]).product::<f64>().cbrt(),
         invalid: AtomicBool::new(false),
+        gaps_resolved: false,
     };
     // Inspect raw field traces before canonicalizing opposite faces.
     for axis in 0..3 {
@@ -734,14 +756,79 @@ fn generate_internal<F: ScalarField>(
             }
         }
     }
-    if let Some(background) = background {
+    // Two walls closer than a cell hide between lattice nodes: resolve them
+    // on a locally refined lattice.
+    let gaps_resolved = context.background.is_none()
+        && context.constraints.is_none()
+        && context.halfspaces.is_none();
+    let refined = if gaps_resolved {
+        resolve_gaps(&context).map_err(MeshingError::GenerationFailed)?
+    } else {
+        None
+    };
+    let refined_lattice_edges = refined.as_ref().map_or(0, |r| r.2);
+    let context = match &refined {
+        Some((points, tetrahedra, _)) => Context {
+            background: Some(Background {
+                points,
+                tetrahedra,
+                #[cfg(feature = "experimental-quads")]
+                observer: None,
+            }),
+            gaps_resolved,
+            ..context
+        },
+        None => Context {
+            gaps_resolved,
+            ..context
+        },
+    };
+    // The refined lattice is not an input: only a caller's background is checked.
+    if refined.is_none()
+        && let Some(background) = context.background
+    {
         validate_background(background, &context).map_err(MeshingError::InvalidOptions)?;
     }
     context.check().map_err(MeshingError::GenerationFailed)?;
     if !(1..=2).contains(&options.order) {
         return Err(MeshingError::InvalidOptions("order must be 1 or 2".into()));
     }
-    let result = build(&context).and_then(|mut output| {
+    // Adaptation cannot always close the geometry or the shape of what it
+    // coarsened. When the final checks refuse its mesh, the uniform lattice
+    // mesh of the same field is returned instead, and says so.
+    let lattice = context.without_adaptation();
+    let mut adaptation_abandoned = false;
+    let mut attempt = build(&context);
+    // Retained constraints and half-spaces have no lattice route to fall back on.
+    if options.adapt.is_some()
+        && context.constraints.is_none()
+        && context.halfspaces.is_none()
+        && attempt.as_ref().is_err_and(|error| {
+            [
+                "sampled geometry error",
+                "minimum MMG quality",
+                "lie outside the solid",
+                "inverted tetrahedron",
+                "two-manifold",
+                "periodic cap node",
+                "periodic triangle mismatch",
+                "periodic node match",
+                "periodic edge/corner",
+                "crosses a periodic plane",
+            ]
+            .iter()
+            .any(|gate| error.contains(gate))
+        })
+    {
+        let fallback = build(&lattice);
+        if fallback.is_ok() {
+            adaptation_abandoned = true;
+            attempt = fallback;
+        }
+    }
+    let result = attempt.and_then(|mut output| {
+        output.diagnostics.adaptation_abandoned = adaptation_abandoned;
+        output.diagnostics.refined_lattice_edges = refined_lattice_edges;
         if options.order == 2 {
             let mut elements = crate::quadratic::elevate(
                 &output.mesh,
@@ -764,6 +851,7 @@ fn generate_internal<F: ScalarField>(
                 options.bounds,
                 options.periodic,
             )?;
+            share_image_coordinates(&mut elements.points, &periodic_pairs);
             output.diagnostics.volume = elements
                 .tets
                 .iter()
@@ -776,7 +864,7 @@ fn generate_internal<F: ScalarField>(
         }
         Ok(output)
     });
-    if context.invalid.load(Ordering::Relaxed) {
+    if context.invalid.load(Ordering::Relaxed) || lattice.invalid.load(Ordering::Relaxed) {
         return Err(MeshingError::GenerationFailed(
             "field or gradient returned nonfinite values".into(),
         ));
@@ -941,14 +1029,94 @@ pub(crate) fn periodic_pairs<const N: usize>(
     Ok(pairs)
 }
 
+/// Give the periodic images of a node bitwise identical coordinates in the
+/// plane of their faces, the low-side image being the reference.
+///
+/// Images move by the same steps but are projected onto the wall separately,
+/// so they agree only to rounding. A pair straddling a rounding boundary of
+/// the coordinate keys that match images would no longer be recognized.
+fn weld_periodic_images(points: &mut [Point], bounds: [Point; 2], periodic: [bool; 3]) {
+    // Far above the rounding of a projection, far below any edge length.
+    const REACH: f64 = 1e-9;
+    let [lo, hi] = bounds;
+    // Twice, so that the four or eight images of an edge or corner node agree.
+    for _ in 0..2 {
+        for a in (0..3).filter(|&a| periodic[a]) {
+            let others = [(a + 1) % 3, (a + 2) % 3];
+            let reach = others.map(|b| REACH * (hi[b] - lo[b]));
+            let cell = |p: Point| -> [i64; 2] {
+                std::array::from_fn(|k| ((p[others[k]] - lo[others[k]]) / reach[k]).floor() as i64)
+            };
+            let mut low = HashMap::<[i64; 2], Vec<usize>>::new();
+            for (i, p) in points.iter().enumerate() {
+                if p[a] == lo[a] {
+                    low.entry(cell(*p)).or_default().push(i);
+                }
+            }
+            for j in 0..points.len() {
+                if points[j][a] != hi[a] {
+                    continue;
+                }
+                let c = cell(points[j]);
+                let image = (-1..=1)
+                    .flat_map(|u| (-1..=1).map(move |v| [c[0] + u, c[1] + v]))
+                    .filter_map(|key| low.get(&key))
+                    .flatten()
+                    .copied()
+                    .find(|&i| {
+                        (0..2).all(|k| {
+                            (points[i][others[k]] - points[j][others[k]]).abs() <= reach[k]
+                        })
+                    });
+                if let Some(i) = image {
+                    for b in others {
+                        points[j][b] = points[i][b];
+                    }
+                }
+            }
+        }
+    }
+}
+
+/// Give paired periodic nodes bitwise identical coordinates in the plane of
+/// their faces. Images projected onto the wall separately agree only to
+/// rounding; the low-side node of each pair is the reference.
+fn share_image_coordinates(points: &mut [Point], pairs: &[Vec<[usize; 2]>; 3]) {
+    // Twice, so that the four or eight images of an edge or corner node agree.
+    for _ in 0..2 {
+        for (axis, pairs) in pairs.iter().enumerate() {
+            for &[low, high] in pairs {
+                for a in (0..3).filter(|&a| a != axis) {
+                    points[high][a] = points[low][a];
+                }
+            }
+        }
+    }
+}
+
 fn finish<F: ScalarField>(mesh: Mesh, g: &Context<F>) -> Result<Output, String> {
     finish_with_constraints(mesh, g, None)
+}
+/// Whether the final checks accept `mesh`, without the coverage report that
+/// only the returned mesh needs.
+fn accepted<F: ScalarField>(mesh: &Mesh, g: &Context<F>) -> bool {
+    check(copy_mesh(mesh), g, None, false, &Measured::default()).is_ok()
 }
 fn finish_with_constraints<F: ScalarField>(
     mesh: Mesh,
     g: &Context<F>,
     constraints: Option<&[intersection::ConstraintMask]>,
 ) -> Result<Output, String> {
+    check(mesh, g, constraints, true, &Measured::default())
+}
+fn check<F: ScalarField>(
+    mut mesh: Mesh,
+    g: &Context<F>,
+    constraints: Option<&[intersection::ConstraintMask]>,
+    report: bool,
+    measured: &Measured,
+) -> Result<Output, String> {
+    weld_periodic_images(&mut mesh.points, g.bounds(), g.options.periodic);
     observe_linear(g, "final-linear", &mesh);
     let mut volume = 0.;
     let mut minimum: f64 = 1.;
@@ -978,7 +1146,7 @@ fn finish_with_constraints<F: ScalarField>(
     };
     let mut samples = Vec::new();
     let [lo, hi] = g.bounds();
-    for f in &mesh.surface {
+    for (index, f) in mesh.surface.iter().enumerate() {
         let p = f.map(|i| mesh.points[i]);
         let mut tag = 0;
         for a in 0..3 {
@@ -997,39 +1165,18 @@ fn finish_with_constraints<F: ScalarField>(
         if tag == 0 && constraints.is_some() && features == 0 {
             return Err("retained boundary facet has no supporting constraint".into());
         }
-        if tag == 0 || constraints.is_some() {
+        if let Some((distance, at)) = measured
+            .of(&mesh, index)
+            .filter(|_| tag == 0 && constraints.is_none())
+        {
+            observe_distance(at, distance);
+        } else if tag == 0 || constraints.is_some() {
             // A chord lying in a box plane must follow the wall/plane curve inside
             // that plane. The full gradient measures the distance to the unclipped
             // wall, which can pass much closer outside the box, so it under-reports
             // curve error. Only the adaptive path, which refines curve chords by this
-            // measure, applies it; the lattice pipeline keeps its released check.
-            let in_plane = g.options.adapt.is_some();
-            let lock = |q: &[Point]| -> [bool; 3] {
-                std::array::from_fn(|a| {
-                    in_plane && (q.iter().all(|v| v[a] == lo[a]) || q.iter().all(|v| v[a] == hi[a]))
-                })
-            };
-            for sample in [
-                (p[0], lock(&p[..1])),
-                (p[1], lock(&p[1..2])),
-                (p[2], lock(&p[2..])),
-                (
-                    std::array::from_fn(|a| (p[0][a] + p[1][a] + p[2][a]) / 3.),
-                    [false; 3],
-                ),
-                (
-                    std::array::from_fn(|a| (p[0][a] + p[1][a]) / 2.),
-                    lock(&[p[0], p[1]]),
-                ),
-                (
-                    std::array::from_fn(|a| (p[1][a] + p[2][a]) / 2.),
-                    lock(&[p[1], p[2]]),
-                ),
-                (
-                    std::array::from_fn(|a| (p[2][a] + p[0][a]) / 2.),
-                    lock(&[p[2], p[0]]),
-                ),
-            ] {
+            // measure, holds its samples in the plane.
+            for sample in facet_samples(p, [lo, hi], g.options.adapt.is_some()) {
                 if let Some(fields) = g.constraints.filter(|_| constraints.is_some()) {
                     let distance = if features == 0 {
                         crate::projection::positive_constraint_distance(
@@ -1047,15 +1194,14 @@ fn finish_with_constraints<F: ScalarField>(
                         )
                     };
                     observe_distance(sample.0, distance);
-                } else if g.batched() {
-                    samples.push(sample);
-                    if samples.len() == 4096 {
-                        distance_batch(g, &samples, &mut observe_distance)?;
-                        samples.clear();
-                    }
                 } else {
-                    observe_distance(sample.0, g.distance_in(sample.0, sample.1));
+                    samples.push(sample);
                 }
+            }
+            // Whole facets only: the batch bounds each facet by its vertices.
+            if samples.len() >= 4096 {
+                distance_batch(g, &samples, &mut observe_distance)?;
+                samples.clear();
             }
         }
     }
@@ -1071,7 +1217,23 @@ fn finish_with_constraints<F: ScalarField>(
             g.options.geometry_tolerance
         ));
     }
+    // After the surface check: a coarse concave wall also leaves samples outside.
+    // A cut of the gap-resolved lattice has no bridge to find; coarsening by
+    // adaptation can make one.
+    if constraints.is_none()
+        && (!g.gaps_resolved || g.options.adapt.is_some())
+        && let outside = elements_outside(&mesh, g)?
+        && let Some(&(_, distance, at)) = outside.iter().max_by(|a, b| a.1.total_cmp(&b.1))
+    {
+        let count = outside.len();
+        return Err(format!(
+            "{count} element(s) lie outside the solid, by up to {distance:e} near {at:?}: \
+             two surfaces are closer than a cell there and the mesh bridges them; \
+             increase resolution"
+        ));
+    }
     let pairs = periodic_pairs(&mesh.points, &mesh.surface, g.bounds(), g.options.periodic)?;
+    share_image_coordinates(&mut mesh.points, &pairs);
     let empty = mesh.tets.is_empty();
     if !empty && minimum < g.options.minimum_quality {
         return Err(format!(
@@ -1079,6 +1241,18 @@ fn finish_with_constraints<F: ScalarField>(
             g.options.minimum_quality, elements_below_quality_01
         ));
     }
+    let coverage = if report && constraints.is_none() && g.halfspaces.is_none() {
+        let wall: Vec<[Point; 3]> = mesh
+            .surface
+            .iter()
+            .zip(&tags)
+            .filter(|(_, tag)| **tag == 0)
+            .map(|(f, _)| f.map(|i| mesh.points[i]))
+            .collect();
+        wall_coverage(&wall, g)?
+    } else {
+        0.
+    };
     Ok(Output {
         quadratic: None,
         mesh,
@@ -1092,12 +1266,290 @@ fn finish_with_constraints<F: ScalarField>(
             volume,
             minimum_mmg_quality: if empty { 0. } else { minimum },
             maximum_sampled_surface_error: error,
+            maximum_sampled_coverage_error: coverage,
             elements_below_quality_01,
             reverted_snap_vertices: 0,
+            defeaturing_moves: 0,
+            removed_bridging_elements: 0,
+            refined_lattice_edges: 0,
+            balanced_wall_vertices: 0,
+            improved_elements: 0,
+            adaptation_abandoned: false,
             inserted_interior_nodes: 0,
             adapt: None,
         },
     })
+}
+
+/// Share of the geometry tolerance that refinement and optimization work to.
+/// They steer by cheaper estimates than the final gate, which measures the
+/// distance walked to the wall; the margin keeps a facet they accept from
+/// failing the gate on that difference. Envelope meshers keep the same kind of slack.
+const WORKING_TOLERANCE: f64 = 0.9;
+/// Interior samples per lattice edge when looking for hidden walls.
+const GAP_SAMPLES: usize = 7;
+/// Items between two calls of `check` in the loops that do no field work of
+/// their own. A caller may look at its interruption flag only once in many
+/// calls, so a long loop has to call often to stay interruptible.
+const POLL: usize = 16;
+/// A hidden excursion shallower than this fraction of the geometry tolerance
+/// is a wall grazing the edge, not a gap.
+const GAP_DEPTH: f64 = 0.25;
+
+/// The BCC lattice with every edge that hides two walls split inside the gap,
+/// and the number of splits; `None` when no edge does.
+///
+/// An edge whose ends lie on one side of the wall can still pass through the
+/// other side: two walls closer than a cell. Unsplit, the lattice either
+/// bridges the gap with elements or drops the film of solid inside it.
+/// Samples are taken at canonical points, so periodic images split alike.
+#[allow(clippy::type_complexity)]
+fn resolve_gaps<F: ScalarField>(
+    g: &Context<F>,
+) -> Result<Option<(Vec<Point>, Vec<crate::Tet>, usize)>, String> {
+    let o = g.options;
+    let [nx, ny, nz] = o.cells;
+    let [lo, hi] = o.bounds;
+    let step: Point = std::array::from_fn(|a| (hi[a] - lo[a]) / o.cells[a] as f64);
+    let mut points = Vec::with_capacity((nx + 1) * (ny + 1) * (nz + 1) + nx * ny * nz);
+    for z in 0..=nz {
+        for y in 0..=ny {
+            for x in 0..=nx {
+                let ijk = [x, y, z];
+                points.push(std::array::from_fn(|a| {
+                    if ijk[a] == o.cells[a] {
+                        hi[a]
+                    } else {
+                        lo[a] + ijk[a] as f64 * step[a]
+                    }
+                }));
+            }
+        }
+    }
+    let center_start = points.len();
+    for z in 0..nz {
+        for y in 0..ny {
+            for x in 0..nx {
+                points.push(std::array::from_fn(|a| {
+                    lo[a] + ([x, y, z][a] as f64 + 0.5) * step[a]
+                }));
+            }
+        }
+    }
+    let id = |x: usize, y: usize, z: usize| x + (nx + 1) * (y + (ny + 1) * z);
+    let cube_faces = [
+        [0, 3, 2, 1],
+        [4, 5, 6, 7],
+        [0, 1, 5, 4],
+        [3, 7, 6, 2],
+        [0, 4, 7, 3],
+        [1, 2, 6, 5],
+    ];
+    let mut tets: Vec<crate::Tet> = Vec::new();
+    for z in 0..nz {
+        g.check()?;
+        for y in 0..ny {
+            for x in 0..nx {
+                let corners = [
+                    id(x, y, z),
+                    id(x + 1, y, z),
+                    id(x + 1, y + 1, z),
+                    id(x, y + 1, z),
+                    id(x, y, z + 1),
+                    id(x + 1, y, z + 1),
+                    id(x + 1, y + 1, z + 1),
+                    id(x, y + 1, z + 1),
+                ];
+                let c = center_start + x + nx * (y + ny * z);
+                for (fi, face) in cube_faces.iter().enumerate() {
+                    let face = face.map(|i| corners[i]);
+                    let coord = [z, z, y, y, x, x][fi];
+                    let positive = fi % 2 == 1;
+                    if (positive && coord == [nz, nz, ny, ny, nx, nx][fi] - 1)
+                        || (!positive && coord == 0)
+                    {
+                        // The same diagonal on both periodic faces.
+                        let pivot = (0..4).min_by_key(|&i| g.rank(points[face[i]])).unwrap();
+                        for k in 1..3 {
+                            tets.push([
+                                c,
+                                face[pivot],
+                                face[(pivot + k) % 4],
+                                face[(pivot + k + 1) % 4],
+                            ]);
+                        }
+                    } else if positive {
+                        let neighbor = c + [nx * ny, nx * ny, nx, nx, 1, 1][fi];
+                        for j in 0..4 {
+                            tets.push([c, neighbor, face[j], face[(j + 1) % 4]]);
+                        }
+                    }
+                }
+            }
+        }
+    }
+    let residual = |v: f64| if g.band() { v.abs() - g.threshold() } else { v };
+    // Which side of the wall, or of the two walls of a band, a value lies on;
+    // zero on a wall.
+    let side = |v: f64| -> i8 {
+        let r = residual(v);
+        if r == 0. {
+            0
+        } else if r < 0. {
+            1
+        } else if g.band() && v < 0. {
+            2
+        } else {
+            3
+        }
+    };
+    let mut values: Vec<f64> = Vec::with_capacity(points.len());
+    for chunk in points.chunks(1 << 16) {
+        g.check()?;
+        values.extend(g.values(chunk));
+    }
+    let mut incident = vec![Vec::new(); points.len()];
+    for (t, tet) in tets.iter().enumerate() {
+        if t % (1 << 16) == 0 {
+            g.check()?;
+        }
+        for &v in tet {
+            incident[v].push(t);
+        }
+    }
+    let lattice = tets.len();
+    let mut splits = 0;
+    for _ in 0..2 {
+        g.check()?;
+        // Edges are listed from their lower vertex, a few thousand vertices at
+        // a time: a lattice of a hundred cells has tens of millions of them.
+        let neighbours =
+            |a: usize, incident: &[Vec<usize>], tets: &[crate::Tet], near: &mut Vec<usize>| {
+                near.clear();
+                for b in incident[a].iter().flat_map(|&t| tets[t]) {
+                    if b > a && !near.contains(&b) {
+                        near.push(b);
+                    }
+                }
+                near.sort_unstable();
+            };
+        let mut near = Vec::new();
+        // The steepest change of the field seen along an edge. An edge whose
+        // ends both lie farther from the level than twice that slope can
+        // cover in half its length hides no crossing, and is not sampled.
+        let mut steepest: f64 = 0.;
+        for (t, tet) in tets.iter().enumerate() {
+            if t % 4096 == 0 {
+                g.check()?;
+            }
+            for [i, j] in [[0, 1], [0, 2], [0, 3], [1, 2], [1, 3], [2, 3]] {
+                let (a, b) = (tet[i], tet[j]);
+                let slope = (values[a] - values[b]).abs() / norm(sub(points[a], points[b]));
+                if slope.is_finite() {
+                    steepest = steepest.max(slope);
+                }
+            }
+        }
+        // The deepest sample on the other side of each edge.
+        let mut hidden: Vec<([usize; 2], Point, f64)> = Vec::new();
+        let mut edges: Vec<[usize; 2]> = Vec::new();
+        let mut samples: Vec<Point> = Vec::new();
+        let mut flush = |edges: &mut Vec<[usize; 2]>,
+                         samples: &mut Vec<Point>,
+                         values: &[f64]|
+         -> Result<(), String> {
+            g.check()?;
+            let sampled = g.values(samples);
+            for (i, e) in edges.iter().enumerate() {
+                let ends = side(values[e[0]]);
+                let deepest = (0..GAP_SAMPLES)
+                    .map(|k| i * GAP_SAMPLES + k)
+                    .filter(|&k| side(sampled[k]) != 0 && side(sampled[k]) != ends)
+                    .max_by(|&a, &b| {
+                        residual(sampled[a])
+                            .abs()
+                            .total_cmp(&residual(sampled[b]).abs())
+                    });
+                if let Some(k) = deepest {
+                    hidden.push((*e, samples[k], sampled[k]));
+                }
+            }
+            edges.clear();
+            samples.clear();
+            Ok(())
+        };
+        for a in 0..points.len() {
+            if a % POLL == 0 {
+                g.check()?;
+            }
+            neighbours(a, &incident, &tets, &mut near);
+            for &b in &near {
+                if side(values[a]) == 0 || side(values[a]) != side(values[b]) {
+                    continue;
+                }
+                let (p, q) = (points[a], points[b]);
+                let nearest = residual(values[a]).abs().min(residual(values[b]).abs());
+                if nearest > steepest * norm(sub(p, q)) {
+                    continue;
+                }
+                edges.push([a, b]);
+                for k in 1..=GAP_SAMPLES {
+                    let w = k as f64 / (GAP_SAMPLES + 1) as f64;
+                    samples.push(std::array::from_fn(|c| p[c] + w * (q[c] - p[c])));
+                }
+            }
+            if samples.len() >= 4096 {
+                flush(&mut edges, &mut samples, &values)?;
+            }
+        }
+        flush(&mut edges, &mut samples, &values)?;
+        let at: Vec<Point> = hidden.iter().map(|h| h.1).collect();
+        let gradients = g.gradients(&at);
+        let hidden: Vec<_> = hidden
+            .into_iter()
+            .zip(gradients)
+            .filter(|((_, _, v), gradient)| {
+                wall_distance(residual(*v), *gradient, [false; 3])
+                    > GAP_DEPTH * o.geometry_tolerance
+            })
+            .map(|(h, _)| h)
+            .collect();
+        if hidden.is_empty() {
+            break;
+        }
+        for (e, p, v) in hidden {
+            let m = points.len();
+            points.push(p);
+            values.push(v);
+            incident.push(Vec::new());
+            let shell: Vec<usize> = incident[e[0]]
+                .iter()
+                .copied()
+                .filter(|&t| tets[t].contains(&e[1]))
+                .collect();
+            for t in shell {
+                let old = tets[t];
+                let twin = tets.len();
+                tets[t] = old.map(|v| if v == e[0] { m } else { v });
+                tets.push(old.map(|v| if v == e[1] { m } else { v }));
+                incident[e[0]].retain(|&i| i != t);
+                incident[e[0]].push(twin);
+                incident[m].extend([t, twin]);
+                for v in old {
+                    if v != e[0] && v != e[1] {
+                        incident[v].push(twin);
+                    }
+                }
+            }
+            splits += 1;
+        }
+        // The budget bounds the mesh of the solid, not the lattice of the
+        // box it is cut from: only what the splits add counts against it.
+        if tets.len() - lattice > o.max_tetrahedra {
+            return Err("resolving narrow gaps exceeds max_tetrahedra".into());
+        }
+    }
+    Ok((splits > 0).then_some((points, tets, splits)))
 }
 
 fn validate_background<F: ScalarField>(
@@ -1376,7 +1828,15 @@ fn build<F: ScalarField>(g: &Context<F>) -> Result<Output, String> {
             clip_lattice(&mut b, g)?
         };
         g.check()?;
-        let bad = nonmanifold_vertices(&candidate.surface, candidate.points.len());
+        let mut bad = nonmanifold_vertices(&candidate.surface, candidate.points.len());
+        // A cap triangle whose three nodes all snapped onto the wall takes its
+        // side from the off-face apex, which differs between periodic images.
+        bad.extend(unmatched_cap_vertices(
+            &candidate.points,
+            &candidate.surface,
+            o.bounds,
+            o.periodic,
+        ));
         // A tiny sampled component can disappear entirely if every interior
         // sample snaps onto its wall. Surface manifold tests cannot see an
         // absent component. Restore discarded interior samples before accepting.
@@ -1431,6 +1891,7 @@ fn build<F: ScalarField>(g: &Context<F>) -> Result<Output, String> {
     }
     let mut mesh =
         mesh.ok_or("safe snapping could not resolve boundary topology in eight rounds")?;
+    weld_periodic_images(&mut mesh.points, g.bounds(), o.periodic);
     observe_linear(g, "clipped", &mesh);
     drop(b);
     drop(original_points);
@@ -1438,6 +1899,11 @@ fn build<F: ScalarField>(g: &Context<F>) -> Result<Output, String> {
     if mesh.tets.is_empty() {
         return finish(mesh, g);
     }
+    let removed_bridging_elements = if g.gaps_resolved {
+        0
+    } else {
+        remove_bridging_elements(&mut mesh, g, h)?
+    };
     if let Some(adapt) = o.adapt {
         let mut stats = crate::tet_adapt::adapt(
             &mut mesh,
@@ -1448,6 +1914,7 @@ fn build<F: ScalarField>(g: &Context<F>) -> Result<Output, String> {
             o.max_tetrahedra,
         )?;
         observe_linear(g, "adapted", &mesh);
+        weld_periodic_images(&mut mesh.points, g.bounds(), o.periodic);
         crate::optimize::optimize_for(
             &mut mesh,
             threshold,
@@ -1484,19 +1951,16 @@ fn build<F: ScalarField>(g: &Context<F>) -> Result<Output, String> {
                 *total += elapsed;
             }
         }
-        let inserted_interior_nodes = crate::adaptive::refine_interior(
-            &mut mesh,
-            o.interior_refine_nodes,
-            o.minimum_quality.max(0.1),
-            o.max_tetrahedra,
-            g,
-        )?;
-        let mut output = finish(mesh, g)?;
+        // Adaptation has no operator for an element pinned between the wall
+        // and a box plane: its result goes through the sliver recovery of
+        // the lattice path, kept only if the geometry gate accepts it.
+        let mut output = close(mesh, g, threshold, h, false)?;
+        output.diagnostics.removed_bridging_elements = removed_bridging_elements;
         output.diagnostics.reverted_snap_vertices = reverted_snap_vertices;
-        output.diagnostics.inserted_interior_nodes = inserted_interior_nodes;
         output.diagnostics.adapt = Some(stats);
         return Ok(output);
     }
+    weld_periodic_images(&mut mesh.points, g.bounds(), o.periodic);
     crate::optimize::optimize_for(
         &mut mesh,
         threshold,
@@ -1508,14 +1972,16 @@ fn build<F: ScalarField>(g: &Context<F>) -> Result<Output, String> {
         g,
     )?;
     observe_linear(g, "optimized", &mesh);
+    weld_periodic_images(&mut mesh.points, g.bounds(), o.periodic);
     crate::adaptive::refine_for(
         &mut mesh,
         threshold,
-        o.geometry_tolerance,
+        WORKING_TOLERANCE * o.geometry_tolerance,
         o.max_tetrahedra,
         g,
     )?;
     observe_linear(g, "geometry-refined", &mesh);
+    weld_periodic_images(&mut mesh.points, g.bounds(), o.periodic);
     crate::optimize::optimize_for(
         &mut mesh,
         threshold,
@@ -1526,6 +1992,24 @@ fn build<F: ScalarField>(g: &Context<F>) -> Result<Output, String> {
         None,
         g,
     )?;
+    let mut output = close(mesh, g, threshold, h, true)?;
+    output.diagnostics.removed_bridging_elements = removed_bridging_elements;
+    output.diagnostics.reverted_snap_vertices = reverted_snap_vertices;
+    Ok(output)
+}
+
+/// The stages both routes end with: quality recovery, interior refinement,
+/// volume balancing and the final checks.
+fn close<F: ScalarField>(
+    mesh: Mesh,
+    g: &Context<F>,
+    threshold: f64,
+    h: f64,
+    keep_failed: bool,
+) -> Result<Output, String> {
+    let o = g.options;
+    let (mesh, defeaturing_moves) = recover_within_gate(mesh, g, threshold, h, keep_failed)?;
+    let (mut mesh, improved_elements) = improve_shapes(mesh, g, threshold, h)?;
     let inserted_interior_nodes = crate::adaptive::refine_interior(
         &mut mesh,
         o.interior_refine_nodes,
@@ -1533,10 +2017,219 @@ fn build<F: ScalarField>(g: &Context<F>) -> Result<Output, String> {
         o.max_tetrahedra,
         g,
     )?;
-    let mut output = finish(mesh, g)?;
-    output.diagnostics.reverted_snap_vertices = reverted_snap_vertices;
+    let (balanced_wall_vertices, measured) = balance_volume(&mut mesh, g)?;
+    let mut output = check(mesh, g, None, true, &measured)?;
+    output.diagnostics.defeaturing_moves = defeaturing_moves;
+    output.diagnostics.improved_elements = improved_elements;
     output.diagnostics.inserted_interior_nodes = inserted_interior_nodes;
+    output.diagnostics.balanced_wall_vertices = balanced_wall_vertices;
     Ok(output)
+}
+
+fn copy_mesh(mesh: &Mesh) -> Mesh {
+    Mesh {
+        points: mesh.points.clone(),
+        tets: mesh.tets.clone(),
+        surface: mesh.surface.clone(),
+    }
+}
+
+/// Shape the mesher works towards around its worst elements, whatever the
+/// floor the caller requires. An MMG quality of 0.1 still allows dihedral
+/// angles of a few degrees.
+const SHAPE_TARGET: f64 = 0.2;
+
+/// Local remeshing around the elements below `SHAPE_TARGET`, and how many of
+/// them it lifted, when the caller requires a quality floor at all. It
+/// collapses, splits and swaps without moving the wall, and
+/// is kept only when it leaves fewer such elements, a worst element no worse,
+/// and a mesh the final gate accepts.
+fn improve_shapes<F: ScalarField>(
+    mesh: Mesh,
+    g: &Context<F>,
+    threshold: f64,
+    h: f64,
+) -> Result<(Mesh, usize), String> {
+    let o = g.options;
+    let shapes = |mesh: &Mesh| {
+        mesh.tets
+            .iter()
+            .map(|t| quality(t.map(|i| mesh.points[i])).powf(1.5))
+            .fold((0, f64::INFINITY), |(below, worst), q| {
+                (below + usize::from(q < SHAPE_TARGET), worst.min(q))
+            })
+    };
+    let (below, worst) = shapes(&mesh);
+    // A caller who sets no quality floor gets the mesh as the lattice cut it.
+    if o.optimize_passes == 0 || o.minimum_quality <= 0. || below == 0 {
+        return Ok((mesh, 0));
+    }
+    let mut trial = copy_mesh(&mesh);
+    remesh_rounds(&mut trial, g, threshold, h, None, |mesh| {
+        shapes(mesh).0 == 0
+    })?;
+    let (left, lowest) = shapes(&trial);
+    if left < below && lowest >= worst && accepted(&trial, g) {
+        return Ok((trial, below - left));
+    }
+    Ok((mesh, 0))
+}
+
+/// Rounds of sliver removal and smoothing on `mesh` until `done` or until a
+/// round changes nothing, and the number of defeaturing merges they took.
+/// `defeature` is how far a merge may move the wall, when it may at all.
+fn remesh_rounds<F: ScalarField>(
+    mesh: &mut Mesh,
+    g: &Context<F>,
+    threshold: f64,
+    h: f64,
+    defeature: Option<f64>,
+    done: impl Fn(&Mesh) -> bool,
+) -> Result<usize, String> {
+    let o = g.options;
+    let mut merged = 0;
+    for _ in 0..6 {
+        weld_periodic_images(&mut mesh.points, g.bounds(), o.periodic);
+        let (operations, merges) = crate::tet_adapt::remove_slivers(
+            mesh,
+            g,
+            threshold,
+            o.periodic,
+            h,
+            o.geometry_tolerance.min(0.1 * h),
+            defeature,
+        )?;
+        merged += merges;
+        if operations == 0 {
+            break;
+        }
+        weld_periodic_images(&mut mesh.points, g.bounds(), o.periodic);
+        crate::optimize::optimize_for(
+            mesh,
+            threshold,
+            h,
+            o.optimize_passes,
+            3.,
+            o.threads,
+            None,
+            g,
+        )?;
+        if done(mesh) {
+            break;
+        }
+    }
+    Ok(merged)
+}
+
+/// Remesh around the elements below `minimum_quality`, and return a mesh the
+/// final gate accepts with the number of defeaturing moves it took. A mesh
+/// that passes the floor is returned unchanged.
+///
+/// Relocation cannot repair a sliver that needs new connectivity, so the
+/// geometry-preserving operations run first. Defeaturing is the last resort:
+/// it restarts from the mesh as it came, because those operations can close
+/// the room a merge needs, and a defeatured mesh that still fails is not
+/// worth its changed geometry.
+///
+/// The reach of a defeaturing move bounds how far a vertex goes within the
+/// working tolerance, not how far the facets around it end up from the wall:
+/// a shorter reach is tried when the gate refuses the result. When no reach
+/// passes, `keep_failed` returns the first attempt, whose rejection then
+/// names the cause, and otherwise the mesh as it came.
+fn recover_within_gate<F: ScalarField>(
+    mesh: Mesh,
+    g: &Context<F>,
+    threshold: f64,
+    h: f64,
+    keep_failed: bool,
+) -> Result<(Mesh, usize), String> {
+    let o = g.options;
+    let passes = |mesh: &Mesh| {
+        mesh.tets
+            .iter()
+            .all(|t| quality(t.map(|i| mesh.points[i])).powf(1.5) >= o.minimum_quality)
+    };
+    if o.optimize_passes == 0 || o.minimum_quality <= 0. || passes(&mesh) {
+        return Ok((mesh, 0));
+    }
+    let mut preserved = copy_mesh(&mesh);
+    let moves = remesh_rounds(&mut preserved, g, threshold, h, None, passes)?;
+    let untouched = moves == 0 && preserved.tets == mesh.tets && preserved.points == mesh.points;
+    let repaired = passes(&preserved);
+    let mut preserved_accepted = None;
+    let mut first = None;
+    for reach in [1., 0.6, 0.3] {
+        let mut defeatured = None;
+        if !repaired {
+            let mut trial = copy_mesh(&mesh);
+            let limit = (reach * WORKING_TOLERANCE * o.geometry_tolerance).min(0.5 * h);
+            let merged = remesh_rounds(&mut trial, g, threshold, h, Some(limit), passes)?;
+            if merged > 0 && passes(&trial) {
+                defeatured = Some((trial, merged));
+            }
+        }
+        match defeatured {
+            Some((trial, merged)) => {
+                if accepted(&trial, g) {
+                    return Ok((trial, merged));
+                }
+                first.get_or_insert((trial, merged));
+            }
+            None if untouched => return Ok((mesh, 0)),
+            None => {
+                if *preserved_accepted.get_or_insert_with(|| accepted(&preserved, g)) {
+                    return Ok((preserved, moves));
+                }
+                if first.is_none() {
+                    first = Some((copy_mesh(&preserved), moves));
+                }
+            }
+        }
+    }
+    Ok(match first {
+        Some(attempt) if keep_failed => attempt,
+        _ => (mesh, 0),
+    })
+}
+
+/// Vertices of cap triangles present on only one of two periodic faces.
+fn unmatched_cap_vertices(
+    points: &[Point],
+    surface: &[[usize; 3]],
+    bounds: [Point; 2],
+    periodic: [bool; 3],
+) -> Vec<usize> {
+    let [lo, hi] = bounds;
+    let mut out = Vec::new();
+    for a in (0..3).filter(|&a| periodic[a]) {
+        let key = |p: Point| {
+            std::array::from_fn::<_, 3, _>(|axis| {
+                if axis == a {
+                    0
+                } else {
+                    ((p[axis] - lo[axis]) / (hi[axis] - lo[axis]) * 1e11).round() as i64
+                }
+            })
+        };
+        let mut faces = [BTreeMap::new(), BTreeMap::new()];
+        for f in surface {
+            for (side, &value) in [lo[a], hi[a]].iter().enumerate() {
+                if f.iter().all(|&i| points[i][a] == value) {
+                    let mut keys = f.map(|i| key(points[i]));
+                    keys.sort_unstable();
+                    faces[side].insert(keys, *f);
+                }
+            }
+        }
+        for side in 0..2 {
+            for (k, f) in &faces[side] {
+                if !faces[1 - side].contains_key(k) {
+                    out.extend(f.iter().copied());
+                }
+            }
+        }
+    }
+    out
 }
 
 fn clip_lattice<F: ScalarField>(
@@ -1880,6 +2573,45 @@ fn snap_batch<F: ScalarField>(
     g.check()
 }
 
+/// Distance from each sample to the boundary of the solid inside the box.
+///
+/// A sample held in a box plane is measured within that plane, because the
+/// wall can pass closer outside the box, where it bounds nothing. The free
+/// distance holds instead when it is shorter and either the walk ends inside
+/// the box, on that same wall, or the sample is in the solid: the solid then
+/// passes the box plane by no more than that distance, so a strip of it
+/// thinner than the tolerance along a box face counts as close to the wall,
+/// however far its outline lies within the face.
+fn clipped_wall_distances<F: ScalarField>(
+    g: &Context<F>,
+    samples: &[(Point, [bool; 3])],
+) -> Result<Vec<f64>, String> {
+    // Walks matter where an estimate could reach the tolerance.
+    let settled = 0.25 * g.options.geometry_tolerance;
+    let mut distances = g.wall_distances(samples, g.threshold(), settled)?;
+    let held: Vec<usize> = (0..samples.len())
+        .filter(|&i| samples[i].1 != [false; 3])
+        .collect();
+    if held.is_empty() {
+        return Ok(distances);
+    }
+    let free: Vec<_> = held.iter().map(|&i| (samples[i].0, [false; 3])).collect();
+    let points: Vec<Point> = free.iter().map(|s| s.0).collect();
+    let values = g.values(&points);
+    let walks = g.wall_walks(&free, g.threshold(), settled)?;
+    for ((&i, value), (distance, end)) in held.iter().zip(values).zip(walks) {
+        let residual = if g.band() {
+            value.abs() - g.threshold()
+        } else {
+            value
+        };
+        if residual < 0. || g.contains(end) {
+            distances[i] = distances[i].min(distance);
+        }
+    }
+    Ok(distances)
+}
+
 fn distance_batch<F: ScalarField>(
     g: &Context<F>,
     samples: &[(Point, [bool; 3])],
@@ -1887,18 +2619,762 @@ fn distance_batch<F: ScalarField>(
 ) -> Result<(), String> {
     g.check()?;
     let points: Vec<Point> = samples.iter().map(|s| s.0).collect();
-    let values = g.values(&points);
-    let gradients = g.gradients(&points);
-    for ((v, grad), (point, locked)) in values.into_iter().zip(gradients).zip(samples) {
-        let residual = if g.band() { v.abs() - g.threshold() } else { v };
-        observe(*point, wall_distance(residual, grad, *locked));
+    let estimates = clipped_wall_distances(g, samples)?;
+    for (d, p) in estimates
+        .as_chunks::<FACET_SAMPLES>()
+        .0
+        .iter()
+        .zip(points.as_chunks::<FACET_SAMPLES>().0)
+    {
+        let (distance, at) = facet_distance([p[0], p[1], p[2]], d);
+        observe(at, distance);
     }
     g.check()
+}
+
+/// Wall distances of surface facets as the final checks measure them, with
+/// the coordinates they were measured at. A facet none of whose vertices has
+/// moved since needs no second measure.
+#[derive(Default)]
+struct Measured {
+    points: Vec<Point>,
+    /// By surface facet: the distance and where it is reached.
+    facets: Vec<Option<(f64, Point)>>,
+}
+impl Measured {
+    fn of(&self, mesh: &Mesh, facet: usize) -> Option<(f64, Point)> {
+        if self.points.len() != mesh.points.len() || self.facets.len() != mesh.surface.len() {
+            return None;
+        }
+        mesh.surface[facet]
+            .iter()
+            .all(|&v| self.points[v] == mesh.points[v])
+            .then_some(self.facets[facet])
+            .flatten()
+    }
+}
+
+/// Move wall vertices along the wall normal so that the flat facets enclose
+/// the volume of the curved solid, and return how many moved.
+///
+/// With every vertex on the wall, a facet lies wholly on the inner side of a
+/// convex wall: the mesh loses volume in proportion to its chord error, and
+/// its whole geometry error sits on one side. The mean offset of a facet from
+/// the wall is the mean of its three edge-midpoint offsets, exactly so for a
+/// quadratic wall. Each vertex moves by the area-weighted mean over its
+/// facets, which restores the volume to first order and spreads the error on
+/// both sides of the wall. Quadratic elements follow the wall themselves.
+fn balance_volume<F: ScalarField>(
+    mesh: &mut Mesh,
+    g: &Context<F>,
+) -> Result<(usize, Measured), String> {
+    let o = g.options;
+    if o.order != 1 || g.constraints.is_some() || g.halfspaces.is_some() {
+        return Ok((0, Measured::default()));
+    }
+    let [lo, hi] = o.bounds;
+    let on_plane = |p: Point, a: usize| p[a] == lo[a] || p[a] == hi[a];
+    let (wall_index, wall): (Vec<usize>, Vec<[usize; 3]>) = mesh
+        .surface
+        .iter()
+        .copied()
+        .enumerate()
+        .filter(|(_, f)| !g.cap(f.map(|i| mesh.points[i])))
+        .unzip();
+    let mut edges = HashMap::<[usize; 2], usize>::new();
+    let mut samples = Vec::new();
+    for f in &wall {
+        for [i, j] in [[0, 1], [1, 2], [2, 0]] {
+            let e = [f[i].min(f[j]), f[i].max(f[j])];
+            edges.entry(e).or_insert_with(|| {
+                let (p, q) = (mesh.points[e[0]], mesh.points[e[1]]);
+                // As the geometry gate measures it.
+                let locked =
+                    std::array::from_fn(|a| o.adapt.is_some() && p[a] == q[a] && on_plane(p, a));
+                samples.push((std::array::from_fn(|a| 0.5 * (p[a] + q[a])), locked));
+                samples.len() - 1
+            });
+        }
+    }
+    let mut offset = Vec::with_capacity(samples.len());
+    for chunk in samples.chunks(4096) {
+        g.check()?;
+        let points: Vec<Point> = chunk.iter().map(|s| s.0).collect();
+        let distances = clipped_wall_distances(g, chunk)?;
+        // Positive where the wall lies outside the facet.
+        offset.extend(g.values(&points).into_iter().zip(distances).map(|(v, d)| {
+            let residual = if g.band() { v.abs() - g.threshold() } else { v };
+            if d.is_finite() {
+                -residual.signum() * d
+            } else {
+                0.
+            }
+        }));
+    }
+    let mut weighted = vec![0.; mesh.points.len()];
+    let mut area = vec![0.; mesh.points.len()];
+    for f in &wall {
+        let p = f.map(|i| mesh.points[i]);
+        let a = 0.5 * norm(crate::cross(sub(p[1], p[0]), sub(p[2], p[0])));
+        let mean = [[0, 1], [1, 2], [2, 0]]
+            .iter()
+            .map(|[i, j]| offset[edges[&[f[*i].min(f[*j]), f[*i].max(f[*j])]]])
+            .sum::<f64>()
+            / 3.;
+        for &v in f {
+            weighted[v] += a * mean;
+            area[v] += a;
+        }
+    }
+    // Periodic images share one neighbourhood, split between the two sides
+    // of the box: they pool their facets and move by one vector.
+    let mut groups = BTreeMap::<[i64; 3], Vec<usize>>::new();
+    for v in (0..mesh.points.len()).filter(|&v| area[v] > 0.) {
+        groups.entry(g.rank(mesh.points[v])).or_default().push(v);
+    }
+    let groups: Vec<Vec<usize>> = groups.into_values().collect();
+    let at: Vec<Point> = groups.iter().map(|m| mesh.points[m[0]]).collect();
+    let values = g.values(&at);
+    let gradients = g.gradients(&at);
+    // Only wall vertices move.
+    let mut incident = vec![Vec::<u32>::new(); mesh.points.len()];
+    for (t, tet) in mesh.tets.iter().enumerate() {
+        for &v in tet {
+            if area[v] > 0. {
+                incident[v].push(t as u32);
+            }
+        }
+    }
+    let limit = 0.5 * o.geometry_tolerance;
+    let floor = o.minimum_quality.max(0.2);
+    let shape = |points: &[Point], t: usize| {
+        let p = mesh.tets[t].map(|i| points[i]);
+        if determinant(p) > 0. {
+            quality(p).powf(1.5)
+        } else {
+            0.
+        }
+    };
+    let initial: Vec<f64> = (0..mesh.tets.len())
+        .map(|t| shape(&mesh.points, t))
+        .collect();
+    // No move may leave an element worse than the worst the mesh had.
+    let floor = floor.max(initial.iter().copied().fold(f64::INFINITY, f64::min));
+    // Moves are recorded as the group they moved, by its place in `applied`.
+    const UNMOVED: u32 = u32::MAX;
+    let start = mesh.points.clone();
+    let mut applied: Vec<usize> = Vec::new();
+    let mut group_of = vec![UNMOVED; mesh.points.len()];
+    for (((index, members), value), gradient) in
+        groups.iter().enumerate().zip(values).zip(gradients)
+    {
+        if index % POLL == 0 {
+            g.check()?;
+        }
+        // Outward normal, kept in every box plane an image lies in.
+        let side = if g.band() { value.signum() } else { 1. };
+        let mut normal: Point = std::array::from_fn(|a| {
+            if members.iter().any(|&v| on_plane(mesh.points[v], a)) {
+                0.
+            } else {
+                side * gradient[a]
+            }
+        });
+        let length = norm(normal);
+        if !(length > 0. && length.is_finite()) {
+            continue;
+        }
+        normal = normal.map(|x| x / length);
+        let step = (members.iter().map(|&v| weighted[v]).sum::<f64>()
+            / members.iter().map(|&v| area[v]).sum::<f64>())
+        .clamp(-limit, limit);
+        if step == 0. {
+            continue;
+        }
+        let quality = |points: &[Point], v: usize| {
+            incident[v]
+                .iter()
+                .map(|&t| {
+                    let p = mesh.tets[t as usize].map(|i| points[i]);
+                    if determinant(p) > 0. {
+                        quality(p).powf(1.5)
+                    } else {
+                        0.
+                    }
+                })
+                .fold(f64::INFINITY, f64::min)
+        };
+        let before: Vec<f64> = members.iter().map(|&v| quality(&mesh.points, v)).collect();
+        for &v in members {
+            for a in 0..3 {
+                mesh.points[v][a] += step * normal[a];
+            }
+        }
+        let kept = members
+            .iter()
+            .zip(&before)
+            .all(|(&v, &b)| g.contains(mesh.points[v]) && quality(&mesh.points, v) >= b.min(floor));
+        if kept {
+            for &v in members {
+                group_of[v] = applied.len() as u32;
+            }
+            applied.push(index);
+        } else {
+            for &v in members {
+                mesh.points[v] = start[v];
+            }
+        }
+    }
+    let moved_by = |v: &usize| (group_of[*v] != UNMOVED).then_some(group_of[*v] as usize);
+    // A facet between facets of other sizes can end up farther from the wall
+    // than it was: its vertices return, until no facet exceeds the working
+    // tolerance because of a move.
+    let mut reverted = vec![false; applied.len()];
+    let mut measured = Measured::default();
+    for _ in 0..4 {
+        let mut undo: Vec<usize> = Vec::new();
+        measured.facets.clear();
+        measured.facets.resize(mesh.surface.len(), None);
+        for (facets, indices) in wall.chunks(1024).zip(wall_index.chunks(1024)) {
+            g.check()?;
+            let samples: Vec<_> = facets
+                .iter()
+                .flat_map(|f| facet_samples(f.map(|i| mesh.points[i]), [lo, hi], o.adapt.is_some()))
+                .collect();
+            let estimates = clipped_wall_distances(g, &samples)?;
+            for ((f, d), &index) in facets
+                .iter()
+                .zip(estimates.as_chunks::<FACET_SAMPLES>().0)
+                .zip(indices)
+            {
+                let (error, at) = facet_distance(f.map(|i| mesh.points[i]), d);
+                measured.facets[index] = Some((error, at));
+                if error > WORKING_TOLERANCE * o.geometry_tolerance {
+                    undo.extend(f.iter().filter_map(moved_by).filter(|&i| !reverted[i]));
+                }
+            }
+        }
+        if undo.is_empty() {
+            measured.points.clone_from(&mesh.points);
+            break;
+        }
+        for index in undo {
+            if !std::mem::replace(&mut reverted[index], true) {
+                for &v in &groups[applied[index]] {
+                    mesh.points[v] = start[v];
+                }
+            }
+        }
+    }
+    // Each move was checked against the neighbours as they stood then. Moves
+    // returned since can leave an element worse than either state allowed:
+    // the moves around it return too, down to the initial mesh if need be.
+    loop {
+        let mut undo: Vec<usize> = Vec::new();
+        for (t, tet) in mesh.tets.iter().enumerate() {
+            if tet.iter().filter_map(moved_by).any(|i| !reverted[i])
+                && shape(&mesh.points, t) < initial[t].min(floor)
+            {
+                undo.extend(tet.iter().filter_map(moved_by).filter(|&i| !reverted[i]));
+            }
+        }
+        if undo.is_empty() {
+            break;
+        }
+        for index in undo {
+            if !std::mem::replace(&mut reverted[index], true) {
+                for &v in &groups[applied[index]] {
+                    mesh.points[v] = start[v];
+                }
+            }
+        }
+    }
+    let moved = applied
+        .iter()
+        .zip(&reverted)
+        .filter(|(_, undone)| !**undone)
+        .map(|(&index, _)| groups[index].len())
+        .sum();
+    weld_periodic_images(&mut mesh.points, g.bounds(), o.periodic);
+    Ok((moved, measured))
+}
+
+/// Reference lines per lattice cell and axis when sampling the wall of a
+/// lattice mesh, and of an adapted one. Adaptation coarsens, so it is where
+/// a feature gets lost and where the finer sampling pays for itself.
+const COVERAGE_LINES: [usize; 2] = [2, 3];
+/// Finest reference grid per axis, which bounds the cost on fine lattices.
+const COVERAGE_GRID: usize = 192;
+
+/// Closest point of triangle `t` to `p` (Ericson, Real-Time Collision Detection).
+fn closest_on_triangle(p: Point, t: [Point; 3]) -> Point {
+    let [a, b, c] = t;
+    let (ab, ac, ap) = (sub(b, a), sub(c, a), sub(p, a));
+    let (d1, d2) = (dot(ab, ap), dot(ac, ap));
+    if d1 <= 0. && d2 <= 0. {
+        return a;
+    }
+    let bp = sub(p, b);
+    let (d3, d4) = (dot(ab, bp), dot(ac, bp));
+    if d3 >= 0. && d4 <= d3 {
+        return b;
+    }
+    let along = |from: Point, edge: Point, w: f64| -> Point {
+        std::array::from_fn(|k| from[k] + w * edge[k])
+    };
+    let vc = d1 * d4 - d3 * d2;
+    if vc <= 0. && d1 >= 0. && d3 <= 0. {
+        return along(a, ab, d1 / (d1 - d3));
+    }
+    let cp = sub(p, c);
+    let (d5, d6) = (dot(ab, cp), dot(ac, cp));
+    if d6 >= 0. && d5 <= d6 {
+        return c;
+    }
+    let vb = d5 * d2 - d1 * d6;
+    if vb <= 0. && d2 >= 0. && d6 <= 0. {
+        return along(a, ac, d2 / (d2 - d6));
+    }
+    let va = d3 * d6 - d5 * d4;
+    if va <= 0. && d4 - d3 >= 0. && d5 - d6 >= 0. {
+        return along(b, sub(c, b), (d4 - d3) / ((d4 - d3) + (d5 - d6)));
+    }
+    let denominator = va + vb + vc;
+    if denominator == 0. {
+        return a;
+    }
+    let (v, w) = (vb / denominator, vc / denominator);
+    std::array::from_fn(|k| a[k] + v * ab[k] + w * ac[k])
+}
+
+/// Largest sampled distance from the wall of the solid to the meshed wall.
+///
+/// The facet samples of the geometry gate measure the mesh against the wall.
+/// A feature the mesh lost, or a crease it cut across, has no facet there, so
+/// only wall points can report it. They are taken where the lines of a grid
+/// finer than the lattice cross the wall, located by bisection, which needs
+/// nothing of the field but its sign. Distances beyond the reach of the
+/// search are reported as that reach.
+fn wall_coverage<F: ScalarField>(wall: &[[Point; 3]], g: &Context<F>) -> Result<f64, String> {
+    if wall.is_empty() && !g.gaps_resolved {
+        return Ok(0.);
+    }
+    let o = g.options;
+    let [lo, hi] = o.bounds;
+    let lines = COVERAGE_LINES[usize::from(o.adapt.is_some())];
+    let n: [usize; 3] = o.cells.map(|c| (lines * c).min(COVERAGE_GRID));
+    let step: Point = std::array::from_fn(|a| (hi[a] - lo[a]) / n[a] as f64);
+    let h = (0..3)
+        .map(|a| (hi[a] - lo[a]) / o.cells[a] as f64)
+        .fold(0., f64::max);
+    let reach = (4. * o.geometry_tolerance).min(2. * h);
+    // Negative in the solid.
+    let residual = |v: f64| {
+        if g.band() { v.abs() - g.threshold() } else { v }
+    };
+    let node = |i: usize, j: usize, k: usize| -> Point {
+        [
+            lo[0] + (i as f64 + 0.5) * step[0],
+            lo[1] + (j as f64 + 0.5) * step[1],
+            lo[2] + (k as f64 + 0.5) * step[2],
+        ]
+    };
+    let mut grid: Vec<f32> = Vec::with_capacity(n[0] * n[1] * n[2]);
+    let mut batch = Vec::with_capacity(4096);
+    for k in 0..n[2] {
+        for j in 0..n[1] {
+            for i in 0..n[0] {
+                batch.push(node(i, j, k));
+                if batch.len() == 4096 {
+                    g.check()?;
+                    grid.extend(g.values(&batch).into_iter().map(|v| residual(v) as f32));
+                    batch.clear();
+                }
+            }
+        }
+    }
+    grid.extend(g.values(&batch).into_iter().map(|v| residual(v) as f32));
+    if wall.is_empty() {
+        // Opposite signs on the coverage grid witness an implicit wall that the mesh lost.
+        if grid.iter().any(|&v| v < 0.) && grid.iter().any(|&v| v > 0.) {
+            return Err(
+                "sampled solid and void but mesh has no implicit wall; increase resolution".into(),
+            );
+        }
+        return Ok(0.);
+    }
+    let at = |i: usize, j: usize, k: usize| f64::from(grid[i + n[0] * (j + n[1] * k)]);
+    // Segments across the wall, solid end first, with the residuals there.
+    let mut ends: Vec<([Point; 2], [f64; 2])> = Vec::new();
+    for k in 0..n[2] {
+        for j in 0..n[1] {
+            g.check()?;
+            for i in 0..n[0] {
+                for (a, next) in [(i + 1, j, k), (i, j + 1, k), (i, j, k + 1)]
+                    .into_iter()
+                    .enumerate()
+                {
+                    if [next.0, next.1, next.2][a] == n[a] {
+                        continue;
+                    }
+                    let (here, there) = (at(i, j, k), at(next.0, next.1, next.2));
+                    if (here < 0.) != (there < 0.) {
+                        let (p, q) = (node(i, j, k), node(next.0, next.1, next.2));
+                        ends.push(if here < 0. {
+                            ([p, q], [here, there])
+                        } else {
+                            ([q, p], [there, here])
+                        });
+                    }
+                }
+            }
+        }
+    }
+    // Two bisections, then the chord of the last bracket: the root is then
+    // known to a small fraction of the reference step at three evaluations.
+    for _ in 0..2 {
+        g.check()?;
+        let middle: Vec<Point> = ends
+            .iter()
+            .map(|([p, q], _)| std::array::from_fn(|a| 0.5 * (p[a] + q[a])))
+            .collect();
+        for (chunk, start) in middle.chunks(4096).zip((0..).step_by(4096)) {
+            g.check()?;
+            for (offset, v) in g.values(chunk).into_iter().enumerate() {
+                let (r, e) = (residual(v), start + offset);
+                let end = usize::from(r >= 0.);
+                ends[e].0[end] = middle[e];
+                ends[e].1[end] = r;
+            }
+        }
+    }
+    let roots: Vec<Point> = ends
+        .into_iter()
+        .map(|([p, q], [inner, outer])| {
+            let w = if outer > inner {
+                (-inner / (outer - inner)).clamp(0., 1.)
+            } else {
+                0.5
+            };
+            std::array::from_fn(|a| p[a] + w * (q[a] - p[a]))
+        })
+        .collect();
+    // Facets by the cells their boxes overlap. A cell is at least a reach
+    // wide, so every facet within reach of a point is listed in the cell of
+    // that point or in one of the twenty-six around it.
+    let cell = reach.max(h);
+    let key =
+        |p: Point| -> [i64; 3] { std::array::from_fn(|a| ((p[a] - lo[a]) / cell).floor() as i64) };
+    let mut bins = HashMap::<[i64; 3], Vec<u32>>::new();
+    for (f, t) in wall.iter().enumerate() {
+        let low = key(std::array::from_fn(|a| {
+            t.iter().map(|p| p[a]).fold(f64::INFINITY, f64::min)
+        }));
+        let high = key(std::array::from_fn(|a| {
+            t.iter().map(|p| p[a]).fold(f64::NEG_INFINITY, f64::max)
+        }));
+        for x in low[0]..=high[0] {
+            for y in low[1]..=high[1] {
+                for z in low[2]..=high[2] {
+                    bins.entry([x, y, z]).or_default().push(f as u32);
+                }
+            }
+        }
+    }
+    let mut worst: f64 = 0.;
+    'roots: for (index, root) in roots.into_iter().enumerate() {
+        if index % POLL == 0 {
+            g.check()?;
+        }
+        let [x, y, z] = key(root);
+        let mut nearest = reach;
+        for dx in [0, -1, 1] {
+            for dy in [0, -1, 1] {
+                for dz in [0, -1, 1] {
+                    for &f in bins.get(&[x + dx, y + dy, z + dz]).into_iter().flatten() {
+                        let on = closest_on_triangle(root, wall[f as usize]);
+                        nearest = nearest.min(norm(sub(on, root)));
+                        // One triangle this close proves this root cannot increase the maximum.
+                        if nearest <= worst {
+                            continue 'roots;
+                        }
+                    }
+                }
+            }
+        }
+        worst = worst.max(nearest);
+    }
+    Ok(worst)
+}
+
+/// Elements with the centroid or an edge midpoint outside the solid by more
+/// than the geometry tolerance, each with that distance and the sample.
+///
+/// Lattice nodes on either side of a gap narrower than a cell are both inside,
+/// so the elements between them are kept and bridge the gap. A sample of an
+/// element is never farther from the solid than its nearest vertex, which
+/// bounds the first-order estimate where the gradients of the two walls cancel.
+fn elements_outside<F: ScalarField>(
+    mesh: &Mesh,
+    g: &Context<F>,
+) -> Result<Vec<(usize, f64, Point)>, String> {
+    g.check()?;
+    const PAIRS: [[usize; 2]; 6] = [[0, 1], [0, 2], [0, 3], [1, 2], [1, 3], [2, 3]];
+    // Centroids first, then each edge once.
+    let mut samples: Vec<(Point, f64)> = mesh
+        .tets
+        .iter()
+        .map(|t| {
+            let c: Point =
+                std::array::from_fn(|a| t.iter().map(|&i| mesh.points[i][a]).sum::<f64>() / 4.);
+            let nearest = t
+                .iter()
+                .map(|&i| norm(sub(mesh.points[i], c)))
+                .fold(f64::INFINITY, f64::min);
+            (c, nearest)
+        })
+        .collect();
+    let mut edges = BTreeMap::new();
+    for t in &mesh.tets {
+        for [i, j] in PAIRS {
+            let key = [t[i].min(t[j]), t[i].max(t[j])];
+            edges.entry(key).or_insert_with(|| {
+                let (p, q) = (mesh.points[key[0]], mesh.points[key[1]]);
+                samples.push((
+                    std::array::from_fn(|a| (p[a] + q[a]) / 2.),
+                    norm(sub(p, q)) / 2.,
+                ));
+                samples.len() - 1
+            });
+        }
+    }
+    let residual = |v: f64| if g.band() { v.abs() - g.threshold() } else { v };
+    let mut distance = vec![0.; samples.len()];
+    for (chunk, start) in samples.chunks(4096).zip((0..).step_by(4096)) {
+        g.check()?;
+        let points: Vec<Point> = chunk.iter().map(|s| s.0).collect();
+        let outside: Vec<usize> = g
+            .values(&points)
+            .into_iter()
+            .enumerate()
+            .filter_map(|(i, v)| (residual(v) > 0.).then_some(i))
+            .collect();
+        let points: Vec<Point> = outside.iter().map(|&i| points[i]).collect();
+        let values = g.values(&points);
+        let gradients = g.gradients(&points);
+        for ((&i, v), gradient) in outside.iter().zip(values).zip(gradients) {
+            distance[start + i] = wall_distance(residual(v), gradient, [false; 3]).min(chunk[i].1);
+        }
+    }
+    let mut found = Vec::new();
+    for (t, tet) in mesh.tets.iter().enumerate() {
+        let mut worst = (distance[t], samples[t].0);
+        for [i, j] in PAIRS {
+            let e = edges[&[tet[i].min(tet[j]), tet[i].max(tet[j])]];
+            if distance[e] > worst.0 {
+                worst = (distance[e], samples[e].0);
+            }
+        }
+        if worst.0 > g.options.geometry_tolerance {
+            found.push((t, worst.0, worst.1));
+        }
+    }
+    Ok(found)
+}
+
+/// Remove the elements that bridge a gap narrower than a cell and return
+/// their number. The mesh is left untouched when the removal would pinch
+/// the boundary.
+fn remove_bridging_elements<F: ScalarField>(
+    mesh: &mut Mesh,
+    g: &Context<F>,
+    h: f64,
+) -> Result<usize, String> {
+    let outside = elements_outside(mesh, g)?;
+    if outside.is_empty() {
+        return Ok(0);
+    }
+    let mut keep = vec![true; mesh.tets.len()];
+    for &(t, _, _) in &outside {
+        keep[t] = false;
+    }
+    let tets: Vec<_> = mesh
+        .tets
+        .iter()
+        .zip(&keep)
+        .filter_map(|(t, &kept)| kept.then_some(*t))
+        .collect();
+    let Ok(surface) = crate::boundary(&tets) else {
+        return Ok(0);
+    };
+    if !nonmanifold_vertices(&surface, mesh.points.len()).is_empty()
+        || !unmatched_cap_vertices(&mesh.points, &surface, g.options.bounds, g.options.periodic)
+            .is_empty()
+    {
+        return Ok(0);
+    }
+    // Vertices the removal exposed were interior: bring them onto the wall
+    // where that keeps their elements valid. The optimizer that follows
+    // recovers the shape this costs.
+    let mut exposed = vec![false; mesh.points.len()];
+    for f in &surface {
+        for &v in f {
+            exposed[v] = true;
+        }
+    }
+    for f in &mesh.surface {
+        for &v in f {
+            exposed[v] = false;
+        }
+    }
+    let mut incident = vec![Vec::new(); mesh.points.len()];
+    for (t, tet) in tets.iter().enumerate() {
+        for &v in tet {
+            incident[v].push(t);
+        }
+    }
+    for v in (0..mesh.points.len()).filter(|&v| exposed[v]) {
+        let original = mesh.points[v];
+        let level = g.level(g.value(original), g.threshold());
+        let locked = g.locked(original);
+        let mut p = original;
+        for _ in 0..8 {
+            let f = g.value(p) - level;
+            if f.abs() < 1e-13 {
+                break;
+            }
+            let mut gradient = g.gradient(p);
+            for a in 0..3 {
+                if locked[a] {
+                    gradient[a] = 0.;
+                }
+            }
+            let g2 = dot(gradient, gradient);
+            if g2 < 1e-20 {
+                break;
+            }
+            p = std::array::from_fn(|a| p[a] - f * gradient[a] / g2);
+        }
+        let worst = |points: &[Point]| {
+            incident[v]
+                .iter()
+                .map(|&t| {
+                    // The shape measure ignores orientation: an inverted
+                    // element must not pass for a well-shaped one.
+                    let p = tets[t].map(|i| points[i]);
+                    if determinant(p) > 0. { quality(p) } else { 0. }
+                })
+                .fold(f64::INFINITY, f64::min)
+        };
+        let before = worst(&mesh.points);
+        mesh.points[v] = p;
+        if !(g.contains(p)
+            && norm(sub(p, original)) <= h
+            && (g.value(p) - level).abs() < 1e-11
+            && worst(&mesh.points) >= before.min(0.05)
+            && worst(&mesh.points) > 0.)
+        {
+            mesh.points[v] = original;
+        }
+    }
+    mesh.tets = tets;
+    mesh.surface = surface;
+    Ok(outside.len())
+}
+
+/// Samples per boundary facet: three vertices, the centroid and three edge midpoints.
+const FACET_SAMPLES: usize = 7;
+
+/// The samples of one facet, vertices first, each with the box axes its
+/// distance is measured without. `in_plane` holds a sample lying in a box
+/// plane to that plane.
+fn facet_samples(
+    p: [Point; 3],
+    bounds: [Point; 2],
+    in_plane: bool,
+) -> [(Point, [bool; 3]); FACET_SAMPLES] {
+    let [lo, hi] = bounds;
+    let lock = |q: &[Point]| -> [bool; 3] {
+        std::array::from_fn(|a| {
+            in_plane && (q.iter().all(|v| v[a] == lo[a]) || q.iter().all(|v| v[a] == hi[a]))
+        })
+    };
+    let middle =
+        |i: usize, j: usize| -> Point { std::array::from_fn(|a| (p[i][a] + p[j][a]) / 2.) };
+    [
+        (p[0], lock(&p[..1])),
+        (p[1], lock(&p[1..2])),
+        (p[2], lock(&p[2..])),
+        (
+            std::array::from_fn(|a| (p[0][a] + p[1][a] + p[2][a]) / 3.),
+            [false; 3],
+        ),
+        (middle(0, 1), lock(&[p[0], p[1]])),
+        (middle(1, 2), lock(&[p[1], p[2]])),
+        (middle(2, 0), lock(&[p[2], p[0]])),
+    ]
+}
+
+/// Largest wall distance over one facet's samples, vertices first, and the
+/// sample that reaches it.
+///
+/// `|f| / |grad f|` overestimates without bound near a critical point of the
+/// field. A sample of the facet is never farther from the wall than a vertex
+/// of that facet plus that vertex's own distance, which bounds the estimate.
+fn facet_distance(vertices: [Point; 3], estimates: &[f64]) -> (f64, Point) {
+    let centroid: Point =
+        std::array::from_fn(|a| (vertices[0][a] + vertices[1][a] + vertices[2][a]) / 3.);
+    let midpoint = |i: usize, j: usize| -> Point {
+        std::array::from_fn(|a| (vertices[i][a] + vertices[j][a]) / 2.)
+    };
+    let interior = [centroid, midpoint(0, 1), midpoint(1, 2), midpoint(2, 0)];
+    let mut worst = (0_f64, vertices[0]);
+    for (&estimate, vertex) in estimates[..3].iter().zip(vertices) {
+        if estimate > worst.0 {
+            worst = (estimate, vertex);
+        }
+    }
+    for (&estimate, sample) in estimates[3..].iter().zip(interior) {
+        let bound = (0..3)
+            .map(|i| norm(sub(vertices[i], sample)) + estimates[i])
+            .fold(f64::INFINITY, f64::min);
+        if estimate.min(bound) > worst.0 {
+            worst = (estimate.min(bound), sample);
+        }
+    }
+    worst
 }
 
 #[cfg(test)]
 mod topology_tests {
     use super::nonmanifold_vertices;
+
+    #[test]
+    fn welding_reunites_images_that_straddle_a_rounding_boundary() {
+        // Observed on a spinodoid: the images differ by 1.5e-14 and round to
+        // different coordinate keys, which read as an unmatched cap node.
+        let key = |z: f64| ((z + 0.5) * 1e11).round() as i64;
+        let bounds = [[-0.5; 3], [0.5; 3]];
+        let mut points = vec![
+            [-0.066_985_937_411_702_25, -0.5, 0.297_619_743_944_991_8],
+            [-0.066_985_937_411_702_4, 0.5, 0.297_619_743_945_007_1],
+            [0.2, 0.5, 0.1],
+            [0.5, 0.5, 0.297_619_743_945_007_1],
+        ];
+        assert_ne!(key(points[0][2]), key(points[1][2]));
+        let far = points[2];
+        super::weld_periodic_images(&mut points, bounds, [true; 3]);
+        assert_eq!(points[1], [points[0][0], 0.5, points[0][2]]);
+        assert_eq!(points[2], far);
+        // No image on the low face within reach: left alone.
+        assert_eq!(
+            points[3][2].to_bits(),
+            0.297_619_743_945_007_1_f64.to_bits()
+        );
+        let mut fixed = points.clone();
+        super::weld_periodic_images(&mut fixed, bounds, [true, false, true]);
+        assert_eq!(fixed, points);
+    }
 
     #[test]
     fn wall_distance_retains_real_misses_and_zero_gradients() {
@@ -2527,6 +4003,7 @@ mod topology_tests {
                 scale: 1.,
                 optimizer_length: 1.,
                 invalid: AtomicBool::new(false),
+                gaps_resolved: false,
             };
             let points = [[0.2, 0., -0.5], [0.2, 0., 0.5]];
             assert_eq!(context.value(points[0]), context.value(points[1]));

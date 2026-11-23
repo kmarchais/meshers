@@ -41,9 +41,15 @@ def test_geometry_rejection_locates_a_sample_with_the_reported_error(compiled):
     point = np.fromstring(match[2], sep=",")
     assert point.shape == (3,)
     assert np.all(abs(point) <= 0.5)
-    gradient = -2 * np.pi / 0.3 * np.sin(2 * np.pi * point)
-    distance = abs(abs(schwarz(*point)) - 1) / np.linalg.norm(gradient)
-    assert distance == pytest.approx(float(match[1]), rel=1e-8)
+    # The reported error is the length of the Newton walk from the sample to the wall.
+    level = np.sign(schwarz(*point))
+    at = point.copy()
+    for _ in range(8):
+        gradient = -2 * np.pi / 0.3 * np.sin(2 * np.pi * at)
+        at -= (schwarz(*at) - level) * gradient / (gradient @ gradient)
+    assert schwarz(*at) == pytest.approx(level, abs=1e-9)
+    distance = np.linalg.norm(at - point)
+    assert distance == pytest.approx(float(match[1]), rel=1e-6)
     assert distance > 0.01
 
 
@@ -316,7 +322,8 @@ def test_native_field_with_python_gradient_uses_calling_thread():
 @pytest.mark.parametrize("order", [1, 2])
 def test_expected_components_exposes_missing_island_in_nonempty_mesh(order):
     def solid(x, y, z):
-        sphere = (x - 0.125) ** 2 + (y - 0.125) ** 2 + (z - 0.25) ** 2 - 0.06**2
+        # Clear of every lattice edge at four cells, so edge sampling cannot find it.
+        sphere = (x - 0.06) ** 2 + (y - 0.125) ** 2 + (z - 0.19) ** 2 - 0.045**2
         return np.minimum(0.75 - x, sphere)
 
     opts = {"order": order, "optimize_passes": 0, "snap": 0, "geometry_tolerance": 0.02}
@@ -326,13 +333,14 @@ def test_expected_components_exposes_missing_island_in_nonempty_mesh(order):
     assert fine.diagnostics["face_connected_components"] == 2
 
 
-def test_expected_components_exposes_lost_thin_slab():
+def test_lost_thin_slab_is_rejected_without_being_asked():
     def slab(x, _y, _z):
         return (x - 0.06) ** 2 - 0.025**2
 
     opts = {"expected_components": 1, "optimize_passes": 0, "snap": 0, "geometry_tolerance": 0.02}
-    with pytest.raises(meshers.MeshingError, match="Expected 1 face-connected components, found 0"):
-        meshers.generate(slab, cells=4, **opts)
+    with pytest.raises(meshers.MeshingError, match="mesh has no implicit wall"):
+        # A loose tolerance keeps narrow-feature refinement from finding the slab.
+        meshers.generate(slab, cells=4, optimize_passes=0, snap=0, geometry_tolerance=1.0)
     fine = meshers.generate(slab, cells=24, **opts)
     assert fine.diagnostics["volume"] == pytest.approx(0.05)
 

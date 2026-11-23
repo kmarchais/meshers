@@ -132,9 +132,6 @@ fn orbit(mesh: &Mesh, e: Edge, geometry: &impl crate::geometry::Geometry) -> [[i
     k.sort_unstable();
     k
 }
-fn error(p: Point, t: f64, geometry: &impl crate::geometry::Geometry) -> f64 {
-    geometry.residual(p, t).abs() / norm(geometry.gradient(p))
-}
 fn midpoint(
     mesh: &Mesh,
     e: Edge,
@@ -196,50 +193,38 @@ pub(crate) fn refine_for(
         profile.count("input_tetrahedra", mesh.tets.len());
         let mut scores = BTreeMap::<_, f64>::new();
         let mut surface_edges = BTreeMap::<_, Vec<Edge>>::new();
-        let mut batched_errors = Vec::new();
-        if geometry.batched() {
-            let mut samples = Vec::new();
-            for f in &mesh.surface {
-                let p = f.map(|i| mesh.points[i]);
-                if geometry.cap(p) {
-                    continue;
-                }
-                samples.push(std::array::from_fn(|a| (p[0][a] + p[1][a] + p[2][a]) / 3.));
-                for [i, j] in [[0, 1], [1, 2], [2, 0]] {
-                    // Match the scalar path's index-sorted edge arithmetic.
-                    let e = edge(f[i], f[j]);
-                    samples.push(std::array::from_fn(|a| {
-                        (mesh.points[e[0]][a] + mesh.points[e[1]][a]) * 0.5
-                    }));
-                }
+        let mut samples = Vec::new();
+        for f in &mesh.surface {
+            let p = f.map(|i| mesh.points[i]);
+            if geometry.cap(p) {
+                continue;
             }
-            for chunk in samples.chunks(4096) {
-                geometry.check()?;
-                let values = geometry.values(chunk);
-                let gradients = geometry.gradients(chunk);
-                batched_errors.extend(values.into_iter().zip(gradients).map(|(v, g)| {
-                    (if geometry.band() {
-                        v.abs() - threshold
-                    } else {
-                        v
-                    })
-                    .abs()
-                        / norm(g)
-                }));
+            samples.push((
+                std::array::from_fn(|a| (p[0][a] + p[1][a] + p[2][a]) / 3.),
+                [false; 3],
+            ));
+            for [i, j] in [[0, 1], [1, 2], [2, 0]] {
+                // Index-sorted, so both facets of an edge sample the same point.
+                let e = edge(f[i], f[j]);
+                samples.push((
+                    std::array::from_fn(|a| (mesh.points[e[0]][a] + mesh.points[e[1]][a]) * 0.5),
+                    [false; 3],
+                ));
             }
         }
-        let mut batched_errors = batched_errors.into_iter();
+        // The measure of the final geometry gate, so both agree on a facet.
+        let mut errors = Vec::with_capacity(samples.len());
+        for chunk in samples.chunks(4096) {
+            geometry.check()?;
+            errors.extend(geometry.wall_distances(chunk, threshold, 0.25 * tolerance)?);
+        }
+        drop(samples);
+        let mut errors = errors.into_iter();
         for f in &mesh.surface {
             if geometry.cap(f.map(|i| mesh.points[i])) {
                 continue;
             }
-            let p = f.map(|i| mesh.points[i]);
-            let center = std::array::from_fn(|a| (p[0][a] + p[1][a] + p[2][a]) / 3.);
-            let center_error = if geometry.batched() {
-                batched_errors.next().unwrap()
-            } else {
-                error(center, threshold, geometry)
-            };
+            let center_error = errors.next().unwrap();
             let face_edges = [edge(f[0], f[1]), edge(f[1], f[2]), edge(f[2], f[0])];
             let longest = *face_edges
                 .iter()
@@ -251,14 +236,11 @@ pub(crate) fn refine_for(
             for e in face_edges {
                 let key = orbit(mesh, e, geometry);
                 surface_edges.entry(key).or_default().push(e);
-                let mid =
-                    std::array::from_fn(|a| (mesh.points[e[0]][a] + mesh.points[e[1]][a]) * 0.5);
-                let score = (if geometry.batched() {
-                    batched_errors.next().unwrap()
-                } else {
-                    error(mid, threshold, geometry)
-                })
-                .max(if e == longest { center_error * 0.8 } else { 0. });
+                let score =
+                    errors
+                        .next()
+                        .unwrap()
+                        .max(if e == longest { center_error * 0.8 } else { 0. });
                 if score > tolerance {
                     scores
                         .entry(key)

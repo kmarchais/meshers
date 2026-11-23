@@ -133,6 +133,7 @@ pub fn adapt_intersection(
         scale,
         optimizer_length: (0..3).map(|a| hi[a] - lo[a]).product::<f64>().cbrt(),
         invalid: AtomicBool::new(false),
+        gaps_resolved: false,
     };
     let weights = [
         [1., 0., 0.],
