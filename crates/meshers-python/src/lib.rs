@@ -362,7 +362,7 @@ fn make_field(
 }
 
 #[allow(clippy::too_many_arguments)]
-#[pyfunction(signature = (field, gradient, bounds, cells, periodic, band, tolerance, minimum_quality, budget, passes, interior_refine_nodes, snap, threads, batch_size, cancel, adapt=None, order=1, size_field=None, halfspaces=None, regions=None, constraints=None, curved_fit=false, *, _observations=None))]
+#[pyfunction(signature = (field, gradient, bounds, cells, periodic, band, tolerance, minimum_quality, budget, passes, interior_refine_nodes, snap, threads, batch_size, cancel, adapt=None, order=1, size_field=None, halfspaces=None, regions=None, constraints=None, curved_fit=false, *, lattice_fallback=true, defeaturing=true, _observations=None))]
 fn generate<'py>(
     py: Python<'py>,
     field: Py<PyAny>,
@@ -387,6 +387,8 @@ fn generate<'py>(
     regions: Option<Vec<u64>>,
     constraints: Option<Vec<Py<PyAny>>>,
     curved_fit: bool,
+    lattice_fallback: bool,
+    defeaturing: bool,
     _observations: Option<Bound<'py, PyList>>,
 ) -> PyResult<Bound<'py, PyDict>> {
     let capture_requested = _observations.is_some();
@@ -471,6 +473,8 @@ fn generate<'py>(
         ),
         order,
         curved_fit,
+        lattice_fallback,
+        defeaturing,
     };
     let start = std::time::Instant::now();
     #[cfg(feature = "experimental-surfaces")]

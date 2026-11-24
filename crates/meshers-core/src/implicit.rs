@@ -72,6 +72,13 @@ pub struct Options {
     pub order: u8,
     /// Experimental local fitting of quadratic wall faces. Requires order two.
     pub curved_fit: bool,
+    /// Return the uniform lattice mesh when the final checks refuse the
+    /// adapted one. When false, that refusal is the error. Default: true.
+    pub lattice_fallback: bool,
+    /// Let quality recovery merge or move wall vertices off the wall as a
+    /// last resort. When false, a mesh that only defeaturing would lift to
+    /// `minimum_quality` is rejected. Default: true.
+    pub defeaturing: bool,
 }
 impl Default for Options {
     fn default() -> Self {
@@ -90,6 +97,8 @@ impl Default for Options {
             adapt: None,
             order: 1,
             curved_fit: false,
+            lattice_fallback: true,
+            defeaturing: true,
         }
     }
 }
@@ -807,6 +816,7 @@ fn generate_internal<F: ScalarField>(
     let mut attempt = build(&context);
     // Retained constraints and half-spaces have no lattice route to fall back on.
     if options.adapt.is_some()
+        && options.lattice_fallback
         && context.constraints.is_none()
         && context.halfspaces.is_none()
         && attempt.as_ref().is_err_and(|error| {
@@ -2194,7 +2204,7 @@ fn recover_within_gate<F: ScalarField>(
     let mut first = None;
     for reach in [1., 0.6, 0.3] {
         let mut defeatured = None;
-        if !repaired {
+        if !repaired && o.defeaturing {
             let mut trial = copy_mesh(&mesh);
             let limit = (reach * WORKING_TOLERANCE * o.geometry_tolerance).min(0.5 * h);
             let merged = remesh_rounds(&mut trial, g, threshold, h, Some(limit), passes)?;

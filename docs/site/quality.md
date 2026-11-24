@@ -46,4 +46,12 @@ Where the search does not run, an element left outside the solid by more than `g
 
 When the final checks refuse an adapted mesh of a plain field, `generate` returns the uniform lattice mesh of the same field, without the requested sizes or layers, sets `adaptation_abandoned` and emits a `UserWarning`. Meshes with retained constraints or half-spaces raise `MeshingError` instead.
 
+Each of these two degraded results can be refused instead of returned with a warning. `fallback=False` raises the refusal of the adapted mesh, which names the gate it missed. `defeaturing=False` keeps quality recovery to the operations that leave the wall where it is, and rejects a mesh they cannot lift to `minimum_quality`. `strict=True` turns both off; either can be turned back on beside it. A mesh that needs neither is the same whatever these are set to.
+
+```python
+mesh = meshers.generate(
+    "gyroid", band=(-0.5, 0.5), cells=16, adapt=True, minimum_quality=0.1, strict=True
+)
+```
+
 Invalid options raise `ValueError`. A failed meshing gate raises `MeshingError`. [Python API](api/python.md)

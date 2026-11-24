@@ -115,6 +115,9 @@ class _VolumeOptions(MeshingOptions, LegacyCompileOption, total=False):
     size_field: Field | None
     curved_fit: bool
     expected_components: int | None
+    strict: bool
+    fallback: bool
+    defeaturing: bool
 
 
 @dataclass(frozen=True, slots=True)
@@ -295,6 +298,13 @@ def generate(
         expected_components (int | None): Default ``None``. Require this many face-connected solid
             components in the cut box, before pairing periodic faces. Zero requires sampled-empty
             output.
+        strict (bool): Default ``False``. Refuse a degraded mesh instead of returning it with a
+            warning: sets the default of ``fallback`` and ``defeaturing`` to False.
+        fallback (bool): Default ``not strict``. Return the uniform lattice mesh when the final
+            checks reject the adapted one. When False, that rejection is raised.
+        defeaturing (bool): Default ``not strict``. Let quality recovery move wall vertices off the
+            implicit surface as a last resort. When False, a mesh it cannot otherwise lift to
+            ``minimum_quality`` is rejected.
 
     Returns:
         Mesh: Owned arrays and diagnostics. Empty geometries return empty arrays.
@@ -392,6 +402,7 @@ def generate(
         int(route.order),
         options.get("size_field"),
         curved_fit=options.get("curved_fit", False),
+        **_degradations(options),
         **_native_constraints(field, planes, adapt=route.adapt, scalar_mode=scalar_mode),
     )
     result["diagnostics"]["threads"] = route.threads
@@ -406,6 +417,30 @@ def generate(
             stacklevel=2,
         )
     return _check_components(_volume_mesh(result), expected_components)
+
+
+class _Degradations(TypedDict):
+    """Degraded results the native mesher may still return."""
+
+    lattice_fallback: bool
+    defeaturing: bool
+
+
+def _degradations(options: _VolumeOptions) -> _Degradations:
+    """Return which degraded results `strict`, `fallback` and `defeaturing` leave allowed.
+
+    Raises:
+        TypeError: One of the three options is not a bool.
+    """
+    flags = {"strict": True}
+    for name in ("strict", "fallback", "defeaturing"):
+        # `strict` defaults to False; the other two default to its opposite.
+        value = options.get(name, not flags["strict"])
+        if not isinstance(value, (bool, np.bool_)):
+            msg = f"{name} must be a bool"
+            raise TypeError(msg)
+        flags[name] = bool(value)
+    return {"lattice_fallback": flags["fallback"], "defeaturing": flags["defeaturing"]}
 
 
 def _warn_defeaturing(diagnostics: dict, minimum_quality: float) -> None:

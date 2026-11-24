@@ -77,6 +77,9 @@ def generate(
     regions: Sequence[int] | None = None,
     constraints: Sequence[str | Field | CompiledField] | None = None,
     curved_fit: bool = False,
+    *,
+    lattice_fallback: bool = True,
+    defeaturing: bool = True,
 ) -> _GeneratedVolume: ...
 
 class CompiledField:

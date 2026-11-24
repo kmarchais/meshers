@@ -984,6 +984,20 @@ fn fibre_grazing_a_box_edge_is_defeatured_within_tolerance() {
     // Merged crossings leave fewer paired nodes; generation itself rejects
     // caps that no longer match.
     assert!(gated.periodic_pairs.iter().all(|pairs| !pairs.is_empty()));
+    // Without defeaturing the floor cannot be reached: the mesh is rejected
+    // on its quality, and the wall is left where the field puts it.
+    let strict = generate(
+        &fibre,
+        Options {
+            minimum_quality: 0.1,
+            defeaturing: false,
+            ..options
+        },
+    );
+    let Err(meshers_core::MeshingError::GenerationFailed(reason)) = strict else {
+        panic!("a mesh below the floor was returned without defeaturing");
+    };
+    assert!(reason.contains("minimum MMG quality"), "{reason}");
 }
 
 #[test]
@@ -1307,4 +1321,22 @@ fn a_refused_adaptation_falls_back_to_the_lattice_mesh() {
     assert_eq!(adapted.mesh.tets, lattice.mesh.tets);
     assert!(adapted.diagnostics.minimum_mmg_quality >= 0.1);
     assert!(adapted.diagnostics.maximum_sampled_surface_error <= tolerance);
+    // Without the fallback, the refusal of the adapted mesh is the error.
+    let strict = generate(
+        &ball,
+        Options {
+            adapt: Some(meshers_core::tet_adapt::Options {
+                tolerance: 0.05,
+                min_length: 0.1,
+                max_length: 0.25,
+                ..Default::default()
+            }),
+            lattice_fallback: false,
+            ..options
+        },
+    );
+    let Err(meshers_core::MeshingError::GenerationFailed(reason)) = strict else {
+        panic!("a refused adaptation returned a mesh without the fallback");
+    };
+    assert!(reason.contains("sampled geometry error"), "{reason}");
 }
