@@ -1,0 +1,183 @@
+{
+  "hardware": {
+    "cpu_model": "AMD Ryzen 7 7730U with Radeon Graphics",
+    "cpu_count": 16,
+    "ram_bytes": 32476979200,
+    "machine": "x86_64",
+    "platform": "Linux-7.0.0-42-generic-x86_64-with-glibc2.43"
+  },
+  "sources": {
+    "base": {
+      "python": "3.12.16",
+      "numpy": "2.5.3",
+      "meshers": "0.2.1",
+      "native_sha256": "d4429919aa805b3cc9e07c4cc9bb47b70906d9da246ae50da2946887aab60148"
+    },
+    "candidate": {
+      "python": "3.12.16",
+      "numpy": "2.5.3",
+      "meshers": "0.2.1",
+      "native_sha256": "de209176d2b05090afcaf1b17d727d546ce0c95e55c5e75c79c11b658cd4237f"
+    }
+  },
+  "references": {
+    "adaptive_spinodoid": {
+      "validation": {
+        "tetrahedra": 28943,
+        "nodes": 7092,
+        "volume": 0.5824009113259319,
+        "quality_min": 0.3914287049050121,
+        "quality_p05": 0.5629588298727168,
+        "quality_p10": 0.5969753640383879,
+        "quality_median": 0.7402428217398452,
+        "quality_mean": 0.7409140868974324,
+        "quality_p90": 0.8863690361517071,
+        "quality_max": 0.9991249046543307,
+        "surface_error": 0.001228338394739928
+      },
+      "hashes": {
+        "points": "79eba542e8beb9d75f286d0d3356fb42a1712fe7eca9c2f253a975aa4ffe3867",
+        "tetrahedra": "9b2d7b4a17dc18483b3e252282bfc3dd3675c2ae1d465cd14b0caaf972caa426",
+        "surface": "b23ae919e2ffa4191249213ec97980e4fcbb55e11cc2d8fcd569718380b31423",
+        "boundary_tags": "eaf2b5f1ae0c9b6fbc2b4c1938aa264c038b6559f6332dc5c5008595967011f4",
+        "pairs_0": "786a923ac09850370be33118c125126114e457ac04538c96ddcd386903c5688c",
+        "pairs_1": "fa3e4b06a243c0c7f7bd9194395462ba1e2151acec13bce55777b228ba6bf95e",
+        "pairs_2": "9d16be28e3e7a9c2687717fab473eeed5f1d3ab82447426f9aad81ad8aa5fa14"
+      }
+    },
+    "spinodoid": {
+      "validation": {
+        "tetrahedra": 107079,
+        "nodes": 22163,
+        "volume": 0.5823979950791279,
+        "quality_min": 0.22674606050177695,
+        "quality_p05": 0.6178447506536375,
+        "quality_p10": 0.6979249042600566,
+        "quality_median": 0.9295160030897787,
+        "quality_mean": 0.8726281304462764,
+        "quality_p90": 0.9384547659169639,
+        "quality_max": 0.9982123382315334,
+        "surface_error": 0.0023333863122586597
+      },
+      "hashes": {
+        "points": "9a06a8adad9ed6d62b4983af17078694c1b9b08a3b88eb04f116b07ac154104c",
+        "tetrahedra": "d8ecb34ff92bf2b32cd4668be6007e00333d0d7d9dc70c382f4bd08a3479bfcb",
+        "surface": "51077f265512aea4684bad8ff77e5550d4f528ec817ef6cacc611c4aa9fae212",
+        "boundary_tags": "14c77e9211e12acfd50dcbe0ded254fbcdf3188faa0f3a7779934ee94b6e296e",
+        "pairs_0": "8249196abba778c9dc24d643e5cffb975936c81ad422b81fb7d37a39b22f7476",
+        "pairs_1": "0abb27bc0c069bf95370fc3ce8c7d51e49579e540512b8c435ca811ffaef94a2",
+        "pairs_2": "92df584cd1976c44c1a68292730c1b28d9937be1093278ff41b232947e4ed47d"
+      }
+    },
+    "adaptive_lattice": {
+      "validation": {
+        "tetrahedra": 20978,
+        "nodes": 5820,
+        "volume": 0.1975956643968005,
+        "quality_min": 0.4539627670915531,
+        "quality_p05": 0.5607231774917272,
+        "quality_p10": 0.5930319114388076,
+        "quality_median": 0.7306143842776776,
+        "quality_mean": 0.7328004857336696,
+        "quality_p90": 0.8797114582739324,
+        "quality_max": 0.9957150610975323,
+        "surface_error": 0.0014835860379609597
+      },
+      "hashes": {
+        "points": "72e5346c8e2685cd214f9c3ba9e49b722a0fe912f3cc5d3df8992f176497f8f6",
+        "tetrahedra": "f3ec0db1acb0ac496e63a477167258d30ebe5f356e85683b33da9130357a8e07",
+        "surface": "b7f0c077b06422dccba0bab1fed7047db59ae9813a70b39b87dbe8784a2e705e",
+        "boundary_tags": "4f95d74e8c025ed1a8a1f1382212cea35bcbfa74403e671f632e538df65c9cdb",
+        "pairs_0": "e38cc0713777772a125998d75ebb54981b14f4880654fd5c4c909b4de0887da0",
+        "pairs_1": "88e384ddc4db330937fe8c1173591c4c194839a211060df8df5c9f4b5de9920e",
+        "pairs_2": "1824fb55a795f15436b6a547927bdc4ac9e2ea820634352937fdf0204da8480b"
+      }
+    }
+  },
+  "date": "2026-11-25",
+  "logical_cpu": 2,
+  "rustc": "rustc 1.100.0 (0ef1bc386 2026-11-09)",
+  "maturin": "1.16.0",
+  "base": "5ed0ae95223eddede731bfcee8901d7d7d75ae72",
+  "candidate": "2ac044a1988ede1f0f455969c8b2cf235220bf6b",
+  "measured_pairs": {
+    "adaptive_lattice": {
+      "wall_s": {
+        "base": 1.3455685270018876,
+        "candidate": 1.260322666959837,
+        "point": 0.9353605973096201,
+        "lo": 0.9242556566094103,
+        "hi": 0.9464655380098299,
+        "pairs": 13
+      },
+      "cpu_s": {
+        "base": 1.345394587,
+        "candidate": 1.260202107,
+        "point": 0.9353713826113381,
+        "lo": 0.9242609014519002,
+        "hi": 0.9464818637707759,
+        "pairs": 13
+      },
+      "peak_bytes": {
+        "base": 80519168,
+        "candidate": 82534400,
+        "point": 1.015204148416654,
+        "lo": 1.0050521069324876,
+        "hi": 1.0257219986756991,
+        "pairs": 13
+      }
+    },
+    "adaptive_spinodoid": {
+      "wall_s": {
+        "base": 2.5272749639116228,
+        "candidate": 2.386552697047591,
+        "point": 0.9440927757750439,
+        "lo": 0.9346518480172935,
+        "hi": 0.9556992049370815,
+        "pairs": 13
+      },
+      "cpu_s": {
+        "base": 2.526910321,
+        "candidate": 2.386246784,
+        "point": 0.9440646553535958,
+        "lo": 0.9346240088000599,
+        "hi": 0.9556982580833253,
+        "pairs": 13
+      },
+      "peak_bytes": {
+        "base": 109797376,
+        "candidate": 109674496,
+        "point": 0.9999627102211284,
+        "lo": 0.9899630831189171,
+        "hi": 1.0099623373233397,
+        "pairs": 13
+      }
+    },
+    "spinodoid": {
+      "wall_s": {
+        "base": 1.7801597330253571,
+        "candidate": 1.7827870019245893,
+        "point": 1.0045966096140024,
+        "lo": 0.9926572261820036,
+        "hi": 1.0146425757101425,
+        "pairs": 13
+      },
+      "cpu_s": {
+        "base": 1.779908667,
+        "candidate": 1.782542916,
+        "point": 1.004589820085789,
+        "lo": 0.9926724820585211,
+        "hi": 1.014635718286647,
+        "pairs": 13
+      },
+      "peak_bytes": {
+        "base": 94605312,
+        "candidate": 94527488,
+        "point": 0.9995235620235621,
+        "lo": 0.9895283264033264,
+        "hi": 1.0095187976437976,
+        "pairs": 13
+      }
+    }
+  }
+}

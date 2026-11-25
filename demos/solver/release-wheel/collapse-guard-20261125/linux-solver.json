@@ -1,0 +1,176 @@
+{
+  "versions": {
+    "meshers": "0.2.1",
+    "fedoo": "1.0.0b2",
+    "numpy": "2.5.3",
+    "scipy": "1.18.1",
+    "pyvista": "0.49.0",
+    "vtk": "9.7.1"
+  },
+  "config": {
+    "name": "meshers-tet4-adaptive",
+    "arm": "meshers",
+    "cells": 24,
+    "order": 1,
+    "adapt": true,
+    "tolerance": 1,
+    "min_length": 0.002,
+    "adapt_tolerance": 0.0003,
+    "max_length": 0.032
+  },
+  "vtkhdf": {
+    "/": "group",
+    "VTKHDF/": "group",
+    "VTKHDF@Type": "13fda776c964952f09ff638596dda14b33919a29dc41571ce012aa67c54aebdb",
+    "VTKHDF@Version": "8e305c06c9a30297cd86e82599488b41d256c8dbd1f8c83fbb0198bf180eecc6",
+    "VTKHDF/CellData/": "group",
+    "VTKHDF/CellData/MMGQuality": "9978b9c92ec7f9106e6eef992b9ec73a91a17c7f27573b8b8b069e3404e4dfcc",
+    "VTKHDF/CellData/Volume": "8b42e2362fdc82d0036c95712a20f7ccff311b0cbdcd7c4a588b956a398cbfba",
+    "VTKHDF/Connectivity": "9ef36b5912b3f605563d90e6dd2d15da537ee43e801250a76457cc6399519b94",
+    "VTKHDF/FieldData/": "group",
+    "VTKHDF/FieldData/PeriodicPairs0": "c7a50b3a12a3700c8fc98f0c83f6a05155f66df1432ea9ca88c956db45663f01",
+    "VTKHDF/FieldData/PeriodicPairs1": "ddcbbc31e025d6ff7ebfed1f9c85a8135a614c822687eeead1c912cffb145837",
+    "VTKHDF/FieldData/PeriodicPairs2": "c95b0f494c8c9915de1a52daae65ef3e02a994d6f0b996b1596876a82be1ff32",
+    "VTKHDF/NumberOfCells": "6cb0e47efe7d277c849327cc59b085def08890aa440af25ab7c8f18d3f2b6dea",
+    "VTKHDF/NumberOfConnectivityIds": "88113f5c0e654ea753161f7398474684c9c97d623495a622d4df90aadd824929",
+    "VTKHDF/NumberOfPoints": "932061e89bf8850eb7714a03518f15cf2080ce4ac9be8ad3497f9d16a5fe7a06",
+    "VTKHDF/Offsets": "f5470fbdd5665ef6c7bce50dcdd6d9f4012a227acfeb0ee7e746901dc748494d",
+    "VTKHDF/PointData/": "group",
+    "VTKHDF/PointData/PeriodicMasterId": "fe7c6d8849f1c9f044c2eb6ebf67ce9e39be4989ca35ec46d3b21562a3137697",
+    "VTKHDF/PointData/PeriodicShift": "c17c24f7eefcc939c459a2aef6b5c88d89d2359d07c2b50c49f69916745797fd",
+    "VTKHDF/Points": "5d1b9bdf5f466757ab4b1196f31ca3759814749b8f8ae483a1e1bd135e9a8ad1",
+    "VTKHDF/Types": "0c27a67e3a00f68ffd65edf4c83951647e9c6df21fa499b82d5de0b17f9fdc23"
+  },
+  "results": {
+    "base": {
+      "export_sha256": "73d04e8f22e822c1bb328acae9f8cd88296625ff9570c172bd43808dc1bef942",
+      "solver_mesh_sha256": "d2755e03286a3fe722b33b7233fc395125bb1206397c9ffb5f371b01910b3ef8",
+      "geometry_sha256": "5b785c3126de765102465f00ad4b0829905814f381b36e58eb9e40cb46c6043e",
+      "fea_without_timing_sha256": "93f23698379a661025b7fb04c127a6045e71961a2911e3e40f34451059a8aae6",
+      "stiffness_engineering_voigt": [
+        [
+          0.7996781746096555,
+          0.14354412609369002,
+          0.14354532416503418,
+          9.874171070006418e-07,
+          -9.230979796648358e-07,
+          3.257986679920156e-08
+        ],
+        [
+          0.14354412609555084,
+          0.7996773673185683,
+          0.14354691516333945,
+          -1.4043632261335805e-07,
+          -1.685182135679176e-07,
+          -1.5458946203567329e-07
+        ],
+        [
+          0.14354532416731974,
+          0.14354691516248816,
+          0.799676452364383,
+          5.458363397080547e-08,
+          -2.068674091786651e-06,
+          -3.6264471278910586e-07
+        ],
+        [
+          9.874093036879953e-07,
+          -1.4044012941792634e-07,
+          5.458332921161405e-08,
+          0.19254916224750787,
+          -5.925481453771249e-07,
+          1.5357453598424112e-07
+        ],
+        [
+          -9.230876066278683e-07,
+          -1.6851871377975486e-07,
+          -2.068676775042064e-06,
+          -5.925480390796149e-07,
+          0.1925500704841575,
+          2.3141787931545463e-07
+        ],
+        [
+          3.258653720798276e-08,
+          -1.5459303644383228e-07,
+          -3.62648299858165e-07,
+          1.53574983921396e-07,
+          2.314178853003588e-07,
+          0.1925513118742504
+        ]
+      ],
+      "relative_energy_discrepancy": 0.00707673827587519,
+      "reference_sha256": "077b05afb900595e6e7891e5a092538cec6eb2f805156d2119ac9eb771477908",
+      "status": "within-reference-target",
+      "load_counts": [
+        6,
+        6
+      ],
+      "nodes": 42320,
+      "tetrahedra": 189873
+    },
+    "candidate": {
+      "export_sha256": "c298c156169dfa95e37bfb24348d174908080a961d0190384e9f690460adcdcf",
+      "solver_mesh_sha256": "d2755e03286a3fe722b33b7233fc395125bb1206397c9ffb5f371b01910b3ef8",
+      "geometry_sha256": "5b785c3126de765102465f00ad4b0829905814f381b36e58eb9e40cb46c6043e",
+      "fea_without_timing_sha256": "93f23698379a661025b7fb04c127a6045e71961a2911e3e40f34451059a8aae6",
+      "stiffness_engineering_voigt": [
+        [
+          0.7996781746096555,
+          0.14354412609369002,
+          0.14354532416503418,
+          9.874171070006418e-07,
+          -9.230979796648358e-07,
+          3.257986679920156e-08
+        ],
+        [
+          0.14354412609555084,
+          0.7996773673185683,
+          0.14354691516333945,
+          -1.4043632261335805e-07,
+          -1.685182135679176e-07,
+          -1.5458946203567329e-07
+        ],
+        [
+          0.14354532416731974,
+          0.14354691516248816,
+          0.799676452364383,
+          5.458363397080547e-08,
+          -2.068674091786651e-06,
+          -3.6264471278910586e-07
+        ],
+        [
+          9.874093036879953e-07,
+          -1.4044012941792634e-07,
+          5.458332921161405e-08,
+          0.19254916224750787,
+          -5.925481453771249e-07,
+          1.5357453598424112e-07
+        ],
+        [
+          -9.230876066278683e-07,
+          -1.6851871377975486e-07,
+          -2.068676775042064e-06,
+          -5.925480390796149e-07,
+          0.1925500704841575,
+          2.3141787931545463e-07
+        ],
+        [
+          3.258653720798276e-08,
+          -1.5459303644383228e-07,
+          -3.62648299858165e-07,
+          1.53574983921396e-07,
+          2.314178853003588e-07,
+          0.1925513118742504
+        ]
+      ],
+      "relative_energy_discrepancy": 0.00707673827587519,
+      "reference_sha256": "077b05afb900595e6e7891e5a092538cec6eb2f805156d2119ac9eb771477908",
+      "status": "within-reference-target",
+      "load_counts": [
+        6,
+        6
+      ],
+      "nodes": 42320,
+      "tetrahedra": 189873
+    }
+  }
+}
