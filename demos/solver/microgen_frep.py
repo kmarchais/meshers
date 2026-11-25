@@ -5,9 +5,11 @@
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
 import logging
 import tempfile
+from importlib import import_module
 from importlib.metadata import distribution, version
 from pathlib import Path
 from typing import TYPE_CHECKING
@@ -120,12 +122,9 @@ def main() -> int:
         "microgen_source": json.loads(
             distribution("microgen").read_text("direct_url.json") or "{}",
         ).get("vcs_info"),
-        "wheel_hashes": json
-        .loads(
-            distribution("meshers").read_text("direct_url.json") or "{}",
-        )
-        .get("archive_info", {})
-        .get("hashes"),
+        "native_sha256": hashlib.sha256(
+            Path(import_module("meshers._meshers").__file__).read_bytes(),
+        ).hexdigest(),
         "geometry_tolerance": TOLERANCE,
         "physical_quality_min": QUALITY,
         "relative_volume_limit": VOLUME_LIMIT,
