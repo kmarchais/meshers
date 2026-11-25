@@ -1,0 +1,53 @@
+name: Microgen F-rep coverage
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+  workflow_dispatch:
+    inputs:
+      suite:
+        description: Geometry set
+        type: choice
+        options: [regressions, inventory]
+        default: inventory
+
+permissions:
+  contents: read
+
+jobs:
+  wheel:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    env:
+      OPENBLAS_NUM_THREADS: '1'
+      OMP_NUM_THREADS: '1'
+      MKL_NUM_THREADS: '1'
+      RAYON_NUM_THREADS: '1'
+      VTK_SMP_MAX_THREADS: '1'
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - uses: astral-sh/setup-uv@v6
+      - name: Install Gmsh shared library dependencies
+        run: sudo apt-get update && sudo apt-get install -y libglu1-mesa libxft2 libxcursor1 libxinerama1
+      - name: Build and install the wheel with the pinned Microgen backend
+        run: |
+          uv venv --python 3.12
+          uv pip install maturin
+          .venv/bin/maturin build --manifest-path crates/meshers-python/Cargo.toml --locked --release --interpreter .venv/bin/python --out dist
+          uv pip install dist/*.whl 'microgen @ git+https://github.com/3MAH/microgen@adeab99ca547d6d1589ea7765ffa563c3c6201a9'
+      - name: Audit the exported meshes
+        env:
+          SUITE: ${{ inputs.suite || 'regressions' }}
+        run: .venv/bin/python demos/solver/microgen_frep.py --suite "$SUITE" --output frep-results.json
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: frep-${{ inputs.suite || 'regressions' }}
+          path: frep-results.json
+          if-no-files-found: error
