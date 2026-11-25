@@ -1195,6 +1195,17 @@ impl<'g, G: Geometry> Tets<'g, G> {
     /// as the final gate measures them: at their vertices, centroids and edge
     /// midpoints, held in their box planes where the gate holds them.
     fn near_wall(&self, v: usize, tolerance: f64) -> bool {
+        let wall: Vec<Face> = self.vb[v]
+            .iter()
+            .copied()
+            .filter(|f| self.faces[f] == 0)
+            .collect();
+        self.fits_wall(&[v], &wall, tolerance)
+    }
+
+    /// Whether `vertices` and `facets` lie within `tolerance` of the wall at
+    /// the samples and by the measure of the final gate.
+    fn fits_wall(&self, vertices: &[usize], facets: &[Face], tolerance: f64) -> bool {
         let lock = |u: usize, w: usize| {
             if self.g.holds_samples() {
                 self.held(u, w)
@@ -1202,11 +1213,11 @@ impl<'g, G: Geometry> Tets<'g, G> {
                 [false; 3]
             }
         };
-        let mut samples = vec![(self.points[v], lock(v, v))];
-        for f in &self.vb[v] {
-            if self.faces[f] != 0 {
-                continue;
-            }
+        let mut samples: Vec<_> = vertices
+            .iter()
+            .map(|&v| (self.points[v], lock(v, v)))
+            .collect();
+        for f in facets {
             let p = self.local(f.map(|n| self.points[n]));
             samples.push((
                 std::array::from_fn(|a| (p[0][a] + p[1][a] + p[2][a]) / 3.),
@@ -1314,58 +1325,11 @@ impl<'g, G: Geometry> Tets<'g, G> {
             return false;
         };
         let before = self.worst(&shell);
-        // Each ring triangle joins u and v, which must lie on opposite sides of it.
-        let oriented = |a: usize, b: usize, c: usize| -> Option<[[usize; 4]; 2]> {
-            let du = determinant(self.tet_points([a, b, c, u], None));
-            let dv = determinant(self.tet_points([a, b, c, v], None));
-            if du * dv >= 0. {
-                return None;
-            }
-            let tu = if du > 0. { [a, b, c, u] } else { [a, c, b, u] };
-            let tv = if dv > 0. { [a, b, c, v] } else { [a, c, b, v] };
-            Some([tu, tv])
-        };
-        let q = |i: usize, k: usize, j: usize| -> f64 {
-            oriented(ring[i], ring[k], ring[j]).map_or(f64::NEG_INFINITY, |ts| {
-                ts.iter()
-                    .map(|&t| mmg(self.tet_points(t, None)))
-                    .fold(1., f64::min)
-            })
-        };
-        // Dynamic programming over polygon triangulations, maximizing the worst quality.
-        let mut best = vec![vec![f64::NEG_INFINITY; n]; n];
-        let mut split = vec![vec![usize::MAX; n]; n];
-        for i in 0..n - 1 {
-            best[i][i + 1] = f64::INFINITY;
-        }
-        for gap in 2..n {
-            for i in 0..n - gap {
-                let j = i + gap;
-                for k in i + 1..j {
-                    let value = best[i][k].min(best[k][j]).min(q(i, k, j));
-                    if value > best[i][j] {
-                        best[i][j] = value;
-                        split[i][j] = k;
-                    }
-                }
-            }
-        }
-        if best[0][n - 1] <= before + 1e-6 {
+        let Some((after, new)) = self.fill(&ring, u, v) else {
             return false;
-        }
-        let mut new = Vec::new();
-        let mut stack = vec![(0, n - 1)];
-        while let Some((i, j)) = stack.pop() {
-            if j - i < 2 {
-                continue;
-            }
-            let k = split[i][j];
-            let Some(ts) = oriented(ring[i], ring[k], ring[j]) else {
-                return false;
-            };
-            new.extend(ts);
-            stack.push((i, k));
-            stack.push((k, j));
+        };
+        if after <= before + 1e-6 {
+            return false;
         }
         let volume = |ts: &mut dyn Iterator<Item = [usize; 4]>| -> f64 {
             ts.map(|t| determinant(self.tet_points(t, None)).abs())
@@ -1437,6 +1401,175 @@ impl<'g, G: Geometry> Tets<'g, G> {
             self.add_tet(tet);
         }
         true
+    }
+
+    /// Swap a wall edge for the other diagonal of its two wall facets, when
+    /// that lifts the worst element around it and the new facets stay
+    /// within `tolerance` of the wall by the measure of the final gate.
+    ///
+    /// The elements around the edge are replaced by the best triangulation of
+    /// the fan they form. A single flat element lying on the wall is removed.
+    /// The solid changes by the volume between the two pairs of facets.
+    fn swap_wall_edge(&mut self, u: usize, v: usize, tolerance: f64) -> bool {
+        let old = self.edge_faces(u, v);
+        if old.len() != 2
+            || old.iter().any(|f| self.faces[f] != 0)
+            || self.constraint_faces.is_some()
+            || self.g.halfspaces().is_some()
+        {
+            return false;
+        }
+        let apex = |f: &Face| f.iter().copied().find(|&w| w != u && w != v);
+        let (Some(c), Some(d)) = (apex(&old[0]), apex(&old[1])) else {
+            return false;
+        };
+        // An edge between two vertices of one box plane would lie in it.
+        if self.masks[c] & self.masks[d] & !WALL != 0 {
+            return false;
+        }
+        let shell = self.shell(u, v);
+        let n = shell.len();
+        if !(1..=6).contains(&n) {
+            return false;
+        }
+        // The fan from one wall facet to the other.
+        let mut fan = vec![c];
+        let mut used = vec![false; n];
+        while fan.len() <= n {
+            let last = fan[fan.len() - 1];
+            let Some((i, next)) = (0..n).filter(|&i| !used[i]).find_map(|i| {
+                let rest: Vec<usize> = self.tets[shell[i]]
+                    .into_iter()
+                    .filter(|&w| w != u && w != v)
+                    .collect();
+                (rest[0] == last)
+                    .then_some(rest[1])
+                    .or((rest[1] == last).then_some(rest[0]))
+                    .map(|next| (i, next))
+            }) else {
+                return false;
+            };
+            used[i] = true;
+            fan.push(next);
+        }
+        if fan[n] != d {
+            return false;
+        }
+        let before = self.worst(&shell);
+        let new = if n == 1 {
+            // The other two faces of the element become the wall.
+            if before >= SLIVER_EDGES
+                || !self.edge_faces(c, d).is_empty()
+                || self.vt[u].len() < 2
+                || self.vt[v].len() < 2
+            {
+                return false;
+            }
+            Vec::new()
+        } else {
+            if self.adjacent(c).contains(&d) {
+                return false;
+            }
+            let Some((after, new)) = self.fill(&fan, u, v) else {
+                return false;
+            };
+            if after <= before + 1e-6
+                || new
+                    .iter()
+                    .any(|&t| !self.in_one_cell([None; 4], t, usize::MAX))
+            {
+                return false;
+            }
+            new
+        };
+        // Where the solid is convex along the edge, the new facets cut the
+        // element between the two diagonals off it and the fan fills the rest.
+        // Along a reentrant edge they would pass outside and the fan overlap.
+        let volume = |ts: &mut dyn Iterator<Item = [usize; 4]>| -> f64 {
+            ts.map(|t| determinant(self.tet_points(t, None)).abs())
+                .sum()
+        };
+        let solid = volume(&mut shell.iter().map(|&t| self.tets[t]));
+        let cut = volume(&mut std::iter::once([u, v, c, d]));
+        if (volume(&mut new.iter().copied()) + cut - solid).abs() > 1e-9 * solid {
+            return false;
+        }
+        let facets = [sorted([u, c, d]), sorted([v, c, d])];
+        if !self.fits_wall(&[], &facets, tolerance) {
+            return false;
+        }
+        for t in shell {
+            self.kill_tet(t);
+        }
+        for t in new {
+            self.add_tet(t);
+        }
+        for f in old {
+            self.remove_face(f);
+        }
+        for f in facets {
+            self.add_feature_face(f, 0, 0);
+        }
+        for w in [u, v, c, d] {
+            self.refresh(w);
+        }
+        true
+    }
+
+    /// Best triangulation of the polygon `ring` joined to `u` and `v`, which
+    /// lie on either side of it: its worst quality and its elements.
+    fn fill(&self, ring: &[usize], u: usize, v: usize) -> Option<(f64, Vec<[usize; 4]>)> {
+        let n = ring.len();
+        let oriented = |a: usize, b: usize, c: usize| -> Option<[[usize; 4]; 2]> {
+            let du = determinant(self.tet_points([a, b, c, u], None));
+            let dv = determinant(self.tet_points([a, b, c, v], None));
+            if du * dv >= 0. {
+                return None;
+            }
+            let tu = if du > 0. { [a, b, c, u] } else { [a, c, b, u] };
+            let tv = if dv > 0. { [a, b, c, v] } else { [a, c, b, v] };
+            Some([tu, tv])
+        };
+        let q = |i: usize, k: usize, j: usize| -> f64 {
+            oriented(ring[i], ring[k], ring[j]).map_or(f64::NEG_INFINITY, |ts| {
+                ts.iter()
+                    .map(|&t| mmg(self.tet_points(t, None)))
+                    .fold(1., f64::min)
+            })
+        };
+        // Dynamic programming over polygon triangulations, maximizing the worst quality.
+        let mut best = vec![vec![f64::NEG_INFINITY; n]; n];
+        let mut split = vec![vec![usize::MAX; n]; n];
+        for i in 0..n - 1 {
+            best[i][i + 1] = f64::INFINITY;
+        }
+        for gap in 2..n {
+            for i in 0..n - gap {
+                let j = i + gap;
+                for k in i + 1..j {
+                    let value = best[i][k].min(best[k][j]).min(q(i, k, j));
+                    if value > best[i][j] {
+                        best[i][j] = value;
+                        split[i][j] = k;
+                    }
+                }
+            }
+        }
+        let mut new = Vec::new();
+        let mut stack = vec![(0, n - 1)];
+        while let Some((i, j)) = stack.pop() {
+            if j - i < 2 {
+                continue;
+            }
+            let k = split[i][j];
+            if k == usize::MAX {
+                return None;
+            }
+            new.extend(oriented(ring[i], ring[k], ring[j])?);
+            stack.push((i, k));
+            stack.push((k, j));
+        }
+        Some((best[0][n - 1], new))
     }
 
     fn relocate(&mut self, v: usize, o: &Options) -> bool {
@@ -2500,7 +2633,7 @@ pub(crate) fn remove_slivers(
             }
         }
         for (_, [u, v]) in seeded(&s, SLIVER) {
-            if s.remove_edge(u, v) {
+            if s.remove_edge(u, v) || s.swap_wall_edge(u, v, tolerance) {
                 changed += 1;
             }
         }
@@ -3406,6 +3539,77 @@ mod tests {
             .project([-0.4, 0.4999, 0.23], super::WALL, 0., 0)
             .unwrap();
         assert!(point[1] > 0.49 && point[1] < 0.5);
+    }
+
+    #[test]
+    fn wall_edge_swaps_for_the_shorter_diagonal_only_where_the_solid_is_convex() {
+        struct Floor;
+
+        impl crate::geometry::Geometry for Floor {
+            fn value(&self, point: Point) -> f64 {
+                point[2]
+            }
+            fn gradient(&self, _point: Point) -> Point {
+                [0., 0., 1.]
+            }
+            fn bounds(&self) -> [Point; 2] {
+                [[-3.; 3], [3.; 3]]
+            }
+            fn rank(&self, _point: Point) -> [i64; 3] {
+                [0; 3]
+            }
+            fn band(&self) -> bool {
+                false
+            }
+        }
+
+        // Two elements under the wall facets of a long edge, whose other
+        // diagonal is short. `lift` raises the ends of that diagonal.
+        let fan = |lift: f64| {
+            let points = vec![
+                [-1., 0., 0.],
+                [1., 0., 0.],
+                [0., 0.3, lift],
+                [0., -0.3, lift],
+                [0., 0., -1.],
+            ];
+            let tets = [[0, 1, 2, 4], [0, 1, 4, 3]]
+                .map(|mut t: [usize; 4]| {
+                    if crate::determinant(t.map(|node| points[node])) < 0. {
+                        t.swap(0, 1);
+                    }
+                    t
+                })
+                .to_vec();
+            crate::Mesh {
+                points,
+                tets,
+                surface: vec![[0, 1, 2], [0, 1, 3]],
+            }
+        };
+        let quality = |state: &super::Tets<Floor>| {
+            (0..state.tets.len())
+                .filter(|&t| state.alive[t])
+                .map(|t| super::mmg(state.tet_points(state.tets[t], None)))
+                .fold(1., f64::min)
+        };
+
+        let flat = fan(0.);
+        let mut state = super::Tets::new(&flat, &Floor, 0., [false; 3]);
+        let before = quality(&state);
+        assert!(state.swap_wall_edge(0, 1, 1e-6));
+        assert!(quality(&state) > before);
+        assert_eq!(state.live_tetrahedra, 2);
+        assert!(state.faces.contains_key(&super::sorted([0, 2, 3])));
+        assert!(state.faces.contains_key(&super::sorted([1, 2, 3])));
+        assert!(!state.faces.contains_key(&super::sorted([0, 1, 2])));
+        assert!(state.edge_faces(0, 1).is_empty());
+
+        // Along a reentrant edge the new facets would pass outside the solid.
+        let reentrant = fan(0.3);
+        let mut state = super::Tets::new(&reentrant, &Floor, 0., [false; 3]);
+        assert!(!state.swap_wall_edge(0, 1, 1.));
+        assert_eq!(state.edge_faces(0, 1).len(), 2);
     }
 
     #[test]
