@@ -1,22 +1,28 @@
 # Working on Meshers
 
-Meshers generates and adapts meshes for finite element analysis. The primary workload is Microgen's implicit solids, including periodic TPMS and graded fields. Judge changes by the cost of resolving a physical problem to a stated accuracy.
+Meshers is almost entirely vibe coded. Use reproducible benchmarks to guide agents as they extend support for implicit geometries (FRep), especially Microgen’s periodic and graded solids. For finite element analysis (FEA), compare the cost of reaching a stated physical accuracy. For CAD and new cell types, distinguish released support from prototypes.
 
-## What to measure
+## Measure algorithm changes
 
-- Check that the returned mesh represents the intended solid. Measure boundary distance in both directions, signed volume by component or material, retained features, and the boundary labels used by the solver. Include mapped caps and periodic seams. Record which checks are sampled.
-- Check cell orientation, conformity and shape distributions on the final coordinates. For higher-order cells, inspect the curved mapping. Count elements, nodes and free degrees of freedom.
-- For an FEA claim, state the load, material, boundary conditions, element formulation, reference solution and error tolerance. Compare assembly and solve costs as well as generation time and peak memory. Keep failed and over-budget cases in the results.
-- Compare the same physical geometry on both routes. Identify the exact Microgen backend, seed, repair steps and solver settings. A fixed-count comparison answers a different question from a fixed-error comparison. Label each result accordingly.
+Compare pinned base and candidate builds on the same geometry, hardware and settings. Preserve the input, seed, backend, repair steps and replay command. Choose a suite from the [benchmark index](docs/site/benchmark-index.md) and check its [open targets](docs/site/benchmark-gaps.md). Reuse the release fixtures, add a regression case for the feature or defect, and check a case outside the tuning set before changing defaults.
 
-Run the release fixtures and comparative FEA studies on every available, compatible configuration. Record any pending or unsupported runs alongside the completed ones. Capture CPU model, logical CPU count, physical RAM, OS and architecture when a benchmark runs. Publish dated configuration snapshots and numerical settings. Keep hostnames, local account paths and queue identifiers private. Record a new snapshot after a configuration change.
+| Metric | What to record |
+| --- | --- |
+| Computation | Generation, assembly and solve time separately, plus peak memory. |
+| Boundary and volume accuracy | Sample distances in both directions, including caps and seams. Check signed volume by component or material and probe thin features. |
+| Mesh quality and size | Orientation, conformity and shape distributions on final coordinates. Check curved mappings. Count elements, nodes and free degrees of freedom. |
+| FEA convergence | Error against a reference under refinement. State the load, material, boundary conditions, element formulation and tolerance. |
 
-## How to make changes
+Verify node ordering, labels, boundary conditions and periodic pairs in the exported mesh the solver reads. Run release fixtures and comparative FEA studies on available compatible configurations. Keep failures, fallbacks and pending runs visible. Record dated snapshots of CPU model, logical core count, physical RAM, OS and architecture and keep machine names private.
 
-Start with a reproducible discrepancy or profile on a pinned build. Preserve the failing input, baseline and replay command. Check the proposed change against an independent measurement and a case outside the tuning set before changing defaults. Record regressions in any of the competing goals. Reuse existing fixtures, solver studies and release benchmarks.
+## Checks and pull requests
 
-Preserve node ordering, material and face labels, boundary conditions and periodic pairs through adaptation and export. Test what the downstream solver reads. Keep diagnostics consistent with the returned mesh after fitting or repair.
+Every PR that adds a feature or changes how an algorithm works must update the documentation in the same PR. Update the relevant user guide or [features and algorithms](docs/site/course-fields.md) pages, including any examples, figures and limits affected by the change.
 
-CAD/BRep, triangle and quad surfaces, tetrahedra and hex cells are part of the intended scope. Identify which input and element combinations work in the installed build and which are research prototypes. For printing or visualization, state the separate acceptance criteria.
+Teach an algorithm with a worked input: let readers predict a step, see how the geometry changes, and follow a link to the implementation. Keep instructions short.
 
-Use the development commands in [README.md](README.md) and the [performance protocol](docs/site/performance.md). Send heavy builds, sweeps and solver comparisons through the shared compute queue described in Kevin's machine instructions.
+When a PR changes a priority, milestone status or benchmark outcome on the [roadmap](docs/site/roadmap.md), update that entry and its review date in the same PR. Link the issue or PR for work in progress and the measured result when a milestone passes. At release, move delivered capabilities into the overview’s supported scope.
+
+Use the pinned formatter, linter, type checker and tests to guide edits. Run Ruff and ty for Python, rustfmt and Clippy for Rust, and the relevant regression tests. Follow the [development commands](README.md#develop) and [benchmark protocol](docs/site/performance.md). Queue heavy builds and studies on the shared compute queue.
+
+Keep PR descriptions to a purpose sentence and the evidence. An algorithm PR should add a capability or improve a measured result. Include a compact before/after table for the affected metrics, a replay command or results link, and regression results for existing features. Quantify any tradeoff so reviewers can decide whether it is worthwhile. For documentation-only changes, show the changed page or example.

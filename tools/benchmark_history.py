@@ -111,15 +111,19 @@ def timing_plot(data: dict) -> str:
             f'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 {55 + len(cases) * 58}" '
             'role="img"><title>Within-run generation times in seconds</title>'
         ),
-        '<rect width="100%" height="100%" fill="#0b202b"/>',
-        '<g font-family="sans-serif" font-size="13" fill="#eef5f7">',
+        (
+            "<style>:root{color:#24413b;--base:#ad633b;--head:#0b8072}"
+            "@media(prefers-color-scheme:dark){:root{color:#dcebe6;--base:#e5a679;--head:#76d6be}}"
+            "</style>"
+        ),
+        '<g font-family="system-ui,sans-serif" font-size="13" fill="currentColor">',
         '<text x="20" y="25">Median seconds · upper bar: base · lower bar: candidate</text>',
     ]
     scale = max((m[k]["seconds"] for _, m in cases for k in ("base", "head")), default=0)
     for index, (name, medians) in enumerate(cases):
         y = 55 + index * 58
         svg.append(f'<text x="20" y="{y + 13}">{html.escape(name)}</text>')
-        for offset, label, color in [(0, "base", "#8eafff"), (21, "head", "#52d5b8")]:
+        for offset, label, color in [(0, "base", "var(--base)"), (21, "head", "var(--head)")]:
             seconds = medians[label]["seconds"]
             width = 400 * seconds / scale if scale else 0
             svg.append(
@@ -209,13 +213,23 @@ def render(directory: Path) -> None:
         lines.append("</details>")
         path.with_suffix(".md").write_text("\n".join(lines).rstrip() + "\n", encoding="utf-8")
     records.sort(key=lambda r: r[1]["recorded_at"])
+    latest_plot = (
+        [f"![Latest within-run timing comparison](benchmarks/{records[-1][0]}.svg)", ""]
+        if records
+        else []
+    )
     index = [
+        "---",
+        "icon: lucide/history",
+        "---",
+        "",
         "# Benchmark history",
         "",
         "Open a record for its timing plot, quality gates and raw samples.",
         "",
         "Compare times within a run. A REFERENCE compares one source revision to itself.",
         "",
+        *latest_plot,
         "| Record | Suite | Result | Platform |",
         "| --- | --- | --- | --- |",
     ]

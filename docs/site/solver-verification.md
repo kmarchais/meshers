@@ -1,6 +1,13 @@
+---
+icon: lucide/chart-line
+---
+
 # Does the displacement converge?
 
-![Displacement and energy errors against maximum physical edge length for a cube, a cylindrical gyroid and a toroidal gyroid. Each series uses three refinements.](assets/solver-convergence.png)
+<div class="plot-pair">
+  <figure><img src="assets/playground/displacement.svg" alt="Log–log displacement error by specimen; cube order 2.01, cylinder 1.97 and torus 1.92."></figure>
+  <figure><img src="assets/playground/energy.svg" alt="Log–log elastic energy error; final orders range from 1.00 to 1.05."></figure>
+</div>
 
 | Specimen | Cells per axis | Final displacement order | Final energy order |
 | --- | --- | ---: | ---: |
@@ -17,8 +24,8 @@ Rates use maximum physical edge length on each discrete domain. For periodic loa
 ## Replay
 
 ```sh
-uv run --with scipy python demos/solver/convergence.py
-uv run --with fedoo==0.8.4 python demos/solver/fedoo_convergence.py
+uv run --with scipy demos/solver/convergence.py
+uv run --with fedoo==0.8.4 demos/solver/fedoo_convergence.py
 ```
 
 [Independent assembly results](https://github.com/kmarchais/meshers/blob/main/docs/solver-convergence-results.json) · [Fedoo results and environment](https://github.com/kmarchais/meshers/blob/main/docs/fedoo-convergence-results.json)

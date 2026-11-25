@@ -1,8 +1,14 @@
+---
+icon: lucide/gauge
+---
+
 # Performance and regression checks
+
+[Benchmark index](benchmark-index.md) · [Open targets](benchmark-gaps.md)
 
 Both Schwarz P meshes meet the 1% stiffness target. The native Tet4 route took less time on all five configurations. [Comparison protocol and raw runs](https://github.com/kmarchais/meshers/blob/main/demos/solver/release-wheel/schwarz-matched-cost-20261118/README.md)
 
-![Median time for three qualifying runs per route on each CPU and OS. Native Tet4 was faster than the repaired route on all five configurations for this Schwarz P specimen.](assets/schwarz-cost.svg)
+<figure class="guide-figure chart"><img src="assets/playground/matched-cost.svg" alt="Median time for three qualifying runs per route on each CPU and OS. Native Tet4 was faster than the repaired route on all five configurations for this Schwarz P specimen."></figure>
 
 Median of three runs per setting. Stiffness discrepancy was 0.992% for native Tet4 and 0.927–0.928% after Microgen repair.
 
@@ -14,7 +20,7 @@ On one Linux runner with matching Python and NumPy, discard one warm-up pair. Al
 | --- | --- |
 | Median time | +25% plus 20 ms |
 | Median peak memory | +15% plus 8 MiB |
-| MMG quality (min, max, mean, median, p05, p10, p90) | 1% decrease for each statistic. Each candidate repeat is also checked against the base median. |
+| Tetrahedron shape quality (min, max, mean, median, p05, p10, p90) | 1% decrease for each statistic. Each candidate repeat is also checked against the base median. |
 | Sampled wall error and mapped cap error | +5% plus 10⁻¹⁰ for each |
 | Volume | ±0.5% |
 | Nodes and tetrahedra | ±1% each |
@@ -50,9 +56,9 @@ Use `--suite release` for all fixtures. Archive with full `--base-ref` and `--he
 
 Python 3.11 CI reopens the Schwarz P VTKHDF export before solving.
 
-- **Geometry** — two-sided sampled wall/cap distance ≤ 0.002, volume within 1%, MMG quality ≥ 0.1. Check topology, periodic faces and material probes.
+- **Geometry** — two-sided sampled wall/cap distance ≤ 0.002, volume within 1%, tetrahedron shape quality ≥ 0.1. Check topology, periodic faces and material probes.
 - **Stiffness** — all six strain and six stress solves must pass. Worst relative strain-energy discrepancy ≤ 1% against the reference tensor.
 
 ```sh
-uv run --with fedoo==1.0.0b2 python demos/solver/schwarz_workflow.py native-candidate candidate-acceptance
+uv run --with fedoo==1.0.0b2 demos/solver/schwarz_workflow.py native-candidate candidate-acceptance
 ```

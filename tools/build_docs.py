@@ -14,8 +14,42 @@ else:
 ROOT = Path(__file__).resolve().parents[1]
 
 
+def build_playground() -> None:
+    """Build the browser mesher and self-hosted Three.js viewer."""
+    playground = ROOT / "docs/playground"
+    assets = ROOT / "docs/site/assets/playground"
+    assets.mkdir(parents=True, exist_ok=True)
+    run_command(
+        "cargo",
+        "rustc",
+        "--locked",
+        "--release",
+        "--target",
+        "wasm32-unknown-unknown",
+        "--target-dir",
+        "target",
+        "-p",
+        "meshers-playground",
+        "--",
+        "-C",
+        "link-arg=--max-memory=33554432",
+        cwd=ROOT,
+    )
+    shutil.copyfile(
+        ROOT / "target/wasm32-unknown-unknown/release/meshers_playground.wasm",
+        assets / "meshers.wasm",
+    )
+    run_command("node", "starter.mjs", cwd=playground)
+    run_command("node", "figures.mjs", cwd=playground)
+    run_command("node", "--test", "smoke.test.js", cwd=playground)
+    run_command("npm", "ci", "--no-audit", "--no-fund", cwd=playground)
+    run_command("npm", "run", "build", cwd=playground)
+    shutil.copyfile(playground / "node_modules/three/LICENSE", assets / "three-LICENSE.txt")
+
+
 def main() -> None:
     """Build both references and copy the generated Rust HTML into the site."""
+    build_playground()
     run_command(
         "cargo",
         "doc",

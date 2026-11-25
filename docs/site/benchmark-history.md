@@ -1,8 +1,14 @@
+---
+icon: lucide/history
+---
+
 # Benchmark history
 
 Open a record for its timing plot, quality gates and raw samples.
 
 Compare times within a run. A REFERENCE compares one source revision to itself.
+
+![Latest within-run timing comparison](benchmarks/v0.2.1.svg)
 
 | Record | Suite | Result | Platform |
 | --- | --- | --- | --- |

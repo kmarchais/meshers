@@ -1,0 +1,12 @@
+{
+  "name": "meshers-docs-playground",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "esbuild viewer.js --bundle --minify --format=esm --outfile=../site/assets/playground/viewer.js"
+  },
+  "devDependencies": {
+    "esbuild": "0.28.2",
+    "three": "0.187.0"
+  }
+}

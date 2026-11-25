@@ -1,4 +1,14 @@
+---
+icon: lucide/flask-conical
+---
+
 # Testing and coverage
+
+<ol class="mesh-flow">
+  <li><strong>Cell</strong>Check signed volume and shape.</li>
+  <li><strong>Boundary</strong>Check surface labels and periodic correspondence.</li>
+  <li><strong>Solve</strong>Measure a physical error against a reference.</li>
+</ol>
 
 | Layer | What to verify |
 | --- | --- |

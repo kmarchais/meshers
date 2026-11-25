@@ -2,17 +2,30 @@
 site_name = "Meshers"
 site_url = "https://kmarchais.github.io/meshers/"
 site_description = "CPU tetrahedral meshing of implicit solids and TPMS geometries"
-extra_css = ["assets/brand.css"]
+extra_css = ["assets/brand.css", "assets/explorer.css", "assets/guides.css"]
+extra_javascript = ["assets/shell-colors.js"]
 copyright = "Kevin Marchais · MIT license"
 docs_dir = "docs/site"
 site_dir = "site"
 nav = [
-  { "Start here" = [{ "Overview" = "index.md" }, { "Installation and first mesh" = "getting-started.md" }, { "Python examples" = "examples.md" }] },
+  { "Start here" = [{ "Overview" = "index.md" }, { "Installation and first mesh" = "getting-started.md" }, { "Python examples" = "examples.md" }, { "Roadmap" = "roadmap.md" }] },
+  { "Features and algorithms" = [
+    { "Fields and gradients" = "course-fields.md" },
+    { "Cut a background tetrahedron" = "course-cutting.md" },
+    { "Size and improve elements" = "course-adaptation.md" },
+    { "Constrain and pair boundaries" = "course-constraints.md" },
+    { "Fit curved elements" = "course-quadratic.md" },
+    { "Extract surface meshes" = "course-surfaces.md" },
+    { "Verify the FEA result" = "course-verification.md" },
+  ] },
   { "User guide" = [{ "Fields and grading" = "fields.md" }, { "Periodicity and quality" = "quality.md" }, { "Intersections and curved domains" = "intersections.md" }, { "Solver verification" = "solver-verification.md" }, { "Periodic homogenization" = "periodic-homogenization.md" }] },
-  { "Performance" = [{ "Regression checks" = "performance.md" }, { "Benchmark history" = "benchmark-history.md" }] },
-  { "API reference" = [{ "Python" = "api/python.md" }, { "Rust" = "api/rust.md" }] },
+  { "Benchmarks" = [{ "Benchmark index" = "benchmark-index.md" }, { "Open targets" = "benchmark-gaps.md" }, { "Regression checks" = "performance.md" }, { "Benchmark history" = "benchmark-history.md" }] },
+  { "API reference" = [{ "Python" = "api/python.md" }, { "Rust" = "api/rust.md" }, { "WebAssembly (explorer)" = "api/wasm.md" }] },
   { "Development" = [{ "Contributing" = "contributing.md" }, { "Testing and coverage" = "testing.md" }, { "Release preparation" = "release.md" }] },
 ]
+
+[project.extra]
+generator = false
 
 [project.theme]
 custom_dir = "docs/overrides"
@@ -20,7 +33,7 @@ language = "en"
 logo = "assets/mark.svg"
 favicon = "assets/mark.svg"
 font = false
-features = ["navigation.sections", "navigation.top", "content.code.copy"]
+features = ["navigation.top", "content.code.copy"]
 
 [[project.theme.palette]]
 media = "(prefers-color-scheme)"

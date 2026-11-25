@@ -1,6 +1,7 @@
 [workspace]
 resolver = "2"
-members = ["crates/meshers-core"]
+members = ["crates/meshers-core", "docs/playground"]
+default-members = ["crates/meshers-core"]
 exclude = ["crates/meshers-python"]
 
 [workspace.package]

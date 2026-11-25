@@ -1,4 +1,14 @@
+---
+icon: simple/rust
+---
+
 # Rust API
+
+<ol class="mesh-flow">
+  <li><strong>ScalarField</strong>Evaluate the implicit function</li>
+  <li><strong>Options</strong>Set the region and sampling grid</li>
+  <li><strong>Output</strong>Inspect the mesh and diagnostics</li>
+</ol>
 
 [Browse the Rust crate reference](../rust/meshers_core/index.html).
 

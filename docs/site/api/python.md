@@ -1,4 +1,14 @@
+---
+icon: simple/python
+---
+
 # Python API
+
+<ol class="mesh-flow">
+  <li><strong>Field</strong>Python callable or compiled expression</li>
+  <li><strong>generate</strong>Set bounds, cells and geometry options</li>
+  <li><strong>Mesh</strong>Read points, tetrahedra and surface arrays</li>
+</ol>
 
 The default wheel exposes volume meshing, field compilation and cancellation. `Field` is the callable type accepted by the mesher.
 

@@ -1,6 +1,24 @@
+---
+icon: lucide/layers
+---
+
 # Named surfaces and curved domains
 
-![Cut sphere with a teal spherical wall and a copper planar face. The triangles on each side share the rim.](assets/cut-sphere.png)
+<div class="guide-pair" markdown="block">
+
+<figure class="guide-figure" id="cut-layers">
+  <img src="assets/cut-sphere.svg" alt="Cut sphere with a triangulated wall and planar cap">
+  <fieldset class="mesh-fields"><legend>Visible boundary</legend>
+  <div class="mesh-segments">
+    <label><input type="radio" name="boundary" value="" checked><span>Both</span></label>
+    <label><input type="radio" name="boundary" value="wall"><span>Spherical wall</span></label>
+    <label><input type="radio" name="boundary" value="cap"><span>Planar cut</span></label>
+  </div>
+  </fieldset>
+  <figcaption>The triangles come from the two named surfaces of a 12-cell-per-axis mesh.</figcaption>
+</figure>
+
+<div markdown="block">
 
 Each field names a boundary and keeps its negative side. Here `cut` labels the copper face at `z = 0.25`.
 
@@ -8,17 +26,25 @@ Each field names a boundary and keeps its negative side. Here `cut` labels the c
 import meshers
 
 mesh = meshers.generate_intersection(
-    {"sphere": lambda x, y, z: x * x + y * y + z * z - 0.7**2, "cut": lambda x, y, z: z - 0.25},
-    bounds=(-0.8, 0.8, -0.8, 0.8, -0.8, 0.8),
-    cells=24,
-    optimize_passes=8,
-    geometry_tolerance=0.02,
+    {
+        "sphere": lambda x, y, z: x**2 + y**2 + z**2 - 0.7**2,
+        "cut": lambda x, y, z: z - 0.25,
+    },
+    bounds=(-0.8, 0.8) * 3,
+    cells=12,
+    optimize_passes=2,
+    geometry_tolerance=0.04,
 )
 cut_triangles = mesh.surface_for("cut")
 rim_edges = mesh.feature_edges
 ```
 
 VTKHDF preserves the named surfaces, per-vertex `constraint_masks`, feature edges, chart coordinates and periodic metadata.
+
+</div>
+</div>
+
+<script type="module" src="assets/guide-controls.js"></script>
 
 ## Map and pair the ends
 
