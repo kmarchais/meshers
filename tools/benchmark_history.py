@@ -13,15 +13,14 @@ from pathlib import Path
 
 from tools.performance_gate import (
     CASES,
-    FIXTURE_VERSION,
+    MAPPED_CAP_VERSION,
     MIN_MEASURED_PAIRS,
     QUALITY,
     RELEASE_CASES,
+    RESOURCE_LIMITS_BY_VERSION,
     SCHEMA_VERSION,
     case_regressions,
 )
-
-SUPPORTED_FIXTURE_VERSIONS = {2, 3, FIXTURE_VERSION}
 
 
 def validate(data: dict) -> None:
@@ -33,7 +32,7 @@ def validate(data: dict) -> None:
     if data.get("schema_version") != SCHEMA_VERSION or not data.get("complete"):
         msg = f"Expected a complete schema-{SCHEMA_VERSION} benchmark"
         raise ValueError(msg)
-    if data.get("fixture_version") not in SUPPORTED_FIXTURE_VERSIONS:
+    if data.get("fixture_version") not in RESOURCE_LIMITS_BY_VERSION:
         msg = "Unsupported benchmark fixture version"
         raise ValueError(msg)
     expected = {"pr": CASES, "release": RELEASE_CASES}.get(data.get("suite"), ())
@@ -54,11 +53,22 @@ def validate(data: dict) -> None:
         msg = "Invalid benchmark worker SHA-256"
         raise ValueError(msg)
     for name, case in data["cases"].items():
-        needs_cap = name == "mapped_intersection" and data["fixture_version"] == FIXTURE_VERSION
-        validate_case(case, data["measured_pairs"], needs_cap=needs_cap)
+        needs_cap = name == "mapped_intersection" and data["fixture_version"] >= MAPPED_CAP_VERSION
+        validate_case(
+            case,
+            data["measured_pairs"],
+            needs_cap=needs_cap,
+            fixture_version=data["fixture_version"],
+        )
 
 
-def validate_case(case: dict, measured_pairs: int, *, needs_cap: bool) -> None:
+def validate_case(
+    case: dict,
+    measured_pairs: int,
+    *,
+    needs_cap: bool,
+    fixture_version: int,
+) -> None:
     """Check raw samples, summary medians and the recorded regression verdict.
 
     Raises:
@@ -95,9 +105,9 @@ def validate_case(case: dict, measured_pairs: int, *, needs_cap: bool) -> None:
             msg = "Summary does not match the raw measurements"
             raise ValueError(msg)
     if case["failures"] != case_regressions(
-        case["medians"]["base"],
-        case["medians"]["head"],
-        case["runs"]["head"],
+        case["medians"],
+        case["runs"],
+        fixture_version=fixture_version,
     ):
         msg = "Regression verdict does not match the measurements"
         raise ValueError(msg)

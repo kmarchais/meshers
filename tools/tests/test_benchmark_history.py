@@ -114,9 +114,9 @@ def test_preserves_real_regression_and_failed_worker(tmp_path):
     for row in [*case["runs"]["head"], case["medians"]["head"]]:
         row["quality_min"] = 0.4
     case["failures"] = gate.case_regressions(
-        case["medians"]["base"],
-        case["medians"]["head"],
-        case["runs"]["head"],
+        case["medians"],
+        case["runs"],
+        fixture_version=data["fixture_version"],
     )
     data["cases"]["adaptive_gyroid"] = {
         "runs": {"base": [], "head": []},
@@ -132,9 +132,10 @@ def test_preserves_real_regression_and_failed_worker(tmp_path):
     assert "sample failed" in page
 
 
-def test_mapped_cap_measurements_are_required_in_new_fixture_records():
+@pytest.mark.parametrize("version", [4, gate.FIXTURE_VERSION])
+def test_mapped_cap_measurements_are_required_in_new_fixture_records(version):
     data = measurement()
-    data["fixture_version"] = gate.FIXTURE_VERSION
+    data["fixture_version"] = version
     with pytest.raises(ValueError, match="Invalid numeric measurement"):
         history.validate(data)
     case = data["cases"]["mapped_intersection"]
@@ -152,3 +153,26 @@ def test_worker_fingerprint_on_split_benchmark_records():
     data["worker_sha256"] = "b" * 40
     with pytest.raises(ValueError, match="Invalid benchmark worker SHA-256"):
         history.validate(data)
+
+
+def test_archive_replays_resource_limits_from_the_recorded_version():
+    data = measurement()
+    data["fixture_version"] = 4
+    mapped = data["cases"]["mapped_intersection"]
+    for label, rows in mapped["runs"].items():
+        for row in [*rows, mapped["medians"][label]]:
+            row["mapped_cap_error"] = 0.001
+    case = data["cases"]["schwarz_p"]
+    for row in [*case["runs"]["head"], case["medians"]["head"]]:
+        row.update(seconds=1.20, peak_rss_bytes=8_000_000)
+    history.validate(data)
+    data["fixture_version"] = gate.FIXTURE_VERSION
+    with pytest.raises(ValueError, match="Regression verdict"):
+        history.validate(data)
+    case["failures"] = gate.case_regressions(
+        case["medians"],
+        case["runs"],
+        fixture_version=data["fixture_version"],
+    )
+    assert [failure.split()[0] for failure in case["failures"]] == ["seconds", "peak_rss_bytes"]
+    history.validate(data)
