@@ -76,7 +76,7 @@ jobs:
           version = tomllib.loads((root / 'crates/meshers-python/pyproject.toml').read_text())['project']['version']
           files = sorted((root / 'dist').iterdir())
           wheels = [p for p in files if p.suffix == '.whl']
-          assert len(files) == 5 and len(wheels) == 4, 'Expected four wheels and one source archive'
+          assert len(files) == 6 and len(wheels) == 5, 'Expected five wheels and one source archive'
           assert (root / 'dist' / f'meshers-{version}.tar.gz').is_file()
           for path in wheels:
               with zipfile.ZipFile(path) as archive:
