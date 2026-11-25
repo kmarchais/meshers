@@ -61,6 +61,10 @@ jobs:
       - run: uv pip install --system maturin
       - run: maturin build --locked --release --interpreter python --out dist
       - run: 'uv pip install --system --only-binary :all: dist/*.whl "meshers[test]"'
+      - name: Verify periodic Tet4 and Tet10 cap connectivity
+        if: runner.os == 'Windows' && matrix.python == '3.11'
+        working-directory: .
+        run: python -m pytest tools/tests/test_periodic_trace.py -q
       - run: python -m pytest tests -q
       - name: Check Windows benchmark process and memory handling
         if: runner.os == 'Windows' && matrix.python == '3.11'

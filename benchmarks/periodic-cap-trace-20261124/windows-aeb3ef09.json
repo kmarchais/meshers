@@ -1,0 +1,288 @@
+{
+  "recorded_at": "2026-11-24T22:39:23.024894+00:00",
+  "cpu_model": "Intel(R) Core(TM) Ultra 9 285K",
+  "cpu_count": 24,
+  "ram_bytes": 68062457856,
+  "machine": "AMD64",
+  "platform": "Windows-11-10.0.26200-SP0",
+  "python": "3.12.15",
+  "numpy": "2.5.5",
+  "meshers": "0.2.1",
+  "native_sha256": "bf66cc24811447cef01568d23cfb079b5646b795703565b568fdeb98987ea7d4",
+  "baseline_worker_sha256_lf": "4a7f155deb7bb8889b4d85079636169cd110eca03c39afddb2162fbe76921fb2",
+  "worker_sha256_lf": "692f08509d114acf00abf3b8c3752a86af840fb706e57635a5207ed811c84464",
+  "cases": {
+    "compiled_gyroid": {
+      "nodes": 17849,
+      "tetrahedra": 70403,
+      "periodic_pairs": [
+        334,
+        332,
+        334
+      ],
+      "generation_seconds": 1.0012615000014193,
+      "three_axis_check_ms": [
+        7.1693999925628304,
+        6.765300000552088,
+        9.180799999739975,
+        7.315700000617653,
+        5.592899979092181
+      ],
+      "controls": {
+        "original": {
+          "before": "pass",
+          "after": "pass",
+          "records_identical": true
+        },
+        "drop_pair": {
+          "before": "pass",
+          "after": "Missing periodic cap pair on axis 0"
+        },
+        "flip_volume_and_surface_diagonal": {
+          "before": "pass",
+          "after": "Opposite cap traces differ on axis 0"
+        }
+      }
+    },
+    "callback_gyroid": {
+      "nodes": 17849,
+      "tetrahedra": 70403,
+      "periodic_pairs": [
+        334,
+        332,
+        334
+      ],
+      "generation_seconds": 3.586339399975259,
+      "three_axis_check_ms": [
+        5.8102000039070845,
+        5.589400010649115,
+        5.309899977874011,
+        8.303700014948845,
+        8.160199970006943
+      ],
+      "controls": {
+        "original": {
+          "before": "pass",
+          "after": "pass",
+          "records_identical": true
+        }
+      }
+    },
+    "graded": {
+      "nodes": 17493,
+      "tetrahedra": 65506,
+      "periodic_pairs": [
+        0,
+        0,
+        0
+      ],
+      "generation_seconds": 1.7045616999967024,
+      "three_axis_check_ms": [],
+      "controls": {
+        "original": {
+          "before": "pass",
+          "after": "pass",
+          "records_identical": true
+        }
+      }
+    },
+    "mapped_intersection": {
+      "nodes": 12079,
+      "tetrahedra": 63648,
+      "periodic_pairs": [
+        0,
+        0,
+        0
+      ],
+      "generation_seconds": 0.6005219999933615,
+      "three_axis_check_ms": [],
+      "controls": {
+        "original": {
+          "before": "pass",
+          "after": "pass",
+          "records_identical": true
+        }
+      }
+    },
+    "schwarz_p": {
+      "nodes": 17857,
+      "tetrahedra": 90792,
+      "periodic_pairs": [
+        141,
+        141,
+        141
+      ],
+      "generation_seconds": 0.7442601000075229,
+      "three_axis_check_ms": [
+        6.275199993979186,
+        6.708200031425804,
+        6.374299991875887,
+        6.199900002684444,
+        7.549499976448715
+      ],
+      "controls": {
+        "original": {
+          "before": "pass",
+          "after": "pass",
+          "records_identical": true
+        }
+      }
+    },
+    "spinodoid": {
+      "nodes": 22163,
+      "tetrahedra": 107079,
+      "periodic_pairs": [
+        450,
+        441,
+        473
+      ],
+      "generation_seconds": 1.3079781999695115,
+      "three_axis_check_ms": [
+        10.128900001291186,
+        9.933400026056916,
+        11.1075000022538,
+        9.447699994780123,
+        10.48540003830567
+      ],
+      "controls": {
+        "original": {
+          "before": "pass",
+          "after": "pass",
+          "records_identical": true
+        }
+      }
+    },
+    "smooth_lattice": {
+      "nodes": 11012,
+      "tetrahedra": 43392,
+      "periodic_pairs": [
+        400,
+        400,
+        400
+      ],
+      "generation_seconds": 0.6873010999988765,
+      "three_axis_check_ms": [
+        3.972700040321797,
+        12.617100030183792,
+        5.726500006858259,
+        4.242099996190518,
+        4.123000020626932
+      ],
+      "controls": {
+        "original": {
+          "before": "pass",
+          "after": "pass",
+          "records_identical": true
+        }
+      }
+    },
+    "adaptive_gyroid": {
+      "nodes": 8527,
+      "tetrahedra": 30716,
+      "periodic_pairs": [
+        248,
+        237,
+        242
+      ],
+      "generation_seconds": 2.1016973000369035,
+      "three_axis_check_ms": [
+        2.4055999820120633,
+        2.3802999639883637,
+        2.391899994108826,
+        2.4646000238135457,
+        2.489499980583787
+      ],
+      "controls": {
+        "original": {
+          "before": "pass",
+          "after": "pass",
+          "records_identical": true
+        }
+      }
+    },
+    "adaptive_spinodoid": {
+      "nodes": 7079,
+      "tetrahedra": 28875,
+      "periodic_pairs": [
+        246,
+        248,
+        260
+      ],
+      "generation_seconds": 2.4265976999886334,
+      "three_axis_check_ms": [
+        3.2808000105433166,
+        4.030500014778227,
+        3.2247999915853143,
+        3.2506000134162605,
+        3.4020000020973384
+      ],
+      "controls": {
+        "original": {
+          "before": "pass",
+          "after": "pass",
+          "records_identical": true
+        }
+      }
+    },
+    "adaptive_lattice": {
+      "nodes": 5818,
+      "tetrahedra": 20967,
+      "periodic_pairs": [
+        293,
+        267,
+        275
+      ],
+      "generation_seconds": 1.1587454000255093,
+      "three_axis_check_ms": [
+        2.7364999987185,
+        2.6579999830573797,
+        2.628499991260469,
+        2.743199991527945,
+        2.975400013383478
+      ],
+      "controls": {
+        "original": {
+          "before": "pass",
+          "after": "pass",
+          "records_identical": true
+        }
+      }
+    },
+    "gyroid_tet10": {
+      "nodes": 116856,
+      "tetrahedra": 70403,
+      "periodic_pairs": [
+        1120,
+        1114,
+        1120
+      ],
+      "generation_seconds": 1.4537050999933854,
+      "three_axis_check_ms": [
+        9.591500042006373,
+        10.60969999525696,
+        10.442999948281795,
+        9.772900026291609,
+        9.432199993170798
+      ],
+      "controls": {
+        "original": {
+          "before": "pass",
+          "after": "pass",
+          "records_identical": true
+        },
+        "drop_pair": {
+          "before": "pass",
+          "after": "Missing periodic cap pair on axis 0"
+        },
+        "swap_surface_midpoints": {
+          "before": "pass",
+          "after": "Tagged cap differs from volume trace on axis 0, side 1"
+        }
+      }
+    }
+  },
+  "mapped_rotation": {
+    "pairs": 35,
+    "radians": 0.3333333333333333
+  }
+}
