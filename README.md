@@ -37,6 +37,8 @@ uv run --group docs python tools/build_docs.py
 
 [Contributing](docs/site/contributing.md) · [Release checks](docs/site/release.md)
 
+The **Microgen F-rep coverage** workflow builds a release wheel and checks four meshes after VTU export. To run the 69-case inventory, select **Run workflow** and choose **inventory**. The artifact records each case's geometry checks, native rejection, or audit error.
+
 ## License
 
 Meshers is [MIT licensed](LICENSE). Python distributions include the bundled dependencies’ license notices.
