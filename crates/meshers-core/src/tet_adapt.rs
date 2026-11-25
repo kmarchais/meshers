@@ -1023,12 +1023,18 @@ impl<'g, G: Geometry> Tets<'g, G> {
         if self.folds_into_plane(u, v) || self.flattens_onto_plane(u, v) {
             return false;
         }
+        // Reject an overlong replacement edge before building the volume and surface links.
+        let au = self.adjacent(u);
+        for &w in &au {
+            if w != v && self.length(v, w) > SPLIT * 0.5 * (size[v] + size[w]) {
+                return false;
+            }
+        }
         let shell = self.shell(u, v);
         if shell.is_empty() {
             return false;
         }
         // Link condition, vertex level: common neighbours are exactly the shell ring.
-        let au = self.adjacent(u);
         let av = self.adjacent(v);
         let mut ring: Vec<usize> = shell
             .iter()
@@ -1090,11 +1096,6 @@ impl<'g, G: Geometry> Tets<'g, G> {
             opposite.sort_unstable();
             opposite.dedup();
             if common != opposite {
-                return false;
-            }
-        }
-        for &w in &au {
-            if w != v && self.length(v, w) > SPLIT * 0.5 * (size[v] + size[w]) {
                 return false;
             }
         }

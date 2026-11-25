@@ -1,0 +1,183 @@
+{
+  "hardware": {
+    "cpu_model": "Intel(R) Core(TM) Ultra 9 285K",
+    "cpu_count": 24,
+    "ram_bytes": 68062457856,
+    "machine": "AMD64",
+    "platform": "Windows-11-10.0.26200-SP0"
+  },
+  "sources": {
+    "base": {
+      "python": "3.12.15",
+      "numpy": "2.5.5",
+      "meshers": "0.2.1",
+      "native_sha256": "aef631e14f88b8a0373ea403d01d4532070793d2862271e412b6f1b15f7eccb4"
+    },
+    "candidate": {
+      "python": "3.12.15",
+      "numpy": "2.5.5",
+      "meshers": "0.2.1",
+      "native_sha256": "f9e3ffde1017c37930e8e1e92159abe5d95d2b4c9c79edc81dbdb8db9bc4abc3"
+    }
+  },
+  "references": {
+    "adaptive_spinodoid": {
+      "validation": {
+        "tetrahedra": 28875,
+        "nodes": 7079,
+        "volume": 0.5824008617115499,
+        "quality_min": 0.3859592371413767,
+        "quality_p05": 0.5610130013947943,
+        "quality_p10": 0.596731787803779,
+        "quality_median": 0.7411007558594915,
+        "quality_mean": 0.7415606054531468,
+        "quality_p90": 0.8872964806838565,
+        "quality_max": 0.998091610898019,
+        "surface_error": 0.001220597455115126
+      },
+      "hashes": {
+        "points": "3d52d41a9e83009f460229e36768a76ee6a050fa05a359893ab4e87378757426",
+        "tetrahedra": "edc362451676587d125ca18026c6cc0ebd897cb4d90ee2bcdc2f3ddd3d299014",
+        "surface": "363a7709b2fde6a93db78c585656cc5496b0df7074fc622d0ed06be960b93a2f",
+        "boundary_tags": "df57a1d150a7892fc6b05e9af7838b0d645a3880b6c69d8346394a3fb274b9bf",
+        "pairs_0": "dd8446ba5f9a11926988aa54c1e301715436125d9dc056d89896e3c669c62f5a",
+        "pairs_1": "00e298bd84b86dc73d9b1199836a6e5888abda38a64fdbb8ac2d0039b1c34cfc",
+        "pairs_2": "9b1be45bb4f4c97a161c0cdc52f661d2566e5829f068c8c8f2f98ae48787289d"
+      }
+    },
+    "spinodoid": {
+      "validation": {
+        "tetrahedra": 107079,
+        "nodes": 22163,
+        "volume": 0.5823979950791279,
+        "quality_min": 0.22674606050178003,
+        "quality_p05": 0.6178447506517548,
+        "quality_p10": 0.6979249042599418,
+        "quality_median": 0.9295160030897787,
+        "quality_mean": 0.8726281304462845,
+        "quality_p90": 0.9384547659169639,
+        "quality_max": 0.9982123382315943,
+        "surface_error": 0.0023333863122588045
+      },
+      "hashes": {
+        "points": "21f644ed95e9ef21f6b8261f1c26e54f4ab6e7ed708470ffd8c8092b820298c6",
+        "tetrahedra": "d8ecb34ff92bf2b32cd4668be6007e00333d0d7d9dc70c382f4bd08a3479bfcb",
+        "surface": "51077f265512aea4684bad8ff77e5550d4f528ec817ef6cacc611c4aa9fae212",
+        "boundary_tags": "14c77e9211e12acfd50dcbe0ded254fbcdf3188faa0f3a7779934ee94b6e296e",
+        "pairs_0": "8249196abba778c9dc24d643e5cffb975936c81ad422b81fb7d37a39b22f7476",
+        "pairs_1": "0abb27bc0c069bf95370fc3ce8c7d51e49579e540512b8c435ca811ffaef94a2",
+        "pairs_2": "92df584cd1976c44c1a68292730c1b28d9937be1093278ff41b232947e4ed47d"
+      }
+    },
+    "adaptive_lattice": {
+      "validation": {
+        "tetrahedra": 20967,
+        "nodes": 5818,
+        "volume": 0.1975965421816504,
+        "quality_min": 0.4431893224724038,
+        "quality_p05": 0.5610452111974904,
+        "quality_p10": 0.5925358992177251,
+        "quality_median": 0.7309112414944805,
+        "quality_mean": 0.7329239751063243,
+        "quality_p90": 0.8792023520837321,
+        "quality_max": 0.9964535984786047,
+        "surface_error": 0.0014836255797734952
+      },
+      "hashes": {
+        "points": "2ef816f420bebdb55ac8e25abf1c1dc37d369f2b1d91b8623c8e0422f347ad24",
+        "tetrahedra": "8434cac4cbde1eff32bfe95a22b23de3ec594a2ecd5c97a6aefab50bdf970664",
+        "surface": "cbe57585bb777788ed424df851630db89abacc8560780e56efbccf8f711b9a48",
+        "boundary_tags": "1bd085b178654cb32bd788ecb7069d2d04d9c45cb8d76de132c1932d502d4082",
+        "pairs_0": "54ab3852a26a62505616f48ac6350a2c53c11eb0bcca262cfe9894ee347f0e26",
+        "pairs_1": "c7f0bdbdf4ec3002488da26b5c729e519489fb396c9817e34605aba7e8472c71",
+        "pairs_2": "0c74d78ad78260b1eb7cf27623ba5f30216a826a6d98be162048043d48637669"
+      }
+    }
+  },
+  "date": "2026-11-25",
+  "logical_cpu": 10,
+  "rustc": "rustc 1.99.1 (58cf8f9c3 2026-10-13)",
+  "maturin": "1.15.0",
+  "base": "5ed0ae95223eddede731bfcee8901d7d7d75ae72",
+  "candidate": "2ac044a1988ede1f0f455969c8b2cf235220bf6b",
+  "measured_pairs": {
+    "adaptive_lattice": {
+      "wall_s": {
+        "base": 0.9251724000205286,
+        "candidate": 0.8497676000115462,
+        "point": 0.929599562767305,
+        "lo": 0.8999922820244887,
+        "hi": 0.9435732899882701,
+        "pairs": 13
+      },
+      "cpu_s": {
+        "base": 0.90625,
+        "candidate": 0.84375,
+        "point": 0.9310344827586207,
+        "lo": 0.9152542372881356,
+        "hi": 0.9473684210526315,
+        "pairs": 13
+      },
+      "peak_bytes": {
+        "base": 61689856,
+        "candidate": 61648896,
+        "point": 0.9986056702742182,
+        "lo": 0.988619613571476,
+        "hi": 1.0085917269769604,
+        "pairs": 13
+      }
+    },
+    "adaptive_spinodoid": {
+      "wall_s": {
+        "base": 1.7639551000320353,
+        "candidate": 1.6832677000202239,
+        "point": 0.9375624919942926,
+        "lo": 0.9256747954316985,
+        "hi": 0.956432791279453,
+        "pairs": 13
+      },
+      "cpu_s": {
+        "base": 1.734375,
+        "candidate": 1.609375,
+        "point": 0.9304347826086956,
+        "lo": 0.9090909090909091,
+        "hi": 0.9469026548672567,
+        "pairs": 13
+      },
+      "peak_bytes": {
+        "base": 85262336,
+        "candidate": 85299200,
+        "point": 0.9992791234140715,
+        "lo": 0.9892863321799308,
+        "hi": 1.0092719146482123,
+        "pairs": 13
+      }
+    },
+    "spinodoid": {
+      "wall_s": {
+        "base": 0.9100915999733843,
+        "candidate": 0.9131965999840759,
+        "point": 1.01047313041114,
+        "lo": 0.9903001746057484,
+        "hi": 1.0230922686778081,
+        "pairs": 13
+      },
+      "cpu_s": {
+        "base": 0.890625,
+        "candidate": 0.90625,
+        "point": 1.0169491525423728,
+        "lo": 0.9997035408547078,
+        "hi": 1.0357142857142858,
+        "pairs": 13
+      },
+      "peak_bytes": {
+        "base": 66121728,
+        "candidate": 66424832,
+        "point": 1.0020983768437943,
+        "lo": 0.9920773930753564,
+        "hi": 1.0121193606122323,
+        "pairs": 13
+      }
+    }
+  }
+}
