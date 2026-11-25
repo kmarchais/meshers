@@ -36,8 +36,8 @@
       "reverted_snap_vertices": 0
     },
     "missed_limits": [],
-    "seconds": 0.9356502090813592,
-    "field_points": 11875562
+    "seconds": 0.9107431670418009,
+    "field_points": 11883350
   },
   {
     "case": "sphere",
@@ -76,7 +76,7 @@
       "reverted_snap_vertices": 0
     },
     "missed_limits": [],
-    "seconds": 0.9761344159487635,
+    "seconds": 0.9562947499798611,
     "field_points": 1030635
   },
   {
@@ -116,8 +116,8 @@
       "reverted_snap_vertices": 0
     },
     "missed_limits": [],
-    "seconds": 1.2901922500459477,
-    "field_points": 12650501
+    "seconds": 1.0175760419806466,
+    "field_points": 12660053
   },
   {
     "case": "sphere-corner",
@@ -156,7 +156,7 @@
       "reverted_snap_vertices": 0
     },
     "missed_limits": [],
-    "seconds": 1.2872387079987675,
+    "seconds": 1.263544625020586,
     "field_points": 1147796
   },
   {
@@ -196,8 +196,8 @@
       "reverted_snap_vertices": 0
     },
     "missed_limits": [],
-    "seconds": 1.6458642500219867,
-    "field_points": 21435288
+    "seconds": 1.5742863749619573,
+    "field_points": 21449340
   },
   {
     "case": "sphere-tangent-face",
@@ -236,7 +236,7 @@
       "reverted_snap_vertices": 0
     },
     "missed_limits": [],
-    "seconds": 1.6616836671018973,
+    "seconds": 1.5869779589120299,
     "field_points": 1511911
   },
   {
@@ -244,42 +244,40 @@
     "cells": 16,
     "adapt": false,
     "tolerance": 0.02,
-    "tetrahedra": 10777,
-    "wall_facets": 3748,
+    "tetrahedra": 10794,
+    "wall_facets": 3762,
     "inverted": 0,
     "quality": {
       "minimum": 0.2162294373163386,
-      "first_percentile": 0.41421990629021477,
-      "median": 0.8164323640696706
+      "first_percentile": 0.4036002366424774,
+      "median": 0.8158743721048738
     },
     "dihedral_degrees": [
       13.697092302462229,
       158.16584325276114
     ],
-    "mesh_to_wall": 0.01208593607925136,
-    "mesh_to_wall_spread": 2.015815683097341,
-    "wall_to_mesh": 0.021659816636890393,
-    "relative_volume_error": 0.0002333638183722453,
+    "mesh_to_wall": 0.012086274123993839,
+    "mesh_to_wall_spread": 2.023968862892581,
+    "wall_to_mesh": 0.017385918960460534,
+    "relative_volume_error": 6.478218501748678e-05,
     "unmatched_cap_nodes": 0,
     "inexact_cap_nodes": 0,
     "cap_node_offset": 0.0,
     "mesher": {
       "minimum_mmg_quality": 0.21622943731633898,
-      "sampled_surface_error": 0.012085936101898141,
-      "sampled_coverage_error": 0.029611677818979606,
+      "sampled_surface_error": 0.012086274146606775,
+      "sampled_coverage_error": 0.016983903799059744,
       "adaptation_abandoned": false,
-      "balanced_wall_vertices": 1988,
+      "balanced_wall_vertices": 1995,
       "improved_elements": 0,
       "defeaturing_moves": 0,
       "refined_lattice_edges": 15,
       "removed_bridging_elements": 0,
       "reverted_snap_vertices": 14
     },
-    "missed_limits": [
-      "wall_to_mesh"
-    ],
-    "seconds": 7.871396874892525,
-    "field_points": 18057099
+    "missed_limits": [],
+    "seconds": 7.896552832913585,
+    "field_points": 18368172
   },
   {
     "case": "spheres-random",
@@ -320,7 +318,7 @@
     "missed_limits": [
       "wall_to_mesh"
     ],
-    "seconds": 9.339916541008279,
+    "seconds": 9.492051749955863,
     "field_points": 4101585
   },
   {
@@ -328,74 +326,72 @@
     "cells": 16,
     "adapt": false,
     "tolerance": 0.02,
-    "tetrahedra": 45440,
-    "wall_facets": 3740,
+    "tetrahedra": 45473,
+    "wall_facets": 3766,
     "inverted": 0,
     "quality": {
-      "minimum": 0.32152361958443343,
-      "first_percentile": 0.4960088055670437,
+      "minimum": 0.32125940024572686,
+      "first_percentile": 0.49296340990455567,
       "median": 0.9295160030897806
     },
     "dihedral_degrees": [
-      16.332539851303267,
-      149.2030766202652
+      16.317298960765438,
+      149.3718897195869
     ],
-    "mesh_to_wall": 0.014051226050818811,
-    "mesh_to_wall_spread": 2.1245293056774335,
-    "wall_to_mesh": 0.02384796212239103,
-    "relative_volume_error": -8.04643632711377e-05,
+    "mesh_to_wall": 0.014331893562699564,
+    "mesh_to_wall_spread": 2.1452939708614895,
+    "wall_to_mesh": 0.01992356835844581,
+    "relative_volume_error": -3.398198403337105e-06,
     "unmatched_cap_nodes": 0,
     "inexact_cap_nodes": 0,
     "cap_node_offset": 0.0,
     "mesher": {
-      "minimum_mmg_quality": 0.3215236195844334,
-      "sampled_surface_error": 0.01405122606320625,
-      "sampled_coverage_error": 0.032618720097895036,
+      "minimum_mmg_quality": 0.32125940024572697,
+      "sampled_surface_error": 0.014331893575220044,
+      "sampled_coverage_error": 0.013108539856880867,
       "adaptation_abandoned": false,
-      "balanced_wall_vertices": 1986,
+      "balanced_wall_vertices": 2000,
       "improved_elements": 12,
       "defeaturing_moves": 0,
       "refined_lattice_edges": 15,
       "removed_bridging_elements": 0,
       "reverted_snap_vertices": 12
     },
-    "missed_limits": [
-      "wall_to_mesh"
-    ],
-    "seconds": 10.734191666007973,
-    "field_points": 25101322
+    "missed_limits": [],
+    "seconds": 10.72463150008116,
+    "field_points": 25494845
   },
   {
     "case": "spheres-random-matrix",
     "cells": 16,
     "adapt": true,
     "tolerance": 0.02,
-    "tetrahedra": 8842,
+    "tetrahedra": 8841,
     "wall_facets": 1164,
     "inverted": 0,
     "quality": {
-      "minimum": 0.14374333943785042,
-      "first_percentile": 0.5023762495234916,
-      "median": 0.7617798965911263
+      "minimum": 0.40592502190958396,
+      "first_percentile": 0.5051174152952469,
+      "median": 0.7593233646069172
     },
     "dihedral_degrees": [
-      11.132895005257645,
-      160.43343963185677
+      19.91083879924008,
+      143.69512978515155
     ],
-    "mesh_to_wall": 0.011329333232821145,
-    "mesh_to_wall_spread": 2.7514318331538856,
-    "wall_to_mesh": 0.02530040769843886,
-    "relative_volume_error": 0.00046432586273259524,
+    "mesh_to_wall": 0.011120831354243002,
+    "mesh_to_wall_spread": 2.7461276271362327,
+    "wall_to_mesh": 0.024003438083731697,
+    "relative_volume_error": 0.00047092152951111466,
     "unmatched_cap_nodes": 0,
     "inexact_cap_nodes": 0,
     "cap_node_offset": 0.0,
     "mesher": {
-      "minimum_mmg_quality": 0.1437433394378506,
-      "sampled_surface_error": 0.011329333244055205,
-      "sampled_coverage_error": 0.022098366673661694,
+      "minimum_mmg_quality": 0.4059250219095843,
+      "sampled_surface_error": 0.01112083136693811,
+      "sampled_coverage_error": 0.02232635892012316,
       "adaptation_abandoned": false,
-      "balanced_wall_vertices": 651,
-      "improved_elements": 0,
+      "balanced_wall_vertices": 650,
+      "improved_elements": 1,
       "defeaturing_moves": 0,
       "refined_lattice_edges": 15,
       "removed_bridging_elements": 0,
@@ -404,8 +400,8 @@
     "missed_limits": [
       "wall_to_mesh"
     ],
-    "seconds": 10.358737249975093,
-    "field_points": 3948653
+    "seconds": 10.886249125003815,
+    "field_points": 6568036
   },
   {
     "case": "fibre",
@@ -444,8 +440,8 @@
       "reverted_snap_vertices": 0
     },
     "missed_limits": [],
-    "seconds": 1.0330633749254048,
-    "field_points": 10075939
+    "seconds": 0.689823416993022,
+    "field_points": 10082515
   },
   {
     "case": "fibre",
@@ -484,7 +480,7 @@
       "reverted_snap_vertices": 0
     },
     "missed_limits": [],
-    "seconds": 0.7801635829964653,
+    "seconds": 0.7375584580004215,
     "field_points": 1014294
   },
   {
@@ -524,8 +520,8 @@
       "reverted_snap_vertices": 0
     },
     "missed_limits": [],
-    "seconds": 0.6453446249943227,
-    "field_points": 9512478
+    "seconds": 0.6523352910298854,
+    "field_points": 9519294
   },
   {
     "case": "fibre-through-edge",
@@ -564,7 +560,7 @@
       "reverted_snap_vertices": 0
     },
     "missed_limits": [],
-    "seconds": 0.8616544170072302,
+    "seconds": 0.8578794579952955,
     "field_points": 1053349
   },
   {
@@ -604,8 +600,8 @@
       "reverted_snap_vertices": 0
     },
     "missed_limits": [],
-    "seconds": 1.2517666659550741,
-    "field_points": 18374870
+    "seconds": 1.7647727499715984,
+    "field_points": 26155767
   },
   {
     "case": "fibre-grazing-edge",
@@ -644,8 +640,8 @@
       "reverted_snap_vertices": 0
     },
     "missed_limits": [],
-    "seconds": 1.2866498749936,
-    "field_points": 5247075
+    "seconds": 1.1298847920261323,
+    "field_points": 4637230
   },
   {
     "case": "fibre-inside-face",
@@ -684,8 +680,8 @@
       "reverted_snap_vertices": 0
     },
     "missed_limits": [],
-    "seconds": 0.7848932499764487,
-    "field_points": 8575668
+    "seconds": 0.5817259999457747,
+    "field_points": 8581272
   },
   {
     "case": "fibre-inside-face",
@@ -724,7 +720,7 @@
       "reverted_snap_vertices": 0
     },
     "missed_limits": [],
-    "seconds": 0.6650593749945983,
+    "seconds": 0.6670675420900807,
     "field_points": 962435
   },
   {
@@ -732,29 +728,29 @@
     "cells": 16,
     "adapt": false,
     "tolerance": 0.02,
-    "tetrahedra": 8336,
+    "tetrahedra": 8342,
     "wall_facets": 2256,
     "inverted": 0,
     "quality": {
-      "minimum": 0.2520539170797213,
-      "first_percentile": 0.3309495838602195,
-      "median": 0.8518981724211686
+      "minimum": 0.25205340981030144,
+      "first_percentile": 0.33068655750626336,
+      "median": 0.852172403111149
     },
     "dihedral_degrees": [
-      12.706646115136271,
-      154.09335018399437
+      12.66943550293741,
+      154.35549916760172
     ],
     "mesh_to_wall": 0.017997076604281625,
-    "mesh_to_wall_spread": 22.132787765374726,
+    "mesh_to_wall_spread": 22.10011617572909,
     "wall_to_mesh": 0.012374922461331912,
-    "relative_volume_error": 0.004292448389115799,
+    "relative_volume_error": 0.0042947683252128055,
     "unmatched_cap_nodes": 0,
     "inexact_cap_nodes": 0,
     "cap_node_offset": 0.0,
     "mesher": {
-      "minimum_mmg_quality": 0.2520539170797215,
+      "minimum_mmg_quality": 0.25205340981030205,
       "sampled_surface_error": 0.017997076604463133,
-      "sampled_coverage_error": 0.008233617446313627,
+      "sampled_coverage_error": 0.008216949304942683,
       "adaptation_abandoned": false,
       "balanced_wall_vertices": 1161,
       "improved_elements": 0,
@@ -764,8 +760,8 @@
       "reverted_snap_vertices": 0
     },
     "missed_limits": [],
-    "seconds": 1.5132302499841899,
-    "field_points": 29778734
+    "seconds": 2.1062064999714494,
+    "field_points": 42568233
   },
   {
     "case": "fibre-across-face",
@@ -804,7 +800,7 @@
       "reverted_snap_vertices": 0
     },
     "missed_limits": [],
-    "seconds": 0.9816533750854433,
+    "seconds": 0.9010528340004385,
     "field_points": 1864260
   },
   {
@@ -844,8 +840,8 @@
       "reverted_snap_vertices": 0
     },
     "missed_limits": [],
-    "seconds": 1.8944304160540923,
-    "field_points": 14818640
+    "seconds": 2.1149048330262303,
+    "field_points": 14828612
   },
   {
     "case": "fibres-xyz",
@@ -884,7 +880,7 @@
       "reverted_snap_vertices": 0
     },
     "missed_limits": [],
-    "seconds": 2.6645596671150997,
+    "seconds": 2.5102348749060184,
     "field_points": 2283328
   },
   {
@@ -924,8 +920,8 @@
       "reverted_snap_vertices": 0
     },
     "missed_limits": [],
-    "seconds": 3.668167583993636,
-    "field_points": 31098414
+    "seconds": 2.7576372500043362,
+    "field_points": 31112706
   },
   {
     "case": "gyroid-skeleton",
@@ -964,7 +960,7 @@
       "reverted_snap_vertices": 0
     },
     "missed_limits": [],
-    "seconds": 2.199235666077584,
+    "seconds": 2.1728565000230446,
     "field_points": 2560680
   },
   {
@@ -1004,8 +1000,8 @@
       "reverted_snap_vertices": 0
     },
     "missed_limits": [],
-    "seconds": 4.545583207975142,
-    "field_points": 45507064
+    "seconds": 5.757502708001994,
+    "field_points": 45537100
   },
   {
     "case": "gyroid-sheet",
@@ -1044,7 +1040,7 @@
       "reverted_snap_vertices": 0
     },
     "missed_limits": [],
-    "seconds": 4.424040250014514,
+    "seconds": 4.247950708959252,
     "field_points": 5234781
   },
   {
@@ -1052,31 +1048,31 @@
     "cells": 16,
     "adapt": false,
     "tolerance": 0.02,
-    "tetrahedra": 28464,
+    "tetrahedra": 28416,
     "wall_facets": 13390,
     "inverted": 0,
     "quality": {
-      "minimum": 0.2919361295062293,
-      "first_percentile": 0.34153743856784535,
-      "median": 0.4886551940146743
+      "minimum": 0.28722011256623525,
+      "first_percentile": 0.3512299905165171,
+      "median": 0.498334936151167
     },
     "dihedral_degrees": [
-      13.792145258935308,
-      151.4165209627637
+      13.956483683232968,
+      151.1729553744944
     ],
-    "mesh_to_wall": 0.0025167759421921587,
-    "mesh_to_wall_spread": 4.058841105407708,
-    "wall_to_mesh": 0.0023218173552822675,
-    "relative_volume_error": -0.0032317265627509473,
+    "mesh_to_wall": 0.0024408936518675126,
+    "mesh_to_wall_spread": 4.04858274683581,
+    "wall_to_mesh": 0.0022126773223046423,
+    "relative_volume_error": -0.003233852866760034,
     "unmatched_cap_nodes": 0,
     "inexact_cap_nodes": 0,
     "cap_node_offset": 0.0,
     "mesher": {
-      "minimum_mmg_quality": 0.29193612950622977,
-      "sampled_surface_error": 0.0025195780548301636,
-      "sampled_coverage_error": 0.0018814706268115227,
+      "minimum_mmg_quality": 0.2872201125662352,
+      "sampled_surface_error": 0.002444252589314803,
+      "sampled_coverage_error": 0.001721829623450396,
       "adaptation_abandoned": false,
-      "balanced_wall_vertices": 7117,
+      "balanced_wall_vertices": 7121,
       "improved_elements": 31,
       "defeaturing_moves": 0,
       "refined_lattice_edges": 1020,
@@ -1084,8 +1080,8 @@
       "reverted_snap_vertices": 672
     },
     "missed_limits": [],
-    "seconds": 13.003255249932408,
-    "field_points": 95086522
+    "seconds": 12.6914916660171,
+    "field_points": 95551343
   },
   {
     "case": "gyroid-thin-sheet",
@@ -1124,7 +1120,7 @@
       "reverted_snap_vertices": 672
     },
     "missed_limits": [],
-    "seconds": 9.09991441690363,
+    "seconds": 8.915568917058408,
     "field_points": 13174646
   },
   {
@@ -1132,84 +1128,84 @@
     "cells": 16,
     "adapt": false,
     "tolerance": 0.02,
-    "tetrahedra": 31397,
-    "wall_facets": 7294,
+    "tetrahedra": 31369,
+    "wall_facets": 7276,
     "inverted": 0,
     "quality": {
-      "minimum": 0.10238060012113663,
-      "first_percentile": 0.42644193809689823,
-      "median": 0.8457744102314977
+      "minimum": 0.10275739706128026,
+      "first_percentile": 0.43108935465400566,
+      "median": 0.8406302953419694
     },
     "dihedral_degrees": [
-      6.2390064576266,
-      170.0819070662964
+      6.45805591673993,
+      170.12056865065352
     ],
-    "mesh_to_wall": 0.015127903530519413,
-    "mesh_to_wall_spread": 5.315284097204453,
-    "wall_to_mesh": 0.00801837678101271,
-    "relative_volume_error": 0.00011961669426452382,
+    "mesh_to_wall": 0.014548556318761485,
+    "mesh_to_wall_spread": 5.244429307513064,
+    "wall_to_mesh": 0.0076735054744976085,
+    "relative_volume_error": 0.00010781629476808163,
     "unmatched_cap_nodes": 0,
     "inexact_cap_nodes": 0,
     "cap_node_offset": 0.0,
     "mesher": {
-      "minimum_mmg_quality": 0.10238060012113685,
-      "sampled_surface_error": 0.0151279035305634,
-      "sampled_coverage_error": 0.00546456783185325,
+      "minimum_mmg_quality": 0.10275739706128043,
+      "sampled_surface_error": 0.01454855631879493,
+      "sampled_coverage_error": 0.005464576361702127,
       "adaptation_abandoned": false,
-      "balanced_wall_vertices": 3907,
-      "improved_elements": 0,
+      "balanced_wall_vertices": 3893,
+      "improved_elements": 2,
       "defeaturing_moves": 0,
       "refined_lattice_edges": 2,
       "removed_bridging_elements": 0,
-      "reverted_snap_vertices": 9
+      "reverted_snap_vertices": 5
     },
     "missed_limits": [
       "dihedral"
     ],
-    "seconds": 58.64482616703026,
-    "field_points": 127118041
+    "seconds": 65.00657141697593,
+    "field_points": 141934888
   },
   {
     "case": "spinodoid-50",
     "cells": 16,
     "adapt": true,
     "tolerance": 0.02,
-    "tetrahedra": 6558,
-    "wall_facets": 1704,
+    "tetrahedra": 6539,
+    "wall_facets": 1700,
     "inverted": 0,
     "quality": {
-      "minimum": 0.10088832624522268,
-      "first_percentile": 0.42471634638664496,
-      "median": 0.7218309906487728
+      "minimum": 0.10088833668259654,
+      "first_percentile": 0.40305510965022084,
+      "median": 0.708143807844725
     },
     "dihedral_degrees": [
-      6.374726778250255,
-      169.3461208646075
+      6.49187115164544,
+      162.41021679655432
     ],
-    "mesh_to_wall": 0.012602186239852242,
-    "mesh_to_wall_spread": 2.7784147552696297,
-    "wall_to_mesh": 0.011160681814422284,
-    "relative_volume_error": 0.00020124349732242308,
+    "mesh_to_wall": 0.012602186239852873,
+    "mesh_to_wall_spread": 2.7876159232905824,
+    "wall_to_mesh": 0.011381942904585642,
+    "relative_volume_error": 0.00016944204168511945,
     "unmatched_cap_nodes": 0,
     "inexact_cap_nodes": 0,
     "cap_node_offset": 0.0,
     "mesher": {
-      "minimum_mmg_quality": 0.10088832624522277,
-      "sampled_surface_error": 0.012602186239879186,
-      "sampled_coverage_error": 0.008931574721116008,
+      "minimum_mmg_quality": 0.10088833668259663,
+      "sampled_surface_error": 0.012602186239879182,
+      "sampled_coverage_error": 0.009052358795880715,
       "adaptation_abandoned": false,
-      "balanced_wall_vertices": 974,
-      "improved_elements": 2,
+      "balanced_wall_vertices": 980,
+      "improved_elements": 6,
       "defeaturing_moves": 0,
       "refined_lattice_edges": 2,
       "removed_bridging_elements": 0,
-      "reverted_snap_vertices": 9
+      "reverted_snap_vertices": 5
     },
     "missed_limits": [
       "dihedral"
     ],
-    "seconds": 9.973594499984756,
-    "field_points": 10150287
+    "seconds": 15.816236749989912,
+    "field_points": 24115966
   },
   {
     "case": "spinodoid-30",
@@ -1220,27 +1216,27 @@
     "wall_facets": 6814,
     "inverted": 0,
     "quality": {
-      "minimum": 0.28139647772167065,
-      "first_percentile": 0.4810376473757059,
-      "median": 0.8032005563915696
+      "minimum": 0.2875076110053544,
+      "first_percentile": 0.4812425408183194,
+      "median": 0.803226583339889
     },
     "dihedral_degrees": [
-      14.015269176267934,
-      147.233763626634
+      14.123085109430058,
+      147.40854146379283
     ],
     "mesh_to_wall": 0.014773652990412705,
-    "mesh_to_wall_spread": 4.70236742341565,
+    "mesh_to_wall_spread": 4.699266834907736,
     "wall_to_mesh": 0.011887369737171522,
-    "relative_volume_error": -0.00027491759878373045,
+    "relative_volume_error": -0.00027627570628407927,
     "unmatched_cap_nodes": 0,
     "inexact_cap_nodes": 0,
     "cap_node_offset": 0.0,
     "mesher": {
-      "minimum_mmg_quality": 0.2813964777216705,
+      "minimum_mmg_quality": 0.28750761100535455,
       "sampled_surface_error": 0.01477365354198641,
       "sampled_coverage_error": 0.008276121369017862,
       "adaptation_abandoned": false,
-      "balanced_wall_vertices": 3659,
+      "balanced_wall_vertices": 3656,
       "improved_elements": 25,
       "defeaturing_moves": 0,
       "refined_lattice_edges": 14,
@@ -1248,8 +1244,8 @@
       "reverted_snap_vertices": 0
     },
     "missed_limits": [],
-    "seconds": 25.64442374999635,
-    "field_points": 49778006
+    "seconds": 24.488814459065907,
+    "field_points": 49843886
   },
   {
     "case": "spinodoid-30",
@@ -1288,7 +1284,7 @@
       "reverted_snap_vertices": 0
     },
     "missed_limits": [],
-    "seconds": 9.733790250029415,
+    "seconds": 9.402557791909203,
     "field_points": 10828304
   },
   {
@@ -1296,42 +1292,40 @@
     "cells": 16,
     "adapt": false,
     "tolerance": 0.02,
-    "tetrahedra": 41052,
-    "wall_facets": 6614,
+    "tetrahedra": 41056,
+    "wall_facets": 6616,
     "inverted": 0,
     "quality": {
-      "minimum": 0.14484636921733793,
-      "first_percentile": 0.461378312947054,
-      "median": 0.8843987481281808
+      "minimum": 0.18750715461920334,
+      "first_percentile": 0.4569848832148777,
+      "median": 0.8813202007273955
     },
     "dihedral_degrees": [
-      8.09940262743077,
-      165.83234188857168
+      10.241095297380074,
+      158.71015728061766
     ],
-    "mesh_to_wall": 0.013455812303069298,
-    "mesh_to_wall_spread": 5.02993513609526,
-    "wall_to_mesh": 0.008442055146788934,
-    "relative_volume_error": 0.0001647716140638078,
+    "mesh_to_wall": 0.013453688393728897,
+    "mesh_to_wall_spread": 4.9978963884471534,
+    "wall_to_mesh": 0.008445764846859135,
+    "relative_volume_error": 0.00015224738697905416,
     "unmatched_cap_nodes": 0,
     "inexact_cap_nodes": 0,
     "cap_node_offset": 0.0,
     "mesher": {
-      "minimum_mmg_quality": 0.14484636921733823,
-      "sampled_surface_error": 0.013455812321185513,
-      "sampled_coverage_error": 0.009054990660926713,
+      "minimum_mmg_quality": 0.18750715461920336,
+      "sampled_surface_error": 0.013453688411884988,
+      "sampled_coverage_error": 0.009055023603366213,
       "adaptation_abandoned": false,
-      "balanced_wall_vertices": 3546,
-      "improved_elements": 83,
+      "balanced_wall_vertices": 3556,
+      "improved_elements": 85,
       "defeaturing_moves": 0,
       "refined_lattice_edges": 2,
       "removed_bridging_elements": 0,
       "reverted_snap_vertices": 0
     },
-    "missed_limits": [
-      "dihedral"
-    ],
-    "seconds": 41.08393075002823,
-    "field_points": 88650866
+    "missed_limits": [],
+    "seconds": 50.69226624991279,
+    "field_points": 115604299
   },
   {
     "case": "spinodoid-70",
@@ -1342,28 +1336,28 @@
     "wall_facets": 1724,
     "inverted": 0,
     "quality": {
-      "minimum": 0.14121261966976809,
-      "first_percentile": 0.3735661790175523,
-      "median": 0.7250913479480081
+      "minimum": 0.19126977705389353,
+      "first_percentile": 0.3741652035692695,
+      "median": 0.730422536481233
     },
     "dihedral_degrees": [
-      7.540820771616132,
-      165.9190119481661
+      9.477949994462472,
+      159.03043928127033
     ],
-    "mesh_to_wall": 0.011429411242915367,
-    "mesh_to_wall_spread": 2.455632194527194,
-    "wall_to_mesh": 0.008876781471943792,
-    "relative_volume_error": 0.0006956082077456127,
+    "mesh_to_wall": 0.011413097757293168,
+    "mesh_to_wall_spread": 2.4554307331911116,
+    "wall_to_mesh": 0.008964108419706776,
+    "relative_volume_error": 0.0006817349557974861,
     "unmatched_cap_nodes": 0,
     "inexact_cap_nodes": 0,
     "cap_node_offset": 0.0,
     "mesher": {
-      "minimum_mmg_quality": 0.1412126196697682,
-      "sampled_surface_error": 0.011429411243362992,
-      "sampled_coverage_error": 0.008785073048862776,
+      "minimum_mmg_quality": 0.19126977705389356,
+      "sampled_surface_error": 0.011413097757755578,
+      "sampled_coverage_error": 0.00886410582094653,
       "adaptation_abandoned": false,
-      "balanced_wall_vertices": 979,
-      "improved_elements": 1,
+      "balanced_wall_vertices": 983,
+      "improved_elements": 5,
       "defeaturing_moves": 0,
       "refined_lattice_edges": 2,
       "removed_bridging_elements": 0,
@@ -1372,8 +1366,8 @@
     "missed_limits": [
       "dihedral"
     ],
-    "seconds": 13.808088833931834,
-    "field_points": 21032312
+    "seconds": 10.845235750079155,
+    "field_points": 13932547
   },
   {
     "case": "sphere-corner",
@@ -1412,8 +1406,8 @@
       "reverted_snap_vertices": 0
     },
     "missed_limits": [],
-    "seconds": 0.6766749579692259,
-    "field_points": 5545264
+    "seconds": 0.6359212909592316,
+    "field_points": 5549560
   },
   {
     "case": "sphere-corner",
@@ -1452,7 +1446,7 @@
       "reverted_snap_vertices": 0
     },
     "missed_limits": [],
-    "seconds": 0.773311416967772,
+    "seconds": 0.7296892079757527,
     "field_points": 839841
   },
   {
@@ -1492,8 +1486,8 @@
       "reverted_snap_vertices": 0
     },
     "missed_limits": [],
-    "seconds": 2.5034477909794077,
-    "field_points": 28161388
+    "seconds": 1.9928355000447482,
+    "field_points": 28181308
   },
   {
     "case": "sphere-corner",
@@ -1532,7 +1526,7 @@
       "reverted_snap_vertices": 0
     },
     "missed_limits": [],
-    "seconds": 2.388158291927539,
+    "seconds": 2.2964078339282423,
     "field_points": 1921176
   },
   {
@@ -1540,71 +1534,69 @@
     "cells": 12,
     "adapt": false,
     "tolerance": 0.02,
-    "tetrahedra": 5060,
-    "wall_facets": 2192,
+    "tetrahedra": 5077,
+    "wall_facets": 2206,
     "inverted": 0,
     "quality": {
-      "minimum": 0.22462403003877116,
-      "first_percentile": 0.3989126234330389,
-      "median": 0.7807462919307975
+      "minimum": 0.30079312524377094,
+      "first_percentile": 0.4667505016523146,
+      "median": 0.7803003884738485
     },
     "dihedral_degrees": [
-      13.058553084182574,
-      156.38688052690617
+      16.439813914593493,
+      143.84081709744433
     ],
-    "mesh_to_wall": 0.017722512900698276,
-    "mesh_to_wall_spread": 1.9396455743143781,
-    "wall_to_mesh": 0.0277350862970647,
-    "relative_volume_error": -0.0005111986459157558,
+    "mesh_to_wall": 0.0150098966760716,
+    "mesh_to_wall_spread": 1.9118327383311287,
+    "wall_to_mesh": 0.019046107453741985,
+    "relative_volume_error": -0.0008715919765319713,
     "unmatched_cap_nodes": 0,
     "inexact_cap_nodes": 0,
     "cap_node_offset": 0.0,
     "mesher": {
-      "minimum_mmg_quality": 0.22462403003877102,
-      "sampled_surface_error": 0.01772251292007416,
-      "sampled_coverage_error": 0.0248104314206129,
+      "minimum_mmg_quality": 0.3007931252437715,
+      "sampled_surface_error": 0.015009896689947292,
+      "sampled_coverage_error": 0.021932652014890384,
       "adaptation_abandoned": false,
-      "balanced_wall_vertices": 1182,
-      "improved_elements": 0,
+      "balanced_wall_vertices": 1191,
+      "improved_elements": 2,
       "defeaturing_moves": 0,
       "refined_lattice_edges": 22,
       "removed_bridging_elements": 0,
       "reverted_snap_vertices": 15
     },
-    "missed_limits": [
-      "wall_to_mesh"
-    ],
-    "seconds": 5.824373833020218,
-    "field_points": 10693092
+    "missed_limits": [],
+    "seconds": 6.021805917029269,
+    "field_points": 15509682
   },
   {
     "case": "spheres-random",
     "cells": 12,
     "adapt": true,
     "tolerance": 0.02,
-    "tetrahedra": 4933,
+    "tetrahedra": 4925,
     "wall_facets": 1242,
     "inverted": 0,
     "quality": {
-      "minimum": 0.32452240039876257,
-      "first_percentile": 0.515497878271023,
-      "median": 0.753831286523932
+      "minimum": 0.3255417992565802,
+      "first_percentile": 0.519185903781417,
+      "median": 0.7550850364992099
     },
     "dihedral_degrees": [
-      14.88330194408051,
-      138.89910521999303
+      14.824275920902306,
+      136.49749738869195
     ],
-    "mesh_to_wall": 0.016104155634938586,
-    "mesh_to_wall_spread": 3.050303125525432,
-    "wall_to_mesh": 0.02290705447853676,
-    "relative_volume_error": -0.0026768352934360973,
+    "mesh_to_wall": 0.015428995158156909,
+    "mesh_to_wall_spread": 3.13333399352954,
+    "wall_to_mesh": 0.022911909938914104,
+    "relative_volume_error": -0.0026468300344667517,
     "unmatched_cap_nodes": 0,
     "inexact_cap_nodes": 0,
     "cap_node_offset": 0.0,
     "mesher": {
-      "minimum_mmg_quality": 0.3245224003987628,
-      "sampled_surface_error": 0.016104155654107624,
-      "sampled_coverage_error": 0.023136516748892322,
+      "minimum_mmg_quality": 0.3255417992565804,
+      "sampled_surface_error": 0.015428995170886339,
+      "sampled_coverage_error": 0.0231415946807626,
       "adaptation_abandoned": false,
       "balanced_wall_vertices": 688,
       "improved_elements": 0,
@@ -1616,39 +1608,39 @@
     "missed_limits": [
       "wall_to_mesh"
     ],
-    "seconds": 9.050041832961142,
-    "field_points": 6673716
+    "seconds": 8.47484625002835,
+    "field_points": 6680423
   },
   {
     "case": "spheres-random",
     "cells": 24,
     "adapt": false,
     "tolerance": 0.02,
-    "tetrahedra": 32920,
-    "wall_facets": 8298,
+    "tetrahedra": 32940,
+    "wall_facets": 8312,
     "inverted": 0,
     "quality": {
-      "minimum": 0.2978037055924907,
-      "first_percentile": 0.5170087807561573,
-      "median": 0.8710986228101458
+      "minimum": 0.30071105865491804,
+      "first_percentile": 0.509362196244017,
+      "median": 0.8694171788970109
     },
     "dihedral_degrees": [
-      14.589885012381645,
-      147.3833614116993
+      15.405062611751417,
+      147.38180985434732
     ],
-    "mesh_to_wall": 0.009732508201843067,
-    "mesh_to_wall_spread": 1.9008867393170565,
-    "wall_to_mesh": 0.01772596141475126,
-    "relative_volume_error": 0.00037650560497182184,
+    "mesh_to_wall": 0.010457167911846576,
+    "mesh_to_wall_spread": 1.8963179083422639,
+    "wall_to_mesh": 0.01625139629998779,
+    "relative_volume_error": 0.0003196358977541891,
     "unmatched_cap_nodes": 0,
     "inexact_cap_nodes": 0,
     "cap_node_offset": 0.0,
     "mesher": {
-      "minimum_mmg_quality": 0.29780370559249086,
-      "sampled_surface_error": 0.009732508211166453,
+      "minimum_mmg_quality": 0.300711058654918,
+      "sampled_surface_error": 0.010457167921879763,
       "sampled_coverage_error": 0.01355529841655782,
       "adaptation_abandoned": false,
-      "balanced_wall_vertices": 4310,
+      "balanced_wall_vertices": 4315,
       "improved_elements": 3,
       "defeaturing_moves": 0,
       "refined_lattice_edges": 15,
@@ -1656,8 +1648,8 @@
       "reverted_snap_vertices": 5
     },
     "missed_limits": [],
-    "seconds": 21.89146983390674,
-    "field_points": 56785517
+    "seconds": 21.313794250017963,
+    "field_points": 57494392
   },
   {
     "case": "spheres-random",
@@ -1696,7 +1688,7 @@
       "reverted_snap_vertices": 5
     },
     "missed_limits": [],
-    "seconds": 16.329616208095104,
+    "seconds": 15.863652124884538,
     "field_points": 5705375
   },
   {
@@ -1736,8 +1728,8 @@
       "reverted_snap_vertices": 0
     },
     "missed_limits": [],
-    "seconds": 1.1452164580114186,
-    "field_points": 15128311
+    "seconds": 0.9899795410456136,
+    "field_points": 17788192
   },
   {
     "case": "fibre-grazing-edge",
@@ -1749,26 +1741,26 @@
     "inverted": 0,
     "quality": {
       "minimum": 0.2564341194106284,
-      "first_percentile": 0.26897172936570646,
-      "median": 0.6649332595645048
+      "first_percentile": 0.2725271032496863,
+      "median": 0.6622143794406616
     },
     "dihedral_degrees": [
-      15.484167761218911,
-      154.56285922829733
+      15.034522692068288,
+      155.65365348852816
     ],
     "mesh_to_wall": 0.01689918862579504,
-    "mesh_to_wall_spread": 4.14900943240973,
-    "wall_to_mesh": 0.01670466390475587,
-    "relative_volume_error": -0.0018250788300006038,
+    "mesh_to_wall_spread": 4.149039299851033,
+    "wall_to_mesh": 0.016704651184304066,
+    "relative_volume_error": -0.0016429359139402688,
     "unmatched_cap_nodes": 0,
     "inexact_cap_nodes": 0,
     "cap_node_offset": 0.0,
     "mesher": {
       "minimum_mmg_quality": 0.2564341194106284,
       "sampled_surface_error": 0.016899188643243385,
-      "sampled_coverage_error": 0.01343608929653701,
+      "sampled_coverage_error": 0.013436437291945054,
       "adaptation_abandoned": false,
-      "balanced_wall_vertices": 156,
+      "balanced_wall_vertices": 154,
       "improved_elements": 0,
       "defeaturing_moves": 43,
       "refined_lattice_edges": 0,
@@ -1776,77 +1768,77 @@
       "reverted_snap_vertices": 0
     },
     "missed_limits": [],
-    "seconds": 0.9746948330430314,
-    "field_points": 3423303
+    "seconds": 0.8711371659301221,
+    "field_points": 4475044
   },
   {
     "case": "fibre-grazing-edge",
     "cells": 24,
     "adapt": false,
     "tolerance": 0.02,
-    "tetrahedra": 25301,
+    "tetrahedra": 25325,
     "wall_facets": 4674,
     "inverted": 0,
     "quality": {
-      "minimum": 0.1737372119527042,
-      "first_percentile": 0.3870963209144905,
-      "median": 0.8981013054691245
+      "minimum": 0.20029289670067799,
+      "first_percentile": 0.40554083823034304,
+      "median": 0.8908839579957525
     },
     "dihedral_degrees": [
-      11.2991934843069,
-      152.14072058607297
+      12.71654736187909,
+      150.99705098857615
     ],
-    "mesh_to_wall": 0.001261611454431408,
-    "mesh_to_wall_spread": 4.4593477671268715,
-    "wall_to_mesh": 0.0012563831288207382,
-    "relative_volume_error": -0.003441971658980192,
+    "mesh_to_wall": 0.0013314083933347158,
+    "mesh_to_wall_spread": 3.6541155699506147,
+    "wall_to_mesh": 0.001319245801200666,
+    "relative_volume_error": -0.003446725031700404,
     "unmatched_cap_nodes": 0,
     "inexact_cap_nodes": 0,
     "cap_node_offset": 0.0,
     "mesher": {
-      "minimum_mmg_quality": 0.17373721195270453,
-      "sampled_surface_error": 0.0012616114549790242,
-      "sampled_coverage_error": 0.001023379192916947,
+      "minimum_mmg_quality": 0.2002928967006778,
+      "sampled_surface_error": 0.001331408393917377,
+      "sampled_coverage_error": 0.0010576278899147242,
       "adaptation_abandoned": false,
-      "balanced_wall_vertices": 2578,
-      "improved_elements": 0,
+      "balanced_wall_vertices": 2580,
+      "improved_elements": 3,
       "defeaturing_moves": 0,
       "refined_lattice_edges": 0,
       "removed_bridging_elements": 0,
       "reverted_snap_vertices": 0
     },
     "missed_limits": [],
-    "seconds": 2.9042913750745356,
-    "field_points": 51354192
+    "seconds": 4.957988957990892,
+    "field_points": 69373833
   },
   {
     "case": "fibre-grazing-edge",
     "cells": 24,
     "adapt": true,
     "tolerance": 0.02,
-    "tetrahedra": 1664,
+    "tetrahedra": 1663,
     "wall_facets": 420,
     "inverted": 0,
     "quality": {
-      "minimum": 0.14819944820938366,
-      "first_percentile": 0.20981116455979162,
-      "median": 0.6449783946751254
+      "minimum": 0.17673507170407157,
+      "first_percentile": 0.20952205931734114,
+      "median": 0.643359608612754
     },
     "dihedral_degrees": [
-      10.423230663956456,
-      159.2123408489918
+      11.295392411305485,
+      158.47917388753692
     ],
-    "mesh_to_wall": 0.008989541317208624,
-    "mesh_to_wall_spread": 5.038602157633575,
-    "wall_to_mesh": 0.007606768777323977,
-    "relative_volume_error": -0.005144368165671653,
+    "mesh_to_wall": 0.008986036048587864,
+    "mesh_to_wall_spread": 5.057951650358669,
+    "wall_to_mesh": 0.007603401740971817,
+    "relative_volume_error": -0.0051524349784366485,
     "unmatched_cap_nodes": 0,
     "inexact_cap_nodes": 0,
     "cap_node_offset": 0.0,
     "mesher": {
-      "minimum_mmg_quality": 0.14819944820938385,
-      "sampled_surface_error": 0.008989541325310128,
-      "sampled_coverage_error": 0.007962936147456197,
+      "minimum_mmg_quality": 0.1767350717040717,
+      "sampled_surface_error": 0.00898603605668536,
+      "sampled_coverage_error": 0.007958419092949183,
       "adaptation_abandoned": false,
       "balanced_wall_vertices": 297,
       "improved_elements": 3,
@@ -1858,8 +1850,8 @@
     "missed_limits": [
       "volume"
     ],
-    "seconds": 1.8067463339539245,
-    "field_points": 4586778
+    "seconds": 1.8655124159995466,
+    "field_points": 6139536
   },
   {
     "case": "fibre-across-face",
@@ -1870,29 +1862,29 @@
     "wall_facets": 1372,
     "inverted": 0,
     "quality": {
-      "minimum": 0.2487461780225562,
-      "first_percentile": 0.3439189502777937,
-      "median": 0.8063376309564373
+      "minimum": 0.2440402605674855,
+      "first_percentile": 0.34046706219622286,
+      "median": 0.807032648834088
     },
     "dihedral_degrees": [
-      10.99892033904771,
-      153.48406542446904
+      10.877820285283708,
+      153.48436227153107
     ],
     "mesh_to_wall": 0.017998330181175644,
-    "mesh_to_wall_spread": 12.44530161981899,
-    "wall_to_mesh": 0.011665909105410247,
-    "relative_volume_error": 0.005732739825922373,
+    "mesh_to_wall_spread": 13.36737212363651,
+    "wall_to_mesh": 0.011665248109295473,
+    "relative_volume_error": 0.005447667464383077,
     "unmatched_cap_nodes": 0,
     "inexact_cap_nodes": 0,
     "cap_node_offset": 0.0,
     "mesher": {
-      "minimum_mmg_quality": 0.2487461780225564,
+      "minimum_mmg_quality": 0.2440402605674856,
       "sampled_surface_error": 0.017998330181175658,
-      "sampled_coverage_error": 0.009781468970942828,
+      "sampled_coverage_error": 0.009769181375436012,
       "adaptation_abandoned": false,
-      "balanced_wall_vertices": 715,
+      "balanced_wall_vertices": 712,
       "improved_elements": 0,
-      "defeaturing_moves": 107,
+      "defeaturing_moves": 103,
       "refined_lattice_edges": 0,
       "removed_bridging_elements": 0,
       "reverted_snap_vertices": 0
@@ -1900,8 +1892,8 @@
     "missed_limits": [
       "volume"
     ],
-    "seconds": 1.5041849580593407,
-    "field_points": 25677613
+    "seconds": 1.578102125087753,
+    "field_points": 23154009
   },
   {
     "case": "fibre-across-face",
@@ -1940,7 +1932,7 @@
       "reverted_snap_vertices": 0
     },
     "missed_limits": [],
-    "seconds": 0.7399892080575228,
+    "seconds": 0.6695724169258028,
     "field_points": 1576111
   },
   {
@@ -1982,8 +1974,8 @@
     "missed_limits": [
       "dihedral"
     ],
-    "seconds": 2.697834708960727,
-    "field_points": 40028015
+    "seconds": 2.2378120420034975,
+    "field_points": 40042811
   },
   {
     "case": "fibre-across-face",
@@ -1994,25 +1986,25 @@
     "wall_facets": 378,
     "inverted": 0,
     "quality": {
-      "minimum": 0.3222715696447765,
-      "first_percentile": 0.3390220284004747,
-      "median": 0.6671223357205139
+      "minimum": 0.32261127137767165,
+      "first_percentile": 0.33860084034610144,
+      "median": 0.6699160044266286
     },
     "dihedral_degrees": [
-      14.751542522408917,
-      151.8399028476649
+      14.687049212599353,
+      151.47230284378
     ],
     "mesh_to_wall": 0.017999945813886063,
-    "mesh_to_wall_spread": 3.3697002546778463,
-    "wall_to_mesh": 0.00809601670598217,
-    "relative_volume_error": 0.002298587530414231,
+    "mesh_to_wall_spread": 3.34964485827603,
+    "wall_to_mesh": 0.00808505830037486,
+    "relative_volume_error": 0.002295508790547851,
     "unmatched_cap_nodes": 0,
     "inexact_cap_nodes": 0,
     "cap_node_offset": 0.0,
     "mesher": {
-      "minimum_mmg_quality": 0.3222715696447765,
+      "minimum_mmg_quality": 0.3226112713776719,
       "sampled_surface_error": 0.017999945813895853,
-      "sampled_coverage_error": 0.008153943001486271,
+      "sampled_coverage_error": 0.008141910987284342,
       "adaptation_abandoned": false,
       "balanced_wall_vertices": 248,
       "improved_elements": 0,
@@ -2022,40 +2014,40 @@
       "reverted_snap_vertices": 0
     },
     "missed_limits": [],
-    "seconds": 1.7606365829706192,
-    "field_points": 3694587
+    "seconds": 1.6371147909667343,
+    "field_points": 3695858
   },
   {
     "case": "gyroid-thin-sheet",
     "cells": 12,
     "adapt": false,
     "tolerance": 0.02,
-    "tetrahedra": 24176,
-    "wall_facets": 12090,
+    "tetrahedra": 24246,
+    "wall_facets": 12102,
     "inverted": 0,
     "quality": {
-      "minimum": 0.20067260728446992,
-      "first_percentile": 0.2785169485408408,
-      "median": 0.5371752722277452
+      "minimum": 0.20056514280622476,
+      "first_percentile": 0.2821147434346059,
+      "median": 0.5358262779163032
     },
     "dihedral_degrees": [
-      9.047940349575079,
-      157.98615972617748
+      9.937906667681208,
+      160.34861598525126
     ],
-    "mesh_to_wall": 0.016809368866313765,
-    "mesh_to_wall_spread": 5.249704684561559,
-    "wall_to_mesh": 0.022624329396850336,
-    "relative_volume_error": -0.005316907295520479,
+    "mesh_to_wall": 0.01679687722021373,
+    "mesh_to_wall_spread": 5.5020030890732965,
+    "wall_to_mesh": 0.020737013876305582,
+    "relative_volume_error": -0.005066639509803905,
     "unmatched_cap_nodes": 0,
     "inexact_cap_nodes": 0,
     "cap_node_offset": 0.0,
     "mesher": {
-      "minimum_mmg_quality": 0.2006726072844699,
-      "sampled_surface_error": 0.016809368866317096,
-      "sampled_coverage_error": 0.00923933896974198,
+      "minimum_mmg_quality": 0.20056514280622484,
+      "sampled_surface_error": 0.016796877220219626,
+      "sampled_coverage_error": 0.008315174705359632,
       "adaptation_abandoned": false,
-      "balanced_wall_vertices": 6300,
-      "improved_elements": 600,
+      "balanced_wall_vertices": 6308,
+      "improved_elements": 602,
       "defeaturing_moves": 0,
       "refined_lattice_edges": 792,
       "removed_bridging_elements": 0,
@@ -2066,39 +2058,39 @@
       "wall_to_mesh",
       "volume"
     ],
-    "seconds": 21.583193165948614,
-    "field_points": 212506017
+    "seconds": 13.982720999978483,
+    "field_points": 115202628
   },
   {
     "case": "gyroid-thin-sheet",
     "cells": 12,
     "adapt": true,
     "tolerance": 0.02,
-    "tetrahedra": 9418,
+    "tetrahedra": 9419,
     "wall_facets": 4868,
     "inverted": 0,
     "quality": {
-      "minimum": 0.13932254749369674,
-      "first_percentile": 0.37100175178460887,
-      "median": 0.620197918097263
+      "minimum": 0.1392945309729302,
+      "first_percentile": 0.3718474550184144,
+      "median": 0.6207259446262348
     },
     "dihedral_degrees": [
-      10.281325271486848,
-      158.8751130612375
+      10.27495498045053,
+      158.88666871734736
     ],
-    "mesh_to_wall": 0.016672319775572222,
-    "mesh_to_wall_spread": 7.954123130158078,
-    "wall_to_mesh": 0.022583441670705605,
-    "relative_volume_error": -0.004895376600771217,
+    "mesh_to_wall": 0.016672377579487984,
+    "mesh_to_wall_spread": 8.034767652570917,
+    "wall_to_mesh": 0.02258354105890771,
+    "relative_volume_error": -0.004920866397026269,
     "unmatched_cap_nodes": 0,
     "inexact_cap_nodes": 0,
     "cap_node_offset": 0.0,
     "mesher": {
-      "minimum_mmg_quality": 0.13932254749369694,
-      "sampled_surface_error": 0.016672319775577094,
-      "sampled_coverage_error": 0.01706133925838222,
+      "minimum_mmg_quality": 0.1392945309729304,
+      "sampled_surface_error": 0.016672377579493462,
+      "sampled_coverage_error": 0.01706142354638369,
       "adaptation_abandoned": false,
-      "balanced_wall_vertices": 2741,
+      "balanced_wall_vertices": 2742,
       "improved_elements": 1,
       "defeaturing_moves": 0,
       "refined_lattice_edges": 792,
@@ -2108,39 +2100,39 @@
     "missed_limits": [
       "wall_to_mesh"
     ],
-    "seconds": 12.325374083011411,
-    "field_points": 53442606
+    "seconds": 12.564789291005582,
+    "field_points": 53482621
   },
   {
     "case": "gyroid-thin-sheet",
     "cells": 24,
     "adapt": false,
     "tolerance": 0.02,
-    "tetrahedra": 50241,
+    "tetrahedra": 50240,
     "wall_facets": 26932,
     "inverted": 0,
     "quality": {
-      "minimum": 0.275042285263081,
-      "first_percentile": 0.4133192483808057,
-      "median": 0.5860254299823167
+      "minimum": 0.2710086377241499,
+      "first_percentile": 0.41558353647304225,
+      "median": 0.5862698280780541
     },
     "dihedral_degrees": [
-      15.53934569946366,
-      152.9474001294373
+      15.580892693655072,
+      152.91536887292992
     ],
-    "mesh_to_wall": 0.015320727980790401,
-    "mesh_to_wall_spread": 10.327821116408199,
-    "wall_to_mesh": 0.00902519021568979,
-    "relative_volume_error": -0.002681817056447211,
+    "mesh_to_wall": 0.015325849860883313,
+    "mesh_to_wall_spread": 10.366708175377655,
+    "wall_to_mesh": 0.009025032225470188,
+    "relative_volume_error": -0.002684299571760307,
     "unmatched_cap_nodes": 0,
     "inexact_cap_nodes": 0,
     "cap_node_offset": 0.0,
     "mesher": {
-      "minimum_mmg_quality": 0.2750422852630811,
-      "sampled_surface_error": 0.015320727980818457,
-      "sampled_coverage_error": 0.004175920775673099,
+      "minimum_mmg_quality": 0.2710086377241502,
+      "sampled_surface_error": 0.015483840256625777,
+      "sampled_coverage_error": 0.004174488517661821,
       "adaptation_abandoned": false,
-      "balanced_wall_vertices": 14036,
+      "balanced_wall_vertices": 14039,
       "improved_elements": 21,
       "defeaturing_moves": 0,
       "refined_lattice_edges": 348,
@@ -2148,8 +2140,8 @@
       "reverted_snap_vertices": 792
     },
     "missed_limits": [],
-    "seconds": 18.542136000003666,
-    "field_points": 186099025
+    "seconds": 20.11674633307848,
+    "field_points": 186233786
   },
   {
     "case": "gyroid-thin-sheet",
@@ -2188,39 +2180,39 @@
       "reverted_snap_vertices": 792
     },
     "missed_limits": [],
-    "seconds": 13.723326833103783,
-    "field_points": 34643920
+    "seconds": 14.217627999954857,
+    "field_points": 34655705
   },
   {
     "case": "spinodoid-50",
     "cells": 12,
     "adapt": false,
     "tolerance": 0.02,
-    "tetrahedra": 14240,
+    "tetrahedra": 14239,
     "wall_facets": 4132,
     "inverted": 0,
     "quality": {
-      "minimum": 0.21607135821067525,
-      "first_percentile": 0.3889866136132588,
-      "median": 0.7995175574768996
+      "minimum": 0.2439736102259043,
+      "first_percentile": 0.38514911288483744,
+      "median": 0.7997551167257796
     },
     "dihedral_degrees": [
-      10.996960524940526,
-      155.3570389946169
+      11.708232923559784,
+      154.611411887398
     ],
     "mesh_to_wall": 0.016070394055865477,
-    "mesh_to_wall_spread": 5.3914526122703155,
-    "wall_to_mesh": 0.011871957351879727,
-    "relative_volume_error": 0.0003231590775492066,
+    "mesh_to_wall_spread": 5.412415267486807,
+    "wall_to_mesh": 0.019324063206546203,
+    "relative_volume_error": 0.0003940620604476752,
     "unmatched_cap_nodes": 0,
     "inexact_cap_nodes": 0,
     "cap_node_offset": 0.0,
     "mesher": {
-      "minimum_mmg_quality": 0.21607135821067555,
+      "minimum_mmg_quality": 0.24397361022590466,
       "sampled_surface_error": 0.016070394056011624,
-      "sampled_coverage_error": 0.008758128230445463,
+      "sampled_coverage_error": 0.008824500394896953,
       "adaptation_abandoned": false,
-      "balanced_wall_vertices": 2261,
+      "balanced_wall_vertices": 2241,
       "improved_elements": 0,
       "defeaturing_moves": 62,
       "refined_lattice_edges": 5,
@@ -2228,8 +2220,8 @@
       "reverted_snap_vertices": 4
     },
     "missed_limits": [],
-    "seconds": 39.58639549999498,
-    "field_points": 81537505
+    "seconds": 35.319808124913834,
+    "field_points": 73204858
   },
   {
     "case": "spinodoid-50",
@@ -2241,24 +2233,24 @@
     "inverted": 0,
     "quality": {
       "minimum": 0.2261260010503314,
-      "first_percentile": 0.4006027240577144,
-      "median": 0.7298213207221239
+      "first_percentile": 0.4017614978219719,
+      "median": 0.7288933127643411
     },
     "dihedral_degrees": [
-      12.37356197721345,
+      12.373561977213422,
       149.9107302614663
     ],
     "mesh_to_wall": 0.0175754071801539,
-    "mesh_to_wall_spread": 2.822159435968499,
-    "wall_to_mesh": 0.015894378400198986,
-    "relative_volume_error": 0.00021230704799557465,
+    "mesh_to_wall_spread": 2.8434710186067473,
+    "wall_to_mesh": 0.016369856845883154,
+    "relative_volume_error": 0.00020524445031400163,
     "unmatched_cap_nodes": 0,
     "inexact_cap_nodes": 0,
     "cap_node_offset": 0.0,
     "mesher": {
       "minimum_mmg_quality": 0.22612600105033173,
       "sampled_surface_error": 0.017575407180355447,
-      "sampled_coverage_error": 0.009238112731762057,
+      "sampled_coverage_error": 0.009228970773101084,
       "adaptation_abandoned": false,
       "balanced_wall_vertices": 956,
       "improved_elements": 0,
@@ -2268,90 +2260,90 @@
       "reverted_snap_vertices": 4
     },
     "missed_limits": [],
-    "seconds": 17.817204916966148,
-    "field_points": 27740314
+    "seconds": 16.72454258403741,
+    "field_points": 24394900
   },
   {
     "case": "spinodoid-50",
     "cells": 24,
     "adapt": false,
     "tolerance": 0.02,
-    "tetrahedra": 99294,
-    "wall_facets": 16888,
+    "tetrahedra": 99283,
+    "wall_facets": 16878,
     "inverted": 0,
     "quality": {
-      "minimum": 0.10999682261383031,
-      "first_percentile": 0.49841563880759954,
-      "median": 0.9077732746011674
+      "minimum": 0.1138119249080492,
+      "first_percentile": 0.5004192526000394,
+      "median": 0.9070090885261484
     },
     "dihedral_degrees": [
-      9.504508945872367,
-      164.13264879053017
+      9.590233214855873,
+      163.21904183421998
     ],
-    "mesh_to_wall": 0.012213217915493164,
-    "mesh_to_wall_spread": 5.1155875981145424,
-    "wall_to_mesh": 0.004660070125437252,
-    "relative_volume_error": 5.5149694239808866e-05,
+    "mesh_to_wall": 0.012807495783948374,
+    "mesh_to_wall_spread": 5.098222711791826,
+    "wall_to_mesh": 0.005540932729468526,
+    "relative_volume_error": 6.452742652163224e-05,
     "unmatched_cap_nodes": 0,
     "inexact_cap_nodes": 0,
     "cap_node_offset": 0.0,
     "mesher": {
-      "minimum_mmg_quality": 0.10999682261383033,
-      "sampled_surface_error": 0.01221321791553852,
-      "sampled_coverage_error": 0.003949492815435746,
+      "minimum_mmg_quality": 0.11381192490804926,
+      "sampled_surface_error": 0.012807495784003047,
+      "sampled_coverage_error": 0.0036647089417635443,
       "adaptation_abandoned": false,
-      "balanced_wall_vertices": 8876,
-      "improved_elements": 0,
+      "balanced_wall_vertices": 8869,
+      "improved_elements": 1,
       "defeaturing_moves": 0,
       "refined_lattice_edges": 0,
       "removed_bridging_elements": 0,
-      "reverted_snap_vertices": 2
+      "reverted_snap_vertices": 0
     },
     "missed_limits": [
       "dihedral"
     ],
-    "seconds": 118.69012858392671,
-    "field_points": 260783520
+    "seconds": 170.7206375419628,
+    "field_points": 396794368
   },
   {
     "case": "spinodoid-50",
     "cells": 24,
     "adapt": true,
     "tolerance": 0.02,
-    "tetrahedra": 8005,
-    "wall_facets": 1828,
+    "tetrahedra": 8045,
+    "wall_facets": 1822,
     "inverted": 0,
     "quality": {
-      "minimum": 0.2383231009020346,
-      "first_percentile": 0.4270790675032508,
-      "median": 0.7100012038680241
+      "minimum": 0.23675705642835054,
+      "first_percentile": 0.43026895068484866,
+      "median": 0.7090216367866928
     },
     "dihedral_degrees": [
-      11.9094795864663,
-      152.49286552651643
+      11.907330672790495,
+      152.49604161444717
     ],
-    "mesh_to_wall": 0.01639821065547327,
-    "mesh_to_wall_spread": 2.916671478900559,
-    "wall_to_mesh": 0.010949603389867916,
-    "relative_volume_error": 0.00010612101278928421,
+    "mesh_to_wall": 0.016398210654157426,
+    "mesh_to_wall_spread": 2.918701436339253,
+    "wall_to_mesh": 0.010949124766355244,
+    "relative_volume_error": 0.00010264337789012146,
     "unmatched_cap_nodes": 0,
     "inexact_cap_nodes": 0,
     "cap_node_offset": 0.0,
     "mesher": {
-      "minimum_mmg_quality": 0.238323100902035,
-      "sampled_surface_error": 0.016398210655664092,
-      "sampled_coverage_error": 0.012807705947229754,
+      "minimum_mmg_quality": 0.23675705642835077,
+      "sampled_surface_error": 0.016398210654350435,
+      "sampled_coverage_error": 0.012806946492953882,
       "adaptation_abandoned": false,
-      "balanced_wall_vertices": 1052,
+      "balanced_wall_vertices": 1048,
       "improved_elements": 0,
       "defeaturing_moves": 6,
       "refined_lattice_edges": 0,
       "removed_bridging_elements": 0,
-      "reverted_snap_vertices": 2
+      "reverted_snap_vertices": 0
     },
     "missed_limits": [],
-    "seconds": 18.161082459031604,
-    "field_points": 20389484
+    "seconds": 16.014744209009223,
+    "field_points": 20130558
   },
   {
     "case": "spinodoid-30",
@@ -2362,23 +2354,23 @@
     "wall_facets": 3832,
     "inverted": 0,
     "quality": {
-      "minimum": 0.33502738160506873,
-      "first_percentile": 0.4435698115177579,
-      "median": 0.7574805839567427
+      "minimum": 0.3350275339332721,
+      "first_percentile": 0.44312913211641625,
+      "median": 0.7576194649346553
     },
     "dihedral_degrees": [
-      16.148909625129285,
+      16.1489187036865,
       145.89896798787018
     ],
     "mesh_to_wall": 0.016849972104684054,
-    "mesh_to_wall_spread": 4.447860057661804,
+    "mesh_to_wall_spread": 4.437154508999644,
     "wall_to_mesh": 0.02850116028167181,
-    "relative_volume_error": -0.0008751405334336271,
+    "relative_volume_error": -0.0008755475462765006,
     "unmatched_cap_nodes": 0,
     "inexact_cap_nodes": 0,
     "cap_node_offset": 0.0,
     "mesher": {
-      "minimum_mmg_quality": 0.335027381605069,
+      "minimum_mmg_quality": 0.33502753393327245,
       "sampled_surface_error": 0.016849972105289584,
       "sampled_coverage_error": 0.009171701642009845,
       "adaptation_abandoned": false,
@@ -2392,8 +2384,8 @@
     "missed_limits": [
       "wall_to_mesh"
     ],
-    "seconds": 16.0255354589317,
-    "field_points": 27640402
+    "seconds": 15.796728375018574,
+    "field_points": 27656702
   },
   {
     "case": "spinodoid-30",
@@ -2432,7 +2424,7 @@
       "reverted_snap_vertices": 5
     },
     "missed_limits": [],
-    "seconds": 8.994618875090964,
+    "seconds": 8.912538999924436,
     "field_points": 6366555
   },
   {
@@ -2440,40 +2432,40 @@
     "cells": 24,
     "adapt": false,
     "tolerance": 0.02,
-    "tetrahedra": 62998,
+    "tetrahedra": 62997,
     "wall_facets": 14724,
     "inverted": 0,
     "quality": {
-      "minimum": 0.1951293927434786,
-      "first_percentile": 0.5126218069261333,
-      "median": 0.8663938857944526
+      "minimum": 0.20260402244156767,
+      "first_percentile": 0.5134693766675628,
+      "median": 0.8670589680446816
     },
     "dihedral_degrees": [
-      12.978457590199412,
-      155.32421283603222
+      13.95193341363677,
+      158.16771104317516
     ],
-    "mesh_to_wall": 0.00557895104666187,
-    "mesh_to_wall_spread": 4.538612991686137,
-    "wall_to_mesh": 0.003518367581154573,
-    "relative_volume_error": -8.697849012706538e-05,
+    "mesh_to_wall": 0.005578562068523921,
+    "mesh_to_wall_spread": 4.553825100429921,
+    "wall_to_mesh": 0.0035189197432915886,
+    "relative_volume_error": -8.717530575841348e-05,
     "unmatched_cap_nodes": 0,
     "inexact_cap_nodes": 0,
     "cap_node_offset": 0.0,
     "mesher": {
-      "minimum_mmg_quality": 0.19512939274347857,
-      "sampled_surface_error": 0.0055789511790789335,
-      "sampled_coverage_error": 0.0026557947713039104,
+      "minimum_mmg_quality": 0.20260402244156758,
+      "sampled_surface_error": 0.005578562200906314,
+      "sampled_coverage_error": 0.0026554743050218924,
       "adaptation_abandoned": false,
-      "balanced_wall_vertices": 7733,
-      "improved_elements": 23,
+      "balanced_wall_vertices": 7731,
+      "improved_elements": 25,
       "defeaturing_moves": 0,
       "refined_lattice_edges": 2,
       "removed_bridging_elements": 0,
       "reverted_snap_vertices": 3
     },
     "missed_limits": [],
-    "seconds": 76.69947754102759,
-    "field_points": 169656641
+    "seconds": 65.45271866593976,
+    "field_points": 139312936
   },
   {
     "case": "spinodoid-30",
@@ -2512,7 +2504,7 @@
       "reverted_snap_vertices": 3
     },
     "missed_limits": [],
-    "seconds": 22.909639665973373,
+    "seconds": 22.765309000038542,
     "field_points": 30142989
   },
   {
@@ -2552,8 +2544,8 @@
       "reverted_snap_vertices": 0
     },
     "missed_limits": [],
-    "seconds": 1.8686394169926643,
-    "field_points": 27091068
+    "seconds": 1.8816981250420213,
+    "field_points": 27108936
   },
   {
     "case": "sphere",
@@ -2592,7 +2584,7 @@
       "reverted_snap_vertices": 0
     },
     "missed_limits": [],
-    "seconds": 2.0119775410275906,
+    "seconds": 1.953738791984506,
     "field_points": 2326850
   },
   {
@@ -2600,27 +2592,27 @@
     "cells": 24,
     "adapt": false,
     "tolerance": 0.01,
-    "tetrahedra": 65288,
+    "tetrahedra": 65289,
     "wall_facets": 22066,
     "inverted": 0,
     "quality": {
-      "minimum": 0.28160448961257695,
-      "first_percentile": 0.5001016034636228,
-      "median": 0.7931255564131656
+      "minimum": 0.2818037389359584,
+      "first_percentile": 0.5004114662937282,
+      "median": 0.7931564368815346
     },
     "dihedral_degrees": [
-      16.078419225917123,
+      15.917119177698297,
       149.58067322451956
     ],
     "mesh_to_wall": 0.0009457197900391755,
-    "mesh_to_wall_spread": 3.972358921773129,
+    "mesh_to_wall_spread": 3.9701009733199792,
     "wall_to_mesh": 0.0008444580900244536,
-    "relative_volume_error": 0.00046342517240738346,
+    "relative_volume_error": 0.0004634279140849351,
     "unmatched_cap_nodes": 0,
     "inexact_cap_nodes": 0,
     "cap_node_offset": 0.0,
     "mesher": {
-      "minimum_mmg_quality": 0.2816044896125774,
+      "minimum_mmg_quality": 0.2818037389359587,
       "sampled_surface_error": 0.0009465602400133601,
       "sampled_coverage_error": 0.0008003601521205309,
       "adaptation_abandoned": false,
@@ -2632,8 +2624,8 @@
       "reverted_snap_vertices": 0
     },
     "missed_limits": [],
-    "seconds": 14.417094792006537,
-    "field_points": 154293640
+    "seconds": 15.425785416038707,
+    "field_points": 154361749
   },
   {
     "case": "gyroid-sheet",
@@ -2672,7 +2664,7 @@
       "reverted_snap_vertices": 0
     },
     "missed_limits": [],
-    "seconds": 8.908870125073008,
+    "seconds": 8.485048625036143,
     "field_points": 10404559
   }
 ]

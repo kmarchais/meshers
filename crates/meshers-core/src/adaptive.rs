@@ -139,7 +139,23 @@ fn midpoint(
     geometry: &impl crate::geometry::Geometry,
 ) -> Option<Point> {
     let [a, b] = e.map(|i| mesh.points[i]);
-    let mut p = std::array::from_fn(|i| (a[i] + b[i]) * 0.5);
+    project(
+        mesh,
+        e,
+        std::array::from_fn(|i| (a[i] + b[i]) * 0.5),
+        t,
+        geometry,
+    )
+}
+/// The wall point reached from `p`, held in the box planes of the edge `e`.
+fn project(
+    mesh: &Mesh,
+    e: Edge,
+    mut p: Point,
+    t: f64,
+    geometry: &impl crate::geometry::Geometry,
+) -> Option<Point> {
+    let [a, b] = e.map(|i| mesh.points[i]);
     let level = geometry.level(geometry.value(a), t);
     for _ in 0..12 {
         let value = geometry.value(p) - level;
@@ -162,6 +178,57 @@ fn midpoint(
     }
     ((geometry.value(p) - level).abs() < 1e-11 && geometry.contains(p)).then_some(p)
 }
+/// Where the wall folds between the ends of `e`, and how far that fold lies
+/// from the edge.
+///
+/// A facet that spans a fold has its samples close to the wall on either
+/// side while the fold itself is far from the facet: the measure from the
+/// mesh to the wall does not see it. The tangent planes at the two ends meet
+/// along the fold, to first order, when their normals differ sharply.
+fn crease(
+    mesh: &Mesh,
+    e: Edge,
+    normals: &HashMap<usize, Point>,
+    geometry: &impl crate::geometry::Geometry,
+) -> Option<(f64, Point)> {
+    let [a, b] = e.map(|i| mesh.points[i]);
+    let held: [bool; 3] = std::array::from_fn(|i| a[i] == b[i] && geometry.locked(a)[i]);
+    let normal = |v: usize| -> Option<Point> {
+        let mut n = *normals.get(&v)?;
+        for i in 0..3 {
+            if held[i] {
+                n[i] = 0.;
+            }
+        }
+        let length = norm(n);
+        (length > 1e-12).then(|| n.map(|x| x / length))
+    };
+    let (na, nb) = (normal(e[0])?, normal(e[1])?);
+    let c = dot(na, nb);
+    if c > CREASE_COSINE {
+        return None;
+    }
+    let m: Point = std::array::from_fn(|i| (a[i] + b[i]) * 0.5);
+    let (ra, rb) = (dot(na, sub(m, a)), dot(nb, sub(m, b)));
+    let det = 1. - c * c;
+    if det < 1e-9 {
+        return None;
+    }
+    let (alpha, beta) = ((c * rb - ra) / det, (c * ra - rb) / det);
+    let x: Point = std::array::from_fn(|i| m[i] + alpha * na[i] + beta * nb[i]);
+    // A fold at one end is already a node of the mesh.
+    let d = sub(b, a);
+    let along = dot(sub(x, a), d) / dot(d, d);
+    (0.15..=0.85).contains(&along).then(|| (norm(sub(x, m)), x))
+}
+
+/// Cosine of the turn of the wall normal along an edge beyond which the
+/// edge is taken to span a fold and not a smooth curve.
+const CREASE_COSINE: f64 = 0.8;
+/// Share of an edge stepped to either side of a suspected fold to see
+/// whether the wall normal jumps there.
+const CREASE_STEP: f64 = 0.05;
+
 pub fn refine(
     mesh: &mut Mesh,
     threshold: f64,
@@ -249,6 +316,57 @@ pub(crate) fn refine_for(
                 }
             }
         }
+        // Folds of the wall that facets span.
+        let mut wall: Vec<usize> = surface_edges
+            .values()
+            .flatten()
+            .flatten()
+            .copied()
+            .collect();
+        wall.sort_unstable();
+        wall.dedup();
+        let positions: Vec<Point> = wall.iter().map(|&v| mesh.points[v]).collect();
+        let mut normals = HashMap::new();
+        for (ids, chunk) in wall.chunks(4096).zip(positions.chunks(4096)) {
+            geometry.check()?;
+            normals.extend(ids.iter().copied().zip(geometry.gradients(chunk)));
+        }
+        let mut suspects = Vec::new();
+        for (key, copies) in &surface_edges {
+            for &e in copies {
+                if let Some((depth, at)) = crease(mesh, e, &normals, geometry)
+                    && depth > tolerance
+                {
+                    suspects.push((*key, e, depth, at));
+                }
+            }
+        }
+        // A smooth wall can turn as much between two nodes of a coarse mesh.
+        // At a fold the normal jumps over a short step across it.
+        let probes: Vec<Point> = suspects
+            .iter()
+            .flat_map(|&(_, e, _, at)| {
+                let [a, b] = e.map(|i| mesh.points[i]);
+                [-CREASE_STEP, CREASE_STEP]
+                    .map(|s| std::array::from_fn(|i| at[i] + s * (b[i] - a[i])))
+            })
+            .collect();
+        let mut turns = Vec::with_capacity(probes.len());
+        for chunk in probes.chunks(4096) {
+            geometry.check()?;
+            turns.extend(geometry.gradients(chunk));
+        }
+        let mut folds = HashMap::new();
+        for ((key, e, depth, at), sides) in suspects.into_iter().zip(turns.chunks(2)) {
+            let cosine = dot(sides[0], sides[1]) / (norm(sides[0]) * norm(sides[1]));
+            if cosine < CREASE_COSINE {
+                folds.insert(e, at);
+                scores
+                    .entry(key)
+                    .and_modify(|v| *v = v.max(depth))
+                    .or_insert(depth);
+            }
+        }
         profile.mark("surface_scoring");
         profile.count("candidate_orbits", scores.len());
         let mut candidates: Vec<_> = scores.into_iter().collect();
@@ -291,31 +409,67 @@ pub(crate) fn refine_for(
             let mut new_points = Vec::new();
             let mut new_tets = Vec::new();
             let mut valid = true;
-            for &e in &copies {
-                let Some(p) = midpoint(mesh, e, threshold, geometry) else {
-                    valid = false;
-                    break;
-                };
-                let id = mesh.points.len() + new_points.len();
-                new_points.push(p);
-                for &ci in &edges[&e] {
-                    for endpoint in e {
-                        let mut t = mesh.tets[ci];
-                        *t.iter_mut().find(|v| **v == endpoint).unwrap() = id;
-                        let xyz = t.map(|i| if i == id { p } else { mesh.points[i] });
-                        if determinant(xyz) <= 0.
-                            || quality(xyz).powf(1.5) < geometry.refinement_quality_floor()
-                        {
-                            valid = false;
+            // A node at the bottom of a sharp fold can flatten the elements
+            // around the edge: it then goes part of the way down, onto the wall.
+            let reaches: &[f64] = if copies.iter().any(|e| folds.contains_key(e)) {
+                &[1., 0.7, 0.4, 0.]
+            } else {
+                &[0.]
+            };
+            for &reach in reaches {
+                new_points.clear();
+                new_tets.clear();
+                valid = true;
+                // One decision for the periodic copies of an edge. Each copy
+                // tests its own fold, and images agree only to rounding: a
+                // fold found or reached on some of them alone would split
+                // the images at different places.
+                let folded: Option<Vec<Point>> = (reach > 0.)
+                    .then(|| {
+                        copies
+                            .iter()
+                            .map(|e| {
+                                let at = folds.get(e)?;
+                                let [a, b] = e.map(|i| mesh.points[i]);
+                                let start = std::array::from_fn(|i| {
+                                    let m = (a[i] + b[i]) * 0.5;
+                                    m + reach * (at[i] - m)
+                                });
+                                project(mesh, *e, start, threshold, geometry)
+                            })
+                            .collect()
+                    })
+                    .flatten();
+                for (copy, &e) in copies.iter().enumerate() {
+                    let fold = folded.as_ref().map(|points| points[copy]);
+                    let Some(p) = fold.or_else(|| midpoint(mesh, e, threshold, geometry)) else {
+                        valid = false;
+                        break;
+                    };
+                    let id = mesh.points.len() + new_points.len();
+                    new_points.push(p);
+                    for &ci in &edges[&e] {
+                        for endpoint in e {
+                            let mut t = mesh.tets[ci];
+                            *t.iter_mut().find(|v| **v == endpoint).unwrap() = id;
+                            let xyz = t.map(|i| if i == id { p } else { mesh.points[i] });
+                            if determinant(xyz) <= 0.
+                                || quality(xyz).powf(1.5) < geometry.refinement_quality_floor()
+                            {
+                                valid = false;
+                                break;
+                            }
+                            new_tets.push(t);
+                        }
+                        if !valid {
                             break;
                         }
-                        new_tets.push(t);
                     }
                     if !valid {
                         break;
                     }
                 }
-                if !valid {
+                if valid {
                     break;
                 }
             }

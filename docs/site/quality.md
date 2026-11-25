@@ -26,9 +26,9 @@ During Tet10 elevation and fitting, the development branch bisects regions where
 
 `sampled_surface_error` is the largest distance from a facet sample to the wall, measured by walking from the sample to the wall rather than by `|f| / |grad f|`. A walk that reaches the wall bounds the distance from above whether or not the field is a distance function. A sample whose first-order estimate is under a quarter of `geometry_tolerance` keeps that estimate, as does a walk that does not converge. `geometry_tolerance` gates the result. A sample in a box plane of an adaptive mesh is measured within that plane, unless the solid passes the plane by less than that. Across a periodic plane the wall of the next cell counts as the wall inside does, so both images of a sample measure alike.
 
-`sampled_coverage_error` measures the other direction: from the wall of the solid, sampled where lines twice finer than the lattice cross it, three times with adaptation, to the meshed wall. Only this measure sees a feature the mesh lost or a crease it cut across. It is reported, capped at four tolerances, and does not reject a mesh.
+`sampled_coverage_error` measures the other direction: from the wall of the solid, sampled where lines twice finer than the lattice cross it, three times with adaptation, to the meshed wall. Only this measure sees a feature the mesh lost or a crease it cut across. On the lattice path, an edge whose ends have sharply different wall normals is checked for a fold between them: where the normal jumps over a short step, the refinement places its node in the fold, or part of the way down when the elements around the edge would flatten. Adaptive meshing does not do this yet. It is reported, capped at four tolerances, and does not reject a mesh.
 
-Periodic images have bitwise identical coordinates in the plane of their faces, in linear and quadratic output.
+Periodic images have bitwise identical coordinates in the plane of their faces, in linear and quadratic output. A lattice node snapped onto the wall is projected once for all its images, and every later operation moves images by the same steps.
 
 ## Volume of linear meshes
 
@@ -36,7 +36,7 @@ With every vertex on the wall, flat facets lie inside a convex wall and the mesh
 
 ## Quality recovery and narrow gaps
 
-A mesh below `minimum_quality` is remeshed locally: short edges collapse, long ones split, interior edges and faces swap. With a quality floor set, the same operations also work on the elements below an MMG quality of 0.2 (`improved_elements`), and are kept when the final checks accept the result. Without a floor, the mesh is returned as cut.
+A mesh below `minimum_quality` is remeshed locally: short edges collapse, long ones split, interior edges and faces swap. A wall edge swaps for the other diagonal of its two facets where the solid is convex along it and the new facets stay within `geometry_tolerance` of the wall. With a quality floor set, the same operations also work on the elements below an MMG quality of 0.2 (`improved_elements`), and are kept when the final checks accept the result. Without a floor, the mesh is returned as cut.
 
 If the floor is still missed, a last resort trades geometry for shape around the poor elements. Two crossings of the wall with one box edge merge, a crossing next to a box corner slides along its edge, and other wall vertices may leave the wall. Vertices stay in their box planes, periodic images move alike, and the result stays within `geometry_tolerance`. Each move is accepted on the samples and the measure of the final geometry check. `defeaturing_moves` counts these moves and `generate` emits a `UserWarning` when it is nonzero.
 

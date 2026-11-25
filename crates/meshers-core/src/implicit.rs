@@ -1038,9 +1038,12 @@ pub(crate) fn periodic_pairs<const N: usize>(
 /// Give the periodic images of a node bitwise identical coordinates in the
 /// plane of their faces, the low-side image being the reference.
 ///
-/// Images move by the same steps but are projected onto the wall separately,
-/// so they agree only to rounding. A pair straddling a rounding boundary of
-/// the coordinate keys that match images would no longer be recognized.
+/// A pair of images that agree only to rounding can straddle a rounding
+/// boundary of the coordinate keys that match images, and would then no
+/// longer be recognized. Snapped lattice nodes get one position per class at
+/// the source, and every later operation moves images alike, so this finds
+/// nothing to do on the meshes of the periodic bench. It runs once, before
+/// the final checks, for inputs that reach them some other way.
 fn weld_periodic_images(points: &mut [Point], bounds: [Point; 2], periodic: [bool; 3]) {
     // Far above the rounding of a projection, far below any edge length.
     const REACH: f64 = 1e-9;
@@ -1081,6 +1084,37 @@ fn weld_periodic_images(points: &mut [Point], bounds: [Point; 2], periodic: [boo
                 }
             }
         }
+    }
+}
+
+/// Give the periodic images of a snapped lattice node one position.
+///
+/// Each image is projected onto the wall from its own side of the box, and a
+/// periodic field agrees between the two sides only to rounding. The lattice
+/// positions are still exact here, so the images of a node are known without
+/// a tolerance: the first one decides, and the others take its coordinates
+/// in the planes they share.
+fn share_snapped_images<F: ScalarField>(
+    points: &mut [Point],
+    values: &mut [f64],
+    lattice: &[Point],
+    g: &Context<F>,
+) {
+    if g.options.periodic == [false; 3] {
+        return;
+    }
+    let mut first = HashMap::new();
+    for i in 0..lattice.len() {
+        let reference = *first.entry(g.rank(lattice[i])).or_insert(i);
+        if reference == i {
+            continue;
+        }
+        for a in 0..3 {
+            if lattice[i][a] == lattice[reference][a] {
+                points[i][a] = points[reference][a];
+            }
+        }
+        values[i] = values[reference];
     }
 }
 
@@ -1815,6 +1849,7 @@ fn build<F: ScalarField>(g: &Context<F>) -> Result<Output, String> {
             }
         }
     }
+    share_snapped_images(&mut b.points, &mut b.values, &original_points, g);
     let mut mesh = None;
     let mut reverted_snap_vertices = 0;
     for topology_attempt in 0..8 {
@@ -1897,7 +1932,6 @@ fn build<F: ScalarField>(g: &Context<F>) -> Result<Output, String> {
     }
     let mut mesh =
         mesh.ok_or("safe snapping could not resolve boundary topology in eight rounds")?;
-    weld_periodic_images(&mut mesh.points, g.bounds(), o.periodic);
     observe_linear(g, "clipped", &mesh);
     drop(b);
     drop(original_points);
@@ -1920,7 +1954,6 @@ fn build<F: ScalarField>(g: &Context<F>) -> Result<Output, String> {
             o.max_tetrahedra,
         )?;
         observe_linear(g, "adapted", &mesh);
-        weld_periodic_images(&mut mesh.points, g.bounds(), o.periodic);
         crate::optimize::optimize_for(
             &mut mesh,
             threshold,
@@ -1966,7 +1999,6 @@ fn build<F: ScalarField>(g: &Context<F>) -> Result<Output, String> {
         output.diagnostics.adapt = Some(stats);
         return Ok(output);
     }
-    weld_periodic_images(&mut mesh.points, g.bounds(), o.periodic);
     crate::optimize::optimize_for(
         &mut mesh,
         threshold,
@@ -1978,7 +2010,6 @@ fn build<F: ScalarField>(g: &Context<F>) -> Result<Output, String> {
         g,
     )?;
     observe_linear(g, "optimized", &mesh);
-    weld_periodic_images(&mut mesh.points, g.bounds(), o.periodic);
     crate::adaptive::refine_for(
         &mut mesh,
         threshold,
@@ -1987,7 +2018,6 @@ fn build<F: ScalarField>(g: &Context<F>) -> Result<Output, String> {
         g,
     )?;
     observe_linear(g, "geometry-refined", &mesh);
-    weld_periodic_images(&mut mesh.points, g.bounds(), o.periodic);
     crate::optimize::optimize_for(
         &mut mesh,
         threshold,
@@ -2095,7 +2125,6 @@ fn remesh_rounds<F: ScalarField>(
     let o = g.options;
     let mut merged = 0;
     for _ in 0..6 {
-        weld_periodic_images(&mut mesh.points, g.bounds(), o.periodic);
         let (operations, merges) = crate::tet_adapt::remove_slivers(
             mesh,
             g,
@@ -2109,7 +2138,6 @@ fn remesh_rounds<F: ScalarField>(
         if operations == 0 {
             break;
         }
-        weld_periodic_images(&mut mesh.points, g.bounds(), o.periodic);
         crate::optimize::optimize_for(
             mesh,
             threshold,
@@ -2878,7 +2906,6 @@ fn balance_volume<F: ScalarField>(
         .filter(|(_, undone)| !**undone)
         .map(|(&index, _)| groups[index].len())
         .sum();
-    weld_periodic_images(&mut mesh.points, g.bounds(), o.periodic);
     Ok((moved, measured))
 }
 
