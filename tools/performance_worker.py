@@ -24,6 +24,7 @@ if TYPE_CHECKING:
     from numpy.typing import NDArray
 
     FloatArray = NDArray[np.float64]
+    Indices = NDArray[np.int64]
 
 if sys.platform == "win32":
     try:
@@ -38,6 +39,14 @@ else:
 CAP = 250_000
 _MAX_JACOBIAN_DEPTH = 12
 _TET4_NODES = 4
+_TRI3_NODES = 3
+# Face opposite each tetrahedron corner, in Tri6 order (ab, bc, ca).
+_TET_FACES = np.array([
+    [1, 2, 3, 5, 9, 8],
+    [0, 3, 2, 7, 9, 6],
+    [0, 1, 3, 4, 8, 7],
+    [0, 2, 1, 6, 5, 4],
+])
 _TRIANGLES_PER_BOUNDARY_EDGE = 2
 _MIN_CELL_QUALITY = 0.01
 _MAX_SURFACE_ERROR = 0.1
@@ -330,6 +339,89 @@ def _measure_generation(case: str) -> tuple[Mesh, float, int]:
     return mesh, elapsed, peak_rss_bytes()
 
 
+def _sorted_trace(faces: Indices) -> Indices:
+    # Attach each Tri6 midpoint to its opposite corner before reordering.
+    order = np.argsort(faces[:, :3], axis=1)
+    keys = np.take_along_axis(faces[:, :3], order, axis=1)
+    if faces.shape[1] == _TET_FACES.shape[1]:
+        mids = np.take_along_axis(faces[:, [4, 5, 3]], order, axis=1)
+        keys = np.column_stack((keys, mids))
+    return keys[np.lexsort(keys.T[::-1])]
+
+
+def _volume_cap(mesh: Mesh, on_plane: NDArray[np.bool_]) -> Indices:
+    # A nondegenerate tet in the box meets its supporting plane in a face
+    # precisely when three corners lie there. Only gather those cells.
+    corners = on_plane[mesh.tetrahedra[:, :4]]
+    cells = np.flatnonzero(np.count_nonzero(corners, axis=1) == _TRI3_NODES)
+    opposite = np.argmin(corners[cells], axis=1)
+    slots = _TET_FACES[opposite]
+    if mesh.tetrahedra.shape[1] == _TET4_NODES:
+        slots = slots[:, :3]
+    return mesh.tetrahedra[cells[:, None], slots]
+
+
+def check_periodic_axis(mesh: Mesh, axis: int, transform: FloatArray) -> None:
+    """Check the solver's cap connectivity and pairs on a periodic unit-box axis.
+
+    Classify volume faces in parameter space for mapped meshes, then verify
+    every supplied pair against the fixture's rigid map in physical space.
+    Wall-only contacts may have partners without belonging to a material face.
+
+    Raises:
+        RuntimeError: The pair table, tagged boundary or opposite trace is inconsistent.
+    """
+    coordinates = mesh.points if mesh.parameters is None else mesh.parameters
+    pairs = mesh.periodic_pairs[axis]
+    if (
+        pairs.shape[1:] != (2,)
+        or not len(pairs)
+        or np.any(pairs < 0)
+        or np.any(pairs >= len(mesh.points))
+    ):
+        msg = f"Invalid periodic pair table on axis {axis}"
+        raise RuntimeError(msg)
+    source, target = pairs.T
+    if (
+        len(np.unique(source)) != len(source)
+        or len(np.unique(target)) != len(target)
+        or not np.all(coordinates[source, axis] == 0)
+        or not np.all(coordinates[target, axis] == 1)
+        or not np.allclose(
+            mesh.points[source] @ transform[:3, :3].T + transform[:3, 3],
+            mesh.points[target],
+            atol=1e-10,
+            rtol=0,
+        )
+    ):
+        msg = f"Invalid periodic correspondence on axis {axis}"
+        raise RuntimeError(msg)
+    correspondence = np.full(len(mesh.points), -1, dtype=np.int64)
+    correspondence[source] = target
+    traces = []
+    for side in (0, 1):
+        cap = _volume_cap(mesh, coordinates[:, axis] == side)
+        tagged = mesh.surface[mesh.boundary_tags == 2 * axis + 1 + side]
+        volume_trace = _sorted_trace(cap)
+        if (
+            not len(cap)
+            or cap.shape != tagged.shape
+            or not np.array_equal(volume_trace, _sorted_trace(tagged))
+        ):
+            msg = f"Tagged cap differs from volume trace on axis {axis}, side {side}"
+            raise RuntimeError(msg)
+        if side == 0:
+            cap = correspondence[cap]
+            if np.any(cap < 0):
+                msg = f"Missing periodic cap pair on axis {axis}"
+                raise RuntimeError(msg)
+            volume_trace = _sorted_trace(cap)
+        traces.append(volume_trace)
+    if not np.array_equal(traces[0], traces[1]):
+        msg = f"Opposite cap traces differ on axis {axis}"
+        raise RuntimeError(msg)
+
+
 def sample(case: str) -> dict[str, float]:
     """Measure a fresh process, then independently validate its mesh.
 
@@ -365,17 +457,10 @@ def sample(case: str) -> dict[str, float]:
         msg = "Closed manifold boundary required"
         raise RuntimeError(msg)
     if case not in {"graded", "mapped_intersection"}:
-        for axis, pairs in enumerate(mesh.periodic_pairs):
-            expected = np.zeros(3)
-            expected[axis] = 1
-            if not len(pairs) or not np.allclose(
-                mesh.points[pairs[:, 1]] - mesh.points[pairs[:, 0]],
-                expected,
-                atol=1e-10,
-                rtol=0,
-            ):
-                msg = "Periodic correspondence lost"
-                raise RuntimeError(msg)
+        for axis in range(3):
+            transform = np.eye(4)
+            transform[axis, 3] = 1
+            check_periodic_axis(mesh, axis, transform)
     record = {
         "seconds": elapsed,
         "peak_rss_bytes": peak,
