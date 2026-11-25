@@ -39,6 +39,15 @@ pub(crate) trait Geometry: Sync {
     fn gradient(&self, p: Point) -> Point;
     fn rank(&self, p: Point) -> [i64; 3];
     fn bounds(&self) -> [Point; 2];
+    /// Whether the final gate measures a sample lying in box planes within
+    /// those planes.
+    fn holds_samples(&self) -> bool {
+        false
+    }
+    /// Axes along which the solid repeats.
+    fn periodic(&self) -> [bool; 3] {
+        [false; 3]
+    }
     fn band(&self) -> bool {
         true
     }
@@ -84,6 +93,50 @@ pub(crate) trait Geometry: Sync {
             .into_iter()
             .map(|walk| walk.0)
             .collect())
+    }
+    /// The distance the final geometry gate measures for each sample.
+    ///
+    /// A sample held in box planes walks within them, so that a chord of a
+    /// cap outline is measured against that outline. Where the sample lies
+    /// in the solid, or its free walk ends inside the box or across a periodic
+    /// plane, the solid passes the plane by a strip no thicker than the free
+    /// distance, and the shorter of the two counts. Both images of a periodic
+    /// sample then measure alike.
+    fn gate_distances(
+        &self,
+        samples: &[(Point, [bool; 3])],
+        threshold: f64,
+        tolerance: f64,
+    ) -> Result<Vec<f64>, String> {
+        // Walks matter where an estimate could reach the tolerance.
+        let settled = 0.25 * tolerance;
+        let mut distances = self.wall_distances(samples, threshold, settled)?;
+        let held: Vec<usize> = (0..samples.len())
+            .filter(|&i| samples[i].1 != [false; 3])
+            .collect();
+        if held.is_empty() {
+            return Ok(distances);
+        }
+        let free: Vec<_> = held.iter().map(|&i| (samples[i].0, [false; 3])).collect();
+        let points: Vec<Point> = free.iter().map(|s| s.0).collect();
+        let values = self.values(&points);
+        let walks = self.wall_walks(&free, threshold, settled)?;
+        for ((&i, value), (distance, end)) in held.iter().zip(values).zip(walks) {
+            let residual = if self.band() {
+                value.abs() - threshold
+            } else {
+                value
+            };
+            // Across a periodic plane the wall is that of the next cell, as
+            // real as the one inside: only a plane that ends the solid hides it.
+            let [lo, hi] = self.bounds();
+            let periodic = self.periodic();
+            let reachable = (0..3).all(|a| periodic[a] || (lo[a]..=hi[a]).contains(&end[a]));
+            if residual < 0. || reachable {
+                distances[i] = distances[i].min(distance);
+            }
+        }
+        Ok(distances)
     }
     /// `wall_distances` with the point each walk ended at.
     fn wall_walks(

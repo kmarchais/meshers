@@ -1191,15 +1191,48 @@ impl<'g, G: Geometry> Tets<'g, G> {
         true
     }
 
-    /// Whether `v` and the centroids of its wall facets lie within
-    /// `tolerance` of the wall, to first order.
+    /// Whether the wall facets around `v` lie within `tolerance` of the wall
+    /// as the final gate measures them: at their vertices, centroids and edge
+    /// midpoints, held in their box planes where the gate holds them.
     fn near_wall(&self, v: usize, tolerance: f64) -> bool {
-        self.distance(self.points[v], [false; 3]) <= tolerance
-            && self.vb[v].iter().all(|f| {
-                let p = self.local(f.map(|n| self.points[n]));
-                let centre = std::array::from_fn(|a| (p[0][a] + p[1][a] + p[2][a]) / 3.);
-                self.faces[f] != 0 || self.distance(centre, [false; 3]) <= tolerance
-            })
+        let lock = |u: usize, w: usize| {
+            if self.g.holds_samples() {
+                self.held(u, w)
+            } else {
+                [false; 3]
+            }
+        };
+        let mut samples = vec![(self.points[v], lock(v, v))];
+        for f in &self.vb[v] {
+            if self.faces[f] != 0 {
+                continue;
+            }
+            let p = self.local(f.map(|n| self.points[n]));
+            samples.push((
+                std::array::from_fn(|a| (p[0][a] + p[1][a] + p[2][a]) / 3.),
+                [false; 3],
+            ));
+            for (i, j) in [(0, 1), (1, 2), (0, 2)] {
+                samples.push((
+                    std::array::from_fn(|a| 0.5 * (p[i][a] + p[j][a])),
+                    lock(f[i], f[j]),
+                ));
+            }
+        }
+        // Local simplices can extend outside the fundamental cell.
+        let [lo, hi] = self.g.bounds();
+        for (p, _) in &mut samples {
+            for a in 0..3 {
+                if let Some(period) = self.period[a]
+                    && (p[a] < lo[a] || p[a] > hi[a])
+                {
+                    p[a] = lo[a] + (p[a] - lo[a]).rem_euclid(period);
+                }
+            }
+        }
+        self.g
+            .gate_distances(&samples, self.threshold, tolerance)
+            .is_ok_and(|distances| distances.iter().all(|&d| d <= tolerance))
     }
 
     /// Whether collapsing `u` onto `v` lays a boundary facet of `u` entirely
@@ -1534,6 +1567,18 @@ impl<'g, G: Geometry> Tets<'g, G> {
     fn locked(&self, u: usize, v: usize) -> [bool; 3] {
         let shared = self.masks[u] & self.masks[v];
         std::array::from_fn(|a| (shared >> (2 + 2 * a)) & 3 != 0)
+    }
+
+    /// Box axes that the final gate holds for a sample of the edge: those of
+    /// the box planes both ends lie in, by their coordinates.
+    fn held(&self, u: usize, v: usize) -> [bool; 3] {
+        let [lo, hi] = self.g.bounds();
+        let (p, q) = (self.points[u], self.points[v]);
+        let labelled = self.locked(u, v);
+        std::array::from_fn(|a| {
+            let on = |x: f64| x == lo[a] || x == hi[a];
+            labelled[a] || (on(p[a]) && on(q[a]) && (p[a] == q[a] || self.period[a].is_some()))
+        })
     }
 
     /// Unit tangent of the wall/plane curve through a curve vertex.

@@ -278,6 +278,12 @@ impl<F: ScalarField> Geometry for Context<'_, F> {
     fn geometry_tolerance(&self) -> Option<f64> {
         Some(WORKING_TOLERANCE * self.options.geometry_tolerance)
     }
+    fn periodic(&self) -> [bool; 3] {
+        self.options.periodic
+    }
+    fn holds_samples(&self) -> bool {
+        self.options.adapt.is_some()
+    }
     fn batched(&self) -> bool {
         self.field.prefers_batches()
     }
@@ -1176,7 +1182,7 @@ fn check<F: ScalarField>(
             // wall, which can pass much closer outside the box, so it under-reports
             // curve error. Only the adaptive path, which refines curve chords by this
             // measure, holds its samples in the plane.
-            for sample in facet_samples(p, [lo, hi], g.options.adapt.is_some()) {
+            for sample in facet_samples(p, [lo, hi], g.holds_samples()) {
                 if let Some(fields) = g.constraints.filter(|_| constraints.is_some()) {
                     let distance = if features == 0 {
                         crate::projection::positive_constraint_distance(
@@ -2586,30 +2592,7 @@ fn clipped_wall_distances<F: ScalarField>(
     g: &Context<F>,
     samples: &[(Point, [bool; 3])],
 ) -> Result<Vec<f64>, String> {
-    // Walks matter where an estimate could reach the tolerance.
-    let settled = 0.25 * g.options.geometry_tolerance;
-    let mut distances = g.wall_distances(samples, g.threshold(), settled)?;
-    let held: Vec<usize> = (0..samples.len())
-        .filter(|&i| samples[i].1 != [false; 3])
-        .collect();
-    if held.is_empty() {
-        return Ok(distances);
-    }
-    let free: Vec<_> = held.iter().map(|&i| (samples[i].0, [false; 3])).collect();
-    let points: Vec<Point> = free.iter().map(|s| s.0).collect();
-    let values = g.values(&points);
-    let walks = g.wall_walks(&free, g.threshold(), settled)?;
-    for ((&i, value), (distance, end)) in held.iter().zip(values).zip(walks) {
-        let residual = if g.band() {
-            value.abs() - g.threshold()
-        } else {
-            value
-        };
-        if residual < 0. || g.contains(end) {
-            distances[i] = distances[i].min(distance);
-        }
-    }
-    Ok(distances)
+    g.gate_distances(samples, g.threshold(), g.options.geometry_tolerance)
 }
 
 fn distance_batch<F: ScalarField>(
